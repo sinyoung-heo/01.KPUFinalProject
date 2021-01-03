@@ -360,3 +360,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/The Eternals/FrameDirectX12/Reference/Library/Engine.lib
