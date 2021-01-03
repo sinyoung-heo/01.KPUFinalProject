@@ -95,13 +95,15 @@ void CTerrainMeshObject::Render_ShadowDepth(const _float & fTimeDelta)
 	m_pMeshCom->Render_StaticMeshShadowDepth(m_pShadowCom);
 }
 
-void CTerrainMeshObject::Render_GameObject(ID3D12GraphicsCommandList * pCommandList, 
+void CTerrainMeshObject::Render_GameObject(const _float& fTimeDelta, 
+										   ID3D12GraphicsCommandList * pCommandList,
 										   const _int& iContextIdx)
 {
 	m_pMeshCom->Render_StaticMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
-void CTerrainMeshObject::Render_ShadowDepth(ID3D12GraphicsCommandList * pCommandList, 
+void CTerrainMeshObject::Render_ShadowDepth(const _float& fTimeDelta, 
+											ID3D12GraphicsCommandList * pCommandList,
 											const _int& iContextIdx)
 {
 	m_pMeshCom->Render_StaticMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);

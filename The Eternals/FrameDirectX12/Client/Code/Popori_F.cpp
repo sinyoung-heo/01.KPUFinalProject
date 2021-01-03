@@ -103,12 +103,6 @@ _int CPopori_F::Update_GameObject(const _float & fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	Key_Input(fTimeDelta);
 
-	/*__________________________________________________________________________________________________________
-	[ Play Animation ]
-	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
-
 	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
 	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
@@ -159,6 +153,12 @@ _int CPopori_F::LateUpdate_GameObject(const _float & fTimeDelta)
 
 void CPopori_F::Render_GameObject(const _float & fTimeDelta)
 {
+	/*__________________________________________________________________________________________________________
+	[ Play Animation ]
+	____________________________________________________________________________________________________________*/
+	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+
 	m_pMeshCom->Render_DynamicMesh(m_pShaderCom);
 }
 
@@ -167,13 +167,21 @@ void CPopori_F::Render_ShadowDepth(const _float & fTimeDelta)
 	m_pMeshCom->Render_DynamicMeshShadowDepth(m_pShadowCom);
 }
 
-void CPopori_F::Render_GameObject(ID3D12GraphicsCommandList * pCommandList,
+void CPopori_F::Render_GameObject(const _float& fTimeDelta, 
+								  ID3D12GraphicsCommandList * pCommandList,
 								  const _int& iContextIdx)
 {
+	/*__________________________________________________________________________________________________________
+	[ Play Animation ]
+	____________________________________________________________________________________________________________*/
+	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
-void CPopori_F::Render_ShadowDepth(ID3D12GraphicsCommandList * pCommandList,
+void CPopori_F::Render_ShadowDepth(const _float& fTimeDelta, 
+								   ID3D12GraphicsCommandList * pCommandList,
 								   const _int& iContextIdx)
 {
 	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);

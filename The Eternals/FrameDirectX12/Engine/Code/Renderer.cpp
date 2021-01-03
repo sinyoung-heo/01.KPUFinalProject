@@ -1,8 +1,8 @@
 #include "Renderer.h"
-
 #include "GraphicDevice.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
+#include "TimeMgr.h"
 #include "ComponentMgr.h"
 #include "LightMgr.h"
 #include "GameObject.h"
@@ -674,7 +674,9 @@ void CRenderer::Worker_Thread(_int threadIndex)
 		// Start Render ShadowDepth.
 		for (_int i = threadIndex; i < m_RenderList[RENDER_NONALPHA].size(); i += CONTEXT::CONTEXT_END)
 		{
-			m_RenderList[RENDER_NONALPHA][i]->Render_ShadowDepth(m_arrShadowCommandList[threadIndex], threadIndex);
+			m_RenderList[RENDER_NONALPHA][i]->Render_ShadowDepth(CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"),
+																 m_arrShadowCommandList[threadIndex], 
+																 threadIndex);
 		}
 		
 		// Submit Shadow Pass.
@@ -699,7 +701,9 @@ void CRenderer::Worker_Thread(_int threadIndex)
 		// Start Render Scene.
 		for (_int i = threadIndex; i < m_RenderList[RENDER_NONALPHA].size(); i += CONTEXT::CONTEXT_END)
 		{
-			m_RenderList[RENDER_NONALPHA][i]->Render_GameObject(m_arrSceneCommandList[threadIndex], threadIndex);
+			m_RenderList[RENDER_NONALPHA][i]->Render_GameObject(CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"), 
+																m_arrSceneCommandList[threadIndex],
+																threadIndex);
 		}
 
 		// End Scene Pass.
