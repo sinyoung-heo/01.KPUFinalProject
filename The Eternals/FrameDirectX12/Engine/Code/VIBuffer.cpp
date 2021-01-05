@@ -221,6 +221,11 @@ ID3D12Resource * CVIBuffer::Create_DefaultBuffer(const void * InitData,
 	return pDefaultBuffer;
 }
 
+CComponent* CVIBuffer::Clone(void)
+{
+	return nullptr;
+}
+
 void CVIBuffer::Free()
 {
 	CComponent::Free();

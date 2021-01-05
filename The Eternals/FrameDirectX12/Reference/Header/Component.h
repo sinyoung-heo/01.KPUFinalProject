@@ -13,9 +13,9 @@ protected:
 	virtual ~CComponent() = default;
 
 public:
-	virtual void Update_Component(const _float& fTimeDelta);
-	virtual void Render_Component(const _float& fTimeDelta);
-	virtual void Release_UploadBuffer();
+	virtual void	Update_Component(const _float& fTimeDelta);
+	virtual void	Render_Component(const _float& fTimeDelta);
+	virtual void	Release_UploadBuffer();
 
 protected:
 	ID3D12Device*				m_pGraphicDevice	= nullptr;

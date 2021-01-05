@@ -23,6 +23,7 @@ CComponent::CComponent(const CComponent & rhs)
 
 
 
+
 void CComponent::Update_Component(const _float & fTimeDelta)
 {
 }

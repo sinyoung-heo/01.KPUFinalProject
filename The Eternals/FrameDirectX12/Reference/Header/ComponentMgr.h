@@ -12,6 +12,7 @@
 #include "ScreenTex.h"
 #include "Texture.h"
 #include "Mesh.h"
+#include "NaviMesh.h"
 #include "ColliderBox.h"
 #include "ColliderSphere.h"
 

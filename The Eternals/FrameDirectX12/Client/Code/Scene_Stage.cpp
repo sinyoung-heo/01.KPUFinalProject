@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Scene_Stage.h"
 
+#include "ComponentMgr.h"
 #include "GraphicDevice.h"
 #include "LightMgr.h"
 #include "Font.h"
@@ -30,11 +31,13 @@ HRESULT CScene_Stage::Ready_Scene()
 	COUT_STR("");
 #endif
 
+	Engine::FAILED_CHECK_RETURN(Ready_NaviMesh(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LayerCamera(L"Layer_Camera"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LayerEnvironment(L"Layer_Environment"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LayerGameObject(L"Layer_GameObject"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LayerUI(L"Layer_UI"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LayerFont(L"Layer_Font"), E_FAIL);
+
 	Engine::FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
 	return S_OK;
@@ -158,13 +161,13 @@ HRESULT CScene_Stage::Ready_LayerGameObject(wstring wstrLayerTag)
 	____________________________________________________________________________________________________________*/
 	CStaticMeshObject* pStaticMeshObject = nullptr;
 
-	// LandMarkBoundary
-	pStaticMeshObject = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-												  L"ResourcePrototype_LandMarkBoundary",	// MeshTag 
-												  _vec3(0.05f, 0.05f, 0.05f),				// Scale
-												  _vec3(0.0f, 0.0f, 0.0f),					// Angle
-												  _vec3(0.0f, 0.f, 0.f));					// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"StaticMeshObject", pStaticMeshObject), E_FAIL);
+	//// LandMarkBoundary
+	//pStaticMeshObject = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+	//											  L"ResourcePrototype_LandMarkBoundary",	// MeshTag 
+	//											  _vec3(0.05f, 0.05f, 0.05f),				// Scale
+	//											  _vec3(0.0f, 0.0f, 0.0f),					// Angle
+	//											  _vec3(0.0f, 0.f, 0.f));					// Pos
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"StaticMeshObject", pStaticMeshObject), E_FAIL);
 
 
 	// Status
@@ -179,13 +182,13 @@ HRESULT CScene_Stage::Ready_LayerGameObject(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ TerrainMeshObject ]
 	____________________________________________________________________________________________________________*/
-	CTerrainMeshObject* pTerrainMeshObject = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-																		L"ResourcePrototype_LandMarkPlane",	// MeshTag 
-																		_vec3(0.05f, 0.05f, 0.05f),			// Scale
-																		_vec3(0.0f, 0.0f, 0.0f),			// Angle
-																		_vec3(0.0f, 0.f, 0.f));				// Pos
-	
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainMeshObject", pTerrainMeshObject), E_FAIL);
+	//CTerrainMeshObject* pTerrainMeshObject = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+	//																	L"ResourcePrototype_LandMarkPlane",	// MeshTag 
+	//																	_vec3(0.05f, 0.05f, 0.05f),			// Scale
+	//																	_vec3(0.0f, 0.0f, 0.0f),			// Angle
+	//																	_vec3(0.0f, 0.f, 0.f));				// Pos
+	//
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainMeshObject", pTerrainMeshObject), E_FAIL);
 
 
 
@@ -202,12 +205,12 @@ HRESULT CScene_Stage::Ready_LayerGameObject(wstring wstrLayerTag)
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
 
 
-	pPopori_F = CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
-								  L"ResourcePrototype_PoporiH25",	// MeshTag
-								  _vec3(0.25f, 0.25f, 0.25f),		// Scale
-								  _vec3(0.0f, 0.0f, 0.0f),			// Angle
-								  _vec3(0.0f, 0.f, 0.0f));			// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
+	//pPopori_F = CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
+	//							  L"ResourcePrototype_PoporiH25",	// MeshTag
+	//							  _vec3(0.25f, 0.25f, 0.25f),		// Scale
+	//							  _vec3(0.0f, 0.0f, 0.0f),			// Angle
+	//							  _vec3(0.0f, 0.f, 0.0f));			// Pos
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
 
 
 	/*__________________________________________________________________________________________________________
@@ -303,6 +306,19 @@ HRESULT CScene_Stage::Ready_LightInfo()
 	tLightInfo.Range		= 50.0f;
 	Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, m_pCommandList, tLightInfo), E_FAIL);
 
+	return S_OK;
+}
+
+HRESULT CScene_Stage::Ready_NaviMesh()
+{
+	Engine::CNaviMesh* pNaviMesh = Engine::CNaviMesh::Create(m_pGraphicDevice,
+															 m_pCommandList,
+															 wstring(L"../../Bin/ToolData/TestNaviMesh.dat"));
+
+	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"TestNaviMesh",
+																							  Engine::ID_DYNAMIC,
+																							  pNaviMesh),
+																							  E_FAIL);
 	return S_OK;
 }
 

@@ -442,8 +442,8 @@ aiVector3D CAniCtrl::Calc_InterPolatedValue_From_Key(const _float & fAnimationTi
 
 		assert(fFactor >= 0.0f && fFactor <= 1.0f);
 
-		const aiVector3D& StartValue = pNewVectorKey[uiKeyIndex].mValue;
-		const aiVector3D& EndValue = pNewVectorKey[uiNextKeyIndex].mValue;
+		const aiVector3D& StartValue	= pNewVectorKey[uiKeyIndex].mValue;
+		const aiVector3D& EndValue		= pNewVectorKey[uiNextKeyIndex].mValue;
 
 		ret2.x = StartValue.x + (EndValue.x - StartValue.x) * fFactor;
 		ret2.y = StartValue.y + (EndValue.y - StartValue.y) * fFactor;

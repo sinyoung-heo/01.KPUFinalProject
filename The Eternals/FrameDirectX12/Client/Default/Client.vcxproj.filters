@@ -34,15 +34,6 @@
     <Filter Include="96.Camera">
       <UniqueIdentifier>{fd951fef-76fb-4e49-bf03-6a0843ab4a01}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\03.CubeObject">
-      <UniqueIdentifier>{7af8cf58-650d-4246-acac-5d8f4c1df892}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\02.RectObject">
-      <UniqueIdentifier>{851722c3-688d-47c2-9258-f83785e0772a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\04.TerrainObject">
-      <UniqueIdentifier>{ef54af93-bffa-4e2a-ae60-069505659442}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Scene\00.Loading">
       <UniqueIdentifier>{414ce8cb-454b-482a-95af-49b027ded482}</UniqueIdentifier>
     </Filter>
@@ -58,17 +49,29 @@
     <Filter Include="02.GameObject\00.LogoBack">
       <UniqueIdentifier>{e1830c16-2d13-49f7-8572-3acdd2330b3c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\08.TextureEffect">
-      <UniqueIdentifier>{447913bb-84f9-4c8d-9978-476e7a28c9bf}</UniqueIdentifier>
+    <Filter Include="02.GameObject\99.SampleObject">
+      <UniqueIdentifier>{123f4ddb-5d76-4b1a-b120-3eb2d0c5b1d3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\07.Popori_F">
-      <UniqueIdentifier>{c3511f7c-4ce1-4a91-abc0-8f5afd0bef91}</UniqueIdentifier>
+    <Filter Include="02.GameObject\99.SampleObject\01.RectObject">
+      <UniqueIdentifier>{851722c3-688d-47c2-9258-f83785e0772a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\06.StaticMeshObject">
+    <Filter Include="02.GameObject\99.SampleObject\02.CubeObject">
+      <UniqueIdentifier>{7af8cf58-650d-4246-acac-5d8f4c1df892}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.SampleObject\03.TerrainObject">
+      <UniqueIdentifier>{ef54af93-bffa-4e2a-ae60-069505659442}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.SampleObject\04.TerrainMeshObject">
+      <UniqueIdentifier>{3b4ee930-0624-4cbc-8246-7121b52f2614}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.SampleObject\05.StaticMeshObject">
       <UniqueIdentifier>{2351c006-4ada-445d-8e86-d03ee28c66bc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\05.TerrainMeshObject">
-      <UniqueIdentifier>{3b4ee930-0624-4cbc-8246-7121b52f2614}</UniqueIdentifier>
+    <Filter Include="02.GameObject\99.SampleObject\06.Popori_F">
+      <UniqueIdentifier>{c3511f7c-4ce1-4a91-abc0-8f5afd0bef91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.SampleObject\07.TextureEffect">
+      <UniqueIdentifier>{447913bb-84f9-4c8d-9978-476e7a28c9bf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -112,25 +115,25 @@
       <Filter>01.Scene\03.Stage</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\CubeObject.h">
-      <Filter>02.GameObject\03.CubeObject</Filter>
+      <Filter>02.GameObject\99.SampleObject\02.CubeObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\RectObject.h">
-      <Filter>02.GameObject\02.RectObject</Filter>
+      <Filter>02.GameObject\99.SampleObject\01.RectObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\Loading.h">
       <Filter>01.Scene\00.Loading</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\TerrainObject.h">
-      <Filter>02.GameObject\04.TerrainObject</Filter>
+      <Filter>02.GameObject\99.SampleObject\03.TerrainObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\StaticMeshObject.h">
-      <Filter>02.GameObject\06.StaticMeshObject</Filter>
+      <Filter>02.GameObject\99.SampleObject\05.StaticMeshObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\Popori_F.h">
-      <Filter>02.GameObject\07.Popori_F</Filter>
+      <Filter>02.GameObject\99.SampleObject\06.Popori_F</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\TextureEffect.h">
-      <Filter>02.GameObject\08.TextureEffect</Filter>
+      <Filter>02.GameObject\99.SampleObject\07.TextureEffect</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\SkyBox.h">
       <Filter>02.GameObject\01.Environment\00.SkyBox</Filter>
@@ -145,7 +148,7 @@
       <Filter>02.GameObject\00.LogoBack</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\TerrainMeshObject.h">
-      <Filter>02.GameObject\05.TerrainMeshObject</Filter>
+      <Filter>02.GameObject\99.SampleObject\04.TerrainMeshObject</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>99.Etc</Filter>
@@ -171,25 +174,25 @@
       <Filter>01.Scene\03.Stage</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CubeObject.cpp">
-      <Filter>02.GameObject\03.CubeObject</Filter>
+      <Filter>02.GameObject\99.SampleObject\02.CubeObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\RectObject.cpp">
-      <Filter>02.GameObject\02.RectObject</Filter>
+      <Filter>02.GameObject\99.SampleObject\01.RectObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Loading.cpp">
       <Filter>01.Scene\00.Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\TerrainObject.cpp">
-      <Filter>02.GameObject\04.TerrainObject</Filter>
+      <Filter>02.GameObject\99.SampleObject\03.TerrainObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\StaticMeshObject.cpp">
-      <Filter>02.GameObject\06.StaticMeshObject</Filter>
+      <Filter>02.GameObject\99.SampleObject\05.StaticMeshObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Popori_F.cpp">
-      <Filter>02.GameObject\07.Popori_F</Filter>
+      <Filter>02.GameObject\99.SampleObject\06.Popori_F</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\TextureEffect.cpp">
-      <Filter>02.GameObject\08.TextureEffect</Filter>
+      <Filter>02.GameObject\99.SampleObject\07.TextureEffect</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\SkyBox.cpp">
       <Filter>02.GameObject\01.Environment\00.SkyBox</Filter>
@@ -204,7 +207,7 @@
       <Filter>02.GameObject\00.LogoBack</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\TerrainMeshObject.cpp">
-      <Filter>02.GameObject\05.TerrainMeshObject</Filter>
+      <Filter>02.GameObject\99.SampleObject\04.TerrainMeshObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

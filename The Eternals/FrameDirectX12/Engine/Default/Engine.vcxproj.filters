@@ -109,15 +109,6 @@
     <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\03.ShaderSkyBox">
       <UniqueIdentifier>{106e0b91-c773-4a45-9c2d-5fb85ea87b80}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\04.SuperClass\04.Component\03.Collider">
-      <UniqueIdentifier>{9e54f05e-8bb8-4f58-b15f-b0ccb7221c32}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\04.SuperClass\04.Component\03.Collider\Sphere">
-      <UniqueIdentifier>{0042b639-c405-428f-8f83-838937092eb2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\04.SuperClass\04.Component\03.Collider\Box">
-      <UniqueIdentifier>{5ae764c1-69d1-47b7-a46b-e90c7cd97b93}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\03.Light">
       <UniqueIdentifier>{ac3da27b-092c-442d-a11f-d1fbcd4b8310}</UniqueIdentifier>
     </Filter>
@@ -142,9 +133,6 @@
     <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\02.Mesh\01.AniCtrl">
       <UniqueIdentifier>{267e7fb3-81ec-43cf-bec4-7aa2b14da72d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\03.NaviMesh">
-      <UniqueIdentifier>{d7017b1a-322f-4482-a8cd-c89bdcb1f503}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.Mgr\99.DDSTextureLoader">
       <UniqueIdentifier>{b5030466-be53-44a2-b8ff-53c91638118e}</UniqueIdentifier>
     </Filter>
@@ -153,6 +141,24 @@
     </Filter>
     <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\06.ShaderShadow">
       <UniqueIdentifier>{f81e7572-66e6-4b7a-901c-0b9c99cfb802}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\03.NaviMesh">
+      <UniqueIdentifier>{d7017b1a-322f-4482-a8cd-c89bdcb1f503}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\03.NaviMesh\00.Line">
+      <UniqueIdentifier>{02359a7f-9472-4c48-a78f-3ff3d196c30c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\03.NaviMesh\01.Cell">
+      <UniqueIdentifier>{ebbb371a-1ff0-4db1-8665-a79b8fcb1fc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\04.Collider">
+      <UniqueIdentifier>{9e54f05e-8bb8-4f58-b15f-b0ccb7221c32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\04.Collider\Sphere">
+      <UniqueIdentifier>{0042b639-c405-428f-8f83-838937092eb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\04.Collider\Box">
+      <UniqueIdentifier>{5ae764c1-69d1-47b7-a46b-e90c7cd97b93}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -274,10 +280,10 @@
       <Filter>00.System\03.Font</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\ColliderSphere.h">
-      <Filter>01.Utility\04.SuperClass\04.Component\03.Collider\Sphere</Filter>
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\04.Collider\Sphere</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\ColliderBox.h">
-      <Filter>01.Utility\04.SuperClass\04.Component\03.Collider\Box</Filter>
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\04.Collider\Box</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\RcTex.h">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\00.Buffer\02.RcTex</Filter>
@@ -323,6 +329,15 @@
     </ClInclude>
     <ClInclude Include="..\Code\ShaderShadow.h">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\06.ShaderShadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Line.h">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\03.NaviMesh\00.Line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Cell.h">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\03.NaviMesh\01.Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\NaviMesh.h">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\03.NaviMesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -417,10 +432,10 @@
       <Filter>00.System\03.Font</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\ColliderSphere.cpp">
-      <Filter>01.Utility\04.SuperClass\04.Component\03.Collider\Sphere</Filter>
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\04.Collider\Sphere</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\ColliderBox.cpp">
-      <Filter>01.Utility\04.SuperClass\04.Component\03.Collider\Box</Filter>
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\04.Collider\Box</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\RcTex.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\00.Buffer\02.RcTex</Filter>
@@ -466,6 +481,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\ShaderShadow.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\06.ShaderShadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Line.cpp">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\03.NaviMesh\00.Line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Cell.cpp">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\03.NaviMesh\01.Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\NaviMesh.cpp">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\03.NaviMesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

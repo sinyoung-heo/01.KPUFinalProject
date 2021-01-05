@@ -21,6 +21,7 @@ private:
 	HRESULT			Ready_LayerUI(wstring wstrLayerTag);
 	HRESULT			Ready_LayerFont(wstring wstrLayerTag);
 	HRESULT			Ready_LightInfo();
+	HRESULT			Ready_NaviMesh();
 
 public:
 	static CScene_Stage*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);

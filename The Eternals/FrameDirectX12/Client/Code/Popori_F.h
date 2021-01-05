@@ -11,6 +11,7 @@ namespace Engine
 	class CColliderSphere;
 	class CColliderBox;
 	class CFont;
+	class CNaviMesh;
 }
 
 class CDynamicCamera;
@@ -58,6 +59,7 @@ private:
 	Engine::CShaderShadow*		m_pShadowCom			= nullptr;
 	Engine::CColliderSphere*	m_pColliderSphereCom	= nullptr;
 	Engine::CColliderBox*		m_pColliderBoxCom		= nullptr;
+	Engine::CNaviMesh*			m_pNaviMesh				= nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]

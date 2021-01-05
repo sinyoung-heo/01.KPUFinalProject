@@ -172,6 +172,14 @@ typedef struct tagVector3 : public XMFLOAT3
 	friend tagVector3 operator*(const float& input, tagVector3& v1)		{ return tagVector3(input * v1.x, input * v1.y, input * v1.z); }
 	friend tagVector3 operator*(const double& input, tagVector3& v1)	{ return tagVector3((float)input * v1.x, (float)input * v1.y, (float)input * v1.z); }
 
+	// ³ª´°¼Á
+	tagVector3 operator/(const int& input)					{ return tagVector3(this->x / (float)input, this->y / (float)input, this->z / (float)input); }
+	tagVector3 operator/(const float& input)				{ return tagVector3(this->x / input, this->y / input, this->z / input); }
+	tagVector3 operator/(const double& input)				{ return tagVector3(this->x / (float)input, this->y / (float)input, this->z / (float)input); }
+	const tagVector3 operator/(const int& input)	const	{ return tagVector3(this->x / (float)input, this->y / (float)input, this->z / (float)input); }
+	const tagVector3 operator/(const float& input)	const	{ return tagVector3(this->x / input, this->y / input, this->z / input); }
+	const tagVector3 operator/(const double& input) const	{ return tagVector3(this->x / (float)input, this->y / (float)input, this->z / (float)input); }
+
 	// Ãà¾à ¿¬»êÀÚ
 	tagVector3 operator+=(const tagVector3& input)	{ return (*this) = (*this) + input; }
 	tagVector3 operator-=(const tagVector3& input)	{ return (*this) = (*this) - input; }
@@ -478,9 +486,24 @@ typedef struct tagVector4 : public XMFLOAT4
 		return tagVector4(XMVectorGetX(result), XMVectorGetY(result), XMVectorGetZ(result), XMVectorGetW(result));
 	}
 
+	// Plane
+	void Plane_FromPoints(const _vec3& v1, const _vec3& v2, const _vec3& v3)
+	{
+		XMVECTOR V1 = XMVectorSet(v1.x, v1.y, v1.z, 1.f);
+		XMVECTOR V2 = XMVectorSet(v2.x, v2.y, v2.z, 1.f);
+		XMVECTOR V3 = XMVectorSet(v3.x, v3.y, v3.z, 1.f);
+
+		XMVECTOR P1 = XMPlaneFromPoints(V1, V2, V3);
+
+		this->x = XMVectorGetX(P1);
+		this->y = XMVectorGetY(P1);
+		this->z = XMVectorGetZ(P1);
+		this->w = XMVectorGetW(P1);
+	}
+
 	void Print() { cout << "x : " << this->x << "\t y : " << this->y << "\t z : " << this->z << "\t w : " << this->w << endl; }
 
-} _vec4, _rgba, _rect;
+} _vec4, _rgba, _rect, _plane;
 
 
 namespace Engine

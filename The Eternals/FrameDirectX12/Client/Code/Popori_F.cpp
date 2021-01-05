@@ -225,6 +225,11 @@ HRESULT CPopori_F::Add_Component(wstring wstrMeshTag)
 	m_pColliderBoxCom->Ready_Collider();
 	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderBox", m_pColliderBoxCom);
 
+	// NaviMesh
+	m_pNaviMesh = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"TestNaviMesh", Engine::ID_DYNAMIC));
+	Engine::NULL_CHECK_RETURN(m_pNaviMesh, E_FAIL);
+	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pNaviMesh);
+
 	return S_OK;
 }
 

@@ -48,7 +48,7 @@ protected:
 	D3D12_PRIMITIVE_TOPOLOGY	m_PrimitiveTopology	= D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 public:
-	virtual CComponent* Clone(void) PURE;
+	virtual CComponent* Clone(void);
 protected:
 	virtual void Free();
 };

@@ -182,6 +182,8 @@ call CopyEngine.bat</Command>
     <ClInclude Include="..\Code\AniCtrl.h" />
     <ClInclude Include="..\Code\Base.h" />
     <ClInclude Include="..\Code\Camera.h" />
+    <ClInclude Include="..\Code\Cell.h" />
+    <ClInclude Include="..\Code\Line.h" />
     <ClInclude Include="..\Code\ColliderBox.h" />
     <ClInclude Include="..\Code\ColliderSphere.h" />
     <ClInclude Include="..\Code\Component.h" />
@@ -204,6 +206,7 @@ call CopyEngine.bat</Command>
     <ClInclude Include="..\Code\Management.h" />
     <ClInclude Include="..\Code\MathMgr.h" />
     <ClInclude Include="..\Code\Mesh.h" />
+    <ClInclude Include="..\Code\NaviMesh.h" />
     <ClInclude Include="..\Code\ObjectMgr.h" />
     <ClInclude Include="..\Code\RcCol.h" />
     <ClInclude Include="..\Code\RcTex.h" />
@@ -240,6 +243,8 @@ call CopyEngine.bat</Command>
     <ClCompile Include="..\Code\AniCtrl.cpp" />
     <ClCompile Include="..\Code\Base.cpp" />
     <ClCompile Include="..\Code\Camera.cpp" />
+    <ClCompile Include="..\Code\Cell.cpp" />
+    <ClCompile Include="..\Code\Line.cpp" />
     <ClCompile Include="..\Code\ColliderBox.cpp" />
     <ClCompile Include="..\Code\ColliderSphere.cpp" />
     <ClCompile Include="..\Code\Component.cpp" />
@@ -262,6 +267,7 @@ call CopyEngine.bat</Command>
     <ClCompile Include="..\Code\Management.cpp" />
     <ClCompile Include="..\Code\MathMgr.cpp" />
     <ClCompile Include="..\Code\Mesh.cpp" />
+    <ClCompile Include="..\Code\NaviMesh.cpp" />
     <ClCompile Include="..\Code\ObjectMgr.cpp" />
     <ClCompile Include="..\Code\RcCol.cpp" />
     <ClCompile Include="..\Code\RcTex.cpp" />
