@@ -22,7 +22,7 @@ CShaderMesh::CShaderMesh(const CShaderMesh & rhs)
 
 HRESULT CShaderMesh::SetUp_ShaderConstantBuffer(const _uint& uiNumSubsetMesh)
 {
-	m_uiTexSize = uiNumSubsetMesh;
+	m_uiSubsetMeshSize	= uiNumSubsetMesh;
 
 	m_pCB_MatrixDesc = CUploadBuffer<CB_MATRIX_DESC>::Create(m_pGraphicDevice);
 	NULL_CHECK_RETURN(m_pCB_MatrixDesc, E_FAIL);
@@ -61,22 +61,22 @@ void CShaderMesh::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, const _
 
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexDiffuseDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexDiffuseDescriptorHandle.Offset(iIdx + (m_uiTexSize * TEX_DIFFUSE), m_uiCBV_SRV_UAV_DescriptorSize);
+	SRV_TexDiffuseDescriptorHandle.Offset(iIdx + (m_uiSubsetMeshSize * TEX_DIFFUSE), m_uiCBV_SRV_UAV_DescriptorSize);
 	m_pCommandList->SetGraphicsRootDescriptorTable(0,		// RootParameter Index - TexDiffuse
 												   SRV_TexDiffuseDescriptorHandle);
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexNormalDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexNormalDescriptorHandle.Offset(iIdx + (m_uiTexSize * TEX_NORMAL), m_uiCBV_SRV_UAV_DescriptorSize);
+	SRV_TexNormalDescriptorHandle.Offset(iIdx + (m_uiSubsetMeshSize * TEX_NORMAL), m_uiCBV_SRV_UAV_DescriptorSize);
 	m_pCommandList->SetGraphicsRootDescriptorTable(1,		// RootParameter Index - TexNormal
 												   SRV_TexNormalDescriptorHandle);
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexSpecularDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexSpecularDescriptorHandle.Offset(iIdx + (m_uiTexSize * TEX_SPECULAR), m_uiCBV_SRV_UAV_DescriptorSize);
+	SRV_TexSpecularDescriptorHandle.Offset(iIdx + (m_uiSubsetMeshSize * TEX_SPECULAR), m_uiCBV_SRV_UAV_DescriptorSize);
 	m_pCommandList->SetGraphicsRootDescriptorTable(2,		// RootParameter Index - TexSpecular
 												   SRV_TexSpecularDescriptorHandle);
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexShadowDepthDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexShadowDepthDescriptorHandle.Offset(m_uiTexSize * TEX_SHADOWDEPTH, m_uiCBV_SRV_UAV_DescriptorSize);
+	SRV_TexShadowDepthDescriptorHandle.Offset(m_uiSubsetMeshSize * TEXTURE_END, m_uiCBV_SRV_UAV_DescriptorSize);
 	m_pCommandList->SetGraphicsRootDescriptorTable(3,		// RootParameter Index - TexShadowDepth
 												   SRV_TexShadowDepthDescriptorHandle);
 
@@ -114,22 +114,22 @@ void CShaderMesh::Begin_Shader(ID3D12GraphicsCommandList * pCommandList,
 
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexDiffuseDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexDiffuseDescriptorHandle.Offset(iIdx + (m_uiTexSize * TEX_DIFFUSE), m_uiCBV_SRV_UAV_DescriptorSize);
+	SRV_TexDiffuseDescriptorHandle.Offset(iIdx + (m_uiSubsetMeshSize * TEX_DIFFUSE), m_uiCBV_SRV_UAV_DescriptorSize);
 	pCommandList->SetGraphicsRootDescriptorTable(0,		// RootParameter Index - TexDiffuse
 												 SRV_TexDiffuseDescriptorHandle);
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexNormalDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexNormalDescriptorHandle.Offset(iIdx + (m_uiTexSize * TEX_NORMAL), m_uiCBV_SRV_UAV_DescriptorSize);
+	SRV_TexNormalDescriptorHandle.Offset(iIdx + (m_uiSubsetMeshSize * TEX_NORMAL), m_uiCBV_SRV_UAV_DescriptorSize);
 	pCommandList->SetGraphicsRootDescriptorTable(1,		// RootParameter Index - TexNormal
 												 SRV_TexNormalDescriptorHandle);
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexSpecularDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexSpecularDescriptorHandle.Offset(iIdx + (m_uiTexSize * TEX_SPECULAR), m_uiCBV_SRV_UAV_DescriptorSize);
+	SRV_TexSpecularDescriptorHandle.Offset(iIdx + (m_uiSubsetMeshSize * TEX_SPECULAR), m_uiCBV_SRV_UAV_DescriptorSize);
 	pCommandList->SetGraphicsRootDescriptorTable(2,		// RootParameter Index - TexSpecular
 												 SRV_TexSpecularDescriptorHandle);
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexShadowDepthDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexShadowDepthDescriptorHandle.Offset(m_uiTexSize * TEX_SHADOWDEPTH, m_uiCBV_SRV_UAV_DescriptorSize);
+	SRV_TexShadowDepthDescriptorHandle.Offset(m_uiSubsetMeshSize * TEXTURE_END, m_uiCBV_SRV_UAV_DescriptorSize);
 	pCommandList->SetGraphicsRootDescriptorTable(3,		// RootParameter Index - TexShadowDepth
 												 SRV_TexShadowDepthDescriptorHandle);
 

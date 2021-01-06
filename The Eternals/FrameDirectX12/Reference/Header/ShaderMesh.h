@@ -9,7 +9,6 @@ enum TEXTURE_MAPPING
 	TEX_DIFFUSE,
 	TEX_NORMAL, 
 	TEX_SPECULAR, 
-	TEX_SHADOWDEPTH,
 	TEXTURE_END 
 };
 
@@ -55,6 +54,8 @@ private:
 	CUploadBuffer<CB_MATRIX_DESC>*		m_pCB_MatrixDesc		= nullptr;
 	CUploadBuffer<CB_SKINNING_DESC>*	m_pCB_SkinningDesc		= nullptr;
 	CUploadBuffer<CB_SHADOW_DESC>*		m_pCB_ShadowDesc		= nullptr;
+
+	_uint m_uiSubsetMeshSize = 0;
 
 public:
 	virtual CComponent *	Clone() override;

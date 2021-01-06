@@ -68,21 +68,21 @@ protected:
 	[ Component ]
 	____________________________________________________________________________________________________________*/
 	map<wstring, CComponent*>	m_mapComponent[COMPONENTID::ID_END];
-	CTransform*							m_pTransCom	= nullptr;
-	CInfo*								m_pInfoCom	= nullptr;
+	CTransform*					m_pTransCom	= nullptr;
+	CInfo*						m_pInfoCom	= nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	_bool			m_bIsDead		= false;
-	_bool			m_bIsLateInit	= false;
-	_float			m_fViewZ		= 0.0f;
-	_long			m_UIDepth		= 0;
+	_bool	m_bIsDead		= false;
+	_bool	m_bIsLateInit	= false;
+	_float	m_fViewZ		= 0.0f;
+	_long	m_UIDepth		= 0;
 
 	/*__________________________________________________________________________________________________________
 	[ ShadowDepth ]
 	____________________________________________________________________________________________________________*/
-	SHADOW_DESC		m_tShadowInfo	{ };
+	SHADOW_DESC	m_tShadowInfo { };
 
 public:
 	virtual CGameObject* Clone_GameObject();

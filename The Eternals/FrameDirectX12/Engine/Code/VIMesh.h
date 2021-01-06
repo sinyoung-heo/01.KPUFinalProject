@@ -94,7 +94,7 @@ private:
 	vector<ComPtr<ID3D12Resource>>	m_vecSpecUpload;
 
 	ID3D12DescriptorHeap*			m_pTexDescriptorHeap = nullptr;
-	_uint							m_uiTexSize          = 0;
+	_uint							m_uiSubsetMeshSize	 = 0;
 
 	/*__________________________________________________________________________________________________________
 	[ Assimp ]

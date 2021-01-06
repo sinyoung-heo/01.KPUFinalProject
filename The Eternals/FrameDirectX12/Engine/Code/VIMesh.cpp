@@ -444,10 +444,10 @@ HRESULT CVIMesh::Create_TextureDescriptorHeap()
 	- 텍스처 자원을 성공적으로 생성했다면, 그 다음으로 해야할 일은 그에 대한 SRV 서술자를 생성하는 것이다. 
 	그래야 자원을 셰이더 프로그램이 사용할 루트 서명 매개변수 슬롯에 설정할 수 있다.
 	____________________________________________________________________________________________________________*/
-	m_uiTexSize = _uint(m_vecDiffResource.size());
+	m_uiSubsetMeshSize = _uint(m_vecDiffResource.size());
 
 	D3D12_DESCRIPTOR_HEAP_DESC SRV_HeapDesc	= {};
-	SRV_HeapDesc.NumDescriptors = m_uiTexSize * (TEXTURE_END - 1) + 1;	// 텍스처의 개수 만큼 설정. (+ 1 = ShadowDepth)
+	SRV_HeapDesc.NumDescriptors = m_uiSubsetMeshSize * (TEXTURE_END - 1) + 1;	// 텍스처의 개수 만큼 설정. (+ 1 = ShadowDepth)
 	SRV_HeapDesc.Type			= D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	SRV_HeapDesc.Flags			= D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
@@ -463,7 +463,7 @@ HRESULT CVIMesh::Create_TextureDescriptorHeap()
 	CD3DX12_CPU_DESCRIPTOR_HANDLE SRV_DescriptorHandle(m_pTexDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
 	// Tex Diffuse
-	for (_uint i = 0; i < m_uiTexSize; ++i)
+	for (_uint i = 0; i < m_uiSubsetMeshSize; ++i)
 	{
 		D3D12_SHADER_RESOURCE_VIEW_DESC SRV_Desc = {};
 		SRV_Desc.Format							= m_vecDiffResource[i]->GetDesc().Format;
@@ -480,7 +480,7 @@ HRESULT CVIMesh::Create_TextureDescriptorHeap()
 	}
 
 	// Tex Normal
-	for (_uint i = 0; i < m_uiTexSize; ++i)
+	for (_uint i = 0; i < m_uiSubsetMeshSize; ++i)
 	{
 		D3D12_SHADER_RESOURCE_VIEW_DESC SRV_Desc = {};
 		SRV_Desc.Format							= m_vecNormResource[i]->GetDesc().Format;
@@ -497,7 +497,7 @@ HRESULT CVIMesh::Create_TextureDescriptorHeap()
 	}
 
 	// Tex Specular
-	for (_uint i = 0; i < m_uiTexSize; ++i)
+	for (_uint i = 0; i < m_uiSubsetMeshSize; ++i)
 	{
 		D3D12_SHADER_RESOURCE_VIEW_DESC SRV_Desc = {};
 		SRV_Desc.Format							= m_vecSpecResource[i]->GetDesc().Format;
