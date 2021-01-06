@@ -33,6 +33,8 @@ HRESULT CPopori_F::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos		= vPos;
 
+	m_pInfoCom->m_fSpeed = 15.0f;
+
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
@@ -68,7 +70,7 @@ HRESULT CPopori_F::Ready_GameObject(wstring wstrMeshTag,
 	/*__________________________________________________________________________________________________________
 	[ Font 생성 ]
 	____________________________________________________________________________________________________________*/
-	m_pFont = static_cast<Engine::CFont*>(Engine::CObjectMgr::Get_Instance()->Clone_GameObjectPrototype(L"Prototype_Font_NetmarbleLight"));
+	m_pFont = static_cast<Engine::CFont*>(Engine::CObjectMgr::Get_Instance()->Clone_GameObjectPrototype(L"Font_NetmarbleLight"));
 	Engine::NULL_CHECK_RETURN(m_pFont, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pFont->Ready_GameObject(L"", _vec2(900.f, 0.f), D2D1::ColorF::Yellow), E_FAIL);
 
@@ -226,9 +228,10 @@ HRESULT CPopori_F::Add_Component(wstring wstrMeshTag)
 	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderBox", m_pColliderBoxCom);
 
 	// NaviMesh
-	m_pNaviMesh = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"TestNaviMesh", Engine::ID_DYNAMIC));
-	Engine::NULL_CHECK_RETURN(m_pNaviMesh, E_FAIL);
-	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pNaviMesh);
+	m_pNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"TestNaviMesh", Engine::ID_DYNAMIC));
+	Engine::NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);
+	m_pNaviMeshCom->Set_CurrentCellIndex(0);
+	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
 
 	return S_OK;
 }
@@ -303,6 +306,70 @@ void CPopori_F::Key_Input(const _float & fTimeDelta)
 	{
 		m_uiAnimIdx = 1;
 	}
+
+	
+	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+	m_pTransCom->m_vDir.Normalize();
+
+	if (Engine::KEY_PRESSING(DIK_W))
+	{
+		// 대각선 - 우 상단.
+		if (Engine::KEY_PRESSING(DIK_D))
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_UP;
+		// 대각선 - 좌 상단.
+		else if (Engine::KEY_PRESSING(DIK_A))
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_UP;
+		// 직진.
+		else
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + FRONT;
+
+		// NaviMesh 이동.
+		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos, 
+													 &m_pTransCom->m_vDir,
+													 m_pInfoCom->m_fSpeed * fTimeDelta);
+		m_pTransCom->m_vPos = vPos;
+	}
+
+	else if (Engine::KEY_PRESSING(DIK_S))
+	{
+		// 대각선 - 우 하단.
+		if (Engine::KEY_PRESSING(DIK_D))
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_DOWN;
+		// 대각선 - 좌 하단.
+		else if (Engine::KEY_PRESSING(DIK_A))
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_DOWN;
+		// 후진.
+		else
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + BACK;
+
+		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+													 &m_pTransCom->m_vDir,
+													 m_pInfoCom->m_fSpeed * fTimeDelta);
+		m_pTransCom->m_vPos = vPos;
+	}
+
+	else if (Engine::KEY_PRESSING(DIK_A))
+	{
+		// 좌로 이동.
+		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT;
+
+		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+													 &m_pTransCom->m_vDir, 
+													 m_pInfoCom->m_fSpeed * fTimeDelta);
+		m_pTransCom->m_vPos = vPos;
+	}
+
+	else if (Engine::KEY_PRESSING(DIK_D))
+	{
+		// 우로 이동.
+		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT;
+
+		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos, 
+													 &m_pTransCom->m_vDir,
+													 m_pInfoCom->m_fSpeed * fTimeDelta);
+		m_pTransCom->m_vPos = vPos;
+	}
+
 }
 
 CPopori_F * CPopori_F::Create(ID3D12Device * pGraphicDevice, 

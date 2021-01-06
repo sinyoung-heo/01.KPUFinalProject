@@ -23,10 +23,14 @@ HRESULT CDynamicCamera::Ready_GameObject(const Engine::CAMERA_DESC& tCameraInfo,
 										 const Engine::PROJ_DESC& tProjInfo,
 										 const Engine::ORTHO_DESC& tOrthoInfo)
 {
+	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, false), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Engine::CCamera::Ready_GameObject(tCameraInfo, tProjInfo, tOrthoInfo), E_FAIL);
 
+	m_pTransCom->m_vAngle.x = 22.5f;
+	m_pTransCom->m_vAngle.y = 0.0f;
+
 	// Font 생성.
-	m_pFont = static_cast<Engine::CFont*>(Engine::CObjectMgr::Get_Instance()->Clone_GameObjectPrototype(L"Prototype_Font_NetmarbleLight"));
+	m_pFont = static_cast<Engine::CFont*>(Engine::CObjectMgr::Get_Instance()->Clone_GameObjectPrototype(L"Font_NetmarbleLight"));
 	Engine::NULL_CHECK_RETURN(m_pFont, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pFont->Ready_GameObject(L"", _vec2(1150.f, 0.f), D2D1::ColorF::Cyan), E_FAIL);
 
@@ -35,6 +39,9 @@ HRESULT CDynamicCamera::Ready_GameObject(const Engine::CAMERA_DESC& tCameraInfo,
 
 HRESULT CDynamicCamera::LateInit_GameObject()
 {
+	m_pTarget = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"Popori_F");
+	Engine::NULL_CHECK_RETURN(m_pTarget, E_FAIL);
+
 	return S_OK;
 }
 
@@ -50,7 +57,17 @@ _int CDynamicCamera::Update_GameObject(const _float & fTimeDelta)
 		Key_Input(fTimeDelta);
 
 		/*__________________________________________________________________________________________________________
-		[ View Matrix Update ]
+		[ Target의 Position과 Distance를 기준으로 Camera의 Eye값 계산. ]
+		____________________________________________________________________________________________________________*/
+		m_pTransCom->m_vScale	= _vec3(0.0f, 0.0f, m_fDistFromTarget);
+		m_pTransCom->m_vPos		= m_pTarget->Get_Transform()->m_vPos;
+		Engine::CGameObject::Update_GameObject(fTimeDelta);
+
+		m_tCameraInfo.vEye.TransformCoord(_vec3(0.0f, 0.0f, -1.0f), m_pTransCom->m_matWorld);
+		m_tCameraInfo.vAt = m_pTransCom->m_vPos;
+
+		/*__________________________________________________________________________________________________________
+		[ Update ViewMatrix ]
 		____________________________________________________________________________________________________________*/
 		Engine::CCamera::Update_GameObject(fTimeDelta);
 
@@ -61,11 +78,15 @@ _int CDynamicCamera::Update_GameObject(const _float & fTimeDelta)
 		{
 			m_wstrText = wstring(L"[ Camera Info ] \n") +
 						 wstring(L"Eye\t(%d, %d, %d) \n") +
-						 wstring(L"At\t(%d, %d, %d)\n");
+						 wstring(L"At\t(%d, %d, %d)\n") +
+						 wstring(L"Angle X    %d \n") +
+						 wstring(L"Angle Y    %d \n") +
+						 wstring(L"TargetDist %d \n");
 
 			wsprintf(m_szText, m_wstrText.c_str(),
 					(_int)m_tCameraInfo.vEye.x, (_int)m_tCameraInfo.vEye.y, (_int)m_tCameraInfo.vEye.z,
-					(_int)m_tCameraInfo.vAt.x, (_int)m_tCameraInfo.vAt.y, (_int)m_tCameraInfo.vAt.z);
+					(_int)m_tCameraInfo.vAt.x, (_int)m_tCameraInfo.vAt.y, (_int)m_tCameraInfo.vAt.z,
+					(_int)m_pTransCom->m_vAngle.x, (_int)m_pTransCom->m_vAngle.y, (_int)m_fDistFromTarget);
 
 			m_pFont->Update_GameObject(fTimeDelta);
 			m_pFont->Set_Text(wstring(m_szText));
@@ -101,16 +122,10 @@ void CDynamicCamera::Key_Input(const _float & fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	if (dwMouseMove = Engine::GetDIMouseMove(Engine::MOUSEMOVESTATE::DIMS_Y))
 	{
-		_vec3 vRight;
-		memcpy(&vRight, &matWorld.m[0][0], sizeof(_vec3));
+		m_pTransCom->m_vAngle.x += static_cast<_float>(dwMouseMove) / 30.f;
 
-		_matrix matRot;
-		matRot = XMMatrixRotationAxis(vRight.Get_XMVECTOR(), XMConvertToRadians(dwMouseMove / 10.f));
-
-		_vec3 vLook = m_tCameraInfo.vAt - m_tCameraInfo.vEye;
-		vLook.TransformCoord(vLook, matRot);
-
-		m_tCameraInfo.vAt = m_tCameraInfo.vEye + vLook;
+		//// At의 Y값 조정.
+		//m_pTransCom->m_vAt.y += static_cast<_float>(-dwMouseMove) / 150.f;
 	}
 
 	/*__________________________________________________________________________________________________________
@@ -118,16 +133,18 @@ void CDynamicCamera::Key_Input(const _float & fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	if (dwMouseMove = Engine::GetDIMouseMove(Engine::MOUSEMOVESTATE::DIMS_X))
 	{
-		_vec3 vUp = _vec3(0.f, 1.f, 0.f);
-
-		_matrix matRot;
-		matRot = XMMatrixRotationAxis(vUp.Get_XMVECTOR(), XMConvertToRadians(dwMouseMove / 10.f));
-
-		_vec3   vLook = m_tCameraInfo.vAt - m_tCameraInfo.vEye;
-		vLook.TransformCoord(vLook, matRot);
-
-		m_tCameraInfo.vAt = m_tCameraInfo.vEye + vLook;
+		m_pTransCom->m_vAngle.y += static_cast<_float>(dwMouseMove) / 24.f;
+		//_vec3 vUp = _vec3(0.f, 1.f, 0.f);
 	}
+
+	/*____________________________________________________________________
+	[ Angle Y값 보정. ]
+	______________________________________________________________________*/
+	if (m_pTransCom->m_vAngle.y < 0.f)
+		m_pTransCom->m_vAngle.y = 359.9f;
+
+	if (m_pTransCom->m_vAngle.y >= 360.f)
+		m_pTransCom->m_vAngle.y = (_float)(static_cast<_int>(m_pTransCom->m_vAngle.y) % 360);
 }
 
 CDynamicCamera * CDynamicCamera::Create(ID3D12Device * pGraphicDevice,
@@ -146,7 +163,7 @@ CDynamicCamera * CDynamicCamera::Create(ID3D12Device * pGraphicDevice,
 
 void CDynamicCamera::Free()
 {
-	CCamera::Free();
-
 	Engine::Safe_Release(m_pFont);
+	
+	CCamera::Free();
 }

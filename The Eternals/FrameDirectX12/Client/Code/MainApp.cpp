@@ -47,17 +47,17 @@ HRESULT CMainApp::Ready_MainApp()
 	[ Font »ý¼º ]
 	____________________________________________________________________________________________________________*/
 	// FPS
-	m_pFont_FPS = static_cast<Engine::CFont*>(m_pObjectMgr->Clone_GameObjectPrototype(L"Prototype_Font_NetmarbleLight"));
+	m_pFont_FPS = static_cast<Engine::CFont*>(m_pObjectMgr->Clone_GameObjectPrototype(L"Font_NetmarbleLight"));
 	Engine::NULL_CHECK_RETURN(m_pFont_FPS, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pFont_FPS->Ready_GameObject(L"", _vec2(1520.f, 0.f), D2D1::ColorF::Cornsilk), E_FAIL);
 
 	// PipelineState
-	m_pFont_PipelineState = static_cast<Engine::CFont*>(Engine::CObjectMgr::Get_Instance()->Clone_GameObjectPrototype(L"Prototype_Font_NetmarbleLight"));
+	m_pFont_PipelineState = static_cast<Engine::CFont*>(Engine::CObjectMgr::Get_Instance()->Clone_GameObjectPrototype(L"Font_NetmarbleLight"));
 	Engine::NULL_CHECK_RETURN(m_pFont_PipelineState, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pFont_PipelineState->Ready_GameObject(L"", _vec2(1370.f, 32.f), D2D1::ColorF::Cornsilk), E_FAIL);
 
 	// RenderList
-	m_pFont_RenderList = static_cast<Engine::CFont*>(Engine::CObjectMgr::Get_Instance()->Clone_GameObjectPrototype(L"Prototype_Font_NetmarbleLight"));
+	m_pFont_RenderList = static_cast<Engine::CFont*>(Engine::CObjectMgr::Get_Instance()->Clone_GameObjectPrototype(L"Font_NetmarbleLight"));
 	Engine::NULL_CHECK_RETURN(m_pFont_RenderList, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pFont_RenderList->Ready_GameObject(L"", _vec2(1370.f, 160.f), D2D1::ColorF::Cornsilk), E_FAIL);
 
@@ -266,7 +266,7 @@ HRESULT CMainApp::SetUp_Font()
 												  20.f,					// Font Size
 												  D2D1::ColorF::White);	// Font Color
 	Engine::NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	m_pObjectMgr->Add_GameObjectPrototype(L"Prototype_Font_NetmarbleLight", pGameObject);
+	m_pObjectMgr->Add_GameObjectPrototype(L"Font_NetmarbleLight", pGameObject);
 
 	// NetmarbleBold - 32
 	pGameObject = Engine::CFont::Create_Prototype(m_pGraphicDevice, m_pCommandList,

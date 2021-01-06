@@ -92,7 +92,7 @@ HRESULT CScene_Stage::Ready_LayerCamera(wstring wstrLayerTag)
 	[ DynamicCamera ]
 	____________________________________________________________________________________________________________*/
 	CDynamicCamera* pDynamicCamera = CDynamicCamera::Create(m_pGraphicDevice, m_pCommandList,
-															Engine::CAMERA_DESC(_vec3(30.0f, 25.0f, 35.0f),	// Eye
+															Engine::CAMERA_DESC(_vec3(30.0f, 25.0f, -35.0f),// Eye
 																				_vec3(20.0f, 15.0f, 10.0f),	// At
 																				_vec3(0.0f, 1.0f, 0.0f)),	// Up
 
@@ -201,7 +201,7 @@ HRESULT CScene_Stage::Ready_LayerGameObject(wstring wstrLayerTag)
 								  L"ResourcePrototype_PoporiR19",	// MeshTag
 								  _vec3(0.25f, 0.25f, 0.25f),		// Scale
 								  _vec3(0.0f, 0.0f, 0.0f),			// Angle
-								  _vec3(5.0f, 0.f, 0.0f));			// Pos
+								  _vec3(58.0f, 0.f, 25.0f));		// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
 
 
