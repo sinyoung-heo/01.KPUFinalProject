@@ -100,6 +100,7 @@
       <PreprocessorDefinitions>_WINDOWS;_DEBUG;_XM_NO_INTRINSICS_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>../Default;../Header;../Code;../../Reference/Header;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).stdafx</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -176,6 +177,7 @@
       <PreprocessorDefinitions>_WINDOWS;NDEBUG;_XM_NO_INTRINSICS_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>../Default;../Header;../Code;../../Reference/Header;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).stdafx</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -203,6 +205,12 @@
     <ClInclude Include="..\Header\Macro.h" />
     <ClInclude Include="..\Header\Struct.h" />
     <ClInclude Include="..\Header\Typedef.h" />
+    <ClInclude Include="TabAnimation.h" />
+    <ClInclude Include="TabCamera.h" />
+    <ClInclude Include="TabCollider.h" />
+    <ClInclude Include="TabEffect.h" />
+    <ClInclude Include="TabObject.h" />
+    <ClInclude Include="TabPathFinder.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="MyForm.h" />
@@ -214,6 +222,12 @@
     <ClInclude Include="ToolView.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="TabAnimation.cpp" />
+    <ClCompile Include="TabCamera.cpp" />
+    <ClCompile Include="TabCollider.cpp" />
+    <ClCompile Include="TabEffect.cpp" />
+    <ClCompile Include="TabObject.cpp" />
+    <ClCompile Include="TabPathFinder.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="MyForm.cpp" />
     <ClCompile Include="stdafx.cpp">

@@ -1,4 +1,10 @@
 ﻿#pragma once
+#include "TabPathFinder.h"
+#include "TabObject.h"
+#include "TabCollider.h"
+#include "TabAnimation.h"
+#include "TabCamera.h"
+#include "TabEffect.h"
 
 // CMyForm 폼 보기
 
@@ -25,6 +31,28 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 
 	DECLARE_MESSAGE_MAP()
+
+	// 재정의
+	virtual void OnInitialUpdate();
+	afx_msg void OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult);
+
+public:
+	CTabCtrl		m_Tab;
+
+	CTabPathFinder	m_TabPathFinder;
+	CTabObject		m_TabObject;
+	CTabCollider	m_TabCollider;
+	CTabAnimation	m_TabAnimation;
+	CTabCamera		m_TabCamera;
+	CTabEffect		m_TabEffect;
+
+	_bool m_bIsTabPathFinder	= false;
+	_bool m_bIsTabObject		= false;
+	_bool m_bIsTabCollider		= false;
+	_bool m_bIsTabAnimation		= false;
+	_bool m_bIsTabCamera		= false;
+	_bool m_bIsTabEffect		= false;
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
 
 

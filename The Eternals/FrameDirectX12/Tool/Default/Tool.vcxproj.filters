@@ -23,6 +23,27 @@
     <Filter Include="03.FormView">
       <UniqueIdentifier>{d2791b3e-5e8b-4e45-a097-8d6661ac1a6d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.TapControl">
+      <UniqueIdentifier>{75de00bb-75d6-44db-aa79-272463907c4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.TapControl\00.TabPathFinder">
+      <UniqueIdentifier>{76594900-fc04-419a-b4a4-1b938ef18dcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.TapControl\01.TabObject">
+      <UniqueIdentifier>{381eb77c-885a-4513-af25-e85df13ebd77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.TapControl\02.TabCollider">
+      <UniqueIdentifier>{22a6a12b-2491-48fb-9449-f6c25c886ec0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.TapControl\03.TabAnimation">
+      <UniqueIdentifier>{d1848303-8ed5-401b-87da-3b4c96a1660f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.TapControl\04.TabCamera">
+      <UniqueIdentifier>{ce938b0a-35f5-4ebf-9778-f7250d119ff3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.TapControl\05.TabEffect">
+      <UniqueIdentifier>{31d8d723-24f3-4984-ae5a-457e8ffa7887}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
@@ -70,6 +91,24 @@
     <ClInclude Include="MyForm.h">
       <Filter>03.FormView</Filter>
     </ClInclude>
+    <ClInclude Include="TabPathFinder.h">
+      <Filter>04.TapControl\00.TabPathFinder</Filter>
+    </ClInclude>
+    <ClInclude Include="TabObject.h">
+      <Filter>04.TapControl\01.TabObject</Filter>
+    </ClInclude>
+    <ClInclude Include="TabCollider.h">
+      <Filter>04.TapControl\02.TabCollider</Filter>
+    </ClInclude>
+    <ClInclude Include="TabAnimation.h">
+      <Filter>04.TapControl\03.TabAnimation</Filter>
+    </ClInclude>
+    <ClInclude Include="TabCamera.h">
+      <Filter>04.TapControl\04.TabCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="TabEffect.h">
+      <Filter>04.TapControl\05.TabEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -89,6 +128,24 @@
     </ClCompile>
     <ClCompile Include="MyForm.cpp">
       <Filter>03.FormView</Filter>
+    </ClCompile>
+    <ClCompile Include="TabPathFinder.cpp">
+      <Filter>04.TapControl\00.TabPathFinder</Filter>
+    </ClCompile>
+    <ClCompile Include="TabObject.cpp">
+      <Filter>04.TapControl\01.TabObject</Filter>
+    </ClCompile>
+    <ClCompile Include="TabCollider.cpp">
+      <Filter>04.TapControl\02.TabCollider</Filter>
+    </ClCompile>
+    <ClCompile Include="TabAnimation.cpp">
+      <Filter>04.TapControl\03.TabAnimation</Filter>
+    </ClCompile>
+    <ClCompile Include="TabCamera.cpp">
+      <Filter>04.TapControl\04.TabCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="TabEffect.cpp">
+      <Filter>04.TapControl\05.TabEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
