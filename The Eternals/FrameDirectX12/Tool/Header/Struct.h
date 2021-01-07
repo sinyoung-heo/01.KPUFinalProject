@@ -22,3 +22,19 @@ typedef struct tagFrame
 	_float	fFrameSpeed		= 0.0f;	// 스프라이트 이미지 재생속도.
 
 } FRAME;
+
+typedef struct tagTexturePath
+{
+	wstring wstrTextureTag	= L"";	// TextureTag.
+	wstring wstrPath		= L"";	// 파일 상대 경로.
+	_int	iTexSize		= 1;	// Texture 개수.
+
+} IMGPATH;
+
+typedef struct tagMeshPath
+{
+	wstring wstrMeshTag		= L"";	// MeshTag.
+	wstring wstrPath		= L"";	// 파일 상대 경로.
+	wstring wstrFileName	= L"";	// Mesh 파일 이름.
+
+} MESHPATH;

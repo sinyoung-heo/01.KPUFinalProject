@@ -15,6 +15,7 @@
 #endif
 
 #include "framework.h"
+#include <cstring>
 
 // 여기서 프로그램에 필요한 추가 헤더를 참조합니다.
 // C 런타임 헤더 파일입니다.
@@ -57,6 +58,8 @@ using namespace DirectX::PackedVector;
 #include "Base.h"
 #include "GraphicDevice.h"
 #include "Include.h"
+
+#include "ToolFileInfo.h"
 
 
 #ifdef _DEBUG

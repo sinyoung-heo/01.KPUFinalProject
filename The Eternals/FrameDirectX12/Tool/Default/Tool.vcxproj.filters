@@ -44,6 +44,12 @@
     <Filter Include="04.TapControl\05.TabEffect">
       <UniqueIdentifier>{31d8d723-24f3-4984-ae5a-457e8ffa7887}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.Mgr">
+      <UniqueIdentifier>{d96cb6e1-f894-4cf7-a6c4-0d5655068a7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Mgr\00.FileInfo">
+      <UniqueIdentifier>{84953377-7787-4f24-acf7-789bdb947b6b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
@@ -109,6 +115,9 @@
     <ClInclude Include="TabEffect.h">
       <Filter>04.TapControl\05.TabEffect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ToolFileInfo.h">
+      <Filter>97.Mgr\00.FileInfo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -146,6 +155,9 @@
     </ClCompile>
     <ClCompile Include="TabEffect.cpp">
       <Filter>04.TapControl\05.TabEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ToolFileInfo.cpp">
+      <Filter>97.Mgr\00.FileInfo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
