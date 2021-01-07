@@ -22,13 +22,182 @@ CString CToolFileInfo::ConvertRelativePath(CString strFullPath)
 
 void CToolFileInfo::DirInfoExtractionDDS(const wstring& wstrPath, list<IMGPATH*>& rPathInfoLst)
 {
+	wstring wstrFilePath = wstrPath + L"\\*.*";
+
+	// 파일 및 경로 제어 관련 제공. (MFC 클래스)
+	CFileFind find;
+
+	// 현재 경로에서 첫 번째 파일 탐색.
+	find.FindFile(wstrFilePath.c_str());
+
+	int iContinue = 1;
+	while (iContinue)
+	{
+		iContinue = find.FindNextFileW();
+
+		// 현재 찾은 파일 이름이 "." 이나 ".."인지 검사. 맞으면 true 반환.
+		if (find.IsDots())
+			continue;
+
+		// 찾은 이름이 파일명이 아닌 폴더명이라면 true반환.
+		else if (find.IsDirectory())
+			DirInfoExtractionDDS(wstring(find.GetFilePath()), rPathInfoLst);
+
+		// find 객체가 찾은 것이 파일 이름일 때.
+		else
+		{
+			if (find.IsSystem())
+				continue;
+
+			IMGPATH* pImgPath = new IMGPATH;
+			_tchar szCurPath[MAX_STR] = L"";
+
+			/*__________________________________________________________________________________________________________
+			[ 현재 경로 저장 ]
+			ex) D:\ ~  The Eternals\FrameDirectX12\Bin\Resource\ResourceStage\Texture\Fire\0.dds
+			____________________________________________________________________________________________________________*/
+			lstrcpy(szCurPath, find.GetFilePath().GetString());
+
+			/*__________________________________________________________________________________________________________
+			[ 파일명과 확장자 제거 ]
+			ex) D:\ ~  The Eternals\FrameDirectX12\Bin\Resource\ResourceStage\Texture\Fire
+			____________________________________________________________________________________________________________*/
+			PathRemoveFileSpec(szCurPath);
+
+			/*__________________________________________________________________________________________________________
+			[ 현재 폴더 내의 파일의 개수를 얻는다. ]
+			____________________________________________________________________________________________________________*/
+			pImgPath->iTexSize = DirFileCount(szCurPath);
+
+			/*__________________________________________________________________________________________________________
+			[ 경로 상에서 온전한 파일명만 얻어온다. ]
+			ex) wstrTexturename = 0, 1, 2, 3, 4 ....
+			____________________________________________________________________________________________________________*/
+			wstring wstrTextureName = find.GetFileTitle().GetString();
+
+			// wstrTextureName = 0.dds
+			wstrTextureName = wstrTextureName.substr(0, wstrTextureName.length() - 1) + L"%d.dds";
+
+			// szFullPath : D:\ ~  The Eternals\FrameDirectX12\Bin\Resource\ResourceStage\Texture\Fire\%d.dds
+			_tchar szFullPath[MAX_STR] = L"";
+			PathCombine(szFullPath, szCurPath, wstrTextureName.c_str());
+
+			/*__________________________________________________________________________________________________________
+			[ 상대 경로 변환. ]
+			____________________________________________________________________________________________________________*/
+			pImgPath->wstrPath			= ConvertRelativePath(szFullPath);
+			pImgPath->wstrTextureTag	= PathFindFileName(szCurPath);
+
+			rPathInfoLst.push_back(pImgPath);
+
+			iContinue = 0;
+		}
+	}
 }
 
 void CToolFileInfo::DirInfoMeshExtraction(const wstring& wstrPath, list<MESHPATH*>& rPathInfoLst)
 {
+	wstring wstrFilePath = wstrPath + L"\\*.*";
+
+	// 파일 및 경로 제어 관련 제공. (MFC 클래스)
+	CFileFind find;
+
+	// 현재 경로에서 첫 번째 파일 탐색.
+	find.FindFile(wstrFilePath.c_str());
+
+	int iContinue = 1;
+	while (iContinue)
+	{
+		iContinue = find.FindNextFileW();
+
+		// 현재 찾은 파일 이름이 "." 이나 ".."인지 검사. 맞으면 true 반환.
+		if (find.IsDots())
+			continue;
+
+		// 찾은 이름이 파일명이 아닌 폴더명이라면 true반환.
+		else if (find.IsDirectory())
+			DirInfoMeshExtraction(wstring(find.GetFilePath()), rPathInfoLst);
+
+		// find 객체가 찾은 것이 파일 이름일 때.
+		else
+		{
+			if (find.IsSystem())
+				continue;
+
+			MESHPATH*	pMeshPath = new MESHPATH;
+			_tchar		szCurPath[MAX_STR] = L"";
+
+			/*__________________________________________________________________________________________________________
+			[ 현재 경로 저장 ]
+			ex) D:\ ~  The Eternals\FrameDirectX12\Bin\Resource\ResourceStage\StaticMesh\LandMark\HD_LandMark_Diff.dds
+			____________________________________________________________________________________________________________*/
+			lstrcpy(szCurPath, find.GetFilePath().GetString());
+
+			/*__________________________________________________________________________________________________________
+			[ 파일명과 확장자 제거 ]
+			ex) D:\ ~  The Eternals\FrameDirectX12\Bin\Resource\ResourceStage\StaticMesh\LandMark\
+			____________________________________________________________________________________________________________*/
+			PathRemoveFileSpec(szCurPath);
+
+			/*__________________________________________________________________________________________________________
+			[ 폴더명을 얻어와서 MeshTag와 MeshFileName 얻어오기 ]
+			____________________________________________________________________________________________________________*/
+			CFileFind find_directory;
+			find_directory.FindFile(szCurPath);
+
+			_int iResult = 1;
+			while (iResult)
+			{
+				iResult = find_directory.FindNextFileW();
+
+				// 현재 찾은 파일 이름이 "." 이나 ".."인지 검사. 맞으면 true 반환.
+				if (find_directory.IsDots())
+					continue;
+
+				// 찾은 이름이 파일명이 아닌 폴더명이라면 true 반환.
+				if (find_directory.IsDirectory())
+				{
+					iResult = 0;
+
+					pMeshPath->wstrMeshTag	= find_directory.GetFileName();
+					pMeshPath->wstrFileName = pMeshPath->wstrMeshTag + L".X";
+				}
+			}
+
+			/*__________________________________________________________________________________________________________
+			[ 상대 경로 변환. ]
+			____________________________________________________________________________________________________________*/
+			pMeshPath->wstrPath = ConvertRelativePath(szCurPath);
+			pMeshPath->wstrPath = pMeshPath->wstrPath + L"\\";
+			rPathInfoLst.push_back(pMeshPath);
+
+			iContinue = 0;
+		}
+	}
 }
 
 _int CToolFileInfo::DirFileCount(const wstring& wstrPath)
 {
-	return _int();
+	wstring wstrFilePath = wstrPath + L"\\*.*";
+
+	CFileFind find;
+	find.FindFile(wstrFilePath.c_str());
+
+	_int iFileCnt = 0;
+	_int iContinue = 1;
+	while (iContinue)
+	{
+		iContinue = find.FindNextFile();
+
+		if (find.IsDots())
+			continue;
+		else if (find.IsDirectory())
+			continue;
+		else if (find.IsSystem())
+			continue;
+
+		++iFileCnt;
+	}
+
+	return iFileCnt;
 }

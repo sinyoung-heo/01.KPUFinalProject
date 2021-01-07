@@ -409,43 +409,43 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	// ShaderColor
 	pShader = CShaderColor::Create(m_pGraphicDevice, m_pCommandList);
 	NULL_CHECK_RETURN(pShader, E_FAIL);
-	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"Prototype_ShaderColor", ID_STATIC, pShader), E_FAIL);
+	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderColor", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
 	// ShaderTexture
 	pShader = CShaderTexture::Create(m_pGraphicDevice, m_pCommandList);
 	NULL_CHECK_RETURN(pShader, E_FAIL);
-	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"Prototype_ShaderTexture", ID_STATIC, pShader), E_FAIL);
+	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderTexture", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
 	// ShaderMesh
 	pShader = CShaderMesh::Create(m_pGraphicDevice, m_pCommandList);
 	NULL_CHECK_RETURN(pShader, E_FAIL);
-	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"Prototype_ShaderMesh", ID_STATIC, pShader), E_FAIL);
+	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderMesh", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
 	// ShaderSKyBox
 	pShader = CShaderSkyBox::Create(m_pGraphicDevice, m_pCommandList);
 	NULL_CHECK_RETURN(pShader, E_FAIL);
-	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"Prototype_ShaderSkyBox", ID_STATIC, pShader), E_FAIL);
+	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderSkyBox", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
 	// ShaderLighting
 	pShader = CShaderLighting::Create(m_pGraphicDevice, m_pCommandList);
 	NULL_CHECK_RETURN(pShader, E_FAIL);
-	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"Prototype_ShaderLighting", ID_STATIC, pShader), E_FAIL);
+	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderLighting", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
 	// ShaderBlend
 	pShader = CShaderBlend::Create(m_pGraphicDevice, m_pCommandList);
 	NULL_CHECK_RETURN(pShader, E_FAIL);
-	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"Prototype_ShaderBlend", ID_STATIC, pShader), E_FAIL);
+	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderBlend", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
 	// ShaderShadow
 	pShader = CShaderShadow::Create(m_pGraphicDevice, m_pCommandList);
 	NULL_CHECK_RETURN(pShader, E_FAIL);
-	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"Prototype_ShaderShadow", ID_STATIC, pShader), E_FAIL);
+	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderShadow", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
 	return S_OK;
@@ -498,10 +498,10 @@ HRESULT CRenderer::Ready_RenderTarget()
 	/*__________________________________________________________________________________________________________
 	[ Blend Resource ]
 	____________________________________________________________________________________________________________*/
-	m_pBlendBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"Prototype_ScreenTex", COMPONENTID::ID_STATIC));
+	m_pBlendBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pBlendBuffer, E_FAIL);
 
-	m_pBlendShader = static_cast<CShaderBlend*>(m_pComponentMgr->Clone_Component(L"Prototype_ShaderBlend", COMPONENTID::ID_STATIC));
+	m_pBlendShader = static_cast<CShaderBlend*>(m_pComponentMgr->Clone_Component(L"ShaderBlend", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pBlendShader, E_FAIL);
 	FAILED_CHECK_RETURN(m_pBlendShader->Set_PipelineStatePass(0), E_FAIL);
 

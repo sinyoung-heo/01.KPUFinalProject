@@ -223,7 +223,7 @@ HRESULT CColliderSphere::Add_Component()
 	NULL_CHECK_RETURN(m_pTransCom, E_FAIL);
 
 	// Shader
-	m_pShaderCom = static_cast<CShaderColor*>(CComponentMgr::Get_Instance()->Clone_Component(L"Prototype_ShaderColor", COMPONENTID::ID_STATIC));
+	m_pShaderCom = static_cast<CShaderColor*>(CComponentMgr::Get_Instance()->Clone_Component(L"ShaderColor", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->Set_PipelineStatePass(1);
 

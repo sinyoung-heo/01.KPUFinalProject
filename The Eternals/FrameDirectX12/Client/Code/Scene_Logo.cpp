@@ -40,13 +40,13 @@ HRESULT CScene_Logo::Ready_Scene()
 	/*__________________________________________________________________________________________________________
 	[ LogoBack ]
 	____________________________________________________________________________________________________________*/
-	m_pLogoBack = CLogoBack::Create(m_pGraphicDevice, m_pCommandList, L"ResourcePrototype_TextureLogo");
+	m_pLogoBack = CLogoBack::Create(m_pGraphicDevice, m_pCommandList, L"Logo");
 	Engine::NULL_CHECK_RETURN(m_pLogoBack, E_FAIL);
 
 	/*__________________________________________________________________________________________________________
 	[ Loading Font ]
 	____________________________________________________________________________________________________________*/
-	m_pFont_LoadingStr = static_cast<Engine::CFont*>(m_pObjectMgr->Clone_GameObjectPrototype(L"Prototype_Font_NetmarbleBold"));
+	m_pFont_LoadingStr = static_cast<Engine::CFont*>(m_pObjectMgr->Clone_GameObjectPrototype(L"Font_NetmarbleBold"));
 	Engine::NULL_CHECK_RETURN(m_pFont_LoadingStr, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pFont_LoadingStr->Ready_GameObject(L"", _vec2(16.0f, 16.0f), D2D1::ColorF::SpringGreen), E_FAIL);
 

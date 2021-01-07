@@ -274,7 +274,7 @@ HRESULT CMainApp::SetUp_Font()
 												  32.f,					// Font Size
 												  D2D1::ColorF::White);	// Font Color
 	Engine::NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	m_pObjectMgr->Add_GameObjectPrototype(L"Prototype_Font_NetmarbleBold", pGameObject);
+	m_pObjectMgr->Add_GameObjectPrototype(L"Font_NetmarbleBold", pGameObject);
 
 	return S_OK;
 }
@@ -286,42 +286,42 @@ HRESULT CMainApp::SetUp_ComponentPrototype()
 	// RcCol
 	pComponent = Engine::CRcCol::Create(m_pGraphicDevice, m_pCommandList);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"Prototype_RcCol", Engine::ID_STATIC, pComponent), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"RcCol", Engine::ID_STATIC, pComponent), E_FAIL);
 
 	// CubeCol
 	pComponent = Engine::CCubeCol::Create(m_pGraphicDevice, m_pCommandList);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"Prototype_CubeCol", Engine::ID_STATIC, pComponent), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"CubeCol", Engine::ID_STATIC, pComponent), E_FAIL);
 
 	// RcTex
 	pComponent = Engine::CRcTex::Create(m_pGraphicDevice, m_pCommandList);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"Prototype_RcTex", Engine::ID_STATIC, pComponent), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"RcTex", Engine::ID_STATIC, pComponent), E_FAIL);
 
 	// CubeTex
 	pComponent = Engine::CCubeTex::Create(m_pGraphicDevice, m_pCommandList);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"Prototype_CubeTex", Engine::ID_STATIC, pComponent), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"CubeTex", Engine::ID_STATIC, pComponent), E_FAIL);
 
 	// TerrainTex
 	pComponent = Engine::CTerrainTex::Create(m_pGraphicDevice, m_pCommandList, 128, 128, 1.f);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"Prototype_TerrainTex", Engine::ID_STATIC, pComponent), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"TerrainTex", Engine::ID_STATIC, pComponent), E_FAIL);
 
 	// ScreenTex
 	pComponent = Engine::CScreenTex::Create(m_pGraphicDevice, m_pCommandList);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"Prototype_ScreenTex", Engine::ID_STATIC, pComponent), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ScreenTex", Engine::ID_STATIC, pComponent), E_FAIL);
 
 	// Collider Sphere
 	pComponent = Engine::CColliderSphere::Create(m_pGraphicDevice, m_pCommandList, 10, 10);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"Prototype_ColliderSphere", Engine::ID_DYNAMIC, pComponent), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ColliderSphere", Engine::ID_DYNAMIC, pComponent), E_FAIL);
 
 	// Collider Box
 	pComponent = Engine::CColliderBox::Create(m_pGraphicDevice, m_pCommandList);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"Prototype_ColliderBox", Engine::ID_DYNAMIC, pComponent), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ColliderBox", Engine::ID_DYNAMIC, pComponent), E_FAIL);
 
 	return S_OK;
 }
@@ -334,13 +334,13 @@ HRESULT CMainApp::SetUp_LoadingResource()
 	pComponent = Engine::CTexture::Create(m_pGraphicDevice, m_pCommandList,
 										  L"../../Bin/Resource/ResourceLoading/Texture/BackBuffer/%d.dds", 2);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"ResourcePrototype_TextureBackBuffer", Engine::ID_STATIC, pComponent), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"BackBuffer", Engine::ID_STATIC, pComponent), E_FAIL);
 
 	// Texture - Logo
 	pComponent = Engine::CTexture::Create(m_pGraphicDevice, m_pCommandList,
 										  L"../../Bin/Resource/ResourceLoading/Texture/Logo/%d.dds", 4);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"ResourcePrototype_TextureLogo", Engine::ID_STATIC, pComponent), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"Logo", Engine::ID_STATIC, pComponent), E_FAIL);
 
 	return S_OK;
 }

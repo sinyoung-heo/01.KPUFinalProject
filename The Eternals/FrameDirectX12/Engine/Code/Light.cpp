@@ -17,25 +17,25 @@ HRESULT CLight::Ready_Light(const D3DLIGHT & tLightInfo)
 	m_tLightInfo = tLightInfo;
 
 	// Buffer
-	m_pBufferCom = static_cast<Engine::CScreenTex*>(CComponentMgr::Get_Instance()->Clone_Component(L"Prototype_ScreenTex", COMPONENTID::ID_STATIC));
+	m_pBufferCom = static_cast<Engine::CScreenTex*>(CComponentMgr::Get_Instance()->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
 
 	if (m_tLightInfo.Type == LIGHTTYPE::D3DLIGHT_DIRECTIONAL)
 	{
 		// Shader
-		m_pShaderCom = static_cast<Engine::CShaderLighting*>(CComponentMgr::Get_Instance()->Clone_Component(L"Prototype_ShaderLighting", COMPONENTID::ID_STATIC));
+		m_pShaderCom = static_cast<Engine::CShaderLighting*>(CComponentMgr::Get_Instance()->Clone_Component(L"ShaderLighting", COMPONENTID::ID_STATIC));
 		NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 		FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(0), E_FAIL);
 	}
 	if (m_tLightInfo.Type == LIGHTTYPE::D3DLIGHT_POINT)
 	{
 		// Shader
-		m_pShaderCom = static_cast<Engine::CShaderLighting*>(CComponentMgr::Get_Instance()->Clone_Component(L"Prototype_ShaderLighting", COMPONENTID::ID_STATIC));
+		m_pShaderCom = static_cast<Engine::CShaderLighting*>(CComponentMgr::Get_Instance()->Clone_Component(L"ShaderLighting", COMPONENTID::ID_STATIC));
 		NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 		FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(1), E_FAIL);
 
 		// Collider
-		m_pColliderCom = static_cast<Engine::CColliderBox*>(CComponentMgr::Get_Instance()->Clone_Component(L"Prototype_ColliderBox", COMPONENTID::ID_DYNAMIC));
+		m_pColliderCom = static_cast<Engine::CColliderBox*>(CComponentMgr::Get_Instance()->Clone_Component(L"ColliderBox", COMPONENTID::ID_DYNAMIC));
 		NULL_CHECK_RETURN(m_pColliderCom, E_FAIL);
 		m_pColliderCom->Ready_Collider();
 		m_pColliderCom->Set_PipelineStatePass(0);

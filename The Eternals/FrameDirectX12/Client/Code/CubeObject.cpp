@@ -80,13 +80,13 @@ HRESULT CCubeObject::Add_Component()
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
 	// Buffer
-	m_pBufferCom = static_cast<Engine::CCubeCol*>(m_pComponentMgr->Clone_Component(L"Prototype_CubeCol", Engine::COMPONENTID::ID_STATIC));
+	m_pBufferCom = static_cast<Engine::CCubeCol*>(m_pComponentMgr->Clone_Component(L"CubeCol", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
 	m_pBufferCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Buffer", m_pBufferCom);
 
 	// Shader
-	m_pShaderCom = static_cast<Engine::CShaderColor*>(m_pComponentMgr->Clone_Component(L"Prototype_ShaderColor", Engine::COMPONENTID::ID_STATIC));
+	m_pShaderCom = static_cast<Engine::CShaderColor*>(m_pComponentMgr->Clone_Component(L"ShaderColor", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->AddRef();
 	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(0), E_FAIL);

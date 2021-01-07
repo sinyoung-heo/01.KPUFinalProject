@@ -22,4 +22,29 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	afx_msg void OnDropFiles(HDROP hDropInfo);
+
+	afx_msg void OnBnClickedRadio_Mesh();
+	afx_msg void OnBnClickedRadio_Texture();
+	_bool m_bIsClickedRadio_Mesh	= false;
+	_bool m_bIsClickedRadio_Texture	= false;
+
+	afx_msg void OnBnClickedButton_Save();
+
+public:
+	/*__________________________________________________________________________________________________________
+	[ Controler ]
+	____________________________________________________________________________________________________________*/
+	CListBox	m_ListBoxPath;
+	CButton		m_Radio_ResourceType[2];
+
+	/*__________________________________________________________________________________________________________
+	[ Value ]
+	____________________________________________________________________________________________________________*/
+	list<MESHPATH*> m_lstMeshFileInfo;
+	_int m_iMeshPathCnt = 0;
+
+	list<IMGPATH*>	m_lstTextureFileInfo;
+	_int m_iTexturePathCnt = 0;
+
 };

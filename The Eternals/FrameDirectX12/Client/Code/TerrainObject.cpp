@@ -73,19 +73,19 @@ HRESULT CTerrainObject::Add_Component()
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
 	// Buffer
-	m_pBufferCom = static_cast<Engine::CTerrainTex*>(m_pComponentMgr->Clone_Component(L"Prototype_TerrainTex", Engine::COMPONENTID::ID_STATIC));
+	m_pBufferCom = static_cast<Engine::CTerrainTex*>(m_pComponentMgr->Clone_Component(L"TerrainTex", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
 	m_pBufferCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Buffer", m_pBufferCom);
 
 	// Texture
-	m_pTextureCom = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(L"ResourcePrototype_TextureTerrain", Engine::COMPONENTID::ID_STATIC));
+	m_pTextureCom = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(L"Terrain", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
 	m_pTextureCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Texture", m_pTextureCom);
 
 	// Shader
-	m_pShaderCom = static_cast<Engine::CShaderTexture*>(m_pComponentMgr->Clone_Component(L"Prototype_ShaderTexture", Engine::COMPONENTID::ID_STATIC));
+	m_pShaderCom = static_cast<Engine::CShaderTexture*>(m_pComponentMgr->Clone_Component(L"ShaderTexture", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->AddRef();
 	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(0), E_FAIL);

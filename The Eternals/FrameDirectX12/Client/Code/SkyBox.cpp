@@ -83,7 +83,7 @@ HRESULT CSkyBox::Add_Component(wstring wstrTextureTag)
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
 	// Buffer
-	m_pBufferCom = static_cast<Engine::CCubeTex*>(m_pComponentMgr->Clone_Component(L"Prototype_CubeTex", Engine::COMPONENTID::ID_STATIC));
+	m_pBufferCom = static_cast<Engine::CCubeTex*>(m_pComponentMgr->Clone_Component(L"CubeTex", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
 	m_pBufferCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Buffer", m_pBufferCom);
@@ -95,7 +95,7 @@ HRESULT CSkyBox::Add_Component(wstring wstrTextureTag)
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Texture", m_pTextureCom);
 
 	// Shader
-	m_pShaderCom = static_cast<Engine::CShaderSkyBox*>(m_pComponentMgr->Clone_Component(L"Prototype_ShaderSkyBox", Engine::COMPONENTID::ID_STATIC));
+	m_pShaderCom = static_cast<Engine::CShaderSkyBox*>(m_pComponentMgr->Clone_Component(L"ShaderSkyBox", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->AddRef();
 	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(0), E_FAIL);
