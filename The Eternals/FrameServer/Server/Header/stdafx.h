@@ -31,3 +31,5 @@ using namespace chrono;
 #include "struct.h"
 #include "extern.h"
 #include "function.h"
+
+#include "dataType.h"
