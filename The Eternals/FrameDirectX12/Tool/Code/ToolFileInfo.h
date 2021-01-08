@@ -1,4 +1,6 @@
 #pragma once
+#include "Include.h"
+
 class CToolFileInfo
 {
 public:

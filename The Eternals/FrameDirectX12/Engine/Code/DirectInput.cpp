@@ -9,7 +9,7 @@ CDirectInput::CDirectInput()
 
 
 
-HRESULT CDirectInput::Ready_InputDevice(HINSTANCE hInst, HWND hWnd)
+HRESULT CDirectInput::Ready_InputDevice(HINSTANCE hInst, HWND hWnd, const _int& iInputType)
 {
 	FAILED_CHECK_RETURN(DirectInput8Create(hInst,
 										   DIRECTINPUT_VERSION,
@@ -34,7 +34,7 @@ HRESULT CDirectInput::Ready_InputDevice(HINSTANCE hInst, HWND hWnd)
 	m_pMouse->SetDataFormat(&c_dfDIMouse);
 	// DISCL_EXCLUSIVE		: 마우스가 클라이언트 화면 안에서만 움직임. 커서 렌더링 X
 	// DISCL_NONEXCLUSIVE	: 마우스가 클라이언트 화면 밖으로도 움직임. 커서 렌더링 O
-	m_pMouse->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+	m_pMouse->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | iInputType);
 	m_pMouse->Acquire();
 
 	return S_OK;

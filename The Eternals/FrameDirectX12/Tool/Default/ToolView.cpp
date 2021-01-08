@@ -13,6 +13,18 @@
 #include "ToolDoc.h"
 #include "ToolView.h"
 #include "MainFrm.h"
+#include "ToolMainApp.h"
+#include "GraphicDevice.h"
+#include "TimeMgr.h"
+#include "FrameMgr.h"
+#include "DirectInput.h"
+#include "DirectSound.h"
+#include "Management.h"
+#include "ObjectMgr.h"
+#include "ComponentMgr.h"
+#include "Renderer.h"
+#include "LightMgr.h"
+#include "FrustumMgr.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -20,6 +32,10 @@
 
 HWND		g_hWnd;
 HINSTANCE	g_hInst;
+
+_bool	g_bIsLoadingStart	= false;
+_bool	g_bIsLoadingFinish	= false;
+_int	g_iFPS				= 0;
 
 // CToolView
 
@@ -42,6 +58,20 @@ CToolView::CToolView() noexcept
 
 CToolView::~CToolView()
 {
+	Engine::Safe_Release(m_pMainApp);
+
+	Engine::CFrameMgr::Get_Instance()->Destroy_Instance();
+	Engine::CTimerMgr::Get_Instance()->Destroy_Instance();
+	Engine::CDirectInput::Get_Instance()->Destroy_Instance();
+	Engine::CDirectSound::Get_Instance()->Destroy_Instance();
+	Engine::CManagement::Get_Instance()->Destroy_Instance();
+	Engine::CRenderer::Get_Instance()->Destroy_Instance();
+	Engine::CLightMgr::Get_Instance()->Destroy_Instance();
+	Engine::CObjectMgr::Get_Instance()->Destroy_Instance();
+	Engine::CComponentMgr::Get_Instance()->Destroy_Instance();
+	Engine::CFrustumMgr::Get_Instance()->Destroy_Instance();
+	Engine::CGraphicDevice::Get_Instance()->Destroy_Instance();
+
 }
 
 BOOL CToolView::PreCreateWindow(CREATESTRUCT& cs)
@@ -113,7 +143,8 @@ void CToolView::OnInitialUpdate()
 	CScrollView::OnInitialUpdate();
 
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
-	g_hWnd = m_hWnd;
+	g_hWnd	= m_hWnd;
+	g_hInst = AfxGetInstanceHandle();
 
 	SetScrollSizes(MM_TEXT, CSize(WINCX, WINCY));
 
@@ -141,4 +172,23 @@ void CToolView::OnInitialUpdate()
 							 WINCX + iRowFrm, 
 							 WINCY + iColFrm, 
 							 SWP_NOZORDER);
+
+	/*__________________________________________________________________________________________________________
+	[ MainApp 생성 ]
+	____________________________________________________________________________________________________________*/
+	m_pMainApp = CToolMainApp::Create();
+
+	/*__________________________________________________________________________________________________________
+	[ Timer 생성 ]
+	Timer_TimeDelta : GameObject들이 공통적으로 사용할 Timer
+	Timer_FPS60		: FPS를 60으로 제한하기 위해 사용할 Timer
+	____________________________________________________________________________________________________________*/
+	Engine::CTimerMgr::Get_Instance()->Ready_Timer(L"Timer_TimeDelta");
+	Engine::CTimerMgr::Get_Instance()->Ready_Timer(L"Timer_FPS60");
+
+	/*__________________________________________________________________________________________________________
+	[ Frame 생성 ]
+	____________________________________________________________________________________________________________*/
+	Engine::CFrameMgr::Get_Instance()->Ready_Frame(L"Frame60", 60.f);
+
 }

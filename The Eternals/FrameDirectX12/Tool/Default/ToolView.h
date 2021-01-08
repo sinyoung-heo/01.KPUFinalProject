@@ -5,6 +5,7 @@
 #pragma once
 
 class CToolDoc;
+class CToolMainApp;
 class CToolView : public CScrollView
 {
 protected: // serialization에서만 만들어집니다.
@@ -42,6 +43,9 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual void OnInitialUpdate();
+
+public:
+	CToolMainApp* m_pMainApp = nullptr;
 };
 
 #ifndef _DEBUG  // ToolView.cpp의 디버그 버전
