@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #define TEST
+#include "dataType.h"
 
 /* IOCP SERVER 관련 변수*/
 HANDLE g_hIocp;

@@ -20,8 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainServer.cpp" />
+    <ClCompile Include="..\Code\Obj.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Code\Obj.h" />
+    <ClInclude Include="..\Header\dataType.h" />
     <ClInclude Include="..\Header\define.h" />
     <ClInclude Include="..\Header\enum.h" />
     <ClInclude Include="..\Header\extern.h" />
@@ -101,7 +104,7 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>../Code;../Header;../Default;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -130,7 +133,7 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>../Code;../Header;../Default;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
