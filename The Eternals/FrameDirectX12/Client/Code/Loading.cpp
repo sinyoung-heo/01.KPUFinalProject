@@ -53,14 +53,14 @@ HRESULT CLoading::Loading_DynamicMesh()
 									   L"../../Bin/Resource/ResourceStage/DynamicMesh/PoporiR19/", 
 									   L"PoporiR19.X");
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"ResourcePrototype_PoporiR19", Engine::ID_STATIC, pComponent), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"PoporiR19", Engine::ID_STATIC, pComponent), E_FAIL);
 
 	// Popori
 	pComponent = Engine::CMesh::Create(m_pGraphicDevice, m_pCommandList,
 									   L"../../Bin/Resource/ResourceStage/DynamicMesh/PoporiH25/", 
 									   L"PoporiH25.X");
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"ResourcePrototype_PoporiH25", Engine::ID_STATIC, pComponent), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"PoporiH25", Engine::ID_STATIC, pComponent), E_FAIL);
 
 	return S_OK;
 }
@@ -76,28 +76,28 @@ HRESULT CLoading::Loading_StaticMesh()
 									   L"../../Bin/Resource/ResourceStage/StaticMesh/LandMark/",
 									   L"LandMark.X");
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"ResourcePrototype_LandMark", Engine::ID_STATIC, pComponent), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"LandMark", Engine::ID_STATIC, pComponent), E_FAIL);
 
 	// LandMarkBoundary
 	pComponent = Engine::CMesh::Create(m_pGraphicDevice, m_pCommandList,
 									   L"../../Bin/Resource/ResourceStage/StaticMesh/LandMarkBoundary/",
 									   L"LandMarkBoundary.X");
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"ResourcePrototype_LandMarkBoundary", Engine::ID_STATIC, pComponent), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"LandMarkBoundary", Engine::ID_STATIC, pComponent), E_FAIL);
 
 	// LandMarkPlane
 	pComponent = Engine::CMesh::Create(m_pGraphicDevice, m_pCommandList,
 									   L"../../Bin/Resource/ResourceStage/StaticMesh/LandMarkPlane/",
 									   L"LandMarkPlane.X");
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"ResourcePrototype_LandMarkPlane", Engine::ID_STATIC, pComponent), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"LandMarkPlane", Engine::ID_STATIC, pComponent), E_FAIL);
 
 	// Status
 	pComponent = Engine::CMesh::Create(m_pGraphicDevice, m_pCommandList,
 									   L"../../Bin/Resource/ResourceStage/StaticMesh/Status/",
 									   L"Status.X");
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"ResourcePrototype_Status", Engine::ID_STATIC, pComponent), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"Status", Engine::ID_STATIC, pComponent), E_FAIL);
 
 
 	return S_OK;
@@ -114,28 +114,28 @@ HRESULT CLoading::Loading_Texture()
 										  L"../../Bin/Resource/ResourceStage/Texture/SkyBox/%d.dds", 3, 
 										  Engine::TEXTYPE::TEX_CUBE);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"ResourcePrototype_TextureSkyBox", Engine::ID_STATIC, pComponent), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"SkyBox", Engine::ID_STATIC, pComponent), E_FAIL);
 
 	// Texture - Terrain
 	pComponent = Engine::CTexture::Create(m_pGraphicDevice, m_pCommandList,
 										  L"../../Bin/Resource/ResourceStage/Texture/Terrain/%d.dds", 1,
 										  Engine::TEXTYPE::TEX_2D);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"ResourcePrototype_TextureTerrain", Engine::ID_STATIC, pComponent), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"Terrain", Engine::ID_STATIC, pComponent), E_FAIL);
 
 	// Texture - Fire
 	pComponent = Engine::CTexture::Create(m_pGraphicDevice, m_pCommandList,
 										  L"../../Bin/Resource/ResourceStage/Texture/Fire/%d.dds", 1,
 										  Engine::TEXTYPE::TEX_2D);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"ResourcePrototype_TextureFire", Engine::ID_STATIC, pComponent), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"Fire", Engine::ID_STATIC, pComponent), E_FAIL);
 
 	// Textue - Torch
 	pComponent = Engine::CTexture::Create(m_pGraphicDevice, m_pCommandList,
 										  L"../../Bin/Resource/ResourceStage/Texture/Torch/%d.dds", 1,
 										  Engine::TEXTYPE::TEX_2D);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"ResourcePrototype_TextureTorch", Engine::ID_STATIC, pComponent), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"Torch", Engine::ID_STATIC, pComponent), E_FAIL);
 
 	return S_OK;
 }

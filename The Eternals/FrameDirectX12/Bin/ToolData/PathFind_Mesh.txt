@@ -1,0 +1,7 @@
+PoporiH25|PoporiH25.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\PoporiH25\
+PoporiR19|PoporiR19.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\PoporiR19\
+Weapon|Weapon.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Weapon\
+LandMark|LandMark.X|..\..\Bin\Resource\ResourceStage\StaticMesh\LandMark\
+LandMarkBoundary|LandMarkBoundary.X|..\..\Bin\Resource\ResourceStage\StaticMesh\LandMarkBoundary\
+LandMarkPlane|LandMarkPlane.X|..\..\Bin\Resource\ResourceStage\StaticMesh\LandMarkPlane\
+Status|Status.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Status\

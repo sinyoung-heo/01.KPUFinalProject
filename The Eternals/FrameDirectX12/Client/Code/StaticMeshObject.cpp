@@ -120,14 +120,14 @@ HRESULT CStaticMeshObject::Add_Component(wstring wstrMeshTag)
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Mesh", m_pMeshCom);
 
 	// Shader
-	m_pShaderCom = static_cast<Engine::CShaderMesh*>(m_pComponentMgr->Clone_Component(L"Prototype_ShaderMesh", Engine::COMPONENTID::ID_STATIC));
+	m_pShaderCom = static_cast<Engine::CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->AddRef();
 	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(1), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
 	// Shadow
-	m_pShadowCom = static_cast<Engine::CShaderShadow*>(m_pComponentMgr->Clone_Component(L"Prototype_ShaderShadow", Engine::COMPONENTID::ID_STATIC));
+	m_pShadowCom = static_cast<Engine::CShaderShadow*>(m_pComponentMgr->Clone_Component(L"ShaderShadow", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShadowCom, E_FAIL);
 	m_pShadowCom->AddRef();
 	Engine::FAILED_CHECK_RETURN(m_pShadowCom->Set_PipelineStatePass(0), E_FAIL);

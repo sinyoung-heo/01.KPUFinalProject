@@ -49,14 +49,14 @@ HRESULT CCell::Ready_Cell(const _ulong& dwIndex,
 HRESULT CCell::Ready_Component()
 {
 	// Shader
-	m_pShaderCom = static_cast<CShaderColor*>(CComponentMgr::Get_Instance()->Clone_Component(L"Prototype_ShaderColor", COMPONENTID::ID_STATIC));
+	m_pShaderCom = static_cast<CShaderColor*>(CComponentMgr::Get_Instance()->Clone_Component(L"ShaderColor", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->Set_PipelineStatePass(1);
 
 	// Collider
 	for (_int i = 0; i < POINT_END; ++i)
 	{
-		m_pColliderCom[i] = static_cast<CColliderSphere*>(CComponentMgr::Get_Instance()->Clone_Component(L"Prototype_ColliderSphere", Engine::COMPONENTID::ID_DYNAMIC));
+		m_pColliderCom[i] = static_cast<CColliderSphere*>(CComponentMgr::Get_Instance()->Clone_Component(L"ColliderSphere", Engine::COMPONENTID::ID_DYNAMIC));
 		NULL_CHECK_RETURN(m_pColliderCom[i], E_FAIL);
 		FAILED_CHECK_RETURN(m_pColliderCom[i]->Ready_Collider(), E_FAIL);
 

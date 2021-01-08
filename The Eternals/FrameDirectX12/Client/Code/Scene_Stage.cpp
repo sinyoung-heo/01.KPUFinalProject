@@ -127,7 +127,7 @@ HRESULT CScene_Stage::Ready_LayerEnvironment(wstring wstrLayerTag)
 	[ SkyBox ]
 	____________________________________________________________________________________________________________*/
 	CSkyBox* pSkyBox = CSkyBox::Create(m_pGraphicDevice, m_pCommandList,
-									   L"ResourcePrototype_TextureSkyBox",	// Texture Tag
+									   L"SkyBox",	// Texture Tag
 									   _vec3(512.f, 512.f, 512.f),			// Scale
 									   _vec3(0.0f, 0.0f, 0.0f),				// Angle
 									   _vec3(0.0f, 0.0f, 0.0f));			// Pos
@@ -163,7 +163,7 @@ HRESULT CScene_Stage::Ready_LayerGameObject(wstring wstrLayerTag)
 
 	//// LandMarkBoundary
 	//pStaticMeshObject = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-	//											  L"ResourcePrototype_LandMarkBoundary",	// MeshTag 
+	//											  L"LandMarkBoundary",	// MeshTag 
 	//											  _vec3(0.05f, 0.05f, 0.05f),				// Scale
 	//											  _vec3(0.0f, 0.0f, 0.0f),					// Angle
 	//											  _vec3(0.0f, 0.f, 0.f));					// Pos
@@ -172,7 +172,7 @@ HRESULT CScene_Stage::Ready_LayerGameObject(wstring wstrLayerTag)
 
 	// Status
 	pStaticMeshObject = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-												  L"ResourcePrototype_Status",	// MeshTag 
+												  L"Status",	// MeshTag 
 												  _vec3(0.05f, 0.05f, 0.05f),	// Scale
 												  _vec3(0.f, 0.0f, 0.0f),		// Angle
 												  _vec3(-15.0f, 13.f, 0.f));	// Pos
@@ -183,7 +183,7 @@ HRESULT CScene_Stage::Ready_LayerGameObject(wstring wstrLayerTag)
 	[ TerrainMeshObject ]
 	____________________________________________________________________________________________________________*/
 	//CTerrainMeshObject* pTerrainMeshObject = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-	//																	L"ResourcePrototype_LandMarkPlane",	// MeshTag 
+	//																	L"LandMarkPlane",	// MeshTag 
 	//																	_vec3(0.05f, 0.05f, 0.05f),			// Scale
 	//																	_vec3(0.0f, 0.0f, 0.0f),			// Angle
 	//																	_vec3(0.0f, 0.f, 0.f));				// Pos
@@ -198,7 +198,7 @@ HRESULT CScene_Stage::Ready_LayerGameObject(wstring wstrLayerTag)
 	CPopori_F* pPopori_F = nullptr;
 
 	pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
-								  L"ResourcePrototype_PoporiR19",	// MeshTag
+								  L"PoporiR19",	// MeshTag
 								  _vec3(0.25f, 0.25f, 0.25f),		// Scale
 								  _vec3(0.0f, 0.0f, 0.0f),			// Angle
 								  _vec3(58.0f, 0.f, 25.0f));		// Pos
@@ -206,7 +206,7 @@ HRESULT CScene_Stage::Ready_LayerGameObject(wstring wstrLayerTag)
 
 
 	//pPopori_F = CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
-	//							  L"ResourcePrototype_PoporiH25",	// MeshTag
+	//							  L"PoporiH25",	// MeshTag
 	//							  _vec3(0.25f, 0.25f, 0.25f),		// Scale
 	//							  _vec3(0.0f, 0.0f, 0.0f),			// Angle
 	//							  _vec3(0.0f, 0.f, 0.0f));			// Pos
@@ -220,7 +220,7 @@ HRESULT CScene_Stage::Ready_LayerGameObject(wstring wstrLayerTag)
 
 	// Fire
 	pTexEffect = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-										L"ResourcePrototype_TextureFire",	// TextureTag
+										L"Fire",	// TextureTag
 										_vec3(5.0f, 5.0f, 1.0f),			// Scale
 										_vec3(0.0f, 0.0f, 0.0f),			// Angle
 										_vec3(6.0f, 2.5f, -10.0f),			// Pos
@@ -233,7 +233,7 @@ HRESULT CScene_Stage::Ready_LayerGameObject(wstring wstrLayerTag)
 
 	// Torch
 	pTexEffect = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-										L"ResourcePrototype_TextureTorch",	// TextureTag
+										L"Torch",	// TextureTag
 										_vec3(5.0f, 10.0f, 1.0f),			// Scale
 										_vec3(0.0f, 0.0f, 0.0f),			// Angle
 										_vec3(10.0f, 5.0f, -10.0f),			// Pos

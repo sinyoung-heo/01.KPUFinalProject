@@ -103,7 +103,8 @@ _int CPopori_F::Update_GameObject(const _float & fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Key Input ]
 	____________________________________________________________________________________________________________*/
-	Key_Input(fTimeDelta);
+	if(!g_bIsOnDebugCaemra)
+		Key_Input(fTimeDelta);
 
 	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
 	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
@@ -200,28 +201,28 @@ HRESULT CPopori_F::Add_Component(wstring wstrMeshTag)
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Mesh", m_pMeshCom);
 
 	// Shader
-	m_pShaderCom = static_cast<Engine::CShaderMesh*>(m_pComponentMgr->Clone_Component(L"Prototype_ShaderMesh", Engine::COMPONENTID::ID_STATIC));
+	m_pShaderCom = static_cast<Engine::CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->AddRef();
 	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(0), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
 	// Shadow
-	m_pShadowCom = static_cast<Engine::CShaderShadow*>(m_pComponentMgr->Clone_Component(L"Prototype_ShaderShadow", Engine::COMPONENTID::ID_STATIC));
+	m_pShadowCom = static_cast<Engine::CShaderShadow*>(m_pComponentMgr->Clone_Component(L"ShaderShadow", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShadowCom, E_FAIL);
 	m_pShadowCom->AddRef();
 	Engine::FAILED_CHECK_RETURN(m_pShadowCom->Set_PipelineStatePass(0), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shadow", m_pShadowCom);
 
 	// Collider - Sphere
-	m_pColliderSphereCom = static_cast<Engine::CColliderSphere*>(m_pComponentMgr->Clone_Component(L"Prototype_ColliderSphere", Engine::COMPONENTID::ID_DYNAMIC));
+	m_pColliderSphereCom = static_cast<Engine::CColliderSphere*>(m_pComponentMgr->Clone_Component(L"ColliderSphere", Engine::COMPONENTID::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pColliderSphereCom, E_FAIL);
 	m_pColliderSphereCom->AddRef();
 	m_pColliderSphereCom->Ready_Collider();
 	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderSphere", m_pColliderSphereCom);
 
 	// Collider - Box
-	m_pColliderBoxCom = static_cast<Engine::CColliderBox*>(m_pComponentMgr->Clone_Component(L"Prototype_ColliderBox", Engine::COMPONENTID::ID_DYNAMIC));
+	m_pColliderBoxCom = static_cast<Engine::CColliderBox*>(m_pComponentMgr->Clone_Component(L"ColliderBox", Engine::COMPONENTID::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pColliderBoxCom, E_FAIL);
 	m_pColliderBoxCom->AddRef();
 	m_pColliderBoxCom->Ready_Collider();
