@@ -26,13 +26,16 @@ HRESULT CLoading::Ready_Loading(LOADINGID eLoadingID)
 
 _uint CLoading::Loading_For_Stage()
 {
-	Loading_DynamicMesh();
-	Loading_StaticMesh();
-	Loading_Texture();
+	//Loading_DynamicMesh();
+	//Loading_StaticMesh();
+	//Loading_Texture();
+
+	Loading_MeshFromFilePath();
+	Loading_TextureFromFilePath();
 
 	m_bIsFinish = true;
 
-	lstrcpy(m_szLoadingStr, L"Loading Finish");
+	lstrcpy(m_szLoadingStr, L"Resource Loading is Finish");
 
 #ifdef CLIENT_LOG
 	COUT_STR("<< Loading Finish >>");
@@ -40,6 +43,106 @@ _uint CLoading::Loading_For_Stage()
 #endif
 
 	return 0;
+}
+
+HRESULT CLoading::Loading_MeshFromFilePath()
+{
+	wifstream fin { L"../../Bin/ToolData/PathFind_Mesh.txt" };
+	if (fin.fail())
+		return E_FAIL;
+
+	_tchar szMeshTag[MAX_STR]	= L"";
+	_tchar szFileName[MAX_STR]	= L"";
+	_tchar szPath[MAX_STR]		= L"";
+
+	wstring	wstrMeshTag		= L"";
+	wstring	wstrFileName	= L"";
+	wstring	wstrPath		= L"";
+	Engine::CComponent* pComponent = nullptr;
+
+	while (true)
+	{
+		fin.getline(szMeshTag, MAX_STR, '|');
+		fin.getline(szFileName, MAX_STR, '|');
+		fin.getline(szPath, MAX_STR);
+
+		if (fin.eof())
+			break;
+
+		lstrcpy(m_szLoadingStr, szMeshTag);
+		lstrcat(m_szLoadingStr, L" Mesh Loading");
+
+		wstrMeshTag		= szMeshTag;
+		wstrFileName	= szFileName;
+		wstrPath		= szPath;
+		wstrPath		+= L"\\";
+
+		pComponent = Engine::CMesh::Create(m_pGraphicDevice, m_pCommandList,
+										   wstrPath,
+										   wstrFileName);
+		Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
+		Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(wstrMeshTag, Engine::ID_STATIC, pComponent), E_FAIL);
+
+		++m_iCurLoadingCnt;
+	}
+
+	fin.close();
+
+	return S_OK;
+}
+
+HRESULT CLoading::Loading_TextureFromFilePath()
+{
+	wifstream fin { L"../../Bin/ToolData/PathFind_Texture.txt" };
+	if (fin.fail())
+		return E_FAIL;
+
+	_tchar szTextureTag[MAX_STR]	= L"";
+	_tchar szCount[MAX_STR]			= L"";
+	_tchar szPath[MAX_STR]			= L"";
+
+	wstring	wstrTextureTag	= L"";
+	wstring	wstrPath		= L"";
+	Engine::CComponent* pComponent = nullptr;
+
+	while (true)
+	{
+		fin.getline(szTextureTag, MAX_STR, '|');
+		fin.getline(szCount, MAX_STR, '|');
+		fin.getline(szPath, MAX_STR);
+
+		if (fin.eof())
+			break;
+
+		lstrcpy(m_szLoadingStr, szTextureTag);
+		lstrcat(m_szLoadingStr, L" Texture Loading");
+
+		_int iTexSize = _ttoi(szCount);
+
+		Engine::TEXTYPE eTexType;
+		if (!lstrcmp(szTextureTag, L"SkyBox"))
+			eTexType = Engine::TEXTYPE::TEX_CUBE;
+		else
+			eTexType = Engine::TEXTYPE::TEX_2D;
+
+		wstrTextureTag = szTextureTag;
+		wstrPath = szPath;
+		wstrPath += L"\\";
+
+		pComponent = Engine::CTexture::Create(m_pGraphicDevice, m_pCommandList,
+											  wstrPath, 
+											  iTexSize, 
+											  eTexType);
+		Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
+		Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(wstrTextureTag, Engine::ID_STATIC, pComponent), E_FAIL);
+
+		++m_iCurLoadingCnt;
+	}
+
+	fin.close();
+
+
+	return S_OK;
 }
 
 HRESULT CLoading::Loading_DynamicMesh()

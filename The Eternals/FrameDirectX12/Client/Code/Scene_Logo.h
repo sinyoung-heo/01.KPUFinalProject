@@ -28,20 +28,18 @@ private:
 	HRESULT			Ready_LayerGameObject(wstring wstrLayerTag);
 	HRESULT			Ready_LayerUI(wstring wstrLayerTag);
 	HRESULT			Ready_LayerFont(wstring wstrLayerTag);
+	HRESULT			SetUp_MaxLoadingCount();
 
 private:
-	CLoading*	m_pLoading					= nullptr;
-	CLogoBack*	m_pLogoBack					= nullptr;
+	CLoading*	m_pLoading	= nullptr;
+	CLogoBack*	m_pLogoBack	= nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Loading Text ]
 	____________________________________________________________________________________________________________*/
 	Engine::CFont*	m_pFont_LoadingStr		= nullptr;
 	_tchar			m_szLoadingStr[MIN_STR]	= L"";
-
-	_float			m_fTime					= 0.0f;
-	_float			m_fUpdateTime			= 0.2f;
-	_int			m_iDotCnt				= 0;
+	_int			m_iMaxFileCount = 0;
 
 public:
 	static CScene_Logo*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);

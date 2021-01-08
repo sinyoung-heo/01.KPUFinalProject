@@ -20,11 +20,15 @@ public:
 	const LOADINGID&	Get_LoadingID()		const	{ return m_eLoadingID; }
 	const _bool&		Get_Finish()		const	{ return m_bIsFinish; }
 	const _tchar*		Get_LoadingString()	const 	{ return m_szLoadingStr; }
+	const _int&			Get_CurLoadingCnt() const	{ return m_iCurLoadingCnt; }
 
 	HRESULT				Ready_Loading(LOADINGID eLoadingID);
 	_uint				Loading_For_Stage();
 
 private:
+	HRESULT				Loading_MeshFromFilePath();
+	HRESULT				Loading_TextureFromFilePath();
+
 	HRESULT             Loading_StaticMesh();
 	HRESULT				Loading_DynamicMesh();
 	HRESULT             Loading_Texture();
@@ -52,6 +56,7 @@ private:
 	LOADINGID			        m_eLoadingID			= LOADING_END;
 	_bool				        m_bIsFinish				= false;
 	_tchar						m_szLoadingStr[MAX_STR]	= L"";
+	_int						m_iCurLoadingCnt		= 0;
 
 public:
 	static CLoading*	Create(ID3D12Device* pGraphicDevice,

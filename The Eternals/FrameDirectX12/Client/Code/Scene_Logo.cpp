@@ -30,6 +30,7 @@ HRESULT CScene_Logo::Ready_Scene()
 	Engine::FAILED_CHECK_RETURN(Ready_LayerGameObject(L"Layer_GameObject"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LayerUI(L"Layer_UI"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LayerFont(L"Layer_Font"), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(SetUp_MaxLoadingCount(), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
 	[ Loading Thread »ý¼º ]
@@ -66,39 +67,18 @@ _int CScene_Logo::Update_Scene(const _float & fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Loading Text ]
 	____________________________________________________________________________________________________________*/
-	if (!m_pLoading->Get_Finish())
-	{
-		lstrcpy(m_szLoadingStr, (m_pLoading->Get_LoadingString()));
+	_int	iCurLoadingCnt	= m_pLoading->Get_CurLoadingCnt();
+	_float	fRatio			= (_float)iCurLoadingCnt / (_float)m_iMaxFileCount;
+	_int	iPercent		= (_int)(fRatio * 100.0f);
 
-		if (0 == m_iDotCnt)
-			lstrcpy(m_szLoadingStr, m_pLoading->Get_LoadingString());
-		else if (1 == m_iDotCnt)
-			lstrcat(m_szLoadingStr, L" .");
-		else if (2 == m_iDotCnt)
-			lstrcat(m_szLoadingStr, L" . .");
-		else if (3 == m_iDotCnt)
-			lstrcat(m_szLoadingStr, L" . . .");
-		else if (4 == m_iDotCnt)
-			lstrcat(m_szLoadingStr, L" . . . .");
+	lstrcpy(m_szLoadingStr, (m_pLoading->Get_LoadingString()));
+	_tchar szPercent[MIN_STR] = L"%d %% \n";
+	wsprintf(szPercent, L"Now Loading %d %% Complete\n", iPercent);
+	wstring wstrResult	= szPercent;
+	wstring wstrLoading = m_szLoadingStr;
+	wstrResult += wstrLoading;
 
-		m_fTime += fTimeDelta;
-		if (m_fTime >= m_fUpdateTime)
-		{
-			m_fTime = 0.0f;
-			++m_iDotCnt;
-		}
-
-		if (m_iDotCnt > 4)
-			m_iDotCnt = 0;
-
-
-		m_pFont_LoadingStr->Set_Text(wstring(m_szLoadingStr));
-	}
-	else
-	{
-		lstrcpy(m_szLoadingStr, L"Loading Complete !");
-		m_pFont_LoadingStr->Set_Text(wstring(m_szLoadingStr));
-	}
+	m_pFont_LoadingStr->Set_Text(wstrResult);
 
 	return Engine::CScene::Update_Scene(fTimeDelta);
 }
@@ -215,6 +195,49 @@ HRESULT CScene_Logo::Ready_LayerFont(wstring wstrLayerTag)
 	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
 
 
+
+	return S_OK;
+}
+
+HRESULT CScene_Logo::SetUp_MaxLoadingCount()
+{
+	_tchar	szLineCnt[MIN_STR] = L"";
+	_int	iCnt = 0;
+
+	wifstream fin { L"../../Bin/ToolData/PathFind_Mesh_Count.txt" };
+	if (fin.fail())
+		return E_FAIL;
+
+	while (true)
+	{
+		fin.getline(szLineCnt, MIN_STR);
+
+		if (fin.eof())
+			break;
+
+		int iCnt = _ttoi(szLineCnt);
+		m_iMaxFileCount += iCnt;
+	}
+
+	fin.close();
+
+
+	fin.open(L"../../Bin/ToolData/PathFind_Texture_Count.txt");
+	if (fin.fail())
+		return E_FAIL;
+
+	while (true)
+	{
+		fin.getline(szLineCnt, MIN_STR);
+
+		if (fin.eof())
+			break;
+
+		int iCnt = _ttoi(szLineCnt);
+		m_iMaxFileCount += (_float)iCnt;
+	}
+
+	fin.close();
 
 	return S_OK;
 }
