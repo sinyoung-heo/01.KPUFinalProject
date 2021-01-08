@@ -19,6 +19,27 @@
     <Filter Include="99.Header\00.System\00.vector">
       <UniqueIdentifier>{dfb13cd2-92f8-4845-90de-615e89c8be8e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Object\00.Player">
+      <UniqueIdentifier>{49cde1b8-fa3e-4738-af8d-f25b3071750e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Object\01.Monster">
+      <UniqueIdentifier>{18286f8a-de7b-4314-9589-035b3a406c27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Object\02.NPC">
+      <UniqueIdentifier>{8db1a4a6-5b77-481d-a941-69d693f2ee98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Object\03.Map">
+      <UniqueIdentifier>{0007eba0-073d-485e-9257-83e4845ebcd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Manager">
+      <UniqueIdentifier>{aa626495-33ce-4e80-af03-1d9d5349ebf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Manager\00.PacketMgr">
+      <UniqueIdentifier>{b50bb8b7-533a-4a6b-8665-6a53bdf9a958}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Manager\01.ObjectMgr">
+      <UniqueIdentifier>{6141f726-af0b-44fd-9775-be8beb0c6175}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainServer.cpp">
@@ -26,6 +47,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\Obj.cpp">
       <Filter>01.Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Player.cpp">
+      <Filter>01.Object\00.Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PacketMgr.cpp">
+      <Filter>98.Manager\00.PacketMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjMgr.cpp">
+      <Filter>98.Manager\01.ObjectMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +85,15 @@
     </ClInclude>
     <ClInclude Include="..\Header\dataType.h">
       <Filter>99.Header\00.System\00.vector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Player.h">
+      <Filter>01.Object\00.Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PacketMgr.h">
+      <Filter>98.Manager\00.PacketMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ObjMgr.h">
+      <Filter>98.Manager\01.ObjectMgr</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

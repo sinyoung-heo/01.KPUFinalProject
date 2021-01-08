@@ -11,7 +11,7 @@ constexpr int KEY_SERVER		= 1000000;
 #define DEAD_OBJ 1
 #define NO_INIT -1
 #define PI 3.141592
-constexpr int SERVER_CORE		= 4;
+constexpr int SERVER_CORE		= 5;
 
 
 /* GAME CONTENTS */
@@ -33,3 +33,36 @@ constexpr int ELF_ATT			= 3;			// ELF 공격력
 constexpr int BOSS_ATT			= 10;			// BOSS 공격력
 
 constexpr int MASTER			= 99999;
+
+
+
+
+
+/* MACRO */
+#define NO_COPY(CLASSNAME)							\
+	private:										\
+	CLASSNAME(const CLASSNAME&);					\
+	CLASSNAME& operator = (const CLASSNAME&);		
+
+#define DECLARE_SINGLETON(CLASSNAME)				\
+	NO_COPY(CLASSNAME)								\
+	private:										\
+	static CLASSNAME*	m_pInstance;				\
+	public:											\
+	static CLASSNAME*	GetInstance( void );		\
+	static void DestroyInstance( void );			
+
+#define IMPLEMENT_SINGLETON(CLASSNAME)				\
+	CLASSNAME*	CLASSNAME::m_pInstance = NULL;		\
+	CLASSNAME*	CLASSNAME::GetInstance( void )	{	\
+		if(NULL == m_pInstance) {					\
+			m_pInstance = new CLASSNAME;			\
+		}											\
+		return m_pInstance;							\
+	}												\
+	void CLASSNAME::DestroyInstance( void ) {		\
+		if(NULL != m_pInstance)	{					\
+			m_pInstance->Release();					\
+			m_pInstance = NULL;						\
+		}											\
+	}
