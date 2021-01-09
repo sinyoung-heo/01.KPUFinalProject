@@ -4,10 +4,10 @@ extern HANDLE g_hIocp;
 extern SOCKET g_hListenSock;
 extern OVER_EX g_accept_over;
 
-extern SQLHDBC g_hdbc;
-extern SQLHSTMT g_hstmt;
-extern SQLRETURN g_retcode;
-extern SQLHENV g_henv;
+//extern SQLHDBC g_hdbc;
+//extern SQLHSTMT g_hstmt;
+//extern SQLRETURN g_retcode;
+//extern SQLHENV g_henv;
 
 /*==================================∞‘¿” ƒ‹≈Ÿ√˜=================================*/
 /* ID LOCK */

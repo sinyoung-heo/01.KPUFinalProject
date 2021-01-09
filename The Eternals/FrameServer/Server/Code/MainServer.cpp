@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Player.h"
 #define TEST
 
 /* IOCP SERVER 관련 변수*/
@@ -13,11 +14,11 @@ mutex g_id_lock;
 priority_queue<event_type> g_timer_queue;
 mutex g_timer_lock;
 
-/* DATABASE 관련 변수 */
-SQLHDBC g_hdbc;
-SQLHSTMT g_hstmt;
-SQLRETURN g_retcode;
-SQLHENV g_henv;
+///* DATABASE 관련 변수 */
+//SQLHDBC g_hdbc;
+//SQLHSTMT g_hstmt;
+//SQLRETURN g_retcode;
+//SQLHENV g_henv;
 
 /*==============================================================함수 선언부========================================================================*/
 void Ready_Server();				// 서버 메인 루프 초기화
@@ -100,6 +101,16 @@ void Ready_Server()
 
 void add_new_client(SOCKET ns)
 {
+	size_t s_num, temp;
+
+	/* 서버에서 유저를 관리할 번호 설정 */
+	g_id_lock.lock();
+	temp = CObjMgr::GetInstance()->Get_mapObj().size();
+	if (CObjMgr::GetInstance()->Get_GameObject(temp) == nullptr)
+		s_num = temp;
+	g_id_lock.unlock();
+
+	/* 새로 접속한 유저의 정보 초기화 */
 }
 
 void disconnect_client(int id)
@@ -152,7 +163,7 @@ void worker_thread()
 				cout << "Packet from Client [" << key << "]" << endl;
 #endif 
 				/* Packet 재조립 */
-				//process_recv(key, io_size);
+				process_recv(key, io_size);
 			}
 			break;
 

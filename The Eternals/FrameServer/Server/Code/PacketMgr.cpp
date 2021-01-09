@@ -16,6 +16,12 @@ void process_packet(int id)
 	{
 		cs_packet_login* p = reinterpret_cast<cs_packet_login*>(pPlayer->m_packet_start);
 
+		pPlayer->Get_ClientLock().lock();
+		strcpy_s(pPlayer->m_ID, p->name);
+		pPlayer->Get_ClientLock().unlock();
+
+		/* CHECK ID in Database Server */
+
 	}
 		
 

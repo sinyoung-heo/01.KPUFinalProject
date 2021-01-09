@@ -21,6 +21,7 @@ protected:
 	//unsigned char* m_recv_start; // player
 
 	/*=============∞‘¿” ƒ¡≈Ÿ√˜===============*/
+public:
 	bool m_bIsConnect; // all
 	bool m_bIsDead; //all
 	char m_ID[MAX_ID_LEN]; // all
@@ -33,6 +34,7 @@ protected:
 	_vec3 m_vPos; // all
 	_vec3 m_vDir; // all
 
+protected:
 	mutex c_lock;  // all
 
 	//unordered_set<int> view_list; // player

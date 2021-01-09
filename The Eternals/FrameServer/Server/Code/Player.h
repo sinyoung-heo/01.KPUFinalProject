@@ -17,7 +17,7 @@ public:
 	unsigned char* m_packet_start; // player
 	unsigned char* m_recv_start; // player
 
-private:
+public:
 	/*=============°ÔÀÓ ÄÁÅÙÃ÷===============*/
 	int	level; // player
 	int Hp, maxHp; // player, monster

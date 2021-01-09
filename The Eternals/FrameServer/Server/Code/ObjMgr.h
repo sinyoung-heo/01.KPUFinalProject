@@ -14,6 +14,7 @@ public:
 	HRESULT Delete_GameObject(int server_num);
 public:
 	CObj* Get_GameObject(int server_num);
+	unordered_map<int, CObj*>& Get_mapObj() { return m_mapObj; }
 
 public:
 	void Release();
