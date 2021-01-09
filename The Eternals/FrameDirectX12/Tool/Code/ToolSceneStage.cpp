@@ -8,6 +8,7 @@
 #include "Font.h"
 #include "ToolCamera.h"
 #include "ToolCoordinate.h"
+#include "ToolTerrain.h"
 
 CToolSceneStage::CToolSceneStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -31,7 +32,7 @@ HRESULT CToolSceneStage::Ready_Scene()
 	____________________________________________________________________________________________________________*/
 	m_pFont_Stage = static_cast<Engine::CFont*>(m_pObjectMgr->Clone_GameObjectPrototype(L"Font_NetmarbleLight"));
 	Engine::NULL_CHECK_RETURN(m_pFont_Stage, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pFont_Stage->Ready_GameObject(L"", _vec2(1390.f, 0.f), D2D1::ColorF::SpringGreen), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pFont_Stage->Ready_GameObject(L"", _vec2(1410.f, 0.f), D2D1::ColorF::SpringGreen), E_FAIL);
 
 
 	return S_OK;
@@ -114,9 +115,22 @@ HRESULT CToolSceneStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 	CToolCoordinate* pCoordinate = CToolCoordinate::Create(m_pGraphicDevice, m_pCommandList,
 														   _vec3(512.0f, 512.0f, 512.0f),	// Scale
 														   _vec3(0.0f, 0.0f, 0.0f),			// Angle
-														   _vec3(0.0f, 0.0f, 0.0f));		// Pos
+														   _vec3(-0.05f, 0.0f, -0.05f));	// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"ToolCoordinate", pCoordinate), E_FAIL);
 
+	/*__________________________________________________________________________________________________________
+	[ Terrain ]
+	____________________________________________________________________________________________________________*/
+	CToolTerrain* pTerrain = nullptr;
+
+	pTerrain = CToolTerrain::Create(m_pGraphicDevice, m_pCommandList, L"TerrainTex128");
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainTex128", pTerrain), E_FAIL);
+
+	pTerrain = CToolTerrain::Create(m_pGraphicDevice, m_pCommandList, L"TerrainTex256");
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainTex256", pTerrain), E_FAIL);
+
+	pTerrain = CToolTerrain::Create(m_pGraphicDevice, m_pCommandList, L"TerrainTex512");
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainTex512", pTerrain), E_FAIL);
 
 	return S_OK;
 }

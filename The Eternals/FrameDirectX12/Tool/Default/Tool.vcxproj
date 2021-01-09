@@ -206,6 +206,7 @@
     <ClInclude Include="..\Code\ToolMainApp.h" />
     <ClInclude Include="..\Code\ToolSceneLogo.h" />
     <ClInclude Include="..\Code\ToolSceneStage.h" />
+    <ClInclude Include="..\Code\ToolTerrain.h" />
     <ClInclude Include="..\Header\Const.h" />
     <ClInclude Include="..\Header\Extern.h" />
     <ClInclude Include="..\Header\Include.h" />
@@ -236,6 +237,7 @@
     <ClCompile Include="..\Code\ToolMainApp.cpp" />
     <ClCompile Include="..\Code\ToolSceneLogo.cpp" />
     <ClCompile Include="..\Code\ToolSceneStage.cpp" />
+    <ClCompile Include="..\Code\ToolTerrain.cpp" />
     <ClCompile Include="TabAnimation.cpp" />
     <ClCompile Include="TabCamera.cpp" />
     <ClCompile Include="TabCollider.cpp" />

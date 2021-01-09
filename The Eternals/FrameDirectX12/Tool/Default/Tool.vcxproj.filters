@@ -172,6 +172,9 @@
     <ClInclude Include="..\Code\ToolCoordinate.h">
       <Filter>03.ToolGameObject\00.Environment\00.Coordinate</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ToolTerrain.h">
+      <Filter>03.ToolGameObject\00.Environment\02.Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -230,6 +233,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\ToolCoordinate.cpp">
       <Filter>03.ToolGameObject\00.Environment\00.Coordinate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ToolTerrain.cpp">
+      <Filter>03.ToolGameObject\00.Environment\02.Terrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
