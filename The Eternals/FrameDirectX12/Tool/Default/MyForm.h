@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "TabPathFinder.h"
-#include "TabObject.h"
+#include "TabMap.h"
 #include "TabCollider.h"
 #include "TabAnimation.h"
 #include "TabCamera.h"
@@ -40,7 +40,7 @@ public:
 	CTabCtrl		m_Tab;
 
 	CTabPathFinder	m_TabPathFinder;
-	CTabObject		m_TabObject;
+	CTabMap			m_TabObject;
 	CTabCollider	m_TabCollider;
 	CTabAnimation	m_TabAnimation;
 	CTabCamera		m_TabCamera;

@@ -3,38 +3,38 @@
 
 #include "stdafx.h"
 #include "Tool.h"
-#include "TabObject.h"
+#include "TabMap.h"
 #include "afxdialogex.h"
 
 
-// CTabObject 대화 상자
+// CTabMap 대화 상자
 
-IMPLEMENT_DYNAMIC(CTabObject, CDialogEx)
+IMPLEMENT_DYNAMIC(CTabMap, CDialogEx)
 
-CTabObject::CTabObject(CWnd* pParent /*=nullptr*/)
+CTabMap::CTabMap(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_CTabObject, pParent)
 {
 
 }
 
-CTabObject::~CTabObject()
+CTabMap::~CTabMap()
 {
 }
 
-void CTabObject::DoDataExchange(CDataExchange* pDX)
+void CTabMap::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 }
 
 
-BEGIN_MESSAGE_MAP(CTabObject, CDialogEx)
+BEGIN_MESSAGE_MAP(CTabMap, CDialogEx)
 END_MESSAGE_MAP()
 
 
-// CTabObject 메시지 처리기
+// CTabMap 메시지 처리기
 
 
-BOOL CTabObject::PreTranslateMessage(MSG* pMsg)
+BOOL CTabMap::PreTranslateMessage(MSG* pMsg)
 {
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 	if (pMsg->message == WM_KEYDOWN && pMsg->wParam == VK_ESCAPE)

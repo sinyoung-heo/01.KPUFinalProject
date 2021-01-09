@@ -1,15 +1,15 @@
 ﻿#pragma once
 
 
-// CTabObject 대화 상자
+// CTabMap 대화 상자
 
-class CTabObject : public CDialogEx
+class CTabMap : public CDialogEx
 {
-	DECLARE_DYNAMIC(CTabObject)
+	DECLARE_DYNAMIC(CTabMap)
 
 public:
-	CTabObject(CWnd* pParent = nullptr);   // 표준 생성자입니다.
-	virtual ~CTabObject();
+	CTabMap(CWnd* pParent = nullptr);   // 표준 생성자입니다.
+	virtual ~CTabMap();
 
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME

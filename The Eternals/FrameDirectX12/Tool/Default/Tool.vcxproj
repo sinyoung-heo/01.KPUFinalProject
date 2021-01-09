@@ -218,7 +218,7 @@
     <ClInclude Include="TabCamera.h" />
     <ClInclude Include="TabCollider.h" />
     <ClInclude Include="TabEffect.h" />
-    <ClInclude Include="TabObject.h" />
+    <ClInclude Include="TabMap.h" />
     <ClInclude Include="TabPathFinder.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
@@ -244,7 +244,7 @@
     <ClCompile Include="TabCamera.cpp" />
     <ClCompile Include="TabCollider.cpp" />
     <ClCompile Include="TabEffect.cpp" />
-    <ClCompile Include="TabObject.cpp" />
+    <ClCompile Include="TabMap.cpp" />
     <ClCompile Include="TabPathFinder.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="MyForm.cpp" />

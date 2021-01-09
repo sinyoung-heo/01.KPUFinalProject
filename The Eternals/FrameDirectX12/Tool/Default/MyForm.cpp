@@ -56,7 +56,7 @@ void CMyForm::OnInitialUpdate()
 
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 	m_Tab.InsertItem(0, _T("PathFinder"));
-	m_Tab.InsertItem(1, _T("Object"));
+	m_Tab.InsertItem(1, _T("Map"));
 	m_Tab.InsertItem(2, _T("Collider"));
 	m_Tab.InsertItem(3, _T("Animation"));
 	m_Tab.InsertItem(4, _T("Camera"));
