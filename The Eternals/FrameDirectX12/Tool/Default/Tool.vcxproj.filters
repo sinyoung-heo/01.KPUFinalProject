@@ -169,6 +169,9 @@
     <ClInclude Include="..\Code\ToolCamera.h">
       <Filter>96.Camera</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ToolCoordinate.h">
+      <Filter>03.ToolGameObject\00.Environment\00.Coordinate</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -224,6 +227,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\ToolCamera.cpp">
       <Filter>96.Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ToolCoordinate.cpp">
+      <Filter>03.ToolGameObject\00.Environment\00.Coordinate</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -24,16 +24,16 @@ HRESULT CCoordinateCol::Ready_Buffer()
 	array<VTXCOL, 6> vertices =
 	{
 		// X√‡
-		VTXCOL(_vec3(0.0f, 0.0f, 0.0f), _rgba(1.0f, 1.f, 0.0f, 1.0f)),	// 0
-		VTXCOL(_vec3(1.0f, 0.0f, 0.0f), _rgba(1.0f, 1.f, 0.0f, 1.0f)),	// 1
+		VTXCOL(_vec3(0.0f, 0.0f, 0.0f), _rgba(1.0f, 0.5f, 0.0f, 1.0f)),	// 0
+		VTXCOL(_vec3(1.0f, 0.0f, 0.0f), _rgba(1.0f, 0.5f, 0.0f, 1.0f)),	// 1
 
 		// Y√‡
 		VTXCOL(_vec3(0.0f, 0.0f, 0.0f), _rgba(0.0f, 1.f, 0.0f, 1.0f)),	// 2
 		VTXCOL(_vec3(0.0f, 1.0f, 0.0f), _rgba(0.0f, 1.f, 0.0f, 1.0f)),	// 3
 
 		// Z√‡
-		VTXCOL(_vec3(0.0f, 0.0f, 0.0f), _rgba(0.0f, 0.f, 1.0f, 1.0f)),	// 4
-		VTXCOL(_vec3(0.0f, 0.0f, 1.0f), _rgba(0.0f, 0.f, 1.0f, 1.0f))	// 5
+		VTXCOL(_vec3(0.0f, 0.0f, 0.0f), _rgba(0.0f, 1.f, 1.0f, 1.0f)),	// 4
+		VTXCOL(_vec3(0.0f, 0.0f, 1.0f), _rgba(0.0f, 1.f, 1.0f, 1.0f))	// 5
 	};
 
 	const _int uiVB_ByteSize = (_uint)vertices.size() * sizeof(VTXCOL);

@@ -7,6 +7,7 @@
 #include "LightMgr.h"
 #include "Font.h"
 #include "ToolCamera.h"
+#include "ToolCoordinate.h"
 
 CToolSceneStage::CToolSceneStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -107,6 +108,16 @@ HRESULT CToolSceneStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 	Engine::CLayer* pLayer = Engine::CLayer::Create();
 	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
 	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
+
+
+	/*__________________________________________________________________________________________________________
+	[ Coordinate ]
+	____________________________________________________________________________________________________________*/
+	CToolCoordinate* pCoordinate = CToolCoordinate::Create(m_pGraphicDevice, m_pCommandList,
+														   _vec3(512.0f, 512.0f, 512.0f),	// Scale
+														   _vec3(0.0f, 0.0f, 0.0f),			// Angle
+														   _vec3(0.0f, 0.0f, 0.0f));		// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"ToolCoordinate", pCoordinate), E_FAIL);
 
 
 	return S_OK;
