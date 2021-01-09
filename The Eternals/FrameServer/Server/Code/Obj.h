@@ -2,8 +2,12 @@
 class CObj
 {
 public:
-	CObj() = default;
-	virtual ~CObj() = default;
+	CObj();
+	virtual ~CObj();
+
+public:
+	mutex& Get_ClientLock() { return c_lock; }
+	const bool& Get_IsConnected() { return m_bIsConnect; }
 
 public:
 	virtual DWORD Release();
@@ -11,28 +15,28 @@ public:
 protected:
 	/*=============Ω√Ω∫≈€ ƒ¡≈Ÿ√˜==============*/
 	int move_time;
-	SOCKET	m_sock; // player
-	OVER_EX	m_recv_over;  // player 
-	unsigned char* m_packet_start; // player
-	unsigned char* m_recv_start; // player
+	//SOCKET	m_sock; // player
+	//OVER_EX	m_recv_over;  // player 
+	//unsigned char* m_packet_start; // player
+	//unsigned char* m_recv_start; // player
 
 	/*=============∞‘¿” ƒ¡≈Ÿ√˜===============*/
 	bool m_bIsConnect; // all
 	bool m_bIsDead; //all
 	char m_ID[MAX_ID_LEN]; // all
 	char m_type; // all
-	int	level; // player
-	int Hp, maxHp; // player, monster
-	int Exp, maxExp; // player
-	int att; // player monster
-	float spd; // player monster
+	//int	level; // player
+	//int Hp, maxHp; // player, monster
+	//int Exp, maxExp; // player
+	//int att; // player monster
+	//float spd; // player monster
 	_vec3 m_vPos; // all
 	_vec3 m_vDir; // all
 
 	mutex c_lock;  // all
 
-	unordered_set<int> view_list; // player
-	mutex v_lock; // player 
+	//unordered_set<int> view_list; // player
+	//mutex v_lock; // player 
 	atomic<STATUS> m_status; // all
 };
 

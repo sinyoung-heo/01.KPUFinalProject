@@ -25,7 +25,7 @@ constexpr char CS_MOVE = 1;
 constexpr char CS_ATTACK = 2;
 constexpr char CS_CHAT = 3;
 constexpr char CS_LOGOUT = 4;
-constexpr char CS_TELEORT = 5;				// 부하 테스트용 동접 테스트를 위해 텔러포트로 Hot Spot 해소
+constexpr char CS_TELEPORT = 5;				// 부하 테스트용 동접 테스트를 위해 텔러포트로 Hot Spot 해소
 
 
 struct sc_packet_login_ok 

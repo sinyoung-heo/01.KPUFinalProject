@@ -4,16 +4,20 @@ class CPlayer :
     public CObj
 {
 public:
-    CPlayer() {}
-    virtual ~CPlayer() {}
+	CPlayer();
+	virtual ~CPlayer();
 
-private:
+public:
+	virtual DWORD Release();
+
+public:
 	/*=============½Ã½ºÅÛ ÄÁÅÙÃ÷==============*/
 	SOCKET	m_sock; // player
 	OVER_EX	m_recv_over;  // player 
 	unsigned char* m_packet_start; // player
 	unsigned char* m_recv_start; // player
 
+private:
 	/*=============°ÔÀÓ ÄÁÅÙÃ÷===============*/
 	int	level; // player
 	int Hp, maxHp; // player, monster

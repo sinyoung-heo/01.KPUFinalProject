@@ -10,8 +10,7 @@ void send_stat_change_packet(int to, int id);									// 상태정보(HP,LV,EXP) 변�
 
 void process_move(int id, char dir);											// 움직임 처리 함수
 void process_attck(int id);														// 공격 처리 함수
-void update_view_leave(int id);													// NPC가 죽은 후 유저의 시야 관리					
 
 /* 패킷 관리 및 처리 함수 */
 void process_packet(int id);													// 패킷 처리 함수 (모든 컨텐츠 처리)
-void process_recv(int id, DWORD iosize);										// 패킷 재조립 함수
+void process_recv(int id, DWORD iosize);										// 패킷 재조립 함수 (Ring Buffer 사용)
