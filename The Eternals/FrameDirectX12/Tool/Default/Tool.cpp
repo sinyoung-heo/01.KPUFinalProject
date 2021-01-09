@@ -13,6 +13,7 @@
 #include "ToolMainApp.h"
 #include "TimeMgr.h"
 #include "FrameMgr.h"
+#include "DirectInput.h"
 
 
 #ifdef _DEBUG
@@ -218,7 +219,8 @@ BOOL CToolApp::OnIdle(LONG lCount)
 			Engine::CTimerMgr::Get_Instance()->SetUp_TimeDelta(L"Timer_TimeDelta");
 			_float fTime_TimeDelta = Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta");
 
-
+			
+			
 			m_pMainView->m_pMainApp->Update_MainApp(fTime_TimeDelta);
 			m_pMainView->m_pMainApp->LateUpdate_MainApp(fTime_TimeDelta);
 			m_pMainView->m_pMainApp->Render_MainApp(fTime_TimeDelta);

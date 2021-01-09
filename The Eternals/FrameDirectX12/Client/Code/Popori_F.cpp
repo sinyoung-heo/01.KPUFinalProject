@@ -106,8 +106,23 @@ _int CPopori_F::Update_GameObject(const _float & fTimeDelta)
 	if(!g_bIsOnDebugCaemra)
 		Key_Input(fTimeDelta);
 
-	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
-	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
+	/*__________________________________________________________________________________________________________
+	[ TransCom - Update WorldMatrix ]
+	____________________________________________________________________________________________________________*/
+	Engine::CGameObject::Update_GameObject(fTimeDelta);
+
+
+	return NO_EVENT;
+}
+
+_int CPopori_F::LateUpdate_GameObject(const _float & fTimeDelta)
+{
+	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
+
+	/*__________________________________________________________________________________________________________
+	[ Renderer - Add Render Group ]
+	____________________________________________________________________________________________________________*/
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 
 	/*__________________________________________________________________________________________________________
 	[ Font Update ]
@@ -131,25 +146,10 @@ _int CPopori_F::Update_GameObject(const _float & fTimeDelta)
 	}
 
 	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
+	[ Animation KeyFrame Index ]
 	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
-
-	/*__________________________________________________________________________________________________________
-	[ TransCom - Update WorldMatrix ]
-	____________________________________________________________________________________________________________*/
-	Engine::CGameObject::Update_GameObject(fTimeDelta);
-
-
-	return NO_EVENT;
-}
-
-_int CPopori_F::LateUpdate_GameObject(const _float & fTimeDelta)
-{
-	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
-	
-	Set_ConstantTable();
-	Set_ConstantTableShadowDepth();
+	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
+	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
 	return NO_EVENT;
 }
@@ -180,6 +180,7 @@ void CPopori_F::Render_GameObject(const _float& fTimeDelta,
 	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
 
+	Set_ConstantTable();
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
@@ -187,6 +188,7 @@ void CPopori_F::Render_ShadowDepth(const _float& fTimeDelta,
 								   ID3D12GraphicsCommandList * pCommandList,
 								   const _int& iContextIdx)
 {
+	Set_ConstantTableShadowDepth();
 	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 }
 

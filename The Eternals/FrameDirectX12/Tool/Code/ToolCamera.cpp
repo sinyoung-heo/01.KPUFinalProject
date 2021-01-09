@@ -40,13 +40,26 @@ _int CToolCamera::Update_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Key Input ]
 	____________________________________________________________________________________________________________*/
-	Key_Input(fTimeDelta);
+	if (Engine::KEY_PRESSING(DIK_LSHIFT))
+		Key_Input(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
 	[ View Matrix Update ]
 	____________________________________________________________________________________________________________*/
 	Engine::CCamera::Update_GameObject(fTimeDelta);
 
+	
+	/*__________________________________________________________________________________________________________
+	[ Set Transform ]
+	____________________________________________________________________________________________________________*/
+	Engine::CGraphicDevice::Get_Instance()->Set_Transform(Engine::MATRIXID::VIEW, &m_tCameraInfo.matView);
+
+
+	return NO_EVENT;
+}
+
+_int CToolCamera::LateUpdate_GameObject(const _float& fTimeDelta)
+{
 	/*__________________________________________________________________________________________________________
 	[ Font Update ]
 	____________________________________________________________________________________________________________*/
@@ -64,17 +77,6 @@ _int CToolCamera::Update_GameObject(const _float& fTimeDelta)
 		m_pFont->Set_Text(wstring(m_szText));
 	}
 
-	/*__________________________________________________________________________________________________________
-	[ Set Transform ]
-	____________________________________________________________________________________________________________*/
-	Engine::CGraphicDevice::Get_Instance()->Set_Transform(Engine::MATRIXID::VIEW, &m_tCameraInfo.matView);
-
-
-	return NO_EVENT;
-}
-
-_int CToolCamera::LateUpdate_GameObject(const _float& fTimeDelta)
-{
 	return NO_EVENT;
 }
 

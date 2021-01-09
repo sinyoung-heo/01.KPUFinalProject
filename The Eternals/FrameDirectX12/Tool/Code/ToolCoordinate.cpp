@@ -38,11 +38,6 @@ _int CToolCoordinate::Update_GameObject(const _float& fTimeDelta)
 		return DEAD_OBJ;
 
 	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_PRIORITY, this), -1);
-
-	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
@@ -54,6 +49,11 @@ _int CToolCoordinate::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
+	/*__________________________________________________________________________________________________________
+	[ Renderer - Add Render Group ]
+	____________________________________________________________________________________________________________*/
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_PRIORITY, this), -1);
+
 	Set_ConstantTable();
 
 	return NO_EVENT;
@@ -61,6 +61,7 @@ _int CToolCoordinate::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CToolCoordinate::Render_GameObject(const _float& fTimeDelta)
 {
+
 	m_pShaderCom->Begin_Shader();
 	m_pBufferCom->Begin_Buffer();
 

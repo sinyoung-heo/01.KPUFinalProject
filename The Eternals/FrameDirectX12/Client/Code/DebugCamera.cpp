@@ -67,23 +67,6 @@ _int CDebugCamera::Update_GameObject(const _float & fTimeDelta)
 		Engine::CCamera::Update_GameObject(fTimeDelta);
 
 		/*__________________________________________________________________________________________________________
-		[ Font Update ]
-		____________________________________________________________________________________________________________*/
-		if (Engine::CRenderer::Get_Instance()->Get_RenderOnOff(L"Font"))
-		{
-			m_wstrText = wstring(L"[ Camera Info ] \n") +
-						 wstring(L"Eye\t(%d, %d, %d) \n") +
-						 wstring(L"At\t(%d, %d, %d)\n");
-
-			wsprintf(m_szText, m_wstrText.c_str(),
-					(_int)m_tCameraInfo.vEye.x, (_int)m_tCameraInfo.vEye.y, (_int)m_tCameraInfo.vEye.z,
-					(_int)m_tCameraInfo.vAt.x, (_int)m_tCameraInfo.vAt.y, (_int)m_tCameraInfo.vAt.z);
-
-			m_pFont->Update_GameObject(fTimeDelta);
-			m_pFont->Set_Text(wstring(m_szText));
-		}
-
-		/*__________________________________________________________________________________________________________
 		[ Set Transform ]
 		____________________________________________________________________________________________________________*/
 		Engine::CGraphicDevice::Get_Instance()->Set_Transform(Engine::MATRIXID::VIEW, &m_tCameraInfo.matView);
@@ -100,6 +83,26 @@ _int CDebugCamera::Update_GameObject(const _float & fTimeDelta)
 
 _int CDebugCamera::LateUpdate_GameObject(const _float & fTimeDelta)
 {
+	/*__________________________________________________________________________________________________________
+	[ Font Update ]
+	____________________________________________________________________________________________________________*/
+	if (Engine::CRenderer::Get_Instance()->Get_RenderOnOff(L"Font"))
+	{
+		if (g_bIsOnDebugCaemra)
+		{
+			m_wstrText = wstring(L"[ Camera Info ] \n") +
+						 wstring(L"Eye\t(%d, %d, %d) \n") +
+						 wstring(L"At\t(%d, %d, %d)\n");
+
+			wsprintf(m_szText, m_wstrText.c_str(),
+					(_int)m_tCameraInfo.vEye.x, (_int)m_tCameraInfo.vEye.y, (_int)m_tCameraInfo.vEye.z,
+					(_int)m_tCameraInfo.vAt.x, (_int)m_tCameraInfo.vAt.y, (_int)m_tCameraInfo.vAt.z);
+
+			m_pFont->Update_GameObject(fTimeDelta);
+			m_pFont->Set_Text(wstring(m_szText));
+		}
+	}
+
 	return NO_EVENT;
 }
 

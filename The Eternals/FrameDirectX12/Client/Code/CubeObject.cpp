@@ -45,11 +45,6 @@ _int CCubeObject::Update_GameObject(const _float & fTimeDelta)
 	m_pTransCom->m_vAngle.y += 90.f * fTimeDelta;
 
 	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
-
-	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
@@ -62,13 +57,18 @@ _int CCubeObject::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
-	Set_ConstantTable();
+	/*__________________________________________________________________________________________________________
+	[ Renderer - Add Render Group ]
+	____________________________________________________________________________________________________________*/
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 
 	return NO_EVENT;
 }
 
 void CCubeObject::Render_GameObject(const _float & fTimeDelta)
 {
+	Set_ConstantTable();
+
 	m_pShaderCom->Begin_Shader();
 	m_pBufferCom->Begin_Buffer();
 

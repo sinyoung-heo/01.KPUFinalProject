@@ -50,13 +50,11 @@ _int CToolSceneStage::Update_Scene(const _float& fTimeDelta)
 	}
 
 	return Engine::CScene::Update_Scene(fTimeDelta);
-
 }
 
 _int CToolSceneStage::LateUpdate_Scene(const _float& fTimeDelta)
 {
 	return Engine::CScene::LateUpdate_Scene(fTimeDelta);
-
 }
 
 HRESULT CToolSceneStage::Render_Scene(const _float& fTimeDelta)
