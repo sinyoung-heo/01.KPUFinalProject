@@ -85,15 +85,15 @@ _int CTerrainMeshObject::LateUpdate_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-void CTerrainMeshObject::Render_GameObject(const _float & fTimeDelta)
-{
-	m_pMeshCom->Render_StaticMesh(m_pShaderCom);
-}
-
-void CTerrainMeshObject::Render_ShadowDepth(const _float & fTimeDelta)
-{
-	m_pMeshCom->Render_StaticMeshShadowDepth(m_pShadowCom);
-}
+//void CTerrainMeshObject::Render_GameObject(const _float & fTimeDelta)
+//{
+//	m_pMeshCom->Render_StaticMesh(m_pShaderCom);
+//}
+//
+//void CTerrainMeshObject::Render_ShadowDepth(const _float & fTimeDelta)
+//{
+//	m_pMeshCom->Render_StaticMeshShadowDepth(m_pShadowCom);
+//}
 
 void CTerrainMeshObject::Render_GameObject(const _float& fTimeDelta, 
 										   ID3D12GraphicsCommandList * pCommandList,

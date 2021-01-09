@@ -25,10 +25,10 @@ public:
 
 	// Method
 	HRESULT							Ready_Mesh(wstring wstrFilePath, wstring wstrFileName);
-	void							Render_DynamicMesh(CShader* pShader);
-	void							Render_StaticMesh(CShader* pShader);
-	void							Render_DynamicMeshShadowDepth(CShader* pShader);
-	void							Render_StaticMeshShadowDepth(CShader* pShader);
+	//void							Render_DynamicMesh(CShader* pShader);
+	//void							Render_StaticMesh(CShader* pShader);
+	//void							Render_DynamicMeshShadowDepth(CShader* pShader);
+	//void							Render_StaticMeshShadowDepth(CShader* pShader);
 
 	// 2020.06.11 MultiThreadRendering
 	void							Render_DynamicMesh(ID3D12GraphicsCommandList* pCommandList,

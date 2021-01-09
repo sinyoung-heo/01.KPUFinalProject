@@ -85,15 +85,15 @@ _int CStaticMeshObject::LateUpdate_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-void CStaticMeshObject::Render_GameObject(const _float & fTimeDelta)
-{
-	m_pMeshCom->Render_StaticMesh(m_pShaderCom);
-}
-
-void CStaticMeshObject::Render_ShadowDepth(const _float & fTimeDelta)
-{
-	m_pMeshCom->Render_StaticMeshShadowDepth(m_pShadowCom);
-}
+//void CStaticMeshObject::Render_GameObject(const _float & fTimeDelta)
+//{
+//	m_pMeshCom->Render_StaticMesh(m_pShaderCom);
+//}
+//
+//void CStaticMeshObject::Render_ShadowDepth(const _float & fTimeDelta)
+//{
+//	m_pMeshCom->Render_StaticMeshShadowDepth(m_pShadowCom);
+//}
 
 void CStaticMeshObject::Render_GameObject(const _float& fTimeDelta, 
 										  ID3D12GraphicsCommandList * pCommandList,

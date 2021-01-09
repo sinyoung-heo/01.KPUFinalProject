@@ -6,6 +6,7 @@
 #include "DirectInput.h"
 #include "LightMgr.h"
 #include "Font.h"
+#include "ToolCamera.h"
 
 CToolSceneStage::CToolSceneStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -74,6 +75,23 @@ HRESULT CToolSceneStage::Ready_LayerCamera(wstring wstrLayerTag)
 	Engine::CLayer* pLayer = Engine::CLayer::Create();
 	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
 	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
+
+	/*__________________________________________________________________________________________________________
+	[ ToolCamera ]
+	____________________________________________________________________________________________________________*/
+	CToolCamera* pCToolCamera = CToolCamera::Create(m_pGraphicDevice, m_pCommandList,
+													Engine::CAMERA_DESC(_vec3(-10.0, 10.0f, -20.0f),	// Eye
+																		_vec3(0.0f, 0.0f, 0.0f),		// At
+																		_vec3(0.0f, 1.0f, 0.f)),		// Up
+													Engine::PROJ_DESC(60.0f,							// FovY
+																		_float(WINCX) / _float(WINCY),	// Aspect
+																		1.0f,							// Near
+																		1000.0f),						// Far
+													Engine::ORTHO_DESC(WINCX,							// Viewport Width
+																	   WINCY,							// Viewport Height
+																	   0.0f,							// Near
+																	   1.0f));							// Far
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"ToolCamera", pCToolCamera), E_FAIL);
 
 
 	return S_OK;

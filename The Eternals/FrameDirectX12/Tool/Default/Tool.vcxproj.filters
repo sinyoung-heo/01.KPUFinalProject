@@ -71,6 +71,21 @@
     <Filter Include="02.ToolScene\00.ToolLoading">
       <UniqueIdentifier>{04295b2b-3596-4ece-a728-4e0580ebcd7d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.ToolGameObject\00.Environment">
+      <UniqueIdentifier>{4f2cef7b-9361-48dc-9e79-fd5f5b82e374}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Camera">
+      <UniqueIdentifier>{6487ef7d-fab9-44d9-bddb-46a4bb3aa156}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ToolGameObject\00.Environment\00.Coordinate">
+      <UniqueIdentifier>{61bbcf23-f27f-44e3-9437-ed1b184f7d03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ToolGameObject\00.Environment\01.SkyBox">
+      <UniqueIdentifier>{f4741af7-e8fa-4f7d-a644-45c3bc990389}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ToolGameObject\00.Environment\02.Terrain">
+      <UniqueIdentifier>{c92c7163-e5b2-4871-a116-23047d0ed8b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
@@ -151,6 +166,9 @@
     <ClInclude Include="..\Code\ToolSceneStage.h">
       <Filter>02.ToolScene\02.ToolStage</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ToolCamera.h">
+      <Filter>96.Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -203,6 +221,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\ToolSceneStage.cpp">
       <Filter>02.ToolScene\02.ToolStage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ToolCamera.cpp">
+      <Filter>96.Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

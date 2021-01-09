@@ -200,6 +200,11 @@ HRESULT CToolMainApp::SetUp_ComponentPrototype()
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ColliderBox", Engine::ID_DYNAMIC, pComponent), E_FAIL);
 
+	// CoordinateCol
+	pComponent = Engine::CCoordinateCol::Create(m_pGraphicDevice, m_pCommandList);
+	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"CoordinateCol", Engine::ID_STATIC, pComponent), E_FAIL);
+
 	return S_OK;
 }
 
@@ -246,7 +251,11 @@ HRESULT CToolMainApp::SetUp_StartScene(Engine::SCENEID eScebeID)
 
 void CToolMainApp::Key_Input()
 {
-	
+	/*__________________________________________________________________________________________________________
+	[ Render On/Off ]
+	____________________________________________________________________________________________________________*/
+	if (Engine::KEY_DOWN(DIK_F1))
+		m_pRenderer->Set_RenderOnOff(L"RenderTarget");
 }
 
 CToolMainApp* CToolMainApp::Create()

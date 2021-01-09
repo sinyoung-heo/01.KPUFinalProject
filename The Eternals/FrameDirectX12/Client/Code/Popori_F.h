@@ -44,8 +44,8 @@ public:
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
-	virtual void	Render_GameObject(const _float& fTimeDelta);
-	virtual void	Render_ShadowDepth(const _float & fTimeDelta);
+	//virtual void	Render_GameObject(const _float& fTimeDelta);
+	//virtual void	Render_ShadowDepth(const _float & fTimeDelta);
 
 	// 2020.06.11 MultiThreadRendering
 	virtual void	Render_GameObject(const _float& fTimeDelta, 

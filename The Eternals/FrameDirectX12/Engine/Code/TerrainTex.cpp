@@ -18,8 +18,8 @@ CTerrainTex::CTerrainTex(const CTerrainTex & rhs)
 
 
 HRESULT CTerrainTex::Ready_Buffer(const _uint & iNumVerticesX,
-									 const _uint & iNumVerticesZ,
-									 const _float & fInterval)
+								  const _uint & iNumVerticesZ,
+								  const _float & fInterval)
 {
 	FAILED_CHECK_RETURN(CVIBuffer::Ready_Buffer(), E_FAIL);
 

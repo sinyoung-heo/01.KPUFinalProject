@@ -40,10 +40,10 @@ public:
 														 const UINT64& uiByteSize,
 														 ID3D12Resource*& pUploadBuffer);
 
-	void							Render_DynamicMesh(CShader* pShader);
-	void							Render_StaticMesh(CShader* pShader);
-	void							Render_DynamicMeshShadowDepth(CShader* pShader);
-	void							Render_StaticMeshShadowDepth(CShader* pShader);
+	//void							Render_DynamicMesh(CShader* pShader);
+	//void							Render_StaticMesh(CShader* pShader);
+	//void							Render_DynamicMeshShadowDepth(CShader* pShader);
+	//void							Render_StaticMeshShadowDepth(CShader* pShader);
 
 	// 2020.06.11 MultiThreadRendering
 	void							Render_DynamicMesh(ID3D12GraphicsCommandList* pCommandList,

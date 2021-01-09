@@ -199,6 +199,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Code\ToolCamera.h" />
     <ClInclude Include="..\Code\ToolFileInfo.h" />
     <ClInclude Include="..\Code\ToolLoading.h" />
     <ClInclude Include="..\Code\ToolMainApp.h" />
@@ -227,6 +228,7 @@
     <ClInclude Include="ToolView.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Code\ToolCamera.cpp" />
     <ClCompile Include="..\Code\ToolFileInfo.cpp" />
     <ClCompile Include="..\Code\ToolLoading.cpp" />
     <ClCompile Include="..\Code\ToolMainApp.cpp" />
