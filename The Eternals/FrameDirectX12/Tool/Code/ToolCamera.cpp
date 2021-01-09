@@ -1,26 +1,23 @@
 #include "stdafx.h"
-#include "DebugCamera.h"
-
+#include "ToolCamera.h"
 #include "GraphicDevice.h"
 #include "ObjectMgr.h"
 #include "DirectInput.h"
-#include "DynamicCamera.h"
 #include "Font.h"
 
-
-CDebugCamera::CDebugCamera(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CToolCamera::CToolCamera(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CCamera(pGraphicDevice, pCommandList)
 {
 }
 
-CDebugCamera::CDebugCamera(const CDebugCamera & rhs)
+CToolCamera::CToolCamera(const CToolCamera& rhs)
 	: Engine::CCamera(rhs)
 {
 }
 
-HRESULT CDebugCamera::Ready_GameObject(const Engine::CAMERA_DESC& tCameraInfo,
-									   const Engine::PROJ_DESC& tProjInfo,
-									   const Engine::ORTHO_DESC& tOrthoInfo)
+HRESULT CToolCamera::Ready_GameObject(const Engine::CAMERA_DESC& tCameraInfo,
+									  const Engine::PROJ_DESC& tProjInfo, 
+									  const Engine::ORTHO_DESC& tOrthoInfo)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CCamera::Ready_GameObject(tCameraInfo, tProjInfo, tOrthoInfo), E_FAIL);
 
@@ -31,86 +28,63 @@ HRESULT CDebugCamera::Ready_GameObject(const Engine::CAMERA_DESC& tCameraInfo,
 	return S_OK;
 }
 
-HRESULT CDebugCamera::LateInit_GameObject()
+HRESULT CToolCamera::LateInit_GameObject()
 {
 	return S_OK;
 }
 
-_int CDebugCamera::Update_GameObject(const _float & fTimeDelta)
+_int CToolCamera::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
-
-	if (g_bIsOnDebugCaemra)
-	{
-		if (!m_bIsResetDebugCamera)
-		{
-			m_bIsResetDebugCamera = true;
-
-			CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
-			if (nullptr != pDynamicCamera)
-			{
-				m_tCameraInfo = pDynamicCamera->Get_CameraInfo();
-			}
-
-			pDynamicCamera = nullptr;
-		}
-
-		/*__________________________________________________________________________________________________________
-		[ Key Input ]
-		____________________________________________________________________________________________________________*/
+	/*__________________________________________________________________________________________________________
+	[ Key Input ]
+	____________________________________________________________________________________________________________*/
+	if (Engine::KEY_PRESSING(DIK_LSHIFT))
 		Key_Input(fTimeDelta);
 
-		/*__________________________________________________________________________________________________________
-		[ View Matrix Update ]
-		____________________________________________________________________________________________________________*/
-		Engine::CCamera::Update_GameObject(fTimeDelta);
+	/*__________________________________________________________________________________________________________
+	[ View Matrix Update ]
+	____________________________________________________________________________________________________________*/
+	Engine::CCamera::Update_GameObject(fTimeDelta);
 
-		/*__________________________________________________________________________________________________________
-		[ Set Transform ]
-		____________________________________________________________________________________________________________*/
-		Engine::CGraphicDevice::Get_Instance()->Set_Transform(Engine::MATRIXID::VIEW, &m_tCameraInfo.matView);
-
-	}
-	else
-	{
-		m_bIsResetDebugCamera = false;
-	}
+	
+	/*__________________________________________________________________________________________________________
+	[ Set Transform ]
+	____________________________________________________________________________________________________________*/
+	Engine::CGraphicDevice::Get_Instance()->Set_Transform(Engine::MATRIXID::VIEW, &m_tCameraInfo.matView);
 
 
 	return NO_EVENT;
 }
 
-_int CDebugCamera::LateUpdate_GameObject(const _float & fTimeDelta)
+_int CToolCamera::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	/*__________________________________________________________________________________________________________
 	[ Font Update ]
 	____________________________________________________________________________________________________________*/
 	if (Engine::CRenderer::Get_Instance()->Get_RenderOnOff(L"Font"))
 	{
-		if (g_bIsOnDebugCaemra)
-		{
-			m_wstrText = wstring(L"[ Camera Info ] \n") +
-						 wstring(L"Eye\t(%d, %d, %d) \n") +
-						 wstring(L"At\t(%d, %d, %d)\n");
+		m_wstrText = wstring(L"[ Camera Info ] \n") +
+					 wstring(L"Eye\t(%d, %d, %d) \n") +
+					 wstring(L"At\t(%d, %d, %d)\n");
 
-			wsprintf(m_szText, m_wstrText.c_str(),
-					(_int)m_tCameraInfo.vEye.x, (_int)m_tCameraInfo.vEye.y, (_int)m_tCameraInfo.vEye.z,
-					(_int)m_tCameraInfo.vAt.x, (_int)m_tCameraInfo.vAt.y, (_int)m_tCameraInfo.vAt.z);
+		wsprintf(m_szText, m_wstrText.c_str(),
+				(_int)m_tCameraInfo.vEye.x, (_int)m_tCameraInfo.vEye.y, (_int)m_tCameraInfo.vEye.z,
+				(_int)m_tCameraInfo.vAt.x, (_int)m_tCameraInfo.vAt.y, (_int)m_tCameraInfo.vAt.z);
 
-			m_pFont->Update_GameObject(fTimeDelta);
-			m_pFont->Set_Text(wstring(m_szText));
-		}
+		m_pFont->Update_GameObject(fTimeDelta);
+		m_pFont->Set_Text(wstring(m_szText));
 	}
 
 	return NO_EVENT;
 }
 
-void CDebugCamera::Render_GameObject(const _float & fTimeDelta)
+void CToolCamera::Render_GameObject(const _float& fTimeDelta)
 {
 }
 
-void CDebugCamera::Key_Input(const _float & fTimeDelta)
+void CToolCamera::Key_Input(const _float& fTimeDelta)
 {
 	_matrix matWorld = INIT_MATRIX;
 	matWorld = MATRIX_INVERSE(m_tCameraInfo.matView);
@@ -194,16 +168,11 @@ void CDebugCamera::Key_Input(const _float & fTimeDelta)
 		m_tCameraInfo.vEye	-= vLook * m_fSpeed * fTimeDelta;
 		m_tCameraInfo.vAt	-= vLook * m_fSpeed * fTimeDelta;
 	}
-
 }
 
-CDebugCamera * CDebugCamera::Create(ID3D12Device * pGraphicDevice, 
-									ID3D12GraphicsCommandList * pCommandList,
-									const Engine::CAMERA_DESC & tCameraInfo,
-									const Engine::PROJ_DESC & tProjInfo,
-									const Engine::ORTHO_DESC & tOrthoInfo)
+CToolCamera* CToolCamera::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, const Engine::CAMERA_DESC& tCameraInfo, const Engine::PROJ_DESC& tProjInfo, const Engine::ORTHO_DESC& tOrthoInfo)
 {
-	CDebugCamera* pInstance = new CDebugCamera(pGraphicDevice, pCommandList);
+	CToolCamera* pInstance = new CToolCamera(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(tCameraInfo, tProjInfo, tOrthoInfo)))
 		Engine::Safe_Release(pInstance);
@@ -211,7 +180,7 @@ CDebugCamera * CDebugCamera::Create(ID3D12Device * pGraphicDevice,
 	return pInstance;
 }
 
-void CDebugCamera::Free()
+void CToolCamera::Free()
 {
 	Engine::CCamera::Free();
 

@@ -90,7 +90,7 @@ HRESULT CToolSceneLogo::Render_Scene(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(CScene::Render_Scene(fTimeDelta), E_FAIL);
 
-	if (Engine::KEY_DOWN(DIK_RETURN) && m_pLoading->Get_Finish())
+	if (/*Engine::KEY_DOWN(DIK_RETURN) &&*/ m_pLoading->Get_Finish())
 	{
 		m_pObjectMgr->Clear_Layer();
 

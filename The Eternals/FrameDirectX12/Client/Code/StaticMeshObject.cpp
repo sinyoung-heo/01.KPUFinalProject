@@ -62,11 +62,6 @@ _int CStaticMeshObject::Update_GameObject(const _float & fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
-	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
-
 	/*____________________________________________________________________
 	TransCom - Update WorldMatrix.
 	______________________________________________________________________*/
@@ -79,26 +74,30 @@ _int CStaticMeshObject::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
-	Set_ConstantTable();
-	Set_ConstantTableShadowDepth();
+	/*__________________________________________________________________________________________________________
+	[ Renderer - Add Render Group ]
+	____________________________________________________________________________________________________________*/
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 
 	return NO_EVENT;
 }
 
-void CStaticMeshObject::Render_GameObject(const _float & fTimeDelta)
-{
-	m_pMeshCom->Render_StaticMesh(m_pShaderCom);
-}
-
-void CStaticMeshObject::Render_ShadowDepth(const _float & fTimeDelta)
-{
-	m_pMeshCom->Render_StaticMeshShadowDepth(m_pShadowCom);
-}
+//void CStaticMeshObject::Render_GameObject(const _float & fTimeDelta)
+//{
+//	m_pMeshCom->Render_StaticMesh(m_pShaderCom);
+//}
+//
+//void CStaticMeshObject::Render_ShadowDepth(const _float & fTimeDelta)
+//{
+//	m_pMeshCom->Render_StaticMeshShadowDepth(m_pShadowCom);
+//}
 
 void CStaticMeshObject::Render_GameObject(const _float& fTimeDelta, 
 										  ID3D12GraphicsCommandList * pCommandList,
 										  const _int& iContextIdx)
 {
+	Set_ConstantTable();
+
 	m_pMeshCom->Render_StaticMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
@@ -106,6 +105,8 @@ void CStaticMeshObject::Render_ShadowDepth(const _float& fTimeDelta,
 										   ID3D12GraphicsCommandList * pCommandList,
 										   const _int& iContextIdx)
 {
+	Set_ConstantTableShadowDepth();
+
 	m_pMeshCom->Render_StaticMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 }
 

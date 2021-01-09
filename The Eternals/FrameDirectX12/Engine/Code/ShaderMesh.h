@@ -29,8 +29,8 @@ public:
 	HRESULT			SetUp_ShaderConstantBuffer(const _uint& uiNumSubsetMesh = 1);
 	// CShader을(를) 통해 상속됨
 	virtual HRESULT	Ready_Shader();
-	virtual void	Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap = nullptr, 
-								 const _uint& iIdx = 0);
+	//virtual void	Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap = nullptr, 
+	//							 const _uint& iIdx = 0);
 
 	// 2020.06.13 MultiThreadRendering
 	virtual void	Begin_Shader(ID3D12GraphicsCommandList* pCommandList,

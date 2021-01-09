@@ -59,6 +59,7 @@ using namespace DirectX::PackedVector;
 #include "Include.h"
 
 #include "ToolFileInfo.h"
+#include "MouseMgr.h"
 
 
 #ifdef _DEBUG

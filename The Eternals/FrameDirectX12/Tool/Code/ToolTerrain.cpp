@@ -1,29 +1,28 @@
 #include "stdafx.h"
-#include "TerrainObject.h"
-
+#include "ToolTerrain.h"
 #include "ObjectMgr.h"
 #include "GraphicDevice.h"
 
-CTerrainObject::CTerrainObject(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+
+CToolTerrain::CToolTerrain(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
 }
 
-CTerrainObject::CTerrainObject(const CTerrainObject & rhs)
+CToolTerrain::CToolTerrain(const CToolTerrain& rhs)
 	: Engine::CGameObject(rhs)
 {
 }
 
-
-HRESULT CTerrainObject::Ready_GameObject()
+HRESULT CToolTerrain::Ready_GameObject(wstring wstrTerrainTag)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true), E_FAIL);
-	Engine::FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Add_Component(wstrTerrainTag), E_FAIL);
 
 	return S_OK;
 }
 
-HRESULT CTerrainObject::LateInit_GameObject()
+HRESULT CToolTerrain::LateInit_GameObject()
 {
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer();
@@ -31,12 +30,15 @@ HRESULT CTerrainObject::LateInit_GameObject()
 	return S_OK;
 }
 
-_int CTerrainObject::Update_GameObject(const _float & fTimeDelta)
+_int CToolTerrain::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
+
+	if (!m_bIsUpdate)
+		return NO_EVENT;
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
@@ -46,34 +48,37 @@ _int CTerrainObject::Update_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CTerrainObject::LateUpdate_GameObject(const _float & fTimeDelta)
+_int CToolTerrain::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
+
+	if (!m_bIsUpdate)
+		return NO_EVENT;
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_PRIORITY, this), -1);
 
 	return NO_EVENT;
 }
 
-void CTerrainObject::Render_GameObject(const _float & fTimeDelta)
+void CToolTerrain::Render_GameObject(const _float& fTimeDelta)
 {
 	Set_ConstantTable();
 
-	m_pShaderCom->Begin_Shader(0);
+	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), m_uiTexIdx);
 	m_pBufferCom->Begin_Buffer();
 
 	m_pBufferCom->Render_Buffer();
 }
 
-HRESULT CTerrainObject::Add_Component()
+HRESULT CToolTerrain::Add_Component(wstring wstrTerrainTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
 	// Buffer
-	m_pBufferCom = static_cast<Engine::CTerrainTex*>(m_pComponentMgr->Clone_Component(L"TerrainTex", Engine::COMPONENTID::ID_STATIC));
+	m_pBufferCom = static_cast<Engine::CTerrainTex*>(m_pComponentMgr->Clone_Component(wstrTerrainTag, Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
 	m_pBufferCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Buffer", m_pBufferCom);
@@ -88,13 +93,13 @@ HRESULT CTerrainObject::Add_Component()
 	m_pShaderCom = static_cast<Engine::CShaderTexture*>(m_pComponentMgr->Clone_Component(L"ShaderTexture", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->AddRef();
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(0), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(m_uiShaderPass), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
 	return S_OK;
 }
 
-void CTerrainObject::Set_ConstantTable()
+void CToolTerrain::Set_ConstantTable()
 {
 	_matrix* pmatView = Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::VIEW);
 	_matrix* pmatProj = Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::PROJECTION);
@@ -115,18 +120,19 @@ void CTerrainObject::Set_ConstantTable()
 	m_pShaderCom->Get_UploadBuffer_MatrixDesc()->CopyData(0, tCB_MatrixDesc);
 }
 
-
-CTerrainObject * CTerrainObject::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CToolTerrain* CToolTerrain::Create(ID3D12Device* pGraphicDevice, 
+								   ID3D12GraphicsCommandList* pCommandList,
+								   wstring wstrTerrainTag)
 {
-	CTerrainObject* pInstance = new CTerrainObject(pGraphicDevice, pCommandList);
+	CToolTerrain* pInstance = new CToolTerrain(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject()))
+	if (FAILED(pInstance->Ready_GameObject(wstrTerrainTag)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
 }
 
-void CTerrainObject::Free()
+void CToolTerrain::Free()
 {
 	Engine::CGameObject::Free();
 

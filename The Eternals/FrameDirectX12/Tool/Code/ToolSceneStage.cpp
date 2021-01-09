@@ -6,6 +6,9 @@
 #include "DirectInput.h"
 #include "LightMgr.h"
 #include "Font.h"
+#include "ToolCamera.h"
+#include "ToolCoordinate.h"
+#include "ToolTerrain.h"
 
 CToolSceneStage::CToolSceneStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -29,7 +32,7 @@ HRESULT CToolSceneStage::Ready_Scene()
 	____________________________________________________________________________________________________________*/
 	m_pFont_Stage = static_cast<Engine::CFont*>(m_pObjectMgr->Clone_GameObjectPrototype(L"Font_NetmarbleLight"));
 	Engine::NULL_CHECK_RETURN(m_pFont_Stage, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pFont_Stage->Ready_GameObject(L"", _vec2(1390.f, 0.f), D2D1::ColorF::SpringGreen), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pFont_Stage->Ready_GameObject(L"", _vec2(1410.f, 0.f), D2D1::ColorF::SpringGreen), E_FAIL);
 
 
 	return S_OK;
@@ -47,14 +50,18 @@ _int CToolSceneStage::Update_Scene(const _float& fTimeDelta)
 		m_pFont_Stage->Set_Text(wstring(m_szFPS));
 	}
 
-	return Engine::CScene::Update_Scene(fTimeDelta);
+	/*__________________________________________________________________________________________________________
+	[ Key Input ]
+	____________________________________________________________________________________________________________*/
+	if (Engine::KEY_PRESSING(DIK_LSHIFT))
+		Key_Input();
 
+	return Engine::CScene::Update_Scene(fTimeDelta);
 }
 
 _int CToolSceneStage::LateUpdate_Scene(const _float& fTimeDelta)
 {
 	return Engine::CScene::LateUpdate_Scene(fTimeDelta);
-
 }
 
 HRESULT CToolSceneStage::Render_Scene(const _float& fTimeDelta)
@@ -75,6 +82,23 @@ HRESULT CToolSceneStage::Ready_LayerCamera(wstring wstrLayerTag)
 	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
 	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
 
+	/*__________________________________________________________________________________________________________
+	[ ToolCamera ]
+	____________________________________________________________________________________________________________*/
+	CToolCamera* pCToolCamera = CToolCamera::Create(m_pGraphicDevice, m_pCommandList,
+													Engine::CAMERA_DESC(_vec3(-10.0, 10.0f, -20.0f),	// Eye
+																		_vec3(0.0f, 0.0f, 0.0f),		// At
+																		_vec3(0.0f, 1.0f, 0.f)),		// Up
+													Engine::PROJ_DESC(60.0f,							// FovY
+																		_float(WINCX) / _float(WINCY),	// Aspect
+																		1.0f,							// Near
+																		1000.0f),						// Far
+													Engine::ORTHO_DESC(WINCX,							// Viewport Width
+																	   WINCY,							// Viewport Height
+																	   0.0f,							// Near
+																	   1.0f));							// Far
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"ToolCamera", pCToolCamera), E_FAIL);
+
 
 	return S_OK;
 }
@@ -90,6 +114,29 @@ HRESULT CToolSceneStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
 	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
 
+
+	/*__________________________________________________________________________________________________________
+	[ Coordinate ]
+	____________________________________________________________________________________________________________*/
+	CToolCoordinate* pCoordinate = CToolCoordinate::Create(m_pGraphicDevice, m_pCommandList,
+														   _vec3(512.0f, 512.0f, 512.0f),	// Scale
+														   _vec3(0.0f, 0.0f, 0.0f),			// Angle
+														   _vec3(-0.05f, 0.0f, -0.05f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"ToolCoordinate", pCoordinate), E_FAIL);
+
+	/*__________________________________________________________________________________________________________
+	[ Terrain ]
+	____________________________________________________________________________________________________________*/
+	CToolTerrain* pTerrain = nullptr;
+
+	pTerrain = CToolTerrain::Create(m_pGraphicDevice, m_pCommandList, L"TerrainTex128");
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainTex128", pTerrain), E_FAIL);
+
+	//pTerrain = CToolTerrain::Create(m_pGraphicDevice, m_pCommandList, L"TerrainTex256");
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainTex256", pTerrain), E_FAIL);
+
+	//pTerrain = CToolTerrain::Create(m_pGraphicDevice, m_pCommandList, L"TerrainTex512");
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainTex512", pTerrain), E_FAIL);
 
 	return S_OK;
 }
@@ -143,6 +190,19 @@ HRESULT CToolSceneStage::Ready_LightInfo()
 
 
 	return S_OK;
+}
+
+void CToolSceneStage::Key_Input()
+{
+	/*__________________________________________________________________________________________________________
+	[ Terrain Picking ]
+	____________________________________________________________________________________________________________*/
+	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON(Engine::DIM_LB)))
+	{
+		CToolTerrain* pTerrain = static_cast<CToolTerrain*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"TerrainTex128"));
+		_vec3 vPickingPos = CMouseMgr::Picking_OnTerrain(pTerrain);
+		vPickingPos.Print();
+	}
 }
 
 CToolSceneStage* CToolSceneStage::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)

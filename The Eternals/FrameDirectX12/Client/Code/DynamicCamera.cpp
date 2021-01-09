@@ -72,6 +72,19 @@ _int CDynamicCamera::Update_GameObject(const _float & fTimeDelta)
 		Engine::CCamera::Update_GameObject(fTimeDelta);
 
 		/*__________________________________________________________________________________________________________
+		[ Set Transform ]
+		____________________________________________________________________________________________________________*/
+		Engine::CGraphicDevice::Get_Instance()->Set_Transform(Engine::MATRIXID::VIEW, &m_tCameraInfo.matView);
+	}
+
+	return NO_EVENT;
+}
+
+_int CDynamicCamera::LateUpdate_GameObject(const _float & fTimeDelta)
+{
+	if (!g_bIsOnDebugCaemra)
+	{
+		/*__________________________________________________________________________________________________________
 		[ Font Update ]
 		____________________________________________________________________________________________________________*/
 		if (Engine::CRenderer::Get_Instance()->Get_RenderOnOff(L"Font"))
@@ -91,18 +104,8 @@ _int CDynamicCamera::Update_GameObject(const _float & fTimeDelta)
 			m_pFont->Update_GameObject(fTimeDelta);
 			m_pFont->Set_Text(wstring(m_szText));
 		}
-
-		/*__________________________________________________________________________________________________________
-		[ Set Transform ]
-		____________________________________________________________________________________________________________*/
-		Engine::CGraphicDevice::Get_Instance()->Set_Transform(Engine::MATRIXID::VIEW, &m_tCameraInfo.matView);
 	}
 
-	return NO_EVENT;
-}
-
-_int CDynamicCamera::LateUpdate_GameObject(const _float & fTimeDelta)
-{
 	return NO_EVENT;
 }
 

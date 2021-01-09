@@ -13,13 +13,15 @@ CTerrainTex::CTerrainTex(const CTerrainTex & rhs)
 	, m_iNumVerticesX(rhs.m_iNumVerticesX)
 	, m_iNumVerticesZ(rhs.m_iNumVerticesZ)
 	, m_fInterval(rhs.m_fInterval)
+	, vecVertices(rhs.vecVertices)
+	, vecIndices(rhs.vecIndices)
 {
 }
 
 
 HRESULT CTerrainTex::Ready_Buffer(const _uint & iNumVerticesX,
-									 const _uint & iNumVerticesZ,
-									 const _float & fInterval)
+								  const _uint & iNumVerticesZ,
+								  const _float & fInterval)
 {
 	FAILED_CHECK_RETURN(CVIBuffer::Ready_Buffer(), E_FAIL);
 
@@ -33,7 +35,6 @@ HRESULT CTerrainTex::Ready_Buffer(const _uint & iNumVerticesX,
 	/*__________________________________________________________________________________________________________
 	[ Vertex Buffer ]
 	____________________________________________________________________________________________________________*/
-	vector<VTXTEX> vecVertices;
 	vecVertices.resize(uiVertexCnt);
 
 	for (_uint i = 0; i < m_iNumVerticesZ; ++i)
@@ -51,7 +52,6 @@ HRESULT CTerrainTex::Ready_Buffer(const _uint & iNumVerticesX,
 	/*__________________________________________________________________________________________________________
 	[ Index Buffer ]
 	____________________________________________________________________________________________________________*/
-	vector<_uint> vecIndices;
 	vecIndices.resize(uiFaceCnt * 3);
 
 	_uint k = 0;
@@ -72,7 +72,7 @@ HRESULT CTerrainTex::Ready_Buffer(const _uint & iNumVerticesX,
 			vSour = vecVertices[vecIndices[k + 1]].vPos - vecVertices[vecIndices[k]].vPos;
 			vDest = vecVertices[vecIndices[k + 2]].vPos - vecVertices[vecIndices[k + 1]].vPos;
 
-			vNormal = vSour.Cross_InputDst(vDest);
+			vNormal = vSour.Cross_InputV1(vDest);
 			vNormal.Normalize();
 
 			vecVertices[vecIndices[k]].vNormal		+= vNormal;
@@ -88,7 +88,7 @@ HRESULT CTerrainTex::Ready_Buffer(const _uint & iNumVerticesX,
 			vSour = vecVertices[vecIndices[k + 1]].vPos - vecVertices[vecIndices[k]].vPos;
 			vDest = vecVertices[vecIndices[k + 2]].vPos - vecVertices[vecIndices[k + 1]].vPos;
 
-			vNormal = vSour.Cross_InputDst(vDest);
+			vNormal = vSour.Cross_InputV1(vDest);
 			vNormal.Normalize();
 
 			vecVertices[vecIndices[k]].vNormal		+= vNormal;

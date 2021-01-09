@@ -4,9 +4,6 @@
     <Filter Include="99.Etc">
       <UniqueIdentifier>{643a98a3-1e95-47ad-92e7-ff36fb085b55}</UniqueIdentifier>
     </Filter>
-    <Filter Include="98.Header">
-      <UniqueIdentifier>{c26b4ae7-a46d-4a73-b5fe-acc8762421d3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99.Etc\리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -71,6 +68,27 @@
     <Filter Include="02.ToolScene\00.ToolLoading">
       <UniqueIdentifier>{04295b2b-3596-4ece-a728-4e0580ebcd7d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.ToolGameObject\00.Environment">
+      <UniqueIdentifier>{4f2cef7b-9361-48dc-9e79-fd5f5b82e374}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Camera">
+      <UniqueIdentifier>{6487ef7d-fab9-44d9-bddb-46a4bb3aa156}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ToolGameObject\00.Environment\00.Coordinate">
+      <UniqueIdentifier>{61bbcf23-f27f-44e3-9437-ed1b184f7d03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ToolGameObject\00.Environment\01.SkyBox">
+      <UniqueIdentifier>{f4741af7-e8fa-4f7d-a644-45c3bc990389}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ToolGameObject\00.Environment\02.Terrain">
+      <UniqueIdentifier>{c92c7163-e5b2-4871-a116-23047d0ed8b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Mgr\01.MouseMgr">
+      <UniqueIdentifier>{867f126f-03ef-476d-a6c9-4d8321693d20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Mgr\01.MouseMgr\98.Header">
+      <UniqueIdentifier>{c26b4ae7-a46d-4a73-b5fe-acc8762421d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
@@ -98,22 +116,22 @@
       <Filter>99.Etc</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Include.h">
-      <Filter>98.Header</Filter>
+      <Filter>97.Mgr\01.MouseMgr\98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Macro.h">
-      <Filter>98.Header</Filter>
+      <Filter>97.Mgr\01.MouseMgr\98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Struct.h">
-      <Filter>98.Header</Filter>
+      <Filter>97.Mgr\01.MouseMgr\98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Typedef.h">
-      <Filter>98.Header</Filter>
+      <Filter>97.Mgr\01.MouseMgr\98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Const.h">
-      <Filter>98.Header</Filter>
+      <Filter>97.Mgr\01.MouseMgr\98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Extern.h">
-      <Filter>98.Header</Filter>
+      <Filter>97.Mgr\01.MouseMgr\98.Header</Filter>
     </ClInclude>
     <ClInclude Include="MyForm.h">
       <Filter>00.MFC Class\03.FormView</Filter>
@@ -150,6 +168,18 @@
     </ClInclude>
     <ClInclude Include="..\Code\ToolSceneStage.h">
       <Filter>02.ToolScene\02.ToolStage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ToolCamera.h">
+      <Filter>96.Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ToolCoordinate.h">
+      <Filter>03.ToolGameObject\00.Environment\00.Coordinate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ToolTerrain.h">
+      <Filter>03.ToolGameObject\00.Environment\02.Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\MouseMgr.h">
+      <Filter>97.Mgr\01.MouseMgr</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -203,6 +233,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\ToolSceneStage.cpp">
       <Filter>02.ToolScene\02.ToolStage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ToolCamera.cpp">
+      <Filter>96.Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ToolCoordinate.cpp">
+      <Filter>03.ToolGameObject\00.Environment\00.Coordinate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ToolTerrain.cpp">
+      <Filter>03.ToolGameObject\00.Environment\02.Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MouseMgr.cpp">
+      <Filter>97.Mgr\01.MouseMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

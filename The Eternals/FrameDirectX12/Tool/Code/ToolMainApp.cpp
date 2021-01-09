@@ -183,7 +183,15 @@ HRESULT CToolMainApp::SetUp_ComponentPrototype()
 	// TerrainTex
 	pComponent = Engine::CTerrainTex::Create(m_pGraphicDevice, m_pCommandList, 128, 128, 1.f);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"TerrainTex", Engine::ID_STATIC, pComponent), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"TerrainTex128", Engine::ID_STATIC, pComponent), E_FAIL);
+
+	pComponent = Engine::CTerrainTex::Create(m_pGraphicDevice, m_pCommandList, 256, 256, 1.f);
+	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"TerrainTex256", Engine::ID_STATIC, pComponent), E_FAIL);
+
+	pComponent = Engine::CTerrainTex::Create(m_pGraphicDevice, m_pCommandList, 512, 512, 1.f);
+	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"TerrainTex512", Engine::ID_STATIC, pComponent), E_FAIL);
 
 	// ScreenTex
 	pComponent = Engine::CScreenTex::Create(m_pGraphicDevice, m_pCommandList);
@@ -199,6 +207,11 @@ HRESULT CToolMainApp::SetUp_ComponentPrototype()
 	pComponent = Engine::CColliderBox::Create(m_pGraphicDevice, m_pCommandList);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ColliderBox", Engine::ID_DYNAMIC, pComponent), E_FAIL);
+
+	// CoordinateCol
+	pComponent = Engine::CCoordinateCol::Create(m_pGraphicDevice, m_pCommandList);
+	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"CoordinateCol", Engine::ID_STATIC, pComponent), E_FAIL);
 
 	return S_OK;
 }
@@ -246,7 +259,11 @@ HRESULT CToolMainApp::SetUp_StartScene(Engine::SCENEID eScebeID)
 
 void CToolMainApp::Key_Input()
 {
-	
+	/*__________________________________________________________________________________________________________
+	[ Render On/Off ]
+	____________________________________________________________________________________________________________*/
+	if (Engine::KEY_DOWN(DIK_F1))
+		m_pRenderer->Set_RenderOnOff(L"RenderTarget");
 }
 
 CToolMainApp* CToolMainApp::Create()

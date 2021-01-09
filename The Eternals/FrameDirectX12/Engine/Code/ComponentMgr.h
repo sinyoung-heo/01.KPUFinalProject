@@ -15,6 +15,7 @@
 #include "NaviMesh.h"
 #include "ColliderBox.h"
 #include "ColliderSphere.h"
+#include "CoordinateCol.h"
 
 #include "ShaderColor.h"
 #include "ShaderTexture.h"
