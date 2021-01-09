@@ -43,6 +43,9 @@
     <Filter Include="98.Manager\02.DBMgr">
       <UniqueIdentifier>{312541b9-a9f6-47c9-9336-bcaff206e407}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.Manager\03.ObjectPool">
+      <UniqueIdentifier>{99e2a804-2341-4eaf-a726-c1680193991e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainServer.cpp">
@@ -57,10 +60,10 @@
     <ClCompile Include="..\Code\PacketMgr.cpp">
       <Filter>98.Manager\00.PacketMgr</Filter>
     </ClCompile>
-    <ClCompile Include="ObjMgr.cpp">
+    <ClCompile Include="..\Code\ObjMgr.cpp">
       <Filter>98.Manager\01.ObjectMgr</Filter>
     </ClCompile>
-    <ClCompile Include="DBMgr.cpp">
+    <ClCompile Include="..\Code\DBMgr.cpp">
       <Filter>98.Manager\02.DBMgr</Filter>
     </ClCompile>
   </ItemGroup>
@@ -103,6 +106,12 @@
     </ClInclude>
     <ClInclude Include="..\Code\DBMgr.h">
       <Filter>98.Manager\02.DBMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ObjPool.h">
+      <Filter>98.Manager\03.ObjectPool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ObjPool.hpp">
+      <Filter>98.Manager\03.ObjectPool</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
