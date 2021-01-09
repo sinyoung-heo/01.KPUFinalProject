@@ -1,21 +1,20 @@
 #pragma once
-#include "Include.h"
 #include "Base.h"
 
-class CLoading final : public Engine::CBase
+class CToolLoading : public Engine::CBase
 {
 public:
-	enum LOADINGID 
-	{ 
-		LOADING_STAGE, 
-		LOADING_END 
+	enum LOADINGID
+	{
+		LOADING_STAGE,
+		LOADING_END
 	};
 
 private:
-	explicit CLoading(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CLoading() = default;
+	explicit CToolLoading(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CToolLoading() = default;
 
-public:
+	public:
 	CRITICAL_SECTION*	Get_Crt()					{ return &m_Crt; }
 	const LOADINGID&	Get_LoadingID()		const	{ return m_eLoadingID; }
 	const _bool&		Get_Finish()		const	{ return m_bIsFinish; }
@@ -55,10 +54,11 @@ private:
 	_int						m_iCurLoadingCnt		= 0;
 
 public:
-	static CLoading*	Create(ID3D12Device* pGraphicDevice,
-							   ID3D12GraphicsCommandList* pCommandList, 
-							   LOADINGID eLoadingID);
+	static CToolLoading* Create(ID3D12Device* pGraphicDevice,
+								ID3D12GraphicsCommandList* pCommandList, 
+								LOADINGID eLoadingID);
 private:
-	virtual void		Free(void);
+	virtual void Free(void);
+
 };
 

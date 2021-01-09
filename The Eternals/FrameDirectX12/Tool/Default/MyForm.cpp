@@ -119,6 +119,7 @@ void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 		break;
 
 	case 1:
+
 		m_TabPathFinder.ShowWindow(SW_HIDE);
 		m_TabObject.ShowWindow(SW_SHOW);
 		m_TabCollider.ShowWindow(SW_HIDE);
@@ -133,8 +134,14 @@ void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 		m_bIsTabCamera		= false;
 		m_bIsTabEffect		= false;
 
+		g_bIsLoadingStart = true;
+
+
 		break;
 	case 2:
+		g_bIsLoadingStart = true;
+
+
 		m_TabPathFinder.ShowWindow(SW_HIDE);
 		m_TabObject.ShowWindow(SW_HIDE);
 		m_TabCollider.ShowWindow(SW_SHOW);
@@ -149,8 +156,11 @@ void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 		m_bIsTabCamera		= false;
 		m_bIsTabEffect		= false;
 
+
 		break;
 	case 3:
+		g_bIsLoadingStart = true;
+
 		m_TabPathFinder.ShowWindow(SW_HIDE);
 		m_TabObject.ShowWindow(SW_HIDE);
 		m_TabCollider.ShowWindow(SW_HIDE);
@@ -167,6 +177,8 @@ void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 
 		break;
 	case 4:
+		g_bIsLoadingStart = true;
+
 		m_TabPathFinder.ShowWindow(SW_HIDE);
 		m_TabObject.ShowWindow(SW_HIDE);
 		m_TabCollider.ShowWindow(SW_HIDE);
@@ -184,6 +196,8 @@ void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 		break;
 
 	case 5:
+		g_bIsLoadingStart = true;
+
 		m_TabPathFinder.ShowWindow(SW_HIDE);
 		m_TabObject.ShowWindow(SW_HIDE);
 		m_TabCollider.ShowWindow(SW_HIDE);

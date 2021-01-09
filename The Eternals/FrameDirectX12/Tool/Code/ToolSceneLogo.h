@@ -1,20 +1,17 @@
 #pragma once
-#include "Include.h"
 #include "Scene.h"
-#include "Loading.h"
+#include "ToolLoading.h"
 
 namespace Engine
 {
 	class CFont;
 }
 
-class CLogoBack;
-
-class CScene_Logo final : public Engine::CScene
+class CToolSceneLogo : public Engine::CScene
 {
 private:
-	explicit CScene_Logo(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CScene_Logo() = default;
+	explicit CToolSceneLogo(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CToolSceneLogo() = default;
 
 public:
 	virtual HRESULT Ready_Scene();
@@ -31,8 +28,7 @@ private:
 	HRESULT			SetUp_MaxLoadingCount();
 
 private:
-	CLoading*	m_pLoading	= nullptr;
-	CLogoBack*	m_pLogoBack	= nullptr;
+	CToolLoading*	m_pLoading	= nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Loading Text ]
@@ -41,10 +37,14 @@ private:
 	_tchar			m_szLoadingStr[MIN_STR]	= L"";
 	_int			m_iMaxFileCount			= 0;
 
+	Engine::CFont*	m_pFont_Stage			= nullptr;
+	_tchar			m_szFPS[MAX_STR]		= L"";
+	_int			m_iFPS					= 0;
+
 public:
-	static CScene_Logo*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	static CToolSceneLogo* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 
 private:
-	virtual void		Free();
+	virtual void Free();
 };
 

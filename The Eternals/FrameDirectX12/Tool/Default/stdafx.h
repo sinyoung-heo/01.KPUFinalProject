@@ -55,8 +55,7 @@ using Microsoft::WRL::ComPtr;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 
-#include "Base.h"
-#include "GraphicDevice.h"
+#include "Engine_Include.h"
 #include "Include.h"
 
 #include "ToolFileInfo.h"

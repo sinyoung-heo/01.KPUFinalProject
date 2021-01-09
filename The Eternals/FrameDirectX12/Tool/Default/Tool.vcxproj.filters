@@ -7,42 +7,9 @@
     <Filter Include="98.Header">
       <UniqueIdentifier>{c26b4ae7-a46d-4a73-b5fe-acc8762421d3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00.MainFrm">
-      <UniqueIdentifier>{5267f27d-3907-4694-b22d-60f8b01f5953}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Document">
-      <UniqueIdentifier>{b7e29e40-755d-42e3-8532-50a4914d6666}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.View">
-      <UniqueIdentifier>{03f3d710-2657-41d2-acec-1f62d85b49d6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99.Etc\리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="03.FormView">
-      <UniqueIdentifier>{d2791b3e-5e8b-4e45-a097-8d6661ac1a6d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.TapControl">
-      <UniqueIdentifier>{75de00bb-75d6-44db-aa79-272463907c4b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.TapControl\00.TabPathFinder">
-      <UniqueIdentifier>{76594900-fc04-419a-b4a4-1b938ef18dcc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.TapControl\01.TabObject">
-      <UniqueIdentifier>{381eb77c-885a-4513-af25-e85df13ebd77}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.TapControl\02.TabCollider">
-      <UniqueIdentifier>{22a6a12b-2491-48fb-9449-f6c25c886ec0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.TapControl\03.TabAnimation">
-      <UniqueIdentifier>{d1848303-8ed5-401b-87da-3b4c96a1660f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.TapControl\04.TabCamera">
-      <UniqueIdentifier>{ce938b0a-35f5-4ebf-9778-f7250d119ff3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.TapControl\05.TabEffect">
-      <UniqueIdentifier>{31d8d723-24f3-4984-ae5a-457e8ffa7887}</UniqueIdentifier>
     </Filter>
     <Filter Include="97.Mgr">
       <UniqueIdentifier>{d96cb6e1-f894-4cf7-a6c4-0d5655068a7d}</UniqueIdentifier>
@@ -50,16 +17,70 @@
     <Filter Include="97.Mgr\00.FileInfo">
       <UniqueIdentifier>{84953377-7787-4f24-acf7-789bdb947b6b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00.MFC Class">
+      <UniqueIdentifier>{33709bb2-c25f-4b38-9a87-b535ac793bc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.MFC Class\00.MainFrm">
+      <UniqueIdentifier>{5267f27d-3907-4694-b22d-60f8b01f5953}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.MFC Class\01.Document">
+      <UniqueIdentifier>{b7e29e40-755d-42e3-8532-50a4914d6666}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.MFC Class\02.View">
+      <UniqueIdentifier>{03f3d710-2657-41d2-acec-1f62d85b49d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.MFC Class\03.FormView">
+      <UniqueIdentifier>{d2791b3e-5e8b-4e45-a097-8d6661ac1a6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.MFC Class\04.TapControl">
+      <UniqueIdentifier>{75de00bb-75d6-44db-aa79-272463907c4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.MFC Class\04.TapControl\00.TabPathFinder">
+      <UniqueIdentifier>{76594900-fc04-419a-b4a4-1b938ef18dcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.MFC Class\04.TapControl\01.TabObject">
+      <UniqueIdentifier>{381eb77c-885a-4513-af25-e85df13ebd77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.MFC Class\04.TapControl\02.TabCollider">
+      <UniqueIdentifier>{22a6a12b-2491-48fb-9449-f6c25c886ec0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.MFC Class\04.TapControl\03.TabAnimation">
+      <UniqueIdentifier>{d1848303-8ed5-401b-87da-3b4c96a1660f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.MFC Class\04.TapControl\04.TabCamera">
+      <UniqueIdentifier>{ce938b0a-35f5-4ebf-9778-f7250d119ff3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.MFC Class\04.TapControl\05.TabEffect">
+      <UniqueIdentifier>{31d8d723-24f3-4984-ae5a-457e8ffa7887}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.ToolMainApp">
+      <UniqueIdentifier>{7a38d91e-184b-4150-a04f-936d241f5c2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.ToolScene">
+      <UniqueIdentifier>{e3556f59-7478-4b5d-bc52-ced113f3a976}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.ToolScene\01.ToolLogo">
+      <UniqueIdentifier>{3ce08ec5-5e26-4fa8-9ad2-f4611907e5c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.ToolScene\02.ToolStage">
+      <UniqueIdentifier>{a9a21f8f-5864-4932-8237-bd1673325a04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ToolGameObject">
+      <UniqueIdentifier>{22d0a5ef-27a8-4f6c-ac6a-ca5643aa31d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.ToolScene\00.ToolLoading">
+      <UniqueIdentifier>{04295b2b-3596-4ece-a728-4e0580ebcd7d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
-      <Filter>00.MainFrm</Filter>
+      <Filter>00.MFC Class\00.MainFrm</Filter>
     </ClInclude>
     <ClInclude Include="ToolDoc.h">
-      <Filter>01.Document</Filter>
+      <Filter>00.MFC Class\01.Document</Filter>
     </ClInclude>
     <ClInclude Include="ToolView.h">
-      <Filter>02.View</Filter>
+      <Filter>00.MFC Class\02.View</Filter>
     </ClInclude>
     <ClInclude Include="framework.h">
       <Filter>99.Etc</Filter>
@@ -95,39 +116,51 @@
       <Filter>98.Header</Filter>
     </ClInclude>
     <ClInclude Include="MyForm.h">
-      <Filter>03.FormView</Filter>
+      <Filter>00.MFC Class\03.FormView</Filter>
     </ClInclude>
     <ClInclude Include="TabPathFinder.h">
-      <Filter>04.TapControl\00.TabPathFinder</Filter>
+      <Filter>00.MFC Class\04.TapControl\00.TabPathFinder</Filter>
     </ClInclude>
     <ClInclude Include="TabObject.h">
-      <Filter>04.TapControl\01.TabObject</Filter>
+      <Filter>00.MFC Class\04.TapControl\01.TabObject</Filter>
     </ClInclude>
     <ClInclude Include="TabCollider.h">
-      <Filter>04.TapControl\02.TabCollider</Filter>
+      <Filter>00.MFC Class\04.TapControl\02.TabCollider</Filter>
     </ClInclude>
     <ClInclude Include="TabAnimation.h">
-      <Filter>04.TapControl\03.TabAnimation</Filter>
+      <Filter>00.MFC Class\04.TapControl\03.TabAnimation</Filter>
     </ClInclude>
     <ClInclude Include="TabCamera.h">
-      <Filter>04.TapControl\04.TabCamera</Filter>
+      <Filter>00.MFC Class\04.TapControl\04.TabCamera</Filter>
     </ClInclude>
     <ClInclude Include="TabEffect.h">
-      <Filter>04.TapControl\05.TabEffect</Filter>
+      <Filter>00.MFC Class\04.TapControl\05.TabEffect</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\ToolFileInfo.h">
       <Filter>97.Mgr\00.FileInfo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ToolMainApp.h">
+      <Filter>01.ToolMainApp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ToolSceneLogo.h">
+      <Filter>02.ToolScene\01.ToolLogo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ToolLoading.h">
+      <Filter>02.ToolScene\00.ToolLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ToolSceneStage.h">
+      <Filter>02.ToolScene\02.ToolStage</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
-      <Filter>00.MainFrm</Filter>
+      <Filter>00.MFC Class\00.MainFrm</Filter>
     </ClCompile>
     <ClCompile Include="ToolDoc.cpp">
-      <Filter>01.Document</Filter>
+      <Filter>00.MFC Class\01.Document</Filter>
     </ClCompile>
     <ClCompile Include="ToolView.cpp">
-      <Filter>02.View</Filter>
+      <Filter>00.MFC Class\02.View</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>99.Etc</Filter>
@@ -136,28 +169,40 @@
       <Filter>99.Etc</Filter>
     </ClCompile>
     <ClCompile Include="MyForm.cpp">
-      <Filter>03.FormView</Filter>
+      <Filter>00.MFC Class\03.FormView</Filter>
     </ClCompile>
     <ClCompile Include="TabPathFinder.cpp">
-      <Filter>04.TapControl\00.TabPathFinder</Filter>
+      <Filter>00.MFC Class\04.TapControl\00.TabPathFinder</Filter>
     </ClCompile>
     <ClCompile Include="TabObject.cpp">
-      <Filter>04.TapControl\01.TabObject</Filter>
+      <Filter>00.MFC Class\04.TapControl\01.TabObject</Filter>
     </ClCompile>
     <ClCompile Include="TabCollider.cpp">
-      <Filter>04.TapControl\02.TabCollider</Filter>
+      <Filter>00.MFC Class\04.TapControl\02.TabCollider</Filter>
     </ClCompile>
     <ClCompile Include="TabAnimation.cpp">
-      <Filter>04.TapControl\03.TabAnimation</Filter>
+      <Filter>00.MFC Class\04.TapControl\03.TabAnimation</Filter>
     </ClCompile>
     <ClCompile Include="TabCamera.cpp">
-      <Filter>04.TapControl\04.TabCamera</Filter>
+      <Filter>00.MFC Class\04.TapControl\04.TabCamera</Filter>
     </ClCompile>
     <ClCompile Include="TabEffect.cpp">
-      <Filter>04.TapControl\05.TabEffect</Filter>
+      <Filter>00.MFC Class\04.TapControl\05.TabEffect</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\ToolFileInfo.cpp">
       <Filter>97.Mgr\00.FileInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ToolMainApp.cpp">
+      <Filter>01.ToolMainApp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ToolSceneLogo.cpp">
+      <Filter>02.ToolScene\01.ToolLogo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ToolLoading.cpp">
+      <Filter>02.ToolScene\00.ToolLoading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ToolSceneStage.cpp">
+      <Filter>02.ToolScene\02.ToolStage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

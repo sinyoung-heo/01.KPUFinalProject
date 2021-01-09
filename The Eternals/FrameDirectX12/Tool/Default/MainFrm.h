@@ -40,7 +40,7 @@ protected:
 
 	virtual BOOL OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext);
 
-private:
+public:
 	// CSplitterWnd: 창 분할을 담당하는 윈도우 클래스. (분할 윈도우)
 	CSplitterWnd	m_MainSplit;
 };

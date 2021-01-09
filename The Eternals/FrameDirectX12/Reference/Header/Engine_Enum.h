@@ -3,34 +3,10 @@
 
 namespace Engine
 {
-	enum WINMODE	
-	{ 
-		MODE_FULL,
-		MODE_WIN, 
-		MODE_END 
-	};
-
-	enum SWAPCHAIN	
-	{ 
-		FRONT_BUFFER,
-		BACK_BUFFER,
-		BUFFER_END 
-	};
-
-	enum CMDID		
-	{ 
-		CMD_MAIN,
-		CMD_LOADING,
-		CMD_END 
-	};
-
-	enum MATRIXID	
-	{ 
-		VIEW, 
-		PROJECTION,
-		ORTHO, 
-		MATRIX_END 
-	};
+	enum WINMODE	{ MODE_FULL, MODE_WIN, MODE_END };
+	enum SWAPCHAIN	{ FRONT_BUFFER, BACK_BUFFER, BUFFER_END  };
+	enum CMDID		{ CMD_MAIN, CMD_LOADING, CMD_END };
+	enum MATRIXID	{ VIEW, PROJECTION, ORTHO, MATRIX_END };
 
 	/*__________________________________________________________________________________________________________
 	2020.06.07 Thread Contex추가.
@@ -43,49 +19,19 @@ namespace Engine
 		CONTEXT3,
 		CONTEXT_END 
 	};
-
-	enum THREADID
-	{
-		SHADOW,
-		SCENE,
-		THREADID_END
-	};
+	enum THREADID { SHADOW, SCENE, THREADID_END };
 
 
 	/*__________________________________________________________________________________________________________
 	ID_DYNAMIC : 매 프레임마다 업데이트가 되어야 할 컴포넌트들의 집합
 	ID_STATIC  : 매 프레임마다 업데이트가 필요 없는 컴포넌트들의 집합
 	____________________________________________________________________________________________________________*/
-	enum COMPONENTID	
-	{ 
-		ID_DYNAMIC,
-		ID_STATIC, 
-		ID_END 
-	};
+	enum COMPONENTID	{ ID_DYNAMIC, ID_STATIC, ID_END };
+	enum TEXTYPE		{ TEX_2D, TEX_CUBE, TEX_END };
 
-	enum TEXTYPE
-	{
-		TEX_2D,
-		TEX_CUBE,
-		TEX_END
-	};
+	enum MOUSEBUTTON	{ DIM_LB, DIM_RB, DIM_WB, DIM_END };
+	enum MOUSEMOVESTATE { DIMS_X, DIMS_Y, DIMS_Z, DIMS_END };
 
-	enum MOUSEBUTTON	
-	{ 
-		DIM_LB,
-		DIM_RB, 
-		DIM_WB,
-		DIM_END 
-	};
-
-	enum MOUSEMOVESTATE 
-	{ 
-		DIMS_X,
-		DIMS_Y, 
-		DIMS_Z, 
-		DIMS_END
-	};
-	
 	enum SCENEID		
 	{ 
 		SCENE_STATIC,

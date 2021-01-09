@@ -1,19 +1,20 @@
 #include "stdafx.h"
-#include "Loading.h"
+#include "ToolLoading.h"
 #include "ComponentMgr.h"
 #include "ObjectMgr.h"
 #include "Management.h"
 
-CLoading::CLoading(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+
+CToolLoading::CToolLoading(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: m_pGraphicDevice(pGraphicDevice)
 	, m_pCommandList(pCommandList)
 	, m_bIsFinish(false)
 {
 	ZeroMemory(m_szLoadingStr, sizeof(_tchar) * 256);
+	lstrcpy(m_szLoadingStr, L"Waiting for Loading Thread");
 }
 
-
-HRESULT CLoading::Ready_Loading(LOADINGID eLoadingID)
+HRESULT CToolLoading::Ready_Loading(LOADINGID eLoadingID)
 {
 	InitializeCriticalSection(&m_Crt);
 
@@ -24,24 +25,20 @@ HRESULT CLoading::Ready_Loading(LOADINGID eLoadingID)
 	return S_OK;
 }
 
-_uint CLoading::Loading_For_Stage()
+_uint CToolLoading::Loading_For_Stage()
 {
 	Loading_MeshFromFilePath();
 	Loading_TextureFromFilePath();
 
-	m_bIsFinish = true;
+	m_bIsFinish			= true;
+	g_bIsLoadingFinish	= true;
 
 	lstrcpy(m_szLoadingStr, L"Resource Loading is Finish");
-
-#ifdef CLIENT_LOG
-	COUT_STR("<< Loading Finish >>");
-	COUT_STR("");
-#endif
 
 	return 0;
 }
 
-HRESULT CLoading::Loading_MeshFromFilePath()
+HRESULT CToolLoading::Loading_MeshFromFilePath()
 {
 	wifstream fin { L"../../Bin/ToolData/PathFind_Mesh.txt" };
 	if (fin.fail())
@@ -87,7 +84,7 @@ HRESULT CLoading::Loading_MeshFromFilePath()
 	return S_OK;
 }
 
-HRESULT CLoading::Loading_TextureFromFilePath()
+HRESULT CToolLoading::Loading_TextureFromFilePath()
 {
 	wifstream fin { L"../../Bin/ToolData/PathFind_Texture.txt" };
 	if (fin.fail())
@@ -137,39 +134,49 @@ HRESULT CLoading::Loading_TextureFromFilePath()
 
 	fin.close();
 
-
 	return S_OK;
 }
 
-unsigned int CLoading::Thread_Main(void * pArg)
-{
-	CLoading* pLoading = (CLoading*)pArg;
 
+unsigned int __stdcall CToolLoading::Thread_Main(void* pArg)
+{
+	CToolLoading* pLoading = (CToolLoading*)pArg;
 	_uint iFlag = 0;
 
-	EnterCriticalSection(pLoading->Get_Crt());
 
-	switch (pLoading->Get_LoadingID())
+	while(true)
 	{
-	case LOADING_STAGE:
-		pLoading->Loading_For_Stage();
+		cout << g_bIsLoadingStart << endl;
+		if (g_bIsLoadingStart)
+		{
+			// EnterCriticalSection(pLoading->Get_Crt());
 
-		break;
-	default:
+			switch (pLoading->Get_LoadingID())
+			{
+			case LOADING_STAGE:
+				pLoading->Loading_For_Stage();
 
-		break;
+				break;
+			default:
+				break;
+			}
+
+			// LeaveCriticalSection(pLoading->Get_Crt());
+
+			break;
+		}
+
 	}
-
-	LeaveCriticalSection(pLoading->Get_Crt());
 
 	return 0;
 }
 
-CLoading * CLoading::Create(ID3D12Device * pGraphicDevice, 
-							ID3D12GraphicsCommandList * pCommandList, 
-							LOADINGID eLoadingID)
+CToolLoading* CToolLoading::Create(ID3D12Device* pGraphicDevice, 
+								   ID3D12GraphicsCommandList* 
+								   pCommandList, LOADINGID 
+								   eLoadingID)
 {
-	CLoading* pInstance = new CLoading(pGraphicDevice, pCommandList);
+	CToolLoading* pInstance = new CToolLoading(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_Loading(eLoadingID)))
 		Safe_Release(pInstance);
@@ -177,14 +184,9 @@ CLoading * CLoading::Create(ID3D12Device * pGraphicDevice,
 	return pInstance;
 }
 
-void CLoading::Free(void)
+void CToolLoading::Free(void)
 {
 	WaitForSingleObject(m_hThread, INFINITE);
 	CloseHandle(m_hThread);
 	DeleteCriticalSection(&m_Crt);
-
-#ifdef CLIENT_LOG
-	COUT_STR("<< Destroy Loading Thread >>");
-	COUT_STR("");
-#endif
 }

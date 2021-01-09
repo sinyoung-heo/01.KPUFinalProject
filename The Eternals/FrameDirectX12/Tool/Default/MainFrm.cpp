@@ -9,6 +9,7 @@
 #include "MainFrm.h"
 #include "ToolView.h"
 #include "MyForm.h"
+#include "ToolMainApp.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -39,6 +40,7 @@ CMainFrame::CMainFrame() noexcept
 
 CMainFrame::~CMainFrame()
 {
+
 }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -79,6 +81,9 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 	// TODO: CREATESTRUCT cs를 수정하여 여기에서
 	//  Window 클래스 또는 스타일을 수정합니다.
 
+	// Untitle 삭제해주기
+	cs.style &= ~FWS_ADDTOTITLE;
+
 	return TRUE;
 }
 
@@ -113,5 +118,6 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 	m_MainSplit.CreateView(0, 1, RUNTIME_CLASS(CToolView), CSize(WINCX - 280, WINCY), pContext);
 
 	// return CFrameWnd::OnCreateClient(lpcs, pContext);
+
 	return TRUE;
 }

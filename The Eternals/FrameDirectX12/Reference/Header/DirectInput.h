@@ -24,7 +24,9 @@ public:
 	_long	Get_DIMouseMove(MOUSEMOVESTATE eMouseMoveState) { return *(((_ulong*)&m_MouseState) + eMouseMoveState); }
 
 	// Method
-	HRESULT	Ready_InputDevice(HINSTANCE hInst, HWND hWnd);
+	HRESULT	Ready_InputDevice(HINSTANCE hInst, 
+							  HWND hWnd,
+							  const _int& iInputType = DISCL_EXCLUSIVE);
 	void	SetUp_InputState();
 
 	// KeyInput
@@ -40,9 +42,9 @@ public:
 	bool	Mouse_KeyDown(const MOUSEBUTTON& eMouseKey);
 
 private:
-	LPDIRECTINPUT8			m_pInputSDK = nullptr;
-	LPDIRECTINPUTDEVICE8	m_pKeyBoard = nullptr;
-	LPDIRECTINPUTDEVICE8	m_pMouse	= nullptr;
+	LPDIRECTINPUT8			m_pInputSDK		= nullptr;
+	LPDIRECTINPUTDEVICE8	m_pKeyBoard		= nullptr;
+	LPDIRECTINPUTDEVICE8	m_pMouse		= nullptr;
 
 	// KeyBoard
 	byte			m_byKeyState[256];

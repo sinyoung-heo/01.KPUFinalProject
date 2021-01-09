@@ -8,9 +8,12 @@
 #include "afxdialogex.h"
 #include "Tool.h"
 #include "MainFrm.h"
-
 #include "ToolDoc.h"
 #include "ToolView.h"
+#include "ToolMainApp.h"
+#include "TimeMgr.h"
+#include "FrameMgr.h"
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -181,3 +184,63 @@ void CToolApp::OnAppAbout()
 
 
 
+
+
+BOOL CToolApp::OnIdle(LONG lCount)
+{
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+	if (this->m_pMainWnd->IsIconic())
+		return FALSE;
+	else
+	{
+		if (!m_bIsReady)
+		{
+			m_bIsReady		= true;
+
+			m_pMainFrame	= dynamic_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+			m_pMainView		= dynamic_cast<CToolView*>(m_pMainFrame->m_MainSplit.GetPane(0, 1));
+
+		}
+
+		// MainLoop
+		/*__________________________________________________________________________________________________________
+		[ 프레임 제한에 사용할 Timer를 갱신 (Timer_FPS60) ]
+		____________________________________________________________________________________________________________*/
+		Engine::CTimerMgr::Get_Instance()->SetUp_TimeDelta(L"Timer_FPS60");
+		_float fTime_FPS60 = Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_FPS60");
+
+
+		if (Engine::CFrameMgr::Get_Instance()->IsPermit_Call(L"Frame60", fTime_FPS60))
+		{
+			/*__________________________________________________________________________________________________________
+			[ GameObject들이 공통적으로 사용할 Timer 갱신 (Timer_TimeDelta) ]
+			____________________________________________________________________________________________________________*/
+			Engine::CTimerMgr::Get_Instance()->SetUp_TimeDelta(L"Timer_TimeDelta");
+			_float fTime_TimeDelta = Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta");
+
+
+			m_pMainView->m_pMainApp->Update_MainApp(fTime_TimeDelta);
+			m_pMainView->m_pMainApp->LateUpdate_MainApp(fTime_TimeDelta);
+			m_pMainView->m_pMainApp->Render_MainApp(fTime_TimeDelta);
+
+			++m_iFPS;
+			m_fFPSTime += fTime_TimeDelta;
+		}
+
+		if (m_fFPSTime >= 1.0f)
+		{
+			g_iFPS		= m_iFPS;
+			swprintf_s(m_szFPS, L"FPS : %d", m_iFPS);
+			SetWindowText(g_hWnd, m_szFPS);
+
+			m_iFPS		= 0;
+			m_fFPSTime	= 0.0f;
+		}
+
+
+		return TRUE;
+	}
+
+
+	return TRUE;
+}
