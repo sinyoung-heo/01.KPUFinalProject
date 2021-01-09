@@ -199,6 +199,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Code\MouseMgr.h" />
     <ClInclude Include="..\Code\ToolCamera.h" />
     <ClInclude Include="..\Code\ToolCoordinate.h" />
     <ClInclude Include="..\Code\ToolFileInfo.h" />
@@ -230,6 +231,7 @@
     <ClInclude Include="ToolView.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Code\MouseMgr.cpp" />
     <ClCompile Include="..\Code\ToolCamera.cpp" />
     <ClCompile Include="..\Code\ToolCoordinate.cpp" />
     <ClCompile Include="..\Code\ToolFileInfo.cpp" />

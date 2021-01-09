@@ -26,6 +26,8 @@ private:
 	HRESULT			Ready_LayerFont(wstring wstrLayerTag);
 	HRESULT			Ready_LightInfo();
 
+	void			Key_Input();
+
 private:
 	/*__________________________________________________________________________________________________________
 	[ Loading Text ]

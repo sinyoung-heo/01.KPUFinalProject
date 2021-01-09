@@ -39,7 +39,7 @@ public:
 	____________________________________________________________________________________________________________*/
 	_uint m_uiTexIdx		= 0;
 	_uint m_uiShaderPass	= 1;
-	_bool m_bIsUpdate		= false;
+	_bool m_bIsUpdate		= true;
 
 
 public:

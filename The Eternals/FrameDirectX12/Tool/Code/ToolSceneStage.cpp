@@ -50,6 +50,12 @@ _int CToolSceneStage::Update_Scene(const _float& fTimeDelta)
 		m_pFont_Stage->Set_Text(wstring(m_szFPS));
 	}
 
+	/*__________________________________________________________________________________________________________
+	[ Key Input ]
+	____________________________________________________________________________________________________________*/
+	if (Engine::KEY_PRESSING(DIK_LSHIFT))
+		Key_Input();
+
 	return Engine::CScene::Update_Scene(fTimeDelta);
 }
 
@@ -126,11 +132,11 @@ HRESULT CToolSceneStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 	pTerrain = CToolTerrain::Create(m_pGraphicDevice, m_pCommandList, L"TerrainTex128");
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainTex128", pTerrain), E_FAIL);
 
-	pTerrain = CToolTerrain::Create(m_pGraphicDevice, m_pCommandList, L"TerrainTex256");
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainTex256", pTerrain), E_FAIL);
+	//pTerrain = CToolTerrain::Create(m_pGraphicDevice, m_pCommandList, L"TerrainTex256");
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainTex256", pTerrain), E_FAIL);
 
-	pTerrain = CToolTerrain::Create(m_pGraphicDevice, m_pCommandList, L"TerrainTex512");
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainTex512", pTerrain), E_FAIL);
+	//pTerrain = CToolTerrain::Create(m_pGraphicDevice, m_pCommandList, L"TerrainTex512");
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainTex512", pTerrain), E_FAIL);
 
 	return S_OK;
 }
@@ -184,6 +190,19 @@ HRESULT CToolSceneStage::Ready_LightInfo()
 
 
 	return S_OK;
+}
+
+void CToolSceneStage::Key_Input()
+{
+	/*__________________________________________________________________________________________________________
+	[ Terrain Picking ]
+	____________________________________________________________________________________________________________*/
+	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON(Engine::DIM_LB)))
+	{
+		CToolTerrain* pTerrain = static_cast<CToolTerrain*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"TerrainTex128"));
+		_vec3 vPickingPos = CMouseMgr::Picking_OnTerrain(pTerrain);
+		vPickingPos.Print();
+	}
 }
 
 CToolSceneStage* CToolSceneStage::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)

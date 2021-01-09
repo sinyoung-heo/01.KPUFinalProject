@@ -4,9 +4,6 @@
     <Filter Include="99.Etc">
       <UniqueIdentifier>{643a98a3-1e95-47ad-92e7-ff36fb085b55}</UniqueIdentifier>
     </Filter>
-    <Filter Include="98.Header">
-      <UniqueIdentifier>{c26b4ae7-a46d-4a73-b5fe-acc8762421d3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99.Etc\리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -86,6 +83,12 @@
     <Filter Include="03.ToolGameObject\00.Environment\02.Terrain">
       <UniqueIdentifier>{c92c7163-e5b2-4871-a116-23047d0ed8b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.Mgr\01.MouseMgr">
+      <UniqueIdentifier>{867f126f-03ef-476d-a6c9-4d8321693d20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Mgr\01.MouseMgr\98.Header">
+      <UniqueIdentifier>{c26b4ae7-a46d-4a73-b5fe-acc8762421d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
@@ -113,22 +116,22 @@
       <Filter>99.Etc</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Include.h">
-      <Filter>98.Header</Filter>
+      <Filter>97.Mgr\01.MouseMgr\98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Macro.h">
-      <Filter>98.Header</Filter>
+      <Filter>97.Mgr\01.MouseMgr\98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Struct.h">
-      <Filter>98.Header</Filter>
+      <Filter>97.Mgr\01.MouseMgr\98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Typedef.h">
-      <Filter>98.Header</Filter>
+      <Filter>97.Mgr\01.MouseMgr\98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Const.h">
-      <Filter>98.Header</Filter>
+      <Filter>97.Mgr\01.MouseMgr\98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Extern.h">
-      <Filter>98.Header</Filter>
+      <Filter>97.Mgr\01.MouseMgr\98.Header</Filter>
     </ClInclude>
     <ClInclude Include="MyForm.h">
       <Filter>00.MFC Class\03.FormView</Filter>
@@ -174,6 +177,9 @@
     </ClInclude>
     <ClInclude Include="..\Code\ToolTerrain.h">
       <Filter>03.ToolGameObject\00.Environment\02.Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\MouseMgr.h">
+      <Filter>97.Mgr\01.MouseMgr</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -236,6 +242,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\ToolTerrain.cpp">
       <Filter>03.ToolGameObject\00.Environment\02.Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MouseMgr.cpp">
+      <Filter>97.Mgr\01.MouseMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

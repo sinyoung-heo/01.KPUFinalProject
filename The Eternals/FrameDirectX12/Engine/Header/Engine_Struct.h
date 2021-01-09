@@ -106,28 +106,28 @@ typedef struct tagVector2 : public XMFLOAT2
 		return XMConvertToDegrees(angleRadians);
 	}
 
-	float Dot(const tagVector2& vDst)
+	float Dot(const tagVector2& v1)
 	{
-		XMVECTOR dst = XMVectorSet(vDst.x, vDst.y, 0.f, 0.f);
-		XMVECTOR src = XMVectorSet(this->x, this->y, 0.f, 0.f);
-		XMVECTOR result = XMVector2Dot(dst, src);
+		XMVECTOR V1 = XMVectorSet(v1.x, v1.y, 0.f, 0.f);
+		XMVECTOR V2 = XMVectorSet(this->x, this->y, 0.f, 0.f);
+		XMVECTOR result = XMVector2Dot(V1, V2);
 		return XMVectorGetX(result);
 	}
 
-	tagVector2 Cross_InputDst(const tagVector2& vDst)
+	tagVector2 Cross_InputV1(const tagVector2& v1)
 	{
-		XMVECTOR dst = XMVectorSet(vDst.x, vDst.y, 0.f, 0.f);
-		XMVECTOR src = XMVectorSet(this->x, this->y, 0.f, 0.f);
-		XMVECTOR result = XMVector2Cross(dst, src);
+		XMVECTOR V1 = XMVectorSet(v1.x, v1.y, 0.f, 0.f);
+		XMVECTOR V2 = XMVectorSet(this->x, this->y, 0.f, 0.f);
+		XMVECTOR result = XMVector2Cross(V1, V2);
 
 		return tagVector2(XMVectorGetX(result), XMVectorGetY(result));
 	}
 
-	tagVector2 Cross_InputSrc(const tagVector2& vSrc)
+	tagVector2 Cross_InputV2(const tagVector2& v2)
 	{
-		XMVECTOR dst = XMVectorSet(this->x, this->y, 0.f, 0.f);
-		XMVECTOR src = XMVectorSet(vSrc.x, vSrc.y, 0.f, 0.f);
-		XMVECTOR result = XMVector2Cross(dst, src);
+		XMVECTOR V1 = XMVectorSet(this->x, this->y, 0.f, 0.f);
+		XMVECTOR V2 = XMVectorSet(v2.x, v2.y, 0.f, 0.f);
+		XMVECTOR result = XMVector2Cross(V1, V2);
 
 		return tagVector2(XMVectorGetX(result), XMVectorGetY(result));
 	}
@@ -251,28 +251,28 @@ typedef struct tagVector3 : public XMFLOAT3
 		return XMConvertToDegrees(angleRadians);
 	}
 
-	float Dot(const tagVector3& vDst)
+	float Dot(const tagVector3& v1)
 	{
-		XMVECTOR dst = XMVectorSet(vDst.x, vDst.y, vDst.z, 0.f);
-		XMVECTOR src = XMVectorSet(this->x, this->y, this->z, 0.f);
-		XMVECTOR result = XMVector3Dot(dst, src);
+		XMVECTOR V1 = XMVectorSet(v1.x, v1.y, v1.z, 0.f);
+		XMVECTOR V2 = XMVectorSet(this->x, this->y, this->z, 0.f);
+		XMVECTOR result = XMVector3Dot(V1, V2);
 		return XMVectorGetX(result);
 	}
 
-	tagVector3 Cross_InputDst(const tagVector3& vDst)
+	tagVector3 Cross_InputV1(const tagVector3& v1)
 	{
-		XMVECTOR dst = XMVectorSet(vDst.x, vDst.y, vDst.z, 0.f);
-		XMVECTOR src = XMVectorSet(this->x, this->y, this->z, 0.f);
-		XMVECTOR result = XMVector3Cross(dst, src);
+		XMVECTOR V1 = XMVectorSet(v1.x, v1.y, v1.z, 0.f);
+		XMVECTOR V2 = XMVectorSet(this->x, this->y, this->z, 0.f);
+		XMVECTOR result = XMVector3Cross(V1, V2);
 
 		return tagVector3(XMVectorGetX(result), XMVectorGetY(result), XMVectorGetZ(result));
 	}
 
-	tagVector3 Cross_InputSrc(const tagVector3& vSrc)
+	tagVector3 Cross_InputV2(const tagVector3& v2)
 	{
-		XMVECTOR dst = XMVectorSet(this->x, this->y, this->z, 0.f);
-		XMVECTOR src = XMVectorSet(vSrc.x, vSrc.y, vSrc.z, 0.f);
-		XMVECTOR result = XMVector3Cross(dst, src);
+		XMVECTOR V1 = XMVectorSet(this->x, this->y, this->z, 0.f);
+		XMVECTOR V2 = XMVectorSet(v2.x, v2.y, v2.z, 0.f);
+		XMVECTOR result = XMVector3Cross(V1, V2);
 
 		return tagVector3(XMVectorGetX(result), XMVectorGetY(result), XMVectorGetZ(result));
 	}

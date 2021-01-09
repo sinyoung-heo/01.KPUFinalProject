@@ -59,6 +59,7 @@ CToolView::CToolView() noexcept
 CToolView::~CToolView()
 {
 	Engine::Safe_Release(m_pMainApp);
+	CMouseMgr::Get_Instance()->Destroy_Instance();
 
 	Engine::CFrameMgr::Get_Instance()->Destroy_Instance();
 	Engine::CTimerMgr::Get_Instance()->Destroy_Instance();
