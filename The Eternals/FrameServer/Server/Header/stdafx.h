@@ -14,6 +14,7 @@
 #include <queue>
 #include <atomic>
 #include <vector>
+#include <stack>
 #include <sqlext.h>
 #include <string>
 
