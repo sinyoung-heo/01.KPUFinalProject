@@ -9,12 +9,13 @@
 #include <mutex>
 #include <unordered_set>
 #include <unordered_map>
+#include <map>
+#include <vector>
+#include <stack>
 #include <algorithm>
 #include <chrono>
 #include <queue>
 #include <atomic>
-#include <vector>
-#include <stack>
 #include <sqlext.h>
 #include <string>
 
@@ -37,5 +38,6 @@ using namespace chrono;
 
 #include "dataType.h"
 #include "ObjMgr.h"
+#include "ObjPoolMgr.h"
 #include "PacketMgr.h"
 #include "DBMgr.h"

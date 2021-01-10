@@ -21,7 +21,9 @@ mutex g_timer_lock;
 //SQLHENV g_henv;
 
 /*==============================================================함수 선언부========================================================================*/
+void Ready_ServerManager();			// 서버 매니저 초기화
 void Ready_Server();				// 서버 메인 루프 초기화
+void Release_Server();				// 서버 종료
 
 void add_new_client(SOCKET ns);		// 새로운 유저 접속 함수
 void disconnect_client(int id);		// 유저 접속 정료 함수
@@ -55,9 +57,22 @@ int main()
 	return NO_EVENT;
 }
 
+void Ready_ServerManager()
+{
+	// INIT OBJECT POOL MANAGER
+	CObjPoolMgr::GetInstance()->Init_ObjPoolMgr();	
+#ifdef TEST
+	cout << "Finish Server Managers" << endl;
+#endif // TEST
+
+}
+
 /*==============================================================함수 정의부========================================================================*/
 void Ready_Server()
 {
+	/* Init Server Managers */
+	Ready_ServerManager();
+
 	std::wcout.imbue(std::locale("korean"));
 
 	/* WINSOCK 초기화 */
@@ -97,6 +112,16 @@ void Ready_Server()
 
 	/* 비동기 Accept */
 	AcceptEx(g_hListenSock, cSocket, g_accept_over.iocp_buf, 0, 32, 32, NULL, &g_accept_over.wsa_over);
+
+#ifdef TEST
+	cout << "Finish Server Initialization" << endl;
+#endif // TEST
+}
+
+void Release_Server()
+{
+	CObjPoolMgr::GetInstance()->DestroyInstance();
+	CObjMgr::GetInstance()->DestroyInstance();
 }
 
 void add_new_client(SOCKET ns)
@@ -110,11 +135,88 @@ void add_new_client(SOCKET ns)
 		s_num = temp;
 	g_id_lock.unlock();
 
-	/* 새로 접속한 유저의 정보 초기화 */
+	// 최대 서버 인원 초과 여부
+	if (MAX_USER == s_num)
+	{
+#ifdef TEST
+		cout << "Max user limit exceeded.\n";
+#endif
+		closesocket(ns);
+	}
+	else
+	{
+#ifdef TEST
+		cout << "New Client [" << s_num << "] Accepted" << endl;
+#endif
+		/* 새로 접속한 유저의 정보 초기화 */
+		CPlayer* pNew = static_cast<CPlayer*>(CObjPoolMgr::GetInstance()->use_Object(L"PLAYER"));
+
+		pNew->Get_ClientLock().lock();
+		pNew->Set_IsConnected(true);
+		pNew->Set_IsDead(false);
+		pNew->m_sock = ns;
+		pNew->m_ID[0] = 0;
+		pNew->Get_ClientLock().unlock();
+
+		pNew->m_packet_start = pNew->m_recv_over.iocp_buf;
+		pNew->m_recv_over.op_mode = OPMODE::OP_MODE_RECV;
+		pNew->m_recv_over.wsa_buf.buf = reinterpret_cast<CHAR*>(pNew->m_recv_over.iocp_buf);
+		pNew->m_recv_over.wsa_buf.len = sizeof(pNew->m_recv_over.iocp_buf);
+		ZeroMemory(&pNew->m_recv_over.wsa_over, sizeof(pNew->m_recv_over.wsa_over));
+		pNew->m_recv_start = pNew->m_recv_over.iocp_buf;
+
+		pNew->m_type = '0';
+		pNew->m_vPos = _vec3(0.f, 0.f, 0.f);
+		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
+		pNew->level = 1;
+		pNew->Hp = 100;
+		pNew->maxHp = 100;
+		pNew->Exp = 0;
+		pNew->maxExp = 0;
+		pNew->att = 10;
+		pNew->spd = 10.f;
+
+		/* 해당 클라이언트 소켓을 IOCP에 등록 */
+		CreateIoCompletionPort(reinterpret_cast<HANDLE>(ns), g_hIocp, s_num, 0);
+
+		DWORD flags = 0;
+		int ret;
+
+		/* 해당 클라이언트로부터 정보를 RECV */
+		pNew->Get_ClientLock().lock();
+		// 현재 해당 클라이언트의 접속 여부 검사
+		if (pNew->Get_IsConnected())
+			ret = WSARecv(pNew->m_sock, &pNew->m_recv_over.wsa_buf, 1, NULL, &flags, &pNew->m_recv_over.wsa_over, NULL);
+		pNew->Get_ClientLock().unlock();
+
+		if (SOCKET_ERROR == ret)
+		{
+			int err_no = WSAGetLastError();
+			if (ERROR_IO_PENDING != err_no)
+				error_display("WSARecv : ", err_no);
+		}
+	}
+	/* 새로 들어온 유저의 접속 처리 완료 -> 다시 비동기 ACCEPT */
+	SOCKET cSocket = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
+	g_accept_over.op_mode = OP_MODE_ACCEPT;
+	g_accept_over.wsa_buf.len = static_cast<ULONG> (cSocket);
+	ZeroMemory(&g_accept_over.wsa_over, sizeof(&g_accept_over.wsa_over));
+	AcceptEx(g_hListenSock, cSocket, g_accept_over.iocp_buf, 0, 32, 32, NULL, &g_accept_over.wsa_over);
 }
 
 void disconnect_client(int id)
 {
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(id));
+
+	pPlayer->Get_ClientLock().lock();
+	pPlayer->Set_IsConnected(false);
+	closesocket(pPlayer->m_sock);
+	pPlayer->m_sock = 0;
+	pPlayer->Get_ClientLock().unlock();
+
+	memset(pPlayer, 0, sizeof(CPlayer));
+
+	CObjPoolMgr::GetInstance()->return_Object(L"PLAYER", pPlayer);
 }
 
 void time_worker()
@@ -152,6 +254,7 @@ void worker_thread()
 		switch (over_ex->op_mode)
 		{
 		case OPMODE::OP_MODE_ACCEPT:
+			add_new_client(static_cast<SOCKET>(over_ex->wsa_buf.len));
 			break;
 
 		case OPMODE::OP_MODE_RECV:

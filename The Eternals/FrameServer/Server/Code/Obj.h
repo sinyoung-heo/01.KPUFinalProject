@@ -10,6 +10,10 @@ public:
 	const bool& Get_IsConnected() { return m_bIsConnect; }
 
 public:
+	void Set_IsConnected(const bool& set) { m_bIsConnect = set; }
+	void Set_IsDead(const bool& set) { m_bIsDead = set; }
+
+public:
 	virtual DWORD Release();
 
 protected:
