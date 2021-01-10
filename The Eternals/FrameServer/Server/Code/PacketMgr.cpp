@@ -21,10 +21,8 @@ void process_packet(int id)
 		pPlayer->Get_ClientLock().unlock();
 
 		/* CHECK ID in Database Server */
-
+		send_login_ok(id);
 	}
-		
-
 		break;
 	case CS_MOVE:
 		break;
@@ -95,4 +93,45 @@ void process_recv(int id, DWORD iosize)
 	if (pPlayer->Get_IsConnected())
 		WSARecv(pPlayer->m_sock, &pPlayer->m_recv_over.wsa_buf, 1, NULL, &recv_flag, &pPlayer->m_recv_over.wsa_over, NULL);
 	pPlayer->Get_ClientLock().unlock();
+}
+
+void send_packet(int id, void* p)
+{
+	unsigned char* packet = reinterpret_cast<unsigned char*>(p);
+
+	OVER_EX* send_over = new OVER_EX;
+
+	memcpy(send_over->iocp_buf, packet, packet[0]);
+	send_over->op_mode = OP_MODE_SEND;
+	send_over->wsa_buf.buf = reinterpret_cast<CHAR*>(send_over->iocp_buf);
+	send_over->wsa_buf.len = packet[0];
+	ZeroMemory(&send_over->wsa_over, sizeof(send_over->wsa_over));
+
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(id));
+
+	pPlayer->Get_ClientLock().lock();
+	if (pPlayer->Get_IsConnected())
+		WSASend(pPlayer->m_sock, &send_over->wsa_buf, 1, NULL, 0, &send_over->wsa_over, NULL);
+	pPlayer->Get_ClientLock().unlock();
+}
+
+void send_login_ok(int id)
+{
+	sc_packet_login_ok p;
+
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(id));
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_LOGIN_OK;
+	p.id = id;
+
+	p.att = pPlayer->att;
+	p.exp = pPlayer->Exp;
+	p.hp = pPlayer->Hp;
+	p.level = pPlayer->level;
+	p.maxExp = pPlayer->maxExp;
+	p.maxHp = pPlayer->maxHp;
+	p.spd = pPlayer->spd;
+
+	send_packet(id, &p);
 }

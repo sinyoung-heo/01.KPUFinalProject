@@ -51,6 +51,7 @@ int main()
 	/* Time Thread 소멸 */
 	time_thread.join();
 
+	Release_Server();
 	closesocket(g_hListenSock);
 	WSACleanup();
 
@@ -115,7 +116,7 @@ void Ready_Server()
 
 #ifdef TEST
 	cout << "Finish Server Initialization" << endl;
-#endif // TEST
+#endif 
 }
 
 void Release_Server()
@@ -175,6 +176,8 @@ void add_new_client(SOCKET ns)
 		pNew->maxExp = 0;
 		pNew->att = 10;
 		pNew->spd = 10.f;
+
+		CObjMgr::GetInstance()->Add_GameObject(s_num, pNew);
 
 		/* 해당 클라이언트 소켓을 IOCP에 등록 */
 		CreateIoCompletionPort(reinterpret_cast<HANDLE>(ns), g_hIocp, s_num, 0);

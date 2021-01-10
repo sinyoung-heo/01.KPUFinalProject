@@ -29,14 +29,14 @@ using namespace chrono;
 #pragma comment(lib, "odbc32.lib")
 
 /* USER HEADER */
-#include "protocol.h"
 #include "define.h"
+#include "dataType.h"
+#include "protocol.h"
 #include "enum.h"
 #include "struct.h"
 #include "extern.h"
 #include "function.h"
 
-#include "dataType.h"
 #include "ObjMgr.h"
 #include "ObjPoolMgr.h"
 #include "PacketMgr.h"

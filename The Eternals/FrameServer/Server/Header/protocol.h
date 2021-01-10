@@ -33,10 +33,16 @@ struct sc_packet_login_ok
 	char size;
 	char type;
 	int  id;
-	short x, y;
-	short hp;
-	short level;
-	int   exp;
+
+	_vec3 vPos;
+	_vec3 vDir;
+	int hp;
+	int maxHp;
+	int exp;
+	int maxExp;
+	int level;
+	int att;
+	float spd;
 };
 
 struct sc_packet_move 
