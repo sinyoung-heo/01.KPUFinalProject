@@ -39,9 +39,6 @@ HRESULT CObjMgr::Delete_GameObject(int server_num)
 	/* 3.탐색 성공 -> 삭제 */
 	if (user->second)
 	{
-		delete user->second;
-		user->second = nullptr;
-
 		m_mapObj.erase(server_num);
 
 		return S_OK;
@@ -65,10 +62,5 @@ CObj* CObjMgr::Get_GameObject(int server_num)
 
 void CObjMgr::Release()
 {
-	for (auto& MyPair : m_mapObj)
-	{
-		Safe_Release(MyPair.second);
-	}
-
 	m_mapObj.clear();
 }

@@ -121,8 +121,8 @@ void Ready_Server()
 
 void Release_Server()
 {
-	CObjPoolMgr::GetInstance()->DestroyInstance();
 	CObjMgr::GetInstance()->DestroyInstance();
+	CObjPoolMgr::GetInstance()->DestroyInstance();
 }
 
 void add_new_client(SOCKET ns)
@@ -217,9 +217,13 @@ void disconnect_client(int id)
 	pPlayer->m_sock = 0;
 	pPlayer->Get_ClientLock().unlock();
 
-	memset(pPlayer, 0, sizeof(CPlayer));
-
 	CObjPoolMgr::GetInstance()->return_Object(L"PLAYER", pPlayer);
+	CObjMgr::GetInstance()->Delete_GameObject(id);
+
+	if (CObjMgr::GetInstance()->Get_mapObj().size() <= 0)
+	{
+		Release_Server();
+	}
 }
 
 void time_worker()

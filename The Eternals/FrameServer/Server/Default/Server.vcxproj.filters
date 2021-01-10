@@ -72,6 +72,9 @@
     <ClCompile Include="..\Code\ObjPoolMgr.cpp">
       <Filter>98.Manager\03.ObjPoolMgr</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\ObjectPool.cpp">
+      <Filter>98.Manager\03.ObjPoolMgr\00.ObjectPool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\stdafx.h">
@@ -113,14 +116,11 @@
     <ClInclude Include="..\Code\DBMgr.h">
       <Filter>98.Manager\02.DBMgr</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\ObjPool.h">
-      <Filter>98.Manager\03.ObjPoolMgr\00.ObjectPool</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\ObjPool.hpp">
-      <Filter>98.Manager\03.ObjPoolMgr\00.ObjectPool</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\ObjPoolMgr.h">
       <Filter>98.Manager\03.ObjPoolMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ObjectPool.h">
+      <Filter>98.Manager\03.ObjPoolMgr\00.ObjectPool</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,8 +1,5 @@
 #pragma once
-#include "ObjPool.h"
-
-class CObj;
-typedef CObjPool<CObj>* OBJLIST;
+#include "ObjectPool.h"
 
 class CObjPoolMgr
 {
@@ -22,6 +19,6 @@ public:
 	void Release();
 
 private:
-	map<wstring, OBJLIST> m_mapObjPool;
+	map<wstring, CObjectPool*> m_mapObjPool;
 };
 

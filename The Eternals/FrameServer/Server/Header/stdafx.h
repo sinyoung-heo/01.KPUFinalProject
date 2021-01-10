@@ -37,7 +37,7 @@ using namespace chrono;
 #include "extern.h"
 #include "function.h"
 
-#include "ObjMgr.h"
 #include "ObjPoolMgr.h"
+#include "ObjMgr.h"
 #include "PacketMgr.h"
 #include "DBMgr.h"

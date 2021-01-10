@@ -22,6 +22,7 @@
     <ClCompile Include="..\Code\DBMgr.cpp" />
     <ClCompile Include="..\Code\MainServer.cpp" />
     <ClCompile Include="..\Code\Obj.cpp" />
+    <ClCompile Include="..\Code\ObjectPool.cpp" />
     <ClCompile Include="..\Code\ObjMgr.cpp" />
     <ClCompile Include="..\Code\ObjPoolMgr.cpp" />
     <ClCompile Include="..\Code\PacketMgr.cpp" />
@@ -30,9 +31,8 @@
   <ItemGroup>
     <ClInclude Include="..\Code\DBMgr.h" />
     <ClInclude Include="..\Code\Obj.h" />
+    <ClInclude Include="..\Code\ObjectPool.h" />
     <ClInclude Include="..\Code\ObjMgr.h" />
-    <ClInclude Include="..\Code\ObjPool.h" />
-    <ClInclude Include="..\Code\ObjPool.hpp" />
     <ClInclude Include="..\Code\ObjPoolMgr.h" />
     <ClInclude Include="..\Code\PacketMgr.h" />
     <ClInclude Include="..\Code\Player.h" />

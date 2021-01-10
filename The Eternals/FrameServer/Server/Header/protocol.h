@@ -34,8 +34,6 @@ struct sc_packet_login_ok
 	char type;
 	int  id;
 
-	_vec3 vPos;
-	_vec3 vDir;
 	int hp;
 	int maxHp;
 	int exp;
@@ -43,6 +41,8 @@ struct sc_packet_login_ok
 	int level;
 	int att;
 	float spd;
+	float posX, posY, posZ;
+	float dirX, dirY, dirZ;
 };
 
 struct sc_packet_move 
