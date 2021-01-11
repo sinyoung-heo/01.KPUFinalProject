@@ -83,11 +83,11 @@
     <Filter Include="97.Mgr\01.MouseMgr">
       <UniqueIdentifier>{867f126f-03ef-476d-a6c9-4d8321693d20}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97.Mgr\01.MouseMgr\98.Header">
-      <UniqueIdentifier>{c26b4ae7-a46d-4a73-b5fe-acc8762421d3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00.MFC Class\04.TapControl\01.TabMap">
       <UniqueIdentifier>{381eb77c-885a-4513-af25-e85df13ebd77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Header">
+      <UniqueIdentifier>{c26b4ae7-a46d-4a73-b5fe-acc8762421d3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -116,22 +116,22 @@
       <Filter>99.Etc</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Include.h">
-      <Filter>97.Mgr\01.MouseMgr\98.Header</Filter>
+      <Filter>98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Macro.h">
-      <Filter>97.Mgr\01.MouseMgr\98.Header</Filter>
+      <Filter>98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Struct.h">
-      <Filter>97.Mgr\01.MouseMgr\98.Header</Filter>
+      <Filter>98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Typedef.h">
-      <Filter>97.Mgr\01.MouseMgr\98.Header</Filter>
+      <Filter>98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Const.h">
-      <Filter>97.Mgr\01.MouseMgr\98.Header</Filter>
+      <Filter>98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Extern.h">
-      <Filter>97.Mgr\01.MouseMgr\98.Header</Filter>
+      <Filter>98.Header</Filter>
     </ClInclude>
     <ClInclude Include="MyForm.h">
       <Filter>00.MFC Class\03.FormView</Filter>
