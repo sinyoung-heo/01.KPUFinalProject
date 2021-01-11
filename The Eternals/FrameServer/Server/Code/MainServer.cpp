@@ -174,7 +174,7 @@ void add_new_client(SOCKET ns)
 		pNew->m_recv_start = pNew->m_recv_over.iocp_buf;
 
 		pNew->m_type = '0';
-		pNew->m_vPos = _vec3((rand() % 100) * 1.f+1000.f, 0.f, 0.f);
+		pNew->m_vPos = _vec3((rand() % 100) * 1.f+1000.f, (rand() % 100) * 1.f + 500.f, 0.f);
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->level = 1;
 		pNew->Hp = 100;
