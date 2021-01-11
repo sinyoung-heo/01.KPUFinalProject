@@ -34,9 +34,9 @@ public:
 	Engine::CManagement*		m_pManagement		= nullptr;
 	Engine::CObjectMgr*			m_pObjectMgr		= nullptr;
 	Engine::CComponentMgr*		m_pComponentMgr		= nullptr;
-
-	HRESULT	 Ready_TerrainControl();
-	HRESULT	 Ready_SkyBoxControl();
+	HRESULT	Ready_TerrainControl();
+	HRESULT	Ready_SkyBoxControl();
+	HRESULT Ready_EditControl();
 
 	/*__________________________________________________________________________________________________________
 	[ TERRAIN ]
@@ -59,11 +59,15 @@ public:
 
 
 	/*__________________________________________________________________________________________________________
-	[ SkyBox ]
+	[ SKYBOX ]
 	____________________________________________________________________________________________________________*/
 	// Function
 	afx_msg void OnLbnSelchangeList1002_SkyBoxTexIndex();
 	afx_msg void OnBnClickedCheck1004_SkyBoxRenderOnOff();
+	afx_msg void OnEnChangeEdit1001_SkyBoxPosX();
+	afx_msg void OnEnChangeEdit1002_SkyBoxPosY();
+	afx_msg void OnEnChangeEdit1003_SkyBoxPosZ();
+	afx_msg void OnEnChangeEdit1004__SkyBoxScale();
 
 	// Control
 	CEdit		m_SkyBoxEdit_PosX;
@@ -79,8 +83,62 @@ public:
 	float		m_fSkyBox_PosZ	= 0.0f;
 	float		m_fSkyBox_Scale = 512.0f;
 
-	afx_msg void OnEnChangeEdit1001_SkyBoxPosX();
-	afx_msg void OnEnChangeEdit1002_SkyBoxPosY();
-	afx_msg void OnEnChangeEdit1003_SkyBoxPosZ();
-	afx_msg void OnEnChangeEdit1004__SkyBoxScale();
+	/*__________________________________________________________________________________________________________
+	[ EDIT CHECK CONTROL ]
+	____________________________________________________________________________________________________________*/
+	// Function
+	afx_msg void OnBnClickedCheck1005_EditStaticMesh();
+	afx_msg void OnBnClickedCheck1006_EditLightingInfo();
+	afx_msg void OnBnClickedCheck1007_EditNavigationMesh();
+
+	// Control
+	CButton m_EditCheck_StaticMesh;
+	CButton m_EditCheck_LightingInfo;
+	CButton m_EditCheck_NavigationMesh;
+
+	/*__________________________________________________________________________________________________________
+	[ STATIC MESH ]
+	____________________________________________________________________________________________________________*/
+	// Function
+
+
+	// Control
+	CButton			m_StaticMeshRadio_CreateMode;
+	CButton			m_StaticMeshRadio_ModifyMode;
+	CTreeCtrl		m_StaticMeshTree_ResourceTree;
+	CListBox		m_StaticMeshListBox_ObjectList;
+	CButton			m_StaticMeshButton_DeleteObject;
+	CButton			m_StaticMeshButton_AllDeleteObject;
+
+	CEdit			m_StaticMeshEdit_ScaleX;
+	CEdit			m_StaticMeshEdit_ScaleY;
+	CEdit			m_StaticMeshEdit_ScaleZ;
+	CSpinButtonCtrl m_StaticMeshSpinCtrl_ScaleX;
+	CSpinButtonCtrl m_StaticMeshSpinCtrl_ScaleY;
+	CSpinButtonCtrl m_StaticMeshSpinCtrl_ScaleZ;
+
+	CEdit			m_StaticMeshEdit_AngleX;
+	CEdit			m_StaticMeshEdit_AngleY;
+	CEdit			m_StaticMeshEdit_AngleZ;
+	CSpinButtonCtrl m_StaticMeshSpinCtrl_AngleX;
+	CSpinButtonCtrl m_StaticMeshSpinCtrl_AngleY;
+	CSpinButtonCtrl m_StaticMeshSpinCtrl_AngleZ;
+
+	CEdit			m_StaticMeshEdit_PosX;
+	CEdit			m_StaticMeshEdit_PosY;
+	CEdit			m_StaticMeshEdit_PosZ;
+	CSpinButtonCtrl m_StaticMeshSpinCtrl_PosX;
+	CSpinButtonCtrl m_StaticMeshSpinCtrl_PosY;
+	CSpinButtonCtrl m_StaticMeshSpinCtrl_PosZ;
+
+	CButton			m_StaticMeshCheck_IsRenderShadow;
+	CButton			m_StaticMeshCheck_IsCollision;
+
+	CButton			m_StaticMeshButton_Save;
+	CButton			m_StaticMeshButton_Load;
+
+
+	// Value
+
+
 };

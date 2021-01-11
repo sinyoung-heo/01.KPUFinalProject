@@ -42,6 +42,18 @@ END_MESSAGE_MAP()
 
 
 // CTabPathFinder 메시지 처리기
+BOOL CTabPathFinder::OnInitDialog()
+{
+	CDialogEx::OnInitDialog();
+
+	// TODO:  여기에 추가 초기화 작업을 추가합니다.
+	m_Radio_ResourceType[0].SetCheck(TRUE);
+	m_bIsClickedRadio_Mesh = true;
+
+
+	return TRUE;  // return TRUE unless you set the focus to a control
+				  // 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
+}
 
 
 BOOL CTabPathFinder::PreTranslateMessage(MSG* pMsg)
@@ -137,6 +149,9 @@ void CTabPathFinder::OnBnClickedRadio_Mesh()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	UpdateData(TRUE);
 
+	m_Radio_ResourceType[0].SetCheck(true);
+	m_Radio_ResourceType[1].SetCheck(false);
+
 	if (m_Radio_ResourceType[0].GetCheck())
 	{
 		m_bIsClickedRadio_Mesh		= true;
@@ -151,6 +166,9 @@ void CTabPathFinder::OnBnClickedRadio_Texture()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	UpdateData(TRUE);
+
+	m_Radio_ResourceType[0].SetCheck(false);
+	m_Radio_ResourceType[1].SetCheck(true);
 
 	if (m_Radio_ResourceType[1].GetCheck())
 	{

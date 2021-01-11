@@ -87,8 +87,8 @@ HRESULT CToolSceneStage::Ready_LayerCamera(wstring wstrLayerTag)
 	[ ToolCamera ]
 	____________________________________________________________________________________________________________*/
 	CToolCamera* pCToolCamera = CToolCamera::Create(m_pGraphicDevice, m_pCommandList,
-													Engine::CAMERA_DESC(_vec3(-10.0, 10.0f, -20.0f),	// Eye
-																		_vec3(0.0f, 0.0f, 0.0f),		// At
+													Engine::CAMERA_DESC(_vec3(-6.0, 6.0f, -6.0f),	// Eye
+																		_vec3(0.0f, 6.0f, 0.0f),		// At
 																		_vec3(0.0f, 1.0f, 0.f)),		// Up
 													Engine::PROJ_DESC(60.0f,							// FovY
 																		_float(WINCX) / _float(WINCY),	// Aspect
