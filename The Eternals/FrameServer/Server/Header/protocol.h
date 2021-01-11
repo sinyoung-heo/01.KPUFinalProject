@@ -66,9 +66,11 @@ struct sc_packet_enter
 	char size;
 	char type;
 	int  id;
+
 	char name[MAX_ID_LEN];
 	char o_type;
-	short x, y;
+	float posX, posY, posZ;
+	float dirX, dirY, dirZ;
 };
 
 struct sc_packet_leave 

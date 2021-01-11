@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Player.h"
+#include <random>
 #define TEST
 
 /* IOCP SERVER 관련 변수*/
@@ -34,6 +35,7 @@ void worker_thread();				// Worker Thread Enter Function
 /*==============================================================MAIN CODE=========================================================================*/
 int main()
 {
+	srand(unsigned int(time(nullptr)));
 	Ready_Server();
 
 	/* Time Thread 생성 */
@@ -57,18 +59,18 @@ int main()
 
 	return NO_EVENT;
 }
-
+/*==============================================================함수 정의부========================================================================*/
 void Ready_ServerManager()
 {
 	// INIT OBJECT POOL MANAGER
 	CObjPoolMgr::GetInstance()->Init_ObjPoolMgr();	
+	CObjMgr::GetInstance()->Init_ObjMgr();
 #ifdef TEST
 	cout << "Finish Server Managers" << endl;
 #endif // TEST
 
 }
 
-/*==============================================================함수 정의부========================================================================*/
 void Ready_Server()
 {
 	/* Init Server Managers */
@@ -131,7 +133,7 @@ void Release_Server()
 
 void add_new_client(SOCKET ns)
 {
-	size_t s_num;
+	size_t s_num = 0;
 
 	/* 서버에서 유저를 관리할 번호 설정 */
 	g_id_lock.lock();
@@ -144,7 +146,7 @@ void add_new_client(SOCKET ns)
 	g_id_lock.unlock();
 
 	// 최대 서버 인원 초과 여부
-	if (/*MAX_USER*/3 == s_num)
+	if (/*MAX_USER*/3 == CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER")->size())
 	{
 #ifdef TEST
 		cout << "Max user limit exceeded.\n";
@@ -172,7 +174,7 @@ void add_new_client(SOCKET ns)
 		pNew->m_recv_start = pNew->m_recv_over.iocp_buf;
 
 		pNew->m_type = '0';
-		pNew->m_vPos = _vec3(0.f, 0.f, 0.f);
+		pNew->m_vPos = _vec3((rand() % 100) * 1.f+1000.f, 0.f, 0.f);
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->level = 1;
 		pNew->Hp = 100;

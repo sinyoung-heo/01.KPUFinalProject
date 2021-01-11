@@ -23,7 +23,20 @@ void process_packet(int id)
 		/* CHECK ID in Database Server */
 		send_login_ok(id);
 
+		// 접속 중인 유저 탐색
+		auto player_list = CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER");
 
+		for (auto& others : *player_list)
+		{		
+			if (others.second->Get_IsConnected())
+			{
+				if (others.second->m_sNum != pPlayer->m_sNum)
+				{
+					send_enter_packet(others.second->m_sNum, pPlayer->m_sNum);
+					send_enter_packet(pPlayer->m_sNum, others.second->m_sNum);
+				}			
+			}
+		}
 	}
 		break;
 	case CS_MOVE:
@@ -144,4 +157,30 @@ void send_login_ok(int id)
 	p.dirZ = pPlayer->m_vDir.z;
 
 	send_packet(id, &p);
+}
+
+void send_enter_packet(int to_client, int new_id)
+{
+	sc_packet_enter p;
+
+	CPlayer* pNewPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", new_id));
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_ENTER;
+	p.id = new_id;
+
+	pNewPlayer->Get_ClientLock().lock();
+	strcpy_s(p.name, pNewPlayer->m_ID);
+	pNewPlayer->Get_ClientLock().unlock();
+	p.o_type = pNewPlayer->m_type;
+
+	p.posX = pNewPlayer->m_vPos.x;
+	p.posY = pNewPlayer->m_vPos.y;
+	p.posZ = pNewPlayer->m_vPos.z;
+
+	p.dirX = pNewPlayer->m_vDir.x;
+	p.dirY = pNewPlayer->m_vDir.y;
+	p.dirZ = pNewPlayer->m_vDir.z;
+
+	send_packet(to_client, &p);
 }
