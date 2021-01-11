@@ -123,21 +123,28 @@ void Release_Server()
 {
 	CObjMgr::GetInstance()->DestroyInstance();
 	CObjPoolMgr::GetInstance()->DestroyInstance();
+
+	closesocket(g_hListenSock);
+	WSACleanup();
+	exit(1);
 }
 
 void add_new_client(SOCKET ns)
 {
-	size_t s_num, temp;
+	size_t s_num;
 
 	/* 서버에서 유저를 관리할 번호 설정 */
 	g_id_lock.lock();
-	temp = CObjMgr::GetInstance()->Get_mapObj().size();
-	if (CObjMgr::GetInstance()->Get_GameObject(temp) == nullptr)
-		s_num = temp;
+	CPlayer* pNew = static_cast<CPlayer*>(CObjPoolMgr::GetInstance()->use_Object(L"PLAYER"));
+
+	if (CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pNew->m_sNum) == nullptr)
+		s_num = pNew->m_sNum;
+	else
+		CObjPoolMgr::GetInstance()->return_Object(L"PLAYER", pNew);
 	g_id_lock.unlock();
 
 	// 최대 서버 인원 초과 여부
-	if (MAX_USER == s_num)
+	if (/*MAX_USER*/3 == s_num)
 	{
 #ifdef TEST
 		cout << "Max user limit exceeded.\n";
@@ -150,8 +157,6 @@ void add_new_client(SOCKET ns)
 		cout << "New Client [" << s_num << "] Accepted" << endl;
 #endif
 		/* 새로 접속한 유저의 정보 초기화 */
-		CPlayer* pNew = static_cast<CPlayer*>(CObjPoolMgr::GetInstance()->use_Object(L"PLAYER"));
-
 		pNew->Get_ClientLock().lock();
 		pNew->Set_IsConnected(true);
 		pNew->Set_IsDead(false);
@@ -177,7 +182,7 @@ void add_new_client(SOCKET ns)
 		pNew->att = 10;
 		pNew->spd = 10.f;
 
-		CObjMgr::GetInstance()->Add_GameObject(s_num, pNew);
+		CObjMgr::GetInstance()->Add_GameObject(L"PLAYER",pNew, s_num);
 
 		/* 해당 클라이언트 소켓을 IOCP에 등록 */
 		CreateIoCompletionPort(reinterpret_cast<HANDLE>(ns), g_hIocp, s_num, 0);
@@ -199,6 +204,7 @@ void add_new_client(SOCKET ns)
 				error_display("WSARecv : ", err_no);
 		}
 	}
+
 	/* 새로 들어온 유저의 접속 처리 완료 -> 다시 비동기 ACCEPT */
 	SOCKET cSocket = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
 	g_accept_over.op_mode = OP_MODE_ACCEPT;
@@ -209,18 +215,18 @@ void add_new_client(SOCKET ns)
 
 void disconnect_client(int id)
 {
-	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(id));
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 
 	pPlayer->Get_ClientLock().lock();
 	pPlayer->Set_IsConnected(false);
 	closesocket(pPlayer->m_sock);
 	pPlayer->m_sock = 0;
-	pPlayer->Get_ClientLock().unlock();
 
 	CObjPoolMgr::GetInstance()->return_Object(L"PLAYER", pPlayer);
-	CObjMgr::GetInstance()->Delete_GameObject(id);
+	CObjMgr::GetInstance()->Delete_GameObject(L"PLAYER", pPlayer);
+	pPlayer->Get_ClientLock().unlock();
 
-	if (CObjMgr::GetInstance()->Get_mapObj().size() <= 0)
+	if (CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER")->size() <= 0)
 	{
 		Release_Server();
 	}

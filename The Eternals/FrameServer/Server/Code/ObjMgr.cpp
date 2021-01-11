@@ -11,56 +11,143 @@ CObjMgr::~CObjMgr(void)
 {
 }
 
-HRESULT CObjMgr::Add_GameObject(int num, CObj* pObj)
+CObj* CObjMgr::Get_GameObject(wstring wstrObjTag, int server_num)
 {
-	if (pObj != nullptr)
-	{
-		/* 1.map에 같은 server number값이 있는지 탐색 */
-		auto& user = m_mapObj.find(num);
+	/* map에서 찾고자 하는 OBJLIST를 Key 값을 통해 찾기 */
+	auto& iter_find = m_mapObjList.find(wstrObjTag);
 
-		/* 2.사용하지 않는 server number라면 새로운 유저에게 부여(탐색 실패) */
-		if (user == m_mapObj.end())
-		{
-			m_mapObj[num] = pObj;
-		}
-	}
-	return S_OK;
-}
-
-HRESULT CObjMgr::Delete_GameObject(int server_num)
-{
-	/* 1.server number값이 있는지 탐색 */
-	auto& user = m_mapObj.find(server_num);
-
-	/* 2.탐색 실패 */
-	if (user == m_mapObj.end())
-		return E_FAIL;
-
-	/* 3.탐색 성공 -> 삭제 */
-	if (user->second)
-	{
-		m_mapObj.erase(server_num);
-
-		return S_OK;
-	}	
-
-	return E_FAIL;
-}
-
-CObj* CObjMgr::Get_GameObject(int server_num)
-{
-	/* 1.server number값이 있는지 탐색 */
-	auto& user = m_mapObj.find(server_num);
-
-	/* 2.탐색 실패 */
-	if (user == m_mapObj.end())
+	/* 해당 OBJLIST를 찾지 못하였다면 NULL 반환 */
+	if (iter_find == m_mapObjList.end())
 		return nullptr;
-	
-	/* 3.탐색 성공 -> 객체 찾기 성공 */
+
+	/* server number값이 있는지 탐색 */
+	auto& user = iter_find->second.find(server_num);
+
+	/* 탐색 실패 */
+	if (user == iter_find->second.end())
+		return nullptr;
+
+	/* 탐색 성공 -> 객체 찾기 성공 */
 	return user->second;
 }
 
+OBJLIST* CObjMgr::Get_OBJLIST(wstring wstrObjTag)
+{
+	/* map에서 찾고자 하는 OBJLIST를 key 값을 통해 찾기 */
+	auto& iter_find = m_mapObjList.find(wstrObjTag);
+
+	/* 해당 OBJLIST를 찾지 못하였다면 NULL 반환 */
+	if (iter_find == m_mapObjList.end())
+		return nullptr;
+
+	return &(iter_find->second);
+}
+
+HRESULT CObjMgr::Add_GameObject(wstring wstrObjTag, CObj* pObj, int server_num)
+{
+	if (pObj != nullptr)
+	{
+		/* map에서 찾고자 하는 OBJLIST를 key 값을 통해 찾기 */
+		auto& iter_find = m_mapObjList.find(wstrObjTag);
+
+		/* 해당 OBJLIST가 없다면, 임시 OBJLIST 생성한 후 오브젝트 삽입 */
+		if (iter_find == m_mapObjList.end())
+			m_mapObjList[wstrObjTag] = OBJLIST();
+		
+		m_mapObjList[wstrObjTag][server_num] = pObj;
+	}
+
+	return S_OK;
+}
+
+HRESULT CObjMgr::Delete_GameObject(wstring wstrObjTag, CObj* pObj)
+{
+	if (pObj != nullptr)
+	{
+		/* map에서 찾고자 하는 OBJLIST를 key 값을 통해 찾기 */
+		auto& iter_find = m_mapObjList.find(wstrObjTag);
+
+		/* 해당 OBJLIST가 없다면, 임시 OBJLIST 생성한 후 오브젝트 삽입 */
+		if (iter_find == m_mapObjList.end())
+			return E_FAIL;
+
+		/* server number 값이 있는지 탐색 */
+		auto& user = iter_find->second.find(pObj->m_sNum);
+		
+		/* 탐색 실패 */
+		if (user == iter_find->second.end())
+			return E_FAIL;
+
+		/* 3.탐색 성공 -> 삭제 */
+		if (user->second)
+		{
+			iter_find->second.erase(pObj->m_sNum);
+			return S_OK;
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CObjMgr::Delete_OBJLIST(wstring wstrObjTag)
+{
+	m_mapObjList[wstrObjTag].clear();
+	return S_OK;
+}
+
+//HRESULT CObjMgr::Add_GameObject(int num, CObj* pObj)
+//{
+//	if (pObj != nullptr)
+//	{
+//		/* 1.map에 같은 server number값이 있는지 탐색 */
+//		auto& user = m_mapObj.find(num);
+//
+//		/* 2.사용하지 않는 server number라면 새로운 유저에게 부여(탐색 실패) */
+//		if (user == m_mapObj.end())
+//		{
+//			m_mapObj[num] = pObj;
+//		}
+//	}
+//	return S_OK;
+//}
+//
+//HRESULT CObjMgr::Delete_GameObject(int server_num)
+//{
+//	/* 1.server number값이 있는지 탐색 */
+//	auto& user = m_mapObj.find(server_num);
+//
+//	/* 2.탐색 실패 */
+//	if (user == m_mapObj.end())
+//		return E_FAIL;
+//
+//	/* 3.탐색 성공 -> 삭제 */
+//	if (user->second)
+//	{
+//		m_mapObj.erase(server_num);
+//
+//		return S_OK;
+//	}	
+//
+//	return E_FAIL;
+//}
+//
+//CObj* CObjMgr::Get_GameObject(int server_num)
+//{
+//	/* 1.server number값이 있는지 탐색 */
+//	auto& user = m_mapObj.find(server_num);
+//
+//	/* 2.탐색 실패 */
+//	if (user == m_mapObj.end())
+//		return nullptr;
+//	
+//	/* 3.탐색 성공 -> 객체 찾기 성공 */
+//	return user->second;
+//}
+
 void CObjMgr::Release()
 {
-	m_mapObj.clear();
+	for (auto& o_list : m_mapObjList)
+	{
+		o_list.second.clear();
+	}
 }

@@ -10,11 +10,27 @@ public:
 	~CObjectPool();
 
 public:
+	template<typename T>
+	HRESULT Create_ObjectPool(int size)
+	{
+		m_iMaxSize = size;
+
+		for (int i = 0; i < m_iMaxSize; ++i)
+		{
+			T* pObj = new T();
+			pObj->Set_ServerNumber(i + 1);
+			m_stackObj.push(pObj);
+		}
+
+		return S_OK;
+	}
+public:
 	// Object 사용
 	CObj* use_Object();
 	// Object 반환
 	void return_Obj(CObj* obj);
 
+private:
 	// Object Pool 확장
 	void Expand_Pool();
 	void Release();

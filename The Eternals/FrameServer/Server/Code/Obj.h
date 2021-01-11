@@ -12,6 +12,7 @@ public:
 public:
 	void Set_IsConnected(const bool& set) { m_bIsConnect = set; }
 	void Set_IsDead(const bool& set) { m_bIsDead = set; }
+	void Set_ServerNumber(const int& num) { m_sNum = num; }
 
 public:
 	virtual DWORD Release();
@@ -30,6 +31,7 @@ public:
 	bool m_bIsDead; //all
 	char m_ID[MAX_ID_LEN]; // all
 	char m_type; // all
+	int  m_sNum;
 	//int	level; // player
 	//int Hp, maxHp; // player, monster
 	//int Exp, maxExp; // player

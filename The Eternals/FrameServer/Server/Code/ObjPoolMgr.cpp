@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ObjPoolMgr.h"
+#include "Player.h"
 
 IMPLEMENT_SINGLETON(CObjPoolMgr)
 
@@ -13,7 +14,8 @@ CObjPoolMgr::~CObjPoolMgr(void)
 
 HRESULT CObjPoolMgr::Init_ObjPoolMgr(void)
 {
-	CObjectPool* pPlayerPool = new CObjectPool(100);
+	CObjectPool* pPlayerPool = new CObjectPool();
+	pPlayerPool->Create_ObjectPool<CPlayer>(100);
 	m_mapObjPool[L"PLAYER"] = pPlayerPool;
 
 	return S_OK;

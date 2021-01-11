@@ -5,7 +5,7 @@
 void process_packet(int id)
 {
 	/* Server Number 해당 유저 */
-	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(id));
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 
 	// 패킷 타입
 	char p_type = pPlayer->m_packet_start[1];
@@ -22,6 +22,8 @@ void process_packet(int id)
 
 		/* CHECK ID in Database Server */
 		send_login_ok(id);
+
+
 	}
 		break;
 	case CS_MOVE:
@@ -41,7 +43,7 @@ void process_packet(int id)
 void process_recv(int id, DWORD iosize)
 {
 	/* Server Number 해당 유저 */
-	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(id));
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 	
 	// m_packet_start		: 처리할 데이터 버퍼 및 위치 (= iocp_buffer)
 	// m_packet_start[0]	: 처리할 패킷의 크기
@@ -107,7 +109,7 @@ void send_packet(int id, void* p)
 	send_over->wsa_buf.len = packet[0];
 	ZeroMemory(&send_over->wsa_over, sizeof(send_over->wsa_over));
 
-	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(id));
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 
 	pPlayer->Get_ClientLock().lock();
 	if (pPlayer->Get_IsConnected())
@@ -119,7 +121,7 @@ void send_login_ok(int id)
 {
 	sc_packet_login_ok p;
 
-	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(id));
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 
 	p.size = sizeof(p);
 	p.type = SC_PACKET_LOGIN_OK;
@@ -132,6 +134,14 @@ void send_login_ok(int id)
 	p.maxExp = pPlayer->maxExp;
 	p.maxHp = pPlayer->maxHp;
 	p.spd = pPlayer->spd;
+
+	p.posX = pPlayer->m_vPos.x;
+	p.posY = pPlayer->m_vPos.y;
+	p.posZ = pPlayer->m_vPos.z;
+
+	p.dirX = pPlayer->m_vDir.x;
+	p.dirY = pPlayer->m_vDir.y;
+	p.dirZ = pPlayer->m_vDir.z;
 
 	send_packet(id, &p);
 }
