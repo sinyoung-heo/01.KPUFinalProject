@@ -67,11 +67,13 @@ _int CToolCamera::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		m_wstrText = wstring(L"[ Camera Info ] \n") +
 					 wstring(L"Eye\t(%d, %d, %d) \n") +
-					 wstring(L"At\t(%d, %d, %d)\n");
+					 wstring(L"At\t(%d, %d, %d)\n") +
+					 wstring(L"Speed\t%d");
 
 		wsprintf(m_szText, m_wstrText.c_str(),
 				(_int)m_tCameraInfo.vEye.x, (_int)m_tCameraInfo.vEye.y, (_int)m_tCameraInfo.vEye.z,
-				(_int)m_tCameraInfo.vAt.x, (_int)m_tCameraInfo.vAt.y, (_int)m_tCameraInfo.vAt.z);
+				(_int)m_tCameraInfo.vAt.x, (_int)m_tCameraInfo.vAt.y, (_int)m_tCameraInfo.vAt.z,
+				(_int)m_fSpeed);
 
 		m_pFont->Update_GameObject(fTimeDelta);
 		m_pFont->Set_Text(wstring(m_szText));
@@ -168,6 +170,13 @@ void CToolCamera::Key_Input(const _float& fTimeDelta)
 		m_tCameraInfo.vEye	-= vLook * m_fSpeed * fTimeDelta;
 		m_tCameraInfo.vAt	-= vLook * m_fSpeed * fTimeDelta;
 	}
+
+	// Camera Speed
+	if (Engine::KEY_DOWN(DIK_MINUS))
+		m_fSpeed -= 5.0f;
+	if (Engine::KEY_DOWN(DIK_EQUALS))
+		m_fSpeed += 5.0f;
+
 }
 
 CToolCamera* CToolCamera::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, const Engine::CAMERA_DESC& tCameraInfo, const Engine::PROJ_DESC& tProjInfo, const Engine::ORTHO_DESC& tOrthoInfo)

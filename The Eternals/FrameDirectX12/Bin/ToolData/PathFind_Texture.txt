@@ -1,4 +1,4 @@
 Fire|1|..\..\Bin\Resource\ResourceStage\Texture\Fire\%d.dds
 SkyBox|3|..\..\Bin\Resource\ResourceStage\Texture\SkyBox\%d.dds
-Terrain|1|..\..\Bin\Resource\ResourceStage\Texture\Terrain\%d.dds
+Terrain|9|..\..\Bin\Resource\ResourceStage\Texture\Terrain\%d.dds
 Torch|1|..\..\Bin\Resource\ResourceStage\Texture\Torch\%d.dds

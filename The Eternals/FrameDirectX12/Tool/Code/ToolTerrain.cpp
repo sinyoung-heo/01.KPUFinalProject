@@ -67,7 +67,7 @@ void CToolTerrain::Render_GameObject(const _float& fTimeDelta)
 {
 	Set_ConstantTable();
 
-	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), m_uiTexIdx);
+	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), 0, m_uiTexIdx);
 	m_pBufferCom->Begin_Buffer();
 
 	m_pBufferCom->Render_Buffer();

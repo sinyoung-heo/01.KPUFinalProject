@@ -15,6 +15,8 @@ private:
 	virtual ~CManagement() = default;
 
 public:
+	CScene* Get_CurrentScene() { return m_pCurrentScene; }
+public:
 	HRESULT	SetUp_CurrentScene(CScene* pNewScene);
 	_int	Update_Management(const _float& fTimeDelta);
 	_int	LateUpdate_Management(const _float& fTimeDelta);

@@ -120,6 +120,7 @@ void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 
 	case 1:
 
+		g_bIsLoadingStart = true;
 		m_TabPathFinder.ShowWindow(SW_HIDE);
 		m_TabObject.ShowWindow(SW_SHOW);
 		m_TabCollider.ShowWindow(SW_HIDE);
@@ -134,7 +135,14 @@ void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 		m_bIsTabCamera		= false;
 		m_bIsTabEffect		= false;
 
-		g_bIsLoadingStart = true;
+		if (g_bIsLoadingFinish)
+		{
+			if (!m_bIsInitTabObject)
+			{
+				m_bIsInitTabObject = true;
+				m_TabObject.Ready_TerrainControl();
+			}
+		}
 
 
 		break;

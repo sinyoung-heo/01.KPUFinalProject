@@ -132,11 +132,11 @@ HRESULT CToolSceneStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 	pTerrain = CToolTerrain::Create(m_pGraphicDevice, m_pCommandList, L"TerrainTex128");
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainTex128", pTerrain), E_FAIL);
 
-	//pTerrain = CToolTerrain::Create(m_pGraphicDevice, m_pCommandList, L"TerrainTex256");
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainTex256", pTerrain), E_FAIL);
+	pTerrain = CToolTerrain::Create(m_pGraphicDevice, m_pCommandList, L"TerrainTex256");
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainTex256", pTerrain), E_FAIL);
 
-	//pTerrain = CToolTerrain::Create(m_pGraphicDevice, m_pCommandList, L"TerrainTex512");
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainTex512", pTerrain), E_FAIL);
+	pTerrain = CToolTerrain::Create(m_pGraphicDevice, m_pCommandList, L"TerrainTex512");
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainTex512", pTerrain), E_FAIL);
 
 	return S_OK;
 }
@@ -187,7 +187,19 @@ HRESULT CToolSceneStage::Ready_LayerFont(wstring wstrLayerTag)
 
 HRESULT CToolSceneStage::Ready_LightInfo()
 {
+	Engine::D3DLIGHT tLightInfo;
+	ZeroMemory(&tLightInfo, sizeof(Engine::D3DLIGHT));
 
+	// Direction
+	tLightInfo.Type			= Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL;
+	tLightInfo.Diffuse		= _rgba(1.0f, 1.0f, 1.0f, 1.0f);
+	tLightInfo.Specular		= _rgba(0.4f, 0.4f, 0.4f, 1.0f);
+	tLightInfo.Ambient		= _rgba(0.3f, 0.3f, 0.3f, 1.0f);
+	tLightInfo.Direction	= _vec4(1.0f, -1.0f, 1.0f, 0.0f);
+	Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, 
+																			 m_pCommandList, 
+																			 Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL,
+																			 tLightInfo), E_FAIL);
 
 	return S_OK;
 }
@@ -200,8 +212,12 @@ void CToolSceneStage::Key_Input()
 	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON(Engine::DIM_LB)))
 	{
 		CToolTerrain* pTerrain = static_cast<CToolTerrain*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"TerrainTex128"));
-		_vec3 vPickingPos = CMouseMgr::Picking_OnTerrain(pTerrain);
-		vPickingPos.Print();
+		
+		if (nullptr != m_pPickingTerrain)
+		{
+			_vec3 vPickingPos = CMouseMgr::Picking_OnTerrain(m_pPickingTerrain);
+			vPickingPos.Print();
+		}
 	}
 }
 

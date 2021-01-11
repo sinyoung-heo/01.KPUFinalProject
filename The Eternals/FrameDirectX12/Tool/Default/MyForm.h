@@ -47,7 +47,10 @@ public:
 	CTabEffect		m_TabEffect;
 
 	_bool m_bIsTabPathFinder	= false;
+	
 	_bool m_bIsTabObject		= false;
+	_bool m_bIsInitTabObject	= false;
+
 	_bool m_bIsTabCollider		= false;
 	_bool m_bIsTabAnimation		= false;
 	_bool m_bIsTabCamera		= false;

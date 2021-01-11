@@ -742,7 +742,7 @@ void CRenderTarget::Render_RenderTarget()
 	{
 		Set_ConstantTable(i);
 
-		m_pShaderCom->Begin_Shader(m_pTexDescriptorHeap, i);
+		m_pShaderCom->Begin_Shader(m_pTexDescriptorHeap, i, i);
 		m_pBufferCom->Begin_Buffer();
 
 		m_pBufferCom->Render_Buffer();

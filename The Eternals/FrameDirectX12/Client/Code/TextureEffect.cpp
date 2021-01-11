@@ -80,14 +80,15 @@ _int CTextureEffect::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 	
-	Set_ConstantTable();
-
 	return NO_EVENT;
 }
 
 void CTextureEffect::Render_GameObject(const _float & fTimeDelta)
 {
-	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), m_uiTexIdx);
+	Set_ConstantTable();
+
+
+	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), 0, m_uiTexIdx);
 	m_pBufferCom->Begin_Buffer();
 
 	m_pBufferCom->Render_Buffer();
