@@ -163,7 +163,7 @@ void CTerrainMeshObject::Set_ConstantTableShadowDepth()
 	if (nullptr == m_pDynamicCamera)
 		return;
 
-	_vec3 vLightDir			= _vec3(Engine::CLightMgr::Get_Instance()->Get_LightInfo(0).Direction);
+	_vec3 vLightDir			= _vec3(Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL, 0).Direction);
 	_vec3 vDynamicCamEye	= m_pDynamicCamera->Get_CameraInfo().vEye;
 
 	Engine::CGameObject::SetUp_ShadowDepth(vDynamicCamEye, vDynamicCamEye, vLightDir);

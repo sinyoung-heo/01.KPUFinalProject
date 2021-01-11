@@ -15,23 +15,25 @@ private:
 
 public:
 	// Get
-	const D3DLIGHT&	Get_LightInfo(const _int& iIdx);
+	D3DLIGHT	Get_LightInfo(const LIGHTTYPE & eLightID, const _int& iIdx);
 
 	// Set
-	HRESULT			Set_LightInfo(const _int& iIdx, const D3DLIGHT& tLightInfo);
-	HRESULT			Set_IsLightOn(const _int& iIdx, const _bool& bIsLightOn);
+	HRESULT		Set_LightInfo(const LIGHTTYPE& eLightID, const _int & iIdx, const D3DLIGHT & tLightInfo);
+	HRESULT		Set_IsLightOn(const LIGHTTYPE& eLightID, const _int & iIdx, const _bool & bIsLightOn);
 
 	// Method
-	HRESULT			Add_Light(ID3D12Device* pGraphicDevice, 
-							  ID3D12GraphicsCommandList* pCommandList, 
-							  const D3DLIGHT& tLightInfo);
-	void			Render_Light(vector<ComPtr<ID3D12Resource>> pvecTargetTexture);
+	HRESULT		Add_Light(ID3D12Device* pGraphicDevice, 
+						  ID3D12GraphicsCommandList* pCommandList, 
+						  const LIGHTTYPE& eLightID,
+						  const D3DLIGHT& tLightInfo);
+	void		Render_Light(vector<ComPtr<ID3D12Resource>> pvecTargetTexture);
 
 private:
 	/*__________________________________________________________________________________________________________
 	[ Light ]
 	____________________________________________________________________________________________________________*/
-	vector<CLight*>	m_vecLight;
+	vector<CLight*>	m_vecLight[LIGHTTYPE::D3DLIGHT_END];
+
 
 private:
 	virtual void Free();
