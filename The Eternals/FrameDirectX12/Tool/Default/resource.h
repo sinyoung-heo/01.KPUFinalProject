@@ -25,6 +25,7 @@
 #define IDC_CHECK1001                   1012
 #define IDC_LIST1001                    1013
 #define IDC_LIST1003                    1014
+#define IDC_CHECK1004                   1015
 #define IDC_EDIT1001                    1018
 #define IDC_EDIT1002                    1019
 #define IDC_EDIT1003                    1020

@@ -1,25 +1,23 @@
 #include "stdafx.h"
-#include "SkyBox.h"
-
+#include "ToolSkyBox.h"
 #include "ObjectMgr.h"
 #include "GraphicDevice.h"
 
 
-CSkyBox::CSkyBox(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CToolSkyBox::CToolSkyBox(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
 }
 
-CSkyBox::CSkyBox(const CSkyBox & rhs)
+CToolSkyBox::CToolSkyBox(const CToolSkyBox& rhs)
 	: Engine::CGameObject(rhs)
 {
 }
 
-
-HRESULT CSkyBox::Ready_GameObject(wstring wstrTextureTag, 
-								  const _vec3 & vScale,
-								  const _vec3 & vAngle,
-								  const _vec3 & vPos)
+HRESULT CToolSkyBox::Ready_GameObject(wstring wstrTextureTag, 
+									  const _vec3& vScale, 
+									  const _vec3& vAngle, 
+									  const _vec3& vPos)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, false), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrTextureTag), E_FAIL);
@@ -28,12 +26,12 @@ HRESULT CSkyBox::Ready_GameObject(wstring wstrTextureTag,
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos		= vPos;
 
-	m_uiTexIdx	= 0;
+	m_uiTexIdx				= 0;
 
 	return S_OK;
 }
 
-HRESULT CSkyBox::LateInit_GameObject()
+HRESULT CToolSkyBox::LateInit_GameObject()
 {
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer();
@@ -41,12 +39,15 @@ HRESULT CSkyBox::LateInit_GameObject()
 	return S_OK;
 }
 
-_int CSkyBox::Update_GameObject(const _float & fTimeDelta)
+_int CToolSkyBox::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
+
+	if (!m_bIsUpdate)
+		return NO_EVENT;
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
@@ -56,9 +57,10 @@ _int CSkyBox::Update_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CSkyBox::LateUpdate_GameObject(const _float & fTimeDelta)
+_int CToolSkyBox::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
+	if (!m_bIsUpdate)
+		return NO_EVENT;
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
@@ -68,7 +70,7 @@ _int CSkyBox::LateUpdate_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-void CSkyBox::Render_GameObject(const _float & fTimeDelta)
+void CToolSkyBox::Render_GameObject(const _float& fTimeDelta)
 {
 	Set_ConstantTable();
 
@@ -78,7 +80,7 @@ void CSkyBox::Render_GameObject(const _float & fTimeDelta)
 	m_pBufferCom->Render_Buffer();
 }
 
-HRESULT CSkyBox::Add_Component(wstring wstrTextureTag)
+HRESULT CToolSkyBox::Add_Component(wstring wstrTextureTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -104,7 +106,7 @@ HRESULT CSkyBox::Add_Component(wstring wstrTextureTag)
 	return S_OK;
 }
 
-void CSkyBox::Set_ConstantTable()
+void CToolSkyBox::Set_ConstantTable()
 {
 	_matrix* pmatView = Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::VIEW);
 	_matrix* pmatProj = Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::PROJECTION);
@@ -123,17 +125,16 @@ void CSkyBox::Set_ConstantTable()
 	XMStoreFloat4x4(&tCB_MatrixDesc.matProj, XMMatrixTranspose(*pmatProj));
 
 	m_pShaderCom->Get_UploadBuffer_MatrixDesc()->CopyData(0, tCB_MatrixDesc);
-
 }
 
-CSkyBox * CSkyBox::Create(ID3D12Device * pGraphicDevice, 
-						  ID3D12GraphicsCommandList * pCommandList,
-						  wstring wstrTextureTag,
-						  const _vec3 & vScale,
-						  const _vec3 & vAngle,
-						  const _vec3 & vPos)
+CToolSkyBox* CToolSkyBox::Create(ID3D12Device* pGraphicDevice,
+								 ID3D12GraphicsCommandList* pCommandList, 
+								 wstring wstrTextureTag,
+								 const _vec3& vScale, 
+								 const _vec3& vAngle,
+								 const _vec3& vPos)
 {
-	CSkyBox* pInstance = new CSkyBox(pGraphicDevice, pCommandList);
+	CToolSkyBox* pInstance = new CToolSkyBox(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrTextureTag, vScale, vAngle, vPos)))
 		Engine::Safe_Release(pInstance);
@@ -141,7 +142,7 @@ CSkyBox * CSkyBox::Create(ID3D12Device * pGraphicDevice,
 	return pInstance;
 }
 
-void CSkyBox::Free()
+void CToolSkyBox::Free()
 {
 	Engine::CGameObject::Free();
 

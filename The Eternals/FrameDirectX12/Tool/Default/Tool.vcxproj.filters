@@ -181,6 +181,9 @@
     <ClInclude Include="TabMap.h">
       <Filter>00.MFC Class\04.TapControl\01.TabMap</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ToolSkyBox.h">
+      <Filter>03.ToolGameObject\00.Environment\01.SkyBox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -245,6 +248,9 @@
     </ClCompile>
     <ClCompile Include="TabMap.cpp">
       <Filter>00.MFC Class\04.TapControl\01.TabMap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ToolSkyBox.cpp">
+      <Filter>03.ToolGameObject\00.Environment\01.SkyBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

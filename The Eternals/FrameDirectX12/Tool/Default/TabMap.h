@@ -35,11 +35,13 @@ public:
 	Engine::CObjectMgr*			m_pObjectMgr		= nullptr;
 	Engine::CComponentMgr*		m_pComponentMgr		= nullptr;
 
+	HRESULT	 Ready_TerrainControl();
+	HRESULT	 Ready_SkyBoxControl();
+
 	/*__________________________________________________________________________________________________________
 	[ TERRAIN ]
 	____________________________________________________________________________________________________________*/
 	// Function
-	HRESULT	 Ready_TerrainControl();
 	afx_msg void OnBnClickedRadio1001_Terrain128();
 	afx_msg void OnBnClickedRadio1002_Terrain256();
 	afx_msg void OnBnClickedRadio1003_Terrain512();
@@ -55,4 +57,30 @@ public:
 
 	// Value
 
+
+	/*__________________________________________________________________________________________________________
+	[ SkyBox ]
+	____________________________________________________________________________________________________________*/
+	// Function
+	afx_msg void OnLbnSelchangeList1002_SkyBoxTexIndex();
+	afx_msg void OnBnClickedCheck1004_SkyBoxRenderOnOff();
+
+	// Control
+	CEdit		m_SkyBoxEdit_PosX;
+	CEdit		m_SkyBoxEdit_PosY;
+	CEdit		m_SkyBoxEdit_PosZ;
+	CEdit		m_SkyBoxEdit_Scale;
+	CListBox	m_SkyBoxListBox_TexIndex;
+	CButton		m_SkyBoxCheckBox_RenderOnOff;
+
+	// Value
+	float		m_fSkyBox_PosX	= 0.0f;
+	float		m_fSkyBox_PosY	= 0.0f;
+	float		m_fSkyBox_PosZ	= 0.0f;
+	float		m_fSkyBox_Scale = 512.0f;
+
+	afx_msg void OnEnChangeEdit1001_SkyBoxPosX();
+	afx_msg void OnEnChangeEdit1002_SkyBoxPosY();
+	afx_msg void OnEnChangeEdit1003_SkyBoxPosZ();
+	afx_msg void OnEnChangeEdit1004__SkyBoxScale();
 };

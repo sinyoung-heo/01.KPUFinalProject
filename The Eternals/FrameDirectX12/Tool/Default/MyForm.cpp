@@ -141,6 +141,7 @@ void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 			{
 				m_bIsInitTabObject = true;
 				m_TabObject.Ready_TerrainControl();
+				m_TabObject.Ready_SkyBoxControl();
 			}
 		}
 

@@ -60,14 +60,14 @@ _int CLogoBack::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
-	Set_ConstantTable(m_uiTexIdx);
-
 	return NO_EVENT;
 }
 
 void CLogoBack::Render_GameObject(const _float & fTimeDelta)
 {
-	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), m_uiTexIdx);
+	Set_ConstantTable();
+
+	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), 0, m_uiTexIdx);
 	m_pBufferCom->Begin_Buffer();
 
 	m_pBufferCom->Render_Buffer();
@@ -99,7 +99,7 @@ HRESULT CLogoBack::Add_Component(wstring wstrTextureTag)
 	return S_OK;
 }
 
-void CLogoBack::Set_ConstantTable(const _uint& iIdx)
+void CLogoBack::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ CB 정보 전달 ]
@@ -111,7 +111,7 @@ void CLogoBack::Set_ConstantTable(const _uint& iIdx)
 	XMStoreFloat4x4(&tCB_MatrixDesc.matView, XMMatrixTranspose(m_matView));
 	XMStoreFloat4x4(&tCB_MatrixDesc.matProj, XMMatrixTranspose(m_matProj));
 
-	m_pShaderCom->Get_UploadBuffer_MatrixDesc()->CopyData(iIdx, tCB_MatrixDesc);
+	m_pShaderCom->Get_UploadBuffer_MatrixDesc()->CopyData(0, tCB_MatrixDesc);
 
 }
 

@@ -9,6 +9,7 @@
 #include "ToolCamera.h"
 #include "ToolCoordinate.h"
 #include "ToolTerrain.h"
+#include "ToolSkyBox.h"
 
 CToolSceneStage::CToolSceneStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -137,6 +138,16 @@ HRESULT CToolSceneStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 
 	pTerrain = CToolTerrain::Create(m_pGraphicDevice, m_pCommandList, L"TerrainTex512");
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainTex512", pTerrain), E_FAIL);
+
+	/*__________________________________________________________________________________________________________
+	[ SkyBox ]
+	____________________________________________________________________________________________________________*/
+	CToolSkyBox* pSkyBox = CToolSkyBox::Create(m_pGraphicDevice, m_pCommandList,
+											   L"SkyBox",							// Texture Tag
+											   _vec3(512.f, 512.f, 512.f),			// Scale
+											   _vec3(0.0f, 0.0f, 0.0f),				// Angle
+											   _vec3(0.0f, 0.0f, 0.0f));			// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SkyBox", pSkyBox), E_FAIL);
 
 	return S_OK;
 }

@@ -249,3 +249,4 @@ BOOL CToolApp::OnIdle(LONG lCount)
 
 	return TRUE;
 }
+

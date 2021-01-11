@@ -127,7 +127,7 @@ HRESULT CScene_Stage::Ready_LayerEnvironment(wstring wstrLayerTag)
 	[ SkyBox ]
 	____________________________________________________________________________________________________________*/
 	CSkyBox* pSkyBox = CSkyBox::Create(m_pGraphicDevice, m_pCommandList,
-									   L"SkyBox",	// Texture Tag
+									   L"SkyBox",							// Texture Tag
 									   _vec3(512.f, 512.f, 512.f),			// Scale
 									   _vec3(0.0f, 0.0f, 0.0f),				// Angle
 									   _vec3(0.0f, 0.0f, 0.0f));			// Pos
