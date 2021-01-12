@@ -13,8 +13,12 @@ public:
 
 	// TextureDDS PathFind
 	static void DirInfoExtractionDDS(const wstring& wstrPath, list<IMGPATH*>& rPathInfoLst);
+
 	// Mesh PathFind
-	static void DirInfoMeshExtraction(const wstring& wstrPath, list<MESHPATH*>& rPathInfoLst);
+	static void DirInfoMeshExtraction(const wstring& wstrPath,
+									  list<MESHPATH*>& rPathInfoLst,
+									  list<MESH_TREECTRL_INFO*>& lstMeshTreeCtrlInfo);
+
 	// 현재 경로에 들어있는 이미지 파일의 개수
 	static _int DirFileCount(const wstring& wstrPath);
 };

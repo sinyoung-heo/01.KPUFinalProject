@@ -135,22 +135,9 @@ void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 		m_bIsTabCamera		= false;
 		m_bIsTabEffect		= false;
 
-		if (g_bIsLoadingFinish)
-		{
-			if (!m_bIsInitTabObject)
-			{
-				m_bIsInitTabObject = true;
-				m_TabObject.Ready_TerrainControl();
-				m_TabObject.Ready_SkyBoxControl();
-				m_TabObject.Ready_EditControl();
-			}
-		}
-
-
 		break;
 	case 2:
 		g_bIsLoadingStart = true;
-
 
 		m_TabPathFinder.ShowWindow(SW_HIDE);
 		m_TabObject.ShowWindow(SW_HIDE);

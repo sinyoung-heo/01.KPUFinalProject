@@ -10,6 +10,9 @@
 #include "ToolCoordinate.h"
 #include "ToolTerrain.h"
 #include "ToolSkyBox.h"
+#include "MainFrm.h"
+#include "MyForm.h"
+
 
 CToolSceneStage::CToolSceneStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -34,6 +37,16 @@ HRESULT CToolSceneStage::Ready_Scene()
 	m_pFont_Stage = static_cast<Engine::CFont*>(m_pObjectMgr->Clone_GameObjectPrototype(L"Font_NetmarbleLight"));
 	Engine::NULL_CHECK_RETURN(m_pFont_Stage, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pFont_Stage->Ready_GameObject(L"", _vec2(1410.f, 0.f), D2D1::ColorF::SpringGreen), E_FAIL);
+
+	/*__________________________________________________________________________________________________________
+	[ MFC 컨트롤 활성화 ]
+	____________________________________________________________________________________________________________*/
+	CMainFrame* pMainFrame = static_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+	CMyForm* pMyForm = static_cast<CMyForm*>(pMainFrame->m_MainSplit.GetPane(0, 0));
+	pMyForm->m_TabObject.Ready_TerrainControl();
+	pMyForm->m_TabObject.Ready_SkyBoxControl();
+	pMyForm->m_TabObject.Ready_EditControl();
+	pMyForm->m_TabObject.Ready_StaticMeshControl();
 
 
 	return S_OK;

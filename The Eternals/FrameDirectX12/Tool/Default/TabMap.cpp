@@ -264,6 +264,11 @@ HRESULT CTabMap::Ready_EditControl()
 	m_EditCheck_LightingInfo.EnableWindow(TRUE);
 	m_EditCheck_NavigationMesh.EnableWindow(TRUE);
 
+	return S_OK;
+}
+
+HRESULT CTabMap::Ready_StaticMeshControl()
+{
 	// StaticMesh
 	m_EditCheck_StaticMesh.SetCheck(true);
 	m_StaticMeshRadio_CreateMode.EnableWindow(TRUE);
@@ -300,6 +305,90 @@ HRESULT CTabMap::Ready_EditControl()
 	m_StaticMeshButton_Save.EnableWindow(TRUE);
 	m_StaticMeshButton_Load.EnableWindow(TRUE);
 
+	// Ready Mesh TreeControl.
+
+	HTREEITEM h_DynamciMesh, h_DynamicMeshRoot;
+	HTREEITEM h_StaticMesh, h_StaticMeshRoot;
+
+	h_DynamciMesh	= m_StaticMeshTree_ResourceTree.InsertItem(L"DynamicMesh", NULL, NULL);
+	h_StaticMesh	= m_StaticMeshTree_ResourceTree.InsertItem(L"StaticMesh", NULL, NULL);
+
+	wifstream fin { L"../../Bin/ToolData/MeshTreeCtrlInfo.txt" };
+	if (fin.fail())
+		return E_FAIL;
+
+	_tchar	szCurMeshType[MIN_STR]	= L"";
+	_tchar	szCurMeshRoot[MIN_STR]	= L"";
+	_tchar	szMeshTag[MAX_STR]		= L"";
+
+	wstring wstrPreMeshType			= L"";
+	wstring wstrPreMeshRoot			= L"";
+
+	while (true)
+	{
+		fin.getline(szCurMeshType, MIN_STR, '|');
+		fin.getline(szCurMeshRoot, MIN_STR, '|');
+		fin.getline(szMeshTag, MIN_STR);
+
+		if (fin.eof())
+			break;
+
+		wstring wstrCurMeshType = szCurMeshType;
+		wstring wstrCurMeshRoot = szCurMeshRoot;
+
+		// 이전의 MeshRootTag값이 현재의 MeshRootTag값과 다르면 TreeCtrl에 삽입.
+		if (L"DynamicMesh" == wstrCurMeshType)
+		{
+			if (wstrPreMeshRoot != wstrCurMeshRoot)
+			{
+				wstrPreMeshRoot = wstrCurMeshRoot;
+				h_DynamicMeshRoot = m_StaticMeshTree_ResourceTree.InsertItem(wstrPreMeshRoot.c_str(), h_DynamciMesh, NULL);
+			}
+
+			m_StaticMeshTree_ResourceTree.InsertItem(szMeshTag, h_DynamicMeshRoot, NULL);
+		}
+
+		if (L"StaticMesh" == wstrCurMeshType)
+		{
+			if (wstrPreMeshRoot != wstrCurMeshRoot)
+			{
+				wstrPreMeshRoot = wstrCurMeshRoot;
+				h_StaticMeshRoot = m_StaticMeshTree_ResourceTree.InsertItem(wstrPreMeshRoot.c_str(), h_StaticMesh, NULL);
+			}
+
+			m_StaticMeshTree_ResourceTree.InsertItem(szMeshTag, h_StaticMeshRoot, NULL);
+		}
+
+
+	}
+
+	fin.close();
+
+
+	// 모든 트리의 노드를 펼친다.
+	m_StaticMeshTree_ResourceTree.Expand(h_DynamciMesh, TVE_EXPAND);
+
+	// DynamicMesh
+	HTREEITEM h_Child = m_StaticMeshTree_ResourceTree.GetNextItem(h_DynamciMesh, TVGN_CHILD);
+	m_StaticMeshTree_ResourceTree.Expand(h_Child, TVE_EXPAND);
+
+	while (h_Child != NULL)
+	{
+		h_Child = m_StaticMeshTree_ResourceTree.GetNextItem(h_Child, TVGN_NEXT);
+		m_StaticMeshTree_ResourceTree.Expand(h_Child, TVE_EXPAND);
+	}
+
+	// StaticMesh
+	m_StaticMeshTree_ResourceTree.Expand(h_StaticMesh, TVE_EXPAND);
+
+	h_Child = m_StaticMeshTree_ResourceTree.GetNextItem(h_StaticMesh, TVGN_CHILD);
+	m_StaticMeshTree_ResourceTree.Expand(h_Child, TVE_EXPAND);
+
+	while (h_Child != NULL)
+	{
+		h_Child = m_StaticMeshTree_ResourceTree.GetNextItem(h_Child, TVGN_NEXT);
+		m_StaticMeshTree_ResourceTree.Expand(h_Child, TVE_EXPAND);
+	}
 
 	return S_OK;
 }

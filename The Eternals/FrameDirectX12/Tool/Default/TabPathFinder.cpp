@@ -20,6 +20,7 @@ CTabPathFinder::~CTabPathFinder()
 {
 	for_each(m_lstMeshFileInfo.begin(), m_lstMeshFileInfo.end(), Engine::Safe_Delete<MESHPATH*>);
 	for_each(m_lstTextureFileInfo.begin(), m_lstTextureFileInfo.end(), Engine::Safe_Delete<IMGPATH*>);
+	for_each(m_lstMeshTreeCtrlInfo.begin(), m_lstMeshTreeCtrlInfo.end(), Engine::Safe_Delete<MESH_TREECTRL_INFO*>);
 }
 
 void CTabPathFinder::DoDataExchange(CDataExchange* pDX)
@@ -92,7 +93,7 @@ void CTabPathFinder::OnDropFiles(HDROP hDropInfo)
 		for (int i = 0; i < iCount; ++i)
 		{
 			DragQueryFile(hDropInfo, i, szFullPath, MAX_STR);
-			CToolFileInfo::DirInfoMeshExtraction(szFullPath, m_lstMeshFileInfo);
+			CToolFileInfo::DirInfoMeshExtraction(szFullPath, m_lstMeshFileInfo, m_lstMeshTreeCtrlInfo);
 		}
 
 		wstring wstrCombine			= L"";
@@ -196,7 +197,7 @@ void CTabPathFinder::OnBnClickedButton_Save()
 		}
 
 		for (auto& pMeshPath : m_lstMeshFileInfo)
-			fout << pMeshPath->wstrMeshTag << L"|" << pMeshPath->wstrFileName << "|" << pMeshPath->wstrPath << endl;
+			fout << pMeshPath->wstrMeshTag << L"|" << pMeshPath->wstrFileName << L"|" << pMeshPath->wstrPath << endl;
 
 		fout.close();
 		WinExec("notepad.exe ../../Bin/ToolData/PathFind_Mesh.txt", SW_SHOW);
@@ -213,6 +214,15 @@ void CTabPathFinder::OnBnClickedButton_Save()
 		fout << m_iMeshPathCnt << endl;
 
 		fout.close();
+
+
+		// Mesh Tree Ctrl Info
+		fout.open(L"../../Bin/ToolData/MeshTreeCtrlInfo.txt");
+
+		for (auto& pMeshTreeCtrlInfo : m_lstMeshTreeCtrlInfo)
+			fout << pMeshTreeCtrlInfo->wstrMeshType << L"|" << pMeshTreeCtrlInfo->wstrRootTag << L"|" << pMeshTreeCtrlInfo->wstrMeshTag << endl;
+
+		fout.close();
 	}
 
 	else if (m_bIsClickedRadio_Texture)
@@ -227,7 +237,7 @@ void CTabPathFinder::OnBnClickedButton_Save()
 
 		for (auto& pImgPath : m_lstTextureFileInfo)
 
-			fout << pImgPath->wstrTextureTag << L"|" << pImgPath->iTexSize << "|" << pImgPath->wstrPath << endl;
+			fout << pImgPath->wstrTextureTag << L"|" << pImgPath->iTexSize << L"|" << pImgPath->wstrPath << endl;
 		fout.close();
 		WinExec("notepad.exe ../../Bin/ToolData/PathFind_Texture.txt", SW_SHOW);
 

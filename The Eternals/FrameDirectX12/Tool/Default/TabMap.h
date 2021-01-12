@@ -37,6 +37,7 @@ public:
 	HRESULT	Ready_TerrainControl();
 	HRESULT	Ready_SkyBoxControl();
 	HRESULT Ready_EditControl();
+	HRESULT Ready_StaticMeshControl();
 
 	/*__________________________________________________________________________________________________________
 	[ TERRAIN ]

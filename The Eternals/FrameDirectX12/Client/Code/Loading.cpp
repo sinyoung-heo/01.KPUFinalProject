@@ -71,7 +71,6 @@ HRESULT CLoading::Loading_MeshFromFilePath()
 		wstrMeshTag		= szMeshTag;
 		wstrFileName	= szFileName;
 		wstrPath		= szPath;
-		wstrPath		+= L"\\";
 
 		pComponent = Engine::CMesh::Create(m_pGraphicDevice, m_pCommandList,
 										   wstrPath,
@@ -121,9 +120,8 @@ HRESULT CLoading::Loading_TextureFromFilePath()
 		else
 			eTexType = Engine::TEXTYPE::TEX_2D;
 
-		wstrTextureTag = szTextureTag;
-		wstrPath = szPath;
-		wstrPath += L"\\";
+		wstrTextureTag	= szTextureTag;
+		wstrPath		= szPath;
 
 		pComponent = Engine::CTexture::Create(m_pGraphicDevice, m_pCommandList,
 											  wstrPath, 

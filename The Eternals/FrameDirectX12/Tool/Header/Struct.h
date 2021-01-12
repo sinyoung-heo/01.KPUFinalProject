@@ -38,3 +38,11 @@ typedef struct tagMeshPath
 	wstring wstrFileName	= L"";	// Mesh 파일 이름.
 
 } MESHPATH;
+
+typedef struct tagMeshTreeCtrlInfo
+{
+	wstring wstrMeshType	= L"";	// ex) StaticMesh
+	wstring wstrRootTag		= L"";	// ex) Stage1
+	wstring wstrMeshTag		= L"";	// ex) LandMark
+
+} MESH_TREECTRL_INFO;
