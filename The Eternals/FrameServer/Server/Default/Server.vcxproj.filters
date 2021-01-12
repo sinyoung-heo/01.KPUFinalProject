@@ -49,6 +49,12 @@
     <Filter Include="98.Manager\03.ObjPoolMgr\00.ObjectPool">
       <UniqueIdentifier>{99e2a804-2341-4eaf-a726-c1680193991e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.Manager\04.SectorMgr">
+      <UniqueIdentifier>{03b16073-64e2-454b-a4c9-2c726b7e9d12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Manager\04.SectorMgr\00.Sector">
+      <UniqueIdentifier>{4e705134-5e6d-476a-a69b-8040bc51aab7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainServer.cpp">
@@ -74,6 +80,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\ObjectPool.cpp">
       <Filter>98.Manager\03.ObjPoolMgr\00.ObjectPool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Sector.cpp">
+      <Filter>98.Manager\04.SectorMgr\00.Sector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\SectorMgr.cpp">
+      <Filter>98.Manager\04.SectorMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +133,12 @@
     </ClInclude>
     <ClInclude Include="..\Code\ObjectPool.h">
       <Filter>98.Manager\03.ObjPoolMgr\00.ObjectPool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Sector.h">
+      <Filter>98.Manager\04.SectorMgr\00.Sector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\SectorMgr.h">
+      <Filter>98.Manager\04.SectorMgr</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

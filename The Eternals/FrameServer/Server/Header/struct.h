@@ -11,9 +11,23 @@ struct OVER_EX
 };
 
 /* _____________________________________________USER 구조체_____________________________________________ */
-struct client_info
+typedef struct tagSectorInfo
 {
-	
+	int m_iSectorNum = 0;
+	int m_iMinX = 0;
+	int m_iMinY = 0;
+	int m_iMaxX = 0;
+	int m_iMaxY = 0;
+}SECINFO, * PSECINFO;
+
+template <>
+struct hash<pair<int, int>> 
+{
+	size_t operator()(const pair<int, int>& t) const 
+	{
+		// 해시 계산
+		return t.first ^ t.second;
+	}
 };
 
 /* _____________________________________________TIMER THERAD - NPC AI STRUCT_____________________________________________ */

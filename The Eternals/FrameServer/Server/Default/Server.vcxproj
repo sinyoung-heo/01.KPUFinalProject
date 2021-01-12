@@ -27,6 +27,8 @@
     <ClCompile Include="..\Code\ObjPoolMgr.cpp" />
     <ClCompile Include="..\Code\PacketMgr.cpp" />
     <ClCompile Include="..\Code\Player.cpp" />
+    <ClCompile Include="..\Code\Sector.cpp" />
+    <ClCompile Include="..\Code\SectorMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Code\DBMgr.h" />
@@ -36,6 +38,8 @@
     <ClInclude Include="..\Code\ObjPoolMgr.h" />
     <ClInclude Include="..\Code\PacketMgr.h" />
     <ClInclude Include="..\Code\Player.h" />
+    <ClInclude Include="..\Code\Sector.h" />
+    <ClInclude Include="..\Code\SectorMgr.h" />
     <ClInclude Include="..\Header\dataType.h" />
     <ClInclude Include="..\Header\define.h" />
     <ClInclude Include="..\Header\enum.h" />
