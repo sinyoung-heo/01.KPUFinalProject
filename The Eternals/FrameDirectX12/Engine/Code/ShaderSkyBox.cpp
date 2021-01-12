@@ -33,7 +33,9 @@ HRESULT CShaderSkyBox::Ready_Shader()
 	return S_OK;
 }
 
-void CShaderSkyBox::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, const _uint& iIdx)
+void CShaderSkyBox::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, 
+								 const _uint& iConstantBufferIdx,
+								 const _uint& iTexIdx)
 {
 	CRenderer::Get_Instance()->Set_CurPipelineState(m_pPipelineState);
 	m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
@@ -46,7 +48,7 @@ void CShaderSkyBox::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, const
 
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_DescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_DescriptorHandle.Offset(iIdx, m_uiCBV_SRV_UAV_DescriptorSize);
+	SRV_DescriptorHandle.Offset(iTexIdx, m_uiCBV_SRV_UAV_DescriptorSize);
 
 	m_pCommandList->SetGraphicsRootDescriptorTable(0,		// RootParameter Index
 												   SRV_DescriptorHandle);
@@ -55,7 +57,8 @@ void CShaderSkyBox::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, const
 	[ CBV를 루트 서술자에 묶는다 ]
 	____________________________________________________________________________________________________________*/
 	m_pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
-													  m_pCB_MatrixDesc->Resource()->GetGPUVirtualAddress());
+													  m_pCB_MatrixDesc->Resource()->GetGPUVirtualAddress() + 
+													  m_pCB_MatrixDesc->GetElementByteSize() * iConstantBufferIdx);
 }
 
 HRESULT CShaderSkyBox::Create_RootSignature()

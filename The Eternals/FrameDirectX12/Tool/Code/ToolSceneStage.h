@@ -6,6 +6,8 @@ namespace Engine
 	class CFont;
 }
 
+class CToolTerrain;
+
 class CToolSceneStage : public Engine::CScene
 {
 private:
@@ -27,6 +29,9 @@ private:
 	HRESULT			Ready_LightInfo();
 
 	void			Key_Input();
+
+public:
+	CToolTerrain* m_pPickingTerrain = nullptr;
 
 private:
 	/*__________________________________________________________________________________________________________

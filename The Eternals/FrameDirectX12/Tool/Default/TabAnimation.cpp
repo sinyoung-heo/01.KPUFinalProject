@@ -5,7 +5,9 @@
 #include "Tool.h"
 #include "TabAnimation.h"
 #include "afxdialogex.h"
-
+#include "ComponentMgr.h"
+#include "ObjectMgr.h"
+#include "Management.h"
 
 // CTabAnimation 대화 상자
 
@@ -13,6 +15,9 @@ IMPLEMENT_DYNAMIC(CTabAnimation, CDialogEx)
 
 CTabAnimation::CTabAnimation(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_CTabAnimation, pParent)
+	, m_pComponentMgr(Engine::CComponentMgr::Get_Instance())
+	, m_pObjectMgr(Engine::CObjectMgr::Get_Instance())
+	, m_pManagement(Engine::CManagement::Get_Instance())
 {
 
 }

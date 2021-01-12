@@ -2,6 +2,14 @@
 
 
 // CTabCollider 대화 상자
+namespace Engine
+{
+	class CComponentMgr;
+	class CObjectMgr;
+	class CManagement;
+	class CRenderer;
+}
+
 
 class CTabCollider : public CDialogEx
 {
@@ -22,4 +30,9 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+
+	Engine::CManagement*		m_pManagement		= nullptr;
+	Engine::CObjectMgr*			m_pObjectMgr		= nullptr;
+	Engine::CComponentMgr*		m_pComponentMgr		= nullptr;
+
 };

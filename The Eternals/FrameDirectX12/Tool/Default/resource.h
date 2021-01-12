@@ -25,6 +25,7 @@
 #define IDC_CHECK1001                   1012
 #define IDC_LIST1001                    1013
 #define IDC_LIST1003                    1014
+#define IDC_CHECK1004                   1015
 #define IDC_EDIT1001                    1018
 #define IDC_EDIT1002                    1019
 #define IDC_EDIT1003                    1020
@@ -74,6 +75,50 @@
 #define IDC_EDIT1029                    1064
 #define IDC_BUTTON1005                  1065
 #define IDC_BUTTON1006                  1066
+#define IDC_EDIT1030                    1067
+#define IDC_EDIT1031                    1068
+#define IDC_EDIT1032                    1069
+#define IDC_EDIT1033                    1070
+#define IDC_EDIT1034                    1071
+#define IDC_EDIT1035                    1072
+#define IDC_EDIT1036                    1073
+#define IDC_EDIT1037                    1074
+#define IDC_EDIT1038                    1075
+#define IDC_EDIT1039                    1076
+#define IDC_EDIT1040                    1077
+#define IDC_EDIT1041                    1078
+#define IDC_EDIT1042                    1079
+#define IDC_EDIT1043                    1080
+#define IDC_EDIT1044                    1081
+#define IDC_EDIT1045                    1082
+#define IDC_EDIT1046                    1083
+#define IDC_LIST1004                    1084
+#define IDC_RADIO1008                   1085
+#define IDC_RADIO1009                   1086
+#define IDC_BUTTON1007                  1087
+#define IDC_BUTTON1008                  1088
+#define IDC_BUTTON1009                  1089
+#define IDC_BUTTON1010                  1090
+#define IDC_CHECK1005                   1091
+#define IDC_CHECK1006                   1092
+#define IDC_CHECK1007                   1093
+#define IDC_EDIT1047                    1094
+#define IDC_EDIT1048                    1095
+#define IDC_EDIT1049                    1096
+#define IDC_SPIN1010                    1097
+#define IDC_SPIN1011                    1098
+#define IDC_SPIN1012                    1099
+#define IDC_EDIT1050                    1101
+#define IDC_EDIT1051                    1102
+#define IDC_EDIT1052                    1103
+#define IDC_SPIN1013                    1104
+#define IDC_SPIN1014                    1105
+#define IDC_SPIN1015                    1106
+#define IDC_EDIT1053                    1107
+#define IDC_EDIT1054                    1108
+#define IDC_EDIT1055                    1109
+#define IDC_BUTTON1011                  1111
+#define IDC_BUTTON1012                  1112
 
 // Next default values for new objects
 // 
@@ -81,7 +126,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        319
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1048
+#define _APS_NEXT_CONTROL_VALUE         1092
 #define _APS_NEXT_SYMED_VALUE           316
 #endif
 #endif
