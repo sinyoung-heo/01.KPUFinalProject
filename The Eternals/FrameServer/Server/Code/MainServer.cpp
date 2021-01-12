@@ -146,7 +146,7 @@ void add_new_client(SOCKET ns)
 	g_id_lock.unlock();
 
 	// 최대 서버 인원 초과 여부
-	if (/*MAX_USER*/3 == CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER")->size())
+	if (MAX_USER == CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER")->size())
 	{
 #ifdef TEST
 		cout << "Max user limit exceeded.\n";
@@ -218,6 +218,15 @@ void add_new_client(SOCKET ns)
 void disconnect_client(int id)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+
+	// 접속 중인 유저 탐색
+	auto player_list = CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER");
+
+	for (auto& others : *player_list)
+	{
+		if (others.second->Get_IsConnected())
+			send_leave_packet(others.second->m_sNum, id);
+	}
 
 	pPlayer->Get_ClientLock().lock();
 	pPlayer->Set_IsConnected(false);

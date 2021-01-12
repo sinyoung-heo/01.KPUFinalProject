@@ -50,8 +50,10 @@ struct sc_packet_move
 	char size;
 	char type;
 	int id;
-	short x, y;
+
 	int move_time;
+	float posX, posY, posZ;
+	float dirX, dirY, dirZ;
 };
 
 /* PROTOCOL 추가 확장 */
@@ -123,8 +125,10 @@ struct cs_packet_move
 {
 	char  size;
 	char  type;
-	char  direction;
+
 	int	  move_time;
+	float posX, posY, posZ;
+	float dirX, dirY, dirZ;
 };
 
 struct cs_packet_attack 

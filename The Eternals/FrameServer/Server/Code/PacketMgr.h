@@ -3,12 +3,12 @@
 void send_packet(int id, void* p);												// Packet 전송 함수
 void send_login_ok(int id);														// 로그인 수락 패킷
 void send_enter_packet(int to_client, int new_id);								// 등장 패킷
-void send_chat_packet(int to, int id, char* message);							// 채팅 패킷
+void send_leave_packet(int to_client, int leave_id);							// 떠남 패킷
 void send_move_packet(int to_client, int id);									// 움직임 패킷
-void send_leave_packet(int to_client, int new_id);								// 떠남 패킷
+void send_chat_packet(int to, int id, char* message);							// 채팅 패킷
 void send_stat_change_packet(int to, int id);									// 상태정보(HP,LV,EXP) 변경 패킷
 
-void process_move(int id, char dir);											// 움직임 처리 함수
+void process_move(int id, cs_packet_move* info);								// 움직임 처리 함수
 void process_attck(int id);														// 공격 처리 함수
 
 /* 패킷 관리 및 처리 함수 */

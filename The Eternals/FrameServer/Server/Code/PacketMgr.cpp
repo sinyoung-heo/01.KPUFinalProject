@@ -38,9 +38,16 @@ void process_packet(int id)
 			}
 		}
 	}
-		break;
+	break;
+
 	case CS_MOVE:
-		break;
+	{
+		cs_packet_move* p = reinterpret_cast<cs_packet_move*>(pPlayer->m_packet_start);
+		//pPlayer->move_time = p->move_time;
+		process_move(id, p);
+	}
+	break;
+
 	case CS_ATTACK:
 		break;
 	case CS_CHAT:
@@ -110,6 +117,7 @@ void process_recv(int id, DWORD iosize)
 	pPlayer->Get_ClientLock().unlock();
 }
 
+/*==================================================================================================*/
 void send_packet(int id, void* p)
 {
 	unsigned char* packet = reinterpret_cast<unsigned char*>(p);
@@ -183,4 +191,69 @@ void send_enter_packet(int to_client, int new_id)
 	p.dirZ = pNewPlayer->m_vDir.z;
 
 	send_packet(to_client, &p);
+}
+
+void send_leave_packet(int to_client, int leave_id)
+{
+	sc_packet_leave p;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_LEAVE;
+	p.id = leave_id;
+
+	send_packet(to_client, &p);
+}
+
+void send_move_packet(int to_client, int id)
+{
+	sc_packet_move p;
+
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_MOVE;
+	p.id = id;
+
+	//p.move_time = pNewPlayer->move_time;
+
+	p.posX = pPlayer->m_vPos.x;
+	p.posY = pPlayer->m_vPos.y;
+	p.posZ = pPlayer->m_vPos.z;
+
+	p.dirX = pPlayer->m_vDir.x;
+	p.dirY = pPlayer->m_vDir.y;
+	p.dirZ = pPlayer->m_vDir.z;
+
+	send_packet(to_client, &p);
+}
+
+/*==================================================================================================*/
+void process_move(int id, cs_packet_move* info)
+{
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+
+	/* 해당 플레이어로부터 받은 위치값 저장 */
+	pPlayer->m_vPos.x = info->posX;
+	pPlayer->m_vPos.y = info->posY;
+	pPlayer->m_vPos.z = info->posZ;
+
+	pPlayer->m_vDir.x = info->dirX;
+	pPlayer->m_vDir.y = info->dirY;
+	pPlayer->m_vDir.z = info->dirZ;
+
+
+	// 접속 중인 유저 탐색 -> 해당 플레이어 위치 전송
+	auto player_list = CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER");
+
+	for (auto& others : *player_list)
+	{
+		if (others.second->Get_IsConnected())
+		{
+			if (others.second->m_sNum != id)
+			{
+				send_move_packet(others.second->m_sNum, id);
+			}
+		}
+	}
+
 }

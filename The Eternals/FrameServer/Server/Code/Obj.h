@@ -19,7 +19,6 @@ public:
 
 protected:
 	/*=============½Ã½ºÅÛ ÄÁÅÙÃ÷==============*/
-	int move_time;
 	//SOCKET	m_sock; // player
 	//OVER_EX	m_recv_over;  // player 
 	//unsigned char* m_packet_start; // player
@@ -27,6 +26,7 @@ protected:
 
 	/*=============°ÔÀÓ ÄÁÅÙÃ÷===============*/
 public:
+	int move_time;
 	bool m_bIsConnect; // all
 	bool m_bIsDead; //all
 	char m_ID[MAX_ID_LEN]; // all
