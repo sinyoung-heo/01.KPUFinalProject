@@ -1,31 +1,30 @@
 #include "stdafx.h"
-#include "StaticMeshObject.h"
+#include "ToolStaticMesh.h"
 
 #include "GraphicDevice.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
 #include "LightMgr.h"
-#include "DynamicCamera.h"
-#include "RenderTarget.h"
 
 
-CStaticMeshObject::CStaticMeshObject(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CToolStaticMesh::CToolStaticMesh(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
 }
 
-CStaticMeshObject::CStaticMeshObject(const CStaticMeshObject & rhs)
+CToolStaticMesh::CToolStaticMesh(const CToolStaticMesh & rhs)
 	: Engine::CGameObject(rhs)
 	, m_wstrMeshTag(rhs.m_wstrMeshTag)
-	, m_pDynamicCamera(rhs.m_pDynamicCamera)
 {
 }
 
 
-HRESULT CStaticMeshObject::Ready_GameObject(wstring wstrMeshTag,
+HRESULT CToolStaticMesh::Ready_GameObject(wstring wstrMeshTag,
 											const _vec3& vScale,
 											const _vec3& vAngle,
-											const _vec3& vPos)
+											const _vec3& vPos,
+											const _bool& bIsRenderShadow,
+											const _bool& bIsCollision)
 {
 	m_wstrMeshTag = wstrMeshTag;
 
@@ -36,18 +35,18 @@ HRESULT CStaticMeshObject::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos		= vPos;
 
+	m_bIsRenderShadow		= bIsRenderShadow;
+	m_bIsCollision			= bIsCollision;
+
+	// 그림자를 그리지 않으면 0번 패스.
+	if (!m_bIsRenderShadow)
+		m_pShaderCom->Set_PipelineStatePass(0);
+
 	return S_OK;
 }
 
-HRESULT CStaticMeshObject::LateInit_GameObject()
+HRESULT CToolStaticMesh::LateInit_GameObject()
 {
-	/*__________________________________________________________________________________________________________
-	[ Get GameObject - DynamicCamera ]
-	____________________________________________________________________________________________________________*/
-	m_pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
-	Engine::NULL_CHECK_RETURN(m_pDynamicCamera, E_FAIL);
-	m_pDynamicCamera->AddRef();
-
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	m_pShadowCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
@@ -55,7 +54,7 @@ HRESULT CStaticMeshObject::LateInit_GameObject()
 	return S_OK;
 }
 
-_int CStaticMeshObject::Update_GameObject(const _float & fTimeDelta)
+_int CToolStaticMesh::Update_GameObject(const _float & fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
@@ -70,7 +69,7 @@ _int CStaticMeshObject::Update_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CStaticMeshObject::LateUpdate_GameObject(const _float & fTimeDelta)
+_int CToolStaticMesh::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
@@ -82,19 +81,22 @@ _int CStaticMeshObject::LateUpdate_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-void CStaticMeshObject::Render_GameObject(const _float & fTimeDelta)
+void CToolStaticMesh::Render_GameObject(const _float& fTimeDelta)
 {
 	Set_ConstantTable();
 	m_pMeshCom->Render_StaticMesh(m_pShaderCom);
 }
 
-void CStaticMeshObject::Render_ShadowDepth(const _float & fTimeDelta)
+void CToolStaticMesh::Render_ShadowDepth(const _float& fTimeDelta)
 {
-	Set_ConstantTableShadowDepth();
-	m_pMeshCom->Render_StaticMeshShadowDepth(m_pShadowCom);
+	if (m_bIsRenderShadow)
+	{
+		Set_ConstantTableShadowDepth();
+		m_pMeshCom->Render_StaticMeshShadowDepth(m_pShadowCom);
+	}
 }
 
-void CStaticMeshObject::Render_GameObject(const _float& fTimeDelta, 
+void CToolStaticMesh::Render_GameObject(const _float& fTimeDelta, 
 										  ID3D12GraphicsCommandList * pCommandList,
 										  const _int& iContextIdx)
 {
@@ -102,15 +104,18 @@ void CStaticMeshObject::Render_GameObject(const _float& fTimeDelta,
 	m_pMeshCom->Render_StaticMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
-void CStaticMeshObject::Render_ShadowDepth(const _float& fTimeDelta, 
+void CToolStaticMesh::Render_ShadowDepth(const _float& fTimeDelta, 
 										   ID3D12GraphicsCommandList * pCommandList,
 										   const _int& iContextIdx)
 {
-	Set_ConstantTableShadowDepth();
-	m_pMeshCom->Render_StaticMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
+	if (m_bIsRenderShadow)
+	{
+		//Set_ConstantTableShadowDepth();
+		//m_pMeshCom->Render_StaticMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
+	}
 }
 
-HRESULT CStaticMeshObject::Add_Component(wstring wstrMeshTag)
+HRESULT CToolStaticMesh::Add_Component(wstring wstrMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -137,7 +142,7 @@ HRESULT CStaticMeshObject::Add_Component(wstring wstrMeshTag)
 	return S_OK;
 }
 
-void CStaticMeshObject::Set_ConstantTable()
+void CToolStaticMesh::Set_ConstantTable()
 {
 	_matrix* pmatView = Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::VIEW);
 	_matrix* pmatProj = Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::PROJECTION);
@@ -158,15 +163,17 @@ void CStaticMeshObject::Set_ConstantTable()
 	m_pShaderCom->Get_UploadBuffer_MatrixDesc()->CopyData(0, tCB_MatrixDesc);
 }
 
-void CStaticMeshObject::Set_ConstantTableShadowDepth()
+void CToolStaticMesh::Set_ConstantTableShadowDepth()
 {
-	if (nullptr == m_pDynamicCamera)
-		return;
+	//if (nullptr == m_pDynamicCamera)
+	//	return;
 
-	_vec3 vLightDir			= _vec3(Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL, 0).Direction);
-	_vec3 vDynamicCamEye	= m_pDynamicCamera->Get_CameraInfo().vEye;
+	//_vec3 vLightDir			= _vec3(Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL, 0).Direction);
+	//_vec3 vDynamicCamEye	= m_pDynamicCamera->Get_CameraInfo().vEye;
 
-	Engine::CGameObject::SetUp_ShadowDepth(vDynamicCamEye, vDynamicCamEye, vLightDir);
+	//Engine::CGameObject::SetUp_ShadowDepth(vDynamicCamEye, vDynamicCamEye, vLightDir);
+
+	m_tShadowInfo = CShadowLightMgr::Get_Instance()->m_tShadowInfo;
 
 	/*__________________________________________________________________________________________________________
 	[ ShadowDepth ]
@@ -196,26 +203,26 @@ void CStaticMeshObject::Set_ConstantTableShadowDepth()
 
 }
 
-CStaticMeshObject * CStaticMeshObject::Create(ID3D12Device * pGraphicDevice, 
+CToolStaticMesh * CToolStaticMesh::Create(ID3D12Device * pGraphicDevice, 
 											  ID3D12GraphicsCommandList * pCommandList, 
 											  wstring wstrMeshTag, 
 											  const _vec3 & vScale, 
 											  const _vec3 & vAngle, 
-											  const _vec3 & vPos)
+											  const _vec3 & vPos,
+											  const _bool& bIsRenderShadow,
+											  const _bool& bIsCollision)
 {
-	CStaticMeshObject* pInstance = new CStaticMeshObject(pGraphicDevice, pCommandList);
+	CToolStaticMesh* pInstance = new CToolStaticMesh(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos)))
+	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos, bIsRenderShadow, bIsCollision)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
 }
 
-void CStaticMeshObject::Free()
+void CToolStaticMesh::Free()
 {
 	Engine::CGameObject::Free();
-
-	Engine::Safe_Release(m_pDynamicCamera);
 
 	Engine::Safe_Release(m_pMeshCom);
 	Engine::Safe_Release(m_pShaderCom);

@@ -82,22 +82,23 @@ _int CTerrainMeshObject::LateUpdate_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-//void CTerrainMeshObject::Render_GameObject(const _float & fTimeDelta)
-//{
-//	m_pMeshCom->Render_StaticMesh(m_pShaderCom);
-//}
-//
-//void CTerrainMeshObject::Render_ShadowDepth(const _float & fTimeDelta)
-//{
-//	m_pMeshCom->Render_StaticMeshShadowDepth(m_pShadowCom);
-//}
+void CTerrainMeshObject::Render_GameObject(const _float & fTimeDelta)
+{
+	Set_ConstantTable();
+	m_pMeshCom->Render_StaticMesh(m_pShaderCom);
+}
+
+void CTerrainMeshObject::Render_ShadowDepth(const _float & fTimeDelta)
+{
+	Set_ConstantTableShadowDepth();
+	m_pMeshCom->Render_StaticMeshShadowDepth(m_pShadowCom);
+}
 
 void CTerrainMeshObject::Render_GameObject(const _float& fTimeDelta, 
 										   ID3D12GraphicsCommandList * pCommandList,
 										   const _int& iContextIdx)
 {
 	Set_ConstantTable();
-
 	m_pMeshCom->Render_StaticMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
@@ -106,7 +107,6 @@ void CTerrainMeshObject::Render_ShadowDepth(const _float& fTimeDelta,
 											const _int& iContextIdx)
 {
 	Set_ConstantTableShadowDepth();
-
 	m_pMeshCom->Render_StaticMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 }
 

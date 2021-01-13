@@ -74,29 +74,29 @@ HRESULT CMesh::Ready_Mesh(wstring wstrFilePath, wstring wstrFileName)
 	return S_OK;
 }
 
-//void CMesh::Render_DynamicMesh(CShader * pShader)
-//{
-//	if (nullptr != m_pVIMesh)
-//		m_pVIMesh->Render_DynamicMesh(pShader);
-//}
-//
-//void CMesh::Render_StaticMesh(CShader * pShader)
-//{
-//	if (nullptr != m_pVIMesh)
-//		m_pVIMesh->Render_StaticMesh(pShader);
-//}
-//
-//void CMesh::Render_DynamicMeshShadowDepth(CShader * pShader)
-//{
-//	if (nullptr != m_pVIMesh)
-//		m_pVIMesh->Render_DynamicMeshShadowDepth(pShader);
-//}
-//
-//void CMesh::Render_StaticMeshShadowDepth(CShader * pShader)
-//{
-//	if (nullptr != m_pVIMesh)
-//		m_pVIMesh->Render_StaticMeshShadowDepth(pShader);
-//}
+void CMesh::Render_DynamicMesh(CShader * pShader)
+{
+	if (nullptr != m_pVIMesh)
+		m_pVIMesh->Render_DynamicMesh(pShader);
+}
+
+void CMesh::Render_StaticMesh(CShader * pShader)
+{
+	if (nullptr != m_pVIMesh)
+		m_pVIMesh->Render_StaticMesh(pShader);
+}
+
+void CMesh::Render_DynamicMeshShadowDepth(CShader * pShader)
+{
+	if (nullptr != m_pVIMesh)
+		m_pVIMesh->Render_DynamicMeshShadowDepth(pShader);
+}
+
+void CMesh::Render_StaticMeshShadowDepth(CShader * pShader)
+{
+	if (nullptr != m_pVIMesh)
+		m_pVIMesh->Render_StaticMeshShadowDepth(pShader);
+}
 
 void CMesh::Render_DynamicMesh(ID3D12GraphicsCommandList * pCommandList, 
 							   const _int& iContextIdx,

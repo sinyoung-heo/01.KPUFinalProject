@@ -1,5 +1,4 @@
 #pragma once
-#include "Include.h"
 #include "GameObject.h"
 
 namespace Engine
@@ -9,28 +8,28 @@ namespace Engine
 	class CShaderShadow;
 }
 
-class CDynamicCamera;
-
-class CTerrainMeshObject : public Engine::CGameObject
+class CToolStaticMesh : public Engine::CGameObject
 {
 private:
-	explicit CTerrainMeshObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CTerrainMeshObject(const CTerrainMeshObject& rhs);
-	virtual ~CTerrainMeshObject() = default; 
+	explicit CToolStaticMesh(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	explicit CToolStaticMesh(const CToolStaticMesh& rhs);
+	virtual ~CToolStaticMesh() = default; 
 
 public:
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
 									 const _vec3& vScale,
 									 const _vec3& vAngle,
-									 const _vec3& vPos);
+									 const _vec3& vPos,
+									 const _bool& bIsRenderShadow,
+									 const _bool& bIsCollision);
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 
 	// SingleThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta);
-	virtual void	Render_ShadowDepth(const _float & fTimeDelta);
+	virtual void	Render_ShadowDepth(const _float& fTimeDelta);
 
 	// MultiThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
@@ -52,16 +51,19 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	wstring			m_wstrMeshTag			= L"";
-	CDynamicCamera*	m_pDynamicCamera		= nullptr;
+	wstring m_wstrMeshTag		= L"";
+	_bool	m_bIsRenderShadow	= false;
+	_bool	m_bIsCollision		= false;
 
 public:
-	static CTerrainMeshObject* Create(ID3D12Device* pGraphicDevice,
-									  ID3D12GraphicsCommandList* pCommandList,
-									  wstring wstrMeshTag,
-									  const _vec3& vScale,
-									  const _vec3& vAngle,
-									  const _vec3& vPos);
+	static CToolStaticMesh* Create(ID3D12Device* pGraphicDevice, 
+									 ID3D12GraphicsCommandList* pCommandList,
+									 wstring wstrMeshTag,
+									 const _vec3& vScale,
+									 const _vec3& vAngle,
+									 const _vec3& vPos,
+									 const _bool& bIsRenderShadow,
+									 const _bool& bIsCollision);
 private:
 	virtual void Free();
 };

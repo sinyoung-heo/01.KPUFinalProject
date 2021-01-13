@@ -60,6 +60,7 @@ using namespace DirectX::PackedVector;
 
 #include "ToolFileInfo.h"
 #include "MouseMgr.h"
+#include "ShadowLightMgr.h"
 
 
 #ifdef _DEBUG

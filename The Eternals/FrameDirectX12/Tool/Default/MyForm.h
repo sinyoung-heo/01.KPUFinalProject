@@ -40,14 +40,14 @@ public:
 	CTabCtrl		m_Tab;
 
 	CTabPathFinder	m_TabPathFinder;
-	CTabMap			m_TabObject;
+	CTabMap			m_TabMap;
 	CTabCollider	m_TabCollider;
 	CTabAnimation	m_TabAnimation;
 	CTabCamera		m_TabCamera;
 	CTabEffect		m_TabEffect;
 
 	_bool m_bIsTabPathFinder	= false;
-	_bool m_bIsTabObject		= false;
+	_bool m_bIsTabMap			= false;
 	_bool m_bIsTabCollider		= false;
 	_bool m_bIsTabAnimation		= false;
 	_bool m_bIsTabCamera		= false;

@@ -198,7 +198,7 @@ void CMainApp::Render_MainApp(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Render Management ]
 	____________________________________________________________________________________________________________*/
-	m_pManagement->Render_Management(fTimeDelta);
+	m_pManagement->Render_Management(fTimeDelta, Engine::RENDERID::MULTI_THREAD);
 }
 
 HRESULT CMainApp::SetUp_DefaultSetting(Engine::WINMODE eMode, const _uint& uiWidth, const _uint& uiHeight)

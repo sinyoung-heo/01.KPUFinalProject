@@ -140,7 +140,7 @@ HRESULT CRenderer::Add_Renderer(CComponent * pComponent)
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta)
+HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID)
 {
 	/*__________________________________________________________________________________________________________
 	- GPU가 모든 명령 리스트를 실행할 때 까지 기다린다.
@@ -151,101 +151,18 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta)
 	FAILED_CHECK_RETURN(CGraphicDevice::Get_Instance()->Render_Begin(_rgba(0.0f, 0.0f, 0.0f, 1.0f)), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
-	2020.06.07 MultiThreadRendering
 	LoadingThread가 끝나고 나서 쓰레드를 만들어줘야 한다.
 	어떤 이유인지는 모르겠지만 미리 만들어두면 Work_Trhead함수 구동이 안된다.
 	____________________________________________________________________________________________________________*/
-	if (m_bIsLoadingFinish)
+	if(RENDERID::MULTI_THREAD == eID)
+		Render_MultiThread(fTimeDelta);
+
+	Render_Priority(fTimeDelta);		// SkyBox
+	if (RENDERID::SINGLE_THREAD == eID)
 	{
-		// 2020.06.07 MultiThreadRendering.
-		if (!m_bIsCreateThread)
-		{
-			m_bIsCreateThread = true;
-			Create_ThreadContext();
-		}
-
-		// 2020.06.08 MultiThreadRendering
-		FAILED_CHECK_RETURN(Reset_ThreadCommandList(), E_FAIL);
-
-		// 2020.06.08 MultiThreadRendering
-		/*__________________________________________________________________________________________________________
-		[ Render ShadowDepth Pass ]
-		____________________________________________________________________________________________________________*/
-		// Begin Render ShadowDepth Pass.
-		m_pShadowDepthTarget->Begin_RenderTargetOnContext(m_pPreShadowCommandList, THREADID::SHADOW);
-
-		// Start WorkThread.
-		// None-Signal -> Signal
-		for (_int i = 0; i < CONTEXT::CONTEXT_END; ++i)
-			SetEvent(m_hWorkerBeginRender[i]);
-
-		// 2020.06.08 MultiThreadRendering
-		// ShadowDepth가 전부 그려질 때 까지 대기하자. 전부 그려졌으면 명령 제출.
-		WaitForMultipleObjects(CONTEXT::CONTEXT_END, m_hWorkerFinishShadow, TRUE, INFINITE);
-
-		// End Render ShadowDepth Pass.
-		m_pShadowDepthTarget->End_RenderTargetOnContext(m_pEndShadowCommandList, THREADID::SHADOW);
-		
-
-		// Submit Begin RenderShadow Pass.
-		m_pPreShadowCommandList->Close();
-		ID3D12CommandList* ppPreShadowCommandLists[] = { m_pPreShadowCommandList };
-		CGraphicDevice::Get_Instance()->Get_CommandQueue()->ExecuteCommandLists(_countof(ppPreShadowCommandLists), ppPreShadowCommandLists);
-
-		// Submit RenderShadow Pass.
-		ID3D12CommandList* ppShadowCommandLists[CONTEXT::CONTEXT_END] = 
-		{ 
-			m_arrShadowCommandList[CONTEXT::CONTEXT0],
-			m_arrShadowCommandList[CONTEXT::CONTEXT1],
-			m_arrShadowCommandList[CONTEXT::CONTEXT2],
-			m_arrShadowCommandList[CONTEXT::CONTEXT3]
-		};
-		CGraphicDevice::Get_Instance()->Get_CommandQueue()->ExecuteCommandLists(_countof(ppShadowCommandLists), ppShadowCommandLists);
-
-		// Submit End RenderShadow Pass.
-		m_pEndShadowCommandList->Close();
-		ID3D12CommandList* ppEndShadowCommandLists[] = { m_pEndShadowCommandList };
-		CGraphicDevice::Get_Instance()->Get_CommandQueue()->ExecuteCommandLists(_countof(ppEndShadowCommandLists), ppEndShadowCommandLists);
-
-
-		/*__________________________________________________________________________________________________________
-		[ Render Scene Pass ]
-		____________________________________________________________________________________________________________*/
-		// Begin Render Scene Pass.
-		m_pDeferredTarget->Begin_RenderTargetOnContext(m_pPreSceneCommandList, THREADID::SCENE);
-		
-		// 2020.06.13 MultiThreadRendering
-		// Scene이 전부 그려질 때 까지 대기하자. 전부 그려졌으면 명령 제출.
-		WaitForMultipleObjects(CONTEXT::CONTEXT_END, m_hWorkerFinishedRender, TRUE, INFINITE);
-
-		// End Render Scene Pass.
-		m_pDeferredTarget->End_RenderTargetOnContext(m_pEndSceneCommandList, THREADID::SCENE);
-
-		// Submit Begin RenderScene Pass.
-		m_pPreSceneCommandList->Close();
-		ID3D12CommandList* ppPreSceneCommandLists[] = { m_pPreSceneCommandList };
-		CGraphicDevice::Get_Instance()->Get_CommandQueue()->ExecuteCommandLists(_countof(ppPreSceneCommandLists), ppPreSceneCommandLists);
-
-		// Submit RenderScene Pass.
-		ID3D12CommandList* ppSceneCommandLists[CONTEXT::CONTEXT_END] = 
-		{
-			m_arrSceneCommandList[CONTEXT::CONTEXT0],
-			m_arrSceneCommandList[CONTEXT::CONTEXT1],
-			m_arrSceneCommandList[CONTEXT::CONTEXT2],
-			m_arrSceneCommandList[CONTEXT::CONTEXT3]
-		};
-		CGraphicDevice::Get_Instance()->Get_CommandQueue()->ExecuteCommandLists(_countof(ppSceneCommandLists), ppSceneCommandLists);
-
-		// Submit End RenderScene Pass.
-		m_pEndSceneCommandList->Close();
-		ID3D12CommandList* ppEndSceneCommandLists[] = { m_pEndSceneCommandList };
-		CGraphicDevice::Get_Instance()->Get_CommandQueue()->ExecuteCommandLists(_countof(ppEndSceneCommandLists), ppEndSceneCommandLists);
-
+		Render_ShadowDepth(fTimeDelta);	// Shadow Depth
+		Render_NonAlpha(fTimeDelta);	// Diffuse, Normal, Specular, Depth
 	}
-
-	Render_Priority(fTimeDelta);
-	// Render_ShadowDepth(fTimeDelta);	// Shadow Depth
-	// Render_NonAlpha(fTimeDelta);		// Diffuse, Normal, Specular, Depth
 	Render_Light();						// Shade, Specular
 	Render_Blend();						// Target Blend
 	Render_Alpha(fTimeDelta);
@@ -654,6 +571,93 @@ HRESULT CRenderer::Reset_ThreadCommandList()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_MultiThread(const _float& fTimeDelta)
+{
+	if (m_bIsLoadingFinish)
+	{
+		if (!m_bIsCreateThread)
+		{
+			m_bIsCreateThread = true;
+			Create_ThreadContext();
+		}
+
+		FAILED_CHECK_RETURN(Reset_ThreadCommandList(), E_FAIL);
+
+		/*__________________________________________________________________________________________________________
+		[ Render ShadowDepth Pass ]
+		____________________________________________________________________________________________________________*/
+		// Begin Render ShadowDepth Pass.
+		m_pShadowDepthTarget->Begin_RenderTargetOnContext(m_pPreShadowCommandList, THREADID::SHADOW);
+
+		// Start WorkThread.
+		// None-Signal -> Signal
+		for (_int i = 0; i < CONTEXT::CONTEXT_END; ++i)
+			SetEvent(m_hWorkerBeginRender[i]);
+
+		// ShadowDepth가 전부 그려질 때 까지 대기하자. 전부 그려졌으면 명령 제출.
+		WaitForMultipleObjects(CONTEXT::CONTEXT_END, m_hWorkerFinishShadow, TRUE, INFINITE);
+
+		// End Render ShadowDepth Pass.
+		m_pShadowDepthTarget->End_RenderTargetOnContext(m_pEndShadowCommandList, THREADID::SHADOW);
+		
+
+		// Submit Begin RenderShadow Pass.
+		m_pPreShadowCommandList->Close();
+		ID3D12CommandList* ppPreShadowCommandLists[] = { m_pPreShadowCommandList };
+		CGraphicDevice::Get_Instance()->Get_CommandQueue()->ExecuteCommandLists(_countof(ppPreShadowCommandLists), ppPreShadowCommandLists);
+
+		// Submit RenderShadow Pass.
+		ID3D12CommandList* ppShadowCommandLists[CONTEXT::CONTEXT_END] = 
+		{ 
+			m_arrShadowCommandList[CONTEXT::CONTEXT0],
+			m_arrShadowCommandList[CONTEXT::CONTEXT1],
+			m_arrShadowCommandList[CONTEXT::CONTEXT2],
+			m_arrShadowCommandList[CONTEXT::CONTEXT3]
+		};
+		CGraphicDevice::Get_Instance()->Get_CommandQueue()->ExecuteCommandLists(_countof(ppShadowCommandLists), ppShadowCommandLists);
+
+		// Submit End RenderShadow Pass.
+		m_pEndShadowCommandList->Close();
+		ID3D12CommandList* ppEndShadowCommandLists[] = { m_pEndShadowCommandList };
+		CGraphicDevice::Get_Instance()->Get_CommandQueue()->ExecuteCommandLists(_countof(ppEndShadowCommandLists), ppEndShadowCommandLists);
+
+
+		/*__________________________________________________________________________________________________________
+		[ Render Scene Pass ]
+		____________________________________________________________________________________________________________*/
+		// Begin Render Scene Pass.
+		m_pDeferredTarget->Begin_RenderTargetOnContext(m_pPreSceneCommandList, THREADID::SCENE);
+		
+		// Scene이 전부 그려질 때 까지 대기하자. 전부 그려졌으면 명령 제출.
+		WaitForMultipleObjects(CONTEXT::CONTEXT_END, m_hWorkerFinishedRender, TRUE, INFINITE);
+
+		// End Render Scene Pass.
+		m_pDeferredTarget->End_RenderTargetOnContext(m_pEndSceneCommandList, THREADID::SCENE);
+
+		// Submit Begin RenderScene Pass.
+		m_pPreSceneCommandList->Close();
+		ID3D12CommandList* ppPreSceneCommandLists[] = { m_pPreSceneCommandList };
+		CGraphicDevice::Get_Instance()->Get_CommandQueue()->ExecuteCommandLists(_countof(ppPreSceneCommandLists), ppPreSceneCommandLists);
+
+		// Submit RenderScene Pass.
+		ID3D12CommandList* ppSceneCommandLists[CONTEXT::CONTEXT_END] = 
+		{
+			m_arrSceneCommandList[CONTEXT::CONTEXT0],
+			m_arrSceneCommandList[CONTEXT::CONTEXT1],
+			m_arrSceneCommandList[CONTEXT::CONTEXT2],
+			m_arrSceneCommandList[CONTEXT::CONTEXT3]
+		};
+		CGraphicDevice::Get_Instance()->Get_CommandQueue()->ExecuteCommandLists(_countof(ppSceneCommandLists), ppSceneCommandLists);
+
+		// Submit End RenderScene Pass.
+		m_pEndSceneCommandList->Close();
+		ID3D12CommandList* ppEndSceneCommandLists[] = { m_pEndSceneCommandList };
+		CGraphicDevice::Get_Instance()->Get_CommandQueue()->ExecuteCommandLists(_countof(ppEndSceneCommandLists), ppEndSceneCommandLists);
+	}
+
+	return S_OK;
+}
+
 
 void CRenderer::Worker_Thread(_int threadIndex)
 {
@@ -756,12 +760,14 @@ void CRenderer::Free()
 
 	CGraphicDevice::Get_Instance()->Wait_ForGpuComplete();
 
-	for (_int i = 0; i < CONTEXT::CONTEXT_END; ++i)
+	if (m_bIsCreateThread)
 	{
-		CloseHandle(m_hWorkerBeginRender[i]);
-		CloseHandle(m_hWorkerFinishShadow[i]);
-		CloseHandle(m_hWorkerFinishedRender[i]);
-		CloseHandle(m_hThreadHandle[i]);
+		for (_int i = 0; i < CONTEXT::CONTEXT_END; ++i)
+		{
+			CloseHandle(m_hWorkerBeginRender[i]);
+			CloseHandle(m_hWorkerFinishShadow[i]);
+			CloseHandle(m_hWorkerFinishedRender[i]);
+			CloseHandle(m_hThreadHandle[i]);
+		}
 	}
-
 }

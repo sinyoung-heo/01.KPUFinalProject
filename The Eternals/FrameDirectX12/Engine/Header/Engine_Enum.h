@@ -20,6 +20,7 @@ namespace Engine
 		CONTEXT_END 
 	};
 	enum THREADID { SHADOW, SCENE, THREADID_END };
+	enum RENDERID { MULTI_THREAD, SINGLE_THREAD, RENDERID_END };
 
 
 	/*__________________________________________________________________________________________________________

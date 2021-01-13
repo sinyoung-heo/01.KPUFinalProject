@@ -47,7 +47,6 @@ _int CToolCamera::Update_GameObject(const _float& fTimeDelta)
 	[ View Matrix Update ]
 	____________________________________________________________________________________________________________*/
 	Engine::CCamera::Update_GameObject(fTimeDelta);
-
 	
 	/*__________________________________________________________________________________________________________
 	[ Set Transform ]
