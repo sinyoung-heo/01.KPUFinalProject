@@ -36,8 +36,8 @@ private:
 
 
 public:
-	CToolTerrain*		m_pPickingTerrain	= nullptr;
-	CToolStaticMesh*	m_pPickingObject	= nullptr;
+	CToolTerrain*			m_pPickingTerrain	= nullptr;
+	Engine::CGameObject*	m_pPickingObject	= nullptr;
 
 private:
 	/*__________________________________________________________________________________________________________

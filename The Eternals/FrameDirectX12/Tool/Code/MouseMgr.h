@@ -19,8 +19,8 @@ public:
 								   _vec3& orig,
 								   _vec3& dir,
 								   _float* u, _float* v, _float* t);
-	static _bool Picking_Object(Engine::CGameObject* pPickingObject,
-								Engine::OBJLIST* pOBJLIST);
+	_bool Picking_Object(Engine::CGameObject* pPickingObject,
+						 Engine::OBJLIST* pOBJLIST);
 
 private:
 	virtual void Free();

@@ -182,7 +182,7 @@ _bool CMouseMgr::Picking_Object(Engine::CGameObject* pPickingObject, Engine::OBJ
 		pObject->Set_BoundingBoxColor(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
 
 	_float fDist = 0.0f;
-	for (auto& pObject : *pOBJLIST)
+	for (Engine::CGameObject* pObject : *pOBJLIST)
 	{
 		vRayDir.Normalize();
 
