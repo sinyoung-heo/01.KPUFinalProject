@@ -785,6 +785,13 @@ void CTabMap::OnBnClickedRadio1005_StaticMeshCreateMode()
 	m_bIsCreateMode = true;
 	m_bIsModifyMode = false;
 
+	m_fStaticMeshScaleX = 0.01f;
+	m_fStaticMeshScaleY = 0.01f;
+	m_fStaticMeshScaleZ = 0.01f;
+	m_fStaticMeshAngleX = 0.0f;
+	m_fStaticMeshAngleY = 0.0f;
+	m_fStaticMeshAngleZ = 0.0f;
+
 	UpdateData(FALSE);
 }
 
@@ -947,9 +954,45 @@ void CTabMap::OnLbnSelchangeList1003_StaticMeshObjectList()
 {
 	UpdateData(TRUE);
 
+	Engine::OBJLIST* pStaticMeshList = m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh");
+	// BoundingBox 색상 Green으로 변경.
+	for (auto& pObject : *pStaticMeshList)
+		pObject->Set_BoundingBoxColor(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
+
+
 	// 선택한 ListBox의 Index를 얻어온다.
 	m_iStaticMeshSelectIdx = m_StaticMeshListBox_ObjectList.GetCaretIndex();
 
+	// 선택한 Object의 색상을 Red로 변경.
+	Engine::CGameObject* pSelectedObject = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"StaticMesh", m_iStaticMeshSelectIdx);
+	if (nullptr != pSelectedObject)
+	{
+		pSelectedObject->Set_BoundingBoxColor(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+
+		// 선택한 Object의 정보로 Edit Control을 채운다.
+		_tchar szTemp[MIN_STR] = L"";
+
+		_stprintf_s(szTemp, MIN_STR, L"%0.001f", pSelectedObject->Get_Transform()->m_vScale.x);
+		m_StaticMeshEdit_ScaleX.SetWindowTextW(szTemp);
+		_stprintf_s(szTemp, MIN_STR, L"%0.001f", pSelectedObject->Get_Transform()->m_vScale.y);
+		m_StaticMeshEdit_ScaleY.SetWindowTextW(szTemp);
+		_stprintf_s(szTemp, MIN_STR, L"%0.001f", pSelectedObject->Get_Transform()->m_vScale.z);
+		m_StaticMeshEdit_ScaleZ.SetWindowTextW(szTemp);
+		_stprintf_s(szTemp, MIN_STR, L"%0.1f", pSelectedObject->Get_Transform()->m_vAngle.x);
+		m_StaticMeshEdit_AngleX.SetWindowTextW(szTemp);
+		_stprintf_s(szTemp, MIN_STR, L"%0.1f", pSelectedObject->Get_Transform()->m_vAngle.y);
+		m_StaticMeshEdit_AngleY.SetWindowTextW(szTemp);
+		_stprintf_s(szTemp, MIN_STR, L"%0.1f", pSelectedObject->Get_Transform()->m_vAngle.z);
+		m_StaticMeshEdit_AngleZ.SetWindowTextW(szTemp);
+		_stprintf_s(szTemp, MIN_STR, L"%0.1f", pSelectedObject->Get_Transform()->m_vPos.x);
+		m_StaticMeshEdit_PosX.SetWindowTextW(szTemp);
+		_stprintf_s(szTemp, MIN_STR, L"%0.1f", pSelectedObject->Get_Transform()->m_vPos.y);
+		m_StaticMeshEdit_PosY.SetWindowTextW(szTemp);
+		_stprintf_s(szTemp, MIN_STR, L"%0.1f", pSelectedObject->Get_Transform()->m_vPos.z);
+		m_StaticMeshEdit_PosZ.SetWindowTextW(szTemp);
+
+		static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject = pSelectedObject;
+	}
 
 	UpdateData(FALSE);
 }

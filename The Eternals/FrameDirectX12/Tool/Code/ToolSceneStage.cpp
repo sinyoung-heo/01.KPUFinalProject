@@ -313,16 +313,16 @@ void CToolSceneStage::KeyInput_TabMap(CTabMap& TabMap)
 		Engine::OBJLIST* pStaticMeshList = m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh");
 		if (nullptr != pStaticMeshList)
 		{
-			if (CMouseMgr::Get_Instance()->Picking_Object(m_pPickingObject, pStaticMeshList))
+			if (CMouseMgr::Get_Instance()->Picking_Object(&m_pPickingObject, pStaticMeshList))
 			{
 				// 선택한 Object의 정보로 Edit Control을 채운다.
 				_tchar szTemp[MIN_STR] = L"";
 
-				_stprintf_s(szTemp, MIN_STR, L"%0.1f", m_pPickingObject->Get_Transform()->m_vScale.x);
+				_stprintf_s(szTemp, MIN_STR, L"%0.001f", m_pPickingObject->Get_Transform()->m_vScale.x);
 				TabMap.m_StaticMeshEdit_ScaleX.SetWindowTextW(szTemp);
-				_stprintf_s(szTemp, MIN_STR, L"%0.1f", m_pPickingObject->Get_Transform()->m_vScale.y);
+				_stprintf_s(szTemp, MIN_STR, L"%0.001f", m_pPickingObject->Get_Transform()->m_vScale.y);
 				TabMap.m_StaticMeshEdit_ScaleY.SetWindowTextW(szTemp);
-				_stprintf_s(szTemp, MIN_STR, L"%0.1f", m_pPickingObject->Get_Transform()->m_vScale.z);
+				_stprintf_s(szTemp, MIN_STR, L"%0.001f", m_pPickingObject->Get_Transform()->m_vScale.z);
 				TabMap.m_StaticMeshEdit_ScaleZ.SetWindowTextW(szTemp);
 
 				_stprintf_s(szTemp, MIN_STR, L"%0.1f", m_pPickingObject->Get_Transform()->m_vAngle.x);

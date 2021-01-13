@@ -3,6 +3,8 @@
 
 
 class CToolTerrain;
+class CToolStaticMesh;
+
 class CMouseMgr : public Engine::CBase
 {
 	DECLARE_SINGLETON(CMouseMgr)
@@ -19,7 +21,7 @@ public:
 								   _vec3& orig,
 								   _vec3& dir,
 								   _float* u, _float* v, _float* t);
-	_bool Picking_Object(Engine::CGameObject* pPickingObject,
+	_bool Picking_Object(Engine::CGameObject** pPickingObject,
 						 Engine::OBJLIST* pOBJLIST);
 
 private:

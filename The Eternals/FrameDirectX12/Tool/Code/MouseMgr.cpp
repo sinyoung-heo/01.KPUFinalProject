@@ -2,6 +2,7 @@
 #include "MouseMgr.h"
 #include "GraphicDevice.h"
 #include "ToolTerrain.h"
+#include "ToolStaticMesh.h"
 
 IMPLEMENT_SINGLETON(CMouseMgr)
 
@@ -146,7 +147,7 @@ _bool CMouseMgr::IntersectTriangle(_vec3& v0,
 	return true;
 }
 
-_bool CMouseMgr::Picking_Object(Engine::CGameObject* pPickingObject, Engine::OBJLIST* pOBJLIST)
+_bool CMouseMgr::Picking_Object(Engine::CGameObject** ppPickingObject, Engine::OBJLIST* pOBJLIST)
 {
 	POINT ptMouse{};
 
@@ -182,17 +183,20 @@ _bool CMouseMgr::Picking_Object(Engine::CGameObject* pPickingObject, Engine::OBJ
 		pObject->Set_BoundingBoxColor(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
 
 	_float fDist = 0.0f;
-	for (Engine::CGameObject* pObject : *pOBJLIST)
+
+	auto iter_begin = pOBJLIST->begin();
+	auto iter_end	= pOBJLIST->end();
+	for (; iter_begin != iter_end; ++iter_begin)
 	{
 		vRayDir.Normalize();
 
 		// 충돌했다면, BoundingBox의 색상을 Red로 변경.
-		if (pObject->Get_BoundingBox()->Get_BoundingInfo().Intersects(vRayPos.Get_XMVECTOR(),
-																	  vRayDir.Get_XMVECTOR(), 
-																	  fDist))
+		if ((*iter_begin)->Get_BoundingBox()->Get_BoundingInfo().Intersects(vRayPos.Get_XMVECTOR(),
+																			vRayDir.Get_XMVECTOR(), 
+																			fDist))
 		{
-			pObject->Set_BoundingBoxColor(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
-			pPickingObject = pObject;
+			(*iter_begin)->Set_BoundingBoxColor(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+			*ppPickingObject = /*static_cast<CToolStaticMesh*>*/(*iter_begin);
 
 			return true;
 		}
