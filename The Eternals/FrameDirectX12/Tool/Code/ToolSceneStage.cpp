@@ -54,6 +54,18 @@ HRESULT CToolSceneStage::Ready_Scene()
 _int CToolSceneStage::Update_Scene(const _float& fTimeDelta)
 {
 	/*__________________________________________________________________________________________________________
+	[ Key Input ]
+	____________________________________________________________________________________________________________*/
+	if (Engine::KEY_PRESSING(DIK_LSHIFT))
+		KeyInput();
+
+
+	return Engine::CScene::Update_Scene(fTimeDelta);
+}
+
+_int CToolSceneStage::LateUpdate_Scene(const _float& fTimeDelta)
+{
+	/*__________________________________________________________________________________________________________
 	[ Stage Text ]
 	____________________________________________________________________________________________________________*/
 	if (nullptr != m_pFont_Stage)
@@ -64,16 +76,22 @@ _int CToolSceneStage::Update_Scene(const _float& fTimeDelta)
 	}
 
 	/*__________________________________________________________________________________________________________
-	[ Key Input ]
+	[ MFC Control ]
 	____________________________________________________________________________________________________________*/
-	if (Engine::KEY_PRESSING(DIK_LSHIFT))
-		KeyInput();
+	CMainFrame* pMainFrame	= static_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+	CMyForm* pMyForm		= static_cast<CMyForm*>(pMainFrame->m_MainSplit.GetPane(0, 0));
 
-	return Engine::CScene::Update_Scene(fTimeDelta);
-}
+	// StaticMeshObjectList Size
+	if (pMyForm->m_bIsTabMap && 
+		nullptr != m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh"))
+	{
+		pMyForm->m_TabMap.m_iStaticMeshObjectSize = m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh")->size();
 
-_int CToolSceneStage::LateUpdate_Scene(const _float& fTimeDelta)
-{
+		_tchar szTemp[MIN_STR] = L"";
+		wsprintf(szTemp, L"%d", pMyForm->m_TabMap.m_iStaticMeshObjectSize);
+		pMyForm->m_TabMap.m_StaticMeshEdit_ObjectSize.SetWindowTextW(szTemp);
+	}
+
 	return Engine::CScene::LateUpdate_Scene(fTimeDelta);
 }
 
@@ -231,13 +249,6 @@ void CToolSceneStage::KeyInput()
 	CMainFrame* pMainFrame	= static_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
 	CMyForm*	pMyForm		= static_cast<CMyForm*>(pMainFrame->m_MainSplit.GetPane(0, 0));
 
-	// StaticMeshObjectList Size
-	pMyForm->m_TabMap.m_iStaticMeshObjectSize = m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh")->size();
-
-	_tchar szTemp[MIN_STR] = L"";
-	wsprintf(szTemp, L"%d", pMyForm->m_TabMap.m_iStaticMeshObjectSize);
-	pMyForm->m_TabMap.m_StaticMeshEdit_ObjectSize.SetWindowTextW(szTemp);
-
 	/*__________________________________________________________________________________________________________
 	[ Terrain Picking ]
 	____________________________________________________________________________________________________________*/
@@ -247,19 +258,18 @@ void CToolSceneStage::KeyInput()
 		if (pMyForm->m_bIsTabMap)
 			KeyInput_TabMap(pMyForm->m_TabMap);
 
-	
-
 	}
 
 }
 
 void CToolSceneStage::KeyInput_TabMap(CTabMap& TabMap)
 {
-	if (nullptr != m_pPickingTerrain)
+	
+	// StaticMesh Object 생성.
+	if (TabMap.m_EditCheck_StaticMesh.GetCheck() &&
+		TabMap.m_bIsCreateMode)
 	{
-		// StaticMesh Object 생성.
-		if (TabMap.m_EditCheck_StaticMesh.GetCheck() &&
-			TabMap.m_bIsCreateMode)
+		if (nullptr != m_pPickingTerrain)
 		{
 			CToolStaticMesh* pStaticMesh = nullptr;
 
@@ -267,7 +277,6 @@ void CToolSceneStage::KeyInput_TabMap(CTabMap& TabMap)
 			_vec3 vScale			= _vec3(TabMap.m_fStaticMeshScaleX, TabMap.m_fStaticMeshScaleY, TabMap.m_fStaticMeshScaleZ);
 			_vec3 vAngle			= _vec3(TabMap.m_fStaticMeshAngleX, TabMap.m_fStaticMeshAngleY, TabMap.m_fStaticMeshAngleZ);
 			_vec3 vPickingPos		= CMouseMgr::Picking_OnTerrain(m_pPickingTerrain);
-
 			_bool bIsRenderShadow	= TabMap.m_bIsRenderShadow;
 			_bool bIsCollision		= TabMap.m_bIsCollision;
 
@@ -293,8 +302,24 @@ void CToolSceneStage::KeyInput_TabMap(CTabMap& TabMap)
 			_stprintf_s(szTemp, MIN_STR, L"%0.1f", vPickingPos.z);
 			TabMap.m_StaticMeshEdit_PosZ.SetWindowTextW(szTemp);
 		}
+	}
+
+	// StaticMesh를 선택하여 정보 수정.
+	if (TabMap.m_EditCheck_StaticMesh.GetCheck() &&
+		TabMap.m_bIsModifyMode)
+	{
+		Engine::OBJLIST* pStaticMeshList = m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh");
+		if (nullptr != pStaticMeshList)
+		{
+			if (CMouseMgr::Picking_Object(m_pPickingObject, pStaticMeshList))
+			{
+
+			}
+		}
+		
 
 	}
+	
 }
 
 CToolSceneStage* CToolSceneStage::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)

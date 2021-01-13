@@ -178,8 +178,8 @@ void CGameObject::SetUp_BoundingBox(_matrix* pParent,
 		vScale.z = abs(vMax.z - vMin.z);
 
 		m_pBoundingBoxCom->Set_ParentMatrix(pParent);
-		m_pBoundingBoxCom->Set_Extents(vParentScale);
 		m_pBoundingBoxCom->Set_Scale(vScale);
+		m_pBoundingBoxCom->Set_Extents(vParentScale);
 		m_pBoundingBoxCom->Set_Pos(vCenter);
 	}
 }

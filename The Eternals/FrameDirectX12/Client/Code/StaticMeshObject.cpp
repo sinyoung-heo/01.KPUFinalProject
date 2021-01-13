@@ -31,15 +31,15 @@ HRESULT CStaticMeshObject::Ready_GameObject(wstring wstrMeshTag,
 
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(m_wstrMeshTag), E_FAIL);
+	m_pTransCom->m_vScale	= vScale;
+	m_pTransCom->m_vAngle	= vAngle;
+	m_pTransCom->m_vPos		= vPos;
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
 										   m_pTransCom->m_vScale,
 										   m_pMeshCom->Get_CenterPos(),
 										   m_pMeshCom->Get_MinVector(),
 										   m_pMeshCom->Get_MaxVector());
 
-	m_pTransCom->m_vScale	= vScale;
-	m_pTransCom->m_vAngle	= vAngle;
-	m_pTransCom->m_vPos		= vPos;
 
 	return S_OK;
 }

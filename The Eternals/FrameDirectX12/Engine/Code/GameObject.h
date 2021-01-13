@@ -20,11 +20,13 @@ public:
 	CComponent*		Get_Component(wstring wstrComponentTag, COMPONENTID eID);
 	CTransform*		Get_Transform()			{ return m_pTransCom; }
 	CInfo*			Get_Info()				{ return m_pInfoCom; }
+	CColliderBox*	Get_BoundingBox()		{ return m_pBoundingBoxCom;}
 	_float			Get_DepthOfView()		{ return m_fViewZ; }
 	_long			Get_UIDepth()			{ return m_UIDepth; }
 
 	// Set
-	void			Set_DeadGameObject()	{ m_bIsDead = true; }
+	void			Set_DeadGameObject()						{ m_bIsDead = true; }
+	void			Set_BoundingBoxColor(const _rgba& vColor)	{ m_pBoundingBoxCom->Set_Color(vColor); }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT Ready_GameObjectPrototype();

@@ -16,8 +16,8 @@ private:
 
 public:
 	// Get
-	CTransform*				Get_Transform()				{ return m_pTransCom; }
-	const BoundingSphere&	Get_BoundingInfo() const	{ return m_BoundingInfo; }
+	CTransform*		Get_Transform()		{ return m_pTransCom; }
+	BoundingSphere&	Get_BoundingInfo() 	{ return m_BoundingInfo; }
 
 	// Set
 	void					Set_Pos(const _vec3& vPos)						{ m_pTransCom->m_vPos	= vPos; }

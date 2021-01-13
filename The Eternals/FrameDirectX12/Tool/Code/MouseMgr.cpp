@@ -146,6 +146,61 @@ _bool CMouseMgr::IntersectTriangle(_vec3& v0,
 	return true;
 }
 
+_bool CMouseMgr::Picking_Object(Engine::CGameObject* pPickingObject, Engine::OBJLIST* pOBJLIST)
+{
+	POINT ptMouse{};
+
+	GetCursorPos(&ptMouse);
+	ScreenToClient(g_hWnd, &ptMouse);
+
+	D3D12_VIEWPORT ViewPort = Engine::CGraphicDevice::Get_Instance()->Get_Viewport();
+
+	// Window좌표 -> 투영 좌표계로 변환.
+	_vec3 vMousePos = _vec3(0.f);
+	vMousePos.x		= ptMouse.x / (ViewPort.Width * 0.5f) - 1.f;
+	vMousePos.y		= ptMouse.y / -(ViewPort.Height * 0.5f) + 1.f;
+	vMousePos.z		= 0.f;
+
+	// 투영 좌표계 -> 카메라 좌표계로 변환.
+	_matrix matProj = *(Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::MATRIXID::PROJECTION));
+	matProj = XMMatrixInverse(nullptr, matProj);
+	vMousePos.TransformCoord(vMousePos, matProj);
+
+	// 카메라 좌표계 -> 월드 좌표계로 변환.
+	_vec3 vRayDir, vRayPos;
+	vRayPos = _vec3(0.f, 0.f, 0.f);
+	vRayDir = vMousePos - vRayPos;
+
+	_matrix matView = *(Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::MATRIXID::VIEW));
+	matView = XMMatrixInverse(nullptr, matView);
+	vRayDir.TransformNormal(vRayDir, matView);
+	vRayPos.TransformCoord(vRayPos, matView);
+
+	
+	// BoundingBox 색상 Green으로 변경.
+	for (auto& pObject : *pOBJLIST)
+		pObject->Set_BoundingBoxColor(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
+
+	_float fDist = 0.0f;
+	for (auto& pObject : *pOBJLIST)
+	{
+		vRayDir.Normalize();
+
+		// 충돌했다면, BoundingBox의 색상을 Red로 변경.
+		if (pObject->Get_BoundingBox()->Get_BoundingInfo().Intersects(vRayPos.Get_XMVECTOR(),
+																	  vRayDir.Get_XMVECTOR(), 
+																	  fDist))
+		{
+			pObject->Set_BoundingBoxColor(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+			pPickingObject = pObject;
+
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void CMouseMgr::Free()
 {
 

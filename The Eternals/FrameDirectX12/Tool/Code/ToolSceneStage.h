@@ -9,6 +9,7 @@ namespace Engine
 }
 
 class CToolTerrain;
+class CToolStaticMesh;
 
 class CToolSceneStage : public Engine::CScene
 {
@@ -35,7 +36,8 @@ private:
 
 
 public:
-	CToolTerrain* m_pPickingTerrain = nullptr;
+	CToolTerrain*		m_pPickingTerrain	= nullptr;
+	CToolStaticMesh*	m_pPickingObject	= nullptr;
 
 private:
 	/*__________________________________________________________________________________________________________

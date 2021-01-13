@@ -28,15 +28,15 @@ HRESULT CPopori_F::Ready_GameObject(wstring wstrMeshTag,
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
+	m_pTransCom->m_vScale	= vScale;
+	m_pTransCom->m_vAngle	= vAngle;
+	m_pTransCom->m_vPos		= vPos;
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
 										   m_pTransCom->m_vScale,
 										   m_pMeshCom->Get_CenterPos(),
 										   m_pMeshCom->Get_MinVector(),
 										   m_pMeshCom->Get_MaxVector());
 
-	m_pTransCom->m_vScale	= vScale;
-	m_pTransCom->m_vAngle	= vAngle;
-	m_pTransCom->m_vPos		= vPos;
 
 	m_pInfoCom->m_fSpeed = 15.0f;
 
@@ -67,8 +67,8 @@ HRESULT CPopori_F::Ready_GameObject(wstring wstrMeshTag,
 	Engine::NULL_CHECK_RETURN(pmatSkinning, E_FAIL);
 	m_pColliderBoxCom->Set_SkinningMatrix(pmatSkinning);	// Bone Matrix
 	m_pColliderBoxCom->Set_ParentMatrix(pmatParent);		// Parent Matrix
-	m_pColliderBoxCom->Set_Extents(m_pTransCom->m_vScale);	// Box Offset From Center
 	m_pColliderBoxCom->Set_Scale(_vec3(4.f, 4.f, 4.f));		// Collider Scale
+	m_pColliderBoxCom->Set_Extents(m_pTransCom->m_vScale);	// Box Offset From Center
 
 	/*__________________________________________________________________________________________________________
 	[ Font »ý¼º ]
