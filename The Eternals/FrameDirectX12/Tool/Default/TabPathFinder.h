@@ -48,4 +48,6 @@ public:
 	list<IMGPATH*>	m_lstTextureFileInfo;
 	_int m_iTexturePathCnt = 0;
 
+
+	list<MESH_TREECTRL_INFO*> m_lstMeshTreeCtrlInfo;
 };

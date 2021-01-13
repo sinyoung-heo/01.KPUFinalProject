@@ -59,6 +59,7 @@ _int CToolMainApp::Update_MainApp(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Update Management ]
 	____________________________________________________________________________________________________________*/
+	CShadowLightMgr::Get_Instance()->Update_ShadowLight();
 	m_pManagement->Update_Management(fTimeDelta);
 
 	return S_OK;
@@ -85,7 +86,7 @@ void CToolMainApp::Render_MainApp(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Render Management ]
 	____________________________________________________________________________________________________________*/
-	m_pManagement->Render_Management(fTimeDelta);
+	m_pManagement->Render_Management(fTimeDelta, Engine::RENDERID::SINGLE_THREAD);
 }
 
 HRESULT CToolMainApp::SetUp_DefaultSetting(Engine::WINMODE eMode, 

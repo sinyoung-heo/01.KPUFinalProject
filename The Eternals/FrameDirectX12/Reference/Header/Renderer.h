@@ -48,9 +48,6 @@ public:
 
 	// Set
 	HRESULT	Set_CurPipelineState(ID3D12PipelineState* pPipelineState);
-	/*__________________________________________________________________________________________________________
-	20.06.11 MultiThreadRendering
-	____________________________________________________________________________________________________________*/
 	HRESULT	Set_CurPipelineState(ID3D12GraphicsCommandList* pCommandList, 
 								 ID3D12PipelineState* pPipelineState,
 								 const _int& iContextIdx);
@@ -65,7 +62,7 @@ public:
 	HRESULT	Ready_Renderer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 	HRESULT	Add_Renderer(const RENDERGROUP& eRenderID, CGameObject* pGameObject);
 	HRESULT Add_Renderer(CComponent* pComponent);
-	HRESULT	Render_Renderer(const _float& fTimeDelta);
+	HRESULT	Render_Renderer(const _float& fTimeDelta, const RENDERID& eID = RENDERID::MULTI_THREAD);
 	void	Clear_RenderGroup();
 
 private:
@@ -127,7 +124,9 @@ private:
 	____________________________________________________________________________________________________________*/
 	map<wstring, _bool> m_mapRenderOnOff;
 
-	// 2020.06.07 MultiThreadRendering
+	/*__________________________________________________________________________________________________________
+	[ MultiThread Rendering ]
+	____________________________________________________________________________________________________________*/
 	HANDLE m_hWorkerBeginRender[CONTEXT::CONTEXT_END];		// 각 쓰레드에게 Render시작을 알림.
 	HANDLE m_hWorkerFinishShadow[CONTEXT::CONTEXT_END];		// Render ShadowDepth.
 	HANDLE m_hWorkerFinishedRender[CONTEXT::CONTEXT_END];	// Render NoneAlpha.
@@ -159,7 +158,9 @@ public:
 	void	Create_ThreadContext();
 	HRESULT	Create_ThreadCommandList();
 	HRESULT	Reset_ThreadCommandList();
+	HRESULT Render_MultiThread(const _float& fTimeDelta);
 	void	Worker_Thread(_int threadIndex);
+
 
 private:
 	virtual void		Free();

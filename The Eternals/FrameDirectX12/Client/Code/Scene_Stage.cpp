@@ -53,9 +53,9 @@ _int CScene_Stage::LateUpdate_Scene(const _float & fTimeDelta)
 	return Engine::CScene::LateUpdate_Scene(fTimeDelta);
 }
 
-HRESULT CScene_Stage::Render_Scene(const _float & fTimeDelta)
+HRESULT CScene_Stage::Render_Scene(const _float & fTimeDelta, const Engine::RENDERID& eID)
 {
-	Engine::FAILED_CHECK_RETURN(CScene::Render_Scene(fTimeDelta), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(CScene::Render_Scene(fTimeDelta, eID), E_FAIL);
 
 	return S_OK;
 }

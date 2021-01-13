@@ -10,6 +10,8 @@
 #include "ToolCoordinate.h"
 #include "ToolTerrain.h"
 #include "ToolSkyBox.h"
+#include "ToolStaticMesh.h"
+
 
 CToolSceneStage::CToolSceneStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -35,6 +37,16 @@ HRESULT CToolSceneStage::Ready_Scene()
 	Engine::NULL_CHECK_RETURN(m_pFont_Stage, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pFont_Stage->Ready_GameObject(L"", _vec2(1410.f, 0.f), D2D1::ColorF::SpringGreen), E_FAIL);
 
+	/*__________________________________________________________________________________________________________
+	[ MFC 牧飘费 劝己拳 ]
+	____________________________________________________________________________________________________________*/
+	CMainFrame* pMainFrame = static_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+	CMyForm* pMyForm = static_cast<CMyForm*>(pMainFrame->m_MainSplit.GetPane(0, 0));
+	pMyForm->m_TabMap.Ready_TerrainControl();
+	pMyForm->m_TabMap.Ready_SkyBoxControl();
+	pMyForm->m_TabMap.Ready_EditControl();
+	pMyForm->m_TabMap.Ready_StaticMeshControl();
+	m_pPickingTerrain = static_cast<CToolTerrain*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"TerrainTex128"));
 
 	return S_OK;
 }
@@ -55,7 +67,7 @@ _int CToolSceneStage::Update_Scene(const _float& fTimeDelta)
 	[ Key Input ]
 	____________________________________________________________________________________________________________*/
 	if (Engine::KEY_PRESSING(DIK_LSHIFT))
-		Key_Input();
+		KeyInput();
 
 	return Engine::CScene::Update_Scene(fTimeDelta);
 }
@@ -65,9 +77,9 @@ _int CToolSceneStage::LateUpdate_Scene(const _float& fTimeDelta)
 	return Engine::CScene::LateUpdate_Scene(fTimeDelta);
 }
 
-HRESULT CToolSceneStage::Render_Scene(const _float& fTimeDelta)
+HRESULT CToolSceneStage::Render_Scene(const _float& fTimeDelta, const Engine::RENDERID& eID)
 {
-	Engine::FAILED_CHECK_RETURN(CScene::Render_Scene(fTimeDelta), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(CScene::Render_Scene(fTimeDelta, eID), E_FAIL);
 
 	return S_OK;
 }
@@ -163,6 +175,15 @@ HRESULT CToolSceneStage::Ready_LayerGameObject(wstring wstrLayerTag)
 	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
 	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
 
+	CToolStaticMesh* pStaticMesh = nullptr;
+	pStaticMesh = CToolStaticMesh::Create(m_pGraphicDevice, m_pCommandList,
+										  L"Status",					// MeshTag 
+										  _vec3(0.05f, 0.05f, 0.05f),	// Scale
+										  _vec3(0.f, 0.0f, 0.0f),		// Angle
+										  _vec3(-15.0f, 13.f, 0.f),
+										  false,
+										  false);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"StaticMesh", pStaticMesh), E_FAIL);
 
 	return S_OK;
 }
@@ -206,7 +227,7 @@ HRESULT CToolSceneStage::Ready_LightInfo()
 	tLightInfo.Diffuse		= _rgba(1.0f, 1.0f, 1.0f, 1.0f);
 	tLightInfo.Specular		= _rgba(0.4f, 0.4f, 0.4f, 1.0f);
 	tLightInfo.Ambient		= _rgba(0.3f, 0.3f, 0.3f, 1.0f);
-	tLightInfo.Direction	= _vec4(1.0f, -1.0f, 1.0f, 0.0f);
+	tLightInfo.Direction	= _vec4(-1.0f, -1.0f, -1.0f, 0.0f);
 	Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, 
 																			 m_pCommandList, 
 																			 Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL,
@@ -215,20 +236,52 @@ HRESULT CToolSceneStage::Ready_LightInfo()
 	return S_OK;
 }
 
-void CToolSceneStage::Key_Input()
+void CToolSceneStage::KeyInput()
 {
+	CMainFrame* pMainFrame	= static_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+	CMyForm*	pMyForm		= static_cast<CMyForm*>(pMainFrame->m_MainSplit.GetPane(0, 0));
+
 	/*__________________________________________________________________________________________________________
 	[ Terrain Picking ]
 	____________________________________________________________________________________________________________*/
 	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON(Engine::DIM_LB)))
 	{
-		CToolTerrain* pTerrain = static_cast<CToolTerrain*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"TerrainTex128"));
-		
-		if (nullptr != m_pPickingTerrain)
+		if (pMyForm->m_bIsTabMap)
+			KeyInput_TabMap(pMyForm->m_TabMap);
+
+	
+
+	}
+
+}
+
+void CToolSceneStage::KeyInput_TabMap(const CTabMap& TabMap)
+{
+	if (nullptr != m_pPickingTerrain)
+	{
+		// StaticMesh Object 积己.
+		if (TabMap.m_EditCheck_StaticMesh.GetCheck() &&
+			TabMap.m_bIsCreateMode)
 		{
-			_vec3 vPickingPos = CMouseMgr::Picking_OnTerrain(m_pPickingTerrain);
-			vPickingPos.Print();
+			CToolStaticMesh* pStaticMesh = nullptr;
+
+			wstring wstrMeshTag		= TabMap.m_wstrTreeMeshTag;
+			_vec3 vScale			= _vec3(TabMap.m_fStaticMeshScaleX, TabMap.m_fStaticMeshScaleY, TabMap.m_fStaticMeshScaleZ);
+			_vec3 vAngle			= _vec3(TabMap.m_fStaticMeshAngleX, TabMap.m_fStaticMeshAngleY, TabMap.m_fStaticMeshAngleZ);
+			_vec3 vPickingPos		= CMouseMgr::Picking_OnTerrain(m_pPickingTerrain);
+			_bool bIsRenderShadow	= TabMap.m_bIsRenderShadow;
+			_bool bIsCollision		= TabMap.m_bIsCollision;
+
+			pStaticMesh = CToolStaticMesh::Create(m_pGraphicDevice, m_pCommandList,
+												  wstrMeshTag,
+												  vScale,
+												  vAngle,
+												  vPickingPos,
+												  bIsRenderShadow,
+												  bIsCollision);
+			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"StaticMesh", pStaticMesh), E_FAIL);
 		}
+
 	}
 }
 

@@ -25,39 +25,32 @@ public:
 	ID3D12DescriptorHeap*			Get_TexDescriptorHeap() { return m_pTexDescriptorHeap; }
 
 	// Set
-	void							Set_AniCtrl(CAniCtrl* pAniCtrl) { m_pAniCtrl = pAniCtrl; }
+	void			Set_AniCtrl(CAniCtrl* pAniCtrl) { m_pAniCtrl = pAniCtrl; }
 
 	// Method
-	HRESULT							Ready_Component(const aiScene * pScene, wstring wstrPath);
-	HRESULT							Ready_Mesh(const aiMesh* pAiMesh,
-											   vector<VTXMESH>& vecVertex, 
-											   vector<_uint>& vecIndex);
-	HRESULT							Ready_Texture();
-	HRESULT							Create_TextureDescriptorHeap();
-	virtual void					Release_UploadBuffer();
+	HRESULT			Ready_Component(const aiScene * pScene, wstring wstrPath);
+	HRESULT			Ready_Mesh(const aiMesh* pAiMesh,
+							   vector<VTXMESH>& vecVertex, 
+							   vector<_uint>& vecIndex);
+	HRESULT			Ready_Texture();
+	HRESULT			Create_TextureDescriptorHeap();
+	virtual void	Release_UploadBuffer();
 
-	ID3D12Resource*					Create_DefaultBuffer(const void* InitData,
-														 const UINT64& uiByteSize,
-														 ID3D12Resource*& pUploadBuffer);
+	ID3D12Resource*	Create_DefaultBuffer(const void* InitData,
+										 const UINT64& uiByteSize,
+										 ID3D12Resource*& pUploadBuffer);
 
-	//void							Render_DynamicMesh(CShader* pShader);
-	//void							Render_StaticMesh(CShader* pShader);
-	//void							Render_DynamicMeshShadowDepth(CShader* pShader);
-	//void							Render_StaticMeshShadowDepth(CShader* pShader);
+	// SingleThread Rendering
+	void Render_DynamicMesh(CShader* pShader);
+	void Render_StaticMesh(CShader* pShader);
+	void Render_DynamicMeshShadowDepth(CShader* pShader);
+	void Render_StaticMeshShadowDepth(CShader* pShader);
 
-	// 2020.06.11 MultiThreadRendering
-	void							Render_DynamicMesh(ID3D12GraphicsCommandList* pCommandList,
-													   const _int& iContextIdx,
-													   CShader* pShader);
-	void							Render_StaticMesh(ID3D12GraphicsCommandList* pCommandList,
-													  const _int& iContextIdx, 
-													  CShader* pShader);
-	void							Render_DynamicMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, 
-																  const _int& iContextIdx, 
-																  CShader* pShader);
-	void							Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList,
-																 const _int& iContextIdx,
-																 CShader* pShader);
+	// MultiThread Rendering
+	void Render_DynamicMesh(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
+	void Render_StaticMesh(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
+	void Render_DynamicMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
+	void Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 
 private:
 	/*__________________________________________________________________________________________________________

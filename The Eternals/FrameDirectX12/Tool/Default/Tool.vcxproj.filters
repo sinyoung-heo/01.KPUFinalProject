@@ -89,6 +89,12 @@
     <Filter Include="98.Header">
       <UniqueIdentifier>{c26b4ae7-a46d-4a73-b5fe-acc8762421d3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.ToolGameObject\00.Environment\03.StaticMesh">
+      <UniqueIdentifier>{a854eb1f-06ee-4645-8f7a-bf01cacf0f91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Mgr\02.ShadowLightMgr">
+      <UniqueIdentifier>{2037404a-c8ee-47c8-bc26-4cd0ff7f2b71}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
@@ -184,6 +190,12 @@
     <ClInclude Include="..\Code\ToolSkyBox.h">
       <Filter>03.ToolGameObject\00.Environment\01.SkyBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ToolStaticMesh.h">
+      <Filter>03.ToolGameObject\00.Environment\03.StaticMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ShadowLightMgr.h">
+      <Filter>97.Mgr\02.ShadowLightMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -251,6 +263,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\ToolSkyBox.cpp">
       <Filter>03.ToolGameObject\00.Environment\01.SkyBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ToolStaticMesh.cpp">
+      <Filter>03.ToolGameObject\00.Environment\03.StaticMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ShadowLightMgr.cpp">
+      <Filter>97.Mgr\02.ShadowLightMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

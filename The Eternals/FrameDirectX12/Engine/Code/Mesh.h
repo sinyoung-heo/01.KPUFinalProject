@@ -24,29 +24,23 @@ public:
 	_uint*							Get_3DMaxCurFrame()		{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_3DMaxCurFrame(); else return nullptr;}
 
 	// Method
-	HRESULT							Ready_Mesh(wstring wstrFilePath, wstring wstrFileName);
-	//void							Render_DynamicMesh(CShader* pShader);
-	//void							Render_StaticMesh(CShader* pShader);
-	//void							Render_DynamicMeshShadowDepth(CShader* pShader);
-	//void							Render_StaticMeshShadowDepth(CShader* pShader);
+	HRESULT Ready_Mesh(wstring wstrFilePath, wstring wstrFileName);
 
-	// 2020.06.11 MultiThreadRendering
-	void							Render_DynamicMesh(ID3D12GraphicsCommandList* pCommandList,
-													   const _int& iContextIdx,
-													   CShader* pShader);
-	void							Render_StaticMesh(ID3D12GraphicsCommandList* pCommandList,
-													  const _int& iContextIdx, 
-													  CShader* pShader);
-	void							Render_DynamicMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, 
-																  const _int& iContextIdx, 
-																  CShader* pShader);
-	void							Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList,
-																 const _int& iContextIdx,
-																 CShader* pShader);
+	// SingleThread Rendering
+	void Render_DynamicMesh(CShader* pShader);
+	void Render_StaticMesh(CShader* pShader);
+	void Render_DynamicMeshShadowDepth(CShader* pShader);
+	void Render_StaticMeshShadowDepth(CShader* pShader);
 
-	void							Set_AnimationKey(const _uint& uiAniKey);
-	void							Play_Animation(_float fAnimationTime);
-	SKINNING_MATRIX*				Find_SkinningMatrix(string strBoneName);
+	// MultiThreadRendering
+	void Render_DynamicMesh(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
+	void Render_StaticMesh(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
+	void Render_DynamicMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
+	void Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
+
+	void Set_AnimationKey(const _uint& uiAniKey);
+	void Play_Animation(_float fAnimationTime);
+	SKINNING_MATRIX* Find_SkinningMatrix(string strBoneName);
 
 private:
 	/*__________________________________________________________________________________________________________

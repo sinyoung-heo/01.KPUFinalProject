@@ -200,6 +200,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Code\MouseMgr.h" />
+    <ClInclude Include="..\Code\ShadowLightMgr.h" />
     <ClInclude Include="..\Code\ToolCamera.h" />
     <ClInclude Include="..\Code\ToolCoordinate.h" />
     <ClInclude Include="..\Code\ToolFileInfo.h" />
@@ -208,6 +209,7 @@
     <ClInclude Include="..\Code\ToolSceneLogo.h" />
     <ClInclude Include="..\Code\ToolSceneStage.h" />
     <ClInclude Include="..\Code\ToolSkyBox.h" />
+    <ClInclude Include="..\Code\ToolStaticMesh.h" />
     <ClInclude Include="..\Code\ToolTerrain.h" />
     <ClInclude Include="..\Header\Const.h" />
     <ClInclude Include="..\Header\Extern.h" />
@@ -233,6 +235,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MouseMgr.cpp" />
+    <ClCompile Include="..\Code\ShadowLightMgr.cpp" />
     <ClCompile Include="..\Code\ToolCamera.cpp" />
     <ClCompile Include="..\Code\ToolCoordinate.cpp" />
     <ClCompile Include="..\Code\ToolFileInfo.cpp" />
@@ -241,6 +244,7 @@
     <ClCompile Include="..\Code\ToolSceneLogo.cpp" />
     <ClCompile Include="..\Code\ToolSceneStage.cpp" />
     <ClCompile Include="..\Code\ToolSkyBox.cpp" />
+    <ClCompile Include="..\Code\ToolStaticMesh.cpp" />
     <ClCompile Include="..\Code\ToolTerrain.cpp" />
     <ClCompile Include="TabAnimation.cpp" />
     <ClCompile Include="TabCamera.cpp" />

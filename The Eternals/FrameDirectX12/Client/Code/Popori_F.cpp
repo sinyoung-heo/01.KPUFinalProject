@@ -154,21 +154,21 @@ _int CPopori_F::LateUpdate_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-//void CPopori_F::Render_GameObject(const _float & fTimeDelta)
-//{
-//	/*__________________________________________________________________________________________________________
-//	[ Play Animation ]
-//	____________________________________________________________________________________________________________*/
-//	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-//	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
-//
-//	m_pMeshCom->Render_DynamicMesh(m_pShaderCom);
-//}
-//
-//void CPopori_F::Render_ShadowDepth(const _float & fTimeDelta)
-//{
-//	m_pMeshCom->Render_DynamicMeshShadowDepth(m_pShadowCom);
-//}
+void CPopori_F::Render_GameObject(const _float & fTimeDelta)
+{
+	/*__________________________________________________________________________________________________________
+	[ Play Animation ]
+	____________________________________________________________________________________________________________*/
+	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+
+	m_pMeshCom->Render_DynamicMesh(m_pShaderCom);
+}
+
+void CPopori_F::Render_ShadowDepth(const _float & fTimeDelta)
+{
+	m_pMeshCom->Render_DynamicMeshShadowDepth(m_pShadowCom);
+}
 
 void CPopori_F::Render_GameObject(const _float& fTimeDelta, 
 								  ID3D12GraphicsCommandList * pCommandList,

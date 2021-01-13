@@ -30,6 +30,7 @@ protected:
 public:
 	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 
 	Engine::CManagement*		m_pManagement		= nullptr;
 	Engine::CObjectMgr*			m_pObjectMgr		= nullptr;
@@ -37,6 +38,7 @@ public:
 	HRESULT	Ready_TerrainControl();
 	HRESULT	Ready_SkyBoxControl();
 	HRESULT Ready_EditControl();
+	HRESULT Ready_StaticMeshControl();
 
 	/*__________________________________________________________________________________________________________
 	[ TERRAIN ]
@@ -100,7 +102,20 @@ public:
 	[ STATIC MESH ]
 	____________________________________________________________________________________________________________*/
 	// Function
-
+	afx_msg void OnBnClickedRadio1005_StaticMeshCreateMode();
+	afx_msg void OnBnClickedRadio1006_StaticMeshModifyeMode();
+	afx_msg void OnNMClickTree1001_TreeMeshTag(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnEnChangeEdit1005_StaticMeshScaleX();
+	afx_msg void OnEnChangeEdit1006_StaticMeshScaleY();
+	afx_msg void OnEnChangeEdit1007_StaticMeshScaleZ();
+	afx_msg void OnEnChangeEdit1008_StaticMeshAngleX();
+	afx_msg void OnEnChangeEdit1009_StaticMeshAngleY();
+	afx_msg void OnEnChangeEdit1010_StaticMeshAngleZ();
+	afx_msg void OnEnChangeEdit1011_StaticMeshPosX();
+	afx_msg void OnEnChangeEdit1012_StaticMeshPosY();
+	afx_msg void OnEnChangeEdit1013_StaticMeshPosZ();
+	afx_msg void OnBnClickedCheck1002_StaticMeshRenderShadow();
+	afx_msg void OnBnClickedCheck1003_StaticMeshIsCollision();
 
 	// Control
 	CButton			m_StaticMeshRadio_CreateMode;
@@ -113,23 +128,12 @@ public:
 	CEdit			m_StaticMeshEdit_ScaleX;
 	CEdit			m_StaticMeshEdit_ScaleY;
 	CEdit			m_StaticMeshEdit_ScaleZ;
-	CSpinButtonCtrl m_StaticMeshSpinCtrl_ScaleX;
-	CSpinButtonCtrl m_StaticMeshSpinCtrl_ScaleY;
-	CSpinButtonCtrl m_StaticMeshSpinCtrl_ScaleZ;
-
 	CEdit			m_StaticMeshEdit_AngleX;
 	CEdit			m_StaticMeshEdit_AngleY;
 	CEdit			m_StaticMeshEdit_AngleZ;
-	CSpinButtonCtrl m_StaticMeshSpinCtrl_AngleX;
-	CSpinButtonCtrl m_StaticMeshSpinCtrl_AngleY;
-	CSpinButtonCtrl m_StaticMeshSpinCtrl_AngleZ;
-
 	CEdit			m_StaticMeshEdit_PosX;
 	CEdit			m_StaticMeshEdit_PosY;
 	CEdit			m_StaticMeshEdit_PosZ;
-	CSpinButtonCtrl m_StaticMeshSpinCtrl_PosX;
-	CSpinButtonCtrl m_StaticMeshSpinCtrl_PosY;
-	CSpinButtonCtrl m_StaticMeshSpinCtrl_PosZ;
 
 	CButton			m_StaticMeshCheck_IsRenderShadow;
 	CButton			m_StaticMeshCheck_IsCollision;
@@ -137,8 +141,20 @@ public:
 	CButton			m_StaticMeshButton_Save;
 	CButton			m_StaticMeshButton_Load;
 
-
 	// Value
+	_bool	m_bIsCreateMode = true;
+	_bool	m_bIsModifyMode = false;
 
-
+	wstring	m_wstrTreeMeshTag	= L"";
+	float m_fStaticMeshScaleX	= 0.05f;
+	float m_fStaticMeshScaleY	= 0.05f;
+	float m_fStaticMeshScaleZ	= 0.05f;
+	float m_fStaticMeshAngleX	= 0.0f;
+	float m_fStaticMeshAngleY	= 0.0f;
+	float m_fStaticMeshAngleZ	= 0.0f;
+	float m_fStaticMeshPosX		= 0.0f;
+	float m_fStaticMeshPosY		= 0.0f;
+	float m_fStaticMeshPosZ		= 0.0f;
+	_bool m_bIsRenderShadow		= false;
+	_bool m_bIsCollision		= false;
 };

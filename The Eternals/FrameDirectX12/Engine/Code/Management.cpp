@@ -35,10 +35,10 @@ _int CManagement::LateUpdate_Management(const _float & fTimeDelta)
 	return 0;
 }
 
-HRESULT CManagement::Render_Management(const _float & fTimeDelta)
+HRESULT CManagement::Render_Management(const _float & fTimeDelta, const RENDERID& eID)
 {
 	if (nullptr != m_pCurrentScene)
-		FAILED_CHECK_RETURN(m_pCurrentScene->Render_Scene(fTimeDelta), E_FAIL);
+		FAILED_CHECK_RETURN(m_pCurrentScene->Render_Scene(fTimeDelta, eID), E_FAIL);
 
 	return S_OK;
 }

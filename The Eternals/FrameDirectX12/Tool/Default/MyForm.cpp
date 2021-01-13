@@ -71,9 +71,9 @@ void CMyForm::OnInitialUpdate()
 	m_TabPathFinder.MoveWindow(0, 25, rect.Width(), rect.Height());
 	m_TabPathFinder.ShowWindow(SW_SHOW);
 
-	m_TabObject.Create(IDD_CTabObject, &m_Tab);
-	m_TabObject.MoveWindow(0, 25, rect.Width(), rect.Height());
-	m_TabObject.ShowWindow(SW_HIDE);
+	m_TabMap.Create(IDD_CTabObject, &m_Tab);
+	m_TabMap.MoveWindow(0, 25, rect.Width(), rect.Height());
+	m_TabMap.ShowWindow(SW_HIDE);
 
 	m_TabCollider.Create(IDD_CTabCollider, &m_Tab);
 	m_TabCollider.MoveWindow(0, 25, rect.Width(), rect.Height());
@@ -103,14 +103,14 @@ void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 	{
 	case 0:
 		m_TabPathFinder.ShowWindow(SW_SHOW);
-		m_TabObject.ShowWindow(SW_HIDE);
+		m_TabMap.ShowWindow(SW_HIDE);
 		m_TabCollider.ShowWindow(SW_HIDE);
 		m_TabAnimation.ShowWindow(SW_HIDE);
 		m_TabCamera.ShowWindow(SW_HIDE);
 		m_TabEffect.ShowWindow(SW_HIDE);
 
 		m_bIsTabPathFinder	= true;
-		m_bIsTabObject		= false;
+		m_bIsTabMap			= false;
 		m_bIsTabCollider	= false;
 		m_bIsTabAnimation	= false;
 		m_bIsTabCamera		= false;
@@ -122,45 +122,32 @@ void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 
 		g_bIsLoadingStart = true;
 		m_TabPathFinder.ShowWindow(SW_HIDE);
-		m_TabObject.ShowWindow(SW_SHOW);
+		m_TabMap.ShowWindow(SW_SHOW);
 		m_TabCollider.ShowWindow(SW_HIDE);
 		m_TabAnimation.ShowWindow(SW_HIDE);
 		m_TabCamera.ShowWindow(SW_HIDE);
 		m_TabEffect.ShowWindow(SW_HIDE);
 
 		m_bIsTabPathFinder	= false;
-		m_bIsTabObject		= true;
+		m_bIsTabMap			= true;
 		m_bIsTabCollider	= false;
 		m_bIsTabAnimation	= false;
 		m_bIsTabCamera		= false;
 		m_bIsTabEffect		= false;
 
-		if (g_bIsLoadingFinish)
-		{
-			if (!m_bIsInitTabObject)
-			{
-				m_bIsInitTabObject = true;
-				m_TabObject.Ready_TerrainControl();
-				m_TabObject.Ready_SkyBoxControl();
-				m_TabObject.Ready_EditControl();
-			}
-		}
-
-
 		break;
 	case 2:
 		g_bIsLoadingStart = true;
 
-
 		m_TabPathFinder.ShowWindow(SW_HIDE);
-		m_TabObject.ShowWindow(SW_HIDE);
+		m_TabMap.ShowWindow(SW_HIDE);
 		m_TabCollider.ShowWindow(SW_SHOW);
 		m_TabAnimation.ShowWindow(SW_HIDE);
 		m_TabCamera.ShowWindow(SW_HIDE);
 		m_TabEffect.ShowWindow(SW_HIDE);
 
 		m_bIsTabPathFinder	= false;
-		m_bIsTabObject		= false;
+		m_bIsTabMap			= false;
 		m_bIsTabCollider	= true;
 		m_bIsTabAnimation	= false;
 		m_bIsTabCamera		= false;
@@ -172,14 +159,14 @@ void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 		g_bIsLoadingStart = true;
 
 		m_TabPathFinder.ShowWindow(SW_HIDE);
-		m_TabObject.ShowWindow(SW_HIDE);
+		m_TabMap.ShowWindow(SW_HIDE);
 		m_TabCollider.ShowWindow(SW_HIDE);
 		m_TabAnimation.ShowWindow(SW_SHOW);
 		m_TabCamera.ShowWindow(SW_HIDE);
 		m_TabEffect.ShowWindow(SW_HIDE);
 
 		m_bIsTabPathFinder	= false;
-		m_bIsTabObject		= false;
+		m_bIsTabMap			= false;
 		m_bIsTabCollider	= false;
 		m_bIsTabAnimation	= true;
 		m_bIsTabCamera		= false;
@@ -190,14 +177,14 @@ void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 		g_bIsLoadingStart = true;
 
 		m_TabPathFinder.ShowWindow(SW_HIDE);
-		m_TabObject.ShowWindow(SW_HIDE);
+		m_TabMap.ShowWindow(SW_HIDE);
 		m_TabCollider.ShowWindow(SW_HIDE);
 		m_TabAnimation.ShowWindow(SW_HIDE);
 		m_TabCamera.ShowWindow(SW_SHOW);
 		m_TabEffect.ShowWindow(SW_HIDE);
 
 		m_bIsTabPathFinder	= false;
-		m_bIsTabObject		= false;
+		m_bIsTabMap			= false;
 		m_bIsTabCollider	= false;
 		m_bIsTabAnimation	= false;
 		m_bIsTabCamera		= true;
@@ -209,14 +196,14 @@ void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 		g_bIsLoadingStart = true;
 
 		m_TabPathFinder.ShowWindow(SW_HIDE);
-		m_TabObject.ShowWindow(SW_HIDE);
+		m_TabMap.ShowWindow(SW_HIDE);
 		m_TabCollider.ShowWindow(SW_HIDE);
 		m_TabAnimation.ShowWindow(SW_HIDE);
 		m_TabCamera.ShowWindow(SW_HIDE);
 		m_TabEffect.ShowWindow(SW_SHOW);
 
 		m_bIsTabPathFinder	= false;
-		m_bIsTabObject		= false;
+		m_bIsTabMap			= false;
 		m_bIsTabCollider	= false;
 		m_bIsTabAnimation	= false;
 		m_bIsTabCamera		= false;

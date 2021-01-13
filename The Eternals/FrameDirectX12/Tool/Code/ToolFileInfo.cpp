@@ -95,7 +95,9 @@ void CToolFileInfo::DirInfoExtractionDDS(const wstring& wstrPath, list<IMGPATH*>
 	}
 }
 
-void CToolFileInfo::DirInfoMeshExtraction(const wstring& wstrPath, list<MESHPATH*>& rPathInfoLst)
+void CToolFileInfo::DirInfoMeshExtraction(const wstring& wstrPath, 
+										  list<MESHPATH*>& rPathInfoLst,
+										  list<MESH_TREECTRL_INFO*>& lstMeshTreeCtrlInfo)
 {
 	wstring wstrFilePath = wstrPath + L"\\*.*";
 
@@ -116,7 +118,7 @@ void CToolFileInfo::DirInfoMeshExtraction(const wstring& wstrPath, list<MESHPATH
 
 		// 찾은 이름이 파일명이 아닌 폴더명이라면 true반환.
 		else if (find.IsDirectory())
-			DirInfoMeshExtraction(wstring(find.GetFilePath()), rPathInfoLst);
+			DirInfoMeshExtraction(wstring(find.GetFilePath()), rPathInfoLst, lstMeshTreeCtrlInfo);
 
 		// find 객체가 찾은 것이 파일 이름일 때.
 		else
@@ -124,18 +126,19 @@ void CToolFileInfo::DirInfoMeshExtraction(const wstring& wstrPath, list<MESHPATH
 			if (find.IsSystem())
 				continue;
 
-			MESHPATH*	pMeshPath = new MESHPATH;
-			_tchar		szCurPath[MAX_STR] = L"";
+			MESHPATH*			pMeshPath		= new MESHPATH;
+			MESH_TREECTRL_INFO* pTreeCtrlInfo	= new MESH_TREECTRL_INFO;
+			_tchar szCurPath[MAX_STR] = L"";
 
 			/*__________________________________________________________________________________________________________
 			[ 현재 경로 저장 ]
-			ex) D:\ ~  The Eternals\FrameDirectX12\Bin\Resource\ResourceStage\StaticMesh\LandMark\HD_LandMark_Diff.dds
+			ex) D:\ ~  The Eternals\FrameDirectX12\Bin\Resource\ResourceStage\StaticMesh\Sample\LandMark\HD_LandMark_Diff.dds
 			____________________________________________________________________________________________________________*/
 			lstrcpy(szCurPath, find.GetFilePath().GetString());
 
 			/*__________________________________________________________________________________________________________
 			[ 파일명과 확장자 제거 ]
-			ex) D:\ ~  The Eternals\FrameDirectX12\Bin\Resource\ResourceStage\StaticMesh\LandMark\
+			ex) D:\ ~  The Eternals\FrameDirectX12\Bin\Resource\ResourceStage\StaticMesh\Sample\LandMark\
 			____________________________________________________________________________________________________________*/
 			PathRemoveFileSpec(szCurPath);
 
@@ -167,9 +170,62 @@ void CToolFileInfo::DirInfoMeshExtraction(const wstring& wstrPath, list<MESHPATH
 			/*__________________________________________________________________________________________________________
 			[ 상대 경로 변환. ]
 			____________________________________________________________________________________________________________*/
+			_tchar wstrOriginPath[MAX_STR] = L"";
+			lstrcpy(wstrOriginPath, szCurPath);
+			
+
 			pMeshPath->wstrPath = ConvertRelativePath(szCurPath);
 			pMeshPath->wstrPath = pMeshPath->wstrPath + L"\\";
 			rPathInfoLst.push_back(pMeshPath);
+
+			/*__________________________________________________________________________________________________________
+			[ TreeCtrl Info 저장. ]
+			____________________________________________________________________________________________________________*/
+			pTreeCtrlInfo->wstrMeshTag = pMeshPath->wstrMeshTag;
+
+			PathRemoveFileSpec(wstrOriginPath);
+			CFileFind ff1;
+			ff1.FindFile(wstrOriginPath);
+
+			_int iResult2 = 1;
+			while (iResult2)
+			{
+				iResult2 = ff1.FindNextFileW();
+				// 현재 찾은 파일 이름이 "." 이나 ".."인지 검사. 맞으면 true 반환.
+				if (ff1.IsDots())
+					continue;
+
+				// 찾은 이름이 파일명이 아닌 폴더명이라면 true 반환.
+				if (ff1.IsDirectory())
+				{
+					iResult2 = 0;
+					pTreeCtrlInfo->wstrRootTag = ff1.GetFileName();
+				}
+			}
+
+
+			PathRemoveFileSpec(wstrOriginPath);
+			CFileFind ff2;
+			ff2.FindFile(wstrOriginPath);
+
+			_int iResult3 = 1;
+			while (iResult3)
+			{
+				iResult3 = ff2.FindNextFileW();
+				// 현재 찾은 파일 이름이 "." 이나 ".."인지 검사. 맞으면 true 반환.
+				if (ff2.IsDots())
+					continue;
+
+				// 찾은 이름이 파일명이 아닌 폴더명이라면 true 반환.
+				if (ff2.IsDirectory())
+				{
+					iResult3 = 0;
+					pTreeCtrlInfo->wstrMeshType = ff2.GetFileName();
+				}
+			}
+
+			lstMeshTreeCtrlInfo.push_back(pTreeCtrlInfo);
+
 
 			iContinue = 0;
 		}

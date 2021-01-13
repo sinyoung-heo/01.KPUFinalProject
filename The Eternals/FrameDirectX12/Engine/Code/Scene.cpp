@@ -30,7 +30,7 @@ _int CScene::LateUpdate_Scene(const _float & fTimeDelta)
 	return m_pObjectMgr->LateUpdate_ObjectMgr(fTimeDelta);
 }
 
-HRESULT CScene::Render_Scene(const _float & fTimeDelta)
+HRESULT CScene::Render_Scene(const _float & fTimeDelta, const RENDERID& eID)
 {
 	/*__________________________________________________________________________________________________________
 	[ Renderer를 통해서 렌더링 ]
@@ -38,7 +38,7 @@ HRESULT CScene::Render_Scene(const _float & fTimeDelta)
 	if (nullptr == m_pRenderer)
 		return E_FAIL;
 
-	FAILED_CHECK_RETURN(m_pRenderer->Render_Renderer(fTimeDelta), E_FAIL);
+	FAILED_CHECK_RETURN(m_pRenderer->Render_Renderer(fTimeDelta, eID), E_FAIL);
 
 	return S_OK;
 }

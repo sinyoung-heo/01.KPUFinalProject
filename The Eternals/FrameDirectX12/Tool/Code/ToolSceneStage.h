@@ -1,5 +1,7 @@
 #pragma once
 #include "Scene.h"
+#include "MainFrm.h"
+#include "MyForm.h"
 
 namespace Engine
 {
@@ -18,7 +20,7 @@ public:
 	virtual HRESULT Ready_Scene();
 	virtual _int	Update_Scene(const _float & fTimeDelta);
 	virtual _int	LateUpdate_Scene(const _float & fTimeDelta);
-	virtual HRESULT	Render_Scene(const _float & fTimeDelta);
+	virtual HRESULT	Render_Scene(const _float & fTimeDelta, const Engine::RENDERID& eID = Engine::RENDERID::MULTI_THREAD);
 
 private:
 	HRESULT			Ready_LayerCamera(wstring wstrLayerTag);
@@ -28,7 +30,9 @@ private:
 	HRESULT			Ready_LayerFont(wstring wstrLayerTag);
 	HRESULT			Ready_LightInfo();
 
-	void			Key_Input();
+	void			KeyInput();
+	void			KeyInput_TabMap(const CTabMap& TabMap);
+
 
 public:
 	CToolTerrain* m_pPickingTerrain = nullptr;
@@ -40,6 +44,8 @@ private:
 	Engine::CFont*	m_pFont_Stage = nullptr;
 	_tchar			m_szFPS[MAX_STR] = L"";
 	_int			m_iFPS = 0;
+
+
 
 public:
 	static CToolSceneStage* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
