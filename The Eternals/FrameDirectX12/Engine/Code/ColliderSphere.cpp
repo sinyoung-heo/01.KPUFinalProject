@@ -261,7 +261,11 @@ void CColliderSphere::Set_ConstantTable()
 
 CComponent * CColliderSphere::Clone()
 {
-	return new CColliderSphere(*this);
+	 CComponent* pComponent = new CColliderSphere(*this);
+	 static_cast<CColliderSphere*>(pComponent)->Ready_Collider();
+
+	// return new CColliderSphere(*this);
+	return pComponent;
 }
 
 CColliderSphere * CColliderSphere::Create(ID3D12Device * pGraphicDevice, 

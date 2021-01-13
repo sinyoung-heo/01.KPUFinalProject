@@ -230,7 +230,11 @@ void CColliderBox::Set_ConstantTable()
 
 CComponent * CColliderBox::Clone()
 {
-	return new CColliderBox(*this);
+	 CComponent* pComponent = new CColliderBox(*this);
+	 static_cast<CColliderBox*>(pComponent)->Ready_Collider();
+
+	// return new CColliderBox(*this);
+	return pComponent;
 }
 
 CColliderBox * CColliderBox::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)

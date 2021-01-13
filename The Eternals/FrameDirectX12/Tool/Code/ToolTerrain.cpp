@@ -19,6 +19,8 @@ HRESULT CToolTerrain::Ready_GameObject(wstring wstrTerrainTag)
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrTerrainTag), E_FAIL);
 
+	m_pTransCom->m_vPos.y -= TERRAIN_OFFSET;
+
 	return S_OK;
 }
 

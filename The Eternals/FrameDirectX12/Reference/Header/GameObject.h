@@ -28,7 +28,9 @@ public:
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT Ready_GameObjectPrototype();
-	virtual HRESULT	Ready_GameObject(const _bool& bIsCreate_Transform = true, const _bool& bIsCreate_Info = false);
+	virtual HRESULT	Ready_GameObject(const _bool& bIsCreate_Transform = true, 
+									 const _bool& bIsCreate_Info = false,
+									 const _bool& bIsCreate_BoundingBox = false);
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
@@ -45,6 +47,7 @@ public:
 protected:
 	virtual HRESULT Add_Component();
 	void			SetUp_BillboardMatrix();
+	void			SetUp_BoundingBox(_matrix* pParent, const _vec3& vParentScale, const _vec3& vCenter, const _vec3& vMin, const _vec3& vMax);
 	void			SetUp_ShadowDepth(_vec3& vLightEye, _vec3& vLightAt, _vec3& vLightDir);
 	void			Compute_ViewZ(_vec4& vPosInWorld);
 
@@ -66,16 +69,18 @@ protected:
 	[ Component ]
 	____________________________________________________________________________________________________________*/
 	map<wstring, CComponent*>	m_mapComponent[COMPONENTID::ID_END];
-	CTransform*					m_pTransCom	= nullptr;
-	CInfo*						m_pInfoCom	= nullptr;
+	CTransform*					m_pTransCom			= nullptr;
+	CInfo*						m_pInfoCom			= nullptr;
+	CColliderBox*				m_pBoundingBoxCom	= nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	_bool	m_bIsDead		= false;
-	_bool	m_bIsLateInit	= false;
-	_float	m_fViewZ		= 0.0f;
-	_long	m_UIDepth		= 0;
+	_bool	m_bIsDead			= false;
+	_bool	m_bIsLateInit		= false;
+	_float	m_fViewZ			= 0.0f;
+	_long	m_UIDepth			= 0;
+	_bool	m_bIsBoundingBox	= false;
 
 	/*__________________________________________________________________________________________________________
 	[ ShadowDepth ]

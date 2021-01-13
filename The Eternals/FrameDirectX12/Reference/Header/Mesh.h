@@ -22,6 +22,9 @@ public:
 	_uint*							Get_NumAnimation()		{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_NumAnimation(); else return nullptr; }
 	_uint*							Get_3DMaxNumFrame()		{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_3DMaxNumFrame(); else return nullptr;}
 	_uint*							Get_3DMaxCurFrame()		{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_3DMaxCurFrame(); else return nullptr;}
+	const _vec3&					Get_CenterPos()			{ return m_pVIMesh->Get_CenterPos(); }
+	const _vec3&					Get_MinVector()			{ return m_pVIMesh->Get_MinVector(); }
+	const _vec3&					Get_MaxVector()			{ return m_pVIMesh->Get_MaxVector(); }
 
 	// Method
 	HRESULT Ready_Mesh(wstring wstrFilePath, wstring wstrFileName);

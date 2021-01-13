@@ -99,7 +99,7 @@ HRESULT CToolSceneStage::Ready_LayerCamera(wstring wstrLayerTag)
 	[ ToolCamera ]
 	____________________________________________________________________________________________________________*/
 	CToolCamera* pCToolCamera = CToolCamera::Create(m_pGraphicDevice, m_pCommandList,
-													Engine::CAMERA_DESC(_vec3(-6.0, 6.0f, -6.0f),	// Eye
+													Engine::CAMERA_DESC(_vec3(-6.0, 6.0f, -6.0f),		// Eye
 																		_vec3(0.0f, 6.0f, 0.0f),		// At
 																		_vec3(0.0f, 1.0f, 0.f)),		// Up
 													Engine::PROJ_DESC(60.0f,							// FovY
@@ -175,16 +175,6 @@ HRESULT CToolSceneStage::Ready_LayerGameObject(wstring wstrLayerTag)
 	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
 	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
 
-	CToolStaticMesh* pStaticMesh = nullptr;
-	pStaticMesh = CToolStaticMesh::Create(m_pGraphicDevice, m_pCommandList,
-										  L"Status",					// MeshTag 
-										  _vec3(0.05f, 0.05f, 0.05f),	// Scale
-										  _vec3(0.f, 0.0f, 0.0f),		// Angle
-										  _vec3(-15.0f, 13.f, 0.f),
-										  false,
-										  false);
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"StaticMesh", pStaticMesh), E_FAIL);
-
 	return S_OK;
 }
 
@@ -241,11 +231,19 @@ void CToolSceneStage::KeyInput()
 	CMainFrame* pMainFrame	= static_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
 	CMyForm*	pMyForm		= static_cast<CMyForm*>(pMainFrame->m_MainSplit.GetPane(0, 0));
 
+	// StaticMeshObjectList Size
+	pMyForm->m_TabMap.m_iStaticMeshObjectSize = m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh")->size();
+
+	_tchar szTemp[MIN_STR] = L"";
+	wsprintf(szTemp, L"%d", pMyForm->m_TabMap.m_iStaticMeshObjectSize);
+	pMyForm->m_TabMap.m_StaticMeshEdit_ObjectSize.SetWindowTextW(szTemp);
+
 	/*__________________________________________________________________________________________________________
 	[ Terrain Picking ]
 	____________________________________________________________________________________________________________*/
 	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON(Engine::DIM_LB)))
 	{
+		// TabMap Mouse Picking Event
 		if (pMyForm->m_bIsTabMap)
 			KeyInput_TabMap(pMyForm->m_TabMap);
 
@@ -255,7 +253,7 @@ void CToolSceneStage::KeyInput()
 
 }
 
-void CToolSceneStage::KeyInput_TabMap(const CTabMap& TabMap)
+void CToolSceneStage::KeyInput_TabMap(CTabMap& TabMap)
 {
 	if (nullptr != m_pPickingTerrain)
 	{
@@ -269,6 +267,7 @@ void CToolSceneStage::KeyInput_TabMap(const CTabMap& TabMap)
 			_vec3 vScale			= _vec3(TabMap.m_fStaticMeshScaleX, TabMap.m_fStaticMeshScaleY, TabMap.m_fStaticMeshScaleZ);
 			_vec3 vAngle			= _vec3(TabMap.m_fStaticMeshAngleX, TabMap.m_fStaticMeshAngleY, TabMap.m_fStaticMeshAngleZ);
 			_vec3 vPickingPos		= CMouseMgr::Picking_OnTerrain(m_pPickingTerrain);
+
 			_bool bIsRenderShadow	= TabMap.m_bIsRenderShadow;
 			_bool bIsCollision		= TabMap.m_bIsCollision;
 
@@ -280,6 +279,19 @@ void CToolSceneStage::KeyInput_TabMap(const CTabMap& TabMap)
 												  bIsRenderShadow,
 												  bIsCollision);
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"StaticMesh", pStaticMesh), E_FAIL);
+
+			// StaticMeshListBox에 삽입.
+			TabMap.m_StaticMeshListBox_ObjectList.AddString(wstrMeshTag.c_str());
+
+			// 생성 위치 Edit Control에 기록.
+			_tchar szTemp[MIN_STR] = L"";
+
+			_stprintf_s(szTemp, MIN_STR, L"%0.1f", vPickingPos.x);
+			TabMap.m_StaticMeshEdit_PosX.SetWindowTextW(szTemp);
+			_stprintf_s(szTemp, MIN_STR, L"%0.1f", vPickingPos.y);
+			TabMap.m_StaticMeshEdit_PosY.SetWindowTextW(szTemp);
+			_stprintf_s(szTemp, MIN_STR, L"%0.1f", vPickingPos.z);
+			TabMap.m_StaticMeshEdit_PosZ.SetWindowTextW(szTemp);
 		}
 
 	}

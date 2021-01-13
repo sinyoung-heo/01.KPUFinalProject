@@ -31,7 +31,7 @@ private:
 	HRESULT			Ready_LightInfo();
 
 	void			KeyInput();
-	void			KeyInput_TabMap(const CTabMap& TabMap);
+	void			KeyInput_TabMap(CTabMap& TabMap);
 
 
 public:

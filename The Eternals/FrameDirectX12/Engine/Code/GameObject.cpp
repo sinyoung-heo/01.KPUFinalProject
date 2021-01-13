@@ -51,20 +51,31 @@ HRESULT CGameObject::Ready_GameObjectPrototype()
 	return S_OK;
 }
 
-HRESULT CGameObject::Ready_GameObject(const _bool & bIsCreate_Transform, const _bool & bIsCreate_Info)
+HRESULT CGameObject::Ready_GameObject(const _bool & bIsCreate_Transform, 
+									  const _bool & bIsCreate_Info,
+									  const _bool& bIsCreate_BoundingBox)
 {
 	if (bIsCreate_Transform)
 	{
-		m_pTransCom = Engine::CTransform::Create();
+		m_pTransCom = CTransform::Create();
 		NULL_CHECK_RETURN(m_pTransCom, E_FAIL);
 		m_mapComponent[ID_DYNAMIC].emplace(L"Com_Transform", m_pTransCom);
 	}
 
 	if (bIsCreate_Info)
 	{
-		m_pInfoCom = Engine::CInfo::Create();;
+		m_pInfoCom =CInfo::Create();;
 		NULL_CHECK_RETURN(m_pInfoCom, E_FAIL);
 		m_mapComponent[ID_STATIC].emplace(L"Com_Info", m_pInfoCom);
+	}
+
+	m_bIsBoundingBox = bIsCreate_BoundingBox;
+	if (bIsCreate_BoundingBox)
+	{
+		m_pBoundingBoxCom = static_cast<CColliderBox*>(m_pComponentMgr->Clone_Component(L"ColliderBox", ID_DYNAMIC));
+		NULL_CHECK_RETURN(m_pBoundingBoxCom, E_FAIL);
+		m_pBoundingBoxCom->AddRef();
+		m_mapComponent[ID_DYNAMIC].emplace(L"Com_BoundingBox", m_pBoundingBoxCom);
 	}
 
 	return S_OK;
@@ -153,6 +164,26 @@ void CGameObject::SetUp_BillboardMatrix()
 
 }
 
+void CGameObject::SetUp_BoundingBox(_matrix* pParent, 
+									const _vec3& vParentScale,
+									const _vec3& vCenter, 
+									const _vec3& vMin,
+									const _vec3& vMax)
+{
+	if (nullptr != m_pBoundingBoxCom)
+	{
+		_vec3 vScale = _vec3(0.0f);
+		vScale.x = abs(vMax.x - vMin.x);
+		vScale.y = abs(vMax.y - vMin.y);
+		vScale.z = abs(vMax.z - vMin.z);
+
+		m_pBoundingBoxCom->Set_ParentMatrix(pParent);
+		m_pBoundingBoxCom->Set_Extents(vParentScale);
+		m_pBoundingBoxCom->Set_Scale(vScale);
+		m_pBoundingBoxCom->Set_Pos(vCenter);
+	}
+}
+
 void CGameObject::SetUp_ShadowDepth(_vec3 & vLightEye, 
 									_vec3 & vLightAt,
 									_vec3 & vLightDir)
@@ -208,6 +239,9 @@ CGameObject * CGameObject::Clone_GameObject()
 
 void CGameObject::Free()
 {
+	if(m_bIsBoundingBox)
+	 Safe_Release(m_pBoundingBoxCom);
+
 	for (_uint i = 0; i < ID_END; ++i)
 	{
 		for_each(m_mapComponent[i].begin(), m_mapComponent[i].end(), CDeleteMap());

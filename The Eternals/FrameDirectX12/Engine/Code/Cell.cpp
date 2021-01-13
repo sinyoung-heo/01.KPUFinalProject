@@ -58,7 +58,6 @@ HRESULT CCell::Ready_Component()
 	{
 		m_pColliderCom[i] = static_cast<CColliderSphere*>(CComponentMgr::Get_Instance()->Clone_Component(L"ColliderSphere", Engine::COMPONENTID::ID_DYNAMIC));
 		NULL_CHECK_RETURN(m_pColliderCom[i], E_FAIL);
-		FAILED_CHECK_RETURN(m_pColliderCom[i]->Ready_Collider(), E_FAIL);
 
 		m_matWorld[i] = XMMatrixTranslation(m_vPoint[i].x, m_vPoint[i].y, m_vPoint[i].z);
 		m_pColliderCom[i]->Set_ParentMatrix(&m_matWorld[i]);	// Parent Matrix

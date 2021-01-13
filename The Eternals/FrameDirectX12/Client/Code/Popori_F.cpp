@@ -26,8 +26,13 @@ HRESULT CPopori_F::Ready_GameObject(wstring wstrMeshTag,
 									const _vec3 & vAngle, 
 									const _vec3 & vPos)
 {
-	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
+	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
+										   m_pTransCom->m_vScale,
+										   m_pMeshCom->Get_CenterPos(),
+										   m_pMeshCom->Get_MinVector(),
+										   m_pMeshCom->Get_MaxVector());
 
 	m_pTransCom->m_vScale	= vScale;
 	m_pTransCom->m_vAngle	= vAngle;
@@ -51,7 +56,6 @@ HRESULT CPopori_F::Ready_GameObject(wstring wstrMeshTag,
 	pmatSkinning	= m_pMeshCom->Find_SkinningMatrix("Bip01-L-Hand");
 	pmatParent		= &(m_pTransCom->m_matWorld);
 	Engine::NULL_CHECK_RETURN(pmatSkinning, E_FAIL);
-
 	m_pColliderSphereCom->Set_SkinningMatrix(pmatSkinning);		// Bone Matrix
 	m_pColliderSphereCom->Set_ParentMatrix(pmatParent);			// Parent Matrix
 	m_pColliderSphereCom->Set_Scale(_vec3(2.f, 2.f, 2.f));		// Collider Scale
@@ -61,11 +65,10 @@ HRESULT CPopori_F::Ready_GameObject(wstring wstrMeshTag,
 	pmatSkinning	= m_pMeshCom->Find_SkinningMatrix("Bip01-R-Hand");
 	pmatParent		= &(m_pTransCom->m_matWorld);
 	Engine::NULL_CHECK_RETURN(pmatSkinning, E_FAIL);
-
 	m_pColliderBoxCom->Set_SkinningMatrix(pmatSkinning);	// Bone Matrix
 	m_pColliderBoxCom->Set_ParentMatrix(pmatParent);		// Parent Matrix
-	m_pColliderBoxCom->Set_Scale(_vec3(4.f, 4.f, 4.f));		// Collider Scale
 	m_pColliderBoxCom->Set_Extents(m_pTransCom->m_vScale);	// Box Offset From Center
+	m_pColliderBoxCom->Set_Scale(_vec3(4.f, 4.f, 4.f));		// Collider Scale
 
 	/*__________________________________________________________________________________________________________
 	[ Font »ý¼º ]
@@ -220,14 +223,12 @@ HRESULT CPopori_F::Add_Component(wstring wstrMeshTag)
 	m_pColliderSphereCom = static_cast<Engine::CColliderSphere*>(m_pComponentMgr->Clone_Component(L"ColliderSphere", Engine::COMPONENTID::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pColliderSphereCom, E_FAIL);
 	m_pColliderSphereCom->AddRef();
-	m_pColliderSphereCom->Ready_Collider();
 	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderSphere", m_pColliderSphereCom);
 
 	// Collider - Box
 	m_pColliderBoxCom = static_cast<Engine::CColliderBox*>(m_pComponentMgr->Clone_Component(L"ColliderBox", Engine::COMPONENTID::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pColliderBoxCom, E_FAIL);
 	m_pColliderBoxCom->AddRef();
-	m_pColliderBoxCom->Ready_Collider();
 	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderBox", m_pColliderBoxCom);
 
 	// NaviMesh

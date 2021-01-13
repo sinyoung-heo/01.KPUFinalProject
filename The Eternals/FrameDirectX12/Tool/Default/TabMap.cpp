@@ -4,7 +4,6 @@
 #include "stdafx.h"
 #include "Tool.h"
 #include "TabMap.h"
-#include "afxdialogex.h"
 #include "ComponentMgr.h"
 #include "ObjectMgr.h"
 #include "Management.h"
@@ -78,6 +77,9 @@ void CTabMap::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT1011, m_fStaticMeshPosX);
 	DDX_Text(pDX, IDC_EDIT1012, m_fStaticMeshPosY);
 	DDX_Text(pDX, IDC_EDIT1013, m_fStaticMeshPosZ);
+	DDX_Control(pDX, IDC_EDIT1057, m_StaticMeshEdit_ObjectSize);
+	DDX_Text(pDX, IDC_EDIT1057, m_iStaticMeshObjectSize);
+	DDX_Control(pDX, IDC_EDIT1058, m_StaticMeshEdit_SelectMesthTag);
 }
 
 
@@ -112,6 +114,9 @@ BEGIN_MESSAGE_MAP(CTabMap, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK1003, &CTabMap::OnBnClickedCheck1003_StaticMeshIsCollision)
 	ON_WM_MOUSEHWHEEL()
 	ON_WM_MOUSEWHEEL()
+	ON_LBN_SELCHANGE(IDC_LIST1003, &CTabMap::OnLbnSelchangeList1003_StaticMeshObjectList)
+	ON_BN_CLICKED(IDC_BUTTON1001, &CTabMap::OnBnClickedButton1001_StasticMeshDelete)
+	ON_BN_CLICKED(IDC_BUTTON1002, &CTabMap::OnBnClickedButton1002_StaticMeshAllDelete)
 END_MESSAGE_MAP()
 
 
@@ -146,6 +151,7 @@ BOOL CTabMap::OnInitDialog()
 	m_StaticMeshRadio_CreateMode.EnableWindow(FALSE);
 	m_StaticMeshRadio_ModifyMode.EnableWindow(FALSE);
 	m_StaticMeshTree_ResourceTree.EnableWindow(FALSE);
+	m_StaticMeshEdit_SelectMesthTag.EnableWindow(FALSE);
 	m_StaticMeshListBox_ObjectList.EnableWindow(FALSE);
 	m_StaticMeshButton_DeleteObject.EnableWindow(FALSE);
 	m_StaticMeshButton_AllDeleteObject.EnableWindow(FALSE);
@@ -158,6 +164,7 @@ BOOL CTabMap::OnInitDialog()
 	m_StaticMeshEdit_PosX.EnableWindow(FALSE);
 	m_StaticMeshEdit_PosY.EnableWindow(FALSE);
 	m_StaticMeshEdit_PosZ.EnableWindow(FALSE);
+	m_StaticMeshEdit_ObjectSize.EnableWindow(FALSE);
 	m_StaticMeshCheck_IsRenderShadow.EnableWindow(FALSE);
 	m_StaticMeshCheck_IsCollision.EnableWindow(FALSE);
 	m_StaticMeshButton_Save.EnableWindow(FALSE);
@@ -200,26 +207,22 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 		m_StaticMeshEdit_PosY.GetWindowRect(&rcStaticMeshEdit[7]);
 		m_StaticMeshEdit_PosZ.GetWindowRect(&rcStaticMeshEdit[8]);
 
-		if (PtInRect(&rcStaticMeshEdit[0], pt))			// Scale X
+		if (PtInRect(&rcStaticMeshEdit[0], pt) ||	// Scale X
+			PtInRect(&rcStaticMeshEdit[1], pt) ||	// Scale Y
+			PtInRect(&rcStaticMeshEdit[2], pt))		// Scale X
 		{
 			if (zDelta > 0)
-				m_fStaticMeshScaleX += 0.1f;
+			{
+				m_fStaticMeshScaleX += 0.01f;
+				m_fStaticMeshScaleY += 0.01f;
+				m_fStaticMeshScaleZ += 0.01f;
+			}
 			else if (zDelta < 0 && m_fStaticMeshScaleX > 0.f)
-				m_fStaticMeshScaleX -= 0.1f;
-		}
-		else if (PtInRect(&rcStaticMeshEdit[1], pt))	// Scale Y
-		{
-			if (zDelta > 0)
-				m_fStaticMeshScaleY += 0.1f;
-			else if (zDelta < 0 && m_fStaticMeshScaleY > 0.f)
-				m_fStaticMeshScaleY -= 0.1f;
-		}
-		else if (PtInRect(&rcStaticMeshEdit[2], pt))	// Scale Z
-		{
-			if (zDelta > 0)
-				m_fStaticMeshScaleZ += 0.1f;
-			else if (zDelta < 0 && m_fStaticMeshScaleZ > 0.f)
-				m_fStaticMeshScaleZ -= 0.1f;
+			{
+				m_fStaticMeshScaleX -= 0.01f;
+				m_fStaticMeshScaleY -= 0.01f;
+				m_fStaticMeshScaleZ -= 0.01f;
+			}
 		}
 		else if (PtInRect(&rcStaticMeshEdit[3], pt))	// Angle X
 		{
@@ -291,11 +294,9 @@ HRESULT CTabMap::Ready_TerrainControl()
 	m_TerrainRadio128.SetCheck(true);
 	CToolTerrain* m_pTerrain128 = static_cast<CToolTerrain*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"TerrainTex128"));
 	m_pTerrain128->m_bIsUpdate = true;
-	//static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingTerrain = m_pTerrain128;
 
 	m_TerrainRadio256.SetCheck(false);
 	m_TerrainRadio512.SetCheck(false);
-
 
 
 	// Render WireFrame 활성화.
@@ -382,6 +383,7 @@ HRESULT CTabMap::Ready_StaticMeshControl()
 
 
 	m_StaticMeshTree_ResourceTree.EnableWindow(TRUE);
+	m_StaticMeshEdit_SelectMesthTag.EnableWindow(TRUE);
 	m_StaticMeshListBox_ObjectList.EnableWindow(TRUE);
 	m_StaticMeshButton_DeleteObject.EnableWindow(TRUE);
 	m_StaticMeshButton_AllDeleteObject.EnableWindow(TRUE);
@@ -394,6 +396,7 @@ HRESULT CTabMap::Ready_StaticMeshControl()
 	m_StaticMeshEdit_PosX.EnableWindow(TRUE);
 	m_StaticMeshEdit_PosY.EnableWindow(TRUE);
 	m_StaticMeshEdit_PosZ.EnableWindow(TRUE);
+	m_StaticMeshEdit_ObjectSize.EnableWindow(TRUE);
 	m_StaticMeshCheck_IsRenderShadow.EnableWindow(TRUE);
 	m_StaticMeshCheck_IsCollision.EnableWindow(TRUE);
 	m_StaticMeshButton_Save.EnableWindow(TRUE);
@@ -680,6 +683,7 @@ void CTabMap::OnBnClickedCheck1005_EditStaticMesh()
 	m_StaticMeshRadio_CreateMode.EnableWindow(TRUE);
 	m_StaticMeshRadio_ModifyMode.EnableWindow(TRUE);
 	m_StaticMeshTree_ResourceTree.EnableWindow(TRUE);
+	m_StaticMeshEdit_SelectMesthTag.EnableWindow(TRUE);
 	m_StaticMeshListBox_ObjectList.EnableWindow(TRUE);
 	m_StaticMeshButton_DeleteObject.EnableWindow(TRUE);
 	m_StaticMeshButton_AllDeleteObject.EnableWindow(TRUE);
@@ -692,6 +696,7 @@ void CTabMap::OnBnClickedCheck1005_EditStaticMesh()
 	m_StaticMeshEdit_PosX.EnableWindow(TRUE);
 	m_StaticMeshEdit_PosY.EnableWindow(TRUE);
 	m_StaticMeshEdit_PosZ.EnableWindow(TRUE);
+	m_StaticMeshEdit_ObjectSize.EnableWindow(TRUE);
 	m_StaticMeshCheck_IsRenderShadow.EnableWindow(TRUE);
 	m_StaticMeshCheck_IsCollision.EnableWindow(TRUE);
 	m_StaticMeshButton_Save.EnableWindow(TRUE);
@@ -714,6 +719,7 @@ void CTabMap::OnBnClickedCheck1006_EditLightingInfo()
 	m_StaticMeshRadio_CreateMode.EnableWindow(FALSE);
 	m_StaticMeshRadio_ModifyMode.EnableWindow(FALSE);
 	m_StaticMeshTree_ResourceTree.EnableWindow(FALSE);
+	m_StaticMeshEdit_SelectMesthTag.EnableWindow(FALSE);
 	m_StaticMeshListBox_ObjectList.EnableWindow(FALSE);
 	m_StaticMeshButton_DeleteObject.EnableWindow(FALSE);
 	m_StaticMeshButton_AllDeleteObject.EnableWindow(FALSE);
@@ -725,6 +731,7 @@ void CTabMap::OnBnClickedCheck1006_EditLightingInfo()
 	m_StaticMeshEdit_AngleZ.EnableWindow(FALSE);
 	m_StaticMeshEdit_PosY.EnableWindow(FALSE);
 	m_StaticMeshEdit_PosZ.EnableWindow(FALSE);
+	m_StaticMeshEdit_ObjectSize.EnableWindow(TRUE);
 	m_StaticMeshCheck_IsRenderShadow.EnableWindow(FALSE);
 	m_StaticMeshCheck_IsCollision.EnableWindow(FALSE);
 	m_StaticMeshButton_Save.EnableWindow(FALSE);
@@ -746,6 +753,7 @@ void CTabMap::OnBnClickedCheck1007_EditNavigationMesh()
 	m_StaticMeshRadio_CreateMode.EnableWindow(FALSE);
 	m_StaticMeshRadio_ModifyMode.EnableWindow(FALSE);
 	m_StaticMeshTree_ResourceTree.EnableWindow(FALSE);
+	m_StaticMeshEdit_SelectMesthTag.EnableWindow(FALSE);
 	m_StaticMeshListBox_ObjectList.EnableWindow(FALSE);
 	m_StaticMeshButton_DeleteObject.EnableWindow(FALSE);
 	m_StaticMeshButton_AllDeleteObject.EnableWindow(FALSE);
@@ -758,6 +766,7 @@ void CTabMap::OnBnClickedCheck1007_EditNavigationMesh()
 	m_StaticMeshEdit_PosX.EnableWindow(FALSE);
 	m_StaticMeshEdit_PosY.EnableWindow(FALSE);
 	m_StaticMeshEdit_PosZ.EnableWindow(FALSE);
+	m_StaticMeshEdit_ObjectSize.EnableWindow(TRUE);
 	m_StaticMeshCheck_IsRenderShadow.EnableWindow(FALSE);
 	m_StaticMeshCheck_IsCollision.EnableWindow(FALSE);
 	m_StaticMeshButton_Save.EnableWindow(FALSE);
@@ -769,22 +778,28 @@ void CTabMap::OnBnClickedCheck1007_EditNavigationMesh()
 void CTabMap::OnBnClickedRadio1005_StaticMeshCreateMode()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
 	m_StaticMeshRadio_CreateMode.SetCheck(true);
 	m_StaticMeshRadio_ModifyMode.SetCheck(false);
 	m_bIsCreateMode = true;
 	m_bIsModifyMode = false;
+
+	UpdateData(FALSE);
 }
 
 
 void CTabMap::OnBnClickedRadio1006_StaticMeshModifyeMode()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
 	m_StaticMeshRadio_CreateMode.SetCheck(false);
 	m_StaticMeshRadio_ModifyMode.SetCheck(true);
 	m_bIsCreateMode = false;
 	m_bIsModifyMode = true;
 
-
+	UpdateData(FALSE);
 }
 
 
@@ -803,6 +818,8 @@ void CTabMap::OnNMClickTree1001_TreeMeshTag(NMHDR* pNMHDR, LRESULT* pResult)
 	// 클릭한 Tree의 문자열을 얻어온다.
 	m_wstrTreeMeshTag = m_StaticMeshTree_ResourceTree.GetItemText(h_MeshTag);
 
+	// 클릭한 문자열 설정.
+	m_StaticMeshEdit_SelectMesthTag.SetWindowTextW(m_wstrTreeMeshTag.c_str());
 
 	*pResult = 0;
 
@@ -922,5 +939,48 @@ void CTabMap::OnBnClickedCheck1003_StaticMeshIsCollision()
 		m_bIsCollision = false;
 
 	UpdateData(FALSE);
+
+}
+
+
+void CTabMap::OnLbnSelchangeList1003_StaticMeshObjectList()
+{
+	UpdateData(TRUE);
+
+	// 선택한 ListBox의 Index를 얻어온다.
+	m_iStaticMeshSelectIdx = m_StaticMeshListBox_ObjectList.GetCaretIndex();
+
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnBnClickedButton1001_StasticMeshDelete()
+{
+	// 선택한 StaticMeshObject 삭제.
+	if (!m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh")->empty() &&
+		m_iStaticMeshSelectIdx < m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh")->size())
+	{
+		m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"StaticMesh", m_iStaticMeshSelectIdx)->Set_DeadGameObject();
+
+		// ListBox와 Edit컨트롤 수정.
+		m_StaticMeshListBox_ObjectList.DeleteString(m_iStaticMeshSelectIdx);
+	}
+}
+
+
+void CTabMap::OnBnClickedButton1002_StaticMeshAllDelete()
+{
+	// 모든 StaticMeshObject 삭제.
+	if (!m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh")->empty())
+	{
+		Engine::OBJLIST* lstStaticMeshObject = m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh");
+
+		for (auto& pStaticMesh : *lstStaticMeshObject)
+			pStaticMesh->Set_DeadGameObject();
+
+		// ListBox와 Edit컨트롤 수정.
+		m_StaticMeshListBox_ObjectList.ResetContent();
+	}
 
 }

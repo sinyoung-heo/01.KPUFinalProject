@@ -28,3 +28,6 @@ const _float PI		= 3.141592f;
 
 // Animation Tick Per Seconds
 const _float TPS	= 4'800.0f;
+
+
+const _float TERRAIN_OFFSET = 0.05f;

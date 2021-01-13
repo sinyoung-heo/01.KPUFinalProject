@@ -32,6 +32,10 @@ CVIMesh::CVIMesh(const CVIMesh & rhs)
 	, m_vecSpecResource(rhs.m_vecSpecResource)
 	, m_vecMeshEntry(rhs.m_vecMeshEntry)
 	, m_pTexDescriptorHeap(rhs.m_pTexDescriptorHeap)
+	, m_iSumVertex(rhs.m_iSumVertex)
+	, m_vCenter(rhs.m_vCenter)
+	, m_vMin(rhs.m_vMin)
+	, m_vMax(rhs.m_vMax)
 {
 	m_pScene = rhs.m_pScene;
 
@@ -195,6 +199,9 @@ HRESULT CVIMesh::Ready_Component(const aiScene * pScene, wstring wstrPath)
 		m_vecSubMeshGeometry[i].iBaseVertexLocation		= 0;
 	}
 
+	m_vCenter = m_vCenter / m_iSumVertex;
+
+
 	FAILED_CHECK_RETURN(Ready_Texture(), E_FAIL);
 
 	CGraphicDevice::Get_Instance()->Wait_ForGpuComplete();
@@ -251,7 +258,28 @@ HRESULT CVIMesh::Ready_Mesh(const aiMesh * pAiMesh,
 			vtxMesh.vTexUV = _vec2(pAiMesh->mTextureCoords[0][i].x, pAiMesh->mTextureCoords[0][i].y);
 
 		vecVertex.emplace_back(vtxMesh);
+
+		// - Center, Min, Max 정보 입력.
+		m_vCenter += vtxMesh.vPos;
+
+		if (m_vMin.x > vtxMesh.vPos.x)
+			m_vMin.x = vtxMesh.vPos.x;
+		if (m_vMin.y > vtxMesh.vPos.y)
+			m_vMin.y = vtxMesh.vPos.y;
+		if (m_vMin.z > vtxMesh.vPos.z)
+			m_vMin.z = vtxMesh.vPos.z;
+
+		if (m_vMax.x < vtxMesh.vPos.x)
+			m_vMax.x = vtxMesh.vPos.x;
+		if (m_vMax.y < vtxMesh.vPos.y)
+			m_vMax.y = vtxMesh.vPos.y;
+		if (m_vMax.z < vtxMesh.vPos.z)
+			m_vMax.z = vtxMesh.vPos.z;
+
 	}
+
+	m_iSumVertex += pAiMesh->mNumVertices;
+
 
 	/*__________________________________________________________________________________________________________
 	[ Index Buffer ]
@@ -663,6 +691,7 @@ ID3D12Resource * CVIMesh::Create_DefaultBuffer(const void * InitData,
 
 	return pDefaultBuffer;
 }
+
 
 void CVIMesh::Render_DynamicMesh(CShader * pShader)
 {

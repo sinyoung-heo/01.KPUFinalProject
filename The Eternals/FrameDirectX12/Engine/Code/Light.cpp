@@ -37,7 +37,6 @@ HRESULT CLight::Ready_Light(const D3DLIGHT & tLightInfo)
 		// Collider
 		m_pColliderCom = static_cast<Engine::CColliderBox*>(CComponentMgr::Get_Instance()->Clone_Component(L"ColliderBox", COMPONENTID::ID_DYNAMIC));
 		NULL_CHECK_RETURN(m_pColliderCom, E_FAIL);
-		m_pColliderCom->Ready_Collider();
 		m_pColliderCom->Set_PipelineStatePass(0);
 		m_pColliderCom->Set_Pos(_vec3(m_tLightInfo.Position.x, m_tLightInfo.Position.y, m_tLightInfo.Position.z));
 		m_pColliderCom->Set_Scale(_vec3(0.5f, 0.5f, 0.5f));

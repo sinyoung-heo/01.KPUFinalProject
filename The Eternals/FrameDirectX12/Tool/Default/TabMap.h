@@ -116,11 +116,15 @@ public:
 	afx_msg void OnEnChangeEdit1013_StaticMeshPosZ();
 	afx_msg void OnBnClickedCheck1002_StaticMeshRenderShadow();
 	afx_msg void OnBnClickedCheck1003_StaticMeshIsCollision();
+	afx_msg void OnLbnSelchangeList1003_StaticMeshObjectList();
+	afx_msg void OnBnClickedButton1001_StasticMeshDelete();
+	afx_msg void OnBnClickedButton1002_StaticMeshAllDelete();
 
 	// Control
 	CButton			m_StaticMeshRadio_CreateMode;
 	CButton			m_StaticMeshRadio_ModifyMode;
 	CTreeCtrl		m_StaticMeshTree_ResourceTree;
+	CEdit			m_StaticMeshEdit_SelectMesthTag;
 	CListBox		m_StaticMeshListBox_ObjectList;
 	CButton			m_StaticMeshButton_DeleteObject;
 	CButton			m_StaticMeshButton_AllDeleteObject;
@@ -134,6 +138,7 @@ public:
 	CEdit			m_StaticMeshEdit_PosX;
 	CEdit			m_StaticMeshEdit_PosY;
 	CEdit			m_StaticMeshEdit_PosZ;
+	CEdit			m_StaticMeshEdit_ObjectSize;
 
 	CButton			m_StaticMeshCheck_IsRenderShadow;
 	CButton			m_StaticMeshCheck_IsCollision;
@@ -142,19 +147,23 @@ public:
 	CButton			m_StaticMeshButton_Load;
 
 	// Value
-	_bool	m_bIsCreateMode = true;
-	_bool	m_bIsModifyMode = false;
+	_bool	m_bIsCreateMode		= true;
+	_bool	m_bIsModifyMode		= false;
 
-	wstring	m_wstrTreeMeshTag	= L"";
-	float m_fStaticMeshScaleX	= 0.05f;
-	float m_fStaticMeshScaleY	= 0.05f;
-	float m_fStaticMeshScaleZ	= 0.05f;
-	float m_fStaticMeshAngleX	= 0.0f;
-	float m_fStaticMeshAngleY	= 0.0f;
-	float m_fStaticMeshAngleZ	= 0.0f;
-	float m_fStaticMeshPosX		= 0.0f;
-	float m_fStaticMeshPosY		= 0.0f;
-	float m_fStaticMeshPosZ		= 0.0f;
-	_bool m_bIsRenderShadow		= false;
-	_bool m_bIsCollision		= false;
+	wstring	m_wstrTreeMeshTag		= L"";
+	float	m_fStaticMeshScaleX		= 0.01f;
+	float	m_fStaticMeshScaleY		= 0.01f;
+	float	m_fStaticMeshScaleZ		= 0.01f;
+	float	m_fStaticMeshAngleX		= 0.0f;
+	float	m_fStaticMeshAngleY		= 0.0f;
+	float	m_fStaticMeshAngleZ		= 0.0f;
+	float	m_fStaticMeshPosX		= 0.0f;
+	float	m_fStaticMeshPosY		= 0.0f;
+	float	m_fStaticMeshPosZ		= 0.0f;
+	int		m_iStaticMeshObjectSize = 0;
+	_float	m_iObjectSize			= 0;
+
+	_bool	m_bIsRenderShadow		= false;
+	_bool	m_bIsCollision			= false;
+	_int	m_iStaticMeshSelectIdx	= 0;
 };

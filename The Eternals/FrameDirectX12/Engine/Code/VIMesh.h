@@ -23,23 +23,22 @@ public:
 	vector<ComPtr<ID3D12Resource>>	Get_NormTexture()		{ return m_vecNormResource; };
 	vector<ComPtr<ID3D12Resource>>	Get_SpecTexture()		{ return m_vecSpecResource; };
 	ID3D12DescriptorHeap*			Get_TexDescriptorHeap() { return m_pTexDescriptorHeap; }
-
+	const _vec3&					Get_CenterPos()			{ return m_vCenter; }
+	const _vec3&					Get_MinVector()			{ return m_vMin; }
+	const _vec3&					Get_MaxVector()			{ return m_vMax; }
 	// Set
-	void			Set_AniCtrl(CAniCtrl* pAniCtrl) { m_pAniCtrl = pAniCtrl; }
+	void							Set_AniCtrl(CAniCtrl* pAniCtrl) { m_pAniCtrl = pAniCtrl; }
 
 	// Method
-	HRESULT			Ready_Component(const aiScene * pScene, wstring wstrPath);
-	HRESULT			Ready_Mesh(const aiMesh* pAiMesh,
-							   vector<VTXMESH>& vecVertex, 
-							   vector<_uint>& vecIndex);
+	HRESULT			Ready_Component(const aiScene* pScene, wstring wstrPath);
+	HRESULT			Ready_Mesh(const aiMesh* pAiMesh, vector<VTXMESH>& vecVertex, vector<_uint>& vecIndex);
 	HRESULT			Ready_Texture();
 	HRESULT			Create_TextureDescriptorHeap();
 	virtual void	Release_UploadBuffer();
+private:
+	ID3D12Resource*	Create_DefaultBuffer(const void* InitData, const UINT64& uiByteSize, ID3D12Resource*& pUploadBuffer);
 
-	ID3D12Resource*	Create_DefaultBuffer(const void* InitData,
-										 const UINT64& uiByteSize,
-										 ID3D12Resource*& pUploadBuffer);
-
+public:
 	// SingleThread Rendering
 	void Render_DynamicMesh(CShader* pShader);
 	void Render_StaticMesh(CShader* pShader);
@@ -99,6 +98,14 @@ private:
 	[ Animation Ctrl ]
 	____________________________________________________________________________________________________________*/
 	CAniCtrl* m_pAniCtrl = nullptr;
+
+	/*__________________________________________________________________________________________________________
+	[ CenterPos and MIN/MAX ]
+	____________________________________________________________________________________________________________*/
+	_int	m_iSumVertex	= 0;
+	_vec3	m_vCenter		= _vec3(0.0f);
+	_vec3	m_vMin			= _vec3(0.0f);
+	_vec3	m_vMax			= _vec3(0.0f);
 
 public:
 	virtual CComponent* Clone();
