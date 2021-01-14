@@ -41,3 +41,4 @@ using namespace chrono;
 #include "ObjMgr.h"
 #include "PacketMgr.h"
 #include "DBMgr.h"
+#include "SectorMgr.h"

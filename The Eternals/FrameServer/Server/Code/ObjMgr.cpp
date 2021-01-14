@@ -49,6 +49,27 @@ OBJLIST* CObjMgr::Get_OBJLIST(wstring wstrObjTag)
 	return &(iter_find->second);
 }
 
+bool CObjMgr::Is_Player(int server_num)
+{
+	/* PLAYER ObjList 에서 찾고자 하는 OBJLIST를 key 값을 통해 찾기 */
+	auto& iter_find = m_mapObjList[L"PLAYER"].find(server_num);
+
+	/* 해당 OBJLIST를 찾지 못하였다면 NULL 반환 */
+	if (iter_find == m_mapObjList[L"PLAYER"].end())
+		return false;
+
+	return true;
+}
+
+bool CObjMgr::Is_Near(const CObj* me, const CObj* other)
+{
+	float dist = (other->m_vPos.x - me->m_vPos.x) * (other->m_vPos.x - me->m_vPos.x);
+	dist += (other->m_vPos.y - me->m_vPos.y) * (other->m_vPos.y - me->m_vPos.y);
+	dist += (other->m_vPos.z - me->m_vPos.z) * (other->m_vPos.z - me->m_vPos.z);
+
+	return dist <= VIEW_LIMIT * VIEW_LIMIT;
+}
+
 HRESULT CObjMgr::Add_GameObject(wstring wstrObjTag, CObj* pObj, int server_num)
 {
 	if (pObj != nullptr)

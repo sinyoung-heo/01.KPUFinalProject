@@ -14,9 +14,14 @@ private:
 
 public:
 	HRESULT Init_ObjMgr();
+
 public:
 	CObj* Get_GameObject(wstring wstrObjTag, int server_num = 0);
 	OBJLIST* Get_OBJLIST(wstring wstrObjTag);
+
+public:
+	bool Is_Player(int server_num = 0);
+	bool Is_Near(const CObj* me, const CObj* other);
 
 public:
 	HRESULT Add_GameObject(wstring wstrObjTag, CObj* pObj, int server_num);

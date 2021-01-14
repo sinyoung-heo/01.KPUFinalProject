@@ -63,6 +63,7 @@ int main()
 void Ready_ServerManager()
 {
 	// INIT OBJECT POOL MANAGER
+	CSectorMgr::GetInstance();
 	CObjPoolMgr::GetInstance()->Init_ObjPoolMgr();	
 	CObjMgr::GetInstance()->Init_ObjMgr();
 #ifdef TEST
@@ -123,6 +124,7 @@ void Ready_Server()
 
 void Release_Server()
 {
+	CSectorMgr::GetInstance()->DestroyInstance();
 	CObjMgr::GetInstance()->DestroyInstance();
 	CObjPoolMgr::GetInstance()->DestroyInstance();
 
@@ -174,8 +176,6 @@ void add_new_client(SOCKET ns)
 		pNew->m_recv_start = pNew->m_recv_over.iocp_buf;
 
 		pNew->m_type = '0';
-		pNew->m_vPos = _vec3((rand() % 100) * 1.f+1000.f, (rand() % 100) * 1.f + 500.f, 0.f);
-		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->level = 1;
 		pNew->Hp = 100;
 		pNew->maxHp = 100;
@@ -183,8 +183,11 @@ void add_new_client(SOCKET ns)
 		pNew->maxExp = 0;
 		pNew->att = 10;
 		pNew->spd = 10.f;
+		pNew->m_vPos = _vec3((rand() % 100) * 1.f+1000.f, (rand() % 100) * 1.f + 500.f, 0.f);
+		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 
-		CObjMgr::GetInstance()->Add_GameObject(L"PLAYER",pNew, s_num);
+		CSectorMgr::GetInstance()->Enter_ClientInSector((int)s_num, (int)(pNew->m_vPos.y / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
+		CObjMgr::GetInstance()->Add_GameObject(L"PLAYER",pNew, (int)s_num);
 
 		/* 해당 클라이언트 소켓을 IOCP에 등록 */
 		CreateIoCompletionPort(reinterpret_cast<HANDLE>(ns), g_hIocp, s_num, 0);
@@ -219,22 +222,61 @@ void disconnect_client(int id)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 
-	// 접속 중인 유저 탐색
-	auto player_list = CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER");
+	/* sector에서 해당 플레이어 지우기 */
+	CSectorMgr::GetInstance()->Leave_ClientInSector(id, (int)(pPlayer->m_vPos.y / SECTOR_SIZE), (int)(pPlayer->m_vPos.x / SECTOR_SIZE));
 
-	for (auto& others : *player_list)
+	/* 해당 플레이어가 등록되어 있는 섹터 내의 유저들에게 접속 종료를 알림 */
+	unordered_set<pair<int, int>> nearSector;
+	nearSector.reserve(5);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSector, (int)pPlayer->m_vPos.x, (int)pPlayer->m_vPos.y);
+
+	// 인접 섹터 순회
+	for (auto& s : nearSector)
 	{
-		if (others.second->Get_IsConnected())
-			send_leave_packet(others.second->m_sNum, id);
+		// 인접 섹터 내의 타 유저들이 있는지 검사
+		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+		{
+			// 타 유저의 서버 번호 추출
+			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			{
+				/* 오직 유저들에게만 패킷을 전송 (NPC 제외) */
+				if (false == CObjMgr::GetInstance()->Is_Player(obj_num)) continue;		
+				// '나'에게 패킷 전송 X
+				if (obj_num == id) continue;
+
+				CPlayer* pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+				
+				// 접속한 유저들에게만 접속 종료를 알림
+				if (pOther->Get_IsConnected())
+				{
+					/* 타 유저의 시야 목록 내에 '나'가 있다면 지운다 */
+					pOther->v_lock.lock();
+					if (0 != pOther->view_list.count(id))
+					{
+						pOther->view_list.erase(id);
+						pOther->v_lock.unlock();
+
+						/* 타 유저에게 접속 종료 패킷 전송 */
+						send_leave_packet(obj_num, id);
+					}
+					else pOther->v_lock.unlock();					
+				}
+			}
+		}
 	}
 
 	pPlayer->Get_ClientLock().lock();
+	
+	CObjPoolMgr::GetInstance()->return_Object(L"PLAYER", pPlayer);
+	CObjMgr::GetInstance()->Delete_GameObject(L"PLAYER", pPlayer);
 	pPlayer->Set_IsConnected(false);
 	closesocket(pPlayer->m_sock);
 	pPlayer->m_sock = 0;
+	pPlayer->m_sNum = 0;
+	pPlayer->m_vPos = _vec3(0.f, 0.f, 0.f);
+	pPlayer->m_vDir = _vec3(0.f, 0.f, 0.f);
+	pPlayer->m_ID[0] = 0;
 
-	CObjPoolMgr::GetInstance()->return_Object(L"PLAYER", pPlayer);
-	CObjMgr::GetInstance()->Delete_GameObject(L"PLAYER", pPlayer);
 	pPlayer->Get_ClientLock().unlock();
 
 	if (CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER")->size() <= 0)

@@ -34,7 +34,7 @@ constexpr int BOSS_ATT			= 10;			// BOSS °ø°Ý·Â
 
 constexpr int MASTER			= 99999;
 
-constexpr int SECTOR_SIZE		= 20;
+constexpr int SECTOR_SIZE		= 400;
 
 
 

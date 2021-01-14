@@ -14,7 +14,7 @@ private:
 	virtual ~CSectorMgr(void);
 
 public:
-	const SECTOR Get_Sector();
+	const SECTOR Get_SectorList();
 
 public:
 	void Enter_ClientInSector(int objNum, int col, int row);

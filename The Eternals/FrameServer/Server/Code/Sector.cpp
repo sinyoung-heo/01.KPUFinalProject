@@ -13,11 +13,11 @@ CSector::~CSector()
 
 void CSector::Set_MinMax(const int& x, const int& z)
 {
-	m_tInfo.m_iMinX = x - SECTOR_SIZE * 0.5f;
-	m_tInfo.m_iMinY = z - SECTOR_SIZE * 0.5f;
-	m_tInfo.m_iMaxX = x + SECTOR_SIZE * 0.5f;
-	m_tInfo.m_iMaxY = z + SECTOR_SIZE * 0.5f;
-}
+	m_tInfo.m_iMinX = (int)(x - SECTOR_SIZE * 0.5f);
+	m_tInfo.m_iMinY = (int)(z - SECTOR_SIZE * 0.5f);
+	m_tInfo.m_iMaxX = (int)(x + SECTOR_SIZE * 0.5f);
+	m_tInfo.m_iMaxY = (int)(z + SECTOR_SIZE * 0.5f);
+}											 
 
 void CSector::Set_SectorNumber(const int& num)
 {

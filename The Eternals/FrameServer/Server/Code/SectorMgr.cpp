@@ -11,7 +11,7 @@ CSectorMgr::~CSectorMgr(void)
 {
 }
 
-const SECTOR CSectorMgr::Get_Sector()
+const SECTOR CSectorMgr::Get_SectorList()
 {
 	return m_arrSectorList;
 }
