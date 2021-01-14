@@ -1,0 +1,6 @@
+StaticMesh|Sample|LandMark
+StaticMesh|Sample|LandMarkBoundary
+StaticMesh|Sample|LandMarkPlane
+StaticMesh|Sample|Status
+DynamicMesh|Character|PoporiH25
+DynamicMesh|Character|PoporiR19

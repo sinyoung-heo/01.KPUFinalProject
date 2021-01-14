@@ -24,24 +24,33 @@ HRESULT CToolStaticMesh::Ready_GameObject(wstring wstrMeshTag,
 											const _vec3& vAngle,
 											const _vec3& vPos,
 											const _bool& bIsRenderShadow,
-											const _bool& bIsCollision)
+											const _bool& bIsBoundingBox,
+											const _bool& bIsBoundingSphere,
+											const _vec3& vBoundingSphereScale,
+											const _vec3& vBoundingSpherePos)
 {
-	m_wstrMeshTag = wstrMeshTag;
 
-	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
-	Engine::FAILED_CHECK_RETURN(Add_Component(m_wstrMeshTag), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true, true), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
+	m_wstrMeshTag			= wstrMeshTag;
 	m_pTransCom->m_vScale	= vScale;
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos		= vPos;
+	m_bIsRenderShadow		= bIsRenderShadow; 
+	m_bIsCollision			= bIsBoundingSphere;
+
+	// BoundingBox.
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
 										   m_pTransCom->m_vScale,
 										   m_pMeshCom->Get_CenterPos(),
 										   m_pMeshCom->Get_MinVector(),
 										   m_pMeshCom->Get_MaxVector());
+	// BoundingSphere.
+	Engine::CGameObject::SetUp_BoundingSphere(&(m_pTransCom->m_matWorld),
+											  m_pTransCom->m_vScale,
+											  vBoundingSphereScale,
+											  vBoundingSpherePos);
 
-
-	m_bIsRenderShadow		= bIsRenderShadow;
-	m_bIsCollision			= bIsCollision;
 
 	// 그림자를 그리지 않으면 0번 패스.
 	if (!m_bIsRenderShadow)
@@ -65,6 +74,22 @@ _int CToolStaticMesh::Update_GameObject(const _float & fTimeDelta)
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
+
+	// 충돌하지 않으면 Scale을 0으로.
+	if (!m_bIsCollision)
+	{
+		Engine::CGameObject::SetUp_BoundingSphere(&(m_pTransCom->m_matWorld),
+												  m_pTransCom->m_vScale,
+												  _vec3(0.0f),
+												  _vec3(0.0f));
+	}
+
+	// 그림자를 그리지 않으면 0번 패스.
+	if (!m_bIsRenderShadow)
+		m_pShaderCom->Set_PipelineStatePass(0);
+	else
+
+		m_pShaderCom->Set_PipelineStatePass(1);
 
 	/*____________________________________________________________________
 	TransCom - Update WorldMatrix.
@@ -144,6 +169,12 @@ HRESULT CToolStaticMesh::Add_Component(wstring wstrMeshTag)
 	Engine::FAILED_CHECK_RETURN(m_pShadowCom->Set_PipelineStatePass(0), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shadow", m_pShadowCom);
 
+	//// Collider
+	//m_pBoundingSphereCom = static_cast<Engine::CColliderSphere*>(m_pComponentMgr->Clone_Component(L"ColliderSphere", Engine::COMPONENTID::ID_DYNAMIC));
+	//Engine::NULL_CHECK_RETURN(m_pBoundingSphereCom, E_FAIL);
+	//m_pBoundingSphereCom->AddRef();
+	//m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_BoundingSphere", m_pBoundingSphereCom);
+
 	return S_OK;
 }
 
@@ -215,11 +246,22 @@ CToolStaticMesh * CToolStaticMesh::Create(ID3D12Device * pGraphicDevice,
 											  const _vec3 & vAngle, 
 											  const _vec3 & vPos,
 											  const _bool& bIsRenderShadow,
-											  const _bool& bIsCollision)
+											  const _bool& bIsBoundingBox,
+											  const _bool& bIsBoundingSphere,
+											  const _vec3& vBoundingSphereScale,
+											  const _vec3& vBoundingSpherePos)
 {
 	CToolStaticMesh* pInstance = new CToolStaticMesh(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos, bIsRenderShadow, bIsCollision)))
+	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, 
+										   vScale,
+										   vAngle, 
+										   vPos, 
+										   bIsRenderShadow, 
+										   bIsBoundingBox,
+										   bIsBoundingSphere,
+										   vBoundingSphereScale,
+										   vBoundingSpherePos)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;

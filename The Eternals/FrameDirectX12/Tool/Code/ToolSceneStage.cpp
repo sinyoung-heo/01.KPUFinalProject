@@ -283,30 +283,31 @@ void CToolSceneStage::KeyInput_TabMap(CTabMap& TabMap)
 			TabMap.UpdateData(TRUE);
 			CToolStaticMesh* pStaticMesh = nullptr;
 
-			wstring wstrMeshTag		= TabMap.m_wstrTreeMeshTag;
-			_vec3 vScale			= _vec3(TabMap.m_fStaticMeshScaleX, TabMap.m_fStaticMeshScaleY, TabMap.m_fStaticMeshScaleZ);
-			_vec3 vAngle			= _vec3(TabMap.m_fStaticMeshAngleX, TabMap.m_fStaticMeshAngleY, TabMap.m_fStaticMeshAngleZ);
-			_vec3 vPickingPos		= CMouseMgr::Picking_OnTerrain(m_pPickingTerrain);
-			_bool bIsRenderShadow	= TabMap.m_bIsRenderShadow;
-			_bool bIsCollision		= TabMap.m_bIsCollision;
+			_vec3 vScale				= _vec3(TabMap.m_fStaticMeshScaleX, TabMap.m_fStaticMeshScaleY, TabMap.m_fStaticMeshScaleZ);
+			_vec3 vAngle				= _vec3(TabMap.m_fStaticMeshAngleX, TabMap.m_fStaticMeshAngleY, TabMap.m_fStaticMeshAngleZ);
+			_vec3 vPickingPos			= CMouseMgr::Picking_OnTerrain(m_pPickingTerrain);
+			_vec3 vBoundingSpherePos	= _vec3(TabMap.m_fStaticMeshColliderPosX, TabMap.m_fStaticMeshColliderPosY, TabMap.m_fStaticMeshColliderPosZ);
 
 			TabMap.m_fStaticMeshPosX = vPickingPos.x;
 			TabMap.m_fStaticMeshPosY = vPickingPos.y;
 			TabMap.m_fStaticMeshPosZ = vPickingPos.z;
 
-			if (L"" == wstrMeshTag)
+			if (L"" == TabMap.m_wstrTreeMeshTag)
 				return;
 			pStaticMesh = CToolStaticMesh::Create(m_pGraphicDevice, m_pCommandList,
-												  wstrMeshTag,
-												  vScale,
-												  vAngle,
-												  vPickingPos,
-												  bIsRenderShadow,
-												  bIsCollision);
+												  TabMap.m_wstrTreeMeshTag,					// MeshTag
+												  vScale,									// Scale
+												  vAngle,									// Angle
+												  vPickingPos,								// Pos
+												  TabMap.m_bIsRenderShadow,					// Render Shadow
+												  true,										// Bounding Box
+												  TabMap.m_bIsCollision,					// Bounding Sphere
+												  _vec3(TabMap.m_fStaticMeshColliderScale),	// Bounding Sphere Scale
+												   vBoundingSpherePos);						// Bounding Sphere Pos
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"StaticMesh", pStaticMesh), E_FAIL);
 
 			// StaticMeshListBox에 삽입.
-			TabMap.m_StaticMeshListBox_ObjectList.AddString(wstrMeshTag.c_str());
+			TabMap.m_StaticMeshListBox_ObjectList.AddString(TabMap.m_wstrTreeMeshTag.c_str());
 
 			// 생성 위치 Edit Control에 기록.
 			_tchar szTemp[MIN_STR] = L"";
@@ -332,8 +333,6 @@ void CToolSceneStage::KeyInput_TabMap(CTabMap& TabMap)
 	if (TabMap.m_EditCheck_StaticMesh.GetCheck() &&
 		TabMap.m_bIsModifyMode)
 	{
-		// m_pPickingObject = nullptr;
-
 		Engine::OBJLIST* pStaticMeshList = m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh");
 		if (nullptr != pStaticMeshList)
 		{
@@ -343,15 +342,46 @@ void CToolSceneStage::KeyInput_TabMap(CTabMap& TabMap)
 				_tchar szTemp[MIN_STR] = L"";
 
 				TabMap.UpdateData(TRUE);
-				TabMap.m_fStaticMeshScaleX = m_pPickingObject->Get_Transform()->m_vScale.x;
-				TabMap.m_fStaticMeshScaleY = m_pPickingObject->Get_Transform()->m_vScale.y;
-				TabMap.m_fStaticMeshScaleZ = m_pPickingObject->Get_Transform()->m_vScale.z;
-				TabMap.m_fStaticMeshAngleX = m_pPickingObject->Get_Transform()->m_vAngle.x;
-				TabMap.m_fStaticMeshAngleY = m_pPickingObject->Get_Transform()->m_vAngle.y;
-				TabMap.m_fStaticMeshAngleZ = m_pPickingObject->Get_Transform()->m_vAngle.z;
+
+				TabMap.m_fStaticMeshScaleX	= m_pPickingObject->Get_Transform()->m_vScale.x;
+				TabMap.m_fStaticMeshScaleY	= m_pPickingObject->Get_Transform()->m_vScale.y;
+				TabMap.m_fStaticMeshScaleZ	= m_pPickingObject->Get_Transform()->m_vScale.z;
+				TabMap.m_fStaticMeshAngleX	= m_pPickingObject->Get_Transform()->m_vAngle.x;
+				TabMap.m_fStaticMeshAngleY	= m_pPickingObject->Get_Transform()->m_vAngle.y;
+				TabMap.m_fStaticMeshAngleZ	= m_pPickingObject->Get_Transform()->m_vAngle.z;
 				TabMap.m_fStaticMeshPosX	= m_pPickingObject->Get_Transform()->m_vPos.x;
 				TabMap.m_fStaticMeshPosY	= m_pPickingObject->Get_Transform()->m_vPos.y;
 				TabMap.m_fStaticMeshPosZ	= m_pPickingObject->Get_Transform()->m_vPos.z;
+
+				TabMap.m_bIsRenderShadow			= static_cast<CToolStaticMesh*>(m_pPickingObject)->Get_IsRenderShadow();
+				TabMap.m_bIsCollision				= static_cast<CToolStaticMesh*>(m_pPickingObject)->Get_IsCollision();
+				TabMap.m_fStaticMeshColliderScale	= m_pPickingObject->Get_BoundingSphere()->Get_Transform()->m_vScale.x;
+				TabMap.m_fStaticMeshColliderPosX	= m_pPickingObject->Get_BoundingSphere()->Get_Transform()->m_vPos.x;
+				TabMap.m_fStaticMeshColliderPosY	= m_pPickingObject->Get_BoundingSphere()->Get_Transform()->m_vPos.y;
+				TabMap.m_fStaticMeshColliderPosZ	= m_pPickingObject->Get_BoundingSphere()->Get_Transform()->m_vPos.z;
+
+				if (TabMap.m_bIsRenderShadow)
+					TabMap.m_StaticMeshCheck_IsRenderShadow.SetCheck(true);
+				else
+					TabMap.m_StaticMeshCheck_IsRenderShadow.SetCheck(false);
+
+				if (TabMap.m_bIsCollision)
+				{
+					TabMap.m_StaticMeshCheck_IsCollision.SetCheck(true);
+					TabMap.m_StaticMeshEdit_ColliderScale.EnableWindow(TRUE);
+					TabMap.m_StaticMeshEdit_ColliderPosX.EnableWindow(TRUE);
+					TabMap.m_StaticMeshEdit_ColliderPosY.EnableWindow(TRUE);
+					TabMap.m_StaticMeshEdit_ColliderPosZ.EnableWindow(TRUE);
+				}
+				else
+				{
+					TabMap.m_StaticMeshCheck_IsCollision.SetCheck(false);
+					TabMap.m_StaticMeshEdit_ColliderScale.EnableWindow(FALSE);
+					TabMap.m_StaticMeshEdit_ColliderPosX.EnableWindow(FALSE);
+					TabMap.m_StaticMeshEdit_ColliderPosY.EnableWindow(FALSE);
+					TabMap.m_StaticMeshEdit_ColliderPosZ.EnableWindow(FALSE);
+				}
+
 				TabMap.UpdateData(FALSE);
 			}
 		}
@@ -372,20 +402,26 @@ void CToolSceneStage::KeyInput_ModeChange(CTabMap& TabMap)
 
 		TabMap.m_StaticMeshRadio_CreateMode.SetCheck(TabMap.m_bIsCreateMode);
 		TabMap.m_StaticMeshRadio_ModifyMode.SetCheck(TabMap.m_bIsModifyMode);
+
 		// Object 생성 모드일 경우.
 		if (TabMap.m_bIsCreateMode)
 		{
-			TabMap.m_fStaticMeshScaleX = 0.01f;
-			TabMap.m_fStaticMeshScaleY = 0.01f;
-			TabMap.m_fStaticMeshScaleZ = 0.01f;
-			TabMap.m_fStaticMeshAngleX = 0.0f;
-			TabMap.m_fStaticMeshAngleY = 0.0f;
-			TabMap.m_fStaticMeshAngleZ = 0.0f;
+			TabMap.m_fStaticMeshScaleX	= 0.01f;
+			TabMap.m_fStaticMeshScaleY	= 0.01f;
+			TabMap.m_fStaticMeshScaleZ	= 0.01f;
+			TabMap.m_fStaticMeshAngleX	= 0.0f;
+			TabMap.m_fStaticMeshAngleY	= 0.0f;
+			TabMap.m_fStaticMeshAngleZ	= 0.0f;
+
+			TabMap.m_fStaticMeshColliderScale	= 0.0f;
+			TabMap.m_fStaticMeshColliderPosX	= 0.0f;
+			TabMap.m_fStaticMeshColliderPosY	= 0.0f;
+			TabMap.m_fStaticMeshColliderPosZ	= 0.0f;
 		}
 		// Object 수정 모드일 경우.
 		else if (TabMap.m_bIsModifyMode)
 		{
-
+			
 		}
 	}
 
