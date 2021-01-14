@@ -31,6 +31,7 @@ public:
 	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
+	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 
 	Engine::CManagement*		m_pManagement		= nullptr;
 	Engine::CObjectMgr*			m_pObjectMgr		= nullptr;
@@ -119,6 +120,8 @@ public:
 	afx_msg void OnLbnSelchangeList1003_StaticMeshObjectList();
 	afx_msg void OnBnClickedButton1001_StasticMeshDelete();
 	afx_msg void OnBnClickedButton1002_StaticMeshAllDelete();
+	afx_msg void OnBnClickedButton1003_StaticMeshSAVE();
+	afx_msg void OnBnClickedButton1004_StaticMeshLOAD();
 
 	// Control
 	CButton			m_StaticMeshRadio_CreateMode;
@@ -139,6 +142,10 @@ public:
 	CEdit			m_StaticMeshEdit_PosY;
 	CEdit			m_StaticMeshEdit_PosZ;
 	CEdit			m_StaticMeshEdit_ObjectSize;
+	CEdit			m_StaticMeshEdit_ColliderScale;
+	CEdit			m_StaticMeshEdit_ColliderPosX;
+	CEdit			m_StaticMeshEdit_ColliderPosY;
+	CEdit			m_StaticMeshEdit_ColliderPosZ;
 
 	CButton			m_StaticMeshCheck_IsRenderShadow;
 	CButton			m_StaticMeshCheck_IsCollision;
@@ -163,7 +170,11 @@ public:
 	int		m_iStaticMeshObjectSize = 0;
 	_float	m_iObjectSize			= 0;
 
-	_bool	m_bIsRenderShadow		= false;
-	_bool	m_bIsCollision			= false;
-	_int	m_iStaticMeshSelectIdx	= 0;
+	_bool	m_bIsRenderShadow			= false;
+	_bool	m_bIsCollision				= false;
+	_int	m_iStaticMeshSelectIdx		= 0;
+	float	m_fStaticMeshColliderScale	= 0.0f;
+	float	m_fStaticMeshColliderPosX	= 0.0f;
+	float	m_fStaticMeshColliderPosY	= 0.0f;
+	float	m_fStaticMeshColliderPosZ	= 0.0f;
 };

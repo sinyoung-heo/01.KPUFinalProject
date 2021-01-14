@@ -53,7 +53,8 @@ HRESULT CGameObject::Ready_GameObjectPrototype()
 
 HRESULT CGameObject::Ready_GameObject(const _bool & bIsCreate_Transform, 
 									  const _bool & bIsCreate_Info,
-									  const _bool& bIsCreate_BoundingBox)
+									  const _bool& bIsCreate_BoundingBox,
+									  const _bool& bIsCreate_BoundingSphere)
 {
 	if (bIsCreate_Transform)
 	{
@@ -76,6 +77,15 @@ HRESULT CGameObject::Ready_GameObject(const _bool & bIsCreate_Transform,
 		NULL_CHECK_RETURN(m_pBoundingBoxCom, E_FAIL);
 		m_pBoundingBoxCom->AddRef();
 		m_mapComponent[ID_DYNAMIC].emplace(L"Com_BoundingBox", m_pBoundingBoxCom);
+	}
+
+	m_bIsBoundingSphere = bIsCreate_BoundingSphere;
+	if (bIsCreate_BoundingSphere)
+	{
+		m_pBoundingSphereCom = static_cast<CColliderSphere*>(m_pComponentMgr->Clone_Component(L"ColliderSphere", ID_DYNAMIC));
+		NULL_CHECK_RETURN(m_pBoundingSphereCom, E_FAIL);
+		m_pBoundingSphereCom->AddRef();
+		m_mapComponent[ID_DYNAMIC].emplace(L"Com_BoundingSphere", m_pBoundingSphereCom);
 	}
 
 	return S_OK;
@@ -184,6 +194,20 @@ void CGameObject::SetUp_BoundingBox(_matrix* pParent,
 	}
 }
 
+void CGameObject::SetUp_BoundingSphere(_matrix* pParent, 
+									   const _vec3& vParentScale,
+									   const _vec3& vScale,
+									   const _vec3& vPos)
+{
+	if (nullptr != m_pBoundingSphereCom)
+	{
+		m_pBoundingSphereCom->Set_ParentMatrix(pParent);
+		m_pBoundingSphereCom->Set_Scale(vScale);
+		m_pBoundingSphereCom->Set_Radius(vParentScale);
+
+	}
+}
+
 void CGameObject::SetUp_ShadowDepth(_vec3 & vLightEye, 
 									_vec3 & vLightAt,
 									_vec3 & vLightDir)
@@ -239,8 +263,11 @@ CGameObject * CGameObject::Clone_GameObject()
 
 void CGameObject::Free()
 {
-	if(m_bIsBoundingBox)
-	 Safe_Release(m_pBoundingBoxCom);
+	if (m_bIsBoundingBox)
+		Safe_Release(m_pBoundingBoxCom);
+
+	if (m_bIsBoundingSphere)
+		Safe_Release(m_pBoundingSphereCom);
 
 	for (_uint i = 0; i < ID_END; ++i)
 	{

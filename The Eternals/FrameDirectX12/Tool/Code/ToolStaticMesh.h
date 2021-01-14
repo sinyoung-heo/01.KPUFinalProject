@@ -6,6 +6,7 @@ namespace Engine
 	class CMesh;
 	class CShaderMesh;
 	class CShaderShadow;
+	class CColliderSphere;
 }
 
 class CToolStaticMesh : public Engine::CGameObject
@@ -22,7 +23,10 @@ public:
 									 const _vec3& vAngle,
 									 const _vec3& vPos,
 									 const _bool& bIsRenderShadow,
-									 const _bool& bIsCollision);
+									 const _bool& bIsBoundingBox		= true,
+									 const _bool& bIsBoundingSphere		= false,
+									 const _vec3& vBoundingSphereScale	= _vec3(1.0f),
+									 const _vec3& vBoundingSpherePos	= _vec3(0.0f));
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
@@ -40,30 +44,31 @@ private:
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
 
-private:
+public:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
 	____________________________________________________________________________________________________________*/
-	Engine::CMesh*			m_pMeshCom		= nullptr;
-	Engine::CShaderMesh*	m_pShaderCom	= nullptr;
-	Engine::CShaderShadow*	m_pShadowCom	= nullptr;
+	Engine::CMesh*				m_pMeshCom				= nullptr;
+	Engine::CShaderMesh*		m_pShaderCom			= nullptr;
+	Engine::CShaderShadow*		m_pShadowCom			= nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
 	wstring m_wstrMeshTag		= L"";
-	_bool	m_bIsRenderShadow	= false;
-	_bool	m_bIsCollision		= false;
 
 public:
-	static CToolStaticMesh* Create(ID3D12Device* pGraphicDevice, 
+	static CToolStaticMesh* Create(ID3D12Device* pGraphicDevice,
 									 ID3D12GraphicsCommandList* pCommandList,
 									 wstring wstrMeshTag,
 									 const _vec3& vScale,
 									 const _vec3& vAngle,
 									 const _vec3& vPos,
 									 const _bool& bIsRenderShadow,
-									 const _bool& bIsCollision);
+									 const _bool& bIsBoundingBox		= true,
+									 const _bool& bIsBoundingSphere		= false,
+									 const _vec3& vBoundingSphereScale	= _vec3(1.0f),
+									 const _vec3& vBoundingSpherePos	= _vec3(0.0f));
 private:
 	virtual void Free();
 };

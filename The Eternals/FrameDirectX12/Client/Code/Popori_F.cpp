@@ -53,12 +53,13 @@ HRESULT CPopori_F::Ready_GameObject(wstring wstrMeshTag,
 	_matrix*					pmatParent		= nullptr;
 
 	// ColliderSphere
-	pmatSkinning	= m_pMeshCom->Find_SkinningMatrix("Bip01-L-Hand");
+	// pmatSkinning	= m_pMeshCom->Find_SkinningMatrix("Bip01-L-Hand");
+	pmatSkinning	= m_pMeshCom->Find_SkinningMatrix("Bip01-R-Hand");
 	pmatParent		= &(m_pTransCom->m_matWorld);
 	Engine::NULL_CHECK_RETURN(pmatSkinning, E_FAIL);
 	m_pColliderSphereCom->Set_SkinningMatrix(pmatSkinning);		// Bone Matrix
 	m_pColliderSphereCom->Set_ParentMatrix(pmatParent);			// Parent Matrix
-	m_pColliderSphereCom->Set_Scale(_vec3(2.f, 2.f, 2.f));		// Collider Scale
+	m_pColliderSphereCom->Set_Scale(_vec3(3.f, 3.f, 3.f));		// Collider Scale
 	m_pColliderSphereCom->Set_Radius(m_pTransCom->m_vScale);	// Collider Radius
 
 	// ColliderBox
@@ -67,7 +68,7 @@ HRESULT CPopori_F::Ready_GameObject(wstring wstrMeshTag,
 	Engine::NULL_CHECK_RETURN(pmatSkinning, E_FAIL);
 	m_pColliderBoxCom->Set_SkinningMatrix(pmatSkinning);	// Bone Matrix
 	m_pColliderBoxCom->Set_ParentMatrix(pmatParent);		// Parent Matrix
-	m_pColliderBoxCom->Set_Scale(_vec3(4.f, 4.f, 4.f));		// Collider Scale
+	m_pColliderBoxCom->Set_Scale(_vec3(3.f, 3.f, 3.f));		// Collider Scale
 	m_pColliderBoxCom->Set_Extents(m_pTransCom->m_vScale);	// Box Offset From Center
 
 	/*__________________________________________________________________________________________________________

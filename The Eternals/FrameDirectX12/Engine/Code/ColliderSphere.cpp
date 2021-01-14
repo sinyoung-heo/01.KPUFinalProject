@@ -25,7 +25,7 @@ HRESULT CColliderSphere::Ready_Buffer(const _uint& uiSliceCnt, const _uint& uiSt
 	m_PrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	m_BoundingInfo.Center = _vec3(0.0f, 0.0f, 0.0f);
-	m_BoundingInfo.Radius = 1.f;
+	m_BoundingInfo.Radius = 0.5f;
 
 	/*__________________________________________________________________________________________________________
 	[ Vertex Buffer ]

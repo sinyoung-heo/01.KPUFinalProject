@@ -43,12 +43,16 @@
 #define IDC_SPIN1002                    1031
 #define IDC_EDIT1058                    1031
 #define IDC_SPIN1003                    1032
+#define IDC_EDIT1059                    1032
 #define IDC_EDIT1008                    1033
 #define IDC_EDIT1009                    1034
 #define IDC_EDIT1010                    1035
 #define IDC_SPIN1004                    1036
+#define IDC_EDIT1060                    1036
 #define IDC_SPIN1005                    1037
+#define IDC_EDIT1061                    1037
 #define IDC_SPIN1006                    1038
+#define IDC_EDIT1062                    1038
 #define IDC_EDIT1011                    1039
 #define IDC_EDIT1012                    1040
 #define IDC_EDIT1013                    1041
