@@ -53,12 +53,21 @@ HRESULT CToolSceneStage::Ready_Scene()
 
 _int CToolSceneStage::Update_Scene(const _float& fTimeDelta)
 {
+	CMainFrame* pMainFrame	= static_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+	CMyForm*	pMyForm		= static_cast<CMyForm*>(pMainFrame->m_MainSplit.GetPane(0, 0));
+
 	/*__________________________________________________________________________________________________________
 	[ Key Input ]
 	____________________________________________________________________________________________________________*/
 	if (Engine::KEY_PRESSING(DIK_LSHIFT))
 		KeyInput();
 
+	// CreateMode <-> ModifyMode
+	if (Engine::KEY_DOWN(DIK_TAB))
+	{
+		if (pMyForm->m_bIsTabMap)
+			KeyInput_ModeChange(pMyForm->m_TabMap);
+	}
 
 	return Engine::CScene::Update_Scene(fTimeDelta);
 }
@@ -117,13 +126,13 @@ HRESULT CToolSceneStage::Ready_LayerCamera(wstring wstrLayerTag)
 	[ ToolCamera ]
 	____________________________________________________________________________________________________________*/
 	CToolCamera* pCToolCamera = CToolCamera::Create(m_pGraphicDevice, m_pCommandList,
-													Engine::CAMERA_DESC(_vec3(-6.0, 6.0f, -6.0f),		// Eye
-																		_vec3(0.0f, 6.0f, 0.0f),		// At
+													Engine::CAMERA_DESC(_vec3(4.0, 6.0f, -6.0f),		// Eye
+																		_vec3(4.0f, 4.0f, 0.0f),		// At
 																		_vec3(0.0f, 1.0f, 0.f)),		// Up
 													Engine::PROJ_DESC(60.0f,							// FovY
-																		_float(WINCX) / _float(WINCY),	// Aspect
-																		1.0f,							// Near
-																		1000.0f),						// Far
+																	  _float(WINCX) / _float(WINCY),	// Aspect
+																	  1.0f,								// Near
+																	  1000.0f),							// Far
 													Engine::ORTHO_DESC(WINCX,							// Viewport Width
 																	   WINCY,							// Viewport Height
 																	   0.0f,							// Near
@@ -271,6 +280,7 @@ void CToolSceneStage::KeyInput_TabMap(CTabMap& TabMap)
 	{
 		if (nullptr != m_pPickingTerrain)
 		{
+			TabMap.UpdateData(TRUE);
 			CToolStaticMesh* pStaticMesh = nullptr;
 
 			wstring wstrMeshTag		= TabMap.m_wstrTreeMeshTag;
@@ -280,6 +290,12 @@ void CToolSceneStage::KeyInput_TabMap(CTabMap& TabMap)
 			_bool bIsRenderShadow	= TabMap.m_bIsRenderShadow;
 			_bool bIsCollision		= TabMap.m_bIsCollision;
 
+			TabMap.m_fStaticMeshPosX = vPickingPos.x;
+			TabMap.m_fStaticMeshPosY = vPickingPos.y;
+			TabMap.m_fStaticMeshPosZ = vPickingPos.z;
+
+			if (L"" == wstrMeshTag)
+				return;
 			pStaticMesh = CToolStaticMesh::Create(m_pGraphicDevice, m_pCommandList,
 												  wstrMeshTag,
 												  vScale,
@@ -295,12 +311,20 @@ void CToolSceneStage::KeyInput_TabMap(CTabMap& TabMap)
 			// 생성 위치 Edit Control에 기록.
 			_tchar szTemp[MIN_STR] = L"";
 
+			
 			_stprintf_s(szTemp, MIN_STR, L"%0.1f", vPickingPos.x);
 			TabMap.m_StaticMeshEdit_PosX.SetWindowTextW(szTemp);
+			TabMap.m_fStaticMeshPosX = vPickingPos.x;
+
 			_stprintf_s(szTemp, MIN_STR, L"%0.1f", vPickingPos.y);
 			TabMap.m_StaticMeshEdit_PosY.SetWindowTextW(szTemp);
+			TabMap.m_fStaticMeshPosY = vPickingPos.y;
+
 			_stprintf_s(szTemp, MIN_STR, L"%0.1f", vPickingPos.z);
 			TabMap.m_StaticMeshEdit_PosZ.SetWindowTextW(szTemp);
+			TabMap.m_fStaticMeshPosZ = vPickingPos.z;
+			TabMap.UpdateData(FALSE);
+
 		}
 	}
 
@@ -318,33 +342,54 @@ void CToolSceneStage::KeyInput_TabMap(CTabMap& TabMap)
 				// 선택한 Object의 정보로 Edit Control을 채운다.
 				_tchar szTemp[MIN_STR] = L"";
 
-				_stprintf_s(szTemp, MIN_STR, L"%0.001f", m_pPickingObject->Get_Transform()->m_vScale.x);
-				TabMap.m_StaticMeshEdit_ScaleX.SetWindowTextW(szTemp);
-				_stprintf_s(szTemp, MIN_STR, L"%0.001f", m_pPickingObject->Get_Transform()->m_vScale.y);
-				TabMap.m_StaticMeshEdit_ScaleY.SetWindowTextW(szTemp);
-				_stprintf_s(szTemp, MIN_STR, L"%0.001f", m_pPickingObject->Get_Transform()->m_vScale.z);
-				TabMap.m_StaticMeshEdit_ScaleZ.SetWindowTextW(szTemp);
-
-				_stprintf_s(szTemp, MIN_STR, L"%0.1f", m_pPickingObject->Get_Transform()->m_vAngle.x);
-				TabMap.m_StaticMeshEdit_AngleX.SetWindowTextW(szTemp);
-				_stprintf_s(szTemp, MIN_STR, L"%0.1f", m_pPickingObject->Get_Transform()->m_vAngle.y);
-				TabMap.m_StaticMeshEdit_AngleY.SetWindowTextW(szTemp);
-				_stprintf_s(szTemp, MIN_STR, L"%0.1f", m_pPickingObject->Get_Transform()->m_vAngle.z);
-				TabMap.m_StaticMeshEdit_AngleZ.SetWindowTextW(szTemp);
-
-				_stprintf_s(szTemp, MIN_STR, L"%0.1f", m_pPickingObject->Get_Transform()->m_vPos.x);
-				TabMap.m_StaticMeshEdit_PosX.SetWindowTextW(szTemp);
-				_stprintf_s(szTemp, MIN_STR, L"%0.1f", m_pPickingObject->Get_Transform()->m_vPos.y);
-				TabMap.m_StaticMeshEdit_PosY.SetWindowTextW(szTemp);
-				_stprintf_s(szTemp, MIN_STR, L"%0.1f", m_pPickingObject->Get_Transform()->m_vPos.z);
-				TabMap.m_StaticMeshEdit_PosZ.SetWindowTextW(szTemp);
-
+				TabMap.UpdateData(TRUE);
+				TabMap.m_fStaticMeshScaleX = m_pPickingObject->Get_Transform()->m_vScale.x;
+				TabMap.m_fStaticMeshScaleY = m_pPickingObject->Get_Transform()->m_vScale.y;
+				TabMap.m_fStaticMeshScaleZ = m_pPickingObject->Get_Transform()->m_vScale.z;
+				TabMap.m_fStaticMeshAngleX = m_pPickingObject->Get_Transform()->m_vAngle.x;
+				TabMap.m_fStaticMeshAngleY = m_pPickingObject->Get_Transform()->m_vAngle.y;
+				TabMap.m_fStaticMeshAngleZ = m_pPickingObject->Get_Transform()->m_vAngle.z;
+				TabMap.m_fStaticMeshPosX	= m_pPickingObject->Get_Transform()->m_vPos.x;
+				TabMap.m_fStaticMeshPosY	= m_pPickingObject->Get_Transform()->m_vPos.y;
+				TabMap.m_fStaticMeshPosZ	= m_pPickingObject->Get_Transform()->m_vPos.z;
+				TabMap.UpdateData(FALSE);
 			}
 		}
 		
 
 	}
 	
+}
+
+void CToolSceneStage::KeyInput_ModeChange(CTabMap& TabMap)
+{
+	TabMap.UpdateData(TRUE);
+
+	if (TabMap.m_EditCheck_StaticMesh.GetCheck())
+	{
+		TabMap.m_bIsCreateMode = !TabMap.m_bIsCreateMode;
+		TabMap.m_bIsModifyMode = !TabMap.m_bIsModifyMode;
+
+		TabMap.m_StaticMeshRadio_CreateMode.SetCheck(TabMap.m_bIsCreateMode);
+		TabMap.m_StaticMeshRadio_ModifyMode.SetCheck(TabMap.m_bIsModifyMode);
+		// Object 생성 모드일 경우.
+		if (TabMap.m_bIsCreateMode)
+		{
+			TabMap.m_fStaticMeshScaleX = 0.01f;
+			TabMap.m_fStaticMeshScaleY = 0.01f;
+			TabMap.m_fStaticMeshScaleZ = 0.01f;
+			TabMap.m_fStaticMeshAngleX = 0.0f;
+			TabMap.m_fStaticMeshAngleY = 0.0f;
+			TabMap.m_fStaticMeshAngleZ = 0.0f;
+		}
+		// Object 수정 모드일 경우.
+		else if (TabMap.m_bIsModifyMode)
+		{
+
+		}
+	}
+
+	TabMap.UpdateData(FALSE);
 }
 
 CToolSceneStage* CToolSceneStage::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)

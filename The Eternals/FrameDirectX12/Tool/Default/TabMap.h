@@ -31,6 +31,7 @@ public:
 	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
+	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 
 	Engine::CManagement*		m_pManagement		= nullptr;
 	Engine::CObjectMgr*			m_pObjectMgr		= nullptr;

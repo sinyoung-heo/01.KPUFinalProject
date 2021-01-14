@@ -117,6 +117,7 @@ BEGIN_MESSAGE_MAP(CTabMap, CDialogEx)
 	ON_LBN_SELCHANGE(IDC_LIST1003, &CTabMap::OnLbnSelchangeList1003_StaticMeshObjectList)
 	ON_BN_CLICKED(IDC_BUTTON1001, &CTabMap::OnBnClickedButton1001_StasticMeshDelete)
 	ON_BN_CLICKED(IDC_BUTTON1002, &CTabMap::OnBnClickedButton1002_StaticMeshAllDelete)
+	ON_WM_KEYDOWN()
 END_MESSAGE_MAP()
 
 
@@ -194,6 +195,8 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	/*__________________________________________________________________________________________________________
 	[ StaticMesh Control ]
 	____________________________________________________________________________________________________________*/
+	Engine::CGameObject* pObject = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject;
+	
 	if (m_EditCheck_StaticMesh.GetCheck())
 	{
 		RECT rcStaticMeshEdit[9] = { };
@@ -217,54 +220,89 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 				m_fStaticMeshScaleY += 0.01f;
 				m_fStaticMeshScaleZ += 0.01f;
 			}
-			else if (zDelta < 0 && m_fStaticMeshScaleX > 0.f)
+			else if (zDelta < 0 && 
+					 m_fStaticMeshScaleX > 0 &&
+					 m_fStaticMeshScaleY > 0 &&
+					 m_fStaticMeshScaleX > 0)
 			{
 				m_fStaticMeshScaleX -= 0.01f;
 				m_fStaticMeshScaleY -= 0.01f;
 				m_fStaticMeshScaleZ -= 0.01f;
+			}
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsModifyMode && nullptr != pObject)
+			{
+				pObject->Get_Transform()->m_vScale.x = m_fStaticMeshScaleX;
+				pObject->Get_Transform()->m_vScale.y = m_fStaticMeshScaleY;
+				pObject->Get_Transform()->m_vScale.z = m_fStaticMeshScaleZ;
 			}
 		}
 		else if (PtInRect(&rcStaticMeshEdit[3], pt))	// Angle X
 		{
 			if (zDelta > 0)
 				m_fStaticMeshAngleX += 1.0f;
-			else if (zDelta < 0 && m_fStaticMeshAngleX > 0.f)
+			else if (zDelta < 0)
 				m_fStaticMeshAngleX -= 1.0f;
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsModifyMode && nullptr != pObject)
+				pObject->Get_Transform()->m_vAngle.x = m_fStaticMeshAngleX;
 		}
 		else if (PtInRect(&rcStaticMeshEdit[4], pt))	// Angle Y
 		{
 			if (zDelta > 0)
 				m_fStaticMeshAngleY += 1.0f;
-			else if (zDelta < 0 && m_fStaticMeshAngleY > 0.f)
+			else if (zDelta < 0)
 				m_fStaticMeshAngleY -= 1.0f;
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsModifyMode && nullptr != pObject)
+				pObject->Get_Transform()->m_vAngle.y = m_fStaticMeshAngleY;
 		}
 		else if (PtInRect(&rcStaticMeshEdit[5], pt))	// Angle Z
 		{
 			if (zDelta > 0)
 				m_fStaticMeshAngleZ += 1.0f;
-			else if (zDelta < 0 && m_fStaticMeshAngleZ > 0.f)
+			else if (zDelta < 0)
 				m_fStaticMeshAngleZ -= 1.0f;
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsModifyMode && nullptr != pObject)
+				pObject->Get_Transform()->m_vAngle.z = m_fStaticMeshAngleZ;
 		}
 		else if (PtInRect(&rcStaticMeshEdit[6], pt))	// Pos X
 		{
 			if (zDelta > 0)
 				m_fStaticMeshPosX += 1.0f;
-			else if (zDelta < 0 && m_fStaticMeshPosX > 0.f)
+			else if (zDelta < 0)
 				m_fStaticMeshPosX -= 1.0f;
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsModifyMode && nullptr != pObject)
+				pObject->Get_Transform()->m_vPos.x = m_fStaticMeshPosX;
 		}
 		else if (PtInRect(&rcStaticMeshEdit[7], pt))	// Pos Y
 		{
 			if (zDelta > 0)
 				m_fStaticMeshPosY += 1.0f;
-			else if (zDelta < 0 && m_fStaticMeshPosY > 0.f)
+			else if (zDelta < 0)
 				m_fStaticMeshPosY -= 1.0f;
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsModifyMode && nullptr != pObject)
+				pObject->Get_Transform()->m_vPos.y= m_fStaticMeshPosY;
 		}
 		else if (PtInRect(&rcStaticMeshEdit[8], pt))	// Pos Z
 		{
 			if (zDelta > 0)
 				m_fStaticMeshPosZ += 1.0f;
-			else if (zDelta < 0 && m_fStaticMeshPosZ > 0.f)
+			else if (zDelta < 0)
 				m_fStaticMeshPosZ -= 1.0f;
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsModifyMode && nullptr != pObject)
+				pObject->Get_Transform()->m_vPos.z = m_fStaticMeshPosZ;
 		}
 	}
 
@@ -274,6 +312,16 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 
 	return CDialogEx::OnMouseWheel(nFlags, zDelta, pt);
 }
+
+void CTabMap::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	UpdateData(TRUE);
+
+	UpdateData(FALSE);
+	CDialogEx::OnKeyDown(nChar, nRepCnt, nFlags);
+}
+
 
 
 HRESULT CTabMap::Ready_TerrainControl()
@@ -838,9 +886,18 @@ void CTabMap::OnEnChangeEdit1005_StaticMeshScaleX()
 {
 	UpdateData(TRUE);
 
+	// 현재 모드가 ModifyMode일 경우.
+	if (m_bIsModifyMode)
+	{
+		// 선택한 Object가 nullptr이 아닐 경우 값 변경.
+		Engine::CGameObject* pObject = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject;
+		if (nullptr != pObject)
+		{
+			pObject->Get_Transform()->m_vScale.x = m_fStaticMeshScaleX;
+		}
+	}
 
 	UpdateData(FALSE);
-
 }
 
 
@@ -849,6 +906,16 @@ void CTabMap::OnEnChangeEdit1006_StaticMeshScaleY()
 {
 	UpdateData(TRUE);
 
+	// 현재 모드가 ModifyMode일 경우.
+	if (m_bIsModifyMode)
+	{
+		// 선택한 Object가 nullptr이 아닐 경우 값 변경.
+		Engine::CGameObject* pObject = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject;
+		if (nullptr != pObject)
+		{
+			pObject->Get_Transform()->m_vScale.y = m_fStaticMeshScaleY;
+		}
+	}
 
 	UpdateData(FALSE);
 }
@@ -859,6 +926,16 @@ void CTabMap::OnEnChangeEdit1007_StaticMeshScaleZ()
 {
 	UpdateData(TRUE);
 
+	// 현재 모드가 ModifyMode일 경우.
+	if (m_bIsModifyMode)
+	{
+		// 선택한 Object가 nullptr이 아닐 경우 값 변경.
+		Engine::CGameObject* pObject = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject;
+		if (nullptr != pObject)
+		{
+			pObject->Get_Transform()->m_vScale.z = m_fStaticMeshScaleZ;
+		}
+	}
 
 	UpdateData(FALSE);
 }
@@ -868,6 +945,16 @@ void CTabMap::OnEnChangeEdit1008_StaticMeshAngleX()
 {
 	UpdateData(TRUE);
 
+	// 현재 모드가 ModifyMode일 경우.
+	if (m_bIsModifyMode)
+	{
+		// 선택한 Object가 nullptr이 아닐 경우 값 변경.
+		Engine::CGameObject* pObject = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject;
+		if (nullptr != pObject)
+		{
+			pObject->Get_Transform()->m_vAngle.x = m_fStaticMeshAngleX;
+		}
+	}
 
 	UpdateData(FALSE);
 }
@@ -878,6 +965,16 @@ void CTabMap::OnEnChangeEdit1009_StaticMeshAngleY()
 {
 	UpdateData(TRUE);
 
+	// 현재 모드가 ModifyMode일 경우.
+	if (m_bIsModifyMode)
+	{
+		// 선택한 Object가 nullptr이 아닐 경우 값 변경.
+		Engine::CGameObject* pObject = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject;
+		if (nullptr != pObject)
+		{
+			pObject->Get_Transform()->m_vAngle.y = m_fStaticMeshAngleY;
+		}
+	}
 
 	UpdateData(FALSE);
 }
@@ -888,6 +985,16 @@ void CTabMap::OnEnChangeEdit1010_StaticMeshAngleZ()
 {
 	UpdateData(TRUE);
 
+	// 현재 모드가 ModifyMode일 경우.
+	if (m_bIsModifyMode)
+	{
+		// 선택한 Object가 nullptr이 아닐 경우 값 변경.
+		Engine::CGameObject* pObject = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject;
+		if (nullptr != pObject)
+		{
+			pObject->Get_Transform()->m_vAngle.z = m_fStaticMeshAngleZ;
+		}
+	}
 
 	UpdateData(FALSE);
 }
@@ -897,6 +1004,16 @@ void CTabMap::OnEnChangeEdit1011_StaticMeshPosX()
 {
 	UpdateData(TRUE);
 
+	// 현재 모드가 ModifyMode일 경우.
+	if (m_bIsModifyMode)
+	{
+		// 선택한 Object가 nullptr이 아닐 경우 값 변경.
+		Engine::CGameObject* pObject = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject;
+		if (nullptr != pObject)
+		{
+			pObject->Get_Transform()->m_vPos.x = m_fStaticMeshPosX;
+		}
+	}
 
 	UpdateData(FALSE);
 }
@@ -906,6 +1023,16 @@ void CTabMap::OnEnChangeEdit1012_StaticMeshPosY()
 {
 	UpdateData(TRUE);
 
+	// 현재 모드가 ModifyMode일 경우.
+	if (m_bIsModifyMode)
+	{
+		// 선택한 Object가 nullptr이 아닐 경우 값 변경.
+		Engine::CGameObject* pObject = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject;
+		if (nullptr != pObject)
+		{
+			pObject->Get_Transform()->m_vPos.y = m_fStaticMeshPosY;
+		}
+	}
 
 	UpdateData(FALSE);
 }
@@ -915,6 +1042,16 @@ void CTabMap::OnEnChangeEdit1013_StaticMeshPosZ()
 {
 	UpdateData(TRUE);
 
+	// 현재 모드가 ModifyMode일 경우.
+	if (m_bIsModifyMode)
+	{
+		// 선택한 Object가 nullptr이 아닐 경우 값 변경.
+		Engine::CGameObject* pObject = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject;
+		if (nullptr != pObject)
+		{
+			pObject->Get_Transform()->m_vPos.z = m_fStaticMeshPosZ;
+		}
+	}
 
 	UpdateData(FALSE);
 }

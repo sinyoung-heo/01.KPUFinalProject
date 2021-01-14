@@ -33,7 +33,7 @@ private:
 
 	void			KeyInput();
 	void			KeyInput_TabMap(CTabMap& TabMap);
-
+	void			KeyInput_ModeChange(CTabMap& TabMap);
 
 public:
 	CToolTerrain*			m_pPickingTerrain	= nullptr;
