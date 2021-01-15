@@ -1323,10 +1323,10 @@ void CTabMap::OnBnClickedButton1003_StaticMeshSAVE()
 		return;
 
 	CFileDialog Dlg(FALSE,
-					L"dat",
-					L"*.dat",
+					L"staticmesh",
+					L"*.staticmesh",
 					OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-					L"Data Files(*.dat) | *.dat ||",
+					L"Data Files(*.staticmesh) | *.staticmesh ||",
 					this);
 
 	_tchar szPath[MAX_STR] = L"";
@@ -1357,14 +1357,24 @@ void CTabMap::OnBnClickedButton1003_StaticMeshSAVE()
 			_vec3 vBoundingSpherePos	= pObject->Get_BoundingSphere()->Get_Transform()->m_vPos;
 			 
 			// StaticMesh Data 저장
-			fout	<< wstrMeshTag << L" "										// MeshTag
-					<< vScale.x	<< L" " << vScale.y << L" "	<< vScale.z	<< L" "	// Scale
-					<< vAngle.x	<< L" "	<< vAngle.y	<< L" " << vAngle.z	<< L" "	// Angle
-					<< vPos.x	<< L" " << vPos.y << L" " << vPos.z << L" "		// Pos
-					<< bIsRenderShadow	<< L" "									// Is Render Shadow
-					<< bIsCollision		<< L" "									// Is Collision
-					<< vBoundingSphereScale.x	<< L" " << vBoundingSphereScale.y	<< L" " << vBoundingSphereScale.z << L" "	// BoundingSphere Scale
-					<< vBoundingSpherePos.x		<< L" " << vBoundingSpherePos.y		<< L" " << vBoundingSpherePos.z << L" ";	// BoundingSphere Pos
+			fout	<< wstrMeshTag << L" "				// MeshTag
+					<< vScale.x	<< L" " 
+					<< vScale.y << L" "	
+					<< vScale.z	<< L" "					// Scale
+					<< vAngle.x	<< L" "	
+					<< vAngle.y	<< L" " 
+					<< vAngle.z	<< L" "					// Angle
+					<< vPos.x << L" " 
+					<< vPos.y << L" " 
+					<< vPos.z << L" "					// Pos
+					<< bIsRenderShadow << L" "			// Is Render Shadow
+					<< bIsCollision << L" "				// Is Collision
+					<< vBoundingSphereScale.x << L" " 
+					<< vBoundingSphereScale.y << L" " 
+					<< vBoundingSphereScale.z << L" "	// BoundingSphere Scale
+					<< vBoundingSpherePos.x << L" " 
+					<< vBoundingSpherePos.y << L" " 
+					<< vBoundingSpherePos.z << L" ";	// BoundingSphere Pos
 		}
 
 
@@ -1391,10 +1401,10 @@ void CTabMap::OnBnClickedButton1004_StaticMeshLOAD()
 	}
 
 	CFileDialog Dlg(TRUE,
-					L"dat",
-					L"*.dat",
+					L"staticmesh",
+					L"*.staticmesh",
 					OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-					L"Data Files(*.dat)|*.dat||",
+					L"Data Files(*.staticmesh)|*.staticmesh||",
 					this);
 
 	_tchar szPath[MAX_STR] = L"";
@@ -1424,14 +1434,24 @@ void CTabMap::OnBnClickedButton1004_StaticMeshLOAD()
 		while (true)
 		{
 
-			fin		>> wstrMeshTag 						// MeshTag
-					>> vScale.x	>> vScale.y >> vScale.z	// Scale
-					>> vAngle.x	>> vAngle.y >> vAngle.z	// Angle
-					>> vPos.x >> vPos.y >> vPos.z		// Pos
-					>> bIsRenderShadow					// Is Render Shadow
-					>> bIsCollision 					// Is Collision
-					>> vBoundingSphereScale.x >> vBoundingSphereScale.y >> vBoundingSphereScale.z	// BoundingSphere Scale
-					>> vBoundingSpherePos.x >> vBoundingSpherePos.y >> vBoundingSpherePos.z;		// // BoundingSphere Pos
+			fin		>> wstrMeshTag 				// MeshTag
+					>> vScale.x	
+					>> vScale.y 
+					>> vScale.z					// Scale
+					>> vAngle.x	
+					>> vAngle.y 
+					>> vAngle.z					// Angle
+					>> vPos.x 
+					>> vPos.y 
+					>> vPos.z					// Pos
+					>> bIsRenderShadow			// Is Render Shadow
+					>> bIsCollision 			// Is Collision
+					>> vBoundingSphereScale.x	// BoundingSphere Scale
+					>> vBoundingSphereScale.y 
+					>> vBoundingSphereScale.z	
+					>> vBoundingSpherePos.x		// BoundingSphere Pos
+					>> vBoundingSpherePos.y 
+					>> vBoundingSpherePos.z;	
 
 			if (fin.eof())
 				break;
