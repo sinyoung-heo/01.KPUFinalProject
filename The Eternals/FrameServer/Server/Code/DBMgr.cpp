@@ -64,19 +64,13 @@ void CDBMgr::Disconnect_DB()
 bool CDBMgr::Check_ID(int id, char* pw)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
-	/*SQLINTEGER level, posX, posY, hp, maxhp, exp, maxexp, att, ori_x, ori_y;
-	SQLLEN cbLevel = 0, cbPosX = 0, cbPosY = 0, cbHp = 0, cbMaxHp = 0, cbExp = 0, cbMaxExp = 0, cbAtt = 0, cbOriX = 0, cbOriY = 0;*/
-
+	
 	SQLINTEGER u_type, u_level, u_Hp, u_maxHp, u_Exp, u_maxExp, u_att;
 	SQLFLOAT u_posX, u_posY, u_posZ, u_speed;
 
-	SQLLEN cbType = 0, cbLevel = 0, cbHp = 0, cbmaxHp = 0, cbExp = 0, cbmaxExp = 0, cbAtt = 0, cbPosX = 0, cbPosY = 0, cbPosZ = 0, cbSpeed = 0;
 	SQLLEN cbLen = 0;
 
 	/* 유효한 ID인지 검사하는 쿼리문 */
-	/*std::string str_order
-		= "SELECT user_level, user_x, user_y, user_hp,user_maxhp, user_exp, user_maxexp, user_att, user_ori_x, user_ori_y FROM USER_DATA WHERE user_name = '";*/
-
 	std::string str_order
 		= "SELECT * FROM USER_DATA WHERE user_ID = '";
 
@@ -94,17 +88,17 @@ bool CDBMgr::Check_ID(int id, char* pw)
 	if (m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO)
 	{
 		/* Load Data on player info */
-		m_retcode = SQLBindCol(m_hstmt, 2, SQL_C_FLOAT, &u_posX, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 3, SQL_C_FLOAT, &u_posY, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 4, SQL_C_FLOAT, &u_posZ, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 5, SQL_C_LONG, &u_type, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 6, SQL_C_LONG, &u_level, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 7, SQL_C_LONG, &u_Hp, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 8, SQL_C_LONG, &u_maxHp, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 9, SQL_C_LONG, &u_Exp, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 10, SQL_C_LONG, &u_maxExp, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 11, SQL_C_LONG, &u_att, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 12, SQL_C_FLOAT, &u_speed, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 3, SQL_C_DOUBLE, &u_posX, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 4, SQL_C_DOUBLE, &u_posY, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 5, SQL_C_DOUBLE, &u_posZ, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 6, SQL_C_LONG, &u_type, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 7, SQL_C_LONG, &u_level, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 8, SQL_C_LONG, &u_Hp, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 9, SQL_C_LONG, &u_maxHp, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 10, SQL_C_LONG, &u_Exp, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 11, SQL_C_LONG, &u_maxExp, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 12, SQL_C_LONG, &u_att, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 13, SQL_C_DOUBLE, &u_speed, 100, &cbLen);
 
 		for (int i = 0; ; i++)
 		{
@@ -174,7 +168,6 @@ void CDBMgr::Insert_NewPlayer_DB(int id, char* pw)
 #ifdef TEST
 	cout << "회원 가입 완료" << endl;
 #endif // TEST
-
 
 	SQLCloseCursor(m_hstmt);
 	SQLCancel(m_hstmt);
