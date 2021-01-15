@@ -54,15 +54,25 @@ HRESULT CLightMgr::Add_Light(ID3D12Device * pGraphicDevice,
 	return S_OK;
 }
 
+void CLightMgr::Update_Light()
+{
+	auto iter_begin = m_vecLight[D3DLIGHT_POINT].begin();
+	auto iter_end	= m_vecLight[D3DLIGHT_POINT].end();
 
-//void CLightMgr::Render_Light(vector<ComPtr<ID3D12Resource>> pvecTargetTexture)
-//{
-//	for (auto& pLight : m_vecLight)
-//	{
-//		if (nullptr != pLight)
-//			pLight->Render_Light(pvecTargetTexture);
-//	}
-//}
+	for (; iter_begin != iter_end ;)
+	{
+		_int iEvent = (*iter_begin)->Update_Light();
+		if (DEAD_OBJ == iEvent)
+		{
+			Safe_Release(*iter_begin);
+			iter_begin	= m_vecLight[D3DLIGHT_POINT].erase(iter_begin);
+			iter_end	= m_vecLight[D3DLIGHT_POINT].end();
+		}
+		else
+			++iter_begin;
+	}
+
+}
 
 void CLightMgr::Render_Light(vector<ComPtr<ID3D12Resource>> pvecTargetTexture)
 {
@@ -80,10 +90,6 @@ void CLightMgr::Render_Light(vector<ComPtr<ID3D12Resource>> pvecTargetTexture)
 
 void CLightMgr::Free()
 {
-	//for_each(m_vecLight.begin(), m_vecLight.end(), Safe_Release<CLight*>);
-	//m_vecLight.clear();
-	//m_vecLight.shrink_to_fit();
-
 	for (auto& vecLight : m_vecLight)
 	{
 		for_each(vecLight.begin(), vecLight.end(), Safe_Release<CLight*>);

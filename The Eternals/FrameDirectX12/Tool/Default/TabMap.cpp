@@ -12,6 +12,7 @@
 #include "ToolSkyBox.h"
 #include "ToolStaticMesh.h"
 #include "GraphicDevice.h"
+#include "LightMgr.h"
 
 // CTabMap 대화 상자
 
@@ -90,6 +91,103 @@ void CTabMap::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT1060, m_fStaticMeshColliderPosX);
 	DDX_Text(pDX, IDC_EDIT1061, m_fStaticMeshColliderPosY);
 	DDX_Text(pDX, IDC_EDIT1062, m_fStaticMeshColliderPosZ);
+	DDX_Control(pDX, IDC_EDIT1014, m_LightInfoEdit_DL_DiffuseR);
+	DDX_Control(pDX, IDC_EDIT1015, m_LightInfoEdit_DL_DiffuseG);
+	DDX_Control(pDX, IDC_EDIT1016, m_LightInfoEdit_DL_DiffuseB);
+	DDX_Control(pDX, IDC_EDIT1017, m_LightInfoEdit_DL_DiffuseA);
+	DDX_Control(pDX, IDC_EDIT1018, m_LightInfoEdit_DL_SpecularR);
+	DDX_Control(pDX, IDC_EDIT1019, m_LightInfoEdit_DL_SpecularG);
+	DDX_Control(pDX, IDC_EDIT1020, m_LightInfoEdit_DL_SpecularB);
+	DDX_Control(pDX, IDC_EDIT1021, m_LightInfoEdit_DL_SpecularA);
+	DDX_Control(pDX, IDC_EDIT1022, m_LightInfoEdit_DL_AmbientR);
+	DDX_Control(pDX, IDC_EDIT1023, m_LightInfoEdit_DL_AmbientG);
+	DDX_Control(pDX, IDC_EDIT1024, m_LightInfoEdit_DL_AmbientB);
+	DDX_Control(pDX, IDC_EDIT1025, m_LightInfoEdit_DL_AmbientA);
+	DDX_Control(pDX, IDC_EDIT1026, m_LightInfoEdit_DL_DirectionX);
+	DDX_Control(pDX, IDC_EDIT1027, m_LightInfoEdit_DL_DirectionY);
+	DDX_Control(pDX, IDC_EDIT1028, m_LightInfoEdit_DL_DirectionZ);
+	DDX_Control(pDX, IDC_BUTTON1005, m_LightInfoButton_DL_SAVE);
+	DDX_Control(pDX, IDC_BUTTON1006, m_LightInfoButton_DL_LOAD);
+	DDX_Control(pDX, IDC_EDIT1030, m_LightInfoEdit_PL_DiffuseR);
+	DDX_Control(pDX, IDC_EDIT1031, m_LightInfoEdit_PL_DiffuseG);
+	DDX_Control(pDX, IDC_EDIT1032, m_LightInfoEdit_PL_DiffuseB);
+	DDX_Control(pDX, IDC_EDIT1033, m_LightInfoEdit_PL_DiffuseA);
+	DDX_Control(pDX, IDC_EDIT1034, m_LightInfoEdit_PL_SpecularR);
+	DDX_Control(pDX, IDC_EDIT1035, m_LightInfoEdit_PL_SpecularG);
+	DDX_Control(pDX, IDC_EDIT1036, m_LightInfoEdit_PL_SpecularB);
+	DDX_Control(pDX, IDC_EDIT1037, m_LightInfoEdit_PL_SpecularA);
+	DDX_Control(pDX, IDC_EDIT1038, m_LightInfoEdit_PL_AnbientR);
+	DDX_Control(pDX, IDC_EDIT1039, m_LightInfoEdit_PL_AnbientG);
+	DDX_Control(pDX, IDC_EDIT1040, m_LightInfoEdit_PL_AnbientB);
+	DDX_Control(pDX, IDC_EDIT1041, m_LightInfoEdit_PL_AnbientA);
+	DDX_Control(pDX, IDC_EDIT1029, m_LightInfoEdit_DL_DirectionW);
+	DDX_Control(pDX, IDC_EDIT1042, m_LightInfoEdit_PL_PosX);
+	DDX_Control(pDX, IDC_EDIT1043, m_LightInfoEdit_PL_PosY);
+	DDX_Control(pDX, IDC_EDIT1044, m_LightInfoEdit_PL_PosZ);
+	DDX_Control(pDX, IDC_EDIT1045, m_LightInfoEdit_PL_PosW);
+	DDX_Control(pDX, IDC_EDIT1046, m_LightInfoEdit_PL_Range);
+	DDX_Control(pDX, IDC_RADIO1008, m_LightInfoRadio_PL_CreateMode);
+	DDX_Control(pDX, IDC_RADIO1009, m_LightInfoRadio_PL_ModifyMode);
+	DDX_Control(pDX, IDC_LIST1004, m_LightInfoListBox_PL_List);
+	DDX_Control(pDX, IDC_BUTTON1007, m_LightInfoButton_PL_DELETE);
+	DDX_Control(pDX, IDC_BUTTON1008, m_LightInfoButton_PL_ALLDELETE);
+	DDX_Control(pDX, IDC_BUTTON1009, m_LightInfoButton_PL_SAVE);
+	DDX_Control(pDX, IDC_BUTTON1010, m_LightInfoButton_PL_LOAD);
+	DDX_Control(pDX, IDC_EDIT1047, m_LightInfoEdit_SL_EyeX);
+	DDX_Control(pDX, IDC_EDIT1048, m_LightInfoEdit_SL_EyeY);
+	DDX_Control(pDX, IDC_EDIT1049, m_LightInfoEdit_SL_EyeZ);
+	DDX_Control(pDX, IDC_EDIT1050, m_LightInfoEdit_SL_AtX);
+	DDX_Control(pDX, IDC_EDIT1051, m_LightInfoEdit_SL_AtY);
+	DDX_Control(pDX, IDC_EDIT1052, m_LightInfoEdit_SL_AtZ);
+	DDX_Control(pDX, IDC_EDIT1056, m_LightInfoEdit_SL_Height);
+	DDX_Control(pDX, IDC_EDIT1053, m_LightInfoEdit_SL_FovY);
+	DDX_Control(pDX, IDC_EDIT1054, m_LightInfoEdit_SL_Near);
+	DDX_Control(pDX, IDC_EDIT1055, m_LightInfoEdit_SL_Far);
+	DDX_Control(pDX, IDC_BUTTON1011, m_LightInfoButton_SL_SAVE);
+	DDX_Control(pDX, IDC_BUTTON1012, m_LightInfoButton_SL_LOAD);
+	DDX_Text(pDX, IDC_EDIT1014, m_fLightInfo_DL_DiffuseR);
+	DDX_Text(pDX, IDC_EDIT1015, m_fLightInfo_DL_DiffuseG);
+	DDX_Text(pDX, IDC_EDIT1016, m_fLightInfo_DL_DiffuseB);
+	DDX_Text(pDX, IDC_EDIT1017, m_fLightInfo_DL_DiffuseA);
+	DDX_Text(pDX, IDC_EDIT1018, m_fLightInfo_DL_SpecularR);
+	DDX_Text(pDX, IDC_EDIT1019, m_fLightInfo_DL_SpecularG);
+	DDX_Text(pDX, IDC_EDIT1020, m_fLightInfo_DL_SpecularB);
+	DDX_Text(pDX, IDC_EDIT1021, m_fLightInfo_DL_SpecularA);
+	DDX_Text(pDX, IDC_EDIT1022, m_fLightInfo_DL_AmbientR);
+	DDX_Text(pDX, IDC_EDIT1023, m_fLightInfo_DL_AmbientG);
+	DDX_Text(pDX, IDC_EDIT1024, m_fLightInfo_DL_AmbientB);
+	DDX_Text(pDX, IDC_EDIT1025, m_fLightInfo_DL_AmbientA);
+	DDX_Text(pDX, IDC_EDIT1026, m_fLightInfo_DL_DirX);
+	DDX_Text(pDX, IDC_EDIT1027, m_fLightInfo_DL_DirY);
+	DDX_Text(pDX, IDC_EDIT1028, m_fLightInfo_DL_DirZ);
+	DDX_Text(pDX, IDC_EDIT1029, m_fLightInfo_DL_DirW);
+	DDX_Text(pDX, IDC_EDIT1030, m_fLightInfo_PL_DiffuseR);
+	DDX_Text(pDX, IDC_EDIT1031, m_fLightInfo_PL_DiffuseG);
+	DDX_Text(pDX, IDC_EDIT1032, m_fLightInfo_PL_DiffuseB);
+	DDX_Text(pDX, IDC_EDIT1033, m_fLightInfo_PL_DiffuseA);
+	DDX_Text(pDX, IDC_EDIT1034, m_fLightInfo_PL_SpecularR);
+	DDX_Text(pDX, IDC_EDIT1035, m_fLightInfo_PL_SpecularG);
+	DDX_Text(pDX, IDC_EDIT1036, m_fLightInfo_PL_SpecularB);
+	DDX_Text(pDX, IDC_EDIT1037, m_fLightInfo_PL_SpecularA);
+	DDX_Text(pDX, IDC_EDIT1038, m_fLightInfo_PL_AmbientR);
+	DDX_Text(pDX, IDC_EDIT1039, m_fLightInfo_PL_AmbientG);
+	DDX_Text(pDX, IDC_EDIT1040, m_fLightInfo_PL_AmbientB);
+	DDX_Text(pDX, IDC_EDIT1041, m_fLightInfo_PL_AmbientA);
+	DDX_Text(pDX, IDC_EDIT1042, m_fLightInfo_PL_PosX);
+	DDX_Text(pDX, IDC_EDIT1043, m_fLightInfo_PL_PosY);
+	DDX_Text(pDX, IDC_EDIT1044, m_fLightInfo_PL_PosZ);
+	DDX_Text(pDX, IDC_EDIT1045, m_fLightInfo_PL_PosW);
+	DDX_Text(pDX, IDC_EDIT1046, m_fLightInfo_PL_Range);
+	DDX_Text(pDX, IDC_EDIT1047, m_fLightInfo_SL_EyeX);
+	DDX_Text(pDX, IDC_EDIT1048, m_fLightInfo_SL_EyeY);
+	DDX_Text(pDX, IDC_EDIT1049, m_fLightInfo_SL_EyeZ);
+	DDX_Text(pDX, IDC_EDIT1050, m_fLightInfo_SL_AtX);
+	DDX_Text(pDX, IDC_EDIT1051, m_fLightInfo_SL_AtY);
+	DDX_Text(pDX, IDC_EDIT1052, m_fLightInfo_SL_AtZ);
+	DDX_Text(pDX, IDC_EDIT1056, m_fLightInfo_SL_Height);
+	DDX_Text(pDX, IDC_EDIT1053, m_fLightInfo_SL_FovY);
+	DDX_Text(pDX, IDC_EDIT1054, m_fLightInfo_SL_Near);
+	DDX_Text(pDX, IDC_EDIT1055, m_fLightInfo_SL_Far);
 }
 
 
@@ -130,6 +228,58 @@ BEGIN_MESSAGE_MAP(CTabMap, CDialogEx)
 	ON_WM_KEYDOWN()
 	ON_BN_CLICKED(IDC_BUTTON1003, &CTabMap::OnBnClickedButton1003_StaticMeshSAVE)
 	ON_BN_CLICKED(IDC_BUTTON1004, &CTabMap::OnBnClickedButton1004_StaticMeshLOAD)
+	ON_EN_CHANGE(IDC_EDIT1014, &CTabMap::OnEnChangeEdit1014_LightInfo_DL_DiffuseR)
+	ON_EN_CHANGE(IDC_EDIT1015, &CTabMap::OnEnChangeEdit1015_LightInfo_DL_DiffuseG)
+	ON_EN_CHANGE(IDC_EDIT1016, &CTabMap::OnEnChangeEdit1016_LightInfo_DL_DiffuseB)
+	ON_EN_CHANGE(IDC_EDIT1017, &CTabMap::OnEnChangeEdit1017_LightInfo_DL_DiffuseA)
+	ON_EN_CHANGE(IDC_EDIT1018, &CTabMap::OnEnChangeEdit1018_LightInfo_DL_SpecularR)
+	ON_EN_CHANGE(IDC_EDIT1019, &CTabMap::OnEnChangeEdit1019_LightInfo_DL_SpecularG)
+	ON_EN_CHANGE(IDC_EDIT1020, &CTabMap::OnEnChangeEdit1020_LightInfo_DL_SpecularB)
+	ON_EN_CHANGE(IDC_EDIT1021, &CTabMap::OnEnChangeEdit1021_LightInfo_DL_SpecularA)
+	ON_EN_CHANGE(IDC_EDIT1022, &CTabMap::OnEnChangeEdit1022_LightInfo_DL_AmbientR)
+	ON_EN_CHANGE(IDC_EDIT1023, &CTabMap::OnEnChangeEdit1023_LightInfo_DL_AmbientG)
+	ON_EN_CHANGE(IDC_EDIT1024, &CTabMap::OnEnChangeEdit1024_LightInfo_DL_AmbientB)
+	ON_EN_CHANGE(IDC_EDIT1025, &CTabMap::OnEnChangeEdit1025_LightInfo_DL_AmbientA)
+	ON_EN_CHANGE(IDC_EDIT1026, &CTabMap::OnEnChangeEdit1026_LightInfo_DL_DirX)
+	ON_EN_CHANGE(IDC_EDIT1027, &CTabMap::OnEnChangeEdit1027_LightInfo_DL_DirY)
+	ON_EN_CHANGE(IDC_EDIT1028, &CTabMap::OnEnChangeEdit1028_LightInfo_DL_DirZ)
+	ON_EN_CHANGE(IDC_EDIT1029, &CTabMap::OnEnChangeEdit1029_LightInfo_DL_DirW)
+	ON_EN_CHANGE(IDC_EDIT1030, &CTabMap::OnEnChangeEdit1030_LightInfo_PL_DiffuseR)
+	ON_EN_CHANGE(IDC_EDIT1031, &CTabMap::OnEnChangeEdit1031_LightInfo_PL_DiffuseG)
+	ON_EN_CHANGE(IDC_EDIT1032, &CTabMap::OnEnChangeEdit1032_LightInfo_PL_DiffuseB)
+	ON_EN_CHANGE(IDC_EDIT1033, &CTabMap::OnEnChangeEdit1033_LightInfo_PL_DiffuseA)
+	ON_EN_CHANGE(IDC_EDIT1034, &CTabMap::OnEnChangeEdit1034_LightInfo_PL_SpecularR)
+	ON_EN_CHANGE(IDC_EDIT1035, &CTabMap::OnEnChangeEdit1035_LightInfo_PL_SpecularG)
+	ON_EN_CHANGE(IDC_EDIT1036, &CTabMap::OnEnChangeEdit1036_LightInfo_PL_SpecularB)
+	ON_EN_CHANGE(IDC_EDIT1037, &CTabMap::OnEnChangeEdit1037_LightInfo_PL_SpecularA)
+	ON_EN_CHANGE(IDC_EDIT1038, &CTabMap::OnEnChangeEdit1038_LightInfo_PL_AmbientR)
+	ON_EN_CHANGE(IDC_EDIT1039, &CTabMap::OnEnChangeEdit1039_LightInfo_PL_AmbientG)
+	ON_EN_CHANGE(IDC_EDIT1040, &CTabMap::OnEnChangeEdit1040_LightInfo_PL_AmbientB)
+	ON_EN_CHANGE(IDC_EDIT1041, &CTabMap::OnEnChangeEdit1041_LightInfo_PL_AmbientA)
+	ON_EN_CHANGE(IDC_EDIT1042, &CTabMap::OnEnChangeEdit1042_LightInfo_PL_PosX)
+	ON_EN_CHANGE(IDC_EDIT1043, &CTabMap::OnEnChangeEdit1043_LightInfo_PL_PosY)
+	ON_EN_CHANGE(IDC_EDIT1044, &CTabMap::OnEnChangeEdit1044_LightInfo_PL_PosZ)
+	ON_EN_CHANGE(IDC_EDIT1045, &CTabMap::OnEnChangeEdit1045_LightInfo_PL_PosW)
+	ON_EN_CHANGE(IDC_EDIT1046, &CTabMap::OnEnChangeEdit1046_LightInfo_PL_Range)
+	ON_BN_CLICKED(IDC_RADIO1008, &CTabMap::OnBnClickedRadio1008_LightInfo_PL_CreateMode)
+	ON_BN_CLICKED(IDC_RADIO1009, &CTabMap::OnBnClickedRadio1009_LightInfo_PL_ModifyMode)
+	ON_LBN_SELCHANGE(IDC_LIST1004, &CTabMap::OnLbnSelchangeList1004_LightInfo_PL_List)
+	ON_BN_CLICKED(IDC_BUTTON1009, &CTabMap::OnBnClickedButton1009__LightInfo_PL_SAVE)
+	ON_BN_CLICKED(IDC_BUTTON1010, &CTabMap::OnBnClickedButton1010__LightInfo_PL_LOAD)
+	//ON_EN_CHANGE(IDC_EDIT1047, &CTabMap::OnEnChangeEdit1047_LightInfo_SL_EyeX)
+	//ON_EN_CHANGE(IDC_EDIT1048, &CTabMap::OnEnChangeEdit1048_LightInfo_SL_EyeY)
+	//ON_EN_CHANGE(IDC_EDIT1049, &CTabMap::OnEnChangeEdit1049_LightInfo_SL_EyeZ)
+	ON_EN_CHANGE(IDC_EDIT1050, &CTabMap::OnEnChangeEdit1050_LightInfo_SL_AtX)
+	ON_EN_CHANGE(IDC_EDIT1051, &CTabMap::OnEnChangeEdit1051_LightInfo_SL_AtY)
+	ON_EN_CHANGE(IDC_EDIT1052, &CTabMap::OnEnChangeEdit1052_LightInfo_SL_AtZ)
+	ON_EN_CHANGE(IDC_EDIT1056, &CTabMap::OnEnChangeEdit1056_LightInfo_SL_Height)
+	ON_EN_CHANGE(IDC_EDIT1053, &CTabMap::OnEnChangeEdit1053_LightInfo_SL_FovY)
+	ON_EN_CHANGE(IDC_EDIT1054, &CTabMap::OnEnChangeEdit1054_LightInfo_SL_Near)
+	ON_EN_CHANGE(IDC_EDIT1055, &CTabMap::OnEnChangeEdit1055_LightInfo_SL_Far)
+	ON_BN_CLICKED(IDC_BUTTON1011, &CTabMap::OnBnClickedButton1011__LightInfo_SL_SAVE)
+	ON_BN_CLICKED(IDC_BUTTON1012, &CTabMap::OnBnClickedButton1012_LightInfo_SL_LOAD)
+	ON_BN_CLICKED(IDC_BUTTON1005, &CTabMap::OnBnClickedButton1005_LightInfo_DL_SAVE)
+	ON_BN_CLICKED(IDC_BUTTON1006, &CTabMap::OnBnClickedButton1006_LightInfo_DL_LOAD)
 END_MESSAGE_MAP()
 
 
@@ -187,6 +337,62 @@ BOOL CTabMap::OnInitDialog()
 	m_StaticMeshButton_Save.EnableWindow(FALSE);
 	m_StaticMeshButton_Load.EnableWindow(FALSE);
 
+	// Lighting
+	m_LightInfoEdit_DL_DiffuseR.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DiffuseG.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DiffuseB.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DiffuseA.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_SpecularR.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_SpecularG.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_SpecularB.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_SpecularA.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_AmbientR.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_AmbientG.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_AmbientB.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_AmbientA.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DirectionX.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DirectionY.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DirectionZ.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DirectionW.EnableWindow(FALSE);
+	m_LightInfoButton_DL_SAVE.EnableWindow(FALSE);
+	m_LightInfoButton_DL_LOAD.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_DiffuseR.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_DiffuseG.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_DiffuseB.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_DiffuseA.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_SpecularR.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_SpecularG.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_SpecularB.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_SpecularA.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_AnbientR.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_AnbientG.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_AnbientB.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_AnbientA.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_PosX.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_PosY.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_PosZ.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_PosW.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_Range.EnableWindow(FALSE);
+	m_LightInfoRadio_PL_CreateMode.EnableWindow(FALSE);
+	m_LightInfoRadio_PL_ModifyMode.EnableWindow(FALSE);
+	m_LightInfoListBox_PL_List.EnableWindow(FALSE);
+	m_LightInfoButton_PL_DELETE.EnableWindow(FALSE);
+	m_LightInfoButton_PL_ALLDELETE.EnableWindow(FALSE);
+	m_LightInfoButton_PL_SAVE.EnableWindow(FALSE);
+	m_LightInfoButton_PL_LOAD.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_EyeX.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_EyeY.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_EyeZ.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_AtX.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_AtY.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_AtZ.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_Height.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_FovY.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_Near.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_Far.EnableWindow(FALSE);
+	m_LightInfoButton_SL_SAVE.EnableWindow(FALSE);
+	m_LightInfoButton_SL_LOAD.EnableWindow(FALSE);
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
 }
@@ -211,10 +417,9 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	/*__________________________________________________________________________________________________________
 	[ StaticMesh ]
 	____________________________________________________________________________________________________________*/
-	Engine::CGameObject* pObject = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject;
-	
 	if (m_EditCheck_StaticMesh.GetCheck())
 	{
+		Engine::CGameObject* pObject = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject;
 		RECT rcStaticMeshEdit[13] = { };
 		m_StaticMeshEdit_ScaleX.GetWindowRect(&rcStaticMeshEdit[0]);
 		m_StaticMeshEdit_ScaleY.GetWindowRect(&rcStaticMeshEdit[1]);
@@ -225,13 +430,10 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 		m_StaticMeshEdit_PosX.GetWindowRect(&rcStaticMeshEdit[6]);
 		m_StaticMeshEdit_PosY.GetWindowRect(&rcStaticMeshEdit[7]);
 		m_StaticMeshEdit_PosZ.GetWindowRect(&rcStaticMeshEdit[8]);
-
 		m_StaticMeshEdit_ColliderScale.GetWindowRect(&rcStaticMeshEdit[9]);
 		m_StaticMeshEdit_ColliderPosX.GetWindowRect(&rcStaticMeshEdit[10]);
 		m_StaticMeshEdit_ColliderPosY.GetWindowRect(&rcStaticMeshEdit[11]);
 		m_StaticMeshEdit_ColliderPosZ.GetWindowRect(&rcStaticMeshEdit[12]);
-
-
 
 		if (PtInRect(&rcStaticMeshEdit[0], pt) ||	// Scale X
 			PtInRect(&rcStaticMeshEdit[1], pt) ||	// Scale Y
@@ -373,6 +575,709 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 		}
 	}
 
+	/*__________________________________________________________________________________________________________
+	[ Lighting Info ]
+	____________________________________________________________________________________________________________*/
+	if (m_EditCheck_LightingInfo.GetCheck())
+	{
+		RECT rcLightInfoEdit_DL_Edit[16] = { };
+		m_LightInfoEdit_DL_DiffuseR.GetWindowRect(&rcLightInfoEdit_DL_Edit[0]);
+		m_LightInfoEdit_DL_DiffuseG.GetWindowRect(&rcLightInfoEdit_DL_Edit[1]);
+		m_LightInfoEdit_DL_DiffuseB.GetWindowRect(&rcLightInfoEdit_DL_Edit[2]);
+		m_LightInfoEdit_DL_DiffuseA.GetWindowRect(&rcLightInfoEdit_DL_Edit[3]);
+		m_LightInfoEdit_DL_SpecularR.GetWindowRect(&rcLightInfoEdit_DL_Edit[4]);
+		m_LightInfoEdit_DL_SpecularG.GetWindowRect(&rcLightInfoEdit_DL_Edit[5]);
+		m_LightInfoEdit_DL_SpecularB.GetWindowRect(&rcLightInfoEdit_DL_Edit[6]);
+		m_LightInfoEdit_DL_SpecularA.GetWindowRect(&rcLightInfoEdit_DL_Edit[7]);
+		m_LightInfoEdit_DL_AmbientR.GetWindowRect(&rcLightInfoEdit_DL_Edit[8]);
+		m_LightInfoEdit_DL_AmbientG.GetWindowRect(&rcLightInfoEdit_DL_Edit[9]);
+		m_LightInfoEdit_DL_AmbientB.GetWindowRect(&rcLightInfoEdit_DL_Edit[10]);
+		m_LightInfoEdit_DL_AmbientA.GetWindowRect(&rcLightInfoEdit_DL_Edit[11]);
+		m_LightInfoEdit_DL_DirectionX.GetWindowRect(&rcLightInfoEdit_DL_Edit[12]);
+		m_LightInfoEdit_DL_DirectionY.GetWindowRect(&rcLightInfoEdit_DL_Edit[13]);
+		m_LightInfoEdit_DL_DirectionZ.GetWindowRect(&rcLightInfoEdit_DL_Edit[14]);
+		m_LightInfoEdit_DL_DirectionW.GetWindowRect(&rcLightInfoEdit_DL_Edit[15]);
+
+		Engine::D3DLIGHT tDirLightInfo = Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0);
+		
+		if (PtInRect(&rcLightInfoEdit_DL_Edit[0], pt))			// DL_DiffuseR
+		{
+			if (zDelta > 0)
+			{
+				m_fLightInfo_DL_DiffuseR += 0.1f;
+				if (m_fLightInfo_DL_DiffuseR > 1.0f)
+					m_fLightInfo_DL_DiffuseR = 1.0f;
+			}
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_DL_DiffuseR -= 0.1f;
+				if (m_fLightInfo_DL_DiffuseR < 0.0f)
+					m_fLightInfo_DL_DiffuseR = 0.0f;
+			}
+
+			tDirLightInfo.Diffuse.x = m_fLightInfo_DL_DiffuseR;
+			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+		}
+		else if (PtInRect(&rcLightInfoEdit_DL_Edit[1], pt))		// DL_DiffuseG
+		{
+			if (zDelta > 0)
+			{
+				m_fLightInfo_DL_DiffuseG += 0.1f;
+				if (m_fLightInfo_DL_DiffuseG > 1.0f)
+					m_fLightInfo_DL_DiffuseG = 1.0f;
+			}
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_DL_DiffuseG -= 0.1f;
+				if (m_fLightInfo_DL_DiffuseG < 0.0f)
+					m_fLightInfo_DL_DiffuseG = 0.0f;
+			}
+
+			tDirLightInfo.Diffuse.y = m_fLightInfo_DL_DiffuseG;
+			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+		}
+		else if (PtInRect(&rcLightInfoEdit_DL_Edit[2], pt))		// DL_DiffuseB
+		{
+			if (zDelta > 0)
+			{
+				m_fLightInfo_DL_DiffuseB += 0.1f;
+				if (m_fLightInfo_DL_DiffuseB > 1.0f)
+					m_fLightInfo_DL_DiffuseB = 1.0f;
+			}
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_DL_DiffuseB -= 0.1f;
+				if (m_fLightInfo_DL_DiffuseB < 0.0f)
+					m_fLightInfo_DL_DiffuseB = 0.0f;
+			}
+
+			tDirLightInfo.Diffuse.z = m_fLightInfo_DL_DiffuseB;
+			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+		}
+		else if (PtInRect(&rcLightInfoEdit_DL_Edit[3], pt))		// DL_DiffuseA
+		{
+			m_fLightInfo_DL_DiffuseA = 1.0f;
+
+			tDirLightInfo.Diffuse.w = m_fLightInfo_DL_DiffuseA;
+			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+		}
+		else if (PtInRect(&rcLightInfoEdit_DL_Edit[4], pt))		// DL_SpecularR
+		{
+			if (zDelta > 0)
+			{
+				m_fLightInfo_DL_SpecularR += 0.1f;
+				if (m_fLightInfo_DL_SpecularR > 1.0f)
+					m_fLightInfo_DL_SpecularR = 1.0f;
+			}
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_DL_SpecularR -= 0.1f;
+				if (m_fLightInfo_DL_SpecularR < 0.0f)
+					m_fLightInfo_DL_SpecularR = 0.0f;
+			}
+
+
+			tDirLightInfo.Specular.x = m_fLightInfo_DL_SpecularR;
+			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+		}
+		else if (PtInRect(&rcLightInfoEdit_DL_Edit[5], pt))		// DL_SpecularG
+		{
+			if (zDelta > 0)
+			{
+				m_fLightInfo_DL_SpecularG += 0.1f;
+				if (m_fLightInfo_DL_SpecularG > 1.0f)
+					m_fLightInfo_DL_SpecularG = 1.0f;
+			}
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_DL_SpecularG -= 0.1f;
+				if (m_fLightInfo_DL_SpecularG < 0.0f)
+					m_fLightInfo_DL_SpecularG = 0.0f;
+			}
+
+			tDirLightInfo.Specular.y = m_fLightInfo_DL_SpecularG;
+			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+		}
+		else if (PtInRect(&rcLightInfoEdit_DL_Edit[6], pt))		// DL_SpecularB
+		{
+			if (zDelta > 0)
+			{
+				m_fLightInfo_DL_SpecularB += 0.1f;
+				if (m_fLightInfo_DL_SpecularB > 1.0f)
+					m_fLightInfo_DL_SpecularB = 1.0f;
+			}
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_DL_SpecularB -= 0.1f;
+				if (m_fLightInfo_DL_SpecularB < 0.0f)
+					m_fLightInfo_DL_SpecularB = 0.0f;
+			}
+
+			tDirLightInfo.Specular.z = m_fLightInfo_DL_SpecularB;
+			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+			
+		}
+		else if (PtInRect(&rcLightInfoEdit_DL_Edit[7], pt))		// DL_SpecularA
+		{
+			m_fLightInfo_DL_SpecularA = 1.0f;
+
+			tDirLightInfo.Specular.w = m_fLightInfo_DL_SpecularA;
+			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+		}
+		else if (PtInRect(&rcLightInfoEdit_DL_Edit[8], pt))		// DL_AmbientR
+		{
+			if (zDelta > 0)
+			{
+				m_fLightInfo_DL_AmbientR += 0.1f;
+				if (m_fLightInfo_DL_AmbientR > 1.0f)
+					m_fLightInfo_DL_AmbientR = 1.0f;
+			}
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_DL_AmbientR -= 0.1f;
+				if (m_fLightInfo_DL_AmbientR < 0.0f)
+					m_fLightInfo_DL_AmbientR = 0.0f;
+			}
+
+			tDirLightInfo.Ambient.x = m_fLightInfo_DL_AmbientR;
+			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+		}
+		else if (PtInRect(&rcLightInfoEdit_DL_Edit[9], pt))		// DL_AmbientG
+		{
+			if (zDelta > 0)
+			{
+				m_fLightInfo_DL_AmbientG += 0.1f;
+				if (m_fLightInfo_DL_AmbientG > 1.0f)
+					m_fLightInfo_DL_AmbientG = 1.0f;
+			}
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_DL_AmbientG -= 0.1f;
+				if (m_fLightInfo_DL_AmbientG < 0.0f)
+					m_fLightInfo_DL_AmbientG = 0.0f;
+			}
+
+			tDirLightInfo.Ambient.y = m_fLightInfo_DL_AmbientG;
+			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+		}
+		else if (PtInRect(&rcLightInfoEdit_DL_Edit[10], pt))	// DL_AmbientB
+		{
+			if (zDelta > 0)
+			{
+				m_fLightInfo_DL_AmbientB += 0.1f;
+				if (m_fLightInfo_DL_AmbientB > 1.0f)
+					m_fLightInfo_DL_AmbientB = 1.0f;
+			}
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_DL_AmbientB -= 0.1f;
+				if (m_fLightInfo_DL_AmbientB < 0.0f)
+					m_fLightInfo_DL_AmbientB = 0.0f;
+			}
+			
+			tDirLightInfo.Ambient.z = m_fLightInfo_DL_AmbientB;
+			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+		}
+		else if (PtInRect(&rcLightInfoEdit_DL_Edit[11], pt))	// DL_AmbientA
+		{
+			m_fLightInfo_DL_AmbientA = 1.0f;
+
+			tDirLightInfo.Ambient.w = m_fLightInfo_DL_AmbientA;
+			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+		}
+		else if (PtInRect(&rcLightInfoEdit_DL_Edit[12], pt))	// DL_DirectionX
+		{
+			if (zDelta > 0)
+			{
+				m_fLightInfo_DL_DirX += 0.1f;
+				if (m_fLightInfo_DL_DirX > 1.0f)
+					m_fLightInfo_DL_DirX = 1.0f;
+			}
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_DL_DirX -= 0.1f;
+				if (m_fLightInfo_DL_DirX < -1.0f)
+					m_fLightInfo_DL_DirX = -1.0f;
+			}
+
+			tDirLightInfo.Direction.x = m_fLightInfo_DL_DirX;
+			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+
+			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+			m_fLightInfo_SL_EyeX = CShadowLightMgr::Get_Instance()->m_vLightEye.x;
+			m_fLightInfo_SL_EyeY = CShadowLightMgr::Get_Instance()->m_vLightEye.y;
+			m_fLightInfo_SL_EyeZ = CShadowLightMgr::Get_Instance()->m_vLightEye.z;
+
+		}
+		else if (PtInRect(&rcLightInfoEdit_DL_Edit[13], pt))	// DL_DirectionY
+		{
+			m_fLightInfo_DL_DirY = -1.0f;
+
+			tDirLightInfo.Direction.y = m_fLightInfo_DL_DirY;
+			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+
+			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+			m_fLightInfo_SL_EyeX = CShadowLightMgr::Get_Instance()->m_vLightEye.x;
+			m_fLightInfo_SL_EyeY = CShadowLightMgr::Get_Instance()->m_vLightEye.y;
+			m_fLightInfo_SL_EyeZ = CShadowLightMgr::Get_Instance()->m_vLightEye.z;
+
+		}
+		else if (PtInRect(&rcLightInfoEdit_DL_Edit[14], pt))	// DL_DirectionZ
+		{
+			if (zDelta > 0)
+			{
+				m_fLightInfo_DL_DirZ += 0.1f;
+				if (m_fLightInfo_DL_DirZ > 1.0f)
+					m_fLightInfo_DL_DirZ = 1.0f;
+			}
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_DL_DirZ -= 0.1f;
+				if (m_fLightInfo_DL_DirZ < -1.0f)
+					m_fLightInfo_DL_DirZ = -1.0f;
+			}
+
+			tDirLightInfo.Direction.z = m_fLightInfo_DL_DirZ;
+			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+
+			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+			m_fLightInfo_SL_EyeX = CShadowLightMgr::Get_Instance()->m_vLightEye.x;
+			m_fLightInfo_SL_EyeY = CShadowLightMgr::Get_Instance()->m_vLightEye.y;
+			m_fLightInfo_SL_EyeZ = CShadowLightMgr::Get_Instance()->m_vLightEye.z;
+
+		}
+		else if (PtInRect(&rcLightInfoEdit_DL_Edit[15], pt))	// DL_DirectionW
+		{
+			m_fLightInfo_DL_DirW = 0.0f;
+
+			tDirLightInfo.Direction.w = m_fLightInfo_DL_DirW;
+			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+		}
+
+		RECT rcLightInfoEdit_PL_Edit[17] = { };
+		m_LightInfoEdit_PL_DiffuseR.GetWindowRect(&rcLightInfoEdit_PL_Edit[0]);
+		m_LightInfoEdit_PL_DiffuseG.GetWindowRect(&rcLightInfoEdit_PL_Edit[1]);
+		m_LightInfoEdit_PL_DiffuseB.GetWindowRect(&rcLightInfoEdit_PL_Edit[2]);
+		m_LightInfoEdit_PL_DiffuseA.GetWindowRect(&rcLightInfoEdit_PL_Edit[3]);
+		m_LightInfoEdit_PL_SpecularR.GetWindowRect(&rcLightInfoEdit_PL_Edit[4]);
+		m_LightInfoEdit_PL_SpecularG.GetWindowRect(&rcLightInfoEdit_PL_Edit[5]);
+		m_LightInfoEdit_PL_SpecularB.GetWindowRect(&rcLightInfoEdit_PL_Edit[6]);
+		m_LightInfoEdit_PL_SpecularA.GetWindowRect(&rcLightInfoEdit_PL_Edit[7]);
+		m_LightInfoEdit_PL_AnbientR.GetWindowRect(&rcLightInfoEdit_PL_Edit[8]);
+		m_LightInfoEdit_PL_AnbientG.GetWindowRect(&rcLightInfoEdit_PL_Edit[9]);
+		m_LightInfoEdit_PL_AnbientB.GetWindowRect(&rcLightInfoEdit_PL_Edit[10]);
+		m_LightInfoEdit_PL_AnbientA.GetWindowRect(&rcLightInfoEdit_PL_Edit[11]);
+		m_LightInfoEdit_PL_PosX.GetWindowRect(&rcLightInfoEdit_PL_Edit[12]);
+		m_LightInfoEdit_PL_PosY.GetWindowRect(&rcLightInfoEdit_PL_Edit[13]);
+		m_LightInfoEdit_PL_PosZ.GetWindowRect(&rcLightInfoEdit_PL_Edit[14]);
+		m_LightInfoEdit_PL_PosW.GetWindowRect(&rcLightInfoEdit_PL_Edit[15]);
+		m_LightInfoEdit_PL_Range.GetWindowRect(&rcLightInfoEdit_PL_Edit[16]);
+
+		if (PtInRect(&rcLightInfoEdit_PL_Edit[0], pt))			// PL_DiffuseR
+		{
+			if (zDelta > 0)
+			{
+				m_fLightInfo_PL_DiffuseR += 0.1f;
+				if (m_fLightInfo_PL_DiffuseR > 1.0f)
+					m_fLightInfo_PL_DiffuseR = 1.0f;
+			}
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_PL_DiffuseR -= 0.1f;
+				if (m_fLightInfo_PL_DiffuseR < 0.0f)
+					m_fLightInfo_PL_DiffuseR = 0.0f;
+			}
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsLightingModifyMode)
+			{
+
+			}
+		}
+		else if (PtInRect(&rcLightInfoEdit_PL_Edit[1], pt))		// PL_DiffuseG
+		{
+			if (zDelta > 0)
+			{
+				m_fLightInfo_PL_DiffuseG += 0.1f;
+				if (m_fLightInfo_PL_DiffuseG > 1.0f)
+					m_fLightInfo_PL_DiffuseG = 1.0f;
+			}
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_PL_DiffuseG -= 0.1f;
+				if (m_fLightInfo_PL_DiffuseG < 0.0f)
+					m_fLightInfo_PL_DiffuseG = 0.0f;
+			}
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsLightingModifyMode)
+			{
+
+			}
+		}
+		else if (PtInRect(&rcLightInfoEdit_PL_Edit[2], pt))		// PL_DiffuseB
+		{
+			if (zDelta > 0)
+			{
+				m_fLightInfo_PL_DiffuseB += 0.1f;
+				if (m_fLightInfo_PL_DiffuseB > 1.0f)
+					m_fLightInfo_PL_DiffuseB = 1.0f;
+			}
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_PL_DiffuseB -= 0.1f;
+				if (m_fLightInfo_PL_DiffuseB < 0.0f)
+					m_fLightInfo_PL_DiffuseB = 0.0f;
+			}
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsLightingModifyMode)
+			{
+
+			}
+		}
+		else if (PtInRect(&rcLightInfoEdit_PL_Edit[3], pt))		// PL_DiffuseA
+		{
+			m_fLightInfo_PL_DiffuseA = 1.0f;
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsLightingModifyMode)
+			{
+
+			}
+		}
+		else if (PtInRect(&rcLightInfoEdit_PL_Edit[4], pt))		// PL_SpecularR
+		{
+			if (zDelta > 0)
+			{
+				m_fLightInfo_PL_SpecularR += 0.1f;
+				if (m_fLightInfo_PL_SpecularR > 1.0f)
+					m_fLightInfo_PL_SpecularR = 1.0f;
+			}
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_PL_SpecularR -= 0.1f;
+				if (m_fLightInfo_PL_SpecularR < 0.0f)
+					m_fLightInfo_PL_SpecularR = 0.0f;
+			}
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsLightingModifyMode)
+			{
+
+			}
+		}
+		else if (PtInRect(&rcLightInfoEdit_PL_Edit[5], pt))		// PL_SpecularG
+		{
+			if (zDelta > 0)
+			{
+				m_fLightInfo_PL_SpecularG += 0.1f;
+				if (m_fLightInfo_PL_SpecularG > 1.0f)
+					m_fLightInfo_PL_SpecularG = 1.0f;
+			}
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_PL_SpecularG -= 0.1f;
+				if (m_fLightInfo_PL_SpecularG < 0.0f)
+					m_fLightInfo_PL_SpecularG = 0.0f;
+			}
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsLightingModifyMode)
+			{
+
+			}
+		}
+		else if (PtInRect(&rcLightInfoEdit_PL_Edit[6], pt))		// PL_SpecularB
+		{
+			if (zDelta > 0)
+			{
+				m_fLightInfo_PL_SpecularB += 0.1f;
+				if (m_fLightInfo_PL_SpecularB > 1.0f)
+					m_fLightInfo_PL_SpecularB = 1.0f;
+			}
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_PL_SpecularB -= 0.1f;
+				if (m_fLightInfo_PL_SpecularB < 0.0f)
+					m_fLightInfo_PL_SpecularB = 0.0f;
+			}
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsLightingModifyMode)
+			{
+
+			}
+		}
+		else if (PtInRect(&rcLightInfoEdit_PL_Edit[7], pt))		// PL_SpecularA
+		{
+			m_fLightInfo_PL_SpecularA = 1.0f;
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsLightingModifyMode)
+			{
+
+			}
+		}
+		else if (PtInRect(&rcLightInfoEdit_PL_Edit[8], pt))		// PL_AmbientR
+		{
+			if (zDelta > 0)
+			{
+				m_fLightInfo_PL_AmbientR += 0.1f;
+				if (m_fLightInfo_PL_AmbientR > 1.0f)
+					m_fLightInfo_PL_AmbientR = 1.0f;
+			}
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_PL_AmbientR -= 0.1f;
+				if (m_fLightInfo_PL_AmbientR < 0.0f)
+					m_fLightInfo_PL_AmbientR = 0.0f;
+			}
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsLightingModifyMode)
+			{
+
+			}
+		}
+		else if (PtInRect(&rcLightInfoEdit_PL_Edit[9], pt))		// PL_AmbientG
+		{
+			if (zDelta > 0)
+			{
+				m_fLightInfo_PL_AmbientG += 0.1f;
+				if (m_fLightInfo_PL_AmbientG > 1.0f)
+					m_fLightInfo_PL_AmbientG = 1.0f;
+			}
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_PL_AmbientG -= 0.1f;
+				if (m_fLightInfo_PL_AmbientG < 0.0f)
+					m_fLightInfo_PL_AmbientG = 0.0f;
+			}
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsLightingModifyMode)
+			{
+
+			}
+		}
+		else if (PtInRect(&rcLightInfoEdit_PL_Edit[10], pt))	// PL_AmbientB
+		{
+			if (zDelta > 0)
+			{
+				m_fLightInfo_PL_AmbientB += 0.1f;
+				if (m_fLightInfo_PL_AmbientB > 1.0f)
+					m_fLightInfo_PL_AmbientB = 1.0f;
+			}
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_PL_AmbientB -= 0.1f;
+				if (m_fLightInfo_PL_AmbientB < 0.0f)
+					m_fLightInfo_PL_AmbientB = 0.0f;
+			}
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsLightingModifyMode)
+			{
+
+			}
+		}
+		else if (PtInRect(&rcLightInfoEdit_PL_Edit[11], pt))	// PL_AmbientA
+		{
+			m_fLightInfo_PL_AmbientA = 1.0f;
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsLightingModifyMode)
+			{
+
+			}
+		}
+		else if (PtInRect(&rcLightInfoEdit_PL_Edit[12], pt))	// PL_PosX
+		{
+			if (zDelta > 0)
+				m_fLightInfo_PL_PosX += 1.f;
+			else if (zDelta < 0)
+				m_fLightInfo_PL_PosX -= 1.0f;
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsLightingModifyMode)
+			{
+
+			}
+		}
+		else if (PtInRect(&rcLightInfoEdit_PL_Edit[13], pt))	// PL_PosY
+		{
+			if (zDelta > 0)
+				m_fLightInfo_PL_PosY += 1.f;
+			else if (zDelta < 0)
+				m_fLightInfo_PL_PosY -= 1.0f;
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsLightingModifyMode)
+			{
+
+			}
+		}
+		else if (PtInRect(&rcLightInfoEdit_PL_Edit[14], pt))	// PL_PosZ
+		{
+			if (zDelta > 0)
+				m_fLightInfo_PL_PosZ += 1.f;
+			else if (zDelta < 0)
+				m_fLightInfo_PL_PosZ -= 1.0f;
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsLightingModifyMode)
+			{
+
+			}
+		}
+		else if (PtInRect(&rcLightInfoEdit_PL_Edit[15], pt))	// PL_PosW
+		{
+			m_fLightInfo_PL_PosW = 1.0f;
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsLightingModifyMode)
+			{
+
+			}
+		}
+		else if (PtInRect(&rcLightInfoEdit_PL_Edit[16], pt))	// PL_Range
+		{
+			if (zDelta > 0)
+				m_fLightInfo_PL_Range += 1.f;
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_PL_Range -= 1.0f;
+				if (m_fLightInfo_PL_Range < 0.0f)
+					m_fLightInfo_PL_Range = 0.0f;
+			}
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsLightingModifyMode)
+			{
+
+			}
+		}
+
+
+		RECT rcLightInfoEdit_SL_Edit[10] = { };
+		m_LightInfoEdit_SL_EyeX.GetWindowRect(&rcLightInfoEdit_SL_Edit[0]);
+		m_LightInfoEdit_SL_EyeY.GetWindowRect(&rcLightInfoEdit_SL_Edit[1]);
+		m_LightInfoEdit_SL_EyeZ.GetWindowRect(&rcLightInfoEdit_SL_Edit[2]);
+		m_LightInfoEdit_SL_AtX.GetWindowRect(&rcLightInfoEdit_SL_Edit[3]);
+		m_LightInfoEdit_SL_AtY.GetWindowRect(&rcLightInfoEdit_SL_Edit[4]);
+		m_LightInfoEdit_SL_AtZ.GetWindowRect(&rcLightInfoEdit_SL_Edit[5]);
+		m_LightInfoEdit_SL_Height.GetWindowRect(&rcLightInfoEdit_SL_Edit[6]);
+		m_LightInfoEdit_SL_FovY.GetWindowRect(&rcLightInfoEdit_SL_Edit[7]);
+		m_LightInfoEdit_SL_Near.GetWindowRect(&rcLightInfoEdit_SL_Edit[8]);
+		m_LightInfoEdit_SL_Far.GetWindowRect(&rcLightInfoEdit_SL_Edit[9]);
+
+		if (PtInRect(&rcLightInfoEdit_SL_Edit[0], pt))			// SL_EyeX
+		{
+			//if (zDelta > 0)
+			//	m_fLightInfo_SL_EyeX += 10.f;
+			//else if (zDelta < 0)
+			//	m_fLightInfo_SL_EyeX -= 10.0f;
+		}
+		else if (PtInRect(&rcLightInfoEdit_SL_Edit[1], pt))		// SL_EyeY
+		{
+			//if (zDelta > 0)
+			//	m_fLightInfo_SL_EyeY += 10.f;
+			//else if (zDelta < 0)
+			//	m_fLightInfo_SL_EyeY -= 10.0f;
+		}
+		else if (PtInRect(&rcLightInfoEdit_SL_Edit[2], pt))		// SL_EyeZ
+		{
+			//if (zDelta > 0)
+			//	m_fLightInfo_SL_EyeZ += 10.f;
+			//else if (zDelta < 0)
+			//	m_fLightInfo_SL_EyeZ -= 10.0f;
+		}
+		else if (PtInRect(&rcLightInfoEdit_SL_Edit[3], pt))		// SL_AtX
+		{
+			if (zDelta > 0)
+				m_fLightInfo_SL_AtX += 1.f;
+			else if (zDelta < 0)
+				m_fLightInfo_SL_AtX -= 1.0f;
+
+			CShadowLightMgr::Get_Instance()->m_vLightAt.x = m_fLightInfo_SL_AtX;
+			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+		}
+		else if (PtInRect(&rcLightInfoEdit_SL_Edit[4], pt))		// SL_AtY
+		{
+
+			m_fLightInfo_SL_AtY = 0.0f;
+
+			CShadowLightMgr::Get_Instance()->m_vLightAt.x = m_fLightInfo_SL_AtY;
+			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+		}
+		else if (PtInRect(&rcLightInfoEdit_SL_Edit[5], pt))		// SL_AtZ
+		{
+			if (zDelta > 0)
+				m_fLightInfo_SL_AtZ += 1.f;
+			else if (zDelta < 0)
+				m_fLightInfo_SL_AtZ -= 1.0f;
+
+			CShadowLightMgr::Get_Instance()->m_vLightAt.x = m_fLightInfo_SL_AtZ;
+			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+		}
+		else if (PtInRect(&rcLightInfoEdit_SL_Edit[6], pt))		// SL_Height
+		{
+			if (zDelta > 0)
+				m_fLightInfo_SL_Height += 100.f;
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_SL_Height -= 100.f;
+				if (m_fLightInfo_SL_Height < 100.0f)
+					m_fLightInfo_SL_Height = 100.0f;
+			}
+
+			CShadowLightMgr::Get_Instance()->m_fHeight = m_fLightInfo_SL_Height;
+			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+			m_fLightInfo_SL_EyeX = CShadowLightMgr::Get_Instance()->m_vLightEye.x;
+			m_fLightInfo_SL_EyeY = CShadowLightMgr::Get_Instance()->m_vLightEye.y;
+			m_fLightInfo_SL_EyeZ = CShadowLightMgr::Get_Instance()->m_vLightEye.z;
+		}
+		else if (PtInRect(&rcLightInfoEdit_SL_Edit[7], pt))		// SL_FovY
+		{
+			if (zDelta > 0)
+				m_fLightInfo_SL_FovY += 1.f;
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_SL_FovY -= 1.f;
+
+				if (m_fLightInfo_SL_FovY < 0.0f)
+					m_fLightInfo_SL_FovY = 1.0f;
+			}
+
+			CShadowLightMgr::Get_Instance()->m_fFovY = m_fLightInfo_SL_FovY;
+			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+		}
+		else if (PtInRect(&rcLightInfoEdit_SL_Edit[8], pt))		// SL_Near
+		{
+			m_fLightInfo_SL_Near = 1.0f;
+
+			CShadowLightMgr::Get_Instance()->m_fNear = m_fLightInfo_SL_Near;
+			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+		}
+		else if (PtInRect(&rcLightInfoEdit_SL_Edit[9], pt))		// SL_Far
+		{
+			if (zDelta > 0)
+				m_fLightInfo_SL_Far += 100.f;
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_SL_Far -= 100.f;
+
+				if (m_fLightInfo_SL_Far < 1000.0f)
+					m_fLightInfo_SL_Far = 1000.0f;
+			}
+
+			CShadowLightMgr::Get_Instance()->m_fFar = m_fLightInfo_SL_Far;
+			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+		}
+
+	}
+
 
 	UpdateData(FALSE);
 
@@ -405,11 +1310,12 @@ HRESULT CTabMap::Ready_TerrainControl()
 	m_TerrainListBox_TexIndex.EnableWindow(TRUE);
 
 	// Terrain 128X128 활성화.
-	m_TerrainRadio128.SetCheck(true);
-	CToolTerrain* m_pTerrain128 = static_cast<CToolTerrain*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"TerrainTex128"));
-	m_pTerrain128->m_bIsUpdate = true;
+	m_TerrainRadio128.SetCheck(false);
 
-	m_TerrainRadio256.SetCheck(false);
+	m_TerrainRadio256.SetCheck(true);
+	CToolTerrain* m_pTerrain256 = static_cast<CToolTerrain*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"TerrainTex256"));
+	m_pTerrain256->m_bIsUpdate = true;
+
 	m_TerrainRadio512.SetCheck(false);
 
 
@@ -494,7 +1400,6 @@ HRESULT CTabMap::Ready_StaticMeshControl()
 	m_StaticMeshRadio_ModifyMode.SetCheck(false);
 	m_bIsCreateMode = true;
 	m_bIsModifyMode = false;
-
 
 	m_StaticMeshTree_ResourceTree.EnableWindow(TRUE);
 	m_StaticMeshEdit_SelectMesthTag.EnableWindow(TRUE);
@@ -604,6 +1509,110 @@ HRESULT CTabMap::Ready_StaticMeshControl()
 		h_Child = m_StaticMeshTree_ResourceTree.GetNextItem(h_Child, TVGN_NEXT);
 		m_StaticMeshTree_ResourceTree.Expand(h_Child, TVE_EXPAND);
 	}
+
+	UpdateData(FALSE);
+
+	return S_OK;
+}
+
+HRESULT CTabMap::Ready_LightingInfoContorl()
+{
+	UpdateData(TRUE);
+
+	m_EditCheck_LightingInfo.SetCheck(false);
+
+	m_LightInfoEdit_DL_DiffuseR.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DiffuseG.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DiffuseB.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DiffuseA.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_SpecularR.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_SpecularG.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_SpecularB.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_SpecularA.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_AmbientR.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_AmbientG.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_AmbientB.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_AmbientA.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DirectionX.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DirectionY.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DirectionZ.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DirectionW.EnableWindow(FALSE);
+	m_LightInfoButton_DL_SAVE.EnableWindow(FALSE);
+	m_LightInfoButton_DL_LOAD.EnableWindow(FALSE);
+
+	m_LightInfoEdit_PL_DiffuseR.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_DiffuseG.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_DiffuseB.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_DiffuseA.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_SpecularR.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_SpecularG.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_SpecularB.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_SpecularA.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_AnbientR.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_AnbientG.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_AnbientB.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_AnbientA.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_PosX.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_PosY.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_PosZ.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_PosW.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_Range.EnableWindow(FALSE);
+
+	m_LightInfoRadio_PL_CreateMode.EnableWindow(FALSE);
+	m_LightInfoRadio_PL_CreateMode.SetCheck(true);
+	m_LightInfoRadio_PL_ModifyMode.EnableWindow(FALSE);
+	m_LightInfoRadio_PL_ModifyMode.SetCheck(false);
+	m_bIsLightingCreateMode = true;
+	m_bIsLightingModifyMode = false;
+	m_LightInfoListBox_PL_List.EnableWindow(FALSE);
+	m_LightInfoButton_PL_DELETE.EnableWindow(FALSE);
+	m_LightInfoButton_PL_ALLDELETE.EnableWindow(FALSE);
+	m_LightInfoButton_PL_SAVE.EnableWindow(FALSE);
+	m_LightInfoButton_PL_LOAD.EnableWindow(FALSE);
+
+	m_LightInfoEdit_SL_EyeX.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_EyeY.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_EyeZ.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_AtX.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_AtY.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_AtZ.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_Height.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_FovY.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_Near.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_Far.EnableWindow(FALSE);
+	m_LightInfoButton_SL_SAVE.EnableWindow(FALSE);
+	m_LightInfoButton_SL_LOAD.EnableWindow(FALSE);
+
+	// Direction Light 정보 초기화.
+	m_fLightInfo_DL_DiffuseR	= Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0).Diffuse.x;
+	m_fLightInfo_DL_DiffuseG	= Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0).Diffuse.y;
+	m_fLightInfo_DL_DiffuseB	= Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0).Diffuse.z;
+	m_fLightInfo_DL_DiffuseA	= Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0).Diffuse.w;
+	m_fLightInfo_DL_SpecularR	= Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0).Specular.x;
+	m_fLightInfo_DL_SpecularG	= Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0).Specular.y;
+	m_fLightInfo_DL_SpecularB	= Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0).Specular.z;
+	m_fLightInfo_DL_SpecularA	= Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0).Specular.w;
+	m_fLightInfo_DL_AmbientR	= Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0).Ambient.x;
+	m_fLightInfo_DL_AmbientG	= Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0).Ambient.y;
+	m_fLightInfo_DL_AmbientB	= Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0).Ambient.z;
+	m_fLightInfo_DL_AmbientA	= Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0).Ambient.w;
+	m_fLightInfo_DL_DirX		= Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0).Direction.x;
+	m_fLightInfo_DL_DirY		= Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0).Direction.y;
+	m_fLightInfo_DL_DirZ		= Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0).Direction.z;
+	m_fLightInfo_DL_DirW		= Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0).Direction.w;
+
+	// Shadow Light 정보 초기화.
+	CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+	m_fLightInfo_SL_EyeX	= CShadowLightMgr::Get_Instance()->m_vLightEye.x;
+	m_fLightInfo_SL_EyeY	= CShadowLightMgr::Get_Instance()->m_vLightEye.y;
+	m_fLightInfo_SL_EyeZ	= CShadowLightMgr::Get_Instance()->m_vLightEye.z;
+	m_fLightInfo_SL_AtX		= CShadowLightMgr::Get_Instance()->m_vLightAt.x;
+	m_fLightInfo_SL_AtY		= CShadowLightMgr::Get_Instance()->m_vLightAt.y;
+	m_fLightInfo_SL_AtZ		= CShadowLightMgr::Get_Instance()->m_vLightAt.z;
+	m_fLightInfo_SL_Height	= CShadowLightMgr::Get_Instance()->m_fHeight;
+	m_fLightInfo_SL_FovY	= CShadowLightMgr::Get_Instance()->m_fFovY;
+	m_fLightInfo_SL_Near	= CShadowLightMgr::Get_Instance()->m_fNear;
+	m_fLightInfo_SL_Far		= CShadowLightMgr::Get_Instance()->m_fFar;
 
 	UpdateData(FALSE);
 
@@ -824,6 +1833,64 @@ void CTabMap::OnBnClickedCheck1005_EditStaticMesh()
 	m_StaticMeshButton_Save.EnableWindow(TRUE);
 	m_StaticMeshButton_Load.EnableWindow(TRUE);
 
+	// Lighting
+	m_LightInfoEdit_DL_DiffuseR.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DiffuseG.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DiffuseB.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DiffuseA.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_SpecularR.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_SpecularG.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_SpecularB.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_SpecularA.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_AmbientR.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_AmbientG.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_AmbientB.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_AmbientA.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DirectionX.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DirectionY.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DirectionZ.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DirectionW.EnableWindow(FALSE);
+	m_LightInfoButton_DL_SAVE.EnableWindow(FALSE);
+	m_LightInfoButton_DL_LOAD.EnableWindow(FALSE);
+
+	m_LightInfoEdit_PL_DiffuseR.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_DiffuseG.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_DiffuseB.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_DiffuseA.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_SpecularR.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_SpecularG.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_SpecularB.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_SpecularA.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_AnbientR.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_AnbientG.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_AnbientB.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_AnbientA.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_PosX.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_PosY.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_PosZ.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_PosW.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_Range.EnableWindow(FALSE);
+	m_LightInfoRadio_PL_CreateMode.EnableWindow(FALSE);
+	m_LightInfoRadio_PL_ModifyMode.EnableWindow(FALSE);
+	m_LightInfoListBox_PL_List.EnableWindow(FALSE);
+	m_LightInfoButton_PL_DELETE.EnableWindow(FALSE);
+	m_LightInfoButton_PL_ALLDELETE.EnableWindow(FALSE);
+	m_LightInfoButton_PL_SAVE.EnableWindow(FALSE);
+	m_LightInfoButton_PL_LOAD.EnableWindow(FALSE);
+
+	m_LightInfoEdit_SL_EyeX.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_EyeY.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_EyeZ.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_AtX.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_AtY.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_AtZ.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_Height.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_FovY.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_Near.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_Far.EnableWindow(FALSE);
+	m_LightInfoButton_SL_SAVE.EnableWindow(FALSE);
+	m_LightInfoButton_SL_LOAD.EnableWindow(FALSE);
+
 	UpdateData(FALSE);
 }
 
@@ -851,6 +1918,7 @@ void CTabMap::OnBnClickedCheck1006_EditLightingInfo()
 	m_StaticMeshEdit_AngleX.EnableWindow(FALSE);
 	m_StaticMeshEdit_AngleY.EnableWindow(FALSE);
 	m_StaticMeshEdit_AngleZ.EnableWindow(FALSE);
+	m_StaticMeshEdit_PosX.EnableWindow(FALSE);
 	m_StaticMeshEdit_PosY.EnableWindow(FALSE);
 	m_StaticMeshEdit_PosZ.EnableWindow(FALSE);
 	m_StaticMeshEdit_ObjectSize.EnableWindow(FALSE);
@@ -862,6 +1930,64 @@ void CTabMap::OnBnClickedCheck1006_EditLightingInfo()
 	m_StaticMeshEdit_ColliderPosZ.EnableWindow(FALSE);
 	m_StaticMeshButton_Save.EnableWindow(FALSE);
 	m_StaticMeshButton_Load.EnableWindow(FALSE);
+
+	// Lighting
+	m_LightInfoEdit_DL_DiffuseR.EnableWindow(TRUE);
+	m_LightInfoEdit_DL_DiffuseG.EnableWindow(TRUE);
+	m_LightInfoEdit_DL_DiffuseB.EnableWindow(TRUE);
+	m_LightInfoEdit_DL_DiffuseA.EnableWindow(TRUE);
+	m_LightInfoEdit_DL_SpecularR.EnableWindow(TRUE);
+	m_LightInfoEdit_DL_SpecularG.EnableWindow(TRUE);
+	m_LightInfoEdit_DL_SpecularB.EnableWindow(TRUE);
+	m_LightInfoEdit_DL_SpecularA.EnableWindow(TRUE);
+	m_LightInfoEdit_DL_AmbientR.EnableWindow(TRUE);
+	m_LightInfoEdit_DL_AmbientG.EnableWindow(TRUE);
+	m_LightInfoEdit_DL_AmbientB.EnableWindow(TRUE);
+	m_LightInfoEdit_DL_AmbientA.EnableWindow(TRUE);
+	m_LightInfoEdit_DL_DirectionX.EnableWindow(TRUE);
+	m_LightInfoEdit_DL_DirectionY.EnableWindow(TRUE);
+	m_LightInfoEdit_DL_DirectionZ.EnableWindow(TRUE);
+	m_LightInfoEdit_DL_DirectionW.EnableWindow(TRUE);
+	m_LightInfoButton_DL_SAVE.EnableWindow(TRUE);
+	m_LightInfoButton_DL_LOAD.EnableWindow(TRUE);
+
+	m_LightInfoEdit_PL_DiffuseR.EnableWindow(TRUE);
+	m_LightInfoEdit_PL_DiffuseG.EnableWindow(TRUE);
+	m_LightInfoEdit_PL_DiffuseB.EnableWindow(TRUE);
+	m_LightInfoEdit_PL_DiffuseA.EnableWindow(TRUE);
+	m_LightInfoEdit_PL_SpecularR.EnableWindow(TRUE);
+	m_LightInfoEdit_PL_SpecularG.EnableWindow(TRUE);
+	m_LightInfoEdit_PL_SpecularB.EnableWindow(TRUE);
+	m_LightInfoEdit_PL_SpecularA.EnableWindow(TRUE);
+	m_LightInfoEdit_PL_AnbientR.EnableWindow(TRUE);
+	m_LightInfoEdit_PL_AnbientG.EnableWindow(TRUE);
+	m_LightInfoEdit_PL_AnbientB.EnableWindow(TRUE);
+	m_LightInfoEdit_PL_AnbientA.EnableWindow(TRUE);
+	m_LightInfoEdit_PL_PosX.EnableWindow(TRUE);
+	m_LightInfoEdit_PL_PosY.EnableWindow(TRUE);
+	m_LightInfoEdit_PL_PosZ.EnableWindow(TRUE);
+	m_LightInfoEdit_PL_PosW.EnableWindow(TRUE);
+	m_LightInfoEdit_PL_Range.EnableWindow(TRUE);
+	m_LightInfoRadio_PL_CreateMode.EnableWindow(TRUE);
+	m_LightInfoRadio_PL_ModifyMode.EnableWindow(TRUE);
+	m_LightInfoListBox_PL_List.EnableWindow(TRUE);
+	m_LightInfoButton_PL_DELETE.EnableWindow(TRUE);
+	m_LightInfoButton_PL_ALLDELETE.EnableWindow(TRUE);
+	m_LightInfoButton_PL_SAVE.EnableWindow(TRUE);
+	m_LightInfoButton_PL_LOAD.EnableWindow(TRUE);
+
+	m_LightInfoEdit_SL_EyeX.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_EyeY.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_EyeZ.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_AtX.EnableWindow(TRUE);
+	m_LightInfoEdit_SL_AtY.EnableWindow(TRUE);
+	m_LightInfoEdit_SL_AtZ.EnableWindow(TRUE);
+	m_LightInfoEdit_SL_Height.EnableWindow(TRUE);
+	m_LightInfoEdit_SL_FovY.EnableWindow(TRUE);
+	m_LightInfoEdit_SL_Near.EnableWindow(TRUE);
+	m_LightInfoEdit_SL_Far.EnableWindow(TRUE);
+	m_LightInfoButton_SL_SAVE.EnableWindow(TRUE);
+	m_LightInfoButton_SL_LOAD.EnableWindow(TRUE);
 
 	UpdateData(FALSE);
 }
@@ -901,6 +2027,64 @@ void CTabMap::OnBnClickedCheck1007_EditNavigationMesh()
 	m_StaticMeshEdit_ColliderPosZ.EnableWindow(FALSE);
 	m_StaticMeshButton_Save.EnableWindow(FALSE);
 	m_StaticMeshButton_Load.EnableWindow(FALSE);
+
+	// Lighting
+	m_LightInfoEdit_DL_DiffuseR.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DiffuseG.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DiffuseB.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DiffuseA.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_SpecularR.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_SpecularG.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_SpecularB.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_SpecularA.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_AmbientR.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_AmbientG.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_AmbientB.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_AmbientA.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DirectionX.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DirectionY.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DirectionZ.EnableWindow(FALSE);
+	m_LightInfoEdit_DL_DirectionW.EnableWindow(FALSE);
+	m_LightInfoButton_DL_SAVE.EnableWindow(FALSE);
+	m_LightInfoButton_DL_LOAD.EnableWindow(FALSE);
+
+	m_LightInfoEdit_PL_DiffuseR.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_DiffuseG.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_DiffuseB.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_DiffuseA.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_SpecularR.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_SpecularG.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_SpecularB.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_SpecularA.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_AnbientR.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_AnbientG.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_AnbientB.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_AnbientA.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_PosX.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_PosY.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_PosZ.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_PosW.EnableWindow(FALSE);
+	m_LightInfoEdit_PL_Range.EnableWindow(FALSE);
+	m_LightInfoRadio_PL_CreateMode.EnableWindow(FALSE);
+	m_LightInfoRadio_PL_ModifyMode.EnableWindow(FALSE);
+	m_LightInfoListBox_PL_List.EnableWindow(FALSE);
+	m_LightInfoButton_PL_DELETE.EnableWindow(FALSE);
+	m_LightInfoButton_PL_ALLDELETE.EnableWindow(FALSE);
+	m_LightInfoButton_PL_SAVE.EnableWindow(FALSE);
+	m_LightInfoButton_PL_LOAD.EnableWindow(FALSE);
+
+	m_LightInfoEdit_SL_EyeX.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_EyeY.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_EyeZ.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_AtX.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_AtY.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_AtZ.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_Height.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_FovY.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_Near.EnableWindow(FALSE);
+	m_LightInfoEdit_SL_Far.EnableWindow(FALSE);
+	m_LightInfoButton_SL_SAVE.EnableWindow(FALSE);
+	m_LightInfoButton_SL_LOAD.EnableWindow(FALSE);
 
 	UpdateData(FALSE);
 }
@@ -1323,10 +2507,10 @@ void CTabMap::OnBnClickedButton1003_StaticMeshSAVE()
 		return;
 
 	CFileDialog Dlg(FALSE,
-					L"dat",
-					L"*.dat",
+					L"staticmesh",
+					L"*.staticmesh",
 					OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-					L"Data Files(*.dat) | *.dat ||",
+					L"Data Files(*.staticmesh) | *.staticmesh ||",
 					this);
 
 	_tchar szPath[MAX_STR] = L"";
@@ -1357,14 +2541,24 @@ void CTabMap::OnBnClickedButton1003_StaticMeshSAVE()
 			_vec3 vBoundingSpherePos	= pObject->Get_BoundingSphere()->Get_Transform()->m_vPos;
 			 
 			// StaticMesh Data 저장
-			fout	<< wstrMeshTag << L" "										// MeshTag
-					<< vScale.x	<< L" " << vScale.y << L" "	<< vScale.z	<< L" "	// Scale
-					<< vAngle.x	<< L" "	<< vAngle.y	<< L" " << vAngle.z	<< L" "	// Angle
-					<< vPos.x	<< L" " << vPos.y << L" " << vPos.z << L" "		// Pos
-					<< bIsRenderShadow	<< L" "									// Is Render Shadow
-					<< bIsCollision		<< L" "									// Is Collision
-					<< vBoundingSphereScale.x	<< L" " << vBoundingSphereScale.y	<< L" " << vBoundingSphereScale.z << L" "	// BoundingSphere Scale
-					<< vBoundingSpherePos.x		<< L" " << vBoundingSpherePos.y		<< L" " << vBoundingSpherePos.z << L" ";	// BoundingSphere Pos
+			fout	<< wstrMeshTag << L" "				// MeshTag
+					<< vScale.x	<< L" " 
+					<< vScale.y << L" "	
+					<< vScale.z	<< L" "					// Scale
+					<< vAngle.x	<< L" "	
+					<< vAngle.y	<< L" " 
+					<< vAngle.z	<< L" "					// Angle
+					<< vPos.x << L" " 
+					<< vPos.y << L" " 
+					<< vPos.z << L" "					// Pos
+					<< bIsRenderShadow << L" "			// Is Render Shadow
+					<< bIsCollision << L" "				// Is Collision
+					<< vBoundingSphereScale.x << L" " 
+					<< vBoundingSphereScale.y << L" " 
+					<< vBoundingSphereScale.z << L" "	// BoundingSphere Scale
+					<< vBoundingSpherePos.x << L" " 
+					<< vBoundingSpherePos.y << L" " 
+					<< vBoundingSpherePos.z << L" ";	// BoundingSphere Pos
 		}
 
 
@@ -1391,10 +2585,10 @@ void CTabMap::OnBnClickedButton1004_StaticMeshLOAD()
 	}
 
 	CFileDialog Dlg(TRUE,
-					L"dat",
-					L"*.dat",
+					L"staticmesh",
+					L"*.staticmesh",
 					OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-					L"Data Files(*.dat)|*.dat||",
+					L"Data Files(*.staticmesh)|*.staticmesh||",
 					this);
 
 	_tchar szPath[MAX_STR] = L"";
@@ -1424,14 +2618,24 @@ void CTabMap::OnBnClickedButton1004_StaticMeshLOAD()
 		while (true)
 		{
 
-			fin		>> wstrMeshTag 						// MeshTag
-					>> vScale.x	>> vScale.y >> vScale.z	// Scale
-					>> vAngle.x	>> vAngle.y >> vAngle.z	// Angle
-					>> vPos.x >> vPos.y >> vPos.z		// Pos
-					>> bIsRenderShadow					// Is Render Shadow
-					>> bIsCollision 					// Is Collision
-					>> vBoundingSphereScale.x >> vBoundingSphereScale.y >> vBoundingSphereScale.z	// BoundingSphere Scale
-					>> vBoundingSpherePos.x >> vBoundingSpherePos.y >> vBoundingSpherePos.z;		// // BoundingSphere Pos
+			fin		>> wstrMeshTag 				// MeshTag
+					>> vScale.x	
+					>> vScale.y 
+					>> vScale.z					// Scale
+					>> vAngle.x	
+					>> vAngle.y 
+					>> vAngle.z					// Angle
+					>> vPos.x 
+					>> vPos.y 
+					>> vPos.z					// Pos
+					>> bIsRenderShadow			// Is Render Shadow
+					>> bIsCollision 			// Is Collision
+					>> vBoundingSphereScale.x	// BoundingSphere Scale
+					>> vBoundingSphereScale.y 
+					>> vBoundingSphereScale.z	
+					>> vBoundingSpherePos.x		// BoundingSphere Pos
+					>> vBoundingSpherePos.y 
+					>> vBoundingSpherePos.z;	
 
 			if (fin.eof())
 				break;
@@ -1455,9 +2659,960 @@ void CTabMap::OnBnClickedButton1004_StaticMeshLOAD()
 			m_StaticMeshListBox_ObjectList.AddString(wstrMeshTag.c_str());
 		}
 
-
 		AfxMessageBox(L"Data Load Successed");
 	}
 
 	UpdateData(FALSE);
 }
+
+
+void CTabMap::OnEnChangeEdit1014_LightInfo_DL_DiffuseR()
+{
+	UpdateData(TRUE);
+
+	Engine::D3DLIGHT tDirLightInfo = Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0);
+
+	tDirLightInfo.Diffuse.x = m_fLightInfo_DL_DiffuseR;
+	Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+
+	
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1015_LightInfo_DL_DiffuseG()
+{
+	UpdateData(TRUE);
+
+	Engine::D3DLIGHT tDirLightInfo = Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0);
+
+	tDirLightInfo.Diffuse.y = m_fLightInfo_DL_DiffuseG;
+	Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1016_LightInfo_DL_DiffuseB()
+{
+	UpdateData(TRUE);
+	
+	Engine::D3DLIGHT tDirLightInfo = Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0);
+
+	tDirLightInfo.Diffuse.z = m_fLightInfo_DL_DiffuseB;
+	Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1017_LightInfo_DL_DiffuseA()
+{
+	UpdateData(TRUE);
+
+	m_fLightInfo_DL_DiffuseA = 1.0f;
+
+	Engine::D3DLIGHT tDirLightInfo = Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0);
+
+	tDirLightInfo.Diffuse.w = m_fLightInfo_DL_DiffuseA;
+	Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1018_LightInfo_DL_SpecularR()
+{
+	UpdateData(TRUE);
+	
+	Engine::D3DLIGHT tDirLightInfo = Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0);
+
+	tDirLightInfo.Specular.x = m_fLightInfo_DL_SpecularR;
+	Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1019_LightInfo_DL_SpecularG()
+{
+	UpdateData(TRUE);
+
+	Engine::D3DLIGHT tDirLightInfo = Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0);
+
+	tDirLightInfo.Specular.y = m_fLightInfo_DL_SpecularG;
+	Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1020_LightInfo_DL_SpecularB()
+{
+	UpdateData(TRUE);
+	
+	Engine::D3DLIGHT tDirLightInfo = Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0);
+
+	tDirLightInfo.Specular.z = m_fLightInfo_DL_SpecularB;
+	Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1021_LightInfo_DL_SpecularA()
+{
+	UpdateData(TRUE);
+
+	m_fLightInfo_DL_SpecularA = 1.0f;
+
+	Engine::D3DLIGHT tDirLightInfo = Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0);
+
+	tDirLightInfo.Specular.w = m_fLightInfo_DL_SpecularA;
+	Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1022_LightInfo_DL_AmbientR()
+{
+	UpdateData(TRUE);
+
+	Engine::D3DLIGHT tDirLightInfo = Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0);
+
+	tDirLightInfo.Ambient.x = m_fLightInfo_DL_AmbientR;
+	Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1023_LightInfo_DL_AmbientG()
+{
+	UpdateData(TRUE);
+	
+	Engine::D3DLIGHT tDirLightInfo = Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0);
+
+	tDirLightInfo.Ambient.y = m_fLightInfo_DL_AmbientG;
+	Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1024_LightInfo_DL_AmbientB()
+{
+	UpdateData(TRUE);
+	
+	Engine::D3DLIGHT tDirLightInfo = Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0);
+
+	tDirLightInfo.Ambient.z = m_fLightInfo_DL_AmbientB;
+	Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1025_LightInfo_DL_AmbientA()
+{
+	UpdateData(TRUE);
+
+	m_fLightInfo_DL_AmbientA = 1.0f;
+
+	Engine::D3DLIGHT tDirLightInfo = Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0);
+
+	tDirLightInfo.Ambient.w = m_fLightInfo_DL_AmbientA;
+	Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1026_LightInfo_DL_DirX()
+{
+	UpdateData(TRUE);
+
+	Engine::D3DLIGHT tDirLightInfo = Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0);
+
+	tDirLightInfo.Direction.x = m_fLightInfo_DL_DirX;
+	Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+
+	CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+	m_fLightInfo_SL_EyeX = CShadowLightMgr::Get_Instance()->m_vLightEye.x;
+	m_fLightInfo_SL_EyeY = CShadowLightMgr::Get_Instance()->m_vLightEye.y;
+	m_fLightInfo_SL_EyeZ = CShadowLightMgr::Get_Instance()->m_vLightEye.z;
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1027_LightInfo_DL_DirY()
+{
+	UpdateData(TRUE);
+
+	m_fLightInfo_DL_DirY = -1.0f;
+
+	Engine::D3DLIGHT tDirLightInfo = Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0);
+
+	tDirLightInfo.Direction.y = m_fLightInfo_DL_DirY;
+	Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+
+	CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+	m_fLightInfo_SL_EyeX = CShadowLightMgr::Get_Instance()->m_vLightEye.x;
+	m_fLightInfo_SL_EyeY = CShadowLightMgr::Get_Instance()->m_vLightEye.y;
+	m_fLightInfo_SL_EyeZ = CShadowLightMgr::Get_Instance()->m_vLightEye.z;
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1028_LightInfo_DL_DirZ()
+{
+	UpdateData(TRUE);
+	
+	Engine::D3DLIGHT tDirLightInfo = Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0);
+
+	tDirLightInfo.Direction.z = m_fLightInfo_DL_DirZ;
+	Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+
+	CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+	m_fLightInfo_SL_EyeX = CShadowLightMgr::Get_Instance()->m_vLightEye.x;
+	m_fLightInfo_SL_EyeY = CShadowLightMgr::Get_Instance()->m_vLightEye.y;
+	m_fLightInfo_SL_EyeZ = CShadowLightMgr::Get_Instance()->m_vLightEye.z;
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1029_LightInfo_DL_DirW()
+{
+	UpdateData(TRUE);
+
+	m_fLightInfo_DL_DirW = 0.0f;
+
+	Engine::D3DLIGHT tDirLightInfo = Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0);
+
+	tDirLightInfo.Direction.w = m_fLightInfo_DL_DirW;
+	Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+
+	UpdateData(FALSE);
+}
+
+void CTabMap::OnBnClickedButton1005_LightInfo_DL_SAVE()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
+	CFileDialog Dlg(FALSE,
+					L"lightinginfo",
+					L"*.lightinginfo",
+					OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+					L"Data Files(*.lightinginfo) | *.lightinginfo ||",
+					this);
+
+	_tchar szPath[MAX_STR] = L"";
+	GetCurrentDirectory(MAX_STR, szPath);		// 작업중인 현재 경로.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	lstrcat(szPath, L"\\Bin\\ToolData");
+	Dlg.m_ofn.lpstrInitialDir = szPath;
+
+	if (Dlg.DoModal() == IDOK)
+	{
+		wofstream fout{ Dlg.GetPathName().GetString() };
+		if (fout.fail())
+		{
+			AfxMessageBox(L"Save is Failed");
+			return;
+		}
+
+		Engine::D3DLIGHT tDirLightInfo = Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0);
+
+		// DirectionLight Data 저장하기.
+		fout	<< tDirLightInfo.Diffuse.x << L" "		// Diffuse
+				<< tDirLightInfo.Diffuse.y << L" " 
+				<< tDirLightInfo.Diffuse.z << L" "	
+				<< tDirLightInfo.Diffuse.w << L" "
+				<< tDirLightInfo.Specular.x << L" "		// Specular
+				<< tDirLightInfo.Specular.y << L" " 
+				<< tDirLightInfo.Specular.z << L" "	
+				<< tDirLightInfo.Specular.w << L" " 
+				<< tDirLightInfo.Ambient.x << L" "
+				<< tDirLightInfo.Ambient.y << L" "		// Ambient
+				<< tDirLightInfo.Ambient.z << L" "			
+				<< tDirLightInfo.Ambient.w << L" "
+				<< tDirLightInfo.Direction.x << L" "	// Direction
+				<< tDirLightInfo.Direction.y << L" " 
+				<< tDirLightInfo.Direction.z << L" "
+				<< tDirLightInfo.Direction.w << L" " ;
+	}
+
+	AfxMessageBox(L"Data Save Successed");
+
+	UpdateData(FALSE);
+
+}
+
+
+void CTabMap::OnBnClickedButton1006_LightInfo_DL_LOAD()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
+	CFileDialog Dlg(TRUE,
+					L"lightinginfo",
+					L"*.lightinginfo",
+					OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+					L"Data Files(*.lightinginfo)|*.lightinginfo||",
+					this);
+
+	_tchar szPath[MAX_STR] = L"";
+	GetCurrentDirectory(MAX_STR, szPath);		// 작업중인 현재 경로.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	lstrcat(szPath, L"\\Bin\\ToolData");
+	Dlg.m_ofn.lpstrInitialDir = szPath;
+
+	if (Dlg.DoModal() == IDOK)
+	{
+		wifstream fin { Dlg.GetPathName().GetString() };
+		if (fin.fail())
+		{
+			AfxMessageBox(L"Load is Failed");
+			return;
+		}
+
+		while (true)
+		{
+			Engine::D3DLIGHT tDirLightInfo;
+
+			// DirectionLight Data 불러오기.
+			fin		>> tDirLightInfo.Diffuse.x		// Diffuse
+					>> tDirLightInfo.Diffuse.y	
+					>> tDirLightInfo.Diffuse.z	
+					>> tDirLightInfo.Diffuse.w	
+					>> tDirLightInfo.Specular.x		// Specular
+					>> tDirLightInfo.Specular.y	
+					>> tDirLightInfo.Specular.z	
+					>> tDirLightInfo.Specular.w	
+					>> tDirLightInfo.Ambient.x	
+					>> tDirLightInfo.Ambient.y		// Ambient
+					>> tDirLightInfo.Ambient.z			
+					>> tDirLightInfo.Ambient.w	
+					>> tDirLightInfo.Direction.x	// Direction
+					>> tDirLightInfo.Direction.y
+					>> tDirLightInfo.Direction.z
+					>> tDirLightInfo.Direction.w;
+
+			if (fin.eof())
+				break;
+
+			// Direction Light 정보 입력.
+			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+			m_fLightInfo_DL_DiffuseR	= tDirLightInfo.Diffuse.x;
+			m_fLightInfo_DL_DiffuseG	= tDirLightInfo.Diffuse.y;
+			m_fLightInfo_DL_DiffuseB	= tDirLightInfo.Diffuse.z;
+			m_fLightInfo_DL_DiffuseA	= tDirLightInfo.Diffuse.w;
+			m_fLightInfo_DL_SpecularR	= tDirLightInfo.Specular.x;
+			m_fLightInfo_DL_SpecularG	= tDirLightInfo.Specular.y;
+			m_fLightInfo_DL_SpecularB	= tDirLightInfo.Specular.z;
+			m_fLightInfo_DL_SpecularA	= tDirLightInfo.Specular.w;
+			m_fLightInfo_DL_AmbientR	= tDirLightInfo.Ambient.x;
+			m_fLightInfo_DL_AmbientG	= tDirLightInfo.Ambient.y;
+			m_fLightInfo_DL_AmbientB	= tDirLightInfo.Ambient.z;
+			m_fLightInfo_DL_AmbientA	= tDirLightInfo.Ambient.w;
+			m_fLightInfo_DL_DirX		= tDirLightInfo.Direction.x;
+			m_fLightInfo_DL_DirY		= tDirLightInfo.Direction.y;
+			m_fLightInfo_DL_DirZ		= tDirLightInfo.Direction.z;
+			m_fLightInfo_DL_DirW		= tDirLightInfo.Direction.w;
+
+		}
+
+		AfxMessageBox(L"Data Load Successed");
+
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnBnClickedRadio1008_LightInfo_PL_CreateMode()
+{
+	UpdateData(TRUE);
+
+	m_LightInfoRadio_PL_CreateMode.SetCheck(true);
+	m_LightInfoRadio_PL_ModifyMode.SetCheck(false);
+	m_bIsLightingCreateMode = true;
+	m_bIsLightingModifyMode = false;
+
+	m_fLightInfo_PL_DiffuseR	= 1.0f;
+	m_fLightInfo_PL_DiffuseG	= 1.0f;
+	m_fLightInfo_PL_DiffuseB	= 1.0f;
+	m_fLightInfo_PL_DiffuseA	= 1.0f;
+	m_fLightInfo_PL_SpecularR	= 1.0f;
+	m_fLightInfo_PL_SpecularG	= 1.0f;
+	m_fLightInfo_PL_SpecularB	= 1.0f;
+	m_fLightInfo_PL_SpecularA	= 1.0f;
+	m_fLightInfo_PL_AmbientR	= 1.0f;
+	m_fLightInfo_PL_AmbientG	= 1.0f;
+	m_fLightInfo_PL_AmbientB	= 1.0f;
+	m_fLightInfo_PL_AmbientA	= 1.0f;
+	m_fLightInfo_PL_PosX		= 0.0f;
+	m_fLightInfo_PL_PosY		= 0.0f;
+	m_fLightInfo_PL_PosZ		= 0.0f;
+	m_fLightInfo_PL_PosW		= 1.0f;
+	m_fLightInfo_PL_Range		= 0.0f;
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnBnClickedRadio1009_LightInfo_PL_ModifyMode()
+{
+	UpdateData(TRUE);
+
+	m_LightInfoRadio_PL_CreateMode.SetCheck(false);
+	m_LightInfoRadio_PL_ModifyMode.SetCheck(true);
+	m_bIsLightingCreateMode = false;
+	m_bIsLightingModifyMode = true;
+
+	UpdateData(FALSE);
+}
+
+void CTabMap::OnEnChangeEdit1030_LightInfo_PL_DiffuseR()
+{
+	UpdateData(TRUE);
+	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
+
+	if (m_bIsLightingModifyMode)
+	{
+
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1031_LightInfo_PL_DiffuseG()
+{
+	UpdateData(TRUE);
+	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
+
+	if (m_bIsLightingModifyMode)
+	{
+
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1032_LightInfo_PL_DiffuseB()
+{
+	UpdateData(TRUE);
+	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
+
+	if (m_bIsLightingModifyMode)
+	{
+
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1033_LightInfo_PL_DiffuseA()
+{
+	UpdateData(TRUE);
+
+	m_fLightInfo_PL_DiffuseA = 1.0f;
+	if (m_bIsLightingModifyMode)
+	{
+
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1034_LightInfo_PL_SpecularR()
+{
+	UpdateData(TRUE);
+	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
+
+	if (m_bIsLightingModifyMode)
+	{
+
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1035_LightInfo_PL_SpecularG()
+{
+	UpdateData(TRUE);
+	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
+
+	if (m_bIsLightingModifyMode)
+	{
+
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1036_LightInfo_PL_SpecularB()
+{
+	UpdateData(TRUE);
+	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
+
+	if (m_bIsLightingModifyMode)
+	{
+
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1037_LightInfo_PL_SpecularA()
+{
+	UpdateData(TRUE);
+
+	m_fLightInfo_PL_SpecularA = 1.0f;
+	if (m_bIsLightingModifyMode)
+	{
+
+	}
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1038_LightInfo_PL_AmbientR()
+{
+	UpdateData(TRUE);
+	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
+
+	if (m_bIsLightingModifyMode)
+	{
+
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1039_LightInfo_PL_AmbientG()
+{
+	UpdateData(TRUE);
+	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
+
+	if (m_bIsLightingModifyMode)
+	{
+
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1040_LightInfo_PL_AmbientB()
+{
+	UpdateData(TRUE);
+	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
+
+	if (m_bIsLightingModifyMode)
+	{
+
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1041_LightInfo_PL_AmbientA()
+{
+	UpdateData(TRUE);
+
+	m_fLightInfo_PL_AmbientA = 1.0f;
+	if (m_bIsLightingModifyMode)
+	{
+
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1042_LightInfo_PL_PosX()
+{
+	UpdateData(TRUE);
+	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
+
+	if (m_bIsLightingModifyMode)
+	{
+
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1043_LightInfo_PL_PosY()
+{
+	UpdateData(TRUE);
+	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
+
+	if (m_bIsLightingModifyMode)
+	{
+
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1044_LightInfo_PL_PosZ()
+{
+	UpdateData(TRUE);
+	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
+
+	if (m_bIsLightingModifyMode)
+	{
+
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1045_LightInfo_PL_PosW()
+{
+	UpdateData(TRUE);
+
+	m_fLightInfo_PL_PosW = 1.0f;
+	if (m_bIsLightingModifyMode)
+	{
+
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1046_LightInfo_PL_Range()
+{
+	UpdateData(TRUE);
+	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
+
+	if (m_bIsLightingModifyMode)
+	{
+
+	}
+	else
+	{
+
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnLbnSelchangeList1004_LightInfo_PL_List()
+{
+	UpdateData(TRUE);
+	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
+
+	if (m_bIsLightingModifyMode)
+	{
+
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnBnClickedButton1009__LightInfo_PL_SAVE()
+{
+	UpdateData(TRUE);
+	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
+
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnBnClickedButton1010__LightInfo_PL_LOAD()
+{
+	UpdateData(TRUE);
+	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
+
+
+	UpdateData(FALSE);
+}
+
+
+//void CTabMap::OnEnChangeEdit1047_LightInfo_SL_EyeX()
+//{
+//	UpdateData(TRUE);
+//	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
+//
+//	if (m_bIsLightingModifyMode)
+//	{
+//
+//	}
+//
+//	UpdateData(FALSE);
+//}
+//
+//
+//void CTabMap::OnEnChangeEdit1048_LightInfo_SL_EyeY()
+//{
+//	UpdateData(TRUE);
+//	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
+//
+//	if (m_bIsLightingModifyMode)
+//	{
+//
+//	}
+//
+//	UpdateData(FALSE);
+//}
+//
+//
+//void CTabMap::OnEnChangeEdit1049_LightInfo_SL_EyeZ()
+//{
+//	UpdateData(TRUE);
+//	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
+//
+//	if (m_bIsLightingModifyMode)
+//	{
+//
+//	}
+//
+//	UpdateData(FALSE);
+//}
+
+
+void CTabMap::OnEnChangeEdit1050_LightInfo_SL_AtX()
+{
+	UpdateData(TRUE);
+	
+	CShadowLightMgr::Get_Instance()->m_vLightAt.x = m_fLightInfo_SL_AtX;
+	CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1051_LightInfo_SL_AtY()
+{
+	UpdateData(TRUE);
+	
+	m_fLightInfo_SL_AtY = 0.0f;
+	CShadowLightMgr::Get_Instance()->m_vLightAt.y = m_fLightInfo_SL_AtY;
+	CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1052_LightInfo_SL_AtZ()
+{
+	UpdateData(TRUE);
+
+	CShadowLightMgr::Get_Instance()->m_vLightAt.z = m_fLightInfo_SL_AtZ;
+	CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1056_LightInfo_SL_Height()
+{
+	UpdateData(TRUE);
+
+	CShadowLightMgr::Get_Instance()->m_fHeight = m_fLightInfo_SL_Height;
+	CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+	m_fLightInfo_SL_EyeX = CShadowLightMgr::Get_Instance()->m_vLightEye.x;
+	m_fLightInfo_SL_EyeY = CShadowLightMgr::Get_Instance()->m_vLightEye.y;
+	m_fLightInfo_SL_EyeZ = CShadowLightMgr::Get_Instance()->m_vLightEye.z;
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1053_LightInfo_SL_FovY()
+{
+	UpdateData(TRUE);
+	
+	CShadowLightMgr::Get_Instance()->m_fFovY = m_fLightInfo_SL_FovY;
+	CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1054_LightInfo_SL_Near()
+{
+	UpdateData(TRUE);
+	
+	m_fLightInfo_SL_Near = 1.0f;
+	CShadowLightMgr::Get_Instance()->m_fNear = m_fLightInfo_SL_Near;
+	CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1055_LightInfo_SL_Far()
+{
+	UpdateData(TRUE);
+	
+	CShadowLightMgr::Get_Instance()->m_fFar = m_fLightInfo_SL_Far;
+	CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnBnClickedButton1011__LightInfo_SL_SAVE()
+{
+	UpdateData(TRUE);
+
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
+	CFileDialog Dlg(FALSE,
+					L"lightinginfo",
+					L"*.lightinginfo",
+					OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+					L"Data Files(*.lightinginfo) | *.lightinginfo ||",
+					this);
+
+	_tchar szPath[MAX_STR] = L"";
+	GetCurrentDirectory(MAX_STR, szPath);		// 작업중인 현재 경로.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	lstrcat(szPath, L"\\Bin\\ToolData");
+	Dlg.m_ofn.lpstrInitialDir = szPath;
+
+	if (Dlg.DoModal() == IDOK)
+	{
+		wofstream fout{ Dlg.GetPathName().GetString() };
+		if (fout.fail())
+		{
+			AfxMessageBox(L"Save is Failed");
+			return;
+		}
+
+		// LightView.
+		_vec3	vLightEye	= CShadowLightMgr::Get_Instance()->m_vLightEye;
+		_vec3	vLightAt	= CShadowLightMgr::Get_Instance()->m_vLightAt;
+		_float	fHeight		= CShadowLightMgr::Get_Instance()->m_fHeight;
+
+		// LightProj.
+		_float	fFovY		= CShadowLightMgr::Get_Instance()->m_fFovY;
+		_float	fFar		= CShadowLightMgr::Get_Instance()->m_fFar;
+
+		// ShadowLight Data 저장하기.
+		fout	<< vLightEye.x << L" "	// Light Eye.
+				<< vLightEye.y << L" " 
+				<< vLightEye.z << L" "	
+				<< vLightAt.x << L" "	// Light At.
+				<< vLightAt.y << L" " 
+				<< vLightAt.z << L" "	
+				<< fHeight << L" "		// Light Height.
+				<< fFovY << L" "		// Light FovY
+				<< fFar << L" ";		// Light Fawr
+
+
+	}
+
+	AfxMessageBox(L"Data Save Successed");
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnBnClickedButton1012_LightInfo_SL_LOAD()
+{
+	UpdateData(TRUE);
+	
+	CFileDialog Dlg(TRUE,
+					L"lightinginfo",
+					L"*.lightinginfo",
+					OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+					L"Data Files(*.lightinginfo)|*.lightinginfo||",
+					this);
+
+	_tchar szPath[MAX_STR] = L"";
+	GetCurrentDirectory(MAX_STR, szPath);		// 작업중인 현재 경로.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	lstrcat(szPath, L"\\Bin\\ToolData");
+	Dlg.m_ofn.lpstrInitialDir = szPath;
+
+	if (Dlg.DoModal() == IDOK)
+	{
+		wifstream fin{ Dlg.GetPathName().GetString() };
+		if (fin.fail())
+		{
+			AfxMessageBox(L"Load is Failed");
+			return;
+		}
+
+		while (true)
+		{
+			_vec3	vLightEye;
+			_vec3	vLightAt;
+			_float	fHeight;
+			_float	fFovY;
+			_float	fFar;
+
+			// ShadowLight Data 불러오기.
+			fin		>> vLightEye.x		// Diffuse
+					>> vLightEye.y	
+					>> vLightEye.z	
+					>> vLightAt.x		// Specular
+					>> vLightAt.y	
+					>> vLightAt.z	
+					>> fHeight
+					>> fFovY		// Ambient
+					>> fFar;
+
+			if (fin.eof())
+				break;
+
+			// ShadowLight 정보 입력.
+			CShadowLightMgr::Get_Instance()->m_vLightEye	= vLightEye;
+			CShadowLightMgr::Get_Instance()->m_vLightAt		= vLightAt;
+			CShadowLightMgr::Get_Instance()->m_fHeight		= fHeight;
+			CShadowLightMgr::Get_Instance()->m_fFovY		= fFovY;
+			CShadowLightMgr::Get_Instance()->m_fFar			= fFar;
+
+			// Shadow Light 정보 초기화.
+			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+			m_fLightInfo_SL_EyeX	= CShadowLightMgr::Get_Instance()->m_vLightEye.x;
+			m_fLightInfo_SL_EyeY	= CShadowLightMgr::Get_Instance()->m_vLightEye.y;
+			m_fLightInfo_SL_EyeZ	= CShadowLightMgr::Get_Instance()->m_vLightEye.z;
+			m_fLightInfo_SL_AtX		= CShadowLightMgr::Get_Instance()->m_vLightAt.x;
+			m_fLightInfo_SL_AtY		= CShadowLightMgr::Get_Instance()->m_vLightAt.y;
+			m_fLightInfo_SL_AtZ		= CShadowLightMgr::Get_Instance()->m_vLightAt.z;
+			m_fLightInfo_SL_Height	= CShadowLightMgr::Get_Instance()->m_fHeight;
+			m_fLightInfo_SL_FovY	= CShadowLightMgr::Get_Instance()->m_fFovY;
+			m_fLightInfo_SL_Near	= CShadowLightMgr::Get_Instance()->m_fNear;
+			m_fLightInfo_SL_Far		= CShadowLightMgr::Get_Instance()->m_fFar;
+		}
+
+	}
+
+	AfxMessageBox(L"Data Load Successed");
+
+	UpdateData(FALSE);
+}
+

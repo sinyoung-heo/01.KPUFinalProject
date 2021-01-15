@@ -46,7 +46,8 @@ HRESULT CToolSceneStage::Ready_Scene()
 	pMyForm->m_TabMap.Ready_SkyBoxControl();
 	pMyForm->m_TabMap.Ready_EditControl();
 	pMyForm->m_TabMap.Ready_StaticMeshControl();
-	m_pPickingTerrain = static_cast<CToolTerrain*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"TerrainTex128"));
+	pMyForm->m_TabMap.Ready_LightingInfoContorl();
+	m_pPickingTerrain = static_cast<CToolTerrain*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"TerrainTex256"));
 
 	return S_OK;
 }
@@ -185,7 +186,7 @@ HRESULT CToolSceneStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 											   L"SkyBox",							// Texture Tag
 											   _vec3(512.f, 512.f, 512.f),			// Scale
 											   _vec3(0.0f, 0.0f, 0.0f),				// Angle
-											   _vec3(0.0f, 0.0f, 0.0f));			// Pos
+											   _vec3(128.0f, 0.0f, 128.0f));		// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SkyBox", pSkyBox), E_FAIL);
 
 	return S_OK;

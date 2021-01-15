@@ -16,8 +16,8 @@ public:
 	Engine::SHADOW_DESC	m_tShadowInfo{ };
 
 	_matrix m_matLightView;
-	_vec3	m_vLightEye = _vec3(128.0f, 512.0f, 128.0f);
-	_vec3	m_vLightAt	=_vec3(0.0f);
+	_vec3	m_vLightEye = _vec3(0.0f, 0.0f, 0.0f);
+	_vec3	m_vLightAt	=_vec3(128.0f, 0.0f, 128.0f);
 	_float	m_fHeight	= 500.0f;
 
 	_matrix m_matLightProj;

@@ -49,6 +49,15 @@ HRESULT CLight::Ready_Light(const D3DLIGHT & tLightInfo)
 	return S_OK;
 }
 
+_int CLight::Update_Light()
+{
+	if (m_bIsDead)
+		return DEAD_OBJ;
+
+
+	return NO_EVENT;
+}
+
 void CLight::Render_Light(vector<ComPtr<ID3D12Resource>> pvecTargetTexture)
 {
 	if (!m_bIsSetTexture)

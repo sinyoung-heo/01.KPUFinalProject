@@ -40,6 +40,7 @@ public:
 	HRESULT	Ready_SkyBoxControl();
 	HRESULT Ready_EditControl();
 	HRESULT Ready_StaticMeshControl();
+	HRESULT Ready_LightingInfoContorl();
 
 	/*__________________________________________________________________________________________________________
 	[ TERRAIN ]
@@ -154,8 +155,8 @@ public:
 	CButton			m_StaticMeshButton_Load;
 
 	// Value
-	_bool	m_bIsCreateMode		= true;
-	_bool	m_bIsModifyMode		= false;
+	_bool	m_bIsCreateMode			= true;
+	_bool	m_bIsModifyMode			= false;
 
 	wstring	m_wstrTreeMeshTag		= L"";
 	float	m_fStaticMeshScaleX		= 0.01f;
@@ -177,4 +178,173 @@ public:
 	float	m_fStaticMeshColliderPosX	= 0.0f;
 	float	m_fStaticMeshColliderPosY	= 0.0f;
 	float	m_fStaticMeshColliderPosZ	= 0.0f;
+
+
+	/*__________________________________________________________________________________________________________
+	[ LIGTING ]
+	____________________________________________________________________________________________________________*/
+	// Function
+	afx_msg void OnEnChangeEdit1014_LightInfo_DL_DiffuseR();
+	afx_msg void OnEnChangeEdit1015_LightInfo_DL_DiffuseG();
+	afx_msg void OnEnChangeEdit1016_LightInfo_DL_DiffuseB();
+	afx_msg void OnEnChangeEdit1017_LightInfo_DL_DiffuseA();
+	afx_msg void OnEnChangeEdit1018_LightInfo_DL_SpecularR();
+	afx_msg void OnEnChangeEdit1019_LightInfo_DL_SpecularG();
+	afx_msg void OnEnChangeEdit1020_LightInfo_DL_SpecularB();
+	afx_msg void OnEnChangeEdit1021_LightInfo_DL_SpecularA();
+	afx_msg void OnEnChangeEdit1022_LightInfo_DL_AmbientR();
+	afx_msg void OnEnChangeEdit1023_LightInfo_DL_AmbientG();
+	afx_msg void OnEnChangeEdit1024_LightInfo_DL_AmbientB();
+	afx_msg void OnEnChangeEdit1025_LightInfo_DL_AmbientA();
+	afx_msg void OnEnChangeEdit1026_LightInfo_DL_DirX();
+	afx_msg void OnEnChangeEdit1027_LightInfo_DL_DirY();
+	afx_msg void OnEnChangeEdit1028_LightInfo_DL_DirZ();
+	afx_msg void OnEnChangeEdit1029_LightInfo_DL_DirW();
+	afx_msg void OnBnClickedButton1005_LightInfo_DL_SAVE();
+	afx_msg void OnBnClickedButton1006_LightInfo_DL_LOAD();
+
+	afx_msg void OnBnClickedRadio1008_LightInfo_PL_CreateMode();
+	afx_msg void OnBnClickedRadio1009_LightInfo_PL_ModifyMode();
+	afx_msg void OnEnChangeEdit1030_LightInfo_PL_DiffuseR();
+	afx_msg void OnEnChangeEdit1031_LightInfo_PL_DiffuseG();
+	afx_msg void OnEnChangeEdit1032_LightInfo_PL_DiffuseB();
+	afx_msg void OnEnChangeEdit1033_LightInfo_PL_DiffuseA();
+	afx_msg void OnEnChangeEdit1034_LightInfo_PL_SpecularR();
+	afx_msg void OnEnChangeEdit1035_LightInfo_PL_SpecularG();
+	afx_msg void OnEnChangeEdit1036_LightInfo_PL_SpecularB();
+	afx_msg void OnEnChangeEdit1037_LightInfo_PL_SpecularA();
+	afx_msg void OnEnChangeEdit1038_LightInfo_PL_AmbientR();
+	afx_msg void OnEnChangeEdit1039_LightInfo_PL_AmbientG();
+	afx_msg void OnEnChangeEdit1040_LightInfo_PL_AmbientB();
+	afx_msg void OnEnChangeEdit1041_LightInfo_PL_AmbientA();
+	afx_msg void OnEnChangeEdit1042_LightInfo_PL_PosX();
+	afx_msg void OnEnChangeEdit1043_LightInfo_PL_PosY();
+	afx_msg void OnEnChangeEdit1044_LightInfo_PL_PosZ();
+	afx_msg void OnEnChangeEdit1045_LightInfo_PL_PosW();
+	afx_msg void OnEnChangeEdit1046_LightInfo_PL_Range();
+	afx_msg void OnLbnSelchangeList1004_LightInfo_PL_List();
+	afx_msg void OnBnClickedButton1009__LightInfo_PL_SAVE();
+	afx_msg void OnBnClickedButton1010__LightInfo_PL_LOAD();
+
+	//afx_msg void OnEnChangeEdit1047_LightInfo_SL_EyeX();
+	//afx_msg void OnEnChangeEdit1048_LightInfo_SL_EyeY();
+	//afx_msg void OnEnChangeEdit1049_LightInfo_SL_EyeZ();
+	afx_msg void OnEnChangeEdit1050_LightInfo_SL_AtX();
+	afx_msg void OnEnChangeEdit1051_LightInfo_SL_AtY();
+	afx_msg void OnEnChangeEdit1052_LightInfo_SL_AtZ();
+	afx_msg void OnEnChangeEdit1056_LightInfo_SL_Height();
+	afx_msg void OnEnChangeEdit1053_LightInfo_SL_FovY();
+	afx_msg void OnEnChangeEdit1054_LightInfo_SL_Near();
+	afx_msg void OnEnChangeEdit1055_LightInfo_SL_Far();
+	afx_msg void OnBnClickedButton1011__LightInfo_SL_SAVE();
+	afx_msg void OnBnClickedButton1012_LightInfo_SL_LOAD();
+
+	// Contorl
+	CEdit		m_LightInfoEdit_DL_DiffuseR;
+	CEdit		m_LightInfoEdit_DL_DiffuseG;
+	CEdit		m_LightInfoEdit_DL_DiffuseB;
+	CEdit		m_LightInfoEdit_DL_DiffuseA;
+	CEdit		m_LightInfoEdit_DL_SpecularR;
+	CEdit		m_LightInfoEdit_DL_SpecularG;
+	CEdit		m_LightInfoEdit_DL_SpecularB;
+	CEdit		m_LightInfoEdit_DL_SpecularA;
+	CEdit		m_LightInfoEdit_DL_AmbientR;
+	CEdit		m_LightInfoEdit_DL_AmbientG;
+	CEdit		m_LightInfoEdit_DL_AmbientB;
+	CEdit		m_LightInfoEdit_DL_AmbientA;
+	CEdit		m_LightInfoEdit_DL_DirectionX;
+	CEdit		m_LightInfoEdit_DL_DirectionY;
+	CEdit		m_LightInfoEdit_DL_DirectionZ;
+	CEdit		m_LightInfoEdit_DL_DirectionW;
+	CButton		m_LightInfoButton_DL_SAVE;
+	CButton		m_LightInfoButton_DL_LOAD;
+
+	CEdit		m_LightInfoEdit_PL_DiffuseR;
+	CEdit		m_LightInfoEdit_PL_DiffuseG;
+	CEdit		m_LightInfoEdit_PL_DiffuseB;
+	CEdit		m_LightInfoEdit_PL_DiffuseA;
+	CEdit		m_LightInfoEdit_PL_SpecularR;
+	CEdit		m_LightInfoEdit_PL_SpecularG;
+	CEdit		m_LightInfoEdit_PL_SpecularB;
+	CEdit		m_LightInfoEdit_PL_SpecularA;
+	CEdit		m_LightInfoEdit_PL_AnbientR;
+	CEdit		m_LightInfoEdit_PL_AnbientG;
+	CEdit		m_LightInfoEdit_PL_AnbientB;
+	CEdit		m_LightInfoEdit_PL_AnbientA;
+	CEdit		m_LightInfoEdit_PL_PosX;
+	CEdit		m_LightInfoEdit_PL_PosY;
+	CEdit		m_LightInfoEdit_PL_PosZ;
+	CEdit		m_LightInfoEdit_PL_PosW;
+	CEdit		m_LightInfoEdit_PL_Range;
+	CButton		m_LightInfoRadio_PL_CreateMode;
+	CButton		m_LightInfoRadio_PL_ModifyMode;
+	CListBox	m_LightInfoListBox_PL_List;
+	CButton		m_LightInfoButton_PL_DELETE;
+	CButton		m_LightInfoButton_PL_ALLDELETE;
+	CButton		m_LightInfoButton_PL_SAVE;
+	CButton		m_LightInfoButton_PL_LOAD;
+
+	CEdit		m_LightInfoEdit_SL_EyeX;
+	CEdit		m_LightInfoEdit_SL_EyeY;
+	CEdit		m_LightInfoEdit_SL_EyeZ;
+	CEdit		m_LightInfoEdit_SL_AtX;
+	CEdit		m_LightInfoEdit_SL_AtY;
+	CEdit		m_LightInfoEdit_SL_AtZ;
+	CEdit		m_LightInfoEdit_SL_Height;
+	CEdit		m_LightInfoEdit_SL_FovY;
+	CEdit		m_LightInfoEdit_SL_Near;
+	CEdit		m_LightInfoEdit_SL_Far;
+	CButton		m_LightInfoButton_SL_SAVE;
+	CButton		m_LightInfoButton_SL_LOAD;
+
+	// Value
+	_bool	m_bIsLightingCreateMode = true;
+	_bool	m_bIsLightingModifyMode = false;
+
+	float m_fLightInfo_DL_DiffuseR	= 1.0f;
+	float m_fLightInfo_DL_DiffuseG	= 1.0f;
+	float m_fLightInfo_DL_DiffuseB	= 1.0f;
+	float m_fLightInfo_DL_DiffuseA	= 1.0f;
+	float m_fLightInfo_DL_SpecularR = 1.0f;
+	float m_fLightInfo_DL_SpecularG = 1.0f;
+	float m_fLightInfo_DL_SpecularB = 1.0f;
+	float m_fLightInfo_DL_SpecularA = 1.0f;
+	float m_fLightInfo_DL_AmbientR	= 1.0f;
+	float m_fLightInfo_DL_AmbientG	= 1.0f;
+	float m_fLightInfo_DL_AmbientB	= 1.0f;
+	float m_fLightInfo_DL_AmbientA	= 1.0f;
+	float m_fLightInfo_DL_DirX		= 1.0f;
+	float m_fLightInfo_DL_DirY		= -1.0f;
+	float m_fLightInfo_DL_DirZ		= 1.0f;
+	float m_fLightInfo_DL_DirW		= 0.0f;
+
+	float m_fLightInfo_PL_DiffuseR	= 1.0f;
+	float m_fLightInfo_PL_DiffuseG	= 1.0f;
+	float m_fLightInfo_PL_DiffuseB	= 1.0f;
+	float m_fLightInfo_PL_DiffuseA	= 1.0f;
+	float m_fLightInfo_PL_SpecularR = 1.0f;
+	float m_fLightInfo_PL_SpecularG = 1.0f;
+	float m_fLightInfo_PL_SpecularB = 1.0f;
+	float m_fLightInfo_PL_SpecularA = 1.0f;
+	float m_fLightInfo_PL_AmbientR	= 1.0f;
+	float m_fLightInfo_PL_AmbientG	= 1.0f;
+	float m_fLightInfo_PL_AmbientB	= 1.0f;
+	float m_fLightInfo_PL_AmbientA	= 1.0f;
+	float m_fLightInfo_PL_PosX		= 0.0f;
+	float m_fLightInfo_PL_PosY		= 0.0f;
+	float m_fLightInfo_PL_PosZ		= 0.0f;
+	float m_fLightInfo_PL_PosW		= 1.0f;
+	float m_fLightInfo_PL_Range		= 0.0f;
+
+	float m_fLightInfo_SL_EyeX		= 0.0f;
+	float m_fLightInfo_SL_EyeY		= 0.0f;
+	float m_fLightInfo_SL_EyeZ		= 0.0f;
+	float m_fLightInfo_SL_AtX		= 1.0f;
+	float m_fLightInfo_SL_AtY		= 1.0f;
+	float m_fLightInfo_SL_AtZ		= 1.0f;
+	float m_fLightInfo_SL_Height	= 0.0f;
+	float m_fLightInfo_SL_FovY		= 15.0f;
+	float m_fLightInfo_SL_Near		= 1.0f;
+	float m_fLightInfo_SL_Far		= 10'000.0f;
+
 };

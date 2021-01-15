@@ -12,6 +12,7 @@ F3	Render On/Off	Collider
 로딩이 끝나면 Stage로 자동 씬전환.
 
 	[ TabMap ]
+	-, =		: 카메라 이동속도 증감.
 	TAB		: Create <-> Modify 변경.
 	LSHIFT + WASD	: 카메라 이동.
 	LSHIFT + LBUTTON	: 오브젝트 피킹 (생성 및 수정)

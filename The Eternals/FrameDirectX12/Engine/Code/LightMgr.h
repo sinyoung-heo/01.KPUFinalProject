@@ -15,7 +15,7 @@ private:
 
 public:
 	// Get
-	D3DLIGHT	Get_LightInfo(const LIGHTTYPE & eLightID, const _int& iIdx);
+	D3DLIGHT	Get_LightInfo(const LIGHTTYPE & eLightID, const _int& iIdx = 0);
 
 	// Set
 	HRESULT		Set_LightInfo(const LIGHTTYPE& eLightID, const _int & iIdx, const D3DLIGHT & tLightInfo);
@@ -26,6 +26,7 @@ public:
 						  ID3D12GraphicsCommandList* pCommandList, 
 						  const LIGHTTYPE& eLightID,
 						  const D3DLIGHT& tLightInfo);
+	void		Update_Light();
 	void		Render_Light(vector<ComPtr<ID3D12Resource>> pvecTargetTexture);
 
 private:

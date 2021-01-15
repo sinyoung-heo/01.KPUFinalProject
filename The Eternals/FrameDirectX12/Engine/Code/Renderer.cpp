@@ -152,17 +152,18 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 
 	/*__________________________________________________________________________________________________________
 	LoadingThread가 끝나고 나서 쓰레드를 만들어줘야 한다.
-	어떤 이유인지는 모르겠지만 미리 만들어두면 Work_Trhead함수 구동이 안된다.
 	____________________________________________________________________________________________________________*/
 	if(RENDERID::MULTI_THREAD == eID)
 		Render_MultiThread(fTimeDelta);
 
 	Render_Priority(fTimeDelta);		// SkyBox
+
 	if (RENDERID::SINGLE_THREAD == eID)
 	{
 		Render_ShadowDepth(fTimeDelta);	// Shadow Depth
 		Render_NonAlpha(fTimeDelta);	// Diffuse, Normal, Specular, Depth
 	}
+
 	Render_Light();						// Shade, Specular
 	Render_Blend();						// Target Blend
 	Render_Alpha(fTimeDelta);
@@ -221,6 +222,7 @@ void CRenderer::Render_Light()
 {
 	m_pLightTarget->SetUp_LightOnGraphicDevice();
 
+	CLightMgr::Get_Instance()->Update_Light();
 	CLightMgr::Get_Instance()->Render_Light(m_pDeferredTarget->Get_TargetTexture());
 
 	m_pLightTarget->Release_OnGraphicDevice();
