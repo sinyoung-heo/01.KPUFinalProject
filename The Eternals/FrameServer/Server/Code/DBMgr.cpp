@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "DBMgr.h"
+#include "Player.h"
 
 IMPLEMENT_SINGLETON(CDBMgr)
 
@@ -32,7 +33,7 @@ HRESULT CDBMgr::Ready_DB()
 				SQLSetConnectAttr(m_hdbc, SQL_LOGIN_TIMEOUT, (SQLPOINTER)5, 0);
 
 				// Connect to data source  
-				m_retcode = SQLConnect(m_hdbc, (SQLWCHAR*)L"gs_2015182030", SQL_NTS, (SQLWCHAR*)NULL, 0, NULL, 0);
+				m_retcode = SQLConnect(m_hdbc, (SQLWCHAR*)L"Eternals_DBServer", SQL_NTS, (SQLWCHAR*)NULL, 0, NULL, 0);
 
 				// Allocate statement handle  
 				if (m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO)
@@ -60,13 +61,123 @@ void CDBMgr::Disconnect_DB()
 	SQLFreeHandle(SQL_HANDLE_ENV, m_henv);
 }
 
-bool CDBMgr::Check_ID(int id)
+bool CDBMgr::Check_ID(int id, char* pw)
 {
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	/*SQLINTEGER level, posX, posY, hp, maxhp, exp, maxexp, att, ori_x, ori_y;
+	SQLLEN cbLevel = 0, cbPosX = 0, cbPosY = 0, cbHp = 0, cbMaxHp = 0, cbExp = 0, cbMaxExp = 0, cbAtt = 0, cbOriX = 0, cbOriY = 0;*/
+
+	SQLINTEGER u_type, u_level, u_Hp, u_maxHp, u_Exp, u_maxExp, u_att;
+	SQLFLOAT u_posX, u_posY, u_posZ, u_speed;
+
+	SQLLEN cbType = 0, cbLevel = 0, cbHp = 0, cbmaxHp = 0, cbExp = 0, cbmaxExp = 0, cbAtt = 0, cbPosX = 0, cbPosY = 0, cbPosZ = 0, cbSpeed = 0;
+	SQLLEN cbLen = 0;
+
+	/* 유효한 ID인지 검사하는 쿼리문 */
+	/*std::string str_order
+		= "SELECT user_level, user_x, user_y, user_hp,user_maxhp, user_exp, user_maxexp, user_att, user_ori_x, user_ori_y FROM USER_DATA WHERE user_name = '";*/
+
+	std::string str_order
+		= "SELECT * FROM USER_DATA WHERE user_ID = '";
+
+	str_order += pPlayer->m_ID;
+	str_order += "' and user_password = '";
+	str_order += pw;
+	str_order += "'";
+
+	std::wstring wsr_order = L"";
+	wsr_order.assign(str_order.begin(), str_order.end());
+
+	m_retcode = SQLExecDirect(m_hstmt, (SQLWCHAR*)wsr_order.c_str(), SQL_NTS);
+
+	// 데이터 처리 시작 - 유효한 ID일 경우
+	if (m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO)
+	{
+		/* Load Data on player info */
+		m_retcode = SQLBindCol(m_hstmt, 2, SQL_C_FLOAT, &u_posX, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 3, SQL_C_FLOAT, &u_posY, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 4, SQL_C_FLOAT, &u_posZ, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 5, SQL_C_LONG, &u_type, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 6, SQL_C_LONG, &u_level, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 7, SQL_C_LONG, &u_Hp, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 8, SQL_C_LONG, &u_maxHp, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 9, SQL_C_LONG, &u_Exp, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 10, SQL_C_LONG, &u_maxExp, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 11, SQL_C_LONG, &u_att, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 12, SQL_C_FLOAT, &u_speed, 100, &cbLen);
+
+		for (int i = 0; ; i++)
+		{
+			m_retcode = SQLFetch(m_hstmt);
+			if (m_retcode == SQL_ERROR || m_retcode == SQL_SUCCESS_WITH_INFO)
+				db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
+
+			/* player info를 올바르게 로드했다면 정보 저장 */
+			if (m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO)
+			{
+				pPlayer->m_vPos = _vec3((float)u_posX, (float)u_posY, (float)u_posZ);
+				pPlayer->m_type = (char)u_type;
+				pPlayer->level = u_level;
+				pPlayer->Hp = u_Hp;
+				pPlayer->maxHp = u_maxHp;
+				pPlayer->Exp = u_Exp;
+				pPlayer->maxExp = u_maxExp;
+				pPlayer->att = u_att;
+				pPlayer->spd = (float)u_speed;
+
+				SQLCloseCursor(m_hstmt);
+				return true;
+			}
+			else
+				break;
+		}
+	}
+	else db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
+
+	SQLCloseCursor(m_hstmt);
+
 	return false;
 }
 
-void CDBMgr::Insert_NewPlayer_DB(int id)
+void CDBMgr::Insert_NewPlayer_DB(int id, char* pw)
 {
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+
+	// ID
+	string name{ "'" };
+	name += pPlayer->m_ID;
+	name += "'";
+	// password
+	string password{ "'" };
+	password += pw;
+	password += "'";
+
+	/* 회원 가입 */
+	std::string str_order
+		= "EXEC insert_user " + name + ", "+password + ", "
+		+ to_string(pPlayer->m_vPos.x) + ", "
+		+ to_string(pPlayer->m_vPos.y) + ", "
+		+ to_string(pPlayer->m_vPos.z) + ", "
+		+ to_string(pPlayer->m_type) + ", "
+		+ to_string(pPlayer->level) + ", "
+		+ to_string(pPlayer->Hp) + ", "
+		+ to_string(pPlayer->maxHp) + ", "
+		+ to_string(pPlayer->Exp) + ", "
+		+ to_string(pPlayer->maxExp) + ", "
+		+ to_string(pPlayer->att) + ", "
+		+ to_string(pPlayer->spd);
+
+	std::wstring wstr_order = L"";
+	wstr_order.assign(str_order.begin(), str_order.end());
+	m_retcode = SQLExecDirect(m_hstmt, (SQLWCHAR*)wstr_order.c_str(), SQL_NTS);
+
+#ifdef TEST
+	cout << "회원 가입 완료" << endl;
+#endif // TEST
+
+
+	SQLCloseCursor(m_hstmt);
+	SQLCancel(m_hstmt);
 }
 
 void CDBMgr::Update_stat_DB(int id)
@@ -75,6 +186,25 @@ void CDBMgr::Update_stat_DB(int id)
 
 void CDBMgr::Update_move_DB(int id)
 {
+}
+
+void CDBMgr::db_show_error(SQLHANDLE hHandle, SQLSMALLINT hType, RETCODE RetCode)
+{
+	SQLSMALLINT iRec = 0;
+	SQLINTEGER iError;
+	WCHAR wszMessage[1000];
+	WCHAR wszState[SQL_SQLSTATE_SIZE + 1];
+	if (RetCode == SQL_INVALID_HANDLE) {
+		//wcout << L"Invalid handle!\n";
+		return;
+	}
+	while (SQLGetDiagRec(hType, hHandle, ++iRec, wszState, &iError, wszMessage,
+		(SQLSMALLINT)(sizeof(wszMessage) / sizeof(WCHAR)), (SQLSMALLINT*)NULL) == SQL_SUCCESS) {
+		// Hide data truncated..
+		if (wcsncmp(wszState, L"01004", 5)) {
+			wcout << L"[" << wszState << L"]" << wszMessage << L"(" << iError << L")\n";
+		}
+	}
 }
 
 void CDBMgr::Release()

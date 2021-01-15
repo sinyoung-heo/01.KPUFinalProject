@@ -2,6 +2,7 @@
 
 constexpr int SERVER_PORT = 5689;
 constexpr int MAX_ID_LEN = 10;
+constexpr int MAX_PW_LEN = 16;
 constexpr int MAX_USER = 10000;
 constexpr int WORLD_WIDTH = 2000;
 constexpr int WORLD_HEIGHT = 2000;
@@ -114,6 +115,7 @@ struct cs_packet_login
 	char  size;
 	char  type;
 	char  name[MAX_ID_LEN];
+	char  password[MAX_PW_LEN];
 };
 
 constexpr char MV_UP = 0;

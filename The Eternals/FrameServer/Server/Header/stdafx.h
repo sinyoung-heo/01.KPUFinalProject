@@ -1,4 +1,5 @@
 #pragma once
+#define TEST
 
 /* SYSTEM HEADER */
 //#include "vld.h"
@@ -18,6 +19,7 @@
 #include <atomic>
 #include <sqlext.h>
 #include <string>
+#include <random>
 
 /* NAMESPACE */
 using namespace std;

@@ -21,6 +21,13 @@ void process_packet(int id)
 		pPlayer->Get_ClientLock().unlock();
 
 		/* CHECK ID in Database Server */
+		if (false == CDBMgr::GetInstance()->Check_ID(id, p->password))
+		{
+			/* 처음 게임에 접속한 유저라면 회원으로 등록 in Database Server */
+			CDBMgr::GetInstance()->Insert_NewPlayer_DB(id, p->password);
+		}
+
+		/* 로그인 수락 패킷 전송 */
 		send_login_ok(id);
 
 		/* Sector 다시 등록 (접속 시 미리 한 번 하고있음. 완전함을 위해 한 번 더 등록(sector의 Key는 Unique함) */

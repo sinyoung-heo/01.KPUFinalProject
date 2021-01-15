@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "Player.h"
-#include <random>
-#define TEST
 
 /* IOCP SERVER 관련 변수*/
 HANDLE g_hIocp;
@@ -66,6 +64,7 @@ void Ready_ServerManager()
 	CSectorMgr::GetInstance();
 	CObjPoolMgr::GetInstance()->Init_ObjPoolMgr();	
 	CObjMgr::GetInstance()->Init_ObjMgr();
+	CDBMgr::GetInstance()->Ready_DB();
 #ifdef TEST
 	cout << "Finish Server Managers" << endl;
 #endif // TEST
@@ -127,6 +126,7 @@ void Release_Server()
 	CSectorMgr::GetInstance()->DestroyInstance();
 	CObjMgr::GetInstance()->DestroyInstance();
 	CObjPoolMgr::GetInstance()->DestroyInstance();
+	CDBMgr::GetInstance()->DestroyInstance();
 
 	closesocket(g_hListenSock);
 	WSACleanup();
@@ -180,7 +180,7 @@ void add_new_client(SOCKET ns)
 		pNew->Hp = 100;
 		pNew->maxHp = 100;
 		pNew->Exp = 0;
-		pNew->maxExp = 0;
+		pNew->maxExp = 100;
 		pNew->att = 10;
 		pNew->spd = 10.f;
 		pNew->m_vPos = _vec3((rand() % 100) * 1.f+1000.f, (rand() % 100) * 1.f + 500.f, 0.f);
