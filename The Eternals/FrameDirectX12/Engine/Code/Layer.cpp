@@ -138,7 +138,7 @@ _int CLayer::Update_Layer(const _float & fTimeDelta)
 			if (MyPair.second.empty())
 				break;
 
-			int iEvent = (*iter_begin)->Update_GameObject(fTimeDelta);
+			_int iEvent = (*iter_begin)->Update_GameObject(fTimeDelta);
 
 			if (DEAD_OBJ == iEvent)
 			{
