@@ -175,6 +175,38 @@ void CDBMgr::Insert_NewPlayer_DB(int id, char* pw)
 
 void CDBMgr::Update_stat_DB(int id)
 {
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+
+	if (false == pPlayer->Get_IsConnected())
+		return;
+
+	// ID
+	string name{ "'" };
+	name += pPlayer->m_ID;
+	name += "'";
+
+	/* Player Stat °»½Å */
+	std::string str_order
+		= "EXEC update_user_info "
+		+ to_string(pPlayer->m_vPos.x) + ", "
+		+ to_string(pPlayer->m_vPos.y) + ", "
+		+ to_string(pPlayer->m_vPos.z) + ", "
+		+ to_string(pPlayer->m_type) + ", "
+		+ to_string(pPlayer->level) + ", "
+		+ to_string(pPlayer->Hp) + ", "
+		+ to_string(pPlayer->maxHp) + ", "
+		+ to_string(pPlayer->Exp) + ", "
+		+ to_string(pPlayer->maxExp) + ", "
+		+ to_string(pPlayer->att) + ", "
+		+ to_string(pPlayer->spd)
+		+ name;
+		
+	std::wstring wstr_order = L"";
+	wstr_order.assign(str_order.begin(), str_order.end());
+	m_retcode = SQLExecDirect(m_hstmt, (SQLWCHAR*)wstr_order.c_str(), SQL_NTS);
+
+	SQLCloseCursor(m_hstmt);
+	SQLCancel(m_hstmt);	
 }
 
 void CDBMgr::Update_move_DB(int id)

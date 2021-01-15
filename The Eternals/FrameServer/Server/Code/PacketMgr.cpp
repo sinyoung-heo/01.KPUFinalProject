@@ -7,6 +7,8 @@ void process_packet(int id)
 	/* Server Number 해당 유저 */
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 
+	if (pPlayer == nullptr) return;
+
 	// 패킷 타입
 	char p_type = pPlayer->m_packet_start[1];
 
@@ -116,6 +118,8 @@ void process_recv(int id, DWORD iosize)
 {
 	/* Server Number 해당 유저 */
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+
+	if (pPlayer == nullptr) return;
 	
 	// m_packet_start		: 처리할 데이터 버퍼 및 위치 (= iocp_buffer)
 	// m_packet_start[0]	: 처리할 패킷의 크기
@@ -196,6 +200,8 @@ void send_login_ok(int id)
 
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 
+	if (pPlayer == nullptr) return;
+
 	p.size = sizeof(p);
 	p.type = SC_PACKET_LOGIN_OK;
 	p.id = id;
@@ -262,6 +268,8 @@ void send_move_packet(int to_client, int id)
 
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 
+	if (pPlayer == nullptr) return;
+
 	p.size = sizeof(p);
 	p.type = SC_PACKET_MOVE;
 	p.id = id;
@@ -283,6 +291,8 @@ void send_move_packet(int to_client, int id)
 void process_move(int id, cs_packet_move* info)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+
+	if (pPlayer == nullptr) return;
 
 	/* 해당 플레이어의 원래 위치값 */
 	float ori_x, ori_y, ori_z;

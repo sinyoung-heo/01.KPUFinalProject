@@ -222,6 +222,8 @@ void disconnect_client(int id)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 
+	if (pPlayer == nullptr) return;
+
 	/* sector에서 해당 플레이어 지우기 */
 	CSectorMgr::GetInstance()->Leave_ClientInSector(id, (int)(pPlayer->m_vPos.y / SECTOR_SIZE), (int)(pPlayer->m_vPos.x / SECTOR_SIZE));
 
@@ -266,6 +268,9 @@ void disconnect_client(int id)
 	}
 
 	pPlayer->Get_ClientLock().lock();
+
+	// DB 정보 저장 후 종료
+	CDBMgr::GetInstance()->Update_stat_DB(id);
 	
 	CObjPoolMgr::GetInstance()->return_Object(L"PLAYER", pPlayer);
 	CObjMgr::GetInstance()->Delete_GameObject(L"PLAYER", pPlayer);
