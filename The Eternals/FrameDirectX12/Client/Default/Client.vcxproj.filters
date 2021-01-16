@@ -73,6 +73,18 @@
     <Filter Include="02.GameObject\99.SampleObject\07.TextureEffect">
       <UniqueIdentifier>{447913bb-84f9-4c8d-9978-476e7a28c9bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Scene\99.DebugStage">
+      <UniqueIdentifier>{8129731b-c82e-4cf7-bbab-9ac7e83b6987}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\99.DebugStage\StageHSY">
+      <UniqueIdentifier>{cce7a519-dab0-4b1d-a458-3dc62e3a06ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\99.DebugStage\StagePJO">
+      <UniqueIdentifier>{c12c083f-6b2d-4435-a817-2e559d054f87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\99.DebugStage\StageLDH">
+      <UniqueIdentifier>{962761de-71a1-4a1a-9d46-0a8a8149a0ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -153,6 +165,15 @@
     <ClInclude Include="stdafx.h">
       <Filter>99.Etc</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\StageLDH.h">
+      <Filter>01.Scene\99.DebugStage\StageLDH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\StagePJO.h">
+      <Filter>01.Scene\99.DebugStage\StagePJO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\StageHSY.h">
+      <Filter>01.Scene\99.DebugStage\StageHSY</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -208,6 +229,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\TerrainMeshObject.cpp">
       <Filter>02.GameObject\99.SampleObject\04.TerrainMeshObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\StageLDH.cpp">
+      <Filter>01.Scene\99.DebugStage\StageLDH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\StagePJO.cpp">
+      <Filter>01.Scene\99.DebugStage\StagePJO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\StageHSY.cpp">
+      <Filter>01.Scene\99.DebugStage\StageHSY</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

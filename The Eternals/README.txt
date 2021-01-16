@@ -1,8 +1,13 @@
 [ Client ]
-Tab	카메라 모드 변경 DynamicCamera <-> DebugCamera
-F1	Render On/Off	RenderTarget 
-F2	Render On/Off	Font
-F3	Render On/Off	Collider
+DebugStage 전환 : Logo씬에서 로딩 완료 후 키입력.
+- 숫자 1	: StageLDH
+- 숫자 2	: StagePJO
+- 숫자 3	: StageHSY
+
+- Tab	카메라 모드 변경 DynamicCamera <-> DebugCamera
+- F1	Render On/Off	RenderTarget 
+- F2	Render On/Off	Font
+- F3	Render On/Off	Collider
 
 
 

@@ -177,6 +177,9 @@
     <ClInclude Include="..\Code\Scene_Menu.h" />
     <ClInclude Include="..\Code\Scene_Stage.h" />
     <ClInclude Include="..\Code\SkyBox.h" />
+    <ClInclude Include="..\Code\StageHSY.h" />
+    <ClInclude Include="..\Code\StageLDH.h" />
+    <ClInclude Include="..\Code\StagePJO.h" />
     <ClInclude Include="..\Code\StaticMeshObject.h" />
     <ClInclude Include="..\Code\TerrainMeshObject.h" />
     <ClInclude Include="..\Code\TerrainObject.h" />
@@ -205,6 +208,9 @@
     <ClCompile Include="..\Code\Scene_Menu.cpp" />
     <ClCompile Include="..\Code\Scene_Stage.cpp" />
     <ClCompile Include="..\Code\SkyBox.cpp" />
+    <ClCompile Include="..\Code\StageHSY.cpp" />
+    <ClCompile Include="..\Code\StageLDH.cpp" />
+    <ClCompile Include="..\Code\StagePJO.cpp" />
     <ClCompile Include="..\Code\StaticMeshObject.cpp" />
     <ClCompile Include="..\Code\TerrainMeshObject.cpp" />
     <ClCompile Include="..\Code\TerrainObject.cpp" />

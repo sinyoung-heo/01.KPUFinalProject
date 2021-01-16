@@ -6,6 +6,10 @@
 #include "Management.h"
 #include "Scene_Menu.h"
 #include "Scene_Stage.h"
+#include "StageLDH.h"
+#include "StagePJO.h"
+#include "StageHSY.h"
+
 #include "LogoBack.h"
 #include "Font.h"
 
@@ -96,13 +100,43 @@ HRESULT CScene_Logo::Render_Scene(const _float & fTimeDelta, const Engine::RENDE
 {
 	Engine::FAILED_CHECK_RETURN(CScene::Render_Scene(fTimeDelta, eID), E_FAIL);
 
-	if (Engine::KEY_DOWN(DIK_RETURN) && m_pLoading->Get_Finish())
+	// Scene ÀüÈ¯.
+	if (m_pLoading->Get_Finish())
 	{
-		m_pObjectMgr->Clear_Layer();
+		if (Engine::KEY_DOWN(DIK_RETURN))
+		{
+			m_pObjectMgr->Clear_Layer();
+			Engine::CScene* pNewScene = nullptr;
 
-		Engine::CScene* pNewScene = CScene_Stage::Create(m_pGraphicDevice, m_pCommandList);
-		Engine::CManagement::Get_Instance()->SetUp_CurrentScene(pNewScene);
+			pNewScene = CScene_Stage::Create(m_pGraphicDevice, m_pCommandList);
+			Engine::CManagement::Get_Instance()->SetUp_CurrentScene(pNewScene);
+		}
+		else if (Engine::KEY_DOWN(DIK_1))
+		{
+			m_pObjectMgr->Clear_Layer();
+			Engine::CScene* pNewScene = nullptr;
+
+			pNewScene = CStageLDH::Create(m_pGraphicDevice, m_pCommandList);
+			Engine::CManagement::Get_Instance()->SetUp_CurrentScene(pNewScene);
+		}
+		else if (Engine::KEY_DOWN(DIK_2))
+		{
+			m_pObjectMgr->Clear_Layer();
+			Engine::CScene* pNewScene = nullptr;
+
+			pNewScene = CStagePJO::Create(m_pGraphicDevice, m_pCommandList);
+			Engine::CManagement::Get_Instance()->SetUp_CurrentScene(pNewScene);
+		}
+		else if (Engine::KEY_DOWN(DIK_3))
+		{
+			m_pObjectMgr->Clear_Layer();
+			Engine::CScene* pNewScene = nullptr;
+
+			pNewScene = CStageHSY::Create(m_pGraphicDevice, m_pCommandList);
+			Engine::CManagement::Get_Instance()->SetUp_CurrentScene(pNewScene);
+		}
 	}
+
 
 	return S_OK;
 }
