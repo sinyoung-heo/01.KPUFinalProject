@@ -200,8 +200,6 @@ public:
 	afx_msg void OnEnChangeEdit1027_LightInfo_DL_DirY();
 	afx_msg void OnEnChangeEdit1028_LightInfo_DL_DirZ();
 	afx_msg void OnEnChangeEdit1029_LightInfo_DL_DirW();
-	afx_msg void OnBnClickedButton1005_LightInfo_DL_SAVE();
-	afx_msg void OnBnClickedButton1006_LightInfo_DL_LOAD();
 
 	afx_msg void OnBnClickedRadio1008_LightInfo_PL_CreateMode();
 	afx_msg void OnBnClickedRadio1009_LightInfo_PL_ModifyMode();
@@ -226,9 +224,6 @@ public:
 	afx_msg void OnBnClickedButton1009__LightInfo_PL_SAVE();
 	afx_msg void OnBnClickedButton1010__LightInfo_PL_LOAD();
 
-	//afx_msg void OnEnChangeEdit1047_LightInfo_SL_EyeX();
-	//afx_msg void OnEnChangeEdit1048_LightInfo_SL_EyeY();
-	//afx_msg void OnEnChangeEdit1049_LightInfo_SL_EyeZ();
 	afx_msg void OnEnChangeEdit1050_LightInfo_SL_AtX();
 	afx_msg void OnEnChangeEdit1051_LightInfo_SL_AtY();
 	afx_msg void OnEnChangeEdit1052_LightInfo_SL_AtZ();
@@ -256,8 +251,20 @@ public:
 	CEdit		m_LightInfoEdit_DL_DirectionY;
 	CEdit		m_LightInfoEdit_DL_DirectionZ;
 	CEdit		m_LightInfoEdit_DL_DirectionW;
-	CButton		m_LightInfoButton_DL_SAVE;
-	CButton		m_LightInfoButton_DL_LOAD;
+
+	CEdit		m_LightInfoEdit_SL_EyeX;
+	CEdit		m_LightInfoEdit_SL_EyeY;
+	CEdit		m_LightInfoEdit_SL_EyeZ;
+	CEdit		m_LightInfoEdit_SL_AtX;
+	CEdit		m_LightInfoEdit_SL_AtY;
+	CEdit		m_LightInfoEdit_SL_AtZ;
+	CEdit		m_LightInfoEdit_SL_Height;
+	CEdit		m_LightInfoEdit_SL_FovY;
+	CEdit		m_LightInfoEdit_SL_Near;
+	CEdit		m_LightInfoEdit_SL_Far;
+	CButton		m_LightInfoButton_SL_SAVE;
+	CButton		m_LightInfoButton_SL_LOAD;
+
 
 	CEdit		m_LightInfoEdit_PL_DiffuseR;
 	CEdit		m_LightInfoEdit_PL_DiffuseG;
@@ -283,19 +290,6 @@ public:
 	CButton		m_LightInfoButton_PL_ALLDELETE;
 	CButton		m_LightInfoButton_PL_SAVE;
 	CButton		m_LightInfoButton_PL_LOAD;
-
-	CEdit		m_LightInfoEdit_SL_EyeX;
-	CEdit		m_LightInfoEdit_SL_EyeY;
-	CEdit		m_LightInfoEdit_SL_EyeZ;
-	CEdit		m_LightInfoEdit_SL_AtX;
-	CEdit		m_LightInfoEdit_SL_AtY;
-	CEdit		m_LightInfoEdit_SL_AtZ;
-	CEdit		m_LightInfoEdit_SL_Height;
-	CEdit		m_LightInfoEdit_SL_FovY;
-	CEdit		m_LightInfoEdit_SL_Near;
-	CEdit		m_LightInfoEdit_SL_Far;
-	CButton		m_LightInfoButton_SL_SAVE;
-	CButton		m_LightInfoButton_SL_LOAD;
 
 	// Value
 	_bool	m_bIsLightingCreateMode = true;

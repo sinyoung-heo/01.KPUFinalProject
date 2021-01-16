@@ -200,6 +200,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Code\MouseMgr.h" />
+    <ClInclude Include="..\Code\Popori_F.h" />
     <ClInclude Include="..\Code\ShadowLightMgr.h" />
     <ClInclude Include="..\Code\ToolCamera.h" />
     <ClInclude Include="..\Code\ToolCoordinate.h" />
@@ -235,6 +236,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MouseMgr.cpp" />
+    <ClCompile Include="..\Code\Popori_F.cpp" />
     <ClCompile Include="..\Code\ShadowLightMgr.cpp" />
     <ClCompile Include="..\Code\ToolCamera.cpp" />
     <ClCompile Include="..\Code\ToolCoordinate.cpp" />

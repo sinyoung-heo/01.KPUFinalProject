@@ -106,8 +106,6 @@ void CTabMap::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT1026, m_LightInfoEdit_DL_DirectionX);
 	DDX_Control(pDX, IDC_EDIT1027, m_LightInfoEdit_DL_DirectionY);
 	DDX_Control(pDX, IDC_EDIT1028, m_LightInfoEdit_DL_DirectionZ);
-	DDX_Control(pDX, IDC_BUTTON1005, m_LightInfoButton_DL_SAVE);
-	DDX_Control(pDX, IDC_BUTTON1006, m_LightInfoButton_DL_LOAD);
 	DDX_Control(pDX, IDC_EDIT1030, m_LightInfoEdit_PL_DiffuseR);
 	DDX_Control(pDX, IDC_EDIT1031, m_LightInfoEdit_PL_DiffuseG);
 	DDX_Control(pDX, IDC_EDIT1032, m_LightInfoEdit_PL_DiffuseB);
@@ -278,8 +276,8 @@ BEGIN_MESSAGE_MAP(CTabMap, CDialogEx)
 	ON_EN_CHANGE(IDC_EDIT1055, &CTabMap::OnEnChangeEdit1055_LightInfo_SL_Far)
 	ON_BN_CLICKED(IDC_BUTTON1011, &CTabMap::OnBnClickedButton1011__LightInfo_SL_SAVE)
 	ON_BN_CLICKED(IDC_BUTTON1012, &CTabMap::OnBnClickedButton1012_LightInfo_SL_LOAD)
-	ON_BN_CLICKED(IDC_BUTTON1005, &CTabMap::OnBnClickedButton1005_LightInfo_DL_SAVE)
-	ON_BN_CLICKED(IDC_BUTTON1006, &CTabMap::OnBnClickedButton1006_LightInfo_DL_LOAD)
+	//ON_BN_CLICKED(IDC_BUTTON1005, &CTabMap::OnBnClickedButton1005_LightInfo_DL_SAVE)
+	//ON_BN_CLICKED(IDC_BUTTON1006, &CTabMap::OnBnClickedButton1006_LightInfo_DL_LOAD)
 END_MESSAGE_MAP()
 
 
@@ -354,8 +352,6 @@ BOOL CTabMap::OnInitDialog()
 	m_LightInfoEdit_DL_DirectionY.EnableWindow(FALSE);
 	m_LightInfoEdit_DL_DirectionZ.EnableWindow(FALSE);
 	m_LightInfoEdit_DL_DirectionW.EnableWindow(FALSE);
-	m_LightInfoButton_DL_SAVE.EnableWindow(FALSE);
-	m_LightInfoButton_DL_LOAD.EnableWindow(FALSE);
 	m_LightInfoEdit_PL_DiffuseR.EnableWindow(FALSE);
 	m_LightInfoEdit_PL_DiffuseG.EnableWindow(FALSE);
 	m_LightInfoEdit_PL_DiffuseB.EnableWindow(FALSE);
@@ -1537,8 +1533,6 @@ HRESULT CTabMap::Ready_LightingInfoContorl()
 	m_LightInfoEdit_DL_DirectionY.EnableWindow(FALSE);
 	m_LightInfoEdit_DL_DirectionZ.EnableWindow(FALSE);
 	m_LightInfoEdit_DL_DirectionW.EnableWindow(FALSE);
-	m_LightInfoButton_DL_SAVE.EnableWindow(FALSE);
-	m_LightInfoButton_DL_LOAD.EnableWindow(FALSE);
 
 	m_LightInfoEdit_PL_DiffuseR.EnableWindow(FALSE);
 	m_LightInfoEdit_PL_DiffuseG.EnableWindow(FALSE);
@@ -1850,8 +1844,6 @@ void CTabMap::OnBnClickedCheck1005_EditStaticMesh()
 	m_LightInfoEdit_DL_DirectionY.EnableWindow(FALSE);
 	m_LightInfoEdit_DL_DirectionZ.EnableWindow(FALSE);
 	m_LightInfoEdit_DL_DirectionW.EnableWindow(FALSE);
-	m_LightInfoButton_DL_SAVE.EnableWindow(FALSE);
-	m_LightInfoButton_DL_LOAD.EnableWindow(FALSE);
 
 	m_LightInfoEdit_PL_DiffuseR.EnableWindow(FALSE);
 	m_LightInfoEdit_PL_DiffuseG.EnableWindow(FALSE);
@@ -1948,8 +1940,6 @@ void CTabMap::OnBnClickedCheck1006_EditLightingInfo()
 	m_LightInfoEdit_DL_DirectionY.EnableWindow(TRUE);
 	m_LightInfoEdit_DL_DirectionZ.EnableWindow(TRUE);
 	m_LightInfoEdit_DL_DirectionW.EnableWindow(TRUE);
-	m_LightInfoButton_DL_SAVE.EnableWindow(TRUE);
-	m_LightInfoButton_DL_LOAD.EnableWindow(TRUE);
 
 	m_LightInfoEdit_PL_DiffuseR.EnableWindow(TRUE);
 	m_LightInfoEdit_PL_DiffuseG.EnableWindow(TRUE);
@@ -2045,8 +2035,6 @@ void CTabMap::OnBnClickedCheck1007_EditNavigationMesh()
 	m_LightInfoEdit_DL_DirectionY.EnableWindow(FALSE);
 	m_LightInfoEdit_DL_DirectionZ.EnableWindow(FALSE);
 	m_LightInfoEdit_DL_DirectionW.EnableWindow(FALSE);
-	m_LightInfoButton_DL_SAVE.EnableWindow(FALSE);
-	m_LightInfoButton_DL_LOAD.EnableWindow(FALSE);
 
 	m_LightInfoEdit_PL_DiffuseR.EnableWindow(FALSE);
 	m_LightInfoEdit_PL_DiffuseG.EnableWindow(FALSE);
@@ -2438,27 +2426,44 @@ void CTabMap::OnLbnSelchangeList1003_StaticMeshObjectList()
 	{
 		pSelectedObject->Set_BoundingBoxColor(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 
-		// 선택한 Object의 정보로 Edit Control을 채운다.
 		_tchar szTemp[MIN_STR] = L"";
 
-		_stprintf_s(szTemp, MIN_STR, L"%0.001f", pSelectedObject->Get_Transform()->m_vScale.x);
-		m_StaticMeshEdit_ScaleX.SetWindowTextW(szTemp);
-		_stprintf_s(szTemp, MIN_STR, L"%0.001f", pSelectedObject->Get_Transform()->m_vScale.y);
-		m_StaticMeshEdit_ScaleY.SetWindowTextW(szTemp);
-		_stprintf_s(szTemp, MIN_STR, L"%0.001f", pSelectedObject->Get_Transform()->m_vScale.z);
-		m_StaticMeshEdit_ScaleZ.SetWindowTextW(szTemp);
-		_stprintf_s(szTemp, MIN_STR, L"%0.1f", pSelectedObject->Get_Transform()->m_vAngle.x);
-		m_StaticMeshEdit_AngleX.SetWindowTextW(szTemp);
-		_stprintf_s(szTemp, MIN_STR, L"%0.1f", pSelectedObject->Get_Transform()->m_vAngle.y);
-		m_StaticMeshEdit_AngleY.SetWindowTextW(szTemp);
-		_stprintf_s(szTemp, MIN_STR, L"%0.1f", pSelectedObject->Get_Transform()->m_vAngle.z);
-		m_StaticMeshEdit_AngleZ.SetWindowTextW(szTemp);
-		_stprintf_s(szTemp, MIN_STR, L"%0.1f", pSelectedObject->Get_Transform()->m_vPos.x);
-		m_StaticMeshEdit_PosX.SetWindowTextW(szTemp);
-		_stprintf_s(szTemp, MIN_STR, L"%0.1f", pSelectedObject->Get_Transform()->m_vPos.y);
-		m_StaticMeshEdit_PosY.SetWindowTextW(szTemp);
-		_stprintf_s(szTemp, MIN_STR, L"%0.1f", pSelectedObject->Get_Transform()->m_vPos.z);
-		m_StaticMeshEdit_PosZ.SetWindowTextW(szTemp);
+		m_fStaticMeshScaleX = pSelectedObject->Get_Transform()->m_vScale.x;
+		m_fStaticMeshScaleY = pSelectedObject->Get_Transform()->m_vScale.y;
+		m_fStaticMeshScaleZ = pSelectedObject->Get_Transform()->m_vScale.z;
+		m_fStaticMeshAngleX = pSelectedObject->Get_Transform()->m_vAngle.x;
+		m_fStaticMeshAngleY = pSelectedObject->Get_Transform()->m_vAngle.y;
+		m_fStaticMeshAngleZ = pSelectedObject->Get_Transform()->m_vAngle.z;
+		m_fStaticMeshPosX = pSelectedObject->Get_Transform()->m_vPos.x;
+		m_fStaticMeshPosY = pSelectedObject->Get_Transform()->m_vPos.y;
+		m_fStaticMeshPosZ = pSelectedObject->Get_Transform()->m_vPos.z;
+
+		m_bIsRenderShadow = pSelectedObject->Get_IsRenderShadow();
+		if (m_bIsRenderShadow)
+			m_StaticMeshCheck_IsRenderShadow.SetCheck(true);
+		else
+			m_StaticMeshCheck_IsRenderShadow.SetCheck(false);
+
+
+		m_bIsCollision = pSelectedObject->Get_IsCollision();
+		if (m_bIsCollision)
+		{
+			m_StaticMeshEdit_ColliderScale.EnableWindow(TRUE);
+			m_StaticMeshEdit_ColliderPosX.EnableWindow(TRUE);
+			m_StaticMeshEdit_ColliderPosY.EnableWindow(TRUE);
+			m_StaticMeshEdit_ColliderPosZ.EnableWindow(TRUE);
+		}
+		else
+		{
+			m_StaticMeshEdit_ColliderScale.EnableWindow(FALSE);
+			m_StaticMeshEdit_ColliderPosX.EnableWindow(FALSE);
+			m_StaticMeshEdit_ColliderPosY.EnableWindow(FALSE);
+			m_StaticMeshEdit_ColliderPosZ.EnableWindow(FALSE);
+		}
+		m_fStaticMeshColliderScale = pSelectedObject->Get_BoundingSphere()->Get_Transform()->m_vScale.x;
+		m_fStaticMeshColliderPosX = pSelectedObject->Get_BoundingSphere()->Get_Transform()->m_vPos.x;
+		m_fStaticMeshColliderPosY = pSelectedObject->Get_BoundingSphere()->Get_Transform()->m_vPos.y;
+		m_fStaticMeshColliderPosZ = pSelectedObject->Get_BoundingSphere()->Get_Transform()->m_vPos.z;
 
 		static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject = pSelectedObject;
 	}
@@ -2900,144 +2905,6 @@ void CTabMap::OnEnChangeEdit1029_LightInfo_DL_DirW()
 	UpdateData(FALSE);
 }
 
-void CTabMap::OnBnClickedButton1005_LightInfo_DL_SAVE()
-{
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	UpdateData(TRUE);
-
-	CFileDialog Dlg(FALSE,
-					L"lightinginfo",
-					L"*.lightinginfo",
-					OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-					L"Data Files(*.lightinginfo) | *.lightinginfo ||",
-					this);
-
-	_tchar szPath[MAX_STR] = L"";
-	GetCurrentDirectory(MAX_STR, szPath);		// 작업중인 현재 경로.
-	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
-	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
-	lstrcat(szPath, L"\\Bin\\ToolData");
-	Dlg.m_ofn.lpstrInitialDir = szPath;
-
-	if (Dlg.DoModal() == IDOK)
-	{
-		wofstream fout{ Dlg.GetPathName().GetString() };
-		if (fout.fail())
-		{
-			AfxMessageBox(L"Save is Failed");
-			return;
-		}
-
-		Engine::D3DLIGHT tDirLightInfo = Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0);
-
-		// DirectionLight Data 저장하기.
-		fout	<< tDirLightInfo.Diffuse.x << L" "		// Diffuse
-				<< tDirLightInfo.Diffuse.y << L" " 
-				<< tDirLightInfo.Diffuse.z << L" "	
-				<< tDirLightInfo.Diffuse.w << L" "
-				<< tDirLightInfo.Specular.x << L" "		// Specular
-				<< tDirLightInfo.Specular.y << L" " 
-				<< tDirLightInfo.Specular.z << L" "	
-				<< tDirLightInfo.Specular.w << L" " 
-				<< tDirLightInfo.Ambient.x << L" "
-				<< tDirLightInfo.Ambient.y << L" "		// Ambient
-				<< tDirLightInfo.Ambient.z << L" "			
-				<< tDirLightInfo.Ambient.w << L" "
-				<< tDirLightInfo.Direction.x << L" "	// Direction
-				<< tDirLightInfo.Direction.y << L" " 
-				<< tDirLightInfo.Direction.z << L" "
-				<< tDirLightInfo.Direction.w << L" " ;
-	}
-
-	AfxMessageBox(L"Data Save Successed");
-
-	UpdateData(FALSE);
-
-}
-
-
-void CTabMap::OnBnClickedButton1006_LightInfo_DL_LOAD()
-{
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	UpdateData(TRUE);
-
-	CFileDialog Dlg(TRUE,
-					L"lightinginfo",
-					L"*.lightinginfo",
-					OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-					L"Data Files(*.lightinginfo)|*.lightinginfo||",
-					this);
-
-	_tchar szPath[MAX_STR] = L"";
-	GetCurrentDirectory(MAX_STR, szPath);		// 작업중인 현재 경로.
-	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
-	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
-	lstrcat(szPath, L"\\Bin\\ToolData");
-	Dlg.m_ofn.lpstrInitialDir = szPath;
-
-	if (Dlg.DoModal() == IDOK)
-	{
-		wifstream fin { Dlg.GetPathName().GetString() };
-		if (fin.fail())
-		{
-			AfxMessageBox(L"Load is Failed");
-			return;
-		}
-
-		while (true)
-		{
-			Engine::D3DLIGHT tDirLightInfo;
-
-			// DirectionLight Data 불러오기.
-			fin		>> tDirLightInfo.Diffuse.x		// Diffuse
-					>> tDirLightInfo.Diffuse.y	
-					>> tDirLightInfo.Diffuse.z	
-					>> tDirLightInfo.Diffuse.w	
-					>> tDirLightInfo.Specular.x		// Specular
-					>> tDirLightInfo.Specular.y	
-					>> tDirLightInfo.Specular.z	
-					>> tDirLightInfo.Specular.w	
-					>> tDirLightInfo.Ambient.x	
-					>> tDirLightInfo.Ambient.y		// Ambient
-					>> tDirLightInfo.Ambient.z			
-					>> tDirLightInfo.Ambient.w	
-					>> tDirLightInfo.Direction.x	// Direction
-					>> tDirLightInfo.Direction.y
-					>> tDirLightInfo.Direction.z
-					>> tDirLightInfo.Direction.w;
-
-			if (fin.eof())
-				break;
-
-			// Direction Light 정보 입력.
-			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
-			m_fLightInfo_DL_DiffuseR	= tDirLightInfo.Diffuse.x;
-			m_fLightInfo_DL_DiffuseG	= tDirLightInfo.Diffuse.y;
-			m_fLightInfo_DL_DiffuseB	= tDirLightInfo.Diffuse.z;
-			m_fLightInfo_DL_DiffuseA	= tDirLightInfo.Diffuse.w;
-			m_fLightInfo_DL_SpecularR	= tDirLightInfo.Specular.x;
-			m_fLightInfo_DL_SpecularG	= tDirLightInfo.Specular.y;
-			m_fLightInfo_DL_SpecularB	= tDirLightInfo.Specular.z;
-			m_fLightInfo_DL_SpecularA	= tDirLightInfo.Specular.w;
-			m_fLightInfo_DL_AmbientR	= tDirLightInfo.Ambient.x;
-			m_fLightInfo_DL_AmbientG	= tDirLightInfo.Ambient.y;
-			m_fLightInfo_DL_AmbientB	= tDirLightInfo.Ambient.z;
-			m_fLightInfo_DL_AmbientA	= tDirLightInfo.Ambient.w;
-			m_fLightInfo_DL_DirX		= tDirLightInfo.Direction.x;
-			m_fLightInfo_DL_DirY		= tDirLightInfo.Direction.y;
-			m_fLightInfo_DL_DirZ		= tDirLightInfo.Direction.z;
-			m_fLightInfo_DL_DirW		= tDirLightInfo.Direction.w;
-
-		}
-
-		AfxMessageBox(L"Data Load Successed");
-
-	}
-
-	UpdateData(FALSE);
-}
-
-
 void CTabMap::OnBnClickedRadio1008_LightInfo_PL_CreateMode()
 {
 	UpdateData(TRUE);
@@ -3356,48 +3223,6 @@ void CTabMap::OnBnClickedButton1010__LightInfo_PL_LOAD()
 }
 
 
-//void CTabMap::OnEnChangeEdit1047_LightInfo_SL_EyeX()
-//{
-//	UpdateData(TRUE);
-//	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
-//
-//	if (m_bIsLightingModifyMode)
-//	{
-//
-//	}
-//
-//	UpdateData(FALSE);
-//}
-//
-//
-//void CTabMap::OnEnChangeEdit1048_LightInfo_SL_EyeY()
-//{
-//	UpdateData(TRUE);
-//	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
-//
-//	if (m_bIsLightingModifyMode)
-//	{
-//
-//	}
-//
-//	UpdateData(FALSE);
-//}
-//
-//
-//void CTabMap::OnEnChangeEdit1049_LightInfo_SL_EyeZ()
-//{
-//	UpdateData(TRUE);
-//	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
-//
-//	if (m_bIsLightingModifyMode)
-//	{
-//
-//	}
-//
-//	UpdateData(FALSE);
-//}
-
-
 void CTabMap::OnEnChangeEdit1050_LightInfo_SL_AtX()
 {
 	UpdateData(TRUE);
@@ -3510,27 +3335,38 @@ void CTabMap::OnBnClickedButton1011__LightInfo_SL_SAVE()
 			return;
 		}
 
-		// LightView.
-		_vec3	vLightEye	= CShadowLightMgr::Get_Instance()->m_vLightEye;
+		// DirectionLight & ShadowLight Data 저장하기.
+		Engine::D3DLIGHT tDirLightInfo = Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0);
 		_vec3	vLightAt	= CShadowLightMgr::Get_Instance()->m_vLightAt;
 		_float	fHeight		= CShadowLightMgr::Get_Instance()->m_fHeight;
-
-		// LightProj.
 		_float	fFovY		= CShadowLightMgr::Get_Instance()->m_fFovY;
 		_float	fFar		= CShadowLightMgr::Get_Instance()->m_fFar;
 
-		// ShadowLight Data 저장하기.
-		fout	<< vLightEye.x << L" "	// Light Eye.
-				<< vLightEye.y << L" " 
-				<< vLightEye.z << L" "	
-				<< vLightAt.x << L" "	// Light At.
-				<< vLightAt.y << L" " 
-				<< vLightAt.z << L" "	
-				<< fHeight << L" "		// Light Height.
-				<< fFovY << L" "		// Light FovY
-				<< fFar << L" ";		// Light Fawr
+				// DirectionLight
+		fout	<< tDirLightInfo.Diffuse.x		<< L" "	// Diffuse
+				<< tDirLightInfo.Diffuse.y		<< L" " 
+				<< tDirLightInfo.Diffuse.z		<< L" "	
+				<< tDirLightInfo.Diffuse.w		<< L" "
+				<< tDirLightInfo.Specular.x		<< L" "	// Specular
+				<< tDirLightInfo.Specular.y		<< L" " 
+				<< tDirLightInfo.Specular.z		<< L" "	
+				<< tDirLightInfo.Specular.w		<< L" " 
+				<< tDirLightInfo.Ambient.x		<< L" "
+				<< tDirLightInfo.Ambient.y		<< L" "	// Ambient
+				<< tDirLightInfo.Ambient.z		<< L" "			
+				<< tDirLightInfo.Ambient.w		<< L" "
+				<< tDirLightInfo.Direction.x	<< L" "	// Direction
+				<< tDirLightInfo.Direction.y	<< L" " 
+				<< tDirLightInfo.Direction.z	<< L" "
+				<< tDirLightInfo.Direction.w	<< L" "
 
-
+				// ShadowLight Data 저장하기.
+				<< vLightAt.x					<< L" "	// Light At.
+				<< vLightAt.y					<< L" " 
+				<< vLightAt.z					<< L" "	
+				<< fHeight						<< L" "	// Light Height.
+				<< fFovY						<< L" "	// Light FovY
+				<< fFar							<< L" ";// Light Fawr
 	}
 
 	AfxMessageBox(L"Data Save Successed");
@@ -3568,35 +3404,67 @@ void CTabMap::OnBnClickedButton1012_LightInfo_SL_LOAD()
 
 		while (true)
 		{
-			_vec3	vLightEye;
+			Engine::D3DLIGHT tDirLightInfo;
 			_vec3	vLightAt;
 			_float	fHeight;
 			_float	fFovY;
 			_float	fFar;
 
-			// ShadowLight Data 불러오기.
-			fin		>> vLightEye.x		// Diffuse
-					>> vLightEye.y	
-					>> vLightEye.z	
-					>> vLightAt.x		// Specular
+					// DirectionLight Data 불러오기.
+			fin		>> tDirLightInfo.Diffuse.x		// Diffuse
+					>> tDirLightInfo.Diffuse.y	
+					>> tDirLightInfo.Diffuse.z	
+					>> tDirLightInfo.Diffuse.w	
+					>> tDirLightInfo.Specular.x		// Specular
+					>> tDirLightInfo.Specular.y	
+					>> tDirLightInfo.Specular.z	
+					>> tDirLightInfo.Specular.w	
+					>> tDirLightInfo.Ambient.x	
+					>> tDirLightInfo.Ambient.y		// Ambient
+					>> tDirLightInfo.Ambient.z			
+					>> tDirLightInfo.Ambient.w	
+					>> tDirLightInfo.Direction.x	// Direction
+					>> tDirLightInfo.Direction.y
+					>> tDirLightInfo.Direction.z
+					>> tDirLightInfo.Direction.w
+
+					// ShadowLight Data 불러오기.
+					>> vLightAt.x					// ShadowLight At
 					>> vLightAt.y	
 					>> vLightAt.z	
-					>> fHeight
-					>> fFovY		// Ambient
-					>> fFar;
+					>> fHeight						// ShadowLight Height
+					>> fFovY						// ShadowLight FovY
+					>> fFar;						// ShadowLight Far
 
 			if (fin.eof())
 				break;
 
+			// Direction Light 정보 입력.
+			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
+			m_fLightInfo_DL_DiffuseR	= tDirLightInfo.Diffuse.x;
+			m_fLightInfo_DL_DiffuseG	= tDirLightInfo.Diffuse.y;
+			m_fLightInfo_DL_DiffuseB	= tDirLightInfo.Diffuse.z;
+			m_fLightInfo_DL_DiffuseA	= tDirLightInfo.Diffuse.w;
+			m_fLightInfo_DL_SpecularR	= tDirLightInfo.Specular.x;
+			m_fLightInfo_DL_SpecularG	= tDirLightInfo.Specular.y;
+			m_fLightInfo_DL_SpecularB	= tDirLightInfo.Specular.z;
+			m_fLightInfo_DL_SpecularA	= tDirLightInfo.Specular.w;
+			m_fLightInfo_DL_AmbientR	= tDirLightInfo.Ambient.x;
+			m_fLightInfo_DL_AmbientG	= tDirLightInfo.Ambient.y;
+			m_fLightInfo_DL_AmbientB	= tDirLightInfo.Ambient.z;
+			m_fLightInfo_DL_AmbientA	= tDirLightInfo.Ambient.w;
+			m_fLightInfo_DL_DirX		= tDirLightInfo.Direction.x;
+			m_fLightInfo_DL_DirY		= tDirLightInfo.Direction.y;
+			m_fLightInfo_DL_DirZ		= tDirLightInfo.Direction.z;
+			m_fLightInfo_DL_DirW		= tDirLightInfo.Direction.w;
+
 			// ShadowLight 정보 입력.
-			CShadowLightMgr::Get_Instance()->m_vLightEye	= vLightEye;
 			CShadowLightMgr::Get_Instance()->m_vLightAt		= vLightAt;
 			CShadowLightMgr::Get_Instance()->m_fHeight		= fHeight;
 			CShadowLightMgr::Get_Instance()->m_fFovY		= fFovY;
 			CShadowLightMgr::Get_Instance()->m_fFar			= fFar;
-
-			// Shadow Light 정보 초기화.
 			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+
 			m_fLightInfo_SL_EyeX	= CShadowLightMgr::Get_Instance()->m_vLightEye.x;
 			m_fLightInfo_SL_EyeY	= CShadowLightMgr::Get_Instance()->m_vLightEye.y;
 			m_fLightInfo_SL_EyeZ	= CShadowLightMgr::Get_Instance()->m_vLightEye.z;

@@ -209,7 +209,7 @@ void CToolStaticMesh::Set_ConstantTableShadowDepth()
 
 	//Engine::CGameObject::SetUp_ShadowDepth(vDynamicCamEye, vDynamicCamEye, vLightDir);
 
-	m_tShadowInfo = CShadowLightMgr::Get_Instance()->m_tShadowInfo;
+	m_tShadowInfo = CShadowLightMgr::Get_Instance()->m_tShadowDesc;
 
 	/*__________________________________________________________________________________________________________
 	[ ShadowDepth ]

@@ -282,7 +282,7 @@ HRESULT CScene_Stage::Ready_LightInfo()
 	tLightInfo.Type			= Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL;
 	tLightInfo.Diffuse		= _rgba(1.0f, 1.0f, 1.0f, 1.0f);
 	tLightInfo.Specular		= _rgba(0.4f, 0.4f, 0.4f, 1.0f);
-	tLightInfo.Ambient		= _rgba(0.3f, 0.3f, 0.3f, 1.0f);
+	tLightInfo.Ambient		= _rgba(0.0f, 0.0f, 0.0f, 1.0f);
 	tLightInfo.Direction	= _vec4(1.0f, -1.0f, 1.0f, 0.0f);
 	Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, 
 																			 m_pCommandList, 

@@ -166,9 +166,9 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 
 	Render_Light();						// Shade, Specular
 	Render_Blend();						// Target Blend
-	Render_Alpha(fTimeDelta);
+	Render_Alpha(fTimeDelta);			// Effect Texture, Mesh
 	Render_Collider(fTimeDelta);		// Collider Render
-	Render_UI(fTimeDelta);
+	Render_UI(fTimeDelta);				// UI Render
 	Render_RenderTarget();				// Debug RenderTarget
 
 	// [ Excute CommandList ]

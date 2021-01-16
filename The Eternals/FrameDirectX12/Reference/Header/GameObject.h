@@ -95,7 +95,6 @@ protected:
 	_bool	m_bIsCollision		= false;
 	_bool	m_bIsBoundingBox	= false;
 	_bool	m_bIsBoundingSphere = false;
-	
 	_bool	m_bIsRenderShadow	= false;
 
 

@@ -11,6 +11,7 @@
 #include "ToolTerrain.h"
 #include "ToolSkyBox.h"
 #include "ToolStaticMesh.h"
+#include "Popori_F.h"
 
 
 CToolSceneStage::CToolSceneStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -27,7 +28,6 @@ HRESULT CToolSceneStage::Ready_Scene()
 	Engine::FAILED_CHECK_RETURN(Ready_LayerGameObject(L"Layer_GameObject"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LayerUI(L"Layer_UI"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LayerFont(L"Layer_Font"), E_FAIL);
-
 	Engine::FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
@@ -203,6 +203,18 @@ HRESULT CToolSceneStage::Ready_LayerGameObject(wstring wstrLayerTag)
 	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
 	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
 
+
+	/*__________________________________________________________________________________________________________
+	[ Popori_F ]
+	____________________________________________________________________________________________________________*/
+	//CPopori_F* pPopori_F = nullptr;
+	//pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
+	//							  L"PoporiR19",						// MeshTag
+	//							  _vec3(0.05f, 0.05f, 0.05f),		// Scale
+	//							  _vec3(0.0f, 0.0f, 0.0f),			// Angle
+	//							  _vec3(25.0f, 0.f, 20.0f));		// Pos
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
+
 	return S_OK;
 }
 
@@ -244,8 +256,8 @@ HRESULT CToolSceneStage::Ready_LightInfo()
 	tLightInfo.Type			= Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL;
 	tLightInfo.Diffuse		= _rgba(1.0f, 1.0f, 1.0f, 1.0f);
 	tLightInfo.Specular		= _rgba(0.4f, 0.4f, 0.4f, 1.0f);
-	tLightInfo.Ambient		= _rgba(0.3f, 0.3f, 0.3f, 1.0f);
-	tLightInfo.Direction	= _vec4(-1.0f, -1.0f, -1.0f, 0.0f);
+	tLightInfo.Ambient		= _rgba(0.0f, 0.0f, 0.0f, 1.0f);
+	tLightInfo.Direction	= _vec4(-1.0f, -1.0f, 0.5f, 0.0f);
 	Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, 
 																			 m_pCommandList, 
 																			 Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL,
