@@ -139,17 +139,21 @@ void Initialize_NPC()
 	int s_num = -1;
 
 	/* 서버에서 NPC를 관리할 번호 설정 */
-	for (int i = 0; i < MAX_NPC; ++i)
+	for (int i = NPC_NUM_START; i < NPC_NUM_START + MAX_NPC; ++i)
 	{
 		pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
 
 		if (pNew)
+		{
+			pNew->m_sNum += NPC_NUM_START;
 			s_num = pNew->m_sNum;
+		}
+		else continue;
 
 		/* NPC의 정보 초기화 */	
 		pNew->Set_IsConnected(true);
 		pNew->Set_IsDead(false);	
-		sprintf_s(pNew->m_ID, "NPC%d", i);
+		sprintf_s(pNew->m_ID, "NPC%d", s_num);
 	
 		pNew->m_vPos = _vec3((rand() % 100) * 1.f + 1000.f, (rand() % 100) * 1.f + 500.f, 0.f);
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);

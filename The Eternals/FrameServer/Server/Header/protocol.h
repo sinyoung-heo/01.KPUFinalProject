@@ -10,8 +10,6 @@ constexpr int WORLD_HEIGHT = 2000;
 constexpr int MAX_STR_LEN = 100;
 constexpr int VIEW_LIMIT = 200;				// 시야 반지름, 상대방과 사이에 6개의 타일이 있어도 보여야 함.
 
-constexpr int NUM_NPC = 5000;
-
 #pragma pack (push, 1)
 
 constexpr char SC_PACKET_LOGIN_OK = 0;

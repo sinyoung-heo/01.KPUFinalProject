@@ -63,6 +63,18 @@ bool CObjMgr::Is_Player(int server_num)
 	return true;
 }
 
+bool CObjMgr::Is_NPC(int server_num)
+{
+	/* NPC ObjList 에서 찾고자 하는 OBJLIST를 key 값을 통해 찾기 */
+	auto& iter_find = m_mapObjList[L"NPC"].find(server_num);
+
+	/* 해당 OBJLIST를 찾지 못하였다면 NULL 반환 */
+	if (iter_find == m_mapObjList[L"NPC"].end())
+		return false;
+
+	return true;
+}
+
 bool CObjMgr::Is_Near(const CObj* me, const CObj* other)
 {
 	float dist = (other->m_vPos.x - me->m_vPos.x) * (other->m_vPos.x - me->m_vPos.x);

@@ -21,6 +21,7 @@ public:
 
 public:
 	bool Is_Player(int server_num = 0);
+	bool Is_NPC(int server_num = 0);
 	bool Is_Near(const CObj* me, const CObj* other);
 
 public:

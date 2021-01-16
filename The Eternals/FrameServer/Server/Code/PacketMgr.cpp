@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "PacketMgr.h"
 #include "Player.h"
+#include "Npc.h"
 
+/* ========================패킷 처리========================*/
 void process_packet(int id)
 {
 	/* Server Number 해당 유저 */
@@ -51,7 +53,8 @@ void process_packet(int id)
 				{
 					// '나'에게 등장 패킷 전송 X
 					if (obj_num == id) continue;
-					/* 타 유저 처리 */
+
+					/* 타유저일 경우 처리 */
 					if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
 					{
 						CPlayer* pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
@@ -83,7 +86,19 @@ void process_packet(int id)
 							else pPlayer->v_lock.unlock();
 						}
 					}
-					/* NPC일 경우 */
+					/* NPC일 경우 처리 */
+					else if (true == CObjMgr::GetInstance()->Is_NPC(obj_num))
+					{
+						CNpc* pNPC = static_cast<CNpc*>(CObjMgr::GetInstance()->Get_GameObject(L"NPC", obj_num));
+
+						// 시야 내에 없다면 시야 목록에 등록X.
+						if (false == CObjMgr::GetInstance()->Is_Near(pPlayer, pNPC)) continue;
+						pPlayer->v_lock.lock();
+						pPlayer->view_list.insert(obj_num);
+						pPlayer->v_lock.unlock();
+						send_NPC_enter_packet(id, obj_num);
+					}
+					/* MONSTER일 경우 처리*/
 					else
 					{
 						int i = 0;
@@ -112,7 +127,6 @@ void process_packet(int id)
 		break;
 	}
 }
-
 /* ========================패킷 재조립========================*/
 void process_recv(int id, DWORD iosize)
 {
@@ -173,7 +187,7 @@ void process_recv(int id, DWORD iosize)
 	pPlayer->Get_ClientLock().unlock();
 }
 
-/*==================================================================================================*/
+/*===========================================PLAYER=====================================================*/
 void send_packet(int id, void* p)
 {
 	unsigned char* packet = reinterpret_cast<unsigned char*>(p);
@@ -287,7 +301,6 @@ void send_move_packet(int to_client, int id)
 	send_packet(to_client, &p);
 }
 
-/*==================================================================================================*/
 void process_move(int id, cs_packet_move* info)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
@@ -335,7 +348,7 @@ void process_move(int id, cs_packet_move* info)
 			// 타 유저의 서버 번호 추출
 			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
-				/* 플레이어 처리 */
+				/* 타유저일 경우 처리 */
 				if (obj_num == id) continue;
 				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
 				{
@@ -348,7 +361,16 @@ void process_move(int id, cs_packet_move* info)
 					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pOther))
 						new_viewlist.insert(obj_num);			
 				}
-				/* NPC 처리 */
+				/* NPC일 경우 처리 */
+				else if (true == CObjMgr::GetInstance()->Is_NPC(obj_num))
+				{
+					CNpc* pNPC = static_cast<CNpc*>(CObjMgr::GetInstance()->Get_GameObject(L"NPC", obj_num));
+
+					// 시야 내에 없다면 시야 목록에 등록X.
+					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pNPC))
+						new_viewlist.insert(obj_num);				
+				}
+				/* MONSTER일 경우 처리*/
 				else
 				{
 					int i = 0;
@@ -368,12 +390,12 @@ void process_move(int id, cs_packet_move* info)
 			pPlayer->view_list.insert(server_num);
 			pPlayer->v_lock.unlock();
 
-			// 플레이어에게 새로운 유저 등장 패킷 전송
-			send_enter_packet(id, server_num);
-
-			// 새로운 타 유저 처리
+			// 새로운 타유저의 시야 처리
 			if (true == CObjMgr::GetInstance()->Is_Player(server_num))
 			{
+				// 플레이어('나')에게 새로운 유저 등장 패킷 전송
+				send_enter_packet(id, server_num);
+
 				CPlayer* pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", server_num));
 
 				// 타 유저의 시야 목록 처리
@@ -390,6 +412,17 @@ void process_move(int id, cs_packet_move* info)
 					pOther->v_lock.unlock();
 					send_move_packet(server_num, id);
 				}
+			}
+			// 새로 시야에 들어온 NPC일 경우 처리
+			else if (true == CObjMgr::GetInstance()->Is_NPC(server_num))
+			{
+				// 플레이어('나')에게 NPC등장 패킷 전송
+				send_NPC_enter_packet(id, server_num);
+			}
+			// 새로 시야에 들어온 MONSTER일 경우 처리
+			else
+			{
+				int i = 0;
 			}
 		}
 		// 플레이어 시야 목록에 계속 있는 객체 처리
@@ -419,7 +452,7 @@ void process_move(int id, cs_packet_move* info)
 		} // 상대방에게 나의 스탯 정보 갱신 .... 나중에
 	}
 
-	/* 시야 목록에서 사라진 객체 처리 */
+	/* 이전 시야 목록에서 사라진 객체 처리 */
 	for (int s_num : old_viewlist)
 	{
 		// 갱신된 시야 목록에 없는 객체일 경우
@@ -449,4 +482,31 @@ void process_move(int id, cs_packet_move* info)
 			}
 		}
 	}
+}
+
+/*============================================NPC======================================================*/
+void send_NPC_enter_packet(int to_client, int new_id)
+{
+	sc_packet_enter p;
+
+	CNpc* pNewPlayer = static_cast<CNpc*>(CObjMgr::GetInstance()->Get_GameObject(L"NPC", new_id));
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_ENTER;
+	p.id = new_id;
+
+	pNewPlayer->Get_ClientLock().lock();
+	strcpy_s(p.name, pNewPlayer->m_ID);
+	pNewPlayer->Get_ClientLock().unlock();
+	p.o_type = pNewPlayer->m_type;
+
+	p.posX = pNewPlayer->m_vPos.x;
+	p.posY = pNewPlayer->m_vPos.y;
+	p.posZ = pNewPlayer->m_vPos.z;
+
+	p.dirX = pNewPlayer->m_vDir.x;
+	p.dirY = pNewPlayer->m_vDir.y;
+	p.dirZ = pNewPlayer->m_vDir.z;
+
+	send_packet(to_client, &p);
 }
