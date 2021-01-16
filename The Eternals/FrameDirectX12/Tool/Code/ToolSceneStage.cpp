@@ -67,7 +67,7 @@ _int CToolSceneStage::Update_Scene(const _float& fTimeDelta)
 	if (Engine::KEY_DOWN(DIK_TAB))
 	{
 		if (pMyForm->m_bIsTabMap)
-			KeyInput_ModeChange(pMyForm->m_TabMap);
+			KeyInput_TabMapModeChange(pMyForm->m_TabMap);
 	}
 
 	return Engine::CScene::Update_Scene(fTimeDelta);
@@ -127,8 +127,8 @@ HRESULT CToolSceneStage::Ready_LayerCamera(wstring wstrLayerTag)
 	[ ToolCamera ]
 	____________________________________________________________________________________________________________*/
 	CToolCamera* pCToolCamera = CToolCamera::Create(m_pGraphicDevice, m_pCommandList,
-													Engine::CAMERA_DESC(_vec3(4.0, 6.0f, -6.0f),		// Eye
-																		_vec3(4.0f, 4.0f, 0.0f),		// At
+													Engine::CAMERA_DESC(_vec3(8.0, 35.0f, -23.0f),		// Eye
+																		_vec3(16.0f, 22.0f, 0.0f),		// At
 																		_vec3(0.0f, 1.0f, 0.f)),		// Up
 													Engine::PROJ_DESC(60.0f,							// FovY
 																	  _float(WINCX) / _float(WINCY),	// Aspect
@@ -276,20 +276,24 @@ void CToolSceneStage::KeyInput()
 	____________________________________________________________________________________________________________*/
 	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON(Engine::DIM_LB)))
 	{
-		// TabMap Mouse Picking Event
+		// TabMap Mouse Picking Event. (STATIC MESH / LIGHTING / NAVIGATION MESH)
 		if (pMyForm->m_bIsTabMap)
-			KeyInput_TabMap(pMyForm->m_TabMap);
+		{
+			if (pMyForm->m_TabMap.m_EditCheck_StaticMesh.GetCheck())
+				KeyInput_TabMapStaticMesh(pMyForm->m_TabMap);
+			
+			else if (pMyForm->m_TabMap.m_EditCheck_LightingInfo.GetCheck())
+				KeyInput_TabMapLightingInfo(pMyForm->m_TabMap);
+		}
 
 	}
 
 }
 
-void CToolSceneStage::KeyInput_TabMap(CTabMap& TabMap)
+void CToolSceneStage::KeyInput_TabMapStaticMesh(CTabMap& TabMap)
 {
-	
 	// StaticMesh Object 생성.
-	if (TabMap.m_EditCheck_StaticMesh.GetCheck() &&
-		TabMap.m_bIsCreateMode)
+	if (TabMap.m_bIsCreateMode)
 	{
 		if (nullptr != m_pPickingTerrain)
 		{
@@ -344,8 +348,7 @@ void CToolSceneStage::KeyInput_TabMap(CTabMap& TabMap)
 	}
 
 	// StaticMesh를 선택하여 정보 수정.
-	if (TabMap.m_EditCheck_StaticMesh.GetCheck() &&
-		TabMap.m_bIsModifyMode)
+	if (TabMap.m_bIsModifyMode)
 	{
 		Engine::OBJLIST* pStaticMeshList = m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh");
 		if (nullptr != pStaticMeshList)
@@ -357,22 +360,22 @@ void CToolSceneStage::KeyInput_TabMap(CTabMap& TabMap)
 
 				TabMap.UpdateData(TRUE);
 
-				TabMap.m_fStaticMeshScaleX	= m_pPickingObject->Get_Transform()->m_vScale.x;
-				TabMap.m_fStaticMeshScaleY	= m_pPickingObject->Get_Transform()->m_vScale.y;
-				TabMap.m_fStaticMeshScaleZ	= m_pPickingObject->Get_Transform()->m_vScale.z;
-				TabMap.m_fStaticMeshAngleX	= m_pPickingObject->Get_Transform()->m_vAngle.x;
-				TabMap.m_fStaticMeshAngleY	= m_pPickingObject->Get_Transform()->m_vAngle.y;
-				TabMap.m_fStaticMeshAngleZ	= m_pPickingObject->Get_Transform()->m_vAngle.z;
-				TabMap.m_fStaticMeshPosX	= m_pPickingObject->Get_Transform()->m_vPos.x;
-				TabMap.m_fStaticMeshPosY	= m_pPickingObject->Get_Transform()->m_vPos.y;
-				TabMap.m_fStaticMeshPosZ	= m_pPickingObject->Get_Transform()->m_vPos.z;
+				TabMap.m_fStaticMeshScaleX = m_pPickingObject->Get_Transform()->m_vScale.x;
+				TabMap.m_fStaticMeshScaleY = m_pPickingObject->Get_Transform()->m_vScale.y;
+				TabMap.m_fStaticMeshScaleZ = m_pPickingObject->Get_Transform()->m_vScale.z;
+				TabMap.m_fStaticMeshAngleX = m_pPickingObject->Get_Transform()->m_vAngle.x;
+				TabMap.m_fStaticMeshAngleY = m_pPickingObject->Get_Transform()->m_vAngle.y;
+				TabMap.m_fStaticMeshAngleZ = m_pPickingObject->Get_Transform()->m_vAngle.z;
+				TabMap.m_fStaticMeshPosX = m_pPickingObject->Get_Transform()->m_vPos.x;
+				TabMap.m_fStaticMeshPosY = m_pPickingObject->Get_Transform()->m_vPos.y;
+				TabMap.m_fStaticMeshPosZ = m_pPickingObject->Get_Transform()->m_vPos.z;
 
-				TabMap.m_bIsRenderShadow			= static_cast<CToolStaticMesh*>(m_pPickingObject)->Get_IsRenderShadow();
-				TabMap.m_bIsCollision				= static_cast<CToolStaticMesh*>(m_pPickingObject)->Get_IsCollision();
-				TabMap.m_fStaticMeshColliderScale	= m_pPickingObject->Get_BoundingSphere()->Get_Transform()->m_vScale.x;
-				TabMap.m_fStaticMeshColliderPosX	= m_pPickingObject->Get_BoundingSphere()->Get_Transform()->m_vPos.x;
-				TabMap.m_fStaticMeshColliderPosY	= m_pPickingObject->Get_BoundingSphere()->Get_Transform()->m_vPos.y;
-				TabMap.m_fStaticMeshColliderPosZ	= m_pPickingObject->Get_BoundingSphere()->Get_Transform()->m_vPos.z;
+				TabMap.m_bIsRenderShadow = static_cast<CToolStaticMesh*>(m_pPickingObject)->Get_IsRenderShadow();
+				TabMap.m_bIsCollision = static_cast<CToolStaticMesh*>(m_pPickingObject)->Get_IsCollision();
+				TabMap.m_fStaticMeshColliderScale = m_pPickingObject->Get_BoundingSphere()->Get_Transform()->m_vScale.x;
+				TabMap.m_fStaticMeshColliderPosX = m_pPickingObject->Get_BoundingSphere()->Get_Transform()->m_vPos.x;
+				TabMap.m_fStaticMeshColliderPosY = m_pPickingObject->Get_BoundingSphere()->Get_Transform()->m_vPos.y;
+				TabMap.m_fStaticMeshColliderPosZ = m_pPickingObject->Get_BoundingSphere()->Get_Transform()->m_vPos.z;
 
 				if (TabMap.m_bIsRenderShadow)
 					TabMap.m_StaticMeshCheck_IsRenderShadow.SetCheck(true);
@@ -399,16 +402,29 @@ void CToolSceneStage::KeyInput_TabMap(CTabMap& TabMap)
 				TabMap.UpdateData(FALSE);
 			}
 		}
-		
 
 	}
-	
+
 }
 
-void CToolSceneStage::KeyInput_ModeChange(CTabMap& TabMap)
+void CToolSceneStage::KeyInput_TabMapLightingInfo(CTabMap& TabMap)
+{
+	// StaticMesh Object 생성.
+	if (TabMap.m_bIsLightingCreateMode)
+	{
+
+	}
+	else if (TabMap.m_bIsLightingModifyMode)
+	{
+
+	}
+}
+
+void CToolSceneStage::KeyInput_TabMapModeChange(CTabMap& TabMap)
 {
 	TabMap.UpdateData(TRUE);
 
+	// StaticMesh ModeChange
 	if (TabMap.m_EditCheck_StaticMesh.GetCheck())
 	{
 		TabMap.m_bIsCreateMode = !TabMap.m_bIsCreateMode;
@@ -420,24 +436,57 @@ void CToolSceneStage::KeyInput_ModeChange(CTabMap& TabMap)
 		// Object 생성 모드일 경우.
 		if (TabMap.m_bIsCreateMode)
 		{
-			TabMap.m_fStaticMeshScaleX	= 0.01f;
-			TabMap.m_fStaticMeshScaleY	= 0.01f;
-			TabMap.m_fStaticMeshScaleZ	= 0.01f;
-			TabMap.m_fStaticMeshAngleX	= 0.0f;
-			TabMap.m_fStaticMeshAngleY	= 0.0f;
-			TabMap.m_fStaticMeshAngleZ	= 0.0f;
+			TabMap.m_fStaticMeshScaleX = 0.01f;
+			TabMap.m_fStaticMeshScaleY = 0.01f;
+			TabMap.m_fStaticMeshScaleZ = 0.01f;
+			TabMap.m_fStaticMeshAngleX = 0.0f;
+			TabMap.m_fStaticMeshAngleY = 0.0f;
+			TabMap.m_fStaticMeshAngleZ = 0.0f;
 
-			TabMap.m_fStaticMeshColliderScale	= 0.0f;
-			TabMap.m_fStaticMeshColliderPosX	= 0.0f;
-			TabMap.m_fStaticMeshColliderPosY	= 0.0f;
-			TabMap.m_fStaticMeshColliderPosZ	= 0.0f;
+			TabMap.m_fStaticMeshColliderScale = 0.0f;
+			TabMap.m_fStaticMeshColliderPosX = 0.0f;
+			TabMap.m_fStaticMeshColliderPosY = 0.0f;
+			TabMap.m_fStaticMeshColliderPosZ = 0.0f;
 		}
 		// Object 수정 모드일 경우.
 		else if (TabMap.m_bIsModifyMode)
 		{
-			
+
 		}
 	}
+
+	// LightingInfo ModeChange
+	else if (TabMap.m_EditCheck_LightingInfo.GetCheck())
+	{
+		TabMap.m_bIsLightingCreateMode = !TabMap.m_bIsLightingCreateMode;
+		TabMap.m_bIsLightingModifyMode = !TabMap.m_bIsLightingModifyMode;
+
+		// TabMap.
+		TabMap.m_LightInfoRadio_PL_CreateMode.SetCheck(TabMap.m_bIsLightingCreateMode);
+		TabMap.m_LightInfoRadio_PL_ModifyMode.SetCheck(TabMap.m_bIsLightingModifyMode);
+
+		if (TabMap.m_bIsLightingCreateMode)
+		{
+			TabMap.m_fLightInfo_PL_DiffuseR		= 1.0f;
+			TabMap.m_fLightInfo_PL_DiffuseG		= 1.0f;
+			TabMap.m_fLightInfo_PL_DiffuseB		= 1.0f;
+			TabMap.m_fLightInfo_PL_DiffuseA		= 1.0f;
+			TabMap.m_fLightInfo_PL_SpecularR	= 0.5f;
+			TabMap.m_fLightInfo_PL_SpecularG	= 0.5f;
+			TabMap.m_fLightInfo_PL_SpecularB	= 0.5f;
+			TabMap.m_fLightInfo_PL_SpecularA	= 1.0f;
+			TabMap.m_fLightInfo_PL_AmbientR		= 0.5f;
+			TabMap.m_fLightInfo_PL_AmbientG		= 0.5f;
+			TabMap.m_fLightInfo_PL_AmbientB		= 0.5f;
+			TabMap.m_fLightInfo_PL_AmbientA		= 1.0f;
+			TabMap.m_fLightInfo_PL_PosX			= 0.0f;
+			TabMap.m_fLightInfo_PL_PosY			= 0.0f;
+			TabMap.m_fLightInfo_PL_PosZ			= 0.0f;
+			TabMap.m_fLightInfo_PL_PosW			= 1.0f;
+			TabMap.m_fLightInfo_PL_Range		= 10.0f;
+		}
+	}
+
 
 	TabMap.UpdateData(FALSE);
 }

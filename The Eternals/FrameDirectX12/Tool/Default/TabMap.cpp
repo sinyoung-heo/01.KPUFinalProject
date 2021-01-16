@@ -853,6 +853,108 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::D3DLIGHT_DIRECTIONAL, 0, tDirLightInfo);
 		}
 
+		RECT rcLightInfoEdit_SL_Edit[10] = { };
+		m_LightInfoEdit_SL_EyeX.GetWindowRect(&rcLightInfoEdit_SL_Edit[0]);
+		m_LightInfoEdit_SL_EyeY.GetWindowRect(&rcLightInfoEdit_SL_Edit[1]);
+		m_LightInfoEdit_SL_EyeZ.GetWindowRect(&rcLightInfoEdit_SL_Edit[2]);
+		m_LightInfoEdit_SL_AtX.GetWindowRect(&rcLightInfoEdit_SL_Edit[3]);
+		m_LightInfoEdit_SL_AtY.GetWindowRect(&rcLightInfoEdit_SL_Edit[4]);
+		m_LightInfoEdit_SL_AtZ.GetWindowRect(&rcLightInfoEdit_SL_Edit[5]);
+		m_LightInfoEdit_SL_Height.GetWindowRect(&rcLightInfoEdit_SL_Edit[6]);
+		m_LightInfoEdit_SL_FovY.GetWindowRect(&rcLightInfoEdit_SL_Edit[7]);
+		m_LightInfoEdit_SL_Near.GetWindowRect(&rcLightInfoEdit_SL_Edit[8]);
+		m_LightInfoEdit_SL_Far.GetWindowRect(&rcLightInfoEdit_SL_Edit[9]);
+
+		if (PtInRect(&rcLightInfoEdit_SL_Edit[0], pt))			// SL_EyeX
+		{}
+		else if (PtInRect(&rcLightInfoEdit_SL_Edit[1], pt))		// SL_EyeY
+		{}
+		else if (PtInRect(&rcLightInfoEdit_SL_Edit[2], pt))		// SL_EyeZ
+		{}
+		else if (PtInRect(&rcLightInfoEdit_SL_Edit[3], pt))		// SL_AtX
+		{
+			if (zDelta > 0)
+				m_fLightInfo_SL_AtX += 1.f;
+			else if (zDelta < 0)
+				m_fLightInfo_SL_AtX -= 1.0f;
+
+			CShadowLightMgr::Get_Instance()->m_vLightAt.x = m_fLightInfo_SL_AtX;
+			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+		}
+		else if (PtInRect(&rcLightInfoEdit_SL_Edit[4], pt))		// SL_AtY
+		{
+
+			m_fLightInfo_SL_AtY = 0.0f;
+
+			CShadowLightMgr::Get_Instance()->m_vLightAt.x = m_fLightInfo_SL_AtY;
+			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+		}
+		else if (PtInRect(&rcLightInfoEdit_SL_Edit[5], pt))		// SL_AtZ
+		{
+			if (zDelta > 0)
+				m_fLightInfo_SL_AtZ += 1.f;
+			else if (zDelta < 0)
+				m_fLightInfo_SL_AtZ -= 1.0f;
+
+			CShadowLightMgr::Get_Instance()->m_vLightAt.x = m_fLightInfo_SL_AtZ;
+			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+		}
+		else if (PtInRect(&rcLightInfoEdit_SL_Edit[6], pt))		// SL_Height
+		{
+			if (zDelta > 0)
+				m_fLightInfo_SL_Height += 100.f;
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_SL_Height -= 100.f;
+				if (m_fLightInfo_SL_Height < 100.0f)
+					m_fLightInfo_SL_Height = 100.0f;
+			}
+
+			CShadowLightMgr::Get_Instance()->m_fHeight = m_fLightInfo_SL_Height;
+			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+			m_fLightInfo_SL_EyeX = CShadowLightMgr::Get_Instance()->m_vLightEye.x;
+			m_fLightInfo_SL_EyeY = CShadowLightMgr::Get_Instance()->m_vLightEye.y;
+			m_fLightInfo_SL_EyeZ = CShadowLightMgr::Get_Instance()->m_vLightEye.z;
+		}
+		else if (PtInRect(&rcLightInfoEdit_SL_Edit[7], pt))		// SL_FovY
+		{
+			if (zDelta > 0)
+				m_fLightInfo_SL_FovY += 1.f;
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_SL_FovY -= 1.f;
+
+				if (m_fLightInfo_SL_FovY < 0.0f)
+					m_fLightInfo_SL_FovY = 1.0f;
+			}
+
+			CShadowLightMgr::Get_Instance()->m_fFovY = m_fLightInfo_SL_FovY;
+			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+		}
+		else if (PtInRect(&rcLightInfoEdit_SL_Edit[8], pt))		// SL_Near
+		{
+			m_fLightInfo_SL_Near = 1.0f;
+
+			CShadowLightMgr::Get_Instance()->m_fNear = m_fLightInfo_SL_Near;
+			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+		}
+		else if (PtInRect(&rcLightInfoEdit_SL_Edit[9], pt))		// SL_Far
+		{
+			if (zDelta > 0)
+				m_fLightInfo_SL_Far += 100.f;
+			else if (zDelta < 0)
+			{
+				m_fLightInfo_SL_Far -= 100.f;
+
+				if (m_fLightInfo_SL_Far < 1000.0f)
+					m_fLightInfo_SL_Far = 1000.0f;
+			}
+
+			CShadowLightMgr::Get_Instance()->m_fFar = m_fLightInfo_SL_Far;
+			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+		}
+
+
 		RECT rcLightInfoEdit_PL_Edit[17] = { };
 		m_LightInfoEdit_PL_DiffuseR.GetWindowRect(&rcLightInfoEdit_PL_Edit[0]);
 		m_LightInfoEdit_PL_DiffuseG.GetWindowRect(&rcLightInfoEdit_PL_Edit[1]);
@@ -1158,123 +1260,6 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			}
 		}
 
-
-		RECT rcLightInfoEdit_SL_Edit[10] = { };
-		m_LightInfoEdit_SL_EyeX.GetWindowRect(&rcLightInfoEdit_SL_Edit[0]);
-		m_LightInfoEdit_SL_EyeY.GetWindowRect(&rcLightInfoEdit_SL_Edit[1]);
-		m_LightInfoEdit_SL_EyeZ.GetWindowRect(&rcLightInfoEdit_SL_Edit[2]);
-		m_LightInfoEdit_SL_AtX.GetWindowRect(&rcLightInfoEdit_SL_Edit[3]);
-		m_LightInfoEdit_SL_AtY.GetWindowRect(&rcLightInfoEdit_SL_Edit[4]);
-		m_LightInfoEdit_SL_AtZ.GetWindowRect(&rcLightInfoEdit_SL_Edit[5]);
-		m_LightInfoEdit_SL_Height.GetWindowRect(&rcLightInfoEdit_SL_Edit[6]);
-		m_LightInfoEdit_SL_FovY.GetWindowRect(&rcLightInfoEdit_SL_Edit[7]);
-		m_LightInfoEdit_SL_Near.GetWindowRect(&rcLightInfoEdit_SL_Edit[8]);
-		m_LightInfoEdit_SL_Far.GetWindowRect(&rcLightInfoEdit_SL_Edit[9]);
-
-		if (PtInRect(&rcLightInfoEdit_SL_Edit[0], pt))			// SL_EyeX
-		{
-			//if (zDelta > 0)
-			//	m_fLightInfo_SL_EyeX += 10.f;
-			//else if (zDelta < 0)
-			//	m_fLightInfo_SL_EyeX -= 10.0f;
-		}
-		else if (PtInRect(&rcLightInfoEdit_SL_Edit[1], pt))		// SL_EyeY
-		{
-			//if (zDelta > 0)
-			//	m_fLightInfo_SL_EyeY += 10.f;
-			//else if (zDelta < 0)
-			//	m_fLightInfo_SL_EyeY -= 10.0f;
-		}
-		else if (PtInRect(&rcLightInfoEdit_SL_Edit[2], pt))		// SL_EyeZ
-		{
-			//if (zDelta > 0)
-			//	m_fLightInfo_SL_EyeZ += 10.f;
-			//else if (zDelta < 0)
-			//	m_fLightInfo_SL_EyeZ -= 10.0f;
-		}
-		else if (PtInRect(&rcLightInfoEdit_SL_Edit[3], pt))		// SL_AtX
-		{
-			if (zDelta > 0)
-				m_fLightInfo_SL_AtX += 1.f;
-			else if (zDelta < 0)
-				m_fLightInfo_SL_AtX -= 1.0f;
-
-			CShadowLightMgr::Get_Instance()->m_vLightAt.x = m_fLightInfo_SL_AtX;
-			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
-		}
-		else if (PtInRect(&rcLightInfoEdit_SL_Edit[4], pt))		// SL_AtY
-		{
-
-			m_fLightInfo_SL_AtY = 0.0f;
-
-			CShadowLightMgr::Get_Instance()->m_vLightAt.x = m_fLightInfo_SL_AtY;
-			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
-		}
-		else if (PtInRect(&rcLightInfoEdit_SL_Edit[5], pt))		// SL_AtZ
-		{
-			if (zDelta > 0)
-				m_fLightInfo_SL_AtZ += 1.f;
-			else if (zDelta < 0)
-				m_fLightInfo_SL_AtZ -= 1.0f;
-
-			CShadowLightMgr::Get_Instance()->m_vLightAt.x = m_fLightInfo_SL_AtZ;
-			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
-		}
-		else if (PtInRect(&rcLightInfoEdit_SL_Edit[6], pt))		// SL_Height
-		{
-			if (zDelta > 0)
-				m_fLightInfo_SL_Height += 100.f;
-			else if (zDelta < 0)
-			{
-				m_fLightInfo_SL_Height -= 100.f;
-				if (m_fLightInfo_SL_Height < 100.0f)
-					m_fLightInfo_SL_Height = 100.0f;
-			}
-
-			CShadowLightMgr::Get_Instance()->m_fHeight = m_fLightInfo_SL_Height;
-			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
-			m_fLightInfo_SL_EyeX = CShadowLightMgr::Get_Instance()->m_vLightEye.x;
-			m_fLightInfo_SL_EyeY = CShadowLightMgr::Get_Instance()->m_vLightEye.y;
-			m_fLightInfo_SL_EyeZ = CShadowLightMgr::Get_Instance()->m_vLightEye.z;
-		}
-		else if (PtInRect(&rcLightInfoEdit_SL_Edit[7], pt))		// SL_FovY
-		{
-			if (zDelta > 0)
-				m_fLightInfo_SL_FovY += 1.f;
-			else if (zDelta < 0)
-			{
-				m_fLightInfo_SL_FovY -= 1.f;
-
-				if (m_fLightInfo_SL_FovY < 0.0f)
-					m_fLightInfo_SL_FovY = 1.0f;
-			}
-
-			CShadowLightMgr::Get_Instance()->m_fFovY = m_fLightInfo_SL_FovY;
-			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
-		}
-		else if (PtInRect(&rcLightInfoEdit_SL_Edit[8], pt))		// SL_Near
-		{
-			m_fLightInfo_SL_Near = 1.0f;
-
-			CShadowLightMgr::Get_Instance()->m_fNear = m_fLightInfo_SL_Near;
-			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
-		}
-		else if (PtInRect(&rcLightInfoEdit_SL_Edit[9], pt))		// SL_Far
-		{
-			if (zDelta > 0)
-				m_fLightInfo_SL_Far += 100.f;
-			else if (zDelta < 0)
-			{
-				m_fLightInfo_SL_Far -= 100.f;
-
-				if (m_fLightInfo_SL_Far < 1000.0f)
-					m_fLightInfo_SL_Far = 1000.0f;
-			}
-
-			CShadowLightMgr::Get_Instance()->m_fFar = m_fLightInfo_SL_Far;
-			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
-		}
-
 	}
 
 
@@ -1282,16 +1267,6 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 
 	return CDialogEx::OnMouseWheel(nFlags, zDelta, pt);
 }
-
-void CTabMap::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
-{
-	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	UpdateData(TRUE);
-
-	UpdateData(FALSE);
-	CDialogEx::OnKeyDown(nChar, nRepCnt, nFlags);
-}
-
 
 
 HRESULT CTabMap::Ready_TerrainControl()
@@ -1561,8 +1536,8 @@ HRESULT CTabMap::Ready_LightingInfoContorl()
 	m_LightInfoEdit_PL_Range.EnableWindow(FALSE);
 
 	m_LightInfoRadio_PL_CreateMode.EnableWindow(FALSE);
-	m_LightInfoRadio_PL_CreateMode.SetCheck(true);
 	m_LightInfoRadio_PL_ModifyMode.EnableWindow(FALSE);
+	m_LightInfoRadio_PL_CreateMode.SetCheck(true);
 	m_LightInfoRadio_PL_ModifyMode.SetCheck(false);
 	m_bIsLightingCreateMode = true;
 	m_bIsLightingModifyMode = false;
@@ -1970,6 +1945,11 @@ void CTabMap::OnBnClickedCheck1006_EditLightingInfo()
 	m_LightInfoEdit_PL_Range.EnableWindow(TRUE);
 	m_LightInfoRadio_PL_CreateMode.EnableWindow(TRUE);
 	m_LightInfoRadio_PL_ModifyMode.EnableWindow(TRUE);
+	m_LightInfoRadio_PL_CreateMode.SetCheck(true);
+	m_LightInfoRadio_PL_ModifyMode.SetCheck(false);
+	m_bIsLightingCreateMode = true;
+	m_bIsLightingModifyMode = false;
+
 	m_LightInfoListBox_PL_List.EnableWindow(TRUE);
 	m_LightInfoButton_PL_DELETE.EnableWindow(TRUE);
 	m_LightInfoButton_PL_ALLDELETE.EnableWindow(TRUE);
@@ -1988,6 +1968,25 @@ void CTabMap::OnBnClickedCheck1006_EditLightingInfo()
 	m_LightInfoEdit_SL_Far.EnableWindow(TRUE);
 	m_LightInfoButton_SL_SAVE.EnableWindow(TRUE);
 	m_LightInfoButton_SL_LOAD.EnableWindow(TRUE);
+
+	m_fLightInfo_PL_DiffuseR	= 1.0f;
+	m_fLightInfo_PL_DiffuseG	= 1.0f;
+	m_fLightInfo_PL_DiffuseB	= 1.0f;
+	m_fLightInfo_PL_DiffuseA	= 1.0f;
+	m_fLightInfo_PL_SpecularR	= 0.5f;
+	m_fLightInfo_PL_SpecularG	= 0.5f;
+	m_fLightInfo_PL_SpecularB	= 0.5f;
+	m_fLightInfo_PL_SpecularA	= 1.0f;
+	m_fLightInfo_PL_AmbientR	= 0.5f;
+	m_fLightInfo_PL_AmbientG	= 0.5f;
+	m_fLightInfo_PL_AmbientB	= 0.5f;
+	m_fLightInfo_PL_AmbientA	= 1.0f;
+	m_fLightInfo_PL_PosX		= 0.0f;
+	m_fLightInfo_PL_PosY		= 0.0f;
+	m_fLightInfo_PL_PosZ		= 0.0f;
+	m_fLightInfo_PL_PosW		= 1.0f;
+	m_fLightInfo_PL_Range		= 10.0f;
+
 
 	UpdateData(FALSE);
 }
@@ -2949,19 +2948,19 @@ void CTabMap::OnBnClickedRadio1008_LightInfo_PL_CreateMode()
 	m_fLightInfo_PL_DiffuseG	= 1.0f;
 	m_fLightInfo_PL_DiffuseB	= 1.0f;
 	m_fLightInfo_PL_DiffuseA	= 1.0f;
-	m_fLightInfo_PL_SpecularR	= 1.0f;
-	m_fLightInfo_PL_SpecularG	= 1.0f;
-	m_fLightInfo_PL_SpecularB	= 1.0f;
+	m_fLightInfo_PL_SpecularR	= 0.5f;
+	m_fLightInfo_PL_SpecularG	= 0.5f;
+	m_fLightInfo_PL_SpecularB	= 0.5f;
 	m_fLightInfo_PL_SpecularA	= 1.0f;
-	m_fLightInfo_PL_AmbientR	= 1.0f;
-	m_fLightInfo_PL_AmbientG	= 1.0f;
-	m_fLightInfo_PL_AmbientB	= 1.0f;
+	m_fLightInfo_PL_AmbientR	= 0.5f;
+	m_fLightInfo_PL_AmbientG	= 0.5f;
+	m_fLightInfo_PL_AmbientB	= 0.5f;
 	m_fLightInfo_PL_AmbientA	= 1.0f;
 	m_fLightInfo_PL_PosX		= 0.0f;
 	m_fLightInfo_PL_PosY		= 0.0f;
 	m_fLightInfo_PL_PosZ		= 0.0f;
 	m_fLightInfo_PL_PosW		= 1.0f;
-	m_fLightInfo_PL_Range		= 0.0f;
+	m_fLightInfo_PL_Range		= 10.0f;
 
 	UpdateData(FALSE);
 }

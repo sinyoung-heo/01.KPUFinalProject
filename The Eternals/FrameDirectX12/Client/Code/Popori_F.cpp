@@ -131,7 +131,7 @@ _int CPopori_F::LateUpdate_GameObject(const _float & fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Font Update ]
 	____________________________________________________________________________________________________________*/
-	if (Engine::CRenderer::Get_Instance()->Get_RenderOnOff(L"Font"))
+	if (Engine::CRenderer::Get_Instance()->Get_RenderOnOff(L"DebugFont"))
 	{
 		m_wstrText = wstring(L"[ Character Info ] \n") +
 					 wstring(L"Num Animation \t %d \n") +

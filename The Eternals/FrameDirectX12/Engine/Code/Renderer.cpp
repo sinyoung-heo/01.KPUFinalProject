@@ -112,7 +112,7 @@ HRESULT CRenderer::Ready_Renderer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCo
 	FAILED_CHECK_RETURN(Ready_RenderTarget(), E_FAIL);
 
 	m_mapRenderOnOff[L"RenderTarget"]	= true;
-	m_mapRenderOnOff[L"Font"]			= true;
+	m_mapRenderOnOff[L"DebugFont"]		= true;
 	m_mapRenderOnOff[L"Collider"]		= true;
 
 	/*__________________________________________________________________________________________________________
@@ -166,8 +166,8 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 
 	Render_Light();						// Shade, Specular
 	Render_Blend();						// Target Blend
-	Render_Alpha(fTimeDelta);			// Effect Texture, Mesh
 	Render_Collider(fTimeDelta);		// Collider Render
+	Render_Alpha(fTimeDelta);			// Effect Texture, Mesh
 	Render_UI(fTimeDelta);				// UI Render
 	Render_RenderTarget();				// Debug RenderTarget
 
@@ -199,33 +199,35 @@ void CRenderer::Render_Priority(const _float& fTimeDelta)
 
 void CRenderer::Render_ShadowDepth(const _float & fTimeDelta)
 {
-	m_pShadowDepthTarget->SetUp_ShadowDepthOnGraphicDevice();
+	m_pShadowDepthTarget->SetUp_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
+
 
 	for (auto& pGameObject : m_RenderList[RENDER_NONALPHA])
 		pGameObject->Render_ShadowDepth(fTimeDelta);
 
-	m_pShadowDepthTarget->Release_ShadowDepthOnGraphicDevice();
+	// m_pShadowDepthTarget->Release_ShadowDepthOnGraphicDevice();
+	m_pShadowDepthTarget->Release_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
 }
 
 
 void CRenderer::Render_NonAlpha(const _float& fTimeDelta)
 {
-	m_pDeferredTarget->SetUp_OnGraphicDevice();
+	m_pDeferredTarget->SetUp_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
 
 	for (auto& pGameObject : m_RenderList[RENDER_NONALPHA])
 		pGameObject->Render_GameObject(fTimeDelta);
 
-	m_pDeferredTarget->Release_OnGraphicDevice();
+	m_pDeferredTarget->Release_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
 }
 
 void CRenderer::Render_Light()
 {
-	m_pLightTarget->SetUp_LightOnGraphicDevice();
+	m_pLightTarget->SetUp_OnGraphicDevice(TARGETID::TYPE_LIGHTING);
 
 	CLightMgr::Get_Instance()->Update_Light();
 	CLightMgr::Get_Instance()->Render_Light(m_pDeferredTarget->Get_TargetTexture());
 
-	m_pLightTarget->Release_OnGraphicDevice();
+	m_pLightTarget->Release_OnGraphicDevice(TARGETID::TYPE_LIGHTING);
 
 }
 
@@ -309,9 +311,6 @@ void CRenderer::Render_RenderTarget()
 
 void CRenderer::Render_Font(const _float & fTimeDelta)
 {
-	if (!m_mapRenderOnOff[L"Font"])
-		return;
-
 	CGraphicDevice::Get_Instance()->Render_TextBegin();
 
 	for (auto& pGameObject : m_RenderList[RENDER_FONT])
@@ -378,26 +377,21 @@ HRESULT CRenderer::Ready_RenderTarget()
 	// Diffuse, Normal, Specular, Depth
 	m_pDeferredTarget = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 4);
 	NULL_CHECK_RETURN(m_pDeferredTarget, E_FAIL);
-
 	m_pDeferredTarget->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Diffuse
 	m_pDeferredTarget->Set_TargetClearColor(1, _rgba(0.0f, 0.0f, 0.0f, 1.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Normal
 	m_pDeferredTarget->Set_TargetClearColor(2, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Specular
 	m_pDeferredTarget->Set_TargetClearColor(3, _rgba(1.0f, 1.0f, 1.0f, 1.0f), DXGI_FORMAT_R32G32B32A32_FLOAT);	// Depth
-	FAILED_CHECK_RETURN(m_pDeferredTarget->SetUp_DefaultSetting(), E_FAIL);
-	FAILED_CHECK_RETURN(m_pDeferredTarget->Create_TextureDescriptorHeap(), E_FAIL);
-	m_pDeferredTarget->SetUp_ShaderConstantBuffer();
+	FAILED_CHECK_RETURN(m_pDeferredTarget->SetUp_DefaultSetting(TARGETID::TYPE_DEFAULT), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
 	[ Light RnderTarget ]
 	____________________________________________________________________________________________________________*/
 	m_pLightTarget = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 2);
 	NULL_CHECK_RETURN(m_pLightTarget, E_FAIL);
-
 	m_pLightTarget->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 1.0f), DXGI_FORMAT_R32G32B32A32_FLOAT);	// Shade
 	m_pLightTarget->Set_TargetClearColor(1, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Specular
-	FAILED_CHECK_RETURN(m_pLightTarget->SetUp_LightSetting(), E_FAIL);
-	FAILED_CHECK_RETURN(m_pLightTarget->Create_TextureDescriptorHeap(), E_FAIL);
-	m_pLightTarget->SetUp_ShaderConstantBuffer();
+	FAILED_CHECK_RETURN(m_pLightTarget->SetUp_DefaultSetting(TARGETID::TYPE_LIGHTING), E_FAIL);
+
 	m_pLightTarget->Set_TargetRenderPos(_vec3(480.0f, 90.0f /*+ (90.0f * 8.0f)*/, 1.0f));
 
 	/*__________________________________________________________________________________________________________
@@ -405,12 +399,10 @@ HRESULT CRenderer::Ready_RenderTarget()
 	____________________________________________________________________________________________________________*/
 	m_pShadowDepthTarget = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
 	NULL_CHECK_RETURN(m_pShadowDepthTarget, E_FAIL);
-
 	m_pShadowDepthTarget->Set_TargetClearColor(0, _rgba(1.0f, 1.0f, 1.0f, 1.0f), DXGI_FORMAT_R32G32B32A32_FLOAT);
 	m_pShadowDepthTarget->Set_TargetTextureSize(0, SHADOWTEX_WIDTH, SHADOWTEX_HEIGHT);
-	FAILED_CHECK_RETURN(m_pShadowDepthTarget->SetUp_ShadowDepthSetting(), E_FAIL);
-	FAILED_CHECK_RETURN(m_pShadowDepthTarget->Create_TextureDescriptorHeap(), E_FAIL);
-	m_pShadowDepthTarget->SetUp_ShaderConstantBuffer();
+	FAILED_CHECK_RETURN(m_pShadowDepthTarget->SetUp_DefaultSetting(TARGETID::TYPE_SHADOWDEPTH), E_FAIL);
+
 	m_pShadowDepthTarget->Set_TargetRenderScale(_vec3(90.0f, 90.0f, 90.0f));
 	m_pShadowDepthTarget->Set_TargetRenderPos(_vec3(720.0f, 90.0f, 1.0f));
 

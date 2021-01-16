@@ -86,7 +86,7 @@ _int CDebugCamera::LateUpdate_GameObject(const _float & fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Font Update ]
 	____________________________________________________________________________________________________________*/
-	if (Engine::CRenderer::Get_Instance()->Get_RenderOnOff(L"Font"))
+	if (Engine::CRenderer::Get_Instance()->Get_RenderOnOff(L"DebugFont"))
 	{
 		if (g_bIsOnDebugCaemra)
 		{

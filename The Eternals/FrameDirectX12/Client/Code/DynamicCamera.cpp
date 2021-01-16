@@ -87,7 +87,7 @@ _int CDynamicCamera::LateUpdate_GameObject(const _float & fTimeDelta)
 		/*__________________________________________________________________________________________________________
 		[ Font Update ]
 		____________________________________________________________________________________________________________*/
-		if (Engine::CRenderer::Get_Instance()->Get_RenderOnOff(L"Font"))
+		if (Engine::CRenderer::Get_Instance()->Get_RenderOnOff(L"DebugFont"))
 		{
 			m_wstrText = wstring(L"[ Camera Info ] \n") +
 						 wstring(L"Eye\t(%d, %d, %d) \n") +

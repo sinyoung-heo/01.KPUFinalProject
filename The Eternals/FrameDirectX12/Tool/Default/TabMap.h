@@ -31,7 +31,6 @@ public:
 	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
-	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 
 	Engine::CManagement*		m_pManagement		= nullptr;
 	Engine::CObjectMgr*			m_pObjectMgr		= nullptr;
@@ -302,13 +301,13 @@ public:
 	float m_fLightInfo_DL_DiffuseG	= 1.0f;
 	float m_fLightInfo_DL_DiffuseB	= 1.0f;
 	float m_fLightInfo_DL_DiffuseA	= 1.0f;
-	float m_fLightInfo_DL_SpecularR = 1.0f;
-	float m_fLightInfo_DL_SpecularG = 1.0f;
-	float m_fLightInfo_DL_SpecularB = 1.0f;
+	float m_fLightInfo_DL_SpecularR = 0.5f;
+	float m_fLightInfo_DL_SpecularG = 0.5f;
+	float m_fLightInfo_DL_SpecularB = 0.5f;
 	float m_fLightInfo_DL_SpecularA = 1.0f;
-	float m_fLightInfo_DL_AmbientR	= 1.0f;
-	float m_fLightInfo_DL_AmbientG	= 1.0f;
-	float m_fLightInfo_DL_AmbientB	= 1.0f;
+	float m_fLightInfo_DL_AmbientR	= 0.5f;
+	float m_fLightInfo_DL_AmbientG	= 0.5f;
+	float m_fLightInfo_DL_AmbientB	= 0.5f;
 	float m_fLightInfo_DL_AmbientA	= 1.0f;
 	float m_fLightInfo_DL_DirX		= 1.0f;
 	float m_fLightInfo_DL_DirY		= -1.0f;
@@ -319,19 +318,19 @@ public:
 	float m_fLightInfo_PL_DiffuseG	= 1.0f;
 	float m_fLightInfo_PL_DiffuseB	= 1.0f;
 	float m_fLightInfo_PL_DiffuseA	= 1.0f;
-	float m_fLightInfo_PL_SpecularR = 1.0f;
-	float m_fLightInfo_PL_SpecularG = 1.0f;
-	float m_fLightInfo_PL_SpecularB = 1.0f;
-	float m_fLightInfo_PL_SpecularA = 1.0f;
-	float m_fLightInfo_PL_AmbientR	= 1.0f;
-	float m_fLightInfo_PL_AmbientG	= 1.0f;
-	float m_fLightInfo_PL_AmbientB	= 1.0f;
+	float m_fLightInfo_PL_SpecularR	= 0.5f;
+	float m_fLightInfo_PL_SpecularG	= 0.5f;
+	float m_fLightInfo_PL_SpecularB	= 0.5f;
+	float m_fLightInfo_PL_SpecularA	= 1.0f;
+	float m_fLightInfo_PL_AmbientR	= 0.5f;
+	float m_fLightInfo_PL_AmbientG	= 0.5f;
+	float m_fLightInfo_PL_AmbientB	= 0.5f;
 	float m_fLightInfo_PL_AmbientA	= 1.0f;
 	float m_fLightInfo_PL_PosX		= 0.0f;
 	float m_fLightInfo_PL_PosY		= 0.0f;
 	float m_fLightInfo_PL_PosZ		= 0.0f;
 	float m_fLightInfo_PL_PosW		= 1.0f;
-	float m_fLightInfo_PL_Range		= 0.0f;
+	float m_fLightInfo_PL_Range		= 10.0f;
 
 	float m_fLightInfo_SL_EyeX		= 0.0f;
 	float m_fLightInfo_SL_EyeY		= 0.0f;
@@ -340,7 +339,7 @@ public:
 	float m_fLightInfo_SL_AtY		= 1.0f;
 	float m_fLightInfo_SL_AtZ		= 1.0f;
 	float m_fLightInfo_SL_Height	= 0.0f;
-	float m_fLightInfo_SL_FovY		= 15.0f;
+	float m_fLightInfo_SL_FovY		= 30.0f;
 	float m_fLightInfo_SL_Near		= 1.0f;
 	float m_fLightInfo_SL_Far		= 10'000.0f;
 };
