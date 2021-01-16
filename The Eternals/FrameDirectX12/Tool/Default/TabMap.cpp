@@ -1298,7 +1298,7 @@ HRESULT CTabMap::Ready_TerrainControl()
 
 	// ListBox 초기화.
 	Engine::CTexture* pTextureCom = static_cast<Engine::CTexture*>(m_pComponentMgr->Get_Component(L"Terrain", Engine::COMPONENTID::ID_STATIC));
-	for (_int i = 0; i < pTextureCom->Get_TexSize(); ++i)
+	for (_uint i = 0; i < pTextureCom->Get_TexSize(); ++i)
 	{
 		_tchar m_szText[MAX_STR] = L"";
 		wsprintf(m_szText, L"Index : %d", i);
@@ -1328,7 +1328,7 @@ HRESULT CTabMap::Ready_SkyBoxControl()
 
 	// ListBox 초기화.
 	Engine::CTexture* pTextureCom = static_cast<Engine::CTexture*>(m_pComponentMgr->Get_Component(L"SkyBox", Engine::COMPONENTID::ID_STATIC));
-	for (_int i = 0; i < pTextureCom->Get_TexSize(); ++i)
+	for (_uint i = 0; i < pTextureCom->Get_TexSize(); ++i)
 	{
 		_tchar m_szText[MAX_STR] = L"";
 		wsprintf(m_szText, L"Index : %d", i);

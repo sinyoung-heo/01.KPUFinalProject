@@ -95,7 +95,7 @@ _int CToolSceneStage::LateUpdate_Scene(const _float& fTimeDelta)
 	if (pMyForm->m_bIsTabMap && 
 		nullptr != m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh"))
 	{
-		pMyForm->m_TabMap.m_iStaticMeshObjectSize = m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh")->size();
+		pMyForm->m_TabMap.m_iStaticMeshObjectSize = (_int)m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh")->size();
 
 		_tchar szTemp[MIN_STR] = L"";
 		wsprintf(szTemp, L"%d", pMyForm->m_TabMap.m_iStaticMeshObjectSize);
@@ -412,7 +412,49 @@ void CToolSceneStage::KeyInput_TabMapLightingInfo(CTabMap& TabMap)
 	// StaticMesh Object 생성.
 	if (TabMap.m_bIsLightingCreateMode)
 	{
+		TabMap.UpdateData(TRUE);
 
+		_vec3	vPickingPos	= CMouseMgr::Picking_OnTerrain(m_pPickingTerrain);
+
+		_rgba	PL_Diffuse	= _rgba(TabMap.m_fLightInfo_PL_DiffuseR, TabMap.m_fLightInfo_PL_DiffuseG, TabMap.m_fLightInfo_PL_DiffuseB, TabMap.m_fLightInfo_PL_DiffuseA);
+		_rgba	PL_Specular = _rgba(TabMap.m_fLightInfo_PL_SpecularR, TabMap.m_fLightInfo_PL_SpecularG, TabMap.m_fLightInfo_PL_SpecularB, TabMap.m_fLightInfo_PL_SpecularA);
+		_rgba	PL_Ambient	= _rgba(TabMap.m_fLightInfo_PL_AmbientR, TabMap.m_fLightInfo_PL_AmbientG, TabMap.m_fLightInfo_PL_AmbientB, TabMap.m_fLightInfo_PL_AmbientA);
+		_vec4	vPos		= _vec4(vPickingPos, TabMap.m_fLightInfo_PL_PosW);
+		_float	fRange		= TabMap.m_fLightInfo_PL_Range;
+
+		Engine::D3DLIGHT tLightInfo;
+		ZeroMemory(&tLightInfo, sizeof(Engine::D3DLIGHT));
+		tLightInfo.Type			= Engine::LIGHTTYPE::D3DLIGHT_POINT;
+		tLightInfo.Diffuse		= PL_Diffuse;
+		tLightInfo.Specular		= PL_Specular;
+		tLightInfo.Ambient		= PL_Ambient;
+		tLightInfo.Position		= _vec4(vPos.x, vPos.y, vPos.z, 1.0f);
+		tLightInfo.Range		= fRange;
+		Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice,
+																				 m_pCommandList,
+																				 Engine::LIGHTTYPE::D3DLIGHT_POINT,
+																				 tLightInfo), E_FAIL);
+
+		// ListBox 추가.
+		_uint iSize = Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::LIGHTTYPE::D3DLIGHT_POINT).size();
+		_tchar szTemp[MIN_STR] = L"";
+		wsprintf(szTemp, L"Idx : %d", iSize - 1);
+		TabMap.m_LightInfoListBox_PL_List.AddString(szTemp);
+
+		_stprintf_s(szTemp, MIN_STR, L"%0.1f", vPickingPos.x);
+		TabMap.m_LightInfoEdit_PL_PosX.SetWindowTextW(szTemp);
+		TabMap.m_fLightInfo_PL_PosX = vPickingPos.x;
+
+		_stprintf_s(szTemp, MIN_STR, L"%0.1f", vPickingPos.y);
+		TabMap.m_LightInfoEdit_PL_PosY.SetWindowTextW(szTemp);
+		TabMap.m_fLightInfo_PL_PosY = vPickingPos.y;
+
+		_stprintf_s(szTemp, MIN_STR, L"%0.1f", vPickingPos.z);
+		TabMap.m_LightInfoEdit_PL_PosZ.SetWindowTextW(szTemp);
+		TabMap.m_fLightInfo_PL_PosZ = vPickingPos.z;
+
+
+		TabMap.UpdateData(FALSE);
 	}
 	else if (TabMap.m_bIsLightingModifyMode)
 	{

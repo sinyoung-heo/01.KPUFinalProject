@@ -9,12 +9,17 @@ CLightMgr::CLightMgr()
 }
 
 
-D3DLIGHT CLightMgr::Get_LightInfo(const LIGHTTYPE& eLightID, const _int& iIdx)
+D3DLIGHT& CLightMgr::Get_LightInfo(const LIGHTTYPE& eLightID, const _int& iIdx)
 {
-	if (iIdx >= m_vecLight[eLightID].size())
-		return D3DLIGHT();
+	if (eLightID < D3DLIGHT_END )
+	{
+		if (iIdx < m_vecLight[eLightID].size())
+		{
+			return m_vecLight[eLightID][iIdx]->Get_LightInfo();
+		}
+	}
 
-	return m_vecLight[eLightID][iIdx]->Get_LightInfo();
+	return D3DLIGHT();
 }
 
 HRESULT CLightMgr::Set_LightInfo(const LIGHTTYPE& eLightID,

@@ -294,7 +294,6 @@ HRESULT CScene_Stage::Ready_LightInfo()
 	tLightInfo.Diffuse		= _rgba(0.2f, 0.2f, 1.0f, 1.0f);
 	tLightInfo.Specular		= _rgba(0.3f, 0.3f, 0.3f, 1.0f);
 	tLightInfo.Ambient		= _rgba(0.3f, 0.3f, 0.3f, 1.0f);
-	tLightInfo.Direction	= _vec4(0.0f, 0.0f, 0.0f, 0.0f);
 	tLightInfo.Position		= _vec4(5.0f, 50.0f, 0.0f, 1.0f);
 	tLightInfo.Range		= 50.0f;
 	Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice,
@@ -306,7 +305,6 @@ HRESULT CScene_Stage::Ready_LightInfo()
 	tLightInfo.Diffuse		= _rgba(1.0f, 0.2f, 0.2f, 1.0f);
 	tLightInfo.Specular		= _rgba(0.3f, 0.3f, 0.3f, 1.0f);
 	tLightInfo.Ambient		= _rgba(0.3f, 0.3f, 0.3f, 0.3f);
-	tLightInfo.Direction	= _vec4(0.0f, 0.0f, 0.0f, 0.0f);
 	tLightInfo.Position		= _vec4(10.0f, 50.0f, 0.0f, 1.0f);
 	tLightInfo.Range		= 50.0f;
 	Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, 
