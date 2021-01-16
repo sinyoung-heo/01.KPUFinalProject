@@ -16,6 +16,7 @@ private:
 public:
 	// Get
 	D3DLIGHT&			Get_LightInfo(const LIGHTTYPE & eLightID, const _int& iIdx = 0);
+	CLight*				Get_Light(const LIGHTTYPE & eLightID, const _int & iIdx = 0);
 	vector<CLight*>&	Get_VecLightInfo(const LIGHTTYPE & eLightID) { return m_vecLight[eLightID]; }
 	const SHADOW_DESC&	Get_ShadowDesc()		{ return m_tShadowDesc; }
 	const _vec3&		Get_ShadowLightEye()	{ return m_vShadowLightEye; }

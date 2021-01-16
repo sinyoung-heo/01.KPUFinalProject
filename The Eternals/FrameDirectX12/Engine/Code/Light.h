@@ -1,6 +1,6 @@
 #pragma once
-#include "Engine_Include.h"
 #include "Base.h"
+#include "Engine_Include.h"
 
 BEGIN(Engine)
 
@@ -24,6 +24,8 @@ public:
 	void			Set_LightInfo(const D3DLIGHT& tLightInfo)	{ m_tLightInfo = tLightInfo; }
 	void			Set_IsLightOn(const _bool& bIsLightOn)		{ m_bIsLightOn = bIsLightOn; }
 	void			Set_IsDead()								{ m_bIsDead = true; }
+	void			Set_ColliderColorSelected();
+	void			Set_ColliderColorDiffuse();
 
 	// Method
 	HRESULT			Ready_Light(const D3DLIGHT& tLightInfo);

@@ -12,6 +12,18 @@ CLight::CLight(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pComma
 {
 }
 
+void CLight::Set_ColliderColorSelected()
+{
+	// m_pColliderCom->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+	m_pColliderCom->Set_PipelineStatePass(1);
+}
+
+void CLight::Set_ColliderColorDiffuse()
+{
+	// m_pColliderCom->Set_Color(m_tLightInfo.Diffuse);
+	m_pColliderCom->Set_PipelineStatePass(0);
+}
+
 HRESULT CLight::Ready_Light(const D3DLIGHT & tLightInfo)
 {
 	m_tLightInfo = tLightInfo;
@@ -40,6 +52,7 @@ HRESULT CLight::Ready_Light(const D3DLIGHT & tLightInfo)
 		m_pColliderCom->Set_PipelineStatePass(0);
 		m_pColliderCom->Set_Pos(_vec3(m_tLightInfo.Position.x, m_tLightInfo.Position.y, m_tLightInfo.Position.z));
 		m_pColliderCom->Set_Scale(_vec3(0.5f, 0.5f, 0.5f));
+		m_pColliderCom->Set_Extents(_vec3(1.0f));
 		m_pColliderCom->Set_Color(m_tLightInfo.Diffuse);
 		m_pColliderCom->Get_Transform()->Update_Component(0.0f);
 	}
@@ -54,6 +67,7 @@ _int CLight::Update_Light()
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	m_pColliderCom->Update_Component(0.0f);
 
 	return NO_EVENT;
 }

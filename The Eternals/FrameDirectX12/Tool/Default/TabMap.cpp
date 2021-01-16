@@ -13,6 +13,7 @@
 #include "ToolStaticMesh.h"
 #include "GraphicDevice.h"
 #include "LightMgr.h"
+#include "Light.h"
 
 // CTabMap 대화 상자
 
@@ -3222,12 +3223,40 @@ void CTabMap::OnEnChangeEdit1046_LightInfo_PL_Range()
 void CTabMap::OnLbnSelchangeList1004_LightInfo_PL_List()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
 
-	if (m_bIsLightingModifyMode)
-	{
+	// 선택한 ListBox의 Index를 얻어온다.
+	_int m_iSelectPLIdx = m_LightInfoListBox_PL_List.GetCaretIndex();
 
-	}
+	// 선택한 Light 설정.
+	Engine::CLight* pSelectLight = Engine::CLightMgr::Get_Instance()->Get_Light(Engine::LIGHTTYPE::D3DLIGHT_POINT, m_iSelectPLIdx);
+	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight = pSelectLight;
+
+	// 모든 Light의 Collider를 Diffuse 색상으로 변겅.
+	for (auto& pPointLight : Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::LIGHTTYPE::D3DLIGHT_POINT))
+		pPointLight->Set_ColliderColorDiffuse();
+
+	// 선택한 Light의 Collider 색상 변경.
+	pSelectLight->Set_ColliderColorSelected();
+
+	// MFC Control 변수 값 설정.
+	m_fLightInfo_PL_DiffuseR	= pSelectLight->Get_LightInfo().Diffuse.x;
+	m_fLightInfo_PL_DiffuseG	= pSelectLight->Get_LightInfo().Diffuse.y;
+	m_fLightInfo_PL_DiffuseB	= pSelectLight->Get_LightInfo().Diffuse.z;
+	m_fLightInfo_PL_DiffuseA	= pSelectLight->Get_LightInfo().Diffuse.w;
+	m_fLightInfo_PL_SpecularR	= pSelectLight->Get_LightInfo().Specular.x;
+	m_fLightInfo_PL_SpecularG	= pSelectLight->Get_LightInfo().Specular.y;
+	m_fLightInfo_PL_SpecularB	= pSelectLight->Get_LightInfo().Specular.z;
+	m_fLightInfo_PL_SpecularA	= pSelectLight->Get_LightInfo().Specular.w;
+	m_fLightInfo_PL_AmbientR	= pSelectLight->Get_LightInfo().Ambient.x;
+	m_fLightInfo_PL_AmbientG	= pSelectLight->Get_LightInfo().Ambient.y;
+	m_fLightInfo_PL_AmbientB	= pSelectLight->Get_LightInfo().Ambient.z;
+	m_fLightInfo_PL_AmbientA	= pSelectLight->Get_LightInfo().Ambient.w;
+	m_fLightInfo_PL_PosX		= pSelectLight->Get_LightInfo().Position.x;
+	m_fLightInfo_PL_PosY		= pSelectLight->Get_LightInfo().Position.y;
+	m_fLightInfo_PL_PosZ		= pSelectLight->Get_LightInfo().Position.z;
+	m_fLightInfo_PL_PosW		= pSelectLight->Get_LightInfo().Position.w;
+	m_fLightInfo_PL_Range		= pSelectLight->Get_LightInfo().Range;
+	
 
 	UpdateData(FALSE);
 }

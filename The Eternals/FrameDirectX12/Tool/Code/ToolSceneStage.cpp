@@ -4,6 +4,7 @@
 #include "ComponentMgr.h"
 #include "GraphicDevice.h"
 #include "DirectInput.h"
+#include "Light.h"
 #include "LightMgr.h"
 #include "Font.h"
 #include "ToolCamera.h"
@@ -458,7 +459,36 @@ void CToolSceneStage::KeyInput_TabMapLightingInfo(CTabMap& TabMap)
 	}
 	else if (TabMap.m_bIsLightingModifyMode)
 	{
+		TabMap.UpdateData(TRUE);
 
+		vector<Engine::CLight*> vecPointLight = Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::LIGHTTYPE::D3DLIGHT_POINT);
+		if (vecPointLight.empty())
+			return;
+
+		if (CMouseMgr::Get_Instance()->Picking_Light(&m_pPickingLight, vecPointLight))
+		{
+			// 선택한 Light의 정보로 Edit Control을 채운다.
+			TabMap.m_fLightInfo_PL_DiffuseR		= m_pPickingLight->Get_LightInfo().Diffuse.x;
+			TabMap.m_fLightInfo_PL_DiffuseG		= m_pPickingLight->Get_LightInfo().Diffuse.y;
+			TabMap.m_fLightInfo_PL_DiffuseB		= m_pPickingLight->Get_LightInfo().Diffuse.z;
+			TabMap.m_fLightInfo_PL_DiffuseA		= m_pPickingLight->Get_LightInfo().Diffuse.w;
+			TabMap.m_fLightInfo_PL_SpecularR	= m_pPickingLight->Get_LightInfo().Specular.x;
+			TabMap.m_fLightInfo_PL_SpecularG	= m_pPickingLight->Get_LightInfo().Specular.y;
+			TabMap.m_fLightInfo_PL_SpecularB	= m_pPickingLight->Get_LightInfo().Specular.z;
+			TabMap.m_fLightInfo_PL_SpecularA	= m_pPickingLight->Get_LightInfo().Specular.w;
+			TabMap.m_fLightInfo_PL_AmbientR		= m_pPickingLight->Get_LightInfo().Ambient.x;
+			TabMap.m_fLightInfo_PL_AmbientG		= m_pPickingLight->Get_LightInfo().Ambient.y;
+			TabMap.m_fLightInfo_PL_AmbientB		= m_pPickingLight->Get_LightInfo().Ambient.z;
+			TabMap.m_fLightInfo_PL_AmbientA		= m_pPickingLight->Get_LightInfo().Ambient.w;
+			TabMap.m_fLightInfo_PL_PosX			= m_pPickingLight->Get_LightInfo().Position.x;
+			TabMap.m_fLightInfo_PL_PosY			= m_pPickingLight->Get_LightInfo().Position.y;
+			TabMap.m_fLightInfo_PL_PosZ			= m_pPickingLight->Get_LightInfo().Position.z;
+			TabMap.m_fLightInfo_PL_PosW			= m_pPickingLight->Get_LightInfo().Position.w;
+			TabMap.m_fLightInfo_PL_Range		= m_pPickingLight->Get_LightInfo().Range;
+		}
+
+
+		TabMap.UpdateData(FALSE);
 	}
 }
 
