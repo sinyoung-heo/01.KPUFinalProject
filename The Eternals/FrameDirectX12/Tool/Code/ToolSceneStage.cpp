@@ -316,7 +316,8 @@ void CToolSceneStage::KeyInput_TabMap(CTabMap& TabMap)
 												  true,										// Bounding Box
 												  TabMap.m_bIsCollision,					// Bounding Sphere
 												  _vec3(TabMap.m_fStaticMeshColliderScale),	// Bounding Sphere Scale
-												   vBoundingSpherePos);						// Bounding Sphere Pos
+												   vBoundingSpherePos,						// Bounding Sphere Pos
+												  TabMap.m_bIsMousePicking);
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"StaticMesh", pStaticMesh), E_FAIL);
 
 			// StaticMeshListBox¿¡ »ðÀÔ.

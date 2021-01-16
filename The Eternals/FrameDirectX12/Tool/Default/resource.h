@@ -80,6 +80,7 @@
 #define IDC_EDIT1028                    1063
 #define IDC_EDIT1029                    1064
 #define IDC_BUTTON1005                  1065
+#define IDC_CHECK1008                   1065
 #define IDC_BUTTON1006                  1066
 #define IDC_EDIT1030                    1067
 #define IDC_EDIT1031                    1068

@@ -186,6 +186,7 @@ void CTabMap::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT1053, m_fLightInfo_SL_FovY);
 	DDX_Text(pDX, IDC_EDIT1054, m_fLightInfo_SL_Near);
 	DDX_Text(pDX, IDC_EDIT1055, m_fLightInfo_SL_Far);
+	DDX_Control(pDX, IDC_CHECK1008, m_StaticMeshCheck_IsMousePicking);
 }
 
 
@@ -278,6 +279,7 @@ BEGIN_MESSAGE_MAP(CTabMap, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1012, &CTabMap::OnBnClickedButton1012_LightInfo_SL_LOAD)
 	//ON_BN_CLICKED(IDC_BUTTON1005, &CTabMap::OnBnClickedButton1005_LightInfo_DL_SAVE)
 	//ON_BN_CLICKED(IDC_BUTTON1006, &CTabMap::OnBnClickedButton1006_LightInfo_DL_LOAD)
+	ON_BN_CLICKED(IDC_CHECK1008, &CTabMap::OnBnClickedCheck1008_StaticMeshIsMousePicking)
 END_MESSAGE_MAP()
 
 
@@ -328,6 +330,7 @@ BOOL CTabMap::OnInitDialog()
 	m_StaticMeshEdit_ObjectSize.EnableWindow(FALSE);
 	m_StaticMeshCheck_IsRenderShadow.EnableWindow(FALSE);
 	m_StaticMeshCheck_IsCollision.EnableWindow(FALSE);
+	m_StaticMeshCheck_IsMousePicking.EnableWindow(FALSE);
 	m_StaticMeshEdit_ColliderScale.EnableWindow(FALSE);
 	m_StaticMeshEdit_ColliderPosX.EnableWindow(FALSE);
 	m_StaticMeshEdit_ColliderPosY.EnableWindow(FALSE);
@@ -1412,8 +1415,13 @@ HRESULT CTabMap::Ready_StaticMeshControl()
 	m_StaticMeshEdit_PosY.EnableWindow(TRUE);
 	m_StaticMeshEdit_PosZ.EnableWindow(TRUE);
 	m_StaticMeshEdit_ObjectSize.EnableWindow(TRUE);
+	
 	m_StaticMeshCheck_IsRenderShadow.EnableWindow(TRUE);
 	m_StaticMeshCheck_IsCollision.EnableWindow(TRUE);
+	m_StaticMeshCheck_IsMousePicking.EnableWindow(TRUE);
+	m_StaticMeshCheck_IsMousePicking.SetCheck(true);
+	m_bIsMousePicking = true;
+
 	m_StaticMeshEdit_ColliderScale.EnableWindow(FALSE);
 	m_StaticMeshEdit_ColliderPosX.EnableWindow(FALSE);
 	m_StaticMeshEdit_ColliderPosY.EnableWindow(FALSE);
@@ -1820,6 +1828,7 @@ void CTabMap::OnBnClickedCheck1005_EditStaticMesh()
 	m_StaticMeshEdit_ObjectSize.EnableWindow(TRUE);
 	m_StaticMeshCheck_IsRenderShadow.EnableWindow(TRUE);
 	m_StaticMeshCheck_IsCollision.EnableWindow(TRUE);
+	m_StaticMeshCheck_IsMousePicking.EnableWindow(TRUE);
 	m_StaticMeshEdit_ColliderScale.EnableWindow(FALSE);
 	m_StaticMeshEdit_ColliderPosX.EnableWindow(FALSE);
 	m_StaticMeshEdit_ColliderPosY.EnableWindow(FALSE);
@@ -1916,6 +1925,7 @@ void CTabMap::OnBnClickedCheck1006_EditLightingInfo()
 	m_StaticMeshEdit_ObjectSize.EnableWindow(FALSE);
 	m_StaticMeshCheck_IsRenderShadow.EnableWindow(FALSE);
 	m_StaticMeshCheck_IsCollision.EnableWindow(FALSE);
+	m_StaticMeshCheck_IsMousePicking.EnableWindow(FALSE);
 	m_StaticMeshEdit_ColliderScale.EnableWindow(FALSE);
 	m_StaticMeshEdit_ColliderPosX.EnableWindow(FALSE);
 	m_StaticMeshEdit_ColliderPosY.EnableWindow(FALSE);
@@ -2011,6 +2021,7 @@ void CTabMap::OnBnClickedCheck1007_EditNavigationMesh()
 	m_StaticMeshEdit_ObjectSize.EnableWindow(FALSE);
 	m_StaticMeshCheck_IsRenderShadow.EnableWindow(FALSE);
 	m_StaticMeshCheck_IsCollision.EnableWindow(FALSE);
+	m_StaticMeshCheck_IsMousePicking.EnableWindow(FALSE);
 	m_StaticMeshEdit_ColliderScale.EnableWindow(FALSE);
 	m_StaticMeshEdit_ColliderPosX.EnableWindow(FALSE);
 	m_StaticMeshEdit_ColliderPosY.EnableWindow(FALSE);
@@ -2322,29 +2333,16 @@ void CTabMap::OnBnClickedCheck1002_StaticMeshRenderShadow()
 	UpdateData(TRUE);
 
 	if (m_StaticMeshCheck_IsRenderShadow.GetCheck())
-	{
 		m_bIsRenderShadow = true;
-
-		if (m_bIsModifyMode)
-		{
-			Engine::CGameObject* pObject = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject;
-			if (pObject != nullptr)
-			{
-				pObject->Set_IsRenderShadow(m_bIsRenderShadow);
-			}
-		}
-	}
 	else
-	{
 		m_bIsRenderShadow = false;
 
-		if (m_bIsModifyMode)
+	if (m_bIsModifyMode)
+	{
+		Engine::CGameObject* pObject = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject;
+		if (pObject != nullptr)
 		{
-			Engine::CGameObject* pObject = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject;
-			if (pObject != nullptr)
-			{
-				pObject->Set_IsRenderShadow(m_bIsRenderShadow);
-			}
+			pObject->Set_IsRenderShadow(m_bIsRenderShadow);
 		}
 	}
 
@@ -2406,6 +2404,28 @@ void CTabMap::OnBnClickedCheck1003_StaticMeshIsCollision()
 
 }
 
+void CTabMap::OnBnClickedCheck1008_StaticMeshIsMousePicking()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (m_StaticMeshCheck_IsMousePicking.GetCheck())
+	{
+		m_bIsMousePicking = true;
+		m_StaticMeshCheck_IsMousePicking.SetCheck(true);
+	}
+	else
+	{
+		m_bIsMousePicking = false;
+		m_StaticMeshCheck_IsMousePicking.SetCheck(false);
+	}
+	
+	if (m_bIsModifyMode)
+	{
+		Engine::CGameObject* pObject = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject;
+		static_cast<CToolStaticMesh*>(pObject)->m_bIsMousePicking = m_bIsMousePicking;
+	}
+}
+
+
 
 void CTabMap::OnLbnSelchangeList1003_StaticMeshObjectList()
 {
@@ -2464,6 +2484,13 @@ void CTabMap::OnLbnSelchangeList1003_StaticMeshObjectList()
 		m_fStaticMeshColliderPosX = pSelectedObject->Get_BoundingSphere()->Get_Transform()->m_vPos.x;
 		m_fStaticMeshColliderPosY = pSelectedObject->Get_BoundingSphere()->Get_Transform()->m_vPos.y;
 		m_fStaticMeshColliderPosZ = pSelectedObject->Get_BoundingSphere()->Get_Transform()->m_vPos.z;
+
+		m_bIsMousePicking = static_cast<CToolStaticMesh*>(pSelectedObject)->m_bIsMousePicking;
+
+		if (m_bIsMousePicking)
+			m_StaticMeshCheck_IsMousePicking.SetCheck(true);
+		else
+			m_StaticMeshCheck_IsMousePicking.SetCheck(false);
 
 		static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject = pSelectedObject;
 	}
@@ -2544,26 +2571,28 @@ void CTabMap::OnBnClickedButton1003_StaticMeshSAVE()
 			_bool bIsCollision			= pObject->Get_IsCollision();
 			_vec3 vBoundingSphereScale	= pObject->Get_BoundingSphere()->Get_Transform()->m_vScale;
 			_vec3 vBoundingSpherePos	= pObject->Get_BoundingSphere()->Get_Transform()->m_vPos;
-			 
+			_bool bIsMousePicking		= static_cast<CToolStaticMesh*>(pObject)->m_bIsMousePicking;
+
 			// StaticMesh Data 저장
-			fout	<< wstrMeshTag << L" "				// MeshTag
-					<< vScale.x	<< L" " 
-					<< vScale.y << L" "	
-					<< vScale.z	<< L" "					// Scale
-					<< vAngle.x	<< L" "	
-					<< vAngle.y	<< L" " 
-					<< vAngle.z	<< L" "					// Angle
-					<< vPos.x << L" " 
-					<< vPos.y << L" " 
-					<< vPos.z << L" "					// Pos
-					<< bIsRenderShadow << L" "			// Is Render Shadow
-					<< bIsCollision << L" "				// Is Collision
-					<< vBoundingSphereScale.x << L" " 
-					<< vBoundingSphereScale.y << L" " 
-					<< vBoundingSphereScale.z << L" "	// BoundingSphere Scale
-					<< vBoundingSpherePos.x << L" " 
-					<< vBoundingSpherePos.y << L" " 
-					<< vBoundingSpherePos.z << L" ";	// BoundingSphere Pos
+			fout	<< wstrMeshTag				<< L" "	// MeshTag
+					<< vScale.x					<< L" " 
+					<< vScale.y					<< L" "	
+					<< vScale.z					<< L" "	// Scale
+					<< vAngle.x					<< L" "	
+					<< vAngle.y					<< L" " 
+					<< vAngle.z					<< L" "	// Angle
+					<< vPos.x					<< L" " 
+					<< vPos.y					<< L" " 
+					<< vPos.z					<< L" "	// Pos
+					<< bIsRenderShadow			<< L" "	// Is Render Shadow
+					<< bIsCollision				<< L" "	// Is Collision
+					<< vBoundingSphereScale.x	<< L" " 
+					<< vBoundingSphereScale.y	<< L" " 
+					<< vBoundingSphereScale.z	<< L" "	// BoundingSphere Scale
+					<< vBoundingSpherePos.x		<< L" " 
+					<< vBoundingSpherePos.y		<< L" " 
+					<< vBoundingSpherePos.z		<< L" "	// BoundingSphere Pos
+					<< bIsMousePicking			<< L" ";// Is MousePicking
 		}
 
 
@@ -2620,6 +2649,7 @@ void CTabMap::OnBnClickedButton1004_StaticMeshLOAD()
 		_bool	bIsCollision			= false;
 		_vec3	vBoundingSphereScale	= _vec3(0.0f);
 		_vec3	vBoundingSpherePos      = _vec3(0.0f);
+		_bool	bIsMousePicking			= false;
 		while (true)
 		{
 
@@ -2640,8 +2670,8 @@ void CTabMap::OnBnClickedButton1004_StaticMeshLOAD()
 					>> vBoundingSphereScale.z	
 					>> vBoundingSpherePos.x		// BoundingSphere Pos
 					>> vBoundingSpherePos.y 
-					>> vBoundingSpherePos.z;	
-
+					>> vBoundingSpherePos.z
+					>> bIsMousePicking;			// Is MousePicking
 			if (fin.eof())
 				break;
 
@@ -2657,7 +2687,8 @@ void CTabMap::OnBnClickedButton1004_StaticMeshLOAD()
 												  true,					// Bounding Box
 												  bIsCollision,			// Bounding Sphere
 												  vBoundingSphereScale,	// Bounding Sphere Scale
-												  vBoundingSpherePos);	// Bounding Sphere Pos
+												  vBoundingSpherePos,	// Bounding Sphere Pos
+												  bIsMousePicking);		// Is Mouse Picking
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"StaticMesh", pStaticMesh), E_FAIL);
 
 			// StaticMeshListBox에 삽입.
@@ -3483,4 +3514,3 @@ void CTabMap::OnBnClickedButton1012_LightInfo_SL_LOAD()
 
 	UpdateData(FALSE);
 }
-

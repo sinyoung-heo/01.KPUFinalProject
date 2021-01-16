@@ -26,7 +26,8 @@ public:
 									 const _bool& bIsBoundingBox		= true,
 									 const _bool& bIsBoundingSphere		= false,
 									 const _vec3& vBoundingSphereScale	= _vec3(1.0f),
-									 const _vec3& vBoundingSpherePos	= _vec3(0.0f));
+									 const _vec3& vBoundingSpherePos	= _vec3(0.0f),
+									 const _bool& bIsMousePicking = true);
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
@@ -56,6 +57,7 @@ public:
 	[ Value ]
 	____________________________________________________________________________________________________________*/
 	wstring m_wstrMeshTag		= L"";
+	_bool	m_bIsMousePicking	= true;
 
 public:
 	static CToolStaticMesh* Create(ID3D12Device* pGraphicDevice,
@@ -68,7 +70,8 @@ public:
 									 const _bool& bIsBoundingBox		= true,
 									 const _bool& bIsBoundingSphere		= false,
 									 const _vec3& vBoundingSphereScale	= _vec3(1.0f),
-									 const _vec3& vBoundingSpherePos	= _vec3(0.0f));
+									 const _vec3& vBoundingSpherePos	= _vec3(0.0f),
+									 const _bool& bIsMousePicking = true);
 private:
 	virtual void Free();
 };

@@ -118,6 +118,7 @@ public:
 	afx_msg void OnEnChangeEdit1013_StaticMeshPosZ();
 	afx_msg void OnBnClickedCheck1002_StaticMeshRenderShadow();
 	afx_msg void OnBnClickedCheck1003_StaticMeshIsCollision();
+	afx_msg void OnBnClickedCheck1008_StaticMeshIsMousePicking();
 	afx_msg void OnLbnSelchangeList1003_StaticMeshObjectList();
 	afx_msg void OnBnClickedButton1001_StasticMeshDelete();
 	afx_msg void OnBnClickedButton1002_StaticMeshAllDelete();
@@ -150,6 +151,7 @@ public:
 
 	CButton			m_StaticMeshCheck_IsRenderShadow;
 	CButton			m_StaticMeshCheck_IsCollision;
+	CButton			m_StaticMeshCheck_IsMousePicking;
 
 	CButton			m_StaticMeshButton_Save;
 	CButton			m_StaticMeshButton_Load;
@@ -173,6 +175,7 @@ public:
 
 	_bool	m_bIsRenderShadow			= false;
 	_bool	m_bIsCollision				= false;
+	_bool	m_bIsMousePicking			= true;
 	_int	m_iStaticMeshSelectIdx		= 0;
 	float	m_fStaticMeshColliderScale	= 0.0f;
 	float	m_fStaticMeshColliderPosX	= 0.0f;
@@ -340,5 +343,4 @@ public:
 	float m_fLightInfo_SL_FovY		= 15.0f;
 	float m_fLightInfo_SL_Near		= 1.0f;
 	float m_fLightInfo_SL_Far		= 10'000.0f;
-
 };

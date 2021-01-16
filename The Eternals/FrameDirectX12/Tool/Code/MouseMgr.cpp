@@ -188,18 +188,22 @@ _bool CMouseMgr::Picking_Object(Engine::CGameObject** ppPickingObject, Engine::O
 	auto iter_end	= pOBJLIST->end();
 	for (; iter_begin != iter_end; ++iter_begin)
 	{
-		vRayDir.Normalize();
-
-		// 충돌했다면, BoundingBox의 색상을 Red로 변경.
-		if ((*iter_begin)->Get_BoundingBox()->Get_BoundingInfo().Intersects(vRayPos.Get_XMVECTOR(),
-																			vRayDir.Get_XMVECTOR(), 
-																			fDist))
+		if (static_cast<CToolStaticMesh*>(*iter_begin)->m_bIsMousePicking)
 		{
-			(*iter_begin)->Set_BoundingBoxColor(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
-			*ppPickingObject = /*static_cast<CToolStaticMesh*>*/(*iter_begin);
+			vRayDir.Normalize();
 
-			return true;
+			// 충돌했다면, BoundingBox의 색상을 Red로 변경.
+			if ((*iter_begin)->Get_BoundingBox()->Get_BoundingInfo().Intersects(vRayPos.Get_XMVECTOR(),
+																				vRayDir.Get_XMVECTOR(), 
+																				fDist))
+			{
+				(*iter_begin)->Set_BoundingBoxColor(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+				*ppPickingObject = /*static_cast<CToolStaticMesh*>*/(*iter_begin);
+
+				return true;
+			}
 		}
+
 	}
 
 	return false;
