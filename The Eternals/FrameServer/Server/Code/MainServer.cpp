@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Player.h"
+#include "Npc.h"
 
 /* IOCP SERVER 관련 변수*/
 HANDLE g_hIocp;
@@ -13,17 +14,13 @@ mutex g_id_lock;
 priority_queue<event_type> g_timer_queue;
 mutex g_timer_lock;
 
-///* DATABASE 관련 변수 */
-//SQLHDBC g_hdbc;
-//SQLHSTMT g_hstmt;
-//SQLRETURN g_retcode;
-//SQLHENV g_henv;
-
 /*==============================================================함수 선언부========================================================================*/
 void Ready_ServerManager();			// 서버 매니저 초기화
 void Ready_Server();				// 서버 메인 루프 초기화
 void Release_Server();				// 서버 종료
 
+void Initialize_NPC();
+void Delete_NPC();
 void add_new_client(SOCKET ns);		// 새로운 유저 접속 함수
 void disconnect_client(int id);		// 유저 접속 정료 함수
 
@@ -75,6 +72,9 @@ void Ready_Server()
 {
 	/* Init Server Managers */
 	Ready_ServerManager();
+
+	/* Create NPC */
+	Initialize_NPC();
 
 	std::wcout.imbue(std::locale("korean"));
 
@@ -131,6 +131,55 @@ void Release_Server()
 	closesocket(g_hListenSock);
 	WSACleanup();
 	exit(1);
+}
+
+void Initialize_NPC()
+{
+	CNpc* pNew = nullptr;
+	int s_num = -1;
+
+	/* 서버에서 NPC를 관리할 번호 설정 */
+	for (int i = 0; i < MAX_NPC; ++i)
+	{
+		pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+		if (pNew)
+			s_num = pNew->m_sNum;
+
+		/* NPC의 정보 초기화 */	
+		pNew->Set_IsConnected(true);
+		pNew->Set_IsDead(false);	
+		sprintf_s(pNew->m_ID, "NPC%d", i);
+	
+		pNew->m_vPos = _vec3((rand() % 100) * 1.f + 1000.f, (rand() % 100) * 1.f + 500.f, 0.f);
+		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
+		pNew->m_type = '1';
+		pNew->spd = 10.f;
+		pNew->m_status = STATUS::ST_NONACTIVE;
+		
+		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.y / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
+		CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
+
+#ifdef TEST
+		cout << "NPC [" << s_num << "] Initialize Finish.\n";
+#endif
+	}
+
+#ifdef TEST
+	cout << "NPC Initialize Finish.\n";
+#endif
+}
+
+void Delete_NPC()
+{
+	CNpc* pNPC = nullptr;
+
+	for (int i = 1; i < MAX_NPC + 1; ++i)
+	{
+		pNPC = static_cast<CNpc*>(CObjMgr::GetInstance()->Get_GameObject(L"NPC", i));
+		CObjPoolMgr::GetInstance()->return_Object(L"NPC", pNPC);
+		CObjMgr::GetInstance()->Delete_GameObject(L"NPC", pNPC);
+	}
 }
 
 void add_new_client(SOCKET ns)
@@ -286,6 +335,7 @@ void disconnect_client(int id)
 
 	if (CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER")->size() <= 0)
 	{
+		Delete_NPC();
 		Release_Server();
 	}
 }

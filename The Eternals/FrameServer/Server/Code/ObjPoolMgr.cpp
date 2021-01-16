@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ObjPoolMgr.h"
 #include "Player.h"
+#include "Npc.h"
 
 IMPLEMENT_SINGLETON(CObjPoolMgr)
 
@@ -18,6 +19,10 @@ HRESULT CObjPoolMgr::Init_ObjPoolMgr(void)
 	pPlayerPool->Create_ObjectPool<CPlayer>(100);
 	m_mapObjPool[L"PLAYER"] = pPlayerPool;
 
+	CObjectPool* pNpcPool = new CObjectPool();
+	pNpcPool->Create_ObjectPool<CNpc>(MAX_NPC);
+	m_mapObjPool[L"NPC"] = pNpcPool;
+
 	return S_OK;
 }
 
@@ -31,8 +36,6 @@ CObj* CObjPoolMgr::use_Object(wstring wstrObjTag)
 
 	/* 해당 Object Pool이 존재하면 Object 반환 */
 	return iter_find->second->use_Object();
-
-	return nullptr;
 }
 
 HRESULT CObjPoolMgr::return_Object(wstring wstrObjTag, CObj* Obj)

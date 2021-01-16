@@ -14,6 +14,8 @@ CObjMgr::~CObjMgr(void)
 HRESULT CObjMgr::Init_ObjMgr()
 {
 	m_mapObjList[L"PLAYER"] = OBJLIST();
+	m_mapObjList[L"NPC"] = OBJLIST();
+
 	return S_OK;
 }
 
@@ -125,7 +127,7 @@ HRESULT CObjMgr::Delete_OBJLIST(wstring wstrObjTag)
 void CObjMgr::Release()
 {
 	for (auto& o_list : m_mapObjList)
-	{
+	{	
 		o_list.second.clear();
 	}
 }

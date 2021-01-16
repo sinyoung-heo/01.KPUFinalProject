@@ -39,12 +39,13 @@ public:
 	//float spd; // player monster
 	_vec3 m_vPos; // all
 	_vec3 m_vDir; // all
+	atomic<STATUS> m_status; // all
 
 protected:
 	mutex c_lock;  // all
 
 	//unordered_set<int> view_list; // player
 	//mutex v_lock; // player 
-	atomic<STATUS> m_status; // all
+	
 };
 
