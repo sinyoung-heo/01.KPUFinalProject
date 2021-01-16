@@ -69,10 +69,9 @@ HRESULT CGraphicDevice::Render_Begin(const _rgba& vRGBA)
 	- 프리젠트가 끝나면 렌더 타겟 버퍼의 상태는 
 	  프리젠트 상태(D3D12_RESOURCE_STATE_PRESENT)에서 렌더 타겟 상태(D3D12_RESOURCE_STATE_RENDER_TARGET)로 바뀔 것이다.
 	____________________________________________________________________________________________________________*/
-	m_RenterTargetResourceBarrier.Transition.pResource   = m_arrSwapChainBuffer[m_iCurrBackBuffer];
-	m_RenterTargetResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-	m_RenterTargetResourceBarrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	m_arrCommandList[CMDID::CMD_MAIN]->ResourceBarrier(1, &m_RenterTargetResourceBarrier);
+	m_arrCommandList[CMDID::CMD_MAIN]->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_arrSwapChainBuffer[m_iCurrBackBuffer],
+																								D3D12_RESOURCE_STATE_PRESENT, 
+																								D3D12_RESOURCE_STATE_RENDER_TARGET));
 
 	/*__________________________________________________________________________________________________________
 	 Clear the back buffer and depth buffer.
@@ -91,7 +90,7 @@ HRESULT CGraphicDevice::Render_Begin(const _rgba& vRGBA)
 	- 깊이-스텐실 서술자의 CPU 주소를 계산.
 	- 원하는 값으로 깊이-스텐실(뷰)을 지운다.
 	____________________________________________________________________________________________________________*/
-	// 2020.06.14 MultiThreadRendering.
+	// MultiThreadRendering.
 	//m_arrCommandList[CMDID::CMD_MAIN]->ClearDepthStencilView(m_pDSV_Heap->GetCPUDescriptorHandleForHeapStart(),
 	//														  D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 
 	//														  1.0f,
@@ -132,13 +131,12 @@ HRESULT CGraphicDevice::Render_ExcuteCmdList()
 	- GPU가 렌더 타겟(버퍼)을 더 이상 사용하지 않으면 렌더 타겟의 상태는 
 	  프리젠트 상태(D3D12_RESOURCE_STATE_PRESENT)로 바뀔 것이다.
 	____________________________________________________________________________________________________________*/
-	if (false == CRenderer::Get_Instance()->Get_RenderOnOff(L"Font"))
-	{
-		m_RenterTargetResourceBarrier.Transition.pResource   = m_arrSwapChainBuffer[m_iCurrBackBuffer];
-		m_RenterTargetResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-		m_RenterTargetResourceBarrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_PRESENT;
-		m_arrCommandList[CMDID::CMD_MAIN]->ResourceBarrier(1, &m_RenterTargetResourceBarrier);
-	}
+	//if (false == CRenderer::Get_Instance()->Get_RenderOnOff(L"Font"))
+	//{
+	//	m_arrCommandList[CMDID::CMD_MAIN]->ResourceBarrier(1,&CD3DX12_RESOURCE_BARRIER::Transition(m_arrSwapChainBuffer[m_iCurrBackBuffer],
+	//																							   D3D12_RESOURCE_STATE_RENDER_TARGET, 
+	//																							   D3D12_RESOURCE_STATE_PRESENT));
+	//}
 
 	/*__________________________________________________________________________________________________________
 	- 명령들의 기록을 마친다.
@@ -275,24 +273,22 @@ HRESULT CGraphicDevice::End_ResetCmdList(const CMDID& eCmdID)
 
 void CGraphicDevice::Begin_BackBufferSetting()
 {
-	m_RenterTargetResourceBarrier.Transition.pResource   = m_arrSwapChainBuffer[m_iCurrBackBuffer];
-	m_RenterTargetResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	m_RenterTargetResourceBarrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_PRESENT;
-	m_arrCommandList[CMDID::CMD_MAIN]->ResourceBarrier(1, &m_RenterTargetResourceBarrier);
+	m_arrCommandList[CMDID::CMD_MAIN]->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_arrSwapChainBuffer[m_iCurrBackBuffer],
+																								D3D12_RESOURCE_STATE_RENDER_TARGET,
+																								D3D12_RESOURCE_STATE_PRESENT));
 
 }
 
 void CGraphicDevice::End_BackBufferSetting()
 {
-	m_RenterTargetResourceBarrier.Transition.pResource   = m_arrSwapChainBuffer[m_iCurrBackBuffer];
-	m_RenterTargetResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-	m_RenterTargetResourceBarrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	m_arrCommandList[CMDID::CMD_MAIN]->ResourceBarrier(1, &m_RenterTargetResourceBarrier);
+	m_arrCommandList[CMDID::CMD_MAIN]->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_arrSwapChainBuffer[m_iCurrBackBuffer],
+																								D3D12_RESOURCE_STATE_PRESENT,
+																								D3D12_RESOURCE_STATE_RENDER_TARGET));
 
 	m_arrCommandList[CMDID::CMD_MAIN]->OMSetRenderTargets(1,
 														  &CD3DX12_CPU_DESCRIPTOR_HANDLE(m_pRTV_Heap->GetCPUDescriptorHandleForHeapStart(),
-														  							   m_iCurrBackBuffer,
-														  							   m_uiRTV_DescriptorSize),
+														  								 m_iCurrBackBuffer,
+														  								 m_uiRTV_DescriptorSize),
 														  true,
 														  &m_pDSV_Heap->GetCPUDescriptorHandleForHeapStart());
 
@@ -633,12 +629,6 @@ HRESULT CGraphicDevice::Create_RenderTargetAndDepthStencilBuffer(const _uint& iW
 		RTV_HeapHandle.Offset(1, m_uiRTV_DescriptorSize);
 	}
 
-	// RenderTarget ResourceBarrier
-	m_RenterTargetResourceBarrier.Type                    = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	m_RenterTargetResourceBarrier.Flags                   = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	m_RenterTargetResourceBarrier.Transition.Subresource  = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-
-
 	/*__________________________________________________________________________________________________________
 	[ Create the depth/stencil buffer and view ]
 	____________________________________________________________________________________________________________*/
@@ -684,15 +674,9 @@ HRESULT CGraphicDevice::Create_RenderTargetAndDepthStencilBuffer(const _uint& iW
 	/*__________________________________________________________________________________________________________
 	[ Transition the resource from its initial state to be used as a depth buffer ]
 	____________________________________________________________________________________________________________*/
-	D3D12_RESOURCE_BARRIER DepthStencil_ResourceBarrier;
-	DepthStencil_ResourceBarrier.Type                    = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	DepthStencil_ResourceBarrier.Flags                   = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	DepthStencil_ResourceBarrier.Transition.Subresource  = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-	DepthStencil_ResourceBarrier.Transition.pResource    = m_pDepthStencilBuffer;
-	DepthStencil_ResourceBarrier.Transition.StateBefore  = D3D12_RESOURCE_STATE_COMMON;
-	DepthStencil_ResourceBarrier.Transition.StateAfter   = D3D12_RESOURCE_STATE_DEPTH_WRITE;
-	
-	m_arrCommandList[CMD_MAIN]->ResourceBarrier(1, &DepthStencil_ResourceBarrier);
+	m_arrCommandList[CMD_MAIN]->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_pDepthStencilBuffer,
+																						 D3D12_RESOURCE_STATE_COMMON,
+																						 D3D12_RESOURCE_STATE_DEPTH_WRITE));
 
 	/*__________________________________________________________________________________________________________
 	[ Execute the resize commands ]

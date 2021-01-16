@@ -31,7 +31,6 @@ public:
 	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
-	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 
 	Engine::CManagement*		m_pManagement		= nullptr;
 	Engine::CObjectMgr*			m_pObjectMgr		= nullptr;
@@ -118,6 +117,7 @@ public:
 	afx_msg void OnEnChangeEdit1013_StaticMeshPosZ();
 	afx_msg void OnBnClickedCheck1002_StaticMeshRenderShadow();
 	afx_msg void OnBnClickedCheck1003_StaticMeshIsCollision();
+	afx_msg void OnBnClickedCheck1008_StaticMeshIsMousePicking();
 	afx_msg void OnLbnSelchangeList1003_StaticMeshObjectList();
 	afx_msg void OnBnClickedButton1001_StasticMeshDelete();
 	afx_msg void OnBnClickedButton1002_StaticMeshAllDelete();
@@ -150,6 +150,7 @@ public:
 
 	CButton			m_StaticMeshCheck_IsRenderShadow;
 	CButton			m_StaticMeshCheck_IsCollision;
+	CButton			m_StaticMeshCheck_IsMousePicking;
 
 	CButton			m_StaticMeshButton_Save;
 	CButton			m_StaticMeshButton_Load;
@@ -173,7 +174,8 @@ public:
 
 	_bool	m_bIsRenderShadow			= false;
 	_bool	m_bIsCollision				= false;
-	_int	m_iStaticMeshSelectIdx		= 0;
+	_bool	m_bIsMousePicking			= true;
+	_int	m_iStaticMeshSelectIdx		= -1;
 	float	m_fStaticMeshColliderScale	= 0.0f;
 	float	m_fStaticMeshColliderPosX	= 0.0f;
 	float	m_fStaticMeshColliderPosY	= 0.0f;
@@ -200,8 +202,6 @@ public:
 	afx_msg void OnEnChangeEdit1027_LightInfo_DL_DirY();
 	afx_msg void OnEnChangeEdit1028_LightInfo_DL_DirZ();
 	afx_msg void OnEnChangeEdit1029_LightInfo_DL_DirW();
-	afx_msg void OnBnClickedButton1005_LightInfo_DL_SAVE();
-	afx_msg void OnBnClickedButton1006_LightInfo_DL_LOAD();
 
 	afx_msg void OnBnClickedRadio1008_LightInfo_PL_CreateMode();
 	afx_msg void OnBnClickedRadio1009_LightInfo_PL_ModifyMode();
@@ -223,12 +223,11 @@ public:
 	afx_msg void OnEnChangeEdit1045_LightInfo_PL_PosW();
 	afx_msg void OnEnChangeEdit1046_LightInfo_PL_Range();
 	afx_msg void OnLbnSelchangeList1004_LightInfo_PL_List();
+	afx_msg void OnBnClickedButton1007_LightInfo_PL_DELETE();
+	afx_msg void OnBnClickedButton1008_LightInfo_PL_ALLDELETE();
 	afx_msg void OnBnClickedButton1009__LightInfo_PL_SAVE();
 	afx_msg void OnBnClickedButton1010__LightInfo_PL_LOAD();
 
-	//afx_msg void OnEnChangeEdit1047_LightInfo_SL_EyeX();
-	//afx_msg void OnEnChangeEdit1048_LightInfo_SL_EyeY();
-	//afx_msg void OnEnChangeEdit1049_LightInfo_SL_EyeZ();
 	afx_msg void OnEnChangeEdit1050_LightInfo_SL_AtX();
 	afx_msg void OnEnChangeEdit1051_LightInfo_SL_AtY();
 	afx_msg void OnEnChangeEdit1052_LightInfo_SL_AtZ();
@@ -256,8 +255,20 @@ public:
 	CEdit		m_LightInfoEdit_DL_DirectionY;
 	CEdit		m_LightInfoEdit_DL_DirectionZ;
 	CEdit		m_LightInfoEdit_DL_DirectionW;
-	CButton		m_LightInfoButton_DL_SAVE;
-	CButton		m_LightInfoButton_DL_LOAD;
+
+	CEdit		m_LightInfoEdit_SL_EyeX;
+	CEdit		m_LightInfoEdit_SL_EyeY;
+	CEdit		m_LightInfoEdit_SL_EyeZ;
+	CEdit		m_LightInfoEdit_SL_AtX;
+	CEdit		m_LightInfoEdit_SL_AtY;
+	CEdit		m_LightInfoEdit_SL_AtZ;
+	CEdit		m_LightInfoEdit_SL_Height;
+	CEdit		m_LightInfoEdit_SL_FovY;
+	CEdit		m_LightInfoEdit_SL_Near;
+	CEdit		m_LightInfoEdit_SL_Far;
+	CButton		m_LightInfoButton_SL_SAVE;
+	CButton		m_LightInfoButton_SL_LOAD;
+
 
 	CEdit		m_LightInfoEdit_PL_DiffuseR;
 	CEdit		m_LightInfoEdit_PL_DiffuseG;
@@ -284,19 +295,6 @@ public:
 	CButton		m_LightInfoButton_PL_SAVE;
 	CButton		m_LightInfoButton_PL_LOAD;
 
-	CEdit		m_LightInfoEdit_SL_EyeX;
-	CEdit		m_LightInfoEdit_SL_EyeY;
-	CEdit		m_LightInfoEdit_SL_EyeZ;
-	CEdit		m_LightInfoEdit_SL_AtX;
-	CEdit		m_LightInfoEdit_SL_AtY;
-	CEdit		m_LightInfoEdit_SL_AtZ;
-	CEdit		m_LightInfoEdit_SL_Height;
-	CEdit		m_LightInfoEdit_SL_FovY;
-	CEdit		m_LightInfoEdit_SL_Near;
-	CEdit		m_LightInfoEdit_SL_Far;
-	CButton		m_LightInfoButton_SL_SAVE;
-	CButton		m_LightInfoButton_SL_LOAD;
-
 	// Value
 	_bool	m_bIsLightingCreateMode = true;
 	_bool	m_bIsLightingModifyMode = false;
@@ -305,13 +303,13 @@ public:
 	float m_fLightInfo_DL_DiffuseG	= 1.0f;
 	float m_fLightInfo_DL_DiffuseB	= 1.0f;
 	float m_fLightInfo_DL_DiffuseA	= 1.0f;
-	float m_fLightInfo_DL_SpecularR = 1.0f;
-	float m_fLightInfo_DL_SpecularG = 1.0f;
-	float m_fLightInfo_DL_SpecularB = 1.0f;
+	float m_fLightInfo_DL_SpecularR = 0.5f;
+	float m_fLightInfo_DL_SpecularG = 0.5f;
+	float m_fLightInfo_DL_SpecularB = 0.5f;
 	float m_fLightInfo_DL_SpecularA = 1.0f;
-	float m_fLightInfo_DL_AmbientR	= 1.0f;
-	float m_fLightInfo_DL_AmbientG	= 1.0f;
-	float m_fLightInfo_DL_AmbientB	= 1.0f;
+	float m_fLightInfo_DL_AmbientR	= 0.5f;
+	float m_fLightInfo_DL_AmbientG	= 0.5f;
+	float m_fLightInfo_DL_AmbientB	= 0.5f;
 	float m_fLightInfo_DL_AmbientA	= 1.0f;
 	float m_fLightInfo_DL_DirX		= 1.0f;
 	float m_fLightInfo_DL_DirY		= -1.0f;
@@ -322,19 +320,20 @@ public:
 	float m_fLightInfo_PL_DiffuseG	= 1.0f;
 	float m_fLightInfo_PL_DiffuseB	= 1.0f;
 	float m_fLightInfo_PL_DiffuseA	= 1.0f;
-	float m_fLightInfo_PL_SpecularR = 1.0f;
-	float m_fLightInfo_PL_SpecularG = 1.0f;
-	float m_fLightInfo_PL_SpecularB = 1.0f;
-	float m_fLightInfo_PL_SpecularA = 1.0f;
-	float m_fLightInfo_PL_AmbientR	= 1.0f;
-	float m_fLightInfo_PL_AmbientG	= 1.0f;
-	float m_fLightInfo_PL_AmbientB	= 1.0f;
+	float m_fLightInfo_PL_SpecularR	= 0.5f;
+	float m_fLightInfo_PL_SpecularG	= 0.5f;
+	float m_fLightInfo_PL_SpecularB	= 0.5f;
+	float m_fLightInfo_PL_SpecularA	= 1.0f;
+	float m_fLightInfo_PL_AmbientR	= 0.5f;
+	float m_fLightInfo_PL_AmbientG	= 0.5f;
+	float m_fLightInfo_PL_AmbientB	= 0.5f;
 	float m_fLightInfo_PL_AmbientA	= 1.0f;
 	float m_fLightInfo_PL_PosX		= 0.0f;
 	float m_fLightInfo_PL_PosY		= 0.0f;
 	float m_fLightInfo_PL_PosZ		= 0.0f;
 	float m_fLightInfo_PL_PosW		= 1.0f;
-	float m_fLightInfo_PL_Range		= 0.0f;
+	float m_fLightInfo_PL_Range		= 10.0f;
+	_int m_iSelectPLIdx				= -1;
 
 	float m_fLightInfo_SL_EyeX		= 0.0f;
 	float m_fLightInfo_SL_EyeY		= 0.0f;
@@ -343,8 +342,7 @@ public:
 	float m_fLightInfo_SL_AtY		= 1.0f;
 	float m_fLightInfo_SL_AtZ		= 1.0f;
 	float m_fLightInfo_SL_Height	= 0.0f;
-	float m_fLightInfo_SL_FovY		= 15.0f;
+	float m_fLightInfo_SL_FovY		= 30.0f;
 	float m_fLightInfo_SL_Near		= 1.0f;
 	float m_fLightInfo_SL_Far		= 10'000.0f;
-
 };

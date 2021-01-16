@@ -4,6 +4,7 @@
 #include "ComponentMgr.h"
 #include "GraphicDevice.h"
 #include "DirectInput.h"
+#include "Light.h"
 #include "LightMgr.h"
 #include "Font.h"
 #include "ToolCamera.h"
@@ -11,6 +12,7 @@
 #include "ToolTerrain.h"
 #include "ToolSkyBox.h"
 #include "ToolStaticMesh.h"
+#include "Popori_F.h"
 
 
 CToolSceneStage::CToolSceneStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -27,7 +29,6 @@ HRESULT CToolSceneStage::Ready_Scene()
 	Engine::FAILED_CHECK_RETURN(Ready_LayerGameObject(L"Layer_GameObject"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LayerUI(L"Layer_UI"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LayerFont(L"Layer_Font"), E_FAIL);
-
 	Engine::FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
@@ -67,7 +68,7 @@ _int CToolSceneStage::Update_Scene(const _float& fTimeDelta)
 	if (Engine::KEY_DOWN(DIK_TAB))
 	{
 		if (pMyForm->m_bIsTabMap)
-			KeyInput_ModeChange(pMyForm->m_TabMap);
+			KeyInput_TabMapModeChange(pMyForm->m_TabMap);
 	}
 
 	return Engine::CScene::Update_Scene(fTimeDelta);
@@ -95,7 +96,7 @@ _int CToolSceneStage::LateUpdate_Scene(const _float& fTimeDelta)
 	if (pMyForm->m_bIsTabMap && 
 		nullptr != m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh"))
 	{
-		pMyForm->m_TabMap.m_iStaticMeshObjectSize = m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh")->size();
+		pMyForm->m_TabMap.m_iStaticMeshObjectSize = (_int)m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh")->size();
 
 		_tchar szTemp[MIN_STR] = L"";
 		wsprintf(szTemp, L"%d", pMyForm->m_TabMap.m_iStaticMeshObjectSize);
@@ -127,8 +128,8 @@ HRESULT CToolSceneStage::Ready_LayerCamera(wstring wstrLayerTag)
 	[ ToolCamera ]
 	____________________________________________________________________________________________________________*/
 	CToolCamera* pCToolCamera = CToolCamera::Create(m_pGraphicDevice, m_pCommandList,
-													Engine::CAMERA_DESC(_vec3(4.0, 6.0f, -6.0f),		// Eye
-																		_vec3(4.0f, 4.0f, 0.0f),		// At
+													Engine::CAMERA_DESC(_vec3(8.0, 35.0f, -23.0f),		// Eye
+																		_vec3(16.0f, 22.0f, 0.0f),		// At
 																		_vec3(0.0f, 1.0f, 0.f)),		// Up
 													Engine::PROJ_DESC(60.0f,							// FovY
 																	  _float(WINCX) / _float(WINCY),	// Aspect
@@ -203,6 +204,18 @@ HRESULT CToolSceneStage::Ready_LayerGameObject(wstring wstrLayerTag)
 	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
 	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
 
+
+	/*__________________________________________________________________________________________________________
+	[ Popori_F ]
+	____________________________________________________________________________________________________________*/
+	CPopori_F* pPopori_F = nullptr;
+	pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
+								  L"PoporiR19",						// MeshTag
+								  _vec3(0.05f, 0.05f, 0.05f),		// Scale
+								  _vec3(0.0f, 0.0f, 0.0f),			// Angle
+								  _vec3(25.0f, 0.f, 20.0f));		// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
+
 	return S_OK;
 }
 
@@ -244,8 +257,8 @@ HRESULT CToolSceneStage::Ready_LightInfo()
 	tLightInfo.Type			= Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL;
 	tLightInfo.Diffuse		= _rgba(1.0f, 1.0f, 1.0f, 1.0f);
 	tLightInfo.Specular		= _rgba(0.4f, 0.4f, 0.4f, 1.0f);
-	tLightInfo.Ambient		= _rgba(0.3f, 0.3f, 0.3f, 1.0f);
-	tLightInfo.Direction	= _vec4(-1.0f, -1.0f, -1.0f, 0.0f);
+	tLightInfo.Ambient		= _rgba(0.0f, 0.0f, 0.0f, 1.0f);
+	tLightInfo.Direction	= _vec4(-1.0f, -1.0f, 0.5f, 0.0f);
 	Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, 
 																			 m_pCommandList, 
 																			 Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL,
@@ -264,20 +277,24 @@ void CToolSceneStage::KeyInput()
 	____________________________________________________________________________________________________________*/
 	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON(Engine::DIM_LB)))
 	{
-		// TabMap Mouse Picking Event
+		// TabMap Mouse Picking Event. (STATIC MESH / LIGHTING / NAVIGATION MESH)
 		if (pMyForm->m_bIsTabMap)
-			KeyInput_TabMap(pMyForm->m_TabMap);
+		{
+			if (pMyForm->m_TabMap.m_EditCheck_StaticMesh.GetCheck())
+				KeyInput_TabMapStaticMesh(pMyForm->m_TabMap);
+			
+			else if (pMyForm->m_TabMap.m_EditCheck_LightingInfo.GetCheck())
+				KeyInput_TabMapLightingInfo(pMyForm->m_TabMap);
+		}
 
 	}
 
 }
 
-void CToolSceneStage::KeyInput_TabMap(CTabMap& TabMap)
+void CToolSceneStage::KeyInput_TabMapStaticMesh(CTabMap& TabMap)
 {
-	
 	// StaticMesh Object 생성.
-	if (TabMap.m_EditCheck_StaticMesh.GetCheck() &&
-		TabMap.m_bIsCreateMode)
+	if (TabMap.m_bIsCreateMode)
 	{
 		if (nullptr != m_pPickingTerrain)
 		{
@@ -304,7 +321,8 @@ void CToolSceneStage::KeyInput_TabMap(CTabMap& TabMap)
 												  true,										// Bounding Box
 												  TabMap.m_bIsCollision,					// Bounding Sphere
 												  _vec3(TabMap.m_fStaticMeshColliderScale),	// Bounding Sphere Scale
-												   vBoundingSpherePos);						// Bounding Sphere Pos
+												   vBoundingSpherePos,						// Bounding Sphere Pos
+												  TabMap.m_bIsMousePicking);
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"StaticMesh", pStaticMesh), E_FAIL);
 
 			// StaticMeshListBox에 삽입.
@@ -331,8 +349,7 @@ void CToolSceneStage::KeyInput_TabMap(CTabMap& TabMap)
 	}
 
 	// StaticMesh를 선택하여 정보 수정.
-	if (TabMap.m_EditCheck_StaticMesh.GetCheck() &&
-		TabMap.m_bIsModifyMode)
+	if (TabMap.m_bIsModifyMode)
 	{
 		Engine::OBJLIST* pStaticMeshList = m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh");
 		if (nullptr != pStaticMeshList)
@@ -344,22 +361,22 @@ void CToolSceneStage::KeyInput_TabMap(CTabMap& TabMap)
 
 				TabMap.UpdateData(TRUE);
 
-				TabMap.m_fStaticMeshScaleX	= m_pPickingObject->Get_Transform()->m_vScale.x;
-				TabMap.m_fStaticMeshScaleY	= m_pPickingObject->Get_Transform()->m_vScale.y;
-				TabMap.m_fStaticMeshScaleZ	= m_pPickingObject->Get_Transform()->m_vScale.z;
-				TabMap.m_fStaticMeshAngleX	= m_pPickingObject->Get_Transform()->m_vAngle.x;
-				TabMap.m_fStaticMeshAngleY	= m_pPickingObject->Get_Transform()->m_vAngle.y;
-				TabMap.m_fStaticMeshAngleZ	= m_pPickingObject->Get_Transform()->m_vAngle.z;
-				TabMap.m_fStaticMeshPosX	= m_pPickingObject->Get_Transform()->m_vPos.x;
-				TabMap.m_fStaticMeshPosY	= m_pPickingObject->Get_Transform()->m_vPos.y;
-				TabMap.m_fStaticMeshPosZ	= m_pPickingObject->Get_Transform()->m_vPos.z;
+				TabMap.m_fStaticMeshScaleX = m_pPickingObject->Get_Transform()->m_vScale.x;
+				TabMap.m_fStaticMeshScaleY = m_pPickingObject->Get_Transform()->m_vScale.y;
+				TabMap.m_fStaticMeshScaleZ = m_pPickingObject->Get_Transform()->m_vScale.z;
+				TabMap.m_fStaticMeshAngleX = m_pPickingObject->Get_Transform()->m_vAngle.x;
+				TabMap.m_fStaticMeshAngleY = m_pPickingObject->Get_Transform()->m_vAngle.y;
+				TabMap.m_fStaticMeshAngleZ = m_pPickingObject->Get_Transform()->m_vAngle.z;
+				TabMap.m_fStaticMeshPosX = m_pPickingObject->Get_Transform()->m_vPos.x;
+				TabMap.m_fStaticMeshPosY = m_pPickingObject->Get_Transform()->m_vPos.y;
+				TabMap.m_fStaticMeshPosZ = m_pPickingObject->Get_Transform()->m_vPos.z;
 
-				TabMap.m_bIsRenderShadow			= static_cast<CToolStaticMesh*>(m_pPickingObject)->Get_IsRenderShadow();
-				TabMap.m_bIsCollision				= static_cast<CToolStaticMesh*>(m_pPickingObject)->Get_IsCollision();
-				TabMap.m_fStaticMeshColliderScale	= m_pPickingObject->Get_BoundingSphere()->Get_Transform()->m_vScale.x;
-				TabMap.m_fStaticMeshColliderPosX	= m_pPickingObject->Get_BoundingSphere()->Get_Transform()->m_vPos.x;
-				TabMap.m_fStaticMeshColliderPosY	= m_pPickingObject->Get_BoundingSphere()->Get_Transform()->m_vPos.y;
-				TabMap.m_fStaticMeshColliderPosZ	= m_pPickingObject->Get_BoundingSphere()->Get_Transform()->m_vPos.z;
+				TabMap.m_bIsRenderShadow = static_cast<CToolStaticMesh*>(m_pPickingObject)->Get_IsRenderShadow();
+				TabMap.m_bIsCollision = static_cast<CToolStaticMesh*>(m_pPickingObject)->Get_IsCollision();
+				TabMap.m_fStaticMeshColliderScale = m_pPickingObject->Get_BoundingSphere()->Get_Transform()->m_vScale.x;
+				TabMap.m_fStaticMeshColliderPosX = m_pPickingObject->Get_BoundingSphere()->Get_Transform()->m_vPos.x;
+				TabMap.m_fStaticMeshColliderPosY = m_pPickingObject->Get_BoundingSphere()->Get_Transform()->m_vPos.y;
+				TabMap.m_fStaticMeshColliderPosZ = m_pPickingObject->Get_BoundingSphere()->Get_Transform()->m_vPos.z;
 
 				if (TabMap.m_bIsRenderShadow)
 					TabMap.m_StaticMeshCheck_IsRenderShadow.SetCheck(true);
@@ -383,19 +400,109 @@ void CToolSceneStage::KeyInput_TabMap(CTabMap& TabMap)
 					TabMap.m_StaticMeshEdit_ColliderPosZ.EnableWindow(FALSE);
 				}
 
+				TabMap.m_iStaticMeshSelectIdx = -1;
+
 				TabMap.UpdateData(FALSE);
 			}
 		}
-		
 
 	}
-	
+
 }
 
-void CToolSceneStage::KeyInput_ModeChange(CTabMap& TabMap)
+void CToolSceneStage::KeyInput_TabMapLightingInfo(CTabMap& TabMap)
+{
+	// StaticMesh Object 생성.
+	if (TabMap.m_bIsLightingCreateMode)
+	{
+		TabMap.UpdateData(TRUE);
+
+		_vec3	vPickingPos	= CMouseMgr::Picking_OnTerrain(m_pPickingTerrain);
+
+		_rgba	PL_Diffuse	= _rgba(TabMap.m_fLightInfo_PL_DiffuseR, TabMap.m_fLightInfo_PL_DiffuseG, TabMap.m_fLightInfo_PL_DiffuseB, TabMap.m_fLightInfo_PL_DiffuseA);
+		_rgba	PL_Specular = _rgba(TabMap.m_fLightInfo_PL_SpecularR, TabMap.m_fLightInfo_PL_SpecularG, TabMap.m_fLightInfo_PL_SpecularB, TabMap.m_fLightInfo_PL_SpecularA);
+		_rgba	PL_Ambient	= _rgba(TabMap.m_fLightInfo_PL_AmbientR, TabMap.m_fLightInfo_PL_AmbientG, TabMap.m_fLightInfo_PL_AmbientB, TabMap.m_fLightInfo_PL_AmbientA);
+		_vec4	vPos		= _vec4(vPickingPos, TabMap.m_fLightInfo_PL_PosW);
+		_float	fRange		= TabMap.m_fLightInfo_PL_Range;
+
+		Engine::D3DLIGHT tLightInfo;
+		ZeroMemory(&tLightInfo, sizeof(Engine::D3DLIGHT));
+		tLightInfo.Type			= Engine::LIGHTTYPE::D3DLIGHT_POINT;
+		tLightInfo.Diffuse		= PL_Diffuse;
+		tLightInfo.Specular		= PL_Specular;
+		tLightInfo.Ambient		= PL_Ambient;
+		tLightInfo.Position		= _vec4(vPos.x, vPos.y, vPos.z, 1.0f);
+		tLightInfo.Range		= fRange;
+		Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice,
+																				 m_pCommandList,
+																				 Engine::LIGHTTYPE::D3DLIGHT_POINT,
+																				 tLightInfo), E_FAIL);
+
+		// ListBox 추가.
+		_uint iSize = Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::LIGHTTYPE::D3DLIGHT_POINT).size();
+		_tchar szTemp[MIN_STR] = L"";
+		wsprintf(szTemp, L"Index : %d", iSize - 1);
+		TabMap.m_LightInfoListBox_PL_List.AddString(szTemp);
+
+
+
+		_stprintf_s(szTemp, MIN_STR, L"%0.1f", vPickingPos.x);
+		TabMap.m_LightInfoEdit_PL_PosX.SetWindowTextW(szTemp);
+		TabMap.m_fLightInfo_PL_PosX = vPickingPos.x;
+
+		_stprintf_s(szTemp, MIN_STR, L"%0.1f", vPickingPos.y);
+		TabMap.m_LightInfoEdit_PL_PosY.SetWindowTextW(szTemp);
+		TabMap.m_fLightInfo_PL_PosY = vPickingPos.y;
+
+		_stprintf_s(szTemp, MIN_STR, L"%0.1f", vPickingPos.z);
+		TabMap.m_LightInfoEdit_PL_PosZ.SetWindowTextW(szTemp);
+		TabMap.m_fLightInfo_PL_PosZ = vPickingPos.z;
+
+
+		TabMap.UpdateData(FALSE);
+	}
+	else if (TabMap.m_bIsLightingModifyMode)
+	{
+		TabMap.UpdateData(TRUE);
+
+		vector<Engine::CLight*> vecPointLight = Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::LIGHTTYPE::D3DLIGHT_POINT);
+		if (vecPointLight.empty())
+			return;
+
+		if (CMouseMgr::Get_Instance()->Picking_Light(&m_pPickingLight, vecPointLight))
+		{
+			// 선택한 Light의 정보로 Edit Control을 채운다.
+			TabMap.m_fLightInfo_PL_DiffuseR		= m_pPickingLight->Get_LightInfo().Diffuse.x;
+			TabMap.m_fLightInfo_PL_DiffuseG		= m_pPickingLight->Get_LightInfo().Diffuse.y;
+			TabMap.m_fLightInfo_PL_DiffuseB		= m_pPickingLight->Get_LightInfo().Diffuse.z;
+			TabMap.m_fLightInfo_PL_DiffuseA		= m_pPickingLight->Get_LightInfo().Diffuse.w;
+			TabMap.m_fLightInfo_PL_SpecularR	= m_pPickingLight->Get_LightInfo().Specular.x;
+			TabMap.m_fLightInfo_PL_SpecularG	= m_pPickingLight->Get_LightInfo().Specular.y;
+			TabMap.m_fLightInfo_PL_SpecularB	= m_pPickingLight->Get_LightInfo().Specular.z;
+			TabMap.m_fLightInfo_PL_SpecularA	= m_pPickingLight->Get_LightInfo().Specular.w;
+			TabMap.m_fLightInfo_PL_AmbientR		= m_pPickingLight->Get_LightInfo().Ambient.x;
+			TabMap.m_fLightInfo_PL_AmbientG		= m_pPickingLight->Get_LightInfo().Ambient.y;
+			TabMap.m_fLightInfo_PL_AmbientB		= m_pPickingLight->Get_LightInfo().Ambient.z;
+			TabMap.m_fLightInfo_PL_AmbientA		= m_pPickingLight->Get_LightInfo().Ambient.w;
+			TabMap.m_fLightInfo_PL_PosX			= m_pPickingLight->Get_LightInfo().Position.x;
+			TabMap.m_fLightInfo_PL_PosY			= m_pPickingLight->Get_LightInfo().Position.y;
+			TabMap.m_fLightInfo_PL_PosZ			= m_pPickingLight->Get_LightInfo().Position.z;
+			TabMap.m_fLightInfo_PL_PosW			= m_pPickingLight->Get_LightInfo().Position.w;
+			TabMap.m_fLightInfo_PL_Range		= m_pPickingLight->Get_LightInfo().Range;
+
+			TabMap.m_iSelectPLIdx = -1;
+		}
+
+
+		TabMap.UpdateData(FALSE);
+	}
+}
+
+void CToolSceneStage::KeyInput_TabMapModeChange(CTabMap& TabMap)
 {
 	TabMap.UpdateData(TRUE);
 
+	// StaticMesh ModeChange
 	if (TabMap.m_EditCheck_StaticMesh.GetCheck())
 	{
 		TabMap.m_bIsCreateMode = !TabMap.m_bIsCreateMode;
@@ -407,24 +514,57 @@ void CToolSceneStage::KeyInput_ModeChange(CTabMap& TabMap)
 		// Object 생성 모드일 경우.
 		if (TabMap.m_bIsCreateMode)
 		{
-			TabMap.m_fStaticMeshScaleX	= 0.01f;
-			TabMap.m_fStaticMeshScaleY	= 0.01f;
-			TabMap.m_fStaticMeshScaleZ	= 0.01f;
-			TabMap.m_fStaticMeshAngleX	= 0.0f;
-			TabMap.m_fStaticMeshAngleY	= 0.0f;
-			TabMap.m_fStaticMeshAngleZ	= 0.0f;
+			TabMap.m_fStaticMeshScaleX = 0.01f;
+			TabMap.m_fStaticMeshScaleY = 0.01f;
+			TabMap.m_fStaticMeshScaleZ = 0.01f;
+			TabMap.m_fStaticMeshAngleX = 0.0f;
+			TabMap.m_fStaticMeshAngleY = 0.0f;
+			TabMap.m_fStaticMeshAngleZ = 0.0f;
 
-			TabMap.m_fStaticMeshColliderScale	= 0.0f;
-			TabMap.m_fStaticMeshColliderPosX	= 0.0f;
-			TabMap.m_fStaticMeshColliderPosY	= 0.0f;
-			TabMap.m_fStaticMeshColliderPosZ	= 0.0f;
+			TabMap.m_fStaticMeshColliderScale = 0.0f;
+			TabMap.m_fStaticMeshColliderPosX = 0.0f;
+			TabMap.m_fStaticMeshColliderPosY = 0.0f;
+			TabMap.m_fStaticMeshColliderPosZ = 0.0f;
 		}
 		// Object 수정 모드일 경우.
 		else if (TabMap.m_bIsModifyMode)
 		{
-			
+
 		}
 	}
+
+	// LightingInfo ModeChange
+	else if (TabMap.m_EditCheck_LightingInfo.GetCheck())
+	{
+		TabMap.m_bIsLightingCreateMode = !TabMap.m_bIsLightingCreateMode;
+		TabMap.m_bIsLightingModifyMode = !TabMap.m_bIsLightingModifyMode;
+
+		// TabMap.
+		TabMap.m_LightInfoRadio_PL_CreateMode.SetCheck(TabMap.m_bIsLightingCreateMode);
+		TabMap.m_LightInfoRadio_PL_ModifyMode.SetCheck(TabMap.m_bIsLightingModifyMode);
+
+		if (TabMap.m_bIsLightingCreateMode)
+		{
+			TabMap.m_fLightInfo_PL_DiffuseR		= 1.0f;
+			TabMap.m_fLightInfo_PL_DiffuseG		= 1.0f;
+			TabMap.m_fLightInfo_PL_DiffuseB		= 1.0f;
+			TabMap.m_fLightInfo_PL_DiffuseA		= 1.0f;
+			TabMap.m_fLightInfo_PL_SpecularR	= 0.5f;
+			TabMap.m_fLightInfo_PL_SpecularG	= 0.5f;
+			TabMap.m_fLightInfo_PL_SpecularB	= 0.5f;
+			TabMap.m_fLightInfo_PL_SpecularA	= 1.0f;
+			TabMap.m_fLightInfo_PL_AmbientR		= 0.5f;
+			TabMap.m_fLightInfo_PL_AmbientG		= 0.5f;
+			TabMap.m_fLightInfo_PL_AmbientB		= 0.5f;
+			TabMap.m_fLightInfo_PL_AmbientA		= 1.0f;
+			TabMap.m_fLightInfo_PL_PosX			= 0.0f;
+			TabMap.m_fLightInfo_PL_PosY			= 0.0f;
+			TabMap.m_fLightInfo_PL_PosZ			= 0.0f;
+			TabMap.m_fLightInfo_PL_PosW			= 1.0f;
+			TabMap.m_fLightInfo_PL_Range		= 10.0f;
+		}
+	}
+
 
 	TabMap.UpdateData(FALSE);
 }

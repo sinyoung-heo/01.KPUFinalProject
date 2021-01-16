@@ -79,7 +79,7 @@ _int CMainApp::Update_MainApp(const _float & fTimeDelta)
 	Key_Input();
 
 
-	if (m_pRenderer->Get_RenderOnOff(L"Font"))
+	if (m_pRenderer->Get_RenderOnOff(L"DebugFont"))
 	{
 		/*__________________________________________________________________________________________________________
 		[ Text - FPS ]
@@ -141,7 +141,7 @@ _int CMainApp::LateUpdate_MainApp(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pManagement, -1);
 
-	if (m_pRenderer->Get_RenderOnOff(L"Font"))
+	if (m_pRenderer->Get_RenderOnOff(L"DebugFont"))
 	{
 		/*__________________________________________________________________________________________________________
 		[ Text RenderList Object Cnt ]
@@ -388,7 +388,7 @@ void CMainApp::Key_Input()
 		m_pRenderer->Set_RenderOnOff(L"RenderTarget");
 
 	if (Engine::KEY_DOWN(DIK_F2))
-		m_pRenderer->Set_RenderOnOff(L"Font");
+		m_pRenderer->Set_RenderOnOff(L"DebugFont");
 
 	if (Engine::KEY_DOWN(DIK_F3))
 		m_pRenderer->Set_RenderOnOff(L"Collider");

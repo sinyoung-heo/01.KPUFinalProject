@@ -24,9 +24,6 @@ void CColliderBox::Set_Extents(const _vec3 & vParentScale)
 	m_BoundingInfo.Extents.x *= m_pTransCom->m_vScale.x * vParentScale.x;
 	m_BoundingInfo.Extents.y *= m_pTransCom->m_vScale.y * vParentScale.y;
 	m_BoundingInfo.Extents.z *= m_pTransCom->m_vScale.z * vParentScale.z;
-	//m_BoundingInfo.Extents.x *= m_pTransCom->m_vScale.x;
-	//m_BoundingInfo.Extents.y *= m_pTransCom->m_vScale.y;
-	//m_BoundingInfo.Extents.z *= m_pTransCom->m_vScale.z;
 
 	m_vLength.x = m_BoundingInfo.Extents.x * 2.f;
 	m_vLength.y = m_BoundingInfo.Extents.y * 2.f;

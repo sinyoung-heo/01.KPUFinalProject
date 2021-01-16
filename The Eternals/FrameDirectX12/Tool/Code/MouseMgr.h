@@ -1,6 +1,10 @@
 #pragma once
 #include "ObjectMgr.h"
 
+namespace Engine
+{
+	class CLight;
+}
 
 class CToolTerrain;
 class CToolStaticMesh;
@@ -21,8 +25,9 @@ public:
 								   _vec3& orig,
 								   _vec3& dir,
 								   _float* u, _float* v, _float* t);
-	_bool Picking_Object(Engine::CGameObject** pPickingObject,
-						 Engine::OBJLIST* pOBJLIST);
+
+	_bool Picking_Object(Engine::CGameObject** pPickingObject, Engine::OBJLIST* pOBJLIST);
+	_bool Picking_Light(Engine::CLight** pPickingLight, vector<Engine::CLight*>& vecPointLight);
 
 private:
 	virtual void Free();

@@ -3,6 +3,8 @@
 #include "GraphicDevice.h"
 #include "ToolTerrain.h"
 #include "ToolStaticMesh.h"
+#include "LightMgr.h"
+#include "Light.h"
 
 IMPLEMENT_SINGLETON(CMouseMgr)
 
@@ -183,24 +185,88 @@ _bool CMouseMgr::Picking_Object(Engine::CGameObject** ppPickingObject, Engine::O
 		pObject->Set_BoundingBoxColor(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
 
 	_float fDist = 0.0f;
-
 	auto iter_begin = pOBJLIST->begin();
 	auto iter_end	= pOBJLIST->end();
+	for (; iter_begin != iter_end; ++iter_begin)
+	{
+		if (static_cast<CToolStaticMesh*>(*iter_begin)->m_bIsMousePicking)
+		{
+			vRayDir.Normalize();
+
+			// 충돌했다면, BoundingBox의 색상을 Red로 변경.
+			if ((*iter_begin)->Get_BoundingBox()->Get_BoundingInfo().Intersects(vRayPos.Get_XMVECTOR(),
+																				vRayDir.Get_XMVECTOR(), 
+																				fDist))
+			{
+				(*iter_begin)->Set_BoundingBoxColor(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+				*ppPickingObject = (*iter_begin);
+
+				return true;
+			}
+		}
+
+	}
+
+	return false;
+}
+
+_bool CMouseMgr::Picking_Light(Engine::CLight** pPickingLight, vector<Engine::CLight*>& vecPointLight)
+{
+	POINT ptMouse{};
+
+	GetCursorPos(&ptMouse);
+	ScreenToClient(g_hWnd, &ptMouse);
+
+	D3D12_VIEWPORT ViewPort = Engine::CGraphicDevice::Get_Instance()->Get_Viewport();
+
+	// Window좌표 -> 투영 좌표계로 변환.
+	_vec3 vMousePos = _vec3(0.f);
+	vMousePos.x		= ptMouse.x / (ViewPort.Width * 0.5f) - 1.f;
+	vMousePos.y		= ptMouse.y / -(ViewPort.Height * 0.5f) + 1.f;
+	vMousePos.z		= 0.f;
+
+	// 투영 좌표계 -> 카메라 좌표계로 변환.
+	_matrix matProj = *(Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::MATRIXID::PROJECTION));
+	matProj = XMMatrixInverse(nullptr, matProj);
+	vMousePos.TransformCoord(vMousePos, matProj);
+
+	// 카메라 좌표계 -> 월드 좌표계로 변환.
+	_vec3 vRayDir, vRayPos;
+	vRayPos = _vec3(0.f, 0.f, 0.f);
+	vRayDir = vMousePos - vRayPos;
+
+	_matrix matView = *(Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::MATRIXID::VIEW));
+	matView = XMMatrixInverse(nullptr, matView);
+	vRayDir.TransformNormal(vRayDir, matView);
+	vRayPos.TransformCoord(vRayPos, matView);
+
+
+	// PointLight Collder 색상 초기화.
+	for (auto& pPointLight : vecPointLight)
+		pPointLight->Set_ColliderColorDiffuse();
+
+
+	_float fDist = 0.0f;
+	auto iter_begin = vecPointLight.begin();
+	auto iter_end	= vecPointLight.end();
 	for (; iter_begin != iter_end; ++iter_begin)
 	{
 		vRayDir.Normalize();
 
 		// 충돌했다면, BoundingBox의 색상을 Red로 변경.
-		if ((*iter_begin)->Get_BoundingBox()->Get_BoundingInfo().Intersects(vRayPos.Get_XMVECTOR(),
-																			vRayDir.Get_XMVECTOR(), 
+		if ((*iter_begin)->Get_ColliderCom()->Get_BoundingInfo().Intersects(vRayPos.Get_XMVECTOR(),
+																			vRayDir.Get_XMVECTOR(),
 																			fDist))
 		{
-			(*iter_begin)->Set_BoundingBoxColor(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
-			*ppPickingObject = /*static_cast<CToolStaticMesh*>*/(*iter_begin);
+			(*iter_begin)->Set_ColliderColorSelected();
+			*pPickingLight = (*iter_begin);
 
 			return true;
 		}
 	}
+
+
+
 
 	return false;
 }

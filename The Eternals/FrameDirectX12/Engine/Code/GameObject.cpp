@@ -108,6 +108,7 @@ _int CGameObject::Update_GameObject(const _float & fTimeDelta)
 		iter.second->Update_Component(fTimeDelta);
 
 
+
 	return NO_EVENT;
 }
 

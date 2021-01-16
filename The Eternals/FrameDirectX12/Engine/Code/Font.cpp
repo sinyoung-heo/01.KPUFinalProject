@@ -154,9 +154,6 @@ _int CFont::Update_GameObject(const _float & fTimeDelta)
 {
 	FAILED_CHECK_RETURN(CGameObject::LateInit_GameObject(), E_FAIL);
 
-	if (!m_pRenderer->Get_RenderOnOff(L"Font"))
-		return 0;
-
 	/*__________________________________________________________________________________________________________
 	[ Change Text - Change Rect Offset ]
 	____________________________________________________________________________________________________________*/
@@ -186,9 +183,6 @@ _int CFont::LateUpdate_GameObject(const _float & fTimeDelta)
 
 void CFont::Render_GameObject(const _float & fTimeDelta)
 {
-	if (!m_pRenderer->Get_RenderOnOff(L"Font"))
-		return;
-
 	if (nullptr != m_pD2D_Context)
 	{
 		m_pD2D_Context->DrawTextW(m_wstrText.c_str(),			// 그릴 문자열.

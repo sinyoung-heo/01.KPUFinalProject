@@ -46,6 +46,12 @@ cbuffer cbShadowInfo : register(b2)
 	float		fLightPorjFar	: packoffset(c9);
 };
 
+/*__________________________________________________________________________________________________________
+[ Global ]
+____________________________________________________________________________________________________________*/
+static float fFar = 1000.0f;
+
+
 
 // VS_MAIN
 struct VS_IN
@@ -149,7 +155,7 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 	
 	// Depth
 	ps_output.Depth		= float4(ps_input.ProjPos.z / ps_input.ProjPos.w,	// (posWVP.z / posWVP.w) : Proj 영역의 Z.
-								 ps_input.ProjPos.w * 0.001f,				// posWVP.w / Far : 0~1로 만든 View영역의 Z.
+								 ps_input.ProjPos.w / fFar,				// posWVP.w / Far : 0~1로 만든 View영역의 Z.
 								 0.0f, 1.0f);
 
 	return (ps_output);
@@ -174,7 +180,7 @@ PS_OUT PS_SHADOW_MAIN(VS_OUT ps_input) : SV_TARGET
 	
 	// Depth
 	ps_output.Depth		= float4(ps_input.ProjPos.z / ps_input.ProjPos.w,	// (posWVP.z / posWVP.w) : Proj 영역의 Z.
-								 ps_input.ProjPos.w * 0.001f,				// posWVP.w / Far : 0~1로 만든 View영역의 Z.
+								 ps_input.ProjPos.w / fFar,				// posWVP.w / Far : 0~1로 만든 View영역의 Z.
 								 0.0f, 1.0f);
 	
 	/*__________________________________________________________________________________________________________

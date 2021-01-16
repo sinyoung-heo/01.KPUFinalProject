@@ -20,14 +20,15 @@ CToolStaticMesh::CToolStaticMesh(const CToolStaticMesh & rhs)
 
 
 HRESULT CToolStaticMesh::Ready_GameObject(wstring wstrMeshTag,
-											const _vec3& vScale,
-											const _vec3& vAngle,
-											const _vec3& vPos,
-											const _bool& bIsRenderShadow,
-											const _bool& bIsBoundingBox,
-											const _bool& bIsBoundingSphere,
-											const _vec3& vBoundingSphereScale,
-											const _vec3& vBoundingSpherePos)
+										  const _vec3& vScale,
+										  const _vec3& vAngle,
+										  const _vec3& vPos,
+										  const _bool& bIsRenderShadow,
+										  const _bool& bIsBoundingBox,
+										  const _bool& bIsBoundingSphere,
+										  const _vec3& vBoundingSphereScale,
+										  const _vec3& vBoundingSpherePos,
+										  const _bool& bIsMousePicking)
 {
 
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true, true), E_FAIL);
@@ -38,6 +39,7 @@ HRESULT CToolStaticMesh::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vPos		= vPos;
 	m_bIsRenderShadow		= bIsRenderShadow; 
 	m_bIsCollision			= bIsBoundingSphere;
+	m_bIsMousePicking		= bIsMousePicking;
 
 	// BoundingBox.
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
@@ -209,7 +211,7 @@ void CToolStaticMesh::Set_ConstantTableShadowDepth()
 
 	//Engine::CGameObject::SetUp_ShadowDepth(vDynamicCamEye, vDynamicCamEye, vLightDir);
 
-	m_tShadowInfo = CShadowLightMgr::Get_Instance()->m_tShadowInfo;
+	m_tShadowInfo = CShadowLightMgr::Get_Instance()->m_tShadowDesc;
 
 	/*__________________________________________________________________________________________________________
 	[ ShadowDepth ]
@@ -240,16 +242,17 @@ void CToolStaticMesh::Set_ConstantTableShadowDepth()
 }
 
 CToolStaticMesh * CToolStaticMesh::Create(ID3D12Device * pGraphicDevice, 
-											  ID3D12GraphicsCommandList * pCommandList, 
-											  wstring wstrMeshTag, 
-											  const _vec3 & vScale, 
-											  const _vec3 & vAngle, 
-											  const _vec3 & vPos,
-											  const _bool& bIsRenderShadow,
-											  const _bool& bIsBoundingBox,
-											  const _bool& bIsBoundingSphere,
-											  const _vec3& vBoundingSphereScale,
-											  const _vec3& vBoundingSpherePos)
+										  ID3D12GraphicsCommandList * pCommandList, 
+										  wstring wstrMeshTag, 
+										  const _vec3 & vScale, 
+										  const _vec3 & vAngle, 
+										  const _vec3 & vPos,
+										  const _bool& bIsRenderShadow,
+										  const _bool& bIsBoundingBox,
+										  const _bool& bIsBoundingSphere,
+										  const _vec3& vBoundingSphereScale,
+										  const _vec3& vBoundingSpherePos,
+										  const _bool& bIsMousePicking)
 {
 	CToolStaticMesh* pInstance = new CToolStaticMesh(pGraphicDevice, pCommandList);
 
@@ -261,7 +264,8 @@ CToolStaticMesh * CToolStaticMesh::Create(ID3D12Device * pGraphicDevice,
 										   bIsBoundingBox,
 										   bIsBoundingSphere,
 										   vBoundingSphereScale,
-										   vBoundingSpherePos)))
+										   vBoundingSpherePos,
+										   bIsMousePicking)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;

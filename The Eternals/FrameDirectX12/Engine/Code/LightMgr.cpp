@@ -9,12 +9,30 @@ CLightMgr::CLightMgr()
 }
 
 
-D3DLIGHT CLightMgr::Get_LightInfo(const LIGHTTYPE& eLightID, const _int& iIdx)
+D3DLIGHT& CLightMgr::Get_LightInfo(const LIGHTTYPE& eLightID, const _int& iIdx)
 {
-	if (iIdx >= m_vecLight[eLightID].size())
-		return D3DLIGHT();
+	if (eLightID < D3DLIGHT_END )
+	{
+		if (iIdx < m_vecLight[eLightID].size())
+		{
+			return m_vecLight[eLightID][iIdx]->Get_LightInfo();
+		}
+	}
 
-	return m_vecLight[eLightID][iIdx]->Get_LightInfo();
+	return D3DLIGHT();
+}
+
+CLight* CLightMgr::Get_Light(const LIGHTTYPE& eLightID, const _int& iIdx)
+{
+	if (eLightID < D3DLIGHT_END)
+	{
+		if (iIdx < m_vecLight[eLightID].size())
+		{
+			return m_vecLight[eLightID][iIdx];
+		}
+	}
+
+	return nullptr;
 }
 
 HRESULT CLightMgr::Set_LightInfo(const LIGHTTYPE& eLightID,
@@ -56,6 +74,9 @@ HRESULT CLightMgr::Add_Light(ID3D12Device * pGraphicDevice,
 
 void CLightMgr::Update_Light()
 {
+	/*__________________________________________________________________________________________________________
+	[ MFC Tool 에서 사용 ]
+	____________________________________________________________________________________________________________*/
 	auto iter_begin = m_vecLight[D3DLIGHT_POINT].begin();
 	auto iter_end	= m_vecLight[D3DLIGHT_POINT].end();
 
@@ -71,6 +92,28 @@ void CLightMgr::Update_Light()
 		else
 			++iter_begin;
 	}
+
+	/*__________________________________________________________________________________________________________
+	[ Shadow Light View & Proj Update ]
+	____________________________________________________________________________________________________________*/
+	_vec3 vLightDir = _vec3(Get_LightInfo(Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL, 0).Direction);
+	vLightDir *= -1.0f;
+	
+	// LightView
+	m_vShadowLightEye	= (vLightDir) * m_fShadowLightHeight;
+	_vec3 vAt			= m_vShadowLightAt;
+	_vec3 vUp			= _vec3(0.0f, 1.0f, 0.0f);
+
+	m_tShadowDesc.vLightPosition	= _vec4(m_vShadowLightEye, 1.0f);
+	m_tShadowDesc.matLightView		= XMMatrixLookAtLH(m_vShadowLightEye.Get_XMVECTOR(),
+													   vAt.Get_XMVECTOR(),
+													   vUp.Get_XMVECTOR());
+	// LightProj
+	m_tShadowDesc.fLightPorjFar		= m_fShadowLightFar;
+	m_tShadowDesc.matLightProj		= XMMatrixPerspectiveFovLH(XMConvertToRadians(m_fShadowLightFovY),
+															   1.0f,
+															   m_fShadowLightNear, 
+															   m_fShadowLightFar);
 
 }
 

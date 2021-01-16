@@ -6,6 +6,7 @@
 namespace Engine
 {
 	class CFont;
+	class CLight;
 }
 
 class CToolTerrain;
@@ -32,12 +33,14 @@ private:
 	HRESULT			Ready_LightInfo();
 
 	void			KeyInput();
-	void			KeyInput_TabMap(CTabMap& TabMap);
-	void			KeyInput_ModeChange(CTabMap& TabMap);
+	void			KeyInput_TabMapStaticMesh(CTabMap& TabMap);
+	void			KeyInput_TabMapLightingInfo(CTabMap& TabMap);
+	void			KeyInput_TabMapModeChange(CTabMap& TabMap);
 
 public:
 	CToolTerrain*			m_pPickingTerrain	= nullptr;
 	Engine::CGameObject*	m_pPickingObject	= nullptr;
+	Engine::CLight*			m_pPickingLight		= nullptr;
 
 private:
 	/*__________________________________________________________________________________________________________

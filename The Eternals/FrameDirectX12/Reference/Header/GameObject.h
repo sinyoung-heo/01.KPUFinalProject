@@ -24,6 +24,7 @@ public:
 	CColliderSphere*	Get_BoundingSphere()	{ return m_pBoundingSphereCom; }
 	_float				Get_DepthOfView()		{ return m_fViewZ; }
 	_long				Get_UIDepth()			{ return m_UIDepth; }
+	const _bool&		Get_IsDead()			{ return m_bIsDead; }
 	const _bool&		Get_IsCollision()		{ return m_bIsCollision; }
 	const _bool&		Get_IsRenderShadow()	{ return m_bIsRenderShadow;}
 
@@ -95,7 +96,6 @@ protected:
 	_bool	m_bIsCollision		= false;
 	_bool	m_bIsBoundingBox	= false;
 	_bool	m_bIsBoundingSphere = false;
-	
 	_bool	m_bIsRenderShadow	= false;
 
 
