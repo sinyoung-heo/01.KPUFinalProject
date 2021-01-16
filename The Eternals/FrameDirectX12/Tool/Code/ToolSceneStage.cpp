@@ -400,6 +400,8 @@ void CToolSceneStage::KeyInput_TabMapStaticMesh(CTabMap& TabMap)
 					TabMap.m_StaticMeshEdit_ColliderPosZ.EnableWindow(FALSE);
 				}
 
+				TabMap.m_iStaticMeshSelectIdx = -1;
+
 				TabMap.UpdateData(FALSE);
 			}
 		}
@@ -439,8 +441,10 @@ void CToolSceneStage::KeyInput_TabMapLightingInfo(CTabMap& TabMap)
 		// ListBox Ãß°¡.
 		_uint iSize = Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::LIGHTTYPE::D3DLIGHT_POINT).size();
 		_tchar szTemp[MIN_STR] = L"";
-		wsprintf(szTemp, L"Idx : %d", iSize - 1);
+		wsprintf(szTemp, L"Index : %d", iSize - 1);
 		TabMap.m_LightInfoListBox_PL_List.AddString(szTemp);
+
+
 
 		_stprintf_s(szTemp, MIN_STR, L"%0.1f", vPickingPos.x);
 		TabMap.m_LightInfoEdit_PL_PosX.SetWindowTextW(szTemp);
@@ -485,6 +489,8 @@ void CToolSceneStage::KeyInput_TabMapLightingInfo(CTabMap& TabMap)
 			TabMap.m_fLightInfo_PL_PosZ			= m_pPickingLight->Get_LightInfo().Position.z;
 			TabMap.m_fLightInfo_PL_PosW			= m_pPickingLight->Get_LightInfo().Position.w;
 			TabMap.m_fLightInfo_PL_Range		= m_pPickingLight->Get_LightInfo().Range;
+
+			TabMap.m_iSelectPLIdx = -1;
 		}
 
 

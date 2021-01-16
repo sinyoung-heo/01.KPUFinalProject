@@ -175,7 +175,7 @@ public:
 	_bool	m_bIsRenderShadow			= false;
 	_bool	m_bIsCollision				= false;
 	_bool	m_bIsMousePicking			= true;
-	_int	m_iStaticMeshSelectIdx		= 0;
+	_int	m_iStaticMeshSelectIdx		= -1;
 	float	m_fStaticMeshColliderScale	= 0.0f;
 	float	m_fStaticMeshColliderPosX	= 0.0f;
 	float	m_fStaticMeshColliderPosY	= 0.0f;
@@ -223,6 +223,8 @@ public:
 	afx_msg void OnEnChangeEdit1045_LightInfo_PL_PosW();
 	afx_msg void OnEnChangeEdit1046_LightInfo_PL_Range();
 	afx_msg void OnLbnSelchangeList1004_LightInfo_PL_List();
+	afx_msg void OnBnClickedButton1007_LightInfo_PL_DELETE();
+	afx_msg void OnBnClickedButton1008_LightInfo_PL_ALLDELETE();
 	afx_msg void OnBnClickedButton1009__LightInfo_PL_SAVE();
 	afx_msg void OnBnClickedButton1010__LightInfo_PL_LOAD();
 
@@ -331,6 +333,7 @@ public:
 	float m_fLightInfo_PL_PosZ		= 0.0f;
 	float m_fLightInfo_PL_PosW		= 1.0f;
 	float m_fLightInfo_PL_Range		= 10.0f;
+	_int m_iSelectPLIdx				= -1;
 
 	float m_fLightInfo_SL_EyeX		= 0.0f;
 	float m_fLightInfo_SL_EyeY		= 0.0f;

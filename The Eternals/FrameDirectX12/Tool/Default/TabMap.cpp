@@ -281,6 +281,8 @@ BEGIN_MESSAGE_MAP(CTabMap, CDialogEx)
 	//ON_BN_CLICKED(IDC_BUTTON1005, &CTabMap::OnBnClickedButton1005_LightInfo_DL_SAVE)
 	//ON_BN_CLICKED(IDC_BUTTON1006, &CTabMap::OnBnClickedButton1006_LightInfo_DL_LOAD)
 	ON_BN_CLICKED(IDC_CHECK1008, &CTabMap::OnBnClickedCheck1008_StaticMeshIsMousePicking)
+	ON_BN_CLICKED(IDC_BUTTON1007, &CTabMap::OnBnClickedButton1007_LightInfo_PL_DELETE)
+	ON_BN_CLICKED(IDC_BUTTON1008, &CTabMap::OnBnClickedButton1008_LightInfo_PL_ALLDELETE)
 END_MESSAGE_MAP()
 
 
@@ -2495,14 +2497,34 @@ void CTabMap::OnLbnSelchangeList1003_StaticMeshObjectList()
 		static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject = pSelectedObject;
 	}
 
+	m_iStaticMeshSelectIdx = -1;
+
 	UpdateData(FALSE);
 }
 
 
 void CTabMap::OnBnClickedButton1001_StasticMeshDelete()
 {
+	UpdateData(TRUE);
+
 	// 선택한 StaticMeshObject 삭제.
-	if (!m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh")->empty() &&
+	if (m_iStaticMeshSelectIdx == -1)
+	{
+		if (nullptr != static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject)
+			static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject->Set_DeadGameObject();
+
+		m_StaticMeshListBox_ObjectList.ResetContent();
+		if (!m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh")->empty())
+		{
+			for (auto& pObject : *(m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh")))
+			{
+				if (!pObject->Get_IsDead())
+					m_StaticMeshListBox_ObjectList.AddString(static_cast<CToolStaticMesh*>(pObject)->m_wstrMeshTag.c_str());
+			}
+		}
+	}
+
+	else if (!m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh")->empty() &&
 		m_iStaticMeshSelectIdx < m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh")->size())
 	{
 		m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"StaticMesh", m_iStaticMeshSelectIdx)->Set_DeadGameObject();
@@ -2510,6 +2532,8 @@ void CTabMap::OnBnClickedButton1001_StasticMeshDelete()
 		// ListBox와 Edit컨트롤 수정.
 		m_StaticMeshListBox_ObjectList.DeleteString(m_iStaticMeshSelectIdx);
 	}
+
+	UpdateData(FALSE);
 }
 
 
@@ -2690,7 +2714,6 @@ void CTabMap::OnBnClickedButton1004_StaticMeshLOAD()
 												  vBoundingSpherePos,	// Bounding Sphere Pos
 												  bIsMousePicking);		// Is Mouse Picking
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"StaticMesh", pStaticMesh), E_FAIL);
-
 			// StaticMeshListBox에 삽입.
 			m_StaticMeshListBox_ObjectList.AddString(wstrMeshTag.c_str());
 		}
@@ -3225,7 +3248,7 @@ void CTabMap::OnLbnSelchangeList1004_LightInfo_PL_List()
 	UpdateData(TRUE);
 
 	// 선택한 ListBox의 Index를 얻어온다.
-	_int m_iSelectPLIdx = m_LightInfoListBox_PL_List.GetCaretIndex();
+	m_iSelectPLIdx = m_LightInfoListBox_PL_List.GetCaretIndex();
 
 	// 선택한 Light 설정.
 	Engine::CLight* pSelectLight = Engine::CLightMgr::Get_Instance()->Get_Light(Engine::LIGHTTYPE::D3DLIGHT_POINT, m_iSelectPLIdx);
@@ -3256,10 +3279,67 @@ void CTabMap::OnLbnSelchangeList1004_LightInfo_PL_List()
 	m_fLightInfo_PL_PosZ		= pSelectLight->Get_LightInfo().Position.z;
 	m_fLightInfo_PL_PosW		= pSelectLight->Get_LightInfo().Position.w;
 	m_fLightInfo_PL_Range		= pSelectLight->Get_LightInfo().Range;
-	
+
 
 	UpdateData(FALSE);
 }
+
+void CTabMap::OnBnClickedButton1007_LightInfo_PL_DELETE()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
+	// 선택한 StaticMeshObject 삭제.
+	if (m_iSelectPLIdx == -1)
+	{
+		if (nullptr != static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight)
+			static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight->Set_IsDead();
+
+		// ListBox 수정.
+		m_LightInfoListBox_PL_List.ResetContent();
+		for (_uint i = 0; i < Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::LIGHTTYPE::D3DLIGHT_POINT).size() - 1; ++i)
+		{
+			_tchar szTemp[MIN_STR] = L"";
+			wsprintf(szTemp, L"Index : %d", i);
+			m_LightInfoListBox_PL_List.AddString(szTemp);
+		}
+
+	}
+
+
+
+	// 선택한 PointLight 삭제.
+	if (!Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::LIGHTTYPE::D3DLIGHT_POINT).empty() &&
+		m_iSelectPLIdx < Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::LIGHTTYPE::D3DLIGHT_POINT).size())
+	{
+		Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::LIGHTTYPE::D3DLIGHT_POINT)[m_iSelectPLIdx]->Set_IsDead();
+
+		// ListBox 수정.
+		m_LightInfoListBox_PL_List.ResetContent();
+
+		for (_uint i = 0; i < Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::LIGHTTYPE::D3DLIGHT_POINT).size() - 1; ++i)
+		{
+			_tchar szTemp[MIN_STR] = L"";
+			wsprintf(szTemp, L"Index : %d", i);
+			m_LightInfoListBox_PL_List.AddString(szTemp);
+		}
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnBnClickedButton1008_LightInfo_PL_ALLDELETE()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
+
+
+	UpdateData(FALSE);
+}
+
+
 
 
 void CTabMap::OnBnClickedButton1009__LightInfo_PL_SAVE()
