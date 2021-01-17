@@ -368,7 +368,10 @@ void process_move(int id, cs_packet_move* info)
 
 					// 시야 내에 없다면 시야 목록에 등록X.
 					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pNPC))
-						new_viewlist.insert(obj_num);				
+					{
+						new_viewlist.insert(obj_num);
+						active_npc(obj_num);
+					}
 				}
 				/* MONSTER일 경우 처리*/
 				else
@@ -509,4 +512,233 @@ void send_NPC_enter_packet(int to_client, int new_id)
 	p.dirZ = pNewPlayer->m_vDir.z;
 
 	send_packet(to_client, &p);
+}
+
+void send_NPC_move_packet(int to_client, int id)
+{
+	sc_packet_move p;
+
+	CNpc* pNPC = static_cast<CNpc*>(CObjMgr::GetInstance()->Get_GameObject(L"NPC", id));
+
+	if (pNPC == nullptr) return;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_MOVE;
+	p.id = id;
+
+	//p.move_time = pNewPlayer->move_time;
+
+	p.posX = pNPC->m_vPos.x;
+	p.posY = pNPC->m_vPos.y;
+	p.posZ = pNPC->m_vPos.z;
+
+	p.dirX = pNPC->m_vDir.x;
+	p.dirY = pNPC->m_vDir.y;
+	p.dirZ = pNPC->m_vDir.z;
+
+	send_packet(to_client, &p);
+}
+
+void random_move_npc(int id)
+{
+	CNpc* pNPC = static_cast<CNpc*>(CObjMgr::GetInstance()->Get_GameObject(L"NPC", id));
+
+	if (pNPC == nullptr) return;
+
+	/* 해당 플레이어의 원래 위치값 */
+	float ori_x, ori_y, ori_z;
+	ori_x = pNPC->m_vPos.x;
+	ori_y = pNPC->m_vPos.y;
+	ori_z = pNPC->m_vPos.z;
+
+	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
+	unordered_set<pair<int, int>> oldnearSector;
+	oldnearSector.reserve(5);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, ori_x, ori_y);
+
+	unordered_set <int> old_viewlist; 
+
+	// 이동 전: 인접 섹터 순회
+	for (auto& s : oldnearSector)
+	{
+		// 인접 섹터 내의 타 유저들이 있는지 검사
+		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+		{
+			// 타 유저의 서버 번호 추출
+			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			{
+				/* 타유저일 경우 처리 */
+				if (obj_num == id) continue;
+				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+
+					// 접속한 유저만 시야 목록에 등록한다.
+					if (!pPlayer->Get_IsConnected()) continue;
+
+					// 시야 내에 있다면 시야 목록에 등록한다.
+					if (CObjMgr::GetInstance()->Is_Near(pNPC, pPlayer))
+						old_viewlist.insert(obj_num);
+				}
+			}
+		}
+	}
+
+	/* 움직임 처리 */
+	switch (rand() % 4)
+	{
+	case 0: if (ori_x > 0) pNPC->m_vPos.x -= 10.f; break;
+	case 1: if (ori_x < (WORLD_WIDTH - 1))  pNPC->m_vPos.x += 10.f; break;
+	case 2: if (ori_y > 0)  pNPC->m_vPos.y -= 10.f; break;
+	case 3: if (ori_y < (WORLD_HEIGHT - 1))  pNPC->m_vPos.y += 10.f; break;
+	}
+
+	/* 변경된 좌표로 섹터 갱신 */
+	CSectorMgr::GetInstance()->Compare_exchange_Sector(id, (int)ori_y, (int)ori_x, (int)(pNPC->m_vPos.y), (int)(pNPC->m_vPos.x));
+
+	// 움직인 후 위치에서의 viewlist (시야 내에 플레이어 저장)
+	unordered_set <int> new_viewlist;
+
+	unordered_set<pair<int, int>> nearSectors;
+	nearSectors.reserve(5);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSectors, (int)(pNPC->m_vPos.x), (int)(pNPC->m_vPos.y));
+
+	// 이동 후: 인접 섹터 순회 -> 유저가 있을 시 new viewlist 내에 등록
+	for (auto& s : nearSectors)
+	{
+		// 인접 섹터 내의 타 유저들이 있는지 검사
+		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+		{
+			// 타 유저의 서버 번호 추출
+			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			{
+				/* 타유저일 경우 처리 */
+				if (obj_num == id) continue;
+				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+
+					// 접속한 유저만 시야 목록에 등록한다.
+					if (!pPlayer->Get_IsConnected()) continue;
+
+					// 시야 내에 있다면 시야 목록에 등록한다.
+					if (CObjMgr::GetInstance()->Is_Near(pNPC, pPlayer))
+						new_viewlist.insert(obj_num);
+				}
+			}
+		}
+	}
+
+	/* 유저들 중 현재 NPC를 시야 목록 안에 가지고 있는 경우 -> true */
+	bool isInContinue = false; 
+
+	// 이동 전 viewlist & 이동 후 viewlist 비교 -> 각 유저들의 시야 목록 내에 NPC 존재 여부를 결정.
+	for (auto pl : old_viewlist)
+	{
+		// 이동 후에도 NPC 시야 목록 내에 "pl"(server number) 유저가 남아있는 경우
+		if (0 < new_viewlist.count(pl))
+		{
+			// 현재 NPC는 계속 어떤 유저의 시야 목록에 있어야 함.
+			isInContinue = true;
+
+			CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
+			if (pPlayer != nullptr)
+			{
+				/* 해당 유저의 시야 목록에 현재 NPC가 존재할 경우 */
+				pPlayer->v_lock.lock();
+				if (0 < pPlayer->view_list.count(id))
+				{
+					pPlayer->v_lock.unlock();
+					/* 해당 유저에게 NPC가 움직인 후의 위치를 전송 */
+					send_NPC_move_packet(pl, id);
+				}
+				/* 해당 유저의 시야 목록에 현재 NPC가 존재하지 않을 경우 */
+				else
+				{
+					/* 해당 유저의 시야 목록에 현재 NPC 등록 */
+					pPlayer->view_list.insert(id);
+					pPlayer->v_lock.unlock();
+					send_NPC_enter_packet(pl, id);
+				}
+			}
+		}
+		// 이동 후에 NPC 시야 목록 내에 "pl"(server number) 유저가 없는 경우
+		else
+		{
+			CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
+			if (pPlayer != nullptr)
+			{
+				/* 해당 유저의 시야 목록에 현재 NPC가 존재할 경우 */
+				pPlayer->v_lock.lock();
+				if (0 < pPlayer->view_list.count(id))
+				{
+					/* 해당 유저의 시야 목록에서 현재 NPC 삭제 */
+					pPlayer->view_list.erase(id);
+					pPlayer->v_lock.unlock();
+					send_leave_packet(pl, id);
+				}
+				else
+					pPlayer->v_lock.unlock();
+			}
+		}
+	}
+
+	// new_vielist 순회 -> 플레이어의 시야 목록에 있어야 할 새로운 npc들을 추가
+	for (auto pl : new_viewlist)
+	{
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
+		if (pPlayer != nullptr)
+		{
+			pPlayer->v_lock.lock();			
+			if (0 == pPlayer->view_list.count(pl))
+			{
+				/* 각 유저의 시야 목록 내에 현재 NPC가 없을 경우 -> 현재 NPC 등록 */
+				if (0 == pPlayer->view_list.count(id))
+				{
+					pPlayer->view_list.insert(id);
+					pPlayer->v_lock.unlock();
+					send_NPC_enter_packet(pl, id);
+				}
+				/* 각 유저의 시야 목록 내에 현재 NPC가 있을 경우 -> 현재 NPC 위치 전송 */
+				else
+				{
+					pPlayer->v_lock.unlock();
+					send_NPC_move_packet(pl, id);
+				}
+			}
+			else
+				pPlayer->v_lock.unlock();
+		}
+		
+	}
+
+	add_timer(id, OPMODE::OP_RANDOM_MOVE_NPC, system_clock::now() + 1s);
+}
+
+void active_npc(int id)
+{
+	CNpc* pNPC = static_cast<CNpc*>(CObjMgr::GetInstance()->Get_GameObject(L"NPC", id));
+	
+	if (nullptr == pNPC) return;
+	
+	/* NPC가 활성화되어 있지 않을 경우 활성화 */
+	if (pNPC->m_status != ST_ACTIVE)
+	{
+		STATUS prev_state = pNPC->m_status;
+		if (true == atomic_compare_exchange_strong(&pNPC->m_status, &prev_state, ST_ACTIVE))
+			add_timer(id, OP_RANDOM_MOVE_NPC, system_clock::now() + 1s);
+	}
+}
+
+/*===========================================FUNC====================================================*/
+void add_timer(int obj_id, OPMODE ev_type, system_clock::time_point t)
+{
+	g_timer_lock.lock();
+	g_timer_queue.emplace(obj_id, t, ev_type);
+	g_timer_lock.unlock();
+}
+
+bool CAS(atomic<STATUS>* addr, STATUS* old_v, STATUS new_v)
+{
+	return atomic_compare_exchange_strong(addr, old_v, new_v);
 }

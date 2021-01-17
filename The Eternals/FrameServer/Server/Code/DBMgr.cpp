@@ -148,7 +148,7 @@ void CDBMgr::Insert_NewPlayer_DB(int id, char* pw)
 
 	/* 회원 가입 */
 	std::string str_order
-		= "EXEC insert_user " + name + ", "+password + ", "
+		= "EXEC insert_user " + name + ", "+ password + ", "
 		+ to_string(pPlayer->m_vPos.x) + ", "
 		+ to_string(pPlayer->m_vPos.y) + ", "
 		+ to_string(pPlayer->m_vPos.z) + ", "
@@ -164,6 +164,9 @@ void CDBMgr::Insert_NewPlayer_DB(int id, char* pw)
 	std::wstring wstr_order = L"";
 	wstr_order.assign(str_order.begin(), str_order.end());
 	m_retcode = SQLExecDirect(m_hstmt, (SQLWCHAR*)wstr_order.c_str(), SQL_NTS);
+
+	if (!(m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO))
+		db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
 
 #ifdef TEST
 	cout << "회원 가입 완료" << endl;
@@ -191,19 +194,21 @@ void CDBMgr::Update_stat_DB(int id)
 		+ to_string(pPlayer->m_vPos.x) + ", "
 		+ to_string(pPlayer->m_vPos.y) + ", "
 		+ to_string(pPlayer->m_vPos.z) + ", "
-		+ to_string(pPlayer->m_type) + ", "
 		+ to_string(pPlayer->level) + ", "
 		+ to_string(pPlayer->Hp) + ", "
 		+ to_string(pPlayer->maxHp) + ", "
 		+ to_string(pPlayer->Exp) + ", "
 		+ to_string(pPlayer->maxExp) + ", "
 		+ to_string(pPlayer->att) + ", "
-		+ to_string(pPlayer->spd)
+		+ to_string(pPlayer->spd) + ", "
 		+ name;
 		
 	std::wstring wstr_order = L"";
 	wstr_order.assign(str_order.begin(), str_order.end());
 	m_retcode = SQLExecDirect(m_hstmt, (SQLWCHAR*)wstr_order.c_str(), SQL_NTS);
+
+	if (!(m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO))
+		db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
 
 	SQLCloseCursor(m_hstmt);
 	SQLCancel(m_hstmt);	

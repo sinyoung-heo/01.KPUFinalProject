@@ -36,7 +36,7 @@ int main()
 	/* Time Thread 생성 */
 	thread time_thread{ time_worker };
 	
-	/* Worker Threads 생성 - 5개 */
+	/* Worker Threads 생성 - 4개 */
 	vector<thread> vecWorker;
 	for (int i = 0; i < SERVER_CORE; ++i)
 		vecWorker.emplace_back(worker_thread);
@@ -330,7 +330,6 @@ void disconnect_client(int id)
 	pPlayer->Set_IsConnected(false);
 	closesocket(pPlayer->m_sock);
 	pPlayer->m_sock = 0;
-	pPlayer->m_sNum = 0;
 	pPlayer->m_vPos = _vec3(0.f, 0.f, 0.f);
 	pPlayer->m_vDir = _vec3(0.f, 0.f, 0.f);
 	pPlayer->m_ID[0] = 0;
@@ -346,6 +345,36 @@ void disconnect_client(int id)
 
 void time_worker()
 {
+	while (true)
+	{
+		while (true)
+		{
+			g_timer_lock.lock();
+			if (!g_timer_queue.empty())
+			{
+				event_type ev = g_timer_queue.top();
+
+				if (ev.wakeup_time > system_clock::now())
+				{
+					g_timer_lock.unlock();
+					break;
+				}
+				g_timer_queue.pop();
+				g_timer_lock.unlock();
+
+				OVER_EX* ex_over = new OVER_EX;
+				ex_over->op_mode = ev.event_id;
+
+				PostQueuedCompletionStatus(g_hIocp, 1, ev.obj_id, &ex_over->wsa_over);
+			}
+			else
+			{
+				g_timer_lock.unlock();
+				break;
+			}
+		}
+		this_thread::sleep_for(1ms);
+	}
 }
 
 void worker_thread()
@@ -371,7 +400,10 @@ void worker_thread()
 #endif
 
 		if (ret == FALSE)
+		{
+			disconnect_client(key);
 			error_display("GQCS Error : ", WSAGetLastError());
+		}
 
 		/* <I/O 처리 작업> */
 		OVER_EX* over_ex = reinterpret_cast<OVER_EX*>(lpover);
@@ -399,13 +431,14 @@ void worker_thread()
 			delete over_ex;
 			break;
 
-		case OPMODE::OP_MODE_ATTACK:
+		case OPMODE::OP_RANDOM_MOVE_NPC:
+		{
+			/* 변경해야 될 것: 아래 함수 bool 리턴 받은 후 전체 플레이어 중 시야 내에 없다면 STATUS 변경 */
+			random_move_npc(key);
+			delete over_ex;
+		}
 			break;
-		case OPMODE::OP_PLAYER_MOVE_NOTIFY:
-			break;
-		case OPMODE::OP_RANDOM_MOVE:
-			break;
-
+	
 		default:
 #ifdef TEST
 			cout << "[ERROR] Unknown Type MODE in Worker Thread!" << endl;

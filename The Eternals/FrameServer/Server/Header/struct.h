@@ -41,4 +41,10 @@ struct event_type
 	{
 		return (wakeup_time > _Left.wakeup_time);
 	}
+
+	event_type(int id, system_clock::time_point t, OPMODE eid)
+		:obj_id(id), wakeup_time(t), event_id(eid)
+	{
+		target_id = -1;
+	}
 };

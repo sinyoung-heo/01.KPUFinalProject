@@ -11,7 +11,7 @@ constexpr int KEY_SERVER		= 1000000;
 #define DEAD_OBJ 1
 #define NO_INIT -1
 #define PI 3.141592
-constexpr int SERVER_CORE		= 5;
+constexpr int SERVER_CORE		= 4;
 constexpr int NPC_NUM_START		= 1000;
 
 
