@@ -2507,7 +2507,7 @@ void CTabMap::OnBnClickedButton1001_StasticMeshDelete()
 {
 	UpdateData(TRUE);
 
-	// 선택한 StaticMeshObject 삭제.
+	// 선택한 StaticMeshObject 삭제. (Picking)
 	if (m_iStaticMeshSelectIdx == -1)
 	{
 		if (nullptr != static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject)
@@ -2524,6 +2524,7 @@ void CTabMap::OnBnClickedButton1001_StasticMeshDelete()
 		}
 	}
 
+	// 선택한 StaticMeshObject 삭제. (LishtBox Select)
 	else if (!m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh")->empty() &&
 		m_iStaticMeshSelectIdx < m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh")->size())
 	{
@@ -3289,7 +3290,7 @@ void CTabMap::OnBnClickedButton1007_LightInfo_PL_DELETE()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	UpdateData(TRUE);
 
-	// 선택한 StaticMeshObject 삭제.
+	// 선택한 PointLight 삭제. (Picking)
 	if (m_iSelectPLIdx == -1)
 	{
 		if (nullptr != static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight)
@@ -3306,9 +3307,7 @@ void CTabMap::OnBnClickedButton1007_LightInfo_PL_DELETE()
 
 	}
 
-
-
-	// 선택한 PointLight 삭제.
+	// 선택한 PointLight 삭제. (ListBox Select)
 	if (!Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::LIGHTTYPE::D3DLIGHT_POINT).empty() &&
 		m_iSelectPLIdx < Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::LIGHTTYPE::D3DLIGHT_POINT).size())
 	{
@@ -3334,6 +3333,29 @@ void CTabMap::OnBnClickedButton1008_LightInfo_PL_ALLDELETE()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	UpdateData(TRUE);
 
+	for (auto& pPointLight : Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::LIGHTTYPE::D3DLIGHT_POINT))
+		pPointLight->Set_IsDead();
+
+	// ListBox 수정.
+	m_LightInfoListBox_PL_List.ResetContent();
+
+	m_fLightInfo_PL_DiffuseR	= 1.0f;
+	m_fLightInfo_PL_DiffuseG	= 1.0f;
+	m_fLightInfo_PL_DiffuseB	= 1.0f;
+	m_fLightInfo_PL_DiffuseA	= 1.0f;
+	m_fLightInfo_PL_SpecularR	= 0.5f;
+	m_fLightInfo_PL_SpecularG	= 0.5f;
+	m_fLightInfo_PL_SpecularB	= 0.5f;
+	m_fLightInfo_PL_SpecularA	= 1.0f;
+	m_fLightInfo_PL_AmbientR	= 0.5f;
+	m_fLightInfo_PL_AmbientG	= 0.5f;
+	m_fLightInfo_PL_AmbientB	= 0.5f;
+	m_fLightInfo_PL_AmbientA	= 1.0f;
+	m_fLightInfo_PL_PosX		= 0.0f;
+	m_fLightInfo_PL_PosY		= 0.0f;
+	m_fLightInfo_PL_PosZ		= 0.0f;
+	m_fLightInfo_PL_PosW		= 1.0f;
+	m_fLightInfo_PL_Range		= 10.0f;
 
 
 	UpdateData(FALSE);
