@@ -412,7 +412,7 @@ void CToolSceneStage::KeyInput_TabMapStaticMesh(CTabMap& TabMap)
 
 void CToolSceneStage::KeyInput_TabMapLightingInfo(CTabMap& TabMap)
 {
-	// StaticMesh Object 持失.
+	// PointLight 持失.
 	if (TabMap.m_bIsLightingCreateMode)
 	{
 		TabMap.UpdateData(TRUE);

@@ -3560,10 +3560,58 @@ void CTabMap::OnBnClickedButton1008_LightInfo_PL_ALLDELETE()
 void CTabMap::OnBnClickedButton1009__LightInfo_PL_SAVE()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
 
 
+	CFileDialog Dlg(FALSE,
+					L"lightinginfo",
+					L"*.lightinginfo",
+					OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+					L"Data Files(*.lightinginfo) | *.lightinginfo ||",
+					this);
 
+	_tchar szPath[MAX_STR] = L"";
+	GetCurrentDirectory(MAX_STR, szPath);		// 작업중인 현재 경로.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	lstrcat(szPath, L"\\Bin\\ToolData");
+	Dlg.m_ofn.lpstrInitialDir = szPath;
+
+	if (Dlg.DoModal() == IDOK)
+	{
+		wofstream fout{ Dlg.GetPathName().GetString() };
+		if (fout.fail())
+		{
+			AfxMessageBox(L"Save is Failed");
+			return;
+		}
+
+		for (auto& pPointLight : Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::D3DLIGHT_POINT))
+		{
+			// PointLight 정보 저장.
+			Engine::D3DLIGHT tLightInfo = pPointLight->Get_LightInfo();
+
+			fout	<< tLightInfo.Diffuse.x		<< L" "		// Diffuse
+					<< tLightInfo.Diffuse.y		<< L" " 
+					<< tLightInfo.Diffuse.z		<< L" "	
+					<< tLightInfo.Diffuse.w		<< L" "
+					<< tLightInfo.Specular.x	<< L" "		// Specular
+					<< tLightInfo.Specular.y	<< L" " 
+					<< tLightInfo.Specular.z	<< L" "	
+					<< tLightInfo.Specular.w	<< L" " 
+					<< tLightInfo.Ambient.x		<< L" "		// Ambient
+					<< tLightInfo.Ambient.y		<< L" "	
+					<< tLightInfo.Ambient.z		<< L" "			
+					<< tLightInfo.Ambient.w		<< L" "
+					<< tLightInfo.Position.x	<< L" "		// Position
+					<< tLightInfo.Position.y	<< L" " 
+					<< tLightInfo.Position.z	<< L" "
+					<< tLightInfo.Position.w	<< L" "
+					<< tLightInfo.Range			<< L" ";	// Range
+		}
+
+	}
+
+	AfxMessageBox(L"Data Save Successed");
 
 	UpdateData(FALSE);
 }
@@ -3572,8 +3620,78 @@ void CTabMap::OnBnClickedButton1009__LightInfo_PL_SAVE()
 void CTabMap::OnBnClickedButton1010__LightInfo_PL_LOAD()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
 
+	// 1. ListBox 초기화.
+	m_LightInfoListBox_PL_List.ResetContent();
+
+	// 2. 모든 PointLight 삭제.
+	for (auto& pPointLight : Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::D3DLIGHT_POINT))
+		pPointLight->Set_IsDead();
+
+	CFileDialog Dlg(TRUE,
+					L"lightinginfo",
+					L"*.lightinginfo",
+					OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+					L"Data Files(*.lightinginfo)|*.lightinginfo||",
+					this);
+
+	_tchar szPath[MAX_STR] = L"";
+	GetCurrentDirectory(MAX_STR, szPath);		// 작업중인 현재 경로.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	lstrcat(szPath, L"\\Bin\\ToolData");
+	Dlg.m_ofn.lpstrInitialDir = szPath;
+
+	if (Dlg.DoModal() == IDOK)
+	{
+		wifstream fin{ Dlg.GetPathName().GetString() };
+		if (fin.fail())
+		{
+			AfxMessageBox(L"Load is Failed");
+			return;
+		}
+
+		while (true)
+		{
+			// PointLight 정보 저장.
+			Engine::D3DLIGHT tLightInfo { };
+			tLightInfo.Type = Engine::D3DLIGHT_POINT;
+
+					// PointLight Data 불러오기.
+			fin		>> tLightInfo.Diffuse.x		// Diffuse
+					>> tLightInfo.Diffuse.y	
+					>> tLightInfo.Diffuse.z	
+					>> tLightInfo.Diffuse.w	
+					>> tLightInfo.Specular.x	// Specular
+					>> tLightInfo.Specular.y	
+					>> tLightInfo.Specular.z	
+					>> tLightInfo.Specular.w	
+					>> tLightInfo.Ambient.x		// Ambient
+					>> tLightInfo.Ambient.y		
+					>> tLightInfo.Ambient.z			
+					>> tLightInfo.Ambient.w	
+					>> tLightInfo.Position.x	// Direction
+					>> tLightInfo.Position.y
+					>> tLightInfo.Position.z
+					>> tLightInfo.Position.w
+					>> tLightInfo.Range;		// Range
+
+			if (fin.eof())
+				break;
+
+			Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(Engine::CGraphicDevice::Get_Instance()->Get_GraphicDevice(),
+																					 Engine::CGraphicDevice::Get_Instance()->Get_CommandList(Engine::CMDID::CMD_MAIN),
+																					 Engine::LIGHTTYPE::D3DLIGHT_POINT,
+																					 tLightInfo), E_FAIL);
+
+			// ListBox 추가.
+			_uint iSize = (_uint)Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::LIGHTTYPE::D3DLIGHT_POINT).size();
+			_tchar szTemp[MIN_STR] = L"";
+			wsprintf(szTemp, L"Index : %d", iSize - 1);
+			m_LightInfoListBox_PL_List.AddString(szTemp);
+		}
+
+	}
 
 	UpdateData(FALSE);
 }
@@ -3663,8 +3781,6 @@ void CTabMap::OnEnChangeEdit1055_LightInfo_SL_Far()
 
 void CTabMap::OnBnClickedButton1011__LightInfo_SL_SAVE()
 {
-	UpdateData(TRUE);
-
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	UpdateData(TRUE);
 
@@ -3707,8 +3823,8 @@ void CTabMap::OnBnClickedButton1011__LightInfo_SL_SAVE()
 				<< tDirLightInfo.Specular.y		<< L" " 
 				<< tDirLightInfo.Specular.z		<< L" "	
 				<< tDirLightInfo.Specular.w		<< L" " 
-				<< tDirLightInfo.Ambient.x		<< L" "
-				<< tDirLightInfo.Ambient.y		<< L" "	// Ambient
+				<< tDirLightInfo.Ambient.x		<< L" "	// Ambient
+				<< tDirLightInfo.Ambient.y		<< L" "	
 				<< tDirLightInfo.Ambient.z		<< L" "			
 				<< tDirLightInfo.Ambient.w		<< L" "
 				<< tDirLightInfo.Direction.x	<< L" "	// Direction
@@ -3775,8 +3891,8 @@ void CTabMap::OnBnClickedButton1012_LightInfo_SL_LOAD()
 					>> tDirLightInfo.Specular.y	
 					>> tDirLightInfo.Specular.z	
 					>> tDirLightInfo.Specular.w	
-					>> tDirLightInfo.Ambient.x	
-					>> tDirLightInfo.Ambient.y		// Ambient
+					>> tDirLightInfo.Ambient.x		// Ambient
+					>> tDirLightInfo.Ambient.y	
 					>> tDirLightInfo.Ambient.z			
 					>> tDirLightInfo.Ambient.w	
 					>> tDirLightInfo.Direction.x	// Direction
