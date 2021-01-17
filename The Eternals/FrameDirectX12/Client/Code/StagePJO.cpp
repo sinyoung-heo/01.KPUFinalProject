@@ -1,6 +1,5 @@
 #include "stdafx.h"
-#include "Scene_Stage.h"
-
+#include "StagePJO.h"
 #include "ComponentMgr.h"
 #include "GraphicDevice.h"
 #include "LightMgr.h"
@@ -17,14 +16,14 @@
 #include "TerrainMeshObject.h"
 
 
-CScene_Stage::CScene_Stage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CStagePJO::CStagePJO(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
 {
 }
 
 
 
-HRESULT CScene_Stage::Ready_Scene()
+HRESULT CStagePJO::Ready_Scene()
 {
 #ifdef CLIENT_LOG
 	COUT_STR("<< Ready Scene_Stage >>");
@@ -42,24 +41,24 @@ HRESULT CScene_Stage::Ready_Scene()
 	return S_OK;
 }
 
-_int CScene_Stage::Update_Scene(const _float & fTimeDelta)
+_int CStagePJO::Update_Scene(const _float & fTimeDelta)
 {
 	return Engine::CScene::Update_Scene(fTimeDelta);
 }
 
-_int CScene_Stage::LateUpdate_Scene(const _float & fTimeDelta)
+_int CStagePJO::LateUpdate_Scene(const _float & fTimeDelta)
 {
 	return Engine::CScene::LateUpdate_Scene(fTimeDelta);
 }
 
-HRESULT CScene_Stage::Render_Scene(const _float & fTimeDelta, const Engine::RENDERID& eID)
+HRESULT CStagePJO::Render_Scene(const _float & fTimeDelta, const Engine::RENDERID& eID)
 {
 	Engine::FAILED_CHECK_RETURN(CScene::Render_Scene(fTimeDelta, eID), E_FAIL);
 
 	return S_OK;
 }
 
-HRESULT CScene_Stage::Ready_LayerCamera(wstring wstrLayerTag)
+HRESULT CStagePJO::Ready_LayerCamera(wstring wstrLayerTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
 	
@@ -111,7 +110,7 @@ HRESULT CScene_Stage::Ready_LayerCamera(wstring wstrLayerTag)
 }
 
 
-HRESULT CScene_Stage::Ready_LayerEnvironment(wstring wstrLayerTag)
+HRESULT CStagePJO::Ready_LayerEnvironment(wstring wstrLayerTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
 
@@ -136,7 +135,7 @@ HRESULT CScene_Stage::Ready_LayerEnvironment(wstring wstrLayerTag)
 	return S_OK;
 }
 
-HRESULT CScene_Stage::Ready_LayerGameObject(wstring wstrLayerTag)
+HRESULT CStagePJO::Ready_LayerGameObject(wstring wstrLayerTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
 
@@ -243,7 +242,7 @@ HRESULT CScene_Stage::Ready_LayerGameObject(wstring wstrLayerTag)
 	return S_OK;
 }
 
-HRESULT CScene_Stage::Ready_LayerUI(wstring wstrLayerTag)
+HRESULT CStagePJO::Ready_LayerUI(wstring wstrLayerTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
 
@@ -258,7 +257,7 @@ HRESULT CScene_Stage::Ready_LayerUI(wstring wstrLayerTag)
 	return S_OK;
 }
 
-HRESULT CScene_Stage::Ready_LayerFont(wstring wstrLayerTag)
+HRESULT CStagePJO::Ready_LayerFont(wstring wstrLayerTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
 
@@ -273,7 +272,7 @@ HRESULT CScene_Stage::Ready_LayerFont(wstring wstrLayerTag)
 	return S_OK;
 }
 
-HRESULT CScene_Stage::Ready_LightInfo()
+HRESULT CStagePJO::Ready_LightInfo()
 {
 	Engine::D3DLIGHT tLightInfo;
 	ZeroMemory(&tLightInfo, sizeof(Engine::D3DLIGHT));
@@ -294,6 +293,7 @@ HRESULT CScene_Stage::Ready_LightInfo()
 	tLightInfo.Diffuse		= _rgba(0.2f, 0.2f, 1.0f, 1.0f);
 	tLightInfo.Specular		= _rgba(0.3f, 0.3f, 0.3f, 1.0f);
 	tLightInfo.Ambient		= _rgba(0.3f, 0.3f, 0.3f, 1.0f);
+	tLightInfo.Direction	= _vec4(0.0f, 0.0f, 0.0f, 0.0f);
 	tLightInfo.Position		= _vec4(5.0f, 50.0f, 0.0f, 1.0f);
 	tLightInfo.Range		= 50.0f;
 	Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice,
@@ -305,6 +305,7 @@ HRESULT CScene_Stage::Ready_LightInfo()
 	tLightInfo.Diffuse		= _rgba(1.0f, 0.2f, 0.2f, 1.0f);
 	tLightInfo.Specular		= _rgba(0.3f, 0.3f, 0.3f, 1.0f);
 	tLightInfo.Ambient		= _rgba(0.3f, 0.3f, 0.3f, 0.3f);
+	tLightInfo.Direction	= _vec4(0.0f, 0.0f, 0.0f, 0.0f);
 	tLightInfo.Position		= _vec4(10.0f, 50.0f, 0.0f, 1.0f);
 	tLightInfo.Range		= 50.0f;
 	Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, 
@@ -315,7 +316,7 @@ HRESULT CScene_Stage::Ready_LightInfo()
 	return S_OK;
 }
 
-HRESULT CScene_Stage::Ready_NaviMesh()
+HRESULT CStagePJO::Ready_NaviMesh()
 {
 	Engine::CNaviMesh* pNaviMesh = Engine::CNaviMesh::Create(m_pGraphicDevice,
 															 m_pCommandList,
@@ -328,9 +329,9 @@ HRESULT CScene_Stage::Ready_NaviMesh()
 	return S_OK;
 }
 
-CScene_Stage * CScene_Stage::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CStagePJO * CStagePJO::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 {
-	CScene_Stage* pInstance = new CScene_Stage(pGraphicDevice, pCommandList);
+	CStagePJO* pInstance = new CStagePJO(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_Scene()))
 		Engine::Safe_Release(pInstance);
@@ -338,7 +339,7 @@ CScene_Stage * CScene_Stage::Create(ID3D12Device* pGraphicDevice, ID3D12Graphics
 	return pInstance;
 }
 
-void CScene_Stage::Free()
+void CStagePJO::Free()
 {
 	Engine::CScene::Free();
 }

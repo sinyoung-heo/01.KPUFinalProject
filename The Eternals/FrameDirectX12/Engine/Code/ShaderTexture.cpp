@@ -134,88 +134,131 @@ HRESULT CShaderTexture::Create_PipelineState()
 	____________________________________________________________________________________________________________*/
 	ID3D12PipelineState*				pPipelineState = nullptr;
 	vector<D3D12_INPUT_ELEMENT_DESC>	vecInputLayout;
-
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC	PipelineStateDesc;
 	ZeroMemory(&PipelineStateDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
+
+	/*__________________________________________________________________________________________________________
+	[ 0번 PipelineState Pass ]
+	- "VS_NORMAL_MAIN"
+	- "PS_NORMAL_MAIN"
+	- FILL_MODE_SOLID
+	- CULL_MODE_BACK
+	____________________________________________________________________________________________________________*/
 	PipelineStateDesc.pRootSignature		= m_pRootSignature;
 	PipelineStateDesc.SampleMask			= UINT_MAX;
 	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
 	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
 	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;
+	PipelineStateDesc.NumRenderTargets		= 1;
+	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R8G8B8A8_UNORM;
+	vecInputLayout							= Create_InputLayout("VS_NORMAL_MAIN", "PS_NORMAL_MAIN");
+	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState			= Create_BlendState();
+	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState();
+	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState();
 
+	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
+	m_vecPipelineState.emplace_back(pPipelineState);
+	CRenderer::Get_Instance()->Add_PipelineStateCnt();
 
-	// 0번 PipelineState Pass
-	PipelineStateDesc.NumRenderTargets	= 2;
-	PipelineStateDesc.RTVFormats[0]		= DXGI_FORMAT_R8G8B8A8_UNORM;
-	PipelineStateDesc.RTVFormats[1]		= DXGI_FORMAT_R8G8B8A8_UNORM;
-	vecInputLayout						= Create_InputLayout("VS_NORMAL_MAIN", "PS_NORMAL_MAIN");
-	PipelineStateDesc.InputLayout		= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
-	PipelineStateDesc.VS				= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.PS				= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.BlendState		= Create_BlendState();
-	PipelineStateDesc.RasterizerState	= CShader::Create_RasterizerState();
-	PipelineStateDesc.DepthStencilState	= CShader::Create_DepthStencilState();
+	/*__________________________________________________________________________________________________________
+	[ 1번 PipelineState Pass ]
+	- "VS_NORMAL_MAIN"
+	- "PS_NORMAL_MAIN"
+	- FILL_MODE_WIREFRAME
+	- CULL_MODE_BACK
+	____________________________________________________________________________________________________________*/
+	PipelineStateDesc.pRootSignature		= m_pRootSignature;
+	PipelineStateDesc.SampleMask			= UINT_MAX;
+	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;
+	PipelineStateDesc.NumRenderTargets		= 1;
+	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R8G8B8A8_UNORM;
+	vecInputLayout							= Create_InputLayout("VS_NORMAL_MAIN", "PS_NORMAL_MAIN");
+	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState			= Create_BlendState();
+	PipelineStateDesc.RasterizerState		= Create_RasterizerState(D3D12_FILL_MODE_WIREFRAME);
+	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState();
 
-	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc,
-																	  IID_PPV_ARGS(&pPipelineState)),
-																	  E_FAIL);
+	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
 	CRenderer::Get_Instance()->Add_PipelineStateCnt();
 
 
-	// 1번 PipelineState Pass
-	PipelineStateDesc.RasterizerState = Create_RasterizerState(D3D12_FILL_MODE_WIREFRAME);
+	/*__________________________________________________________________________________________________________
+	[ 2번 PipelineState Pass ]
+	- "VS_TEXTURE_SPRITE"
+	- "PS_TEXTURE_SPRITE"
+	- FILL_MODE_SOLID
+	- CULL_MODE_NONE
+	- BLEND (O)
+	____________________________________________________________________________________________________________*/
+	PipelineStateDesc.pRootSignature		= m_pRootSignature;
+	PipelineStateDesc.SampleMask			= UINT_MAX;
+	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;
+	PipelineStateDesc.NumRenderTargets		= 1;
+	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R8G8B8A8_UNORM;
+	vecInputLayout							= Create_InputLayout("VS_TEXTURE_SPRITE", "PS_TEXTURE_SPRITE");
+	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState			= Create_BlendState(true,
+																D3D12_BLEND_ONE,
+																D3D12_BLEND_ONE,
+																D3D12_BLEND_OP_ADD,
+																D3D12_BLEND_ONE,
+																D3D12_BLEND_ONE,
+																D3D12_BLEND_OP_ADD);
+	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
+	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState(true);
 
-	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, 
-																	  IID_PPV_ARGS(&pPipelineState)), 
-																	  E_FAIL);
+	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
 	CRenderer::Get_Instance()->Add_PipelineStateCnt();
 
 
-	// 2번 PipelineState Pass
-	vecInputLayout						= Create_InputLayout("VS_TEXTURE_SPRITE", "PS_TEXTURE_SPRITE");
-	PipelineStateDesc.InputLayout		= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
-	PipelineStateDesc.VS				= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.PS				= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.BlendState		= Create_BlendState(true,
-															D3D12_BLEND_ONE,
-															D3D12_BLEND_ONE,
-															D3D12_BLEND_OP_ADD,
-															D3D12_BLEND_ONE,
-															D3D12_BLEND_ONE,
-															D3D12_BLEND_OP_ADD);
-	PipelineStateDesc.RasterizerState	= CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
-	PipelineStateDesc.DepthStencilState = CShader::Create_DepthStencilState(true);
 
-	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, 
-																	  IID_PPV_ARGS(&pPipelineState)), 
-																	  E_FAIL);
-	m_vecPipelineState.emplace_back(pPipelineState);
-	CRenderer::Get_Instance()->Add_PipelineStateCnt();
-
-
-	// 3번 PipelineState Pass - RenderTarget Texture
+	/*__________________________________________________________________________________________________________
+	[ 3번 PipelineState Pass - RenderTarget Texture ]
+	- "VS_MAIN"
+	- "PS_MAIN"
+	- FILL_MODE_SOLID
+	- CULL_MODE_BACK
+	____________________________________________________________________________________________________________*/
+	PipelineStateDesc.pRootSignature		= m_pRootSignature;
+	PipelineStateDesc.SampleMask			= UINT_MAX;
+	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;
+	PipelineStateDesc.NumRenderTargets		= 1;
+	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R8G8B8A8_UNORM;
 	m_pVS_ByteCode = Compile_Shader(L"../../Bin/Shader/ShaderTexture.hlsl", nullptr, "VS_MAIN", "vs_5_1");
 	m_pPS_ByteCode = Compile_Shader(L"../../Bin/Shader/ShaderTexture.hlsl", nullptr, "PS_MAIN", "ps_5_1");
-
 	_uint uiOffset = 0;
 	vecInputLayout =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, uiOffset, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, uiOffset += sizeof(_vec3), D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
-	PipelineStateDesc.InputLayout		= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
-	PipelineStateDesc.VS				= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.PS				= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.BlendState		= Create_BlendState();
-	PipelineStateDesc.RasterizerState	= CShader::Create_RasterizerState();
-	PipelineStateDesc.DepthStencilState	= CShader::Create_DepthStencilState();
+	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState			= Create_BlendState();
+	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState();
+	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState();
 
-	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, 
-																	  IID_PPV_ARGS(&pPipelineState)), 
-																	  E_FAIL);
+	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
 	CRenderer::Get_Instance()->Add_PipelineStateCnt();
 

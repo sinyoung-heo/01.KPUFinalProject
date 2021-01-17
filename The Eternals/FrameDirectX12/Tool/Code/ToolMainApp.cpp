@@ -265,6 +265,14 @@ void CToolMainApp::Key_Input()
 	____________________________________________________________________________________________________________*/
 	if (Engine::KEY_DOWN(DIK_F1))
 		m_pRenderer->Set_RenderOnOff(L"RenderTarget");
+
+	if (Engine::KEY_DOWN(DIK_F2))
+		m_pRenderer->Set_RenderOnOff(L"Font");
+
+	if (Engine::KEY_DOWN(DIK_F3))
+		m_pRenderer->Set_RenderOnOff(L"Collider");
+
+
 }
 
 CToolMainApp* CToolMainApp::Create()

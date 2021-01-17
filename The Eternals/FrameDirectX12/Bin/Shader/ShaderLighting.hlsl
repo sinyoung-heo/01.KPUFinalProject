@@ -26,7 +26,6 @@ cbuffer cbLightInfo : register(b0)
 	float4	vLightSpecular	: packoffset(c1);
 	float4	vLightAmibient	: packoffset(c2);
 	float4	vLightDirection	: packoffset(c3);
-
 	float4	vLightPosition	: packoffset(c4);
 	float	fLightRange		: packoffset(c5);
 };
@@ -35,12 +34,17 @@ cbuffer cbCameraInfo : register(b1)
 {
 	float4x4	matViewInv		: packoffset(c0);
 	float4x4	matProjInv		: packoffset(c4);
-
 	float4		vCameraPosition	: packoffset(c8);
-
 	float		fProjNear		: packoffset(c9);
 	float		fProjFar		: packoffset(c10);
 };
+
+
+/*__________________________________________________________________________________________________________
+[ Global ]
+____________________________________________________________________________________________________________*/
+static float fFar = 1000.0f;
+
 
 
 // VS_MAIN
@@ -85,7 +89,8 @@ PS_OUT PS_DIRECTION(VS_OUT ps_input) : SV_TARGET
 	float4 TexNormal	= g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
 	float4 Normal		= vector(TexNormal.xyz * 2.f - 1.f, 0.f);
 	
-	float4 Shade		= saturate(dot(normalize(vLightDirection), Normal));
+	float4 vDirection = vLightDirection * -1.0f;
+	float4 Shade		= saturate(dot(normalize(vDirection), Normal));
 	ps_output.Shade		= (vLightDiffuse) * (Shade + (vLightAmibient));
 	ps_output.Shade.a	= 1.0f;
 	
@@ -97,7 +102,7 @@ PS_OUT PS_DIRECTION(VS_OUT ps_input) : SV_TARGET
 	____________________________________________________________________________________________________________*/
 	float4	Depth	= g_TexDepth.Sample(g_samLinearWrap, ps_input.TexUV);
 	
-	float	ViewZ	= Depth.y * 1000.0f;
+	float	ViewZ	= Depth.y * fFar;
 	float4	Pos		= Depth;
 	// (0, 0) ~ (1, 1) => (-1, 1) ~ (1, -1)
 	Pos.x = (ps_input.TexUV.x *  2.0f - 1.0f) * ViewZ;	// UV좌표 -> 투영좌표 * ViewZ
@@ -108,7 +113,7 @@ PS_OUT PS_DIRECTION(VS_OUT ps_input) : SV_TARGET
 	Pos = mul(Pos, matProjInv);	// Proj의 역행렬을 곱하여 View영역의 Pos.
 	Pos = mul(Pos, matViewInv);	// View의 역행렬을 곱하여 World영역의 Pos.
 	
-	float3 LightDir		= normalize(vLightDirection.xyz);
+	float3 LightDir		= normalize(vDirection.xyz);
 	float3 Reflection	= normalize(reflect(LightDir, Normal.xyz));
 	float3 Look			= normalize(vCameraPosition.xyz - Pos.xyz);
 	
@@ -137,7 +142,7 @@ PS_OUT PS_POINT(VS_OUT ps_input)
 	float4	Normal		= float4(TexNormal.xyz * 2.f - 1.f, 0.f);
 	
 	float4	Depth		= g_TexDepth.Sample(g_samLinearWrap, ps_input.TexUV);
-	float	ViewZ		= Depth.y * 1000.0f;
+	float	ViewZ		= Depth.y * fFar;
 	
 	// (0, 0) ~ (1, 1) => (-1, 1) ~ (1, -1)
 	float4	Pos;

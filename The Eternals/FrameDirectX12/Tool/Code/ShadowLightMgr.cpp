@@ -20,13 +20,13 @@ _int CShadowLightMgr::Update_ShadowLight()
 	_vec3 vAt	= m_vLightAt;
 	_vec3 vUp	= _vec3(0.0f, 1.0f, 0.0f);
 
-	m_tShadowInfo.vLightPosition	= _vec4(m_vLightEye, 1.0f);
-	m_tShadowInfo.matLightView		= XMMatrixLookAtLH(m_vLightEye.Get_XMVECTOR(),
+	m_tShadowDesc.vLightPosition	= _vec4(m_vLightEye, 1.0f);
+	m_tShadowDesc.matLightView		= XMMatrixLookAtLH(m_vLightEye.Get_XMVECTOR(),
 													   vAt.Get_XMVECTOR(),
 													   vUp.Get_XMVECTOR());
 	// LightProj
-	m_tShadowInfo.fLightPorjFar		= m_fFar;
-	m_tShadowInfo.matLightProj		= XMMatrixPerspectiveFovLH(XMConvertToRadians(m_fFovY),
+	m_tShadowDesc.fLightPorjFar		= m_fFar;
+	m_tShadowDesc.matLightProj		= XMMatrixPerspectiveFovLH(XMConvertToRadians(m_fFovY),
 															   1.0f,
 															   m_fNear, 
 															   m_fFar);

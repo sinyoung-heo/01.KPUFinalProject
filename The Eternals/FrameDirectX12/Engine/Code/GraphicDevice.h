@@ -67,6 +67,8 @@ private:
 	void	Get_HardwareAdapter(IDXGIFactory2* pFactory, IDXGIAdapter1** ppOutAdapter);
 
 private:
+	_bool m_bIsLateInit = false;
+
 	/*__________________________________________________________________________________________________________
 	[ DirectX 12 GraphicDevice ]
 	IDXGIFactory	: IDXGISwapChain 인터페이스 생성과 디스플레이 어댑터(그래픽 카드) 열거에 쓰임.
@@ -140,7 +142,6 @@ private:
 	_uint											m_uiMSAA4X_QualityLevels		= 0;
 	D3D12_VIEWPORT									m_Viewport						{ };
 	D3D12_RECT										m_ScissorRect					{ };
-	D3D12_RESOURCE_BARRIER							m_RenterTargetResourceBarrier;
 
 	ID3D12Resource*									m_pDepthStencilBuffer			= nullptr;
 
