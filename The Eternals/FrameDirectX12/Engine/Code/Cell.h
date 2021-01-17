@@ -20,26 +20,26 @@ private:
 	virtual ~CCell() = default;
 
 public:
+	// Get
 	CLine&			Get_Line(const int& iIndex)					{ return *m_pLine[iIndex]; }
 	const _vec3*	Get_Point(const POINT& eType)		const	{ return &m_vPoint[eType]; }
 	CCell*			Get_Neighbor(const NEIGHBOR& eType) const	{ return m_pNeighbor[eType]; }
 	const _ulong*	Get_Index()									{ return &m_dwCurrentIdx; }
+	
+	// Set
 	void			Set_Neighbor(const NEIGHBOR& eType, CCell* pNeighbor) { m_pNeighbor[eType] = pNeighbor; }
 
-
+	// Method
 	HRESULT			Ready_Cell(const _ulong& dwIndex,
-							   const _vec3* pPointA,
-							   const _vec3* pPointB,
-							   const _vec3* pPointC);
+							   const _vec3& vPointA,
+							   const _vec3& vPointB,
+							   const _vec3& vPointC);
 	HRESULT			Ready_Component();
 	virtual void	Update_Component(const _float& fTimeDelta);
 	virtual void	Render_Component(const _float& fTimeDelta);
 	void			Set_ConstantTable();
 
-	_bool			Compare_Point(const _vec3* pPointF,
-								  const _vec3* pPointS,
-								  CCell* pCell);
-
+	_bool			Compare_Point(const _vec3* pPointF, const _vec3* pPointS, CCell* pCell);
 	COMPARE			Compare(const _vec3* pEndPos,
 							_ulong* pIndex,
 							const _float& fTargetSpeed,
@@ -47,10 +47,7 @@ public:
 							_vec3* pTargetDir = nullptr,
 							_vec3* pSlidingDir = nullptr);
 
-	COMPARE			Compare(_vec3* pEndPos,
-							_ulong* pIndex, 
-							_int* iLineIndex);
-
+	COMPARE			Compare(_vec3* pEndPos, _ulong* pIndex, _int* iLineIndex);
 	float			Position_On_Height(const _vec3* vPos);
 
 public:
@@ -76,9 +73,9 @@ public:
 	static CCell* Create(ID3D12Device* pGraphicDevice, 
 						 ID3D12GraphicsCommandList* pCommandList,
 						 const _ulong& dwIndex,
-						 const _vec3* pPointA,
-						 const _vec3* pPointB,
-						 const _vec3* pPointC);
+						 const _vec3& vPointA,
+						 const _vec3& vPointB,
+						 const _vec3& vPointC);
 private:
 	virtual void Free();
 };

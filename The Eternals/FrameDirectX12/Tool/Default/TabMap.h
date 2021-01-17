@@ -40,6 +40,7 @@ public:
 	HRESULT Ready_EditControl();
 	HRESULT Ready_StaticMeshControl();
 	HRESULT Ready_LightingInfoContorl();
+	HRESULT Ready_NavigationMeshControl();
 
 	/*__________________________________________________________________________________________________________
 	[ TERRAIN ]
@@ -345,4 +346,45 @@ public:
 	float m_fLightInfo_SL_FovY		= 30.0f;
 	float m_fLightInfo_SL_Near		= 1.0f;
 	float m_fLightInfo_SL_Far		= 10'000.0f;
+
+
+
+	/*__________________________________________________________________________________________________________
+	[ NAVIGATION MESH ]
+	____________________________________________________________________________________________________________*/
+	// Funtion
+	afx_msg void OnBnClickedRadio1011_NaviMeshCreateMode();
+	afx_msg void OnBnClickedRadio1012_NaviMeshModifyMode();
+
+	// Contorl
+	CButton		m_NaviMeshRadio_CreateMode;
+	CButton		m_NaviMeshRadio_ModifyMode;
+	CButton		m_NaviMeshCheck_AutoCreate;
+	CListBox	m_NaviMeshListBox_CellList;
+	CButton		m_NaviMeshButton_Delete;
+	CButton		m_NaviMeshButton_AllDelete;
+	CEdit		m_NaviMeshEdit_PointA_X;
+	CEdit		m_NaviMeshEdit_PointA_Y;
+	CEdit		m_NaviMeshEdit_PointA_Z;
+	CEdit		m_NaviMeshEdit_PointB_X;
+	CEdit		m_NaviMeshEdit_PointB_Y;
+	CEdit		m_NaviMeshEdit_PointB_Z;
+	CEdit		m_NaviMeshEdit_PointC_X;
+	CEdit		m_NaviMeshEdit_PointC_Y;
+	CEdit		m_NaviMeshEdit_PointC_Z;
+	CButton		m_NaviMeshButton_SAVE;
+	CButton		m_NaviMeshButton_LOAD;
+
+	// Value
+	float m_fNaviMeshPointA_X = 0.0f;
+	float m_fNaviMeshPointA_Y = 0.0f;
+	float m_fNaviMeshPointA_Z = 0.0f;
+	float m_fNaviMeshPointB_X = 0.0f;
+	float m_fNaviMeshPointB_Y = 0.0f;
+	float m_fNaviMeshPointB_Z = 0.0f;
+	float m_fNaviMeshPointC_X = 0.0f;
+	float m_fNaviMeshPointC_Y = 0.0f;
+	float m_fNaviMeshPointC_Z = 0.0f;
+	_bool m_bIsNaviCreateMode = true;
+	_bool m_bIsNaviModifyMode = false;
 };

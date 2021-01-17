@@ -113,20 +113,37 @@
 #define IDC_EDIT1048                    1095
 #define IDC_EDIT1049                    1096
 #define IDC_SPIN1010                    1097
+#define IDC_RADIO1011                   1097
 #define IDC_SPIN1011                    1098
+#define IDC_RADIO1012                   1098
 #define IDC_SPIN1012                    1099
+#define IDC_CHECK1010                   1099
 #define IDC_EDIT1056                    1100
 #define IDC_EDIT1050                    1101
 #define IDC_EDIT1051                    1102
 #define IDC_EDIT1052                    1103
 #define IDC_SPIN1013                    1104
+#define IDC_LIST1005                    1104
 #define IDC_SPIN1014                    1105
+#define IDC_BUTTON1013                  1105
 #define IDC_SPIN1015                    1106
+#define IDC_BUTTON1014                  1106
 #define IDC_EDIT1053                    1107
 #define IDC_EDIT1054                    1108
 #define IDC_EDIT1055                    1109
+#define IDC_EDIT1063                    1110
 #define IDC_BUTTON1011                  1111
 #define IDC_BUTTON1012                  1112
+#define IDC_EDIT1064                    1113
+#define IDC_EDIT1065                    1114
+#define IDC_EDIT1066                    1115
+#define IDC_EDIT1067                    1116
+#define IDC_EDIT1068                    1117
+#define IDC_EDIT1069                    1118
+#define IDC_EDIT1070                    1119
+#define IDC_EDIT1071                    1120
+#define IDC_BUTTON1015                  1121
+#define IDC_BUTTON1016                  1122
 
 // Next default values for new objects
 // 
@@ -134,7 +151,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        319
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1098
+#define _APS_NEXT_CONTROL_VALUE         1105
 #define _APS_NEXT_SYMED_VALUE           316
 #endif
 #endif

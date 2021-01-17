@@ -143,6 +143,8 @@ HRESULT CShaderTexture::Create_PipelineState()
 	- "PS_NORMAL_MAIN"
 	- FILL_MODE_SOLID
 	- CULL_MODE_BACK
+	- Blend		(X)
+	- Z Write	(O)
 	____________________________________________________________________________________________________________*/
 	PipelineStateDesc.pRootSignature		= m_pRootSignature;
 	PipelineStateDesc.SampleMask			= UINT_MAX;
@@ -170,6 +172,8 @@ HRESULT CShaderTexture::Create_PipelineState()
 	- "PS_NORMAL_MAIN"
 	- FILL_MODE_WIREFRAME
 	- CULL_MODE_BACK
+	- Blend		(X)
+	- Z Write	(O)
 	____________________________________________________________________________________________________________*/
 	PipelineStateDesc.pRootSignature		= m_pRootSignature;
 	PipelineStateDesc.SampleMask			= UINT_MAX;
@@ -198,7 +202,8 @@ HRESULT CShaderTexture::Create_PipelineState()
 	- "PS_TEXTURE_SPRITE"
 	- FILL_MODE_SOLID
 	- CULL_MODE_NONE
-	- BLEND (O)
+	- Blend		(X)
+	- Z Write	(O)
 	____________________________________________________________________________________________________________*/
 	PipelineStateDesc.pRootSignature		= m_pRootSignature;
 	PipelineStateDesc.SampleMask			= UINT_MAX;
@@ -234,6 +239,8 @@ HRESULT CShaderTexture::Create_PipelineState()
 	- "PS_MAIN"
 	- FILL_MODE_SOLID
 	- CULL_MODE_BACK
+	- Blend		(X)
+	- Z Write	(O)
 	____________________________________________________________________________________________________________*/
 	PipelineStateDesc.pRootSignature		= m_pRootSignature;
 	PipelineStateDesc.SampleMask			= UINT_MAX;

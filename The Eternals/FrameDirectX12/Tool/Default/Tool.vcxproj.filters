@@ -98,6 +98,9 @@
     <Filter Include="03.ToolGameObject\01.Popori_F">
       <UniqueIdentifier>{3e178d98-c6c9-4e3d-9f70-2303c490a8f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.ToolGameObject\00.Environment\04.Cell">
+      <UniqueIdentifier>{44fd862a-2012-42ef-8e70-3fb3299cd1e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
@@ -202,6 +205,7 @@
     <ClInclude Include="..\Code\Popori_F.h">
       <Filter>03.ToolGameObject\01.Popori_F</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ToolCell.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -279,6 +283,7 @@
     <ClCompile Include="..\Code\Popori_F.cpp">
       <Filter>03.ToolGameObject\01.Popori_F</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\ToolCell.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Tool.rc">

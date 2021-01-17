@@ -188,6 +188,32 @@ void CTabMap::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT1054, m_fLightInfo_SL_Near);
 	DDX_Text(pDX, IDC_EDIT1055, m_fLightInfo_SL_Far);
 	DDX_Control(pDX, IDC_CHECK1008, m_StaticMeshCheck_IsMousePicking);
+	DDX_Control(pDX, IDC_RADIO1011, m_NaviMeshRadio_CreateMode);
+	DDX_Control(pDX, IDC_RADIO1012, m_NaviMeshRadio_ModifyMode);
+	DDX_Control(pDX, IDC_CHECK1010, m_NaviMeshCheck_AutoCreate);
+	DDX_Control(pDX, IDC_LIST1005, m_NaviMeshListBox_CellList);
+	DDX_Control(pDX, IDC_BUTTON1013, m_NaviMeshButton_Delete);
+	DDX_Control(pDX, IDC_BUTTON1014, m_NaviMeshButton_AllDelete);
+	DDX_Control(pDX, IDC_EDIT1063, m_NaviMeshEdit_PointA_X);
+	DDX_Control(pDX, IDC_EDIT1064, m_NaviMeshEdit_PointA_Y);
+	DDX_Control(pDX, IDC_EDIT1065, m_NaviMeshEdit_PointA_Z);
+	DDX_Control(pDX, IDC_EDIT1066, m_NaviMeshEdit_PointB_X);
+	DDX_Control(pDX, IDC_EDIT1067, m_NaviMeshEdit_PointB_Y);
+	DDX_Control(pDX, IDC_EDIT1068, m_NaviMeshEdit_PointB_Z);
+	DDX_Control(pDX, IDC_EDIT1069, m_NaviMeshEdit_PointC_X);
+	DDX_Control(pDX, IDC_EDIT1070, m_NaviMeshEdit_PointC_Y);
+	DDX_Control(pDX, IDC_EDIT1071, m_NaviMeshEdit_PointC_Z);
+	DDX_Control(pDX, IDC_BUTTON1015, m_NaviMeshButton_SAVE);
+	DDX_Control(pDX, IDC_BUTTON1016, m_NaviMeshButton_LOAD);
+	DDX_Text(pDX, IDC_EDIT1063, m_fNaviMeshPointA_X);
+	DDX_Text(pDX, IDC_EDIT1064, m_fNaviMeshPointA_Y);
+	DDX_Text(pDX, IDC_EDIT1065, m_fNaviMeshPointA_Z);
+	DDX_Text(pDX, IDC_EDIT1066, m_fNaviMeshPointB_X);
+	DDX_Text(pDX, IDC_EDIT1067, m_fNaviMeshPointB_Y);
+	DDX_Text(pDX, IDC_EDIT1068, m_fNaviMeshPointB_Z);
+	DDX_Text(pDX, IDC_EDIT1069, m_fNaviMeshPointC_X);
+	DDX_Text(pDX, IDC_EDIT1070, m_fNaviMeshPointC_Y);
+	DDX_Text(pDX, IDC_EDIT1071, m_fNaviMeshPointC_Z);
 }
 
 
@@ -283,6 +309,8 @@ BEGIN_MESSAGE_MAP(CTabMap, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK1008, &CTabMap::OnBnClickedCheck1008_StaticMeshIsMousePicking)
 	ON_BN_CLICKED(IDC_BUTTON1007, &CTabMap::OnBnClickedButton1007_LightInfo_PL_DELETE)
 	ON_BN_CLICKED(IDC_BUTTON1008, &CTabMap::OnBnClickedButton1008_LightInfo_PL_ALLDELETE)
+	ON_BN_CLICKED(IDC_RADIO1011, &CTabMap::OnBnClickedRadio1011_NaviMeshCreateMode)
+	ON_BN_CLICKED(IDC_RADIO1012, &CTabMap::OnBnClickedRadio1012_NaviMeshModifyMode)
 END_MESSAGE_MAP()
 
 
@@ -394,6 +422,25 @@ BOOL CTabMap::OnInitDialog()
 	m_LightInfoEdit_SL_Far.EnableWindow(FALSE);
 	m_LightInfoButton_SL_SAVE.EnableWindow(FALSE);
 	m_LightInfoButton_SL_LOAD.EnableWindow(FALSE);
+
+	// NavigationMesh
+	m_NaviMeshRadio_CreateMode.EnableWindow(FALSE);
+	m_NaviMeshRadio_ModifyMode.EnableWindow(FALSE);
+	m_NaviMeshCheck_AutoCreate.EnableWindow(FALSE);
+	m_NaviMeshListBox_CellList.EnableWindow(FALSE);
+	m_NaviMeshButton_Delete.EnableWindow(FALSE);
+	m_NaviMeshButton_AllDelete.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointA_X.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointA_Y.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointA_Z.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointB_X.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointB_Y.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointB_Z.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointC_X.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointC_Y.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointC_Z.EnableWindow(FALSE);
+	m_NaviMeshButton_SAVE.EnableWindow(FALSE);
+	m_NaviMeshButton_LOAD.EnableWindow(FALSE);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
@@ -977,6 +1024,8 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 		m_LightInfoEdit_PL_PosW.GetWindowRect(&rcLightInfoEdit_PL_Edit[15]);
 		m_LightInfoEdit_PL_Range.GetWindowRect(&rcLightInfoEdit_PL_Edit[16]);
 
+		Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+
 		if (PtInRect(&rcLightInfoEdit_PL_Edit[0], pt))			// PL_DiffuseR
 		{
 			if (zDelta > 0)
@@ -995,7 +1044,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Diffuse.x = m_fLightInfo_PL_DiffuseR;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[1], pt))		// PL_DiffuseG
@@ -1016,7 +1071,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Diffuse.y = m_fLightInfo_PL_DiffuseG;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[2], pt))		// PL_DiffuseB
@@ -1037,7 +1098,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Diffuse.z = m_fLightInfo_PL_DiffuseB;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[3], pt))		// PL_DiffuseA
@@ -1047,7 +1114,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Diffuse.w = m_fLightInfo_PL_DiffuseA;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[4], pt))		// PL_SpecularR
@@ -1068,7 +1141,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Specular.x = m_fLightInfo_PL_SpecularR;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[5], pt))		// PL_SpecularG
@@ -1089,7 +1168,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Specular.y = m_fLightInfo_PL_SpecularG;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[6], pt))		// PL_SpecularB
@@ -1110,7 +1195,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Specular.z = m_fLightInfo_PL_SpecularB;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[7], pt))		// PL_SpecularA
@@ -1120,7 +1211,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Specular.w = m_fLightInfo_PL_SpecularA;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[8], pt))		// PL_AmbientR
@@ -1141,7 +1238,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Ambient.x = m_fLightInfo_PL_AmbientR;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[9], pt))		// PL_AmbientG
@@ -1162,7 +1265,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Ambient.y = m_fLightInfo_PL_AmbientG;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[10], pt))	// PL_AmbientB
@@ -1183,7 +1292,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Ambient.z = m_fLightInfo_PL_AmbientB;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[11], pt))	// PL_AmbientA
@@ -1193,7 +1308,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Ambient.w = m_fLightInfo_PL_AmbientA;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[12], pt))	// PL_PosX
@@ -1206,7 +1327,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Position.x = m_fLightInfo_PL_PosX;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderPosition();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[13], pt))	// PL_PosY
@@ -1219,7 +1346,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Position.y = m_fLightInfo_PL_PosY;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderPosition();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[14], pt))	// PL_PosZ
@@ -1232,7 +1365,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Position.z = m_fLightInfo_PL_PosZ;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderPosition();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[15], pt))	// PL_PosW
@@ -1242,7 +1381,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Position.w = m_fLightInfo_PL_PosW;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderPosition();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[16], pt))	// PL_Range
@@ -1259,7 +1404,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Range = m_fLightInfo_PL_Range;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 
@@ -1599,6 +1750,48 @@ HRESULT CTabMap::Ready_LightingInfoContorl()
 	return S_OK;
 }
 
+HRESULT CTabMap::Ready_NavigationMeshControl()
+{
+	m_NaviMeshRadio_CreateMode.EnableWindow(FALSE);
+	m_NaviMeshRadio_CreateMode.SetCheck(true);
+	m_NaviMeshRadio_ModifyMode.EnableWindow(FALSE);
+	m_NaviMeshRadio_ModifyMode.SetCheck(false);
+	m_bIsNaviCreateMode = true;
+	m_bIsNaviModifyMode = false;
+
+	m_NaviMeshRadio_CreateMode.EnableWindow(FALSE);
+	m_NaviMeshRadio_ModifyMode.EnableWindow(FALSE);
+	m_NaviMeshCheck_AutoCreate.EnableWindow(FALSE);
+	m_NaviMeshListBox_CellList.EnableWindow(FALSE);
+	m_NaviMeshButton_Delete.EnableWindow(FALSE);
+	m_NaviMeshButton_AllDelete.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointA_X.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointA_Y.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointA_Z.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointB_X.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointB_Y.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointB_Z.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointC_X.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointC_Y.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointC_Z.EnableWindow(FALSE);
+	m_NaviMeshButton_SAVE.EnableWindow(FALSE);
+	m_NaviMeshButton_LOAD.EnableWindow(FALSE);
+
+	m_fNaviMeshPointA_X = 0.0f;
+	m_fNaviMeshPointA_Y = 0.0f;
+	m_fNaviMeshPointA_Z = 0.0f;
+	
+	m_fNaviMeshPointB_X = 0.0f;
+	m_fNaviMeshPointB_Y = 0.0f;
+	m_fNaviMeshPointB_Z = 0.0f;
+	
+	m_fNaviMeshPointC_X = 0.0f;
+	m_fNaviMeshPointC_Y = 0.0f;
+	m_fNaviMeshPointC_Z = 0.0f;
+
+	return S_OK;
+}
+
 
 
 void CTabMap::OnBnClickedRadio1001_Terrain128()
@@ -1870,6 +2063,25 @@ void CTabMap::OnBnClickedCheck1005_EditStaticMesh()
 	m_LightInfoButton_SL_SAVE.EnableWindow(FALSE);
 	m_LightInfoButton_SL_LOAD.EnableWindow(FALSE);
 
+	// NavigationMesh
+	m_NaviMeshRadio_CreateMode.EnableWindow(FALSE);
+	m_NaviMeshRadio_ModifyMode.EnableWindow(FALSE);
+	m_NaviMeshCheck_AutoCreate.EnableWindow(FALSE);
+	m_NaviMeshListBox_CellList.EnableWindow(FALSE);
+	m_NaviMeshButton_Delete.EnableWindow(FALSE);
+	m_NaviMeshButton_AllDelete.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointA_X.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointA_Y.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointA_Z.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointB_X.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointB_Y.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointB_Z.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointC_X.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointC_Y.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointC_Z.EnableWindow(FALSE);
+	m_NaviMeshButton_SAVE.EnableWindow(FALSE);
+	m_NaviMeshButton_LOAD.EnableWindow(FALSE);
+
 	UpdateData(FALSE);
 }
 
@@ -1991,6 +2203,25 @@ void CTabMap::OnBnClickedCheck1006_EditLightingInfo()
 	m_fLightInfo_PL_Range		= 10.0f;
 
 
+	// NavigationMesh
+	m_NaviMeshRadio_CreateMode.EnableWindow(FALSE);
+	m_NaviMeshRadio_ModifyMode.EnableWindow(FALSE);
+	m_NaviMeshCheck_AutoCreate.EnableWindow(FALSE);
+	m_NaviMeshListBox_CellList.EnableWindow(FALSE);
+	m_NaviMeshButton_Delete.EnableWindow(FALSE);
+	m_NaviMeshButton_AllDelete.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointA_X.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointA_Y.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointA_Z.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointB_X.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointB_Y.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointB_Z.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointC_X.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointC_Y.EnableWindow(FALSE);
+	m_NaviMeshEdit_PointC_Z.EnableWindow(FALSE);
+	m_NaviMeshButton_SAVE.EnableWindow(FALSE);
+	m_NaviMeshButton_LOAD.EnableWindow(FALSE);
+
 	UpdateData(FALSE);
 }
 
@@ -2048,7 +2279,6 @@ void CTabMap::OnBnClickedCheck1007_EditNavigationMesh()
 	m_LightInfoEdit_DL_DirectionY.EnableWindow(FALSE);
 	m_LightInfoEdit_DL_DirectionZ.EnableWindow(FALSE);
 	m_LightInfoEdit_DL_DirectionW.EnableWindow(FALSE);
-
 	m_LightInfoEdit_PL_DiffuseR.EnableWindow(FALSE);
 	m_LightInfoEdit_PL_DiffuseG.EnableWindow(FALSE);
 	m_LightInfoEdit_PL_DiffuseB.EnableWindow(FALSE);
@@ -2073,7 +2303,6 @@ void CTabMap::OnBnClickedCheck1007_EditNavigationMesh()
 	m_LightInfoButton_PL_ALLDELETE.EnableWindow(FALSE);
 	m_LightInfoButton_PL_SAVE.EnableWindow(FALSE);
 	m_LightInfoButton_PL_LOAD.EnableWindow(FALSE);
-
 	m_LightInfoEdit_SL_EyeX.EnableWindow(FALSE);
 	m_LightInfoEdit_SL_EyeY.EnableWindow(FALSE);
 	m_LightInfoEdit_SL_EyeZ.EnableWindow(FALSE);
@@ -2086,6 +2315,25 @@ void CTabMap::OnBnClickedCheck1007_EditNavigationMesh()
 	m_LightInfoEdit_SL_Far.EnableWindow(FALSE);
 	m_LightInfoButton_SL_SAVE.EnableWindow(FALSE);
 	m_LightInfoButton_SL_LOAD.EnableWindow(FALSE);
+
+	// NavigationMesh
+	m_NaviMeshRadio_CreateMode.EnableWindow(TRUE);
+	m_NaviMeshRadio_ModifyMode.EnableWindow(TRUE);
+	m_NaviMeshCheck_AutoCreate.EnableWindow(TRUE);
+	m_NaviMeshListBox_CellList.EnableWindow(TRUE);
+	m_NaviMeshButton_Delete.EnableWindow(TRUE);
+	m_NaviMeshButton_AllDelete.EnableWindow(TRUE);
+	m_NaviMeshEdit_PointA_X.EnableWindow(TRUE);
+	m_NaviMeshEdit_PointA_Y.EnableWindow(TRUE);
+	m_NaviMeshEdit_PointA_Z.EnableWindow(TRUE);
+	m_NaviMeshEdit_PointB_X.EnableWindow(TRUE);
+	m_NaviMeshEdit_PointB_Y.EnableWindow(TRUE);
+	m_NaviMeshEdit_PointB_Z.EnableWindow(TRUE);
+	m_NaviMeshEdit_PointC_X.EnableWindow(TRUE);
+	m_NaviMeshEdit_PointC_Y.EnableWindow(TRUE);
+	m_NaviMeshEdit_PointC_Z.EnableWindow(TRUE);
+	m_NaviMeshButton_SAVE.EnableWindow(TRUE);
+	m_NaviMeshButton_LOAD.EnableWindow(TRUE);
 
 	UpdateData(FALSE);
 }
@@ -2507,7 +2755,7 @@ void CTabMap::OnBnClickedButton1001_StasticMeshDelete()
 {
 	UpdateData(TRUE);
 
-	// 선택한 StaticMeshObject 삭제.
+	// 선택한 StaticMeshObject 삭제. (Picking)
 	if (m_iStaticMeshSelectIdx == -1)
 	{
 		if (nullptr != static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject)
@@ -2524,6 +2772,7 @@ void CTabMap::OnBnClickedButton1001_StasticMeshDelete()
 		}
 	}
 
+	// 선택한 StaticMeshObject 삭제. (LishtBox Select)
 	else if (!m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh")->empty() &&
 		m_iStaticMeshSelectIdx < m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"StaticMesh")->size())
 	{
@@ -3005,11 +3254,17 @@ void CTabMap::OnBnClickedRadio1009_LightInfo_PL_ModifyMode()
 void CTabMap::OnEnChangeEdit1030_LightInfo_PL_DiffuseR()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
 
-	if (m_bIsLightingModifyMode)
+
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode && 
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Diffuse.x = m_fLightInfo_PL_DiffuseR;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3019,11 +3274,16 @@ void CTabMap::OnEnChangeEdit1030_LightInfo_PL_DiffuseR()
 void CTabMap::OnEnChangeEdit1031_LightInfo_PL_DiffuseG()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
 
-	if (m_bIsLightingModifyMode)
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Diffuse.y = m_fLightInfo_PL_DiffuseG;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3033,11 +3293,16 @@ void CTabMap::OnEnChangeEdit1031_LightInfo_PL_DiffuseG()
 void CTabMap::OnEnChangeEdit1032_LightInfo_PL_DiffuseB()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
 
-	if (m_bIsLightingModifyMode)
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Diffuse.z = m_fLightInfo_PL_DiffuseB;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3048,10 +3313,15 @@ void CTabMap::OnEnChangeEdit1033_LightInfo_PL_DiffuseA()
 {
 	UpdateData(TRUE);
 
-	m_fLightInfo_PL_DiffuseA = 1.0f;
-	if (m_bIsLightingModifyMode)
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Diffuse.w = m_fLightInfo_PL_DiffuseA;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3061,11 +3331,16 @@ void CTabMap::OnEnChangeEdit1033_LightInfo_PL_DiffuseA()
 void CTabMap::OnEnChangeEdit1034_LightInfo_PL_SpecularR()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
 
-	if (m_bIsLightingModifyMode)
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Specular.x = m_fLightInfo_PL_SpecularR;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3075,11 +3350,16 @@ void CTabMap::OnEnChangeEdit1034_LightInfo_PL_SpecularR()
 void CTabMap::OnEnChangeEdit1035_LightInfo_PL_SpecularG()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
-
-	if (m_bIsLightingModifyMode)
+	
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Specular.y = m_fLightInfo_PL_SpecularG;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3089,11 +3369,16 @@ void CTabMap::OnEnChangeEdit1035_LightInfo_PL_SpecularG()
 void CTabMap::OnEnChangeEdit1036_LightInfo_PL_SpecularB()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
-
-	if (m_bIsLightingModifyMode)
+	
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Specular.z = m_fLightInfo_PL_SpecularB;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3105,10 +3390,18 @@ void CTabMap::OnEnChangeEdit1037_LightInfo_PL_SpecularA()
 	UpdateData(TRUE);
 
 	m_fLightInfo_PL_SpecularA = 1.0f;
-	if (m_bIsLightingModifyMode)
-	{
 
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
+	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Specular.w = m_fLightInfo_PL_SpecularA;
+
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
+
 	UpdateData(FALSE);
 }
 
@@ -3116,11 +3409,16 @@ void CTabMap::OnEnChangeEdit1037_LightInfo_PL_SpecularA()
 void CTabMap::OnEnChangeEdit1038_LightInfo_PL_AmbientR()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
 
-	if (m_bIsLightingModifyMode)
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Ambient.x = m_fLightInfo_PL_AmbientR;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3130,11 +3428,16 @@ void CTabMap::OnEnChangeEdit1038_LightInfo_PL_AmbientR()
 void CTabMap::OnEnChangeEdit1039_LightInfo_PL_AmbientG()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
-
-	if (m_bIsLightingModifyMode)
+	
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Ambient.y = m_fLightInfo_PL_AmbientG;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3144,11 +3447,16 @@ void CTabMap::OnEnChangeEdit1039_LightInfo_PL_AmbientG()
 void CTabMap::OnEnChangeEdit1040_LightInfo_PL_AmbientB()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
-
-	if (m_bIsLightingModifyMode)
+	
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Ambient.z = m_fLightInfo_PL_AmbientB;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3160,9 +3468,16 @@ void CTabMap::OnEnChangeEdit1041_LightInfo_PL_AmbientA()
 	UpdateData(TRUE);
 
 	m_fLightInfo_PL_AmbientA = 1.0f;
-	if (m_bIsLightingModifyMode)
-	{
 
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
+	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Ambient.w = m_fLightInfo_PL_AmbientA;
+
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3172,11 +3487,16 @@ void CTabMap::OnEnChangeEdit1041_LightInfo_PL_AmbientA()
 void CTabMap::OnEnChangeEdit1042_LightInfo_PL_PosX()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
 
-	if (m_bIsLightingModifyMode)
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Position.x = m_fLightInfo_PL_PosX;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderPosition();
 	}
 
 	UpdateData(FALSE);
@@ -3186,11 +3506,16 @@ void CTabMap::OnEnChangeEdit1042_LightInfo_PL_PosX()
 void CTabMap::OnEnChangeEdit1043_LightInfo_PL_PosY()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
 
-	if (m_bIsLightingModifyMode)
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Position.y = m_fLightInfo_PL_PosY;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderPosition();
 	}
 
 	UpdateData(FALSE);
@@ -3200,11 +3525,16 @@ void CTabMap::OnEnChangeEdit1043_LightInfo_PL_PosY()
 void CTabMap::OnEnChangeEdit1044_LightInfo_PL_PosZ()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
-
-	if (m_bIsLightingModifyMode)
+	
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Position.z = m_fLightInfo_PL_PosZ;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderPosition();
 	}
 
 	UpdateData(FALSE);
@@ -3216,9 +3546,16 @@ void CTabMap::OnEnChangeEdit1045_LightInfo_PL_PosW()
 	UpdateData(TRUE);
 
 	m_fLightInfo_PL_PosW = 1.0f;
-	if (m_bIsLightingModifyMode)
+	
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Position.w = m_fLightInfo_PL_PosW;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderPosition();
 	}
 
 	UpdateData(FALSE);
@@ -3228,15 +3565,16 @@ void CTabMap::OnEnChangeEdit1045_LightInfo_PL_PosW()
 void CTabMap::OnEnChangeEdit1046_LightInfo_PL_Range()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
 
-	if (m_bIsLightingModifyMode)
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Range = m_fLightInfo_PL_Range;
 
-	}
-	else
-	{
-
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3289,7 +3627,7 @@ void CTabMap::OnBnClickedButton1007_LightInfo_PL_DELETE()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	UpdateData(TRUE);
 
-	// 선택한 StaticMeshObject 삭제.
+	// 선택한 PointLight 삭제. (Picking)
 	if (m_iSelectPLIdx == -1)
 	{
 		if (nullptr != static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight)
@@ -3306,9 +3644,7 @@ void CTabMap::OnBnClickedButton1007_LightInfo_PL_DELETE()
 
 	}
 
-
-
-	// 선택한 PointLight 삭제.
+	// 선택한 PointLight 삭제. (ListBox Select)
 	if (!Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::LIGHTTYPE::D3DLIGHT_POINT).empty() &&
 		m_iSelectPLIdx < Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::LIGHTTYPE::D3DLIGHT_POINT).size())
 	{
@@ -3334,6 +3670,29 @@ void CTabMap::OnBnClickedButton1008_LightInfo_PL_ALLDELETE()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	UpdateData(TRUE);
 
+	for (auto& pPointLight : Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::LIGHTTYPE::D3DLIGHT_POINT))
+		pPointLight->Set_IsDead();
+
+	// ListBox 수정.
+	m_LightInfoListBox_PL_List.ResetContent();
+
+	m_fLightInfo_PL_DiffuseR	= 1.0f;
+	m_fLightInfo_PL_DiffuseG	= 1.0f;
+	m_fLightInfo_PL_DiffuseB	= 1.0f;
+	m_fLightInfo_PL_DiffuseA	= 1.0f;
+	m_fLightInfo_PL_SpecularR	= 0.5f;
+	m_fLightInfo_PL_SpecularG	= 0.5f;
+	m_fLightInfo_PL_SpecularB	= 0.5f;
+	m_fLightInfo_PL_SpecularA	= 1.0f;
+	m_fLightInfo_PL_AmbientR	= 0.5f;
+	m_fLightInfo_PL_AmbientG	= 0.5f;
+	m_fLightInfo_PL_AmbientB	= 0.5f;
+	m_fLightInfo_PL_AmbientA	= 1.0f;
+	m_fLightInfo_PL_PosX		= 0.0f;
+	m_fLightInfo_PL_PosY		= 0.0f;
+	m_fLightInfo_PL_PosZ		= 0.0f;
+	m_fLightInfo_PL_PosW		= 1.0f;
+	m_fLightInfo_PL_Range		= 10.0f;
 
 
 	UpdateData(FALSE);
@@ -3345,8 +3704,58 @@ void CTabMap::OnBnClickedButton1008_LightInfo_PL_ALLDELETE()
 void CTabMap::OnBnClickedButton1009__LightInfo_PL_SAVE()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
 
+
+	CFileDialog Dlg(FALSE,
+					L"lightinginfo",
+					L"*.lightinginfo",
+					OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+					L"Data Files(*.lightinginfo) | *.lightinginfo ||",
+					this);
+
+	_tchar szPath[MAX_STR] = L"";
+	GetCurrentDirectory(MAX_STR, szPath);		// 작업중인 현재 경로.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	lstrcat(szPath, L"\\Bin\\ToolData");
+	Dlg.m_ofn.lpstrInitialDir = szPath;
+
+	if (Dlg.DoModal() == IDOK)
+	{
+		wofstream fout{ Dlg.GetPathName().GetString() };
+		if (fout.fail())
+		{
+			AfxMessageBox(L"Save is Failed");
+			return;
+		}
+
+		for (auto& pPointLight : Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::D3DLIGHT_POINT))
+		{
+			// PointLight 정보 저장.
+			Engine::D3DLIGHT tLightInfo = pPointLight->Get_LightInfo();
+
+			fout	<< tLightInfo.Diffuse.x		<< L" "		// Diffuse
+					<< tLightInfo.Diffuse.y		<< L" " 
+					<< tLightInfo.Diffuse.z		<< L" "	
+					<< tLightInfo.Diffuse.w		<< L" "
+					<< tLightInfo.Specular.x	<< L" "		// Specular
+					<< tLightInfo.Specular.y	<< L" " 
+					<< tLightInfo.Specular.z	<< L" "	
+					<< tLightInfo.Specular.w	<< L" " 
+					<< tLightInfo.Ambient.x		<< L" "		// Ambient
+					<< tLightInfo.Ambient.y		<< L" "	
+					<< tLightInfo.Ambient.z		<< L" "			
+					<< tLightInfo.Ambient.w		<< L" "
+					<< tLightInfo.Position.x	<< L" "		// Position
+					<< tLightInfo.Position.y	<< L" " 
+					<< tLightInfo.Position.z	<< L" "
+					<< tLightInfo.Position.w	<< L" "
+					<< tLightInfo.Range			<< L" ";	// Range
+		}
+
+	}
+
+	AfxMessageBox(L"Data Save Successed");
 
 	UpdateData(FALSE);
 }
@@ -3355,8 +3764,78 @@ void CTabMap::OnBnClickedButton1009__LightInfo_PL_SAVE()
 void CTabMap::OnBnClickedButton1010__LightInfo_PL_LOAD()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
 
+	// 1. ListBox 초기화.
+	m_LightInfoListBox_PL_List.ResetContent();
+
+	// 2. 모든 PointLight 삭제.
+	for (auto& pPointLight : Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::D3DLIGHT_POINT))
+		pPointLight->Set_IsDead();
+
+	CFileDialog Dlg(TRUE,
+					L"lightinginfo",
+					L"*.lightinginfo",
+					OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+					L"Data Files(*.lightinginfo)|*.lightinginfo||",
+					this);
+
+	_tchar szPath[MAX_STR] = L"";
+	GetCurrentDirectory(MAX_STR, szPath);		// 작업중인 현재 경로.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	lstrcat(szPath, L"\\Bin\\ToolData");
+	Dlg.m_ofn.lpstrInitialDir = szPath;
+
+	if (Dlg.DoModal() == IDOK)
+	{
+		wifstream fin{ Dlg.GetPathName().GetString() };
+		if (fin.fail())
+		{
+			AfxMessageBox(L"Load is Failed");
+			return;
+		}
+
+		while (true)
+		{
+			// PointLight 정보 저장.
+			Engine::D3DLIGHT tLightInfo { };
+			tLightInfo.Type = Engine::D3DLIGHT_POINT;
+
+					// PointLight Data 불러오기.
+			fin		>> tLightInfo.Diffuse.x		// Diffuse
+					>> tLightInfo.Diffuse.y	
+					>> tLightInfo.Diffuse.z	
+					>> tLightInfo.Diffuse.w	
+					>> tLightInfo.Specular.x	// Specular
+					>> tLightInfo.Specular.y	
+					>> tLightInfo.Specular.z	
+					>> tLightInfo.Specular.w	
+					>> tLightInfo.Ambient.x		// Ambient
+					>> tLightInfo.Ambient.y		
+					>> tLightInfo.Ambient.z			
+					>> tLightInfo.Ambient.w	
+					>> tLightInfo.Position.x	// Direction
+					>> tLightInfo.Position.y
+					>> tLightInfo.Position.z
+					>> tLightInfo.Position.w
+					>> tLightInfo.Range;		// Range
+
+			if (fin.eof())
+				break;
+
+			Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(Engine::CGraphicDevice::Get_Instance()->Get_GraphicDevice(),
+																					 Engine::CGraphicDevice::Get_Instance()->Get_CommandList(Engine::CMDID::CMD_MAIN),
+																					 Engine::LIGHTTYPE::D3DLIGHT_POINT,
+																					 tLightInfo), E_FAIL);
+
+			// ListBox 추가.
+			_uint iSize = (_uint)Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::LIGHTTYPE::D3DLIGHT_POINT).size();
+			_tchar szTemp[MIN_STR] = L"";
+			wsprintf(szTemp, L"Index : %d", iSize - 1);
+			m_LightInfoListBox_PL_List.AddString(szTemp);
+		}
+
+	}
 
 	UpdateData(FALSE);
 }
@@ -3446,8 +3925,6 @@ void CTabMap::OnEnChangeEdit1055_LightInfo_SL_Far()
 
 void CTabMap::OnBnClickedButton1011__LightInfo_SL_SAVE()
 {
-	UpdateData(TRUE);
-
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	UpdateData(TRUE);
 
@@ -3490,8 +3967,8 @@ void CTabMap::OnBnClickedButton1011__LightInfo_SL_SAVE()
 				<< tDirLightInfo.Specular.y		<< L" " 
 				<< tDirLightInfo.Specular.z		<< L" "	
 				<< tDirLightInfo.Specular.w		<< L" " 
-				<< tDirLightInfo.Ambient.x		<< L" "
-				<< tDirLightInfo.Ambient.y		<< L" "	// Ambient
+				<< tDirLightInfo.Ambient.x		<< L" "	// Ambient
+				<< tDirLightInfo.Ambient.y		<< L" "	
 				<< tDirLightInfo.Ambient.z		<< L" "			
 				<< tDirLightInfo.Ambient.w		<< L" "
 				<< tDirLightInfo.Direction.x	<< L" "	// Direction
@@ -3558,8 +4035,8 @@ void CTabMap::OnBnClickedButton1012_LightInfo_SL_LOAD()
 					>> tDirLightInfo.Specular.y	
 					>> tDirLightInfo.Specular.z	
 					>> tDirLightInfo.Specular.w	
-					>> tDirLightInfo.Ambient.x	
-					>> tDirLightInfo.Ambient.y		// Ambient
+					>> tDirLightInfo.Ambient.x		// Ambient
+					>> tDirLightInfo.Ambient.y	
 					>> tDirLightInfo.Ambient.z			
 					>> tDirLightInfo.Ambient.w	
 					>> tDirLightInfo.Direction.x	// Direction
@@ -3621,4 +4098,42 @@ void CTabMap::OnBnClickedButton1012_LightInfo_SL_LOAD()
 	AfxMessageBox(L"Data Load Successed");
 
 	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnBnClickedRadio1011_NaviMeshCreateMode()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	m_bIsNaviCreateMode = true;
+	m_bIsNaviModifyMode = false;
+
+	m_NaviMeshRadio_CreateMode.SetCheck(m_bIsNaviCreateMode);
+	m_NaviMeshRadio_ModifyMode.SetCheck(m_bIsNaviModifyMode);
+
+	m_NaviMeshCheck_AutoCreate.EnableWindow(TRUE);
+	m_NaviMeshCheck_AutoCreate.SetCheck(false);
+
+	m_fNaviMeshPointA_X = 0.0f;
+	m_fNaviMeshPointA_Y = 0.0f;
+	m_fNaviMeshPointA_Z = 0.0f;
+	m_fNaviMeshPointB_X = 0.0f;
+	m_fNaviMeshPointB_Y = 0.0f;
+	m_fNaviMeshPointB_Z = 0.0f;
+	m_fNaviMeshPointC_X = 0.0f;
+	m_fNaviMeshPointC_Y = 0.0f;
+	m_fNaviMeshPointC_Z = 0.0f;
+}
+
+
+void CTabMap::OnBnClickedRadio1012_NaviMeshModifyMode()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	m_bIsNaviCreateMode = false;
+	m_bIsNaviModifyMode = true;
+
+	m_NaviMeshRadio_CreateMode.SetCheck(m_bIsNaviCreateMode);
+	m_NaviMeshRadio_ModifyMode.SetCheck(m_bIsNaviModifyMode);
+
+	m_NaviMeshCheck_AutoCreate.EnableWindow(FALSE);
+	m_NaviMeshCheck_AutoCreate.SetCheck(false);
 }

@@ -14,12 +14,19 @@ CLight::CLight(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pComma
 
 void CLight::Set_ColliderColorSelected()
 {
+	m_pColliderCom->Set_Color(m_tLightInfo.Diffuse);
 	m_pColliderCom->Set_PipelineStatePass(1);
 }
 
 void CLight::Set_ColliderColorDiffuse()
 {
+	m_pColliderCom->Set_Color(m_tLightInfo.Diffuse);
 	m_pColliderCom->Set_PipelineStatePass(0);
+}
+
+void CLight::Set_ColliderPosition()
+{
+	m_pColliderCom->Set_Pos(_vec3(m_tLightInfo.Position.x, m_tLightInfo.Position.y, m_tLightInfo.Position.z));
 }
 
 HRESULT CLight::Ready_Light(const D3DLIGHT & tLightInfo)
