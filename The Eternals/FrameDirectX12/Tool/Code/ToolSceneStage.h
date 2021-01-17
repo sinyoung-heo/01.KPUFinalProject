@@ -7,13 +7,18 @@ namespace Engine
 {
 	class CFont;
 	class CLight;
+	class CColliderSphere;
+
 }
 
 class CToolTerrain;
 class CToolStaticMesh;
+class CToolCell;
 
 class CToolSceneStage : public Engine::CScene
 {
+	enum POINT { POINT_A, POINT_B, POINT_C, POINT_END };
+
 private:
 	explicit CToolSceneStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 	virtual ~CToolSceneStage() = default;
@@ -22,7 +27,7 @@ public:
 	virtual HRESULT Ready_Scene();
 	virtual _int	Update_Scene(const _float & fTimeDelta);
 	virtual _int	LateUpdate_Scene(const _float & fTimeDelta);
-	virtual HRESULT	Render_Scene(const _float & fTimeDelta, const Engine::RENDERID& eID = Engine::RENDERID::MULTI_THREAD);
+	virtual HRESULT	Render_Scene(const _float & fTimeDelta, const Engine::RENDERID& eID);
 
 private:
 	HRESULT			Ready_LayerCamera(wstring wstrLayerTag);
@@ -35,12 +40,21 @@ private:
 	void			KeyInput();
 	void			KeyInput_TabMapStaticMesh(CTabMap& TabMap);
 	void			KeyInput_TabMapLightingInfo(CTabMap& TabMap);
+	void			KeyInput_TabMapNavigationMesh(CTabMap& TabMap);
 	void			KeyInput_TabMapModeChange(CTabMap& TabMap);
 
 public:
 	CToolTerrain*			m_pPickingTerrain	= nullptr;
 	Engine::CGameObject*	m_pPickingObject	= nullptr;
 	Engine::CLight*			m_pPickingLight		= nullptr;
+
+	// Picking NaviMesh
+	_int						m_iPickingCnt	= -1;
+	_vec3						m_vPickingPoint[POINT_END]		{ _vec3(0.0f), _vec3(0.0f) ,_vec3(0.0f) };
+	_matrix						m_matColliderWorld[POINT_END];
+	Engine::CColliderSphere*	m_pPickingCollider[POINT_END]	{ nullptr, nullptr, nullptr };
+	_vec3*	m_pSharePointB	= nullptr;
+	_vec3*	m_pSharePointC	= nullptr;
 
 private:
 	/*__________________________________________________________________________________________________________

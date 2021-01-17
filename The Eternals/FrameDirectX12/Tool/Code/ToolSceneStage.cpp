@@ -13,6 +13,7 @@
 #include "ToolSkyBox.h"
 #include "ToolStaticMesh.h"
 #include "Popori_F.h"
+#include "ToolCell.h"
 
 
 CToolSceneStage::CToolSceneStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -32,6 +33,21 @@ HRESULT CToolSceneStage::Ready_Scene()
 	Engine::FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
+	[ NaviMesh Cell Picking Collider ]
+	____________________________________________________________________________________________________________*/
+	for (_int i = 0; i < POINT_END; ++i)
+	{
+		m_pPickingCollider[i] = static_cast<Engine::CColliderSphere*>(Engine::CComponentMgr::Get_Instance()->Clone_Component(L"ColliderSphere", Engine::COMPONENTID::ID_DYNAMIC));
+		NULL_CHECK_RETURN(m_pPickingCollider[i], E_FAIL);
+		// m_pColliderCom[i]->AddRef();
+
+		m_matColliderWorld[i] = XMMatrixTranslation(1000.0f, 1000.0f, 1000.0f);
+		m_pPickingCollider[i]->Set_ParentMatrix(&m_matColliderWorld[i]);	// Parent Matrix
+		m_pPickingCollider[i]->Set_Scale(_vec3(0.5f, 0.5f, 0.5f));			// Collider Scale
+		m_pPickingCollider[i]->Set_Radius(_vec3(1.f, 1.f, 1.f));			// Collider Radius
+	}
+
+	/*__________________________________________________________________________________________________________
 	[ Stage Font ]
 	____________________________________________________________________________________________________________*/
 	m_pFont_Stage = static_cast<Engine::CFont*>(m_pObjectMgr->Clone_GameObjectPrototype(L"Font_NetmarbleLight"));
@@ -48,6 +64,7 @@ HRESULT CToolSceneStage::Ready_Scene()
 	pMyForm->m_TabMap.Ready_EditControl();
 	pMyForm->m_TabMap.Ready_StaticMeshControl();
 	pMyForm->m_TabMap.Ready_LightingInfoContorl();
+	pMyForm->m_TabMap.Ready_NavigationMeshControl();
 	m_pPickingTerrain = static_cast<CToolTerrain*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"TerrainTex256"));
 
 	return S_OK;
@@ -57,6 +74,21 @@ _int CToolSceneStage::Update_Scene(const _float& fTimeDelta)
 {
 	CMainFrame* pMainFrame	= static_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
 	CMyForm*	pMyForm		= static_cast<CMyForm*>(pMainFrame->m_MainSplit.GetPane(0, 0));
+
+	/*__________________________________________________________________________________________________________
+	[ NaviMesh Picking Collider ]
+	____________________________________________________________________________________________________________*/
+	if (pMyForm->m_TabMap.m_EditCheck_NavigationMesh.GetCheck() && 
+		pMyForm->m_TabMap.m_bIsNaviCreateMode)
+	{
+		// Collider 위치 갱신.
+		for (_int i = 0; i < POINT_END; ++i)
+		{
+			m_matColliderWorld[i] = XMMatrixTranslation(m_vPickingPoint[i].x, m_vPickingPoint[i].y, m_vPickingPoint[i].z);
+			m_pPickingCollider[i]->Set_ParentMatrix(&m_matColliderWorld[i]);
+			m_pPickingCollider[i]->Update_Component(fTimeDelta);
+		}
+	}
 
 	/*__________________________________________________________________________________________________________
 	[ Key Input ]
@@ -282,9 +314,12 @@ void CToolSceneStage::KeyInput()
 		{
 			if (pMyForm->m_TabMap.m_EditCheck_StaticMesh.GetCheck())
 				KeyInput_TabMapStaticMesh(pMyForm->m_TabMap);
-			
+
 			else if (pMyForm->m_TabMap.m_EditCheck_LightingInfo.GetCheck())
 				KeyInput_TabMapLightingInfo(pMyForm->m_TabMap);
+
+			else if (pMyForm->m_TabMap.m_EditCheck_NavigationMesh.GetCheck())
+				KeyInput_TabMapNavigationMesh(pMyForm->m_TabMap);
 		}
 
 	}
@@ -461,6 +496,8 @@ void CToolSceneStage::KeyInput_TabMapLightingInfo(CTabMap& TabMap)
 
 		TabMap.UpdateData(FALSE);
 	}
+
+	// PointLight 수정.
 	else if (TabMap.m_bIsLightingModifyMode)
 	{
 		TabMap.UpdateData(TRUE);
@@ -496,6 +533,95 @@ void CToolSceneStage::KeyInput_TabMapLightingInfo(CTabMap& TabMap)
 
 		TabMap.UpdateData(FALSE);
 	}
+}
+
+void CToolSceneStage::KeyInput_TabMapNavigationMesh(CTabMap& TabMap)
+{
+	TabMap.UpdateData(TRUE);
+
+	Engine::OBJLIST*	pCellList	= Engine::CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_Environment", L"Cell");
+	CToolCell*			pCell		= nullptr;
+
+	// NavigationMesh Create 모드.
+	if (TabMap.m_bIsNaviCreateMode)
+	{
+		// Navigation AutoCreate가 아닐 떄.
+		if (!TabMap.m_NaviMeshCheck_AutoCreate.GetCheck())
+		{
+			// Cell이 없을 때 (최초 생성시)
+			if (nullptr == pCellList || pCellList->empty())
+			{
+				_vec3 vPickingPos = CMouseMgr::Picking_OnTerrain(m_pPickingTerrain);
+				++m_iPickingCnt;
+
+				if (POINT_A == m_iPickingCnt)
+				{
+					m_vPickingPoint[POINT_A] = vPickingPos;
+				}
+
+				else if (POINT_B == m_iPickingCnt)
+				{
+					m_vPickingPoint[POINT_B] = vPickingPos;
+				}
+
+				else if (POINT_C == m_iPickingCnt)
+				{
+					m_vPickingPoint[POINT_C] = vPickingPos;
+
+					// Cell 생성.
+					pCell = CToolCell::Create(m_pGraphicDevice, m_pCommandList,
+											  0,						// Cell Index
+											  m_vPickingPoint[POINT_A],	// Point A
+											  m_vPickingPoint[POINT_B],	// Point B
+											  m_vPickingPoint[POINT_C]);// Point C
+					m_pObjectMgr->Add_GameObject(L"Layer_Environment", L"Cell", pCell);
+
+					m_vPickingPoint[POINT_A] = _vec3(1000.0f);
+					m_vPickingPoint[POINT_B] = _vec3(1000.0f);
+					m_vPickingPoint[POINT_C] = _vec3(1000.0f);
+					m_iPickingCnt = -1;
+				}
+			}
+
+			else
+			{
+
+			}
+
+		}
+
+		// Navigation AutoCreate일 때.
+		else
+		{
+			// Cell이 없을 때 (최초 생성시)
+			if (nullptr == pCellList || pCellList->empty())
+				return;
+
+			if (POINT_A == m_iPickingCnt)
+			{
+
+			}
+
+			else if (POINT_B == m_iPickingCnt)
+			{
+
+			}
+
+			else if (POINT_C == m_iPickingCnt)
+			{
+
+			}
+		}
+
+	}
+
+	// NavigationMesh Modify 모드.
+	else if (TabMap.m_bIsNaviModifyMode)
+	{
+
+	}
+
+	TabMap.UpdateData(FALSE);
 }
 
 void CToolSceneStage::KeyInput_TabMapModeChange(CTabMap& TabMap)
@@ -565,6 +691,39 @@ void CToolSceneStage::KeyInput_TabMapModeChange(CTabMap& TabMap)
 		}
 	}
 
+	// NavigationMesh ModeChange
+	else if (TabMap.m_EditCheck_NavigationMesh.GetCheck())
+	{
+		TabMap.m_bIsNaviCreateMode = !TabMap.m_bIsNaviCreateMode;
+		TabMap.m_bIsNaviModifyMode = !TabMap.m_bIsNaviModifyMode;
+
+		// TabMap.
+		TabMap.m_NaviMeshRadio_CreateMode.SetCheck(TabMap.m_bIsNaviCreateMode);
+		TabMap.m_NaviMeshRadio_ModifyMode.SetCheck(TabMap.m_bIsNaviModifyMode);
+
+		if (TabMap.m_bIsNaviCreateMode)
+		{
+			TabMap.m_NaviMeshCheck_AutoCreate.EnableWindow(TRUE);
+			TabMap.m_NaviMeshCheck_AutoCreate.SetCheck(false);
+
+			TabMap.m_fNaviMeshPointA_X = 0.0f;
+			TabMap.m_fNaviMeshPointA_Y = 0.0f;
+			TabMap.m_fNaviMeshPointA_Z = 0.0f;
+			TabMap.m_fNaviMeshPointB_X = 0.0f;
+			TabMap.m_fNaviMeshPointB_Y = 0.0f;
+			TabMap.m_fNaviMeshPointB_Z = 0.0f;
+			TabMap.m_fNaviMeshPointC_X = 0.0f;
+			TabMap.m_fNaviMeshPointC_Y = 0.0f;
+			TabMap.m_fNaviMeshPointC_Z = 0.0f;
+		}
+		else
+		{
+			TabMap.m_NaviMeshCheck_AutoCreate.EnableWindow(FALSE);
+			TabMap.m_NaviMeshCheck_AutoCreate.SetCheck(false);
+		}
+
+
+	}
 
 	TabMap.UpdateData(FALSE);
 }
@@ -585,4 +744,7 @@ void CToolSceneStage::Free()
 
 	if (nullptr != m_pFont_Stage)
 		Engine::Safe_Release(m_pFont_Stage);
+
+	for (auto& pCollider : m_pPickingCollider)
+		Engine::Safe_Release(pCollider);
 }

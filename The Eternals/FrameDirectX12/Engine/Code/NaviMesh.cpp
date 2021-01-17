@@ -224,9 +224,9 @@ HRESULT CNaviMesh::Ready_NaviMesh(wstring wstrFilePath)
 		pCell = CCell::Create(m_pGraphicDevice,
 							  m_pCommandList,
 							  m_vecCell.size(),
-							  &vPointA,
-							  &vPointB,
-							  &vPointC);
+							  vPointA,
+							  vPointB,
+							  vPointC);
 		NULL_CHECK_RETURN(pCell, E_FAIL);
 		m_vecCell.push_back(pCell);
 	}

@@ -18,16 +18,16 @@ CCell::CCell(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandLi
 
 }
 
-HRESULT CCell::Ready_Cell(const _ulong& dwIndex,
-						  const _vec3* pPointA,
-						  const _vec3* pPointB,
-						  const _vec3* pPointC)
+HRESULT CCell::Ready_Cell(const _ulong& dwIndex, 
+						  const _vec3& vPointA,
+						  const _vec3& vPointB, 
+						  const _vec3& vPointC)
 {
 	m_dwCurrentIdx = dwIndex;
 
-	m_vPoint[POINT_A] =  *pPointA;
-	m_vPoint[POINT_B] = *pPointB;
-	m_vPoint[POINT_C] = *pPointC;
+	m_vPoint[POINT_A] = vPointA;
+	m_vPoint[POINT_B] = vPointB;
+	m_vPoint[POINT_C] = vPointC;
 
 	m_pLine[LINE_AB] = CLine::Create(&_vec2(m_vPoint[POINT_A].x, m_vPoint[POINT_A].z),
 									 &_vec2(m_vPoint[POINT_B].x, m_vPoint[POINT_B].z));
@@ -61,7 +61,7 @@ HRESULT CCell::Ready_Component()
 
 		m_matWorld[i] = XMMatrixTranslation(m_vPoint[i].x, m_vPoint[i].y, m_vPoint[i].z);
 		m_pColliderCom[i]->Set_ParentMatrix(&m_matWorld[i]);	// Parent Matrix
-		m_pColliderCom[i]->Set_Scale(_vec3(1.f, 1.f, 1.f));		// Collider Scale
+		m_pColliderCom[i]->Set_Scale(_vec3(0.5f, 0.5f, 0.5f));		// Collider Scale
 		m_pColliderCom[i]->Set_Radius(_vec3(1.f, 1.f, 1.f));	// Collider Radius
 
 
@@ -310,15 +310,15 @@ float CCell::Position_On_Height(const _vec3* vPos)
 }
 
 CCell* CCell::Create(ID3D12Device* pGraphicDevice, 
-					 ID3D12GraphicsCommandList* pCommandList, 
-					 const _ulong& dwIndex, 
-					 const _vec3* pPointA, 
-					 const _vec3* pPointB, 
-					 const _vec3* pPointC)
+					 ID3D12GraphicsCommandList* pCommandList,
+					 const _ulong& dwIndex,
+					 const _vec3& vPointA,
+					 const _vec3& vPointB,
+					 const _vec3& vPointC)
 {
 	CCell* pInstance = new CCell(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_Cell(dwIndex, pPointA, pPointB, pPointC)))
+	if (FAILED(pInstance->Ready_Cell(dwIndex, vPointA, vPointB, vPointC)))
 		Safe_Release(pInstance);
 
 	return pInstance;
