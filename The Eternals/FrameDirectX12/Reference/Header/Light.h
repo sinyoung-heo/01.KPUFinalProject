@@ -26,6 +26,7 @@ public:
 	void			Set_IsDead()								{ m_bIsDead = true; }
 	void			Set_ColliderColorSelected();
 	void			Set_ColliderColorDiffuse();
+	void			Set_ColliderPosition();
 
 	// Method
 	HRESULT			Ready_Light(const D3DLIGHT& tLightInfo);

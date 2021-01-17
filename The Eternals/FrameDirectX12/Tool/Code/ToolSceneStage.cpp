@@ -439,7 +439,7 @@ void CToolSceneStage::KeyInput_TabMapLightingInfo(CTabMap& TabMap)
 																				 tLightInfo), E_FAIL);
 
 		// ListBox Ãß°¡.
-		_uint iSize = Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::LIGHTTYPE::D3DLIGHT_POINT).size();
+		_uint iSize = (_uint)Engine::CLightMgr::Get_Instance()->Get_VecLightInfo(Engine::LIGHTTYPE::D3DLIGHT_POINT).size();
 		_tchar szTemp[MIN_STR] = L"";
 		wsprintf(szTemp, L"Index : %d", iSize - 1);
 		TabMap.m_LightInfoListBox_PL_List.AddString(szTemp);

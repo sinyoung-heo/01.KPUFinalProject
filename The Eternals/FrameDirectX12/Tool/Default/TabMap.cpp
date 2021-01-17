@@ -977,6 +977,8 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 		m_LightInfoEdit_PL_PosW.GetWindowRect(&rcLightInfoEdit_PL_Edit[15]);
 		m_LightInfoEdit_PL_Range.GetWindowRect(&rcLightInfoEdit_PL_Edit[16]);
 
+		Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+
 		if (PtInRect(&rcLightInfoEdit_PL_Edit[0], pt))			// PL_DiffuseR
 		{
 			if (zDelta > 0)
@@ -995,7 +997,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Diffuse.x = m_fLightInfo_PL_DiffuseR;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[1], pt))		// PL_DiffuseG
@@ -1016,7 +1024,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Diffuse.y = m_fLightInfo_PL_DiffuseG;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[2], pt))		// PL_DiffuseB
@@ -1037,7 +1051,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Diffuse.z = m_fLightInfo_PL_DiffuseB;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[3], pt))		// PL_DiffuseA
@@ -1047,7 +1067,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Diffuse.w = m_fLightInfo_PL_DiffuseA;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[4], pt))		// PL_SpecularR
@@ -1068,7 +1094,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Specular.x = m_fLightInfo_PL_SpecularR;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[5], pt))		// PL_SpecularG
@@ -1089,7 +1121,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Specular.y = m_fLightInfo_PL_SpecularG;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[6], pt))		// PL_SpecularB
@@ -1110,7 +1148,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Specular.z = m_fLightInfo_PL_SpecularB;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[7], pt))		// PL_SpecularA
@@ -1120,7 +1164,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Specular.w = m_fLightInfo_PL_SpecularA;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[8], pt))		// PL_AmbientR
@@ -1141,7 +1191,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Ambient.x = m_fLightInfo_PL_AmbientR;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[9], pt))		// PL_AmbientG
@@ -1162,7 +1218,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Ambient.y = m_fLightInfo_PL_AmbientG;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[10], pt))	// PL_AmbientB
@@ -1183,7 +1245,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Ambient.z = m_fLightInfo_PL_AmbientB;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[11], pt))	// PL_AmbientA
@@ -1193,7 +1261,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Ambient.w = m_fLightInfo_PL_AmbientA;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[12], pt))	// PL_PosX
@@ -1206,7 +1280,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Position.x = m_fLightInfo_PL_PosX;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderPosition();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[13], pt))	// PL_PosY
@@ -1219,7 +1299,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Position.y = m_fLightInfo_PL_PosY;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderPosition();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[14], pt))	// PL_PosZ
@@ -1232,7 +1318,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Position.z = m_fLightInfo_PL_PosZ;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderPosition();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[15], pt))	// PL_PosW
@@ -1242,7 +1334,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Position.w = m_fLightInfo_PL_PosW;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderPosition();
+				}
 			}
 		}
 		else if (PtInRect(&rcLightInfoEdit_PL_Edit[16], pt))	// PL_Range
@@ -1259,7 +1357,13 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			// Modify Mode일 경우 변경된 값 반영.
 			if (m_bIsLightingModifyMode)
 			{
-
+				if (nullptr != pSelectLight)
+				{
+					Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+					tLightInfo.Range = m_fLightInfo_PL_Range;
+					pSelectLight->Set_LightInfo(tLightInfo);
+					pSelectLight->Set_ColliderColorSelected();
+				}
 			}
 		}
 
@@ -3006,11 +3110,17 @@ void CTabMap::OnBnClickedRadio1009_LightInfo_PL_ModifyMode()
 void CTabMap::OnEnChangeEdit1030_LightInfo_PL_DiffuseR()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
 
-	if (m_bIsLightingModifyMode)
+
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode && 
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Diffuse.x = m_fLightInfo_PL_DiffuseR;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3020,11 +3130,16 @@ void CTabMap::OnEnChangeEdit1030_LightInfo_PL_DiffuseR()
 void CTabMap::OnEnChangeEdit1031_LightInfo_PL_DiffuseG()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
 
-	if (m_bIsLightingModifyMode)
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Diffuse.y = m_fLightInfo_PL_DiffuseG;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3034,11 +3149,16 @@ void CTabMap::OnEnChangeEdit1031_LightInfo_PL_DiffuseG()
 void CTabMap::OnEnChangeEdit1032_LightInfo_PL_DiffuseB()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
 
-	if (m_bIsLightingModifyMode)
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Diffuse.z = m_fLightInfo_PL_DiffuseB;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3049,10 +3169,15 @@ void CTabMap::OnEnChangeEdit1033_LightInfo_PL_DiffuseA()
 {
 	UpdateData(TRUE);
 
-	m_fLightInfo_PL_DiffuseA = 1.0f;
-	if (m_bIsLightingModifyMode)
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Diffuse.w = m_fLightInfo_PL_DiffuseA;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3062,11 +3187,16 @@ void CTabMap::OnEnChangeEdit1033_LightInfo_PL_DiffuseA()
 void CTabMap::OnEnChangeEdit1034_LightInfo_PL_SpecularR()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
 
-	if (m_bIsLightingModifyMode)
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Specular.x = m_fLightInfo_PL_SpecularR;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3076,11 +3206,16 @@ void CTabMap::OnEnChangeEdit1034_LightInfo_PL_SpecularR()
 void CTabMap::OnEnChangeEdit1035_LightInfo_PL_SpecularG()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
-
-	if (m_bIsLightingModifyMode)
+	
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Specular.y = m_fLightInfo_PL_SpecularG;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3090,11 +3225,16 @@ void CTabMap::OnEnChangeEdit1035_LightInfo_PL_SpecularG()
 void CTabMap::OnEnChangeEdit1036_LightInfo_PL_SpecularB()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
-
-	if (m_bIsLightingModifyMode)
+	
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Specular.z = m_fLightInfo_PL_SpecularB;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3106,10 +3246,18 @@ void CTabMap::OnEnChangeEdit1037_LightInfo_PL_SpecularA()
 	UpdateData(TRUE);
 
 	m_fLightInfo_PL_SpecularA = 1.0f;
-	if (m_bIsLightingModifyMode)
-	{
 
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
+	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Specular.w = m_fLightInfo_PL_SpecularA;
+
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
+
 	UpdateData(FALSE);
 }
 
@@ -3117,11 +3265,16 @@ void CTabMap::OnEnChangeEdit1037_LightInfo_PL_SpecularA()
 void CTabMap::OnEnChangeEdit1038_LightInfo_PL_AmbientR()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
 
-	if (m_bIsLightingModifyMode)
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Ambient.x = m_fLightInfo_PL_AmbientR;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3131,11 +3284,16 @@ void CTabMap::OnEnChangeEdit1038_LightInfo_PL_AmbientR()
 void CTabMap::OnEnChangeEdit1039_LightInfo_PL_AmbientG()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
-
-	if (m_bIsLightingModifyMode)
+	
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Ambient.y = m_fLightInfo_PL_AmbientG;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3145,11 +3303,16 @@ void CTabMap::OnEnChangeEdit1039_LightInfo_PL_AmbientG()
 void CTabMap::OnEnChangeEdit1040_LightInfo_PL_AmbientB()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
-
-	if (m_bIsLightingModifyMode)
+	
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Ambient.z = m_fLightInfo_PL_AmbientB;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3161,9 +3324,16 @@ void CTabMap::OnEnChangeEdit1041_LightInfo_PL_AmbientA()
 	UpdateData(TRUE);
 
 	m_fLightInfo_PL_AmbientA = 1.0f;
-	if (m_bIsLightingModifyMode)
-	{
 
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
+	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Ambient.w = m_fLightInfo_PL_AmbientA;
+
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3173,11 +3343,16 @@ void CTabMap::OnEnChangeEdit1041_LightInfo_PL_AmbientA()
 void CTabMap::OnEnChangeEdit1042_LightInfo_PL_PosX()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
 
-	if (m_bIsLightingModifyMode)
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Position.x = m_fLightInfo_PL_PosX;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderPosition();
 	}
 
 	UpdateData(FALSE);
@@ -3187,11 +3362,16 @@ void CTabMap::OnEnChangeEdit1042_LightInfo_PL_PosX()
 void CTabMap::OnEnChangeEdit1043_LightInfo_PL_PosY()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
 
-	if (m_bIsLightingModifyMode)
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Position.y = m_fLightInfo_PL_PosY;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderPosition();
 	}
 
 	UpdateData(FALSE);
@@ -3201,11 +3381,16 @@ void CTabMap::OnEnChangeEdit1043_LightInfo_PL_PosY()
 void CTabMap::OnEnChangeEdit1044_LightInfo_PL_PosZ()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
-
-	if (m_bIsLightingModifyMode)
+	
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Position.z = m_fLightInfo_PL_PosZ;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderPosition();
 	}
 
 	UpdateData(FALSE);
@@ -3217,9 +3402,16 @@ void CTabMap::OnEnChangeEdit1045_LightInfo_PL_PosW()
 	UpdateData(TRUE);
 
 	m_fLightInfo_PL_PosW = 1.0f;
-	if (m_bIsLightingModifyMode)
+	
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Position.w = m_fLightInfo_PL_PosW;
 
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderPosition();
 	}
 
 	UpdateData(FALSE);
@@ -3229,15 +3421,16 @@ void CTabMap::OnEnChangeEdit1045_LightInfo_PL_PosW()
 void CTabMap::OnEnChangeEdit1046_LightInfo_PL_Range()
 {
 	UpdateData(TRUE);
-	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
 
-	if (m_bIsLightingModifyMode)
+	Engine::CLight* pSelectLight = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingLight;
+	if (m_bIsLightingModifyMode &&
+		nullptr != pSelectLight)
 	{
+		Engine::D3DLIGHT tLightInfo = pSelectLight->Get_LightInfo();
+		tLightInfo.Range = m_fLightInfo_PL_Range;
 
-	}
-	else
-	{
-
+		pSelectLight->Set_LightInfo(tLightInfo);
+		pSelectLight->Set_ColliderColorSelected();
 	}
 
 	UpdateData(FALSE);
@@ -3368,6 +3561,8 @@ void CTabMap::OnBnClickedButton1009__LightInfo_PL_SAVE()
 {
 	UpdateData(TRUE);
 	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene());
+
+
 
 
 	UpdateData(FALSE);
