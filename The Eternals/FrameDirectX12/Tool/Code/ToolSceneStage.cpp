@@ -45,6 +45,8 @@ HRESULT CToolSceneStage::Ready_Scene()
 		m_pPickingCollider[i]->Set_ParentMatrix(&m_matColliderWorld[i]);	// Parent Matrix
 		m_pPickingCollider[i]->Set_Scale(_vec3(0.5f, 0.5f, 0.5f));			// Collider Scale
 		m_pPickingCollider[i]->Set_Radius(_vec3(1.f, 1.f, 1.f));			// Collider Radius
+		m_pPickingCollider[i]->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+		m_pPickingCollider[i]->Set_PipelineStatePass(0);
 	}
 
 	/*__________________________________________________________________________________________________________
@@ -575,6 +577,13 @@ void CToolSceneStage::KeyInput_TabMapNavigationMesh(CTabMap& TabMap)
 											  m_vPickingPoint[POINT_B],	// Point B
 											  m_vPickingPoint[POINT_C]);// Point C
 					m_pObjectMgr->Add_GameObject(L"Layer_Environment", L"Cell", pCell);
+					pCellList = Engine::CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_Environment", L"Cell");
+
+					// ListBox¿¡ Ãß°¡.
+					_uint iSize = (_uint)pCellList->size();
+					_tchar szTemp[MIN_STR] = L"";
+					wsprintf(szTemp, L"Index : %d", iSize - 1);
+					TabMap.m_NaviMeshListBox_CellList.AddString(szTemp);
 
 					m_vPickingPoint[POINT_A] = _vec3(1000.0f);
 					m_vPickingPoint[POINT_B] = _vec3(1000.0f);
