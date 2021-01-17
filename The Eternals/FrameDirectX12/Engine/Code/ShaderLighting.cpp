@@ -203,9 +203,18 @@ HRESULT CShaderLighting::Create_PipelineState()
 	____________________________________________________________________________________________________________*/
 	ID3D12PipelineState*				pPipelineState = nullptr;
 	vector<D3D12_INPUT_ELEMENT_DESC>	vecInputLayout;
-
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC	PipelineStateDesc;
 	ZeroMemory(&PipelineStateDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
+
+	/*__________________________________________________________________________________________________________
+	[ 0번 PipelineState Pass ]
+	- "VS_MAIN"
+	- "PS_DIRECTION"
+	- FILL_MODE_SOLID
+	- CULL_MODE_BACK
+	- Blend		(O)
+	- Z Write	(X)
+	____________________________________________________________________________________________________________*/
 	PipelineStateDesc.pRootSignature		= m_pRootSignature;
 	PipelineStateDesc.SampleMask			= UINT_MAX;
 	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
@@ -215,38 +224,58 @@ HRESULT CShaderLighting::Create_PipelineState()
 	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
 	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
 	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;
+	vecInputLayout							= Create_InputLayout("VS_MAIN", "PS_DIRECTION");
+	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState			= Create_BlendState(true,
+																D3D12_BLEND_ONE,
+																D3D12_BLEND_ONE,
+																D3D12_BLEND_OP_ADD,
+																D3D12_BLEND_ONE,
+																D3D12_BLEND_ONE, 
+																D3D12_BLEND_OP_ADD);
+	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState();
+	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState(false);	// LightTarget의 Depth는 false
 
-
-	// 0번 PipelineState Pass - Direction Lighting
-	vecInputLayout						= Create_InputLayout("VS_MAIN", "PS_DIRECTION");
-	PipelineStateDesc.InputLayout		= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
-	PipelineStateDesc.VS				= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.PS				= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.BlendState		= Create_BlendState(true,
-															D3D12_BLEND_ONE,
-															D3D12_BLEND_ONE,
-															D3D12_BLEND_OP_ADD,
-															D3D12_BLEND_ONE,
-															D3D12_BLEND_ONE, 
-															D3D12_BLEND_OP_ADD);
-	PipelineStateDesc.RasterizerState	= CShader::Create_RasterizerState();
-	PipelineStateDesc.DepthStencilState	= CShader::Create_DepthStencilState(false);	// LightTarget의 Depth는 false
-
-	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, 
-																	  IID_PPV_ARGS(&pPipelineState)), 
-																	  E_FAIL);
+	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
 	CRenderer::Get_Instance()->Add_PipelineStateCnt();
 
-	// 1번 PipelineState Pass - Point Lighting
-	vecInputLayout						= Create_InputLayout("VS_MAIN", "PS_POINT");
-	PipelineStateDesc.InputLayout		= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
-	PipelineStateDesc.VS				= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.PS				= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
 
-	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, 
-																	  IID_PPV_ARGS(&pPipelineState)), 
-																	  E_FAIL);
+	/*__________________________________________________________________________________________________________
+	[ 1번 PipelineState Pass ]
+	- "VS_MAIN"
+	- "PS_POINT"
+	- FILL_MODE_SOLID
+	- CULL_MODE_BACK
+	- Blend		(O)
+	- Z Write	(X)
+	____________________________________________________________________________________________________________*/
+	PipelineStateDesc.pRootSignature		= m_pRootSignature;
+	PipelineStateDesc.SampleMask			= UINT_MAX;
+	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	PipelineStateDesc.NumRenderTargets		= 2;								// PS에서 사용할 RenderTarget 개수.
+	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R32G32B32A32_FLOAT;	// Shade Target
+	PipelineStateDesc.RTVFormats[1]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Specular Target
+	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;
+	vecInputLayout							= Create_InputLayout("VS_MAIN", "PS_POINT");
+	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState			= Create_BlendState(true,
+																D3D12_BLEND_ONE,
+																D3D12_BLEND_ONE,
+																D3D12_BLEND_OP_ADD,
+																D3D12_BLEND_ONE,
+																D3D12_BLEND_ONE, 
+																D3D12_BLEND_OP_ADD);
+	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState();
+	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState(false);	// LightTarget의 Depth는 false
+
+	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
 	CRenderer::Get_Instance()->Add_PipelineStateCnt();
 

@@ -125,6 +125,8 @@ HRESULT CShaderColor::Create_PipelineState()
 	- "PS_MAIN"
 	- FILL_MODE_SOLID
 	- CULL_MODE_BACK
+	- Blend		(X)
+	- Z Write	(O)
 	____________________________________________________________________________________________________________*/
 	PipelineStateDesc.pRootSignature		= m_pRootSignature;
 	PipelineStateDesc.SampleMask			= UINT_MAX;
@@ -153,6 +155,8 @@ HRESULT CShaderColor::Create_PipelineState()
 	- "PS_MAIN"
 	- FILL_MODE_WIREFRAME
 	- CULL_MODE_BACK
+	- Blend		(X)
+	- Z Write	(O)
 	____________________________________________________________________________________________________________*/
 	PipelineStateDesc.pRootSignature		= m_pRootSignature;
 	PipelineStateDesc.SampleMask			= UINT_MAX;
@@ -181,6 +185,8 @@ HRESULT CShaderColor::Create_PipelineState()
 	- "PS_MAIN"
 	- FILL_MODE_SOLID
 	- CULL_MODE_BACK
+	- Blend		(X)
+	- Z Write	(O)
 	____________________________________________________________________________________________________________*/
 	PipelineStateDesc.pRootSignature		= m_pRootSignature;
 	PipelineStateDesc.SampleMask			= UINT_MAX;
@@ -210,6 +216,8 @@ HRESULT CShaderColor::Create_PipelineState()
 	- "PS_MAIN"
 	- FILL_MODE_SOLID
 	- CULL_MODE_BACK
+	- Blend		(X)
+	- Z Write	(O)
 	____________________________________________________________________________________________________________*/
 	PipelineStateDesc.pRootSignature		= m_pRootSignature;
 	PipelineStateDesc.SampleMask			= UINT_MAX;

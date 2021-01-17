@@ -113,7 +113,9 @@
 #define IDC_EDIT1048                    1095
 #define IDC_EDIT1049                    1096
 #define IDC_SPIN1010                    1097
+#define IDC_RADIO1011                   1097
 #define IDC_SPIN1011                    1098
+#define IDC_RADIO1012                   1098
 #define IDC_SPIN1012                    1099
 #define IDC_EDIT1056                    1100
 #define IDC_EDIT1050                    1101
