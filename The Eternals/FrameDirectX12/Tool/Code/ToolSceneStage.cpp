@@ -105,6 +105,22 @@ _int CToolSceneStage::Update_Scene(const _float& fTimeDelta)
 			KeyInput_TabMapModeChange(pMyForm->m_TabMap);
 	}
 
+	// NavigationMesh ModeChange (Find Near Point)
+	if (Engine::KEY_DOWN(DIK_LCONTROL))
+	{
+		if (pMyForm->m_bIsTabMap &&
+			pMyForm->m_TabMap.m_EditCheck_NavigationMesh.GetCheck() &&
+			pMyForm->m_TabMap.m_bIsNaviCreateMode)
+		{
+			pMyForm->m_TabMap.UpdateData(TRUE);
+
+			_bool bIsFindNear = pMyForm->m_TabMap.m_NaviMeshCheck_FindNearPoint.GetCheck();
+			pMyForm->m_TabMap.m_NaviMeshCheck_FindNearPoint.SetCheck(!bIsFindNear);
+
+			pMyForm->m_TabMap.UpdateData(FALSE);
+		}
+	}
+
 	return Engine::CScene::Update_Scene(fTimeDelta);
 }
 
@@ -547,79 +563,157 @@ void CToolSceneStage::KeyInput_TabMapNavigationMesh(CTabMap& TabMap)
 	// NavigationMesh Create 모드.
 	if (TabMap.m_bIsNaviCreateMode)
 	{
-		// Navigation AutoCreate가 아닐 떄.
-		if (!TabMap.m_NaviMeshCheck_AutoCreate.GetCheck())
+		_vec3 vPickingPos = CMouseMgr::Picking_OnTerrain(m_pPickingTerrain);
+
+		// Cell이 없을 때 (최초 생성시)
+		if (nullptr == pCellList || pCellList->empty())
 		{
-			// Cell이 없을 때 (최초 생성시)
-			if (nullptr == pCellList || pCellList->empty())
-			{
-				_vec3 vPickingPos = CMouseMgr::Picking_OnTerrain(m_pPickingTerrain);
-				++m_iPickingCnt;
-
-				if (POINT_A == m_iPickingCnt)
-				{
-					m_vPickingPoint[POINT_A] = vPickingPos;
-				}
-
-				else if (POINT_B == m_iPickingCnt)
-				{
-					m_vPickingPoint[POINT_B] = vPickingPos;
-				}
-
-				else if (POINT_C == m_iPickingCnt)
-				{
-					m_vPickingPoint[POINT_C] = vPickingPos;
-
-					// Cell 생성.
-					pCell = CToolCell::Create(m_pGraphicDevice, m_pCommandList,
-											  0,						// Cell Index
-											  m_vPickingPoint[POINT_A],	// Point A
-											  m_vPickingPoint[POINT_B],	// Point B
-											  m_vPickingPoint[POINT_C]);// Point C
-					m_pObjectMgr->Add_GameObject(L"Layer_Environment", L"Cell", pCell);
-					pCellList = Engine::CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_Environment", L"Cell");
-
-					// ListBox에 추가.
-					_uint iSize = (_uint)pCellList->size();
-					_tchar szTemp[MIN_STR] = L"";
-					wsprintf(szTemp, L"Index : %d", iSize - 1);
-					TabMap.m_NaviMeshListBox_CellList.AddString(szTemp);
-
-					m_vPickingPoint[POINT_A] = _vec3(1000.0f);
-					m_vPickingPoint[POINT_B] = _vec3(1000.0f);
-					m_vPickingPoint[POINT_C] = _vec3(1000.0f);
-					m_iPickingCnt = -1;
-				}
-			}
-
-			else
-			{
-
-			}
-
-		}
-
-		// Navigation AutoCreate일 때.
-		else
-		{
-			// Cell이 없을 때 (최초 생성시)
-			if (nullptr == pCellList || pCellList->empty())
-				return;
+			++m_iPickingCnt;
 
 			if (POINT_A == m_iPickingCnt)
 			{
+				m_vPickingPoint[POINT_A] = vPickingPos;
 
+				TabMap.m_fNaviMeshPointA_X = m_vPickingPoint[POINT_A].x;
+				TabMap.m_fNaviMeshPointA_Y = m_vPickingPoint[POINT_A].y;
+				TabMap.m_fNaviMeshPointA_Z = m_vPickingPoint[POINT_A].z;
+				TabMap.m_fNaviMeshPointB_X = 0.0f;
+				TabMap.m_fNaviMeshPointB_Y = 0.0f;
+				TabMap.m_fNaviMeshPointB_Z = 0.0f;
+				TabMap.m_fNaviMeshPointC_X = 0.0f;
+				TabMap.m_fNaviMeshPointC_Y = 0.0f;
+				TabMap.m_fNaviMeshPointC_Z = 0.0f;
 			}
 
 			else if (POINT_B == m_iPickingCnt)
 			{
+				m_vPickingPoint[POINT_B] = vPickingPos;
 
+				TabMap.m_fNaviMeshPointB_X = m_vPickingPoint[POINT_B].x;
+				TabMap.m_fNaviMeshPointB_Y = m_vPickingPoint[POINT_B].y;
+				TabMap.m_fNaviMeshPointB_Z = m_vPickingPoint[POINT_B].z;
 			}
 
 			else if (POINT_C == m_iPickingCnt)
 			{
+				m_vPickingPoint[POINT_C] = vPickingPos;
 
+				// Cell 생성.
+				pCell = CToolCell::Create(m_pGraphicDevice, m_pCommandList,
+										  0,								// Cell Index
+										  m_vPickingPoint[POINT_A],			// Point A
+										  m_vPickingPoint[POINT_B],			// Point B
+										  m_vPickingPoint[POINT_C],			// Point C
+										  TabMap.m_iNaviMeshCellOption);	// Option
+				m_pObjectMgr->Add_GameObject(L"Layer_Environment", L"Cell", pCell);
+				pCellList = Engine::CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_Environment", L"Cell");
+
+				// ListBox에 추가.
+				_tchar szTemp[MIN_STR] = L"";
+				wsprintf(szTemp, L"Index : %d", (_uint)pCellList->size() - 1);
+				TabMap.m_NaviMeshListBox_CellList.AddString(szTemp);
+
+				// EditContorl에 값 추가.
+				TabMap.m_fNaviMeshPointC_X = m_vPickingPoint[POINT_C].x;
+				TabMap.m_fNaviMeshPointC_Y = m_vPickingPoint[POINT_C].y;
+				TabMap.m_fNaviMeshPointC_Z = m_vPickingPoint[POINT_C].z;
+
+				m_vPickingPoint[POINT_A] = _vec3(1000.0f);
+				m_vPickingPoint[POINT_B] = _vec3(1000.0f);
+				m_vPickingPoint[POINT_C] = _vec3(1000.0f);
+				m_iPickingCnt = -1;
 			}
+		}
+
+		// 1개 이상의 Cell이 있을 때.
+		else
+		{
+			// Picking지점과 가장 인접한 Cell을 찾는다.
+			++m_iPickingCnt;
+			_vec3* pOut = CMouseMgr::Get_Instance()->Find_NearCellPoint(vPickingPos, &m_pPickingCell);
+
+			if (POINT_A == m_iPickingCnt)
+			{
+				m_vPickingPoint[POINT_A] = *pOut;
+				m_pPickingPoint[POINT_A] = pOut;
+
+				TabMap.m_fNaviMeshPointA_X = m_vPickingPoint[POINT_A].x;
+				TabMap.m_fNaviMeshPointA_Y = m_vPickingPoint[POINT_A].y;
+				TabMap.m_fNaviMeshPointA_Z = m_vPickingPoint[POINT_A].z;
+				TabMap.m_fNaviMeshPointB_X = 0.0f;
+				TabMap.m_fNaviMeshPointB_Y = 0.0f;
+				TabMap.m_fNaviMeshPointB_Z = 0.0f;
+				TabMap.m_fNaviMeshPointC_X = 0.0f;
+				TabMap.m_fNaviMeshPointC_Y = 0.0f;
+				TabMap.m_fNaviMeshPointC_Z = 0.0f;
+			}
+
+			else if (POINT_B == m_iPickingCnt)
+			{
+				if (TabMap.m_NaviMeshCheck_FindNearPoint.GetCheck())
+				{
+					m_vPickingPoint[POINT_B] = *pOut;
+					m_pPickingPoint[POINT_B] = pOut;
+				}
+				else
+					m_vPickingPoint[POINT_B] = vPickingPos;
+
+				TabMap.m_fNaviMeshPointB_X = m_vPickingPoint[POINT_B].x;
+				TabMap.m_fNaviMeshPointB_Y = m_vPickingPoint[POINT_B].y;
+				TabMap.m_fNaviMeshPointB_Z = m_vPickingPoint[POINT_B].z;
+			}
+
+			else if (POINT_C == m_iPickingCnt)
+			{
+				m_vPickingPoint[POINT_C] = *pOut;
+				m_pPickingPoint[POINT_C] = pOut;
+
+				if (!TabMap.m_NaviMeshCheck_FindNearPoint.GetCheck())
+				{
+					// Cell 생성 - 두 개의 점 공유받아서 생성.
+					pCell = CToolCell::ShareCreate(m_pGraphicDevice, m_pCommandList,
+												   (_ulong)pCellList->size() - 1,	// Cell Index
+												   m_pPickingPoint[POINT_A],		// Point A
+												   m_vPickingPoint[POINT_B],		// Point B
+												   m_pPickingPoint[POINT_C],		// Point C
+												   TabMap.m_iNaviMeshCellOption,	// Option
+												   TabMap.m_NaviMeshCheck_FindNearPoint.GetCheck());
+				}
+				else
+				{
+					// Cell 생성 - 모든 점을 공유받아서 생성.
+					pCell = CToolCell::ShareCreate(m_pGraphicDevice, m_pCommandList,
+												   (_ulong)pCellList->size() - 1,	// Cell Index
+												   m_pPickingPoint[POINT_A],		// Point A
+												   m_pPickingPoint[POINT_B],		// Point B
+												   m_pPickingPoint[POINT_C],		// Point C
+												   TabMap.m_iNaviMeshCellOption,	// Option
+												   TabMap.m_NaviMeshCheck_FindNearPoint.GetCheck());
+				}
+
+				m_pObjectMgr->Add_GameObject(L"Layer_Environment", L"Cell", pCell);
+				pCellList = Engine::CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_Environment", L"Cell");
+
+				// ListBox에 추가.
+				_tchar szTemp[MIN_STR] = L"";
+				wsprintf(szTemp, L"Index : %d", (_uint)pCellList->size() - 1);
+				TabMap.m_NaviMeshListBox_CellList.AddString(szTemp);
+
+				// EditContorl에 값 추가.
+				TabMap.m_fNaviMeshPointC_X = m_vPickingPoint[POINT_C].x;
+				TabMap.m_fNaviMeshPointC_Y = m_vPickingPoint[POINT_C].y;
+				TabMap.m_fNaviMeshPointC_Z = m_vPickingPoint[POINT_C].z;
+
+				// 값 초기화.
+				m_vPickingPoint[POINT_A] = _vec3(1000.0f);
+				m_vPickingPoint[POINT_B] = _vec3(1000.0f);
+				m_vPickingPoint[POINT_C] = _vec3(1000.0f);
+				m_pPickingPoint[POINT_A] = nullptr;
+				m_pPickingPoint[POINT_B] = nullptr;
+				m_pPickingPoint[POINT_C] = nullptr;
+				m_iPickingCnt = -1;
+			}
+
 		}
 
 	}
@@ -627,6 +721,26 @@ void CToolSceneStage::KeyInput_TabMapNavigationMesh(CTabMap& TabMap)
 	// NavigationMesh Modify 모드.
 	else if (TabMap.m_bIsNaviModifyMode)
 	{
+		Engine::OBJLIST* pCellList = Engine::CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_Environment", L"Cell");
+		if (nullptr == pCellList || pCellList->empty())
+			return;
+
+		// Cell 색상 Green & WireFrame으로 변경.
+		for (auto& pCell : *pCellList)
+		{
+			static_cast<CToolCell*>(pCell)->m_vColor = _rgba(0.0f, 1.0f, 0.0f, 1.0f);	// Color Green
+			static_cast<CToolCell*>(pCell)->m_pShaderCom->Set_PipelineStatePass(1);		// WireFrame
+		}
+
+		_vec3 vPickingPos = CMouseMgr::Picking_OnTerrain(m_pPickingTerrain);
+		CMouseMgr::Get_Instance()->Find_NearCellPoint(vPickingPos, &m_pPickingCell);
+
+		if (m_pPickingCell != nullptr)
+		{
+			m_pPickingCell->m_vColor = _rgba(1.0f, 0.0f, 0.0f, 1.0f);	// Color Red
+			m_pPickingCell->m_pShaderCom->Set_PipelineStatePass(0);		// Solid
+		}
+
 
 	}
 
@@ -712,8 +826,8 @@ void CToolSceneStage::KeyInput_TabMapModeChange(CTabMap& TabMap)
 
 		if (TabMap.m_bIsNaviCreateMode)
 		{
-			TabMap.m_NaviMeshCheck_AutoCreate.EnableWindow(TRUE);
-			TabMap.m_NaviMeshCheck_AutoCreate.SetCheck(false);
+			TabMap.m_NaviMeshCheck_FindNearPoint.EnableWindow(TRUE);
+			TabMap.m_NaviMeshCheck_FindNearPoint.SetCheck(false);
 
 			TabMap.m_fNaviMeshPointA_X = 0.0f;
 			TabMap.m_fNaviMeshPointA_Y = 0.0f;
@@ -727,8 +841,8 @@ void CToolSceneStage::KeyInput_TabMapModeChange(CTabMap& TabMap)
 		}
 		else
 		{
-			TabMap.m_NaviMeshCheck_AutoCreate.EnableWindow(FALSE);
-			TabMap.m_NaviMeshCheck_AutoCreate.SetCheck(false);
+			TabMap.m_NaviMeshCheck_FindNearPoint.EnableWindow(FALSE);
+			TabMap.m_NaviMeshCheck_FindNearPoint.SetCheck(false);
 		}
 
 
@@ -736,6 +850,7 @@ void CToolSceneStage::KeyInput_TabMapModeChange(CTabMap& TabMap)
 
 	TabMap.UpdateData(FALSE);
 }
+
 
 CToolSceneStage* CToolSceneStage::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 {

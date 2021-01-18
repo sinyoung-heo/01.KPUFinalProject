@@ -205,7 +205,9 @@
     <ClInclude Include="..\Code\Popori_F.h">
       <Filter>03.ToolGameObject\01.Popori_F</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\ToolCell.h" />
+    <ClInclude Include="..\Code\ToolCell.h">
+      <Filter>03.ToolGameObject\00.Environment\04.Cell</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -283,7 +285,9 @@
     <ClCompile Include="..\Code\Popori_F.cpp">
       <Filter>03.ToolGameObject\01.Popori_F</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\ToolCell.cpp" />
+    <ClCompile Include="..\Code\ToolCell.cpp">
+      <Filter>03.ToolGameObject\00.Environment\04.Cell</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Tool.rc">

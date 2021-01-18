@@ -8,6 +8,7 @@ namespace Engine
 
 class CToolTerrain;
 class CToolStaticMesh;
+class CToolCell;
 
 class CMouseMgr : public Engine::CBase
 {
@@ -26,8 +27,9 @@ public:
 								   _vec3& dir,
 								   _float* u, _float* v, _float* t);
 
-	_bool Picking_Object(Engine::CGameObject** pPickingObject, Engine::OBJLIST* pOBJLIST);
-	_bool Picking_Light(Engine::CLight** pPickingLight, vector<Engine::CLight*>& vecPointLight);
+	_bool Picking_Object(Engine::CGameObject** ppPickingObject, Engine::OBJLIST* pOBJLIST);
+	_bool Picking_Light(Engine::CLight** ppPickingLight, vector<Engine::CLight*>& vecPointLight);
+	_vec3* Find_NearCellPoint(_vec3& vPickingPos, CToolCell** ppPickingCell);
 
 private:
 	virtual void Free();

@@ -47,14 +47,14 @@ public:
 	CToolTerrain*			m_pPickingTerrain	= nullptr;
 	Engine::CGameObject*	m_pPickingObject	= nullptr;
 	Engine::CLight*			m_pPickingLight		= nullptr;
+	CToolCell*				m_pPickingCell		= nullptr;
 
-	// Picking NaviMesh
+	// Picking NaviMeshCell
 	_int						m_iPickingCnt	= -1;
 	_vec3						m_vPickingPoint[POINT_END]		{ _vec3(0.0f), _vec3(0.0f) ,_vec3(0.0f) };
+	_vec3*						m_pPickingPoint[POINT_END]		{ nullptr, nullptr , nullptr };
 	_matrix						m_matColliderWorld[POINT_END];
 	Engine::CColliderSphere*	m_pPickingCollider[POINT_END]	{ nullptr, nullptr, nullptr };
-	_vec3*	m_pSharePointB	= nullptr;
-	_vec3*	m_pSharePointC	= nullptr;
 
 private:
 	/*__________________________________________________________________________________________________________

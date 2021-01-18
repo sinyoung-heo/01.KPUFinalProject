@@ -3,6 +3,7 @@
 #include "GraphicDevice.h"
 #include "ToolTerrain.h"
 #include "ToolStaticMesh.h"
+#include "ToolCell.h"
 #include "LightMgr.h"
 #include "Light.h"
 
@@ -74,7 +75,9 @@ _vec3 CMouseMgr::Picking_OnTerrain(CToolTerrain* pTerrain)
 								  vRayPos, vRayDir,
 								  &fU, &fV, &fDist))
 			{
-				return vRayPos + (vRayDir * fDist);
+				_vec3 vPickingPos = vRayPos + (vRayDir * fDist);
+				vPickingPos.y = 0.0f;
+				return vPickingPos;
 			}
 
 			dwVtxIdx[0] = dwIndex + dwVtxCntX;
@@ -86,7 +89,9 @@ _vec3 CMouseMgr::Picking_OnTerrain(CToolTerrain* pTerrain)
 								  vRayPos, vRayDir,
 								  &fU, &fV, &fDist))
 			{
-				return vRayPos + (vRayDir * fDist);
+				_vec3 vPickingPos = vRayPos + (vRayDir * fDist);
+				vPickingPos.y = 0.0f;
+				return vPickingPos;
 			}
 		}
 	}
@@ -210,7 +215,7 @@ _bool CMouseMgr::Picking_Object(Engine::CGameObject** ppPickingObject, Engine::O
 	return false;
 }
 
-_bool CMouseMgr::Picking_Light(Engine::CLight** pPickingLight, vector<Engine::CLight*>& vecPointLight)
+_bool CMouseMgr::Picking_Light(Engine::CLight** ppPickingLight, vector<Engine::CLight*>& vecPointLight)
 {
 	POINT ptMouse{};
 
@@ -259,8 +264,8 @@ _bool CMouseMgr::Picking_Light(Engine::CLight** pPickingLight, vector<Engine::CL
 																			fDist))
 		{
 			(*iter_begin)->Set_ColliderColorSelected();
-			*pPickingLight = (*iter_begin);
-
+			*ppPickingLight = (*iter_begin);
+			
 			return true;
 		}
 	}
@@ -269,6 +274,64 @@ _bool CMouseMgr::Picking_Light(Engine::CLight** pPickingLight, vector<Engine::CL
 
 
 	return false;
+}
+
+_vec3* CMouseMgr::Find_NearCellPoint(_vec3& vPickingPos, CToolCell** ppPickingCell)
+{
+	CToolCell*	pSelectCell		= nullptr;
+	_vec3*		pSelectPoint	= nullptr;
+	_float		fDist			= 0.0f;
+
+	// 일단 첫 번째 Cell과 비교한 값을 저장.
+	Engine::OBJLIST* pCellList = Engine::CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_Environment", L"Cell");
+
+	pSelectCell = static_cast<CToolCell*>(pCellList->front());
+	fDist = vPickingPos.Get_Distance(pSelectCell->m_vCenter);
+
+	// 모든 Cell들과 거리비교를 통해서 가장 가까운 Cell을 찾는다.
+	for (auto& pCell : *pCellList)
+	{
+		_float fNewDist = vPickingPos.Get_Distance(static_cast<CToolCell*>(pCell)->m_vCenter);
+
+		// 더 적은 값을 fDist로 입력. swap 진행.
+		if (fNewDist <= fDist)
+		{
+			pSelectCell = static_cast<CToolCell*>(pCell);
+			*ppPickingCell = static_cast<CToolCell*>(pCell);
+			fDist = fNewDist;
+		}
+	}
+
+	// 가장 가까운 Cell중에서 A, B, C점들 중에서 가장 가까운 점을 찾아서 반환한다.
+	_float fDistFromA	= 0.0f;
+	_float fDistFromB	= 0.0f; 
+	_float fDistFromC	= 0.0f;
+	_float fMin			= 0.0f;
+	_vec3* pOut			= nullptr;
+
+	fDistFromA = vPickingPos.Get_Distance(*pSelectCell->m_pPoint[0]);
+	fDistFromB = vPickingPos.Get_Distance(*pSelectCell->m_pPoint[1]);
+	fDistFromC = vPickingPos.Get_Distance(*pSelectCell->m_pPoint[2]);
+
+
+	// A, B비교.
+	if (fDistFromA > fDistFromB)
+		fMin = fDistFromB;
+	else
+		fMin = fDistFromA;
+
+	// A, B중 작은 값과 C비교.
+	if (fMin > fDistFromC)
+		fMin = fDistFromC;
+
+	if (fMin == fDistFromA)
+		pOut = pSelectCell->m_pPoint[0];
+	else if (fMin == fDistFromB)
+		pOut = pSelectCell->m_pPoint[1];
+	else if (fMin == fDistFromC)
+		pOut = pSelectCell->m_pPoint[2];
+
+	return pOut;
 }
 
 void CMouseMgr::Free()

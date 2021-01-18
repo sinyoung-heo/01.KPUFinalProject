@@ -404,7 +404,7 @@ HRESULT CRenderer::Ready_RenderTarget()
 	FAILED_CHECK_RETURN(m_pShadowDepthTarget->SetUp_DefaultSetting(TARGETID::TYPE_SHADOWDEPTH), E_FAIL);
 
 	m_pShadowDepthTarget->Set_TargetRenderScale(_vec3(90.0f, 90.0f, 90.0f));
-	m_pShadowDepthTarget->Set_TargetRenderPos(_vec3(720.0f, 90.0f, 1.0f));
+	m_pShadowDepthTarget->Set_TargetRenderPos(_vec3(WINCX - 90.0f, WINCY - 90.0f, 1.0f));
 
 	/*__________________________________________________________________________________________________________
 	[ Blend Resource ]
