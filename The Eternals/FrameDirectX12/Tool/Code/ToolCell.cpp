@@ -14,10 +14,12 @@ CToolCell::CToolCell(const CToolCell& rhs)
 }
 
 HRESULT CToolCell::Ready_GameObject(const _ulong& dwIndex, 
-									const _vec3& vPointA, 
-									const _vec3& vPointB, 
-									const _vec3& vPointC)
+									_vec3& vPointA, 
+									_vec3& vPointB, 
+									_vec3& vPointC)
 {
+	CheckClockWise(vPointA, vPointB, vPointC);
+
 	m_bIsShare			= false;
 	m_dwCurrentIdx		= dwIndex;
 	m_pPoint[POINT_A]	= new _vec3(vPointA);
@@ -25,21 +27,34 @@ HRESULT CToolCell::Ready_GameObject(const _ulong& dwIndex,
 	m_pPoint[POINT_C]	= new _vec3(vPointC);
 	m_vCenter			= (*m_pPoint[POINT_A] + *m_pPoint[POINT_B] + *m_pPoint[POINT_C]) / 3.f;
 
+
 	Engine::FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
 	return S_OK;
 }
 
 HRESULT CToolCell::Ready_GameObject(const _ulong& dwIndex,
-									const _vec3& vNewPointA,
-									_vec3* pSharePointB,
+									_vec3* pSharePointA,
+									_vec3& vNewPointB,
 									_vec3* pSharePointC)
 {
+	// 시계방향이면
+	if (CheckClockWise(pSharePointA, &vNewPointB, pSharePointC))
+	{
+		m_pPoint[POINT_A] = pSharePointA;
+		m_pPoint[POINT_B] = new _vec3(vNewPointB);
+		m_pPoint[POINT_C] = pSharePointC;
+	}
+	// 반시계방향이면
+	else
+	{
+		m_pPoint[POINT_A] = pSharePointA;
+		m_pPoint[POINT_B] = pSharePointC;
+		m_pPoint[POINT_C] = new _vec3(vNewPointB);
+	}
+
 	m_bIsShare			= true;
 	m_dwCurrentIdx		= dwIndex;
-	m_pPoint[POINT_A]	= new _vec3(vNewPointA);
-	m_pPoint[POINT_B]	= pSharePointB;
-	m_pPoint[POINT_C]	= pSharePointC;
 	m_vCenter			= (*m_pPoint[POINT_A] + *m_pPoint[POINT_B] + *m_pPoint[POINT_C]) / 3.f;
 
 	Engine::FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
@@ -206,6 +221,36 @@ void CToolCell::Set_ConstantTable()
 	m_pShaderCom->Get_UploadBuffer_ColorDesc()->CopyData(0, tCB_ColorDesc);
 }
 
+void CToolCell::CheckClockWise(_vec3& p0, _vec3& p1, _vec3& p2)
+{
+	_vec3 u = p1 - p0;
+	_vec3 v = p2 - p0;
+
+	_vec3 vResult = u.Cross_InputV2(v);
+	vResult.Normalize();
+
+	if (vResult.y < 0.0f)
+		swap(p1, p2);
+
+}
+
+_bool CToolCell::CheckClockWise(_vec3* p0, _vec3* p1, _vec3* p2)
+{
+	_vec3 u = *p1 - *p0;
+	_vec3 v = *p2 - *p0;
+
+	_vec3 vResult = u.Cross_InputV2(v);
+	vResult.Normalize();
+
+	if (vResult.y < 0.0f)
+	{
+		// swap(p1, p2);
+		return false;
+	}
+
+	return true;
+}
+
 ID3D12Resource* CToolCell::Create_DefaultBuffer(const void* InitData, 
 												UINT64 uiByteSize, 
 												ID3D12Resource*& pUploadBuffer)
@@ -349,9 +394,9 @@ D3D12_INDEX_BUFFER_VIEW CToolCell::Get_IndexBufferView() const
 CToolCell* CToolCell::Create(ID3D12Device* pGraphicDevice,
 							 ID3D12GraphicsCommandList* pCommandList, 
 							 const _ulong& dwIndex, 
-							 const _vec3& vPointA, 
-							 const _vec3& vPointB, 
-							 const _vec3& vPointC)
+							 _vec3& vPointA, 
+							 _vec3& vPointB, 
+							 _vec3& vPointC)
 {
 	CToolCell* pInstance = new CToolCell(pGraphicDevice, pCommandList);
 
@@ -364,13 +409,13 @@ CToolCell* CToolCell::Create(ID3D12Device* pGraphicDevice,
 CToolCell* CToolCell::ShareCreate(ID3D12Device* pGraphicDevice, 
 								  ID3D12GraphicsCommandList* pCommandList, 
 								  const _ulong& dwIndex, 
-								  const _vec3& vNewPointA, 
-								 _vec3* pSharePointB, 
-								 _vec3* pSharePointC)
+								  _vec3* pSharePointA,
+								  _vec3& vNewPointB,
+								  _vec3* pSharePointC)
 {
 	CToolCell* pInstance = new CToolCell(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(dwIndex, vNewPointA, pSharePointB, pSharePointC)))
+	if (FAILED(pInstance->Ready_GameObject(dwIndex, pSharePointA, vNewPointB, pSharePointC)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
@@ -386,7 +431,12 @@ void CToolCell::Free()
 		Engine::Safe_Release(pCollider);
 
 	if (m_bIsShare)
-		Engine::Safe_Delete(m_pPoint[POINT_A]);
+	{
+		if (m_bIsClockwise)
+			Engine::Safe_Delete(m_pPoint[POINT_B]);
+		else
+			Engine::Safe_Delete(m_pPoint[POINT_C]);
+	}
 	else
 	{
 		Engine::Safe_Delete(m_pPoint[POINT_A]);

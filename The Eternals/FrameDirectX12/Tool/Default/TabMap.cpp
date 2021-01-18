@@ -190,7 +190,7 @@ void CTabMap::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CHECK1008, m_StaticMeshCheck_IsMousePicking);
 	DDX_Control(pDX, IDC_RADIO1011, m_NaviMeshRadio_CreateMode);
 	DDX_Control(pDX, IDC_RADIO1012, m_NaviMeshRadio_ModifyMode);
-	DDX_Control(pDX, IDC_CHECK1010, m_NaviMeshCheck_AutoCreate);
+	DDX_Control(pDX, IDC_CHECK1010, m_NaviMeshCheck_FindNearPoint);
 	DDX_Control(pDX, IDC_LIST1005, m_NaviMeshListBox_CellList);
 	DDX_Control(pDX, IDC_BUTTON1013, m_NaviMeshButton_Delete);
 	DDX_Control(pDX, IDC_BUTTON1014, m_NaviMeshButton_AllDelete);
@@ -426,7 +426,7 @@ BOOL CTabMap::OnInitDialog()
 	// NavigationMesh
 	m_NaviMeshRadio_CreateMode.EnableWindow(FALSE);
 	m_NaviMeshRadio_ModifyMode.EnableWindow(FALSE);
-	m_NaviMeshCheck_AutoCreate.EnableWindow(FALSE);
+	m_NaviMeshCheck_FindNearPoint.EnableWindow(FALSE);
 	m_NaviMeshListBox_CellList.EnableWindow(FALSE);
 	m_NaviMeshButton_Delete.EnableWindow(FALSE);
 	m_NaviMeshButton_AllDelete.EnableWindow(FALSE);
@@ -1761,7 +1761,7 @@ HRESULT CTabMap::Ready_NavigationMeshControl()
 
 	m_NaviMeshRadio_CreateMode.EnableWindow(FALSE);
 	m_NaviMeshRadio_ModifyMode.EnableWindow(FALSE);
-	m_NaviMeshCheck_AutoCreate.EnableWindow(FALSE);
+	m_NaviMeshCheck_FindNearPoint.EnableWindow(FALSE);
 	m_NaviMeshListBox_CellList.EnableWindow(FALSE);
 	m_NaviMeshButton_Delete.EnableWindow(FALSE);
 	m_NaviMeshButton_AllDelete.EnableWindow(FALSE);
@@ -2066,7 +2066,7 @@ void CTabMap::OnBnClickedCheck1005_EditStaticMesh()
 	// NavigationMesh
 	m_NaviMeshRadio_CreateMode.EnableWindow(FALSE);
 	m_NaviMeshRadio_ModifyMode.EnableWindow(FALSE);
-	m_NaviMeshCheck_AutoCreate.EnableWindow(FALSE);
+	m_NaviMeshCheck_FindNearPoint.EnableWindow(FALSE);
 	m_NaviMeshListBox_CellList.EnableWindow(FALSE);
 	m_NaviMeshButton_Delete.EnableWindow(FALSE);
 	m_NaviMeshButton_AllDelete.EnableWindow(FALSE);
@@ -2206,7 +2206,7 @@ void CTabMap::OnBnClickedCheck1006_EditLightingInfo()
 	// NavigationMesh
 	m_NaviMeshRadio_CreateMode.EnableWindow(FALSE);
 	m_NaviMeshRadio_ModifyMode.EnableWindow(FALSE);
-	m_NaviMeshCheck_AutoCreate.EnableWindow(FALSE);
+	m_NaviMeshCheck_FindNearPoint.EnableWindow(FALSE);
 	m_NaviMeshListBox_CellList.EnableWindow(FALSE);
 	m_NaviMeshButton_Delete.EnableWindow(FALSE);
 	m_NaviMeshButton_AllDelete.EnableWindow(FALSE);
@@ -2319,7 +2319,7 @@ void CTabMap::OnBnClickedCheck1007_EditNavigationMesh()
 	// NavigationMesh
 	m_NaviMeshRadio_CreateMode.EnableWindow(TRUE);
 	m_NaviMeshRadio_ModifyMode.EnableWindow(TRUE);
-	m_NaviMeshCheck_AutoCreate.EnableWindow(TRUE);
+	m_NaviMeshCheck_FindNearPoint.EnableWindow(TRUE);
 	m_NaviMeshListBox_CellList.EnableWindow(TRUE);
 	m_NaviMeshButton_Delete.EnableWindow(TRUE);
 	m_NaviMeshButton_AllDelete.EnableWindow(TRUE);
@@ -4110,8 +4110,8 @@ void CTabMap::OnBnClickedRadio1011_NaviMeshCreateMode()
 	m_NaviMeshRadio_CreateMode.SetCheck(m_bIsNaviCreateMode);
 	m_NaviMeshRadio_ModifyMode.SetCheck(m_bIsNaviModifyMode);
 
-	m_NaviMeshCheck_AutoCreate.EnableWindow(TRUE);
-	m_NaviMeshCheck_AutoCreate.SetCheck(false);
+	m_NaviMeshCheck_FindNearPoint.EnableWindow(TRUE);
+	m_NaviMeshCheck_FindNearPoint.SetCheck(false);
 
 	m_fNaviMeshPointA_X = 0.0f;
 	m_fNaviMeshPointA_Y = 0.0f;
@@ -4134,6 +4134,6 @@ void CTabMap::OnBnClickedRadio1012_NaviMeshModifyMode()
 	m_NaviMeshRadio_CreateMode.SetCheck(m_bIsNaviCreateMode);
 	m_NaviMeshRadio_ModifyMode.SetCheck(m_bIsNaviModifyMode);
 
-	m_NaviMeshCheck_AutoCreate.EnableWindow(FALSE);
-	m_NaviMeshCheck_AutoCreate.SetCheck(false);
+	m_NaviMeshCheck_FindNearPoint.EnableWindow(FALSE);
+	m_NaviMeshCheck_FindNearPoint.SetCheck(false);
 }

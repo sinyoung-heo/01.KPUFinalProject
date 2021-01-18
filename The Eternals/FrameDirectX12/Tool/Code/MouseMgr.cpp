@@ -74,7 +74,9 @@ _vec3 CMouseMgr::Picking_OnTerrain(CToolTerrain* pTerrain)
 								  vRayPos, vRayDir,
 								  &fU, &fV, &fDist))
 			{
-				return vRayPos + (vRayDir * fDist);
+				_vec3 vPickingPos = vRayPos + (vRayDir * fDist);
+				vPickingPos.y = 0.0f;
+				return vPickingPos;
 			}
 
 			dwVtxIdx[0] = dwIndex + dwVtxCntX;
@@ -86,7 +88,9 @@ _vec3 CMouseMgr::Picking_OnTerrain(CToolTerrain* pTerrain)
 								  vRayPos, vRayDir,
 								  &fU, &fV, &fDist))
 			{
-				return vRayPos + (vRayDir * fDist);
+				_vec3 vPickingPos = vRayPos + (vRayDir * fDist);
+				vPickingPos.y = 0.0f;
+				return vPickingPos;
 			}
 		}
 	}

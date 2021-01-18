@@ -359,7 +359,7 @@ public:
 	// Contorl
 	CButton		m_NaviMeshRadio_CreateMode;
 	CButton		m_NaviMeshRadio_ModifyMode;
-	CButton		m_NaviMeshCheck_AutoCreate;
+	CButton		m_NaviMeshCheck_FindNearPoint;
 	CListBox	m_NaviMeshListBox_CellList;
 	CButton		m_NaviMeshButton_Delete;
 	CButton		m_NaviMeshButton_AllDelete;

@@ -43,6 +43,9 @@ private:
 	void			KeyInput_TabMapNavigationMesh(CTabMap& TabMap);
 	void			KeyInput_TabMapModeChange(CTabMap& TabMap);
 
+private:
+	_vec3*			Find_NearCellPoint(_vec3& vPickingPos);
+
 public:
 	CToolTerrain*			m_pPickingTerrain	= nullptr;
 	Engine::CGameObject*	m_pPickingObject	= nullptr;
@@ -51,6 +54,7 @@ public:
 	// Picking NaviMesh
 	_int						m_iPickingCnt	= -1;
 	_vec3						m_vPickingPoint[POINT_END]		{ _vec3(0.0f), _vec3(0.0f) ,_vec3(0.0f) };
+	_vec3*						m_pPickingPoint[POINT_END]		{ nullptr, nullptr , nullptr };
 	_matrix						m_matColliderWorld[POINT_END];
 	Engine::CColliderSphere*	m_pPickingCollider[POINT_END]	{ nullptr, nullptr, nullptr };
 	_vec3*	m_pSharePointB	= nullptr;
