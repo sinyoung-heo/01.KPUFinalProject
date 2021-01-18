@@ -24,12 +24,14 @@ void process_packet(int id)
 		strcpy_s(pPlayer->m_ID, p->name);
 		pPlayer->Get_ClientLock().unlock();
 
+#ifndef DUMMY
 		/* CHECK ID in Database Server */
 		if (false == CDBMgr::GetInstance()->Check_ID(id, p->password))
 		{
 			/* 처음 게임에 접속한 유저라면 회원으로 등록 in Database Server */
 			CDBMgr::GetInstance()->Insert_NewPlayer_DB(id, p->password);
 		}
+#endif // DUMMY
 
 		/* 로그인 수락 패킷 전송 */
 		send_login_ok(id);
@@ -112,7 +114,7 @@ void process_packet(int id)
 	case CS_MOVE:
 	{
 		cs_packet_move* p = reinterpret_cast<cs_packet_move*>(pPlayer->m_packet_start);
-		//pPlayer->move_time = p->move_time;
+		pPlayer->move_time = p->move_time;
 		process_move(id, p);
 	}
 	break;
@@ -288,7 +290,7 @@ void send_move_packet(int to_client, int id)
 	p.type = SC_PACKET_MOVE;
 	p.id = id;
 
-	//p.move_time = pNewPlayer->move_time;
+	p.move_time = pPlayer->move_time;
 
 	p.posX = pPlayer->m_vPos.x;
 	p.posY = pPlayer->m_vPos.y;
@@ -554,7 +556,7 @@ void random_move_npc(int id)
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
 	oldnearSector.reserve(5);
-	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, ori_x, ori_y);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_y);
 
 	unordered_set <int> old_viewlist; 
 

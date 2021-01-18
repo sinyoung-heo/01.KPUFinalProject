@@ -1,5 +1,6 @@
 #pragma once
-#define TEST
+//#define TEST
+#define DUMMY
 
 /* SYSTEM HEADER */
 //#include "vld.h"

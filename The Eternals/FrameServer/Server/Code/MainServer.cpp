@@ -322,9 +322,11 @@ void disconnect_client(int id)
 
 	pPlayer->Get_ClientLock().lock();
 
+#ifndef DUMMY
 	// DB 정보 저장 후 종료
 	CDBMgr::GetInstance()->Update_stat_DB(id);
-	
+#endif // !DUMMY
+
 	CObjPoolMgr::GetInstance()->return_Object(L"PLAYER", pPlayer);
 	CObjMgr::GetInstance()->Delete_GameObject(L"PLAYER", pPlayer);
 	pPlayer->Set_IsConnected(false);
@@ -401,8 +403,14 @@ void worker_thread()
 
 		if (ret == FALSE)
 		{
-			disconnect_client(key);
-			error_display("GQCS Error : ", WSAGetLastError());
+			int err_no = WSAGetLastError();
+			if (64 == err_no)
+				disconnect_client(key);
+			else
+			{
+				disconnect_client(key);
+				error_display("GQCS Error : ", WSAGetLastError());
+			}
 		}
 
 		/* <I/O 처리 작업> */

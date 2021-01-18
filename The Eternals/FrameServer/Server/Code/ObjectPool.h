@@ -15,10 +15,10 @@ public:
 	{
 		m_iMaxSize = size;
 
-		for (int i = 0; i < m_iMaxSize; ++i)
+		for (int i = m_iMaxSize-1; i >= 0; --i)
 		{
 			T* pObj = new T();
-			pObj->Set_ServerNumber(i + 1);
+			pObj->Set_ServerNumber(i);
 			m_stackObj.push(pObj);
 		}
 
