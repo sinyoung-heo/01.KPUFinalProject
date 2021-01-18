@@ -601,7 +601,13 @@ void CToolSceneStage::KeyInput_TabMapNavigationMesh(CTabMap& TabMap)
 
 			else if (POINT_B == m_iPickingCnt)
 			{
-				m_vPickingPoint[POINT_B] = vPickingPos;
+				if (TabMap.m_NaviMeshCheck_FindNearPoint.GetCheck())
+				{
+					m_vPickingPoint[POINT_B] = *pOut;
+					m_pPickingPoint[POINT_B] = pOut;
+				}
+				else
+					m_vPickingPoint[POINT_B] = vPickingPos;
 			}
 
 			else if (POINT_C == m_iPickingCnt)
@@ -609,12 +615,27 @@ void CToolSceneStage::KeyInput_TabMapNavigationMesh(CTabMap& TabMap)
 				m_vPickingPoint[POINT_C] = *pOut;
 				m_pPickingPoint[POINT_C] = pOut;
 
-				// Cell 생성.
-				pCell = CToolCell::ShareCreate(m_pGraphicDevice, m_pCommandList,
-											   pCellList->size() - 1,		// Cell Index
-											   m_pPickingPoint[POINT_A],	// Point A
-											   m_vPickingPoint[POINT_B],	// Point B
-											   m_pPickingPoint[POINT_C]);	// Point C
+				if (!TabMap.m_NaviMeshCheck_FindNearPoint.GetCheck())
+				{
+					// Cell 생성 - 두 개의 점 공유받아서 생성.
+					pCell = CToolCell::ShareCreate(m_pGraphicDevice, m_pCommandList,
+												   pCellList->size() - 1,		// Cell Index
+												   m_pPickingPoint[POINT_A],	// Point A
+												   m_vPickingPoint[POINT_B],	// Point B
+												   m_pPickingPoint[POINT_C],	// Point C
+												   TabMap.m_NaviMeshCheck_FindNearPoint.GetCheck());
+				}
+				else
+				{
+					// Cell 생성 - 모든 점을 공유받아서 생성.
+					pCell = CToolCell::ShareCreate(m_pGraphicDevice, m_pCommandList,
+												   pCellList->size() - 1,		// Cell Index
+												   m_pPickingPoint[POINT_A],	// Point A
+												   m_pPickingPoint[POINT_B],	// Point B
+												   m_pPickingPoint[POINT_C],	// Point C
+												   TabMap.m_NaviMeshCheck_FindNearPoint.GetCheck());
+				}
+
 				m_pObjectMgr->Add_GameObject(L"Layer_Environment", L"Cell", pCell);
 				pCellList = Engine::CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_Environment", L"Cell");
 
@@ -623,10 +644,11 @@ void CToolSceneStage::KeyInput_TabMapNavigationMesh(CTabMap& TabMap)
 				wsprintf(szTemp, L"Index : %d", (_uint)pCellList->size() - 1);
 				TabMap.m_NaviMeshListBox_CellList.AddString(szTemp);
 
-
+				// 값 초기화.
 				m_vPickingPoint[POINT_A] = _vec3(1000.0f);
 				m_vPickingPoint[POINT_B] = _vec3(1000.0f);
 				m_vPickingPoint[POINT_C] = _vec3(1000.0f);
+				m_pPickingPoint[POINT_A] = nullptr;
 				m_pPickingPoint[POINT_B] = nullptr;
 				m_pPickingPoint[POINT_C] = nullptr;
 				m_iPickingCnt = -1;

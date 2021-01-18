@@ -25,7 +25,14 @@ public:
 	virtual HRESULT Ready_GameObject(const _ulong& dwIndex,
 									 _vec3* pSharePointA,
 									 _vec3& vNewPointB,
-									 _vec3* pSharePointC);
+									 _vec3* pSharePointC,
+									 const _bool& bIsFindNear = false);
+	virtual HRESULT Ready_GameObject(const _ulong& dwIndex,
+									 _vec3* pSharePointA,
+									 _vec3* pSharePointB,
+									 _vec3* pSharePointC,
+									 const _bool& bIsFindNear = false);
+
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
@@ -52,12 +59,14 @@ public:
 	_vec3	m_vCenter		= _vec3(0.0f);
 	_ulong	m_dwCurrentIdx	= 0;
 	_bool	m_bIsShare		= false;
+	_bool	m_bIsFindNear	= false;
 	_bool	m_bIsClockwise	= true;
 	
 	_rgba	m_vColor		= _rgba(0.0f, 1.0f, 0.0f, 1.0f);
-
+	
 
 private:
+#pragma region BUFFER
 	/*__________________________________________________________________________________________________________
 	- 시스템 메모리 복사본.
 	- 정점/인덱스 형식이 범용적일 수 있으므로, ID3DBlob를 사용.
@@ -85,7 +94,7 @@ private:
 										 ID3D12Resource*& pUploadBuffer);
 	D3D12_VERTEX_BUFFER_VIEW	Get_VertexBufferView()	const;
 	D3D12_INDEX_BUFFER_VIEW		Get_IndexBufferView()	const;
-
+#pragma endregion
 public:
 	static CToolCell* Create(ID3D12Device* pGraphicDevice,
 							 ID3D12GraphicsCommandList* pCommandList,
@@ -99,7 +108,17 @@ public:
 								  const _ulong& dwIndex,
 								  _vec3* pSharePointA,
 								  _vec3& vNewPointB,
-								  _vec3* pSharePointC);
+								  _vec3* pSharePointC,
+								  const _bool& bIsFindNear = false);
+
+	static CToolCell* ShareCreate(ID3D12Device* pGraphicDevice,
+								  ID3D12GraphicsCommandList* pCommandList,
+								  const _ulong& dwIndex,
+								  _vec3* pSharePointA,
+								  _vec3* pSharePointB,
+								  _vec3* pSharePointC,
+								  const _bool& bIsFindNear = false);
+
 
 private:
 	virtual void Free();

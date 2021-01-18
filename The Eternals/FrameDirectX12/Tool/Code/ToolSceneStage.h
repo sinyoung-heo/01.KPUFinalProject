@@ -57,8 +57,6 @@ public:
 	_vec3*						m_pPickingPoint[POINT_END]		{ nullptr, nullptr , nullptr };
 	_matrix						m_matColliderWorld[POINT_END];
 	Engine::CColliderSphere*	m_pPickingCollider[POINT_END]	{ nullptr, nullptr, nullptr };
-	_vec3*	m_pSharePointB	= nullptr;
-	_vec3*	m_pSharePointC	= nullptr;
 
 private:
 	/*__________________________________________________________________________________________________________

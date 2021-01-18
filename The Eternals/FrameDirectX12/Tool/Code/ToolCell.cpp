@@ -27,7 +27,6 @@ HRESULT CToolCell::Ready_GameObject(const _ulong& dwIndex,
 	m_pPoint[POINT_C]	= new _vec3(vPointC);
 	m_vCenter			= (*m_pPoint[POINT_A] + *m_pPoint[POINT_B] + *m_pPoint[POINT_C]) / 3.f;
 
-
 	Engine::FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
 	return S_OK;
@@ -36,7 +35,8 @@ HRESULT CToolCell::Ready_GameObject(const _ulong& dwIndex,
 HRESULT CToolCell::Ready_GameObject(const _ulong& dwIndex,
 									_vec3* pSharePointA,
 									_vec3& vNewPointB,
-									_vec3* pSharePointC)
+									_vec3* pSharePointC,
+									const _bool& bIsFindNear)
 {
 	// 시계방향이면
 	if (CheckClockWise(pSharePointA, &vNewPointB, pSharePointC))
@@ -44,6 +44,7 @@ HRESULT CToolCell::Ready_GameObject(const _ulong& dwIndex,
 		m_pPoint[POINT_A] = pSharePointA;
 		m_pPoint[POINT_B] = new _vec3(vNewPointB);
 		m_pPoint[POINT_C] = pSharePointC;
+		m_bIsClockwise = true;
 	}
 	// 반시계방향이면
 	else
@@ -51,13 +52,49 @@ HRESULT CToolCell::Ready_GameObject(const _ulong& dwIndex,
 		m_pPoint[POINT_A] = pSharePointA;
 		m_pPoint[POINT_B] = pSharePointC;
 		m_pPoint[POINT_C] = new _vec3(vNewPointB);
+		m_bIsClockwise = false;
 	}
 
 	m_bIsShare			= true;
+	m_bIsFindNear		= bIsFindNear;
 	m_dwCurrentIdx		= dwIndex;
 	m_vCenter			= (*m_pPoint[POINT_A] + *m_pPoint[POINT_B] + *m_pPoint[POINT_C]) / 3.f;
 
 	Engine::FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
+
+	return S_OK;
+}
+
+HRESULT CToolCell::Ready_GameObject(const _ulong& dwIndex, 
+									_vec3* pSharePointA, 
+									_vec3* pSharePointB,
+									_vec3* pSharePointC,
+									const _bool& bIsFindNear)
+{
+	// 시계방향이면
+	if (CheckClockWise(pSharePointA, pSharePointB, pSharePointC))
+	{
+		m_pPoint[POINT_A] = pSharePointA;
+		m_pPoint[POINT_B] = pSharePointB;
+		m_pPoint[POINT_C] = pSharePointC;
+		m_bIsClockwise = true;
+	}
+	// 반시계방향이면
+	else
+	{
+		m_pPoint[POINT_A] = pSharePointA;
+		m_pPoint[POINT_B] = pSharePointC;
+		m_pPoint[POINT_C] = pSharePointB;
+		m_bIsClockwise = false;
+	}
+
+	m_bIsShare			= true;
+	m_bIsFindNear		= bIsFindNear;
+	m_dwCurrentIdx		= dwIndex;
+	m_vCenter			= (*m_pPoint[POINT_A] + *m_pPoint[POINT_B] + *m_pPoint[POINT_C]) / 3.f;
+
+	Engine::FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
+
 
 	return S_OK;
 }
@@ -411,11 +448,28 @@ CToolCell* CToolCell::ShareCreate(ID3D12Device* pGraphicDevice,
 								  const _ulong& dwIndex, 
 								  _vec3* pSharePointA,
 								  _vec3& vNewPointB,
-								  _vec3* pSharePointC)
+								  _vec3* pSharePointC,
+								  const _bool& bIsFindNear)
 {
 	CToolCell* pInstance = new CToolCell(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(dwIndex, pSharePointA, vNewPointB, pSharePointC)))
+	if (FAILED(pInstance->Ready_GameObject(dwIndex, pSharePointA, vNewPointB, pSharePointC, bIsFindNear)))
+		Engine::Safe_Release(pInstance);
+
+	return pInstance;
+}
+
+CToolCell* CToolCell::ShareCreate(ID3D12Device* pGraphicDevice,
+								  ID3D12GraphicsCommandList* pCommandList,
+								  const _ulong& dwIndex, 
+								  _vec3* pSharePointA,
+								  _vec3* pSharePointB, 
+								  _vec3* pSharePointC,
+								  const _bool& bIsFindNear)
+{
+	CToolCell* pInstance = new CToolCell(pGraphicDevice, pCommandList);
+
+	if (FAILED(pInstance->Ready_GameObject(dwIndex, pSharePointA, pSharePointB, pSharePointC, bIsFindNear)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
@@ -424,26 +478,34 @@ CToolCell* CToolCell::ShareCreate(ID3D12Device* pGraphicDevice,
 void CToolCell::Free()
 {
 	Engine::CGameObject::Free();
-
 	Engine::Safe_Release(m_pShaderCom);
 
 	for (auto& pCollider : m_pColliderCom)
 		Engine::Safe_Release(pCollider);
 
+
+
+	// 공유받았다면, 새로 생성한 Point만 할당 해제.
 	if (m_bIsShare)
 	{
-		if (m_bIsClockwise)
-			Engine::Safe_Delete(m_pPoint[POINT_B]);
-		else
-			Engine::Safe_Delete(m_pPoint[POINT_C]);
+		if (!m_bIsFindNear)
+		{
+			// 시계방향이었을 때.
+			if (m_bIsClockwise)
+				Engine::Safe_Delete(m_pPoint[POINT_B]);
+			else
+				Engine::Safe_Delete(m_pPoint[POINT_C]);
+		}
 	}
+	// 원본이라면 모두 해제.
 	else
 	{
 		Engine::Safe_Delete(m_pPoint[POINT_A]);
 		Engine::Safe_Delete(m_pPoint[POINT_B]);
 		Engine::Safe_Delete(m_pPoint[POINT_C]);
-
 	}				
+
+
 
 
 	Engine::Safe_Release(m_pVB_CPU);
