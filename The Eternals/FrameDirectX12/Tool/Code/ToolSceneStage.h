@@ -43,15 +43,13 @@ private:
 	void			KeyInput_TabMapNavigationMesh(CTabMap& TabMap);
 	void			KeyInput_TabMapModeChange(CTabMap& TabMap);
 
-private:
-	_vec3*			Find_NearCellPoint(_vec3& vPickingPos);
-
 public:
 	CToolTerrain*			m_pPickingTerrain	= nullptr;
 	Engine::CGameObject*	m_pPickingObject	= nullptr;
 	Engine::CLight*			m_pPickingLight		= nullptr;
+	CToolCell*				m_pPickingCell		= nullptr;
 
-	// Picking NaviMesh
+	// Picking NaviMeshCell
 	_int						m_iPickingCnt	= -1;
 	_vec3						m_vPickingPoint[POINT_END]		{ _vec3(0.0f), _vec3(0.0f) ,_vec3(0.0f) };
 	_vec3*						m_pPickingPoint[POINT_END]		{ nullptr, nullptr , nullptr };

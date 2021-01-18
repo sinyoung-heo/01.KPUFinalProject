@@ -355,13 +355,17 @@ public:
 	// Funtion
 	afx_msg void OnBnClickedRadio1011_NaviMeshCreateMode();
 	afx_msg void OnBnClickedRadio1012_NaviMeshModifyMode();
+	afx_msg void OnBnClickedButton1013_NaviMeshCellPopBack();
+	afx_msg void OnBnClickedButton1014_NaviMeshCellAllDelete();
+	afx_msg void OnLbnSelchangeList1005_NaviMeshCellListBox();
+
 
 	// Contorl
 	CButton		m_NaviMeshRadio_CreateMode;
 	CButton		m_NaviMeshRadio_ModifyMode;
 	CButton		m_NaviMeshCheck_FindNearPoint;
 	CListBox	m_NaviMeshListBox_CellList;
-	CButton		m_NaviMeshButton_Delete;
+	CButton		m_NaviMeshButton_PopBack;
 	CButton		m_NaviMeshButton_AllDelete;
 	CEdit		m_NaviMeshEdit_PointA_X;
 	CEdit		m_NaviMeshEdit_PointA_Y;
@@ -387,4 +391,6 @@ public:
 	float m_fNaviMeshPointC_Z = 0.0f;
 	_bool m_bIsNaviCreateMode = true;
 	_bool m_bIsNaviModifyMode = false;
+	_int m_bIsCellSelectIdx = -1;
+
 };
