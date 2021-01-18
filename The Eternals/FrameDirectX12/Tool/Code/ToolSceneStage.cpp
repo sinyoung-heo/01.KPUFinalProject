@@ -600,10 +600,11 @@ void CToolSceneStage::KeyInput_TabMapNavigationMesh(CTabMap& TabMap)
 
 				// Cell »ý¼º.
 				pCell = CToolCell::Create(m_pGraphicDevice, m_pCommandList,
-										  0,						// Cell Index
-										  m_vPickingPoint[POINT_A],	// Point A
-										  m_vPickingPoint[POINT_B],	// Point B
-										  m_vPickingPoint[POINT_C]);// Point C
+										  0,								// Cell Index
+										  m_vPickingPoint[POINT_A],			// Point A
+										  m_vPickingPoint[POINT_B],			// Point B
+										  m_vPickingPoint[POINT_C],			// Point C
+										  TabMap.m_iNaviMeshCellOption);	// Option
 				m_pObjectMgr->Add_GameObject(L"Layer_Environment", L"Cell", pCell);
 				pCellList = Engine::CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_Environment", L"Cell");
 
@@ -675,6 +676,7 @@ void CToolSceneStage::KeyInput_TabMapNavigationMesh(CTabMap& TabMap)
 												   m_pPickingPoint[POINT_A],		// Point A
 												   m_vPickingPoint[POINT_B],		// Point B
 												   m_pPickingPoint[POINT_C],		// Point C
+												   TabMap.m_iNaviMeshCellOption,	// Option
 												   TabMap.m_NaviMeshCheck_FindNearPoint.GetCheck());
 				}
 				else
@@ -685,6 +687,7 @@ void CToolSceneStage::KeyInput_TabMapNavigationMesh(CTabMap& TabMap)
 												   m_pPickingPoint[POINT_A],		// Point A
 												   m_pPickingPoint[POINT_B],		// Point B
 												   m_pPickingPoint[POINT_C],		// Point C
+												   TabMap.m_iNaviMeshCellOption,	// Option
 												   TabMap.m_NaviMeshCheck_FindNearPoint.GetCheck());
 				}
 

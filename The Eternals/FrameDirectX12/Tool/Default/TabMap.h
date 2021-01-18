@@ -389,6 +389,7 @@ public:
 	float m_fNaviMeshPointC_X = 0.0f;
 	float m_fNaviMeshPointC_Y = 0.0f;
 	float m_fNaviMeshPointC_Z = 0.0f;
+	int m_iNaviMeshCellOption = 0;
 	_bool m_bIsNaviCreateMode = true;
 	_bool m_bIsNaviModifyMode = false;
 	_int m_bIsCellSelectIdx = -1;

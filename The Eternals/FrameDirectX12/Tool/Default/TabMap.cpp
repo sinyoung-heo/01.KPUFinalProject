@@ -215,6 +215,7 @@ void CTabMap::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT1069, m_fNaviMeshPointC_X);
 	DDX_Text(pDX, IDC_EDIT1070, m_fNaviMeshPointC_Y);
 	DDX_Text(pDX, IDC_EDIT1071, m_fNaviMeshPointC_Z);
+	DDX_Text(pDX, IDC_EDIT1072, m_iNaviMeshCellOption);
 }
 
 
@@ -4152,7 +4153,7 @@ void CTabMap::OnBnClickedButton1013_NaviMeshCellPopBack()
 		!pCellList->empty())
 	{
 		pCellList->back()->Set_DeadGameObject();
-		m_NaviMeshListBox_CellList.DeleteString(pCellList->size() - 1);
+		m_NaviMeshListBox_CellList.DeleteString((_uint)pCellList->size() - 1);
 	}
 }
 

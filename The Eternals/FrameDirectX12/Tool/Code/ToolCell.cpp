@@ -16,7 +16,8 @@ CToolCell::CToolCell(const CToolCell& rhs)
 HRESULT CToolCell::Ready_GameObject(const _ulong& dwIndex, 
 									_vec3& vPointA, 
 									_vec3& vPointB, 
-									_vec3& vPointC)
+									_vec3& vPointC,
+									const _int& iOption)
 {
 	CheckClockWise(vPointA, vPointB, vPointC);
 
@@ -25,6 +26,8 @@ HRESULT CToolCell::Ready_GameObject(const _ulong& dwIndex,
 	m_pPoint[POINT_A]	= new _vec3(vPointA);
 	m_pPoint[POINT_B]	= new _vec3(vPointB);
 	m_pPoint[POINT_C]	= new _vec3(vPointC);
+	m_iOption			= iOption;
+	
 	m_vCenter			= (*m_pPoint[POINT_A] + *m_pPoint[POINT_B] + *m_pPoint[POINT_C]) / 3.f;
 
 	Engine::FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
@@ -36,6 +39,7 @@ HRESULT CToolCell::Ready_GameObject(const _ulong& dwIndex,
 									_vec3* pSharePointA,
 									_vec3& vNewPointB,
 									_vec3* pSharePointC,
+									const _int& iOption,
 									const _bool& bIsFindNear)
 {
 	// 시계방향이면
@@ -58,6 +62,8 @@ HRESULT CToolCell::Ready_GameObject(const _ulong& dwIndex,
 	m_bIsShare			= true;
 	m_bIsFindNear		= bIsFindNear;
 	m_dwCurrentIdx		= dwIndex;
+	m_iOption			= iOption;
+
 	m_vCenter			= (*m_pPoint[POINT_A] + *m_pPoint[POINT_B] + *m_pPoint[POINT_C]) / 3.f;
 
 	Engine::FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
@@ -69,6 +75,7 @@ HRESULT CToolCell::Ready_GameObject(const _ulong& dwIndex,
 									_vec3* pSharePointA, 
 									_vec3* pSharePointB,
 									_vec3* pSharePointC,
+									const _int& iOption,
 									const _bool& bIsFindNear)
 {
 	// 시계방향이면
@@ -91,6 +98,8 @@ HRESULT CToolCell::Ready_GameObject(const _ulong& dwIndex,
 	m_bIsShare			= true;
 	m_bIsFindNear		= bIsFindNear;
 	m_dwCurrentIdx		= dwIndex;
+	m_iOption			= iOption;
+
 	m_vCenter			= (*m_pPoint[POINT_A] + *m_pPoint[POINT_B] + *m_pPoint[POINT_C]) / 3.f;
 
 	Engine::FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
@@ -433,11 +442,12 @@ CToolCell* CToolCell::Create(ID3D12Device* pGraphicDevice,
 							 const _ulong& dwIndex, 
 							 _vec3& vPointA, 
 							 _vec3& vPointB, 
-							 _vec3& vPointC)
+							 _vec3& vPointC,
+							  const _int& iOption)
 {
 	CToolCell* pInstance = new CToolCell(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(dwIndex, vPointA, vPointB, vPointC)))
+	if (FAILED(pInstance->Ready_GameObject(dwIndex, vPointA, vPointB, vPointC, iOption)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
@@ -449,11 +459,12 @@ CToolCell* CToolCell::ShareCreate(ID3D12Device* pGraphicDevice,
 								  _vec3* pSharePointA,
 								  _vec3& vNewPointB,
 								  _vec3* pSharePointC,
+								  const _int& iOption,
 								  const _bool& bIsFindNear)
 {
 	CToolCell* pInstance = new CToolCell(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(dwIndex, pSharePointA, vNewPointB, pSharePointC, bIsFindNear)))
+	if (FAILED(pInstance->Ready_GameObject(dwIndex, pSharePointA, vNewPointB, pSharePointC, iOption, bIsFindNear)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
@@ -465,11 +476,12 @@ CToolCell* CToolCell::ShareCreate(ID3D12Device* pGraphicDevice,
 								  _vec3* pSharePointA,
 								  _vec3* pSharePointB, 
 								  _vec3* pSharePointC,
+								  const _int& iOption,
 								  const _bool& bIsFindNear)
 {
 	CToolCell* pInstance = new CToolCell(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(dwIndex, pSharePointA, pSharePointB, pSharePointC, bIsFindNear)))
+	if (FAILED(pInstance->Ready_GameObject(dwIndex, pSharePointA, pSharePointB, pSharePointC, iOption, bIsFindNear)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;

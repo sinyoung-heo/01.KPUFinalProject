@@ -21,16 +21,19 @@ public:
 	virtual HRESULT	Ready_GameObject(const _ulong& dwIndex,
 									 _vec3& vPointA,
 									 _vec3& vPointB,
-									 _vec3& vPointC);
+									 _vec3& vPointC,
+									 const _int& iOption);
 	virtual HRESULT Ready_GameObject(const _ulong& dwIndex,
 									 _vec3* pSharePointA,
 									 _vec3& vNewPointB,
 									 _vec3* pSharePointC,
+									 const _int& iOption,
 									 const _bool& bIsFindNear = false);
 	virtual HRESULT Ready_GameObject(const _ulong& dwIndex,
 									 _vec3* pSharePointA,
 									 _vec3* pSharePointB,
 									 _vec3* pSharePointC,
+									 const _int& iOption,
 									 const _bool& bIsFindNear = false);
 
 	virtual HRESULT	LateInit_GameObject();
@@ -58,10 +61,11 @@ public:
 	_vec3*	m_pPoint[POINT_END];
 	_vec3	m_vCenter		= _vec3(0.0f);
 	_ulong	m_dwCurrentIdx	= 0;
+	_int	m_iOption		= 0;
+
 	_bool	m_bIsShare		= false;
 	_bool	m_bIsFindNear	= false;
 	_bool	m_bIsClockwise	= true;
-	
 	_rgba	m_vColor		= _rgba(0.0f, 1.0f, 0.0f, 1.0f);
 	
 
@@ -101,7 +105,8 @@ public:
 							 const _ulong& dwIndex,
 							 _vec3& vPointA,
 							 _vec3& vPointB,
-							 _vec3& vPointC);
+							 _vec3& vPointC,
+							 const _int& iOption);
 
 	static CToolCell* ShareCreate(ID3D12Device* pGraphicDevice,
 								  ID3D12GraphicsCommandList* pCommandList,
@@ -109,6 +114,7 @@ public:
 								  _vec3* pSharePointA,
 								  _vec3& vNewPointB,
 								  _vec3* pSharePointC,
+								  const _int & iOption,
 								  const _bool& bIsFindNear = false);
 
 	static CToolCell* ShareCreate(ID3D12Device* pGraphicDevice,
@@ -117,6 +123,7 @@ public:
 								  _vec3* pSharePointA,
 								  _vec3* pSharePointB,
 								  _vec3* pSharePointC,
+								  const _int& iOption,
 								  const _bool& bIsFindNear = false);
 
 
