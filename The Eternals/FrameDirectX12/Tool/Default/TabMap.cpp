@@ -204,6 +204,7 @@ void CTabMap::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT1069, m_NaviMeshEdit_PointC_X);
 	DDX_Control(pDX, IDC_EDIT1070, m_NaviMeshEdit_PointC_Y);
 	DDX_Control(pDX, IDC_EDIT1071, m_NaviMeshEdit_PointC_Z);
+	DDX_Control(pDX, IDC_EDIT1072, m_NaviMeshEdit_Option);
 	DDX_Control(pDX, IDC_BUTTON1015, m_NaviMeshButton_SAVE);
 	DDX_Control(pDX, IDC_BUTTON1016, m_NaviMeshButton_LOAD);
 	DDX_Text(pDX, IDC_EDIT1063, m_fNaviMeshPointA_X);
@@ -316,6 +317,10 @@ BEGIN_MESSAGE_MAP(CTabMap, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1013, &CTabMap::OnBnClickedButton1013_NaviMeshCellPopBack)
 	ON_BN_CLICKED(IDC_BUTTON1014, &CTabMap::OnBnClickedButton1014_NaviMeshCellAllDelete)
 	ON_LBN_SELCHANGE(IDC_LIST1005, &CTabMap::OnLbnSelchangeList1005_NaviMeshCellListBox)
+	ON_WM_MOUSEMOVE()
+	ON_EN_CHANGE(IDC_EDIT1072, &CTabMap::OnEnChangeEdit1072_NaviMeshCellOption)
+	ON_BN_CLICKED(IDC_BUTTON1015, &CTabMap::OnBnClickedButton1015_NaviMeshCellSAVE)
+	ON_BN_CLICKED(IDC_BUTTON1016, &CTabMap::OnBnClickedButton1016_NaviMeshCellLOAD)
 END_MESSAGE_MAP()
 
 
@@ -444,6 +449,7 @@ BOOL CTabMap::OnInitDialog()
 	m_NaviMeshEdit_PointC_X.EnableWindow(FALSE);
 	m_NaviMeshEdit_PointC_Y.EnableWindow(FALSE);
 	m_NaviMeshEdit_PointC_Z.EnableWindow(FALSE);
+	m_NaviMeshEdit_Option.EnableWindow(FALSE);
 	m_NaviMeshButton_SAVE.EnableWindow(FALSE);
 	m_NaviMeshButton_LOAD.EnableWindow(FALSE);
 
@@ -1422,6 +1428,38 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	}
 
 
+	/*__________________________________________________________________________________________________________
+	[ NavigationMesh ]
+	____________________________________________________________________________________________________________*/
+	if (m_EditCheck_NavigationMesh.GetCheck())
+	{
+		RECT rcNavigationMesh[1] = { };
+		m_NaviMeshEdit_Option.GetWindowRect(&rcNavigationMesh[0]);
+		
+
+		if (PtInRect(&rcNavigationMesh[0], pt))	// Option.
+		{
+			if (zDelta > 0)
+			{
+				++m_iNaviMeshCellOption;
+			}
+			else if (zDelta < 0)
+			{
+				--m_iNaviMeshCellOption;
+				if (m_iNaviMeshCellOption < 0)
+					m_iNaviMeshCellOption = 0;
+			}
+
+			// Modify Mode일 경우 변경된 값 반영.
+			if (m_bIsNaviModifyMode)
+			{
+				static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingCell->m_iOption = m_iNaviMeshCellOption;
+			}
+		}
+	}
+
+
+
 	UpdateData(FALSE);
 
 	return CDialogEx::OnMouseWheel(nFlags, zDelta, pt);
@@ -1779,6 +1817,7 @@ HRESULT CTabMap::Ready_NavigationMeshControl()
 	m_NaviMeshEdit_PointC_X.EnableWindow(FALSE);
 	m_NaviMeshEdit_PointC_Y.EnableWindow(FALSE);
 	m_NaviMeshEdit_PointC_Z.EnableWindow(FALSE);
+	m_NaviMeshEdit_Option.EnableWindow(FALSE);
 	m_NaviMeshButton_SAVE.EnableWindow(FALSE);
 	m_NaviMeshButton_LOAD.EnableWindow(FALSE);
 
@@ -2084,6 +2123,7 @@ void CTabMap::OnBnClickedCheck1005_EditStaticMesh()
 	m_NaviMeshEdit_PointC_X.EnableWindow(FALSE);
 	m_NaviMeshEdit_PointC_Y.EnableWindow(FALSE);
 	m_NaviMeshEdit_PointC_Z.EnableWindow(FALSE);
+	m_NaviMeshEdit_Option.EnableWindow(FALSE);
 	m_NaviMeshButton_SAVE.EnableWindow(FALSE);
 	m_NaviMeshButton_LOAD.EnableWindow(FALSE);
 
@@ -2224,6 +2264,7 @@ void CTabMap::OnBnClickedCheck1006_EditLightingInfo()
 	m_NaviMeshEdit_PointC_X.EnableWindow(FALSE);
 	m_NaviMeshEdit_PointC_Y.EnableWindow(FALSE);
 	m_NaviMeshEdit_PointC_Z.EnableWindow(FALSE);
+	m_NaviMeshEdit_Option.EnableWindow(FALSE);
 	m_NaviMeshButton_SAVE.EnableWindow(FALSE);
 	m_NaviMeshButton_LOAD.EnableWindow(FALSE);
 
@@ -2337,6 +2378,7 @@ void CTabMap::OnBnClickedCheck1007_EditNavigationMesh()
 	m_NaviMeshEdit_PointC_X.EnableWindow(TRUE);
 	m_NaviMeshEdit_PointC_Y.EnableWindow(TRUE);
 	m_NaviMeshEdit_PointC_Z.EnableWindow(TRUE);
+	m_NaviMeshEdit_Option.EnableWindow(TRUE);
 	m_NaviMeshButton_SAVE.EnableWindow(TRUE);
 	m_NaviMeshButton_LOAD.EnableWindow(TRUE);
 
@@ -4109,6 +4151,8 @@ void CTabMap::OnBnClickedButton1012_LightInfo_SL_LOAD()
 void CTabMap::OnBnClickedRadio1011_NaviMeshCreateMode()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
 	m_bIsNaviCreateMode = true;
 	m_bIsNaviModifyMode = false;
 
@@ -4127,12 +4171,25 @@ void CTabMap::OnBnClickedRadio1011_NaviMeshCreateMode()
 	m_fNaviMeshPointC_X = 0.0f;
 	m_fNaviMeshPointC_Y = 0.0f;
 	m_fNaviMeshPointC_Z = 0.0f;
+
+	// 모든 Cell과 Collider Reset.
+	Engine::OBJLIST* pCellList = Engine::CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_Environment", L"Cell");
+	if (nullptr != pCellList || !pCellList->empty())
+	{
+		// Cell 색상 Green & WireFrame으로 변경.
+		for (auto& pCell : *pCellList)
+			static_cast<CToolCell*>(pCell)->Reset_CellAndCollider();
+	}
+
+	UpdateData(FALSE);
 }
 
 
 void CTabMap::OnBnClickedRadio1012_NaviMeshModifyMode()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
 	m_bIsNaviCreateMode = false;
 	m_bIsNaviModifyMode = true;
 
@@ -4141,12 +4198,25 @@ void CTabMap::OnBnClickedRadio1012_NaviMeshModifyMode()
 
 	m_NaviMeshCheck_FindNearPoint.EnableWindow(FALSE);
 	m_NaviMeshCheck_FindNearPoint.SetCheck(false);
+
+	// 모든 Cell과 Collider Reset.
+	Engine::OBJLIST* pCellList = Engine::CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_Environment", L"Cell");
+	if (nullptr != pCellList || !pCellList->empty())
+	{
+		// Cell 색상 Green & WireFrame으로 변경.
+		for (auto& pCell : *pCellList)
+			static_cast<CToolCell*>(pCell)->Reset_CellAndCollider();
+	}
+
+	UpdateData(FALSE);
 }
 
 
 void CTabMap::OnBnClickedButton1013_NaviMeshCellPopBack()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+	
 	Engine::OBJLIST* pCellList = Engine::CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_Environment", L"Cell");
 
 	if (nullptr != pCellList &&
@@ -4155,12 +4225,16 @@ void CTabMap::OnBnClickedButton1013_NaviMeshCellPopBack()
 		pCellList->back()->Set_DeadGameObject();
 		m_NaviMeshListBox_CellList.DeleteString((_uint)pCellList->size() - 1);
 	}
+
+	UpdateData(FALSE);
 }
 
 
 void CTabMap::OnBnClickedButton1014_NaviMeshCellAllDelete()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+	
 	Engine::OBJLIST* pCellList = Engine::CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_Environment", L"Cell");
 
 	if (nullptr != pCellList &&
@@ -4171,12 +4245,16 @@ void CTabMap::OnBnClickedButton1014_NaviMeshCellAllDelete()
 
 		m_NaviMeshListBox_CellList.ResetContent();
 	}
+
+	UpdateData(FALSE);
 }
 
 
 void CTabMap::OnLbnSelchangeList1005_NaviMeshCellListBox()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+	
 	Engine::OBJLIST* pCellList = Engine::CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_Environment", L"Cell");
 	CToolCell* pSelectCell = nullptr;
 
@@ -4196,4 +4274,169 @@ void CTabMap::OnLbnSelchangeList1005_NaviMeshCellListBox()
 
 	// 선택한 Cell 설정.
 	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingCell = pSelectCell;
+
+	m_fNaviMeshPointA_X		= pSelectCell->m_pPoint[0]->x;
+	m_fNaviMeshPointA_Y		= pSelectCell->m_pPoint[0]->y;
+	m_fNaviMeshPointA_Z		= pSelectCell->m_pPoint[0]->z;
+	m_fNaviMeshPointB_X		= pSelectCell->m_pPoint[1]->x;
+	m_fNaviMeshPointB_Y		= pSelectCell->m_pPoint[1]->y;
+	m_fNaviMeshPointB_Z		= pSelectCell->m_pPoint[1]->z;
+	m_fNaviMeshPointC_X		= pSelectCell->m_pPoint[2]->x;
+	m_fNaviMeshPointC_Y		= pSelectCell->m_pPoint[2]->y;
+	m_fNaviMeshPointC_Z		= pSelectCell->m_pPoint[2]->z;
+	m_iNaviMeshCellOption	= pSelectCell->m_iOption;
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnEnChangeEdit1072_NaviMeshCellOption()
+{
+	UpdateData(TRUE);
+
+	//if (m_NaviMeshRadio_ModifyMode)
+	//{
+	//	static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingCell->m_iOption = m_iNaviMeshCellOption;
+	//}
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnBnClickedButton1015_NaviMeshCellSAVE()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
+	Engine::OBJLIST* pCellList = Engine::CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_Environment", L"Cell");
+	if (nullptr == pCellList ||
+		pCellList->empty())
+		return;
+
+
+	CFileDialog Dlg(FALSE,
+					L"navimeshcellinfo",
+					L"*.navimeshcellinfo",
+					OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+					L"Data Files(*.navimeshcellinfo) | *.navimeshcellinfo ||",
+					this);
+
+	_tchar szPath[MAX_STR] = L"";
+	GetCurrentDirectory(MAX_STR, szPath);		// 작업중인 현재 경로.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	lstrcat(szPath, L"\\Bin\\ToolData");
+	Dlg.m_ofn.lpstrInitialDir = szPath;
+
+	if (Dlg.DoModal() == IDOK)
+	{
+		wofstream fout{ Dlg.GetPathName().GetString() };
+		if (fout.fail())
+		{
+			AfxMessageBox(L"Save is Failed");
+			return;
+		}
+
+		for (auto& pCell : *pCellList)
+		{
+			fout	<< static_cast<CToolCell*>(pCell)->m_pPoint[0]->x << L" "		// Point A
+					<< static_cast<CToolCell*>(pCell)->m_pPoint[0]->y << L" " 
+					<< static_cast<CToolCell*>(pCell)->m_pPoint[0]->z << L" "	
+					<< static_cast<CToolCell*>(pCell)->m_pPoint[1]->x << L" "		// Point B
+					<< static_cast<CToolCell*>(pCell)->m_pPoint[1]->y << L" "	
+					<< static_cast<CToolCell*>(pCell)->m_pPoint[1]->z << L" " 
+					<< static_cast<CToolCell*>(pCell)->m_pPoint[2]->x << L" "		// Point C
+					<< static_cast<CToolCell*>(pCell)->m_pPoint[2]->y << L" " 
+					<< static_cast<CToolCell*>(pCell)->m_pPoint[2]->z << L" "
+					<< static_cast<CToolCell*>(pCell)->m_iOption << L" "			// Option
+					<< static_cast<CToolCell*>(pCell)->m_dwCurrentIdx << L" ";		// Index
+		}
+
+	}
+
+	AfxMessageBox(L"Data Save Successed");
+
+	UpdateData(FALSE);
+}
+
+
+void CTabMap::OnBnClickedButton1016_NaviMeshCellLOAD()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
+	Engine::OBJLIST* pCellList = Engine::CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_Environment", L"Cell");
+	if (nullptr != pCellList)
+	{
+		for (auto& pCell : *pCellList)
+			pCell->Set_DeadGameObject();
+	}
+	m_NaviMeshListBox_CellList.ResetContent();
+
+
+	CFileDialog Dlg(TRUE,
+					L"navimeshcellinfo",
+					L"*.navimeshcellinfo",
+					OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+					L"Data Files(*.navimeshcellinfo)|*.navimeshcellinfo||",
+					this);
+
+	_tchar szPath[MAX_STR] = L"";
+	GetCurrentDirectory(MAX_STR, szPath);		// 작업중인 현재 경로.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	lstrcat(szPath, L"\\Bin\\ToolData");
+	Dlg.m_ofn.lpstrInitialDir = szPath;
+
+	if (Dlg.DoModal() == IDOK)
+	{
+		wifstream fin{ Dlg.GetPathName().GetString() };
+		if (fin.fail())
+		{
+			AfxMessageBox(L"Load is Failed");
+			return;
+		}
+
+		while (true)
+		{
+			_vec3	vPointA	= _vec3(0.0f);
+			_vec3	vPointB	= _vec3(0.0f);
+			_vec3	vPointC	= _vec3(0.0f);
+			_int	iOption	= 0;
+			_ulong	iIdx	= 0;
+
+			// Cell Data 불러오기.
+			fin >> vPointA.x		// PointA
+				>> vPointA.y
+				>> vPointA.z
+				>> vPointB.x		// vPointB
+				>> vPointB.y
+				>> vPointB.z
+				>> vPointC.x		// vPointC
+				>> vPointC.y
+				>> vPointC.z
+				>> iOption			// iOption
+				>> iIdx;			// Index
+
+			if (fin.eof())
+				break;
+
+
+			CToolCell* pCell = CToolCell::Create(Engine::CGraphicDevice::Get_Instance()->Get_GraphicDevice(),
+												 Engine::CGraphicDevice::Get_Instance()->Get_CommandList(Engine::CMDID::CMD_MAIN),
+												 iIdx,		// Cell Index
+												 vPointA,	// Point A
+												 vPointB,	// Point B
+												 vPointC,	// Point C
+												 iOption);	// Option
+			m_pObjectMgr->Add_GameObject(L"Layer_Environment", L"Cell", pCell);
+
+			// ListBox에 추가.
+			_tchar szTemp[MIN_STR] = L"";
+			wsprintf(szTemp, L"Index : %d", iIdx);
+			m_NaviMeshListBox_CellList.AddString(szTemp);
+		}
+
+
+	}
 }

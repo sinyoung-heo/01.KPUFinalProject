@@ -276,11 +276,15 @@ _bool CMouseMgr::Picking_Light(Engine::CLight** ppPickingLight, vector<Engine::C
 	return false;
 }
 
-_vec3* CMouseMgr::Find_NearCellPoint(_vec3& vPickingPos, CToolCell** ppPickingCell)
+_vec3* CMouseMgr::Find_NearCellPoint(_vec3& vPickingPos, CToolCell** ppPickingCell, _int* pIndex)
 {
 	CToolCell*	pSelectCell		= nullptr;
 	_vec3*		pSelectPoint	= nullptr;
 	_float		fDist			= 0.0f;
+
+	// 모든 Cell, Collider의 파이프라인 상태 원상복귀.
+
+
 
 	// 일단 첫 번째 Cell과 비교한 값을 저장.
 	Engine::OBJLIST* pCellList = Engine::CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_Environment", L"Cell");
@@ -291,6 +295,7 @@ _vec3* CMouseMgr::Find_NearCellPoint(_vec3& vPickingPos, CToolCell** ppPickingCe
 	// 모든 Cell들과 거리비교를 통해서 가장 가까운 Cell을 찾는다.
 	for (auto& pCell : *pCellList)
 	{
+		static_cast<CToolCell*>(pCell)->Reset_CellAndCollider();
 		_float fNewDist = vPickingPos.Get_Distance(static_cast<CToolCell*>(pCell)->m_vCenter);
 
 		// 더 적은 값을 fDist로 입력. swap 진행.
@@ -325,11 +330,27 @@ _vec3* CMouseMgr::Find_NearCellPoint(_vec3& vPickingPos, CToolCell** ppPickingCe
 		fMin = fDistFromC;
 
 	if (fMin == fDistFromA)
+	{
 		pOut = pSelectCell->m_pPoint[0];
+		pSelectCell->Set_SelectedPoint(0);
+		
+		if (nullptr != pIndex)
+			*pIndex = 0;
+	}
 	else if (fMin == fDistFromB)
+	{
 		pOut = pSelectCell->m_pPoint[1];
+		pSelectCell->Set_SelectedPoint(1);
+		if (nullptr != pIndex)
+			*pIndex = 1;
+	}
 	else if (fMin == fDistFromC)
+	{
 		pOut = pSelectCell->m_pPoint[2];
+		pSelectCell->Set_SelectedPoint(2);
+		if (nullptr != pIndex)
+			*pIndex = 2;
+	}
 
 	return pOut;
 }

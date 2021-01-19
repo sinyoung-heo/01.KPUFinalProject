@@ -29,7 +29,8 @@ public:
 
 	_bool Picking_Object(Engine::CGameObject** ppPickingObject, Engine::OBJLIST* pOBJLIST);
 	_bool Picking_Light(Engine::CLight** ppPickingLight, vector<Engine::CLight*>& vecPointLight);
-	_vec3* Find_NearCellPoint(_vec3& vPickingPos, CToolCell** ppPickingCell);
+	_vec3* Find_NearCellPoint(_vec3& vPickingPos, CToolCell** ppPickingCell, _int* pIndex = nullptr);
+	
 
 private:
 	virtual void Free();
