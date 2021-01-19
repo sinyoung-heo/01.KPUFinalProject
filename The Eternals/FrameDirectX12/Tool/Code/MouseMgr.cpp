@@ -276,7 +276,7 @@ _bool CMouseMgr::Picking_Light(Engine::CLight** ppPickingLight, vector<Engine::C
 	return false;
 }
 
-_vec3* CMouseMgr::Find_NearCellPoint(_vec3& vPickingPos, CToolCell** ppPickingCell)
+_vec3* CMouseMgr::Find_NearCellPoint(_vec3& vPickingPos, CToolCell** ppPickingCell, _int* pIndex)
 {
 	CToolCell*	pSelectCell		= nullptr;
 	_vec3*		pSelectPoint	= nullptr;
@@ -333,16 +333,23 @@ _vec3* CMouseMgr::Find_NearCellPoint(_vec3& vPickingPos, CToolCell** ppPickingCe
 	{
 		pOut = pSelectCell->m_pPoint[0];
 		pSelectCell->Set_SelectedPoint(0);
+		
+		if (nullptr != pIndex)
+			*pIndex = 0;
 	}
 	else if (fMin == fDistFromB)
 	{
 		pOut = pSelectCell->m_pPoint[1];
 		pSelectCell->Set_SelectedPoint(1);
+		if (nullptr != pIndex)
+			*pIndex = 1;
 	}
 	else if (fMin == fDistFromC)
 	{
 		pOut = pSelectCell->m_pPoint[2];
 		pSelectCell->Set_SelectedPoint(2);
+		if (nullptr != pIndex)
+			*pIndex = 2;
 	}
 
 	return pOut;

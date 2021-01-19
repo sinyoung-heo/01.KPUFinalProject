@@ -203,7 +203,7 @@ void CToolCell::Set_SelectedPoint(const _int& iIdx)
 	m_pColliderCom[iIdx]->Set_PipelineStatePass(0);
 
 	m_pColliderCom[iIdx]->Set_Scale(_vec3(0.55f, 0.55f, 0.55f));	// Collider Scale
-	m_pColliderCom[iIdx]->Set_Radius(_vec3(1.f, 1.f, 1.f));		// Collider Radius
+	m_pColliderCom[iIdx]->Set_Radius(_vec3(1.f, 1.f, 1.f));			// Collider Radius
 }
 
 HRESULT CToolCell::Add_Component()

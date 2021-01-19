@@ -346,6 +346,8 @@ void CToolSceneStage::KeyInput()
 	if (pMyForm->m_TabMap.m_EditCheck_NavigationMesh.GetCheck() &&
 		pMyForm->m_TabMap.m_bIsNaviModifyMode)
 	{
+		_long	dwMouseMove = 0;
+
 		if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON(Engine::DIM_LB)))
 		{
 			// if (m_vPrePickingPos != m_vCurPickingPos)
@@ -355,11 +357,54 @@ void CToolSceneStage::KeyInput()
 
 				if (nullptr != m_pNearPoint)
 				{
-					*m_pNearPoint = m_vCurPickingPos;
+					m_pNearPoint->x = m_vCurPickingPos.x;
+					m_pNearPoint->z = m_vCurPickingPos.z;
+
+					pMyForm->m_TabMap.UpdateData(TRUE);
+					pMyForm->m_TabMap.m_fNaviMeshPointA_X	= m_pPickingCell->m_pPoint[POINT_A]->x;
+					pMyForm->m_TabMap.m_fNaviMeshPointA_Y	= m_pPickingCell->m_pPoint[POINT_A]->y;
+					pMyForm->m_TabMap.m_fNaviMeshPointA_Z	= m_pPickingCell->m_pPoint[POINT_A]->z;
+					pMyForm->m_TabMap.m_fNaviMeshPointB_X	= m_pPickingCell->m_pPoint[POINT_B]->x;
+					pMyForm->m_TabMap.m_fNaviMeshPointB_Y	= m_pPickingCell->m_pPoint[POINT_B]->y;
+					pMyForm->m_TabMap.m_fNaviMeshPointB_Z	= m_pPickingCell->m_pPoint[POINT_B]->z;
+					pMyForm->m_TabMap.m_fNaviMeshPointC_X	= m_pPickingCell->m_pPoint[POINT_C]->x;
+					pMyForm->m_TabMap.m_fNaviMeshPointC_Y	= m_pPickingCell->m_pPoint[POINT_C]->y;
+					pMyForm->m_TabMap.m_fNaviMeshPointC_Z	= m_pPickingCell->m_pPoint[POINT_C]->z;
+					pMyForm->m_TabMap.m_iNaviMeshCellOption = m_pPickingCell->m_iOption;
+					pMyForm->m_TabMap.UpdateData(FALSE);
 				}
 			}
 
 		}
+
+		else if (dwMouseMove = Engine::GetDIMouseMove(Engine::MOUSEMOVESTATE::DIMS_Z))
+		{
+			pMyForm->m_TabMap.UpdateData(TRUE);
+
+			if (nullptr != m_pNearPoint)
+			{
+				cout << dwMouseMove << endl;
+
+				if (dwMouseMove > 0)
+					m_pNearPoint->y += 0.5f;
+				else
+					m_pNearPoint->y -= 0.5f;
+
+				pMyForm->m_TabMap.m_fNaviMeshPointA_X	= m_pPickingCell->m_pPoint[POINT_A]->x;
+				pMyForm->m_TabMap.m_fNaviMeshPointA_Y	= m_pPickingCell->m_pPoint[POINT_A]->y;
+				pMyForm->m_TabMap.m_fNaviMeshPointA_Z	= m_pPickingCell->m_pPoint[POINT_A]->z;
+				pMyForm->m_TabMap.m_fNaviMeshPointB_X	= m_pPickingCell->m_pPoint[POINT_B]->x;
+				pMyForm->m_TabMap.m_fNaviMeshPointB_Y	= m_pPickingCell->m_pPoint[POINT_B]->y;
+				pMyForm->m_TabMap.m_fNaviMeshPointB_Z	= m_pPickingCell->m_pPoint[POINT_B]->z;
+				pMyForm->m_TabMap.m_fNaviMeshPointC_X	= m_pPickingCell->m_pPoint[POINT_C]->x;
+				pMyForm->m_TabMap.m_fNaviMeshPointC_Y	= m_pPickingCell->m_pPoint[POINT_C]->y;
+				pMyForm->m_TabMap.m_fNaviMeshPointC_Z	= m_pPickingCell->m_pPoint[POINT_C]->z;
+				pMyForm->m_TabMap.m_iNaviMeshCellOption = m_pPickingCell->m_iOption;
+			}
+
+			pMyForm->m_TabMap.UpdateData(FALSE);
+		}
+
 	}
 
 }
@@ -752,7 +797,6 @@ void CToolSceneStage::KeyInput_TabMapNavigationMesh(CTabMap& TabMap)
 		// Picking 지점과 가장 가까운 점을 찾는다.
 		_vec3 vPickingPos	= CMouseMgr::Picking_OnTerrain(m_pPickingTerrain);
 		m_pNearPoint		= CMouseMgr::Get_Instance()->Find_NearCellPoint(vPickingPos, &m_pPickingCell);
-
 		m_vCurPickingPos = *m_pNearPoint;
 	}
 
