@@ -43,7 +43,7 @@ HRESULT CToolSceneStage::Ready_Scene()
 
 		m_matColliderWorld[i] = XMMatrixTranslation(1000.0f, 1000.0f, 1000.0f);
 		m_pPickingCollider[i]->Set_ParentMatrix(&m_matColliderWorld[i]);	// Parent Matrix
-		m_pPickingCollider[i]->Set_Scale(_vec3(0.5f, 0.5f, 0.5f));			// Collider Scale
+		m_pPickingCollider[i]->Set_Scale(_vec3(0.55f, 0.55f, 0.55f));		// Collider Scale
 		m_pPickingCollider[i]->Set_Radius(_vec3(1.f, 1.f, 1.f));			// Collider Radius
 		m_pPickingCollider[i]->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 		m_pPickingCollider[i]->Set_PipelineStatePass(0);
@@ -340,6 +340,26 @@ void CToolSceneStage::KeyInput()
 				KeyInput_TabMapNavigationMesh(pMyForm->m_TabMap);
 		}
 
+	}
+
+	// NaviMesh 수정모드일 경우.
+	if (pMyForm->m_TabMap.m_EditCheck_NavigationMesh.GetCheck() &&
+		pMyForm->m_TabMap.m_bIsNaviModifyMode)
+	{
+		if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON(Engine::DIM_LB)))
+		{
+			// if (m_vPrePickingPos != m_vCurPickingPos)
+			{
+				m_vCurPickingPos = CMouseMgr::Picking_OnTerrain(m_pPickingTerrain);
+				m_vPrePickingPos = m_vCurPickingPos;
+
+				if (nullptr != m_pNearPoint)
+				{
+					*m_pNearPoint = m_vCurPickingPos;
+				}
+			}
+
+		}
 	}
 
 }
@@ -727,21 +747,13 @@ void CToolSceneStage::KeyInput_TabMapNavigationMesh(CTabMap& TabMap)
 
 		// Cell 색상 Green & WireFrame으로 변경.
 		for (auto& pCell : *pCellList)
-		{
-			static_cast<CToolCell*>(pCell)->m_vColor = _rgba(0.0f, 1.0f, 0.0f, 1.0f);	// Color Green
-			static_cast<CToolCell*>(pCell)->m_pShaderCom->Set_PipelineStatePass(1);		// WireFrame
-		}
+			static_cast<CToolCell*>(pCell)->Reset_CellAndCollider();
 
-		_vec3 vPickingPos = CMouseMgr::Picking_OnTerrain(m_pPickingTerrain);
-		CMouseMgr::Get_Instance()->Find_NearCellPoint(vPickingPos, &m_pPickingCell);
+		// Picking 지점과 가장 가까운 점을 찾는다.
+		_vec3 vPickingPos	= CMouseMgr::Picking_OnTerrain(m_pPickingTerrain);
+		m_pNearPoint		= CMouseMgr::Get_Instance()->Find_NearCellPoint(vPickingPos, &m_pPickingCell);
 
-		if (m_pPickingCell != nullptr)
-		{
-			m_pPickingCell->m_vColor = _rgba(1.0f, 0.0f, 0.0f, 1.0f);	// Color Red
-			m_pPickingCell->m_pShaderCom->Set_PipelineStatePass(0);		// Solid
-		}
-
-
+		m_vCurPickingPos = *m_pNearPoint;
 	}
 
 	TabMap.UpdateData(FALSE);
@@ -845,7 +857,14 @@ void CToolSceneStage::KeyInput_TabMapModeChange(CTabMap& TabMap)
 			TabMap.m_NaviMeshCheck_FindNearPoint.SetCheck(false);
 		}
 
-
+		// 모든 Cell과 Collider Reset.
+		Engine::OBJLIST* pCellList = Engine::CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_Environment", L"Cell");
+		if (nullptr != pCellList || !pCellList->empty())
+		{
+			// Cell 색상 Green & WireFrame으로 변경.
+			for (auto& pCell : *pCellList)
+				static_cast<CToolCell*>(pCell)->Reset_CellAndCollider();
+		}
 	}
 
 	TabMap.UpdateData(FALSE);

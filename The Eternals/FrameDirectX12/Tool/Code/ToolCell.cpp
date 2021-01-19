@@ -126,6 +126,9 @@ _int CToolCell::Update_GameObject(const _float& fTimeDelta)
 		m_matWorld[i] = XMMatrixTranslation(m_pPoint[i]->x, m_pPoint[i]->y, m_pPoint[i]->z);
 		m_pColliderCom[i]->Set_ParentMatrix(&m_matWorld[i]);
 		m_pColliderCom[i]->Update_Component(fTimeDelta);
+
+		// VertexBuffer Update.
+		m_arrVertices[i].vPos = *m_pPoint[i];
 	}
 
 	/*__________________________________________________________________________________________________________
@@ -146,6 +149,10 @@ _int CToolCell::LateUpdate_GameObject(const _float& fTimeDelta)
 void CToolCell::Render_GameObject(const _float& fTimeDelta)
 {
 	Set_ConstantTable();
+
+	// Vertex버퍼 정보 CopyData.
+	memcpy(m_pVetexData, m_arrVertices.data(), m_uiVB_ByteSize);
+
 	m_pShaderCom->Begin_Shader();
 	/*__________________________________________________________________________________________________________
 	[ 메쉬의 정점 버퍼 뷰와 인덱스 버퍼 뷰를 설정 ]
@@ -164,11 +171,39 @@ void CToolCell::Render_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ 정점들이 파이프라인의 입력 조립기 단계로 공급 ]
 	____________________________________________________________________________________________________________*/
+	//m_pCommandList->DrawInstanced(3, 1, 0, 0);
+	
 	m_pCommandList->DrawIndexedInstanced(m_tSubMeshGeometry.uiIndexCount,	// 그리기에 사용할 인덱스들의 개수. (인스턴스 당)
 										 1,									// 그릴 인스턴스 개수.
 										 0,									// 인덱스 버퍼의 첫 index
 										 0, 								// 그리기 호출에 쓰이는 인덱스들에 더할 정수 값.
 										 0);	
+}
+
+void CToolCell::Reset_CellAndCollider()
+{
+	// Color Green & Render WireFrame.
+	m_vColor = _rgba(0.0f, 1.0f, 0.0f, 1.0f);
+	m_pShaderCom->Set_PipelineStatePass(1);	
+
+	for (_int i = 0; i < POINT_END; ++i)
+	{
+		m_pColliderCom[i]->Set_Color(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
+		m_pColliderCom[i]->Set_PipelineStatePass(1);
+
+		m_pColliderCom[i]->Set_Scale(_vec3(0.5f, 0.5f, 0.5f));	// Collider Scale
+		m_pColliderCom[i]->Set_Radius(_vec3(1.f, 1.f, 1.f));	// Collider Radius
+	}
+}
+
+void CToolCell::Set_SelectedPoint(const _int& iIdx)
+{
+	// Color Red & Render Soild.
+	m_pColliderCom[iIdx]->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+	m_pColliderCom[iIdx]->Set_PipelineStatePass(0);
+
+	m_pColliderCom[iIdx]->Set_Scale(_vec3(0.55f, 0.55f, 0.55f));	// Collider Scale
+	m_pColliderCom[iIdx]->Set_Radius(_vec3(1.f, 1.f, 1.f));		// Collider Radius
 }
 
 HRESULT CToolCell::Add_Component()
@@ -199,11 +234,11 @@ HRESULT CToolCell::Add_Component()
 	/*__________________________________________________________________________________________________________
 	[ Vertex Buffer ]
 	____________________________________________________________________________________________________________*/
-	array<Engine::VTXCOL, 3> vertices =
+	m_arrVertices =
 	{
-		Engine::VTXCOL(*m_pPoint[POINT_A], _rgba(RANDOM_COLOR)),	// 0
-		Engine::VTXCOL(*m_pPoint[POINT_B], _rgba(RANDOM_COLOR)),	// 1
-		Engine::VTXCOL(*m_pPoint[POINT_C], _rgba(RANDOM_COLOR)),	// 2
+		Engine::VTXCOL(_vec3(*m_pPoint[POINT_A]), _rgba(RANDOM_COLOR)),	// 0
+		Engine::VTXCOL(_vec3(*m_pPoint[POINT_B]), _rgba(RANDOM_COLOR)),	// 1
+		Engine::VTXCOL(_vec3(*m_pPoint[POINT_C]), _rgba(RANDOM_COLOR)),	// 2
 	};
 
 	/*__________________________________________________________________________________________________________
@@ -211,22 +246,22 @@ HRESULT CToolCell::Add_Component()
 	____________________________________________________________________________________________________________*/
 	array<_uint, 3> indices = { 0, 1, 2	}; // 첫 번째 삼각형.
 
-	const _int uiVB_ByteSize = (_uint)vertices.size() * sizeof(Engine::VTXCOL);
+	const _int uiVB_ByteSize = (_uint)m_arrVertices.size() * sizeof(Engine::VTXCOL);
 	const _int uiIB_ByteSize = (_uint)indices.size() * sizeof(_uint);
 
 	Engine::FAILED_CHECK_RETURN(D3DCreateBlob(uiVB_ByteSize, &m_pVB_CPU), E_FAIL);
-	CopyMemory(m_pVB_CPU->GetBufferPointer(), vertices.data(), uiVB_ByteSize);
+	CopyMemory(m_pVB_CPU->GetBufferPointer(), m_arrVertices.data(), uiVB_ByteSize);
 
 	Engine::FAILED_CHECK_RETURN(D3DCreateBlob(uiIB_ByteSize, &m_pIB_CPU), E_FAIL);
 	CopyMemory(m_pIB_CPU->GetBufferPointer(), indices.data(), uiIB_ByteSize);
 
 	// VB 생성.
-	m_pVB_GPU = Create_DefaultBuffer(vertices.data(), uiVB_ByteSize, m_pVB_Uploader);
+	m_pVB_GPU = Create_DynamicVertex(m_arrVertices.data(), uiVB_ByteSize, m_pVB_Uploader);
 	Engine::NULL_CHECK_RETURN(m_pVB_GPU, E_FAIL);
-
 	// IB 생성.
 	m_pIB_GPU = Create_DefaultBuffer(indices.data(), uiIB_ByteSize, m_pIB_Uploader);
 	Engine::NULL_CHECK_RETURN(m_pIB_GPU, E_FAIL);
+
 
 	m_uiVertexByteStride	= sizeof(Engine::VTXCOL);
 	m_uiVB_ByteSize			= uiVB_ByteSize;
@@ -360,12 +395,12 @@ ID3D12Resource* CToolCell::Create_DefaultBuffer(const void* InitData,
 	Upload_ResourceDest.Flags					= D3D12_RESOURCE_FLAG_NONE;
 
 	Engine::FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommittedResource(&Upload_HeapProperties,
-																  D3D12_HEAP_FLAG_NONE,
-																  &Upload_ResourceDest,
-																  D3D12_RESOURCE_STATE_GENERIC_READ,
-																  nullptr,
-																  IID_PPV_ARGS(&pUploadBuffer)), 
-																  NULL);
+																		  D3D12_HEAP_FLAG_NONE,
+																		  &Upload_ResourceDest,
+																		  D3D12_RESOURCE_STATE_GENERIC_READ,
+																		  nullptr,
+																		  IID_PPV_ARGS(&pUploadBuffer)), 
+																		  NULL);
 
 	
 	/*__________________________________________________________________________________________________________
@@ -388,7 +423,6 @@ ID3D12Resource* CToolCell::Create_DefaultBuffer(const void* InitData,
 	ResourceBarrier.Transition.pResource    = pDefaultBuffer;
 	ResourceBarrier.Transition.StateBefore  = D3D12_RESOURCE_STATE_COMMON;
 	ResourceBarrier.Transition.StateAfter   = D3D12_RESOURCE_STATE_COPY_DEST;
-
 	m_pCommandList->ResourceBarrier(1, &ResourceBarrier);
 
 	UpdateSubresources<1>(m_pCommandList, 
@@ -402,7 +436,6 @@ ID3D12Resource* CToolCell::Create_DefaultBuffer(const void* InitData,
 	ResourceBarrier.Transition.pResource    = pDefaultBuffer;
 	ResourceBarrier.Transition.StateBefore  = D3D12_RESOURCE_STATE_COPY_DEST;
 	ResourceBarrier.Transition.StateAfter   = D3D12_RESOURCE_STATE_GENERIC_READ;
-
 	m_pCommandList->ResourceBarrier(1, &ResourceBarrier);
 
 	/*__________________________________________________________________________________________________________
@@ -412,6 +445,40 @@ ID3D12Resource* CToolCell::Create_DefaultBuffer(const void* InitData,
 	- 복사가 완료되었음이 확실해진 후에 호출자가 UploadBuffer를 해제하면 된다.
 	____________________________________________________________________________________________________________*/
 
+	Engine::CGraphicDevice::Get_Instance()->End_ResetCmdList(Engine::CMDID::CMD_MAIN);
+
+	return pDefaultBuffer;
+}
+
+
+ID3D12Resource* CToolCell::Create_DynamicVertex(const void* InitData, 
+												UINT64 uiByteSize, 
+												ID3D12Resource*& pUploadBuffer)
+{
+	Engine::CGraphicDevice::Get_Instance()->Begin_ResetCmdList(Engine::CMDID::CMD_MAIN);
+
+	ID3D12Resource* pDefaultBuffer = nullptr;
+
+	/*__________________________________________________________________________________________________________
+	- CPU 메모리의 자료를 기본 버퍼에 복사하려면, 임시 업로드 힙을 만들어야 한다.
+	____________________________________________________________________________________________________________*/
+	Engine::FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+																		  D3D12_HEAP_FLAG_NONE,
+																		  &CD3DX12_RESOURCE_DESC::Buffer(uiByteSize),
+																		  D3D12_RESOURCE_STATE_GENERIC_READ,
+																		  nullptr,
+																		  IID_PPV_ARGS(&pDefaultBuffer)),
+																		  NULL);
+
+
+	pDefaultBuffer->Map(0, nullptr, (void**)&m_pVetexData);	// Write Vertex Data to pVertexDataBegin dynamically
+	
+	/*__________________________________________________________________________________________________________
+	[ 주의 ]
+	- 위의 함수 호출 이후에도, UploadBuffer를 계속 유지해야 한다.
+	- 실제로 복사를 수행하는 명령 목록이 아직 실행되지 않았기 때문이다.
+	- 복사가 완료되었음이 확실해진 후에 호출자가 UploadBuffer를 해제하면 된다.
+	____________________________________________________________________________________________________________*/
 	Engine::CGraphicDevice::Get_Instance()->End_ResetCmdList(Engine::CMDID::CMD_MAIN);
 
 	return pDefaultBuffer;

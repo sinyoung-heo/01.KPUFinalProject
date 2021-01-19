@@ -41,6 +41,9 @@ public:
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 
+	void			Reset_CellAndCollider();
+	void			Set_SelectedPoint(const _int& iIdx);
+
 private:
 	HRESULT			Add_Component();
 	void			Set_ConstantTable();
@@ -92,10 +95,20 @@ private:
 
 	Engine::SUBMESH_GEOMETRY m_tSubMeshGeometry;
 	D3D12_PRIMITIVE_TOPOLOGY m_PrimitiveTopology	= D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+
+	array<Engine::VTXCOL, 3> m_arrVertices;
+	UINT8* m_pVetexData = nullptr;
+
 private:
 	ID3D12Resource*	Create_DefaultBuffer(const void* InitData,
 										 UINT64 uiByteSize, 
 										 ID3D12Resource*& pUploadBuffer);
+	ID3D12Resource*	Create_DynamicVertex(const void* InitData,
+										 UINT64 uiByteSize, 
+										 ID3D12Resource*& pUploadBuffer);
+
+
 	D3D12_VERTEX_BUFFER_VIEW	Get_VertexBufferView()	const;
 	D3D12_INDEX_BUFFER_VIEW		Get_IndexBufferView()	const;
 #pragma endregion

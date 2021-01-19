@@ -316,6 +316,7 @@ BEGIN_MESSAGE_MAP(CTabMap, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1013, &CTabMap::OnBnClickedButton1013_NaviMeshCellPopBack)
 	ON_BN_CLICKED(IDC_BUTTON1014, &CTabMap::OnBnClickedButton1014_NaviMeshCellAllDelete)
 	ON_LBN_SELCHANGE(IDC_LIST1005, &CTabMap::OnLbnSelchangeList1005_NaviMeshCellListBox)
+	ON_WM_MOUSEMOVE()
 END_MESSAGE_MAP()
 
 
@@ -4127,6 +4128,15 @@ void CTabMap::OnBnClickedRadio1011_NaviMeshCreateMode()
 	m_fNaviMeshPointC_X = 0.0f;
 	m_fNaviMeshPointC_Y = 0.0f;
 	m_fNaviMeshPointC_Z = 0.0f;
+
+	// 모든 Cell과 Collider Reset.
+	Engine::OBJLIST* pCellList = Engine::CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_Environment", L"Cell");
+	if (nullptr != pCellList || !pCellList->empty())
+	{
+		// Cell 색상 Green & WireFrame으로 변경.
+		for (auto& pCell : *pCellList)
+			static_cast<CToolCell*>(pCell)->Reset_CellAndCollider();
+	}
 }
 
 
@@ -4141,6 +4151,15 @@ void CTabMap::OnBnClickedRadio1012_NaviMeshModifyMode()
 
 	m_NaviMeshCheck_FindNearPoint.EnableWindow(FALSE);
 	m_NaviMeshCheck_FindNearPoint.SetCheck(false);
+
+	// 모든 Cell과 Collider Reset.
+	Engine::OBJLIST* pCellList = Engine::CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_Environment", L"Cell");
+	if (nullptr != pCellList || !pCellList->empty())
+	{
+		// Cell 색상 Green & WireFrame으로 변경.
+		for (auto& pCell : *pCellList)
+			static_cast<CToolCell*>(pCell)->Reset_CellAndCollider();
+	}
 }
 
 

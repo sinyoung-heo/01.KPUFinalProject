@@ -53,8 +53,12 @@ public:
 	_int						m_iPickingCnt	= -1;
 	_vec3						m_vPickingPoint[POINT_END]		{ _vec3(0.0f), _vec3(0.0f) ,_vec3(0.0f) };
 	_vec3*						m_pPickingPoint[POINT_END]		{ nullptr, nullptr , nullptr };
+	_vec3*						m_pNearPoint	= nullptr;
 	_matrix						m_matColliderWorld[POINT_END];
 	Engine::CColliderSphere*	m_pPickingCollider[POINT_END]	{ nullptr, nullptr, nullptr };
+
+	_vec3 m_vPrePickingPos = _vec3(0.0f);
+	_vec3 m_vCurPickingPos = _vec3(1.0f);
 
 private:
 	/*__________________________________________________________________________________________________________

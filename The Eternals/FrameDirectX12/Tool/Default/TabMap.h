@@ -393,5 +393,4 @@ public:
 	_bool m_bIsNaviCreateMode = true;
 	_bool m_bIsNaviModifyMode = false;
 	_int m_bIsCellSelectIdx = -1;
-
 };
