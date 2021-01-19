@@ -395,4 +395,6 @@ public:
 	_bool m_bIsNaviModifyMode = false;
 	_int m_bIsCellSelectIdx = -1;
 
+	afx_msg void OnBnClickedButton1015_NaviMeshCellSAVE();
+	afx_msg void OnBnClickedButton1016_NaviMeshCellLOAD();
 };

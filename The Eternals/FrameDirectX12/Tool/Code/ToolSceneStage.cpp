@@ -737,7 +737,7 @@ void CToolSceneStage::KeyInput_TabMapNavigationMesh(CTabMap& TabMap)
 				{
 					// Cell 생성 - 두 개의 점 공유받아서 생성.
 					pCell = CToolCell::ShareCreate(m_pGraphicDevice, m_pCommandList,
-												   (_ulong)pCellList->size() - 1,	// Cell Index
+												   (_ulong)pCellList->size(),		// Cell Index
 												   m_pPickingPoint[POINT_A],		// Point A
 												   m_vPickingPoint[POINT_B],		// Point B
 												   m_pPickingPoint[POINT_C],		// Point C
@@ -748,7 +748,7 @@ void CToolSceneStage::KeyInput_TabMapNavigationMesh(CTabMap& TabMap)
 				{
 					// Cell 생성 - 모든 점을 공유받아서 생성.
 					pCell = CToolCell::ShareCreate(m_pGraphicDevice, m_pCommandList,
-												   (_ulong)pCellList->size() - 1,	// Cell Index
+												   (_ulong)pCellList->size(),		// Cell Index
 												   m_pPickingPoint[POINT_A],		// Point A
 												   m_pPickingPoint[POINT_B],		// Point B
 												   m_pPickingPoint[POINT_C],		// Point C
