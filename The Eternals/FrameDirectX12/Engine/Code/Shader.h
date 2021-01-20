@@ -13,9 +13,11 @@ protected:
 public:
 	// Get
 	array<const CD3DX12_STATIC_SAMPLER_DESC, 6>	Get_StaticSamplers();
-	ID3D12RootSignature*						Get_RootSignature()		{ return m_pRootSignature; }
+	ID3D12RootSignature*						Get_RootSignature()				{ return m_pRootSignature; }
 	ID3D12PipelineState*						Get_PipelineState(const _uint& iIdx = 0);
-	ID3D12PipelineState*						Get_PipelineStatePass()	{ return m_pPipelineState; }
+	ID3D12PipelineState*						Get_PipelineStatePass()			{ return m_pPipelineState; }
+	CUploadBuffer<CB_CAMERA_MATRIX>*			Get_UploadBuffer_CameraMatrix() { return m_pCB_CameraMatrix; }
+
 	// Set
 	HRESULT					Set_PipelineStatePass(const _uint& iIdx = 0);
 
@@ -78,6 +80,8 @@ protected:
 	ID3DBlob*	m_pVS_ByteCode							= nullptr;
 	ID3DBlob*	m_pPS_ByteCode							= nullptr;
 
+	// Camera ConstantBuffer
+	CUploadBuffer<CB_CAMERA_MATRIX>* m_pCB_CameraMatrix = nullptr;
 
 
 public:

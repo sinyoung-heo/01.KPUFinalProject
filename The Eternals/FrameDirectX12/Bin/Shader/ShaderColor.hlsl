@@ -10,18 +10,33 @@ s - 샘플러
 GPU를 고려해서 상수버퍼의 맴버들을 묶는 옵션이다.
 - float3 과 float 을 이 옵션으로 묶을 수 있다.
 ______________________________________________________________________*/
-cbuffer cbMatrixInfo	: register(b0)
+cbuffer cbCamreaMatrix : register(b0)
 {
-	float4x4 matWVP		: packoffset(c0);
-	float4x4 matWorld	: packoffset(c4);
-	float4x4 matView	: packoffset(c8);
-	float4x4 matProj	: packoffset(c12);
-};
-
-cbuffer cbColorInfo : register(b1)
-{
-	float4 Color : packoffset(c0);
+	float4x4	g_matView		: packoffset(c0);
+	float4x4	g_matProj		: packoffset(c4);
+	float4x4	g_matOrtho		: packoffset(c8);
+	float4		g_vCameraPos	: packoffset(c12);
+	float		g_fProjFar		: packoffset(c16);
 }
+
+cbuffer cbShaderColor : register(b1)
+{
+	float4x4	g_matWorld	: packoffset(c0);
+	float4		g_Color		: packoffset(c4);
+}
+
+//cbuffer cbMatrixInfo	: register(b0)
+//{
+//	float4x4 matWVP		: packoffset(c0);
+//	float4x4 matWorld	: packoffset(c4);
+//	float4x4 matView	: packoffset(c8);
+//	float4x4 matProj	: packoffset(c12);
+//};
+//
+//cbuffer cbColorInfo : register(b1)
+//{
+//	float4 Color : packoffset(c0);
+//}
 
 /*__________________________________________________________________________________________________________
 [ Vertex Shader ]
@@ -43,8 +58,12 @@ VS_OUT VS_MAIN(VS_IN vs_input)
 {
 	VS_OUT vs_output	= (VS_OUT) 0;
 	
+	float4x4 matWV, matWVP;
+	matWV	= mul(g_matWorld, g_matView);
+	matWVP	= mul(matWV, g_matProj);
+
 	vs_output.Pos		= mul(float4(vs_input.Pos, 1.0f), matWVP);
-	vs_output.Color		= Color;
+	vs_output.Color		= g_Color;
 	
 	return (vs_output);
 }
@@ -54,6 +73,10 @@ VS_OUT VS_MAIN_RANDOM(VS_IN vs_input)
 {
 	VS_OUT vs_output	= (VS_OUT) 0;
 	
+	float4x4 matWV, matWVP;
+	matWV	= mul(g_matWorld, g_matView);
+	matWVP	= mul(matWV, g_matProj);
+
 	vs_output.Pos		= mul(float4(vs_input.Pos, 1.0f), matWVP);
 	vs_output.Color		= vs_input.Color;
 	

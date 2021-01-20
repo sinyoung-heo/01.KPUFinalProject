@@ -16,6 +16,7 @@ CShader::CShader(const CShader & rhs)
 	, m_uiCBV_SRV_UAV_DescriptorSize(rhs.m_uiCBV_SRV_UAV_DescriptorSize)
 	, m_pVS_ByteCode(rhs.m_pVS_ByteCode)
 	, m_pPS_ByteCode(rhs.m_pPS_ByteCode)
+	, m_pCB_CameraMatrix(rhs.m_pCB_CameraMatrix)
 {
 	m_pRootSignature->AddRef();
 	
@@ -98,6 +99,10 @@ HRESULT CShader::Ready_Shader()
 {
 	m_uiCBV_SRV_UAV_DescriptorSize = CGraphicDevice::Get_Instance()->Get_CBV_SRV_UAV_DescriptorSize();
 
+	// Create CameraMatrix ConstantBuffer
+	m_pCB_CameraMatrix = CUploadBuffer<CB_CAMERA_MATRIX>::Create(m_pGraphicDevice);
+	NULL_CHECK_RETURN(m_pCB_CameraMatrix, E_FAIL);
+
 	return S_OK;
 }
 
@@ -145,7 +150,17 @@ D3D12_BLEND_DESC CShader::Create_BlendState(const _bool & bIsBlendEnable,
 											const D3D12_BLEND & DstBlendAlpha, 
 											const D3D12_BLEND_OP & BlendOpAlpha)
 {
-	return D3D12_BLEND_DESC();
+	D3D12_BLEND_DESC BlendDesc = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+
+	BlendDesc.RenderTarget[0].BlendEnable		= bIsBlendEnable;
+	BlendDesc.RenderTarget[0].SrcBlend			= SrcBlend;
+	BlendDesc.RenderTarget[0].DestBlend			= DstBlend;
+	BlendDesc.RenderTarget[0].BlendOp			= BlendOp;
+	BlendDesc.RenderTarget[0].SrcBlendAlpha		= SrcBlendAlpha;
+	BlendDesc.RenderTarget[0].DestBlendAlpha	= DstBlendAlpha;
+	BlendDesc.RenderTarget[0].BlendOpAlpha		= BlendOpAlpha;
+
+	return BlendDesc;
 }
 
 D3D12_RASTERIZER_DESC CShader::Create_RasterizerState(const D3D12_FILL_MODE & eFillMode, 
@@ -237,16 +252,19 @@ void CShader::Free()
 {
 	CComponent::Free();
 
-	Engine::Safe_Release(m_pVS_ByteCode);
-	Engine::Safe_Release(m_pPS_ByteCode);
+	Safe_Release(m_pVS_ByteCode);
+	Safe_Release(m_pPS_ByteCode);
 
-	Engine::Safe_Release(m_pRootSignature);
+	Safe_Release(m_pRootSignature);
 
 	for (_uint i = 0; i < m_vecPipelineState.size(); ++i)
-		Engine::Safe_Release(m_vecPipelineState[i]);
+		Safe_Release(m_vecPipelineState[i]);
 
 	m_vecPipelineState.clear();
 	m_vecPipelineState.shrink_to_fit();
+
+	if (!m_bIsClone)
+		Safe_Delete(m_pCB_CameraMatrix);
 
 }
 

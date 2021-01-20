@@ -241,22 +241,30 @@ void CColliderSphere::Set_ConstantTable()
 	/*__________________________________________________________________________________________________________
 	[ Set CB Data ]
 	____________________________________________________________________________________________________________*/
-	// Matrix Info
-	CB_MATRIX_DESC	tCB_MatrixDesc;
-	ZeroMemory(&tCB_MatrixDesc, sizeof(CB_MATRIX_DESC));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matWVP, XMMatrixTranspose(m_pTransCom->m_matWorld * (*pmatView) * (*pmatProj)));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matWorld, XMMatrixTranspose(m_pTransCom->m_matWorld));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matView, XMMatrixTranspose(*pmatView));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matProj, XMMatrixTranspose(*pmatProj));
+	CB_SHADER_COLOR tCB_ColorShader;
+	ZeroMemory(&tCB_ColorShader, sizeof(CB_SHADER_COLOR));
 
-	m_pShaderCom->Get_UploadBuffer_MatrixDesc()->CopyData(0, tCB_MatrixDesc);
+	XMStoreFloat4x4(&tCB_ColorShader.matWorld, XMMatrixTranspose(m_pTransCom->m_matWorld));
+	tCB_ColorShader.vColor = m_vColor;
 
-	// Color Info
-	CB_COLOR_DESC	tCB_ColorDesc;
-	ZeroMemory(&tCB_ColorDesc, sizeof(CB_COLOR_DESC));
-	tCB_ColorDesc.vColor = m_vColor;
+	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ColorShader);
 
-	m_pShaderCom->Get_UploadBuffer_ColorDesc()->CopyData(0, tCB_ColorDesc);
+	//// Matrix Info
+	//CB_MATRIX_DESC	tCB_MatrixDesc;
+	//ZeroMemory(&tCB_MatrixDesc, sizeof(CB_MATRIX_DESC));
+	//XMStoreFloat4x4(&tCB_MatrixDesc.matWVP, XMMatrixTranspose(m_pTransCom->m_matWorld * (*pmatView) * (*pmatProj)));
+	//XMStoreFloat4x4(&tCB_MatrixDesc.matWorld, XMMatrixTranspose(m_pTransCom->m_matWorld));
+	//XMStoreFloat4x4(&tCB_MatrixDesc.matView, XMMatrixTranspose(*pmatView));
+	//XMStoreFloat4x4(&tCB_MatrixDesc.matProj, XMMatrixTranspose(*pmatProj));
+
+	//m_pShaderCom->Get_UploadBuffer_MatrixDesc()->CopyData(0, tCB_MatrixDesc);
+
+	//// Color Info
+	//CB_COLOR_DESC	tCB_ColorDesc;
+	//ZeroMemory(&tCB_ColorDesc, sizeof(CB_COLOR_DESC));
+	//tCB_ColorDesc.vColor = m_vColor;
+
+	//m_pShaderCom->Get_UploadBuffer_ColorDesc()->CopyData(0, tCB_ColorDesc);
 }
 
 CComponent * CColliderSphere::Clone()

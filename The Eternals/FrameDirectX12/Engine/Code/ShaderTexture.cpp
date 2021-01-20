@@ -121,8 +121,8 @@ HRESULT CShaderTexture::Create_RootSignature()
 															  pSignatureBlob->GetBufferSize(),
 															  IID_PPV_ARGS(&m_pRootSignature)),
 															  E_FAIL);
-	Engine::Safe_Release(pSignatureBlob);
-	Engine::Safe_Release(pErrorBlob);
+	Safe_Release(pSignatureBlob);
+	Safe_Release(pErrorBlob);
 
 	return S_OK;
 }
@@ -332,7 +332,7 @@ CShaderTexture * CShaderTexture::Create(ID3D12Device * pGraphicDevice, ID3D12Gra
 	CShaderTexture* pInstance = new CShaderTexture(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_Shader()))
-		Engine::Safe_Release(pInstance);
+		Safe_Release(pInstance);
 
 	return pInstance;
 }
@@ -341,6 +341,6 @@ void CShaderTexture::Free()
 {
 	CShader::Free();
 
-	Engine::Safe_Delete(m_pCB_MatrixDesc);
-	Engine::Safe_Delete(m_pCB_TexSpriteDesc);
+	Safe_Delete(m_pCB_MatrixDesc);
+	Safe_Delete(m_pCB_TexSpriteDesc);
 }

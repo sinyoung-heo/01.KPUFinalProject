@@ -108,8 +108,8 @@ HRESULT CShaderSkyBox::Create_RootSignature()
 															  pSignatureBlob->GetBufferSize(),
 															  IID_PPV_ARGS(&m_pRootSignature)), 
 															  E_FAIL);
-	Engine::Safe_Release(pSignatureBlob);
-	Engine::Safe_Release(pErrorBlob);
+	Safe_Release(pSignatureBlob);
+	Safe_Release(pErrorBlob);
 
 
 	return S_OK;
@@ -208,7 +208,7 @@ CShaderSkyBox * CShaderSkyBox::Create(ID3D12Device * pGraphicDevice, ID3D12Graph
 	CShaderSkyBox* pInstance = new CShaderSkyBox(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_Shader()))
-		Engine::Safe_Release(pInstance);
+		Safe_Release(pInstance);
 
 	return pInstance;
 }
@@ -217,5 +217,5 @@ void CShaderSkyBox::Free()
 {
 	CShader::Free();
 	
-	Engine::Safe_Delete(m_pCB_MatrixDesc);
+	Safe_Delete(m_pCB_MatrixDesc);
 }

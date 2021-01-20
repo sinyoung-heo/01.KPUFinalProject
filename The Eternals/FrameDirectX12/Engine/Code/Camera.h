@@ -1,13 +1,18 @@
 #pragma once
 #include "GameObject.h"
+#include "ShaderColor.h"
+#include "ShaderTexture.h"
+#include "ShaderMesh.h"
+#include "ShaderSkyBox.h"
+#include "ShaderShadow.h"
 
 BEGIN(Engine)
 
-class CShaderColor;
-class CShaderTexture;
-class CShaderMesh;
-class CShaderSkyBox;
-class CShaderShadow;
+//class CShaderColor;
+//class CShaderTexture;
+//class CShaderMesh;
+//class CShaderSkyBox;
+//class CShaderShadow;
 
 class ENGINE_DLL CCamera : public CGameObject
 {
@@ -37,6 +42,9 @@ public:
 	virtual _int		Update_GameObject(const _float& fTimeDelta);
 
 protected:
+	void				Set_ConstantTable();
+
+protected:
 	/*____________________________________________________________________
 	[ Value ]
 	______________________________________________________________________*/
@@ -44,7 +52,6 @@ protected:
 	PROJ_DESC	m_tProjInfo		{ };	// 원근 투영 정보를 담은 구조체.
 	ORTHO_DESC	m_tOrthoInfo	{ };	// 직교 투영 정보를 담은 구조체.
 
-private:
 	CShaderColor*	m_pShaderColor		= nullptr;
 	CShaderTexture* m_pShaderTexture	= nullptr;
 	CShaderMesh*	m_pShaderMesh		= nullptr;

@@ -213,6 +213,7 @@ HRESULT CToolCell::Add_Component()
 	NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->AddRef();
 	m_pShaderCom->Set_PipelineStatePass(1);
+	
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
 	// Collider
@@ -286,20 +287,29 @@ void CToolCell::Set_ConstantTable()
 	/*__________________________________________________________________________________________________________
 	[ Set CB Data ]
 	____________________________________________________________________________________________________________*/
-	// Matrix Info
-	Engine::CB_MATRIX_DESC	tCB_MatrixDesc;
-	ZeroMemory(&tCB_MatrixDesc, sizeof(Engine::CB_MATRIX_DESC));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matWVP, XMMatrixTranspose((*pmatView) * (*pmatProj)));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matWorld, XMMatrixTranspose(INIT_MATRIX));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matView, XMMatrixTranspose(*pmatView));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matProj, XMMatrixTranspose(*pmatProj));
-	m_pShaderCom->Get_UploadBuffer_MatrixDesc()->CopyData(0, tCB_MatrixDesc);
+	Engine::CB_SHADER_COLOR tCB_ColorShader;
+	ZeroMemory(&tCB_ColorShader, sizeof(Engine::CB_SHADER_COLOR));
 
-	// Color Info
-	Engine::CB_COLOR_DESC	tCB_ColorDesc;
-	ZeroMemory(&tCB_ColorDesc, sizeof(Engine::CB_COLOR_DESC));
-	tCB_ColorDesc.vColor = m_vColor;
-	m_pShaderCom->Get_UploadBuffer_ColorDesc()->CopyData(0, tCB_ColorDesc);
+	XMStoreFloat4x4(&tCB_ColorShader.matWorld, XMMatrixTranspose(INIT_MATRIX));
+	tCB_ColorShader.vColor = m_vColor;
+
+	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ColorShader);
+	
+	
+	//// Matrix Info
+	//Engine::CB_MATRIX_DESC	tCB_MatrixDesc;
+	//ZeroMemory(&tCB_MatrixDesc, sizeof(Engine::CB_MATRIX_DESC));
+	//XMStoreFloat4x4(&tCB_MatrixDesc.matWVP, XMMatrixTranspose((*pmatView) * (*pmatProj)));
+	//XMStoreFloat4x4(&tCB_MatrixDesc.matWorld, XMMatrixTranspose(INIT_MATRIX));
+	//XMStoreFloat4x4(&tCB_MatrixDesc.matView, XMMatrixTranspose(*pmatView));
+	//XMStoreFloat4x4(&tCB_MatrixDesc.matProj, XMMatrixTranspose(*pmatProj));
+	//m_pShaderCom->Get_UploadBuffer_MatrixDesc()->CopyData(0, tCB_MatrixDesc);
+
+	//// Color Info
+	//Engine::CB_COLOR_DESC	tCB_ColorDesc;
+	//ZeroMemory(&tCB_ColorDesc, sizeof(Engine::CB_COLOR_DESC));
+	//tCB_ColorDesc.vColor = m_vColor;
+	//m_pShaderCom->Get_UploadBuffer_ColorDesc()->CopyData(0, tCB_ColorDesc);
 }
 
 void CToolCell::CheckClockWise(_vec3& p0, _vec3& p1, _vec3& p2)

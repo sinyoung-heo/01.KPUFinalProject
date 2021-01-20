@@ -106,22 +106,30 @@ void CCubeObject::Set_ConstantTable()
 	/*__________________________________________________________________________________________________________
 	[ Set CB Data ]
 	____________________________________________________________________________________________________________*/
-	// Matrix Info
-	Engine::CB_MATRIX_DESC	tCB_MatrixDesc;
-	ZeroMemory(&tCB_MatrixDesc, sizeof(Engine::CB_MATRIX_DESC));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matWVP, XMMatrixTranspose(m_pTransCom->m_matWorld * (*pmatView) * (*pmatProj)));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matWorld, XMMatrixTranspose(m_pTransCom->m_matWorld));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matView, XMMatrixTranspose(*pmatView));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matProj, XMMatrixTranspose(*pmatProj));
+	Engine::CB_SHADER_COLOR tCB_ColorShader;
+	ZeroMemory(&tCB_ColorShader, sizeof(Engine::CB_SHADER_COLOR));
 
-	m_pShaderCom->Get_UploadBuffer_MatrixDesc()->CopyData(0, tCB_MatrixDesc);
+	XMStoreFloat4x4(&tCB_ColorShader.matWorld, XMMatrixTranspose(m_pTransCom->m_matWorld));
+	tCB_ColorShader.vColor = _rgba(0.0f, 1.0f, 1.0f, 1.0f);
 
-	// Color Info
-	Engine::CB_COLOR_DESC	tCB_ColorDesc;
-	ZeroMemory(&tCB_ColorDesc, sizeof(Engine::CB_COLOR_DESC));
-	tCB_ColorDesc.vColor = _rgba(0.0f, 1.0f, 1.0f, 1.0f);
+	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ColorShader);
 
-	m_pShaderCom->Get_UploadBuffer_ColorDesc()->CopyData(0, tCB_ColorDesc);
+	//// Matrix Info
+	//Engine::CB_MATRIX_DESC	tCB_MatrixDesc;
+	//ZeroMemory(&tCB_MatrixDesc, sizeof(Engine::CB_MATRIX_DESC));
+	//XMStoreFloat4x4(&tCB_MatrixDesc.matWVP, XMMatrixTranspose(m_pTransCom->m_matWorld * (*pmatView) * (*pmatProj)));
+	//XMStoreFloat4x4(&tCB_MatrixDesc.matWorld, XMMatrixTranspose(m_pTransCom->m_matWorld));
+	//XMStoreFloat4x4(&tCB_MatrixDesc.matView, XMMatrixTranspose(*pmatView));
+	//XMStoreFloat4x4(&tCB_MatrixDesc.matProj, XMMatrixTranspose(*pmatProj));
+
+	//m_pShaderCom->Get_UploadBuffer_MatrixDesc()->CopyData(0, tCB_MatrixDesc);
+
+	//// Color Info
+	//Engine::CB_COLOR_DESC	tCB_ColorDesc;
+	//ZeroMemory(&tCB_ColorDesc, sizeof(Engine::CB_COLOR_DESC));
+	//tCB_ColorDesc.vColor = _rgba(0.0f, 1.0f, 1.0f, 1.0f);
+
+	//m_pShaderCom->Get_UploadBuffer_ColorDesc()->CopyData(0, tCB_ColorDesc);
 
 }
 

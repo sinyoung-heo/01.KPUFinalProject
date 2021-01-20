@@ -126,8 +126,8 @@ HRESULT CShaderShadow::Create_RootSignature()
 															  pSignatureBlob->GetBufferSize(),
 															  IID_PPV_ARGS(&m_pRootSignature)),
 															  E_FAIL);
-	Engine::Safe_Release(pSignatureBlob);
-	Engine::Safe_Release(pErrorBlob);
+	Safe_Release(pSignatureBlob);
+	Safe_Release(pErrorBlob);
 
 	return S_OK;
 }
@@ -236,7 +236,7 @@ CShaderShadow * CShaderShadow::Create(ID3D12Device * pGraphicDevice, ID3D12Graph
 	CShaderShadow* pInstance = new CShaderShadow(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_Shader()))
-		Engine::Safe_Release(pInstance);
+		Safe_Release(pInstance);
 
 	return pInstance;
 }
@@ -245,7 +245,7 @@ void CShaderShadow::Free()
 {
 	CShader::Free();
 
-	Engine::Safe_Delete(m_pCB_ShadowDepthDesc);
-	Engine::Safe_Delete(m_pCB_SkinningDesc);
+	Safe_Delete(m_pCB_ShadowDepthDesc);
+	Safe_Delete(m_pCB_SkinningDesc);
 
 }

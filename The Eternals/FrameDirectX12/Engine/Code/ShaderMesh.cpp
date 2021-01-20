@@ -27,7 +27,7 @@ HRESULT CShaderMesh::SetUp_ShaderConstantBuffer(const _uint& uiNumSubsetMesh)
 	m_pCB_MatrixDesc = CUploadBuffer<CB_MATRIX_DESC>::Create(m_pGraphicDevice);
 	NULL_CHECK_RETURN(m_pCB_MatrixDesc, E_FAIL);
 
-	CGraphicDevice::Get_Instance()->Wait_ForGpuComplete();
+	// CGraphicDevice::Get_Instance()->Wait_ForGpuComplete();
 
 	// SubsetMesh 개수만큼 만들어준다.
 	m_pCB_SkinningDesc = CUploadBuffer<CB_SKINNING_DESC>::Create(m_pGraphicDevice, uiNumSubsetMesh);
@@ -220,8 +220,8 @@ HRESULT CShaderMesh::Create_RootSignature()
 															  pSignatureBlob->GetBufferSize(),
 															  IID_PPV_ARGS(&m_pRootSignature)),
 															  E_FAIL);
-	Engine::Safe_Release(pSignatureBlob);
-	Engine::Safe_Release(pErrorBlob);
+	Safe_Release(pSignatureBlob);
+	Safe_Release(pErrorBlob);
 
 	return S_OK;
 }
@@ -364,7 +364,7 @@ CShaderMesh * CShaderMesh::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsC
 	CShaderMesh* pInstance = new CShaderMesh(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_Shader()))
-		Engine::Safe_Release(pInstance);
+		Safe_Release(pInstance);
 
 	return pInstance;
 }
@@ -373,8 +373,8 @@ void CShaderMesh::Free()
 {
 	CShader::Free();
 
-	Engine::Safe_Delete(m_pCB_MatrixDesc);
-	Engine::Safe_Delete(m_pCB_SkinningDesc);
-	Engine::Safe_Delete(m_pCB_ShadowDesc);
+	Safe_Delete(m_pCB_MatrixDesc);
+	Safe_Delete(m_pCB_SkinningDesc);
+	Safe_Delete(m_pCB_ShadowDesc);
 
 }

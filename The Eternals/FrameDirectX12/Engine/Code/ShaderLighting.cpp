@@ -17,7 +17,6 @@ CShaderLighting::CShaderLighting(const CShaderLighting & rhs)
 
 void CShaderLighting::SetUp_ShaderTexture(vector<ComPtr<ID3D12Resource>> pVecTexture)
 {
-
 	Create_DescriptorHeaps(pVecTexture);
 	Create_ConstantBuffer();
 }
@@ -190,8 +189,8 @@ HRESULT CShaderLighting::Create_RootSignature()
 															  pSignatureBlob->GetBufferSize(),
 															  IID_PPV_ARGS(&m_pRootSignature)), 
 															  E_FAIL);
-	Engine::Safe_Release(pSignatureBlob);
-	Engine::Safe_Release(pErrorBlob);
+	Safe_Release(pSignatureBlob);
+	Safe_Release(pErrorBlob);
 
 	return S_OK;
 }
@@ -341,7 +340,7 @@ CShaderLighting * CShaderLighting::Create(ID3D12Device * pGraphicDevice, ID3D12G
 	CShaderLighting* pInstance = new CShaderLighting(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_Shader()))
-		Engine::Safe_Release(pInstance);
+		Safe_Release(pInstance);
 
 	return pInstance;
 }
@@ -350,7 +349,7 @@ void CShaderLighting::Free()
 {
 	CShader::Free();
 
-	Engine::Safe_Release(m_pTexDescriptorHeap);
-	Engine::Safe_Delete(m_pCB_LightDesc);
-	Engine::Safe_Delete(m_pCB_CameraDesc);
+	Safe_Release(m_pTexDescriptorHeap);
+	Safe_Delete(m_pCB_LightDesc);
+	Safe_Delete(m_pCB_CameraDesc);
 }

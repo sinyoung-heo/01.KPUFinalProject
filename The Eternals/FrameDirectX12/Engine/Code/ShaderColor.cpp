@@ -36,11 +36,17 @@ void CShaderColor::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, const 
 	/*__________________________________________________________________________________________________________
 	[ CBV를 루트 서술자에 묶는다 ]
 	____________________________________________________________________________________________________________*/
+	//m_pCommandList->SetGraphicsRootConstantBufferView(0,	// RootParameter Index
+	//												  m_pCB_MatrixDesc->Resource()->GetGPUVirtualAddress());
+
+	//m_pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
+	//												  m_pCB_ColorDesc->Resource()->GetGPUVirtualAddress());
+
 	m_pCommandList->SetGraphicsRootConstantBufferView(0,	// RootParameter Index
-													  m_pCB_MatrixDesc->Resource()->GetGPUVirtualAddress());
+													  m_pCB_CameraMatrix->Resource()->GetGPUVirtualAddress());
 
 	m_pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
-													  m_pCB_ColorDesc->Resource()->GetGPUVirtualAddress());
+													  m_pCB_ShaderColor->Resource()->GetGPUVirtualAddress());
 }
 
 HRESULT CShaderColor::Create_DescriptorHeaps()
@@ -54,11 +60,14 @@ HRESULT CShaderColor::Create_DescriptorHeaps()
 
 HRESULT CShaderColor::Create_ConstantBuffer()
 {
-	m_pCB_MatrixDesc = CUploadBuffer<CB_MATRIX_DESC>::Create(m_pGraphicDevice);
-	NULL_CHECK_RETURN(m_pCB_MatrixDesc, E_FAIL);
+	//m_pCB_MatrixDesc = CUploadBuffer<CB_MATRIX_DESC>::Create(m_pGraphicDevice);
+	//NULL_CHECK_RETURN(m_pCB_MatrixDesc, E_FAIL);
 
-	m_pCB_ColorDesc = CUploadBuffer<CB_COLOR_DESC>::Create(m_pGraphicDevice);
-	NULL_CHECK_RETURN(m_pCB_ColorDesc, E_FAIL);
+	//m_pCB_ColorDesc = CUploadBuffer<CB_COLOR_DESC>::Create(m_pGraphicDevice);
+	//NULL_CHECK_RETURN(m_pCB_ColorDesc, E_FAIL);
+
+	m_pCB_ShaderColor = CUploadBuffer<CB_SHADER_COLOR>::Create(m_pGraphicDevice);
+	NULL_CHECK_RETURN(m_pCB_ShaderColor, E_FAIL);
 
 	return S_OK;
 }
@@ -77,13 +86,13 @@ HRESULT CShaderColor::Create_RootSignature()
 	______________________________________________________________________*/
 	CD3DX12_ROOT_PARAMETER RootParameter[2];
 
-	RootParameter[0].InitAsConstantBufferView(0);	// register b0 - cbMatrixInfo
-	RootParameter[1].InitAsConstantBufferView(1);	// register b1 - cbColorInfo
+	RootParameter[0].InitAsConstantBufferView(0);	// register b0 - cbCamreaMatrix
+	RootParameter[1].InitAsConstantBufferView(1);	// register b1 - cbShaderColor
 
 	/*____________________________________________________________________
 	- 루트 서명은 루트 매개변수들의 배열이다.
 	______________________________________________________________________*/
-	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(2,		// 루트 파라미터 개수. (cbMatrixInfo, cbColorInfo)
+	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(2,		// 루트 파라미터 개수. (cbCamreaMatrix, cbShaderColor)
 												  RootParameter, 
 												  0,		// Texture가 없으므로 0.
 												  nullptr,	// Texture가 없으므로 nullptr.
@@ -106,8 +115,8 @@ HRESULT CShaderColor::Create_RootSignature()
 															  pSignatureBlob->GetBufferSize(),
 															  IID_PPV_ARGS(&m_pRootSignature)), 
 															  E_FAIL);
-	Engine::Safe_Release(pSignatureBlob);
-	Engine::Safe_Release(pErrorBlob);
+	Safe_Release(pSignatureBlob);
+	Safe_Release(pErrorBlob);
 
 	return S_OK;
 }
@@ -140,7 +149,7 @@ HRESULT CShaderColor::Create_PipelineState()
 	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
 	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.BlendState			= Create_BlendState();
+	PipelineStateDesc.BlendState			= CShader::Create_BlendState();
 	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState();
 	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID);
 
@@ -170,9 +179,9 @@ HRESULT CShaderColor::Create_PipelineState()
 	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
 	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.BlendState			= Create_BlendState();
+	PipelineStateDesc.BlendState			= CShader::Create_BlendState();
 	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState();
-	PipelineStateDesc.RasterizerState = CShader::Create_RasterizerState(D3D12_FILL_MODE_WIREFRAME);
+	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState(D3D12_FILL_MODE_WIREFRAME);
 
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
@@ -200,7 +209,7 @@ HRESULT CShaderColor::Create_PipelineState()
 	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
 	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.BlendState			= Create_BlendState();
+	PipelineStateDesc.BlendState			= CShader::Create_BlendState();
 	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState();
 	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID);
 
@@ -231,7 +240,7 @@ HRESULT CShaderColor::Create_PipelineState()
 	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
 	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.BlendState			= Create_BlendState();
+	PipelineStateDesc.BlendState			= CShader::Create_BlendState();
 	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState();
 	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID);
 
@@ -278,29 +287,6 @@ vector<D3D12_INPUT_ELEMENT_DESC> CShaderColor::Create_InputLayout(string VS_Entr
 	return vecInputLayout;
 }
 
-D3D12_BLEND_DESC CShaderColor::Create_BlendState(const _bool& bIsBlendEnable,
-														const D3D12_BLEND& SrcBlend,
-														const D3D12_BLEND& DstBlend,
-														const D3D12_BLEND_OP& BlendOp,
-														const D3D12_BLEND& SrcBlendAlpha,
-														const D3D12_BLEND& DstBlendAlpha,
-														const D3D12_BLEND_OP& BlendOpAlpha)
-{
-	D3D12_BLEND_DESC BlendDesc = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-
-	BlendDesc.RenderTarget[0].BlendEnable		= bIsBlendEnable;
-
-	BlendDesc.RenderTarget[0].SrcBlend			= SrcBlend;
-	BlendDesc.RenderTarget[0].DestBlend			= DstBlend;
-	BlendDesc.RenderTarget[0].BlendOp			= BlendOp;
-
-	BlendDesc.RenderTarget[0].SrcBlendAlpha		= SrcBlendAlpha;
-	BlendDesc.RenderTarget[0].DestBlendAlpha	= DstBlendAlpha;
-	BlendDesc.RenderTarget[0].BlendOpAlpha		= BlendOpAlpha;
-
-	return BlendDesc;
-}
-
 CComponent * CShaderColor::Clone()
 {
 	return new CShaderColor(*this);
@@ -311,7 +297,7 @@ CShaderColor * CShaderColor::Create(ID3D12Device * pGraphicDevice, ID3D12Graphic
 	CShaderColor* pInstance = new CShaderColor(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_Shader()))
-		Engine::Safe_Release(pInstance);
+		Safe_Release(pInstance);
 
 	return pInstance;
 }
@@ -320,6 +306,7 @@ void CShaderColor::Free()
 {
 	CShader::Free();
 
-	Engine::Safe_Delete(m_pCB_MatrixDesc);
-	Engine::Safe_Delete(m_pCB_ColorDesc);
+	//Safe_Delete(m_pCB_MatrixDesc);
+	//Safe_Delete(m_pCB_ColorDesc);
+	Safe_Delete(m_pCB_ShaderColor);
 }

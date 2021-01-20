@@ -709,12 +709,13 @@ namespace Engine
 	} SHADOW_DESC;
 
 	/*__________________________________________________________________________________________________________
-	[ CB Struct ]
+	[ Shader ConstantBuffer Struct ]
 	____________________________________________________________________________________________________________*/
 	typedef struct tagConstantBufferCameraDesc
 	{
 		XMFLOAT4X4	matView;
 		XMFLOAT4X4	matProj;
+		XMFLOAT4X4	matOrtho;
 		_vec4		vCameraPos;
 		_float		fProjFar;
 
@@ -792,11 +793,15 @@ namespace Engine
 		_vec4		vLightPos;
 		_float		fLightPorjFar;
 
-	};
+	} CB_SHADER_SHADOW;
 
 
 	
 	
+
+
+
+
 	typedef struct tagCBMatrixDesc
 	{
 		XMFLOAT4X4 matWVP;

@@ -709,8 +709,99 @@ namespace Engine
 	} SHADOW_DESC;
 
 	/*__________________________________________________________________________________________________________
-	[ CB Struct ]
+	[ Shader ConstantBuffer Struct ]
 	____________________________________________________________________________________________________________*/
+	typedef struct tagConstantBufferCameraDesc
+	{
+		XMFLOAT4X4	matView;
+		XMFLOAT4X4	matProj;
+		XMFLOAT4X4	matOrtho;
+		_vec4		vCameraPos;
+		_float		fProjFar;
+
+	} CB_CAMERA_MATRIX;
+
+	typedef struct tagConstantBufferShaderColor
+	{
+		XMFLOAT4X4	matWorld;
+		_rgba		vColor;
+
+	} CB_SHADER_COLOR;
+	
+	typedef struct tagConstantBufferShaderTexture
+	{
+		XMFLOAT4X4	matWorld;
+
+		_int		iFrameCnt;	// 스프라이트 이미지 X축 개수.
+		_int		iCurFrame;	// 현재 그려지는 이미지의 X축 Index.
+		_int		iSceneCnt;	// 스프라이트 이미지 Y축 개수.
+		_int		iCurScene;	// 현재 그려지는 이미지의 Y축 Index.
+
+	} CB_SHADER_TEXTURE;
+	
+	typedef struct tagConstantBufferShaderMesh
+	{
+		XMFLOAT4X4	matWorld;
+		XMFLOAT4X4	matBoneOffset[64];
+		XMFLOAT4X4	matBoneScale[64];
+		XMFLOAT4X4	matBoneRotation[64];
+		XMFLOAT4X4	matBoneTrans[64];
+		XMFLOAT4X4	matParentTransform[64];
+		XMFLOAT4X4	matRootTransform[64];
+
+		XMFLOAT4X4	matLightView;
+		XMFLOAT4X4	matLightProj;
+		_vec4		vLightPos;
+		_float		fLightPorjFar;
+
+	} CB_SHADER_MESH;
+
+	typedef struct tagConstantBufferShaderSkyBox
+	{
+		XMFLOAT4X4	matWorld;
+
+	} CB_SHADER_SKYBOX;
+
+	typedef struct tagConstantBufferShaderLighting
+	{
+		_rgba		vLightDiffuse;
+		_rgba		vLightSpecular;
+		_rgba		vLightAmbient;
+		_vec4		vLightDirection;
+		_vec4		vLightPos;
+		_float		vLightRange;
+
+		XMFLOAT4X4	matViewInv;
+		XMFLOAT4X4	matProjInv;
+		_vec4		vCameraPos;
+		_float		fProjFar;
+
+	} CB_SHADER_LIGHTING;
+
+	typedef struct tagConstantBufferShaderShadow
+	{
+		XMFLOAT4X4	matWorld;
+		XMFLOAT4X4	matBoneOffset[64];
+		XMFLOAT4X4	matBoneScale[64];
+		XMFLOAT4X4	matBoneRotation[64];
+		XMFLOAT4X4	matBoneTrans[64];
+		XMFLOAT4X4	matParentTransform[64];
+		XMFLOAT4X4	matRootTransform[64];
+
+		XMFLOAT4X4	matLightView;
+		XMFLOAT4X4	matLightProj;
+		_vec4		vLightPos;
+		_float		fLightPorjFar;
+
+	} CB_SHADER_SHADOW;
+
+
+	
+	
+
+
+
+
 	typedef struct tagCBMatrixDesc
 	{
 		XMFLOAT4X4 matWVP;
