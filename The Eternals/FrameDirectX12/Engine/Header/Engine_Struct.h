@@ -662,13 +662,10 @@ namespace Engine
 	typedef struct tagSkinningMatrix
 	{
 		_matrix	matBoneOffset		= INIT_MATRIX;
-
 		_matrix matBoneScale		= INIT_MATRIX;
 		_matrix matBoneRotation		= INIT_MATRIX;
 		_matrix matBoneTrans		= INIT_MATRIX;
-
 		_matrix matParentTransform	= INIT_MATRIX;
-
 		_matrix matRootTransform	= INIT_MATRIX;
 
 	} SKINNING_MATRIX;
@@ -682,10 +679,6 @@ namespace Engine
 		_uint	uiStartIndexLocation	= 0;
 		_int	iBaseVertexLocation		= 0;
 
-		// Bounding box of the geometry defined by this submesh. 
-		// This is used in later chapters of the book.
-		BoundingBox Bounds;
-
 	} SUBMESH_GEOMETRY;
 
 	/*__________________________________________________________________________________________________________
@@ -694,12 +687,10 @@ namespace Engine
 	typedef struct tagD3DLight
 	{
 		LIGHTTYPE	Type		= D3DLIGHT_DIRECTIONAL;
-
 		_rgba		Diffuse		= _rgba(0.0f, 0.0f, 0.0f, 0.0f);
 		_rgba		Specular	= _rgba(0.0f, 0.0f, 0.0f, 0.0f);
 		_rgba		Ambient		= _rgba(0.0f, 0.0f, 0.0f, 0.0f);
 		_vec4		Position	= _rgba(0.0f, 0.0f, 0.0f, 0.0f);
-
 		_vec4		Direction	= _rgba(0.0f, 0.0f, 0.0f, 0.0f);
 		_float		Range		= 0.0f;
 
@@ -712,7 +703,6 @@ namespace Engine
 	{
 		_matrix		matLightView;
 		_matrix		matLightProj;
-
 		_vec4		vLightPosition;
 		_float		fLightPorjFar;
 
@@ -721,6 +711,92 @@ namespace Engine
 	/*__________________________________________________________________________________________________________
 	[ CB Struct ]
 	____________________________________________________________________________________________________________*/
+	typedef struct tagConstantBufferCameraDesc
+	{
+		XMFLOAT4X4	matView;
+		XMFLOAT4X4	matProj;
+		_vec4		vCameraPos;
+		_float		fProjFar;
+
+	} CB_CAMERA_MATRIX;
+
+	typedef struct tagConstantBufferShaderColor
+	{
+		XMFLOAT4X4	matWorld;
+		_rgba		vColor;
+
+	} CB_SHADER_COLOR;
+	
+	typedef struct tagConstantBufferShaderTexture
+	{
+		XMFLOAT4X4	matWorld;
+
+		_int		iFrameCnt;	// 스프라이트 이미지 X축 개수.
+		_int		iCurFrame;	// 현재 그려지는 이미지의 X축 Index.
+		_int		iSceneCnt;	// 스프라이트 이미지 Y축 개수.
+		_int		iCurScene;	// 현재 그려지는 이미지의 Y축 Index.
+
+	} CB_SHADER_TEXTURE;
+	
+	typedef struct tagConstantBufferShaderMesh
+	{
+		XMFLOAT4X4	matWorld;
+		XMFLOAT4X4	matBoneOffset[64];
+		XMFLOAT4X4	matBoneScale[64];
+		XMFLOAT4X4	matBoneRotation[64];
+		XMFLOAT4X4	matBoneTrans[64];
+		XMFLOAT4X4	matParentTransform[64];
+		XMFLOAT4X4	matRootTransform[64];
+
+		XMFLOAT4X4	matLightView;
+		XMFLOAT4X4	matLightProj;
+		_vec4		vLightPos;
+		_float		fLightPorjFar;
+
+	} CB_SHADER_MESH;
+
+	typedef struct tagConstantBufferShaderSkyBox
+	{
+		XMFLOAT4X4	matWorld;
+
+	} CB_SHADER_SKYBOX;
+
+	typedef struct tagConstantBufferShaderLighting
+	{
+		_rgba		vLightDiffuse;
+		_rgba		vLightSpecular;
+		_rgba		vLightAmbient;
+		_vec4		vLightDirection;
+		_vec4		vLightPos;
+		_float		vLightRange;
+
+		XMFLOAT4X4	matViewInv;
+		XMFLOAT4X4	matProjInv;
+		_vec4		vCameraPos;
+		_float		fProjFar;
+
+	} CB_SHADER_LIGHTING;
+
+	typedef struct tagConstantBufferShaderShadow
+	{
+		XMFLOAT4X4	matWorld;
+		XMFLOAT4X4	matBoneOffset[64];
+		XMFLOAT4X4	matBoneScale[64];
+		XMFLOAT4X4	matBoneRotation[64];
+		XMFLOAT4X4	matBoneTrans[64];
+		XMFLOAT4X4	matParentTransform[64];
+		XMFLOAT4X4	matRootTransform[64];
+
+		XMFLOAT4X4	matLightView;
+		XMFLOAT4X4	matLightProj;
+		_vec4		vLightPos;
+		_float		fLightPorjFar;
+
+	};
+
+
+	
+	
 	typedef struct tagCBMatrixDesc
 	{
 		XMFLOAT4X4 matWVP;
@@ -781,7 +857,7 @@ namespace Engine
 		_float		fProjNear;
 		_float		fProjFar;
 
-	} CB_CAMERA_DESC;
+	} CB_CAMERAINV_DESC;
 
 	typedef struct tagCBShadowDepthDesc
 	{

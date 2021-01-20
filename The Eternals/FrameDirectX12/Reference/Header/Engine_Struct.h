@@ -662,13 +662,10 @@ namespace Engine
 	typedef struct tagSkinningMatrix
 	{
 		_matrix	matBoneOffset		= INIT_MATRIX;
-
 		_matrix matBoneScale		= INIT_MATRIX;
 		_matrix matBoneRotation		= INIT_MATRIX;
 		_matrix matBoneTrans		= INIT_MATRIX;
-
 		_matrix matParentTransform	= INIT_MATRIX;
-
 		_matrix matRootTransform	= INIT_MATRIX;
 
 	} SKINNING_MATRIX;
@@ -682,10 +679,6 @@ namespace Engine
 		_uint	uiStartIndexLocation	= 0;
 		_int	iBaseVertexLocation		= 0;
 
-		// Bounding box of the geometry defined by this submesh. 
-		// This is used in later chapters of the book.
-		BoundingBox Bounds;
-
 	} SUBMESH_GEOMETRY;
 
 	/*__________________________________________________________________________________________________________
@@ -694,12 +687,10 @@ namespace Engine
 	typedef struct tagD3DLight
 	{
 		LIGHTTYPE	Type		= D3DLIGHT_DIRECTIONAL;
-
 		_rgba		Diffuse		= _rgba(0.0f, 0.0f, 0.0f, 0.0f);
 		_rgba		Specular	= _rgba(0.0f, 0.0f, 0.0f, 0.0f);
 		_rgba		Ambient		= _rgba(0.0f, 0.0f, 0.0f, 0.0f);
 		_vec4		Position	= _rgba(0.0f, 0.0f, 0.0f, 0.0f);
-
 		_vec4		Direction	= _rgba(0.0f, 0.0f, 0.0f, 0.0f);
 		_float		Range		= 0.0f;
 
@@ -712,7 +703,6 @@ namespace Engine
 	{
 		_matrix		matLightView;
 		_matrix		matLightProj;
-
 		_vec4		vLightPosition;
 		_float		fLightPorjFar;
 
@@ -781,7 +771,7 @@ namespace Engine
 		_float		fProjNear;
 		_float		fProjFar;
 
-	} CB_CAMERA_DESC;
+	} CB_CAMERAINV_DESC;
 
 	typedef struct tagCBShadowDepthDesc
 	{

@@ -118,7 +118,7 @@ HRESULT CShaderLighting::Create_ConstantBuffer()
 	m_pCB_LightDesc = CUploadBuffer<CB_LIGHT_DESC>::Create(m_pGraphicDevice);
 	NULL_CHECK_RETURN(m_pCB_LightDesc, E_FAIL);
 
-	m_pCB_CameraDesc = CUploadBuffer<CB_CAMERA_DESC>::Create(m_pGraphicDevice);
+	m_pCB_CameraDesc = CUploadBuffer<CB_CAMERAINV_DESC>::Create(m_pGraphicDevice);
 	NULL_CHECK_RETURN(m_pCB_CameraDesc, E_FAIL);
 
 	return S_OK;

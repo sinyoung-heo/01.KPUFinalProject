@@ -8,7 +8,6 @@ cbuffer cbShadowDepth : register(b0)
 	float4x4	matWorld		: packoffset(c4);
 	float4x4	matLightView	: packoffset(c8);
 	float4x4	matLightProj	: packoffset(c12);
-
 	float4		vLightPosition	: packoffset(c16);
 	float		fLightPorjFar	: packoffset(c17);
 };
@@ -16,13 +15,10 @@ cbuffer cbShadowDepth : register(b0)
 cbuffer cbSkinningInfo : register(b1)
 {
 	float4x4 matBoneOffset[64];
-	
 	float4x4 matBoneScale[64];
 	float4x4 matBoneRotation[64];
 	float4x4 matBoneTrans[64];
-	
 	float4x4 matParentTransform[64];
-	
 	float4x4 matRootTransform[64];
 };
 
@@ -53,11 +49,8 @@ VS_OUT VS_MAIN(VS_IN vs_input)
 	if (vs_input.BoneWeights[0].x != 0.0f)
 	{
 		matBone = mul(mul(matBoneOffset[vs_input.BoneId[0].x], mul(mul(mul(matBoneScale[vs_input.BoneId[0].x], matBoneRotation[vs_input.BoneId[0].x]), matBoneTrans[vs_input.BoneId[0].x]), matParentTransform[vs_input.BoneId[0].x])), matRootTransform[vs_input.BoneId[0].x]) * vs_input.BoneWeights[0].x;
-		
 		matBone += mul(mul(matBoneOffset[vs_input.BoneId[0].y], mul(mul(mul(matBoneScale[vs_input.BoneId[0].y], matBoneRotation[vs_input.BoneId[0].y]), matBoneTrans[vs_input.BoneId[0].y]), matParentTransform[vs_input.BoneId[0].y])), matRootTransform[vs_input.BoneId[0].y]) * vs_input.BoneWeights[0].y;
-		
 		matBone += mul(mul(matBoneOffset[vs_input.BoneId[0].z], mul(mul(mul(matBoneScale[vs_input.BoneId[0].z], matBoneRotation[vs_input.BoneId[0].z]), matBoneTrans[vs_input.BoneId[0].z]), matParentTransform[vs_input.BoneId[0].z])), matRootTransform[vs_input.BoneId[0].z]) * vs_input.BoneWeights[0].z;
-		
 		matBone += mul(mul(matBoneOffset[vs_input.BoneId[1].x], mul(mul(mul(matBoneScale[vs_input.BoneId[1].x], matBoneRotation[vs_input.BoneId[1].x]), matBoneTrans[vs_input.BoneId[1].x]), matParentTransform[vs_input.BoneId[1].x])), matRootTransform[vs_input.BoneId[1].x]) * vs_input.BoneWeights[1].x;
 	}
 	

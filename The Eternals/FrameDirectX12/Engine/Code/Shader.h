@@ -61,17 +61,15 @@ protected:
 	- 루트 서명은 반드시 그리기 호출에 쓰이는 셰이더들과 호환돼야 한다.
 	- 루트 서명의 유효성은 파이프라인 상태 객체를 생성할 때 검증된다.
 	- 그리기 호출마다 서로 다른 셰이더 프로그램들을 사용할 수 있으며, 그런 경우 루트 서명도 달라야 한다.
-	____________________________________________________________________________________________________________*/
-	ID3D12RootSignature*			m_pRootSignature	= nullptr;
 
-	/*__________________________________________________________________________________________________________
 	[ 파이프라인 상태 객체(Pipeline State Object, PSO) ]
 	- DirectX 9 Shader에서 technique - pass의 개념.
 	- PSO 검증과 생성에는 많은 시간이 걸릴 수 있으므로, 초기화 시점에서 생성해야 한다.
 	- 성능을 위해서는 PSO 상태 변경을 최소화해야 한다.
 	- 같은 PSO를 사용할 수 있는 물체들은 모두 함께 그려야 마땅하다.
 	____________________________________________________________________________________________________________*/
-	vector<ID3D12PipelineState*>	m_vecPipelineState;
+	ID3D12RootSignature*			m_pRootSignature	= nullptr;
+	vector<ID3D12PipelineState*>	m_vecPipelineState;				// All Shader PipelineState
 	ID3D12PipelineState*			m_pPipelineState	= nullptr;	// Current PipelineState
 
 	_uint		m_uiCBV_SRV_UAV_DescriptorSize			= 0;
@@ -79,6 +77,8 @@ protected:
 
 	ID3DBlob*	m_pVS_ByteCode							= nullptr;
 	ID3DBlob*	m_pPS_ByteCode							= nullptr;
+
+
 
 public:
 	virtual CComponent* Clone() PURE;

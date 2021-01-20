@@ -122,8 +122,8 @@ void CLight::Set_ConstantTable()
 	/*__________________________________________________________________________________________________________
 	[ Camera Info ]
 	____________________________________________________________________________________________________________*/
-	CB_CAMERA_DESC tCB_CameraDesc;
-	ZeroMemory(&tCB_CameraDesc, sizeof(CB_CAMERA_DESC));
+	CB_CAMERAINV_DESC tCB_CameraDesc;
+	ZeroMemory(&tCB_CameraDesc, sizeof(CB_CAMERAINV_DESC));
 
 	_matrix* pmatView = CGraphicDevice::Get_Instance()->Get_Transform(MATRIXID::VIEW);
 	_matrix* pmatProj = CGraphicDevice::Get_Instance()->Get_Transform(MATRIXID::PROJECTION);

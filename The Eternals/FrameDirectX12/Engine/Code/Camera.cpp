@@ -1,6 +1,12 @@
 #include "Camera.h"
 #include "GraphicDevice.h"
 
+#include "ShaderColor.h"
+#include "ShaderTexture.h"
+#include "ShaderMesh.h"
+#include "ShaderSkyBox.h"
+#include "ShaderShadow.h"
+
 USING(Engine)
 
 CCamera::CCamera(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)

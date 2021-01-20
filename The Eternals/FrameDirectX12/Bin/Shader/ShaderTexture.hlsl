@@ -27,10 +27,10 @@ cbuffer cbMatrixInfo	: register(b0)
 cbuffer cbTexSpriteInfo : register(b1)
 {
 	int	iFrameCnt		= 1; // 스프라이트 이미지의 X축 개수.
-	int iFrameOffset	= 0;
+	int iFrameOffset	= 0; // 현재 그려지는 스프라이트의 x축 index.
 
 	int	iSceneCnt		= 1; // 스프라이트 이미지의 Y축 개수.
-	int iSceneOffset	= 0;
+	int iSceneOffset	= 0; // 현재 그려지는 스프라이트의 y축 index.
 }
 
 
