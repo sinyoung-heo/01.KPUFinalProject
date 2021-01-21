@@ -1,8 +1,9 @@
 #pragma once
 #include "Obj.h"
 
-typedef unordered_map <int,CObj*>		OBJLIST;
+typedef /*unordered_*/map <int,CObj*>		OBJLIST;
 typedef OBJLIST::iterator				OBJITER;
+typedef lock_guard<recursive_mutex>		objmgr_lock;
 
 class CObjMgr
 {
@@ -34,5 +35,6 @@ public:
 
 private:
 	map<wstring, OBJLIST>	m_mapObjList;
+	recursive_mutex			m_mutex;
 };
 

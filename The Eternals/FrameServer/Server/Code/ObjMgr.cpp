@@ -21,6 +21,8 @@ HRESULT CObjMgr::Init_ObjMgr()
 
 CObj* CObjMgr::Get_GameObject(wstring wstrObjTag, int server_num)
 {
+	objmgr_lock ol(m_mutex);
+
 	/* map에서 찾고자 하는 OBJLIST를 Key 값을 통해 찾기 */
 	auto& iter_find = m_mapObjList.find(wstrObjTag);
 
@@ -41,6 +43,8 @@ CObj* CObjMgr::Get_GameObject(wstring wstrObjTag, int server_num)
 
 OBJLIST* CObjMgr::Get_OBJLIST(wstring wstrObjTag)
 {
+	objmgr_lock ol(m_mutex);
+
 	/* map에서 찾고자 하는 OBJLIST를 key 값을 통해 찾기 */
 	auto& iter_find = m_mapObjList.find(wstrObjTag);
 
@@ -53,6 +57,8 @@ OBJLIST* CObjMgr::Get_OBJLIST(wstring wstrObjTag)
 
 bool CObjMgr::Is_Player(int server_num)
 {
+	objmgr_lock ol(m_mutex);
+
 	/* PLAYER ObjList 에서 찾고자 하는 OBJLIST를 key 값을 통해 찾기 */
 	auto& iter_find = m_mapObjList[L"PLAYER"].find(server_num);
 
@@ -65,6 +71,8 @@ bool CObjMgr::Is_Player(int server_num)
 
 bool CObjMgr::Is_NPC(int server_num)
 {
+	objmgr_lock ol(m_mutex);
+
 	/* NPC ObjList 에서 찾고자 하는 OBJLIST를 key 값을 통해 찾기 */
 	auto& iter_find = m_mapObjList[L"NPC"].find(server_num);
 
