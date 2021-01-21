@@ -1,6 +1,6 @@
 #include "Camera.h"
 #include "GraphicDevice.h"
-
+#include "LightMgr.h"
 #include "ShaderColor.h"
 #include "ShaderTexture.h"
 #include "ShaderMesh.h"
@@ -99,16 +99,36 @@ _int CCamera::Update_GameObject(const _float & fTimeDelta)
 
 void CCamera::Set_ConstantTable()
 {
-	CB_CAMERA_MATRIX tCB_CameraMatrix;
-	ZeroMemory(&tCB_CameraMatrix, sizeof(CB_CAMERA_MATRIX));
+	CB_CAMERA_MATRIX tCB_CameraProjMatrix;
+	ZeroMemory(&tCB_CameraProjMatrix, sizeof(CB_CAMERA_MATRIX));
+	tCB_CameraProjMatrix.matView	= CShader::Compute_MatrixTranspose(m_tCameraInfo.matView);
+	tCB_CameraProjMatrix.matProj	= CShader::Compute_MatrixTranspose(m_tProjInfo.matProj);
+	tCB_CameraProjMatrix.vCameraPos = _vec4(m_tCameraInfo.vEye, 1.0f);
+	tCB_CameraProjMatrix.fProjFar	= m_tProjInfo.fFarZ;
 
-	XMStoreFloat4x4(&tCB_CameraMatrix.matView, XMMatrixTranspose(m_tCameraInfo.matView));
-	XMStoreFloat4x4(&tCB_CameraMatrix.matProj, XMMatrixTranspose(m_tProjInfo.matProj));
-	XMStoreFloat4x4(&tCB_CameraMatrix.matOrtho, XMMatrixTranspose(m_tOrthoInfo.matProj));
-	tCB_CameraMatrix.vCameraPos = _vec4(m_tCameraInfo.vEye, 1.0f);
-	tCB_CameraMatrix.fProjFar	= m_tProjInfo.fFarZ;
+	CB_CAMERA_MATRIX tCB_CamerOrthoMatrix;
+	ZeroMemory(&tCB_CamerOrthoMatrix, sizeof(CB_CAMERA_MATRIX));
+	tCB_CamerOrthoMatrix.matView	= CShader::Compute_MatrixTranspose(INIT_MATRIX);
+	tCB_CamerOrthoMatrix.matProj	= CShader::Compute_MatrixTranspose(m_tOrthoInfo.matProj);
 
-	m_pShaderColor->Get_UploadBuffer_CameraMatrix()->CopyData(0, tCB_CameraMatrix);
+	CB_CAMERA_MATRIX tCB_CamerLightMatrix;
+	ZeroMemory(&tCB_CamerLightMatrix, sizeof(CB_CAMERA_MATRIX));
+	tCB_CamerLightMatrix.matView	= CShader::Compute_MatrixTranspose(CLightMgr::Get_Instance()->Get_ShadowDesc().matLightView);
+	tCB_CamerLightMatrix.matProj	= CShader::Compute_MatrixTranspose(CLightMgr::Get_Instance()->Get_ShadowDesc().matLightProj);
+	tCB_CamerLightMatrix.vCameraPos	= CLightMgr::Get_Instance()->Get_ShadowDesc().vLightPosition;
+	tCB_CamerLightMatrix.fProjFar	= CLightMgr::Get_Instance()->Get_ShadowDesc().fLightPorjFar;
+
+
+	// ShaderColor
+	m_pShaderColor->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
+	m_pShaderColor->Get_UploadBuffer_CameraOrthoMatrix()->CopyData(0, tCB_CamerOrthoMatrix);
+	m_pShaderColor->Get_UploadBuffer_CameraLightMatrix()->CopyData(0, tCB_CamerLightMatrix);
+
+	// ShaderTexture
+	m_pShaderTexture->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
+	m_pShaderTexture->Get_UploadBuffer_CameraOrthoMatrix()->CopyData(0, tCB_CamerOrthoMatrix);
+	m_pShaderTexture->Get_UploadBuffer_CameraLightMatrix()->CopyData(0, tCB_CamerLightMatrix);
+
 
 }
 

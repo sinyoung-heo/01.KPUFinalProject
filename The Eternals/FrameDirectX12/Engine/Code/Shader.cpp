@@ -16,7 +16,10 @@ CShader::CShader(const CShader & rhs)
 	, m_uiCBV_SRV_UAV_DescriptorSize(rhs.m_uiCBV_SRV_UAV_DescriptorSize)
 	, m_pVS_ByteCode(rhs.m_pVS_ByteCode)
 	, m_pPS_ByteCode(rhs.m_pPS_ByteCode)
-	, m_pCB_CameraMatrix(rhs.m_pCB_CameraMatrix)
+	, m_pCB_CameraProjMatrix(rhs.m_pCB_CameraProjMatrix)
+	, m_pCB_CameraOrthoMatrix(rhs.m_pCB_CameraOrthoMatrix)
+	, m_pCB_CameraLightMatrix(rhs.m_pCB_CameraLightMatrix)
+
 {
 	m_pRootSignature->AddRef();
 	
@@ -100,8 +103,14 @@ HRESULT CShader::Ready_Shader()
 	m_uiCBV_SRV_UAV_DescriptorSize = CGraphicDevice::Get_Instance()->Get_CBV_SRV_UAV_DescriptorSize();
 
 	// Create CameraMatrix ConstantBuffer
-	m_pCB_CameraMatrix = CUploadBuffer<CB_CAMERA_MATRIX>::Create(m_pGraphicDevice);
-	NULL_CHECK_RETURN(m_pCB_CameraMatrix, E_FAIL);
+	m_pCB_CameraProjMatrix = CUploadBuffer<CB_CAMERA_MATRIX>::Create(m_pGraphicDevice);
+	NULL_CHECK_RETURN(m_pCB_CameraProjMatrix, E_FAIL);
+
+	m_pCB_CameraOrthoMatrix = CUploadBuffer<CB_CAMERA_MATRIX>::Create(m_pGraphicDevice);
+	NULL_CHECK_RETURN(m_pCB_CameraOrthoMatrix, E_FAIL);
+
+	m_pCB_CameraLightMatrix = CUploadBuffer<CB_CAMERA_MATRIX>::Create(m_pGraphicDevice);
+	NULL_CHECK_RETURN(m_pCB_CameraLightMatrix, E_FAIL);
 
 	return S_OK;
 }
@@ -273,7 +282,10 @@ void CShader::Free()
 	m_vecPipelineState.shrink_to_fit();
 
 	if (!m_bIsClone)
-		Safe_Delete(m_pCB_CameraMatrix);
-
+	{
+		Safe_Delete(m_pCB_CameraProjMatrix);
+		Safe_Delete(m_pCB_CameraOrthoMatrix);
+		Safe_Delete(m_pCB_CameraLightMatrix);
+	}
 }
 

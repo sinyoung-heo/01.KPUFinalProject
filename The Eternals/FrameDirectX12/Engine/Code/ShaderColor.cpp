@@ -28,7 +28,9 @@ HRESULT CShaderColor::Ready_Shader()
 	return S_OK;
 }
 
-void CShaderColor::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, const _uint& iIdx)
+void CShaderColor::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, 
+								const _uint& iSubsetIdx,
+								const MATRIXID& eID)
 {
 	CRenderer::Get_Instance()->Set_CurPipelineState(m_pPipelineState);
 	m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
@@ -36,8 +38,22 @@ void CShaderColor::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, const 
 	/*__________________________________________________________________________________________________________
 	[ CBV를 루트 서술자에 묶는다 ]
 	____________________________________________________________________________________________________________*/
-	m_pCommandList->SetGraphicsRootConstantBufferView(0,	// RootParameter Index
-													  m_pCB_CameraMatrix->Resource()->GetGPUVirtualAddress());
+	if (MATRIXID::PROJECTION == eID)
+	{
+		m_pCommandList->SetGraphicsRootConstantBufferView(0,	// RootParameter Index
+														  m_pCB_CameraProjMatrix->Resource()->GetGPUVirtualAddress());
+	}
+	else if (MATRIXID::ORTHO == eID)
+	{
+		m_pCommandList->SetGraphicsRootConstantBufferView(0,	// RootParameter Index
+														  m_pCB_CameraOrthoMatrix->Resource()->GetGPUVirtualAddress());
+	}
+	else if (MATRIXID::LIGHT == eID)
+	{
+		m_pCommandList->SetGraphicsRootConstantBufferView(0,	// RootParameter Index
+														  m_pCB_CameraLightMatrix->Resource()->GetGPUVirtualAddress());
+	}
+
 
 	m_pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
 													  m_pCB_ShaderColor->Resource()->GetGPUVirtualAddress());

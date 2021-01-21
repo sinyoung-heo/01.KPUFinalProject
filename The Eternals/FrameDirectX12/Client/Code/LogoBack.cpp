@@ -26,7 +26,7 @@ HRESULT CLogoBack::Ready_GameObject(wstring wstrTextureTag)
 HRESULT CLogoBack::LateInit_GameObject()
 {
 	// SetUp Shader ConstantBuffer
-	m_pShaderCom->SetUp_ShaderConstantBuffer(m_pTextureCom->Get_TexSize());
+	m_pShaderCom->SetUp_ShaderConstantBuffer();
 
 	return S_OK;
 }
@@ -67,7 +67,7 @@ void CLogoBack::Render_GameObject(const _float & fTimeDelta)
 {
 	Set_ConstantTable();
 
-	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), 0, m_uiTexIdx);
+	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), 0, m_uiTexIdx, Engine::MATRIXID::ORTHO);
 	m_pBufferCom->Begin_Buffer();
 
 	m_pBufferCom->Render_Buffer();
@@ -102,17 +102,19 @@ HRESULT CLogoBack::Add_Component(wstring wstrTextureTag)
 void CLogoBack::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
-	[ CB 정보 전달 ]
+	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
-	Engine::CB_MATRIX_DESC	tCB_MatrixDesc;
-	ZeroMemory(&tCB_MatrixDesc, sizeof(Engine::CB_MATRIX_DESC));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matWVP, XMMatrixTranspose(m_pTransCom->m_matWorld * (m_matView) * (m_matProj)));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matWorld, XMMatrixTranspose(m_pTransCom->m_matWorld));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matView, XMMatrixTranspose(m_matView));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matProj, XMMatrixTranspose(m_matProj));
+	Engine::CB_CAMERA_MATRIX tCB_CameraMatrix;
+	ZeroMemory(&tCB_CameraMatrix, sizeof(Engine::CB_CAMERA_MATRIX));
+	tCB_CameraMatrix.matView	= Engine::CShader::Compute_MatrixTranspose(m_matView);
+	tCB_CameraMatrix.matProj	= Engine::CShader::Compute_MatrixTranspose(m_matProj);
 
-	m_pShaderCom->Get_UploadBuffer_MatrixDesc()->CopyData(0, tCB_MatrixDesc);
+	Engine::CB_SHADER_TEXTURE tCB_ShaderTexture;
+	ZeroMemory(&tCB_ShaderTexture, sizeof(Engine::CB_SHADER_TEXTURE));
+	tCB_ShaderTexture.matWorld = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
 
+	m_pShaderCom->Get_UploadBuffer_CameraOrthoMatrix()->CopyData(0, tCB_CameraMatrix);
+	m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 }
 
 CLogoBack * CLogoBack::Create(ID3D12Device * pGraphicDevice,

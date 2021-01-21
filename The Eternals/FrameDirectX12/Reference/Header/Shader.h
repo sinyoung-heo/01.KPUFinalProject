@@ -13,10 +13,12 @@ protected:
 public:
 	// Get
 	array<const CD3DX12_STATIC_SAMPLER_DESC, 6>	Get_StaticSamplers();
-	ID3D12RootSignature*						Get_RootSignature()				{ return m_pRootSignature; }
+	ID3D12RootSignature*						Get_RootSignature()						{ return m_pRootSignature; }
 	ID3D12PipelineState*						Get_PipelineState(const _uint& iIdx = 0);
-	ID3D12PipelineState*						Get_PipelineStatePass()			{ return m_pPipelineState; }
-	CUploadBuffer<CB_CAMERA_MATRIX>*			Get_UploadBuffer_CameraMatrix() { return m_pCB_CameraMatrix; }
+	ID3D12PipelineState*						Get_PipelineStatePass()					{ return m_pPipelineState; }
+	CUploadBuffer<CB_CAMERA_MATRIX>*			Get_UploadBuffer_CameraProjMatrix()		{ return m_pCB_CameraProjMatrix; }
+	CUploadBuffer<CB_CAMERA_MATRIX>*			Get_UploadBuffer_CameraOrthoMatrix()	{ return m_pCB_CameraOrthoMatrix; }
+	CUploadBuffer<CB_CAMERA_MATRIX>*			Get_UploadBuffer_CameraLightMatrix()	{ return m_pCB_CameraLightMatrix; }
 
 	// Set
 	HRESULT					Set_PipelineStatePass(const _uint& iIdx = 0);
@@ -73,18 +75,21 @@ protected:
 	- 성능을 위해서는 PSO 상태 변경을 최소화해야 한다.
 	- 같은 PSO를 사용할 수 있는 물체들은 모두 함께 그려야 마땅하다.
 	____________________________________________________________________________________________________________*/
-	ID3D12RootSignature*			m_pRootSignature	= nullptr;
-	vector<ID3D12PipelineState*>	m_vecPipelineState;				// All Shader PipelineState
-	ID3D12PipelineState*			m_pPipelineState	= nullptr;	// Current PipelineState
+	ID3D12RootSignature*			m_pRootSignature			= nullptr;
+	ID3D12PipelineState*			m_pPipelineState			= nullptr;	// Current PipelineState
+	vector<ID3D12PipelineState*>	m_vecPipelineState;						// All Shader PipelineState
 
-	_uint		m_uiCBV_SRV_UAV_DescriptorSize			= 0;
-	_uint		m_uiTexSize								= 0;
+	_uint		m_uiCBV_SRV_UAV_DescriptorSize					= 0;
+	_uint		m_uiTexSize										= 0;
 
-	ID3DBlob*	m_pVS_ByteCode							= nullptr;
-	ID3DBlob*	m_pPS_ByteCode							= nullptr;
+	ID3DBlob*	m_pVS_ByteCode									= nullptr;
+	ID3DBlob*	m_pPS_ByteCode									= nullptr;
 
 	// Camera ConstantBuffer
-	CUploadBuffer<CB_CAMERA_MATRIX>* m_pCB_CameraMatrix = nullptr;
+	CUploadBuffer<CB_CAMERA_MATRIX>* m_pCB_CameraProjMatrix		= nullptr;
+	CUploadBuffer<CB_CAMERA_MATRIX>* m_pCB_CameraOrthoMatrix	= nullptr;
+	CUploadBuffer<CB_CAMERA_MATRIX>* m_pCB_CameraLightMatrix	= nullptr;
+
 
 
 public:

@@ -219,7 +219,7 @@ HRESULT CScene_Stage::Ready_LayerGameObject(wstring wstrLayerTag)
 
 	// Fire
 	pTexEffect = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-										L"Fire",	// TextureTag
+										L"Fire",							// TextureTag
 										_vec3(5.0f, 5.0f, 1.0f),			// Scale
 										_vec3(0.0f, 0.0f, 0.0f),			// Angle
 										_vec3(6.0f, 2.5f, -10.0f),			// Pos
@@ -232,7 +232,7 @@ HRESULT CScene_Stage::Ready_LayerGameObject(wstring wstrLayerTag)
 
 	// Torch
 	pTexEffect = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-										L"Torch",	// TextureTag
+										L"Torch",							// TextureTag
 										_vec3(5.0f, 10.0f, 1.0f),			// Scale
 										_vec3(0.0f, 0.0f, 0.0f),			// Angle
 										_vec3(10.0f, 5.0f, -10.0f),			// Pos

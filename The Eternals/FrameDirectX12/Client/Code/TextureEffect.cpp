@@ -87,8 +87,7 @@ void CTextureEffect::Render_GameObject(const _float & fTimeDelta)
 {
 	Set_ConstantTable();
 
-
-	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), 0, m_uiTexIdx);
+	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), 0, m_uiTexIdx, Engine::MATRIXID::PROJECTION);
 	m_pBufferCom->Begin_Buffer();
 
 	m_pBufferCom->Render_Buffer();
@@ -122,49 +121,35 @@ HRESULT CTextureEffect::Add_Component(wstring wstrTextureTag)
 
 void CTextureEffect::Set_ConstantTable()
 {
-	_matrix* pmatView = Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::VIEW);
-	_matrix* pmatProj = Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::PROJECTION);
-
-	if (nullptr == pmatView || nullptr == pmatProj)
-		return;
-
 	/*__________________________________________________________________________________________________________
-	[ CB 정보 전달 ]
+	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
-	Engine::CB_MATRIX_DESC	tCB_MatrixDesc;
-	ZeroMemory(&tCB_MatrixDesc, sizeof(Engine::CB_MATRIX_DESC));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matWVP, XMMatrixTranspose(m_pTransCom->m_matWorld * (*pmatView) * (*pmatProj)));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matWorld, XMMatrixTranspose(m_pTransCom->m_matWorld));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matView, XMMatrixTranspose(*pmatView));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matProj, XMMatrixTranspose(*pmatProj));
+	Engine::CB_SHADER_TEXTURE tCB_ShaderTexture;
+	ZeroMemory(&tCB_ShaderTexture, sizeof(Engine::CB_SHADER_TEXTURE));
+	tCB_ShaderTexture.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderTexture.iFrameCnt	= m_tFrame.iFrameCnt;
+	tCB_ShaderTexture.iCurFrame	= (_int)m_tFrame.fCurFrame;
+	tCB_ShaderTexture.iSceneCnt	= m_tFrame.iSceneCnt;
+	tCB_ShaderTexture.iCurScene	= (_int)m_tFrame.fCurScene;
 
-	m_pShaderCom->Get_UploadBuffer_MatrixDesc()->CopyData(0, tCB_MatrixDesc);
-
-	Engine::CB_TEXSPRITE_DESC tCB_SpriteDesc;
-	ZeroMemory(&tCB_SpriteDesc, sizeof(Engine::CB_TEXSPRITE_DESC));
-	tCB_SpriteDesc.iFrameCnt	= m_tFrame.iFrameCnt;
-	tCB_SpriteDesc.iFrameOffset = (_int)m_tFrame.fFrameOffset;
-	tCB_SpriteDesc.iSceneCnt	= m_tFrame.iSceneCnt;
-	tCB_SpriteDesc.iSceneOffset = (_int)m_tFrame.fSceneOffset;
-
-	m_pShaderCom->Get_UploadBuffer_TexSpriteDesc()->CopyData(0, tCB_SpriteDesc);
+	m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 }
 
 void CTextureEffect::Update_SpriteFrame(const _float & fTimeDelta)
 {
-	m_tFrame.fFrameOffset += fTimeDelta * m_tFrame.fFrameSpeed;
+	m_tFrame.fCurFrame += fTimeDelta * m_tFrame.fFrameSpeed;
 
 	// Sprite X축
-	if (m_tFrame.fFrameOffset > m_tFrame.iFrameCnt)
+	if (m_tFrame.fCurFrame > m_tFrame.iFrameCnt)
 	{
-		m_tFrame.fFrameOffset = 0.0f;
-		m_tFrame.fSceneOffset += 1.0f;
+		m_tFrame.fCurFrame = 0.0f;
+		m_tFrame.fCurScene += 1.0f;
 	}
 
 	// Sprite Y축
-	if (m_tFrame.fSceneOffset >= m_tFrame.iSceneCnt)
+	if (m_tFrame.fCurScene >= m_tFrame.iSceneCnt)
 	{
-		m_tFrame.fSceneOffset = 0.0f;
+		m_tFrame.fCurScene = 0.0f;
 	}
 
 }

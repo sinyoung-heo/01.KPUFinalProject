@@ -20,13 +20,10 @@ CShaderTexture::CShaderTexture(const CShaderTexture & rhs)
 	____________________________________________________________________________________________________________*/
 }
 
-HRESULT CShaderTexture::SetUp_ShaderConstantBuffer(const _uint& iNumTexture)
+HRESULT CShaderTexture::SetUp_ShaderConstantBuffer(const _uint& iNumSubset)
 {
-	m_pCB_MatrixDesc = CUploadBuffer<CB_MATRIX_DESC>::Create(m_pGraphicDevice, iNumTexture);
-	NULL_CHECK_RETURN(m_pCB_MatrixDesc, E_FAIL);
-
-	m_pCB_TexSpriteDesc = CUploadBuffer<CB_TEXSPRITE_DESC>::Create(m_pGraphicDevice, iNumTexture);
-	NULL_CHECK_RETURN(m_pCB_TexSpriteDesc, E_FAIL);
+	m_pCB_ShaderTexture = CUploadBuffer<CB_SHADER_TEXTURE>::Create(m_pGraphicDevice, iNumSubset);
+	NULL_CHECK_RETURN(m_pCB_ShaderTexture, E_FAIL);
 
 	return S_OK;
 }
@@ -41,8 +38,9 @@ HRESULT CShaderTexture::Ready_Shader()
 }
 
 void CShaderTexture::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, 
-								  const _uint& iConstantBufferIdx,
-								  const _uint& iTexIdx)
+								  const _uint& iSubsetIdx,
+								  const _uint& iTexIdx,
+								  const MATRIXID& eID)
 {
 	CRenderer::Get_Instance()->Set_CurPipelineState(m_pPipelineState);
 	m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
@@ -62,13 +60,29 @@ void CShaderTexture::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap,
 	/*__________________________________________________________________________________________________________
 	[ CBV를 루트 서술자에 묶는다 ]
 	____________________________________________________________________________________________________________*/
-	m_pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
-													  m_pCB_MatrixDesc->Resource()->GetGPUVirtualAddress() +
-													  m_pCB_MatrixDesc->GetElementByteSize() * iConstantBufferIdx);
+	if (MATRIXID::PROJECTION == eID)
+	{
+		// 원근 투영.
+		m_pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
+														  m_pCB_CameraProjMatrix->Resource()->GetGPUVirtualAddress());
+	}
+	else if (MATRIXID::ORTHO == eID)
+	{
+		// 직교 투영.
+		m_pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
+														  m_pCB_CameraOrthoMatrix->Resource()->GetGPUVirtualAddress());
+	}
+	else if (MATRIXID::LIGHT == eID)
+	{
+		// 광원 원근 투영.
+		m_pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
+														  m_pCB_CameraLightMatrix->Resource()->GetGPUVirtualAddress());
+	}
+	
 
 	m_pCommandList->SetGraphicsRootConstantBufferView(2,	// RootParameter Index
-													  m_pCB_TexSpriteDesc->Resource()->GetGPUVirtualAddress() +
-													  m_pCB_TexSpriteDesc->GetElementByteSize() * iConstantBufferIdx);
+													  m_pCB_ShaderTexture->Resource()->GetGPUVirtualAddress() +
+													  m_pCB_ShaderTexture->GetElementByteSize() * iSubsetIdx);
 }
 
 
@@ -93,7 +107,7 @@ HRESULT CShaderTexture::Create_RootSignature()
 	RootParameter[2].InitAsConstantBufferView(1);	// register b1.
 
 	auto StaticSamplers = Get_StaticSamplers();
-	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(3,							// 루트 파라미터 개수.(CBV 1, SRV 1 : 총 2개)
+	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(3,							// 루트 파라미터 개수.(CBV 2, SRV 1 : 총 3개)
 												  RootParameter,
 												  (_uint)StaticSamplers.size(),	// 샘플러 개수.
 												  StaticSamplers.data(),		// 샘플러 데이터.
@@ -341,6 +355,5 @@ void CShaderTexture::Free()
 {
 	CShader::Free();
 
-	Safe_Delete(m_pCB_MatrixDesc);
-	Safe_Delete(m_pCB_TexSpriteDesc);
+	Safe_Delete(m_pCB_ShaderTexture);
 }

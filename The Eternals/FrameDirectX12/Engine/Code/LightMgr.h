@@ -18,7 +18,7 @@ public:
 	D3DLIGHT&			Get_LightInfo(const LIGHTTYPE & eLightID, const _int& iIdx = 0);
 	CLight*				Get_Light(const LIGHTTYPE & eLightID, const _int & iIdx = 0);
 	vector<CLight*>&	Get_VecLightInfo(const LIGHTTYPE & eLightID) { return m_vecLight[eLightID]; }
-	const SHADOW_DESC&	Get_ShadowDesc()		{ return m_tShadowDesc; }
+	SHADOW_DESC&		Get_ShadowDesc()		{ return m_tShadowDesc; }
 	const _vec3&		Get_ShadowLightEye()	{ return m_vShadowLightEye; }
 	const _vec3&		Get_ShadowLightAt()		{ return m_vShadowLightAt; }
 
@@ -50,10 +50,12 @@ private:
 	____________________________________________________________________________________________________________*/
 	SHADOW_DESC	m_tShadowDesc{ };
 
+	// _matrix		m_matLightView			= INIT_MATRIX;
 	_vec3		m_vShadowLightEye		= _vec3(0.0f, 0.0f, 0.0f);
 	_vec3		m_vShadowLightAt		= _vec3(128.0f, 0.0f, 128.0f);
 	_float		m_fShadowLightHeight	= 500.0f;
 
+	// _matrix		m_matLightProj			= INIT_MATRIX;
 	_float		m_fShadowLightFovY		= 45.0f;
 	_float		m_fShadowLightNear		= 1.0f;
 	_float		m_fShadowLightFar		= 10'000.0f;

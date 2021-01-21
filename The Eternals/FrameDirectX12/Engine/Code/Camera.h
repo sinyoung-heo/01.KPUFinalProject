@@ -1,18 +1,13 @@
 #pragma once
 #include "GameObject.h"
-#include "ShaderColor.h"
-#include "ShaderTexture.h"
-#include "ShaderMesh.h"
-#include "ShaderSkyBox.h"
-#include "ShaderShadow.h"
 
 BEGIN(Engine)
 
-//class CShaderColor;
-//class CShaderTexture;
-//class CShaderMesh;
-//class CShaderSkyBox;
-//class CShaderShadow;
+class CShaderColor;
+class CShaderTexture;
+class CShaderMesh;
+class CShaderSkyBox;
+class CShaderShadow;
 
 class ENGINE_DLL CCamera : public CGameObject
 {

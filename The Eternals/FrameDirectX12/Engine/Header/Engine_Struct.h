@@ -146,6 +146,8 @@ typedef struct tagVector3 : public XMFLOAT3
 	explicit tagVector3(const float& input) : XMFLOAT3(input, input, input) {}
 	explicit tagVector3(const XMFLOAT3& input) : XMFLOAT3(input) {}
 	explicit tagVector3(const XMFLOAT4& input) : XMFLOAT3(input.x, input.y, input.z) {}
+	explicit tagVector3(XMFLOAT3& input) : XMFLOAT3(input) {}
+	explicit tagVector3(XMFLOAT4& input) : XMFLOAT3(input.x, input.y, input.z) {}
 
 	/*____________________________________________________________________
 	연산자 오버로딩
@@ -715,7 +717,6 @@ namespace Engine
 	{
 		XMFLOAT4X4	matView;
 		XMFLOAT4X4	matProj;
-		XMFLOAT4X4	matOrtho;
 		_vec4		vCameraPos;
 		_float		fProjFar;
 

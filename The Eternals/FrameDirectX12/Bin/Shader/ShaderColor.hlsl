@@ -14,9 +14,8 @@ cbuffer cbCamreaMatrix : register(b0)
 {
 	float4x4	g_matView		: packoffset(c0);
 	float4x4	g_matProj		: packoffset(c4);
-	float4x4	g_matOrtho		: packoffset(c8);
-	float4		g_vCameraPos	: packoffset(c12);
-	float		g_fProjFar		: packoffset(c16);
+	float4		g_vCameraPos	: packoffset(c8);
+	float		g_fProjFar		: packoffset(c9);
 }
 
 cbuffer cbShaderColor : register(b1)
@@ -25,18 +24,6 @@ cbuffer cbShaderColor : register(b1)
 	float4		g_Color		: packoffset(c4);
 }
 
-//cbuffer cbMatrixInfo	: register(b0)
-//{
-//	float4x4 matWVP		: packoffset(c0);
-//	float4x4 matWorld	: packoffset(c4);
-//	float4x4 matView	: packoffset(c8);
-//	float4x4 matProj	: packoffset(c12);
-//};
-//
-//cbuffer cbColorInfo : register(b1)
-//{
-//	float4 Color : packoffset(c0);
-//}
 
 /*__________________________________________________________________________________________________________
 [ Vertex Shader ]
