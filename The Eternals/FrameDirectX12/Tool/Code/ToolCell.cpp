@@ -281,12 +281,12 @@ void CToolCell::Set_ConstantTable()
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
-	Engine::CB_SHADER_COLOR tCB_ColorShader;
-	ZeroMemory(&tCB_ColorShader, sizeof(Engine::CB_SHADER_COLOR));
-	tCB_ColorShader.matWorld	= Engine::CShader::Compute_MatrixTranspose(INIT_MATRIX);
-	tCB_ColorShader.vColor		= m_vColor;
+	Engine::CB_SHADER_COLOR tCB_ShaderColor;
+	ZeroMemory(&tCB_ShaderColor, sizeof(Engine::CB_SHADER_COLOR));
+	tCB_ShaderColor.matWorld	= Engine::CShader::Compute_MatrixTranspose(INIT_MATRIX);
+	tCB_ShaderColor.vColor		= m_vColor;
 
-	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ColorShader);
+	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ShaderColor);
 }
 
 void CToolCell::CheckClockWise(_vec3& p0, _vec3& p1, _vec3& p2)

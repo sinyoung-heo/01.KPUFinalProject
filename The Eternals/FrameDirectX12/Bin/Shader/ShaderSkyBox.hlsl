@@ -16,13 +16,18 @@ TextureCube g_CubeTex : register(t0);
 /*____________________________________________________________________
 [ Constant Buffer ]
 ______________________________________________________________________*/
-cbuffer cbMatrixInfo	: register(b0)
+cbuffer cbCamreaMatrix : register(b0)
 {
-	float4x4 matWVP		: packoffset(c0);
-	float4x4 matWorld	: packoffset(c4);
-	float4x4 matView	: packoffset(c8);
-	float4x4 matProj	: packoffset(c12);
-};
+	float4x4	g_matView		: packoffset(c0);
+	float4x4	g_matProj		: packoffset(c4);
+	float4		g_vCameraPos	: packoffset(c8);
+	float		g_fProjFar		: packoffset(c9);
+}
+
+cbuffer cbShaderSkyBox : register(b1)
+{
+	float4x4	g_matWorld	: packoffset(c0);
+}
 
 
 // VS_MAIN
@@ -42,6 +47,10 @@ VS_OUT VS_MAIN(VS_IN vs_input)
 {
 	VS_OUT vs_output;
 
+	float4x4 matWV, matWVP;
+	matWV	= mul(g_matWorld, g_matView);
+	matWVP	= mul(matWV, g_matProj);
+	
 	vs_output.vPos		= mul(float4(vs_input.vPos, 1.0f), matWVP);
 	vs_output.vTexUV	= vs_input.vTexUV;
 	

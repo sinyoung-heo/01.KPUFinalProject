@@ -94,11 +94,11 @@ void CToolCoordinate::Set_ConstantTable()
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
-	Engine::CB_SHADER_COLOR tCB_ColorShader;
-	ZeroMemory(&tCB_ColorShader, sizeof(Engine::CB_SHADER_COLOR));
-	tCB_ColorShader.matWorld = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	Engine::CB_SHADER_COLOR tCB_ShaderColor;
+	ZeroMemory(&tCB_ShaderColor, sizeof(Engine::CB_SHADER_COLOR));
+	tCB_ShaderColor.matWorld = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
 
-	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ColorShader);
+	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ShaderColor);
 
 }
 

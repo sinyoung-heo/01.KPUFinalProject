@@ -139,39 +139,15 @@ void CCell::Render_Component(const _float& fTimeDelta)
 
 void CCell::Set_ConstantTable()
 {
-	_matrix* pmatView = CGraphicDevice::Get_Instance()->Get_Transform(MATRIXID::VIEW);
-	_matrix* pmatProj = CGraphicDevice::Get_Instance()->Get_Transform(MATRIXID::PROJECTION);
-
-	if (nullptr == pmatView || nullptr == pmatProj)
-		return;
-
 	/*__________________________________________________________________________________________________________
-	[ Set CB Data ]
+	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
-	CB_SHADER_COLOR tCB_ColorShader;
-	ZeroMemory(&tCB_ColorShader, sizeof(CB_SHADER_COLOR));
-	
-	XMStoreFloat4x4(&tCB_ColorShader.matWorld, XMMatrixTranspose(INIT_MATRIX));
-	tCB_ColorShader.vColor = _rgba(1.f, 0.f, 0.f, 1.f);
+	CB_SHADER_COLOR tCB_ShaderColor;
+	ZeroMemory(&tCB_ShaderColor, sizeof(CB_SHADER_COLOR));
+	tCB_ShaderColor.matWorld	= CShader::Compute_MatrixTranspose(INIT_MATRIX);
+	tCB_ShaderColor.vColor		= _rgba(1.f, 0.f, 0.f, 1.f);
 
-	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ColorShader);
-
-	//// Matrix Info
-	//CB_MATRIX_DESC	tCB_MatrixDesc;
-	//ZeroMemory(&tCB_MatrixDesc, sizeof(CB_MATRIX_DESC));
-	//XMStoreFloat4x4(&tCB_MatrixDesc.matWVP, XMMatrixTranspose((*pmatView) * (*pmatProj)));
-	//XMStoreFloat4x4(&tCB_MatrixDesc.matWorld, XMMatrixTranspose(INIT_MATRIX));
-	//XMStoreFloat4x4(&tCB_MatrixDesc.matView, XMMatrixTranspose(*pmatView));
-	//XMStoreFloat4x4(&tCB_MatrixDesc.matProj, XMMatrixTranspose(*pmatProj));
-
-	//m_pShaderCom->Get_UploadBuffer_MatrixDesc()->CopyData(0, tCB_MatrixDesc);
-
-	//// Color Info
-	//CB_COLOR_DESC	tCB_ColorDesc;
-	//ZeroMemory(&tCB_ColorDesc, sizeof(CB_COLOR_DESC));
-	//tCB_ColorDesc.vColor = _rgba(1.f, 0.f, 0.f, 1.f);
-
-	//m_pShaderCom->Get_UploadBuffer_ColorDesc()->CopyData(0, tCB_ColorDesc);
+	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ShaderColor);
 }
 
 _bool CCell::Compare_Point(const _vec3* pPointF, const _vec3* pPointS, CCell* pCell)

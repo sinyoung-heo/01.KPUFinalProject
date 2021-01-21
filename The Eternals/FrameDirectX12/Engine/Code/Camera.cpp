@@ -122,14 +122,17 @@ void CCamera::Set_ConstantTable()
 	// ShaderColor
 	m_pShaderColor->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 	m_pShaderColor->Get_UploadBuffer_CameraOrthoMatrix()->CopyData(0, tCB_CamerOrthoMatrix);
-	m_pShaderColor->Get_UploadBuffer_CameraLightMatrix()->CopyData(0, tCB_CamerLightMatrix);
+	// m_pShaderColor->Get_UploadBuffer_CameraLightMatrix()->CopyData(0, tCB_CamerLightMatrix);
 
 	// ShaderTexture
 	m_pShaderTexture->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 	m_pShaderTexture->Get_UploadBuffer_CameraOrthoMatrix()->CopyData(0, tCB_CamerOrthoMatrix);
-	m_pShaderTexture->Get_UploadBuffer_CameraLightMatrix()->CopyData(0, tCB_CamerLightMatrix);
+	// m_pShaderTexture->Get_UploadBuffer_CameraLightMatrix()->CopyData(0, tCB_CamerLightMatrix);
 
-
+	// ShaderSkyBox
+	m_pShaderSkyBox->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
+	// m_pShaderSkyBox->Get_UploadBuffer_CameraOrthoMatrix()->CopyData(0, tCB_CamerOrthoMatrix);
+	// m_pShaderSkyBox->Get_UploadBuffer_CameraLightMatrix()->CopyData(0, tCB_CamerLightMatrix);
 }
 
 void CCamera::Free()

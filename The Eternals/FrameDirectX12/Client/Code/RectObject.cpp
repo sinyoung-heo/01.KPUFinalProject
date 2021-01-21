@@ -98,12 +98,12 @@ void CRectObject::Set_ConstantTable()
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
-	Engine::CB_SHADER_COLOR tCB_ColorShader;
-	ZeroMemory(&tCB_ColorShader, sizeof(Engine::CB_SHADER_COLOR));
-	tCB_ColorShader.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ColorShader.vColor		= _rgba(1.f, 0.f, 0.f, 1.f);
+	Engine::CB_SHADER_COLOR tCB_ShaderColor;
+	ZeroMemory(&tCB_ShaderColor, sizeof(Engine::CB_SHADER_COLOR));
+	tCB_ShaderColor.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderColor.vColor		= _rgba(1.f, 0.f, 0.f, 1.f);
 
-	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ColorShader);
+	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ShaderColor);
 }
 
 

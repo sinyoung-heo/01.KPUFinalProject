@@ -18,8 +18,8 @@ CShaderSkyBox::CShaderSkyBox(const CShaderSkyBox & rhs)
 
 HRESULT CShaderSkyBox::SetUp_ShaderConstantBuffer()
 {
-	m_pCB_MatrixDesc = CUploadBuffer<CB_MATRIX_DESC>::Create(m_pGraphicDevice);
-	NULL_CHECK_RETURN(m_pCB_MatrixDesc, E_FAIL);
+	m_pCB_ShaderSkyBox = CUploadBuffer<CB_SHADER_SKYBOX>::Create(m_pGraphicDevice);
+	NULL_CHECK_RETURN(m_pCB_ShaderSkyBox, E_FAIL);
 
 	return S_OK;
 }
@@ -34,8 +34,9 @@ HRESULT CShaderSkyBox::Ready_Shader()
 }
 
 void CShaderSkyBox::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, 
-								 const _uint& iConstantBufferIdx,
-								 const _uint& iTexIdx)
+								 const _uint& iSubsetIdx,
+								 const _uint& iTexIdx,
+								 const MATRIXID& eID)
 {
 	CRenderer::Get_Instance()->Set_CurPipelineState(m_pPipelineState);
 	m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
@@ -56,9 +57,26 @@ void CShaderSkyBox::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap,
 	/*__________________________________________________________________________________________________________
 	[ CBV를 루트 서술자에 묶는다 ]
 	____________________________________________________________________________________________________________*/
-	m_pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
-													  m_pCB_MatrixDesc->Resource()->GetGPUVirtualAddress() + 
-													  m_pCB_MatrixDesc->GetElementByteSize() * iConstantBufferIdx);
+	if (MATRIXID::PROJECTION == eID)
+	{
+		m_pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
+														  m_pCB_CameraProjMatrix->Resource()->GetGPUVirtualAddress());
+	}
+	else if (MATRIXID::ORTHO == eID)
+	{
+		m_pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
+														  m_pCB_CameraOrthoMatrix->Resource()->GetGPUVirtualAddress());
+	}
+	else if (MATRIXID::LIGHT == eID)
+	{
+		m_pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
+														  m_pCB_CameraLightMatrix->Resource()->GetGPUVirtualAddress());
+	}
+
+	
+	m_pCommandList->SetGraphicsRootConstantBufferView(2,	// RootParameter Index
+													  m_pCB_ShaderSkyBox->Resource()->GetGPUVirtualAddress() + 
+													  m_pCB_ShaderSkyBox->GetElementByteSize() * iSubsetIdx);
 }
 
 HRESULT CShaderSkyBox::Create_RootSignature()
@@ -75,12 +93,13 @@ HRESULT CShaderSkyBox::Create_RootSignature()
 	/*__________________________________________________________________________________________________________
 	- 루트 매개변수는 테이블이거나, 루트 서술자 또는 루트 상수이다.
 	____________________________________________________________________________________________________________*/
-	CD3DX12_ROOT_PARAMETER RootParameter[2];
+	CD3DX12_ROOT_PARAMETER RootParameter[3];
 	RootParameter[0].InitAsDescriptorTable(1, &SRV_Table, D3D12_SHADER_VISIBILITY_PIXEL);
 	RootParameter[1].InitAsConstantBufferView(0);	// register b0.
+	RootParameter[2].InitAsConstantBufferView(1);	// register b1.
 
 	auto StaticSamplers = Get_StaticSamplers();
-	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(2,							// 루트 파라미터 개수.(CBV 1, SRV 1 : 총 2개)
+	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(3,							// 루트 파라미터 개수.(CBV 2, SRV 1 : 총 2개)
 												  RootParameter,
 												  (_uint)StaticSamplers.size(),	// 샘플러 개수.
 												  StaticSamplers.data(),		// 샘플러 데이터.
@@ -217,5 +236,5 @@ void CShaderSkyBox::Free()
 {
 	CShader::Free();
 	
-	Safe_Delete(m_pCB_MatrixDesc);
+	Safe_Delete(m_pCB_ShaderSkyBox);
 }

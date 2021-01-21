@@ -12,14 +12,16 @@ private:
 
 public:
 	// Get
-	CUploadBuffer<CB_MATRIX_DESC>*	Get_UploadBuffer_MatrixDesc()	{ return m_pCB_MatrixDesc; }
+	CUploadBuffer<CB_SHADER_SKYBOX>* Get_UploadBuffer_ShaderSkyBox()	{ return m_pCB_ShaderSkyBox; }
+	// CUploadBuffer<CB_MATRIX_DESC>*	Get_UploadBuffer_MatrixDesc()	{ return m_pCB_MatrixDesc; }
 
 	HRESULT			SetUp_ShaderConstantBuffer();
 	// CShader을(를) 통해 상속됨
 	virtual HRESULT	Ready_Shader();
 	virtual void	Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap = nullptr, 
-								 const _uint& iConstantBufferIdx = 0,
-								 const _uint& iTexIdx = 0);
+								 const _uint& iSubsetIdx = 0,
+								 const _uint& iTexIdx = 0,
+								 const MATRIXID& eID = MATRIXID::PROJECTION);
 
 private:
 	virtual HRESULT								Create_RootSignature();
@@ -35,7 +37,9 @@ private:
 																  const D3D12_BLEND_OP& BlendOpAlpha	= D3D12_BLEND_OP_ADD);
 
 private:
-	CUploadBuffer<CB_MATRIX_DESC>*	m_pCB_MatrixDesc		= nullptr;
+	// CUploadBuffer<CB_MATRIX_DESC>*	m_pCB_MatrixDesc		= nullptr;
+	CUploadBuffer<CB_SHADER_SKYBOX>* m_pCB_ShaderSkyBox = nullptr;
+
 
 public:
 	virtual CComponent*		Clone() override;

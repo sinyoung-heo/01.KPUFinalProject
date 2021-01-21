@@ -204,12 +204,12 @@ void CColliderBox::Set_ConstantTable()
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
-	CB_SHADER_COLOR tCB_ColorShader;
-	ZeroMemory(&tCB_ColorShader, sizeof(CB_SHADER_COLOR));
-	tCB_ColorShader.matWorld	= CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ColorShader.vColor		= m_vColor;
+	CB_SHADER_COLOR tCB_ShaderColor;
+	ZeroMemory(&tCB_ShaderColor, sizeof(CB_SHADER_COLOR));
+	tCB_ShaderColor.matWorld	= CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderColor.vColor		= m_vColor;
 
-	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ColorShader);
+	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ShaderColor);
 }
 
 CComponent * CColliderBox::Clone()

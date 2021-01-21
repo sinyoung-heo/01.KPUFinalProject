@@ -17,10 +17,10 @@ public:
 	HRESULT			SetUp_ShaderConstantBuffer(const _uint& iNumSubset = 1);
 	// CShader을(를) 통해 상속됨
 	virtual HRESULT	Ready_Shader();
-	virtual void	Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap	= nullptr,
-								 const _uint& iSubsetIdx					= 0,
-								 const _uint& iTexIdx						= 0,
-								 const MATRIXID& eID						= MATRIXID::PROJECTION);
+	virtual void	Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap = nullptr,
+								 const _uint& iSubsetIdx = 0,
+								 const _uint& iTexIdx = 0,
+								 const MATRIXID& eID = MATRIXID::PROJECTION);
 
 private:
 	virtual HRESULT								Create_RootSignature();
