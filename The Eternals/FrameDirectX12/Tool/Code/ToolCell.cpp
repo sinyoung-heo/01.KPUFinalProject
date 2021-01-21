@@ -278,38 +278,15 @@ HRESULT CToolCell::Add_Component()
 
 void CToolCell::Set_ConstantTable()
 {
-	_matrix* pmatView = Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::MATRIXID::VIEW);
-	_matrix* pmatProj = Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::MATRIXID::PROJECTION);
-
-	if (nullptr == pmatView || nullptr == pmatProj)
-		return;
-
 	/*__________________________________________________________________________________________________________
-	[ Set CB Data ]
+	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
 	Engine::CB_SHADER_COLOR tCB_ColorShader;
 	ZeroMemory(&tCB_ColorShader, sizeof(Engine::CB_SHADER_COLOR));
-
-	XMStoreFloat4x4(&tCB_ColorShader.matWorld, XMMatrixTranspose(INIT_MATRIX));
-	tCB_ColorShader.vColor = m_vColor;
+	tCB_ColorShader.matWorld	= Engine::CShader::Compute_MatrixTranspose(INIT_MATRIX);
+	tCB_ColorShader.vColor		= m_vColor;
 
 	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ColorShader);
-	
-	
-	//// Matrix Info
-	//Engine::CB_MATRIX_DESC	tCB_MatrixDesc;
-	//ZeroMemory(&tCB_MatrixDesc, sizeof(Engine::CB_MATRIX_DESC));
-	//XMStoreFloat4x4(&tCB_MatrixDesc.matWVP, XMMatrixTranspose((*pmatView) * (*pmatProj)));
-	//XMStoreFloat4x4(&tCB_MatrixDesc.matWorld, XMMatrixTranspose(INIT_MATRIX));
-	//XMStoreFloat4x4(&tCB_MatrixDesc.matView, XMMatrixTranspose(*pmatView));
-	//XMStoreFloat4x4(&tCB_MatrixDesc.matProj, XMMatrixTranspose(*pmatProj));
-	//m_pShaderCom->Get_UploadBuffer_MatrixDesc()->CopyData(0, tCB_MatrixDesc);
-
-	//// Color Info
-	//Engine::CB_COLOR_DESC	tCB_ColorDesc;
-	//ZeroMemory(&tCB_ColorDesc, sizeof(Engine::CB_COLOR_DESC));
-	//tCB_ColorDesc.vColor = m_vColor;
-	//m_pShaderCom->Get_UploadBuffer_ColorDesc()->CopyData(0, tCB_ColorDesc);
 }
 
 void CToolCell::CheckClockWise(_vec3& p0, _vec3& p1, _vec3& p2)

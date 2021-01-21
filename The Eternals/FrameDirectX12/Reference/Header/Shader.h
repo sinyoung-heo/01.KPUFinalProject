@@ -34,6 +34,9 @@ public:
 										 ID3D12DescriptorHeap* pTexDescriptorHeap = nullptr,
 										 const _uint& iIdx = 0);
 
+public:
+	static XMFLOAT4X4	Compute_MatrixTranspose(_matrix& mat);
+
 protected:
 	virtual HRESULT								Create_DescriptorHeaps();
 	virtual HRESULT								Create_ConstantBuffer();
@@ -85,7 +88,7 @@ protected:
 
 
 public:
-	virtual CComponent* Clone() PURE;
+	virtual CComponent* Clone() { return nullptr; };
 protected:
 	virtual void		Free();
 };

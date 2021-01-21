@@ -12,8 +12,6 @@ private:
 
 public:
 	// Get
-	//CUploadBuffer<CB_MATRIX_DESC>*	Get_UploadBuffer_MatrixDesc()	{ return m_pCB_MatrixDesc; }
-	//CUploadBuffer<CB_COLOR_DESC>*	Get_UploadBuffer_ColorDesc()	{ return m_pCB_ColorDesc; }
 	CUploadBuffer<CB_SHADER_COLOR>* Get_UploadBuffer_ShaderColor()	{ return m_pCB_ShaderColor; }
 
 	// CShader을(를) 통해 상속됨
@@ -30,9 +28,6 @@ private:
 																   string PS_EntryPoint = "PS_MAIN");
 
 private:
-	//CUploadBuffer<CB_MATRIX_DESC>*	m_pCB_MatrixDesc	= nullptr;
-	//CUploadBuffer<CB_COLOR_DESC>*	m_pCB_ColorDesc		= nullptr;
-
 	CUploadBuffer<CB_SHADER_COLOR>* m_pCB_ShaderColor = nullptr;
 
 

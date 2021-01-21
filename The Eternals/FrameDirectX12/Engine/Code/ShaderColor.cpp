@@ -36,12 +36,6 @@ void CShaderColor::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, const 
 	/*__________________________________________________________________________________________________________
 	[ CBV를 루트 서술자에 묶는다 ]
 	____________________________________________________________________________________________________________*/
-	//m_pCommandList->SetGraphicsRootConstantBufferView(0,	// RootParameter Index
-	//												  m_pCB_MatrixDesc->Resource()->GetGPUVirtualAddress());
-
-	//m_pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
-	//												  m_pCB_ColorDesc->Resource()->GetGPUVirtualAddress());
-
 	m_pCommandList->SetGraphicsRootConstantBufferView(0,	// RootParameter Index
 													  m_pCB_CameraMatrix->Resource()->GetGPUVirtualAddress());
 
@@ -60,12 +54,6 @@ HRESULT CShaderColor::Create_DescriptorHeaps()
 
 HRESULT CShaderColor::Create_ConstantBuffer()
 {
-	//m_pCB_MatrixDesc = CUploadBuffer<CB_MATRIX_DESC>::Create(m_pGraphicDevice);
-	//NULL_CHECK_RETURN(m_pCB_MatrixDesc, E_FAIL);
-
-	//m_pCB_ColorDesc = CUploadBuffer<CB_COLOR_DESC>::Create(m_pGraphicDevice);
-	//NULL_CHECK_RETURN(m_pCB_ColorDesc, E_FAIL);
-
 	m_pCB_ShaderColor = CUploadBuffer<CB_SHADER_COLOR>::Create(m_pGraphicDevice);
 	NULL_CHECK_RETURN(m_pCB_ShaderColor, E_FAIL);
 
@@ -306,7 +294,5 @@ void CShaderColor::Free()
 {
 	CShader::Free();
 
-	//Safe_Delete(m_pCB_MatrixDesc);
-	//Safe_Delete(m_pCB_ColorDesc);
 	Safe_Delete(m_pCB_ShaderColor);
 }

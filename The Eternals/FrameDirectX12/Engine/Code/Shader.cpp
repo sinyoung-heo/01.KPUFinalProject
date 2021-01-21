@@ -117,6 +117,15 @@ void CShader::Begin_Shader(ID3D12GraphicsCommandList * pCommandList,
 {
 }
 
+XMFLOAT4X4 CShader::Compute_MatrixTranspose(_matrix& mat)
+{
+	XMFLOAT4X4 matTranspose;
+
+	XMStoreFloat4x4(&matTranspose, XMMatrixTranspose((mat)));
+
+	return matTranspose;
+}
+
 HRESULT CShader::Create_DescriptorHeaps()
 {
 	return S_OK;
