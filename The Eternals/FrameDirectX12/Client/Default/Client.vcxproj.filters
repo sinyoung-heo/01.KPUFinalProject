@@ -76,15 +76,6 @@
     <Filter Include="01.Scene\99.DebugStage">
       <UniqueIdentifier>{8129731b-c82e-4cf7-bbab-9ac7e83b6987}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Scene\99.DebugStage\StageHSY">
-      <UniqueIdentifier>{cce7a519-dab0-4b1d-a458-3dc62e3a06ef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Scene\99.DebugStage\StagePJO">
-      <UniqueIdentifier>{c12c083f-6b2d-4435-a817-2e559d054f87}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Scene\99.DebugStage\StageLDH">
-      <UniqueIdentifier>{962761de-71a1-4a1a-9d46-0a8a8149a0ea}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.Mgr\00.PacketMgr">
       <UniqueIdentifier>{4d9afe9f-34b3-44e0-acf1-51a5f382f0be}</UniqueIdentifier>
     </Filter>
@@ -93,6 +84,15 @@
     </Filter>
     <Filter Include="97.Mgr\02.CollisionMgr">
       <UniqueIdentifier>{e6d909b7-4f42-40ea-8b61-bad7b56f65e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\99.DebugStage\01.StageLDH">
+      <UniqueIdentifier>{962761de-71a1-4a1a-9d46-0a8a8149a0ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\99.DebugStage\02.StagePJO">
+      <UniqueIdentifier>{c12c083f-6b2d-4435-a817-2e559d054f87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\99.DebugStage\03.StageHSY">
+      <UniqueIdentifier>{cce7a519-dab0-4b1d-a458-3dc62e3a06ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -175,13 +175,13 @@
       <Filter>99.Etc</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\StageLDH.h">
-      <Filter>01.Scene\99.DebugStage\StageLDH</Filter>
+      <Filter>01.Scene\99.DebugStage\01.StageLDH</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\StagePJO.h">
-      <Filter>01.Scene\99.DebugStage\StagePJO</Filter>
+      <Filter>01.Scene\99.DebugStage\02.StagePJO</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\StageHSY.h">
-      <Filter>01.Scene\99.DebugStage\StageHSY</Filter>
+      <Filter>01.Scene\99.DebugStage\03.StageHSY</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\ShadowLightMgr.h">
       <Filter>97.Mgr\01.ShadowLightMgr</Filter>
@@ -243,13 +243,13 @@
       <Filter>02.GameObject\99.SampleObject\04.TerrainMeshObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\StageLDH.cpp">
-      <Filter>01.Scene\99.DebugStage\StageLDH</Filter>
+      <Filter>01.Scene\99.DebugStage\01.StageLDH</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\StagePJO.cpp">
-      <Filter>01.Scene\99.DebugStage\StagePJO</Filter>
+      <Filter>01.Scene\99.DebugStage\02.StagePJO</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\StageHSY.cpp">
-      <Filter>01.Scene\99.DebugStage\StageHSY</Filter>
+      <Filter>01.Scene\99.DebugStage\03.StageHSY</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\ShadowLightMgr.cpp">
       <Filter>97.Mgr\01.ShadowLightMgr</Filter>

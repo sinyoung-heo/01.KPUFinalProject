@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fstream>
 #include "StagePJO.h"
 #include "ComponentMgr.h"
 #include "GraphicDevice.h"
@@ -109,8 +110,32 @@ HRESULT CStagePJO::Ready_LayerCamera(wstring wstrLayerTag)
 	return S_OK;
 }
 
-
 HRESULT CStagePJO::Ready_LayerEnvironment(wstring wstrLayerTag)
+{
+	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
+
+	/*__________________________________________________________________________________________________________
+	[ Environment Layer »ý¼º ]
+	____________________________________________________________________________________________________________*/
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
+	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
+	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
+
+	/*__________________________________________________________________________________________________________
+	[ SkyBox ]
+	____________________________________________________________________________________________________________*/
+	CSkyBox* pSkyBox = CSkyBox::Create(m_pGraphicDevice, m_pCommandList,
+									   L"SkyBox",							// Texture Tag
+									   _vec3(512.f, 512.f, 512.f),			// Scale
+									   _vec3(0.0f, 0.0f, 0.0f),				// Angle
+									   _vec3(0.0f, 0.0f, 0.0f));			// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SkyBox", pSkyBox), E_FAIL);
+
+
+	return S_OK;
+}
+
+HRESULT CStagePJO::Ready_LayerGameObject(wstring wstrLayerTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
 
@@ -223,6 +248,7 @@ HRESULT CStagePJO::Ready_LayerEnvironment(wstring wstrLayerTag)
 
 	return S_OK;
 }
+
 
 HRESULT CStagePJO::Ready_LayerUI(wstring wstrLayerTag)
 {

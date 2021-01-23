@@ -15,8 +15,8 @@ public:
 	virtual HRESULT	Render_Scene(const _float& fTimeDelta, const Engine::RENDERID& eID = Engine::RENDERID::MULTI_THREAD);
 
 private:
-	HRESULT	Ready_LayerEnvironment(wstring wstrLayerTag);
 	HRESULT	Ready_LayerCamera(wstring wstrLayerTag);
+	HRESULT	Ready_LayerEnvironment(wstring wstrLayerTag);
 	HRESULT	Ready_LayerGameObject(wstring wstrLayerTag);
 	HRESULT	Ready_LayerUI(wstring wstrLayerTag);
 	HRESULT	Ready_LayerFont(wstring wstrLayerTag);

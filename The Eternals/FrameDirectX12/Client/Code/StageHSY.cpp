@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fstream>
 #include "StageHSY.h"
 #include "ComponentMgr.h"
 #include "GraphicDevice.h"
@@ -375,14 +376,10 @@ HRESULT CStageHSY::Ready_LightInfo()
 
 HRESULT CStageHSY::Ready_NaviMesh()
 {
-	Engine::CNaviMesh* pNaviMesh = Engine::CNaviMesh::Create(m_pGraphicDevice,
-															 m_pCommandList,
-															 wstring(L"../../Bin/ToolData/TestNaviMesh.dat"));
+	Engine::CNaviMesh* pNaviMesh = Engine::CNaviMesh::Create(m_pGraphicDevice,  m_pCommandList,
+															 wstring(L"../../Bin/ToolData/TestNavigationCell.navimeshcellinfo"));
+	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"TestNaviMesh", Engine::ID_DYNAMIC, pNaviMesh), E_FAIL);
 
-	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"TestNaviMesh",
-																							  Engine::ID_DYNAMIC,
-																							  pNaviMesh),
-																							  E_FAIL);
 	return S_OK;
 }
 
