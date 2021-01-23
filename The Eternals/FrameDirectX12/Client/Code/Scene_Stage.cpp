@@ -379,6 +379,7 @@ HRESULT CScene_Stage::Ready_NaviMesh()
 	Engine::CNaviMesh* pNaviMesh = Engine::CNaviMesh::Create(m_pGraphicDevice,  m_pCommandList,
 															 wstring(L"../../Bin/ToolData/TestNavigationCell.navimeshcellinfo"));
 	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"TestNaviMesh", Engine::ID_DYNAMIC, pNaviMesh), E_FAIL);
+
 	return S_OK;
 }
 

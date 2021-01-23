@@ -73,12 +73,12 @@ HRESULT CStageHSY::Ready_LayerCamera(wstring wstrLayerTag)
 	[ DebugCamera ]
 	____________________________________________________________________________________________________________*/
 	CDebugCamera* pDebugCamera = CDebugCamera::Create(m_pGraphicDevice, m_pCommandList,
-													  Engine::CAMERA_DESC(_vec3(30.0f, 25.0f, 35.0f),	// Eye
+													  Engine::CAMERA_DESC(_vec3(30.0f, 30.0f, 35.0f),	// Eye
 													  					  _vec3(20.0f, 15.0f, 10.0f),	// At
 													  					  _vec3(0.0f, 1.0f, 0.f)),		// Up
 													  Engine::PROJ_DESC(60.0f,							// FovY
 													  					_float(WINCX) / _float(WINCY),	// Aspect
-													  					1.0f,							// Near
+													  					0.1f,							// Near
 													  					1000.0f),						// Far
 													  Engine::ORTHO_DESC(WINCX,							// Viewport Width
 													  					 WINCY,							// Viewport Height
@@ -96,7 +96,7 @@ HRESULT CStageHSY::Ready_LayerCamera(wstring wstrLayerTag)
 
 															Engine::PROJ_DESC(60.0f,						// FovY
 																			  _float(WINCX) / _float(WINCY),// Aspect
-																			  1.0f,							// Near
+																			  0.1f,							// Near
 																			  1000.0f),						// Far
 
 															Engine::ORTHO_DESC(WINCX,						// Viewport Width
@@ -147,96 +147,103 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
 
 
-	///*__________________________________________________________________________________________________________
-	//[ TerrainObject ]
-	//____________________________________________________________________________________________________________*/
-	//CTerrainObject* pTerrainObject = CTerrainObject::Create(m_pGraphicDevice, m_pCommandList);
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainObject", pTerrainObject), E_FAIL);
-
+	Engine::CGameObject* pGameObj = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ StaticMeshObject ]
 	____________________________________________________________________________________________________________*/
-	CStaticMeshObject* pStaticMeshObject = nullptr;
+	wifstream fin { L"../../Bin/ToolData/TestStaticMesh.staticmesh" };
+	if (fin.fail())
+		return E_FAIL;
 
-	//// LandMarkBoundary
-	//pStaticMeshObject = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-	//											  L"LandMarkBoundary",	// MeshTag 
-	//											  _vec3(0.05f, 0.05f, 0.05f),				// Scale
-	//											  _vec3(0.0f, 0.0f, 0.0f),					// Angle
-	//											  _vec3(0.0f, 0.f, 0.f));					// Pos
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"StaticMeshObject", pStaticMeshObject), E_FAIL);
+	wstring	wstrMeshTag				= L"";
+	_vec3	vScale					= _vec3(0.0f);
+	_vec3	vAngle					= _vec3(0.0f);
+	_vec3	vPos					= _vec3(0.0f);
+	_bool	bIsRenderShadow			= false;
+	_bool	bIsCollision			= false;
+	_vec3	vBoundingSphereScale	= _vec3(0.0f);
+	_vec3	vBoundingSpherePos      = _vec3(0.0f);
+	_bool	bIsMousePicking			= false;
 
+	while (true)
+	{
+		fin >> wstrMeshTag 				// MeshTag
+			>> vScale.x
+			>> vScale.y
+			>> vScale.z					// Scale
+			>> vAngle.x
+			>> vAngle.y
+			>> vAngle.z					// Angle
+			>> vPos.x
+			>> vPos.y
+			>> vPos.z					// Pos
+			>> bIsRenderShadow			// Is Render Shadow
+			>> bIsCollision 			// Is Collision
+			>> vBoundingSphereScale.x	// BoundingSphere Scale
+			>> vBoundingSphereScale.y
+			>> vBoundingSphereScale.z
+			>> vBoundingSpherePos.x		// BoundingSphere Pos
+			>> vBoundingSpherePos.y
+			>> vBoundingSpherePos.z
+			>> bIsMousePicking;
 
-	// Status
-	//pStaticMeshObject = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-	//											  L"Status",	// MeshTag 
-	//											  _vec3(0.05f, 0.05f, 0.05f),	// Scale
-	//											  _vec3(0.f, 0.0f, 0.0f),		// Angle
-	//											  _vec3(-15.0f, 13.f, 0.f));	// Pos
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"StaticMeshObject", pStaticMeshObject), E_FAIL);
+		if (fin.eof())
+			break;
 
+		pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+											 wstrMeshTag,			// MeshTag
+											 vScale,				// Scale
+											 vAngle,				// Angle
+											 vPos,					// Pos
+											 bIsRenderShadow,		// Render Shadow
+											 bIsCollision,			// Bounding Sphere
+											 vBoundingSphereScale,	// Bounding Sphere Scale
+											 vBoundingSpherePos);	// Bounding Sphere Pos
 
-	/*__________________________________________________________________________________________________________
-	[ TerrainMeshObject ]
-	____________________________________________________________________________________________________________*/
-	//CTerrainMeshObject* pTerrainMeshObject = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-	//																	L"LandMarkPlane",	// MeshTag 
-	//																	_vec3(0.05f, 0.05f, 0.05f),			// Scale
-	//																	_vec3(0.0f, 0.0f, 0.0f),			// Angle
-	//																	_vec3(0.0f, 0.f, 0.f));				// Pos
-	//
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainMeshObject", pTerrainMeshObject), E_FAIL);
-
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"StaticMesh", pGameObj), E_FAIL);
+	}
 
 
 	/*__________________________________________________________________________________________________________
 	[ Popori_F ]
 	____________________________________________________________________________________________________________*/
-	CPopori_F* pPopori_F = nullptr;
-
-	pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
-								  L"PoporiR19",	// MeshTag
-								  _vec3(0.25f, 0.25f, 0.25f),		// Scale
-								  _vec3(0.0f, 0.0f, 0.0f),			// Angle
-								  _vec3(58.0f, 0.f, 25.0f));		// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
+	pGameObj =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
+								  L"PoporiR19",					// MeshTag
+								  _vec3(0.05f, 0.05f, 0.05f),	// Scale
+								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+								  _vec3(25.0f, 0.f, 20.0f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pGameObj), E_FAIL);
 
 
-	//pPopori_F = CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
-	//							  L"PoporiH25",	// MeshTag
-	//							  _vec3(0.25f, 0.25f, 0.25f),		// Scale
-	//							  _vec3(0.0f, 0.0f, 0.0f),			// Angle
-	//							  _vec3(0.0f, 0.f, 0.0f));			// Pos
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
+	pGameObj = CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
+								  L"PoporiH25",					// MeshTag
+								  _vec3(0.05f, 0.05f, 0.05f),	// Scale
+								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+								  _vec3(26.5f, 0.f, 20.0f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pGameObj), E_FAIL);
 
 
 	/*__________________________________________________________________________________________________________
 	[ TexEffect ]
 	____________________________________________________________________________________________________________*/
-	CTextureEffect* pTexEffect = nullptr;
-
 	// Fire
-	pTexEffect = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-										L"Fire",	// TextureTag
-										_vec3(5.0f, 5.0f, 1.0f),			// Scale
-										_vec3(0.0f, 0.0f, 0.0f),			// Angle
-										_vec3(6.0f, 2.5f, -10.0f),			// Pos
-										FRAME(8, 8, 64.0f));				// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TexEffect", pTexEffect), E_FAIL);
-
-
-
-
+	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+									  L"Fire",						// TextureTag
+									  _vec3(2.5f, 2.5f, 1.0f),		// Scale
+									  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+									  _vec3(26.0f, 1.5f, 26.5f),	// Pos
+									  FRAME(8, 8, 64.0f));			// Sprite Image Frame
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TexEffect", pGameObj), E_FAIL);
 
 	// Torch
-	pTexEffect = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-										L"Torch",	// TextureTag
-										_vec3(5.0f, 10.0f, 1.0f),			// Scale
-										_vec3(0.0f, 0.0f, 0.0f),			// Angle
-										_vec3(10.0f, 5.0f, -10.0f),			// Pos
-										FRAME(8, 8, 64.0f));				// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TexEffect", pTexEffect), E_FAIL);
+	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+									  L"Torch",						// TextureTag
+									  _vec3(2.5f, 5.0f, 1.0f),		// Scale
+									  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+									  _vec3(28.0f, 2.0f, 27.0f),	// Pos
+									  FRAME(8, 8, 64.0f));			// Sprite Image Frame
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TexEffect", pGameObj), E_FAIL);
 
 
 	return S_OK;
@@ -274,44 +281,94 @@ HRESULT CStageHSY::Ready_LayerFont(wstring wstrLayerTag)
 
 HRESULT CStageHSY::Ready_LightInfo()
 {
-	Engine::D3DLIGHT tLightInfo;
-	ZeroMemory(&tLightInfo, sizeof(Engine::D3DLIGHT));
+	wifstream fin{ L"../../Bin/ToolData/TestLightInfo_DirectionAndShadow.lightinginfo" };
+	if (fin.fail())
+		return E_FAIL;
 
-	// Direction
-	tLightInfo.Type			= Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL;
-	tLightInfo.Diffuse		= _rgba(1.0f, 1.0f, 1.0f, 1.0f);
-	tLightInfo.Specular		= _rgba(0.4f, 0.4f, 0.4f, 1.0f);
-	tLightInfo.Ambient		= _rgba(0.0f, 0.0f, 0.0f, 1.0f);
-	tLightInfo.Direction	= _vec4(1.0f, -1.0f, 1.0f, 0.0f);
-	Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, 
-																			 m_pCommandList, 
-																			 Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL,
-																			 tLightInfo), E_FAIL);
+	while (true)
+	{
+		Engine::D3DLIGHT tDirLightInfo;
+		_vec3	vLightAt;
+		_float	fHeight;
+		_float	fFovY;
+		_float	fFar;
 
-	// Point Light
-	tLightInfo.Type			= Engine::LIGHTTYPE::D3DLIGHT_POINT;
-	tLightInfo.Diffuse		= _rgba(0.2f, 0.2f, 1.0f, 1.0f);
-	tLightInfo.Specular		= _rgba(0.3f, 0.3f, 0.3f, 1.0f);
-	tLightInfo.Ambient		= _rgba(0.3f, 0.3f, 0.3f, 1.0f);
-	tLightInfo.Direction	= _vec4(0.0f, 0.0f, 0.0f, 0.0f);
-	tLightInfo.Position		= _vec4(5.0f, 50.0f, 0.0f, 1.0f);
-	tLightInfo.Range		= 50.0f;
-	Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice,
-																			 m_pCommandList,
-																			 Engine::LIGHTTYPE::D3DLIGHT_POINT,
-																			 tLightInfo), E_FAIL);
+		// DirectionLight Data 불러오기.
+		fin >> tDirLightInfo.Diffuse.x		// Diffuse
+			>> tDirLightInfo.Diffuse.y
+			>> tDirLightInfo.Diffuse.z
+			>> tDirLightInfo.Diffuse.w
+			>> tDirLightInfo.Specular.x		// Specular
+			>> tDirLightInfo.Specular.y
+			>> tDirLightInfo.Specular.z
+			>> tDirLightInfo.Specular.w
+			>> tDirLightInfo.Ambient.x		// Ambient
+			>> tDirLightInfo.Ambient.y
+			>> tDirLightInfo.Ambient.z
+			>> tDirLightInfo.Ambient.w
+			>> tDirLightInfo.Direction.x	// Direction
+			>> tDirLightInfo.Direction.y
+			>> tDirLightInfo.Direction.z
+			>> tDirLightInfo.Direction.w
 
-	tLightInfo.Type			= Engine::LIGHTTYPE::D3DLIGHT_POINT;
-	tLightInfo.Diffuse		= _rgba(1.0f, 0.2f, 0.2f, 1.0f);
-	tLightInfo.Specular		= _rgba(0.3f, 0.3f, 0.3f, 1.0f);
-	tLightInfo.Ambient		= _rgba(0.3f, 0.3f, 0.3f, 0.3f);
-	tLightInfo.Direction	= _vec4(0.0f, 0.0f, 0.0f, 0.0f);
-	tLightInfo.Position		= _vec4(10.0f, 50.0f, 0.0f, 1.0f);
-	tLightInfo.Range		= 50.0f;
-	Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, 
-																			 m_pCommandList,
-																			 Engine::LIGHTTYPE::D3DLIGHT_POINT,
-																			 tLightInfo), E_FAIL);
+			// ShadowLight Data 불러오기.
+			>> vLightAt.x					// ShadowLight At
+			>> vLightAt.y
+			>> vLightAt.z
+			>> fHeight						// ShadowLight Height
+			>> fFovY						// ShadowLight FovY
+			>> fFar;						// ShadowLight Far
+
+		if (fin.eof())
+			break;
+
+		Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, m_pCommandList, 
+																				 Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL,
+																				 tDirLightInfo), E_FAIL);
+		CShadowLightMgr::Get_Instance()->Set_LightAt(vLightAt);
+		CShadowLightMgr::Get_Instance()->Set_LightHeight(fHeight);
+		CShadowLightMgr::Get_Instance()->Set_LightFovY(fFovY);
+		CShadowLightMgr::Get_Instance()->Set_LightFar(fFar);
+		CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+	}
+
+
+	wifstream fin2 { "../../Bin/ToolData/TestLightInfo_PointLight.lightinginfo" };
+	if (fin2.fail())
+		return E_FAIL;
+
+	while (true)
+	{
+		// PointLight 정보 저장.
+		Engine::D3DLIGHT tLightInfo { };
+		tLightInfo.Type = Engine::D3DLIGHT_POINT;
+
+				// PointLight Data 불러오기.
+		fin2	>> tLightInfo.Diffuse.x		// Diffuse
+				>> tLightInfo.Diffuse.y
+				>> tLightInfo.Diffuse.z
+				>> tLightInfo.Diffuse.w
+				>> tLightInfo.Specular.x	// Specular
+				>> tLightInfo.Specular.y
+				>> tLightInfo.Specular.z
+				>> tLightInfo.Specular.w
+				>> tLightInfo.Ambient.x		// Ambient
+				>> tLightInfo.Ambient.y
+				>> tLightInfo.Ambient.z
+				>> tLightInfo.Ambient.w
+				>> tLightInfo.Position.x	// Position
+				>> tLightInfo.Position.y
+				>> tLightInfo.Position.z
+				>> tLightInfo.Position.w
+				>> tLightInfo.Range;		// Range
+
+		if (fin2.eof())
+			break;
+
+		Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, m_pCommandList,
+																				 Engine::LIGHTTYPE::D3DLIGHT_POINT,
+																				 tLightInfo), E_FAIL);
+	}
 
 	return S_OK;
 }
