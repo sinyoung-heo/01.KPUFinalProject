@@ -16,6 +16,9 @@ CShader::CShader(const CShader & rhs)
 	, m_uiCBV_SRV_UAV_DescriptorSize(rhs.m_uiCBV_SRV_UAV_DescriptorSize)
 	, m_pVS_ByteCode(rhs.m_pVS_ByteCode)
 	, m_pPS_ByteCode(rhs.m_pPS_ByteCode)
+	, m_pCB_CameraProjMatrix(rhs.m_pCB_CameraProjMatrix)
+	, m_pCB_CameraOrthoMatrix(rhs.m_pCB_CameraOrthoMatrix)
+
 {
 	m_pRootSignature->AddRef();
 	
@@ -98,6 +101,13 @@ HRESULT CShader::Ready_Shader()
 {
 	m_uiCBV_SRV_UAV_DescriptorSize = CGraphicDevice::Get_Instance()->Get_CBV_SRV_UAV_DescriptorSize();
 
+	// Create CameraMatrix ConstantBuffer
+	m_pCB_CameraProjMatrix = CUploadBuffer<CB_CAMERA_MATRIX>::Create(m_pGraphicDevice);
+	NULL_CHECK_RETURN(m_pCB_CameraProjMatrix, E_FAIL);
+
+	m_pCB_CameraOrthoMatrix = CUploadBuffer<CB_CAMERA_MATRIX>::Create(m_pGraphicDevice);
+	NULL_CHECK_RETURN(m_pCB_CameraOrthoMatrix, E_FAIL);
+
 	return S_OK;
 }
 
@@ -110,6 +120,15 @@ void CShader::Begin_Shader(ID3D12GraphicsCommandList * pCommandList,
 						   ID3D12DescriptorHeap* pTexDescriptorHeap,
 						   const _uint& iIdx)
 {
+}
+
+XMFLOAT4X4 CShader::Compute_MatrixTranspose(_matrix& mat)
+{
+	XMFLOAT4X4 matTranspose;
+
+	XMStoreFloat4x4(&matTranspose, XMMatrixTranspose((mat)));
+
+	return matTranspose;
 }
 
 HRESULT CShader::Create_DescriptorHeaps()
@@ -145,7 +164,17 @@ D3D12_BLEND_DESC CShader::Create_BlendState(const _bool & bIsBlendEnable,
 											const D3D12_BLEND & DstBlendAlpha, 
 											const D3D12_BLEND_OP & BlendOpAlpha)
 {
-	return D3D12_BLEND_DESC();
+	D3D12_BLEND_DESC BlendDesc = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+
+	BlendDesc.RenderTarget[0].BlendEnable		= bIsBlendEnable;
+	BlendDesc.RenderTarget[0].SrcBlend			= SrcBlend;
+	BlendDesc.RenderTarget[0].DestBlend			= DstBlend;
+	BlendDesc.RenderTarget[0].BlendOp			= BlendOp;
+	BlendDesc.RenderTarget[0].SrcBlendAlpha		= SrcBlendAlpha;
+	BlendDesc.RenderTarget[0].DestBlendAlpha	= DstBlendAlpha;
+	BlendDesc.RenderTarget[0].BlendOpAlpha		= BlendOpAlpha;
+
+	return BlendDesc;
 }
 
 D3D12_RASTERIZER_DESC CShader::Create_RasterizerState(const D3D12_FILL_MODE & eFillMode, 
@@ -237,16 +266,21 @@ void CShader::Free()
 {
 	CComponent::Free();
 
-	Engine::Safe_Release(m_pVS_ByteCode);
-	Engine::Safe_Release(m_pPS_ByteCode);
+	Safe_Release(m_pVS_ByteCode);
+	Safe_Release(m_pPS_ByteCode);
 
-	Engine::Safe_Release(m_pRootSignature);
+	Safe_Release(m_pRootSignature);
 
 	for (_uint i = 0; i < m_vecPipelineState.size(); ++i)
-		Engine::Safe_Release(m_vecPipelineState[i]);
+		Safe_Release(m_vecPipelineState[i]);
 
 	m_vecPipelineState.clear();
 	m_vecPipelineState.shrink_to_fit();
 
+	if (!m_bIsClone)
+	{
+		Safe_Delete(m_pCB_CameraProjMatrix);
+		Safe_Delete(m_pCB_CameraOrthoMatrix);
+	}
 }
 

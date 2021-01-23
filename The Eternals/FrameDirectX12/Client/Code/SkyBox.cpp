@@ -72,7 +72,7 @@ void CSkyBox::Render_GameObject(const _float & fTimeDelta)
 {
 	Set_ConstantTable();
 
-	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), 0, m_uiTexIdx);
+	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), 0, m_uiTexIdx, Engine::MATRIXID::PROJECTION);
 	m_pBufferCom->Begin_Buffer();
 
 	m_pBufferCom->Render_Buffer();
@@ -106,24 +106,14 @@ HRESULT CSkyBox::Add_Component(wstring wstrTextureTag)
 
 void CSkyBox::Set_ConstantTable()
 {
-	_matrix* pmatView = Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::VIEW);
-	_matrix* pmatProj = Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::PROJECTION);
-
-	if (nullptr == pmatProj)
-		return;
-
 	/*__________________________________________________________________________________________________________
-	[ CB 정보 전달 ]
+	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
-	Engine::CB_MATRIX_DESC	tCB_MatrixDesc;
-	ZeroMemory(&tCB_MatrixDesc, sizeof(Engine::CB_MATRIX_DESC));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matWVP, XMMatrixTranspose(m_pTransCom->m_matWorld * (*pmatView) * (*pmatProj)));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matWorld, XMMatrixTranspose(m_pTransCom->m_matWorld));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matView, XMMatrixTranspose(*pmatView));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matProj, XMMatrixTranspose(*pmatProj));
+	Engine::CB_SHADER_SKYBOX tCB_ShaderSkyBox;
+	ZeroMemory(&tCB_ShaderSkyBox, sizeof(Engine::CB_SHADER_SKYBOX));
+	tCB_ShaderSkyBox.matWorld = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
 
-	m_pShaderCom->Get_UploadBuffer_MatrixDesc()->CopyData(0, tCB_MatrixDesc);
-
+	m_pShaderCom->Get_UploadBuffer_ShaderSkyBox()->CopyData(0, tCB_ShaderSkyBox);
 }
 
 CSkyBox * CSkyBox::Create(ID3D12Device * pGraphicDevice, 

@@ -177,8 +177,8 @@ HRESULT CShaderBlend::Create_RootSignature()
 															  pSignatureBlob->GetBufferSize(),
 															  IID_PPV_ARGS(&m_pRootSignature)),
 															  E_FAIL);
-	Engine::Safe_Release(pSignatureBlob);
-	Engine::Safe_Release(pErrorBlob);
+	Safe_Release(pSignatureBlob);
+	Safe_Release(pErrorBlob);
 
 	return S_OK;
 }
@@ -290,7 +290,6 @@ CShaderBlend * CShaderBlend::Create(ID3D12Device * pGraphicDebice, ID3D12Graphic
 void CShaderBlend::Free()
 {
 	CShader::Free();
-
 	Safe_Release(m_pTexDescriptorHeap);
 
 }

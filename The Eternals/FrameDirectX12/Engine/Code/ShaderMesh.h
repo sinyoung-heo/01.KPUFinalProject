@@ -21,12 +21,11 @@ private:
 
 public:
 	// Get
-	CUploadBuffer<CB_MATRIX_DESC>*		Get_UploadBuffer_MatrixDesc()	{ return m_pCB_MatrixDesc; }
-	CUploadBuffer<CB_SKINNING_DESC>*	Get_UploadBuffer_SkinningDesc() { return m_pCB_SkinningDesc; }
-	CUploadBuffer<CB_SHADOW_DESC>*		Get_UploadBuffer_ShadowDesc()	{ return m_pCB_ShadowDesc; }
-
+	CUploadBuffer<CB_SHADER_MESH>*		Get_UploadBuffer_ShaderMesh()	{ return m_pCB_ShaderMesh; }
+	CUploadBuffer<CB_SKINNING_MATRIX>*	Get_UploadBuffer_SkinningDesc() { return m_pCB_SkinningMatrix; }
 
 	HRESULT			SetUp_ShaderConstantBuffer(const _uint& uiNumSubsetMesh = 1);
+
 	// CShader을(를) 통해 상속됨
 	virtual HRESULT	Ready_Shader();
 
@@ -53,11 +52,11 @@ private:
 																  const D3D12_BLEND& DstBlendAlpha		= D3D12_BLEND_ZERO,
 																  const D3D12_BLEND_OP& BlendOpAlpha	= D3D12_BLEND_OP_ADD);
 private:
-	CUploadBuffer<CB_MATRIX_DESC>*		m_pCB_MatrixDesc		= nullptr;
-	CUploadBuffer<CB_SKINNING_DESC>*	m_pCB_SkinningDesc		= nullptr;
-	CUploadBuffer<CB_SHADOW_DESC>*		m_pCB_ShadowDesc		= nullptr;
-
 	_uint m_uiSubsetMeshSize = 0;
+
+	CUploadBuffer<CB_SHADER_MESH>*		m_pCB_ShaderMesh		= nullptr;
+	CUploadBuffer<CB_SKINNING_MATRIX>*	m_pCB_SkinningMatrix	= nullptr;
+
 
 public:
 	virtual CComponent *	Clone() override;

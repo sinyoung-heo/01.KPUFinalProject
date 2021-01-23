@@ -24,7 +24,6 @@ namespace Engine
 	typedef	float				_float;
 	typedef	double				_double;
 
-	typedef XMVECTOR			_vector;
 	typedef	XMMATRIX			_matrix;
 
 }

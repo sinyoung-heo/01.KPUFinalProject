@@ -524,7 +524,7 @@ void CRenderTarget::Render_RenderTarget()
 	{
 		Set_ConstantTable(i);
 
-		m_pShaderCom->Begin_Shader(m_pTexDescriptorHeap, i, i);
+		m_pShaderCom->Begin_Shader(m_pTexDescriptorHeap, i, i, Engine::MATRIXID::ORTHO);
 		m_pBufferCom->Begin_Buffer();
 
 		m_pBufferCom->Render_Buffer();
@@ -543,11 +543,20 @@ void CRenderTarget::Set_ConstantTable(const _uint & iIdx)
 	_matrix matTrans = XMMatrixTranslation(vPos.x, vPos.y, vPos.z);
 	_matrix matWorld = matScale * matTrans;
 
-	CB_MATRIX_DESC	tCB_MatrixDesc;
-	ZeroMemory(&tCB_MatrixDesc, sizeof(CB_MATRIX_DESC));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matWVP, XMMatrixTranspose(matWorld * matView * matProj));
+	/*__________________________________________________________________________________________________________
+	[ Set ConstantBuffer Data ]
+	____________________________________________________________________________________________________________*/
+	CB_CAMERA_MATRIX tCB_CameraMatrix;
+	ZeroMemory(&tCB_CameraMatrix, sizeof(CB_CAMERA_MATRIX));
+	tCB_CameraMatrix.matView	= CShader::Compute_MatrixTranspose(matView);
+	tCB_CameraMatrix.matProj	= CShader::Compute_MatrixTranspose(matProj);
 
-	m_pShaderCom->Get_UploadBuffer_MatrixDesc()->CopyData(iIdx, tCB_MatrixDesc);
+	CB_SHADER_TEXTURE tCB_ShaderTexture;
+	ZeroMemory(&tCB_ShaderTexture, sizeof(CB_SHADER_TEXTURE));
+	tCB_ShaderTexture.matWorld = CShader::Compute_MatrixTranspose(matWorld);
+
+	m_pShaderCom->Get_UploadBuffer_CameraOrthoMatrix()->CopyData(0, tCB_CameraMatrix);
+	m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(iIdx, tCB_ShaderTexture);
 }
 
 HRESULT CRenderTarget::Create_TextureDescriptorHeap()

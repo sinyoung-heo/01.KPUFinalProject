@@ -8,6 +8,7 @@ namespace Engine
 	class CObjectMgr;
 	class CManagement;
 	class CRenderer;
+	class CLightMgr;
 }
 
 class CToolMainApp : public Engine::CBase
@@ -42,6 +43,7 @@ private:
 	Engine::CObjectMgr*			m_pObjectMgr		= nullptr;
 	Engine::CManagement*		m_pManagement		= nullptr;
 	Engine::CRenderer*			m_pRenderer			= nullptr;
+	Engine::CLightMgr*			m_pLightMgr			= nullptr;
 
 public:
 	static CToolMainApp* Create();

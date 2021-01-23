@@ -359,6 +359,8 @@ public:
 	afx_msg void OnBnClickedButton1014_NaviMeshCellAllDelete();
 	afx_msg void OnLbnSelchangeList1005_NaviMeshCellListBox();
 	afx_msg void OnEnChangeEdit1072_NaviMeshCellOption();
+	afx_msg void OnBnClickedButton1015_NaviMeshCellSAVE();
+	afx_msg void OnBnClickedButton1016_NaviMeshCellLOAD();
 
 	// Contorl
 	CButton		m_NaviMeshRadio_CreateMode;
@@ -394,7 +396,4 @@ public:
 	_bool m_bIsNaviCreateMode = true;
 	_bool m_bIsNaviModifyMode = false;
 	_int m_bIsCellSelectIdx = -1;
-
-	afx_msg void OnBnClickedButton1015_NaviMeshCellSAVE();
-	afx_msg void OnBnClickedButton1016_NaviMeshCellLOAD();
 };

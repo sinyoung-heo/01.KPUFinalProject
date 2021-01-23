@@ -97,32 +97,15 @@ HRESULT CCubeObject::Add_Component()
 
 void CCubeObject::Set_ConstantTable()
 {
-	_matrix* pmatView = Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::MATRIXID::VIEW);
-	_matrix* pmatProj = Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::MATRIXID::PROJECTION);
-
-	if (nullptr == pmatView || nullptr == pmatProj)
-		return;
-
 	/*__________________________________________________________________________________________________________
-	[ Set CB Data ]
+	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
-	// Matrix Info
-	Engine::CB_MATRIX_DESC	tCB_MatrixDesc;
-	ZeroMemory(&tCB_MatrixDesc, sizeof(Engine::CB_MATRIX_DESC));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matWVP, XMMatrixTranspose(m_pTransCom->m_matWorld * (*pmatView) * (*pmatProj)));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matWorld, XMMatrixTranspose(m_pTransCom->m_matWorld));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matView, XMMatrixTranspose(*pmatView));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matProj, XMMatrixTranspose(*pmatProj));
+	Engine::CB_SHADER_COLOR tCB_ShaderColor;
+	ZeroMemory(&tCB_ShaderColor, sizeof(Engine::CB_SHADER_COLOR));
+	tCB_ShaderColor.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderColor.vColor		= _rgba(0.0f, 1.0f, 1.0f, 1.0f);
 
-	m_pShaderCom->Get_UploadBuffer_MatrixDesc()->CopyData(0, tCB_MatrixDesc);
-
-	// Color Info
-	Engine::CB_COLOR_DESC	tCB_ColorDesc;
-	ZeroMemory(&tCB_ColorDesc, sizeof(Engine::CB_COLOR_DESC));
-	tCB_ColorDesc.vColor = _rgba(0.0f, 1.0f, 1.0f, 1.0f);
-
-	m_pShaderCom->Get_UploadBuffer_ColorDesc()->CopyData(0, tCB_ColorDesc);
-
+	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ShaderColor);
 }
 
 CCubeObject * CCubeObject::Create(ID3D12Device * pGraphicDevice,

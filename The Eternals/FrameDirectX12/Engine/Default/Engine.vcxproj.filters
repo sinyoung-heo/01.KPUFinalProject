@@ -103,23 +103,11 @@
     <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader">
       <UniqueIdentifier>{25632ef7-3f05-4319-9771-036ac9cca6b5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\02.ShaderMesh">
-      <UniqueIdentifier>{37c61b46-50ce-474e-927a-a0bcea2a3c34}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\03.ShaderSkyBox">
-      <UniqueIdentifier>{106e0b91-c773-4a45-9c2d-5fb85ea87b80}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\03.Light">
       <UniqueIdentifier>{ac3da27b-092c-442d-a11f-d1fbcd4b8310}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\04.ShaderLight">
-      <UniqueIdentifier>{78cb0134-7bf9-46ea-aea8-fc1ef56439e9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\00.Buffer\05.ScreenTex">
       <UniqueIdentifier>{b5bde4cb-78e6-4606-9a21-8fb28c5c756e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\05.ShaderBlend">
-      <UniqueIdentifier>{474ac61e-9a10-4c9b-b6c5-c62f4e2bd899}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\00.ShaderColor">
       <UniqueIdentifier>{ec387493-e82b-409b-8aab-4896b9e9d296}</UniqueIdentifier>
@@ -138,9 +126,6 @@
     </Filter>
     <Filter Include="97.Mgr\02.FrustomMgr">
       <UniqueIdentifier>{4399fbf6-4ee2-405b-899b-3b6fef6f8b67}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\06.ShaderShadow">
-      <UniqueIdentifier>{f81e7572-66e6-4b7a-901c-0b9c99cfb802}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\03.NaviMesh">
       <UniqueIdentifier>{d7017b1a-322f-4482-a8cd-c89bdcb1f503}</UniqueIdentifier>
@@ -162,6 +147,21 @@
     </Filter>
     <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\00.Buffer\06.CoordinateCol">
       <UniqueIdentifier>{2ad9604a-d2f1-4ebb-a3ab-d6608b545bff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\02.ShaderSkyBox">
+      <UniqueIdentifier>{106e0b91-c773-4a45-9c2d-5fb85ea87b80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\03.ShaderMesh">
+      <UniqueIdentifier>{37c61b46-50ce-474e-927a-a0bcea2a3c34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\04.ShaderShadow">
+      <UniqueIdentifier>{f81e7572-66e6-4b7a-901c-0b9c99cfb802}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\05.ShaderLight">
+      <UniqueIdentifier>{78cb0134-7bf9-46ea-aea8-fc1ef56439e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\06.ShaderBlend">
+      <UniqueIdentifier>{474ac61e-9a10-4c9b-b6c5-c62f4e2bd899}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -292,13 +292,13 @@
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\00.Buffer\02.RcTex</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\ShaderMesh.h">
-      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\02.ShaderMesh</Filter>
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\03.ShaderMesh</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\CubeTex.h">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\00.Buffer\03.CubeTex</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\ShaderSkyBox.h">
-      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\03.ShaderSkyBox</Filter>
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\02.ShaderSkyBox</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\RenderTarget.h">
       <Filter>01.Utility\02.RenderTarget</Filter>
@@ -307,7 +307,7 @@
       <Filter>01.Utility\03.Light</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\ShaderLighting.h">
-      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\04.ShaderLight</Filter>
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\05.ShaderLight</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\LightMgr.h">
       <Filter>01.Utility\03.Light</Filter>
@@ -322,7 +322,7 @@
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\00.ShaderColor</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\ShaderBlend.h">
-      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\05.ShaderBlend</Filter>
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\06.ShaderBlend</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\Mesh.h">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\02.Mesh</Filter>
@@ -331,7 +331,7 @@
       <Filter>97.Mgr\02.FrustomMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\ShaderShadow.h">
-      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\06.ShaderShadow</Filter>
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\04.ShaderShadow</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\Line.h">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\03.NaviMesh\00.Line</Filter>
@@ -447,13 +447,13 @@
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\00.Buffer\02.RcTex</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\ShaderMesh.cpp">
-      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\02.ShaderMesh</Filter>
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\03.ShaderMesh</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CubeTex.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\00.Buffer\03.CubeTex</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\ShaderSkyBox.cpp">
-      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\03.ShaderSkyBox</Filter>
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\02.ShaderSkyBox</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\RenderTarget.cpp">
       <Filter>01.Utility\02.RenderTarget</Filter>
@@ -462,7 +462,7 @@
       <Filter>01.Utility\03.Light</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\ShaderLighting.cpp">
-      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\04.ShaderLight</Filter>
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\05.ShaderLight</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\LightMgr.cpp">
       <Filter>01.Utility\03.Light</Filter>
@@ -477,7 +477,7 @@
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\00.ShaderColor</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\ShaderBlend.cpp">
-      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\05.ShaderBlend</Filter>
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\06.ShaderBlend</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Mesh.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\02.Mesh</Filter>
@@ -486,7 +486,7 @@
       <Filter>97.Mgr\02.FrustomMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\ShaderShadow.cpp">
-      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\06.ShaderShadow</Filter>
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\04.ShaderShadow</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Line.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\03.NaviMesh\00.Line</Filter>
@@ -503,13 +503,13 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Bin\Shader\ShaderMesh.hlsl">
-      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\02.ShaderMesh</Filter>
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\03.ShaderMesh</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderSkyBox.hlsl">
-      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\03.ShaderSkyBox</Filter>
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\02.ShaderSkyBox</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderLighting.hlsl">
-      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\04.ShaderLight</Filter>
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\05.ShaderLight</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderTexture.hlsl">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\01.ShaderTexture</Filter>
@@ -518,10 +518,10 @@
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\00.ShaderColor</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderBlend.hlsl">
-      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\05.ShaderBlend</Filter>
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\06.ShaderBlend</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderShadow.hlsl">
-      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\06.ShaderShadow</Filter>
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\04.ShaderShadow</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

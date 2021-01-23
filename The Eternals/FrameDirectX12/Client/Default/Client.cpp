@@ -29,7 +29,7 @@ ________________________________________________________________________________
 HINSTANCE	g_hInst;							// 현재 인스턴스입니다.
 HWND		g_hWnd;
 
-_bool		g_bIsOnDebugCaemra = false;
+_bool		g_bIsOnDebugCaemra = true;
 
 
 _ulong Release_Singleton();
@@ -318,6 +318,12 @@ _ulong Release_Singleton()
 	COUT_STR("-------------------------");
 #endif
 	_ulong dwRefCnt = 0;
+
+	if (dwRefCnt = CShadowLightMgr::Get_Instance()->Destroy_Instance())
+	{
+		MSG_BOX(L"CFrameMgr Release Failed");
+		return dwRefCnt;
+	}
 
 	if (dwRefCnt = Engine::CFrameMgr::Get_Instance()->Destroy_Instance())
 	{

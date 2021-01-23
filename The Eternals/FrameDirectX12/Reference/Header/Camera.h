@@ -3,6 +3,12 @@
 
 BEGIN(Engine)
 
+class CShaderColor;
+class CShaderTexture;
+class CShaderMesh;
+class CShaderSkyBox;
+class CShaderShadow;
+
 class ENGINE_DLL CCamera : public CGameObject
 {
 protected:
@@ -31,15 +37,26 @@ public:
 	virtual _int		Update_GameObject(const _float& fTimeDelta);
 
 protected:
-	/*____________________________________________________________________
+	void				Set_ConstantTable();
+
+protected:
+	/*__________________________________________________________________________________________________________
 	[ Value ]
-	______________________________________________________________________*/
+	____________________________________________________________________________________________________________*/
 	CAMERA_DESC	m_tCameraInfo	{ };	// Camera - Eyte, At, Up
 	PROJ_DESC	m_tProjInfo		{ };	// 원근 투영 정보를 담은 구조체.
 	ORTHO_DESC	m_tOrthoInfo	{ };	// 직교 투영 정보를 담은 구조체.
 
+	/*__________________________________________________________________________________________________________
+	[ Shader Component ]
+	____________________________________________________________________________________________________________*/
+	CShaderColor*	m_pShaderColor		= nullptr;
+	CShaderTexture* m_pShaderTexture	= nullptr;
+	CShaderSkyBox*	m_pShaderSkyBox		= nullptr;
+	CShaderMesh*	m_pShaderMesh		= nullptr;
+
 protected:
-	virtual void			Free();
+	virtual void Free();
 };
 
 END

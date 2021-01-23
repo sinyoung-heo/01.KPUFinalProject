@@ -3861,7 +3861,7 @@ void CTabMap::OnBnClickedButton1010__LightInfo_PL_LOAD()
 					>> tLightInfo.Ambient.y		
 					>> tLightInfo.Ambient.z			
 					>> tLightInfo.Ambient.w	
-					>> tLightInfo.Position.x	// Direction
+					>> tLightInfo.Position.x	// Position
 					>> tLightInfo.Position.y
 					>> tLightInfo.Position.z
 					>> tLightInfo.Position.w

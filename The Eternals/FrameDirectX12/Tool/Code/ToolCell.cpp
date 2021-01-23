@@ -213,6 +213,7 @@ HRESULT CToolCell::Add_Component()
 	NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->AddRef();
 	m_pShaderCom->Set_PipelineStatePass(1);
+	
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
 	// Collider
@@ -277,29 +278,15 @@ HRESULT CToolCell::Add_Component()
 
 void CToolCell::Set_ConstantTable()
 {
-	_matrix* pmatView = Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::MATRIXID::VIEW);
-	_matrix* pmatProj = Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::MATRIXID::PROJECTION);
-
-	if (nullptr == pmatView || nullptr == pmatProj)
-		return;
-
 	/*__________________________________________________________________________________________________________
-	[ Set CB Data ]
+	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
-	// Matrix Info
-	Engine::CB_MATRIX_DESC	tCB_MatrixDesc;
-	ZeroMemory(&tCB_MatrixDesc, sizeof(Engine::CB_MATRIX_DESC));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matWVP, XMMatrixTranspose((*pmatView) * (*pmatProj)));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matWorld, XMMatrixTranspose(INIT_MATRIX));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matView, XMMatrixTranspose(*pmatView));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matProj, XMMatrixTranspose(*pmatProj));
-	m_pShaderCom->Get_UploadBuffer_MatrixDesc()->CopyData(0, tCB_MatrixDesc);
+	Engine::CB_SHADER_COLOR tCB_ShaderColor;
+	ZeroMemory(&tCB_ShaderColor, sizeof(Engine::CB_SHADER_COLOR));
+	tCB_ShaderColor.matWorld	= Engine::CShader::Compute_MatrixTranspose(INIT_MATRIX);
+	tCB_ShaderColor.vColor		= m_vColor;
 
-	// Color Info
-	Engine::CB_COLOR_DESC	tCB_ColorDesc;
-	ZeroMemory(&tCB_ColorDesc, sizeof(Engine::CB_COLOR_DESC));
-	tCB_ColorDesc.vColor = m_vColor;
-	m_pShaderCom->Get_UploadBuffer_ColorDesc()->CopyData(0, tCB_ColorDesc);
+	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ShaderColor);
 }
 
 void CToolCell::CheckClockWise(_vec3& p0, _vec3& p1, _vec3& p2)
@@ -343,29 +330,9 @@ ID3D12Resource* CToolCell::Create_DefaultBuffer(const void* InitData,
 	/*__________________________________________________________________________________________________________
 	[ 실제 기본 버퍼 자원을 생성 ]
 	____________________________________________________________________________________________________________*/
-	D3D12_HEAP_PROPERTIES Default_HeapProperties;
-	Default_HeapProperties.Type                 = D3D12_HEAP_TYPE_DEFAULT;
-	Default_HeapProperties.CPUPageProperty      = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-	Default_HeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-	Default_HeapProperties.CreationNodeMask     = 1;
-	Default_HeapProperties.VisibleNodeMask      = 1;
-
-	D3D12_RESOURCE_DESC Default_ResourceDesc;
-	Default_ResourceDesc.Dimension				= D3D12_RESOURCE_DIMENSION_BUFFER;
-	Default_ResourceDesc.Alignment				= 0;
-	Default_ResourceDesc.Width					= uiByteSize;
-	Default_ResourceDesc.Height					= 1;
-	Default_ResourceDesc.DepthOrArraySize		= 1;
-	Default_ResourceDesc.MipLevels				= 1;
-	Default_ResourceDesc.Format					= DXGI_FORMAT_UNKNOWN;
-	Default_ResourceDesc.SampleDesc.Count		= 1;
-	Default_ResourceDesc.SampleDesc.Quality		= 0;
-	Default_ResourceDesc.Layout					= D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	Default_ResourceDesc.Flags					= D3D12_RESOURCE_FLAG_NONE;
-
-	Engine::FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommittedResource(&Default_HeapProperties,
+	Engine::FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 																		  D3D12_HEAP_FLAG_NONE,
-																		  &Default_ResourceDesc,
+																		  &CD3DX12_RESOURCE_DESC::Buffer(uiByteSize),
 																		  D3D12_RESOURCE_STATE_COMMON,
 																		  nullptr,
 																		  IID_PPV_ARGS(&pDefaultBuffer)), 
@@ -374,35 +341,14 @@ ID3D12Resource* CToolCell::Create_DefaultBuffer(const void* InitData,
 	/*__________________________________________________________________________________________________________
 	- CPU 메모리의 자료를 기본 버퍼에 복사하려면, 임시 업로드 힙을 만들어야 한다.
 	____________________________________________________________________________________________________________*/
-	D3D12_HEAP_PROPERTIES Upload_HeapProperties;
-	Upload_HeapProperties.Type                 = D3D12_HEAP_TYPE_UPLOAD;
-	Upload_HeapProperties.CPUPageProperty      = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-	Upload_HeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-	Upload_HeapProperties.CreationNodeMask     = 1;
-	Upload_HeapProperties.VisibleNodeMask      = 1;
-
-	D3D12_RESOURCE_DESC Upload_ResourceDest;
-	Upload_ResourceDest.Dimension				= D3D12_RESOURCE_DIMENSION_BUFFER;
-	Upload_ResourceDest.Alignment				= 0;
-	Upload_ResourceDest.Width					= uiByteSize;
-	Upload_ResourceDest.Height					= 1;
-	Upload_ResourceDest.DepthOrArraySize		= 1;
-	Upload_ResourceDest.MipLevels				= 1;
-	Upload_ResourceDest.Format					= DXGI_FORMAT_UNKNOWN;
-	Upload_ResourceDest.SampleDesc.Count		= 1;
-	Upload_ResourceDest.SampleDesc.Quality		= 0;
-	Upload_ResourceDest.Layout					= D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	Upload_ResourceDest.Flags					= D3D12_RESOURCE_FLAG_NONE;
-
-	Engine::FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommittedResource(&Upload_HeapProperties,
+	Engine::FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 																		  D3D12_HEAP_FLAG_NONE,
-																		  &Upload_ResourceDest,
+																		  &CD3DX12_RESOURCE_DESC::Buffer(uiByteSize),
 																		  D3D12_RESOURCE_STATE_GENERIC_READ,
 																		  nullptr,
 																		  IID_PPV_ARGS(&pUploadBuffer)), 
 																		  NULL);
 
-	
 	/*__________________________________________________________________________________________________________
 	[ 기본 버퍼에 복사할 자료를 서술 ]
 	____________________________________________________________________________________________________________*/
@@ -411,39 +357,26 @@ ID3D12Resource* CToolCell::Create_DefaultBuffer(const void* InitData,
 	subResourceData.RowPitch	= uiByteSize;
 	subResourceData.SlicePitch	= subResourceData.RowPitch;
 
+
 	/*__________________________________________________________________________________________________________
 	[ 기본 버퍼 자원으로의 자료 복사를 요청 ]
 	- 계략적으로 말하자면, 보조 함수 UpdateSubresources는 CPU 메모리를 임시 업로드 힙에 복사하고,
 	ID3D12CommandList::CopySubresourceRegion을 이용해서 임시 업로드 힙의 자료를 mBuffer에 복사한다.
-	____________________________________________________________________________________________________________*/
-	D3D12_RESOURCE_BARRIER ResourceBarrier;
-	ResourceBarrier.Type                    = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	ResourceBarrier.Flags                   = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	ResourceBarrier.Transition.Subresource  = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-	ResourceBarrier.Transition.pResource    = pDefaultBuffer;
-	ResourceBarrier.Transition.StateBefore  = D3D12_RESOURCE_STATE_COMMON;
-	ResourceBarrier.Transition.StateAfter   = D3D12_RESOURCE_STATE_COPY_DEST;
-	m_pCommandList->ResourceBarrier(1, &ResourceBarrier);
 
-	UpdateSubresources<1>(m_pCommandList, 
-						  pDefaultBuffer, 
-						  pUploadBuffer, 
-						  0, 
-						  0, 
-						  1,
-						  &subResourceData);
-
-	ResourceBarrier.Transition.pResource    = pDefaultBuffer;
-	ResourceBarrier.Transition.StateBefore  = D3D12_RESOURCE_STATE_COPY_DEST;
-	ResourceBarrier.Transition.StateAfter   = D3D12_RESOURCE_STATE_GENERIC_READ;
-	m_pCommandList->ResourceBarrier(1, &ResourceBarrier);
-
-	/*__________________________________________________________________________________________________________
 	[ 주의 ]
 	- 위의 함수 호출 이후에도, UploadBuffer를 계속 유지해야 한다.
 	- 실제로 복사를 수행하는 명령 목록이 아직 실행되지 않았기 때문이다.
 	- 복사가 완료되었음이 확실해진 후에 호출자가 UploadBuffer를 해제하면 된다.
 	____________________________________________________________________________________________________________*/
+	m_pCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(pDefaultBuffer,
+																			 D3D12_RESOURCE_STATE_COMMON, 
+																			 D3D12_RESOURCE_STATE_COPY_DEST));
+
+	UpdateSubresources<1>(m_pCommandList, pDefaultBuffer, pUploadBuffer, 0, 0, 1, &subResourceData);
+
+	m_pCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(pDefaultBuffer,
+																			 D3D12_RESOURCE_STATE_COPY_DEST, 
+																			 D3D12_RESOURCE_STATE_GENERIC_READ));
 
 	Engine::CGraphicDevice::Get_Instance()->End_ResetCmdList(Engine::CMDID::CMD_MAIN);
 

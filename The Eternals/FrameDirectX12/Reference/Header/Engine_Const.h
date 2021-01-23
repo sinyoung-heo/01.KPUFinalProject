@@ -12,6 +12,6 @@ namespace Engine
 	const _int	MIN_STR				= 64;
 	const _int	MAX_STR				= 256;
 
-	const _float SHADOWTEX_WIDTH	= 4048.0f;
-	const _float SHADOWTEX_HEIGHT	= 4048.0f;
+	const _float SHADOWTEX_WIDTH	= 8192.0f;
+	const _float SHADOWTEX_HEIGHT	= 8192.0f;
 }

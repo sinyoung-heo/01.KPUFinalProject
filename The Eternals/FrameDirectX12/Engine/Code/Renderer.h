@@ -44,7 +44,7 @@ public:
 	const _uint&	Get_CntPipelineState()								{ return m_uiCnt_PipelineState; }
 	const _uint&	Get_CntSetPipelineState()							{ return m_uiCnt_SetPipelineState; }
 	_bool			Get_RenderOnOff(wstring wstrTag);
-	CRenderTarget*	Get_ShadowDepthTarget()								{ return m_pShadowDepthTarget; }
+	CRenderTarget*	Get_TargetShadowDepth()								{ return m_pTargetShadowDepth; }
 
 	// Set
 	HRESULT	Set_CurPipelineState(ID3D12PipelineState* pPipelineState);
@@ -101,9 +101,9 @@ private:
 	[ Multi RenderTarget ]
 	____________________________________________________________________________________________________________*/
 	// Render Target
-	CRenderTarget*	m_pDeferredTarget		= nullptr;
-	CRenderTarget*	m_pLightTarget			= nullptr;
-	CRenderTarget*	m_pShadowDepthTarget	= nullptr;
+	CRenderTarget*	m_pTargetDeferred		= nullptr;
+	CRenderTarget*	m_pTargetLight			= nullptr;
+	CRenderTarget*	m_pTargetShadowDepth	= nullptr;
 
 	// Blend
 	CScreenTex*		m_pBlendBuffer			= nullptr;

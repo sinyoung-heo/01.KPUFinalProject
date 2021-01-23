@@ -13,9 +13,12 @@ protected:
 public:
 	// Get
 	array<const CD3DX12_STATIC_SAMPLER_DESC, 6>	Get_StaticSamplers();
-	ID3D12RootSignature*						Get_RootSignature()		{ return m_pRootSignature; }
+	ID3D12RootSignature*						Get_RootSignature()						{ return m_pRootSignature; }
 	ID3D12PipelineState*						Get_PipelineState(const _uint& iIdx = 0);
-	ID3D12PipelineState*						Get_PipelineStatePass()	{ return m_pPipelineState; }
+	ID3D12PipelineState*						Get_PipelineStatePass()					{ return m_pPipelineState; }
+	CUploadBuffer<CB_CAMERA_MATRIX>*			Get_UploadBuffer_CameraProjMatrix()		{ return m_pCB_CameraProjMatrix; }
+	CUploadBuffer<CB_CAMERA_MATRIX>*			Get_UploadBuffer_CameraOrthoMatrix()	{ return m_pCB_CameraOrthoMatrix; }
+
 	// Set
 	HRESULT					Set_PipelineStatePass(const _uint& iIdx = 0);
 
@@ -31,6 +34,9 @@ public:
 										 const _int& iContextIdx,
 										 ID3D12DescriptorHeap* pTexDescriptorHeap = nullptr,
 										 const _uint& iIdx = 0);
+
+public:
+	static XMFLOAT4X4	Compute_MatrixTranspose(_matrix& mat);
 
 protected:
 	virtual HRESULT								Create_DescriptorHeaps();
@@ -61,27 +67,30 @@ protected:
 	- 루트 서명은 반드시 그리기 호출에 쓰이는 셰이더들과 호환돼야 한다.
 	- 루트 서명의 유효성은 파이프라인 상태 객체를 생성할 때 검증된다.
 	- 그리기 호출마다 서로 다른 셰이더 프로그램들을 사용할 수 있으며, 그런 경우 루트 서명도 달라야 한다.
-	____________________________________________________________________________________________________________*/
-	ID3D12RootSignature*			m_pRootSignature	= nullptr;
 
-	/*__________________________________________________________________________________________________________
 	[ 파이프라인 상태 객체(Pipeline State Object, PSO) ]
 	- DirectX 9 Shader에서 technique - pass의 개념.
 	- PSO 검증과 생성에는 많은 시간이 걸릴 수 있으므로, 초기화 시점에서 생성해야 한다.
 	- 성능을 위해서는 PSO 상태 변경을 최소화해야 한다.
 	- 같은 PSO를 사용할 수 있는 물체들은 모두 함께 그려야 마땅하다.
 	____________________________________________________________________________________________________________*/
-	vector<ID3D12PipelineState*>	m_vecPipelineState;
-	ID3D12PipelineState*			m_pPipelineState	= nullptr;	// Current PipelineState
+	ID3D12RootSignature*			m_pRootSignature			= nullptr;
+	ID3D12PipelineState*			m_pPipelineState			= nullptr;	// Current PipelineState
+	vector<ID3D12PipelineState*>	m_vecPipelineState;						// All Shader PipelineState
 
-	_uint		m_uiCBV_SRV_UAV_DescriptorSize			= 0;
-	_uint		m_uiTexSize								= 0;
+	_uint		m_uiCBV_SRV_UAV_DescriptorSize					= 0;
+	_uint		m_uiTexSize										= 0;
 
-	ID3DBlob*	m_pVS_ByteCode							= nullptr;
-	ID3DBlob*	m_pPS_ByteCode							= nullptr;
+	ID3DBlob*	m_pVS_ByteCode									= nullptr;
+	ID3DBlob*	m_pPS_ByteCode									= nullptr;
+
+	// Camera ConstantBuffer
+	CUploadBuffer<CB_CAMERA_MATRIX>* m_pCB_CameraProjMatrix		= nullptr;
+	CUploadBuffer<CB_CAMERA_MATRIX>* m_pCB_CameraOrthoMatrix	= nullptr;
+
 
 public:
-	virtual CComponent* Clone() PURE;
+	virtual CComponent* Clone() { return nullptr; };
 protected:
 	virtual void		Free();
 };

@@ -69,15 +69,23 @@ _int CMainApp::Update_MainApp(const _float & fTimeDelta)
 	Engine::NULL_CHECK_RETURN(m_pManagement, -1);
 
 	/*__________________________________________________________________________________________________________
-	Direct Input
-	____________________________________________________________________________________________________________*/
-	Engine::CDirectInput::Get_Instance()->SetUp_InputState();
-
-	/*__________________________________________________________________________________________________________
 	[ Key Input ]
 	____________________________________________________________________________________________________________*/
+	Engine::CDirectInput::Get_Instance()->SetUp_InputState();
 	Key_Input();
 
+	/*__________________________________________________________________________________________________________
+	[ Update Management ]
+	____________________________________________________________________________________________________________*/
+	CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+	m_pManagement->Update_Management(fTimeDelta);
+
+	return 0;
+}
+
+_int CMainApp::LateUpdate_MainApp(const _float & fTimeDelta)
+{
+	Engine::NULL_CHECK_RETURN(m_pManagement, -1);
 
 	if (m_pRenderer->Get_RenderOnOff(L"DebugFont"))
 	{
@@ -127,22 +135,7 @@ _int CMainApp::Update_MainApp(const _float & fTimeDelta)
 			m_pFont_PipelineState->Update_GameObject(fTimeDelta);
 			m_pFont_PipelineState->Set_Text(wstring(m_szPipeline));
 		}
-	}
 
-	/*__________________________________________________________________________________________________________
-	[ Update Management ]
-	____________________________________________________________________________________________________________*/
-	m_pManagement->Update_Management(fTimeDelta);
-
-	return 0;
-}
-
-_int CMainApp::LateUpdate_MainApp(const _float & fTimeDelta)
-{
-	Engine::NULL_CHECK_RETURN(m_pManagement, -1);
-
-	if (m_pRenderer->Get_RenderOnOff(L"DebugFont"))
-	{
 		/*__________________________________________________________________________________________________________
 		[ Text RenderList Object Cnt ]
 		____________________________________________________________________________________________________________*/

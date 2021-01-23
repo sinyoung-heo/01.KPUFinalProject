@@ -21,9 +21,11 @@ CCell::CCell(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandLi
 HRESULT CCell::Ready_Cell(const _ulong& dwIndex, 
 						  const _vec3& vPointA,
 						  const _vec3& vPointB, 
-						  const _vec3& vPointC)
+						  const _vec3& vPointC,
+						  const _int& iOption)
 {
-	m_dwCurrentIdx = dwIndex;
+	m_dwCurrentIdx	= dwIndex;
+	m_iOption		= iOption;
 
 	m_vPoint[POINT_A] = vPointA;
 	m_vPoint[POINT_B] = vPointB;
@@ -139,31 +141,15 @@ void CCell::Render_Component(const _float& fTimeDelta)
 
 void CCell::Set_ConstantTable()
 {
-	_matrix* pmatView = CGraphicDevice::Get_Instance()->Get_Transform(MATRIXID::VIEW);
-	_matrix* pmatProj = CGraphicDevice::Get_Instance()->Get_Transform(MATRIXID::PROJECTION);
-
-	if (nullptr == pmatView || nullptr == pmatProj)
-		return;
-
 	/*__________________________________________________________________________________________________________
-	[ Set CB Data ]
+	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
-	// Matrix Info
-	CB_MATRIX_DESC	tCB_MatrixDesc;
-	ZeroMemory(&tCB_MatrixDesc, sizeof(CB_MATRIX_DESC));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matWVP, XMMatrixTranspose((*pmatView) * (*pmatProj)));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matWorld, XMMatrixTranspose(INIT_MATRIX));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matView, XMMatrixTranspose(*pmatView));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matProj, XMMatrixTranspose(*pmatProj));
+	CB_SHADER_COLOR tCB_ShaderColor;
+	ZeroMemory(&tCB_ShaderColor, sizeof(CB_SHADER_COLOR));
+	tCB_ShaderColor.matWorld	= CShader::Compute_MatrixTranspose(INIT_MATRIX);
+	tCB_ShaderColor.vColor		= _rgba(1.f, 0.f, 0.f, 1.f);
 
-	m_pShaderCom->Get_UploadBuffer_MatrixDesc()->CopyData(0, tCB_MatrixDesc);
-
-	// Color Info
-	CB_COLOR_DESC	tCB_ColorDesc;
-	ZeroMemory(&tCB_ColorDesc, sizeof(CB_COLOR_DESC));
-	tCB_ColorDesc.vColor = _rgba(1.f, 0.f, 0.f, 1.f);
-
-	m_pShaderCom->Get_UploadBuffer_ColorDesc()->CopyData(0, tCB_ColorDesc);
+	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ShaderColor);
 }
 
 _bool CCell::Compare_Point(const _vec3* pPointF, const _vec3* pPointS, CCell* pCell)
@@ -314,11 +300,12 @@ CCell* CCell::Create(ID3D12Device* pGraphicDevice,
 					 const _ulong& dwIndex,
 					 const _vec3& vPointA,
 					 const _vec3& vPointB,
-					 const _vec3& vPointC)
+					 const _vec3& vPointC,
+					 const _int& iOption)
 {
 	CCell* pInstance = new CCell(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_Cell(dwIndex, vPointA, vPointB, vPointC)))
+	if (FAILED(pInstance->Ready_Cell(dwIndex, vPointA, vPointB, vPointC, iOption)))
 		Safe_Release(pInstance);
 
 	return pInstance;

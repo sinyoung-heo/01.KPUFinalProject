@@ -7,6 +7,7 @@
 #include "ObjectMgr.h"
 #include "Management.h"
 #include "Renderer.h"
+#include "LightMgr.h"
 #include "Font.h"
 #include "ToolSceneLogo.h"
 
@@ -16,6 +17,7 @@ CToolMainApp::CToolMainApp()
 	, m_pObjectMgr(Engine::CObjectMgr::Get_Instance())
 	, m_pManagement(Engine::CManagement::Get_Instance())
 	, m_pRenderer(Engine::CRenderer::Get_Instance())
+	, m_pLightMgr(Engine::CLightMgr::Get_Instance())
 
 {
 }
@@ -59,6 +61,7 @@ _int CToolMainApp::Update_MainApp(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Update Management ]
 	____________________________________________________________________________________________________________*/
+	m_pLightMgr->Update_Light();
 	CShadowLightMgr::Get_Instance()->Update_ShadowLight();
 	m_pManagement->Update_Management(fTimeDelta);
 

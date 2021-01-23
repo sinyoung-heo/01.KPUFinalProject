@@ -17,7 +17,7 @@ CGameObject::CGameObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList
 	, m_pComponentMgr(CComponentMgr::Get_Instance())
 	, m_pFrustumMgr(CFrustumMgr::Get_Instance())
 {
-	ZeroMemory(&m_tShadowInfo, sizeof(CB_SHADOW_DESC));
+	// ZeroMemory(&m_tShadowInfo, sizeof(CB_SHADOW_DESC));
 }
 
 CGameObject::CGameObject(const CGameObject & rhs)
@@ -32,7 +32,7 @@ CGameObject::CGameObject(const CGameObject & rhs)
 	, m_bIsLateInit(rhs.m_bIsLateInit)
 	, m_fViewZ(rhs.m_fViewZ)
 	, m_UIDepth(rhs.m_UIDepth)
-	, m_tShadowInfo(rhs.m_tShadowInfo)
+	// , m_tShadowInfo(rhs.m_tShadowInfo)
 {
 }
 
@@ -213,23 +213,23 @@ void CGameObject::SetUp_ShadowDepth(_vec3 & vLightEye,
 									_vec3 & vLightAt,
 									_vec3 & vLightDir)
 {
-	// LightDir
-	vLightDir.y *= -1.5f;
-	vLightDir.x *= -1.0f;
+	//// LightDir
+	//vLightDir.y *= -1.5f;
+	//vLightDir.x *= -1.0f;
 
-	// LightView
-	_vec3 vEye						= vLightEye + (vLightDir) * 1000.0f;
-	_vec3 vAt						= vLightAt;
-	m_tShadowInfo.vLightPosition	= _vec4(vEye, 1.0f);
-	m_tShadowInfo.matLightView		= XMMatrixLookAtLH(vEye.Get_XMVECTOR(),
-													   vAt.Get_XMVECTOR(),
-													   _vec3(0.0f, 1.0f, 0.0f).Get_XMVECTOR());
-	// LightProj
-	m_tShadowInfo.fLightPorjFar		= 10000.0f;
-	m_tShadowInfo.matLightProj		= XMMatrixPerspectiveFovLH(XMConvertToRadians(15.0f),
-															   1.0f,
-															   1.0f, 
-															   m_tShadowInfo.fLightPorjFar);
+	//// LightView
+	//_vec3 vEye						= vLightEye + (vLightDir) * 1000.0f;
+	//_vec3 vAt						= vLightAt;
+	//m_tShadowInfo.vLightPosition	= _vec4(vEye, 1.0f);
+	//m_tShadowInfo.matLightView		= XMMatrixLookAtLH(vEye.Get_XMVECTOR(),
+	//												   vAt.Get_XMVECTOR(),
+	//												   _vec3(0.0f, 1.0f, 0.0f).Get_XMVECTOR());
+	//// LightProj
+	//m_tShadowInfo.fLightPorjFar		= 10000.0f;
+	//m_tShadowInfo.matLightProj		= XMMatrixPerspectiveFovLH(XMConvertToRadians(15.0f),
+	//														   1.0f,
+	//														   1.0f, 
+	//														   m_tShadowInfo.fLightPorjFar);
 }
 
 void CGameObject::Compute_ViewZ(_vec4& vPosInWorld)

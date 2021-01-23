@@ -16,21 +16,23 @@ Texture2D g_TexDiffuse : register(t0);
 /*____________________________________________________________________
 [ Constant Buffer ]
 ______________________________________________________________________*/
-cbuffer cbMatrixInfo	: register(b0)
+cbuffer cbCamreaMatrix : register(b0)
 {
-	float4x4 matWVP		: packoffset(c0);
-	float4x4 matWorld	: packoffset(c4);
-	float4x4 matView	: packoffset(c8);
-	float4x4 matProj	: packoffset(c12);
-};
+	float4x4	g_matView		: packoffset(c0);
+	float4x4	g_matProj		: packoffset(c4);
+	float4		g_vCameraPos	: packoffset(c8);
+	float		g_fProjFar		: packoffset(c9);
+}
 
-cbuffer cbTexSpriteInfo : register(b1)
+cbuffer cbShaderTexture : register(b1)
 {
-	int	iFrameCnt		= 1; // 스프라이트 이미지의 X축 개수.
-	int iFrameOffset	= 0;
-
-	int	iSceneCnt		= 1; // 스프라이트 이미지의 Y축 개수.
-	int iSceneOffset	= 0;
+	float4x4	g_matWorld	: packoffset(c0);
+	
+	int			g_iFrameCnt	: packoffset(c4.x);   // 스프라이트 이미지 X축 개수.
+	int			g_iCurFrame : packoffset(c4.y);   // 현재 그려지는 이미지의 X축 Index.
+	int			g_iSceneCnt : packoffset(c4.z);   // 스프라이트 이미지 Y축 개수.
+	int			g_iCurScene : packoffset(c4.w);   // 현재 그려지는 이미지의 Y축 Index.
+	
 }
 
 
@@ -54,6 +56,10 @@ VS_TEX_OUT VS_MAIN(VS_TEX_IN vs_input)
 {
 	VS_TEX_OUT vs_output = (VS_TEX_OUT) 0;
 	
+	float4x4 matWV, matWVP;
+	matWV	= mul(g_matWorld, g_matView);
+	matWVP	= mul(matWV, g_matProj);
+	
 	vs_output.Pos	= mul(float4(vs_input.Pos, 1.0f), matWVP);
 	vs_output.TexUV	= vs_input.TexUV;
 	
@@ -76,6 +82,10 @@ VS_TEX_OUT VS_TEXTURE_SPRITE(VS_TEX_IN vs_input)
 {
 	VS_TEX_OUT vs_output;
 	
+	float4x4 matWV, matWVP;
+	matWV	= mul(g_matWorld, g_matView);
+	matWVP	= mul(matWV, g_matProj);
+	
 	vs_output.Pos	= mul(float4(vs_input.Pos, 1.0f), matWVP);
 	vs_output.TexUV	= vs_input.TexUV;
 	
@@ -84,8 +94,8 @@ VS_TEX_OUT VS_TEXTURE_SPRITE(VS_TEX_IN vs_input)
 // PS_TEXTURE_SPRITE
 float4 PS_TEXTURE_SPRITE(VS_TEX_OUT ps_input) : SV_TARGET
 {
-	float u = (ps_input.TexUV.x / (float)iFrameCnt) + iFrameOffset * (1.0f / (float)iFrameCnt);
-	float v = (ps_input.TexUV.y / (float)iSceneCnt) + iSceneOffset * (1.0f / (float)iSceneCnt);
+	float u = (ps_input.TexUV.x / (float)g_iFrameCnt) + g_iCurFrame * (1.0f / (float)g_iFrameCnt);
+	float v = (ps_input.TexUV.y / (float)g_iSceneCnt) + g_iCurScene * (1.0f / (float)g_iSceneCnt);
 	
 	float4 Color = g_TexDiffuse.Sample(g_samLinearWrap, float2(u, v));
 	
@@ -115,6 +125,10 @@ struct VS_TEXNORMAL_OUT
 VS_TEXNORMAL_OUT VS_NORMAL_MAIN(VS_TEXNORMAL_IN vs_input)
 {
 	VS_TEXNORMAL_OUT vs_output = (VS_TEXNORMAL_OUT) 0;
+	
+	float4x4 matWV, matWVP;
+	matWV	= mul(g_matWorld, g_matView);
+	matWVP	= mul(matWV, g_matProj);
 	
 	vs_output.Pos		= mul(float4(vs_input.Pos, 1.0f), matWVP);
 	vs_output.Normal	= vs_input.Normal;

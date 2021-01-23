@@ -123,7 +123,7 @@ _vec3 CNaviMesh::Move_OnNaviMesh(const _vec3* pTargetPos,
 	if (CCell::COMPARE_MOVE == eResult)
 	{
 		//if(!bIsJump)
-		//vEndPos.y = GetNaviHeight(&vTargetPos); // test
+		vEndPos.y = Get_NaviMeshHeight(&vTargetPos); // test
 		return vEndPos;
 	}
 	
@@ -134,7 +134,7 @@ _vec3 CNaviMesh::Move_OnNaviMesh(const _vec3* pTargetPos,
 	{
 		vEndPos = *pTargetPos + vSliding * fSpeed;
 		//if (!bIsJump)
-		//vEndPos.y = GetNaviHeight(&vTargetPos); // test
+		vEndPos.y = Get_NaviMeshHeight(&vTargetPos); // test
 
 		return vEndPos;
 	}
@@ -155,7 +155,7 @@ _vec3 CNaviMesh::Move_OnNaviMesh(const _vec3* pTargetPos,
 		if (CCell::COMPARE_MOVE == eResult)
 		{
 			//if (!bIsJump)
-			//vEndPos.y = GetNaviHeight(&vTargetPos); // test
+			vEndPos.y = Get_NaviMeshHeight(&vTargetPos); // test
 
 			return vEndPos;
 		}
@@ -171,7 +171,7 @@ _vec3 CNaviMesh::Move_OnNaviMesh(const _vec3* pTargetPos,
 		if (CCell::COMPARE_MOVE == eResult)
 		{
 			//if (!bIsJump)
-			//vEndPos.y = GetNaviHeight(&vTargetPos); // test
+			vEndPos.y = Get_NaviMeshHeight(&vTargetPos); // test
 
 			return vEndPos;
 		}
@@ -195,7 +195,49 @@ _vec3 CNaviMesh::Move_OnNaviMesh(const _vec3* pTargetPos,
 
 HRESULT CNaviMesh::Ready_NaviMesh(wstring wstrFilePath)
 {
-	HANDLE hFile = CreateFile(wstrFilePath.c_str(),
+	wifstream fin{ wstrFilePath };
+	if (fin.fail())
+		return E_FAIL;
+
+	while (true)
+	{
+		CCell*	pCell	= nullptr;
+		_vec3	vPointA	= _vec3(0.0f);
+		_vec3	vPointB	= _vec3(0.0f);
+		_vec3	vPointC	= _vec3(0.0f);
+		_int	iOption	= 0;
+		_ulong	iIdx	= 0;
+
+		// Cell Data 불러오기.
+		fin >> vPointA.x		// PointA
+			>> vPointA.y
+			>> vPointA.z
+			>> vPointB.x		// vPointB
+			>> vPointB.y
+			>> vPointB.z
+			>> vPointC.x		// vPointC
+			>> vPointC.y
+			>> vPointC.z
+			>> iOption			// iOption
+			>> iIdx;			// Index
+
+		if (fin.eof())
+			break;
+
+		pCell = CCell::Create(m_pGraphicDevice, m_pCommandList,
+							  m_vecCell.size(),
+							  vPointA,
+							  vPointB,
+							  vPointC, 
+							  iOption);
+		NULL_CHECK_RETURN(pCell, E_FAIL);
+		m_vecCell.emplace_back(pCell);
+	}
+
+
+
+
+	/*HANDLE hFile = CreateFile(wstrFilePath.c_str(),
 							  GENERIC_READ,
 							  0,
 							  0,
@@ -231,7 +273,7 @@ HRESULT CNaviMesh::Ready_NaviMesh(wstring wstrFilePath)
 		m_vecCell.push_back(pCell);
 	}
 
-	CloseHandle(hFile);
+	CloseHandle(hFile);*/
 
 	Link_Cell();
 

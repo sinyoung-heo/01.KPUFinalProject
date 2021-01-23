@@ -9,7 +9,6 @@
 #include "StageLDH.h"
 #include "StagePJO.h"
 #include "StageHSY.h"
-
 #include "LogoBack.h"
 #include "Font.h"
 

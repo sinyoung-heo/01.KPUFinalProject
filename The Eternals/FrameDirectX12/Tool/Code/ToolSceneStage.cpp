@@ -183,7 +183,7 @@ HRESULT CToolSceneStage::Ready_LayerCamera(wstring wstrLayerTag)
 																		_vec3(0.0f, 1.0f, 0.f)),		// Up
 													Engine::PROJ_DESC(60.0f,							// FovY
 																	  _float(WINCX) / _float(WINCY),	// Aspect
-																	  1.0f,								// Near
+																	  0.1f,								// Near
 																	  1000.0f),							// Far
 													Engine::ORTHO_DESC(WINCX,							// Viewport Width
 																	   WINCY,							// Viewport Height
