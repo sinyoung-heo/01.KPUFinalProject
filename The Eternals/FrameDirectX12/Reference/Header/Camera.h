@@ -54,7 +54,6 @@ protected:
 	CShaderTexture* m_pShaderTexture	= nullptr;
 	CShaderSkyBox*	m_pShaderSkyBox		= nullptr;
 	CShaderMesh*	m_pShaderMesh		= nullptr;
-	CShaderShadow*	m_pShaderShadow		= nullptr;
 
 protected:
 	virtual void Free();

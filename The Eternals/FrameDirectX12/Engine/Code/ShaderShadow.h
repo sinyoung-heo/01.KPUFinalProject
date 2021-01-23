@@ -11,8 +11,8 @@ class ENGINE_DLL CShaderShadow final : public CShader
 
 public:
 	// Get
-	CUploadBuffer<CB_SHADOWDEPTH_DESC>*	Get_UploadBuffer_ShadowDepthDesc()	{ return m_pCB_ShadowDepthDesc; }
-	CUploadBuffer<CB_SKINNING_MATRIX>*	Get_UploadBuffer_SkinningDesc()		{ return m_pCB_SkinningDesc; }
+	CUploadBuffer<CB_SHADER_SHADOW>*	Get_UploadBuffer_ShaderShadow()		{ return m_pCB_ShadowShader; }
+	CUploadBuffer<CB_SKINNING_MATRIX>*	Get_UploadBuffer_SkinningMatrix()	{ return m_pCB_SkinningMatrix; }
 
 	// CShader을(를) 통해 상속됨
 	virtual HRESULT	Ready_Shader();
@@ -32,8 +32,7 @@ private:
 	virtual HRESULT								Create_ConstantBuffer(const _uint& iNumSubsetMesh);
 	virtual HRESULT								Create_RootSignature();
 	virtual HRESULT								Create_PipelineState();
-	virtual vector<D3D12_INPUT_ELEMENT_DESC>	Create_InputLayout(string VS_EntryPoint					= "VS_MAIN",
-																   string PS_EntryPoint					= "PS_MAIN");
+	virtual vector<D3D12_INPUT_ELEMENT_DESC>	Create_InputLayout(string VS_EntryPoint	= "VS_MAIN", string PS_EntryPoint = "PS_MAIN");
 	virtual D3D12_BLEND_DESC					Create_BlendState(const _bool& bIsBlendEnable			= false,
 																  const D3D12_BLEND& SrcBlend			= D3D12_BLEND_ONE,
 																  const D3D12_BLEND& DstBlend			= D3D12_BLEND_ZERO,
@@ -43,8 +42,8 @@ private:
 																  const D3D12_BLEND_OP& BlendOpAlpha	= D3D12_BLEND_OP_ADD);
 
 private:
-	CUploadBuffer<CB_SHADOWDEPTH_DESC>*	m_pCB_ShadowDepthDesc	= nullptr;
-	CUploadBuffer<CB_SKINNING_MATRIX>*	m_pCB_SkinningDesc		= nullptr;
+	CUploadBuffer<CB_SHADER_SHADOW>*	m_pCB_ShadowShader		= nullptr;
+	CUploadBuffer<CB_SKINNING_MATRIX>*	m_pCB_SkinningMatrix	= nullptr;
 
 public:
 	virtual CComponent *	Clone() override;

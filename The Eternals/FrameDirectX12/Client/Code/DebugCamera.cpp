@@ -49,9 +49,7 @@ _int CDebugCamera::Update_GameObject(const _float & fTimeDelta)
 
 			CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
 			if (nullptr != pDynamicCamera)
-			{
 				m_tCameraInfo = pDynamicCamera->Get_CameraInfo();
-			}
 
 			pDynamicCamera = nullptr;
 		}
@@ -73,9 +71,7 @@ _int CDebugCamera::Update_GameObject(const _float & fTimeDelta)
 
 	}
 	else
-	{
 		m_bIsResetDebugCamera = false;
-	}
 
 
 	return NO_EVENT;

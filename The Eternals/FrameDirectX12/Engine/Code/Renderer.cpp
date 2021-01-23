@@ -199,32 +199,32 @@ void CRenderer::Render_Priority(const _float& fTimeDelta)
 
 void CRenderer::Render_ShadowDepth(const _float & fTimeDelta)
 {
-	m_pShadowDepthTarget->SetUp_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
+	m_pTargetShadowDepth->SetUp_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
 
 	for (auto& pGameObject : m_RenderList[RENDER_NONALPHA])
 		pGameObject->Render_ShadowDepth(fTimeDelta);
 
-	m_pShadowDepthTarget->Release_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
+	m_pTargetShadowDepth->Release_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
 }
 
 
 void CRenderer::Render_NonAlpha(const _float& fTimeDelta)
 {
-	m_pDeferredTarget->SetUp_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
+	m_pTargetDeferred->SetUp_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
 
 	for (auto& pGameObject : m_RenderList[RENDER_NONALPHA])
 		pGameObject->Render_GameObject(fTimeDelta);
 
-	m_pDeferredTarget->Release_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
+	m_pTargetDeferred->Release_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
 }
 
 void CRenderer::Render_Light()
 {
-	m_pLightTarget->SetUp_OnGraphicDevice(TARGETID::TYPE_LIGHTING);
+	m_pTargetLight->SetUp_OnGraphicDevice(TARGETID::TYPE_LIGHTING);
 
-	CLightMgr::Get_Instance()->Render_Light(m_pDeferredTarget->Get_TargetTexture());
+	CLightMgr::Get_Instance()->Render_Light(m_pTargetDeferred->Get_TargetTexture());
 
-	m_pLightTarget->Release_OnGraphicDevice(TARGETID::TYPE_LIGHTING);
+	m_pTargetLight->Release_OnGraphicDevice(TARGETID::TYPE_LIGHTING);
 
 }
 
@@ -234,8 +234,8 @@ void CRenderer::Render_Blend()
 	{
 		m_bIsSetBlendTexture = true;
 
-		vector<ComPtr<ID3D12Resource>> vecDeferredTarget	= m_pDeferredTarget->Get_TargetTexture();
-		vector<ComPtr<ID3D12Resource>> vecShadeTarget		= m_pLightTarget->Get_TargetTexture();
+		vector<ComPtr<ID3D12Resource>> vecDeferredTarget	= m_pTargetDeferred->Get_TargetTexture();
+		vector<ComPtr<ID3D12Resource>> vecShadeTarget		= m_pTargetLight->Get_TargetTexture();
 
 		vector<ComPtr<ID3D12Resource>> vecBlendTarget;
 		vecBlendTarget.emplace_back(vecDeferredTarget[0]);	// RenderTarget - Diffuse
@@ -294,14 +294,14 @@ void CRenderer::Render_RenderTarget()
 {
 	if (m_mapRenderOnOff[L"RenderTarget"])
 	{
-		if (nullptr != m_pDeferredTarget)
-			m_pDeferredTarget->Render_RenderTarget();
+		if (nullptr != m_pTargetDeferred)
+			m_pTargetDeferred->Render_RenderTarget();
 
-		if (nullptr != m_pLightTarget)
-			m_pLightTarget->Render_RenderTarget();
+		if (nullptr != m_pTargetLight)
+			m_pTargetLight->Render_RenderTarget();
 
-		if (nullptr != m_pShadowDepthTarget)
-			m_pShadowDepthTarget->Render_RenderTarget();
+		if (nullptr != m_pTargetShadowDepth)
+			m_pTargetShadowDepth->Render_RenderTarget();
 	}
 
 }
@@ -372,36 +372,36 @@ HRESULT CRenderer::Ready_RenderTarget()
 	[ Deferred RenderTarget ]
 	____________________________________________________________________________________________________________*/
 	// Diffuse, Normal, Specular, Depth
-	m_pDeferredTarget = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 4);
-	NULL_CHECK_RETURN(m_pDeferredTarget, E_FAIL);
-	m_pDeferredTarget->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Diffuse
-	m_pDeferredTarget->Set_TargetClearColor(1, _rgba(0.0f, 0.0f, 0.0f, 1.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Normal
-	m_pDeferredTarget->Set_TargetClearColor(2, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Specular
-	m_pDeferredTarget->Set_TargetClearColor(3, _rgba(1.0f, 1.0f, 1.0f, 1.0f), DXGI_FORMAT_R32G32B32A32_FLOAT);	// Depth
-	FAILED_CHECK_RETURN(m_pDeferredTarget->SetUp_DefaultSetting(TARGETID::TYPE_DEFAULT), E_FAIL);
+	m_pTargetDeferred = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 4);
+	NULL_CHECK_RETURN(m_pTargetDeferred, E_FAIL);
+	m_pTargetDeferred->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Diffuse
+	m_pTargetDeferred->Set_TargetClearColor(1, _rgba(0.0f, 0.0f, 0.0f, 1.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Normal
+	m_pTargetDeferred->Set_TargetClearColor(2, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Specular
+	m_pTargetDeferred->Set_TargetClearColor(3, _rgba(1.0f, 1.0f, 1.0f, 1.0f), DXGI_FORMAT_R32G32B32A32_FLOAT);	// Depth
+	FAILED_CHECK_RETURN(m_pTargetDeferred->SetUp_DefaultSetting(TARGETID::TYPE_DEFAULT), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
 	[ Light RnderTarget ]
 	____________________________________________________________________________________________________________*/
-	m_pLightTarget = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 2);
-	NULL_CHECK_RETURN(m_pLightTarget, E_FAIL);
-	m_pLightTarget->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 1.0f), DXGI_FORMAT_R32G32B32A32_FLOAT);	// Shade
-	m_pLightTarget->Set_TargetClearColor(1, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Specular
-	FAILED_CHECK_RETURN(m_pLightTarget->SetUp_DefaultSetting(TARGETID::TYPE_LIGHTING), E_FAIL);
+	m_pTargetLight = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 2);
+	NULL_CHECK_RETURN(m_pTargetLight, E_FAIL);
+	m_pTargetLight->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 1.0f), DXGI_FORMAT_R32G32B32A32_FLOAT);	// Shade
+	m_pTargetLight->Set_TargetClearColor(1, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Specular
+	FAILED_CHECK_RETURN(m_pTargetLight->SetUp_DefaultSetting(TARGETID::TYPE_LIGHTING), E_FAIL);
 
-	m_pLightTarget->Set_TargetRenderPos(_vec3(480.0f, 90.0f /*+ (90.0f * 8.0f)*/, 1.0f));
+	m_pTargetLight->Set_TargetRenderPos(_vec3(480.0f, 90.0f /*+ (90.0f * 8.0f)*/, 1.0f));
 
 	/*__________________________________________________________________________________________________________
 	[ ShadowDepth RenderTarget ]
 	____________________________________________________________________________________________________________*/
-	m_pShadowDepthTarget = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
-	NULL_CHECK_RETURN(m_pShadowDepthTarget, E_FAIL);
-	m_pShadowDepthTarget->Set_TargetClearColor(0, _rgba(1.0f, 1.0f, 1.0f, 1.0f), DXGI_FORMAT_R32G32B32A32_FLOAT);
-	m_pShadowDepthTarget->Set_TargetTextureSize(0, SHADOWTEX_WIDTH, SHADOWTEX_HEIGHT);
-	FAILED_CHECK_RETURN(m_pShadowDepthTarget->SetUp_DefaultSetting(TARGETID::TYPE_SHADOWDEPTH), E_FAIL);
+	m_pTargetShadowDepth = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
+	NULL_CHECK_RETURN(m_pTargetShadowDepth, E_FAIL);
+	m_pTargetShadowDepth->Set_TargetClearColor(0, _rgba(1.0f, 1.0f, 1.0f, 1.0f), DXGI_FORMAT_R32G32B32A32_FLOAT);
+	m_pTargetShadowDepth->Set_TargetTextureSize(0, SHADOWTEX_WIDTH, SHADOWTEX_HEIGHT);
+	FAILED_CHECK_RETURN(m_pTargetShadowDepth->SetUp_DefaultSetting(TARGETID::TYPE_SHADOWDEPTH), E_FAIL);
 
-	m_pShadowDepthTarget->Set_TargetRenderScale(_vec3(90.0f, 90.0f, 90.0f));
-	m_pShadowDepthTarget->Set_TargetRenderPos(_vec3(WINCX - 90.0f, WINCY - 90.0f, 1.0f));
+	m_pTargetShadowDepth->Set_TargetRenderScale(_vec3(90.0f, 90.0f, 90.0f));
+	m_pTargetShadowDepth->Set_TargetRenderPos(_vec3(WINCX - 90.0f, WINCY - 90.0f, 1.0f));
 
 	/*__________________________________________________________________________________________________________
 	[ Blend Resource ]
@@ -578,7 +578,7 @@ HRESULT CRenderer::Render_MultiThread(const _float& fTimeDelta)
 		[ Render ShadowDepth Pass ]
 		____________________________________________________________________________________________________________*/
 		// Begin Render ShadowDepth Pass.
-		m_pShadowDepthTarget->Begin_RenderTargetOnContext(m_pPreShadowCommandList, THREADID::SHADOW);
+		m_pTargetShadowDepth->Begin_RenderTargetOnContext(m_pPreShadowCommandList, THREADID::SHADOW);
 
 		// Start WorkThread.
 		// None-Signal -> Signal
@@ -589,7 +589,7 @@ HRESULT CRenderer::Render_MultiThread(const _float& fTimeDelta)
 		WaitForMultipleObjects(CONTEXT::CONTEXT_END, m_hWorkerFinishShadow, TRUE, INFINITE);
 
 		// End Render ShadowDepth Pass.
-		m_pShadowDepthTarget->End_RenderTargetOnContext(m_pEndShadowCommandList, THREADID::SHADOW);
+		m_pTargetShadowDepth->End_RenderTargetOnContext(m_pEndShadowCommandList, THREADID::SHADOW);
 		
 
 		// Submit Begin RenderShadow Pass.
@@ -617,13 +617,13 @@ HRESULT CRenderer::Render_MultiThread(const _float& fTimeDelta)
 		[ Render Scene Pass ]
 		____________________________________________________________________________________________________________*/
 		// Begin Render Scene Pass.
-		m_pDeferredTarget->Begin_RenderTargetOnContext(m_pPreSceneCommandList, THREADID::SCENE);
+		m_pTargetDeferred->Begin_RenderTargetOnContext(m_pPreSceneCommandList, THREADID::SCENE);
 		
 		// Scene이 전부 그려질 때 까지 대기하자. 전부 그려졌으면 명령 제출.
 		WaitForMultipleObjects(CONTEXT::CONTEXT_END, m_hWorkerFinishedRender, TRUE, INFINITE);
 
 		// End Render Scene Pass.
-		m_pDeferredTarget->End_RenderTargetOnContext(m_pEndSceneCommandList, THREADID::SCENE);
+		m_pTargetDeferred->End_RenderTargetOnContext(m_pEndSceneCommandList, THREADID::SCENE);
 
 		// Submit Begin RenderScene Pass.
 		m_pPreSceneCommandList->Close();
@@ -664,7 +664,7 @@ void CRenderer::Worker_Thread(_int threadIndex)
 		[ Render ShadowDepth ]
 		____________________________________________________________________________________________________________*/
 		// Bind RenderTarget.
-		m_pShadowDepthTarget->Bind_RenderTargetOnContext(m_arrShadowCommandList[threadIndex], THREADID::SHADOW);
+		m_pTargetShadowDepth->Bind_RenderTargetOnContext(m_arrShadowCommandList[threadIndex], THREADID::SHADOW);
 
 		// Start Render ShadowDepth.
 		for (_int i = threadIndex; i < m_RenderList[RENDER_NONALPHA].size(); i += CONTEXT::CONTEXT_END)
@@ -691,7 +691,7 @@ void CRenderer::Worker_Thread(_int threadIndex)
 		이 프레임에 대해서는 쉐도우 패스를 제출한 후에만 보낼 수 있다.
 		____________________________________________________________________________________________________________*/
 		// Bind RenderTarget
-		m_pDeferredTarget->Bind_RenderTargetOnContext(m_arrSceneCommandList[threadIndex], THREADID::SCENE);
+		m_pTargetDeferred->Bind_RenderTargetOnContext(m_arrSceneCommandList[threadIndex], THREADID::SCENE);
 
 		// Start Render Scene.
 		for (_int i = threadIndex; i < m_RenderList[RENDER_NONALPHA].size(); i += CONTEXT::CONTEXT_END)
@@ -720,9 +720,9 @@ void CRenderer::Free()
 
 	Clear_RenderGroup();
 
-	Safe_Release(m_pDeferredTarget);
-	Safe_Release(m_pLightTarget);
-	Safe_Release(m_pShadowDepthTarget);
+	Safe_Release(m_pTargetDeferred);
+	Safe_Release(m_pTargetLight);
+	Safe_Release(m_pTargetShadowDepth);
 
 	Safe_Release(m_pBlendBuffer);
 	Safe_Release(m_pBlendShader);

@@ -12,8 +12,7 @@ private:
 
 public:
 	// Get
-	CUploadBuffer<CB_LIGHT_DESC>*		Get_UploadBuffer_LightDesc()	{ return m_pCB_LightDesc; }
-	CUploadBuffer<CB_CAMERAINV_DESC>*	Get_UploadBuffer_CameraDesc()	{ return m_pCB_CameraDesc; }
+	CUploadBuffer<CB_SHADER_LIGHTING>*	Get_UploadBuffer_ShaderLighting() { return m_pCB_ShaderLighting; }
 
 	// Set
 	void							SetUp_ShaderTexture(vector< ComPtr<ID3D12Resource>> pvecTargetTexture);
@@ -39,10 +38,8 @@ private:
 																  const D3D12_BLEND_OP& BlendOpAlpha	= D3D12_BLEND_OP_ADD);
 
 private:
-	ID3D12DescriptorHeap*			m_pTexDescriptorHeap = nullptr;
-	CUploadBuffer<CB_LIGHT_DESC>*	m_pCB_LightDesc		 = nullptr;
-	CUploadBuffer<CB_CAMERAINV_DESC>*	m_pCB_CameraDesc	 = nullptr;
-
+	ID3D12DescriptorHeap*				m_pTexDescriptorHeap = nullptr;
+	CUploadBuffer<CB_SHADER_LIGHTING>*	m_pCB_ShaderLighting = nullptr;
 
 public:
 	virtual CComponent *		Clone() override;

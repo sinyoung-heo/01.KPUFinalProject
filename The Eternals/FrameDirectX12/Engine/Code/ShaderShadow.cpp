@@ -38,11 +38,11 @@ void CShaderShadow::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, const
 	[ CBV를 루트 서술자에 묶는다 ]
 	____________________________________________________________________________________________________________*/
 	m_pCommandList->SetGraphicsRootConstantBufferView(0,	// RootParameter Index
-													  m_pCB_ShadowDepthDesc->Resource()->GetGPUVirtualAddress());
+													  m_pCB_ShadowShader->Resource()->GetGPUVirtualAddress());
 
 	m_pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
-													  m_pCB_SkinningDesc->Resource()->GetGPUVirtualAddress() + 
-													  m_pCB_SkinningDesc->GetElementByteSize() * iIdx);
+													  m_pCB_SkinningMatrix->Resource()->GetGPUVirtualAddress() + 
+													  m_pCB_SkinningMatrix->GetElementByteSize() * iIdx);
 }
 
 void CShaderShadow::Begin_Shader(ID3D12GraphicsCommandList * pCommandList,
@@ -57,11 +57,11 @@ void CShaderShadow::Begin_Shader(ID3D12GraphicsCommandList * pCommandList,
 	[ CBV를 루트 서술자에 묶는다 ]
 	____________________________________________________________________________________________________________*/
 	pCommandList->SetGraphicsRootConstantBufferView(0,	// RootParameter Index
-													m_pCB_ShadowDepthDesc->Resource()->GetGPUVirtualAddress());
+													m_pCB_ShadowShader->Resource()->GetGPUVirtualAddress());
 
 	pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
-													m_pCB_SkinningDesc->Resource()->GetGPUVirtualAddress() + 
-													m_pCB_SkinningDesc->GetElementByteSize() * iIdx);
+													m_pCB_SkinningMatrix->Resource()->GetGPUVirtualAddress() + 
+													m_pCB_SkinningMatrix->GetElementByteSize() * iIdx);
 }
 
 void CShaderShadow::SetUp_ShaderConstantBuffer(const _uint& iNumSubsetMesh)
@@ -76,14 +76,14 @@ HRESULT CShaderShadow::Create_DescriptorHeaps()
 
 HRESULT CShaderShadow::Create_ConstantBuffer(const _uint& iNumSubsetMesh)
 {
-	m_pCB_ShadowDepthDesc = CUploadBuffer<CB_SHADOWDEPTH_DESC>::Create(m_pGraphicDevice);
-	NULL_CHECK_RETURN(m_pCB_ShadowDepthDesc, E_FAIL);
+	m_pCB_ShadowShader = CUploadBuffer<CB_SHADER_SHADOW>::Create(m_pGraphicDevice);
+	NULL_CHECK_RETURN(m_pCB_ShadowShader, E_FAIL);
 
 	CGraphicDevice::Get_Instance()->Wait_ForGpuComplete();
 
 	// SubsetMesh 개수만큼 만들어준다.
-	m_pCB_SkinningDesc = CUploadBuffer<CB_SKINNING_MATRIX>::Create(m_pGraphicDevice, iNumSubsetMesh);
-	NULL_CHECK_RETURN(m_pCB_SkinningDesc, E_FAIL);
+	m_pCB_SkinningMatrix = CUploadBuffer<CB_SKINNING_MATRIX>::Create(m_pGraphicDevice, iNumSubsetMesh);
+	NULL_CHECK_RETURN(m_pCB_SkinningMatrix, E_FAIL);
 
 	return S_OK;
 }
@@ -245,7 +245,7 @@ void CShaderShadow::Free()
 {
 	CShader::Free();
 
-	Safe_Delete(m_pCB_ShadowDepthDesc);
-	Safe_Delete(m_pCB_SkinningDesc);
+	Safe_Delete(m_pCB_ShadowShader);
+	Safe_Delete(m_pCB_SkinningMatrix);
 
 }

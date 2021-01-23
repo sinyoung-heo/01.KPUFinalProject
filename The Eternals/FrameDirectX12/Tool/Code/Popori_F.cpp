@@ -213,21 +213,19 @@ void CPopori_F::Set_ConstantTable()
 
 void CPopori_F::Set_ConstantTableShadowDepth()
 {
-	Engine::SHADOW_DESC tShadowInfo = CShadowLightMgr::Get_Instance()->m_tShadowDesc;
-
 	/*__________________________________________________________________________________________________________
-	[ ShadowDepth ]
+	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
-	Engine::CB_SHADOWDEPTH_DESC	tCB_ShadowDepthDesc;
-	ZeroMemory(&tCB_ShadowDepthDesc, sizeof(Engine::CB_SHADOWDEPTH_DESC));
-	XMStoreFloat4x4(&tCB_ShadowDepthDesc.matWVP, XMMatrixTranspose(m_pTransCom->m_matWorld * tShadowInfo.matLightView * tShadowInfo.matLightProj));
-	XMStoreFloat4x4(&tCB_ShadowDepthDesc.matWorld, XMMatrixTranspose(m_pTransCom->m_matWorld));
-	XMStoreFloat4x4(&tCB_ShadowDepthDesc.matLightView, XMMatrixTranspose(tShadowInfo.matLightView));
-	XMStoreFloat4x4(&tCB_ShadowDepthDesc.matLightProj, XMMatrixTranspose(tShadowInfo.matLightProj));
-	tCB_ShadowDepthDesc.vLightPosition = tShadowInfo.vLightPosition;
-	tCB_ShadowDepthDesc.fLightPorjFar = tShadowInfo.fLightPorjFar;
+	Engine::SHADOW_DESC tShadowDesc = CShadowLightMgr::Get_Instance()->m_tShadowDesc;
 
-	m_pShadowCom->Get_UploadBuffer_ShadowDepthDesc()->CopyData(0, tCB_ShadowDepthDesc);
+	Engine::CB_SHADER_SHADOW tCB_ShaderShadow;
+	ZeroMemory(&tCB_ShaderShadow, sizeof(Engine::CB_SHADER_SHADOW));
+	tCB_ShaderShadow.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderShadow.matView	= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
+	tCB_ShaderShadow.matProj	= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
+	tCB_ShaderShadow.fProjFar	= tShadowDesc.fLightPorjFar;
+
+	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
 }
 
 

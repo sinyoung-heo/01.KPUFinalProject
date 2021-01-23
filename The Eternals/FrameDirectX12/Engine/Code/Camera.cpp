@@ -72,9 +72,6 @@ HRESULT CCamera::Ready_GameObject(const CAMERA_DESC& tCameraInfo,
 	m_pShaderMesh = static_cast<CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pShaderMesh, E_FAIL);
 
-	m_pShaderShadow = static_cast<CShaderShadow*>(m_pComponentMgr->Clone_Component(L"ShaderShadow", COMPONENTID::ID_STATIC));
-	NULL_CHECK_RETURN(m_pShaderShadow, E_FAIL);
-
 	return S_OK;
 }
 
@@ -137,5 +134,4 @@ void CCamera::Free()
 	Safe_Release(m_pShaderTexture);
 	Safe_Release(m_pShaderSkyBox);
 	Safe_Release(m_pShaderMesh);
-	Safe_Release(m_pShaderShadow);
 }

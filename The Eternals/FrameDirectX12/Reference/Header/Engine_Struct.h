@@ -713,8 +713,6 @@ namespace Engine
 
 
 
-
-
 	/*__________________________________________________________________________________________________________
 	[ Shader ConstantBuffer Struct ]
 	____________________________________________________________________________________________________________*/
@@ -728,6 +726,7 @@ namespace Engine
 
 	} CB_CAMERA_MATRIX;
 
+
 	// Shader Color
 	typedef struct tagConstantBufferShaderColor
 	{
@@ -736,6 +735,7 @@ namespace Engine
 
 	} CB_SHADER_COLOR;
 	
+
 	// Shader Texture
 	typedef struct tagConstantBufferShaderTexture
 	{
@@ -748,12 +748,14 @@ namespace Engine
 
 	} CB_SHADER_TEXTURE;
 	
+
 	// Shader SkyBox
 	typedef struct tagConstantBufferShaderSkyBox
 	{
 		XMFLOAT4X4	matWorld;
 
 	} CB_SHADER_SKYBOX;
+
 
 	// Shader Mesh
 	typedef struct tagConstantBufferShaderMesh
@@ -767,7 +769,17 @@ namespace Engine
 
 	} CB_SHADER_MESH;
 
-	typedef struct tagCBSkinningMatrix
+	// Shader Shadow
+	typedef struct tagConstantBufferShaderShadow
+	{
+		XMFLOAT4X4	matWorld;
+		XMFLOAT4X4	matView;
+		XMFLOAT4X4	matProj;
+		_float		fProjFar;
+
+	}CB_SHADER_SHADOW;
+
+	typedef struct tagConstnatBufferSkinningMatrix
 	{
 		XMFLOAT4X4	matBoneOffset[64];
 		XMFLOAT4X4	matBoneScale[64];
@@ -778,122 +790,22 @@ namespace Engine
 
 	} CB_SKINNING_MATRIX;
 
-
-
-
-
-	typedef struct tagCBShadowDesc
-	{
-		XMFLOAT4X4	matLightView;
-		XMFLOAT4X4	matLightProj;
-		XMFLOAT4	vLightPosition;
-		_float		fLightPorjFar;
-
-	} CB_SHADOW_DESC;
-
-
-
-
-
+	// Shader Lighting
 	typedef struct tagConstantBufferShaderLighting
 	{
-		_rgba		vLightDiffuse;
-		_rgba		vLightSpecular;
-		_rgba		vLightAmbient;
-		_vec4		vLightDirection;
-		_vec4		vLightPos;
-		_float		vLightRange;
-
 		XMFLOAT4X4	matViewInv;
 		XMFLOAT4X4	matProjInv;
 		_vec4		vCameraPos;
-		_float		fProjFar;
+		_vec4		vProjFar;
+
+		_rgba		vLightDiffuse;
+		_rgba		vLightSpecular;
+		_rgba		vLightAmbient;
+		_vec4		vLightDir;
+		_vec4		vLightPos;
+		_vec4		vLightRange;
 
 	} CB_SHADER_LIGHTING;
-
-	typedef struct tagConstantBufferShaderShadow
-	{
-		XMFLOAT4X4	matWorld;
-		XMFLOAT4X4	matBoneOffset[64];
-		XMFLOAT4X4	matBoneScale[64];
-		XMFLOAT4X4	matBoneRotation[64];
-		XMFLOAT4X4	matBoneTrans[64];
-		XMFLOAT4X4	matParentTransform[64];
-		XMFLOAT4X4	matRootTransform[64];
-
-		XMFLOAT4X4	matLightView;
-		XMFLOAT4X4	matLightProj;
-		_vec4		vLightPos;
-		_float		fLightPorjFar;
-
-	} CB_SHADER_SHADOW;
-
-
-	
-	
-
-
-
-
-	typedef struct tagCBMatrixDesc
-	{
-		XMFLOAT4X4 matWVP;
-		XMFLOAT4X4 matWorld;
-		XMFLOAT4X4 matView;
-		XMFLOAT4X4 matProj;
-
-	} CB_MATRIX_DESC;
-
-	typedef struct tagCBColorDesc
-	{
-		XMFLOAT4 vColor = _rgba(1.0f, 1.0f, 1.0f, 1.0f);
-
-	} CB_COLOR_DESC;
-
-	typedef struct tagCBTexSpriteDesc
-	{
-		_int	iFrameCnt		= 1;	// 스프라이트 이미지의 X축 끝점.
-		_int	iFrameOffset	= 0;
-		_int	iSceneCnt		= 1;	// 스프라이트 이미지의 Y축 끝점.
-		_int	iSceneOffset	= 0;
-
-	} CB_TEXSPRITE_DESC;
-
-	typedef struct tagCBLightDesc
-	{
-		XMFLOAT4	vLightDiffuse;
-		XMFLOAT4	vLightSpecular;
-		XMFLOAT4	vLightAmibient;
-		XMFLOAT4	vLightDirection;
-
-		XMFLOAT4	vLightPosition;
-		_float		fLightRange;
-
-	} CB_LIGHT_DESC;
-
-	typedef struct tagCBCameraDesc
-	{
-		XMFLOAT4X4	matViewInv;
-		XMFLOAT4X4	matProjInv;
-
-		XMFLOAT4	vCameraPosition;
-
-		_float		fProjNear;
-		_float		fProjFar;
-
-	} CB_CAMERAINV_DESC;
-
-	typedef struct tagCBShadowDepthDesc
-	{
-		XMFLOAT4X4	matWVP;
-		XMFLOAT4X4	matWorld;
-		XMFLOAT4X4	matLightView;
-		XMFLOAT4X4	matLightProj;
-
-		XMFLOAT4	vLightPosition;
-		_float		fLightPorjFar;
-
-	} CB_SHADOWDEPTH_DESC;
 
 
 }

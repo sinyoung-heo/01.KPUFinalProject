@@ -61,11 +61,7 @@ void CShaderLighting::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, con
 	[ CBV를 루트 서술자에 묶는다 ]
 	____________________________________________________________________________________________________________*/
 	m_pCommandList->SetGraphicsRootConstantBufferView(3,	// RootParameter Index
-													  m_pCB_LightDesc->Resource()->GetGPUVirtualAddress());
-
-	m_pCommandList->SetGraphicsRootConstantBufferView(4,	// RootParameter Index
-													  m_pCB_CameraDesc->Resource()->GetGPUVirtualAddress());
-
+													  m_pCB_ShaderLighting->Resource()->GetGPUVirtualAddress());
 }
 
 HRESULT CShaderLighting::Create_DescriptorHeaps(vector<ComPtr<ID3D12Resource>> pvecTargetTexture)
@@ -114,11 +110,8 @@ HRESULT CShaderLighting::Create_DescriptorHeaps(vector<ComPtr<ID3D12Resource>> p
 
 HRESULT CShaderLighting::Create_ConstantBuffer()
 {
-	m_pCB_LightDesc = CUploadBuffer<CB_LIGHT_DESC>::Create(m_pGraphicDevice);
-	NULL_CHECK_RETURN(m_pCB_LightDesc, E_FAIL);
-
-	m_pCB_CameraDesc = CUploadBuffer<CB_CAMERAINV_DESC>::Create(m_pGraphicDevice);
-	NULL_CHECK_RETURN(m_pCB_CameraDesc, E_FAIL);
+	m_pCB_ShaderLighting = CUploadBuffer<CB_SHADER_LIGHTING>::Create(m_pGraphicDevice);
+	NULL_CHECK_RETURN(m_pCB_ShaderLighting, E_FAIL);
 
 	return S_OK;
 }
@@ -151,17 +144,16 @@ HRESULT CShaderLighting::Create_RootSignature()
 	/*__________________________________________________________________________________________________________
 	- 루트 매개변수는 테이블이거나, 루트 서술자 또는 루트 상수이다.
 	____________________________________________________________________________________________________________*/
-	CD3DX12_ROOT_PARAMETER RootParameter[5];
+	CD3DX12_ROOT_PARAMETER RootParameter[4];
 
 	RootParameter[0].InitAsDescriptorTable(1, &SRV_Table[0], D3D12_SHADER_VISIBILITY_PIXEL);
 	RootParameter[1].InitAsDescriptorTable(1, &SRV_Table[1], D3D12_SHADER_VISIBILITY_PIXEL);
 	RootParameter[2].InitAsDescriptorTable(1, &SRV_Table[2], D3D12_SHADER_VISIBILITY_PIXEL);
 	RootParameter[3].InitAsConstantBufferView(0);	// register b0.
-	RootParameter[4].InitAsConstantBufferView(1);	// register b1.
 
 	auto StaticSamplers = Get_StaticSamplers();
 
-	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(5,							// 루트 파라미터 개수. (CBV 1, SRV 3 : 총 4개)
+	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(4,							// 루트 파라미터 개수. (CBV 1, SRV 3 : 총 4개)
 												  RootParameter,
 												  (UINT)StaticSamplers.size(),	// 샘플러 개수.
 												  StaticSamplers.data(),		// 샘플러 데이터.
@@ -350,6 +342,5 @@ void CShaderLighting::Free()
 	CShader::Free();
 
 	Safe_Release(m_pTexDescriptorHeap);
-	Safe_Delete(m_pCB_LightDesc);
-	Safe_Delete(m_pCB_CameraDesc);
+	Safe_Delete(m_pCB_ShaderLighting);
 }

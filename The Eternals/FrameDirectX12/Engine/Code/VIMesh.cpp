@@ -242,17 +242,8 @@ HRESULT CVIMesh::Ready_Mesh(const aiMesh * pAiMesh,
 
 		// - Normal 정보가 있다면, Normal값 입력.
 		if (pAiMesh->HasNormals())
-		{
-			// 머리랑 몸통의 Normal이 반대임. (임시방편)
-			if (!strcmp("Popori_F_Face10_Skel", pAiMesh->mName.C_Str()) ||
-				!strcmp("Popori_F_Hair12B_Skel", pAiMesh->mName.C_Str()))
-			{
-				vtxMesh.vNormal = _vec3(pAiMesh->mNormals[i].x, pAiMesh->mNormals[i].y, pAiMesh->mNormals[i].z) * -1.0f;
-			}
-			else
-				vtxMesh.vNormal = _vec3(pAiMesh->mNormals[i].x, pAiMesh->mNormals[i].y, pAiMesh->mNormals[i].z);
+			vtxMesh.vNormal = _vec3(pAiMesh->mNormals[i].x, pAiMesh->mNormals[i].y, pAiMesh->mNormals[i].z);
 
-		}
 		// - Texture 정보가 있다면, TexUV값 입력.
 		if (pAiMesh->HasTextureCoords(0))
 			vtxMesh.vTexUV = _vec2(pAiMesh->mTextureCoords[0][i].x, pAiMesh->mTextureCoords[0][i].y);
@@ -542,7 +533,7 @@ HRESULT CVIMesh::Create_TextureDescriptorHeap()
 	}
 
 	// Tex ShadowDepth
-	vector<ComPtr<ID3D12Resource>> vecShadowDepthTarget = CRenderer::Get_Instance()->Get_ShadowDepthTarget()->Get_TargetTexture();
+	vector<ComPtr<ID3D12Resource>> vecShadowDepthTarget = CRenderer::Get_Instance()->Get_TargetShadowDepth()->Get_TargetTexture();
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC SRV_Desc = {};
 	SRV_Desc.Format							= vecShadowDepthTarget[0]->GetDesc().Format;
@@ -643,19 +634,19 @@ void CVIMesh::Render_DynamicMesh(CShader * pShader)
 
 	for (_int i = 0; i < m_vecMeshEntry.size(); ++i)
 	{
-		CB_SKINNING_MATRIX tCB_SkinningDesc;
-		ZeroMemory(&tCB_SkinningDesc, sizeof(CB_SKINNING_MATRIX));
+		CB_SKINNING_MATRIX tCB_SkinningMatrix;
+		ZeroMemory(&tCB_SkinningMatrix, sizeof(CB_SKINNING_MATRIX));
 
 		for (_uint j = 0; j < (*pvecSkinningMatrix)[i].size(); ++j)
 		{
-			tCB_SkinningDesc.matBoneOffset[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneOffset);
-			tCB_SkinningDesc.matBoneScale[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneScale);
-			tCB_SkinningDesc.matBoneRotation[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneRotation);
-			tCB_SkinningDesc.matBoneTrans[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneTrans);
-			tCB_SkinningDesc.matParentTransform[j]	= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matParentTransform);
-			tCB_SkinningDesc.matRootTransform[j]	= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform);
+			tCB_SkinningMatrix.matBoneOffset[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneOffset);
+			tCB_SkinningMatrix.matBoneScale[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneScale);
+			tCB_SkinningMatrix.matBoneRotation[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneRotation);
+			tCB_SkinningMatrix.matBoneTrans[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneTrans);
+			tCB_SkinningMatrix.matParentTransform[j]	= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matParentTransform);
+			tCB_SkinningMatrix.matRootTransform[j]	= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform);
 		}
-		static_cast<CShaderMesh*>(pShader)->Get_UploadBuffer_SkinningDesc()->CopyData(i, tCB_SkinningDesc);
+		static_cast<CShaderMesh*>(pShader)->Get_UploadBuffer_SkinningDesc()->CopyData(i, tCB_SkinningMatrix);
 
 
 		pShader->Begin_Shader(m_pTexDescriptorHeap, i);
@@ -682,19 +673,19 @@ void CVIMesh::Render_DynamicMeshShadowDepth(CShader * pShader)
 
 	for (_int i = 0; i < m_vecMeshEntry.size(); ++i)
 	{
-		CB_SKINNING_MATRIX tCB_SkinningDesc;
-		ZeroMemory(&tCB_SkinningDesc, sizeof(CB_SKINNING_MATRIX));
+		CB_SKINNING_MATRIX tCB_SkinningMatrix;
+		ZeroMemory(&tCB_SkinningMatrix, sizeof(CB_SKINNING_MATRIX));
 
 		for (_uint j = 0; j < (*pvecSkinningMatrix)[i].size(); ++j)
 		{
-			tCB_SkinningDesc.matBoneOffset[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneOffset);
-			tCB_SkinningDesc.matBoneScale[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneScale);
-			tCB_SkinningDesc.matBoneRotation[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneRotation);
-			tCB_SkinningDesc.matBoneTrans[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneTrans);
-			tCB_SkinningDesc.matParentTransform[j]	= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matParentTransform);
-			tCB_SkinningDesc.matRootTransform[j]	= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform);
+			tCB_SkinningMatrix.matBoneOffset[j]      = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneOffset);
+			tCB_SkinningMatrix.matBoneScale[j]       = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneScale);
+			tCB_SkinningMatrix.matBoneRotation[j]    = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneRotation);
+			tCB_SkinningMatrix.matBoneTrans[j]       = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneTrans);
+			tCB_SkinningMatrix.matParentTransform[j] = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matParentTransform);
+			tCB_SkinningMatrix.matRootTransform[j]   = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform);
 		}
-		static_cast<CShaderShadow*>(pShader)->Get_UploadBuffer_SkinningDesc()->CopyData(i, tCB_SkinningDesc);
+		static_cast<CShaderShadow*>(pShader)->Get_UploadBuffer_SkinningMatrix()->CopyData(i, tCB_SkinningMatrix);
 
 		pShader->Begin_Shader(m_pTexDescriptorHeap, i);
 		Begin_Buffer(m_pCommandList, i);
@@ -722,19 +713,19 @@ void CVIMesh::Render_DynamicMesh(ID3D12GraphicsCommandList * pCommandList,
 
 	for (_int i = 0; i < m_vecMeshEntry.size(); ++i)
 	{
-		CB_SKINNING_MATRIX tCB_SkinningDesc;
-		ZeroMemory(&tCB_SkinningDesc, sizeof(CB_SKINNING_MATRIX));
+		CB_SKINNING_MATRIX tCB_SkinningMatrix;
+		ZeroMemory(&tCB_SkinningMatrix, sizeof(CB_SKINNING_MATRIX));
 
 		for (_uint j = 0; j < (*pvecSkinningMatrix)[i].size(); ++j)
 		{
-			tCB_SkinningDesc.matBoneOffset[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneOffset);
-			tCB_SkinningDesc.matBoneScale[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneScale);
-			tCB_SkinningDesc.matBoneRotation[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneRotation);
-			tCB_SkinningDesc.matBoneTrans[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneTrans);
-			tCB_SkinningDesc.matParentTransform[j]	= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matParentTransform);
-			tCB_SkinningDesc.matRootTransform[j]	= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform);
+			tCB_SkinningMatrix.matBoneOffset[j]      = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneOffset);
+			tCB_SkinningMatrix.matBoneScale[j]       = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneScale);
+			tCB_SkinningMatrix.matBoneRotation[j]    = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneRotation);
+			tCB_SkinningMatrix.matBoneTrans[j]       = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneTrans);
+			tCB_SkinningMatrix.matParentTransform[j] = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matParentTransform);
+			tCB_SkinningMatrix.matRootTransform[j]   = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform);
 		}
-		static_cast<CShaderMesh*>(pShader)->Get_UploadBuffer_SkinningDesc()->CopyData(i, tCB_SkinningDesc);
+		static_cast<CShaderMesh*>(pShader)->Get_UploadBuffer_SkinningDesc()->CopyData(i, tCB_SkinningMatrix);
 
 
 		pShader->Begin_Shader(pCommandList, iContextIdx, m_pTexDescriptorHeap, i);
@@ -765,20 +756,19 @@ void CVIMesh::Render_DynamicMeshShadowDepth(ID3D12GraphicsCommandList * pCommand
 
 	for (_int i = 0; i < m_vecMeshEntry.size(); ++i)
 	{
-		CB_SKINNING_MATRIX tCB_SkinningDesc;
-		ZeroMemory(&tCB_SkinningDesc, sizeof(CB_SKINNING_MATRIX));
+		CB_SKINNING_MATRIX tCB_SkinningMatrix;
+		ZeroMemory(&tCB_SkinningMatrix, sizeof(CB_SKINNING_MATRIX));
 
 		for (_uint j = 0; j < (*pvecSkinningMatrix)[i].size(); ++j)
 		{
-			tCB_SkinningDesc.matBoneOffset[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneOffset);
-			tCB_SkinningDesc.matBoneScale[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneScale);
-			tCB_SkinningDesc.matBoneRotation[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneRotation);
-			tCB_SkinningDesc.matBoneTrans[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneTrans);
-			tCB_SkinningDesc.matParentTransform[j]	= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matParentTransform);
-			tCB_SkinningDesc.matRootTransform[j]	= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform);
+			tCB_SkinningMatrix.matBoneOffset[j]      = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneOffset);
+			tCB_SkinningMatrix.matBoneScale[j]       = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneScale);
+			tCB_SkinningMatrix.matBoneRotation[j]    = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneRotation);
+			tCB_SkinningMatrix.matBoneTrans[j]       = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneTrans);
+			tCB_SkinningMatrix.matParentTransform[j] = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matParentTransform);
+			tCB_SkinningMatrix.matRootTransform[j]   = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform);
 		}
-		static_cast<CShaderShadow*>(pShader)->Get_UploadBuffer_SkinningDesc()->CopyData(i, tCB_SkinningDesc);
-
+		static_cast<CShaderShadow*>(pShader)->Get_UploadBuffer_SkinningMatrix()->CopyData(i, tCB_SkinningMatrix);
 
 		pShader->Begin_Shader(pCommandList, iContextIdx, m_pTexDescriptorHeap, i);
 		Begin_Buffer(pCommandList, i);

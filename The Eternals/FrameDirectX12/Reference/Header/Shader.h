@@ -89,7 +89,6 @@ protected:
 	CUploadBuffer<CB_CAMERA_MATRIX>* m_pCB_CameraOrthoMatrix	= nullptr;
 
 
-
 public:
 	virtual CComponent* Clone() { return nullptr; };
 protected:

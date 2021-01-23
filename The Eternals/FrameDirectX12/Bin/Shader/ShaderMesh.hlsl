@@ -22,20 +22,20 @@ Texture2D g_TexShadowDepth	: register(t3);	// ShadowDepth
 ____________________________________________________________________________________________________________*/
 cbuffer cbCamreaMatrix : register(b0)
 {
-	float4x4	g_matView;
-	float4x4	g_matProj;
-	float4		g_vCameraPos;
-	float		g_fProjFar;
+	float4x4	g_matView		: packoffset(c0);
+	float4x4	g_matProj		: packoffset(c4);
+	float4		g_vCameraPos	: packoffset(c8);
+	float		g_fProjFar		: packoffset(c9.x);
 }
 
 cbuffer cbShaderMesh : register(b1)
 {
-	float4x4	g_matWorld;
+	float4x4	g_matWorld		: packoffset(c0);
 	
-	float4x4	g_matLightView;
-	float4x4	g_matLightProj;
-	float4		g_vLightPos;
-	float		g_fLightPorjFar;
+	float4x4	g_matLightView	: packoffset(c4);
+	float4x4	g_matLightProj	: packoffset(c8);
+	float4		g_vLightPos		: packoffset(c12);
+	float		g_fLightPorjFar	: packoffset(c13.x);
 };
 
 cbuffer cbSkinningMatrix : register(b2)

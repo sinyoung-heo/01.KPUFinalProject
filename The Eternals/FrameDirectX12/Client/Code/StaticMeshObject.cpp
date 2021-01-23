@@ -165,15 +165,15 @@ void CStaticMeshObject::Set_ConstantTable()
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
-	Engine::SHADOW_DESC tShadowInfo = CShadowLightMgr::Get_Instance()->Get_ShadowDesc();
+	Engine::SHADOW_DESC tShadowDesc = CShadowLightMgr::Get_Instance()->Get_ShadowDesc();
 	
 	Engine::CB_SHADER_MESH tCB_ShaderMesh;
 	ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
 	tCB_ShaderMesh.matWorld			= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderMesh.matLightView		= Engine::CShader::Compute_MatrixTranspose(tShadowInfo.matLightView);
-	tCB_ShaderMesh.matLightProj		= Engine::CShader::Compute_MatrixTranspose(tShadowInfo.matLightProj);
-	tCB_ShaderMesh.vLightPos		= tShadowInfo.vLightPosition;
-	tCB_ShaderMesh.fLightPorjFar	= tShadowInfo.fLightPorjFar;
+	tCB_ShaderMesh.matLightView		= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
+	tCB_ShaderMesh.matLightProj		= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
+	tCB_ShaderMesh.vLightPos		= tShadowDesc.vLightPosition;
+	tCB_ShaderMesh.fLightPorjFar	= tShadowDesc.fLightPorjFar;
 
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 }
@@ -183,18 +183,16 @@ void CStaticMeshObject::Set_ConstantTableShadowDepth()
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
-	Engine::SHADOW_DESC tShadowInfo = CShadowLightMgr::Get_Instance()->Get_ShadowDesc();
+	Engine::SHADOW_DESC tShadowDesc = CShadowLightMgr::Get_Instance()->Get_ShadowDesc();
 
-	Engine::CB_SHADOWDEPTH_DESC	tCB_ShadowDepthDesc;
-	ZeroMemory(&tCB_ShadowDepthDesc, sizeof(Engine::CB_SHADOWDEPTH_DESC));
-	tCB_ShadowDepthDesc.matWVP			= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld * tShadowInfo.matLightView * tShadowInfo.matLightProj);
-	tCB_ShadowDepthDesc.matWorld		= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShadowDepthDesc.matLightView	= Engine::CShader::Compute_MatrixTranspose(tShadowInfo.matLightView);
-	tCB_ShadowDepthDesc.matLightProj	= Engine::CShader::Compute_MatrixTranspose(tShadowInfo.matLightProj);
-	tCB_ShadowDepthDesc.vLightPosition	= tShadowInfo.vLightPosition;
-	tCB_ShadowDepthDesc.fLightPorjFar	= tShadowInfo.fLightPorjFar;
+	Engine::CB_SHADER_SHADOW tCB_ShaderShadow;
+	ZeroMemory(&tCB_ShaderShadow, sizeof(Engine::CB_SHADER_SHADOW));
+	tCB_ShaderShadow.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderShadow.matView	= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
+	tCB_ShaderShadow.matProj	= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
+	tCB_ShaderShadow.fProjFar	= tShadowDesc.fLightPorjFar;
 
-	m_pShadowCom->Get_UploadBuffer_ShadowDepthDesc()->CopyData(0, tCB_ShadowDepthDesc);
+	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
 }
 
 CStaticMeshObject * CStaticMeshObject::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList, 
