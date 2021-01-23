@@ -58,6 +58,7 @@ using namespace DirectX::PackedVector;
 Manager Class
 ______________________________________________________________________*/
 #include "MathMgr.h"
+#include "ShadowLightMgr.h"
 
 /*____________________________________________________________________
 Window Console창.

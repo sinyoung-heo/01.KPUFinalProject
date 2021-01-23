@@ -82,7 +82,7 @@ HRESULT CShaderShadow::Create_ConstantBuffer(const _uint& iNumSubsetMesh)
 	CGraphicDevice::Get_Instance()->Wait_ForGpuComplete();
 
 	// SubsetMesh 개수만큼 만들어준다.
-	m_pCB_SkinningDesc = CUploadBuffer<CB_SKINNING_DESC>::Create(m_pGraphicDevice, iNumSubsetMesh);
+	m_pCB_SkinningDesc = CUploadBuffer<CB_SKINNING_MATRIX>::Create(m_pGraphicDevice, iNumSubsetMesh);
 	NULL_CHECK_RETURN(m_pCB_SkinningDesc, E_FAIL);
 
 	return S_OK;

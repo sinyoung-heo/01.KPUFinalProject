@@ -72,13 +72,6 @@ void CShaderTexture::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap,
 		m_pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
 														  m_pCB_CameraOrthoMatrix->Resource()->GetGPUVirtualAddress());
 	}
-	else if (MATRIXID::LIGHT == eID)
-	{
-		// 광원 원근 투영.
-		m_pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
-														  m_pCB_CameraLightMatrix->Resource()->GetGPUVirtualAddress());
-	}
-	
 
 	m_pCommandList->SetGraphicsRootConstantBufferView(2,	// RootParameter Index
 													  m_pCB_ShaderTexture->Resource()->GetGPUVirtualAddress() +

@@ -12,7 +12,7 @@ class ENGINE_DLL CShaderShadow final : public CShader
 public:
 	// Get
 	CUploadBuffer<CB_SHADOWDEPTH_DESC>*	Get_UploadBuffer_ShadowDepthDesc()	{ return m_pCB_ShadowDepthDesc; }
-	CUploadBuffer<CB_SKINNING_DESC>*	Get_UploadBuffer_SkinningDesc()		{ return m_pCB_SkinningDesc; }
+	CUploadBuffer<CB_SKINNING_MATRIX>*	Get_UploadBuffer_SkinningDesc()		{ return m_pCB_SkinningDesc; }
 
 	// CShader을(를) 통해 상속됨
 	virtual HRESULT	Ready_Shader();
@@ -44,7 +44,7 @@ private:
 
 private:
 	CUploadBuffer<CB_SHADOWDEPTH_DESC>*	m_pCB_ShadowDepthDesc	= nullptr;
-	CUploadBuffer<CB_SKINNING_DESC>*	m_pCB_SkinningDesc		= nullptr;
+	CUploadBuffer<CB_SKINNING_MATRIX>*	m_pCB_SkinningDesc		= nullptr;
 
 public:
 	virtual CComponent *	Clone() override;

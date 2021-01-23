@@ -21,9 +21,11 @@ CCell::CCell(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandLi
 HRESULT CCell::Ready_Cell(const _ulong& dwIndex, 
 						  const _vec3& vPointA,
 						  const _vec3& vPointB, 
-						  const _vec3& vPointC)
+						  const _vec3& vPointC,
+						  const _int& iOption)
 {
-	m_dwCurrentIdx = dwIndex;
+	m_dwCurrentIdx	= dwIndex;
+	m_iOption		= iOption;
 
 	m_vPoint[POINT_A] = vPointA;
 	m_vPoint[POINT_B] = vPointB;
@@ -298,11 +300,12 @@ CCell* CCell::Create(ID3D12Device* pGraphicDevice,
 					 const _ulong& dwIndex,
 					 const _vec3& vPointA,
 					 const _vec3& vPointB,
-					 const _vec3& vPointC)
+					 const _vec3& vPointC,
+					 const _int& iOption)
 {
 	CCell* pInstance = new CCell(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_Cell(dwIndex, vPointA, vPointB, vPointC)))
+	if (FAILED(pInstance->Ready_Cell(dwIndex, vPointA, vPointB, vPointC, iOption)))
 		Safe_Release(pInstance);
 
 	return pInstance;

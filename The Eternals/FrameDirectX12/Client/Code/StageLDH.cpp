@@ -169,12 +169,12 @@ HRESULT CStageLDH::Ready_LayerGameObject(wstring wstrLayerTag)
 
 
 	// Status
-	pStaticMeshObject = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-												  L"Status",	// MeshTag 
-												  _vec3(0.05f, 0.05f, 0.05f),	// Scale
-												  _vec3(0.f, 0.0f, 0.0f),		// Angle
-												  _vec3(-15.0f, 13.f, 0.f));	// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"StaticMeshObject", pStaticMeshObject), E_FAIL);
+	//pStaticMeshObject = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+	//											  L"Status",	// MeshTag 
+	//											  _vec3(0.05f, 0.05f, 0.05f),	// Scale
+	//											  _vec3(0.f, 0.0f, 0.0f),		// Angle
+	//											  _vec3(-15.0f, 13.f, 0.f));	// Pos
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"StaticMeshObject", pStaticMeshObject), E_FAIL);
 
 
 	/*__________________________________________________________________________________________________________

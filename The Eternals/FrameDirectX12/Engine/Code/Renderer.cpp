@@ -201,11 +201,9 @@ void CRenderer::Render_ShadowDepth(const _float & fTimeDelta)
 {
 	m_pShadowDepthTarget->SetUp_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
 
-
 	for (auto& pGameObject : m_RenderList[RENDER_NONALPHA])
 		pGameObject->Render_ShadowDepth(fTimeDelta);
 
-	// m_pShadowDepthTarget->Release_ShadowDepthOnGraphicDevice();
 	m_pShadowDepthTarget->Release_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
 }
 
@@ -224,7 +222,6 @@ void CRenderer::Render_Light()
 {
 	m_pLightTarget->SetUp_OnGraphicDevice(TARGETID::TYPE_LIGHTING);
 
-	CLightMgr::Get_Instance()->Update_Light();
 	CLightMgr::Get_Instance()->Render_Light(m_pDeferredTarget->Get_TargetTexture());
 
 	m_pLightTarget->Release_OnGraphicDevice(TARGETID::TYPE_LIGHTING);

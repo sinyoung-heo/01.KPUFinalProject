@@ -52,8 +52,8 @@ protected:
 	____________________________________________________________________________________________________________*/
 	CShaderColor*	m_pShaderColor		= nullptr;
 	CShaderTexture* m_pShaderTexture	= nullptr;
-	CShaderMesh*	m_pShaderMesh		= nullptr;
 	CShaderSkyBox*	m_pShaderSkyBox		= nullptr;
+	CShaderMesh*	m_pShaderMesh		= nullptr;
 	CShaderShadow*	m_pShaderShadow		= nullptr;
 
 protected:

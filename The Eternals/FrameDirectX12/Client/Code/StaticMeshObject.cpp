@@ -22,23 +22,41 @@ CStaticMeshObject::CStaticMeshObject(const CStaticMeshObject & rhs)
 }
 
 
-HRESULT CStaticMeshObject::Ready_GameObject(wstring wstrMeshTag,
-											const _vec3& vScale,
-											const _vec3& vAngle,
-											const _vec3& vPos)
+HRESULT CStaticMeshObject::Ready_GameObject(wstring wstrMeshTag, 
+											const _vec3 & vScale, 
+											const _vec3 & vAngle, 
+											const _vec3 & vPos,
+											const _bool& bIsRenderShadow,
+											const _bool& bIsCollision,
+											const _vec3& vBoundingSphereScale,
+											const _vec3& vBoundingSpherePos)
 {
-	m_wstrMeshTag = wstrMeshTag;
-
-	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
-	Engine::FAILED_CHECK_RETURN(Add_Component(m_wstrMeshTag), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, false, true, true), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
+	m_wstrMeshTag			= wstrMeshTag;
 	m_pTransCom->m_vScale	= vScale;
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos		= vPos;
+	m_bIsCollision			= bIsCollision;
+
+	// BoundingBox.
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
 										   m_pTransCom->m_vScale,
 										   m_pMeshCom->Get_CenterPos(),
 										   m_pMeshCom->Get_MinVector(),
 										   m_pMeshCom->Get_MaxVector());
+	// BoundingSphere.
+	Engine::CGameObject::SetUp_BoundingSphere(&(m_pTransCom->m_matWorld),
+											  m_pTransCom->m_vScale,
+											  vBoundingSphereScale,
+											  vBoundingSpherePos);
+
+	// 그림자를 그리지 않으면 0번 패스.
+	m_bIsRenderShadow = bIsRenderShadow; 
+	if (!m_bIsRenderShadow)
+		m_pShaderCom->Set_PipelineStatePass(0);
+	else
+		m_pShaderCom->Set_PipelineStatePass(1);
 
 
 	return S_OK;
@@ -144,73 +162,61 @@ HRESULT CStaticMeshObject::Add_Component(wstring wstrMeshTag)
 
 void CStaticMeshObject::Set_ConstantTable()
 {
-	_matrix* pmatView = Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::VIEW);
-	_matrix* pmatProj = Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::PROJECTION);
-
-	if (nullptr == pmatView || nullptr == pmatProj)
-		return;
-
 	/*__________________________________________________________________________________________________________
-	[ Matrix Info ]
+	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
-	Engine::CB_MATRIX_DESC	tCB_MatrixDesc;
-	ZeroMemory(&tCB_MatrixDesc, sizeof(Engine::CB_MATRIX_DESC));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matWVP, XMMatrixTranspose(m_pTransCom->m_matWorld * (*pmatView) * (*pmatProj)));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matWorld, XMMatrixTranspose(m_pTransCom->m_matWorld));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matView, XMMatrixTranspose(*pmatView));
-	XMStoreFloat4x4(&tCB_MatrixDesc.matProj, XMMatrixTranspose(*pmatProj));
+	Engine::SHADOW_DESC tShadowInfo = CShadowLightMgr::Get_Instance()->Get_ShadowDesc();
+	
+	Engine::CB_SHADER_MESH tCB_ShaderMesh;
+	ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
+	tCB_ShaderMesh.matWorld			= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderMesh.matLightView		= Engine::CShader::Compute_MatrixTranspose(tShadowInfo.matLightView);
+	tCB_ShaderMesh.matLightProj		= Engine::CShader::Compute_MatrixTranspose(tShadowInfo.matLightProj);
+	tCB_ShaderMesh.vLightPos		= tShadowInfo.vLightPosition;
+	tCB_ShaderMesh.fLightPorjFar	= tShadowInfo.fLightPorjFar;
 
-	m_pShaderCom->Get_UploadBuffer_MatrixDesc()->CopyData(0, tCB_MatrixDesc);
+	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 }
 
 void CStaticMeshObject::Set_ConstantTableShadowDepth()
 {
-	if (nullptr == m_pDynamicCamera)
-		return;
-
-	_vec3 vLightDir			= _vec3(Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL, 0).Direction);
-	_vec3 vDynamicCamEye	= m_pDynamicCamera->Get_CameraInfo().vEye;
-
-	Engine::CGameObject::SetUp_ShadowDepth(vDynamicCamEye, vDynamicCamEye, vLightDir);
-
 	/*__________________________________________________________________________________________________________
-	[ ShadowDepth ]
+	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
+	Engine::SHADOW_DESC tShadowInfo = CShadowLightMgr::Get_Instance()->Get_ShadowDesc();
+
 	Engine::CB_SHADOWDEPTH_DESC	tCB_ShadowDepthDesc;
 	ZeroMemory(&tCB_ShadowDepthDesc, sizeof(Engine::CB_SHADOWDEPTH_DESC));
-	XMStoreFloat4x4(&tCB_ShadowDepthDesc.matWVP, XMMatrixTranspose(m_pTransCom->m_matWorld * m_tShadowInfo.matLightView * m_tShadowInfo.matLightProj));
-	XMStoreFloat4x4(&tCB_ShadowDepthDesc.matWorld, XMMatrixTranspose(m_pTransCom->m_matWorld));
-	XMStoreFloat4x4(&tCB_ShadowDepthDesc.matLightView, XMMatrixTranspose(m_tShadowInfo.matLightView));
-	XMStoreFloat4x4(&tCB_ShadowDepthDesc.matLightProj, XMMatrixTranspose(m_tShadowInfo.matLightProj));
-	tCB_ShadowDepthDesc.vLightPosition = m_tShadowInfo.vLightPosition;
-	tCB_ShadowDepthDesc.fLightPorjFar  = m_tShadowInfo.fLightPorjFar;
+	tCB_ShadowDepthDesc.matWVP			= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld * tShadowInfo.matLightView * tShadowInfo.matLightProj);
+	tCB_ShadowDepthDesc.matWorld		= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShadowDepthDesc.matLightView	= Engine::CShader::Compute_MatrixTranspose(tShadowInfo.matLightView);
+	tCB_ShadowDepthDesc.matLightProj	= Engine::CShader::Compute_MatrixTranspose(tShadowInfo.matLightProj);
+	tCB_ShadowDepthDesc.vLightPosition	= tShadowInfo.vLightPosition;
+	tCB_ShadowDepthDesc.fLightPorjFar	= tShadowInfo.fLightPorjFar;
 
 	m_pShadowCom->Get_UploadBuffer_ShadowDepthDesc()->CopyData(0, tCB_ShadowDepthDesc);
-
-	/*__________________________________________________________________________________________________________
-	[ ShadowInfo ]
-	____________________________________________________________________________________________________________*/
-	Engine::CB_SHADOW_DESC	tCB_ShadowDesc;
-	ZeroMemory(&tCB_ShadowDesc, sizeof(Engine::CB_SHADOW_DESC));
-	XMStoreFloat4x4(&tCB_ShadowDesc.matLightView, XMMatrixTranspose(m_tShadowInfo.matLightView));
-	XMStoreFloat4x4(&tCB_ShadowDesc.matLightProj, XMMatrixTranspose(m_tShadowInfo.matLightProj));
-	tCB_ShadowDesc.vLightPosition	= m_tShadowInfo.vLightPosition;
-	tCB_ShadowDesc.fLightPorjFar	= m_tShadowInfo.fLightPorjFar;
-
-	m_pShaderCom->Get_UploadBuffer_ShadowDesc()->CopyData(0, tCB_ShadowDesc);
-
 }
 
-CStaticMeshObject * CStaticMeshObject::Create(ID3D12Device * pGraphicDevice, 
-											  ID3D12GraphicsCommandList * pCommandList, 
+CStaticMeshObject * CStaticMeshObject::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList, 
 											  wstring wstrMeshTag, 
 											  const _vec3 & vScale, 
 											  const _vec3 & vAngle, 
-											  const _vec3 & vPos)
+											  const _vec3 & vPos,
+											  const _bool& bIsRenderShadow,
+											  const _bool& bIsCollision,
+											  const _vec3& vBoundingSphereScale,
+											  const _vec3& vBoundingSpherePos)
 {
 	CStaticMeshObject* pInstance = new CStaticMeshObject(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos)))
+	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, 
+										   vScale, 
+										   vAngle,
+										   vPos, 
+										   bIsRenderShadow,
+										   bIsCollision, 
+										   vBoundingSphereScale,
+										   vBoundingSpherePos)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;

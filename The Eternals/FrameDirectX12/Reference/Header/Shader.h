@@ -18,7 +18,6 @@ public:
 	ID3D12PipelineState*						Get_PipelineStatePass()					{ return m_pPipelineState; }
 	CUploadBuffer<CB_CAMERA_MATRIX>*			Get_UploadBuffer_CameraProjMatrix()		{ return m_pCB_CameraProjMatrix; }
 	CUploadBuffer<CB_CAMERA_MATRIX>*			Get_UploadBuffer_CameraOrthoMatrix()	{ return m_pCB_CameraOrthoMatrix; }
-	CUploadBuffer<CB_CAMERA_MATRIX>*			Get_UploadBuffer_CameraLightMatrix()	{ return m_pCB_CameraLightMatrix; }
 
 	// Set
 	HRESULT					Set_PipelineStatePass(const _uint& iIdx = 0);
@@ -88,7 +87,6 @@ protected:
 	// Camera ConstantBuffer
 	CUploadBuffer<CB_CAMERA_MATRIX>* m_pCB_CameraProjMatrix		= nullptr;
 	CUploadBuffer<CB_CAMERA_MATRIX>* m_pCB_CameraOrthoMatrix	= nullptr;
-	CUploadBuffer<CB_CAMERA_MATRIX>* m_pCB_CameraLightMatrix	= nullptr;
 
 
 

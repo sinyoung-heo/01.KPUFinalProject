@@ -639,55 +639,29 @@ ID3D12Resource * CVIMesh::Create_DefaultBuffer(const void * InitData,
 
 void CVIMesh::Render_DynamicMesh(CShader * pShader)
 {
-	vector<VECTOR_SKINNING_MATRIX>*	pvecSkinningMatrix = nullptr;
-
-	if (nullptr != m_pAniCtrl)
-	{
-		pvecSkinningMatrix = m_pAniCtrl->Get_VecSkinningMatrix();
-	}
-
-	if (nullptr == pvecSkinningMatrix)
-		return;
+	vector<VECTOR_SKINNING_MATRIX>*	pvecSkinningMatrix = m_pAniCtrl->Get_VecSkinningMatrix();
 
 	for (_int i = 0; i < m_vecMeshEntry.size(); ++i)
 	{
-		CB_SKINNING_DESC tCB_SkinningDesc;
-		ZeroMemory(&tCB_SkinningDesc, sizeof(CB_SKINNING_DESC));
+		CB_SKINNING_MATRIX tCB_SkinningDesc;
+		ZeroMemory(&tCB_SkinningDesc, sizeof(CB_SKINNING_MATRIX));
 
-		if (0 != (*pvecSkinningMatrix).size())
+		for (_uint j = 0; j < (*pvecSkinningMatrix)[i].size(); ++j)
 		{
-			for (_uint j = 0; j < (*pvecSkinningMatrix)[i].size(); ++j)
-			{
-				XMStoreFloat4x4(&tCB_SkinningDesc.matBoneOffset[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneOffset));
-				XMStoreFloat4x4(&tCB_SkinningDesc.matBoneScale[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneScale));
-				XMStoreFloat4x4(&tCB_SkinningDesc.matBoneRotation[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneRotation));
-				XMStoreFloat4x4(&tCB_SkinningDesc.matBoneTrans[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneTrans));
-				XMStoreFloat4x4(&tCB_SkinningDesc.matParentTransform[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matParentTransform));
-				XMStoreFloat4x4(&tCB_SkinningDesc.matRootTransform[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform));
-			}
-
-			static_cast<CShaderMesh*>(pShader)->Get_UploadBuffer_SkinningDesc()->CopyData(i, tCB_SkinningDesc);
-
+			tCB_SkinningDesc.matBoneOffset[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneOffset);
+			tCB_SkinningDesc.matBoneScale[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneScale);
+			tCB_SkinningDesc.matBoneRotation[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneRotation);
+			tCB_SkinningDesc.matBoneTrans[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneTrans);
+			tCB_SkinningDesc.matParentTransform[j]	= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matParentTransform);
+			tCB_SkinningDesc.matRootTransform[j]	= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform);
 		}
+		static_cast<CShaderMesh*>(pShader)->Get_UploadBuffer_SkinningDesc()->CopyData(i, tCB_SkinningDesc);
 
-		// Texture가 없으면 건너뛴다.
-		if (!m_vecMeshEntry[i].blsTexture)
-			continue;
 
-		// Begin Shader.
 		pShader->Begin_Shader(m_pTexDescriptorHeap, i);
+		Begin_Buffer(m_pCommandList, i);
 
-		// Begin_Buffer.
-		m_pCommandList->IASetVertexBuffers(0, 1, &Get_VertexBufferView(i));
-		m_pCommandList->IASetIndexBuffer(&Get_IndexBufferView(i));
-		m_pCommandList->IASetPrimitiveTopology(m_PrimitiveTopology);
-
-		// Render_Buffer.
-		m_pCommandList->DrawIndexedInstanced(m_vecSubMeshGeometry[i].uiIndexCount,
-											 1,
-											 0,
-											 0,
-											 0);
+		Render_Buffer(m_pCommandList, i);
 	}
 }
 
@@ -695,74 +669,37 @@ void CVIMesh::Render_StaticMesh(CShader * pShader)
 {
 	for (_int i = 0; i < m_vecMeshEntry.size(); ++i)
 	{
-		// Texture가 없으면 건너뛴다.
-		if (!m_vecMeshEntry[i].blsTexture)
-			continue;
-
-		// Begin Shader.
 		pShader->Begin_Shader(m_pTexDescriptorHeap, i);
+		Begin_Buffer(m_pCommandList, i);
 
-		// Begin Buffer.
-		m_pCommandList->IASetVertexBuffers(0, 1, &Get_VertexBufferView(i));
-		m_pCommandList->IASetIndexBuffer(&Get_IndexBufferView(i));
-		m_pCommandList->IASetPrimitiveTopology(m_PrimitiveTopology);
-
-		// Render Buffer.
-		m_pCommandList->DrawIndexedInstanced(m_vecSubMeshGeometry[i].uiIndexCount,
-											 1,
-											 0,
-											 0,
-											 0);
+		Render_Buffer(m_pCommandList, i);
 	}
 }
 
 void CVIMesh::Render_DynamicMeshShadowDepth(CShader * pShader)
 {
-	vector<VECTOR_SKINNING_MATRIX>*	pvecSkinningMatrix = nullptr;
-
-	if (nullptr != m_pAniCtrl)
-	{
-		pvecSkinningMatrix = m_pAniCtrl->Get_VecSkinningMatrix();
-	}
-
-	if (nullptr == pvecSkinningMatrix)
-		return;
+	vector<VECTOR_SKINNING_MATRIX>*	pvecSkinningMatrix = pvecSkinningMatrix = m_pAniCtrl->Get_VecSkinningMatrix();;
 
 	for (_int i = 0; i < m_vecMeshEntry.size(); ++i)
 	{
-		CB_SKINNING_DESC tCB_SkinningDesc;
-		ZeroMemory(&tCB_SkinningDesc, sizeof(CB_SKINNING_DESC));
+		CB_SKINNING_MATRIX tCB_SkinningDesc;
+		ZeroMemory(&tCB_SkinningDesc, sizeof(CB_SKINNING_MATRIX));
 
-		if (0 != (*pvecSkinningMatrix).size())
+		for (_uint j = 0; j < (*pvecSkinningMatrix)[i].size(); ++j)
 		{
-			for (_uint j = 0; j < (*pvecSkinningMatrix)[i].size(); ++j)
-			{
-				XMStoreFloat4x4(&tCB_SkinningDesc.matBoneOffset[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneOffset));
-				XMStoreFloat4x4(&tCB_SkinningDesc.matBoneScale[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneScale));
-				XMStoreFloat4x4(&tCB_SkinningDesc.matBoneRotation[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneRotation));
-				XMStoreFloat4x4(&tCB_SkinningDesc.matBoneTrans[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneTrans));
-				XMStoreFloat4x4(&tCB_SkinningDesc.matParentTransform[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matParentTransform));
-				XMStoreFloat4x4(&tCB_SkinningDesc.matRootTransform[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform));
-			}
-
-			static_cast<CShaderShadow*>(pShader)->Get_UploadBuffer_SkinningDesc()->CopyData(i, tCB_SkinningDesc);
-
+			tCB_SkinningDesc.matBoneOffset[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneOffset);
+			tCB_SkinningDesc.matBoneScale[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneScale);
+			tCB_SkinningDesc.matBoneRotation[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneRotation);
+			tCB_SkinningDesc.matBoneTrans[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneTrans);
+			tCB_SkinningDesc.matParentTransform[j]	= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matParentTransform);
+			tCB_SkinningDesc.matRootTransform[j]	= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform);
 		}
+		static_cast<CShaderShadow*>(pShader)->Get_UploadBuffer_SkinningDesc()->CopyData(i, tCB_SkinningDesc);
 
-		// Begin Shader.
 		pShader->Begin_Shader(m_pTexDescriptorHeap, i);
+		Begin_Buffer(m_pCommandList, i);
 
-		// Begin_Buffer.
-		m_pCommandList->IASetVertexBuffers(0, 1, &Get_VertexBufferView(i));
-		m_pCommandList->IASetIndexBuffer(&Get_IndexBufferView(i));
-		m_pCommandList->IASetPrimitiveTopology(m_PrimitiveTopology);
-
-		// Render_Buffer.
-		m_pCommandList->DrawIndexedInstanced(m_vecSubMeshGeometry[i].uiIndexCount,
-											 1,
-											 0,
-											 0,
-											 0);
+		Render_Buffer(m_pCommandList, i);
 	}
 }
 
@@ -770,20 +707,10 @@ void CVIMesh::Render_StaticMeshShadowDepth(CShader * pShader)
 {
 	for (_int i = 0; i < m_vecMeshEntry.size(); ++i)
 	{
-		// Begin Shader.
 		pShader->Begin_Shader(m_pTexDescriptorHeap, i);
+		Begin_Buffer(m_pCommandList, i);
 
-		// Begin Buffer.
-		m_pCommandList->IASetVertexBuffers(0, 1, &Get_VertexBufferView(i));
-		m_pCommandList->IASetIndexBuffer(&Get_IndexBufferView(i));
-		m_pCommandList->IASetPrimitiveTopology(m_PrimitiveTopology);
-
-		// Render Buffer.
-		m_pCommandList->DrawIndexedInstanced(m_vecSubMeshGeometry[i].uiIndexCount,
-											 1,
-											 0,
-											 0,
-											 0);
+		Render_Buffer(m_pCommandList, i);
 	}
 }
 
@@ -791,56 +718,29 @@ void CVIMesh::Render_DynamicMesh(ID3D12GraphicsCommandList * pCommandList,
 								 const _int& iContextIdx,
 								 CShader * pShader)
 {
-	vector<VECTOR_SKINNING_MATRIX>*	pvecSkinningMatrix = nullptr;
-
-	if (nullptr != m_pAniCtrl)
-	{
-		pvecSkinningMatrix = m_pAniCtrl->Get_VecSkinningMatrix();
-	}
-
-	if (nullptr == pvecSkinningMatrix)
-		return;
+	vector<VECTOR_SKINNING_MATRIX>*	pvecSkinningMatrix = m_pAniCtrl->Get_VecSkinningMatrix();
 
 	for (_int i = 0; i < m_vecMeshEntry.size(); ++i)
 	{
-		CB_SKINNING_DESC tCB_SkinningDesc;
-		ZeroMemory(&tCB_SkinningDesc, sizeof(CB_SKINNING_DESC));
+		CB_SKINNING_MATRIX tCB_SkinningDesc;
+		ZeroMemory(&tCB_SkinningDesc, sizeof(CB_SKINNING_MATRIX));
 
-		if (0 != (*pvecSkinningMatrix).size())
+		for (_uint j = 0; j < (*pvecSkinningMatrix)[i].size(); ++j)
 		{
-			for (_uint j = 0; j < (*pvecSkinningMatrix)[i].size(); ++j)
-			{
-				XMStoreFloat4x4(&tCB_SkinningDesc.matBoneOffset[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneOffset));
-				XMStoreFloat4x4(&tCB_SkinningDesc.matBoneScale[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneScale));
-				XMStoreFloat4x4(&tCB_SkinningDesc.matBoneRotation[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneRotation));
-				XMStoreFloat4x4(&tCB_SkinningDesc.matBoneTrans[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneTrans));
-				XMStoreFloat4x4(&tCB_SkinningDesc.matParentTransform[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matParentTransform));
-				XMStoreFloat4x4(&tCB_SkinningDesc.matRootTransform[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform));
-			}
-
-			static_cast<CShaderMesh*>(pShader)->Get_UploadBuffer_SkinningDesc()->CopyData(i, tCB_SkinningDesc);
-
+			tCB_SkinningDesc.matBoneOffset[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneOffset);
+			tCB_SkinningDesc.matBoneScale[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneScale);
+			tCB_SkinningDesc.matBoneRotation[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneRotation);
+			tCB_SkinningDesc.matBoneTrans[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneTrans);
+			tCB_SkinningDesc.matParentTransform[j]	= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matParentTransform);
+			tCB_SkinningDesc.matRootTransform[j]	= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform);
 		}
+		static_cast<CShaderMesh*>(pShader)->Get_UploadBuffer_SkinningDesc()->CopyData(i, tCB_SkinningDesc);
 
-		// Texture가 없으면 건너뛴다.
-		if (!m_vecMeshEntry[i].blsTexture)
-			continue;
 
-		// Begin Shader.
 		pShader->Begin_Shader(pCommandList, iContextIdx, m_pTexDescriptorHeap, i);
+		Begin_Buffer(pCommandList, i);
 
-		// Begin_Buffer.
-		pCommandList->IASetVertexBuffers(0, 1, &Get_VertexBufferView(i));
-		pCommandList->IASetIndexBuffer(&Get_IndexBufferView(i));
-		pCommandList->IASetPrimitiveTopology(m_PrimitiveTopology);
-
-
-		// Render_Buffer.
-		pCommandList->DrawIndexedInstanced(m_vecSubMeshGeometry[i].uiIndexCount,
-										   1,
-										   0,
-										   0,
-										   0);
+		Render_Buffer(pCommandList, i);
 	}
 }
 
@@ -850,24 +750,10 @@ void CVIMesh::Render_StaticMesh(ID3D12GraphicsCommandList * pCommandList,
 {
 	for (_int i = 0; i < m_vecMeshEntry.size(); ++i)
 	{
-		// Texture가 없으면 건너뛴다.
-		if (!m_vecMeshEntry[i].blsTexture)
-			continue;
-
-		// Begin Shader.
 		pShader->Begin_Shader(pCommandList, iContextIdx, m_pTexDescriptorHeap, i);
+		Begin_Buffer(pCommandList, i);
 
-		// Begin Buffer.
-		pCommandList->IASetVertexBuffers(0, 1, &Get_VertexBufferView(i));
-		pCommandList->IASetIndexBuffer(&Get_IndexBufferView(i));
-		pCommandList->IASetPrimitiveTopology(m_PrimitiveTopology);
-
-		// Render Buffer
-		pCommandList->DrawIndexedInstanced(m_vecSubMeshGeometry[i].uiIndexCount,
-										   1,
-										   0,
-										   0,
-										   0);
+		Render_Buffer(pCommandList, i);
 	}
 }
 
@@ -875,52 +761,29 @@ void CVIMesh::Render_DynamicMeshShadowDepth(ID3D12GraphicsCommandList * pCommand
 											const _int& iContextIdx,
 											CShader * pShader)
 {
-	vector<VECTOR_SKINNING_MATRIX>*	pvecSkinningMatrix = nullptr;
-
-	if (nullptr != m_pAniCtrl)
-	{
-		pvecSkinningMatrix = m_pAniCtrl->Get_VecSkinningMatrix();
-	}
-
-	if (nullptr == pvecSkinningMatrix)
-		return;
+	vector<VECTOR_SKINNING_MATRIX>*	pvecSkinningMatrix = m_pAniCtrl->Get_VecSkinningMatrix();
 
 	for (_int i = 0; i < m_vecMeshEntry.size(); ++i)
 	{
-		CB_SKINNING_DESC tCB_SkinningDesc;
-		ZeroMemory(&tCB_SkinningDesc, sizeof(CB_SKINNING_DESC));
+		CB_SKINNING_MATRIX tCB_SkinningDesc;
+		ZeroMemory(&tCB_SkinningDesc, sizeof(CB_SKINNING_MATRIX));
 
-		if (0 != (*pvecSkinningMatrix).size())
+		for (_uint j = 0; j < (*pvecSkinningMatrix)[i].size(); ++j)
 		{
-			for (_uint j = 0; j < (*pvecSkinningMatrix)[i].size(); ++j)
-			{
-				XMStoreFloat4x4(&tCB_SkinningDesc.matBoneOffset[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneOffset));
-				XMStoreFloat4x4(&tCB_SkinningDesc.matBoneScale[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneScale));
-				XMStoreFloat4x4(&tCB_SkinningDesc.matBoneRotation[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneRotation));
-				XMStoreFloat4x4(&tCB_SkinningDesc.matBoneTrans[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneTrans));
-				XMStoreFloat4x4(&tCB_SkinningDesc.matParentTransform[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matParentTransform));
-				XMStoreFloat4x4(&tCB_SkinningDesc.matRootTransform[j], XMMatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform));
-			}
-
-			static_cast<CShaderShadow*>(pShader)->Get_UploadBuffer_SkinningDesc()->CopyData(i, tCB_SkinningDesc);
-
+			tCB_SkinningDesc.matBoneOffset[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneOffset);
+			tCB_SkinningDesc.matBoneScale[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneScale);
+			tCB_SkinningDesc.matBoneRotation[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneRotation);
+			tCB_SkinningDesc.matBoneTrans[j]		= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneTrans);
+			tCB_SkinningDesc.matParentTransform[j]	= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matParentTransform);
+			tCB_SkinningDesc.matRootTransform[j]	= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform);
 		}
+		static_cast<CShaderShadow*>(pShader)->Get_UploadBuffer_SkinningDesc()->CopyData(i, tCB_SkinningDesc);
 
-		// Begin Shader.
+
 		pShader->Begin_Shader(pCommandList, iContextIdx, m_pTexDescriptorHeap, i);
+		Begin_Buffer(pCommandList, i);
 
-		// Begin_Buffer.
-		pCommandList->IASetVertexBuffers(0, 1, &Get_VertexBufferView(i));
-		pCommandList->IASetIndexBuffer(&Get_IndexBufferView(i));
-		pCommandList->IASetPrimitiveTopology(m_PrimitiveTopology);
-
-
-		// Render_Buffer.
-		pCommandList->DrawIndexedInstanced(m_vecSubMeshGeometry[i].uiIndexCount,
-										   1,
-										   0,
-										   0,
-										   0);
+		Render_Buffer(pCommandList, i);
 	}
 }
 
@@ -930,21 +793,28 @@ void CVIMesh::Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList * pCommandL
 {
 	for (_int i = 0; i < m_vecMeshEntry.size(); ++i)
 	{
-		// Begin Shader.
 		pShader->Begin_Shader(pCommandList, iContextIdx, m_pTexDescriptorHeap, i);
+		Begin_Buffer(pCommandList, i);
 
-		// Begin Buffer.
-		pCommandList->IASetVertexBuffers(0, 1, &Get_VertexBufferView(i));
-		pCommandList->IASetIndexBuffer(&Get_IndexBufferView(i));
-		pCommandList->IASetPrimitiveTopology(m_PrimitiveTopology);
-
-		// Rener Buffer.
-		pCommandList->DrawIndexedInstanced(m_vecSubMeshGeometry[i].uiIndexCount,
-										   1,
-										   0,
-										   0,
-										   0);
+		Render_Buffer(pCommandList, i);
 	}
+}
+
+void CVIMesh::Begin_Buffer(ID3D12GraphicsCommandList* pCommandList, const _int& iSubMeshIdx)
+{
+	pCommandList->IASetVertexBuffers(0, 1, &Get_VertexBufferView(iSubMeshIdx));
+	pCommandList->IASetIndexBuffer(&Get_IndexBufferView(iSubMeshIdx));
+
+	pCommandList->IASetPrimitiveTopology(m_PrimitiveTopology);
+}
+
+void CVIMesh::Render_Buffer(ID3D12GraphicsCommandList* pCommandList, const _int& iSubMeshIdx)
+{
+	pCommandList->DrawIndexedInstanced(m_vecSubMeshGeometry[iSubMeshIdx].uiIndexCount,
+									   1,
+									   0,
+									   0,
+									   0);
 }
 
 CComponent * CVIMesh::Clone()

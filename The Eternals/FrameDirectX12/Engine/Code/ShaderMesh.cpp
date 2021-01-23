@@ -24,17 +24,12 @@ HRESULT CShaderMesh::SetUp_ShaderConstantBuffer(const _uint& uiNumSubsetMesh)
 {
 	m_uiSubsetMeshSize	= uiNumSubsetMesh;
 
-	m_pCB_MatrixDesc = CUploadBuffer<CB_MATRIX_DESC>::Create(m_pGraphicDevice);
-	NULL_CHECK_RETURN(m_pCB_MatrixDesc, E_FAIL);
-
-	// CGraphicDevice::Get_Instance()->Wait_ForGpuComplete();
+	m_pCB_ShaderMesh = CUploadBuffer<CB_SHADER_MESH>::Create(m_pGraphicDevice);
+	NULL_CHECK_RETURN(m_pCB_ShaderMesh, E_FAIL);
 
 	// SubsetMesh 개수만큼 만들어준다.
-	m_pCB_SkinningDesc = CUploadBuffer<CB_SKINNING_DESC>::Create(m_pGraphicDevice, uiNumSubsetMesh);
-	NULL_CHECK_RETURN(m_pCB_SkinningDesc, E_FAIL);
-
-	m_pCB_ShadowDesc = CUploadBuffer<CB_SHADOW_DESC>::Create(m_pGraphicDevice);
-	NULL_CHECK_RETURN(m_pCB_ShadowDesc, E_FAIL);
+	m_pCB_SkinningMatrix = CUploadBuffer<CB_SKINNING_MATRIX>::Create(m_pGraphicDevice, uiNumSubsetMesh);
+	NULL_CHECK_RETURN(m_pCB_SkinningMatrix, E_FAIL);
 
 	return S_OK;
 }
@@ -76,7 +71,7 @@ void CShaderMesh::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, const _
 												   SRV_TexSpecularDescriptorHandle);
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexShadowDepthDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexShadowDepthDescriptorHandle.Offset(m_uiSubsetMeshSize * TEXTURE_END, m_uiCBV_SRV_UAV_DescriptorSize);
+	SRV_TexShadowDepthDescriptorHandle.Offset(m_uiSubsetMeshSize * TEXTURE_END + 0, m_uiCBV_SRV_UAV_DescriptorSize);
 	m_pCommandList->SetGraphicsRootDescriptorTable(3,		// RootParameter Index - TexShadowDepth
 												   SRV_TexShadowDepthDescriptorHandle);
 
@@ -85,14 +80,15 @@ void CShaderMesh::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, const _
 	[ CBV를 루트 서술자에 묶는다 ]
 	____________________________________________________________________________________________________________*/
 	m_pCommandList->SetGraphicsRootConstantBufferView(4,	// RootParameter Index
-													  m_pCB_MatrixDesc->Resource()->GetGPUVirtualAddress());
+													  m_pCB_CameraProjMatrix->Resource()->GetGPUVirtualAddress());
 
 	m_pCommandList->SetGraphicsRootConstantBufferView(5,	// RootParameter Index
-													  m_pCB_SkinningDesc->Resource()->GetGPUVirtualAddress() + 
-													  m_pCB_SkinningDesc->GetElementByteSize() * iSubMeshIdx);
+													  m_pCB_ShaderMesh->Resource()->GetGPUVirtualAddress());
 
 	m_pCommandList->SetGraphicsRootConstantBufferView(6,	// RootParameter Index
-													  m_pCB_ShadowDesc->Resource()->GetGPUVirtualAddress());
+													  m_pCB_SkinningMatrix->Resource()->GetGPUVirtualAddress() + 
+													  m_pCB_SkinningMatrix->GetElementByteSize() * iSubMeshIdx);
+
 }
 
 void CShaderMesh::Begin_Shader(ID3D12GraphicsCommandList * pCommandList,
@@ -129,7 +125,7 @@ void CShaderMesh::Begin_Shader(ID3D12GraphicsCommandList * pCommandList,
 												 SRV_TexSpecularDescriptorHandle);
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexShadowDepthDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexShadowDepthDescriptorHandle.Offset(m_uiSubsetMeshSize * TEXTURE_END, m_uiCBV_SRV_UAV_DescriptorSize);
+	SRV_TexShadowDepthDescriptorHandle.Offset(m_uiSubsetMeshSize * TEXTURE_END + 0, m_uiCBV_SRV_UAV_DescriptorSize);
 	pCommandList->SetGraphicsRootDescriptorTable(3,		// RootParameter Index - TexShadowDepth
 												 SRV_TexShadowDepthDescriptorHandle);
 
@@ -138,14 +134,16 @@ void CShaderMesh::Begin_Shader(ID3D12GraphicsCommandList * pCommandList,
 	[ CBV를 루트 서술자에 묶는다 ]
 	____________________________________________________________________________________________________________*/
 	pCommandList->SetGraphicsRootConstantBufferView(4,	// RootParameter Index
-													m_pCB_MatrixDesc->Resource()->GetGPUVirtualAddress());
+													m_pCB_CameraProjMatrix->Resource()->GetGPUVirtualAddress());
 
 	pCommandList->SetGraphicsRootConstantBufferView(5,	// RootParameter Index
-													m_pCB_SkinningDesc->Resource()->GetGPUVirtualAddress() + 
-													m_pCB_SkinningDesc->GetElementByteSize() * iSubMeshIdx);
+													m_pCB_ShaderMesh->Resource()->GetGPUVirtualAddress());
 
 	pCommandList->SetGraphicsRootConstantBufferView(6,	// RootParameter Index
-													m_pCB_ShadowDesc->Resource()->GetGPUVirtualAddress());
+													m_pCB_SkinningMatrix->Resource()->GetGPUVirtualAddress() + 
+													m_pCB_SkinningMatrix->GetElementByteSize() * iSubMeshIdx);
+
+
 }
 
 HRESULT CShaderMesh::Create_RootSignature()
@@ -270,7 +268,7 @@ HRESULT CShaderMesh::Create_PipelineState()
 
 	/*__________________________________________________________________________________________________________
 	[ 1번 PipelineState Pass ]
-	- "VS_MAIN"
+	- "VS_SHADOW_MAIN"
 	- "PS_SHADOW_MAIN"
 	- FILL_MODE_SOLID
 	- CULL_MODE_BACK
@@ -288,7 +286,7 @@ HRESULT CShaderMesh::Create_PipelineState()
 	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
 	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
 	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;
-	vecInputLayout							= Create_InputLayout("VS_MAIN", "PS_SHADOW_MAIN");
+	vecInputLayout							= Create_InputLayout("VS_SHADOW_MAIN", "PS_SHADOW_MAIN");
 	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
 	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
@@ -373,8 +371,7 @@ void CShaderMesh::Free()
 {
 	CShader::Free();
 
-	Safe_Delete(m_pCB_MatrixDesc);
-	Safe_Delete(m_pCB_SkinningDesc);
-	Safe_Delete(m_pCB_ShadowDesc);
+	Safe_Delete(m_pCB_ShaderMesh);
+	Safe_Delete(m_pCB_SkinningMatrix);
 
 }

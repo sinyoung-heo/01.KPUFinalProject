@@ -33,7 +33,8 @@ public:
 	HRESULT			Ready_Cell(const _ulong& dwIndex,
 							   const _vec3& vPointA,
 							   const _vec3& vPointB,
-							   const _vec3& vPointC);
+							   const _vec3& vPointC,
+							   const _int& iOption);
 	HRESULT			Ready_Component();
 	virtual void	Update_Component(const _float& fTimeDelta);
 	virtual void	Render_Component(const _float& fTimeDelta);
@@ -65,8 +66,9 @@ public:
 	_vec3	m_vPoint[POINT_END];
 	CCell*	m_pNeighbor[NEIGHBOR_END];
 	CLine*	m_pLine[LINE_END];
-	_ulong	m_dwCurrentIdx = 0;
-	
+	_ulong	m_dwCurrentIdx	= 0;
+	_int	m_iOption		= 0;
+
 	_plane	m_tPlane;
 
 public:
@@ -75,7 +77,8 @@ public:
 						 const _ulong& dwIndex,
 						 const _vec3& vPointA,
 						 const _vec3& vPointB,
-						 const _vec3& vPointC);
+						 const _vec3& vPointC,
+						 const _int& iOption);
 private:
 	virtual void Free();
 };

@@ -51,6 +51,9 @@ public:
 	void Render_DynamicMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 	void Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 
+	void Begin_Buffer(ID3D12GraphicsCommandList* pCommandList, const _int& iSubMeshIdx);
+	void Render_Buffer(ID3D12GraphicsCommandList* pCommandList, const _int& iSubMeshIdx);
+
 private:
 	/*__________________________________________________________________________________________________________
 	[ Vertex Buffer / Index Buffer ]

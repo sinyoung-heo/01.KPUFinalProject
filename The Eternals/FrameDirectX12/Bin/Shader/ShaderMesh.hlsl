@@ -20,30 +20,32 @@ Texture2D g_TexShadowDepth	: register(t3);	// ShadowDepth
 /*__________________________________________________________________________________________________________
 [ Constant Buffer ]
 ____________________________________________________________________________________________________________*/
-cbuffer cbMatrixInfo	: register(b0)
+cbuffer cbCamreaMatrix : register(b0)
 {
-	float4x4 matWVP		: packoffset(c0);
-	float4x4 matWorld	: packoffset(c4);
-	float4x4 matView	: packoffset(c8);
-	float4x4 matProj	: packoffset(c12);
+	float4x4	g_matView;
+	float4x4	g_matProj;
+	float4		g_vCameraPos;
+	float		g_fProjFar;
+}
+
+cbuffer cbShaderMesh : register(b1)
+{
+	float4x4	g_matWorld;
+	
+	float4x4	g_matLightView;
+	float4x4	g_matLightProj;
+	float4		g_vLightPos;
+	float		g_fLightPorjFar;
 };
 
-cbuffer cbSkinningInfo : register(b1)
+cbuffer cbSkinningMatrix : register(b2)
 {
-	float4x4 matBoneOffset[64];
-	float4x4 matBoneScale[64];
-	float4x4 matBoneRotation[64];
-	float4x4 matBoneTrans[64];
-	float4x4 matParentTransform[64];
-	float4x4 matRootTransform[64];
-};
-
-cbuffer cbShadowInfo : register(b2)
-{
-	float4x4	matLightView	: packoffset(c0);
-	float4x4	matLightProj	: packoffset(c4);
-	float4		vLightPosition	: packoffset(c8);
-	float		fLightPorjFar	: packoffset(c9);
+	float4x4	g_matBoneOffset[64];
+	float4x4	g_matBoneScale[64];
+	float4x4	g_matBoneRotation[64];
+	float4x4	g_matBoneTrans[64];
+	float4x4	g_matParentTransform[64];
+	float4x4	g_matRootTransform[64];
 };
 
 /*__________________________________________________________________________________________________________
@@ -78,7 +80,7 @@ struct VS_OUT
 };
 
 /*__________________________________________________________________________________________________________
-[ BUMP MAPPING ]
+[ 그림자 (X) ]
 ____________________________________________________________________________________________________________*/
 VS_OUT VS_MAIN(VS_IN vs_input)
 {
@@ -86,16 +88,20 @@ VS_OUT VS_MAIN(VS_IN vs_input)
 	
 	if (vs_input.BoneWeights[0].x != 0.0f)
 	{
-		matBone  = mul(mul(matBoneOffset[vs_input.BoneId[0].x], mul(mul(mul(matBoneScale[vs_input.BoneId[0].x], matBoneRotation[vs_input.BoneId[0].x]), matBoneTrans[vs_input.BoneId[0].x]), matParentTransform[vs_input.BoneId[0].x])), matRootTransform[vs_input.BoneId[0].x]) * vs_input.BoneWeights[0].x;
+		matBone  = mul(mul(g_matBoneOffset[vs_input.BoneId[0].x], mul(mul(mul(g_matBoneScale[vs_input.BoneId[0].x], g_matBoneRotation[vs_input.BoneId[0].x]), g_matBoneTrans[vs_input.BoneId[0].x]), g_matParentTransform[vs_input.BoneId[0].x])), g_matRootTransform[vs_input.BoneId[0].x]) * vs_input.BoneWeights[0].x;
 		
-		matBone += mul(mul(matBoneOffset[vs_input.BoneId[0].y], mul(mul(mul(matBoneScale[vs_input.BoneId[0].y], matBoneRotation[vs_input.BoneId[0].y]), matBoneTrans[vs_input.BoneId[0].y]), matParentTransform[vs_input.BoneId[0].y])), matRootTransform[vs_input.BoneId[0].y]) * vs_input.BoneWeights[0].y;
+		matBone += mul(mul(g_matBoneOffset[vs_input.BoneId[0].y], mul(mul(mul(g_matBoneScale[vs_input.BoneId[0].y], g_matBoneRotation[vs_input.BoneId[0].y]), g_matBoneTrans[vs_input.BoneId[0].y]), g_matParentTransform[vs_input.BoneId[0].y])), g_matRootTransform[vs_input.BoneId[0].y]) * vs_input.BoneWeights[0].y;
 		
-		matBone += mul(mul(matBoneOffset[vs_input.BoneId[0].z], mul(mul(mul(matBoneScale[vs_input.BoneId[0].z], matBoneRotation[vs_input.BoneId[0].z]), matBoneTrans[vs_input.BoneId[0].z]), matParentTransform[vs_input.BoneId[0].z])), matRootTransform[vs_input.BoneId[0].z]) * vs_input.BoneWeights[0].z;
+		matBone += mul(mul(g_matBoneOffset[vs_input.BoneId[0].z], mul(mul(mul(g_matBoneScale[vs_input.BoneId[0].z], g_matBoneRotation[vs_input.BoneId[0].z]), g_matBoneTrans[vs_input.BoneId[0].z]), g_matParentTransform[vs_input.BoneId[0].z])), g_matRootTransform[vs_input.BoneId[0].z]) * vs_input.BoneWeights[0].z;
 		
-		matBone += mul(mul(matBoneOffset[vs_input.BoneId[1].x], mul(mul(mul(matBoneScale[vs_input.BoneId[1].x], matBoneRotation[vs_input.BoneId[1].x]), matBoneTrans[vs_input.BoneId[1].x]), matParentTransform[vs_input.BoneId[1].x])), matRootTransform[vs_input.BoneId[1].x]) * vs_input.BoneWeights[1].x;
+		matBone += mul(mul(g_matBoneOffset[vs_input.BoneId[1].x], mul(mul(mul(g_matBoneScale[vs_input.BoneId[1].x], g_matBoneRotation[vs_input.BoneId[1].x]), g_matBoneTrans[vs_input.BoneId[1].x]), g_matParentTransform[vs_input.BoneId[1].x])), g_matRootTransform[vs_input.BoneId[1].x]) * vs_input.BoneWeights[1].x;
 	}
 	
 	VS_OUT vs_output	= (VS_OUT) 0;
+	
+	float4x4 matWV, matWVP;
+	matWV	= mul(g_matWorld, g_matView);
+	matWVP	= mul(matWV, g_matProj);
 	
 	float4 vModelPos	= mul(float4(vs_input.Pos, 1.0f), matBone);
 	vs_output.Pos		= mul(vModelPos, matWVP);
@@ -103,27 +109,21 @@ VS_OUT VS_MAIN(VS_IN vs_input)
 	vs_output.Normal	= vs_input.Normal;
 	
 	// N
-	float3 WorldNormal		= mul(vs_input.Normal, (float3x3) matWorld);
+	float3 WorldNormal		= mul(vs_input.Normal, (float3x3) g_matWorld);
 	vs_output.N				= normalize(WorldNormal);
 	
 	// T
 	float3 Tangent			= cross(float3(0.f, 1.f, 0.f), (float3) vs_input.Normal);
-	float3 WorldTangent		= mul(Tangent, (float3x3) matWorld);
+	float3 WorldTangent		= mul(Tangent, (float3x3) g_matWorld);
 	vs_output.T				= normalize(WorldTangent);
 	
 	// B
 	float3 Binormal			= cross((float3) vs_input.Normal, Tangent);
-	float3 WorldBinormal	= mul(Binormal, (float3x3) matWorld);
+	float3 WorldBinormal	= mul(Binormal, (float3x3) g_matWorld);
 	vs_output.B				= normalize(WorldBinormal);
 	
 	// ProjPos
 	vs_output.ProjPos		= vs_output.Pos;
-	
-	// 광원 위치에서의 투영 좌표
-	float4 matLightPosW		= mul(float4(vs_input.Pos.xyz, 1.0f), matWorld);
-	float4 matLightPosWV	= mul(float4(matLightPosW.xyz, 1.0f), matLightView);
-	vs_output.LightPos		= mul(float4(matLightPosWV.xyz, 1.0f), matLightProj);
-	vs_output.LightPos.z	= vs_output.LightPos.z * vs_output.LightPos.w / fLightPorjFar;
 	
 	return (vs_output);
 }
@@ -155,12 +155,66 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 	
 	// Depth
 	ps_output.Depth		= float4(ps_input.ProjPos.z / ps_input.ProjPos.w,	// (posWVP.z / posWVP.w) : Proj 영역의 Z.
-								 ps_input.ProjPos.w / fFar,				// posWVP.w / Far : 0~1로 만든 View영역의 Z.
+								 ps_input.ProjPos.w / g_fProjFar,			// posWVP.w / Far : 0~1로 만든 View영역의 Z.
 								 0.0f, 1.0f);
 
 	return (ps_output);
 }
 
+/*__________________________________________________________________________________________________________
+[ 그림자 (O) ]
+____________________________________________________________________________________________________________*/
+VS_OUT VS_SHADOW_MAIN(VS_IN vs_input)
+{
+	float4x4 matBone = { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f };
+	
+	if (vs_input.BoneWeights[0].x != 0.0f)
+	{
+		matBone  = mul(mul(g_matBoneOffset[vs_input.BoneId[0].x], mul(mul(mul(g_matBoneScale[vs_input.BoneId[0].x], g_matBoneRotation[vs_input.BoneId[0].x]), g_matBoneTrans[vs_input.BoneId[0].x]), g_matParentTransform[vs_input.BoneId[0].x])), g_matRootTransform[vs_input.BoneId[0].x]) * vs_input.BoneWeights[0].x;
+		
+		matBone += mul(mul(g_matBoneOffset[vs_input.BoneId[0].y], mul(mul(mul(g_matBoneScale[vs_input.BoneId[0].y], g_matBoneRotation[vs_input.BoneId[0].y]), g_matBoneTrans[vs_input.BoneId[0].y]), g_matParentTransform[vs_input.BoneId[0].y])), g_matRootTransform[vs_input.BoneId[0].y]) * vs_input.BoneWeights[0].y;
+		
+		matBone += mul(mul(g_matBoneOffset[vs_input.BoneId[0].z], mul(mul(mul(g_matBoneScale[vs_input.BoneId[0].z], g_matBoneRotation[vs_input.BoneId[0].z]), g_matBoneTrans[vs_input.BoneId[0].z]), g_matParentTransform[vs_input.BoneId[0].z])), g_matRootTransform[vs_input.BoneId[0].z]) * vs_input.BoneWeights[0].z;
+		
+		matBone += mul(mul(g_matBoneOffset[vs_input.BoneId[1].x], mul(mul(mul(g_matBoneScale[vs_input.BoneId[1].x], g_matBoneRotation[vs_input.BoneId[1].x]), g_matBoneTrans[vs_input.BoneId[1].x]), g_matParentTransform[vs_input.BoneId[1].x])), g_matRootTransform[vs_input.BoneId[1].x]) * vs_input.BoneWeights[1].x;
+	}
+	
+	VS_OUT vs_output	= (VS_OUT) 0;
+	
+	float4x4 matWV, matWVP;
+	matWV	= mul(g_matWorld, g_matView);
+	matWVP	= mul(matWV, g_matProj);
+	
+	float4 vModelPos	= mul(float4(vs_input.Pos, 1.0f), matBone);
+	vs_output.Pos		= mul(vModelPos, matWVP);
+	vs_output.TexUV		= vs_input.TexUV;
+	vs_output.Normal	= vs_input.Normal;
+	
+	// N
+	float3 WorldNormal		= mul(vs_input.Normal, (float3x3) g_matWorld);
+	vs_output.N				= normalize(WorldNormal);
+	
+	// T
+	float3 Tangent			= cross(float3(0.f, 1.f, 0.f), (float3) vs_input.Normal);
+	float3 WorldTangent		= mul(Tangent, (float3x3) g_matWorld);
+	vs_output.T				= normalize(WorldTangent);
+	
+	// B
+	float3 Binormal			= cross((float3) vs_input.Normal, Tangent);
+	float3 WorldBinormal	= mul(Binormal, (float3x3) g_matWorld);
+	vs_output.B				= normalize(WorldBinormal);
+	
+	// ProjPos
+	vs_output.ProjPos		= vs_output.Pos;
+	
+	// 광원 위치에서의 투영 좌표
+	float4 matLightPosW		= mul(float4(vs_input.Pos.xyz, 1.0f), g_matWorld);
+	float4 matLightPosWV	= mul(float4(matLightPosW.xyz, 1.0f), g_matLightView);
+	vs_output.LightPos		= mul(float4(matLightPosWV.xyz, 1.0f), g_matLightProj);
+	vs_output.LightPos.z	= vs_output.LightPos.z * vs_output.LightPos.w / g_fLightPorjFar;
+	
+	return (vs_output);
+}
 
 PS_OUT PS_SHADOW_MAIN(VS_OUT ps_input) : SV_TARGET
 {
@@ -180,22 +234,23 @@ PS_OUT PS_SHADOW_MAIN(VS_OUT ps_input) : SV_TARGET
 	
 	// Depth
 	ps_output.Depth		= float4(ps_input.ProjPos.z / ps_input.ProjPos.w,	// (posWVP.z / posWVP.w) : Proj 영역의 Z.
-								 ps_input.ProjPos.w / fFar,				// posWVP.w / Far : 0~1로 만든 View영역의 Z.
+								 ps_input.ProjPos.w / g_fProjFar,			// posWVP.w / Far : 0~1로 만든 View영역의 Z.
 								 0.0f, 1.0f);
 	
 	/*__________________________________________________________________________________________________________
 	[ 현재의 깊이와 그림자 깊이 비교 ]
 	____________________________________________________________________________________________________________*/
-	float2 uv	= ps_input.LightPos.xy / ps_input.LightPos.w;
-	uv.y		= uv.y * -0.5f + 0.5f;
-	uv.x		= uv.x *  0.5f + 0.5f;
+	float2 uv = ps_input.LightPos.xy / ps_input.LightPos.w;
+	uv.y = uv.y * -0.5f + 0.5f;
+	uv.x = uv.x * 0.5f + 0.5f;
 	
 	float CurrentDepth	= ps_input.LightPos.z / ps_input.LightPos.w;
 	float ShadowDepth	= g_TexShadowDepth.Sample(g_samLinearWrap, uv).x;
 	if (CurrentDepth > ShadowDepth + 0.0000125f)
-	{
 		ps_output.Diffuse.rgb *= 0.5;
-	}	
 	
+	// ps_output.Diffuse.rgb = float3(1, 1, 1);
+	
+
 	return (ps_output);
 }

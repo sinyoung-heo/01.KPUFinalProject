@@ -710,9 +710,15 @@ namespace Engine
 
 	} SHADOW_DESC;
 
+
+
+
+
+
 	/*__________________________________________________________________________________________________________
 	[ Shader ConstantBuffer Struct ]
 	____________________________________________________________________________________________________________*/
+	// Camera Matrix
 	typedef struct tagConstantBufferCameraDesc
 	{
 		XMFLOAT4X4	matView;
@@ -722,6 +728,7 @@ namespace Engine
 
 	} CB_CAMERA_MATRIX;
 
+	// Shader Color
 	typedef struct tagConstantBufferShaderColor
 	{
 		XMFLOAT4X4	matWorld;
@@ -729,6 +736,7 @@ namespace Engine
 
 	} CB_SHADER_COLOR;
 	
+	// Shader Texture
 	typedef struct tagConstantBufferShaderTexture
 	{
 		XMFLOAT4X4	matWorld;
@@ -740,15 +748,17 @@ namespace Engine
 
 	} CB_SHADER_TEXTURE;
 	
+	// Shader SkyBox
+	typedef struct tagConstantBufferShaderSkyBox
+	{
+		XMFLOAT4X4	matWorld;
+
+	} CB_SHADER_SKYBOX;
+
+	// Shader Mesh
 	typedef struct tagConstantBufferShaderMesh
 	{
 		XMFLOAT4X4	matWorld;
-		XMFLOAT4X4	matBoneOffset[64];
-		XMFLOAT4X4	matBoneScale[64];
-		XMFLOAT4X4	matBoneRotation[64];
-		XMFLOAT4X4	matBoneTrans[64];
-		XMFLOAT4X4	matParentTransform[64];
-		XMFLOAT4X4	matRootTransform[64];
 
 		XMFLOAT4X4	matLightView;
 		XMFLOAT4X4	matLightProj;
@@ -757,11 +767,33 @@ namespace Engine
 
 	} CB_SHADER_MESH;
 
-	typedef struct tagConstantBufferShaderSkyBox
+	typedef struct tagCBSkinningMatrix
 	{
-		XMFLOAT4X4	matWorld;
+		XMFLOAT4X4	matBoneOffset[64];
+		XMFLOAT4X4	matBoneScale[64];
+		XMFLOAT4X4	matBoneRotation[64];
+		XMFLOAT4X4	matBoneTrans[64];
+		XMFLOAT4X4	matParentTransform[64];
+		XMFLOAT4X4	matRootTransform[64];
 
-	} CB_SHADER_SKYBOX;
+	} CB_SKINNING_MATRIX;
+
+
+
+
+
+	typedef struct tagCBShadowDesc
+	{
+		XMFLOAT4X4	matLightView;
+		XMFLOAT4X4	matLightProj;
+		XMFLOAT4	vLightPosition;
+		_float		fLightPorjFar;
+
+	} CB_SHADOW_DESC;
+
+
+
+
 
 	typedef struct tagConstantBufferShaderLighting
 	{
@@ -827,20 +859,6 @@ namespace Engine
 
 	} CB_TEXSPRITE_DESC;
 
-	typedef struct tagCBSkinningDesc
-	{
-		XMFLOAT4X4	matBoneOffset[64];
-
-		XMFLOAT4X4	matBoneScale[64];
-		XMFLOAT4X4	matBoneRotation[64];
-		XMFLOAT4X4	matBoneTrans[64];
-
-		XMFLOAT4X4	matParentTransform[64];
-
-		XMFLOAT4X4	matRootTransform[64];
-
-	} CB_SKINNING_DESC;
-
 	typedef struct tagCBLightDesc
 	{
 		XMFLOAT4	vLightDiffuse;
@@ -877,15 +895,6 @@ namespace Engine
 
 	} CB_SHADOWDEPTH_DESC;
 
-	typedef struct tagCBShadowDesc
-	{
-		XMFLOAT4X4	matLightView;
-		XMFLOAT4X4	matLightProj;
-
-		XMFLOAT4	vLightPosition;
-		_float		fLightPorjFar;
-
-	} CB_SHADOW_DESC;
 
 }
 

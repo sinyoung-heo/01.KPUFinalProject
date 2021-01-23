@@ -85,6 +85,15 @@
     <Filter Include="01.Scene\99.DebugStage\StageLDH">
       <UniqueIdentifier>{962761de-71a1-4a1a-9d46-0a8a8149a0ea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.Mgr\00.PacketMgr">
+      <UniqueIdentifier>{4d9afe9f-34b3-44e0-acf1-51a5f382f0be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Mgr\01.ShadowLightMgr">
+      <UniqueIdentifier>{2ea7e636-a640-459b-8952-a54d6bc53653}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Mgr\02.CollisionMgr">
+      <UniqueIdentifier>{e6d909b7-4f42-40ea-8b61-bad7b56f65e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -174,6 +183,9 @@
     <ClInclude Include="..\Code\StageHSY.h">
       <Filter>01.Scene\99.DebugStage\StageHSY</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ShadowLightMgr.h">
+      <Filter>97.Mgr\01.ShadowLightMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -238,6 +250,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\StageHSY.cpp">
       <Filter>01.Scene\99.DebugStage\StageHSY</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ShadowLightMgr.cpp">
+      <Filter>97.Mgr\01.ShadowLightMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

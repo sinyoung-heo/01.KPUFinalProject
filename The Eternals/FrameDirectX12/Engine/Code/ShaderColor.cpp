@@ -48,12 +48,6 @@ void CShaderColor::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap,
 		m_pCommandList->SetGraphicsRootConstantBufferView(0,	// RootParameter Index
 														  m_pCB_CameraOrthoMatrix->Resource()->GetGPUVirtualAddress());
 	}
-	else if (MATRIXID::LIGHT == eID)
-	{
-		m_pCommandList->SetGraphicsRootConstantBufferView(0,	// RootParameter Index
-														  m_pCB_CameraLightMatrix->Resource()->GetGPUVirtualAddress());
-	}
-
 
 	m_pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
 													  m_pCB_ShaderColor->Resource()->GetGPUVirtualAddress());

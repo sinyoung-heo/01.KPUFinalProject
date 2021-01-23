@@ -67,12 +67,6 @@ void CShaderSkyBox::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap,
 		m_pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
 														  m_pCB_CameraOrthoMatrix->Resource()->GetGPUVirtualAddress());
 	}
-	else if (MATRIXID::LIGHT == eID)
-	{
-		m_pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
-														  m_pCB_CameraLightMatrix->Resource()->GetGPUVirtualAddress());
-	}
-
 	
 	m_pCommandList->SetGraphicsRootConstantBufferView(2,	// RootParameter Index
 													  m_pCB_ShaderSkyBox->Resource()->GetGPUVirtualAddress() + 
