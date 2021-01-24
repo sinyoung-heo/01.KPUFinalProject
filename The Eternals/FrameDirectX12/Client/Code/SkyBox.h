@@ -45,12 +45,12 @@ private:
 	_uint	m_uiTexIdx						= 0;
 
 public:
-	static CSkyBox* Create(ID3D12Device* pGraphicDevice, 
-						   ID3D12GraphicsCommandList* pCommandList,
-						   wstring wstrTextureTag,
-						   const _vec3 & vScale,
-						   const _vec3 & vAngle,
-						   const _vec3 & vPos);
+	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
+									   ID3D12GraphicsCommandList* pCommandList,
+									   wstring wstrTextureTag,
+									   const _vec3 & vScale,
+									   const _vec3 & vAngle,
+									   const _vec3 & vPos);
 private:
 	virtual void Free();
 };

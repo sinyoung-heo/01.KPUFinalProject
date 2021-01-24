@@ -195,15 +195,15 @@ void CStaticMeshObject::Set_ConstantTableShadowDepth()
 	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
 }
 
-CStaticMeshObject * CStaticMeshObject::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList, 
-											  wstring wstrMeshTag, 
-											  const _vec3 & vScale, 
-											  const _vec3 & vAngle, 
-											  const _vec3 & vPos,
-											  const _bool& bIsRenderShadow,
-											  const _bool& bIsCollision,
-											  const _vec3& vBoundingSphereScale,
-											  const _vec3& vBoundingSpherePos)
+Engine::CGameObject* CStaticMeshObject::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
+											   wstring wstrMeshTag, 
+											   const _vec3 & vScale, 
+											   const _vec3 & vAngle, 
+											   const _vec3 & vPos,
+											   const _bool& bIsRenderShadow,
+											   const _bool& bIsCollision,
+											   const _vec3& vBoundingSphereScale,
+											   const _vec3& vBoundingSpherePos)
 {
 	CStaticMeshObject* pInstance = new CStaticMeshObject(pGraphicDevice, pCommandList);
 

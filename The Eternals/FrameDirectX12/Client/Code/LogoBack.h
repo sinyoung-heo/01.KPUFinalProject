@@ -44,9 +44,9 @@ private:
 	_matrix	m_matProj	= INIT_MATRIX;
 
 public:
-	static	CLogoBack* Create(ID3D12Device* pGraphicDevice, 
-							  ID3D12GraphicsCommandList* pCommandList,
-							  wstring wstrTextureTag);
+	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, 
+									   ID3D12GraphicsCommandList* pCommandList,
+									   wstring wstrTextureTag);
 private:
 	virtual void Free();
 };

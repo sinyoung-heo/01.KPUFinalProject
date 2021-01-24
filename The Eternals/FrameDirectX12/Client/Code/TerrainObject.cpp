@@ -107,7 +107,7 @@ void CTerrainObject::Set_ConstantTable()
 }
 
 
-CTerrainObject * CTerrainObject::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+Engine::CGameObject* CTerrainObject::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 {
 	CTerrainObject* pInstance = new CTerrainObject(pGraphicDevice, pCommandList);
 

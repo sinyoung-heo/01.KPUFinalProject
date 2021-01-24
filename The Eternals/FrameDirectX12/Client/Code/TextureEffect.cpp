@@ -154,13 +154,13 @@ void CTextureEffect::Update_SpriteFrame(const _float & fTimeDelta)
 
 }
 
-CTextureEffect * CTextureEffect::Create(ID3D12Device * pGraphicDevice,
-										ID3D12GraphicsCommandList * pCommandList,
-										wstring wstrTextureTag, 
-										const _vec3 & vScale, 
-										const _vec3 & vAngle, 
-										const _vec3 & vPos, 
-										const FRAME & tFrame)
+Engine::CGameObject* CTextureEffect::Create(ID3D12Device * pGraphicDevice,
+											ID3D12GraphicsCommandList * pCommandList,
+											wstring wstrTextureTag, 
+											const _vec3 & vScale, 
+											const _vec3 & vAngle, 
+											const _vec3 & vPos, 
+											const FRAME & tFrame)
 {
 	CTextureEffect* pInstance = new CTextureEffect(pGraphicDevice, pCommandList);
 

@@ -70,41 +70,43 @@ HRESULT CStageLDH::Ready_LayerCamera(wstring wstrLayerTag)
 	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
 	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
 
+	Engine::CGameObject* pGameObj = nullptr;
+
 	/*__________________________________________________________________________________________________________
 	[ DebugCamera ]
 	____________________________________________________________________________________________________________*/
-	CDebugCamera* pDebugCamera = CDebugCamera::Create(m_pGraphicDevice, m_pCommandList,
-													  Engine::CAMERA_DESC(_vec3(30.0f, 30.0f, 35.0f),	// Eye
-													  					  _vec3(20.0f, 15.0f, 10.0f),	// At
-													  					  _vec3(0.0f, 1.0f, 0.f)),		// Up
-													  Engine::PROJ_DESC(60.0f,							// FovY
-													  					_float(WINCX) / _float(WINCY),	// Aspect
-													  					0.1f,							// Near
-													  					1000.0f),						// Far
-													  Engine::ORTHO_DESC(WINCX,							// Viewport Width
-													  					 WINCY,							// Viewport Height
-													  					 0.0f,							// Near
-													  					 1.0f));						// Far
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"DebugCamera", pDebugCamera), E_FAIL);
+	pGameObj = CDebugCamera::Create(m_pGraphicDevice, m_pCommandList,
+									Engine::CAMERA_DESC(_vec3(30.0f, 30.0f, 35.0f),	// Eye
+														_vec3(20.0f, 15.0f, 10.0f),	// At
+														_vec3(0.0f, 1.0f, 0.f)),	// Up
+									Engine::PROJ_DESC(60.0f,						// FovY
+													  _float(WINCX) / _float(WINCY),// Aspect
+													  0.1f,							// Near
+													  1000.0f),						// Far
+									Engine::ORTHO_DESC(WINCX,						// Viewport Width
+													   WINCY,						// Viewport Height
+													   0.0f,						// Near
+													   1.0f));						// Far
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"DebugCamera", pGameObj), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
 	[ DynamicCamera ]
 	____________________________________________________________________________________________________________*/
-	CDynamicCamera* pDynamicCamera = CDynamicCamera::Create(m_pGraphicDevice, m_pCommandList,
-															Engine::CAMERA_DESC(_vec3(30.0f, 25.0f, -35.0f),// Eye
-																				_vec3(20.0f, 15.0f, 10.0f),	// At
-																				_vec3(0.0f, 1.0f, 0.0f)),	// Up
-
-															Engine::PROJ_DESC(60.0f,						// FovY
-																			  _float(WINCX) / _float(WINCY),// Aspect
-																			  0.1f,							// Near
-																			  1000.0f),						// Far
-
-															Engine::ORTHO_DESC(WINCX,						// Viewport Width
-																			   WINCY,						// Viewport Height
-																			   0.0f,						// Near
-																			   1.0f));
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"DynamicCamera", pDynamicCamera), E_FAIL);
+	pGameObj = CDynamicCamera::Create(m_pGraphicDevice, m_pCommandList,
+									  Engine::CAMERA_DESC(_vec3(30.0f, 25.0f, -35.0f),	// Eye
+									  					  _vec3(20.0f, 15.0f, 10.0f),	// At
+									  					  _vec3(0.0f, 1.0f, 0.0f)),		// Up
+									  
+									  Engine::PROJ_DESC(60.0f,							// FovY
+									  					_float(WINCX) / _float(WINCY),	// Aspect
+									  					0.1f,							// Near
+									  					1000.0f),						// Far
+									  
+									  Engine::ORTHO_DESC(WINCX,							// Viewport Width
+									  					 WINCY,							// Viewport Height
+									  					 0.0f,							// Near
+									  					 1.0f));						// Far
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"DynamicCamera", pGameObj), E_FAIL);
 
 
 	return S_OK;
@@ -122,15 +124,17 @@ HRESULT CStageLDH::Ready_LayerEnvironment(wstring wstrLayerTag)
 	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
 	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
 
+	Engine::CGameObject* pGameObj = nullptr;
+
 	/*__________________________________________________________________________________________________________
 	[ SkyBox ]
 	____________________________________________________________________________________________________________*/
-	CSkyBox* pSkyBox = CSkyBox::Create(m_pGraphicDevice, m_pCommandList,
-									   L"SkyBox",							// Texture Tag
-									   _vec3(512.f, 512.f, 512.f),			// Scale
-									   _vec3(0.0f, 0.0f, 0.0f),				// Angle
-									   _vec3(0.0f, 0.0f, 0.0f));			// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SkyBox", pSkyBox), E_FAIL);
+	pGameObj = CSkyBox::Create(m_pGraphicDevice, m_pCommandList,
+							   L"SkyBox",							// Texture Tag
+							   _vec3(512.f, 512.f, 512.f),			// Scale
+							   _vec3(0.0f, 0.0f, 0.0f),				// Angle
+							   _vec3(0.0f, 0.0f, 0.0f));			// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SkyBox", pGameObj), E_FAIL);
 
 
 	return S_OK;

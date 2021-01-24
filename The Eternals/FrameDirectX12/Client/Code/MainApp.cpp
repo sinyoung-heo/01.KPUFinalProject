@@ -250,9 +250,16 @@ HRESULT CMainApp::SetUp_LoadingResource()
 
 	// Texture - Logo
 	pComponent = Engine::CTexture::Create(m_pGraphicDevice, m_pCommandList,
-										  L"../../Bin/Resource/ResourceLoading/Texture/Logo/%d.dds", 4);
+										  L"../../Bin/Resource/ResourceLoading/Texture/Logo/%d.dds", 6);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"Logo", Engine::ID_STATIC, pComponent), E_FAIL);
+
+	// Texture - LoadingProgress
+	// Texture - Logo
+	pComponent = Engine::CTexture::Create(m_pGraphicDevice, m_pCommandList,
+										  L"../../Bin/Resource/ResourceLoading/Texture/LoadingProgress/%d.dds", 4);
+	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"LoadingProgress", Engine::ID_STATIC, pComponent), E_FAIL);
 
 	return S_OK;
 }

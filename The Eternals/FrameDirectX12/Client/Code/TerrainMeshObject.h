@@ -55,12 +55,12 @@ private:
 	CDynamicCamera*	m_pDynamicCamera		= nullptr;
 
 public:
-	static CTerrainMeshObject* Create(ID3D12Device* pGraphicDevice,
-									  ID3D12GraphicsCommandList* pCommandList,
-									  wstring wstrMeshTag,
-									  const _vec3& vScale,
-									  const _vec3& vAngle,
-									  const _vec3& vPos);
+	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
+									   ID3D12GraphicsCommandList* pCommandList,
+									   wstring wstrMeshTag,
+									   const _vec3& vScale,
+									   const _vec3& vAngle,
+									   const _vec3& vPos);
 private:
 	virtual void Free();
 };

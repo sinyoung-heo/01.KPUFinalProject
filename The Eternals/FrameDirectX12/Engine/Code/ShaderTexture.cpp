@@ -225,8 +225,8 @@ HRESULT CShaderTexture::Create_PipelineState()
 	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.BlendState			= Create_BlendState(true,
-																D3D12_BLEND_ONE,
-																D3D12_BLEND_ONE,
+																D3D12_BLEND_SRC_ALPHA,
+																D3D12_BLEND_INV_SRC_ALPHA,
 																D3D12_BLEND_OP_ADD,
 																D3D12_BLEND_ONE,
 																D3D12_BLEND_ONE,
@@ -246,7 +246,7 @@ HRESULT CShaderTexture::Create_PipelineState()
 	- "PS_MAIN"
 	- FILL_MODE_SOLID
 	- CULL_MODE_BACK
-	- Blend		(X)
+	- Blend		(O)
 	- Z Write	(O)
 	____________________________________________________________________________________________________________*/
 	PipelineStateDesc.pRootSignature		= m_pRootSignature;
@@ -277,6 +277,76 @@ HRESULT CShaderTexture::Create_PipelineState()
 	CRenderer::Get_Instance()->Add_PipelineStateCnt();
 
 
+	/*__________________________________________________________________________________________________________
+	[ 4번 PipelineState Pass ]
+	- "VS_NORMAL_MAIN"
+	- "PS_NORMAL_MAIN"
+	- FILL_MODE_SOLID
+	- CULL_MODE_BACK
+	- Blend		(O)
+	- Z Write	(O)
+	____________________________________________________________________________________________________________*/
+	PipelineStateDesc.pRootSignature		= m_pRootSignature;
+	PipelineStateDesc.SampleMask			= UINT_MAX;
+	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;
+	PipelineStateDesc.NumRenderTargets		= 1;
+	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R8G8B8A8_UNORM;
+	vecInputLayout							= Create_InputLayout("VS_NORMAL_MAIN", "PS_NORMAL_MAIN");
+	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState			= Create_BlendState(true,
+																D3D12_BLEND_SRC_ALPHA,
+																D3D12_BLEND_INV_SRC_ALPHA,
+																D3D12_BLEND_OP_ADD,
+																D3D12_BLEND_ONE,
+																D3D12_BLEND_ZERO,
+																D3D12_BLEND_OP_ADD);
+	PipelineStateDesc.RasterizerState		= Create_RasterizerState();
+	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState(false);
+
+	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
+	m_vecPipelineState.emplace_back(pPipelineState);
+	CRenderer::Get_Instance()->Add_PipelineStateCnt();
+
+	/*__________________________________________________________________________________________________________
+	[ 5번 PipelineState Pass ]
+	- "VS_GAUAGE"
+	- "PS_NORMAL_MAIN"
+	- FILL_MODE_SOLID
+	- CULL_MODE_BACK
+	- Blend		(O)
+	- Z Write	(O)
+	____________________________________________________________________________________________________________*/
+	PipelineStateDesc.pRootSignature		= m_pRootSignature;
+	PipelineStateDesc.SampleMask			= UINT_MAX;
+	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;
+	PipelineStateDesc.NumRenderTargets		= 1;
+	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R8G8B8A8_UNORM;
+	vecInputLayout							= Create_InputLayout("VS_GAUAGE", "PS_GAUAGE");
+	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState			= Create_BlendState(true,
+																D3D12_BLEND_SRC_ALPHA,
+																D3D12_BLEND_INV_SRC_ALPHA,
+																D3D12_BLEND_OP_ADD,
+																D3D12_BLEND_ONE,
+																D3D12_BLEND_ZERO,
+																D3D12_BLEND_OP_ADD);
+	PipelineStateDesc.RasterizerState		= Create_RasterizerState();
+	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState(false);
+
+	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
+	m_vecPipelineState.emplace_back(pPipelineState);
+	CRenderer::Get_Instance()->Add_PipelineStateCnt();
+
 	return S_OK;
 }
 
@@ -300,18 +370,18 @@ vector<D3D12_INPUT_ELEMENT_DESC> CShaderTexture::Create_InputLayout(string VS_En
 }
 
 D3D12_BLEND_DESC CShaderTexture::Create_BlendState(const _bool& bIsBlendEnable,
-														  const D3D12_BLEND& SrcBlend,
-														  const D3D12_BLEND& DstBlend,
-														  const D3D12_BLEND_OP& BlendOp,
-														  const D3D12_BLEND& SrcBlendAlpha,
-														  const D3D12_BLEND& DstBlendAlpha,
-														  const D3D12_BLEND_OP& BlendOpAlpha)
+												   const D3D12_BLEND& SrcBlend,
+												   const D3D12_BLEND& DstBlend,
+												   const D3D12_BLEND_OP& BlendOp,
+												   const D3D12_BLEND& SrcBlendAlpha,
+												   const D3D12_BLEND& DstBlendAlpha,
+												   const D3D12_BLEND_OP& BlendOpAlpha)
 {
 	D3D12_BLEND_DESC BlendDesc = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 
 	// 블렌드 설정.
 	ZeroMemory(&BlendDesc, sizeof(D3D12_BLEND_DESC));
-	BlendDesc.AlphaToCoverageEnable					= TRUE;
+	BlendDesc.AlphaToCoverageEnable					= FALSE;
 	BlendDesc.IndependentBlendEnable				= FALSE;
 	BlendDesc.RenderTarget[0].BlendEnable			= bIsBlendEnable;
 	BlendDesc.RenderTarget[0].LogicOpEnable			= FALSE;

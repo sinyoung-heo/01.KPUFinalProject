@@ -169,6 +169,8 @@
     <ClInclude Include="..\Code\Loading.h" />
     <ClInclude Include="..\Code\CubeObject.h" />
     <ClInclude Include="..\Code\DynamicCamera.h" />
+    <ClInclude Include="..\Code\LoadingProgress.h" />
+    <ClInclude Include="..\Code\LoadingProgressBack.h" />
     <ClInclude Include="..\Code\LogoBack.h" />
     <ClInclude Include="..\Code\MainApp.h" />
     <ClInclude Include="..\Code\Popori_F.h" />
@@ -201,6 +203,8 @@
     <ClCompile Include="..\Code\Loading.cpp" />
     <ClCompile Include="..\Code\CubeObject.cpp" />
     <ClCompile Include="..\Code\DynamicCamera.cpp" />
+    <ClCompile Include="..\Code\LoadingProgress.cpp" />
+    <ClCompile Include="..\Code\LoadingProgressBack.cpp" />
     <ClCompile Include="..\Code\LogoBack.cpp" />
     <ClCompile Include="..\Code\MainApp.cpp" />
     <ClCompile Include="..\Code\Popori_F.cpp" />

@@ -169,7 +169,7 @@ void CTerrainMeshObject::Set_ConstantTableShadowDepth()
 }
 
 
-CTerrainMeshObject * CTerrainMeshObject::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList, 
+Engine::CGameObject* CTerrainMeshObject::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
 												wstring wstrMeshTag, 
 												const _vec3 & vScale,
 												const _vec3 & vAngle,

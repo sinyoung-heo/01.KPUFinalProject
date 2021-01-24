@@ -116,12 +116,12 @@ void CSkyBox::Set_ConstantTable()
 	m_pShaderCom->Get_UploadBuffer_ShaderSkyBox()->CopyData(0, tCB_ShaderSkyBox);
 }
 
-CSkyBox * CSkyBox::Create(ID3D12Device * pGraphicDevice, 
-						  ID3D12GraphicsCommandList * pCommandList,
-						  wstring wstrTextureTag,
-						  const _vec3 & vScale,
-						  const _vec3 & vAngle,
-						  const _vec3 & vPos)
+Engine::CGameObject* CSkyBox::Create(ID3D12Device * pGraphicDevice,
+									 ID3D12GraphicsCommandList * pCommandList,
+									 wstring wstrTextureTag,
+									 const _vec3 & vScale,
+									 const _vec3 & vAngle,
+									 const _vec3 & vPos)
 {
 	CSkyBox* pInstance = new CSkyBox(pGraphicDevice, pCommandList);
 

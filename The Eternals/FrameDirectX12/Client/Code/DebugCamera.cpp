@@ -193,11 +193,11 @@ void CDebugCamera::Key_Input(const _float & fTimeDelta)
 
 }
 
-CDebugCamera * CDebugCamera::Create(ID3D12Device * pGraphicDevice, 
-									ID3D12GraphicsCommandList * pCommandList,
-									const Engine::CAMERA_DESC & tCameraInfo,
-									const Engine::PROJ_DESC & tProjInfo,
-									const Engine::ORTHO_DESC & tOrthoInfo)
+Engine::CGameObject* CDebugCamera::Create(ID3D12Device * pGraphicDevice,
+										  ID3D12GraphicsCommandList * pCommandList,
+										  const Engine::CAMERA_DESC & tCameraInfo,
+										  const Engine::PROJ_DESC & tProjInfo,
+										  const Engine::ORTHO_DESC & tOrthoInfo)
 {
 	CDebugCamera* pInstance = new CDebugCamera(pGraphicDevice, pCommandList);
 

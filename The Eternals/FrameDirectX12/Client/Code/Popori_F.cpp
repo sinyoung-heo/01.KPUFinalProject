@@ -347,11 +347,11 @@ void CPopori_F::Key_Input(const _float & fTimeDelta)
 
 }
 
-CPopori_F * CPopori_F::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
-							  wstring wstrMeshTag, 
-							  const _vec3 & vScale, 
-							  const _vec3 & vAngle, 
-							  const _vec3 & vPos)
+Engine::CGameObject* CPopori_F::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
+									   wstring wstrMeshTag, 
+									   const _vec3 & vScale, 
+									   const _vec3 & vAngle, 
+									   const _vec3 & vPos)
 {
 	CPopori_F* pInstance = new CPopori_F(pGraphicDevice, pCommandList);
 

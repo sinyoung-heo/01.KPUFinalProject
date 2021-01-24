@@ -60,15 +60,15 @@ private:
 	CDynamicCamera*	m_pDynamicCamera		= nullptr;
 
 public:
-	static CStaticMeshObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
-									 wstring wstrMeshTag, 
-									 const _vec3 & vScale, 
-									 const _vec3 & vAngle, 
-									 const _vec3 & vPos,
-									 const _bool& bIsRenderShadow,
-									 const _bool& bIsCollision,
-									 const _vec3& vBoundingSphereScale,
-									 const _vec3& vBoundingSpherePos);
+	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
+									   wstring wstrMeshTag, 
+									   const _vec3 & vScale, 
+									   const _vec3 & vAngle, 
+									   const _vec3 & vPos,
+									   const _bool& bIsRenderShadow,
+									   const _bool& bIsCollision,
+									   const _vec3& vBoundingSphereScale,
+									   const _vec3& vBoundingSpherePos);
 private:
 	virtual void Free();
 };

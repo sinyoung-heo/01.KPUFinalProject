@@ -64,7 +64,7 @@ private:
 
 public:
 	virtual CGameObject*	Clone_GameObject();
-	static CFont*			Create_Prototype(ID3D12Device* pGraphicDevice, 
+	static	CFont*			Create_Prototype(ID3D12Device* pGraphicDevice, 
 											 ID3D12GraphicsCommandList* pCommandList,
 											 wstring wstrFontName,
 											 const _float& fSize,

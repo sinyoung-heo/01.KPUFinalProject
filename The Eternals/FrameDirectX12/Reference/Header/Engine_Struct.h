@@ -746,6 +746,8 @@ namespace Engine
 		_int		iSceneCnt;	// 스프라이트 이미지 Y축 개수.
 		_int		iCurScene;	// 현재 그려지는 이미지의 Y축 Index.
 
+		_float		fGauge;
+
 	} CB_SHADER_TEXTURE;
 	
 

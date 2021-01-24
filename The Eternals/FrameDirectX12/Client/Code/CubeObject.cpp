@@ -108,11 +108,11 @@ void CCubeObject::Set_ConstantTable()
 	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ShaderColor);
 }
 
-CCubeObject * CCubeObject::Create(ID3D12Device * pGraphicDevice,
-								  ID3D12GraphicsCommandList * pCommandList,
-								  const _vec3 & vScale,
-								  const _vec3 & vAngle,
-								  const _vec3 & vPos)
+Engine::CGameObject* CCubeObject::Create(ID3D12Device * pGraphicDevice,
+										 ID3D12GraphicsCommandList * pCommandList,
+										 const _vec3 & vScale,
+										 const _vec3 & vAngle,
+										 const _vec3 & vPos)
 {
 	CCubeObject* pInstance = new CCubeObject(pGraphicDevice, pCommandList);
 

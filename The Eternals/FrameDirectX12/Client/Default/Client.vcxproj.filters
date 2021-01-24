@@ -46,9 +46,6 @@
     <Filter Include="96.Camera\01.DynamicCamera">
       <UniqueIdentifier>{99b8dbdf-8398-4c85-a054-3158a779b010}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\00.LogoBack">
-      <UniqueIdentifier>{e1830c16-2d13-49f7-8572-3acdd2330b3c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\99.SampleObject">
       <UniqueIdentifier>{123f4ddb-5d76-4b1a-b120-3eb2d0c5b1d3}</UniqueIdentifier>
     </Filter>
@@ -93,6 +90,18 @@
     </Filter>
     <Filter Include="01.Scene\99.DebugStage\03.StageHSY">
       <UniqueIdentifier>{cce7a519-dab0-4b1d-a458-3dc62e3a06ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.SampleObject\08.SampleUI">
+      <UniqueIdentifier>{2bf9ad56-c327-4202-a8e3-de774ae5b3d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\01.Logo\00.LogoBack">
+      <UniqueIdentifier>{e1830c16-2d13-49f7-8572-3acdd2330b3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\01.Logo\01.LoadingProgressBack">
+      <UniqueIdentifier>{3c565417-9667-43d1-b28b-ac56d6c8d6f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\01.Logo\02.LoadingProgress">
+      <UniqueIdentifier>{018c85ab-d8f8-4c79-8bba-f142768a3d1c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -166,7 +175,7 @@
       <Filter>96.Camera\00.DebugCamera</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\LogoBack.h">
-      <Filter>02.GameObject\00.LogoBack</Filter>
+      <Filter>01.Scene\01.Logo\00.LogoBack</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\TerrainMeshObject.h">
       <Filter>02.GameObject\99.SampleObject\04.TerrainMeshObject</Filter>
@@ -185,6 +194,12 @@
     </ClInclude>
     <ClInclude Include="..\Code\ShadowLightMgr.h">
       <Filter>97.Mgr\01.ShadowLightMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\LoadingProgressBack.h">
+      <Filter>01.Scene\01.Logo\01.LoadingProgressBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\LoadingProgress.h">
+      <Filter>01.Scene\01.Logo\02.LoadingProgress</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -237,7 +252,7 @@
       <Filter>96.Camera\00.DebugCamera</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\LogoBack.cpp">
-      <Filter>02.GameObject\00.LogoBack</Filter>
+      <Filter>01.Scene\01.Logo\00.LogoBack</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\TerrainMeshObject.cpp">
       <Filter>02.GameObject\99.SampleObject\04.TerrainMeshObject</Filter>
@@ -253,6 +268,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\ShadowLightMgr.cpp">
       <Filter>97.Mgr\01.ShadowLightMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\LoadingProgressBack.cpp">
+      <Filter>01.Scene\01.Logo\01.LoadingProgressBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\LoadingProgress.cpp">
+      <Filter>01.Scene\01.Logo\02.LoadingProgress</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

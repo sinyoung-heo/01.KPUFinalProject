@@ -10,6 +10,8 @@
 #include "StagePJO.h"
 #include "StageHSY.h"
 #include "LogoBack.h"
+#include "LoadingProgressBack.h"
+#include "LoadingProgress.h"
 #include "Font.h"
 
 
@@ -41,11 +43,6 @@ HRESULT CScene_Logo::Ready_Scene()
 	m_pLoading = CLoading::Create(m_pGraphicDevice, m_pCommandList, CLoading::LOADING_STAGE);
 	Engine::NULL_CHECK_RETURN(m_pLoading, E_FAIL);
 
-	/*__________________________________________________________________________________________________________
-	[ LogoBack ]
-	____________________________________________________________________________________________________________*/
-	m_pLogoBack = CLogoBack::Create(m_pGraphicDevice, m_pCommandList, L"Logo");
-	Engine::NULL_CHECK_RETURN(m_pLogoBack, E_FAIL);
 
 	/*__________________________________________________________________________________________________________
 	[ Loading Font ]
@@ -59,13 +56,6 @@ HRESULT CScene_Logo::Ready_Scene()
 
 _int CScene_Logo::Update_Scene(const _float & fTimeDelta)
 {
-	/*__________________________________________________________________________________________________________
-	[ LogoBack ]
-	____________________________________________________________________________________________________________*/
-	if (nullptr != m_pLogoBack)
-		m_pLogoBack->Update_GameObject(fTimeDelta);
-
-
 	/*__________________________________________________________________________________________________________
 	[ Loading Text ]
 	____________________________________________________________________________________________________________*/
@@ -83,15 +73,14 @@ _int CScene_Logo::Update_Scene(const _float & fTimeDelta)
 	wstrResult += wstrLoading;
 
 	m_pFont_LoadingStr->Set_Text(wstrResult);
+	static_cast<CLoadingProgress*>(m_pLoadingProgress)->Set_LoadingPercent(fRatio);
+
 
 	return Engine::CScene::Update_Scene(fTimeDelta);
 }
 
 _int CScene_Logo::LateUpdate_Scene(const _float & fTimeDelta)
 {
-	if (nullptr != m_pLogoBack)
-		m_pLogoBack->LateUpdate_GameObject(fTimeDelta);
-
 	return Engine::CScene::LateUpdate_Scene(fTimeDelta);
 }
 
@@ -209,10 +198,22 @@ HRESULT CScene_Logo::Ready_LayerUI(wstring wstrLayerTag)
 
 	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
 
+	Engine::CGameObject* pGameObj = nullptr;
+
 	/*__________________________________________________________________________________________________________
-	[ GameObject 持失 ]
-	m_pObjectMgr->Add_GameObject(wstrLayerTag, wstrObjTag);
+	[ GameObject 持失 ]Logo   LoadingProgress
 	____________________________________________________________________________________________________________*/
+	pGameObj = CLogoBack::Create(m_pGraphicDevice, m_pCommandList, L"Logo");
+	Engine::NULL_CHECK_RETURN(pGameObj, E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"LogoBack", pGameObj), E_FAIL);
+
+	pGameObj = CLoadingProgressBack::Create(m_pGraphicDevice, m_pCommandList, L"LoadingProgress");
+	Engine::NULL_CHECK_RETURN(pGameObj, E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"LoadingProgressBack", pGameObj), E_FAIL);
+
+	m_pLoadingProgress = CLoadingProgress::Create(m_pGraphicDevice, m_pCommandList, L"LoadingProgress");
+	Engine::NULL_CHECK_RETURN(m_pLoadingProgress, E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"LoadingProgressBack", m_pLoadingProgress), E_FAIL);
 
 	return S_OK;
 }
@@ -289,9 +290,6 @@ CScene_Logo * CScene_Logo::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCo
 void CScene_Logo::Free()
 {
 	Engine::CScene::Free();
-
-	if (nullptr != m_pLogoBack)
-		Engine::Safe_Release(m_pLogoBack);
 
 	if (nullptr != m_pFont_LoadingStr)
 		Engine::Safe_Release(m_pFont_LoadingStr);

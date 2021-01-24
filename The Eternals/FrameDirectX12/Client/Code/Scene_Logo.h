@@ -8,8 +8,6 @@ namespace Engine
 	class CFont;
 }
 
-class CLogoBack;
-
 class CScene_Logo final : public Engine::CScene
 {
 private:
@@ -31,8 +29,8 @@ private:
 	HRESULT			SetUp_MaxLoadingCount();
 
 private:
-	CLoading*	m_pLoading	= nullptr;
-	CLogoBack*	m_pLogoBack	= nullptr;
+	CLoading*				m_pLoading				= nullptr;
+	Engine::CGameObject*	m_pLoadingProgress		= nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Loading Text ]

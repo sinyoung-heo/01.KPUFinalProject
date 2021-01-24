@@ -107,11 +107,11 @@ void CRectObject::Set_ConstantTable()
 }
 
 
-CRectObject * CRectObject::Create(ID3D12Device * pGraphicDevice, 
-								  ID3D12GraphicsCommandList * pCommandList,
-								  const _vec3 & vScale, 
-								  const _vec3 & vAngle,
-								  const _vec3 & vPos)
+Engine::CGameObject* CRectObject::Create(ID3D12Device * pGraphicDevice,
+										 ID3D12GraphicsCommandList * pCommandList,
+										 const _vec3 & vScale, 
+										 const _vec3 & vAngle,
+										 const _vec3 & vPos)
 {
 	CRectObject* pInstance = new CRectObject(pGraphicDevice, pCommandList);
 

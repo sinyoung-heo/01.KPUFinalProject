@@ -1,30 +1,28 @@
 #include "stdafx.h"
-#include "LogoBack.h"
+#include "LoadingProgressBack.h"
 
-CLogoBack::CLogoBack(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CLoadingProgressBack::CLoadingProgressBack(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
 }
 
-
-HRESULT CLogoBack::Ready_GameObject(wstring wstrTextureTag)
+HRESULT CLoadingProgressBack::Ready_GameObject(wstring wstrTextureTag)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, false), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrTextureTag), E_FAIL);
 
 	m_matView				= INIT_MATRIX;
 	m_matProj				= XMMatrixOrthographicLH(WINCX, WINCY, 0.0f, 1.0f);
-	m_pTransCom->m_vPos		= _vec3((_float)WINCX / 2.0f, (_float)WINCY / 2.0f, 0.1f);
-	m_pTransCom->m_vScale	= _vec3((_float)WINCX, (_float)WINCY, 1.0f);
+	m_pTransCom->m_vPos		= _vec3((_float)WINCX / 2.0f, (_float)WINCY - 50.0f, 1.0f);
+	m_pTransCom->m_vScale	= _vec3(1200.0f, 100.0f, 1.0f);
 
-	m_uiTexIdx	= 5;
-	m_UIDepth	= 1000;
-	
+	m_uiTexIdx	= 2;
+	m_UIDepth	= 900;
 
 	return S_OK;
 }
 
-HRESULT CLogoBack::LateInit_GameObject()
+HRESULT CLoadingProgressBack::LateInit_GameObject()
 {
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer();
@@ -32,7 +30,7 @@ HRESULT CLogoBack::LateInit_GameObject()
 	return S_OK;
 }
 
-_int CLogoBack::Update_GameObject(const _float & fTimeDelta)
+_int CLoadingProgressBack::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
@@ -57,14 +55,14 @@ _int CLogoBack::Update_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CLogoBack::LateUpdate_GameObject(const _float & fTimeDelta)
+_int CLoadingProgressBack::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
 	return NO_EVENT;
 }
 
-void CLogoBack::Render_GameObject(const _float & fTimeDelta)
+void CLoadingProgressBack::Render_GameObject(const _float& fTimeDelta)
 {
 	Set_ConstantTable();
 
@@ -74,7 +72,7 @@ void CLogoBack::Render_GameObject(const _float & fTimeDelta)
 	m_pBufferCom->Render_Buffer();
 }
 
-HRESULT CLogoBack::Add_Component(wstring wstrTextureTag)
+HRESULT CLoadingProgressBack::Add_Component(wstring wstrTextureTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -94,13 +92,13 @@ HRESULT CLogoBack::Add_Component(wstring wstrTextureTag)
 	m_pShaderCom = static_cast<Engine::CShaderTexture*>(m_pComponentMgr->Clone_Component(L"ShaderTexture", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->AddRef();
-	m_pShaderCom->Set_PipelineStatePass(0);
+	m_pShaderCom->Set_PipelineStatePass(4);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
 	return S_OK;
 }
 
-void CLogoBack::Set_ConstantTable()
+void CLoadingProgressBack::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -118,11 +116,11 @@ void CLogoBack::Set_ConstantTable()
 	m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 }
 
-Engine::CGameObject* CLogoBack::Create(ID3D12Device * pGraphicDevice,
-									   ID3D12GraphicsCommandList * pCommandList,
-									   wstring wstrTextureTag)
+Engine::CGameObject* CLoadingProgressBack::Create(ID3D12Device* pGraphicDevice,
+												  ID3D12GraphicsCommandList* pCommandList, 
+												  wstring wstrTextureTag)
 {
-	CLogoBack* pInstance = new CLogoBack(pGraphicDevice, pCommandList);
+	CLoadingProgressBack* pInstance = new CLoadingProgressBack(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrTextureTag)))
 		Engine::Safe_Release(pInstance);
@@ -130,12 +128,11 @@ Engine::CGameObject* CLogoBack::Create(ID3D12Device * pGraphicDevice,
 	return pInstance;
 }
 
-void CLogoBack::Free()
+void CLoadingProgressBack::Free()
 {
 	Engine::CGameObject::Free();
 
 	Engine::Safe_Release(m_pBufferCom);
 	Engine::Safe_Release(m_pShaderCom);
 	Engine::Safe_Release(m_pTextureCom);
-
 }

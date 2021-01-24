@@ -150,11 +150,11 @@ void CDynamicCamera::Key_Input(const _float & fTimeDelta)
 		m_pTransCom->m_vAngle.y = (_float)(static_cast<_int>(m_pTransCom->m_vAngle.y) % 360);
 }
 
-CDynamicCamera * CDynamicCamera::Create(ID3D12Device * pGraphicDevice,
-										ID3D12GraphicsCommandList * pCommandList,
-										const Engine::CAMERA_DESC & tCameraInfo,
-										const Engine::PROJ_DESC & tProjInfo, 
-										const Engine::ORTHO_DESC & tOrthoInfo)
+Engine::CGameObject* CDynamicCamera::Create(ID3D12Device * pGraphicDevice,
+											ID3D12GraphicsCommandList * pCommandList,
+											const Engine::CAMERA_DESC & tCameraInfo,
+											const Engine::PROJ_DESC & tProjInfo, 
+											const Engine::ORTHO_DESC & tOrthoInfo)
 {
 	CDynamicCamera* pInstance = new CDynamicCamera(pGraphicDevice, pCommandList);
 

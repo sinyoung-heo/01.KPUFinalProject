@@ -42,11 +42,11 @@ private:
 	_tchar			m_szText[MAX_STR]	= L"";
 
 public:
-	static CDebugCamera* Create(ID3D12Device* pGraphicDevice, 
-								ID3D12GraphicsCommandList* pCommandList,
-								const Engine::CAMERA_DESC& tCameraInfo,
-								const Engine::PROJ_DESC& tProjInfo,
-								const Engine::ORTHO_DESC& tOrthoInfo);
+	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
+									   ID3D12GraphicsCommandList* pCommandList,
+									   const Engine::CAMERA_DESC& tCameraInfo,
+									   const Engine::PROJ_DESC& tProjInfo,
+									   const Engine::ORTHO_DESC& tOrthoInfo);
 private:
 	virtual void Free();
 };
