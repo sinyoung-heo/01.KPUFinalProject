@@ -87,92 +87,11 @@ _int CMainApp::LateUpdate_MainApp(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pManagement, -1);
 
+	/*__________________________________________________________________________________________________________
+	[ Debug Font ]
+	____________________________________________________________________________________________________________*/
 	if (m_pRenderer->Get_RenderOnOff(L"DebugFont"))
-	{
-		/*__________________________________________________________________________________________________________
-		[ Text - FPS ]
-		____________________________________________________________________________________________________________*/
-		if (nullptr != m_pFont_FPS)
-		{
-			m_pFont_FPS->Update_GameObject(fTimeDelta);
-
-			m_fTime += fTimeDelta;
-			++m_uiFPS;
-
-			if (m_fTime >= 1.0f)
-			{
-				wsprintf(m_szFPS, L"FPS : %d", m_uiFPS);
-				m_pFont_FPS->Set_Text(wstring(m_szFPS));
-
-				m_fTime = 0.0f;
-				m_uiFPS = 0;
-			}
-		}
-
-		/*__________________________________________________________________________________________________________
-		[ Text - PipelineState ]
-		____________________________________________________________________________________________________________*/
-		if (nullptr != m_pRenderer)
-		{
-			m_uiCnt_ShaderFile = m_pRenderer->Get_CntShaderFile();
-			m_uiCnt_PipelineState = m_pRenderer->Get_CntPipelineState();
-			m_uiCnt_SetPipelineState = m_pRenderer->Get_CntSetPipelineState();
-			m_pRenderer->Reset_SetPipelineStateCnt();
-		}
-
-		m_wstrPipeline = wstring(L"[ Shader Info ]\n") +
-						 wstring(L"Num ShaderFile : %d\n") +
-						 wstring(L"Num PipelineState : %d\n") +
-						 wstring(L"Num SetPipelineState : %d");
-
-		wsprintf(m_szPipeline, m_wstrPipeline.c_str(),
-				 m_uiCnt_ShaderFile,
-				 m_uiCnt_PipelineState,
-				 m_uiCnt_SetPipelineState);
-
-		if (nullptr != m_pFont_PipelineState)
-		{
-			m_pFont_PipelineState->Update_GameObject(fTimeDelta);
-			m_pFont_PipelineState->Set_Text(wstring(m_szPipeline));
-		}
-
-		/*__________________________________________________________________________________________________________
-		[ Text RenderList Object Cnt ]
-		____________________________________________________________________________________________________________*/
-		if (nullptr != m_pRenderer)
-		{
-			m_iPrioritySize		= m_pRenderer->Get_RenderLstSize(m_pRenderer->RENDER_PRIORITY);
-			m_iNoneAlphaSize	= m_pRenderer->Get_RenderLstSize(m_pRenderer->RENDER_NONALPHA);
-			m_iAlphaSize		= m_pRenderer->Get_RenderLstSize(m_pRenderer->RENDER_ALPHA);
-			m_iUISize			= m_pRenderer->Get_RenderLstSize(m_pRenderer->RENDER_UI);
-			m_iColliderSize		= m_pRenderer->Get_ColliderLstSize();
-			m_iFontSize			= m_pRenderer->Get_RenderLstSize(m_pRenderer->RENDER_FONT);
-		}
-		m_wstrRenderList = wstring(L"[ Render Group ]\n") +
-						   wstring(L"PRIORITY\t%d\n") +
-						   wstring(L"NONEALPHA\t%d\n") +
-						   wstring(L"ALPHA\t\t%d\n") +
-						   wstring(L"UI\t\t%d\n") +
-						   wstring(L"COLLIDER\t%d\n") +
-						   wstring(L"FONT\t\t%d\n") +
-						   wstring(L"------------------   %d");
-
-		wsprintf(m_szRenderList, m_wstrRenderList.c_str(),
-				 m_iPrioritySize,
-				 m_iNoneAlphaSize,
-				 m_iAlphaSize,
-				 m_iUISize,
-				 m_iColliderSize,
-				 m_iFontSize,
-				 m_iPrioritySize + m_iNoneAlphaSize + m_iAlphaSize + m_iUISize + m_iColliderSize + m_iFontSize);
-
-		if (nullptr != m_pFont_RenderList)
-		{
-			m_pFont_RenderList->Update_GameObject(fTimeDelta);
-			m_pFont_RenderList->Set_Text(wstring(m_szRenderList));
-		}
-
-	}
+		Show_FontLog(fTimeDelta);
 
 
 	/*__________________________________________________________________________________________________________
@@ -386,6 +305,92 @@ void CMainApp::Key_Input()
 	if (Engine::KEY_DOWN(DIK_F3))
 		m_pRenderer->Set_RenderOnOff(L"Collider");
 
+}
+
+void CMainApp::Show_FontLog(const _float& fTimeDelta)
+{
+	/*__________________________________________________________________________________________________________
+	[ Text - FPS ]
+	____________________________________________________________________________________________________________*/
+	if (nullptr != m_pFont_FPS)
+	{
+		m_pFont_FPS->Update_GameObject(fTimeDelta);
+
+		m_fTime += fTimeDelta;
+		++m_uiFPS;
+
+		if (m_fTime >= 1.0f)
+		{
+			wsprintf(m_szFPS, L"FPS : %d", m_uiFPS);
+			m_pFont_FPS->Set_Text(wstring(m_szFPS));
+
+			m_fTime = 0.0f;
+			m_uiFPS = 0;
+		}
+	}
+
+	/*__________________________________________________________________________________________________________
+	[ Text - PipelineState ]
+	____________________________________________________________________________________________________________*/
+	if (nullptr != m_pRenderer)
+	{
+		m_uiCnt_ShaderFile = m_pRenderer->Get_CntShaderFile();
+		m_uiCnt_PipelineState = m_pRenderer->Get_CntPipelineState();
+		m_uiCnt_SetPipelineState = m_pRenderer->Get_CntSetPipelineState();
+		m_pRenderer->Reset_SetPipelineStateCnt();
+	}
+
+	m_wstrPipeline = wstring(L"[ Shader Info ]\n") +
+					 wstring(L"Num ShaderFile : %d\n") +
+					 wstring(L"Num PipelineState : %d\n") +
+					 wstring(L"Num SetPipelineState : %d");
+
+	wsprintf(m_szPipeline, m_wstrPipeline.c_str(),
+			 m_uiCnt_ShaderFile,
+			 m_uiCnt_PipelineState,
+			 m_uiCnt_SetPipelineState);
+
+	if (nullptr != m_pFont_PipelineState)
+	{
+		m_pFont_PipelineState->Update_GameObject(fTimeDelta);
+		m_pFont_PipelineState->Set_Text(wstring(m_szPipeline));
+	}
+
+	/*__________________________________________________________________________________________________________
+	[ Text RenderList Object Cnt ]
+	____________________________________________________________________________________________________________*/
+	if (nullptr != m_pRenderer)
+	{
+		m_iPrioritySize		= m_pRenderer->Get_RenderLstSize(m_pRenderer->RENDER_PRIORITY);
+		m_iNoneAlphaSize	= m_pRenderer->Get_RenderLstSize(m_pRenderer->RENDER_NONALPHA);
+		m_iAlphaSize		= m_pRenderer->Get_RenderLstSize(m_pRenderer->RENDER_ALPHA);
+		m_iUISize			= m_pRenderer->Get_RenderLstSize(m_pRenderer->RENDER_UI);
+		m_iColliderSize		= m_pRenderer->Get_ColliderLstSize();
+		m_iFontSize			= m_pRenderer->Get_RenderLstSize(m_pRenderer->RENDER_FONT);
+	}
+	m_wstrRenderList = wstring(L"[ Render Group ]\n") +
+					   wstring(L"PRIORITY\t%d\n") +
+					   wstring(L"NONEALPHA\t%d\n") +
+					   wstring(L"ALPHA\t\t%d\n") +
+					   wstring(L"UI\t\t%d\n") +
+					   wstring(L"COLLIDER\t%d\n") +
+					   wstring(L"FONT\t\t%d\n") +
+					   wstring(L"------------------   %d");
+
+	wsprintf(m_szRenderList, m_wstrRenderList.c_str(),
+			 m_iPrioritySize,
+			 m_iNoneAlphaSize,
+			 m_iAlphaSize,
+			 m_iUISize,
+			 m_iColliderSize,
+			 m_iFontSize,
+			 m_iPrioritySize + m_iNoneAlphaSize + m_iAlphaSize + m_iUISize + m_iColliderSize + m_iFontSize);
+
+	if (nullptr != m_pFont_RenderList)
+	{
+		m_pFont_RenderList->Update_GameObject(fTimeDelta);
+		m_pFont_RenderList->Set_Text(wstring(m_szRenderList));
+	}
 }
 
 CMainApp * CMainApp::Create()

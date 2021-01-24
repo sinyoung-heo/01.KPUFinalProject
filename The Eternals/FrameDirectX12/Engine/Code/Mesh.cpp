@@ -48,13 +48,10 @@ HRESULT CMesh::Ready_Mesh(wstring wstrFilePath, wstring wstrFileName)
 	Safe_Delete_Array(pStringPath);
 
 
-	m_pScene = m_Importer.ReadFile(strFullPath.c_str(),
-								   aiProcess_MakeLeftHanded |
-								   aiPostProcessSteps::aiProcess_FlipWindingOrder |
-								   aiProcess_FlipUVs);
+	m_pScene = m_Importer.ReadFile(strFullPath.c_str(), aiProcess_ConvertToLeftHanded | aiProcess_OptimizeMeshes);
 
-	m_wstrVIMeshTag		= L"Prototype" + wstrFileName + L"VIMesh";
-	m_wstrAniCtrlTag	= L"Prototype" + wstrFileName + L"AniCtrl";
+	m_wstrVIMeshTag		= wstrFileName + L"VIMesh";
+	m_wstrAniCtrlTag	= wstrFileName + L"AniCtrl";
 
 	CComponent* pComonent = nullptr;
 	if (m_pScene->mNumMeshes)
@@ -176,7 +173,5 @@ void CMesh::Free()
 		Safe_Release(m_pAniCtrl);
 
 	if (!m_bIsClone)
-	{
 		m_pScene = nullptr;
-	}
 }

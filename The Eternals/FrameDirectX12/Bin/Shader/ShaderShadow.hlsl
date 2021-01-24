@@ -46,10 +46,36 @@ VS_OUT VS_MAIN(VS_IN vs_input)
 	
 	if (vs_input.BoneWeights[0].x != 0.0f)
 	{
-		matBone = mul(mul(g_matBoneOffset[vs_input.BoneId[0].x], mul(mul(mul(g_matBoneScale[vs_input.BoneId[0].x], g_matBoneRotation[vs_input.BoneId[0].x]), g_matBoneTrans[vs_input.BoneId[0].x]), g_matParentTransform[vs_input.BoneId[0].x])), g_matRootTransform[vs_input.BoneId[0].x]) * vs_input.BoneWeights[0].x;
-		matBone += mul(mul(g_matBoneOffset[vs_input.BoneId[0].y], mul(mul(mul(g_matBoneScale[vs_input.BoneId[0].y], g_matBoneRotation[vs_input.BoneId[0].y]), g_matBoneTrans[vs_input.BoneId[0].y]), g_matParentTransform[vs_input.BoneId[0].y])), g_matRootTransform[vs_input.BoneId[0].y]) * vs_input.BoneWeights[0].y;
-		matBone += mul(mul(g_matBoneOffset[vs_input.BoneId[0].z], mul(mul(mul(g_matBoneScale[vs_input.BoneId[0].z], g_matBoneRotation[vs_input.BoneId[0].z]), g_matBoneTrans[vs_input.BoneId[0].z]), g_matParentTransform[vs_input.BoneId[0].z])), g_matRootTransform[vs_input.BoneId[0].z]) * vs_input.BoneWeights[0].z;
-		matBone += mul(mul(g_matBoneOffset[vs_input.BoneId[1].x], mul(mul(mul(g_matBoneScale[vs_input.BoneId[1].x], g_matBoneRotation[vs_input.BoneId[1].x]), g_matBoneTrans[vs_input.BoneId[1].x]), g_matParentTransform[vs_input.BoneId[1].x])), g_matRootTransform[vs_input.BoneId[1].x]) * vs_input.BoneWeights[1].x;
+		// Offset * Scale * Rotation * Transform * ParentTransform * RootTransform
+		float4x4 matOS, matOSR, matOSRT, matOSRTP, matOSRTPR;
+		
+		matOS		= mul(g_matBoneOffset[vs_input.BoneId[0].x], g_matBoneScale[vs_input.BoneId[0].x]);
+		matOSR		= mul(matOS, g_matBoneRotation[vs_input.BoneId[0].x]);
+		matOSRT		= mul(matOSR, g_matBoneTrans[vs_input.BoneId[0].x]);
+		matOSRTP	= mul(matOSRT, g_matParentTransform[vs_input.BoneId[0].x]);
+		matOSRTPR	= mul(matOSRTP, g_matRootTransform[vs_input.BoneId[0].x]);
+		matBone		= matOSRTPR * vs_input.BoneWeights[0].x;
+		
+		matOS		= mul(g_matBoneOffset[vs_input.BoneId[0].y], g_matBoneScale[vs_input.BoneId[0].y]);
+		matOSR		= mul(matOS, g_matBoneRotation[vs_input.BoneId[0].y]);
+		matOSRT		= mul(matOSR, g_matBoneTrans[vs_input.BoneId[0].y]);
+		matOSRTP	= mul(matOSRT, g_matParentTransform[vs_input.BoneId[0].y]);
+		matOSRTPR	= mul(matOSRTP, g_matRootTransform[vs_input.BoneId[0].y]);
+		matBone		+= matOSRTPR * vs_input.BoneWeights[0].y;
+		
+		matOS		= mul(g_matBoneOffset[vs_input.BoneId[0].z], g_matBoneScale[vs_input.BoneId[0].z]);
+		matOSR		= mul(matOS, g_matBoneRotation[vs_input.BoneId[0].z]);
+		matOSRT		= mul(matOSR, g_matBoneTrans[vs_input.BoneId[0].z]);
+		matOSRTP	= mul(matOSRT, g_matParentTransform[vs_input.BoneId[0].z]);
+		matOSRTPR	= mul(matOSRTP, g_matRootTransform[vs_input.BoneId[0].z]);
+		matBone		+= matOSRTPR * vs_input.BoneWeights[0].z;
+
+		matOS		= mul(g_matBoneOffset[vs_input.BoneId[1].x], g_matBoneScale[vs_input.BoneId[1].x]);
+		matOSR		= mul(matOS, g_matBoneRotation[vs_input.BoneId[1].x]);
+		matOSRT		= mul(matOSR, g_matBoneTrans[vs_input.BoneId[1].x]);
+		matOSRTP	= mul(matOSRT, g_matParentTransform[vs_input.BoneId[1].x]);
+		matOSRTPR	= mul(matOSRTP, g_matRootTransform[vs_input.BoneId[1].x]);
+		matBone		+= matOSRTPR * vs_input.BoneWeights[1].x;
 	}
 	
 	VS_OUT vs_output	= (VS_OUT) 0;

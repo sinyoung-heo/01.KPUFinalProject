@@ -33,6 +33,7 @@ private:
 	HRESULT	SetUp_StartScene(Engine::SCENEID eScebeID);
 
 	void	Key_Input();
+	void	Show_FontLog(const _float& fTimeDelta);
 
 private:
 	/*__________________________________________________________________________________________________________
