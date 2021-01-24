@@ -170,9 +170,6 @@ VS_TEXNORMAL_OUT VS_GAUAGE(VS_TEXNORMAL_IN vs_input)
 float4 PS_GAUAGE(VS_TEXNORMAL_OUT ps_input) : SV_TARGET
 {
 	float4 vDiffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
-	
-	// float gauge = ceil(u_Gauge - vTexPos.x);
-	// FragColor = u_Color * gauge;
 	float fGauge	= ceil(g_fGauge - ps_input.TexUV.x);
 	
 	float4 vColor = vDiffuse * fGauge;

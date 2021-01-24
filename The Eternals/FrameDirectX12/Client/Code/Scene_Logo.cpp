@@ -47,9 +47,11 @@ HRESULT CScene_Logo::Ready_Scene()
 	/*__________________________________________________________________________________________________________
 	[ Loading Font ]
 	____________________________________________________________________________________________________________*/
-	m_pFont_LoadingStr = static_cast<Engine::CFont*>(m_pObjectMgr->Clone_GameObjectPrototype(L"Font_NetmarbleBold"));
+	m_pFont_LoadingStr = static_cast<Engine::CFont*>(m_pObjectMgr->Clone_GameObjectPrototype(L"Font_Loading"));
 	Engine::NULL_CHECK_RETURN(m_pFont_LoadingStr, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pFont_LoadingStr->Ready_GameObject(L"", _vec2(16.0f, 16.0f), D2D1::ColorF::SpringGreen), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pFont_LoadingStr->Ready_GameObject(L"", 
+																	 _vec2(WINCX / 2.0f - 275.0f, WINCY - 100.0f),
+																	 D2D1::ColorF::RosyBrown), E_FAIL);
 
 	return S_OK;
 }
@@ -66,8 +68,8 @@ _int CScene_Logo::Update_Scene(const _float & fTimeDelta)
 	_int	iPercent		= (_int)(fRatio * 100.0f);
 
 	lstrcpy(m_szLoadingStr, (m_pLoading->Get_LoadingString()));
-	_tchar szPercent[MIN_STR] = L"%d %% \n";
-	wsprintf(szPercent, L"Now Loading %d %% Complete\n", iPercent);
+	_tchar szPercent[MIN_STR] = L"";
+	wsprintf(szPercent, L"Now Loading %d %% ", iPercent);
 	wstring wstrResult	= szPercent;
 	wstring wstrLoading = m_szLoadingStr;
 	wstrResult += wstrLoading;

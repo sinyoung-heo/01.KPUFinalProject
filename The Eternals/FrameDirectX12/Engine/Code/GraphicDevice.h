@@ -50,7 +50,6 @@ public:
 	HRESULT End_ResetCmdList(const CMDID& eCmdID);
 	void	Begin_BackBufferSetting();
 	void	End_BackBufferSetting();
-	void	Clear_DepthStencilBuffer(const CMDID& eCmdID);
 
 private:
 	HRESULT	Create_GraphicDevice(const _uint& iWidth, const _uint& iHeight);

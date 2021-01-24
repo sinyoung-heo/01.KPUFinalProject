@@ -31,7 +31,7 @@ _uint CLoading::Loading_For_Stage()
 
 	m_bIsFinish = true;
 
-	lstrcpy(m_szLoadingStr, L"Resource Loading is Finish");
+	lstrcpy(m_szLoadingStr, L"COMPLETE");
 
 #ifdef CLIENT_LOG
 	COUT_STR("<< Loading Finish >>");
@@ -65,8 +65,8 @@ HRESULT CLoading::Loading_MeshFromFilePath()
 		if (fin.eof())
 			break;
 
-		lstrcpy(m_szLoadingStr, szMeshTag);
-		lstrcat(m_szLoadingStr, L" Mesh Loading");
+		lstrcpy(m_szLoadingStr, L"MESH - ");
+		lstrcat(m_szLoadingStr, szMeshTag);
 
 		wstrMeshTag		= szMeshTag;
 		wstrFileName	= szFileName;
@@ -109,8 +109,8 @@ HRESULT CLoading::Loading_TextureFromFilePath()
 		if (fin.eof())
 			break;
 
-		lstrcpy(m_szLoadingStr, szTextureTag);
-		lstrcat(m_szLoadingStr, L" Texture Loading");
+		lstrcpy(m_szLoadingStr, L"TEXTURE - ");
+		lstrcat(m_szLoadingStr, szTextureTag);
 
 		_int iTexSize = _ttoi(szCount);
 

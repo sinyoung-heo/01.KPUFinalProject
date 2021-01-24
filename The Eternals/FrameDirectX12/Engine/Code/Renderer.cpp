@@ -481,6 +481,14 @@ HRESULT CRenderer::Create_ThreadCommandList()
 
 		FAILED_CHECK_RETURN(m_arrShadowCommandList[i]->Close(), E_FAIL);
 		FAILED_CHECK_RETURN(m_arrSceneCommandList[i]->Close(), E_FAIL);
+
+		_tchar szName[MIN_STR];
+
+		wsprintf(szName, L"COMMANDLIST_MULTITHREAD_SHADOW%d", i);
+		m_arrShadowCommandList[i]->SetName(szName);
+
+		wsprintf(szName, L"COMMANDLIST_MULTITHREAD_SCENE%d", i);
+		m_arrSceneCommandList[i]->SetName(szName);
 	}
 
 	// PreCommandList - ShadowDepth
@@ -505,7 +513,9 @@ HRESULT CRenderer::Create_ThreadCommandList()
 															E_FAIL);
 
 	FAILED_CHECK_RETURN(m_pPreShadowCommandList->Close(), E_FAIL);
+	m_pPreShadowCommandList->SetName(L"COMMANDLIST_MULTITHREAD_PRE_SHADOW");
 	FAILED_CHECK_RETURN(m_pEndShadowCommandList->Close(), E_FAIL);
+	m_pEndShadowCommandList->SetName(L"COMMANDLIST_MULTITHREAD_END_SHADOW");
 
 
 	// PreCommandList - Scene
@@ -530,7 +540,9 @@ HRESULT CRenderer::Create_ThreadCommandList()
 															E_FAIL);
 
 	FAILED_CHECK_RETURN(m_pPreSceneCommandList->Close(), E_FAIL);
+	m_pPreSceneCommandList->SetName(L"COMMANDLIST_MULTITHREAD_PRE_SCENE");
 	FAILED_CHECK_RETURN(m_pEndSceneCommandList->Close(), E_FAIL);
+	m_pEndSceneCommandList->SetName(L"COMMANDLIST_MULTITHREAD_END_SCENE");
 
 	return S_OK;
 }

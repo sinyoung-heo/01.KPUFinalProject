@@ -294,17 +294,6 @@ void CGraphicDevice::End_BackBufferSetting()
 
 }
 
-void CGraphicDevice::Clear_DepthStencilBuffer(const CMDID & eCmdID)
-{
-	m_arrCommandList[eCmdID]->ClearDepthStencilView(m_pDSV_Heap->GetCPUDescriptorHandleForHeapStart(),
-													D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 
-													1.0f,
-													0,
-													0, 
-													nullptr);
-}
-
-
 HRESULT CGraphicDevice::Create_GraphicDevice(const _uint & iWidth, const _uint & iHeight)
 {
 #if defined(_DEBUG)
