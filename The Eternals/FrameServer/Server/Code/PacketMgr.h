@@ -10,7 +10,7 @@ void send_move_packet(int to_client, int id);									// 움직임 패킷
 void send_chat_packet(int to, int id, char* message);							// 채팅 패킷
 void send_stat_change_packet(int to, int id);									// 상태정보(HP,LV,EXP) 변경 패킷
 
-void process_move(int id, cs_packet_move* info);								// 움직임 처리 함수
+void process_move(int id, char direction);								// 움직임 처리 함수
 void process_attck(int id);														// 공격 처리 함수
 
 /* 패킷 관리 및 처리 함수 */

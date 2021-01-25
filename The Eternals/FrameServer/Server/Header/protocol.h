@@ -26,7 +26,7 @@ constexpr char CS_ATTACK = 2;
 constexpr char CS_CHAT = 3;
 constexpr char CS_LOGOUT = 4;
 constexpr char CS_TELEPORT = 5;				// 부하 테스트용 동접 테스트를 위해 텔러포트로 Hot Spot 해소
-
+constexpr char CS_DUMMY_LOGIN = 6;
 
 struct sc_packet_login_ok 
 {
@@ -128,8 +128,7 @@ struct cs_packet_move
 	char  type;
 
 	int	  move_time;
-	float posX, posY, posZ;
-	float dirX, dirY, dirZ;
+	char  dir;
 };
 
 struct cs_packet_attack 

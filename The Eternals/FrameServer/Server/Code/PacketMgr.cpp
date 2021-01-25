@@ -115,7 +115,7 @@ void process_packet(int id)
 	{
 		cs_packet_move* p = reinterpret_cast<cs_packet_move*>(pPlayer->m_packet_start);
 		pPlayer->move_time = p->move_time;
-		process_move(id, p);
+		process_move(id, p->dir);
 	}
 	break;
 
@@ -127,6 +127,26 @@ void process_packet(int id)
 		break;
 	case CS_TELEPORT:
 		break;
+	case CS_DUMMY_LOGIN:
+	{
+		cs_packet_login* p = reinterpret_cast<cs_packet_login*>(pPlayer->m_packet_start);
+
+		pPlayer->Get_ClientLock().lock();
+		strcpy_s(pPlayer->m_ID, p->name);
+		pPlayer->Get_ClientLock().unlock();
+
+		/* 로그인 수락 패킷 전송 */
+		send_login_ok(id);
+
+		/* Sector 다시 등록 (접속 시 미리 한 번 하고있음. 완전함을 위해 한 번 더 등록(sector의 Key는 Unique함) */
+		CSectorMgr::GetInstance()->Enter_ClientInSector(id, (int)(pPlayer->m_vPos.y / SECTOR_SIZE), (int)(pPlayer->m_vPos.x / SECTOR_SIZE));
+
+		/* 해당 플레이어가 등록되어 있는 섹터 내의 유저들에게 접속을 알림 */
+		unordered_set<pair<int, int>> nearSector;
+		nearSector.reserve(5);
+		CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSector, (int)pPlayer->m_vPos.x, (int)pPlayer->m_vPos.y);
+	}
+	break;
 	}
 }
 /* ========================패킷 재조립========================*/
@@ -303,17 +323,39 @@ void send_move_packet(int to_client, int id)
 	send_packet(to_client, &p);
 }
 
-void process_move(int id, cs_packet_move* info)
+void process_move(int id, char direction)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 
 	if (pPlayer == nullptr) return;
 
-	/* 해당 플레이어의 원래 위치값 */
+	/* 해당 플레이어의 원래 위치값 & 변경된 위치값 */
 	float ori_x, ori_y, ori_z;
-	ori_x = pPlayer->m_vPos.x;
-	ori_y = pPlayer->m_vPos.y;
-	ori_z = pPlayer->m_vPos.z;
+	float cur_x, cur_y, cur_z;
+	cur_x = ori_x = pPlayer->m_vPos.x;
+	cur_y = ori_y = pPlayer->m_vPos.y;
+	cur_z = ori_z = pPlayer->m_vPos.z;
+
+	switch (direction)
+	{
+	case MV_UP:
+		cur_y -= 10;
+		break;
+	case MV_DOWN: 
+		cur_y += 10;
+		break;
+	case MV_LEFT: 
+		cur_x -= 10;
+		break;
+	case MV_RIGHT: 
+		cur_x += 10;
+		break;
+	
+#ifdef TEST
+	default: cout << "Unknown Direction in CS_MOVE packet.\n";
+		while (true);
+#endif // TEST
+	}
 
 	/* 해당 플레이어의 원래 시야 목록 */
 	pPlayer->v_lock.lock();
@@ -321,17 +363,17 @@ void process_move(int id, cs_packet_move* info)
 	pPlayer->v_lock.unlock();
 
 	/* 해당 플레이어로부터 받은 변경된 위치값 저장 */
-	pPlayer->m_vPos.x = info->posX;
-	pPlayer->m_vPos.y = info->posY;
-	pPlayer->m_vPos.z = info->posZ;
+	pPlayer->m_vPos.x = cur_x;
+	pPlayer->m_vPos.y = cur_y;
+	pPlayer->m_vPos.z = cur_z;
 
-	pPlayer->m_vDir.x = info->dirX;
-	pPlayer->m_vDir.y = info->dirY;
-	pPlayer->m_vDir.z = info->dirZ;
+	pPlayer->m_vDir.x = 0.f;
+	pPlayer->m_vDir.y = 0.f;
+	pPlayer->m_vDir.z = 0.f;
+	send_move_packet(id, id);
 
 	/* 변경된 좌표로 섹터 갱신 */
 	CSectorMgr::GetInstance()->Compare_exchange_Sector(id, (int)ori_y, (int)ori_x, (int)(pPlayer->m_vPos.y), (int)(pPlayer->m_vPos.x));
-
 
 	/* 플레이어 주변의 섹터를 검색 -> 인접한 섹터 내의 객체에게 좌표 전송 */
 	unordered_set<pair<int, int>> nearSector;
