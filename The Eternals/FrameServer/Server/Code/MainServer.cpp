@@ -74,7 +74,7 @@ void Ready_Server()
 	Ready_ServerManager();
 
 	/* Create NPC */
-	Initialize_NPC();
+	//Initialize_NPC();
 
 	std::wcout.imbue(std::locale("korean"));
 

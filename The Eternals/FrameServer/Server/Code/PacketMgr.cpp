@@ -127,26 +127,6 @@ void process_packet(int id)
 		break;
 	case CS_TELEPORT:
 		break;
-	case CS_DUMMY_LOGIN:
-	{
-		cs_packet_login* p = reinterpret_cast<cs_packet_login*>(pPlayer->m_packet_start);
-
-		pPlayer->Get_ClientLock().lock();
-		strcpy_s(pPlayer->m_ID, p->name);
-		pPlayer->Get_ClientLock().unlock();
-
-		/* 로그인 수락 패킷 전송 */
-		send_login_ok(id);
-
-		/* Sector 다시 등록 (접속 시 미리 한 번 하고있음. 완전함을 위해 한 번 더 등록(sector의 Key는 Unique함) */
-		CSectorMgr::GetInstance()->Enter_ClientInSector(id, (int)(pPlayer->m_vPos.y / SECTOR_SIZE), (int)(pPlayer->m_vPos.x / SECTOR_SIZE));
-
-		/* 해당 플레이어가 등록되어 있는 섹터 내의 유저들에게 접속을 알림 */
-		unordered_set<pair<int, int>> nearSector;
-		nearSector.reserve(5);
-		CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSector, (int)pPlayer->m_vPos.x, (int)pPlayer->m_vPos.y);
-	}
-	break;
 	}
 }
 /* ========================패킷 재조립========================*/
