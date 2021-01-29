@@ -31,6 +31,11 @@ HRESULT CStageLDH::Ready_Scene()
 	COUT_STR("");
 #endif
 
+#ifdef SERVER
+	Engine::FAILED_CHECK_RETURN(Ready_Server(), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Connect_Server(), E_FAIL);
+#endif
+
 	Engine::FAILED_CHECK_RETURN(Ready_NaviMesh(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LayerCamera(L"Layer_Camera"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LayerEnvironment(L"Layer_Environment"), E_FAIL);
@@ -386,6 +391,50 @@ HRESULT CStageLDH::Ready_NaviMesh()
 
 	return S_OK;
 }
+
+#ifdef SERVER
+HRESULT CStageLDH::Ready_Server()
+{
+	// Initialize Windows Socket
+	WSADATA wsaData;
+	WSAStartup(MAKEWORD(2, 2), &wsaData);
+
+	// Create Windows Socket
+	g_hSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+	/* Non-Blocking Socket으로 전환 */
+	unsigned long ul = 1;
+	ioctlsocket(g_hSocket, FIONBIO, (unsigned long*)&ul);
+
+	return S_OK;
+}
+
+HRESULT CStageLDH::Connect_Server()
+{
+	/* Socket Address Structure */
+	SOCKADDR_IN sockAddr;
+	memset(&sockAddr, 0, sizeof(sockAddr));
+
+	sockAddr.sin_family = AF_INET;
+	sockAddr.sin_port = htons(SERVER_PORT);
+	sockAddr.sin_addr.s_addr = inet_addr(SERVER_IP);
+
+	if (connect(g_hSocket, (SOCKADDR*)&sockAddr, sizeof(sockAddr)) == SOCKET_ERROR)
+	{
+		int err_no = WSAGetLastError();
+		if (err_no != WSAEWOULDBLOCK)
+		{
+			error_display("connect : ", err_no);
+			closesocket(g_hSocket);
+			return E_FAIL;
+		}
+	}
+
+	cout << "서버에 접속을 요청하였습니다. 잠시만 기다려주세요." << endl;
+
+	return S_OK;
+}
+#endif // SERVER
 
 CStageLDH * CStageLDH::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 {

@@ -23,6 +23,10 @@ private:
 	HRESULT	Ready_LightInfo();
 	HRESULT	Ready_NaviMesh();
 
+private:
+	HRESULT Ready_Server();
+	HRESULT Connect_Server();
+
 public:
 	static CStageLDH*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 private:

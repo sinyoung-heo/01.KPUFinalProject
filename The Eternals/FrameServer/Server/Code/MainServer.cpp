@@ -409,7 +409,9 @@ void worker_thread()
 			else
 			{
 				disconnect_client(key);
+#ifdef TEST
 				error_display("GQCS Error : ", WSAGetLastError());
+#endif
 			}
 		}
 

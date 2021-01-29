@@ -165,6 +165,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\FrameServer\Server\Header\protocol.h" />
     <ClInclude Include="..\Code\DebugCamera.h" />
     <ClInclude Include="..\Code\Loading.h" />
     <ClInclude Include="..\Code\CubeObject.h" />

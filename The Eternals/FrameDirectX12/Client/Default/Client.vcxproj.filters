@@ -201,6 +201,9 @@
     <ClInclude Include="..\Code\LoadingProgress.h">
       <Filter>01.Scene\01.Logo\02.LoadingProgress</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\FrameServer\Server\Header\protocol.h">
+      <Filter>98.Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">

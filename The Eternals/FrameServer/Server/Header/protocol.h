@@ -1,5 +1,6 @@
 #pragma once
 
+constexpr char SERVER_IP[16] = "127.0.0.1";
 constexpr int SERVER_PORT = 5689;
 constexpr int MAX_ID_LEN = 10;
 constexpr int MAX_PW_LEN = 16;

@@ -34,6 +34,15 @@ _bool		g_bIsOnDebugCaemra = true;
 
 _ulong Release_Singleton();
 
+#ifdef SERVER
+// 해당 클라이언트 전역 소켓
+SOCKET	g_hSocket;
+
+/* 클라이언트가 서버에 접속을 했을 때, 서버로부터 받는 ID */
+int		g_iSNum = -1;
+#endif // SERVER
+
+
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);

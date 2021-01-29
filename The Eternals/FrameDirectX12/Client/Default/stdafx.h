@@ -5,6 +5,12 @@
 
 #pragma once
 
+/*
+ON: SERVER CONNECT MODE
+OFF: SERVER DISCONNECT MODE
+*/
+#define SERVER
+
 #ifdef _DEBUG
 
 #include "vld.h"
@@ -16,6 +22,12 @@
 #define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용을 Windows 헤더에서 제외합니다.
 // Windows 헤더 파일
 #include <windows.h>
+
+// Windows Socket 헤더 파일
+#pragma comment(lib, "ws2_32")
+#include <WinSock2.h>
+// Server Protocol Header
+#include "..\..\..\FrameServer\Server\Header\protocol.h"
 
 // C 런타임 헤더 파일입니다.
 #include <stdlib.h>
