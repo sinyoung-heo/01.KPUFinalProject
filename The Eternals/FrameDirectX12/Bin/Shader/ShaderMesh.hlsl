@@ -300,3 +300,29 @@ PS_OUT PS_SHADOW_MAIN(VS_OUT ps_input) : SV_TARGET
 
 	return (ps_output);
 }
+
+
+/*__________________________________________________________________________________________________________
+[ SkySpere ]
+____________________________________________________________________________________________________________*/
+//VS_OUT VS_SKYSPHERE(VS_IN vs_input)
+//{
+//	VS_OUT vs_output = (VS_OUT) 0;
+	
+//	float4x4 matWV, matWVP;
+//	matWV	= mul(g_matWorld, g_matView);
+//	matWVP	= mul(matWV, g_matProj);
+	
+//	vs_output.Pos		= mul(float4(vs_input.Pos, 1.0f), matWVP);
+//	vs_output.TexUV		= vs_input.TexUV;
+	
+//	return vs_output;
+//}
+
+//float4 PS_SKYSPHERE(VS_OUT ps_input) : SV_TARGET
+//{	
+//	// Diffuse
+//	float4 vColor	= g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
+
+//	return (vColor);
+//}

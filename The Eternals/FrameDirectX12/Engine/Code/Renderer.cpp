@@ -339,10 +339,16 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderMesh", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
-	// ShaderSKyBox
+	// ShaderSkyBox
 	pShader = CShaderSkyBox::Create(m_pGraphicDevice, m_pCommandList);
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderSkyBox", ID_STATIC, pShader), E_FAIL);
+	++m_uiCnt_ShaderFile;
+
+	// ShaderSkySphere
+	pShader = CShaderSkySphere::Create(m_pGraphicDevice, m_pCommandList);
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderSkySphere", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
 	// ShaderLighting

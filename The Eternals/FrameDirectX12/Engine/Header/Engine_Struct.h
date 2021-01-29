@@ -758,6 +758,12 @@ namespace Engine
 
 	} CB_SHADER_SKYBOX;
 
+	// Shader SkySphere
+	typedef struct tagConstantBufferShaderSkySphere
+	{
+		XMFLOAT4X4	matWorld;
+
+	} CB_SHADER_SKYSPHERE;
 
 	// Shader Mesh
 	typedef struct tagConstantBufferShaderMesh

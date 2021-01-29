@@ -404,7 +404,7 @@ CComponent * CShaderTexture::Clone()
 	return new CShaderTexture(*this);
 }
 
-CShaderTexture * CShaderTexture::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CShader * CShaderTexture::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 {
 	CShaderTexture* pInstance = new CShaderTexture(pGraphicDevice, pCommandList);
 

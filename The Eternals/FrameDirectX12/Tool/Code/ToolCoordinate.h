@@ -36,11 +36,11 @@ public:
 	Engine::CShaderColor*	m_pShaderCom = nullptr;
 
 public:
-	static CToolCoordinate* Create(ID3D12Device* pGraphicDevice, 
-								   ID3D12GraphicsCommandList* pCommandList,
-								   const _vec3 & vScale,
-								   const _vec3 & vAngle,
-								   const _vec3 & vPos);
+	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, 
+									   ID3D12GraphicsCommandList* pCommandList,
+									   const _vec3 & vScale,
+									   const _vec3 & vAngle,
+									   const _vec3 & vPos);
 private:
 	virtual void Free();
 };

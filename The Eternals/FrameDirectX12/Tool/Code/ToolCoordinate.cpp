@@ -102,11 +102,11 @@ void CToolCoordinate::Set_ConstantTable()
 
 }
 
-CToolCoordinate* CToolCoordinate::Create(ID3D12Device* pGraphicDevice, 
-										 ID3D12GraphicsCommandList* pCommandList, 
-										 const _vec3& vScale, 
-										 const _vec3& vAngle,
-										 const _vec3& vPos)
+Engine::CGameObject* CToolCoordinate::Create(ID3D12Device* pGraphicDevice,
+											 ID3D12GraphicsCommandList* pCommandList, 
+											 const _vec3& vScale, 
+											 const _vec3& vAngle,
+											 const _vec3& vPos)
 {
 	CToolCoordinate* pInstance = new CToolCoordinate(pGraphicDevice, pCommandList);
 

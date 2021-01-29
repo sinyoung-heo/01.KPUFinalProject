@@ -101,6 +101,9 @@
     <Filter Include="03.ToolGameObject\00.Environment\04.Cell">
       <UniqueIdentifier>{44fd862a-2012-42ef-8e70-3fb3299cd1e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.ToolGameObject\00.Environment\05.SkySphere">
+      <UniqueIdentifier>{aa0f7301-1429-4eb4-aa56-9b9a5f13fd25}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
@@ -208,6 +211,9 @@
     <ClInclude Include="..\Code\ToolCell.h">
       <Filter>03.ToolGameObject\00.Environment\04.Cell</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ToolSkySphere.h">
+      <Filter>03.ToolGameObject\00.Environment\05.SkySphere</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -287,6 +293,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\ToolCell.cpp">
       <Filter>03.ToolGameObject\00.Environment\04.Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ToolSkySphere.cpp">
+      <Filter>03.ToolGameObject\00.Environment\05.SkySphere</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -33,14 +33,14 @@ cbuffer cbShaderSkyBox : register(b1)
 // VS_MAIN
 struct VS_IN
 {
-	float3 vPos		: POSITION;
-	float3 vTexUV	: TEXCOORD0;
+	float3 Pos		: POSITION;
+	float3 TexUV	: TEXCOORD0;
 };
 
 struct VS_OUT
 {
-	float4 vPos		: SV_POSITION;
-	float3 vTexUV	: TEXCOORD0;
+	float4 Pos		: SV_POSITION;
+	float3 TexUV	: TEXCOORD0;
 };
 
 VS_OUT VS_MAIN(VS_IN vs_input)
@@ -51,8 +51,8 @@ VS_OUT VS_MAIN(VS_IN vs_input)
 	matWV	= mul(g_matWorld, g_matView);
 	matWVP	= mul(matWV, g_matProj);
 	
-	vs_output.vPos		= mul(float4(vs_input.vPos, 1.0f), matWVP);
-	vs_output.vTexUV	= vs_input.vTexUV;
+	vs_output.Pos	= mul(float4(vs_input.Pos, 1.0f), matWVP);
+	vs_output.TexUV	= vs_input.TexUV;
 	
 	return vs_output;
 }
@@ -67,7 +67,7 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 {
 	PS_OUT ps_output = (PS_OUT) 0;
 	
-	ps_output.Diffuse = g_CubeTex.Sample(g_samLinearWrap, ps_input.vTexUV);
+	ps_output.Diffuse = g_CubeTex.Sample(g_samLinearWrap, ps_input.TexUV);
 	
 	return ps_output;
 }

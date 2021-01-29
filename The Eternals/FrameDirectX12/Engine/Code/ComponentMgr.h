@@ -21,6 +21,7 @@
 #include "ShaderTexture.h"
 #include "ShaderMesh.h"
 #include "ShaderSkyBox.h"
+#include "ShaderSkySphere.h"
 #include "ShaderLighting.h"
 #include "ShaderBlend.h"
 #include "ShaderShadow.h"

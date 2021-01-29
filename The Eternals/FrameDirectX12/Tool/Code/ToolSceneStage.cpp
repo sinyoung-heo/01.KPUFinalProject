@@ -14,6 +14,7 @@
 #include "ToolStaticMesh.h"
 #include "Popori_F.h"
 #include "ToolCell.h"
+#include "ToolSkySphere.h"
 
 
 CToolSceneStage::CToolSceneStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -206,15 +207,16 @@ HRESULT CToolSceneStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
 	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
 
+	Engine::CGameObject* pGameObj = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Coordinate ]
 	____________________________________________________________________________________________________________*/
-	CToolCoordinate* pCoordinate = CToolCoordinate::Create(m_pGraphicDevice, m_pCommandList,
-														   _vec3(512.0f, 512.0f, 512.0f),	// Scale
-														   _vec3(0.0f, 0.0f, 0.0f),			// Angle
-														   _vec3(-0.05f, 0.0f, -0.05f));	// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"ToolCoordinate", pCoordinate), E_FAIL);
+	pGameObj = CToolCoordinate::Create(m_pGraphicDevice, m_pCommandList,
+									   _vec3(512.0f, 512.0f, 512.0f),	// Scale
+									   _vec3(0.0f, 0.0f, 0.0f),			// Angle
+									   _vec3(-0.05f, 0.0f, -0.05f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"ToolCoordinate", pGameObj), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
 	[ Terrain ]
@@ -230,6 +232,17 @@ HRESULT CToolSceneStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 	pTerrain = CToolTerrain::Create(m_pGraphicDevice, m_pCommandList, L"TerrainTex512");
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainTex512", pTerrain), E_FAIL);
 
+
+	/*__________________________________________________________________________________________________________
+	[ SkySphere ]
+	____________________________________________________________________________________________________________*/
+	pGameObj = CToolSkySphere::Create(m_pGraphicDevice, m_pCommandList,
+									  L"HNC_B_Cloud00_A_SM",			// Mesh Tag
+									  _vec3(0.001f, 0.001f, 0.001f),	// Scale
+									  _vec3(0.0f, 0.0f, 0.0f),			// Angle
+									  _vec3(0.0f, 0.0f, 0.0f));			// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SkySphere", pGameObj), E_FAIL);
+
 	/*__________________________________________________________________________________________________________
 	[ SkyBox ]
 	____________________________________________________________________________________________________________*/
@@ -239,6 +252,7 @@ HRESULT CToolSceneStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 											   _vec3(0.0f, 0.0f, 0.0f),				// Angle
 											   _vec3(128.0f, 0.0f, 128.0f));		// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SkyBox", pSkyBox), E_FAIL);
+
 
 	return S_OK;
 }

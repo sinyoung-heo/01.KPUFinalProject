@@ -290,7 +290,7 @@ CComponent * CShaderColor::Clone()
 	return new CShaderColor(*this);
 }
 
-CShaderColor * CShaderColor::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CShader* CShaderColor::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 {
 	CShaderColor* pInstance = new CShaderColor(pGraphicDevice, pCommandList);
 

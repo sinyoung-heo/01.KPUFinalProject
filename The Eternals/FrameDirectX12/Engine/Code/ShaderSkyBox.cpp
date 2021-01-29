@@ -216,7 +216,7 @@ CComponent * CShaderSkyBox::Clone()
 	return new CShaderSkyBox(*this);
 }
 
-CShaderSkyBox * CShaderSkyBox::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CShader* CShaderSkyBox::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 {
 	CShaderSkyBox* pInstance = new CShaderSkyBox(pGraphicDevice, pCommandList);
 

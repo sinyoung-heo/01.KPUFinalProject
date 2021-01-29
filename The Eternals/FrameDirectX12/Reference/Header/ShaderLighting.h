@@ -42,10 +42,10 @@ private:
 	CUploadBuffer<CB_SHADER_LIGHTING>*	m_pCB_ShaderLighting = nullptr;
 
 public:
-	virtual CComponent *		Clone() override;
-	static	CShaderLighting*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual CComponent*	Clone() override;
+	static	CShader*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 private:
-	virtual void				Free();
+	virtual void Free();
 };
 
 END

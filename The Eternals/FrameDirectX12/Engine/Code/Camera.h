@@ -5,9 +5,9 @@ BEGIN(Engine)
 
 class CShaderColor;
 class CShaderTexture;
-class CShaderMesh;
 class CShaderSkyBox;
-class CShaderShadow;
+class CShaderSkySphere;
+class CShaderMesh;
 
 class ENGINE_DLL CCamera : public CGameObject
 {
@@ -50,10 +50,11 @@ protected:
 	/*__________________________________________________________________________________________________________
 	[ Shader Component ]
 	____________________________________________________________________________________________________________*/
-	CShaderColor*	m_pShaderColor		= nullptr;
-	CShaderTexture* m_pShaderTexture	= nullptr;
-	CShaderSkyBox*	m_pShaderSkyBox		= nullptr;
-	CShaderMesh*	m_pShaderMesh		= nullptr;
+	CShaderColor*		m_pShaderColor		= nullptr;
+	CShaderTexture*		m_pShaderTexture	= nullptr;
+	CShaderSkyBox*		m_pShaderSkyBox		= nullptr;
+	CShaderSkySphere*	m_pShaderSkySphere	= nullptr;
+	CShaderMesh*		m_pShaderMesh		= nullptr;
 
 protected:
 	virtual void Free();

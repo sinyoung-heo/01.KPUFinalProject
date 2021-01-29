@@ -231,7 +231,7 @@ CComponent * CShaderShadow::Clone()
 	return new CShaderShadow(*this);
 }
 
-CShaderShadow * CShaderShadow::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CShader* CShaderShadow::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 {
 	CShaderShadow* pInstance = new CShaderShadow(pGraphicDevice, pCommandList);
 

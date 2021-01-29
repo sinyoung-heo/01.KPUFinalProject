@@ -3,9 +3,10 @@
 #include "LightMgr.h"
 #include "ShaderColor.h"
 #include "ShaderTexture.h"
-#include "ShaderMesh.h"
 #include "ShaderSkyBox.h"
-#include "ShaderShadow.h"
+#include "ShaderSkySphere.h"
+#include "ShaderMesh.h"
+
 
 USING(Engine)
 
@@ -69,6 +70,9 @@ HRESULT CCamera::Ready_GameObject(const CAMERA_DESC& tCameraInfo,
 	m_pShaderSkyBox = static_cast<CShaderSkyBox*>(m_pComponentMgr->Clone_Component(L"ShaderSkyBox", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pShaderSkyBox, E_FAIL);
 
+	m_pShaderSkySphere = static_cast<CShaderSkySphere*>(m_pComponentMgr->Clone_Component(L"ShaderSkySphere", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pShaderSkySphere, E_FAIL);
+
 	m_pShaderMesh = static_cast<CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pShaderMesh, E_FAIL);
 
@@ -122,6 +126,9 @@ void CCamera::Set_ConstantTable()
 	// ShaderSkyBox
 	m_pShaderSkyBox->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 
+	// ShaderSkySphere
+	m_pShaderSkySphere->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
+
 	// ShaderMesh
 	m_pShaderMesh->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 }
@@ -133,5 +140,6 @@ void CCamera::Free()
 	Safe_Release(m_pShaderColor);
 	Safe_Release(m_pShaderTexture);
 	Safe_Release(m_pShaderSkyBox);
+	Safe_Release(m_pShaderSkySphere);
 	Safe_Release(m_pShaderMesh);
 }

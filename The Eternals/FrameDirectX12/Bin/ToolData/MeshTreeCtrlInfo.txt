@@ -1,6 +1,13 @@
+StaticMesh|Sample|HNC_B_Cloud00_A_SM
 StaticMesh|Sample|LandMark
 StaticMesh|Sample|LandMarkBoundary
 StaticMesh|Sample|LandMarkPlane
 StaticMesh|Sample|Status
+ResourceStage|StaticMesh|Stage1
+ResourceStage|StaticMesh|Stage2
+ResourceStage|StaticMesh|Stage3
+ResourceStage|StaticMesh|Stage4
 DynamicMesh|Character|PoporiH25
 DynamicMesh|Character|PoporiR19
+ResourceStage|DynamicMesh|Monster
+ResourceStage|DynamicMesh|NPC

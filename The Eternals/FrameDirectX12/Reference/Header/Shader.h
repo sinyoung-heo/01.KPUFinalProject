@@ -43,18 +43,18 @@ protected:
 	virtual HRESULT								Create_ConstantBuffer();
 	virtual HRESULT								Create_RootSignature();
 	virtual HRESULT								Create_PipelineState();
-	virtual vector<D3D12_INPUT_ELEMENT_DESC>	Create_InputLayout(string VS_EntryPoint					= "VS_MAIN",
-																   string PS_EntryPoint					= "PS_MAIN");
-	virtual D3D12_BLEND_DESC					Create_BlendState(const _bool& bIsBlendEnable			= false,
-																  const D3D12_BLEND& SrcBlend			= D3D12_BLEND_ONE,
-																  const D3D12_BLEND& DstBlend			= D3D12_BLEND_ZERO,
-																  const D3D12_BLEND_OP& BlendOp			= D3D12_BLEND_OP_ADD,
-																  const D3D12_BLEND& SrcBlendAlpha		= D3D12_BLEND_ONE,
-																  const D3D12_BLEND& DstBlendAlpha		= D3D12_BLEND_ZERO,
-																  const D3D12_BLEND_OP& BlendOpAlpha	= D3D12_BLEND_OP_ADD);
-	D3D12_RASTERIZER_DESC						Create_RasterizerState(const D3D12_FILL_MODE& eFillMode = D3D12_FILL_MODE_SOLID,
-																	   const D3D12_CULL_MODE& eCullMode = D3D12_CULL_MODE_BACK);
-	D3D12_DEPTH_STENCIL_DESC					Create_DepthStencilState(const _bool& bIsZWrite			= true);
+	virtual vector<D3D12_INPUT_ELEMENT_DESC>	Create_InputLayout(string VS_EntryPoint	= "VS_MAIN",
+																   string PS_EntryPoint	= "PS_MAIN");
+	virtual D3D12_BLEND_DESC	Create_BlendState(const _bool& bIsBlendEnable			= false,
+												  const D3D12_BLEND& SrcBlend			= D3D12_BLEND_ONE,
+												  const D3D12_BLEND& DstBlend			= D3D12_BLEND_ZERO,
+												  const D3D12_BLEND_OP& BlendOp			= D3D12_BLEND_OP_ADD,
+												  const D3D12_BLEND& SrcBlendAlpha		= D3D12_BLEND_ONE,
+												  const D3D12_BLEND& DstBlendAlpha		= D3D12_BLEND_ZERO,
+												  const D3D12_BLEND_OP& BlendOpAlpha	= D3D12_BLEND_OP_ADD);
+	D3D12_RASTERIZER_DESC		Create_RasterizerState(const D3D12_FILL_MODE& eFillMode = D3D12_FILL_MODE_SOLID,
+													   const D3D12_CULL_MODE& eCullMode = D3D12_CULL_MODE_BACK);
+	D3D12_DEPTH_STENCIL_DESC	Create_DepthStencilState(const _bool& bIsZWrite			= true);
 	ID3DBlob* Compile_Shader(const wstring& wstrFilename,
 							 const D3D_SHADER_MACRO* tDefines,
 							 const string& strEntrypoint,
