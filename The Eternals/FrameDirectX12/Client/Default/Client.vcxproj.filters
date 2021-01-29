@@ -204,6 +204,9 @@
     <ClInclude Include="..\..\..\FrameServer\Server\Header\protocol.h">
       <Filter>98.Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\PacketMgr.h">
+      <Filter>97.Mgr\00.PacketMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -277,6 +280,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\LoadingProgress.cpp">
       <Filter>01.Scene\01.Logo\02.LoadingProgress</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PacketMgr.cpp">
+      <Filter>97.Mgr\00.PacketMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -71,6 +71,7 @@ Manager Class
 ______________________________________________________________________*/
 #include "MathMgr.h"
 #include "ShadowLightMgr.h"
+#include "PacketMgr.h"
 
 /*____________________________________________________________________
 Window Console창.
