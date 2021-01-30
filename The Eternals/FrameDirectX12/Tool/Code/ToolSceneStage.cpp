@@ -235,7 +235,7 @@ HRESULT CToolSceneStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 	____________________________________________________________________________________________________________*/
 	CToolSkyBox* pSkyBox = CToolSkyBox::Create(m_pGraphicDevice, m_pCommandList,
 											   L"SkyBox",							// Texture Tag
-											   _vec3(512.f, 512.f, 512.f),			// Scale
+											   _vec3(900.0f, 900.0f, 900.0f),		// Scale
 											   _vec3(0.0f, 0.0f, 0.0f),				// Angle
 											   _vec3(128.0f, 0.0f, 128.0f));		// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SkyBox", pSkyBox), E_FAIL);
