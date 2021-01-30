@@ -17,6 +17,11 @@ public:
 	HRESULT Connect_Server();
 
 public:
+	void	recv_packet();
+	void	ProcessData(char* net_buf, size_t io_byte);
+	void	ProcessPacket(char* ptr);
+
+public:
 	void send_login();
 
 private:

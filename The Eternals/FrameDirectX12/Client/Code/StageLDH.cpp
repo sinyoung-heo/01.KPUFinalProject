@@ -49,6 +49,9 @@ HRESULT CStageLDH::Ready_Scene()
 
 _int CStageLDH::Update_Scene(const _float & fTimeDelta)
 {
+#ifdef SERVER
+	CPacketMgr::Get_Instance()->recv_packet();
+#endif
 	return Engine::CScene::Update_Scene(fTimeDelta);
 }
 
