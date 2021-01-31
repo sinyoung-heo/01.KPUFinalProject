@@ -27,6 +27,7 @@ public:
 	const _bool&		Get_IsDead()			{ return m_bIsDead; }
 	const _bool&		Get_IsCollision()		{ return m_bIsCollision; }
 	const _bool&		Get_IsRenderShadow()	{ return m_bIsRenderShadow;}
+	const int&			Get_ServerNumber()		{ return m_iSNum; }
 
 	// Set
 	void				Set_DeadGameObject()								{ m_bIsDead = true; }
@@ -34,6 +35,7 @@ public:
 	void				Set_BoundingSphereColor(const _rgba& vColor)		{ m_pBoundingSphereCom->Set_Color(vColor); }
 	void				Set_IsCollision(const _bool& bIsCollision)			{ m_bIsCollision = bIsCollision; }
 	void				Set_IsRenderShadow(const _bool& bIsRenderShadow)	{ m_bIsRenderShadow = bIsRenderShadow; }
+	void				Set_ServerNumber(const int& num)					{ m_iSNum = num; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT Ready_GameObjectPrototype();
@@ -97,7 +99,9 @@ protected:
 	_bool	m_bIsBoundingBox	= false;
 	_bool	m_bIsBoundingSphere = false;
 	_bool	m_bIsRenderShadow	= false;
-
+	
+	/* server */
+	int		m_iSNum				= 0;
 
 	///*__________________________________________________________________________________________________________
 	//[ ShadowDepth ]

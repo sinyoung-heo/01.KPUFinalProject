@@ -47,7 +47,10 @@ HRESULT CDynamicCamera::LateInit_GameObject()
 
 _int CDynamicCamera::Update_GameObject(const _float & fTimeDelta)
 {
+#ifndef SERVER
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
+#endif // !SERVER
+
 
 	if (!g_bIsOnDebugCaemra)
 	{

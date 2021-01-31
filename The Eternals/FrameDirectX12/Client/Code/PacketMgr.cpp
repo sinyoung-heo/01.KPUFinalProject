@@ -1,5 +1,9 @@
 #include "stdafx.h"
 #include "PacketMgr.h"
+#include "ObjectMgr.h"
+
+#include "TestPlayer.h"
+#include "DynamicCamera.h"
 
 IMPLEMENT_SINGLETON(CPacketMgr)
 
@@ -8,8 +12,11 @@ CPacketMgr::CPacketMgr()
 
 }
 
-HRESULT CPacketMgr::Ready_Server()
+HRESULT CPacketMgr::Ready_Server(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 {
+	m_pGraphicDevice = pGraphicDevice;
+	m_pCommandList = pCommandList;
+
 	// Initialize Windows Socket
 	WSADATA wsaData;
 	WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -142,6 +149,29 @@ void CPacketMgr::ProcessPacket(char* ptr)
 	{
 	case SC_PACKET_LOGIN_OK:
 	{
+		sc_packet_login_ok* packet = reinterpret_cast<sc_packet_login_ok*>(ptr);
+
+		g_iSNum = packet->id;
+
+		/*__________________________________________________________________________________________________________
+		[ GameLogic Object(player) 积己 ]
+		____________________________________________________________________________________________________________*/
+		
+		Engine::CGameObject* pGameObj = nullptr;
+
+		pGameObj = CTestPlayer::Create(m_pGraphicDevice, m_pCommandList,
+									   L"PoporiR19",					// MeshTag
+									   _vec3(0.05f, 0.05f, 0.05f),		// Scale
+									   _vec3(0.0f, 0.0f, 0.0f),			// Angle
+									   _vec3(25.0f, 0.f, 20.0f));		// Pos
+
+		pGameObj->Set_ServerNumber(g_iSNum);
+		Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"Popori_F", pGameObj), E_FAIL);
+
+		/* Camera Target Setting */
+		CDynamicCamera* pCamera = static_cast<CDynamicCamera*>(Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
+		pCamera->Set_Target(pGameObj);
+		
 		cout << "Login OK! 立加肯丰!" << endl;
 	}
 	break;

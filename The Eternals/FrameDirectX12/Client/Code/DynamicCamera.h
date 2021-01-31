@@ -16,6 +16,8 @@ private:
 	virtual ~CDynamicCamera() = default;
 
 public:
+	void	Set_Target(Engine::CGameObject* pTarget) { m_pTarget = pTarget; }
+public:
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(const Engine::CAMERA_DESC& tCameraInfo,
 									 const Engine::PROJ_DESC& tProjInfo,

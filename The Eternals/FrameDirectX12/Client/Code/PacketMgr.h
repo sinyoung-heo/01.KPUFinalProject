@@ -13,7 +13,7 @@ private:
 	virtual ~CPacketMgr() = default;
 
 public:
-	HRESULT Ready_Server();
+	HRESULT Ready_Server(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 	HRESULT Connect_Server();
 
 public:
@@ -21,13 +21,16 @@ public:
 	void	ProcessData(char* net_buf, size_t io_byte);
 	void	ProcessPacket(char* ptr);
 
-public:
-	void send_login();
+	void	send_login();
 
 private:
-	void send_packet(void* packet);
+	void	send_packet(void* packet);
 
 private:
 	virtual void Free();
+
+private:
+	ID3D12Device* m_pGraphicDevice = nullptr;
+	ID3D12GraphicsCommandList* m_pCommandList = nullptr;
 };
 
