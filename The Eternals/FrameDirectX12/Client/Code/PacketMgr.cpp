@@ -172,18 +172,68 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		CDynamicCamera* pCamera = static_cast<CDynamicCamera*>(Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
 		pCamera->Set_Target(pGameObj);
 		
+#ifdef ERR_CHECK
 		cout << "Login OK! 접속완료!" << endl;
+#endif
 	}
 	break;
 
 	case SC_PACKET_LOGIN_FAIL:
 		break;
+
 	case SC_PACKET_ENTER:
+	{
+		sc_packet_enter* packet = reinterpret_cast<sc_packet_enter*>(ptr);
+
+		/* 객체의 타입 판별: Player/Monster/NPC */
+		switch (packet->o_type)
+		{
+		/* other player */
+		case 48:
+		{
+			if (packet->id == g_iSNum) break;
+
+			/*__________________________________________________________________________________________________________
+			[ GameLogic Object(player) 생성 ]
+			____________________________________________________________________________________________________________*/
+
+			Engine::CGameObject* pGameObj = nullptr;
+
+			pGameObj = CTestPlayer::Create(m_pGraphicDevice, m_pCommandList,
+										   L"PoporiR19",					// MeshTag
+										   _vec3(0.05f, 0.05f, 0.05f),		// Scale
+										   _vec3(0.0f, 0.0f, 0.0f),			// Angle
+										   _vec3(26.0f, 0.f, 20.0f));		// Pos
+
+			pGameObj->Set_ServerNumber(packet->id);
+
+			Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"Popori_F", pGameObj), E_FAIL);
+		}
 		break;
+		/* npc */
+		case 49:
+		{
+
+		}
+		break;
+
+		default:
+			break;
+		}
+	}
+	break;
+
 	case SC_PACKET_MOVE:
 		break;
 	case SC_PACKET_LEAVE:
-		break;
+	{
+		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
+
+		if (packet->id == g_iSNum) break;
+
+		Engine::CObjectMgr::Get_Instance()->Delete_ServerObject(L"Layer_GameObject", L"Popori_F", packet->id);
+	}
+	break;
 
 	default:
 #ifdef ERR_CHECK

@@ -34,6 +34,7 @@ public:
 
 	// Delete
 	HRESULT			Delete_GameObject(wstring wstrLayerTag, wstring wstrObjTag, _int iIdx = 0);
+	HRESULT			Delete_ServerObject(wstring wstrLayerTag, wstring wstrObjTag, int num);
 	HRESULT			Clear_OBJLIST(wstring wstrLayerTag, wstring wstrObjTag);
 	void			Clear_Layer();
 	void			Clear_Prototype();

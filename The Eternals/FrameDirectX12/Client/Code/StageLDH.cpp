@@ -49,9 +49,6 @@ HRESULT CStageLDH::Ready_Scene()
 
 _int CStageLDH::Update_Scene(const _float & fTimeDelta)
 {
-#ifdef SERVER
-	CPacketMgr::Get_Instance()->recv_packet();
-#endif
 	return Engine::CScene::Update_Scene(fTimeDelta);
 }
 
@@ -63,6 +60,10 @@ _int CStageLDH::LateUpdate_Scene(const _float & fTimeDelta)
 HRESULT CStageLDH::Render_Scene(const _float & fTimeDelta, const Engine::RENDERID& eID)
 {
 	Engine::FAILED_CHECK_RETURN(CScene::Render_Scene(fTimeDelta, eID), E_FAIL);
+
+#ifdef SERVER
+	CPacketMgr::Get_Instance()->recv_packet();
+#endif
 
 	return S_OK;
 }

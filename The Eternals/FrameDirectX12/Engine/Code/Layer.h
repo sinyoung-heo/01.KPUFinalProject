@@ -20,10 +20,12 @@ public:
 	// Get
 	OBJLIST*		Get_OBJLIST(wstring wstrObjTag);
 	CGameObject*	Get_GameObject(wstring wstrObjTag, _int iIdx = 0);
+	CGameObject*	Get_ServerObject(wstring wstrObjTag, int num);
 
 	// Add & Delete
 	HRESULT			Add_GameObject(wstring wstrObjTag, CGameObject* pGameObject);
 	HRESULT			Delete_GameObject(wstring wstrObjTag, _int iIdx = 0);
+	HRESULT			Delete_ServerObject(wstring wstrObjTag, int num);
 	HRESULT			Clear_OBJLIST(wstring wstrObjTag);
 
 	// Method

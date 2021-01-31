@@ -49,6 +49,35 @@ CGameObject * CLayer::Get_GameObject(wstring wstrObjTag, _int iIdx)
 	return (*iter_begin);
 }
 
+CGameObject* CLayer::Get_ServerObject(wstring wstrObjTag, int num)
+{
+	/*__________________________________________________________________________________________________________
+	- 1. map에서 찾고자 하는 OBJLIST의 Key값을 탐색한다.
+	____________________________________________________________________________________________________________*/
+	OBJLIST* pObjLst = Get_OBJLIST(wstrObjTag);
+
+	/*__________________________________________________________________________________________________________
+	- 2. 찾고자 하는 OBJLIST가 없다면 nullptr을 반환.
+	____________________________________________________________________________________________________________*/
+	NULL_CHECK_RETURN(pObjLst, nullptr);
+
+	/*__________________________________________________________________________________________________________
+	- 3. 찾고자하는 GameObject를 OBJLIST에서 탐색.
+	____________________________________________________________________________________________________________*/
+
+	OBJITER iter_begin = pObjLst->begin();
+
+	for (iter_begin; iter_begin != pObjLst->end();)
+	{
+		if ((*iter_begin)->Get_ServerNumber() == num)
+			return (*iter_begin);
+		else
+			++iter_begin;
+	}
+
+	return nullptr;
+}
+
 
 HRESULT CLayer::Add_GameObject(wstring wstrObjTag, CGameObject * pGameObject)
 {
@@ -89,6 +118,33 @@ HRESULT CLayer::Delete_GameObject(wstring wstrObjTag, _int iIdx)
 	- 탐색 성공시, 해당 Key값의 OBJLIST에서 해당 index삭제.
 	____________________________________________________________________________________________________________*/
 	CGameObject* pGameObject = Get_GameObject(wstrObjTag, iIdx);
+	if (nullptr != pGameObject)
+	{
+		pGameObject->Set_DeadGameObject();
+
+		return S_OK;
+	}
+
+	return E_FAIL;
+}
+
+HRESULT CLayer::Delete_ServerObject(wstring wstrObjTag, int num)
+{
+	/*__________________________________________________________________________________________________________
+	- 삭제할 OBJLIST의 Key값을 탐색한다.
+	____________________________________________________________________________________________________________*/
+	auto iter_find = m_mapObjLst.find(wstrObjTag);
+
+	/*__________________________________________________________________________________________________________
+	- 탐색에 실패할 경우 종료
+	____________________________________________________________________________________________________________*/
+	if (iter_find == m_mapObjLst.end())
+		return E_FAIL;
+
+	/*__________________________________________________________________________________________________________
+	- 탐색 성공시, 해당 Key값의 OBJLIST에서 해당 index삭제.
+	____________________________________________________________________________________________________________*/
+	CGameObject* pGameObject = Get_ServerObject(wstrObjTag, num);
 	if (nullptr != pGameObject)
 	{
 		pGameObject->Set_DeadGameObject();

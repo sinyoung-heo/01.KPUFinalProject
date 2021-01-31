@@ -339,8 +339,11 @@ CNaviMesh* CNaviMesh::Create(ID3D12Device* pGraphicDevice,
 
 void CNaviMesh::Free()
 {
-	for_each(m_vecCell.begin(), m_vecCell.end(), CDeleteObj());
-	m_vecCell.clear();
+	if (!m_bIsClone)
+	{
+		for_each(m_vecCell.begin(), m_vecCell.end(), CDeleteObj());
+		m_vecCell.clear();
+	}
 	
 	CComponent::Free();
 }

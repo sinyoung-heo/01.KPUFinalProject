@@ -229,6 +229,7 @@ HRESULT CTestPlayer::Add_Component(wstring wstrMeshTag)
 	// NaviMesh
 	m_pNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"TestNaviMesh", Engine::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);
+	m_pNaviMeshCom->AddRef();
 	m_pNaviMeshCom->Set_CurrentCellIndex(0);
 	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
 
@@ -363,6 +364,7 @@ void CTestPlayer::Free()
 	Engine::Safe_Release(m_pShadowCom);
 	Engine::Safe_Release(m_pColliderSphereCom);
 	Engine::Safe_Release(m_pColliderBoxCom);
+	Engine::Safe_Release(m_pNaviMeshCom);
 
 	Engine::Safe_Release(m_pFont);
 }
