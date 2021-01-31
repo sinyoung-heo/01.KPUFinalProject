@@ -480,6 +480,9 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	if (m_EditCheck_StaticMesh.GetCheck())
 	{
 		Engine::CGameObject* pObject = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject;
+		if (nullptr == pObject)
+			return CDialogEx::OnMouseWheel(nFlags, zDelta, pt);
+
 		RECT rcStaticMeshEdit[13] = { };
 		m_StaticMeshEdit_ScaleX.GetWindowRect(&rcStaticMeshEdit[0]);
 		m_StaticMeshEdit_ScaleY.GetWindowRect(&rcStaticMeshEdit[1]);
