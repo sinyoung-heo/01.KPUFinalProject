@@ -31,11 +31,6 @@ HRESULT CStageLDH::Ready_Scene()
 	COUT_STR("");
 #endif
 
-#ifdef SERVER
-	Engine::FAILED_CHECK_RETURN(CPacketMgr::Get_Instance()->Ready_Server(), E_FAIL);
-	Engine::FAILED_CHECK_RETURN(CPacketMgr::Get_Instance()->Connect_Server(), E_FAIL);
-#endif
-
 	Engine::FAILED_CHECK_RETURN(Ready_NaviMesh(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LayerCamera(L"Layer_Camera"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LayerEnvironment(L"Layer_Environment"), E_FAIL);
@@ -43,6 +38,11 @@ HRESULT CStageLDH::Ready_Scene()
 	Engine::FAILED_CHECK_RETURN(Ready_LayerUI(L"Layer_UI"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LayerFont(L"Layer_Font"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
+
+#ifdef SERVER
+	Engine::FAILED_CHECK_RETURN(CPacketMgr::Get_Instance()->Ready_Server(), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(CPacketMgr::Get_Instance()->Connect_Server(), E_FAIL);
+#endif
 
 	return S_OK;
 }

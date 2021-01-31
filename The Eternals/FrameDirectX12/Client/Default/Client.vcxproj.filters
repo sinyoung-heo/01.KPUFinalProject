@@ -103,6 +103,9 @@
     <Filter Include="01.Scene\01.Logo\02.LoadingProgress">
       <UniqueIdentifier>{018c85ab-d8f8-4c79-8bba-f142768a3d1c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.SampleObject\09.TestPlayer">
+      <UniqueIdentifier>{254f7e38-7b8f-44cb-b41d-48facfba9a23}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -207,6 +210,9 @@
     <ClInclude Include="..\Code\PacketMgr.h">
       <Filter>97.Mgr\00.PacketMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\TestPlayer.h">
+      <Filter>02.GameObject\99.SampleObject\09.TestPlayer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -283,6 +289,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\PacketMgr.cpp">
       <Filter>97.Mgr\00.PacketMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TestPlayer.cpp">
+      <Filter>02.GameObject\99.SampleObject\09.TestPlayer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

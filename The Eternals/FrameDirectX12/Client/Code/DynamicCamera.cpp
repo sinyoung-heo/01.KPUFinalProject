@@ -51,20 +51,23 @@ _int CDynamicCamera::Update_GameObject(const _float & fTimeDelta)
 
 	if (!g_bIsOnDebugCaemra)
 	{
-		/*__________________________________________________________________________________________________________
-		[ Key Input ]
-		____________________________________________________________________________________________________________*/
-		Key_Input(fTimeDelta);
+		if (nullptr != m_pTarget)
+		{
+			/*__________________________________________________________________________________________________________
+			[ Key Input ]
+			____________________________________________________________________________________________________________*/
+			Key_Input(fTimeDelta);
 
-		/*__________________________________________________________________________________________________________
-		[ Target의 Position과 Distance를 기준으로 Camera의 Eye값 계산. ]
-		____________________________________________________________________________________________________________*/
-		m_pTransCom->m_vScale	= _vec3(0.0f, 0.0f, m_fDistFromTarget);
-		m_pTransCom->m_vPos		= m_pTarget->Get_Transform()->m_vPos;
-		Engine::CGameObject::Update_GameObject(fTimeDelta);
+			/*__________________________________________________________________________________________________________
+			[ Target의 Position과 Distance를 기준으로 Camera의 Eye값 계산. ]
+			____________________________________________________________________________________________________________*/
+			m_pTransCom->m_vScale = _vec3(0.0f, 0.0f, m_fDistFromTarget);
+			m_pTransCom->m_vPos = m_pTarget->Get_Transform()->m_vPos;
+			Engine::CGameObject::Update_GameObject(fTimeDelta);
 
-		m_tCameraInfo.vEye.TransformCoord(_vec3(0.0f, 0.0f, -1.0f), m_pTransCom->m_matWorld);
-		m_tCameraInfo.vAt = m_pTransCom->m_vPos;
+			m_tCameraInfo.vEye.TransformCoord(_vec3(0.0f, 0.0f, -1.0f), m_pTransCom->m_matWorld);
+			m_tCameraInfo.vAt = m_pTransCom->m_vPos;
+		}
 
 		/*__________________________________________________________________________________________________________
 		[ Update ViewMatrix ]
