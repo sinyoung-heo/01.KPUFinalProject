@@ -1,5 +1,3 @@
-DynamicMesh|Character|PoporiH25
-DynamicMesh|Character|PoporiR19
 StaticMesh|Sample|LandMark
 StaticMesh|Sample|LandMarkBoundary
 StaticMesh|Sample|LandMarkPlane
@@ -61,6 +59,12 @@ StaticMesh|StageVelika|VK_CON_Base_Center_SM
 StaticMesh|StageVelika|VK_CON_BridgeGate_SM
 StaticMesh|StageVelika|VK_CON_Bridge_SM
 StaticMesh|StageVelika|VK_CON_CenterGate_SM
+StaticMesh|StageVelika|VK_CON_CenterGear02_SM
+StaticMesh|StageVelika|VK_CON_CenterGear03_SM
+StaticMesh|StageVelika|VK_CON_CenterGear04_SM
+StaticMesh|StageVelika|VK_CON_CenterGear05_SM
+StaticMesh|StageVelika|VK_CON_CenterGearBody_SM
+StaticMesh|StageVelika|VK_CON_CenterGear_SM
 StaticMesh|StageVelika|VK_CON_CircleFloor_02_SM
 StaticMesh|StageVelika|VK_CON_Floor_03_SM
 StaticMesh|StageVelika|VK_CON_Floor_04_SM
@@ -87,6 +91,9 @@ StaticMesh|StageVelika|VK_CON_Wall_B_SM
 StaticMesh|StageVelika|VK_INT_Curtain01_SM
 StaticMesh|StageVelika|VK_INT_Curtain02_SM
 StaticMesh|StageVelika|VK_INT_Curtain03_SM
+StaticMesh|StageVelika|VK_INT_FirePlace01_SM
+StaticMesh|StageVelika|VK_INT_FirePlace02_SM
+StaticMesh|StageVelika|VK_INT_FirePlace03_SM
 StaticMesh|StageVelika|VK_INT_Rail_02_SM
 StaticMesh|StageVelika|VK_INT_StreetTable_01_SM
 StaticMesh|StageVelika|VK_INT_StreetTable_02_SM
@@ -101,4 +108,10 @@ StaticMesh|StageVelika|VK_INT_Wall02_02_SM
 StaticMesh|StageVelika|VK_INT_Wall02_03_SM
 StaticMesh|StageVelika|VK_INT_Wall02_04_SM
 StaticMesh|StageVelika|VK_INT_Wall02_SM
+StaticMesh|StageVelika|VK_OBJ_Statu_01_01_SM
+StaticMesh|StageVelika|VK_OBJ_Statu_01_02_SM
 StaticMesh|StageVelika|VK_OBJ_Statu_02_SM
+StaticMesh|StageVelika|VK_OBJ_Statu_03_Body_SM
+StaticMesh|StageVelika|VK_OBJ_Statu_03_Wing_SM
+DynamicMesh|Character|PoporiH25
+DynamicMesh|Character|PoporiR19

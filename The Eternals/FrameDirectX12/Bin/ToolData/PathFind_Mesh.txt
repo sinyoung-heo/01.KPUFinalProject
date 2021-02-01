@@ -1,5 +1,3 @@
-PoporiH25|PoporiH25.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\PoporiH25\
-PoporiR19|PoporiR19.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\PoporiR19\
 LandMark|LandMark.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\LandMark\
 LandMarkBoundary|LandMarkBoundary.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\LandMarkBoundary\
 LandMarkPlane|LandMarkPlane.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\LandMarkPlane\
@@ -61,6 +59,12 @@ VK_CON_Base_Center_SM|VK_CON_Base_Center_SM.X|..\..\Bin\Resource\ResourceStage\S
 VK_CON_BridgeGate_SM|VK_CON_BridgeGate_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_BridgeGate_SM\
 VK_CON_Bridge_SM|VK_CON_Bridge_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_Bridge_SM\
 VK_CON_CenterGate_SM|VK_CON_CenterGate_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_CenterGate_SM\
+VK_CON_CenterGear02_SM|VK_CON_CenterGear02_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_CenterGear02_SM\
+VK_CON_CenterGear03_SM|VK_CON_CenterGear03_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_CenterGear03_SM\
+VK_CON_CenterGear04_SM|VK_CON_CenterGear04_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_CenterGear04_SM\
+VK_CON_CenterGear05_SM|VK_CON_CenterGear05_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_CenterGear05_SM\
+VK_CON_CenterGearBody_SM|VK_CON_CenterGearBody_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_CenterGearBody_SM\
+VK_CON_CenterGear_SM|VK_CON_CenterGear_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_CenterGear_SM\
 VK_CON_CircleFloor_02_SM|VK_CON_CircleFloor_02_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_CircleFloor_02_SM\
 VK_CON_Floor_03_SM|VK_CON_Floor_03_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_Floor_03_SM\
 VK_CON_Floor_04_SM|VK_CON_Floor_04_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_Floor_04_SM\
@@ -87,6 +91,9 @@ VK_CON_Wall_B_SM|VK_CON_Wall_B_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\
 VK_INT_Curtain01_SM|VK_INT_Curtain01_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_INT_Curtain01_SM\
 VK_INT_Curtain02_SM|VK_INT_Curtain02_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_INT_Curtain02_SM\
 VK_INT_Curtain03_SM|VK_INT_Curtain03_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_INT_Curtain03_SM\
+VK_INT_FirePlace01_SM|VK_INT_FirePlace01_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_INT_FirePlace01_SM\
+VK_INT_FirePlace02_SM|VK_INT_FirePlace02_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_INT_FirePlace02_SM\
+VK_INT_FirePlace03_SM|VK_INT_FirePlace03_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_INT_FirePlace03_SM\
 VK_INT_Rail_02_SM|VK_INT_Rail_02_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_INT_Rail_02_SM\
 VK_INT_StreetTable_01_SM|VK_INT_StreetTable_01_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_INT_StreetTable_01_SM\
 VK_INT_StreetTable_02_SM|VK_INT_StreetTable_02_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_INT_StreetTable_02_SM\
@@ -101,4 +108,10 @@ VK_INT_Wall02_02_SM|VK_INT_Wall02_02_SM.X|..\..\Bin\Resource\ResourceStage\Stati
 VK_INT_Wall02_03_SM|VK_INT_Wall02_03_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_INT_Wall02_03_SM\
 VK_INT_Wall02_04_SM|VK_INT_Wall02_04_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_INT_Wall02_04_SM\
 VK_INT_Wall02_SM|VK_INT_Wall02_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_INT_Wall02_SM\
+VK_OBJ_Statu_01_01_SM|VK_OBJ_Statu_01_01_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_OBJ_Statu_01_01_SM\
+VK_OBJ_Statu_01_02_SM|VK_OBJ_Statu_01_02_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_OBJ_Statu_01_02_SM\
 VK_OBJ_Statu_02_SM|VK_OBJ_Statu_02_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_OBJ_Statu_02_SM\
+VK_OBJ_Statu_03_Body_SM|VK_OBJ_Statu_03_Body_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_OBJ_Statu_03_Body_SM\
+VK_OBJ_Statu_03_Wing_SM|VK_OBJ_Statu_03_Wing_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_OBJ_Statu_03_Wing_SM\
+PoporiH25|PoporiH25.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\PoporiH25\
+PoporiR19|PoporiR19.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\PoporiR19\
