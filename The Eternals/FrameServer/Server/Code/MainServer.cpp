@@ -157,6 +157,7 @@ void Initialize_NPC()
 	
 		pNew->m_vPos = _vec3((rand() % 100) * 1.f + 1000.f, (rand() % 100) * 1.f + 500.f, 0.f);
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
+		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = '1';
 		pNew->spd = 10.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
@@ -236,8 +237,9 @@ void add_new_client(SOCKET ns)
 		pNew->maxExp = 100;
 		pNew->att = 10;
 		pNew->spd = 10.f;
-		pNew->m_vPos = _vec3((rand() % 100) * 1.f+1000.f, (rand() % 100) * 1.f + 500.f, 0.f);
+		pNew->m_vPos = _vec3((rand() % 50) * 1.f, 0.f, (rand() % 50) * 1.f);
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
+		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector((int)s_num, (int)(pNew->m_vPos.y / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
 		CObjMgr::GetInstance()->Add_GameObject(L"PLAYER",pNew, (int)s_num);

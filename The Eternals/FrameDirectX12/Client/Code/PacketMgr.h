@@ -22,6 +22,7 @@ public:
 	void	ProcessPacket(char* ptr);
 
 	void	send_login();
+	void	send_move(char dir, const _vec3& vDir, const _vec3& vAngle);
 
 private:
 	void	send_packet(void* packet);

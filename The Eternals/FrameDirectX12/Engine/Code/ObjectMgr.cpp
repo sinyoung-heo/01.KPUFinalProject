@@ -59,6 +59,22 @@ CGameObject * CObjectMgr::Get_GameObject(wstring wstrLayerTag, wstring wstrObjTa
 	return pInstance->Get_GameObject(wstrObjTag, iIdx);
 }
 
+CGameObject* CObjectMgr::Get_ServerObject(wstring wstrLayerTag, wstring wstrObjTag, int num)
+{
+	/*__________________________________________________________________________________________________________
+	- 1. 찾고자 하는 Layer Tag값을 탐색한다.
+	____________________________________________________________________________________________________________*/
+	CLayer* pInstance = Get_Layer(wstrLayerTag);
+
+	/*__________________________________________________________________________________________________________
+	- 2. 없을 경우, nullptr을 반환한다.
+	____________________________________________________________________________________________________________*/
+	NULL_CHECK_RETURN(pInstance, nullptr);
+
+
+	return pInstance->Get_ServerObject(wstrObjTag, num);
+}
+
 HRESULT CObjectMgr::Add_GameObjectPrototype(wstring wstrPrototypeTag, CGameObject * pGameObject)
 {
 	if (nullptr != pGameObject)

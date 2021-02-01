@@ -115,7 +115,9 @@ void process_packet(int id)
 	{
 		cs_packet_move* p = reinterpret_cast<cs_packet_move*>(pPlayer->m_packet_start);
 		pPlayer->move_time = p->move_time;
-		process_move(id, p->dir);
+		_vec3& vDir = _vec3(p->dirX, p->dirY, p->dirZ);
+		_vec3& vAngle = _vec3(0.f, p->angleY, 0.f);
+		process_move(id, p->dir, vDir, vAngle);
 	}
 	break;
 
@@ -234,10 +236,6 @@ void send_login_ok(int id)
 	p.posY = pPlayer->m_vPos.y;
 	p.posZ = pPlayer->m_vPos.z;
 
-	p.dirX = pPlayer->m_vDir.x;
-	p.dirY = pPlayer->m_vDir.y;
-	p.dirZ = pPlayer->m_vDir.z;
-
 	send_packet(id, &p);
 }
 
@@ -292,43 +290,65 @@ void send_move_packet(int to_client, int id)
 
 	p.move_time = pPlayer->move_time;
 
+	p.o_type = pPlayer->m_type;
+	p.angleY = pPlayer->m_vAngle.y;
+
 	p.posX = pPlayer->m_vPos.x;
 	p.posY = pPlayer->m_vPos.y;
 	p.posZ = pPlayer->m_vPos.z;
 
-	p.dirX = pPlayer->m_vDir.x;
-	p.dirY = pPlayer->m_vDir.y;
-	p.dirZ = pPlayer->m_vDir.z;
-
 	send_packet(to_client, &p);
 }
 
-void process_move(int id, char direction)
+void process_move(int id, char direction, const _vec3& _vDir, const _vec3& _vAngle)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 
 	if (pPlayer == nullptr) return;
 
 	/* 해당 플레이어의 원래 위치값 & 변경된 위치값 */
+	_vec3 cur(0.f);
 	float ori_x, ori_y, ori_z;
-	float cur_x, cur_y, cur_z;
-	cur_x = ori_x = pPlayer->m_vPos.x;
-	cur_y = ori_y = pPlayer->m_vPos.y;
-	cur_z = ori_z = pPlayer->m_vPos.z;
+	
+	cur.x = ori_x = pPlayer->m_vPos.x;
+	cur.y = ori_y = pPlayer->m_vPos.y;
+	cur.z = ori_z = pPlayer->m_vPos.z;
+
+	pPlayer->m_vDir = _vDir;
+	pPlayer->m_vAngle = _vAngle;
 
 	switch (direction)
 	{
-	case MV_UP:
-		cur_y -= 10;
+	case MV_FRONT:
+		pPlayer->m_vAngle.y += ANGLE_FRONT;
+	break;
+
+	case MV_BACK: 
+		pPlayer->m_vAngle.y += ANGLE_BACK;
 		break;
-	case MV_DOWN: 
-		cur_y += 10;
-		break;
+
 	case MV_LEFT: 
-		cur_x -= 10;
+		pPlayer->m_vAngle.y += ANGLE_LEFT;
 		break;
+
+	case MV_LEFT_UP:
+		pPlayer->m_vAngle.y += ANGLE_LEFT_UP;
+		break;
+
+	case MV_LEFT_DOWN:
+		pPlayer->m_vAngle.y += ANGLE_LEFT_DOWN;
+		break;
+
 	case MV_RIGHT: 
-		cur_x += 10;
+		pPlayer->m_vAngle.y += ANGLE_RIGHT;
+		break;
+
+	case MV_RIGHT_UP:
+		pPlayer->m_vAngle.y += ANGLE_RIGHT_UP;
+		break;
+
+	case MV_RIGHT_DOWN:
+		pPlayer->m_vAngle.y += ANGLE_RIGHT_DOWN;
 		break;
 	
 #ifdef TEST
@@ -343,13 +363,12 @@ void process_move(int id, char direction)
 	pPlayer->v_lock.unlock();
 
 	/* 해당 플레이어로부터 받은 변경된 위치값 저장 */
-	pPlayer->m_vPos.x = cur_x;
-	pPlayer->m_vPos.y = cur_y;
-	pPlayer->m_vPos.z = cur_z;
+	cur += pPlayer->m_vDir;
 
-	pPlayer->m_vDir.x = 0.f;
-	pPlayer->m_vDir.y = 0.f;
-	pPlayer->m_vDir.z = 0.f;
+	pPlayer->m_vPos.x = cur.x;
+	pPlayer->m_vPos.y = cur.y;
+	pPlayer->m_vPos.z = cur.z;
+
 	send_move_packet(id, id);
 
 	/* 변경된 좌표로 섹터 갱신 */
@@ -556,9 +575,7 @@ void send_NPC_move_packet(int to_client, int id)
 	p.posY = pNPC->m_vPos.y;
 	p.posZ = pNPC->m_vPos.z;
 
-	p.dirX = pNPC->m_vDir.x;
-	p.dirY = pNPC->m_vDir.y;
-	p.dirZ = pNPC->m_vDir.z;
+	p.angleY = pNPC->m_vAngle.y;
 
 	send_packet(to_client, &p);
 }

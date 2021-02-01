@@ -37,6 +37,7 @@ public:
 	//int Exp, maxExp; // player
 	//int att; // player monster
 	//float spd; // player monster
+	_vec3 m_vAngle;
 	_vec3 m_vPos; // all
 	_vec3 m_vDir; // all
 	atomic<STATUS> m_status; // all

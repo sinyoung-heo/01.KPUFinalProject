@@ -287,59 +287,115 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 	{
 		// 대각선 - 우 상단.
 		if (Engine::KEY_PRESSING(DIK_D))
+		{
+#ifndef SERVER
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_UP;
+#else
+			CPacketMgr::Get_Instance()->send_move(MV_RIGHT_UP, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+#endif 
+		}
+			
 		// 대각선 - 좌 상단.
 		else if (Engine::KEY_PRESSING(DIK_A))
+		{
+#ifndef SERVER
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_UP;
+#else
+			CPacketMgr::Get_Instance()->send_move(MV_LEFT_UP, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+#endif		
+		}
+		
 		// 직진.
 		else
+		{
+#ifndef SERVER
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + FRONT;
-
+#else
+			CPacketMgr::Get_Instance()->send_move(MV_FRONT, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+#endif 			
+		}
+			
+#ifndef SERVER
 		// NaviMesh 이동.
 		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
 			&m_pTransCom->m_vDir,
 			m_pInfoCom->m_fSpeed * fTimeDelta);
 		m_pTransCom->m_vPos = vPos;
+#endif 
+		
 	}
 
 	else if (Engine::KEY_PRESSING(DIK_S))
 	{
 		// 대각선 - 우 하단.
 		if (Engine::KEY_PRESSING(DIK_D))
+		{
+#ifndef SERVER
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_DOWN;
+#else
+			CPacketMgr::Get_Instance()->send_move(MV_RIGHT_DOWN, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+#endif 			
+		}
+			
 		// 대각선 - 좌 하단.
 		else if (Engine::KEY_PRESSING(DIK_A))
+		{
+#ifndef SERVER
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_DOWN;
+#else
+			CPacketMgr::Get_Instance()->send_move(MV_LEFT_DOWN, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+#endif 			
+		}
+	
 		// 후진.
 		else
+		{
+#ifndef SERVER
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + BACK;
-
+#else
+			CPacketMgr::Get_Instance()->send_move(MV_BACK, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+#endif			
+		}
+			
+#ifndef SERVER
 		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
 			&m_pTransCom->m_vDir,
 			m_pInfoCom->m_fSpeed * fTimeDelta);
 		m_pTransCom->m_vPos = vPos;
+#endif
+	
 	}
 
 	else if (Engine::KEY_PRESSING(DIK_A))
 	{
-		// 좌로 이동.
+		// 좌로 이동.	
+#ifndef SERVER
 		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT;
 
 		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
 			&m_pTransCom->m_vDir,
 			m_pInfoCom->m_fSpeed * fTimeDelta);
 		m_pTransCom->m_vPos = vPos;
+#else
+		CPacketMgr::Get_Instance()->send_move(MV_LEFT, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+#endif 
+
 	}
 
 	else if (Engine::KEY_PRESSING(DIK_D))
 	{
-		// 우로 이동.
+		// 우로 이동.	
+#ifndef SERVER
 		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT;
 
 		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
 			&m_pTransCom->m_vDir,
 			m_pInfoCom->m_fSpeed * fTimeDelta);
 		m_pTransCom->m_vPos = vPos;
+#else
+		CPacketMgr::Get_Instance()->send_move(MV_RIGHT, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+#endif
+	
 	}
 }
 

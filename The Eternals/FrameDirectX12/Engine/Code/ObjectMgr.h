@@ -18,6 +18,7 @@ public:
 	CLayer*			Get_Layer(wstring wstrLayerTag);
 	OBJLIST*		Get_OBJLIST(wstring wstrLayerTag, wstring wstrObjTag);
 	CGameObject*	Get_GameObject(wstring wstrLayerTag, wstring wstrObjTag, _int iIdx = 0);
+	CGameObject*	Get_ServerObject(wstring wstrLayerTag, wstring wstrObjTag, int num);
 
 	// Prototype
 	HRESULT			Add_GameObjectPrototype(wstring wstrPrototypeTag, CGameObject* pGameObject);

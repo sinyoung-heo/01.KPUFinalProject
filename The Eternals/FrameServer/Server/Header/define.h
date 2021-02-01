@@ -37,6 +37,18 @@ constexpr int MASTER			= 99999;
 
 constexpr int SECTOR_SIZE		= 400;
 
+/*____________________________________________________________________
+Player Direction
+______________________________________________________________________*/
+constexpr float	ANGLE_FRONT			= 0.f;
+constexpr float	ANGLE_RIGHT			= 90.f;
+constexpr float	ANGLE_RIGHT_UP		= 45.f;
+constexpr float	ANGLE_RIGHT_DOWN	= 135.f;
+constexpr float	ANGLE_LEFT			= 270.f;
+constexpr float	ANGLE_LEFT_UP		= 315.f;
+constexpr float	ANGLE_LEFT_DOWN		= 225.f;
+constexpr float	ANGLE_BACK			= 180.f;
+
 
 
 

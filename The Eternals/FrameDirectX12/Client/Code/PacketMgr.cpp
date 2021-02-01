@@ -163,7 +163,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 									   L"PoporiR19",					// MeshTag
 									   _vec3(0.05f, 0.05f, 0.05f),		// Scale
 									   _vec3(0.0f, 0.0f, 0.0f),			// Angle
-									   _vec3(25.0f, 0.f, 20.0f));		// Pos
+									   _vec3(packet->posX, packet->posY, packet->posZ));		// Pos
 
 		pGameObj->Set_ServerNumber(g_iSNum);
 		Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"Popori_F", pGameObj), E_FAIL);
@@ -203,7 +203,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 										   L"PoporiR19",					// MeshTag
 										   _vec3(0.05f, 0.05f, 0.05f),		// Scale
 										   _vec3(0.0f, 0.0f, 0.0f),			// Angle
-										   _vec3(26.0f, 0.f, 20.0f));		// Pos
+										   _vec3(packet->posX, packet->posY, packet->posZ));		// Pos
 
 			pGameObj->Set_ServerNumber(packet->id);
 
@@ -224,7 +224,45 @@ void CPacketMgr::ProcessPacket(char* ptr)
 	break;
 
 	case SC_PACKET_MOVE:
+	{
+		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
+
+		int s_num = packet->id;
+
+		/* 객체의 타입 판별: Player/Monster/NPC */
+		switch (packet->o_type)
+		{
+		/* player */
+		case 48:
+		{
+			/* 현재 클라이언트가 움직인 경우 */
+			if (s_num == g_iSNum)
+			{
+				Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"Popori_F", 0);
+
+				pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+				pObj->Get_Transform()->m_vAngle.y = packet->angleY;
+			}
+			/* 다른 클라이언트가 움직인 경우 */
+			else
+			{
+				Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"Popori_F", s_num);
+				pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+				pObj->Get_Transform()->m_vAngle.y = packet->angleY;
+			}
+		}
 		break;
+
+		/* npc */
+		case 49:
+			break;
+
+		default:
+			break;
+		}	
+	}
+	break;
+
 	case SC_PACKET_LEAVE:
 	{
 		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
@@ -253,6 +291,25 @@ void CPacketMgr::send_login()
 	int t_id = GetCurrentProcessId();
 	sprintf_s(p.name, "P%03d", t_id % 1000);
 	sprintf_s(p.password, "%03d", t_id % 1000);
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_move(char dir, const _vec3& vDir, const _vec3& vAngle)
+{
+	cs_packet_move p;
+
+	p.size = sizeof(p);
+	p.type = CS_MOVE;
+
+	p.dir = dir;
+	p.dirX = vDir.x;
+	p.dirY = vDir.y;
+	p.dirZ = vDir.z;
+
+	p.angleX = vAngle.x;
+	p.angleY = vAngle.y;
+	p.angleZ = vAngle.z;
 
 	send_packet(&p);
 }
