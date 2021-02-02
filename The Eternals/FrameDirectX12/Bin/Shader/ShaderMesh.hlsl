@@ -16,7 +16,7 @@ Texture2D g_TexDiffuse		: register(t0);	// Diffuse 색상.
 Texture2D g_TexNormal		: register(t1);	// 탄젠트 공간 Normal Map.
 Texture2D g_TexSpecular		: register(t2);	// Specular 강도.
 Texture2D g_TexShadowDepth	: register(t3);	// ShadowDepth
-
+Texture2D g_TexDissolve : register(t4); // Dissolve
 /*__________________________________________________________________________________________________________
 [ Constant Buffer ]
 ____________________________________________________________________________________________________________*/
@@ -36,6 +36,7 @@ cbuffer cbShaderMesh : register(b1)
 	float4x4	g_matLightProj	: packoffset(c8);
 	float4		g_vLightPos		: packoffset(c12);
 	float		g_fLightPorjFar	: packoffset(c13.x);
+    float fDissolve : packoffset(c13.y);
 };
 
 cbuffer cbSkinningMatrix : register(b2)
@@ -47,7 +48,6 @@ cbuffer cbSkinningMatrix : register(b2)
 	float4x4	g_matParentTransform[64];
 	float4x4	g_matRootTransform[64];
 };
-
 /*__________________________________________________________________________________________________________
 [ Global ]
 ____________________________________________________________________________________________________________*/
@@ -158,6 +158,7 @@ struct PS_OUT
 	float4 Normal		: SV_TARGET1;	// 1번 RenderTarget - Normal
 	float4 Specular		: SV_TARGET2;	// 2번 RenderTarget - Specular
 	float4 Depth		: SV_TARGET3;	// 3번 RenderTarget - Depth
+    float4 Emissive		: SV_TARGET4;	// 4번 RenderTarget - Emissive
 };
 
 PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
@@ -181,6 +182,14 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 								 ps_input.ProjPos.w / g_fProjFar,			// posWVP.w / Far : 0~1로 만든 View영역의 Z.
 								 0.0f, 1.0f);
 
+    float Normal_fDissolve = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV).r;
+    if ((0.05f > (1.f - fDissolve) - Normal_fDissolve) && ((1.f - fDissolve) - Normal_fDissolve) > 0.f)
+    {
+        ps_output.Emissive = float4(1, Normal_fDissolve, 0, 1);
+    }
+    clip((1.f - fDissolve) - Normal_fDissolve);
+
+	
 	return (ps_output);
 }
 
@@ -297,6 +306,7 @@ PS_OUT PS_SHADOW_MAIN(VS_OUT ps_input) : SV_TARGET
 	
 	// ps_output.Diffuse.rgb = float3(1, 1, 1);
 	
-
+   
+	
 	return (ps_output);
 }

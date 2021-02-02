@@ -74,8 +74,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>../Bin\</OutDir>
-    <IncludePath>../../Reference/Assimp/include;$(IncludePath)</IncludePath>
-    <LibraryPath>../../Reference/Assimp/lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>../../Reference/Assimp/include;C:\Program Files %28x86%29\Visual Leak Detector\include;$(IncludePath)</IncludePath>
+    <LibraryPath>../../Reference/Assimp/lib;C:\Program Files %28x86%29\Visual Leak Detector\lib\Win64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -86,8 +86,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>../Release\</OutDir>
-    <IncludePath>../../Reference/Assimp/include;$(IncludePath)</IncludePath>
-    <LibraryPath>../../Reference/Assimp/lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>../../Reference/Assimp/include;C:\Program Files %28x86%29\Visual Leak Detector\include;$(IncludePath)</IncludePath>
+    <LibraryPath>../../Reference/Assimp/lib;C:\Program Files %28x86%29\Visual Leak Detector\lib\Win64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -101,7 +101,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>d3dcompiler.lib;D3D12.lib;dxgi.lib;dxguid.lib;dinput8.lib;assimp-vc140-mt.lib;d3d12.lib;d3d11.lib;d2d1.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3dcompiler.lib;D3D12.lib;dxgi.lib;dxguid.lib;dinput8.lib;assimp-vc140-mt.lib;d3d12.lib;d3d11.lib;d2d1.lib;dwrite.lib;vld.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
       <AdditionalLibraryDirectories>../../Reference/Assimp/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
@@ -163,7 +163,7 @@ call CopyEngine.bat</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>d3dcompiler.lib;D3D12.lib;dxgi.lib;dxguid.lib;dinput8.lib;assimp-vc140-mt.lib;d3d12.lib;d3d11.lib;d2d1.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3dcompiler.lib;D3D12.lib;dxgi.lib;dxguid.lib;dinput8.lib;assimp-vc140-mt.lib;d3d12.lib;d3d11.lib;d2d1.lib;dwrite.lib;vld.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
       <AdditionalLibraryDirectories>../../Reference/Assimp/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
@@ -219,6 +219,7 @@ call CopyEngine.bat</Command>
     <ClInclude Include="..\Code\ShaderBlend.h" />
     <ClInclude Include="..\Code\ShaderColor.h" />
     <ClInclude Include="..\Code\ShaderLighting.h" />
+    <ClInclude Include="..\Code\ShaderLuminance.h" />
     <ClInclude Include="..\Code\ShaderMesh.h" />
     <ClInclude Include="..\Code\ShaderShadow.h" />
     <ClInclude Include="..\Code\ShaderSkyBox.h" />
@@ -281,6 +282,7 @@ call CopyEngine.bat</Command>
     <ClCompile Include="..\Code\ShaderBlend.cpp" />
     <ClCompile Include="..\Code\ShaderColor.cpp" />
     <ClCompile Include="..\Code\ShaderLighting.cpp" />
+    <ClCompile Include="..\Code\ShaderLuminance.cpp" />
     <ClCompile Include="..\Code\ShaderMesh.cpp" />
     <ClCompile Include="..\Code\ShaderShadow.cpp" />
     <ClCompile Include="..\Code\ShaderSkyBox.cpp" />
@@ -305,6 +307,10 @@ call CopyEngine.bat</Command>
     <FxCompile Include="..\..\Bin\Shader\ShaderLighting.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\Bin\Shader\ShaderLuminance.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderMesh.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

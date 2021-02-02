@@ -23,7 +23,6 @@ public:
 	// Get
 	CUploadBuffer<CB_SHADER_MESH>*		Get_UploadBuffer_ShaderMesh()	{ return m_pCB_ShaderMesh; }
 	CUploadBuffer<CB_SKINNING_MATRIX>*	Get_UploadBuffer_SkinningDesc() { return m_pCB_SkinningMatrix; }
-
 	HRESULT			SetUp_ShaderConstantBuffer(const _uint& uiNumSubsetMesh = 1);
 
 	// CShader을(를) 통해 상속됨
@@ -56,8 +55,7 @@ private:
 
 	CUploadBuffer<CB_SHADER_MESH>*		m_pCB_ShaderMesh		= nullptr;
 	CUploadBuffer<CB_SKINNING_MATRIX>*	m_pCB_SkinningMatrix	= nullptr;
-
-
+	
 public:
 	virtual CComponent *	Clone() override;
 	static	CShaderMesh*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);

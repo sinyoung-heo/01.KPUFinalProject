@@ -6,6 +6,7 @@
 #include "AniCtrl.h"
 #include "Renderer.h"
 #include "RenderTarget.h"
+#include "ComponentMgr.h"
 
 USING(Engine)
 
@@ -142,7 +143,7 @@ HRESULT CVIMesh::Ready_Component(const aiScene * pScene, wstring wstrPath)
 		m_vecMeshEntry[i].NumIndices	= m_pScene->mMeshes[i]->mNumFaces * 3;
 		m_vecMeshEntry[i].BaseVertex	= 0;
 		m_vecMeshEntry[i].BaseIndex		= 0;
-
+		
 		_int iNumVertices				= m_pScene->mMeshes[i]->mNumVertices;
 		_int iNumIndices				= m_vecMeshEntry[i].NumIndices;
 
@@ -466,7 +467,7 @@ HRESULT CVIMesh::Create_TextureDescriptorHeap()
 	m_uiSubsetMeshSize = _uint(m_vecDiffResource.size());
 
 	D3D12_DESCRIPTOR_HEAP_DESC SRV_HeapDesc	= {};
-	SRV_HeapDesc.NumDescriptors = m_uiSubsetMeshSize * (TEXTURE_END) + 1;	// 텍스처의 개수 만큼 설정. (+ 1 = ShadowDepth)
+	SRV_HeapDesc.NumDescriptors = m_uiSubsetMeshSize * (TEXTURE_END)  + 1 + 1;	// 텍스처의 개수 만큼 설정. (+ 1 = ShadowDepth +1 Dissolve Texture)
 	SRV_HeapDesc.Type			= D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	SRV_HeapDesc.Flags			= D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
@@ -544,6 +545,24 @@ HRESULT CVIMesh::Create_TextureDescriptorHeap()
 	SRV_Desc.Texture2D.ResourceMinLODClamp	= 0.0f;
 
 	m_pGraphicDevice->CreateShaderResourceView(vecShadowDepthTarget[0].Get(), &SRV_Desc, SRV_DescriptorHandle);
+
+	// 힙의 다음 서술자로 넘어간다.
+	SRV_DescriptorHandle.Offset(1, CGraphicDevice::Get_Instance()->Get_CBV_SRV_UAV_DescriptorSize());
+
+	//Dissol
+	ComPtr<ID3D12Resource> TexDissolve = static_cast<CTexture*>
+		(CComponentMgr::Get_Instance()->Get_Component(L"ResourcePrototype_TextureDissolve", ID_STATIC))->Get_Texture().front();
+
+	SRV_Desc = {};
+	SRV_Desc.Format = TexDissolve->GetDesc().Format;
+	SRV_Desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	SRV_Desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	SRV_Desc.Texture2D.MostDetailedMip = 0;
+	SRV_Desc.Texture2D.MipLevels = TexDissolve->GetDesc().MipLevels;
+	SRV_Desc.Texture2D.ResourceMinLODClamp = 0.0f;
+
+	m_pGraphicDevice->CreateShaderResourceView(TexDissolve.Get(), &SRV_Desc, SRV_DescriptorHandle);
+
 
 	return S_OK;
 }

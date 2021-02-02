@@ -8,7 +8,7 @@
 #include "DynamicCamera.h"
 #include "Font.h"
 #include "RenderTarget.h"
-
+#include "TimeMgr.h"
 
 CPopori_F::CPopori_F(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -254,7 +254,15 @@ void CPopori_F::Set_ConstantTable()
 	tCB_ShaderMesh.vLightPos		= tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar	= tShadowDesc.fLightPorjFar;
 
+
+
+	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.15;
+	tCB_ShaderMesh.fDeltaTime = m_fDeltaTime;
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
+
+	
+	if (m_fDeltaTime > 1.f)
+		m_fDeltaTime = 0.f;
 }
 
 void CPopori_F::Set_ConstantTableShadowDepth()
@@ -272,6 +280,8 @@ void CPopori_F::Set_ConstantTableShadowDepth()
 	tCB_ShaderShadow.fProjFar	= tShadowDesc.fLightPorjFar;
 
 	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
+
+
 }
 
 void CPopori_F::Key_Input(const _float & fTimeDelta)

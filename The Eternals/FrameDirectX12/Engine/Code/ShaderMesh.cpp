@@ -31,6 +31,7 @@ HRESULT CShaderMesh::SetUp_ShaderConstantBuffer(const _uint& uiNumSubsetMesh)
 	m_pCB_SkinningMatrix = CUploadBuffer<CB_SKINNING_MATRIX>::Create(m_pGraphicDevice, uiNumSubsetMesh);
 	NULL_CHECK_RETURN(m_pCB_SkinningMatrix, E_FAIL);
 
+
 	return S_OK;
 }
 
@@ -71,24 +72,27 @@ void CShaderMesh::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, const _
 												   SRV_TexSpecularDescriptorHandle);
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexShadowDepthDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexShadowDepthDescriptorHandle.Offset(m_uiSubsetMeshSize * TEXTURE_END + 0, m_uiCBV_SRV_UAV_DescriptorSize);
-	m_pCommandList->SetGraphicsRootDescriptorTable(3,		// RootParameter Index - TexShadowDepth
+	SRV_TexShadowDepthDescriptorHandle.Offset(m_uiSubsetMeshSize * TEXTURE_END +0, m_uiCBV_SRV_UAV_DescriptorSize);
+	m_pCommandList->SetGraphicsRootDescriptorTable(3,		// RootParameter Index - TexDepth
 												   SRV_TexShadowDepthDescriptorHandle);
 
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexDissolveDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	SRV_TexDissolveDescriptorHandle.Offset(m_uiSubsetMeshSize * TEXTURE_END + 1, m_uiCBV_SRV_UAV_DescriptorSize);
+	m_pCommandList->SetGraphicsRootDescriptorTable(4,		// RootParameter Index - TexDissolve
+		SRV_TexDissolveDescriptorHandle);
 
 	/*__________________________________________________________________________________________________________
 	[ CBV를 루트 서술자에 묶는다 ]
 	____________________________________________________________________________________________________________*/
-	m_pCommandList->SetGraphicsRootConstantBufferView(4,	// RootParameter Index
+	m_pCommandList->SetGraphicsRootConstantBufferView(5,	// RootParameter Index
 													  m_pCB_CameraProjMatrix->Resource()->GetGPUVirtualAddress());
 
-	m_pCommandList->SetGraphicsRootConstantBufferView(5,	// RootParameter Index
+	m_pCommandList->SetGraphicsRootConstantBufferView(6,	// RootParameter Index
 													  m_pCB_ShaderMesh->Resource()->GetGPUVirtualAddress());
 
-	m_pCommandList->SetGraphicsRootConstantBufferView(6,	// RootParameter Index
+	m_pCommandList->SetGraphicsRootConstantBufferView(7,	// RootParameter Index
 													  m_pCB_SkinningMatrix->Resource()->GetGPUVirtualAddress() + 
 													  m_pCB_SkinningMatrix->GetElementByteSize() * iSubMeshIdx);
-
 }
 
 void CShaderMesh::Begin_Shader(ID3D12GraphicsCommandList * pCommandList,
@@ -125,24 +129,27 @@ void CShaderMesh::Begin_Shader(ID3D12GraphicsCommandList * pCommandList,
 												 SRV_TexSpecularDescriptorHandle);
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexShadowDepthDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexShadowDepthDescriptorHandle.Offset(m_uiSubsetMeshSize * TEXTURE_END + 0, m_uiCBV_SRV_UAV_DescriptorSize);
+	SRV_TexShadowDepthDescriptorHandle.Offset(m_uiSubsetMeshSize * TEX_END, m_uiCBV_SRV_UAV_DescriptorSize);
 	pCommandList->SetGraphicsRootDescriptorTable(3,		// RootParameter Index - TexShadowDepth
 												 SRV_TexShadowDepthDescriptorHandle);
 
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexEmissiveDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	SRV_TexEmissiveDescriptorHandle.Offset(m_uiSubsetMeshSize * TEX_END + 1, m_uiCBV_SRV_UAV_DescriptorSize);
+	pCommandList->SetGraphicsRootDescriptorTable(4,		// RootParameter Index - TexDissolve
+		SRV_TexEmissiveDescriptorHandle);
 
 	/*__________________________________________________________________________________________________________
 	[ CBV를 루트 서술자에 묶는다 ]
 	____________________________________________________________________________________________________________*/
-	pCommandList->SetGraphicsRootConstantBufferView(4,	// RootParameter Index
+	pCommandList->SetGraphicsRootConstantBufferView(5,	// RootParameter Index
 													m_pCB_CameraProjMatrix->Resource()->GetGPUVirtualAddress());
 
-	pCommandList->SetGraphicsRootConstantBufferView(5,	// RootParameter Index
+	pCommandList->SetGraphicsRootConstantBufferView(6,	// RootParameter Index
 													m_pCB_ShaderMesh->Resource()->GetGPUVirtualAddress());
 
-	pCommandList->SetGraphicsRootConstantBufferView(6,	// RootParameter Index
+	pCommandList->SetGraphicsRootConstantBufferView(7,	// RootParameter Index
 													m_pCB_SkinningMatrix->Resource()->GetGPUVirtualAddress() + 
 													m_pCB_SkinningMatrix->GetElementByteSize() * iSubMeshIdx);
-
 
 }
 
@@ -151,7 +158,7 @@ HRESULT CShaderMesh::Create_RootSignature()
 	/*__________________________________________________________________________________________________________
 	[ SRV를 담는 서술자 테이블을 생성 ]
 	____________________________________________________________________________________________________________*/
-	CD3DX12_DESCRIPTOR_RANGE SRV_Table[4];
+	CD3DX12_DESCRIPTOR_RANGE SRV_Table[5];
 
 	// TexDiffuse
 	SRV_Table[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,	// 서술자의 종류 - Shader Resource View.
@@ -176,21 +183,26 @@ HRESULT CShaderMesh::Create_RootSignature()
 					  3,								// 셰이더 인수들의 기준 레지스터 번호. (register t3)
 					  0);								// 레지스터 공간.
 
+	// Dissolve
+	SRV_Table[4].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,	// 서술자의 종류 - Shader Resource View.
+		1,								// 서술자의 개수 - Texture2D의 개수.
+		4,								// 셰이더 인수들의 기준 레지스터 번호. (register t4)
+		0);								// 레지스터 공간.
 	/*__________________________________________________________________________________________________________
 	- 루트 매개변수는 테이블이거나, 루트 서술자 또는 루트 상수이다.
 	____________________________________________________________________________________________________________*/
-	CD3DX12_ROOT_PARAMETER RootParameter[7];
+	CD3DX12_ROOT_PARAMETER RootParameter[8];
 	RootParameter[0].InitAsDescriptorTable(1, &SRV_Table[0], D3D12_SHADER_VISIBILITY_PIXEL);
 	RootParameter[1].InitAsDescriptorTable(1, &SRV_Table[1], D3D12_SHADER_VISIBILITY_PIXEL);
 	RootParameter[2].InitAsDescriptorTable(1, &SRV_Table[2], D3D12_SHADER_VISIBILITY_PIXEL);
 	RootParameter[3].InitAsDescriptorTable(1, &SRV_Table[3], D3D12_SHADER_VISIBILITY_PIXEL);
-	RootParameter[4].InitAsConstantBufferView(0);	// register b0.
-	RootParameter[5].InitAsConstantBufferView(1);	// register b1.
-	RootParameter[6].InitAsConstantBufferView(2);	// register b2.
-
+	RootParameter[4].InitAsDescriptorTable(1, &SRV_Table[4], D3D12_SHADER_VISIBILITY_PIXEL);
+	RootParameter[5].InitAsConstantBufferView(0);	// register b0.
+	RootParameter[6].InitAsConstantBufferView(1);	// register b1.
+	RootParameter[7].InitAsConstantBufferView(2);	// register b2.
 	auto StaticSamplers = Get_StaticSamplers();
 
-	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(7,							// 루트 파라미터 개수.
+	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(8,							// 루트 파라미터 개수.
 												  RootParameter,
 												  (UINT)StaticSamplers.size(),	// 샘플러 개수.
 												  StaticSamplers.data(),		// 샘플러 데이터.
@@ -246,11 +258,12 @@ HRESULT CShaderMesh::Create_PipelineState()
 	PipelineStateDesc.pRootSignature		= m_pRootSignature;
 	PipelineStateDesc.SampleMask			= UINT_MAX;
 	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	PipelineStateDesc.NumRenderTargets		= 4;								// PS에서 사용할 RenderTarget 개수.
+	PipelineStateDesc.NumRenderTargets		= 5;								// PS에서 사용할 RenderTarget 개수.
 	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
 	PipelineStateDesc.RTVFormats[1]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Normal Target
 	PipelineStateDesc.RTVFormats[2]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Specular Target
 	PipelineStateDesc.RTVFormats[3]			= DXGI_FORMAT_R32G32B32A32_FLOAT;	// Depth Target
+	PipelineStateDesc.RTVFormats[4]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
 	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
 	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
 	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -278,11 +291,12 @@ HRESULT CShaderMesh::Create_PipelineState()
 	PipelineStateDesc.pRootSignature		= m_pRootSignature;
 	PipelineStateDesc.SampleMask			= UINT_MAX;
 	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	PipelineStateDesc.NumRenderTargets		= 4;								// PS에서 사용할 RenderTarget 개수.
+	PipelineStateDesc.NumRenderTargets		= 5;								// PS에서 사용할 RenderTarget 개수.
 	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
 	PipelineStateDesc.RTVFormats[1]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Normal Target
 	PipelineStateDesc.RTVFormats[2]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Specular Target
 	PipelineStateDesc.RTVFormats[3]			= DXGI_FORMAT_R32G32B32A32_FLOAT;	// Depth Target
+	PipelineStateDesc.RTVFormats[4]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
 	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
 	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
 	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -373,5 +387,4 @@ void CShaderMesh::Free()
 
 	Safe_Delete(m_pCB_ShaderMesh);
 	Safe_Delete(m_pCB_SkinningMatrix);
-
 }

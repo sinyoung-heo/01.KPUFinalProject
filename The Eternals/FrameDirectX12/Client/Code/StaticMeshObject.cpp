@@ -7,7 +7,7 @@
 #include "LightMgr.h"
 #include "DynamicCamera.h"
 #include "RenderTarget.h"
-
+#include "TimeMgr.h"
 
 CStaticMeshObject::CStaticMeshObject(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -166,14 +166,21 @@ void CStaticMeshObject::Set_ConstantTable()
 	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
 	Engine::SHADOW_DESC tShadowDesc = CShadowLightMgr::Get_Instance()->Get_ShadowDesc();
-	
+
 	Engine::CB_SHADER_MESH tCB_ShaderMesh;
 	ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
-	tCB_ShaderMesh.matWorld			= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderMesh.matLightView		= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
-	tCB_ShaderMesh.matLightProj		= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
-	tCB_ShaderMesh.vLightPos		= tShadowDesc.vLightPosition;
-	tCB_ShaderMesh.fLightPorjFar	= tShadowDesc.fLightPorjFar;
+	tCB_ShaderMesh.matWorld = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderMesh.matLightView = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
+	tCB_ShaderMesh.matLightProj = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
+	tCB_ShaderMesh.vLightPos = tShadowDesc.vLightPosition;
+	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
+
+
+	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.05;
+	tCB_ShaderMesh.fDeltaTime = m_fDeltaTime;
+	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
+	if (m_fDeltaTime > 1.f)
+		m_fDeltaTime = 0.f;
 
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 }

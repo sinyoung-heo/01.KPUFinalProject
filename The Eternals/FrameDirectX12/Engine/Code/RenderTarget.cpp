@@ -61,9 +61,10 @@ HRESULT CRenderTarget::Ready_RenderTarget(const _uint& uiTargetCnt)
 	FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(3), E_FAIL);
 
 	// Render RenderTarget
-	m_vPos		= _vec3(160.0f, 90.0f, 1.0f);
-	m_vScale	= _vec3(160.0f, 90.0f, 1.0f);
-
+	/*m_vPos		= _vec3(160.0f, 90.0f, 1.0f);
+	m_vScale	= _vec3(160.0f, 90.0f, 1.0f);*/
+	m_vPos = _vec3(160.0f * 0.7f, 90.0f *0.7f, 1.0f);
+	m_vScale = _vec3(160.0f * 0.7f, 90.0f * 0.7f, 1.0f);
 	return S_OK;
 }
 

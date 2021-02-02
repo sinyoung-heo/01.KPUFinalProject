@@ -10,7 +10,13 @@ class CComponent;
 class CRenderTarget;
 class CScreenTex;
 class CShaderBlend;
-
+class CShaderLuminance;
+#define WIDTH_FIRST 112
+#define WIDTH_SECOND 224+112
+#define WIDTH_THIRD 448+112
+#define WIDTH_FOURTH 672+112
+#define HEIGHT_FIRST 63
+#define HEIGHT_SECOND 63 + 126
 struct ThreadParameter
 {
 	_int threadIdx;
@@ -31,7 +37,7 @@ public:
 		RENDER_FONT,
 		RENDER_END
 	};
-
+	enum BUFFERID { LUMINANCE,BUFFER_END};
 private:
 	explicit CRenderer();
 	virtual ~CRenderer() = default;
@@ -70,6 +76,7 @@ private:
 	void	Render_ShadowDepth(const _float& fTimeDelta);
 	void	Render_NonAlpha(const _float& fTimeDelta);
 	void	Render_Light();
+	void	Render_Luminance();
 	void	Render_Blend();
 	void	Render_Alpha(const _float& fTimeDelta);
 	void	Render_UI(const _float& fTimeDelta);
@@ -100,16 +107,23 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Multi RenderTarget ]
 	____________________________________________________________________________________________________________*/
-	// Render Target
-	CRenderTarget*	m_pTargetDeferred		= nullptr;
-	CRenderTarget*	m_pTargetLight			= nullptr;
-	CRenderTarget*	m_pTargetShadowDepth	= nullptr;
+	// Render Target - 타겟추가후 꼭 릴리즈
+	CRenderTarget*	m_pTargetDeferred		= nullptr; // 디퍼드 -> Target5
+	CRenderTarget*	m_pTargetLight			= nullptr; // 라이트 -> Target2
+	CRenderTarget*	m_pTargetShadowDepth	= nullptr; // 셰도우 -> Target1
+	CRenderTarget*  m_pTargetLuminance       = nullptr; //루미넌스 ->Target1
 
+	
+	
 	// Blend
 	CScreenTex*		m_pBlendBuffer			= nullptr;
 	CShaderBlend*	m_pBlendShader			= nullptr;
 	_bool			m_bIsSetBlendTexture	{ false };
 
+	//Luminance
+	CScreenTex* m_pLuminanceBuffer = nullptr;
+	CShaderLuminance* m_pLuminanceShader = nullptr;
+	_bool			m_bIsSetLuminanceTexture{ false };
 	/*__________________________________________________________________________________________________________
 	[ Pipeline StateGroup ]
 	____________________________________________________________________________________________________________*/
