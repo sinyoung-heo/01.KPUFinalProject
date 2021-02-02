@@ -302,6 +302,10 @@ HRESULT CMainApp::SetUp_StartScene(Engine::SCENEID eScebeID)
 
 void CMainApp::Key_Input()
 {
+#ifdef SERVER
+	if (!g_bIsActive) return;
+#endif 
+
 	/*__________________________________________________________________________________________________________
 	[ Camera Mode ]
 	____________________________________________________________________________________________________________*/

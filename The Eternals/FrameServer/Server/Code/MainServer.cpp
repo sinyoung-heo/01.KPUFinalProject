@@ -237,7 +237,7 @@ void add_new_client(SOCKET ns)
 		pNew->maxExp = 100;
 		pNew->att = 10;
 		pNew->spd = 10.f;
-		pNew->m_vPos = _vec3((rand() % 50) * 1.f, 0.f, (rand() % 50) * 1.f);
+		pNew->m_vPos = _vec3((rand() % 10) * 1.f + 30.f, 0.f, (rand() % 10) * 1.f + 20.f);
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 

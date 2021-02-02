@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "TestPlayer.h"
+#include "TestOthers.h"
 
 #include "GraphicDevice.h"
 #include "DirectInput.h"
@@ -9,18 +9,18 @@
 #include "Font.h"
 #include "RenderTarget.h"
 
-CTestPlayer::CTestPlayer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CTestOthers::CTestOthers(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
 }
 
-CTestPlayer::CTestPlayer(const CTestPlayer& rhs)
+CTestOthers::CTestOthers(const CTestOthers& rhs)
 	: Engine::CGameObject(rhs)
 	, m_wstrMeshTag(rhs.m_wstrMeshTag)
 {
 }
 
-HRESULT CTestPlayer::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
+HRESULT CTestOthers::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
@@ -77,7 +77,7 @@ HRESULT CTestPlayer::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, 
 	return S_OK;
 }
 
-HRESULT CTestPlayer::LateInit_GameObject()
+HRESULT CTestOthers::LateInit_GameObject()
 {
 	/*__________________________________________________________________________________________________________
 	[ Get GameObject - DynamicCamera ]
@@ -93,18 +93,12 @@ HRESULT CTestPlayer::LateInit_GameObject()
 	return S_OK;
 }
 
-_int CTestPlayer::Update_GameObject(const _float& fTimeDelta)
+_int CTestOthers::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
-
-	/*__________________________________________________________________________________________________________
-	[ Key Input ]
-	____________________________________________________________________________________________________________*/
-	if (!g_bIsOnDebugCaemra)
-		Key_Input(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
@@ -115,7 +109,7 @@ _int CTestPlayer::Update_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CTestPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
+_int CTestOthers::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
@@ -124,37 +118,10 @@ _int CTestPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 
-	/*__________________________________________________________________________________________________________
-	[ Font Update ]
-	____________________________________________________________________________________________________________*/
-	if (Engine::CRenderer::Get_Instance()->Get_RenderOnOff(L"DebugFont"))
-	{
-		m_wstrText = wstring(L"[ Character Info ] \n") +
-			wstring(L"Num Animation \t %d \n") +
-			wstring(L"Current Ani Index \t %d \n") +
-			wstring(L"Max Frame \t %d \n") +
-			wstring(L"Current Frame \t %d");
-
-		wsprintf(m_szText, m_wstrText.c_str(),
-			*(m_pMeshCom->Get_NumAnimation()),
-			m_uiAnimIdx,
-			m_ui3DMax_NumFrame,
-			m_ui3DMax_CurFrame);
-
-		m_pFont->Update_GameObject(fTimeDelta);
-		m_pFont->Set_Text(wstring(m_szText));
-	}
-
-	/*__________________________________________________________________________________________________________
-	[ Animation KeyFrame Index ]
-	____________________________________________________________________________________________________________*/
-	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
-	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
-
 	return NO_EVENT;
 }
 
-void CTestPlayer::Render_GameObject(const _float& fTimeDelta)
+void CTestOthers::Render_GameObject(const _float& fTimeDelta)
 {
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
@@ -166,13 +133,13 @@ void CTestPlayer::Render_GameObject(const _float& fTimeDelta)
 	m_pMeshCom->Render_DynamicMesh(m_pShaderCom);
 }
 
-void CTestPlayer::Render_ShadowDepth(const _float& fTimeDelta)
+void CTestOthers::Render_ShadowDepth(const _float& fTimeDelta)
 {
 	Set_ConstantTableShadowDepth();
 	m_pMeshCom->Render_DynamicMeshShadowDepth(m_pShadowCom);
 }
 
-void CTestPlayer::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
+void CTestOthers::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
@@ -184,13 +151,13 @@ void CTestPlayer::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsComm
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
-void CTestPlayer::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
+void CTestOthers::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
 	Set_ConstantTableShadowDepth();
 	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 }
 
-HRESULT CTestPlayer::Add_Component(wstring wstrMeshTag)
+HRESULT CTestOthers::Add_Component(wstring wstrMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -236,8 +203,8 @@ HRESULT CTestPlayer::Add_Component(wstring wstrMeshTag)
 	return S_OK;
 }
 
-void CTestPlayer::Set_ConstantTable()
-{	
+void CTestOthers::Set_ConstantTable()
+{
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
@@ -254,7 +221,7 @@ void CTestPlayer::Set_ConstantTable()
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 }
 
-void CTestPlayer::Set_ConstantTableShadowDepth()
+void CTestOthers::Set_ConstantTableShadowDepth()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -271,141 +238,9 @@ void CTestPlayer::Set_ConstantTableShadowDepth()
 	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
 }
 
-void CTestPlayer::Key_Input(const _float& fTimeDelta)
+Engine::CGameObject* CTestOthers::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
 {
-#ifdef SERVER
-	if (!g_bIsActive) return;
-#endif 
-
-	if (Engine::KEY_DOWN(DIK_1))
-		m_uiAnimIdx = 0;
-
-	else if (Engine::KEY_DOWN(DIK_2))
-		m_uiAnimIdx = 1;
-
-
-	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
-	m_pTransCom->m_vDir.Normalize();
-
-	if (Engine::KEY_PRESSING(DIK_W))
-	{
-		// 대각선 - 우 상단.
-		if (Engine::KEY_PRESSING(DIK_D))
-		{
-#ifndef SERVER
-			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_UP;
-#else
-			CPacketMgr::Get_Instance()->send_move(MV_RIGHT_UP, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
-#endif 
-		}
-			
-		// 대각선 - 좌 상단.
-		else if (Engine::KEY_PRESSING(DIK_A))
-		{
-#ifndef SERVER
-			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_UP;
-#else
-			CPacketMgr::Get_Instance()->send_move(MV_LEFT_UP, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
-#endif		
-		}
-		
-		// 직진.
-		else
-		{
-#ifndef SERVER
-			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + FRONT;
-#else
-			CPacketMgr::Get_Instance()->send_move(MV_FRONT, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
-#endif 			
-		}
-			
-#ifndef SERVER
-		// NaviMesh 이동.
-		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
-			&m_pTransCom->m_vDir,
-			m_pInfoCom->m_fSpeed * fTimeDelta);
-		m_pTransCom->m_vPos = vPos;
-#endif 
-		
-	}
-
-	else if (Engine::KEY_PRESSING(DIK_S))
-	{
-		// 대각선 - 우 하단.
-		if (Engine::KEY_PRESSING(DIK_D))
-		{
-#ifndef SERVER
-			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_DOWN;
-#else
-			CPacketMgr::Get_Instance()->send_move(MV_RIGHT_DOWN, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
-#endif 			
-		}
-			
-		// 대각선 - 좌 하단.
-		else if (Engine::KEY_PRESSING(DIK_A))
-		{
-#ifndef SERVER
-			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_DOWN;
-#else
-			CPacketMgr::Get_Instance()->send_move(MV_LEFT_DOWN, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
-#endif 			
-		}
-	
-		// 후진.
-		else
-		{
-#ifndef SERVER
-			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + BACK;
-#else
-			CPacketMgr::Get_Instance()->send_move(MV_BACK, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
-#endif			
-		}
-			
-#ifndef SERVER
-		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
-			&m_pTransCom->m_vDir,
-			m_pInfoCom->m_fSpeed * fTimeDelta);
-		m_pTransCom->m_vPos = vPos;
-#endif
-	
-	}
-
-	else if (Engine::KEY_PRESSING(DIK_A))
-	{
-		// 좌로 이동.	
-#ifndef SERVER
-		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT;
-
-		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
-			&m_pTransCom->m_vDir,
-			m_pInfoCom->m_fSpeed * fTimeDelta);
-		m_pTransCom->m_vPos = vPos;
-#else
-		CPacketMgr::Get_Instance()->send_move(MV_LEFT, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
-#endif 
-
-	}
-
-	else if (Engine::KEY_PRESSING(DIK_D))
-	{
-		// 우로 이동.	
-#ifndef SERVER
-		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT;
-
-		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
-			&m_pTransCom->m_vDir,
-			m_pInfoCom->m_fSpeed * fTimeDelta);
-		m_pTransCom->m_vPos = vPos;
-#else
-		CPacketMgr::Get_Instance()->send_move(MV_RIGHT, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
-#endif
-	
-	}
-}
-
-Engine::CGameObject* CTestPlayer::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
-{
-	CTestPlayer* pInstance = new CTestPlayer(pGraphicDevice, pCommandList);
+	CTestOthers* pInstance = new CTestOthers(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos)))
 		Engine::Safe_Release(pInstance);
@@ -413,7 +248,7 @@ Engine::CGameObject* CTestPlayer::Create(ID3D12Device* pGraphicDevice, ID3D12Gra
 	return pInstance;
 }
 
-void CTestPlayer::Free()
+void CTestOthers::Free()
 {
 	Engine::CGameObject::Free();
 

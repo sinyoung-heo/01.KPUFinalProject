@@ -3,18 +3,6 @@
 #include "Include.h"
 #include "GameObject.h"
 
-/*____________________________________________________________________
-Player Direction
-______________________________________________________________________*/
-#define	FRONT		0.f
-#define	RIGHT		90.f
-#define	RIGHT_UP	45.f
-#define	RIGHT_DOWN	135.f
-#define	LEFT		270.f
-#define	LEFT_UP		315.f
-#define	LEFT_DOWN	225.f
-#define	BACK		180.f
-
 namespace Engine
 {
 	class CMesh;
@@ -28,12 +16,12 @@ namespace Engine
 
 class CDynamicCamera;
 
-class CTestPlayer : public Engine::CGameObject
+class CTestOthers : public Engine::CGameObject
 {
 private:
-	explicit CTestPlayer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CTestPlayer(const CTestPlayer& rhs);
-	virtual ~CTestPlayer() = default;
+	explicit CTestOthers(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	explicit CTestOthers(const CTestOthers& rhs);
+	virtual ~CTestOthers() = default;
 
 public:
 	// CGameObject을(를) 통해 상속됨
@@ -57,8 +45,6 @@ private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
-
-	void			Key_Input(const _float& fTimeDelta);
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,

@@ -108,6 +108,10 @@ void CDebugCamera::Render_GameObject(const _float & fTimeDelta)
 
 void CDebugCamera::Key_Input(const _float & fTimeDelta)
 {
+#ifdef SERVER
+	if (!g_bIsActive) return;
+#endif 
+
 	_matrix matWorld = INIT_MATRIX;
 	matWorld = MATRIX_INVERSE(m_tCameraInfo.matView);
 

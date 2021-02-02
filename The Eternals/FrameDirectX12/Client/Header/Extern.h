@@ -7,6 +7,7 @@ extern HINSTANCE	g_hInst;
 #ifdef SERVER
 extern SOCKET	g_hSocket;
 extern int		g_iSNum;
+extern bool		g_bIsActive;
 #endif // SERVER
 
 

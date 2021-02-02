@@ -106,6 +106,9 @@
     <Filter Include="02.GameObject\99.SampleObject\09.TestPlayer">
       <UniqueIdentifier>{254f7e38-7b8f-44cb-b41d-48facfba9a23}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.SampleObject\10.TestOthers">
+      <UniqueIdentifier>{f44b5ea2-b13d-49b4-9baa-eef83af278bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -213,6 +216,9 @@
     <ClInclude Include="..\Code\TestPlayer.h">
       <Filter>02.GameObject\99.SampleObject\09.TestPlayer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\TestOthers.h">
+      <Filter>02.GameObject\99.SampleObject\10.TestOthers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -292,6 +298,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\TestPlayer.cpp">
       <Filter>02.GameObject\99.SampleObject\09.TestPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TestOthers.cpp">
+      <Filter>02.GameObject\99.SampleObject\10.TestOthers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

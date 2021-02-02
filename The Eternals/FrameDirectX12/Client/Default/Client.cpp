@@ -40,6 +40,9 @@ SOCKET	g_hSocket;
 
 /* 클라이언트가 서버에 접속을 했을 때, 서버로부터 받는 ID */
 int		g_iSNum = -1;
+
+/* 해당 클라이언트가 선택되었음을 나타냄 */
+bool	g_bIsActive = false;
 #endif // SERVER
 
 
@@ -310,6 +313,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 		}
 		break;
+
+	case WM_ACTIVATE:
+		if (LOWORD(wParam) == WA_INACTIVE)
+			g_bIsActive = false;
+		else
+			g_bIsActive = true;
+		break;
+
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;

@@ -3,6 +3,7 @@
 #include "ObjectMgr.h"
 
 #include "TestPlayer.h"
+#include "TestOthers.h"
 #include "DynamicCamera.h"
 
 IMPLEMENT_SINGLETON(CPacketMgr)
@@ -199,15 +200,15 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 			Engine::CGameObject* pGameObj = nullptr;
 
-			pGameObj = CTestPlayer::Create(m_pGraphicDevice, m_pCommandList,
-										   L"PoporiR19",					// MeshTag
-										   _vec3(0.05f, 0.05f, 0.05f),		// Scale
-										   _vec3(0.0f, 0.0f, 0.0f),			// Angle
+			pGameObj = CTestOthers::Create(m_pGraphicDevice, m_pCommandList,
+											L"PoporiH25",											// MeshTag
+										   _vec3(0.05f, 0.05f, 0.05f),								// Scale
+										   _vec3(0.0f, 0.0f, 0.0f),									// Angle
 										   _vec3(packet->posX, packet->posY, packet->posZ));		// Pos
 
 			pGameObj->Set_ServerNumber(packet->id);
 
-			Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"Popori_F", pGameObj), E_FAIL);
+			Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"Others", pGameObj), E_FAIL);
 		}
 		break;
 		/* npc */
@@ -246,7 +247,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 			/* 다른 클라이언트가 움직인 경우 */
 			else
 			{
-				Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"Popori_F", s_num);
+				Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
 				pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
 				pObj->Get_Transform()->m_vAngle.y = packet->angleY;
 			}
@@ -269,7 +270,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 		if (packet->id == g_iSNum) break;
 
-		Engine::CObjectMgr::Get_Instance()->Delete_ServerObject(L"Layer_GameObject", L"Popori_F", packet->id);
+		Engine::CObjectMgr::Get_Instance()->Delete_ServerObject(L"Layer_GameObject", L"Others", packet->id);
 	}
 	break;
 
