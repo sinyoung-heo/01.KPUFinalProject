@@ -263,7 +263,14 @@ HRESULT CToolSceneStage::Ready_LayerGameObject(wstring wstrLayerTag)
 								  L"PoporiR19",						// MeshTag
 								  _vec3(0.05f, 0.05f, 0.05f),		// Scale
 								  _vec3(0.0f, 0.0f, 0.0f),			// Angle
-								  _vec3(25.0f, 0.f, 20.0f));		// Pos
+								  _vec3(95.0f, 0.f, 90.0f));		// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
+
+	pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
+								  L"PoporiR19",						// MeshTag
+								  _vec3(0.05f, 0.05f, 0.05f),		// Scale
+								  _vec3(0.0f, 0.0f, 0.0f),			// Angle
+								  _vec3(180.0f, 0.f, 75.0f));		// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
 
 	return S_OK;
