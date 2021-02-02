@@ -192,9 +192,10 @@ void add_new_client(SOCKET ns)
 	size_t s_num = 0;
 
 	/* 서버에서 유저를 관리할 번호 설정 */
-	g_id_lock.lock();
 	CPlayer* pNew = static_cast<CPlayer*>(CObjPoolMgr::GetInstance()->use_Object(L"PLAYER"));
-
+	if (!pNew) return;
+	
+	g_id_lock.lock();
 	if (CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pNew->m_sNum) == nullptr)
 		s_num = pNew->m_sNum;
 	else
