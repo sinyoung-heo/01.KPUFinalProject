@@ -315,6 +315,24 @@ void CPacketMgr::send_move(char dir, const _vec3& vDir, const _vec3& vAngle)
 	send_packet(&p);
 }
 
+void CPacketMgr::send_move_stop(const _vec3& vPos, const _vec3& vAngle)
+{
+	cs_packet_move_stop p;
+
+	p.size = sizeof(p);
+	p.type = CS_MOVE_STOP;
+
+	p.posX = vPos.x;
+	p.posY = vPos.y;
+	p.posZ = vPos.z;
+
+	p.angleX = vAngle.x;
+	p.angleY = vAngle.y;
+	p.angleZ = vAngle.z;
+
+	send_packet(&p);
+}
+
 void CPacketMgr::send_packet(void* packet)
 {
 	char* p = reinterpret_cast<char*>(packet);

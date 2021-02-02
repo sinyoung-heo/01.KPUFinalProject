@@ -23,10 +23,11 @@ constexpr char SC_PACKET_STAT_CHANGE = 6;
 
 constexpr char CS_LOGIN = 0;
 constexpr char CS_MOVE = 1;
-constexpr char CS_ATTACK = 2;
-constexpr char CS_CHAT = 3;
-constexpr char CS_LOGOUT = 4;
-constexpr char CS_TELEPORT = 5;				// 부하 테스트용 동접 테스트를 위해 텔러포트로 Hot Spot 해소
+constexpr char CS_MOVE_STOP = 2;
+constexpr char CS_ATTACK = 3;
+constexpr char CS_CHAT = 4;
+constexpr char CS_LOGOUT = 5;
+constexpr char CS_TELEPORT = 6;				// 부하 테스트용 동접 테스트를 위해 텔러포트로 Hot Spot 해소
 
 struct sc_packet_login_ok 
 {
@@ -134,6 +135,15 @@ struct cs_packet_move
 	char  dir;
 	int	  move_time; 
 	float dirX, dirY, dirZ;
+	float angleX, angleY, angleZ;
+};
+
+struct cs_packet_move_stop
+{
+	char  size;
+	char  type;
+
+	float posX, posY, posZ;
 	float angleX, angleY, angleZ;
 };
 

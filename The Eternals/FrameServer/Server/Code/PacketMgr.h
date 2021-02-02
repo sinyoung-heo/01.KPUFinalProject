@@ -11,6 +11,7 @@ void send_chat_packet(int to, int id, char* message);							// 채팅 패킷
 void send_stat_change_packet(int to, int id);									// 상태정보(HP,LV,EXP) 변경 패킷
 
 void process_move(int id, char direction, const _vec3& _vDir, const _vec3& _vAngle);							// 움직임 처리 함수
+void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vAngle);
 void process_attck(int id);														// 공격 처리 함수
 
 /* 패킷 관리 및 처리 함수 */

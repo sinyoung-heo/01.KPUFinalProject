@@ -23,6 +23,7 @@ public:
 
 	void	send_login();
 	void	send_move(char dir, const _vec3& vDir, const _vec3& vAngle);
+	void	send_move_stop(const _vec3& vPos, const _vec3& vAngle);
 
 private:
 	void	send_packet(void* packet);
