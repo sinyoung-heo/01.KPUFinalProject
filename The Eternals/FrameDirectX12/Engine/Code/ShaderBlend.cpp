@@ -277,7 +277,7 @@ CComponent * CShaderBlend::Clone()
 	return new CShaderBlend(*this);
 }
 
-CShaderBlend * CShaderBlend::Create(ID3D12Device * pGraphicDebice, ID3D12GraphicsCommandList* pCommandList)
+CShader * CShaderBlend::Create(ID3D12Device * pGraphicDebice, ID3D12GraphicsCommandList* pCommandList)
 {
 	CShaderBlend* pInstance = new CShaderBlend(pGraphicDebice, pCommandList);
 

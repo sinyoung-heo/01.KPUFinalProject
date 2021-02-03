@@ -24,6 +24,9 @@ public:
 	void	Begin_Buffer();
 	void	Render_Buffer();
 
+	void	Begin_Buffer(ID3D12GraphicsCommandList* pCommandList);
+	void	Render_Buffer(ID3D12GraphicsCommandList* pCommandList);
+
 private:
 	_uint   m_iNumVerticesX = 0;
 	_uint   m_iNumVerticesZ = 0;

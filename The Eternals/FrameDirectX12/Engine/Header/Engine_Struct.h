@@ -734,7 +734,7 @@ namespace Engine
 		_rgba		vColor;
 
 	} CB_SHADER_COLOR;
-	
+
 
 	// Shader Texture
 	typedef struct tagConstantBufferShaderTexture

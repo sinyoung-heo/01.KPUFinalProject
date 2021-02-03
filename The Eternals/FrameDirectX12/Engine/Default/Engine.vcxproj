@@ -217,6 +217,7 @@ call CopyEngine.bat</Command>
     <ClInclude Include="..\Code\ScreenTex.h" />
     <ClInclude Include="..\Code\Shader.h" />
     <ClInclude Include="..\Code\ShaderBlend.h" />
+    <ClInclude Include="..\Code\ShaderBumpTerrain.h" />
     <ClInclude Include="..\Code\ShaderColor.h" />
     <ClInclude Include="..\Code\ShaderLighting.h" />
     <ClInclude Include="..\Code\ShaderMesh.h" />
@@ -279,6 +280,7 @@ call CopyEngine.bat</Command>
     <ClCompile Include="..\Code\ScreenTex.cpp" />
     <ClCompile Include="..\Code\Shader.cpp" />
     <ClCompile Include="..\Code\ShaderBlend.cpp" />
+    <ClCompile Include="..\Code\ShaderBumpTerrain.cpp" />
     <ClCompile Include="..\Code\ShaderColor.cpp" />
     <ClCompile Include="..\Code\ShaderLighting.cpp" />
     <ClCompile Include="..\Code\ShaderMesh.cpp" />
@@ -295,6 +297,10 @@ call CopyEngine.bat</Command>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Bin\Shader\ShaderBlend.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\Bin\Shader\ShaderBumpTerrain.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>

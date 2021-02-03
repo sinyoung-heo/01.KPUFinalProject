@@ -45,7 +45,7 @@ HRESULT CTerrainTex::Ready_Buffer(const _uint & iNumVerticesX,
 			_int iIdx = i * iNumVerticesX + j;
 
 			vecVertices[iIdx].vPos		= _vec3(j * m_fInterval, 0.f, i * m_fInterval);
-			vecVertices[iIdx].vNormal	= _vec3(0.f, 0.f, 0.f);
+			vecVertices[iIdx].vNormal	= _vec3(0.f, 1.f, 0.f);
 			vecVertices[iIdx].vTexUV	= _vec2((j / (iNumVerticesX - 1.f)) * fDetail, (i / (iNumVerticesZ - 1.f)) * fDetail);
 		}
 	}
@@ -144,6 +144,35 @@ void CTerrainTex::Begin_Buffer()
 void CTerrainTex::Render_Buffer()
 {
 	CVIBuffer::Render_Buffer();
+}
+
+void CTerrainTex::Begin_Buffer(ID3D12GraphicsCommandList* pCommandList)
+{
+	/*__________________________________________________________________________________________________________
+	[ 메쉬의 정점 버퍼 뷰와 인덱스 버퍼 뷰를 설정 ]
+	____________________________________________________________________________________________________________*/
+	pCommandList->IASetVertexBuffers(0, 						 // 시작 슬롯. (입력 슬롯은 총 16개)
+									 1, 						 // 입력 슬롯들에 묶을 정점 버퍼 개수.
+									 &Get_VertexBufferView()); // 정점 버퍼 뷰의 첫 원소를 가리키는 포인터.
+
+	pCommandList->IASetIndexBuffer(&Get_IndexBufferView());
+
+	/*__________________________________________________________________________________________________________
+	[ 메쉬의 프리미티브 유형을 설정 ]
+	____________________________________________________________________________________________________________*/
+	pCommandList->IASetPrimitiveTopology(m_PrimitiveTopology);
+}
+
+void CTerrainTex::Render_Buffer(ID3D12GraphicsCommandList* pCommandList)
+{
+	/*__________________________________________________________________________________________________________
+	[ 정점들이 파이프라인의 입력 조립기 단계로 공급 ]
+	____________________________________________________________________________________________________________*/
+	pCommandList->DrawIndexedInstanced(m_tSubMeshGeometry.uiIndexCount,	// 그리기에 사용할 인덱스들의 개수. (인스턴스 당)
+									   1,								// 그릴 인스턴스 개수.
+									   0,								// 인덱스 버퍼의 첫 index
+									   0, 								// 그리기 호출에 쓰이는 인덱스들에 더할 정수 값.
+									   0);								// 인스턴싱
 }
 
 CComponent * CTerrainTex::Clone()

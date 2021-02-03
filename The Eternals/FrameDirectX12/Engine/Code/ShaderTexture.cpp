@@ -100,7 +100,7 @@ HRESULT CShaderTexture::Create_RootSignature()
 	RootParameter[2].InitAsConstantBufferView(1);	// register b1.
 
 	auto StaticSamplers = Get_StaticSamplers();
-	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(3,							// 루트 파라미터 개수.(CBV 2, SRV 1 : 총 3개)
+	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(_countof(RootParameter),	// 루트 파라미터 개수.(CBV 2, SRV 1 : 총 3개)
 												  RootParameter,
 												  (_uint)StaticSamplers.size(),	// 샘플러 개수.
 												  StaticSamplers.data(),		// 샘플러 데이터.
@@ -404,7 +404,7 @@ CComponent * CShaderTexture::Clone()
 	return new CShaderTexture(*this);
 }
 
-CShaderTexture * CShaderTexture::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CShader * CShaderTexture::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 {
 	CShaderTexture* pInstance = new CShaderTexture(pGraphicDevice, pCommandList);
 

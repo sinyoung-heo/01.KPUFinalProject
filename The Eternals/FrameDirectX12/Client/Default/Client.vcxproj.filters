@@ -103,6 +103,9 @@
     <Filter Include="01.Scene\01.Logo\02.LoadingProgress">
       <UniqueIdentifier>{018c85ab-d8f8-4c79-8bba-f142768a3d1c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\01.Environment\01.BumpTerrain">
+      <UniqueIdentifier>{262daf1d-3b00-4c77-8265-be157ed217c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -204,6 +207,9 @@
     <ClInclude Include="..\..\..\FrameServer\Server\Header\protocol.h">
       <Filter>98.Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\BumpTerrain.h">
+      <Filter>02.GameObject\01.Environment\01.BumpTerrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -277,6 +283,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\LoadingProgress.cpp">
       <Filter>01.Scene\01.Logo\02.LoadingProgress</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\BumpTerrain.cpp">
+      <Filter>02.GameObject\01.Environment\01.BumpTerrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

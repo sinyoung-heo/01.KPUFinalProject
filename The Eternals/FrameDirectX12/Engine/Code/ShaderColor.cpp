@@ -90,7 +90,7 @@ HRESULT CShaderColor::Create_RootSignature()
 	/*____________________________________________________________________
 	- 루트 서명은 루트 매개변수들의 배열이다.
 	______________________________________________________________________*/
-	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(2,		// 루트 파라미터 개수. (cbCamreaMatrix, cbShaderColor)
+	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(_countof(RootParameter),	// 루트 파라미터 개수. (cbCamreaMatrix, cbShaderColor)
 												  RootParameter, 
 												  0,		// Texture가 없으므로 0.
 												  nullptr,	// Texture가 없으므로 nullptr.
@@ -290,7 +290,7 @@ CComponent * CShaderColor::Clone()
 	return new CShaderColor(*this);
 }
 
-CShaderColor * CShaderColor::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CShader * CShaderColor::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 {
 	CShaderColor* pInstance = new CShaderColor(pGraphicDevice, pCommandList);
 

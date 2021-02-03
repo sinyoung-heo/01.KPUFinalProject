@@ -224,7 +224,7 @@ HRESULT CMainApp::SetUp_ComponentPrototype()
 	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"CubeTex", Engine::ID_STATIC, pComponent), E_FAIL);
 
 	// TerrainTex
-	pComponent = Engine::CTerrainTex::Create(m_pGraphicDevice, m_pCommandList, 128, 128, 1.f);
+	pComponent = Engine::CTerrainTex::Create(m_pGraphicDevice, m_pCommandList, 256, 256, 1.f, 40.0f);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"TerrainTex", Engine::ID_STATIC, pComponent), E_FAIL);
 

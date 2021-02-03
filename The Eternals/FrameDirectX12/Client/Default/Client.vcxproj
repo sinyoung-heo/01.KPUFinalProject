@@ -166,6 +166,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\FrameServer\Server\Header\protocol.h" />
+    <ClInclude Include="..\Code\BumpTerrain.h" />
     <ClInclude Include="..\Code\DebugCamera.h" />
     <ClInclude Include="..\Code\Loading.h" />
     <ClInclude Include="..\Code\CubeObject.h" />
@@ -200,6 +201,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Code\BumpTerrain.cpp" />
     <ClCompile Include="..\Code\DebugCamera.cpp" />
     <ClCompile Include="..\Code\Loading.cpp" />
     <ClCompile Include="..\Code\CubeObject.cpp" />

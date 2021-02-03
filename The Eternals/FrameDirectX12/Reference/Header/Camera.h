@@ -5,6 +5,7 @@ BEGIN(Engine)
 
 class CShaderColor;
 class CShaderTexture;
+class CShaderBumpTerrain;
 class CShaderMesh;
 class CShaderSkyBox;
 class CShaderShadow;
@@ -50,10 +51,11 @@ protected:
 	/*__________________________________________________________________________________________________________
 	[ Shader Component ]
 	____________________________________________________________________________________________________________*/
-	CShaderColor*	m_pShaderColor		= nullptr;
-	CShaderTexture* m_pShaderTexture	= nullptr;
-	CShaderSkyBox*	m_pShaderSkyBox		= nullptr;
-	CShaderMesh*	m_pShaderMesh		= nullptr;
+	CShaderColor*		m_pShaderColor		 = nullptr;
+	CShaderTexture*		m_pShaderTexture	 = nullptr;
+	CShaderBumpTerrain*	m_pShaderBumpTerrain = nullptr;
+	CShaderSkyBox*		m_pShaderSkyBox		 = nullptr;
+	CShaderMesh*		m_pShaderMesh		 = nullptr;
 
 protected:
 	virtual void Free();

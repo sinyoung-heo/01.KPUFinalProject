@@ -345,6 +345,9 @@
     <ClInclude Include="..\Code\CoordinateCol.h">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\00.Buffer\06.CoordinateCol</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ShaderBumpTerrain.h">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\01.ShaderTexture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\DirectInput.cpp">
@@ -500,6 +503,9 @@
     <ClCompile Include="..\Code\CoordinateCol.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\00.Buffer\06.CoordinateCol</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\ShaderBumpTerrain.cpp">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\01.ShaderTexture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Bin\Shader\ShaderMesh.hlsl">
@@ -522,6 +528,9 @@
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderShadow.hlsl">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\04.ShaderShadow</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Bin\Shader\ShaderBumpTerrain.hlsl">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\01.ShaderTexture</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
