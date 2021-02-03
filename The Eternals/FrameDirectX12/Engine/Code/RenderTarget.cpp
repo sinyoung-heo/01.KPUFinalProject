@@ -26,12 +26,15 @@ void CRenderTarget::Set_TargetClearColor(const _uint& iIdx, const _rgba& vColor,
 	m_vecTargetFormat[iIdx]			= TargetFormat;
 }
 
-void CRenderTarget::Set_TargetTextureSize(const _uint & iIdx, const _float & fWidth, const _float & fHeight)
+void CRenderTarget::Set_TargetTextureSize(const _uint & iIdx, const _float & fWidth, const _float & fHeight,bool bisShadowTexture)
 {
 	if (iIdx >= m_vecViewPort.size())
 		return;
 
-	m_vecViewPort[iIdx] = { 0.0f, 0.0f, fWidth, fWidth, 0.0f, 1.0f };
+	if(bisShadowTexture)
+		m_vecViewPort[iIdx] = { 0.0f, 0.0f, fWidth, fWidth, 0.0f, 1.0f };
+	else
+		m_vecViewPort[iIdx] = { 0.0f, 0.0f, fWidth, fHeight, 0.0f, 1.0f };
 }
 
 HRESULT CRenderTarget::Ready_RenderTarget(const _uint& uiTargetCnt)
@@ -231,7 +234,7 @@ HRESULT CRenderTarget::SetUp_OnGraphicDevice(const TARGETID& eID)
 		m_pCommandList->OMSetRenderTargets(m_uiTargetCnt,
 										   &CD3DX12_CPU_DESCRIPTOR_HANDLE(m_pRTV_Heap->GetCPUDescriptorHandleForHeapStart()), 
 										   true,
-										   &CD3DX12_CPU_DESCRIPTOR_HANDLE(CGraphicDevice::Get_Instance()->Get_DSV_Heap()->GetCPUDescriptorHandleForHeapStart()));
+										   nullptr);
 	}
 
 	// Depth/Stencil Buffer	X
@@ -352,6 +355,55 @@ HRESULT CRenderTarget::Release_OnGraphicDevice(const TARGETID& eID)
 
 		return S_OK;
 	}
+
+	return S_OK;
+}
+
+HRESULT CRenderTarget::SetUp_OnGraphicDevice_DownSampling(int Sample)
+{
+	CGraphicDevice::Get_Instance()->Begin_BackBufferSetting();
+	for (_uint i = 0; i < m_uiTargetCnt; ++i)
+	{
+		m_pCommandList->ResourceBarrier(1,
+			&CD3DX12_RESOURCE_BARRIER::Transition(m_vecTargetTexture[i].Get(),
+				D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET));
+	}
+	for (_uint i = 0; i < m_uiTargetCnt; ++i)
+	{
+		m_pCommandList->ClearRenderTargetView(CD3DX12_CPU_DESCRIPTOR_HANDLE(m_pRTV_Heap->GetCPUDescriptorHandleForHeapStart(),
+			i, m_uiRTV_DescriptorSize),m_vecClearColor[i].Color, 0, nullptr);
+	}
+
+	D3D12_RECT ScissorRect = { 0, 0, (LONG)WINCX, (LONG)WINCY };
+	D3D12_VIEWPORT ViewPort;
+	ZeroMemory(&ViewPort, sizeof(D3D12_VIEWPORT));
+	ViewPort.Height = WINCY * 0.25f, ViewPort.Width = WINCX * 0.25f, ViewPort.MaxDepth = 1.0f;
+	m_pCommandList->RSSetViewports(1, &ViewPort);
+	m_pCommandList->RSSetScissorRects(1, &ScissorRect);
+
+	m_pCommandList->OMSetRenderTargets(m_uiTargetCnt,
+		&CD3DX12_CPU_DESCRIPTOR_HANDLE(m_pRTV_Heap->GetCPUDescriptorHandleForHeapStart()),
+		true,
+		&CD3DX12_CPU_DESCRIPTOR_HANDLE(CGraphicDevice::Get_Instance()->Get_DSV_Heap()->GetCPUDescriptorHandleForHeapStart()));
+
+	return S_OK	;
+}
+
+HRESULT CRenderTarget::Release_OnGraphicDevice_DownSampling()
+{
+	for (_uint i = 0; i < m_uiTargetCnt; ++i)
+	{
+		m_pCommandList->ResourceBarrier(1,
+			&CD3DX12_RESOURCE_BARRIER::Transition(m_vecTargetTexture[i].Get(),
+				D3D12_RESOURCE_STATE_RENDER_TARGET,
+				D3D12_RESOURCE_STATE_GENERIC_READ));
+	}
+	CGraphicDevice::Get_Instance()->End_BackBufferSetting();
+
+	D3D12_RECT		ScissorRect = { 0, 0, (LONG)WINCX, (LONG)WINCY };
+	D3D12_VIEWPORT	Viewport = CGraphicDevice::Get_Instance()->Get_Viewport();
+	m_pCommandList->RSSetViewports(1, &Viewport);
+	m_pCommandList->RSSetScissorRects(1, &ScissorRect);
 
 	return S_OK;
 }

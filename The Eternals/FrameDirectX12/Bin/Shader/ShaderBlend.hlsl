@@ -14,7 +14,8 @@ ______________________________________________________________________*/
 Texture2D g_TexDiffuse	: register(t0);	// Albedo
 Texture2D g_TexShade	: register(t1);	// Shade
 Texture2D g_TexSpecular : register(t2);	// Specular
-
+Texture2D g_TexBlur : register(t3); // Blur_Emissive
+Texture2D g_TexEmissive : register(t4); // Emissive
 
 /*____________________________________________________________________
 [ Vertex Shader ]
@@ -51,8 +52,10 @@ float4 PS_MAIN(VS_OUT ps_input) : SV_TARGET
 	float4 Albedo	= g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
 	float4 Shade	= g_TexShade.Sample(g_samLinearWrap, ps_input.TexUV);
 	float4 Specular = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 Blur = g_TexBlur.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 Emissive = g_TexEmissive.Sample(g_samLinearWrap, ps_input.TexUV);
 	
-	float4 Color	= Albedo * Shade + Specular;
+    float4 Color = Albedo * Shade + Specular + Blur + Emissive;
 	
 	return (Color);
 }

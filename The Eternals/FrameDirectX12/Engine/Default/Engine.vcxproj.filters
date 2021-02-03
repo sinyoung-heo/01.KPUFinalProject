@@ -166,6 +166,12 @@
     <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\07.ShaderLuminance">
       <UniqueIdentifier>{9544e09a-78f1-434a-8ad6-699ba3e6af70}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\08.ShaderDownSampling">
+      <UniqueIdentifier>{e4305883-c7cc-4994-b519-9fbff2a47c25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\09.ShaderBlur">
+      <UniqueIdentifier>{dfbfeacc-44af-483e-9b05-e714d4bac7c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\Engine_Functor.h">
@@ -351,6 +357,12 @@
     <ClInclude Include="..\Code\ShaderLuminance.h">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\07.ShaderLuminance</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ShaderDownSampling.h">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\08.ShaderDownSampling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ShaderBlur.h">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\09.ShaderBlur</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\DirectInput.cpp">
@@ -509,6 +521,12 @@
     <ClCompile Include="..\Code\ShaderLuminance.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\07.ShaderLuminance</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\ShaderDownSampling.cpp">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\08.ShaderDownSampling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ShaderBlur.cpp">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\09.ShaderBlur</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Bin\Shader\ShaderMesh.hlsl">
@@ -534,6 +552,12 @@
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderLuminance.hlsl">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\07.ShaderLuminance</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Bin\Shader\ShaderDownSampling.hlsl">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\08.ShaderDownSampling</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Bin\Shader\ShaderBlur.hlsl">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\09.ShaderBlur</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

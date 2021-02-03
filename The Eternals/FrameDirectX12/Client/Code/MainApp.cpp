@@ -273,7 +273,7 @@ HRESULT CMainApp::SetUp_LoadingResource()
 	// Textue - Dissolve
 
 	pComponent = Engine::CTexture::Create(m_pGraphicDevice, m_pCommandList,
-		L"../../Bin/Resource/ResourceLoading/Texture/Dissolve/%d.dds", 2,
+		L"../../Bin/Resource/ResourceLoading/Texture/Dissolve/%d.dds", 1,
 		Engine::TEXTYPE::TEX_2D);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"ResourcePrototype_TextureDissolve", Engine::ID_STATIC, pComponent), E_FAIL);

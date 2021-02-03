@@ -467,7 +467,7 @@ HRESULT CVIMesh::Create_TextureDescriptorHeap()
 	m_uiSubsetMeshSize = _uint(m_vecDiffResource.size());
 
 	D3D12_DESCRIPTOR_HEAP_DESC SRV_HeapDesc	= {};
-	SRV_HeapDesc.NumDescriptors = m_uiSubsetMeshSize * (TEXTURE_END)  + 1 + 1;	// 텍스처의 개수 만큼 설정. (+ 1 = ShadowDepth +1 Dissolve Texture)
+	SRV_HeapDesc.NumDescriptors = m_uiSubsetMeshSize * (TEXTURE_END )  + 1 + 1;	// 텍스처의 개수 만큼 설정. (+ 1 = ShadowDepth +1 Dissolve Texture)
 	SRV_HeapDesc.Type			= D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	SRV_HeapDesc.Flags			= D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
