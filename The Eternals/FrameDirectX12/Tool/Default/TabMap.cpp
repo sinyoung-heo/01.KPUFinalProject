@@ -960,7 +960,7 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			else if (zDelta < 0)
 				m_fLightInfo_SL_AtZ -= 1.0f;
 
-			CShadowLightMgr::Get_Instance()->m_vLightAt.x = m_fLightInfo_SL_AtZ;
+			CShadowLightMgr::Get_Instance()->m_vLightAt.z = m_fLightInfo_SL_AtZ;
 			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
 		}
 		else if (PtInRect(&rcLightInfoEdit_SL_Edit[6], pt))		// SL_Height

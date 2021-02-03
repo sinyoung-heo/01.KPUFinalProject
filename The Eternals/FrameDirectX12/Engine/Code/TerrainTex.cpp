@@ -21,7 +21,8 @@ CTerrainTex::CTerrainTex(const CTerrainTex & rhs)
 
 HRESULT CTerrainTex::Ready_Buffer(const _uint & iNumVerticesX,
 								  const _uint & iNumVerticesZ,
-								  const _float & fInterval)
+								  const _float & fInterval,
+								  const _float & fDetail)
 {
 	FAILED_CHECK_RETURN(CVIBuffer::Ready_Buffer(), E_FAIL);
 
@@ -45,7 +46,7 @@ HRESULT CTerrainTex::Ready_Buffer(const _uint & iNumVerticesX,
 
 			vecVertices[iIdx].vPos		= _vec3(j * m_fInterval, 0.f, i * m_fInterval);
 			vecVertices[iIdx].vNormal	= _vec3(0.f, 0.f, 0.f);
-			vecVertices[iIdx].vTexUV	= _vec2((j / (iNumVerticesX - 1.f)) * 5.f, (i / (iNumVerticesZ - 1.f)) * 5.f);
+			vecVertices[iIdx].vTexUV	= _vec2((j / (iNumVerticesX - 1.f)) * fDetail, (i / (iNumVerticesZ - 1.f)) * fDetail);
 		}
 	}
 
@@ -154,11 +155,12 @@ CTerrainTex * CTerrainTex::Create(ID3D12Device * pGraphicDevice,
 										ID3D12GraphicsCommandList * pCommandList, 
 										const _uint & iNumVerticesX, 
 										const _uint & iNumVerticesZ, 
-										const _float & fInterval)
+										const _float & fInterval,
+										const _float& fDetail)
 {
 	CTerrainTex* pInstance = new CTerrainTex(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_Buffer(iNumVerticesX, iNumVerticesZ, fInterval)))
+	if (FAILED(pInstance->Ready_Buffer(iNumVerticesX, iNumVerticesZ, fInterval, fDetail)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
