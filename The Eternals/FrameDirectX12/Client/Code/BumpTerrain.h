@@ -4,10 +4,10 @@
 
 namespace Engine
 {
-	class CTerrainTex;
-	class CTexture;
-	class CShaderBumpTerrain;
-	class CShaderShadow;
+	//  class CTerrainTex;
+	// class CTexture;
+	// class CShaderBumpTerrain;
+	// class CShaderShadow;
 }
 
 class CBumpTerrain : public Engine::CGameObject
@@ -40,10 +40,10 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
 	____________________________________________________________________________________________________________*/
-	Engine::CTerrainTex*		m_pBufferCom  = nullptr;
-	Engine::CTexture*			m_pTextureCom = nullptr;
-	Engine::CShaderBumpTerrain* m_pShaderCom  = nullptr;
-	Engine::CShaderShadow*		m_pShadowCom  = nullptr;
+	// Engine::CTerrainTex*		m_pBufferCom  = nullptr;
+	// Engine::CTexture*			m_pTextureCom = nullptr;
+	// Engine::CShaderBumpTerrain* m_pShaderCom  = nullptr;
+	// Engine::CShaderShadow*		m_pShadowCom  = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]

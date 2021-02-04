@@ -5,7 +5,6 @@ BEGIN(Engine)
 
 class CShaderColor;
 class CShaderTexture;
-class CShaderBumpTerrain;
 class CShaderMesh;
 class CShaderSkyBox;
 class CShaderShadow;
@@ -53,7 +52,6 @@ protected:
 	____________________________________________________________________________________________________________*/
 	CShaderColor*		m_pShaderColor		 = nullptr;
 	CShaderTexture*		m_pShaderTexture	 = nullptr;
-	CShaderBumpTerrain*	m_pShaderBumpTerrain = nullptr;
 	CShaderSkyBox*		m_pShaderSkyBox		 = nullptr;
 	CShaderMesh*		m_pShaderMesh		 = nullptr;
 

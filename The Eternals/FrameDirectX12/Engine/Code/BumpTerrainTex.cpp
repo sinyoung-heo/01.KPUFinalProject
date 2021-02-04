@@ -1,14 +1,15 @@
-#include "TerrainTex.h"
+#include "BumpTerrainTex.h"
 #include "GraphicDevice.h"
+#include "ShaderMesh.h"
 
 USING(Engine)
 
-CTerrainTex::CTerrainTex(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CBumpTerrainTex::CBumpTerrainTex(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CVIBuffer(pGraphicDevice, pCommandList)
 {
 }
 
-CTerrainTex::CTerrainTex(const CTerrainTex & rhs)
+CBumpTerrainTex::CBumpTerrainTex(const CBumpTerrainTex& rhs)
 	: CVIBuffer(rhs)
 	, m_iNumVerticesX(rhs.m_iNumVerticesX)
 	, m_iNumVerticesZ(rhs.m_iNumVerticesZ)
@@ -18,11 +19,10 @@ CTerrainTex::CTerrainTex(const CTerrainTex & rhs)
 {
 }
 
-
-HRESULT CTerrainTex::Ready_Buffer(const _uint & iNumVerticesX,
-								  const _uint & iNumVerticesZ,
-								  const _float & fInterval,
-								  const _float & fDetail)
+HRESULT CBumpTerrainTex::Ready_Buffer(const _uint& iNumVerticesX, 
+									  const _uint& iNumVerticesZ,
+									  const _float& fInterval,
+									  const _float& fDetail)
 {
 	FAILED_CHECK_RETURN(CVIBuffer::Ready_Buffer(), E_FAIL);
 
@@ -45,7 +45,7 @@ HRESULT CTerrainTex::Ready_Buffer(const _uint & iNumVerticesX,
 			_int iIdx = i * iNumVerticesX + j;
 
 			vecVertices[iIdx].vPos		= _vec3(j * m_fInterval, 0.f, i * m_fInterval);
-			vecVertices[iIdx].vNormal	= _vec3(0.f, 1.f, 0.f);
+			vecVertices[iIdx].vNormal	= _vec3(0.f, 0.f, 0.f);
 			vecVertices[iIdx].vTexUV	= _vec2((j / (iNumVerticesX - 1.f)) * fDetail, (i / (iNumVerticesZ - 1.f)) * fDetail);
 		}
 	}
@@ -101,7 +101,7 @@ HRESULT CTerrainTex::Ready_Buffer(const _uint & iNumVerticesX,
 	}
 
 
-	const _uint vbByteSize = (_uint)vecVertices.size() * sizeof(VTXTEX);
+	const _uint vbByteSize = (_uint)vecVertices.size() * sizeof(VTXMESH);
 	const _uint ibByteSize = (_uint)vecIndices.size() * sizeof(_uint);
 
 	/*__________________________________________________________________________________________________________
@@ -123,7 +123,7 @@ HRESULT CTerrainTex::Ready_Buffer(const _uint & iNumVerticesX,
 	NULL_CHECK_RETURN(m_pIB_GPU, E_FAIL);
 
 
-	m_uiVertexByteStride	= sizeof(VTXTEX);
+	m_uiVertexByteStride	= sizeof(VTXMESH);
 	m_uiVB_ByteSize			= vbByteSize;
 	m_uiIB_ByteSize			= ibByteSize;
 	m_IndexFormat			= DXGI_FORMAT_R32_UINT;
@@ -135,30 +135,60 @@ HRESULT CTerrainTex::Ready_Buffer(const _uint & iNumVerticesX,
 	return S_OK;
 }
 
-void CTerrainTex::Begin_Buffer()
+void CBumpTerrainTex::Begin_Buffer()
 {
-	CVIBuffer::Begin_Buffer();
 }
 
-
-void CTerrainTex::Render_Buffer()
+void CBumpTerrainTex::Render_Buffer()
 {
-	CVIBuffer::Render_Buffer();
 }
 
-CComponent * CTerrainTex::Clone()
+void CBumpTerrainTex::Render_Terrain(ID3D12GraphicsCommandList* pCommandList, 
+									 const _int& iContextIdx, 
+									 ID3D12DescriptorHeap* pTexDescriptorHeap, 
+									 ID3D12DescriptorHeap* pTexShadowDepthHeap,
+									 CShader* pShader)
 {
-	return new CTerrainTex(*this);
+	static_cast<CShaderMesh*>(pShader)->Begin_ShaderBumpTerrain(pCommandList, 
+																iContextIdx,
+																pTexDescriptorHeap, 
+																pTexShadowDepthHeap);
+	Begin_Buffer(pCommandList);
+	Render_Buffer(pCommandList);
 }
 
-CTerrainTex * CTerrainTex::Create(ID3D12Device * pGraphicDevice,
-										ID3D12GraphicsCommandList * pCommandList, 
-										const _uint & iNumVerticesX, 
-										const _uint & iNumVerticesZ, 
-										const _float & fInterval,
-										const _float& fDetail)
+void CBumpTerrainTex::Begin_Buffer(ID3D12GraphicsCommandList* pCommandList)
 {
-	CTerrainTex* pInstance = new CTerrainTex(pGraphicDevice, pCommandList);
+	pCommandList->IASetVertexBuffers(0, 						 // 시작 슬롯. (입력 슬롯은 총 16개)
+									 1, 						 // 입력 슬롯들에 묶을 정점 버퍼 개수.
+									 &Get_VertexBufferView()); // 정점 버퍼 뷰의 첫 원소를 가리키는 포인터.
+	pCommandList->IASetIndexBuffer(&Get_IndexBufferView());
+
+	pCommandList->IASetPrimitiveTopology(m_PrimitiveTopology);
+}
+
+void CBumpTerrainTex::Render_Buffer(ID3D12GraphicsCommandList* pCommandList)
+{
+	pCommandList->DrawIndexedInstanced(m_tSubMeshGeometry.uiIndexCount,	// 그리기에 사용할 인덱스들의 개수. (인스턴스 당)
+									   1,								// 그릴 인스턴스 개수.
+									   0,								// 인덱스 버퍼의 첫 index
+									   0, 								// 그리기 호출에 쓰이는 인덱스들에 더할 정수 값.
+									   0);								// 인스턴싱
+}
+
+CComponent* CBumpTerrainTex::Clone()
+{
+	return new CBumpTerrainTex(*this);
+}
+
+CBumpTerrainTex* CBumpTerrainTex::Create(ID3D12Device* pGraphicDevice,
+										 ID3D12GraphicsCommandList* pCommandList, 
+										 const _uint& iNumVerticesX, 
+										 const _uint& iNumVerticesZ, 
+										 const _float& fInterval, 
+										 const _float& fDetail)
+{
+	CBumpTerrainTex* pInstance = new CBumpTerrainTex(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_Buffer(iNumVerticesX, iNumVerticesZ, fInterval, fDetail)))
 		Engine::Safe_Release(pInstance);
@@ -166,7 +196,7 @@ CTerrainTex * CTerrainTex::Create(ID3D12Device * pGraphicDevice,
 	return pInstance;
 }
 
-void CTerrainTex::Free()
+void CBumpTerrainTex::Free()
 {
 	CVIBuffer::Free();
 }

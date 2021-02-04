@@ -26,8 +26,8 @@ HRESULT CBumpTerrain::Ready_GameObject(wstring wstrTextureTag)
 HRESULT CBumpTerrain::LateInit_GameObject()
 {
 	// SetUp Shader ConstantBuffer
-	m_pShaderCom->SetUp_ShaderConstantBuffer();
-	m_pShadowCom->SetUp_ShaderConstantBuffer(1);
+	// m_pShaderCom->SetUp_ShaderConstantBuffer();
+	// m_pShadowCom->SetUp_ShaderConstantBuffer(1);
 
 	return S_OK;
 }
@@ -83,12 +83,12 @@ void CBumpTerrain::Render_GameObject(const _float& fTimeDelta,
 									 ID3D12GraphicsCommandList* pCommandList, 
 									 const _int& iContextIdx)
 {
-	Set_ConstantTable();
+	// Set_ConstantTable();
 
-	m_pShaderCom->Begin_Shader(pCommandList, iContextIdx, m_pTextureCom->Get_TexDescriptorHeap(), m_pRenderer->Get_TargetShadowDepth()->Get_TargetTextureDescriptorHeap());
-	m_pBufferCom->Begin_Buffer(pCommandList);
+	// m_pShaderCom->Begin_Shader(pCommandList, iContextIdx, m_pTextureCom->Get_TexDescriptorHeap(), m_pRenderer->Get_TargetShadowDepth()->Get_TargetTextureDescriptorHeap());
+	// m_pBufferCom->Begin_Buffer(pCommandList);
 
-	m_pBufferCom->Render_Buffer(pCommandList);
+	// m_pBufferCom->Render_Buffer(pCommandList);
 }
 
 void CBumpTerrain::Render_ShadowDepth(const _float& fTimeDelta, 
@@ -107,31 +107,31 @@ HRESULT CBumpTerrain::Add_Component(wstring wstrTextureTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
-	// Buffer
-	m_pBufferCom = static_cast<Engine::CTerrainTex*>(m_pComponentMgr->Clone_Component(L"TerrainTex", Engine::COMPONENTID::ID_STATIC));
-	Engine::NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
-	m_pBufferCom->AddRef();
-	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Buffer", m_pBufferCom);
+	//// Buffer
+	//m_pBufferCom = static_cast<Engine::CTerrainTex*>(m_pComponentMgr->Clone_Component(L"TerrainTex", Engine::COMPONENTID::ID_STATIC));
+	//Engine::NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
+	//m_pBufferCom->AddRef();
+	//m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Buffer", m_pBufferCom);
 
-	// Texture
-	m_pTextureCom = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(wstrTextureTag, Engine::COMPONENTID::ID_STATIC));
-	Engine::NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
-	m_pTextureCom->AddRef();
-	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Texture", m_pTextureCom);
+	//// Texture
+	//m_pTextureCom = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(wstrTextureTag, Engine::COMPONENTID::ID_STATIC));
+	//Engine::NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
+	//m_pTextureCom->AddRef();
+	//m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Texture", m_pTextureCom);
 
-	// Shader
-	m_pShaderCom = static_cast<Engine::CShaderBumpTerrain*>(m_pComponentMgr->Clone_Component(L"ShaderBumpTerrain", Engine::COMPONENTID::ID_STATIC));
-	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
-	m_pShaderCom->AddRef();
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(0), E_FAIL);
-	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
+	//// Shader
+	//m_pShaderCom = static_cast<Engine::CShaderBumpTerrain*>(m_pComponentMgr->Clone_Component(L"ShaderBumpTerrain", Engine::COMPONENTID::ID_STATIC));
+	//Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
+	//m_pShaderCom->AddRef();
+	//Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(0), E_FAIL);
+	//m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
-	// Shadow
-	m_pShadowCom = static_cast<Engine::CShaderShadow*>(m_pComponentMgr->Clone_Component(L"ShaderShadow", Engine::COMPONENTID::ID_STATIC));
-	Engine::NULL_CHECK_RETURN(m_pShadowCom, E_FAIL);
-	m_pShadowCom->AddRef();
-	Engine::FAILED_CHECK_RETURN(m_pShadowCom->Set_PipelineStatePass(1), E_FAIL);
-	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shadow", m_pShadowCom);
+	//// Shadow
+	//m_pShadowCom = static_cast<Engine::CShaderShadow*>(m_pComponentMgr->Clone_Component(L"ShaderShadow", Engine::COMPONENTID::ID_STATIC));
+	//Engine::NULL_CHECK_RETURN(m_pShadowCom, E_FAIL);
+	//m_pShadowCom->AddRef();
+	//Engine::FAILED_CHECK_RETURN(m_pShadowCom->Set_PipelineStatePass(1), E_FAIL);
+	//m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shadow", m_pShadowCom);
 
 	return S_OK;
 }
@@ -151,7 +151,7 @@ void CBumpTerrain::Set_ConstantTable()
 	tCB_ShaderMesh.vLightPos		= tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar	= tShadowDesc.fLightPorjFar;
 
-	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
+	// m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 }
 
 void CBumpTerrain::Set_ConstantTableShadowDepth()
@@ -168,7 +168,7 @@ void CBumpTerrain::Set_ConstantTableShadowDepth()
 	tCB_ShaderShadow.matProj	= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
 	tCB_ShaderShadow.fProjFar	= tShadowDesc.fLightPorjFar;
 
-	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
+	// m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
 }
 
 Engine::CGameObject* CBumpTerrain::Create(ID3D12Device* pGraphicDevice, 
@@ -187,8 +187,8 @@ void CBumpTerrain::Free()
 {
 	Engine::CGameObject::Free();
 
-	Engine::Safe_Release(m_pBufferCom);
-	Engine::Safe_Release(m_pTextureCom);
-	Engine::Safe_Release(m_pShaderCom);
-	Engine::Safe_Release(m_pShadowCom);
+	//Engine::Safe_Release(m_pBufferCom);
+	//Engine::Safe_Release(m_pTextureCom);
+	//Engine::Safe_Release(m_pShaderCom);
+	//Engine::Safe_Release(m_pShadowCom);
 }

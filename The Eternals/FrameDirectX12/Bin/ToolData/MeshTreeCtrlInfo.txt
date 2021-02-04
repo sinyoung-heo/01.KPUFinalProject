@@ -1,3 +1,7 @@
+DynamicMesh|Character|PoporiH25
+DynamicMesh|Character|PoporiR19
+StaticMesh|Plane|BumpTerrainMesh00
+StaticMesh|Plane|BumpTerrainMesh01
 StaticMesh|Sample|LandMark
 StaticMesh|Sample|LandMarkBoundary
 StaticMesh|Sample|LandMarkPlane
@@ -113,5 +117,3 @@ StaticMesh|StageVelika|VK_OBJ_Statu_01_02_SM
 StaticMesh|StageVelika|VK_OBJ_Statu_02_SM
 StaticMesh|StageVelika|VK_OBJ_Statu_03_Body_SM
 StaticMesh|StageVelika|VK_OBJ_Statu_03_Wing_SM
-DynamicMesh|Character|PoporiH25
-DynamicMesh|Character|PoporiR19

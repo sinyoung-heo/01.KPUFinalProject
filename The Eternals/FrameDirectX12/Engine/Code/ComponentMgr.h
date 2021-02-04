@@ -19,7 +19,6 @@
 
 #include "ShaderColor.h"
 #include "ShaderTexture.h"
-#include "ShaderBumpTerrain.h"
 #include "ShaderMesh.h"
 #include "ShaderSkyBox.h"
 #include "ShaderLighting.h"

@@ -1,5 +1,3 @@
-BumpTerrainRoad00|3|..\..\Bin\Resource\ResourceStage\Texture\BumpTerrainRoad00\%d.dds
-BumpTerrainRoad01|3|..\..\Bin\Resource\ResourceStage\Texture\BumpTerrainRoad01\%d.dds
 Fire|1|..\..\Bin\Resource\ResourceStage\Texture\Fire\%d.dds
 SkyBox|7|..\..\Bin\Resource\ResourceStage\Texture\SkyBox\%d.dds
 Terrain|8|..\..\Bin\Resource\ResourceStage\Texture\Terrain\%d.dds
