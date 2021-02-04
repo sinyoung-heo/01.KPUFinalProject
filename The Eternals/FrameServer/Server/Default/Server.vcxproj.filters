@@ -55,6 +55,15 @@
     <Filter Include="98.Manager\04.SectorMgr\00.Sector">
       <UniqueIdentifier>{4e705134-5e6d-476a-a69b-8040bc51aab7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.Manager\05.NaviMesh">
+      <UniqueIdentifier>{8dde213e-5822-4b51-8f01-38760bc3387b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Manager\05.NaviMesh\00.Line">
+      <UniqueIdentifier>{03d0f6f5-935c-4e78-b4f2-170e3245c85e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Manager\05.NaviMesh\01.Cell">
+      <UniqueIdentifier>{9c647be3-e44b-41ea-8298-632878a45b09}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainServer.cpp">
@@ -89,6 +98,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\Npc.cpp">
       <Filter>01.Object\02.NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Line.cpp">
+      <Filter>98.Manager\05.NaviMesh\00.Line</Filter>
+    </ClCompile>
+    <ClCompile Include="Cell.cpp">
+      <Filter>98.Manager\05.NaviMesh\01.Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\NaviMesh.cpp">
+      <Filter>98.Manager\05.NaviMesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +163,15 @@
     </ClInclude>
     <ClInclude Include="..\Code\Npc.h">
       <Filter>01.Object\02.NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Line.h">
+      <Filter>98.Manager\05.NaviMesh\00.Line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Cell.h">
+      <Filter>98.Manager\05.NaviMesh\01.Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\NaviMesh.h">
+      <Filter>98.Manager\05.NaviMesh</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

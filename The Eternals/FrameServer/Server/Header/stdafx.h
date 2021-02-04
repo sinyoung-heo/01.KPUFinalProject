@@ -21,6 +21,7 @@
 #include <sqlext.h>
 #include <string>
 #include <random>
+#include <fstream>
 
 /* NAMESPACE */
 using namespace std;

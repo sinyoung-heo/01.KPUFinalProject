@@ -22,8 +22,10 @@
 #include <tchar.h>
 #include <comdef.h>
 #include <memory>
+#include <chrono>
 
 using namespace std;
+using namespace chrono;
 
 /*__________________________________________________________________________________________________________
 [ DirectX 12 ]

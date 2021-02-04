@@ -53,12 +53,15 @@ public:
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 
+public:
+	void			Set_DeadReckoning(const _vec3& vPos1, const _vec3& vPos2, const _vec3& vPos3, const _vec3& vPos4);
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
 
 	void			Key_Input(const _float& fTimeDelta);
+	void			Send_Player_Move();
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
@@ -86,7 +89,11 @@ private:
 	____________________________________________________________________________________________________________*/
 	CDynamicCamera* m_pDynamicCamera = nullptr;
 	wstring			m_wstrMeshTag = L"";
+
+	/* Server */
 	bool			m_bIsKeyUp = false;
+	float			m_fBazierSpeed = 0.f;
+	MVKEY			m_eKeyState = MVKEY::K_END;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]

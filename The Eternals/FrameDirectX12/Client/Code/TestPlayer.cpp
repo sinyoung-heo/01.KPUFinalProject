@@ -35,6 +35,9 @@ HRESULT CTestPlayer::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, 
 
 
 	m_pInfoCom->m_fSpeed = 5.0f;
+	m_pInfoCom->m_arrBezierPoint[3] = { m_pTransCom->m_vPos };
+	m_eKeyState = MVKEY::K_END;
+	m_bIsKeyUp = false;
 
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
@@ -74,7 +77,6 @@ HRESULT CTestPlayer::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, 
 	Engine::NULL_CHECK_RETURN(m_pFont, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pFont->Ready_GameObject(L"", _vec2(900.f, 0.f), D2D1::ColorF::Yellow), E_FAIL);
 
-	m_bIsKeyUp = false;
 	return S_OK;
 }
 
@@ -105,13 +107,26 @@ _int CTestPlayer::Update_GameObject(const _float& fTimeDelta)
 	[ Key Input ]
 	____________________________________________________________________________________________________________*/
 	if (!g_bIsOnDebugCaemra)
+	{
 		Key_Input(fTimeDelta);
+
+		/* 움직이고 있는 중일 경우 */
+		if (m_bIsKeyUp)
+		{
+			if (CPacketMgr::Get_Instance()->change_MoveKey(m_eKeyState))
+				Send_Player_Move();
+
+			//if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_arrBezierPoint[3]))
+			{
+				m_pTransCom->m_vPos += m_pTransCom->m_vDir * fTimeDelta * 0.5f;
+			}
+		}
+	}
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
-
 
 	return NO_EVENT;
 }
@@ -189,6 +204,14 @@ void CTestPlayer::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCom
 {
 	Set_ConstantTableShadowDepth();
 	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
+}
+
+void CTestPlayer::Set_DeadReckoning(const _vec3& vPos1, const _vec3& vPos2, const _vec3& vPos3, const _vec3& vPos4)
+{
+	m_pInfoCom->m_arrBezierPoint[0] = vPos1;
+	m_pInfoCom->m_arrBezierPoint[1] = vPos2;
+	m_pInfoCom->m_arrBezierPoint[2] = vPos3;
+	m_pInfoCom->m_arrBezierPoint[3] = vPos4;
 }
 
 HRESULT CTestPlayer::Add_Component(wstring wstrMeshTag)
@@ -284,7 +307,6 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 	else if (Engine::KEY_DOWN(DIK_2))
 		m_uiAnimIdx = 1;
 
-
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 	m_pTransCom->m_vDir.Normalize();
 
@@ -296,7 +318,7 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 #ifndef SERVER
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_UP;
 #else
-			CPacketMgr::Get_Instance()->send_move(MV_RIGHT_UP, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+			m_eKeyState = MVKEY::K_RIGHT_UP;			
 #endif 
 		}
 		// 대각선 - 좌 상단.
@@ -305,7 +327,7 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 #ifndef SERVER
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_UP;
 #else
-			CPacketMgr::Get_Instance()->send_move(MV_LEFT_UP, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+			m_eKeyState = MVKEY::K_LEFT_UP;
 #endif		
 		}
 		// 직진.
@@ -313,8 +335,8 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 		{
 #ifndef SERVER
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + FRONT;
-#else
-			CPacketMgr::Get_Instance()->send_move(MV_FRONT, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+#else			
+			m_eKeyState = MVKEY::K_FRONT;
 #endif 	
 		}
 
@@ -325,8 +347,10 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 			m_pInfoCom->m_fSpeed * fTimeDelta);
 		m_pTransCom->m_vPos = vPos;
 #endif 		
+		m_last_move_time = high_resolution_clock::now();
 		m_bIsKeyUp = true;
 	}
+
 	else if (Engine::KEY_PRESSING(DIK_S))
 	{
 		// 대각선 - 우 하단.
@@ -335,7 +359,7 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 #ifndef SERVER
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_DOWN;
 #else
-			CPacketMgr::Get_Instance()->send_move(MV_RIGHT_DOWN, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+			m_eKeyState = MVKEY::K_RIGHT_DOWN;
 #endif 			
 		}
 		// 대각선 - 좌 하단.
@@ -344,7 +368,7 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 #ifndef SERVER
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_DOWN;
 #else
-			CPacketMgr::Get_Instance()->send_move(MV_LEFT_DOWN, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+			m_eKeyState = MVKEY::K_LEFT_DOWN;
 #endif 			
 		}
 		// 후진.
@@ -353,7 +377,7 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 #ifndef SERVER
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + BACK;
 #else
-			CPacketMgr::Get_Instance()->send_move(MV_BACK, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+			m_eKeyState = MVKEY::K_BACK;
 #endif			
 		}
 
@@ -363,6 +387,7 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 			m_pInfoCom->m_fSpeed * fTimeDelta);
 		m_pTransCom->m_vPos = vPos;
 #endif
+		m_last_move_time = high_resolution_clock::now();
 		m_bIsKeyUp = true;
 	}
 	// 좌로 이동.
@@ -377,7 +402,8 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 			m_pInfoCom->m_fSpeed * fTimeDelta);
 		m_pTransCom->m_vPos = vPos;
 #else
-		CPacketMgr::Get_Instance()->send_move(MV_LEFT, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+		m_last_move_time = high_resolution_clock::now();
+		m_eKeyState = MVKEY::K_LEFT;
 		m_bIsKeyUp = true;
 #endif 
 	}
@@ -393,7 +419,8 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 			m_pInfoCom->m_fSpeed * fTimeDelta);
 		m_pTransCom->m_vPos = vPos;
 #else
-		CPacketMgr::Get_Instance()->send_move(MV_RIGHT, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+		m_last_move_time = high_resolution_clock::now();
+		m_eKeyState = MVKEY::K_RIGHT;
 		m_bIsKeyUp = true;
 #endif
 	}
@@ -403,12 +430,44 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 		if (m_bIsKeyUp)
 		{
 #ifdef SERVER
+			cout << "send_move_stop" << endl;
 			CPacketMgr::Get_Instance()->send_move_stop(m_pTransCom->m_vPos, m_pTransCom->m_vAngle);
 #endif
 			m_bIsKeyUp = false;
 		}
 	}
+}
 
+void CTestPlayer::Send_Player_Move()
+{
+	cout << "send_move" << endl;
+	switch (m_eKeyState)
+	{
+	case K_FRONT:
+		CPacketMgr::Get_Instance()->send_move(MV_FRONT, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+		break;
+	case K_BACK:
+		CPacketMgr::Get_Instance()->send_move(MV_BACK, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+		break;
+	case K_RIGHT:
+		CPacketMgr::Get_Instance()->send_move(MV_RIGHT, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+		break;
+	case K_RIGHT_UP:
+		CPacketMgr::Get_Instance()->send_move(MV_RIGHT_UP, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+		break;
+	case K_RIGHT_DOWN:
+		CPacketMgr::Get_Instance()->send_move(MV_RIGHT_DOWN, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+		break;
+	case K_LEFT:
+		CPacketMgr::Get_Instance()->send_move(MV_LEFT, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+		break;
+	case K_LEFT_UP:
+		CPacketMgr::Get_Instance()->send_move(MV_LEFT_UP, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+		break;
+	case K_LEFT_DOWN:
+		CPacketMgr::Get_Instance()->send_move(MV_LEFT_DOWN, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
+		break;
+	}
 }
 
 Engine::CGameObject* CTestPlayer::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)

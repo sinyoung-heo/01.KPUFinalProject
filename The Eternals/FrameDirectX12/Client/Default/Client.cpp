@@ -345,6 +345,12 @@ _ulong Release_Singleton()
 		return dwRefCnt;
 	}
 
+	if (dwRefCnt = CServerMath::Get_Instance()->Destroy_Instance())
+	{
+		MSG_BOX(L"CServerMath Release Failed");
+		return dwRefCnt;
+	}
+
 	if (dwRefCnt = CShadowLightMgr::Get_Instance()->Destroy_Instance())
 	{
 		MSG_BOX(L"CShadowLightMgr Release Failed");

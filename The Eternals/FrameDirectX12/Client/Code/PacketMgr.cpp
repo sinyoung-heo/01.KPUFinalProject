@@ -17,6 +17,8 @@ HRESULT CPacketMgr::Ready_Server(ID3D12Device* pGraphicDevice, ID3D12GraphicsCom
 {
 	m_pGraphicDevice = pGraphicDevice;
 	m_pCommandList = pCommandList;
+	m_eCurKey = MVKEY::K_END;
+	m_ePreKey = MVKEY::K_END;
 
 	// Initialize Windows Socket
 	WSADATA wsaData;
@@ -241,13 +243,21 @@ void CPacketMgr::ProcessPacket(char* ptr)
 			{
 				Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"Popori_F", 0);
 
-				pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+				auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
+
+				static_cast<CTestPlayer*>(pObj)->Set_DeadReckoning(pObj->Get_Transform()->m_vPos,
+					pObj->Get_Transform()->m_vPos, pObj->Get_Transform()->m_vPos, _vec3(packet->posX, packet->posY, packet->posZ));
+			
+				//pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
 				pObj->Get_Transform()->m_vAngle.y = packet->angleY;
 			}
 			/* 다른 클라이언트가 움직인 경우 */
 			else
 			{
 				Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+
+				auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
+
 				pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
 				pObj->Get_Transform()->m_vAngle.y = packet->angleY;
 			}
@@ -312,7 +322,23 @@ void CPacketMgr::send_move(char dir, const _vec3& vDir, const _vec3& vAngle)
 	p.angleY = vAngle.y;
 	p.angleZ = vAngle.z;
 
+	p.move_time = static_cast<unsigned>(duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count());
+
 	send_packet(&p);
+}
+
+bool CPacketMgr::change_MoveKey(MVKEY eKey)
+{
+	m_eCurKey = eKey;
+
+	/* 키 입력이 변경되었을 경우 */
+	if (m_eCurKey != m_ePreKey)
+	{
+		m_ePreKey = m_eCurKey;
+		return true;
+	}
+
+	return false;
 }
 
 void CPacketMgr::send_move_stop(const _vec3& vPos, const _vec3& vAngle)

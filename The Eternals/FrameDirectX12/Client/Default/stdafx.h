@@ -72,6 +72,7 @@ ______________________________________________________________________*/
 #include "MathMgr.h"
 #include "ShadowLightMgr.h"
 #include "PacketMgr.h"
+#include "ServerMath.h"
 
 /*____________________________________________________________________
 Window Console창.

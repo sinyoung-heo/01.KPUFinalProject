@@ -1,0 +1,6 @@
+#pragma once
+
+enum MVKEY
+{
+	K_FRONT, K_BACK, K_RIGHT, K_RIGHT_UP, K_RIGHT_DOWN, K_LEFT, K_LEFT_UP, K_LEFT_DOWN, K_END
+};

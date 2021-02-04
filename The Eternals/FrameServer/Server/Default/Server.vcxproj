@@ -20,7 +20,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\DBMgr.cpp" />
+    <ClCompile Include="..\Code\Line.cpp" />
     <ClCompile Include="..\Code\MainServer.cpp" />
+    <ClCompile Include="..\Code\NaviMesh.cpp" />
     <ClCompile Include="..\Code\Npc.cpp" />
     <ClCompile Include="..\Code\Obj.cpp" />
     <ClCompile Include="..\Code\ObjectPool.cpp" />
@@ -30,9 +32,13 @@
     <ClCompile Include="..\Code\Player.cpp" />
     <ClCompile Include="..\Code\Sector.cpp" />
     <ClCompile Include="..\Code\SectorMgr.cpp" />
+    <ClCompile Include="Cell.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Code\Cell.h" />
     <ClInclude Include="..\Code\DBMgr.h" />
+    <ClInclude Include="..\Code\Line.h" />
+    <ClInclude Include="..\Code\NaviMesh.h" />
     <ClInclude Include="..\Code\Npc.h" />
     <ClInclude Include="..\Code\Obj.h" />
     <ClInclude Include="..\Code\ObjectPool.h" />
