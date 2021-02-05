@@ -183,7 +183,7 @@ void CToolCell::Render_GameObject(const _float& fTimeDelta)
 void CToolCell::Reset_CellAndCollider()
 {
 	// Color Green & Render WireFrame.
-	m_vColor = _rgba(0.0f, 1.0f, 0.0f, 1.0f);
+	m_vColor = _rgba(1.0f, 1.0f, 0.0f, 1.0f);
 	m_pShaderCom->Set_PipelineStatePass(1);	
 
 	for (_int i = 0; i < POINT_END; ++i)
