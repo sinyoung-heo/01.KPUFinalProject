@@ -23,13 +23,18 @@ public:
 	void	Set_TargetClearColor(const _uint& iIdx,  const _rgba& vColor, const DXGI_FORMAT& TargetFormat);
 	void	Set_TargetRenderPos(const _vec3& vPos)		{ m_vPos = vPos; };
 	void	Set_TargetRenderScale(const _vec3& vScale)	{ m_vScale = vScale; };
-	void	Set_TargetTextureSize(const _uint& iIdx, const _float& fWidth, const _float& fHeight);
+	void	Set_TargetTextureSize(const _uint& iIdx, const _float& fWidth, const _float& fHeight,bool bisShadowTexture=true);
 
 	// Method
 	HRESULT	Ready_RenderTarget(const _uint& uiTargetCnt);
 	HRESULT	SetUp_DefaultSetting(const TARGETID& eID = TYPE_DEFAULT);
 	HRESULT SetUp_OnGraphicDevice(const TARGETID& eID = TYPE_DEFAULT);
 	HRESULT Release_OnGraphicDevice(const TARGETID& eID = TYPE_DEFAULT);
+
+	//DownSampling Method
+	HRESULT SetUp_OnGraphicDevice_DownSampling(int Sample);
+	HRESULT Release_OnGraphicDevice_DownSampling();
+
 
 	// MultiThreadRendering
 	HRESULT	Begin_RenderTargetOnContext(ID3D12GraphicsCommandList* pCommandList, const THREADID& eID);

@@ -166,6 +166,9 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 
 	Render_Light();						// Shade, Specular
 	Render_Luminance();					// Luminance(고휘도추출)
+	Render_DownSampling();
+	Render_SSAO();
+	Render_Blur();
 	Render_Blend();						// Target Blend
 	Render_Collider(fTimeDelta);		// Collider Render
 	Render_Alpha(fTimeDelta);			// Effect Texture, Mesh
@@ -238,10 +241,17 @@ void CRenderer::Render_Blend()
 		vector<ComPtr<ID3D12Resource>> vecDeferredTarget	= m_pTargetDeferred->Get_TargetTexture();
 		vector<ComPtr<ID3D12Resource>> vecShadeTarget		= m_pTargetLight->Get_TargetTexture();
 
+		vector<ComPtr<ID3D12Resource>> vecBlurTarget = m_pTargetBlur->Get_TargetTexture();
+		vector<ComPtr<ID3D12Resource>> vecSSAOTarget = m_pTargetSSAO->Get_TargetTexture();
+
+
 		vector<ComPtr<ID3D12Resource>> vecBlendTarget;
 		vecBlendTarget.emplace_back(vecDeferredTarget[0]);	// RenderTarget - Diffuse
 		vecBlendTarget.emplace_back(vecShadeTarget[0]);		// RenderTarget - Shade
 		vecBlendTarget.emplace_back(vecShadeTarget[1]);		// RenderTarget - Specular
+		vecBlendTarget.emplace_back(vecBlurTarget[0]);		// RenderTarget - Blur 
+		vecBlendTarget.emplace_back(vecDeferredTarget[4]);		// RenderTarget - Emissive
+		vecBlendTarget.emplace_back(vecBlurTarget[3]);		// RenderTarget - SSAO
 
 		m_pBlendShader->SetUp_ShaderTexture(vecBlendTarget);
 	}
@@ -268,6 +278,69 @@ void CRenderer::Render_Luminance()
 	m_pLuminanceBuffer->Begin_Buffer();
 	m_pLuminanceBuffer->Render_Buffer();
 	m_pTargetLuminance->Release_OnGraphicDevice();
+}
+
+void CRenderer::Render_DownSampling()
+{
+	if (!m_bIsSetDownSamplingTexture)
+	{
+		m_bIsSetDownSamplingTexture = true; 
+		vector<ComPtr<ID3D12Resource>> vecDeferredTarget = m_pTargetDeferred->Get_TargetTexture();\
+		vector<ComPtr<ID3D12Resource>> vecSSAOTarget = m_pTargetSSAO->Get_TargetTexture();
+		vector<ComPtr<ID3D12Resource>> vecDownSamplingTarget;
+		vecDownSamplingTarget.emplace_back(vecDeferredTarget[4]);	// RenderTarget - Emissive
+		vecDownSamplingTarget.emplace_back(vecDeferredTarget[4]);	// RenderTarget - Emissive
+		vecDownSamplingTarget.emplace_back(vecSSAOTarget[0]);	// RenderTarget - SSAO
+		m_pDownSamplingShader->SetUp_ShaderTexture(vecDownSamplingTarget);
+	
+	}
+	m_pTargetDownSampling->SetUp_OnGraphicDevice_DownSampling(4);
+	m_pDownSamplingShader->Begin_Shader();
+	m_pDownSamplingBuffer->Begin_Buffer();
+	m_pDownSamplingBuffer->Render_Buffer();
+	m_pTargetDownSampling->Release_OnGraphicDevice_DownSampling();
+}
+
+void CRenderer::Render_Blur()
+{
+	if (!m_bIsSetBlurTexture)
+	{
+		m_bIsSetBlurTexture = true;
+		vector<ComPtr<ID3D12Resource>> vecDownSampleTarget = m_pTargetDownSampling->Get_TargetTexture();
+		vector<ComPtr<ID3D12Resource>> vecDeferredTarget = m_pTargetDeferred->Get_TargetTexture();
+		vector<ComPtr<ID3D12Resource>> vecSSAOTarget = m_pTargetSSAO->Get_TargetTexture();
+
+		vector<ComPtr<ID3D12Resource>> vecBlurTarget;
+		vecBlurTarget.emplace_back(vecDownSampleTarget[0]);	// RenderTarget - DS Emissive
+		vecBlurTarget.emplace_back(vecDownSampleTarget[1]);	// RenderTarget - DS CrossFilter
+		vecBlurTarget.emplace_back(vecDeferredTarget[0]);	// RenderTarget - Albedo
+		vecBlurTarget.emplace_back(vecDeferredTarget[3]);	// RenderTarget - Depth
+		vecBlurTarget.emplace_back(vecSSAOTarget[0]);	// RenderTarget - SSAO
+		m_pBlurShader->SetUp_ShaderTexture(vecBlurTarget);
+	}
+	m_pTargetBlur->SetUp_OnGraphicDevice();
+	m_pBlurShader->Begin_Shader();
+	m_pBlurBuffer->Begin_Buffer();
+	m_pBlurBuffer->Render_Buffer();
+	m_pTargetBlur->Release_OnGraphicDevice();
+}
+
+void CRenderer::Render_SSAO()
+{
+	if (!m_bIsSetSSAOTexture)
+	{
+		m_bIsSetSSAOTexture = true;
+		vector<ComPtr<ID3D12Resource>> vecDeferredTarget = m_pTargetDeferred->Get_TargetTexture();
+		vector<ComPtr<ID3D12Resource>> vecSSAOTarget;
+		vecSSAOTarget.emplace_back(vecDeferredTarget[1]);	// RenderTarget - Normal
+		vecSSAOTarget.emplace_back(vecDeferredTarget[3]);	// RenderTarget - Depth
+		m_pSSAOShader->SetUp_ShaderTexture(vecSSAOTarget);
+	}
+	m_pTargetSSAO->SetUp_OnGraphicDevice();
+	m_pSSAOShader->Begin_Shader();
+	m_pSSAOBuffer->Begin_Buffer();
+	m_pSSAOBuffer->Render_Buffer();
+	m_pTargetSSAO->Release_OnGraphicDevice();
 }
 
 void CRenderer::Render_Alpha(const _float& fTimeDelta)
@@ -323,6 +396,14 @@ void CRenderer::Render_RenderTarget()
 
 		if (nullptr != m_pTargetLuminance)
 			m_pTargetLuminance->Render_RenderTarget();
+
+		if (nullptr != m_pTargetDownSampling)
+			m_pTargetDownSampling->Render_RenderTarget();
+
+		if (nullptr != m_pTargetBlur)
+			m_pTargetBlur->Render_RenderTarget();
+		if (nullptr != m_pTargetSSAO)
+			m_pTargetSSAO->Render_RenderTarget();
 	}
 
 }
@@ -389,6 +470,24 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderLuminance", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
+
+	// ShaderDownSampling
+	pShader = CShaderDownSampling::Create(m_pGraphicDevice, m_pCommandList);
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderDownSampling", ID_STATIC, pShader), E_FAIL);
+	++m_uiCnt_ShaderFile;
+
+	// ShaderBlur
+	pShader = CShaderBlur::Create(m_pGraphicDevice, m_pCommandList);
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderBlur", ID_STATIC, pShader), E_FAIL);
+	++m_uiCnt_ShaderFile;
+
+	// ShaderSSAO
+	pShader = CShaderSSAO::Create(m_pGraphicDevice, m_pCommandList);
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderSSAO", ID_STATIC, pShader), E_FAIL);
+	++m_uiCnt_ShaderFile;
 	return S_OK;
 }
 
@@ -437,7 +536,6 @@ HRESULT CRenderer::Ready_RenderTarget()
 	NULL_CHECK_RETURN(m_pTargetLuminance, E_FAIL);
 	m_pTargetLuminance->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R16G16B16A16_UNORM);
 	FAILED_CHECK_RETURN(m_pTargetLuminance->SetUp_DefaultSetting(), E_FAIL);
-
 	m_pTargetLuminance->Set_TargetRenderPos(_vec3(WIDTH_THIRD, HEIGHT_FIRST, 1.0f));
 
 	m_pLuminanceShader = static_cast<CShaderLuminance*>(m_pComponentMgr->Clone_Component(L"ShaderLuminance", COMPONENTID::ID_STATIC));
@@ -446,6 +544,59 @@ HRESULT CRenderer::Ready_RenderTarget()
 
 	m_pLuminanceBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pLuminanceBuffer, E_FAIL);
+	/*__________________________________________________________________________________________________________
+	[ DownSample RenderTarget ]
+	____________________________________________________________________________________________________________*/
+	m_pTargetDownSampling = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 3);
+	NULL_CHECK_RETURN(m_pTargetDownSampling, E_FAIL);
+	m_pTargetDownSampling->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	m_pTargetDownSampling->Set_TargetClearColor(1, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	m_pTargetDownSampling->Set_TargetClearColor(2, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	m_pTargetDownSampling->Set_TargetTextureSize(0, WINCX / 4 , WINCY / 4, false);
+	m_pTargetDownSampling->Set_TargetTextureSize(1, WINCX / 4 , WINCY / 4, false);
+	m_pTargetDownSampling->Set_TargetTextureSize(2, WINCX / 4, WINCY / 4, false);
+
+	FAILED_CHECK_RETURN(m_pTargetDownSampling->SetUp_DefaultSetting(), E_FAIL);
+	m_pTargetDownSampling->Set_TargetRenderPos(_vec3(WIDTH_FOURTH, HEIGHT_FIRST, 1.0f));
+
+	m_pDownSamplingShader = static_cast<CShaderDownSampling*>(m_pComponentMgr->Clone_Component(L"ShaderDownSampling", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pDownSamplingShader, E_FAIL);
+	FAILED_CHECK_RETURN(m_pDownSamplingShader->Set_PipelineStatePass(0), E_FAIL);
+
+	m_pDownSamplingBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pDownSamplingBuffer, E_FAIL);
+
+	/*__________________________________________________________________________________________________________
+	[ Blur RenderTarget ]
+	____________________________________________________________________________________________________________*/
+	m_pTargetBlur = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 4);
+	NULL_CHECK_RETURN(m_pTargetBlur, E_FAIL);
+	m_pTargetBlur->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	m_pTargetBlur->Set_TargetClearColor(1, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	m_pTargetBlur->Set_TargetClearColor(2, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	m_pTargetBlur->Set_TargetClearColor(3, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	FAILED_CHECK_RETURN(m_pTargetBlur->SetUp_DefaultSetting(), E_FAIL);
+	m_pTargetBlur->Set_TargetRenderPos(_vec3(WIDTH_FIFTH, HEIGHT_FIRST, 1.0f));
+
+	m_pBlurShader = static_cast<CShaderBlur*>(m_pComponentMgr->Clone_Component(L"ShaderBlur", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pBlurShader, E_FAIL);
+	FAILED_CHECK_RETURN(m_pBlurShader->Set_PipelineStatePass(0), E_FAIL);
+
+	m_pBlurBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pBlurBuffer, E_FAIL);
+	/*__________________________________________________________________________________________________________
+	[ SSAO RenderTarget ]
+	____________________________________________________________________________________________________________*/
+	m_pTargetSSAO = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
+	NULL_CHECK_RETURN(m_pTargetSSAO, E_FAIL);
+	m_pTargetSSAO->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 1.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	FAILED_CHECK_RETURN(m_pTargetSSAO->SetUp_DefaultSetting(), E_FAIL);
+	m_pTargetSSAO->Set_TargetRenderPos(_vec3(WIDTH_SECOND, HEIGHT_THIRD, 1.0f));
+	m_pSSAOShader = static_cast<CShaderSSAO*>(m_pComponentMgr->Clone_Component(L"ShaderSSAO", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pSSAOShader, E_FAIL);
+	FAILED_CHECK_RETURN(m_pSSAOShader->Set_PipelineStatePass(0), E_FAIL);
+	m_pSSAOBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pSSAOBuffer, E_FAIL);
 	/*__________________________________________________________________________________________________________
 	[ Blend Resource ]
 	____________________________________________________________________________________________________________*/
@@ -788,6 +939,18 @@ void CRenderer::Free()
 	Safe_Release(m_pTargetLuminance);
 	Safe_Release(m_pLuminanceShader);
 	Safe_Release(m_pLuminanceBuffer);
+	//DownSampling
+	Safe_Release(m_pTargetDownSampling);
+	Safe_Release(m_pDownSamplingShader);
+	Safe_Release(m_pDownSamplingBuffer);
+	//Blur
+	Safe_Release(m_pTargetBlur);
+	Safe_Release(m_pBlurShader);
+	Safe_Release(m_pBlurBuffer);
+	//SSAO
+	Safe_Release(m_pTargetSSAO);
+	Safe_Release(m_pSSAOShader);
+	Safe_Release(m_pSSAOBuffer);
 	/*__________________________________________________________________________________________________________
 	2020.06.07 MultiThreadRendering
 	- CommandAllocators & CommandList 제거.

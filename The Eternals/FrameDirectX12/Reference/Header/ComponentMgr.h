@@ -25,6 +25,9 @@
 #include "ShaderBlend.h"
 #include "ShaderShadow.h"
 #include "ShaderLuminance.h"
+#include "ShaderDownSampling.h"
+#include "ShaderBlur.h"
+#include "ShaderSSAO.h"
 BEGIN(Engine)
 
 class ENGINE_DLL CComponentMgr final : public CBase
