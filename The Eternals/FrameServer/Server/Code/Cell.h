@@ -16,16 +16,16 @@ public:
 
 public:
 	// Get
-	CLine&			Get_Line(const int& iIndex) { return *m_pLine[iIndex]; }
-	const _vec3*	Get_Point(const POINT& eType)		const { return &m_vPoint[eType]; }
-	CCell*			Get_Neighbor(const NEIGHBOR& eType) const { return m_pNeighbor[eType]; }
-	const unsigned long* Get_Index() { return &m_dwCurrentIdx; }
+	CLine&			Get_Line(const int& iIndex)					{ return *m_pLine[iIndex]; }
+	const _vec3*	Get_Point(const POINT& eType)		const	{ return &m_vPoint[eType]; }
+	CCell*			Get_Neighbor(const NEIGHBOR& eType) const	{ return m_pNeighbor[eType]; }
+	const _ulong*	Get_Index()									{ return &m_dwCurrentIdx; }
 
 	// Set
 	void			Set_Neighbor(const NEIGHBOR& eType, CCell* pNeighbor) { m_pNeighbor[eType] = pNeighbor; }
 
 	// Method
-	HRESULT			Ready_Cell(const unsigned long& dwIndex,
+	HRESULT			Ready_Cell(const _ulong& dwIndex,
 							   const _vec3& vPointA,
 							   const _vec3& vPointB,
 							   const _vec3& vPointC,
@@ -33,24 +33,23 @@ public:
 
 	bool			Compare_Point(const _vec3* pPointF, const _vec3* pPointS, CCell* pCell);
 	COMPARE			Compare(const _vec3* pEndPos,
-							unsigned long* pIndex,
+							_ulong* pIndex,
 							const float& fTargetSpeed,
 							_vec3* pTargetPos = nullptr,
 							_vec3* pTargetDir = nullptr,
 							_vec3* pSlidingDir = nullptr);
 
-	COMPARE			Compare(_vec3* pEndPos, unsigned long* pIndex, int* iLineIndex);
+	COMPARE			Compare(_vec3* pEndPos, _ulong* pIndex, int* iLineIndex);
 	float			Position_On_Height(const _vec3* vPos);
 
 	void			Release();
 
 public:
-	static CCell* Create(
-		const unsigned long& dwIndex,
-		const _vec3& vPointA,
-		const _vec3& vPointB,
-		const _vec3& vPointC,
-		const int& iOption);
+	static CCell* Create(const _ulong& dwIndex,
+						 const _vec3& vPointA,
+						 const _vec3& vPointB,
+						 const _vec3& vPointC,
+						 const int& iOption);
 
 public:
 	/*__________________________________________________________________________________________________________

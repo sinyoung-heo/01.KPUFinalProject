@@ -163,7 +163,7 @@ void Initialize_NPC()
 		pNew->spd = 10.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 		
-		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.y / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
+		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
 		CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
 
 #ifdef TEST
@@ -239,11 +239,12 @@ void add_new_client(SOCKET ns)
 		pNew->maxExp = 100;
 		pNew->att = 10;
 		pNew->spd = 10.f;
-		pNew->m_vPos = _vec3((rand() % 10) * 1.f + 30.f, 0.f, (rand() % 10) * 1.f + 20.f);
+		//pNew->m_vPos = _vec3((rand() % 10) * 1.f + 30.f, 0.f, (rand() % 10) * 1.f + 20.f);
+		pNew->m_vPos = _vec3(25.0f, 0.f, 20.0f);
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 
-		CSectorMgr::GetInstance()->Enter_ClientInSector((int)s_num, (int)(pNew->m_vPos.y / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
+		CSectorMgr::GetInstance()->Enter_ClientInSector((int)s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
 		CObjMgr::GetInstance()->Add_GameObject(L"PLAYER",pNew, (int)s_num);
 
 		/* 해당 클라이언트 소켓을 IOCP에 등록 */
@@ -282,12 +283,12 @@ void disconnect_client(int id)
 	if (pPlayer == nullptr) return;
 
 	/* sector에서 해당 플레이어 지우기 */
-	CSectorMgr::GetInstance()->Leave_ClientInSector(id, (int)(pPlayer->m_vPos.y / SECTOR_SIZE), (int)(pPlayer->m_vPos.x / SECTOR_SIZE));
+	CSectorMgr::GetInstance()->Leave_ClientInSector(id, (int)(pPlayer->m_vPos.z / SECTOR_SIZE), (int)(pPlayer->m_vPos.x / SECTOR_SIZE));
 
 	/* 해당 플레이어가 등록되어 있는 섹터 내의 유저들에게 접속 종료를 알림 */
 	unordered_set<pair<int, int>> nearSector;
 	nearSector.reserve(5);
-	CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSector, (int)pPlayer->m_vPos.x, (int)pPlayer->m_vPos.y);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSector, (int)pPlayer->m_vPos.x, (int)pPlayer->m_vPos.z);
 
 	// 인접 섹터 순회
 	for (auto& s : nearSector)
