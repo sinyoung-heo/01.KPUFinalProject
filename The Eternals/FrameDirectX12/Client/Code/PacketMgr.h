@@ -25,6 +25,9 @@ public:
 	void	send_move(char dir, const _vec3& vDir, const _vec3& vAngle);
 	void	send_move_stop(const _vec3& vPos, const _vec3& vAngle);
 
+public:
+	bool	change_MoveKey(MVKEY eKey);
+
 private:
 	void	send_packet(void* packet);
 
@@ -34,5 +37,8 @@ private:
 private:
 	ID3D12Device* m_pGraphicDevice = nullptr;
 	ID3D12GraphicsCommandList* m_pCommandList = nullptr;
+
+	MVKEY m_eCurKey;
+	MVKEY m_ePreKey;
 };
 

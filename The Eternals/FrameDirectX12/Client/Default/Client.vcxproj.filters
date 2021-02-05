@@ -109,6 +109,9 @@
     <Filter Include="02.GameObject\99.SampleObject\10.TestOthers">
       <UniqueIdentifier>{f44b5ea2-b13d-49b4-9baa-eef83af278bc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.Mgr\03.ServerMath">
+      <UniqueIdentifier>{b64d5781-3c56-46f4-9a46-0ee160c4fbde}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -219,6 +222,12 @@
     <ClInclude Include="..\Code\TestOthers.h">
       <Filter>02.GameObject\99.SampleObject\10.TestOthers</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ServerMath.h">
+      <Filter>97.Mgr\03.ServerMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\enum.h">
+      <Filter>98.Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -301,6 +310,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\TestOthers.cpp">
       <Filter>02.GameObject\99.SampleObject\10.TestOthers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ServerMath.cpp">
+      <Filter>97.Mgr\03.ServerMath</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
