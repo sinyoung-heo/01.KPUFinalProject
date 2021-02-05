@@ -14,6 +14,7 @@ class CShaderLuminance;
 class CShaderDownSampling;
 class CShaderBlur;
 class CShaderSSAO;
+class CShaderMesh;
 #define WIDTH_FIRST 112
 #define WIDTH_SECOND 224+112
 #define WIDTH_THIRD 448+112
@@ -22,6 +23,7 @@ class CShaderSSAO;
 #define HEIGHT_FIRST 63
 #define HEIGHT_SECOND 126 + 63
 #define HEIGHT_THIRD 126+126 + 63
+#define HEIGHT_FOURTH 126+126+126+63
 struct ThreadParameter
 {
 	_int threadIdx;
@@ -37,6 +39,7 @@ public:
 	{
 		RENDER_PRIORITY,
 		RENDER_NONALPHA,
+		RENDER_DISTORTION,
 		RENDER_ALPHA,
 		RENDER_UI,
 		RENDER_FONT,
@@ -86,6 +89,7 @@ private:
 	void	Render_Blur();
 	void	Render_SSAO();
 	void	Render_Blend();
+	void	Render_Distortion(const _float& fTimeDelta);
 	void	Render_Alpha(const _float& fTimeDelta);
 	void	Render_UI(const _float& fTimeDelta);
 	void	Render_Collider(const _float& fTimeDelta);
@@ -123,6 +127,8 @@ private:
 	CRenderTarget* m_pTargetDownSampling = nullptr;		//다운샘플->Target2
 	CRenderTarget* m_pTargetBlur = nullptr;				//블러		->Target3
 	CRenderTarget* m_pTargetSSAO = nullptr;				//ssao		->Target1
+
+	CRenderTarget* m_pTargetDistortion = nullptr;		//Distortion
 	// Blend
 	CScreenTex*		m_pBlendBuffer					= nullptr;
 	CShaderBlend*	m_pBlendShader					= nullptr;

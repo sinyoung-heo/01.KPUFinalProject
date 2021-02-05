@@ -234,7 +234,7 @@ HRESULT CRenderTarget::SetUp_OnGraphicDevice(const TARGETID& eID)
 		m_pCommandList->OMSetRenderTargets(m_uiTargetCnt,
 										   &CD3DX12_CPU_DESCRIPTOR_HANDLE(m_pRTV_Heap->GetCPUDescriptorHandleForHeapStart()), 
 										   true,
-										   nullptr);
+										&CD3DX12_CPU_DESCRIPTOR_HANDLE(CGraphicDevice::Get_Instance()->Get_DSV_Heap()->GetCPUDescriptorHandleForHeapStart()));
 	}
 
 	// Depth/Stencil Buffer	X

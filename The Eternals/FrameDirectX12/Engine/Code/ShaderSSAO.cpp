@@ -208,7 +208,7 @@ HRESULT CShaderSSAO::Create_PipelineState()
 	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.BlendState			= Create_BlendState();
 	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState();
-	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState();	//  Depth´Â false
+	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState(false);	//  Depth´Â false
 
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
