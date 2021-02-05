@@ -138,9 +138,12 @@ void CDistortionDisk::Set_ConstantTable()
 
 	Engine::CB_SHADER_MESH tCB_ShaderMesh;
 	ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
-	tCB_ShaderMesh.matWorld = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderMesh.matLightView = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
-	tCB_ShaderMesh.matLightProj = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
+	tCB_ShaderMesh.matWorld = Engine::CShader::Compute_MatrixTranspose(INIT_MATRIX);
+	tCB_ShaderMesh.matLightView = Engine::CShader::Compute_MatrixTranspose(INIT_MATRIX);
+	_matrix Ortho = m_pDynamicCamera->Get_OrthInfo().matProj;
+	Ortho._11 = 2  / WINCX;
+	Ortho._22 = 2  / WINCY;
+	tCB_ShaderMesh.matLightProj = Engine::CShader::Compute_MatrixTranspose(Ortho);
 	tCB_ShaderMesh.vLightPos = tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 

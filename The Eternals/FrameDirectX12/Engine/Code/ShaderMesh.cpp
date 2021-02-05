@@ -329,13 +329,13 @@ HRESULT CShaderMesh::Create_PipelineState()
 	PipelineStateDesc.SampleDesc.Count = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
 	PipelineStateDesc.SampleDesc.Quality = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
 	PipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	vecInputLayout = Create_InputLayout("VS_MAIN", "PS_DISTORTION");
+	vecInputLayout = Create_InputLayout("VS_DISTORTION", "PS_DISTORTION");
 	PipelineStateDesc.InputLayout = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
 	PipelineStateDesc.VS = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.PS = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.BlendState = Create_BlendState();
 	PipelineStateDesc.RasterizerState = CShader::Create_RasterizerState();
-	PipelineStateDesc.DepthStencilState = CShader::Create_DepthStencilState();
+	PipelineStateDesc.DepthStencilState = CShader::Create_DepthStencilState(false);
 
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
