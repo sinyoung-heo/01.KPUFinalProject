@@ -268,6 +268,8 @@ VS_OUT VS_SHADOW_MAIN(VS_IN vs_input)
 	vs_output.LightPos		= mul(float4(matLightPosWV.xyz, 1.0f), g_matLightProj);
 	vs_output.LightPos.z	= vs_output.LightPos.z * vs_output.LightPos.w / g_fLightPorjFar;
 	
+    
+	
 	return (vs_output);
 }
 
@@ -309,6 +311,29 @@ PS_OUT PS_SHADOW_MAIN(VS_OUT ps_input) : SV_TARGET
    
 	
 	return (ps_output);
+}
+
+
+VS_OUT VS_DISTORTION(VS_IN vs_input)
+{
+  
+    float4x4 matBone = { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f };
+	
+    VS_OUT vs_output = (VS_OUT) 0;
+	
+    float4x4 matWV, matWVP;
+    matWV = mul(g_matWorld, g_matView);
+    matWVP = mul(matWV, g_matLightProj);
+	
+    float4 vModelPos = mul(float4(vs_input.Pos, 1.0f), matBone);
+    vs_output.Pos = mul(vModelPos, matWVP);
+    vs_output.TexUV = vs_input.TexUV;
+    vs_output.Normal = vs_input.Normal;
+	
+
+	// ProjPos
+    vs_output.ProjPos = vs_output.Pos;
+    return (vs_output);
 }
 
 float4 PS_DISTORTION(VS_OUT ps_input) : SV_TARGET

@@ -520,15 +520,15 @@ HRESULT CVIMesh::Create_TextureDescriptorHeap()
 	for (_uint i = 0; i < m_uiSubsetMeshSize; ++i)
 	{
 		if (m_vecSpecResource.empty())
-			break;
+			m_vecSpecResource = m_vecNormResource;
 
 		D3D12_SHADER_RESOURCE_VIEW_DESC SRV_Desc = {};
-		SRV_Desc.Format							= m_vecSpecResource[i]->GetDesc().Format;
-		SRV_Desc.ViewDimension					= D3D12_SRV_DIMENSION_TEXTURE2D;
-		SRV_Desc.Shader4ComponentMapping		= D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		SRV_Desc.Texture2D.MostDetailedMip		= 0;
-		SRV_Desc.Texture2D.MipLevels			= m_vecSpecResource[i]->GetDesc().MipLevels;
-		SRV_Desc.Texture2D.ResourceMinLODClamp	= 0.0f;
+		SRV_Desc.Format = m_vecSpecResource[i]->GetDesc().Format;
+		SRV_Desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+		SRV_Desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		SRV_Desc.Texture2D.MostDetailedMip = 0;
+		SRV_Desc.Texture2D.MipLevels = m_vecSpecResource[i]->GetDesc().MipLevels;
+		SRV_Desc.Texture2D.ResourceMinLODClamp = 0.0f;
 
 		m_pGraphicDevice->CreateShaderResourceView(m_vecSpecResource[i].Get(), &SRV_Desc, SRV_DescriptorHandle);
 

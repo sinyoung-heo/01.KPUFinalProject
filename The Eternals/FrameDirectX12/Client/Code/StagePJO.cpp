@@ -251,9 +251,9 @@ HRESULT CStagePJO::Ready_LayerGameObject(wstring wstrLayerTag)
 
 
 	pGameObj = CDistortionDisk::Create(m_pGraphicDevice, m_pCommandList,
-		L"DistortDisk", _vec3(2.5f, 2.5f, 2.5f),		// Scale
+		L"DistortDisk", _vec3(0.5f, 0.5f, 0.5f),		// Scale
 		_vec3(0.0f, 0.0f, 0.0f),		// Angle
-		_vec3(28.0f, 2.0f, 27.0f),	// Pos
+		_vec3(0, 0, 0),	// Pos
 		false,false, _vec3(0), _vec3(0));
 
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"StaticMesh", pGameObj), E_FAIL);

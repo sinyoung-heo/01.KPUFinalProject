@@ -128,7 +128,6 @@ void CCamera::Set_ConstantTable()
 	m_pShaderMesh->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 
 	// ShaderSSAO
-	
 	tCB_CameraProjMatrix.matView =   CShader::Compute_MatrixTranspose(m_tCameraInfo.matView);
 	tCB_CameraProjMatrix.matProj = CShader::Compute_MatrixTranspose(m_tProjInfo.matProj);
 	m_pShaderSSAO->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
