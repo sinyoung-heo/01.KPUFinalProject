@@ -1,17 +1,10 @@
-DynamicMesh|Character|PoporiH25
-DynamicMesh|Character|PoporiR19
-<<<<<<< HEAD
-StaticMesh|Sample|DistortDisk
-=======
 StaticMesh|Plane|BumpTerrainMesh00
 StaticMesh|Plane|BumpTerrainMesh01
->>>>>>> hsy0130
+StaticMesh|Sample|DistortDisk
 StaticMesh|Sample|LandMark
 StaticMesh|Sample|LandMarkBoundary
 StaticMesh|Sample|LandMarkPlane
 StaticMesh|Sample|Status
-<<<<<<< HEAD
-=======
 StaticMesh|StageVelika|EX01_UnionSymbol_Velika_SM
 StaticMesh|StageVelika|EX01_Union_VK_Tower_SM
 StaticMesh|StageVelika|VK_ADD_Agit01_SM
@@ -90,4 +83,5 @@ StaticMesh|StageVelika|VK_OBJ_Statu_01_02_SM
 StaticMesh|StageVelika|VK_OBJ_Statu_02_SM
 StaticMesh|StageVelika|VK_OBJ_Statu_03_Body_SM
 StaticMesh|StageVelika|VK_OBJ_Statu_03_Wing_SM
->>>>>>> hsy0130
+DynamicMesh|Character|PoporiH25
+DynamicMesh|Character|PoporiR19

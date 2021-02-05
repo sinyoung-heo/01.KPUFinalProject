@@ -50,18 +50,11 @@ protected:
 	/*__________________________________________________________________________________________________________
 	[ Shader Component ]
 	____________________________________________________________________________________________________________*/
-<<<<<<< HEAD
 	CShaderColor*	m_pShaderColor		= nullptr;
 	CShaderTexture* m_pShaderTexture	= nullptr;
 	CShaderSkyBox*	m_pShaderSkyBox		= nullptr;
 	CShaderMesh*	m_pShaderMesh		= nullptr;
 	CShaderSSAO* m_pShaderSSAO = nullptr;
-=======
-	CShaderColor*		m_pShaderColor		 = nullptr;
-	CShaderTexture*		m_pShaderTexture	 = nullptr;
-	CShaderSkyBox*		m_pShaderSkyBox		 = nullptr;
-	CShaderMesh*		m_pShaderMesh		 = nullptr;
->>>>>>> hsy0130
 
 protected:
 	virtual void Free();

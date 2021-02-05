@@ -1,17 +1,10 @@
-PoporiH25|PoporiH25.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\PoporiH25\
-PoporiR19|PoporiR19.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\PoporiR19\
-<<<<<<< HEAD
-DistortDisk|DistortDisk.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\DistortDisk\
-=======
 BumpTerrainMesh00|BumpTerrainMesh00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpTerrainMesh00\
 BumpTerrainMesh01|BumpTerrainMesh01.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpTerrainMesh01\
->>>>>>> hsy0130
+DistortDisk|DistortDisk.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\DistortDisk\
 LandMark|LandMark.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\LandMark\
 LandMarkBoundary|LandMarkBoundary.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\LandMarkBoundary\
 LandMarkPlane|LandMarkPlane.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\LandMarkPlane\
 Status|Status.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\Status\
-<<<<<<< HEAD
-=======
 EX01_UnionSymbol_Velika_SM|EX01_UnionSymbol_Velika_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\EX01_UnionSymbol_Velika_SM\
 EX01_Union_VK_Tower_SM|EX01_Union_VK_Tower_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\EX01_Union_VK_Tower_SM\
 VK_ADD_Agit01_SM|VK_ADD_Agit01_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_ADD_Agit01_SM\
@@ -90,4 +83,5 @@ VK_OBJ_Statu_01_02_SM|VK_OBJ_Statu_01_02_SM.X|..\..\Bin\Resource\ResourceStage\S
 VK_OBJ_Statu_02_SM|VK_OBJ_Statu_02_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_OBJ_Statu_02_SM\
 VK_OBJ_Statu_03_Body_SM|VK_OBJ_Statu_03_Body_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_OBJ_Statu_03_Body_SM\
 VK_OBJ_Statu_03_Wing_SM|VK_OBJ_Statu_03_Wing_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_OBJ_Statu_03_Wing_SM\
->>>>>>> hsy0130
+PoporiH25|PoporiH25.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\PoporiH25\
+PoporiR19|PoporiR19.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\PoporiR19\
