@@ -112,6 +112,9 @@
     <Filter Include="97.Mgr\03.ServerMath">
       <UniqueIdentifier>{b64d5781-3c56-46f4-9a46-0ee160c4fbde}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.SampleObject\11.DistortionDisk">
+      <UniqueIdentifier>{7b8281d4-b400-430a-ac90-25dda5307255}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -228,6 +231,9 @@
     <ClInclude Include="..\Header\enum.h">
       <Filter>98.Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\DistortionDisk.h">
+      <Filter>02.GameObject\99.SampleObject\11.DistortionDisk</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -313,6 +319,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\ServerMath.cpp">
       <Filter>97.Mgr\03.ServerMath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\DistortionDisk.cpp">
+      <Filter>02.GameObject\99.SampleObject\11.DistortionDisk</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

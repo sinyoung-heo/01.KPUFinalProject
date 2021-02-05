@@ -12,11 +12,7 @@ SamplerState g_samAnisotropicClamp	: register(s5);
 /*__________________________________________________________________________________________________________
 [ Texture ]
 ____________________________________________________________________________________________________________*/
-Texture2D g_TexDiffuse		: register(t0);	// Diffuse »ö»ó.
-Texture2D g_TexNormal		: register(t1);	// ÅºÁ¨Æ® °ø°£ Normal Map.
-Texture2D g_TexSpecular		: register(t2);	// Specular °­µµ.
-Texture2D g_TexShadowDepth	: register(t3);	// ShadowDepth
-Texture2D g_TexDissolve : register(t4); // Dissolve
+Texture2D g_TexNormal		: register(t0);	// ÅºÁ¨Æ® °ø°£ Normal Map.
 /*__________________________________________________________________________________________________________
 [ Constant Buffer ]
 ____________________________________________________________________________________________________________*/
@@ -309,9 +305,4 @@ PS_OUT PS_SHADOW_MAIN(VS_OUT ps_input) : SV_TARGET
    
 	
 	return (ps_output);
-}
-
-float4 PS_DISTORTION(VS_OUT ps_input) : SV_TARGET
-{
-    return g_TexNormal.Sample(g_samLinearWrap,ps_input.TexUV);
 }

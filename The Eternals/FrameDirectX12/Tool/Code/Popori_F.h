@@ -61,6 +61,7 @@ private:
 	_uint			m_ui3DMax_NumFrame					= 0;	// 3DMax에서 애니메이션의 총 Frame 개수
 	_uint			m_ui3DMax_CurFrame					= 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
 
+	float m_fDeltaTime = 0.0f;
 public:
 	static CPopori_F* Create(ID3D12Device* pGraphicDevice,
 							 ID3D12GraphicsCommandList* pCommandList,

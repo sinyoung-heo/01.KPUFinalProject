@@ -15,7 +15,7 @@
 #include "TextureEffect.h"
 #include "SkyBox.h"
 #include "TerrainMeshObject.h"
-
+#include "DistortionDisk.h"
 
 CStagePJO::CStagePJO(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -250,6 +250,13 @@ HRESULT CStagePJO::Ready_LayerGameObject(wstring wstrLayerTag)
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TexEffect", pGameObj), E_FAIL);
 
 
+	pGameObj = CDistortionDisk::Create(m_pGraphicDevice, m_pCommandList,
+		L"DistortDisk", _vec3(2.5f, 2.5f, 2.5f),		// Scale
+		_vec3(0.0f, 0.0f, 0.0f),		// Angle
+		_vec3(28.0f, 2.0f, 27.0f),	// Pos
+		false,false, _vec3(0), _vec3(0));
+
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"StaticMesh", pGameObj), E_FAIL);
 	return S_OK;
 }
 
