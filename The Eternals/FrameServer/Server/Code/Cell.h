@@ -11,7 +11,8 @@ public:
 
 private:
 	explicit CCell();
-	virtual ~CCell() = default;
+public:
+	virtual ~CCell();
 
 public:
 	// Get

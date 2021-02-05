@@ -7,6 +7,11 @@ CCell::CCell()
 	ZeroMemory(m_pNeighbor, sizeof(CCell*) * NEIGHBOR_END);
 }
 
+CCell::~CCell()
+{
+	Release();
+}
+
 HRESULT CCell::Ready_Cell(const unsigned long& dwIndex, const _vec3& vPointA, const _vec3& vPointB, const _vec3& vPointC, const int& iOption)
 {
 	m_dwCurrentIdx = dwIndex;
@@ -169,6 +174,12 @@ float CCell::Position_On_Height(const _vec3* vPos)
 
 void CCell::Release()
 {
+	for (int i = 0; i < LINE_END; ++i)
+	{
+		delete m_pLine[i];
+		m_pLine[i] = nullptr;
+	}
+		
 }
 
 CCell* CCell::Create(const unsigned long& dwIndex, const _vec3& vPointA, const _vec3& vPointB, const _vec3& vPointC, const int& iOption)

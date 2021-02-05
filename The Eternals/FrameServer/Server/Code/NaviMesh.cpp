@@ -227,4 +227,10 @@ void CNaviMesh::Link_Cell()
 
 void CNaviMesh::Release()
 {
+	for (auto& v : m_vecCell)
+	{
+		delete v;
+		v = nullptr;
+	}
+	m_vecCell.clear();
 }

@@ -8,6 +8,7 @@ public:
 
 private:
 	explicit CLine() = default;
+public:
 	virtual ~CLine() = default;
 
 public:
