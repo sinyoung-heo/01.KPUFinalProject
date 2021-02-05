@@ -207,7 +207,11 @@ void CPopori_F::Set_ConstantTable()
 	tCB_ShaderMesh.matLightProj		= Engine::CShader::Compute_MatrixTranspose(tShadowInfo.matLightProj);
 	tCB_ShaderMesh.vLightPos		= tShadowInfo.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar	= tShadowInfo.fLightPorjFar;
-
+	
+	m_fDeltaTime += 0.01f;
+	if (m_fDeltaTime > 1.f)
+		m_fDeltaTime = 0.0f;
+	tCB_ShaderMesh.fDeltaTime = m_fDeltaTime;
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 }
 

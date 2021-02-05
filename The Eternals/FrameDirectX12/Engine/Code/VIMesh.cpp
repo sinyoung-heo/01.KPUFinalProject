@@ -519,6 +519,9 @@ HRESULT CVIMesh::Create_TextureDescriptorHeap()
 	// Tex Specular
 	for (_uint i = 0; i < m_uiSubsetMeshSize; ++i)
 	{
+		if (m_vecSpecResource.empty())
+			break;
+
 		D3D12_SHADER_RESOURCE_VIEW_DESC SRV_Desc = {};
 		SRV_Desc.Format							= m_vecSpecResource[i]->GetDesc().Format;
 		SRV_Desc.ViewDimension					= D3D12_SRV_DIMENSION_TEXTURE2D;

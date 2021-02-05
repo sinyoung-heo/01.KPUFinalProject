@@ -170,6 +170,7 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	Render_SSAO();
 	Render_Blur();
 	Render_Blend();						// Target Blend
+	Render_Distortion(fTimeDelta);
 	Render_Collider(fTimeDelta);		// Collider Render
 	Render_Alpha(fTimeDelta);			// Effect Texture, Mesh
 	Render_UI(fTimeDelta);				// UI Render
@@ -261,6 +262,16 @@ void CRenderer::Render_Blend()
 
 	m_pBlendBuffer->Render_Buffer();
 
+}
+
+void CRenderer::Render_Distortion(const _float& fTimeDelta)
+{
+	m_pTargetDistortion->SetUp_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
+
+	for (auto& pGameObject : m_RenderList[RENDER_DISTORTION])
+		pGameObject->Render_GameObject(fTimeDelta);
+
+	m_pTargetDistortion->Release_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
 }
 
 void CRenderer::Render_Luminance()
@@ -404,6 +415,10 @@ void CRenderer::Render_RenderTarget()
 			m_pTargetBlur->Render_RenderTarget();
 		if (nullptr != m_pTargetSSAO)
 			m_pTargetSSAO->Render_RenderTarget();
+
+
+		if (nullptr != m_pTargetDistortion)
+			m_pTargetDistortion->Render_RenderTarget();
 	}
 
 }
@@ -597,6 +612,15 @@ HRESULT CRenderer::Ready_RenderTarget()
 	FAILED_CHECK_RETURN(m_pSSAOShader->Set_PipelineStatePass(0), E_FAIL);
 	m_pSSAOBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pSSAOBuffer, E_FAIL);
+
+	//Distortion
+
+	m_pTargetDistortion = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
+	NULL_CHECK_RETURN(m_pTargetDistortion, E_FAIL);
+	m_pTargetDistortion->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 1.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	FAILED_CHECK_RETURN(m_pTargetDistortion->SetUp_DefaultSetting(), E_FAIL);
+	m_pTargetDistortion->Set_TargetRenderPos(_vec3(WIDTH_SECOND, HEIGHT_FOURTH, 1.0f));
+
 	/*__________________________________________________________________________________________________________
 	[ Blend Resource ]
 	____________________________________________________________________________________________________________*/
@@ -951,6 +975,10 @@ void CRenderer::Free()
 	Safe_Release(m_pTargetSSAO);
 	Safe_Release(m_pSSAOShader);
 	Safe_Release(m_pSSAOBuffer);
+
+	//Distort
+	Safe_Release(m_pTargetDistortion);
+
 	/*__________________________________________________________________________________________________________
 	2020.06.07 MultiThreadRendering
 	- CommandAllocators & CommandList Á¦°Å.
