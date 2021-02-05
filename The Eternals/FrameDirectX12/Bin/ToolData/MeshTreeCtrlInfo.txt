@@ -1,3 +1,5 @@
+DynamicMesh|Character|PoporiH25
+DynamicMesh|Character|PoporiR19
 StaticMesh|Plane|BumpTerrainMesh00
 StaticMesh|Plane|BumpTerrainMesh01
 StaticMesh|Sample|DistortDisk
@@ -49,7 +51,6 @@ StaticMesh|StageVelika|VK_CON3_OBJ_01_SM
 StaticMesh|StageVelika|VK_CON_Backwall_02_Bottom_SM
 StaticMesh|StageVelika|VK_CON_Backwall_SM
 StaticMesh|StageVelika|VK_CON_Base_Center_Main_SM
-StaticMesh|StageVelika|VK_CON_Base_Center_SM
 StaticMesh|StageVelika|VK_CON_Bridge_SM
 StaticMesh|StageVelika|VK_CON_CenterGate_SM
 StaticMesh|StageVelika|VK_CON_CenterGear02_SM
@@ -83,5 +84,3 @@ StaticMesh|StageVelika|VK_OBJ_Statu_01_02_SM
 StaticMesh|StageVelika|VK_OBJ_Statu_02_SM
 StaticMesh|StageVelika|VK_OBJ_Statu_03_Body_SM
 StaticMesh|StageVelika|VK_OBJ_Statu_03_Wing_SM
-DynamicMesh|Character|PoporiH25
-DynamicMesh|Character|PoporiR19
