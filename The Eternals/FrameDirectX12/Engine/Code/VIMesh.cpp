@@ -372,7 +372,7 @@ HRESULT CVIMesh::Ready_Texture()
 		return S_OK;
 
 
-	for (_uint i = 0; i < m_pScene->mNumMaterials; ++i)
+	for (_uint i = 0; i < m_vecMeshEntry.size(); ++i)
 	{
 		// aiString strTextureName;
 		const aiMaterial* Material = m_pScene->mMaterials[i];

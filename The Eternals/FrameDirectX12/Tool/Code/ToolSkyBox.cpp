@@ -26,7 +26,7 @@ HRESULT CToolSkyBox::Ready_GameObject(wstring wstrTextureTag,
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos		= vPos;
 
-	m_uiTexIdx				= 0;
+	m_uiTexIdx				= 1;
 
 	return S_OK;
 }

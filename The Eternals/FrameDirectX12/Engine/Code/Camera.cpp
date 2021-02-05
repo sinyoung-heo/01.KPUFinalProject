@@ -64,7 +64,7 @@ HRESULT CCamera::Ready_GameObject(const CAMERA_DESC& tCameraInfo,
 	NULL_CHECK_RETURN(m_pShaderColor, E_FAIL);
 
 	m_pShaderTexture = static_cast<CShaderTexture*>(m_pComponentMgr->Clone_Component(L"ShaderTexture", COMPONENTID::ID_STATIC));
-	NULL_CHECK_RETURN(m_pShaderTexture, E_FAIL);;
+	NULL_CHECK_RETURN(m_pShaderTexture, E_FAIL);
 
 	m_pShaderSkyBox = static_cast<CShaderSkyBox*>(m_pComponentMgr->Clone_Component(L"ShaderSkyBox", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pShaderSkyBox, E_FAIL);

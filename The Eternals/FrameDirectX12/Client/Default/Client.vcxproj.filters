@@ -103,6 +103,7 @@
     <Filter Include="01.Scene\01.Logo\02.LoadingProgress">
       <UniqueIdentifier>{018c85ab-d8f8-4c79-8bba-f142768a3d1c}</UniqueIdentifier>
     </Filter>
+<<<<<<< HEAD
     <Filter Include="02.GameObject\99.SampleObject\09.TestPlayer">
       <UniqueIdentifier>{254f7e38-7b8f-44cb-b41d-48facfba9a23}</UniqueIdentifier>
     </Filter>
@@ -114,6 +115,10 @@
     </Filter>
     <Filter Include="02.GameObject\99.SampleObject\11.DistortionDisk">
       <UniqueIdentifier>{7b8281d4-b400-430a-ac90-25dda5307255}</UniqueIdentifier>
+=======
+    <Filter Include="02.GameObject\01.Environment\01.BumpTerrain">
+      <UniqueIdentifier>{262daf1d-3b00-4c77-8265-be157ed217c1}</UniqueIdentifier>
+>>>>>>> hsy0130
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -216,6 +221,7 @@
     <ClInclude Include="..\..\..\FrameServer\Server\Header\protocol.h">
       <Filter>98.Header</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="..\Code\PacketMgr.h">
       <Filter>97.Mgr\00.PacketMgr</Filter>
     </ClInclude>
@@ -233,6 +239,10 @@
     </ClInclude>
     <ClInclude Include="..\Code\DistortionDisk.h">
       <Filter>02.GameObject\99.SampleObject\11.DistortionDisk</Filter>
+=======
+    <ClInclude Include="..\Code\BumpTerrain.h">
+      <Filter>02.GameObject\01.Environment\01.BumpTerrain</Filter>
+>>>>>>> hsy0130
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -308,6 +318,7 @@
     <ClCompile Include="..\Code\LoadingProgress.cpp">
       <Filter>01.Scene\01.Logo\02.LoadingProgress</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="..\Code\PacketMgr.cpp">
       <Filter>97.Mgr\00.PacketMgr</Filter>
     </ClCompile>
@@ -322,6 +333,10 @@
     </ClCompile>
     <ClCompile Include="..\Code\DistortionDisk.cpp">
       <Filter>02.GameObject\99.SampleObject\11.DistortionDisk</Filter>
+=======
+    <ClCompile Include="..\Code\BumpTerrain.cpp">
+      <Filter>02.GameObject\01.Environment\01.BumpTerrain</Filter>
+>>>>>>> hsy0130
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

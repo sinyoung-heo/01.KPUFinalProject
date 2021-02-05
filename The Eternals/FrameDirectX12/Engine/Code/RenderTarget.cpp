@@ -219,7 +219,7 @@ HRESULT CRenderTarget::SetUp_OnGraphicDevice(const TARGETID& eID)
 	{
 		m_pCommandList->ClearRenderTargetView(CD3DX12_CPU_DESCRIPTOR_HANDLE(m_pRTV_Heap->GetCPUDescriptorHandleForHeapStart(), 
 																			i, 
-																			m_uiRTV_DescriptorSize), 
+									 										m_uiRTV_DescriptorSize), 
 											 m_vecClearColor[i].Color,
 											 0, 
 											 nullptr);

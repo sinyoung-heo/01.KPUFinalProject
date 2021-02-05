@@ -4,14 +4,6 @@
 
 BEGIN(Engine)
 
-enum TEXTURE_MAPPING 
-{ 
-	TEX_DIFFUSE,
-	TEX_NORMAL, 
-	TEX_SPECULAR, 
-	TEXTURE_END 
-};
-
 class ENGINE_DLL CShaderMesh final : public CShader
 {
 private:
@@ -57,10 +49,10 @@ private:
 	CUploadBuffer<CB_SKINNING_MATRIX>*	m_pCB_SkinningMatrix	= nullptr;
 	
 public:
-	virtual CComponent *	Clone() override;
-	static	CShaderMesh*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual CComponent* Clone() override;
+	static	CShader*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 private:
-	virtual void			Free();
+	virtual void Free();
 };
 
 END

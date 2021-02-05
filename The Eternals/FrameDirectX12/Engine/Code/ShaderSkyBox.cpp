@@ -93,7 +93,7 @@ HRESULT CShaderSkyBox::Create_RootSignature()
 	RootParameter[2].InitAsConstantBufferView(1);	// register b1.
 
 	auto StaticSamplers = Get_StaticSamplers();
-	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(3,							// 루트 파라미터 개수.(CBV 2, SRV 1 : 총 2개)
+	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(_countof(RootParameter),	// 루트 파라미터 개수.(CBV 2, SRV 1 : 총 2개)
 												  RootParameter,
 												  (_uint)StaticSamplers.size(),	// 샘플러 개수.
 												  StaticSamplers.data(),		// 샘플러 데이터.
@@ -216,7 +216,7 @@ CComponent * CShaderSkyBox::Clone()
 	return new CShaderSkyBox(*this);
 }
 
-CShaderSkyBox * CShaderSkyBox::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CShader * CShaderSkyBox::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 {
 	CShaderSkyBox* pInstance = new CShaderSkyBox(pGraphicDevice, pCommandList);
 

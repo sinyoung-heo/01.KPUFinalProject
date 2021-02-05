@@ -69,7 +69,7 @@ public:
 	_bool	m_bIsShare		= false;
 	_bool	m_bIsFindNear	= false;
 	_bool	m_bIsClockwise	= true;
-	_rgba	m_vColor		= _rgba(0.0f, 1.0f, 0.0f, 1.0f);
+	_rgba	m_vColor		= _rgba(1.0f, 1.0f, 0.0f, 1.0f);
 	
 
 private:

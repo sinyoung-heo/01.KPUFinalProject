@@ -19,7 +19,8 @@ public:
 public:
 	HRESULT	Ready_Buffer(const _uint& iNumVerticesX,
 						 const _uint& iNumVerticesZ,
-						 const _float& fInterval = 1.f);
+						 const _float& fInterval = 1.f,
+						 const _float& fDetail = 5.0f);
 	void	Begin_Buffer();
 	void	Render_Buffer();
 
@@ -37,7 +38,8 @@ public:
 								   ID3D12GraphicsCommandList* pCommandList, 
 								   const _uint& iNumVerticesX, 
 								   const _uint& iNumVerticesZ, 
-								   const _float& fInterval = 1.f);
+								   const _float& fInterval = 1.f,
+								   const _float& fDetail = 5.0f);
 private:
 	virtual void			Free();
 };

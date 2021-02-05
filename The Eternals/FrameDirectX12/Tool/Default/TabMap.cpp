@@ -480,6 +480,9 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	if (m_EditCheck_StaticMesh.GetCheck())
 	{
 		Engine::CGameObject* pObject = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingObject;
+		if (nullptr == pObject)
+			return CDialogEx::OnMouseWheel(nFlags, zDelta, pt);
+
 		RECT rcStaticMeshEdit[13] = { };
 		m_StaticMeshEdit_ScaleX.GetWindowRect(&rcStaticMeshEdit[0]);
 		m_StaticMeshEdit_ScaleY.GetWindowRect(&rcStaticMeshEdit[1]);
@@ -957,7 +960,7 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 			else if (zDelta < 0)
 				m_fLightInfo_SL_AtZ -= 1.0f;
 
-			CShadowLightMgr::Get_Instance()->m_vLightAt.x = m_fLightInfo_SL_AtZ;
+			CShadowLightMgr::Get_Instance()->m_vLightAt.z = m_fLightInfo_SL_AtZ;
 			CShadowLightMgr::Get_Instance()->Update_ShadowLight();
 		}
 		else if (PtInRect(&rcLightInfoEdit_SL_Edit[6], pt))		// SL_Height

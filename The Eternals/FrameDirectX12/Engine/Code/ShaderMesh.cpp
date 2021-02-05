@@ -202,7 +202,8 @@ HRESULT CShaderMesh::Create_RootSignature()
 	RootParameter[7].InitAsConstantBufferView(2);	// register b2.
 	auto StaticSamplers = Get_StaticSamplers();
 
-	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(8,							// 루트 파라미터 개수.
+
+	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(_countof(RootParameter),	// 루트 파라미터 개수.
 												  RootParameter,
 												  (UINT)StaticSamplers.size(),	// 샘플러 개수.
 												  StaticSamplers.data(),		// 샘플러 데이터.
@@ -399,7 +400,7 @@ CComponent * CShaderMesh::Clone()
 	return new CShaderMesh(*this);
 }
 
-CShaderMesh * CShaderMesh::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CShader* CShaderMesh::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 {
 	CShaderMesh* pInstance = new CShaderMesh(pGraphicDevice, pCommandList);
 
