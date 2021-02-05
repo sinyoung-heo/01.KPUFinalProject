@@ -6,7 +6,7 @@
 #include "ShaderMesh.h"
 #include "ShaderSkyBox.h"
 #include "ShaderShadow.h"
-
+#include "ShaderSSAO.h"
 USING(Engine)
 
 CCamera::CCamera(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -72,6 +72,8 @@ HRESULT CCamera::Ready_GameObject(const CAMERA_DESC& tCameraInfo,
 	m_pShaderMesh = static_cast<CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pShaderMesh, E_FAIL);
 
+	m_pShaderSSAO = static_cast<CShaderSSAO*>(m_pComponentMgr->Clone_Component(L"ShaderSSAO", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pShaderSSAO, E_FAIL);
 	return S_OK;
 }
 
@@ -124,6 +126,12 @@ void CCamera::Set_ConstantTable()
 
 	// ShaderMesh
 	m_pShaderMesh->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
+
+	// ShaderSSAO
+	
+	tCB_CameraProjMatrix.matView =   CShader::Compute_MatrixTranspose(m_tCameraInfo.matView);
+	tCB_CameraProjMatrix.matProj = CShader::Compute_MatrixTranspose(m_tProjInfo.matProj);
+	m_pShaderSSAO->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 }
 
 void CCamera::Free()
@@ -134,4 +142,5 @@ void CCamera::Free()
 	Safe_Release(m_pShaderTexture);
 	Safe_Release(m_pShaderSkyBox);
 	Safe_Release(m_pShaderMesh);
+	Safe_Release(m_pShaderSSAO);
 }

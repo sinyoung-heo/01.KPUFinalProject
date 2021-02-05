@@ -14,6 +14,7 @@ SamplerState g_samAnisotropicClamp	: register(s5);
 ____________________________________________________________________________________________________________*/
 Texture2D g_TexEmissive		: register(t0);	//Deffered Target Index 4 :  Emissive Target
 Texture2D g_TexCrossFilter : register(t1); //CrossFilter Texture
+Texture2D g_TexSSAO : register(t2); //SSAO Texture
 
 /*____________________________________________________________________
 [ Vertex Shader ]
@@ -49,7 +50,8 @@ ______________________________________________________________________*/
 struct PS_OUT
 {
     float4 DS_EMISSIVE : SV_TARGET0; // 0번 RenderTarget
-    float4 DS_CROSSFILTER : SV_TARGET1; // 1번 RenderTarget
+    float4 DS_CROSSFILTER : SV_TARGET1; // 1번 RenderTarget 
+    float4 DS_SSAO : SV_TARGET2; // 2번 RenderTarget
 };
 PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 {
@@ -57,20 +59,23 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
   
     float2 vTexUV = ps_input.TexUV;
     float4 Emissive = float4(0, 0, 0, 0);
-    float4 CrossFillter = float4(0, 0, 0, 0);
+    float4 CrossFillter = float4(0, 0, 0, 0); 
+    float4 SSAO = float4(0, 0, 0, 0);
     for (int i = -2; i <= 2; ++i)
     {
         for (int j = -2; j <= 2; ++j)
         {
             vTexUV.x = ps_input.TexUV.x + (i / 1600.f);
             vTexUV.y = ps_input.TexUV.y + (j / 900.f);
+            vTexUV = saturate(vTexUV);
             Emissive += g_TexEmissive.Sample(g_samLinearClamp, vTexUV);
-            CrossFillter += g_TexCrossFilter.Sample(g_samLinearClamp, vTexUV);
-
+            SSAO += g_TexSSAO.Sample(g_samLinearClamp, vTexUV);
+            
         }
     }
-    Emissive /= 20, CrossFillter /= 20;
+    Emissive /= 25, CrossFillter /= 25, SSAO /= 25;
     output.DS_EMISSIVE = Emissive;
-    output.DS_CROSSFILTER = CrossFillter;
+    output.DS_CROSSFILTER = Emissive;
+    output.DS_SSAO = SSAO;
     return (output);
 }

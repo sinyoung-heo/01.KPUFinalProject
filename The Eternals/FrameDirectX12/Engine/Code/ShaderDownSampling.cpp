@@ -58,7 +58,10 @@ void CShaderDownSampling::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap,
 	m_pCommandList->SetGraphicsRootDescriptorTable(1,		// RootParameter Index. (Tex CrossFilter)
 		SRV_TexCrossFilterDescriptorHandle);
 
-
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexSSAODescriptorHandle(m_pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	SRV_TexSSAODescriptorHandle.Offset(2, m_uiCBV_SRV_UAV_DescriptorSize);
+	m_pCommandList->SetGraphicsRootDescriptorTable(2,		// RootParameter Index. (Tex SSAO)
+		SRV_TexSSAODescriptorHandle);
 }
 
 HRESULT CShaderDownSampling::Create_DescriptorHeaps(vector<ComPtr<ID3D12Resource>> pVecTexture)
@@ -115,7 +118,7 @@ HRESULT CShaderDownSampling::Create_RootSignature()
 	/*__________________________________________________________________________________________________________
 	[ SRV를 담는 서술자 테이블을 생성 ]
 	____________________________________________________________________________________________________________*/
-	CD3DX12_DESCRIPTOR_RANGE SRV_Table[2];
+	CD3DX12_DESCRIPTOR_RANGE SRV_Table[3];
 	
 	// Texture - Emissive
 	SRV_Table[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,// 서술자의 종류 - Shader Resource View.
@@ -127,16 +130,22 @@ HRESULT CShaderDownSampling::Create_RootSignature()
 		1,								// 서술자의 개수 - Texture2D의 개수.
 		1,								// 셰이더 인수들의 기준 레지스터 번호. (register t1)
 		0);								// 레지스터 공간.
+		// Texture - SSAO
+	SRV_Table[2].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,// 서술자의 종류 - Shader Resource View.
+		1,								// 서술자의 개수 - Texture2D의 개수.
+		2,								// 셰이더 인수들의 기준 레지스터 번호. (register t2)
+		0);								// 레지스터 공간.
 
 	/*__________________________________________________________________________________________________________
 	- 루트 매개변수는 테이블이거나, 루트 서술자 또는 루트 상수이다.
 	____________________________________________________________________________________________________________*/
-	CD3DX12_ROOT_PARAMETER RootParameter[2];
+	CD3DX12_ROOT_PARAMETER RootParameter[3];
 	RootParameter[0].InitAsDescriptorTable(1, &SRV_Table[0], D3D12_SHADER_VISIBILITY_PIXEL);	// t0
 	RootParameter[1].InitAsDescriptorTable(1, &SRV_Table[1], D3D12_SHADER_VISIBILITY_PIXEL);	// t1
+	RootParameter[2].InitAsDescriptorTable(1, &SRV_Table[2], D3D12_SHADER_VISIBILITY_PIXEL);	// t2
 
 	auto StaticSamplers = Get_StaticSamplers();
-	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(2,							// 루트 파라미터 개수.(SRV 2 : 총 2개)
+	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(3,							// 루트 파라미터 개수.(SRV 3 : 총 3개)
 												  RootParameter,
 												  (_uint)StaticSamplers.size(),	// 샘플러 개수.
 												  StaticSamplers.data(),		// 샘플러 데이터.
@@ -192,9 +201,10 @@ HRESULT CShaderDownSampling::Create_PipelineState()
 	PipelineStateDesc.pRootSignature		= m_pRootSignature;
 	PipelineStateDesc.SampleMask			= UINT_MAX;
 	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	PipelineStateDesc.NumRenderTargets		= 2;
+	PipelineStateDesc.NumRenderTargets		= 3;
 	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R8G8B8A8_UNORM;
 	PipelineStateDesc.RTVFormats[1]			= DXGI_FORMAT_R8G8B8A8_UNORM;
+	PipelineStateDesc.RTVFormats[2]			= DXGI_FORMAT_R8G8B8A8_UNORM;
 	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
 	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
 	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -243,7 +253,7 @@ D3D12_BLEND_DESC CShaderDownSampling::Create_BlendState(const _bool & bIsBlendEn
 
 	// 블렌드 설정.
 	ZeroMemory(&BlendDesc, sizeof(D3D12_BLEND_DESC));
-	BlendDesc.AlphaToCoverageEnable					= TRUE;
+	BlendDesc.AlphaToCoverageEnable					= FALSE;
 	BlendDesc.IndependentBlendEnable				= FALSE;
 	BlendDesc.RenderTarget[0].BlendEnable			= bIsBlendEnable;
 	BlendDesc.RenderTarget[0].LogicOpEnable			= FALSE;

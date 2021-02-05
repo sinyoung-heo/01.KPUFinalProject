@@ -8,7 +8,7 @@ class CShaderTexture;
 class CShaderMesh;
 class CShaderSkyBox;
 class CShaderShadow;
-
+class CShaderSSAO;
 class ENGINE_DLL CCamera : public CGameObject
 {
 protected:
@@ -54,6 +54,7 @@ protected:
 	CShaderTexture* m_pShaderTexture	= nullptr;
 	CShaderSkyBox*	m_pShaderSkyBox		= nullptr;
 	CShaderMesh*	m_pShaderMesh		= nullptr;
+	CShaderSSAO* m_pShaderSSAO = nullptr;
 
 protected:
 	virtual void Free();

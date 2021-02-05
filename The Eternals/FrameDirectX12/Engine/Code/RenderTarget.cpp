@@ -377,7 +377,7 @@ HRESULT CRenderTarget::SetUp_OnGraphicDevice_DownSampling(int Sample)
 	D3D12_RECT ScissorRect = { 0, 0, (LONG)WINCX, (LONG)WINCY };
 	D3D12_VIEWPORT ViewPort;
 	ZeroMemory(&ViewPort, sizeof(D3D12_VIEWPORT));
-	ViewPort.Height = WINCY * 0.25f, ViewPort.Width = WINCX * 0.25f, ViewPort.MaxDepth = 1.0f;
+	ViewPort.Height = WINCY * (1.f / float(Sample)), ViewPort.Width = WINCX * (1.f / float(Sample)), ViewPort.MaxDepth = 1.0f;
 	m_pCommandList->RSSetViewports(1, &ViewPort);
 	m_pCommandList->RSSetScissorRects(1, &ScissorRect);
 

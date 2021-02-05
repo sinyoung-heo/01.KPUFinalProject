@@ -13,13 +13,15 @@ class CShaderBlend;
 class CShaderLuminance;
 class CShaderDownSampling;
 class CShaderBlur;
+class CShaderSSAO;
 #define WIDTH_FIRST 112
 #define WIDTH_SECOND 224+112
 #define WIDTH_THIRD 448+112
 #define WIDTH_FOURTH 672+112
 #define WIDTH_FIFTH 672+224+112
 #define HEIGHT_FIRST 63
-#define HEIGHT_SECOND 63 + 126
+#define HEIGHT_SECOND 126 + 63
+#define HEIGHT_THIRD 126+126 + 63
 struct ThreadParameter
 {
 	_int threadIdx;
@@ -82,6 +84,7 @@ private:
 	void	Render_Luminance();
 	void	Render_DownSampling();
 	void	Render_Blur();
+	void	Render_SSAO();
 	void	Render_Blend();
 	void	Render_Alpha(const _float& fTimeDelta);
 	void	Render_UI(const _float& fTimeDelta);
@@ -119,7 +122,7 @@ private:
 	CRenderTarget*  m_pTargetLuminance       = nullptr; //·ç¹Ì³Í½º ->Target1
 	CRenderTarget* m_pTargetDownSampling = nullptr;		//´Ù¿î»ùÇÃ->Target2
 	CRenderTarget* m_pTargetBlur = nullptr;				//ºí·¯		->Target3
-	
+	CRenderTarget* m_pTargetSSAO = nullptr;				//ssao		->Target1
 	// Blend
 	CScreenTex*		m_pBlendBuffer					= nullptr;
 	CShaderBlend*	m_pBlendShader					= nullptr;
@@ -140,6 +143,10 @@ private:
 	CShaderBlur* m_pBlurShader = nullptr;
 	_bool				m_bIsSetBlurTexture{ false };
 
+	//SSAO
+	CScreenTex* m_pSSAOBuffer = nullptr;
+	CShaderSSAO* m_pSSAOShader = nullptr;
+	_bool				m_bIsSetSSAOTexture{ false };
 	/*__________________________________________________________________________________________________________
 	[ Pipeline StateGroup ]
 	____________________________________________________________________________________________________________*/

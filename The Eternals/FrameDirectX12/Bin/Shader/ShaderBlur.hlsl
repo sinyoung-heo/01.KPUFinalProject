@@ -16,6 +16,7 @@ Texture2D g_TexEmissive : register(t0); //DownSample Target Index 0 :  Emissive 
 Texture2D g_TexCrossFilter : register(t1); ///DownSample Target Index 1  - Cross Fliter Target - DowmSample
 Texture2D g_TexAlbedo : register(t2); //Deffered Target Index 0 :  Albedo Target
 Texture2D g_TexDepth : register(t3); //Deffered Target Index 3 :  Depth Target
+Texture2D g_TexSSAO : register(t4); //Deffered Target Index 4 :  SSAO Target
 /*
 [Static Constant Table]
 */
@@ -57,7 +58,8 @@ struct PS_OUT
 {
     float4 EMISSIVE_BLUR        : SV_TARGET0; // 0번 RenderTarget
     float4 CROSSFILTER_BLUR     : SV_TARGET1; // 1번 RenderTarget
-    float4 DOF_BLUR             : SV_TARGET2; // 1번 RenderTarget
+    float4 DOF_BLUR             : SV_TARGET2; // 2번 RenderTarget
+    float4 SSAO_BLUR : SV_TARGET3; // 3번 RenderTarget
 };
 PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 {
@@ -67,16 +69,25 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
     vGausTexUV = saturate(vGausTexUV);
     float4 DOF_Output = (float4) 0, DOF_Output2 = (float4) 0;
     float4 Emis_Output = (float4) 0, Emis_Output2 = (float4) 0;
-    
+    float4 SSAO_Output = (float4) 0, SSAO_Output2 = (float4) 0;
     for (int i = 0; i < 13; i++)
     {
         vGausTexUV.x = ps_input.TexUV.x + (g_fOffSet[i]) / 800.f;
-        vGausTexUV.x = saturate(vGausTexUV.x);
+        //vGausTexUV.x = saturate(vGausTexUV.x);
         DOF_Output += g_TexAlbedo.Sample(g_samLinearWrap, vGausTexUV) * (g_fWeight[i]);
         Emis_Output += g_TexEmissive.Sample(g_samLinearWrap, vGausTexUV) * (g_fWeight[i]);
+        
+     
         vGausTexUV.y = ps_input.TexUV.y + (g_fOffSet[i]) / 450.f;
-        vGausTexUV.y = saturate(vGausTexUV.y);
+        //vGausTexUV.y = saturate(vGausTexUV.y);
+        DOF_Output2 += g_TexAlbedo.Sample(g_samLinearWrap, vGausTexUV) * (g_fWeight[i]);
         Emis_Output2 += g_TexEmissive.Sample(g_samLinearWrap, vGausTexUV) * (g_fWeight[i]);
+        
+        
+        vGausTexUV.x = ps_input.TexUV.x + (g_fOffSet[i] /12) / 200.f;
+        SSAO_Output += g_TexSSAO.Sample(g_samLinearWrap, vGausTexUV) * (g_fWeight[i]);
+        vGausTexUV.y = ps_input.TexUV.y + (g_fOffSet[i]/12) / 112.5f;
+        SSAO_Output2 += g_TexSSAO.Sample(g_samLinearWrap, vGausTexUV) * (g_fWeight[i]);
     }
     
     output.EMISSIVE_BLUR = (Emis_Output + Emis_Output2) *0.5f;
@@ -85,5 +96,6 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
     
     output.DOF_BLUR = (DOF_Output + DOF_Output2) *0.5f;
   
+    output.SSAO_BLUR = (SSAO_Output + SSAO_Output2) * 0.5f;
     return (output);
 }

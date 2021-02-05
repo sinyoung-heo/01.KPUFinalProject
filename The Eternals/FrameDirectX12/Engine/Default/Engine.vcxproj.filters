@@ -172,6 +172,9 @@
     <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\09.ShaderBlur">
       <UniqueIdentifier>{dfbfeacc-44af-483e-9b05-e714d4bac7c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\10.ShaderSsao">
+      <UniqueIdentifier>{45232813-74a9-465c-ae95-8e3ed04390d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\Engine_Functor.h">
@@ -363,6 +366,9 @@
     <ClInclude Include="..\Code\ShaderBlur.h">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\09.ShaderBlur</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ShaderSSAO.h">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\10.ShaderSsao</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\DirectInput.cpp">
@@ -527,6 +533,9 @@
     <ClCompile Include="..\Code\ShaderBlur.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\09.ShaderBlur</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\ShaderSSAO.cpp">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\10.ShaderSsao</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Bin\Shader\ShaderMesh.hlsl">
@@ -558,6 +567,9 @@
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderBlur.hlsl">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\09.ShaderBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Bin\Shader\ShaderSSAO.hlsl">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\10.ShaderSsao</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
