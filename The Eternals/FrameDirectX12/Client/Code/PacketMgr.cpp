@@ -244,7 +244,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 				Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"Popori_F", 0);
 
 				auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
-
+				
 				static_cast<CTestPlayer*>(pObj)->Set_DeadReckoning(pObj->Get_Transform()->m_vPos,
 					pObj->Get_Transform()->m_vPos, pObj->Get_Transform()->m_vPos, _vec3(packet->posX, packet->posY, packet->posZ));
 			

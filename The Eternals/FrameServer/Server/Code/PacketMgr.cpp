@@ -128,7 +128,7 @@ void process_packet(int id)
 
 		_vec3 vPos = _vec3(p->posX, p->posY, p->posZ);
 		_vec3 vAngle = _vec3(0.f, p->angleY, 0.f);
-		//process_move_stop(id, vPos, vAngle);
+		process_move_stop(id, vPos, vAngle);
 	}
 	break;
 
@@ -375,7 +375,7 @@ void process_move(int id, char direction, const _vec3& _vDir, const _vec3& _vAng
 	/* 해당 플레이어로부터 받은 변경된 위치값 저장 */
 	_vec3 cal_curPos = _vec3(0.0f);
 	
-	cal_curPos = CNaviMesh::GetInstance()->Move_OnNaviMesh(&pPlayer->m_vPos, &pPlayer->m_vDir, 0.2f);
+	cal_curPos = CNaviMesh::GetInstance()->Move_OnNaviMesh(&pPlayer->m_vPos, &pPlayer->m_vDir, 0.5f);
 
 	pPlayer->m_vPos = cal_curPos;
 

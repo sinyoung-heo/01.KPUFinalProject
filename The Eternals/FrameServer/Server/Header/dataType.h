@@ -684,6 +684,50 @@ public:
 		return theta * (180.f / (float)PI);
 	}
 
+	tagVector4 Cross(const tagVector4& v1, const tagVector4& v2)
+	{
+		tagVector4 ret = tagVector4((v1.y * v2.z) - (v1.z * v2.y), 
+									(v1.z * v2.x) - (v1.x * v2.z), 
+									(v1.x * v2.y) - (v1.y * v2.x), 
+									0.f);
+
+		return ret;
+	}
+
+	tagVector4 PlaneDotNormal(const tagVector4& v1, const tagVector4& v2)
+	{
+		float fValue = (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
+		tagVector4 ret;
+		ret.w = fValue;
+
+		return ret;
+	}
+
+	tagVector4 VectorNegate(tagVector4 v)
+	{
+		return tagVector4(-1.f * v.x, -1.f * v.y, -1.f * v.z, -1.f * v.w);
+	}
+
+	
+	// Plane
+	void Plane_FromPoints(const _vec3& v1, const _vec3& v2, const _vec3& v3)
+	{
+		tagVector4 V1 = tagVector4(v1.x, v1.y, v1.z, 1.f);
+		tagVector4 V2 = tagVector4(v2.x, v2.y, v2.z, 1.f);
+		tagVector4 V3 = tagVector4(v3.x, v3.y, v3.z, 1.f);
+
+		//tagVector4 P1 = XMPlaneFromPoints(V1, V2, V3);
+
+		tagVector4 V21 = V1 - V2;
+		tagVector4 V31 = V1 - V3;
+		
+		tagVector4 N = Cross(V21, V31);
+		N.Normalize();
+
+		tagVector4 D = PlaneDotNormal(N, v1);
+		D = VectorNegate(D);
+	}
+
 public:
 	float x, y, z, w;
 
