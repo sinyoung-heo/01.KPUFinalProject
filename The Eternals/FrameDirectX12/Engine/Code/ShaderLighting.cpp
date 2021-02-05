@@ -327,7 +327,7 @@ CComponent * CShaderLighting::Clone()
 	return new CShaderLighting(*this);
 }
 
-CShaderLighting * CShaderLighting::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CShader * CShaderLighting::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 {
 	CShaderLighting* pInstance = new CShaderLighting(pGraphicDevice, pCommandList);
 

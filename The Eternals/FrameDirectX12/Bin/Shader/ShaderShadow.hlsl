@@ -37,9 +37,7 @@ struct VS_OUT
 	float4 ProjPos	: TEXCOORD0;
 };
 
-/*__________________________________________________________________________________________________________
-[ BUMP MAPPING ]
-____________________________________________________________________________________________________________*/
+
 VS_OUT VS_MAIN(VS_IN vs_input)
 {
 	float4x4 matBone = { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f };
@@ -94,6 +92,34 @@ VS_OUT VS_MAIN(VS_IN vs_input)
 	
 	return (vs_output);
 }
+
+
+
+struct VS_IN_BUMPTERRAIN
+{
+	float3 Pos				: POSITION;
+	float3 Normal			: NORMAL;
+	float2 TexUV			: TEXCOORD;
+};
+
+VS_OUT VS_BUMPTERRAIN(VS_IN_BUMPTERRAIN vs_input)
+{
+	VS_OUT vs_output = (VS_OUT) 0;
+
+	float4x4 matWV, matWVP;
+	matWV	= mul(g_matWorld, g_matView);
+	matWVP	= mul(matWV, g_matProj);
+	
+	vs_output.Pos		= mul(float4(vs_input.Pos, 1.0f), matWVP);
+	
+	// 광원 위치에서의 투영 좌표 계산.
+	float4 vPos			= vs_output.Pos;
+	vPos.z				= vPos.z * vPos.w / g_fProjFar;
+	vs_output.ProjPos	= vPos;
+	
+	return (vs_output);
+}
+
 
 // PS_MAIN
 struct PS_OUT

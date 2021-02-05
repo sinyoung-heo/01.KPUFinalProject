@@ -13,7 +13,6 @@ private:
 public:
 	// Get
 	CUploadBuffer<CB_SHADER_SKYBOX>* Get_UploadBuffer_ShaderSkyBox()	{ return m_pCB_ShaderSkyBox; }
-	// CUploadBuffer<CB_MATRIX_DESC>*	Get_UploadBuffer_MatrixDesc()	{ return m_pCB_MatrixDesc; }
 
 	HRESULT			SetUp_ShaderConstantBuffer();
 	// CShader을(를) 통해 상속됨
@@ -37,15 +36,14 @@ private:
 																  const D3D12_BLEND_OP& BlendOpAlpha	= D3D12_BLEND_OP_ADD);
 
 private:
-	// CUploadBuffer<CB_MATRIX_DESC>*	m_pCB_MatrixDesc		= nullptr;
 	CUploadBuffer<CB_SHADER_SKYBOX>* m_pCB_ShaderSkyBox = nullptr;
 
 
 public:
-	virtual CComponent*		Clone() override;
-	static	CShaderSkyBox*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual CComponent*	Clone() override;
+	static	CShader*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 private:
-	virtual void			Free();
+	virtual void Free();
 };
 
 END

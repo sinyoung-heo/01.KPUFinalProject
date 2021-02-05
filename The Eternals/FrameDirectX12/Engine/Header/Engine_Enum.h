@@ -19,8 +19,10 @@ namespace Engine
 		CONTEXT3,
 		CONTEXT_END 
 	};
-	enum THREADID { SHADOW, SCENE, THREADID_END };
-	enum RENDERID { MULTI_THREAD, SINGLE_THREAD, RENDERID_END };
+
+	enum THREADID			{ SHADOW, SCENE, THREADID_END };
+	enum TEXTURE_MAPPING	{ TEX_DIFFUSE, TEX_NORMAL, TEX_SPECULAR, TEXTURE_END };
+	enum RENDERID			{ MULTI_THREAD, SINGLE_THREAD, RENDERID_END };
 
 
 	/*__________________________________________________________________________________________________________

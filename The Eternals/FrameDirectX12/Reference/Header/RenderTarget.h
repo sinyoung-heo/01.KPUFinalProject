@@ -17,7 +17,8 @@ private:
 
 public:
 	// Get
-	vector<ComPtr<ID3D12Resource>> Get_TargetTexture() { return m_vecTargetTexture; };
+	vector<ComPtr<ID3D12Resource>>	Get_TargetTexture()					{ return m_vecTargetTexture; };
+	ID3D12DescriptorHeap*			Get_TargetTextureDescriptorHeap()	{ return m_pTexDescriptorHeap; }
 
 	// Set
 	void	Set_TargetClearColor(const _uint& iIdx,  const _rgba& vColor, const DXGI_FORMAT& TargetFormat);
