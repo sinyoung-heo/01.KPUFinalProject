@@ -374,7 +374,9 @@ void process_move(int id, char direction, const _vec3& _vDir, const _vec3& _vAng
 
 	/* 해당 플레이어로부터 받은 변경된 위치값 저장 */
 	_vec3 cal_curPos = _vec3(0.0f);
-	
+	_vec2 coll_pos = _vec2(0.f);
+
+	CCollisionMgr::GetInstance()->Is_Collision_NaviLine(pPlayer->m_vPos, pPlayer->m_vDir, &coll_pos);
 	cal_curPos = CNaviMesh::GetInstance()->Move_OnNaviMesh(&pPlayer->m_vPos, &pPlayer->m_vDir, 0.5f);
 
 	pPlayer->m_vPos = cal_curPos;

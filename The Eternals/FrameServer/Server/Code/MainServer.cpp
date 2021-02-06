@@ -63,6 +63,7 @@ void Ready_ServerManager()
 	CObjMgr::GetInstance()->Init_ObjMgr();
 	CDBMgr::GetInstance()->Ready_DB();
 	CNaviMesh::GetInstance()->Ready_NaviMesh(L"../../../FrameDirectX12/Bin/ToolData/TestNavigationCell.navimeshcellinfo");
+	CCollisionMgr::GetInstance();
 #ifdef TEST
 	cout << "Finish Server Managers" << endl;
 #endif // TEST
@@ -128,6 +129,7 @@ void Release_Server()
 	CObjPoolMgr::GetInstance()->DestroyInstance();
 	CDBMgr::GetInstance()->DestroyInstance();
 	CNaviMesh::GetInstance()->DestroyInstance();
+	CCollisionMgr::GetInstance()->DestroyInstance();
 
 	closesocket(g_hListenSock);
 	WSACleanup();

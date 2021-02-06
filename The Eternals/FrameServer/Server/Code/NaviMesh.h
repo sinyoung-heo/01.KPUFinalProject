@@ -10,6 +10,7 @@ private:
 	virtual ~CNaviMesh() = default;
 
 public:
+	const vector<CCell*>& Get_CellList() { return m_vecCell; }
 	_vec3	Get_CellCenterPos(const _ulong& dwIndex);
 	int		Get_CurrentPositionCellIndex(const _vec3& vPos);
 	void	Set_CurrentCellIndex(const _ulong& dwIdx) { m_dwCurrentIdx = dwIdx; }
