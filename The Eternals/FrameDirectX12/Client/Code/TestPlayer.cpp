@@ -28,10 +28,10 @@ HRESULT CTestPlayer::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, 
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos = vPos;
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
-		m_pTransCom->m_vScale,
-		m_pMeshCom->Get_CenterPos(),
-		m_pMeshCom->Get_MinVector(),
-		m_pMeshCom->Get_MaxVector());
+										   m_pTransCom->m_vScale,
+										   m_pMeshCom->Get_CenterPos(),
+										   m_pMeshCom->Get_MinVector(),
+										   m_pMeshCom->Get_MaxVector());
 
 
 	m_pInfoCom->m_fSpeed = 5.0f;
@@ -120,8 +120,8 @@ _int CTestPlayer::Update_GameObject(const _float& fTimeDelta)
 			{
 				// NaviMesh ÀÌµ¿.
 				_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
-					&m_pTransCom->m_vDir,
-					m_pInfoCom->m_fSpeed * fTimeDelta);
+															 &m_pTransCom->m_vDir,
+															 m_pInfoCom->m_fSpeed * fTimeDelta);
 				m_pTransCom->m_vPos = vPos;
 			}
 		}
@@ -208,14 +208,6 @@ void CTestPlayer::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCom
 {
 	Set_ConstantTableShadowDepth();
 	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
-}
-
-void CTestPlayer::Set_DeadReckoning(const _vec3& vPos1, const _vec3& vPos2, const _vec3& vPos3, const _vec3& vPos4)
-{
-	m_pInfoCom->m_arrBezierPoint[0] = vPos1;
-	m_pInfoCom->m_arrBezierPoint[1] = vPos2;
-	m_pInfoCom->m_arrBezierPoint[2] = vPos3;
-	m_pInfoCom->m_arrBezierPoint[3] = vPos4;
 }
 
 HRESULT CTestPlayer::Add_Component(wstring wstrMeshTag)

@@ -28,13 +28,14 @@ HRESULT CTestOthers::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, 
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos = vPos;
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
-		m_pTransCom->m_vScale,
-		m_pMeshCom->Get_CenterPos(),
-		m_pMeshCom->Get_MinVector(),
-		m_pMeshCom->Get_MaxVector());
+										   m_pTransCom->m_vScale,
+										   m_pMeshCom->Get_CenterPos(),
+										   m_pMeshCom->Get_MinVector(),
+										   m_pMeshCom->Get_MaxVector());
 
 
 	m_pInfoCom->m_fSpeed = 5.0f;
+	m_pInfoCom->m_arrBezierPoint[3] = { m_pTransCom->m_vPos };
 
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
@@ -105,6 +106,17 @@ _int CTestOthers::Update_GameObject(const _float& fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
+	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+	m_pTransCom->m_vDir.Normalize();
+
+	if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_arrBezierPoint[3]))
+	{
+		// NaviMesh 이동.
+		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+													 &m_pTransCom->m_vDir,
+													 m_pInfoCom->m_fSpeed * fTimeDelta);
+		m_pTransCom->m_vPos = vPos;
+	}
 
 	return NO_EVENT;
 }
