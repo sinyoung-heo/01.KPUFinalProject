@@ -90,6 +90,7 @@ private:
 
 	/* Server */
 	bool			m_bIsKeyUp = false;
+	bool			m_bIsSameDir = false;
 	float			m_fBazierSpeed = 0.f;
 	MVKEY			m_eKeyState = MVKEY::K_END;
 
