@@ -113,12 +113,16 @@ _int CTestPlayer::Update_GameObject(const _float& fTimeDelta)
 		/* 움직이고 있는 중일 경우 */
 		if (m_bIsKeyUp)
 		{
-			//if (CPacketMgr::Get_Instance()->change_MoveKey(m_eKeyState))
+			if (CPacketMgr::Get_Instance()->change_MoveKey(m_eKeyState))
 				Send_Player_Move();
 
-			//if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_arrBezierPoint[3]))
+			if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_arrBezierPoint[3]))
 			{
-				//m_pTransCom->m_vPos += m_pTransCom->m_vDir /** fTimeDelta*/ * 1.f;
+				// NaviMesh 이동.
+				_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+					&m_pTransCom->m_vDir,
+					m_pInfoCom->m_fSpeed * fTimeDelta);
+				m_pTransCom->m_vPos = vPos;
 			}
 		}
 	}

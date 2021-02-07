@@ -36,10 +36,11 @@ bool CCollisionMgr::CheckIntersectPoint(_vec2& AP1, _vec2& AP2, _vec2& BP1, _vec
 	return true;
 }
 
-void CCollisionMgr::Is_Collision_NaviLine(_vec3& vPos, _vec3& vDir, _vec2* vResult)
+bool CCollisionMgr::Is_Collision_NaviLine(_vec3& vPos, _vec3& vDir, _vec2* vResult)
 {
 	_vec2 vStart = _vec2(vPos.x, vPos.z);
-	_vec2 vEnd = vStart + _vec2(vDir.x * 5.f, vDir.z * 5.f);
+	_vec2 vEnd = vStart + _vec2(vDir.x * 1000.f, vDir.z * 1000.f);
+	vector<_vec2> vecPoint;
 
 	/* NaviMesh의 모든 Cell 검사 */
 	for (auto& c : CNaviMesh::GetInstance()->Get_CellList())
@@ -49,11 +50,34 @@ void CCollisionMgr::Is_Collision_NaviLine(_vec3& vPos, _vec3& vDir, _vec2* vResu
 		{
 			if (CheckIntersectPoint(vStart, vEnd, c->Get_Line(i).Get_Point()[0], c->Get_Line(i).Get_Point()[1], vResult))
 			{
-				cout << "Navi collide to Line] x:	" << vResult->x << " y: " << vResult->y << endl;
+				vecPoint.emplace_back(vResult->x, vResult->y);
 			}
 		}
 	}
 
+	float ret = 0.f;
+	bool bIsRet = false;
+	for (auto& r : vecPoint)
+	{
+		float dist = (vPos.x - r.x) * (vPos.x - r.x);
+		dist += (vPos.z - r.y) * (vPos.z - r.y);
+
+		if (ret < dist)
+		{
+			bIsRet = true;
+			ret = dist;
+			*vResult = r;
+		}
+	}
+
+	if (bIsRet) 
+	{
+#ifdef SERVER
+		cout << "Navi collide to Line] x: " << vResult->x << " y: " << vResult->y << endl;
+#endif
+		return true;
+	}	
+	else return false;
 }
 
 void CCollisionMgr::Release()

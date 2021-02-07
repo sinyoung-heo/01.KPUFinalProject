@@ -248,7 +248,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 				static_cast<CTestPlayer*>(pObj)->Set_DeadReckoning(pObj->Get_Transform()->m_vPos,
 					pObj->Get_Transform()->m_vPos, pObj->Get_Transform()->m_vPos, _vec3(packet->posX, packet->posY, packet->posZ));
 			
-				pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+				//pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
 				pObj->Get_Transform()->m_vAngle.y = packet->angleY;
 			}
 			/* 다른 클라이언트가 움직인 경우 */
