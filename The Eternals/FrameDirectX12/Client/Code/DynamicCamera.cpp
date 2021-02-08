@@ -119,6 +119,8 @@ void CDynamicCamera::Render_GameObject(const _float & fTimeDelta)
 {
 }
 
+
+
 void CDynamicCamera::Key_Input(const _float & fTimeDelta)
 {
 #ifdef SERVER

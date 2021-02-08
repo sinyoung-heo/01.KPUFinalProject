@@ -9,12 +9,13 @@ namespace Engine
 	class CShaderTexture;
 }
 
-class CTextureEffect : public Engine::CGameObject
+class CDynamicCamera;
+class CTextureDistortion : public Engine::CGameObject
 {
 private:
-	explicit CTextureEffect(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CTextureEffect(const CTextureEffect& rhs);
-	virtual ~CTextureEffect() = default;
+	explicit CTextureDistortion(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	explicit CTextureDistortion(const CTextureDistortion& rhs);
+	virtual ~CTextureDistortion() = default;
 
 public:
 	// CGameObject을(를) 통해 상속됨
@@ -28,11 +29,12 @@ public:
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 
+	void			Set_ParentPosition(_vec3* pPos) { m_pParentPosition = pPos; }
+
 private:
 	virtual HRESULT Add_Component(wstring wstrTextureTag);
 	void			Set_ConstantTable();
 	void			Update_SpriteFrame(const _float& fTimeDelta);
-
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -41,7 +43,9 @@ private:
 	Engine::CTexture*		m_pTextureCom	= nullptr;
 	Engine::CShaderTexture*	m_pShaderCom	= nullptr;
 
-	wstring m_strTextag= L"";
+
+	CDynamicCamera* m_pDynamicCamara = nullptr;
+	_vec3* m_pParentPosition = nullptr;
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/

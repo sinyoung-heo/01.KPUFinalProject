@@ -65,10 +65,14 @@ _int CDistortionDisk::Update_GameObject(const _float & fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	m_pTransCom->m_vScale.x += fTimeDelta;
+	m_pTransCom->m_vScale.z += fTimeDelta;
 	/*____________________________________________________________________
 	TransCom - Update WorldMatrix.
 	______________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
+
+
 
 	return NO_EVENT;
 }

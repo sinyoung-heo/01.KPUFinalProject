@@ -1,32 +1,35 @@
 #include "stdafx.h"
-#include "TextureEffect.h"
+#include "TextureDistortion.h"
 
 #include "ObjectMgr.h"
 #include "GraphicDevice.h"
-#include "TextureDistortion.h"
-
-CTextureEffect::CTextureEffect(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+#include "DynamicCamera.h"
+#include "DebugCamera.h"
+#include "ObjectMgr.h"
+CTextureDistortion::CTextureDistortion(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
 }
 
-CTextureEffect::CTextureEffect(const CTextureEffect & rhs)
+CTextureDistortion::CTextureDistortion(const CTextureDistortion & rhs)
 	: Engine::CGameObject(rhs)
 {
 }
 
 
-HRESULT CTextureEffect::Ready_GameObject(wstring wstrTextureTag, 
+HRESULT CTextureDistortion::Ready_GameObject(wstring wstrTextureTag, 
 										 const _vec3 & vScale,
 										 const _vec3 & vAngle,
 										 const _vec3 & vPos,
 										 const FRAME& tFrame)
 {
+
+
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrTextureTag), E_FAIL);
 
-	m_strTextag = wstrTextureTag;
 	m_pTransCom->m_vScale	= vScale;
+	m_pTransCom->m_vScale.y *= 3.f;
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos		= vPos;
 
@@ -36,31 +39,30 @@ HRESULT CTextureEffect::Ready_GameObject(wstring wstrTextureTag,
 	return S_OK;
 }
 
-HRESULT CTextureEffect::LateInit_GameObject()
+HRESULT CTextureDistortion::LateInit_GameObject()
 {
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer();
 
-	CGameObject* pGameObj;
-	// Fire
-	pGameObj = CTextureDistortion::Create(m_pGraphicDevice, m_pCommandList,
-		m_strTextag,						// TextureTag
-		m_pTransCom->m_vScale,		// Scale
-		m_pTransCom->m_vAngle,		// Angle
-		m_pTransCom->m_vPos,	// Pos
-		m_tFrame);			// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"TexEffect", pGameObj), E_FAIL);
-	static_cast<CTextureDistortion*>(pGameObj)->Set_ParentPosition(&m_pTransCom->m_vPos);
+	//DynamicCamera
+	m_pDynamicCamara = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DebugCamera"));
+	
+
 	return S_OK;
 }
 
-_int CTextureEffect::Update_GameObject(const _float & fTimeDelta)
+_int CTextureDistortion::Update_GameObject(const _float & fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	_vec3 Src = m_pDynamicCamara->Get_CameraInfo().vEye;
+	_vec3 Dir = (*m_pParentPosition) - Src;
+	Dir.y = 0.f;
+	Dir.Normalize();
+	m_pTransCom->m_vPos = (*m_pParentPosition) + Dir * 2.f;
 	/*__________________________________________________________________________________________________________
 	[ Update Sprite Frame ]
 	____________________________________________________________________________________________________________*/
@@ -69,7 +71,7 @@ _int CTextureEffect::Update_GameObject(const _float & fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_DISTORTION, this), -1);
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
@@ -87,14 +89,14 @@ _int CTextureEffect::Update_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CTextureEffect::LateUpdate_GameObject(const _float & fTimeDelta)
+_int CTextureDistortion::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 	
 	return NO_EVENT;
 }
 
-void CTextureEffect::Render_GameObject(const _float & fTimeDelta)
+void CTextureDistortion::Render_GameObject(const _float & fTimeDelta)
 {
 	Set_ConstantTable();
 
@@ -104,7 +106,7 @@ void CTextureEffect::Render_GameObject(const _float & fTimeDelta)
 	m_pBufferCom->Render_Buffer();
 }
 
-HRESULT CTextureEffect::Add_Component(wstring wstrTextureTag)
+HRESULT CTextureDistortion::Add_Component(wstring wstrTextureTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -130,7 +132,7 @@ HRESULT CTextureEffect::Add_Component(wstring wstrTextureTag)
 	return S_OK;
 }
 
-void CTextureEffect::Set_ConstantTable()
+void CTextureDistortion::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -146,7 +148,7 @@ void CTextureEffect::Set_ConstantTable()
 	m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 }
 
-void CTextureEffect::Update_SpriteFrame(const _float & fTimeDelta)
+void CTextureDistortion::Update_SpriteFrame(const _float & fTimeDelta)
 {
 	m_tFrame.fCurFrame += fTimeDelta * m_tFrame.fFrameSpeed;
 
@@ -165,7 +167,7 @@ void CTextureEffect::Update_SpriteFrame(const _float & fTimeDelta)
 
 }
 
-Engine::CGameObject* CTextureEffect::Create(ID3D12Device * pGraphicDevice,
+Engine::CGameObject* CTextureDistortion::Create(ID3D12Device * pGraphicDevice,
 											ID3D12GraphicsCommandList * pCommandList,
 											wstring wstrTextureTag, 
 											const _vec3 & vScale, 
@@ -173,7 +175,7 @@ Engine::CGameObject* CTextureEffect::Create(ID3D12Device * pGraphicDevice,
 											const _vec3 & vPos, 
 											const FRAME & tFrame)
 {
-	CTextureEffect* pInstance = new CTextureEffect(pGraphicDevice, pCommandList);
+	CTextureDistortion* pInstance = new CTextureDistortion(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrTextureTag, vScale, vAngle, vPos, tFrame)))
 		Engine::Safe_Release(pInstance);
@@ -181,7 +183,7 @@ Engine::CGameObject* CTextureEffect::Create(ID3D12Device * pGraphicDevice,
 	return pInstance;
 }
 
-void CTextureEffect::Free()
+void CTextureDistortion::Free()
 {
 	Engine::CGameObject::Free();
 

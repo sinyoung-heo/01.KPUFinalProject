@@ -57,6 +57,7 @@ float4 PS_MAIN(VS_OUT ps_input) : SV_TARGET
     //float2 TexUV = (Normal.xy ) + ps_input.TexUV;
     vector vDistortionInfo = g_TexDistortion.Sample(g_samLinearWrap, ps_input.TexUV);
     float2 vDistortion = (vDistortionInfo.xy * 2.f) - 1.f;
+    vDistortion *= 0.05f;//°­µµ
     float2 TexUV = float2(ps_input.TexUV.x + vDistortion.x * vDistortionInfo.b, ps_input.TexUV.y + vDistortion.y * vDistortionInfo.b);
     TexUV = saturate(TexUV);
 	float4 Albedo	= g_TexDiffuse.Sample(g_samLinearWrap, TexUV);

@@ -268,6 +268,11 @@ void CRenderer::Render_Blend()
 
 void CRenderer::Render_Distortion(const _float& fTimeDelta)
 {
+	sort(m_RenderList[RENDER_DISTORTION].begin(), m_RenderList[RENDER_DISTORTION ].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
+		{
+			return pSour->Get_DepthOfView() > pDest->Get_DepthOfView();
+		});
+
 	m_pTargetDistortion->SetUp_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
 
 	for (auto& pGameObject : m_RenderList[RENDER_DISTORTION])

@@ -210,6 +210,15 @@
     <ClInclude Include="..\Code\BumpTerrain.h">
       <Filter>02.GameObject\01.Environment\01.BumpTerrain</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\DistortionDisk.h" />
+    <ClInclude Include="..\Code\PacketMgr.h" />
+    <ClInclude Include="..\Code\ServerMath.h" />
+    <ClInclude Include="..\Code\TestOthers.h" />
+    <ClInclude Include="..\Code\TestPlayer.h" />
+    <ClInclude Include="..\Header\enum.h" />
+    <ClInclude Include="..\Code\TextureDistortion.h">
+      <Filter>02.GameObject\99.SampleObject\07.TextureEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -286,6 +295,14 @@
     </ClCompile>
     <ClCompile Include="..\Code\BumpTerrain.cpp">
       <Filter>02.GameObject\01.Environment\01.BumpTerrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\DistortionDisk.cpp" />
+    <ClCompile Include="..\Code\PacketMgr.cpp" />
+    <ClCompile Include="..\Code\ServerMath.cpp" />
+    <ClCompile Include="..\Code\TestOthers.cpp" />
+    <ClCompile Include="..\Code\TestPlayer.cpp" />
+    <ClCompile Include="..\Code\TextureDistortion.cpp">
+      <Filter>02.GameObject\99.SampleObject\07.TextureEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
