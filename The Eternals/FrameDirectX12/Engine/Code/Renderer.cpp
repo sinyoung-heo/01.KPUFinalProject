@@ -169,8 +169,8 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	Render_DownSampling();
 	Render_SSAO();
 	Render_Blur();
-	Render_Blend();						// Target Blend
 	Render_Distortion(fTimeDelta);
+	Render_Blend();						// Target Blend
 	Render_Collider(fTimeDelta);		// Collider Render
 	Render_Alpha(fTimeDelta);			// Effect Texture, Mesh
 	Render_UI(fTimeDelta);				// UI Render
@@ -244,6 +244,7 @@ void CRenderer::Render_Blend()
 
 		vector<ComPtr<ID3D12Resource>> vecBlurTarget = m_pTargetBlur->Get_TargetTexture();
 		vector<ComPtr<ID3D12Resource>> vecSSAOTarget = m_pTargetSSAO->Get_TargetTexture();
+		vector<ComPtr<ID3D12Resource>> vecDistortionTarget = m_pTargetDistortion->Get_TargetTexture();
 
 
 		vector<ComPtr<ID3D12Resource>> vecBlendTarget;
@@ -253,6 +254,7 @@ void CRenderer::Render_Blend()
 		vecBlendTarget.emplace_back(vecBlurTarget[0]);		// RenderTarget - Blur 
 		vecBlendTarget.emplace_back(vecDeferredTarget[4]);		// RenderTarget - Emissive
 		vecBlendTarget.emplace_back(vecBlurTarget[3]);		// RenderTarget - SSAO
+		vecBlendTarget.emplace_back(vecDistortionTarget[0]);		// RenderTarget - SSAO
 
 		m_pBlendShader->SetUp_ShaderTexture(vecBlendTarget);
 	}
