@@ -106,6 +106,12 @@
     <Filter Include="97.Mgr\03.ServerMath">
       <UniqueIdentifier>{608982b7-5130-4247-b0b0-0a6009ba9f5b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.SampleObject\09.TestPlayer">
+      <UniqueIdentifier>{f0f95ad6-bbdd-49d9-bc89-2cca06f27a2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.SampleObject\10.TestOthers">
+      <UniqueIdentifier>{6ad99d1c-9bb2-4d7f-806e-99ac48309498}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -205,8 +211,6 @@
       <Filter>98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\DistortionDisk.h" />
-    <ClInclude Include="..\Code\TestOthers.h" />
-    <ClInclude Include="..\Code\TestPlayer.h" />
     <ClInclude Include="..\Code\Scene_StageVelika.h">
       <Filter>01.Scene\03.StageVelika</Filter>
     </ClInclude>
@@ -218,6 +222,12 @@
     </ClInclude>
     <ClInclude Include="..\Code\ServerMath.h">
       <Filter>97.Mgr\03.ServerMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\TestOthers.h">
+      <Filter>02.GameObject\99.SampleObject\10.TestOthers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\TestPlayer.h">
+      <Filter>02.GameObject\99.SampleObject\09.TestPlayer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -291,8 +301,6 @@
       <Filter>01.Scene\01.Logo\02.LoadingProgress</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\DistortionDisk.cpp" />
-    <ClCompile Include="..\Code\TestOthers.cpp" />
-    <ClCompile Include="..\Code\TestPlayer.cpp" />
     <ClCompile Include="..\Code\Scene_StageVelika.cpp">
       <Filter>01.Scene\03.StageVelika</Filter>
     </ClCompile>
@@ -301,6 +309,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\ServerMath.cpp">
       <Filter>97.Mgr\03.ServerMath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TestOthers.cpp">
+      <Filter>02.GameObject\99.SampleObject\10.TestOthers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TestPlayer.cpp">
+      <Filter>02.GameObject\99.SampleObject\09.TestPlayer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
