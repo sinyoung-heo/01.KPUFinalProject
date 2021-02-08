@@ -10,17 +10,18 @@ private:
 	virtual ~CNaviMesh() = default;
 
 public:
-	_vec3*	Get_CellCenterPos(const unsigned long& dwIndex);
+	const vector<CCell*>& Get_CellList() { return m_vecCell; }
+	_vec3	Get_CellCenterPos(const _ulong& dwIndex);
 	int		Get_CurrentPositionCellIndex(const _vec3& vPos);
-	void	Set_CurrentCellIndex(const unsigned long& dwIdx) { m_dwCurrentIdx = dwIdx; }
-
-	_vec3*	Move_OnNaviMesh(const _vec3* pTargetPos,
-							const _vec3* pTargetDir,
-							const float& fSpeed = 0.0f,
-							const bool& bIsJump = false);
+	void	Set_CurrentCellIndex(const _ulong& dwIdx) { m_dwCurrentIdx = dwIdx; }
 
 public:
 	HRESULT	Ready_NaviMesh(wstring wstrFilePath);
+
+	_vec3	Move_OnNaviMesh(const _vec3* pTargetPos,
+							const _vec3* pTargetDir,
+							const float& fSpeed = 0.0f,
+							const bool& bIsJump = false);
 
 private:
 	void	Link_Cell();

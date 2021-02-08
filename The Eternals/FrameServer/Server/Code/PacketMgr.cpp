@@ -37,12 +37,12 @@ void process_packet(int id)
 		send_login_ok(id);
 
 		/* Sector 다시 등록 (접속 시 미리 한 번 하고있음. 완전함을 위해 한 번 더 등록(sector의 Key는 Unique함) */
-		CSectorMgr::GetInstance()->Enter_ClientInSector(id, (int)(pPlayer->m_vPos.y / SECTOR_SIZE), (int)(pPlayer->m_vPos.x / SECTOR_SIZE));
+		CSectorMgr::GetInstance()->Enter_ClientInSector(id, (int)(pPlayer->m_vPos.z / SECTOR_SIZE), (int)(pPlayer->m_vPos.x / SECTOR_SIZE));
 
 		/* 해당 플레이어가 등록되어 있는 섹터 내의 유저들에게 접속을 알림 */
 		unordered_set<pair<int, int>> nearSector;
 		nearSector.reserve(5);
-		CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSector, (int)pPlayer->m_vPos.x, (int)pPlayer->m_vPos.y);
+		CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSector, (int)pPlayer->m_vPos.x, (int)pPlayer->m_vPos.z);
 
 		// 인접 섹터 순회
 		for (auto& s : nearSector)
@@ -116,8 +116,8 @@ void process_packet(int id)
 		cs_packet_move* p = reinterpret_cast<cs_packet_move*>(pPlayer->m_packet_start);
 		
 		pPlayer->move_time = p->move_time;
-		_vec3& vDir = _vec3(p->dirX, p->dirY, p->dirZ);
-		_vec3& vAngle = _vec3(0.f, p->angleY, 0.f);
+		_vec3 vDir = _vec3(p->dirX, p->dirY, p->dirZ);
+		_vec3 vAngle = _vec3(0.f, p->angleY, 0.f);
 		process_move(id, p->dir, vDir, vAngle);
 	}
 	break;
@@ -126,8 +126,8 @@ void process_packet(int id)
 	{
 		cs_packet_move_stop* p = reinterpret_cast<cs_packet_move_stop*>(pPlayer->m_packet_start);
 
-		_vec3& vPos = _vec3(p->posX, p->posY, p->posZ);
-		_vec3& vAngle = _vec3(0.f, p->angleY, 0.f);
+		_vec3 vPos = _vec3(p->posX, p->posY, p->posZ);
+		_vec3 vAngle = _vec3(0.f, p->angleY, 0.f);
 		process_move_stop(id, vPos, vAngle);
 	}
 	break;
@@ -318,12 +318,11 @@ void process_move(int id, char direction, const _vec3& _vDir, const _vec3& _vAng
 	if (pPlayer == nullptr) return;
 
 	/* 해당 플레이어의 원래 위치값 & 변경된 위치값 */
-	_vec3 cur(0.f);
 	float ori_x, ori_y, ori_z;
 	
-	cur.x = ori_x = pPlayer->m_vPos.x;
-	cur.y = ori_y = pPlayer->m_vPos.y;
-	cur.z = ori_z = pPlayer->m_vPos.z;
+	ori_x = pPlayer->m_vPos.x;
+	ori_y = pPlayer->m_vPos.y;
+	ori_z = pPlayer->m_vPos.z;
 
 	pPlayer->m_vDir = _vDir;
 	pPlayer->m_vAngle = _vAngle;
@@ -365,7 +364,7 @@ void process_move(int id, char direction, const _vec3& _vDir, const _vec3& _vAng
 #ifdef TEST
 	default: cout << "Unknown Direction in CS_MOVE packet.\n";
 		while (true);
-#endif // TEST
+#endif 
 	}
 
 	/* 해당 플레이어의 원래 시야 목록 */
@@ -374,21 +373,25 @@ void process_move(int id, char direction, const _vec3& _vDir, const _vec3& _vAng
 	pPlayer->v_lock.unlock();
 
 	/* 해당 플레이어로부터 받은 변경된 위치값 저장 */
-	cur += pPlayer->m_vDir;
+	_vec3 cal_curPos = _vec3(0.0f);
+	_vec2 coll_pos = _vec2(0.f);
 
-	pPlayer->m_vPos.x = cur.x;
-	pPlayer->m_vPos.y = cur.y;
-	pPlayer->m_vPos.z = cur.z;
+	if (CCollisionMgr::GetInstance()->Is_Collision_NaviLine(pPlayer->m_vPos, pPlayer->m_vDir, &coll_pos))
+	{
+		pPlayer->m_vPos.x = coll_pos.x;
+		pPlayer->m_vPos.y = 0.f;
+		pPlayer->m_vPos.z = coll_pos.y;
+	}
 
 	send_move_packet(id, id);
 
 	/* 변경된 좌표로 섹터 갱신 */
-	CSectorMgr::GetInstance()->Compare_exchange_Sector(id, (int)ori_y, (int)ori_x, (int)(pPlayer->m_vPos.y), (int)(pPlayer->m_vPos.x));
+	CSectorMgr::GetInstance()->Compare_exchange_Sector(id, (int)ori_z, (int)ori_x, (int)(pPlayer->m_vPos.z), (int)(pPlayer->m_vPos.x));
 
 	/* 플레이어 주변의 섹터를 검색 -> 인접한 섹터 내의 객체에게 좌표 전송 */
 	unordered_set<pair<int, int>> nearSector;
 	nearSector.reserve(5);
-	CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSector, (int)pPlayer->m_vPos.x, (int)pPlayer->m_vPos.y);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSector, (int)pPlayer->m_vPos.x, (int)pPlayer->m_vPos.z);
 
 	// 해당 플레이어의 갱신된 시야 목록
 	unordered_set<int> new_viewlist;
@@ -569,12 +572,12 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vAngle)
 	send_move_packet(id, id);
 
 	/* 변경된 좌표로 섹터 갱신 */
-	CSectorMgr::GetInstance()->Compare_exchange_Sector(id, (int)ori_y, (int)ori_x, (int)(pPlayer->m_vPos.y), (int)(pPlayer->m_vPos.x));
+	CSectorMgr::GetInstance()->Compare_exchange_Sector(id, (int)ori_z, (int)ori_x, (int)(pPlayer->m_vPos.z), (int)(pPlayer->m_vPos.x));
 
 	/* 플레이어 주변의 섹터를 검색 -> 인접한 섹터 내의 객체에게 좌표 전송 */
 	unordered_set<pair<int, int>> nearSector;
 	nearSector.reserve(5);
-	CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSector, (int)pPlayer->m_vPos.x, (int)pPlayer->m_vPos.y);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSector, (int)pPlayer->m_vPos.x, (int)pPlayer->m_vPos.z);
 
 	// 해당 플레이어의 갱신된 시야 목록
 	unordered_set<int> new_viewlist;
@@ -792,7 +795,7 @@ void random_move_npc(int id)
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
 	oldnearSector.reserve(5);
-	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_y);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist; 
 
@@ -827,19 +830,19 @@ void random_move_npc(int id)
 	{
 	case 0: if (ori_x > 0) pNPC->m_vPos.x -= 10.f; break;
 	case 1: if (ori_x < (WORLD_WIDTH - 1))  pNPC->m_vPos.x += 10.f; break;
-	case 2: if (ori_y > 0)  pNPC->m_vPos.y -= 10.f; break;
-	case 3: if (ori_y < (WORLD_HEIGHT - 1))  pNPC->m_vPos.y += 10.f; break;
+	case 2: if (ori_z > 0)  pNPC->m_vPos.z -= 10.f; break;
+	case 3: if (ori_z < (WORLD_HEIGHT - 1))  pNPC->m_vPos.z += 10.f; break;
 	}
 
 	/* 변경된 좌표로 섹터 갱신 */
-	CSectorMgr::GetInstance()->Compare_exchange_Sector(id, (int)ori_y, (int)ori_x, (int)(pNPC->m_vPos.y), (int)(pNPC->m_vPos.x));
+	CSectorMgr::GetInstance()->Compare_exchange_Sector(id, (int)ori_z, (int)ori_x, (int)(pNPC->m_vPos.z), (int)(pNPC->m_vPos.x));
 
 	// 움직인 후 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set <int> new_viewlist;
 
 	unordered_set<pair<int, int>> nearSectors;
 	nearSectors.reserve(5);
-	CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSectors, (int)(pNPC->m_vPos.x), (int)(pNPC->m_vPos.y));
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSectors, (int)(pNPC->m_vPos.x), (int)(pNPC->m_vPos.z));
 
 	// 이동 후: 인접 섹터 순회 -> 유저가 있을 시 new viewlist 내에 등록
 	for (auto& s : nearSectors)

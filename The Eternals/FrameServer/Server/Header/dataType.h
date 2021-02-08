@@ -4,166 +4,166 @@
 typedef struct tagVector2
 {
 public:
-	explicit tagVector2()
+	tagVector2()
 		:x(0.f), y(0.f)
 	{}
-	explicit tagVector2(const float& _x, const float& _y)
+	tagVector2(const float& _x, const float& _y)
 		: x(_x), y(_y)
 	{}
-	explicit tagVector2(const float& num)
+	tagVector2(const float& num)
 		: x(num), y(num)
 	{}
-	explicit tagVector2(const tagVector2& vec)
+	tagVector2(const tagVector2& vec)
 		: x(vec.x), y(vec.y)
 	{}
 
 	/* ===============================================ø¨ªÍ¿⁄ ø¿πˆ∑Œµ˘=============================================== */
 	// µ°º¿
-	tagVector2& operator+(const tagVector2& vec)
+	tagVector2 operator+(const tagVector2& vec)
 	{
 		return tagVector2(this->x + vec.x, this->y + vec.y);
 	}
 
-	const tagVector2& operator+(const tagVector2& vec) const
+	const tagVector2 operator+(const tagVector2& vec) const
 	{
 		return tagVector2(this->x + vec.x, this->y + vec.y);
 	}
 
 	// ª¨º¿
-	tagVector2& operator-(const tagVector2& vec)
+	tagVector2 operator-(const tagVector2& vec)
 	{
 		return tagVector2(this->x - vec.x, this->y - vec.y);
 	}
 
-	const tagVector2& operator-(const tagVector2& vec) const
+	const tagVector2 operator-(const tagVector2& vec) const
 	{
 		return tagVector2(this->x - vec.x, this->y - vec.y);
 	}
 
 	// ∞ˆº¿
-	tagVector2& operator*(const tagVector2& vec)
+	tagVector2 operator*(const tagVector2& vec)
 	{
 		return tagVector2(this->x * vec.x, this->y * vec.y);
 	}
 
-	tagVector2& operator*(const int& num)
+	tagVector2 operator*(const int& num)
 	{
 		return tagVector2(this->x * (float)num, this->y * (float)num);
 	}
 
-	tagVector2& operator*(const float& num)
+	tagVector2 operator*(const float& num)
 	{
 		return tagVector2(this->x * num, this->y * num);
 	}
 
-	tagVector2& operator*(const double& num)
+	tagVector2 operator*(const double& num)
 	{
 		return tagVector2(this->x * (float)num, this->y * (float)num);
 	}
 
-	const tagVector2& operator*(const tagVector2& vec) const
+	const tagVector2 operator*(const tagVector2& vec) const
 	{
 		return tagVector2(this->x * vec.x, this->y * vec.y);
 	}
 
-	const tagVector2& operator*(const int& num) const
+	const tagVector2 operator*(const int& num) const
 	{
 		return tagVector2(this->x * (float)num, this->y * (float)num);
 	}
 
-	const tagVector2& operator*(const float& num) const
+	const tagVector2 operator*(const float& num) const
 	{
 		return tagVector2(this->x * num, this->y * num);
 	}
 
-	const tagVector2& operator*(const double& num) const
+	const tagVector2 operator*(const double& num) const
 	{
 		return tagVector2(this->x * (float)num, this->y * (float)num);
 	}
 
-	friend tagVector2& operator*(const int& num, tagVector2& vec)
+	friend tagVector2 operator*(const int& num, tagVector2& vec)
 	{
 		return tagVector2(vec.x * (float)num, vec.y * (float)num);
 	}
 
-	friend tagVector2& operator*(const float& num, tagVector2& vec)
+	friend tagVector2 operator*(const float& num, tagVector2& vec)
 	{
 		return tagVector2(vec.x * num, vec.y * num);
 	}
 
-	friend tagVector2& operator*(const double& num, tagVector2& vec)
+	friend tagVector2 operator*(const double& num, tagVector2& vec)
 	{
 		return tagVector2(vec.x * (float)num, vec.y * (float)num);
 	}
 
 	// ≥™¥∞º¿
-	tagVector2& operator/(const int& num)
+	tagVector2 operator/(const int& num)
 	{
 		return tagVector2(this->x / (float)num, this->y / (float)num);
 	}
 
-	tagVector2& operator/(const float& num)
+	tagVector2 operator/(const float& num)
 	{
 		return tagVector2(this->x / num, this->y / num);
 	}
 
-	tagVector2& operator/(const double& num)
+	tagVector2 operator/(const double& num)
 	{
 		return tagVector2(this->x / (float)num, this->y / (float)num);
 	}
 
-	const tagVector2& operator/(const int& num) const
+	const tagVector2 operator/(const int& num) const
 	{
 		return tagVector2(this->x / (float)num, this->y / (float)num);
 	}
 
-	const tagVector2& operator/(const float& num) const
+	const tagVector2 operator/(const float& num) const
 	{
 		return tagVector2(this->x / num, this->y / num);
 	}
 
-	const tagVector2& operator/(const double& num) const
+	const tagVector2 operator/(const double& num) const
 	{
 		return tagVector2(this->x / (float)num, this->y / (float)num);
 	}
 
-	friend tagVector2& operator/(const int& num, tagVector2& vec)
+	friend tagVector2 operator/(const int& num, tagVector2& vec)
 	{
 		return tagVector2(vec.x / (float)num, vec.y / (float)num);
 	}
 
-	friend tagVector2& operator/(const float& num, tagVector2& vec)
+	friend tagVector2 operator/(const float& num, tagVector2& vec)
 	{
 		return tagVector2(vec.x / num, vec.y / num);
 	}
 
-	friend tagVector2& operator/(const double& num, tagVector2& vec)
+	friend tagVector2 operator/(const double& num, tagVector2& vec)
 	{
 		return tagVector2(vec.x / (float)num, vec.y / (float)num);
 	}
 
 	// √‡æ‡ ø¨ªÍ¿⁄
-	tagVector2& operator+=(const tagVector2& vec)
+	tagVector2 operator+=(const tagVector2& vec)
 	{
 		return (*this) = (*this) + vec;
 	}
-	tagVector2& operator-=(const tagVector2& vec)
+	tagVector2 operator-=(const tagVector2& vec)
 	{
 		return (*this) = (*this) - vec;
 	}
-	tagVector2& operator*=(const tagVector2& vec)
+	tagVector2 operator*=(const tagVector2& vec)
 	{
 		return (*this) = (*this) * vec;
 	}
-	tagVector2& operator*=(const int& num)
+	tagVector2 operator*=(const int& num)
 	{
 		return (*this) = (*this) * (float)num;
 	}
-	tagVector2& operator*=(const float& num)
+	tagVector2 operator*=(const float& num)
 	{
 		return (*this) = (*this) * num;
 	}
-	tagVector2& operator*=(const double& num)
+	tagVector2 operator*=(const double& num)
 	{
 		return (*this) = (*this) * (float)num;
 	}
@@ -209,24 +209,6 @@ public:
 		return sqrtf((dst.x - this->x) * (dst.x - this->x) + (dst.y - this->y) * (dst.y - this->y));
 	}
 
-	float Angle(tagVector2& vec)
-	{
-		// src normalize
-		this->Normalize();
-
-		// dst normalize
-		vec.Normalize();
-
-		/* µŒ ¥‹¿ß ∫§≈Õ ≥ª¿˚ -> cos•» ∞™ µµ√‚ */
-		float cos = this->Dot(vec);
-
-		/* Radian = acos(cos•») */
-		float theta = acosf(cos);
-
-		// degree
-		return theta * (180.f / (float)PI);
-	}
-
 public:
 	float x, y;
 
@@ -235,166 +217,166 @@ public:
 typedef struct tagVector3
 {
 public:
-	explicit tagVector3() 
+	tagVector3() 
 		:x(0.f), y(0.f), z(0.f) 
 	{}
-	explicit tagVector3(const float& _x, const float& _y, const float& _z)
+	tagVector3(const float& _x, const float& _y, const float& _z)
 		: x(_x), y(_y), z(_z)
 	{}
-	explicit tagVector3(const float& num)
+	tagVector3(const float& num)
 		: x(num), y(num), z(num) 
 	{}
-	explicit tagVector3(const tagVector3& vec) 
+	tagVector3(const tagVector3& vec) 
 		: x(vec.x), y(vec.y), z(vec.z) 
 	{}
-	
+		
 	/* ===============================================ø¨ªÍ¿⁄ ø¿πˆ∑Œµ˘=============================================== */
 	// µ°º¿
-	tagVector3& operator+(const tagVector3& vec) 
+	tagVector3 operator+(const tagVector3& vec) 
 	{ 
 		return tagVector3(this->x + vec.x, this->y + vec.y, this->z + vec.z);
 	}
 
-	const tagVector3& operator+(const tagVector3& vec) const 
+	const tagVector3 operator+(const tagVector3& vec) const 
 	{ 
 		return tagVector3(this->x + vec.x, this->y + vec.y, this->z + vec.z);
 	}
 
 	// ª¨º¿
-	tagVector3& operator-(const tagVector3& vec)
+	tagVector3 operator-(const tagVector3& vec)
 	{
 		return tagVector3(this->x - vec.x, this->y - vec.y, this->z - vec.z);
 	}
 
-	const tagVector3& operator-(const tagVector3& vec) const
+	const tagVector3 operator-(const tagVector3& vec) const
 	{
 		return tagVector3(this->x - vec.x, this->y - vec.y, this->z - vec.z);
 	}
 
 	// ∞ˆº¿
-	tagVector3& operator*(const tagVector3& vec)
+	tagVector3 operator*(const tagVector3& vec)
 	{
 		return tagVector3(this->x * vec.x, this->y * vec.y, this->z * vec.z);
 	}
 
-	tagVector3& operator*(const int& num)
+	tagVector3 operator*(const int& num)
 	{
 		return tagVector3(this->x * (float)num, this->y * (float)num, this->z * (float)num);
 	}
 
-	tagVector3& operator*(const float& num)
+	tagVector3 operator*(const float& num)
 	{
 		return tagVector3(this->x * num, this->y * num, this->z * num);
 	}
 
-	tagVector3& operator*(const double& num)
+	tagVector3 operator*(const double& num)
 	{
 		return tagVector3(this->x * (float)num, this->y * (float)num, this->z * (float)num);
 	}
 
-	const tagVector3& operator*(const tagVector3& vec) const
+	const tagVector3 operator*(const tagVector3& vec) const
 	{
 		return tagVector3(this->x * vec.x, this->y * vec.y, this->z * vec.z);
 	}
 
-	const tagVector3& operator*(const int& num) const
+	const tagVector3 operator*(const int& num) const
 	{
 		return tagVector3(this->x * (float)num, this->y * (float)num, this->z * (float)num);
 	}
 
-	const tagVector3& operator*(const float& num) const
+	const tagVector3 operator*(const float& num) const
 	{
 		return tagVector3(this->x * num, this->y * num, this->z * num);
 	}
 
-	const tagVector3& operator*(const double& num) const
+	const tagVector3 operator*(const double& num) const
 	{
 		return tagVector3(this->x * (float)num, this->y * (float)num, this->z * (float)num);
 	}
 
-	friend tagVector3& operator*(const int& num, tagVector3& vec)
+	friend tagVector3 operator*(const int& num, tagVector3& vec)
 	{
 		return tagVector3(vec.x * (float)num, vec.y * (float)num, vec.z * (float)num);
 	}
 
-	friend tagVector3& operator*(const float& num, tagVector3& vec)
+	friend tagVector3 operator*(const float& num, tagVector3& vec)
 	{
 		return tagVector3(vec.x * num, vec.y * num, vec.z * num);
 	}
 
-	friend tagVector3& operator*(const double& num, tagVector3& vec)
+	friend tagVector3 operator*(const double& num, tagVector3& vec)
 	{
 		return tagVector3(vec.x * (float)num, vec.y * (float)num, vec.z * (float)num);
 	}
 
 	// ≥™¥∞º¿
-	tagVector3& operator/(const int& num)
+	tagVector3 operator/(const int& num)
 	{
 		return tagVector3(this->x / (float)num, this->y / (float)num, this->z / (float)num);
 	}
 
-	tagVector3& operator/(const float& num)
+	tagVector3 operator/(const float& num)
 	{
 		return tagVector3(this->x / num, this->y / num, this->z / num);
 	}
 
-	tagVector3& operator/(const double& num)
+	tagVector3 operator/(const double& num)
 	{
 		return tagVector3(this->x / (float)num, this->y / (float)num, this->z / (float)num);
 	}
 
-	const tagVector3& operator/(const int& num) const
+	const tagVector3 operator/(const int& num) const
 	{
 		return tagVector3(this->x / (float)num, this->y / (float)num, this->z / (float)num);
 	}
 
-	const tagVector3& operator/(const float& num) const
+	const tagVector3 operator/(const float& num) const
 	{
 		return tagVector3(this->x / num, this->y / num, this->z / num);
 	}
 
-	const tagVector3& operator/(const double& num) const
+	const tagVector3 operator/(const double& num) const
 	{
 		return tagVector3(this->x / (float)num, this->y / (float)num, this->z / (float)num);
 	}
 
-	friend tagVector3& operator/(const int& num, tagVector3& vec)
+	friend tagVector3 operator/(const int& num, tagVector3& vec)
 	{
 		return tagVector3(vec.x / (float)num, vec.y / (float)num, vec.z / (float)num);
 	}
 
-	friend tagVector3& operator/(const float& num, tagVector3& vec)
+	friend tagVector3 operator/(const float& num, tagVector3& vec)
 	{
 		return tagVector3(vec.x / num, vec.y / num, vec.z / num);
 	}
 
-	friend tagVector3& operator/(const double& num, tagVector3& vec)
+	friend tagVector3 operator/(const double& num, tagVector3& vec)
 	{
 		return tagVector3(vec.x / (float)num, vec.y / (float)num, vec.z / (float)num);
 	}
 
 	// √‡æ‡ ø¨ªÍ¿⁄
-	tagVector3& operator+=(const tagVector3& vec)
+	tagVector3 operator+=(const tagVector3& vec)
 	{
 		return (*this) = (*this) + vec;
 	}
-	tagVector3& operator-=(const tagVector3& vec)
+	tagVector3 operator-=(const tagVector3& vec)
 	{
 		return (*this) = (*this) - vec;
 	}
-	tagVector3& operator*=(const tagVector3& vec)
+	tagVector3 operator*=(const tagVector3& vec)
 	{
 		return (*this) = (*this) * vec;
 	}
-	tagVector3& operator*=(const int& num)
+	tagVector3 operator*=(const int& num)
 	{
 		return (*this) = (*this) * (float)num;
 	}
-	tagVector3& operator*=(const float& num)
+	tagVector3 operator*=(const float& num)
 	{
 		return (*this) = (*this) * num;
 	}
-	tagVector3& operator*=(const double& num)
+	tagVector3 operator*=(const double& num)
 	{
 		return (*this) = (*this) * (float)num;
 	}
@@ -459,12 +441,12 @@ public:
 		return theta * (180.f / (float)PI);
 	}
 
-	tagVector3* Cross(tagVector3* target, tagVector3* v1, tagVector3* v2)
+	tagVector3 Cross(tagVector3* target, tagVector3* v1, tagVector3* v2)
 	{
 		target->x = (v1->y * v2->z) - (v1->z * v2->y);
 		target->y = (v1->z * v2->x) - (v1->x * v2->z);
 		target->z = (v1->x * v2->y) - (v1->y * v2->x);
-		return target;
+		return *target;
 	}
 	
 public:
@@ -475,166 +457,166 @@ public:
 typedef struct tagVector4
 {
 public:
-	explicit tagVector4()
+	tagVector4()
 		:x(0.f), y(0.f), z(0.f), w(0.f)
 	{}
-	explicit tagVector4(const float& _x, const float& _y, const float& _z, const float& _w)
+	tagVector4(const float& _x, const float& _y, const float& _z, const float& _w)
 		: x(_x), y(_y), z(_z), w(0.f)
 	{}
-	explicit tagVector4(const float& num)
+	tagVector4(const float& num)
 		: x(num), y(num), z(num), w(0.f)
 	{}
-	explicit tagVector4(const tagVector3& vec)
+	tagVector4(const tagVector3& vec)
 		: x(vec.x), y(vec.y), z(vec.z), w(0.f)
 	{}
 
 	/* ===============================================ø¨ªÍ¿⁄ ø¿πˆ∑Œµ˘=============================================== */
 	// µ°º¿
-	tagVector4& operator+(const tagVector4& vec)
+	tagVector4 operator+(const tagVector4& vec)
 	{
 		return tagVector4(this->x + vec.x, this->y + vec.y, this->z + vec.z, this->w + vec.w);
 	}
 
-	const tagVector4& operator+(const tagVector4& vec) const
+	const tagVector4 operator+(const tagVector4& vec) const
 	{
 		return tagVector4(this->x + vec.x, this->y + vec.y, this->z + vec.z, this->w + vec.w);
 	}
 
 	// ª¨º¿
-	tagVector4& operator-(const tagVector4& vec)
+	tagVector4 operator-(const tagVector4& vec)
 	{
 		return tagVector4(this->x - vec.x, this->y - vec.y, this->z - vec.z, this->w + vec.w);
 	}
 
-	const tagVector4& operator-(const tagVector4& vec) const
+	const tagVector4 operator-(const tagVector4& vec) const
 	{
 		return tagVector4(this->x - vec.x, this->y - vec.y, this->z - vec.z, this->w + vec.w);
 	}
 
 	// ∞ˆº¿
-	tagVector4& operator*(const tagVector4& vec)
+	tagVector4 operator*(const tagVector4& vec)
 	{
 		return tagVector4(this->x * vec.x, this->y * vec.y, this->z * vec.z, this->w + vec.w);
 	}
 
-	tagVector4& operator*(const int& num)
+	tagVector4 operator*(const int& num)
 	{
 		return tagVector4(this->x * (float)num, this->y * (float)num, this->z * (float)num, this->w * (float)num);
 	}
 
-	tagVector4& operator*(const float& num)
+	tagVector4 operator*(const float& num)
 	{
 		return tagVector4(this->x * num, this->y * num, this->z * num, this->w * (float)num);
 	}
 
-	tagVector4& operator*(const double& num)
+	tagVector4 operator*(const double& num)
 	{
 		return tagVector4(this->x * (float)num, this->y * (float)num, this->z * (float)num, this->w * (float)num);
 	}
 
-	const tagVector4& operator*(const tagVector4& vec) const
+	const tagVector4 operator*(const tagVector4& vec) const
 	{
 		return tagVector4(this->x * vec.x, this->y * vec.y, this->z * vec.z, this->w * vec.w);
 	}
 
-	const tagVector4& operator*(const int& num) const
+	const tagVector4 operator*(const int& num) const
 	{
 		return tagVector4(this->x * (float)num, this->y * (float)num, this->z * (float)num, this->w * (float)num);
 	}
 
-	const tagVector4& operator*(const float& num) const
+	const tagVector4 operator*(const float& num) const
 	{
 		return tagVector4(this->x * num, this->y * num, this->z * num, this->w * num);
 	}
 
-	const tagVector4& operator*(const double& num) const
+	const tagVector4 operator*(const double& num) const
 	{
 		return tagVector4(this->x * (float)num, this->y * (float)num, this->z * (float)num, this->w * (float)num);
 	}
 
-	friend tagVector4& operator*(const int& num, tagVector4& vec)
+	friend tagVector4 operator*(const int& num, tagVector4& vec)
 	{
 		return tagVector4(vec.x * (float)num, vec.y * (float)num, vec.z * (float)num, vec.w * (float)num);
 	}
 
-	friend tagVector4& operator*(const float& num, tagVector4& vec)
+	friend tagVector4 operator*(const float& num, tagVector4& vec)
 	{
 		return tagVector4(vec.x * num, vec.y * num, vec.z * num, vec.w * num);
 	}
 
-	friend tagVector4& operator*(const double& num, tagVector4& vec)
+	friend tagVector4 operator*(const double& num, tagVector4& vec)
 	{
 		return tagVector4(vec.x * (float)num, vec.y * (float)num, vec.z * (float)num, vec.w * (float)num);
 	}
 
 	// ≥™¥∞º¿
-	tagVector4& operator/(const int& num)
+	tagVector4 operator/(const int& num)
 	{
 		return tagVector4(this->x / (float)num, this->y / (float)num, this->z / (float)num, this->w / (float)num);
 	}
 
-	tagVector4& operator/(const float& num)
+	tagVector4 operator/(const float& num)
 	{
 		return tagVector4(this->x / num, this->y / num, this->z / num, this->w / num);
 	}
 
-	tagVector4& operator/(const double& num)
+	tagVector4 operator/(const double& num)
 	{
 		return tagVector4(this->x / (float)num, this->y / (float)num, this->z / (float)num, this->w / (float)num);
 	}
 
-	const tagVector4& operator/(const int& num) const
+	const tagVector4 operator/(const int& num) const
 	{
 		return tagVector4(this->x / (float)num, this->y / (float)num, this->z / (float)num, this->w / (float)num);
 	}
 
-	const tagVector4& operator/(const float& num) const
+	const tagVector4 operator/(const float& num) const
 	{
 		return tagVector4(this->x / num, this->y / num, this->z / num, this->w / num);
 	}
 
-	const tagVector4& operator/(const double& num) const
+	const tagVector4 operator/(const double& num) const
 	{
 		return tagVector4(this->x / (float)num, this->y / (float)num, this->z / (float)num, this->w / (float)num);
 	}
 
-	friend tagVector4& operator/(const int& num, tagVector4& vec)
+	friend tagVector4 operator/(const int& num, tagVector4& vec)
 	{
 		return tagVector4(vec.x / (float)num, vec.y / (float)num, vec.z / (float)num, vec.w / (float)num);
 	}
 
-	friend tagVector4& operator/(const float& num, tagVector4& vec)
+	friend tagVector4 operator/(const float& num, tagVector4& vec)
 	{
 		return tagVector4(vec.x / num, vec.y / num, vec.z / num, vec.w / num);
 	}
 
-	friend tagVector4& operator/(const double& num, tagVector4& vec)
+	friend tagVector4 operator/(const double& num, tagVector4& vec)
 	{
 		return tagVector4(vec.x / (float)num, vec.y / (float)num, vec.z / (float)num, vec.w / (float)num);
 	}
 
 	// √‡æ‡ ø¨ªÍ¿⁄
-	tagVector4& operator+=(const tagVector4& vec)
+	tagVector4 operator+=(const tagVector4& vec)
 	{
 		return (*this) = (*this) + vec;
 	}
-	tagVector4& operator-=(const tagVector4& vec)
+	tagVector4 operator-=(const tagVector4& vec)
 	{
 		return (*this) = (*this) - vec;
 	}
-	tagVector4& operator*=(const tagVector4& vec)
+	tagVector4 operator*=(const tagVector4& vec)
 	{
 		return (*this) = (*this) * vec;
 	}
-	tagVector4& operator*=(const int& num)
+	tagVector4 operator*=(const int& num)
 	{
 		return (*this) = (*this) * (float)num;
 	}
-	tagVector4& operator*=(const float& num)
+	tagVector4 operator*=(const float& num)
 	{
 		return (*this) = (*this) * num;
 	}
-	tagVector4& operator*=(const double& num)
+	tagVector4 operator*=(const double& num)
 	{
 		return (*this) = (*this) * (float)num;
 	}
@@ -702,8 +684,52 @@ public:
 		return theta * (180.f / (float)PI);
 	}
 
+	tagVector4 Cross(const tagVector4& v1, const tagVector4& v2)
+	{
+		tagVector4 ret = tagVector4((v1.y * v2.z) - (v1.z * v2.y), 
+									(v1.z * v2.x) - (v1.x * v2.z), 
+									(v1.x * v2.y) - (v1.y * v2.x), 
+									0.f);
+
+		return ret;
+	}
+
+	tagVector4 PlaneDotNormal(const tagVector4& v1, const tagVector4& v2)
+	{
+		float fValue = (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
+		tagVector4 ret;
+		ret.w = fValue;
+
+		return ret;
+	}
+
+	tagVector4 VectorNegate(tagVector4 v)
+	{
+		return tagVector4(-1.f * v.x, -1.f * v.y, -1.f * v.z, -1.f * v.w);
+	}
+
+	
+	// Plane
+	void Plane_FromPoints(const _vec3& v1, const _vec3& v2, const _vec3& v3)
+	{
+		tagVector4 V1 = tagVector4(v1.x, v1.y, v1.z, 1.f);
+		tagVector4 V2 = tagVector4(v2.x, v2.y, v2.z, 1.f);
+		tagVector4 V3 = tagVector4(v3.x, v3.y, v3.z, 1.f);
+
+		//tagVector4 P1 = XMPlaneFromPoints(V1, V2, V3);
+
+		tagVector4 V21 = V1 - V2;
+		tagVector4 V31 = V1 - V3;
+		
+		tagVector4 N = Cross(V21, V31);
+		N.Normalize();
+
+		tagVector4 D = PlaneDotNormal(N, v1);
+		D = VectorNegate(D);
+	}
+
 public:
 	float x, y, z, w;
 
-}_vec4,_plane;
+}_vec4, _plane;
 

@@ -244,11 +244,12 @@ void CPacketMgr::ProcessPacket(char* ptr)
 				Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"Popori_F", 0);
 
 				auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
-
-				static_cast<CTestPlayer*>(pObj)->Set_DeadReckoning(pObj->Get_Transform()->m_vPos,
-					pObj->Get_Transform()->m_vPos, pObj->Get_Transform()->m_vPos, _vec3(packet->posX, packet->posY, packet->posZ));
+				
+				pObj->Set_DeadReckoning(pObj->Get_Transform()->m_vPos,
+										pObj->Get_Transform()->m_vPos,
+										pObj->Get_Transform()->m_vPos, 
+										_vec3(packet->posX, packet->posY, packet->posZ));
 			
-				//pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
 				pObj->Get_Transform()->m_vAngle.y = packet->angleY;
 			}
 			/* 다른 클라이언트가 움직인 경우 */
@@ -258,7 +259,11 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 				auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
-				pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+				pObj->Set_DeadReckoning(pObj->Get_Transform()->m_vPos,
+										pObj->Get_Transform()->m_vPos,
+										pObj->Get_Transform()->m_vPos,
+										_vec3(packet->posX, packet->posY, packet->posZ));
+				//pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
 				pObj->Get_Transform()->m_vAngle.y = packet->angleY;
 			}
 		}
