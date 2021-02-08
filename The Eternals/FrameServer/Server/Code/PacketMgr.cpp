@@ -376,7 +376,7 @@ void process_move(int id, char direction, const _vec3& _vDir, const _vec3& _vAng
 	_vec3 cal_curPos = _vec3(0.0f);
 	_vec2 coll_pos = _vec2(0.f);
 
-	if (CCollisionMgr::GetInstance()->Is_Collision_NaviLine(pPlayer->m_vPos, pPlayer->m_vDir, &coll_pos))
+	if (CCollisionMgr::GetInstance()->Is_DeadReckoning(pPlayer->m_vPos, pPlayer->m_vDir, &coll_pos))
 	{
 		pPlayer->m_vPos.x = coll_pos.x;
 		pPlayer->m_vPos.y = 0.f;
