@@ -202,6 +202,7 @@ void CGameObject::SetUp_BoundingSphere(_matrix* pParent,
 {
 	if (nullptr != m_pBoundingSphereCom)
 	{
+		m_pBoundingSphereCom->Set_Pos(vPos);
 		m_pBoundingSphereCom->Set_ParentMatrix(pParent);
 		m_pBoundingSphereCom->Set_Scale(vScale);
 		m_pBoundingSphereCom->Set_Radius(vParentScale);
