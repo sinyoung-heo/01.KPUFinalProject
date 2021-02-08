@@ -38,6 +38,7 @@ private:
 public:
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
+									 wstring wstrNaviMeshTag,
 									 const _vec3& vScale,
 									 const _vec3& vAngle,
 									 const _vec3& vPos);
@@ -54,7 +55,7 @@ public:
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 
 private:
-	virtual HRESULT Add_Component(wstring wstrMeshTag);
+	virtual HRESULT Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag);
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
 
@@ -96,6 +97,7 @@ public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,
 									   wstring wstrMeshTag,
+									   wstring wstrNaviMeshTag,
 									   const _vec3& vScale,
 									   const _vec3& vAngle,
 									   const _vec3& vPos);

@@ -214,6 +214,7 @@ HRESULT CStagePJO::Ready_LayerGameObject(wstring wstrLayerTag)
 	____________________________________________________________________________________________________________*/
 	pGameObj =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
 								  L"PoporiR19",					// MeshTag
+								  L"TestNaviMesh",				// NaviMeshTag
 								  _vec3(0.05f, 0.05f, 0.05f),	// Scale
 								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
 								  _vec3(25.0f, 0.f, 20.0f));	// Pos
@@ -222,6 +223,7 @@ HRESULT CStagePJO::Ready_LayerGameObject(wstring wstrLayerTag)
 
 	pGameObj = CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
 								  L"PoporiH25",					// MeshTag
+								  L"TestNaviMesh",				// NaviMeshTag
 								  _vec3(0.05f, 0.05f, 0.05f),	// Scale
 								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
 								  _vec3(26.5f, 0.f, 20.0f));	// Pos

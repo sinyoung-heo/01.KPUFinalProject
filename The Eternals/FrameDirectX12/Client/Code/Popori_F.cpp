@@ -21,16 +21,18 @@ CPopori_F::CPopori_F(const CPopori_F & rhs)
 {
 }
 
-HRESULT CPopori_F::Ready_GameObject(wstring wstrMeshTag, 
+HRESULT CPopori_F::Ready_GameObject(wstring wstrMeshTag,
+									wstring wstrNaviMeshTag,
 									const _vec3 & vScale, 
 									const _vec3 & vAngle, 
 									const _vec3 & vPos)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
-	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag, wstrNaviMeshTag), E_FAIL);
 	m_pTransCom->m_vScale	= vScale;
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos		= vPos;
+	m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(vPos));
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
 										   m_pTransCom->m_vScale,
 										   m_pMeshCom->Get_CenterPos(),
@@ -194,7 +196,7 @@ void CPopori_F::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsComma
 	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 }
 
-HRESULT CPopori_F::Add_Component(wstring wstrMeshTag)
+HRESULT CPopori_F::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -231,9 +233,9 @@ HRESULT CPopori_F::Add_Component(wstring wstrMeshTag)
 	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderBox", m_pColliderBoxCom);
 
 	// NaviMesh
-	m_pNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"TestNaviMesh", Engine::ID_DYNAMIC));
+	m_pNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(wstrNaviMeshTag, Engine::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);
-	m_pNaviMeshCom->Set_CurrentCellIndex(0);
+	m_pNaviMeshCom->AddRef();
 	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
 
 	return S_OK;
@@ -359,13 +361,14 @@ void CPopori_F::Key_Input(const _float & fTimeDelta)
 
 Engine::CGameObject* CPopori_F::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
 									   wstring wstrMeshTag, 
+									   wstring wstrNaviMeshTag,
 									   const _vec3 & vScale, 
 									   const _vec3 & vAngle, 
 									   const _vec3 & vPos)
 {
 	CPopori_F* pInstance = new CPopori_F(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos)))
+	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, wstrNaviMeshTag, vScale, vAngle, vPos)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
@@ -382,6 +385,7 @@ void CPopori_F::Free()
 	Engine::Safe_Release(m_pShadowCom);
 	Engine::Safe_Release(m_pColliderSphereCom);
 	Engine::Safe_Release(m_pColliderBoxCom);
+	Engine::Safe_Release(m_pNaviMeshCom);
 
 	Engine::Safe_Release(m_pFont);
 }

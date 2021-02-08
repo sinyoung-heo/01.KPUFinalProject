@@ -19,7 +19,8 @@ CSkyBox::CSkyBox(const CSkyBox & rhs)
 HRESULT CSkyBox::Ready_GameObject(wstring wstrTextureTag, 
 								  const _vec3 & vScale,
 								  const _vec3 & vAngle,
-								  const _vec3 & vPos)
+								  const _vec3 & vPos,
+								  const _int& iIdx)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, false), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrTextureTag), E_FAIL);
@@ -28,7 +29,7 @@ HRESULT CSkyBox::Ready_GameObject(wstring wstrTextureTag,
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos		= vPos;
 
-	m_uiTexIdx	= 0;
+	m_uiTexIdx	= iIdx;
 
 	return S_OK;
 }
@@ -121,11 +122,12 @@ Engine::CGameObject* CSkyBox::Create(ID3D12Device * pGraphicDevice,
 									 wstring wstrTextureTag,
 									 const _vec3 & vScale,
 									 const _vec3 & vAngle,
-									 const _vec3 & vPos)
+									 const _vec3 & vPos,
+									 const _int& iIdx)
 {
 	CSkyBox* pInstance = new CSkyBox(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(wstrTextureTag, vScale, vAngle, vPos)))
+	if (FAILED(pInstance->Ready_GameObject(wstrTextureTag, vScale, vAngle, vPos, iIdx)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
