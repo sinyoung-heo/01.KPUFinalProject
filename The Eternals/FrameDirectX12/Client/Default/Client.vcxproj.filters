@@ -103,6 +103,9 @@
     <Filter Include="01.Scene\03.StageVelika">
       <UniqueIdentifier>{af574c80-212e-42e6-9a44-0bbdcdee06c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.Mgr\03.ServerMath">
+      <UniqueIdentifier>{608982b7-5130-4247-b0b0-0a6009ba9f5b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -202,13 +205,19 @@
       <Filter>98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\DistortionDisk.h" />
-    <ClInclude Include="..\Code\PacketMgr.h" />
-    <ClInclude Include="..\Code\ServerMath.h" />
     <ClInclude Include="..\Code\TestOthers.h" />
     <ClInclude Include="..\Code\TestPlayer.h" />
-    <ClInclude Include="..\Header\enum.h" />
     <ClInclude Include="..\Code\Scene_StageVelika.h">
       <Filter>01.Scene\03.StageVelika</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\enum.h">
+      <Filter>98.Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PacketMgr.h">
+      <Filter>97.Mgr\00.PacketMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ServerMath.h">
+      <Filter>97.Mgr\03.ServerMath</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -282,12 +291,16 @@
       <Filter>01.Scene\01.Logo\02.LoadingProgress</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\DistortionDisk.cpp" />
-    <ClCompile Include="..\Code\PacketMgr.cpp" />
-    <ClCompile Include="..\Code\ServerMath.cpp" />
     <ClCompile Include="..\Code\TestOthers.cpp" />
     <ClCompile Include="..\Code\TestPlayer.cpp" />
     <ClCompile Include="..\Code\Scene_StageVelika.cpp">
       <Filter>01.Scene\03.StageVelika</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PacketMgr.cpp">
+      <Filter>97.Mgr\00.PacketMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ServerMath.cpp">
+      <Filter>97.Mgr\03.ServerMath</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
