@@ -9,26 +9,26 @@ CNaviMesh::CNaviMesh()
 
 }
 
-_vec3* CNaviMesh::Get_CellCenterPos(const unsigned long& dwIndex)
+_vec3 CNaviMesh::Get_CellCenterPos(const _ulong& dwIndex)
 {
-	_vec3 vResult((*m_vecCell[dwIndex]->Get_Point(CCell::POINT_A) +
-		*m_vecCell[dwIndex]->Get_Point(CCell::POINT_B) +
-		*m_vecCell[dwIndex]->Get_Point(CCell::POINT_C)) / 3.0f);
+	_vec3 vResult = (*m_vecCell[dwIndex]->Get_Point(CCell::POINT_A) +
+					 *m_vecCell[dwIndex]->Get_Point(CCell::POINT_B) +
+					 *m_vecCell[dwIndex]->Get_Point(CCell::POINT_C)) / 3.0f;
 
-	return &vResult;
+	return vResult;
 }
 
 int CNaviMesh::Get_CurrentPositionCellIndex(const _vec3& vPos)
 {
 	for (auto& pCell : m_vecCell)
 	{
-		_vec3 vPosA(*pCell->Get_Point(CCell::POINT_A));
-		_vec3 vPosB(*pCell->Get_Point(CCell::POINT_A));
-		_vec3 vPosC(*pCell->Get_Point(CCell::POINT_A));
-													  
-		_vec3 vDirA(vPosB - vPosA);
-		_vec3 vDirB(vPosC - vPosB);
-		_vec3 vDirC(vPosA - vPosC);
+		_vec3 vPosA = *pCell->Get_Point(CCell::POINT_A);
+		_vec3 vPosB = *pCell->Get_Point(CCell::POINT_B);
+		_vec3 vPosC = *pCell->Get_Point(CCell::POINT_C);
+
+		_vec3 vDirA = vPosB - vPosA;
+		_vec3 vDirB = vPosC - vPosB;
+		_vec3 vDirC = vPosA - vPosC;
 
 		vDirA = _vec3{ -vDirA.z, vDirA.y, vDirA.x };
 		vDirB = _vec3{ -vDirB.z, vDirB.y, vDirB.x };
@@ -38,12 +38,12 @@ int CNaviMesh::Get_CurrentPositionCellIndex(const _vec3& vPos)
 		vDirB.Normalize();
 		vDirC.Normalize();
 
-		_vec3 vCellDir[3];
-		
-		vCellDir[0] = _vec3(vPos - vPosA);
-		vCellDir[1] = _vec3(vPos - vPosB);
-		vCellDir[2] = _vec3(vPos - vPosC);
-		
+		_vec3 vCellDir[3] =
+		{
+			vPos - vPosA,
+			vPos - vPosB,
+			vPos - vPosC
+		};
 
 		for (auto& cell_dir : vCellDir)
 			cell_dir.Normalize();
@@ -59,26 +59,26 @@ int CNaviMesh::Get_CurrentPositionCellIndex(const _vec3& vPos)
 	return -1;
 }
 
-_vec3* CNaviMesh::Move_OnNaviMesh(const _vec3* pTargetPos, const _vec3* pTargetDir, const float& fSpeed, const bool& bIsJump)
+_vec3 CNaviMesh::Move_OnNaviMesh(const _vec3* pTargetPos, const _vec3* pTargetDir, const float& fSpeed, const bool& bIsJump)
 {
-	_vec3 vEndPos(*pTargetPos + *pTargetDir * fSpeed);
-	_vec3 vSliding(_vec3(0.f));
-	_vec3 vTargetDir(*pTargetDir);
-	_vec3 vTargetPos(*pTargetPos);
+	_vec3 vEndPos = *pTargetPos + *pTargetDir * fSpeed;
+	_vec3 vSliding = _vec3(0.f);
+	_vec3 vTargetDir = *pTargetDir;
+	_vec3 vTargetPos = *pTargetPos;
 
 	CCell::COMPARE eResult = m_vecCell[m_dwCurrentIdx]->Compare(&vEndPos,
-		&m_dwCurrentIdx,
-		fSpeed,
-		&vTargetPos,
-		&vTargetDir,
-		&vSliding);
+																&m_dwCurrentIdx,
+																fSpeed,
+																&vTargetPos,
+																&vTargetDir,
+																&vSliding);
 
 	/*____________________________________________________________________
 	MOVE
 	______________________________________________________________________*/
 	if (CCell::COMPARE_MOVE == eResult)
 	{
-		return &vEndPos;
+		return vEndPos;
 	}
 
 	/*____________________________________________________________________
@@ -87,8 +87,7 @@ _vec3* CNaviMesh::Move_OnNaviMesh(const _vec3* pTargetPos, const _vec3* pTargetD
 	else if (CCell::COMPARE_SLIDING == eResult)
 	{
 		vEndPos = *pTargetPos + vSliding * fSpeed;
-
-		return &vEndPos;
+		return vEndPos;
 	}
 
 	/*____________________________________________________________________
@@ -98,45 +97,44 @@ _vec3* CNaviMesh::Move_OnNaviMesh(const _vec3* pTargetPos, const _vec3* pTargetD
 	{
 		vEndPos = *pTargetPos + vTargetDir * fSpeed;
 		eResult = m_vecCell[m_dwCurrentIdx]->Compare(&vEndPos,
-			&m_dwCurrentIdx,
-			fSpeed,
-			&vTargetPos,
-			&vTargetDir,
-			&vSliding);
+													 &m_dwCurrentIdx,
+													 fSpeed,
+													 &vTargetPos,
+													 &vTargetDir,
+													 &vSliding);
 
 		if (CCell::COMPARE_MOVE == eResult)
 		{
-			return &vEndPos;
+			return vEndPos;
 		}
 
 		vEndPos = *pTargetPos + vSliding * fSpeed;
 		eResult = m_vecCell[m_dwCurrentIdx]->Compare(&vEndPos,
-			&m_dwCurrentIdx,
-			fSpeed,
-			&vTargetPos,
-			&vTargetDir,
-			&vSliding);
+													 &m_dwCurrentIdx,
+													 fSpeed,
+													 &vTargetPos,
+													 &vTargetDir,
+													 &vSliding);
 
 		if (CCell::COMPARE_MOVE == eResult)
 		{
-			return &vEndPos;
+			return vEndPos;
 		}
 
-		_vec3 vA(*m_vecCell[m_dwCurrentIdx]->Get_Point(CCell::POINT_A));
-		_vec3 vB(*m_vecCell[m_dwCurrentIdx]->Get_Point(CCell::POINT_B));
-		_vec3 vC(*m_vecCell[m_dwCurrentIdx]->Get_Point(CCell::POINT_C));
+		_vec3 vA = *m_vecCell[m_dwCurrentIdx]->Get_Point(CCell::POINT_A);
+		_vec3 vB = *m_vecCell[m_dwCurrentIdx]->Get_Point(CCell::POINT_B);
+		_vec3 vC = *m_vecCell[m_dwCurrentIdx]->Get_Point(CCell::POINT_C);
 
-		_vec3 src((vA + vB + vC) / 3.f);
-		_vec3 dir(src - *pTargetPos);
+		_vec3 src = (vA + vB + vC) / 3.f;
+		_vec3 dir = src - *pTargetPos;
 		dir.Normalize();
 
 		src = *pTargetPos + dir * fSpeed;
-		//m_dwCurrentIdx = m_dstIdx;
 
-		return &src;
+		return src;
 	}
 
-	return &vEndPos;
+	return vEndPos;
 }
 
 HRESULT CNaviMesh::Ready_NaviMesh(wstring wstrFilePath)
@@ -148,11 +146,11 @@ HRESULT CNaviMesh::Ready_NaviMesh(wstring wstrFilePath)
 	while (true)
 	{
 		CCell*	pCell = nullptr;
-		_vec3	vPointA(0.0f);
-		_vec3	vPointB(0.0f);
-		_vec3	vPointC(0.0f);
-		int	iOption = 0;
-		unsigned long	iIdx = 0;
+		_vec3	vPointA = _vec3(0.0f);
+		_vec3	vPointB = _vec3(0.0f);
+		_vec3	vPointC = _vec3(0.0f);
+		int		iOption = 0;
+		_ulong	iIdx = 0;
 
 		// Cell Data 불러오기.
 		fin >> vPointA.x		// PointA
@@ -188,9 +186,9 @@ HRESULT CNaviMesh::Ready_NaviMesh(wstring wstrFilePath)
 
 void CNaviMesh::Link_Cell()
 {
-	for (unsigned long i = 0; i < m_vecCell.size(); ++i)
+	for (_ulong i = 0; i < m_vecCell.size(); ++i)
 	{
-		for (unsigned long j = 0; j < m_vecCell.size(); ++j)
+		for (_ulong j = 0; j < m_vecCell.size(); ++j)
 		{
 			if (i == j)
 				continue;

@@ -21,7 +21,8 @@ public:
 	virtual HRESULT	Ready_GameObject(wstring wstrTextureTag, 
 									 const _vec3 & vScale,
 									 const _vec3 & vAngle,
-									 const _vec3 & vPos);
+									 const _vec3 & vPos,
+									 const _int& iIdx = 0);
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
@@ -50,7 +51,8 @@ public:
 									   wstring wstrTextureTag,
 									   const _vec3 & vScale,
 									   const _vec3 & vAngle,
-									   const _vec3 & vPos);
+									   const _vec3 & vPos,
+									   const _int& iIdx = 0);
 private:
 	virtual void Free();
 };

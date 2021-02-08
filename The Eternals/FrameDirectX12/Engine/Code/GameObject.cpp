@@ -46,6 +46,14 @@ CComponent * CGameObject::Get_Component(wstring wstrComponentTag, COMPONENTID eI
 	return pComponent;
 }
 
+void CGameObject::Set_DeadReckoning(const _vec3& vPos1, const _vec3& vPos2, const _vec3& vPos3, const _vec3& vPos4)
+{
+	m_pInfoCom->m_arrBezierPoint[0] = vPos1;
+	m_pInfoCom->m_arrBezierPoint[1] = vPos2;
+	m_pInfoCom->m_arrBezierPoint[2] = vPos3;
+	m_pInfoCom->m_arrBezierPoint[3] = vPos4;
+}
+
 HRESULT CGameObject::Ready_GameObjectPrototype()
 {
 	return S_OK;
@@ -202,6 +210,7 @@ void CGameObject::SetUp_BoundingSphere(_matrix* pParent,
 {
 	if (nullptr != m_pBoundingSphereCom)
 	{
+		m_pBoundingSphereCom->Set_Pos(vPos);
 		m_pBoundingSphereCom->Set_ParentMatrix(pParent);
 		m_pBoundingSphereCom->Set_Scale(vScale);
 		m_pBoundingSphereCom->Set_Radius(vParentScale);

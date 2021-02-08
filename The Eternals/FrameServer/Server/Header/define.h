@@ -50,8 +50,9 @@ constexpr float	ANGLE_LEFT_DOWN		= 225.f;
 constexpr float	ANGLE_BACK			= 180.f;
 
 
-
-
+/* TYPEDEF */
+typedef	unsigned long		_ulong;
+typedef	unsigned int		_uint;
 
 /* MACRO */
 #define NO_COPY(CLASSNAME)							\

@@ -10,7 +10,7 @@
 
 #include "Scene_Logo.h"
 #include "Scene_Menu.h"
-#include "Scene_Stage.h"
+#include "Scene_StageVelika.h"
 #include "Font.h"
 
 
@@ -88,16 +88,15 @@ _int CMainApp::LateUpdate_MainApp(const _float & fTimeDelta)
 	Engine::NULL_CHECK_RETURN(m_pManagement, -1);
 
 	/*__________________________________________________________________________________________________________
+	[ LateUpdate Management ]
+	____________________________________________________________________________________________________________*/
+	m_pManagement->LateUpdate_Management(fTimeDelta);
+
+	/*__________________________________________________________________________________________________________
 	[ Debug Font ]
 	____________________________________________________________________________________________________________*/
 	if (m_pRenderer->Get_RenderOnOff(L"DebugFont"))
 		Show_FontLog(fTimeDelta);
-
-
-	/*__________________________________________________________________________________________________________
-	[ LateUpdate Management ]
-	____________________________________________________________________________________________________________*/
-	m_pManagement->LateUpdate_Management(fTimeDelta);
 
 	return 0;
 }
@@ -298,7 +297,7 @@ HRESULT CMainApp::SetUp_StartScene(Engine::SCENEID eScebeID)
 		pScene = CScene_Menu::Create(m_pGraphicDevice, m_pCommandList);
 		break;
 	case Engine::SCENE_STAGE:
-		pScene = CScene_Stage::Create(m_pGraphicDevice, m_pCommandList);
+		pScene = CScene_StageVelika::Create(m_pGraphicDevice, m_pCommandList);
 	default:
 		break;
 	}

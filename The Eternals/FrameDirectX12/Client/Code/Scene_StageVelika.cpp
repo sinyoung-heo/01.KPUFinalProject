@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include <fstream>
-#include "Scene_Stage.h"
+#include "Scene_StageVelika.h"
 #include "ComponentMgr.h"
 #include "GraphicDevice.h"
 #include "LightMgr.h"
@@ -17,14 +17,14 @@
 #include "TerrainMeshObject.h"
 
 
-CScene_Stage::CScene_Stage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CScene_StageVelika::CScene_StageVelika(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
 {
 }
 
 
 
-HRESULT CScene_Stage::Ready_Scene()
+HRESULT CScene_StageVelika::Ready_Scene()
 {
 #ifdef CLIENT_LOG
 	COUT_STR("<< Ready Scene_Stage >>");
@@ -42,24 +42,24 @@ HRESULT CScene_Stage::Ready_Scene()
 	return S_OK;
 }
 
-_int CScene_Stage::Update_Scene(const _float & fTimeDelta)
+_int CScene_StageVelika::Update_Scene(const _float & fTimeDelta)
 {
 	return Engine::CScene::Update_Scene(fTimeDelta);
 }
 
-_int CScene_Stage::LateUpdate_Scene(const _float & fTimeDelta)
+_int CScene_StageVelika::LateUpdate_Scene(const _float & fTimeDelta)
 {
 	return Engine::CScene::LateUpdate_Scene(fTimeDelta);
 }
 
-HRESULT CScene_Stage::Render_Scene(const _float & fTimeDelta, const Engine::RENDERID& eID)
+HRESULT CScene_StageVelika::Render_Scene(const _float & fTimeDelta, const Engine::RENDERID& eID)
 {
 	Engine::FAILED_CHECK_RETURN(CScene::Render_Scene(fTimeDelta, eID), E_FAIL);
 
 	return S_OK;
 }
 
-HRESULT CScene_Stage::Ready_LayerCamera(wstring wstrLayerTag)
+HRESULT CScene_StageVelika::Ready_LayerCamera(wstring wstrLayerTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
 	
@@ -76,8 +76,8 @@ HRESULT CScene_Stage::Ready_LayerCamera(wstring wstrLayerTag)
 	[ DebugCamera ]
 	____________________________________________________________________________________________________________*/
 	pGameObj = CDebugCamera::Create(m_pGraphicDevice, m_pCommandList,
-									Engine::CAMERA_DESC(_vec3(30.0f, 30.0f, 35.0f),		// Eye
-														_vec3(20.0f, 15.0f, 10.0f),		// At
+									Engine::CAMERA_DESC(_vec3(95.0f, 45.0f, -20.0f),	// Eye
+														_vec3(95.0f, 40.0f, 15.0f),		// At
 														_vec3(0.0f, 1.0f, 0.f)),		// Up
 									Engine::PROJ_DESC(60.0f,							// FovY
 													  _float(WINCX) / _float(WINCY),	// Aspect
@@ -93,8 +93,8 @@ HRESULT CScene_Stage::Ready_LayerCamera(wstring wstrLayerTag)
 	[ DynamicCamera ]
 	____________________________________________________________________________________________________________*/
 	pGameObj = CDynamicCamera::Create(m_pGraphicDevice, m_pCommandList,
-									  Engine::CAMERA_DESC(_vec3(30.0f, 25.0f, -35.0f),	// Eye
-									  					  _vec3(20.0f, 15.0f, 10.0f),	// At
+									  Engine::CAMERA_DESC(_vec3(95.0f, 45.0f, -20.0f),	// Eye
+									  					  _vec3(95.0f, 40.0f, 15.0f),	// At
 									  					  _vec3(0.0f, 1.0f, 0.0f)),		// Up
 									  
 									  Engine::PROJ_DESC(60.0f,							// FovY
@@ -113,7 +113,7 @@ HRESULT CScene_Stage::Ready_LayerCamera(wstring wstrLayerTag)
 }
 
 
-HRESULT CScene_Stage::Ready_LayerEnvironment(wstring wstrLayerTag)
+HRESULT CScene_StageVelika::Ready_LayerEnvironment(wstring wstrLayerTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
 
@@ -130,17 +130,48 @@ HRESULT CScene_Stage::Ready_LayerEnvironment(wstring wstrLayerTag)
 	[ SkyBox ]
 	____________________________________________________________________________________________________________*/
 	pGameObj = CSkyBox::Create(m_pGraphicDevice, m_pCommandList,
-							   L"SkyBox",							// Texture Tag
-							   _vec3(512.f, 512.f, 512.f),			// Scale
-							   _vec3(0.0f, 0.0f, 0.0f),				// Angle
-							   _vec3(0.0f, 0.0f, 0.0f));			// Pos
+							   L"SkyBox",					// Texture Tag
+							   _vec3(512.f, 512.f, 512.f),	// Scale
+							   _vec3(0.0f, 0.0f, 0.0f),		// Angle
+							   _vec3(0.0f, 0.0f, 0.0f),		// Pos
+							   1);							// Tex Index
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SkyBox", pGameObj), E_FAIL);
 
+	/*__________________________________________________________________________________________________________
+	[ BumpTerrainMesh ]
+	____________________________________________________________________________________________________________*/
+	_vec3 vPos    = _vec3(0.0f, -0.1f, 0.5f);
+	_vec3 vOffset = _vec3(13.83f, 0.0f, 11.98f);
+
+	for (_int i = 0; i < 21; ++i)
+	{
+		if (0 == i % 2)
+			vPos.x = 0.0f;
+		else
+			vPos.x = 6.915f;
+
+		for (_int j = 0; j < 21; ++j)
+		{
+			pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+												 L"BumpTerrainMesh01",		// MeshTag
+												 _vec3(0.003f),				// Scale
+												 _vec3(90.0f, 0.0f, 0.0f),	// Angle
+												 vPos,						// Pos
+												 true,						// Render Shadow
+												 false,						// Is Collision
+												 _vec3(0.0f),				// Bounding Sphere Scale
+												 _vec3(0.0f));				// Bounding Sphere Pos
+			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainMesh", pGameObj), E_FAIL);
+			vPos.x += vOffset.x;
+		}
+
+		vPos.z += vOffset.z;
+	}
 
 	return S_OK;
 }
 
-HRESULT CScene_Stage::Ready_LayerGameObject(wstring wstrLayerTag)
+HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
 
@@ -157,7 +188,7 @@ HRESULT CScene_Stage::Ready_LayerGameObject(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ StaticMeshObject ]
 	____________________________________________________________________________________________________________*/
-	wifstream fin { L"../../Bin/ToolData/TestStaticMesh.staticmesh" };
+	wifstream fin { L"../../Bin/ToolData/StageVelika_StaticMesh.staticmesh" };
 	if (fin.fail())
 		return E_FAIL;
 
@@ -215,46 +246,38 @@ HRESULT CScene_Stage::Ready_LayerGameObject(wstring wstrLayerTag)
 	____________________________________________________________________________________________________________*/
 	pGameObj =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
 								  L"PoporiR19",					// MeshTag
+								  L"StageVelika_NaviMesh",		// NaviMeshTag
 								  _vec3(0.05f, 0.05f, 0.05f),	// Scale
 								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-								  _vec3(25.0f, 0.f, 20.0f));	// Pos
+								  _vec3(120.0f, 0.f, 75.0f));	// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pGameObj), E_FAIL);
-
-
-	pGameObj = CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
-								  L"PoporiH25",					// MeshTag
-								  _vec3(0.05f, 0.05f, 0.05f),	// Scale
-								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-								  _vec3(26.5f, 0.f, 20.0f));	// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pGameObj), E_FAIL);
-
 
 	/*__________________________________________________________________________________________________________
 	[ TexEffect ]
 	____________________________________________________________________________________________________________*/
-	// Fire
-	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-									  L"Fire",						// TextureTag
-									  _vec3(2.5f, 2.5f, 1.0f),		// Scale
-									  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-									  _vec3(26.0f, 1.5f, 26.5f),	// Pos
-									  FRAME(8, 8, 64.0f));			// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TexEffect", pGameObj), E_FAIL);
+	//// Fire
+	//pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+	//								  L"Fire",						// TextureTag
+	//								  _vec3(2.5f, 2.5f, 1.0f),		// Scale
+	//								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+	//								  _vec3(26.0f, 1.5f, 26.5f),	// Pos
+	//								  FRAME(8, 8, 64.0f));			// Sprite Image Frame
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TexEffect", pGameObj), E_FAIL);
 
-	// Torch
-	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-									  L"Torch",						// TextureTag
-									  _vec3(2.5f, 5.0f, 1.0f),		// Scale
-									  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-									  _vec3(28.0f, 2.0f, 27.0f),	// Pos
-									  FRAME(8, 8, 64.0f));			// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TexEffect", pGameObj), E_FAIL);
+	//// Torch
+	//pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+	//								  L"Torch",						// TextureTag
+	//								  _vec3(2.5f, 5.0f, 1.0f),		// Scale
+	//								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+	//								  _vec3(28.0f, 2.0f, 27.0f),	// Pos
+	//								  FRAME(8, 8, 64.0f));			// Sprite Image Frame
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TexEffect", pGameObj), E_FAIL);
 
 
 	return S_OK;
 }
 
-HRESULT CScene_Stage::Ready_LayerUI(wstring wstrLayerTag)
+HRESULT CScene_StageVelika::Ready_LayerUI(wstring wstrLayerTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
 
@@ -269,7 +292,7 @@ HRESULT CScene_Stage::Ready_LayerUI(wstring wstrLayerTag)
 	return S_OK;
 }
 
-HRESULT CScene_Stage::Ready_LayerFont(wstring wstrLayerTag)
+HRESULT CScene_StageVelika::Ready_LayerFont(wstring wstrLayerTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
 
@@ -284,9 +307,9 @@ HRESULT CScene_Stage::Ready_LayerFont(wstring wstrLayerTag)
 	return S_OK;
 }
 
-HRESULT CScene_Stage::Ready_LightInfo()
+HRESULT CScene_StageVelika::Ready_LightInfo()
 {
-	wifstream fin{ L"../../Bin/ToolData/TestLightInfo_DirectionAndShadow.lightinginfo" };
+	wifstream fin{ L"../../Bin/ToolData/StageVelika_DirectionAndShadow.lightinginfo" };
 	if (fin.fail())
 		return E_FAIL;
 
@@ -338,58 +361,58 @@ HRESULT CScene_Stage::Ready_LightInfo()
 	}
 
 
-	wifstream fin2 { "../../Bin/ToolData/TestLightInfo_PointLight.lightinginfo" };
-	if (fin2.fail())
-		return E_FAIL;
+	//wifstream fin2 { "../../Bin/ToolData/StageVelika_PointLight.lightinginfo" };
+	//if (fin2.fail())
+	//	return E_FAIL;
 
-	while (true)
-	{
-		// PointLight 정보 저장.
-		Engine::D3DLIGHT tLightInfo { };
-		tLightInfo.Type = Engine::D3DLIGHT_POINT;
+	//while (true)
+	//{
+	//	// PointLight 정보 저장.
+	//	Engine::D3DLIGHT tLightInfo { };
+	//	tLightInfo.Type = Engine::D3DLIGHT_POINT;
 
-				// PointLight Data 불러오기.
-		fin2	>> tLightInfo.Diffuse.x		// Diffuse
-				>> tLightInfo.Diffuse.y
-				>> tLightInfo.Diffuse.z
-				>> tLightInfo.Diffuse.w
-				>> tLightInfo.Specular.x	// Specular
-				>> tLightInfo.Specular.y
-				>> tLightInfo.Specular.z
-				>> tLightInfo.Specular.w
-				>> tLightInfo.Ambient.x		// Ambient
-				>> tLightInfo.Ambient.y
-				>> tLightInfo.Ambient.z
-				>> tLightInfo.Ambient.w
-				>> tLightInfo.Position.x	// Position
-				>> tLightInfo.Position.y
-				>> tLightInfo.Position.z
-				>> tLightInfo.Position.w
-				>> tLightInfo.Range;		// Range
+	//			// PointLight Data 불러오기.
+	//	fin2	>> tLightInfo.Diffuse.x		// Diffuse
+	//			>> tLightInfo.Diffuse.y
+	//			>> tLightInfo.Diffuse.z
+	//			>> tLightInfo.Diffuse.w
+	//			>> tLightInfo.Specular.x	// Specular
+	//			>> tLightInfo.Specular.y
+	//			>> tLightInfo.Specular.z
+	//			>> tLightInfo.Specular.w
+	//			>> tLightInfo.Ambient.x		// Ambient
+	//			>> tLightInfo.Ambient.y
+	//			>> tLightInfo.Ambient.z
+	//			>> tLightInfo.Ambient.w
+	//			>> tLightInfo.Position.x	// Position
+	//			>> tLightInfo.Position.y
+	//			>> tLightInfo.Position.z
+	//			>> tLightInfo.Position.w
+	//			>> tLightInfo.Range;		// Range
 
-		if (fin2.eof())
-			break;
+	//	if (fin2.eof())
+	//		break;
 
-		Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, m_pCommandList,
-																				 Engine::LIGHTTYPE::D3DLIGHT_POINT,
-																				 tLightInfo), E_FAIL);
-	}
+	//	Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, m_pCommandList,
+	//																			 Engine::LIGHTTYPE::D3DLIGHT_POINT,
+	//																			 tLightInfo), E_FAIL);
+	//}
 
 	return S_OK;
 }
 
-HRESULT CScene_Stage::Ready_NaviMesh()
+HRESULT CScene_StageVelika::Ready_NaviMesh()
 {
 	Engine::CNaviMesh* pNaviMesh = Engine::CNaviMesh::Create(m_pGraphicDevice,  m_pCommandList,
-															 wstring(L"../../Bin/ToolData/TestNavigationCell.navimeshcellinfo"));
-	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"TestNaviMesh", Engine::ID_DYNAMIC, pNaviMesh), E_FAIL);
+															 wstring(L"../../Bin/ToolData/StageVelika_NaviMesh.navimeshcellinfo"));
+	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"StageVelika_NaviMesh", Engine::ID_DYNAMIC, pNaviMesh), E_FAIL);
 
 	return S_OK;
 }
 
-CScene_Stage * CScene_Stage::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CScene_StageVelika * CScene_StageVelika::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 {
-	CScene_Stage* pInstance = new CScene_Stage(pGraphicDevice, pCommandList);
+	CScene_StageVelika* pInstance = new CScene_StageVelika(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_Scene()))
 		Engine::Safe_Release(pInstance);
@@ -397,7 +420,7 @@ CScene_Stage * CScene_Stage::Create(ID3D12Device* pGraphicDevice, ID3D12Graphics
 	return pInstance;
 }
 
-void CScene_Stage::Free()
+void CScene_StageVelika::Free()
 {
 	Engine::CScene::Free();
 }

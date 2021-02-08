@@ -12,7 +12,7 @@ CCell::~CCell()
 	Release();
 }
 
-HRESULT CCell::Ready_Cell(const unsigned long& dwIndex, const _vec3& vPointA, const _vec3& vPointB, const _vec3& vPointC, const int& iOption)
+HRESULT CCell::Ready_Cell(const _ulong& dwIndex, const _vec3& vPointA, const _vec3& vPointB, const _vec3& vPointC, const int& iOption)
 {
 	m_dwCurrentIdx = dwIndex;
 	m_iOption = iOption;
@@ -22,13 +22,13 @@ HRESULT CCell::Ready_Cell(const unsigned long& dwIndex, const _vec3& vPointA, co
 	m_vPoint[POINT_C] = vPointC;
 
 	m_pLine[LINE_AB] = CLine::Create(&_vec2(m_vPoint[POINT_A].x, m_vPoint[POINT_A].z),
-		&_vec2(m_vPoint[POINT_B].x, m_vPoint[POINT_B].z));
+									 &_vec2(m_vPoint[POINT_B].x, m_vPoint[POINT_B].z));
 
 	m_pLine[LINE_BC] = CLine::Create(&_vec2(m_vPoint[POINT_B].x, m_vPoint[POINT_B].z),
-		&_vec2(m_vPoint[POINT_C].x, m_vPoint[POINT_C].z));
+									 &_vec2(m_vPoint[POINT_C].x, m_vPoint[POINT_C].z));
 
 	m_pLine[LINE_CA] = CLine::Create(&_vec2(m_vPoint[POINT_C].x, m_vPoint[POINT_C].z),
-		&_vec2(m_vPoint[POINT_A].x, m_vPoint[POINT_A].z));
+									 &_vec2(m_vPoint[POINT_A].x, m_vPoint[POINT_A].z));
 
 	// Height 산출용 평면 구조체.
 	//m_tPlane.Plane_FromPoints(m_vPoint[POINT_A], m_vPoint[POINT_B], m_vPoint[POINT_C]);
@@ -83,9 +83,9 @@ bool CCell::Compare_Point(const _vec3* pPointF, const _vec3* pPointS, CCell* pCe
 	return false;
 }
 
-CCell::COMPARE CCell::Compare(const _vec3* pEndPos, unsigned long* pIndex, const float& fTargetSpeed, _vec3* pTargetPos, _vec3* pTargetDir, _vec3* pSlidingDir)
+CCell::COMPARE CCell::Compare(const _vec3* pEndPos, _ulong* pIndex, const float& fTargetSpeed, _vec3* pTargetPos, _vec3* pTargetDir, _vec3* pSlidingDir)
 {
-	for (unsigned long i = 0; i < LINE_END; ++i)
+	for (_ulong i = 0; i < LINE_END; ++i)
 	{
 		if (CLine::COMPARE_LEFT == m_pLine[i]->Compare(&_vec2(pEndPos->x, pEndPos->z)))
 		{
@@ -94,7 +94,7 @@ CCell::COMPARE CCell::Compare(const _vec3* pEndPos, unsigned long* pIndex, const
 				/*____________________________________________________________________
 				선분의 법선벡터
 				______________________________________________________________________*/
-				_vec3 vNormal(_vec3(m_pLine[i]->Get_Normal().x, 0.f, m_pLine[i]->Get_Normal().y));
+				_vec3 vNormal = _vec3(m_pLine[i]->Get_Normal().x, 0.f, m_pLine[i]->Get_Normal().y);
 
 				/*____________________________________________________________________
 				Slideing Vector 공식.
@@ -102,12 +102,12 @@ CCell::COMPARE CCell::Compare(const _vec3* pEndPos, unsigned long* pIndex, const
 				______________________________________________________________________*/
 				*pSlidingDir = *pTargetDir - vNormal * pTargetDir->Dot(vNormal);
 
-				_vec3 doubleNormal(*pTargetDir - (vNormal * 1.4f) * pTargetDir->Dot(vNormal * 1.4f));
-				_vec3 TripleNormal(*pTargetDir - (vNormal * 2.f) * pTargetDir->Dot(vNormal * 2.f));
+				_vec3 doubleNormal = *pTargetDir - (vNormal * 1.4f) * pTargetDir->Dot(vNormal * 1.4f);
+				_vec3 TripleNormal = *pTargetDir - (vNormal * 2.f) * pTargetDir->Dot(vNormal * 2.f);
 
-				_vec3 vEndPos(*pTargetPos + *pSlidingDir * fTargetSpeed * 5.f);
-				_vec3 vDoublePos(*pTargetPos + doubleNormal * fTargetSpeed * 5.f);
-				_vec3 vTriplePos(*pTargetPos + TripleNormal * fTargetSpeed * 5.f);
+				_vec3 vEndPos = *pTargetPos + *pSlidingDir * fTargetSpeed * 5.f;
+				_vec3 vDoublePos = *pTargetPos + doubleNormal * fTargetSpeed * 5.f;
+				_vec3 vTriplePos = *pTargetPos + TripleNormal * fTargetSpeed * 5.f;
 
 				/*____________________________________________________________________
 				Start & Finish점 비교.
@@ -143,9 +143,9 @@ CCell::COMPARE CCell::Compare(const _vec3* pEndPos, unsigned long* pIndex, const
 	return COMPARE_MOVE;
 }
 
-CCell::COMPARE CCell::Compare(_vec3* pEndPos, unsigned long* pIndex, int* iLineIndex)
+CCell::COMPARE CCell::Compare(_vec3* pEndPos, _ulong* pIndex, int* iLineIndex)
 {
-	for (unsigned long i = 0; i < LINE_END; ++i)
+	for (_ulong i = 0; i < LINE_END; ++i)
 	{
 		if (CLine::COMPARE_LEFT == m_pLine[i]->Compare(&_vec2(pEndPos->x, pEndPos->z)))
 		{
@@ -182,7 +182,7 @@ void CCell::Release()
 		
 }
 
-CCell* CCell::Create(const unsigned long& dwIndex, const _vec3& vPointA, const _vec3& vPointB, const _vec3& vPointC, const int& iOption)
+CCell* CCell::Create(const _ulong& dwIndex, const _vec3& vPointA, const _vec3& vPointB, const _vec3& vPointC, const int& iOption)
 {
 	CCell* pInstance = new CCell();
 

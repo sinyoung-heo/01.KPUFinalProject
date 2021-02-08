@@ -51,6 +51,7 @@ VK_CON3_OBJ_01_SM|VK_CON3_OBJ_01_SM.X|..\..\Bin\Resource\ResourceStage\StaticMes
 VK_CON_Backwall_02_Bottom_SM|VK_CON_Backwall_02_Bottom_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_Backwall_02_Bottom_SM\
 VK_CON_Backwall_SM|VK_CON_Backwall_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_Backwall_SM\
 VK_CON_Base_Center_Main_SM|VK_CON_Base_Center_Main_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_Base_Center_Main_SM\
+VK_CON_Base_Center_SM|VK_CON_Base_Center_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_Base_Center_SM\
 VK_CON_Bridge_SM|VK_CON_Bridge_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_Bridge_SM\
 VK_CON_CenterGate_SM|VK_CON_CenterGate_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_CenterGate_SM\
 VK_CON_CenterGear02_SM|VK_CON_CenterGear02_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_CenterGear02_SM\

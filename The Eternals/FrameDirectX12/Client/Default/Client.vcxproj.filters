@@ -28,9 +28,6 @@
     <Filter Include="01.Scene\01.Logo">
       <UniqueIdentifier>{fd93da88-aeef-4df4-a63a-e362f97fa376}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Scene\03.Stage">
-      <UniqueIdentifier>{af574c80-212e-42e6-9a44-0bbdcdee06c7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="96.Camera">
       <UniqueIdentifier>{fd951fef-76fb-4e49-bf03-6a0843ab4a01}</UniqueIdentifier>
     </Filter>
@@ -103,8 +100,17 @@
     <Filter Include="01.Scene\01.Logo\02.LoadingProgress">
       <UniqueIdentifier>{018c85ab-d8f8-4c79-8bba-f142768a3d1c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\01.Environment\01.BumpTerrain">
-      <UniqueIdentifier>{262daf1d-3b00-4c77-8265-be157ed217c1}</UniqueIdentifier>
+    <Filter Include="01.Scene\03.StageVelika">
+      <UniqueIdentifier>{af574c80-212e-42e6-9a44-0bbdcdee06c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Mgr\03.ServerMath">
+      <UniqueIdentifier>{608982b7-5130-4247-b0b0-0a6009ba9f5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.SampleObject\09.TestPlayer">
+      <UniqueIdentifier>{f0f95ad6-bbdd-49d9-bc89-2cca06f27a2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.SampleObject\10.TestOthers">
+      <UniqueIdentifier>{6ad99d1c-9bb2-4d7f-806e-99ac48309498}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -143,9 +149,6 @@
     </ClInclude>
     <ClInclude Include="..\Code\Scene_Menu.h">
       <Filter>01.Scene\02.Menu</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\Scene_Stage.h">
-      <Filter>01.Scene\03.Stage</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\CubeObject.h">
       <Filter>02.GameObject\99.SampleObject\02.CubeObject</Filter>
@@ -207,8 +210,24 @@
     <ClInclude Include="..\..\..\FrameServer\Server\Header\protocol.h">
       <Filter>98.Header</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\BumpTerrain.h">
-      <Filter>02.GameObject\01.Environment\01.BumpTerrain</Filter>
+    <ClInclude Include="..\Code\DistortionDisk.h" />
+    <ClInclude Include="..\Code\Scene_StageVelika.h">
+      <Filter>01.Scene\03.StageVelika</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\enum.h">
+      <Filter>98.Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PacketMgr.h">
+      <Filter>97.Mgr\00.PacketMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ServerMath.h">
+      <Filter>97.Mgr\03.ServerMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\TestOthers.h">
+      <Filter>02.GameObject\99.SampleObject\10.TestOthers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\TestPlayer.h">
+      <Filter>02.GameObject\99.SampleObject\09.TestPlayer</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\DistortionDisk.h" />
     <ClInclude Include="..\Code\PacketMgr.h" />
@@ -235,9 +254,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\Scene_Menu.cpp">
       <Filter>01.Scene\02.Menu</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\Scene_Stage.cpp">
-      <Filter>01.Scene\03.Stage</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CubeObject.cpp">
       <Filter>02.GameObject\99.SampleObject\02.CubeObject</Filter>
@@ -293,8 +309,21 @@
     <ClCompile Include="..\Code\LoadingProgress.cpp">
       <Filter>01.Scene\01.Logo\02.LoadingProgress</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\BumpTerrain.cpp">
-      <Filter>02.GameObject\01.Environment\01.BumpTerrain</Filter>
+    <ClCompile Include="..\Code\DistortionDisk.cpp" />
+    <ClCompile Include="..\Code\Scene_StageVelika.cpp">
+      <Filter>01.Scene\03.StageVelika</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PacketMgr.cpp">
+      <Filter>97.Mgr\00.PacketMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ServerMath.cpp">
+      <Filter>97.Mgr\03.ServerMath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TestOthers.cpp">
+      <Filter>02.GameObject\99.SampleObject\10.TestOthers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TestPlayer.cpp">
+      <Filter>02.GameObject\99.SampleObject\09.TestPlayer</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\DistortionDisk.cpp" />
     <ClCompile Include="..\Code\PacketMgr.cpp" />

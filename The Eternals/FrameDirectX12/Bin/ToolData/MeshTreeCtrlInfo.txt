@@ -51,6 +51,7 @@ StaticMesh|StageVelika|VK_CON3_OBJ_01_SM
 StaticMesh|StageVelika|VK_CON_Backwall_02_Bottom_SM
 StaticMesh|StageVelika|VK_CON_Backwall_SM
 StaticMesh|StageVelika|VK_CON_Base_Center_Main_SM
+StaticMesh|StageVelika|VK_CON_Base_Center_SM
 StaticMesh|StageVelika|VK_CON_Bridge_SM
 StaticMesh|StageVelika|VK_CON_CenterGate_SM
 StaticMesh|StageVelika|VK_CON_CenterGear02_SM

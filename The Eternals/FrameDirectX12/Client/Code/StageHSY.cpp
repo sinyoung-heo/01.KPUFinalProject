@@ -15,7 +15,6 @@
 #include "TextureEffect.h"
 #include "SkyBox.h"
 #include "TerrainMeshObject.h"
-#include "BumpTerrain.h"
 
 
 CStageHSY::CStageHSY(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -162,60 +161,60 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BumpTerrain", pGameObj), E_FAIL);
 
 
-	///*__________________________________________________________________________________________________________
-	//[ StaticMeshObject ]
-	//____________________________________________________________________________________________________________*/
-	//wifstream fin { L"../../Bin/ToolData/TestStaticMesh.staticmesh" };
-	//if (fin.fail())
-	//	return E_FAIL;
+	/*__________________________________________________________________________________________________________
+	[ StaticMeshObject ]
+	____________________________________________________________________________________________________________*/
+	wifstream fin { L"../../Bin/ToolData/TestStaticMesh.staticmesh" };
+	if (fin.fail())
+		return E_FAIL;
 
-	//wstring	wstrMeshTag				= L"";
-	//_vec3	vScale					= _vec3(0.0f);
-	//_vec3	vAngle					= _vec3(0.0f);
-	//_vec3	vPos					= _vec3(0.0f);
-	//_bool	bIsRenderShadow			= false;
-	//_bool	bIsCollision			= false;
-	//_vec3	vBoundingSphereScale	= _vec3(0.0f);
-	//_vec3	vBoundingSpherePos      = _vec3(0.0f);
-	//_bool	bIsMousePicking			= false;
+	wstring	wstrMeshTag				= L"";
+	_vec3	vScale					= _vec3(0.0f);
+	_vec3	vAngle					= _vec3(0.0f);
+	_vec3	vPos					= _vec3(0.0f);
+	_bool	bIsRenderShadow			= false;
+	_bool	bIsCollision			= false;
+	_vec3	vBoundingSphereScale	= _vec3(0.0f);
+	_vec3	vBoundingSpherePos      = _vec3(0.0f);
+	_bool	bIsMousePicking			= false;
 
-	//while (true)
-	//{
-	//	fin >> wstrMeshTag 				// MeshTag
-	//		>> vScale.x
-	//		>> vScale.y
-	//		>> vScale.z					// Scale
-	//		>> vAngle.x
-	//		>> vAngle.y
-	//		>> vAngle.z					// Angle
-	//		>> vPos.x
-	//		>> vPos.y
-	//		>> vPos.z					// Pos
-	//		>> bIsRenderShadow			// Is Render Shadow
-	//		>> bIsCollision 			// Is Collision
-	//		>> vBoundingSphereScale.x	// BoundingSphere Scale
-	//		>> vBoundingSphereScale.y
-	//		>> vBoundingSphereScale.z
-	//		>> vBoundingSpherePos.x		// BoundingSphere Pos
-	//		>> vBoundingSpherePos.y
-	//		>> vBoundingSpherePos.z
-	//		>> bIsMousePicking;
+	while (true)
+	{
+		fin >> wstrMeshTag 				// MeshTag
+			>> vScale.x
+			>> vScale.y
+			>> vScale.z					// Scale
+			>> vAngle.x
+			>> vAngle.y
+			>> vAngle.z					// Angle
+			>> vPos.x
+			>> vPos.y
+			>> vPos.z					// Pos
+			>> bIsRenderShadow			// Is Render Shadow
+			>> bIsCollision 			// Is Collision
+			>> vBoundingSphereScale.x	// BoundingSphere Scale
+			>> vBoundingSphereScale.y
+			>> vBoundingSphereScale.z
+			>> vBoundingSpherePos.x		// BoundingSphere Pos
+			>> vBoundingSpherePos.y
+			>> vBoundingSpherePos.z
+			>> bIsMousePicking;
 
-	//	if (fin.eof())
-	//		break;
+		if (fin.eof())
+			break;
 
-	//	pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-	//										 wstrMeshTag,			// MeshTag
-	//										 vScale,				// Scale
-	//										 vAngle,				// Angle
-	//										 vPos,					// Pos
-	//										 bIsRenderShadow,		// Render Shadow
-	//										 bIsCollision,			// Bounding Sphere
-	//										 vBoundingSphereScale,	// Bounding Sphere Scale
-	//										 vBoundingSpherePos);	// Bounding Sphere Pos
+		pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+											 wstrMeshTag,			// MeshTag
+											 vScale,				// Scale
+											 vAngle,				// Angle
+											 vPos,					// Pos
+											 bIsRenderShadow,		// Render Shadow
+											 bIsCollision,			// Bounding Sphere
+											 vBoundingSphereScale,	// Bounding Sphere Scale
+											 vBoundingSpherePos);	// Bounding Sphere Pos
 
-	//	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"StaticMesh", pGameObj), E_FAIL);
-	//}
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"StaticMesh", pGameObj), E_FAIL);
+	}
 
 
 	/*__________________________________________________________________________________________________________
@@ -223,19 +222,11 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 	____________________________________________________________________________________________________________*/
 	pGameObj =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
 								  L"PoporiR19",					// MeshTag
+								  L"TestNaviMesh",				// NaviMeshTag
 								  _vec3(0.05f, 0.05f, 0.05f),	// Scale
 								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
 								  _vec3(25.0f, 0.f, 20.0f));	// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pGameObj), E_FAIL);
-
-
-	pGameObj = CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
-								  L"PoporiH25",					// MeshTag
-								  _vec3(0.05f, 0.05f, 0.05f),	// Scale
-								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-								  _vec3(26.5f, 0.f, 20.0f));	// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pGameObj), E_FAIL);
-
 
 	/*__________________________________________________________________________________________________________
 	[ TexEffect ]

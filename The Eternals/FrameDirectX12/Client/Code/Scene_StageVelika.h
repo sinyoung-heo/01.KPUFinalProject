@@ -2,11 +2,11 @@
 #include "Include.h"
 #include "Scene.h"
 
-class CScene_Stage final : public Engine::CScene
+class CScene_StageVelika final : public Engine::CScene
 {
 private:
-	explicit CScene_Stage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CScene_Stage() = default;
+	explicit CScene_StageVelika(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CScene_StageVelika() = default;
 
 public:
 	virtual HRESULT Ready_Scene();
@@ -24,7 +24,7 @@ private:
 	HRESULT			Ready_NaviMesh();
 
 public:
-	static CScene_Stage*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	static CScene_StageVelika*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 private:
 	virtual void			Free();
 };
