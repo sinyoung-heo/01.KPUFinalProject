@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Code\Cell.cpp" />
     <ClCompile Include="..\Code\CollisionMgr.cpp" />
     <ClCompile Include="..\Code\DBMgr.cpp" />
     <ClCompile Include="..\Code\Line.cpp" />
@@ -33,7 +34,6 @@
     <ClCompile Include="..\Code\Player.cpp" />
     <ClCompile Include="..\Code\Sector.cpp" />
     <ClCompile Include="..\Code\SectorMgr.cpp" />
-    <ClCompile Include="Cell.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Code\Cell.h" />

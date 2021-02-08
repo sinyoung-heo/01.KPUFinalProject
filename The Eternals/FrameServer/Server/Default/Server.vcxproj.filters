@@ -105,14 +105,14 @@
     <ClCompile Include="..\Code\Line.cpp">
       <Filter>98.Manager\05.NaviMesh\00.Line</Filter>
     </ClCompile>
-    <ClCompile Include="Cell.cpp">
-      <Filter>98.Manager\05.NaviMesh\01.Cell</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\NaviMesh.cpp">
       <Filter>98.Manager\05.NaviMesh</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CollisionMgr.cpp">
       <Filter>98.Manager\06.CollisionMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Cell.cpp">
+      <Filter>98.Manager\05.NaviMesh\01.Cell</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
