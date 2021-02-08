@@ -15,7 +15,7 @@ HRESULT CLine::Ready_Line(const _vec2* pPointA, const _vec2* pPointB)
 
 CLine::COMPARE CLine::Compare(const _vec2* pEndPos)
 {
-	_vec2 vDest(_vec2(pEndPos->x - m_vPoint[POINT_START].x, pEndPos->y - m_vPoint[POINT_START].y));
+	_vec2 vDest = *pEndPos - m_vPoint[POINT_START];
 	vDest.Normalize();
 		
 	float fResult = vDest.Dot(m_vNormal);

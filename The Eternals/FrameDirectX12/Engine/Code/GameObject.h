@@ -38,6 +38,7 @@ public:
 	void				Set_IsRenderShadow(const _bool& bIsRenderShadow)	{ m_bIsRenderShadow = bIsRenderShadow; }
 	void				Set_ServerNumber(const int& num)					{ m_iSNum = num; }
 	void				Set_LastMoveTime(const steady_clock::time_point& last) { m_last_move_time = last; }
+	void				Set_DeadReckoning(const _vec3& vPos1, const _vec3& vPos2, const _vec3& vPos3, const _vec3& vPos4);
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT Ready_GameObjectPrototype();

@@ -12,9 +12,9 @@ public:
 	virtual ~CLine() = default;
 
 public:
-	const _vec2& Get_Point(const POINT& ePoint) { return m_vPoint[ePoint]; }
-	_vec2* Get_Point() { return m_vPoint; }
-	_vec2& Get_Normal() { return m_vNormal; }
+	const _vec2&	Get_Point(const POINT& ePoint)	{ return m_vPoint[ePoint]; }
+	_vec2*			Get_Point()						{ return m_vPoint; }
+	_vec2&			Get_Normal()					{ return m_vNormal; }
 
 	HRESULT Ready_Line(const _vec2* pPointA, const _vec2* pPointB);
 	COMPARE Compare(const _vec2* pEndPos);
@@ -23,7 +23,6 @@ public:
 
 public:
 	static CLine* Create(const _vec2* pPointA, const _vec2* pPointB);
-
 
 private:
 	_vec2 m_vPoint[POINT_END];

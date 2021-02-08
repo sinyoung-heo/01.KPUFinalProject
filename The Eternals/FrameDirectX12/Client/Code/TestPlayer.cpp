@@ -28,16 +28,17 @@ HRESULT CTestPlayer::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, 
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos = vPos;
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
-		m_pTransCom->m_vScale,
-		m_pMeshCom->Get_CenterPos(),
-		m_pMeshCom->Get_MinVector(),
-		m_pMeshCom->Get_MaxVector());
+										   m_pTransCom->m_vScale,
+										   m_pMeshCom->Get_CenterPos(),
+										   m_pMeshCom->Get_MinVector(),
+										   m_pMeshCom->Get_MaxVector());
 
 
 	m_pInfoCom->m_fSpeed = 5.0f;
 	m_pInfoCom->m_arrBezierPoint[3] = { m_pTransCom->m_vPos };
 	m_eKeyState = MVKEY::K_END;
 	m_bIsKeyUp = false;
+	m_bIsSameDir = false;
 
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
@@ -113,12 +114,19 @@ _int CTestPlayer::Update_GameObject(const _float& fTimeDelta)
 		/* 움직이고 있는 중일 경우 */
 		if (m_bIsKeyUp)
 		{
-			if (CPacketMgr::Get_Instance()->change_MoveKey(m_eKeyState))
-				Send_Player_Move();
-
-			//if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_arrBezierPoint[3]))
+			if (CPacketMgr::Get_Instance()->change_MoveKey(m_eKeyState) || m_bIsSameDir == true)
 			{
-				m_pTransCom->m_vPos += m_pTransCom->m_vDir * fTimeDelta * 0.5f;
+				Send_Player_Move();
+				m_bIsSameDir = false;
+			}
+
+			if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_arrBezierPoint[3]))
+			{
+				// NaviMesh 이동.
+				_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+															 &m_pTransCom->m_vDir,
+															 m_pInfoCom->m_fSpeed * fTimeDelta);
+				m_pTransCom->m_vPos = vPos;
 			}
 		}
 	}
@@ -204,14 +212,6 @@ void CTestPlayer::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCom
 {
 	Set_ConstantTableShadowDepth();
 	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
-}
-
-void CTestPlayer::Set_DeadReckoning(const _vec3& vPos1, const _vec3& vPos2, const _vec3& vPos3, const _vec3& vPos4)
-{
-	m_pInfoCom->m_arrBezierPoint[0] = vPos1;
-	m_pInfoCom->m_arrBezierPoint[1] = vPos2;
-	m_pInfoCom->m_arrBezierPoint[2] = vPos3;
-	m_pInfoCom->m_arrBezierPoint[3] = vPos4;
 }
 
 HRESULT CTestPlayer::Add_Component(wstring wstrMeshTag)
@@ -434,6 +434,7 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 			CPacketMgr::Get_Instance()->send_move_stop(m_pTransCom->m_vPos, m_pTransCom->m_vAngle);
 #endif
 			m_bIsKeyUp = false;
+			m_bIsSameDir = true;
 		}
 	}
 }

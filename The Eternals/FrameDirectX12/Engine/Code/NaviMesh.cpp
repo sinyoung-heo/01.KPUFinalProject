@@ -37,8 +37,8 @@ _int CNaviMesh::Get_CurrentPositionCellIndex(const _vec3& vPos)
 	for (auto& pCell : m_vecCell)
 	{
 		_vec3 vPosA = *pCell->Get_Point(CCell::POINT_A);
-		_vec3 vPosB = *pCell->Get_Point(CCell::POINT_A);
-		_vec3 vPosC = *pCell->Get_Point(CCell::POINT_A);
+		_vec3 vPosB = *pCell->Get_Point(CCell::POINT_B);
+		_vec3 vPosC = *pCell->Get_Point(CCell::POINT_C);
 
 		_vec3 vDirA = vPosB - vPosA;
 		_vec3 vDirB = vPosC - vPosB;
