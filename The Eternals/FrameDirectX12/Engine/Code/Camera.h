@@ -18,9 +18,10 @@ protected:
 
 public:
 	// Get
-	const CAMERA_DESC&	Get_CameraInfo()								{ return m_tCameraInfo; }
-	const PROJ_DESC&	Get_ProjInfo()									{ return m_tProjInfo; }
-	const ORTHO_DESC&	Get_OrthInfo()									{ return m_tOrthoInfo; }
+	const CAMERA_DESC&		Get_CameraInfo()	{ return m_tCameraInfo; }
+	const PROJ_DESC&		Get_ProjInfo()		{ return m_tProjInfo; }
+	const ORTHO_DESC&		Get_OrthInfo()		{ return m_tOrthoInfo; }
+	const BoundingFrustum&	Get_Frustum()		{ return m_tFrustum; }
 
 	// Set
 	void				Set_CameraInfo(const CAMERA_DESC& tCameraInfo)	{ m_tCameraInfo = tCameraInfo; }
@@ -43,9 +44,11 @@ protected:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	CAMERA_DESC	m_tCameraInfo	{ };	// Camera - Eyte, At, Up
-	PROJ_DESC	m_tProjInfo		{ };	// 원근 투영 정보를 담은 구조체.
-	ORTHO_DESC	m_tOrthoInfo	{ };	// 직교 투영 정보를 담은 구조체.
+	CAMERA_DESC		m_tCameraInfo	{ };	// Camera - Eyte, At, Up
+	PROJ_DESC		m_tProjInfo		{ };	// 원근 투영 정보를 담은 구조체.
+	ORTHO_DESC		m_tOrthoInfo	{ };	// 직교 투영 정보를 담은 구조체.
+	BoundingFrustum m_tFrustum;				// 카메라 절두체.
+
 
 	/*__________________________________________________________________________________________________________
 	[ Shader Component ]
@@ -54,7 +57,7 @@ protected:
 	CShaderTexture* m_pShaderTexture	= nullptr;
 	CShaderSkyBox*	m_pShaderSkyBox		= nullptr;
 	CShaderMesh*	m_pShaderMesh		= nullptr;
-	CShaderSSAO* m_pShaderSSAO = nullptr;
+	CShaderSSAO*	m_pShaderSSAO       = nullptr;
 
 protected:
 	virtual void Free();

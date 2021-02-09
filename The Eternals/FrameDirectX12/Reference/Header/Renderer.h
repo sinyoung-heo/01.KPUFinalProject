@@ -52,25 +52,25 @@ private:
 
 public:
 	// Get
-	_uint			Get_RenderLstSize(const RENDERGROUP& eRenderGroup);
-	_uint			Get_ColliderLstSize();
-	const _uint&	Get_CntShaderFile()									{ return m_uiCnt_ShaderFile; }
-	const _uint&	Get_CntPipelineState()								{ return m_uiCnt_PipelineState; }
-	const _uint&	Get_CntSetPipelineState()							{ return m_uiCnt_SetPipelineState; }
-	_bool			Get_RenderOnOff(wstring wstrTag);
-	CRenderTarget*	Get_TargetShadowDepth()								{ return m_pTargetShadowDepth; }
+	_uint				Get_RenderLstSize(const RENDERGROUP& eRenderGroup);
+	_uint				Get_ColliderLstSize();
+	const _uint&		Get_CntShaderFile()					{ return m_uiCnt_ShaderFile; }
+	const _uint&		Get_CntPipelineState()				{ return m_uiCnt_PipelineState; }
+	const _uint&		Get_CntSetPipelineState()			{ return m_uiCnt_SetPipelineState; }
+	_bool				Get_RenderOnOff(wstring wstrTag);
+	CRenderTarget*		Get_TargetShadowDepth()				{ return m_pTargetShadowDepth; }
+	BoundingFrustum&	Get_Frustum()						{ return m_tFrustum; } 
 
 	// Set
 	HRESULT	Set_CurPipelineState(ID3D12PipelineState* pPipelineState);
 	HRESULT	Set_CurPipelineState(ID3D12GraphicsCommandList* pCommandList, 
 								 ID3D12PipelineState* pPipelineState,
 								 const _int& iContextIdx);
-
-
 	HRESULT	Set_RenderOnOff(wstring wstrTag);
-	void	Add_PipelineStateCnt()		{ ++m_uiCnt_PipelineState; };
-	void	Reset_SetPipelineStateCnt() { m_uiCnt_SetPipelineState = 0; }
-	void	Set_bIsLoadingFinish()		{ m_bIsLoadingFinish = true; }
+	void	Add_PipelineStateCnt()							{ ++m_uiCnt_PipelineState; };
+	void	Reset_SetPipelineStateCnt()						{ m_uiCnt_SetPipelineState = 0; }
+	void	Set_bIsLoadingFinish()							{ m_bIsLoadingFinish = true; }
+	void	Set_Frustum(const BoundingFrustum& tFrustum)	{ m_tFrustum = tFrustum; }
 
 	// Method
 	HRESULT	Ready_Renderer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
@@ -115,20 +115,20 @@ private:
 	list<CComponent*>		m_ColliderList;					// Collier RenderList
 	_uint					m_uiRenderListSize		= 0;	// Render GameObject Cnt
 	_uint					m_uiColliderListSize	= 0;	// Render Collider Cnt
+	BoundingFrustum			m_tFrustum;
 
 	/*__________________________________________________________________________________________________________
 	[ Multi RenderTarget ]
 	____________________________________________________________________________________________________________*/
 	// Render Target - 타겟추가후 꼭 릴리즈
-	CRenderTarget*	m_pTargetDeferred		= nullptr; // 디퍼드 -> Target5
-	CRenderTarget*	m_pTargetLight			= nullptr; // 라이트 -> Target2
-	CRenderTarget*	m_pTargetShadowDepth	= nullptr; // 셰도우 -> Target1
-	CRenderTarget*  m_pTargetLuminance       = nullptr; //루미넌스 ->Target1
-	CRenderTarget* m_pTargetDownSampling = nullptr;		//다운샘플->Target2
-	CRenderTarget* m_pTargetBlur = nullptr;				//블러		->Target3
-	CRenderTarget* m_pTargetSSAO = nullptr;				//ssao		->Target1
-
-	CRenderTarget* m_pTargetDistortion = nullptr;		//Distortion
+	CRenderTarget*	m_pTargetDeferred	  = nullptr; // 디퍼드		-> Target5
+	CRenderTarget*	m_pTargetLight		  = nullptr; // 라이트		-> Target2
+	CRenderTarget*	m_pTargetShadowDepth  = nullptr; // 셰도우		-> Target1
+	CRenderTarget*  m_pTargetLuminance    = nullptr; // 루미넌스		-> Target1
+	CRenderTarget*	m_pTargetDownSampling = nullptr; // 다운샘플		-> Target2
+	CRenderTarget*	m_pTargetBlur         = nullptr; // 블러			-> Target3
+	CRenderTarget*	m_pTargetSSAO         = nullptr; // SSAO		-> Target1
+	CRenderTarget* m_pTargetDistortion    = nullptr; // Distortion
 	// Blend
 	CScreenTex*		m_pBlendBuffer					= nullptr;
 	CShaderBlend*	m_pBlendShader					= nullptr;

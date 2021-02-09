@@ -1,12 +1,13 @@
 #include "Camera.h"
 #include "GraphicDevice.h"
-#include "LightMgr.h"
+#include "Renderer.h"
 #include "ShaderColor.h"
 #include "ShaderTexture.h"
 #include "ShaderMesh.h"
 #include "ShaderSkyBox.h"
 #include "ShaderShadow.h"
 #include "ShaderSSAO.h"
+
 USING(Engine)
 
 CCamera::CCamera(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -58,6 +59,11 @@ HRESULT CCamera::Ready_GameObject(const CAMERA_DESC& tCameraInfo,
 
 
 	/*__________________________________________________________________________________________________________
+	[ Set Frustum ]
+	____________________________________________________________________________________________________________*/
+	m_tFrustum.CreateFromMatrix(m_tFrustum, m_tProjInfo.matProj);
+
+	/*__________________________________________________________________________________________________________
 	[ Shader Component 생성 ]
 	____________________________________________________________________________________________________________*/
 	m_pShaderColor = static_cast<CShaderColor*>(m_pComponentMgr->Clone_Component(L"ShaderColor", COMPONENTID::ID_STATIC));
@@ -87,6 +93,18 @@ _int CCamera::Update_GameObject(const _float & fTimeDelta)
 	m_tCameraInfo.matView = XMMatrixLookAtLH(m_tCameraInfo.vEye.Get_XMVECTOR(), 
 											 m_tCameraInfo.vAt.Get_XMVECTOR(), 
 											 m_tCameraInfo.vUp.Get_XMVECTOR());
+
+	/*__________________________________________________________________________________________________________
+	[ 절두체 Update ]
+	____________________________________________________________________________________________________________*/
+	BoundingFrustum tFrustum;
+	_matrix matViewInv;
+	
+	matViewInv = XMMatrixInverse(nullptr, m_tCameraInfo.matView);
+	m_tFrustum.CreateFromMatrix(m_tFrustum, m_tProjInfo.matProj);
+	m_tFrustum.Transform(m_tFrustum, matViewInv);
+
+	CRenderer::Get_Instance()->Set_Frustum(m_tFrustum);
 
 	/*__________________________________________________________________________________________________________
 	[ Shader ConstantBuffer Update ]
@@ -128,7 +146,7 @@ void CCamera::Set_ConstantTable()
 	m_pShaderMesh->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 
 	// ShaderSSAO
-	tCB_CameraProjMatrix.matView =   CShader::Compute_MatrixTranspose(m_tCameraInfo.matView);
+	tCB_CameraProjMatrix.matView = CShader::Compute_MatrixTranspose(m_tCameraInfo.matView);
 	tCB_CameraProjMatrix.matProj = CShader::Compute_MatrixTranspose(m_tProjInfo.matProj);
 	m_pShaderSSAO->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 }

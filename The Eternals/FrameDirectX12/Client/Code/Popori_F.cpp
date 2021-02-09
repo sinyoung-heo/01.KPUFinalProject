@@ -256,12 +256,9 @@ void CPopori_F::Set_ConstantTable()
 	tCB_ShaderMesh.vLightPos		= tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar	= tShadowDesc.fLightPorjFar;
 
-
-
-	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.15;
+	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.15f;
 	tCB_ShaderMesh.fDeltaTime = m_fDeltaTime;
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
-
 	
 	if (m_fDeltaTime > 1.f)
 		m_fDeltaTime = 0.f;
