@@ -59,7 +59,8 @@ HRESULT CLight::Ready_Light(const D3DLIGHT & tLightInfo)
 		m_pColliderCom->Set_Scale(_vec3(0.5f, 0.5f, 0.5f));
 		m_pColliderCom->Set_Extents(_vec3(1.0f));
 		m_pColliderCom->Set_Color(m_tLightInfo.Diffuse);
-		m_pColliderCom->Get_Transform()->Update_Component(0.0f);
+		m_pColliderCom->Update_Component(0.0f);
+		// m_pColliderCom->Get_Transform()->Update_Component(0.0f);
 	}
 
 
@@ -72,7 +73,9 @@ _int CLight::Update_Light()
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
-	m_pColliderCom->Update_Component(0.0f);
+	if (D3DLIGHT_POINT == m_tLightInfo.Type &&
+		CRenderer::Get_Instance()->Get_Frustum().Contains(m_pColliderCom->Get_BoundingInfo()) != DirectX::DISJOINT)
+		m_pColliderCom->Update_Component(0.0f);
 
 	return NO_EVENT;
 }
@@ -87,15 +90,28 @@ void CLight::Render_Light(vector<ComPtr<ID3D12Resource>> pvecTargetTexture)
 		m_pShaderCom->SetUp_ShaderTexture(pvecTargetTexture);
 	}
 
-	if (CRenderer::Get_Instance()->Get_RenderOnOff(L"Collider") && D3DLIGHT_POINT == m_tLightInfo.Type)
-		CRenderer::Get_Instance()->Add_Renderer(m_pColliderCom);
+	if (D3DLIGHT_POINT == m_tLightInfo.Type &&
+		CRenderer::Get_Instance()->Get_Frustum().Contains(m_pColliderCom->Get_BoundingInfo()) != DirectX::DISJOINT)
+	{
+		if (CRenderer::Get_Instance()->Get_RenderOnOff(L"Collider"))
+			CRenderer::Get_Instance()->Add_Renderer(m_pColliderCom);
 
-	Set_ConstantTable();
+		Set_ConstantTable();
 
-	m_pShaderCom->Begin_Shader();
-	m_pBufferCom->Begin_Buffer();
+		m_pShaderCom->Begin_Shader();
+		m_pBufferCom->Begin_Buffer();
 
-	m_pBufferCom->Render_Buffer();
+		m_pBufferCom->Render_Buffer();
+	}
+	else if (D3DLIGHT_DIRECTIONAL == m_tLightInfo.Type)
+	{
+		Set_ConstantTable();
+
+		m_pShaderCom->Begin_Shader();
+		m_pBufferCom->Begin_Buffer();
+
+		m_pBufferCom->Render_Buffer();
+	}
 }
 
 void CLight::Set_ConstantTable()

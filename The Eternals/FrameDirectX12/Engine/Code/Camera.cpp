@@ -97,10 +97,14 @@ _int CCamera::Update_GameObject(const _float & fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ ÀýµÎÃ¼ Update ]
 	____________________________________________________________________________________________________________*/
-	BoundingFrustum tFrustum;
+	_vec3 vDir = m_tCameraInfo.vEye - m_tCameraInfo.vAt;
+	vDir.Normalize();
+
+	_matrix matFrustumView = XMMatrixLookAtLH(_vec3(m_tCameraInfo.vEye + vDir * 10.0f).Get_XMVECTOR(),
+											  m_tCameraInfo.vAt.Get_XMVECTOR(), 
+											  m_tCameraInfo.vUp.Get_XMVECTOR());
 	_matrix matViewInv;
-	
-	matViewInv = XMMatrixInverse(nullptr, m_tCameraInfo.matView);
+	matViewInv = XMMatrixInverse(nullptr, matFrustumView);
 	m_tFrustum.CreateFromMatrix(m_tFrustum, m_tProjInfo.matProj);
 	m_tFrustum.Transform(m_tFrustum, matViewInv);
 

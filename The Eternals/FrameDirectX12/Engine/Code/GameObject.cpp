@@ -187,7 +187,8 @@ void CGameObject::SetUp_BoundingBox(_matrix* pParent,
 									const _vec3& vParentScale,
 									const _vec3& vCenter, 
 									const _vec3& vMin,
-									const _vec3& vMax)
+									const _vec3& vMax,
+									const _float& fScaleOffset)
 {
 	if (nullptr != m_pBoundingBoxCom)
 	{
@@ -195,6 +196,8 @@ void CGameObject::SetUp_BoundingBox(_matrix* pParent,
 		vScale.x = abs(vMax.x - vMin.x);
 		vScale.y = abs(vMax.y - vMin.y);
 		vScale.z = abs(vMax.z - vMin.z);
+
+		vScale *= fScaleOffset;
 
 		m_pBoundingBoxCom->Set_ParentMatrix(pParent);
 		m_pBoundingBoxCom->Set_Scale(vScale);
