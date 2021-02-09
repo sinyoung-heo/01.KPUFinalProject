@@ -369,12 +369,6 @@ _ulong Release_Singleton()
 		return dwRefCnt;
 	}
 
-	if (dwRefCnt = Engine::CMathMgr::Get_Instance()->Destroy_Instance())
-	{
-		MSG_BOX(L"CMathMgr Release Failed");
-		return dwRefCnt;
-	}
-
 	if (dwRefCnt = Engine::CDirectInput::Get_Instance()->Destroy_Instance())
 	{
 		MSG_BOX(L"CDirectInput Release Failed");

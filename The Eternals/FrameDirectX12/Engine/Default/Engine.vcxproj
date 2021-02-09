@@ -205,7 +205,6 @@ call CopyEngine.bat</Command>
     <ClInclude Include="..\Code\Light.h" />
     <ClInclude Include="..\Code\LightMgr.h" />
     <ClInclude Include="..\Code\Management.h" />
-    <ClInclude Include="..\Code\MathMgr.h" />
     <ClInclude Include="..\Code\Mesh.h" />
     <ClInclude Include="..\Code\NaviMesh.h" />
     <ClInclude Include="..\Code\ObjectMgr.h" />
@@ -271,7 +270,6 @@ call CopyEngine.bat</Command>
     <ClCompile Include="..\Code\Light.cpp" />
     <ClCompile Include="..\Code\LightMgr.cpp" />
     <ClCompile Include="..\Code\Management.cpp" />
-    <ClCompile Include="..\Code\MathMgr.cpp" />
     <ClCompile Include="..\Code\Mesh.cpp" />
     <ClCompile Include="..\Code\NaviMesh.cpp" />
     <ClCompile Include="..\Code\ObjectMgr.cpp" />

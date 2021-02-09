@@ -40,9 +40,6 @@
     <Filter Include="97.Mgr">
       <UniqueIdentifier>{37799aed-be29-4cee-8d59-a49c737f5a54}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97.Mgr\01.MathMgr">
-      <UniqueIdentifier>{12ba79eb-3f19-453e-a53b-bfefe320abdf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\02.RenderTarget">
       <UniqueIdentifier>{8d124c76-c4c3-42ab-bfbd-d94bd5b441c5}</UniqueIdentifier>
     </Filter>
@@ -175,6 +172,9 @@
     <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\10.ShaderSsao">
       <UniqueIdentifier>{45232813-74a9-465c-ae95-8e3ed04390d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.Mgr\01.DescriptorHeapMgr">
+      <UniqueIdentifier>{12ba79eb-3f19-453e-a53b-bfefe320abdf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\Engine_Functor.h">
@@ -212,9 +212,6 @@
     </ClInclude>
     <ClInclude Include="..\Code\TimeMgr.h">
       <Filter>00.System\01.Timer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\MathMgr.h">
-      <Filter>97.Mgr\01.MathMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\GraphicDevice.h">
       <Filter>00.System\00.GraphicDevice</Filter>
@@ -388,9 +385,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\TimeMgr.cpp">
       <Filter>00.System\01.Timer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\MathMgr.cpp">
-      <Filter>97.Mgr\01.MathMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\GraphicDevice.cpp">
       <Filter>00.System\00.GraphicDevice</Filter>

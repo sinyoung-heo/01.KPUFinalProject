@@ -69,7 +69,6 @@ using namespace DirectX::PackedVector;
 /*____________________________________________________________________
 Manager Class
 ______________________________________________________________________*/
-#include "MathMgr.h"
 #include "ShadowLightMgr.h"
 #include "PacketMgr.h"
 #include "ServerMath.h"
