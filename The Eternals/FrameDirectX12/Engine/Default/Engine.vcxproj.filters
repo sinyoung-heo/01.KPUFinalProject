@@ -363,6 +363,12 @@
     <ClInclude Include="..\Code\ShaderSSAO.h">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\10.ShaderSsao</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\DescriptorHeapMgr.h">
+      <Filter>97.Mgr\01.DescriptorHeapMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\InstancingMgr.h">
+      <Filter>97.Mgr\02.InstancingMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\DirectInput.cpp">
@@ -523,6 +529,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\ShaderSSAO.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\10.ShaderSsao</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\DescriptorHeapMgr.cpp">
+      <Filter>97.Mgr\01.DescriptorHeapMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\InstancingMgr.cpp">
+      <Filter>97.Mgr\02.InstancingMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

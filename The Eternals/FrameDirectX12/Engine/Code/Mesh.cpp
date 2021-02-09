@@ -11,15 +11,13 @@ CMesh::CMesh(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommand
 CMesh::CMesh(const CMesh & rhs)
 	: CComponent(rhs)
 	, m_pScene(rhs.m_pScene)
-	, m_wstrFilePath(rhs.m_wstrFilePath)
-	, m_wstrFullPath(rhs.m_wstrFullPath)
-	, m_wstrFileName(rhs.m_wstrFileName)
 	, m_wstrVIMeshTag(rhs.m_wstrVIMeshTag)
 	, m_wstrAniCtrlTag(rhs.m_wstrAniCtrlTag)
 {
 	if (m_pScene->mNumMeshes)
-		m_pVIMesh	= static_cast<CVIMesh*>(CComponentMgr::Get_Instance()->Clone_Component(m_wstrVIMeshTag, ID_STATIC));
-
+	{
+		m_pVIMesh = static_cast<CVIMesh*>(CComponentMgr::Get_Instance()->Clone_Component(m_wstrVIMeshTag, ID_STATIC));
+	}
 	if (m_pScene->mNumAnimations)
 	{
 		m_pAniCtrl = static_cast<CAniCtrl*>(CComponentMgr::Get_Instance()->Clone_Component(m_wstrAniCtrlTag, ID_STATIC));
@@ -33,16 +31,13 @@ HRESULT CMesh::Ready_Mesh(wstring wstrFilePath, wstring wstrFileName)
 	wstrFilePath	: ../../Bin/Resource/Mesh/
 	wstrFileName	: OOO.X
 	____________________________________________________________________________________________________________*/
-	m_wstrFilePath = wstrFilePath;
-	m_wstrFileName = wstrFileName;
+	wstring wstrFullPath = wstrFilePath;
+	wstrFullPath += wstrFileName;
 
-	m_wstrFullPath = wstrFilePath;
-	m_wstrFullPath += wstrFileName;
-
-	size_t iLength = wcslen((wchar_t*)m_wstrFullPath.c_str());
+	size_t iLength = wcslen((wchar_t*)wstrFullPath.c_str());
 
 	char* pStringPath = new char[2 * iLength + 1];
-	wcstombs(pStringPath, (wchar_t*)m_wstrFullPath.c_str(), 2 * iLength + 1);
+	wcstombs(pStringPath, (wchar_t*)wstrFullPath.c_str(), 2 * iLength + 1);
 
 	string strFullPath = pStringPath;
 	Safe_Delete_Array(pStringPath);
@@ -56,7 +51,7 @@ HRESULT CMesh::Ready_Mesh(wstring wstrFilePath, wstring wstrFileName)
 	CComponent* pComonent = nullptr;
 	if (m_pScene->mNumMeshes)
 	{
-		pComonent = CVIMesh::Create(m_pGraphicDevice, m_pCommandList, m_pScene, m_wstrFilePath);
+		pComonent = CVIMesh::Create(m_pGraphicDevice, m_pCommandList, m_pScene, wstrFileName, wstrFilePath);
 		NULL_CHECK_RETURN(pComonent, E_FAIL);
 		FAILED_CHECK_RETURN(CComponentMgr::Get_Instance()->Add_ComponentPrototype(m_wstrVIMeshTag, ID_STATIC, pComonent), E_FAIL);
 	}

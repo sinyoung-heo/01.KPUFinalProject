@@ -14,6 +14,8 @@
 #include "ComponentMgr.h"
 #include "Renderer.h"
 #include "LightMgr.h"
+#include "DescriptorHeapMgr.h"
+#include "InstancingMgr.h"
 #include <chrono>
 
 #define MAX_LOADSTRING 100
@@ -395,6 +397,18 @@ _ulong Release_Singleton()
 	if (dwRefCnt = Engine::CLightMgr::Get_Instance()->Destroy_Instance())
 	{
 		MSG_BOX(L"CLightMgr Release Failed");
+		return dwRefCnt;
+	}
+
+	if (dwRefCnt = Engine::CDescriptorHeapMgr::Get_Instance()->Destroy_Instance())
+	{
+		MSG_BOX(L"CDescriptorHeapMgr Release Failed");
+		return dwRefCnt;
+	}
+
+	if (dwRefCnt = Engine::CInstancingMgr::Get_Instance()->Destroy_Instance())
+	{
+		MSG_BOX(L"CInstancingMgr Release Failed");
 		return dwRefCnt;
 	}
 

@@ -124,6 +124,7 @@ HRESULT CLoading::Loading_TextureFromFilePath()
 		wstrPath		= szPath;
 
 		pComponent = Engine::CTexture::Create(m_pGraphicDevice, m_pCommandList,
+											  wstrTextureTag,
 											  wstrPath, 
 											  iTexSize, 
 											  eTexType);

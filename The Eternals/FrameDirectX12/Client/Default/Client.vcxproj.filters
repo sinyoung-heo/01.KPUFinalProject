@@ -214,12 +214,6 @@
     <ClInclude Include="..\Code\Scene_StageVelika.h">
       <Filter>01.Scene\03.StageVelika</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\enum.h">
-      <Filter>98.Header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\PacketMgr.h">
-      <Filter>97.Mgr\00.PacketMgr</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\ServerMath.h">
       <Filter>97.Mgr\03.ServerMath</Filter>
     </ClInclude>
@@ -237,6 +231,12 @@
     <ClInclude Include="..\Header\enum.h" />
     <ClInclude Include="..\Code\TextureDistortion.h">
       <Filter>02.GameObject\99.SampleObject\07.TextureEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PacketMgr.h">
+      <Filter>97.Mgr\00.PacketMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\enum.h">
+      <Filter>98.Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -313,9 +313,6 @@
     <ClCompile Include="..\Code\Scene_StageVelika.cpp">
       <Filter>01.Scene\03.StageVelika</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\PacketMgr.cpp">
-      <Filter>97.Mgr\00.PacketMgr</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\ServerMath.cpp">
       <Filter>97.Mgr\03.ServerMath</Filter>
     </ClCompile>
@@ -332,6 +329,9 @@
     <ClCompile Include="..\Code\TestPlayer.cpp" />
     <ClCompile Include="..\Code\TextureDistortion.cpp">
       <Filter>02.GameObject\99.SampleObject\07.TextureEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PacketMgr.cpp">
+      <Filter>97.Mgr\00.PacketMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

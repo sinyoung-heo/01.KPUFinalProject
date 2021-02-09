@@ -1,5 +1,6 @@
 #include "Texture.h"
 #include "GraphicDevice.h"
+#include "DescriptorHeapMgr.h"
 
 USING(Engine)
 
@@ -13,17 +14,17 @@ CTexture::CTexture(const CTexture & rhs)
 	, m_vecResource(rhs.m_vecResource)
 	, m_pTexDescriptorHeap(rhs.m_pTexDescriptorHeap)
 	, m_uiTexSize(rhs.m_uiTexSize)
+	, m_wstrFileName(rhs.m_wstrFileName)
 {
 	for (auto& pTexture : m_vecResource)
 		pTexture->AddRef();
 
 	if(nullptr != m_pTexDescriptorHeap)
 		m_pTexDescriptorHeap->AddRef();
-
-	lstrcpy(m_szFileName, rhs.m_szFileName);
 }
 
-HRESULT CTexture::Ready_Texture(wstring wstrFilePath,
+HRESULT CTexture::Ready_Texture(wstring wstrFileName,
+								wstring wstrFilePath,
 								const _uint & iCnt,
 								const TEXTYPE& eType)
 {
@@ -33,7 +34,7 @@ HRESULT CTexture::Ready_Texture(wstring wstrFilePath,
 	m_vecResource.reserve(iCnt);
 	m_vecUpload.reserve(iCnt);
 
-	lstrcpy(m_szFileName, wstrFilePath.c_str());
+	m_wstrFileName = wstrFileName;
 
 	_tchar szFullPath[MAX_PATH] = L"";
 
@@ -120,6 +121,10 @@ HRESULT CTexture::Create_TextureDescriptorHeap(const TEXTYPE& eType)
 		}
 	}
 
+
+	// Add DescriptorHeap
+	CDescriptorHeapMgr::Get_Instance()->Add_DescriptorHeap(m_wstrFileName, m_pTexDescriptorHeap);
+
 	return S_OK;
 }
 
@@ -137,15 +142,15 @@ CComponent * CTexture::Clone()
 	return new CTexture(*this);
 }
 
-CTexture * CTexture::Create(ID3D12Device * pGraphicDevice, 
-							ID3D12GraphicsCommandList * pCommandList,
+CTexture * CTexture::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
+							wstring wstrFileName,
 							wstring wstrFilePath,
 							const _uint & iCnt,
 							const TEXTYPE& eType)
 {
 	CTexture* pInstance = new CTexture(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_Texture(wstrFilePath, iCnt, eType)))
+	if (FAILED(pInstance->Ready_Texture(wstrFileName, wstrFilePath, iCnt, eType)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;

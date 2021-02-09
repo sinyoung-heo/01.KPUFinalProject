@@ -7,6 +7,7 @@
 #include "Renderer.h"
 #include "RenderTarget.h"
 #include "ComponentMgr.h"
+#include "DescriptorHeapMgr.h"
 
 USING(Engine)
 
@@ -27,6 +28,7 @@ CVIMesh::CVIMesh(const CVIMesh & rhs)
 	, m_vecIB_ByteSize(rhs.m_vecIB_ByteSize)
 	, m_IndexFormat(rhs.m_IndexFormat)
 	, m_vecSubMeshGeometry(rhs.m_vecSubMeshGeometry)
+	, m_wstrFileName(rhs.m_wstrFileName)
 	, m_wstrFilePath(rhs.m_wstrFilePath)
 	, m_vecDiffResource(rhs.m_vecDiffResource)
 	, m_vecNormResource(rhs.m_vecNormResource)
@@ -86,7 +88,6 @@ CVIMesh::CVIMesh(const CVIMesh & rhs)
 D3D12_VERTEX_BUFFER_VIEW CVIMesh::Get_VertexBufferView(const _uint & iIndex) const
 {
 	D3D12_VERTEX_BUFFER_VIEW VertexBufferView;
-
 	VertexBufferView.BufferLocation = m_vecVB_GPU[iIndex]->GetGPUVirtualAddress();
 	VertexBufferView.StrideInBytes	= m_uiVertexByteStride;
 	VertexBufferView.SizeInBytes	= m_vecVB_ByteSize[iIndex];
@@ -97,7 +98,6 @@ D3D12_VERTEX_BUFFER_VIEW CVIMesh::Get_VertexBufferView(const _uint & iIndex) con
 D3D12_INDEX_BUFFER_VIEW CVIMesh::Get_IndexBufferView(const _uint & iIndex) const
 {
 	D3D12_INDEX_BUFFER_VIEW IndexBufferView;
-
 	IndexBufferView.BufferLocation	= m_vecIB_GPU[iIndex]->GetGPUVirtualAddress();
 	IndexBufferView.Format			= m_IndexFormat;
 	IndexBufferView.SizeInBytes		= m_vecIB_ByteSize[iIndex];
@@ -105,9 +105,10 @@ D3D12_INDEX_BUFFER_VIEW CVIMesh::Get_IndexBufferView(const _uint & iIndex) const
 	return IndexBufferView;
 }
 
-HRESULT CVIMesh::Ready_Component(const aiScene * pScene, wstring wstrPath)
+HRESULT CVIMesh::Ready_Component(const aiScene * pScene, wstring wstrFileName, wstring wstrPath)
 {
 	m_pScene		= pScene;
+	m_wstrFileName	= wstrFileName;
 	m_wstrFilePath	= wstrPath;
 	NULL_CHECK_RETURN(m_pScene, E_FAIL);
 
@@ -567,6 +568,9 @@ HRESULT CVIMesh::Create_TextureDescriptorHeap()
 	m_pGraphicDevice->CreateShaderResourceView(TexDissolve.Get(), &SRV_Desc, SRV_DescriptorHandle);
 
 
+	// Add DescriptorHeap
+	CDescriptorHeapMgr::Get_Instance()->Add_DescriptorHeap(m_wstrFileName, m_pTexDescriptorHeap);
+
 	return S_OK;
 }
 
@@ -837,11 +841,12 @@ CComponent * CVIMesh::Clone()
 CVIMesh * CVIMesh::Create(ID3D12Device * pGraphicDevice,
 						  ID3D12GraphicsCommandList * pCommandList,
 						  const aiScene * pScene, 
+						  wstring wstrFileName,
 						  wstring wstrPath)
 {
 	CVIMesh* pInstance = new CVIMesh(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_Component(pScene, wstrPath)))
+	if (FAILED(pInstance->Ready_Component(pScene, wstrFileName, wstrPath)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;

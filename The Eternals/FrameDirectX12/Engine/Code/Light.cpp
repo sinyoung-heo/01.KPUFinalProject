@@ -90,6 +90,7 @@ void CLight::Render_Light(vector<ComPtr<ID3D12Resource>> pvecTargetTexture)
 		m_pShaderCom->SetUp_ShaderTexture(pvecTargetTexture);
 	}
 
+	// Frustum Culling
 	if (D3DLIGHT_POINT == m_tLightInfo.Type &&
 		CRenderer::Get_Instance()->Get_Frustum().Contains(m_pColliderCom->Get_BoundingInfo()) != DirectX::DISJOINT)
 	{
@@ -141,34 +142,6 @@ void CLight::Set_ConstantTable()
 	tCB_ShaderLighting.vLightRange		= _vec4(m_tLightInfo.Range);
 
 	m_pShaderCom->Get_UploadBuffer_ShaderLighting()->CopyData(0, tCB_ShaderLighting);
-
-	///*__________________________________________________________________________________________________________
-	//[ Camera Info ]
-	//____________________________________________________________________________________________________________*/
-	//CB_CAMERAINV_DESC tCB_CameraDesc;
-	//ZeroMemory(&tCB_CameraDesc, sizeof(CB_CAMERAINV_DESC));
-
-	//_matrix* pmatView = CGraphicDevice::Get_Instance()->Get_Transform(MATRIXID::VIEW);
-	//_matrix* pmatProj = CGraphicDevice::Get_Instance()->Get_Transform(MATRIXID::PROJECTION);
-	//if (nullptr == pmatView ||
-	//	nullptr == pmatProj)
-	//{
-	//	m_pShaderCom->Get_UploadBuffer_CameraDesc()->CopyData(0, tCB_CameraDesc);
-	//	return;
-	//}
-
-	//_matrix matViewInv		= MATRIX_INVERSE(*pmatView);
-	//_matrix matProjInv		= MATRIX_INVERSE(*pmatProj);
-	//_vec4	vCameraPosition = INIT_VEC4(0.0f);
-	//memcpy(&vCameraPosition, &matViewInv._41, sizeof(_vec4));
-
-	//XMStoreFloat4x4(&tCB_CameraDesc.matViewInv, XMMatrixTranspose(matViewInv));
-	//XMStoreFloat4x4(&tCB_CameraDesc.matProjInv, XMMatrixTranspose(matProjInv));
-	//tCB_CameraDesc.vCameraPosition	= vCameraPosition;
-	//tCB_CameraDesc.fProjNear		= 1.0f;
-	//tCB_CameraDesc.fProjFar			= 1000.0f;
-
-	//m_pShaderCom->Get_UploadBuffer_CameraDesc()->CopyData(0, tCB_CameraDesc);
 }
 
 CLight * CLight::Create(ID3D12Device * pGraphicDevice,

@@ -26,11 +26,13 @@ public:
 	const _vec3&					Get_CenterPos()			{ return m_vCenter; }
 	const _vec3&					Get_MinVector()			{ return m_vMin; }
 	const _vec3&					Get_MaxVector()			{ return m_vMax; }
+	wstring							Get_FileName()			{ return m_wstrFileName; }
 	// Set
 	void							Set_AniCtrl(CAniCtrl* pAniCtrl) { m_pAniCtrl = pAniCtrl; }
+	void							Set_FileName(wstring& wstrFileName) { m_wstrFileName = wstrFileName; }
 
 	// Method
-	HRESULT			Ready_Component(const aiScene* pScene, wstring wstrPath);
+	HRESULT			Ready_Component(const aiScene* pScene, wstring wstrFileName, wstring wstrPath);
 	HRESULT			Ready_Mesh(const aiMesh* pAiMesh, vector<VTXMESH>& vecVertex, vector<_uint>& vecIndex);
 	HRESULT			Ready_Texture();
 	HRESULT			Create_TextureDescriptorHeap();
@@ -78,6 +80,7 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Texture ]
 	____________________________________________________________________________________________________________*/
+	wstring							m_wstrFileName;
 	wstring							m_wstrFilePath;
 
 	vector<ComPtr<ID3D12Resource>>	m_vecDiffResource;
@@ -115,6 +118,7 @@ public:
 	static CVIMesh*		Create(ID3D12Device* pGraphicDevice,
 							   ID3D12GraphicsCommandList* pCommandList,
 							   const aiScene* pScene,
+							   wstring wstrFileName,
 							   wstring wstrPath);
 private:
 	virtual void		Free();

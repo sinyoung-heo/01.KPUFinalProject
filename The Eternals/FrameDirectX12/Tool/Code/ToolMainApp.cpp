@@ -226,22 +226,24 @@ HRESULT CToolMainApp::SetUp_LoadingResource()
 
 	// Texture - BackBuffer
 	pComponent = Engine::CTexture::Create(m_pGraphicDevice, m_pCommandList,
+										  L"BackBuffer",
 										  L"../../Bin/Resource/ResourceLoading/Texture/BackBuffer/%d.dds", 2);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"BackBuffer", Engine::ID_STATIC, pComponent), E_FAIL);
 
 	// Texture - Logo
 	pComponent = Engine::CTexture::Create(m_pGraphicDevice, m_pCommandList,
+										  L"Logo",
 										  L"../../Bin/Resource/ResourceLoading/Texture/Logo/%d.dds", 4);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"Logo", Engine::ID_STATIC, pComponent), E_FAIL);
 
 
 	// Textue - Dissolve
-
 	pComponent = Engine::CTexture::Create(m_pGraphicDevice, m_pCommandList,
-		L"../../Bin/Resource/ResourceLoading/Texture/Dissolve/%d.dds", 1,
-		Engine::TEXTYPE::TEX_2D);
+										  L"Dissolve",
+										  L"../../Bin/Resource/ResourceLoading/Texture/Dissolve/%d.dds", 1,
+										  Engine::TEXTYPE::TEX_2D);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"ResourcePrototype_TextureDissolve", Engine::ID_STATIC, pComponent), E_FAIL);
 

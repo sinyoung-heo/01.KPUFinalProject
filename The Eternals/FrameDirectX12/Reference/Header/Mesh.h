@@ -25,6 +25,7 @@ public:
 	const _vec3&					Get_CenterPos()			{ return m_pVIMesh->Get_CenterPos(); }
 	const _vec3&					Get_MinVector()			{ return m_pVIMesh->Get_MinVector(); }
 	const _vec3&					Get_MaxVector()			{ return m_pVIMesh->Get_MaxVector(); }
+	wstring							Get_FileName()			{ return m_pVIMesh->Get_FileName(); }
 
 	// Method
 	HRESULT Ready_Mesh(wstring wstrFilePath, wstring wstrFileName);
@@ -58,13 +59,6 @@ private:
 	____________________________________________________________________________________________________________*/
 	CVIMesh*	m_pVIMesh			= nullptr;
 	CAniCtrl*	m_pAniCtrl			= nullptr;
-
-	/*__________________________________________________________________________________________________________
-	[ FilePatn / FileName ]
-	____________________________________________________________________________________________________________*/
-	wstring	m_wstrFilePath			= L"";
-	wstring	m_wstrFullPath			= L"";
-	wstring m_wstrFileName			= L"";
 
 	/*__________________________________________________________________________________________________________
 	[ Component Tag ]
