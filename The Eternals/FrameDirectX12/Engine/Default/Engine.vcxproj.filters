@@ -121,9 +121,6 @@
     <Filter Include="97.Mgr\99.DDSTextureLoader">
       <UniqueIdentifier>{b5030466-be53-44a2-b8ff-53c91638118e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97.Mgr\02.FrustomMgr">
-      <UniqueIdentifier>{4399fbf6-4ee2-405b-899b-3b6fef6f8b67}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\03.NaviMesh">
       <UniqueIdentifier>{d7017b1a-322f-4482-a8cd-c89bdcb1f503}</UniqueIdentifier>
     </Filter>
@@ -174,6 +171,9 @@
     </Filter>
     <Filter Include="97.Mgr\01.DescriptorHeapMgr">
       <UniqueIdentifier>{12ba79eb-3f19-453e-a53b-bfefe320abdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Mgr\02.InstancingMgr">
+      <UniqueIdentifier>{d66a6f78-91be-4d28-869e-439692f7ab6a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -336,9 +336,6 @@
     <ClInclude Include="..\Code\Mesh.h">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\02.Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\FrustumMgr.h">
-      <Filter>97.Mgr\02.FrustomMgr</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\ShaderShadow.h">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\04.ShaderShadow</Filter>
     </ClInclude>
@@ -499,9 +496,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\Mesh.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\02.Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\FrustumMgr.cpp">
-      <Filter>97.Mgr\02.FrustomMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\ShaderShadow.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\04.ShaderShadow</Filter>

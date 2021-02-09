@@ -24,7 +24,6 @@
 #include "ComponentMgr.h"
 #include "Renderer.h"
 #include "LightMgr.h"
-#include "FrustumMgr.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -71,7 +70,6 @@ CToolView::~CToolView()
 	Engine::CLightMgr::Get_Instance()->Destroy_Instance();
 	Engine::CObjectMgr::Get_Instance()->Destroy_Instance();
 	Engine::CComponentMgr::Get_Instance()->Destroy_Instance();
-	Engine::CFrustumMgr::Get_Instance()->Destroy_Instance();
 	Engine::CGraphicDevice::Get_Instance()->Destroy_Instance();
 
 }

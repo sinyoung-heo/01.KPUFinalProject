@@ -197,7 +197,6 @@ call CopyEngine.bat</Command>
     <ClInclude Include="..\Code\Font.h" />
     <ClInclude Include="..\Code\Frame.h" />
     <ClInclude Include="..\Code\FrameMgr.h" />
-    <ClInclude Include="..\Code\FrustumMgr.h" />
     <ClInclude Include="..\Code\GameObject.h" />
     <ClInclude Include="..\Code\GraphicDevice.h" />
     <ClInclude Include="..\Code\Info.h" />
@@ -262,7 +261,6 @@ call CopyEngine.bat</Command>
     <ClCompile Include="..\Code\Font.cpp" />
     <ClCompile Include="..\Code\Frame.cpp" />
     <ClCompile Include="..\Code\FrameMgr.cpp" />
-    <ClCompile Include="..\Code\FrustumMgr.cpp" />
     <ClCompile Include="..\Code\GameObject.cpp" />
     <ClCompile Include="..\Code\GraphicDevice.cpp" />
     <ClCompile Include="..\Code\Info.cpp" />

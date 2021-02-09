@@ -1,7 +1,6 @@
 #pragma once
 #include "ComponentMgr.h"
 #include "Renderer.h"
-#include "FrustumMgr.h"
 
 BEGIN(Engine)
 
@@ -64,7 +63,6 @@ protected:
 	void			SetUp_BillboardMatrix();
 	void			SetUp_BoundingBox(_matrix* pParent, const _vec3& vParentScale, const _vec3& vCenter, const _vec3& vMin, const _vec3& vMax, const _float& fScaleOffset = 1.0f);
 	void			SetUp_BoundingSphere(_matrix* pParent, const _vec3& vParentScale, const _vec3& vScale, const _vec3& vPos);
-	void			SetUp_ShadowDepth(_vec3& vLightEye, _vec3& vLightAt, _vec3& vLightDir);
 	void			Compute_ViewZ(_vec4& vPosInWorld);
 
 private:
@@ -79,7 +77,6 @@ protected:
 	CRenderer*					m_pRenderer			= nullptr;
 	CObjectMgr*					m_pObjectMgr		= nullptr;
 	CComponentMgr*				m_pComponentMgr		= nullptr;
-	CFrustumMgr*				m_pFrustumMgr		= nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Component ]

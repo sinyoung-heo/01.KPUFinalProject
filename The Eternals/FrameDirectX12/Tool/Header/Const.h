@@ -1,9 +1,6 @@
 #pragma once
 #include "Typedef.h"
 
-const _vec3	g_vLook = _vec3( 0.f, 0.f, 1.f);
-
-
 const _int WINCX	= 1'600;
 const _int WINCY	= 900;
 const _int WINPOS_X	= 0;

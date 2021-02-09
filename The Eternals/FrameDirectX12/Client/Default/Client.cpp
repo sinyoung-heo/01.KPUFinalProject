@@ -14,7 +14,6 @@
 #include "ComponentMgr.h"
 #include "Renderer.h"
 #include "LightMgr.h"
-#include "FrustumMgr.h"
 #include <chrono>
 
 #define MAX_LOADSTRING 100
@@ -408,12 +407,6 @@ _ulong Release_Singleton()
 	if (dwRefCnt = Engine::CComponentMgr::Get_Instance()->Destroy_Instance())
 	{
 		MSG_BOX(L"Engine::CComponentMgr Release Failed");
-		return dwRefCnt;
-	}
-
-	if (dwRefCnt = Engine::CFrustumMgr::Get_Instance()->Destroy_Instance())
-	{
-		MSG_BOX(L"CFrustumMgr Release Failed");
 		return dwRefCnt;
 	}
 
