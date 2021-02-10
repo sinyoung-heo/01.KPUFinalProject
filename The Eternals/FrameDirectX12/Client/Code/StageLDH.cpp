@@ -16,6 +16,15 @@
 #include "SkyBox.h"
 #include "TerrainMeshObject.h"
 
+#include "Chicken.h"
+#include "Cat.h"
+#include "Aman_boy.h"
+#include "Human_boy.h"
+#include "Human_girl.h"
+#include "NPC_Villagers.h"
+#include "Baraka_M_Extractor.h"
+#include "Baraka_M_Merchant.h"
+#include "Baraka_M_Mystellium.h"
 
 CStageLDH::CStageLDH(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -238,6 +247,78 @@ HRESULT CStageLDH::Ready_LayerGameObject(wstring wstrLayerTag)
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pGameObj), E_FAIL);
 
 #endif // !SERVER
+
+	pGameObj = CChicken::Create(m_pGraphicDevice, m_pCommandList,
+								L"Chicken",					// MeshTag
+								L"TestNaviMesh",    // NaviMeshTag
+								_vec3(0.05f, 0.05f, 0.05f),	// Scale
+								_vec3(0.0f, 0.0f, 0.0f),	// Angle
+								_vec3(25.0f, 0.f, 20.0f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"NPC", pGameObj), E_FAIL);
+
+	pGameObj = CCat::Create(m_pGraphicDevice, m_pCommandList,
+							L"Cat",					// MeshTag
+							L"TestNaviMesh",    // NaviMeshTag
+							_vec3(0.05f, 0.05f, 0.05f),	// Scale
+							_vec3(0.0f, 0.0f, 0.0f),	// Angle
+							_vec3(27.0f, 0.f, 20.0f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"NPC", pGameObj), E_FAIL);
+
+	pGameObj = CAman_boy::Create(m_pGraphicDevice, m_pCommandList,
+								 L"Aman_boy",					// MeshTag
+								 L"TestNaviMesh",    // NaviMeshTag
+								 _vec3(0.05f, 0.05f, 0.05f),	// Scale
+								 _vec3(0.0f, 0.0f, 0.0f),	// Angle
+								 _vec3(29.0f, 0.f, 20.0f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"NPC", pGameObj), E_FAIL);
+
+	pGameObj = CHuman_boy::Create(m_pGraphicDevice, m_pCommandList,
+								  L"Human_boy",					// MeshTag
+								  L"TestNaviMesh",    // NaviMeshTag
+								  _vec3(0.05f, 0.05f, 0.05f),	// Scale
+								  _vec3(0.0f, 0.0f, 0.0f),	// Angle
+								  _vec3(31.0f, 0.f, 20.0f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"NPC", pGameObj), E_FAIL);
+
+	//pGameObj = CHuman_girl::Create(m_pGraphicDevice, m_pCommandList,
+	//							   L"Human_girl",					// MeshTag
+	//							   L"TestNaviMesh",    // NaviMeshTag
+	//							   _vec3(0.05f, 0.05f, 0.05f),	// Scale
+	//							   _vec3(0.0f, 0.0f, 0.0f),	// Angle
+	//							   _vec3(33.0f, 0.f, 20.0f));	// Pos
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"NPC", pGameObj), E_FAIL);
+
+	pGameObj = CNPC_Villagers::Create(m_pGraphicDevice, m_pCommandList,
+									  L"NPC_Villagers",					// MeshTag
+									  L"TestNaviMesh",    // NaviMeshTag
+									  _vec3(0.05f, 0.05f, 0.05f),	// Scale
+									  _vec3(0.0f, 0.0f, 0.0f),	// Angle
+									  _vec3(19.0f, 0.f, 20.0f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"NPC", pGameObj), E_FAIL);
+
+	//pGameObj = CBaraka_M_Extractor::Create(m_pGraphicDevice, m_pCommandList,
+	//									   L"Baraka_M_Extractor",					// MeshTag
+	//									   L"TestNaviMesh",    // NaviMeshTag
+	//									   _vec3(0.05f, 0.05f, 0.05f),	// Scale
+	//									   _vec3(0.0f, 0.0f, 0.0f),	// Angle
+	//									   _vec3(19.0f, 0.f, 23.0f));	// Pos
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"NPC", pGameObj), E_FAIL);
+
+	//pGameObj = CBaraka_M_Merchant::Create(m_pGraphicDevice, m_pCommandList,
+	//									  L"Baraka_M_Merchant",					// MeshTag
+	//									  L"TestNaviMesh",    // NaviMeshTag
+	//									  _vec3(0.05f, 0.05f, 0.05f),	// Scale
+	//									  _vec3(0.0f, 0.0f, 0.0f),	// Angle
+	//									  _vec3(21.0f, 0.f, 23.0f));	// Pos
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"NPC", pGameObj), E_FAIL);
+
+	//pGameObj = CBaraka_M_Mystellium::Create(m_pGraphicDevice, m_pCommandList,
+	//									    L"Baraka_M_Mystellium",					// MeshTag
+	//									    L"TestNaviMesh",    // NaviMeshTag
+	//									    _vec3(0.05f, 0.05f, 0.05f),	// Scale
+	//									    _vec3(0.0f, 0.0f, 0.0f),	// Angle
+	//									    _vec3(23.0f, 0.f, 23.0f));	// Pos
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"NPC", pGameObj), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
 	[ TexEffect ]
