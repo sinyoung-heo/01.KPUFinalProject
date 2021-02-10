@@ -105,11 +105,6 @@ protected:
 	int		m_iSNum				= 0;
 	high_resolution_clock::time_point m_last_move_time;
 
-	///*__________________________________________________________________________________________________________
-	//[ ShadowDepth ]
-	//____________________________________________________________________________________________________________*/
-	//SHADOW_DESC	m_tShadowInfo { };
-
 public:
 	virtual CGameObject* Clone_GameObject();
 protected:

@@ -43,6 +43,16 @@ HRESULT CPopori_F::Ready_GameObject(wstring wstrMeshTag,
 	m_pInfoCom->m_fSpeed = 5.0f;
 
 	/*__________________________________________________________________________________________________________
+	[ PipelineStatePass ]
+	____________________________________________________________________________________________________________*/
+	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(0), E_FAIL);
+	m_iMeshPipelineStatePass = 0;
+	
+	Engine::FAILED_CHECK_RETURN(m_pShadowCom->Set_PipelineStatePass(0), E_FAIL);
+	m_iShadowPipelineStatePass = 0;
+
+
+	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 1;
@@ -210,14 +220,12 @@ HRESULT CPopori_F::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 	m_pShaderCom = static_cast<Engine::CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->AddRef();
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(0), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
 	// Shadow
 	m_pShadowCom = static_cast<Engine::CShaderShadow*>(m_pComponentMgr->Clone_Component(L"ShaderShadow", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShadowCom, E_FAIL);
 	m_pShadowCom->AddRef();
-	Engine::FAILED_CHECK_RETURN(m_pShadowCom->Set_PipelineStatePass(0), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shadow", m_pShadowCom);
 
 	// Collider - Sphere

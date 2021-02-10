@@ -15,6 +15,7 @@ public:
 	array<const CD3DX12_STATIC_SAMPLER_DESC, 6>	Get_StaticSamplers();
 	ID3D12RootSignature*						Get_RootSignature()						{ return m_pRootSignature; }
 	ID3D12PipelineState*						Get_PipelineState(const _uint& iIdx = 0);
+	_uint										Get_PipelineStateCnt()					{ return (_uint)(m_vecPipelineState.size()); }
 	ID3D12PipelineState*						Get_PipelineStatePass()					{ return m_pPipelineState; }
 	CUploadBuffer<CB_CAMERA_MATRIX>*			Get_UploadBuffer_CameraProjMatrix()		{ return m_pCB_CameraProjMatrix; }
 	CUploadBuffer<CB_CAMERA_MATRIX>*			Get_UploadBuffer_CameraOrthoMatrix()	{ return m_pCB_CameraOrthoMatrix; }

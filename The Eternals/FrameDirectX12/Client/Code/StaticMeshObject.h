@@ -45,6 +45,10 @@ private:
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
 
+	// Instancing
+	void			Set_ConstantTable(const _int& iContextIdx);
+	void			Set_ConstantTableShadowDepth(const _int& iContextIdx);
+
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -56,8 +60,10 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	wstring			m_wstrMeshTag			= L"";
-	CDynamicCamera*	m_pDynamicCamera		= nullptr;
+	wstring			m_wstrMeshTag		       = L"";
+	_uint			m_iMeshPipelineStatePass   = 0;
+	_uint			m_iShadowPipelineStatePass = 0;
+	CDynamicCamera*	m_pDynamicCamera	       = nullptr;
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,

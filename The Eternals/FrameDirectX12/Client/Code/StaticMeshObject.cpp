@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "StaticMeshObject.h"
-
 #include "GraphicDevice.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
 #include "LightMgr.h"
+#include "TimeMgr.h"
 #include "DynamicCamera.h"
 #include "RenderTarget.h"
-#include "TimeMgr.h"
+#include "InstancingMgr.h"
 
 CStaticMeshObject::CStaticMeshObject(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -51,12 +51,23 @@ HRESULT CStaticMeshObject::Ready_GameObject(wstring wstrMeshTag,
 											  vBoundingSphereScale,
 											  vBoundingSpherePos);
 
-	// 그림자를 그리지 않으면 0번 패스.
+	// PipelineState.
 	m_bIsRenderShadow = bIsRenderShadow; 
 	if (!m_bIsRenderShadow)
-		m_pShaderCom->Set_PipelineStatePass(0);
+	{
+		// ShadowDepth X
+		Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(0), E_FAIL);
+		m_iMeshPipelineStatePass = 0;
+	}
 	else
-		m_pShaderCom->Set_PipelineStatePass(1);
+	{
+		// ShadowDepth O
+		Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(1), E_FAIL);
+		m_iMeshPipelineStatePass = 1;
+	}
+
+	Engine::FAILED_CHECK_RETURN(m_pShadowCom->Set_PipelineStatePass(0), E_FAIL);
+	m_iShadowPipelineStatePass = 0;
 
 
 	return S_OK;
@@ -149,7 +160,6 @@ HRESULT CStaticMeshObject::Add_Component(wstring wstrMeshTag)
 	m_pShaderCom = static_cast<Engine::CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->AddRef();
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(1), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
 	// Shadow
@@ -200,6 +210,38 @@ void CStaticMeshObject::Set_ConstantTableShadowDepth()
 	tCB_ShaderShadow.fProjFar	= tShadowDesc.fLightPorjFar;
 
 	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
+}
+
+void CStaticMeshObject::Set_ConstantTable(const _int& iContextIdx)
+{
+	// Add Instance.
+	Engine::CInstancingMgr::Get_Instance()->Add_MeshInstance(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass);
+
+	/*__________________________________________________________________________________________________________
+	[ Set ConstantBuffer Data ]
+	____________________________________________________________________________________________________________*/
+	Engine::SHADOW_DESC tShadowDesc = CShadowLightMgr::Get_Instance()->Get_ShadowDesc();
+
+	Engine::CB_SHADER_MESH tCB_ShaderMesh;
+	ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
+	tCB_ShaderMesh.matWorld      = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderMesh.matLightView  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
+	tCB_ShaderMesh.matLightProj  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
+	tCB_ShaderMesh.vLightPos     = tShadowDesc.vLightPosition;
+	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
+
+	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.05f;
+	tCB_ShaderMesh.fDeltaTime = m_fDeltaTime;
+	if (m_fDeltaTime > 1.f)
+		m_fDeltaTime = 0.f;
+
+	_uint iIdx = Engine::CInstancingMgr::Get_Instance()->Get_MeshInstanceCount(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass);
+	Engine::CInstancingMgr::Get_Instance()->Get_UploadBuffer_ShaderMesh(iContextIdx, m_wstrMeshTag)->CopyData(iIdx - 1, tCB_ShaderMesh);
+}
+
+void CStaticMeshObject::Set_ConstantTableShadowDepth(const _int& iContextIdx)
+{
+
 }
 
 Engine::CGameObject* CStaticMeshObject::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
