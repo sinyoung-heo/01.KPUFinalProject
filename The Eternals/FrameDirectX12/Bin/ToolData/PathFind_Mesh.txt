@@ -1,5 +1,14 @@
 PoporiH25|PoporiH25.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\PoporiH25\
 PoporiR19|PoporiR19.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\PoporiR19\
+Aman_boy|Aman_boy.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Aman_boy\
+Baraka_M_Extractor|Baraka_M_Extractor.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Baraka_M_Extractor\
+Baraka_M_Merchant|Baraka_M_Merchant.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Baraka_M_Merchant\
+Baraka_M_Mystellium|Baraka_M_Mystellium.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Baraka_M_Mystellium\
+Cat|Cat.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Cat\
+Chicken|Chicken.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Chicken\
+Human_boy|Human_boy.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Human_boy\
+Human_girl|Human_girl.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Human_girl\
+NPC_Villagers|NPC_Villagers.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\NPC_Villagers\
 BumpTerrainMesh00|BumpTerrainMesh00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpTerrainMesh00\
 BumpTerrainMesh01|BumpTerrainMesh01.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpTerrainMesh01\
 DistortDisk|DistortDisk.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\DistortDisk\
