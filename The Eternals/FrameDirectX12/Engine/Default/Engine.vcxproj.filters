@@ -369,7 +369,6 @@
     <ClInclude Include="..\Code\InstancingMgr.h">
       <Filter>97.Mgr\02.InstancingMgr</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h" />
     <ClInclude Include="..\Code\ShaderMeshInstancing.h">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\03.ShaderMesh</Filter>
     </ClInclude>
@@ -581,8 +580,5 @@
     <FxCompile Include="..\..\Bin\Shader\ShaderMeshInstancing.hlsl">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\03.ShaderMesh</Filter>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Engine.rc" />
   </ItemGroup>
 </Project>
