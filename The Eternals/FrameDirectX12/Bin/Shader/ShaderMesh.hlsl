@@ -16,7 +16,7 @@ Texture2D g_TexDiffuse		: register(t0);	// Diffuse »ö»ó.
 Texture2D g_TexNormal		: register(t1);	// ÅºÁ¨Æ® °ø°£ Normal Map.
 Texture2D g_TexSpecular		: register(t2);	// Specular °­µµ.
 Texture2D g_TexShadowDepth	: register(t3);	// ShadowDepth
-Texture2D g_TexDissolve : register(t4); // Dissolve
+Texture2D g_TexDissolve		: register(t4); // Dissolve
 /*__________________________________________________________________________________________________________
 [ Constant Buffer ]
 ____________________________________________________________________________________________________________*/
@@ -36,7 +36,7 @@ cbuffer cbShaderMesh : register(b1)
 	float4x4	g_matLightProj	: packoffset(c8);
 	float4		g_vLightPos		: packoffset(c12);
 	float		g_fLightPorjFar	: packoffset(c13.x);
-    float fDissolve : packoffset(c13.y);
+    float		g_fDissolve		: packoffset(c13.y);
 };
 
 cbuffer cbSkinningMatrix : register(b2)
@@ -183,11 +183,11 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 								 0.0f, 1.0f);
 
     float Normal_fDissolve = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV).r;
-    if ((0.05f > (1.f - fDissolve) - Normal_fDissolve) && ((1.f - fDissolve) - Normal_fDissolve) > 0.f)
+    if ((0.05f > (1.f - g_fDissolve) - Normal_fDissolve) && ((1.f - g_fDissolve) - Normal_fDissolve) > 0.f)
     {
         ps_output.Emissive = float4(1, Normal_fDissolve, 0, 1);
     }
-    clip((1.f - fDissolve) - Normal_fDissolve);
+    clip((1.f - g_fDissolve) - Normal_fDissolve);
 
 	
 	return (ps_output);
