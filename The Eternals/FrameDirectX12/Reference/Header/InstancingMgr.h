@@ -36,7 +36,6 @@ public:
 	void	SetUp_MeshConstantBuffer(ID3D12Device* pGraphicDevice);
 	void	Add_MeshInstance(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& iPipelineStateIdx);
 	void	Reset_MeshInstancing();
-
 	void	Render_MeshInstance(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 
 private:

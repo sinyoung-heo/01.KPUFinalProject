@@ -103,12 +103,17 @@ void CInstancingMgr::Reset_MeshInstancing()
 
 void CInstancingMgr::Render_MeshInstance(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
-	// first - MeshTag, second - vector<INSTANCING_DESC>
+	/*__________________________________________________________________________________________________________
+	first	: MeshTag
+	second	: vector<INSTANCING_DESC>
+	____________________________________________________________________________________________________________*/
 	for (auto& pair : m_mapMeshInstancing[iContextIdx])
 	{
 		wstring wstrMeshTag = pair.first;
 
-		// PipelineStatePass 별로 Rendering 수행
+		/*__________________________________________________________________________________________________________
+		[ PipelineStatePass 별로 Rendering 수행 ]
+		____________________________________________________________________________________________________________*/
 		for (_uint iPipelineStatePass = 0; iPipelineStatePass < pair.second.size(); ++iPipelineStatePass)
 		{
 			if (!pair.second[iPipelineStatePass].iInstanceCount)
