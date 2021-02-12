@@ -146,6 +146,22 @@ void CStaticMeshObject::Render_ShadowDepth(const _float& fTimeDelta,
 	m_pMeshCom->Render_StaticMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 }
 
+void CStaticMeshObject::Render_GameObjectInstancing(const _float& fTimeDelta, const _int& iContextIdx)
+{
+	/*__________________________________________________________________________________________________________
+	[ Add Instance ]
+	____________________________________________________________________________________________________________*/
+	Engine::CInstancingMgr::Get_Instance()->Add_MeshInstance(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass);
+	_uint iInstanceIdx = Engine::CInstancingMgr::Get_Instance()->Get_MeshInstanceCount(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass) - 1;
+
+	Set_ConstantTable(iContextIdx, iInstanceIdx);
+	m_pMeshCom->Render_StaticMeshInstancing(iContextIdx, m_wstrMeshTag, iInstanceIdx, m_iMeshPipelineStatePass);
+}
+
+void CStaticMeshObject::Render_ShadowDepthInstancing(const _float& fTimeDelta, const _int& iContextIdx)
+{
+}
+
 HRESULT CStaticMeshObject::Add_Component(wstring wstrMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
@@ -212,11 +228,8 @@ void CStaticMeshObject::Set_ConstantTableShadowDepth()
 	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
 }
 
-void CStaticMeshObject::Set_ConstantTable(const _int& iContextIdx)
+void CStaticMeshObject::Set_ConstantTable(const _int& iContextIdx, const _int& iInstanceIdx)
 {
-	// Add Instance.
-	Engine::CInstancingMgr::Get_Instance()->Add_MeshInstance(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass);
-
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
@@ -235,11 +248,10 @@ void CStaticMeshObject::Set_ConstantTable(const _int& iContextIdx)
 	if (m_fDeltaTime > 1.f)
 		m_fDeltaTime = 0.f;
 
-	_uint iIdx = Engine::CInstancingMgr::Get_Instance()->Get_MeshInstanceCount(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass);
-	Engine::CInstancingMgr::Get_Instance()->Get_UploadBuffer_ShaderMesh(iContextIdx, m_wstrMeshTag)->CopyData(iIdx - 1, tCB_ShaderMesh);
+	Engine::CInstancingMgr::Get_Instance()->Get_UploadBuffer_ShaderMesh(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderMesh);
 }
 
-void CStaticMeshObject::Set_ConstantTableShadowDepth(const _int& iContextIdx)
+void CStaticMeshObject::Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int& iInstancingIdx)
 {
 
 }

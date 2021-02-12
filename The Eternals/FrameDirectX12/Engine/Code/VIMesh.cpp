@@ -8,6 +8,7 @@
 #include "RenderTarget.h"
 #include "ComponentMgr.h"
 #include "DescriptorHeapMgr.h"
+#include "InstancingMgr.h"
 
 USING(Engine)
 
@@ -85,22 +86,22 @@ CVIMesh::CVIMesh(const CVIMesh & rhs)
 
 }
 
-D3D12_VERTEX_BUFFER_VIEW CVIMesh::Get_VertexBufferView(const _uint & iIndex) const
+D3D12_VERTEX_BUFFER_VIEW CVIMesh::Get_VertexBufferView(const _uint & iSubMeshIdx) const
 {
 	D3D12_VERTEX_BUFFER_VIEW VertexBufferView;
-	VertexBufferView.BufferLocation = m_vecVB_GPU[iIndex]->GetGPUVirtualAddress();
+	VertexBufferView.BufferLocation = m_vecVB_GPU[iSubMeshIdx]->GetGPUVirtualAddress();
 	VertexBufferView.StrideInBytes	= m_uiVertexByteStride;
-	VertexBufferView.SizeInBytes	= m_vecVB_ByteSize[iIndex];
+	VertexBufferView.SizeInBytes	= m_vecVB_ByteSize[iSubMeshIdx];
 
 	return VertexBufferView;
 }
 
-D3D12_INDEX_BUFFER_VIEW CVIMesh::Get_IndexBufferView(const _uint & iIndex) const
+D3D12_INDEX_BUFFER_VIEW CVIMesh::Get_IndexBufferView(const _uint & iSubMeshIdx) const
 {
 	D3D12_INDEX_BUFFER_VIEW IndexBufferView;
-	IndexBufferView.BufferLocation	= m_vecIB_GPU[iIndex]->GetGPUVirtualAddress();
+	IndexBufferView.BufferLocation	= m_vecIB_GPU[iSubMeshIdx]->GetGPUVirtualAddress();
 	IndexBufferView.Format			= m_IndexFormat;
-	IndexBufferView.SizeInBytes		= m_vecIB_ByteSize[iIndex];
+	IndexBufferView.SizeInBytes		= m_vecIB_ByteSize[iSubMeshIdx];
 
 	return IndexBufferView;
 }
@@ -211,6 +212,9 @@ HRESULT CVIMesh::Ready_Component(const aiScene * pScene, wstring wstrFileName, w
 
 	// Create Texture DescriptorHeap.
 	FAILED_CHECK_RETURN(Create_TextureDescriptorHeap(), E_FAIL);
+
+	// Add DescriptorHeap
+	CDescriptorHeapMgr::Get_Instance()->Add_DescriptorHeap(m_wstrFileName, m_pTexDescriptorHeap);
 
 	return S_OK;
 }
@@ -567,10 +571,6 @@ HRESULT CVIMesh::Create_TextureDescriptorHeap()
 
 	m_pGraphicDevice->CreateShaderResourceView(TexDissolve.Get(), &SRV_Desc, SRV_DescriptorHandle);
 
-
-	// Add DescriptorHeap
-	CDescriptorHeapMgr::Get_Instance()->Add_DescriptorHeap(m_wstrFileName, m_pTexDescriptorHeap);
-
 	return S_OK;
 }
 
@@ -672,7 +672,7 @@ void CVIMesh::Render_DynamicMesh(CShader * pShader)
 			tCB_SkinningMatrix.matParentTransform[j]	= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matParentTransform);
 			tCB_SkinningMatrix.matRootTransform[j]	= CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform);
 		}
-		static_cast<CShaderMesh*>(pShader)->Get_UploadBuffer_SkinningDesc()->CopyData(i, tCB_SkinningMatrix);
+		static_cast<CShaderMesh*>(pShader)->Get_UploadBuffer_SkinningMatrix()->CopyData(i, tCB_SkinningMatrix);
 
 
 		pShader->Begin_Shader(m_pTexDescriptorHeap, i);
@@ -751,7 +751,7 @@ void CVIMesh::Render_DynamicMesh(ID3D12GraphicsCommandList * pCommandList,
 			tCB_SkinningMatrix.matParentTransform[j] = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matParentTransform);
 			tCB_SkinningMatrix.matRootTransform[j]   = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform);
 		}
-		static_cast<CShaderMesh*>(pShader)->Get_UploadBuffer_SkinningDesc()->CopyData(i, tCB_SkinningMatrix);
+		static_cast<CShaderMesh*>(pShader)->Get_UploadBuffer_SkinningMatrix()->CopyData(i, tCB_SkinningMatrix);
 
 
 		pShader->Begin_Shader(pCommandList, iContextIdx, m_pTexDescriptorHeap, i);
@@ -816,6 +816,36 @@ void CVIMesh::Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList * pCommandL
 	}
 }
 
+void CVIMesh::Render_DynamicMeshInstancing(const _int& iContextIdx,
+										   wstring wstrMeshTag, 
+										   const _int& iInstanceIdx,
+										   const _int& iPipelineStatePass)
+{
+	vector<VECTOR_SKINNING_MATRIX>* pvecSkinningMatrix = m_pAniCtrl->Get_VecSkinningMatrix();
+
+	for (_int i = 0; i < m_vecMeshEntry.size(); ++i)
+	{
+		CB_SKINNING_MATRIX tCB_SkinningMatrix;
+		ZeroMemory(&tCB_SkinningMatrix, sizeof(CB_SKINNING_MATRIX));
+
+		for (_uint j = 0; j < (*pvecSkinningMatrix)[i].size(); ++j)
+		{
+			tCB_SkinningMatrix.matBoneOffset[j]      = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneOffset);
+			tCB_SkinningMatrix.matBoneScale[j]	     = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneScale);
+			tCB_SkinningMatrix.matBoneRotation[j]    = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneRotation);
+			tCB_SkinningMatrix.matBoneTrans[j]       = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneTrans);
+			tCB_SkinningMatrix.matParentTransform[j] = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matParentTransform);
+			tCB_SkinningMatrix.matRootTransform[j]   = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform);
+		}
+
+		CInstancingMgr::Get_Instance()->Get_UploadBuffer_SkinningMatrix(iContextIdx, wstrMeshTag, iPipelineStatePass)->CopyData(i, tCB_SkinningMatrix);
+	}
+}
+
+void CVIMesh::Render_StaticMeshInstancing(const _int& iContextIdx, wstring wstrMeshTag, const _int& iInstanceIdx, const _int& iPipelineStatePass)
+{
+}
+
 void CVIMesh::Begin_Buffer(ID3D12GraphicsCommandList* pCommandList, const _int& iSubMeshIdx)
 {
 	pCommandList->IASetVertexBuffers(0, 1, &Get_VertexBufferView(iSubMeshIdx));
@@ -847,7 +877,7 @@ CVIMesh * CVIMesh::Create(ID3D12Device * pGraphicDevice,
 	CVIMesh* pInstance = new CVIMesh(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_Component(pScene, wstrFileName, wstrPath)))
-		Engine::Safe_Release(pInstance);
+		Safe_Release(pInstance);
 
 	return pInstance;
 }

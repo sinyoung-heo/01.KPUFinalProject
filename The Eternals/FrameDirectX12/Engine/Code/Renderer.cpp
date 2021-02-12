@@ -184,7 +184,9 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 
 	// [ Render End ]
 	FAILED_CHECK_RETURN(CGraphicDevice::Get_Instance()->Render_End(), E_FAIL);
+
 	Clear_RenderGroup();
+	Engine::CInstancingMgr::Get_Instance()->Reset_MeshInstancing();
 
 	return S_OK;
 }
@@ -513,6 +515,11 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderSSAO", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
+
+	
+	// SetUp InstancingMgr ShaderComponent
+	CInstancingMgr::Get_Instance()->SetUp_ShaderComponent();
+
 	return S_OK;
 }
 

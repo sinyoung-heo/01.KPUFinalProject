@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "Popori_F.h"
-
 #include "GraphicDevice.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
 #include "LightMgr.h"
+#include "InstancingMgr.h"
 #include "DynamicCamera.h"
 #include "Font.h"
 #include "RenderTarget.h"
@@ -206,6 +206,22 @@ void CPopori_F::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsComma
 	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 }
 
+void CPopori_F::Render_GameObjectInstancing(const _float& fTimeDelta, const _int& iContextIdx)
+{
+	/*__________________________________________________________________________________________________________
+	[ Add Instance ]
+	____________________________________________________________________________________________________________*/
+	Engine::CInstancingMgr::Get_Instance()->Add_MeshInstance(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass);
+	_uint iInstancingIdx = Engine::CInstancingMgr::Get_Instance()->Get_MeshInstanceCount(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass) - 1;
+
+	Set_ConstantTable(iContextIdx, iInstancingIdx);
+	m_pMeshCom->Render_DynamicMeshInstancing(iContextIdx, m_wstrMeshTag, iInstancingIdx, m_iMeshPipelineStatePass);
+}
+
+void CPopori_F::Render_ShadowDepthInstancing(const _float& fTimeDelta, const _int& iContextIdx)
+{
+}
+
 HRESULT CPopori_F::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
@@ -288,6 +304,35 @@ void CPopori_F::Set_ConstantTableShadowDepth()
 
 	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
 
+
+}
+
+void CPopori_F::Set_ConstantTable(const _int& iContextIdx, const _int& iInstancingIdx)
+{
+	/*__________________________________________________________________________________________________________
+	[ Set ConstantBuffer Data ]
+	____________________________________________________________________________________________________________*/
+	Engine::SHADOW_DESC tShadowDesc = CShadowLightMgr::Get_Instance()->Get_ShadowDesc();
+	
+	Engine::CB_SHADER_MESH tCB_ShaderMesh;
+	ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
+	tCB_ShaderMesh.matWorld			= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderMesh.matLightView		= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
+	tCB_ShaderMesh.matLightProj		= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
+	tCB_ShaderMesh.vLightPos		= tShadowDesc.vLightPosition;
+	tCB_ShaderMesh.fLightPorjFar	= tShadowDesc.fLightPorjFar;
+
+	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.15f;
+	tCB_ShaderMesh.fDeltaTime = m_fDeltaTime;
+	
+	if (m_fDeltaTime > 1.f)
+		m_fDeltaTime = 0.f;
+
+	Engine::CInstancingMgr::Get_Instance()->Get_UploadBuffer_ShaderMesh(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass)->CopyData(iInstancingIdx, tCB_ShaderMesh);
+}
+
+void CPopori_F::Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int& iInstancingIdx)
+{
 
 }
 

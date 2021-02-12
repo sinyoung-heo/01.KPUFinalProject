@@ -16,7 +16,8 @@ Texture2D g_TexDiffuse		: register(t0);	// Diffuse »ö»ó.
 Texture2D g_TexNormal		: register(t1);	// ÅºÁ¨Æ® °ø°£ Normal Map.
 Texture2D g_TexSpecular		: register(t2);	// Specular °­µµ.
 Texture2D g_TexShadowDepth	: register(t3);	// ShadowDepth
-Texture2D g_TexDissolve : register(t4); // Dissolve
+Texture2D g_TexDissolve		: register(t4); // Dissolve
+
 /*__________________________________________________________________________________________________________
 [ Constant Buffer ]
 ____________________________________________________________________________________________________________*/
@@ -36,7 +37,7 @@ cbuffer cbShaderMesh : register(b1)
 	float4x4	g_matLightProj	: packoffset(c8);
 	float4		g_vLightPos		: packoffset(c12);
 	float		g_fLightPorjFar	: packoffset(c13.x);
-    float fDissolve : packoffset(c13.y);
+    float		fDissolve		: packoffset(c13.y);
 };
 
 cbuffer cbSkinningMatrix : register(b2)
@@ -48,12 +49,6 @@ cbuffer cbSkinningMatrix : register(b2)
 	float4x4	g_matParentTransform[64];
 	float4x4	g_matRootTransform[64];
 };
-/*__________________________________________________________________________________________________________
-[ Global ]
-____________________________________________________________________________________________________________*/
-static float fFar = 1000.0f;
-
-
 
 // VS_MAIN
 struct VS_IN

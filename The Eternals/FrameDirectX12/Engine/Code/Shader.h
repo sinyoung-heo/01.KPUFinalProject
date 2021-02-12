@@ -19,6 +19,7 @@ public:
 	ID3D12PipelineState*						Get_PipelineStatePass()					{ return m_pPipelineState; }
 	CUploadBuffer<CB_CAMERA_MATRIX>*			Get_UploadBuffer_CameraProjMatrix()		{ return m_pCB_CameraProjMatrix; }
 	CUploadBuffer<CB_CAMERA_MATRIX>*			Get_UploadBuffer_CameraOrthoMatrix()	{ return m_pCB_CameraOrthoMatrix; }
+	const _uint&								Get_CBV_SRV_UAV_DescriptorSize()		{ return m_uiCBV_SRV_UAV_DescriptorSize; }
 
 	// Set
 	HRESULT					Set_PipelineStatePass(const _uint& iIdx = 0);

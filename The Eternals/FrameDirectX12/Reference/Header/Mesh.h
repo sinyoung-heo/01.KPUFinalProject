@@ -18,6 +18,7 @@ public:
 	vector<ComPtr<ID3D12Resource>>	Get_NormTexture()		{ return m_pVIMesh->Get_NormTexture(); };
 	vector<ComPtr<ID3D12Resource>>	Get_SpecTexture()		{ return m_pVIMesh->Get_SpecTexture(); };
 	ID3D12DescriptorHeap*			Get_TexDescriptorHeap()	{ return m_pVIMesh->Get_TexDescriptorHeap(); }
+	CVIMesh*						Get_VIMesh()			{ return m_pVIMesh; }
 	CAniCtrl*						Get_AniCtrl()			{ return m_pAniCtrl; };
 	_uint*							Get_NumAnimation()		{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_NumAnimation(); else return nullptr; }
 	_uint*							Get_3DMaxNumFrame()		{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_3DMaxNumFrame(); else return nullptr;}
@@ -36,11 +37,15 @@ public:
 	void Render_DynamicMeshShadowDepth(CShader* pShader);
 	void Render_StaticMeshShadowDepth(CShader* pShader);
 
-	// MultiThreadRendering
+	// MultiThread Rendering
 	void Render_DynamicMesh(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 	void Render_StaticMesh(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 	void Render_DynamicMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 	void Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
+
+	// Instancing Rendering
+	void Render_DynamicMeshInstancing(const _int& iContextIdx, wstring wstrMeshTag, const _int& iInstanceIdx, const _int& iPipelineStatePass);
+	void Render_StaticMeshInstancing(const _int& iContextIdx, wstring wstrMeshTag, const _int& iInstanceIdx, const _int& iPipelineStatePass);
 
 	void Set_AnimationKey(const _uint& uiAniKey);
 	void Play_Animation(_float fAnimationTime);

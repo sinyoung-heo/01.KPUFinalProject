@@ -23,6 +23,7 @@ public:
 	vector<ComPtr<ID3D12Resource>>	Get_NormTexture()		{ return m_vecNormResource; };
 	vector<ComPtr<ID3D12Resource>>	Get_SpecTexture()		{ return m_vecSpecResource; };
 	ID3D12DescriptorHeap*			Get_TexDescriptorHeap() { return m_pTexDescriptorHeap; }
+	vector<SUBMESH_GEOMETRY>&		Get_SubMeshGeometry()	{ return m_vecSubMeshGeometry; }
 	const _vec3&					Get_CenterPos()			{ return m_vCenter; }
 	const _vec3&					Get_MinVector()			{ return m_vMin; }
 	const _vec3&					Get_MaxVector()			{ return m_vMax; }
@@ -52,6 +53,10 @@ public:
 	void Render_StaticMesh(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 	void Render_DynamicMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 	void Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
+
+	// Instancing Rendering
+	void Render_DynamicMeshInstancing(const _int& iContextIdx, wstring wstrMeshTag, const _int& iInstanceIdx, const _int& iPipelineStatePass);
+	void Render_StaticMeshInstancing(const _int& iContextIdx, wstring wstrMeshTag ,const _int& iInstanceIdx, const _int& iPipelineStatePass);
 
 	void Begin_Buffer(ID3D12GraphicsCommandList* pCommandList, const _int& iSubMeshIdx);
 	void Render_Buffer(ID3D12GraphicsCommandList* pCommandList, const _int& iSubMeshIdx);

@@ -54,10 +54,18 @@ public:
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 
+	// Instancing Rendering
+	virtual void	Render_GameObjectInstancing(const _float& fTimeDelta, const _int& iContextIdx);
+	virtual void	Render_ShadowDepthInstancing(const _float& fTimeDelta, const _int& iContextIdx);
+
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag);
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
+
+	// Instancing
+	void			Set_ConstantTable(const _int& iContextIdx, const _int& iInstancingIdx);
+	void			Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int& iInstancingIdx);
 
 	void			Key_Input(const _float& fTimeDelta);
 

@@ -122,6 +122,24 @@ void CMesh::Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList * pCommandLis
 		m_pVIMesh->Render_StaticMeshShadowDepth(pCommandList, iContextIdx, pShader);
 }
 
+void CMesh::Render_DynamicMeshInstancing(const _int& iContextIdx,
+										 wstring wstrMeshTag, 
+										 const _int& iInstanceIdx,
+										 const _int& iPipelineStatePass)
+{
+	if (nullptr != m_pVIMesh)
+		m_pVIMesh->Render_DynamicMeshInstancing(iContextIdx, wstrMeshTag, iInstanceIdx, iPipelineStatePass);
+}
+
+void CMesh::Render_StaticMeshInstancing(const _int& iContextIdx, 
+										wstring wstrMeshTag,
+										const _int& iInstanceIdx,
+										const _int& iPipelineStatePass)
+{
+	if (nullptr != m_pVIMesh)
+		m_pVIMesh->Render_StaticMeshInstancing(iContextIdx, wstrMeshTag, iInstanceIdx, iPipelineStatePass);
+}
+
 void CMesh::Set_AnimationKey(const _uint & uiAniKey)
 {
 	if (nullptr != m_pAniCtrl)
