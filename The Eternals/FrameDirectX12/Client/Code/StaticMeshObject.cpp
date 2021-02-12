@@ -155,11 +155,11 @@ void CStaticMeshObject::Render_GameObjectInstancing(const _float& fTimeDelta, co
 	_uint iInstanceIdx = Engine::CInstancingMgr::Get_Instance()->Get_MeshInstanceCount(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass) - 1;
 
 	Set_ConstantTable(iContextIdx, iInstanceIdx);
-	m_pMeshCom->Render_StaticMeshInstancing(iContextIdx, m_wstrMeshTag, iInstanceIdx, m_iMeshPipelineStatePass);
 }
 
 void CStaticMeshObject::Render_ShadowDepthInstancing(const _float& fTimeDelta, const _int& iContextIdx)
 {
+
 }
 
 HRESULT CStaticMeshObject::Add_Component(wstring wstrMeshTag)

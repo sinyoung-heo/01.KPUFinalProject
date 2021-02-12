@@ -25,24 +25,19 @@ public:
 	map<wstring, vector<INSTANCING_DESC>>&	Get_MapMeshInstancing(const _uint& iContextIdx) { return m_mapMeshInstancing[iContextIdx];	}
 	_uint									Get_MeshInstanceCount(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& iPipelineStatePass) { return m_mapMeshInstancing[iContextIdx][wstrMeshTag][iPipelineStatePass].iInstanceCount; };
 	CUploadBuffer<CB_SHADER_MESH>*			Get_UploadBuffer_ShaderMesh(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& uiPipelineStatepass);
-	CUploadBuffer<CB_SKINNING_MATRIX>*		Get_UploadBuffer_SkinningMatrix(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& uiPipelineStatepass);
 
 	// Set
 	void Set_MeshPipelineStateCnt(const _uint& iCnt)	{ m_uiMeshPipelineStateCnt = iCnt; }
 	void Set_TexPipelineStateCnt(const _uint& iCnt)		{ m_uiTexPipelineStateCnt = iCnt; }
 
-	// Method
 	HRESULT SetUp_ShaderComponent();
+	// Mesh Instancing
 	void	SetUp_MeshInstancing(wstring wstrMeshTag);
 	void	SetUp_MeshConstantBuffer(ID3D12Device* pGraphicDevice);
-
 	void	Add_MeshInstance(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& iPipelineStateIdx);
 	void	Reset_MeshInstancing();
-	void	Add_TexInstancingDesc(wstring wstrMeshTag, const _uint& iPipelineStateIdx);
-	void	Reset_TexInstancingDesc();
 
-	// Render
-	void Render_MeshInstance(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
+	void	Render_MeshInstance(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 
 private:
 	// Shader
@@ -52,12 +47,10 @@ private:
 	// Key값은 ResourceTag, vector의 Index는 PipelineStateIndex, Size는 Instance개수.
 	map<wstring, vector<INSTANCING_DESC>>						m_mapMeshInstancing[CONTEXT::CONTEXT_END];
 	map<wstring, vector<CUploadBuffer<CB_SHADER_MESH>*>>		m_mapCB_ShaderMesh[CONTEXT::CONTEXT_END];
-	map<wstring, vector<CUploadBuffer<CB_SKINNING_MATRIX>*>>	m_mapCB_SkinningMatrix[CONTEXT::CONTEXT_END];
 	_uint														m_uiMeshPipelineStateCnt = 0;
 
 
-	// map<wstring, CUploadBuffer<CB_SHADER_TEXTURE>*>	m_mapCB_ShaderTexture;
-	_uint											m_uiTexPipelineStateCnt = 0;
+	_uint m_uiTexPipelineStateCnt = 0;
 
 private:
 	virtual void Free();

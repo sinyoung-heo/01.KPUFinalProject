@@ -23,18 +23,6 @@ CUploadBuffer<CB_SHADER_MESH>* CInstancingMgr::Get_UploadBuffer_ShaderMesh(const
 	return nullptr;
 }
 
-CUploadBuffer<CB_SKINNING_MATRIX>* CInstancingMgr::Get_UploadBuffer_SkinningMatrix(const _uint& iContextIdx, 
-																				   wstring wstrMeshTag,
-																				   const _uint& uiPipelineStatepass)
-{
-	auto& iter_find = m_mapCB_SkinningMatrix[iContextIdx].find(wstrMeshTag);
-
-	if (iter_find != m_mapCB_SkinningMatrix[iContextIdx].end())
-		return iter_find->second[uiPipelineStatepass];
-
-	return nullptr;
-}
-
 HRESULT CInstancingMgr::SetUp_ShaderComponent()
 {
 	m_pShaderMesh = static_cast<CShaderMesh*>(CComponentMgr::Get_Instance()->Clone_Component(L"ShaderMesh", COMPONENTID::ID_STATIC));
@@ -70,9 +58,6 @@ void CInstancingMgr::SetUp_MeshInstancing(wstring wstrMeshTag)
 		{
 			m_mapCB_ShaderMesh[i][wstrMeshTag] = vector<CUploadBuffer<CB_SHADER_MESH>*>();
 			m_mapCB_ShaderMesh[i][wstrMeshTag].resize(m_uiMeshPipelineStateCnt);
-
-			m_mapCB_SkinningMatrix[i][wstrMeshTag] = vector<CUploadBuffer<CB_SKINNING_MATRIX>*>();
-			m_mapCB_SkinningMatrix[i][wstrMeshTag].resize(m_uiMeshPipelineStateCnt);
 		}
 	}
 }
@@ -92,18 +77,6 @@ void CInstancingMgr::SetUp_MeshConstantBuffer(ID3D12Device* pGraphicDevice)
 			}
 
 		}
-
-		for (auto& pair : m_mapCB_SkinningMatrix[i])
-		{
-			for (_uint j = 0; j < m_uiMeshPipelineStateCnt; ++j)
-			{
-				iInstanceCnt	= (_uint)(CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_GameObject", pair.first)->size());
-
-				CVIMesh* pVIMesh		= static_cast<CMesh*>(CComponentMgr::Get_Instance()->Get_Component(pair.first, ID_STATIC))->Get_VIMesh();
-				_uint uiSubsetMeshSize	= (_uint)(pVIMesh->Get_SubMeshGeometry().size());
-				pair.second[j]			= CUploadBuffer<CB_SKINNING_MATRIX>::Create(pGraphicDevice, uiSubsetMeshSize * (iInstanceCnt/ 4 + 1));
-			}
-		}
 	}
 
 }
@@ -114,10 +87,6 @@ void CInstancingMgr::Add_MeshInstance(const _uint& iContextIdx, wstring wstrMesh
 
 	if (iter_find != m_mapMeshInstancing[iContextIdx].end())
 		++(m_mapMeshInstancing[iContextIdx][wstrMeshTag][iPipelineStateIdx].iInstanceCount);
-}
-
-void CInstancingMgr::Add_TexInstancingDesc(wstring wstrMeshTag, const _uint& iPipelineStateIdx)
-{
 }
 
 void CInstancingMgr::Reset_MeshInstancing()
@@ -132,10 +101,6 @@ void CInstancingMgr::Reset_MeshInstancing()
 	}
 }
 
-void CInstancingMgr::Reset_TexInstancingDesc()
-{
-}
-
 void CInstancingMgr::Render_MeshInstance(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
 	// first - MeshTag, second - vector<INSTANCING_DESC>
@@ -143,6 +108,7 @@ void CInstancingMgr::Render_MeshInstance(ID3D12GraphicsCommandList* pCommandList
 	{
 		wstring wstrMeshTag = pair.first;
 
+		// PipelineStatePass 별로 Rendering 수행
 		for (_uint iPipelineStatePass = 0; iPipelineStatePass < pair.second.size(); ++iPipelineStatePass)
 		{
 			if (!pair.second[iPipelineStatePass].iInstanceCount)
@@ -158,9 +124,23 @@ void CInstancingMgr::Render_MeshInstance(ID3D12GraphicsCommandList* pCommandList
 			ID3D12DescriptorHeap* pDescriptorHeaps[] = { CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(wstrMeshTag) };
 			pCommandList->SetDescriptorHeaps(_countof(pDescriptorHeaps), pDescriptorHeaps);
 
+			
+			/*__________________________________________________________________________________________________________
+			[ CBV를 루트 서술자에 묶는다 ]
+			____________________________________________________________________________________________________________*/
+			pCommandList->SetGraphicsRootConstantBufferView(5,	// RootParameter Index
+				m_pShaderMesh->Get_UploadBuffer_CameraProjMatrix()->Resource()->GetGPUVirtualAddress());
 
+			pCommandList->SetGraphicsRootShaderResourceView(6,	// RootParameter Index
+				m_mapCB_ShaderMesh[iContextIdx][wstrMeshTag][iPipelineStatePass]->Resource()->GetGPUVirtualAddress());
+
+
+			/*__________________________________________________________________________________________________________
+			[ Render Mesh ]
+			____________________________________________________________________________________________________________*/
 			CVIMesh* pVIMesh = static_cast<CMesh*>(CComponentMgr::Get_Instance()->Get_Component(wstrMeshTag, ID_STATIC))->Get_VIMesh();
 			_uint uiSubsetMeshSize = (_uint)(pVIMesh->Get_SubMeshGeometry().size());
+
 			for (_uint iSubMeshIdx = 0; iSubMeshIdx < uiSubsetMeshSize; ++iSubMeshIdx)
 			{
 				/*__________________________________________________________________________________________________________
@@ -190,24 +170,10 @@ void CInstancingMgr::Render_MeshInstance(ID3D12GraphicsCommandList* pCommandList
 				SRV_TexEmissiveDescriptorHandle.Offset(uiSubsetMeshSize * TEXTURE_END + 1, m_pShaderMesh->Get_CBV_SRV_UAV_DescriptorSize());
 				pCommandList->SetGraphicsRootDescriptorTable(4,		// RootParameter Index - TexDissolve
 															 SRV_TexEmissiveDescriptorHandle);
-				/*__________________________________________________________________________________________________________
-				[ CBV를 루트 서술자에 묶는다 ]
-				____________________________________________________________________________________________________________*/
-				pCommandList->SetGraphicsRootConstantBufferView(5,	// RootParameter Index
-																m_pShaderMesh->Get_UploadBuffer_CameraProjMatrix()->Resource()->GetGPUVirtualAddress());
-
-				pCommandList->SetGraphicsRootShaderResourceView(6,	// RootParameter Index
-					m_mapCB_ShaderMesh[iContextIdx][wstrMeshTag][iPipelineStatePass]->Resource()->GetGPUVirtualAddress());
-
-				pCommandList->SetGraphicsRootShaderResourceView(7,	// RootParameter Index
-					m_mapCB_SkinningMatrix[iContextIdx][wstrMeshTag][iPipelineStatePass]->Resource()->GetGPUVirtualAddress() +
-					m_mapCB_SkinningMatrix[iContextIdx][wstrMeshTag][iPipelineStatePass]->GetElementByteSize() * iSubMeshIdx);
-
 
 				// Render Instance
 				pCommandList->IASetVertexBuffers(0, 1, &pVIMesh->Get_VertexBufferView(iSubMeshIdx));
 				pCommandList->IASetIndexBuffer(&pVIMesh->Get_IndexBufferView(iSubMeshIdx));
-
 				pCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 				pCommandList->DrawIndexedInstanced(pVIMesh->Get_SubMeshGeometry()[iSubMeshIdx].uiIndexCount,
@@ -243,12 +209,6 @@ void CInstancingMgr::Free()
 		for (auto& pair : m_mapCB_ShaderMesh[i])
 		{
 			for (_uint j  =0; j < m_uiMeshPipelineStateCnt; ++j)
-				Safe_Delete(pair.second[j]);
-		}
-
-		for (auto& pair : m_mapCB_SkinningMatrix[i])
-		{
-			for (_uint j = 0; j < m_uiMeshPipelineStateCnt; ++j)
 				Safe_Delete(pair.second[j]);
 		}
 	}

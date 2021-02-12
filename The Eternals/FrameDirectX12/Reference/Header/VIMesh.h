@@ -54,10 +54,6 @@ public:
 	void Render_DynamicMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 	void Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 
-	// Instancing Rendering
-	void Render_DynamicMeshInstancing(const _int& iContextIdx, wstring wstrMeshTag, const _int& iInstanceIdx, const _int& iPipelineStatePass);
-	void Render_StaticMeshInstancing(const _int& iContextIdx, wstring wstrMeshTag ,const _int& iInstanceIdx, const _int& iPipelineStatePass);
-
 	void Begin_Buffer(ID3D12GraphicsCommandList* pCommandList, const _int& iSubMeshIdx);
 	void Render_Buffer(ID3D12GraphicsCommandList* pCommandList, const _int& iSubMeshIdx);
 

@@ -43,10 +43,6 @@ public:
 	void Render_DynamicMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 	void Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 
-	// Instancing Rendering
-	void Render_DynamicMeshInstancing(const _int& iContextIdx, wstring wstrMeshTag, const _int& iInstanceIdx, const _int& iPipelineStatePass);
-	void Render_StaticMeshInstancing(const _int& iContextIdx, wstring wstrMeshTag, const _int& iInstanceIdx, const _int& iPipelineStatePass);
-
 	void Set_AnimationKey(const _uint& uiAniKey);
 	void Play_Animation(_float fAnimationTime);
 	SKINNING_MATRIX* Find_SkinningMatrix(string strBoneName);

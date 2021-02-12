@@ -816,36 +816,6 @@ void CVIMesh::Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList * pCommandL
 	}
 }
 
-void CVIMesh::Render_DynamicMeshInstancing(const _int& iContextIdx,
-										   wstring wstrMeshTag, 
-										   const _int& iInstanceIdx,
-										   const _int& iPipelineStatePass)
-{
-	vector<VECTOR_SKINNING_MATRIX>* pvecSkinningMatrix = m_pAniCtrl->Get_VecSkinningMatrix();
-
-	for (_int i = 0; i < m_vecMeshEntry.size(); ++i)
-	{
-		CB_SKINNING_MATRIX tCB_SkinningMatrix;
-		ZeroMemory(&tCB_SkinningMatrix, sizeof(CB_SKINNING_MATRIX));
-
-		for (_uint j = 0; j < (*pvecSkinningMatrix)[i].size(); ++j)
-		{
-			tCB_SkinningMatrix.matBoneOffset[j]      = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneOffset);
-			tCB_SkinningMatrix.matBoneScale[j]	     = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneScale);
-			tCB_SkinningMatrix.matBoneRotation[j]    = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneRotation);
-			tCB_SkinningMatrix.matBoneTrans[j]       = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matBoneTrans);
-			tCB_SkinningMatrix.matParentTransform[j] = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matParentTransform);
-			tCB_SkinningMatrix.matRootTransform[j]   = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform);
-		}
-
-		CInstancingMgr::Get_Instance()->Get_UploadBuffer_SkinningMatrix(iContextIdx, wstrMeshTag, iPipelineStatePass)->CopyData(iInstanceIdx * m_vecMeshEntry.size() + i, tCB_SkinningMatrix);
-	}
-}
-
-void CVIMesh::Render_StaticMeshInstancing(const _int& iContextIdx, wstring wstrMeshTag, const _int& iInstanceIdx, const _int& iPipelineStatePass)
-{
-}
-
 void CVIMesh::Begin_Buffer(ID3D12GraphicsCommandList* pCommandList, const _int& iSubMeshIdx)
 {
 	pCommandList->IASetVertexBuffers(0, 1, &Get_VertexBufferView(iSubMeshIdx));

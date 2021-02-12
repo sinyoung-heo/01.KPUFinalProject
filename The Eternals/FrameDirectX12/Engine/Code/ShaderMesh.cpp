@@ -198,10 +198,10 @@ HRESULT CShaderMesh::Create_RootSignature()
 	RootParameter[3].InitAsDescriptorTable(1, &SRV_Table[3], D3D12_SHADER_VISIBILITY_PIXEL);
 	RootParameter[4].InitAsDescriptorTable(1, &SRV_Table[4], D3D12_SHADER_VISIBILITY_PIXEL);
 	RootParameter[5].InitAsConstantBufferView(0);		// register b0.
-	//RootParameter[6].InitAsConstantBufferView(1);		// register b1.
-	//RootParameter[7].InitAsConstantBufferView(2);		// register b2.
-	RootParameter[6].InitAsShaderResourceView(0, 1);	// register t0, space 1.
-	RootParameter[7].InitAsShaderResourceView(1, 1);	// register t1, space 1.
+	RootParameter[6].InitAsConstantBufferView(1);		// register b1.
+	RootParameter[7].InitAsConstantBufferView(2);		// register b2.
+	// RootParameter[6].InitAsShaderResourceView(0, 1);	// register t0, space 1.
+	// RootParameter[7].InitAsShaderResourceView(1, 1);	// register t1, space 1.
 
 	auto StaticSamplers = Get_StaticSamplers();
 	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(_countof(RootParameter),	// 루트 파라미터 개수.
