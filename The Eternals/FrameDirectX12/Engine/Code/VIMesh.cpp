@@ -838,7 +838,7 @@ void CVIMesh::Render_DynamicMeshInstancing(const _int& iContextIdx,
 			tCB_SkinningMatrix.matRootTransform[j]   = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform);
 		}
 
-		CInstancingMgr::Get_Instance()->Get_UploadBuffer_SkinningMatrix(iContextIdx, wstrMeshTag, iPipelineStatePass)->CopyData(i, tCB_SkinningMatrix);
+		CInstancingMgr::Get_Instance()->Get_UploadBuffer_SkinningMatrix(iContextIdx, wstrMeshTag, iPipelineStatePass)->CopyData(iInstanceIdx * m_vecMeshEntry.size() + i, tCB_SkinningMatrix);
 	}
 }
 
