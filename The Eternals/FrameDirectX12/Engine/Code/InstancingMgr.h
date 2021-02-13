@@ -3,8 +3,7 @@
 
 BEGIN(Engine)
 
-class CShaderMesh;
-class CShaderShadow;
+class CShaderMeshInstancing;
 
 typedef struct tagMeshInstancingDesc
 {
@@ -25,10 +24,9 @@ public:
 	map<wstring, vector<INSTANCING_DESC>>&	Get_MapMeshInstancing(const _uint& iContextIdx) { return m_mapMeshInstancing[iContextIdx];	}
 	_uint									Get_MeshInstanceCount(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& iPipelineStatePass) { return m_mapMeshInstancing[iContextIdx][wstrMeshTag][iPipelineStatePass].iInstanceCount; };
 	CUploadBuffer<CB_SHADER_MESH>*			Get_UploadBuffer_ShaderMesh(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& uiPipelineStatepass);
-
 	// Set
-	void Set_MeshPipelineStateCnt(const _uint& iCnt)	{ m_uiMeshPipelineStateCnt = iCnt; }
-	void Set_TexPipelineStateCnt(const _uint& iCnt)		{ m_uiTexPipelineStateCnt = iCnt; }
+	void									Set_MeshInstancingPipelineStateCnt(const _uint& iCnt)	{ m_uiMeshPipelineStateCnt = iCnt; }
+	void									Set_TexPipelineStateCnt(const _uint& iCnt)				{ m_uiTexPipelineStateCnt = iCnt; }
 
 	HRESULT SetUp_ShaderComponent();
 	// Mesh Instancing
@@ -40,8 +38,7 @@ public:
 
 private:
 	// Shader
-	CShaderMesh*	m_pShaderMesh   = nullptr;
-	CShaderShadow*	m_pShaderShadow = nullptr;
+	CShaderMeshInstancing*	m_pShaderMeshInstancing   = nullptr;
 
 	// Key값은 ResourceTag, vector의 Index는 PipelineStateIndex, Size는 Instance개수.
 	map<wstring, vector<INSTANCING_DESC>>						m_mapMeshInstancing[CONTEXT::CONTEXT_END];

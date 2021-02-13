@@ -4,8 +4,8 @@
 #include "ShaderColor.h"
 #include "ShaderTexture.h"
 #include "ShaderMesh.h"
+#include "ShaderMeshInstancing.h"
 #include "ShaderSkyBox.h"
-#include "ShaderShadow.h"
 #include "ShaderSSAO.h"
 
 USING(Engine)
@@ -76,6 +76,9 @@ HRESULT CCamera::Ready_GameObject(const CAMERA_DESC& tCameraInfo,
 	NULL_CHECK_RETURN(m_pShaderSkyBox, E_FAIL);
 
 	m_pShaderMesh = static_cast<CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pShaderMesh, E_FAIL);
+
+	m_pShaderMeshInstancing = static_cast<CShaderMeshInstancing*>(m_pComponentMgr->Clone_Component(L"ShaderMeshInstancing", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pShaderMesh, E_FAIL);
 
 	m_pShaderSSAO = static_cast<CShaderSSAO*>(m_pComponentMgr->Clone_Component(L"ShaderSSAO", COMPONENTID::ID_STATIC));
@@ -149,6 +152,9 @@ void CCamera::Set_ConstantTable()
 	// ShaderMesh
 	m_pShaderMesh->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 
+	// ShaderMeshInstancing
+	m_pShaderMeshInstancing->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
+
 	// ShaderSSAO
 	tCB_CameraProjMatrix.matView = CShader::Compute_MatrixTranspose(m_tCameraInfo.matView);
 	tCB_CameraProjMatrix.matProj = CShader::Compute_MatrixTranspose(m_tProjInfo.matProj);
@@ -163,5 +169,6 @@ void CCamera::Free()
 	Safe_Release(m_pShaderTexture);
 	Safe_Release(m_pShaderSkyBox);
 	Safe_Release(m_pShaderMesh);
+	Safe_Release(m_pShaderMeshInstancing);
 	Safe_Release(m_pShaderSSAO);
 }

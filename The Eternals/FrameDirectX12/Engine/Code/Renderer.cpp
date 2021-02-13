@@ -465,7 +465,13 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	pShader = CShaderMesh::Create(m_pGraphicDevice, m_pCommandList);
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderMesh", ID_STATIC, pShader), E_FAIL);
-	CInstancingMgr::Get_Instance()->Set_MeshPipelineStateCnt(pShader->Get_PipelineStateCnt());
+	++m_uiCnt_ShaderFile;
+
+	// ShaderMeshInstancing
+	pShader = CShaderMeshInstancing::Create(m_pGraphicDevice, m_pCommandList);
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderMeshInstancing", ID_STATIC, pShader), E_FAIL);
+	CInstancingMgr::Get_Instance()->Set_MeshInstancingPipelineStateCnt(pShader->Get_PipelineStateCnt());
 	++m_uiCnt_ShaderFile;
 
 	// ShaderSKyBox
