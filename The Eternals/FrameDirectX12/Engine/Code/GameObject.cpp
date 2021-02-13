@@ -135,14 +135,6 @@ void CGameObject::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCom
 {
 }
 
-void CGameObject::Render_GameObjectInstancing(const _float& fTimeDelta, const _int& iContextIdx)
-{
-}
-
-void CGameObject::Render_ShadowDepthInstancing(const _float& fTimeDelta, const _int& iContextIdx)
-{
-}
-
 HRESULT CGameObject::Add_Component()
 {
 	return S_OK;

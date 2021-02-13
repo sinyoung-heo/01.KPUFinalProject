@@ -24,6 +24,7 @@ public:
 	vector<ComPtr<ID3D12Resource>>	Get_SpecTexture()		{ return m_vecSpecResource; };
 	ID3D12DescriptorHeap*			Get_TexDescriptorHeap() { return m_pTexDescriptorHeap; }
 	vector<SUBMESH_GEOMETRY>&		Get_SubMeshGeometry()	{ return m_vecSubMeshGeometry; }
+	const D3D12_PRIMITIVE_TOPOLOGY& Get_PrimitiveTopology() { return m_PrimitiveTopology; }
 	const _vec3&					Get_CenterPos()			{ return m_vCenter; }
 	const _vec3&					Get_MinVector()			{ return m_vMin; }
 	const _vec3&					Get_MaxVector()			{ return m_vMax; }

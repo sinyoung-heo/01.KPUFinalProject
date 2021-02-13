@@ -132,12 +132,12 @@ HRESULT CStageHSY::Ready_LayerEnvironment(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ SkyBox ]
 	____________________________________________________________________________________________________________*/
-	pGameObj = CSkyBox::Create(m_pGraphicDevice, m_pCommandList,
-							   L"SkyBox",							// Texture Tag
-							   _vec3(512.f, 512.f, 512.f),			// Scale
-							   _vec3(0.0f, 0.0f, 0.0f),				// Angle
-							   _vec3(0.0f, 0.0f, 0.0f));			// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SkyBox", pGameObj), E_FAIL);
+	//pGameObj = CSkyBox::Create(m_pGraphicDevice, m_pCommandList,
+	//						   L"SkyBox",							// Texture Tag
+	//						   _vec3(512.f, 512.f, 512.f),			// Scale
+	//						   _vec3(0.0f, 0.0f, 0.0f),				// Angle
+	//						   _vec3(0.0f, 0.0f, 0.0f));			// Pos
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SkyBox", pGameObj), E_FAIL);
 
 
 	return S_OK;
@@ -216,35 +216,35 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ Popori_F ]
 	____________________________________________________________________________________________________________*/
-	pGameObj =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
-								  L"PoporiR19",					// MeshTag
-								  L"TestNaviMesh",				// NaviMeshTag
-								  _vec3(0.05f, 0.05f, 0.05f),	// Scale
-								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-								  _vec3(25.0f, 0.f, 20.0f));	// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PoporiR19", pGameObj), E_FAIL);
+	//pGameObj =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
+	//							  L"PoporiR19",					// MeshTag
+	//							  L"TestNaviMesh",				// NaviMeshTag
+	//							  _vec3(0.05f, 0.05f, 0.05f),	// Scale
+	//							  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+	//							  _vec3(25.0f, 0.f, 20.0f));	// Pos
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PoporiR19", pGameObj), E_FAIL);
 
 
 	/*__________________________________________________________________________________________________________
 	[ TexEffect ]
 	____________________________________________________________________________________________________________*/
-	// Fire
-	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-									  L"Fire",						// TextureTag
-									  _vec3(2.5f, 2.5f, 1.0f),		// Scale
-									  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-									  _vec3(26.0f, 1.5f, 26.5f),	// Pos
-									  FRAME(8, 8, 64.0f));			// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TexEffect", pGameObj), E_FAIL);
+	//// Fire
+	//pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+	//								  L"Fire",						// TextureTag
+	//								  _vec3(2.5f, 2.5f, 1.0f),		// Scale
+	//								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+	//								  _vec3(26.0f, 1.5f, 26.5f),	// Pos
+	//								  FRAME(8, 8, 64.0f));			// Sprite Image Frame
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TexEffect", pGameObj), E_FAIL);
 
-	// Torch
-	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-									  L"Torch",						// TextureTag
-									  _vec3(2.5f, 5.0f, 1.0f),		// Scale
-									  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-									  _vec3(28.0f, 2.0f, 27.0f),	// Pos
-									  FRAME(8, 8, 64.0f));			// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TexEffect", pGameObj), E_FAIL);
+	//// Torch
+	//pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+	//								  L"Torch",						// TextureTag
+	//								  _vec3(2.5f, 5.0f, 1.0f),		// Scale
+	//								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+	//								  _vec3(28.0f, 2.0f, 27.0f),	// Pos
+	//								  FRAME(8, 8, 64.0f));			// Sprite Image Frame
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TexEffect", pGameObj), E_FAIL);
 
 
 	return S_OK;

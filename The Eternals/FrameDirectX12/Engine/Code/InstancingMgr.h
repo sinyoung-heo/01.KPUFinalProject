@@ -7,7 +7,7 @@ class CShaderMeshInstancing;
 
 typedef struct tagMeshInstancingDesc
 {
-	_uint iInstanceCount	= 0;
+	_uint		iInstanceCount	= 0;
 
 } INSTANCING_DESC;
 
@@ -37,10 +37,15 @@ public:
 	void	Render_MeshInstance(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 
 private:
-	// Shader
-	CShaderMeshInstancing*	m_pShaderMeshInstancing   = nullptr;
+	/*__________________________________________________________________________________________________________
+	[ Shader Component ]
+	____________________________________________________________________________________________________________*/
+	CShaderMeshInstancing* m_pShaderMeshInstancing = nullptr;
 
-	// Key값은 ResourceTag, vector의 Index는 PipelineStateIndex, Size는 Instance개수.
+	/*__________________________________________________________________________________________________________
+	Key값은 ResourceTag
+	vector의 Index는 PipelineStateIndex, Size는 Instance개수.
+	____________________________________________________________________________________________________________*/
 	map<wstring, vector<INSTANCING_DESC>>						m_mapMeshInstancing[CONTEXT::CONTEXT_END];
 	map<wstring, vector<CUploadBuffer<CB_SHADER_MESH>*>>		m_mapCB_ShaderMesh[CONTEXT::CONTEXT_END];
 	_uint														m_uiMeshPipelineStateCnt = 0;

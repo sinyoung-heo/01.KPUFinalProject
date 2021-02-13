@@ -29,7 +29,7 @@ HRESULT CShaderMeshInstancing::Create_RootSignature()
 	/*__________________________________________________________________________________________________________
 	[ SRV를 담는 서술자 테이블을 생성 ]
 	____________________________________________________________________________________________________________*/
-	CD3DX12_DESCRIPTOR_RANGE SRV_Table[5];
+	CD3DX12_DESCRIPTOR_RANGE SRV_Table[6];
 
 	// TexDiffuse
 	SRV_Table[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,	// 서술자의 종류 - Shader Resource View.
@@ -68,11 +68,11 @@ HRESULT CShaderMeshInstancing::Create_RootSignature()
 	RootParameter[2].InitAsDescriptorTable(1, &SRV_Table[2], D3D12_SHADER_VISIBILITY_PIXEL);
 	RootParameter[3].InitAsDescriptorTable(1, &SRV_Table[3], D3D12_SHADER_VISIBILITY_PIXEL);
 	RootParameter[4].InitAsDescriptorTable(1, &SRV_Table[4], D3D12_SHADER_VISIBILITY_PIXEL);
-	RootParameter[5].InitAsConstantBufferView(0);		// register b0.
-	RootParameter[6].InitAsShaderResourceView(0, 1);	// register t0, space 1.
+	RootParameter[5].InitAsShaderResourceView(0, 1);	// register t0, space1.
+	RootParameter[6].InitAsConstantBufferView(0);		// register b0.
 
 	auto StaticSamplers = Get_StaticSamplers();
-	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(_countof(RootParameter),	// 루트 파라미터 개수.
+	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(_countof(RootParameter),		// 루트 파라미터 개수.
 												  RootParameter,
 												  (UINT)StaticSamplers.size(),	// 샘플러 개수.
 												  StaticSamplers.data(),		// 샘플러 데이터.
@@ -134,7 +134,6 @@ HRESULT CShaderMeshInstancing::Create_PipelineState()
 	PipelineStateDesc.RTVFormats[2]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Specular Target
 	PipelineStateDesc.RTVFormats[3]			= DXGI_FORMAT_R32G32B32A32_FLOAT;	// Depth Target
 	PipelineStateDesc.RTVFormats[4]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
-
 	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
 	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
 	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;

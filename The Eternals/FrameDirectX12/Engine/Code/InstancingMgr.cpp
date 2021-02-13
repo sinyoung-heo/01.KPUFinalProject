@@ -25,7 +25,7 @@ CUploadBuffer<CB_SHADER_MESH>* CInstancingMgr::Get_UploadBuffer_ShaderMesh(const
 
 HRESULT CInstancingMgr::SetUp_ShaderComponent()
 {
-	m_pShaderMeshInstancing = static_cast<CShaderMeshInstancing*>(CComponentMgr::Get_Instance()->Clone_Component(L"ShaderMesh", COMPONENTID::ID_STATIC));
+	m_pShaderMeshInstancing = static_cast<CShaderMeshInstancing*>(CComponentMgr::Get_Instance()->Clone_Component(L"ShaderMeshInstancing", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pShaderMeshInstancing, E_FAIL);
 
 	return S_OK;
@@ -70,7 +70,7 @@ void CInstancingMgr::SetUp_MeshConstantBuffer(ID3D12Device* pGraphicDevice)
 			for (_uint j = 0; j < m_uiMeshPipelineStateCnt; ++j)
 			{
 				iInstanceCnt	= (_uint)(CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_GameObject", pair.first)->size());
-				pair.second[j]	= CUploadBuffer<CB_SHADER_MESH>::Create(pGraphicDevice, iInstanceCnt / 4 + 1);
+				pair.second[j]	= CUploadBuffer<CB_SHADER_MESH>::Create(pGraphicDevice, iInstanceCnt / 4 + 1, false);
 			}
 
 		}
@@ -116,31 +116,26 @@ void CInstancingMgr::Render_MeshInstance(ID3D12GraphicsCommandList* pCommandList
 			if (!pair.second[iPipelineStatePass].iInstanceCount)
 				continue;
 
-			// SetPipelineState
-			CRenderer::Get_Instance()->Set_CurPipelineState(pCommandList, m_pShaderMeshInstancing->Get_PipelineState(iPipelineStatePass), iContextIdx);
-
 			// Set RootSignature.
 			pCommandList->SetGraphicsRootSignature(m_pShaderMeshInstancing->Get_RootSignature());
 
+			// SetPipelineState
+			m_pShaderMeshInstancing->Set_PipelineStatePass(iPipelineStatePass);
+			CRenderer::Get_Instance()->Set_CurPipelineState(pCommandList, m_pShaderMeshInstancing->Get_PipelineStatePass(), iContextIdx);
+
 			// Set DescriptorHeap.
-			ID3D12DescriptorHeap* pDescriptorHeaps[] = { CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(wstrMeshTag) };
+			ID3D12DescriptorHeap* pTexDescriptorHeap = CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(wstring(wstrMeshTag) + L".X");
+			ID3D12DescriptorHeap* pDescriptorHeaps[] = { pTexDescriptorHeap };
 			pCommandList->SetDescriptorHeaps(_countof(pDescriptorHeaps), pDescriptorHeaps);
 
-			
-			/*__________________________________________________________________________________________________________
-			[ CBV를 루트 서술자에 묶는다 ]
-			____________________________________________________________________________________________________________*/
-			pCommandList->SetGraphicsRootConstantBufferView(5,	// RootParameter Index
+			pCommandList->SetGraphicsRootConstantBufferView(6,	// RootParameter Index
 				m_pShaderMeshInstancing->Get_UploadBuffer_CameraProjMatrix()->Resource()->GetGPUVirtualAddress());
-
-			pCommandList->SetGraphicsRootShaderResourceView(6,	// RootParameter Index
-				m_mapCB_ShaderMesh[iContextIdx][wstrMeshTag][iPipelineStatePass]->Resource()->GetGPUVirtualAddress());
-
 
 			/*__________________________________________________________________________________________________________
 			[ Render Mesh ]
 			____________________________________________________________________________________________________________*/
-			CVIMesh* pVIMesh = static_cast<CMesh*>(CComponentMgr::Get_Instance()->Get_Component(wstrMeshTag, ID_STATIC))->Get_VIMesh();
+			CMesh*		pMesh	= static_cast<CMesh*>(CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", wstrMeshTag)->Get_Component(L"Com_Mesh", ID_STATIC));
+			CVIMesh*	pVIMesh	= pMesh->Get_VIMesh();
 			_uint uiSubsetMeshSize = (_uint)(pVIMesh->Get_SubMeshGeometry().size());
 
 			for (_uint iSubMeshIdx = 0; iSubMeshIdx < uiSubsetMeshSize; ++iSubMeshIdx)
@@ -148,35 +143,41 @@ void CInstancingMgr::Render_MeshInstance(ID3D12GraphicsCommandList* pCommandList
 				/*__________________________________________________________________________________________________________
 				[ SRV를 루트 서술자에 묶는다 ]
 				____________________________________________________________________________________________________________*/
-				CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexDiffuseDescriptorHandle(pDescriptorHeaps[0]->GetGPUDescriptorHandleForHeapStart());
+				CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexDiffuseDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 				SRV_TexDiffuseDescriptorHandle.Offset(iSubMeshIdx + (uiSubsetMeshSize * TEX_DIFFUSE), m_pShaderMeshInstancing->Get_CBV_SRV_UAV_DescriptorSize());
 				pCommandList->SetGraphicsRootDescriptorTable(0,		// RootParameter Index - TexDiffuse
 															 SRV_TexDiffuseDescriptorHandle);
 
-				CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexNormalDescriptorHandle(pDescriptorHeaps[0]->GetGPUDescriptorHandleForHeapStart());
+				CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexNormalDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 				SRV_TexNormalDescriptorHandle.Offset(iSubMeshIdx + (uiSubsetMeshSize * TEX_NORMAL), m_pShaderMeshInstancing->Get_CBV_SRV_UAV_DescriptorSize());
 				pCommandList->SetGraphicsRootDescriptorTable(1,		// RootParameter Index - TexNormal
 															 SRV_TexNormalDescriptorHandle);
 
-				CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexSpecularDescriptorHandle(pDescriptorHeaps[0]->GetGPUDescriptorHandleForHeapStart());
+				CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexSpecularDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 				SRV_TexSpecularDescriptorHandle.Offset(iSubMeshIdx + (uiSubsetMeshSize * TEX_SPECULAR), m_pShaderMeshInstancing->Get_CBV_SRV_UAV_DescriptorSize());
 				pCommandList->SetGraphicsRootDescriptorTable(2,		// RootParameter Index - TexSpecular
 															 SRV_TexSpecularDescriptorHandle);
 
-				CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexShadowDepthDescriptorHandle(pDescriptorHeaps[0]->GetGPUDescriptorHandleForHeapStart());
+				CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexShadowDepthDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 				SRV_TexShadowDepthDescriptorHandle.Offset(uiSubsetMeshSize * TEXTURE_END, m_pShaderMeshInstancing->Get_CBV_SRV_UAV_DescriptorSize());
 				pCommandList->SetGraphicsRootDescriptorTable(3,		// RootParameter Index - TexShadowDepth
 															 SRV_TexShadowDepthDescriptorHandle);
 
-				CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexEmissiveDescriptorHandle(pDescriptorHeaps[0]->GetGPUDescriptorHandleForHeapStart());
+				CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexEmissiveDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 				SRV_TexEmissiveDescriptorHandle.Offset(uiSubsetMeshSize * TEXTURE_END + 1, m_pShaderMeshInstancing->Get_CBV_SRV_UAV_DescriptorSize());
 				pCommandList->SetGraphicsRootDescriptorTable(4,		// RootParameter Index - TexDissolve
 															 SRV_TexEmissiveDescriptorHandle);
 
+				/*__________________________________________________________________________________________________________
+				[ CBV를 루트 서술자에 묶는다 ]
+				____________________________________________________________________________________________________________*/
+					pCommandList->SetGraphicsRootShaderResourceView(5,	// RootParameter Index
+						m_mapCB_ShaderMesh[iContextIdx][wstrMeshTag][iPipelineStatePass]->Resource()->GetGPUVirtualAddress());
+
 				// Render Instance
 				pCommandList->IASetVertexBuffers(0, 1, &pVIMesh->Get_VertexBufferView(iSubMeshIdx));
 				pCommandList->IASetIndexBuffer(&pVIMesh->Get_IndexBufferView(iSubMeshIdx));
-				pCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+				pCommandList->IASetPrimitiveTopology(pVIMesh->Get_PrimitiveTopology());
 
 				pCommandList->DrawIndexedInstanced(pVIMesh->Get_SubMeshGeometry()[iSubMeshIdx].uiIndexCount,
 												   pair.second[iPipelineStatePass].iInstanceCount,
@@ -184,7 +185,6 @@ void CInstancingMgr::Render_MeshInstance(ID3D12GraphicsCommandList* pCommandList
 												   pVIMesh->Get_SubMeshGeometry()[iSubMeshIdx].iBaseVertexLocation,
 												   0);
 			}
-
 		}
 	}
 }

@@ -33,7 +33,6 @@ typedef struct tagShaderMesh
 	float		fOffset2;
 	
 } SHADER_MESH;
-
 StructuredBuffer<SHADER_MESH> g_ShaderMesh : register(t0, space1);
 
 /*__________________________________________________________________________________________________________

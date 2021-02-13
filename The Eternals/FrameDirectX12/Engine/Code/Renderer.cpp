@@ -76,7 +76,7 @@ HRESULT CRenderer::Set_CurPipelineState(ID3D12GraphicsCommandList * pCommandList
 	{
 		m_arrContextPrePipelineState[iContextIdx] = m_arrContextCurPipelineState[iContextIdx];
 
-		CGraphicDevice::Get_Instance()->Set_PipelineState(m_arrContextCurPipelineState[iContextIdx]);
+		// CGraphicDevice::Get_Instance()->Set_PipelineState(m_arrContextCurPipelineState[iContextIdx]);
 		pCommandList->SetPipelineState(m_arrContextCurPipelineState[iContextIdx]);
 
 		++m_uiCnt_SetPipelineState;
@@ -112,9 +112,9 @@ HRESULT CRenderer::Ready_Renderer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCo
 	FAILED_CHECK_RETURN(Ready_ShaderPrototype(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_RenderTarget(), E_FAIL);
 
-	m_mapRenderOnOff[L"RenderTarget"]	= true;
-	m_mapRenderOnOff[L"DebugFont"]		= true;
-	m_mapRenderOnOff[L"Collider"]		= true;
+	m_mapRenderOnOff[L"RenderTarget"]	= false;
+	m_mapRenderOnOff[L"DebugFont"]		= false;
+	m_mapRenderOnOff[L"Collider"]		= false;
 
 	/*__________________________________________________________________________________________________________
 	2020.06.07 MultiThreadRendering
@@ -795,23 +795,23 @@ HRESULT CRenderer::Reset_ThreadCommandList()
 	for (_int i = 0; i < CONTEXT::CONTEXT_END; ++i)
 	{
 		FAILED_CHECK_RETURN(m_arrShadowCommandAllocator[i]->Reset(), E_FAIL);
-		FAILED_CHECK_RETURN(m_arrShadowCommandList[i]->Reset(m_arrShadowCommandAllocator[i], m_pCurPipelineState), E_FAIL);
+		FAILED_CHECK_RETURN(m_arrShadowCommandList[i]->Reset(m_arrShadowCommandAllocator[i], m_arrContextCurPipelineState[i]), E_FAIL);
 
 		FAILED_CHECK_RETURN(m_arrSceneCommandAllocator[i]->Reset(), E_FAIL);
-		FAILED_CHECK_RETURN(m_arrSceneCommandList[i]->Reset(m_arrSceneCommandAllocator[i], m_pCurPipelineState), E_FAIL);
+		FAILED_CHECK_RETURN(m_arrSceneCommandList[i]->Reset(m_arrSceneCommandAllocator[i], m_arrContextCurPipelineState[i]), E_FAIL);
 	}
 
 	// PreCommandList - ShadowDepth.
 	FAILED_CHECK_RETURN(m_pPreShadowCommandAllocator->Reset(), E_FAIL);
-	FAILED_CHECK_RETURN(m_pPreShadowCommandList->Reset(m_pPreShadowCommandAllocator, m_pCurPipelineState), E_FAIL);
+	FAILED_CHECK_RETURN(m_pPreShadowCommandList->Reset(m_pPreShadowCommandAllocator, nullptr), E_FAIL);
 	FAILED_CHECK_RETURN(m_pEndShadowCommandAllocator->Reset(), E_FAIL);
-	FAILED_CHECK_RETURN(m_pEndShadowCommandList->Reset(m_pEndShadowCommandAllocator, m_pCurPipelineState), E_FAIL);
+	FAILED_CHECK_RETURN(m_pEndShadowCommandList->Reset(m_pEndShadowCommandAllocator, nullptr), E_FAIL);
 
 	// PreCommandList - Scene.
 	FAILED_CHECK_RETURN(m_pPreSceneCommandAllocator->Reset(), E_FAIL);
-	FAILED_CHECK_RETURN(m_pPreSceneCommandList->Reset(m_pPreSceneCommandAllocator, m_pCurPipelineState), E_FAIL);
+	FAILED_CHECK_RETURN(m_pPreSceneCommandList->Reset(m_pPreSceneCommandAllocator, nullptr), E_FAIL);
 	FAILED_CHECK_RETURN(m_pEndSceneCommandAllocator->Reset(), E_FAIL);
-	FAILED_CHECK_RETURN(m_pEndSceneCommandList->Reset(m_pEndSceneCommandAllocator, m_pCurPipelineState), E_FAIL);
+	FAILED_CHECK_RETURN(m_pEndSceneCommandList->Reset(m_pEndSceneCommandAllocator, nullptr), E_FAIL);
 
 	return S_OK;
 }
@@ -927,7 +927,7 @@ void CRenderer::Worker_Thread(_int threadIndex)
 																 m_arrShadowCommandList[threadIndex], 
 																 threadIndex);
 		}
-		
+
 		// Submit Shadow Pass.
 		m_arrShadowCommandList[threadIndex]->Close();
 		
@@ -954,6 +954,9 @@ void CRenderer::Worker_Thread(_int threadIndex)
 																m_arrSceneCommandList[threadIndex],
 																threadIndex);
 		}
+
+		// Render Mesh Instance
+		CInstancingMgr::Get_Instance()->Render_MeshInstance(m_arrSceneCommandList[threadIndex], threadIndex);
 
 		// End Scene Pass.
 		m_arrSceneCommandList[threadIndex]->Close();

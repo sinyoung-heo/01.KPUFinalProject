@@ -118,36 +118,13 @@ _int CStaticMeshObject::LateUpdate_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-void CStaticMeshObject::Render_GameObject(const _float & fTimeDelta)
-{
-	Set_ConstantTable();
-	m_pMeshCom->Render_StaticMesh(m_pShaderCom);
-}
-
-void CStaticMeshObject::Render_ShadowDepth(const _float & fTimeDelta)
-{
-	Set_ConstantTableShadowDepth();
-	m_pMeshCom->Render_StaticMeshShadowDepth(m_pShadowCom);
-}
-
 void CStaticMeshObject::Render_GameObject(const _float& fTimeDelta, 
 										  ID3D12GraphicsCommandList * pCommandList,
 										  const _int& iContextIdx)
 {
-	Set_ConstantTable();
-	m_pMeshCom->Render_StaticMesh(pCommandList, iContextIdx, m_pShaderCom);
-}
+	//Set_ConstantTable();
+	//m_pMeshCom->Render_StaticMesh(pCommandList, iContextIdx, m_pShaderCom);
 
-void CStaticMeshObject::Render_ShadowDepth(const _float& fTimeDelta, 
-										   ID3D12GraphicsCommandList * pCommandList,
-										   const _int& iContextIdx)
-{
-	Set_ConstantTableShadowDepth();
-	m_pMeshCom->Render_StaticMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
-}
-
-void CStaticMeshObject::Render_GameObjectInstancing(const _float& fTimeDelta, const _int& iContextIdx)
-{
 	/*__________________________________________________________________________________________________________
 	[ Add Instance ]
 	____________________________________________________________________________________________________________*/
@@ -157,9 +134,12 @@ void CStaticMeshObject::Render_GameObjectInstancing(const _float& fTimeDelta, co
 	Set_ConstantTable(iContextIdx, iInstanceIdx);
 }
 
-void CStaticMeshObject::Render_ShadowDepthInstancing(const _float& fTimeDelta, const _int& iContextIdx)
+void CStaticMeshObject::Render_ShadowDepth(const _float& fTimeDelta, 
+										   ID3D12GraphicsCommandList * pCommandList,
+										   const _int& iContextIdx)
 {
-
+	//Set_ConstantTableShadowDepth();
+	//m_pMeshCom->Render_StaticMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 }
 
 HRESULT CStaticMeshObject::Add_Component(wstring wstrMeshTag)
