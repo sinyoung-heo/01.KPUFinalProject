@@ -224,6 +224,7 @@ call CopyEngine.bat</Command>
     <ClInclude Include="..\Code\ShaderLuminance.h" />
     <ClInclude Include="..\Code\ShaderMesh.h" />
     <ClInclude Include="..\Code\ShaderShadow.h" />
+    <ClInclude Include="..\Code\ShaderShadowInstancing.h" />
     <ClInclude Include="..\Code\ShaderSkyBox.h" />
     <ClInclude Include="..\Code\ShaderSSAO.h" />
     <ClInclude Include="..\Code\ShaderMeshInstancing.h" />
@@ -291,6 +292,7 @@ call CopyEngine.bat</Command>
     <ClCompile Include="..\Code\ShaderLuminance.cpp" />
     <ClCompile Include="..\Code\ShaderMesh.cpp" />
     <ClCompile Include="..\Code\ShaderShadow.cpp" />
+    <ClCompile Include="..\Code\ShaderShadowInstancing.cpp" />
     <ClCompile Include="..\Code\ShaderSkyBox.cpp" />
     <ClCompile Include="..\Code\ShaderSSAO.cpp" />
     <ClCompile Include="..\Code\ShaderMeshInstancing.cpp" />
@@ -339,6 +341,10 @@ call CopyEngine.bat</Command>
     <FxCompile Include="..\..\Bin\Shader\ShaderShadow.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\Bin\Shader\ShaderShadowInstancing.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderSkyBox.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

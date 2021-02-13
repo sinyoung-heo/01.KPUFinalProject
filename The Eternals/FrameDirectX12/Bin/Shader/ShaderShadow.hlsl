@@ -8,6 +8,9 @@ cbuffer cbShaderShadow : register(b0)
 	float4x4	g_matView	: packoffset(c4);
 	float4x4	g_matProj	: packoffset(c8);
 	float		g_fProjFar	: packoffset(c12.x);
+	float		g_fOffset1	: packoffset(c12.y);
+	float		g_fOffset2	: packoffset(c12.z);
+	float		g_fOffset3	: packoffset(c12.w);
 };
 
 cbuffer cbSkinningMatrix : register(b1)
@@ -92,34 +95,6 @@ VS_OUT VS_MAIN(VS_IN vs_input)
 	
 	return (vs_output);
 }
-
-
-
-struct VS_IN_BUMPTERRAIN
-{
-	float3 Pos				: POSITION;
-	float3 Normal			: NORMAL;
-	float2 TexUV			: TEXCOORD;
-};
-
-VS_OUT VS_BUMPTERRAIN(VS_IN_BUMPTERRAIN vs_input)
-{
-	VS_OUT vs_output = (VS_OUT) 0;
-
-	float4x4 matWV, matWVP;
-	matWV	= mul(g_matWorld, g_matView);
-	matWVP	= mul(matWV, g_matProj);
-	
-	vs_output.Pos		= mul(float4(vs_input.Pos, 1.0f), matWVP);
-	
-	// 광원 위치에서의 투영 좌표 계산.
-	float4 vPos			= vs_output.Pos;
-	vPos.z				= vPos.z * vPos.w / g_fProjFar;
-	vs_output.ProjPos	= vPos;
-	
-	return (vs_output);
-}
-
 
 // PS_MAIN
 struct PS_OUT

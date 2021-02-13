@@ -23,6 +23,7 @@
 #include "ShaderMesh.h"
 #include "ShaderMeshInstancing.h"
 #include "ShaderShadow.h"
+#include "ShaderShadowInstancing.h"
 #include "ShaderLighting.h"
 #include "ShaderBlend.h"
 #include "ShaderLuminance.h"

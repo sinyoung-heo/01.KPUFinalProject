@@ -41,6 +41,7 @@ HRESULT CScene_StageVelika::Ready_Scene()
 	Engine::FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
 	Engine::CInstancingMgr::Get_Instance()->SetUp_MeshConstantBuffer(m_pGraphicDevice);
+	Engine::CInstancingMgr::Get_Instance()->SetUp_ShadowConstantBuffer(m_pGraphicDevice);
 
 	return S_OK;
 }
@@ -189,6 +190,7 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 	}
 
 	Engine::CInstancingMgr::Get_Instance()->SetUp_MeshInstancing(L"BumpTerrainMesh01");
+	Engine::CInstancingMgr::Get_Instance()->SetUp_ShadowInstancing(L"BumpTerrainMesh01");
 
 
 	/*__________________________________________________________________________________________________________
@@ -245,6 +247,8 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", wstrMeshTag, pGameObj), E_FAIL);
 		Engine::CInstancingMgr::Get_Instance()->SetUp_MeshInstancing(wstrMeshTag);
+		Engine::CInstancingMgr::Get_Instance()->SetUp_ShadowInstancing(wstrMeshTag);
+
 	}
 
 	/*__________________________________________________________________________________________________________

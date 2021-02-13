@@ -5,8 +5,6 @@
 namespace Engine
 {
 	class CMesh;
-	class CShaderMesh;
-	class CShaderShadow;
 }
 
 class CDynamicCamera;
@@ -38,20 +36,14 @@ public:
 
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
-	void			Set_ConstantTable();
-	void			Set_ConstantTableShadowDepth();
-
-	// Instancing
 	void			Set_ConstantTable(const _int& iContextIdx, const _int& iInstancingIdx);
-	void			Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int& iInstancingIdx);
+	void			Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int& iInstanceIdx);
 
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
 	____________________________________________________________________________________________________________*/
-	Engine::CMesh*			m_pMeshCom		= nullptr;
-	Engine::CShaderMesh*	m_pShaderCom	= nullptr;
-	Engine::CShaderShadow*	m_pShadowCom	= nullptr;
+	Engine::CMesh* m_pMeshCom = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]

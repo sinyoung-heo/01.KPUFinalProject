@@ -76,17 +76,14 @@ struct VS_OUT
 [ 그림자 (X) ]
 ____________________________________________________________________________________________________________*/
 VS_OUT VS_MAIN(VS_IN vs_input, uint iInstanceID : SV_InstanceID)
-{
-	float4x4 matBone = { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f };
-	
+{	
 	VS_OUT vs_output	= (VS_OUT) 0;
 	
 	float4x4 matWV, matWVP;
 	matWV	= mul(g_ShaderMesh[iInstanceID].matWorld, g_matView);
 	matWVP	= mul(matWV, g_matProj);
 	
-	float4 vModelPos	= mul(float4(vs_input.Pos, 1.0f), matBone);
-	vs_output.Pos		= mul(vModelPos, matWVP);
+	vs_output.Pos		= mul(float4(vs_input.Pos, 1.0f), matWVP);
 	vs_output.TexUV		= vs_input.TexUV;
 	vs_output.Normal	= vs_input.Normal;
 	
@@ -159,17 +156,14 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 [ 그림자 (O) ]
 ____________________________________________________________________________________________________________*/
 VS_OUT VS_SHADOW_MAIN(VS_IN vs_input, uint iInstanceID : SV_InstanceID)
-{
-	float4x4 matBone = { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f };
-	
+{	
 	VS_OUT vs_output	= (VS_OUT) 0;
 	
 	float4x4 matWV, matWVP;
 	matWV	= mul(g_ShaderMesh[iInstanceID].matWorld, g_matView);
 	matWVP	= mul(matWV, g_matProj);
 	
-	float4 vModelPos	= mul(float4(vs_input.Pos, 1.0f), matBone);
-	vs_output.Pos		= mul(vModelPos, matWVP);
+	vs_output.Pos		= mul(float4(vs_input.Pos, 1.0f), matWVP);
 	vs_output.TexUV		= vs_input.TexUV;
 	vs_output.Normal	= vs_input.Normal;
 	

@@ -1,26 +1,20 @@
-#include "ShaderShadow.h"
+#include "ShaderShadowInstancing.h"
 #include "GraphicDevice.h"
 #include "Renderer.h"
 
-
 USING(Engine)
 
-CShaderShadow::CShaderShadow(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CShaderShadowInstancing::CShaderShadowInstancing(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CShader(pGraphicDevice, pCommandList)
 {
 }
 
-CShaderShadow::CShaderShadow(const CShaderShadow & rhs)
+CShaderShadowInstancing::CShaderShadowInstancing(const CShaderShadowInstancing& rhs)
 	: CShader(rhs)
 {
-	/*__________________________________________________________________________________________________________
-	- Texture Buffer의 경우, 객체마다 사용하는 텍스처 이미지와 개수가 다르기 때문에,
-	GameObject::LateInit_GameObject()에서 Set_Shader_Texture() 함수 호출을 통해
-	Create_DescriptorHeaps(pvecTexDiffuse), Create_ConstantBuffer()를 실행.
-	____________________________________________________________________________________________________________*/
 }
 
-HRESULT CShaderShadow::Ready_Shader()
+HRESULT CShaderShadowInstancing::Ready_Shader()
 {
 	CShader::Ready_Shader();
 	FAILED_CHECK_RETURN(Create_RootSignature(), E_FAIL);
@@ -29,74 +23,13 @@ HRESULT CShaderShadow::Ready_Shader()
 	return S_OK;
 }
 
-void CShaderShadow::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, const _uint & iIdx)
-{
-	CRenderer::Get_Instance()->Set_CurPipelineState(m_pPipelineState);
-	m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
-
-	/*__________________________________________________________________________________________________________
-	[ CBV를 루트 서술자에 묶는다 ]
-	____________________________________________________________________________________________________________*/
-	m_pCommandList->SetGraphicsRootConstantBufferView(0,	// RootParameter Index
-													  m_pCB_ShadowShader->Resource()->GetGPUVirtualAddress());
-
-	m_pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
-													  m_pCB_SkinningMatrix->Resource()->GetGPUVirtualAddress() + 
-													  m_pCB_SkinningMatrix->GetElementByteSize() * iIdx);
-}
-
-void CShaderShadow::Begin_Shader(ID3D12GraphicsCommandList * pCommandList,
-								 const _int& iContextIdx,
-								 ID3D12DescriptorHeap* pTexDescriptorHeap,
-								 const _uint & iIdx)
-{
-	CRenderer::Get_Instance()->Set_CurPipelineState(pCommandList, m_pPipelineState, iContextIdx);
-	pCommandList->SetGraphicsRootSignature(m_pRootSignature);
-
-	/*__________________________________________________________________________________________________________
-	[ CBV를 루트 서술자에 묶는다 ]
-	____________________________________________________________________________________________________________*/
-	pCommandList->SetGraphicsRootConstantBufferView(0,	// RootParameter Index
-													m_pCB_ShadowShader->Resource()->GetGPUVirtualAddress());
-
-	pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
-													m_pCB_SkinningMatrix->Resource()->GetGPUVirtualAddress() + 
-													m_pCB_SkinningMatrix->GetElementByteSize() * iIdx);
-}
-
-void CShaderShadow::SetUp_ShaderConstantBuffer(const _uint& iNumSubsetMesh)
-{
-	Create_ConstantBuffer(iNumSubsetMesh);
-}
-
-HRESULT CShaderShadow::Create_DescriptorHeaps()
-{
-	return S_OK;
-}
-
-HRESULT CShaderShadow::Create_ConstantBuffer(const _uint& iNumSubsetMesh)
-{
-	m_pCB_ShadowShader = CUploadBuffer<CB_SHADER_SHADOW>::Create(m_pGraphicDevice);
-	NULL_CHECK_RETURN(m_pCB_ShadowShader, E_FAIL);
-
-	CGraphicDevice::Get_Instance()->Wait_ForGpuComplete();
-
-	// SubsetMesh 개수만큼 만들어준다.
-	m_pCB_SkinningMatrix = CUploadBuffer<CB_SKINNING_MATRIX>::Create(m_pGraphicDevice, iNumSubsetMesh);
-	NULL_CHECK_RETURN(m_pCB_SkinningMatrix, E_FAIL);
-
-	return S_OK;
-}
-
-HRESULT CShaderShadow::Create_RootSignature()
+HRESULT CShaderShadowInstancing::Create_RootSignature()
 {
 	/*__________________________________________________________________________________________________________
 	- 루트 매개변수는 테이블이거나, 루트 서술자 또는 루트 상수이다.
 	____________________________________________________________________________________________________________*/
-	CD3DX12_ROOT_PARAMETER RootParameter[2];
-
-	RootParameter[0].InitAsConstantBufferView(0);		// register b0.
-	RootParameter[1].InitAsConstantBufferView(1);		// register b1.
+	CD3DX12_ROOT_PARAMETER RootParameter[1];
+	RootParameter[0].InitAsShaderResourceView(0, 1);	// register t0, space1..
 
 	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(_countof(RootParameter),	// 루트 파라미터 개수. (CBV 2)
 												  RootParameter,
@@ -132,7 +65,7 @@ HRESULT CShaderShadow::Create_RootSignature()
 	return S_OK;
 }
 
-HRESULT CShaderShadow::Create_PipelineState()
+HRESULT CShaderShadowInstancing::Create_PipelineState()
 {
 	/*__________________________________________________________________________________________________________
 	[ PipelineState 기본 설정 ]
@@ -141,7 +74,6 @@ HRESULT CShaderShadow::Create_PipelineState()
 	vector<D3D12_INPUT_ELEMENT_DESC>	vecInputLayout;
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC	PipelineStateDesc;
 	ZeroMemory(&PipelineStateDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
-
 
 	/*__________________________________________________________________________________________________________
 	[ 0번 PipelineState Pass ]
@@ -175,13 +107,12 @@ HRESULT CShaderShadow::Create_PipelineState()
 	return S_OK;
 }
 
-vector<D3D12_INPUT_ELEMENT_DESC> CShaderShadow::Create_InputLayout(string VS_EntryPoint,
-																  string PS_EntryPoint)
+vector<D3D12_INPUT_ELEMENT_DESC> CShaderShadowInstancing::Create_InputLayout(string VS_EntryPoint, string PS_EntryPoint)
 {
 	vector<D3D12_INPUT_ELEMENT_DESC> vecInputLayout;
 
-	m_pVS_ByteCode = Compile_Shader(L"../../Bin/Shader/ShaderShadow.hlsl", nullptr, VS_EntryPoint.c_str(), "vs_5_1");
-	m_pPS_ByteCode = Compile_Shader(L"../../Bin/Shader/ShaderShadow.hlsl", nullptr, PS_EntryPoint.c_str(), "ps_5_1");
+	m_pVS_ByteCode = Compile_Shader(L"../../Bin/Shader/ShaderShadowInstancing.hlsl", nullptr, VS_EntryPoint.c_str(), "vs_5_1");
+	m_pPS_ByteCode = Compile_Shader(L"../../Bin/Shader/ShaderShadowInstancing.hlsl", nullptr, PS_EntryPoint.c_str(), "ps_5_1");
 
 	_uint uiOffset = 0;
 	vecInputLayout =
@@ -198,13 +129,13 @@ vector<D3D12_INPUT_ELEMENT_DESC> CShaderShadow::Create_InputLayout(string VS_Ent
 	return vecInputLayout;
 }
 
-D3D12_BLEND_DESC CShaderShadow::Create_BlendState(const _bool& bIsBlendEnable,
-												 const D3D12_BLEND& SrcBlend,
-												 const D3D12_BLEND& DstBlend,
-												 const D3D12_BLEND_OP& BlendOp,
-												 const D3D12_BLEND& SrcBlendAlpha,
-												 const D3D12_BLEND& DstBlendAlpha,
-												 const D3D12_BLEND_OP& BlendOpAlpha)
+D3D12_BLEND_DESC CShaderShadowInstancing::Create_BlendState(const _bool& bIsBlendEnable, 
+															const D3D12_BLEND& SrcBlend, 
+															const D3D12_BLEND& DstBlend, 
+															const D3D12_BLEND_OP& BlendOp, 
+															const D3D12_BLEND& SrcBlendAlpha,
+															const D3D12_BLEND& DstBlendAlpha, 
+															const D3D12_BLEND_OP& BlendOpAlpha)
 {
 	D3D12_BLEND_DESC BlendDesc = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 	// 블렌드 설정.
@@ -225,15 +156,14 @@ D3D12_BLEND_DESC CShaderShadow::Create_BlendState(const _bool& bIsBlendEnable,
 	return BlendDesc;
 }
 
-
-CComponent * CShaderShadow::Clone()
+CComponent* CShaderShadowInstancing::Clone()
 {
-	return new CShaderShadow(*this);
+	return new CShaderShadowInstancing(*this);
 }
 
-CShader* CShaderShadow::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CShader* CShaderShadowInstancing::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 {
-	CShaderShadow* pInstance = new CShaderShadow(pGraphicDevice, pCommandList);
+	CShaderShadowInstancing* pInstance = new CShaderShadowInstancing(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_Shader()))
 		Safe_Release(pInstance);
@@ -241,11 +171,7 @@ CShader* CShaderShadow::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsComm
 	return pInstance;
 }
 
-void CShaderShadow::Free()
+void CShaderShadowInstancing::Free()
 {
 	CShader::Free();
-
-	Safe_Delete(m_pCB_ShadowShader);
-	Safe_Delete(m_pCB_SkinningMatrix);
-
 }

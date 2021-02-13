@@ -783,8 +783,11 @@ namespace Engine
 		XMFLOAT4X4	matView;
 		XMFLOAT4X4	matProj;
 		_float		fProjFar;
+		_float		fOffset1;
+		_float		fOffset2;
+		_float		fOffset3;
 
-	}CB_SHADER_SHADOW;
+	} CB_SHADER_SHADOW;
 
 	typedef struct tagConstnatBufferSkinningMatrix
 	{

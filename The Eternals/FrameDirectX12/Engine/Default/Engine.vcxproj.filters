@@ -372,6 +372,9 @@
     <ClInclude Include="..\Code\ShaderMeshInstancing.h">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\03.ShaderMesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ShaderShadowInstancing.h">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\04.ShaderShadow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\DirectInput.cpp">
@@ -542,6 +545,9 @@
     <ClCompile Include="..\Code\ShaderMeshInstancing.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\03.ShaderMesh</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\ShaderShadowInstancing.cpp">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\04.ShaderShadow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Bin\Shader\ShaderMesh.hlsl">
@@ -579,6 +585,9 @@
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderMeshInstancing.hlsl">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\03.ShaderMesh</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Bin\Shader\ShaderShadowInstancing.hlsl">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\04.ShaderShadow</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -15,15 +15,17 @@ class CShaderDownSampling;
 class CShaderBlur;
 class CShaderSSAO;
 class CShaderMesh;
-#define WIDTH_FIRST 112
-#define WIDTH_SECOND 224+112
-#define WIDTH_THIRD 448+112
-#define WIDTH_FOURTH 672+112
-#define WIDTH_FIFTH 672+224+112
-#define HEIGHT_FIRST 63
-#define HEIGHT_SECOND 126 + 63
-#define HEIGHT_THIRD 126+126 + 63
-#define HEIGHT_FOURTH 126+126+126+63
+
+#define WIDTH_FIRST		112
+#define WIDTH_SECOND	224 + 112
+#define WIDTH_THIRD		448 + 112
+#define WIDTH_FOURTH	672 + 112
+#define WIDTH_FIFTH		672 + 224 + 112
+#define HEIGHT_FIRST	63
+#define HEIGHT_SECOND	126 + 63
+#define HEIGHT_THIRD	126 + 126 + 63
+#define HEIGHT_FOURTH	126 + 126 + 126 + 63
+
 struct ThreadParameter
 {
 	_int threadIdx;
