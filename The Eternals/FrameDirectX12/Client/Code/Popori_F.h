@@ -75,23 +75,25 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	CDynamicCamera*	m_pDynamicCamera					= nullptr;
-	wstring			m_wstrMeshTag						= L"";
+	wstring			m_wstrMeshTag	           = L"";
+	_uint			m_iMeshPipelineStatePass   = 0;
+	_uint			m_iShadowPipelineStatePass = 0;
+	CDynamicCamera*	m_pDynamicCamera	       = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]
 	____________________________________________________________________________________________________________*/
-	_uint			m_uiAnimIdx							= 0;	// 현재 애니메이션 Index
-	_uint			m_ui3DMax_NumFrame					= 0;	// 3DMax에서 애니메이션의 총 Frame 개수
-	_uint			m_ui3DMax_CurFrame					= 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
+	_uint			m_uiAnimIdx		   = 0;	// 현재 애니메이션 Index
+	_uint			m_ui3DMax_NumFrame = 0;	// 3DMax에서 애니메이션의 총 Frame 개수
+	_uint			m_ui3DMax_CurFrame = 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
 
 	
 	/*__________________________________________________________________________________________________________
 	[ Font ]
 	____________________________________________________________________________________________________________*/
-	Engine::CFont*	m_pFont								= nullptr;
-	wstring			m_wstrText							= L"";
-	_tchar			m_szText[MAX_STR]					= L"";
+	Engine::CFont*	m_pFont			  = nullptr;
+	wstring			m_wstrText		  = L"";
+	_tchar			m_szText[MAX_STR] = L"";
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,

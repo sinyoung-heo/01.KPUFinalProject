@@ -1,6 +1,5 @@
 #pragma once
 #include "Shader.h"
-#include "Texture.h"
 
 BEGIN(Engine)
 
@@ -14,7 +13,7 @@ private:
 public:
 	// Get
 	CUploadBuffer<CB_SHADER_MESH>*		Get_UploadBuffer_ShaderMesh()	{ return m_pCB_ShaderMesh; }
-	CUploadBuffer<CB_SKINNING_MATRIX>*	Get_UploadBuffer_SkinningDesc() { return m_pCB_SkinningMatrix; }
+	CUploadBuffer<CB_SKINNING_MATRIX>*	Get_UploadBuffer_SkinningMatrix() { return m_pCB_SkinningMatrix; }
 	HRESULT			SetUp_ShaderConstantBuffer(const _uint& uiNumSubsetMesh = 1);
 
 	// CShader을(를) 통해 상속됨

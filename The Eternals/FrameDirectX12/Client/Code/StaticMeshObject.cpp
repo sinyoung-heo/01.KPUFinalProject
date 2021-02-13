@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "StaticMeshObject.h"
-
 #include "GraphicDevice.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
 #include "LightMgr.h"
+#include "TimeMgr.h"
 #include "DynamicCamera.h"
 #include "RenderTarget.h"
-#include "TimeMgr.h"
+#include "InstancingMgr.h"
 
 CStaticMeshObject::CStaticMeshObject(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -51,13 +51,14 @@ HRESULT CStaticMeshObject::Ready_GameObject(wstring wstrMeshTag,
 											  vBoundingSphereScale,
 											  vBoundingSpherePos);
 
-	// 그림자를 그리지 않으면 0번 패스.
+	// PipelineState.
 	m_bIsRenderShadow = bIsRenderShadow; 
 	if (!m_bIsRenderShadow)
-		m_pShaderCom->Set_PipelineStatePass(0);
+		m_iMeshPipelineStatePass = 0;
 	else
-		m_pShaderCom->Set_PipelineStatePass(1);
+		m_iMeshPipelineStatePass = 1;
 
+	m_iShadowPipelineStatePass = 0;
 
 	return S_OK;
 }
@@ -70,10 +71,6 @@ HRESULT CStaticMeshObject::LateInit_GameObject()
 	m_pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
 	Engine::NULL_CHECK_RETURN(m_pDynamicCamera, E_FAIL);
 	m_pDynamicCamera->AddRef();
-
-	// SetUp Shader ConstantBuffer
-	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
-	m_pShadowCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
 	return S_OK;
 }
@@ -107,32 +104,30 @@ _int CStaticMeshObject::LateUpdate_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-void CStaticMeshObject::Render_GameObject(const _float & fTimeDelta)
-{
-	Set_ConstantTable();
-	m_pMeshCom->Render_StaticMesh(m_pShaderCom);
-}
-
-void CStaticMeshObject::Render_ShadowDepth(const _float & fTimeDelta)
-{
-	Set_ConstantTableShadowDepth();
-	m_pMeshCom->Render_StaticMeshShadowDepth(m_pShadowCom);
-}
-
 void CStaticMeshObject::Render_GameObject(const _float& fTimeDelta, 
 										  ID3D12GraphicsCommandList * pCommandList,
 										  const _int& iContextIdx)
 {
-	Set_ConstantTable();
-	m_pMeshCom->Render_StaticMesh(pCommandList, iContextIdx, m_pShaderCom);
+	/*__________________________________________________________________________________________________________
+	[ Add Instance ]
+	____________________________________________________________________________________________________________*/
+	Engine::CInstancingMgr::Get_Instance()->Add_MeshInstance(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass);
+	_uint iInstanceIdx = Engine::CInstancingMgr::Get_Instance()->Get_MeshInstanceCount(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass) - 1;
+
+	Set_ConstantTable(iContextIdx, iInstanceIdx);
 }
 
 void CStaticMeshObject::Render_ShadowDepth(const _float& fTimeDelta, 
 										   ID3D12GraphicsCommandList * pCommandList,
 										   const _int& iContextIdx)
 {
-	Set_ConstantTableShadowDepth();
-	m_pMeshCom->Render_StaticMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
+	/*__________________________________________________________________________________________________________
+	[ Add Instance ]
+	____________________________________________________________________________________________________________*/
+	Engine::CInstancingMgr::Get_Instance()->Add_ShadowInstance(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass);
+	_uint iInstanceIdx = Engine::CInstancingMgr::Get_Instance()->Get_ShadowInstanceCount(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass) - 1;
+
+	Set_ConstantTableShadowDepth(iContextIdx, iInstanceIdx);
 }
 
 HRESULT CStaticMeshObject::Add_Component(wstring wstrMeshTag)
@@ -145,24 +140,10 @@ HRESULT CStaticMeshObject::Add_Component(wstring wstrMeshTag)
 	m_pMeshCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Mesh", m_pMeshCom);
 
-	// Shader
-	m_pShaderCom = static_cast<Engine::CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", Engine::COMPONENTID::ID_STATIC));
-	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
-	m_pShaderCom->AddRef();
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(1), E_FAIL);
-	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
-
-	// Shadow
-	m_pShadowCom = static_cast<Engine::CShaderShadow*>(m_pComponentMgr->Clone_Component(L"ShaderShadow", Engine::COMPONENTID::ID_STATIC));
-	Engine::NULL_CHECK_RETURN(m_pShadowCom, E_FAIL);
-	m_pShadowCom->AddRef();
-	Engine::FAILED_CHECK_RETURN(m_pShadowCom->Set_PipelineStatePass(0), E_FAIL);
-	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shadow", m_pShadowCom);
-
 	return S_OK;
 }
 
-void CStaticMeshObject::Set_ConstantTable()
+void CStaticMeshObject::Set_ConstantTable(const _int& iContextIdx, const _int& iInstanceIdx)
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -182,10 +163,10 @@ void CStaticMeshObject::Set_ConstantTable()
 	if (m_fDeltaTime > 1.f)
 		m_fDeltaTime = 0.f;
 
-	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
+	Engine::CInstancingMgr::Get_Instance()->Get_UploadBuffer_ShaderMesh(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderMesh);
 }
 
-void CStaticMeshObject::Set_ConstantTableShadowDepth()
+void CStaticMeshObject::Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int& iInstanceIdx)
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -199,7 +180,7 @@ void CStaticMeshObject::Set_ConstantTableShadowDepth()
 	tCB_ShaderShadow.matProj	= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
 	tCB_ShaderShadow.fProjFar	= tShadowDesc.fLightPorjFar;
 
-	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
+	Engine::CInstancingMgr::Get_Instance()->Get_UploadBuffer_ShaderShadow(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderShadow);
 }
 
 Engine::CGameObject* CStaticMeshObject::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
@@ -232,9 +213,6 @@ void CStaticMeshObject::Free()
 	Engine::CGameObject::Free();
 
 	Engine::Safe_Release(m_pDynamicCamera);
-
 	Engine::Safe_Release(m_pMeshCom);
-	Engine::Safe_Release(m_pShaderCom);
-	Engine::Safe_Release(m_pShadowCom);
 
 }
