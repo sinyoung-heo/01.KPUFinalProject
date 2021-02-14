@@ -6,6 +6,7 @@ BEGIN(Engine)
 class ENGINE_DLL CShader : public CComponent
 {
 protected:
+	explicit CShader() = default;
 	explicit CShader(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 	explicit CShader(const CShader& rhs);
 	virtual ~CShader() = default;

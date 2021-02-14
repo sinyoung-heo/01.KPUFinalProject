@@ -41,7 +41,7 @@ HRESULT CStageHSY::Ready_Scene()
 	Engine::FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
 	Engine::CInstancingMgr::Get_Instance()->SetUp_MeshConstantBuffer(m_pGraphicDevice);
-	Engine::CInstancingMgr::Get_Instance()->SetUp_ShadowConstantBuffer(m_pGraphicDevice);
+	Engine::CShaderShadowInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 
 	return S_OK;
 }
@@ -212,7 +212,7 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, wstrMeshTag, pGameObj), E_FAIL);
 		Engine::CInstancingMgr::Get_Instance()->SetUp_MeshInstancing(wstrMeshTag);
-		Engine::CInstancingMgr::Get_Instance()->SetUp_ShadowInstancing(wstrMeshTag);
+		Engine::CShaderShadowInstancing::Get_Instance()->SetUp_Instancing(wstrMeshTag);
 	}
 	
 	/*__________________________________________________________________________________________________________

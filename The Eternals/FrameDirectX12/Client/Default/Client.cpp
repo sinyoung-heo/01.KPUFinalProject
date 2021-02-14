@@ -418,6 +418,12 @@ _ulong Release_Singleton()
 		return dwRefCnt;
 	}
 
+	if (dwRefCnt = Engine::CShaderShadowInstancing::Get_Instance()->Destroy_Instance())
+	{
+		MSG_BOX(L"Engine::CShaderShadowInstancing Release Failed");
+		return dwRefCnt;
+	}
+
 	if (dwRefCnt = Engine::CComponentMgr::Get_Instance()->Destroy_Instance())
 	{
 		MSG_BOX(L"Engine::CComponentMgr Release Failed");

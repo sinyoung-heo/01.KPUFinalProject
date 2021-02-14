@@ -11,6 +11,7 @@
 
 CStaticMeshObject::CStaticMeshObject(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
+	, m_pShaderShadowInstancing(Engine::CShaderShadowInstancing::Get_Instance())
 {
 }
 
@@ -124,8 +125,8 @@ void CStaticMeshObject::Render_ShadowDepth(const _float& fTimeDelta,
 	/*__________________________________________________________________________________________________________
 	[ Add Instance ]
 	____________________________________________________________________________________________________________*/
-	Engine::CInstancingMgr::Get_Instance()->Add_ShadowInstance(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass);
-	_uint iInstanceIdx = Engine::CInstancingMgr::Get_Instance()->Get_ShadowInstanceCount(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass) - 1;
+	m_pShaderShadowInstancing->Add_Instance(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass);
+	_uint iInstanceIdx = m_pShaderShadowInstancing->Get_InstanceCount(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass) - 1;
 
 	Set_ConstantTableShadowDepth(iContextIdx, iInstanceIdx);
 }
@@ -180,7 +181,7 @@ void CStaticMeshObject::Set_ConstantTableShadowDepth(const _int& iContextIdx, co
 	tCB_ShaderShadow.matProj	= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
 	tCB_ShaderShadow.fProjFar	= tShadowDesc.fLightPorjFar;
 
-	Engine::CInstancingMgr::Get_Instance()->Get_UploadBuffer_ShaderShadow(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderShadow);
+	m_pShaderShadowInstancing->Get_UploadBuffer_ShaderShadow(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderShadow);
 }
 
 Engine::CGameObject* CStaticMeshObject::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,

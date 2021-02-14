@@ -11,18 +11,6 @@ CInstancingMgr::CInstancingMgr()
 {
 }
 
-CUploadBuffer<CB_SHADER_SHADOW>* CInstancingMgr::Get_UploadBuffer_ShaderShadow(const _uint& iContextIdx, 
-																			   wstring wstrMeshTag, 
-																			   const _uint& uiPipelineStatepass)
-{
-	auto& iter_find = m_mapCB_ShaderShadow[iContextIdx].find(wstrMeshTag);
-
-	if (iter_find != m_mapCB_ShaderShadow[iContextIdx].end())
-		return iter_find->second[uiPipelineStatepass];
-
-	return nullptr;
-}
-
 CUploadBuffer<CB_SHADER_MESH>* CInstancingMgr::Get_UploadBuffer_ShaderMesh(const _uint& iContextIdx, 
 																		   wstring wstrMeshTag,
 																		   const _uint& uiPipelineStatepass)
@@ -40,134 +28,8 @@ HRESULT CInstancingMgr::SetUp_ShaderComponent()
 	m_pShaderMeshInstancing = static_cast<CShaderMeshInstancing*>(CComponentMgr::Get_Instance()->Clone_Component(L"ShaderMeshInstancing", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pShaderMeshInstancing, E_FAIL);
 	
-	m_pShaderShadowInstnacing = static_cast<CShaderShadowInstancing*>(CComponentMgr::Get_Instance()->Clone_Component(L"ShaderShadowInstancing", COMPONENTID::ID_STATIC));
-	NULL_CHECK_RETURN(m_pShaderShadowInstnacing, E_FAIL);
 
 	return S_OK;
-}
-
-void CInstancingMgr::SetUp_ShadowInstancing(wstring wstrMeshTag)
-{
-	for (auto& mapShadowInstancing : m_mapShadowInstancing)
-	{
-		auto iter_find = mapShadowInstancing.find(wstrMeshTag);
-
-		if (iter_find == mapShadowInstancing.end())
-		{
-			mapShadowInstancing[wstrMeshTag] = vector<INSTANCING_DESC>();
-			mapShadowInstancing[wstrMeshTag].resize(m_uiShadowPipelineStateCnt);
-
-			for (_uint i = 0; i < m_uiShadowPipelineStateCnt; ++i)
-				mapShadowInstancing[wstrMeshTag].push_back(INSTANCING_DESC());
-		}
-	}
-
-	for (_uint i = 0; i < CONTEXT::CONTEXT_END; ++i)
-	{
-		auto iter_find = m_mapCB_ShaderShadow[i].find(wstrMeshTag);
-
-		if (iter_find == m_mapCB_ShaderShadow[i].end())
-		{
-			m_mapCB_ShaderShadow[i][wstrMeshTag] = vector<CUploadBuffer<CB_SHADER_SHADOW>*>();
-			m_mapCB_ShaderShadow[i][wstrMeshTag].resize(m_uiShadowPipelineStateCnt);
-		}
-	}
-}
-
-void CInstancingMgr::SetUp_ShadowConstantBuffer(ID3D12Device* pGraphicDevice)
-{
-	_uint iInstanceCnt = 0;
-
-	for (_uint i = 0; i < CONTEXT::CONTEXT_END; ++i)
-	{
-		for (auto& pair : m_mapCB_ShaderShadow[i])
-		{
-			for (_uint j = 0; j < m_uiShadowPipelineStateCnt; ++j)
-			{
-				iInstanceCnt = (_uint)(CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_GameObject", pair.first)->size());
-				pair.second[j] = CUploadBuffer<CB_SHADER_SHADOW>::Create(pGraphicDevice, iInstanceCnt / 4 + 1, false);
-			}
-
-		}
-	}
-}
-
-void CInstancingMgr::Add_ShadowInstance(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& iPipelineStateIdx)
-{
-	auto iter_find = m_mapShadowInstancing[iContextIdx].find(wstrMeshTag);
-
-	if (iter_find != m_mapShadowInstancing[iContextIdx].end())
-		++(m_mapShadowInstancing[iContextIdx][wstrMeshTag][iPipelineStateIdx].iInstanceCount);
-}
-
-void CInstancingMgr::Reset_ShadowInstancing()
-{
-	for (auto& mapShadowInstancing : m_mapShadowInstancing)
-	{
-		for (auto& pair : mapShadowInstancing)
-		{
-			for (auto& tInstancingDesc : pair.second)
-				tInstancingDesc.iInstanceCount = 0;
-		}
-	}
-}
-
-void CInstancingMgr::Render_ShadowInstance(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
-{
-	/*__________________________________________________________________________________________________________
-	first	: MeshTag
-	second	: vector<INSTANCING_DESC>
-	____________________________________________________________________________________________________________*/
-	for (auto& pair : m_mapShadowInstancing[iContextIdx])
-	{
-		wstring wstrMeshTag = pair.first;
-
-		/*__________________________________________________________________________________________________________
-		[ PipelineStatePass 별로 Rendering 수행 ]
-		____________________________________________________________________________________________________________*/
-		for (_uint iPipelineStatePass = 0; iPipelineStatePass < pair.second.size(); ++iPipelineStatePass)
-		{
-			if (!pair.second[iPipelineStatePass].iInstanceCount)
-				continue;
-
-			/*__________________________________________________________________________________________________________
-			[ Set RootSignature ]
-			____________________________________________________________________________________________________________*/
-			pCommandList->SetGraphicsRootSignature(m_pShaderShadowInstnacing->Get_RootSignature());
-
-			/*__________________________________________________________________________________________________________
-			[ Set PipelineState ]
-			____________________________________________________________________________________________________________*/
-			m_pShaderShadowInstnacing->Set_PipelineStatePass(iPipelineStatePass);
-			CRenderer::Get_Instance()->Set_CurPipelineState(pCommandList, m_pShaderShadowInstnacing->Get_PipelineStatePass(), iContextIdx);
-
-			/*__________________________________________________________________________________________________________
-			[ SRV, CBV를 루트 서술자에 묶는다 ]
-			____________________________________________________________________________________________________________*/
-			pCommandList->SetGraphicsRootShaderResourceView(0,	// RootParameter Index
-				m_mapCB_ShaderShadow[iContextIdx][wstrMeshTag][iPipelineStatePass]->Resource()->GetGPUVirtualAddress());
-
-			/*__________________________________________________________________________________________________________
-			[ Render Buffer ]
-			____________________________________________________________________________________________________________*/
-			CMesh*		pMesh				= static_cast<CMesh*>(CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", wstrMeshTag)->Get_Component(L"Com_Mesh", ID_STATIC));
-			CVIMesh*	pVIMesh				= pMesh->Get_VIMesh();
-			_uint		uiSubsetMeshSize	= (_uint)(pVIMesh->Get_SubMeshGeometry().size());
-
-			for (_uint iSubMeshIdx = 0; iSubMeshIdx < uiSubsetMeshSize; ++iSubMeshIdx)
-			{
-				pCommandList->IASetVertexBuffers(0, 1, &pVIMesh->Get_VertexBufferView(iSubMeshIdx));
-				pCommandList->IASetIndexBuffer(&pVIMesh->Get_IndexBufferView(iSubMeshIdx));
-				pCommandList->IASetPrimitiveTopology(pVIMesh->Get_PrimitiveTopology());
-
-				pCommandList->DrawIndexedInstanced(pVIMesh->Get_SubMeshGeometry()[iSubMeshIdx].uiIndexCount,
-												   pair.second[iPipelineStatePass].iInstanceCount,
-												   pVIMesh->Get_SubMeshGeometry()[iSubMeshIdx].uiStartIndexLocation,
-												   pVIMesh->Get_SubMeshGeometry()[iSubMeshIdx].iBaseVertexLocation,
-												   0);
-			}
-		}
-	}
 }
 
 void CInstancingMgr::SetUp_MeshInstancing(wstring wstrMeshTag)
@@ -337,28 +199,6 @@ void CInstancingMgr::Render_MeshInstance(ID3D12GraphicsCommandList* pCommandList
 void CInstancingMgr::Free()
 {
 	Safe_Release(m_pShaderMeshInstancing);
-	Safe_Release(m_pShaderShadowInstnacing);
-
-	// Shadow Instancing
-	for (auto& mapShadowInstancing : m_mapShadowInstancing)
-	{
-		for (auto& pair : mapShadowInstancing)
-		{
-			pair.second.clear();
-			pair.second.shrink_to_fit();
-		}
-
-		mapShadowInstancing.clear();
-	}
-
-	for (_uint i = 0; i < CONTEXT::CONTEXT_END; ++i)
-	{
-		for (auto& pair : m_mapCB_ShaderShadow[i])
-		{
-			for (_uint j = 0; j < m_uiShadowPipelineStateCnt; ++j)
-				Safe_Delete(pair.second[j]);
-		}
-	}
 
 	// Mesh Instancing
 	for (auto& mapMeshInstancing : m_mapMeshInstancing)

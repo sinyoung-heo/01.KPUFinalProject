@@ -186,8 +186,8 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	FAILED_CHECK_RETURN(CGraphicDevice::Get_Instance()->Render_End(), E_FAIL);
 
 	Clear_RenderGroup();
-	Engine::CInstancingMgr::Get_Instance()->Reset_MeshInstancing();
-	Engine::CInstancingMgr::Get_Instance()->Reset_ShadowInstancing();
+	CShaderShadowInstancing::Get_Instance()->Reset_Instance();
+	CInstancingMgr::Get_Instance()->Reset_MeshInstancing();
 
 	return S_OK;
 }
@@ -487,14 +487,6 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderShadow", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
-
-	// ShaderShadowInstancing
-	pShader = CShaderShadowInstancing::Create(m_pGraphicDevice, m_pCommandList);
-	NULL_CHECK_RETURN(pShader, E_FAIL);
-	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderShadowInstancing", ID_STATIC, pShader), E_FAIL);
-	CInstancingMgr::Get_Instance()->Set_ShadowInstancingPipelineStateCnt(pShader->Get_PipelineStateCnt());
-	++m_uiCnt_ShaderFile;
-
 	// ShaderLighting
 	pShader = CShaderLighting::Create(m_pGraphicDevice, m_pCommandList);
 	NULL_CHECK_RETURN(pShader, E_FAIL);
@@ -534,6 +526,9 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	
 	// SetUp InstancingMgr ShaderComponent
 	CInstancingMgr::Get_Instance()->SetUp_ShaderComponent();
+	// ShaderShadowInstancing
+	CShaderShadowInstancing::Get_Instance()->Ready_Shader(m_pGraphicDevice, m_pCommandList);
+
 
 	return S_OK;
 }
@@ -938,7 +933,7 @@ void CRenderer::Worker_Thread(_int threadIndex)
 		}
 
 		// Render Shadow Instance
-		CInstancingMgr::Get_Instance()->Render_ShadowInstance(m_arrShadowCommandList[threadIndex], threadIndex);
+		CShaderShadowInstancing::Get_Instance()->Render_Instance(m_arrShadowCommandList[threadIndex], threadIndex);
 
 		// Submit Shadow Pass.
 		m_arrShadowCommandList[threadIndex]->Close();
