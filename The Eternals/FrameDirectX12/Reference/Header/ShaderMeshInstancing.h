@@ -25,6 +25,10 @@ private:
 							 				   const D3D12_BLEND& SrcBlendAlpha		= D3D12_BLEND_ONE,
 							 				   const D3D12_BLEND& DstBlendAlpha		= D3D12_BLEND_ZERO,
 							 				   const D3D12_BLEND_OP& BlendOpAlpha	= D3D12_BLEND_OP_ADD);
+private:
+
+
+
 public:
 	virtual CComponent* Clone() override;
 	static	CShader*	Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList);
