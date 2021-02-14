@@ -514,7 +514,9 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	CShaderMeshInstancing::Get_Instance()->Ready_Shader(m_pGraphicDevice, m_pCommandList);
 	++m_uiCnt_ShaderFile;
 
-
+	// ShaderTextureInstancing
+	CShaderTextureInstancing::Get_Instance()->Ready_Shader(m_pGraphicDevice, m_pCommandList);
+	++m_uiCnt_ShaderFile;
 
 	return S_OK;
 }
