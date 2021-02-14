@@ -8,7 +8,6 @@
 #include "RenderTarget.h"
 #include "ComponentMgr.h"
 #include "DescriptorHeapMgr.h"
-#include "InstancingMgr.h"
 
 USING(Engine)
 

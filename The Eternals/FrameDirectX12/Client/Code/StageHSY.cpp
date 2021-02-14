@@ -4,7 +4,6 @@
 #include "ComponentMgr.h"
 #include "GraphicDevice.h"
 #include "LightMgr.h"
-#include "InstancingMgr.h"
 #include "Font.h"
 #include "DebugCamera.h"
 #include "DynamicCamera.h"
@@ -40,8 +39,8 @@ HRESULT CStageHSY::Ready_Scene()
 	Engine::FAILED_CHECK_RETURN(Ready_LayerFont(L"Layer_Font"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
-	Engine::CInstancingMgr::Get_Instance()->SetUp_MeshConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderShadowInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
+	Engine::CShaderMeshInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 
 	return S_OK;
 }
@@ -211,8 +210,9 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 											 vBoundingSpherePos);	// Bounding Sphere Pos
 
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, wstrMeshTag, pGameObj), E_FAIL);
-		Engine::CInstancingMgr::Get_Instance()->SetUp_MeshInstancing(wstrMeshTag);
+
 		Engine::CShaderShadowInstancing::Get_Instance()->SetUp_Instancing(wstrMeshTag);
+		Engine::CShaderMeshInstancing::Get_Instance()->SetUp_Instancing(wstrMeshTag);
 	}
 	
 	/*__________________________________________________________________________________________________________

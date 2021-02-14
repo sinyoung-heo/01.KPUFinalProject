@@ -15,7 +15,6 @@
 #include "Renderer.h"
 #include "LightMgr.h"
 #include "DescriptorHeapMgr.h"
-#include "InstancingMgr.h"
 #include <chrono>
 
 #define MAX_LOADSTRING 100
@@ -406,12 +405,6 @@ _ulong Release_Singleton()
 		return dwRefCnt;
 	}
 
-	if (dwRefCnt = Engine::CInstancingMgr::Get_Instance()->Destroy_Instance())
-	{
-		MSG_BOX(L"CInstancingMgr Release Failed");
-		return dwRefCnt;
-	}
-
 	if (dwRefCnt = Engine::CObjectMgr::Get_Instance()->Destroy_Instance())
 	{
 		MSG_BOX(L"CObjectMgr Release Failed");
@@ -421,6 +414,12 @@ _ulong Release_Singleton()
 	if (dwRefCnt = Engine::CShaderShadowInstancing::Get_Instance()->Destroy_Instance())
 	{
 		MSG_BOX(L"Engine::CShaderShadowInstancing Release Failed");
+		return dwRefCnt;
+	}
+
+	if (dwRefCnt = Engine::CShaderMeshInstancing::Get_Instance()->Destroy_Instance())
+	{
+		MSG_BOX(L"Engine::CShaderMeshInstancing Release Failed");
 		return dwRefCnt;
 	}
 

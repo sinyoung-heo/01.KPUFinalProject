@@ -5,14 +5,24 @@ BEGIN(Engine)
 
 class ENGINE_DLL CShaderMeshInstancing final : public CShader
 {
+	DECLARE_SINGLETON(CShaderMeshInstancing)
+
 private:
-	explicit CShaderMeshInstancing(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CShaderMeshInstancing(const CShaderMeshInstancing& rhs);
+	explicit CShaderMeshInstancing() = default;
 	virtual ~CShaderMeshInstancing() = default;
 
 public:
-	// CShader을(를) 통해 상속됨
-	virtual HRESULT	Ready_Shader();
+	// Get
+	_uint							Get_InstanceCount(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& iPipelineStatePass)		{ return m_mapInstancing[iContextIdx][wstrMeshTag][iPipelineStatePass].iInstanceCount; };
+	CUploadBuffer<CB_SHADER_MESH>*	Get_UploadBuffer_ShaderMesh(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& uiPipelineStatepass);
+
+	HRESULT Ready_Shader(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	void	SetUp_Instancing(wstring wstrMeshTag);
+	void	SetUp_ConstantBuffer(ID3D12Device* pGraphicDevice);
+	void	Add_Instance(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& iPipelineStateIdx);
+	void	Reset_Instance();
+	void	Render_Instance(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
+
 private:
 	virtual HRESULT	Create_RootSignature();
 	virtual HRESULT	Create_PipelineState();
@@ -26,12 +36,15 @@ private:
 							 				   const D3D12_BLEND& DstBlendAlpha		= D3D12_BLEND_ZERO,
 							 				   const D3D12_BLEND_OP& BlendOpAlpha	= D3D12_BLEND_OP_ADD);
 private:
+	/*__________________________________________________________________________________________________________
+	Key값은 ResourceTag
+	vector의 Index는 PipelineStateIndex, Size는 Instance개수.
+	____________________________________________________________________________________________________________*/
+	map<wstring, vector<INSTANCING_DESC>>						m_mapInstancing[CONTEXT::CONTEXT_END];
+	map<wstring, vector<CUploadBuffer<CB_SHADER_MESH>*>>		m_mapCB_ShaderMesh[CONTEXT::CONTEXT_END];
+	_uint														m_uiPipelineStateCnt = 0;
 
 
-
-public:
-	virtual CComponent* Clone() override;
-	static	CShader*	Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList);
 private:
 	virtual void Free();
 };

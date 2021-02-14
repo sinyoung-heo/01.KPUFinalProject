@@ -4,7 +4,6 @@
 #include "DirectInput.h"
 #include "ObjectMgr.h"
 #include "LightMgr.h"
-#include "InstancingMgr.h"
 #include "DynamicCamera.h"
 #include "Font.h"
 #include "RenderTarget.h"

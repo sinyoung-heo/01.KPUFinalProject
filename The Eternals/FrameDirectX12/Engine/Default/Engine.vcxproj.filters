@@ -169,9 +169,6 @@
     <Filter Include="97.Mgr\01.DescriptorHeapMgr">
       <UniqueIdentifier>{12ba79eb-3f19-453e-a53b-bfefe320abdf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97.Mgr\02.InstancingMgr">
-      <UniqueIdentifier>{d66a6f78-91be-4d28-869e-439692f7ab6a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\10.ShaderSSAO">
       <UniqueIdentifier>{45232813-74a9-465c-ae95-8e3ed04390d7}</UniqueIdentifier>
     </Filter>
@@ -366,9 +363,6 @@
     <ClInclude Include="..\Code\DescriptorHeapMgr.h">
       <Filter>97.Mgr\01.DescriptorHeapMgr</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\InstancingMgr.h">
-      <Filter>97.Mgr\02.InstancingMgr</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\ShaderMeshInstancing.h">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\03.ShaderMesh</Filter>
     </ClInclude>
@@ -538,9 +532,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\DescriptorHeapMgr.cpp">
       <Filter>97.Mgr\01.DescriptorHeapMgr</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\InstancingMgr.cpp">
-      <Filter>97.Mgr\02.InstancingMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\ShaderMeshInstancing.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\03.ShaderMesh</Filter>
