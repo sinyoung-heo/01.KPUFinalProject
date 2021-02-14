@@ -4,6 +4,7 @@
 #include "ComponentMgr.h"
 #include "GraphicDevice.h"
 #include "LightMgr.h"
+#include "InstancingMgr.h"
 #include "Font.h"
 #include "DebugCamera.h"
 #include "DynamicCamera.h"
@@ -38,6 +39,9 @@ HRESULT CStagePJO::Ready_Scene()
 	Engine::FAILED_CHECK_RETURN(Ready_LayerUI(L"Layer_UI"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LayerFont(L"Layer_Font"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
+
+	Engine::CInstancingMgr::Get_Instance()->SetUp_MeshConstantBuffer(m_pGraphicDevice);
+	Engine::CInstancingMgr::Get_Instance()->SetUp_ShadowConstantBuffer(m_pGraphicDevice);
 
 	return S_OK;
 }
@@ -206,6 +210,8 @@ HRESULT CStagePJO::Ready_LayerGameObject(wstring wstrLayerTag)
 											 vBoundingSpherePos);	// Bounding Sphere Pos
 
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"StaticMesh", pGameObj), E_FAIL);
+		Engine::CInstancingMgr::Get_Instance()->SetUp_MeshInstancing(wstrMeshTag);
+		Engine::CInstancingMgr::Get_Instance()->SetUp_ShadowInstancing(wstrMeshTag);
 	}
 
 
