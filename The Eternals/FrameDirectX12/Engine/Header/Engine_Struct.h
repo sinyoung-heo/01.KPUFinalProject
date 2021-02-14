@@ -713,6 +713,14 @@ namespace Engine
 	} SHADOW_DESC;
 
 
+	/*__________________________________________________________________________________________________________
+	[ InstancingDesc ]
+	____________________________________________________________________________________________________________*/
+	typedef struct tagInstancingDesc
+	{
+		_uint		iInstanceCount = 0;
+
+	} INSTANCING_DESC;
 
 
 	/*__________________________________________________________________________________________________________
@@ -770,7 +778,9 @@ namespace Engine
 		XMFLOAT4X4	matLightProj;
 		_vec4		vLightPos;
 		_float		fLightPorjFar;
-		_float fDeltaTime;
+		_float		fDeltaTime;
+		_float		fOffset1;
+		_float		fOffset2;
 
 	} CB_SHADER_MESH;
 
@@ -781,8 +791,11 @@ namespace Engine
 		XMFLOAT4X4	matView;
 		XMFLOAT4X4	matProj;
 		_float		fProjFar;
+		_float		fOffset1;
+		_float		fOffset2;
+		_float		fOffset3;
 
-	}CB_SHADER_SHADOW;
+	} CB_SHADER_SHADOW;
 
 	typedef struct tagConstnatBufferSkinningMatrix
 	{

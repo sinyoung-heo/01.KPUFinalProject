@@ -1,5 +1,4 @@
 #include "ShaderMesh.h"
-
 #include "GraphicDevice.h"
 #include "Renderer.h"
 
@@ -185,9 +184,9 @@ HRESULT CShaderMesh::Create_RootSignature()
 
 	// Dissolve
 	SRV_Table[4].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,	// 서술자의 종류 - Shader Resource View.
-		1,								// 서술자의 개수 - Texture2D의 개수.
-		4,								// 셰이더 인수들의 기준 레지스터 번호. (register t4)
-		0);								// 레지스터 공간.
+					  1,								// 서술자의 개수 - Texture2D의 개수.
+					  4,								// 셰이더 인수들의 기준 레지스터 번호. (register t4)
+					  0);								// 레지스터 공간.
 	/*__________________________________________________________________________________________________________
 	- 루트 매개변수는 테이블이거나, 루트 서술자 또는 루트 상수이다.
 	____________________________________________________________________________________________________________*/
@@ -197,12 +196,11 @@ HRESULT CShaderMesh::Create_RootSignature()
 	RootParameter[2].InitAsDescriptorTable(1, &SRV_Table[2], D3D12_SHADER_VISIBILITY_PIXEL);
 	RootParameter[3].InitAsDescriptorTable(1, &SRV_Table[3], D3D12_SHADER_VISIBILITY_PIXEL);
 	RootParameter[4].InitAsDescriptorTable(1, &SRV_Table[4], D3D12_SHADER_VISIBILITY_PIXEL);
-	RootParameter[5].InitAsConstantBufferView(0);	// register b0.
-	RootParameter[6].InitAsConstantBufferView(1);	// register b1.
-	RootParameter[7].InitAsConstantBufferView(2);	// register b2.
+	RootParameter[5].InitAsConstantBufferView(0);		// register b0.
+	RootParameter[6].InitAsConstantBufferView(1);		// register b1.
+	RootParameter[7].InitAsConstantBufferView(2);		// register b2.
+
 	auto StaticSamplers = Get_StaticSamplers();
-
-
 	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(_countof(RootParameter),	// 루트 파라미터 개수.
 												  RootParameter,
 												  (UINT)StaticSamplers.size(),	// 샘플러 개수.

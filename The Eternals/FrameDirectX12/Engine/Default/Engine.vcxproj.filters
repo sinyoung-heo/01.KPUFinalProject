@@ -166,14 +166,11 @@
     <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\09.ShaderBlur">
       <UniqueIdentifier>{dfbfeacc-44af-483e-9b05-e714d4bac7c3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\10.ShaderSsao">
-      <UniqueIdentifier>{45232813-74a9-465c-ae95-8e3ed04390d7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.Mgr\01.DescriptorHeapMgr">
       <UniqueIdentifier>{12ba79eb-3f19-453e-a53b-bfefe320abdf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97.Mgr\02.InstancingMgr">
-      <UniqueIdentifier>{d66a6f78-91be-4d28-869e-439692f7ab6a}</UniqueIdentifier>
+    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\10.ShaderSSAO">
+      <UniqueIdentifier>{45232813-74a9-465c-ae95-8e3ed04390d7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -361,13 +358,16 @@
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\09.ShaderBlur</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\ShaderSSAO.h">
-      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\10.ShaderSsao</Filter>
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\10.ShaderSSAO</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\DescriptorHeapMgr.h">
       <Filter>97.Mgr\01.DescriptorHeapMgr</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\InstancingMgr.h">
-      <Filter>97.Mgr\02.InstancingMgr</Filter>
+    <ClInclude Include="..\Code\ShaderMeshInstancing.h">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\03.ShaderMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ShaderShadowInstancing.h">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\04.ShaderShadow</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -528,13 +528,16 @@
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\09.ShaderBlur</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\ShaderSSAO.cpp">
-      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\10.ShaderSsao</Filter>
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\10.ShaderSSAO</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\DescriptorHeapMgr.cpp">
       <Filter>97.Mgr\01.DescriptorHeapMgr</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\InstancingMgr.cpp">
-      <Filter>97.Mgr\02.InstancingMgr</Filter>
+    <ClCompile Include="..\Code\ShaderMeshInstancing.cpp">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\03.ShaderMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ShaderShadowInstancing.cpp">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\04.ShaderShadow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -569,7 +572,13 @@
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\09.ShaderBlur</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderSSAO.hlsl">
-      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\10.ShaderSsao</Filter>
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\10.ShaderSSAO</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Bin\Shader\ShaderMeshInstancing.hlsl">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\03.ShaderMesh</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Bin\Shader\ShaderShadowInstancing.hlsl">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\04.ShaderShadow</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

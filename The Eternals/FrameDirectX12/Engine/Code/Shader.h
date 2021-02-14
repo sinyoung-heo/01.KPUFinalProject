@@ -6,6 +6,7 @@ BEGIN(Engine)
 class ENGINE_DLL CShader : public CComponent
 {
 protected:
+	explicit CShader() = default;
 	explicit CShader(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 	explicit CShader(const CShader& rhs);
 	virtual ~CShader() = default;
@@ -15,9 +16,11 @@ public:
 	array<const CD3DX12_STATIC_SAMPLER_DESC, 6>	Get_StaticSamplers();
 	ID3D12RootSignature*						Get_RootSignature()						{ return m_pRootSignature; }
 	ID3D12PipelineState*						Get_PipelineState(const _uint& iIdx = 0);
+	_uint										Get_PipelineStateCnt()					{ return (_uint)(m_vecPipelineState.size()); }
 	ID3D12PipelineState*						Get_PipelineStatePass()					{ return m_pPipelineState; }
 	CUploadBuffer<CB_CAMERA_MATRIX>*			Get_UploadBuffer_CameraProjMatrix()		{ return m_pCB_CameraProjMatrix; }
 	CUploadBuffer<CB_CAMERA_MATRIX>*			Get_UploadBuffer_CameraOrthoMatrix()	{ return m_pCB_CameraOrthoMatrix; }
+	const _uint&								Get_CBV_SRV_UAV_DescriptorSize()		{ return m_uiCBV_SRV_UAV_DescriptorSize; }
 
 	// Set
 	HRESULT					Set_PipelineStatePass(const _uint& iIdx = 0);

@@ -185,7 +185,6 @@ call CopyEngine.bat</Command>
     <ClInclude Include="..\Code\Cell.h" />
     <ClInclude Include="..\Code\CoordinateCol.h" />
     <ClInclude Include="..\Code\DescriptorHeapMgr.h" />
-    <ClInclude Include="..\Code\InstancingMgr.h" />
     <ClInclude Include="..\Code\Line.h" />
     <ClInclude Include="..\Code\ColliderBox.h" />
     <ClInclude Include="..\Code\ColliderSphere.h" />
@@ -224,8 +223,10 @@ call CopyEngine.bat</Command>
     <ClInclude Include="..\Code\ShaderLuminance.h" />
     <ClInclude Include="..\Code\ShaderMesh.h" />
     <ClInclude Include="..\Code\ShaderShadow.h" />
+    <ClInclude Include="..\Code\ShaderShadowInstancing.h" />
     <ClInclude Include="..\Code\ShaderSkyBox.h" />
     <ClInclude Include="..\Code\ShaderSSAO.h" />
+    <ClInclude Include="..\Code\ShaderMeshInstancing.h" />
     <ClInclude Include="..\Code\ShaderTexture.h" />
     <ClInclude Include="..\Code\TerrainTex.h" />
     <ClInclude Include="..\Code\Texture.h" />
@@ -251,7 +252,6 @@ call CopyEngine.bat</Command>
     <ClCompile Include="..\Code\Cell.cpp" />
     <ClCompile Include="..\Code\CoordinateCol.cpp" />
     <ClCompile Include="..\Code\DescriptorHeapMgr.cpp" />
-    <ClCompile Include="..\Code\InstancingMgr.cpp" />
     <ClCompile Include="..\Code\Line.cpp" />
     <ClCompile Include="..\Code\ColliderBox.cpp" />
     <ClCompile Include="..\Code\ColliderSphere.cpp" />
@@ -290,8 +290,10 @@ call CopyEngine.bat</Command>
     <ClCompile Include="..\Code\ShaderLuminance.cpp" />
     <ClCompile Include="..\Code\ShaderMesh.cpp" />
     <ClCompile Include="..\Code\ShaderShadow.cpp" />
+    <ClCompile Include="..\Code\ShaderShadowInstancing.cpp" />
     <ClCompile Include="..\Code\ShaderSkyBox.cpp" />
     <ClCompile Include="..\Code\ShaderSSAO.cpp" />
+    <ClCompile Include="..\Code\ShaderMeshInstancing.cpp" />
     <ClCompile Include="..\Code\ShaderTexture.cpp" />
     <ClCompile Include="..\Code\TerrainTex.cpp" />
     <ClCompile Include="..\Code\Texture.cpp" />
@@ -330,9 +332,17 @@ call CopyEngine.bat</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
+    <FxCompile Include="..\..\Bin\Shader\ShaderMeshInstancing.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderShadow.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\Bin\Shader\ShaderShadowInstancing.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderSkyBox.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

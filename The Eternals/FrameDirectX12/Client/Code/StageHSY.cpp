@@ -39,6 +39,9 @@ HRESULT CStageHSY::Ready_Scene()
 	Engine::FAILED_CHECK_RETURN(Ready_LayerFont(L"Layer_Font"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
+	Engine::CShaderShadowInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
+	Engine::CShaderMeshInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
+
 	return S_OK;
 }
 
@@ -155,13 +158,6 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 	Engine::CGameObject* pGameObj = nullptr;
 
 	/*__________________________________________________________________________________________________________
-	[ BumpTerrain ]
-	____________________________________________________________________________________________________________*/
-	//pGameObj = CBumpTerrain::Create(m_pGraphicDevice, m_pCommandList, L"BumpTerrainRoad01");
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BumpTerrain", pGameObj), E_FAIL);
-
-
-	/*__________________________________________________________________________________________________________
 	[ StaticMeshObject ]
 	____________________________________________________________________________________________________________*/
 	wifstream fin { L"../../Bin/ToolData/TestStaticMesh.staticmesh" };
@@ -213,10 +209,12 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 											 vBoundingSphereScale,	// Bounding Sphere Scale
 											 vBoundingSpherePos);	// Bounding Sphere Pos
 
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"StaticMesh", pGameObj), E_FAIL);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, wstrMeshTag, pGameObj), E_FAIL);
+
+		Engine::CShaderShadowInstancing::Get_Instance()->SetUp_Instancing(wstrMeshTag);
+		Engine::CShaderMeshInstancing::Get_Instance()->SetUp_Instancing(wstrMeshTag);
 	}
-
-
+	
 	/*__________________________________________________________________________________________________________
 	[ Popori_F ]
 	____________________________________________________________________________________________________________*/
@@ -226,7 +224,8 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 								  _vec3(0.05f, 0.05f, 0.05f),	// Scale
 								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
 								  _vec3(25.0f, 0.f, 20.0f));	// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pGameObj), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PoporiR19", pGameObj), E_FAIL);
+
 
 	/*__________________________________________________________________________________________________________
 	[ TexEffect ]

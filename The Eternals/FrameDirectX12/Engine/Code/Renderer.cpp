@@ -75,7 +75,7 @@ HRESULT CRenderer::Set_CurPipelineState(ID3D12GraphicsCommandList * pCommandList
 	{
 		m_arrContextPrePipelineState[iContextIdx] = m_arrContextCurPipelineState[iContextIdx];
 
-		CGraphicDevice::Get_Instance()->Set_PipelineState(m_arrContextCurPipelineState[iContextIdx]);
+		// CGraphicDevice::Get_Instance()->Set_PipelineState(m_arrContextCurPipelineState[iContextIdx]);
 		pCommandList->SetPipelineState(m_arrContextCurPipelineState[iContextIdx]);
 
 		++m_uiCnt_SetPipelineState;
@@ -111,9 +111,9 @@ HRESULT CRenderer::Ready_Renderer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCo
 	FAILED_CHECK_RETURN(Ready_ShaderPrototype(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_RenderTarget(), E_FAIL);
 
-	m_mapRenderOnOff[L"RenderTarget"]	= true;
-	m_mapRenderOnOff[L"DebugFont"]		= true;
-	m_mapRenderOnOff[L"Collider"]		= true;
+	m_mapRenderOnOff[L"RenderTarget"]	= false;
+	m_mapRenderOnOff[L"DebugFont"]		= false;
+	m_mapRenderOnOff[L"Collider"]		= false;
 
 	/*__________________________________________________________________________________________________________
 	2020.06.07 MultiThreadRendering
@@ -183,7 +183,10 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 
 	// [ Render End ]
 	FAILED_CHECK_RETURN(CGraphicDevice::Get_Instance()->Render_End(), E_FAIL);
+
 	Clear_RenderGroup();
+	CShaderShadowInstancing::Get_Instance()->Reset_Instance();
+	CShaderMeshInstancing::Get_Instance()->Reset_Instance();
 
 	return S_OK;
 }
@@ -443,7 +446,7 @@ void CRenderer::Render_Font(const _float & fTimeDelta)
 
 HRESULT CRenderer::Ready_ShaderPrototype()
 {
-	CComponent*	pShader	= nullptr;
+	CShader* pShader = nullptr;
 
 	// ShaderColor
 	pShader = CShaderColor::Create(m_pGraphicDevice, m_pCommandList);
@@ -457,16 +460,22 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderTexture", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
+	// ShaderSkyBox
+	pShader = CShaderSkyBox::Create(m_pGraphicDevice, m_pCommandList);
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderSkyBox", ID_STATIC, pShader), E_FAIL);
+	++m_uiCnt_ShaderFile;
+
 	// ShaderMesh
 	pShader = CShaderMesh::Create(m_pGraphicDevice, m_pCommandList);
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderMesh", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
-	// ShaderSKyBox
-	pShader = CShaderSkyBox::Create(m_pGraphicDevice, m_pCommandList);
+	// ShaderShadow
+	pShader = CShaderShadow::Create(m_pGraphicDevice, m_pCommandList);
 	NULL_CHECK_RETURN(pShader, E_FAIL);
-	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderSkyBox", ID_STATIC, pShader), E_FAIL);
+	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderShadow", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
 	// ShaderLighting
@@ -479,12 +488,6 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	pShader = CShaderBlend::Create(m_pGraphicDevice, m_pCommandList);
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderBlend", ID_STATIC, pShader), E_FAIL);
-	++m_uiCnt_ShaderFile;
-
-	// ShaderShadow
-	pShader = CShaderShadow::Create(m_pGraphicDevice, m_pCommandList);
-	NULL_CHECK_RETURN(pShader, E_FAIL);
-	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderShadow", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
 	// ShaderLuminance
@@ -510,6 +513,17 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderSSAO", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
+
+	// ShaderShadowInstancing
+	CShaderShadowInstancing::Get_Instance()->Ready_Shader(m_pGraphicDevice, m_pCommandList);
+	++m_uiCnt_ShaderFile;
+
+	// ShaderMeshInstancing
+	CShaderMeshInstancing::Get_Instance()->Ready_Shader(m_pGraphicDevice, m_pCommandList);
+	++m_uiCnt_ShaderFile;
+
+
+
 	return S_OK;
 }
 
@@ -779,23 +793,23 @@ HRESULT CRenderer::Reset_ThreadCommandList()
 	for (_int i = 0; i < CONTEXT::CONTEXT_END; ++i)
 	{
 		FAILED_CHECK_RETURN(m_arrShadowCommandAllocator[i]->Reset(), E_FAIL);
-		FAILED_CHECK_RETURN(m_arrShadowCommandList[i]->Reset(m_arrShadowCommandAllocator[i], m_pCurPipelineState), E_FAIL);
+		FAILED_CHECK_RETURN(m_arrShadowCommandList[i]->Reset(m_arrShadowCommandAllocator[i], m_arrContextCurPipelineState[i]), E_FAIL);
 
 		FAILED_CHECK_RETURN(m_arrSceneCommandAllocator[i]->Reset(), E_FAIL);
-		FAILED_CHECK_RETURN(m_arrSceneCommandList[i]->Reset(m_arrSceneCommandAllocator[i], m_pCurPipelineState), E_FAIL);
+		FAILED_CHECK_RETURN(m_arrSceneCommandList[i]->Reset(m_arrSceneCommandAllocator[i], m_arrContextCurPipelineState[i]), E_FAIL);
 	}
 
 	// PreCommandList - ShadowDepth.
 	FAILED_CHECK_RETURN(m_pPreShadowCommandAllocator->Reset(), E_FAIL);
-	FAILED_CHECK_RETURN(m_pPreShadowCommandList->Reset(m_pPreShadowCommandAllocator, m_pCurPipelineState), E_FAIL);
+	FAILED_CHECK_RETURN(m_pPreShadowCommandList->Reset(m_pPreShadowCommandAllocator, nullptr), E_FAIL);
 	FAILED_CHECK_RETURN(m_pEndShadowCommandAllocator->Reset(), E_FAIL);
-	FAILED_CHECK_RETURN(m_pEndShadowCommandList->Reset(m_pEndShadowCommandAllocator, m_pCurPipelineState), E_FAIL);
+	FAILED_CHECK_RETURN(m_pEndShadowCommandList->Reset(m_pEndShadowCommandAllocator, nullptr), E_FAIL);
 
 	// PreCommandList - Scene.
 	FAILED_CHECK_RETURN(m_pPreSceneCommandAllocator->Reset(), E_FAIL);
-	FAILED_CHECK_RETURN(m_pPreSceneCommandList->Reset(m_pPreSceneCommandAllocator, m_pCurPipelineState), E_FAIL);
+	FAILED_CHECK_RETURN(m_pPreSceneCommandList->Reset(m_pPreSceneCommandAllocator, nullptr), E_FAIL);
 	FAILED_CHECK_RETURN(m_pEndSceneCommandAllocator->Reset(), E_FAIL);
-	FAILED_CHECK_RETURN(m_pEndSceneCommandList->Reset(m_pEndSceneCommandAllocator, m_pCurPipelineState), E_FAIL);
+	FAILED_CHECK_RETURN(m_pEndSceneCommandList->Reset(m_pEndSceneCommandAllocator, nullptr), E_FAIL);
 
 	return S_OK;
 }
@@ -911,15 +925,16 @@ void CRenderer::Worker_Thread(_int threadIndex)
 																 m_arrShadowCommandList[threadIndex], 
 																 threadIndex);
 		}
-		
+
+		// Render Shadow Instance
+		CShaderShadowInstancing::Get_Instance()->Render_Instance(m_arrShadowCommandList[threadIndex], threadIndex);
+
 		// Submit Shadow Pass.
 		m_arrShadowCommandList[threadIndex]->Close();
 		
 		// End Render ShadowDepth.
 		// None-Signal -> Signal
 		SetEvent(m_hWorkerFinishShadow[threadIndex]);
-
-
 
 
 
@@ -938,6 +953,9 @@ void CRenderer::Worker_Thread(_int threadIndex)
 																m_arrSceneCommandList[threadIndex],
 																threadIndex);
 		}
+
+		// Render Mesh Instance
+		CShaderMeshInstancing::Get_Instance()->Render_Instance(m_arrSceneCommandList[threadIndex], threadIndex);
 
 		// End Scene Pass.
 		m_arrSceneCommandList[threadIndex]->Close();

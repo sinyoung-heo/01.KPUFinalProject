@@ -39,6 +39,9 @@ HRESULT CScene_StageVelika::Ready_Scene()
 	Engine::FAILED_CHECK_RETURN(Ready_LayerFont(L"Layer_Font"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
+	Engine::CShaderShadowInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
+	Engine::CShaderMeshInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
+
 	return S_OK;
 }
 
@@ -137,37 +140,6 @@ HRESULT CScene_StageVelika::Ready_LayerEnvironment(wstring wstrLayerTag)
 							   1);							// Tex Index
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SkyBox", pGameObj), E_FAIL);
 
-	/*__________________________________________________________________________________________________________
-	[ BumpTerrainMesh ]
-	____________________________________________________________________________________________________________*/
-	_vec3 vPos    = _vec3(0.0f, -0.1f, 0.5f);
-	_vec3 vOffset = _vec3(13.83f, 0.0f, 11.98f);
-
-	for (_int i = 0; i < 21; ++i)
-	{
-		if (0 == i % 2)
-			vPos.x = 0.0f;
-		else
-			vPos.x = 6.915f;
-
-		for (_int j = 0; j < 21; ++j)
-		{
-			pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-												 L"BumpTerrainMesh01",		// MeshTag
-												 _vec3(0.003f),				// Scale
-												 _vec3(90.0f, 0.0f, 0.0f),	// Angle
-												 vPos,						// Pos
-												 true,						// Render Shadow
-												 false,						// Is Collision
-												 _vec3(0.0f),				// Bounding Sphere Scale
-												 _vec3(0.0f));				// Bounding Sphere Pos
-			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainMesh", pGameObj), E_FAIL);
-			vPos.x += vOffset.x;
-		}
-
-		vPos.z += vOffset.z;
-	}
-
 	return S_OK;
 }
 
@@ -184,6 +156,41 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 
 
 	Engine::CGameObject* pGameObj = nullptr;
+
+	/*__________________________________________________________________________________________________________
+	[ BumpTerrainMesh ]
+	____________________________________________________________________________________________________________*/
+	_vec3 vStartPos = _vec3(0.0f, -0.1f, 0.5f);
+	_vec3 vOffset   = _vec3(13.83f, 0.0f, 11.98f);
+
+	for (_int i = 0; i < 21; ++i)
+	{
+		if (0 == i % 2)
+			vStartPos.x = 0.0f;
+		else
+			vStartPos.x = 6.915f;
+
+		for (_int j = 0; j < 21; ++j)
+		{
+			pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+												 L"BumpTerrainMesh01",		// MeshTag
+												 _vec3(0.003f),				// Scale
+												 _vec3(90.0f, 0.0f, 0.0f),	// Angle
+												 vStartPos,					// Pos
+												 true,						// Render Shadow
+												 false,						// Is Collision
+												 _vec3(0.0f),				// Bounding Sphere Scale
+												 _vec3(0.0f));				// Bounding Sphere Pos
+			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpTerrainMesh01", pGameObj), E_FAIL);
+			vStartPos.x += vOffset.x;
+		}
+
+		vStartPos.z += vOffset.z;
+	}
+
+	Engine::CShaderMeshInstancing::Get_Instance()->SetUp_Instancing(L"BumpTerrainMesh01");
+	Engine::CShaderShadowInstancing::Get_Instance()->SetUp_Instancing(L"BumpTerrainMesh01");
+	
 
 	/*__________________________________________________________________________________________________________
 	[ StaticMeshObject ]
@@ -237,9 +244,11 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 											 vBoundingSphereScale,	// Bounding Sphere Scale
 											 vBoundingSpherePos);	// Bounding Sphere Pos
 
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"StaticMesh", pGameObj), E_FAIL);
-	}
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", wstrMeshTag, pGameObj), E_FAIL);
 
+		Engine::CShaderMeshInstancing::Get_Instance()->SetUp_Instancing(wstrMeshTag);
+		Engine::CShaderShadowInstancing::Get_Instance()->SetUp_Instancing(wstrMeshTag);
+	}
 
 	/*__________________________________________________________________________________________________________
 	[ Popori_F ]
@@ -250,7 +259,8 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 								  _vec3(0.05f, 0.05f, 0.05f),	// Scale
 								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
 								  _vec3(120.0f, 0.f, 75.0f));	// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pGameObj), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PoporiR19", pGameObj), E_FAIL);
+
 
 	/*__________________________________________________________________________________________________________
 	[ TexEffect ]

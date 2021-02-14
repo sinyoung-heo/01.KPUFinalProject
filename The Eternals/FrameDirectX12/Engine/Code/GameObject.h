@@ -55,10 +55,9 @@ public:
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 	virtual void	Render_ShadowDepth(const _float & fTimeDelta);
 
-	// MultiThreadRendering
+	// MultiThread Rendering.
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
-
 
 protected:
 	virtual HRESULT Add_Component();
@@ -107,11 +106,6 @@ protected:
 	int		m_iSNum				= 0;
 	bool	m_bIsMoveStop		= false;
 	high_resolution_clock::time_point m_last_move_time;
-
-	///*__________________________________________________________________________________________________________
-	//[ ShadowDepth ]
-	//____________________________________________________________________________________________________________*/
-	//SHADOW_DESC	m_tShadowInfo { };
 
 public:
 	virtual CGameObject* Clone_GameObject();
