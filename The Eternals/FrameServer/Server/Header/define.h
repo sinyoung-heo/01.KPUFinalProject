@@ -12,8 +12,6 @@ constexpr int KEY_SERVER		= 1000000;
 #define NO_INIT -1
 #define PI 3.141592
 constexpr int SERVER_CORE		= 4;
-constexpr int NPC_NUM_START		= 1000;
-
 
 /* GAME CONTENTS */
 constexpr int ZERO_HP			= 0;
@@ -48,7 +46,6 @@ constexpr float	ANGLE_LEFT			= 270.f;
 constexpr float	ANGLE_LEFT_UP		= 315.f;
 constexpr float	ANGLE_LEFT_DOWN		= 225.f;
 constexpr float	ANGLE_BACK			= 180.f;
-
 
 /* TYPEDEF */
 typedef	unsigned long		_ulong;

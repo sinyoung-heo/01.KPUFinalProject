@@ -394,8 +394,8 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 	else if (Engine::KEY_PRESSING(DIK_A))
 	{
 
-		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT;
 #ifndef SERVER
+		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT;
 
 		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
 			&m_pTransCom->m_vDir,

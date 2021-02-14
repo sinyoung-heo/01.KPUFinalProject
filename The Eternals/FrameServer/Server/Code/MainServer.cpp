@@ -75,7 +75,7 @@ void Ready_Server()
 	Ready_ServerManager();
 
 	/* Create NPC */
-	//Initialize_NPC();
+	Initialize_NPC();
 
 	std::wcout.imbue(std::locale("korean"));
 
@@ -142,36 +142,90 @@ void Initialize_NPC()
 	int s_num = -1;
 
 	/* 서버에서 NPC를 관리할 번호 설정 */
-	for (int i = NPC_NUM_START; i < NPC_NUM_START + MAX_NPC; ++i)
+//	for (int i = NPC_NUM_START; i < NPC_NUM_START + MAX_NPC; ++i)
+//	{
+//		pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+//
+//		if (pNew)
+//		{
+//			pNew->m_sNum += NPC_NUM_START;
+//			s_num = pNew->m_sNum;
+//		}
+//		else continue;
+//
+//		/* NPC의 정보 초기화 */	
+//		pNew->Set_IsConnected(true);
+//		pNew->Set_IsDead(false);	
+//		sprintf_s(pNew->m_ID, "NPC%d", s_num);
+//	
+//		pNew->m_vPos = _vec3((rand() % 100) * 1.f + 1000.f, (rand() % 100) * 1.f + 500.f, 0.f);
+//		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
+//		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
+//		pNew->m_type = '1';
+//		pNew->spd = 10.f;
+//		pNew->m_status = STATUS::ST_NONACTIVE;
+//		
+//		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
+//		CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
+//
+//#ifdef TEST
+//		cout << "NPC [" << s_num << "] Initialize Finish.\n";
+//#endif
+//	}
+
+	/* ___________________________________________________*/
+	/*					SCENE - TOWN					  */
+	/* ___________________________________________________*/
+
+	/* NORMAL NPC - 1*/
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
 	{
-		pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-		if (pNew)
-		{
-			pNew->m_sNum += NPC_NUM_START;
-			s_num = pNew->m_sNum;
-		}
-		else continue;
-
-		/* NPC의 정보 초기화 */	
-		pNew->Set_IsConnected(true);
-		pNew->Set_IsDead(false);	
-		sprintf_s(pNew->m_ID, "NPC%d", s_num);
-	
-		pNew->m_vPos = _vec3((rand() % 100) * 1.f + 1000.f, (rand() % 100) * 1.f + 500.f, 0.f);
-		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = '1';
-		pNew->spd = 10.f;
-		pNew->m_status = STATUS::ST_NONACTIVE;
-		
-		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-		CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-
-#ifdef TEST
-		cout << "NPC [" << s_num << "] Initialize Finish.\n";
-#endif
+		pNew->m_sNum = NPC_NUM_START;
+		s_num = pNew->m_sNum;
 	}
+
+	/* NPC의 정보 초기화 */
+	pNew->Set_IsConnected(true);
+	pNew->Set_IsDead(false);
+	sprintf_s(pNew->m_ID, "NPC%d", s_num);
+	
+	pNew->m_vPos = _vec3(25.0f, 0.f, 20.0f);
+	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
+	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
+	pNew->m_type = '1';
+	pNew->m_npcNum = NPC_NORMAL;
+	pNew->spd = 1.f;
+	pNew->m_status = STATUS::ST_NONACTIVE;
+
+	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
+	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
+
+	/* NORMAL NPC - 2*/
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		pNew->m_sNum = NPC_NUM_START + 1;
+		s_num = pNew->m_sNum;
+	}
+
+	/* NPC의 정보 초기화 */
+	pNew->Set_IsConnected(true);
+	pNew->Set_IsDead(false);
+	sprintf_s(pNew->m_ID, "NPC%d", s_num);
+
+	pNew->m_vPos = _vec3(27.0f, 0.f, 20.0f);
+	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
+	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
+	pNew->m_type = '1';
+	pNew->m_npcNum = NPC_NORMAL;
+	pNew->spd = 1.f;
+	pNew->m_status = STATUS::ST_NONACTIVE;
+
+	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
+	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
 
 #ifdef TEST
 	cout << "NPC Initialize Finish.\n";
@@ -180,14 +234,25 @@ void Initialize_NPC()
 
 void Delete_NPC()
 {
-	CNpc* pNPC = nullptr;
+	auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"NPC")->begin();
+	auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"NPC")->end();
+	
+	for (iter_begin; iter_begin != iter_end;)
+	{
+		CObjPoolMgr::GetInstance()->return_Object(L"NPC", iter_begin->second);
+		CObjMgr::GetInstance()->Delete_GameObject(L"NPC", iter_begin->second);
 
-	for (int i = 1; i < MAX_NPC + 1; ++i)
+		iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"NPC")->begin();
+		iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"NPC")->end();
+	}
+
+	//CNpc* pNPC = nullptr;
+	/*for (int i = 1; i < MAX_NPC + 1; ++i)
 	{
 		pNPC = static_cast<CNpc*>(CObjMgr::GetInstance()->Get_GameObject(L"NPC", i));
 		CObjPoolMgr::GetInstance()->return_Object(L"NPC", pNPC);
 		CObjMgr::GetInstance()->Delete_GameObject(L"NPC", pNPC);
-	}
+	}*/
 }
 
 void add_new_client(SOCKET ns)

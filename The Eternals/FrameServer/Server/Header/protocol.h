@@ -6,10 +6,11 @@ constexpr int MAX_ID_LEN = 10;
 constexpr int MAX_PW_LEN = 16;
 constexpr int MAX_USER = 10000;
 constexpr int MAX_NPC = 3;
+constexpr int NPC_NUM_START = 1000;
 constexpr int WORLD_WIDTH = 20000;
 constexpr int WORLD_HEIGHT = 20000;
 constexpr int MAX_STR_LEN = 100;
-constexpr int VIEW_LIMIT = 200;				// 시야 반지름, 상대방과 사이에 6개의 타일이 있어도 보여야 함.
+constexpr int VIEW_LIMIT = 20;				
 
 #pragma pack (push, 1)
 
@@ -60,10 +61,14 @@ struct sc_packet_move
 
 /* PROTOCOL 추가 확장 */
 constexpr char TYPE_PLAYER = 0;
-constexpr char TYPE_ORC = 1;				// AGRO + ROAMING MOVE
-constexpr char TYPE_ELF = 2;				// PEACE + NO MOVE
-constexpr char TYPE_BOSS = 3;				// AGRO + ROAMING MOVE
-constexpr char TYPE_NORMAL = 4;				// PEACE + ROAMING MOVE
+constexpr char TYPE_NPC = 1;	
+
+/*____________________________________________________________________
+NPC NUMBER
+______________________________________________________________________*/
+constexpr char NPC_NORMAL = 0;
+constexpr char NPC_MERCHANT = 1;
+constexpr char NPC_QUEST = 2;
 
 struct sc_packet_enter 
 {
@@ -73,6 +78,7 @@ struct sc_packet_enter
 
 	char name[MAX_ID_LEN];
 	char o_type;
+	char npc_num;
 	float posX, posY, posZ;
 	float dirX, dirY, dirZ;
 };

@@ -264,6 +264,7 @@ void send_enter_packet(int to_client, int new_id)
 	strcpy_s(p.name, pNewPlayer->m_ID);
 	pNewPlayer->Get_ClientLock().unlock();
 	p.o_type = pNewPlayer->m_type;
+	p.npc_num = 0;
 
 	p.posX = pNewPlayer->m_vPos.x;
 	p.posY = pNewPlayer->m_vPos.y;
@@ -769,6 +770,7 @@ void send_NPC_enter_packet(int to_client, int new_id)
 	strcpy_s(p.name, pNewPlayer->m_ID);
 	pNewPlayer->Get_ClientLock().unlock();
 	p.o_type = pNewPlayer->m_type;
+	p.npc_num = pNewPlayer->m_npcNum;
 
 	p.posX = pNewPlayer->m_vPos.x;
 	p.posY = pNewPlayer->m_vPos.y;
