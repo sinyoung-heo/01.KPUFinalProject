@@ -171,8 +171,10 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	Render_Blur();
 	Render_Distortion(fTimeDelta);
 	Render_Blend();						// Target Blend
+
 	Render_Collider(fTimeDelta);		// Collider Render
 	Render_Alpha(fTimeDelta);			// Effect Texture, Mesh
+
 	Render_UI(fTimeDelta);				// UI Render
 	Render_RenderTarget();				// Debug RenderTarget
 
@@ -371,22 +373,12 @@ void CRenderer::Render_Alpha(const _float& fTimeDelta)
 			return pSour->Get_DepthOfView() > pDest->Get_DepthOfView(); 
 		});
 
-	//m_RenderList[RENDER_ALPHA].sort([](CGameObject* pSour, CGameObject* pDest)->_bool 
-	//								{ 
-	//									return pSour->Get_DepthOfView() > pDest->Get_DepthOfView(); 
-	//								});
-
 	for (auto& pGameObject : m_RenderList[RENDER_ALPHA])
 		pGameObject->Render_GameObject(fTimeDelta);
 }
 
 void CRenderer::Render_UI(const _float& fTimeDelta)
 {
-	//m_RenderList[RENDER_UI].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
-	//	{
-	//		return pSour->Get_UIDepth() < pDest->Get_UIDepth(); 
-	//	});
-
 	sort(m_RenderList[RENDER_UI].begin(), m_RenderList[RENDER_UI].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
 		{ 
 			return pSour->Get_UIDepth() > pDest->Get_UIDepth();

@@ -398,4 +398,9 @@ CStageHSY * CStageHSY::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsComman
 void CStageHSY::Free()
 {
 	Engine::CScene::Free();
+
+	Engine::CShaderShadowInstancing::Get_Instance()->Reset_InstancingContainer();
+	Engine::CShaderShadowInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
+	Engine::CShaderMeshInstancing::Get_Instance()->Reset_InstancingContainer();
+	Engine::CShaderMeshInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
 }

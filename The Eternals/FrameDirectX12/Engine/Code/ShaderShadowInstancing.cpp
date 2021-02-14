@@ -98,6 +98,33 @@ void CShaderShadowInstancing::Reset_Instance()
 	}
 }
 
+void CShaderShadowInstancing::Reset_InstancingContainer()
+{
+	// Shadow Instancing
+	for (auto& mapInstancing : m_mapInstancing)
+	{
+		for (auto& pair : mapInstancing)
+		{
+			pair.second.clear();
+			pair.second.shrink_to_fit();
+		}
+
+		mapInstancing.clear();
+	}
+}
+
+void CShaderShadowInstancing::Reset_InstancingConstantBuffer()
+{
+	for (_uint i = 0; i < CONTEXT::CONTEXT_END; ++i)
+	{
+		for (auto& pair : m_mapCB_ShaderShadow[i])
+		{
+			for (_uint j = 0; j < m_uiPipelineStateCnt; ++j)
+				Safe_Delete(pair.second[j]);
+		}
+	}
+}
+
 void CShaderShadowInstancing::Render_Instance(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
 	/*__________________________________________________________________________________________________________

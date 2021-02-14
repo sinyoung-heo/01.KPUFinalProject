@@ -21,6 +21,8 @@ public:
 	void	SetUp_ConstantBuffer(ID3D12Device* pGraphicDevice);
 	void	Add_Instance(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& iPipelineStateIdx);
 	void	Reset_Instance();
+	void	Reset_InstancingContainer();
+	void	Reset_InstancingConstantBuffer();
 	void	Render_Instance(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 
 private:
