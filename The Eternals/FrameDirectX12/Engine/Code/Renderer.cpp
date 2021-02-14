@@ -8,7 +8,6 @@
 #include "GameObject.h"
 #include "RenderTarget.h"
 #include "Font.h"
-#include "InstancingMgr.h"
 
 USING(Engine)
 IMPLEMENT_SINGLETON(CRenderer)
@@ -186,8 +185,8 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	FAILED_CHECK_RETURN(CGraphicDevice::Get_Instance()->Render_End(), E_FAIL);
 
 	Clear_RenderGroup();
-	Engine::CInstancingMgr::Get_Instance()->Reset_MeshInstancing();
-	Engine::CInstancingMgr::Get_Instance()->Reset_ShadowInstancing();
+	CShaderShadowInstancing::Get_Instance()->Reset_Instance();
+	CShaderMeshInstancing::Get_Instance()->Reset_Instance();
 
 	return S_OK;
 }
@@ -459,7 +458,6 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	pShader = CShaderTexture::Create(m_pGraphicDevice, m_pCommandList);
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderTexture", ID_STATIC, pShader), E_FAIL);
-	CInstancingMgr::Get_Instance()->Set_TexPipelineStateCnt(pShader->Get_PipelineStateCnt());
 	++m_uiCnt_ShaderFile;
 
 	// ShaderSkyBox
@@ -474,25 +472,10 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderMesh", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
-	// ShaderMeshInstancing
-	pShader = CShaderMeshInstancing::Create(m_pGraphicDevice, m_pCommandList);
-	NULL_CHECK_RETURN(pShader, E_FAIL);
-	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderMeshInstancing", ID_STATIC, pShader), E_FAIL);
-	CInstancingMgr::Get_Instance()->Set_MeshInstancingPipelineStateCnt(pShader->Get_PipelineStateCnt());
-	++m_uiCnt_ShaderFile;
-
 	// ShaderShadow
 	pShader = CShaderShadow::Create(m_pGraphicDevice, m_pCommandList);
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderShadow", ID_STATIC, pShader), E_FAIL);
-	++m_uiCnt_ShaderFile;
-
-
-	// ShaderShadowInstancing
-	pShader = CShaderShadowInstancing::Create(m_pGraphicDevice, m_pCommandList);
-	NULL_CHECK_RETURN(pShader, E_FAIL);
-	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderShadowInstancing", ID_STATIC, pShader), E_FAIL);
-	CInstancingMgr::Get_Instance()->Set_ShadowInstancingPipelineStateCnt(pShader->Get_PipelineStateCnt());
 	++m_uiCnt_ShaderFile;
 
 	// ShaderLighting
@@ -531,9 +514,15 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderSSAO", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
-	
-	// SetUp InstancingMgr ShaderComponent
-	CInstancingMgr::Get_Instance()->SetUp_ShaderComponent();
+	// ShaderShadowInstancing
+	CShaderShadowInstancing::Get_Instance()->Ready_Shader(m_pGraphicDevice, m_pCommandList);
+	++m_uiCnt_ShaderFile;
+
+	// ShaderMeshInstancing
+	CShaderMeshInstancing::Get_Instance()->Ready_Shader(m_pGraphicDevice, m_pCommandList);
+	++m_uiCnt_ShaderFile;
+
+
 
 	return S_OK;
 }
@@ -938,7 +927,7 @@ void CRenderer::Worker_Thread(_int threadIndex)
 		}
 
 		// Render Shadow Instance
-		CInstancingMgr::Get_Instance()->Render_ShadowInstance(m_arrShadowCommandList[threadIndex], threadIndex);
+		CShaderShadowInstancing::Get_Instance()->Render_Instance(m_arrShadowCommandList[threadIndex], threadIndex);
 
 		// Submit Shadow Pass.
 		m_arrShadowCommandList[threadIndex]->Close();
@@ -946,8 +935,6 @@ void CRenderer::Worker_Thread(_int threadIndex)
 		// End Render ShadowDepth.
 		// None-Signal -> Signal
 		SetEvent(m_hWorkerFinishShadow[threadIndex]);
-
-
 
 
 
@@ -968,7 +955,7 @@ void CRenderer::Worker_Thread(_int threadIndex)
 		}
 
 		// Render Mesh Instance
-		CInstancingMgr::Get_Instance()->Render_MeshInstance(m_arrSceneCommandList[threadIndex], threadIndex);
+		CShaderMeshInstancing::Get_Instance()->Render_Instance(m_arrSceneCommandList[threadIndex], threadIndex);
 
 		// End Scene Pass.
 		m_arrSceneCommandList[threadIndex]->Close();

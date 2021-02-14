@@ -185,7 +185,6 @@ call CopyEngine.bat</Command>
     <ClInclude Include="..\Code\Cell.h" />
     <ClInclude Include="..\Code\CoordinateCol.h" />
     <ClInclude Include="..\Code\DescriptorHeapMgr.h" />
-    <ClInclude Include="..\Code\InstancingMgr.h" />
     <ClInclude Include="..\Code\Line.h" />
     <ClInclude Include="..\Code\ColliderBox.h" />
     <ClInclude Include="..\Code\ColliderSphere.h" />
@@ -253,7 +252,6 @@ call CopyEngine.bat</Command>
     <ClCompile Include="..\Code\Cell.cpp" />
     <ClCompile Include="..\Code\CoordinateCol.cpp" />
     <ClCompile Include="..\Code\DescriptorHeapMgr.cpp" />
-    <ClCompile Include="..\Code\InstancingMgr.cpp" />
     <ClCompile Include="..\Code\Line.cpp" />
     <ClCompile Include="..\Code\ColliderBox.cpp" />
     <ClCompile Include="..\Code\ColliderSphere.cpp" />

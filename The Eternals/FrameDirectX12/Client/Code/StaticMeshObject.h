@@ -43,7 +43,9 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
 	____________________________________________________________________________________________________________*/
-	Engine::CMesh* m_pMeshCom = nullptr;
+	Engine::CMesh*						m_pMeshCom                = nullptr;
+	Engine::CShaderShadowInstancing*	m_pShaderShadowInstancing = nullptr;
+	Engine::CShaderMeshInstancing*		m_pShaderMeshInstancing   = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]

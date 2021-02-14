@@ -3,16 +3,25 @@
 
 BEGIN(Engine)
 
-class CShaderShadowInstancing final :  public CShader
+class ENGINE_DLL CShaderShadowInstancing final :  public CShader
 {
+	DECLARE_SINGLETON(CShaderShadowInstancing)
+
 private:
-	explicit CShaderShadowInstancing(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CShaderShadowInstancing(const CShaderShadowInstancing& rhs);
+	explicit CShaderShadowInstancing() = default;
 	virtual ~CShaderShadowInstancing() = default;
 
 public:
-	// CShader을(를) 통해 상속됨
-	virtual HRESULT	Ready_Shader();
+	_uint								Get_InstanceCount(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& iPipelineStatePass)	{ return m_mapInstancing[iContextIdx][wstrMeshTag][iPipelineStatePass].iInstanceCount; };
+	CUploadBuffer<CB_SHADER_SHADOW>*	Get_UploadBuffer_ShaderShadow(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& uiPipelineStatepass);
+
+	HRESULT Ready_Shader(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	void	SetUp_Instancing(wstring wstrMeshTag);
+	void	SetUp_ConstantBuffer(ID3D12Device* pGraphicDevice);
+	void	Add_Instance(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& iPipelineStateIdx);
+	void	Reset_Instance();
+	void	Render_Instance(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
+
 private:
 	virtual HRESULT	Create_RootSignature();
 	virtual HRESULT	Create_PipelineState();
@@ -25,9 +34,15 @@ private:
 							 				   const D3D12_BLEND& SrcBlendAlpha		= D3D12_BLEND_ONE,
 							 				   const D3D12_BLEND& DstBlendAlpha		= D3D12_BLEND_ZERO,
 							 				   const D3D12_BLEND_OP& BlendOpAlpha	= D3D12_BLEND_OP_ADD);
-public:
-	virtual CComponent* Clone() override;
-	static	CShader*	Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList);
+private:
+	/*__________________________________________________________________________________________________________
+	Key값은 ResourceTag
+	vector의 Index는 PipelineStateIndex, Size는 Instance개수.
+	____________________________________________________________________________________________________________*/
+	map<wstring, vector<INSTANCING_DESC>>						m_mapInstancing[CONTEXT::CONTEXT_END];
+	map<wstring, vector<CUploadBuffer<CB_SHADER_SHADOW>*>>		m_mapCB_ShaderShadow[CONTEXT::CONTEXT_END];
+	_uint														m_uiPipelineStateCnt = 0;
+
 private:
 	virtual void Free();
 };
