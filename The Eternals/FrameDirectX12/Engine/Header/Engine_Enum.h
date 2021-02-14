@@ -6,7 +6,7 @@ namespace Engine
 	enum WINMODE	{ MODE_FULL, MODE_WIN, MODE_END };
 	enum SWAPCHAIN	{ FRONT_BUFFER, BACK_BUFFER, BUFFER_END  };
 	enum CMDID		{ CMD_MAIN, CMD_LOADING, CMD_END };
-	enum MATRIXID	{ VIEW, PROJECTION, ORTHO, LIGHT, MATRIX_END };
+	enum MATRIXID	{ VIEW, PROJECTION, ORTHO, MATRIX_END };
 
 	/*__________________________________________________________________________________________________________
 	2020.06.07 Thread Contex√ﬂ∞°.
