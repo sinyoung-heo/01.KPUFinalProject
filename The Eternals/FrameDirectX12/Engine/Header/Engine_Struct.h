@@ -757,6 +757,9 @@ namespace Engine
 		_int		iCurScene;	// 현재 그려지는 이미지의 Y축 Index.
 
 		_float		fGauge;
+		_float		fOffset1;
+		_float		fOffset2;
+		_float		fOffset3;
 
 	} CB_SHADER_TEXTURE;
 	

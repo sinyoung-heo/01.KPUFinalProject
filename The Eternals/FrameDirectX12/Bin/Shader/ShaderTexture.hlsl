@@ -36,6 +36,9 @@ cbuffer cbShaderTexture : register(b1)
 	
 	// Texture Gauge.
 	float		g_fGauge	: packoffset(c5.x);
+	float		fOffset1	: packoffset(c5.y);
+	float		fOffset2	: packoffset(c5.z);
+	float		fOffset3	: packoffset(c5.w);
 	
 }
 
@@ -43,47 +46,6 @@ cbuffer cbShaderTexture : register(b1)
 /*____________________________________________________________________
 [ Normal Texture X ]
 ______________________________________________________________________*/
-struct VS_TEX_IN
-{
-	float3 Pos		: POSITION;
-	float2 TexUV	: TEXCOORD;
-};
-
-struct VS_TEX_OUT
-{
-	float4 Pos		: SV_POSITION;
-	float2 TexUV	: TEXCOORD;
-};
-
-// VS_MAIN
-VS_TEX_OUT VS_MAIN(VS_TEX_IN vs_input)
-{
-	VS_TEX_OUT vs_output = (VS_TEX_OUT) 0;
-	
-	float4x4 matWV, matWVP;
-	matWV	= mul(g_matWorld, g_matView);
-	matWVP	= mul(matWV, g_matProj);
-	
-	vs_output.Pos	= mul(float4(vs_input.Pos, 1.0f), matWVP);
-	vs_output.TexUV	= vs_input.TexUV;
-	
-	return (vs_output);
-}
-
-// PS_MAIN
-float4 PS_MAIN(VS_TEX_OUT ps_input) : SV_TARGET
-{
-	float4 Color = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
-	
-	return (Color);
-}
-
-
-
-/*____________________________________________________________________
-[ Normal Texture O ]
-______________________________________________________________________*/
-// VS_NORMAL_MAIN
 struct VS_TEXNORMAL_IN
 {
 	float3 Pos		: POSITION;
@@ -98,7 +60,47 @@ struct VS_TEXNORMAL_OUT
 	float2 TexUV	: TEXCOORD1;
 };
 
+struct VS_IN
+{
+	float3 Pos		: POSITION;
+	float2 TexUV	: TEXCOORD;
+};
 
+struct VS_OUT
+{
+	float4 Pos		: SV_POSITION;
+	float2 TexUV	: TEXCOORD;
+};
+
+
+// VS_MAIN
+VS_OUT VS_MAIN(VS_IN vs_input)
+{
+	VS_OUT vs_output = (VS_OUT) 0;
+	
+	float4x4 matWV, matWVP;
+	matWV	= mul(g_matWorld, g_matView);
+	matWVP	= mul(matWV, g_matProj);
+	
+	vs_output.Pos	= mul(float4(vs_input.Pos, 1.0f), matWVP);
+	vs_output.TexUV	= vs_input.TexUV;
+	
+	return (vs_output);
+}
+
+// PS_MAIN
+float4 PS_MAIN(VS_OUT ps_input) : SV_TARGET
+{
+	float4 Color = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
+	
+	return (Color);
+}
+
+
+
+/*____________________________________________________________________
+[ Normal Texture O ]
+______________________________________________________________________*/
 VS_TEXNORMAL_OUT VS_NORMAL_MAIN(VS_TEXNORMAL_IN vs_input)
 {
 	VS_TEXNORMAL_OUT vs_output = (VS_TEXNORMAL_OUT) 0;
