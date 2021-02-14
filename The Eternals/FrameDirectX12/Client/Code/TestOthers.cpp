@@ -106,18 +106,6 @@ _int CTestOthers::Update_GameObject(const _float& fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
-	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
-	m_pTransCom->m_vDir.Normalize();
-
-	if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_arrBezierPoint[3]))
-	{
-		// NaviMesh 이동.
-		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
-													 &m_pTransCom->m_vDir,
-													 m_pInfoCom->m_fSpeed * fTimeDelta);
-		m_pTransCom->m_vPos = vPos;
-	}
-
 	return NO_EVENT;
 }
 
@@ -153,6 +141,21 @@ void CTestOthers::Render_ShadowDepth(const _float& fTimeDelta)
 
 void CTestOthers::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
+	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+	m_pTransCom->m_vDir.Normalize();
+
+	if (!m_bIsMoveStop)
+	{
+		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_arrBezierPoint[3]))
+		{
+			// NaviMesh 이동.
+			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+				&m_pTransCom->m_vDir,
+				m_pInfoCom->m_fSpeed * fTimeDelta);
+			m_pTransCom->m_vPos = vPos;
+		}
+	}
+	
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/

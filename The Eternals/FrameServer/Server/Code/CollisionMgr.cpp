@@ -39,7 +39,7 @@ bool CCollisionMgr::CheckIntersectPoint(_vec2& AP1, _vec2& AP2, _vec2& BP1, _vec
 bool CCollisionMgr::Is_DeadReckoning(_vec3& vPos, _vec3& vDir, _vec2* vResult)
 {
 	_vec2 vStart = _vec2(vPos.x, vPos.z);
-	_vec2 vEnd = vStart + _vec2(vDir.x * 1000.f, vDir.z * 1000.f);
+	_vec2 vEnd = vStart + _vec2(vDir.x * 10000.f, vDir.z * 10000.f);
 	vector<_vec2> vecPoint;
 
 	/* NaviMesh의 모든 Cell 검사 */

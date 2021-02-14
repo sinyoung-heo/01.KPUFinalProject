@@ -15,11 +15,12 @@ constexpr int VIEW_LIMIT = 200;				// 시야 반지름, 상대방과 사이에 6개의 타일이 
 
 constexpr char SC_PACKET_LOGIN_OK = 0;
 constexpr char SC_PACKET_MOVE = 1;
-constexpr char SC_PACKET_ENTER = 2;
-constexpr char SC_PACKET_LEAVE = 3;
-constexpr char SC_PACKET_CHAT = 4;
-constexpr char SC_PACKET_LOGIN_FAIL = 5;
-constexpr char SC_PACKET_STAT_CHANGE = 6;
+constexpr char SC_PACKET_MOVE_STOP = 2;
+constexpr char SC_PACKET_ENTER = 3;
+constexpr char SC_PACKET_LEAVE = 4;
+constexpr char SC_PACKET_CHAT = 5;
+constexpr char SC_PACKET_LOGIN_FAIL = 6;
+constexpr char SC_PACKET_STAT_CHANGE = 7;
 
 constexpr char CS_LOGIN = 0;
 constexpr char CS_MOVE = 1;

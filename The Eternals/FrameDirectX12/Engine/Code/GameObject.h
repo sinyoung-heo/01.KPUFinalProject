@@ -28,6 +28,7 @@ public:
 	const _bool&		Get_IsRenderShadow()	{ return m_bIsRenderShadow;}
 	const int&			Get_ServerNumber()		{ return m_iSNum; }
 	const high_resolution_clock::time_point& Get_LastMoveTime() { return m_last_move_time; }
+	const bool&			Get_MoveStop()			{ return m_bIsMoveStop; }
 
 	// Set
 	void				Set_DeadGameObject()								{ m_bIsDead = true; }
@@ -38,6 +39,7 @@ public:
 	void				Set_ServerNumber(const int& num)					{ m_iSNum = num; }
 	void				Set_LastMoveTime(const steady_clock::time_point& last) { m_last_move_time = last; }
 	void				Set_DeadReckoning(const _vec3& vPos1, const _vec3& vPos2, const _vec3& vPos3, const _vec3& vPos4);
+	void				Set_MoveStop(const bool& b) { m_bIsMoveStop = b; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT Ready_GameObjectPrototype();
@@ -103,6 +105,7 @@ protected:
 	
 	/* server */
 	int		m_iSNum				= 0;
+	bool	m_bIsMoveStop		= false;
 	high_resolution_clock::time_point m_last_move_time;
 
 	///*__________________________________________________________________________________________________________

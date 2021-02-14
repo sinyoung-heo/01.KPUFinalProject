@@ -311,6 +311,30 @@ void send_move_packet(int to_client, int id)
 	send_packet(to_client, &p);
 }
 
+void send_move_stop_packet(int to_client, int id)
+{
+	sc_packet_move p;
+
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+
+	if (pPlayer == nullptr) return;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_MOVE_STOP;
+	p.id = id;
+
+	p.move_time = pPlayer->move_time;
+
+	p.o_type = pPlayer->m_type;
+	p.angleY = pPlayer->m_vAngle.y;
+
+	p.posX = pPlayer->m_vPos.x;
+	p.posY = pPlayer->m_vPos.y;
+	p.posZ = pPlayer->m_vPos.z;
+
+	send_packet(to_client, &p);
+}
+
 void process_move(int id, char direction, const _vec3& _vDir, const _vec3& _vAngle)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
@@ -569,7 +593,7 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vAngle)
 	pPlayer->m_vPos.y = _vPos.y;
 	pPlayer->m_vPos.z = _vPos.z;
 
-	send_move_packet(id, id);
+	send_move_stop_packet(id, id);
 
 	/* 변경된 좌표로 섹터 갱신 */
 	CSectorMgr::GetInstance()->Compare_exchange_Sector(id, (int)ori_z, (int)ori_x, (int)(pPlayer->m_vPos.z), (int)(pPlayer->m_vPos.x));
@@ -656,7 +680,7 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vAngle)
 				else
 				{
 					pOther->v_lock.unlock();
-					send_move_packet(server_num, id);
+					send_move_stop_packet(server_num, id);
 				}
 			}
 			// 새로 시야에 들어온 NPC일 경우 처리
@@ -685,7 +709,7 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vAngle)
 				if (0 != pOther->view_list.count(id))
 				{
 					pOther->v_lock.unlock();
-					send_move_packet(server_num, id);
+					send_move_stop_packet(server_num, id);
 				}
 				// 타 유저의 시야 목록에 '나'가 새로 들어온 경우
 				else
