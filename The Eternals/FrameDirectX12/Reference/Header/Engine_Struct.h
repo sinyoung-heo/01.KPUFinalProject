@@ -583,11 +583,10 @@ namespace Engine
 	typedef struct tagVertexTexture
 	{
 		tagVertexTexture() = default;
-		tagVertexTexture(const _vec3& pos, const _vec3& normal, const _vec2& uv) 
-			: vPos(pos), vNormal(normal), vTexUV(uv) {}
+		tagVertexTexture(const _vec3& pos, const _vec2& uv) 
+			: vPos(pos), vTexUV(uv) {}
 
 		_vec3 vPos;
-		_vec3 vNormal;
 		_vec2 vTexUV;
 
 	} VTXTEX;

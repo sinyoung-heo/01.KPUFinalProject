@@ -43,23 +43,6 @@ cbuffer cbShaderTexture : register(b1)
 }
 
 
-/*____________________________________________________________________
-[ Normal Texture X ]
-______________________________________________________________________*/
-struct VS_TEXNORMAL_IN
-{
-	float3 Pos		: POSITION;
-	float3 Normal	: NORMAL;
-	float2 TexUV	: TEXCOORD;
-};
-
-struct VS_TEXNORMAL_OUT
-{
-	float4 Pos		: SV_POSITION;
-	float3 Normal	: TEXCOORD0;
-	float2 TexUV	: TEXCOORD1;
-};
-
 struct VS_IN
 {
 	float3 Pos		: POSITION;
@@ -73,7 +56,6 @@ struct VS_OUT
 };
 
 
-// VS_MAIN
 VS_OUT VS_MAIN(VS_IN vs_input)
 {
 	VS_OUT vs_output = (VS_OUT) 0;
@@ -88,7 +70,6 @@ VS_OUT VS_MAIN(VS_IN vs_input)
 	return (vs_output);
 }
 
-// PS_MAIN
 float4 PS_MAIN(VS_OUT ps_input) : SV_TARGET
 {
 	float4 Color = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
@@ -97,39 +78,12 @@ float4 PS_MAIN(VS_OUT ps_input) : SV_TARGET
 }
 
 
-
-/*____________________________________________________________________
-[ Normal Texture O ]
-______________________________________________________________________*/
-VS_TEXNORMAL_OUT VS_NORMAL_MAIN(VS_TEXNORMAL_IN vs_input)
-{
-	VS_TEXNORMAL_OUT vs_output = (VS_TEXNORMAL_OUT) 0;
-	
-	float4x4 matWV, matWVP;
-	matWV	= mul(g_matWorld, g_matView);
-	matWVP	= mul(matWV, g_matProj);
-	
-	vs_output.Pos		= mul(float4(vs_input.Pos, 1.0f), matWVP);
-	vs_output.Normal	= vs_input.Normal;
-	vs_output.TexUV		= vs_input.TexUV;
-	
-	return (vs_output);
-}
-
-float4 PS_NORMAL_MAIN(VS_TEXNORMAL_OUT ps_input) : SV_TARGET
-{
-	float4 Diffuse	= g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
-	float4 Normal	= float4(ps_input.Normal, 1.f);
-	
-	return (Diffuse);
-}
-
 /*__________________________________________________________________________________________________________
 [ Texture Sprite ]
 ____________________________________________________________________________________________________________*/
-VS_TEXNORMAL_OUT VS_TEXTURE_SPRITE(VS_TEXNORMAL_IN vs_input)
+VS_OUT VS_TEXTURE_SPRITE(VS_IN vs_input)
 {
-	VS_TEXNORMAL_OUT vs_output;
+	VS_OUT vs_output;
 	
 	float4x4 matWV, matWVP;
 	matWV	= mul(g_matWorld, g_matView);
@@ -141,7 +95,7 @@ VS_TEXNORMAL_OUT VS_TEXTURE_SPRITE(VS_TEXNORMAL_IN vs_input)
 	return (vs_output);
 }
 
-float4 PS_TEXTURE_SPRITE(VS_TEXNORMAL_OUT ps_input) : SV_TARGET
+float4 PS_TEXTURE_SPRITE(VS_OUT ps_input) : SV_TARGET
 {
 	float u = (ps_input.TexUV.x / (float)g_iFrameCnt) + g_iCurFrame * (1.0f / (float)g_iFrameCnt);
 	float v = (ps_input.TexUV.y / (float)g_iSceneCnt) + g_iCurScene * (1.0f / (float)g_iSceneCnt);
@@ -155,9 +109,9 @@ float4 PS_TEXTURE_SPRITE(VS_TEXNORMAL_OUT ps_input) : SV_TARGET
 /*__________________________________________________________________________________________________________
 [ Texture Guage ]
 ____________________________________________________________________________________________________________*/
-VS_TEXNORMAL_OUT VS_GAUAGE(VS_TEXNORMAL_IN vs_input)
+VS_OUT VS_GAUAGE(VS_IN vs_input)
 {
-	VS_TEXNORMAL_OUT vs_output;
+	VS_OUT vs_output;
 	
 	float4x4 matWV, matWVP;
 	matWV	= mul(g_matWorld, g_matView);
@@ -169,7 +123,7 @@ VS_TEXNORMAL_OUT VS_GAUAGE(VS_TEXNORMAL_IN vs_input)
 	return (vs_output);
 }
 
-float4 PS_GAUAGE(VS_TEXNORMAL_OUT ps_input) : SV_TARGET
+float4 PS_GAUAGE(VS_OUT ps_input) : SV_TARGET
 {
 	float4 vDiffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
 	float fGauge	= ceil(g_fGauge - ps_input.TexUV.x);
