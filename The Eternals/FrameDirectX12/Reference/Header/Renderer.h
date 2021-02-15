@@ -16,16 +16,17 @@ class CShaderBlur;
 class CShaderSSAO;
 class CShaderMesh;
 
-#define WIDTH_FIRST		112
-#define WIDTH_SECOND	224 + 112
-#define WIDTH_THIRD		448 + 112
-#define WIDTH_FOURTH	672 + 112
-#define WIDTH_FIFTH		672 + 224 + 112
-#define HEIGHT_FIRST	63
-#define HEIGHT_SECOND	126 + 63
-#define HEIGHT_THIRD	126 + 126 + 63
-#define HEIGHT_FOURTH	126 + 126 + 126 + 63
-
+#define WIDTH_FIRST 112
+#define WIDTH_SECOND 224+112
+#define WIDTH_THIRD 448+112
+#define WIDTH_FOURTH 672+112
+#define WIDTH_FIFTH 672+224+112
+#define WIDTH_SIXTH 672+224+224+112
+#define WIDTH_SEVENTH 672+224+224+224+112
+#define HEIGHT_FIRST 63
+#define HEIGHT_SECOND 126 + 63
+#define HEIGHT_THIRD 126+126 + 63
+#define HEIGHT_FOURTH 126+126+126+63
 struct ThreadParameter
 {
 	_int threadIdx;
@@ -42,6 +43,7 @@ public:
 		RENDER_PRIORITY,
 		RENDER_NONALPHA,
 		RENDER_DISTORTION,
+		RENDER_CROSSFILTER,
 		RENDER_ALPHA,
 		RENDER_UI,
 		RENDER_FONT,
@@ -92,6 +94,7 @@ private:
 	void	Render_SSAO();
 	void	Render_Blend();
 	void	Render_Distortion(const _float& fTimeDelta);
+	void	Render_CrossFilter(const _float& fTimeDelta);
 	void	Render_Alpha(const _float& fTimeDelta);
 	void	Render_UI(const _float& fTimeDelta);
 	void	Render_Collider(const _float& fTimeDelta);
@@ -126,19 +129,24 @@ private:
 	CRenderTarget*	m_pTargetDeferred	  = nullptr; // 디퍼드		-> Target5
 	CRenderTarget*	m_pTargetLight		  = nullptr; // 라이트		-> Target2
 	CRenderTarget*	m_pTargetShadowDepth  = nullptr; // 셰도우		-> Target1
-	CRenderTarget*  m_pTargetLuminance    = nullptr; // 루미넌스		-> Target1
 	CRenderTarget*	m_pTargetDownSampling = nullptr; // 다운샘플		-> Target2
 	CRenderTarget*	m_pTargetBlur         = nullptr; // 블러			-> Target3
 	CRenderTarget*	m_pTargetSSAO         = nullptr; // SSAO		-> Target1
 	CRenderTarget* m_pTargetDistortion    = nullptr; // Distortion
+	CRenderTarget* m_pTargetBlend = nullptr; // Distortion
+	CRenderTarget* m_pTargetCrossFilter = nullptr; // CrossFilter
+
 	// Blend
 	CScreenTex*		m_pBlendBuffer					= nullptr;
 	CShaderBlend*	m_pBlendShader					= nullptr;
 	_bool			m_bIsSetBlendTexture			{ false };
 
+	CShaderBlend* m_pHDRShader = nullptr;
 	//Luminance
+
+	CRenderTarget* m_pTargetLuminance[6]; // 루미넌스		-> Target6
 	CScreenTex*			m_pLuminanceBuffer			= nullptr;
-	CShaderLuminance*   m_pLuminanceShader			= nullptr;
+	CShaderLuminance*   m_pLuminanceShader[6]			;
 	_bool				m_bIsSetLuminanceTexture	{ false };
 
 	//DownSampleTarget

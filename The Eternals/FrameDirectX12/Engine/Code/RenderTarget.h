@@ -33,7 +33,7 @@ public:
 	HRESULT Release_OnGraphicDevice(const TARGETID& eID = TYPE_DEFAULT);
 
 	//DownSampling Method
-	HRESULT SetUp_OnGraphicDevice_DownSampling(int Sample);
+	HRESULT SetUp_OnGraphicDevice_DownSampling(int Sample,bool InitOption=false,int number=0);
 	HRESULT Release_OnGraphicDevice_DownSampling();
 
 

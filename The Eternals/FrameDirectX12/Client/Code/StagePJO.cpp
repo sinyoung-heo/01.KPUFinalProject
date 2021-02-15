@@ -211,6 +211,9 @@ HRESULT CStagePJO::Ready_LayerGameObject(wstring wstrLayerTag)
 
 		Engine::CShaderShadowInstancing::Get_Instance()->SetUp_Instancing(wstrMeshTag);
 		Engine::CShaderMeshInstancing::Get_Instance()->SetUp_Instancing(wstrMeshTag);
+
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"StaticMesh", pGameObj), E_FAIL);
+
 	}
 
 
@@ -257,13 +260,13 @@ HRESULT CStagePJO::Ready_LayerGameObject(wstring wstrLayerTag)
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TexEffect", pGameObj), E_FAIL);
 
 
-	pGameObj = CDistortionDisk::Create(m_pGraphicDevice, m_pCommandList,
-		L"DistortDisk", _vec3(0.1f, 0.1f, 0.1f),		// Scale
-		_vec3(0.0f, 0.0f, 0.0f),		// Angle
-		_vec3(26.5f, 0.f, 20.0f),	// Pos
-		false,false, _vec3(0), _vec3(0));
+	//pGameObj = CDistortionDisk::Create(m_pGraphicDevice, m_pCommandList,
+	//	L"DistortDisk", _vec3(0.1f, 0.1f, 0.1f),		// Scale
+	//	_vec3(0.0f, 0.0f, 0.0f),		// Angle
+	//	_vec3(26.5f, 0.f, 20.0f),	// Pos
+	//	false,false, _vec3(0), _vec3(0));
 
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"StaticMesh", pGameObj), E_FAIL);
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"StaticMesh", pGameObj), E_FAIL);
 	return S_OK;
 }
 
@@ -341,6 +344,9 @@ HRESULT CStagePJO::Ready_LightInfo()
 		if (fin.eof())
 			break;
 
+		tDirLightInfo.Specular.x = 1.f;
+		tDirLightInfo.Specular.y = 1.f;
+		tDirLightInfo.Specular.z = 1.f;
 		Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, m_pCommandList, 
 																				 Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL,
 																				 tDirLightInfo), E_FAIL);
