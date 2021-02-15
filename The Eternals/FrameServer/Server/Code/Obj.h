@@ -39,6 +39,7 @@ public:
 	//float spd; // player monster
 	_vec3 m_vAngle;
 	_vec3 m_vPos; // all
+	_vec3 m_vTempPos; // all
 	_vec3 m_vDir; // all
 	atomic<STATUS> m_status; // all
 

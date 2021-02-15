@@ -138,8 +138,6 @@ void process_packet(int id)
 		break;
 	case CS_LOGOUT:
 		break;
-	case CS_TELEPORT:
-		break;
 	}
 }
 /* ========================패킷 재조립========================*/
@@ -305,9 +303,9 @@ void send_move_packet(int to_client, int id)
 	p.o_type = pPlayer->m_type;
 	p.angleY = pPlayer->m_vAngle.y;
 
-	p.posX = pPlayer->m_vPos.x;
-	p.posY = pPlayer->m_vPos.y;
-	p.posZ = pPlayer->m_vPos.z;
+	p.posX = pPlayer->m_vTempPos.x;
+	p.posY = pPlayer->m_vTempPos.y;
+	p.posZ = pPlayer->m_vTempPos.z;
 
 	send_packet(to_client, &p);
 }
@@ -398,14 +396,13 @@ void process_move(int id, char direction, const _vec3& _vDir, const _vec3& _vAng
 	pPlayer->v_lock.unlock();
 
 	/* 해당 플레이어로부터 받은 변경된 위치값 저장 */
-	_vec3 cal_curPos = _vec3(0.0f);
 	_vec2 coll_pos = _vec2(0.f);
 
 	if (CCollisionMgr::GetInstance()->Is_DeadReckoning(pPlayer->m_vPos, pPlayer->m_vDir, &coll_pos))
 	{
-		pPlayer->m_vPos.x = coll_pos.x;
-		pPlayer->m_vPos.y = 0.f;
-		pPlayer->m_vPos.z = coll_pos.y;
+		pPlayer->m_vTempPos.x = coll_pos.x;
+		pPlayer->m_vTempPos.y = 0.f;
+		pPlayer->m_vTempPos.z = coll_pos.y;
 	}
 
 	send_move_packet(id, id);
@@ -567,6 +564,12 @@ void process_move(int id, char direction, const _vec3& _vDir, const _vec3& _vAng
 			}
 		}
 	}
+
+#ifdef TEST
+	/* 플레이어 시야 내에 있는 객체 출력 */
+	for (int server_obj : new_viewlist)
+		cout << "move" << server_obj << "시야 내에 존재합니다." << endl;
+#endif
 }
 
 void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vAngle)
@@ -753,6 +756,12 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vAngle)
 			}
 		}
 	}
+
+#ifdef TEST
+	/* 플레이어 시야 내에 있는 객체 출력 */
+	for (int server_obj : new_viewlist)
+		cout << "move_stop" << server_obj << "시야 내에 존재합니다." << endl;
+#endif
 }
 
 /*============================================NPC======================================================*/
@@ -769,6 +778,7 @@ void send_NPC_enter_packet(int to_client, int new_id)
 	pNewPlayer->Get_ClientLock().lock();
 	strcpy_s(p.name, pNewPlayer->m_ID);
 	pNewPlayer->Get_ClientLock().unlock();
+
 	p.o_type = pNewPlayer->m_type;
 	p.npc_num = pNewPlayer->m_npcNum;
 
@@ -785,24 +795,18 @@ void send_NPC_enter_packet(int to_client, int new_id)
 
 void send_NPC_move_packet(int to_client, int id)
 {
-	sc_packet_move p;
+	sc_packet_npc_move p;
 
 	CNpc* pNPC = static_cast<CNpc*>(CObjMgr::GetInstance()->Get_GameObject(L"NPC", id));
 
 	if (pNPC == nullptr) return;
 
 	p.size = sizeof(p);
-	p.type = SC_PACKET_MOVE;
+	p.type = SC_PACKET_NPC_MOVE;
 	p.id = id;
 
-	//p.move_time = pNewPlayer->move_time;
-
-	p.posX = pNPC->m_vPos.x;
-	p.posY = pNPC->m_vPos.y;
-	p.posZ = pNPC->m_vPos.z;
-
-	p.angleY = pNPC->m_vAngle.y;
-
+	p.dir = pNPC->m_dir;
+	
 	send_packet(to_client, &p);
 }
 
@@ -852,12 +856,16 @@ void random_move_npc(int id)
 	}
 
 	/* 움직임 처리 */
-	switch (rand() % 4)
+	switch (rand() % 8)
 	{
-	case 0: if (ori_x > 0) pNPC->m_vPos.x -= 10.f; break;
-	case 1: if (ori_x < (WORLD_WIDTH - 1))  pNPC->m_vPos.x += 10.f; break;
-	case 2: if (ori_z > 0)  pNPC->m_vPos.z -= 10.f; break;
-	case 3: if (ori_z < (WORLD_HEIGHT - 1))  pNPC->m_vPos.z += 10.f; break;
+	case 0: pNPC->m_dir = MV_FRONT; break;
+	case 1: pNPC->m_dir = MV_BACK; break;
+	case 2: pNPC->m_dir = MV_RIGHT; break;
+	case 3: pNPC->m_dir = MV_RIGHT_UP; break;
+	case 4: pNPC->m_dir = MV_RIGHT_DOWN; break;
+	case 5: pNPC->m_dir = MV_LEFT; break;
+	case 6: pNPC->m_dir = MV_LEFT_UP; break;
+	case 7: pNPC->m_dir = MV_LEFT_DOWN; break;
 	}
 
 	/* 변경된 좌표로 섹터 갱신 */
@@ -979,7 +987,11 @@ void random_move_npc(int id)
 		
 	}
 
-	add_timer(id, OPMODE::OP_RANDOM_MOVE_NPC, system_clock::now() + 1s);
+	//add_timer(id, OPMODE::OP_RANDOM_MOVE_NPC, system_clock::now() + 10s);
+}
+
+void random_move_stop_npc(int id)
+{
 }
 
 void active_npc(int id)
@@ -993,7 +1005,19 @@ void active_npc(int id)
 	{
 		STATUS prev_state = pNPC->m_status;
 		if (true == atomic_compare_exchange_strong(&pNPC->m_status, &prev_state, ST_ACTIVE))
-			add_timer(id, OP_RANDOM_MOVE_NPC, system_clock::now() + 1s);
+		{
+			switch (pNPC->m_npcNum)
+			{
+			case NPC_NORMAL:
+				add_timer(id, OP_RANDOM_MOVE_NPC, system_clock::now() + 5s);
+				break;
+			case NPC_MERCHANT:
+				break;
+			case NPC_QUEST:
+				break;
+			}
+		
+		}
 	}
 }
 

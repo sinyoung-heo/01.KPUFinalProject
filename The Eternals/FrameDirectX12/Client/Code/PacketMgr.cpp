@@ -194,7 +194,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		switch (packet->o_type)
 		{
 		/* other player */
-		case 48:
+		case TYPE_PLAYER:
 		{
 			if (packet->id == g_iSNum) break;
 
@@ -216,7 +216,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		}
 		break;
 		/* npc */
-		case 49:
+		case TYPE_NPC:
 		{
 			/*__________________________________________________________________________________________________________
 			[ GameLogic Object(NPC) 생성 ]
@@ -226,17 +226,20 @@ void CPacketMgr::ProcessPacket(char* ptr)
 			switch (packet->npc_num)
 			{
 			case NPC_NORMAL:
+			{
 				pGameObj = CChicken::Create(m_pGraphicDevice, m_pCommandList,
-											L"Chicken",													// MeshTag
-											L"TestNaviMesh",											// NaviMeshTag
-											_vec3(0.05f, 0.05f, 0.05f),									// Scale
-											_vec3(0.0f, 0.0f, 0.0f),									// Angle
-											_vec3(packet->posX, packet->posY, packet->posZ));			// Pos
+					L"Chicken",													// MeshTag
+					L"TestNaviMesh",											// NaviMeshTag
+					_vec3(0.05f, 0.05f, 0.05f),									// Scale
+					_vec3(0.0f, 0.0f, 0.0f),									// Angle
+					_vec3(packet->posX, packet->posY, packet->posZ));			// Pos
 
 				pGameObj->Set_ServerNumber(packet->id);
 
 				Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"NPC", pGameObj), E_FAIL);
-				break;
+			}
+			break;
+
 			case NPC_MERCHANT:
 				break;
 			case NPC_QUEST:
@@ -261,7 +264,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		switch (packet->o_type)
 		{
 		/* player */
-		case 48:
+		case TYPE_PLAYER:
 		{
 			/* 현재 클라이언트가 움직인 경우 */
 			if (s_num == g_iSNum)
@@ -295,12 +298,6 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		}
 		break;
 
-		/* npc */
-		case 49:
-			break;
-
-		default:
-			break;
 		}	
 	}
 	break;
@@ -315,7 +312,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		switch (packet->o_type)
 		{
 			/* player */
-		case 48:
+		case TYPE_PLAYER:
 		{
 			/* 현재 클라이언트가 움직인 경우 */
 			if (s_num == g_iSNum)
@@ -349,7 +346,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		break;
 
 		/* npc */
-		case 49:
+		case TYPE_NPC:
 			break;
 
 		default:
@@ -368,6 +365,18 @@ void CPacketMgr::ProcessPacket(char* ptr)
 			Engine::CObjectMgr::Get_Instance()->Delete_ServerObject(L"Layer_GameObject", L"NPC", packet->id);
 		else
 			Engine::CObjectMgr::Get_Instance()->Delete_ServerObject(L"Layer_GameObject", L"Others", packet->id);
+	}
+	break;
+
+	case SC_PACKET_NPC_MOVE:
+	{
+		sc_packet_npc_move* packet = reinterpret_cast<sc_packet_npc_move*>(ptr);
+
+		int s_num = packet->id;
+
+		Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"NPC", s_num);
+		pObj->Set_npc_moveDir(packet->dir);
+		pObj->Set_MoveStop(false);
 	}
 	break;
 

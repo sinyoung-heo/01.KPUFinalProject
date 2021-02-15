@@ -48,6 +48,39 @@ void CGameObject::Set_DeadReckoning(const _vec3& vPos1, const _vec3& vPos2, cons
 	m_pInfoCom->m_arrBezierPoint[3] = vPos4;
 }
 
+void CGameObject::Set_npc_moveDir(const char& dir)
+{
+	m_npc_moveDir = dir;
+
+	switch (m_npc_moveDir)
+	{
+	case MV_FRONT:
+		m_pTransCom->m_vAngle.y = 0.f;
+		break;
+	case MV_BACK:
+		m_pTransCom->m_vAngle.y = 180.f;
+		break;
+	case MV_RIGHT:
+		m_pTransCom->m_vAngle.y = 90.f;
+		break;
+	case MV_RIGHT_UP:
+		m_pTransCom->m_vAngle.y = 45.f;
+		break;
+	case MV_RIGHT_DOWN:
+		m_pTransCom->m_vAngle.y = 135.f;
+		break;
+	case MV_LEFT:
+		m_pTransCom->m_vAngle.y = 270.f;
+		break;
+	case MV_LEFT_UP:
+		m_pTransCom->m_vAngle.y = 315.f;
+		break;
+	case MV_LEFT_DOWN:
+		m_pTransCom->m_vAngle.y = 225.f;
+		break;
+	}
+}
+
 HRESULT CGameObject::Ready_GameObjectPrototype()
 {
 	return S_OK;

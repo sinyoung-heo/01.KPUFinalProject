@@ -40,7 +40,8 @@ HRESULT CChicken::Ready_GameObject(wstring wstrMeshTag,
 										   m_pMeshCom->Get_MaxVector());
 
 
-	m_pInfoCom->m_fSpeed = 5.0f;
+	m_pInfoCom->m_fSpeed = 1.0f;
+	m_bIsMoveStop = true;
 
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
@@ -78,7 +79,6 @@ _int CChicken::Update_GameObject(const _float & fTimeDelta)
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
-
 
 	return NO_EVENT;
 }
@@ -121,6 +121,8 @@ void CChicken::Render_ShadowDepth(const _float & fTimeDelta)
 
 void CChicken::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList * pCommandList, const _int& iContextIdx)
 {
+	Active_NPC(fTimeDelta);
+
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
@@ -222,6 +224,21 @@ void CChicken::Set_ConstantTableShadowDepth()
 	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
 
 
+}
+
+void CChicken::Active_NPC(const _float& fTimeDelta)
+{
+	if (!m_bIsMoveStop)
+	{
+		m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+		m_pTransCom->m_vDir.Normalize();
+
+		// NaviMesh 이동.
+		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+													 &m_pTransCom->m_vDir,
+													 m_pInfoCom->m_fSpeed * fTimeDelta);
+		m_pTransCom->m_vPos = vPos;
+	}
 }
 
 Engine::CGameObject* CChicken::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,

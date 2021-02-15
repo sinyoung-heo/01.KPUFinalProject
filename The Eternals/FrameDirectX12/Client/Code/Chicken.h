@@ -59,6 +59,8 @@ private:
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
 
+	void			Active_NPC(const _float& fTimeDelta);
+
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]

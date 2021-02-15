@@ -11,6 +11,18 @@
 
 #endif
 
+/*____________________________________________________________________
+Player Direction
+______________________________________________________________________*/
+#define	FRONT		0.f
+#define	RIGHT		90.f
+#define	RIGHT_UP	45.f
+#define	RIGHT_DOWN	135.f
+#define	LEFT		270.f
+#define	LEFT_UP		315.f
+#define	LEFT_DOWN	225.f
+#define	BACK		180.f
+
 /* 서버 오류 체크 함수 */
 inline void error_display(const char* msg, int err_no)
 {
