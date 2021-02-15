@@ -38,7 +38,7 @@ HRESULT CStaticMeshObject::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos		= vPos;
 	m_bIsCollision			= bIsCollision;
-
+	m_eRenderGroup = Engine::CRenderer::RENDERGROUP::RENDER_NONALPHA;
 	// BoundingBox.
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
 										   m_pTransCom->m_vScale,
@@ -102,8 +102,10 @@ _int CStaticMeshObject::LateUpdate_GameObject(const _float & fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	// Frustum Culling
 	if (m_pRenderer->Get_Frustum().Contains(m_pBoundingBoxCom->Get_BoundingInfo()) != DirectX::DISJOINT)
+	{
 		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
-
+		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_CROSSFILTER, this), -1);
+	}
 	return NO_EVENT;
 }
 

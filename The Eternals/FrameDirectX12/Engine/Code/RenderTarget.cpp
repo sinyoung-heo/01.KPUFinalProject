@@ -359,7 +359,7 @@ HRESULT CRenderTarget::Release_OnGraphicDevice(const TARGETID& eID)
 	return S_OK;
 }
 
-HRESULT CRenderTarget::SetUp_OnGraphicDevice_DownSampling(int Sample)
+HRESULT CRenderTarget::SetUp_OnGraphicDevice_DownSampling(int Sample,bool InitOption,int number)
 {
 	CGraphicDevice::Get_Instance()->Begin_BackBufferSetting();
 	for (_uint i = 0; i < m_uiTargetCnt; ++i)
@@ -377,14 +377,23 @@ HRESULT CRenderTarget::SetUp_OnGraphicDevice_DownSampling(int Sample)
 	D3D12_RECT ScissorRect = { 0, 0, (LONG)WINCX, (LONG)WINCY };
 	D3D12_VIEWPORT ViewPort;
 	ZeroMemory(&ViewPort, sizeof(D3D12_VIEWPORT));
-	ViewPort.Height = WINCY * (1.f / float(Sample)), ViewPort.Width = WINCX * (1.f / float(Sample)), ViewPort.MaxDepth = 1.0f;
-	m_pCommandList->RSSetViewports(1, &ViewPort);
+
+	if (InitOption)
+	{
+		LONG ViewSize = (LONG)(1024 / number);
+		ScissorRect = { 0, 0, ViewSize, ViewSize };
+		ViewPort.Height = ViewSize, ViewPort.Width = ViewSize, ViewPort.MaxDepth = 1.0f;
+	}
+	else
+	{
+		ViewPort.Height = WINCY * (1.f / float(Sample)), ViewPort.Width = WINCX * (1.f / float(Sample)), ViewPort.MaxDepth = 1.0f;
+	}
 	m_pCommandList->RSSetScissorRects(1, &ScissorRect);
+	m_pCommandList->RSSetViewports(1, &ViewPort);
 
 	m_pCommandList->OMSetRenderTargets(m_uiTargetCnt,
 		&CD3DX12_CPU_DESCRIPTOR_HANDLE(m_pRTV_Heap->GetCPUDescriptorHandleForHeapStart()),
-		true,
-		&CD3DX12_CPU_DESCRIPTOR_HANDLE(CGraphicDevice::Get_Instance()->Get_DSV_Heap()->GetCPUDescriptorHandleForHeapStart()));
+		true,nullptr);
 
 	return S_OK	;
 }

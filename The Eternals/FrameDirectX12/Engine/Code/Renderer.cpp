@@ -165,12 +165,14 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	}
 
 	Render_Light();						// Shade, Specular
-	Render_Luminance();					// Luminance(고휘도추출)
+	
 	Render_DownSampling();
 	Render_SSAO();
 	Render_Blur();
+	Render_CrossFilter(fTimeDelta);
 	Render_Distortion(fTimeDelta);
 	Render_Blend();						// Target Blend
+	Render_Luminance();					// Luminance(고휘도추출)
 	Render_Collider(fTimeDelta);		// Collider Render
 	Render_Alpha(fTimeDelta);			// Effect Texture, Mesh
 	Render_UI(fTimeDelta);				// UI Render
@@ -245,7 +247,8 @@ void CRenderer::Render_Blend()
 		vector<ComPtr<ID3D12Resource>> vecBlurTarget = m_pTargetBlur->Get_TargetTexture();
 		vector<ComPtr<ID3D12Resource>> vecSSAOTarget = m_pTargetSSAO->Get_TargetTexture();
 		vector<ComPtr<ID3D12Resource>> vecDistortionTarget = m_pTargetDistortion->Get_TargetTexture();
-
+		vector<ComPtr<ID3D12Resource>> vecAverageColorTarget = m_pTargetLuminance[5]->Get_TargetTexture();
+	
 
 		vector<ComPtr<ID3D12Resource>> vecBlendTarget;
 		vecBlendTarget.emplace_back(vecDeferredTarget[0]);	// RenderTarget - Diffuse
@@ -255,15 +258,26 @@ void CRenderer::Render_Blend()
 		vecBlendTarget.emplace_back(vecDeferredTarget[4]);		// RenderTarget - Emissive
 		vecBlendTarget.emplace_back(vecBlurTarget[3]);		// RenderTarget - SSAO
 		vecBlendTarget.emplace_back(vecDistortionTarget[0]);		// RenderTarget - SSAO
-
+		vecBlendTarget.emplace_back(vecAverageColorTarget[0]);		// RenderTarget - AVerage
+		vecBlendTarget.emplace_back(m_pTargetBlend->Get_TargetTexture()[0]);
 		m_pBlendShader->SetUp_ShaderTexture(vecBlendTarget);
+		m_pHDRShader->SetUp_ShaderTexture(vecBlendTarget);
 	}
 
+	m_pTargetBlend->SetUp_OnGraphicDevice();
 	m_pBlendShader->Begin_Shader();
 	m_pBlendBuffer->Begin_Buffer();
 
 	m_pBlendBuffer->Render_Buffer();
+	m_pTargetBlend->Release_OnGraphicDevice();
 
+	/// <summary>
+	/// 출력오류
+	/// </summary>
+	m_pHDRShader->Begin_Shader();
+	m_pBlendBuffer->Begin_Buffer();
+
+	m_pBlendBuffer->Render_Buffer();
 }
 
 void CRenderer::Render_Distortion(const _float& fTimeDelta)
@@ -281,21 +295,43 @@ void CRenderer::Render_Distortion(const _float& fTimeDelta)
 	m_pTargetDistortion->Release_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
 }
 
+void CRenderer::Render_CrossFilter(const _float& fTimeDelta)
+{
+
+	m_pTargetCrossFilter->SetUp_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
+
+	for (auto& pGameObject : m_RenderList[RENDER_CROSSFILTER])
+		pGameObject->Render_GameObject(fTimeDelta);
+
+	m_pTargetCrossFilter->Release_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
+}
+
 void CRenderer::Render_Luminance()
 {
 	if (!m_bIsSetLuminanceTexture)
 	{
 		m_bIsSetLuminanceTexture = true;
-		vector<ComPtr<ID3D12Resource>> vecDeferredTarget = m_pTargetDeferred->Get_TargetTexture();
+		vector<ComPtr<ID3D12Resource>> vecBlendTarget = m_pTargetBlend->Get_TargetTexture();
 		vector<ComPtr<ID3D12Resource>> vecLuminanceTarget;
-		vecLuminanceTarget.emplace_back(vecDeferredTarget[0]);	// RenderTarget - Albedo
-		m_pLuminanceShader->SetUp_ShaderTexture(vecLuminanceTarget);
+		vecLuminanceTarget.emplace_back(vecBlendTarget[0]);	// RenderTarget - Blend
+
+		for (int i = 0; i < 6; i++)
+		{
+			vecLuminanceTarget.emplace_back(m_pTargetLuminance[i]->Get_TargetTexture()[0]);	// RenderTarget - Blend
+
+		}
+		for(auto & Shader: m_pLuminanceShader)
+			Shader->SetUp_ShaderTexture(vecLuminanceTarget);
 	}
-	m_pTargetLuminance->SetUp_OnGraphicDevice();
-	m_pLuminanceShader->Begin_Shader();
-	m_pLuminanceBuffer->Begin_Buffer();
-	m_pLuminanceBuffer->Render_Buffer();
-	m_pTargetLuminance->Release_OnGraphicDevice();
+	for (int i=0; i<6; i++)
+	{
+		int num = pow(4, i);
+		m_pTargetLuminance[i]->SetUp_OnGraphicDevice_DownSampling(4, true, num);
+		m_pLuminanceShader[i]->Begin_Shader();
+		m_pLuminanceBuffer->Begin_Buffer();
+		m_pLuminanceBuffer->Render_Buffer();
+		m_pTargetLuminance[i]->Release_OnGraphicDevice_DownSampling();
+	}
 }
 
 void CRenderer::Render_DownSampling()
@@ -303,7 +339,7 @@ void CRenderer::Render_DownSampling()
 	if (!m_bIsSetDownSamplingTexture)
 	{
 		m_bIsSetDownSamplingTexture = true; 
-		vector<ComPtr<ID3D12Resource>> vecDeferredTarget = m_pTargetDeferred->Get_TargetTexture();\
+		vector<ComPtr<ID3D12Resource>> vecDeferredTarget = m_pTargetDeferred->Get_TargetTexture();
 		vector<ComPtr<ID3D12Resource>> vecSSAOTarget = m_pTargetSSAO->Get_TargetTexture();
 		vector<ComPtr<ID3D12Resource>> vecDownSamplingTarget;
 		vecDownSamplingTarget.emplace_back(vecDeferredTarget[4]);	// RenderTarget - Emissive
@@ -412,9 +448,11 @@ void CRenderer::Render_RenderTarget()
 		if (nullptr != m_pTargetShadowDepth)
 			m_pTargetShadowDepth->Render_RenderTarget();
 
-		if (nullptr != m_pTargetLuminance)
-			m_pTargetLuminance->Render_RenderTarget();
-
+		if (nullptr != m_pTargetLuminance[0])
+		{
+			for(auto & Target: m_pTargetLuminance)
+				Target->Render_RenderTarget();
+		}
 		if (nullptr != m_pTargetDownSampling)
 			m_pTargetDownSampling->Render_RenderTarget();
 
@@ -424,8 +462,12 @@ void CRenderer::Render_RenderTarget()
 			m_pTargetSSAO->Render_RenderTarget();
 
 
+		if (nullptr != m_pTargetBlend)
+			m_pTargetBlend->Render_RenderTarget();
 		if (nullptr != m_pTargetDistortion)
 			m_pTargetDistortion->Render_RenderTarget();
+		if (nullptr != m_pTargetCrossFilter)
+			m_pTargetCrossFilter->Render_RenderTarget();
 	}
 
 }
@@ -551,21 +593,36 @@ HRESULT CRenderer::Ready_RenderTarget()
 	m_pTargetShadowDepth->Set_TargetRenderScale(_vec3(90.0f, 90.0f, 90.0f));
 	m_pTargetShadowDepth->Set_TargetRenderPos(_vec3(WINCX - 90.0f, WINCY - 90.0f, 1.0f));
 
+
+
+
 	/*__________________________________________________________________________________________________________
 	[ Luminance RenderTarget ]
 	____________________________________________________________________________________________________________*/
-	m_pTargetLuminance = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
-	NULL_CHECK_RETURN(m_pTargetLuminance, E_FAIL);
-	m_pTargetLuminance->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R16G16B16A16_UNORM);
-	FAILED_CHECK_RETURN(m_pTargetLuminance->SetUp_DefaultSetting(), E_FAIL);
-	m_pTargetLuminance->Set_TargetRenderPos(_vec3(WIDTH_THIRD, HEIGHT_FIRST, 1.0f));
+	for (int i = 0; i < 6; i++)
+	{
+		m_pTargetLuminance[i] = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
+		NULL_CHECK_RETURN(m_pTargetLuminance[i], E_FAIL);
+		m_pTargetLuminance[i]->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R16G16B16A16_UNORM);
 
-	m_pLuminanceShader = static_cast<CShaderLuminance*>(m_pComponentMgr->Clone_Component(L"ShaderLuminance", COMPONENTID::ID_STATIC));
-	NULL_CHECK_RETURN(m_pLuminanceShader, E_FAIL);
-	FAILED_CHECK_RETURN(m_pLuminanceShader->Set_PipelineStatePass(0), E_FAIL);
+		int num = pow(4, i);
+		m_pTargetLuminance[i]->Set_TargetTextureSize(0, int(1024 / num), int(1024 / num), false);
 
+		FAILED_CHECK_RETURN(m_pTargetLuminance[i]->SetUp_DefaultSetting(), E_FAIL);
+
+		
+		m_pTargetLuminance[i]->Set_TargetRenderScale(_vec3(20.0f,20.0f, 20.0f));
+		m_pTargetLuminance[i]->Set_TargetRenderPos(_vec3(WINCX-20, 20 + i*(40), 1.0f));
+
+		m_pLuminanceShader[i] = static_cast<CShaderLuminance*>(m_pComponentMgr->Clone_Component(L"ShaderLuminance", COMPONENTID::ID_STATIC));
+		NULL_CHECK_RETURN(m_pLuminanceShader[i], E_FAIL);
+		FAILED_CHECK_RETURN(m_pLuminanceShader[i]->Set_PipelineStatePass(i), E_FAIL);
+	}
+	
 	m_pLuminanceBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pLuminanceBuffer, E_FAIL);
+
+
 	/*__________________________________________________________________________________________________________
 	[ DownSample RenderTarget ]
 	____________________________________________________________________________________________________________*/
@@ -620,6 +677,7 @@ HRESULT CRenderer::Ready_RenderTarget()
 	m_pSSAOBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pSSAOBuffer, E_FAIL);
 
+	
 	//Distortion
 
 	m_pTargetDistortion = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
@@ -628,9 +686,27 @@ HRESULT CRenderer::Ready_RenderTarget()
 	FAILED_CHECK_RETURN(m_pTargetDistortion->SetUp_DefaultSetting(), E_FAIL);
 	m_pTargetDistortion->Set_TargetRenderPos(_vec3(WIDTH_SECOND, HEIGHT_FOURTH, 1.0f));
 
+	//CrossFilter
+
+	m_pTargetCrossFilter = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
+	NULL_CHECK_RETURN(m_pTargetCrossFilter, E_FAIL);
+	m_pTargetCrossFilter->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	FAILED_CHECK_RETURN(m_pTargetCrossFilter->SetUp_DefaultSetting(), E_FAIL);
+	m_pTargetCrossFilter->Set_TargetRenderPos(_vec3(WIDTH_THIRD, HEIGHT_SECOND, 1.0f));
+
 	/*__________________________________________________________________________________________________________
 	[ Blend Resource ]
 	____________________________________________________________________________________________________________*/
+
+	/*__________________________________________________________________________________________________________
+	[ Blend RenderTarget ]
+	____________________________________________________________________________________________________________*/
+	m_pTargetBlend = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
+	NULL_CHECK_RETURN(m_pTargetBlend, E_FAIL);
+	m_pTargetBlend->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R16G16B16A16_UNORM);
+	FAILED_CHECK_RETURN(m_pTargetBlend->SetUp_DefaultSetting(), E_FAIL);
+	m_pTargetBlend->Set_TargetRenderPos(_vec3(WIDTH_THIRD, HEIGHT_FIRST, 1.0f));
+
 	m_pBlendBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pBlendBuffer, E_FAIL);
 
@@ -638,7 +714,10 @@ HRESULT CRenderer::Ready_RenderTarget()
 	NULL_CHECK_RETURN(m_pBlendShader, E_FAIL);
 	FAILED_CHECK_RETURN(m_pBlendShader->Set_PipelineStatePass(0), E_FAIL);
 
-	
+	m_pHDRShader = static_cast<CShaderBlend*>(m_pComponentMgr->Clone_Component(L"ShaderBlend", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pHDRShader, E_FAIL);
+	FAILED_CHECK_RETURN(m_pHDRShader->Set_PipelineStatePass(1), E_FAIL);
+
 	return S_OK;
 }
 
@@ -965,10 +1044,13 @@ void CRenderer::Free()
 
 	Safe_Release(m_pBlendBuffer);
 	Safe_Release(m_pBlendShader);
-
+	Safe_Release(m_pHDRShader);
 	//Luminance
-	Safe_Release(m_pTargetLuminance);
-	Safe_Release(m_pLuminanceShader);
+	for (int i = 0; i < 6; i++)
+	{
+		Safe_Release(m_pTargetLuminance[i]);
+		Safe_Release(m_pLuminanceShader[i]);
+	}
 	Safe_Release(m_pLuminanceBuffer);
 	//DownSampling
 	Safe_Release(m_pTargetDownSampling);
@@ -982,10 +1064,12 @@ void CRenderer::Free()
 	Safe_Release(m_pTargetSSAO);
 	Safe_Release(m_pSSAOShader);
 	Safe_Release(m_pSSAOBuffer);
-
+	
+	Safe_Release(m_pTargetBlend);
 	//Distort
 	Safe_Release(m_pTargetDistortion);
-
+	//
+	Safe_Release(m_pTargetCrossFilter);
 	/*__________________________________________________________________________________________________________
 	2020.06.07 MultiThreadRendering
 	- CommandAllocators & CommandList 제거.
