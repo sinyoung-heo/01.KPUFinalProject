@@ -16,7 +16,7 @@ Texture2D g_TexDiffuse : register(t0);
 /*__________________________________________________________________________________________________________
 [ Shader Resource ]
 ____________________________________________________________________________________________________________*/
-typedef struct tagShaderMesh
+typedef struct tagShaderTexture
 {
 	float4x4	matWorld;
 	
@@ -117,33 +117,4 @@ float4 PS_TEXTURE_SPRITE(VS_OUT ps_input) : SV_TARGET
 	float4 Color = g_TexDiffuse.Sample(g_samLinearWrap, float2(u, v));
 	
 	return (Color);
-}
-
-
-/*__________________________________________________________________________________________________________
-[ Texture Guage ]
-____________________________________________________________________________________________________________*/
-VS_OUT VS_GAUAGE(VS_IN vs_input, uint iInstanceID : SV_InstanceID)
-{
-	VS_OUT vs_output;
-	
-	float4x4 matWV, matWVP;
-	matWV	= mul(g_ShaderTexture[iInstanceID].matWorld, g_matView);
-	matWVP	= mul(matWV, g_matProj);
-	
-	vs_output.Pos		= mul(float4(vs_input.Pos, 1.0f), matWVP);
-	vs_output.TexUV		= vs_input.TexUV;
-	vs_output.fGauge	= g_ShaderTexture[iInstanceID].fGauge;
-	
-	return (vs_output);
-}
-
-float4 PS_GAUAGE(VS_OUT ps_input) : SV_TARGET
-{
-	float4 vDiffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
-	float fGauge	= ceil(ps_input.fGauge - ps_input.TexUV.x);
-	
-	float4 vColor	= vDiffuse * fGauge;
-	
-	return (vColor);
 }

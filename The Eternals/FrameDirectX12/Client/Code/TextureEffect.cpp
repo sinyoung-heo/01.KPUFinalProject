@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "TextureEffect.h"
-
 #include "ObjectMgr.h"
 #include "GraphicDevice.h"
 #include "TextureDistortion.h"
@@ -22,13 +21,20 @@ HRESULT CTextureEffect::Ready_GameObject(wstring wstrTextureTag,
 										 const _vec3 & vPos,
 										 const FRAME& tFrame)
 {
-	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrTextureTag), E_FAIL);
 
 	m_strTextag = wstrTextureTag;
 	m_pTransCom->m_vScale	= vScale;
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos		= vPos;
+
+	// BoundingBox.
+	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
+										   m_pTransCom->m_vScale,
+										   _vec3(0.0f, 0.0f ,0.0f),
+										   _vec3(0.5f, 0.5f ,0.0f),
+										   _vec3(-0.5f, -0.5f ,0.0f));
 
 	m_uiTexIdx	= 0;
 	m_tFrame	= tFrame;
@@ -49,7 +55,7 @@ HRESULT CTextureEffect::LateInit_GameObject()
 		m_pTransCom->m_vAngle,		// Angle
 		m_pTransCom->m_vPos,	// Pos
 		m_tFrame);			// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"TexEffect", pGameObj), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", m_strTextag, pGameObj), E_FAIL);
 	static_cast<CTextureDistortion*>(pGameObj)->Set_ParentPosition(&m_pTransCom->m_vPos);
 	return S_OK;
 }
@@ -65,11 +71,6 @@ _int CTextureEffect::Update_GameObject(const _float & fTimeDelta)
 	[ Update Sprite Frame ]
 	____________________________________________________________________________________________________________*/
 	Update_SpriteFrame(fTimeDelta);
-
-	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
@@ -91,6 +92,13 @@ _int CTextureEffect::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 	
+	/*__________________________________________________________________________________________________________
+	[ Renderer - Add Render Group ]
+	____________________________________________________________________________________________________________*/
+	// Frustum Culling
+	if (m_pRenderer->Get_Frustum().Contains(m_pBoundingBoxCom->Get_BoundingInfo()) != DirectX::DISJOINT)
+		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);
+
 	return NO_EVENT;
 }
 

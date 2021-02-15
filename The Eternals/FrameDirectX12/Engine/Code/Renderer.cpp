@@ -189,6 +189,7 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	Clear_RenderGroup();
 	CShaderShadowInstancing::Get_Instance()->Reset_Instance();
 	CShaderMeshInstancing::Get_Instance()->Reset_Instance();
+	CShaderTextureInstancing::Get_Instance()->Reset_Instance();
 
 	return S_OK;
 }
@@ -283,6 +284,9 @@ void CRenderer::Render_Distortion(const _float& fTimeDelta)
 	for (auto& pGameObject : m_RenderList[RENDER_DISTORTION])
 		pGameObject->Render_GameObject(fTimeDelta);
 
+	// Render Texture Instancing
+	CShaderTextureInstancing::Get_Instance()->Render_Instance(INSTANCE::INSTANCE_DISTORTION);
+
 	m_pTargetDistortion->Release_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
 }
 
@@ -375,6 +379,9 @@ void CRenderer::Render_Alpha(const _float& fTimeDelta)
 
 	for (auto& pGameObject : m_RenderList[RENDER_ALPHA])
 		pGameObject->Render_GameObject(fTimeDelta);
+
+	// Render Texture Instancing
+	CShaderTextureInstancing::Get_Instance()->Render_Instance(INSTANCE::INSTANCE_ALPHA);
 }
 
 void CRenderer::Render_UI(const _float& fTimeDelta)

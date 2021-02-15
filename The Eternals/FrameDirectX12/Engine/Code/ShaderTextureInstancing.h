@@ -13,17 +13,17 @@ private:
 
 public:
 	// Get
-	_uint								Get_InstanceCount(wstring wstrTextureTag, const _uint& iPipelineStatePass)		{ return m_mapInstancing[wstrTextureTag][iPipelineStatePass].iInstanceCount; };
-	CUploadBuffer<CB_SHADER_TEXTURE>*	Get_UploadBuffer_ShaderMesh(wstring wstrTextureTag, const _uint& uiPipelineStatepass);
+	_uint								Get_InstanceCount(wstring wstrTextureTag, const INSTANCE& eInstance, const _uint& iPipelineStatePass) { return m_mapInstancing[eInstance][wstrTextureTag][iPipelineStatePass].iInstanceCount; };
+	CUploadBuffer<CB_SHADER_TEXTURE>*	Get_UploadBuffer_ShaderTexture(wstring wstrTextureTag, const INSTANCE& eInstance, const _uint& uiPipelineStatepass);
 
 	HRESULT Ready_Shader(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	void	SetUp_Instancing(wstring wstrTextureTag);
-	void	SetUp_ConstantBuffer(ID3D12Device* pGraphicDevice);
-	void	Add_Instance(wstring wstrTextureTag, const _uint& iPipelineStateIdx);
+	void	SetUp_Instancing(const INSTANCE& eInstance, wstring wstrTextureTag);
+	void	SetUp_ConstantBuffer(const INSTANCE& eInstance, ID3D12Device* pGraphicDevice);
+	void	Add_Instance(wstring wstrTextureTag, const INSTANCE& eInstance, const _uint& iPipelineStateIdx);
 	void	Reset_Instance();
 	void	Reset_InstancingContainer();
 	void	Reset_InstancingConstantBuffer();
-	void	Render_Instance();
+	void	Render_Instance(const INSTANCE& eInstance);
 
 private:
 	virtual HRESULT	Create_RootSignature();
@@ -42,8 +42,8 @@ private:
 	Key값은 ResourceTag
 	vector의 Index는 PipelineStateIndex, Size는 Instance개수.
 	____________________________________________________________________________________________________________*/
-	map<wstring, vector<INSTANCING_DESC>>					m_mapInstancing;
-	map<wstring, vector<CUploadBuffer<CB_SHADER_TEXTURE>*>>	m_mapCB_ShaderTexture;
+	map<wstring, vector<INSTANCING_DESC>>					m_mapInstancing[INSTANCE::INSTANCE_END];
+	map<wstring, vector<CUploadBuffer<CB_SHADER_TEXTURE>*>>	m_mapCB_ShaderTexture[INSTANCE::INSTANCE_END];
 	_uint													m_uiPipelineStateCnt = 0;
 
 private:

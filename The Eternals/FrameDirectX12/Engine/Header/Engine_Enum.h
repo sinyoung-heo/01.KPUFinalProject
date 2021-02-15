@@ -7,6 +7,7 @@ namespace Engine
 	enum SWAPCHAIN	{ FRONT_BUFFER, BACK_BUFFER, BUFFER_END  };
 	enum CMDID		{ CMD_MAIN, CMD_LOADING, CMD_END };
 	enum MATRIXID	{ VIEW, PROJECTION, ORTHO, MATRIX_END };
+	enum INSTANCE	{ INSTANCE_ALPHA, INSTANCE_DISTORTION, INSTANCE_END };
 
 	/*__________________________________________________________________________________________________________
 	2020.06.07 Thread Contex√ﬂ∞°.

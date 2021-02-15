@@ -13,6 +13,8 @@ protected:
 public:
 	D3D12_VERTEX_BUFFER_VIEW	Get_VertexBufferView()	const;
 	D3D12_INDEX_BUFFER_VIEW		Get_IndexBufferView()	const;
+	D3D12_PRIMITIVE_TOPOLOGY&	Get_PrimitiveTopology() { return m_PrimitiveTopology; }
+	SUBMESH_GEOMETRY&			Get_SubMeshGeometry()	{ return m_tSubMeshGeometry; }
 
 	HRESULT						Ready_Buffer();
 	void						Begin_Buffer();
