@@ -245,14 +245,6 @@ void Delete_NPC()
 		iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"NPC")->begin();
 		iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"NPC")->end();
 	}
-
-	//CNpc* pNPC = nullptr;
-	/*for (int i = 1; i < MAX_NPC + 1; ++i)
-	{
-		pNPC = static_cast<CNpc*>(CObjMgr::GetInstance()->Get_GameObject(L"NPC", i));
-		CObjPoolMgr::GetInstance()->return_Object(L"NPC", pNPC);
-		CObjMgr::GetInstance()->Delete_GameObject(L"NPC", pNPC);
-	}*/
 }
 
 void add_new_client(SOCKET ns)
@@ -516,7 +508,7 @@ void worker_thread()
 		case OPMODE::OP_RANDOM_MOVE_NPC:
 		{
 			/* 변경해야 될 것: 아래 함수 bool 리턴 받은 후 전체 플레이어 중 시야 내에 없다면 STATUS 변경 */
-			random_move_npc(key);
+			//random_move_npc(key);
 			delete over_ex;
 		}
 			break;
