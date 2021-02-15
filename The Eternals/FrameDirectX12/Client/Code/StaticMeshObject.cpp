@@ -108,6 +108,15 @@ _int CStaticMeshObject::LateUpdate_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
+void CStaticMeshObject::Render_GameObject(const _float& fTimeDelta)
+{
+
+}
+
+void CStaticMeshObject::Render_ShadowDepth(const _float& fTimeDelta)
+{
+}
+
 void CStaticMeshObject::Render_GameObject(const _float& fTimeDelta, 
 										  ID3D12GraphicsCommandList * pCommandList,
 										  const _int& iContextIdx)
