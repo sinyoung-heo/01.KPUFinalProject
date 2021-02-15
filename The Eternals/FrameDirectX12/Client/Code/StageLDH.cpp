@@ -304,7 +304,7 @@ HRESULT CStageLDH::Ready_LayerGameObject(wstring wstrLayerTag)
 									  _vec3(0.0f, 0.0f, 0.0f),		// Angle
 									  _vec3(26.0f, 1.5f, 26.5f),	// Pos
 									  FRAME(8, 8, 64.0f));			// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TexEffect", pGameObj), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Fire", pGameObj), E_FAIL);
 
 	// Torch
 	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
@@ -313,7 +313,7 @@ HRESULT CStageLDH::Ready_LayerGameObject(wstring wstrLayerTag)
 									  _vec3(0.0f, 0.0f, 0.0f),		// Angle
 									  _vec3(28.0f, 2.0f, 27.0f),	// Pos
 									  FRAME(8, 8, 64.0f));			// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TexEffect", pGameObj), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Torch", pGameObj), E_FAIL);
 
 
 	return S_OK;

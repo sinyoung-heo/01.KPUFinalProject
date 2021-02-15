@@ -433,4 +433,9 @@ CScene_StageVelika * CScene_StageVelika::Create(ID3D12Device* pGraphicDevice, ID
 void CScene_StageVelika::Free()
 {
 	Engine::CScene::Free();
+
+	Engine::CShaderShadowInstancing::Get_Instance()->Reset_InstancingContainer();
+	Engine::CShaderShadowInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
+	Engine::CShaderMeshInstancing::Get_Instance()->Reset_InstancingContainer();
+	Engine::CShaderMeshInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
 }

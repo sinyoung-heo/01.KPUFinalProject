@@ -45,7 +45,6 @@ HRESULT CTerrainTex::Ready_Buffer(const _uint & iNumVerticesX,
 			_int iIdx = i * iNumVerticesX + j;
 
 			vecVertices[iIdx].vPos		= _vec3(j * m_fInterval, 0.f, i * m_fInterval);
-			vecVertices[iIdx].vNormal	= _vec3(0.f, 1.f, 0.f);
 			vecVertices[iIdx].vTexUV	= _vec2((j / (iNumVerticesX - 1.f)) * fDetail, (i / (iNumVerticesZ - 1.f)) * fDetail);
 		}
 	}
@@ -68,17 +67,9 @@ HRESULT CTerrainTex::Ready_Buffer(const _uint & iNumVerticesX,
 			vecIndices[k + 2]	= (_uint)iIndex + 1;
 
 			_vec3 vSour, vDest;
-			_vec3 vNormal;
 
 			vSour = vecVertices[vecIndices[k + 1]].vPos - vecVertices[vecIndices[k]].vPos;
 			vDest = vecVertices[vecIndices[k + 2]].vPos - vecVertices[vecIndices[k + 1]].vPos;
-
-			vNormal = vSour.Cross_InputV1(vDest);
-			vNormal.Normalize();
-
-			vecVertices[vecIndices[k]].vNormal		+= vNormal;
-			vecVertices[vecIndices[k + 1]].vNormal	+= vNormal;
-			vecVertices[vecIndices[k + 2]].vNormal	+= vNormal;
 
 			k += 3;
 
@@ -88,13 +79,6 @@ HRESULT CTerrainTex::Ready_Buffer(const _uint & iNumVerticesX,
 
 			vSour = vecVertices[vecIndices[k + 1]].vPos - vecVertices[vecIndices[k]].vPos;
 			vDest = vecVertices[vecIndices[k + 2]].vPos - vecVertices[vecIndices[k + 1]].vPos;
-
-			vNormal = vSour.Cross_InputV1(vDest);
-			vNormal.Normalize();
-
-			vecVertices[vecIndices[k]].vNormal		+= vNormal;
-			vecVertices[vecIndices[k + 1]].vNormal	+= vNormal;
-			vecVertices[vecIndices[k + 2]].vNormal	+= vNormal;
 
 			k += 3; // next quad
 		}

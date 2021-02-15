@@ -423,6 +423,12 @@ _ulong Release_Singleton()
 		return dwRefCnt;
 	}
 
+	if (dwRefCnt = Engine::CShaderTextureInstancing::Get_Instance()->Destroy_Instance())
+	{
+		MSG_BOX(L"Engine::CShaderTextureInstancing Release Failed");
+		return dwRefCnt;
+	}
+
 	if (dwRefCnt = Engine::CComponentMgr::Get_Instance()->Destroy_Instance())
 	{
 		MSG_BOX(L"Engine::CComponentMgr Release Failed");

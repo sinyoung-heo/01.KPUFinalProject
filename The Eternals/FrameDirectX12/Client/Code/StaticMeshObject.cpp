@@ -159,7 +159,7 @@ HRESULT CStaticMeshObject::Add_Component(wstring wstrMeshTag)
 void CStaticMeshObject::Set_ConstantTable(const _int& iContextIdx, const _int& iInstanceIdx)
 {
 	/*__________________________________________________________________________________________________________
-	[ Set ConstantBuffer Data ]
+	[ Set ShaderResource Data ]
 	____________________________________________________________________________________________________________*/
 	Engine::SHADOW_DESC tShadowDesc = CShadowLightMgr::Get_Instance()->Get_ShadowDesc();
 

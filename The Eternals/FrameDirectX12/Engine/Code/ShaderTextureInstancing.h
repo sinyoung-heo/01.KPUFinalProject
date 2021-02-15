@@ -3,26 +3,27 @@
 
 BEGIN(Engine)
 
-class ENGINE_DLL CShaderShadowInstancing final :  public CShader
+class ENGINE_DLL CShaderTextureInstancing : public CShader
 {
-	DECLARE_SINGLETON(CShaderShadowInstancing)
+	DECLARE_SINGLETON(CShaderTextureInstancing)
 
 private:
-	explicit CShaderShadowInstancing() = default;
-	virtual ~CShaderShadowInstancing() = default;
+	explicit CShaderTextureInstancing() = default;
+	virtual ~CShaderTextureInstancing() = default;
 
 public:
-	_uint								Get_InstanceCount(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& iPipelineStatePass)	{ return m_mapInstancing[iContextIdx][wstrMeshTag][iPipelineStatePass].iInstanceCount; };
-	CUploadBuffer<CB_SHADER_SHADOW>*	Get_UploadBuffer_ShaderShadow(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& uiPipelineStatepass);
+	// Get
+	_uint								Get_InstanceCount(wstring wstrTextureTag, const INSTANCE& eInstance, const _uint& iPipelineStatePass) { return m_mapInstancing[eInstance][wstrTextureTag][iPipelineStatePass].iInstanceCount; };
+	CUploadBuffer<CB_SHADER_TEXTURE>*	Get_UploadBuffer_ShaderTexture(wstring wstrTextureTag, const INSTANCE& eInstance, const _uint& uiPipelineStatepass);
 
 	HRESULT Ready_Shader(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	void	SetUp_Instancing(wstring wstrMeshTag);
-	void	SetUp_ConstantBuffer(ID3D12Device* pGraphicDevice);
-	void	Add_Instance(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& iPipelineStateIdx);
+	void	SetUp_Instancing(const INSTANCE& eInstance, wstring wstrTextureTag);
+	void	SetUp_ConstantBuffer(const INSTANCE& eInstance, ID3D12Device* pGraphicDevice);
+	void	Add_Instance(wstring wstrTextureTag, const INSTANCE& eInstance, const _uint& iPipelineStateIdx);
 	void	Reset_Instance();
 	void	Reset_InstancingContainer();
 	void	Reset_InstancingConstantBuffer();
-	void	Render_Instance(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
+	void	Render_Instance(const INSTANCE& eInstance);
 
 private:
 	virtual HRESULT	Create_RootSignature();
@@ -41,9 +42,9 @@ private:
 	Key값은 ResourceTag
 	vector의 Index는 PipelineStateIndex, Size는 Instance개수.
 	____________________________________________________________________________________________________________*/
-	map<wstring, vector<INSTANCING_DESC>>						m_mapInstancing[CONTEXT::CONTEXT_END];
-	map<wstring, vector<CUploadBuffer<CB_SHADER_SHADOW>*>>		m_mapCB_ShaderShadow[CONTEXT::CONTEXT_END];
-	_uint														m_uiPipelineStateCnt = 0;
+	map<wstring, vector<INSTANCING_DESC>>					m_mapInstancing[INSTANCE::INSTANCE_END];
+	map<wstring, vector<CUploadBuffer<CB_SHADER_TEXTURE>*>>	m_mapCB_ShaderTexture[INSTANCE::INSTANCE_END];
+	_uint													m_uiPipelineStateCnt = 0;
 
 private:
 	virtual void Free();

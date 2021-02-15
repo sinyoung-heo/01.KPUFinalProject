@@ -142,6 +142,9 @@
     <Filter Include="02.GameObject\99.SampleObject\11.NPC\08.Baraka_M_Mystellium">
       <UniqueIdentifier>{931cfdba-3150-47de-8ddb-4d03d6284b3b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.SampleObject\12.TexEffectInstance">
+      <UniqueIdentifier>{8127f386-d54a-487e-be8b-709a071ca813}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -295,6 +298,12 @@
     <ClInclude Include="..\Code\Baraka_M_Mystellium.h">
       <Filter>02.GameObject\99.SampleObject\11.NPC\08.Baraka_M_Mystellium</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\TexEffectInstance.h">
+      <Filter>02.GameObject\99.SampleObject\12.TexEffectInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\TexDistortionInstance.h">
+      <Filter>02.GameObject\99.SampleObject\12.TexEffectInstance</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -416,6 +425,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\Baraka_M_Mystellium.cpp">
       <Filter>02.GameObject\99.SampleObject\11.NPC\08.Baraka_M_Mystellium</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TexEffectInstance.cpp">
+      <Filter>02.GameObject\99.SampleObject\12.TexEffectInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TexDistortionInstance.cpp">
+      <Filter>02.GameObject\99.SampleObject\12.TexEffectInstance</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

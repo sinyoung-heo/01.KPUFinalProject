@@ -61,7 +61,7 @@ HRESULT CRenderTarget::Ready_RenderTarget(const _uint& uiTargetCnt)
 
 	m_pShaderCom = static_cast<CShaderTexture*>(CComponentMgr::Get_Instance()->Clone_Component(L"ShaderTexture", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
-	FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(3), E_FAIL);
+	FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(0), E_FAIL);
 
 	// Render RenderTarget
 	/*m_vPos		= _vec3(160.0f, 90.0f, 1.0f);

@@ -1,30 +1,28 @@
 #include "stdafx.h"
-#include "TextureDistortion.h"
-
+#include "TexDistortionInstance.h"
 #include "ObjectMgr.h"
 #include "GraphicDevice.h"
 #include "DynamicCamera.h"
 #include "DebugCamera.h"
 #include "ObjectMgr.h"
-CTextureDistortion::CTextureDistortion(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+
+CTexDistortionInstance::CTexDistortionInstance(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
+	, m_pShaderTextureInstancing(Engine::CShaderTextureInstancing::Get_Instance())
 {
 }
 
-CTextureDistortion::CTextureDistortion(const CTextureDistortion & rhs)
+CTexDistortionInstance::CTexDistortionInstance(const CTexDistortionInstance& rhs)
 	: Engine::CGameObject(rhs)
 {
 }
 
-
-HRESULT CTextureDistortion::Ready_GameObject(wstring wstrTextureTag, 
-										 const _vec3 & vScale,
-										 const _vec3 & vAngle,
-										 const _vec3 & vPos,
-										 const FRAME& tFrame)
+HRESULT CTexDistortionInstance::Ready_GameObject(wstring wstrTextureTag, 
+												 const _vec3& vScale, 
+												 const _vec3& vAngle, 
+												 const _vec3& vPos, 
+												 const FRAME& tFrame)
 {
-
-
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrTextureTag), E_FAIL);
 
@@ -40,25 +38,22 @@ HRESULT CTextureDistortion::Ready_GameObject(wstring wstrTextureTag,
 										   _vec3(0.5f, 0.5f ,0.0f),
 										   _vec3(-0.5f, -0.5f ,0.0f));
 
-	m_uiTexIdx	= 0;
-	m_tFrame	= tFrame;
+	m_uiTexIdx	            = 0;
+	m_iTexPipelineStatePass = 1;
+	m_tFrame	            = tFrame;
 
 	return S_OK;
 }
 
-HRESULT CTextureDistortion::LateInit_GameObject()
+HRESULT CTexDistortionInstance::LateInit_GameObject()
 {
-	// SetUp Shader ConstantBuffer
-	m_pShaderCom->SetUp_ShaderConstantBuffer();
-
 	//DynamicCamera
 	m_pDynamicCamara = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DebugCamera"));
-	
 
 	return S_OK;
 }
 
-_int CTextureDistortion::Update_GameObject(const _float & fTimeDelta)
+_int CTexDistortionInstance::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
@@ -70,6 +65,7 @@ _int CTextureDistortion::Update_GameObject(const _float & fTimeDelta)
 	Dir.y = 0.f;
 	Dir.Normalize();
 	m_pTransCom->m_vPos = (*m_pParentPosition) + Dir * 2.f;
+
 	/*__________________________________________________________________________________________________________
 	[ Update Sprite Frame ]
 	____________________________________________________________________________________________________________*/
@@ -91,7 +87,7 @@ _int CTextureDistortion::Update_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CTextureDistortion::LateUpdate_GameObject(const _float & fTimeDelta)
+_int CTexDistortionInstance::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 	
@@ -105,17 +101,19 @@ _int CTextureDistortion::LateUpdate_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-void CTextureDistortion::Render_GameObject(const _float & fTimeDelta)
+void CTexDistortionInstance::Render_GameObject(const _float& fTimeDelta)
 {
-	Set_ConstantTable();
+	/*__________________________________________________________________________________________________________
+	[ Add Instance ]
+	____________________________________________________________________________________________________________*/
+	m_pShaderTextureInstancing->Add_Instance(m_wstrTextureTag, Engine::INSTANCE::INSTANCE_DISTORTION, m_iTexPipelineStatePass);
+	_uint iInstanceIdx = m_pShaderTextureInstancing->Get_InstanceCount(m_wstrTextureTag, Engine::INSTANCE::INSTANCE_DISTORTION, m_iTexPipelineStatePass) - 1;
 
-	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), 0, m_uiTexIdx, Engine::MATRIXID::PROJECTION);
-	m_pBufferCom->Begin_Buffer();
+	Set_ConstantTable(Engine::INSTANCE::INSTANCE_DISTORTION, iInstanceIdx);
 
-	m_pBufferCom->Render_Buffer();
 }
 
-HRESULT CTextureDistortion::Add_Component(wstring wstrTextureTag)
+HRESULT CTexDistortionInstance::Add_Component(wstring wstrTextureTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -125,26 +123,13 @@ HRESULT CTextureDistortion::Add_Component(wstring wstrTextureTag)
 	m_pBufferCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Buffer", m_pBufferCom);
 
-	// Texture
-	m_pTextureCom = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(wstrTextureTag, Engine::COMPONENTID::ID_STATIC));
-	Engine::NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
-	m_pTextureCom->AddRef();
-	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Texture", m_pTextureCom);
-
-	// Shader
-	m_pShaderCom = static_cast<Engine::CShaderTexture*>(m_pComponentMgr->Clone_Component(L"ShaderTexture", Engine::COMPONENTID::ID_STATIC));
-	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
-	m_pShaderCom->AddRef();
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(2), E_FAIL);
-	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
-
 	return S_OK;
 }
 
-void CTextureDistortion::Set_ConstantTable()
+void CTexDistortionInstance::Set_ConstantTable(const Engine::INSTANCE& eInstanceID, const _int& iInstanceIdx)
 {
 	/*__________________________________________________________________________________________________________
-	[ Set ConstantBuffer Data ]
+	[ Set ShaderResource Data ]
 	____________________________________________________________________________________________________________*/
 	Engine::CB_SHADER_TEXTURE tCB_ShaderTexture;
 	ZeroMemory(&tCB_ShaderTexture, sizeof(Engine::CB_SHADER_TEXTURE));
@@ -154,10 +139,10 @@ void CTextureDistortion::Set_ConstantTable()
 	tCB_ShaderTexture.iSceneCnt	= m_tFrame.iSceneCnt;
 	tCB_ShaderTexture.iCurScene	= (_int)m_tFrame.fCurScene;
 
-	m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
+	m_pShaderTextureInstancing->Get_UploadBuffer_ShaderTexture(m_wstrTextureTag, eInstanceID, m_iTexPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderTexture);
 }
 
-void CTextureDistortion::Update_SpriteFrame(const _float & fTimeDelta)
+void CTexDistortionInstance::Update_SpriteFrame(const _float& fTimeDelta)
 {
 	m_tFrame.fCurFrame += fTimeDelta * m_tFrame.fFrameSpeed;
 
@@ -173,18 +158,16 @@ void CTextureDistortion::Update_SpriteFrame(const _float & fTimeDelta)
 	{
 		m_tFrame.fCurScene = 0.0f;
 	}
-
 }
 
-Engine::CGameObject* CTextureDistortion::Create(ID3D12Device * pGraphicDevice,
-											ID3D12GraphicsCommandList * pCommandList,
-											wstring wstrTextureTag, 
-											const _vec3 & vScale, 
-											const _vec3 & vAngle, 
-											const _vec3 & vPos, 
-											const FRAME & tFrame)
+Engine::CGameObject* CTexDistortionInstance::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, 
+													wstring wstrTextureTag,
+													const _vec3& vScale,
+													const _vec3& vAngle, 
+													const _vec3& vPos, 
+													const FRAME& tFrame)
 {
-	CTextureDistortion* pInstance = new CTextureDistortion(pGraphicDevice, pCommandList);
+	CTexDistortionInstance* pInstance = new CTexDistortionInstance(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrTextureTag, vScale, vAngle, vPos, tFrame)))
 		Engine::Safe_Release(pInstance);
@@ -192,11 +175,9 @@ Engine::CGameObject* CTextureDistortion::Create(ID3D12Device * pGraphicDevice,
 	return pInstance;
 }
 
-void CTextureDistortion::Free()
+void CTexDistortionInstance::Free()
 {
 	Engine::CGameObject::Free();
 
 	Engine::Safe_Release(m_pBufferCom);
-	Engine::Safe_Release(m_pShaderCom);
-	Engine::Safe_Release(m_pTextureCom);
 }

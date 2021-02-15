@@ -19,6 +19,7 @@
 
 #include "ShaderColor.h"
 #include "ShaderTexture.h"
+#include "ShaderTextureInstancing.h"
 #include "ShaderSkyBox.h"
 #include "ShaderMesh.h"
 #include "ShaderMeshInstancing.h"
