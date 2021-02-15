@@ -150,8 +150,8 @@ void CTestOthers::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsComm
 		{
 			// NaviMesh ÀÌµ¿.
 			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
-				&m_pTransCom->m_vDir,
-				m_pInfoCom->m_fSpeed * fTimeDelta);
+														 &m_pTransCom->m_vDir,
+														 m_pInfoCom->m_fSpeed * fTimeDelta);
 			m_pTransCom->m_vPos = vPos;
 		}
 	}
