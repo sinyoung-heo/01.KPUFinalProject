@@ -75,6 +75,7 @@ VK_CON_Gate01_SM|VK_CON_Gate01_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\
 VK_CON_Gate01_Support_SM|VK_CON_Gate01_Support_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_Gate01_Support_SM\
 VK_CON_Landbox_SM|VK_CON_Landbox_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_Landbox_SM\
 VK_CON_MP_P_Center_SM|VK_CON_MP_P_Center_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_MP_P_Center_SM\
+VK_CON_OuterWall_02_SM|VK_CON_OuterWall_02_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_OuterWall_02_SM\
 VK_CON_OuterWall_03_SM|VK_CON_OuterWall_03_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_OuterWall_03_SM\
 VK_CON_StSet_SM|VK_CON_StSet_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_StSet_SM\
 VK_CON_Tower_Parts_SM|VK_CON_Tower_Parts_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_CON_Tower_Parts_SM\

@@ -75,6 +75,7 @@ StaticMesh|StageVelika|VK_CON_Gate01_SM
 StaticMesh|StageVelika|VK_CON_Gate01_Support_SM
 StaticMesh|StageVelika|VK_CON_Landbox_SM
 StaticMesh|StageVelika|VK_CON_MP_P_Center_SM
+StaticMesh|StageVelika|VK_CON_OuterWall_02_SM
 StaticMesh|StageVelika|VK_CON_OuterWall_03_SM
 StaticMesh|StageVelika|VK_CON_StSet_SM
 StaticMesh|StageVelika|VK_CON_Tower_Parts_SM
