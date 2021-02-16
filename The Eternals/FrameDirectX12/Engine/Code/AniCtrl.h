@@ -5,7 +5,8 @@
 
 BEGIN(Engine)
 
-#define _3DMAX_FPS	30.0f
+#define _3DMAX_FPS			30.0f
+#define ANIMA_INTERPOLATION 3.0f
 
 typedef map<string, _uint>		MAP_BONENAME;
 typedef vector<BONE_DESC>		VECTOR_BONE_DESC;
@@ -60,6 +61,7 @@ public:
 	// Method
 	void							Play_Animation(_float fTimeDelta);
 	SKINNING_MATRIX*				Find_SkinningMatrix(string strBoneName);
+	_bool							Is_AnimationSetEnd(const _float& fTimeDelta);
 
 private:
 	HRESULT			Ready_AniCtrl();

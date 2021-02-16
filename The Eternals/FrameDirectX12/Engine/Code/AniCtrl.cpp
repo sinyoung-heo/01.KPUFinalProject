@@ -194,7 +194,6 @@ void CAniCtrl::Play_Animation(_float fTimeDelta)
 	if (m_fBlendingTime <= 0.0f)
 		m_fBlendingTime = 0.0f;
 
-
 	/*__________________________________________________________________________________________________________
 	- Root Node와 단위 행렬을 인자로 넘겨주면 재귀 호출을 통하여 BONE_DESC에 데이터를 저장하는 함수.
 	- Read_NodeHierarchy() 함수 호출이 끝나고 나면, 멤버 변수인 m_vecBoneTransform배열에 데이터를 채우고 리턴.
@@ -243,6 +242,18 @@ SKINNING_MATRIX * CAniCtrl::Find_SkinningMatrix(string strBoneName)
 	}
 
 	return nullptr;
+}
+
+_bool CAniCtrl::Is_AnimationSetEnd(const _float& fTimeDelta)
+{
+	if (m_fAnimationTime >= m_pScene->mAnimations[m_uiCurAniIndex]->mDuration -
+							m_pScene->mAnimations[m_uiCurAniIndex]->mTicksPerSecond * ANIMA_INTERPOLATION * fTimeDelta)
+	{
+		m_fAnimationTime = 0.0f;
+		return true;
+	}
+
+	return false;
 }
 
 void CAniCtrl::Ready_NodeHierarchy(const aiNode * pNode)

@@ -122,6 +122,11 @@ _int CPopori_F::Update_GameObject(const _float & fTimeDelta)
 		Key_Input(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
+	[ Change Animation ]
+	____________________________________________________________________________________________________________*/
+	Change_Animation(fTimeDelta);
+
+	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
@@ -359,6 +364,19 @@ void CPopori_F::Key_Input(const _float & fTimeDelta)
 		m_pTransCom->m_vPos = vPos;
 	}
 
+}
+
+void CPopori_F::Change_Animation(const _float& fTimeDelta)
+{
+	if (0 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+	{
+		m_uiAnimIdx = 1;
+	}
+
+	if (1 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+	{
+		m_uiAnimIdx = 0;
+	}
 }
 
 Engine::CGameObject* CPopori_F::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,

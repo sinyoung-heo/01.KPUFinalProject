@@ -60,6 +60,7 @@ private:
 	void			Set_ConstantTableShadowDepth();
 
 	void			Key_Input(const _float& fTimeDelta);
+	void			Change_Animation(const _float& fTimeDelta);
 
 private:
 	/*__________________________________________________________________________________________________________
