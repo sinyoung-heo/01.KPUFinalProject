@@ -228,6 +228,7 @@ void CChicken::Set_ConstantTableShadowDepth()
 
 void CChicken::Active_NPC(const _float& fTimeDelta)
 {
+	/* NPC MOVE */
 	if (!m_bIsMoveStop)
 	{
 		m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();

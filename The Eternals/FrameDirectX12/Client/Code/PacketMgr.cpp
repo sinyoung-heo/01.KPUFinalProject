@@ -228,11 +228,11 @@ void CPacketMgr::ProcessPacket(char* ptr)
 			case NPC_NORMAL:
 			{
 				pGameObj = CChicken::Create(m_pGraphicDevice, m_pCommandList,
-					L"Chicken",													// MeshTag
-					L"TestNaviMesh",											// NaviMeshTag
-					_vec3(0.05f, 0.05f, 0.05f),									// Scale
-					_vec3(0.0f, 0.0f, 0.0f),									// Angle
-					_vec3(packet->posX, packet->posY, packet->posZ));			// Pos
+											L"Chicken",													// MeshTag
+											L"TestNaviMesh",											// NaviMeshTag
+											_vec3(0.05f, 0.05f, 0.05f),									// Scale
+											_vec3(0.0f, 0.0f, 0.0f),									// Angle
+											_vec3(packet->posX, packet->posY, packet->posZ));			// Pos
 
 				pGameObj->Set_ServerNumber(packet->id);
 
