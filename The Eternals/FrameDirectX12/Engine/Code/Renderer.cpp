@@ -114,6 +114,7 @@ HRESULT CRenderer::Ready_Renderer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCo
 	m_mapRenderOnOff[L"RenderTarget"]	= false;
 	m_mapRenderOnOff[L"DebugFont"]		= false;
 	m_mapRenderOnOff[L"Collider"]		= false;
+	m_mapRenderOnOff[L"SectorGrid"]		= false;
 
 	/*__________________________________________________________________________________________________________
 	2020.06.07 MultiThreadRendering
@@ -433,8 +434,12 @@ void CRenderer::Render_UI(const _float& fTimeDelta)
 
 void CRenderer::Render_Collider(const _float & fTimeDelta)
 {
+	for (auto& pGameObject : m_RenderList[RENDER_COLLIDER])
+		pGameObject->Render_GameObject(fTimeDelta);
+
 	for (auto& pCollider : m_ColliderList)
 		pCollider->Render_Component(fTimeDelta);
+
 }
 
 void CRenderer::Render_RenderTarget()

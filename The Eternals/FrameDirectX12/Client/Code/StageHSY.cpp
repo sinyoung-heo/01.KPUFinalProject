@@ -16,7 +16,6 @@
 #include "SkyBox.h"
 #include "TexEffectInstance.h"
 
-
 CStageHSY::CStageHSY(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
 {
@@ -141,6 +140,40 @@ HRESULT CStageHSY::Ready_LayerEnvironment(wstring wstrLayerTag)
 							   _vec3(0.0f, 0.0f, 0.0f));			// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SkyBox", pGameObj), E_FAIL);
 
+	/*__________________________________________________________________________________________________________
+	[ Sector Grid ]
+	____________________________________________________________________________________________________________*/
+	_int world_width	= 1000;
+	_int world_height	= 1000;
+	_int sector_size	= 40;
+
+	_vec3 vOffset(_float(sector_size), 0.0f, _float(sector_size));
+	_vec3 vCount((_float)(world_width / sector_size), 0.0f, _float(world_height / sector_size));
+
+	_vec3 vPos = _vec3(0.0f, 0.0f, (_float)world_height / 2);
+	for (_int i = 0; i < vCount.x; ++i)
+	{
+		pGameObj = CCubeObject::Create(m_pGraphicDevice, m_pCommandList,
+									   _vec3(0.25f, 1.0f, (_float)world_height),	// Scale
+									   _vec3(0.0f),								// Angle
+									   vPos);									// Pos
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Grid_Width", pGameObj), E_FAIL);
+
+		vPos.x += vOffset.x;
+	}
+
+	vPos = _vec3((_float)world_width / 2, 0.0f, 0.0f);
+	for (_int i = 0; i < vCount.z; ++i)
+	{
+		pGameObj = CCubeObject::Create(m_pGraphicDevice, m_pCommandList,
+									   _vec3((_float)world_width, 1.0f, 0.25f),	// Scale
+									   _vec3(0.0f),								// Angle
+									   vPos);									// Pos
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Grid_Height", pGameObj), E_FAIL);
+
+		vPos.z += vOffset.z;
+	}
+
 
 	return S_OK;
 }
@@ -220,13 +253,13 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ Popori_F ]
 	____________________________________________________________________________________________________________*/
-	pGameObj =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
-								  L"PoporiR19",					// MeshTag
-								  L"TestNaviMesh",				// NaviMeshTag
-								  _vec3(0.05f, 0.05f, 0.05f),	// Scale
-								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-								  _vec3(25.0f, 0.f, 20.0f));	// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PoporiR19", pGameObj), E_FAIL);
+	//pGameObj =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
+	//							  L"PoporiR19",					// MeshTag
+	//							  L"TestNaviMesh",				// NaviMeshTag
+	//							  _vec3(0.05f, 0.05f, 0.05f),	// Scale
+	//							  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+	//							  _vec3(25.0f, 0.f, 20.0f));	// Pos
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PoporiR19", pGameObj), E_FAIL);
 
 
 	/*__________________________________________________________________________________________________________
@@ -254,65 +287,65 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ Texture Effect Instancing ]
 	____________________________________________________________________________________________________________*/
-	_vec3 vStartPos = _vec3(0.0f, 15.f, 1.0f);
-	_vec3 vOffset   = _vec3(5.0f, 0.0f, 4.5f);
+	//_vec3 vStartPos = _vec3(0.0f, 15.f, 1.0f);
+	//_vec3 vOffset   = _vec3(5.0f, 0.0f, 4.5f);
 
-	for (_int i = 0; i < 10; ++i)
-	{
-		if (0 == i % 2)
-			vStartPos.x = 0.0f;
-		else
-			vStartPos.x = 5.0f;
+	//for (_int i = 0; i < 10; ++i)
+	//{
+	//	if (0 == i % 2)
+	//		vStartPos.x = 0.0f;
+	//	else
+	//		vStartPos.x = 5.0f;
 
-		for (_int j = 0; j < 10; ++j)
-		{
-			pGameObj = CTexEffectInstance::Create(m_pGraphicDevice, m_pCommandList,
-										  L"Fire",						// TextureTag
-										  _vec3(2.5f, 2.5f, 1.0f),		// Scale
-										  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-										  vStartPos,					// Pos
-										  FRAME(8, 8, 64.0f));			// Sprite Image Frame
-			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Fire", pGameObj), E_FAIL);
+	//	for (_int j = 0; j < 10; ++j)
+	//	{
+	//		pGameObj = CTexEffectInstance::Create(m_pGraphicDevice, m_pCommandList,
+	//									  L"Fire",						// TextureTag
+	//									  _vec3(2.5f, 2.5f, 1.0f),		// Scale
+	//									  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+	//									  vStartPos,					// Pos
+	//									  FRAME(8, 8, 64.0f));			// Sprite Image Frame
+	//		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Fire", pGameObj), E_FAIL);
 
-			vStartPos.x += vOffset.x;
-		}
+	//		vStartPos.x += vOffset.x;
+	//	}
 
-		vStartPos.z += vOffset.z;
-	}
+	//	vStartPos.z += vOffset.z;
+	//}
 
-	Engine::CShaderTextureInstancing::Get_Instance()->SetUp_Instancing(Engine::INSTANCE::INSTANCE_ALPHA, L"Fire");
-	Engine::CShaderTextureInstancing::Get_Instance()->SetUp_Instancing(Engine::INSTANCE::INSTANCE_DISTORTION, L"Fire");
-	
+	//Engine::CShaderTextureInstancing::Get_Instance()->SetUp_Instancing(Engine::INSTANCE::INSTANCE_ALPHA, L"Fire");
+	//Engine::CShaderTextureInstancing::Get_Instance()->SetUp_Instancing(Engine::INSTANCE::INSTANCE_DISTORTION, L"Fire");
+	//
 
 
-	vStartPos = _vec3(0.0f, 10.0f, 0.0f);
-	vOffset   = _vec3(5.0f, 0.0f, 5.0f);
+	//vStartPos = _vec3(0.0f, 10.0f, 0.0f);
+	//vOffset   = _vec3(5.0f, 0.0f, 5.0f);
 
-	for (_int i = 0; i < 10; ++i)
-	{
-		if (0 == i % 2)
-			vStartPos.x = 0.0f;
-		else
-			vStartPos.x = 5.0f;
+	//for (_int i = 0; i < 10; ++i)
+	//{
+	//	if (0 == i % 2)
+	//		vStartPos.x = 0.0f;
+	//	else
+	//		vStartPos.x = 5.0f;
 
-		for (_int j = 0; j < 10; ++j)
-		{
-			pGameObj = CTexEffectInstance::Create(m_pGraphicDevice, m_pCommandList,
-										  L"Torch",						// TextureTag
-										  _vec3(2.5f, 5.0f, 1.0f),		// Scale
-										  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-										  vStartPos,					// Pos
-										  FRAME(8, 8, 64.0f));			// Sprite Image Frame
-			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Torch", pGameObj), E_FAIL);
+	//	for (_int j = 0; j < 10; ++j)
+	//	{
+	//		pGameObj = CTexEffectInstance::Create(m_pGraphicDevice, m_pCommandList,
+	//									  L"Torch",						// TextureTag
+	//									  _vec3(2.5f, 5.0f, 1.0f),		// Scale
+	//									  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+	//									  vStartPos,					// Pos
+	//									  FRAME(8, 8, 64.0f));			// Sprite Image Frame
+	//		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Torch", pGameObj), E_FAIL);
 
-			vStartPos.x += vOffset.x;
-		}
+	//		vStartPos.x += vOffset.x;
+	//	}
 
-		vStartPos.z += vOffset.z;
-	}
+	//	vStartPos.z += vOffset.z;
+	//}
 
-	Engine::CShaderTextureInstancing::Get_Instance()->SetUp_Instancing(Engine::INSTANCE::INSTANCE_ALPHA, L"Torch");
-	Engine::CShaderTextureInstancing::Get_Instance()->SetUp_Instancing(Engine::INSTANCE::INSTANCE_DISTORTION, L"Torch");
+	//Engine::CShaderTextureInstancing::Get_Instance()->SetUp_Instancing(Engine::INSTANCE::INSTANCE_ALPHA, L"Torch");
+	//Engine::CShaderTextureInstancing::Get_Instance()->SetUp_Instancing(Engine::INSTANCE::INSTANCE_DISTORTION, L"Torch");
 
 	return S_OK;
 }
