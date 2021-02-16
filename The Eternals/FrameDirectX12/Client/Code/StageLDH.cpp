@@ -157,6 +157,39 @@ HRESULT CStageLDH::Ready_LayerEnvironment(wstring wstrLayerTag)
 							   _vec3(0.0f, 0.0f, 0.0f));			// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SkyBox", pGameObj), E_FAIL);
 
+	/*__________________________________________________________________________________________________________
+	[ Sector Grid ]
+	____________________________________________________________________________________________________________*/
+	_int world_width	= 1000;
+	_int world_height	= 1000;
+	_int sector_size	= 40;
+
+	_vec3 vOffset(_float(sector_size), 0.0f, _float(sector_size));
+	_vec3 vCount((_float)(world_width / sector_size), 0.0f, _float(world_height / sector_size));
+
+	_vec3 vPos = _vec3(0.0f, 0.0f, (_float)world_height / 2);
+	for (_int i = 0; i < vCount.x; ++i)
+	{
+		pGameObj = CCubeObject::Create(m_pGraphicDevice, m_pCommandList,
+									   _vec3(0.25f, 1.0f, (_float)world_height),	// Scale
+									   _vec3(0.0f),								// Angle
+									   vPos);									// Pos
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Grid_Width", pGameObj), E_FAIL);
+
+		vPos.x += vOffset.x;
+	}
+
+	vPos = _vec3((_float)world_width / 2, 0.0f, 0.0f);
+	for (_int i = 0; i < vCount.z; ++i)
+	{
+		pGameObj = CCubeObject::Create(m_pGraphicDevice, m_pCommandList,
+									   _vec3((_float)world_width, 1.0f, 0.25f),	// Scale
+									   _vec3(0.0f),								// Angle
+									   vPos);									// Pos
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Grid_Height", pGameObj), E_FAIL);
+
+		vPos.z += vOffset.z;
+	}
 
 	return S_OK;
 }

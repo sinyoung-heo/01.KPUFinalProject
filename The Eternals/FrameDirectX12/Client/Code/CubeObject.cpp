@@ -42,8 +42,6 @@ _int CCubeObject::Update_GameObject(const _float & fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
-	m_pTransCom->m_vAngle.y += 90.f * fTimeDelta;
-
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
@@ -60,7 +58,8 @@ _int CCubeObject::LateUpdate_GameObject(const _float & fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+	if (m_pRenderer->Get_RenderOnOff(L"SectorGrid"))
+		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_COLLIDER, this), -1);
 
 	return NO_EVENT;
 }
@@ -103,7 +102,7 @@ void CCubeObject::Set_ConstantTable()
 	Engine::CB_SHADER_COLOR tCB_ShaderColor;
 	ZeroMemory(&tCB_ShaderColor, sizeof(Engine::CB_SHADER_COLOR));
 	tCB_ShaderColor.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderColor.vColor		= _rgba(0.0f, 1.0f, 1.0f, 1.0f);
+	tCB_ShaderColor.vColor		= _rgba(1.0f, 0.0f, 0.0f, 1.0f);
 
 	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ShaderColor);
 }
