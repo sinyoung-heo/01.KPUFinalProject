@@ -6,7 +6,7 @@
 namespace Engine
 {
 	class CCubeCol;
-	class CShaderColor;
+	class CShaderColorInstancing;
 }
 
 class CCubeObject : public Engine::CGameObject
@@ -28,14 +28,16 @@ public:
 
 private:
 	virtual HRESULT Add_Component();
-	void			Set_ConstantTable();
+	void			Set_ConstantTable(const Engine::COLOR_BUFFER& eBuffer, const _int& iInstanceIdx);
 
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
 	____________________________________________________________________________________________________________*/
-	Engine::CCubeCol*		m_pBufferCom = nullptr;
-	Engine::CShaderColor*	m_pShaderCom = nullptr;
+	Engine::CCubeCol*				m_pBufferCom			 = nullptr;
+	Engine::CShaderColorInstancing* m_pShaderColorInstancing = nullptr;
+
+	_uint m_uiColorPipelineStatePass = 0;
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,

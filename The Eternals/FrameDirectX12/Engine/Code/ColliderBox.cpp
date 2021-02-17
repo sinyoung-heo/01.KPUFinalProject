@@ -191,11 +191,6 @@ HRESULT CColliderBox::Add_Component()
 
 	m_uiColorPipelineStatePass = 1;
 
-	//// Shader
-	//m_pShaderCom = static_cast<CShaderColor*>(CComponentMgr::Get_Instance()->Clone_Component(L"ShaderColor", COMPONENTID::ID_STATIC));
-	//NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
-	//m_pShaderCom->Set_PipelineStatePass(1);
-
 	return S_OK;
 }
 
@@ -237,5 +232,4 @@ void CColliderBox::Free()
 	CVIBuffer::Free();
 
 	Safe_Release(m_pTransCom);
-	// Safe_Release(m_pShaderCom);
 }
