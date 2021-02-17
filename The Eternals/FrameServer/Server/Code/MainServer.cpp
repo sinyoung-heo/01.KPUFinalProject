@@ -194,7 +194,7 @@ void Initialize_NPC()
 	pNew->m_vPos = _vec3(25.0f, 0.f, 20.0f);
 	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	pNew->m_type = '1';
+	pNew->m_type = TYPE_NPC;
 	pNew->m_npcNum = NPC_NORMAL;
 	pNew->spd = 1.f;
 	pNew->m_status = STATUS::ST_NONACTIVE;
@@ -203,29 +203,29 @@ void Initialize_NPC()
 	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
 
 	/* NORMAL NPC - 2*/
-	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
 
-	if (pNew)
-	{
-		pNew->m_sNum = NPC_NUM_START + 1;
-		s_num = pNew->m_sNum;
-	}
+	//if (pNew)
+	//{
+	//	pNew->m_sNum = NPC_NUM_START + 1;
+	//	s_num = pNew->m_sNum;
+	//}
 
-	/* NPC의 정보 초기화 */
-	pNew->Set_IsConnected(true);
-	pNew->Set_IsDead(false);
-	sprintf_s(pNew->m_ID, "NPC%d", s_num);
+	///* NPC의 정보 초기화 */
+	//pNew->Set_IsConnected(true);
+	//pNew->Set_IsDead(false);
+	//sprintf_s(pNew->m_ID, "NPC%d", s_num);
 
-	pNew->m_vPos = _vec3(27.0f, 0.f, 20.0f);
-	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	pNew->m_type = '1';
-	pNew->m_npcNum = NPC_NORMAL;
-	pNew->spd = 1.f;
-	pNew->m_status = STATUS::ST_NONACTIVE;
+	//pNew->m_vPos = _vec3(27.0f, 0.f, 20.0f);
+	//pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
+	//pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
+	//pNew->m_type = '1';
+	//pNew->m_npcNum = NPC_NORMAL;
+	//pNew->spd = 1.f;
+	//pNew->m_status = STATUS::ST_NONACTIVE;
 
-	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
+	//CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
+	//CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
 
 #ifdef TEST
 	cout << "NPC Initialize Finish.\n";
@@ -290,7 +290,7 @@ void add_new_client(SOCKET ns)
 		ZeroMemory(&pNew->m_recv_over.wsa_over, sizeof(pNew->m_recv_over.wsa_over));
 		pNew->m_recv_start = pNew->m_recv_over.iocp_buf;
 
-		pNew->m_type = '0';
+		pNew->m_type = TYPE_PLAYER;
 		pNew->level = 1;
 		pNew->Hp = 100;
 		pNew->maxHp = 100;
@@ -508,7 +508,7 @@ void worker_thread()
 		case OPMODE::OP_RANDOM_MOVE_NPC:
 		{
 			/* 변경해야 될 것: 아래 함수 bool 리턴 받은 후 전체 플레이어 중 시야 내에 없다면 STATUS 변경 */
-			//random_move_npc(key);
+			random_move_npc(key);
 			delete over_ex;
 		}
 			break;

@@ -1,9 +1,7 @@
 #pragma once
 #include "VIBuffer.h"
-
 #include "Transform.h"
-#include "ShaderColor.h"
-
+#include "ShaderColorInstancing.h"
 
 BEGIN(Engine)
 
@@ -26,7 +24,7 @@ public:
 	void					Set_Color(const _rgba& vColor)					{ m_vColor = vColor; }
 	void					Set_ParentMatrix(_matrix* pMatrix)				{ m_pParentMatrix = pMatrix; }
 	void					Set_SkinningMatrix(SKINNING_MATRIX* pMatrix)	{ m_pSkinningMatrix = pMatrix; }
-	HRESULT					Set_PipelineStatePass(const _uint& iIdx = 0)	{ return m_pShaderCom->Set_PipelineStatePass(iIdx); }
+	void					Set_PipelineStatePass(const _uint& iIdx = 0)	{ m_uiColorPipelineStatePass = iIdx; }
 
 	// Method
 	HRESULT					Ready_Buffer(const _uint& uiSliceCnt, const _uint& uiStackCnt);	// Vertex & Index 정보 초기화.
@@ -41,23 +39,23 @@ public:
 
 private:
 	HRESULT					Add_Component();
-	void					Set_ConstantTable();
+	void					Set_ConstantTable(const COLOR_BUFFER& eBuffer, const _int& iInstanceIdx);
 
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
 	____________________________________________________________________________________________________________*/
-	CTransform*			m_pTransCom			= nullptr;
-	CShaderColor*		m_pShaderCom		= nullptr;
+	CTransform*				m_pTransCom			     = nullptr;
+	CShaderColorInstancing* m_pShaderColorInstancing = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
 	BoundingSphere		m_BoundingInfo;
-	_rgba				m_vColor			= _rgba(0.0f, 1.0f, 0.0f, 1.0f);
-
-	SKINNING_MATRIX*	m_pSkinningMatrix	= nullptr;
-	_matrix*			m_pParentMatrix		= nullptr;
+	_rgba				m_vColor			       = _rgba(0.0f, 1.0f, 0.0f, 1.0f);
+	SKINNING_MATRIX*	m_pSkinningMatrix	       = nullptr;
+	_matrix*			m_pParentMatrix		       = nullptr;
+	_uint				m_uiColorPipelineStatePass = 0;
 
 public:
 	virtual CComponent*			Clone();

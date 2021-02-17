@@ -27,6 +27,7 @@ public:
 	const _vec3&					Get_MinVector()			{ return m_pVIMesh->Get_MinVector(); }
 	const _vec3&					Get_MaxVector()			{ return m_pVIMesh->Get_MaxVector(); }
 	wstring							Get_FileName()			{ return m_pVIMesh->Get_FileName(); }
+	_bool							Is_AnimationSetEnd(const _float& fTimeDelta) { return m_pAniCtrl->Is_AnimationSetEnd(fTimeDelta); };
 
 	// Method
 	HRESULT Ready_Mesh(wstring wstrFilePath, wstring wstrFileName);

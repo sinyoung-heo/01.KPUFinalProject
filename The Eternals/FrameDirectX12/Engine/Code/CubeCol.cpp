@@ -1,4 +1,5 @@
 #include "CubeCol.h"
+#include "ShaderColorInstancing.h"
 
 USING(Engine)
 
@@ -112,6 +113,8 @@ void CCubeCol::Render_Buffer()
 
 CComponent * CCubeCol::Clone()
 {
+	CShaderColorInstancing::Get_Instance()->Add_TotalInstancCount(COLOR_BUFFER::BUFFER_CUBE);
+
 	return new CCubeCol(*this);
 }
 

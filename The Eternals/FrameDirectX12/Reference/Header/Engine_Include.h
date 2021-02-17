@@ -80,6 +80,7 @@ using namespace DirectX::PackedVector;
 #include "Engine_Typedef.h"
 #include "Engine_Struct.h"
 #include "Engine_Template.h"
+#include "../../../FrameServer/Server/Header/protocol.h"
 
 #pragma warning(disable : 4251)
 

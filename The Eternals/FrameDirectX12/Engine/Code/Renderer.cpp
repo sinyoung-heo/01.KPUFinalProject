@@ -27,7 +27,7 @@ _uint CRenderer::Get_RenderLstSize(const RENDERGROUP & eRenderGroup)
 
 _uint CRenderer::Get_ColliderLstSize()
 {
-	return m_uiColliderListSize = (_uint)(m_ColliderList.size());
+	return m_uiColliderListSize = (_uint)(m_ColliderList.size() + m_RenderList[RENDER_COLLIDER].size());
 }
 
 _bool CRenderer::Get_RenderOnOff(wstring wstrTag)
@@ -114,6 +114,7 @@ HRESULT CRenderer::Ready_Renderer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCo
 	m_mapRenderOnOff[L"RenderTarget"]	= false;
 	m_mapRenderOnOff[L"DebugFont"]		= false;
 	m_mapRenderOnOff[L"Collider"]		= false;
+	m_mapRenderOnOff[L"SectorGrid"]		= false;
 
 	/*__________________________________________________________________________________________________________
 	2020.06.07 MultiThreadRendering
@@ -165,7 +166,6 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	}
 
 	Render_Light();						// Shade, Specular
-	
 	Render_DownSampling();
 	Render_SSAO();
 	Render_Blur();
@@ -173,8 +173,10 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	Render_Distortion(fTimeDelta);
 	Render_Blend();						// Target Blend
 	Render_Luminance();					// Luminance(°íÈÖµµÃßÃâ)
+
 	Render_Collider(fTimeDelta);		// Collider Render
 	Render_Alpha(fTimeDelta);			// Effect Texture, Mesh
+
 	Render_UI(fTimeDelta);				// UI Render
 	Render_RenderTarget();				// Debug RenderTarget
 
@@ -189,6 +191,8 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	Clear_RenderGroup();
 	CShaderShadowInstancing::Get_Instance()->Reset_Instance();
 	CShaderMeshInstancing::Get_Instance()->Reset_Instance();
+	CShaderTextureInstancing::Get_Instance()->Reset_Instance();
+	CShaderColorInstancing::Get_Instance()->Reset_Instance();
 
 	return S_OK;
 }
@@ -297,6 +301,9 @@ void CRenderer::Render_Distortion(const _float& fTimeDelta)
 
 	for (auto& pGameObject : m_RenderList[RENDER_DISTORTION])
 		pGameObject->Render_GameObject(fTimeDelta);
+
+	// Render Texture Instancing
+	CShaderTextureInstancing::Get_Instance()->Render_Instance(INSTANCE::INSTANCE_DISTORTION);
 
 	m_pTargetDistortion->Release_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
 }
@@ -411,22 +418,15 @@ void CRenderer::Render_Alpha(const _float& fTimeDelta)
 			return pSour->Get_DepthOfView() > pDest->Get_DepthOfView(); 
 		});
 
-	//m_RenderList[RENDER_ALPHA].sort([](CGameObject* pSour, CGameObject* pDest)->_bool 
-	//								{ 
-	//									return pSour->Get_DepthOfView() > pDest->Get_DepthOfView(); 
-	//								});
-
 	for (auto& pGameObject : m_RenderList[RENDER_ALPHA])
 		pGameObject->Render_GameObject(fTimeDelta);
+
+	// Render Texture Instancing
+	CShaderTextureInstancing::Get_Instance()->Render_Instance(INSTANCE::INSTANCE_ALPHA);
 }
 
 void CRenderer::Render_UI(const _float& fTimeDelta)
 {
-	//m_RenderList[RENDER_UI].sort([](CGameObject* pSour, CGameObject* pDest)->_bool
-	//	{
-	//		return pSour->Get_UIDepth() < pDest->Get_UIDepth(); 
-	//	});
-
 	sort(m_RenderList[RENDER_UI].begin(), m_RenderList[RENDER_UI].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
 		{ 
 			return pSour->Get_UIDepth() > pDest->Get_UIDepth();
@@ -438,8 +438,14 @@ void CRenderer::Render_UI(const _float& fTimeDelta)
 
 void CRenderer::Render_Collider(const _float & fTimeDelta)
 {
+	for (auto& pGameObject : m_RenderList[RENDER_COLLIDER])
+		pGameObject->Render_GameObject(fTimeDelta);
+
 	for (auto& pCollider : m_ColliderList)
 		pCollider->Render_Component(fTimeDelta);
+
+	// Render Color Instancing
+	CShaderColorInstancing::Get_Instance()->Render_Instance();
 }
 
 void CRenderer::Render_RenderTarget()
@@ -568,7 +574,13 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	CShaderMeshInstancing::Get_Instance()->Ready_Shader(m_pGraphicDevice, m_pCommandList);
 	++m_uiCnt_ShaderFile;
 
+	// ShaderTextureInstancing
+	CShaderTextureInstancing::Get_Instance()->Ready_Shader(m_pGraphicDevice, m_pCommandList);
+	++m_uiCnt_ShaderFile;
 
+	// ShaderColorInstancing
+	CShaderColorInstancing::Get_Instance()->Ready_Shader(m_pGraphicDevice, m_pCommandList);
+	++m_uiCnt_ShaderFile;
 
 	return S_OK;
 }

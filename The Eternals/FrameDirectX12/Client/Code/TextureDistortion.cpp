@@ -25,13 +25,20 @@ HRESULT CTextureDistortion::Ready_GameObject(wstring wstrTextureTag,
 {
 
 
-	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrTextureTag), E_FAIL);
 
 	m_pTransCom->m_vScale	= vScale;
 	m_pTransCom->m_vScale.y *= 3.f;
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos		= vPos;
+
+	// BoundingBox.
+	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
+										   m_pTransCom->m_vScale,  
+										   _vec3(0.0f, 0.0f ,0.0f),
+										   _vec3(0.5f, 0.5f ,0.0f),
+										   _vec3(-0.5f, -0.5f ,0.0f));
 
 	m_uiTexIdx	= 0;
 	m_tFrame	= tFrame;
@@ -69,11 +76,6 @@ _int CTextureDistortion::Update_GameObject(const _float & fTimeDelta)
 	Update_SpriteFrame(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_DISTORTION, this), -1);
-
-	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
@@ -93,6 +95,13 @@ _int CTextureDistortion::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 	
+	/*__________________________________________________________________________________________________________
+	[ Renderer - Add Render Group ]
+	____________________________________________________________________________________________________________*/
+	// Frustum Culling
+	if (m_pRenderer->Get_Frustum().Contains(m_pBoundingBoxCom->Get_BoundingInfo()) != DirectX::DISJOINT)
+		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_DISTORTION, this), -1);
+
 	return NO_EVENT;
 }
 

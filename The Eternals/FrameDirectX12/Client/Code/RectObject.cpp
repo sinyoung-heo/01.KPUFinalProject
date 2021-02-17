@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "RectObject.h"
-
 #include "ObjectMgr.h"
 #include "GraphicDevice.h"
 
 
 CRectObject::CRectObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
+	, m_pShaderColorInstancing(Engine::CShaderColorInstancing::Get_Instance())
 {
 }
 
@@ -65,12 +65,13 @@ _int CRectObject::LateUpdate_GameObject(const _float & fTimeDelta)
 
 void CRectObject::Render_GameObject(const _float & fTimeDelta)
 {
-	Set_ConstantTable();
+	/*__________________________________________________________________________________________________________
+	[ Add Instance ]
+	____________________________________________________________________________________________________________*/
+	m_pShaderColorInstancing->Add_Instance(Engine::BUFFER_RECT, m_uiColorPipelineStatePass);
+	_uint iInstanceIdx = m_pShaderColorInstancing->Get_InstanceCount(Engine::BUFFER_RECT, m_uiColorPipelineStatePass) - 1;
 
-	m_pShaderCom->Begin_Shader();
-	m_pBufferCom->Begin_Buffer();
-
-	m_pBufferCom->Render_Buffer();
+	Set_ConstantTable(Engine::BUFFER_RECT, iInstanceIdx);
 }
 
 HRESULT CRectObject::Add_Component()
@@ -84,16 +85,12 @@ HRESULT CRectObject::Add_Component()
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Buffer", m_pBufferCom);
 
 	// Shader
-	m_pShaderCom = static_cast<Engine::CShaderColor*>(m_pComponentMgr->Clone_Component(L"ShaderColor", Engine::COMPONENTID::ID_STATIC));
-	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
-	m_pShaderCom->AddRef();
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(0), E_FAIL);
-	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
+	m_uiColorPipelineStatePass = 0;
 
 	return S_OK;
 }
 
-void CRectObject::Set_ConstantTable()
+void CRectObject::Set_ConstantTable(const Engine::COLOR_BUFFER& eBuffer, const _int& iInstanceIdx)
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -101,11 +98,11 @@ void CRectObject::Set_ConstantTable()
 	Engine::CB_SHADER_COLOR tCB_ShaderColor;
 	ZeroMemory(&tCB_ShaderColor, sizeof(Engine::CB_SHADER_COLOR));
 	tCB_ShaderColor.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderColor.vColor		= _rgba(1.f, 0.f, 0.f, 1.f);
+	tCB_ShaderColor.vColor		= _rgba(1.0f, 0.0f, 0.0f, 1.0f);
 
-	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ShaderColor);
+	m_pShaderColorInstancing->Get_UploadBuffer_ShaderColor(eBuffer, m_uiColorPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderColor);
+
 }
-
 
 Engine::CGameObject* CRectObject::Create(ID3D12Device * pGraphicDevice,
 										 ID3D12GraphicsCommandList * pCommandList,
@@ -126,5 +123,4 @@ void CRectObject::Free()
 	CGameObject::Free();
 
 	Engine::Safe_Release(m_pBufferCom);
-	Engine::Safe_Release(m_pShaderCom);
 }

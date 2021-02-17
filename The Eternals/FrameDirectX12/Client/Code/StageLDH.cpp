@@ -48,8 +48,11 @@ HRESULT CStageLDH::Ready_Scene()
 	Engine::FAILED_CHECK_RETURN(Ready_LayerFont(L"Layer_Font"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
+	Engine::CShaderColorInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderShadowInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderMeshInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
+	Engine::CShaderTextureInstancing::Get_Instance()->SetUp_ConstantBuffer(Engine::INSTANCE::INSTANCE_DISTORTION ,m_pGraphicDevice);
+	Engine::CShaderTextureInstancing::Get_Instance()->SetUp_ConstantBuffer(Engine::INSTANCE::INSTANCE_ALPHA, m_pGraphicDevice);
 
 #ifdef SERVER
 	Engine::FAILED_CHECK_RETURN(CPacketMgr::Get_Instance()->Ready_Server(m_pGraphicDevice,m_pCommandList), E_FAIL);
@@ -157,6 +160,39 @@ HRESULT CStageLDH::Ready_LayerEnvironment(wstring wstrLayerTag)
 							   _vec3(0.0f, 0.0f, 0.0f));			// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SkyBox", pGameObj), E_FAIL);
 
+	/*__________________________________________________________________________________________________________
+	[ Sector Grid ]
+	____________________________________________________________________________________________________________*/
+	_int world_width	= 1000;
+	_int world_height	= 1000;
+	_int sector_size	= 40;
+
+	_vec3 vOffset(_float(sector_size), 0.0f, _float(sector_size));
+	_vec3 vCount((_float)(world_width / sector_size), 0.0f, _float(world_height / sector_size));
+
+	_vec3 vPos = _vec3(0.0f, 0.0f, (_float)world_height / 2);
+	for (_int i = 0; i < vCount.x; ++i)
+	{
+		pGameObj = CCubeObject::Create(m_pGraphicDevice, m_pCommandList,
+									   _vec3(0.25f, 1.0f, (_float)world_height),	// Scale
+									   _vec3(0.0f),								// Angle
+									   vPos);									// Pos
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Grid_Width", pGameObj), E_FAIL);
+
+		vPos.x += vOffset.x;
+	}
+
+	vPos = _vec3((_float)world_width / 2, 0.0f, 0.0f);
+	for (_int i = 0; i < vCount.z; ++i)
+	{
+		pGameObj = CCubeObject::Create(m_pGraphicDevice, m_pCommandList,
+									   _vec3((_float)world_width, 1.0f, 0.25f),	// Scale
+									   _vec3(0.0f),								// Angle
+									   vPos);									// Pos
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Grid_Height", pGameObj), E_FAIL);
+
+		vPos.z += vOffset.z;
+	}
 
 	return S_OK;
 }
@@ -304,7 +340,7 @@ HRESULT CStageLDH::Ready_LayerGameObject(wstring wstrLayerTag)
 									  _vec3(0.0f, 0.0f, 0.0f),		// Angle
 									  _vec3(26.0f, 1.5f, 26.5f),	// Pos
 									  FRAME(8, 8, 64.0f));			// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TexEffect", pGameObj), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Fire", pGameObj), E_FAIL);
 
 	// Torch
 	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
@@ -313,7 +349,7 @@ HRESULT CStageLDH::Ready_LayerGameObject(wstring wstrLayerTag)
 									  _vec3(0.0f, 0.0f, 0.0f),		// Angle
 									  _vec3(28.0f, 2.0f, 27.0f),	// Pos
 									  FRAME(8, 8, 64.0f));			// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TexEffect", pGameObj), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Torch", pGameObj), E_FAIL);
 
 
 	return S_OK;
@@ -465,4 +501,11 @@ CStageLDH * CStageLDH::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsComman
 void CStageLDH::Free()
 {
 	Engine::CScene::Free();
+
+	Engine::CShaderShadowInstancing::Get_Instance()->Reset_InstancingContainer();
+	Engine::CShaderShadowInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
+	Engine::CShaderMeshInstancing::Get_Instance()->Reset_InstancingContainer();
+	Engine::CShaderMeshInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
+	Engine::CShaderColorInstancing::Get_Instance()->Reset_Instance();
+	Engine::CShaderColorInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
 }

@@ -13,5 +13,6 @@ public:
 public:
 	float spd;
 	char m_npcNum;
+	char m_dir;
 };
 

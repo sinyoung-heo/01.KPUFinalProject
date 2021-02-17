@@ -1,13 +1,8 @@
 DynamicMesh|Character|PoporiH25
 DynamicMesh|Character|PoporiR19
-DynamicMesh|NPC|Aman_boy
-DynamicMesh|NPC|Baraka_M_Extractor
-DynamicMesh|NPC|Baraka_M_Merchant
-DynamicMesh|NPC|Baraka_M_Mystellium
 DynamicMesh|NPC|Cat
 DynamicMesh|NPC|Chicken
 DynamicMesh|NPC|Human_boy
-DynamicMesh|NPC|Human_girl
 DynamicMesh|NPC|NPC_Villagers
 StaticMesh|Plane|BumpTerrainMesh00
 StaticMesh|Plane|BumpTerrainMesh01

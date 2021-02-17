@@ -82,21 +82,6 @@ void CNaviMesh::Update_Component(const _float& fTimeDelta)
 	{
 		for (auto& pCell : m_vecCell)
 			pCell->Update_Component(fTimeDelta);
-
-		if (E_FAIL == CRenderer::Get_Instance()->Add_Renderer(this))
-			return;
-	}
-}
-
-void CNaviMesh::Render_Component(const _float& fTimeDelta)
-{
-	/*__________________________________________________________________________________________________________
-	[ Renderer - Add RenderGroup ]
-	____________________________________________________________________________________________________________*/
-	if (CRenderer::Get_Instance()->Get_RenderOnOff(L"Collider"))
-	{
-		for (auto& pCell : m_vecCell)
-			pCell->Render_Component(fTimeDelta);
 	}
 }
 

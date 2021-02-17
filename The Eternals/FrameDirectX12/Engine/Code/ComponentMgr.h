@@ -18,7 +18,9 @@
 #include "CoordinateCol.h"
 
 #include "ShaderColor.h"
+#include "ShaderColorInstancing.h"
 #include "ShaderTexture.h"
+#include "ShaderTextureInstancing.h"
 #include "ShaderSkyBox.h"
 #include "ShaderMesh.h"
 #include "ShaderMeshInstancing.h"

@@ -335,6 +335,9 @@ void CMainApp::Key_Input()
 	if (Engine::KEY_DOWN(DIK_F3))
 		m_pRenderer->Set_RenderOnOff(L"Collider");
 
+	if (Engine::KEY_DOWN(DIK_F4))
+		m_pRenderer->Set_RenderOnOff(L"SectorGrid");
+
 }
 
 void CMainApp::Show_FontLog(const _float& fTimeDelta)
@@ -364,9 +367,9 @@ void CMainApp::Show_FontLog(const _float& fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	if (nullptr != m_pRenderer)
 	{
-		m_uiCnt_ShaderFile = m_pRenderer->Get_CntShaderFile();
-		m_uiCnt_PipelineState = m_pRenderer->Get_CntPipelineState();
-		m_uiCnt_SetPipelineState = m_pRenderer->Get_CntSetPipelineState();
+		m_uiCnt_ShaderFile			= m_pRenderer->Get_CntShaderFile();
+		m_uiCnt_PipelineState		= m_pRenderer->Get_CntPipelineState();
+		m_uiCnt_SetPipelineState	= m_pRenderer->Get_CntSetPipelineState();
 		m_pRenderer->Reset_SetPipelineStateCnt();
 	}
 

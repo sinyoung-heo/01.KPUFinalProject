@@ -39,8 +39,11 @@ HRESULT CStagePJO::Ready_Scene()
 	Engine::FAILED_CHECK_RETURN(Ready_LayerFont(L"Layer_Font"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
+	Engine::CShaderColorInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderShadowInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderMeshInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
+	Engine::CShaderTextureInstancing::Get_Instance()->SetUp_ConstantBuffer(Engine::INSTANCE::INSTANCE_DISTORTION, m_pGraphicDevice);
+	Engine::CShaderTextureInstancing::Get_Instance()->SetUp_ConstantBuffer(Engine::INSTANCE::INSTANCE_ALPHA, m_pGraphicDevice);
 
 	return S_OK;
 }
@@ -248,7 +251,7 @@ HRESULT CStagePJO::Ready_LayerGameObject(wstring wstrLayerTag)
 									  _vec3(0.0f, 0.0f, 0.0f),		// Angle
 									  _vec3(26.0f, 1.5f, 26.5f),	// Pos
 									  FRAME(8, 8, 64.0f));			// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TexEffect", pGameObj), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Fire", pGameObj), E_FAIL);
 
 	// Torch
 	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
@@ -257,7 +260,7 @@ HRESULT CStagePJO::Ready_LayerGameObject(wstring wstrLayerTag)
 									  _vec3(0.0f, 0.0f, 0.0f),		// Angle
 									  _vec3(28.0f, 2.0f, 27.0f),	// Pos
 									  FRAME(8, 8, 64.0f));			// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TexEffect", pGameObj), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Torch", pGameObj), E_FAIL);
 
 
 	//pGameObj = CDistortionDisk::Create(m_pGraphicDevice, m_pCommandList,
@@ -420,4 +423,11 @@ CStagePJO * CStagePJO::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsComman
 void CStagePJO::Free()
 {
 	Engine::CScene::Free();
+
+	Engine::CShaderShadowInstancing::Get_Instance()->Reset_InstancingContainer();
+	Engine::CShaderShadowInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
+	Engine::CShaderMeshInstancing::Get_Instance()->Reset_InstancingContainer();
+	Engine::CShaderMeshInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
+	Engine::CShaderColorInstancing::Get_Instance()->Reset_Instance();
+	Engine::CShaderColorInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
 }

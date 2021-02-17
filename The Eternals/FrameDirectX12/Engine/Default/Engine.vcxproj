@@ -218,6 +218,7 @@ call CopyEngine.bat</Command>
     <ClInclude Include="..\Code\ShaderBlend.h" />
     <ClInclude Include="..\Code\ShaderBlur.h" />
     <ClInclude Include="..\Code\ShaderColor.h" />
+    <ClInclude Include="..\Code\ShaderColorInstancing.h" />
     <ClInclude Include="..\Code\ShaderDownSampling.h" />
     <ClInclude Include="..\Code\ShaderLighting.h" />
     <ClInclude Include="..\Code\ShaderLuminance.h" />
@@ -228,6 +229,7 @@ call CopyEngine.bat</Command>
     <ClInclude Include="..\Code\ShaderSSAO.h" />
     <ClInclude Include="..\Code\ShaderMeshInstancing.h" />
     <ClInclude Include="..\Code\ShaderTexture.h" />
+    <ClInclude Include="..\Code\ShaderTextureInstancing.h" />
     <ClInclude Include="..\Code\TerrainTex.h" />
     <ClInclude Include="..\Code\Texture.h" />
     <ClInclude Include="..\Code\TimeMgr.h" />
@@ -295,6 +297,7 @@ call CopyEngine.bat</Command>
     <ClCompile Include="..\Code\ShaderSSAO.cpp" />
     <ClCompile Include="..\Code\ShaderMeshInstancing.cpp" />
     <ClCompile Include="..\Code\ShaderTexture.cpp" />
+    <ClCompile Include="..\Code\ShaderTextureInstancing.cpp" />
     <ClCompile Include="..\Code\TerrainTex.cpp" />
     <ClCompile Include="..\Code\Texture.cpp" />
     <ClCompile Include="..\Code\TimeMgr.cpp" />
@@ -302,6 +305,7 @@ call CopyEngine.bat</Command>
     <ClCompile Include="..\Code\Transform.cpp" />
     <ClCompile Include="..\Code\VIBuffer.cpp" />
     <ClCompile Include="..\Code\VIMesh.cpp" />
+    <ClCompile Include="ShaderColorInstancing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Bin\Shader\ShaderBlend.hlsl">
@@ -313,6 +317,10 @@ call CopyEngine.bat</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderColor.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\Bin\Shader\ShaderColorInstancing.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
@@ -353,6 +361,10 @@ call CopyEngine.bat</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderTexture.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\Bin\Shader\ShaderTextureInstancing.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>

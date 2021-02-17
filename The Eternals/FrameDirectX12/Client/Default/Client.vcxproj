@@ -203,6 +203,8 @@
     <ClInclude Include="..\Code\TerrainObject.h" />
     <ClInclude Include="..\Code\TestOthers.h" />
     <ClInclude Include="..\Code\TestPlayer.h" />
+    <ClInclude Include="..\Code\TexDistortionInstance.h" />
+    <ClInclude Include="..\Code\TexEffectInstance.h" />
     <ClInclude Include="..\Code\TextureDistortion.h" />
     <ClInclude Include="..\Code\TextureEffect.h" />
     <ClInclude Include="..\Header\Const.h" />
@@ -253,6 +255,8 @@
     <ClCompile Include="..\Code\TerrainObject.cpp" />
     <ClCompile Include="..\Code\TestOthers.cpp" />
     <ClCompile Include="..\Code\TestPlayer.cpp" />
+    <ClCompile Include="..\Code\TexDistortionInstance.cpp" />
+    <ClCompile Include="..\Code\TexEffectInstance.cpp" />
     <ClCompile Include="..\Code\TextureDistortion.cpp" />
     <ClCompile Include="..\Code\TextureEffect.cpp" />
     <ClCompile Include="Client.cpp" />

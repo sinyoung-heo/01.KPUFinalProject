@@ -1,4 +1,4 @@
-Fire|1|..\..\Bin\Resource\ResourceStage\Texture\Fire\%d.dds
-SkyBox|7|..\..\Bin\Resource\ResourceStage\Texture\SkyBox\%d.dds
-Terrain|8|..\..\Bin\Resource\ResourceStage\Texture\Terrain\%d.dds
-Torch|1|..\..\Bin\Resource\ResourceStage\Texture\Torch\%d.dds
+Fire|1|..\..\Bin\Resource\ResourceStage\Texture\Effect\Fire\%d.dds
+Torch|1|..\..\Bin\Resource\ResourceStage\Texture\Effect\Torch\%d.dds
+SkyBox|7|..\..\Bin\Resource\ResourceStage\Texture\Environment\SkyBox\%d.dds
+Terrain|8|..\..\Bin\Resource\ResourceStage\Texture\Environment\Terrain\%d.dds

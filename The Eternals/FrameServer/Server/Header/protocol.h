@@ -22,6 +22,8 @@ constexpr char SC_PACKET_LEAVE = 4;
 constexpr char SC_PACKET_CHAT = 5;
 constexpr char SC_PACKET_LOGIN_FAIL = 6;
 constexpr char SC_PACKET_STAT_CHANGE = 7;
+constexpr char SC_PACKET_NPC_MOVE = 8;
+constexpr char SC_PACKET_NPC_MOVE_STOP = 9;
 
 constexpr char CS_LOGIN = 0;
 constexpr char CS_MOVE = 1;
@@ -29,7 +31,9 @@ constexpr char CS_MOVE_STOP = 2;
 constexpr char CS_ATTACK = 3;
 constexpr char CS_CHAT = 4;
 constexpr char CS_LOGOUT = 5;
-constexpr char CS_TELEPORT = 6;				// 부하 테스트용 동접 테스트를 위해 텔러포트로 Hot Spot 해소
+constexpr char CS_NPC_MOVE = 6;
+constexpr char CS_NPC_MOVE_STOP = 7;
+
 
 struct sc_packet_login_ok 
 {
@@ -57,6 +61,15 @@ struct sc_packet_move
 	int move_time;
 	float posX, posY, posZ;
 	float angleY;
+};
+
+struct sc_packet_npc_move
+{
+	char size;
+	char type;
+	int id;
+
+	char dir;
 };
 
 /* PROTOCOL 추가 확장 */

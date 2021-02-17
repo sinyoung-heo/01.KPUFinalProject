@@ -77,4 +77,9 @@ void CComponentMgr::Free()
 		for_each(m_mapComponent[i].begin(), m_mapComponent[i].end(), CDeleteMap());
 		m_mapComponent[i].clear();
 	}
+
+	CShaderShadowInstancing::Get_Instance()->Destroy_Instance();
+	CShaderMeshInstancing::Get_Instance()->Destroy_Instance();
+	CShaderTextureInstancing::Get_Instance()->Destroy_Instance();
+	CShaderColorInstancing::Get_Instance()->Destroy_Instance();
 }

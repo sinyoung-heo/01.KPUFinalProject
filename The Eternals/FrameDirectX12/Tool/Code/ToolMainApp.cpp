@@ -61,7 +61,7 @@ _int CToolMainApp::Update_MainApp(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Update Management ]
 	____________________________________________________________________________________________________________*/
-	m_pLightMgr->Update_Light();
+	// m_pLightMgr->Update_Light();
 	CShadowLightMgr::Get_Instance()->Update_ShadowLight();
 	m_pManagement->Update_Management(fTimeDelta);
 

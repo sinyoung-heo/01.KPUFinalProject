@@ -1,5 +1,4 @@
 #include "ColliderSphere.h"
-
 #include "GraphicDevice.h"
 #include "Renderer.h"
 #include "ComponentMgr.h"
@@ -15,6 +14,7 @@ CColliderSphere::CColliderSphere(ID3D12Device * pGraphicDevice, ID3D12GraphicsCo
 CColliderSphere::CColliderSphere(const CColliderSphere & rhs)
 	: CVIBuffer(rhs)
 	, m_BoundingInfo(rhs.m_BoundingInfo)
+	, m_pShaderColorInstancing(CShaderColorInstancing::Get_Instance())
 {
 }
 
@@ -198,12 +198,13 @@ void CColliderSphere::Update_Component(const _float & fTimeDelta)
 
 void CColliderSphere::Render_Component(const _float & fTimeDelta)
 {
-	Set_ConstantTable();
+	/*__________________________________________________________________________________________________________
+	[ Add Instance ]
+	____________________________________________________________________________________________________________*/
+	m_pShaderColorInstancing->Add_Instance(COLOR_BUFFER::BUFFER_SPHERE, m_uiColorPipelineStatePass);
+	_uint iInstanceIdx = m_pShaderColorInstancing->Get_InstanceCount(COLOR_BUFFER::BUFFER_SPHERE, m_uiColorPipelineStatePass) - 1;
 
-	m_pShaderCom->Begin_Shader();
-	Begin_Buffer();
-
-	Render_Buffer();
+	Set_ConstantTable(COLOR_BUFFER::BUFFER_SPHERE, iInstanceIdx);
 }
 
 void CColliderSphere::Begin_Buffer()
@@ -222,15 +223,12 @@ HRESULT CColliderSphere::Add_Component()
 	m_pTransCom = CTransform::Create();
 	NULL_CHECK_RETURN(m_pTransCom, E_FAIL);
 
-	// Shader
-	m_pShaderCom = static_cast<CShaderColor*>(CComponentMgr::Get_Instance()->Clone_Component(L"ShaderColor", COMPONENTID::ID_STATIC));
-	NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
-	m_pShaderCom->Set_PipelineStatePass(1);
+	m_uiColorPipelineStatePass = 1;
 
 	return S_OK;
 }
 
-void CColliderSphere::Set_ConstantTable()
+void CColliderSphere::Set_ConstantTable(const COLOR_BUFFER& eBuffer, const _int& iInstanceIdx)
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -240,7 +238,7 @@ void CColliderSphere::Set_ConstantTable()
 	tCB_ShaderColor.matWorld	= CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
 	tCB_ShaderColor.vColor		= m_vColor;
 
-	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ShaderColor);
+	m_pShaderColorInstancing->Get_UploadBuffer_ShaderColor(eBuffer, m_uiColorPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderColor);
 }
 
 CComponent * CColliderSphere::Clone()
@@ -248,7 +246,8 @@ CComponent * CColliderSphere::Clone()
 	 CComponent* pComponent = new CColliderSphere(*this);
 	 static_cast<CColliderSphere*>(pComponent)->Ready_Collider();
 
-	// return new CColliderSphere(*this);
+	 CShaderColorInstancing::Get_Instance()->Add_TotalInstancCount(COLOR_BUFFER::BUFFER_SPHERE);
+
 	return pComponent;
 }
 
@@ -270,5 +269,4 @@ void CColliderSphere::Free()
 	CVIBuffer::Free();
 
 	Safe_Release(m_pTransCom);
-	Safe_Release(m_pShaderCom);
 }
