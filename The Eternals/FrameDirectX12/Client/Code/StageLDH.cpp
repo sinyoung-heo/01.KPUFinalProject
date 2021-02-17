@@ -48,8 +48,11 @@ HRESULT CStageLDH::Ready_Scene()
 	Engine::FAILED_CHECK_RETURN(Ready_LayerFont(L"Layer_Font"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
+	Engine::CShaderColorInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderShadowInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderMeshInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
+	Engine::CShaderTextureInstancing::Get_Instance()->SetUp_ConstantBuffer(Engine::INSTANCE::INSTANCE_DISTORTION ,m_pGraphicDevice);
+	Engine::CShaderTextureInstancing::Get_Instance()->SetUp_ConstantBuffer(Engine::INSTANCE::INSTANCE_ALPHA, m_pGraphicDevice);
 
 #ifdef SERVER
 	Engine::FAILED_CHECK_RETURN(CPacketMgr::Get_Instance()->Ready_Server(m_pGraphicDevice,m_pCommandList), E_FAIL);
@@ -498,4 +501,11 @@ CStageLDH * CStageLDH::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsComman
 void CStageLDH::Free()
 {
 	Engine::CScene::Free();
+
+	Engine::CShaderShadowInstancing::Get_Instance()->Reset_InstancingContainer();
+	Engine::CShaderShadowInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
+	Engine::CShaderMeshInstancing::Get_Instance()->Reset_InstancingContainer();
+	Engine::CShaderMeshInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
+	Engine::CShaderColorInstancing::Get_Instance()->Reset_Instance();
+	Engine::CShaderColorInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
 }

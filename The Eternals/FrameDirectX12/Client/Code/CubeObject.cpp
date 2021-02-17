@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "CubeObject.h"
-
 #include "ObjectMgr.h"
 #include "GraphicDevice.h"
 

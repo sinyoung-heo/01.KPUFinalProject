@@ -39,8 +39,11 @@ HRESULT CStagePJO::Ready_Scene()
 	Engine::FAILED_CHECK_RETURN(Ready_LayerFont(L"Layer_Font"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
+	Engine::CShaderColorInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderShadowInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderMeshInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
+	Engine::CShaderTextureInstancing::Get_Instance()->SetUp_ConstantBuffer(Engine::INSTANCE::INSTANCE_DISTORTION, m_pGraphicDevice);
+	Engine::CShaderTextureInstancing::Get_Instance()->SetUp_ConstantBuffer(Engine::INSTANCE::INSTANCE_ALPHA, m_pGraphicDevice);
 
 	return S_OK;
 }
@@ -425,4 +428,6 @@ void CStagePJO::Free()
 	Engine::CShaderShadowInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
 	Engine::CShaderMeshInstancing::Get_Instance()->Reset_InstancingContainer();
 	Engine::CShaderMeshInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
+	Engine::CShaderColorInstancing::Get_Instance()->Reset_Instance();
+	Engine::CShaderColorInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
 }

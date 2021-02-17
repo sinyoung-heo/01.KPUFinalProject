@@ -69,6 +69,10 @@ HRESULT CToolSceneStage::Ready_Scene()
 	pMyForm->m_TabMap.Ready_NavigationMeshControl();
 	m_pPickingTerrain = static_cast<CToolTerrain*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"TerrainTex256"));
 
+
+	Engine::CShaderColorInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
+
+
 	return S_OK;
 }
 
@@ -244,36 +248,36 @@ HRESULT CToolSceneStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ BumpTerrainMesh ]
 	____________________________________________________________________________________________________________*/
-	Engine::CGameObject* pGameObj = nullptr;
-	_vec3 vPos    = _vec3(0.0f, -0.1f, 0.5f);
-	_vec3 vOffset = _vec3(13.83f, 0.0f, 11.98f);
+	//Engine::CGameObject* pGameObj = nullptr;
+	//_vec3 vPos    = _vec3(0.0f, -0.1f, 0.5f);
+	//_vec3 vOffset = _vec3(13.83f, 0.0f, 11.98f);
 
-	for (_int i = 0; i < 21; ++i)
-	{
-		if (0 == i % 2)
-			vPos.x = 0.0f;
-		else
-			vPos.x = 6.915f;
+	//for (_int i = 0; i < 21; ++i)
+	//{
+	//	if (0 == i % 2)
+	//		vPos.x = 0.0f;
+	//	else
+	//		vPos.x = 6.915f;
 
-		for (_int j = 0; j < 21; ++j)
-		{
-			pGameObj = CToolStaticMesh::Create(m_pGraphicDevice, m_pCommandList,
-											   L"BumpTerrainMesh01",		// MeshTag
-											   _vec3(0.003f),				// Scale
-											   _vec3(90.0f, 0.0f, 0.0f),	// Angle
-											   vPos,						// Pos
-											   true,						// Render Shadow
-											   false,						// Bounding Box
-											   false,						// Bounding Sphere
-											   _vec3(0.0f),					// Bounding Sphere Scale
-											   _vec3(0.0f),					// Bounding Sphere Pos
-											   false);
-			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainMesh", pGameObj), E_FAIL);
-			vPos.x += vOffset.x;
-		}
+	//	for (_int j = 0; j < 21; ++j)
+	//	{
+	//		pGameObj = CToolStaticMesh::Create(m_pGraphicDevice, m_pCommandList,
+	//										   L"BumpTerrainMesh01",		// MeshTag
+	//										   _vec3(0.003f),				// Scale
+	//										   _vec3(90.0f, 0.0f, 0.0f),	// Angle
+	//										   vPos,						// Pos
+	//										   true,						// Render Shadow
+	//										   false,						// Bounding Box
+	//										   false,						// Bounding Sphere
+	//										   _vec3(0.0f),					// Bounding Sphere Scale
+	//										   _vec3(0.0f),					// Bounding Sphere Pos
+	//										   false);
+	//		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TerrainMesh", pGameObj), E_FAIL);
+	//		vPos.x += vOffset.x;
+	//	}
 
-		vPos.z += vOffset.z;
-	}
+	//	vPos.z += vOffset.z;
+	//}
 
 
 	return S_OK;
@@ -977,4 +981,7 @@ void CToolSceneStage::Free()
 
 	for (auto& pCollider : m_pPickingCollider)
 		Engine::Safe_Release(pCollider);
+
+	Engine::CShaderColorInstancing::Get_Instance()->Reset_Instance();
+	Engine::CShaderColorInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
 }
