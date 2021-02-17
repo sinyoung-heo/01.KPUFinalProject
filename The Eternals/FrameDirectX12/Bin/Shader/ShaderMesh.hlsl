@@ -177,12 +177,12 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 								 ps_input.ProjPos.w / g_fProjFar,			// posWVP.w / Far : 0~1로 만든 View영역의 Z.
 								 0.0f, 1.0f);
 
-    //float Normal_fDissolve = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV).r;
-    //if ((0.05f > (1.f - fDissolve) - Normal_fDissolve) && ((1.f - fDissolve) - Normal_fDissolve) > 0.f)
-    //{
-    //    ps_output.Emissive = float4(1, Normal_fDissolve, 0, 1);
-    //}
-    //clip((1.f - fDissolve) - Normal_fDissolve);
+    float Normal_fDissolve = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV).r;
+    if ((0.05f > (1.f - g_fDissolve) - Normal_fDissolve) && ((1.f - g_fDissolve) - Normal_fDissolve) > 0.f)
+    {
+        ps_output.Emissive = float4(1, Normal_fDissolve, 0, 1);
+    }
+    clip((1.f - g_fDissolve) - Normal_fDissolve);
 
 	
 	return (ps_output);
@@ -352,6 +352,19 @@ float4 PS_DISTORTION(VS_OUT ps_input) : SV_TARGET0
 	float4 TexNormal	= g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
 	TexNormal			= (TexNormal * 2.0f) - 1.0f;				// 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.
 	float3 Normal		= (TexNormal.x * ps_input.T) + (TexNormal.y * ps_input.B) + (TexNormal.z * ps_input.N);
+    psout = float4(Normal.xyz * 0.5f + 0.5f, 1.f); // 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
+	
+    float2 TexUv = ps_input.TexUV;
+    return g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
+}
+
+float4 PS_BRIGHT(VS_OUT ps_input) : SV_TARGET0
+{
+	// Normal
+    float4 psout;
+    float4 TexNormal = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
+    TexNormal = (TexNormal * 2.0f) - 1.0f; // 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.
+    float3 Normal = (TexNormal.x * ps_input.T) + (TexNormal.y * ps_input.B) + (TexNormal.z * ps_input.N);
     psout = float4(Normal.xyz * 0.5f + 0.5f, 1.f); // 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
 	
     float2 TexUv = ps_input.TexUV;

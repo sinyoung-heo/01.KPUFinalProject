@@ -255,6 +255,8 @@ void CRenderer::Render_Blend()
 
 		vector<ComPtr<ID3D12Resource>> vecBlendTarget;
 		vecBlendTarget.emplace_back(vecDeferredTarget[0]);	// RenderTarget - Diffuse
+		//vecBlendTarget.emplace_back(vecBlurTarget[2]);	// RenderTarget - DOF
+
 		vecBlendTarget.emplace_back(vecShadeTarget[0]);		// RenderTarget - Shade
 		vecBlendTarget.emplace_back(vecShadeTarget[1]);		// RenderTarget - Specular
 		vecBlendTarget.emplace_back(vecBlurTarget[0]);		// RenderTarget - Blur 
@@ -263,6 +265,7 @@ void CRenderer::Render_Blend()
 		vecBlendTarget.emplace_back(vecDistortionTarget[0]);		// RenderTarget - SSAO
 		vecBlendTarget.emplace_back(vecAverageColorTarget[0]);		// RenderTarget - AVerage
 		vecBlendTarget.emplace_back(m_pTargetBlend->Get_TargetTexture()[0]);
+		vecBlendTarget.emplace_back(vecDeferredTarget[3]);	// RenderTarget - Depth
 		m_pBlendShader->SetUp_ShaderTexture(vecBlendTarget);
 		m_pHDRShader->SetUp_ShaderTexture(vecBlendTarget);
 	}
@@ -301,12 +304,12 @@ void CRenderer::Render_Distortion(const _float& fTimeDelta)
 void CRenderer::Render_CrossFilter(const _float& fTimeDelta)
 {
 
-	m_pTargetCrossFilter->SetUp_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
+	m_pTargetCrossFilter->SetUp_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
 
 	for (auto& pGameObject : m_RenderList[RENDER_CROSSFILTER])
 		pGameObject->Render_GameObject(fTimeDelta);
 
-	m_pTargetCrossFilter->Release_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
+	m_pTargetCrossFilter->Release_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
 }
 
 void CRenderer::Render_Luminance()
@@ -348,6 +351,7 @@ void CRenderer::Render_DownSampling()
 		vecDownSamplingTarget.emplace_back(vecDeferredTarget[4]);	// RenderTarget - Emissive
 		vecDownSamplingTarget.emplace_back(vecDeferredTarget[4]);	// RenderTarget - Emissive
 		vecDownSamplingTarget.emplace_back(vecSSAOTarget[0]);	// RenderTarget - SSAO
+		vecDownSamplingTarget.emplace_back(vecDeferredTarget[0]);	// RenderTarget - SSAO
 		m_pDownSamplingShader->SetUp_ShaderTexture(vecDownSamplingTarget);
 	
 	}
@@ -640,15 +644,16 @@ HRESULT CRenderer::Ready_RenderTarget()
 	/*__________________________________________________________________________________________________________
 	[ DownSample RenderTarget ]
 	____________________________________________________________________________________________________________*/
-	m_pTargetDownSampling = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 3);
+	m_pTargetDownSampling = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList,4);
 	NULL_CHECK_RETURN(m_pTargetDownSampling, E_FAIL);
 	m_pTargetDownSampling->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
 	m_pTargetDownSampling->Set_TargetClearColor(1, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
 	m_pTargetDownSampling->Set_TargetClearColor(2, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	m_pTargetDownSampling->Set_TargetClearColor(3, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
 	m_pTargetDownSampling->Set_TargetTextureSize(0, WINCX / 4 , WINCY / 4, false);
 	m_pTargetDownSampling->Set_TargetTextureSize(1, WINCX / 4 , WINCY / 4, false);
 	m_pTargetDownSampling->Set_TargetTextureSize(2, WINCX / 4, WINCY / 4, false);
-
+	m_pTargetDownSampling->Set_TargetTextureSize(3, WINCX / 4, WINCY / 4, false);
 	FAILED_CHECK_RETURN(m_pTargetDownSampling->SetUp_DefaultSetting(), E_FAIL);
 	m_pTargetDownSampling->Set_TargetRenderPos(_vec3(WIDTH_FOURTH, HEIGHT_FIRST, 1.0f));
 
@@ -705,7 +710,7 @@ HRESULT CRenderer::Ready_RenderTarget()
 	m_pTargetCrossFilter = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
 	NULL_CHECK_RETURN(m_pTargetCrossFilter, E_FAIL);
 	m_pTargetCrossFilter->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
-	FAILED_CHECK_RETURN(m_pTargetCrossFilter->SetUp_DefaultSetting(), E_FAIL);
+	FAILED_CHECK_RETURN(m_pTargetCrossFilter->SetUp_DefaultSetting(TARGETID::TYPE_SHADOWDEPTH), E_FAIL);
 	m_pTargetCrossFilter->Set_TargetRenderPos(_vec3(WIDTH_THIRD, HEIGHT_SECOND, 1.0f));
 
 	/*__________________________________________________________________________________________________________

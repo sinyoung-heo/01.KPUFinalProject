@@ -256,7 +256,7 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 	pGameObj =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
 								  L"PoporiR19",					// MeshTag
 								  L"StageVelika_NaviMesh",		// NaviMeshTag
-								  _vec3(0.05f, 0.05f, 0.05f),	// Scale
+								  _vec3(1.25f, 1.25f, 1.25f),	// Scale
 								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
 								  _vec3(120.0f, 0.f, 75.0f));	// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PoporiR19", pGameObj), E_FAIL);

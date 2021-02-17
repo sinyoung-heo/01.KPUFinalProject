@@ -4,6 +4,7 @@
 
 namespace Engine
 {
+	class CShaderMesh;
 	class CMesh;
 }
 
@@ -32,7 +33,6 @@ public:
 
 	// SingleThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta);
-	virtual void	Render_ShadowDepth(const _float& fTimeDelta);
 
 	// MultiThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
@@ -42,6 +42,8 @@ public:
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
 	void			Set_ConstantTable(const _int& iContextIdx, const _int& iInstancingIdx);
+	void			Set_ConstantTable();
+
 	void			Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int& iInstanceIdx);
 
 
@@ -52,6 +54,7 @@ private:
 	Engine::CMesh*						m_pMeshCom                = nullptr;
 	Engine::CShaderShadowInstancing*	m_pShaderShadowInstancing = nullptr;
 	Engine::CShaderMeshInstancing*		m_pShaderMeshInstancing   = nullptr;
+	Engine::CShaderMesh* m_pShaderCom = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]

@@ -74,6 +74,8 @@ HRESULT CStaticMeshObject::LateInit_GameObject()
 	Engine::NULL_CHECK_RETURN(m_pDynamicCamera, E_FAIL);
 	m_pDynamicCamera->AddRef();
 
+	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
+
 	return S_OK;
 }
 
@@ -110,12 +112,11 @@ _int CStaticMeshObject::LateUpdate_GameObject(const _float & fTimeDelta)
 
 void CStaticMeshObject::Render_GameObject(const _float& fTimeDelta)
 {
+	Set_ConstantTable();
+	m_pMeshCom->Render_StaticMesh(m_pShaderCom);
 
 }
 
-void CStaticMeshObject::Render_ShadowDepth(const _float& fTimeDelta)
-{
-}
 
 void CStaticMeshObject::Render_GameObject(const _float& fTimeDelta, 
 										  ID3D12GraphicsCommandList * pCommandList,
@@ -153,6 +154,11 @@ HRESULT CStaticMeshObject::Add_Component(wstring wstrMeshTag)
 	m_pMeshCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Mesh", m_pMeshCom);
 
+	m_pShaderCom = static_cast<Engine::CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", Engine::COMPONENTID::ID_STATIC));
+	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
+	m_pShaderCom->AddRef();
+	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(0), E_FAIL);
+	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 	return S_OK;
 }
 
@@ -177,6 +183,21 @@ void CStaticMeshObject::Set_ConstantTable(const _int& iContextIdx, const _int& i
 		m_fDeltaTime = 0.f;
 
 	m_pShaderMeshInstancing->Get_UploadBuffer_ShaderMesh(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderMesh);
+}
+
+void CStaticMeshObject::Set_ConstantTable()
+{
+
+	/*__________________________________________________________________________________________________________
+	[ Set ConstantBuffer Data ]
+	____________________________________________________________________________________________________________*/
+	Engine::SHADOW_DESC tShadowDesc = CShadowLightMgr::Get_Instance()->Get_ShadowDesc();
+
+	Engine::CB_SHADER_MESH tCB_ShaderMesh;
+	ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
+	tCB_ShaderMesh.matWorld = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+
+	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0,tCB_ShaderMesh);
 }
 
 void CStaticMeshObject::Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int& iInstanceIdx)
@@ -227,5 +248,7 @@ void CStaticMeshObject::Free()
 
 	Engine::Safe_Release(m_pDynamicCamera);
 	Engine::Safe_Release(m_pMeshCom);
+	Engine::Safe_Release(m_pShaderCom);
+
 
 }

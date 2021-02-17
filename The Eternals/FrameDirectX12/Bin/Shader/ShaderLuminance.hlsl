@@ -157,7 +157,7 @@ PS_OUT PS_LUMINANCE5(VS_OUT ps_input) : SV_TARGET
     }
     vColor = vColor / 25;
     
-    output.LUMINANCE = vColor;
+    output.LUMINANCE = vColor + float4(0.05, 0.05, 0.05, 0.f);
     output.LUMINANCE.a = 1.f;
     return (output);
 }

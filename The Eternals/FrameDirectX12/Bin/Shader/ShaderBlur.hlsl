@@ -66,35 +66,37 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
     PS_OUT output = (PS_OUT)0;
     float4 Albedo= g_TexAlbedo.Sample(g_samLinearWrap,ps_input.TexUV);
     float2 vGausTexUV = ps_input.TexUV;
-    vGausTexUV = saturate(vGausTexUV);
+   
     float4 DOF_Output = (float4) 0, DOF_Output2 = (float4) 0;
     float4 Emis_Output = (float4) 0, Emis_Output2 = (float4) 0;
     float4 SSAO_Output = (float4) 0, SSAO_Output2 = (float4) 0;
     for (int i = 0; i < 13; i++)
     {
-        vGausTexUV.x = ps_input.TexUV.x + (g_fOffSet[i]) / 800.f;
+        vGausTexUV.x = ps_input.TexUV.x + (g_fOffSet[i]) / 400.f;
+        vGausTexUV = saturate(vGausTexUV);
         //vGausTexUV.x = saturate(vGausTexUV.x);
         DOF_Output += g_TexAlbedo.Sample(g_samLinearWrap, vGausTexUV) * (g_fWeight[i]);
         Emis_Output += g_TexEmissive.Sample(g_samLinearWrap, vGausTexUV) * (g_fWeight[i]);
         
      
-        vGausTexUV.y = ps_input.TexUV.y + (g_fOffSet[i]) / 450.f;
+        vGausTexUV.y = ps_input.TexUV.y + (g_fOffSet[i]) / 225.f;
+        vGausTexUV = saturate(vGausTexUV);
         //vGausTexUV.y = saturate(vGausTexUV.y);
         DOF_Output2 += g_TexAlbedo.Sample(g_samLinearWrap, vGausTexUV) * (g_fWeight[i]);
         Emis_Output2 += g_TexEmissive.Sample(g_samLinearWrap, vGausTexUV) * (g_fWeight[i]);
         
         
         vGausTexUV.x = ps_input.TexUV.x + (g_fOffSet[i] /12) / 200.f;
-        SSAO_Output += g_TexSSAO.Sample(g_samLinearWrap, vGausTexUV) * (g_fWeight[i]);
+        SSAO_Output += g_TexSSAO.Sample(g_samAnisotropicClamp, vGausTexUV) * (g_fWeight[i]);
         vGausTexUV.y = ps_input.TexUV.y + (g_fOffSet[i]/12) / 112.5f;
-        SSAO_Output2 += g_TexSSAO.Sample(g_samLinearWrap, vGausTexUV) * (g_fWeight[i]);
+        SSAO_Output2 += g_TexSSAO.Sample(g_samAnisotropicClamp, vGausTexUV) * (g_fWeight[i]);
     }
     
     output.EMISSIVE_BLUR = (Emis_Output + Emis_Output2) *0.5f;
     
     output.CROSSFILTER_BLUR = g_TexCrossFilter.Sample(g_samLinearWrap, ps_input.TexUV);
     
-    output.DOF_BLUR = (DOF_Output + DOF_Output2) *0.5f;
+    output.DOF_BLUR = (DOF_Output + DOF_Output2)*0.5f;
   
     output.SSAO_BLUR = (SSAO_Output + SSAO_Output2) * 0.5f;
     return (output);
