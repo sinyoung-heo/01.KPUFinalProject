@@ -39,15 +39,18 @@ HRESULT CChicken::Ready_GameObject(wstring wstrMeshTag,
 										   m_pMeshCom->Get_MinVector(),
 										   m_pMeshCom->Get_MaxVector());
 
-
-	m_pInfoCom->m_fSpeed = 1.0f;
+	m_pInfoCom->m_fSpeed = 0.5f;
 	m_bIsMoveStop = true;
+	m_vecTempPos = _vec3(0.f);
 
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
-	m_uiAnimIdx = 1;
+	m_uiAnimIdx = 3;
 	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+	m_eCurAnimation = ANIM::A_IDLE01;
+	m_ePreAnimation = ANIM::A_IDLE01;
 
 	return S_OK;
 }
@@ -74,6 +77,9 @@ _int CChicken::Update_GameObject(const _float & fTimeDelta)
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
+
+	/* Animation AI */
+	Change_Animation();
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
@@ -231,6 +237,8 @@ void CChicken::Active_NPC(const _float& fTimeDelta)
 	/* NPC MOVE */
 	if (!m_bIsMoveStop)
 	{
+		m_eCurAnimation = A_WALK;
+
 		m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 		m_pTransCom->m_vDir.Normalize();
 
@@ -240,6 +248,60 @@ void CChicken::Active_NPC(const _float& fTimeDelta)
 													 m_pInfoCom->m_fSpeed * fTimeDelta);
 		m_pTransCom->m_vPos = vPos;
 	}
+	else
+	{
+		m_vecTempPos = m_pTransCom->m_vPos;
+	}
+}
+
+void CChicken::Change_Animation()
+{
+	cout << m_eCurAnimation << "번, " << m_ui3DMax_CurFrame << "/" << m_ui3DMax_NumFrame << endl;
+
+	switch (m_eCurAnimation)
+	{
+
+	case A_IDLE01:
+	{
+		m_uiAnimIdx = 3;
+
+		if (m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame)
+			m_eCurAnimation = A_IDLE02;
+	}
+	break;
+
+	case A_IDLE02:
+	{
+		m_uiAnimIdx = 2;
+
+		if (m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame)
+			m_eCurAnimation = A_WAIT;
+	}
+	break;
+
+	case A_WAIT: 
+	{
+		m_uiAnimIdx = 1;
+
+		if (m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame)
+			m_eCurAnimation = A_IDLE01;
+	}
+	break;
+
+	case A_WALK:
+	{
+		m_uiAnimIdx = 0;
+
+		if (CServerMath::Get_Instance()->Is_NPC_Arrive_Point(m_vecTempPos, m_pTransCom->m_vPos, 3.f))
+		{
+			m_eCurAnimation = A_IDLE01;
+			m_bIsMoveStop = true;
+		}
+	}
+	break;
+
+	}
+	m_ePreAnimation = m_eCurAnimation;
 }
 
 Engine::CGameObject* CChicken::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,

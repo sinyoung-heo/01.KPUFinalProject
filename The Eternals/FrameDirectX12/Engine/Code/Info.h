@@ -15,9 +15,9 @@ public:
 	virtual void	Update_Component(const _float& fTimeDelta);
 
 public:
-	_float	m_fSpeed	= 0.0f;
-	_float	m_fRadius	= 0.0f;
-	_vec3	m_arrBezierPoint[4] = { _vec3(0.f,0.f,0.f), };
+	_float	m_fSpeed		= 0.0f;
+	_float	m_fRadius		= 0.0f;
+	_vec3	m_vecArivePos	= _vec3(0.f);
 
 public:
 	virtual CComponent* Clone();

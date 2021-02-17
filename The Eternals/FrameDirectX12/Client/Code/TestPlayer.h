@@ -48,6 +48,7 @@ private:
 
 	void			Key_Input(const _float& fTimeDelta);
 	void			Send_Player_Move();
+	bool			Is_Change_CamDirection();
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
@@ -77,10 +78,11 @@ private:
 	wstring			m_wstrMeshTag = L"";
 
 	/* Server */
-	bool			m_bIsKeyUp = false;
+	bool			m_bIsKeyDown = false;
 	bool			m_bIsSameDir = false;
 	float			m_fBazierSpeed = 0.f;
 	MVKEY			m_eKeyState = MVKEY::K_END;
+	float			m_vecPreAngle = 0.f;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]

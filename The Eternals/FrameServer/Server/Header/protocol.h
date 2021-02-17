@@ -51,16 +51,24 @@ struct sc_packet_login_ok
 	float posX, posY, posZ;
 };
 
+constexpr char MV_FRONT = 0;
+constexpr char MV_BACK = 1;
+constexpr char MV_RIGHT = 2;
+constexpr char MV_RIGHT_UP = 3;
+constexpr char MV_RIGHT_DOWN = 4;
+constexpr char MV_LEFT = 5;
+constexpr char MV_LEFT_UP = 6;
+constexpr char MV_LEFT_DOWN = 7;
+
 struct sc_packet_move 
 {
 	char size;
 	char type;
 	int id;
 
-	char o_type;
 	int move_time;
 	float posX, posY, posZ;
-	float angleY;
+	float dirX, dirY, dirZ;
 };
 
 struct sc_packet_npc_move
@@ -138,24 +146,14 @@ struct cs_packet_login
 	char  password[MAX_PW_LEN];
 };
 
-constexpr char MV_FRONT			= 0;
-constexpr char MV_BACK			= 1;
-constexpr char MV_RIGHT			= 2;
-constexpr char MV_RIGHT_UP		= 3;
-constexpr char MV_RIGHT_DOWN	= 4;
-constexpr char MV_LEFT			= 5;
-constexpr char MV_LEFT_UP		= 6;
-constexpr char MV_LEFT_DOWN		= 7;
-
 struct cs_packet_move 
 {
 	char  size;
 	char  type;
 
-	char  dir;
 	int	  move_time; 
 	float dirX, dirY, dirZ;
-	float angleX, angleY, angleZ;
+	float posX, posY, posZ;
 };
 
 struct cs_packet_move_stop
@@ -164,7 +162,7 @@ struct cs_packet_move_stop
 	char  type;
 
 	float posX, posY, posZ;
-	float angleX, angleY, angleZ;
+	float dirX, dirY, dirZ;
 };
 
 struct cs_packet_attack 
