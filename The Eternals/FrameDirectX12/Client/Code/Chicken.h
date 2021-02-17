@@ -3,18 +3,6 @@
 #include "Include.h"
 #include "GameObject.h"
 
-/*____________________________________________________________________
-Player Direction
-______________________________________________________________________*/
-#define	FRONT		0.f
-#define	RIGHT		90.f
-#define	RIGHT_UP	45.f
-#define	RIGHT_DOWN	135.f
-#define	LEFT		270.f
-#define	LEFT_UP		315.f
-#define	LEFT_DOWN	225.f
-#define	BACK		180.f
-
 namespace Engine
 {
 	class CMesh;
@@ -30,6 +18,8 @@ class CDynamicCamera;
 
 class CChicken : public Engine::CGameObject
 {
+	enum ANIM { A_IDLE01, A_IDLE02, A_WAIT, A_WALK, A_END };
+
 private:
 	explicit CChicken(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 	explicit CChicken(const CChicken& rhs);
@@ -60,6 +50,7 @@ private:
 	void			Set_ConstantTableShadowDepth();
 
 	void			Active_NPC(const _float& fTimeDelta);
+	void			Change_Animation();
 
 private:
 	/*__________________________________________________________________________________________________________
@@ -77,7 +68,7 @@ private:
 	____________________________________________________________________________________________________________*/
 	CDynamicCamera*	m_pDynamicCamera					= nullptr;
 	wstring			m_wstrMeshTag						= L"";
-
+	_vec3			m_vecTempPos;
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]
 	____________________________________________________________________________________________________________*/
@@ -85,7 +76,8 @@ private:
 	_uint			m_ui3DMax_NumFrame					= 0;	// 3DMax에서 애니메이션의 총 Frame 개수
 	_uint			m_ui3DMax_CurFrame					= 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
 
-	
+	ANIM			m_eCurAnimation						= ANIM::A_END;
+	ANIM			m_ePreAnimation						= ANIM::A_END;
 	/*__________________________________________________________________________________________________________
 	[ Font ]
 	____________________________________________________________________________________________________________*/

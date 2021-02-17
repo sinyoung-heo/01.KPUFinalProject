@@ -116,9 +116,10 @@ void process_packet(int id)
 		cs_packet_move* p = reinterpret_cast<cs_packet_move*>(pPlayer->m_packet_start);
 		
 		pPlayer->move_time = p->move_time;
+		_vec3 vPos = _vec3(p->posX, p->posY, p->posZ);
 		_vec3 vDir = _vec3(p->dirX, p->dirY, p->dirZ);
-		_vec3 vAngle = _vec3(0.f, p->angleY, 0.f);
-		process_move(id, p->dir, vDir, vAngle);
+
+		process_move(id, vDir, vPos);
 	}
 	break;
 
@@ -127,8 +128,9 @@ void process_packet(int id)
 		cs_packet_move_stop* p = reinterpret_cast<cs_packet_move_stop*>(pPlayer->m_packet_start);
 
 		_vec3 vPos = _vec3(p->posX, p->posY, p->posZ);
-		_vec3 vAngle = _vec3(0.f, p->angleY, 0.f);
-		process_move_stop(id, vPos, vAngle);
+		_vec3 vDir = _vec3(p->dirX, p->dirY, p->dirZ);
+
+		process_move_stop(id, vPos, vDir);
 	}
 	break;
 
@@ -300,12 +302,13 @@ void send_move_packet(int to_client, int id)
 
 	p.move_time = pPlayer->move_time;
 
-	p.o_type = pPlayer->m_type;
-	p.angleY = pPlayer->m_vAngle.y;
-
 	p.posX = pPlayer->m_vTempPos.x;
 	p.posY = pPlayer->m_vTempPos.y;
 	p.posZ = pPlayer->m_vTempPos.z;
+
+	p.dirX = pPlayer->m_vDir.x;
+	p.dirY = pPlayer->m_vDir.y;
+	p.dirZ = pPlayer->m_vDir.z;
 
 	send_packet(to_client, &p);
 }
@@ -324,78 +327,39 @@ void send_move_stop_packet(int to_client, int id)
 
 	p.move_time = pPlayer->move_time;
 
-	p.o_type = pPlayer->m_type;
-	p.angleY = pPlayer->m_vAngle.y;
-
 	p.posX = pPlayer->m_vPos.x;
 	p.posY = pPlayer->m_vPos.y;
 	p.posZ = pPlayer->m_vPos.z;
 
+	p.dirX = pPlayer->m_vDir.x;
+	p.dirY = pPlayer->m_vDir.y;
+	p.dirZ = pPlayer->m_vDir.z;
+
 	send_packet(to_client, &p);
 }
 
-void process_move(int id, char direction, const _vec3& _vDir, const _vec3& _vAngle)
+void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 
 	if (pPlayer == nullptr) return;
 
 	/* 해당 플레이어의 원래 위치값 & 변경된 위치값 */
-	float ori_x, ori_y, ori_z;
-	
+	float ori_x, ori_y, ori_z;	
 	ori_x = pPlayer->m_vPos.x;
 	ori_y = pPlayer->m_vPos.y;
 	ori_z = pPlayer->m_vPos.z;
 
+	/* 해당 플레이어의 방향벡터와 위치벡터 */
 	pPlayer->m_vDir = _vDir;
-	pPlayer->m_vAngle = _vAngle;
-
-	switch (direction)
-	{
-	case MV_FRONT:
-		pPlayer->m_vAngle.y += ANGLE_FRONT;
-	break;
-
-	case MV_BACK: 
-		pPlayer->m_vAngle.y += ANGLE_BACK;
-		break;
-
-	case MV_LEFT: 
-		pPlayer->m_vAngle.y += ANGLE_LEFT;
-		break;
-
-	case MV_LEFT_UP:
-		pPlayer->m_vAngle.y += ANGLE_LEFT_UP;
-		break;
-
-	case MV_LEFT_DOWN:
-		pPlayer->m_vAngle.y += ANGLE_LEFT_DOWN;
-		break;
-
-	case MV_RIGHT: 
-		pPlayer->m_vAngle.y += ANGLE_RIGHT;
-		break;
-
-	case MV_RIGHT_UP:
-		pPlayer->m_vAngle.y += ANGLE_RIGHT_UP;
-		break;
-
-	case MV_RIGHT_DOWN:
-		pPlayer->m_vAngle.y += ANGLE_RIGHT_DOWN;
-		break;
+	pPlayer->m_vPos = _vPos;
 	
-#ifdef TEST
-	default: cout << "Unknown Direction in CS_MOVE packet.\n";
-		while (true);
-#endif 
-	}
-
 	/* 해당 플레이어의 원래 시야 목록 */
 	pPlayer->v_lock.lock();
 	unordered_set<int> old_viewlist = pPlayer->view_list;
 	pPlayer->v_lock.unlock();
 
-	/* 해당 플레이어로부터 받은 변경된 위치값 저장 */
+	/* 해당 플레이어의 미래 위치 좌표 산출 -> 미래 위치좌표는 임시 변수에 저장 */
 	_vec2 coll_pos = _vec2(0.f);
 
 	if (CCollisionMgr::GetInstance()->Is_DeadReckoning(pPlayer->m_vPos, pPlayer->m_vDir, &coll_pos))
@@ -572,7 +536,7 @@ void process_move(int id, char direction, const _vec3& _vDir, const _vec3& _vAng
 #endif
 }
 
-void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vAngle)
+void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 
@@ -585,14 +549,14 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vAngle)
 	ori_y = pPlayer->m_vPos.y;
 	ori_z = pPlayer->m_vPos.z;
 
-	pPlayer->m_vAngle = _vAngle;
+	pPlayer->m_vDir = _vDir;
 
 	/* 해당 플레이어의 원래 시야 목록 */
 	pPlayer->v_lock.lock();
 	unordered_set<int> old_viewlist = pPlayer->view_list;
 	pPlayer->v_lock.unlock();
 
-	/* 해당 플레이어로부터 받은 변경된 위치값 저장 */
+	/* 해당 플레이어로부터 받은 최종 위치값 저장 */
 	pPlayer->m_vPos.x = _vPos.x;
 	pPlayer->m_vPos.y = _vPos.y;
 	pPlayer->m_vPos.z = _vPos.z;
@@ -994,6 +958,40 @@ void random_move_stop_npc(int id)
 {
 }
 
+void normal_npc_ai(int id)
+{
+	CNpc* pNPC = static_cast<CNpc*>(CObjMgr::GetInstance()->Get_GameObject(L"NPC", id));
+
+	if (pNPC == nullptr) return;
+
+	/* NPC 상태 */
+	switch (pNPC->m_status)
+	{
+	
+	case ST_ACTIVE:
+	{
+		/* walk */
+		random_move_npc(id);
+	}
+	break;
+
+	case ST_WAIT:
+	{
+
+	}
+	break;
+
+	case ST_IDLE:
+	{
+
+	}
+	break;
+
+	}
+
+	
+}
+
 void active_npc(int id)
 {
 	CNpc* pNPC = static_cast<CNpc*>(CObjMgr::GetInstance()->Get_GameObject(L"NPC", id));
@@ -1009,7 +1007,7 @@ void active_npc(int id)
 			switch (pNPC->m_npcNum)
 			{
 			case NPC_NORMAL:
-				add_timer(id, OP_RANDOM_MOVE_NPC, system_clock::now() + 5s);
+				add_timer(id, OP_RANDOM_MOVE_NPC, system_clock::now() + 1s);
 				break;
 			case NPC_MERCHANT:
 				break;

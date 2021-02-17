@@ -40,12 +40,9 @@ CComponent * CGameObject::Get_Component(wstring wstrComponentTag, COMPONENTID eI
 	return pComponent;
 }
 
-void CGameObject::Set_DeadReckoning(const _vec3& vPos1, const _vec3& vPos2, const _vec3& vPos3, const _vec3& vPos4)
+void CGameObject::Set_DeadReckoning(const _vec3& vPos)
 {
-	m_pInfoCom->m_arrBezierPoint[0] = vPos1;
-	m_pInfoCom->m_arrBezierPoint[1] = vPos2;
-	m_pInfoCom->m_arrBezierPoint[2] = vPos3;
-	m_pInfoCom->m_arrBezierPoint[3] = vPos4;
+	m_pInfoCom->m_vecArivePos = vPos;	
 }
 
 void CGameObject::Set_npc_moveDir(const char& dir)
@@ -79,6 +76,11 @@ void CGameObject::Set_npc_moveDir(const char& dir)
 		m_pTransCom->m_vAngle.y = 225.f;
 		break;
 	}
+}
+
+void CGameObject::Set_Other_direction(_vec3& vDir)
+{
+	m_pTransCom->m_vAngle.y = vDir.Get_Angle(g_vLook);
 }
 
 HRESULT CGameObject::Ready_GameObjectPrototype()

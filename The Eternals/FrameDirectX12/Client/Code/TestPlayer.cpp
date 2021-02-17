@@ -35,10 +35,12 @@ HRESULT CTestPlayer::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, 
 
 
 	m_pInfoCom->m_fSpeed = 5.0f;
-	m_pInfoCom->m_arrBezierPoint[3] = { m_pTransCom->m_vPos };
+	m_pInfoCom->m_vecArivePos = m_pTransCom->m_vPos;
+
 	m_eKeyState = MVKEY::K_END;
-	m_bIsKeyUp = false;
+	m_bIsKeyDown = false;
 	m_bIsSameDir = false;
+	m_vecPreAngle = m_pTransCom->m_vAngle.y;
 
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
@@ -180,7 +182,7 @@ void CTestPlayer::Render_ShadowDepth(const _float& fTimeDelta)
 void CTestPlayer::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
 	/* 움직이고 있는 중일 경우 */
-	if (m_bIsKeyUp)
+	if (m_bIsKeyDown)
 	{
 		if (CPacketMgr::Get_Instance()->change_MoveKey(m_eKeyState) || m_bIsSameDir == true)
 		{
@@ -188,9 +190,14 @@ void CTestPlayer::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsComm
 			m_bIsSameDir = false;
 		}
 
-		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_arrBezierPoint[3]))
+		if (Is_Change_CamDirection())
 		{
-			// NaviMesh 이동.
+			Send_Player_Move();
+		}
+
+		// NaviMesh 이동.
+		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vecArivePos))
+		{
 			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
 														 &m_pTransCom->m_vDir,
 														 m_pInfoCom->m_fSpeed * fTimeDelta);
@@ -316,8 +323,8 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 		if (Engine::KEY_PRESSING(DIK_D))
 		{
 #ifndef SERVER
-			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_UP;
 #else
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_UP;
 			m_eKeyState = MVKEY::K_RIGHT_UP;			
 #endif 
 		}
@@ -325,8 +332,8 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 		else if (Engine::KEY_PRESSING(DIK_A))
 		{
 #ifndef SERVER
-			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_UP;
 #else
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_UP;
 			m_eKeyState = MVKEY::K_LEFT_UP;
 #endif		
 		}
@@ -334,8 +341,8 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 		else
 		{
 #ifndef SERVER
-			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + FRONT;
 #else			
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + FRONT;
 			m_eKeyState = MVKEY::K_FRONT;
 #endif 	
 		}
@@ -348,7 +355,7 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 		m_pTransCom->m_vPos = vPos;
 #endif 		
 		m_last_move_time = high_resolution_clock::now();
-		m_bIsKeyUp = true;
+		m_bIsKeyDown = true;
 	}
 
 	else if (Engine::KEY_PRESSING(DIK_S))
@@ -357,8 +364,8 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 		if (Engine::KEY_PRESSING(DIK_D))
 		{
 #ifndef SERVER
-			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_DOWN;
 #else
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_DOWN;
 			m_eKeyState = MVKEY::K_RIGHT_DOWN;
 #endif 			
 		}
@@ -366,8 +373,8 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 		else if (Engine::KEY_PRESSING(DIK_A))
 		{
 #ifndef SERVER
-			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_DOWN;
 #else
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_DOWN;
 			m_eKeyState = MVKEY::K_LEFT_DOWN;
 #endif 			
 		}
@@ -375,8 +382,8 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 		else
 		{
 #ifndef SERVER
-			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + BACK;
 #else
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + BACK;
 			m_eKeyState = MVKEY::K_BACK;
 #endif			
 		}
@@ -388,7 +395,7 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 		m_pTransCom->m_vPos = vPos;
 #endif
 		m_last_move_time = high_resolution_clock::now();
-		m_bIsKeyUp = true;
+		m_bIsKeyDown = true;
 	}
 	// 좌로 이동.
 	else if (Engine::KEY_PRESSING(DIK_A))
@@ -402,9 +409,10 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 			m_pInfoCom->m_fSpeed * fTimeDelta);
 		m_pTransCom->m_vPos = vPos;
 #else
+		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT;
 		m_last_move_time = high_resolution_clock::now();
 		m_eKeyState = MVKEY::K_LEFT;
-		m_bIsKeyUp = true;
+		m_bIsKeyDown = true;
 #endif 
 	}
 	// 우로 이동.	
@@ -419,21 +427,21 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 			m_pInfoCom->m_fSpeed * fTimeDelta);
 		m_pTransCom->m_vPos = vPos;
 #else
+		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT;
 		m_last_move_time = high_resolution_clock::now();
 		m_eKeyState = MVKEY::K_RIGHT;
-		m_bIsKeyUp = true;
+		m_bIsKeyDown = true;
 #endif
 	}
 	// 움직임 Stop
 	else
 	{
-		if (m_bIsKeyUp)
+		if (m_bIsKeyDown)
 		{
 #ifdef SERVER
-			cout << "send_move_stop" << endl;
-			CPacketMgr::Get_Instance()->send_move_stop(m_pTransCom->m_vPos, m_pTransCom->m_vAngle);
+			CPacketMgr::Get_Instance()->send_move_stop(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
 #endif
-			m_bIsKeyUp = false;
+			m_bIsKeyDown = false;
 			m_bIsSameDir = true;
 		}
 	}
@@ -441,46 +449,48 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 
 void CTestPlayer::Send_Player_Move()
 {
-	cout << "send_move" << endl;
-
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 	m_pTransCom->m_vDir.Normalize();
-
+	
 	switch (m_eKeyState)
 	{
 	case K_FRONT:
-		CPacketMgr::Get_Instance()->send_move(MV_FRONT, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
-		//CPacketMgr::Get_Instance()->send_move(MV_FRONT, m_pTransCom->m_vDir, m_pTransCom->m_vAngle);
+		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_BACK:
-		CPacketMgr::Get_Instance()->send_move(MV_BACK, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
-		//CPacketMgr::Get_Instance()->send_move(MV_BACK, m_pTransCom->m_vDir, m_pTransCom->m_vAngle);
+		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_RIGHT:
-		CPacketMgr::Get_Instance()->send_move(MV_RIGHT, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
-		//CPacketMgr::Get_Instance()->send_move(MV_RIGHT, m_pTransCom->m_vDir, m_pTransCom->m_vAngle);
+		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_RIGHT_UP:
-		CPacketMgr::Get_Instance()->send_move(MV_RIGHT_UP, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
-		//CPacketMgr::Get_Instance()->send_move(MV_RIGHT_UP, m_pTransCom->m_vDir, m_pTransCom->m_vAngle);
+		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_RIGHT_DOWN:
-		CPacketMgr::Get_Instance()->send_move(MV_RIGHT_DOWN, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
-		//CPacketMgr::Get_Instance()->send_move(MV_RIGHT_DOWN, m_pTransCom->m_vDir, m_pTransCom->m_vAngle);
+		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_LEFT:
-		CPacketMgr::Get_Instance()->send_move(MV_LEFT, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
-		//CPacketMgr::Get_Instance()->send_move(MV_LEFT, m_pTransCom->m_vDir, m_pTransCom->m_vAngle);
+		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_LEFT_UP:
-		CPacketMgr::Get_Instance()->send_move(MV_LEFT_UP, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
-		//CPacketMgr::Get_Instance()->send_move(MV_LEFT_UP, m_pTransCom->m_vDir, m_pTransCom->m_vAngle);
+		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_LEFT_DOWN:
-		CPacketMgr::Get_Instance()->send_move(MV_LEFT_DOWN, m_pTransCom->m_vDir, m_pDynamicCamera->Get_Transform()->m_vAngle);
-		//CPacketMgr::Get_Instance()->send_move(MV_LEFT_DOWN, m_pTransCom->m_vDir, m_pTransCom->m_vAngle);
+		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	}
+
+	m_vecPreAngle = m_pTransCom->m_vAngle.y;
+}
+
+bool CTestPlayer::Is_Change_CamDirection()
+{
+	if (m_vecPreAngle + 5.f < m_pTransCom->m_vAngle.y)
+		return true;
+	else if (m_vecPreAngle - 5.f > m_pTransCom->m_vAngle.y)
+		return true;
+
+	return false;
 }
 
 Engine::CGameObject* CTestPlayer::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
