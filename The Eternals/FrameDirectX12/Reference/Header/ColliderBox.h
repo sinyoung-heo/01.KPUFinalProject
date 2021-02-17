@@ -1,9 +1,7 @@
 #pragma once
 #include "VIBuffer.h"
-
 #include "Transform.h"
-#include "ShaderColor.h"
-
+#include "ShaderColorInstancing.h"
 
 BEGIN(Engine)
 
@@ -26,7 +24,7 @@ public:
 	void				Set_Color(const _rgba& vColor)					{ m_vColor = vColor; }
 	void				Set_ParentMatrix(_matrix* pMatrix)				{ m_pParentMatrix = pMatrix; }
 	void				Set_SkinningMatrix(SKINNING_MATRIX* pMatrix)	{ m_pSkinningMatrix = pMatrix; }
-	HRESULT				Set_PipelineStatePass(const _uint& iIdx = 0)	{ return m_pShaderCom->Set_PipelineStatePass(iIdx); }
+	void				Set_PipelineStatePass(const _uint& iIdx = 0)	{ m_uiColorPipelineStatePass = iIdx; }
 	void				Set_Extents(const _vec3& vParentScale);
 	
 	// Method
@@ -39,29 +37,27 @@ public:
 
 	void				Begin_Buffer();
 	void				Render_Buffer();
-
 private:
 	HRESULT				Add_Component();
-	void				Set_ConstantTable();
+	void				Set_ConstantTable(const COLOR_BUFFER& eBuffer, const _int& iInstanceIdx);
 
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
 	____________________________________________________________________________________________________________*/
-	CTransform*								m_pTransCom			= nullptr;
-	CShaderColor*							m_pShaderCom		= nullptr;
+	CTransform*				m_pTransCom			     = nullptr;
+	CShaderColorInstancing* m_pShaderColorInstancing = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
 	BoundingBox								m_BoundingInfo;
 	array<_vec3, BoundingBox::CORNER_COUNT> m_arrCorners;
-
-	_vec3									m_vLength			= INIT_VEC3(0.f);
-	_rgba									m_vColor			= _rgba(0.0f, 1.0f, 0.0f, 1.0f);
-
-	SKINNING_MATRIX*						m_pSkinningMatrix	= nullptr;
-	_matrix*								m_pParentMatrix		= nullptr;
+	_vec3									m_vLength			       = INIT_VEC3(0.f);
+	_rgba									m_vColor			       = _rgba(0.0f, 1.0f, 0.0f, 1.0f);
+	SKINNING_MATRIX*						m_pSkinningMatrix	       = nullptr;
+	_matrix*								m_pParentMatrix		       = nullptr;
+	_uint									m_uiColorPipelineStatePass = 0;
 
 public:
 	virtual CComponent*		Clone();

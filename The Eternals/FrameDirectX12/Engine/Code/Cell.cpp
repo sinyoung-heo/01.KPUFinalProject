@@ -1,6 +1,7 @@
 #include "Cell.h"
 #include "GraphicDevice.h"
 #include "ComponentMgr.h"
+#include "Renderer.h"
 
 USING(Engine)
 
@@ -119,14 +120,17 @@ HRESULT CCell::Ready_Component()
 
 void CCell::Update_Component(const _float& fTimeDelta)
 {
-	for (_int i = 0; i < POINT_END; ++i)
+	if (CRenderer::Get_Instance()->Get_RenderOnOff(L"Collider"))
 	{
-		m_matWorld[i] = XMMatrixTranslation(m_vPoint[i].x, m_vPoint[i].y, m_vPoint[i].z);
-		m_pColliderCom[i]->Set_ParentMatrix(&m_matWorld[i]);
+		CRenderer::Get_Instance()->Add_Renderer(this);
 
-		m_pColliderCom[i]->Update_Component(fTimeDelta);
+		for (_int i = 0; i < POINT_END; ++i)
+		{
+			m_matWorld[i] = XMMatrixTranslation(m_vPoint[i].x, m_vPoint[i].y, m_vPoint[i].z);
+			m_pColliderCom[i]->Set_ParentMatrix(&m_matWorld[i]);
+			m_pColliderCom[i]->Update_Component(fTimeDelta);
+		}
 	}
-
 }
 
 void CCell::Render_Component(const _float& fTimeDelta)

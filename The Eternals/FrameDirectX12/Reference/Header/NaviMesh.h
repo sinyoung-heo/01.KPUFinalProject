@@ -18,7 +18,6 @@ public:
 	void	Set_CurrentCellIndex(const _ulong& dwIdx) { m_dwCurrentIdx = dwIdx; }
 
 	virtual void	Update_Component(const _float& fTimeDelta);
-	virtual void	Render_Component(const _float& fTimeDelta);
 	_vec3			Move_OnNaviMesh(const _vec3* pTargetPos,
 									const _vec3* pTargetDir,
 									const _float& fSpeed = 0.0f,

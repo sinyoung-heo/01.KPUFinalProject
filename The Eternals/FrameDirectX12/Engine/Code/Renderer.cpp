@@ -27,7 +27,7 @@ _uint CRenderer::Get_RenderLstSize(const RENDERGROUP & eRenderGroup)
 
 _uint CRenderer::Get_ColliderLstSize()
 {
-	return m_uiColliderListSize = (_uint)(m_ColliderList.size());
+	return m_uiColliderListSize = (_uint)(m_ColliderList.size() + m_RenderList[RENDER_COLLIDER].size());
 }
 
 _bool CRenderer::Get_RenderOnOff(wstring wstrTag)
@@ -166,7 +166,6 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	}
 
 	Render_Light();						// Shade, Specular
-	
 	Render_DownSampling();
 	Render_SSAO();
 	Render_Blur();
@@ -193,6 +192,7 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	CShaderShadowInstancing::Get_Instance()->Reset_Instance();
 	CShaderMeshInstancing::Get_Instance()->Reset_Instance();
 	CShaderTextureInstancing::Get_Instance()->Reset_Instance();
+	CShaderColorInstancing::Get_Instance()->Reset_Instance();
 
 	return S_OK;
 }
@@ -440,6 +440,8 @@ void CRenderer::Render_Collider(const _float & fTimeDelta)
 	for (auto& pCollider : m_ColliderList)
 		pCollider->Render_Component(fTimeDelta);
 
+	// Render Color Instancing
+	CShaderColorInstancing::Get_Instance()->Render_Instance();
 }
 
 void CRenderer::Render_RenderTarget()
@@ -570,6 +572,10 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 
 	// ShaderTextureInstancing
 	CShaderTextureInstancing::Get_Instance()->Ready_Shader(m_pGraphicDevice, m_pCommandList);
+	++m_uiCnt_ShaderFile;
+
+	// ShaderColorInstancing
+	CShaderColorInstancing::Get_Instance()->Ready_Shader(m_pGraphicDevice, m_pCommandList);
 	++m_uiCnt_ShaderFile;
 
 	return S_OK;

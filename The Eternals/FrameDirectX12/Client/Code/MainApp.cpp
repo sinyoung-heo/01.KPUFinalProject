@@ -367,9 +367,9 @@ void CMainApp::Show_FontLog(const _float& fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	if (nullptr != m_pRenderer)
 	{
-		m_uiCnt_ShaderFile = m_pRenderer->Get_CntShaderFile();
-		m_uiCnt_PipelineState = m_pRenderer->Get_CntPipelineState();
-		m_uiCnt_SetPipelineState = m_pRenderer->Get_CntSetPipelineState();
+		m_uiCnt_ShaderFile			= m_pRenderer->Get_CntShaderFile();
+		m_uiCnt_PipelineState		= m_pRenderer->Get_CntPipelineState();
+		m_uiCnt_SetPipelineState	= m_pRenderer->Get_CntSetPipelineState();
 		m_pRenderer->Reset_SetPipelineStateCnt();
 	}
 

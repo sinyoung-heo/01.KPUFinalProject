@@ -4,6 +4,7 @@
 BEGIN(Engine)
 
 class CShaderColor;
+class CShaderColorInstancing;
 class CShaderTexture;
 class CShaderTextureInstancing;
 class CShaderSkyBox;
@@ -55,6 +56,7 @@ protected:
 	[ Shader Component ]
 	____________________________________________________________________________________________________________*/
 	CShaderColor*				m_pShaderColor		       = nullptr;
+	CShaderColorInstancing*		m_pShaderColorInstancing   = nullptr;
 	CShaderTexture*				m_pShaderTexture	       = nullptr;
 	CShaderTextureInstancing*	m_pShaderTextureInstancing = nullptr;
 	CShaderSkyBox*				m_pShaderSkyBox		       = nullptr;

@@ -75,7 +75,9 @@ _int CLight::Update_Light()
 
 	if (D3DLIGHT_POINT == m_tLightInfo.Type &&
 		CRenderer::Get_Instance()->Get_Frustum().Contains(m_pColliderCom->Get_BoundingInfo()) != DirectX::DISJOINT)
+	{
 		m_pColliderCom->Update_Component(0.0f);
+	}
 
 	return NO_EVENT;
 }
@@ -94,9 +96,6 @@ void CLight::Render_Light(vector<ComPtr<ID3D12Resource>> pvecTargetTexture)
 	if (D3DLIGHT_POINT == m_tLightInfo.Type &&
 		CRenderer::Get_Instance()->Get_Frustum().Contains(m_pColliderCom->Get_BoundingInfo()) != DirectX::DISJOINT)
 	{
-		if (CRenderer::Get_Instance()->Get_RenderOnOff(L"Collider"))
-			CRenderer::Get_Instance()->Add_Renderer(m_pColliderCom);
-
 		Set_ConstantTable();
 
 		m_pShaderCom->Begin_Shader();

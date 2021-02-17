@@ -1,4 +1,5 @@
 #include "RcCol.h"
+#include "ShaderColorInstancing.h"
 
 USING(Engine)
 
@@ -87,6 +88,8 @@ void CRcCol::Render_Buffer()
 
 CComponent * CRcCol::Clone()
 {
+	CShaderColorInstancing::Get_Instance()->Add_TotalInstancCount(COLOR_BUFFER::BUFFER_RECT);
+
 	return new CRcCol(*this);
 }
 

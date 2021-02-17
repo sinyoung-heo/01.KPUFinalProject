@@ -81,8 +81,9 @@ HRESULT CCamera::Ready_GameObject(const CAMERA_DESC& tCameraInfo,
 	m_pShaderSSAO = static_cast<CShaderSSAO*>(m_pComponentMgr->Clone_Component(L"ShaderSSAO", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pShaderSSAO, E_FAIL);
 
-	m_pShaderMeshInstancing		= CShaderMeshInstancing::Get_Instance();
+	m_pShaderColorInstancing    = CShaderColorInstancing::Get_Instance();
 	m_pShaderTextureInstancing	= CShaderTextureInstancing::Get_Instance();
+	m_pShaderMeshInstancing		= CShaderMeshInstancing::Get_Instance();
 
 	return S_OK;
 }
@@ -142,6 +143,9 @@ void CCamera::Set_ConstantTable()
 	// ShaderColor
 	m_pShaderColor->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 	m_pShaderColor->Get_UploadBuffer_CameraOrthoMatrix()->CopyData(0, tCB_CamerOrthoMatrix);
+
+	// ShaderColorInstancing
+	m_pShaderColorInstancing->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 
 	// ShaderTexture
 	m_pShaderTexture->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);

@@ -50,11 +50,11 @@ HRESULT CTextureEffect::LateInit_GameObject()
 	CGameObject* pGameObj;
 	// Fire
 	pGameObj = CTextureDistortion::Create(m_pGraphicDevice, m_pCommandList,
-		m_strTextag,						// TextureTag
-		m_pTransCom->m_vScale,		// Scale
-		m_pTransCom->m_vAngle,		// Angle
-		m_pTransCom->m_vPos,	// Pos
-		m_tFrame);			// Sprite Image Frame
+										  m_strTextag,				// TextureTag
+										  m_pTransCom->m_vScale,	// Scale
+										  m_pTransCom->m_vAngle,	// Angle
+										  m_pTransCom->m_vPos,		// Pos
+										  m_tFrame);				// Sprite Image Frame
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", m_strTextag, pGameObj), E_FAIL);
 	static_cast<CTextureDistortion*>(pGameObj)->Set_ParentPosition(&m_pTransCom->m_vPos);
 	return S_OK;

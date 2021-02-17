@@ -1,5 +1,6 @@
 #include "Management.h"
 #include "Scene.h"
+#include "LightMgr.h"
 
 USING(Engine)
 IMPLEMENT_SINGLETON(CManagement)
@@ -23,6 +24,8 @@ _int CManagement::Update_Management(const _float & fTimeDelta)
 {
 	if (m_pCurrentScene != nullptr)
 		m_pCurrentScene->Update_Scene(fTimeDelta);
+
+	CLightMgr::Get_Instance()->Update_Light();
 
 	return 0;
 }
