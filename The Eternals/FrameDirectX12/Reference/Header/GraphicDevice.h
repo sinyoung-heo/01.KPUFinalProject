@@ -112,8 +112,6 @@ private:
 	array<ID3D12CommandAllocator*, CMDID::CMD_END>		m_arrCommandAllocator	{ nullptr };
 	array<ID3D12GraphicsCommandList*, CMDID::CMD_END>	m_arrCommandList		{ nullptr };
 
-	_bool m_bTryOnce = false;
-
 	/*__________________________________________________________________________________________________________
 	[ 서술자 힙 (Descriptor Heap) ]
 	- 그리기 명령을 제출하기 전에, 먼저 해당 그리기 호출이 참조할 자원들을 렌더링 파이프라인에 묶어야 한다.
