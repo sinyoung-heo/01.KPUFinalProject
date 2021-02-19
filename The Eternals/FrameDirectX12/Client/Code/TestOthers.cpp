@@ -35,7 +35,7 @@ HRESULT CTestOthers::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, 
 
 
 	m_pInfoCom->m_fSpeed = 5.0f;
-	m_pInfoCom->m_arrBezierPoint[3] = { m_pTransCom->m_vPos };
+	m_pInfoCom->m_vecArivePos = m_pTransCom->m_vPos;
 
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
@@ -146,9 +146,9 @@ void CTestOthers::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsComm
 
 	if (!m_bIsMoveStop)
 	{
-		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_arrBezierPoint[3]))
+		// NaviMesh 이동.		
+		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vecArivePos))
 		{
-			// NaviMesh 이동.
 			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
 														 &m_pTransCom->m_vDir,
 														 m_pInfoCom->m_fSpeed * fTimeDelta);

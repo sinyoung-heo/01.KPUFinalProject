@@ -250,7 +250,26 @@ typedef struct tagVector3 : public XMFLOAT3
 		XMVECTOR angle = XMVector3AngleBetweenVectors(v1, v2);
 		float	angleRadians = XMVectorGetX(angle);
 
-		return XMConvertToDegrees(angleRadians);
+		float fRet = 0.f;
+
+		if (this->z < 0.f)
+		{
+			fRet = XMConvertToDegrees(angleRadians);
+
+			if (this->x < 0.0f)
+				return 360.f - fRet;			
+			else				
+				return fRet;
+			
+		}
+		else
+		{
+			fRet = XMConvertToDegrees(angleRadians);
+			if (this->x < 0.0f)
+				return 360.f - fRet;		
+			else
+				return fRet;
+		}
 	}
 
 	float Dot(const tagVector3& v1)

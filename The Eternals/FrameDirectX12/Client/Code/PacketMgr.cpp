@@ -260,45 +260,28 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 		int s_num = packet->id;
 
-		/* 객체의 타입 판별: Player/Monster/NPC */
-		switch (packet->o_type)
+		/* 현재 클라이언트가 움직인 경우 */
+		if (s_num == g_iSNum)
 		{
-		/* player */
-		case TYPE_PLAYER:
-		{
-			/* 현재 클라이언트가 움직인 경우 */
-			if (s_num == g_iSNum)
-			{
-				Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"Popori_F", 0);
+			Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"Popori_F", 0);
 
-				auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
-				
-				pObj->Set_DeadReckoning(pObj->Get_Transform()->m_vPos,
-										pObj->Get_Transform()->m_vPos,
-										pObj->Get_Transform()->m_vPos, 
-										_vec3(packet->posX, packet->posY, packet->posZ));
-			
-				pObj->Get_Transform()->m_vAngle.y = packet->angleY;
-			}
-			/* 다른 클라이언트가 움직인 경우 */
-			else
-			{
-				Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+			auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
-				auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
+			pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
 
-				pObj->Set_DeadReckoning(pObj->Get_Transform()->m_vPos,
-										pObj->Get_Transform()->m_vPos,
-										pObj->Get_Transform()->m_vPos,
-										_vec3(packet->posX, packet->posY, packet->posZ));
-			
-				pObj->Get_Transform()->m_vAngle.y = packet->angleY;
-				pObj->Set_MoveStop(false);
-			}
 		}
-		break;
+		/* 다른 클라이언트가 움직인 경우 */
+		else
+		{
+			Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
 
-		}	
+			auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
+
+			pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
+
+			pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
+			pObj->Set_MoveStop(false);
+		}
 	}
 	break;
 
@@ -308,49 +291,27 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 		int s_num = packet->id;
 
-		/* 객체의 타입 판별: Player/Monster/NPC */
-		switch (packet->o_type)
+		/* 현재 클라이언트가 움직인 경우 */
+		if (s_num == g_iSNum)
 		{
-			/* player */
-		case TYPE_PLAYER:
-		{
-			/* 현재 클라이언트가 움직인 경우 */
-			if (s_num == g_iSNum)
-			{
-				Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"Popori_F", 0);
+			Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"Popori_F", 0);
 
-				auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
+			auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
-				pObj->Set_DeadReckoning(pObj->Get_Transform()->m_vPos,
-					pObj->Get_Transform()->m_vPos,
-					pObj->Get_Transform()->m_vPos,
-					_vec3(packet->posX, packet->posY, packet->posZ));
-
-				pObj->Get_Transform()->m_vAngle.y = packet->angleY;
-			}
-			/* 다른 클라이언트가 움직인 경우 */
-			else
-			{
-				Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
-
-				auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
-
-				pObj->Set_DeadReckoning(pObj->Get_Transform()->m_vPos,
-					pObj->Get_Transform()->m_vPos,
-					pObj->Get_Transform()->m_vPos,
-					_vec3(packet->posX, packet->posY, packet->posZ));
-
-				pObj->Set_MoveStop(true);
-			}
+			pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
 		}
-		break;
 
-		/* npc */
-		case TYPE_NPC:
-			break;
+		/* 다른 클라이언트가 움직인 경우 */
+		else	
+		{
+			Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
 
-		default:
-			break;
+			auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
+
+			pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+
+			pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
+			pObj->Set_MoveStop(true);
 		}
 	}
 	break;
@@ -402,21 +363,20 @@ void CPacketMgr::send_login()
 	send_packet(&p);
 }
 
-void CPacketMgr::send_move(char dir, const _vec3& vDir, const _vec3& vAngle)
+void CPacketMgr::send_move(const _vec3& vDir, const _vec3& vPos)
 {
 	cs_packet_move p;
 
 	p.size = sizeof(p);
 	p.type = CS_MOVE;
 
-	p.dir = dir;
+	p.posX = vPos.x;
+	p.posY = vPos.y;
+	p.posZ = vPos.z;
+
 	p.dirX = vDir.x;
 	p.dirY = vDir.y;
 	p.dirZ = vDir.z;
-
-	p.angleX = vAngle.x;
-	p.angleY = vAngle.y;
-	p.angleZ = vAngle.z;
 
 	p.move_time = static_cast<unsigned>(duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count());
 
@@ -437,7 +397,7 @@ bool CPacketMgr::change_MoveKey(MVKEY eKey)
 	return false;
 }
 
-void CPacketMgr::send_move_stop(const _vec3& vPos, const _vec3& vAngle)
+void CPacketMgr::send_move_stop(const _vec3& vPos, const _vec3& vDir)
 {
 	cs_packet_move_stop p;
 
@@ -448,9 +408,9 @@ void CPacketMgr::send_move_stop(const _vec3& vPos, const _vec3& vAngle)
 	p.posY = vPos.y;
 	p.posZ = vPos.z;
 
-	p.angleX = vAngle.x;
-	p.angleY = vAngle.y;
-	p.angleZ = vAngle.z;
+	p.dirX = vDir.x;
+	p.dirY = vDir.y;
+	p.dirZ = vDir.z;
 
 	send_packet(&p);
 }

@@ -9,6 +9,7 @@ CInfo::CInfo()
 CInfo::CInfo(const CInfo & rhs)
 	: m_fSpeed(rhs.m_fSpeed)
 	, m_fRadius(rhs.m_fRadius)
+	, m_vecArivePos(rhs.m_vecArivePos)
 {
 }
 
