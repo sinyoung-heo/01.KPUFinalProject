@@ -6,7 +6,7 @@
 BEGIN(Engine)
 
 #define _3DMAX_FPS			30.0f
-#define ANIMA_INTERPOLATION 3.0f
+#define ANIMA_INTERPOLATION 1.5f
 
 typedef map<string, _uint>		MAP_BONENAME;
 typedef vector<BONE_DESC>		VECTOR_BONE_DESC;

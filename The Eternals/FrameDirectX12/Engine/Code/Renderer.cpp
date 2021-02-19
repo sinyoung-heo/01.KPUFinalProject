@@ -328,7 +328,7 @@ void CRenderer::Render_Luminance()
 		vector<ComPtr<ID3D12Resource>> vecLuminanceTarget;
 		vecLuminanceTarget.emplace_back(vecBlendTarget[0]);	// RenderTarget - Blend
 
-		for (int i = 0; i < 6; i++)
+		for (_int i = 0; i < 6; i++)
 		{
 			vecLuminanceTarget.emplace_back(m_pTargetLuminance[i]->Get_TargetTexture()[0]);	// RenderTarget - Blend
 
@@ -336,9 +336,9 @@ void CRenderer::Render_Luminance()
 		for(auto & Shader: m_pLuminanceShader)
 			Shader->SetUp_ShaderTexture(vecLuminanceTarget);
 	}
-	for (int i=0; i<6; i++)
+	for (_int i = 0; i < 6; i++)
 	{
-		int num = pow(4, i);
+		_int num = pow(4, i);
 		m_pTargetLuminance[i]->SetUp_OnGraphicDevice_DownSampling(4, true, num);
 		m_pLuminanceShader[i]->Begin_Shader();
 		m_pLuminanceBuffer->Begin_Buffer();
@@ -629,14 +629,14 @@ HRESULT CRenderer::Ready_RenderTarget()
 	/*__________________________________________________________________________________________________________
 	[ Luminance RenderTarget ]
 	____________________________________________________________________________________________________________*/
-	for (int i = 0; i < 6; i++)
+	for (_int i = 0; i < 6; i++)
 	{
 		m_pTargetLuminance[i] = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
 		NULL_CHECK_RETURN(m_pTargetLuminance[i], E_FAIL);
 		m_pTargetLuminance[i]->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R16G16B16A16_UNORM);
 
-		int num = pow(4, i);
-		m_pTargetLuminance[i]->Set_TargetTextureSize(0, int(1024 / num), int(1024 / num), false);
+		_int num = pow(4, i);
+		m_pTargetLuminance[i]->Set_TargetTextureSize(0, _int(1024 / num), _int(1024 / num), false);
 
 		FAILED_CHECK_RETURN(m_pTargetLuminance[i]->SetUp_DefaultSetting(), E_FAIL);
 
@@ -767,7 +767,7 @@ void CRenderer::Create_ThreadContext()
 		}
 	};
 
-	for (int i = 0; i < CONTEXT::CONTEXT_END; ++i)
+	for (_int i = 0; i < CONTEXT::CONTEXT_END; ++i)
 	{
 		m_hWorkerBeginRender[i]		= CreateEvent(NULL,	// 핸들 상속과 보안 디스크립터.
 												  FALSE,// TRUE면 수동 리셋, FALSE면 자동 리셋 이벤트.
@@ -1081,7 +1081,7 @@ void CRenderer::Free()
 	Safe_Release(m_pBlendShader);
 	Safe_Release(m_pHDRShader);
 	//Luminance
-	for (int i = 0; i < 6; i++)
+	for (_int i = 0; i < 6; i++)
 	{
 		Safe_Release(m_pTargetLuminance[i]);
 		Safe_Release(m_pLuminanceShader[i]);

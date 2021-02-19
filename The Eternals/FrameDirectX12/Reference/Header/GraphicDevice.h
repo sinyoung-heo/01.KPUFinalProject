@@ -112,6 +112,7 @@ private:
 	array<ID3D12CommandAllocator*, CMDID::CMD_END>		m_arrCommandAllocator	{ nullptr };
 	array<ID3D12GraphicsCommandList*, CMDID::CMD_END>	m_arrCommandList		{ nullptr };
 
+	_bool m_bTryOnce = false;
 
 	/*__________________________________________________________________________________________________________
 	[ ¼­¼úÀÚ Èü (Descriptor Heap) ]

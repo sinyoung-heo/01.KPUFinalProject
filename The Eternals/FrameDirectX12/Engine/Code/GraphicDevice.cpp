@@ -125,20 +125,6 @@ HRESULT CGraphicDevice::Render_Begin(const _rgba& vRGBA)
 HRESULT CGraphicDevice::Render_ExcuteCmdList()
 {
 	/*__________________________________________________________________________________________________________
-	 Indicate a state transition on the resource usage.
-	- 자원 용도에 관련된 상태 전이를 Direct3D에 통지한다.
-	- 현재 렌더 타겟에 대한 렌더링이 끝나기를 기다린다. 
-	- GPU가 렌더 타겟(버퍼)을 더 이상 사용하지 않으면 렌더 타겟의 상태는 
-	  프리젠트 상태(D3D12_RESOURCE_STATE_PRESENT)로 바뀔 것이다.
-	____________________________________________________________________________________________________________*/
-	//if (false == CRenderer::Get_Instance()->Get_RenderOnOff(L"Font"))
-	//{
-	//	m_arrCommandList[CMDID::CMD_MAIN]->ResourceBarrier(1,&CD3DX12_RESOURCE_BARRIER::Transition(m_arrSwapChainBuffer[m_iCurrBackBuffer],
-	//																							   D3D12_RESOURCE_STATE_RENDER_TARGET, 
-	//																							   D3D12_RESOURCE_STATE_PRESENT));
-	//}
-
-	/*__________________________________________________________________________________________________________
 	- 명령들의 기록을 마친다.
 	- ExecuteCommandLists로 명령 목록을 제출하기 전에 
 	  반드시 이 메서드를 이용해서 명령 목록을 닫아야 한다.

@@ -114,7 +114,7 @@ HRESULT CRenderTarget::SetUp_DefaultSetting(const TARGETID& eID)
 		FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 																	  D3D12_HEAP_FLAG_NONE,
 																	  &TexTarget_Desc,
-																	  D3D12_RESOURCE_STATE_RENDER_TARGET,	// 렌더타겟용 리소스.
+																	  D3D12_RESOURCE_STATE_GENERIC_READ,	// 렌더타겟용 리소스.
 																	  &m_vecClearColor[i],
 																	  IID_PPV_ARGS(&m_vecTargetTexture[i])), 
 																	  E_FAIL);
@@ -234,7 +234,7 @@ HRESULT CRenderTarget::SetUp_OnGraphicDevice(const TARGETID& eID)
 		m_pCommandList->OMSetRenderTargets(m_uiTargetCnt,
 										   &CD3DX12_CPU_DESCRIPTOR_HANDLE(m_pRTV_Heap->GetCPUDescriptorHandleForHeapStart()), 
 										   true,
-										&CD3DX12_CPU_DESCRIPTOR_HANDLE(CGraphicDevice::Get_Instance()->Get_DSV_Heap()->GetCPUDescriptorHandleForHeapStart()));
+										   &CD3DX12_CPU_DESCRIPTOR_HANDLE(CGraphicDevice::Get_Instance()->Get_DSV_Heap()->GetCPUDescriptorHandleForHeapStart()));
 	}
 
 	// Depth/Stencil Buffer	X
@@ -244,9 +244,9 @@ HRESULT CRenderTarget::SetUp_OnGraphicDevice(const TARGETID& eID)
 		- TargetTexture에 셰이더에서 그려놓은 Texture들을 Set 해준다.
 		____________________________________________________________________________________________________________*/
 		m_pCommandList->OMSetRenderTargets(m_uiTargetCnt,
-										  &CD3DX12_CPU_DESCRIPTOR_HANDLE(m_pRTV_Heap->GetCPUDescriptorHandleForHeapStart()), 
-										  true,
-										  nullptr);	// Depth Stencil은 nullptr
+										   &CD3DX12_CPU_DESCRIPTOR_HANDLE(m_pRTV_Heap->GetCPUDescriptorHandleForHeapStart()), 
+										   true,
+										   nullptr);	// Depth Stencil은 nullptr
 	}
 
 	// DSV Heap O
@@ -380,9 +380,9 @@ HRESULT CRenderTarget::SetUp_OnGraphicDevice_DownSampling(int Sample,bool InitOp
 
 	if (InitOption)
 	{
-		LONG ViewSize = (LONG)(1024 / number);
-		ScissorRect = { 0, 0, ViewSize, ViewSize };
-		ViewPort.Height = ViewSize, ViewPort.Width = ViewSize, ViewPort.MaxDepth = 1.0f;
+		LONG ViewSize   = (LONG)(1024 / number);
+		ScissorRect     = { 0, 0, ViewSize, ViewSize };
+		ViewPort.Height = (_float)ViewSize, ViewPort.Width = (_float)ViewSize, ViewPort.MaxDepth = 1.0f;
 	}
 	else
 	{

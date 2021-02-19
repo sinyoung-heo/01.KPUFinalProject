@@ -60,7 +60,7 @@ HRESULT CTexture::Ready_Texture(wstring wstrFileName,
 		m_vecUpload.emplace_back(pUpload);
 	}
 
-	CGraphicDevice::Get_Instance()->Wait_ForGpuComplete();
+	// CGraphicDevice::Get_Instance()->Wait_ForGpuComplete();
 	Engine::CGraphicDevice::Get_Instance()->End_ResetCmdList(CMDID::CMD_LOADING);
 
 	// Create Texture DescriptorHeap.

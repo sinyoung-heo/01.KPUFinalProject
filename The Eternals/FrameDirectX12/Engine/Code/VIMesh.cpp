@@ -206,7 +206,7 @@ HRESULT CVIMesh::Ready_Component(const aiScene * pScene, wstring wstrFileName, w
 
 	FAILED_CHECK_RETURN(Ready_Texture(), E_FAIL);
 
-	CGraphicDevice::Get_Instance()->Wait_ForGpuComplete();
+	// CGraphicDevice::Get_Instance()->Wait_ForGpuComplete();
 	CGraphicDevice::Get_Instance()->End_ResetCmdList(CMDID::CMD_LOADING);
 
 	// Create Texture DescriptorHeap.
