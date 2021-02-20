@@ -171,7 +171,7 @@ HRESULT CStageLDH::Ready_LayerEnvironment(wstring wstrLayerTag)
 	_vec3 vCount((_float)(world_width / sector_size), 0.0f, _float(world_height / sector_size));
 
 	_vec3 vPos = _vec3(0.0f, 0.0f, (_float)world_height / 2);
-	for (_int i = 0; i < vCount.x; ++i)
+	for (_int i = 0; i < vCount.x + 1; ++i)
 	{
 		pGameObj = CCubeObject::Create(m_pGraphicDevice, m_pCommandList,
 									   _vec3(0.25f, 1.0f, (_float)world_height),	// Scale
@@ -183,7 +183,7 @@ HRESULT CStageLDH::Ready_LayerEnvironment(wstring wstrLayerTag)
 	}
 
 	vPos = _vec3((_float)world_width / 2, 0.0f, 0.0f);
-	for (_int i = 0; i < vCount.z; ++i)
+	for (_int i = 0; i < vCount.z + 1; ++i)
 	{
 		pGameObj = CCubeObject::Create(m_pGraphicDevice, m_pCommandList,
 									   _vec3((_float)world_width, 1.0f, 0.25f),	// Scale

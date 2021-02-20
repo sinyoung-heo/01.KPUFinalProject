@@ -83,32 +83,30 @@ HRESULT CStageHSY::Ready_LayerCamera(wstring wstrLayerTag)
 	[ DebugCamera ]
 	____________________________________________________________________________________________________________*/
 	pGameObj = CDebugCamera::Create(m_pGraphicDevice, m_pCommandList,
-									Engine::CAMERA_DESC(_vec3(22.0f, 11.0f, 12.0f),	// Eye
-														_vec3(31.0f, -20.0f, 46.0f),// At
-														_vec3(0.0f, 1.0f, 0.f)),	// Up
-									Engine::PROJ_DESC(60.0f,						// FovY
-													  _float(WINCX) / _float(WINCY),// Aspect
-													  0.1f,							// Near
-													  1000.0f),						// Far
-									Engine::ORTHO_DESC(WINCX,						// Viewport Width
-													   WINCY,						// Viewport Height
-													   0.0f,						// Near
-													   1.0f));						// Far
+									Engine::CAMERA_DESC(_vec3(41.0f, 79.0f, -124.0f),	// Eye
+														_vec3(43.0f, 79.0f, -115.0f),	// At
+														_vec3(0.0f, 1.0f, 0.f)),		// Up
+									Engine::PROJ_DESC(60.0f,							// FovY
+													  _float(WINCX) / _float(WINCY),	// Aspect
+													  0.1f,								// Near
+													  1000.0f),							// Far
+									Engine::ORTHO_DESC(WINCX,							// Viewport Width
+													   WINCY,							// Viewport Height
+													   0.0f,							// Near
+													   1.0f));							// Far
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"DebugCamera", pGameObj), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
 	[ DynamicCamera ]
 	____________________________________________________________________________________________________________*/
 	pGameObj = CDynamicCamera::Create(m_pGraphicDevice, m_pCommandList,
-									  Engine::CAMERA_DESC(_vec3(22.0f, 11.0f, 12.0f),	// Eye
-									  					  _vec3(31.0f, -20.0f, 46.0f),	// At
+									  Engine::CAMERA_DESC(_vec3(41.0f, 79.0f, -124.0f),	// Eye
+									  					  _vec3(43.0f, 79.0f, -115.0f),	// At
 									  					  _vec3(0.0f, 1.0f, 0.0f)),		// Up
-									  
 									  Engine::PROJ_DESC(60.0f,							// FovY
 									  					_float(WINCX) / _float(WINCY),	// Aspect
 									  					0.1f,							// Near
 									  					1000.0f),						// Far
-									  
 									  Engine::ORTHO_DESC(WINCX,							// Viewport Width
 									  					 WINCY,							// Viewport Height
 									  					 0.0f,							// Near
@@ -146,15 +144,15 @@ HRESULT CStageHSY::Ready_LayerEnvironment(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ Sector Grid ]
 	____________________________________________________________________________________________________________*/
-	_int world_width	= 1000;
-	_int world_height	= 1000;
-	_int sector_size	= 40;
+	_int world_width	= 256;
+	_int world_height	= 256;
+	_int sector_size	= 256;
 
 	_vec3 vOffset(_float(sector_size), 0.0f, _float(sector_size));
 	_vec3 vCount((_float)(world_width / sector_size), 0.0f, _float(world_height / sector_size));
 
 	_vec3 vPos = _vec3(0.0f, 0.0f, (_float)world_height / 2);
-	for (_int i = 0; i < vCount.x; ++i)
+	for (_int i = 0; i < vCount.x + 1; ++i)
 	{
 		pGameObj = CCubeObject::Create(m_pGraphicDevice, m_pCommandList,
 									   _vec3(0.25f, 1.0f, (_float)world_height),	// Scale
@@ -166,7 +164,7 @@ HRESULT CStageHSY::Ready_LayerEnvironment(wstring wstrLayerTag)
 	}
 
 	vPos = _vec3((_float)world_width / 2, 0.0f, 0.0f);
-	for (_int i = 0; i < vCount.z; ++i)
+	for (_int i = 0; i < vCount.z + 1; ++i)
 	{
 		pGameObj = CCubeObject::Create(m_pGraphicDevice, m_pCommandList,
 									   _vec3((_float)world_width, 1.0f, 0.25f),	// Scale
@@ -207,7 +205,7 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 	for (_uint i = 0; i < 500; ++i)
 	{
 		pGameObj = CTestCollisonObject::Create(m_pGraphicDevice, m_pCommandList,
-											   _vec3(5.0f),
+											   _vec3(10.0f),
 											   _vec3(0.0f),
 											   _vec3((_float)uid_x(dre), (_float)uid_y(dre), (_float)uid_z(dre)));
 

@@ -8,6 +8,13 @@ namespace Engine
 	class CColliderBox;
 }
 
+enum DIRECTION	{ DIR_X, DIR_Y, DIR_Z, DIR_STOP };
+enum MOVE		{ MOVE_MINUS, MOVE_PLUS };
+
+const float OFFSET_MAX = 256.0f;
+const float	OFFSET_MIN = 0.0f;
+
+
 class CTestCollisonObject final : public Engine::CGameObject
 {
 private:
@@ -27,6 +34,7 @@ public:
 
 private:
 	virtual HRESULT Add_Component();
+	void			Move_Direction(const _float& fTimeDelta);
 
 private:
 	/*__________________________________________________________________________________________________________
@@ -35,6 +43,12 @@ private:
 	Engine::CShaderColorInstancing* m_pShaderColorInstancing = nullptr;
 	Engine::CColliderSphere*		m_pColliderSphereCom     = nullptr;
 	Engine::CColliderBox*			m_pColliderBoxCom        = nullptr;
+
+	/*__________________________________________________________________________________________________________
+	[ Value ]
+	____________________________________________________________________________________________________________*/
+	DIRECTION	m_eDir  = DIR_STOP;
+	_float		m_fMove = 1.0f;
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,

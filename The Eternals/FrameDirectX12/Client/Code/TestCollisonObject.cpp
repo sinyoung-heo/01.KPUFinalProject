@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "TestCollisonObject.h"
+#include <random>
 
 CTestCollisonObject::CTestCollisonObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -20,6 +21,8 @@ HRESULT CTestCollisonObject::Ready_GameObject(const _vec3& vScale, const _vec3& 
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos		= vPos;
 
+	m_pInfoCom->m_fSpeed	= 30.0f;
+
 	m_bIsCollision = true;
 	// BoundingBox.
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
@@ -32,6 +35,17 @@ HRESULT CTestCollisonObject::Ready_GameObject(const _vec3& vScale, const _vec3& 
 											  m_pTransCom->m_vScale,
 											  _vec3(1.0f),
 											  _vec3(0.0f));
+
+	uniform_int_distribution<_int>	uid_dir	{ DIR_X, DIR_Z };
+	uniform_int_distribution<_int>	uid_move{ MOVE_MINUS, MOVE_PLUS };
+	random_device			rn;
+	default_random_engine	dre{ rn() };
+
+	m_eDir = DIRECTION(uid_dir(dre));
+	if (MOVE_MINUS == MOVE(uid_move(dre)))
+		m_fMove = -1.0f;
+	else
+		m_fMove = 1.0f;
 
 	return S_OK;
 }
@@ -47,6 +61,11 @@ _int CTestCollisonObject::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
+
+	/*__________________________________________________________________________________________________________
+	[ Move Collision Object ]
+	____________________________________________________________________________________________________________*/
+	Move_Direction(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
@@ -71,6 +90,55 @@ void CTestCollisonObject::Render_GameObject(const _float& fTimeDelta)
 HRESULT CTestCollisonObject::Add_Component()
 {
 	return S_OK;
+}
+
+void CTestCollisonObject::Move_Direction(const _float& fTimeDelta)
+{
+	if (DIR_X == m_eDir)
+	{
+		m_pTransCom->m_vPos.x += m_pInfoCom->m_fSpeed * m_fMove * fTimeDelta;
+
+		if (m_pTransCom->m_vPos.x > OFFSET_MAX)
+		{
+			m_fMove *= -1.0f;
+			m_pTransCom->m_vPos.x = OFFSET_MAX;
+		}
+		else if (m_pTransCom->m_vPos.x < OFFSET_MIN)
+		{
+			m_fMove *= -1.0f;
+			m_pTransCom->m_vPos.x = OFFSET_MIN;
+		}
+	}
+	else if (DIR_Y == m_eDir)
+	{
+		m_pTransCom->m_vPos.y += m_pInfoCom->m_fSpeed * m_fMove * fTimeDelta;
+
+		if (m_pTransCom->m_vPos.y > OFFSET_MAX)
+		{
+			m_fMove *= -1.0f;
+			m_pTransCom->m_vPos.y = OFFSET_MAX;
+		}
+		else if (m_pTransCom->m_vPos.y < OFFSET_MIN)
+		{
+			m_fMove *= -1.0f;
+			m_pTransCom->m_vPos.y = OFFSET_MIN;
+		}
+	}
+	else if (DIR_Z == m_eDir)
+	{
+		m_pTransCom->m_vPos.z += m_pInfoCom->m_fSpeed * m_fMove * fTimeDelta;
+
+		if (m_pTransCom->m_vPos.z > OFFSET_MAX)
+		{
+			m_fMove *= -1.0f;
+			m_pTransCom->m_vPos.z = OFFSET_MAX;
+		}
+		else if (m_pTransCom->m_vPos.z < OFFSET_MIN)
+		{
+			m_fMove *= -1.0f;
+			m_pTransCom->m_vPos.z = OFFSET_MIN;
+		}
+	}
 }
 
 Engine::CGameObject* CTestCollisonObject::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, 
