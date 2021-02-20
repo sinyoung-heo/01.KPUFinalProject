@@ -183,6 +183,7 @@ call CopyEngine.bat</Command>
     <ClInclude Include="..\Code\Base.h" />
     <ClInclude Include="..\Code\Camera.h" />
     <ClInclude Include="..\Code\Cell.h" />
+    <ClInclude Include="..\Code\CollisionMgr.h" />
     <ClInclude Include="..\Code\CoordinateCol.h" />
     <ClInclude Include="..\Code\DescriptorHeapMgr.h" />
     <ClInclude Include="..\Code\Line.h" />
@@ -252,6 +253,7 @@ call CopyEngine.bat</Command>
     <ClCompile Include="..\Code\Base.cpp" />
     <ClCompile Include="..\Code\Camera.cpp" />
     <ClCompile Include="..\Code\Cell.cpp" />
+    <ClCompile Include="..\Code\CollisionMgr.cpp" />
     <ClCompile Include="..\Code\CoordinateCol.cpp" />
     <ClCompile Include="..\Code\DescriptorHeapMgr.cpp" />
     <ClCompile Include="..\Code\Line.cpp" />

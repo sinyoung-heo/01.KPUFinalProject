@@ -215,7 +215,10 @@ _int CLayer::LateUpdate_Layer(const _float & fTimeDelta)
 	for (auto& MyPair : m_mapObjLst)
 	{
 		for (auto& pGameObject : MyPair.second)
+		{
 			pGameObject->LateUpdate_GameObject(fTimeDelta);
+			pGameObject->Clear_CollisionList();
+		}
 	}
 
 	return NO_EVENT;

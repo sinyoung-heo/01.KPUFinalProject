@@ -1,6 +1,7 @@
 #include "Management.h"
 #include "Scene.h"
 #include "LightMgr.h"
+#include "CollisionMgr.h"
 
 USING(Engine)
 IMPLEMENT_SINGLETON(CManagement)
@@ -32,8 +33,14 @@ _int CManagement::Update_Management(const _float & fTimeDelta)
 
 _int CManagement::LateUpdate_Management(const _float & fTimeDelta)
 {
+	// CollisionMgr.
+	CCollisionMgr::Get_Instance()->Progress_SweapAndPrune();
+	//CCollisionMgr::Get_Instance()->Check_Collision();
+
 	if (m_pCurrentScene != nullptr)
 		m_pCurrentScene->LateUpdate_Scene(fTimeDelta);
+
+	CCollisionMgr::Get_Instance()->Clear_CollisionContainer();
 
 	return 0;
 }

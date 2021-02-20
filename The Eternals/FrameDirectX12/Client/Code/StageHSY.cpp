@@ -144,9 +144,9 @@ HRESULT CStageHSY::Ready_LayerEnvironment(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ Sector Grid ]
 	____________________________________________________________________________________________________________*/
-	_int world_width	= 256;
-	_int world_height	= 256;
-	_int sector_size	= 256;
+	_int world_width	= 128;
+	_int world_height	= 128;
+	_int sector_size	= 128;
 
 	_vec3 vOffset(_float(sector_size), 0.0f, _float(sector_size));
 	_vec3 vCount((_float)(world_width / sector_size), 0.0f, _float(world_height / sector_size));
@@ -196,13 +196,13 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ TestCollisionObject ]
 	____________________________________________________________________________________________________________*/
-	uniform_int_distribution<_int>	uid_x	{ 0, 256 };
-	uniform_int_distribution<_int>	uid_y	{ 0, 256 };
-	uniform_int_distribution<_int>	uid_z	{ 0, 256 };
+	uniform_int_distribution<_int>	uid_x	{ 0, 128 };
+	uniform_int_distribution<_int>	uid_y	{ 0, 128 };
+	uniform_int_distribution<_int>	uid_z	{ 0, 128 };
 	random_device			rn;
 	default_random_engine	dre{ rn()};
 
-	for (_uint i = 0; i < 500; ++i)
+	for (_uint i = 0; i < 100; ++i)
 	{
 		pGameObj = CTestCollisonObject::Create(m_pGraphicDevice, m_pCommandList,
 											   _vec3(10.0f),

@@ -13,6 +13,7 @@
 #include <vector>
 #include <list>
 #include <map>
+#include <set>
 #include <string>
 #include <algorithm>
 #include <functional>

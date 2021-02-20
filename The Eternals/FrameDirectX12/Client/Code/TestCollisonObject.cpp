@@ -20,8 +20,7 @@ HRESULT CTestCollisonObject::Ready_GameObject(const _vec3& vScale, const _vec3& 
 	m_pTransCom->m_vScale	= vScale;
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos		= vPos;
-
-	m_pInfoCom->m_fSpeed	= 30.0f;
+	m_wstrCollisionTag      = L"TestCollision";
 
 	m_bIsCollision = true;
 	// BoundingBox.
@@ -36,16 +35,19 @@ HRESULT CTestCollisonObject::Ready_GameObject(const _vec3& vScale, const _vec3& 
 											  _vec3(1.0f),
 											  _vec3(0.0f));
 
-	uniform_int_distribution<_int>	uid_dir	{ DIR_X, DIR_Z };
-	uniform_int_distribution<_int>	uid_move{ MOVE_MINUS, MOVE_PLUS };
-	random_device			rn;
-	default_random_engine	dre{ rn() };
+	uniform_int_distribution<_int>	uid_dir		{ DIR_X, DIR_Z };
+	uniform_int_distribution<_int>	uid_move	{ MOVE_MINUS, MOVE_PLUS };
+	uniform_int_distribution<_int>	uid_speed	{ 10, 50 };
+	// random_device			rn;
+	default_random_engine	dre{ /*rn()*/ };
 
 	m_eDir = DIRECTION(uid_dir(dre));
 	if (MOVE_MINUS == MOVE(uid_move(dre)))
 		m_fMove = -1.0f;
 	else
 		m_fMove = 1.0f;
+
+	m_pInfoCom->m_fSpeed = _float(uid_speed(dre));
 
 	return S_OK;
 }
@@ -62,6 +64,10 @@ _int CTestCollisonObject::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	m_pBoundingSphereCom->Set_Color(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
+	m_pBoundingBoxCom->Set_Color(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
+
+
 	/*__________________________________________________________________________________________________________
 	[ Move Collision Object ]
 	____________________________________________________________________________________________________________*/
@@ -72,6 +78,7 @@ _int CTestCollisonObject::Update_GameObject(const _float& fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
+	m_pCollisonMgr->Add_CollisionCheckList(m_wstrCollisionTag, this);
 
 	return NO_EVENT;
 }
@@ -79,12 +86,27 @@ _int CTestCollisonObject::Update_GameObject(const _float& fTimeDelta)
 _int CTestCollisonObject::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
+	Process_Collision();
 
 	return NO_EVENT;
 }
 
 void CTestCollisonObject::Render_GameObject(const _float& fTimeDelta)
 {
+}
+
+void CTestCollisonObject::Process_Collision()
+{
+	for (auto& pDst : m_lstCollisionDst)
+	{
+		if (L"TestCollision" == pDst->Get_CollisionTag())
+		{
+			m_pBoundingSphereCom->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+			m_pBoundingBoxCom->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+			pDst->Get_BoundingSphere()->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+			pDst->Get_BoundingBox()->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+		}
+	}
 }
 
 HRESULT CTestCollisonObject::Add_Component()

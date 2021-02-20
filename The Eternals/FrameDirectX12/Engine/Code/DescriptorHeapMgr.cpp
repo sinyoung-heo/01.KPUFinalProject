@@ -3,10 +3,6 @@
 USING(Engine)
 IMPLEMENT_SINGLETON(CDescriptorHeapMgr)
 
-CDescriptorHeapMgr::CDescriptorHeapMgr()
-{
-}
-
 HRESULT CDescriptorHeapMgr::Add_DescriptorHeap(wstring wstrHeapTag, ID3D12DescriptorHeap* pDescriptorHeap)
 {
 	/*__________________________________________________________________________________________________________

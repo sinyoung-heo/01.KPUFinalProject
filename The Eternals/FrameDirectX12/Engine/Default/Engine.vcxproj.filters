@@ -172,6 +172,9 @@
     <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\10.ShaderSSAO">
       <UniqueIdentifier>{45232813-74a9-465c-ae95-8e3ed04390d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.Mgr\02.CollisionMgr">
+      <UniqueIdentifier>{75b73304-06c1-4cb8-8b60-2543b32501a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\Engine_Functor.h">
@@ -375,6 +378,9 @@
     <ClInclude Include="..\Code\ShaderColorInstancing.h">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\00.ShaderColor</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\CollisionMgr.h">
+      <Filter>97.Mgr\02.CollisionMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\DirectInput.cpp">
@@ -550,6 +556,9 @@
     </ClCompile>
     <ClCompile Include="ShaderColorInstancing.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\00.ShaderColor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CollisionMgr.cpp">
+      <Filter>97.Mgr\02.CollisionMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

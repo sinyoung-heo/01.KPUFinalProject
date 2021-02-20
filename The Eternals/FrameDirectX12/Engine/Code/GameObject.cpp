@@ -14,6 +14,7 @@ CGameObject::CGameObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList
 	, m_pObjectMgr(CObjectMgr::Get_Instance())
 	, m_pRenderer(CRenderer::Get_Instance())
 	, m_pComponentMgr(CComponentMgr::Get_Instance())
+	, m_pCollisonMgr(CCollisionMgr::Get_Instance())
 {
 }
 
@@ -154,6 +155,10 @@ _int CGameObject::LateUpdate_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
+void CGameObject::Process_Collision()
+{
+}
+
 void CGameObject::Render_GameObject(const _float & fTimeDelta)
 {
 }
@@ -173,6 +178,17 @@ void CGameObject::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCom
 HRESULT CGameObject::Add_Component()
 {
 	return S_OK;
+}
+
+void CGameObject::Add_CollisionList(CGameObject* pDst)
+{
+	if (pDst != this)
+		m_lstCollisionDst.emplace_back(pDst);
+}
+
+void CGameObject::Clear_CollisionList()
+{
+	m_lstCollisionDst.clear();
 }
 
 void CGameObject::SetUp_BillboardMatrix()

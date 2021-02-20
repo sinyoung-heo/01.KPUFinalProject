@@ -15,6 +15,7 @@
 #include "Renderer.h"
 #include "LightMgr.h"
 #include "DescriptorHeapMgr.h"
+#include "CollisionMgr.h"
 #include <chrono>
 
 #define MAX_LOADSTRING 100
@@ -402,6 +403,12 @@ _ulong Release_Singleton()
 	if (dwRefCnt = Engine::CDescriptorHeapMgr::Get_Instance()->Destroy_Instance())
 	{
 		MSG_BOX(L"CDescriptorHeapMgr Release Failed");
+		return dwRefCnt;
+	}
+
+	if (dwRefCnt = Engine::CCollisionMgr::Get_Instance()->Destroy_Instance())
+	{
+		MSG_BOX(L"CCollisionMgr Release Failed");
 		return dwRefCnt;
 	}
 

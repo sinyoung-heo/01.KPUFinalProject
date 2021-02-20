@@ -1,6 +1,7 @@
 #pragma once
 #include "ComponentMgr.h"
 #include "Renderer.h"
+#include "CollisionMgr.h"
 
 BEGIN(Engine)
 
@@ -21,6 +22,7 @@ public:
 	CInfo*				Get_Info()				{ return m_pInfoCom; }
 	CColliderBox*		Get_BoundingBox()		{ return m_pBoundingBoxCom;}
 	CColliderSphere*	Get_BoundingSphere()	{ return m_pBoundingSphereCom; }
+	wstring				Get_CollisionTag()		{ return m_wstrCollisionTag; }
 	_float				Get_DepthOfView()		{ return m_fViewZ; }
 	_long				Get_UIDepth()			{ return m_UIDepth; }
 	const _bool&		Get_IsDead()			{ return m_bIsDead; }
@@ -52,15 +54,17 @@ public:
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
+	virtual void	Process_Collision();
 
 	// SingleThread Rendering.
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 	virtual void	Render_ShadowDepth(const _float & fTimeDelta);
-
 	// MultiThread Rendering.
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 
+	void			Add_CollisionList(CGameObject* pDst);
+	void			Clear_CollisionList();
 protected:
 	virtual HRESULT Add_Component();
 	void			SetUp_BillboardMatrix();
@@ -68,18 +72,19 @@ protected:
 	void			SetUp_BoundingSphere(_matrix* pParent, const _vec3& vParentScale, const _vec3& vScale, const _vec3& vPos);
 	void			Compute_ViewZ(_vec4& vPosInWorld);
 
-private:
 	CComponent*		Find_Component(wstring wstrComponentTag, const COMPONENTID& eID);
+
 
 protected:
 	/*__________________________________________________________________________________________________________
 	[ GraphicDevice & Mgr ]
 	____________________________________________________________________________________________________________*/
-	ID3D12Device*				m_pGraphicDevice	= nullptr;
-	ID3D12GraphicsCommandList*	m_pCommandList		= nullptr;
-	CRenderer*					m_pRenderer			= nullptr;
-	CObjectMgr*					m_pObjectMgr		= nullptr;
-	CComponentMgr*				m_pComponentMgr		= nullptr;
+	ID3D12Device*				m_pGraphicDevice = nullptr;
+	ID3D12GraphicsCommandList*	m_pCommandList	 = nullptr;
+	CRenderer*					m_pRenderer		 = nullptr;
+	CObjectMgr*					m_pObjectMgr	 = nullptr;
+	CComponentMgr*				m_pComponentMgr	 = nullptr;
+	CCollisionMgr*				m_pCollisonMgr   = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -104,6 +109,12 @@ protected:
 	_bool	m_bIsBoundingSphere = false;
 	_bool	m_bIsRenderShadow	= false;
 	
+	/*__________________________________________________________________________________________________________
+	[ Collision ]
+	____________________________________________________________________________________________________________*/
+	wstring				m_wstrCollisionTag;
+	list<CGameObject*>	m_lstCollisionDst;
+
 	/* server */
 	int		m_iSNum				= 0;
 	bool	m_bIsMoveStop		= false;

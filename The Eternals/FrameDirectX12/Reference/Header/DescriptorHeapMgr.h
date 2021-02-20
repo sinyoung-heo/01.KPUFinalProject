@@ -9,7 +9,7 @@ class ENGINE_DLL CDescriptorHeapMgr : public CBase
 	DECLARE_SINGLETON(CDescriptorHeapMgr)
 
 private:
-	explicit CDescriptorHeapMgr();
+	explicit CDescriptorHeapMgr() = default;
 	virtual ~CDescriptorHeapMgr() = default;
 
 public:
