@@ -115,6 +115,11 @@ _int CTestPlayer::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	/*__________________________________________________________________________________________________________
+	[ Renderer - Add Render Group ]
+	____________________________________________________________________________________________________________*/
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+
+	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
@@ -125,11 +130,6 @@ _int CTestPlayer::Update_GameObject(const _float& fTimeDelta)
 _int CTestPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
-
-	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 
 	/*__________________________________________________________________________________________________________
 	[ Font Update ]

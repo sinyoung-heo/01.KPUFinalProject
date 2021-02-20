@@ -76,6 +76,13 @@ _int CTextureDistortion::Update_GameObject(const _float & fTimeDelta)
 	Update_SpriteFrame(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
+	[ Renderer - Add Render Group ]
+	____________________________________________________________________________________________________________*/
+	// Frustum Culling
+	if (m_pRenderer->Get_Frustum().Contains(m_pBoundingBoxCom->Get_BoundingInfo()) != DirectX::DISJOINT)
+		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_DISTORTION, this), -1);
+
+	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
@@ -94,13 +101,6 @@ _int CTextureDistortion::Update_GameObject(const _float & fTimeDelta)
 _int CTextureDistortion::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
-	
-	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	// Frustum Culling
-	if (m_pRenderer->Get_Frustum().Contains(m_pBoundingBoxCom->Get_BoundingInfo()) != DirectX::DISJOINT)
-		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_DISTORTION, this), -1);
 
 	return NO_EVENT;
 }

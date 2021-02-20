@@ -86,6 +86,16 @@ _int CStaticMeshObject::Update_GameObject(const _float & fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	/*__________________________________________________________________________________________________________
+	[ Renderer - Add Render Group ]
+	____________________________________________________________________________________________________________*/
+	// Frustum Culling
+	if (m_pRenderer->Get_Frustum().Contains(m_pBoundingBoxCom->Get_BoundingInfo()) != DirectX::DISJOINT)
+	{
+		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_CROSSFILTER, this), -1);
+	}
+
 	/*____________________________________________________________________
 	TransCom - Update WorldMatrix.
 	______________________________________________________________________*/
@@ -98,15 +108,6 @@ _int CStaticMeshObject::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
-	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	// Frustum Culling
-	if (m_pRenderer->Get_Frustum().Contains(m_pBoundingBoxCom->Get_BoundingInfo()) != DirectX::DISJOINT)
-	{
-		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
-		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_CROSSFILTER, this), -1);
-	}
 	return NO_EVENT;
 }
 

@@ -127,6 +127,11 @@ _int CPopori_F::Update_GameObject(const _float & fTimeDelta)
 	Change_Animation(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
+	[ Renderer - Add Render Group ]
+	____________________________________________________________________________________________________________*/
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+
+	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
@@ -138,11 +143,6 @@ _int CPopori_F::Update_GameObject(const _float & fTimeDelta)
 _int CPopori_F::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
-
-	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 
 	/*__________________________________________________________________________________________________________
 	[ Font Update ]

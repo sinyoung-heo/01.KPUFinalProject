@@ -62,6 +62,11 @@ _int CTerrainMeshObject::Update_GameObject(const _float & fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	/*__________________________________________________________________________________________________________
+	[ Renderer - Add Render Group ]
+	____________________________________________________________________________________________________________*/
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+
 	/*____________________________________________________________________
 	TransCom - Update WorldMatrix.
 	______________________________________________________________________*/
@@ -73,11 +78,6 @@ _int CTerrainMeshObject::Update_GameObject(const _float & fTimeDelta)
 _int CTerrainMeshObject::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
-
-	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 
 	return NO_EVENT;
 }

@@ -145,6 +145,9 @@
     <Filter Include="02.GameObject\99.SampleObject\12.TexEffectInstance">
       <UniqueIdentifier>{8127f386-d54a-487e-be8b-709a071ca813}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.SampleObject\13.TestCollisionObject">
+      <UniqueIdentifier>{aee3eebd-2978-42e2-9fe0-891608d742c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -304,6 +307,9 @@
     <ClInclude Include="..\Code\TexDistortionInstance.h">
       <Filter>02.GameObject\99.SampleObject\12.TexEffectInstance</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\TestCollisonObject.h">
+      <Filter>02.GameObject\99.SampleObject\13.TestCollisionObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -431,6 +437,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\TexDistortionInstance.cpp">
       <Filter>02.GameObject\99.SampleObject\12.TexEffectInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TestCollisonObject.cpp">
+      <Filter>02.GameObject\99.SampleObject\13.TestCollisionObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

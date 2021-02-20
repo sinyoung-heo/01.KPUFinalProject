@@ -201,6 +201,7 @@
     <ClInclude Include="..\Code\StaticMeshObject.h" />
     <ClInclude Include="..\Code\TerrainMeshObject.h" />
     <ClInclude Include="..\Code\TerrainObject.h" />
+    <ClInclude Include="..\Code\TestCollisonObject.h" />
     <ClInclude Include="..\Code\TestOthers.h" />
     <ClInclude Include="..\Code\TestPlayer.h" />
     <ClInclude Include="..\Code\TexDistortionInstance.h" />
@@ -253,6 +254,7 @@
     <ClCompile Include="..\Code\StaticMeshObject.cpp" />
     <ClCompile Include="..\Code\TerrainMeshObject.cpp" />
     <ClCompile Include="..\Code\TerrainObject.cpp" />
+    <ClCompile Include="..\Code\TestCollisonObject.cpp" />
     <ClCompile Include="..\Code\TestOthers.cpp" />
     <ClCompile Include="..\Code\TestPlayer.cpp" />
     <ClCompile Include="..\Code\TexDistortionInstance.cpp" />

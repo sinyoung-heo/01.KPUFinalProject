@@ -94,11 +94,6 @@ _int CChicken::LateUpdate_GameObject(const _float & fTimeDelta)
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
 	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
-
-	/*__________________________________________________________________________________________________________
 	[ Animation KeyFrame Index ]
 	____________________________________________________________________________________________________________*/
 	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());

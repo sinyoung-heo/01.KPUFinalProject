@@ -43,6 +43,12 @@ _int CCubeObject::Update_GameObject(const _float & fTimeDelta)
 		return DEAD_OBJ;
 
 	/*__________________________________________________________________________________________________________
+	[ Renderer - Add Render Group ]
+	____________________________________________________________________________________________________________*/
+	if (m_pRenderer->Get_RenderOnOff(L"SectorGrid"))
+		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_COLLIDER, this), -1);
+
+	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
@@ -54,12 +60,6 @@ _int CCubeObject::Update_GameObject(const _float & fTimeDelta)
 _int CCubeObject::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
-
-	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	if (m_pRenderer->Get_RenderOnOff(L"SectorGrid"))
-		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_COLLIDER, this), -1);
 
 	return NO_EVENT;
 }
