@@ -75,7 +75,7 @@ void Ready_Server()
 	Ready_ServerManager();
 
 	/* Create NPC */
-	//Initialize_NPC();
+	Initialize_NPC();
 
 	std::wcout.imbue(std::locale("korean"));
 
@@ -192,6 +192,7 @@ void Initialize_NPC()
 	sprintf_s(pNew->m_ID, "NPC%d", s_num);
 	
 	pNew->m_vPos = _vec3(25.0f, 0.f, 20.0f);
+	pNew->m_vTempPos = pNew->m_vPos;
 	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 	pNew->m_type = TYPE_NPC;

@@ -32,9 +32,6 @@ constexpr int ELF_ATT			= 3;			// ELF 공격력
 constexpr int BOSS_ATT			= 10;			// BOSS 공격력
 
 constexpr int MASTER			= 99999;
-
-constexpr int SECTOR_SIZE		= 400;
-
 /*____________________________________________________________________
 Player Direction
 ______________________________________________________________________*/

@@ -4,12 +4,16 @@ constexpr char SERVER_IP[16] = "127.0.0.1";
 constexpr int SERVER_PORT = 5689;
 constexpr int MAX_ID_LEN = 10;
 constexpr int MAX_PW_LEN = 16;
+constexpr int MAX_STR_LEN = 100;
+
 constexpr int MAX_USER = 10000;
 constexpr int MAX_NPC = 3;
 constexpr int NPC_NUM_START = 1000;
-constexpr int WORLD_WIDTH = 20000;
-constexpr int WORLD_HEIGHT = 20000;
-constexpr int MAX_STR_LEN = 100;
+
+constexpr int WORLD_WIDTH = 1000;
+constexpr int WORLD_HEIGHT = 1000;
+constexpr int SECTOR_SIZE = 40;
+
 constexpr int VIEW_LIMIT = 20;				
 
 #pragma pack (push, 1)

@@ -759,7 +759,7 @@ void send_NPC_enter_packet(int to_client, int new_id)
 
 void send_NPC_move_packet(int to_client, int id)
 {
-	sc_packet_npc_move p;
+	sc_packet_move p;
 
 	CNpc* pNPC = static_cast<CNpc*>(CObjMgr::GetInstance()->Get_GameObject(L"NPC", id));
 
@@ -769,7 +769,13 @@ void send_NPC_move_packet(int to_client, int id)
 	p.type = SC_PACKET_NPC_MOVE;
 	p.id = id;
 
-	p.dir = pNPC->m_dir;
+	p.posX = pNPC->m_vTempPos.x;
+	p.posY = pNPC->m_vTempPos.y;
+	p.posZ = pNPC->m_vTempPos.z;
+
+	p.dirX = pNPC->m_vDir.x;
+	p.dirY = pNPC->m_vDir.y;
+	p.dirZ = pNPC->m_vDir.z;
 	
 	send_packet(to_client, &p);
 }
@@ -780,7 +786,7 @@ void random_move_npc(int id)
 
 	if (pNPC == nullptr) return;
 
-	/* 해당 플레이어의 원래 위치값 */
+	/* 해당 NPC의 원래 위치값 */
 	float ori_x, ori_y, ori_z;
 	ori_x = pNPC->m_vPos.x;
 	ori_y = pNPC->m_vPos.y;
@@ -819,17 +825,28 @@ void random_move_npc(int id)
 		}
 	}
 
-	/* 움직임 처리 */
+	/* NPC 움직임 처리 */
 	switch (rand() % 8)
 	{
-	case 0: pNPC->m_dir = MV_FRONT; break;
-	case 1: pNPC->m_dir = MV_BACK; break;
-	case 2: pNPC->m_dir = MV_RIGHT; break;
-	case 3: pNPC->m_dir = MV_RIGHT_UP; break;
-	case 4: pNPC->m_dir = MV_RIGHT_DOWN; break;
-	case 5: pNPC->m_dir = MV_LEFT; break;
-	case 6: pNPC->m_dir = MV_LEFT_UP; break;
-	case 7: pNPC->m_dir = MV_LEFT_DOWN; break;
+	case 0: pNPC->m_vDir = _vec3(0.f, 0.f, 1.f); break;
+	case 1: pNPC->m_vDir = _vec3(0.f, 0.f, -1.f); break;
+	case 2: pNPC->m_vDir = _vec3(1.f, 0.f, 0.f); break;
+	case 3: pNPC->m_vDir = _vec3(1.f, 0.f, 1.f); break;
+	case 4: pNPC->m_vDir = _vec3(1.f, 0.f, -1.f); break;
+	case 5: pNPC->m_vDir = _vec3(-1.f, 0.f, 0.f); break;
+	case 6: pNPC->m_vDir = _vec3(-1.f, 0.f, 1.f); break;
+	case 7: pNPC->m_vDir = _vec3(-1.f, 0.f, -1.f); break;
+	}
+
+	/* 해당 NPC의 미래 위치 좌표 산출 -> 미래 위치좌표는 임시 변수에 저장 */
+	pNPC->m_vTempPos += pNPC->m_vDir * 3.f;
+
+	/* NaviMesh를 벗어날 경우 움직임 X */
+	if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(pNPC->m_vTempPos) == -1)
+	{
+		pNPC->m_vTempPos = pNPC->m_vPos;
+		add_timer(id, OPMODE::OP_RANDOM_MOVE_NPC, system_clock::now() + 15s);
+		return;
 	}
 
 	/* 변경된 좌표로 섹터 갱신 */
@@ -898,6 +915,9 @@ void random_move_npc(int id)
 					pPlayer->view_list.insert(id);
 					pPlayer->v_lock.unlock();
 					send_NPC_enter_packet(pl, id);
+
+					/* 해당 유저에게 NPC가 움직인 후의 위치를 전송 */
+					send_NPC_move_packet(pl, id);
 				}
 			}
 		}
@@ -951,7 +971,9 @@ void random_move_npc(int id)
 		
 	}
 
-	//add_timer(id, OPMODE::OP_RANDOM_MOVE_NPC, system_clock::now() + 10s);
+	/* 다음 움직임 명령 예약 */
+	pNPC->m_vPos = pNPC->m_vTempPos;
+	add_timer(id, OPMODE::OP_RANDOM_MOVE_NPC, system_clock::now() + 15s);
 }
 
 void random_move_stop_npc(int id)

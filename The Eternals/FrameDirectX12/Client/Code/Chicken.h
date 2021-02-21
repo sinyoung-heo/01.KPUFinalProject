@@ -50,7 +50,7 @@ private:
 	void			Set_ConstantTableShadowDepth();
 
 	void			Active_NPC(const _float& fTimeDelta);
-	void			Change_Animation();
+	void			Change_Animation(const _float& fTimeDelta);
 
 private:
 	/*__________________________________________________________________________________________________________
@@ -68,7 +68,6 @@ private:
 	____________________________________________________________________________________________________________*/
 	CDynamicCamera*	m_pDynamicCamera					= nullptr;
 	wstring			m_wstrMeshTag						= L"";
-	_vec3			m_vecTempPos;
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]
 	____________________________________________________________________________________________________________*/
