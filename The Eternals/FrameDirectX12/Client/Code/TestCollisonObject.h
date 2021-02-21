@@ -11,7 +11,7 @@ namespace Engine
 enum DIRECTION	{ DIR_X, DIR_Y, DIR_Z, DIR_STOP };
 enum MOVE		{ MOVE_MINUS, MOVE_PLUS };
 
-const float OFFSET_MAX = 128.0f;
+const float OFFSET_MAX = 256.0f;
 const float	OFFSET_MIN = 0.0f;
 
 

@@ -35,7 +35,6 @@ _int CManagement::LateUpdate_Management(const _float & fTimeDelta)
 {
 	// CollisionMgr.
 	CCollisionMgr::Get_Instance()->Progress_SweapAndPrune();
-	//CCollisionMgr::Get_Instance()->Check_Collision();
 
 	if (m_pCurrentScene != nullptr)
 		m_pCurrentScene->LateUpdate_Scene(fTimeDelta);

@@ -4,9 +4,12 @@
 
 BEGIN(Engine)
 
-enum OVERLAP { OVERLAP_X, OVERLAP_Y, OVERLAP_Z, OVERLAP_END };
+enum OVERLAP_AXIS	{ AXIS_X, AXIS_Y, AXIS_Z, AXIS_END };
+enum IS_OVERLAP		{ OVERLAP_UNDER, OVERLAP_TRUE, OVERLAP_OVER, OVERLAP_END };
 
 class CGameObject;
+
+
 
 class ENGINE_DLL CCollisionMgr final :  public CBase
 {
@@ -17,21 +20,18 @@ private:
 	virtual ~CCollisionMgr() = default;
 
 public:
-	void	Add_CollisionCheckList(wstring wstrCollisionTag, CGameObject * pGameObj);
+	void	Add_CollisionCheckList(CGameObject * pGameObj);
 	void	Progress_SweapAndPrune();
 	void	Check_Collision();
 	void	Clear_CollisionContainer();
 private:
-	_bool	Check_OverlapSphere(const OVERLAP& eOverlap, CGameObject* pSrc, CGameObject* pDst);
-	_bool	Check_Sphere(CGameObject* pSrc, CGameObject* pDst);
+	_bool	Check_OverlapSphere(const OVERLAP_AXIS& eOverlap, CGameObject* pSrc, CGameObject* pDst, IS_OVERLAP& eIsOverlap);
 
 private:
-	map<wstring, list<CGameObject*>>	m_mapCollisionCheckList;
-	list<CGameObject*>					m_lstCollisionCheckList;
-
-	map<CGameObject*, list<CGameObject*>> m_lstCollisionPairList_X;
-	map<CGameObject*, list<CGameObject*>> m_lstCollisionPairList_XY;
-	map<CGameObject*, list<CGameObject*>> m_lstCollisionPairList_XYZ;
+	list<CGameObject*>						m_lstCollisionCheckList;
+	map<CGameObject*, list<CGameObject*>>	m_lstCollisionPairList_X;
+	map<CGameObject*, list<CGameObject*>>	m_lstCollisionPairList_XY;
+	map<CGameObject*, list<CGameObject*>>	m_lstCollisionPairList_XYZ;
 
 private:
 	virtual void Free();

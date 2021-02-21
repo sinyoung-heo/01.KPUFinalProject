@@ -78,7 +78,10 @@ _int CTestCollisonObject::Update_GameObject(const _float& fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
-	m_pCollisonMgr->Add_CollisionCheckList(m_wstrCollisionTag, this);
+	/*__________________________________________________________________________________________________________
+	[ Collision - Add Collision List ]
+	____________________________________________________________________________________________________________*/
+	m_pCollisonMgr->Add_CollisionCheckList(this);
 
 	return NO_EVENT;
 }
