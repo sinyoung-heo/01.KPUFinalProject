@@ -41,7 +41,6 @@ HRESULT CChicken::Ready_GameObject(wstring wstrMeshTag,
 
 	m_pInfoCom->m_fSpeed = 0.5f;
 	m_bIsMoveStop = true;
-	m_vecTempPos = _vec3(0.f);
 
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
@@ -79,7 +78,7 @@ _int CChicken::Update_GameObject(const _float & fTimeDelta)
 		return DEAD_OBJ;
 
 	/* Animation AI */
-	Change_Animation();
+	Change_Animation(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
@@ -234,30 +233,32 @@ void CChicken::Set_ConstantTableShadowDepth()
 
 void CChicken::Active_NPC(const _float& fTimeDelta)
 {
+	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+	m_pTransCom->m_vDir.Normalize();
+	
 	/* NPC MOVE */
 	if (!m_bIsMoveStop)
 	{
-		m_eCurAnimation = A_WALK;
+		// NaviMesh 이동.		
+		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vecArivePos))
+		{
+			m_eCurAnimation = A_WALK;
 
-		m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
-		m_pTransCom->m_vDir.Normalize();
-
-		// NaviMesh 이동.
-		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
-													 &m_pTransCom->m_vDir,
-													 m_pInfoCom->m_fSpeed * fTimeDelta);
-		m_pTransCom->m_vPos = vPos;
-	}
-	else
-	{
-		m_vecTempPos = m_pTransCom->m_vPos;
+			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+														 &m_pTransCom->m_vDir,
+														 m_pInfoCom->m_fSpeed * fTimeDelta);
+			m_pTransCom->m_vPos = vPos;
+		}
+		else
+		{
+			m_eCurAnimation = A_IDLE01;
+			m_bIsMoveStop = true;
+		}
 	}
 }
 
-void CChicken::Change_Animation()
+void CChicken::Change_Animation(const _float& fTimeDelta)
 {
-	cout << m_eCurAnimation << "번, " << m_ui3DMax_CurFrame << "/" << m_ui3DMax_NumFrame << endl;
-
 	switch (m_eCurAnimation)
 	{
 
@@ -265,7 +266,7 @@ void CChicken::Change_Animation()
 	{
 		m_uiAnimIdx = 3;
 
-		if (m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame)
+		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			m_eCurAnimation = A_IDLE02;
 	}
 	break;
@@ -274,7 +275,7 @@ void CChicken::Change_Animation()
 	{
 		m_uiAnimIdx = 2;
 
-		if (m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame)
+		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			m_eCurAnimation = A_WAIT;
 	}
 	break;
@@ -283,7 +284,7 @@ void CChicken::Change_Animation()
 	{
 		m_uiAnimIdx = 1;
 
-		if (m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame)
+		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			m_eCurAnimation = A_IDLE01;
 	}
 	break;
@@ -291,12 +292,6 @@ void CChicken::Change_Animation()
 	case A_WALK:
 	{
 		m_uiAnimIdx = 0;
-
-		if (CServerMath::Get_Instance()->Is_NPC_Arrive_Point(m_vecTempPos, m_pTransCom->m_vPos, 3.f))
-		{
-			m_eCurAnimation = A_IDLE01;
-			m_bIsMoveStop = true;
-		}
 	}
 	break;
 

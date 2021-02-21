@@ -163,9 +163,9 @@ HRESULT CStageLDH::Ready_LayerEnvironment(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ Sector Grid ]
 	____________________________________________________________________________________________________________*/
-	_int world_width	= 1000;
-	_int world_height	= 1000;
-	_int sector_size	= 40;
+	_int world_width	= WORLD_WIDTH;
+	_int world_height	= WORLD_HEIGHT;
+	_int sector_size	= SECTOR_SIZE;
 
 	_vec3 vOffset(_float(sector_size), 0.0f, _float(sector_size));
 	_vec3 vCount((_float)(world_width / sector_size), 0.0f, _float(world_height / sector_size));
@@ -174,9 +174,9 @@ HRESULT CStageLDH::Ready_LayerEnvironment(wstring wstrLayerTag)
 	for (_int i = 0; i < vCount.x; ++i)
 	{
 		pGameObj = CCubeObject::Create(m_pGraphicDevice, m_pCommandList,
-									   _vec3(0.25f, 1.0f, (_float)world_height),	// Scale
-									   _vec3(0.0f),								// Angle
-									   vPos);									// Pos
+									   _vec3(0.25f, 1.0f, (_float)world_height), // Scale
+									   _vec3(0.0f),								 // Angle
+									   vPos);									 // Pos
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Grid_Width", pGameObj), E_FAIL);
 
 		vPos.x += vOffset.x;

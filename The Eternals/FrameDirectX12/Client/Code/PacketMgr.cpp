@@ -331,12 +331,14 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 	case SC_PACKET_NPC_MOVE:
 	{
-		sc_packet_npc_move* packet = reinterpret_cast<sc_packet_npc_move*>(ptr);
+		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
 
 		int s_num = packet->id;
 
 		Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"NPC", s_num);
-		pObj->Set_npc_moveDir(packet->dir);
+		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
+
+		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 		pObj->Set_MoveStop(false);
 	}
 	break;

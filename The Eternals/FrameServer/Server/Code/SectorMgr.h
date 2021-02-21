@@ -17,12 +17,14 @@ public:
 	const SECTOR Get_SectorList();
 
 public:
-	void Enter_ClientInSector(int objNum, int col, int row);
-	void Leave_ClientInSector(int objNum, int col, int row);
-	void Compare_exchange_Sector(int objNum, int oriY, int oriX, int curY, int curX);
+	void Enter_ClientInSector(const int& objNum, const int& col, const int& row);
+	void Leave_ClientInSector(const int& objNum, const int& col, const int& row);
+	void Compare_exchange_Sector(const int& objNum, const int& oriZ, const int& oriX, const int& curZ, const int& curX);
 	
 public:
 	void Get_NearSectorIndex(unordered_set<pair<int, int>>* pSet, int posX, int posZ);
+private:
+	bool Check_NearSector(const int& oriZ, const int& oriX, const int& curZ, const int& curX);
 
 public:
 	void Release();
