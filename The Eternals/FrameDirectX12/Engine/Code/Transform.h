@@ -15,10 +15,6 @@ public:
 	_vec3	Get_UpVector()			{ _vec3 vUp;		memcpy(&vUp, &m_matWorld._21, sizeof(_vec3));		return vUp; };
 	_vec3	Get_LookVector()		{ _vec3 vLook;		memcpy(&vLook, &m_matWorld._31, sizeof(_vec3));		return vLook; };
 	_vec3	Get_PositionVector()	{ _vec3 vPosition;	memcpy(&vPosition, &m_matWorld._41, sizeof(_vec3)); return vPosition; };
-
-	void	Set_OriginPos()		{ m_vOriginPos = m_vPos; }
-	void	Set_PosByOrigin()	{ m_vPos = m_vOriginPos; }
-
 public:
 	HRESULT			Ready_Component();
 	virtual void	Update_Component(const _float& fTimeDelta);
@@ -29,8 +25,6 @@ public:
 	_vec3	m_vPos		= _vec3(0.0f);
 	_vec3	m_vDir		= _vec3(0.0f);
 	_matrix m_matWorld	= INIT_MATRIX;
-
-	_vec3	m_vOriginPos = _vec3(0.0f);
 
 public:
 	virtual CComponent* Clone();

@@ -21,95 +21,81 @@ void CCollisionMgr::Add_CollisionCheckList(wstring wstrCollisionTag, CGameObject
 
 void CCollisionMgr::Progress_SweapAndPrune()
 {
-	set<CGameObject*> setCollisionObject;
+	if (m_lstCollisionCheckList.empty())
+		return;
 
 	/*__________________________________________________________________________________________________________
 	[ CollisionList에 등록된 Object를 X축 정렬을 한다. ]
 	____________________________________________________________________________________________________________*/
-	// OriginPos 저장.
-	for (auto& pObject : m_lstCollisionCheckList)
-		pObject->Get_Transform()->Set_OriginPos();
-
 	// Sort by PosX.
 	m_lstCollisionCheckList.sort([](CGameObject* pSrc, CGameObject* pDst)
 								 {
 									return (pSrc->Get_Transform()->m_vPos.x < pDst->Get_Transform()->m_vPos.x);
 								 });
 	// X Overlap Check.
-	for (auto& pSrc : m_lstCollisionCheckList)
+	auto iter_src_begin = m_lstCollisionCheckList.begin();
+	auto iter_dst_begin = iter_src_begin;
+	auto iter_end	    = m_lstCollisionCheckList.end();
+
+	for (; iter_src_begin != iter_end;)
 	{
-		for (auto& pDst : m_lstCollisionCheckList)
+		// src_begin 이전의 Object부터 비교 시작.
+		for (; iter_dst_begin != iter_end; ++iter_dst_begin)
 		{
-			if (pSrc == pDst)
+			if (iter_src_begin == iter_dst_begin)
 				continue;
 
-			if (Check_OverlapSphere(OVERLAP::OVERLAP_X, pSrc, pDst))
-			{
-				m_lstCollisionPairList_X[pSrc].emplace_back(pDst);
-				setCollisionObject.emplace(pSrc);
-				setCollisionObject.emplace(pDst);
-			}
-			else
-				break;
-		}
-	}
+			if (Check_OverlapSphere(OVERLAP::OVERLAP_X, *iter_src_begin, *iter_dst_begin))
+				m_lstCollisionPairList_X[*iter_src_begin].emplace_back(*iter_dst_begin);
+		} 
 
-	// Sort by PosY
-	list<CGameObject*> lstOverlapX{ setCollisionObject.begin(), setCollisionObject.end() };
-	lstOverlapX.sort([](CGameObject* pSrc, CGameObject* pDst)
-					 {
-					 return (pSrc->Get_Transform()->m_vPos.y < pDst->Get_Transform()->m_vPos.y);
-					 });
-	setCollisionObject.clear();
-
-	// Y Overlap Check.
-	for (auto& pSrc : lstOverlapX)
-	{
-		for (auto& pDst : lstOverlapX)
-		{
-			if (pSrc == pDst)
-				continue;
-
-			if (Check_OverlapSphere(OVERLAP::OVERLAP_Y, pSrc, pDst))
-			{
-				m_lstCollisionPairList_XY[pSrc].emplace_back(pDst);
-				setCollisionObject.emplace(pSrc);
-				setCollisionObject.emplace(pDst);
-			}
-			else
-				break;
-		}
+		iter_dst_begin = iter_src_begin;
+		++iter_src_begin;
 	}
 
 
-	// Sort by PosZ
-	list<CGameObject*> lstOverlapXY{ setCollisionObject.begin(), setCollisionObject.end() };
-	lstOverlapXY.sort([](CGameObject* pSrc, CGameObject* pDst)
-					 {
-					 return (pSrc->Get_Transform()->m_vPos.z < pDst->Get_Transform()->m_vPos.z);
-					 });
-	setCollisionObject.clear();
-
-	// Y Overlap Check.
-	for (auto& pSrc : lstOverlapXY)
+	// Y Overlap Chcek.
+	for (auto& pair : m_lstCollisionPairList_X)
 	{
-		for (auto& pDst : lstOverlapXY)
+		pair.second.sort([](CGameObject* pSrc, CGameObject* pDst)
+						 {
+							return (pSrc->Get_Transform()->m_vPos.y < pDst->Get_Transform()->m_vPos.y);
+						 });
+
+		for (auto& pDst : pair.second)
 		{
-			if (pSrc == pDst)
+			if (pair.first == pDst/* ||
+				(pair.first->Get_Transform()->m_vPos.x - pair.first->Get_BoundingSphere()->Get_BoundingInfo().Radius >
+				 pDst->Get_Transform()->m_vPos.x + pDst->Get_BoundingSphere()->Get_BoundingInfo().Radius)*/)
 				continue;
 
-			if (Check_OverlapSphere(OVERLAP::OVERLAP_Z, pSrc, pDst))
+			if (Check_OverlapSphere(OVERLAP::OVERLAP_Y, pair.first, pDst))
 			{
-				m_lstCollisionPairList_XYZ[pSrc].emplace_back(pDst);
+				m_lstCollisionPairList_XY[pair.first].emplace_back(pDst);
 			}
-			else
-				break;
 		}
 	}
 
-	// Reset Pos by Origin.
-	for (auto& pObject : m_lstCollisionCheckList)
-		pObject->Get_Transform()->Set_PosByOrigin();
+	// Z Overlap Check.
+	for (auto& pair : m_lstCollisionPairList_XY)
+	{
+		pair.second.sort([](CGameObject* pSrc, CGameObject* pDst)
+						 {
+							return (pSrc->Get_Transform()->m_vPos.z < pDst->Get_Transform()->m_vPos.z);
+						 });
+
+		for (auto& pDst : pair.second)
+		{
+			if (pair.first == pDst /*||
+				(pair.first->Get_Transform()->m_vPos.x - pair.first->Get_BoundingSphere()->Get_BoundingInfo().Radius >
+				 pDst->Get_Transform()->m_vPos.x + pDst->Get_BoundingSphere()->Get_BoundingInfo().Radius)*/)
+				continue;
+
+			if (Check_OverlapSphere(OVERLAP::OVERLAP_Z, pair.first, pDst))
+				m_lstCollisionPairList_XYZ[pair.first].emplace_back(pDst);
+		}
+	}
+
 }
 
 void CCollisionMgr::Check_Collision()
@@ -158,9 +144,8 @@ void CCollisionMgr::Clear_CollisionContainer()
 
 _bool CCollisionMgr::Check_OverlapSphere(const OVERLAP& eOverlap, CGameObject* pSrc, CGameObject* pDst)
 {
-	_float	fSrcRadius = pSrc->Get_BoundingSphere()->Get_BoundingInfo().Radius;
-	_float	fDstRadius = pDst->Get_BoundingSphere()->Get_BoundingInfo().Radius;
-	_float	fSum       = fSrcRadius + fDstRadius;
+	_float	fSum       = pSrc->Get_BoundingSphere()->Get_BoundingInfo().Radius + 
+						 pDst->Get_BoundingSphere()->Get_BoundingInfo().Radius;
 
 	_vec3	vSrcCenter = pSrc->Get_Transform()->m_vPos;
 	_vec3	vDstCenter = pDst->Get_Transform()->m_vPos;
