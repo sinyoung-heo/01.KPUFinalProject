@@ -39,7 +39,6 @@ HRESULT CToolSceneStage::Ready_Scene()
 	{
 		m_pPickingCollider[i] = static_cast<Engine::CColliderSphere*>(Engine::CComponentMgr::Get_Instance()->Clone_Component(L"ColliderSphere", Engine::COMPONENTID::ID_DYNAMIC));
 		NULL_CHECK_RETURN(m_pPickingCollider[i], E_FAIL);
-		// m_pColliderCom[i]->AddRef();
 
 		m_matColliderWorld[i] = XMMatrixTranslation(1000.0f, 1000.0f, 1000.0f);
 		m_pPickingCollider[i]->Set_ParentMatrix(&m_matColliderWorld[i]);	// Parent Matrix
@@ -215,9 +214,9 @@ HRESULT CToolSceneStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 	[ Coordinate ]
 	____________________________________________________________________________________________________________*/
 	CToolCoordinate* pCoordinate = CToolCoordinate::Create(m_pGraphicDevice, m_pCommandList,
-														   _vec3(512.0f, 512.0f, 512.0f),	// Scale
-														   _vec3(0.0f, 0.0f, 0.0f),			// Angle
-														   _vec3(-0.05f, 0.0f, -0.05f));	// Pos
+														   _vec3(5120.0f, 5120.0f, 5120.0f),	// Scale
+														   _vec3(0.0f, 0.0f, 0.0f),				// Angle
+														   _vec3(-0.05f, 0.0f, -0.05f));		// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"ToolCoordinate", pCoordinate), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
@@ -301,14 +300,28 @@ HRESULT CToolSceneStage::Ready_LayerGameObject(wstring wstrLayerTag)
 	CPopori_F* pPopori_F = nullptr;
 	pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
 								  L"PoporiR19",						// MeshTag
-								  _vec3(0.05f, 0.05f, 0.05f),		// Scale
+								  _vec3(0.25f, 0.25f, 0.25f),		// Scale
 								  _vec3(0.0f, 0.0f, 0.0f),			// Angle
 								  _vec3(95.0f, 0.f, 90.0f));		// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
 
 	pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
 								  L"PoporiR19",						// MeshTag
-								  _vec3(0.05f, 0.05f, 0.05f),		// Scale
+								  _vec3(0.5f, 0.5f, 0.5f),			// Scale
+								  _vec3(0.0f, 0.0f, 0.0f),			// Angle
+								  _vec3(110.0f, 0.f, 90.0f));		// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
+
+	pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
+								  L"PoporiR19",						// MeshTag
+								  _vec3(1.0f, 1.0f, 1.0f),			// Scale
+								  _vec3(0.0f, 0.0f, 0.0f),			// Angle
+								  _vec3(125.0f, 0.f, 90.0f));		// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
+
+	pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
+								  L"PoporiR19",						// MeshTag
+								  _vec3(0.25f, 0.25f, 0.25f),		// Scale
 								  _vec3(0.0f, 0.0f, 0.0f),			// Angle
 								  _vec3(180.0f, 0.f, 75.0f));		// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);

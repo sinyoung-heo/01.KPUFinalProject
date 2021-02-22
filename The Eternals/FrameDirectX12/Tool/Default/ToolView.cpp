@@ -24,6 +24,8 @@
 #include "ComponentMgr.h"
 #include "Renderer.h"
 #include "LightMgr.h"
+#include "CollisionMgr.h"
+#include "DescriptorHeapMgr.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -68,6 +70,8 @@ CToolView::~CToolView()
 	Engine::CManagement::Get_Instance()->Destroy_Instance();
 	Engine::CRenderer::Get_Instance()->Destroy_Instance();
 	Engine::CLightMgr::Get_Instance()->Destroy_Instance();
+	Engine::CCollisionMgr::Get_Instance()->Destroy_Instance();
+	Engine::CDescriptorHeapMgr::Get_Instance()->Destroy_Instance();
 	Engine::CObjectMgr::Get_Instance()->Destroy_Instance();
 	Engine::CComponentMgr::Get_Instance()->Destroy_Instance();
 	Engine::CGraphicDevice::Get_Instance()->Destroy_Instance();

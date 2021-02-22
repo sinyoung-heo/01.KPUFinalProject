@@ -62,21 +62,18 @@ _int CToolCamera::LateUpdate_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Font Update ]
 	____________________________________________________________________________________________________________*/
-	if (Engine::CRenderer::Get_Instance()->Get_RenderOnOff(L"DebugFont"))
-	{
-		m_wstrText = wstring(L"[ Camera Info ] \n") +
-					 wstring(L"Eye\t(%d, %d, %d) \n") +
-					 wstring(L"At\t(%d, %d, %d)\n") +
-					 wstring(L"Speed\t%d");
+	m_wstrText = wstring(L"[ Camera Info ] \n") +
+				 wstring(L"Eye\t(%d, %d, %d) \n") +
+				 wstring(L"At\t(%d, %d, %d)\n") +
+				 wstring(L"Speed\t%d");
 
-		wsprintf(m_szText, m_wstrText.c_str(),
-				(_int)m_tCameraInfo.vEye.x, (_int)m_tCameraInfo.vEye.y, (_int)m_tCameraInfo.vEye.z,
-				(_int)m_tCameraInfo.vAt.x, (_int)m_tCameraInfo.vAt.y, (_int)m_tCameraInfo.vAt.z,
-				(_int)m_fSpeed);
+	wsprintf(m_szText, m_wstrText.c_str(),
+			(_int)m_tCameraInfo.vEye.x, (_int)m_tCameraInfo.vEye.y, (_int)m_tCameraInfo.vEye.z,
+			(_int)m_tCameraInfo.vAt.x, (_int)m_tCameraInfo.vAt.y, (_int)m_tCameraInfo.vAt.z,
+			(_int)m_fSpeed);
 
-		m_pFont->Update_GameObject(fTimeDelta);
-		m_pFont->Set_Text(wstring(m_szText));
-	}
+	m_pFont->Update_GameObject(fTimeDelta);
+	m_pFont->Set_Text(wstring(m_szText));
 
 	return NO_EVENT;
 }

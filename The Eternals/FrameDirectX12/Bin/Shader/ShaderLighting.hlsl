@@ -112,12 +112,12 @@ PS_OUT PS_DIRECTION(VS_OUT ps_input) : SV_TARGET
 	
 	float3 LightDir		= normalize(vDirection.xyz);
 	float3 Reflection	= normalize(reflect(LightDir, Normal.xyz));
-	float3 Look			= normalize(g_vCameraPos.xyz - Pos.xyz);
+	float3 Look			= normalize(Pos.xyz - g_vCameraPos.xyz);
 	
 	float4	TexSpecular	= g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
 	TexSpecular			= TexSpecular * 2.0f - 1.0f;
 	float	SpecPower	= 1.15f;
-	ps_output.Specular	= pow(saturate(dot(Reflection, Look)), 0.0f) * (g_vLightSpecular * TexSpecular * SpecPower);
+	ps_output.Specular	= pow(saturate(dot(Reflection, -Look)), 0.0f) * (g_vLightSpecular * TexSpecular * SpecPower);
 	
 	return (ps_output);
 	
@@ -151,24 +151,24 @@ PS_OUT PS_POINT(VS_OUT ps_input)
 	Pos	= mul(Pos, g_matProjInv);	// Proj의 역행렬을 곱하여 View영역의 Pos.
 	Pos	= mul(Pos, g_matViewInv);	// View의 역행렬을 곱하여 World영역의 Pos.
 	
-	float4	LightDir = g_vLightPos - Pos;
+	float4	LightDir = Pos - g_vLightPos;
 	float	Distnace = length(LightDir);
 	float	Att		 = saturate((g_vLightRange.x - Distnace) / g_vLightRange.x);
 	
 	// Shade
-	float4 Shade		= saturate(dot(normalize(LightDir), Normal));
+	float4 Shade		= saturate(dot(normalize(LightDir) * -1.0f, Normal));
 	ps_output.Shade		= (Shade + g_vLightAmibient) * g_vLightDiffuse * Att;
 	ps_output.Shade.a	= 1.0f;
 	
 	
 	// Specular
 	float3 Reflection	= normalize(reflect(normalize(LightDir.xyz), Normal.xyz));
-	float3 Look			= normalize(g_vCameraPos.xyz - Pos.xyz);
+	float3 Look			= normalize(Pos.xyz - g_vCameraPos.xyz);
 	
 	float4	TexSpecular	= g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
 	TexSpecular			= TexSpecular * 2.0f - 1.0f;
 	float	SpecPower	= 1.15f;
-	ps_output.Specular  = pow(saturate(dot(Reflection, Look)), 0.0f) * (g_vLightSpecular * TexSpecular * Att) * SpecPower;
+	ps_output.Specular  = pow(saturate(dot(Reflection, -Look)), 0.0f) * (g_vLightSpecular * TexSpecular * Att) * SpecPower;
 	
 	return (ps_output);
 }
