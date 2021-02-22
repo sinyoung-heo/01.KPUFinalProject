@@ -1,12 +1,15 @@
 ﻿#pragma once
 #include "TabPathFinder.h"
 #include "TabMap.h"
+#include "TabEffect.h"
+#include "TabUI.h"
 #include "TabCollider.h"
 #include "TabAnimation.h"
 #include "TabCamera.h"
-#include "TabEffect.h"
+
 
 // CMyForm 폼 보기
+#define SCROLL_POWER 75
 
 class CMyForm : public CFormView
 {
@@ -36,24 +39,28 @@ protected:
 	virtual void OnInitialUpdate();
 	afx_msg void OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult);
 
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 public:
 	CTabCtrl		m_Tab;
 
 	CTabPathFinder	m_TabPathFinder;
 	CTabMap			m_TabMap;
+	CTabUI			m_TabUI;
+	CTabEffect		m_TabEffect;
 	CTabCollider	m_TabCollider;
 	CTabAnimation	m_TabAnimation;
 	CTabCamera		m_TabCamera;
-	CTabEffect		m_TabEffect;
 
 	_bool m_bIsTabPathFinder	= false;
 	_bool m_bIsTabMap			= false;
+	_bool m_bIsTabUI			= false;
+	_bool m_bIsTabEffect		= false;
 	_bool m_bIsTabCollider		= false;
 	_bool m_bIsTabAnimation		= false;
 	_bool m_bIsTabCamera		= false;
-	_bool m_bIsTabEffect		= false;
 
-	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	_long m_MaxBottom = 0;
 };
 
 
