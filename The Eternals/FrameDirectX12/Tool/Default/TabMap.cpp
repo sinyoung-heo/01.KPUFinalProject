@@ -217,6 +217,7 @@ void CTabMap::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT1070, m_fNaviMeshPointC_Y);
 	DDX_Text(pDX, IDC_EDIT1071, m_fNaviMeshPointC_Z);
 	DDX_Text(pDX, IDC_EDIT1072, m_iNaviMeshCellOption);
+	DDX_Control(pDX, IDC_CHECK1009, m_TerrainCheckBox_RenderOnOff);
 }
 
 
@@ -321,7 +322,8 @@ BEGIN_MESSAGE_MAP(CTabMap, CDialogEx)
 	ON_EN_CHANGE(IDC_EDIT1072, &CTabMap::OnEnChangeEdit1072_NaviMeshCellOption)
 	ON_BN_CLICKED(IDC_BUTTON1015, &CTabMap::OnBnClickedButton1015_NaviMeshCellSAVE)
 	ON_BN_CLICKED(IDC_BUTTON1016, &CTabMap::OnBnClickedButton1016_NaviMeshCellLOAD)
-END_MESSAGE_MAP()
+		ON_BN_CLICKED(IDC_CHECK1009, &CTabMap::OnBnClickedCheck1009_TerrainRenderOnOff)
+		END_MESSAGE_MAP()
 
 
 // CTabMap 메시지 처리기
@@ -335,6 +337,7 @@ BOOL CTabMap::OnInitDialog()
 	m_TerrainRadio256.EnableWindow(FALSE);
 	m_TerrainRadio512.EnableWindow(FALSE);
 	m_TerrainCheckBox_RenderWireFrame.EnableWindow(FALSE);
+	m_TerrainCheckBox_RenderOnOff.EnableWindow(FALSE);
 	m_TerrainListBox_TexIndex.EnableWindow(FALSE);
 
 	// SkyBox 컨트롤 비활성화
@@ -1482,6 +1485,7 @@ HRESULT CTabMap::Ready_TerrainControl()
 	m_TerrainRadio256.EnableWindow(TRUE);
 	m_TerrainRadio512.EnableWindow(TRUE);
 	m_TerrainCheckBox_RenderWireFrame.EnableWindow(TRUE);
+	m_TerrainCheckBox_RenderOnOff.EnableWindow(TRUE);
 	m_TerrainListBox_TexIndex.EnableWindow(TRUE);
 
 	// Terrain 128X128 활성화.
@@ -1496,6 +1500,7 @@ HRESULT CTabMap::Ready_TerrainControl()
 
 	// Render WireFrame 활성화.
 	m_TerrainCheckBox_RenderWireFrame.SetCheck(true);
+	m_TerrainCheckBox_RenderOnOff.SetCheck(true);
 
 	// ListBox 초기화.
 	Engine::CTexture* pTextureCom = static_cast<Engine::CTexture*>(m_pComponentMgr->Get_Component(L"Terrain", Engine::COMPONENTID::ID_STATIC));
@@ -1920,6 +1925,32 @@ void CTabMap::OnBnClickedCheck1001_TerrainRenderWireFrame()
 	}
 
 	UpdateData(FALSE);
+}
+
+void CTabMap::OnBnClickedCheck1009_TerrainRenderOnOff()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
+	CToolTerrain* m_pTerrain128 = static_cast<CToolTerrain*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"TerrainTex128"));
+	CToolTerrain* m_pTerrain256 = static_cast<CToolTerrain*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"TerrainTex256"));
+	CToolTerrain* m_pTerrain512 = static_cast<CToolTerrain*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"TerrainTex512"));
+
+	if (m_TerrainCheckBox_RenderOnOff.GetCheck())
+	{
+		m_pTerrain128->m_bIsRender = true;
+		m_pTerrain256->m_bIsRender = true;
+		m_pTerrain512->m_bIsRender = true;
+	}
+	else
+	{
+		m_pTerrain128->m_bIsRender = false;
+		m_pTerrain256->m_bIsRender = false;
+		m_pTerrain512->m_bIsRender = false;
+	}
+
+	UpdateData(FALSE);
+
 }
 
 

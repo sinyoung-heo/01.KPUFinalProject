@@ -38,12 +38,19 @@ private:
 	HRESULT			Ready_LightInfo();
 
 	void			KeyInput();
+
+	// TabMap
 	void			KeyInput_TabMapStaticMesh(CTabMap& TabMap);
 	void			KeyInput_TabMapLightingInfo(CTabMap& TabMap);
 	void			KeyInput_TabMapNavigationMesh(CTabMap& TabMap);
 	void			KeyInput_TabMapModeChange(CTabMap& TabMap);
 
+	// TabUI
+
 public:
+	/*__________________________________________________________________________________________________________
+	[ TabMap ]
+	____________________________________________________________________________________________________________*/
 	CToolTerrain*			m_pPickingTerrain	= nullptr;
 	Engine::CGameObject*	m_pPickingObject	= nullptr;
 	Engine::CLight*			m_pPickingLight		= nullptr;
@@ -59,6 +66,12 @@ public:
 
 	_vec3 m_vPrePickingPos = _vec3(0.0f);
 	_vec3 m_vCurPickingPos = _vec3(1.0f);
+
+	/*__________________________________________________________________________________________________________
+	[ TabUI ]
+	____________________________________________________________________________________________________________*/
+
+
 
 private:
 	/*__________________________________________________________________________________________________________

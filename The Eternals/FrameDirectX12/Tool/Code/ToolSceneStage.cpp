@@ -388,6 +388,7 @@ void CToolSceneStage::KeyInput()
 	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON(Engine::DIM_LB)))
 	{
 		// TabMap Mouse Picking Event. (STATIC MESH / LIGHTING / NAVIGATION MESH)
+#pragma region TABMAP_MOUSEPICKING
 		if (pMyForm->m_bIsTabMap)
 		{
 			if (pMyForm->m_TabMap.m_EditCheck_StaticMesh.GetCheck())
@@ -399,12 +400,19 @@ void CToolSceneStage::KeyInput()
 			else if (pMyForm->m_TabMap.m_EditCheck_NavigationMesh.GetCheck())
 				KeyInput_TabMapNavigationMesh(pMyForm->m_TabMap);
 		}
+#pragma endregion
+
+		// TabMap Mouse Picking Event.
+		else if (pMyForm->m_bIsTabMap)
+		{
+
+		}
 
 	}
 
 	// NaviMesh 수정모드일 경우.
-	if (pMyForm->m_TabMap.m_EditCheck_NavigationMesh.GetCheck() &&
-		pMyForm->m_TabMap.m_bIsNaviModifyMode)
+#pragma region TABMAP_NAVIMESH
+	if (pMyForm->m_TabMap.m_EditCheck_NavigationMesh.GetCheck() && pMyForm->m_TabMap.m_bIsNaviModifyMode)
 	{
 		_long	dwMouseMove = 0;
 
@@ -466,9 +474,14 @@ void CToolSceneStage::KeyInput()
 		}
 
 	}
+#pragma endregion
 
 }
 
+
+
+
+#pragma region TABMAP_KEYINPUT
 void CToolSceneStage::KeyInput_TabMapStaticMesh(CTabMap& TabMap)
 {
 	// StaticMesh Object 생성.
@@ -973,6 +986,10 @@ void CToolSceneStage::KeyInput_TabMapModeChange(CTabMap& TabMap)
 
 	TabMap.UpdateData(FALSE);
 }
+#pragma endregion
+
+
+
 
 
 CToolSceneStage* CToolSceneStage::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)

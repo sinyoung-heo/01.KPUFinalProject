@@ -50,6 +50,7 @@ public:
 	afx_msg void OnBnClickedRadio1002_Terrain256();
 	afx_msg void OnBnClickedRadio1003_Terrain512();
 	afx_msg void OnBnClickedCheck1001_TerrainRenderWireFrame();
+	afx_msg void OnBnClickedCheck1009_TerrainRenderOnOff();
 	afx_msg void OnLbnSelchangeList1001_TerrainTexIndex();
 
 	// Control
@@ -57,6 +58,7 @@ public:
 	CButton		m_TerrainRadio256;
 	CButton		m_TerrainRadio512;
 	CButton		m_TerrainCheckBox_RenderWireFrame;
+	CButton		m_TerrainCheckBox_RenderOnOff;
 	CListBox	m_TerrainListBox_TexIndex;
 
 	// Value
