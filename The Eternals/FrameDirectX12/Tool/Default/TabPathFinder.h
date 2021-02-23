@@ -50,4 +50,5 @@ public:
 
 
 	list<MESH_TREECTRL_INFO*> m_lstMeshTreeCtrlInfo;
+	list<TEX_TREECTRL_INFO*> m_lstTexTreeCtrlInfo;
 };

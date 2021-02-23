@@ -1612,10 +1612,10 @@ HRESULT CTabMap::Ready_StaticMeshControl()
 
 	// Ready Mesh TreeControl.
 
-	HTREEITEM h_DynamciMesh, h_DynamicMeshRoot;
+	// HTREEITEM h_DynamciMesh, h_DynamicMeshRoot;
 	HTREEITEM h_StaticMesh, h_StaticMeshRoot;
 
-	h_DynamciMesh	= m_StaticMeshTree_ResourceTree.InsertItem(L"DynamicMesh", NULL, NULL);
+	// h_DynamciMesh	= m_StaticMeshTree_ResourceTree.InsertItem(L"DynamicMesh", NULL, NULL);
 	h_StaticMesh	= m_StaticMeshTree_ResourceTree.InsertItem(L"StaticMesh", NULL, NULL);
 
 	wifstream fin { L"../../Bin/ToolData/MeshTreeCtrlInfo.txt" };
@@ -1642,16 +1642,16 @@ HRESULT CTabMap::Ready_StaticMeshControl()
 		wstring wstrCurMeshRoot = szCurMeshRoot;
 
 		// 이전의 MeshRootTag값이 현재의 MeshRootTag값과 다르면 TreeCtrl에 삽입.
-		if (L"DynamicMesh" == wstrCurMeshType)
-		{
-			if (wstrPreMeshRoot != wstrCurMeshRoot)
-			{
-				wstrPreMeshRoot = wstrCurMeshRoot;
-				h_DynamicMeshRoot = m_StaticMeshTree_ResourceTree.InsertItem(wstrPreMeshRoot.c_str(), h_DynamciMesh, NULL);
-			}
+		//if (L"DynamicMesh" == wstrCurMeshType)
+		//{
+		//	if (wstrPreMeshRoot != wstrCurMeshRoot)
+		//	{
+		//		wstrPreMeshRoot = wstrCurMeshRoot;
+		//		h_DynamicMeshRoot = m_StaticMeshTree_ResourceTree.InsertItem(wstrPreMeshRoot.c_str(), h_DynamciMesh, NULL);
+		//	}
 
-			m_StaticMeshTree_ResourceTree.InsertItem(szMeshTag, h_DynamicMeshRoot, NULL);
-		}
+		//	m_StaticMeshTree_ResourceTree.InsertItem(szMeshTag, h_DynamicMeshRoot, NULL);
+		//}
 
 		if (L"StaticMesh" == wstrCurMeshType)
 		{
@@ -1671,22 +1671,22 @@ HRESULT CTabMap::Ready_StaticMeshControl()
 
 
 	// 모든 트리의 노드를 펼친다.
-	m_StaticMeshTree_ResourceTree.Expand(h_DynamciMesh, TVE_EXPAND);
+	// m_StaticMeshTree_ResourceTree.Expand(h_DynamciMesh, TVE_EXPAND);
 
 	// DynamicMesh
-	HTREEITEM h_Child = m_StaticMeshTree_ResourceTree.GetNextItem(h_DynamciMesh, TVGN_CHILD);
-	m_StaticMeshTree_ResourceTree.Expand(h_Child, TVE_EXPAND);
+	//HTREEITEM h_Child = m_StaticMeshTree_ResourceTree.GetNextItem(h_DynamciMesh, TVGN_CHILD);
+	//m_StaticMeshTree_ResourceTree.Expand(h_Child, TVE_EXPAND);
 
-	while (h_Child != NULL)
-	{
-		h_Child = m_StaticMeshTree_ResourceTree.GetNextItem(h_Child, TVGN_NEXT);
-		m_StaticMeshTree_ResourceTree.Expand(h_Child, TVE_EXPAND);
-	}
+	//while (h_Child != NULL)
+	//{
+	//	h_Child = m_StaticMeshTree_ResourceTree.GetNextItem(h_Child, TVGN_NEXT);
+	//	m_StaticMeshTree_ResourceTree.Expand(h_Child, TVE_EXPAND);
+	//}
 
 	// StaticMesh
 	m_StaticMeshTree_ResourceTree.Expand(h_StaticMesh, TVE_EXPAND);
 
-	h_Child = m_StaticMeshTree_ResourceTree.GetNextItem(h_StaticMesh, TVGN_CHILD);
+	HTREEITEM h_Child = m_StaticMeshTree_ResourceTree.GetNextItem(h_StaticMesh, TVGN_CHILD);
 	m_StaticMeshTree_ResourceTree.Expand(h_Child, TVE_EXPAND);
 
 	while (h_Child != NULL)

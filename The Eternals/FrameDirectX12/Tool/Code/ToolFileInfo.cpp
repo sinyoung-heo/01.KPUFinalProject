@@ -20,7 +20,9 @@ CString CToolFileInfo::ConvertRelativePath(CString strFullPath)
 	return szRelativePath;
 }
 
-void CToolFileInfo::DirInfoExtractionDDS(const wstring& wstrPath, list<IMGPATH*>& rPathInfoLst)
+void CToolFileInfo::DirInfoExtractionDDS(const wstring& wstrPath, 
+										 list<IMGPATH*>& rPathInfoLst,
+										 list<TEX_TREECTRL_INFO*>& lstTexTreeCtrlInfo)
 {
 	wstring wstrFilePath = wstrPath + L"\\*.*";
 
@@ -41,7 +43,7 @@ void CToolFileInfo::DirInfoExtractionDDS(const wstring& wstrPath, list<IMGPATH*>
 
 		// 찾은 이름이 파일명이 아닌 폴더명이라면 true반환.
 		else if (find.IsDirectory())
-			DirInfoExtractionDDS(wstring(find.GetFilePath()), rPathInfoLst);
+			DirInfoExtractionDDS(wstring(find.GetFilePath()), rPathInfoLst, lstTexTreeCtrlInfo);
 
 		// find 객체가 찾은 것이 파일 이름일 때.
 		else
@@ -50,6 +52,7 @@ void CToolFileInfo::DirInfoExtractionDDS(const wstring& wstrPath, list<IMGPATH*>
 				continue;
 
 			IMGPATH* pImgPath = new IMGPATH;
+			TEX_TREECTRL_INFO* pTreeCtrlInfo = new TEX_TREECTRL_INFO;
 			_tchar szCurPath[MAX_STR] = L"";
 
 			/*__________________________________________________________________________________________________________
@@ -85,10 +88,65 @@ void CToolFileInfo::DirInfoExtractionDDS(const wstring& wstrPath, list<IMGPATH*>
 			/*__________________________________________________________________________________________________________
 			[ 상대 경로 변환. ]
 			____________________________________________________________________________________________________________*/
+			_tchar wstrOriginPath[MAX_STR] = L"";
+			lstrcpy(wstrOriginPath, szCurPath);
+			
 			pImgPath->wstrPath			= ConvertRelativePath(szFullPath);
 			pImgPath->wstrTextureTag	= PathFindFileName(szCurPath);
 
 			rPathInfoLst.push_back(pImgPath);
+
+
+			/*__________________________________________________________________________________________________________
+			[ TreeCtrl Info 저장. ]
+			____________________________________________________________________________________________________________*/
+			pTreeCtrlInfo->wstrTexTag = pImgPath->wstrTextureTag;
+
+			PathRemoveFileSpec(wstrOriginPath);
+			CFileFind ff1;
+			ff1.FindFile(wstrOriginPath);
+
+			_int iResult2 = 1;
+			while (iResult2)
+			{
+				iResult2 = ff1.FindNextFileW();
+				// 현재 찾은 파일 이름이 "." 이나 ".."인지 검사. 맞으면 true 반환.
+				if (ff1.IsDots())
+					continue;
+
+				// 찾은 이름이 파일명이 아닌 폴더명이라면 true 반환.
+				if (ff1.IsDirectory())
+				{
+					iResult2 = 0;
+					pTreeCtrlInfo->wstrRootTag = ff1.GetFileName();
+				}
+			}
+
+
+			PathRemoveFileSpec(wstrOriginPath);
+			CFileFind ff2;
+			ff2.FindFile(wstrOriginPath);
+
+			_int iResult3 = 1;
+			while (iResult3)
+			{
+				iResult3 = ff2.FindNextFileW();
+				// 현재 찾은 파일 이름이 "." 이나 ".."인지 검사. 맞으면 true 반환.
+				if (ff2.IsDots())
+					continue;
+
+				// 찾은 이름이 파일명이 아닌 폴더명이라면 true 반환.
+				if (ff2.IsDirectory())
+				{
+					iResult3 = 0;
+					pTreeCtrlInfo->wstrTexType = ff2.GetFileName();
+				}
+			}
+
+			lstTexTreeCtrlInfo.push_back(pTreeCtrlInfo);
+
+
+
 
 			iContinue = 0;
 		}

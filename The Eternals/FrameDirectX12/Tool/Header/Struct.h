@@ -47,3 +47,11 @@ typedef struct tagMeshTreeCtrlInfo
 	wstring wstrMeshTag		= L"";	// ex) LandMark
 
 } MESH_TREECTRL_INFO;
+
+typedef struct tagTextureTreeCtrlInfo
+{
+	wstring wstrTexType = L"";	// ex) Texture
+	wstring wstrRootTag = L"";	// ex) UI
+	wstring wstrTexTag	= L"";	// ex) S1UI_CharacterWindow
+
+} TEX_TREECTRL_INFO;

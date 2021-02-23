@@ -21,6 +21,7 @@ CTabPathFinder::~CTabPathFinder()
 	for_each(m_lstMeshFileInfo.begin(), m_lstMeshFileInfo.end(), Engine::Safe_Delete<MESHPATH*>);
 	for_each(m_lstTextureFileInfo.begin(), m_lstTextureFileInfo.end(), Engine::Safe_Delete<IMGPATH*>);
 	for_each(m_lstMeshTreeCtrlInfo.begin(), m_lstMeshTreeCtrlInfo.end(), Engine::Safe_Delete<MESH_TREECTRL_INFO*>);
+	for_each(m_lstTexTreeCtrlInfo.begin(), m_lstTexTreeCtrlInfo.end(), Engine::Safe_Delete<TEX_TREECTRL_INFO*>);
 }
 
 void CTabPathFinder::DoDataExchange(CDataExchange* pDX)
@@ -116,7 +117,7 @@ void CTabPathFinder::OnDropFiles(HDROP hDropInfo)
 		for (int i = 0; i < iCount; ++i)
 		{
 			DragQueryFile(hDropInfo, i, szFullPath, MAX_STR);
-			CToolFileInfo::DirInfoExtractionDDS(szFullPath, m_lstTextureFileInfo);
+			CToolFileInfo::DirInfoExtractionDDS(szFullPath, m_lstTextureFileInfo, m_lstTexTreeCtrlInfo);
 		}
 
 		wstring wstrCombine		= L"";
@@ -251,6 +252,18 @@ void CTabPathFinder::OnBnClickedButton_Save()
 		}
 
 		fout << m_iTexturePathCnt << endl;
+
+
+
+		fout.close();
+
+		// Mesh Tree Ctrl Info
+		fout.open(L"../../Bin/ToolData/TexTreeCtrlInfo.txt");
+
+		for (auto& pTexTreeCtrlInfo : m_lstTexTreeCtrlInfo)
+			fout << pTexTreeCtrlInfo->wstrTexType << L"|" << pTexTreeCtrlInfo->wstrRootTag << L"|" << pTexTreeCtrlInfo->wstrTexTag << endl;
+
+		fout.close();
 	}
 
 
