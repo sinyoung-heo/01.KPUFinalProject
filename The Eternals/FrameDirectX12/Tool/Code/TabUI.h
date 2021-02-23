@@ -1,5 +1,7 @@
 ﻿#pragma once
-
+#include "TabTexSpriteUV.h"
+#include "Tab2DUI.h"
+#include "Tab3DUI.h"
 
 // CTabUI 대화 상자
 
@@ -23,4 +25,16 @@ protected:
 public:
 	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	afx_msg void OnTcnSelchangeTab1(NMHDR* pNMHDR, LRESULT* pResult);
+
+public:
+	CTabCtrl m_TabUI;
+
+	CTabTexSpriteUV m_TabTexSpriteUV;
+	CTab2DUI		m_Tab2DUI;
+	CTab3DUI		m_Tab3DUI;
+
+	_bool m_bIsTabTexSpriteUV = false;
+	_bool m_bIsTab2DUI        = false;
+	_bool m_bIsTab3DUI        = false;
 };

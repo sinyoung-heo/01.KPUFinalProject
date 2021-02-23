@@ -108,7 +108,6 @@ void CMyForm::OnInitialUpdate()
 
 }
 
-
 void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.

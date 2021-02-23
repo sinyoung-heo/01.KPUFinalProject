@@ -202,6 +202,9 @@
     <ClInclude Include="..\Code\MouseMgr.h" />
     <ClInclude Include="..\Code\Popori_F.h" />
     <ClInclude Include="..\Code\ShadowLightMgr.h" />
+    <ClInclude Include="..\Code\Tab2DUI.h" />
+    <ClInclude Include="..\Code\Tab3DUI.h" />
+    <ClInclude Include="..\Code\TabTexSpriteUV.h" />
     <ClInclude Include="..\Code\TabUI.h" />
     <ClInclude Include="..\Code\ToolCamera.h" />
     <ClInclude Include="..\Code\ToolCell.h" />
@@ -240,6 +243,9 @@
     <ClCompile Include="..\Code\MouseMgr.cpp" />
     <ClCompile Include="..\Code\Popori_F.cpp" />
     <ClCompile Include="..\Code\ShadowLightMgr.cpp" />
+    <ClCompile Include="..\Code\Tab2DUI.cpp" />
+    <ClCompile Include="..\Code\Tab3DUI.cpp" />
+    <ClCompile Include="..\Code\TabTexSpriteUV.cpp" />
     <ClCompile Include="..\Code\TabUI.cpp" />
     <ClCompile Include="..\Code\ToolCamera.cpp" />
     <ClCompile Include="..\Code\ToolCell.cpp" />
