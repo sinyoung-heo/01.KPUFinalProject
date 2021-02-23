@@ -69,6 +69,14 @@ HRESULT CToolSceneStage::Ready_Scene()
 	m_pPickingTerrain = static_cast<CToolTerrain*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"TerrainTex256"));
 
 
+	for (_uint i = 0; i < 500; ++i)
+	{
+		Engine::CShaderColorInstancing::Get_Instance()->Add_TotalInstancCount(Engine::COLOR_BUFFER::BUFFER_RECT);
+		Engine::CShaderColorInstancing::Get_Instance()->Add_TotalInstancCount(Engine::COLOR_BUFFER::BUFFER_CUBE);
+		Engine::CShaderColorInstancing::Get_Instance()->Add_TotalInstancCount(Engine::COLOR_BUFFER::BUFFER_BOX);
+		Engine::CShaderColorInstancing::Get_Instance()->Add_TotalInstancCount(Engine::COLOR_BUFFER::BUFFER_SPHERE);
+	}
+
 	Engine::CShaderColorInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 
 
