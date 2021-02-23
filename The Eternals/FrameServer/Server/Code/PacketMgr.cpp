@@ -264,7 +264,6 @@ void send_enter_packet(int to_client, int new_id)
 	strcpy_s(p.name, pNewPlayer->m_ID);
 	pNewPlayer->Get_ClientLock().unlock();
 	p.o_type = pNewPlayer->m_type;
-	p.npc_num = 0;
 
 	p.posX = pNewPlayer->m_vPos.x;
 	p.posY = pNewPlayer->m_vPos.y;
@@ -731,28 +730,28 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 /*============================================NPC======================================================*/
 void send_NPC_enter_packet(int to_client, int new_id)
 {
-	sc_packet_enter p;
+	sc_packet_npc_enter p;
 
-	CNpc* pNewPlayer = static_cast<CNpc*>(CObjMgr::GetInstance()->Get_GameObject(L"NPC", new_id));
+	CNpc* pNewNPC = static_cast<CNpc*>(CObjMgr::GetInstance()->Get_GameObject(L"NPC", new_id));
 
 	p.size = sizeof(p);
-	p.type = SC_PACKET_ENTER;
+	p.type = SC_PACKET_NPC_ENTER;
 	p.id = new_id;
 
-	pNewPlayer->Get_ClientLock().lock();
-	strcpy_s(p.name, pNewPlayer->m_ID);
-	pNewPlayer->Get_ClientLock().unlock();
+	pNewNPC->Get_ClientLock().lock();
+	strcpy_s(p.name, pNewNPC->m_ID);
+	pNewNPC->Get_ClientLock().unlock();
 
-	p.o_type = pNewPlayer->m_type;
-	p.npc_num = pNewPlayer->m_npcNum;
+	p.o_type = pNewNPC->m_type;
+	p.npc_num = pNewNPC->m_npcNum;
 
-	p.posX = pNewPlayer->m_vPos.x;
-	p.posY = pNewPlayer->m_vPos.y;
-	p.posZ = pNewPlayer->m_vPos.z;
+	p.posX = pNewNPC->m_vPos.x;
+	p.posY = pNewNPC->m_vPos.y;
+	p.posZ = pNewNPC->m_vPos.z;
 
-	p.dirX = pNewPlayer->m_vDir.x;
-	p.dirY = pNewPlayer->m_vDir.y;
-	p.dirZ = pNewPlayer->m_vDir.z;
+	p.dirX = pNewNPC->m_vDir.x;
+	p.dirY = pNewNPC->m_vDir.y;
+	p.dirZ = pNewNPC->m_vDir.z;
 
 	send_packet(to_client, &p);
 }
@@ -974,44 +973,6 @@ void random_move_npc(int id)
 	/* 다음 움직임 명령 예약 */
 	pNPC->m_vPos = pNPC->m_vTempPos;
 	add_timer(id, OPMODE::OP_RANDOM_MOVE_NPC, system_clock::now() + 15s);
-}
-
-void random_move_stop_npc(int id)
-{
-}
-
-void normal_npc_ai(int id)
-{
-	CNpc* pNPC = static_cast<CNpc*>(CObjMgr::GetInstance()->Get_GameObject(L"NPC", id));
-
-	if (pNPC == nullptr) return;
-
-	/* NPC 상태 */
-	switch (pNPC->m_status)
-	{
-	
-	case ST_ACTIVE:
-	{
-		/* walk */
-		random_move_npc(id);
-	}
-	break;
-
-	case ST_WAIT:
-	{
-
-	}
-	break;
-
-	case ST_IDLE:
-	{
-
-	}
-	break;
-
-	}
-
-	
 }
 
 void active_npc(int id)

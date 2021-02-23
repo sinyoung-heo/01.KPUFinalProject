@@ -218,38 +218,9 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		/* npc */
 		case TYPE_NPC:
 		{
-			/*__________________________________________________________________________________________________________
-			[ GameLogic Object(NPC) 持失 ]
-			____________________________________________________________________________________________________________*/
-			Engine::CGameObject* pGameObj = nullptr;
-
-			switch (packet->npc_num)
-			{
-			case NPC_NORMAL:
-			{
-				pGameObj = CChicken::Create(m_pGraphicDevice, m_pCommandList,
-											L"Chicken",													// MeshTag
-											L"TestNaviMesh",											// NaviMeshTag
-											_vec3(0.05f, 0.05f, 0.05f),									// Scale
-											_vec3(0.0f, 0.0f, 0.0f),									// Angle
-											_vec3(packet->posX, packet->posY, packet->posZ));			// Pos
-
-				pGameObj->Set_ServerNumber(packet->id);
-
-				Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"NPC", pGameObj), E_FAIL);
-			}
-			break;
-
-			case NPC_MERCHANT:
-				break;
-			case NPC_QUEST:
-				break;
-			}
+			
 		}
 		break;
-
-		default:
-			break;
 		}
 	}
 	break;
@@ -326,6 +297,40 @@ void CPacketMgr::ProcessPacket(char* ptr)
 			Engine::CObjectMgr::Get_Instance()->Delete_ServerObject(L"Layer_GameObject", L"NPC", packet->id);
 		else
 			Engine::CObjectMgr::Get_Instance()->Delete_ServerObject(L"Layer_GameObject", L"Others", packet->id);
+	}
+	break;
+
+	case SC_PACKET_NPC_ENTER:
+	{
+		sc_packet_npc_enter* packet = reinterpret_cast<sc_packet_npc_enter*>(ptr);
+
+		/*__________________________________________________________________________________________________________
+		[ GameLogic Object(NPC) 持失 ]
+		____________________________________________________________________________________________________________*/
+		Engine::CGameObject* pGameObj = nullptr;
+
+		switch (packet->npc_num)
+		{
+		case NPC_NORMAL:
+		{
+			pGameObj = CChicken::Create(m_pGraphicDevice, m_pCommandList,
+										wstring(packet->name, &packet->name[MAX_ID_LEN]),			// MeshTag
+										L"TestNaviMesh",											// NaviMeshTag
+										_vec3(0.05f, 0.05f, 0.05f),									// Scale
+										_vec3(0.0f, 0.0f, 0.0f),									// Angle
+										_vec3(packet->posX, packet->posY, packet->posZ));			// Pos
+
+			pGameObj->Set_ServerNumber(packet->id);
+
+			Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"NPC", pGameObj), E_FAIL);
+		}
+		break;
+
+		case NPC_MERCHANT:
+			break;
+		case NPC_QUEST:
+			break;
+		}
 	}
 	break;
 

@@ -2,7 +2,7 @@
 
 constexpr char SERVER_IP[16] = "127.0.0.1";
 constexpr int SERVER_PORT = 5689;
-constexpr int MAX_ID_LEN = 10;
+constexpr int MAX_ID_LEN = 16;
 constexpr int MAX_PW_LEN = 16;
 constexpr int MAX_STR_LEN = 100;
 
@@ -27,7 +27,7 @@ constexpr char SC_PACKET_CHAT = 5;
 constexpr char SC_PACKET_LOGIN_FAIL = 6;
 constexpr char SC_PACKET_STAT_CHANGE = 7;
 constexpr char SC_PACKET_NPC_MOVE = 8;
-constexpr char SC_PACKET_NPC_MOVE_STOP = 9;
+constexpr char SC_PACKET_NPC_ENTER = 9;
 
 constexpr char CS_LOGIN = 0;
 constexpr char CS_MOVE = 1;
@@ -37,7 +37,6 @@ constexpr char CS_CHAT = 4;
 constexpr char CS_LOGOUT = 5;
 constexpr char CS_NPC_MOVE = 6;
 constexpr char CS_NPC_MOVE_STOP = 7;
-
 
 struct sc_packet_login_ok 
 {
@@ -75,16 +74,7 @@ struct sc_packet_move
 	float dirX, dirY, dirZ;
 };
 
-struct sc_packet_npc_move
-{
-	char size;
-	char type;
-	int id;
-
-	char dir;
-};
-
-/* PROTOCOL 추가 확장 */
+/* CHARACTER TYPE */
 constexpr char TYPE_PLAYER = 0;
 constexpr char TYPE_NPC = 1;	
 
@@ -96,6 +86,18 @@ constexpr char NPC_MERCHANT = 1;
 constexpr char NPC_QUEST = 2;
 
 struct sc_packet_enter 
+{
+	char size;
+	char type;
+	int  id;
+
+	char name[MAX_ID_LEN];
+	char o_type;
+	float posX, posY, posZ;
+	float dirX, dirY, dirZ;
+};
+
+struct sc_packet_npc_enter
 {
 	char size;
 	char type;
@@ -140,7 +142,6 @@ struct sc_packet_stat_change
 	short level;
 	int   exp;
 };
-
 
 struct cs_packet_login 
 {

@@ -189,7 +189,7 @@ void Initialize_NPC()
 	/* NPC의 정보 초기화 */
 	pNew->Set_IsConnected(true);
 	pNew->Set_IsDead(false);
-	sprintf_s(pNew->m_ID, "NPC%d", s_num);
+	strcpy_s(pNew->m_ID, "Chicken");
 	
 	pNew->m_vPos = _vec3(25.0f, 0.f, 20.0f);
 	pNew->m_vTempPos = pNew->m_vPos;
@@ -202,31 +202,6 @@ void Initialize_NPC()
 
 	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
 	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-
-	/* NORMAL NPC - 2*/
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	pNew->m_sNum = NPC_NUM_START + 1;
-	//	s_num = pNew->m_sNum;
-	//}
-
-	///* NPC의 정보 초기화 */
-	//pNew->Set_IsConnected(true);
-	//pNew->Set_IsDead(false);
-	//sprintf_s(pNew->m_ID, "NPC%d", s_num);
-
-	//pNew->m_vPos = _vec3(27.0f, 0.f, 20.0f);
-	//pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	//pNew->m_type = '1';
-	//pNew->m_npcNum = NPC_NORMAL;
-	//pNew->spd = 1.f;
-	//pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
 
 #ifdef TEST
 	cout << "NPC Initialize Finish.\n";
