@@ -5,7 +5,8 @@
 #include "TestPlayer.h"
 #include "TestOthers.h"
 #include "Chicken.h"
-#include "Cat.h"
+#include "Human_boy.h"
+#include "NPC_Villagers.h"
 #include "DynamicCamera.h"
 
 IMPLEMENT_SINGLETON(CPacketMgr)
@@ -72,10 +73,10 @@ HRESULT CPacketMgr::Connect_Server()
 
 void CPacketMgr::recv_packet()
 {
-	char net_buf[MAX_BUF_SIZE];
+	unsigned char net_buf[MAX_BUF_SIZE];
 
 	// Server Data Receive.
-	int retval = recv(g_hSocket, net_buf, MAX_BUF_SIZE, 0);
+	int retval = recv(g_hSocket, reinterpret_cast<char*>(net_buf), MAX_BUF_SIZE, 0);
 
 #ifdef ERR_CHECK
 	if (retval == SOCKET_ERROR)
@@ -97,9 +98,9 @@ void CPacketMgr::recv_packet()
 	}
 }
 
-void CPacketMgr::ProcessData(char* net_buf, size_t io_byte)
+void CPacketMgr::ProcessData(unsigned char* net_buf, size_t io_byte)
 {
-	char* ptr = net_buf;
+	unsigned char* ptr = net_buf;
 
 	/* 처리해야 할 Original Packet Size */
 	static size_t in_packet_size = 0;
@@ -309,28 +310,37 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		____________________________________________________________________________________________________________*/
 		Engine::CGameObject* pGameObj = nullptr;
 
-		switch (packet->npc_num)
-		{
-		case NPC_NORMAL:
+		if (!strcmp(packet->name, "Chicken") || !strcmp(packet->name, "Cat"))
 		{
 			pGameObj = CChicken::Create(m_pGraphicDevice, m_pCommandList,
 										wstring(packet->name, &packet->name[MAX_ID_LEN]),			// MeshTag
-										L"TestNaviMesh",											// NaviMeshTag
+										wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
 										_vec3(0.05f, 0.05f, 0.05f),									// Scale
 										_vec3(0.0f, 0.0f, 0.0f),									// Angle
 										_vec3(packet->posX, packet->posY, packet->posZ));			// Pos
-
-			pGameObj->Set_ServerNumber(packet->id);
-
-			Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"NPC", pGameObj), E_FAIL);
 		}
-		break;
-
-		case NPC_MERCHANT:
-			break;
-		case NPC_QUEST:
-			break;
+		else if (!strcmp(packet->name, "Aman_boy") || !strcmp(packet->name, "Human_boy"))
+		{
+			pGameObj = CHuman_boy::Create(m_pGraphicDevice, m_pCommandList,
+										wstring(packet->name, &packet->name[MAX_ID_LEN]),			// MeshTag
+										wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
+										_vec3(0.05f, 0.05f, 0.05f),									// Scale
+										_vec3(0.0f, 0.0f, 0.0f),									// Angle
+										_vec3(packet->posX, packet->posY, packet->posZ));			// Pos
 		}
+		else if (!strcmp(packet->name, "NPC_Villagers"))
+		{
+			pGameObj = CNPC_Villagers::Create(m_pGraphicDevice, m_pCommandList,
+										wstring(packet->name, &packet->name[MAX_ID_LEN]),			// MeshTag
+										wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
+										_vec3(0.05f, 0.05f, 0.05f),									// Scale
+										_vec3(0.0f, 0.0f, 0.0f),									// Angle
+										_vec3(packet->posX, packet->posY, packet->posZ));			// Pos
+		}
+
+		pGameObj->Set_ServerNumber(packet->id);
+
+		Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"NPC", pGameObj), E_FAIL);
 	}
 	break;
 

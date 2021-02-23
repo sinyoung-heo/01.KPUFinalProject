@@ -2,12 +2,13 @@
 
 constexpr char SERVER_IP[16] = "127.0.0.1";
 constexpr int SERVER_PORT = 5689;
-constexpr int MAX_ID_LEN = 16;
-constexpr int MAX_PW_LEN = 16;
+constexpr int MAX_ID_LEN = 32;
+constexpr int MAX_PW_LEN = 32;
 constexpr int MAX_STR_LEN = 100;
+constexpr int MIDDLE_STR_LEN = 64;
 
 constexpr int MAX_USER = 10000;
-constexpr int MAX_NPC = 3;
+constexpr int MAX_NPC = 100;
 constexpr int NPC_NUM_START = 1000;
 
 constexpr int WORLD_WIDTH = 1000;
@@ -40,7 +41,7 @@ constexpr char CS_NPC_MOVE_STOP = 7;
 
 struct sc_packet_login_ok 
 {
-	char size;
+	unsigned char size;
 	char type;
 	int  id;
 
@@ -65,7 +66,7 @@ constexpr char MV_LEFT_DOWN = 7;
 
 struct sc_packet_move 
 {
-	char size;
+	unsigned char size;
 	char type;
 	int id;
 
@@ -87,7 +88,7 @@ constexpr char NPC_QUEST = 2;
 
 struct sc_packet_enter 
 {
-	char size;
+	unsigned char size;
 	char type;
 	int  id;
 
@@ -99,11 +100,12 @@ struct sc_packet_enter
 
 struct sc_packet_npc_enter
 {
-	char size;
+	unsigned char size;
 	char type;
 	int  id;
 
 	char name[MAX_ID_LEN];
+	char naviType[MIDDLE_STR_LEN];
 	char o_type;
 	char npc_num;
 	float posX, posY, posZ;
@@ -112,14 +114,14 @@ struct sc_packet_npc_enter
 
 struct sc_packet_leave 
 {
-	char size;
+	unsigned char size;
 	char type;
 	int  id;
 };
 
 struct sc_packet_chat 
 {
-	char  size;
+	unsigned char  size;
 	char  type;
 	int	  id;			// teller
 	char  message[MAX_STR_LEN];
@@ -127,7 +129,7 @@ struct sc_packet_chat
 
 struct sc_packet_login_fail 
 {
-	char  size;
+	unsigned char  size;
 	char  type;
 	int	  id;
 	char  message[MAX_STR_LEN];
@@ -135,7 +137,7 @@ struct sc_packet_login_fail
 
 struct sc_packet_stat_change 
 {
-	char size;
+	unsigned char size;
 	char type;
 	int  id;
 	short hp;
@@ -145,7 +147,7 @@ struct sc_packet_stat_change
 
 struct cs_packet_login 
 {
-	char  size;
+	unsigned char  size;
 	char  type;
 	char  name[MAX_ID_LEN];
 	char  password[MAX_PW_LEN];
@@ -153,7 +155,7 @@ struct cs_packet_login
 
 struct cs_packet_move 
 {
-	char  size;
+	unsigned char  size;
 	char  type;
 
 	int	  move_time; 
@@ -163,7 +165,7 @@ struct cs_packet_move
 
 struct cs_packet_move_stop
 {
-	char  size;
+	unsigned char  size;
 	char  type;
 
 	float posX, posY, posZ;
@@ -172,26 +174,26 @@ struct cs_packet_move_stop
 
 struct cs_packet_attack 
 {
-	char	size;
+	unsigned char	size;
 	char	type;
 };
 
 struct cs_packet_chat 
 {
-	char	size;
+	unsigned char	size;
 	char	type;
 	char	message[MAX_STR_LEN];
 };
 
 struct cs_packet_logout 
 {
-	char	size;
+	unsigned char	size;
 	char	type;
 };
 
 struct cs_packet_teleport 
 {
-	char size;
+	unsigned char size;
 	char type;
 	short x, y;
 };

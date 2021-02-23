@@ -15,7 +15,7 @@ public:
 	{
 		m_iMaxSize = size;
 
-		for (int i = m_iMaxSize-1; i >= 0; --i)
+		for (int i = m_iMaxSize - 1; i >= 0; --i)
 		{
 			T* pObj = new T();
 			pObj->Set_ServerNumber(i);

@@ -1,5 +1,6 @@
 DynamicMesh|Character|PoporiH25
 DynamicMesh|Character|PoporiR19
+DynamicMesh|NPC|Aman_boy
 DynamicMesh|NPC|Cat
 DynamicMesh|NPC|Chicken
 DynamicMesh|NPC|Human_boy

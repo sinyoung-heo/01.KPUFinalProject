@@ -31,6 +31,7 @@ public:
 	bool m_bIsDead; //all
 	char m_ID[MAX_ID_LEN]; // all
 	char m_type; // all
+	char m_naviType[MIDDLE_STR_LEN];
 	int  m_sNum;
 	//int	level; // player
 	//int Hp, maxHp; // player, monster

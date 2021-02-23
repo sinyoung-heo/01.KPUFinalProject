@@ -1,5 +1,6 @@
 PoporiH25|PoporiH25.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\PoporiH25\
 PoporiR19|PoporiR19.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\PoporiR19\
+Aman_boy|Aman_boy.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Aman_boy\
 Cat|Cat.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Cat\
 Chicken|Chicken.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Chicken\
 Human_boy|Human_boy.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Human_boy\

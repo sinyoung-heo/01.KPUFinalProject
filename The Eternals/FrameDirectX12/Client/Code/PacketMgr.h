@@ -18,7 +18,7 @@ public:
 
 public:
 	void	recv_packet();
-	void	ProcessData(char* net_buf, size_t io_byte);
+	void	ProcessData(unsigned char* net_buf, size_t io_byte);
 	void	ProcessPacket(char* ptr);
 
 	void	send_login();

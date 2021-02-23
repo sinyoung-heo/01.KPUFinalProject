@@ -21,7 +21,8 @@ void process_packet(int id)
 		cs_packet_login* p = reinterpret_cast<cs_packet_login*>(pPlayer->m_packet_start);
 
 		pPlayer->Get_ClientLock().lock();
-		strcpy_s(pPlayer->m_ID, p->name);
+		strncpy_s(pPlayer->m_ID, p->name, strlen(p->name));
+		
 		pPlayer->Get_ClientLock().unlock();
 
 #ifndef DUMMY
@@ -261,7 +262,8 @@ void send_enter_packet(int to_client, int new_id)
 	p.id = new_id;
 
 	pNewPlayer->Get_ClientLock().lock();
-	strcpy_s(p.name, pNewPlayer->m_ID);
+	strncpy_s(p.name, pNewPlayer->m_ID, strlen(pNewPlayer->m_ID));
+
 	pNewPlayer->Get_ClientLock().unlock();
 	p.o_type = pNewPlayer->m_type;
 
@@ -734,12 +736,16 @@ void send_NPC_enter_packet(int to_client, int new_id)
 
 	CNpc* pNewNPC = static_cast<CNpc*>(CObjMgr::GetInstance()->Get_GameObject(L"NPC", new_id));
 
+	if (pNewNPC == nullptr) return;
+
 	p.size = sizeof(p);
 	p.type = SC_PACKET_NPC_ENTER;
 	p.id = new_id;
 
 	pNewNPC->Get_ClientLock().lock();
-	strcpy_s(p.name, pNewNPC->m_ID);
+	strncpy_s(p.name, pNewNPC->m_ID, strlen(pNewNPC->m_ID));
+	strncpy_s(p.naviType, pNewNPC->m_naviType, strlen(pNewNPC->m_naviType));
+
 	pNewNPC->Get_ClientLock().unlock();
 
 	p.o_type = pNewNPC->m_type;
