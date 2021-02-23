@@ -131,18 +131,30 @@
 #define IDC_LIST1005                    1104
 #define IDC_SPIN1014                    1105
 #define IDC_BUTTON1013                  1105
+#define IDC_TREE2000                    1105
 #define IDC_SPIN1015                    1106
 #define IDC_BUTTON1014                  1106
+#define IDC_EDIT2000                    1106
 #define IDC_EDIT1053                    1107
+#define IDC_EDIT2001                    1107
 #define IDC_EDIT1054                    1108
+#define IDC_EDIT2002                    1108
 #define IDC_EDIT1055                    1109
+#define IDC_EDIT2003                    1109
 #define IDC_EDIT1063                    1110
+#define IDC_EDIT2004                    1110
 #define IDC_BUTTON1011                  1111
+#define IDC_EDIT2005                    1111
 #define IDC_BUTTON1012                  1112
+#define IDC_EDIT2006                    1112
 #define IDC_EDIT1064                    1113
+#define IDC_EDIT2007                    1113
 #define IDC_EDIT1065                    1114
+#define IDC_EDIT2008                    1114
 #define IDC_EDIT1066                    1115
+#define IDC_EDIT2009                    1115
 #define IDC_EDIT1067                    1116
+#define IDC_BUTTON2000                  1116
 #define IDC_EDIT1068                    1117
 #define IDC_EDIT1069                    1118
 #define IDC_EDIT1070                    1119
@@ -157,7 +169,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        329
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1105
+#define _APS_NEXT_CONTROL_VALUE         1117
 #define _APS_NEXT_SYMED_VALUE           327
 #endif
 #endif

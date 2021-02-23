@@ -34,7 +34,7 @@ public:
 	CTab2DUI		m_Tab2DUI;
 	CTab3DUI		m_Tab3DUI;
 
-	_bool m_bIsTabTexSpriteUV = false;
-	_bool m_bIsTab2DUI        = false;
-	_bool m_bIsTab3DUI        = false;
+	_bool			m_bIsTabTexSpriteUV = false;
+	_bool			m_bIsTab2DUI        = false;
+	_bool			m_bIsTab3DUI        = false;
 };

@@ -35,6 +35,11 @@ public:
 	Engine::CCoordinateCol*	m_pBufferCom = nullptr;
 	Engine::CShaderColor*	m_pShaderCom = nullptr;
 
+	/*__________________________________________________________________________________________________________
+	[ Value ]
+	____________________________________________________________________________________________________________*/
+	_bool m_bIsUpdate = true;
+
 public:
 	static CToolCoordinate* Create(ID3D12Device* pGraphicDevice, 
 								   ID3D12GraphicsCommandList* pCommandList,

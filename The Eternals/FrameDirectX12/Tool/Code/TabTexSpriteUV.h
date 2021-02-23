@@ -2,6 +2,14 @@
 
 
 // CTabTexSpriteUV 대화 상자
+namespace Engine
+{
+	class CComponentMgr;
+	class CObjectMgr;
+	class CManagement;
+}
+
+
 
 class CTabTexSpriteUV : public CDialogEx
 {
@@ -25,6 +33,15 @@ public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 
-public:
+	HRESULT	Ready_TabTexSpriteUV();
 
+public:
+	Engine::CManagement*		m_pManagement		= nullptr;
+	Engine::CObjectMgr*			m_pObjectMgr		= nullptr;
+	Engine::CComponentMgr*		m_pComponentMgr		= nullptr;
+
+	/*__________________________________________________________________________________________________________
+	[ Control ]
+	____________________________________________________________________________________________________________*/
+	CTreeCtrl m_TexUITreeCtrl;
 };
