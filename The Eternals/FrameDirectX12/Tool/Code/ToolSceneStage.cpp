@@ -60,6 +60,8 @@ HRESULT CToolSceneStage::Ready_Scene()
 	____________________________________________________________________________________________________________*/
 	CMainFrame* pMainFrame = static_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
 	CMyForm* pMyForm = static_cast<CMyForm*>(pMainFrame->m_MainSplit.GetPane(0, 0));
+	
+	// Tab Map
 	pMyForm->m_TabMap.Ready_TerrainControl();
 	pMyForm->m_TabMap.Ready_SkyBoxControl();
 	pMyForm->m_TabMap.Ready_EditControl();
@@ -68,6 +70,8 @@ HRESULT CToolSceneStage::Ready_Scene()
 	pMyForm->m_TabMap.Ready_NavigationMeshControl();
 	m_pPickingTerrain = static_cast<CToolTerrain*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"TerrainTex256"));
 
+	// Tab UI
+	pMyForm->m_TabUI.m_TabTexSpriteUV.Ready_TabTexSpriteUV();
 
 	for (_uint i = 0; i < 500; ++i)
 	{
@@ -306,30 +310,31 @@ HRESULT CToolSceneStage::Ready_LayerGameObject(wstring wstrLayerTag)
 	[ Popori_F ]
 	____________________________________________________________________________________________________________*/
 	CPopori_F* pPopori_F = nullptr;
+
 	pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
 								  L"PoporiR19",						// MeshTag
-								  _vec3(0.25f, 0.25f, 0.25f),		// Scale
+								  _vec3(0.05f, 0.05f, 0.05f),		// Scale
+								  _vec3(0.0f, 180.0f, 0.0f),		// Angle
+								  _vec3(0.0f, 0.0f, 0.0f));			// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
+
+	pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
+								  L"PoporiR19",						// MeshTag
+								  _vec3(0.05f, 0.05f, 0.05f),		// Scale
+								  _vec3(0.0f, 0.0f, 0.0f),			// Angle
+								  _vec3(2.0f, 0.0f, 0.0f));			// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
+
+	pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
+								  L"PoporiR19",						// MeshTag
+								  _vec3(0.05f, 0.05f, 0.05f),		// Scale
 								  _vec3(0.0f, 0.0f, 0.0f),			// Angle
 								  _vec3(95.0f, 0.f, 90.0f));		// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
 
 	pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
 								  L"PoporiR19",						// MeshTag
-								  _vec3(0.5f, 0.5f, 0.5f),			// Scale
-								  _vec3(0.0f, 0.0f, 0.0f),			// Angle
-								  _vec3(110.0f, 0.f, 90.0f));		// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
-
-	pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
-								  L"PoporiR19",						// MeshTag
-								  _vec3(1.0f, 1.0f, 1.0f),			// Scale
-								  _vec3(0.0f, 0.0f, 0.0f),			// Angle
-								  _vec3(125.0f, 0.f, 90.0f));		// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
-
-	pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
-								  L"PoporiR19",						// MeshTag
-								  _vec3(0.25f, 0.25f, 0.25f),		// Scale
+								  _vec3(0.05f, 0.05f, 0.05f),		// Scale
 								  _vec3(0.0f, 0.0f, 0.0f),			// Angle
 								  _vec3(180.0f, 0.f, 75.0f));		// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);

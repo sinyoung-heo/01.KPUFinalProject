@@ -4,6 +4,8 @@
 #include "ObjectMgr.h"
 #include "DirectInput.h"
 #include "Font.h"
+#include "MainFrm.h"
+#include "MyForm.h"
 
 CToolCamera::CToolCamera(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CCamera(pGraphicDevice, pCommandList)
@@ -40,7 +42,11 @@ _int CToolCamera::Update_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Key Input ]
 	____________________________________________________________________________________________________________*/
-	if (Engine::KEY_PRESSING(DIK_LSHIFT))
+	CMainFrame* pMainFrame	= static_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+	CMyForm*	pMyForm		= static_cast<CMyForm*>(pMainFrame->m_MainSplit.GetPane(0, 0));
+	
+	if (Engine::KEY_PRESSING(DIK_LSHIFT) &&
+		(!pMyForm->m_TabUI.m_bIsTabTexSpriteUV && !pMyForm->m_TabUI.m_bIsTab2DUI))
 		Key_Input(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
@@ -62,18 +68,24 @@ _int CToolCamera::LateUpdate_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Font Update ]
 	____________________________________________________________________________________________________________*/
-	m_wstrText = wstring(L"[ Camera Info ] \n") +
-				 wstring(L"Eye\t(%d, %d, %d) \n") +
-				 wstring(L"At\t(%d, %d, %d)\n") +
-				 wstring(L"Speed\t%d");
+	CMainFrame* pMainFrame	= static_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+	CMyForm*	pMyForm		= static_cast<CMyForm*>(pMainFrame->m_MainSplit.GetPane(0, 0));
+	
+	if ((!pMyForm->m_TabUI.m_bIsTabTexSpriteUV && !pMyForm->m_TabUI.m_bIsTab2DUI))
+	{
+		m_wstrText = wstring(L"[ Camera Info ] \n") +
+					 wstring(L"Eye\t(%d, %d, %d) \n") +
+					 wstring(L"At\t(%d, %d, %d)\n") +
+					 wstring(L"Speed\t%d");
 
-	wsprintf(m_szText, m_wstrText.c_str(),
-			(_int)m_tCameraInfo.vEye.x, (_int)m_tCameraInfo.vEye.y, (_int)m_tCameraInfo.vEye.z,
-			(_int)m_tCameraInfo.vAt.x, (_int)m_tCameraInfo.vAt.y, (_int)m_tCameraInfo.vAt.z,
-			(_int)m_fSpeed);
+		wsprintf(m_szText, m_wstrText.c_str(),
+				(_int)m_tCameraInfo.vEye.x, (_int)m_tCameraInfo.vEye.y, (_int)m_tCameraInfo.vEye.z,
+				(_int)m_tCameraInfo.vAt.x, (_int)m_tCameraInfo.vAt.y, (_int)m_tCameraInfo.vAt.z,
+				(_int)m_fSpeed);
 
-	m_pFont->Update_GameObject(fTimeDelta);
-	m_pFont->Set_Text(wstring(m_szText));
+		m_pFont->Update_GameObject(fTimeDelta);
+		m_pFont->Set_Text(wstring(m_szText));
+	}
 
 	return NO_EVENT;
 }

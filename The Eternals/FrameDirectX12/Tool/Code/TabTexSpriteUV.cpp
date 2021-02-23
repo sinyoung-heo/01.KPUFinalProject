@@ -47,7 +47,7 @@ BOOL CTabTexSpriteUV::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  여기에 추가 초기화 작업을 추가합니다.
-	Ready_TabTexSpriteUV();
+	m_TexUITreeCtrl.EnableWindow(FALSE);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
@@ -77,6 +77,10 @@ BOOL CTabTexSpriteUV::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 HRESULT CTabTexSpriteUV::Ready_TabTexSpriteUV()
 {
 	UpdateData(TRUE);
+
+	m_TexUITreeCtrl.EnableWindow(TRUE);
+
+
 
 	// Ready Mesh TreeControl.
 	HTREEITEM h_Texture, h_TextureRoot;

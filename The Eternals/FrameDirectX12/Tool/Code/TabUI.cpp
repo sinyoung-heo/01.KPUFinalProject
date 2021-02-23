@@ -61,6 +61,10 @@ BOOL CTabUI::OnInitDialog()
 	m_Tab3DUI.MoveWindow(0, 25, rect.Width(), rect.Height());
 	m_Tab3DUI.ShowWindow(SW_HIDE);
 
+	m_bIsTabTexSpriteUV = false;
+	m_bIsTab2DUI        = false;
+	m_bIsTab3DUI        = false;
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
 }

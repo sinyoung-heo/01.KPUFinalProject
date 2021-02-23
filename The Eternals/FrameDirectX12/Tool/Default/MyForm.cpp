@@ -63,7 +63,6 @@ void CMyForm::OnInitialUpdate()
 	m_MaxBottom = tWindowPlacement.rcNormalPosition.bottom;
 
 
-
 	m_Tab.InsertItem(0, _T("PathFinder"));
 	m_Tab.InsertItem(1, _T("Map"));
 	m_Tab.InsertItem(2, _T("UI"));
@@ -126,7 +125,12 @@ void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 
 		m_bIsTabPathFinder	= true;
 		m_bIsTabMap			= false;
-		m_bIsTabUI          = false;
+		
+		m_bIsTabUI                  = false;
+		m_TabUI.m_bIsTabTexSpriteUV = false;
+		m_TabUI.m_bIsTab2DUI        = false;
+		m_TabUI.m_bIsTab3DUI        = false;
+
 		m_bIsTabEffect		= false;
 		m_bIsTabCollider	= false;
 		m_bIsTabAnimation	= false;
@@ -147,7 +151,12 @@ void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 
 		m_bIsTabPathFinder	= false;
 		m_bIsTabMap			= true;
-		m_bIsTabUI          = false;
+
+		m_bIsTabUI                  = false;
+		m_TabUI.m_bIsTabTexSpriteUV = false;
+		m_TabUI.m_bIsTab2DUI        = false;
+		m_TabUI.m_bIsTab3DUI        = false;
+
 		m_bIsTabEffect		= false;
 		m_bIsTabCollider	= false;
 		m_bIsTabAnimation	= false;
@@ -159,7 +168,13 @@ void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 
 		m_TabPathFinder.ShowWindow(SW_HIDE);
 		m_TabMap.ShowWindow(SW_HIDE);
+
 		m_TabUI.ShowWindow(SW_SHOW);
+		m_TabUI.m_TabUI.SetCurFocus(0);
+		m_TabUI.m_TabTexSpriteUV.ShowWindow(SW_SHOW);
+		m_TabUI.m_Tab2DUI.ShowWindow(SW_HIDE);
+		m_TabUI.m_Tab3DUI.ShowWindow(SW_HIDE);
+
 		m_TabEffect.ShowWindow(SW_HIDE);
 		m_TabCollider.ShowWindow(SW_HIDE);
 		m_TabAnimation.ShowWindow(SW_HIDE);
@@ -167,7 +182,12 @@ void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 
 		m_bIsTabPathFinder	= false;
 		m_bIsTabMap			= false;
-		m_bIsTabUI          = true;
+
+		m_bIsTabUI                  = true;
+		m_TabUI.m_bIsTabTexSpriteUV = true;
+		m_TabUI.m_bIsTab2DUI        = false;
+		m_TabUI.m_bIsTab3DUI        = false;
+
 		m_bIsTabEffect		= false;
 		m_bIsTabCollider	= false;
 		m_bIsTabAnimation	= false;
@@ -188,7 +208,13 @@ void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 
 		m_bIsTabPathFinder	= false;
 		m_bIsTabMap			= false;
-		m_bIsTabUI          = false;
+
+		m_bIsTabUI                  = false;
+		m_TabUI.m_bIsTabTexSpriteUV = false;
+		m_TabUI.m_bIsTab2DUI        = false;
+		m_TabUI.m_bIsTab3DUI        = false;
+
+
 		m_bIsTabEffect		= true;
 		m_bIsTabCollider	= false;
 		m_bIsTabAnimation	= false;
@@ -208,7 +234,13 @@ void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 
 		m_bIsTabPathFinder	= false;
 		m_bIsTabMap			= false;
-		m_bIsTabUI          = false;
+
+		m_bIsTabUI                  = false;
+		m_TabUI.m_bIsTabTexSpriteUV = false;
+		m_TabUI.m_bIsTab2DUI        = false;
+		m_TabUI.m_bIsTab3DUI        = false;
+
+
 		m_bIsTabEffect		= false;
 		m_bIsTabCollider	= true;
 		m_bIsTabAnimation	= false;
@@ -229,7 +261,12 @@ void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 
 		m_bIsTabPathFinder	= false;
 		m_bIsTabMap			= false;
-		m_bIsTabUI          = false;
+
+		m_bIsTabUI                  = false;
+		m_TabUI.m_bIsTabTexSpriteUV = false;
+		m_TabUI.m_bIsTab2DUI        = false;
+		m_TabUI.m_bIsTab3DUI        = false;
+
 		m_bIsTabEffect		= false;
 		m_bIsTabCollider	= false;
 		m_bIsTabAnimation	= true;
@@ -250,7 +287,12 @@ void CMyForm::OnTcnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 
 		m_bIsTabPathFinder	= false;
 		m_bIsTabMap			= false;
-		m_bIsTabUI          = false;
+
+		m_bIsTabUI                  = false;
+		m_TabUI.m_bIsTabTexSpriteUV = false;
+		m_TabUI.m_bIsTab2DUI        = false;
+		m_TabUI.m_bIsTab3DUI        = false;
+
 		m_bIsTabEffect		= false;
 		m_bIsTabCollider	= false;
 		m_bIsTabAnimation	= false;
