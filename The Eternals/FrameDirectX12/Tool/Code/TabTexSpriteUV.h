@@ -7,6 +7,7 @@ namespace Engine
 	class CComponentMgr;
 	class CObjectMgr;
 	class CManagement;
+	class CDescriptorHeapMgr;
 }
 
 
@@ -39,9 +40,23 @@ public:
 	Engine::CManagement*		m_pManagement		= nullptr;
 	Engine::CObjectMgr*			m_pObjectMgr		= nullptr;
 	Engine::CComponentMgr*		m_pComponentMgr		= nullptr;
+	Engine::CDescriptorHeapMgr* m_pDescriptorHeapMgr = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Control ]
 	____________________________________________________________________________________________________________*/
-	CTreeCtrl m_TexUITreeCtrl;
+	afx_msg void	OnNMClickTree2000_TreeTextureTag(NMHDR* pNMHDR, LRESULT* pResult);
+	CTreeCtrl		m_TexUITreeCtrl;
+
+	CEdit	m_EditTextureTag;
+	CString	m_strTextureTag;
+
+	CEdit	m_EditTextureWidth;
+	CEdit	m_EditTexturHeight;
+	int		m_iTextureWidth;
+	int		m_iTextureHeight;
+
+	afx_msg void	OnLbnSelchangeList2000_TextureIndex();
+	CListBox		m_ListBoxTexIndex;
+	_uint			m_iSelectTexIndex = 0;
 };

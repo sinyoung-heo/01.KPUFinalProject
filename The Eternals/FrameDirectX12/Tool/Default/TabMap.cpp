@@ -1958,7 +1958,6 @@ void CTabMap::OnLbnSelchangeList1001_TerrainTexIndex()
 {
 	UpdateData(TRUE);
 
-
 	// 선택한 ListBox의 Index를 얻어온다.
 	_int iNewTexIdx = m_TerrainListBox_TexIndex.GetCaretIndex();
 

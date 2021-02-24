@@ -14,6 +14,7 @@ namespace Engine
 class CToolTerrain;
 class CToolStaticMesh;
 class CToolCell;
+class CToolUICanvas;
 
 class CToolSceneStage : public Engine::CScene
 {
@@ -70,7 +71,7 @@ public:
 	/*__________________________________________________________________________________________________________
 	[ TabUI ]
 	____________________________________________________________________________________________________________*/
-
+	CToolUICanvas* m_pUICanvas = nullptr;
 
 
 private:

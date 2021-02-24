@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "ToolSceneStage.h"
-
 #include "ComponentMgr.h"
 #include "GraphicDevice.h"
 #include "DirectInput.h"
@@ -14,6 +13,7 @@
 #include "ToolStaticMesh.h"
 #include "Popori_F.h"
 #include "ToolCell.h"
+#include "ToolUICanvas.h"
 
 
 CToolSceneStage::CToolSceneStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -311,19 +311,19 @@ HRESULT CToolSceneStage::Ready_LayerGameObject(wstring wstrLayerTag)
 	____________________________________________________________________________________________________________*/
 	CPopori_F* pPopori_F = nullptr;
 
-	pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
-								  L"PoporiR19",						// MeshTag
-								  _vec3(0.05f, 0.05f, 0.05f),		// Scale
-								  _vec3(0.0f, 180.0f, 0.0f),		// Angle
-								  _vec3(0.0f, 0.0f, 0.0f));			// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
+	//pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
+	//							  L"PoporiR19",						// MeshTag
+	//							  _vec3(0.05f, 0.05f, 0.05f),		// Scale
+	//							  _vec3(0.0f, 180.0f, 0.0f),		// Angle
+	//							  _vec3(0.0f, 0.0f, 0.0f));			// Pos
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
 
-	pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
-								  L"PoporiR19",						// MeshTag
-								  _vec3(0.05f, 0.05f, 0.05f),		// Scale
-								  _vec3(0.0f, 0.0f, 0.0f),			// Angle
-								  _vec3(2.0f, 0.0f, 0.0f));			// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
+	//pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
+	//							  L"PoporiR19",						// MeshTag
+	//							  _vec3(0.05f, 0.05f, 0.05f),		// Scale
+	//							  _vec3(0.0f, 0.0f, 0.0f),			// Angle
+	//							  _vec3(2.0f, 0.0f, 0.0f));			// Pos
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
 
 	pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
 								  L"PoporiR19",						// MeshTag
@@ -352,6 +352,16 @@ HRESULT CToolSceneStage::Ready_LayerUI(wstring wstrLayerTag)
 	Engine::CLayer* pLayer = Engine::CLayer::Create();
 	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
 	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
+
+	Engine::CGameObject* pGameObj = nullptr;
+
+	/*__________________________________________________________________________________________________________
+	[ UICanvas ]
+	____________________________________________________________________________________________________________*/
+	pGameObj = CToolUICanvas::Create(m_pGraphicDevice, m_pCommandList,
+									 _vec3(0.0f),
+									 _vec3(0.0f));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"UICanvas", pGameObj), E_FAIL);
 
 
 	return S_OK;

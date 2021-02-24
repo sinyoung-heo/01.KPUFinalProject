@@ -156,6 +156,7 @@
 #define IDC_EDIT1067                    1116
 #define IDC_BUTTON2000                  1116
 #define IDC_EDIT1068                    1117
+#define IDC_LIST2000                    1117
 #define IDC_EDIT1069                    1118
 #define IDC_EDIT1070                    1119
 #define IDC_EDIT1071                    1120
@@ -169,7 +170,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        329
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1117
+#define _APS_NEXT_CONTROL_VALUE         1118
 #define _APS_NEXT_SYMED_VALUE           327
 #endif
 #endif

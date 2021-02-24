@@ -8,6 +8,7 @@
 #include "ComponentMgr.h"
 #include "ObjectMgr.h"
 #include "Management.h"
+#include "DescriptorHeapMgr.h"
 
 
 // CTabTexSpriteUV 대화 상자
@@ -19,6 +20,10 @@ CTabTexSpriteUV::CTabTexSpriteUV(CWnd* pParent /*=nullptr*/)
 	, m_pComponentMgr(Engine::CComponentMgr::Get_Instance())
 	, m_pObjectMgr(Engine::CObjectMgr::Get_Instance())
 	, m_pManagement(Engine::CManagement::Get_Instance())
+	, m_pDescriptorHeapMgr(Engine::CDescriptorHeapMgr::Get_Instance())
+	, m_strTextureTag(_T(""))
+	, m_iTextureWidth(0)
+	, m_iTextureHeight(0)
 {
 
 }
@@ -31,11 +36,20 @@ void CTabTexSpriteUV::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_TREE2000, m_TexUITreeCtrl);
+	DDX_Control(pDX, IDC_EDIT2000, m_EditTextureTag);
+	DDX_Text(pDX, IDC_EDIT2000, m_strTextureTag);
+	DDX_Control(pDX, IDC_EDIT2001, m_EditTextureWidth);
+	DDX_Control(pDX, IDC_EDIT2002, m_EditTexturHeight);
+	DDX_Text(pDX, IDC_EDIT2001, m_iTextureWidth);
+	DDX_Text(pDX, IDC_EDIT2002, m_iTextureHeight);
+	DDX_Control(pDX, IDC_LIST2000, m_ListBoxTexIndex);
 }
 
 
 BEGIN_MESSAGE_MAP(CTabTexSpriteUV, CDialogEx)
 	ON_WM_MOUSEWHEEL()
+	ON_NOTIFY(NM_CLICK, IDC_TREE2000, &CTabTexSpriteUV::OnNMClickTree2000_TreeTextureTag)
+	ON_LBN_SELCHANGE(IDC_LIST2000, &CTabTexSpriteUV::OnLbnSelchangeList2000_TextureIndex)
 END_MESSAGE_MAP()
 
 
@@ -155,4 +169,61 @@ HRESULT CTabTexSpriteUV::Ready_TabTexSpriteUV()
 	UpdateData(FALSE);
 
 	return S_OK;
+}
+
+
+void CTabTexSpriteUV::OnNMClickTree2000_TreeTextureTag(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
+	CPoint mouse;
+	GetCursorPos(&mouse);
+	m_TexUITreeCtrl.ScreenToClient(&mouse);
+
+	_uint iFlag = 0;
+	HTREEITEM h_MeshTag = m_TexUITreeCtrl.HitTest(mouse, &iFlag);
+
+	// 클릭한 Tree의 문자열을 얻어온다.
+	m_strTextureTag = m_TexUITreeCtrl.GetItemText(h_MeshTag);
+
+	// Texture의 Width와 Height를 얻어온다.
+	Engine::CTexture* pTextureCom = static_cast<Engine::CTexture*>(m_pComponentMgr->Get_Component(wstring(m_strTextureTag), Engine::ID_STATIC));
+	m_iTextureWidth  = (_int)pTextureCom->Get_Texture().front().Get()->GetDesc().Width;
+	m_iTextureHeight = (_int)pTextureCom->Get_Texture().front().Get()->GetDesc().Height;
+
+	// Texture DescriptorHeap의 Num을 얻어온다.
+	m_ListBoxTexIndex.ResetContent();
+
+	_int iNumDescriptor = pTextureCom->Get_TexDescriptorHeap()->GetDesc().NumDescriptors;
+	for (_uint i = 0; i < iNumDescriptor; ++i)
+	{
+		_tchar m_szText[MAX_STR] = L"";
+		wsprintf(m_szText, L"Idx : %d", i);
+
+		m_ListBoxTexIndex.AddString(m_szText);
+	}
+	
+
+	*pResult = 0;
+
+	UpdateData(FALSE);
+}
+
+
+void CTabTexSpriteUV::OnLbnSelchangeList2000_TextureIndex()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
+	// 선택한 ListBox의 Index를 얻어온다.
+	m_iSelectTexIndex = m_ListBoxTexIndex.GetCaretIndex();
+
+	// 선택한 TexIdx의 Width와 Height를 갱신한다.
+	Engine::CTexture* pTextureCom = static_cast<Engine::CTexture*>(m_pComponentMgr->Get_Component(wstring(m_strTextureTag), Engine::ID_STATIC));
+	m_iTextureWidth  = (_int)pTextureCom->Get_Texture()[m_iSelectTexIndex].Get()->GetDesc().Width;
+	m_iTextureHeight = (_int)pTextureCom->Get_Texture()[m_iSelectTexIndex].Get()->GetDesc().Height;
+
+	UpdateData(FALSE);
+
 }

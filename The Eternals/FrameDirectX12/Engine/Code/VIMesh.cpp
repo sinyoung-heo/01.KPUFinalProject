@@ -248,16 +248,16 @@ HRESULT CVIMesh::Ready_Mesh(const aiMesh * pAiMesh,
 		// - Normal 정보가 있다면, Normal값 입력.
 		if (pAiMesh->HasNormals())
 		{
-			//// 머리랑 몸통의 Normal이 반대임. (임시방편)
-			//if (!strcmp("Popori_F_Face10_Skel", pAiMesh->mName.C_Str()) ||
-			//	!strcmp("Popori_F_Hair12B_Skel", pAiMesh->mName.C_Str()))
-			//{
-			//	vtxMesh.vNormal = _vec3(pAiMesh->mNormals[i].x, pAiMesh->mNormals[i].y, pAiMesh->mNormals[i].z) * -1.0f;
-			//}
-			//else
-			//	vtxMesh.vNormal = _vec3(pAiMesh->mNormals[i].x, pAiMesh->mNormals[i].y, pAiMesh->mNormals[i].z);
+			// 머리랑 몸통의 Normal이 반대임. (임시방편)
+			if (!strcmp("Popori_F_Face10_Skel", pAiMesh->mName.C_Str()) ||
+				!strcmp("Popori_F_Hair12B_Skel", pAiMesh->mName.C_Str()))
+			{
+				vtxMesh.vNormal = _vec3(pAiMesh->mNormals[i].x, pAiMesh->mNormals[i].y, pAiMesh->mNormals[i].z) * -1.0f;
+			}
+			else
+				vtxMesh.vNormal = _vec3(pAiMesh->mNormals[i].x, pAiMesh->mNormals[i].y, pAiMesh->mNormals[i].z);
 
-			vtxMesh.vNormal = _vec3(pAiMesh->mNormals[i].x, pAiMesh->mNormals[i].y, pAiMesh->mNormals[i].z);
+			//vtxMesh.vNormal = _vec3(pAiMesh->mNormals[i].x, pAiMesh->mNormals[i].y, pAiMesh->mNormals[i].z);
 		}
 		// - Texture 정보가 있다면, TexUV값 입력.
 		if (pAiMesh->HasTextureCoords(0))

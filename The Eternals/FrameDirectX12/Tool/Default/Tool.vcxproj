@@ -217,6 +217,7 @@
     <ClInclude Include="..\Code\ToolSkyBox.h" />
     <ClInclude Include="..\Code\ToolStaticMesh.h" />
     <ClInclude Include="..\Code\ToolTerrain.h" />
+    <ClInclude Include="..\Code\ToolUICanvas.h" />
     <ClInclude Include="..\Header\Const.h" />
     <ClInclude Include="..\Header\Extern.h" />
     <ClInclude Include="..\Header\Include.h" />
@@ -258,6 +259,7 @@
     <ClCompile Include="..\Code\ToolSkyBox.cpp" />
     <ClCompile Include="..\Code\ToolStaticMesh.cpp" />
     <ClCompile Include="..\Code\ToolTerrain.cpp" />
+    <ClCompile Include="..\Code\ToolUICanvas.cpp" />
     <ClCompile Include="TabAnimation.cpp" />
     <ClCompile Include="TabCamera.cpp" />
     <ClCompile Include="TabCollider.cpp" />

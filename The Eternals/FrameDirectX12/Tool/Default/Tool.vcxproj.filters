@@ -113,6 +113,12 @@
     <Filter Include="00.MFC Class\04.TapControl\02.TabUI\02.Tab3DUI">
       <UniqueIdentifier>{324ef735-ad27-4311-9ddf-d0678c02392d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.ToolGameObject\02.ToolUI">
+      <UniqueIdentifier>{3501cd5c-6b1d-49a0-86e2-04dd99708c63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ToolGameObject\02.ToolUI\00.ToolUICanvas">
+      <UniqueIdentifier>{a0d63b96-f6e8-4d5a-82d1-03028c41b888}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
@@ -232,6 +238,7 @@
     <ClInclude Include="..\Code\Tab3DUI.h">
       <Filter>00.MFC Class\04.TapControl\02.TabUI\02.Tab3DUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ToolUICanvas.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -324,6 +331,7 @@
     <ClCompile Include="..\Code\Tab3DUI.cpp">
       <Filter>00.MFC Class\04.TapControl\02.TabUI\02.Tab3DUI</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\ToolUICanvas.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Tool.rc">
