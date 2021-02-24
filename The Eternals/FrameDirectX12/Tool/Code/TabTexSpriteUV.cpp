@@ -9,6 +9,8 @@
 #include "ObjectMgr.h"
 #include "Management.h"
 #include "DescriptorHeapMgr.h"
+#include "ToolSceneStage.h"
+#include "ToolUICanvas.h"
 
 
 // CTabTexSpriteUV 대화 상자
@@ -24,6 +26,8 @@ CTabTexSpriteUV::CTabTexSpriteUV(CWnd* pParent /*=nullptr*/)
 	, m_strTextureTag(_T(""))
 	, m_iTextureWidth(0)
 	, m_iTextureHeight(0)
+	, m_iCanvasWidth(0)
+	, m_iCanvasHeight(0)
 {
 
 }
@@ -43,6 +47,10 @@ void CTabTexSpriteUV::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT2001, m_iTextureWidth);
 	DDX_Text(pDX, IDC_EDIT2002, m_iTextureHeight);
 	DDX_Control(pDX, IDC_LIST2000, m_ListBoxTexIndex);
+	DDX_Control(pDX, IDC_EDIT2010, m_EditCanvasWidth);
+	DDX_Control(pDX, IDC_EDIT2011, m_EditCanvasHeight);
+	DDX_Text(pDX, IDC_EDIT2010, m_iCanvasWidth);
+	DDX_Text(pDX, IDC_EDIT2011, m_iCanvasHeight);
 }
 
 
@@ -84,6 +92,47 @@ BOOL CTabTexSpriteUV::PreTranslateMessage(MSG* pMsg)
 BOOL CTabTexSpriteUV::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	UpdateData(TRUE);
+
+	RECT rcEdit[2] = { };
+	m_EditCanvasWidth.GetWindowRect(&rcEdit[0]);
+	m_EditCanvasHeight.GetWindowRect(&rcEdit[1]);
+
+	if (PtInRect(&rcEdit[0], pt))		// Canvas Width
+	{
+		if (zDelta > 0)
+		{
+			m_iCanvasWidth *= 2;
+		}
+		else if (zDelta < 0)
+		{
+			m_iCanvasWidth /= 2;
+			if (m_iCanvasWidth <= 0)
+				m_iCanvasWidth = 1;
+		}
+
+		m_pToolUICanvas->Get_Transform()->m_vScale = _vec3((_float)m_iCanvasWidth, (_float)m_iCanvasHeight, 1.0f);
+		m_pToolUICanvas->Get_Transform()->m_vPos = _vec3((_float)m_iCanvasWidth / 2, (_float)m_iCanvasHeight / 2, 1.0f);
+	}
+	else if (PtInRect(&rcEdit[1], pt))	// Canvas Height
+	{
+		if (zDelta > 0)
+		{
+			m_iCanvasHeight *= 2;
+		}
+		else if (zDelta < 0)
+		{
+			m_iCanvasHeight /= 2;
+			if (m_iCanvasHeight <= 0)
+				m_iCanvasHeight = 1;
+		}
+
+		m_pToolUICanvas->Get_Transform()->m_vScale = _vec3((_float)m_iCanvasWidth, (_float)m_iCanvasHeight, 1.0f);
+		m_pToolUICanvas->Get_Transform()->m_vPos = _vec3((_float)m_iCanvasWidth / 2, (_float)m_iCanvasHeight / 2, 1.0f);
+	}
+
+
+	UpdateData(FALSE);
 
 	return CDialogEx::OnMouseWheel(nFlags, zDelta, pt);
 }
@@ -93,8 +142,6 @@ HRESULT CTabTexSpriteUV::Ready_TabTexSpriteUV()
 	UpdateData(TRUE);
 
 	m_TexUITreeCtrl.EnableWindow(TRUE);
-
-
 
 	// Ready Mesh TreeControl.
 	HTREEITEM h_Texture, h_TextureRoot;
@@ -139,20 +186,6 @@ HRESULT CTabTexSpriteUV::Ready_TabTexSpriteUV()
 	}
 
 	fin.close();
-
-
-	// 모든 트리의 노드를 펼친다.
-	// m_TexUITreeCtrl.Expand(h_DynamciMesh, TVE_EXPAND);
-
-	// DynamicMesh
-	//HTREEITEM h_Child = m_TexUITreeCtrl.GetNextItem(h_DynamciMesh, TVGN_CHILD);
-	//m_TexUITreeCtrl.Expand(h_Child, TVE_EXPAND);
-
-	//while (h_Child != NULL)
-	//{
-	//	h_Child = m_TexUITreeCtrl.GetNextItem(h_Child, TVGN_NEXT);
-	//	m_TexUITreeCtrl.Expand(h_Child, TVE_EXPAND);
-	//}
 
 	// Texture
 	m_TexUITreeCtrl.Expand(h_Texture, TVE_EXPAND);
@@ -204,6 +237,16 @@ void CTabTexSpriteUV::OnNMClickTree2000_TreeTextureTag(NMHDR* pNMHDR, LRESULT* p
 		m_ListBoxTexIndex.AddString(m_szText);
 	}
 	
+	// ToolCanvas에 DescriptorHeap, TexIndex 설정.
+	m_pToolUICanvas->m_pTexDescriptorHeap = pTextureCom->Get_TexDescriptorHeap();
+	m_pToolUICanvas->m_uiTexIdx           = 0;
+	m_iCanvasWidth	                      = m_iTextureWidth;
+	m_iCanvasHeight                       = m_iTextureHeight;
+
+	// ToolUICanvas Pos와 Scale 설정.
+	m_pToolUICanvas->Get_Transform()->m_vScale	= _vec3((_float)m_iCanvasWidth, (_float)m_iCanvasHeight, 1.0f);
+	m_pToolUICanvas->Get_Transform()->m_vPos	= _vec3((_float)(m_iCanvasWidth / 2), (_float)(m_iCanvasHeight / 2), 1.0f);
+
 
 	*pResult = 0;
 
@@ -223,6 +266,16 @@ void CTabTexSpriteUV::OnLbnSelchangeList2000_TextureIndex()
 	Engine::CTexture* pTextureCom = static_cast<Engine::CTexture*>(m_pComponentMgr->Get_Component(wstring(m_strTextureTag), Engine::ID_STATIC));
 	m_iTextureWidth  = (_int)pTextureCom->Get_Texture()[m_iSelectTexIndex].Get()->GetDesc().Width;
 	m_iTextureHeight = (_int)pTextureCom->Get_Texture()[m_iSelectTexIndex].Get()->GetDesc().Height;
+
+	// ToolCanvas에 DescriptorHeap, TexIndex 설정.
+	m_pToolUICanvas->m_pTexDescriptorHeap = pTextureCom->Get_TexDescriptorHeap();
+	m_pToolUICanvas->m_uiTexIdx           = m_iSelectTexIndex;
+	m_iCanvasWidth                        = m_iTextureWidth;
+	m_iCanvasHeight                       = m_iTextureHeight;
+
+	// ToolUICanvas Pos와 Scale 설정.
+	m_pToolUICanvas->Get_Transform()->m_vScale	= _vec3((_float)m_iCanvasWidth, (_float)m_iCanvasHeight, 1.0f);
+	m_pToolUICanvas->Get_Transform()->m_vPos	= _vec3((_float)m_iCanvasWidth / 2, (_float)m_iCanvasHeight / 2, 1.0f);
 
 	UpdateData(FALSE);
 

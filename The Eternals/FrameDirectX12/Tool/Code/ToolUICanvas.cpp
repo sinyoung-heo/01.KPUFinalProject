@@ -91,7 +91,7 @@ HRESULT CToolUICanvas::Add_Component()
 	m_pShaderCom = static_cast<Engine::CShaderTexture*>(m_pComponentMgr->Clone_Component(L"ShaderTexture", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->AddRef();
-	m_pShaderCom->Set_PipelineStatePass(0);
+	m_pShaderCom->Set_PipelineStatePass(3);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
 	return S_OK;

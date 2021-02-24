@@ -72,6 +72,7 @@ HRESULT CToolSceneStage::Ready_Scene()
 
 	// Tab UI
 	pMyForm->m_TabUI.m_TabTexSpriteUV.Ready_TabTexSpriteUV();
+	pMyForm->m_TabUI.m_TabTexSpriteUV.m_pToolUICanvas = m_pUICanvas;
 
 	for (_uint i = 0; i < 500; ++i)
 	{
@@ -362,7 +363,7 @@ HRESULT CToolSceneStage::Ready_LayerUI(wstring wstrLayerTag)
 									 _vec3(0.0f),
 									 _vec3(0.0f));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"UICanvas", pGameObj), E_FAIL);
-
+	m_pUICanvas = static_cast<CToolUICanvas*>(pGameObj);
 
 	return S_OK;
 }

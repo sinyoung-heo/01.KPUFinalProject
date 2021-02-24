@@ -10,6 +10,7 @@ namespace Engine
 	class CDescriptorHeapMgr;
 }
 
+class CToolUICanvas;
 
 
 class CTabTexSpriteUV : public CDialogEx
@@ -42,6 +43,8 @@ public:
 	Engine::CComponentMgr*		m_pComponentMgr		= nullptr;
 	Engine::CDescriptorHeapMgr* m_pDescriptorHeapMgr = nullptr;
 
+	CToolUICanvas* m_pToolUICanvas = nullptr;
+
 	/*__________________________________________________________________________________________________________
 	[ Control ]
 	____________________________________________________________________________________________________________*/
@@ -59,4 +62,10 @@ public:
 	afx_msg void	OnLbnSelchangeList2000_TextureIndex();
 	CListBox		m_ListBoxTexIndex;
 	_uint			m_iSelectTexIndex = 0;
+
+
+	CEdit	m_EditCanvasWidth;
+	CEdit	m_EditCanvasHeight;
+	int		m_iCanvasWidth;
+	int		m_iCanvasHeight;
 };
