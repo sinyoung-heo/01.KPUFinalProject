@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Baraka_M_Mystellium.h"
+#include "NPC_Boy.h"
 
 #include "GraphicDevice.h"
 #include "DirectInput.h"
@@ -10,18 +10,18 @@
 #include "RenderTarget.h"
 #include "TimeMgr.h"
 
-CBaraka_M_Mystellium::CBaraka_M_Mystellium(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CNPC_Boy::CNPC_Boy(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
 }
 
-CBaraka_M_Mystellium::CBaraka_M_Mystellium(const CBaraka_M_Mystellium & rhs)
+CNPC_Boy::CNPC_Boy(const CNPC_Boy & rhs)
 	: Engine::CGameObject(rhs)
 	, m_wstrMeshTag(rhs.m_wstrMeshTag)
 {
 }
 
-HRESULT CBaraka_M_Mystellium::Ready_GameObject(wstring wstrMeshTag,
+HRESULT CNPC_Boy::Ready_GameObject(wstring wstrMeshTag,
 									wstring wstrNaviMeshTag,
 									const _vec3 & vScale, 
 									const _vec3 & vAngle, 
@@ -51,7 +51,7 @@ HRESULT CBaraka_M_Mystellium::Ready_GameObject(wstring wstrMeshTag,
 	return S_OK;
 }
 
-HRESULT CBaraka_M_Mystellium::LateInit_GameObject()
+HRESULT CNPC_Boy::LateInit_GameObject()
 {
 	/*__________________________________________________________________________________________________________
 	[ Get GameObject - DynamicCamera ]
@@ -67,7 +67,7 @@ HRESULT CBaraka_M_Mystellium::LateInit_GameObject()
 	return S_OK;
 }
 
-_int CBaraka_M_Mystellium::Update_GameObject(const _float & fTimeDelta)
+_int CNPC_Boy::Update_GameObject(const _float & fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
@@ -83,7 +83,7 @@ _int CBaraka_M_Mystellium::Update_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CBaraka_M_Mystellium::LateUpdate_GameObject(const _float & fTimeDelta)
+_int CNPC_Boy::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
@@ -101,7 +101,7 @@ _int CBaraka_M_Mystellium::LateUpdate_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-void CBaraka_M_Mystellium::Render_GameObject(const _float & fTimeDelta)
+void CNPC_Boy::Render_GameObject(const _float & fTimeDelta)
 {
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
@@ -113,13 +113,13 @@ void CBaraka_M_Mystellium::Render_GameObject(const _float & fTimeDelta)
 	m_pMeshCom->Render_DynamicMesh(m_pShaderCom);
 }
 
-void CBaraka_M_Mystellium::Render_ShadowDepth(const _float & fTimeDelta)
+void CNPC_Boy::Render_ShadowDepth(const _float & fTimeDelta)
 {
 	Set_ConstantTableShadowDepth();
 	m_pMeshCom->Render_DynamicMeshShadowDepth(m_pShadowCom);
 }
 
-void CBaraka_M_Mystellium::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList * pCommandList, const _int& iContextIdx)
+void CNPC_Boy::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList * pCommandList, const _int& iContextIdx)
 {
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
@@ -131,13 +131,13 @@ void CBaraka_M_Mystellium::Render_GameObject(const _float& fTimeDelta, ID3D12Gra
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
-void CBaraka_M_Mystellium::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList * pCommandList, const _int& iContextIdx)
+void CNPC_Boy::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList * pCommandList, const _int& iContextIdx)
 {
 	Set_ConstantTableShadowDepth();
 	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 }
 
-HRESULT CBaraka_M_Mystellium::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
+HRESULT CNPC_Boy::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -174,7 +174,7 @@ HRESULT CBaraka_M_Mystellium::Add_Component(wstring wstrMeshTag, wstring wstrNav
 	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderBox", m_pColliderBoxCom);
 
 	// NaviMesh
-	m_pNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(wstrNaviMeshTag, Engine::ID_DYNAMIC));
+	m_pNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(wstrNaviMeshTag.c_str(), Engine::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);
 	m_pNaviMeshCom->AddRef();
 	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
@@ -182,7 +182,7 @@ HRESULT CBaraka_M_Mystellium::Add_Component(wstring wstrMeshTag, wstring wstrNav
 	return S_OK;
 }
 
-void CBaraka_M_Mystellium::Set_ConstantTable()
+void CNPC_Boy::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -205,7 +205,7 @@ void CBaraka_M_Mystellium::Set_ConstantTable()
 		m_fDeltaTime = 0.f;
 }
 
-void CBaraka_M_Mystellium::Set_ConstantTableShadowDepth()
+void CNPC_Boy::Set_ConstantTableShadowDepth()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -224,14 +224,14 @@ void CBaraka_M_Mystellium::Set_ConstantTableShadowDepth()
 
 }
 
-Engine::CGameObject* CBaraka_M_Mystellium::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
+Engine::CGameObject* CNPC_Boy::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
 									   wstring wstrMeshTag, 
 									   wstring wstrNaviMeshTag,
 									   const _vec3 & vScale, 
 									   const _vec3 & vAngle, 
 									   const _vec3 & vPos)
 {
-	CBaraka_M_Mystellium* pInstance = new CBaraka_M_Mystellium(pGraphicDevice, pCommandList);
+	CNPC_Boy* pInstance = new CNPC_Boy(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, wstrNaviMeshTag, vScale, vAngle, vPos)))
 		Engine::Safe_Release(pInstance);
@@ -239,7 +239,7 @@ Engine::CGameObject* CBaraka_M_Mystellium::Create(ID3D12Device * pGraphicDevice,
 	return pInstance;
 }
 
-void CBaraka_M_Mystellium::Free()
+void CNPC_Boy::Free()
 {
 	Engine::CGameObject::Free();
 

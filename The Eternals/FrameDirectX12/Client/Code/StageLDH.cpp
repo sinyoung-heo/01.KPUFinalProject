@@ -16,13 +16,6 @@
 #include "SkyBox.h"
 #include "TerrainMeshObject.h"
 
-#include "Chicken.h"
-#include "Cat.h"
-#include "Aman_boy.h"
-#include "Human_boy.h"
-#include "NPC_Villagers.h"
-
-
 CStageLDH::CStageLDH(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
 {

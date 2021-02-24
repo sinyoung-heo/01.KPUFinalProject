@@ -168,16 +168,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\FrameServer\Server\Header\protocol.h" />
-    <ClInclude Include="..\Code\Aman_boy.h" />
-    <ClInclude Include="..\Code\Baraka_M_Extractor.h" />
-    <ClInclude Include="..\Code\Baraka_M_Merchant.h" />
-    <ClInclude Include="..\Code\Baraka_M_Mystellium.h" />
-    <ClInclude Include="..\Code\Cat.h" />
-    <ClInclude Include="..\Code\Chicken.h" />
+    <ClInclude Include="..\Code\NPC_Animal.h" />
     <ClInclude Include="..\Code\DebugCamera.h" />
     <ClInclude Include="..\Code\DistortionDisk.h" />
-    <ClInclude Include="..\Code\Human_boy.h" />
-    <ClInclude Include="..\Code\Human_girl.h" />
+    <ClInclude Include="..\Code\NPC_Boy.h" />
     <ClInclude Include="..\Code\Loading.h" />
     <ClInclude Include="..\Code\CubeObject.h" />
     <ClInclude Include="..\Code\DynamicCamera.h" />
@@ -221,16 +215,10 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Code\Aman_boy.cpp" />
-    <ClCompile Include="..\Code\Baraka_M_Extractor.cpp" />
-    <ClCompile Include="..\Code\Baraka_M_Merchant.cpp" />
-    <ClCompile Include="..\Code\Baraka_M_Mystellium.cpp" />
-    <ClCompile Include="..\Code\Cat.cpp" />
-    <ClCompile Include="..\Code\Chicken.cpp" />
+    <ClCompile Include="..\Code\NPC_Animal.cpp" />
     <ClCompile Include="..\Code\DebugCamera.cpp" />
     <ClCompile Include="..\Code\DistortionDisk.cpp" />
-    <ClCompile Include="..\Code\Human_boy.cpp" />
-    <ClCompile Include="..\Code\Human_girl.cpp" />
+    <ClCompile Include="..\Code\NPC_Boy.cpp" />
     <ClCompile Include="..\Code\Loading.cpp" />
     <ClCompile Include="..\Code\CubeObject.cpp" />
     <ClCompile Include="..\Code\DynamicCamera.cpp" />

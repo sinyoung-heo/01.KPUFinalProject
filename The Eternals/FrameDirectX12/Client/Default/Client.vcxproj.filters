@@ -115,38 +115,20 @@
     <Filter Include="02.GameObject\99.SampleObject\11.NPC">
       <UniqueIdentifier>{8d3d6604-efa6-4103-bbbe-f6afc93b32f0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\99.SampleObject\11.NPC\00.Chicken">
-      <UniqueIdentifier>{d02c0eb4-d229-4c01-bcd6-c466296abc78}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.SampleObject\11.NPC\01.Cat">
-      <UniqueIdentifier>{7868282e-346a-48ea-95c9-f04227f70baf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.SampleObject\11.NPC\02.Aman_boy">
-      <UniqueIdentifier>{3e6cc183-dd15-45ab-9388-2ecf677a7abd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.SampleObject\11.NPC\03.Human_boy">
-      <UniqueIdentifier>{80c37e2d-3841-42a8-85b1-9f2dfc506d06}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.SampleObject\11.NPC\04.Human_girl">
-      <UniqueIdentifier>{f6eed2c5-64d1-4f35-b85f-c9e8fb472f58}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.SampleObject\11.NPC\05.NPC_Villagers">
-      <UniqueIdentifier>{3973e66e-60c9-4e24-9477-8c6558e6ce19}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.SampleObject\11.NPC\06.Baraka_M_Extractor">
-      <UniqueIdentifier>{a8f01339-d40f-496b-88f5-8e2350a1a980}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.SampleObject\11.NPC\07.Baraka_M_Merchant">
-      <UniqueIdentifier>{dac94750-1ce4-4036-8069-503122cc8a46}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.SampleObject\11.NPC\08.Baraka_M_Mystellium">
-      <UniqueIdentifier>{931cfdba-3150-47de-8ddb-4d03d6284b3b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\99.SampleObject\12.TexEffectInstance">
       <UniqueIdentifier>{8127f386-d54a-487e-be8b-709a071ca813}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\99.SampleObject\13.TestCollisionObject">
       <UniqueIdentifier>{aee3eebd-2978-42e2-9fe0-891608d742c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.SampleObject\11.NPC\00.NPC_Animal">
+      <UniqueIdentifier>{d02c0eb4-d229-4c01-bcd6-c466296abc78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.SampleObject\11.NPC\01.NPC_Boy">
+      <UniqueIdentifier>{80c37e2d-3841-42a8-85b1-9f2dfc506d06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.SampleObject\11.NPC\02.NPC_Villagers">
+      <UniqueIdentifier>{3973e66e-60c9-4e24-9477-8c6558e6ce19}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -274,32 +256,8 @@
     <ClInclude Include="..\Code\ServerMath.h">
       <Filter>97.Mgr\03.ServerMath</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\Chicken.h">
-      <Filter>02.GameObject\99.SampleObject\11.NPC\00.Chicken</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\Cat.h">
-      <Filter>02.GameObject\99.SampleObject\11.NPC\01.Cat</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\Aman_boy.h">
-      <Filter>02.GameObject\99.SampleObject\11.NPC\02.Aman_boy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\Human_boy.h">
-      <Filter>02.GameObject\99.SampleObject\11.NPC\03.Human_boy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\Human_girl.h">
-      <Filter>02.GameObject\99.SampleObject\11.NPC\04.Human_girl</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\NPC_Villagers.h">
-      <Filter>02.GameObject\99.SampleObject\11.NPC\05.NPC_Villagers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\Baraka_M_Extractor.h">
-      <Filter>02.GameObject\99.SampleObject\11.NPC\06.Baraka_M_Extractor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\Baraka_M_Merchant.h">
-      <Filter>02.GameObject\99.SampleObject\11.NPC\07.Baraka_M_Merchant</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\Baraka_M_Mystellium.h">
-      <Filter>02.GameObject\99.SampleObject\11.NPC\08.Baraka_M_Mystellium</Filter>
+      <Filter>02.GameObject\99.SampleObject\11.NPC\02.NPC_Villagers</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\TexEffectInstance.h">
       <Filter>02.GameObject\99.SampleObject\12.TexEffectInstance</Filter>
@@ -309,6 +267,12 @@
     </ClInclude>
     <ClInclude Include="..\Code\TestCollisonObject.h">
       <Filter>02.GameObject\99.SampleObject\13.TestCollisionObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\NPC_Animal.h">
+      <Filter>02.GameObject\99.SampleObject\11.NPC\00.NPC_Animal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\NPC_Boy.h">
+      <Filter>02.GameObject\99.SampleObject\11.NPC\01.NPC_Boy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -405,32 +369,8 @@
     <ClCompile Include="..\Code\ServerMath.cpp">
       <Filter>97.Mgr\03.ServerMath</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\Chicken.cpp">
-      <Filter>02.GameObject\99.SampleObject\11.NPC\00.Chicken</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\Cat.cpp">
-      <Filter>02.GameObject\99.SampleObject\11.NPC\01.Cat</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\Aman_boy.cpp">
-      <Filter>02.GameObject\99.SampleObject\11.NPC\02.Aman_boy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\Human_boy.cpp">
-      <Filter>02.GameObject\99.SampleObject\11.NPC\03.Human_boy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\Human_girl.cpp">
-      <Filter>02.GameObject\99.SampleObject\11.NPC\04.Human_girl</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\NPC_Villagers.cpp">
-      <Filter>02.GameObject\99.SampleObject\11.NPC\05.NPC_Villagers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\Baraka_M_Extractor.cpp">
-      <Filter>02.GameObject\99.SampleObject\11.NPC\06.Baraka_M_Extractor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\Baraka_M_Merchant.cpp">
-      <Filter>02.GameObject\99.SampleObject\11.NPC\07.Baraka_M_Merchant</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\Baraka_M_Mystellium.cpp">
-      <Filter>02.GameObject\99.SampleObject\11.NPC\08.Baraka_M_Mystellium</Filter>
+      <Filter>02.GameObject\99.SampleObject\11.NPC\02.NPC_Villagers</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\TexEffectInstance.cpp">
       <Filter>02.GameObject\99.SampleObject\12.TexEffectInstance</Filter>
@@ -440,6 +380,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\TestCollisonObject.cpp">
       <Filter>02.GameObject\99.SampleObject\13.TestCollisionObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\NPC_Animal.cpp">
+      <Filter>02.GameObject\99.SampleObject\11.NPC\00.NPC_Animal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\NPC_Boy.cpp">
+      <Filter>02.GameObject\99.SampleObject\11.NPC\01.NPC_Boy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

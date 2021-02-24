@@ -3,18 +3,6 @@
 #include "Include.h"
 #include "GameObject.h"
 
-/*____________________________________________________________________
-Player Direction
-______________________________________________________________________*/
-#define	FRONT		0.f
-#define	RIGHT		90.f
-#define	RIGHT_UP	45.f
-#define	RIGHT_DOWN	135.f
-#define	LEFT		270.f
-#define	LEFT_UP		315.f
-#define	LEFT_DOWN	225.f
-#define	BACK		180.f
-
 namespace Engine
 {
 	class CMesh;
@@ -28,12 +16,12 @@ namespace Engine
 
 class CDynamicCamera;
 
-class CBaraka_M_Merchant : public Engine::CGameObject
+class CNPC_Boy : public Engine::CGameObject
 {
 private:
-	explicit CBaraka_M_Merchant(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CBaraka_M_Merchant(const CBaraka_M_Merchant& rhs);
-	virtual ~CBaraka_M_Merchant() = default;
+	explicit CNPC_Boy(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	explicit CNPC_Boy(const CNPC_Boy& rhs);
+	virtual ~CNPC_Boy() = default;
 
 public:
 	// CGameObject을(를) 통해 상속됨

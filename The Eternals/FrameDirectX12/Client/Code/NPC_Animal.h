@@ -16,14 +16,14 @@ namespace Engine
 
 class CDynamicCamera;
 
-class CChicken : public Engine::CGameObject
+class CNPC_Animal : public Engine::CGameObject
 {
 	enum ANIM { A_IDLE01, A_IDLE02, A_WAIT, A_WALK, A_END };
 
 private:
-	explicit CChicken(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CChicken(const CChicken& rhs);
-	virtual ~CChicken() = default;
+	explicit CNPC_Animal(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	explicit CNPC_Animal(const CNPC_Animal& rhs);
+	virtual ~CNPC_Animal() = default;
 
 public:
 	// CGameObject을(를) 통해 상속됨

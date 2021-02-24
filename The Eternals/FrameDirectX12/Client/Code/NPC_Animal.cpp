@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Aman_boy.h"
+#include "NPC_Animal.h"
 
 #include "GraphicDevice.h"
 #include "DirectInput.h"
@@ -10,18 +10,18 @@
 #include "RenderTarget.h"
 #include "TimeMgr.h"
 
-CAman_boy::CAman_boy(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CNPC_Animal::CNPC_Animal(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
 }
 
-CAman_boy::CAman_boy(const CAman_boy & rhs)
+CNPC_Animal::CNPC_Animal(const CNPC_Animal & rhs)
 	: Engine::CGameObject(rhs)
 	, m_wstrMeshTag(rhs.m_wstrMeshTag)
 {
 }
 
-HRESULT CAman_boy::Ready_GameObject(wstring wstrMeshTag,
+HRESULT CNPC_Animal::Ready_GameObject(wstring wstrMeshTag,
 									wstring wstrNaviMeshTag,
 									const _vec3 & vScale, 
 									const _vec3 & vAngle, 
@@ -39,19 +39,22 @@ HRESULT CAman_boy::Ready_GameObject(wstring wstrMeshTag,
 										   m_pMeshCom->Get_MinVector(),
 										   m_pMeshCom->Get_MaxVector());
 
-
-	m_pInfoCom->m_fSpeed = 5.0f;
+	m_pInfoCom->m_fSpeed = 0.5f;
+	m_bIsMoveStop = true;
 
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
-	m_uiAnimIdx = 1;
+	m_uiAnimIdx = 3;
 	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+	m_eCurAnimation = ANIM::A_IDLE01;
+	m_ePreAnimation = ANIM::A_IDLE01;
 
 	return S_OK;
 }
 
-HRESULT CAman_boy::LateInit_GameObject()
+HRESULT CNPC_Animal::LateInit_GameObject()
 {
 	/*__________________________________________________________________________________________________________
 	[ Get GameObject - DynamicCamera ]
@@ -67,30 +70,32 @@ HRESULT CAman_boy::LateInit_GameObject()
 	return S_OK;
 }
 
-_int CAman_boy::Update_GameObject(const _float & fTimeDelta)
+_int CNPC_Animal::Update_GameObject(const _float & fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
-	/*__________________________________________________________________________________________________________
-	[ TransCom - Update WorldMatrix ]
-	____________________________________________________________________________________________________________*/
-	Engine::CGameObject::Update_GameObject(fTimeDelta);
-
-
-	return NO_EVENT;
-}
-
-_int CAman_boy::LateUpdate_GameObject(const _float & fTimeDelta)
-{
-	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
+	/* Animation AI */
+	Change_Animation(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+
+	/*__________________________________________________________________________________________________________
+	[ TransCom - Update WorldMatrix ]
+	____________________________________________________________________________________________________________*/
+	Engine::CGameObject::Update_GameObject(fTimeDelta);
+
+	return NO_EVENT;
+}
+
+_int CNPC_Animal::LateUpdate_GameObject(const _float & fTimeDelta)
+{
+	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
 	/*__________________________________________________________________________________________________________
 	[ Animation KeyFrame Index ]
@@ -101,7 +106,7 @@ _int CAman_boy::LateUpdate_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-void CAman_boy::Render_GameObject(const _float & fTimeDelta)
+void CNPC_Animal::Render_GameObject(const _float & fTimeDelta)
 {
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
@@ -113,14 +118,16 @@ void CAman_boy::Render_GameObject(const _float & fTimeDelta)
 	m_pMeshCom->Render_DynamicMesh(m_pShaderCom);
 }
 
-void CAman_boy::Render_ShadowDepth(const _float & fTimeDelta)
+void CNPC_Animal::Render_ShadowDepth(const _float & fTimeDelta)
 {
 	Set_ConstantTableShadowDepth();
 	m_pMeshCom->Render_DynamicMeshShadowDepth(m_pShadowCom);
 }
 
-void CAman_boy::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList * pCommandList, const _int& iContextIdx)
+void CNPC_Animal::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList * pCommandList, const _int& iContextIdx)
 {
+	Active_NPC(fTimeDelta);
+
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
@@ -131,13 +138,13 @@ void CAman_boy::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsComman
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
-void CAman_boy::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList * pCommandList, const _int& iContextIdx)
+void CNPC_Animal::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList * pCommandList, const _int& iContextIdx)
 {
 	Set_ConstantTableShadowDepth();
 	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 }
 
-HRESULT CAman_boy::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
+HRESULT CNPC_Animal::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -174,7 +181,7 @@ HRESULT CAman_boy::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderBox", m_pColliderBoxCom);
 
 	// NaviMesh
-	m_pNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(wstrNaviMeshTag, Engine::ID_DYNAMIC));
+	m_pNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(wstrNaviMeshTag.c_str(), Engine::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);
 	m_pNaviMeshCom->AddRef();
 	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
@@ -182,7 +189,7 @@ HRESULT CAman_boy::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 	return S_OK;
 }
 
-void CAman_boy::Set_ConstantTable()
+void CNPC_Animal::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -205,7 +212,7 @@ void CAman_boy::Set_ConstantTable()
 		m_fDeltaTime = 0.f;
 }
 
-void CAman_boy::Set_ConstantTableShadowDepth()
+void CNPC_Animal::Set_ConstantTableShadowDepth()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -224,14 +231,82 @@ void CAman_boy::Set_ConstantTableShadowDepth()
 
 }
 
-Engine::CGameObject* CAman_boy::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
+void CNPC_Animal::Active_NPC(const _float& fTimeDelta)
+{
+	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+	m_pTransCom->m_vDir.Normalize();
+	
+	/* NPC MOVE */
+	if (!m_bIsMoveStop)
+	{
+		// NaviMesh 이동.		
+		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vecArivePos))
+		{
+			m_eCurAnimation = A_WALK;
+
+			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+														 &m_pTransCom->m_vDir,
+														 m_pInfoCom->m_fSpeed * fTimeDelta);
+			m_pTransCom->m_vPos = vPos;
+		}
+		else
+		{
+			m_eCurAnimation = A_IDLE01;
+			m_bIsMoveStop = true;
+		}
+	}
+}
+
+void CNPC_Animal::Change_Animation(const _float& fTimeDelta)
+{
+	switch (m_eCurAnimation)
+	{
+
+	case A_IDLE01:
+	{
+		m_uiAnimIdx = 3;
+
+		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			m_eCurAnimation = A_IDLE02;
+	}
+	break;
+
+	case A_IDLE02:
+	{
+		m_uiAnimIdx = 2;
+
+		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			m_eCurAnimation = A_WAIT;
+	}
+	break;
+
+	case A_WAIT: 
+	{
+		m_uiAnimIdx = 1;
+
+		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			m_eCurAnimation = A_IDLE01;
+	}
+	break;
+
+	case A_WALK:
+	{
+		m_uiAnimIdx = 0;
+	}
+	break;
+
+	}
+	m_ePreAnimation = m_eCurAnimation;
+}
+
+Engine::CGameObject* CNPC_Animal::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
 									   wstring wstrMeshTag, 
 									   wstring wstrNaviMeshTag,
 									   const _vec3 & vScale, 
 									   const _vec3 & vAngle, 
 									   const _vec3 & vPos)
 {
-	CAman_boy* pInstance = new CAman_boy(pGraphicDevice, pCommandList);
+	CNPC_Animal* pInstance = new CNPC_Animal(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, wstrNaviMeshTag, vScale, vAngle, vPos)))
 		Engine::Safe_Release(pInstance);
@@ -239,7 +314,7 @@ Engine::CGameObject* CAman_boy::Create(ID3D12Device * pGraphicDevice, ID3D12Grap
 	return pInstance;
 }
 
-void CAman_boy::Free()
+void CNPC_Animal::Free()
 {
 	Engine::CGameObject::Free();
 

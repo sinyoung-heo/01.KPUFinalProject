@@ -4,8 +4,8 @@
 
 #include "TestPlayer.h"
 #include "TestOthers.h"
-#include "Chicken.h"
-#include "Human_boy.h"
+#include "NPC_Animal.h"
+#include "NPC_Boy.h"
 #include "NPC_Villagers.h"
 #include "DynamicCamera.h"
 
@@ -312,30 +312,30 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 		if (!strcmp(packet->name, "Chicken") || !strcmp(packet->name, "Cat"))
 		{
-			pGameObj = CChicken::Create(m_pGraphicDevice, m_pCommandList,
-										wstring(packet->name, &packet->name[MAX_ID_LEN]),			// MeshTag
+			pGameObj = CNPC_Animal::Create(m_pGraphicDevice, m_pCommandList,
+										wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
 										wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
-										_vec3(0.05f, 0.05f, 0.05f),									// Scale
-										_vec3(0.0f, 0.0f, 0.0f),									// Angle
-										_vec3(packet->posX, packet->posY, packet->posZ));			// Pos
+										_vec3(0.05f, 0.05f, 0.05f),										// Scale
+										_vec3(0.0f, 0.0f, 0.0f),										// Angle
+										_vec3(packet->posX, packet->posY, packet->posZ));				// Pos
 		}
 		else if (!strcmp(packet->name, "Aman_boy") || !strcmp(packet->name, "Human_boy"))
 		{
-			pGameObj = CHuman_boy::Create(m_pGraphicDevice, m_pCommandList,
-										wstring(packet->name, &packet->name[MAX_ID_LEN]),			// MeshTag
+			pGameObj = CNPC_Boy::Create(m_pGraphicDevice, m_pCommandList,
+										wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
 										wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
-										_vec3(0.05f, 0.05f, 0.05f),									// Scale
-										_vec3(0.0f, 0.0f, 0.0f),									// Angle
-										_vec3(packet->posX, packet->posY, packet->posZ));			// Pos
+										_vec3(0.05f, 0.05f, 0.05f),										// Scale
+										_vec3(0.0f, 0.0f, 0.0f),										// Angle
+										_vec3(packet->posX, packet->posY, packet->posZ));				// Pos
 		}
 		else if (!strcmp(packet->name, "NPC_Villagers"))
 		{
 			pGameObj = CNPC_Villagers::Create(m_pGraphicDevice, m_pCommandList,
-										wstring(packet->name, &packet->name[MAX_ID_LEN]),			// MeshTag
+										wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
 										wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
-										_vec3(0.05f, 0.05f, 0.05f),									// Scale
-										_vec3(0.0f, 0.0f, 0.0f),									// Angle
-										_vec3(packet->posX, packet->posY, packet->posZ));			// Pos
+										_vec3(0.05f, 0.05f, 0.05f),										// Scale
+										_vec3(0.0f, 0.0f, 0.0f),										// Angle
+										_vec3(packet->posX, packet->posY, packet->posZ));				// Pos
 		}
 
 		pGameObj->Set_ServerNumber(packet->id);
