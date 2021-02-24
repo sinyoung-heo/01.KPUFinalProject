@@ -1,38 +1,33 @@
 #include "stdafx.h"
-#include "ToolUICanvas.h"
+#include "ToolGridLine.h"
 
-CToolUICanvas::CToolUICanvas(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CToolGridLine::CToolGridLine(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
 }
 
-
-HRESULT CToolUICanvas::Ready_GameObject(const _vec3& vPos, 
-										const _vec3& vScale, 
+HRESULT CToolGridLine::Ready_GameObject(const _vec3& vScale,
+										const _vec3& vPos,
 										const _long& iUIDepth)
 {
-	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, false), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
-	m_pTransCom->m_vPos		= vPos;
 	m_pTransCom->m_vScale	= vScale;
+	m_pTransCom->m_vPos		= vPos;
+	m_UIDepth               = iUIDepth;
 
-	m_uiTexIdx	= 0;
-	m_UIDepth	= iUIDepth;
-	
+	m_pShaderCom->Set_PipelineStatePass(0);
 
 	return S_OK;
 }
 
-HRESULT CToolUICanvas::LateInit_GameObject()
+HRESULT CToolGridLine::LateInit_GameObject()
 {
-	// SetUp Shader ConstantBuffer
-	m_pShaderCom->SetUp_ShaderConstantBuffer();
-
 	return S_OK;
 }
 
-_int CToolUICanvas::Update_GameObject(const _float & fTimeDelta)
+_int CToolGridLine::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
@@ -57,77 +52,71 @@ _int CToolUICanvas::Update_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CToolUICanvas::LateUpdate_GameObject(const _float & fTimeDelta)
+_int CToolGridLine::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
 	return NO_EVENT;
 }
 
-void CToolUICanvas::Render_GameObject(const _float & fTimeDelta)
+void CToolGridLine::Render_GameObject(const _float& fTimeDelta)
 {
-	if (nullptr != m_pTexDescriptorHeap)
-	{
-		Set_ConstantTable();
-		m_pShaderCom->Begin_Shader(m_pTexDescriptorHeap,
-								   0,
-								   m_uiTexIdx,
-								   Engine::MATRIXID::ORTHO);
-		m_pBufferCom->Begin_Buffer();
+	Set_ConstantTable();
+	m_pShaderCom->Begin_Shader(nullptr, 0, Engine::MATRIXID::ORTHO);
+	m_pBufferCom->Begin_Buffer();
 
-		m_pBufferCom->Render_Buffer();
-	}
+	m_pBufferCom->Render_Buffer();
 }
 
-HRESULT CToolUICanvas::Add_Component()
+HRESULT CToolGridLine::Add_Component()
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
 	// Buffer
-	m_pBufferCom = static_cast<Engine::CRcTex*>(m_pComponentMgr->Clone_Component(L"RcTex", Engine::COMPONENTID::ID_STATIC));
+	m_pBufferCom = static_cast<Engine::CRcCol*>(m_pComponentMgr->Clone_Component(L"RcCol", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
 	m_pBufferCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Buffer", m_pBufferCom);
 
-	// Shader
-	m_pShaderCom = static_cast<Engine::CShaderTexture*>(m_pComponentMgr->Clone_Component(L"ShaderTexture", Engine::COMPONENTID::ID_STATIC));
+	// ShaderColor
+	m_pShaderCom = static_cast<Engine::CShaderColor*>(m_pComponentMgr->Clone_Component(L"ShaderColor", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->AddRef();
-	m_pShaderCom->Set_PipelineStatePass(3);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
 	return S_OK;
 }
 
-void CToolUICanvas::Set_ConstantTable()
+void CToolGridLine::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
-	Engine::CB_SHADER_TEXTURE tCB_ShaderTexture;
-	ZeroMemory(&tCB_ShaderTexture, sizeof(Engine::CB_SHADER_TEXTURE));
-	tCB_ShaderTexture.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	Engine::CB_SHADER_COLOR tCB_ShaderColor;
+	ZeroMemory(&tCB_ShaderColor, sizeof(Engine::CB_SHADER_COLOR));
+	tCB_ShaderColor.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderColor.vColor		= _rgba(1.0f, 0.0f, 0.0f, 1.0f);
 
-	m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
+	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ShaderColor);
 }
 
-Engine::CGameObject* CToolUICanvas::Create(ID3D12Device * pGraphicDevice,
-										   ID3D12GraphicsCommandList * pCommandList,
+Engine::CGameObject* CToolGridLine::Create(ID3D12Device* pGraphicDevice, 
+										   ID3D12GraphicsCommandList* pCommandList, 
+										   const _vec3& vScale, 
 										   const _vec3& vPos,
-										   const _vec3& vScale,
 										   const _long& iUIDepth)
 {
-	CToolUICanvas* pInstance = new CToolUICanvas(pGraphicDevice, pCommandList);
+	CToolGridLine* pInstance = new CToolGridLine(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(vPos, vPos, iUIDepth)))
+	if (FAILED(pInstance->Ready_GameObject(vScale, vPos, iUIDepth)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
 }
 
-void CToolUICanvas::Free()
+void CToolGridLine::Free()
 {
-	Engine::CGameObject::Free();
+	CGameObject::Free();
 
 	Engine::Safe_Release(m_pBufferCom);
 	Engine::Safe_Release(m_pShaderCom);

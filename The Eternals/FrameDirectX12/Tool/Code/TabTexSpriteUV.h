@@ -51,21 +51,29 @@ public:
 	afx_msg void	OnNMClickTree2000_TreeTextureTag(NMHDR* pNMHDR, LRESULT* pResult);
 	CTreeCtrl		m_TexUITreeCtrl;
 
-	CEdit	m_EditTextureTag;
-	CString	m_strTextureTag;
+	CEdit			m_EditTextureTag;
+	CString			m_strTextureTag;
 
-	CEdit	m_EditTextureWidth;
-	CEdit	m_EditTexturHeight;
-	int		m_iTextureWidth;
-	int		m_iTextureHeight;
+	CEdit			m_EditTextureWidth;
+	CEdit			m_EditTexturHeight;
+	int				m_iTextureWidth;
+	int				m_iTextureHeight;
 
 	afx_msg void	OnLbnSelchangeList2000_TextureIndex();
 	CListBox		m_ListBoxTexIndex;
 	_uint			m_iSelectTexIndex = 0;
 
 
-	CEdit	m_EditCanvasWidth;
-	CEdit	m_EditCanvasHeight;
-	int		m_iCanvasWidth;
-	int		m_iCanvasHeight;
+	CEdit			m_EditCanvasWidth;
+	CEdit			m_EditCanvasHeight;
+	float			m_fCanvasWidth;
+	float			m_fCanvasHeight;
+
+	HRESULT			Create_GridLine(const _float& fGridWidth, const _float& fGridHeight);
+	afx_msg void	OnEnChangeEdit2003_GridWidth();
+	afx_msg void	OnEnChangeEdit2004_GridHeight();
+	CEdit			m_EditGridWidth;
+	CEdit			m_EditGridHeight;
+	float			m_fGridWidth;
+	float			m_fGridHeight;
 };

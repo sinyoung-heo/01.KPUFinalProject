@@ -119,6 +119,9 @@
     <Filter Include="03.ToolGameObject\02.ToolUI\00.ToolUICanvas">
       <UniqueIdentifier>{a0d63b96-f6e8-4d5a-82d1-03028c41b888}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.ToolGameObject\02.ToolUI\01.ToolGridLine">
+      <UniqueIdentifier>{8891f774-f082-4876-b860-1093418b76c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
@@ -238,7 +241,12 @@
     <ClInclude Include="..\Code\Tab3DUI.h">
       <Filter>00.MFC Class\04.TapControl\02.TabUI\02.Tab3DUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\ToolUICanvas.h" />
+    <ClInclude Include="..\Code\ToolGridLine.h">
+      <Filter>03.ToolGameObject\02.ToolUI\01.ToolGridLine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ToolUICanvas.h">
+      <Filter>03.ToolGameObject\02.ToolUI\00.ToolUICanvas</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -331,7 +339,12 @@
     <ClCompile Include="..\Code\Tab3DUI.cpp">
       <Filter>00.MFC Class\04.TapControl\02.TabUI\02.Tab3DUI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\ToolUICanvas.cpp" />
+    <ClCompile Include="..\Code\ToolGridLine.cpp">
+      <Filter>03.ToolGameObject\02.ToolUI\01.ToolGridLine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ToolUICanvas.cpp">
+      <Filter>03.ToolGameObject\02.ToolUI\00.ToolUICanvas</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Tool.rc">

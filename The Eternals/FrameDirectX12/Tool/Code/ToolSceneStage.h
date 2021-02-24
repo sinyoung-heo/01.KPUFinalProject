@@ -15,6 +15,7 @@ class CToolTerrain;
 class CToolStaticMesh;
 class CToolCell;
 class CToolUICanvas;
+class CToolGridLine;
 
 class CToolSceneStage : public Engine::CScene
 {

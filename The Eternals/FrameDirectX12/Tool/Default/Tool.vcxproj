@@ -210,6 +210,7 @@
     <ClInclude Include="..\Code\ToolCell.h" />
     <ClInclude Include="..\Code\ToolCoordinate.h" />
     <ClInclude Include="..\Code\ToolFileInfo.h" />
+    <ClInclude Include="..\Code\ToolGridLine.h" />
     <ClInclude Include="..\Code\ToolLoading.h" />
     <ClInclude Include="..\Code\ToolMainApp.h" />
     <ClInclude Include="..\Code\ToolSceneLogo.h" />
@@ -252,6 +253,7 @@
     <ClCompile Include="..\Code\ToolCell.cpp" />
     <ClCompile Include="..\Code\ToolCoordinate.cpp" />
     <ClCompile Include="..\Code\ToolFileInfo.cpp" />
+    <ClCompile Include="..\Code\ToolGridLine.cpp" />
     <ClCompile Include="..\Code\ToolLoading.cpp" />
     <ClCompile Include="..\Code\ToolMainApp.cpp" />
     <ClCompile Include="..\Code\ToolSceneLogo.cpp" />
