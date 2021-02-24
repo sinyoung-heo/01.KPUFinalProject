@@ -21,10 +21,10 @@ typedef struct tagShaderTexture
 	float4x4	matWorld;
 	
 	// Texture Sprite.
-	int			iFrameCnt;	// 스프라이트 이미지 X축 개수.
-	int			iCurFrame;	// 현재 그려지는 이미지의 X축 Index.
-	int			iSceneCnt;	// 스프라이트 이미지 Y축 개수.
-	int			iCurScene;	// 현재 그려지는 이미지의 Y축 Index.
+	float		fFrameCnt;	// 스프라이트 이미지 X축 개수.
+	float		fCurFrame;	// 현재 그려지는 이미지의 X축 Index.
+	float		fSceneCnt;	// 스프라이트 이미지 Y축 개수.
+	float		fCurScene;	// 현재 그려지는 이미지의 Y축 Index.
 	
 	// Texture Gauge.
 	float		fGauge;
@@ -57,10 +57,10 @@ struct VS_OUT
 	float4	Pos			: SV_POSITION;
 	float2	TexUV		: TEXCOORD;
 	
-	int		iFrameCnt	: TEXCOORD1;
-	int		iCurFrame	: TEXCOORD2;
-	int		iSceneCnt	: TEXCOORD3;
-	int		iCurScene	: TEXCOORD4;
+	float	fFrameCnt	: TEXCOORD1;
+	float	fCurFrame	: TEXCOORD2;
+	float	fSceneCnt	: TEXCOORD3;
+	float	fCurScene	: TEXCOORD4;
 	float	fGauge		: TEXCOORD5;
 };
 
@@ -101,18 +101,18 @@ VS_OUT VS_TEXTURE_SPRITE(VS_IN vs_input, uint iInstanceID : SV_InstanceID)
 	vs_output.Pos	= mul(float4(vs_input.Pos, 1.0f), matWVP);
 	vs_output.TexUV	= vs_input.TexUV;
 	
-	vs_output.iFrameCnt = g_ShaderTexture[iInstanceID].iFrameCnt;
-	vs_output.iCurFrame = g_ShaderTexture[iInstanceID].iCurFrame;
-	vs_output.iSceneCnt = g_ShaderTexture[iInstanceID].iSceneCnt;
-	vs_output.iCurScene = g_ShaderTexture[iInstanceID].iCurScene;
+	vs_output.fFrameCnt = g_ShaderTexture[iInstanceID].fFrameCnt;
+	vs_output.fCurFrame = g_ShaderTexture[iInstanceID].fCurFrame;
+	vs_output.fSceneCnt = g_ShaderTexture[iInstanceID].fSceneCnt;
+	vs_output.fCurScene = g_ShaderTexture[iInstanceID].fCurScene;
 	
 	return (vs_output);
 }
 
 float4 PS_TEXTURE_SPRITE(VS_OUT ps_input) : SV_TARGET
 {
-	float u = (ps_input.TexUV.x / (float)ps_input.iFrameCnt) + ps_input.iCurFrame * (1.0f / (float)ps_input.iFrameCnt);
-	float v = (ps_input.TexUV.y / (float)ps_input.iSceneCnt) + ps_input.iCurScene * (1.0f / (float)ps_input.iSceneCnt);
+	float u = (ps_input.TexUV.x / ps_input.fFrameCnt) + ps_input.fCurFrame * (1.0f / ps_input.fFrameCnt);
+	float v = (ps_input.TexUV.y / ps_input.fSceneCnt) + ps_input.fCurScene * (1.0f / ps_input.fSceneCnt);
 	
 	float4 Color = g_TexDiffuse.Sample(g_samLinearWrap, float2(u, v));
 	

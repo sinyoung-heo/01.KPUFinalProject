@@ -64,6 +64,8 @@ public:
 	_uint			m_iSelectTexIndex = 0;
 
 
+	afx_msg void	OnEnChangeEdit2010_CanvasWidth();
+	afx_msg void	OnEnChangeEdit2010_CanvasHeight();
 	CEdit			m_EditCanvasWidth;
 	CEdit			m_EditCanvasHeight;
 	float			m_fCanvasWidth;
@@ -76,4 +78,9 @@ public:
 	CEdit			m_EditGridHeight;
 	float			m_fGridWidth;
 	float			m_fGridHeight;
+
+	float			m_fFrameCnt;
+	float			m_fCurFrame;
+	float			m_fSceneCnt;
+	float			m_fCurScene;
 };

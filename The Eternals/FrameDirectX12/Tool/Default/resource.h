@@ -162,6 +162,7 @@
 #define IDC_EDIT1070                    1119
 #define IDC_EDIT2011                    1119
 #define IDC_EDIT1071                    1120
+#define IDC_BUTTON2001                  1120
 #define IDC_BUTTON1015                  1121
 #define IDC_BUTTON1016                  1122
 #define IDC_EDIT1072                    1123
