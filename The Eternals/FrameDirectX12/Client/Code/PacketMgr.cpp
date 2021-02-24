@@ -321,11 +321,19 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		}
 		else if (!strcmp(packet->name, "Aman_boy") || !strcmp(packet->name, "Human_boy"))
 		{
+			_vec3 vAngle = _vec3(0.f);
+			if (packet->npc_num == NPC_BG)
+			{
+				if (!strcmp(packet->name, "Human_boy"))
+					vAngle = _vec3(0.0f, 90.0f, 0.0f);
+				else
+					vAngle = _vec3(0.0f, -90.0f, 0.0f);	
+			}
 			pGameObj = CNPC_Boy::Create(m_pGraphicDevice, m_pCommandList,
 										wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
 										wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
 										_vec3(0.05f, 0.05f, 0.05f),										// Scale
-										_vec3(0.0f, 0.0f, 0.0f),										// Angle
+										vAngle,															// Angle
 										_vec3(packet->posX, packet->posY, packet->posZ));				// Pos
 		}
 		else if (!strcmp(packet->name, "NPC_Villagers"))
@@ -334,7 +342,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 										wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
 										wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
 										_vec3(0.05f, 0.05f, 0.05f),										// Scale
-										_vec3(0.0f, 0.0f, 0.0f),										// Angle
+										_vec3(0.0f, -90.0f, 0.0f),										// Angle
 										_vec3(packet->posX, packet->posY, packet->posZ));				// Pos
 		}
 
