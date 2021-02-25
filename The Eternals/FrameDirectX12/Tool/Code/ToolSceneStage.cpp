@@ -454,11 +454,13 @@ void CToolSceneStage::KeyInput()
 #pragma endregion
 
 		// TabMap Mouse Picking Event.
+#pragma region TABUI_MOUSEPICKING
 		else if (pMyForm->m_bIsTabUI)
 		{
 			if (pMyForm->m_TabUI.m_bIsTabTexSpriteUV)
 				KeyInput_TabUITexSpriteUV(pMyForm->m_TabUI.m_TabTexSpriteUV);
 		}
+#pragma endregion
 
 	}
 
@@ -1040,11 +1042,17 @@ void CToolSceneStage::KeyInput_TabMapModeChange(CTabMap& TabMap)
 }
 #pragma endregion
 
-void CToolSceneStage::KeyInput_TabUITexSpriteUV(CTabTexSpriteUV& TabUI)
+
+
+
+#pragma region TABUI_TEXSPRITEUV
+void CToolSceneStage::KeyInput_TabUITexSpriteUV(CTabTexSpriteUV& TabUITexSprite)
 {
 	Engine::OBJLIST* m_plstGridRect = m_pObjectMgr->Get_OBJLIST(L"Layer_UI", L"UIGridRect");
 	if (nullptr == m_plstGridRect || m_plstGridRect->empty())
 		return;
+
+	TabUITexSprite.UpdateData(TRUE);
 
 	CMainFrame* pMainFrame	= static_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
 	CToolView*	pToolView	= static_cast<CToolView*>(pMainFrame->m_MainSplit.GetPane(0, 1));
@@ -1056,15 +1064,27 @@ void CToolSceneStage::KeyInput_TabUITexSpriteUV(CTabTexSpriteUV& TabUI)
 	for (auto& pGridRect : *m_plstGridRect)
 		static_cast<CToolGridRect*>(pGridRect)->m_bIsSelect = false;
 
-	for (auto& pGridRect : *m_plstGridRect)
+	auto iter_begin = m_plstGridRect->begin();
+	for (_int i = 0; i < TabUITexSprite.m_iRectSizeY; ++i)
 	{
-		if (PtInRect(&(static_cast<CToolGridRect*>(pGridRect)->m_tRect), ptMouse))
+		for (_int j = 0; j < TabUITexSprite.m_iRectSizeX; ++j, ++iter_begin)
 		{
-			static_cast<CToolGridRect*>(pGridRect)->m_bIsSelect = true;
-			break;
+			if (PtInRect(&(static_cast<CToolGridRect*>(*iter_begin)->m_tRect), ptMouse))
+			{
+				static_cast<CToolGridRect*>(*iter_begin)->m_bIsSelect = true;
+
+				TabUITexSprite.m_fCurFrame = (_float)j;
+				TabUITexSprite.m_fCurScene = (_float)i;
+
+				TabUITexSprite.UpdateData(FALSE);
+				return;
+			}
 		}
 	}
+
+	TabUITexSprite.UpdateData(FALSE);
 }
+#pragma endregion
 
 
 CToolSceneStage* CToolSceneStage::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)

@@ -98,7 +98,7 @@ void CToolGridRect::Set_ConstantTable()
 	Engine::CB_SHADER_COLOR tCB_ShaderColor;
 	ZeroMemory(&tCB_ShaderColor, sizeof(Engine::CB_SHADER_COLOR));
 	tCB_ShaderColor.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderColor.vColor		= _rgba(1.0f, 0.0f, 0.0f, 0.2f);
+	tCB_ShaderColor.vColor		= _rgba(0.0f, 1.0f, 0.0f, 0.25f);
 
 	m_pShaderCom->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ShaderColor);
 }

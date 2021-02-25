@@ -78,6 +78,8 @@ public:
 	float			m_fGridWidth;
 	float			m_fGridHeight;
 
+	_int			m_iRectSizeX = 0;
+	_int			m_iRectSizeY = 0;
 	float			m_fFrameCnt;
 	float			m_fCurFrame;
 	float			m_fSceneCnt;

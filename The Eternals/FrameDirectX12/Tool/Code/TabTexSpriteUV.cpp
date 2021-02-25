@@ -366,8 +366,8 @@ HRESULT CTabTexSpriteUV::Create_GridRect()
 	Engine::CGameObject* pGridRect = nullptr;
 	m_pObjectMgr->Clear_OBJLIST(L"Layer_UI", L"UIGridRect");
 
-	_int iRectSizeX = (_int)(ceil(m_fFrameCnt));
-	_int iRectSizeY = (_int)(ceil(m_fSceneCnt));
+	m_iRectSizeX = (_int)(ceil(m_fFrameCnt));
+	m_iRectSizeY = (_int)(ceil(m_fSceneCnt));
 
 	_vec3 vScale;
 	vScale.x = m_fCanvasWidth / m_fFrameCnt;
@@ -376,9 +376,9 @@ HRESULT CTabTexSpriteUV::Create_GridRect()
 
 	_vec3 vPos = _vec3(1.0f);
 
-	for (_int i = 0; i < iRectSizeY; ++i)
+	for (_int i = 0; i < m_iRectSizeY; ++i)
 	{
-		for (_int j = 0; j < iRectSizeX; ++j)
+		for (_int j = 0; j < m_iRectSizeX; ++j)
 		{
 			vPos.x = vScale.x * 0.5f + vScale.x * j;
 			vPos.y = vScale.y * 0.5f + vScale.y * i;

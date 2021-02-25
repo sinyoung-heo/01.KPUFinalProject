@@ -49,7 +49,7 @@ private:
 	void			KeyInput_TabMapModeChange(CTabMap& TabMap);
 
 	// TabUI
-	void			KeyInput_TabUITexSpriteUV(CTabTexSpriteUV& TabUI);
+	void			KeyInput_TabUITexSpriteUV(CTabTexSpriteUV& TabUITexSprite);
 
 public:
 	/*__________________________________________________________________________________________________________
