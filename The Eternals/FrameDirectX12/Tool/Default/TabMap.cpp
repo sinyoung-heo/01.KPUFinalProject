@@ -2474,6 +2474,11 @@ void CTabMap::OnNMClickTree1001_TreeMeshTag(NMHDR* pNMHDR, LRESULT* pResult)
 	// 클릭한 Tree의 문자열을 얻어온다.
 	m_wstrTreeMeshTag = m_StaticMeshTree_ResourceTree.GetItemText(h_MeshTag);
 
+	if (m_wstrTreeMeshTag == L"StaticMesh" ||
+		m_wstrTreeMeshTag == L"Sample" ||
+		m_wstrTreeMeshTag == L"StageVelika")
+		return;
+
 	// 클릭한 문자열 설정.
 	m_StaticMeshEdit_SelectMesthTag.SetWindowTextW(m_wstrTreeMeshTag.c_str());
 

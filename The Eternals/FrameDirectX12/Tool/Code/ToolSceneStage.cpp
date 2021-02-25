@@ -454,9 +454,10 @@ void CToolSceneStage::KeyInput()
 #pragma endregion
 
 		// TabMap Mouse Picking Event.
-		else if (pMyForm->m_bIsTabMap)
+		else if (pMyForm->m_bIsTabUI)
 		{
-
+			if (pMyForm->m_TabUI.m_bIsTabTexSpriteUV)
+				KeyInput_TabUITexSpriteUV(pMyForm->m_TabUI.m_TabTexSpriteUV);
 		}
 
 	}
@@ -1039,8 +1040,31 @@ void CToolSceneStage::KeyInput_TabMapModeChange(CTabMap& TabMap)
 }
 #pragma endregion
 
+void CToolSceneStage::KeyInput_TabUITexSpriteUV(CTabTexSpriteUV& TabUI)
+{
+	Engine::OBJLIST* m_plstGridRect = m_pObjectMgr->Get_OBJLIST(L"Layer_UI", L"UIGridRect");
+	if (nullptr == m_plstGridRect || m_plstGridRect->empty())
+		return;
 
+	CMainFrame* pMainFrame	= static_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+	CToolView*	pToolView	= static_cast<CToolView*>(pMainFrame->m_MainSplit.GetPane(0, 1));
 
+	::POINT ptMouse{};
+	GetCursorPos(&ptMouse);
+	ScreenToClient(g_hWnd, &ptMouse);
+
+	for (auto& pGridRect : *m_plstGridRect)
+		static_cast<CToolGridRect*>(pGridRect)->m_bIsSelect = false;
+
+	for (auto& pGridRect : *m_plstGridRect)
+	{
+		if (PtInRect(&(static_cast<CToolGridRect*>(pGridRect)->m_tRect), ptMouse))
+		{
+			static_cast<CToolGridRect*>(pGridRect)->m_bIsSelect = true;
+			break;
+		}
+	}
+}
 
 
 CToolSceneStage* CToolSceneStage::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)

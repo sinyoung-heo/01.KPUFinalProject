@@ -77,6 +77,7 @@ BEGIN_MESSAGE_MAP(CTabTexSpriteUV, CDialogEx)
 	ON_LBN_SELCHANGE(IDC_LIST2000, &CTabTexSpriteUV::OnLbnSelchangeList2000_TextureIndex)
 	ON_EN_CHANGE(IDC_EDIT2003, &CTabTexSpriteUV::OnEnChangeEdit2003_GridWidth)
 	ON_EN_CHANGE(IDC_EDIT2004, &CTabTexSpriteUV::OnEnChangeEdit2004_GridHeight)
+	ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 
@@ -113,49 +114,11 @@ BOOL CTabTexSpriteUV::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	UpdateData(TRUE);
 
-	RECT rcEdit[4] = { };
-	m_EditCanvasWidth.GetWindowRect(&rcEdit[0]);
-	m_EditCanvasHeight.GetWindowRect(&rcEdit[1]);
-	m_EditGridWidth.GetWindowRect(&rcEdit[2]);
-	m_EditGridHeight.GetWindowRect(&rcEdit[3]);
+	RECT rcEdit[2] = { };
+	m_EditGridWidth.GetWindowRect(&rcEdit[0]);
+	m_EditGridHeight.GetWindowRect(&rcEdit[1]);
 
-	if (PtInRect(&rcEdit[0], pt))		// Canvas Width
-	{
-		//if (zDelta > 0)
-		//{
-		//	m_fCanvasWidth *= 2.0f;
-		//}
-		//else if (zDelta < 0)
-		//{
-		//	m_fCanvasWidth /= 2.0f;
-		//	if (m_fCanvasWidth <= MINMUM)
-		//		m_fCanvasWidth = MINMUM;
-		//}
-
-		//m_pToolUICanvas->Get_Transform()->m_vScale	= _vec3(m_fCanvasWidth, m_fCanvasHeight, 1.0f);
-		//m_pToolUICanvas->Get_Transform()->m_vPos	= _vec3(m_fCanvasWidth / 2.0f, m_fCanvasHeight / 2.0f, 1.0f);
-		//Create_GridLine(m_fCanvasWidth, m_fCanvasHeight);
-	}
-	else if (PtInRect(&rcEdit[1], pt))	// Canvas Height
-	{
-		//if (zDelta > 0)
-		//{
-		//	m_fCanvasHeight *= 2.0f;
-		//}
-		//else if (zDelta < 0)
-		//{
-		//	m_fCanvasHeight /= 2.0f;
-		//	if (m_fCanvasHeight <= MINMUM)
-		//		m_fCanvasHeight = MINMUM;
-		//}
-
-		//m_pToolUICanvas->Get_Transform()->m_vScale	= _vec3(m_fCanvasWidth, m_fCanvasHeight, 1.0f);
-		//m_pToolUICanvas->Get_Transform()->m_vPos	= _vec3(m_fCanvasWidth / 2.0f, m_fCanvasHeight / 2.0f, 1.0f);
-		//Create_GridLine(m_fCanvasWidth, m_fCanvasHeight);
-	}
-
-
-	else if (PtInRect(&rcEdit[2], pt))	// Grid Width
+	if (PtInRect(&rcEdit[0], pt))	// Grid Width
 	{
 		if (zDelta > 0)
 		{
@@ -174,7 +137,7 @@ BOOL CTabTexSpriteUV::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 		Create_GridRect();
 	}
 
-	else if (PtInRect(&rcEdit[3], pt))	// Grid Height
+	else if (PtInRect(&rcEdit[1], pt))	// Grid Height
 	{
 		if (zDelta > 0)
 		{
@@ -279,6 +242,9 @@ void CTabTexSpriteUV::OnNMClickTree2000_TreeTextureTag(NMHDR* pNMHDR, LRESULT* p
 
 	// 클릭한 Tree의 문자열을 얻어온다.
 	m_strTextureTag = m_TexUITreeCtrl.GetItemText(h_MeshTag);
+
+	if (m_strTextureTag == L"UI")
+		return;
 
 	// Texture의 Width와 Height를 얻어온다.
 	Engine::CTexture* pTextureCom = static_cast<Engine::CTexture*>(m_pComponentMgr->Get_Component(wstring(m_strTextureTag), Engine::ID_STATIC));

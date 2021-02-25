@@ -35,7 +35,6 @@ public:
 	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
-
 	HRESULT	Ready_TabTexSpriteUV();
 
 public:

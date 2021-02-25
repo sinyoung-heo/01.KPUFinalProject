@@ -19,6 +19,8 @@ HRESULT CToolGridRect::Ready_GameObject(const _vec3& vScale,
 
 	m_pShaderCom->Set_PipelineStatePass(4);
 
+	Update_Rect();
+
 	return S_OK;
 }
 
@@ -34,19 +36,16 @@ _int CToolGridRect::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
-	if (!m_bIsSelect)
-		return NO_EVENT;
-
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_UI, this), -1);
+	if (m_bIsSelect)
+		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_UI, this), -1);
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	m_vConvert = m_pTransCom->m_vPos.Convert_2DWindowToDescartes(WINCX, WINCY);
-	Update_Rect();
 
 	_matrix matScale = XMMatrixScaling(m_pTransCom->m_vScale.x, m_pTransCom->m_vScale.y, m_pTransCom->m_vScale.z);
 	_matrix matTrans = XMMatrixTranslation(m_vConvert.x, m_vConvert.y, m_vConvert.z);
@@ -59,8 +58,6 @@ _int CToolGridRect::Update_GameObject(const _float& fTimeDelta)
 _int CToolGridRect::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
-	if (!m_bIsSelect)
-		return NO_EVENT;
 
 	return NO_EVENT;
 }
@@ -108,10 +105,10 @@ void CToolGridRect::Set_ConstantTable()
 
 void CToolGridRect::Update_Rect()
 {
-	m_tRect.left   = LONG(m_vConvert.x - m_pTransCom->m_vScale.x * 0.5f);
-	m_tRect.top    = LONG(m_vConvert.y - m_pTransCom->m_vScale.y * 0.5f);
-	m_tRect.right  = LONG(m_vConvert.x + m_pTransCom->m_vScale.x * 0.5f);
-	m_tRect.bottom = LONG(m_vConvert.y + m_pTransCom->m_vScale.y * 0.5f);
+	m_tRect.left   = LONG(m_pTransCom->m_vPos.x - m_pTransCom->m_vScale.x * 0.5f);
+	m_tRect.top    = LONG(m_pTransCom->m_vPos.y - m_pTransCom->m_vScale.y * 0.5f);
+	m_tRect.right  = LONG(m_pTransCom->m_vPos.x + m_pTransCom->m_vScale.x * 0.5f);
+	m_tRect.bottom = LONG(m_pTransCom->m_vPos.y + m_pTransCom->m_vScale.y * 0.5f);
 }
 
 Engine::CGameObject* CToolGridRect::Create(ID3D12Device* pGraphicDevice, 

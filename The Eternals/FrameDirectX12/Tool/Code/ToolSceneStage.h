@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "MainFrm.h"
 #include "MyForm.h"
+#include "ToolView.h"
 
 namespace Engine
 {
@@ -48,6 +49,7 @@ private:
 	void			KeyInput_TabMapModeChange(CTabMap& TabMap);
 
 	// TabUI
+	void			KeyInput_TabUITexSpriteUV(CTabTexSpriteUV& TabUI);
 
 public:
 	/*__________________________________________________________________________________________________________
