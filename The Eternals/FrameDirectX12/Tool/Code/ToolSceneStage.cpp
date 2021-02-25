@@ -15,6 +15,7 @@
 #include "ToolCell.h"
 #include "ToolUICanvas.h"
 #include "ToolGridLine.h"
+#include "ToolGridRect.h"
 
 
 CToolSceneStage::CToolSceneStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -372,27 +373,24 @@ HRESULT CToolSceneStage::Ready_LayerUI(wstring wstrLayerTag)
 	pGameObj = CToolGridLine::Create(m_pGraphicDevice, m_pCommandList,
 									 _vec3(0.0f),
 									 _vec3(0.0f),
-									 990);
+									 900);
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"UIGridLineWidth", pGameObj), E_FAIL);
 	
 	pGameObj = CToolGridLine::Create(m_pGraphicDevice, m_pCommandList,
 									 _vec3(0.0f),
 									 _vec3(0.0f),
-									 990);
+									 900);
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"UIGridLineHeight", pGameObj), E_FAIL);
 	
-	
-	_vec3 vPos = _vec3(0.0f);
-	
-	for (_uint i = 0; i < 10; ++i)
-	{
-		pGameObj = CToolGridLine::Create(m_pGraphicDevice, m_pCommandList,
-										 _vec3(1.0f, 10.0f, 1.0f),
-										 vPos,
-										 990);
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"UIGridLineWidth", pGameObj), E_FAIL);
-		vPos.x += 10.0f;
-	}
+	/*__________________________________________________________________________________________________________
+	[ UIGridRect ]
+	____________________________________________________________________________________________________________*/
+	pGameObj = CToolGridRect::Create(m_pGraphicDevice, m_pCommandList,
+									 _vec3(0.0f),
+									 _vec3(0.0f),
+									 950);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"UIGridRect", pGameObj), E_FAIL);
+
 
 	return S_OK;
 }

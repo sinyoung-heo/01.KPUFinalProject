@@ -122,6 +122,9 @@
     <Filter Include="03.ToolGameObject\02.ToolUI\01.ToolGridLine">
       <UniqueIdentifier>{8891f774-f082-4876-b860-1093418b76c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.ToolGameObject\02.ToolUI\02.ToolGridRect">
+      <UniqueIdentifier>{a0afe91a-287f-440a-96cb-a8d13c4f9035}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
@@ -247,6 +250,9 @@
     <ClInclude Include="..\Code\ToolUICanvas.h">
       <Filter>03.ToolGameObject\02.ToolUI\00.ToolUICanvas</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ToolGridRect.h">
+      <Filter>03.ToolGameObject\02.ToolUI\02.ToolGridRect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -344,6 +350,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\ToolUICanvas.cpp">
       <Filter>03.ToolGameObject\02.ToolUI\00.ToolUICanvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ToolGridRect.cpp">
+      <Filter>03.ToolGameObject\02.ToolUI\02.ToolGridRect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

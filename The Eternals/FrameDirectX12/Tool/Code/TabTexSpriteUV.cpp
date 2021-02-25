@@ -13,6 +13,7 @@
 #include "ToolSceneStage.h"
 #include "ToolUICanvas.h"
 #include "ToolGridLine.h"
+#include "ToolGridRect.h"
 
 
 // CTabTexSpriteUV 대화 상자
@@ -76,8 +77,6 @@ BEGIN_MESSAGE_MAP(CTabTexSpriteUV, CDialogEx)
 	ON_LBN_SELCHANGE(IDC_LIST2000, &CTabTexSpriteUV::OnLbnSelchangeList2000_TextureIndex)
 	ON_EN_CHANGE(IDC_EDIT2003, &CTabTexSpriteUV::OnEnChangeEdit2003_GridWidth)
 	ON_EN_CHANGE(IDC_EDIT2004, &CTabTexSpriteUV::OnEnChangeEdit2004_GridHeight)
-	ON_EN_CHANGE(IDC_EDIT2010, &CTabTexSpriteUV::OnEnChangeEdit2010_CanvasWidth)
-	ON_EN_CHANGE(IDC_EDIT2011, &CTabTexSpriteUV::OnEnChangeEdit2010_CanvasHeight)
 END_MESSAGE_MAP()
 
 
@@ -129,8 +128,8 @@ BOOL CTabTexSpriteUV::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 		//else if (zDelta < 0)
 		//{
 		//	m_fCanvasWidth /= 2.0f;
-		//	if (m_fCanvasWidth <= 0.0f)
-		//		m_fCanvasWidth = 1.0f;
+		//	if (m_fCanvasWidth <= MINMUM)
+		//		m_fCanvasWidth = MINMUM;
 		//}
 
 		//m_pToolUICanvas->Get_Transform()->m_vScale	= _vec3(m_fCanvasWidth, m_fCanvasHeight, 1.0f);
@@ -146,8 +145,8 @@ BOOL CTabTexSpriteUV::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 		//else if (zDelta < 0)
 		//{
 		//	m_fCanvasHeight /= 2.0f;
-		//	if (m_fCanvasHeight <= 0.0f)
-		//		m_fCanvasHeight = 1.0f;
+		//	if (m_fCanvasHeight <= MINMUM)
+		//		m_fCanvasHeight = MINMUM;
 		//}
 
 		//m_pToolUICanvas->Get_Transform()->m_vScale	= _vec3(m_fCanvasWidth, m_fCanvasHeight, 1.0f);
@@ -167,11 +166,12 @@ BOOL CTabTexSpriteUV::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 		else if (zDelta < 0.0f)
 		{
 			m_fGridWidth /= 2.0f;
-			if (m_fGridWidth <= 0.0f)
-				m_fGridWidth = 1.0f;
+			if (m_fGridWidth <= MINMUM)
+				m_fGridWidth = MINMUM;
 		}
 
 		Create_GridLine(m_fGridWidth, m_fGridHeight);
+		Create_GridRect();
 	}
 
 	else if (PtInRect(&rcEdit[3], pt))	// Grid Height
@@ -185,11 +185,12 @@ BOOL CTabTexSpriteUV::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 		else if (zDelta < 0.0f)
 		{
 			m_fGridHeight /= 2.0f;
-			if (m_fGridHeight <= 0.0f)
-				m_fGridHeight = 1.0f;
+			if (m_fGridHeight <= MINMUM)
+				m_fGridHeight = MINMUM;
 		}
 
 		Create_GridLine(m_fGridWidth, m_fGridHeight);
+		Create_GridRect();
 	}
 
 	UpdateData(FALSE);
@@ -309,6 +310,7 @@ void CTabTexSpriteUV::OnNMClickTree2000_TreeTextureTag(NMHDR* pNMHDR, LRESULT* p
 
 	// ToolGridLine 생성.
 	Create_GridLine(m_fCanvasWidth, m_fCanvasHeight);
+	Create_GridRect();
 
 	*pResult = 0;
 
@@ -341,35 +343,11 @@ void CTabTexSpriteUV::OnLbnSelchangeList2000_TextureIndex()
 
 	// ToolGridLine 생성.
 	Create_GridLine(m_fCanvasWidth, m_fCanvasHeight);
-
+	Create_GridRect();
 
 	UpdateData(FALSE);
 }
 
-void CTabTexSpriteUV::OnEnChangeEdit2010_CanvasWidth()
-{
-	// TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	//UpdateData(TRUE);
-
-	//m_pToolUICanvas->Get_Transform()->m_vScale	= _vec3(m_fCanvasWidth, m_fCanvasHeight, 1.0f);
-	//m_pToolUICanvas->Get_Transform()->m_vPos	= _vec3(m_fCanvasWidth / 2, m_fCanvasHeight / 2.0f, 1.0f);
-	//Create_GridLine(m_fGridWidth, m_fGridHeight);
-
-	//UpdateData(FALSE);
-}
-
-
-void CTabTexSpriteUV::OnEnChangeEdit2010_CanvasHeight()
-{
-	// TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	//UpdateData(TRUE);
-
-	//m_pToolUICanvas->Get_Transform()->m_vScale	= _vec3(m_fCanvasWidth, m_fCanvasHeight, 1.0f);
-	//m_pToolUICanvas->Get_Transform()->m_vPos	= _vec3(m_fCanvasWidth / 2, m_fCanvasHeight / 2.0f, 1.0f);
-	//Create_GridLine(m_fGridWidth, m_fGridHeight);
-
-	//UpdateData(FALSE);
-}
 
 HRESULT CTabTexSpriteUV::Create_GridLine(const _float& fGridWidth, const _float& fGridHeight)
 {
@@ -393,7 +371,7 @@ HRESULT CTabTexSpriteUV::Create_GridLine(const _float& fGridWidth, const _float&
 										   Engine::CGraphicDevice::Get_Instance()->Get_CommandList(Engine::CMD_MAIN),
 										   _vec3(1.0f, m_fCanvasHeight, 1.0f),
 										   vPos,
-										   990);
+										   900);
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_UI", L"UIGridLineWidth", pGridLine), E_FAIL);
 
 		vPos.x += m_fGridWidth;
@@ -408,7 +386,7 @@ HRESULT CTabTexSpriteUV::Create_GridLine(const _float& fGridWidth, const _float&
 										   Engine::CGraphicDevice::Get_Instance()->Get_CommandList(Engine::CMD_MAIN),
 										   _vec3(m_fCanvasWidth, 1.0f, 1.0f),
 										   vPos,
-										   990);
+										   900);
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_UI", L"UIGridLineHeight", pGridLine), E_FAIL);
 
 		vPos.y += m_fGridHeight;
@@ -416,6 +394,42 @@ HRESULT CTabTexSpriteUV::Create_GridLine(const _float& fGridWidth, const _float&
 
 	return S_OK;
 }
+
+HRESULT CTabTexSpriteUV::Create_GridRect()
+{
+	Engine::CGameObject* pGridRect = nullptr;
+	m_pObjectMgr->Clear_OBJLIST(L"Layer_UI", L"UIGridRect");
+
+	_int iRectSizeX = (_int)(ceil(m_fFrameCnt));
+	_int iRectSizeY = (_int)(ceil(m_fSceneCnt));
+
+	_vec3 vScale;
+	vScale.x = m_fCanvasWidth / m_fFrameCnt;
+	vScale.y = m_fCanvasHeight / m_fSceneCnt;
+	vScale.z = 1.0f;
+
+	_vec3 vPos = _vec3(1.0f);
+
+	for (_int i = 0; i < iRectSizeY; ++i)
+	{
+		for (_int j = 0; j < iRectSizeX; ++j)
+		{
+			vPos.x = vScale.x * 0.5f + vScale.x * j;
+			vPos.y = vScale.y * 0.5f + vScale.y * i;
+
+			pGridRect = CToolGridRect::Create(Engine::CGraphicDevice::Get_Instance()->Get_GraphicDevice(),
+											  Engine::CGraphicDevice::Get_Instance()->Get_CommandList(Engine::CMD_MAIN),
+											  vScale,
+											  vPos,
+											  950);
+			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_UI", L"UIGridRect", pGridRect), E_FAIL);
+		}
+
+	}
+
+	return S_OK;
+}
+
 
 void CTabTexSpriteUV::OnEnChangeEdit2003_GridWidth()
 {
@@ -425,11 +439,12 @@ void CTabTexSpriteUV::OnEnChangeEdit2003_GridWidth()
 	if (m_fGridWidth >= m_fCanvasWidth)
 		m_fGridWidth = m_fCanvasWidth;
 
-	if (m_fGridWidth <= 0.0f)
-		m_fGridWidth = 1.0f;
+	if (m_fGridWidth <= MINMUM)
+		m_fGridWidth = MINMUM;
 
 
 	Create_GridLine(m_fGridWidth, m_fGridHeight);
+	Create_GridRect();
 
 	UpdateData(FALSE);
 }
@@ -443,12 +458,12 @@ void CTabTexSpriteUV::OnEnChangeEdit2004_GridHeight()
 	if (m_fGridHeight >= m_fCanvasHeight)
 		m_fGridHeight = m_fCanvasHeight;
 
-	if (m_fGridHeight <= 0.0f)
-		m_fGridHeight = 1.0f;
+	if (m_fGridHeight <= MINMUM)
+		m_fGridHeight = MINMUM;
 
 	Create_GridLine(m_fGridWidth, m_fGridHeight);
+	Create_GridRect();
 
 	UpdateData(FALSE);
 }
-
 

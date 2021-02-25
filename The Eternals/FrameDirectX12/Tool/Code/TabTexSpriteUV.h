@@ -12,6 +12,7 @@ namespace Engine
 
 class CToolUICanvas;
 
+#define MINMUM 16.0f
 
 class CTabTexSpriteUV : public CDialogEx
 {
@@ -45,6 +46,7 @@ public:
 
 	CToolUICanvas* m_pToolUICanvas = nullptr;
 
+
 	/*__________________________________________________________________________________________________________
 	[ Control ]
 	____________________________________________________________________________________________________________*/
@@ -63,15 +65,13 @@ public:
 	CListBox		m_ListBoxTexIndex;
 	_uint			m_iSelectTexIndex = 0;
 
-
-	afx_msg void	OnEnChangeEdit2010_CanvasWidth();
-	afx_msg void	OnEnChangeEdit2010_CanvasHeight();
 	CEdit			m_EditCanvasWidth;
 	CEdit			m_EditCanvasHeight;
 	float			m_fCanvasWidth;
 	float			m_fCanvasHeight;
 
 	HRESULT			Create_GridLine(const _float& fGridWidth, const _float& fGridHeight);
+	HRESULT			Create_GridRect();
 	afx_msg void	OnEnChangeEdit2003_GridWidth();
 	afx_msg void	OnEnChangeEdit2004_GridHeight();
 	CEdit			m_EditGridWidth;
