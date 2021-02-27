@@ -497,7 +497,7 @@ void Initialize_NPC()
 		strncpy_s(pNew->m_ID, "Cat", strlen("Cat"));
 		strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
 
-		pNew->m_vPos = _vec3(97.0f, 0.f, 59.f);
+		pNew->m_vPos = _vec3(168.0f, 0.f, 46.f);
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
@@ -525,7 +525,7 @@ void Initialize_NPC()
 		strncpy_s(pNew->m_ID, "Cat", strlen("Cat"));
 		strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
 
-		pNew->m_vPos = _vec3(168.0f, 0.f, 46.f);
+		pNew->m_vPos = _vec3(177.0f, 0.f, 55.f);
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
@@ -553,34 +553,6 @@ void Initialize_NPC()
 		strncpy_s(pNew->m_ID, "Cat", strlen("Cat"));
 		strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
 
-		pNew->m_vPos = _vec3(177.0f, 0.f, 55.f);
-		pNew->m_vTempPos = pNew->m_vPos;
-		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_NORMAL;
-		pNew->spd = 1.f;
-		pNew->m_status = STATUS::ST_NONACTIVE;
-
-		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-		CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	}
-	else return;
-
-	// NORMAL NPC 16
-	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	if (pNew)
-	{
-		/* NPC의 정보 초기화 */
-		pNew->m_sNum += NPC_NUM_START;
-		s_num = pNew->m_sNum;
-
-		pNew->Set_IsConnected(true);
-		pNew->Set_IsDead(false);
-		strncpy_s(pNew->m_ID, "Cat", strlen("Cat"));
-		strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
 		pNew->m_vPos = _vec3(170.0f, 0.f, 120.f);
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
@@ -595,7 +567,7 @@ void Initialize_NPC()
 	}
 	else return;
 
-	// NORMAL NPC 17
+	// NORMAL NPC 16
 	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
 
 	if (pNew)
@@ -637,34 +609,6 @@ void Initialize_NPC()
 		strncpy_s(pNew->m_ID, "Chicken", strlen("Chicken"));
 		strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
 
-		pNew->m_vPos = _vec3(125.0f, 0.f, 133.f);
-		pNew->m_vTempPos = pNew->m_vPos;
-		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_NORMAL;
-		pNew->spd = 1.f;
-		pNew->m_status = STATUS::ST_NONACTIVE;
-
-		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-		CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	}
-	else return;
-
-	// NORMAL NPC 19
-	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	if (pNew)
-	{
-		/* NPC의 정보 초기화 */
-		pNew->m_sNum += NPC_NUM_START;
-		s_num = pNew->m_sNum;
-
-		pNew->Set_IsConnected(true);
-		pNew->Set_IsDead(false);
-		strncpy_s(pNew->m_ID, "Chicken", strlen("Chicken"));
-		strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
 		pNew->m_vPos = _vec3(147.0f, 0.f, 125.f);
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
@@ -679,7 +623,7 @@ void Initialize_NPC()
 	}
 	else return;
 
-	// NORMAL NPC 20
+	// NORMAL NPC 19
 	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
 
 	if (pNew)
