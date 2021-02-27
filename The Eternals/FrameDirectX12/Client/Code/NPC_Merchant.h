@@ -16,14 +16,14 @@ namespace Engine
 
 class CDynamicCamera;
 
-class CNPC_Boy : public Engine::CGameObject
+class CNPC_Merchant : public Engine::CGameObject
 {
-	enum ANIM { A_WAIT, A_IDLE, A_WALK, A_TALK, A_LAUGH, A_END };
+	enum ANIM { A_WAIT, A_GREET, A_TALK, A_END };
 
 private:
-	explicit CNPC_Boy(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CNPC_Boy(const CNPC_Boy& rhs);
-	virtual ~CNPC_Boy() = default;
+	explicit CNPC_Merchant(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	explicit CNPC_Merchant(const CNPC_Merchant& rhs);
+	virtual ~CNPC_Merchant() = default;
 
 public:
 	// CGameObject을(를) 통해 상속됨
@@ -77,7 +77,6 @@ private:
 	_uint			m_ui3DMax_CurFrame					= 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
 	ANIM			m_eCurAnimation						= ANIM::A_END;
 	ANIM			m_ePreAnimation						= ANIM::A_END;
-	bool			m_bIsNormalNpc						= false;
 	
 	/*__________________________________________________________________________________________________________
 	[ Font ]

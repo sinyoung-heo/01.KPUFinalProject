@@ -85,6 +85,7 @@ ______________________________________________________________________*/
 constexpr char NPC_NORMAL = 0;
 constexpr char NPC_MERCHANT = 1;
 constexpr char NPC_QUEST = 2;
+constexpr char NPC_BG = 3;
 
 struct sc_packet_enter 
 {

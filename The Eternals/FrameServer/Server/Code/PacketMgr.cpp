@@ -1002,6 +1002,8 @@ void active_npc(int id)
 				break;
 			case NPC_QUEST:
 				break;
+			case NPC_BG:
+				break;
 			}
 		
 		}

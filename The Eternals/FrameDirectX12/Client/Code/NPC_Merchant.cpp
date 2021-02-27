@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "NPC_Boy.h"
+#include "NPC_Merchant.h"
 
 #include "GraphicDevice.h"
 #include "DirectInput.h"
@@ -10,18 +10,18 @@
 #include "RenderTarget.h"
 #include "TimeMgr.h"
 
-CNPC_Boy::CNPC_Boy(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CNPC_Merchant::CNPC_Merchant(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
 }
 
-CNPC_Boy::CNPC_Boy(const CNPC_Boy & rhs)
+CNPC_Merchant::CNPC_Merchant(const CNPC_Merchant & rhs)
 	: Engine::CGameObject(rhs)
 	, m_wstrMeshTag(rhs.m_wstrMeshTag)
 {
 }
 
-HRESULT CNPC_Boy::Ready_GameObject(wstring wstrMeshTag,
+HRESULT CNPC_Merchant::Ready_GameObject(wstring wstrMeshTag,
 									wstring wstrNaviMeshTag,
 									const _vec3 & vScale, 
 									const _vec3 & vAngle, 
@@ -42,12 +42,11 @@ HRESULT CNPC_Boy::Ready_GameObject(wstring wstrMeshTag,
 
 	m_pInfoCom->m_fSpeed = 1.f;
 	m_bIsMoveStop = true;
-	m_bIsNormalNpc = false;
 
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
-	m_uiAnimIdx = 4;
+	m_uiAnimIdx = 0;
 	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 	m_eCurAnimation = ANIM::A_WAIT;
@@ -56,7 +55,7 @@ HRESULT CNPC_Boy::Ready_GameObject(wstring wstrMeshTag,
 	return S_OK;
 }
 
-HRESULT CNPC_Boy::LateInit_GameObject()
+HRESULT CNPC_Merchant::LateInit_GameObject()
 {
 	/*__________________________________________________________________________________________________________
 	[ Get GameObject - DynamicCamera ]
@@ -72,7 +71,7 @@ HRESULT CNPC_Boy::LateInit_GameObject()
 	return S_OK;
 }
 
-_int CNPC_Boy::Update_GameObject(const _float & fTimeDelta)
+_int CNPC_Merchant::Update_GameObject(const _float & fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
@@ -91,7 +90,7 @@ _int CNPC_Boy::Update_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CNPC_Boy::LateUpdate_GameObject(const _float & fTimeDelta)
+_int CNPC_Merchant::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
@@ -109,7 +108,7 @@ _int CNPC_Boy::LateUpdate_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-void CNPC_Boy::Render_GameObject(const _float & fTimeDelta)
+void CNPC_Merchant::Render_GameObject(const _float & fTimeDelta)
 {
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
@@ -121,13 +120,13 @@ void CNPC_Boy::Render_GameObject(const _float & fTimeDelta)
 	m_pMeshCom->Render_DynamicMesh(m_pShaderCom);
 }
 
-void CNPC_Boy::Render_ShadowDepth(const _float & fTimeDelta)
+void CNPC_Merchant::Render_ShadowDepth(const _float & fTimeDelta)
 {
 	Set_ConstantTableShadowDepth();
 	m_pMeshCom->Render_DynamicMeshShadowDepth(m_pShadowCom);
 }
 
-void CNPC_Boy::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList * pCommandList, const _int& iContextIdx)
+void CNPC_Merchant::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList * pCommandList, const _int& iContextIdx)
 {
 	Active_NPC(fTimeDelta);
 
@@ -141,13 +140,13 @@ void CNPC_Boy::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommand
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
-void CNPC_Boy::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList * pCommandList, const _int& iContextIdx)
+void CNPC_Merchant::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList * pCommandList, const _int& iContextIdx)
 {
 	Set_ConstantTableShadowDepth();
 	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 }
 
-HRESULT CNPC_Boy::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
+HRESULT CNPC_Merchant::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -192,7 +191,7 @@ HRESULT CNPC_Boy::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 	return S_OK;
 }
 
-void CNPC_Boy::Set_ConstantTable()
+void CNPC_Merchant::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -215,7 +214,7 @@ void CNPC_Boy::Set_ConstantTable()
 		m_fDeltaTime = 0.f;
 }
 
-void CNPC_Boy::Set_ConstantTableShadowDepth()
+void CNPC_Merchant::Set_ConstantTableShadowDepth()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -234,77 +233,40 @@ void CNPC_Boy::Set_ConstantTableShadowDepth()
 
 }
 
-void CNPC_Boy::Active_NPC(const _float& fTimeDelta)
+void CNPC_Merchant::Active_NPC(const _float& fTimeDelta)
 {
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 	m_pTransCom->m_vDir.Normalize();
-
-	/* NPC MOVE */
-	if (!m_bIsMoveStop)
-	{
-		m_bIsNormalNpc = true;
-
-		// NaviMesh 이동.		
-		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vecArivePos))
-		{
-			m_eCurAnimation = A_WALK;
-
-			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
-														 &m_pTransCom->m_vDir,
-														 m_pInfoCom->m_fSpeed * fTimeDelta);
-			m_pTransCom->m_vPos = vPos;
-		}
-		else
-		{
-			m_eCurAnimation = A_WAIT;
-			m_bIsMoveStop = true;
-		}
-	}
 }
 
-void CNPC_Boy::Change_Animation(const _float& fTimeDelta)
+void CNPC_Merchant::Change_Animation(const _float& fTimeDelta)
 {
 	switch (m_eCurAnimation)
 	{
 
 	case A_WAIT:
 	{
-		m_uiAnimIdx = 4;
-
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-			m_eCurAnimation = A_IDLE;
-	}
-	break;
-
-	case A_IDLE:
-	{
-		m_uiAnimIdx = 3;
-
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-			if (!m_bIsNormalNpc) m_eCurAnimation = A_TALK;
-			else m_eCurAnimation = A_WAIT;
-	}
-	break;
-
-	case A_WALK:
-	{
 		m_uiAnimIdx = 2;
+
+		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			m_eCurAnimation = A_GREET;
+	}
+	break;
+
+	case A_GREET:
+	{
+		m_uiAnimIdx = 1;
+
+		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			m_eCurAnimation = A_TALK;
 	}
 	break;
 
 	case A_TALK:
 	{
-		m_uiAnimIdx = 1;
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-			m_eCurAnimation = A_LAUGH;
-	}
-	break;
-
-	case A_LAUGH:
-	{
 		m_uiAnimIdx = 0;
 		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-			m_eCurAnimation = A_TALK;
+			m_eCurAnimation = A_GREET;
 	}
 	break;
 
@@ -312,14 +274,14 @@ void CNPC_Boy::Change_Animation(const _float& fTimeDelta)
 	m_ePreAnimation = m_eCurAnimation;
 }
 
-Engine::CGameObject* CNPC_Boy::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
+Engine::CGameObject* CNPC_Merchant::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
 									   wstring wstrMeshTag, 
 									   wstring wstrNaviMeshTag,
 									   const _vec3 & vScale, 
 									   const _vec3 & vAngle, 
 									   const _vec3 & vPos)
 {
-	CNPC_Boy* pInstance = new CNPC_Boy(pGraphicDevice, pCommandList);
+	CNPC_Merchant* pInstance = new CNPC_Merchant(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, wstrNaviMeshTag, vScale, vAngle, vPos)))
 		Engine::Safe_Release(pInstance);
@@ -327,7 +289,7 @@ Engine::CGameObject* CNPC_Boy::Create(ID3D12Device * pGraphicDevice, ID3D12Graph
 	return pInstance;
 }
 
-void CNPC_Boy::Free()
+void CNPC_Merchant::Free()
 {
 	Engine::CGameObject::Free();
 
