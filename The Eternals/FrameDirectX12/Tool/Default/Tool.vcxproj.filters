@@ -125,6 +125,12 @@
     <Filter Include="03.ToolGameObject\02.ToolUI\02.ToolGridRect">
       <UniqueIdentifier>{a0afe91a-287f-440a-96cb-a8d13c4f9035}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.ToolGameObject\02.ToolUI\03.ToolUIRoot">
+      <UniqueIdentifier>{89b6ff78-7c90-45c5-a0d0-ed33a6b3ef96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.ToolGameObject\02.ToolUI\04.ToolUIChild">
+      <UniqueIdentifier>{c1a396a5-fe7d-4fa4-be3e-ac188f70347d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
@@ -253,6 +259,12 @@
     <ClInclude Include="..\Code\ToolGridRect.h">
       <Filter>03.ToolGameObject\02.ToolUI\02.ToolGridRect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ToolUIRoot.h">
+      <Filter>03.ToolGameObject\02.ToolUI\03.ToolUIRoot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ToolUIChild.h">
+      <Filter>03.ToolGameObject\02.ToolUI\04.ToolUIChild</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -353,6 +365,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\ToolGridRect.cpp">
       <Filter>03.ToolGameObject\02.ToolUI\02.ToolGridRect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ToolUIRoot.cpp">
+      <Filter>03.ToolGameObject\02.ToolUI\03.ToolUIRoot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ToolUIChild.cpp">
+      <Filter>03.ToolGameObject\02.ToolUI\04.ToolUIChild</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

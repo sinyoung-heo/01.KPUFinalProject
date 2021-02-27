@@ -14,6 +14,15 @@ CMouseMgr::CMouseMgr()
 
 }
 
+HRESULT CMouseMgr::Ready_MouseMgr()
+{
+	return S_OK;
+}
+
+void CMouseMgr::Update_MouseMgr(const _float& fTimeDelta)
+{
+}
+
 _vec3 CMouseMgr::Picking_OnTerrain(CToolTerrain* pTerrain)
 {
 	POINT ptMouse{};
