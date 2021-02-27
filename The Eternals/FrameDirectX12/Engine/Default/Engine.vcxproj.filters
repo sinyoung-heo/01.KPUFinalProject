@@ -175,6 +175,9 @@
     <Filter Include="97.Mgr\02.CollisionMgr">
       <UniqueIdentifier>{75b73304-06c1-4cb8-8b60-2543b32501a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\11.ShaderNPathDir">
+      <UniqueIdentifier>{5f4dc40c-cabc-4792-ba9b-63ecf670c4e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\Engine_Functor.h">
@@ -381,6 +384,9 @@
     <ClInclude Include="..\Code\CollisionMgr.h">
       <Filter>97.Mgr\02.CollisionMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ShaderNPathDir.h">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\11.ShaderNPathDir</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\DirectInput.cpp">
@@ -560,6 +566,9 @@
     <ClCompile Include="..\Code\CollisionMgr.cpp">
       <Filter>97.Mgr\02.CollisionMgr</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\ShaderNPathDir.cpp">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\11.ShaderNPathDir</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Bin\Shader\ShaderMesh.hlsl">
@@ -606,6 +615,9 @@
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderColorInstancing.hlsl">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\00.ShaderColor</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Bin\Shader\ShaderNPathDir.hlsl">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\11.ShaderNPathDir</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

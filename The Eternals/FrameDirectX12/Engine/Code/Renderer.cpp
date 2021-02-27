@@ -166,6 +166,7 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	}
 
 	Render_Light();						// Shade, Specular
+	Render_NPathDir();
 	Render_DownSampling();
 	Render_SSAO();
 	Render_Blur();
@@ -259,13 +260,11 @@ void CRenderer::Render_Blend()
 
 		vector<ComPtr<ID3D12Resource>> vecBlendTarget;
 		vecBlendTarget.emplace_back(vecDeferredTarget[0]);	// RenderTarget - Diffuse
-		//vecBlendTarget.emplace_back(vecBlurTarget[2]);	// RenderTarget - DOF
-
 		vecBlendTarget.emplace_back(vecShadeTarget[0]);		// RenderTarget - Shade
 		vecBlendTarget.emplace_back(vecShadeTarget[1]);		// RenderTarget - Specular
 		vecBlendTarget.emplace_back(vecBlurTarget[0]);		// RenderTarget - Blur 
 		vecBlendTarget.emplace_back(vecDeferredTarget[4]);		// RenderTarget - Emissive
-		vecBlendTarget.emplace_back(vecBlurTarget[3]);		// RenderTarget - SSAO
+		vecBlendTarget.emplace_back(vecBlurTarget[2]);		// RenderTarget - SSAO
 		vecBlendTarget.emplace_back(vecDistortionTarget[0]);		// RenderTarget - SSAO
 		vecBlendTarget.emplace_back(vecAverageColorTarget[0]);		// RenderTarget - AVerage
 		vecBlendTarget.emplace_back(m_pTargetBlend->Get_TargetTexture()[0]);
@@ -347,6 +346,23 @@ void CRenderer::Render_Luminance()
 	}
 }
 
+void CRenderer::Render_NPathDir()
+{
+	if (!m_bisSetNPathDirTexture)
+	{
+		m_bisSetNPathDirTexture = true;
+		vector<ComPtr<ID3D12Resource>> vecDeferredTarget = m_pTargetDeferred->Get_TargetTexture();
+		vector<ComPtr<ID3D12Resource>> vecNPathDirTarget;
+		vecNPathDirTarget.emplace_back(vecDeferredTarget[4]);	// RenderTarget - Emissive
+		m_pNPathDirShader->SetUp_ShaderTexture(vecNPathDirTarget);
+	}
+	m_pTargetNPathDir->SetUp_OnGraphicDevice();
+	m_pNPathDirShader->Begin_Shader();
+	m_pNPathDirBuffer->Begin_Buffer();
+	m_pNPathDirBuffer->Render_Buffer();
+	m_pTargetNPathDir->Release_OnGraphicDevice();
+}
+
 void CRenderer::Render_DownSampling()
 {
 	if (!m_bIsSetDownSamplingTexture)
@@ -354,9 +370,11 @@ void CRenderer::Render_DownSampling()
 		m_bIsSetDownSamplingTexture = true; 
 		vector<ComPtr<ID3D12Resource>> vecDeferredTarget = m_pTargetDeferred->Get_TargetTexture();
 		vector<ComPtr<ID3D12Resource>> vecSSAOTarget = m_pTargetSSAO->Get_TargetTexture();
+		vector<ComPtr<ID3D12Resource>> vecNPathDirTarget = m_pTargetNPathDir->Get_TargetTexture();
+
 		vector<ComPtr<ID3D12Resource>> vecDownSamplingTarget;
 		vecDownSamplingTarget.emplace_back(vecDeferredTarget[4]);	// RenderTarget - Emissive
-		vecDownSamplingTarget.emplace_back(vecDeferredTarget[4]);	// RenderTarget - Emissive
+		vecDownSamplingTarget.emplace_back(vecNPathDirTarget[0]);	// RenderTarget - NPathDir
 		vecDownSamplingTarget.emplace_back(vecSSAOTarget[0]);	// RenderTarget - SSAO
 		vecDownSamplingTarget.emplace_back(vecDeferredTarget[0]);	// RenderTarget - SSAO
 		m_pDownSamplingShader->SetUp_ShaderTexture(vecDownSamplingTarget);
@@ -381,7 +399,6 @@ void CRenderer::Render_Blur()
 		vector<ComPtr<ID3D12Resource>> vecBlurTarget;
 		vecBlurTarget.emplace_back(vecDownSampleTarget[0]);	// RenderTarget - DS Emissive
 		vecBlurTarget.emplace_back(vecDownSampleTarget[1]);	// RenderTarget - DS CrossFilter
-		vecBlurTarget.emplace_back(vecDeferredTarget[0]);	// RenderTarget - Albedo
 		vecBlurTarget.emplace_back(vecDeferredTarget[3]);	// RenderTarget - Depth
 		vecBlurTarget.emplace_back(vecSSAOTarget[0]);	// RenderTarget - SSAO
 		m_pBlurShader->SetUp_ShaderTexture(vecBlurTarget);
@@ -481,6 +498,8 @@ void CRenderer::Render_RenderTarget()
 			m_pTargetDistortion->Render_RenderTarget();
 		if (nullptr != m_pTargetCrossFilter)
 			m_pTargetCrossFilter->Render_RenderTarget();
+		if (nullptr != m_pTargetNPathDir)
+			m_pTargetNPathDir->Render_RenderTarget();
 	}
 
 }
@@ -564,6 +583,12 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	pShader = CShaderSSAO::Create(m_pGraphicDevice, m_pCommandList);
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderSSAO", ID_STATIC, pShader), E_FAIL);
+	++m_uiCnt_ShaderFile;
+
+	//ShaderNPathDir
+	pShader = CShaderNPathDir::Create(m_pGraphicDevice, m_pCommandList);
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderNPathDir", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
 	// ShaderShadowInstancing
@@ -679,12 +704,11 @@ HRESULT CRenderer::Ready_RenderTarget()
 	/*__________________________________________________________________________________________________________
 	[ Blur RenderTarget ]
 	____________________________________________________________________________________________________________*/
-	m_pTargetBlur = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 4);
+	m_pTargetBlur = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 3);
 	NULL_CHECK_RETURN(m_pTargetBlur, E_FAIL);
 	m_pTargetBlur->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
 	m_pTargetBlur->Set_TargetClearColor(1, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
 	m_pTargetBlur->Set_TargetClearColor(2, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
-	m_pTargetBlur->Set_TargetClearColor(3, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
 	FAILED_CHECK_RETURN(m_pTargetBlur->SetUp_DefaultSetting(), E_FAIL);
 	m_pTargetBlur->Set_TargetRenderPos(_vec3(WIDTH_FIFTH, HEIGHT_FIRST, 1.0f));
 
@@ -725,6 +749,19 @@ HRESULT CRenderer::Ready_RenderTarget()
 	FAILED_CHECK_RETURN(m_pTargetCrossFilter->SetUp_DefaultSetting(TARGETID::TYPE_SHADOWDEPTH), E_FAIL);
 	m_pTargetCrossFilter->Set_TargetRenderPos(_vec3(WIDTH_THIRD, HEIGHT_SECOND, 1.0f));
 
+	//NPathDir
+	m_pTargetNPathDir = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
+	NULL_CHECK_RETURN(m_pTargetNPathDir, E_FAIL);
+	m_pTargetNPathDir->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	FAILED_CHECK_RETURN(m_pTargetNPathDir->SetUp_DefaultSetting(TARGETID::TYPE_DEFAULT), E_FAIL);
+	m_pTargetNPathDir->Set_TargetRenderPos(_vec3(WIDTH_THIRD, HEIGHT_THIRD, 1.0f));
+
+	m_pNPathDirBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pNPathDirBuffer, E_FAIL);
+
+	m_pNPathDirShader = static_cast<CShaderNPathDir*>(m_pComponentMgr->Clone_Component(L"ShaderNPathDir", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pNPathDirShader, E_FAIL);
+	FAILED_CHECK_RETURN(m_pNPathDirShader->Set_PipelineStatePass(0), E_FAIL);
 	/*__________________________________________________________________________________________________________
 	[ Blend Resource ]
 	____________________________________________________________________________________________________________*/
@@ -1105,6 +1142,10 @@ void CRenderer::Free()
 	Safe_Release(m_pTargetDistortion);
 	//
 	Safe_Release(m_pTargetCrossFilter);
+	//NPath
+	Safe_Release(m_pTargetNPathDir);
+	Safe_Release(m_pNPathDirShader);
+	Safe_Release(m_pNPathDirBuffer);
 	/*__________________________________________________________________________________________________________
 	2020.06.07 MultiThreadRendering
 	- CommandAllocators & CommandList Á¦°Å.

@@ -115,7 +115,8 @@ float4 PS_FINAL(VS_OUT ps_input) : SV_TARGET
     
     float4 Output = float4(0, 0, 0, 0), Output2 = float4(0, 0, 0, 0);
     float4 Depth = g_TexDepth.Sample(g_samLinearWrap, ps_input.TexUV);
-    float ViewZ = Depth.g; //0 ~1값의 ViewZ 값 멀어질수록 1에 가까워진다. 거리 0.05이상부터 DOF 처리를 매길것임
+    float ViewZ = Depth.g;
+    //0 ~1값의 ViewZ 값 멀어질수록 1에 가까워진다. 거리 0.05이상부터 DOF 처리를 매길것임
     //50 : 1000 = 1600 : 650
     //50 : 1000 = 900 : 
     float2 vGausTexUV = float2(0, 0);

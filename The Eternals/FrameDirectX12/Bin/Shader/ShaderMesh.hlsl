@@ -178,13 +178,13 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 								 0.0f, 1.0f);
 
 
-    //float Normal_fDissolve = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV).r;
+    float Normal_fDissolve = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV).r;
 
-    //if ((0.05f > (1.f - fDissolve) - Normal_fDissolve) && ((1.f - fDissolve) - Normal_fDissolve) > 0.f)
-    //{
-    //    ps_output.Emissive = float4(1, Normal_fDissolve, 0, 1);
-    //}
-    //clip((1.f - fDissolve) - Normal_fDissolve);
+    if ((0.05f > (1.f - g_fDissolve) - Normal_fDissolve) && ((1.f - g_fDissolve) - Normal_fDissolve) > 0.f)
+    {
+        ps_output.Emissive = float4(1, Normal_fDissolve, 0, 1);
+    }
+    clip((1.f - g_fDissolve) - Normal_fDissolve);
 
 	return (ps_output);
 }

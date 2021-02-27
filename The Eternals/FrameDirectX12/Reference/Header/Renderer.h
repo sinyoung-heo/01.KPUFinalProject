@@ -14,6 +14,7 @@ class CShaderLuminance;
 class CShaderDownSampling;
 class CShaderBlur;
 class CShaderSSAO;
+class CShaderNPathDir;
 class CShaderMesh;
 
 #define WIDTH_FIRST		112
@@ -91,6 +92,7 @@ private:
 	void	Render_NonAlpha(const _float& fTimeDelta);
 	void	Render_Light();
 	void	Render_Luminance();
+	void	Render_NPathDir();
 	void	Render_DownSampling();
 	void	Render_Blur();
 	void	Render_SSAO();
@@ -138,6 +140,11 @@ private:
 	CRenderTarget* m_pTargetBlend = nullptr; // Distortion
 	CRenderTarget* m_pTargetCrossFilter = nullptr; // CrossFilter
 
+	// N_PathBlurTarget
+	CRenderTarget * m_pTargetNPathDir = nullptr; // nπÊ«‚ ≈∏∞Ÿ
+	CShaderNPathDir* m_pNPathDirShader = nullptr;
+	CScreenTex* m_pNPathDirBuffer = nullptr;
+	_bool m_bisSetNPathDirTexture		{false};
 	// Blend
 	CScreenTex*		m_pBlendBuffer					= nullptr;
 	CShaderBlend*	m_pBlendShader					= nullptr;

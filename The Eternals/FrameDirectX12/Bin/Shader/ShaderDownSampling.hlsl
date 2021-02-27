@@ -13,7 +13,7 @@ SamplerState g_samAnisotropicClamp	: register(s5);
 [ Texture ]
 ____________________________________________________________________________________________________________*/
 Texture2D g_TexEmissive		: register(t0);	//Deffered Target Index 4 :  Emissive Target
-Texture2D g_TexCrossFilter : register(t1); //CrossFilter Texture
+Texture2D g_TexNPathDir : register(t1); //g_TexNPathDir Texture
 Texture2D g_TexSSAO : register(t2); //SSAO Texture
 Texture2D g_TexAlbedo : register(t3); //Albedo Texture
 
@@ -61,9 +61,9 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
   
     float2 vTexUV = ps_input.TexUV;
     float4 Emissive = float4(0, 0, 0, 0);
-    float4 CrossFillter = float4(0, 0, 0, 0); 
     float4 SSAO = float4(0, 0, 0, 0);
     float4 Albedo = float4(0, 0, 0, 0);
+    float4 NPathDir = float4(0, 0, 0, 0);
     for (int i = -2; i <= 2; ++i)
     {
         for (int j = -2; j <= 2; ++j)
@@ -71,15 +71,16 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
             vTexUV.x = ps_input.TexUV.x + (i / 1600.f);
             vTexUV.y = ps_input.TexUV.y + (j / 900.f);
             vTexUV = saturate(vTexUV);
+            NPathDir += g_TexNPathDir.Sample(g_samLinearClamp, vTexUV);
             Emissive += g_TexEmissive.Sample(g_samLinearClamp, vTexUV);
             SSAO += g_TexSSAO.Sample(g_samLinearClamp, vTexUV);
             Albedo += g_TexAlbedo.Sample(g_samLinearClamp, vTexUV);
 
         }
     }
-    Emissive /= 25, CrossFillter /= 25, SSAO /= 25,Albedo/=25;
+    Emissive /= 25, NPathDir /= 25, SSAO /= 25, Albedo /= 25;
     output.DS_EMISSIVE = Emissive;
-    output.DS_CROSSFILTER = Emissive;
+    output.DS_CROSSFILTER = NPathDir;
     output.DS_SSAO = SSAO;
     output.DS_Albedo = Albedo;
     return (output);
