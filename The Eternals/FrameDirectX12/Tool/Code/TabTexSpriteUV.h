@@ -12,7 +12,8 @@ namespace Engine
 
 class CToolUICanvas;
 
-#define MINMUM 16.0f
+#define GRID_MIN	10.0f
+#define CANVAS_MIN	100.0f
 
 class CTabTexSpriteUV : public CDialogEx
 {
@@ -66,8 +67,8 @@ public:
 
 	CEdit			m_EditCanvasWidth;
 	CEdit			m_EditCanvasHeight;
-	float			m_fCanvasWidth;
-	float			m_fCanvasHeight;
+	float			m_fCanvasWidth	= (_float)WINCY;
+	float			m_fCanvasHeight = (_float)WINCY;
 
 	HRESULT			Create_GridLine(const _float& fGridWidth, const _float& fGridHeight);
 	HRESULT			Create_GridRect();
@@ -84,4 +85,10 @@ public:
 	float			m_fCurFrame;
 	float			m_fSceneCnt;
 	float			m_fCurScene;
+
+
+	CButton			m_ButtonSave;
+	CButton			m_ButtonLoad;
+	afx_msg void OnBnClickedButton2000_SAVE();
+	afx_msg void OnBnClickedButton2001_LOAD();
 };

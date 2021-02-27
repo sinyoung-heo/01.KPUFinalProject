@@ -18,7 +18,6 @@ HRESULT CToolGridRect::Ready_GameObject(const _vec3& vScale,
 	m_UIDepth               = iUIDepth;
 
 	m_pShaderCom->Set_PipelineStatePass(4);
-
 	Update_Rect();
 
 	return S_OK;
