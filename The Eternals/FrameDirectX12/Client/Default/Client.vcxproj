@@ -179,6 +179,7 @@
     <ClInclude Include="..\Code\LoadingProgressBack.h" />
     <ClInclude Include="..\Code\LogoBack.h" />
     <ClInclude Include="..\Code\MainApp.h" />
+    <ClInclude Include="..\Code\NPC_Merchant.h" />
     <ClInclude Include="..\Code\NPC_Villagers.h" />
     <ClInclude Include="..\Code\PacketMgr.h" />
     <ClInclude Include="..\Code\Popori_F.h" />
@@ -226,6 +227,7 @@
     <ClCompile Include="..\Code\LoadingProgressBack.cpp" />
     <ClCompile Include="..\Code\LogoBack.cpp" />
     <ClCompile Include="..\Code\MainApp.cpp" />
+    <ClCompile Include="..\Code\NPC_Merchant.cpp" />
     <ClCompile Include="..\Code\NPC_Villagers.cpp" />
     <ClCompile Include="..\Code\PacketMgr.cpp" />
     <ClCompile Include="..\Code\Popori_F.cpp" />
