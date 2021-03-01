@@ -6,49 +6,35 @@ public:
 	virtual ~CObj();
 
 public:
-	mutex& Get_ClientLock() { return c_lock; }
-	const bool& Get_IsConnected() { return m_bIsConnect; }
+	mutex& Get_ClientLock()					{ return c_lock; }
+	const bool& Get_IsConnected()			{ return m_bIsConnect; }
 
 public:
-	void Set_IsConnected(const bool& set) { m_bIsConnect = set; }
-	void Set_IsDead(const bool& set) { m_bIsDead = set; }
-	void Set_ServerNumber(const int& num) { m_sNum = num; }
+	void Set_IsConnected(const bool& set)	{ m_bIsConnect = set; }
+	void Set_IsDead(const bool& set)		{ m_bIsDead = set; }
+	void Set_ServerNumber(const int& num)	{ m_sNum = num; }
 
 public:
 	virtual DWORD Release();
 
-protected:
-	/*=============Ω√Ω∫≈€ ƒ¡≈Ÿ√˜==============*/
-	//SOCKET	m_sock; // player
-	//OVER_EX	m_recv_over;  // player 
-	//unsigned char* m_packet_start; // player
-	//unsigned char* m_recv_start; // player
-
-	/*=============∞‘¿” ƒ¡≈Ÿ√˜===============*/
 public:
-	int move_time;
-	bool m_bIsConnect; // all
-	bool m_bIsDead; //all
-	char m_ID[MAX_ID_LEN]; // all
-	char m_type; // all
+	/*=============∞‘¿” ƒ¡≈Ÿ√˜===============*/
+	bool m_bIsConnect					= false;
+	bool m_bIsDead						= false;
+	char m_ID[MAX_ID_LEN]; 
+	char m_type; 
 	char m_naviType[MIDDLE_STR_LEN];
-	int  m_sNum;
-	//int	level; // player
-	//int Hp, maxHp; // player, monster
-	//int Exp, maxExp; // player
-	//int att; // player monster
-	//float spd; // player monster
-	_vec3 m_vAngle;
-	_vec3 m_vPos; // all
-	_vec3 m_vTempPos; // all
-	_vec3 m_vDir; // all
-	atomic<STATUS> m_status; // all
+	int  m_sNum							= -1;
+
+	int move_time						= 0;
+	
+	_vec3 m_vAngle						= _vec3(0.f);
+	_vec3 m_vPos						= _vec3(0.f);
+	_vec3 m_vTempPos					= _vec3(0.f);
+	_vec3 m_vDir						= _vec3(0.f);
+	atomic<STATUS> m_status				= STATUS::ST_END;
 
 protected:
-	mutex c_lock;  // all
-
-	//unordered_set<int> view_list; // player
-	//mutex v_lock; // player 
-	
+	mutex c_lock; 
 };
 

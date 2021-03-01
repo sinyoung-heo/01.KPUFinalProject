@@ -19,8 +19,12 @@ void Ready_ServerManager();			// 서버 매니저 초기화
 void Ready_Server();				// 서버 메인 루프 초기화
 void Release_Server();				// 서버 종료
 
-void Initialize_NPC();
-void Delete_NPC();
+void Initialize_NPC();				// Create Stage Velika NPC 
+void Delete_NPC();					// Delete All NPC
+
+void Initialize_Monster();			// Create Monster(test)
+void Delete_Monster();				// Delete All MONSTER
+
 void add_new_client(SOCKET ns);		// 새로운 유저 접속 함수
 void disconnect_client(int id);		// 유저 접속 정료 함수
 
@@ -166,7 +170,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_NORMAL;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -194,7 +197,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_NORMAL;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -223,7 +225,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_NORMAL;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -251,7 +252,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_BG;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -279,7 +279,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_BG;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -307,7 +306,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_NORMAL;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -335,7 +333,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_NORMAL;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -363,7 +360,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_NORMAL;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -391,7 +387,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_BG;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -419,7 +414,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_BG;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -447,7 +441,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_BG;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -475,7 +468,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_BG;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -503,7 +495,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_NORMAL;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -531,7 +522,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_NORMAL;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -559,7 +549,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_NORMAL;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -587,7 +576,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_NORMAL;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -615,7 +603,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_NORMAL;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -643,7 +630,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_NORMAL;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -671,7 +657,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_NORMAL;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -699,7 +684,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_NORMAL;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -727,7 +711,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_NORMAL;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -755,7 +738,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_MERCHANT;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -783,7 +765,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_MERCHANT;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -811,7 +792,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_MERCHANT;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -839,7 +819,6 @@ void Initialize_NPC()
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_QUEST;
-		pNew->spd = 1.f;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -865,6 +844,14 @@ void Delete_NPC()
 		iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"NPC")->begin();
 		iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"NPC")->end();
 	}
+}
+
+void Initialize_Monster()
+{
+}
+
+void Delete_Monster()
+{
 }
 
 void add_new_client(SOCKET ns)

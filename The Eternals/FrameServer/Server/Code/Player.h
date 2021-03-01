@@ -12,20 +12,22 @@ public:
 
 public:
 	/*=============½Ã½ºÅÛ ÄÁÅÙÃ÷==============*/
-	SOCKET	m_sock; // player
-	OVER_EX	m_recv_over;  // player 
-	unsigned char* m_packet_start; // player
-	unsigned char* m_recv_start; // player
+	SOCKET	m_sock; 
+	OVER_EX	m_recv_over;   
+	unsigned char* m_packet_start; 
+	unsigned char* m_recv_start; 
 
 public:
 	/*=============°ÔÀÓ ÄÁÅÙÃ÷===============*/
-	int	level; // player
-	int Hp, maxHp; // player, monster
-	int Exp, maxExp; // player
-	int att; // player monster
-	float spd; // player monster
-
-	unordered_set<int> view_list; // player
-	mutex v_lock; // player 
+	int	level	= 0;
+	int Hp		= 0; 
+	int maxHp	= 0;
+	int Exp		= 0;
+	int maxExp	= 0;
+	int att		= 0;
+	float spd	= 0;
+	
+	unordered_set<int> view_list; 
+	mutex v_lock; 
 };
 

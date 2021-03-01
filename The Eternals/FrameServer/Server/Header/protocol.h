@@ -2,14 +2,19 @@
 
 constexpr char SERVER_IP[16] = "127.0.0.1";
 constexpr int SERVER_PORT = 5689;
+
 constexpr int MAX_ID_LEN = 32;
 constexpr int MAX_PW_LEN = 32;
+
 constexpr int MAX_STR_LEN = 100;
 constexpr int MIDDLE_STR_LEN = 64;
 
 constexpr int MAX_USER = 10000;
 constexpr int MAX_NPC = 100;
+constexpr int MAX_MONSTER = 100;
+
 constexpr int NPC_NUM_START = 1000;
+constexpr int MON_NUM_START = 5000;
 
 constexpr int WORLD_WIDTH = 1000;
 constexpr int WORLD_HEIGHT = 1000;

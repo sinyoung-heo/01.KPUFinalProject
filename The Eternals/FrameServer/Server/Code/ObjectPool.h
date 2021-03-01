@@ -5,7 +5,7 @@ typedef lock_guard<recursive_mutex> o_lock;
 class CObjectPool
 {
 public:
-	CObjectPool() = default;
+	CObjectPool() : m_iMaxSize(0) {}
 	explicit CObjectPool(int size);
 	~CObjectPool();
 
@@ -38,6 +38,6 @@ private:
 private:
 	recursive_mutex m_mutex;
 	stack<CObj*> m_stackObj;
-	int m_iMaxSize;
+	int m_iMaxSize = 0;
 };
 

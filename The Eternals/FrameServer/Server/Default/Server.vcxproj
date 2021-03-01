@@ -24,6 +24,7 @@
     <ClCompile Include="..\Code\DBMgr.cpp" />
     <ClCompile Include="..\Code\Line.cpp" />
     <ClCompile Include="..\Code\MainServer.cpp" />
+    <ClCompile Include="..\Code\Monster.cpp" />
     <ClCompile Include="..\Code\NaviMesh.cpp" />
     <ClCompile Include="..\Code\Npc.cpp" />
     <ClCompile Include="..\Code\Obj.cpp" />
@@ -40,6 +41,7 @@
     <ClInclude Include="..\Code\CollisionMgr.h" />
     <ClInclude Include="..\Code\DBMgr.h" />
     <ClInclude Include="..\Code\Line.h" />
+    <ClInclude Include="..\Code\Monster.h" />
     <ClInclude Include="..\Code\NaviMesh.h" />
     <ClInclude Include="..\Code\Npc.h" />
     <ClInclude Include="..\Code\Obj.h" />
