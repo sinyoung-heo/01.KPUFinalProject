@@ -19,6 +19,7 @@ HRESULT CMouseMgr::Ready_MouseMgr()
 {
 	m_pCursorUI = CToolUIRoot::Create(Engine::CGraphicDevice::Get_Instance()->Get_GraphicDevice(),
 									  Engine::CGraphicDevice::Get_Instance()->Get_CommandList(Engine::CMD_MAIN),
+									  L"Cursor",
 									  L"../../Bin/ToolData/TexUVCursor.texuv",
 									  _vec3(0.0f, 0.0f, 0.0f),
 									  _vec3(32.0f, 32.0f, 1.0f),

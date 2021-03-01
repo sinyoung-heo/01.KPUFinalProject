@@ -5,6 +5,11 @@
 #include "Tool.h"
 #include "TabUI.h"
 #include "afxdialogex.h"
+#include "GraphicDevice.h"
+#include "ComponentMgr.h"
+#include "ObjectMgr.h"
+#include "Management.h"
+#include "ToolUICanvas.h"
 
 // CTabUI 대화 상자
 
@@ -12,6 +17,9 @@ IMPLEMENT_DYNAMIC(CTabUI, CDialogEx)
 
 CTabUI::CTabUI(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_CTabUI, pParent)
+	, m_pComponentMgr(Engine::CComponentMgr::Get_Instance())
+	, m_pObjectMgr(Engine::CObjectMgr::Get_Instance())
+	, m_pManagement(Engine::CManagement::Get_Instance())
 {
 
 }
@@ -108,6 +116,11 @@ void CTabUI::OnTcnSelchangeTab1(NMHDR* pNMHDR, LRESULT* pResult)
 		m_bIsTabTexSpriteUV = false;
 		m_bIsTab2DUI        = true;
 		m_bIsTab3DUI        = false;
+
+		static_cast<CToolUICanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UICanvas"))->m_pTexDescriptorHeap = nullptr;
+		m_pObjectMgr->Clear_OBJLIST(L"Layer_UI", L"UIGridLineWidth");
+		m_pObjectMgr->Clear_OBJLIST(L"Layer_UI", L"UIGridLineHeight");
+		m_pObjectMgr->Clear_OBJLIST(L"Layer_UI", L"UIGridRect");
 
 		break;
 	case 2:

@@ -1121,6 +1121,7 @@ void CToolSceneStage::KeyInput_TabUI2DUI(CTab2DUI& TabUI2DUI)
 		PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
 		lstrcat(szPath, L"\\Bin\\ToolData\\");
 		wstrDataFullPath = wstring(szPath) + wstring(TabUI2DUI.m_wstrRootDataFileName);
+		wstrDataFullPath = CToolFileInfo::ConvertRelativePath(wstrDataFullPath.c_str());
 
 		// _vec3 vPos = _vec3((_float)CMouseMgr::Get_CursorPoint().x, (_float)CMouseMgr::Get_CursorPoint().y, 1.0f);
 		TabUI2DUI.m_fRootPosX = (_float)CMouseMgr::Get_CursorPoint().x;
@@ -1128,6 +1129,7 @@ void CToolSceneStage::KeyInput_TabUI2DUI(CTab2DUI& TabUI2DUI)
 
 		// UI 생성.
 		pGameObj = CToolUIRoot::Create(m_pGraphicDevice, m_pCommandList,
+									   wstring(TabUI2DUI.m_wstrRootObjectTag),
 									   wstrDataFullPath,
 									   _vec3(TabUI2DUI.m_fRootPosX, TabUI2DUI.m_fRootPosY, 0.0f),
 									   _vec3(TabUI2DUI.m_fRootScaleX, TabUI2DUI.m_fRootScaleY, 1.0f),
@@ -1172,6 +1174,34 @@ void CToolSceneStage::KeyInput_TabUI2DUI(CTab2DUI& TabUI2DUI)
 				{
 					static_cast<CToolUIRoot*>(pRootUI)->m_bIsRenderRect = true;
 					m_pPickingRootUI = static_cast<CToolUIRoot*>(pRootUI);
+
+					TabUI2DUI.m_wstrRootUITag     = static_cast<CToolUIRoot*>(pRootUI)->m_wstrObjectTag.c_str();
+					TabUI2DUI.m_wstrRootObjectTag = static_cast<CToolUIRoot*>(pRootUI)->m_wstrObjectTag.c_str();
+					TabUI2DUI.m_fRootPosX         = pRootUI->Get_Transform()->m_vPos.x;
+					TabUI2DUI.m_fRootPosY         = pRootUI->Get_Transform()->m_vPos.y;
+					TabUI2DUI.m_fRootScaleX       = pRootUI->Get_Transform()->m_vScale.x;
+					TabUI2DUI.m_fRootScaleY       = pRootUI->Get_Transform()->m_vScale.y;
+					TabUI2DUI.m_RootUIDepth		  = pRootUI->Get_UIDepth();
+
+					TabUI2DUI.m_fRootFrameSpeed   = static_cast<CToolUIRoot*>(pRootUI)->m_tFrame.fFrameSpeed;
+					if (TabUI2DUI.m_fRootFrameSpeed > 0.0f)
+					{
+						TabUI2DUI.m_bIsRootAnimation = true;
+						TabUI2DUI.m_CheckRootIsAnimation.SetCheck(TRUE);
+						TabUI2DUI.m_EditRootFrameSpeed.EnableWindow(TRUE);
+					}
+					else
+					{
+						TabUI2DUI.m_bIsRootAnimation = false;
+						TabUI2DUI.m_CheckRootIsAnimation.SetCheck(FALSE);
+						TabUI2DUI.m_EditRootFrameSpeed.EnableWindow(FALSE);
+					}
+					TabUI2DUI.m_fRootRectPosOffsetX = static_cast<CToolUIRoot*>(pRootUI)->m_vRectOffset.x;
+					TabUI2DUI.m_fRootRectPosOffsetY = static_cast<CToolUIRoot*>(pRootUI)->m_vRectOffset.y;
+					TabUI2DUI.m_fRootRectScaleX     = static_cast<CToolUIRoot*>(pRootUI)->m_pTransColor->m_vScale.x;
+					TabUI2DUI.m_fRootRectScaleY     = static_cast<CToolUIRoot*>(pRootUI)->m_pTransColor->m_vScale.y;
+
+					break;
 				}
 
 			}
@@ -1189,6 +1219,19 @@ void CToolSceneStage::KeyInput_Tab2DUIModeChange(CTab2DUI& TabUI2DUI)
 	TabUI2DUI.m_bIsRootModifyMode = !TabUI2DUI.m_bIsRootModifyMode;
 	TabUI2DUI.m_RadioRootCreateMode.SetCheck(TabUI2DUI.m_bIsRootCreateMode);
 	TabUI2DUI.m_RadioRootModifyMode.SetCheck(TabUI2DUI.m_bIsRootModifyMode);
+
+	if (TabUI2DUI.m_bIsRootCreateMode)
+	{
+		TabUI2DUI.m_EditRootUITag.EnableWindow(TRUE);
+		TabUI2DUI.m_EditDataFileName.EnableWindow(TRUE);
+		TabUI2DUI.m_EditObjectTag.EnableWindow(TRUE);
+	}
+	else
+	{
+		TabUI2DUI.m_EditRootUITag.EnableWindow(FALSE);
+		TabUI2DUI.m_EditDataFileName.EnableWindow(FALSE);
+		TabUI2DUI.m_EditObjectTag.EnableWindow(FALSE);
+	}
 
 	TabUI2DUI.UpdateData(FALSE);
 }

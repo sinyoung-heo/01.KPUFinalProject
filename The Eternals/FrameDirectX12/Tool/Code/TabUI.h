@@ -28,6 +28,11 @@ public:
 	afx_msg void OnTcnSelchangeTab1(NMHDR* pNMHDR, LRESULT* pResult);
 
 public:
+	Engine::CManagement*		m_pManagement		 = nullptr;
+	Engine::CObjectMgr*			m_pObjectMgr		 = nullptr;
+	Engine::CComponentMgr*		m_pComponentMgr		 = nullptr;
+	Engine::CDescriptorHeapMgr* m_pDescriptorHeapMgr = nullptr;
+
 	CTabCtrl m_TabUI;
 
 	CTabTexSpriteUV m_TabTexSpriteUV;

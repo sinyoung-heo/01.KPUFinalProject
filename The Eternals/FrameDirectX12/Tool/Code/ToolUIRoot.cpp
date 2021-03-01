@@ -11,7 +11,8 @@ CToolUIRoot::CToolUIRoot(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList
 {
 }
 
-HRESULT CToolUIRoot::Ready_GameObject(wstring wstrDataFilePath,
+HRESULT CToolUIRoot::Ready_GameObject(wstring wstrObjectTag,
+									  wstring wstrDataFilePath,
 									  const _vec3& vPos, 
 									  const _vec3& vScale,
 									  const _bool& bIsSpriteAnimation, 
@@ -24,11 +25,13 @@ HRESULT CToolUIRoot::Ready_GameObject(wstring wstrDataFilePath,
 	Engine::FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Read_DataFromFilePath(wstrDataFilePath), E_FAIL);
 
-	m_pTransCom->m_vPos   = vPos;
-	m_pTransCom->m_vScale = vScale;
-	m_bIsSpriteAnimation  = bIsSpriteAnimation;
-	m_tFrame.fFrameSpeed  = fFrameSpeed;
-	m_UIDepth             = iUIDepth;
+	m_wstrObjectTag         = wstrObjectTag;
+	m_wstrDataFilePath      = wstrDataFilePath;
+	m_pTransCom->m_vPos		= vPos;
+	m_pTransCom->m_vScale	= vScale;
+	m_bIsSpriteAnimation	= bIsSpriteAnimation;
+	m_tFrame.fFrameSpeed	= fFrameSpeed;
+	m_UIDepth				= iUIDepth;
 
 	m_pTransColor->m_vPos	= vPos;
 	m_pTransColor->m_vScale = vRectScale;
@@ -188,7 +191,6 @@ HRESULT CToolUIRoot::Read_DataFromFilePath(wstring wstrDataFilePath)
 		m_tFrame.fCurFrame   = fCurFrame;
 		m_tFrame.fSceneCnt   = fSceneCnt;
 		m_tFrame.fCurScene   = fCurScene;
-		m_tFrame.fFrameSpeed = fFrameCnt * fSceneCnt;
 	}
 
 	return S_OK;
@@ -251,7 +253,8 @@ void CToolUIRoot::Update_Rect()
 }
 
 
-Engine::CGameObject* CToolUIRoot::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, 
+Engine::CGameObject* CToolUIRoot::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
+										 wstring wstrObjectTag,
 										 wstring wstrDataFilePath, 
 										 const _vec3& vPos, 
 										 const _vec3& vScale, 
@@ -263,7 +266,8 @@ Engine::CGameObject* CToolUIRoot::Create(ID3D12Device* pGraphicDevice, ID3D12Gra
 {
 	CToolUIRoot* pInstance = new CToolUIRoot(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(wstrDataFilePath, 
+	if (FAILED(pInstance->Ready_GameObject(wstrObjectTag,
+										   wstrDataFilePath, 
 										   vPos, 
 										   vScale, 
 										   bIsSpriteAnimation, 

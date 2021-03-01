@@ -19,7 +19,8 @@ private:
 
 public:
 	// CGameObject을(를) 통해 상속됨
-	virtual HRESULT	Ready_GameObject(wstring wstrDataFilePath,
+	virtual HRESULT	Ready_GameObject(wstring wstrObjectTag,
+									 wstring wstrDataFilePath,
 									 const _vec3& vPos, 
 									 const _vec3& vScale,
 									 const _bool& bIsSpriteAnimation,
@@ -53,10 +54,12 @@ public:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	wstring					m_wstrTextureTag     = L"";
-	ID3D12DescriptorHeap*	m_pTexDescriptorHeap = nullptr;
-	_uint					m_uiTexIdx	         = 0;
-	_bool					m_bIsSpriteAnimation = false;
+	wstring					m_wstrObjectTag			= L"";
+	wstring					m_wstrDataFilePath		= L"";
+	wstring					m_wstrTextureTag		= L"";
+	ID3D12DescriptorHeap*	m_pTexDescriptorHeap	= nullptr;
+	_uint					m_uiTexIdx				= 0;
+	_bool					m_bIsSpriteAnimation	= false;
 	FRAME					m_tFrame;
 
 	RECT					m_tRect;
@@ -71,6 +74,7 @@ private:
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
+									   wstring wstrObjectTag,							   
 									   wstring wstrDataFilePath,
 									   const _vec3& vPos,
 									   const _vec3& vScale,

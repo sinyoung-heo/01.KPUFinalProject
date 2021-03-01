@@ -514,7 +514,6 @@ void CTabTexSpriteUV::OnBnClickedButton2000_SAVE()
 			return;
 		}
 
-		// StaticMesh Data 저장
 		fout << wstring(m_strTextureTag)	<< L" "		// TextureTag
 			 << m_iSelectTexIndex			<< L" "		// TextureIndex
 			 << m_fFrameCnt					<< L" "		// FrameCnt
