@@ -17,6 +17,7 @@ class CToolStaticMesh;
 class CToolCell;
 class CToolUICanvas;
 class CToolGridLine;
+class CToolUIRoot;
 
 class CToolSceneStage : public Engine::CScene
 {
@@ -50,6 +51,9 @@ private:
 
 	// TabUI
 	void			KeyInput_TabUITexSpriteUV(CTabTexSpriteUV& TabUITexSprite);
+	void			KeyInput_TabUI2DUI(CTab2DUI& TabUI2DUI);
+	void			KeyInput_Tab2DUIModeChange(CTab2DUI& TabUI2DUI);
+
 
 public:
 	/*__________________________________________________________________________________________________________
@@ -72,10 +76,14 @@ public:
 	_vec3 m_vCurPickingPos = _vec3(1.0f);
 
 	/*__________________________________________________________________________________________________________
-	[ TabUI ]
+	[ TabUI ] - TexSpriteUV
 	____________________________________________________________________________________________________________*/
 	CToolUICanvas* m_pUICanvas = nullptr;
 
+	/*__________________________________________________________________________________________________________
+	[ TabUI ] - 2DUI
+	____________________________________________________________________________________________________________*/
+	CToolUIRoot* m_pPickingRootUI = nullptr;
 
 private:
 	/*__________________________________________________________________________________________________________

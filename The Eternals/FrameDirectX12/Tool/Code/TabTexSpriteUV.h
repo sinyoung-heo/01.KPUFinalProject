@@ -39,9 +39,9 @@ public:
 	HRESULT	Ready_TabTexSpriteUV();
 
 public:
-	Engine::CManagement*		m_pManagement		= nullptr;
-	Engine::CObjectMgr*			m_pObjectMgr		= nullptr;
-	Engine::CComponentMgr*		m_pComponentMgr		= nullptr;
+	Engine::CManagement*		m_pManagement		 = nullptr;
+	Engine::CObjectMgr*			m_pObjectMgr		 = nullptr;
+	Engine::CComponentMgr*		m_pComponentMgr		 = nullptr;
 	Engine::CDescriptorHeapMgr* m_pDescriptorHeapMgr = nullptr;
 
 	CToolUICanvas* m_pToolUICanvas = nullptr;

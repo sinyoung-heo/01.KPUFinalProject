@@ -2,6 +2,13 @@
 
 
 // CTab2DUI 대화 상자
+namespace Engine
+{
+	class CComponentMgr;
+	class CObjectMgr;
+	class CManagement;
+	class CDescriptorHeapMgr;
+}
 
 class CTab2DUI : public CDialogEx
 {
@@ -24,7 +31,60 @@ public:
 	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
+	HRESULT	Ready_Tab2DUI();
 
 public:
+	afx_msg void OnBnClickedCheck2100_RootUIIsAnimation();
+	afx_msg void OnBnClickedCheck2102_RootUIRenderRect();
+	afx_msg void OnLbnSelchangeList2100_RootUITagSelect();
+	afx_msg void OnBnClickedRadio2100_RootCreateMode();
+	afx_msg void OnBnClickedRadio2101_RootModifyMode();
 
+	Engine::CManagement*		m_pManagement		 = nullptr;
+	Engine::CObjectMgr*			m_pObjectMgr		 = nullptr;
+	Engine::CComponentMgr*		m_pComponentMgr		 = nullptr;
+	Engine::CDescriptorHeapMgr* m_pDescriptorHeapMgr = nullptr;
+
+	/*__________________________________________________________________________________________________________
+	[ Control ]
+	____________________________________________________________________________________________________________*/
+	CButton		m_RadioRootCreateMode;
+	CButton		m_RadioRootModifyMode;
+	CListBox	m_ListBoxRootUI;
+	CEdit		m_EditRootUITag;
+	CEdit		m_EditDataFileName;
+	CEdit		m_EditObjectTag;
+	CEdit		m_EditRootPosX;
+	CEdit		m_EditRootPosY;
+	CEdit		m_EditRootScaleX;
+	CEdit		m_EditRootScaleY;
+	CEdit		m_EditRootUIDepth;
+	CButton		m_CheckRootIsAnimation;
+	CEdit		m_EditRootFrameSpeed;
+	CButton		m_CheckRootRenderRect;
+	CEdit		m_EditRootRectPosOffsetX;
+	CEdit		m_EditRootRectPosOffsetY;
+	CEdit		m_EditRootRectScaleX;
+	CEdit		m_EditRootRectScaleY;
+
+	/*__________________________________________________________________________________________________________
+	[ Value ]
+	____________________________________________________________________________________________________________*/
+	_bool m_bIsRootCreateMode	   = false;
+	_bool m_bIsRootModifyMode	   = false;
+	CString m_wstrRootUITag        = L"";
+	CString m_wstrRootDataFileName = L"";
+	CString m_wstrRootObjectTag    = L"";
+	float	m_fRootPosX            = 0.0f;
+	float	m_fRootPosY            = 0.0f;
+	float	m_fRootScaleX          = 32.0f;
+	float	m_fRootScaleY          = 32.0f;
+	long	m_RootUIDepth          = 1000;
+	_bool	m_bIsRootAnimation     = false;
+	float	m_fRootFrameSpeed	   = 0.0f;
+	_bool	m_bIsRenderRect		   = false;
+	float	m_fRootRectPosOffsetX  = 0.0f;
+	float	m_fRootRectPosOffsetY  = 0.0f;
+	float	m_fRootRectScaleX      = 32.0f;
+	float	m_fRootRectScaleY      = 32.0f;
 };

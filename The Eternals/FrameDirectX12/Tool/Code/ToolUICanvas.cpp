@@ -16,9 +16,8 @@ HRESULT CToolUICanvas::Ready_GameObject(const _vec3& vPos,
 
 	m_pTransCom->m_vPos		= vPos;
 	m_pTransCom->m_vScale	= vScale;
-
-	m_uiTexIdx	= 0;
-	m_UIDepth	= iUIDepth;
+	m_uiTexIdx	            = 0;
+	m_UIDepth	            = iUIDepth;
 	
 
 	return S_OK;
@@ -47,11 +46,9 @@ _int CToolUICanvas::Update_GameObject(const _float & fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
-	m_vConvert = m_pTransCom->m_vPos.Convert_2DWindowToDescartes(WINCX, WINCY);
-
-	_matrix matScale = XMMatrixScaling(m_pTransCom->m_vScale.x, m_pTransCom->m_vScale.y, m_pTransCom->m_vScale.z);
-	_matrix matTrans = XMMatrixTranslation(m_vConvert.x, m_vConvert.y, m_vConvert.z);
-
+	m_vConvert              = m_pTransCom->m_vPos.Convert_2DWindowToDescartes(WINCX, WINCY);
+	_matrix matScale        = XMMatrixScaling(m_pTransCom->m_vScale.x, m_pTransCom->m_vScale.y, m_pTransCom->m_vScale.z);
+	_matrix matTrans        = XMMatrixTranslation(m_vConvert.x, m_vConvert.y, m_vConvert.z);
 	m_pTransCom->m_matWorld = matScale *  matTrans;
 
 	return NO_EVENT;

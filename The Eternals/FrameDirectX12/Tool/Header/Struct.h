@@ -9,7 +9,7 @@ typedef struct tagFrame
 		, fFrameSpeed(1.0f)
 	{}
 
-	tagFrame(const _int& frame_cnt, const _int& scene_cnt, const _float& frame_speed)
+	tagFrame(const _float& frame_cnt, const _float& scene_cnt, const _float& frame_speed)
 		: fCurFrame(0.0f), fFrameCnt(frame_cnt)
 		, fCurScene(0.0f), fSceneCnt(scene_cnt)
 		, fFrameSpeed(frame_speed)

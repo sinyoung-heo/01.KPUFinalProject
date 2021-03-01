@@ -147,10 +147,10 @@ void CTextureEffect::Set_ConstantTable()
 	Engine::CB_SHADER_TEXTURE tCB_ShaderTexture;
 	ZeroMemory(&tCB_ShaderTexture, sizeof(Engine::CB_SHADER_TEXTURE));
 	tCB_ShaderTexture.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderTexture.fFrameCnt	= (_float)m_tFrame.fFrameCnt;
+	tCB_ShaderTexture.fFrameCnt	= m_tFrame.fFrameCnt;
 	tCB_ShaderTexture.fCurFrame	= (_float)(_int)m_tFrame.fCurFrame;
-	tCB_ShaderTexture.fSceneCnt	= (_float)m_tFrame.fSceneCnt;
-	tCB_ShaderTexture.fCurScene	= (_float)(_int)m_tFrame.fCurScene;
+	tCB_ShaderTexture.fSceneCnt	= m_tFrame.fSceneCnt;
+	tCB_ShaderTexture.fCurScene	= (_int)m_tFrame.fCurScene;
 
 	m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 }

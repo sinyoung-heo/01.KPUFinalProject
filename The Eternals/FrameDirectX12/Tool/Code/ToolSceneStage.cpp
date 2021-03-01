@@ -16,6 +16,7 @@
 #include "ToolUICanvas.h"
 #include "ToolGridLine.h"
 #include "ToolGridRect.h"
+#include "ToolUIRoot.h"
 
 
 CToolSceneStage::CToolSceneStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -33,6 +34,8 @@ HRESULT CToolSceneStage::Ready_Scene()
 	Engine::FAILED_CHECK_RETURN(Ready_LayerUI(L"Layer_UI"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LayerFont(L"Layer_Font"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
+
+	CMouseMgr::Get_Instance()->Ready_MouseMgr();
 
 	/*__________________________________________________________________________________________________________
 	[ NaviMesh Cell Picking Collider ]
@@ -74,6 +77,7 @@ HRESULT CToolSceneStage::Ready_Scene()
 
 	// Tab UI
 	pMyForm->m_TabUI.m_TabTexSpriteUV.Ready_TabTexSpriteUV();
+	pMyForm->m_TabUI.m_Tab2DUI.Ready_Tab2DUI();
 	pMyForm->m_TabUI.m_TabTexSpriteUV.m_pToolUICanvas = m_pUICanvas;
 
 	for (_uint i = 0; i < 512; ++i)
@@ -121,6 +125,9 @@ _int CToolSceneStage::Update_Scene(const _float& fTimeDelta)
 	{
 		if (pMyForm->m_bIsTabMap)
 			KeyInput_TabMapModeChange(pMyForm->m_TabMap);
+
+		if (pMyForm->m_TabUI.m_bIsTab2DUI)
+			KeyInput_Tab2DUIModeChange(pMyForm->m_TabUI.m_Tab2DUI);
 	}
 
 	// NavigationMesh ModeChange (Find Near Point)
@@ -139,6 +146,7 @@ _int CToolSceneStage::Update_Scene(const _float& fTimeDelta)
 		}
 	}
 
+	CMouseMgr::Get_Instance()->Update_MouseMgr(fTimeDelta);
 	return Engine::CScene::Update_Scene(fTimeDelta);
 }
 
@@ -434,7 +442,7 @@ void CToolSceneStage::KeyInput()
 	CMyForm*	pMyForm		= static_cast<CMyForm*>(pMainFrame->m_MainSplit.GetPane(0, 0));
 
 	/*__________________________________________________________________________________________________________
-	[ Terrain Picking ]
+	[ L Button Picking ]
 	____________________________________________________________________________________________________________*/
 	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON(Engine::DIM_LB)))
 	{
@@ -453,15 +461,18 @@ void CToolSceneStage::KeyInput()
 		}
 #pragma endregion
 
+
+
 		// TabMap Mouse Picking Event.
 #pragma region TABUI_MOUSEPICKING
 		else if (pMyForm->m_bIsTabUI)
 		{
 			if (pMyForm->m_TabUI.m_bIsTabTexSpriteUV)
 				KeyInput_TabUITexSpriteUV(pMyForm->m_TabUI.m_TabTexSpriteUV);
+			else if (pMyForm->m_TabUI.m_bIsTab2DUI)
+				KeyInput_TabUI2DUI(pMyForm->m_TabUI.m_Tab2DUI);
 		}
 #pragma endregion
-
 	}
 
 	// NaviMesh 수정모드일 경우.
@@ -1085,6 +1096,105 @@ void CToolSceneStage::KeyInput_TabUITexSpriteUV(CTabTexSpriteUV& TabUITexSprite)
 	TabUITexSprite.UpdateData(FALSE);
 }
 #pragma endregion
+
+
+
+
+#pragma region TABUI_2DUI
+void CToolSceneStage::KeyInput_TabUI2DUI(CTab2DUI& TabUI2DUI)
+{
+	TabUI2DUI.UpdateData(TRUE);
+
+	// UI 생성
+	if (TabUI2DUI.m_bIsRootCreateMode)
+	{
+		if (TabUI2DUI.m_wstrRootDataFileName == L"" ||
+			TabUI2DUI.m_wstrRootObjectTag == L"")
+			return;
+
+		Engine::CGameObject* pGameObj = nullptr;
+
+		wstring wstrDataFullPath;
+		_tchar szPath[MAX_STR] = L"";
+		GetCurrentDirectory(MAX_STR, szPath);		// 작업중인 현재 경로.
+		PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+		PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+		lstrcat(szPath, L"\\Bin\\ToolData\\");
+		wstrDataFullPath = wstring(szPath) + wstring(TabUI2DUI.m_wstrRootDataFileName);
+
+		// _vec3 vPos = _vec3((_float)CMouseMgr::Get_CursorPoint().x, (_float)CMouseMgr::Get_CursorPoint().y, 1.0f);
+		TabUI2DUI.m_fRootPosX = (_float)CMouseMgr::Get_CursorPoint().x;
+		TabUI2DUI.m_fRootPosY = (_float)CMouseMgr::Get_CursorPoint().y;
+
+		// UI 생성.
+		pGameObj = CToolUIRoot::Create(m_pGraphicDevice, m_pCommandList,
+									   wstrDataFullPath,
+									   _vec3(TabUI2DUI.m_fRootPosX, TabUI2DUI.m_fRootPosY, 0.0f),
+									   _vec3(TabUI2DUI.m_fRootScaleX, TabUI2DUI.m_fRootScaleY, 1.0f),
+									   TabUI2DUI.m_bIsRootAnimation,
+									   TabUI2DUI.m_fRootFrameSpeed,
+									   _vec3(TabUI2DUI.m_fRootRectPosOffsetX, TabUI2DUI.m_fRootRectPosOffsetY, 0.0f),
+									   _vec3(TabUI2DUI.m_fRootRectScaleX, TabUI2DUI.m_fRootRectScaleY, 1.0f),
+									   TabUI2DUI.m_RootUIDepth);
+		m_pObjectMgr->Add_GameObject(L"Layer_UI", wstring(TabUI2DUI.m_wstrRootObjectTag), pGameObj);
+
+		// ListBox 추가.
+		TabUI2DUI.m_ListBoxRootUI.AddString(TabUI2DUI.m_wstrRootObjectTag);
+	}
+
+	else if (TabUI2DUI.m_bIsRootModifyMode)
+	{
+		_int iListBoxSize = TabUI2DUI.m_ListBoxRootUI.GetCount();
+
+		// Rect Render -> false
+		m_pPickingRootUI = nullptr;
+
+		for (_int i = 0; i < iListBoxSize; ++i)
+		{
+			CString wstrRootUITag = L"";
+			TabUI2DUI.m_ListBoxRootUI.GetText(i, wstrRootUITag);
+			Engine::OBJLIST* pRootUIList = m_pObjectMgr->Get_OBJLIST(L"Layer_UI", wstring(wstrRootUITag));
+
+			for (auto& pRootUI : *pRootUIList)
+				static_cast<CToolUIRoot*>(pRootUI)->m_bIsRenderRect = false;
+		}
+
+		// Picking 수행.
+		for (_int i = 0; i < iListBoxSize; ++i)
+		{
+			CString wstrRootUITag = L"";
+			TabUI2DUI.m_ListBoxRootUI.GetText(i, wstrRootUITag);
+			Engine::OBJLIST* pRootUIList = m_pObjectMgr->Get_OBJLIST(L"Layer_UI", wstring(wstrRootUITag));
+
+			for (auto& pRootUI : *pRootUIList)
+			{
+				if (PtInRect(&(static_cast<CToolUIRoot*>(pRootUI)->m_tRect), CMouseMgr::Get_CursorPoint()))
+				{
+					static_cast<CToolUIRoot*>(pRootUI)->m_bIsRenderRect = true;
+					m_pPickingRootUI = static_cast<CToolUIRoot*>(pRootUI);
+				}
+
+			}
+		}
+	}
+
+	TabUI2DUI.UpdateData(FALSE);
+}
+
+void CToolSceneStage::KeyInput_Tab2DUIModeChange(CTab2DUI& TabUI2DUI)
+{
+	TabUI2DUI.UpdateData(TRUE);
+
+	TabUI2DUI.m_bIsRootCreateMode = !TabUI2DUI.m_bIsRootCreateMode;
+	TabUI2DUI.m_bIsRootModifyMode = !TabUI2DUI.m_bIsRootModifyMode;
+	TabUI2DUI.m_RadioRootCreateMode.SetCheck(TabUI2DUI.m_bIsRootCreateMode);
+	TabUI2DUI.m_RadioRootModifyMode.SetCheck(TabUI2DUI.m_bIsRootModifyMode);
+
+	TabUI2DUI.UpdateData(FALSE);
+}
+
+#pragma endregion
+
 
 
 CToolSceneStage* CToolSceneStage::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)

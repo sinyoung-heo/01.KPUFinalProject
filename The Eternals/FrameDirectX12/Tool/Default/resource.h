@@ -159,13 +159,57 @@
 #define IDC_LIST2000                    1117
 #define IDC_EDIT1069                    1118
 #define IDC_EDIT2010                    1118
+#define IDC_LIST2100                    1118
 #define IDC_EDIT1070                    1119
 #define IDC_EDIT2011                    1119
+#define IDC_EDIT2100                    1119
 #define IDC_EDIT1071                    1120
 #define IDC_BUTTON2001                  1120
+#define IDC_EDIT2101                    1120
 #define IDC_BUTTON1015                  1121
+#define IDC_EDIT2102                    1121
 #define IDC_BUTTON1016                  1122
+#define IDC_EDIT2103                    1122
 #define IDC_EDIT1072                    1123
+#define IDC_EDIT2104                    1123
+#define IDC_CHECK2100                   1124
+#define IDC_EDIT2105                    1125
+#define IDC_EDIT2106                    1126
+#define IDC_EDIT2107                    1127
+#define IDC_LIST2101                    1128
+#define IDC_EDIT2108                    1129
+#define IDC_EDIT2111                    1131
+#define IDC_EDIT2112                    1132
+#define IDC_EDIT2113                    1133
+#define IDC_EDIT2114                    1134
+#define IDC_EDIT2109                    1135
+#define IDC_EDIT2115                    1136
+#define IDC_EDIT2116                    1137
+#define IDC_EDIT2117                    1138
+#define IDC_EDIT2118                    1139
+#define IDC_EDIT2119                    1140
+#define IDC_EDIT2120                    1141
+#define IDC_CHECK2101                   1142
+#define IDC_EDIT2122                    1144
+#define IDC_EDIT2123                    1145
+#define IDC_EDIT2124                    1146
+#define IDC_EDIT2125                    1147
+#define IDC_BUTTON2100                  1148
+#define IDC_BUTTON2101                  1149
+#define IDC_BUTTON2102                  1150
+#define IDC_BUTTON2103                  1151
+#define IDC_BUTTON2104                  1152
+#define IDC_BUTTON2105                  1153
+#define IDC_BUTTON2106                  1154
+#define IDC_BUTTON2107                  1155
+#define IDC_CHECK2102                   1156
+#define IDC_CHECK2103                   1157
+#define IDC_RADIO2100                   1158
+#define IDC_RADIO2101                   1159
+#define IDC_RADIO2103                   1160
+#define IDC_RADIO2104                   1161
+#define IDC_EDIT2121                    1162
+#define IDC_EDIT2126                    1163
 
 // Next default values for new objects
 // 
@@ -173,7 +217,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        329
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1118
+#define _APS_NEXT_CONTROL_VALUE         1159
 #define _APS_NEXT_SYMED_VALUE           327
 #endif
 #endif

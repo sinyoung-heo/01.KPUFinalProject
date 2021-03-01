@@ -30,6 +30,7 @@ public:
 	void	Update_MouseMgr(const _float& fTimeDelta);
 
 public:
+	static POINT Get_CursorPoint();
 	static _vec3 Picking_OnTerrain(CToolTerrain* pTerrain);
 	static _bool IntersectTriangle(_vec3& v0,
 								   _vec3& v1,
