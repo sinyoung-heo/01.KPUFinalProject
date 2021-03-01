@@ -2,6 +2,7 @@
 #include "PacketMgr.h"
 #include "Player.h"
 #include "Npc.h"
+#include "Monster.h"
 
 /* ========================패킷 처리========================*/
 void process_packet(int id)
@@ -102,9 +103,16 @@ void process_packet(int id)
 						send_NPC_enter_packet(id, obj_num);
 					}
 					/* MONSTER일 경우 처리*/
-					else
+					else if (true == CObjMgr::GetInstance()->Is_Monster(obj_num))
 					{
-						int i = 0;
+						CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", obj_num));
+
+						// 시야 내에 없다면 시야 목록에 등록X
+						if (false == CObjMgr::GetInstance()->Is_Near(pPlayer, pMonster)) continue;
+						pPlayer->v_lock.lock();
+						pPlayer->view_list.insert(obj_num);
+						pPlayer->v_lock.unlock();
+						send_Monster_enter_packet(id, obj_num);
 					}
 				}
 			}
@@ -418,9 +426,17 @@ void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 					}
 				}
 				/* MONSTER일 경우 처리*/
-				else
+				else if (true == CObjMgr::GetInstance()->Is_Monster(obj_num))
 				{
-					int i = 0;
+					CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", obj_num));
+
+					// 시야 내에 없다면 시야 목록에 등록X.
+					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pMonster))
+					{
+						new_viewlist.insert(obj_num);
+
+						// monster state change
+					}
 				}
 			}
 		}
@@ -467,9 +483,10 @@ void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 				send_NPC_enter_packet(id, server_num);
 			}
 			// 새로 시야에 들어온 MONSTER일 경우 처리
-			else
+			else if (true == CObjMgr::GetInstance()->Is_Monster(server_num))
 			{
-				int i = 0;
+				// 플레이어('나')에게 Monster 등장 패킷 전송
+				send_Monster_enter_packet(id, server_num);
 			}
 		}
 		// 플레이어 시야 목록에 계속 있는 객체 처리
@@ -610,9 +627,17 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 					}
 				}
 				/* MONSTER일 경우 처리*/
-				else
+				else if (true == CObjMgr::GetInstance()->Is_Monster(obj_num))
 				{
-					int i = 0;
+					CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", obj_num));
+
+					// 시야 내에 없다면 시야 목록에 등록X.
+					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pMonster))
+					{
+						new_viewlist.insert(obj_num);
+
+						// monster state change
+					}
 				}
 			}
 		}
@@ -659,9 +684,10 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 				send_NPC_enter_packet(id, server_num);
 			}
 			// 새로 시야에 들어온 MONSTER일 경우 처리
-			else
+			else if (true == CObjMgr::GetInstance()->Is_Monster(server_num))
 			{
-				int i = 0;
+				// 플레이어('나')에게 Monster 등장 패킷 전송
+				send_Monster_enter_packet(id, server_num);
 			}
 		}
 		// 플레이어 시야 목록에 계속 있는 객체 처리
@@ -755,9 +781,9 @@ void send_NPC_enter_packet(int to_client, int new_id)
 	p.posY = pNewNPC->m_vPos.y;
 	p.posZ = pNewNPC->m_vPos.z;
 
-	p.dirX = pNewNPC->m_vDir.x;
-	p.dirY = pNewNPC->m_vDir.y;
-	p.dirZ = pNewNPC->m_vDir.z;
+	p.angleX = pNewNPC->m_vAngle.x;
+	p.angleY = pNewNPC->m_vAngle.y;
+	p.angleZ = pNewNPC->m_vAngle.z;
 
 	send_packet(to_client, &p);
 }
@@ -1008,6 +1034,40 @@ void active_npc(int id)
 		
 		}
 	}
+}
+
+void send_Monster_enter_packet(int to_client, int new_id)
+{
+	sc_packet_monster_enter p;
+
+	CMonster* pNewMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", new_id));
+
+	if (pNewMonster == nullptr) return;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_MONSTER_ENTER;
+	p.id = new_id;
+
+	pNewMonster->Get_ClientLock().lock();
+	strncpy_s(p.name, pNewMonster->m_ID, strlen(pNewMonster->m_ID));
+	strncpy_s(p.naviType, pNewMonster->m_naviType, strlen(pNewMonster->m_naviType));
+
+	pNewMonster->Get_ClientLock().unlock();
+
+	p.mon_num = pNewMonster->m_monNum;
+
+	p.posX = pNewMonster->m_vPos.x;
+	p.posY = pNewMonster->m_vPos.y;
+	p.posZ = pNewMonster->m_vPos.z;
+
+	p.angleX = pNewMonster->m_vAngle.x;
+	p.angleY = pNewMonster->m_vAngle.y;
+	p.angleZ = pNewMonster->m_vAngle.z;
+
+	p.Hp = pNewMonster->Hp;
+	p.maxHp = pNewMonster->maxHp;
+	
+	send_packet(to_client, &p);
 }
 
 /*===========================================FUNC====================================================*/

@@ -34,6 +34,7 @@ constexpr char SC_PACKET_LOGIN_FAIL = 6;
 constexpr char SC_PACKET_STAT_CHANGE = 7;
 constexpr char SC_PACKET_NPC_MOVE = 8;
 constexpr char SC_PACKET_NPC_ENTER = 9;
+constexpr char SC_PACKET_MONSTER_ENTER = 10;
 
 constexpr char CS_LOGIN = 0;
 constexpr char CS_MOVE = 1;
@@ -82,7 +83,8 @@ struct sc_packet_move
 
 /* CHARACTER TYPE */
 constexpr char TYPE_PLAYER = 0;
-constexpr char TYPE_NPC = 1;	
+constexpr char TYPE_NPC = 1;
+constexpr char TYPE_MONSTER = 2;
 
 /*____________________________________________________________________
 NPC NUMBER
@@ -91,6 +93,13 @@ constexpr char NPC_NORMAL = 0;
 constexpr char NPC_MERCHANT = 1;
 constexpr char NPC_QUEST = 2;
 constexpr char NPC_BG = 3;
+
+/*____________________________________________________________________
+MONSTER NUMBER
+______________________________________________________________________*/
+constexpr char MON_NORMAL = 0;
+constexpr char MON_CHASE = 1;
+constexpr char MON_BOSS = 2;
 
 struct sc_packet_enter 
 {
@@ -115,7 +124,21 @@ struct sc_packet_npc_enter
 	char o_type;
 	char npc_num;
 	float posX, posY, posZ;
-	float dirX, dirY, dirZ;
+	float angleX, angleY, angleZ;
+};
+
+struct sc_packet_monster_enter
+{
+	unsigned char size;
+	char type;
+	int  id;
+
+	char name[MAX_ID_LEN];
+	char naviType[MIDDLE_STR_LEN];
+	char mon_num;
+	int Hp, maxHp;
+	float posX, posY, posZ;
+	float angleX, angleY, angleZ;
 };
 
 struct sc_packet_leave 

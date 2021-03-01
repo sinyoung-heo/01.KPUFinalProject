@@ -17,11 +17,14 @@ void process_packet(int id);													// 패킷 처리 함수 (모든 컨텐츠 처리)
 void process_recv(int id, DWORD iosize);										// 패킷 재조립 함수 (Ring Buffer 사용)
 
 /* ==========================NPC========================== */
-void send_NPC_enter_packet(int to_client, int new_id);							// NPC등장 패킷
+void send_NPC_enter_packet(int to_client, int new_id);							// NPC 등장 패킷
 void send_NPC_move_packet(int to_client, int id);								// 움직임 패킷
 
 void random_move_npc(int id);													// NPC 랜덤 움직임
 void active_npc(int id);														// 해당 NPC의 STATUS = ST_ACTIVE
+
+/* ==========================MONSTER========================== */
+void send_Monster_enter_packet(int to_client, int new_id);						// Monster 등장 패킷
 
 /* =========================FUNC========================== */
 void add_timer(int obj_id, OPMODE ev_type, system_clock::time_point t);

@@ -192,38 +192,23 @@ void CPacketMgr::ProcessPacket(char* ptr)
 	{
 		sc_packet_enter* packet = reinterpret_cast<sc_packet_enter*>(ptr);
 
-		/* 객체의 타입 판별: Player/Monster/NPC */
-		switch (packet->o_type)
-		{
-		/* other player */
-		case TYPE_PLAYER:
-		{
-			if (packet->id == g_iSNum) break;
+		if (packet->id == g_iSNum) break;
 
-			/*__________________________________________________________________________________________________________
-			[ GameLogic Object(player) 생성 ]
-			____________________________________________________________________________________________________________*/
+		/*__________________________________________________________________________________________________________
+		[ GameLogic Object(player) 생성 ]
+		____________________________________________________________________________________________________________*/
 
-			Engine::CGameObject* pGameObj = nullptr;
+		Engine::CGameObject* pGameObj = nullptr;
 
-			pGameObj = CTestOthers::Create(m_pGraphicDevice, m_pCommandList,
-											L"PoporiH25",											// MeshTag
-										   _vec3(0.05f, 0.05f, 0.05f),								// Scale
-										   _vec3(0.0f, 0.0f, 0.0f),									// Angle
-										   _vec3(packet->posX, packet->posY, packet->posZ));		// Pos
+		pGameObj = CTestOthers::Create(m_pGraphicDevice, m_pCommandList,
+									   L"PoporiH25",											// MeshTag
+									   _vec3(0.05f, 0.05f, 0.05f),								// Scale
+									   _vec3(0.0f, 0.0f, 0.0f),									// Angle
+									   _vec3(packet->posX, packet->posY, packet->posZ));		// Pos
 
-			pGameObj->Set_ServerNumber(packet->id);
+		pGameObj->Set_ServerNumber(packet->id);
 
-			Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"Others", pGameObj), E_FAIL);
-		}
-		break;
-		/* npc */
-		case TYPE_NPC:
-		{
-			
-		}
-		break;
-		}
+		Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"Others", pGameObj), E_FAIL);
 	}
 	break;
 
@@ -295,8 +280,10 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 		if (packet->id == g_iSNum) break;
 
-		if (packet->id >= NPC_NUM_START)
+		if (packet->id >= NPC_NUM_START && packet->id < MON_NUM_START)
 			Engine::CObjectMgr::Get_Instance()->Delete_ServerObject(L"Layer_GameObject", L"NPC", packet->id);
+		else if (packet->id >= MON_NUM_START)
+			Engine::CObjectMgr::Get_Instance()->Delete_ServerObject(L"Layer_GameObject", L"MONSTER", packet->id);
 		else
 			Engine::CObjectMgr::Get_Instance()->Delete_ServerObject(L"Layer_GameObject", L"Others", packet->id);
 	}
@@ -317,25 +304,17 @@ void CPacketMgr::ProcessPacket(char* ptr)
 										wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
 										wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
 										_vec3(0.05f, 0.05f, 0.05f),										// Scale
-										_vec3(0.0f, 0.0f, 0.0f),										// Angle
+										_vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
 										_vec3(packet->posX, packet->posY, packet->posZ));				// Pos
 		}
 		else if (!strcmp(packet->name, "Aman_boy") || !strcmp(packet->name, "Human_boy") 
 				 || !strcmp(packet->name, "Popori_boy"))
 		{
-			_vec3 vAngle = _vec3(0.f);
-			if (packet->npc_num == NPC_BG)
-			{
-				if (!strcmp(packet->name, "Human_boy"))
-					vAngle = _vec3(0.0f, 90.0f, 0.0f);
-				else
-					vAngle = _vec3(0.0f, -90.0f, 0.0f);	
-			}
 			pGameObj = CNPC_Boy::Create(m_pGraphicDevice, m_pCommandList,
 										wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
 										wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
 										_vec3(0.05f, 0.05f, 0.05f),										// Scale
-										vAngle,															// Angle
+										_vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
 										_vec3(packet->posX, packet->posY, packet->posZ));				// Pos
 		}
 		else if (!strcmp(packet->name, "NPC_Villagers"))
@@ -344,7 +323,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 										wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
 										wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
 										_vec3(0.05f, 0.05f, 0.05f),										// Scale
-										_vec3(0.0f, -90.0f, 0.0f),										// Angle
+										_vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
 										_vec3(packet->posX, packet->posY, packet->posZ));				// Pos
 		}
 		
@@ -365,6 +344,30 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 		pObj->Set_MoveStop(false);
+	}
+	break;
+
+	case SC_PACKET_MONSTER_ENTER:
+	{
+		sc_packet_monster_enter* packet = reinterpret_cast<sc_packet_monster_enter*>(ptr);
+
+		/*__________________________________________________________________________________________________________
+		[ GameLogic Object(MONSTER) 생성 ]
+		____________________________________________________________________________________________________________*/
+		Engine::CGameObject* pGameObj = nullptr;
+
+		pGameObj = CNPC_Boy::Create(m_pGraphicDevice, m_pCommandList,
+			wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
+			wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
+			_vec3(0.05f, 0.05f, 0.05f),										// Scale
+			_vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
+			_vec3(packet->posX, packet->posY, packet->posZ));
+
+		// hp + maxhp 정보도 저장해야 함.
+
+		pGameObj->Set_ServerNumber(packet->id);
+		Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);
+
 	}
 	break;
 

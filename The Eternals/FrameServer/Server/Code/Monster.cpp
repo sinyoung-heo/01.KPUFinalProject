@@ -2,7 +2,7 @@
 #include "Monster.h"
 
 CMonster::CMonster()
-	:Hp(0), maxHp(0), Exp(0), att(0)
+	:Hp(0), maxHp(0)
 {
 }
 

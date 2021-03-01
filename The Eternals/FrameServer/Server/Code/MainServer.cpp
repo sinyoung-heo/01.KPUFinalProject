@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "Npc.h"
+#include "Monster.h"
 
 /* IOCP SERVER 관련 변수*/
 HANDLE g_hIocp;
@@ -80,7 +81,10 @@ void Ready_Server()
 	Ready_ServerManager();
 
 	/* Create NPC */
-	Initialize_NPC();
+	//Initialize_NPC();
+
+	/* Create Monster */
+	Initialize_Monster();
 
 	std::wcout.imbue(std::locale("korean"));
 
@@ -249,7 +253,7 @@ void Initialize_NPC()
 		pNew->m_vPos = _vec3(91.2f, 0.f, 60.0f);
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
+		pNew->m_vAngle = _vec3(0.f, -90.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_BG;
 		pNew->m_status = STATUS::ST_NONACTIVE;
@@ -276,7 +280,7 @@ void Initialize_NPC()
 		pNew->m_vPos = _vec3(90.0f, 0.f, 60.0f);
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
+		pNew->m_vAngle = _vec3(0.f, 90.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_BG;
 		pNew->m_status = STATUS::ST_NONACTIVE;
@@ -384,7 +388,7 @@ void Initialize_NPC()
 		pNew->m_vPos = _vec3(138.0f, 0.f, 85.0f);
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
+		pNew->m_vAngle = _vec3(0.f, -90.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_BG;
 		pNew->m_status = STATUS::ST_NONACTIVE;
@@ -411,7 +415,7 @@ void Initialize_NPC()
 		pNew->m_vPos = _vec3(137.0f, 0.f, 85.f);
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
+		pNew->m_vAngle = _vec3(0.f, 90.f, 0.f);
 		pNew->m_type = TYPE_NPC;
 		pNew->m_npcNum = NPC_BG;
 		pNew->m_status = STATUS::ST_NONACTIVE;
@@ -848,10 +852,56 @@ void Delete_NPC()
 
 void Initialize_Monster()
 {
+	CMonster* pNew = nullptr;
+	int s_num = -1;
+
+	/* ______________________________________________________________________________________________________*/
+	/*											SCENE - TEST												 */
+	/* ______________________________________________________________________________________________________*/
+
+	// TEST MONSTER
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->m_sNum += MON_NUM_START;
+		s_num = pNew->m_sNum;
+
+		pNew->Set_IsConnected(true);
+		pNew->Set_IsDead(false);
+		strncpy_s(pNew->m_ID, "Human_boy", strlen("Human_boy"));
+		strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
+
+		pNew->m_vPos = _vec3(143.0f, 0.f, 75.0f);
+		pNew->m_vTempPos = pNew->m_vPos;
+		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
+		pNew->m_vAngle = _vec3(0.f, 90.f, 0.f);
+		pNew->Hp = 100;
+		pNew->maxHp = 100;
+		pNew->m_type = TYPE_MONSTER;
+		pNew->m_monNum = MON_NORMAL;
+		pNew->m_status = STATUS::ST_NONACTIVE;
+
+		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
+		CObjMgr::GetInstance()->Add_GameObject(L"MONSTER", pNew, s_num);
+	}
+	else return;
 }
 
 void Delete_Monster()
 {
+	auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"MONSTER")->begin();
+	auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"MONSTER")->end();
+
+	for (iter_begin; iter_begin != iter_end;)
+	{
+		CObjPoolMgr::GetInstance()->return_Object(L"MONSTER", iter_begin->second);
+		CObjMgr::GetInstance()->Delete_GameObject(L"MONSTER", iter_begin->second);
+
+		iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"MONSTER")->begin();
+		iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"MONSTER")->end();
+	}
 }
 
 void add_new_client(SOCKET ns)
@@ -911,7 +961,7 @@ void add_new_client(SOCKET ns)
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector((int)s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-		CObjMgr::GetInstance()->Add_GameObject(L"PLAYER",pNew, (int)s_num);
+		CObjMgr::GetInstance()->Add_GameObject(L"PLAYER", pNew, (int)s_num);
 
 		/* 해당 클라이언트 소켓을 IOCP에 등록 */
 		CreateIoCompletionPort(reinterpret_cast<HANDLE>(ns), g_hIocp, s_num, 0);
@@ -1012,6 +1062,7 @@ void disconnect_client(int id)
 	if (CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER")->size() <= 0)
 	{
 		Delete_NPC();
+		Delete_Monster();
 		Release_Server();
 	}
 }

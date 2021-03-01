@@ -22,7 +22,8 @@ public:
 
 public:
 	bool Is_Player(int server_num = 0);
-	bool Is_NPC(int server_num = 0);
+	bool Is_NPC(int server_num = NPC_NUM_START);
+	bool Is_Monster(int server_num = MON_NUM_START);
 	bool Is_Near(const CObj* me, const CObj* other);
 
 public:
