@@ -434,8 +434,7 @@ void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pMonster))
 					{
 						new_viewlist.insert(obj_num);
-
-						// monster state change
+						active_monster(obj_num);
 					}
 				}
 			}
@@ -635,8 +634,7 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pMonster))
 					{
 						new_viewlist.insert(obj_num);
-
-						// monster state change
+						active_monster(obj_num);
 					}
 				}
 			}
@@ -1068,6 +1066,252 @@ void send_Monster_enter_packet(int to_client, int new_id)
 	p.maxHp = pNewMonster->maxHp;
 	
 	send_packet(to_client, &p);
+}
+
+void send_Monster_move_packet(int to_client, int id)
+{
+	sc_packet_move p;
+
+	CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", id));
+
+	if (pMonster == nullptr) return;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_MONSTER_MOVE;
+	p.id = id;
+
+	p.posX = pMonster->m_vTempPos.x;
+	p.posY = pMonster->m_vTempPos.y;
+	p.posZ = pMonster->m_vTempPos.z;
+
+	p.dirX = pMonster->m_vDir.x;
+	p.dirY = pMonster->m_vDir.y;
+	p.dirZ = pMonster->m_vDir.z;
+
+	send_packet(to_client, &p);
+}
+
+void active_monster(int id)
+{
+	CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", id));
+
+	if (nullptr == pMonster) return;
+
+	/* Monster가 활성화되어 있지 않을 경우 활성화 */
+	if (pMonster->m_status == ST_NONACTIVE)
+	{
+		STATUS prev_state = pMonster->m_status;
+		if (true == atomic_compare_exchange_strong(&pMonster->m_status, &prev_state, ST_ACTIVE))
+		{
+			switch (pMonster->m_monNum)
+			{
+			case MON_NORMAL:
+				add_timer(id, OP_RANDOM_MOVE_MONSTER, system_clock::now() + 1s);
+				break;
+			case MON_CHASE:
+				break;
+			case MON_BOSS:
+				break;
+			}
+
+		}
+	}
+}
+
+void random_move_monster(int id)
+{
+	CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", id));
+
+	if (pMonster == nullptr) return;
+
+	/* 해당 Monster의 원래 위치값 */
+	float ori_x, ori_y, ori_z;
+	ori_x = pMonster->m_vPos.x;
+	ori_y = pMonster->m_vPos.y;
+	ori_z = pMonster->m_vPos.z;
+
+	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
+	unordered_set<pair<int, int>> oldnearSector;
+	oldnearSector.reserve(5);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
+
+	unordered_set <int> old_viewlist;
+
+	// 이동 전: 인접 섹터 순회
+	for (auto& s : oldnearSector)
+	{
+		// 인접 섹터 내의 타 유저들이 있는지 검사
+		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+		{
+			// 타 유저의 서버 번호 추출
+			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			{
+				/* 타유저일 경우 처리 */
+				if (obj_num == id) continue;
+				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+
+					// 접속한 유저만 시야 목록에 등록한다.
+					if (!pPlayer->Get_IsConnected()) continue;
+
+					// 시야 내에 있다면 시야 목록에 등록한다.
+					if (CObjMgr::GetInstance()->Is_Near(pMonster, pPlayer))
+						old_viewlist.insert(obj_num);
+				}
+			}
+		}
+	}
+
+	/* Monster 움직임 처리 */
+	switch (rand() % 8)
+	{
+	case 0: pMonster->m_vDir = _vec3(0.f, 0.f, 1.f); break;
+	case 1: pMonster->m_vDir = _vec3(0.f, 0.f, -1.f); break;
+	case 2: pMonster->m_vDir = _vec3(1.f, 0.f, 0.f); break;
+	case 3: pMonster->m_vDir = _vec3(1.f, 0.f, 1.f); break;
+	case 4: pMonster->m_vDir = _vec3(1.f, 0.f, -1.f); break;
+	case 5: pMonster->m_vDir = _vec3(-1.f, 0.f, 0.f); break;
+	case 6: pMonster->m_vDir = _vec3(-1.f, 0.f, 1.f); break;
+	case 7: pMonster->m_vDir = _vec3(-1.f, 0.f, -1.f); break;
+	}
+
+	/* 해당 NPC의 미래 위치 좌표 산출 -> 미래 위치좌표는 임시 변수에 저장 */
+	pMonster->m_vTempPos += pMonster->m_vDir * 3.f;
+
+	/* NaviMesh를 벗어날 경우 움직임 X */
+	if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(pMonster->m_vTempPos) == -1)
+	{
+		pMonster->m_vTempPos = pMonster->m_vPos;
+		add_timer(id, OPMODE::OP_RANDOM_MOVE_MONSTER, system_clock::now() + 15s);
+		return;
+	}
+
+	/* 변경된 좌표로 섹터 갱신 */
+	CSectorMgr::GetInstance()->Compare_exchange_Sector(id, (int)ori_z, (int)ori_x, (int)(pMonster->m_vPos.z), (int)(pMonster->m_vPos.x));
+
+	// 움직인 후 위치에서의 viewlist (시야 내에 플레이어 저장)
+	unordered_set <int> new_viewlist;
+
+	unordered_set<pair<int, int>> nearSectors;
+	nearSectors.reserve(5);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSectors, (int)(pMonster->m_vPos.x), (int)(pMonster->m_vPos.z));
+
+	// 이동 후: 인접 섹터 순회 -> 유저가 있을 시 new viewlist 내에 등록
+	for (auto& s : nearSectors)
+	{
+		// 인접 섹터 내의 타 유저들이 있는지 검사
+		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+		{
+			// 타 유저의 서버 번호 추출
+			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			{
+				/* 타유저일 경우 처리 */
+				if (obj_num == id) continue;
+				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+
+					// 접속한 유저만 시야 목록에 등록한다.
+					if (!pPlayer->Get_IsConnected()) continue;
+
+					// 시야 내에 있다면 시야 목록에 등록한다.
+					if (CObjMgr::GetInstance()->Is_Near(pMonster, pPlayer))
+						new_viewlist.insert(obj_num);
+				}
+			}
+		}
+	}
+
+	/* 유저들 중 현재 NPC를 시야 목록 안에 가지고 있는 경우 -> true */
+	bool isInContinue = false;
+
+	// 이동 전 viewlist & 이동 후 viewlist 비교 -> 각 유저들의 시야 목록 내에 Monster 존재 여부를 결정.
+	for (auto pl : old_viewlist)
+	{
+		// 이동 후에도 Monster 시야 목록 내에 "pl"(server number) 유저가 남아있는 경우
+		if (0 < new_viewlist.count(pl))
+		{
+			// 현재 NPC는 계속 어떤 유저의 시야 목록에 있어야 함.
+			isInContinue = true;
+
+			CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
+			if (pPlayer != nullptr)
+			{
+				/* 해당 유저의 시야 목록에 현재 Monster가 존재할 경우 */
+				pPlayer->v_lock.lock();
+				if (0 < pPlayer->view_list.count(id))
+				{
+					pPlayer->v_lock.unlock();
+					/* 해당 유저에게 NPC가 움직인 후의 위치를 전송 */
+					send_Monster_move_packet(pl, id);
+				}
+				/* 해당 유저의 시야 목록에 현재 Monster가 존재하지 않을 경우 */
+				else
+				{
+					/* 해당 유저의 시야 목록에 현재 Monster 등록 */
+					pPlayer->view_list.insert(id);
+					pPlayer->v_lock.unlock();
+					send_Monster_enter_packet(pl, id);
+
+					/* 해당 유저에게 Monster가 움직인 후의 위치를 전송 */
+					send_Monster_move_packet(pl, id);
+				}
+			}
+		}
+		// 이동 후에 Monster 시야 목록 내에 "pl"(server number) 유저가 없는 경우
+		else
+		{
+			CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
+			if (pPlayer != nullptr)
+			{
+				/* 해당 유저의 시야 목록에 현재 Monster가 존재할 경우 */
+				pPlayer->v_lock.lock();
+				if (0 < pPlayer->view_list.count(id))
+				{
+					/* 해당 유저의 시야 목록에서 현재 Monster 삭제 */
+					pPlayer->view_list.erase(id);
+					pPlayer->v_lock.unlock();
+					send_leave_packet(pl, id);
+				}
+				else
+					pPlayer->v_lock.unlock();
+			}
+		}
+	}
+
+	// new_vielist 순회 -> 플레이어의 시야 목록에 있어야 할 새로운 Monster들을 추가
+	for (auto pl : new_viewlist)
+	{
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
+		if (pPlayer != nullptr)
+		{
+			pPlayer->v_lock.lock();
+			if (0 == pPlayer->view_list.count(pl))
+			{
+				/* 각 유저의 시야 목록 내에 현재 Monster가 없을 경우 -> 현재 Monster 등록 */
+				if (0 == pPlayer->view_list.count(id))
+				{
+					pPlayer->view_list.insert(id);
+					pPlayer->v_lock.unlock();
+					send_Monster_enter_packet(pl, id);
+				}
+				/* 각 유저의 시야 목록 내에 현재 Monster가 있을 경우 -> 현재 Monster 위치 전송 */
+				else
+				{
+					pPlayer->v_lock.unlock();
+					send_Monster_move_packet(pl, id);
+				}
+			}
+			else
+				pPlayer->v_lock.unlock();
+		}
+
+	}
+
+	/* 다음 움직임 명령 예약 */
+	pMonster->m_vPos = pMonster->m_vTempPos;
+	add_timer(id, OPMODE::OP_RANDOM_MOVE_MONSTER, system_clock::now() + 15s);
 }
 
 /*===========================================FUNC====================================================*/
