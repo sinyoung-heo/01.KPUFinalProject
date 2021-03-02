@@ -66,7 +66,7 @@ public:
 	_vec3					m_vRectOffset;
 	_bool					m_bIsRenderRect = false;
 
-	vector<CToolUIChild*>	m_vecUIChild;
+	vector<Engine::CGameObject*> m_vecUIChild;
 
 private:
 	_vec3 m_vConvert     = _vec3(0.0f);

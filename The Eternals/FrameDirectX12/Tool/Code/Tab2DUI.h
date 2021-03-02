@@ -101,7 +101,9 @@ public:
 	____________________________________________________________________________________________________________*/
 	afx_msg void OnBnClickedRadio2103_ChildUICreateMode();
 	afx_msg void OnBnClickedRadio2104_ChildUIModifyMode();
-
+	afx_msg void OnBnClickedCheck2101_CheckChildIsSpriteAnimation();
+	afx_msg void OnBnClickedButton2103_ChildUICreate();
+	afx_msg void OnBnClickedButton2102_ChildUIDelete();
 
 	/*__________________________________________________________________________________________________________
 	[ ChildUI Control ]
@@ -138,7 +140,8 @@ public:
 	float	m_fChildPosOffsetY       = 0.0f;
 	float	m_fChildScaleOffsetX     = 1.0f;
 	float	m_fChildScaleOffsetY     = 1.0f;
-	long	m_fChildUIDepth          = 900;
+	_bool	m_bIsChildAnimation      = false;
+	long	m_ChildUIDepth           = 900;
 	float	m_fChildFrameSpeed       = 0.0f;
 	float	m_fChildRectPosOffsetX   = 0.0f;
 	float	m_fChildRectPosOffsetY   = 0.0f;

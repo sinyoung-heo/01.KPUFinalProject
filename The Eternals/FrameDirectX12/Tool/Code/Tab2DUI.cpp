@@ -93,7 +93,7 @@ void CTab2DUI::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT2117, m_fChildPosOffsetY);
 	DDX_Text(pDX, IDC_EDIT2119, m_fChildScaleOffsetX);
 	DDX_Text(pDX, IDC_EDIT2120, m_fChildScaleOffsetY);
-	DDX_Text(pDX, IDC_EDIT2118, m_fChildUIDepth);
+	DDX_Text(pDX, IDC_EDIT2118, m_ChildUIDepth);
 	DDX_Text(pDX, IDC_EDIT2126, m_fChildFrameSpeed);
 	DDX_Text(pDX, IDC_EDIT2122, m_fChildRectPosOffsetX);
 	DDX_Text(pDX, IDC_EDIT2123, m_fChildRectPosOffsetY);
@@ -115,6 +115,9 @@ BEGIN_MESSAGE_MAP(CTab2DUI, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON2101, &CTab2DUI::OnBnClickedButton2101_DeleteRootUI)
 	ON_BN_CLICKED(IDC_RADIO2103, &CTab2DUI::OnBnClickedRadio2103_ChildUICreateMode)
 	ON_BN_CLICKED(IDC_RADIO2104, &CTab2DUI::OnBnClickedRadio2104_ChildUIModifyMode)
+	ON_BN_CLICKED(IDC_CHECK2101, &CTab2DUI::OnBnClickedCheck2101_CheckChildIsSpriteAnimation)
+	ON_BN_CLICKED(IDC_BUTTON2103, &CTab2DUI::OnBnClickedButton2103_ChildUICreate)
+	ON_BN_CLICKED(IDC_BUTTON2102, &CTab2DUI::OnBnClickedButton2102_ChildUIDelete)
 END_MESSAGE_MAP()
 
 
@@ -535,15 +538,23 @@ void CTab2DUI::OnBnClickedRadio2100_RootCreateMode()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	UpdateData(TRUE);
 
+	// RootUI
 	m_RadioRootCreateMode.SetCheck(TRUE);
 	m_bIsRootCreateMode = true;
-
 	m_RadioRootModifyMode.SetCheck(FALSE);
 	m_bIsRootModifyMode = false;
 
 	m_EditRootUITag.EnableWindow(TRUE);
 	m_EditDataFileName.EnableWindow(TRUE);
 	m_EditObjectTag.EnableWindow(TRUE);
+
+	// ChildUI
+	m_RadioChildUICreateMode.SetCheck(TRUE);
+	m_bIsChildCreateMode = true;
+	m_RadioChildUIModifyMode.SetCheck(FALSE);
+	m_bIsChildModifyMode = false;
+
+	m_EditChildObjectTag.EnableWindow(TRUE);
 
 	UpdateData(FALSE);
 }
@@ -554,15 +565,23 @@ void CTab2DUI::OnBnClickedRadio2101_RootModifyMode()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	UpdateData(TRUE);
 
+	// RootUI
 	m_RadioRootCreateMode.SetCheck(FALSE);
 	m_bIsRootCreateMode = false;
-
 	m_RadioRootModifyMode.SetCheck(TRUE);
 	m_bIsRootModifyMode = true;
 
 	m_EditRootUITag.EnableWindow(FALSE);
 	m_EditDataFileName.EnableWindow(FALSE);
 	m_EditObjectTag.EnableWindow(FALSE);
+	
+	// ChildUI
+	m_RadioChildUICreateMode.SetCheck(FALSE);
+	m_bIsChildCreateMode = false;
+	m_RadioChildUIModifyMode.SetCheck(TRUE);
+	m_bIsChildModifyMode = true;
+
+	m_EditChildObjectTag.EnableWindow(FALSE);
 
 	UpdateData(FALSE);
 }
@@ -774,7 +793,6 @@ void CTab2DUI::OnBnClickedRadio2103_ChildUICreateMode()
 
 	m_RadioChildUICreateMode.SetCheck(TRUE);
 	m_bIsChildCreateMode = true;
-
 	m_RadioChildUIModifyMode.SetCheck(FALSE);
 	m_bIsChildModifyMode = false;
 
@@ -791,11 +809,102 @@ void CTab2DUI::OnBnClickedRadio2104_ChildUIModifyMode()
 
 	m_RadioChildUICreateMode.SetCheck(FALSE);
 	m_bIsChildCreateMode = false;
-
 	m_RadioChildUIModifyMode.SetCheck(TRUE);
 	m_bIsChildModifyMode = true;
 
 	m_EditChildObjectTag.EnableWindow(FALSE);
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnBnClickedCheck2101_CheckChildIsSpriteAnimation()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
+	m_bIsChildAnimation = m_CheckChildIsAnimation.GetCheck();
+
+	if (m_bIsChildAnimation)
+		m_EditChildFrameSpeed.EnableWindow(TRUE);
+	else
+	{
+		m_EditChildFrameSpeed.EnableWindow(FALSE);
+		m_fChildFrameSpeed = 0.0f;
+	}
+
+	if (m_bIsChildModifyMode)
+	{
+		//CToolUIRoot* pPickingRootUI = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingRootUI;
+		//if (nullptr != pPickingRootUI)
+		//	pPickingRootUI->m_bIsSpriteAnimation = m_bIsChildAnimation;
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnBnClickedButton2103_ChildUICreate()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
+	if (m_bIsChildCreateMode)
+	{
+		if (m_wstrRootDataFileName == L"" || 
+			m_wstrChildRootObjectTag == L"" || 
+			m_wstrChildObjectTag == L"")
+			return;
+
+		// RootUI
+		CToolUIRoot* pRootUI = static_cast<CToolUIRoot*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", wstring(m_wstrChildRootObjectTag)));
+		if (nullptr == pRootUI)
+			return;
+
+
+		wstring wstrDataFullPath;
+		_tchar szPath[MAX_STR] = L"";
+		GetCurrentDirectory(MAX_STR, szPath);		// 작업중인 현재 경로.
+		PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+		PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+		lstrcat(szPath, L"\\Bin\\ToolData\\");
+		wstrDataFullPath = wstring(szPath) + wstring(m_wstrRootDataFileName);
+		wstrDataFullPath = CToolFileInfo::ConvertRelativePath(wstrDataFullPath.c_str());
+
+
+		// UI 생성.
+		Engine::CGameObject* pGameObj = nullptr;
+		pGameObj = CToolUIChild::Create(Engine::CGraphicDevice::Get_Instance()->Get_GraphicDevice(),
+									    Engine::CGraphicDevice::Get_Instance()->Get_CommandList(Engine::CMD_MAIN),
+									    wstring(m_wstrChildRootObjectTag),
+									    wstring(m_wstrChildObjectTag),
+									    wstrDataFullPath,
+									    _vec3(m_fChildPosOffsetX, m_fChildPosOffsetY, 0.0f),
+									    _vec3(m_fChildScaleOffsetX, m_fChildScaleOffsetX, 1.0f),
+									    m_bIsChildAnimation,
+									    m_fChildFrameSpeed,
+									    _vec3(m_fChildRectPosOffsetX, m_fChildRectPosOffsetY, 0.0f),
+									    _vec3(m_fChildRectScaleOffsetX, m_fChildRectScaleOffsetX, 1.0f),
+									    m_ChildUIDepth);
+		m_pObjectMgr->Add_GameObject(L"Layer_UI", wstring(m_wstrChildObjectTag), pGameObj);
+		pRootUI->m_vecUIChild.push_back(pGameObj);
+
+		// ListBox 추가.
+		m_ListBoxChildUI.AddString(m_wstrChildObjectTag);
+	}
+
+	CToolUIChild* pToolUIChild = nullptr;
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnBnClickedButton2102_ChildUIDelete()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+	
+
 
 	UpdateData(FALSE);
 }

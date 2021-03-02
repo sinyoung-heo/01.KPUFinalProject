@@ -73,16 +73,18 @@ _int CToolUIChild::Update_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
-	m_vConvert              = m_pTransCom->m_vPos.Convert_2DWindowToDescartes(WINCX, WINCY);
 	_matrix matScale        = XMMatrixScaling(m_pTransCom->m_vScale.x, m_pTransCom->m_vScale.y, m_pTransCom->m_vScale.z);
-	_matrix matTrans        = XMMatrixTranslation(m_vConvert.x, m_vConvert.y, m_vConvert.z);
-	m_pTransCom->m_matWorld = matScale *  matTrans * (*m_pmatRoot);
+	_matrix matTrans        = XMMatrixTranslation(m_pTransCom->m_vPos.x, m_pTransCom->m_vPos.y, m_pTransCom->m_vPos.z);
+	m_pTransCom->m_matWorld = matScale *  matTrans;
+	m_pTransCom->m_matWorld *= (*m_pmatRoot);
+
 
 	m_pTransColor->m_vPos     = m_pTransCom->m_vPos;
 	m_vConvertRect            = (m_pTransColor->m_vPos + m_vRectOffset).Convert_2DWindowToDescartes(WINCX, WINCY);
 	matScale                  = XMMatrixScaling(m_pTransColor->m_vScale.x, m_pTransColor->m_vScale.y, m_pTransColor->m_vScale.z);
-	matTrans                  = XMMatrixTranslation(m_vConvertRect.x, m_vConvertRect.y, m_vConvertRect.z);
+	matTrans                  = XMMatrixTranslation(m_pTransCom->m_vPos.x, m_pTransCom->m_vPos.y, m_pTransCom->m_vPos.z);
 	m_pTransColor->m_matWorld = matScale * matTrans * (*m_pmatRoot);
+	m_pTransColor->m_matWorld *= (*m_pmatRoot);
 
 	Update_Rect();
 
