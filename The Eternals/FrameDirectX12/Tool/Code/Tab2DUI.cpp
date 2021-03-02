@@ -67,6 +67,38 @@ void CTab2DUI::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_RADIO2100, m_RadioRootCreateMode);
 	DDX_Control(pDX, IDC_RADIO2101, m_RadioRootModifyMode);
 	DDX_Control(pDX, IDC_LIST2102, m_ListBoxDataFileName);
+	DDX_Control(pDX, IDC_RADIO2103, m_RadioChildUICreateMode);
+	DDX_Control(pDX, IDC_RADIO2104, m_RadioChildUIModifyMode);
+	DDX_Control(pDX, IDC_LIST2101, m_ListBoxChildUI);
+	DDX_Control(pDX, IDC_BUTTON2103, m_ButtonCreateChild);
+	DDX_Control(pDX, IDC_BUTTON2102, m_ButtonDeleteChild);
+	DDX_Control(pDX, IDC_EDIT2108, m_EditChildRootObjectTag);
+	DDX_Control(pDX, IDC_EDIT2115, m_EditChildObjectTag);
+	DDX_Control(pDX, IDC_EDIT2116, m_EditChildPosOffsetX);
+	DDX_Control(pDX, IDC_EDIT2117, m_EditChildPosOffsetY);
+	DDX_Control(pDX, IDC_EDIT2119, m_EditChildScaleOffsetX);
+	DDX_Control(pDX, IDC_EDIT2120, m_EditChildScaleOffsetY);
+	DDX_Control(pDX, IDC_EDIT2118, m_EditChildUIDepth);
+	DDX_Control(pDX, IDC_CHECK2101, m_CheckChildIsAnimation);
+	DDX_Control(pDX, IDC_EDIT2126, m_EditChildFrameSpeed);
+	DDX_Control(pDX, IDC_EDIT2122, m_EditChildRectPosOffsetX);
+	DDX_Control(pDX, IDC_EDIT2123, m_EditChildRectPosOffsetY);
+	DDX_Control(pDX, IDC_EDIT2124, m_EditChildRectScaleOffsetX);
+	DDX_Control(pDX, IDC_EDIT2125, m_EditChildRectScaleOffsetY);
+	DDX_Control(pDX, IDC_BUTTON2106, m_ButtonChildSAVE);
+	DDX_Control(pDX, IDC_BUTTON2107, m_ButtonChildLOAD);
+	DDX_Text(pDX, IDC_EDIT2108, m_wstrChildRootObjectTag);
+	DDX_Text(pDX, IDC_EDIT2115, m_wstrChildObjectTag);
+	DDX_Text(pDX, IDC_EDIT2116, m_fChildPosOffsetX);
+	DDX_Text(pDX, IDC_EDIT2117, m_fChildPosOffsetY);
+	DDX_Text(pDX, IDC_EDIT2119, m_fChildScaleOffsetX);
+	DDX_Text(pDX, IDC_EDIT2120, m_fChildScaleOffsetY);
+	DDX_Text(pDX, IDC_EDIT2118, m_fChildUIDepth);
+	DDX_Text(pDX, IDC_EDIT2126, m_fChildFrameSpeed);
+	DDX_Text(pDX, IDC_EDIT2122, m_fChildRectPosOffsetX);
+	DDX_Text(pDX, IDC_EDIT2123, m_fChildRectPosOffsetY);
+	DDX_Text(pDX, IDC_EDIT2124, m_fChildRectScaleOffsetX);
+	DDX_Text(pDX, IDC_EDIT2125, m_fChildRectScaleOffsetY);
 }
 
 
@@ -80,6 +112,9 @@ BEGIN_MESSAGE_MAP(CTab2DUI, CDialogEx)
 	ON_LBN_SELCHANGE(IDC_LIST2102, &CTab2DUI::OnLbnSelchangeList2102_DataFileName)
 	ON_BN_CLICKED(IDC_BUTTON2104, &CTab2DUI::OnBnClickedButton2104_RootUISAVE)
 	ON_BN_CLICKED(IDC_BUTTON2105, &CTab2DUI::OnBnClickedButton2105_RootUILOAD)
+	ON_BN_CLICKED(IDC_BUTTON2101, &CTab2DUI::OnBnClickedButton2101_DeleteRootUI)
+	ON_BN_CLICKED(IDC_RADIO2103, &CTab2DUI::OnBnClickedRadio2103_ChildUICreateMode)
+	ON_BN_CLICKED(IDC_RADIO2104, &CTab2DUI::OnBnClickedRadio2104_ChildUIModifyMode)
 END_MESSAGE_MAP()
 
 
@@ -91,6 +126,8 @@ BOOL CTab2DUI::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  여기에 추가 초기화 작업을 추가합니다.
+	
+	// RootUI
 	m_ListBoxDataFileName.EnableWindow(FALSE);
 	m_RadioRootCreateMode.EnableWindow(FALSE);
 	m_RadioRootModifyMode.EnableWindow(FALSE);
@@ -111,6 +148,28 @@ BOOL CTab2DUI::OnInitDialog()
 	m_EditRootRectPosOffsetY.EnableWindow(FALSE);
 	m_EditRootRectScaleX.EnableWindow(FALSE);
 	m_EditRootRectScaleY.EnableWindow(FALSE);
+
+	// ChildUI
+	m_RadioChildUICreateMode.EnableWindow(FALSE);
+	m_RadioChildUIModifyMode.EnableWindow(FALSE);
+	m_ListBoxChildUI.EnableWindow(FALSE);
+	m_ButtonCreateChild.EnableWindow(FALSE);
+	m_ButtonDeleteChild.EnableWindow(FALSE);
+	m_EditChildRootObjectTag.EnableWindow(FALSE);
+	m_EditChildObjectTag.EnableWindow(FALSE);
+	m_EditChildPosOffsetX.EnableWindow(FALSE);
+	m_EditChildPosOffsetY.EnableWindow(FALSE);
+	m_EditChildScaleOffsetX.EnableWindow(FALSE);
+	m_EditChildScaleOffsetY.EnableWindow(FALSE);
+	m_EditChildUIDepth.EnableWindow(FALSE);
+	m_CheckChildIsAnimation.EnableWindow(FALSE);
+	m_EditChildFrameSpeed.EnableWindow(FALSE);
+	m_EditChildRectPosOffsetX.EnableWindow(FALSE);
+	m_EditChildRectPosOffsetY.EnableWindow(FALSE);
+	m_EditChildRectScaleOffsetX.EnableWindow(FALSE);
+	m_EditChildRectScaleOffsetY.EnableWindow(FALSE);
+	m_ButtonChildSAVE.EnableWindow(FALSE);
+	m_ButtonChildLOAD.EnableWindow(FALSE);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
@@ -312,11 +371,11 @@ HRESULT CTab2DUI::Ready_Tab2DUI()
 {
 	UpdateData(TRUE);
 
+	// RootUI
 	m_ListBoxDataFileName.EnableWindow(TRUE);
 
 	m_RadioRootCreateMode.EnableWindow(TRUE);
 	m_RadioRootModifyMode.EnableWindow(TRUE);
-
 	m_RadioRootCreateMode.SetCheck(TRUE);
 	m_bIsRootCreateMode = true;
 	m_RadioRootModifyMode.SetCheck(FALSE);
@@ -336,6 +395,36 @@ HRESULT CTab2DUI::Ready_Tab2DUI()
 	m_EditRootRectPosOffsetY.EnableWindow(TRUE);
 	m_EditRootRectScaleX.EnableWindow(TRUE);
 	m_EditRootRectScaleY.EnableWindow(TRUE);
+
+	// ChildUI
+	m_RadioChildUICreateMode.EnableWindow(TRUE);
+	m_RadioChildUIModifyMode.EnableWindow(TRUE);
+	m_RadioChildUICreateMode.SetCheck(TRUE);
+	m_bIsChildCreateMode = true;
+	m_RadioChildUIModifyMode.SetCheck(FALSE);
+	m_bIsChildModifyMode = false;
+
+	m_ListBoxChildUI.EnableWindow(TRUE);
+	m_ButtonCreateChild.EnableWindow(TRUE);
+	m_ButtonDeleteChild.EnableWindow(TRUE);
+	m_EditChildRootObjectTag.EnableWindow(FALSE);
+	m_EditChildObjectTag.EnableWindow(TRUE);
+	m_EditChildPosOffsetX.EnableWindow(TRUE);
+	m_EditChildPosOffsetY.EnableWindow(TRUE);
+	m_EditChildScaleOffsetX.EnableWindow(TRUE);
+	m_EditChildScaleOffsetY.EnableWindow(TRUE);
+	m_EditChildUIDepth.EnableWindow(TRUE);
+
+	m_CheckChildIsAnimation.EnableWindow(TRUE);
+	m_CheckChildIsAnimation.SetCheck(false);
+	m_EditChildFrameSpeed.EnableWindow(FALSE);
+
+	m_EditChildRectPosOffsetX.EnableWindow(TRUE);
+	m_EditChildRectPosOffsetY.EnableWindow(TRUE);
+	m_EditChildRectScaleOffsetX.EnableWindow(TRUE);
+	m_EditChildRectScaleOffsetY.EnableWindow(TRUE);
+	m_ButtonChildSAVE.EnableWindow(TRUE);
+	m_ButtonChildLOAD.EnableWindow(TRUE);
 
 	UpdateData(FALSE);
 
@@ -386,7 +475,7 @@ void CTab2DUI::OnLbnSelchangeList2100_RootUITagSelect()
 
 	_int iSelectIdx = m_ListBoxRootUI.GetCaretIndex();
 	m_ListBoxRootUI.GetText(iSelectIdx, m_wstrRootUITag);
-
+	m_ListBoxRootUI.GetText(iSelectIdx, m_wstrChildRootObjectTag);
 
 	for (_int i = 0; i < m_ListBoxRootUI.GetCount(); ++i)
 	{
@@ -644,6 +733,69 @@ void CTab2DUI::OnBnClickedButton2105_RootUILOAD()
 
 		AfxMessageBox(L"Data Load Successed");
 	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnBnClickedButton2101_DeleteRootUI()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
+	CToolUIRoot* pPickingToolUIRoot = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingRootUI;
+	if (nullptr != pPickingToolUIRoot && m_bIsRootModifyMode)
+	{
+		pPickingToolUIRoot->Set_DeadGameObject();
+
+		// ListBox에서 제거.
+		for (_int i = 0; i < m_ListBoxRootUI.GetCount(); ++i)
+		{
+			CString wstrRootUITag = L"";
+			m_ListBoxRootUI.GetText(i, wstrRootUITag);
+
+			if (wstrRootUITag == CString(pPickingToolUIRoot->m_wstrObjectTag.c_str()))
+				m_ListBoxRootUI.DeleteString(i);
+		}
+
+		m_wstrRootUITag        = L"";
+		m_wstrRootDataFileName = L"";
+		m_wstrRootObjectTag    = L"";
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnBnClickedRadio2103_ChildUICreateMode()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
+	m_RadioChildUICreateMode.SetCheck(TRUE);
+	m_bIsChildCreateMode = true;
+
+	m_RadioChildUIModifyMode.SetCheck(FALSE);
+	m_bIsChildModifyMode = false;
+
+	m_EditChildObjectTag.EnableWindow(TRUE);
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnBnClickedRadio2104_ChildUIModifyMode()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
+	m_RadioChildUICreateMode.SetCheck(FALSE);
+	m_bIsChildCreateMode = false;
+
+	m_RadioChildUIModifyMode.SetCheck(TRUE);
+	m_bIsChildModifyMode = true;
+
+	m_EditChildObjectTag.EnableWindow(FALSE);
 
 	UpdateData(FALSE);
 }

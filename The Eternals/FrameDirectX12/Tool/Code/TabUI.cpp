@@ -109,19 +109,25 @@ void CTabUI::OnTcnSelchangeTab1(NMHDR* pNMHDR, LRESULT* pResult)
 		break;
 
 	case 1:
+	{
 		m_TabTexSpriteUV.ShowWindow(SW_HIDE);
 		m_Tab2DUI.ShowWindow(SW_SHOW);
 		m_Tab3DUI.ShowWindow(SW_HIDE);
 
 		m_bIsTabTexSpriteUV = false;
-		m_bIsTab2DUI        = true;
-		m_bIsTab3DUI        = false;
+		m_bIsTab2DUI = true;
+		m_bIsTab3DUI = false;
 
-		static_cast<CToolUICanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UICanvas"))->m_pTexDescriptorHeap = nullptr;
-		m_pObjectMgr->Clear_OBJLIST(L"Layer_UI", L"UIGridLineWidth");
-		m_pObjectMgr->Clear_OBJLIST(L"Layer_UI", L"UIGridLineHeight");
-		m_pObjectMgr->Clear_OBJLIST(L"Layer_UI", L"UIGridRect");
+		if (g_bIsLoadingFinish)
+		{
+			CToolUICanvas* pToolUICanvas = static_cast<CToolUICanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UICanvas"));
+			pToolUICanvas->m_pTexDescriptorHeap = nullptr;
 
+			m_pObjectMgr->Clear_OBJLIST(L"Layer_UI", L"UIGridLineWidth");
+			m_pObjectMgr->Clear_OBJLIST(L"Layer_UI", L"UIGridLineHeight");
+			m_pObjectMgr->Clear_OBJLIST(L"Layer_UI", L"UIGridRect");
+		}
+	}
 		break;
 	case 2:
 		m_TabTexSpriteUV.ShowWindow(SW_HIDE);

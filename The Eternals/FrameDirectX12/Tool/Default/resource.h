@@ -201,7 +201,6 @@
 #define IDC_BUTTON2105                  1153
 #define IDC_BUTTON2106                  1154
 #define IDC_BUTTON2107                  1155
-#define IDC_CHECK2103                   1157
 #define IDC_RADIO2100                   1158
 #define IDC_RADIO2101                   1159
 #define IDC_RADIO2103                   1160

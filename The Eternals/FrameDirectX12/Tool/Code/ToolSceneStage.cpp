@@ -541,6 +541,28 @@ void CToolSceneStage::KeyInput()
 	}
 #pragma endregion
 
+
+#pragma region TOOLROOTUI_MODIFY
+	// ToolRootUI 수정모드일 경우.
+	if (pMyForm->m_TabUI.m_Tab2DUI.m_bIsRootModifyMode && nullptr != m_pPickingRootUI)
+	{
+
+		if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON(Engine::DIM_LB)))
+		{
+			pMyForm->m_TabUI.m_Tab2DUI.UpdateData(TRUE);
+			
+			CMouseMgr::Get_CursorPoint().x;
+			m_pPickingRootUI->Get_Transform()->m_vPos.x = (_float)(CMouseMgr::Get_CursorPoint().x);
+			m_pPickingRootUI->Get_Transform()->m_vPos.y = (_float)(CMouseMgr::Get_CursorPoint().y);
+
+			pMyForm->m_TabUI.m_Tab2DUI.m_fRootPosX = (_float)(CMouseMgr::Get_CursorPoint().x);
+			pMyForm->m_TabUI.m_Tab2DUI.m_fRootPosY = (_float)(CMouseMgr::Get_CursorPoint().x);
+
+			pMyForm->m_TabUI.m_Tab2DUI.UpdateData(FALSE);
+		}
+
+	}
+#pragma endregion
 }
 
 
@@ -1112,6 +1134,20 @@ void CToolSceneStage::KeyInput_TabUI2DUI(CTab2DUI& TabUI2DUI)
 			TabUI2DUI.m_wstrRootObjectTag == L"")
 			return;
 
+		// ListBox에 동일한 ObjTag가 있는지 검사.
+		for (_int i = 0; i < TabUI2DUI.m_ListBoxRootUI.GetCount(); ++i)
+		{
+			CString wstrRootUITag = L"";
+			TabUI2DUI.m_ListBoxRootUI.GetText(i, wstrRootUITag);
+
+			if (wstrRootUITag == TabUI2DUI.m_wstrRootObjectTag)
+			{
+
+				AfxMessageBox(L"동일한 RootUI ObjectTag값 존재");
+				return;
+			}
+		}
+
 		Engine::CGameObject* pGameObj = nullptr;
 
 		wstring wstrDataFullPath;
@@ -1215,23 +1251,33 @@ void CToolSceneStage::KeyInput_Tab2DUIModeChange(CTab2DUI& TabUI2DUI)
 {
 	TabUI2DUI.UpdateData(TRUE);
 
+	// RootUI
 	TabUI2DUI.m_bIsRootCreateMode = !TabUI2DUI.m_bIsRootCreateMode;
 	TabUI2DUI.m_bIsRootModifyMode = !TabUI2DUI.m_bIsRootModifyMode;
 	TabUI2DUI.m_RadioRootCreateMode.SetCheck(TabUI2DUI.m_bIsRootCreateMode);
 	TabUI2DUI.m_RadioRootModifyMode.SetCheck(TabUI2DUI.m_bIsRootModifyMode);
+	
+	// ChildUI
+	TabUI2DUI.m_bIsChildCreateMode = !TabUI2DUI.m_bIsChildCreateMode;
+	TabUI2DUI.m_bIsChildModifyMode = !TabUI2DUI.m_bIsChildModifyMode;
+	TabUI2DUI.m_RadioChildUICreateMode.SetCheck(TabUI2DUI.m_bIsChildCreateMode);
+	TabUI2DUI.m_RadioChildUIModifyMode.SetCheck(TabUI2DUI.m_bIsChildModifyMode);
 
 	if (TabUI2DUI.m_bIsRootCreateMode)
 	{
 		TabUI2DUI.m_EditRootUITag.EnableWindow(TRUE);
 		TabUI2DUI.m_EditDataFileName.EnableWindow(TRUE);
 		TabUI2DUI.m_EditObjectTag.EnableWindow(TRUE);
+		TabUI2DUI.m_EditChildObjectTag.EnableWindow(TRUE);
 	}
 	else
 	{
 		TabUI2DUI.m_EditRootUITag.EnableWindow(FALSE);
 		TabUI2DUI.m_EditDataFileName.EnableWindow(FALSE);
 		TabUI2DUI.m_EditObjectTag.EnableWindow(FALSE);
+		TabUI2DUI.m_EditChildObjectTag.EnableWindow(FALSE);
 	}
+
 
 	TabUI2DUI.UpdateData(FALSE);
 }

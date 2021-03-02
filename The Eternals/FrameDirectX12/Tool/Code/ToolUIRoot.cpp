@@ -133,7 +133,7 @@ HRESULT CToolUIRoot::Add_Component()
 	// Transform
 	m_pTransColor = Engine::CTransform::Create();
 	Engine::NULL_CHECK_RETURN(m_pTransColor, E_FAIL);
-	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_TransColor", m_pBufferColor);
+	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_TransColor", m_pTransColor);
 
 	// Buffer
 	m_pBufferColor = static_cast<Engine::CRcCol*>(m_pComponentMgr->Clone_Component(L"RcCol", Engine::COMPONENTID::ID_STATIC));

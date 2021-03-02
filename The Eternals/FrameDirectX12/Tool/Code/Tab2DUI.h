@@ -35,6 +35,14 @@ public:
 	HRESULT	Ready_Tab2DUI();
 
 public:
+	Engine::CManagement*		m_pManagement		 = nullptr;
+	Engine::CObjectMgr*			m_pObjectMgr		 = nullptr;
+	Engine::CComponentMgr*		m_pComponentMgr		 = nullptr;
+	Engine::CDescriptorHeapMgr* m_pDescriptorHeapMgr = nullptr;
+
+	/*__________________________________________________________________________________________________________
+	[ RootUI Method ]
+	____________________________________________________________________________________________________________*/
 	afx_msg void OnLbnSelchangeList2102_DataFileName();
 	afx_msg void OnBnClickedCheck2100_RootUIIsAnimation();
 	afx_msg void OnLbnSelchangeList2100_RootUITagSelect();
@@ -42,14 +50,11 @@ public:
 	afx_msg void OnBnClickedRadio2101_RootModifyMode();
 	afx_msg void OnBnClickedButton2104_RootUISAVE();
 	afx_msg void OnBnClickedButton2105_RootUILOAD();
+	afx_msg void OnBnClickedButton2101_DeleteRootUI();
 
-	Engine::CManagement*		m_pManagement		 = nullptr;
-	Engine::CObjectMgr*			m_pObjectMgr		 = nullptr;
-	Engine::CComponentMgr*		m_pComponentMgr		 = nullptr;
-	Engine::CDescriptorHeapMgr* m_pDescriptorHeapMgr = nullptr;
 
 	/*__________________________________________________________________________________________________________
-	[ Control ]
+	[ RootUI Control ]
 	____________________________________________________________________________________________________________*/
 	CListBox	m_ListBoxDataFileName;
 	CButton		m_RadioRootCreateMode;
@@ -71,11 +76,10 @@ public:
 	CEdit		m_EditRootRectScaleY;
 
 	/*__________________________________________________________________________________________________________
-	[ Value ]
+	[ RootUI Value ]
 	____________________________________________________________________________________________________________*/
-	_bool m_bIsRootCreateMode	   = false;
-	_bool m_bIsRootModifyMode	   = false;
-
+	_bool	m_bIsRootCreateMode	   = false;
+	_bool	m_bIsRootModifyMode	   = false;
 	CString m_wstrRootUITag        = L"";
 	CString m_wstrRootDataFileName = L"";
 	CString m_wstrRootObjectTag    = L"";
@@ -90,4 +94,54 @@ public:
 	float	m_fRootRectPosOffsetY  = 0.0f;
 	float	m_fRootRectScaleX      = 100.0f;
 	float	m_fRootRectScaleY      = 100.0f;
+	
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/*__________________________________________________________________________________________________________
+	[ ChildUI Method ]
+	____________________________________________________________________________________________________________*/
+	afx_msg void OnBnClickedRadio2103_ChildUICreateMode();
+	afx_msg void OnBnClickedRadio2104_ChildUIModifyMode();
+
+
+	/*__________________________________________________________________________________________________________
+	[ ChildUI Control ]
+	____________________________________________________________________________________________________________*/
+	CButton		m_RadioChildUICreateMode;
+	CButton		m_RadioChildUIModifyMode;
+	CListBox	m_ListBoxChildUI;
+	CButton		m_ButtonCreateChild;
+	CButton		m_ButtonDeleteChild;
+	CEdit		m_EditChildRootObjectTag;
+	CEdit		m_EditChildObjectTag;
+	CEdit		m_EditChildPosOffsetX;
+	CEdit		m_EditChildPosOffsetY;
+	CEdit		m_EditChildScaleOffsetX;
+	CEdit		m_EditChildScaleOffsetY;
+	CEdit		m_EditChildUIDepth;
+	CButton		m_CheckChildIsAnimation;
+	CEdit		m_EditChildFrameSpeed;
+	CEdit		m_EditChildRectPosOffsetX;
+	CEdit		m_EditChildRectPosOffsetY;
+	CEdit		m_EditChildRectScaleOffsetX;
+	CEdit		m_EditChildRectScaleOffsetY;
+	CButton		m_ButtonChildSAVE;
+	CButton		m_ButtonChildLOAD;
+
+	/*__________________________________________________________________________________________________________
+	[ ChildUI Value ]
+	____________________________________________________________________________________________________________*/
+	_bool	m_bIsChildCreateMode     = false;
+	_bool	m_bIsChildModifyMode     = false;
+	CString m_wstrChildRootObjectTag = L"";
+	CString m_wstrChildObjectTag     = L"";
+	float	m_fChildPosOffsetX       = 0.0f;
+	float	m_fChildPosOffsetY       = 0.0f;
+	float	m_fChildScaleOffsetX     = 1.0f;
+	float	m_fChildScaleOffsetY     = 1.0f;
+	long	m_fChildUIDepth          = 900;
+	float	m_fChildFrameSpeed       = 0.0f;
+	float	m_fChildRectPosOffsetX   = 0.0f;
+	float	m_fChildRectPosOffsetY   = 0.0f;
+	float	m_fChildRectScaleOffsetX = 1.0f;
+	float	m_fChildRectScaleOffsetY = 1.0f;
 };
