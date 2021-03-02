@@ -1169,7 +1169,14 @@ void worker_thread()
 			random_move_npc(key);
 			delete over_ex;
 		}
-			break;
+		break;
+
+		case OPMODE::OP_RANDOM_MOVE_MONSTER:
+		{
+			random_move_monster(key);
+			delete over_ex;
+		}
+		break;
 	
 		default:
 #ifdef TEST

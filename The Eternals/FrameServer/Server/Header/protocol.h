@@ -35,6 +35,7 @@ constexpr char SC_PACKET_STAT_CHANGE = 7;
 constexpr char SC_PACKET_NPC_MOVE = 8;
 constexpr char SC_PACKET_NPC_ENTER = 9;
 constexpr char SC_PACKET_MONSTER_ENTER = 10;
+constexpr char SC_PACKET_MONSTER_MOVE = 11;
 
 constexpr char CS_LOGIN = 0;
 constexpr char CS_MOVE = 1;

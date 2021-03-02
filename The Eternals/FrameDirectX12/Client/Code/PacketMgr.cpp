@@ -328,7 +328,6 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		}
 		
 		pGameObj->Set_ServerNumber(packet->id);
-
 		Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"NPC", pGameObj), E_FAIL);
 	}
 	break;
@@ -368,6 +367,20 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		pGameObj->Set_ServerNumber(packet->id);
 		Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);
 
+	}
+	break;
+
+	case SC_PACKET_MONSTER_MOVE:
+	{
+		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
+
+		int s_num = packet->id;
+
+		Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
+		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
+
+		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
+		pObj->Set_MoveStop(false);
 	}
 	break;
 
