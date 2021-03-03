@@ -805,6 +805,10 @@ namespace Engine
 
 	} CB_SHADER_MESH;
 
+	typedef struct tagCBuffer
+	{
+		_vec4 vFloat4;
+	}CB_SHADER_VARIABLE;
 	// Shader Shadow
 	typedef struct tagConstantBufferShaderShadow
 	{

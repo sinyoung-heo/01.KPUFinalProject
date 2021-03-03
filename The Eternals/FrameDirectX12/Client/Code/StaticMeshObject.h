@@ -55,7 +55,7 @@ private:
 	Engine::CShaderShadowInstancing*	m_pShaderShadowInstancing = nullptr;
 	Engine::CShaderMeshInstancing*		m_pShaderMeshInstancing   = nullptr;
 	Engine::CShaderMesh* m_pShaderCom = nullptr;
-
+	Engine::CShaderMesh* m_pCrossFilterShaderCom = nullptr;
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
@@ -64,7 +64,7 @@ private:
 	_uint			m_iShadowPipelineStatePass = 0;
 	CDynamicCamera*	m_pDynamicCamera	       = nullptr;
 
-
+	int m_iRandomnumber = 0;
 	Engine::CRenderer::RENDERGROUP m_eRenderGroup;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,

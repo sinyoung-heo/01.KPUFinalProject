@@ -11,9 +11,11 @@ CShaderNPathDir::CShaderNPathDir(ID3D12Device * pGraphicDevice, ID3D12GraphicsCo
 }
 
 CShaderNPathDir::CShaderNPathDir(const CShaderNPathDir & rhs)
-	: CShader(rhs)
+	: CShader(rhs),m_pCB_ShaderVariable(rhs.m_pCB_ShaderVariable)
 {
 }
+
+
 
 void CShaderNPathDir::SetUp_ShaderTexture(vector<ComPtr<ID3D12Resource>> pVecTexture)
 {
@@ -24,7 +26,10 @@ void CShaderNPathDir::SetUp_ShaderTexture(vector<ComPtr<ID3D12Resource>> pVecTex
 
 		Create_DescriptorHeaps(pVecTexture);
 		Create_ConstantBuffer();
+
+		
 	}
+	
 }
 
 HRESULT CShaderNPathDir::Ready_Shader()
@@ -32,6 +37,10 @@ HRESULT CShaderNPathDir::Ready_Shader()
 	CShader::Ready_Shader();
 	FAILED_CHECK_RETURN(Create_RootSignature(), E_FAIL);
 	FAILED_CHECK_RETURN(Create_PipelineState(), E_FAIL);
+
+	//Cbuffer Shader
+	m_pCB_ShaderVariable = CUploadBuffer<CB_SHADER_VARIABLE>::Create(m_pGraphicDevice);
+	NULL_CHECK_RETURN(m_pCB_ShaderVariable, E_FAIL);
 
 	return S_OK;
 }
@@ -53,7 +62,25 @@ void CShaderNPathDir::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, con
 	m_pCommandList->SetGraphicsRootDescriptorTable(0,		// RootParameter Index. (Tex Emissive)
 		SRV_TexEmissiveDescriptorHandle);
 
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexCrossFilterObjectDescriptorHandle(m_pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	SRV_TexCrossFilterObjectDescriptorHandle.Offset(1, m_uiCBV_SRV_UAV_DescriptorSize);
+	m_pCommandList->SetGraphicsRootDescriptorTable(1,		// RootParameter Index. (Tex Emissive)
+		SRV_TexCrossFilterObjectDescriptorHandle);
 
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexDepthDescriptorHandle(m_pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	SRV_TexDepthDescriptorHandle.Offset(2, m_uiCBV_SRV_UAV_DescriptorSize);
+	m_pCommandList->SetGraphicsRootDescriptorTable(2,		// RootParameter Index. (Tex Emissive)
+		SRV_TexDepthDescriptorHandle);
+
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexCrossFilterDepthDescriptorHandle(m_pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	SRV_TexCrossFilterDepthDescriptorHandle.Offset(3, m_uiCBV_SRV_UAV_DescriptorSize);
+	m_pCommandList->SetGraphicsRootDescriptorTable(3,		// RootParameter Index. (Tex Emissive)
+		SRV_TexCrossFilterDepthDescriptorHandle);
+	/*__________________________________________________________________________________________________________
+	[ CBV를 루트 서술자에 묶는다 ]
+	____________________________________________________________________________________________________________*/
+	m_pCommandList->SetGraphicsRootConstantBufferView(4,	// RootParameter Index
+		m_pCB_ShaderVariable->Resource()->GetGPUVirtualAddress());
 }
 
 HRESULT CShaderNPathDir::Create_DescriptorHeaps(vector<ComPtr<ID3D12Resource>> pVecTexture)
@@ -110,22 +137,37 @@ HRESULT CShaderNPathDir::Create_RootSignature()
 	/*__________________________________________________________________________________________________________
 	[ SRV를 담는 서술자 테이블을 생성 ]
 	____________________________________________________________________________________________________________*/
-	CD3DX12_DESCRIPTOR_RANGE SRV_Table[1];
+	CD3DX12_DESCRIPTOR_RANGE SRV_Table[4];
 	
 	// Texture - Emissive
 	SRV_Table[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,// 서술자의 종류 - Shader Resource View.
 					  1,								// 서술자의 개수 - Texture2D의 개수.
 					  0,								// 셰이더 인수들의 기준 레지스터 번호. (register t0)
 					  0);								// 레지스터 공간.
-
+	SRV_Table[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,// 서술자의 종류 - Shader Resource View.
+		1,								// 서술자의 개수 - Texture2D의 개수.
+		1,								// 셰이더 인수들의 기준 레지스터 번호. (register t1)
+		0);								// 레지스터 공간.
+	SRV_Table[2].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,// 서술자의 종류 - Shader Resource View.
+		1,								// 서술자의 개수 - Texture2D의 개수.
+		2,								// 셰이더 인수들의 기준 레지스터 번호. (register t1)
+		0);								// 레지스터 공간.
+	SRV_Table[3].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,// 서술자의 종류 - Shader Resource View.
+		1,								// 서술자의 개수 - Texture2D의 개수.
+		3,								// 셰이더 인수들의 기준 레지스터 번호. (register t1)
+		0);								// 레지스터 공간.
 	/*__________________________________________________________________________________________________________
 	- 루트 매개변수는 테이블이거나, 루트 서술자 또는 루트 상수이다.
 	____________________________________________________________________________________________________________*/
-	CD3DX12_ROOT_PARAMETER RootParameter[1];
+	CD3DX12_ROOT_PARAMETER RootParameter[5];
 	RootParameter[0].InitAsDescriptorTable(1, &SRV_Table[0], D3D12_SHADER_VISIBILITY_PIXEL);	// t0
-	
+	RootParameter[1].InitAsDescriptorTable(1, &SRV_Table[1], D3D12_SHADER_VISIBILITY_PIXEL);	// t1
+	RootParameter[2].InitAsDescriptorTable(1, &SRV_Table[2], D3D12_SHADER_VISIBILITY_PIXEL);	// t2
+	RootParameter[3].InitAsDescriptorTable(1, &SRV_Table[3], D3D12_SHADER_VISIBILITY_PIXEL);	// t2
+
+	RootParameter[4].InitAsConstantBufferView(0);		// register b0.
 	auto StaticSamplers = Get_StaticSamplers();
-	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(1,							// 루트 파라미터 개수.(SRV 1 : 총개)
+	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(5,							// 루트 파라미터 개수.(SRV 1 : 총개)
 												  RootParameter,
 												  (_uint)StaticSamplers.size(),	// 샘플러 개수.
 												  StaticSamplers.data(),		// 샘플러 데이터.
@@ -267,4 +309,6 @@ void CShaderNPathDir::Free()
 	CShader::Free();
 	Safe_Release(m_pTexDescriptorHeap);
 
+	if(!m_bIsClone)
+		Safe_Delete(m_pCB_ShaderVariable);
 }

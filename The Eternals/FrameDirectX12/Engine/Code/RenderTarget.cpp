@@ -144,13 +144,13 @@ HRESULT CRenderTarget::SetUp_DefaultSetting(const TARGETID& eID)
 	{
 		// DSV_Heap
 		D3D12_DESCRIPTOR_HEAP_DESC DSV_HeapDesc;
-		DSV_HeapDesc.NumDescriptors	= m_uiTargetCnt;
+		DSV_HeapDesc.NumDescriptors	= 1;
 		DSV_HeapDesc.Type			= D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 		DSV_HeapDesc.Flags			= D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 		DSV_HeapDesc.NodeMask		= 0;
 		FAILED_CHECK_RETURN(m_pGraphicDevice->CreateDescriptorHeap(&DSV_HeapDesc, IID_PPV_ARGS(&m_pDSV_Heap)), E_FAIL);
 
-		for (_uint i = 0; i < m_uiTargetCnt; ++i)
+		for (_uint i = 0; i < 1; ++i)
 		{
 			// DepthStencil
 			D3D12_RESOURCE_DESC DepthStencilDesc;
@@ -180,7 +180,7 @@ HRESULT CRenderTarget::SetUp_DefaultSetting(const TARGETID& eID)
 
 		}
 
-		for (_uint i = 0; i < m_uiTargetCnt; ++i)
+		for (_uint i = 0; i < 1; ++i)
 		{
 			// DepthStencil View
 			m_pGraphicDevice->CreateDepthStencilView(m_vecDepthStencilBuffer[i].Get(),
@@ -255,14 +255,14 @@ HRESULT CRenderTarget::SetUp_OnGraphicDevice(const TARGETID& eID)
 		/*__________________________________________________________________________________________________________
 		- Depth/Stencil Buffer를 Clear해준다.
 		____________________________________________________________________________________________________________*/
-		for (_uint i = 0; i < m_uiTargetCnt; ++i)
+		for (_uint i = 0; i < 1; ++i)
 		{
 			m_pCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_vecDepthStencilBuffer[i].Get(),
 																					 D3D12_RESOURCE_STATE_COMMON,
 																					 D3D12_RESOURCE_STATE_DEPTH_WRITE));
 		}
 
-		for (_uint i = 0; i < m_uiTargetCnt; ++i)
+		for (_uint i = 0; i < 1; ++i)
 		{
 			m_pCommandList->ClearDepthStencilView(CD3DX12_CPU_DESCRIPTOR_HANDLE(m_pDSV_Heap->GetCPUDescriptorHandleForHeapStart(),
 																				i, 
@@ -316,7 +316,7 @@ HRESULT CRenderTarget::Release_OnGraphicDevice(const TARGETID& eID)
 
 	else if (TYPE_SHADOWDEPTH == eID)
 	{
-		for (_uint i = 0; i < m_uiTargetCnt; ++i)
+		for (_uint i = 0; i < 1; ++i)
 		{
 			m_pCommandList->ClearDepthStencilView(CD3DX12_CPU_DESCRIPTOR_HANDLE(m_pDSV_Heap->GetCPUDescriptorHandleForHeapStart(),
 																				i, 
@@ -326,6 +326,9 @@ HRESULT CRenderTarget::Release_OnGraphicDevice(const TARGETID& eID)
 												  0,
 												  0, 
 												  nullptr);
+			m_pCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_vecDepthStencilBuffer[i].Get(),
+				D3D12_RESOURCE_STATE_DEPTH_WRITE,
+				D3D12_RESOURCE_STATE_COMMON));
 		}
 
 		/*__________________________________________________________________________________________________________
@@ -343,9 +346,7 @@ HRESULT CRenderTarget::Release_OnGraphicDevice(const TARGETID& eID)
 																					 D3D12_RESOURCE_STATE_RENDER_TARGET,
 																					 D3D12_RESOURCE_STATE_GENERIC_READ));
 
-			m_pCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_vecDepthStencilBuffer[i].Get(),
-																					 D3D12_RESOURCE_STATE_DEPTH_WRITE,
-																					 D3D12_RESOURCE_STATE_COMMON));
+			
 
 			D3D12_RECT		ScissorRect = { 0, 0, (LONG)WINCX, (LONG)WINCY };
 			D3D12_VIEWPORT	Viewport = CGraphicDevice::Get_Instance()->Get_Viewport();

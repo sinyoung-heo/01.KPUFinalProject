@@ -11,6 +11,7 @@ class CShaderSkyBox;
 class CShaderMesh;
 class CShaderMeshInstancing;
 class CShaderSSAO;
+class CShaderNPathDir;
 class ENGINE_DLL CCamera : public CGameObject
 {
 protected:
@@ -64,6 +65,9 @@ protected:
 	CShaderMeshInstancing*		m_pShaderMeshInstancing    = nullptr;
 	CShaderSSAO*				m_pShaderSSAO              = nullptr;
 
+
+	Engine::CB_SHADER_VARIABLE tCB_ShaderVariable;
+	CShaderNPathDir* m_pShaderNPathDir = nullptr;
 protected:
 	virtual void Free();
 };
