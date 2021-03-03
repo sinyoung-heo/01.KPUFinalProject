@@ -230,8 +230,19 @@ BOOL CTab2DUI::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	m_EditRootRectScaleX.GetWindowRect(&rcEditRoot[8]);
 	m_EditRootRectScaleY.GetWindowRect(&rcEditRoot[9]);
 
+	RECT rcEditChild[10] = { };
+	m_EditChildPosOffsetX.GetWindowRect(&rcEditChild[0]);
+	m_EditChildPosOffsetY.GetWindowRect(&rcEditChild[1]);
+	m_EditChildScaleOffsetX.GetWindowRect(&rcEditChild[2]);
+	m_EditChildScaleOffsetY.GetWindowRect(&rcEditChild[3]);
+	m_EditChildUIDepth.GetWindowRect(&rcEditChild[4]);
+	m_EditChildFrameSpeed.GetWindowRect(&rcEditChild[5]);
+	m_EditChildRectPosOffsetX.GetWindowRect(&rcEditChild[6]);
+	m_EditChildRectPosOffsetY.GetWindowRect(&rcEditChild[7]);
+	m_EditChildRectScaleOffsetX.GetWindowRect(&rcEditChild[8]);
+	m_EditChildRectScaleOffsetY.GetWindowRect(&rcEditChild[9]);
 
-
+#pragma region ROOT_UI_EDITCONTORL
 	CToolUIRoot* pPickingRootUI = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingRootUI;
 
 	if (PtInRect(&rcEditRoot[0], pt))		// RootPos X
@@ -347,6 +358,124 @@ BOOL CTab2DUI::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 		if (m_bIsRootModifyMode && nullptr != pPickingRootUI)
 			pPickingRootUI->m_pTransColor->m_vScale.y = m_fRootRectScaleY;
 	}
+#pragma endregion
+
+
+#pragma region CHILD_UI_EDITCONTROL
+	if (PtInRect(&rcEditChild[0], pt))		// RootPos X
+	{
+		if (m_bIsChildModifyMode && nullptr != m_pChildUISelected)
+		{
+			if (zDelta > 0)
+				m_fChildPosOffsetX += 0.01f;
+			else
+				m_fChildPosOffsetX -= 0.01f;
+
+			m_pChildUISelected->Get_Transform()->m_vPos.x = m_fChildPosOffsetX;
+		}
+	}
+	else if (PtInRect(&rcEditChild[1], pt))	// RootPos Y
+	{
+		if (m_bIsChildModifyMode && nullptr != m_pChildUISelected)
+		{
+			if (zDelta > 0)
+				m_fChildPosOffsetY += 0.01f;
+			else
+				m_fChildPosOffsetY -= 0.01f;
+
+			m_pChildUISelected->Get_Transform()->m_vPos.y = m_fChildPosOffsetY;
+		}
+	}
+
+	else if (PtInRect(&rcEditChild[2], pt))	// RootScale X
+	{
+		if (zDelta > 0)
+			m_fChildScaleOffsetX += 0.01f;
+		else
+			m_fChildScaleOffsetX -= 0.01f;
+
+		if (m_bIsChildModifyMode && nullptr != m_pChildUISelected)
+			m_pChildUISelected->Get_Transform()->m_vScale.x = m_fChildScaleOffsetX;
+	}
+	else if (PtInRect(&rcEditChild[3], pt))	// RootScale Y
+	{
+		if (zDelta > 0)
+			m_fChildScaleOffsetY += 0.01f;
+		else
+			m_fChildScaleOffsetY -= 0.01f;
+
+		if (m_bIsChildModifyMode && nullptr != m_pChildUISelected)
+			m_pChildUISelected->Get_Transform()->m_vScale.y = m_fChildScaleOffsetY;
+	}
+
+
+	else if (PtInRect(&rcEditChild[4], pt))	// Root UI Depth
+	{
+		if (zDelta > 0)
+			++m_ChildUIDepth;
+		else
+			--m_ChildUIDepth;
+
+		if (m_bIsChildModifyMode && nullptr != m_pChildUISelected)
+			m_pChildUISelected->Set_UIDepth(m_ChildUIDepth);
+	}
+
+	else if (PtInRect(&rcEditChild[5], pt))	// Root UI FraneSpeed
+	{
+		if (m_CheckRootIsAnimation.GetCheck())
+		{
+			if (zDelta > 0)
+				++m_fChildFrameSpeed;
+			else
+				--m_fChildFrameSpeed;
+
+			if (m_bIsChildModifyMode && nullptr != m_pChildUISelected)
+				m_pChildUISelected->m_tFrame.fFrameSpeed = m_fChildFrameSpeed;
+		}
+	}
+
+	else if (PtInRect(&rcEditChild[6], pt))	// Root RectPos Offset X
+	{
+		if (zDelta > 0)
+			m_fChildRectPosOffsetX += 0.01f;
+		else
+			m_fChildRectPosOffsetX -= 0.01f;
+
+		if (m_bIsChildModifyMode && nullptr != m_pChildUISelected)
+			m_pChildUISelected->m_vRectOffset.x = m_fChildRectPosOffsetX;
+	}
+	else if (PtInRect(&rcEditChild[7], pt))	// Root RectPos Offset Y
+	{
+		if (zDelta > 0)
+			m_fChildRectPosOffsetY += 0.01f;
+		else
+			m_fChildRectPosOffsetY -= 0.01f;
+
+		if (m_bIsChildModifyMode && nullptr != m_pChildUISelected)
+			m_pChildUISelected->m_vRectOffset.y = m_fChildRectPosOffsetY;
+	}
+
+	else if (PtInRect(&rcEditChild[8], pt))	// Root RectScale Offset Y
+	{
+		if (zDelta > 0)
+			m_fChildRectScaleOffsetX += 0.01f;
+		else
+			m_fChildRectScaleOffsetX -= 0.01f;
+
+		if (m_bIsChildModifyMode && nullptr != m_pChildUISelected)
+			m_pChildUISelected->m_pTransColor->m_vScale.x = m_fChildRectScaleOffsetX;
+	}
+	else if (PtInRect(&rcEditChild[9], pt))	// Root RectScale Offset Y
+	{
+		if (zDelta > 0)
+			m_fChildRectScaleOffsetY += 0.01f;
+		else
+			m_fChildRectScaleOffsetY -= 0.01f;
+
+		if (m_bIsChildModifyMode && nullptr != m_pChildUISelected)
+			m_pChildUISelected->m_pTransColor->m_vScale.y = m_fChildRectScaleOffsetY;
+	}
+#pragma endregion
 
 
 	UpdateData(FALSE);
