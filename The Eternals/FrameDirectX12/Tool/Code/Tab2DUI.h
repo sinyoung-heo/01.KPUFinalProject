@@ -50,8 +50,6 @@ public:
 	afx_msg void OnLbnSelchangeList2100_RootUITagSelect();
 	afx_msg void OnBnClickedRadio2100_RootCreateMode();
 	afx_msg void OnBnClickedRadio2101_RootModifyMode();
-	afx_msg void OnBnClickedButton2104_RootUISAVE();
-	afx_msg void OnBnClickedButton2105_RootUILOAD();
 	afx_msg void OnBnClickedButton2101_DeleteRootUI();
 	afx_msg void OnEnChangeEdit2103_RootUIPosX();
 	afx_msg void OnEnChangeEdit2104_RootUIPosY();

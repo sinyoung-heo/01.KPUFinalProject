@@ -545,7 +545,8 @@ void CToolSceneStage::KeyInput()
 
 #pragma region TOOLROOTUI_MODIFY
 	// ToolRootUI 수정모드일 경우.
-	if (pMyForm->m_TabUI.m_Tab2DUI.m_bIsRootModifyMode && nullptr != m_pPickingRootUI)
+	if (pMyForm->m_TabUI.m_bIsTab2DUI &&
+		pMyForm->m_TabUI.m_Tab2DUI.m_bIsRootModifyMode && nullptr != m_pPickingRootUI)
 	{
 
 		if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON(Engine::DIM_LB)))
@@ -557,7 +558,7 @@ void CToolSceneStage::KeyInput()
 			m_pPickingRootUI->Get_Transform()->m_vPos.y = (_float)(CMouseMgr::Get_CursorPoint().y);
 
 			pMyForm->m_TabUI.m_Tab2DUI.m_fRootPosX = (_float)(CMouseMgr::Get_CursorPoint().x);
-			pMyForm->m_TabUI.m_Tab2DUI.m_fRootPosY = (_float)(CMouseMgr::Get_CursorPoint().x);
+			pMyForm->m_TabUI.m_Tab2DUI.m_fRootPosY = (_float)(CMouseMgr::Get_CursorPoint().y);
 
 			pMyForm->m_TabUI.m_Tab2DUI.UpdateData(FALSE);
 		}
@@ -1216,6 +1217,15 @@ void CToolSceneStage::KeyInput_TabUI2DUI(CTab2DUI& TabUI2DUI)
 				{
 					static_cast<CToolUIRoot*>(pRootUI)->m_bIsRenderRect = true;
 					m_pPickingRootUI = static_cast<CToolUIRoot*>(pRootUI);
+
+					// ChildUI ListBox 설정.
+					TabUI2DUI.m_iChildUISelectIdx = -1;
+					TabUI2DUI.m_pChildUISelected = nullptr;
+					TabUI2DUI.m_ListBoxChildUI.ResetContent();
+
+					for (auto& pChildUI : m_pPickingRootUI->m_vecUIChild)
+						TabUI2DUI.m_ListBoxChildUI.AddString(static_cast<CToolUIChild*>(pChildUI)->m_wstrObjectTag.c_str());
+
 
 					TabUI2DUI.m_wstrRootUITag     = static_cast<CToolUIRoot*>(pRootUI)->m_wstrObjectTag.c_str();
 					TabUI2DUI.m_wstrRootObjectTag = static_cast<CToolUIRoot*>(pRootUI)->m_wstrObjectTag.c_str();
