@@ -126,6 +126,8 @@ public:
 	afx_msg void OnEnChangeEdit2123_ChildUIRectPosOffsetY();
 	afx_msg void OnEnChangeEdit2124_ChildUIRectScaleOffsetX();
 	afx_msg void OnEnChangeEdit2125_ChildUIRectScaleOffsetY();
+	afx_msg void OnBnClickedButton2106_RootAndChildUISAVE();
+	afx_msg void OnBnClickedButton2107_RootAndChildUILOAD();
 
 	/*__________________________________________________________________________________________________________
 	[ ChildUI Control ]

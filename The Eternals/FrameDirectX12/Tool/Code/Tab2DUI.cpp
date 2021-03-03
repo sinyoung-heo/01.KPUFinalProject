@@ -139,6 +139,8 @@ BEGIN_MESSAGE_MAP(CTab2DUI, CDialogEx)
 	ON_EN_CHANGE(IDC_EDIT2123, &CTab2DUI::OnEnChangeEdit2123_ChildUIRectPosOffsetY)
 	ON_EN_CHANGE(IDC_EDIT2124, &CTab2DUI::OnEnChangeEdit2124_ChildUIRectScaleOffsetX)
 	ON_EN_CHANGE(IDC_EDIT2125, &CTab2DUI::OnEnChangeEdit2125_ChildUIRectScaleOffsetY)
+	ON_BN_CLICKED(IDC_BUTTON2106, &CTab2DUI::OnBnClickedButton2106_RootAndChildUISAVE)
+	ON_BN_CLICKED(IDC_BUTTON2107, &CTab2DUI::OnBnClickedButton2107_RootAndChildUILOAD)
 END_MESSAGE_MAP()
 
 
@@ -647,6 +649,14 @@ void CTab2DUI::OnLbnSelchangeList2100_RootUITagSelect()
 	if (nullptr != pToolUIRoot)
 		pToolUIRoot->m_bIsRenderRect = true;
 
+	// ChildUI ListBox 설정.
+	m_iChildUISelectIdx = -1;
+	m_pChildUISelected  = nullptr;
+	m_ListBoxChildUI.ResetContent();
+	
+	for (auto& pChildUI : pToolUIRoot->m_vecUIChild)
+		m_ListBoxChildUI.AddString(static_cast<CToolUIChild*>(pChildUI)->m_wstrObjectTag.c_str());
+
 
 	if (m_bIsRootModifyMode)
 	{
@@ -775,19 +785,19 @@ void CTab2DUI::OnBnClickedButton2104_RootUISAVE()
 			return;
 		}
 
-		fout << wstring(m_wstrRootObjectTag)				<< L" "	// Object Tag
-			 << pToolUIRoot->m_wstrDataFilePath				<< L" "	// DataFilePath
-			 << pToolUIRoot->Get_Transform()->m_vPos.x		<< L" "	// Pos X
-			 << pToolUIRoot->Get_Transform()->m_vPos.y		<< L" "	// Pos Y
-			 << pToolUIRoot->Get_Transform()->m_vScale.x	<< L" "	// Scale X
-			 << pToolUIRoot->Get_Transform()->m_vScale.y	<< L" "	// Scale Y
-			 << pToolUIRoot->Get_UIDepth()					<< L" "	// UI Depth
-			 << pToolUIRoot->m_bIsSpriteAnimation			<< L" "	// Is SpriteAnimation
-			 << pToolUIRoot->m_tFrame.fFrameSpeed			<< L" "	// Frame Speed
-			 << pToolUIRoot->m_vRectOffset.x				<< L" "	// RectPosOffset X
-			 << pToolUIRoot->m_vRectOffset.y				<< L" "	// RectPosOffset Y
-			 << pToolUIRoot->m_pTransColor->m_vScale.x		<< L" "	// RectScale X
-			 << pToolUIRoot->m_pTransColor->m_vScale.y		<< L" ";	// RectScale Y
+		fout << wstring(m_wstrRootObjectTag)				<< L"\n"	// Object Tag
+			 << pToolUIRoot->m_wstrDataFilePath				<< L"\n"	// DataFilePath
+			 << pToolUIRoot->Get_Transform()->m_vPos.x		<< L"\n"	// Pos X
+			 << pToolUIRoot->Get_Transform()->m_vPos.y		<< L"\n"	// Pos Y
+			 << pToolUIRoot->Get_Transform()->m_vScale.x	<< L"\n"	// Scale X
+			 << pToolUIRoot->Get_Transform()->m_vScale.y	<< L"\n"	// Scale Y
+			 << pToolUIRoot->Get_UIDepth()					<< L"\n"	// UI Depth
+			 << pToolUIRoot->m_bIsSpriteAnimation			<< L"\n"	// Is SpriteAnimation
+			 << pToolUIRoot->m_tFrame.fFrameSpeed			<< L"\n"	// Frame Speed
+			 << pToolUIRoot->m_vRectOffset.x				<< L"\n"	// RectPosOffset X
+			 << pToolUIRoot->m_vRectOffset.y				<< L"\n"	// RectPosOffset Y
+			 << pToolUIRoot->m_pTransColor->m_vScale.x		<< L"\n"	// RectScale X
+			 << pToolUIRoot->m_pTransColor->m_vScale.y		<< L"\n";	// RectScale Y
 
 		AfxMessageBox(L"Data Save Successed");
 	}
@@ -1373,6 +1383,272 @@ void CTab2DUI::OnEnChangeEdit2125_ChildUIRectScaleOffsetY()
 
 	if (m_bIsChildModifyMode && nullptr != m_pChildUISelected)
 		m_pChildUISelected->m_pTransColor->m_vScale.y = m_fChildRectScaleOffsetY;
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnBnClickedButton2106_RootAndChildUISAVE()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CToolUIRoot* pRootUI = static_cast<CToolUIRoot*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", wstring(m_wstrChildRootObjectTag)));
+	if (nullptr == pRootUI)
+		return;
+
+	UpdateData(TRUE);
+
+	CFileDialog Dlg(FALSE,
+					L"2DUI",
+					L"*.2DUI",
+					OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+					L"Data Files(*.2DUI) | *.2DUI ||",
+					this);
+
+	_tchar szPath[MAX_STR] = L"";
+	GetCurrentDirectory(MAX_STR, szPath);		// 작업중인 현재 경로.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	lstrcat(szPath, L"\\Bin\\ToolData");
+	Dlg.m_ofn.lpstrInitialDir = szPath;
+
+	if (Dlg.DoModal() == IDOK)
+	{
+		wofstream fout { Dlg.GetPathName().GetString() };
+		if (fout.fail())
+		{
+			AfxMessageBox(L"Save is Failed");
+			return;
+		}
+
+		// RootUI 정보 저장.
+		fout << pRootUI->m_wstrDataFilePath				<< L"\n"	// DataFilePath
+			 << wstring(m_wstrRootObjectTag)			<< L"\n"	// Object Tag
+			 << pRootUI->Get_Transform()->m_vPos.x		<< L"\n"	// Pos X
+			 << pRootUI->Get_Transform()->m_vPos.y		<< L"\n"	// Pos Y
+			 << pRootUI->Get_Transform()->m_vScale.x	<< L"\n"	// Scale X
+			 << pRootUI->Get_Transform()->m_vScale.y	<< L"\n"	// Scale Y
+			 << pRootUI->Get_UIDepth()					<< L"\n"	// UI Depth
+			 << pRootUI->m_bIsSpriteAnimation			<< L"\n"	// Is SpriteAnimation
+			 << pRootUI->m_tFrame.fFrameSpeed			<< L"\n"	// Frame Speed
+			 << pRootUI->m_vRectOffset.x				<< L"\n"	// RectPosOffset X
+			 << pRootUI->m_vRectOffset.y				<< L"\n"	// RectPosOffset Y
+			 << pRootUI->m_pTransColor->m_vScale.x		<< L"\n"	// RectScale X
+			 << pRootUI->m_pTransColor->m_vScale.y		<< L"\n"	// RectScale Y
+			 << pRootUI->m_vecUIChild.size()			<< L"\n";	// ChildUI Size
+
+		// ChildUI의 정보 저장.
+		for (auto& pChildUI : pRootUI->m_vecUIChild)
+		{
+			fout << static_cast<CToolUIChild*>(pChildUI)->m_wstrDataFilePath			<< L"\n"  // DataFilePath
+				 << static_cast<CToolUIChild*>(pChildUI)->m_wstrObjectTag				<< L"\n"  // Object Tag
+				 << static_cast<CToolUIChild*>(pChildUI)->Get_Transform()->m_vPos.x		<< L"\n"  // Pos X
+				 << static_cast<CToolUIChild*>(pChildUI)->Get_Transform()->m_vPos.y		<< L"\n"  // Pos Y
+				 << static_cast<CToolUIChild*>(pChildUI)->Get_Transform()->m_vScale.x	<< L"\n"  // Scale X
+				 << static_cast<CToolUIChild*>(pChildUI)->Get_Transform()->m_vScale.y	<< L"\n"  // Scale Y
+				 << static_cast<CToolUIChild*>(pChildUI)->Get_UIDepth()					<< L"\n"  // UI Depth
+				 << (_int)(static_cast<CToolUIChild*>(pChildUI)->m_bIsSpriteAnimation)	<< L"\n"  // Is SpriteAnimation
+				 << static_cast<CToolUIChild*>(pChildUI)->m_tFrame.fFrameSpeed			<< L"\n"  // Frame Speed
+				 << static_cast<CToolUIChild*>(pChildUI)->m_vRectOffset.x				<< L"\n"  // RectPosOffset X
+				 << static_cast<CToolUIChild*>(pChildUI) ->m_vRectOffset.y				<< L"\n"  // RectPosOffset Y
+				 << static_cast<CToolUIChild*>(pChildUI) ->m_pTransColor->m_vScale.x	<< L"\n"  // RectScale X
+				 << static_cast<CToolUIChild*>(pChildUI) ->m_pTransColor->m_vScale.y	<< L"\n"; // RectScale Y
+		}
+
+		AfxMessageBox(L"Data Save Successed");
+	}
+
+
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnBnClickedButton2107_RootAndChildUILOAD()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
+	CFileDialog Dlg(TRUE,
+					L"2DUI",
+					L"*.2DUI",
+					OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+					L"Data Files(*.2DUI)|*.2DUI||",
+					this);
+
+	_tchar szPath[MAX_STR] = L"";
+	GetCurrentDirectory(MAX_STR, szPath);		// 작업중인 현재 경로.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+	lstrcat(szPath, L"\\Bin\\ToolData");
+	Dlg.m_ofn.lpstrInitialDir = szPath;
+
+	if (Dlg.DoModal() == IDOK)
+	{
+		wifstream fin { Dlg.GetPathName().GetString() };
+		if (fin.fail())
+		{
+			AfxMessageBox(L"Load is Failed");
+			return;
+		}		
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrObjectTag      = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		// ChildUI Data
+		vector<wstring> vecDataFilePath;
+		vector<wstring> vecObjectTag;
+		vector<_vec3>	vecPos;
+		vector<_vec3>	vecScale;
+		vector<_long>	vecUIDepth;
+		vector<_int>	vecIsSpriteAnimation;
+		vector<_float>	vecFrameSpeed;
+		vector<_vec3>	vecRectPosOffset;
+		vector<_vec3>	vecRectScale;
+
+		while (true)
+		{
+			fin	>> wstrDataFilePath
+				>> wstrObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			vecDataFilePath.resize(iChildUISize);
+			vecObjectTag.resize(iChildUISize);
+			vecPos.resize(iChildUISize);
+			vecScale.resize(iChildUISize);
+			vecUIDepth.resize(iChildUISize);
+			vecIsSpriteAnimation.resize(iChildUISize);
+			vecFrameSpeed.resize(iChildUISize);
+			vecRectPosOffset.resize(iChildUISize);
+			vecRectScale.resize(iChildUISize);
+
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				fin  >> vecDataFilePath[i]			// DataFilePath
+					 >> vecObjectTag[i]				// Object Tag
+					 >> vecPos[i].x					// Pos X
+					 >> vecPos[i].y					// Pos Y
+					 >> vecScale[i].x				// Scale X
+					 >> vecScale[i].y				// Scale Y
+					 >> vecUIDepth[i]				// UI Depth
+					 >> vecIsSpriteAnimation[i]		// Is SpriteAnimation
+					 >> vecFrameSpeed[i]			// Frame Speed
+					 >> vecRectPosOffset[i].x		// RectPosOffset X
+					 >> vecRectPosOffset[i].y		// RectPosOffset Y
+					 >> vecRectScale[i].x			// RectScale X
+					 >> vecRectScale[i].y;			// RectScale Y
+			}
+
+			if (fin.eof())
+				break;
+
+			Engine::OBJLIST* pObjList = m_pObjectMgr->Get_OBJLIST(L"Layer_UI", wstrObjectTag);
+			if (nullptr != pObjList)
+			{
+				for (auto& pRootUI : *pObjList)
+				{
+					for (auto& pChildUI : static_cast<CToolUIRoot*>(pRootUI)->m_vecUIChild)
+						pChildUI->Set_DeadGameObject();
+				}
+
+				m_pObjectMgr->Clear_OBJLIST(L"Layer_UI", wstrObjectTag);
+			}
+
+			// ToolUIRoot 생성.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CToolUIRoot::Create(Engine::CGraphicDevice::Get_Instance()->Get_GraphicDevice(),
+										   Engine::CGraphicDevice::Get_Instance()->Get_CommandList(Engine::CMD_MAIN),
+										   wstrObjectTag,
+										   wstrDataFilePath,
+										   vPos,
+										   vScale,
+										   bIsSpriteAnimation,
+										   fFrameSpeed,
+										   vRectPosOffset,
+										   vRectScale,
+										   UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrObjectTag, pRootUI);
+
+			// ToolUIChild 생성.
+			Engine::CGameObject* pChildUI = nullptr;
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				pChildUI = CToolUIChild::Create(Engine::CGraphicDevice::Get_Instance()->Get_GraphicDevice(),
+												Engine::CGraphicDevice::Get_Instance()->Get_CommandList(Engine::CMD_MAIN),
+												wstrObjectTag,					// RootObjectTag
+												vecObjectTag[i],				// ObjectTag
+												vecDataFilePath[i],				// DataFilePath
+												vecPos[i],						// Pos
+												vecScale[i],					// Scane
+												(_bool)vecIsSpriteAnimation[i],	// Is Animation
+												vecFrameSpeed[i],				// FrameSpeed
+												vecRectPosOffset[i],			// RectPosOffset
+												vecRectScale[i],				// RectScaleOffset
+												vecUIDepth[i]);					// UI Depth
+				m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
+
+				static_cast<CToolUIRoot*>(pRootUI)->m_vecUIChild.emplace_back(pChildUI);
+
+			}
+
+
+			// Control 최신화.
+			m_wstrRootUITag        = wstrObjectTag.c_str();
+			m_wstrRootDataFileName = PathFindFileName(wstrDataFilePath.c_str());
+			m_wstrRootObjectTag    = wstrObjectTag.c_str();
+			m_fRootPosX            = vPos.x;
+			m_fRootPosY            = vPos.y;
+			m_fRootScaleX          = vScale.x;
+			m_fRootScaleY          = vScale.y;
+			m_RootUIDepth          = UIDepth;
+			m_bIsRootAnimation     = bIsSpriteAnimation;
+			m_fRootFrameSpeed	   = fFrameSpeed;
+			m_fRootRectPosOffsetX  = vRectPosOffset.x;
+			m_fRootRectPosOffsetY  = vRectPosOffset.y;
+			m_fRootRectScaleX      = vRectScale.x;
+			m_fRootRectScaleY      = vRectScale.y;
+
+			// ListBox 추가.
+			for (_int i = 0; i < m_ListBoxRootUI.GetCount(); ++i)
+			{
+				CString wstrRootUITag = L"";
+				m_ListBoxRootUI.GetText(i, wstrRootUITag);
+
+				if (wstrRootUITag == CString(wstrObjectTag.c_str()))
+					m_ListBoxRootUI.DeleteString(i);
+			}
+
+			m_ListBoxRootUI.AddString(wstrObjectTag.c_str());
+
+			// ChildUI ListBox
+			m_ListBoxChildUI.ResetContent();
+			for (auto& pChildUI : static_cast<CToolUIRoot*>(pRootUI)->m_vecUIChild)
+				m_ListBoxChildUI.AddString(static_cast<CToolUIChild*>(pChildUI)->m_wstrObjectTag.c_str());
+
+		}
+
+		AfxMessageBox(L"Data Load Successed");
+	}
+
 
 	UpdateData(FALSE);
 }

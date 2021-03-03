@@ -70,14 +70,27 @@ _int CToolUIChild::Update_GameObject(const _float& fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_UI, this), -1);
 
+
+	return NO_EVENT;
+}
+
+_int CToolUIChild::LateUpdate_GameObject(const _float& fTimeDelta)
+{
+	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
+
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
+	Engine::CGameObject* pRootUI = m_pObjectMgr->Get_GameObject(L"Layer_UI", m_wstrRootObjectTag);
+	if (pRootUI->Get_IsDead())
+		return NO_EVENT;
+
+	m_pmatRoot = &(pRootUI->Get_Transform()->m_matWorld);
+
 	_matrix matScale        = XMMatrixScaling(m_pTransCom->m_vScale.x, m_pTransCom->m_vScale.y, m_pTransCom->m_vScale.z);
 	_matrix matTrans        = XMMatrixTranslation(m_pTransCom->m_vPos.x, m_pTransCom->m_vPos.y, m_pTransCom->m_vPos.z);
 	m_pTransCom->m_matWorld = matScale *  matTrans;
 	m_pTransCom->m_matWorld *= (*m_pmatRoot);
-
 
 	m_pTransColor->m_vPos     = m_pTransCom->m_vPos + m_vRectOffset;
 	matScale                  = XMMatrixScaling(m_pTransColor->m_vScale.x, m_pTransColor->m_vScale.y, m_pTransColor->m_vScale.z);
@@ -86,13 +99,6 @@ _int CToolUIChild::Update_GameObject(const _float& fTimeDelta)
 	m_pTransColor->m_matWorld *= (*m_pmatRoot);
 
 	Update_Rect();
-
-	return NO_EVENT;
-}
-
-_int CToolUIChild::LateUpdate_GameObject(const _float& fTimeDelta)
-{
-	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
 	return NO_EVENT;
 }
