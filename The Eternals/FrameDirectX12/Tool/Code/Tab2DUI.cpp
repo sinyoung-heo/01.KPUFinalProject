@@ -118,6 +118,27 @@ BEGIN_MESSAGE_MAP(CTab2DUI, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK2101, &CTab2DUI::OnBnClickedCheck2101_CheckChildIsSpriteAnimation)
 	ON_BN_CLICKED(IDC_BUTTON2103, &CTab2DUI::OnBnClickedButton2103_ChildUICreate)
 	ON_BN_CLICKED(IDC_BUTTON2102, &CTab2DUI::OnBnClickedButton2102_ChildUIDelete)
+	ON_LBN_SELCHANGE(IDC_LIST2101, &CTab2DUI::OnLbnSelchangeList2101_SelectChildUI)
+	ON_EN_CHANGE(IDC_EDIT2103, &CTab2DUI::OnEnChangeEdit2103_RootUIPosX)
+	ON_EN_CHANGE(IDC_EDIT2104, &CTab2DUI::OnEnChangeEdit2104_RootUIPosY)
+	ON_EN_CHANGE(IDC_EDIT2106, &CTab2DUI::OnEnChangeEdit2106_RootUIScaleX)
+	ON_EN_CHANGE(IDC_EDIT2107, &CTab2DUI::OnEnChangeEdit2107_RootUIScaleY)
+	ON_EN_CHANGE(IDC_EDIT2105, &CTab2DUI::OnEnChangeEdit2105_RootUIUIDepth)
+	ON_EN_CHANGE(IDC_EDIT2121, &CTab2DUI::OnEnChangeEdit2121_RootUIFrameSpeed)
+	ON_EN_CHANGE(IDC_EDIT2111, &CTab2DUI::OnEnChangeEdit2111_RootUIRectPosOffsetX)
+	ON_EN_CHANGE(IDC_EDIT2112, &CTab2DUI::OnEnChangeEdit2112_RootUIRectPosOffsetY)
+	ON_EN_CHANGE(IDC_EDIT2113, &CTab2DUI::OnEnChangeEdit2113_RootUIRectScaleOffsetX)
+	ON_EN_CHANGE(IDC_EDIT2114, &CTab2DUI::OnEnChangeEdit2114_RootUIRectScaleOffsetY)
+	ON_EN_CHANGE(IDC_EDIT2116, &CTab2DUI::OnEnChangeEdit2116_ChildUIPosOffsetX)
+	ON_EN_CHANGE(IDC_EDIT2117, &CTab2DUI::OnEnChangeEdit2117_ChildUIPosOffsetY)
+	ON_EN_CHANGE(IDC_EDIT2119, &CTab2DUI::OnEnChangeEdit2119_ChildUIScaleOffsetX)
+	ON_EN_CHANGE(IDC_EDIT2120, &CTab2DUI::OnEnChangeEdit2120_ChildUIScaleOffsetY)
+	ON_EN_CHANGE(IDC_EDIT2118, &CTab2DUI::OnEnChangeEdit2118_ChildUIUIDepth)
+	ON_EN_CHANGE(IDC_EDIT2126, &CTab2DUI::OnEnChangeEdit2126_ChildUIFrameSpeed)
+	ON_EN_CHANGE(IDC_EDIT2122, &CTab2DUI::OnEnChangeEdit2122_ChildUIRectPosOffsetX)
+	ON_EN_CHANGE(IDC_EDIT2123, &CTab2DUI::OnEnChangeEdit2123_ChildUIRectPosOffsetY)
+	ON_EN_CHANGE(IDC_EDIT2124, &CTab2DUI::OnEnChangeEdit2124_ChildUIRectScaleOffsetX)
+	ON_EN_CHANGE(IDC_EDIT2125, &CTab2DUI::OnEnChangeEdit2125_ChildUIRectScaleOffsetY)
 END_MESSAGE_MAP()
 
 
@@ -208,6 +229,8 @@ BOOL CTab2DUI::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	m_EditRootRectPosOffsetY.GetWindowRect(&rcEditRoot[7]);
 	m_EditRootRectScaleX.GetWindowRect(&rcEditRoot[8]);
 	m_EditRootRectScaleY.GetWindowRect(&rcEditRoot[9]);
+
+
 
 	CToolUIRoot* pPickingRootUI = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingRootUI;
 
@@ -785,6 +808,129 @@ void CTab2DUI::OnBnClickedButton2101_DeleteRootUI()
 	UpdateData(FALSE);
 }
 
+void CTab2DUI::OnEnChangeEdit2103_RootUIPosX()
+{
+	UpdateData(TRUE);
+
+
+	CToolUIRoot* pPickingRootUI = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingRootUI;
+	if (m_bIsRootModifyMode && nullptr != pPickingRootUI)
+		pPickingRootUI->Get_Transform()->m_vPos.x = m_fRootPosX;
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnEnChangeEdit2104_RootUIPosY()
+{
+	UpdateData(TRUE);
+
+	CToolUIRoot* pPickingRootUI = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingRootUI;
+	if (m_bIsRootModifyMode && nullptr != pPickingRootUI)
+		pPickingRootUI->Get_Transform()->m_vPos.y = m_fRootPosY;
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnEnChangeEdit2106_RootUIScaleX()
+{
+	UpdateData(TRUE);
+
+	CToolUIRoot* pPickingRootUI = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingRootUI;
+	if (m_bIsRootModifyMode && nullptr != pPickingRootUI)
+		pPickingRootUI->Get_Transform()->m_vScale.x = m_fRootScaleX;
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnEnChangeEdit2107_RootUIScaleY()
+{
+	UpdateData(TRUE);
+
+	CToolUIRoot* pPickingRootUI = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingRootUI;
+	if (m_bIsRootModifyMode && nullptr != pPickingRootUI)
+		pPickingRootUI->Get_Transform()->m_vScale.y = m_fRootScaleY;
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnEnChangeEdit2105_RootUIUIDepth()
+{
+	UpdateData(TRUE);
+
+	CToolUIRoot* pPickingRootUI = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingRootUI;
+	if (m_bIsRootModifyMode && nullptr != pPickingRootUI)
+		pPickingRootUI->Set_UIDepth(m_RootUIDepth);
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnEnChangeEdit2121_RootUIFrameSpeed()
+{
+	UpdateData(TRUE);
+
+	CToolUIRoot* pPickingRootUI = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingRootUI;
+	if (m_bIsRootModifyMode && nullptr != pPickingRootUI)
+	{
+		if (pPickingRootUI->m_bIsSpriteAnimation)
+			pPickingRootUI->m_tFrame.fFrameSpeed = m_fRootFrameSpeed;
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnEnChangeEdit2111_RootUIRectPosOffsetX()
+{
+	UpdateData(TRUE);
+
+	CToolUIRoot* pPickingRootUI = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingRootUI;
+	if (m_bIsRootModifyMode && nullptr != pPickingRootUI)
+		pPickingRootUI->m_vRectOffset.x = m_fRootRectPosOffsetX;
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnEnChangeEdit2112_RootUIRectPosOffsetY()
+{
+	UpdateData(TRUE);
+
+	CToolUIRoot* pPickingRootUI = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingRootUI;
+	if (m_bIsRootModifyMode && nullptr != pPickingRootUI)
+		pPickingRootUI->m_vRectOffset.y = m_fRootRectPosOffsetY;
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnEnChangeEdit2113_RootUIRectScaleOffsetX()
+{
+	UpdateData(TRUE);
+
+	CToolUIRoot* pPickingRootUI = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingRootUI;
+	if (m_bIsRootModifyMode && nullptr != pPickingRootUI)
+		pPickingRootUI->m_pTransColor->m_vScale.x = m_fRootRectScaleX;
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnEnChangeEdit2114_RootUIRectScaleOffsetY()
+{
+	UpdateData(TRUE);
+
+	CToolUIRoot* pPickingRootUI = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingRootUI;
+	if (m_bIsRootModifyMode && nullptr != pPickingRootUI)
+		pPickingRootUI->m_pTransColor->m_vScale.y = m_fRootRectScaleY;
+
+	UpdateData(FALSE);
+}
+
 
 void CTab2DUI::OnBnClickedRadio2103_ChildUICreateMode()
 {
@@ -797,6 +943,16 @@ void CTab2DUI::OnBnClickedRadio2103_ChildUICreateMode()
 	m_bIsChildModifyMode = false;
 
 	m_EditChildObjectTag.EnableWindow(TRUE);
+
+
+	m_RadioRootCreateMode.SetCheck(TRUE);
+	m_bIsRootCreateMode = true;
+	m_RadioRootModifyMode.SetCheck(FALSE);
+	m_bIsRootModifyMode = false;
+
+	m_EditRootUITag.EnableWindow(TRUE);
+	m_EditDataFileName.EnableWindow(TRUE);
+	m_EditObjectTag.EnableWindow(TRUE);
 
 	UpdateData(FALSE);
 }
@@ -813,6 +969,15 @@ void CTab2DUI::OnBnClickedRadio2104_ChildUIModifyMode()
 	m_bIsChildModifyMode = true;
 
 	m_EditChildObjectTag.EnableWindow(FALSE);
+
+	m_RadioRootCreateMode.SetCheck(FALSE);
+	m_bIsRootCreateMode = false;
+	m_RadioRootModifyMode.SetCheck(TRUE);
+	m_bIsRootModifyMode = true;
+
+	m_EditRootUITag.EnableWindow(FALSE);
+	m_EditDataFileName.EnableWindow(FALSE);
+	m_EditObjectTag.EnableWindow(FALSE);
 
 	UpdateData(FALSE);
 }
@@ -835,9 +1000,8 @@ void CTab2DUI::OnBnClickedCheck2101_CheckChildIsSpriteAnimation()
 
 	if (m_bIsChildModifyMode)
 	{
-		//CToolUIRoot* pPickingRootUI = static_cast<CToolSceneStage*>(m_pManagement->Get_CurrentScene())->m_pPickingRootUI;
-		//if (nullptr != pPickingRootUI)
-		//	pPickingRootUI->m_bIsSpriteAnimation = m_bIsChildAnimation;
+		if (nullptr != m_pChildUISelected)
+			m_pChildUISelected->m_bIsSpriteAnimation = m_bIsChildAnimation;
 	}
 
 	UpdateData(FALSE);
@@ -887,7 +1051,7 @@ void CTab2DUI::OnBnClickedButton2103_ChildUICreate()
 									    _vec3(m_fChildRectScaleOffsetX, m_fChildRectScaleOffsetX, 1.0f),
 									    m_ChildUIDepth);
 		m_pObjectMgr->Add_GameObject(L"Layer_UI", wstring(m_wstrChildObjectTag), pGameObj);
-		pRootUI->m_vecUIChild.push_back(pGameObj);
+		pRootUI->m_vecUIChild.emplace_back(pGameObj);
 
 		// ListBox 추가.
 		m_ListBoxChildUI.AddString(m_wstrChildObjectTag);
@@ -903,8 +1067,183 @@ void CTab2DUI::OnBnClickedButton2102_ChildUIDelete()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	UpdateData(TRUE);
-	
 
+	if (m_bIsChildModifyMode && nullptr != m_pChildUISelected)
+	{
+		m_pChildUISelected->Set_DeadGameObject();
+
+		// RootUI의 vector에서 제거.
+		CToolUIRoot* pRootUI = static_cast<CToolUIRoot*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", wstring(m_wstrChildRootObjectTag)));
+		
+		auto iter_begin = pRootUI->m_vecUIChild.begin();
+		auto iter_end = pRootUI->m_vecUIChild.end();
+		for (; iter_begin != iter_end; ++iter_begin)
+		{
+			if ((*iter_begin)->Get_IsDead())
+			{
+				pRootUI->m_vecUIChild.erase(iter_begin);
+				break;
+			}
+		}
+
+		// ListBox에서 제거.
+		m_ListBoxChildUI.DeleteString(m_iChildUISelectIdx);
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnLbnSelchangeList2101_SelectChildUI()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (m_bIsChildCreateMode)
+		return;
+
+	m_pChildUISelected = nullptr;
+	
+	if (L"" == m_wstrChildRootObjectTag)
+		return;
+	CToolUIRoot* pRootUI = static_cast<CToolUIRoot*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", wstring(m_wstrChildRootObjectTag)));
+	if (nullptr == pRootUI)
+		return;
+
+
+	UpdateData(TRUE);
+
+	// 선택한 Index의 ChildUI 가져오기.
+	m_iChildUISelectIdx = m_ListBoxChildUI.GetCaretIndex();
+	m_pChildUISelected = static_cast<CToolUIChild*>(pRootUI->m_vecUIChild[m_iChildUISelectIdx]);
+	m_pChildUISelected->m_bIsRenderRect = true;
+
+	// 선택한 ChildUI의 정보를 MFC Control에 입력.
+	m_wstrChildObjectTag     = CString(m_pChildUISelected->m_wstrObjectTag.c_str());
+	m_fChildPosOffsetX       = m_pChildUISelected->Get_Transform()->m_vPos.x;
+	m_fChildPosOffsetY       = m_pChildUISelected->Get_Transform()->m_vPos.y;
+	m_fChildScaleOffsetX     = m_pChildUISelected->Get_Transform()->m_vScale.x;
+	m_fChildScaleOffsetY     = m_pChildUISelected->Get_Transform()->m_vScale.y;
+	m_bIsChildAnimation      = m_pChildUISelected->m_bIsSpriteAnimation;
+	m_CheckChildIsAnimation.SetCheck(m_bIsChildAnimation);
+
+	m_fChildFrameSpeed       = m_pChildUISelected->m_tFrame.fFrameSpeed;
+	m_ChildUIDepth           = m_pChildUISelected->Get_UIDepth();
+	m_fChildRectPosOffsetX   = m_pChildUISelected->m_vRectOffset.x;
+	m_fChildRectPosOffsetY   = m_pChildUISelected->m_vRectOffset.y;
+	m_fChildRectScaleOffsetX = m_pChildUISelected->m_pTransColor->m_vScale.x;
+	m_fChildRectScaleOffsetY = m_pChildUISelected->m_pTransColor->m_vScale.y;
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnEnChangeEdit2116_ChildUIPosOffsetX()
+{
+	UpdateData(TRUE);
+
+	if (m_bIsChildModifyMode && nullptr != m_pChildUISelected)
+		m_pChildUISelected->Get_Transform()->m_vPos.x = m_fChildPosOffsetX;
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnEnChangeEdit2117_ChildUIPosOffsetY()
+{
+	UpdateData(TRUE);
+
+	if (m_bIsChildModifyMode && nullptr != m_pChildUISelected)
+		m_pChildUISelected->Get_Transform()->m_vPos.y = m_fChildPosOffsetY;
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnEnChangeEdit2119_ChildUIScaleOffsetX()
+{
+	UpdateData(TRUE);
+
+	if (m_bIsChildModifyMode && nullptr != m_pChildUISelected)
+		m_pChildUISelected->Get_Transform()->m_vScale.x = m_fChildScaleOffsetX;
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnEnChangeEdit2120_ChildUIScaleOffsetY()
+{
+	UpdateData(TRUE);
+
+	if (m_bIsChildModifyMode && nullptr != m_pChildUISelected)
+		m_pChildUISelected->Get_Transform()->m_vScale.y = m_fChildScaleOffsetY;
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnEnChangeEdit2118_ChildUIUIDepth()
+{
+	UpdateData(TRUE);
+
+	if (m_bIsChildModifyMode && nullptr != m_pChildUISelected)
+		m_pChildUISelected->Set_UIDepth(m_ChildUIDepth);
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnEnChangeEdit2126_ChildUIFrameSpeed()
+{
+	UpdateData(TRUE);
+
+	if (m_bIsChildModifyMode && nullptr != m_pChildUISelected)
+	{
+		if (m_pChildUISelected->m_bIsSpriteAnimation)
+			m_pChildUISelected->m_tFrame.fFrameSpeed = m_fChildFrameSpeed;
+	}
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnEnChangeEdit2122_ChildUIRectPosOffsetX()
+{
+	UpdateData(TRUE);
+
+	if (m_bIsChildModifyMode && nullptr != m_pChildUISelected)
+		m_pChildUISelected->m_vRectOffset.x = m_fChildRectPosOffsetX;
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnEnChangeEdit2123_ChildUIRectPosOffsetY()
+{
+	UpdateData(TRUE);
+
+	if (m_bIsChildModifyMode && nullptr != m_pChildUISelected)
+		m_pChildUISelected->m_vRectOffset.y = m_fChildRectPosOffsetY;
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnEnChangeEdit2124_ChildUIRectScaleOffsetX()
+{
+	UpdateData(TRUE);
+
+	if (m_bIsChildModifyMode && nullptr != m_pChildUISelected)
+		m_pChildUISelected->m_pTransColor->m_vScale.x = m_fChildRectScaleOffsetX;
+
+	UpdateData(FALSE);
+}
+
+
+void CTab2DUI::OnEnChangeEdit2125_ChildUIRectScaleOffsetY()
+{
+	UpdateData(TRUE);
+
+	if (m_bIsChildModifyMode && nullptr != m_pChildUISelected)
+		m_pChildUISelected->m_pTransColor->m_vScale.y = m_fChildRectScaleOffsetY;
 
 	UpdateData(FALSE);
 }

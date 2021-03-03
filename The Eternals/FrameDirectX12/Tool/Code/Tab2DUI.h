@@ -10,6 +10,8 @@ namespace Engine
 	class CDescriptorHeapMgr;
 }
 
+class CToolUIChild;
+
 class CTab2DUI : public CDialogEx
 {
 	DECLARE_DYNAMIC(CTab2DUI)
@@ -51,7 +53,16 @@ public:
 	afx_msg void OnBnClickedButton2104_RootUISAVE();
 	afx_msg void OnBnClickedButton2105_RootUILOAD();
 	afx_msg void OnBnClickedButton2101_DeleteRootUI();
-
+	afx_msg void OnEnChangeEdit2103_RootUIPosX();
+	afx_msg void OnEnChangeEdit2104_RootUIPosY();
+	afx_msg void OnEnChangeEdit2106_RootUIScaleX();
+	afx_msg void OnEnChangeEdit2107_RootUIScaleY();
+	afx_msg void OnEnChangeEdit2105_RootUIUIDepth();
+	afx_msg void OnEnChangeEdit2121_RootUIFrameSpeed();
+	afx_msg void OnEnChangeEdit2111_RootUIRectPosOffsetX();
+	afx_msg void OnEnChangeEdit2112_RootUIRectPosOffsetY();
+	afx_msg void OnEnChangeEdit2113_RootUIRectScaleOffsetX();
+	afx_msg void OnEnChangeEdit2114_RootUIRectScaleOffsetY();
 
 	/*__________________________________________________________________________________________________________
 	[ RootUI Control ]
@@ -104,6 +115,17 @@ public:
 	afx_msg void OnBnClickedCheck2101_CheckChildIsSpriteAnimation();
 	afx_msg void OnBnClickedButton2103_ChildUICreate();
 	afx_msg void OnBnClickedButton2102_ChildUIDelete();
+	afx_msg void OnLbnSelchangeList2101_SelectChildUI();
+	afx_msg void OnEnChangeEdit2116_ChildUIPosOffsetX();
+	afx_msg void OnEnChangeEdit2117_ChildUIPosOffsetY();
+	afx_msg void OnEnChangeEdit2119_ChildUIScaleOffsetX();
+	afx_msg void OnEnChangeEdit2120_ChildUIScaleOffsetY();
+	afx_msg void OnEnChangeEdit2118_ChildUIUIDepth();
+	afx_msg void OnEnChangeEdit2126_ChildUIFrameSpeed();
+	afx_msg void OnEnChangeEdit2122_ChildUIRectPosOffsetX();
+	afx_msg void OnEnChangeEdit2123_ChildUIRectPosOffsetY();
+	afx_msg void OnEnChangeEdit2124_ChildUIRectScaleOffsetX();
+	afx_msg void OnEnChangeEdit2125_ChildUIRectScaleOffsetY();
 
 	/*__________________________________________________________________________________________________________
 	[ ChildUI Control ]
@@ -147,4 +169,7 @@ public:
 	float	m_fChildRectPosOffsetY   = 0.0f;
 	float	m_fChildRectScaleOffsetX = 1.0f;
 	float	m_fChildRectScaleOffsetY = 1.0f;
+
+	_int			m_iChildUISelectIdx = 0;
+	CToolUIChild*	m_pChildUISelected  = nullptr;
 };

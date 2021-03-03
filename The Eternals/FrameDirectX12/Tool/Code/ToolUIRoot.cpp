@@ -284,6 +284,8 @@ void CToolUIRoot::Free()
 {
 	Engine::CGameObject::Free();
 
+	m_vecUIChild.clear();
+
 	Engine::Safe_Release(m_pBufferCom);
 	Engine::Safe_Release(m_pShaderCom);
 	Engine::Safe_Release(m_pBufferColor);

@@ -17,6 +17,7 @@
 #include "ToolGridLine.h"
 #include "ToolGridRect.h"
 #include "ToolUIRoot.h"
+#include "ToolUIChild.h"
 
 
 CToolSceneStage::CToolSceneStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -1194,7 +1195,12 @@ void CToolSceneStage::KeyInput_TabUI2DUI(CTab2DUI& TabUI2DUI)
 			Engine::OBJLIST* pRootUIList = m_pObjectMgr->Get_OBJLIST(L"Layer_UI", wstring(wstrRootUITag));
 
 			for (auto& pRootUI : *pRootUIList)
+			{
 				static_cast<CToolUIRoot*>(pRootUI)->m_bIsRenderRect = false;
+
+				for(auto& pChildUI : static_cast<CToolUIRoot*>(pRootUI)->m_vecUIChild)
+					static_cast<CToolUIChild*>(pChildUI)->m_bIsRenderRect = false;
+			}
 		}
 
 		// Picking ผ๖วเ.

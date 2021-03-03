@@ -79,11 +79,10 @@ _int CToolUIChild::Update_GameObject(const _float& fTimeDelta)
 	m_pTransCom->m_matWorld *= (*m_pmatRoot);
 
 
-	m_pTransColor->m_vPos     = m_pTransCom->m_vPos;
-	m_vConvertRect            = (m_pTransColor->m_vPos + m_vRectOffset).Convert_2DWindowToDescartes(WINCX, WINCY);
+	m_pTransColor->m_vPos     = m_pTransCom->m_vPos + m_vRectOffset;
 	matScale                  = XMMatrixScaling(m_pTransColor->m_vScale.x, m_pTransColor->m_vScale.y, m_pTransColor->m_vScale.z);
-	matTrans                  = XMMatrixTranslation(m_pTransCom->m_vPos.x, m_pTransCom->m_vPos.y, m_pTransCom->m_vPos.z);
-	m_pTransColor->m_matWorld = matScale * matTrans * (*m_pmatRoot);
+	matTrans                  = XMMatrixTranslation(m_pTransColor->m_vPos.x, m_pTransColor->m_vPos.y, m_pTransColor->m_vPos.z);
+	m_pTransColor->m_matWorld = matScale * matTrans;
 	m_pTransColor->m_matWorld *= (*m_pmatRoot);
 
 	Update_Rect();
@@ -258,10 +257,13 @@ void CToolUIChild::Update_SpriteFrame(const _float& fTimeDelta)
 
 void CToolUIChild::Update_Rect()
 {
-	m_tRect.left   = LONG((m_pTransColor->m_vPos.x + m_vRectOffset.x) - m_pTransCom->m_vScale.x * 0.5f);
-	m_tRect.top    = LONG((m_pTransColor->m_vPos.y + m_vRectOffset.y) - m_pTransCom->m_vScale.y * 0.5f);
-	m_tRect.right  = LONG((m_pTransColor->m_vPos.x + m_vRectOffset.x) + m_pTransCom->m_vScale.x * 0.5f);
-	m_tRect.bottom = LONG((m_pTransColor->m_vPos.y + m_vRectOffset.y) + m_pTransCom->m_vScale.y * 0.5f);
+	_vec3 vScale = _vec3(m_pTransColor->m_matWorld._11, m_pTransColor->m_matWorld._22, m_pTransColor->m_matWorld._33);
+	_vec3 vPos   = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
+
+	m_tRect.left   = LONG(vPos.x - vScale.x * 0.5f);
+	m_tRect.top    = LONG(vPos.y - vScale.y * 0.5f);
+	m_tRect.right  = LONG(vPos.x + vScale.x * 0.5f);
+	m_tRect.bottom = LONG(vPos.y + vScale.y * 0.5f);
 }
 
 Engine::CGameObject* CToolUIChild::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, 

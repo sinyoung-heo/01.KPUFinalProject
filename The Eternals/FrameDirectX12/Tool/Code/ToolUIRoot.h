@@ -33,6 +33,8 @@ public:
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 
+	void			Delete_ChildUI();
+
 private:
 	virtual HRESULT Add_Component();
 	HRESULT			Read_DataFromFilePath(wstring wstrDataFilePath);
