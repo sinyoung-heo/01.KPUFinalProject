@@ -1,10 +1,14 @@
 DynamicMesh|Character|PoporiH25
 DynamicMesh|Character|PoporiR19
 DynamicMesh|NPC|Aman_boy
+DynamicMesh|NPC|Castanic_M_Lsmith
 DynamicMesh|NPC|Cat
 DynamicMesh|NPC|Chicken
+DynamicMesh|NPC|Highelf_girl
 DynamicMesh|NPC|Human_boy
 DynamicMesh|NPC|NPC_Villagers
+DynamicMesh|NPC|Popori_boy
+DynamicMesh|NPC|Popori_M_Merchant
 StaticMesh|Plane|BumpTerrainMesh00
 StaticMesh|Plane|BumpTerrainMesh01
 StaticMesh|Sample|DistortDisk

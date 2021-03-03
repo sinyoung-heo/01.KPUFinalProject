@@ -1,0 +1,13 @@
+
+신영 
+- StaticMeshShader, ColorShader 인스턴싱 완료.
+- Texture의 경우 알파 블랜딩 순서때문에 인스턴싱 불가능.
+
+준오 
+- DownSampling으로 화면의 평균 색상을 구하여 톤매핑 실시 
+
+동희 
+- NPC 연동
+- Player 움직임 로직 수정
+
+

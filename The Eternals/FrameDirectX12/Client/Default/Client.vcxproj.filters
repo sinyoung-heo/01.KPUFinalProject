@@ -130,6 +130,9 @@
     <Filter Include="02.GameObject\99.SampleObject\11.NPC\02.NPC_Villagers">
       <UniqueIdentifier>{3973e66e-60c9-4e24-9477-8c6558e6ce19}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.SampleObject\11.NPC\03.NPC_Merchant">
+      <UniqueIdentifier>{797a3833-9c0a-4991-ae76-60371ebf7e9e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -274,6 +277,9 @@
     <ClInclude Include="..\Code\NPC_Boy.h">
       <Filter>02.GameObject\99.SampleObject\11.NPC\01.NPC_Boy</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\NPC_Merchant.h">
+      <Filter>02.GameObject\99.SampleObject\11.NPC\03.NPC_Merchant</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -386,6 +392,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\NPC_Boy.cpp">
       <Filter>02.GameObject\99.SampleObject\11.NPC\01.NPC_Boy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\NPC_Merchant.cpp">
+      <Filter>02.GameObject\99.SampleObject\11.NPC\03.NPC_Merchant</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

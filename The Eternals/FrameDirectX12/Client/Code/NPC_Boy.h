@@ -18,6 +18,8 @@ class CDynamicCamera;
 
 class CNPC_Boy : public Engine::CGameObject
 {
+	enum ANIM { A_WAIT, A_IDLE, A_WALK, A_TALK, A_LAUGH, A_END };
+
 private:
 	explicit CNPC_Boy(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 	explicit CNPC_Boy(const CNPC_Boy& rhs);
@@ -47,6 +49,9 @@ private:
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
 
+	void			Active_NPC(const _float& fTimeDelta);
+	void			Change_Animation(const _float& fTimeDelta);
+
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -70,7 +75,9 @@ private:
 	_uint			m_uiAnimIdx							= 0;	// 현재 애니메이션 Index
 	_uint			m_ui3DMax_NumFrame					= 0;	// 3DMax에서 애니메이션의 총 Frame 개수
 	_uint			m_ui3DMax_CurFrame					= 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
-
+	ANIM			m_eCurAnimation						= ANIM::A_END;
+	ANIM			m_ePreAnimation						= ANIM::A_END;
+	bool			m_bIsNormalNpc						= false;
 	
 	/*__________________________________________________________________________________________________________
 	[ Font ]
