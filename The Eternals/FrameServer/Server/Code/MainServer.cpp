@@ -880,7 +880,7 @@ void Initialize_Monster()
 		pNew->Hp = 100;
 		pNew->maxHp = 100;
 		pNew->m_type = TYPE_MONSTER;
-		pNew->m_monNum = MON_NORMAL;
+		pNew->m_monNum = MON_CHASE;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -1165,7 +1165,6 @@ void worker_thread()
 
 		case OPMODE::OP_RANDOM_MOVE_NPC:
 		{
-			/* 변경해야 될 것: 아래 함수 bool 리턴 받은 후 전체 플레이어 중 시야 내에 없다면 STATUS 변경 */
 			random_move_npc(key);
 			delete over_ex;
 		}
@@ -1174,6 +1173,13 @@ void worker_thread()
 		case OPMODE::OP_RANDOM_MOVE_MONSTER:
 		{
 			random_move_monster(key);
+			delete over_ex;
+		}
+		break;
+
+		case OPMODE::OP_CHASE_MOVE_MONSTER:
+		{
+			chase_move_monster(key);
 			delete over_ex;
 		}
 		break;

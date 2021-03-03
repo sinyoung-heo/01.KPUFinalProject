@@ -14,24 +14,16 @@ constexpr int KEY_SERVER		= 1000000;
 constexpr int SERVER_CORE		= 4;
 
 /* GAME CONTENTS */
-constexpr int ZERO_HP			= 0;
-constexpr int ZERO_EXP			= 0;
-constexpr int LEVEL_UP_EXP		= 100;
-constexpr int ATTCK_RANGE		= 1;
-constexpr int ORC_TARGET_RANGE	= 5;
-constexpr int ORC_RAOMING_DIST	= 20;
+//constexpr int ZERO_HP			= 0;
+//constexpr int INIT_HP			= 100;			// 플레이어 초기 HP
+//constexpr int INIT_EXP		= 0;			// 플레이어 초기 EXP
+//constexpr int INIT_MAXEXP		= 100;			// 플레이어 초기 EXP
+//constexpr int INIT_LEV		= 1;			// 플레이어 초기 LEVEL
+//constexpr int INIT_ATT		= 5;			// 플레이어 초기 ATTACK
+//constexpr int INIT_SPEED		= 5;			// 플레이어 초기 SPEED
 
-constexpr int INIT_HP			= 100;			// 플레이어 초기 HP
-constexpr int ORC_HP			= 70;			// ORC HP
-constexpr int ELF_HP			= 80;			// ELF HP
-constexpr int BOSS_HP			= 150;			// BOSS HP
+constexpr int CHASE_RANGE		= 5;			// CHASE MONSTER 추적 범위
 
-constexpr int INIT_ATT			= 5;			// 플레이어 초기 공격력
-constexpr int ORC_ATT			= 7;			// ORC 공격력
-constexpr int ELF_ATT			= 3;			// ELF 공격력
-constexpr int BOSS_ATT			= 10;			// BOSS 공격력
-
-constexpr int MASTER			= 99999;
 /*____________________________________________________________________
 Player Direction
 ______________________________________________________________________*/

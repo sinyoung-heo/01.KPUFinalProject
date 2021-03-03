@@ -107,6 +107,15 @@ bool CObjMgr::Is_Near(const CObj* me, const CObj* other)
 	return dist <= VIEW_LIMIT * VIEW_LIMIT;
 }
 
+bool CObjMgr::Is_Monster_Target(const CObj* me, const CObj* other)
+{
+	float dist = (other->m_vPos.x - me->m_vPos.x) * (other->m_vPos.x - me->m_vPos.x);
+	dist += (other->m_vPos.y - me->m_vPos.y) * (other->m_vPos.y - me->m_vPos.y);
+	dist += (other->m_vPos.z - me->m_vPos.z) * (other->m_vPos.z - me->m_vPos.z);
+
+	return dist <= CHASE_RANGE * CHASE_RANGE;
+}
+
 HRESULT CObjMgr::Add_GameObject(wstring wstrObjTag, CObj* pObj, int server_num)
 {
 	if (pObj != nullptr)
