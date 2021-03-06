@@ -38,6 +38,9 @@ _int CToolUICanvas::Update_GameObject(const _float & fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	if (nullptr == m_pTexDescriptorHeap)
+		return NO_EVENT;
+
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/

@@ -328,23 +328,9 @@ typedef struct tagVector3 : public XMFLOAT3
 
 		vDescartes.x =  this->x - float(WINCX) / 2.f;
 		vDescartes.y = -this->y + float(WINCY) / 2.f;
-		vDescartes.z =  this->z;
+		vDescartes.z =  0.f;
 
 		return vDescartes;
-	}
-
-	tagVector3 Convert_DescartesTo2DWindow(const int& WINCX, const int& WINCY)
-	{
-		/*____________________________________________________________________
-		데카르트 좌표를 윈도우 좌표로 변환해주는 좌표.
-		______________________________________________________________________*/
-		tagVector3 vWindow;
-
-		vWindow.x = this->x + float(WINCX) / 2.f;
-		vWindow.y = WINCY - (this->y + float(WINCY) / 2.f);
-		vWindow.z = this->z;
-
-		return vWindow;
 	}
 
 	tagVector3 Convert_ProjectionToScreen(const XMMATRIX& matView, const XMMATRIX& matProj, const D3D12_VIEWPORT& vp)
