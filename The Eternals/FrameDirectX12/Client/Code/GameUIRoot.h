@@ -9,7 +9,8 @@ protected:
 	virtual ~CGameUIRoot() = default;
 
 public:
-	vector<Engine::CGameObject*>& Get_ChildUIList() { return m_vecUIChild; };
+	vector<Engine::CGameObject*>&	Get_ChildUIList() { return m_vecUIChild; };
+	void							Set_IsRender(const _bool& IsRender) { m_bIsRender = IsRender; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrObjectTag,
@@ -60,10 +61,12 @@ protected:
 	FRAME					m_tFrame;
 
 	RECT	m_tRect;
-	_vec3	m_vRectOffset	= _vec3(0.0f);
+	_vec3	m_vRectOffset = _vec3(0.0f);
 
 	_vec3	m_vConvert     = _vec3(0.0f);
 	_vec3	m_vConvertRect = _vec3(0.0f);
+
+	_bool	m_bIsRender = true;
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,

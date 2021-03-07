@@ -26,6 +26,7 @@ CMainApp::CMainApp()
 
 HRESULT CMainApp::Ready_MainApp()
 {
+	ShowCursor(false);
 	srand(unsigned int(time(nullptr)));
 
 	Engine::FAILED_CHECK_RETURN(SetUp_DefaultSetting(Engine::WINMODE::MODE_WIN, WINCX, WINCY), E_FAIL);
@@ -78,6 +79,7 @@ _int CMainApp::Update_MainApp(const _float & fTimeDelta)
 	[ Update Management ]
 	____________________________________________________________________________________________________________*/
 	CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+	CMouseCursorMgr::Get_Instance()->Update_MouseCursorMgr(fTimeDelta);
 	m_pManagement->Update_Management(fTimeDelta);
 
 	return 0;

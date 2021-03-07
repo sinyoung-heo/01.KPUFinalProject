@@ -56,6 +56,9 @@ _int CGameUIRoot::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	if (!m_bIsRender)
+		return NO_EVENT;
+
 	if (m_bIsSpriteAnimation)
 		Update_SpriteFrame(fTimeDelta);
 

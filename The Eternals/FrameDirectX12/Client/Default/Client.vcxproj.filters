@@ -178,6 +178,9 @@
     <Filter Include="02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuInventory">
       <UniqueIdentifier>{9c82edd5-757a-4969-90b0-4dff9650f064}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.Mgr\04.MouseCursorMgr">
+      <UniqueIdentifier>{9f593d0a-4f7e-4583-a859-a2cb29f4762e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -361,6 +364,9 @@
     <ClInclude Include="..\Code\MainMenuEquipment.h">
       <Filter>02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuEquipment</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\MouseCursorMgr.h">
+      <Filter>97.Mgr\04.MouseCursorMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -510,6 +516,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\MainMenuEquipment.cpp">
       <Filter>02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuEquipment</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MouseCursorMgr.cpp">
+      <Filter>97.Mgr\04.MouseCursorMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

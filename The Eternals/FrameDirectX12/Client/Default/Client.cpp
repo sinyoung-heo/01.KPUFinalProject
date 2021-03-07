@@ -358,6 +358,12 @@ _ulong Release_Singleton()
 		return dwRefCnt;
 	}
 
+	if (dwRefCnt = CMouseCursorMgr::Get_Instance()->Destroy_Instance())
+	{
+		MSG_BOX(L"CMouseCursorMgr Release Failed");
+		return dwRefCnt;
+	}
+
 	if (dwRefCnt = Engine::CFrameMgr::Get_Instance()->Destroy_Instance())
 	{
 		MSG_BOX(L"CFrameMgr Release Failed");

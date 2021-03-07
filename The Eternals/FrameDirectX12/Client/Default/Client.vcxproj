@@ -176,6 +176,7 @@
     <ClInclude Include="..\Code\MainMenuInventory.h" />
     <ClInclude Include="..\Code\MainMenuLogout.h" />
     <ClInclude Include="..\Code\MainMenuSetting.h" />
+    <ClInclude Include="..\Code\MouseCursorMgr.h" />
     <ClInclude Include="..\Code\NPC_Animal.h" />
     <ClInclude Include="..\Code\DebugCamera.h" />
     <ClInclude Include="..\Code\DistortionDisk.h" />
@@ -232,6 +233,7 @@
     <ClCompile Include="..\Code\MainMenuInventory.cpp" />
     <ClCompile Include="..\Code\MainMenuLogout.cpp" />
     <ClCompile Include="..\Code\MainMenuSetting.cpp" />
+    <ClCompile Include="..\Code\MouseCursorMgr.cpp" />
     <ClCompile Include="..\Code\NPC_Animal.cpp" />
     <ClCompile Include="..\Code\DebugCamera.cpp" />
     <ClCompile Include="..\Code\DistortionDisk.cpp" />

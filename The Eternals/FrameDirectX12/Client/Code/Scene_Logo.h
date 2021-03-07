@@ -32,6 +32,8 @@ private:
 	CLoading*				m_pLoading				= nullptr;
 	Engine::CGameObject*	m_pLoadingProgress		= nullptr;
 
+	_bool m_bIsReadyMouseCursorMgr = false;
+
 	/*__________________________________________________________________________________________________________
 	[ Loading Text ]
 	____________________________________________________________________________________________________________*/

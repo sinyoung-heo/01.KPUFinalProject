@@ -72,6 +72,7 @@ ______________________________________________________________________*/
 #include "ShadowLightMgr.h"
 #include "PacketMgr.h"
 #include "ServerMath.h"
+#include "MouseCursorMgr.h"
 
 /*____________________________________________________________________
 Window Console창.

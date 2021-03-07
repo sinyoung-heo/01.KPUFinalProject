@@ -59,6 +59,12 @@ HRESULT CStageHSY::Ready_Scene()
 
 _int CStageHSY::Update_Scene(const _float & fTimeDelta)
 {
+	if (!m_bIsReadyMouseCursorMgr)
+	{
+		m_bIsReadyMouseCursorMgr = true;
+		CMouseCursorMgr::Get_Instance()->Ready_MouseCursorMgr();
+	}
+
 	return Engine::CScene::Update_Scene(fTimeDelta);
 }
 
