@@ -349,6 +349,18 @@
     <ClInclude Include="..\Code\CharacterMpGauge.h">
       <Filter>02.GameObject\98.GameUIChild\00.CharacterClassFrameChild\CharacterMpGauge</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\MainMenuLogout.h">
+      <Filter>02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuLogout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\MainMenuSetting.h">
+      <Filter>02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuSetting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\MainMenuInventory.h">
+      <Filter>02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuInventory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\MainMenuEquipment.h">
+      <Filter>02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuEquipment</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -486,6 +498,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\CharacterMpGauge.cpp">
       <Filter>02.GameObject\98.GameUIChild\00.CharacterClassFrameChild\CharacterMpGauge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MainMenuLogout.cpp">
+      <Filter>02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuLogout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MainMenuSetting.cpp">
+      <Filter>02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuSetting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MainMenuInventory.cpp">
+      <Filter>02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuInventory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MainMenuEquipment.cpp">
+      <Filter>02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuEquipment</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

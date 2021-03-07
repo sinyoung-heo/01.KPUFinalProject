@@ -4,7 +4,7 @@
 
 class CGameUIRoot : public Engine::CGameObject
 {
-private:
+protected:
 	explicit CGameUIRoot(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 	virtual ~CGameUIRoot() = default;
 
@@ -27,14 +27,15 @@ public:
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 
 	void			Add_ChildUI(Engine::CGameObject* pChildUI) { if (nullptr != pChildUI) m_vecUIChild.emplace_back(pChildUI); }
-private:
-	virtual HRESULT Add_Component();
-	HRESULT			Read_DataFromFilePath(wstring wstrDataFilePath);
+protected:
 	void			Set_ConstantTable();
 	void			Update_SpriteFrame(const _float& fTimeDelta);
 	void			Update_Rect();
-
 private:
+	virtual HRESULT Add_Component();
+	HRESULT			Read_DataFromFilePath(wstring wstrDataFilePath);
+
+protected:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
 	____________________________________________________________________________________________________________*/
@@ -75,7 +76,7 @@ public:
 									   const _vec3& vRectOffset,
 									   const _vec3& vRectScale,
 									   const _long& iUIDepth = 1000);
-private:
+protected:
 	virtual void Free();
 };
 
