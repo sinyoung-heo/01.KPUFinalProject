@@ -333,6 +333,17 @@ typedef struct tagVector3 : public XMFLOAT3
 		return vDescartes;
 	}
 
+	tagVector3 Convert_DescartesTo2DWindow(const int& WINCX, const int& WINCY)
+	{
+		tagVector3 vWindow;
+
+		vWindow.x = this->x + float(WINCX) / 2.f;
+		vWindow.y = float(WINCY) - (-1.0f * this->y + float(WINCY) / 2.f);
+		vWindow.z = this->z;
+
+		return vWindow;
+	}
+
 	tagVector3 Convert_ProjectionToScreen(const XMMATRIX& matView, const XMMATRIX& matProj, const D3D12_VIEWPORT& vp)
 	{
 		/*____________________________________________________________________
