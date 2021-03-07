@@ -33,6 +33,7 @@ public:
 	const bool&			Get_MoveStop()			{ return m_bIsMoveStop; }
 
 	// Set
+	void				Set_UIDepth(const _long& iUIDepth)					{ m_UIDepth = iUIDepth; }
 	void				Set_DeadGameObject()								{ m_bIsDead = true; }
 	void				Set_BoundingBoxColor(const _rgba& vColor)			{ m_pBoundingBoxCom->Set_Color(vColor); }
 	void				Set_BoundingSphereColor(const _rgba& vColor)		{ m_pBoundingSphereCom->Set_Color(vColor); }

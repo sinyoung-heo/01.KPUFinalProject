@@ -439,4 +439,6 @@ void CScene_StageVelika::Free()
 	Engine::CShaderShadowInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
 	Engine::CShaderMeshInstancing::Get_Instance()->Reset_InstancingContainer();
 	Engine::CShaderMeshInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
+	Engine::CShaderColorInstancing::Get_Instance()->Reset_Instance();
+	Engine::CShaderColorInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
 }

@@ -769,10 +769,10 @@ namespace Engine
 	{
 		XMFLOAT4X4	matWorld;
 
-		_int		iFrameCnt;	// 스프라이트 이미지 X축 개수.
-		_int		iCurFrame;	// 현재 그려지는 이미지의 X축 Index.
-		_int		iSceneCnt;	// 스프라이트 이미지 Y축 개수.
-		_int		iCurScene;	// 현재 그려지는 이미지의 Y축 Index.
+		_float		fFrameCnt;	// 스프라이트 이미지 X축 개수.
+		_float		fCurFrame;	// 현재 그려지는 이미지의 X축 Index.
+		_float		fSceneCnt;	// 스프라이트 이미지 Y축 개수.
+		_float		fCurScene;	// 현재 그려지는 이미지의 Y축 Index.
 
 		_float		fGauge;
 		_float		fOffset1;

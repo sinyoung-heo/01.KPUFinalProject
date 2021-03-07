@@ -12,7 +12,9 @@ public:
 	static CString ConvertRelativePath(CString strFullPath);
 
 	// TextureDDS PathFind
-	static void DirInfoExtractionDDS(const wstring& wstrPath, list<IMGPATH*>& rPathInfoLst);
+	static void DirInfoExtractionDDS(const wstring& wstrPath, 
+									 list<IMGPATH*>& rPathInfoLst,
+									 list<TEX_TREECTRL_INFO*>& lstTexTreeCtrlInfo);
 
 	// Mesh PathFind
 	static void DirInfoMeshExtraction(const wstring& wstrPath,

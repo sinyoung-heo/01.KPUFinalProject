@@ -38,8 +38,8 @@ HRESULT CTestCollisonObject::Ready_GameObject(const _vec3& vScale, const _vec3& 
 	uniform_int_distribution<_int>	uid_dir		{ DIR_X, DIR_Z };
 	uniform_int_distribution<_int>	uid_move	{ MOVE_MINUS, MOVE_PLUS };
 	uniform_int_distribution<_int>	uid_speed	{ 10, 50 };
-	// random_device			rn;
-	default_random_engine	dre{ /*rn()*/ };
+	random_device			rn;
+	default_random_engine	dre{ rn() };
 
 	m_eDir = DIRECTION(uid_dir(dre));
 	if (MOVE_MINUS == MOVE(uid_move(dre)))

@@ -246,6 +246,41 @@ HRESULT CShaderColor::Create_PipelineState()
 	m_vecPipelineState.emplace_back(pPipelineState);
 	CRenderer::Get_Instance()->Add_PipelineStateCnt();
 
+	/*__________________________________________________________________________________________________________
+	[ 4¹ø PipelineState Pass ]
+	- "VS_MAIN"
+	- "PS_MAIN"
+	- FILL_MODE_SOLID
+	- CULL_MODE_BACK
+	- Blend		(O)
+	- Z Write	(X)
+	____________________________________________________________________________________________________________*/
+	PipelineStateDesc.pRootSignature		= m_pRootSignature;
+	PipelineStateDesc.SampleMask			= UINT_MAX;
+	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	PipelineStateDesc.NumRenderTargets		= 1;
+	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R8G8B8A8_UNORM;
+	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;
+	vecInputLayout							= Create_InputLayout();
+	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID);
+	PipelineStateDesc.BlendState			= CShader::Create_BlendState(true,
+																		 D3D12_BLEND_SRC_ALPHA,
+																		 D3D12_BLEND_INV_SRC_ALPHA,
+																		 D3D12_BLEND_OP_ADD,
+																		 D3D12_BLEND_ONE,
+																		 D3D12_BLEND_ZERO,
+																		 D3D12_BLEND_OP_ADD);
+	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState(false);
+
+	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
+	m_vecPipelineState.emplace_back(pPipelineState);
+	CRenderer::Get_Instance()->Add_PipelineStateCnt();
+
 	return S_OK;
 }
 

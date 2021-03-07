@@ -256,6 +256,7 @@ HRESULT CVIMesh::Ready_Mesh(const aiMesh * pAiMesh,
 			}
 			else
 				vtxMesh.vNormal = _vec3(pAiMesh->mNormals[i].x, pAiMesh->mNormals[i].y, pAiMesh->mNormals[i].z);
+
 			//vtxMesh.vNormal = _vec3(pAiMesh->mNormals[i].x, pAiMesh->mNormals[i].y, pAiMesh->mNormals[i].z);
 		}
 		// - Texture 정보가 있다면, TexUV값 입력.
