@@ -168,6 +168,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\FrameServer\Server\Header\protocol.h" />
+    <ClInclude Include="..\Code\CharacterHpGauge.h" />
+    <ClInclude Include="..\Code\CharacterMpGauge.h" />
+    <ClInclude Include="..\Code\GameUIChild.h" />
+    <ClInclude Include="..\Code\GameUIRoot.h" />
     <ClInclude Include="..\Code\NPC_Animal.h" />
     <ClInclude Include="..\Code\DebugCamera.h" />
     <ClInclude Include="..\Code\DistortionDisk.h" />
@@ -216,6 +220,10 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Code\CharacterHpGauge.cpp" />
+    <ClCompile Include="..\Code\CharacterMpGauge.cpp" />
+    <ClCompile Include="..\Code\GameUIChild.cpp" />
+    <ClCompile Include="..\Code\GameUIRoot.cpp" />
     <ClCompile Include="..\Code\NPC_Animal.cpp" />
     <ClCompile Include="..\Code\DebugCamera.cpp" />
     <ClCompile Include="..\Code\DistortionDisk.cpp" />
