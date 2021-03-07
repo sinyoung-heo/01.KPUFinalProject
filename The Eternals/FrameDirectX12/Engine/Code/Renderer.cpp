@@ -111,7 +111,7 @@ HRESULT CRenderer::Ready_Renderer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCo
 	FAILED_CHECK_RETURN(Ready_ShaderPrototype(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_RenderTarget(), E_FAIL);
 
-	m_mapRenderOnOff[L"RenderTarget"]	= false;
+	m_mapRenderOnOff[L"RenderTarget"]	= true;
 	m_mapRenderOnOff[L"DebugFont"]		= false;
 	m_mapRenderOnOff[L"Collider"]		= true;
 	m_mapRenderOnOff[L"SectorGrid"]		= true;
