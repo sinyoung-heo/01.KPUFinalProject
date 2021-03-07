@@ -22,7 +22,6 @@ private:
 public:
 	void	Add_CollisionCheckList(CGameObject * pGameObj);
 	void	Progress_SweapAndPrune();
-	void	Check_Collision();
 	void	Clear_CollisionContainer();
 private:
 	_bool	Check_OverlapSphere(const OVERLAP_AXIS& eOverlap, CGameObject* pSrc, CGameObject* pDst, IS_OVERLAP& eIsOverlap);

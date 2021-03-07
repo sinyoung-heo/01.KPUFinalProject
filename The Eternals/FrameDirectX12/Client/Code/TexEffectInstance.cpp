@@ -122,10 +122,10 @@ void CTexEffectInstance::Set_ConstantTable(const Engine::INSTANCE& eInstanceID, 
 	Engine::CB_SHADER_TEXTURE tCB_ShaderTexture;
 	ZeroMemory(&tCB_ShaderTexture, sizeof(Engine::CB_SHADER_TEXTURE));
 	tCB_ShaderTexture.matWorld = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderTexture.iFrameCnt = m_tFrame.iFrameCnt;
-	tCB_ShaderTexture.iCurFrame = (_int)m_tFrame.fCurFrame;
-	tCB_ShaderTexture.iSceneCnt = m_tFrame.iSceneCnt;
-	tCB_ShaderTexture.iCurScene = (_int)m_tFrame.fCurScene;
+	tCB_ShaderTexture.fFrameCnt = (_float)m_tFrame.fFrameCnt;
+	tCB_ShaderTexture.fCurFrame = (_float)(_int)m_tFrame.fCurFrame;
+	tCB_ShaderTexture.fSceneCnt = (_float)m_tFrame.fSceneCnt;
+	tCB_ShaderTexture.fCurScene = (_float)(_int)m_tFrame.fCurScene;
 
 	m_pShaderTextureInstancing->Get_UploadBuffer_ShaderTexture(m_wstrTextureTag, eInstanceID, m_iTexPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderTexture);
 }
@@ -135,14 +135,14 @@ void CTexEffectInstance::Update_SpriteFrame(const _float& fTimeDelta)
 	m_tFrame.fCurFrame += fTimeDelta * m_tFrame.fFrameSpeed;
 
 	// Sprite XÃà
-	if (m_tFrame.fCurFrame > m_tFrame.iFrameCnt)
+	if (m_tFrame.fCurFrame > m_tFrame.fFrameCnt)
 	{
 		m_tFrame.fCurFrame = 0.0f;
 		m_tFrame.fCurScene += 1.0f;
 	}
 
 	// Sprite YÃà
-	if (m_tFrame.fCurScene >= m_tFrame.iSceneCnt)
+	if (m_tFrame.fCurScene >= m_tFrame.fSceneCnt)
 	{
 		m_tFrame.fCurScene = 0.0f;
 	}

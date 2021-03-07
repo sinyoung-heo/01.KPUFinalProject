@@ -196,21 +196,21 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ TestCollisionObject ]
 	____________________________________________________________________________________________________________*/
-	uniform_int_distribution<_int>	uid_x	{ 0, 256 };
-	uniform_int_distribution<_int>	uid_y	{ 0, 256 };
-	uniform_int_distribution<_int>	uid_z	{ 0, 256 };
-	random_device			rn;
-	default_random_engine	dre{ rn()};
+	//uniform_int_distribution<_int>	uid_x	{ 0, 256 };
+	//uniform_int_distribution<_int>	uid_y	{ 0, 256 };
+	//uniform_int_distribution<_int>	uid_z	{ 0, 256 };
+	//random_device			rn;
+	//default_random_engine	dre{ rn()};
 
-	for (_uint i = 0; i < 100; ++i)
-	{
-		pGameObj = CTestCollisonObject::Create(m_pGraphicDevice, m_pCommandList,
-											   _vec3(10.0f),
-											   _vec3(0.0f),
-											   _vec3((_float)uid_x(dre), (_float)uid_y(dre), (_float)uid_z(dre)));
+	//for (_uint i = 0; i < 100; ++i)
+	//{
+	//	pGameObj = CTestCollisonObject::Create(m_pGraphicDevice, m_pCommandList,
+	//										   _vec3(10.0f),
+	//										   _vec3(0.0f),
+	//										   _vec3((_float)uid_x(dre), (_float)uid_y(dre), (_float)uid_z(dre)));
 
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"CollisionObject", pGameObj), E_FAIL);
-	}
+	//	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"CollisionObject", pGameObj), E_FAIL);
+	//}
 
 	/*__________________________________________________________________________________________________________
 	[ StaticMeshObject ]
@@ -285,23 +285,23 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ Texture Effect ]
 	____________________________________________________________________________________________________________*/
-	//// Fire
-	//pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-	//								  L"Fire",						// TextureTag
-	//								  _vec3(2.5f, 2.5f, 1.0f),		// Scale
-	//								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-	//								  _vec3(26.0f, 1.5f, 26.5f),	// Pos
-	//								  FRAME(8, 8, 64.0f));			// Sprite Image Frame
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Fire", pGameObj), E_FAIL);
+	// Fire
+	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+									  L"Fire",						// TextureTag
+									  _vec3(2.5f, 2.5f, 1.0f),		// Scale
+									  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+									  _vec3(26.0f, 1.5f, 26.5f),	// Pos
+									  FRAME(8, 8, 64.0f));			// Sprite Image Frame
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Fire", pGameObj), E_FAIL);
 
-	//// Torch
-	//pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-	//								  L"Torch",						// TextureTag
-	//								  _vec3(2.5f, 5.0f, 1.0f),		// Scale
-	//								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-	//								  _vec3(28.0f, 2.0f, 27.0f),	// Pos
-	//								  FRAME(8, 8, 64.0f));			// Sprite Image Frame
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Torch", pGameObj), E_FAIL);
+	// Torch
+	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+									  L"Torch",						// TextureTag
+									  _vec3(2.5f, 5.0f, 1.0f),		// Scale
+									  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+									  _vec3(28.0f, 2.0f, 27.0f),	// Pos
+									  FRAME(8, 8, 64.0f));			// Sprite Image Frame
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Torch", pGameObj), E_FAIL);
 
 
 	/*__________________________________________________________________________________________________________

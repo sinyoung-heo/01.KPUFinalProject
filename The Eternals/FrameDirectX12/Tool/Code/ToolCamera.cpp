@@ -4,6 +4,8 @@
 #include "ObjectMgr.h"
 #include "DirectInput.h"
 #include "Font.h"
+#include "MainFrm.h"
+#include "MyForm.h"
 
 CToolCamera::CToolCamera(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CCamera(pGraphicDevice, pCommandList)
@@ -40,7 +42,11 @@ _int CToolCamera::Update_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Key Input ]
 	____________________________________________________________________________________________________________*/
-	if (Engine::KEY_PRESSING(DIK_LSHIFT))
+	CMainFrame* pMainFrame	= static_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+	CMyForm*	pMyForm		= static_cast<CMyForm*>(pMainFrame->m_MainSplit.GetPane(0, 0));
+	
+	if (Engine::KEY_PRESSING(DIK_LSHIFT) &&
+		(!pMyForm->m_TabUI.m_bIsTabTexSpriteUV && !pMyForm->m_TabUI.m_bIsTab2DUI))
 		Key_Input(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
@@ -62,7 +68,10 @@ _int CToolCamera::LateUpdate_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Font Update ]
 	____________________________________________________________________________________________________________*/
-	if (Engine::CRenderer::Get_Instance()->Get_RenderOnOff(L"DebugFont"))
+	CMainFrame* pMainFrame	= static_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+	CMyForm*	pMyForm		= static_cast<CMyForm*>(pMainFrame->m_MainSplit.GetPane(0, 0));
+	
+	if ((!pMyForm->m_TabUI.m_bIsTabTexSpriteUV && !pMyForm->m_TabUI.m_bIsTab2DUI))
 	{
 		m_wstrText = wstring(L"[ Camera Info ] \n") +
 					 wstring(L"Eye\t(%d, %d, %d) \n") +

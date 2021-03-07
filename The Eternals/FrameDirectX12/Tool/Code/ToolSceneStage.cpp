@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "ToolSceneStage.h"
-
 #include "ComponentMgr.h"
 #include "GraphicDevice.h"
 #include "DirectInput.h"
@@ -14,6 +13,11 @@
 #include "ToolStaticMesh.h"
 #include "Popori_F.h"
 #include "ToolCell.h"
+#include "ToolUICanvas.h"
+#include "ToolGridLine.h"
+#include "ToolGridRect.h"
+#include "ToolUIRoot.h"
+#include "ToolUIChild.h"
 
 
 CToolSceneStage::CToolSceneStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -32,6 +36,8 @@ HRESULT CToolSceneStage::Ready_Scene()
 	Engine::FAILED_CHECK_RETURN(Ready_LayerFont(L"Layer_Font"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
+	CMouseMgr::Get_Instance()->Ready_MouseMgr();
+
 	/*__________________________________________________________________________________________________________
 	[ NaviMesh Cell Picking Collider ]
 	____________________________________________________________________________________________________________*/
@@ -39,7 +45,6 @@ HRESULT CToolSceneStage::Ready_Scene()
 	{
 		m_pPickingCollider[i] = static_cast<Engine::CColliderSphere*>(Engine::CComponentMgr::Get_Instance()->Clone_Component(L"ColliderSphere", Engine::COMPONENTID::ID_DYNAMIC));
 		NULL_CHECK_RETURN(m_pPickingCollider[i], E_FAIL);
-		// m_pColliderCom[i]->AddRef();
 
 		m_matColliderWorld[i] = XMMatrixTranslation(1000.0f, 1000.0f, 1000.0f);
 		m_pPickingCollider[i]->Set_ParentMatrix(&m_matColliderWorld[i]);	// Parent Matrix
@@ -61,6 +66,8 @@ HRESULT CToolSceneStage::Ready_Scene()
 	____________________________________________________________________________________________________________*/
 	CMainFrame* pMainFrame = static_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
 	CMyForm* pMyForm = static_cast<CMyForm*>(pMainFrame->m_MainSplit.GetPane(0, 0));
+	
+	// Tab Map
 	pMyForm->m_TabMap.Ready_TerrainControl();
 	pMyForm->m_TabMap.Ready_SkyBoxControl();
 	pMyForm->m_TabMap.Ready_EditControl();
@@ -69,6 +76,18 @@ HRESULT CToolSceneStage::Ready_Scene()
 	pMyForm->m_TabMap.Ready_NavigationMeshControl();
 	m_pPickingTerrain = static_cast<CToolTerrain*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"TerrainTex256"));
 
+	// Tab UI
+	pMyForm->m_TabUI.m_TabTexSpriteUV.Ready_TabTexSpriteUV();
+	pMyForm->m_TabUI.m_Tab2DUI.Ready_Tab2DUI();
+	pMyForm->m_TabUI.m_TabTexSpriteUV.m_pToolUICanvas = m_pUICanvas;
+
+	for (_uint i = 0; i < 512; ++i)
+	{
+		// Engine::CShaderColorInstancing::Get_Instance()->Add_TotalInstancCount(Engine::COLOR_BUFFER::BUFFER_RECT);
+		// Engine::CShaderColorInstancing::Get_Instance()->Add_TotalInstancCount(Engine::COLOR_BUFFER::BUFFER_CUBE);
+		Engine::CShaderColorInstancing::Get_Instance()->Add_TotalInstancCount(Engine::COLOR_BUFFER::BUFFER_BOX);
+		Engine::CShaderColorInstancing::Get_Instance()->Add_TotalInstancCount(Engine::COLOR_BUFFER::BUFFER_SPHERE);
+	}
 
 	Engine::CShaderColorInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 
@@ -107,6 +126,9 @@ _int CToolSceneStage::Update_Scene(const _float& fTimeDelta)
 	{
 		if (pMyForm->m_bIsTabMap)
 			KeyInput_TabMapModeChange(pMyForm->m_TabMap);
+
+		if (pMyForm->m_TabUI.m_bIsTab2DUI)
+			KeyInput_Tab2DUIModeChange(pMyForm->m_TabUI.m_Tab2DUI);
 	}
 
 	// NavigationMesh ModeChange (Find Near Point)
@@ -125,6 +147,7 @@ _int CToolSceneStage::Update_Scene(const _float& fTimeDelta)
 		}
 	}
 
+	CMouseMgr::Get_Instance()->Update_MouseMgr(fTimeDelta);
 	return Engine::CScene::Update_Scene(fTimeDelta);
 }
 
@@ -215,9 +238,9 @@ HRESULT CToolSceneStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 	[ Coordinate ]
 	____________________________________________________________________________________________________________*/
 	CToolCoordinate* pCoordinate = CToolCoordinate::Create(m_pGraphicDevice, m_pCommandList,
-														   _vec3(512.0f, 512.0f, 512.0f),	// Scale
-														   _vec3(0.0f, 0.0f, 0.0f),			// Angle
-														   _vec3(-0.05f, 0.0f, -0.05f));	// Pos
+														   _vec3(5120.0f, 5120.0f, 5120.0f),	// Scale
+														   _vec3(0.0f, 0.0f, 0.0f),				// Angle
+														   _vec3(-0.05f, 0.0f, -0.05f));		// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"ToolCoordinate", pCoordinate), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
@@ -299,6 +322,21 @@ HRESULT CToolSceneStage::Ready_LayerGameObject(wstring wstrLayerTag)
 	[ Popori_F ]
 	____________________________________________________________________________________________________________*/
 	CPopori_F* pPopori_F = nullptr;
+
+	//pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
+	//							  L"PoporiR19",						// MeshTag
+	//							  _vec3(0.05f, 0.05f, 0.05f),		// Scale
+	//							  _vec3(0.0f, 180.0f, 0.0f),		// Angle
+	//							  _vec3(0.0f, 0.0f, 0.0f));			// Pos
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
+
+	//pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
+	//							  L"PoporiR19",						// MeshTag
+	//							  _vec3(0.05f, 0.05f, 0.05f),		// Scale
+	//							  _vec3(0.0f, 0.0f, 0.0f),			// Angle
+	//							  _vec3(2.0f, 0.0f, 0.0f));			// Pos
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pPopori_F), E_FAIL);
+
 	pPopori_F =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
 								  L"PoporiR19",						// MeshTag
 								  _vec3(0.05f, 0.05f, 0.05f),		// Scale
@@ -326,6 +364,41 @@ HRESULT CToolSceneStage::Ready_LayerUI(wstring wstrLayerTag)
 	Engine::CLayer* pLayer = Engine::CLayer::Create();
 	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
 	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
+
+	Engine::CGameObject* pGameObj = nullptr;
+
+	/*__________________________________________________________________________________________________________
+	[ UICanvas ]
+	____________________________________________________________________________________________________________*/
+	pGameObj = CToolUICanvas::Create(m_pGraphicDevice, m_pCommandList,
+									 _vec3(0.0f),
+									 _vec3(0.0f));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"UICanvas", pGameObj), E_FAIL);
+	m_pUICanvas = static_cast<CToolUICanvas*>(pGameObj);
+
+	/*__________________________________________________________________________________________________________
+	[ UIGridLine ]
+	____________________________________________________________________________________________________________*/
+	pGameObj = CToolGridLine::Create(m_pGraphicDevice, m_pCommandList,
+									 _vec3(0.0f),
+									 _vec3(0.0f),
+									 900);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"UIGridLineWidth", pGameObj), E_FAIL);
+	
+	pGameObj = CToolGridLine::Create(m_pGraphicDevice, m_pCommandList,
+									 _vec3(0.0f),
+									 _vec3(0.0f),
+									 900);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"UIGridLineHeight", pGameObj), E_FAIL);
+	
+	/*__________________________________________________________________________________________________________
+	[ UIGridRect ]
+	____________________________________________________________________________________________________________*/
+	pGameObj = CToolGridRect::Create(m_pGraphicDevice, m_pCommandList,
+									 _vec3(0.0f),
+									 _vec3(0.0f),
+									 950);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"UIGridRect", pGameObj), E_FAIL);
 
 
 	return S_OK;
@@ -370,11 +443,12 @@ void CToolSceneStage::KeyInput()
 	CMyForm*	pMyForm		= static_cast<CMyForm*>(pMainFrame->m_MainSplit.GetPane(0, 0));
 
 	/*__________________________________________________________________________________________________________
-	[ Terrain Picking ]
+	[ L Button Picking ]
 	____________________________________________________________________________________________________________*/
 	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON(Engine::DIM_LB)))
 	{
 		// TabMap Mouse Picking Event. (STATIC MESH / LIGHTING / NAVIGATION MESH)
+#pragma region TABMAP_MOUSEPICKING
 		if (pMyForm->m_bIsTabMap)
 		{
 			if (pMyForm->m_TabMap.m_EditCheck_StaticMesh.GetCheck())
@@ -386,12 +460,25 @@ void CToolSceneStage::KeyInput()
 			else if (pMyForm->m_TabMap.m_EditCheck_NavigationMesh.GetCheck())
 				KeyInput_TabMapNavigationMesh(pMyForm->m_TabMap);
 		}
+#pragma endregion
 
+
+
+		// TabMap Mouse Picking Event.
+#pragma region TABUI_MOUSEPICKING
+		else if (pMyForm->m_bIsTabUI)
+		{
+			if (pMyForm->m_TabUI.m_bIsTabTexSpriteUV)
+				KeyInput_TabUITexSpriteUV(pMyForm->m_TabUI.m_TabTexSpriteUV);
+			else if (pMyForm->m_TabUI.m_bIsTab2DUI)
+				KeyInput_TabUI2DUI(pMyForm->m_TabUI.m_Tab2DUI);
+		}
+#pragma endregion
 	}
 
 	// NaviMesh 수정모드일 경우.
-	if (pMyForm->m_TabMap.m_EditCheck_NavigationMesh.GetCheck() &&
-		pMyForm->m_TabMap.m_bIsNaviModifyMode)
+#pragma region TABMAP_NAVIMESH
+	if (pMyForm->m_TabMap.m_EditCheck_NavigationMesh.GetCheck() && pMyForm->m_TabMap.m_bIsNaviModifyMode)
 	{
 		_long	dwMouseMove = 0;
 
@@ -453,9 +540,37 @@ void CToolSceneStage::KeyInput()
 		}
 
 	}
+#pragma endregion
 
+
+#pragma region TOOLROOTUI_MODIFY
+	// ToolRootUI 수정모드일 경우.
+	if (pMyForm->m_TabUI.m_bIsTab2DUI &&
+		pMyForm->m_TabUI.m_Tab2DUI.m_bIsRootModifyMode && nullptr != m_pPickingRootUI)
+	{
+
+		if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON(Engine::DIM_LB)))
+		{
+			pMyForm->m_TabUI.m_Tab2DUI.UpdateData(TRUE);
+			
+			CMouseMgr::Get_CursorPoint().x;
+			m_pPickingRootUI->Get_Transform()->m_vPos.x = (_float)(CMouseMgr::Get_CursorPoint().x);
+			m_pPickingRootUI->Get_Transform()->m_vPos.y = (_float)(CMouseMgr::Get_CursorPoint().y);
+
+			pMyForm->m_TabUI.m_Tab2DUI.m_fRootPosX = (_float)(CMouseMgr::Get_CursorPoint().x);
+			pMyForm->m_TabUI.m_Tab2DUI.m_fRootPosY = (_float)(CMouseMgr::Get_CursorPoint().y);
+
+			pMyForm->m_TabUI.m_Tab2DUI.UpdateData(FALSE);
+		}
+
+	}
+#pragma endregion
 }
 
+
+
+
+#pragma region TABMAP_KEYINPUT
 void CToolSceneStage::KeyInput_TabMapStaticMesh(CTabMap& TabMap)
 {
 	// StaticMesh Object 생성.
@@ -960,6 +1075,231 @@ void CToolSceneStage::KeyInput_TabMapModeChange(CTabMap& TabMap)
 
 	TabMap.UpdateData(FALSE);
 }
+#pragma endregion
+
+
+
+
+#pragma region TABUI_TEXSPRITEUV
+void CToolSceneStage::KeyInput_TabUITexSpriteUV(CTabTexSpriteUV& TabUITexSprite)
+{
+	Engine::OBJLIST* m_plstGridRect = m_pObjectMgr->Get_OBJLIST(L"Layer_UI", L"UIGridRect");
+	if (nullptr == m_plstGridRect || m_plstGridRect->empty())
+		return;
+
+	TabUITexSprite.UpdateData(TRUE);
+
+	CMainFrame* pMainFrame	= static_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
+	CToolView*	pToolView	= static_cast<CToolView*>(pMainFrame->m_MainSplit.GetPane(0, 1));
+
+	::POINT ptMouse{};
+	GetCursorPos(&ptMouse);
+	ScreenToClient(g_hWnd, &ptMouse);
+
+	for (auto& pGridRect : *m_plstGridRect)
+		static_cast<CToolGridRect*>(pGridRect)->m_bIsSelect = false;
+
+	auto iter_begin = m_plstGridRect->begin();
+	for (_int i = 0; i < TabUITexSprite.m_iRectSizeY; ++i)
+	{
+		for (_int j = 0; j < TabUITexSprite.m_iRectSizeX; ++j, ++iter_begin)
+		{
+			if (PtInRect(&(static_cast<CToolGridRect*>(*iter_begin)->m_tRect), ptMouse))
+			{
+				static_cast<CToolGridRect*>(*iter_begin)->m_bIsSelect = true;
+
+				TabUITexSprite.m_fCurFrame = (_float)j;
+				TabUITexSprite.m_fCurScene = (_float)i;
+
+				TabUITexSprite.UpdateData(FALSE);
+				return;
+			}
+		}
+	}
+
+	TabUITexSprite.UpdateData(FALSE);
+}
+#pragma endregion
+
+
+
+
+#pragma region TABUI_2DUI
+void CToolSceneStage::KeyInput_TabUI2DUI(CTab2DUI& TabUI2DUI)
+{
+	TabUI2DUI.UpdateData(TRUE);
+
+	// UI 생성
+	if (TabUI2DUI.m_bIsRootCreateMode)
+	{
+		if (TabUI2DUI.m_wstrRootDataFileName == L"" ||
+			TabUI2DUI.m_wstrRootObjectTag == L"")
+			return;
+
+		// ListBox에 동일한 ObjTag가 있는지 검사.
+		for (_int i = 0; i < TabUI2DUI.m_ListBoxRootUI.GetCount(); ++i)
+		{
+			CString wstrRootUITag = L"";
+			TabUI2DUI.m_ListBoxRootUI.GetText(i, wstrRootUITag);
+
+			if (wstrRootUITag == TabUI2DUI.m_wstrRootObjectTag)
+			{
+
+				AfxMessageBox(L"동일한 RootUI ObjectTag값 존재");
+				return;
+			}
+		}
+
+		Engine::CGameObject* pGameObj = nullptr;
+
+		wstring wstrDataFullPath;
+		_tchar szPath[MAX_STR] = L"";
+		GetCurrentDirectory(MAX_STR, szPath);		// 작업중인 현재 경로.
+		PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+		PathRemoveFileSpec(szPath);					// 마지막 폴더 삭제.
+		lstrcat(szPath, L"\\Bin\\ToolData\\");
+		wstrDataFullPath = wstring(szPath) + wstring(TabUI2DUI.m_wstrRootDataFileName);
+		wstrDataFullPath = CToolFileInfo::ConvertRelativePath(wstrDataFullPath.c_str());
+
+		// _vec3 vPos = _vec3((_float)CMouseMgr::Get_CursorPoint().x, (_float)CMouseMgr::Get_CursorPoint().y, 1.0f);
+		TabUI2DUI.m_fRootPosX = (_float)CMouseMgr::Get_CursorPoint().x;
+		TabUI2DUI.m_fRootPosY = (_float)CMouseMgr::Get_CursorPoint().y;
+
+		// UI 생성.
+		pGameObj = CToolUIRoot::Create(m_pGraphicDevice, m_pCommandList,
+									   wstring(TabUI2DUI.m_wstrRootObjectTag),
+									   wstrDataFullPath,
+									   _vec3(TabUI2DUI.m_fRootPosX, TabUI2DUI.m_fRootPosY, 0.0f),
+									   _vec3(TabUI2DUI.m_fRootScaleX, TabUI2DUI.m_fRootScaleY, 1.0f),
+									   TabUI2DUI.m_bIsRootAnimation,
+									   TabUI2DUI.m_fRootFrameSpeed,
+									   _vec3(TabUI2DUI.m_fRootRectPosOffsetX, TabUI2DUI.m_fRootRectPosOffsetY, 0.0f),
+									   _vec3(TabUI2DUI.m_fRootRectScaleX, TabUI2DUI.m_fRootRectScaleY, 1.0f),
+									   TabUI2DUI.m_RootUIDepth);
+		m_pObjectMgr->Add_GameObject(L"Layer_UI", wstring(TabUI2DUI.m_wstrRootObjectTag), pGameObj);
+
+		// ListBox 추가.
+		TabUI2DUI.m_ListBoxRootUI.AddString(TabUI2DUI.m_wstrRootObjectTag);
+	}
+
+	else if (TabUI2DUI.m_bIsRootModifyMode)
+	{
+		_int iListBoxSize = TabUI2DUI.m_ListBoxRootUI.GetCount();
+
+		// Rect Render -> false
+		m_pPickingRootUI = nullptr;
+
+		for (_int i = 0; i < iListBoxSize; ++i)
+		{
+			CString wstrRootUITag = L"";
+			TabUI2DUI.m_ListBoxRootUI.GetText(i, wstrRootUITag);
+			Engine::OBJLIST* pRootUIList = m_pObjectMgr->Get_OBJLIST(L"Layer_UI", wstring(wstrRootUITag));
+
+			for (auto& pRootUI : *pRootUIList)
+			{
+				static_cast<CToolUIRoot*>(pRootUI)->m_bIsRenderRect = false;
+
+				for(auto& pChildUI : static_cast<CToolUIRoot*>(pRootUI)->m_vecUIChild)
+					static_cast<CToolUIChild*>(pChildUI)->m_bIsRenderRect = false;
+			}
+		}
+
+		// Picking 수행.
+		for (_int i = 0; i < iListBoxSize; ++i)
+		{
+			CString wstrRootUITag = L"";
+			TabUI2DUI.m_ListBoxRootUI.GetText(i, wstrRootUITag);
+			Engine::OBJLIST* pRootUIList = m_pObjectMgr->Get_OBJLIST(L"Layer_UI", wstring(wstrRootUITag));
+
+			for (auto& pRootUI : *pRootUIList)
+			{
+				if (PtInRect(&(static_cast<CToolUIRoot*>(pRootUI)->m_tRect), CMouseMgr::Get_CursorPoint()))
+				{
+					static_cast<CToolUIRoot*>(pRootUI)->m_bIsRenderRect = true;
+					m_pPickingRootUI = static_cast<CToolUIRoot*>(pRootUI);
+
+					// ChildUI ListBox 설정.
+					TabUI2DUI.m_iChildUISelectIdx = -1;
+					TabUI2DUI.m_pChildUISelected = nullptr;
+					TabUI2DUI.m_ListBoxChildUI.ResetContent();
+
+					for (auto& pChildUI : m_pPickingRootUI->m_vecUIChild)
+						TabUI2DUI.m_ListBoxChildUI.AddString(static_cast<CToolUIChild*>(pChildUI)->m_wstrObjectTag.c_str());
+
+
+					TabUI2DUI.m_wstrRootUITag     = static_cast<CToolUIRoot*>(pRootUI)->m_wstrObjectTag.c_str();
+					TabUI2DUI.m_wstrRootObjectTag = static_cast<CToolUIRoot*>(pRootUI)->m_wstrObjectTag.c_str();
+					TabUI2DUI.m_fRootPosX         = pRootUI->Get_Transform()->m_vPos.x;
+					TabUI2DUI.m_fRootPosY         = pRootUI->Get_Transform()->m_vPos.y;
+					TabUI2DUI.m_fRootScaleX       = pRootUI->Get_Transform()->m_vScale.x;
+					TabUI2DUI.m_fRootScaleY       = pRootUI->Get_Transform()->m_vScale.y;
+					TabUI2DUI.m_RootUIDepth		  = pRootUI->Get_UIDepth();
+
+					TabUI2DUI.m_fRootFrameSpeed   = static_cast<CToolUIRoot*>(pRootUI)->m_tFrame.fFrameSpeed;
+					if (TabUI2DUI.m_fRootFrameSpeed > 0.0f)
+					{
+						TabUI2DUI.m_bIsRootAnimation = true;
+						TabUI2DUI.m_CheckRootIsAnimation.SetCheck(TRUE);
+						TabUI2DUI.m_EditRootFrameSpeed.EnableWindow(TRUE);
+					}
+					else
+					{
+						TabUI2DUI.m_bIsRootAnimation = false;
+						TabUI2DUI.m_CheckRootIsAnimation.SetCheck(FALSE);
+						TabUI2DUI.m_EditRootFrameSpeed.EnableWindow(FALSE);
+					}
+					TabUI2DUI.m_fRootRectPosOffsetX = static_cast<CToolUIRoot*>(pRootUI)->m_vRectOffset.x;
+					TabUI2DUI.m_fRootRectPosOffsetY = static_cast<CToolUIRoot*>(pRootUI)->m_vRectOffset.y;
+					TabUI2DUI.m_fRootRectScaleX     = static_cast<CToolUIRoot*>(pRootUI)->m_pTransColor->m_vScale.x;
+					TabUI2DUI.m_fRootRectScaleY     = static_cast<CToolUIRoot*>(pRootUI)->m_pTransColor->m_vScale.y;
+
+					break;
+				}
+
+			}
+		}
+	}
+
+	TabUI2DUI.UpdateData(FALSE);
+}
+
+void CToolSceneStage::KeyInput_Tab2DUIModeChange(CTab2DUI& TabUI2DUI)
+{
+	TabUI2DUI.UpdateData(TRUE);
+
+	// RootUI
+	TabUI2DUI.m_bIsRootCreateMode = !TabUI2DUI.m_bIsRootCreateMode;
+	TabUI2DUI.m_bIsRootModifyMode = !TabUI2DUI.m_bIsRootModifyMode;
+	TabUI2DUI.m_RadioRootCreateMode.SetCheck(TabUI2DUI.m_bIsRootCreateMode);
+	TabUI2DUI.m_RadioRootModifyMode.SetCheck(TabUI2DUI.m_bIsRootModifyMode);
+	
+	// ChildUI
+	TabUI2DUI.m_bIsChildCreateMode = !TabUI2DUI.m_bIsChildCreateMode;
+	TabUI2DUI.m_bIsChildModifyMode = !TabUI2DUI.m_bIsChildModifyMode;
+	TabUI2DUI.m_RadioChildUICreateMode.SetCheck(TabUI2DUI.m_bIsChildCreateMode);
+	TabUI2DUI.m_RadioChildUIModifyMode.SetCheck(TabUI2DUI.m_bIsChildModifyMode);
+
+	if (TabUI2DUI.m_bIsRootCreateMode)
+	{
+		TabUI2DUI.m_EditRootUITag.EnableWindow(TRUE);
+		TabUI2DUI.m_EditDataFileName.EnableWindow(TRUE);
+		TabUI2DUI.m_EditObjectTag.EnableWindow(TRUE);
+		TabUI2DUI.m_EditChildObjectTag.EnableWindow(TRUE);
+	}
+	else
+	{
+		TabUI2DUI.m_EditRootUITag.EnableWindow(FALSE);
+		TabUI2DUI.m_EditDataFileName.EnableWindow(FALSE);
+		TabUI2DUI.m_EditObjectTag.EnableWindow(FALSE);
+		TabUI2DUI.m_EditChildObjectTag.EnableWindow(FALSE);
+	}
+
+
+	TabUI2DUI.UpdateData(FALSE);
+}
+
+#pragma endregion
+
 
 
 CToolSceneStage* CToolSceneStage::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)

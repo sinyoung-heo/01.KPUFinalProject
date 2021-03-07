@@ -359,6 +359,24 @@ float4 PS_DISTORTION(VS_OUT ps_input) : SV_TARGET0
     return g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
 }
 
+// PS_MAIN
+struct PS_OUT2
+{
+    float4 Color : SV_TARGET0; 
+    float4 Depth : SV_TARGET1;
+};
+
+PS_OUT2 PS_CROSSFILTER(VS_OUT ps_input) : SV_TARGET
+{
+    PS_OUT2 ps_out2 ;
+    ps_out2.Color = float4(g_vLightPos.x, g_vLightPos.y, g_vLightPos.z, 1.f);
+    ps_out2.Depth = float4(ps_input.ProjPos.z / ps_input.ProjPos.w, // (posWVP.z / posWVP.w) : Proj 영역의 Z.
+								 ps_input.ProjPos.w / g_fProjFar, // posWVP.w / Far : 0~1로 만든 View영역의 Z.
+								 0.0f, 1.0f);
+
+    return ps_out2;
+}
+
 float4 PS_BRIGHT(VS_OUT ps_input) : SV_TARGET0
 {
 	// Normal

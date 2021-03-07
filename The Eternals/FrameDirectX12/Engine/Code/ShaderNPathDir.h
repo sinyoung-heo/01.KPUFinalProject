@@ -14,6 +14,8 @@ public:
 	// Set
 	void			SetUp_ShaderTexture(vector<ComPtr<ID3D12Resource>> pVecTexture);
 
+	//Get
+	CUploadBuffer<CB_SHADER_VARIABLE>* Get_UploadBuffer_ShaderVariable() { return m_pCB_ShaderVariable; }
 	// CShader을(를) 통해 상속됨
 	virtual HRESULT	Ready_Shader();
 	virtual void	Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap = nullptr, 
@@ -35,6 +37,7 @@ private:
 																  const D3D12_BLEND_OP& BlendOpAlpha	= D3D12_BLEND_OP_ADD);
 
 private:
+	CUploadBuffer<CB_SHADER_VARIABLE>* m_pCB_ShaderVariable = nullptr;
 	ID3D12DescriptorHeap*	m_pTexDescriptorHeap = nullptr;
 	_bool					m_bIsSetTexture		 = false;
 

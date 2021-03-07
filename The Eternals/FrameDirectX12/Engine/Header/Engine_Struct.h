@@ -333,6 +333,17 @@ typedef struct tagVector3 : public XMFLOAT3
 		return vDescartes;
 	}
 
+	tagVector3 Convert_DescartesTo2DWindow(const int& WINCX, const int& WINCY)
+	{
+		tagVector3 vWindow;
+
+		vWindow.x = this->x + float(WINCX) / 2.f;
+		vWindow.y = float(WINCY) - (-1.0f * this->y + float(WINCY) / 2.f);
+		vWindow.z = this->z;
+
+		return vWindow;
+	}
+
 	tagVector3 Convert_ProjectionToScreen(const XMMATRIX& matView, const XMMATRIX& matProj, const D3D12_VIEWPORT& vp)
 	{
 		/*____________________________________________________________________
@@ -769,10 +780,10 @@ namespace Engine
 	{
 		XMFLOAT4X4	matWorld;
 
-		_int		iFrameCnt;	// 스프라이트 이미지 X축 개수.
-		_int		iCurFrame;	// 현재 그려지는 이미지의 X축 Index.
-		_int		iSceneCnt;	// 스프라이트 이미지 Y축 개수.
-		_int		iCurScene;	// 현재 그려지는 이미지의 Y축 Index.
+		_float		fFrameCnt;	// 스프라이트 이미지 X축 개수.
+		_float		fCurFrame;	// 현재 그려지는 이미지의 X축 Index.
+		_float		fSceneCnt;	// 스프라이트 이미지 Y축 개수.
+		_float		fCurScene;	// 현재 그려지는 이미지의 Y축 Index.
 
 		_float		fGauge;
 		_float		fOffset1;
@@ -805,6 +816,10 @@ namespace Engine
 
 	} CB_SHADER_MESH;
 
+	typedef struct tagCBuffer
+	{
+		_vec4 vFloat4;
+	}CB_SHADER_VARIABLE;
 	// Shader Shadow
 	typedef struct tagConstantBufferShaderShadow
 	{

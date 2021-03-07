@@ -217,6 +217,7 @@ void CTabMap::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT1070, m_fNaviMeshPointC_Y);
 	DDX_Text(pDX, IDC_EDIT1071, m_fNaviMeshPointC_Z);
 	DDX_Text(pDX, IDC_EDIT1072, m_iNaviMeshCellOption);
+	DDX_Control(pDX, IDC_CHECK1009, m_TerrainCheckBox_RenderOnOff);
 }
 
 
@@ -321,7 +322,8 @@ BEGIN_MESSAGE_MAP(CTabMap, CDialogEx)
 	ON_EN_CHANGE(IDC_EDIT1072, &CTabMap::OnEnChangeEdit1072_NaviMeshCellOption)
 	ON_BN_CLICKED(IDC_BUTTON1015, &CTabMap::OnBnClickedButton1015_NaviMeshCellSAVE)
 	ON_BN_CLICKED(IDC_BUTTON1016, &CTabMap::OnBnClickedButton1016_NaviMeshCellLOAD)
-END_MESSAGE_MAP()
+		ON_BN_CLICKED(IDC_CHECK1009, &CTabMap::OnBnClickedCheck1009_TerrainRenderOnOff)
+		END_MESSAGE_MAP()
 
 
 // CTabMap 메시지 처리기
@@ -335,6 +337,7 @@ BOOL CTabMap::OnInitDialog()
 	m_TerrainRadio256.EnableWindow(FALSE);
 	m_TerrainRadio512.EnableWindow(FALSE);
 	m_TerrainCheckBox_RenderWireFrame.EnableWindow(FALSE);
+	m_TerrainCheckBox_RenderOnOff.EnableWindow(FALSE);
 	m_TerrainListBox_TexIndex.EnableWindow(FALSE);
 
 	// SkyBox 컨트롤 비활성화
@@ -473,6 +476,7 @@ BOOL CTabMap::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	UpdateData(TRUE);
+
 
 	/*__________________________________________________________________________________________________________
 	[ StaticMesh ]
@@ -1481,6 +1485,7 @@ HRESULT CTabMap::Ready_TerrainControl()
 	m_TerrainRadio256.EnableWindow(TRUE);
 	m_TerrainRadio512.EnableWindow(TRUE);
 	m_TerrainCheckBox_RenderWireFrame.EnableWindow(TRUE);
+	m_TerrainCheckBox_RenderOnOff.EnableWindow(TRUE);
 	m_TerrainListBox_TexIndex.EnableWindow(TRUE);
 
 	// Terrain 128X128 활성화.
@@ -1495,6 +1500,7 @@ HRESULT CTabMap::Ready_TerrainControl()
 
 	// Render WireFrame 활성화.
 	m_TerrainCheckBox_RenderWireFrame.SetCheck(true);
+	m_TerrainCheckBox_RenderOnOff.SetCheck(true);
 
 	// ListBox 초기화.
 	Engine::CTexture* pTextureCom = static_cast<Engine::CTexture*>(m_pComponentMgr->Get_Component(L"Terrain", Engine::COMPONENTID::ID_STATIC));
@@ -1606,10 +1612,10 @@ HRESULT CTabMap::Ready_StaticMeshControl()
 
 	// Ready Mesh TreeControl.
 
-	HTREEITEM h_DynamciMesh, h_DynamicMeshRoot;
+	// HTREEITEM h_DynamciMesh, h_DynamicMeshRoot;
 	HTREEITEM h_StaticMesh, h_StaticMeshRoot;
 
-	h_DynamciMesh	= m_StaticMeshTree_ResourceTree.InsertItem(L"DynamicMesh", NULL, NULL);
+	// h_DynamciMesh	= m_StaticMeshTree_ResourceTree.InsertItem(L"DynamicMesh", NULL, NULL);
 	h_StaticMesh	= m_StaticMeshTree_ResourceTree.InsertItem(L"StaticMesh", NULL, NULL);
 
 	wifstream fin { L"../../Bin/ToolData/MeshTreeCtrlInfo.txt" };
@@ -1636,16 +1642,16 @@ HRESULT CTabMap::Ready_StaticMeshControl()
 		wstring wstrCurMeshRoot = szCurMeshRoot;
 
 		// 이전의 MeshRootTag값이 현재의 MeshRootTag값과 다르면 TreeCtrl에 삽입.
-		if (L"DynamicMesh" == wstrCurMeshType)
-		{
-			if (wstrPreMeshRoot != wstrCurMeshRoot)
-			{
-				wstrPreMeshRoot = wstrCurMeshRoot;
-				h_DynamicMeshRoot = m_StaticMeshTree_ResourceTree.InsertItem(wstrPreMeshRoot.c_str(), h_DynamciMesh, NULL);
-			}
+		//if (L"DynamicMesh" == wstrCurMeshType)
+		//{
+		//	if (wstrPreMeshRoot != wstrCurMeshRoot)
+		//	{
+		//		wstrPreMeshRoot = wstrCurMeshRoot;
+		//		h_DynamicMeshRoot = m_StaticMeshTree_ResourceTree.InsertItem(wstrPreMeshRoot.c_str(), h_DynamciMesh, NULL);
+		//	}
 
-			m_StaticMeshTree_ResourceTree.InsertItem(szMeshTag, h_DynamicMeshRoot, NULL);
-		}
+		//	m_StaticMeshTree_ResourceTree.InsertItem(szMeshTag, h_DynamicMeshRoot, NULL);
+		//}
 
 		if (L"StaticMesh" == wstrCurMeshType)
 		{
@@ -1665,22 +1671,22 @@ HRESULT CTabMap::Ready_StaticMeshControl()
 
 
 	// 모든 트리의 노드를 펼친다.
-	m_StaticMeshTree_ResourceTree.Expand(h_DynamciMesh, TVE_EXPAND);
+	// m_StaticMeshTree_ResourceTree.Expand(h_DynamciMesh, TVE_EXPAND);
 
 	// DynamicMesh
-	HTREEITEM h_Child = m_StaticMeshTree_ResourceTree.GetNextItem(h_DynamciMesh, TVGN_CHILD);
-	m_StaticMeshTree_ResourceTree.Expand(h_Child, TVE_EXPAND);
+	//HTREEITEM h_Child = m_StaticMeshTree_ResourceTree.GetNextItem(h_DynamciMesh, TVGN_CHILD);
+	//m_StaticMeshTree_ResourceTree.Expand(h_Child, TVE_EXPAND);
 
-	while (h_Child != NULL)
-	{
-		h_Child = m_StaticMeshTree_ResourceTree.GetNextItem(h_Child, TVGN_NEXT);
-		m_StaticMeshTree_ResourceTree.Expand(h_Child, TVE_EXPAND);
-	}
+	//while (h_Child != NULL)
+	//{
+	//	h_Child = m_StaticMeshTree_ResourceTree.GetNextItem(h_Child, TVGN_NEXT);
+	//	m_StaticMeshTree_ResourceTree.Expand(h_Child, TVE_EXPAND);
+	//}
 
 	// StaticMesh
 	m_StaticMeshTree_ResourceTree.Expand(h_StaticMesh, TVE_EXPAND);
 
-	h_Child = m_StaticMeshTree_ResourceTree.GetNextItem(h_StaticMesh, TVGN_CHILD);
+	HTREEITEM h_Child = m_StaticMeshTree_ResourceTree.GetNextItem(h_StaticMesh, TVGN_CHILD);
 	m_StaticMeshTree_ResourceTree.Expand(h_Child, TVE_EXPAND);
 
 	while (h_Child != NULL)
@@ -1921,11 +1927,36 @@ void CTabMap::OnBnClickedCheck1001_TerrainRenderWireFrame()
 	UpdateData(FALSE);
 }
 
+void CTabMap::OnBnClickedCheck1009_TerrainRenderOnOff()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
+	CToolTerrain* m_pTerrain128 = static_cast<CToolTerrain*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"TerrainTex128"));
+	CToolTerrain* m_pTerrain256 = static_cast<CToolTerrain*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"TerrainTex256"));
+	CToolTerrain* m_pTerrain512 = static_cast<CToolTerrain*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"TerrainTex512"));
+
+	if (m_TerrainCheckBox_RenderOnOff.GetCheck())
+	{
+		m_pTerrain128->m_bIsRender = true;
+		m_pTerrain256->m_bIsRender = true;
+		m_pTerrain512->m_bIsRender = true;
+	}
+	else
+	{
+		m_pTerrain128->m_bIsRender = false;
+		m_pTerrain256->m_bIsRender = false;
+		m_pTerrain512->m_bIsRender = false;
+	}
+
+	UpdateData(FALSE);
+
+}
+
 
 void CTabMap::OnLbnSelchangeList1001_TerrainTexIndex()
 {
 	UpdateData(TRUE);
-
 
 	// 선택한 ListBox의 Index를 얻어온다.
 	_int iNewTexIdx = m_TerrainListBox_TexIndex.GetCaretIndex();
@@ -2442,6 +2473,11 @@ void CTabMap::OnNMClickTree1001_TreeMeshTag(NMHDR* pNMHDR, LRESULT* pResult)
 
 	// 클릭한 Tree의 문자열을 얻어온다.
 	m_wstrTreeMeshTag = m_StaticMeshTree_ResourceTree.GetItemText(h_MeshTag);
+
+	if (m_wstrTreeMeshTag == L"StaticMesh" ||
+		m_wstrTreeMeshTag == L"Sample" ||
+		m_wstrTreeMeshTag == L"StageVelika")
+		return;
 
 	// 클릭한 문자열 설정.
 	m_StaticMeshEdit_SelectMesthTag.SetWindowTextW(m_wstrTreeMeshTag.c_str());

@@ -8,6 +8,7 @@
 #include "ShaderSkyBox.h"
 #include "ShaderSSAO.h"
 
+#include "TimeMgr.h"
 USING(Engine)
 
 CCamera::CCamera(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -16,6 +17,8 @@ CCamera::CCamera(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pComma
 	ZeroMemory(&m_tCameraInfo, sizeof(CAMERA_DESC));
 	ZeroMemory(&m_tProjInfo, sizeof(PROJ_DESC));
 	ZeroMemory(&m_tOrthoInfo, sizeof(ORTHO_DESC));
+
+	ZeroMemory(&tCB_ShaderVariable, sizeof(Engine::CB_SHADER_VARIABLE));
 }
 
 CCamera::CCamera(const CCamera & rhs)
@@ -80,6 +83,9 @@ HRESULT CCamera::Ready_GameObject(const CAMERA_DESC& tCameraInfo,
 
 	m_pShaderSSAO = static_cast<CShaderSSAO*>(m_pComponentMgr->Clone_Component(L"ShaderSSAO", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pShaderSSAO, E_FAIL);
+
+	m_pShaderNPathDir = static_cast<CShaderNPathDir*>(m_pComponentMgr->Clone_Component(L"ShaderNPathDir", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pShaderNPathDir, E_FAIL);
 
 	m_pShaderColorInstancing    = CShaderColorInstancing::Get_Instance();
 	m_pShaderTextureInstancing	= CShaderTextureInstancing::Get_Instance();
@@ -169,6 +175,15 @@ void CCamera::Set_ConstantTable()
 	tCB_CameraProjMatrix.matView = CShader::Compute_MatrixTranspose(m_tCameraInfo.matView);
 	tCB_CameraProjMatrix.matProj = CShader::Compute_MatrixTranspose(m_tProjInfo.matProj);
 	m_pShaderSSAO->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
+
+	//ShaderNPathDir
+
+	tCB_ShaderVariable.vFloat4.x += CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta");
+	if (tCB_ShaderVariable.vFloat4.x >= 1)
+		tCB_ShaderVariable.vFloat4.x = 0.f;
+
+	tCB_ShaderVariable.vFloat4.y = m_tProjInfo.fFarZ;
+	m_pShaderNPathDir->Get_UploadBuffer_ShaderVariable()->CopyData(0, tCB_ShaderVariable);
 }
 
 void CCamera::Free()
@@ -180,4 +195,5 @@ void CCamera::Free()
 	Safe_Release(m_pShaderSkyBox);
 	Safe_Release(m_pShaderMesh);
 	Safe_Release(m_pShaderSSAO);
+	Safe_Release(m_pShaderNPathDir);
 }

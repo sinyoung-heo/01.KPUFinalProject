@@ -29,10 +29,10 @@ cbuffer cbShaderTexture : register(b1)
 	float4x4	g_matWorld	: packoffset(c0);
 	
 	// Texture Sprite.
-	int			g_iFrameCnt	: packoffset(c4.x);		// 스프라이트 이미지 X축 개수.
-	int			g_iCurFrame : packoffset(c4.y);		// 현재 그려지는 이미지의 X축 Index.
-	int			g_iSceneCnt : packoffset(c4.z);		// 스프라이트 이미지 Y축 개수.
-	int			g_iCurScene : packoffset(c4.w);		// 현재 그려지는 이미지의 Y축 Index.
+	float		g_fFrameCnt	: packoffset(c4.x);		// 스프라이트 이미지 X축 개수.
+	float		g_fCurFrame : packoffset(c4.y);		// 현재 그려지는 이미지의 X축 Index.
+	float		g_fSceneCnt : packoffset(c4.z);		// 스프라이트 이미지 Y축 개수.
+	float		g_fCurScene : packoffset(c4.w);		// 현재 그려지는 이미지의 Y축 Index.
 	
 	// Texture Gauge.
 	float		g_fGauge	: packoffset(c5.x);
@@ -97,8 +97,8 @@ VS_OUT VS_TEXTURE_SPRITE(VS_IN vs_input)
 
 float4 PS_TEXTURE_SPRITE(VS_OUT ps_input) : SV_TARGET
 {
-	float u = (ps_input.TexUV.x / (float)g_iFrameCnt) + g_iCurFrame * (1.0f / (float)g_iFrameCnt);
-	float v = (ps_input.TexUV.y / (float)g_iSceneCnt) + g_iCurScene * (1.0f / (float)g_iSceneCnt);
+	float u = (ps_input.TexUV.x / g_fFrameCnt) + g_fCurFrame * (1.0f / g_fFrameCnt);
+	float v = (ps_input.TexUV.y / g_fSceneCnt) + g_fCurScene * (1.0f / g_fSceneCnt);
 	
 	float4 Color = g_TexDiffuse.Sample(g_samLinearWrap, float2(u, v));
 	

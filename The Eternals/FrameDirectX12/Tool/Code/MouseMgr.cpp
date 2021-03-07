@@ -6,12 +6,49 @@
 #include "ToolCell.h"
 #include "LightMgr.h"
 #include "Light.h"
+#include "ToolUIRoot.h"
 
 IMPLEMENT_SINGLETON(CMouseMgr)
 
 CMouseMgr::CMouseMgr()
 {
 
+}
+
+HRESULT CMouseMgr::Ready_MouseMgr()
+{
+	//m_pCursorUI = CToolUIRoot::Create(Engine::CGraphicDevice::Get_Instance()->Get_GraphicDevice(),
+	//								  Engine::CGraphicDevice::Get_Instance()->Get_CommandList(Engine::CMD_MAIN),
+	//								  L"Cursor",
+	//								  L"../../Bin/ToolData/TexUVCursor.texuv",
+	//								  _vec3(0.0f, 0.0f, 0.0f),
+	//								  _vec3(32.0f, 32.0f, 1.0f),
+	//								  false,
+	//								  0.0f,
+	//								  _vec3(0.0f),
+	//								  _vec3(32.0f, 32.0f, 1.0f),
+	//								  1000);
+	//Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_UI", L"Cursor", m_pCursorUI);
+									  
+	return S_OK;
+}
+
+void CMouseMgr::Update_MouseMgr(const _float& fTimeDelta)
+{
+	//POINT ptMouse{};
+	//GetCursorPos(&ptMouse);
+	//ScreenToClient(g_hWnd, &ptMouse);
+
+	//m_pCursorUI->Get_Transform()->m_vPos = _vec3((_float)ptMouse.x,  (_float)ptMouse.y, 0.0f);
+}
+
+POINT CMouseMgr::Get_CursorPoint()
+{
+	POINT ptMouse{};
+	GetCursorPos(&ptMouse);
+	ScreenToClient(g_hWnd, &ptMouse);
+
+	return ptMouse;
 }
 
 _vec3 CMouseMgr::Picking_OnTerrain(CToolTerrain* pTerrain)

@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "MainFrm.h"
 #include "MyForm.h"
+#include "ToolView.h"
 
 namespace Engine
 {
@@ -14,6 +15,9 @@ namespace Engine
 class CToolTerrain;
 class CToolStaticMesh;
 class CToolCell;
+class CToolUICanvas;
+class CToolGridLine;
+class CToolUIRoot;
 
 class CToolSceneStage : public Engine::CScene
 {
@@ -38,12 +42,23 @@ private:
 	HRESULT			Ready_LightInfo();
 
 	void			KeyInput();
+
+	// TabMap
 	void			KeyInput_TabMapStaticMesh(CTabMap& TabMap);
 	void			KeyInput_TabMapLightingInfo(CTabMap& TabMap);
 	void			KeyInput_TabMapNavigationMesh(CTabMap& TabMap);
 	void			KeyInput_TabMapModeChange(CTabMap& TabMap);
 
+	// TabUI
+	void			KeyInput_TabUITexSpriteUV(CTabTexSpriteUV& TabUITexSprite);
+	void			KeyInput_TabUI2DUI(CTab2DUI& TabUI2DUI);
+	void			KeyInput_Tab2DUIModeChange(CTab2DUI& TabUI2DUI);
+
+
 public:
+	/*__________________________________________________________________________________________________________
+	[ TabMap ]
+	____________________________________________________________________________________________________________*/
 	CToolTerrain*			m_pPickingTerrain	= nullptr;
 	Engine::CGameObject*	m_pPickingObject	= nullptr;
 	Engine::CLight*			m_pPickingLight		= nullptr;
@@ -59,6 +74,16 @@ public:
 
 	_vec3 m_vPrePickingPos = _vec3(0.0f);
 	_vec3 m_vCurPickingPos = _vec3(1.0f);
+
+	/*__________________________________________________________________________________________________________
+	[ TabUI ] - TexSpriteUV
+	____________________________________________________________________________________________________________*/
+	CToolUICanvas* m_pUICanvas = nullptr;
+
+	/*__________________________________________________________________________________________________________
+	[ TabUI ] - 2DUI
+	____________________________________________________________________________________________________________*/
+	CToolUIRoot* m_pPickingRootUI = nullptr;
 
 private:
 	/*__________________________________________________________________________________________________________

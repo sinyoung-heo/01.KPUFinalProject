@@ -50,6 +50,11 @@ _int CToolSkyBox::Update_GameObject(const _float& fTimeDelta)
 		return NO_EVENT;
 
 	/*__________________________________________________________________________________________________________
+	[ Renderer - Add Render Group ]
+	____________________________________________________________________________________________________________*/
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_PRIORITY, this), -1);
+
+	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
@@ -61,11 +66,6 @@ _int CToolSkyBox::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	if (!m_bIsUpdate)
 		return NO_EVENT;
-
-	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_PRIORITY, this), -1);
 
 	return NO_EVENT;
 }

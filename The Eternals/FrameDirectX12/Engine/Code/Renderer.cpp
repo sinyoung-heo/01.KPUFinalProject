@@ -111,7 +111,7 @@ HRESULT CRenderer::Ready_Renderer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCo
 	FAILED_CHECK_RETURN(Ready_ShaderPrototype(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_RenderTarget(), E_FAIL);
 
-	m_mapRenderOnOff[L"RenderTarget"]	= false;
+	m_mapRenderOnOff[L"RenderTarget"]	= true;
 	m_mapRenderOnOff[L"DebugFont"]		= false;
 	m_mapRenderOnOff[L"Collider"]		= true;
 	m_mapRenderOnOff[L"SectorGrid"]		= true;
@@ -309,7 +309,7 @@ void CRenderer::Render_Distortion(const _float& fTimeDelta)
 
 void CRenderer::Render_CrossFilter(const _float& fTimeDelta)
 {
-
+	
 	m_pTargetCrossFilter->SetUp_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
 
 	for (auto& pGameObject : m_RenderList[RENDER_CROSSFILTER])
@@ -352,12 +352,19 @@ void CRenderer::Render_NPathDir()
 	{
 		m_bisSetNPathDirTexture = true;
 		vector<ComPtr<ID3D12Resource>> vecDeferredTarget = m_pTargetDeferred->Get_TargetTexture();
+		vector<ComPtr<ID3D12Resource>> vecCrossFilterObjectTarget = m_pTargetCrossFilter->Get_TargetTexture();
 		vector<ComPtr<ID3D12Resource>> vecNPathDirTarget;
 		vecNPathDirTarget.emplace_back(vecDeferredTarget[4]);	// RenderTarget - Emissive
+		vecNPathDirTarget.emplace_back(vecCrossFilterObjectTarget[0]);	// RenderTarget - Emissive
+		vecNPathDirTarget.emplace_back(vecDeferredTarget[3]);	// RenderTarget - Depth
+		vecNPathDirTarget.emplace_back(vecCrossFilterObjectTarget[1]);	// RenderTarget - Depth
 		m_pNPathDirShader->SetUp_ShaderTexture(vecNPathDirTarget);
 	}
 	m_pTargetNPathDir->SetUp_OnGraphicDevice();
+
 	m_pNPathDirShader->Begin_Shader();
+
+
 	m_pNPathDirBuffer->Begin_Buffer();
 	m_pNPathDirBuffer->Render_Buffer();
 	m_pTargetNPathDir->Release_OnGraphicDevice();
@@ -743,9 +750,11 @@ HRESULT CRenderer::Ready_RenderTarget()
 
 	//CrossFilter
 
-	m_pTargetCrossFilter = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
+	m_pTargetCrossFilter = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 2);
 	NULL_CHECK_RETURN(m_pTargetCrossFilter, E_FAIL);
-	m_pTargetCrossFilter->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	m_pTargetCrossFilter->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R16G16B16A16_UNORM);
+	m_pTargetCrossFilter->Set_TargetClearColor(1, _rgba(1.0f, 1.0f,1.0f, 1.0f), DXGI_FORMAT_R16G16B16A16_UNORM);
+
 	FAILED_CHECK_RETURN(m_pTargetCrossFilter->SetUp_DefaultSetting(TARGETID::TYPE_SHADOWDEPTH), E_FAIL);
 	m_pTargetCrossFilter->Set_TargetRenderPos(_vec3(WIDTH_THIRD, HEIGHT_SECOND, 1.0f));
 
@@ -754,7 +763,7 @@ HRESULT CRenderer::Ready_RenderTarget()
 	NULL_CHECK_RETURN(m_pTargetNPathDir, E_FAIL);
 	m_pTargetNPathDir->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
 	FAILED_CHECK_RETURN(m_pTargetNPathDir->SetUp_DefaultSetting(TARGETID::TYPE_DEFAULT), E_FAIL);
-	m_pTargetNPathDir->Set_TargetRenderPos(_vec3(WIDTH_THIRD, HEIGHT_THIRD, 1.0f));
+	m_pTargetNPathDir->Set_TargetRenderPos(_vec3(WIDTH_THIRD, HEIGHT_FOURTH, 1.0f));
 
 	m_pNPathDirBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pNPathDirBuffer, E_FAIL);
