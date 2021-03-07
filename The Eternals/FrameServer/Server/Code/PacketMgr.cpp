@@ -1115,7 +1115,6 @@ void active_monster(int id)
 			case MON_BOSS:
 				break;
 			}
-
 		}
 	}
 }
@@ -1396,7 +1395,7 @@ void chase_move_monster(int id)
 		if (pTarget == nullptr) 
 		{
 			pMonster->m_vTempPos = pMonster->m_vPos;
-			add_timer(id, OPMODE::OP_CHASE_MOVE_MONSTER, system_clock::now() + 5s);
+			add_timer(id, OPMODE::OP_CHASE_MOVE_MONSTER, system_clock::now() + 1s);
 			return;
 		}
 
@@ -1432,7 +1431,7 @@ void chase_move_monster(int id)
 	if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(pMonster->m_vTempPos) == -1)
 	{
 		pMonster->m_vTempPos = pMonster->m_vPos;
-		add_timer(id, OPMODE::OP_CHASE_MOVE_MONSTER, system_clock::now() + 10s);
+		add_timer(id, OPMODE::OP_CHASE_MOVE_MONSTER, system_clock::now() + 1s);
 		return;
 	}
 
@@ -1568,7 +1567,7 @@ void chase_move_monster(int id)
 	{
 		/* 다음 움직임 명령 예약 */
 		pMonster->m_vPos = pMonster->m_vTempPos;
-		add_timer(id, OPMODE::OP_CHASE_MOVE_MONSTER, system_clock::now() + 10s);
+		add_timer(id, OPMODE::OP_CHASE_MOVE_MONSTER, system_clock::now() + 5s);
 	}
 }
 
