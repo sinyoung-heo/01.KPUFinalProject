@@ -1,21 +1,21 @@
-#include "ShaderBlur.h"
+#include "ShaderEdge.h"
 
 #include "GraphicDevice.h"
 #include "Renderer.h"
 
 USING(Engine)
 
-CShaderBlur::CShaderBlur(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CShaderEdge::CShaderEdge(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CShader(pGraphicDevice, pCommandList)
 {
 }
 
-CShaderBlur::CShaderBlur(const CShaderBlur & rhs)
+CShaderEdge::CShaderEdge(const CShaderEdge & rhs)
 	: CShader(rhs)
 {
 }
 
-void CShaderBlur::SetUp_ShaderTexture(vector<ComPtr<ID3D12Resource>> pVecTexture)
+void CShaderEdge::SetUp_ShaderTexture(vector<ComPtr<ID3D12Resource>> pVecTexture)
 {
 
 	if (!m_bIsSetTexture)
@@ -27,7 +27,7 @@ void CShaderBlur::SetUp_ShaderTexture(vector<ComPtr<ID3D12Resource>> pVecTexture
 	}
 }
 
-HRESULT CShaderBlur::Ready_Shader()
+HRESULT CShaderEdge::Ready_Shader()
 {
 	CShader::Ready_Shader();
 	FAILED_CHECK_RETURN(Create_RootSignature(), E_FAIL);
@@ -36,7 +36,7 @@ HRESULT CShaderBlur::Ready_Shader()
 	return S_OK;
 }
 
-void CShaderBlur::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, const _uint & iIdx)
+void CShaderEdge::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, const _uint & iIdx)
 {
 	CRenderer::Get_Instance()->Set_CurPipelineState(m_pPipelineState);
 	m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
@@ -48,37 +48,18 @@ void CShaderBlur::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, const _
 	m_pCommandList->SetDescriptorHeaps(_countof(pDescriptorHeaps), pDescriptorHeaps);
 
 
-	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexEmissiveDescriptorHandle(m_pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexEmissiveDescriptorHandle.Offset(0, m_uiCBV_SRV_UAV_DescriptorSize);
-	m_pCommandList->SetGraphicsRootDescriptorTable(0,		// RootParameter Index. (Tex Emissive DS)
-		SRV_TexEmissiveDescriptorHandle);
-
-	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexCrossFilterDescriptorHandle(m_pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexCrossFilterDescriptorHandle.Offset(1, m_uiCBV_SRV_UAV_DescriptorSize);
-	m_pCommandList->SetGraphicsRootDescriptorTable(1,		// RootParameter Index. (Tex CrossFilter DS	)
-		SRV_TexCrossFilterDescriptorHandle);
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexEdgeDescriptorHandle(m_pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	SRV_TexEdgeDescriptorHandle.Offset(0, m_uiCBV_SRV_UAV_DescriptorSize);
+	m_pCommandList->SetGraphicsRootDescriptorTable(0,		// RootParameter Index. (Tex Edge)
+		SRV_TexEdgeDescriptorHandle);
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexDepthDescriptorHandle(m_pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexDepthDescriptorHandle.Offset(2, m_uiCBV_SRV_UAV_DescriptorSize);
-	m_pCommandList->SetGraphicsRootDescriptorTable(2,		// RootParameter Index. (Tex Depth	)
+	SRV_TexDepthDescriptorHandle.Offset(0, m_uiCBV_SRV_UAV_DescriptorSize);
+	m_pCommandList->SetGraphicsRootDescriptorTable(1,		// RootParameter Index. (Tex Depth)
 		SRV_TexDepthDescriptorHandle);
-
-	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexSSAODescriptorHandle(m_pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexSSAODescriptorHandle.Offset(3, m_uiCBV_SRV_UAV_DescriptorSize);
-	m_pCommandList->SetGraphicsRootDescriptorTable(3,		// RootParameter Index. (Tex DS SSAO	)
-		SRV_TexSSAODescriptorHandle);
-
-	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexEdgeDSDescriptorHandle(m_pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexEdgeDSDescriptorHandle.Offset(4, m_uiCBV_SRV_UAV_DescriptorSize);
-	m_pCommandList->SetGraphicsRootDescriptorTable(4,		// RootParameter Index. (Tex DS Edge	)
-		SRV_TexEdgeDSDescriptorHandle);
-	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexEdgeDescriptorHandle(m_pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexEdgeDescriptorHandle.Offset(5, m_uiCBV_SRV_UAV_DescriptorSize);
-	m_pCommandList->SetGraphicsRootDescriptorTable(5,		// RootParameter Index. (Tex Edge	)
-		SRV_TexEdgeDescriptorHandle);
 }
 
-HRESULT CShaderBlur::Create_DescriptorHeaps(vector<ComPtr<ID3D12Resource>> pVecTexture)
+HRESULT CShaderEdge::Create_DescriptorHeaps(vector<ComPtr<ID3D12Resource>> pVecTexture)
 {
 	/*__________________________________________________________________________________________________________
 	[ SRV 서술자 힙 ]
@@ -122,63 +103,39 @@ HRESULT CShaderBlur::Create_DescriptorHeaps(vector<ComPtr<ID3D12Resource>> pVecT
 	return S_OK;
 }
 
-HRESULT CShaderBlur::Create_ConstantBuffer()
+HRESULT CShaderEdge::Create_ConstantBuffer()
 {
 	return S_OK;
 }
 
-HRESULT CShaderBlur::Create_RootSignature()
+HRESULT CShaderEdge::Create_RootSignature()
 {
 	/*__________________________________________________________________________________________________________
 	[ SRV를 담는 서술자 테이블을 생성 ]
 	____________________________________________________________________________________________________________*/
-	CD3DX12_DESCRIPTOR_RANGE SRV_Table[6];
+	CD3DX12_DESCRIPTOR_RANGE SRV_Table[2];
 	
-	// Texture - EmissiveDs
+	// Texture - EdgeTarget
 	SRV_Table[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,// 서술자의 종류 - Shader Resource View.
 					  1,								// 서술자의 개수 - Texture2D의 개수.
 					  0,								// 셰이더 인수들의 기준 레지스터 번호. (register t0)
 					  0);								// 레지스터 공간.
-	// Texture - CrossFilterDs
+
 	SRV_Table[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,// 서술자의 종류 - Shader Resource View.
 		1,								// 서술자의 개수 - Texture2D의 개수.
 		1,								// 셰이더 인수들의 기준 레지스터 번호. (register t1)
 		0);								// 레지스터 공간.
 
-	// Texture - DepthTex
-	SRV_Table[2].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,// 서술자의 종류 - Shader Resource View.
-		1,								// 서술자의 개수 - Texture2D의 개수.
-		2,								// 셰이더 인수들의 기준 레지스터 번호. (register t3)
-		0);								// 레지스터 공간.
-
-	// Texture - DepthTex
-	SRV_Table[3].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,// 서술자의 종류 - Shader Resource View.
-		1,								// 서술자의 개수 - Texture2D의 개수.
-		3,								// 셰이더 인수들의 기준 레지스터 번호. (register t4)
-		0);								// 레지스터 공간.
-	// Texture - EdgeDS
-	SRV_Table[4].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,// 서술자의 종류 - Shader Resource View.
-		1,								// 서술자의 개수 - Texture2D의 개수.
-		4,								// 셰이더 인수들의 기준 레지스터 번호. (register t5)
-		0);								// 레지스터 공간.
-	// Texture - Edge
-	SRV_Table[5].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,// 서술자의 종류 - Shader Resource View.
-		1,								// 서술자의 개수 - Texture2D의 개수.
-		5,								// 셰이더 인수들의 기준 레지스터 번호. (register t5)
-		0);								// 레지스터 공간.
 	/*__________________________________________________________________________________________________________
 	- 루트 매개변수는 테이블이거나, 루트 서술자 또는 루트 상수이다.
 	____________________________________________________________________________________________________________*/
-	CD3DX12_ROOT_PARAMETER RootParameter[6];
+	CD3DX12_ROOT_PARAMETER RootParameter[2];
 	RootParameter[0].InitAsDescriptorTable(1, &SRV_Table[0], D3D12_SHADER_VISIBILITY_PIXEL);	// t0
 	RootParameter[1].InitAsDescriptorTable(1, &SRV_Table[1], D3D12_SHADER_VISIBILITY_PIXEL);	// t1
-	RootParameter[2].InitAsDescriptorTable(1, &SRV_Table[2], D3D12_SHADER_VISIBILITY_PIXEL);	// t2
-	RootParameter[3].InitAsDescriptorTable(1, &SRV_Table[3], D3D12_SHADER_VISIBILITY_PIXEL);	// t3
-	RootParameter[4].InitAsDescriptorTable(1, &SRV_Table[4], D3D12_SHADER_VISIBILITY_PIXEL);	// t4
-	RootParameter[5].InitAsDescriptorTable(1, &SRV_Table[5], D3D12_SHADER_VISIBILITY_PIXEL);	// t5
+
 
 	auto StaticSamplers = Get_StaticSamplers();
-	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(6,							// 루트 파라미터 개수.(SRV 5 : 총 5개)
+	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(2,							// 루트 파라미터 개수.(SRV 2: 총 2개)
 												  RootParameter,
 												  (_uint)StaticSamplers.size(),	// 샘플러 개수.
 												  StaticSamplers.data(),		// 샘플러 데이터.
@@ -212,7 +169,7 @@ HRESULT CShaderBlur::Create_RootSignature()
 	return S_OK;
 }
 
-HRESULT CShaderBlur::Create_PipelineState()
+HRESULT CShaderEdge::Create_PipelineState()
 {
 	/*__________________________________________________________________________________________________________
 	[ PipelineState 기본 설정 ]
@@ -234,10 +191,8 @@ HRESULT CShaderBlur::Create_PipelineState()
 	PipelineStateDesc.pRootSignature		= m_pRootSignature;
 	PipelineStateDesc.SampleMask			= UINT_MAX;
 	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	PipelineStateDesc.NumRenderTargets		= 3;
-	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R16G16B16A16_UNORM;
-	PipelineStateDesc.RTVFormats[1]			= DXGI_FORMAT_R8G8B8A8_UNORM;
-	PipelineStateDesc.RTVFormats[2]			= DXGI_FORMAT_R8G8B8A8_UNORM;
+	PipelineStateDesc.NumRenderTargets		= 1;
+	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R8G8B8A8_UNORM;
 	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
 	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
 	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -253,16 +208,15 @@ HRESULT CShaderBlur::Create_PipelineState()
 	m_vecPipelineState.emplace_back(pPipelineState);
 	CRenderer::Get_Instance()->Add_PipelineStateCnt();
 
-
 	return S_OK;
 }
 
-vector<D3D12_INPUT_ELEMENT_DESC> CShaderBlur::Create_InputLayout(string VS_EntryPoint, string PS_EntryPoint)
+vector<D3D12_INPUT_ELEMENT_DESC> CShaderEdge::Create_InputLayout(string VS_EntryPoint, string PS_EntryPoint)
 {
 	vector<D3D12_INPUT_ELEMENT_DESC> vecInputLayout;
 
-	m_pVS_ByteCode = Compile_Shader(L"../../Bin/Shader/ShaderBlur.hlsl", nullptr, VS_EntryPoint.c_str(), "vs_5_1");
-	m_pPS_ByteCode = Compile_Shader(L"../../Bin/Shader/ShaderBlur.hlsl", nullptr, PS_EntryPoint.c_str(), "ps_5_1");
+	m_pVS_ByteCode = Compile_Shader(L"../../Bin/Shader/ShaderEdge.hlsl", nullptr, VS_EntryPoint.c_str(), "vs_5_1");
+	m_pPS_ByteCode = Compile_Shader(L"../../Bin/Shader/ShaderEdge.hlsl", nullptr, PS_EntryPoint.c_str(), "ps_5_1");
 
 	_uint uiOffset = 0;
 	vecInputLayout =
@@ -274,7 +228,7 @@ vector<D3D12_INPUT_ELEMENT_DESC> CShaderBlur::Create_InputLayout(string VS_Entry
 	return vecInputLayout;
 }
 
-D3D12_BLEND_DESC CShaderBlur::Create_BlendState(const _bool & bIsBlendEnable, 
+D3D12_BLEND_DESC CShaderEdge::Create_BlendState(const _bool & bIsBlendEnable, 
 												 const D3D12_BLEND & SrcBlend, 
 												 const D3D12_BLEND & DstBlend, 
 												 const D3D12_BLEND_OP & BlendOp, 
@@ -286,7 +240,7 @@ D3D12_BLEND_DESC CShaderBlur::Create_BlendState(const _bool & bIsBlendEnable,
 
 	// 블렌드 설정.
 	ZeroMemory(&BlendDesc, sizeof(D3D12_BLEND_DESC));
-	BlendDesc.AlphaToCoverageEnable					= FALSE;
+	BlendDesc.AlphaToCoverageEnable					= TRUE;
 	BlendDesc.IndependentBlendEnable				= FALSE;
 	BlendDesc.RenderTarget[0].BlendEnable			= bIsBlendEnable;
 	BlendDesc.RenderTarget[0].LogicOpEnable			= FALSE;
@@ -303,14 +257,14 @@ D3D12_BLEND_DESC CShaderBlur::Create_BlendState(const _bool & bIsBlendEnable,
 	return BlendDesc;
 }
 
-CComponent * CShaderBlur::Clone()
+CComponent * CShaderEdge::Clone()
 {
-	return new CShaderBlur(*this);
+	return new CShaderEdge(*this);
 }
 
-CShaderBlur * CShaderBlur::Create(ID3D12Device * pGraphicDebice, ID3D12GraphicsCommandList* pCommandList)
+CShaderEdge * CShaderEdge::Create(ID3D12Device * pGraphicDebice, ID3D12GraphicsCommandList* pCommandList)
 {
-	CShaderBlur* pInstance = new CShaderBlur(pGraphicDebice, pCommandList);
+	CShaderEdge* pInstance = new CShaderEdge(pGraphicDebice, pCommandList);
 
 	if (FAILED(pInstance->Ready_Shader()))
 		Safe_Release(pInstance);
@@ -318,7 +272,7 @@ CShaderBlur * CShaderBlur::Create(ID3D12Device * pGraphicDebice, ID3D12GraphicsC
 	return pInstance;
 }
 
-void CShaderBlur::Free()
+void CShaderEdge::Free()
 {
 	CShader::Free();
 	Safe_Release(m_pTexDescriptorHeap);

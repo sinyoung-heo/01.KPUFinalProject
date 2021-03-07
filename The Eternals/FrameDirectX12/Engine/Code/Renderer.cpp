@@ -164,13 +164,16 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 		Render_ShadowDepth(fTimeDelta);	// Shadow Depth
 		Render_NonAlpha(fTimeDelta);	// Diffuse, Normal, Specular, Depth
 	}
+	Render_CrossFilter(fTimeDelta);
+	Render_EdgeObject(fTimeDelta);
 
 	Render_Light();						// Shade, Specular
+	Render_Edge();
 	Render_NPathDir();
 	Render_DownSampling();
 	Render_SSAO();
 	Render_Blur();
-	Render_CrossFilter(fTimeDelta);
+	
 	Render_Distortion(fTimeDelta);
 	Render_Blend();						// Target Blend
 	Render_Luminance();					// Luminance(°íÈÖµµÃßÃâ)
@@ -289,6 +292,50 @@ void CRenderer::Render_Blend()
 	m_pBlendBuffer->Render_Buffer();
 }
 
+void CRenderer::Render_EdgeObject(const _float& fTimeDelta)
+{
+
+	m_pTargetEdgeObject->SetUp_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
+
+	for (auto& pGameObject : m_RenderList[RENDER_EDGE])
+		pGameObject->Render_EdgeGameObject(fTimeDelta);
+
+	m_pTargetEdgeObject->Release_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
+}
+
+void CRenderer::Render_CrossFilter(const _float& fTimeDelta)
+{
+
+	m_pTargetCrossFilter->SetUp_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
+
+	for (auto& pGameObject : m_RenderList[RENDER_CROSSFILTER])
+		pGameObject->Render_CrossFilterGameObject(fTimeDelta);
+
+	m_pTargetCrossFilter->Release_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
+}
+
+void CRenderer::Render_Edge()
+{
+	if (!m_bIsSetEdgeTexture)
+	{
+		m_bIsSetEdgeTexture = true;
+		vector<ComPtr<ID3D12Resource>> vecEdgeObjectTarget = m_pTargetEdgeObject->Get_TargetTexture();
+		vector<ComPtr<ID3D12Resource>> vecDeferredTarget = m_pTargetDeferred->Get_TargetTexture();
+
+		vector<ComPtr<ID3D12Resource>> vecEdgeTarget;
+		vecEdgeTarget.emplace_back(vecEdgeObjectTarget[0]);	// RenderTarget - Blend
+		vecEdgeTarget.emplace_back(vecDeferredTarget[3]);	// RenderTarget - Blend
+
+		m_pEdgeShader->SetUp_ShaderTexture(vecEdgeTarget);
+	}
+	m_pTargetEdge->SetUp_OnGraphicDevice();
+	m_pEdgeShader->Begin_Shader();
+	m_pEdgeBuffer->Begin_Buffer();
+	m_pEdgeBuffer->Render_Buffer();
+	m_pTargetEdge->Release_OnGraphicDevice();
+	
+}
+
 void CRenderer::Render_Distortion(const _float& fTimeDelta)
 {
 	sort(m_RenderList[RENDER_DISTORTION].begin(), m_RenderList[RENDER_DISTORTION ].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
@@ -305,17 +352,6 @@ void CRenderer::Render_Distortion(const _float& fTimeDelta)
 	CShaderTextureInstancing::Get_Instance()->Render_Instance(INSTANCE::INSTANCE_DISTORTION);
 
 	m_pTargetDistortion->Release_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
-}
-
-void CRenderer::Render_CrossFilter(const _float& fTimeDelta)
-{
-	
-	m_pTargetCrossFilter->SetUp_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
-
-	for (auto& pGameObject : m_RenderList[RENDER_CROSSFILTER])
-		pGameObject->Render_GameObject(fTimeDelta);
-
-	m_pTargetCrossFilter->Release_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
 }
 
 void CRenderer::Render_Luminance()
@@ -378,12 +414,13 @@ void CRenderer::Render_DownSampling()
 		vector<ComPtr<ID3D12Resource>> vecDeferredTarget = m_pTargetDeferred->Get_TargetTexture();
 		vector<ComPtr<ID3D12Resource>> vecSSAOTarget = m_pTargetSSAO->Get_TargetTexture();
 		vector<ComPtr<ID3D12Resource>> vecNPathDirTarget = m_pTargetNPathDir->Get_TargetTexture();
+		vector<ComPtr<ID3D12Resource>> vecEdgeTarget = m_pTargetEdge->Get_TargetTexture();
 
 		vector<ComPtr<ID3D12Resource>> vecDownSamplingTarget;
 		vecDownSamplingTarget.emplace_back(vecDeferredTarget[4]);	// RenderTarget - Emissive
 		vecDownSamplingTarget.emplace_back(vecNPathDirTarget[0]);	// RenderTarget - NPathDir
 		vecDownSamplingTarget.emplace_back(vecSSAOTarget[0]);	// RenderTarget - SSAO
-		vecDownSamplingTarget.emplace_back(vecDeferredTarget[0]);	// RenderTarget - SSAO
+		vecDownSamplingTarget.emplace_back(vecEdgeTarget[0]);	// RenderTarget - Edge
 		m_pDownSamplingShader->SetUp_ShaderTexture(vecDownSamplingTarget);
 	
 	}
@@ -402,12 +439,15 @@ void CRenderer::Render_Blur()
 		vector<ComPtr<ID3D12Resource>> vecDownSampleTarget = m_pTargetDownSampling->Get_TargetTexture();
 		vector<ComPtr<ID3D12Resource>> vecDeferredTarget = m_pTargetDeferred->Get_TargetTexture();
 		vector<ComPtr<ID3D12Resource>> vecSSAOTarget = m_pTargetSSAO->Get_TargetTexture();
+		vector<ComPtr<ID3D12Resource>> vecEdgeTarget = m_pTargetEdge->Get_TargetTexture();
 
 		vector<ComPtr<ID3D12Resource>> vecBlurTarget;
 		vecBlurTarget.emplace_back(vecDownSampleTarget[0]);	// RenderTarget - DS Emissive
 		vecBlurTarget.emplace_back(vecDownSampleTarget[1]);	// RenderTarget - DS CrossFilter
 		vecBlurTarget.emplace_back(vecDeferredTarget[3]);	// RenderTarget - Depth
 		vecBlurTarget.emplace_back(vecSSAOTarget[0]);	// RenderTarget - SSAO
+		vecBlurTarget.emplace_back(vecDownSampleTarget[3]);	// RenderTarget - DS Edge
+		vecBlurTarget.emplace_back(vecEdgeTarget[0]);	// RenderTarget -  Edge
 		m_pBlurShader->SetUp_ShaderTexture(vecBlurTarget);
 	}
 	m_pTargetBlur->SetUp_OnGraphicDevice();
@@ -497,12 +537,14 @@ void CRenderer::Render_RenderTarget()
 			m_pTargetBlur->Render_RenderTarget();
 		if (nullptr != m_pTargetSSAO)
 			m_pTargetSSAO->Render_RenderTarget();
-
-
 		if (nullptr != m_pTargetBlend)
 			m_pTargetBlend->Render_RenderTarget();
 		if (nullptr != m_pTargetDistortion)
 			m_pTargetDistortion->Render_RenderTarget();
+		if (nullptr != m_pTargetEdgeObject)
+			m_pTargetEdgeObject->Render_RenderTarget();
+		if (nullptr != m_pTargetEdge)
+			m_pTargetEdge->Render_RenderTarget();
 		if (nullptr != m_pTargetCrossFilter)
 			m_pTargetCrossFilter->Render_RenderTarget();
 		if (nullptr != m_pTargetNPathDir)
@@ -596,6 +638,12 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	pShader = CShaderNPathDir::Create(m_pGraphicDevice, m_pCommandList);
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderNPathDir", ID_STATIC, pShader), E_FAIL);
+	++m_uiCnt_ShaderFile;
+
+	//ShaderEdge
+	pShader = CShaderEdge::Create(m_pGraphicDevice, m_pCommandList);
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderEdge", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
 	// ShaderShadowInstancing
@@ -713,7 +761,7 @@ HRESULT CRenderer::Ready_RenderTarget()
 	____________________________________________________________________________________________________________*/
 	m_pTargetBlur = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 3);
 	NULL_CHECK_RETURN(m_pTargetBlur, E_FAIL);
-	m_pTargetBlur->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	m_pTargetBlur->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R16G16B16A16_UNORM);
 	m_pTargetBlur->Set_TargetClearColor(1, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
 	m_pTargetBlur->Set_TargetClearColor(2, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
 	FAILED_CHECK_RETURN(m_pTargetBlur->SetUp_DefaultSetting(), E_FAIL);
@@ -748,6 +796,26 @@ HRESULT CRenderer::Ready_RenderTarget()
 	FAILED_CHECK_RETURN(m_pTargetDistortion->SetUp_DefaultSetting(), E_FAIL);
 	m_pTargetDistortion->Set_TargetRenderPos(_vec3(WIDTH_SECOND, HEIGHT_FOURTH, 1.0f));
 
+	//EdgeObject
+	m_pTargetEdgeObject = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
+	NULL_CHECK_RETURN(m_pTargetEdgeObject, E_FAIL);
+	m_pTargetEdgeObject->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	FAILED_CHECK_RETURN(m_pTargetEdgeObject->SetUp_DefaultSetting(TARGETID::TYPE_SHADOWDEPTH), E_FAIL);
+	m_pTargetEdgeObject->Set_TargetRenderPos(_vec3(WIDTH_SECOND, HEIGHT_FIFTH, 1.0f));
+	
+	//Edge
+	m_pTargetEdge = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
+	NULL_CHECK_RETURN(m_pTargetEdge, E_FAIL);
+	m_pTargetEdge->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 1.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	FAILED_CHECK_RETURN(m_pTargetEdge->SetUp_DefaultSetting(TARGETID::TYPE_DEFAULT), E_FAIL);
+	m_pTargetEdge->Set_TargetRenderPos(_vec3(WIDTH_SECOND, HEIGHT_SIXTH, 1.0f));
+
+	m_pEdgeBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pEdgeBuffer, E_FAIL);
+
+	m_pEdgeShader = static_cast<CShaderEdge*>(m_pComponentMgr->Clone_Component(L"ShaderEdge", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pEdgeShader, E_FAIL);
+	FAILED_CHECK_RETURN(m_pEdgeShader->Set_PipelineStatePass(0), E_FAIL);
 	//CrossFilter
 
 	m_pTargetCrossFilter = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 2);
@@ -1149,6 +1217,11 @@ void CRenderer::Free()
 	Safe_Release(m_pTargetBlend);
 	//Distort
 	Safe_Release(m_pTargetDistortion);
+	Safe_Release(m_pTargetEdgeObject);
+	//Edge
+	Safe_Release(m_pTargetEdge);
+	Safe_Release(m_pEdgeShader);
+	Safe_Release(m_pEdgeBuffer);
 	//
 	Safe_Release(m_pTargetCrossFilter);
 	//NPath

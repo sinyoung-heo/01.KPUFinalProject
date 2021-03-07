@@ -178,6 +178,9 @@
     <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\11.ShaderNPathDir">
       <UniqueIdentifier>{5f4dc40c-cabc-4792-ba9b-63ecf670c4e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\12.ShaderEdge">
+      <UniqueIdentifier>{fc950e9a-62cd-48e6-97c8-57964e90f373}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\Engine_Functor.h">
@@ -387,6 +390,9 @@
     <ClInclude Include="..\Code\ShaderNPathDir.h">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\11.ShaderNPathDir</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ShaderEdge.h">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\12.ShaderEdge</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\DirectInput.cpp">
@@ -569,6 +575,9 @@
     <ClCompile Include="..\Code\ShaderNPathDir.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\11.ShaderNPathDir</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\ShaderEdge.cpp">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\12.ShaderEdge</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Bin\Shader\ShaderMesh.hlsl">
@@ -618,6 +627,9 @@
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderNPathDir.hlsl">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\11.ShaderNPathDir</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Bin\Shader\ShaderEdge.hlsl">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\12.ShaderEdge</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

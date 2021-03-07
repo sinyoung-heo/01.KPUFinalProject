@@ -84,7 +84,6 @@ float4 PS_MAIN(VS_OUT ps_input) : SV_TARGET
 	float4 Albedo	= g_TexDiffuse.Sample(g_samLinearWrap, TexUV);
 	float4 Shade	= g_TexShade.Sample(g_samLinearWrap, TexUV)*1.5f;
 	float4 Specular = g_TexSpecular.Sample(g_samLinearWrap, TexUV);
-    float4 Blur = g_TexBlur.Sample(g_samLinearWrap, TexUV);
     float4 Emissive = g_TexEmissive.Sample(g_samLinearWrap, TexUV);
     float4 SSAO = g_TexSSAO.Sample(g_samLinearWrap, TexUV);
     
@@ -134,9 +133,9 @@ float4 PS_FINAL(VS_OUT ps_input) : SV_TARGET
         Output = Output2 = g_TexBlend.Sample(g_samLinearWrap, ps_input.TexUV);
     }
     BlendTarget = (Output + Output2)*0.5f;
-    Color= ToneMapping(BlendTarget.xyz, AverageColor.xyz);
+    Color = ToneMapping(BlendTarget.xyz, AverageColor.xyz) + mul(Blur.xyz,2.f) + Emissive.xyz;
 
-    Color += (Blur + Emissive);
+
     return float4(Color, BlendTarget.a);
     
     

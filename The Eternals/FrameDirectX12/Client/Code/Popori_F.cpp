@@ -50,6 +50,7 @@ HRESULT CPopori_F::Ready_GameObject(wstring wstrMeshTag,
 	Engine::FAILED_CHECK_RETURN(m_pShadowCom->Set_PipelineStatePass(0), E_FAIL);
 	m_iShadowPipelineStatePass = 0;
 
+	Engine::FAILED_CHECK_RETURN(m_pEdgeObjectShaderCom->Set_PipelineStatePass(4), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
@@ -103,6 +104,8 @@ HRESULT CPopori_F::LateInit_GameObject()
 
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
+	m_pEdgeObjectShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
+
 	m_pShadowCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
 	return S_OK;
@@ -130,6 +133,8 @@ _int CPopori_F::Update_GameObject(const _float & fTimeDelta)
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+	
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_EDGE, this), -1);
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
@@ -174,16 +179,10 @@ _int CPopori_F::LateUpdate_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-void CPopori_F::Render_GameObject(const _float & fTimeDelta)
+void CPopori_F::Render_EdgeGameObject(const _float & fTimeDelta)
 {
-	/*__________________________________________________________________________________________________________
-	[ Play Animation ]
-	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
-
 	Set_ConstantTable();
-	m_pMeshCom->Render_DynamicMesh(m_pShaderCom);
+	m_pMeshCom->Render_DynamicMesh(m_pEdgeObjectShaderCom);
 }
 
 void CPopori_F::Render_ShadowDepth(const _float & fTimeDelta)
@@ -225,6 +224,12 @@ HRESULT CPopori_F::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
+
+	// Shader
+	m_pEdgeObjectShaderCom = static_cast<Engine::CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", Engine::COMPONENTID::ID_STATIC));
+	Engine::NULL_CHECK_RETURN(m_pEdgeObjectShaderCom, E_FAIL);
+	m_pEdgeObjectShaderCom->AddRef();
+	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader2", m_pEdgeObjectShaderCom);
 
 	// Shadow
 	m_pShadowCom = static_cast<Engine::CShaderShadow*>(m_pComponentMgr->Clone_Component(L"ShaderShadow", Engine::COMPONENTID::ID_STATIC));
@@ -271,7 +276,8 @@ void CPopori_F::Set_ConstantTable()
 	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.15f;
 	tCB_ShaderMesh.fDeltaTime = m_fDeltaTime;
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
-	
+	m_pEdgeObjectShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
+
 	if (m_fDeltaTime > 1.f)
 		m_fDeltaTime = 0.f;
 }
@@ -402,6 +408,7 @@ void CPopori_F::Free()
 
 	Engine::Safe_Release(m_pMeshCom);
 	Engine::Safe_Release(m_pShaderCom);
+	Engine::Safe_Release(m_pEdgeObjectShaderCom);
 	Engine::Safe_Release(m_pShadowCom);
 	Engine::Safe_Release(m_pColliderSphereCom);
 	Engine::Safe_Release(m_pColliderBoxCom);

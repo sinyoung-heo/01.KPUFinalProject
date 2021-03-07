@@ -16,7 +16,7 @@ class CShaderBlur;
 class CShaderSSAO;
 class CShaderNPathDir;
 class CShaderMesh;
-
+class CShaderEdge;
 #define WIDTH_FIRST		112
 #define WIDTH_SECOND	224+112
 #define WIDTH_THIRD		448+112
@@ -28,6 +28,8 @@ class CShaderMesh;
 #define HEIGHT_SECOND	126 + 63
 #define HEIGHT_THIRD	126+126 + 63
 #define HEIGHT_FOURTH	126+126+126+63
+#define HEIGHT_FIFTH	126+126+126+126+63
+#define HEIGHT_SIXTH	126+126+126+126+126+63
 
 struct ThreadParameter
 {
@@ -45,6 +47,7 @@ public:
 		RENDER_PRIORITY,
 		RENDER_NONALPHA,
 		RENDER_DISTORTION,
+		RENDER_EDGE,
 		RENDER_CROSSFILTER,
 		RENDER_COLLIDER,
 		RENDER_ALPHA,
@@ -97,6 +100,8 @@ private:
 	void	Render_Blur();
 	void	Render_SSAO();
 	void	Render_Blend();
+	void	Render_EdgeObject(const _float& fTimeDelta);
+	void	Render_Edge();
 	void	Render_Distortion(const _float& fTimeDelta);
 	void	Render_CrossFilter(const _float& fTimeDelta);
 	void	Render_Alpha(const _float& fTimeDelta);
@@ -140,6 +145,13 @@ private:
 	CRenderTarget* m_pTargetBlend = nullptr; // Distortion
 	CRenderTarget* m_pTargetCrossFilter = nullptr; // CrossFilter
 
+	CRenderTarget* m_pTargetEdgeObject = nullptr; // EdgeObject
+
+	// Edge
+	CRenderTarget* m_pTargetEdge = nullptr;
+	CShaderEdge* m_pEdgeShader = nullptr;
+	CScreenTex* m_pEdgeBuffer = nullptr;
+	_bool m_bIsSetEdgeTexture{ false };
 	// N_PathBlurTarget
 	CRenderTarget * m_pTargetNPathDir = nullptr; // nπÊ«‚ ≈∏∞Ÿ
 	CShaderNPathDir* m_pNPathDirShader = nullptr;
