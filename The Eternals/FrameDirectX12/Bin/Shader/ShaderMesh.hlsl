@@ -377,15 +377,7 @@ PS_OUT2 PS_CROSSFILTER(VS_OUT ps_input) : SV_TARGET
     return ps_out2;
 }
 
-float4 PS_BRIGHT(VS_OUT ps_input) : SV_TARGET0
+float4 PS_EDGE(VS_OUT ps_input) : SV_TARGET0
 {
-	// Normal
-    float4 psout;
-    float4 TexNormal = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
-    TexNormal = (TexNormal * 2.0f) - 1.0f; // 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.
-    float3 Normal = (TexNormal.x * ps_input.T) + (TexNormal.y * ps_input.B) + (TexNormal.z * ps_input.N);
-    psout = float4(Normal.xyz * 0.5f + 0.5f, 1.f); // 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
-	
-    float2 TexUv = ps_input.TexUV;
-    return g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
+    return float4(1, 1, 1, 1);
 }

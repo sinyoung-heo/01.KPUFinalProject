@@ -16,6 +16,8 @@ Texture2D g_TexEmissive : register(t0); //DownSample Target Index 0 :  Emissive 
 Texture2D g_TexNPathDir : register(t1); ///DownSample Target Index 1  - Cross Fliter Target - DowmSample
 Texture2D g_TexDepth : register(t2); //Deffered Target Index 3 :  Depth Target
 Texture2D g_TexSSAO : register(t3); //Deffered Target Index 4 :  SSAO Target
+Texture2D g_TexEdgeDS : register(t4); //DS Target Index 3 :  Edge Target - DownSample
+Texture2D g_TexEdge : register(t5); // Target Index  :  Edge Target
 /*
 [Static Constant Table]
 */
@@ -67,6 +69,8 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
     float4 Emis_Output = (float4) 0, Emis_Output2 = (float4) 0;
     float4 NPath_Output = (float4) 0, NPath_Output2 = (float4) 0;
     float4 SSAO_Output = (float4) 0, SSAO_Output2 = (float4) 0;
+    float4 Edge = g_TexEdge.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 Edge_Output = (float4) 0, Edge_Output2 = (float4) 0;
     for (int i = 0; i < 13; i++)
     {
         vGausTexUV.x = ps_input.TexUV.x + (g_fOffSet[i]) / 400.f;
@@ -74,23 +78,28 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 
         Emis_Output += g_TexEmissive.Sample(g_samLinearWrap, vGausTexUV) * (g_fWeight[i]);
         NPath_Output += g_TexNPathDir.Sample(g_samLinearWrap, vGausTexUV) * (g_fWeight[i]);
+        Edge_Output += g_TexEdgeDS.Sample(g_samLinearWrap, vGausTexUV) * (g_fWeight[i]);
         vGausTexUV.y = ps_input.TexUV.y + (g_fOffSet[i]) / 225.f;
         vGausTexUV = saturate(vGausTexUV);
      
         Emis_Output2 += g_TexEmissive.Sample(g_samLinearWrap, vGausTexUV) * (g_fWeight[i]);
         NPath_Output2 += g_TexNPathDir.Sample(g_samLinearWrap, vGausTexUV) * (g_fWeight[i]);
+        Edge_Output2 += g_TexEdgeDS.Sample(g_samLinearWrap, vGausTexUV) * (g_fWeight[i]);
         
         vGausTexUV.x = ps_input.TexUV.x + (g_fOffSet[i] /12) / 200.f;
         SSAO_Output += g_TexSSAO.Sample(g_samAnisotropicClamp, vGausTexUV) * (g_fWeight[i]);
+        
         vGausTexUV.y = ps_input.TexUV.y + (g_fOffSet[i]/12) / 112.5f;
         SSAO_Output2 += g_TexSSAO.Sample(g_samAnisotropicClamp, vGausTexUV) * (g_fWeight[i]);
+     
     }
-    
+    float ouputEdge = (Edge_Output + Edge_Output2)*0.5f;
     output.EMISSIVE_BLUR = (Emis_Output + Emis_Output2) *0.5f;
     output.CROSSFILTER_BLUR = (NPath_Output + NPath_Output2) * 0.5f;
   
-    output.SSAO_BLUR = (SSAO_Output + SSAO_Output2) * 0.5f;
+    output.SSAO_BLUR = (SSAO_Output + SSAO_Output2);
     
     output.EMISSIVE_BLUR += output.CROSSFILTER_BLUR;//최종때 이미시브에 더할것들은 합산해주어 블렌드에서 따로 안받도록
+    output.EMISSIVE_BLUR += (ouputEdge + Edge*2.f)*0.5f;
     return (output);
 }

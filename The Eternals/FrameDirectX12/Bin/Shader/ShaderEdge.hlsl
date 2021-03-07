@@ -12,11 +12,8 @@ SamplerState g_samAnisotropicClamp	: register(s5);
 /*__________________________________________________________________________________________________________
 [ Texture ]
 ____________________________________________________________________________________________________________*/
-Texture2D g_TexEmissive		: register(t0);	//Deffered Target Index 4 :  Emissive Target
-Texture2D g_TexNPathDir : register(t1); //g_TexNPathDir Texture
-Texture2D g_TexSSAO : register(t2); //SSAO Texture
-Texture2D g_TexEdge : register(t3); //Edge Texture
-
+Texture2D g_TexEdgeObject		: register(t0);	//
+Texture2D g_TexDepth : register(t1);
 /*____________________________________________________________________
 [ Vertex Shader ]
 ______________________________________________________________________*/
@@ -50,38 +47,28 @@ ______________________________________________________________________*/
 // PS_MAIN
 struct PS_OUT
 {
-    float4 DS_EMISSIVE : SV_TARGET0; // 0번 RenderTarget
-    float4 DS_CROSSFILTER : SV_TARGET1; // 1번 RenderTarget 
-    float4 DS_SSAO : SV_TARGET2; // 2번 RenderTarget
-    float4 DS_EDGE : SV_TARGET3; // 3번 RenderTarget
+    float4 EDGE : SV_TARGET0; // 0번 RenderTarget
 };
 PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 {
     PS_OUT output = (PS_OUT)0;
-  
-    float2 vTexUV = ps_input.TexUV;
-    float4 Emissive = float4(0, 0, 0, 0);
-    float4 SSAO = float4(0, 0, 0, 0);
-    float4 Edge = float4(0, 0, 0, 0);
-    float4 NPathDir = float4(0, 0, 0, 0);
-    for (int i = -2; i <= 2; ++i)
+    float2 TexUV = float2(0,0);
+    float4 Depth = g_TexDepth.Sample(g_samLinearWrap, ps_input.TexUV);
+    float ViewZ = Depth.g;
+    int Cnt = 0;
+    for (int i = -1; i <= 1; i++)
     {
-        for (int j = -2; j <= 2; ++j)
+        for (int j = -1; j <= 1; j++)
         {
-            vTexUV.x = ps_input.TexUV.x + (i / 1600.f);
-            vTexUV.y = ps_input.TexUV.y + (j / 900.f);
-            vTexUV = saturate(vTexUV);
-            NPathDir += g_TexNPathDir.Sample(g_samLinearClamp, vTexUV);
-            Emissive += g_TexEmissive.Sample(g_samLinearClamp, vTexUV);
-            SSAO += g_TexSSAO.Sample(g_samLinearClamp, vTexUV);
-            Edge += g_TexEdge.Sample(g_samLinearClamp, vTexUV);
-
+            TexUV = float2(ps_input.TexUV.x + (j / (400.f + (ViewZ * 160.f))),
+            ps_input.TexUV.y + (i / (225.f + (ViewZ * 900.f))));
+            if (g_TexEdgeObject.Sample(g_samLinearWrap, TexUV).a > 0.01)
+                Cnt++;
         }
-    }
-    Emissive /= 25, NPathDir /= 25, SSAO /= 25, Edge /= 25;
-    output.DS_EMISSIVE = Emissive;
-    output.DS_CROSSFILTER = NPathDir;
-    output.DS_SSAO = SSAO;
-    output.DS_EDGE = Edge;
+    }  
+    if (Cnt >= 1 && Cnt != 9)
+        output.EDGE = float4(0.6, 1, 0.4, 1);
+
+    
     return (output);
 }

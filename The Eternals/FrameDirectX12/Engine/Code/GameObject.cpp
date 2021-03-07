@@ -167,6 +167,14 @@ void CGameObject::Render_ShadowDepth(const _float & fTimeDelta)
 {
 }
 
+void CGameObject::Render_EdgeGameObject(const _float& fTimeDelta)
+{
+}
+
+void CGameObject::Render_CrossFilterGameObject(const _float& fTimeDelta)
+{
+}
+
 void CGameObject::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList * pCommandList, const _int& iContextIdx)
 {
 }

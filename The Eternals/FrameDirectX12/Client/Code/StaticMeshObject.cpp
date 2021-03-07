@@ -78,6 +78,7 @@ HRESULT CStaticMeshObject::LateInit_GameObject()
 
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	m_pCrossFilterShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
+	m_pEdgeObjectShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	return S_OK;
 }
 
@@ -95,8 +96,11 @@ _int CStaticMeshObject::Update_GameObject(const _float & fTimeDelta)
 	if (m_pRenderer->Get_Frustum().Contains(m_pBoundingBoxCom->Get_BoundingInfo()) != DirectX::DISJOINT)
 	{
 		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
-		if(m_iRandomnumber ==1)
+		if (m_iRandomnumber == 1)
+		{
 			Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_CROSSFILTER, this), -1);
+			Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_EDGE, this), -1);
+		}
 	}
 
 	/*____________________________________________________________________
@@ -117,8 +121,18 @@ _int CStaticMeshObject::LateUpdate_GameObject(const _float & fTimeDelta)
 void CStaticMeshObject::Render_GameObject(const _float& fTimeDelta)
 {
 	Set_ConstantTable();
-	//m_pMeshCom->Render_StaticMesh(m_pShaderCom);
+	//m_pMeshCom->Render_StaticMesh(m_pShaderCom);	
+}
+void CStaticMeshObject::Render_EdgeGameObject(const _float& fTimeDelta)
+{
+	Set_ConstantTable();
+	m_pMeshCom->Render_StaticMesh(m_pEdgeObjectShaderCom);
+}
+void CStaticMeshObject::Render_CrossFilterGameObject(const _float& fTimeDelta)
+{
+	Set_ConstantTable();
 	m_pMeshCom->Render_StaticMesh(m_pCrossFilterShaderCom);
+
 }
 
 
@@ -170,7 +184,12 @@ HRESULT CStaticMeshObject::Add_Component(wstring wstrMeshTag)
 	Engine::FAILED_CHECK_RETURN(m_pCrossFilterShaderCom->Set_PipelineStatePass(3), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader2", m_pCrossFilterShaderCom);
 
-	
+	m_pEdgeObjectShaderCom = static_cast<Engine::CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", Engine::COMPONENTID::ID_STATIC));
+	Engine::NULL_CHECK_RETURN(m_pEdgeObjectShaderCom, E_FAIL);
+	m_pEdgeObjectShaderCom->AddRef();
+	Engine::FAILED_CHECK_RETURN(m_pEdgeObjectShaderCom->Set_PipelineStatePass(4), E_FAIL);
+	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader3", m_pEdgeObjectShaderCom);
+
 	return S_OK;
 }
 
@@ -216,6 +235,7 @@ void CStaticMeshObject::Set_ConstantTable()
 	tCB_ShaderMesh.vLightPos.y =1.f;//randG * 0.01f;
 	tCB_ShaderMesh.vLightPos.z =1.f;//randB * 0.01f;
 	m_pCrossFilterShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
+	m_pEdgeObjectShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 }
 
 void CStaticMeshObject::Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int& iInstanceIdx)
@@ -268,5 +288,7 @@ void CStaticMeshObject::Free()
 	Engine::Safe_Release(m_pMeshCom);
 	Engine::Safe_Release(m_pShaderCom);
 	Engine::Safe_Release(m_pCrossFilterShaderCom);
+	Engine::Safe_Release(m_pEdgeObjectShaderCom);
+	
 	
 }

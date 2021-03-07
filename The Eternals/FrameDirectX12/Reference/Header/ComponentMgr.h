@@ -33,6 +33,7 @@
 #include "ShaderBlur.h"
 #include "ShaderSSAO.h"
 #include "ShaderNPathDir.h"
+#include "ShaderEdge.h"
 BEGIN(Engine)
 
 class ENGINE_DLL CComponentMgr final : public CBase

@@ -47,7 +47,7 @@ public:
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 
 	// SingleThread Rendering.
-	virtual void	Render_GameObject(const _float& fTimeDelta);
+	virtual void	Render_EdgeGameObject(const _float& fTimeDelta);
 	virtual void	Render_ShadowDepth(const _float & fTimeDelta);
 
 	// MultiThread Rendering
@@ -68,6 +68,8 @@ private:
 	____________________________________________________________________________________________________________*/
 	Engine::CMesh*				m_pMeshCom				= nullptr;
 	Engine::CShaderMesh*		m_pShaderCom			= nullptr;
+	Engine::CShaderMesh*		m_pEdgeObjectShaderCom = nullptr;
+
 	Engine::CShaderShadow*		m_pShadowCom			= nullptr;
 	Engine::CColliderSphere*	m_pColliderSphereCom	= nullptr;
 	Engine::CColliderBox*		m_pColliderBoxCom		= nullptr;
