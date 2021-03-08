@@ -876,14 +876,14 @@ void CVIMesh::Free()
 		Safe_Release(iter);
 
 
-	for (auto& iter : m_vecDiffResource)
-		iter->Release();
+	//for (auto& iter : m_vecDiffResource)
+	//	iter->Release();
 
-	for (auto& iter : m_vecNormResource)
-		iter->Release();
+	//for (auto& iter : m_vecNormResource)
+	//	iter->Release();
 
-	for (auto& iter : m_vecSpecResource)
-		iter->Release();
+	//for (auto& iter : m_vecSpecResource)
+	//	iter->Release();
 
 
 	m_pAniCtrl = nullptr;

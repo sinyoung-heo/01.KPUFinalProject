@@ -23,6 +23,9 @@ private:
 	HRESULT			Ready_LightInfo();
 	HRESULT			Ready_NaviMesh();
 
+private:
+	_bool m_bIsReadyMouseCursorMgr = false;
+
 public:
 	static CScene_StageVelika*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 private:

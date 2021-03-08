@@ -59,7 +59,9 @@ _int CDynamicCamera::Update_GameObject(const _float & fTimeDelta)
 			/*__________________________________________________________________________________________________________
 			[ Key Input ]
 			____________________________________________________________________________________________________________*/
-			Key_Input(fTimeDelta);
+			// MouseCursor 활성화 시, 카메라 움직임 X.
+			if (!CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse())
+				Key_Input(fTimeDelta);
 
 			/*__________________________________________________________________________________________________________
 			[ Target의 Position과 Distance를 기준으로 Camera의 Eye값 계산. ]

@@ -32,6 +32,10 @@ HRESULT CMouseCursorMgr::Ready_MouseCursorMgr()
 
 void CMouseCursorMgr::Update_MouseCursorMgr(const _float& fTimeDelta)
 {
+	// DebugCaemra ON¿Ã∏È Actavie false.
+	if (g_bIsOnDebugCaemra)
+		m_bIsActiveMouse = false;
+
 	if (nullptr != m_pMouseCursor)
 	{
 		if (m_bIsActiveMouse)
