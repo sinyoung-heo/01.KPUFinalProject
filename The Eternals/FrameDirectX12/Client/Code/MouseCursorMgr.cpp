@@ -32,31 +32,32 @@ HRESULT CMouseCursorMgr::Ready_MouseCursorMgr()
 
 void CMouseCursorMgr::Update_MouseCursorMgr(const _float& fTimeDelta)
 {
-
 	if (nullptr != m_pMouseCursor)
 	{
 		if (m_bIsActiveMouse)
 		{
+			m_bIsResetMouse = false;
 			static_cast<CGameUIRoot*>(m_pMouseCursor)->Set_IsRender(true);
 
 			POINT ptMouse{};
 			GetCursorPos(&ptMouse);
 			ScreenToClient(g_hWnd, &ptMouse);
-
 			m_pMouseCursor->Get_Transform()->m_vPos = _vec3((_float)ptMouse.x, (_float)ptMouse.y, 0.0f);
-
 		}
 		else
 		{
-			static_cast<CGameUIRoot*>(m_pMouseCursor)->Set_IsRender(false);
 			SetCursorPos(WINCX / 2, WINCY / 2);
 
-			POINT ptMouse{};
-			GetCursorPos(&ptMouse);
-			ScreenToClient(g_hWnd, &ptMouse);
+			if (!m_bIsResetMouse)
+			{
+				m_bIsResetMouse = true;
 
-			m_pMouseCursor->Get_Transform()->m_vPos = _vec3((_float)ptMouse.x, (_float)ptMouse.y, 0.0f);
-
+				static_cast<CGameUIRoot*>(m_pMouseCursor)->Set_IsRender(false);
+				POINT ptMouse{};
+				GetCursorPos(&ptMouse);
+				ScreenToClient(g_hWnd, &ptMouse);
+				m_pMouseCursor->Get_Transform()->m_vPos = _vec3((_float)ptMouse.x, (_float)ptMouse.y, 0.0f);
+			}
 		}
 
 	}

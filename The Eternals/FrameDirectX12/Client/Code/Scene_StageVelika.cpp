@@ -39,9 +39,13 @@ HRESULT CScene_StageVelika::Ready_Scene()
 	Engine::FAILED_CHECK_RETURN(Ready_LayerFont(L"Layer_Font"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
+	// Ready Instancing 
 	Engine::CShaderColorInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderShadowInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderMeshInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
+
+	// Ready MouseCursorMgr
+	CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(false);
 
 	return S_OK;
 }

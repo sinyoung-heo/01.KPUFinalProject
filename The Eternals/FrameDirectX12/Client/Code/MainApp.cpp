@@ -26,9 +26,9 @@ CMainApp::CMainApp()
 
 HRESULT CMainApp::Ready_MainApp()
 {
-	ShowCursor(false);
 	srand(unsigned int(time(nullptr)));
 
+	SetUp_WindowMouseSetting();
 	Engine::FAILED_CHECK_RETURN(SetUp_DefaultSetting(Engine::WINMODE::MODE_WIN, WINCX, WINCY), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(SetUp_Font(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(SetUp_ComponentPrototype(), E_FAIL);
@@ -79,7 +79,10 @@ _int CMainApp::Update_MainApp(const _float & fTimeDelta)
 	[ Update Management ]
 	____________________________________________________________________________________________________________*/
 	CShadowLightMgr::Get_Instance()->Update_ShadowLight();
+
+	// UpdateMouseCursor
 	CMouseCursorMgr::Get_Instance()->Update_MouseCursorMgr(fTimeDelta);
+
 	m_pManagement->Update_Management(fTimeDelta);
 
 	return 0;
@@ -313,6 +316,31 @@ HRESULT CMainApp::SetUp_StartScene(Engine::SCENEID eScebeID)
 	return S_OK;
 }
 
+void CMainApp::SetUp_WindowMouseSetting()
+{
+	ShowCursor(false);
+
+	RECT rc, rc2;
+	POINT p1, p2;
+
+	GetClientRect(g_hWnd, &rc);
+
+	p1.x = rc.left;
+	p1.y = rc.top;
+	p2.x = rc.right;
+	p2.y = rc.bottom;
+
+	ClientToScreen(g_hWnd, &p1);
+	ClientToScreen(g_hWnd, &p2);
+
+	rc2.left   = p1.x;
+	rc2.top    = p1.y;
+	rc2.right  = p2.x;
+	rc2.bottom = p2.y;
+
+	ClipCursor(&rc2);
+}
+
 void CMainApp::Key_Input()
 {
 #ifdef SERVER
@@ -324,6 +352,12 @@ void CMainApp::Key_Input()
 	____________________________________________________________________________________________________________*/
 	if (Engine::KEY_DOWN(DIK_TAB))
 		g_bIsOnDebugCaemra = !g_bIsOnDebugCaemra;
+
+	/*__________________________________________________________________________________________________________
+	[ MouseCursor ]
+	____________________________________________________________________________________________________________*/
+	if (Engine::KEY_DOWN(DIK_LCONTROL))
+		CMouseCursorMgr::Get_Instance()->Is_ActiveMouse();
 
 	/*__________________________________________________________________________________________________________
 	[ Render On/Off ]

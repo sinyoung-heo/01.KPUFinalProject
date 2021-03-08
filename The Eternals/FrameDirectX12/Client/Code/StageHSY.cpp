@@ -4,6 +4,7 @@
 #include "StageHSY.h"
 #include "ComponentMgr.h"
 #include "GraphicDevice.h"
+#include "DirectInput.h"
 #include "LightMgr.h"
 #include "Font.h"
 #include "DebugCamera.h"
@@ -48,17 +49,22 @@ HRESULT CStageHSY::Ready_Scene()
 	Engine::FAILED_CHECK_RETURN(Ready_LayerFont(L"Layer_Font"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
+	// Ready Instnacing
 	Engine::CShaderColorInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderShadowInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderMeshInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderTextureInstancing::Get_Instance()->SetUp_ConstantBuffer(Engine::INSTANCE::INSTANCE_DISTORTION ,m_pGraphicDevice);
 	Engine::CShaderTextureInstancing::Get_Instance()->SetUp_ConstantBuffer(Engine::INSTANCE::INSTANCE_ALPHA, m_pGraphicDevice);
 
+	// Ready MouseCursorMgr
+	CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(false);
+
 	return S_OK;
 }
 
 _int CStageHSY::Update_Scene(const _float & fTimeDelta)
 {
+	// MouseCursorMgr
 	if (!m_bIsReadyMouseCursorMgr)
 	{
 		m_bIsReadyMouseCursorMgr = true;
