@@ -13,6 +13,8 @@ private:
 public:
 	// Set
 	void			SetUp_ShaderTexture(vector<ComPtr<ID3D12Resource>> pVecTexture);
+	//Get
+	CUploadBuffer<CB_SHADER_INFORMATION>* Get_UploadBuffer_ShaderInformation() { return m_pCB_ShaderInformation; }
 
 	// CShader을(를) 통해 상속됨
 	virtual HRESULT	Ready_Shader();
@@ -35,6 +37,7 @@ private:
 																  const D3D12_BLEND_OP& BlendOpAlpha	= D3D12_BLEND_OP_ADD);
 
 private:
+	CUploadBuffer<CB_SHADER_INFORMATION>* m_pCB_ShaderInformation = nullptr;
 	ID3D12DescriptorHeap*	m_pTexDescriptorHeap = nullptr;
 	_bool					m_bIsSetTexture		 = false;
 

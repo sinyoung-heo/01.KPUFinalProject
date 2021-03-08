@@ -21,6 +21,18 @@ Texture2D g_TexDistortion : register(t6); // Distortion
 Texture2D g_TexAverageColor : register(t7); // AveColor
 Texture2D g_TexBlend : register(t8); // Blend
 Texture2D g_TexDepth : register(t9); //Depth
+
+cbuffer IS_Rendering : register(b0)
+{
+    float fSsao            : packoffset(c0.x);
+    float fDepthOfField    : packoffset(c0.y);
+    float fShade           : packoffset(c0.z);
+    float fToneMapping   : packoffset(c0.w);
+    float fDistortion      : packoffset(c1.x);
+    float fSpecular         : packoffset(c1.y);
+    float fOffset2         : packoffset(c1.z);
+    float fOffset3         : packoffset(c1.w);
+}
 /*____________________________________________________________________
 [ Vertex Shader ]
 ______________________________________________________________________*/
@@ -36,10 +48,7 @@ struct VS_OUT
 	float2 TexUV	: TEXCOORD;
 };
 
-
 static const float3 LUM_CONVERT = float3(0.299f, 0.587f, 0.114f);
-
- 
 
 float3 ToneMapping(float3 vHDRColor,float3 AveLumi)
 {
@@ -87,7 +96,10 @@ float4 PS_MAIN(VS_OUT ps_input) : SV_TARGET
     float4 Emissive = g_TexEmissive.Sample(g_samLinearWrap, TexUV);
     float4 SSAO = g_TexSSAO.Sample(g_samLinearWrap, TexUV);
     
-	
+    //On Off
+    if (fShade) Shade.xyz = fShade;
+    if (fSsao) SSAO.xyz = fSsao;
+    Specular *= fSpecular;
     float4 Color = Albedo * (Shade * SSAO) + Specular;// +Blur + Emissive;
     
     Color.a = Albedo.a;
@@ -111,15 +123,13 @@ float4 PS_FINAL(VS_OUT ps_input) : SV_TARGET
     float4 Blur = g_TexBlur.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 Emissive = g_TexEmissive.Sample(g_samLinearWrap, ps_input.TexUV);
     float3 Color;
-    
     float4 Output = float4(0, 0, 0, 0), Output2 = float4(0, 0, 0, 0);
-    float4 Depth = g_TexDepth.Sample(g_samLinearWrap, ps_input.TexUV);
-    float ViewZ = Depth.g;
+    float ViewZ = g_TexDepth.Sample(g_samLinearWrap, ps_input.TexUV).g;
     //0 ~1값의 ViewZ 값 멀어질수록 1에 가까워진다. 거리 0.05이상부터 DOF 처리를 매길것임
     //50 : 1000 = 1600 : 650
     //50 : 1000 = 900 : 
     float2 vGausTexUV = float2(0, 0);
-    if (ViewZ > 0.05f){ for (int i = 0; i < 13; i++){
+    if (ViewZ > 0.05f && fDepthOfField){ for (int i = 0; i < 13; i++){
             vGausTexUV.x = ps_input.TexUV.x + (g_fOffSet[i]) / (3200.f - ViewZ *2000.f );
             vGausTexUV = saturate(vGausTexUV);
             Output += g_TexBlend.Sample(g_samLinearWrap, vGausTexUV) * (g_fWeight[i]);
@@ -129,12 +139,14 @@ float4 PS_FINAL(VS_OUT ps_input) : SV_TARGET
             Output2 += g_TexBlend.Sample(g_samLinearWrap, vGausTexUV) * (g_fWeight[i]);
         }}
     else
-    {
         Output = Output2 = g_TexBlend.Sample(g_samLinearWrap, ps_input.TexUV);
-    }
     BlendTarget = (Output + Output2)*0.5f;
-    Color = ToneMapping(BlendTarget.xyz, AverageColor.xyz) + mul(Blur.xyz,2.f) + Emissive.xyz;
 
+    //OnOff
+    if(!fToneMapping)
+        Color = ToneMapping(BlendTarget.xyz, AverageColor.xyz) + mul(Blur.xyz, 2.f) + Emissive.xyz;
+    else
+        Color = BlendTarget.xyz + mul(Blur.xyz, 2.f) + Emissive.xyz;
 
     return float4(Color, BlendTarget.a);
     

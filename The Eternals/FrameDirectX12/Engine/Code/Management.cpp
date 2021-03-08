@@ -2,7 +2,7 @@
 #include "Scene.h"
 #include "LightMgr.h"
 #include "CollisionMgr.h"
-
+#include "ShaderMgr.h"
 USING(Engine)
 IMPLEMENT_SINGLETON(CManagement)
 
@@ -27,7 +27,7 @@ _int CManagement::Update_Management(const _float & fTimeDelta)
 		m_pCurrentScene->Update_Scene(fTimeDelta);
 
 	CLightMgr::Get_Instance()->Update_Light();
-
+	CShaderMgr::Get_Instance()->Input_ShaderKey();
 	return 0;
 }
 

@@ -11,7 +11,7 @@ CShaderBlend::CShaderBlend(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandL
 }
 
 CShaderBlend::CShaderBlend(const CShaderBlend & rhs)
-	: CShader(rhs)
+	: CShader(rhs), m_pCB_ShaderInformation(rhs.m_pCB_ShaderInformation)
 {
 }
 
@@ -33,6 +33,9 @@ HRESULT CShaderBlend::Ready_Shader()
 	FAILED_CHECK_RETURN(Create_RootSignature(), E_FAIL);
 	FAILED_CHECK_RETURN(Create_PipelineState(), E_FAIL);
 
+	//Cbuffer Shader
+	m_pCB_ShaderInformation = CUploadBuffer<CB_SHADER_INFORMATION>::Create(m_pGraphicDevice);
+	NULL_CHECK_RETURN(m_pCB_ShaderInformation, E_FAIL);
 	return S_OK;
 }
 
@@ -98,6 +101,11 @@ void CShaderBlend::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, const 
 	SRV_TexDepthDescriptorHandle.Offset(9, m_uiCBV_SRV_UAV_DescriptorSize);
 	m_pCommandList->SetGraphicsRootDescriptorTable(9,		// RootParameter Index. (Tex Blend)
 		SRV_TexDepthDescriptorHandle);
+
+	//Cbuffer
+	m_pCommandList->SetGraphicsRootConstantBufferView(10,	// RootParameter Index
+		m_pCB_ShaderInformation->Resource()->GetGPUVirtualAddress());
+
 }
 
 HRESULT CShaderBlend::Create_DescriptorHeaps(vector<ComPtr<ID3D12Resource>> pVecTexture)
@@ -215,7 +223,7 @@ HRESULT CShaderBlend::Create_RootSignature()
 	/*__________________________________________________________________________________________________________
 	- 루트 매개변수는 테이블이거나, 루트 서술자 또는 루트 상수이다.
 	____________________________________________________________________________________________________________*/
-	CD3DX12_ROOT_PARAMETER RootParameter[10];
+	CD3DX12_ROOT_PARAMETER RootParameter[11];
 	RootParameter[0].InitAsDescriptorTable(1, &SRV_Table[0], D3D12_SHADER_VISIBILITY_PIXEL);	// t0
 	RootParameter[1].InitAsDescriptorTable(1, &SRV_Table[1], D3D12_SHADER_VISIBILITY_PIXEL);	// t1
 	RootParameter[2].InitAsDescriptorTable(1, &SRV_Table[2], D3D12_SHADER_VISIBILITY_PIXEL);	// t2
@@ -226,9 +234,10 @@ HRESULT CShaderBlend::Create_RootSignature()
 	RootParameter[7].InitAsDescriptorTable(1, &SRV_Table[7], D3D12_SHADER_VISIBILITY_PIXEL);	// t7
 	RootParameter[8].InitAsDescriptorTable(1, &SRV_Table[8], D3D12_SHADER_VISIBILITY_PIXEL);	// t8
 	RootParameter[9].InitAsDescriptorTable(1, &SRV_Table[9], D3D12_SHADER_VISIBILITY_PIXEL);	// t9
+	RootParameter[10].InitAsConstantBufferView(0); //b0
 
 	auto StaticSamplers = Get_StaticSamplers();
-	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(10,							// 루트 파라미터 개수.(SRV 10 : 총10개)
+	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(11,							// 루트 파라미터 개수.(SRV 10 : 총10개)
 												  RootParameter,
 												  (_uint)StaticSamplers.size(),	// 샘플러 개수.
 												  StaticSamplers.data(),		// 샘플러 데이터.
@@ -388,5 +397,6 @@ void CShaderBlend::Free()
 {
 	CShader::Free();
 	Safe_Release(m_pTexDescriptorHeap);
-
+	if (!m_bIsClone)
+		Safe_Delete(m_pCB_ShaderInformation);
 }
