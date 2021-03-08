@@ -809,6 +809,18 @@ namespace Engine
 	{
 		_vec4 vFloat4;
 	}CB_SHADER_VARIABLE;
+
+	typedef struct tagShaderInformation
+	{
+		_float Ssao;
+		_float DepthOfField;
+		_float Shade;
+		_float ToneMapping;
+		_float Distortion;
+		_float Specular;
+		_float Offset2;
+		_float Offset3;
+	}CB_SHADER_INFORMATION;
 	// Shader Shadow
 	typedef struct tagConstantBufferShaderShadow
 	{

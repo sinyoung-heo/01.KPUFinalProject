@@ -9,6 +9,7 @@
 #include "RenderTarget.h"
 #include "Font.h"
 
+#include "ShaderMgr.h"
 USING(Engine)
 IMPLEMENT_SINGLETON(CRenderer)
 
@@ -277,6 +278,13 @@ void CRenderer::Render_Blend()
 	}
 
 	m_pTargetBlend->SetUp_OnGraphicDevice();
+
+	CB_SHADER_INFORMATION tCB_ShaderInformation;
+	ZeroMemory(&tCB_ShaderInformation, sizeof(tCB_ShaderInformation));
+	tCB_ShaderInformation = CShaderMgr::Get_Instance()->Get_ShaderInfo();
+	m_pBlendShader->Get_UploadBuffer_ShaderInformation()->CopyData(0, tCB_ShaderInformation);
+
+
 	m_pBlendShader->Begin_Shader();
 	m_pBlendBuffer->Begin_Buffer();
 
@@ -1262,4 +1270,6 @@ void CRenderer::Free()
 			CloseHandle(m_hThreadHandle[i]);
 		}
 	}
+	//ShaderMgr
+	CShaderMgr::Get_Instance()->Destroy_Instance();
 }

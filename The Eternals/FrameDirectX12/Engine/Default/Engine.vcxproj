@@ -225,6 +225,7 @@ call CopyEngine.bat</Command>
     <ClInclude Include="..\Code\ShaderLighting.h" />
     <ClInclude Include="..\Code\ShaderLuminance.h" />
     <ClInclude Include="..\Code\ShaderMesh.h" />
+    <ClInclude Include="..\Code\ShaderMgr.h" />
     <ClInclude Include="..\Code\ShaderNPathDir.h" />
     <ClInclude Include="..\Code\ShaderShadow.h" />
     <ClInclude Include="..\Code\ShaderShadowInstancing.h" />
@@ -296,6 +297,7 @@ call CopyEngine.bat</Command>
     <ClCompile Include="..\Code\ShaderLighting.cpp" />
     <ClCompile Include="..\Code\ShaderLuminance.cpp" />
     <ClCompile Include="..\Code\ShaderMesh.cpp" />
+    <ClCompile Include="..\Code\ShaderMgr.cpp" />
     <ClCompile Include="..\Code\ShaderNPathDir.cpp" />
     <ClCompile Include="..\Code\ShaderShadow.cpp" />
     <ClCompile Include="..\Code\ShaderShadowInstancing.cpp" />
