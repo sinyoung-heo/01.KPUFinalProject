@@ -67,6 +67,9 @@
     <Filter Include="98.Manager\06.CollisionMgr">
       <UniqueIdentifier>{8c010466-d5a4-4c5d-bd6c-64c64187e44b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.TImer">
+      <UniqueIdentifier>{ca7782c9-497b-4fc6-b912-f0b6371f573b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainServer.cpp">
@@ -116,6 +119,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\Monster.cpp">
       <Filter>01.Object\01.Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Timer.cpp">
+      <Filter>97.TImer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -187,6 +193,9 @@
     </ClInclude>
     <ClInclude Include="..\Code\Monster.h">
       <Filter>01.Object\01.Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Timer.h">
+      <Filter>97.TImer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

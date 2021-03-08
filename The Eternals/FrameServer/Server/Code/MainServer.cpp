@@ -15,6 +15,10 @@ mutex g_id_lock;
 priority_queue<event_type> g_timer_queue;
 mutex g_timer_lock;
 
+/* GameLogic 관련 변수 */
+CTimer* g_pTimerFPS;
+CTimer* g_pTimerTimeDelta;
+
 /*==============================================================함수 선언부========================================================================*/
 void Ready_ServerManager();			// 서버 매니저 초기화
 void Ready_Server();				// 서버 메인 루프 초기화
@@ -31,6 +35,7 @@ void disconnect_client(int id);		// 유저 접속 정료 함수
 
 void time_worker();					// Timer Thread Enter Function
 void worker_thread();				// Worker Thread Enter Function
+void gameLogic_worker();			// Game Logic Thread Enter Function
 
 /*==============================================================MAIN CODE=========================================================================*/
 int main()
@@ -40,6 +45,8 @@ int main()
 
 	/* Time Thread 생성 */
 	thread time_thread{ time_worker };
+
+	thread gameLogic_thread{ gameLogic_worker };
 	
 	/* Worker Threads 생성 - 4개 */
 	vector<thread> vecWorker;
@@ -52,6 +59,9 @@ int main()
 
 	/* Time Thread 소멸 */
 	time_thread.join();
+
+	/* Game Logic Thread 소멸 */
+	gameLogic_thread.join();
 
 	Release_Server();
 	closesocket(g_hListenSock);
@@ -1190,5 +1200,68 @@ void worker_thread()
 #endif 
 			break;
 		}
+	}
+}
+
+void gameLogic_worker()
+{
+	// Create Timer
+	g_pTimerFPS			= CTimer::Create();
+	g_pTimerTimeDelta	= CTimer::Create();
+
+	float fFrame	= 1.f / 60.f;
+	float fTime		= 0.f;
+
+	while (true)
+	{
+		/* Timer Update */
+		if (nullptr != g_pTimerFPS)
+			g_pTimerFPS->Update_Timer();
+
+		/* Limit 60 FPS */
+		fTime += g_pTimerFPS->Get_TimeDelta();
+
+		if (fTime >= fFrame)
+		{
+			fTime = 0.f;
+
+			if (g_pTimerTimeDelta != nullptr)
+				g_pTimerTimeDelta->Update_Timer();
+
+			/* MONSTER */
+			auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"MONSTER")->begin();
+			auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"MONSTER")->end();
+
+			for (; iter_begin != iter_end;)
+			{
+				int iEvent = static_cast<CMonster*>(iter_begin->second)->Update_Monster(g_pTimerTimeDelta->Get_TimeDelta());
+
+				if (DEAD_OBJ == iEvent)
+				{
+					CObjPoolMgr::GetInstance()->return_Object(L"MONSTER", iter_begin->second);
+					CObjMgr::GetInstance()->Delete_GameObject(L"MONSTER", iter_begin->second);
+
+					iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"MONSTER")->begin();
+					iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"MONSTER")->end();
+				}
+				else 
+					++iter_begin;
+			}
+
+			/* COLLISION */
+		}
+	}
+
+	// Free Timer.
+	if (g_pTimerFPS)
+	{
+		delete g_pTimerFPS;
+		g_pTimerFPS = nullptr;
+	}
+
+	if (g_pTimerTimeDelta)
+	{
+		delete g_pTimerTimeDelta;
+		g_pTimerTimeDelta = nullptr;
 	}
 }

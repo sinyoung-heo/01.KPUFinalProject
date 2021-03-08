@@ -35,6 +35,7 @@
     <ClCompile Include="..\Code\Player.cpp" />
     <ClCompile Include="..\Code\Sector.cpp" />
     <ClCompile Include="..\Code\SectorMgr.cpp" />
+    <ClCompile Include="..\Code\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Code\Cell.h" />
@@ -52,6 +53,7 @@
     <ClInclude Include="..\Code\Player.h" />
     <ClInclude Include="..\Code\Sector.h" />
     <ClInclude Include="..\Code\SectorMgr.h" />
+    <ClInclude Include="..\Code\Timer.h" />
     <ClInclude Include="..\Header\dataType.h" />
     <ClInclude Include="..\Header\define.h" />
     <ClInclude Include="..\Header\enum.h" />
