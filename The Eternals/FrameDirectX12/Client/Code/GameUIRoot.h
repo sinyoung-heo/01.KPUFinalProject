@@ -2,6 +2,16 @@
 #include "Include.h"
 #include "GameObject.h"
 
+typedef struct tagMainMenuState
+{
+	FRAME	tFrame;
+	_vec3	vPos           = _vec3(0.0f);
+	_vec3	vScale         = _vec3(1.0f);
+	_vec3	vRectPosOffset = _vec3(0.0f);
+	_vec3	vRectScale     = _vec3(1.0f);
+
+} MAIN_MENU_STATE;
+
 class CGameUIRoot : public Engine::CGameObject
 {
 protected:
@@ -10,6 +20,7 @@ protected:
 
 public:
 	vector<Engine::CGameObject*>&	Get_ChildUIList() { return m_vecUIChild; };
+	RECT&							Get_Rect()		  { return m_tRect; }
 	void							Set_IsRender(const _bool& IsRender) { m_bIsRender = IsRender; }
 
 	// CGameObject을(를) 통해 상속됨

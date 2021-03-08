@@ -22,8 +22,8 @@ HRESULT CMouseCursorMgr::Ready_MouseCursorMgr()
 										 _vec3(32.0f, 32.0f, 1.0f),
 										 false,
 										 0.0f,
-										 _vec3(0.0f),
-										 _vec3(32.0f, 32.0f, 1.0f),
+										 _vec3(-12.0f, -12.0f, 0.0f),
+										 _vec3(16.0f, 16.0f, 1.0f),
 										 0);
 	Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_UI", L"MouseCursor", m_pMouseCursor);
 
@@ -61,6 +61,42 @@ void CMouseCursorMgr::Update_MouseCursorMgr(const _float& fTimeDelta)
 		}
 
 	}
+}
+
+_bool CMouseCursorMgr::Check_CursorInRect(RECT& rcSrc)
+{
+	POINT ptMouse = Get_CursorPoint();
+
+	if (Check_IntersectRect(rcSrc, static_cast<CGameUIRoot*>(m_pMouseCursor)->Get_Rect()))
+		return true;
+
+	return false;
+}
+
+_bool CMouseCursorMgr::Check_IntersectRect(RECT& rcSrc, RECT& rcDst)
+{
+	_bool bIsHorizon  = false;	//수평충돌
+	_bool bIsVertical = false;	//수직충돌
+
+	if (rcSrc.left  < rcDst.right &&	//수평충돌
+		rcSrc.right > rcDst.left)
+	{
+		bIsHorizon = true;
+	}
+	else
+		return false;
+
+	if (rcSrc.bottom > rcDst.top &&		// 수직 충돌
+		rcSrc.top < rcDst.bottom)
+	{
+		bIsVertical = true;
+	}
+
+
+	if (bIsHorizon && bIsVertical)
+		return true;
+
+	return false;
 }
 
 POINT CMouseCursorMgr::Get_CursorPoint()

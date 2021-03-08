@@ -645,16 +645,16 @@ HRESULT CStageHSY::Ready_LayerUI(wstring wstrLayerTag)
 
 			// UIRoot 持失.
 			Engine::CGameObject* pRootUI = nullptr;
-			pRootUI = CMainMenuLogout::Create(m_pGraphicDevice, m_pCommandList,
-											  wstrRootObjectTag,
-											  wstrDataFilePath,
-											  vPos,
-											  vScale,
-											  bIsSpriteAnimation,
-											  fFrameSpeed,
-											  vRectPosOffset,
-											  vRectScale,
-											  UIDepth);
+			pRootUI = CMainMenuSetting::Create(m_pGraphicDevice, m_pCommandList,
+											   wstrRootObjectTag,
+											   wstrDataFilePath,
+											   vPos,
+											   vScale,
+											   bIsSpriteAnimation,
+											   fFrameSpeed,
+											   vRectPosOffset,
+											   vRectScale,
+											   UIDepth);
 			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
 		}
 	}
@@ -701,16 +701,16 @@ HRESULT CStageHSY::Ready_LayerUI(wstring wstrLayerTag)
 
 			// UIRoot 持失.
 			Engine::CGameObject* pRootUI = nullptr;
-			pRootUI = CMainMenuLogout::Create(m_pGraphicDevice, m_pCommandList,
-											  wstrRootObjectTag,
-											  wstrDataFilePath,
-											  vPos,
-											  vScale,
-											  bIsSpriteAnimation,
-											  fFrameSpeed,
-											  vRectPosOffset,
-											  vRectScale,
-											  UIDepth);
+			pRootUI = CMainMenuInventory::Create(m_pGraphicDevice, m_pCommandList,
+												 wstrRootObjectTag,
+												 wstrDataFilePath,
+												 vPos,
+												 vScale,
+												 bIsSpriteAnimation,
+												 fFrameSpeed,
+												 vRectPosOffset,
+												 vRectScale,
+												 UIDepth);
 			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
 		}
 	}
@@ -757,16 +757,16 @@ HRESULT CStageHSY::Ready_LayerUI(wstring wstrLayerTag)
 
 			// UIRoot 持失.
 			Engine::CGameObject* pRootUI = nullptr;
-			pRootUI = CMainMenuLogout::Create(m_pGraphicDevice, m_pCommandList,
-											  wstrRootObjectTag,
-											  wstrDataFilePath,
-											  vPos,
-											  vScale,
-											  bIsSpriteAnimation,
-											  fFrameSpeed,
-											  vRectPosOffset,
-											  vRectScale,
-											  UIDepth);
+			pRootUI = CMainMenuEquipment::Create(m_pGraphicDevice, m_pCommandList,
+												 wstrRootObjectTag,
+												 wstrDataFilePath,
+												 vPos,
+												 vScale,
+												 bIsSpriteAnimation,
+												 fFrameSpeed,
+												 vRectPosOffset,
+												 vRectScale,
+												 UIDepth);
 			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
 		}
 	}

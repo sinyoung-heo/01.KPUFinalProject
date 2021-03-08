@@ -249,10 +249,10 @@ void CGameUIRoot::Update_SpriteFrame(const _float& fTimeDelta)
 
 void CGameUIRoot::Update_Rect()
 {
-	m_tRect.left   = LONG((m_pTransColor->m_vPos.x + m_vRectOffset.x) - m_pTransCom->m_vScale.x * 0.5f);
-	m_tRect.top    = LONG((m_pTransColor->m_vPos.y + m_vRectOffset.y) - m_pTransCom->m_vScale.y * 0.5f);
-	m_tRect.right  = LONG((m_pTransColor->m_vPos.x + m_vRectOffset.x) + m_pTransCom->m_vScale.x * 0.5f);
-	m_tRect.bottom = LONG((m_pTransColor->m_vPos.y + m_vRectOffset.y) + m_pTransCom->m_vScale.y * 0.5f);
+	m_tRect.left   = LONG((m_pTransColor->m_vPos.x + m_vRectOffset.x) - m_pTransColor->m_vScale.x * 0.5f);
+	m_tRect.top    = LONG((m_pTransColor->m_vPos.y + m_vRectOffset.y) - m_pTransColor->m_vScale.y * 0.5f);
+	m_tRect.right  = LONG((m_pTransColor->m_vPos.x + m_vRectOffset.x) + m_pTransColor->m_vScale.x * 0.5f);
+	m_tRect.bottom = LONG((m_pTransColor->m_vPos.y + m_vRectOffset.y) + m_pTransColor->m_vScale.y * 0.5f);
 }
 
 Engine::CGameObject* CGameUIRoot::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
@@ -287,6 +287,7 @@ void CGameUIRoot::Free()
 	Engine::CGameObject::Free();
 
 	m_vecUIChild.clear();
+	m_vecUIChild.shrink_to_fit();
 
 	Engine::Safe_Release(m_pBufferCom);
 	Engine::Safe_Release(m_pShaderCom);
