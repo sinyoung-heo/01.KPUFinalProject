@@ -80,6 +80,15 @@ bool CCollisionMgr::Is_DeadReckoning(_vec3& vPos, _vec3& vDir, _vec2* vResult)
 	else return false;
 }
 
+bool CCollisionMgr::Is_Arrive(const _vec3& _vStart, const _vec3& _vEnd)
+{
+	float dist = (_vEnd.x - _vStart.x) * (_vEnd.x - _vStart.x);
+	dist += (_vEnd.y - _vStart.y) * (_vEnd.y - _vStart.y);
+	dist += (_vEnd.z - _vStart.z) * (_vEnd.z - _vStart.z);
+
+	return dist <= 1.f;
+}
+
 void CCollisionMgr::Release()
 {
 }

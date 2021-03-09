@@ -14,6 +14,7 @@ private:
 	
 public:
 	bool Is_DeadReckoning(_vec3& vPos, _vec3& vDir, _vec2* vResult);
+	bool Is_Arrive(const _vec3& _vStart, const _vec3& _vEnd);
 
 public:
 	void Release();
