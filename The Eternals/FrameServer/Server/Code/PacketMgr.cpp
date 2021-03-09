@@ -1044,7 +1044,7 @@ void active_monster(int id)
 	if (nullptr == pMonster) return;
 
 	/* Monster가 활성화되어 있지 않을 경우 활성화 */
-	if (pMonster->m_status == ST_NONACTIVE)
+	if (pMonster->m_status != ST_ACTIVE)
 	{
 		STATUS prev_state = pMonster->m_status;
 		atomic_compare_exchange_strong(&pMonster->m_status, &prev_state, ST_ACTIVE);	
@@ -1057,8 +1057,11 @@ void nonActive_monster(int id)
 
 	if (nullptr == pMonster) return;
 
-	STATUS prev_state = pMonster->m_status;
-	atomic_compare_exchange_strong(&pMonster->m_status, &prev_state, ST_NONACTIVE);
+	if (pMonster->m_status != ST_NONACTIVE)
+	{
+		STATUS prev_state = pMonster->m_status;
+		atomic_compare_exchange_strong(&pMonster->m_status, &prev_state, ST_NONACTIVE);
+	}
 }
 
 /*===========================================FUNC====================================================*/

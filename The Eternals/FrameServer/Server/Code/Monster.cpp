@@ -46,7 +46,7 @@ void CMonster::Change_Animation(const float& fTimeDelta)
 	}
 	break;
 
-	case STATUS::ST_NONACTIVE:
+	case STATUS::ST_NONACTIVE:	
 		break;
 	case STATUS::ST_WAIT:
 		break;
@@ -303,32 +303,12 @@ void CMonster::Move_ChaseMonster(const float& fTimeDelta)
 
 		/* monster chase move */
 		m_vPos += m_vDir * fTimeDelta;
-		cout << "추적중: " << m_vDir.x << ", " << m_vDir.z << endl;
 	}
 	/* 타겟(공격 대상)이 존재하지 않을 경우 -> 랜덤 움직임 */
 	else
 	{
-		if (CCollisionMgr::GetInstance()->Is_Arrive(m_vPos, m_vTempPos))
-		{
-			switch (rand() % 8)
-			{
-			case 0: m_vDir = _vec3(0.f, 0.f, 1.f); break;
-			case 1: m_vDir = _vec3(0.f, 0.f, -1.f); break;
-			case 2: m_vDir = _vec3(1.f, 0.f, 0.f); break;
-			case 3: m_vDir = _vec3(1.f, 0.f, 1.f); break;
-			case 4: m_vDir = _vec3(1.f, 0.f, -1.f); break;
-			case 5: m_vDir = _vec3(-1.f, 0.f, 0.f); break;
-			case 6: m_vDir = _vec3(-1.f, 0.f, 1.f); break;
-			case 7: m_vDir = _vec3(-1.f, 0.f, -1.f); break;
-			}
-
-			/* 해당 NPC의 미래 위치 좌표 산출 -> 미래 위치좌표는 임시 변수에 저장 */
-			m_vTempPos += m_vDir * 3.f;
-		}
-
-		/* Monster Move */
-		m_vPos += m_vDir * fTimeDelta * 3.f;
-		cout << "랜덤" << endl;
+		nonActive_monster(m_sNum);
+		return;
 	}
 
 	/* NaviMesh를 벗어날 경우 움직임 X */
@@ -444,7 +424,6 @@ void CMonster::Move_ChaseMonster(const float& fTimeDelta)
 			else
 				pPlayer->v_lock.unlock();
 		}
-
 	}
 
 	// Monster 시야 내에 아무도 없다면 NON ACTIVE로 상태 변경

@@ -29,9 +29,5 @@ public:
 	int		targetNum	= -1;
 	int		m_AnimIdx	= 0;
 	STATUS	pre_state	= STATUS::ST_END;
-
-private:
-	unordered_set<int> view_list;
-	mutex v_lock;
 };
 

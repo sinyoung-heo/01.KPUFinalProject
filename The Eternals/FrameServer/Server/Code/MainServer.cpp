@@ -19,6 +19,8 @@ mutex g_timer_lock;
 CTimer* g_pTimerFPS;
 CTimer* g_pTimerTimeDelta;
 
+bool g_bIsGameEnd = false;
+
 /*==============================================================함수 선언부========================================================================*/
 void Ready_ServerManager();			// 서버 매니저 초기화
 void Ready_Server();				// 서버 메인 루프 초기화
@@ -1071,6 +1073,7 @@ void disconnect_client(int id)
 
 	if (CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER")->size() <= 0)
 	{
+		g_bIsGameEnd = true;
 		Delete_NPC();
 		Delete_Monster();
 		Release_Server();
@@ -1180,20 +1183,6 @@ void worker_thread()
 		}
 		break;
 
-		case OPMODE::OP_RANDOM_MOVE_MONSTER:
-		{
-			//random_move_monster(key);
-			delete over_ex;
-		}
-		break;
-
-		case OPMODE::OP_CHASE_MOVE_MONSTER:
-		{
-			//chase_move_monster(key);
-			delete over_ex;
-		}
-		break;
-	
 		default:
 #ifdef TEST
 			cout << "[ERROR] Unknown Type MODE in Worker Thread!" << endl;
@@ -1229,6 +1218,8 @@ void gameLogic_worker()
 				g_pTimerTimeDelta->Update_Timer();
 
 			/* MONSTER */
+			if (g_bIsGameEnd) return;
+
 			auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"MONSTER")->begin();
 			auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"MONSTER")->end();
 
