@@ -24,13 +24,9 @@ void active_npc(int id);														// 해당 NPC의 STATUS = ST_ACTIVE
 void random_move_npc(int id);													// NPC 랜덤 움직임
 
 /* ==========================MONSTER========================== */
-void send_Monster_enter_packet(int to_client, int new_id);						// Monster 등장 패킷
-void send_Monster_move_packet(int to_client, int id);							// Monster 움직임 패킷
-
 void active_monster(int id);													// 해당 Monster의 STATUS = ST_ACTIVE
 void nonActive_monster(int id);													// 해당 Monster의 STATUS = ST_NONACTIVE
-void random_move_monster(int id);												// Normal Monster 랜덤 움직임
-void chase_move_monster(int id);												// Chase Monster 움직임
+
 
 /* =========================FUNC========================== */
 void add_timer(int obj_id, OPMODE ev_type, system_clock::time_point t);

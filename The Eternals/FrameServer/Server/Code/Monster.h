@@ -16,6 +16,10 @@ private:
 	void Move_ChaseMonster(const float& fTimeDelta);
 
 public:
+	/* SEND PACKET */
+	void send_Monster_enter_packet(int to_client);
+	void send_Monster_move_packet(int to_client);							
+
 	virtual DWORD Release();
 
 public:

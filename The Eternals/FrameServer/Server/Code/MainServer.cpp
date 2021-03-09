@@ -1182,14 +1182,14 @@ void worker_thread()
 
 		case OPMODE::OP_RANDOM_MOVE_MONSTER:
 		{
-			random_move_monster(key);
+			//random_move_monster(key);
 			delete over_ex;
 		}
 		break;
 
 		case OPMODE::OP_CHASE_MOVE_MONSTER:
 		{
-			chase_move_monster(key);
+			//chase_move_monster(key);
 			delete over_ex;
 		}
 		break;

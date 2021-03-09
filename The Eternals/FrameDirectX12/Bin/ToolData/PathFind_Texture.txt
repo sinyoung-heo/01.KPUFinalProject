@@ -18,8 +18,6 @@ S1UI_CharacterWindow|3|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_Characte
 S1UI_Chat|6|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_Chat\%d.dds
 S1UI_ComboCounter|1|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_ComboCounter\%d.dds
 S1UI_Crosshair|2|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_Crosshair\%d.dds
-S1UI_Cursor|1|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_Cursor\%d.dds
 S1UI_GageBoss|2|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_GageBoss\%d.dds
 S1UI_MainMenu|1|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_MainMenu\%d.dds
-S1UI_ServerWaiting|3|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_ServerWaiting\%d.dds
 S1UI_WareHouse|1|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_WareHouse\%d.dds
