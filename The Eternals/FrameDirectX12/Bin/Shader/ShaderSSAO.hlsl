@@ -50,7 +50,7 @@ float4 Get_SSAO(float2 Uv, float Depth, float ViewZ, half3 Normal)
     half2 vRandomUV;
     float fOccNorm;
     int iColor = 0;
-    float g_fRadius = 0.001f;
+    float g_fRadius = 0.003f;
 
 
     for (int i = 0; i < 16; i++)
@@ -59,14 +59,21 @@ float4 Get_SSAO(float2 Uv, float Depth, float ViewZ, half3 Normal)
         vReflect = normalize(reflect(vRay, Normal)) * g_fRadius;
         vReflect.x *= -1.f;
         vRandomUV = Uv + vReflect.xy;
-        fOccNorm = g_TexDepth.Sample(g_samLinearWrap, vRandomUV).r * ViewZ;
-        
-        
+        fOccNorm = g_TexDepth.Sample(g_samLinearWrap, vRandomUV).r * ViewZ;      
         if (fOccNorm <= Depth + 0.0003)
             ++iColor;
-
     }
-    Out = abs((iColor / 16.f) - 1.f);
+    for (i = 0; i < 16; i++)
+    {
+        vRay = reflect(randomNormal(Uv), -vSamples[i]);
+        vReflect = normalize(reflect(vRay, Normal)) * g_fRadius;
+        vReflect.x *= -1.f;
+        vRandomUV = Uv + vReflect.xy;
+        fOccNorm = g_TexDepth.Sample(g_samLinearWrap, vRandomUV).r * ViewZ;
+        if (fOccNorm <= Depth + 0.0003)
+            ++iColor;
+    }
+    Out = abs((iColor / 32.f) - 1.f);
     return Out;
 }
  
