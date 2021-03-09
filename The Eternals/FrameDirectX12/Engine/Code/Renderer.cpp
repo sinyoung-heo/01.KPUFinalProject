@@ -171,8 +171,8 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	Render_Light();						// Shade, Specular
 	Render_Edge();
 	Render_NPathDir();
-	Render_DownSampling();
 	Render_SSAO();
+	Render_DownSampling();
 	Render_Blur();
 	
 	Render_Distortion(fTimeDelta);
@@ -453,7 +453,7 @@ void CRenderer::Render_Blur()
 		vecBlurTarget.emplace_back(vecDownSampleTarget[0]);	// RenderTarget - DS Emissive
 		vecBlurTarget.emplace_back(vecDownSampleTarget[1]);	// RenderTarget - DS CrossFilter
 		vecBlurTarget.emplace_back(vecDeferredTarget[3]);	// RenderTarget - Depth
-		vecBlurTarget.emplace_back(vecSSAOTarget[0]);	// RenderTarget - SSAO
+		vecBlurTarget.emplace_back(vecDownSampleTarget[2]);	// RenderTarget - SSAO
 		vecBlurTarget.emplace_back(vecDownSampleTarget[3]);	// RenderTarget - DS Edge
 		vecBlurTarget.emplace_back(vecEdgeTarget[0]);	// RenderTarget -  Edge
 		m_pBlurShader->SetUp_ShaderTexture(vecBlurTarget);
