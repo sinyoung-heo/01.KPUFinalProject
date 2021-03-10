@@ -14,7 +14,8 @@ private:
 	void Change_Animation(const float& fTimeDelta);
 	void Move_NormalMonster(const float& fTimeDelta);
 	void Move_ChaseMonster(const float& fTimeDelta);
-
+	
+	void ComeBack_Monster(const float& fTimeDelta);
 public:
 	/* SEND PACKET */
 	void send_Monster_enter_packet(int to_client);
@@ -29,5 +30,6 @@ public:
 	int		targetNum	= -1;
 	int		m_AnimIdx	= 0;
 	STATUS	pre_state	= STATUS::ST_END;
+	_vec3   m_vOriPos	= _vec3(0.f);
 };
 

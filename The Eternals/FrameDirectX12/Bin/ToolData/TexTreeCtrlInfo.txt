@@ -21,5 +21,4 @@ Texture|UI|S1UI_Crosshair
 Texture|UI|S1UI_Cursor
 Texture|UI|S1UI_GageBoss
 Texture|UI|S1UI_MainMenu
-Texture|UI|S1UI_ServerWaiting
 Texture|UI|S1UI_WareHouse
