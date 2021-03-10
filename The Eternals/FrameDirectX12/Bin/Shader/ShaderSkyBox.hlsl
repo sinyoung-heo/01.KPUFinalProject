@@ -69,5 +69,6 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 	
 	ps_output.Diffuse = g_CubeTex.Sample(g_samLinearWrap, ps_input.vTexUV);
 
+    ps_output.Diffuse.a = 1.f;
 	return ps_output;
 }

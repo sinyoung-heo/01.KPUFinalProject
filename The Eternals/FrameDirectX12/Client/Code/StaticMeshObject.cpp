@@ -99,7 +99,7 @@ _int CStaticMeshObject::Update_GameObject(const _float & fTimeDelta)
 		if (m_iRandomnumber == 1)
 		{
 			Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_CROSSFILTER, this), -1);
-			Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_EDGE, this), -1);
+			//Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_EDGE, this), -1);
 		}
 	}
 

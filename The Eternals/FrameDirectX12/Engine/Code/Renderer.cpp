@@ -273,6 +273,7 @@ void CRenderer::Render_Blend()
 		vecBlendTarget.emplace_back(vecAverageColorTarget[0]);		// RenderTarget - AVerage
 		vecBlendTarget.emplace_back(m_pTargetBlend->Get_TargetTexture()[0]);
 		vecBlendTarget.emplace_back(vecDeferredTarget[3]);	// RenderTarget - Depth
+		vecBlendTarget.emplace_back(vecBlurTarget[3]);	// RenderTarget - EdgeBlur
 		m_pBlendShader->SetUp_ShaderTexture(vecBlendTarget);
 		m_pHDRShader->SetUp_ShaderTexture(vecBlendTarget);
 	}
@@ -767,11 +768,13 @@ HRESULT CRenderer::Ready_RenderTarget()
 	/*__________________________________________________________________________________________________________
 	[ Blur RenderTarget ]
 	____________________________________________________________________________________________________________*/
-	m_pTargetBlur = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 3);
+	m_pTargetBlur = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 4);
 	NULL_CHECK_RETURN(m_pTargetBlur, E_FAIL);
 	m_pTargetBlur->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R16G16B16A16_UNORM);
 	m_pTargetBlur->Set_TargetClearColor(1, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
 	m_pTargetBlur->Set_TargetClearColor(2, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	m_pTargetBlur->Set_TargetClearColor(3, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+
 	FAILED_CHECK_RETURN(m_pTargetBlur->SetUp_DefaultSetting(), E_FAIL);
 	m_pTargetBlur->Set_TargetRenderPos(_vec3(WIDTH_FIFTH, HEIGHT_FIRST, 1.0f));
 

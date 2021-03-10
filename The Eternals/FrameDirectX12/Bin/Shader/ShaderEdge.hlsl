@@ -67,7 +67,7 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
         }
     }  
     if (Cnt >= 1 && Cnt != 9)
-        output.EDGE = float4(0.6, 1, 0.4, 1);
+        output.EDGE = float4(0.3f, 0.6f, 1.f, 1);
 
     
     return (output);
