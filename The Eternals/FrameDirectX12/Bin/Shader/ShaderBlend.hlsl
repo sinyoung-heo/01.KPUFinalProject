@@ -21,6 +21,7 @@ Texture2D g_TexDistortion : register(t6); // Distortion
 Texture2D g_TexAverageColor : register(t7); // AveColor
 Texture2D g_TexBlend : register(t8); // Blend
 Texture2D g_TexDepth : register(t9); //Depth
+Texture2D g_TexEdgeBlur : register(t10); //Edge-Blur
 
 cbuffer IS_Rendering : register(b0)
 {
@@ -121,6 +122,7 @@ float4 PS_FINAL(VS_OUT ps_input) : SV_TARGET
     float4 AverageColor = g_TexAverageColor.Sample(g_samLinearWrap, float2(0.5f, 0.5f));
     float4 BlendTarget = g_TexBlend.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 Blur = g_TexBlur.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 EdgeBlur = g_TexEdgeBlur.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 Emissive = g_TexEmissive.Sample(g_samLinearWrap, ps_input.TexUV);
     float3 Color;
     float4 Output = float4(0, 0, 0, 0), Output2 = float4(0, 0, 0, 0);
@@ -148,6 +150,7 @@ float4 PS_FINAL(VS_OUT ps_input) : SV_TARGET
     else
         Color = BlendTarget.xyz + mul(Blur.xyz, 2.f) + Emissive.xyz;
 
+    Color += EdgeBlur;
     return float4(Color, BlendTarget.a);
     
     

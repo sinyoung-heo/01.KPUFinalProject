@@ -234,10 +234,11 @@ HRESULT CShaderBlur::Create_PipelineState()
 	PipelineStateDesc.pRootSignature		= m_pRootSignature;
 	PipelineStateDesc.SampleMask			= UINT_MAX;
 	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	PipelineStateDesc.NumRenderTargets		= 3;
+	PipelineStateDesc.NumRenderTargets		= 4;
 	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R16G16B16A16_UNORM;
 	PipelineStateDesc.RTVFormats[1]			= DXGI_FORMAT_R8G8B8A8_UNORM;
 	PipelineStateDesc.RTVFormats[2]			= DXGI_FORMAT_R8G8B8A8_UNORM;
+	PipelineStateDesc.RTVFormats[3] = DXGI_FORMAT_R8G8B8A8_UNORM;
 	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
 	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
 	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;

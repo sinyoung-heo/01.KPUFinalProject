@@ -59,7 +59,8 @@ struct PS_OUT
 {
     float4 EMISSIVE_BLUR        : SV_TARGET0; // 0번 RenderTarget
     float4 CROSSFILTER_BLUR     : SV_TARGET1; // 1번 RenderTarget
-    float4 SSAO_BLUR : SV_TARGET2; // 2번 RenderTarget
+    float4 SSAO_BLUR : SV_TARGET2; // 2번 
+    float4 EDGE_BLUR : SV_TARGET3; // 3번 RenderTarget
 };
 PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 {
@@ -93,13 +94,13 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
         SSAO_Output2 += g_TexSSAO.Sample(g_samAnisotropicClamp, vGausTexUV) * (g_fWeight[i]);
      
     }
-    float ouputEdge = (Edge_Output + Edge_Output2)*0.5f;
     output.EMISSIVE_BLUR = (Emis_Output + Emis_Output2) *0.5f;
     output.CROSSFILTER_BLUR = (NPath_Output + NPath_Output2) * 0.5f;
   
     output.SSAO_BLUR = (SSAO_Output + SSAO_Output2);
     
     output.EMISSIVE_BLUR += output.CROSSFILTER_BLUR;//최종때 이미시브에 더할것들은 합산해주어 블렌드에서 따로 안받도록
-    output.EMISSIVE_BLUR += (ouputEdge + Edge*2.f)*0.5f;
+   
+    output.EDGE_BLUR += (Edge_Output + Edge_Output2) * 0.5f;
     return (output);
 }
