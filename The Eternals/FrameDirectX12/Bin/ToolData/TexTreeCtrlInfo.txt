@@ -12,6 +12,8 @@ Texture|EffectMultiTexture|Smoke0
 Texture|EffectMultiTexture|Smoke1
 Texture|EffectSpriteTexture|Fire
 Texture|EffectSpriteTexture|Torch
+Texture|Environment|BumpTerrainRoad01
+Texture|Environment|BumpTerrainRoad02
 Texture|Environment|SkyBox
 Texture|Environment|Terrain
 Texture|UI|S1UI_CharacterWindow

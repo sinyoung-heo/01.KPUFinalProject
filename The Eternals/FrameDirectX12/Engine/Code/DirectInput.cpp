@@ -8,7 +8,6 @@ CDirectInput::CDirectInput()
 }
 
 
-
 HRESULT CDirectInput::Ready_InputDevice(HINSTANCE hInst, HWND hWnd, const _int& iInputType)
 {
 	FAILED_CHECK_RETURN(DirectInput8Create(hInst,

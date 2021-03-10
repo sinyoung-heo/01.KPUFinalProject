@@ -7,6 +7,7 @@ class CShaderColor;
 class CShaderColorInstancing;
 class CShaderTexture;
 class CShaderTextureInstancing;
+class CShaderBumpTerrain;
 class CShaderSkyBox;
 class CShaderMesh;
 class CShaderMeshInstancing;
@@ -60,6 +61,7 @@ protected:
 	CShaderColorInstancing*		m_pShaderColorInstancing   = nullptr;
 	CShaderTexture*				m_pShaderTexture	       = nullptr;
 	CShaderTextureInstancing*	m_pShaderTextureInstancing = nullptr;
+	CShaderBumpTerrain*			m_pShaderBumpTerrain       = nullptr;
 	CShaderSkyBox*				m_pShaderSkyBox		       = nullptr;
 	CShaderMesh*				m_pShaderMesh		       = nullptr;
 	CShaderMeshInstancing*		m_pShaderMeshInstancing    = nullptr;

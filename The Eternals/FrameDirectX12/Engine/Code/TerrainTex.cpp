@@ -1,5 +1,6 @@
 #include "TerrainTex.h"
 #include "GraphicDevice.h"
+#include "ShaderBumpTerrain.h"
 
 USING(Engine)
 
@@ -128,6 +129,33 @@ void CTerrainTex::Begin_Buffer()
 void CTerrainTex::Render_Buffer()
 {
 	CVIBuffer::Render_Buffer();
+}
+
+void CTerrainTex::Render_BumpTerrain(ID3D12GraphicsCommandList* pCommandList,
+									 const _int& iContextIdx, 
+									 CShader* pShader)
+{
+	static_cast<CShaderBumpTerrain*>(pShader)->Begin_Shader(pCommandList, iContextIdx);
+	Begin_Buffer(pCommandList);
+	Render_Buffer(pCommandList);
+}
+
+void CTerrainTex::Begin_Buffer(ID3D12GraphicsCommandList* pCommandList)
+{
+	pCommandList->IASetVertexBuffers(0, 						// 시작 슬롯. (입력 슬롯은 총 16개)
+									 1, 						// 입력 슬롯들에 묶을 정점 버퍼 개수.
+									 &Get_VertexBufferView());	// 정점 버퍼 뷰의 첫 원소를 가리키는 포인터.
+	pCommandList->IASetIndexBuffer(&Get_IndexBufferView());
+	pCommandList->IASetPrimitiveTopology(m_PrimitiveTopology);
+}
+
+void CTerrainTex::Render_Buffer(ID3D12GraphicsCommandList* pCommandList)
+{
+	pCommandList->DrawIndexedInstanced(m_tSubMeshGeometry.uiIndexCount,	// 그리기에 사용할 인덱스들의 개수. (인스턴스 당)
+									   1,								// 그릴 인스턴스 개수.
+									   0,								// 인덱스 버퍼의 첫 index
+									   0, 								// 그리기 호출에 쓰이는 인덱스들에 더할 정수 값.
+									   0);								// 인스턴싱
 }
 
 CComponent * CTerrainTex::Clone()

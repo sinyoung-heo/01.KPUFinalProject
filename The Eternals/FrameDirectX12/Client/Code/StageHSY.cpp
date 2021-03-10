@@ -26,6 +26,7 @@
 #include "MainMenuInventory.h"
 #include "MainMenuLogout.h"
 #include "MainMenuSetting.h"
+#include "BumpTerrain.h"
 
 CStageHSY::CStageHSY(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -214,6 +215,13 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 	Engine::CGameObject* pGameObj = nullptr;
 
 	/*__________________________________________________________________________________________________________
+	[ BumpTerrain ]
+	____________________________________________________________________________________________________________*/
+	pGameObj = CBumpTerrain::Create(m_pGraphicDevice, m_pCommandList, L"BumpTerrainRoad01");
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpTerrainRoad", pGameObj), E_FAIL);
+
+
+	/*__________________________________________________________________________________________________________
 	[ TestCollisionObject ]
 	____________________________________________________________________________________________________________*/
 	//uniform_int_distribution<_int>	uid_x	{ 0, 256 };
@@ -293,13 +301,13 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ Popori_F ]
 	____________________________________________________________________________________________________________*/
-	//pGameObj =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
-	//							  L"PoporiR19",					// MeshTag
-	//							  L"TestNaviMesh",				// NaviMeshTag
-	//							  _vec3(0.05f, 0.05f, 0.05f),	// Scale
-	//							  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-	//							  _vec3(25.0f, 0.f, 20.0f));	// Pos
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PoporiR19", pGameObj), E_FAIL);
+	pGameObj =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
+								  L"PoporiR19",					// MeshTag
+								  L"TestNaviMesh",				// NaviMeshTag
+								  _vec3(0.1f, 0.1f, 0.1f),		// Scale
+								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+								  _vec3(0.0f, 0.0f, 0.0f));		// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PoporiR19", pGameObj), E_FAIL);
 
 
 	/*__________________________________________________________________________________________________________
@@ -791,7 +799,7 @@ HRESULT CStageHSY::Ready_LayerFont(wstring wstrLayerTag)
 
 HRESULT CStageHSY::Ready_LightInfo()
 {
-	wifstream fin{ L"../../Bin/ToolData/TestLightInfo_DirectionAndShadow.lightinginfo" };
+	wifstream fin{ L"../../Bin/ToolData/StageVelika_DirectionAndShadow.lightinginfo" };
 	if (fin.fail())
 		return E_FAIL;
 

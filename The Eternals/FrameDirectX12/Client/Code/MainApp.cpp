@@ -232,6 +232,11 @@ HRESULT CMainApp::SetUp_ComponentPrototype()
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"TerrainTex", Engine::ID_STATIC, pComponent), E_FAIL);
 
+	// BumpTerainTex
+	pComponent = Engine::CBumpTerrainTex::Create(m_pGraphicDevice, m_pCommandList, 256, 256, 1.f, 40.0f);
+	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"BumpTerrainTex", Engine::ID_STATIC, pComponent), E_FAIL);
+
 	// ScreenTex
 	pComponent = Engine::CScreenTex::Create(m_pGraphicDevice, m_pCommandList);
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);

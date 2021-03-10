@@ -181,6 +181,9 @@
     <Filter Include="97.Mgr\04.MouseCursorMgr">
       <UniqueIdentifier>{9f593d0a-4f7e-4583-a859-a2cb29f4762e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\01.Environment\02.BumpTerrain">
+      <UniqueIdentifier>{a6494234-2280-4745-bd6b-c0f1178097d8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -292,12 +295,6 @@
     <ClInclude Include="..\Header\enum.h">
       <Filter>98.Header</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\TestPlayer.h">
-      <Filter>02.GameObject\99.SampleObject\09.TestPlayer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\TestOthers.h">
-      <Filter>02.GameObject\99.SampleObject\10.TestOthers</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\ServerMath.h">
       <Filter>97.Mgr\03.ServerMath</Filter>
     </ClInclude>
@@ -331,12 +328,6 @@
     <ClInclude Include="..\Code\ServerMath.h">
       <Filter>97.Mgr\03.ServerMath</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\TestOthers.h">
-      <Filter>99.Etc\SampleObject\10.TestOthers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\TestPlayer.h">
-      <Filter>99.Etc\SampleObject\09.TestPlayer</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\GameUIChild.h">
       <Filter>02.GameObject\98.GameUIChild</Filter>
     </ClInclude>
@@ -366,6 +357,17 @@
     </ClInclude>
     <ClInclude Include="..\Code\MouseCursorMgr.h">
       <Filter>97.Mgr\04.MouseCursorMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\TestOthers.h" />
+    <ClInclude Include="..\Code\TestPlayer.h" />
+    <ClInclude Include="..\Code\BumpTerrain.h">
+      <Filter>02.GameObject\01.Environment\02.BumpTerrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\TestOthers.h">
+      <Filter>99.Etc\SampleObject\10.TestOthers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\TestPlayer.h">
+      <Filter>99.Etc\SampleObject\09.TestPlayer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -448,12 +450,6 @@
     <ClCompile Include="..\Code\PacketMgr.cpp">
       <Filter>97.Mgr\00.PacketMgr</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\TestPlayer.cpp">
-      <Filter>02.GameObject\99.SampleObject\09.TestPlayer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\TestOthers.cpp">
-      <Filter>02.GameObject\99.SampleObject\10.TestOthers</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\ServerMath.cpp">
       <Filter>97.Mgr\03.ServerMath</Filter>
     </ClCompile>
@@ -487,12 +483,6 @@
     <ClCompile Include="..\Code\ServerMath.cpp">
       <Filter>97.Mgr\03.ServerMath</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\TestOthers.cpp">
-      <Filter>99.Etc\SampleObject\10.TestOthers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\TestPlayer.cpp">
-      <Filter>99.Etc\SampleObject\09.TestPlayer</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\GameUIChild.cpp">
       <Filter>02.GameObject\98.GameUIChild</Filter>
     </ClCompile>
@@ -519,6 +509,17 @@
     </ClCompile>
     <ClCompile Include="..\Code\MouseCursorMgr.cpp">
       <Filter>97.Mgr\04.MouseCursorMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TestOthers.cpp" />
+    <ClCompile Include="..\Code\TestPlayer.cpp" />
+    <ClCompile Include="..\Code\BumpTerrain.cpp">
+      <Filter>02.GameObject\01.Environment\02.BumpTerrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TestOthers.cpp">
+      <Filter>99.Etc\SampleObject\10.TestOthers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TestPlayer.cpp">
+      <Filter>99.Etc\SampleObject\09.TestPlayer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

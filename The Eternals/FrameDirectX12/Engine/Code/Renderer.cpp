@@ -538,6 +538,12 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderTexture", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
+	// ShaderBumpTerrain
+	pShader = CShaderBumpTerrain::Create(m_pGraphicDevice, m_pCommandList);
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderBumpTerrain", ID_STATIC, pShader), E_FAIL);
+	++m_uiCnt_ShaderFile;
+
 	// ShaderSkyBox
 	pShader = CShaderSkyBox::Create(m_pGraphicDevice, m_pCommandList);
 	NULL_CHECK_RETURN(pShader, E_FAIL);

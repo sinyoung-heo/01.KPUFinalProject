@@ -387,6 +387,12 @@
     <ClInclude Include="..\Code\ShaderNPathDir.h">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\11.ShaderNPathDir</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ShaderBumpTerrain.h">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\01.ShaderTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\BumpTerrainTex.h">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\00.Buffer\04.TerrainTex</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\DirectInput.cpp">
@@ -569,6 +575,12 @@
     <ClCompile Include="..\Code\ShaderNPathDir.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\11.ShaderNPathDir</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\ShaderBumpTerrain.cpp">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\01.ShaderTexture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\BumpTerrainTex.cpp">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\00.Buffer\04.TerrainTex</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Bin\Shader\ShaderMesh.hlsl">
@@ -618,6 +630,9 @@
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderNPathDir.hlsl">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\11.ShaderNPathDir</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Bin\Shader\ShaderBumpTerrain.hlsl">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\01.ShaderTexture</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -13,10 +13,10 @@ private:
 	virtual ~CBumpTerrainTex() = default;
 
 public:
-	const _uint&	Get_VtxCntX()		{ return m_iNumVerticesX; }
-	const _uint&	Get_VtxCntZ()		{ return m_iNumVerticesZ; }
-	vector<VTXMESH>& Get_VertexBuffer()	{ return vecVertices; }
-	vector<_uint>&	Get_IndexBuffer()	{ return vecIndices; }
+	const _uint&			Get_VtxCntX()		{ return m_iNumVerticesX; }
+	const _uint&			Get_VtxCntZ()		{ return m_iNumVerticesZ; }
+	vector<VTXTEX_NORMAL>&	Get_VertexBuffer()	{ return vecVertices; }
+	vector<_uint>&			Get_IndexBuffer()	{ return vecIndices; }
 
 public:
 	HRESULT	Ready_Buffer(const _uint& iNumVerticesX,
@@ -26,11 +26,11 @@ public:
 	void	Begin_Buffer();
 	void	Render_Buffer();
 
-	void	Render_Terrain(ID3D12GraphicsCommandList* pCommandList, 
-						   const _int& iContextIdx,
-						   ID3D12DescriptorHeap* pTexDescriptorHeap,
-						   ID3D12DescriptorHeap* pTexShadowDepthHeap,
-						   CShader* pShader);
+	// BumpTerrain
+	void	Render_BumpTerrain(ID3D12GraphicsCommandList* pCommandList, 
+							   const _int& iContextIdx,
+							   CShader* pShader);
+private:
 	void	Begin_Buffer(ID3D12GraphicsCommandList* pCommandList);
 	void	Render_Buffer(ID3D12GraphicsCommandList* pCommandList);
 
@@ -39,8 +39,8 @@ private:
 	_uint   m_iNumVerticesZ = 0;
 	_float  m_fInterval		= 0.0f;
 
-	vector<VTXMESH>	vecVertices;
-	vector<_uint>	vecIndices;
+	vector<VTXTEX_NORMAL>	vecVertices;
+	vector<_uint>			vecIndices;
 
 public:
 	virtual CComponent*			Clone();

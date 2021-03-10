@@ -50,7 +50,12 @@ void CMouseCursorMgr::Update_MouseCursorMgr(const _float& fTimeDelta)
 		}
 		else
 		{
-			SetCursorPos(WINCX / 2, WINCY / 2);
+			//if (DIERR_INPUTLOST   != Engine::CDirectInput::Get_Instance()->Get_DeviceMouseState() &&
+			//	DIERR_NOTACQUIRED != Engine::CDirectInput::Get_Instance()->Get_DeviceMouseState() &&
+			//	!g_bIsOnDebugCaemra)
+			//{
+			//	SetCursorPos(WINCX / 2, WINCY / 2);
+			//}
 
 			if (!m_bIsResetMouse)
 			{
