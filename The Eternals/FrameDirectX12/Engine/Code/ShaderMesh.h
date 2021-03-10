@@ -23,7 +23,7 @@ public:
 	virtual void	Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap = nullptr, 
 								 const _uint& iSubMeshIdx = 0);
 
-	// multiThread Rendering
+	// MultiThread Rendering
 	virtual void	Begin_Shader(ID3D12GraphicsCommandList* pCommandList,
 								 const _int& iContextIdx,
 								 ID3D12DescriptorHeap* pTexDescriptorHeap = nullptr,

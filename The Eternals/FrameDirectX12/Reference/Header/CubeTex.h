@@ -3,6 +3,8 @@
 
 BEGIN(Engine)
 
+class CShader;
+
 class ENGINE_DLL CCubeTex final : public CVIBuffer
 {
 private:
@@ -14,6 +16,13 @@ public:
 	HRESULT	Ready_Buffer();
 	void	Begin_Buffer();
 	void	Render_Buffer();
+
+	// MultiThread Rendering
+	void Render_Buffer(ID3D12GraphicsCommandList * pCommandList, 
+					   const _int & iContextIdx, 
+					   CShader * pShader,
+					   ID3D12DescriptorHeap * pTexDescriptorHeap,
+					   const _uint& iTexIdx);
 
 public:
 	virtual CComponent* Clone();

@@ -69,8 +69,41 @@ void CShaderSkyBox::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap,
 	}
 	
 	m_pCommandList->SetGraphicsRootConstantBufferView(2,	// RootParameter Index
-													  m_pCB_ShaderSkyBox->Resource()->GetGPUVirtualAddress() + 
-													  m_pCB_ShaderSkyBox->GetElementByteSize() * iSubsetIdx);
+													  m_pCB_ShaderSkyBox->Resource()->GetGPUVirtualAddress());
+}
+
+void CShaderSkyBox::Begin_Shader(ID3D12GraphicsCommandList* pCommandList,
+								 const _int& iContextIdx,
+								 ID3D12DescriptorHeap* pTexDescriptorHeap, 
+								 const _uint& iTexIndex)
+{
+	// Set PipelineState.
+	CRenderer::Get_Instance()->Set_CurPipelineState(pCommandList, m_pPipelineState, iContextIdx);
+
+	// Set RootSignature.
+	pCommandList->SetGraphicsRootSignature(m_pRootSignature);
+
+	/*__________________________________________________________________________________________________________
+	[ SRV를 루트 서술자에 묶는다 ]
+	____________________________________________________________________________________________________________*/
+	ID3D12DescriptorHeap* pDescriptorHeaps[] = { pTexDescriptorHeap };
+	pCommandList->SetDescriptorHeaps(_countof(pDescriptorHeaps), pDescriptorHeaps);
+
+
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_DescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	SRV_DescriptorHandle.Offset(iTexIndex, m_uiCBV_SRV_UAV_DescriptorSize);
+
+	pCommandList->SetGraphicsRootDescriptorTable(0,		// RootParameter Index
+												   SRV_DescriptorHandle);
+
+	/*__________________________________________________________________________________________________________
+	[ CBV를 루트 서술자에 묶는다 ]
+	____________________________________________________________________________________________________________*/
+	pCommandList->SetGraphicsRootConstantBufferView(1,	// RootParameter Index
+													m_pCB_CameraProjMatrix->Resource()->GetGPUVirtualAddress());
+	
+	pCommandList->SetGraphicsRootConstantBufferView(2,	// RootParameter Index
+													m_pCB_ShaderSkyBox->Resource()->GetGPUVirtualAddress());
 }
 
 HRESULT CShaderSkyBox::Create_RootSignature()
@@ -153,6 +186,39 @@ HRESULT CShaderSkyBox::Create_PipelineState()
 	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	PipelineStateDesc.NumRenderTargets		= 1;
 	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R8G8B8A8_UNORM;
+	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;
+	vecInputLayout							= Create_InputLayout();
+	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState			= Create_BlendState();
+	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
+	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState(false);	// SkyBox의 Depth는 false.
+
+	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)),  E_FAIL);
+	m_vecPipelineState.emplace_back(pPipelineState);
+	CRenderer::Get_Instance()->Add_PipelineStateCnt();
+
+	/*__________________________________________________________________________________________________________
+	[ 0번 PipelineState Pass ]
+	- "VS_MAIN"
+	- "PS_MAIN"
+	- FILL_MODE_SOLID
+	- CULL_MODE_BACK
+	- Blend		(X)
+	- Z Write	(X)
+	____________________________________________________________________________________________________________*/
+	PipelineStateDesc.pRootSignature		= m_pRootSignature;
+	PipelineStateDesc.SampleMask			= UINT_MAX;
+	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	PipelineStateDesc.NumRenderTargets		= 5;								// PS에서 사용할 RenderTarget 개수.
+	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
+	PipelineStateDesc.RTVFormats[1]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Normal Target
+	PipelineStateDesc.RTVFormats[2]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Specular Target
+	PipelineStateDesc.RTVFormats[3]			= DXGI_FORMAT_R32G32B32A32_FLOAT;	// Depth Target
+	PipelineStateDesc.RTVFormats[4]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
 	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
 	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
 	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;

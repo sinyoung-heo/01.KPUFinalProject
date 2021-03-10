@@ -30,6 +30,7 @@ HRESULT CSkyBox::Ready_GameObject(wstring wstrTextureTag,
 	m_pTransCom->m_vPos		= vPos;
 
 	m_uiTexIdx	= iIdx;
+	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(1), E_FAIL);
 
 	return S_OK;
 }
@@ -79,6 +80,19 @@ void CSkyBox::Render_GameObject(const _float & fTimeDelta)
 	m_pBufferCom->Render_Buffer();
 }
 
+void CSkyBox::Render_GameObject(const _float& fTimeDelta, 
+								ID3D12GraphicsCommandList* pCommandList, 
+								const _int& iContextIdx)
+{
+	Set_ConstantTable();
+
+	m_pBufferCom->Render_Buffer(pCommandList, 
+								iContextIdx,
+								m_pShaderCom, 
+								m_pTextureCom->Get_TexDescriptorHeap(),
+								m_uiTexIdx);
+}
+
 HRESULT CSkyBox::Add_Component(wstring wstrTextureTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
@@ -99,7 +113,6 @@ HRESULT CSkyBox::Add_Component(wstring wstrTextureTag)
 	m_pShaderCom = static_cast<Engine::CShaderSkyBox*>(m_pComponentMgr->Clone_Component(L"ShaderSkyBox", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->AddRef();
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(0), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
 	return S_OK;

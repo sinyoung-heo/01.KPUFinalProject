@@ -894,12 +894,13 @@ void CRenderer::Create_ThreadContext()
 
 	for (_int i = 0; i < CONTEXT::CONTEXT_END; ++i)
 	{
-		m_hWorkerBeginRender[i]		= CreateEvent(NULL,	// 핸들 상속과 보안 디스크립터.
-												  FALSE,// TRUE면 수동 리셋, FALSE면 자동 리셋 이벤트.
-												  FALSE,// TRUE면 신호, FALSE면 비신호 상태로 시작.
-												  NULL);// 이벤트에 부여할 이름.
-		m_hWorkerFinishShadow[i]	= CreateEvent(NULL, FALSE, FALSE, NULL);
-		m_hWorkerFinishedRender[i]	= CreateEvent(NULL, FALSE, FALSE, NULL);
+		m_hWorkerBeginRender[i]				= CreateEvent(NULL,	// 핸들 상속과 보안 디스크립터.
+														  FALSE,// TRUE면 수동 리셋, FALSE면 자동 리셋 이벤트.
+														  FALSE,// TRUE면 신호, FALSE면 비신호 상태로 시작.
+														  NULL);// 이벤트에 부여할 이름.
+		m_hWorkerFinishShadow[i]			= CreateEvent(NULL, FALSE, FALSE, NULL);
+		m_hWorkerFinishedRenderPriority[i]	= CreateEvent(NULL, TRUE, FALSE, NULL);
+		m_hWorkerFinishedRenderNoneAlpha[i] = CreateEvent(NULL, FALSE, FALSE, NULL);
 
 		m_tThreadParameter[i].threadIdx = i;
 
@@ -1093,7 +1094,7 @@ HRESULT CRenderer::Render_MultiThread(const _float& fTimeDelta)
 		m_pTargetDeferred->Begin_RenderTargetOnContext(m_pPreSceneCommandList, THREADID::SCENE);
 		
 		// Scene이 전부 그려질 때 까지 대기하자. 전부 그려졌으면 명령 제출.
-		WaitForMultipleObjects(CONTEXT::CONTEXT_END, m_hWorkerFinishedRender, TRUE, INFINITE);
+		WaitForMultipleObjects(CONTEXT::CONTEXT_END, m_hWorkerFinishedRenderNoneAlpha, TRUE, INFINITE);
 
 		// End Render Scene Pass.
 		m_pTargetDeferred->End_RenderTargetOnContext(m_pEndSceneCommandList, THREADID::SCENE);
@@ -1117,6 +1118,12 @@ HRESULT CRenderer::Render_MultiThread(const _float& fTimeDelta)
 		m_pEndSceneCommandList->Close();
 		ID3D12CommandList* ppEndSceneCommandLists[] = { m_pEndSceneCommandList };
 		CGraphicDevice::Get_Instance()->Get_CommandQueue()->ExecuteCommandLists(_countof(ppEndSceneCommandLists), ppEndSceneCommandLists);
+
+
+		// Reset Event
+		for (_uint i = 0; i < CONTEXT::CONTEXT_END; ++i)
+			ResetEvent(m_hWorkerFinishedRenderPriority[i]);
+
 	}
 
 	return S_OK;
@@ -1167,7 +1174,19 @@ void CRenderer::Worker_Thread(_int threadIndex)
 		// Bind RenderTarget
 		m_pTargetDeferred->Bind_RenderTargetOnContext(m_arrSceneCommandList[threadIndex], THREADID::SCENE);
 
-		// Start Render Scene.
+		// Start Render Priority
+		for (_int i = threadIndex; i < m_RenderList[RENDER_PRIORITY].size(); i += CONTEXT::CONTEXT_END)
+		{
+			m_RenderList[RENDER_PRIORITY][i]->Render_GameObject(CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"),
+																m_arrSceneCommandList[threadIndex],
+																threadIndex);
+		}
+
+		// None-Signal -> Signal
+		SetEvent(m_hWorkerFinishedRenderPriority[threadIndex]);
+		WaitForMultipleObjects(CONTEXT::CONTEXT_END, m_hWorkerFinishedRenderPriority, TRUE, INFINITE);
+
+		// Start Render NoneAlpha.
 		for (_int i = threadIndex; i < m_RenderList[RENDER_NONALPHA].size(); i += CONTEXT::CONTEXT_END)
 		{
 			m_RenderList[RENDER_NONALPHA][i]->Render_GameObject(CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"), 
@@ -1184,7 +1203,7 @@ void CRenderer::Worker_Thread(_int threadIndex)
 		// Tell main thread that we are done.
 		// 메인 쓰레드에 우리는 끝났다고 말해라.
 		// None-Signal -> Signal
-		SetEvent(m_hWorkerFinishedRender[threadIndex]);
+		SetEvent(m_hWorkerFinishedRenderNoneAlpha[threadIndex]);
 	}
 
 }
@@ -1269,7 +1288,8 @@ void CRenderer::Free()
 		{
 			CloseHandle(m_hWorkerBeginRender[i]);
 			CloseHandle(m_hWorkerFinishShadow[i]);
-			CloseHandle(m_hWorkerFinishedRender[i]);
+			CloseHandle(m_hWorkerFinishedRenderPriority[i]);
+			CloseHandle(m_hWorkerFinishedRenderNoneAlpha[i]);
 			CloseHandle(m_hThreadHandle[i]);
 		}
 	}

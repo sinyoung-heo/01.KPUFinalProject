@@ -201,9 +201,10 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ MultiThread Rendering ]
 	____________________________________________________________________________________________________________*/
-	HANDLE m_hWorkerBeginRender[CONTEXT::CONTEXT_END];		// 각 쓰레드에게 Render시작을 알림.
-	HANDLE m_hWorkerFinishShadow[CONTEXT::CONTEXT_END];		// Render ShadowDepth.
-	HANDLE m_hWorkerFinishedRender[CONTEXT::CONTEXT_END];	// Render NoneAlpha.
+	HANDLE m_hWorkerBeginRender[CONTEXT::CONTEXT_END];				// 각 쓰레드에게 Render시작을 알림.
+	HANDLE m_hWorkerFinishShadow[CONTEXT::CONTEXT_END];				// Render ShadowDepth.
+	HANDLE m_hWorkerFinishedRenderPriority[CONTEXT::CONTEXT_END];	// Render Priority.
+	HANDLE m_hWorkerFinishedRenderNoneAlpha[CONTEXT::CONTEXT_END];	// Render NoneAlpha.
 	HANDLE m_hThreadHandle[CONTEXT::CONTEXT_END];
 
 	array<ID3D12CommandAllocator*, CONTEXT::CONTEXT_END>	m_arrShadowCommandAllocator		{ nullptr };
