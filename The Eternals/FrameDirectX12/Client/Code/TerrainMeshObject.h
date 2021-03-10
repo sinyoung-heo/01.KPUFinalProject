@@ -3,9 +3,8 @@
 
 namespace Engine
 {
-	class CMesh;
 	class CShaderMesh;
-	class CShaderShadow;
+	class CMesh;
 }
 
 class CDynamicCamera;
@@ -14,7 +13,6 @@ class CTerrainMeshObject : public Engine::CGameObject
 {
 private:
 	explicit CTerrainMeshObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CTerrainMeshObject(const CTerrainMeshObject& rhs);
 	virtual ~CTerrainMeshObject() = default; 
 
 public:
@@ -27,10 +25,6 @@ public:
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 
-	// SingleThread Rendering
-	virtual void	Render_GameObject(const _float& fTimeDelta);
-	virtual void	Render_ShadowDepth(const _float & fTimeDelta);
-
 	// MultiThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
@@ -39,20 +33,24 @@ private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
+	// Instancing
+	void			Set_ConstantTable(const _int& iContextIdx, const _int& iInstancingIdx);
+	void			Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int& iInstanceIdx);
 
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
 	____________________________________________________________________________________________________________*/
-	Engine::CMesh*			m_pMeshCom		= nullptr;
-	Engine::CShaderMesh*	m_pShaderCom	= nullptr;
-	Engine::CShaderShadow*	m_pShadowCom	= nullptr;
+	Engine::CMesh*						m_pMeshCom                = nullptr;
+	Engine::CShaderShadowInstancing*	m_pShaderShadowInstancing = nullptr;
+	Engine::CShaderMeshInstancing*		m_pShaderMeshInstancing   = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	wstring			m_wstrMeshTag			= L"";
-	CDynamicCamera*	m_pDynamicCamera		= nullptr;
+	wstring			m_wstrMeshTag		       = L"";
+	_uint			m_iMeshPipelineStatePass   = 0;
+	_uint			m_iShadowPipelineStatePass = 0;
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,

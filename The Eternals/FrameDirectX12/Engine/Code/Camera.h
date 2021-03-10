@@ -61,12 +61,10 @@ protected:
 	CShaderColorInstancing*		m_pShaderColorInstancing   = nullptr;
 	CShaderTexture*				m_pShaderTexture	       = nullptr;
 	CShaderTextureInstancing*	m_pShaderTextureInstancing = nullptr;
-	CShaderBumpTerrain*			m_pShaderBumpTerrain       = nullptr;
 	CShaderSkyBox*				m_pShaderSkyBox		       = nullptr;
 	CShaderMesh*				m_pShaderMesh		       = nullptr;
 	CShaderMeshInstancing*		m_pShaderMeshInstancing    = nullptr;
 	CShaderSSAO*				m_pShaderSSAO              = nullptr;
-
 
 	Engine::CB_SHADER_VARIABLE tCB_ShaderVariable;
 	CShaderNPathDir* m_pShaderNPathDir = nullptr;

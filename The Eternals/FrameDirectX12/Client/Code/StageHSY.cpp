@@ -26,7 +26,7 @@
 #include "MainMenuInventory.h"
 #include "MainMenuLogout.h"
 #include "MainMenuSetting.h"
-#include "BumpTerrain.h"
+
 
 CStageHSY::CStageHSY(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -213,12 +213,6 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 
 
 	Engine::CGameObject* pGameObj = nullptr;
-
-	/*__________________________________________________________________________________________________________
-	[ BumpTerrain ]
-	____________________________________________________________________________________________________________*/
-	pGameObj = CBumpTerrain::Create(m_pGraphicDevice, m_pCommandList, L"BumpTerrainRoad01");
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpTerrainRoad", pGameObj), E_FAIL);
 
 
 	/*__________________________________________________________________________________________________________

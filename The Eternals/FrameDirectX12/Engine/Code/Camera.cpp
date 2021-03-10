@@ -5,7 +5,6 @@
 #include "ShaderTexture.h"
 #include "ShaderMesh.h"
 #include "ShaderMeshInstancing.h"
-#include "ShaderBumpTerrain.h"
 #include "ShaderSkyBox.h"
 #include "ShaderSSAO.h"
 
@@ -75,9 +74,6 @@ HRESULT CCamera::Ready_GameObject(const CAMERA_DESC& tCameraInfo,
 
 	m_pShaderTexture = static_cast<CShaderTexture*>(m_pComponentMgr->Clone_Component(L"ShaderTexture", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pShaderTexture, E_FAIL);
-
-	m_pShaderBumpTerrain = static_cast<CShaderBumpTerrain*>(m_pComponentMgr->Clone_Component(L"ShaderBumpTerrain", COMPONENTID::ID_STATIC));
-	NULL_CHECK_RETURN(m_pShaderBumpTerrain, E_FAIL);
 
 	m_pShaderSkyBox = static_cast<CShaderSkyBox*>(m_pComponentMgr->Clone_Component(L"ShaderSkyBox", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pShaderSkyBox, E_FAIL);
@@ -165,9 +161,6 @@ void CCamera::Set_ConstantTable()
 	m_pShaderTextureInstancing->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);;
 	m_pShaderTextureInstancing->Get_UploadBuffer_CameraOrthoMatrix()->CopyData(0, tCB_CamerOrthoMatrix);;
 
-	// ShaderBumpTerrain
-	m_pShaderBumpTerrain->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
-
 	// ShaderSkyBox
 	m_pShaderSkyBox->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 
@@ -199,7 +192,6 @@ void CCamera::Free()
 	Safe_Release(m_pShaderColor);
 	Safe_Release(m_pShaderTexture);
 	Safe_Release(m_pShaderSkyBox);
-	Safe_Release(m_pShaderBumpTerrain);
 	Safe_Release(m_pShaderMesh);
 	Safe_Release(m_pShaderSSAO);
 	Safe_Release(m_pShaderNPathDir);

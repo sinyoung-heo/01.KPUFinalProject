@@ -91,9 +91,6 @@
     <Filter Include="99.Etc\SampleObject\03.TerrainObject">
       <UniqueIdentifier>{ef54af93-bffa-4e2a-ae60-069505659442}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99.Etc\SampleObject\04.TerrainMeshObject">
-      <UniqueIdentifier>{3b4ee930-0624-4cbc-8246-7121b52f2614}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99.Etc\SampleObject\05.StaticMeshObject">
       <UniqueIdentifier>{2351c006-4ada-445d-8e86-d03ee28c66bc}</UniqueIdentifier>
     </Filter>
@@ -139,9 +136,6 @@
     <Filter Include="02.GameObject\02.PlayerCharacter">
       <UniqueIdentifier>{30ac5964-93ee-4c7c-bbb1-173e35ff9b0d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\01.Environment\01.StaticObject">
-      <UniqueIdentifier>{31a1d126-62e7-4145-a491-71e8b6a01acd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\03.NPC">
       <UniqueIdentifier>{47df4906-7eaf-475a-9510-a7ba998fbd98}</UniqueIdentifier>
     </Filter>
@@ -181,8 +175,11 @@
     <Filter Include="97.Mgr\04.MouseCursorMgr">
       <UniqueIdentifier>{9f593d0a-4f7e-4583-a859-a2cb29f4762e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\01.Environment\02.BumpTerrain">
-      <UniqueIdentifier>{a6494234-2280-4745-bd6b-c0f1178097d8}</UniqueIdentifier>
+    <Filter Include="02.GameObject\01.Environment\01.StaticMeshObject">
+      <UniqueIdentifier>{31a1d126-62e7-4145-a491-71e8b6a01acd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\01.Environment\02.TerrainMeshObject">
+      <UniqueIdentifier>{380b6048-fba1-4bfc-9945-5fa540c1c856}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -254,9 +251,6 @@
     </ClInclude>
     <ClInclude Include="..\Code\LogoBack.h">
       <Filter>01.Scene\01.Logo\00.LogoBack</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\TerrainMeshObject.h">
-      <Filter>99.Etc\SampleObject\04.TerrainMeshObject</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>99.Etc</Filter>
@@ -360,14 +354,14 @@
     </ClInclude>
     <ClInclude Include="..\Code\TestOthers.h" />
     <ClInclude Include="..\Code\TestPlayer.h" />
-    <ClInclude Include="..\Code\BumpTerrain.h">
-      <Filter>02.GameObject\01.Environment\02.BumpTerrain</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\TestOthers.h">
       <Filter>99.Etc\SampleObject\10.TestOthers</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\TestPlayer.h">
       <Filter>99.Etc\SampleObject\09.TestPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\TerrainMeshObject.h">
+      <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -418,9 +412,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\LogoBack.cpp">
       <Filter>01.Scene\01.Logo\00.LogoBack</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\TerrainMeshObject.cpp">
-      <Filter>99.Etc\SampleObject\04.TerrainMeshObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\StageLDH.cpp">
       <Filter>01.Scene\99.DebugStage\01.StageLDH</Filter>
@@ -512,14 +503,14 @@
     </ClCompile>
     <ClCompile Include="..\Code\TestOthers.cpp" />
     <ClCompile Include="..\Code\TestPlayer.cpp" />
-    <ClCompile Include="..\Code\BumpTerrain.cpp">
-      <Filter>02.GameObject\01.Environment\02.BumpTerrain</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\TestOthers.cpp">
       <Filter>99.Etc\SampleObject\10.TestOthers</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\TestPlayer.cpp">
       <Filter>99.Etc\SampleObject\09.TestPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TerrainMeshObject.cpp">
+      <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

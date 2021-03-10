@@ -168,7 +168,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\FrameServer\Server\Header\protocol.h" />
-    <ClInclude Include="..\Code\BumpTerrain.h" />
     <ClInclude Include="..\Code\CharacterHpGauge.h" />
     <ClInclude Include="..\Code\CharacterMpGauge.h" />
     <ClInclude Include="..\Code\GameUIChild.h" />
@@ -226,7 +225,6 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Code\BumpTerrain.cpp" />
     <ClCompile Include="..\Code\CharacterHpGauge.cpp" />
     <ClCompile Include="..\Code\CharacterMpGauge.cpp" />
     <ClCompile Include="..\Code\GameUIChild.cpp" />

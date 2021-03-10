@@ -153,11 +153,11 @@ HRESULT CScene_StageVelika::Ready_LayerEnvironment(wstring wstrLayerTag)
 	[ SkyBox ]
 	____________________________________________________________________________________________________________*/
 	pGameObj = CSkyBox::Create(m_pGraphicDevice, m_pCommandList,
-							   L"SkyBox",					// Texture Tag
-							   _vec3(512.f, 512.f, 512.f),	// Scale
-							   _vec3(0.0f, 0.0f, 0.0f),		// Angle
-							   _vec3(0.0f, 0.0f, 0.0f),		// Pos
-							   1);							// Tex Index
+							   L"SkyBox",						// Texture Tag
+							   _vec3(900.0f, 900.0f, 900.0f),	// Scale
+							   _vec3(0.0f, 0.0f, 0.0f),			// Angle
+							   _vec3(0.0f, 0.0f, 0.0f),			// Pos
+							   1);								// Tex Index
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SkyBox", pGameObj), E_FAIL);
 
 	return S_OK;
@@ -180,38 +180,16 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ BumpTerrainMesh ]
 	____________________________________________________________________________________________________________*/
-	_vec3 vStartPos = _vec3(0.0f, -0.1f, 0.5f);
-	_vec3 vOffset   = _vec3(13.83f, 0.0f, 11.98f);
-
-	for (_int i = 0; i < 21; ++i)
-	{
-		if (0 == i % 2)
-			vStartPos.x = 0.0f;
-		else
-			vStartPos.x = 6.915f;
-
-		for (_int j = 0; j < 21; ++j)
-		{
-			pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-												 L"BumpTerrainMesh01",		// MeshTag
-												 _vec3(0.003f),				// Scale
-												 _vec3(90.0f, 0.0f, 0.0f),	// Angle
-												 vStartPos,					// Pos
-												 true,						// Render Shadow
-												 false,						// Is Collision
-												 _vec3(0.0f),				// Bounding Sphere Scale
-												 _vec3(0.0f));				// Bounding Sphere Pos
-			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpTerrainMesh01", pGameObj), E_FAIL);
-			vStartPos.x += vOffset.x;
-		}
-
-		vStartPos.z += vOffset.z;
-	}
+	pGameObj = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+											L"BumpTerrainMesh01",
+											_vec3(0.075f),
+											_vec3(90.0f, 0.0f ,0.0f),
+											_vec3(128.0f, -0.01f, 128.0f));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpTerrainMesh01", pGameObj), E_FAIL);
 
 	Engine::CShaderMeshInstancing::Get_Instance()->SetUp_Instancing(L"BumpTerrainMesh01");
 	Engine::CShaderShadowInstancing::Get_Instance()->SetUp_Instancing(L"BumpTerrainMesh01");
 	
-
 	/*__________________________________________________________________________________________________________
 	[ StaticMeshObject ]
 	____________________________________________________________________________________________________________*/
