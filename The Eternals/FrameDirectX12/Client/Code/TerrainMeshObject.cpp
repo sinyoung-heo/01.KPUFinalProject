@@ -86,13 +86,13 @@ void CTerrainMeshObject::Render_ShadowDepth(const _float& fTimeDelta,
 											ID3D12GraphicsCommandList * pCommandList, 
 											const _int& iContextIdx)
 {
-	/*__________________________________________________________________________________________________________
-	[ Add Instance ]
-	____________________________________________________________________________________________________________*/
-	m_pShaderShadowInstancing->Add_Instance(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass);
-	_uint iInstanceIdx = m_pShaderShadowInstancing->Get_InstanceCount(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass) - 1;
+	///*__________________________________________________________________________________________________________
+	//[ Add Instance ]
+	//____________________________________________________________________________________________________________*/
+	//m_pShaderShadowInstancing->Add_Instance(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass);
+	//_uint iInstanceIdx = m_pShaderShadowInstancing->Get_InstanceCount(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass) - 1;
 
-	Set_ConstantTableShadowDepth(iContextIdx, iInstanceIdx);
+	//Set_ConstantTableShadowDepth(iContextIdx, iInstanceIdx);
 }
 
 HRESULT CTerrainMeshObject::Add_Component(wstring wstrMeshTag)
