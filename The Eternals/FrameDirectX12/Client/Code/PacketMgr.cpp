@@ -8,6 +8,7 @@
 #include "NPC_Boy.h"
 #include "NPC_Villagers.h"
 #include "NPC_Merchant.h"
+#include "Monster_Normal.h"
 #include "DynamicCamera.h"
 
 IMPLEMENT_SINGLETON(CPacketMgr)
@@ -355,12 +356,12 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		____________________________________________________________________________________________________________*/
 		Engine::CGameObject* pGameObj = nullptr;
 
-		pGameObj = CNPC_Boy::Create(m_pGraphicDevice, m_pCommandList,
-			wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
-			wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
-			_vec3(0.05f, 0.05f, 0.05f),										// Scale
-			_vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
-			_vec3(packet->posX, packet->posY, packet->posZ));
+		pGameObj = CMonster_Normal::Create(m_pGraphicDevice, m_pCommandList,
+										   wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
+										   wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
+										   _vec3(0.05f, 0.05f, 0.05f),										// Scale
+										   _vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
+										   _vec3(packet->posX, packet->posY, packet->posZ));
 
 		// hp + maxhp 정보도 저장해야 함.
 

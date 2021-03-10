@@ -302,13 +302,22 @@ void CMonster::Move_ChaseMonster(const float& fTimeDelta)
 		m_vDir.Normalize();
 
 		/* monster chase move */
-		m_vPos += m_vDir * fTimeDelta;
+		if (!CCollisionMgr::GetInstance()->Is_Arrive(m_vPos, pTarget->m_vPos))
+			m_vPos += m_vDir * fTimeDelta;
+		else
+			nonActive_monster(m_sNum);	   /// 나중에 공격 모드로 바꾸기.....
 	}
-	/* 타겟(공격 대상)이 존재하지 않을 경우 -> 랜덤 움직임 */
+	/* 타겟(공격 대상)이 존재하지 않을 경우 -> 생성된 위치로 돌아감 */
 	else
 	{
-		nonActive_monster(m_sNum);
-		return;
+		m_vDir = m_vOriPos - m_vPos;
+		m_vDir.Normalize();
+
+		/* monster chase move */
+		if (!CCollisionMgr::GetInstance()->Is_Arrive(m_vPos, m_vOriPos))
+			m_vPos += m_vDir * fTimeDelta;
+		else
+			nonActive_monster(m_sNum);
 	}
 
 	/* NaviMesh를 벗어날 경우 움직임 X */

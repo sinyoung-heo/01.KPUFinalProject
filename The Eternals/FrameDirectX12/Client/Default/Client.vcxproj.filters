@@ -181,6 +181,15 @@
     <Filter Include="02.GameObject\01.Environment\02.TerrainMeshObject">
       <UniqueIdentifier>{380b6048-fba1-4bfc-9945-5fa540c1c856}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99.Etc\SampleObject\15.Monster">
+      <UniqueIdentifier>{e73a9a64-5a60-44be-983e-b8815ff5f609}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Etc\SampleObject\15.Monster\00.Monster_Normal">
+      <UniqueIdentifier>{c44468fa-a3be-4d62-a0da-e9371e6bff6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Etc\SampleObject\15.Monster\01.Monster_Chase">
+      <UniqueIdentifier>{994676e4-5b5b-4bda-a01c-41800c66e29a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -363,6 +372,9 @@
     <ClInclude Include="..\Code\TerrainMeshObject.h">
       <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\Monster_Normal.h">
+      <Filter>99.Etc\SampleObject\15.Monster\00.Monster_Normal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -511,6 +523,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\TerrainMeshObject.cpp">
       <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Monster_Normal.cpp">
+      <Filter>99.Etc\SampleObject\15.Monster\00.Monster_Normal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
