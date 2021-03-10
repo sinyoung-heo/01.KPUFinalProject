@@ -22,6 +22,13 @@ public:
 								 const _uint& iTexIdx = 0,
 								 const MATRIXID& eID = MATRIXID::PROJECTION);
 
+	// MultiThread Rendering
+	virtual void	Begin_Shader(ID3D12GraphicsCommandList* pCommandList,
+								 const _int& iContextIdx,
+								 ID3D12DescriptorHeap* pTexDescriptorHeap = nullptr,
+								 const _uint& iTexIndex = 0);
+
+
 private:
 	virtual HRESULT								Create_RootSignature();
 	virtual HRESULT								Create_PipelineState();

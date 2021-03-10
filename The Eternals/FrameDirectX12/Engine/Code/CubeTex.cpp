@@ -1,4 +1,5 @@
 #include "CubeTex.h"
+#include "ShaderSkyBox.h"
 
 USING(Engine)
 
@@ -106,6 +107,26 @@ void CCubeTex::Begin_Buffer()
 void CCubeTex::Render_Buffer()
 {
 	CVIBuffer::Render_Buffer();
+}
+
+void CCubeTex::Render_Buffer(ID3D12GraphicsCommandList* pCommandList,
+							 const _int& iContextIdx, 
+							 CShader* pShader,
+							 ID3D12DescriptorHeap* pTexDescriptorHeap,
+							 const _uint& iTexIdx)
+{
+	static_cast<CShaderSkyBox*>(pShader)->Begin_Shader(pCommandList, iContextIdx, pTexDescriptorHeap, iTexIdx);
+	pCommandList->IASetVertexBuffers(0, 						
+									 1, 						
+									 &Get_VertexBufferView());	
+	pCommandList->IASetIndexBuffer(&Get_IndexBufferView());
+	pCommandList->IASetPrimitiveTopology(m_PrimitiveTopology);
+
+	pCommandList->DrawIndexedInstanced(m_tSubMeshGeometry.uiIndexCount,
+									   1,									
+									   0,									
+									   0, 								
+									   0);
 }
 
 CComponent * CCubeTex::Clone()
