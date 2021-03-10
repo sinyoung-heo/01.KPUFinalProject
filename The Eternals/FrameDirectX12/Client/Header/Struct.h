@@ -14,6 +14,18 @@ typedef struct tagFrame
 		, fFrameSpeed(frame_speed)
 	{}
 
+	_bool operator!=(tagFrame& rhs)
+	{
+		if (this->fFrameCnt == rhs.fFrameCnt ||
+			this->fCurFrame == rhs.fCurFrame ||
+			this->fSceneCnt == rhs.fSceneCnt ||
+			this->fCurScene == rhs.fCurScene ||
+			this->fFrameSpeed == rhs.fFrameSpeed)
+			return false;
+
+		return true;
+	}
+
 	_float	fFrameCnt	= 1.0f;	// 스프라이트 이미지의 X축 개수.
 	_float	fCurFrame	= 0.0f;
 	_float	fSceneCnt	= 1.0f;	// 스프라이트 이미지의 Y축 개수.

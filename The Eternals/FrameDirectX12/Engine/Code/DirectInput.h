@@ -22,6 +22,7 @@ public:
 	_byte	Get_DIKeyState(_ubyte byKeyID)					{ return m_byKeyState[byKeyID]; }
 	_byte	Get_DIMouseState(MOUSEBUTTON eMouseID)			{ return m_MouseState.rgbButtons[eMouseID]; }
 	_long	Get_DIMouseMove(MOUSEMOVESTATE eMouseMoveState) { return *(((_ulong*)&m_MouseState) + eMouseMoveState); }
+	HRESULT Get_DeviceMouseState()							{ return m_pMouse->GetDeviceState(sizeof(m_MouseState), &m_MouseState); }
 
 	// Method
 	HRESULT	Ready_InputDevice(HINSTANCE hInst, 

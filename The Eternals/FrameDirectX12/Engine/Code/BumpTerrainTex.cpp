@@ -1,6 +1,6 @@
 #include "BumpTerrainTex.h"
 #include "GraphicDevice.h"
-#include "ShaderMesh.h"
+#include "ShaderBumpTerrain.h"
 
 USING(Engine)
 
@@ -100,8 +100,10 @@ HRESULT CBumpTerrainTex::Ready_Buffer(const _uint& iNumVerticesX,
 		}
 	}
 
+	for (auto& vtx_texnormal : vecVertices)
+		vtx_texnormal.vNormal.Normalize();
 
-	const _uint vbByteSize = (_uint)vecVertices.size() * sizeof(VTXMESH);
+	const _uint vbByteSize = (_uint)vecVertices.size() * sizeof(VTXTEX_NORMAL);
 	const _uint ibByteSize = (_uint)vecIndices.size() * sizeof(_uint);
 
 	/*__________________________________________________________________________________________________________
@@ -123,7 +125,7 @@ HRESULT CBumpTerrainTex::Ready_Buffer(const _uint& iNumVerticesX,
 	NULL_CHECK_RETURN(m_pIB_GPU, E_FAIL);
 
 
-	m_uiVertexByteStride	= sizeof(VTXMESH);
+	m_uiVertexByteStride	= sizeof(VTXTEX_NORMAL);
 	m_uiVB_ByteSize			= vbByteSize;
 	m_uiIB_ByteSize			= ibByteSize;
 	m_IndexFormat			= DXGI_FORMAT_R32_UINT;
@@ -143,27 +145,22 @@ void CBumpTerrainTex::Render_Buffer()
 {
 }
 
-void CBumpTerrainTex::Render_Terrain(ID3D12GraphicsCommandList* pCommandList, 
-									 const _int& iContextIdx, 
-									 ID3D12DescriptorHeap* pTexDescriptorHeap, 
-									 ID3D12DescriptorHeap* pTexShadowDepthHeap,
-									 CShader* pShader)
+
+void CBumpTerrainTex::Render_BumpTerrain(ID3D12GraphicsCommandList* pCommandList,
+										 const _int& iContextIdx, 
+										 CShader* pShader)
 {
-	static_cast<CShaderMesh*>(pShader)->Begin_ShaderBumpTerrain(pCommandList, 
-																iContextIdx,
-																pTexDescriptorHeap, 
-																pTexShadowDepthHeap);
+	static_cast<CShaderBumpTerrain*>(pShader)->Begin_Shader(pCommandList, iContextIdx);
 	Begin_Buffer(pCommandList);
 	Render_Buffer(pCommandList);
 }
 
 void CBumpTerrainTex::Begin_Buffer(ID3D12GraphicsCommandList* pCommandList)
 {
-	pCommandList->IASetVertexBuffers(0, 						 // 시작 슬롯. (입력 슬롯은 총 16개)
-									 1, 						 // 입력 슬롯들에 묶을 정점 버퍼 개수.
-									 &Get_VertexBufferView()); // 정점 버퍼 뷰의 첫 원소를 가리키는 포인터.
+	pCommandList->IASetVertexBuffers(0, 						// 시작 슬롯. (입력 슬롯은 총 16개)
+									 1, 						// 입력 슬롯들에 묶을 정점 버퍼 개수.
+									 &Get_VertexBufferView());	// 정점 버퍼 뷰의 첫 원소를 가리키는 포인터.
 	pCommandList->IASetIndexBuffer(&Get_IndexBufferView());
-
 	pCommandList->IASetPrimitiveTopology(m_PrimitiveTopology);
 }
 

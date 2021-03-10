@@ -129,9 +129,9 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 	
 	// Normal
 	float4 TexNormal	= g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
-	TexNormal			= (TexNormal * 2.0f) - 1.0f;				// 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.
+	TexNormal			= (TexNormal * 2.0f) - 1.0f;			// 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.
 	float3 Normal		= (TexNormal.x * ps_input.T) + (TexNormal.y * ps_input.B) + (TexNormal.z * ps_input.N);
-	ps_output.Normal	= float4(Normal.xyz * 0.5f + 0.5f, 1.f);	// 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
+	ps_output.Normal	= float4(Normal.xyz * 0.5f + 0.5f, 1.f);// 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
 	
 	// Specular
 	ps_output.Specular	= g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
@@ -205,9 +205,9 @@ PS_OUT PS_SHADOW_MAIN(VS_OUT ps_input) : SV_TARGET
 	
 	// Normal
 	float4 TexNormal	= g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
-	TexNormal			= (TexNormal * 2.0f) - 1.0f;				// 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.
+	TexNormal			= (TexNormal * 2.0f) - 1.0f;			// 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.
 	float3 Normal		= (TexNormal.x * ps_input.T) + (TexNormal.y * ps_input.B) + (TexNormal.z * ps_input.N);
-	ps_output.Normal	= float4(Normal.xyz * 0.5f + 0.5f, 1.f);	// 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
+	ps_output.Normal	= float4(Normal.xyz * 0.5f + 0.5f, 1.f);// 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
 	
 	// Specular
 	ps_output.Specular	= g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
@@ -229,59 +229,47 @@ PS_OUT PS_SHADOW_MAIN(VS_OUT ps_input) : SV_TARGET
 	if (CurrentDepth > ShadowDepth + 0.0000125f)
 		ps_output.Diffuse.rgb *= 0.5;
 	
-	// ps_output.Diffuse.rgb = float3(1, 1, 1);
-	
-   
-	
 	return (ps_output);
 }
 
 
-//VS_OUT VS_DISTORTION(VS_IN vs_input)
-//{
-  
-//    float4x4 matBone = { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f };
-	
-//    VS_OUT vs_output = (VS_OUT) 0;
-	
-//    float4x4 matWV, matWVP;
-//    matWV = mul(g_matWorld, g_matView);
-//    matWVP = mul(matWV, g_matProj);
-	
-//    float4 vModelPos = mul(float4(vs_input.Pos, 1.0f), matBone);
-//    vs_output.Pos = mul(vModelPos, matWVP);
-//    vs_output.TexUV = vs_input.TexUV;
-//    vs_output.Normal = vs_input.Normal;
-	
+/*__________________________________________________________________________________________________________
+[ TerrainMesh  ]
+____________________________________________________________________________________________________________*/
+static float fDetails = 20.0f;
 
-//	// ProjPos
-//    vs_output.ProjPos = vs_output.Pos;
+PS_OUT PS_TERRAIN_MAIN(VS_OUT ps_input) : SV_TARGET
+{
+	PS_OUT ps_output = (PS_OUT) 0;
 	
-//	// N
-//	float3 WorldNormal		= mul(vs_input.Normal, (float3x3) g_matWorld);
-//	vs_output.N				= normalize(WorldNormal);
+	// Diffuse
+	ps_output.Diffuse	= g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV * fDetails);
 	
-//	// T
-//	float3 Tangent			= cross(float3(0.f, 1.f, 0.f), (float3) vs_input.Normal);
-//	float3 WorldTangent		= mul(Tangent, (float3x3) g_matWorld);
-//	vs_output.T				= normalize(WorldTangent);
+	// Normal
+	float4 TexNormal	= g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV * fDetails);
+	TexNormal			= (TexNormal * 2.0f) - 1.0f;			// 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.
+	float3 Normal		= (TexNormal.x * ps_input.T) + (TexNormal.y * ps_input.B) + (TexNormal.z * ps_input.N);
+	ps_output.Normal	= float4(Normal.xyz * 0.5f + 0.5f, 1.f);// 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
 	
-//	// B
-//	float3 Binormal			= cross((float3) vs_input.Normal, Tangent);
-//	float3 WorldBinormal	= mul(Binormal, (float3x3) g_matWorld);
-//	vs_output.B				= normalize(WorldBinormal);
-//    return (vs_output);
-//}
-
-//float4 PS_DISTORTION(VS_OUT ps_input) : SV_TARGET0
-//{
-//	// Normal
-//    float4 psout;
-//	float4 TexNormal	= g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
-//	TexNormal			= (TexNormal * 2.0f) - 1.0f;	// 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.
-//	float3 Normal		= (TexNormal.x * ps_input.T) + (TexNormal.y * ps_input.B) + (TexNormal.z * ps_input.N);
-//    psout = float4(Normal.xyz * 0.5f + 0.5f, 1.f);		// 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
+	// Specular
+	ps_output.Specular	= g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
 	
-//    float2 TexUv = ps_input.TexUV;
-//    return g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
-//}
+	// Depth
+	ps_output.Depth		= float4(ps_input.ProjPos.z / ps_input.ProjPos.w,	// (posWVP.z / posWVP.w) : Proj 영역의 Z.
+								 ps_input.ProjPos.w / g_fProjFar,			// posWVP.w / Far : 0~1로 만든 View영역의 Z.
+								 0.0f, 1.0f);
+	
+	/*__________________________________________________________________________________________________________
+	[ 현재의 깊이와 그림자 깊이 비교 ]
+	____________________________________________________________________________________________________________*/
+	float2 uv = ps_input.LightPos.xy / ps_input.LightPos.w;
+	uv.y = uv.y * -0.5f + 0.5f;
+	uv.x = uv.x * 0.5f + 0.5f;
+	
+	float CurrentDepth	= ps_input.LightPos.z / ps_input.LightPos.w;
+	float ShadowDepth	= g_TexShadowDepth.Sample(g_samLinearWrap, uv).x;
+	if (CurrentDepth > ShadowDepth + 0.0000125f)
+		ps_output.Diffuse.rgb *= 0.5;
+	
+	return (ps_output);
+}

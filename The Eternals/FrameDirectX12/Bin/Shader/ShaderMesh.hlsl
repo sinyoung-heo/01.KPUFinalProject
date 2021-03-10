@@ -165,9 +165,9 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 	
 	// Normal
 	float4 TexNormal	= g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
-	TexNormal			= (TexNormal * 2.0f) - 1.0f;				// 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.
+	TexNormal			= (TexNormal * 2.0f) - 1.0f;			// 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.
 	float3 Normal		= (TexNormal.x * ps_input.T) + (TexNormal.y * ps_input.B) + (TexNormal.z * ps_input.N);
-	ps_output.Normal	= float4(Normal.xyz * 0.5f + 0.5f, 1.f);	// 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
+	ps_output.Normal	= float4(Normal.xyz * 0.5f + 0.5f, 1.f);// 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
 	
 	// Specular
 	ps_output.Specular	= g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
@@ -278,9 +278,9 @@ PS_OUT PS_SHADOW_MAIN(VS_OUT ps_input) : SV_TARGET
 	
 	// Normal
 	float4 TexNormal	= g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
-	TexNormal			= (TexNormal * 2.0f) - 1.0f;				// 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.
+	TexNormal			= (TexNormal * 2.0f) - 1.0f;			// 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.
 	float3 Normal		= (TexNormal.x * ps_input.T) + (TexNormal.y * ps_input.B) + (TexNormal.z * ps_input.N);
-	ps_output.Normal	= float4(Normal.xyz * 0.5f + 0.5f, 1.f);	// 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
+	ps_output.Normal	= float4(Normal.xyz * 0.5f + 0.5f, 1.f);// 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
 	
 	// Specular
 	ps_output.Specular	= g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);

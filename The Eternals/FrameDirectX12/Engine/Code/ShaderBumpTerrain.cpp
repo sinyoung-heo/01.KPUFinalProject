@@ -1,5 +1,4 @@
 #include "ShaderBumpTerrain.h"
-
 #include "GraphicDevice.h"
 #include "Renderer.h"
 
@@ -23,6 +22,42 @@ HRESULT CShaderBumpTerrain::SetUp_ShaderConstantBuffer()
 	return S_OK;
 }
 
+HRESULT CShaderBumpTerrain::SetUp_ShaderDescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture)
+{
+	m_uiTexSize = vecTexture.size();
+
+	D3D12_DESCRIPTOR_HEAP_DESC SRV_HeapDesc = {};
+	SRV_HeapDesc.NumDescriptors             = m_uiTexSize;	// 텍스처의 개수 만큼 설정.
+	SRV_HeapDesc.Type                       = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	SRV_HeapDesc.Flags                      = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+
+	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateDescriptorHeap(&SRV_HeapDesc,
+															   IID_PPV_ARGS(&m_pTexDescriptorHeap)),
+															   E_FAIL);
+
+	// 힙의 시작을 가리키는 포인터를 얻는다.
+	CD3DX12_CPU_DESCRIPTOR_HANDLE SRV_DescriptorHandle(m_pTexDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
+
+	for (_uint i = 0; i < m_uiTexSize; ++i)
+	{
+		D3D12_SHADER_RESOURCE_VIEW_DESC SRV_Desc = {};
+		SRV_Desc.Format                        = vecTexture[i]->GetDesc().Format;
+		SRV_Desc.ViewDimension                 = D3D12_SRV_DIMENSION_TEXTURE2D;
+		SRV_Desc.Shader4ComponentMapping       = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		SRV_Desc.Texture2D.MostDetailedMip     = 0;
+		SRV_Desc.Texture2D.MipLevels           = vecTexture[i]->GetDesc().MipLevels;
+		SRV_Desc.Texture2D.ResourceMinLODClamp = 0.0f;
+
+		m_pGraphicDevice->CreateShaderResourceView(vecTexture[i].Get(), &SRV_Desc, SRV_DescriptorHandle);
+
+		// 힙의 다음 서술자로 넘어간다.
+		SRV_DescriptorHandle.Offset(1, CGraphicDevice::Get_Instance()->Get_CBV_SRV_UAV_DescriptorSize());
+	}
+
+
+	return S_OK;
+}
+
 HRESULT CShaderBumpTerrain::Ready_Shader()
 {
 	CShader::Ready_Shader();
@@ -32,8 +67,7 @@ HRESULT CShaderBumpTerrain::Ready_Shader()
 	return S_OK;
 }
 
-void CShaderBumpTerrain::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, 
-									  ID3D12DescriptorHeap* pTexShadowDepthHeap)
+void CShaderBumpTerrain::Begin_Shader()
 {
 	CRenderer::Get_Instance()->Set_CurPipelineState(m_pPipelineState);
 	m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
@@ -41,27 +75,27 @@ void CShaderBumpTerrain::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap,
 	/*__________________________________________________________________________________________________________
 	[ SRV를 루트 서술자에 묶는다 ]
 	____________________________________________________________________________________________________________*/
-	ID3D12DescriptorHeap* pDescriptorHeaps[] = { pTexDescriptorHeap, pTexShadowDepthHeap };
+	ID3D12DescriptorHeap* pDescriptorHeaps[] = { m_pTexDescriptorHeap };
 	m_pCommandList->SetDescriptorHeaps(_countof(pDescriptorHeaps), pDescriptorHeaps);
 
 
-	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexDiffuseDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexDiffuseDescriptorHandle(m_pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 	SRV_TexDiffuseDescriptorHandle.Offset(TEX_DIFFUSE, m_uiCBV_SRV_UAV_DescriptorSize);
 	m_pCommandList->SetGraphicsRootDescriptorTable(0,		// RootParameter Index - TexDiffuse
 												   SRV_TexDiffuseDescriptorHandle);
 
-	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexNormalDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexNormalDescriptorHandle(m_pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 	SRV_TexNormalDescriptorHandle.Offset(TEX_NORMAL, m_uiCBV_SRV_UAV_DescriptorSize);
 	m_pCommandList->SetGraphicsRootDescriptorTable(1,		// RootParameter Index - TexNormal
 												   SRV_TexNormalDescriptorHandle);
 
-	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexSpecularDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexSpecularDescriptorHandle(m_pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 	SRV_TexSpecularDescriptorHandle.Offset(TEX_SPECULAR, m_uiCBV_SRV_UAV_DescriptorSize);
 	m_pCommandList->SetGraphicsRootDescriptorTable(2,		// RootParameter Index - TexSpecular
 												   SRV_TexSpecularDescriptorHandle);
 
-	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexShadowDepthDescriptorHandle(pTexShadowDepthHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexShadowDepthDescriptorHandle.Offset(0, m_uiCBV_SRV_UAV_DescriptorSize);
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexShadowDepthDescriptorHandle(m_pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	SRV_TexShadowDepthDescriptorHandle.Offset(TEXTURE_END, m_uiCBV_SRV_UAV_DescriptorSize);
 	m_pCommandList->SetGraphicsRootDescriptorTable(3,		// RootParameter Index - TexShadowDepth
 												   SRV_TexShadowDepthDescriptorHandle);
 
@@ -76,10 +110,7 @@ void CShaderBumpTerrain::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap,
 													  m_pCB_ShaderMesh->Resource()->GetGPUVirtualAddress());
 }
 
-void CShaderBumpTerrain::Begin_Shader(ID3D12GraphicsCommandList* pCommandList,
-									  const _int& iContextIdx, 
-									  ID3D12DescriptorHeap* pTexDescriptorHeap, 
-									  ID3D12DescriptorHeap* pTexShadowDepthHeap)
+void CShaderBumpTerrain::Begin_Shader(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
 	// Set PipelineState.
 	CRenderer::Get_Instance()->Set_CurPipelineState(pCommandList, m_pPipelineState, iContextIdx);
@@ -90,29 +121,29 @@ void CShaderBumpTerrain::Begin_Shader(ID3D12GraphicsCommandList* pCommandList,
 	/*__________________________________________________________________________________________________________
 	[ SRV를 루트 서술자에 묶는다 ]
 	____________________________________________________________________________________________________________*/
-	ID3D12DescriptorHeap* pDescriptorHeaps[] = { pTexDescriptorHeap/*, pTexShadowDepthHeap*/ };
+	ID3D12DescriptorHeap* pDescriptorHeaps[] = { m_pTexDescriptorHeap };
 	pCommandList->SetDescriptorHeaps(_countof(pDescriptorHeaps), pDescriptorHeaps);
 
 
-	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexDiffuseDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexDiffuseDescriptorHandle(m_pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 	SRV_TexDiffuseDescriptorHandle.Offset(TEX_DIFFUSE, m_uiCBV_SRV_UAV_DescriptorSize);
 	pCommandList->SetGraphicsRootDescriptorTable(0,		// RootParameter Index - TexDiffuse
 												 SRV_TexDiffuseDescriptorHandle);
 
-	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexNormalDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexNormalDescriptorHandle(m_pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 	SRV_TexNormalDescriptorHandle.Offset(TEX_NORMAL, m_uiCBV_SRV_UAV_DescriptorSize);
 	pCommandList->SetGraphicsRootDescriptorTable(1,		// RootParameter Index - TexNormal
 												 SRV_TexNormalDescriptorHandle);
 
-	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexSpecularDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexSpecularDescriptorHandle(m_pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 	SRV_TexSpecularDescriptorHandle.Offset(TEX_SPECULAR, m_uiCBV_SRV_UAV_DescriptorSize);
 	pCommandList->SetGraphicsRootDescriptorTable(2,		// RootParameter Index - TexSpecular
 												 SRV_TexSpecularDescriptorHandle);
 
-	//CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexShadowDepthDescriptorHandle(pTexShadowDepthHeap->GetGPUDescriptorHandleForHeapStart());
-	//SRV_TexShadowDepthDescriptorHandle.Offset(0, m_uiCBV_SRV_UAV_DescriptorSize);
-	//pCommandList->SetGraphicsRootDescriptorTable(3,		// RootParameter Index - TexShadowDepth
-	//											 SRV_TexShadowDepthDescriptorHandle);
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexShadowDepthDescriptorHandle(m_pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	SRV_TexShadowDepthDescriptorHandle.Offset(TEXTURE_END, m_uiCBV_SRV_UAV_DescriptorSize);
+	pCommandList->SetGraphicsRootDescriptorTable(3,		// RootParameter Index - TexShadowDepth
+												 SRV_TexShadowDepthDescriptorHandle);
 
 
 	/*__________________________________________________________________________________________________________
@@ -224,11 +255,12 @@ HRESULT CShaderBumpTerrain::Create_PipelineState()
 	PipelineStateDesc.pRootSignature		= m_pRootSignature;
 	PipelineStateDesc.SampleMask			= UINT_MAX;
 	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	PipelineStateDesc.NumRenderTargets		= 4;								// PS에서 사용할 RenderTarget 개수.
+	PipelineStateDesc.NumRenderTargets		= 5;								// PS에서 사용할 RenderTarget 개수.
 	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
 	PipelineStateDesc.RTVFormats[1]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Normal Target
 	PipelineStateDesc.RTVFormats[2]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Specular Target
 	PipelineStateDesc.RTVFormats[3]			= DXGI_FORMAT_R32G32B32A32_FLOAT;	// Depth Target
+	PipelineStateDesc.RTVFormats[4]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
 	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
 	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
 	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;

@@ -621,6 +621,18 @@ namespace Engine
 
 	} VTXTEX;
 
+	typedef struct tagVertexTextureNormal
+	{
+		tagVertexTextureNormal() = default;
+		tagVertexTextureNormal(const _vec3& pos, const _vec3& normal, const _vec2& uv)
+			: vPos(pos), vNormal(normal) ,vTexUV(uv) {}
+
+		_vec3 vPos;
+		_vec3 vNormal;
+		_vec2 vTexUV;
+
+	} VTXTEX_NORMAL;
+
 	typedef struct tagVertexCube
 	{
 		tagVertexCube() = default;

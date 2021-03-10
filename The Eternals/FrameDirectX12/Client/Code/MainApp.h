@@ -31,6 +31,7 @@ private:
 	HRESULT	SetUp_ComponentPrototype();
 	HRESULT	SetUp_LoadingResource();
 	HRESULT	SetUp_StartScene(Engine::SCENEID eScebeID);
+	void	SetUp_WindowMouseSetting();
 
 	void	Key_Input();
 	void	Show_FontLog(const _float& fTimeDelta);

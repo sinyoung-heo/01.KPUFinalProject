@@ -15,19 +15,16 @@ public:
 	CUploadBuffer<CB_SHADER_MESH>* Get_UploadBuffer_ShaderMesh()	{ return m_pCB_ShaderMesh; }
 
 	HRESULT	SetUp_ShaderConstantBuffer();
+	HRESULT SetUp_ShaderDescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture);
 
 	// CShader을(를) 통해 상속됨
 	virtual HRESULT	Ready_Shader();
 
 	// SingleThread Rendering
-	virtual void	Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap,
-								 ID3D12DescriptorHeap* pTexShadowDepthHeap);
+	virtual void	Begin_Shader();
 
 	// multiThread Rendering
-	virtual void	Begin_Shader(ID3D12GraphicsCommandList* pCommandList,
-								 const _int& iContextIdx,
-								 ID3D12DescriptorHeap* pTexDescriptorHeap,
-								 ID3D12DescriptorHeap* pTexShadowDepthHeap);
+	virtual void	Begin_Shader(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 
 private:
 	virtual HRESULT								Create_RootSignature();
@@ -42,7 +39,8 @@ private:
 																  const D3D12_BLEND& DstBlendAlpha		= D3D12_BLEND_ZERO,
 																  const D3D12_BLEND_OP& BlendOpAlpha	= D3D12_BLEND_OP_ADD);
 private:
-	CUploadBuffer<CB_SHADER_MESH>* m_pCB_ShaderMesh	= nullptr;
+	CUploadBuffer<CB_SHADER_MESH>*	m_pCB_ShaderMesh     = nullptr;
+	ID3D12DescriptorHeap*			m_pTexDescriptorHeap = nullptr;
 
 public:
 	virtual CComponent* Clone() override;

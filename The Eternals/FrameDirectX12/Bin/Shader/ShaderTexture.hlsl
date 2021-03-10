@@ -123,12 +123,28 @@ VS_OUT VS_GAUAGE(VS_IN vs_input)
 	return (vs_output);
 }
 
+
+
 float4 PS_GAUAGE(VS_OUT ps_input) : SV_TARGET
 {
 	float4 vDiffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
 	float fGauge	= ceil(g_fGauge - ps_input.TexUV.x);
 	
 	float4 vColor = vDiffuse * fGauge;
+	
+	return (vColor);
+}
+
+float4 PS_GAUAGE_SPRITE(VS_OUT ps_input) : SV_TARGET
+{
+	float u = (ps_input.TexUV.x / g_fFrameCnt) + g_fCurFrame * (1.0f / g_fFrameCnt);
+	float v = (ps_input.TexUV.y / g_fSceneCnt) + g_fCurScene * (1.0f / g_fSceneCnt);
+	
+	float fPercent = (g_fGauge / g_fFrameCnt) + g_fCurFrame * (1.0f / g_fFrameCnt);
+	
+	float4	vDiffuse = g_TexDiffuse.Sample(g_samLinearWrap, float2(u, v));
+	float	fGauge = ceil(fPercent - u);
+	float4	vColor = vDiffuse * fGauge;
 	
 	return (vColor);
 }

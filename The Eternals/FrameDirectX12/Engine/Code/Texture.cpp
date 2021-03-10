@@ -158,8 +158,8 @@ CTexture * CTexture::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommand
 
 void CTexture::Free()
 {
-	for (auto& pTexture : m_vecResource)
-		pTexture->Release();
+	//for (auto& pTexture : m_vecResource)
+	//	pTexture->Release();
 
 	Safe_Release(m_pTexDescriptorHeap);
 

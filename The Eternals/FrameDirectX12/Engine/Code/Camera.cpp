@@ -161,7 +161,6 @@ void CCamera::Set_ConstantTable()
 	m_pShaderTextureInstancing->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);;
 	m_pShaderTextureInstancing->Get_UploadBuffer_CameraOrthoMatrix()->CopyData(0, tCB_CamerOrthoMatrix);;
 
-
 	// ShaderSkyBox
 	m_pShaderSkyBox->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 

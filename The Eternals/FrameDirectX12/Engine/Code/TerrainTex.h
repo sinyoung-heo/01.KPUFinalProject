@@ -3,6 +3,8 @@
 
 BEGIN(Engine)
 
+class CShader;
+
 class ENGINE_DLL CTerrainTex final : public CVIBuffer
 {
 private:
@@ -23,6 +25,14 @@ public:
 						 const _float& fDetail = 5.0f);
 	void	Begin_Buffer();
 	void	Render_Buffer();
+
+	// BumpTerrain
+	void	Render_BumpTerrain(ID3D12GraphicsCommandList* pCommandList, 
+							  const _int& iContextIdx,
+							  CShader* pShader);
+private:
+	void	Begin_Buffer(ID3D12GraphicsCommandList* pCommandList);
+	void	Render_Buffer(ID3D12GraphicsCommandList* pCommandList);
 
 private:
 	_uint   m_iNumVerticesX = 0;

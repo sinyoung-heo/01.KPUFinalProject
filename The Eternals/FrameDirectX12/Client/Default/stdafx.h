@@ -13,7 +13,7 @@ OFF: SERVER DISCONNECT MODE
 
 #ifdef _DEBUG
 
-//#include "vld.h"
+#include "vld.h"
 
 #endif
 
@@ -72,6 +72,7 @@ ______________________________________________________________________*/
 #include "ShadowLightMgr.h"
 #include "PacketMgr.h"
 #include "ServerMath.h"
+#include "MouseCursorMgr.h"
 
 /*____________________________________________________________________
 Window Console창.
