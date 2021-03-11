@@ -52,6 +52,7 @@ public:
 
 	// MultiThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
+	void			Render_AfterImage(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 
 private:
@@ -82,6 +83,9 @@ private:
 	_uint			m_iMeshPipelineStatePass   = 0;
 	_uint			m_iShadowPipelineStatePass = 0;
 	CDynamicCamera*	m_pDynamicCamera	       = nullptr;
+
+	// AfterImage
+	list<_matrix>	m_lstAFWorldMatrix;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]

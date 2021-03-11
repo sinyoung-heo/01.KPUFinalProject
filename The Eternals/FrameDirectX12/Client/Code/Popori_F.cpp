@@ -141,6 +141,10 @@ _int CPopori_F::Update_GameObject(const _float & fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
+	// AfterImage
+	m_lstAFWorldMatrix.emplace_back(m_pTransCom->m_matWorld);
+	if (m_lstAFWorldMatrix.size() > Engine::AFTERIMG_SIZE)
+		m_lstAFWorldMatrix.pop_front();
 
 	return NO_EVENT;
 }
@@ -181,8 +185,8 @@ _int CPopori_F::LateUpdate_GameObject(const _float & fTimeDelta)
 
 void CPopori_F::Render_EdgeGameObject(const _float & fTimeDelta)
 {
-	Set_ConstantTable();
-	m_pMeshCom->Render_DynamicMesh(m_pEdgeObjectShaderCom);
+	//Set_ConstantTable();
+	//m_pMeshCom->Render_DynamicMesh(m_pEdgeObjectShaderCom);
 }
 
 void CPopori_F::Render_ShadowDepth(const _float & fTimeDelta)
@@ -191,7 +195,9 @@ void CPopori_F::Render_ShadowDepth(const _float & fTimeDelta)
 	m_pMeshCom->Render_DynamicMeshShadowDepth(m_pShadowCom);
 }
 
-void CPopori_F::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList * pCommandList, const _int& iContextIdx)
+void CPopori_F::Render_GameObject(const _float& fTimeDelta,
+								  ID3D12GraphicsCommandList * pCommandList, 
+								  const _int& iContextIdx)
 {
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
@@ -200,7 +206,34 @@ void CPopori_F::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsComman
 	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
 
 	Set_ConstantTable();
+	m_pShaderCom->Set_PipelineStatePass(0);
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
+
+	// Render AfterImage
+	m_pShaderCom->Set_PipelineStatePass(5);
+	Render_AfterImage(fTimeDelta, pCommandList, iContextIdx);
+}
+
+void CPopori_F::Render_AfterImage(const _float& fTimeDelta,
+								  ID3D12GraphicsCommandList* pCommandList, 
+								  const _int& iContextIdx)
+{
+	auto iter_begin = m_lstAFWorldMatrix.begin();
+	auto iter_end	= m_lstAFWorldMatrix.end();
+
+	for (_uint i = 0; iter_begin != iter_end; ++i, ++iter_begin)
+	{
+		/*__________________________________________________________________________________________________________
+		[ Set ConstantBuffer Data ]
+		____________________________________________________________________________________________________________*/
+		Engine::CB_SHADER_MESH tCB_ShaderMesh;
+		ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
+		tCB_ShaderMesh.matWorld = Engine::CShader::Compute_MatrixTranspose(*iter_begin);
+		m_pShaderCom->Get_UploadBuffer_AFShaderMesh()->CopyData(i, tCB_ShaderMesh);
+
+		// Render Buffer
+		m_pMeshCom->Render_DynamicMeshAfterImage(pCommandList, iContextIdx, m_pShaderCom, i);
+	}
 }
 
 void CPopori_F::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList * pCommandList, const _int& iContextIdx)

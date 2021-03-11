@@ -51,6 +51,7 @@ public:
 	void Render_AfterDynamicMesh(CShader* pShader);
 	// MultiThread Rendering
 	void Render_DynamicMesh(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
+	void Render_DynamicMeshAfterImage(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader, const _uint& iAfterImgIdx);
 	void Render_StaticMesh(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 	void Render_DynamicMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 	void Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
@@ -114,6 +115,9 @@ private:
 	_vec3	m_vCenter		= _vec3(0.0f);
 	_vec3	m_vMin			= _vec3(0.0f);
 	_vec3	m_vMax			= _vec3(0.0f);
+
+	// AfterImage
+	list<CB_SKINNING_MATRIX> m_lstAFSkinningMatrix;
 
 public:
 	virtual CComponent* Clone();

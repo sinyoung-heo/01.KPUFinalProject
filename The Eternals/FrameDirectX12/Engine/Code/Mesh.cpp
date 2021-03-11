@@ -98,6 +98,15 @@ void CMesh::Render_DynamicMesh(ID3D12GraphicsCommandList * pCommandList,
 		m_pVIMesh->Render_DynamicMesh(pCommandList, iContextIdx, pShader);
 }
 
+void CMesh::Render_DynamicMeshAfterImage(ID3D12GraphicsCommandList* pCommandList, 
+										 const _int& iContextIdx, 
+										 CShader* pShader,
+										 const _uint& iAfterImgIdx)
+{
+	if (nullptr != m_pVIMesh && nullptr != pCommandList)
+		m_pVIMesh->Render_DynamicMeshAfterImage(pCommandList, iContextIdx, pShader, iAfterImgIdx);
+}
+
 void CMesh::Render_StaticMesh(ID3D12GraphicsCommandList * pCommandList, 
 							  const _int& iContextIdx,
 							  CShader * pShader)

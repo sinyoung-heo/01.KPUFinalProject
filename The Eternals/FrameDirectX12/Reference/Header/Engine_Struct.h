@@ -774,6 +774,9 @@ namespace Engine
 		XMFLOAT4X4	matProj;
 		_vec4		vCameraPos;
 		_float		fProjFar;
+		_float		fOffset1;
+		_float		fOffset2;
+		_float		fOffset3;
 
 	} CB_CAMERA_MATRIX;
 
@@ -859,6 +862,27 @@ namespace Engine
 
 	typedef struct tagConstnatBufferSkinningMatrix
 	{
+		tagConstnatBufferSkinningMatrix() = default;
+		tagConstnatBufferSkinningMatrix(const tagConstnatBufferSkinningMatrix& rhs)
+		{
+			//memcpy(matBoneOffset, rhs.matBoneOffset, sizeof(XMFLOAT4X4) * 64);
+			//memcpy(matBoneScale, rhs.matBoneScale, sizeof(XMFLOAT4X4) * 64);
+			//memcpy(matBoneRotation, rhs.matBoneRotation, sizeof(XMFLOAT4X4) * 64);
+			//memcpy(matBoneTrans, rhs.matBoneTrans, sizeof(XMFLOAT4X4) * 64);
+			//memcpy(matParentTransform, rhs.matParentTransform, sizeof(XMFLOAT4X4) * 64);
+			//memcpy(matRootTransform, rhs.matRootTransform, sizeof(XMFLOAT4X4) * 64);
+
+			for (_uint i = 0; i < 64; ++i)
+			{
+				matBoneOffset[i]      = rhs.matBoneOffset[i];
+				matBoneScale[i]       = rhs.matBoneScale[i];
+				matBoneRotation[i]    = rhs.matBoneRotation[i];
+				matBoneTrans[i]       = rhs.matBoneTrans[i];
+				matParentTransform[i] = rhs.matParentTransform[i];
+				matRootTransform[i]   = rhs.matRootTransform[i];
+			}
+		}
+
 		XMFLOAT4X4	matBoneOffset[64];
 		XMFLOAT4X4	matBoneScale[64];
 		XMFLOAT4X4	matBoneRotation[64];

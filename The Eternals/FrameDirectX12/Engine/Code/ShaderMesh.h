@@ -12,8 +12,10 @@ private:
 
 public:
 	// Get
-	CUploadBuffer<CB_SHADER_MESH>*		Get_UploadBuffer_ShaderMesh()	{ return m_pCB_ShaderMesh; }
-	CUploadBuffer<CB_SKINNING_MATRIX>*	Get_UploadBuffer_SkinningMatrix() { return m_pCB_SkinningMatrix; }
+	CUploadBuffer<CB_SHADER_MESH>*		Get_UploadBuffer_ShaderMesh()		{ return m_pCB_ShaderMesh; }
+	CUploadBuffer<CB_SKINNING_MATRIX>*	Get_UploadBuffer_SkinningMatrix()	{ return m_pCB_SkinningMatrix; }
+	CUploadBuffer<CB_SHADER_MESH>*		Get_UploadBuffer_AFShaderMesh()		{ return m_pCB_AFShaderMesh; }
+	CUploadBuffer<CB_SKINNING_MATRIX>*	Get_UploadBuffer_AFSkinningMatrix() { return m_pCB_AFSkinningMatrix; }
 	HRESULT			SetUp_ShaderConstantBuffer(const _uint& uiNumSubsetMesh = 1);
 
 	// CShader을(를) 통해 상속됨
@@ -28,6 +30,11 @@ public:
 								 const _int& iContextIdx,
 								 ID3D12DescriptorHeap* pTexDescriptorHeap = nullptr,
 								 const _uint& iSubMeshIdx = 0);
+
+	virtual void	Begin_Shader(ID3D12GraphicsCommandList* pCommandList,
+								 const _int& iContextIdx,
+								 const _uint& iSubMeshIdx,
+								 const _uint& iAfterImgIdx);
 
 private:
 	virtual HRESULT								Create_RootSignature();
@@ -47,6 +54,10 @@ private:
 	CUploadBuffer<CB_SHADER_MESH>*		m_pCB_ShaderMesh		= nullptr;
 	CUploadBuffer<CB_SKINNING_MATRIX>*	m_pCB_SkinningMatrix	= nullptr;
 	
+	// AfterImage
+	CUploadBuffer<CB_SHADER_MESH>*		m_pCB_AFShaderMesh		= nullptr;
+	CUploadBuffer<CB_SKINNING_MATRIX>*	m_pCB_AFSkinningMatrix	= nullptr;
+
 public:
 	virtual CComponent* Clone() override;
 	static	CShader*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);

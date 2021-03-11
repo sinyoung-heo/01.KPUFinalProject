@@ -165,36 +165,36 @@ HRESULT CStageHSY::Ready_LayerEnvironment(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ Sector Grid ]
 	____________________________________________________________________________________________________________*/
-	_int world_width	= 256;
-	_int world_height	= 256;
-	_int sector_size	= 256;
+	//_int world_width	= 256;
+	//_int world_height	= 256;
+	//_int sector_size	= 256;
 
-	_vec3 vOffset(_float(sector_size), 0.0f, _float(sector_size));
-	_vec3 vCount((_float)(world_width / sector_size), 0.0f, _float(world_height / sector_size));
+	//_vec3 vOffset(_float(sector_size), 0.0f, _float(sector_size));
+	//_vec3 vCount((_float)(world_width / sector_size), 0.0f, _float(world_height / sector_size));
 
-	_vec3 vPos = _vec3(0.0f, 0.0f, (_float)world_height / 2);
-	for (_int i = 0; i < vCount.x + 1; ++i)
-	{
-		pGameObj = CCubeObject::Create(m_pGraphicDevice, m_pCommandList,
-									   _vec3(0.25f, 1.0f, (_float)world_height),	// Scale
-									   _vec3(0.0f),								// Angle
-									   vPos);									// Pos
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Grid_Width", pGameObj), E_FAIL);
+	//_vec3 vPos = _vec3(0.0f, 0.0f, (_float)world_height / 2);
+	//for (_int i = 0; i < vCount.x + 1; ++i)
+	//{
+	//	pGameObj = CCubeObject::Create(m_pGraphicDevice, m_pCommandList,
+	//								   _vec3(0.25f, 1.0f, (_float)world_height),	// Scale
+	//								   _vec3(0.0f),								// Angle
+	//								   vPos);									// Pos
+	//	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Grid_Width", pGameObj), E_FAIL);
 
-		vPos.x += vOffset.x;
-	}
+	//	vPos.x += vOffset.x;
+	//}
 
-	vPos = _vec3((_float)world_width / 2, 0.0f, 0.0f);
-	for (_int i = 0; i < vCount.z + 1; ++i)
-	{
-		pGameObj = CCubeObject::Create(m_pGraphicDevice, m_pCommandList,
-									   _vec3((_float)world_width, 1.0f, 0.25f),	// Scale
-									   _vec3(0.0f),								// Angle
-									   vPos);									// Pos
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Grid_Height", pGameObj), E_FAIL);
+	//vPos = _vec3((_float)world_width / 2, 0.0f, 0.0f);
+	//for (_int i = 0; i < vCount.z + 1; ++i)
+	//{
+	//	pGameObj = CCubeObject::Create(m_pGraphicDevice, m_pCommandList,
+	//								   _vec3((_float)world_width, 1.0f, 0.25f),	// Scale
+	//								   _vec3(0.0f),								// Angle
+	//								   vPos);									// Pos
+	//	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Grid_Height", pGameObj), E_FAIL);
 
-		vPos.z += vOffset.z;
-	}
+	//	vPos.z += vOffset.z;
+	//}
 
 
 	return S_OK;
@@ -298,7 +298,7 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 	pGameObj =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
 								  L"PoporiR19",					// MeshTag
 								  L"TestNaviMesh",				// NaviMeshTag
-								  _vec3(0.1f, 0.1f, 0.1f),		// Scale
+								  _vec3(1.0f, 1.0f, 1.0f),		// Scale
 								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
 								  _vec3(0.0f, 0.0f, 0.0f));		// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PoporiR19", pGameObj), E_FAIL);
