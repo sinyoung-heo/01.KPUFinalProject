@@ -212,8 +212,7 @@ void CRenderer::Clear_RenderGroup()
 
 void CRenderer::Render_Priority(const _float& fTimeDelta)
 {
-	for (auto& pGameObject : m_RenderList[RENDER_PRIORITY])
-		pGameObject->Render_GameObject(fTimeDelta);
+	
 }
 
 void CRenderer::Render_ShadowDepth(const _float & fTimeDelta)
@@ -231,6 +230,8 @@ void CRenderer::Render_NonAlpha(const _float& fTimeDelta)
 {
 	m_pTargetDeferred->SetUp_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
 
+	for (auto& pGameObject : m_RenderList[RENDER_PRIORITY])
+		pGameObject->Render_GameObject(fTimeDelta);
 	for (auto& pGameObject : m_RenderList[RENDER_NONALPHA])
 		pGameObject->Render_GameObject(fTimeDelta);
 
@@ -274,6 +275,7 @@ void CRenderer::Render_Blend()
 		vecBlendTarget.emplace_back(m_pTargetBlend->Get_TargetTexture()[0]);
 		vecBlendTarget.emplace_back(vecDeferredTarget[3]);	// RenderTarget - Depth
 		vecBlendTarget.emplace_back(vecBlurTarget[3]);	// RenderTarget - EdgeBlur
+		vecBlendTarget.emplace_back(vecDeferredTarget[5]);	// RenderTarget - Sky
 		m_pBlendShader->SetUp_ShaderTexture(vecBlendTarget);
 		m_pHDRShader->SetUp_ShaderTexture(vecBlendTarget);
 	}
@@ -375,7 +377,6 @@ void CRenderer::Render_Luminance()
 		for (_int i = 0; i < 6; i++)
 		{
 			vecLuminanceTarget.emplace_back(m_pTargetLuminance[i]->Get_TargetTexture()[0]);	// RenderTarget - Blend
-
 		}
 		for(auto & Shader: m_pLuminanceShader)
 			Shader->SetUp_ShaderTexture(vecLuminanceTarget);
@@ -680,13 +681,15 @@ HRESULT CRenderer::Ready_RenderTarget()
 	[ Deferred RenderTarget ]
 	____________________________________________________________________________________________________________*/
 	// Diffuse, Normal, Specular, Depth
-	m_pTargetDeferred = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 5);
+	m_pTargetDeferred = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 6);
 	NULL_CHECK_RETURN(m_pTargetDeferred, E_FAIL);
 	m_pTargetDeferred->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Diffuse
 	m_pTargetDeferred->Set_TargetClearColor(1, _rgba(0.0f, 0.0f, 0.0f, 1.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Normal
 	m_pTargetDeferred->Set_TargetClearColor(2, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Specular
 	m_pTargetDeferred->Set_TargetClearColor(3, _rgba(1.0f, 1.0f, 1.0f, 1.0f), DXGI_FORMAT_R32G32B32A32_FLOAT);	// Depth
 	m_pTargetDeferred->Set_TargetClearColor(4, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);	// Emissive
+	m_pTargetDeferred->Set_TargetClearColor(5, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);	// Emissive
+
 	FAILED_CHECK_RETURN(m_pTargetDeferred->SetUp_DefaultSetting(TARGETID::TYPE_DEFAULT), E_FAIL);
 
 	/*__________________________________________________________________________________________________________

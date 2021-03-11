@@ -16,7 +16,6 @@ Texture2D g_TexCrossFilterObject : register(t1); // g_TexCrossFilterObject
 Texture2D g_TexDepth : register(t2); // g_TexDepth
 Texture2D g_TexCrossFilterDepth : register(t3); //
 
-
 cbuffer cbShaderVariable : register(b0)
 {
     float4 g_float4 : packoffset(c0);

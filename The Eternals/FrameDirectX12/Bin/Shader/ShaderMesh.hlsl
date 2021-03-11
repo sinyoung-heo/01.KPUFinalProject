@@ -17,7 +17,6 @@ Texture2D g_TexNormal		: register(t1);	// 탄젠트 공간 Normal Map.
 Texture2D g_TexSpecular		: register(t2);	// Specular 강도.
 Texture2D g_TexShadowDepth	: register(t3);	// ShadowDepth
 Texture2D g_TexDissolve		: register(t4); // Dissolve
-
 /*__________________________________________________________________________________________________________
 [ Constant Buffer ]
 ____________________________________________________________________________________________________________*/
@@ -168,16 +167,14 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 	TexNormal			= (TexNormal * 2.0f) - 1.0f;			// 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.
 	float3 Normal		= (TexNormal.x * ps_input.T) + (TexNormal.y * ps_input.B) + (TexNormal.z * ps_input.N);
 	ps_output.Normal	= float4(Normal.xyz * 0.5f + 0.5f, 1.f);// 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
-	
 	// Specular
 	ps_output.Specular	= g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
 	
 	// Depth
 	ps_output.Depth		= float4(ps_input.ProjPos.z / ps_input.ProjPos.w,	// (posWVP.z / posWVP.w) : Proj 영역의 Z.
 								 ps_input.ProjPos.w / g_fProjFar,			// posWVP.w / Far : 0~1로 만든 View영역의 Z.
-								 0.0f, 1.0f);
-
-
+								 1.0f, 1.0f);
+   
     //float Normal_fDissolve = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV).r;
 
     //if ((0.05f > (1.f - g_fDissolve) - Normal_fDissolve) && ((1.f - g_fDissolve) - Normal_fDissolve) > 0.f)
@@ -288,7 +285,7 @@ PS_OUT PS_SHADOW_MAIN(VS_OUT ps_input) : SV_TARGET
 	// Depth
 	ps_output.Depth		= float4(ps_input.ProjPos.z / ps_input.ProjPos.w,	// (posWVP.z / posWVP.w) : Proj 영역의 Z.
 								 ps_input.ProjPos.w / g_fProjFar,			// posWVP.w / Far : 0~1로 만든 View영역의 Z.
-								 0.0f, 1.0f);
+								 1.0f, 1.0f);
 	
 	/*__________________________________________________________________________________________________________
 	[ 현재의 깊이와 그림자 깊이 비교 ]
@@ -372,7 +369,7 @@ PS_OUT2 PS_CROSSFILTER(VS_OUT ps_input) : SV_TARGET
     ps_out2.Color = float4(g_vLightPos.x, g_vLightPos.y, g_vLightPos.z, 1.f);
     ps_out2.Depth = float4(ps_input.ProjPos.z / ps_input.ProjPos.w, // (posWVP.z / posWVP.w) : Proj 영역의 Z.
 								 ps_input.ProjPos.w / g_fProjFar, // posWVP.w / Far : 0~1로 만든 View영역의 Z.
-								 0.0f, 1.0f);
+								 1.0f, 1.0f);
 
     return ps_out2;
 }

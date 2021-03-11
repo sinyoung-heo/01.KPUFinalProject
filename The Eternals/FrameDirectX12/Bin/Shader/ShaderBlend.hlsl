@@ -22,6 +22,7 @@ Texture2D g_TexAverageColor : register(t7); // AveColor
 Texture2D g_TexBlend : register(t8); // Blend
 Texture2D g_TexDepth : register(t9); //Depth
 Texture2D g_TexEdgeBlur : register(t10); //Edge-Blur
+Texture2D g_TexSkyBox : register(t11); //SB
 
 cbuffer IS_Rendering : register(b0)
 {
@@ -126,10 +127,14 @@ float4 PS_FINAL(VS_OUT ps_input) : SV_TARGET
     float4 Emissive = g_TexEmissive.Sample(g_samLinearWrap, ps_input.TexUV);
     float3 Color;
     float4 Output = float4(0, 0, 0, 0), Output2 = float4(0, 0, 0, 0);
-    float ViewZ = g_TexDepth.Sample(g_samLinearWrap, ps_input.TexUV).g;
+    float4 Depth = g_TexDepth.Sample(g_samLinearWrap, ps_input.TexUV);
+    float ViewZ = Depth.g;
     //0 ~1값의 ViewZ 값 멀어질수록 1에 가까워진다. 거리 0.05이상부터 DOF 처리를 매길것임
     //50 : 1000 = 1600 : 650
     //50 : 1000 = 900 : 
+  
+    float4 SkyBox = g_TexSkyBox.Sample(g_samLinearWrap, ps_input.TexUV) * (1 - Depth.b);
+   
     float2 vGausTexUV = float2(0, 0);
     if (ViewZ > 0.05f && fDepthOfField){ for (int i = 0; i < 13; i++){
             vGausTexUV.x = ps_input.TexUV.x + (g_fOffSet[i]) / (3200.f - ViewZ *2000.f );
@@ -142,7 +147,7 @@ float4 PS_FINAL(VS_OUT ps_input) : SV_TARGET
         }}
     else
         Output = Output2 = g_TexBlend.Sample(g_samLinearWrap, ps_input.TexUV);
-    BlendTarget = (Output + Output2)*0.5f;
+    BlendTarget = (Output + Output2) * 0.5f;
 
     //OnOff
     if(!fToneMapping)
@@ -150,9 +155,10 @@ float4 PS_FINAL(VS_OUT ps_input) : SV_TARGET
     else
         Color = BlendTarget.xyz + mul(Blur.xyz, 2.f) + Emissive.xyz;
 
-    Color += EdgeBlur;
+    Color += (EdgeBlur + SkyBox);
+    
     return float4(Color, BlendTarget.a);
     
     
     //return BlendTarget;
-}
+    }
