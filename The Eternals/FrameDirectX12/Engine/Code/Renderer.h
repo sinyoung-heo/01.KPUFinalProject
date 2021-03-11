@@ -156,6 +156,11 @@ private:
 	CRenderTarget * m_pTargetNPathDir = nullptr; // n规氢 鸥百
 	CShaderNPathDir* m_pNPathDirShader = nullptr;
 	CScreenTex* m_pNPathDirBuffer = nullptr;
+	//SUNSHINE
+	CScreenTex* m_pSunShineBuffer = nullptr;
+	CShaderNPathDir* m_pSunShineShader = nullptr;
+	CRenderTarget* m_pTargetSunShine = nullptr; // n规氢 鸥百
+
 	_bool m_bisSetNPathDirTexture		{false};
 	// Blend
 	CScreenTex*		m_pBlendBuffer					= nullptr;
@@ -184,6 +189,9 @@ private:
 	CScreenTex* m_pSSAOBuffer = nullptr;
 	CShaderSSAO* m_pSSAOShader = nullptr;
 	_bool				m_bIsSetSSAOTexture{ false };
+
+
+	
 	/*__________________________________________________________________________________________________________
 	[ Pipeline StateGroup ]
 	____________________________________________________________________________________________________________*/

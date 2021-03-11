@@ -106,9 +106,12 @@ void CShaderBlend::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, const 
 	SRV_TexEdgeBlurDescriptorHandle.Offset(10, m_uiCBV_SRV_UAV_DescriptorSize);
 	m_pCommandList->SetGraphicsRootDescriptorTable(10,		// RootParameter Index. (Tex EdgeBlur)
 		SRV_TexEdgeBlurDescriptorHandle);
-
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexSkyBoxDescriptorHandle(m_pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	SRV_TexSkyBoxDescriptorHandle.Offset(11, m_uiCBV_SRV_UAV_DescriptorSize);
+	m_pCommandList->SetGraphicsRootDescriptorTable(11,		// RootParameter Index. (Tex EdgeBlur)
+		SRV_TexSkyBoxDescriptorHandle);
 	//Cbuffer
-	m_pCommandList->SetGraphicsRootConstantBufferView(11,	// RootParameter Index
+	m_pCommandList->SetGraphicsRootConstantBufferView(12,	// RootParameter Index
 		m_pCB_ShaderInformation->Resource()->GetGPUVirtualAddress());
 
 }
@@ -167,7 +170,7 @@ HRESULT CShaderBlend::Create_RootSignature()
 	/*__________________________________________________________________________________________________________
 	[ SRV를 담는 서술자 테이블을 생성 ]
 	____________________________________________________________________________________________________________*/
-	CD3DX12_DESCRIPTOR_RANGE SRV_Table[11];
+	CD3DX12_DESCRIPTOR_RANGE SRV_Table[12];
 	
 	// Texture - DiffuseTarget
 	SRV_Table[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,// 서술자의 종류 - Shader Resource View.
@@ -229,10 +232,14 @@ HRESULT CShaderBlend::Create_RootSignature()
 		1,								// 서술자의 개수 - Texture2D의 개수.
 		10,								// 셰이더 인수들의 기준 레지스터 번호. (register t10)
 		0);								// 레지스터 공간.
+	SRV_Table[11].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,	// 서술자의 종류 - Shader Resource View.
+		1,								// 서술자의 개수 - Texture2D의 개수.
+		11,								// 셰이더 인수들의 기준 레지스터 번호. (register t10)
+		0);								// 레지스터 공간.
 	/*__________________________________________________________________________________________________________
 	- 루트 매개변수는 테이블이거나, 루트 서술자 또는 루트 상수이다.
 	____________________________________________________________________________________________________________*/
-	CD3DX12_ROOT_PARAMETER RootParameter[12];
+	CD3DX12_ROOT_PARAMETER RootParameter[13];
 	RootParameter[0].InitAsDescriptorTable(1, &SRV_Table[0], D3D12_SHADER_VISIBILITY_PIXEL);	// t0
 	RootParameter[1].InitAsDescriptorTable(1, &SRV_Table[1], D3D12_SHADER_VISIBILITY_PIXEL);	// t1
 	RootParameter[2].InitAsDescriptorTable(1, &SRV_Table[2], D3D12_SHADER_VISIBILITY_PIXEL);	// t2
@@ -244,11 +251,11 @@ HRESULT CShaderBlend::Create_RootSignature()
 	RootParameter[8].InitAsDescriptorTable(1, &SRV_Table[8], D3D12_SHADER_VISIBILITY_PIXEL);	// t8
 	RootParameter[9].InitAsDescriptorTable(1, &SRV_Table[9], D3D12_SHADER_VISIBILITY_PIXEL);	// t9
 	RootParameter[10].InitAsDescriptorTable(1, &SRV_Table[10], D3D12_SHADER_VISIBILITY_PIXEL);	// t10
-
-	RootParameter[11].InitAsConstantBufferView(0); //b0
+	RootParameter[11].InitAsDescriptorTable(1, &SRV_Table[11], D3D12_SHADER_VISIBILITY_PIXEL);	// t10
+	RootParameter[12].InitAsConstantBufferView(0); //b0
 
 	auto StaticSamplers = Get_StaticSamplers();
-	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(12,							// 루트 파라미터 개수.(SRV 10 : 총10개)
+	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(13,							// 루트 파라미터 개수.(SRV 10 : 총10개)
 												  RootParameter,
 												  (_uint)StaticSamplers.size(),	// 샘플러 개수.
 												  StaticSamplers.data(),		// 샘플러 데이터.

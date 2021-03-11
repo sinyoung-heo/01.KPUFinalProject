@@ -212,8 +212,7 @@ void CRenderer::Clear_RenderGroup()
 
 void CRenderer::Render_Priority(const _float& fTimeDelta)
 {
-	for (auto& pGameObject : m_RenderList[RENDER_PRIORITY])
-		pGameObject->Render_GameObject(fTimeDelta);
+	
 }
 
 void CRenderer::Render_ShadowDepth(const _float & fTimeDelta)
@@ -231,6 +230,8 @@ void CRenderer::Render_NonAlpha(const _float& fTimeDelta)
 {
 	m_pTargetDeferred->SetUp_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
 
+	for (auto& pGameObject : m_RenderList[RENDER_PRIORITY])
+		pGameObject->Render_GameObject(fTimeDelta);
 	for (auto& pGameObject : m_RenderList[RENDER_NONALPHA])
 		pGameObject->Render_GameObject(fTimeDelta);
 
@@ -274,6 +275,7 @@ void CRenderer::Render_Blend()
 		vecBlendTarget.emplace_back(m_pTargetBlend->Get_TargetTexture()[0]);
 		vecBlendTarget.emplace_back(vecDeferredTarget[3]);	// RenderTarget - Depth
 		vecBlendTarget.emplace_back(vecBlurTarget[3]);	// RenderTarget - EdgeBlur
+		vecBlendTarget.emplace_back(vecDeferredTarget[5]);	// RenderTarget - Sky
 		m_pBlendShader->SetUp_ShaderTexture(vecBlendTarget);
 		m_pHDRShader->SetUp_ShaderTexture(vecBlendTarget);
 	}
@@ -375,7 +377,6 @@ void CRenderer::Render_Luminance()
 		for (_int i = 0; i < 6; i++)
 		{
 			vecLuminanceTarget.emplace_back(m_pTargetLuminance[i]->Get_TargetTexture()[0]);	// RenderTarget - Blend
-
 		}
 		for(auto & Shader: m_pLuminanceShader)
 			Shader->SetUp_ShaderTexture(vecLuminanceTarget);
@@ -403,16 +404,21 @@ void CRenderer::Render_NPathDir()
 		vecNPathDirTarget.emplace_back(vecCrossFilterObjectTarget[0]);	// RenderTarget - Emissive
 		vecNPathDirTarget.emplace_back(vecDeferredTarget[3]);	// RenderTarget - Depth
 		vecNPathDirTarget.emplace_back(vecCrossFilterObjectTarget[1]);	// RenderTarget - Depth
+		vecNPathDirTarget.emplace_back(vecDeferredTarget[5]);	// RenderTarget - Emissive
+		vecNPathDirTarget.emplace_back(m_pTargetSunShine->Get_TargetTexture()[0]);	// RenderTarget - Emissive
 		m_pNPathDirShader->SetUp_ShaderTexture(vecNPathDirTarget);
+		m_pSunShineShader->SetUp_ShaderTexture(vecNPathDirTarget);
 	}
 	m_pTargetNPathDir->SetUp_OnGraphicDevice();
-
 	m_pNPathDirShader->Begin_Shader();
-
-
 	m_pNPathDirBuffer->Begin_Buffer();
 	m_pNPathDirBuffer->Render_Buffer();
 	m_pTargetNPathDir->Release_OnGraphicDevice();
+	m_pTargetSunShine->SetUp_OnGraphicDevice();
+	m_pSunShineShader->Begin_Shader();
+	m_pSunShineBuffer->Begin_Buffer();
+	m_pSunShineBuffer->Render_Buffer();
+	m_pTargetSunShine->Release_OnGraphicDevice();
 }
 
 void CRenderer::Render_DownSampling()
@@ -558,6 +564,8 @@ void CRenderer::Render_RenderTarget()
 			m_pTargetCrossFilter->Render_RenderTarget();
 		if (nullptr != m_pTargetNPathDir)
 			m_pTargetNPathDir->Render_RenderTarget();
+		if (nullptr != m_pTargetSunShine)
+			m_pTargetSunShine->Render_RenderTarget();
 	}
 
 }
@@ -680,13 +688,15 @@ HRESULT CRenderer::Ready_RenderTarget()
 	[ Deferred RenderTarget ]
 	____________________________________________________________________________________________________________*/
 	// Diffuse, Normal, Specular, Depth
-	m_pTargetDeferred = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 5);
+	m_pTargetDeferred = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 6);
 	NULL_CHECK_RETURN(m_pTargetDeferred, E_FAIL);
 	m_pTargetDeferred->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Diffuse
 	m_pTargetDeferred->Set_TargetClearColor(1, _rgba(0.0f, 0.0f, 0.0f, 1.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Normal
 	m_pTargetDeferred->Set_TargetClearColor(2, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Specular
 	m_pTargetDeferred->Set_TargetClearColor(3, _rgba(1.0f, 1.0f, 1.0f, 1.0f), DXGI_FORMAT_R32G32B32A32_FLOAT);	// Depth
 	m_pTargetDeferred->Set_TargetClearColor(4, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);	// Emissive
+	m_pTargetDeferred->Set_TargetClearColor(5, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);	// Emissive
+
 	FAILED_CHECK_RETURN(m_pTargetDeferred->SetUp_DefaultSetting(TARGETID::TYPE_DEFAULT), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
@@ -850,6 +860,17 @@ HRESULT CRenderer::Ready_RenderTarget()
 	m_pNPathDirShader = static_cast<CShaderNPathDir*>(m_pComponentMgr->Clone_Component(L"ShaderNPathDir", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pNPathDirShader, E_FAIL);
 	FAILED_CHECK_RETURN(m_pNPathDirShader->Set_PipelineStatePass(0), E_FAIL);
+	//SuneShine
+	m_pTargetSunShine = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
+	NULL_CHECK_RETURN(m_pTargetSunShine, E_FAIL);
+	m_pTargetSunShine->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	FAILED_CHECK_RETURN(m_pTargetSunShine->SetUp_DefaultSetting(TARGETID::TYPE_DEFAULT), E_FAIL);
+	m_pTargetSunShine->Set_TargetRenderPos(_vec3(WIDTH_THIRD, HEIGHT_FIFTH, 1.0f));
+	m_pSunShineBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pSunShineBuffer, E_FAIL);
+	m_pSunShineShader = static_cast<CShaderNPathDir*>(m_pComponentMgr->Clone_Component(L"ShaderNPathDir", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pSunShineShader, E_FAIL);
+	FAILED_CHECK_RETURN(m_pSunShineShader->Set_PipelineStatePass(1), E_FAIL);
 	/*__________________________________________________________________________________________________________
 	[ Blend Resource ]
 	____________________________________________________________________________________________________________*/
@@ -1258,6 +1279,10 @@ void CRenderer::Free()
 	Safe_Release(m_pTargetNPathDir);
 	Safe_Release(m_pNPathDirShader);
 	Safe_Release(m_pNPathDirBuffer);
+	//SunS
+	Safe_Release(m_pTargetSunShine);
+	Safe_Release(m_pSunShineShader);
+	Safe_Release(m_pSunShineBuffer);
 	/*__________________________________________________________________________________________________________
 	2020.06.07 MultiThreadRendering
 	- CommandAllocators & CommandList Á¦°Å.

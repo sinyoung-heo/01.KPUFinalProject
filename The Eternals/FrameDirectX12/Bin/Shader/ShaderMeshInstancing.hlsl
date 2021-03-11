@@ -139,7 +139,7 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 	// Depth
 	ps_output.Depth		= float4(ps_input.ProjPos.z / ps_input.ProjPos.w,	// (posWVP.z / posWVP.w) : Proj 영역의 Z.
 								 ps_input.ProjPos.w / g_fProjFar,			// posWVP.w / Far : 0~1로 만든 View영역의 Z.
-								 0.0f, 1.0f);
+								 1.0f, 1.0f);
 
  //   float Normal_fDissolve = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV).r;
 	//if ((0.05f > (1.f - ps_input.Dissolve) - Normal_fDissolve) && ((1.f - ps_input.Dissolve) - Normal_fDissolve) > 0.f)
@@ -215,7 +215,7 @@ PS_OUT PS_SHADOW_MAIN(VS_OUT ps_input) : SV_TARGET
 	// Depth
 	ps_output.Depth		= float4(ps_input.ProjPos.z / ps_input.ProjPos.w,	// (posWVP.z / posWVP.w) : Proj 영역의 Z.
 								 ps_input.ProjPos.w / g_fProjFar,			// posWVP.w / Far : 0~1로 만든 View영역의 Z.
-								 0.0f, 1.0f);
+								 1.0f, 1.0f);
 	
 	/*__________________________________________________________________________________________________________
 	[ 현재의 깊이와 그림자 깊이 비교 ]
@@ -257,7 +257,7 @@ PS_OUT PS_TERRAIN_MAIN(VS_OUT ps_input) : SV_TARGET
 	// Depth
 	ps_output.Depth		= float4(ps_input.ProjPos.z / ps_input.ProjPos.w,	// (posWVP.z / posWVP.w) : Proj 영역의 Z.
 								 ps_input.ProjPos.w / g_fProjFar,			// posWVP.w / Far : 0~1로 만든 View영역의 Z.
-								 0.0f, 1.0f);
+								 1.0f, 1.0f);
 	
 	/*__________________________________________________________________________________________________________
 	[ 현재의 깊이와 그림자 깊이 비교 ]
