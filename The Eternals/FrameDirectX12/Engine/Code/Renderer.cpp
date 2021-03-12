@@ -414,6 +414,8 @@ void CRenderer::Render_NPathDir()
 	m_pNPathDirBuffer->Begin_Buffer();
 	m_pNPathDirBuffer->Render_Buffer();
 	m_pTargetNPathDir->Release_OnGraphicDevice();
+
+
 	m_pTargetSunShine->SetUp_OnGraphicDevice();
 	m_pSunShineShader->Begin_Shader();
 	m_pSunShineBuffer->Begin_Buffer();
@@ -694,8 +696,8 @@ HRESULT CRenderer::Ready_RenderTarget()
 	m_pTargetDeferred->Set_TargetClearColor(1, _rgba(0.0f, 0.0f, 0.0f, 1.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Normal
 	m_pTargetDeferred->Set_TargetClearColor(2, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Specular
 	m_pTargetDeferred->Set_TargetClearColor(3, _rgba(1.0f, 1.0f, 1.0f, 1.0f), DXGI_FORMAT_R32G32B32A32_FLOAT);	// Depth
-	m_pTargetDeferred->Set_TargetClearColor(4, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);	// Emissive
-	m_pTargetDeferred->Set_TargetClearColor(5, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);	// Emissive
+	m_pTargetDeferred->Set_TargetClearColor(4, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Emissive
+	m_pTargetDeferred->Set_TargetClearColor(5, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Emissive
 
 	FAILED_CHECK_RETURN(m_pTargetDeferred->SetUp_DefaultSetting(TARGETID::TYPE_DEFAULT), E_FAIL);
 

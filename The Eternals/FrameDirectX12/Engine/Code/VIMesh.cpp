@@ -761,13 +761,43 @@ void CVIMesh::Render_DynamicMesh(ID3D12GraphicsCommandList * pCommandList,
 			tCB_SkinningMatrix.matRootTransform[j]   = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform);
 		}
 		static_cast<CShaderMesh*>(pShader)->Get_UploadBuffer_SkinningMatrix()->CopyData(i, tCB_SkinningMatrix);
-
+		
+		// Mesh AfterImage
+		if (m_uiAfterImgSize)
+		{
+			m_lstAFSkinningMatrix.emplace_back(tCB_SkinningMatrix);
+			if (m_lstAFSkinningMatrix.size() > m_uiAfterImgSize * m_vecMeshEntry.size())
+				m_lstAFSkinningMatrix.pop_front();
+		}
 
 		pShader->Begin_Shader(pCommandList, iContextIdx, m_pTexDescriptorHeap, i);
 		Begin_Buffer(pCommandList, i);
 
 		Render_Buffer(pCommandList, i);
 	}
+}
+
+void CVIMesh::Render_DynamicMeshAfterImage(ID3D12GraphicsCommandList* pCommandList, 
+										   const _int& iContextIdx, 
+										   CShader* pShader,
+										   const _uint& iAfterImgIdx)
+{
+	auto iter_begin = m_lstAFSkinningMatrix.begin();
+	for (_int i = 0; i < iAfterImgIdx * m_vecMeshEntry.size(); ++i)
+		++iter_begin;
+
+	for (_int i = 0; i < m_vecMeshEntry.size(); ++i, ++iter_begin)
+	{
+		static_cast<CShaderMesh*>(pShader)->Get_UploadBuffer_AFSkinningMatrix()->CopyData(i + (m_vecMeshEntry.size() * iAfterImgIdx), *iter_begin);
+
+		static_cast<CShaderMesh*>(pShader)->Begin_Shader(pCommandList, 
+														 iContextIdx,
+														 i, 
+														 iAfterImgIdx);
+		Begin_Buffer(pCommandList, i);
+		Render_Buffer(pCommandList, i);
+	}
+	
 }
 
 void CVIMesh::Render_StaticMesh(ID3D12GraphicsCommandList * pCommandList,

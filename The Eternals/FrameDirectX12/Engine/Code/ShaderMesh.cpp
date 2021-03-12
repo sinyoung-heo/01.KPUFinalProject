@@ -19,9 +19,10 @@ CShaderMesh::CShaderMesh(const CShaderMesh & rhs)
 	____________________________________________________________________________________________________________*/
 }
 
-HRESULT CShaderMesh::SetUp_ShaderConstantBuffer(const _uint& uiNumSubsetMesh)
+HRESULT CShaderMesh::SetUp_ShaderConstantBuffer(const _uint& uiNumSubsetMesh, const _uint& iAfterImgSize)
 {
-	m_uiSubsetMeshSize	= uiNumSubsetMesh;
+	m_uiSubsetMeshSize  = uiNumSubsetMesh;
+	m_uiAfterImgSize	= iAfterImgSize;
 
 	m_pCB_ShaderMesh = CUploadBuffer<CB_SHADER_MESH>::Create(m_pGraphicDevice);
 	NULL_CHECK_RETURN(m_pCB_ShaderMesh, E_FAIL);
@@ -30,7 +31,15 @@ HRESULT CShaderMesh::SetUp_ShaderConstantBuffer(const _uint& uiNumSubsetMesh)
 	m_pCB_SkinningMatrix = CUploadBuffer<CB_SKINNING_MATRIX>::Create(m_pGraphicDevice, uiNumSubsetMesh);
 	NULL_CHECK_RETURN(m_pCB_SkinningMatrix, E_FAIL);
 
+	// AfterImage
+	if (m_uiAfterImgSize)
+	{
+		m_pCB_AFShaderMesh = CUploadBuffer<CB_SHADER_MESH>::Create(m_pGraphicDevice, m_uiAfterImgSize);
+		NULL_CHECK_RETURN(m_pCB_AFShaderMesh, E_FAIL);
 
+		m_pCB_AFSkinningMatrix = CUploadBuffer<CB_SKINNING_MATRIX>::Create(m_pGraphicDevice, uiNumSubsetMesh * m_uiAfterImgSize);
+		NULL_CHECK_RETURN(m_pCB_AFSkinningMatrix, E_FAIL);
+	}
 	return S_OK;
 }
 
@@ -152,6 +161,32 @@ void CShaderMesh::Begin_Shader(ID3D12GraphicsCommandList * pCommandList,
 
 }
 
+void CShaderMesh::Begin_Shader(ID3D12GraphicsCommandList* pCommandList,
+							   const _int& iContextIdx, 
+							   const _uint& iSubMeshIdx, 
+							   const _uint& iAfterImgIdx)
+{
+	// Set PipelineState.
+	CRenderer::Get_Instance()->Set_CurPipelineState(pCommandList, m_pPipelineState, iContextIdx);
+
+	// Set RootSignature.
+	pCommandList->SetGraphicsRootSignature(m_pRootSignature);
+
+	/*__________________________________________________________________________________________________________
+	[ CBV를 루트 서술자에 묶는다 ]
+	____________________________________________________________________________________________________________*/
+	pCommandList->SetGraphicsRootConstantBufferView(5,	// RootParameter Index
+													m_pCB_CameraProjMatrix->Resource()->GetGPUVirtualAddress());
+
+	pCommandList->SetGraphicsRootConstantBufferView(6,	// RootParameter Index
+													m_pCB_AFShaderMesh->Resource()->GetGPUVirtualAddress() +
+													m_pCB_AFShaderMesh->GetElementByteSize() * iAfterImgIdx);
+
+	pCommandList->SetGraphicsRootConstantBufferView(7,	// RootParameter Index
+													m_pCB_AFSkinningMatrix->Resource()->GetGPUVirtualAddress() + 
+													m_pCB_AFSkinningMatrix->GetElementByteSize() * (iSubMeshIdx + m_uiSubsetMeshSize * iAfterImgIdx));
+}
+
 HRESULT CShaderMesh::Create_RootSignature()
 {
 	/*__________________________________________________________________________________________________________
@@ -257,12 +292,13 @@ HRESULT CShaderMesh::Create_PipelineState()
 	PipelineStateDesc.pRootSignature		= m_pRootSignature;
 	PipelineStateDesc.SampleMask			= UINT_MAX;
 	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	PipelineStateDesc.NumRenderTargets		= 5;								// PS에서 사용할 RenderTarget 개수.
+	PipelineStateDesc.NumRenderTargets		= 6;								// PS에서 사용할 RenderTarget 개수.
 	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
 	PipelineStateDesc.RTVFormats[1]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Normal Target
 	PipelineStateDesc.RTVFormats[2]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Specular Target
 	PipelineStateDesc.RTVFormats[3]			= DXGI_FORMAT_R32G32B32A32_FLOAT;	// Depth Target
 	PipelineStateDesc.RTVFormats[4]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
+	PipelineStateDesc.RTVFormats[5]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
 
 	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
 	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
@@ -291,12 +327,14 @@ HRESULT CShaderMesh::Create_PipelineState()
 	PipelineStateDesc.pRootSignature		= m_pRootSignature;
 	PipelineStateDesc.SampleMask			= UINT_MAX;
 	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	PipelineStateDesc.NumRenderTargets		= 5;								// PS에서 사용할 RenderTarget 개수.
+	PipelineStateDesc.NumRenderTargets		= 6;								// PS에서 사용할 RenderTarget 개수.
 	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
 	PipelineStateDesc.RTVFormats[1]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Normal Target
 	PipelineStateDesc.RTVFormats[2]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Specular Target
 	PipelineStateDesc.RTVFormats[3]			= DXGI_FORMAT_R32G32B32A32_FLOAT;	// Depth Target
 	PipelineStateDesc.RTVFormats[4]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
+	PipelineStateDesc.RTVFormats[5]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
+
 	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
 	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
 	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -393,6 +431,50 @@ HRESULT CShaderMesh::Create_PipelineState()
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
 	CRenderer::Get_Instance()->Add_PipelineStateCnt();
+
+
+	/*__________________________________________________________________________________________________________
+	[ 5번 PipelineState Pass ]
+	- "VS_AFTERIMAGE"
+	- "PS_AFTERIMAGE"
+	- FILL_MODE_SOLID
+	- CULL_MODE_BACK
+	- Blend		(X)
+	- Z Write	(O)
+	____________________________________________________________________________________________________________*/
+	PipelineStateDesc.pRootSignature		= m_pRootSignature;
+	PipelineStateDesc.SampleMask			= UINT_MAX;
+	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	PipelineStateDesc.NumRenderTargets		= 6;								// PS에서 사용할 RenderTarget 개수.
+	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
+	PipelineStateDesc.RTVFormats[1]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Normal Target
+	PipelineStateDesc.RTVFormats[2]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Specular Target
+	PipelineStateDesc.RTVFormats[3]			= DXGI_FORMAT_R32G32B32A32_FLOAT;	// Depth Target
+	PipelineStateDesc.RTVFormats[4]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
+	PipelineStateDesc.RTVFormats[5]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
+
+	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;
+	vecInputLayout							= Create_InputLayout("VS_AFTERIMAGE", "PS_AFTERIMAGE");
+	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState			= Create_BlendState(true,
+																D3D12_BLEND_SRC_ALPHA,
+																D3D12_BLEND_INV_SRC_ALPHA,
+																D3D12_BLEND_OP_ADD,
+																D3D12_BLEND_ONE,
+																D3D12_BLEND_ZERO,
+																D3D12_BLEND_OP_ADD);
+	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState();
+	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState();
+
+	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
+	m_vecPipelineState.emplace_back(pPipelineState);
+	CRenderer::Get_Instance()->Add_PipelineStateCnt();
+
+
 	return S_OK;
 }
 
@@ -468,4 +550,9 @@ void CShaderMesh::Free()
 
 	Safe_Delete(m_pCB_ShaderMesh);
 	Safe_Delete(m_pCB_SkinningMatrix);
+	if (m_uiAfterImgSize)
+	{
+		Safe_Delete(m_pCB_AFShaderMesh);
+		Safe_Delete(m_pCB_AFSkinningMatrix);
+	}
 }

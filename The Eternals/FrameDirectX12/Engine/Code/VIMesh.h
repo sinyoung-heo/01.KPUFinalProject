@@ -30,9 +30,10 @@ public:
 	const _vec3&					Get_MaxVector()			{ return m_vMax; }
 	wstring							Get_FileName()			{ return m_wstrFileName; }
 	// Set
-	void							Set_AniCtrl(CAniCtrl* pAniCtrl) { m_pAniCtrl = pAniCtrl; }
-	void							Set_FileName(wstring& wstrFileName) { m_wstrFileName = wstrFileName; }
-
+	void							Set_AniCtrl(CAniCtrl* pAniCtrl)			{ m_pAniCtrl = pAniCtrl; }
+	void							Set_FileName(wstring& wstrFileName)		{ m_wstrFileName = wstrFileName; }
+	void							Set_AfterImgSize(const _uint& uiSize)	{ m_uiAfterImgSize = uiSize; }
+	 
 	// Method
 	HRESULT			Ready_Component(const aiScene* pScene, wstring wstrFileName, wstring wstrPath);
 	HRESULT			Ready_Mesh(const aiMesh* pAiMesh, vector<VTXMESH>& vecVertex, vector<_uint>& vecIndex);
@@ -51,6 +52,7 @@ public:
 	void Render_AfterDynamicMesh(CShader* pShader);
 	// MultiThread Rendering
 	void Render_DynamicMesh(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
+	void Render_DynamicMeshAfterImage(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader, const _uint& iAfterImgIdx);
 	void Render_StaticMesh(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 	void Render_DynamicMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 	void Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
@@ -114,6 +116,10 @@ private:
 	_vec3	m_vCenter		= _vec3(0.0f);
 	_vec3	m_vMin			= _vec3(0.0f);
 	_vec3	m_vMax			= _vec3(0.0f);
+
+	// AfterImage
+	list<CB_SKINNING_MATRIX>	m_lstAFSkinningMatrix;
+	_uint						m_uiAfterImgSize = 0;
 
 public:
 	virtual CComponent* Clone();
