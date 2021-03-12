@@ -11,6 +11,9 @@
 #include "Monster_Normal.h"
 #include "DynamicCamera.h"
 
+#include "TestColPlayer.h"
+#include "TestColMonster.h"
+
 IMPLEMENT_SINGLETON(CPacketMgr)
 
 CPacketMgr::CPacketMgr()
@@ -172,6 +175,11 @@ void CPacketMgr::ProcessPacket(char* ptr)
 									   _vec3(0.05f, 0.05f, 0.05f),		// Scale
 									   _vec3(0.0f, 0.0f, 0.0f),			// Angle
 									   _vec3(packet->posX, packet->posY, packet->posZ));		// Pos
+
+		//pGameObj = CTestColPlayer::Create(m_pGraphicDevice, m_pCommandList,
+		//							   _vec3(10.f, 10.f, 10.f),			// Scale
+		//							   _vec3(0.0f, 0.0f, 0.0f),			// Angle
+		//							   _vec3(packet->posX, packet->posY, packet->posZ));		// Pos
 
 		pGameObj->Set_ServerNumber(g_iSNum);
 		Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"Popori_F", pGameObj), E_FAIL);
@@ -365,6 +373,13 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 		// hp + maxhp 정보도 저장해야 함.
 
+
+
+		//pGameObj = CTestColMonster::Create(m_pGraphicDevice, m_pCommandList,
+		//	_vec3(10.f, 10.f, 10.f),			// Scale
+		//	_vec3(0.0f, 0.0f, 0.0f),			// Angle
+		//	_vec3(packet->posX, packet->posY, packet->posZ));		// Pos
+
 		pGameObj->Set_ServerNumber(packet->id);
 		Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);
 
@@ -382,6 +397,8 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 		pObj->Set_MoveStop(false);
+
+		cout << "몬스터 무브 패킷" << endl;
 	}
 	break;
 
