@@ -103,7 +103,11 @@ HRESULT CPopori_F::LateInit_GameObject()
 	m_pDynamicCamera->AddRef();
 
 	// SetUp Shader ConstantBuffer
-	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
+	m_uiAfterImgSize = 16;
+	m_vAfterImgColor = _rgba(0.0f, 0.8f, 1.0f, 0.7f);
+	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()), m_uiAfterImgSize);
+	m_pMeshCom->Set_AfterImgSize(m_uiAfterImgSize);
+
 	m_pEdgeObjectShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
 	m_pShadowCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
@@ -143,7 +147,7 @@ _int CPopori_F::Update_GameObject(const _float & fTimeDelta)
 
 	// AfterImage
 	m_lstAFWorldMatrix.emplace_back(m_pTransCom->m_matWorld);
-	if (m_lstAFWorldMatrix.size() > Engine::AFTERIMG_SIZE)
+	if (m_lstAFWorldMatrix.size() > m_uiAfterImgSize)
 		m_lstAFWorldMatrix.pop_front();
 
 	return NO_EVENT;
@@ -185,8 +189,8 @@ _int CPopori_F::LateUpdate_GameObject(const _float & fTimeDelta)
 
 void CPopori_F::Render_EdgeGameObject(const _float & fTimeDelta)
 {
-	//Set_ConstantTable();
-	//m_pMeshCom->Render_DynamicMesh(m_pEdgeObjectShaderCom);
+	Set_ConstantTable();
+	m_pMeshCom->Render_DynamicMesh(m_pEdgeObjectShaderCom);
 }
 
 void CPopori_F::Render_ShadowDepth(const _float & fTimeDelta)
@@ -210,8 +214,11 @@ void CPopori_F::Render_GameObject(const _float& fTimeDelta,
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 
 	// Render AfterImage
-	m_pShaderCom->Set_PipelineStatePass(5);
-	Render_AfterImage(fTimeDelta, pCommandList, iContextIdx);
+	if (m_uiAfterImgSize)
+	{
+		m_pShaderCom->Set_PipelineStatePass(5);
+		Render_AfterImage(fTimeDelta, pCommandList, iContextIdx);
+	}
 }
 
 void CPopori_F::Render_AfterImage(const _float& fTimeDelta,
@@ -228,7 +235,8 @@ void CPopori_F::Render_AfterImage(const _float& fTimeDelta,
 		____________________________________________________________________________________________________________*/
 		Engine::CB_SHADER_MESH tCB_ShaderMesh;
 		ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
-		tCB_ShaderMesh.matWorld = Engine::CShader::Compute_MatrixTranspose(*iter_begin);
+		tCB_ShaderMesh.matWorld       = Engine::CShader::Compute_MatrixTranspose(*iter_begin);
+		tCB_ShaderMesh.fAfterImgColor = m_vAfterImgColor;
 		m_pShaderCom->Get_UploadBuffer_AFShaderMesh()->CopyData(i, tCB_ShaderMesh);
 
 		// Render Buffer

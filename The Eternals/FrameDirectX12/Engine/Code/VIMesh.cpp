@@ -761,9 +761,14 @@ void CVIMesh::Render_DynamicMesh(ID3D12GraphicsCommandList * pCommandList,
 			tCB_SkinningMatrix.matRootTransform[j]   = CShader::Compute_MatrixTranspose((*pvecSkinningMatrix)[i][j].matRootTransform);
 		}
 		static_cast<CShaderMesh*>(pShader)->Get_UploadBuffer_SkinningMatrix()->CopyData(i, tCB_SkinningMatrix);
-		m_lstAFSkinningMatrix.emplace_back(tCB_SkinningMatrix);
-		if (m_lstAFSkinningMatrix.size() > AFTERIMG_SIZE * m_vecMeshEntry.size())
-			m_lstAFSkinningMatrix.pop_front();
+		
+		// Mesh AfterImage
+		if (m_uiAfterImgSize)
+		{
+			m_lstAFSkinningMatrix.emplace_back(tCB_SkinningMatrix);
+			if (m_lstAFSkinningMatrix.size() > m_uiAfterImgSize * m_vecMeshEntry.size())
+				m_lstAFSkinningMatrix.pop_front();
+		}
 
 		pShader->Begin_Shader(pCommandList, iContextIdx, m_pTexDescriptorHeap, i);
 		Begin_Buffer(pCommandList, i);

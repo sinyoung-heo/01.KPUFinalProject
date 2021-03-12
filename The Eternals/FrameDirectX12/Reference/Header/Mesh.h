@@ -29,6 +29,9 @@ public:
 	wstring							Get_FileName()			{ return m_pVIMesh->Get_FileName(); }
 	_bool							Is_AnimationSetEnd(const _float& fTimeDelta) { return m_pAniCtrl->Is_AnimationSetEnd(fTimeDelta); };
 
+	void							Set_AfterImgSize(const _uint& uiSize) { m_pVIMesh->Set_AfterImgSize(uiSize); }
+
+
 	// Method
 	HRESULT Ready_Mesh(wstring wstrFilePath, wstring wstrFileName);
 

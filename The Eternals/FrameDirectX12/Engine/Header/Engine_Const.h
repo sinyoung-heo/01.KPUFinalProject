@@ -14,7 +14,4 @@ namespace Engine
 
 	const _float SHADOWTEX_WIDTH	= 8192.0f;
 	const _float SHADOWTEX_HEIGHT	= 8192.0f;
-
-	// Mesh AfterImage
-	const _int AFTERIMG_SIZE = 16;
 }

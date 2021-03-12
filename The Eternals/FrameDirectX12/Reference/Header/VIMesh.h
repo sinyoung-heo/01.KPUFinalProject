@@ -30,9 +30,10 @@ public:
 	const _vec3&					Get_MaxVector()			{ return m_vMax; }
 	wstring							Get_FileName()			{ return m_wstrFileName; }
 	// Set
-	void							Set_AniCtrl(CAniCtrl* pAniCtrl) { m_pAniCtrl = pAniCtrl; }
-	void							Set_FileName(wstring& wstrFileName) { m_wstrFileName = wstrFileName; }
-
+	void							Set_AniCtrl(CAniCtrl* pAniCtrl)			{ m_pAniCtrl = pAniCtrl; }
+	void							Set_FileName(wstring& wstrFileName)		{ m_wstrFileName = wstrFileName; }
+	void							Set_AfterImgSize(const _uint& uiSize)	{ m_uiAfterImgSize = uiSize; }
+	 
 	// Method
 	HRESULT			Ready_Component(const aiScene* pScene, wstring wstrFileName, wstring wstrPath);
 	HRESULT			Ready_Mesh(const aiMesh* pAiMesh, vector<VTXMESH>& vecVertex, vector<_uint>& vecIndex);
@@ -117,7 +118,8 @@ private:
 	_vec3	m_vMax			= _vec3(0.0f);
 
 	// AfterImage
-	list<CB_SKINNING_MATRIX> m_lstAFSkinningMatrix;
+	list<CB_SKINNING_MATRIX>	m_lstAFSkinningMatrix;
+	_uint						m_uiAfterImgSize = 0;
 
 public:
 	virtual CComponent* Clone();

@@ -27,6 +27,7 @@ cbuffer cbCamreaMatrix : register(b0)
 	float4x4	g_matProj		: packoffset(c4);
 	float4		g_vCameraPos	: packoffset(c8);
 	float		g_fProjFar		: packoffset(c9.x);
+	
 	float		g_fCMOffset1	: packoffset(c9.y);
 	float		g_fCMOffset2	: packoffset(c9.z);
 	float		g_fCMOffset3	: packoffset(c9.w);
@@ -34,15 +35,16 @@ cbuffer cbCamreaMatrix : register(b0)
 
 cbuffer cbShaderMesh : register(b1)
 {
-	float4x4	g_matWorld		: packoffset(c0);
+	float4x4	g_matWorld			: packoffset(c0);
+	float4x4	g_matLightView		: packoffset(c4);
+	float4x4	g_matLightProj		: packoffset(c8);
+	float4		g_vLightPos			: packoffset(c12);
+	float		g_fLightPorjFar		: packoffset(c13.x);
+    float		g_fDissolve			: packoffset(c13.y);
+	float		g_fOffset1			: packoffset(c13.z);
+	float		g_fOffset2			: packoffset(c13.w);
 	
-	float4x4	g_matLightView	: packoffset(c4);
-	float4x4	g_matLightProj	: packoffset(c8);
-	float4		g_vLightPos		: packoffset(c12);
-	float		g_fLightPorjFar	: packoffset(c13.x);
-    float		g_fDissolve		: packoffset(c13.y);
-	float		g_fOffset1		: packoffset(c13.z);
-	float		g_fOffset2		: packoffset(c13.w);
+	float4		g_fAfterImgColor	: packoffset(c14);
 };
 
 cbuffer cbSkinningMatrix : register(b2)
@@ -438,25 +440,24 @@ VS_OUT VS_AFTERIMAGE(VS_IN vs_input)
 	return (vs_output);
 }
 
-struct PS_OUT_AFIMG
-{
-	float4 Diffuse		: SV_TARGET0;	// 0번 RenderTarget - Diffuse
-	float4 Depth		: SV_TARGET3;	// 3번 RenderTarget - Depth
-	float4 Emissive		: SV_TARGET4;	// 4번 RenderTarget - Emissive
-};
+//struct PS_OUT_AFIMG
+//{
+//	float4 Diffuse		: SV_TARGET0;	// 0번 RenderTarget - Diffuse
+//	float4 Depth		: SV_TARGET3;	// 3번 RenderTarget - Depth
+//	float4 Emissive		: SV_TARGET4;	// 4번 RenderTarget - Emissive
+//};
 
-PS_OUT_AFIMG PS_AFTERIMAGE(VS_OUT ps_input) : SV_TARGET
+PS_OUT PS_AFTERIMAGE(VS_OUT ps_input) : SV_TARGET
 {
-	PS_OUT_AFIMG ps_output = (PS_OUT_AFIMG) 0;
+	PS_OUT ps_output = (PS_OUT) 0;
 	
 	// Diffuse
-	//ps_output.Diffuse = float4(0.0f, 0.0f, 1.0f, 0.75f);
-	ps_output.Diffuse	= g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV) * 0.75f;
+	ps_output.Diffuse = g_fAfterImgColor;
 	
 	
 	// Depth
-	ps_output.Depth = float4(ps_input.ProjPos.z / ps_input.ProjPos.w, // (posWVP.z / posWVP.w) : Proj 영역의 Z.
-							 ps_input.ProjPos.w / g_fProjFar, // posWVP.w / Far : 0~1로 만든 View영역의 Z.
+	ps_output.Depth = float4(ps_input.ProjPos.z / ps_input.ProjPos.w,	// (posWVP.z / posWVP.w) : Proj 영역의 Z.
+							 ps_input.ProjPos.w / g_fProjFar,			// posWVP.w / Far : 0~1로 만든 View영역의 Z.
 							 0.0f, 1.0f);
 
 	return (ps_output);

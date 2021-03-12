@@ -16,7 +16,8 @@ public:
 	CUploadBuffer<CB_SKINNING_MATRIX>*	Get_UploadBuffer_SkinningMatrix()	{ return m_pCB_SkinningMatrix; }
 	CUploadBuffer<CB_SHADER_MESH>*		Get_UploadBuffer_AFShaderMesh()		{ return m_pCB_AFShaderMesh; }
 	CUploadBuffer<CB_SKINNING_MATRIX>*	Get_UploadBuffer_AFSkinningMatrix() { return m_pCB_AFSkinningMatrix; }
-	HRESULT			SetUp_ShaderConstantBuffer(const _uint& uiNumSubsetMesh = 1);
+	HRESULT			SetUp_ShaderConstantBuffer(const _uint& uiNumSubsetMesh = 1, 
+											   const _uint& iAfterImgSize = 0);
 
 	// CShader을(를) 통해 상속됨
 	virtual HRESULT	Ready_Shader();
@@ -50,6 +51,7 @@ private:
 																  const D3D12_BLEND_OP& BlendOpAlpha	= D3D12_BLEND_OP_ADD);
 private:
 	_uint m_uiSubsetMeshSize = 0;
+	_uint m_uiAfterImgSize   = 0;
 
 	CUploadBuffer<CB_SHADER_MESH>*		m_pCB_ShaderMesh		= nullptr;
 	CUploadBuffer<CB_SKINNING_MATRIX>*	m_pCB_SkinningMatrix	= nullptr;

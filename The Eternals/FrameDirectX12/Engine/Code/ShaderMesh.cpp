@@ -19,9 +19,10 @@ CShaderMesh::CShaderMesh(const CShaderMesh & rhs)
 	____________________________________________________________________________________________________________*/
 }
 
-HRESULT CShaderMesh::SetUp_ShaderConstantBuffer(const _uint& uiNumSubsetMesh)
+HRESULT CShaderMesh::SetUp_ShaderConstantBuffer(const _uint& uiNumSubsetMesh, const _uint& iAfterImgSize)
 {
-	m_uiSubsetMeshSize	= uiNumSubsetMesh;
+	m_uiSubsetMeshSize  = uiNumSubsetMesh;
+	m_uiAfterImgSize	= iAfterImgSize;
 
 	m_pCB_ShaderMesh = CUploadBuffer<CB_SHADER_MESH>::Create(m_pGraphicDevice);
 	NULL_CHECK_RETURN(m_pCB_ShaderMesh, E_FAIL);
@@ -31,12 +32,14 @@ HRESULT CShaderMesh::SetUp_ShaderConstantBuffer(const _uint& uiNumSubsetMesh)
 	NULL_CHECK_RETURN(m_pCB_SkinningMatrix, E_FAIL);
 
 	// AfterImage
-	m_pCB_AFShaderMesh = CUploadBuffer<CB_SHADER_MESH>::Create(m_pGraphicDevice, AFTERIMG_SIZE);
-	NULL_CHECK_RETURN(m_pCB_AFShaderMesh, E_FAIL);
+	if (m_uiAfterImgSize)
+	{
+		m_pCB_AFShaderMesh = CUploadBuffer<CB_SHADER_MESH>::Create(m_pGraphicDevice, m_uiAfterImgSize);
+		NULL_CHECK_RETURN(m_pCB_AFShaderMesh, E_FAIL);
 
-	m_pCB_AFSkinningMatrix = CUploadBuffer<CB_SKINNING_MATRIX>::Create(m_pGraphicDevice, uiNumSubsetMesh * AFTERIMG_SIZE);
-	NULL_CHECK_RETURN(m_pCB_AFSkinningMatrix, E_FAIL);
-
+		m_pCB_AFSkinningMatrix = CUploadBuffer<CB_SKINNING_MATRIX>::Create(m_pGraphicDevice, uiNumSubsetMesh * m_uiAfterImgSize);
+		NULL_CHECK_RETURN(m_pCB_AFSkinningMatrix, E_FAIL);
+	}
 	return S_OK;
 }
 
@@ -543,6 +546,9 @@ void CShaderMesh::Free()
 
 	Safe_Delete(m_pCB_ShaderMesh);
 	Safe_Delete(m_pCB_SkinningMatrix);
-	Safe_Delete(m_pCB_AFShaderMesh);
-	Safe_Delete(m_pCB_AFSkinningMatrix);
+	if (m_uiAfterImgSize)
+	{
+		Safe_Delete(m_pCB_AFShaderMesh);
+		Safe_Delete(m_pCB_AFSkinningMatrix);
+	}
 }

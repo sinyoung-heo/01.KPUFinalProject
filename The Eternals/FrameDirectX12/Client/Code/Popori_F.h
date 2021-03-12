@@ -86,6 +86,8 @@ private:
 
 	// AfterImage
 	list<_matrix>	m_lstAFWorldMatrix;
+	_uint			m_uiAfterImgSize = 0;
+	_rgba			m_vAfterImgColor = _rgba(1.0f);
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]

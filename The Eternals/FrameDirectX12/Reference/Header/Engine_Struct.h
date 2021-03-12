@@ -829,6 +829,8 @@ namespace Engine
 		_float		fOffset1;
 		_float		fOffset2;
 
+		_rgba		fAfterImgColor;
+
 	} CB_SHADER_MESH;
 
 	typedef struct tagCBuffer
