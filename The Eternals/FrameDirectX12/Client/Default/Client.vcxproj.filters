@@ -190,6 +190,15 @@
     <Filter Include="99.Etc\SampleObject\15.Monster\01.Monster_Chase">
       <UniqueIdentifier>{994676e4-5b5b-4bda-a01c-41800c66e29a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99.Etc\SampleObject\16.SampleNPC">
+      <UniqueIdentifier>{846aca4f-d4ab-435e-960c-ddff5ecac35e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Etc\SampleObject\17.TestColPlayer">
+      <UniqueIdentifier>{c38fbeba-2cfc-4d7e-8c4c-f811a65bad11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Etc\SampleObject\18.TestColMonster">
+      <UniqueIdentifier>{af8cf5a3-7573-4bee-ae7f-005905d751aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -375,6 +384,15 @@
     <ClInclude Include="..\Code\Monster_Normal.h">
       <Filter>99.Etc\SampleObject\15.Monster\00.Monster_Normal</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\SampleNPC.h">
+      <Filter>99.Etc\SampleObject\16.SampleNPC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\TestColPlayer.h">
+      <Filter>99.Etc\SampleObject\17.TestColPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\TestColMonster.h">
+      <Filter>99.Etc\SampleObject\18.TestColMonster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -526,6 +544,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\Monster_Normal.cpp">
       <Filter>99.Etc\SampleObject\15.Monster\00.Monster_Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\SampleNPC.cpp">
+      <Filter>99.Etc\SampleObject\16.SampleNPC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TestColPlayer.cpp">
+      <Filter>99.Etc\SampleObject\17.TestColPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TestColMonster.cpp">
+      <Filter>99.Etc\SampleObject\18.TestColMonster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
