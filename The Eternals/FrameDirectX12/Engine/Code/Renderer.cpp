@@ -1087,27 +1087,22 @@ HRESULT CRenderer::Render_MultiThread(const _float& fTimeDelta)
 
 		// End Render ShadowDepth Pass.
 		m_pTargetShadowDepth->End_RenderTargetOnContext(m_pEndShadowCommandList, THREADID::SHADOW);
-		
-
-		// Submit Begin RenderShadow Pass.
-		m_pPreShadowCommandList->Close();
-		ID3D12CommandList* ppPreShadowCommandLists[] = { m_pPreShadowCommandList };
-		CGraphicDevice::Get_Instance()->Get_CommandQueue()->ExecuteCommandLists(_countof(ppPreShadowCommandLists), ppPreShadowCommandLists);
 
 		// Submit RenderShadow Pass.
-		ID3D12CommandList* ppShadowCommandLists[CONTEXT::CONTEXT_END] = 
+		m_pPreShadowCommandList->Close();
+		m_pEndShadowCommandList->Close();
+
+		ID3D12CommandList* ppShadowCommandLists[CONTEXT::CONTEXT_END + 2] = 
 		{ 
+			m_pPreShadowCommandList,
 			m_arrShadowCommandList[CONTEXT::CONTEXT0],
 			m_arrShadowCommandList[CONTEXT::CONTEXT1],
 			m_arrShadowCommandList[CONTEXT::CONTEXT2],
-			m_arrShadowCommandList[CONTEXT::CONTEXT3]
+			m_arrShadowCommandList[CONTEXT::CONTEXT3],
+			m_pEndShadowCommandList
+
 		};
 		CGraphicDevice::Get_Instance()->Get_CommandQueue()->ExecuteCommandLists(_countof(ppShadowCommandLists), ppShadowCommandLists);
-
-		// Submit End RenderShadow Pass.
-		m_pEndShadowCommandList->Close();
-		ID3D12CommandList* ppEndShadowCommandLists[] = { m_pEndShadowCommandList };
-		CGraphicDevice::Get_Instance()->Get_CommandQueue()->ExecuteCommandLists(_countof(ppEndShadowCommandLists), ppEndShadowCommandLists);
 
 
 		/*__________________________________________________________________________________________________________
@@ -1122,26 +1117,20 @@ HRESULT CRenderer::Render_MultiThread(const _float& fTimeDelta)
 		// End Render Scene Pass.
 		m_pTargetDeferred->End_RenderTargetOnContext(m_pEndSceneCommandList, THREADID::SCENE);
 
-		// Submit Begin RenderScene Pass.
-		m_pPreSceneCommandList->Close();
-		ID3D12CommandList* ppPreSceneCommandLists[] = { m_pPreSceneCommandList };
-		CGraphicDevice::Get_Instance()->Get_CommandQueue()->ExecuteCommandLists(_countof(ppPreSceneCommandLists), ppPreSceneCommandLists);
-
 		// Submit RenderScene Pass.
-		ID3D12CommandList* ppSceneCommandLists[CONTEXT::CONTEXT_END] = 
+		m_pPreSceneCommandList->Close();
+		m_pEndSceneCommandList->Close();
+
+		ID3D12CommandList* ppSceneCommandLists[CONTEXT::CONTEXT_END + 2] = 
 		{
+			m_pPreSceneCommandList,
 			m_arrSceneCommandList[CONTEXT::CONTEXT0],
 			m_arrSceneCommandList[CONTEXT::CONTEXT1],
 			m_arrSceneCommandList[CONTEXT::CONTEXT2],
-			m_arrSceneCommandList[CONTEXT::CONTEXT3]
+			m_arrSceneCommandList[CONTEXT::CONTEXT3],
+			m_pEndSceneCommandList
 		};
 		CGraphicDevice::Get_Instance()->Get_CommandQueue()->ExecuteCommandLists(_countof(ppSceneCommandLists), ppSceneCommandLists);
-
-		// Submit End RenderScene Pass.
-		m_pEndSceneCommandList->Close();
-		ID3D12CommandList* ppEndSceneCommandLists[] = { m_pEndSceneCommandList };
-		CGraphicDevice::Get_Instance()->Get_CommandQueue()->ExecuteCommandLists(_countof(ppEndSceneCommandLists), ppEndSceneCommandLists);
-
 
 		// Reset Event
 		for (_uint i = 0; i < CONTEXT::CONTEXT_END; ++i)
