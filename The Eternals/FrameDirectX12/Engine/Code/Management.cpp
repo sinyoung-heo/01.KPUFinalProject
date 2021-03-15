@@ -3,6 +3,7 @@
 #include "LightMgr.h"
 #include "CollisionMgr.h"
 #include "ShaderMgr.h"
+
 USING(Engine)
 IMPLEMENT_SINGLETON(CManagement)
 
