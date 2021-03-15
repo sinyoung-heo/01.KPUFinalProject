@@ -43,7 +43,8 @@ public:
 	void				Set_LastMoveTime(const steady_clock::time_point& last) { m_last_move_time = last; }
 	void				Set_DeadReckoning(const _vec3& vPos);
 	void				Set_MoveStop(const bool& b)							{ m_bIsMoveStop = b; }
-	void				Set_npc_moveDir(const char& dir);
+	void				Set_Info(int lev, int hp, int maxHp, int mp, int maxMp, int exp, int maxExp, int att, float spd);
+	//void				Set_npc_moveDir(const char& dir);
 	void				Set_Other_direction(_vec3& vDir);
 
 	// CGameObject을(를) 통해 상속됨

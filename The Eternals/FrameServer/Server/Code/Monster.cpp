@@ -3,7 +3,8 @@
 #include "Player.h"
 
 CMonster::CMonster()
-	:Hp(0), maxHp(0), targetNum(-1), pre_state(STATUS::ST_END)
+	:Hp(0), maxHp(0),Exp(0),att(0),spd(0.f),
+	targetNum(-1), pre_state(STATUS::ST_END)
 {
 }
 

@@ -79,6 +79,7 @@ _int CTestColPlayer::Update_GameObject(const _float& fTimeDelta)
 	if (!g_bIsOnDebugCaemra)
 	{
 		Key_Input(fTimeDelta);
+		cout << m_pInfoCom->m_iHp << endl;
 	}
 
 	/*__________________________________________________________________________________________________________
@@ -138,6 +139,9 @@ void CTestColPlayer::Process_Collision()
 			m_pBoundingBoxCom->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 			pDst->Get_BoundingSphere()->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 			pDst->Get_BoundingBox()->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+
+			/* Player HP Decrease */
+			CPacketMgr::Get_Instance()->send_collision_monster_attck(pDst->Get_ServerNumber());
 		}
 	}
 }

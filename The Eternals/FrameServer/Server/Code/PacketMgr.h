@@ -8,9 +8,11 @@ void send_enter_packet(int to_client, int new_id);								// 등장 패킷
 void send_leave_packet(int to_client, int leave_id);							// 떠남 패킷
 void send_move_packet(int to_client, int id);									// 움직임 패킷
 void send_move_stop_packet(int to_client, int id);								// 움직임 패킷
+void send_change_stat(int to_client, int id);
 
 void process_move(int id, const _vec3& _vDir, const _vec3& _vPos);				// 움직임 처리 함수
 void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir);
+void process_collide(int id, int colID);
 
 /* 패킷 관리 및 처리 함수 */
 void process_packet(int id);													// 패킷 처리 함수 (모든 컨텐츠 처리)

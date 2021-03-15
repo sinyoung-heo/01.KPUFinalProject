@@ -170,18 +170,20 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		
 		Engine::CGameObject* pGameObj = nullptr;
 
-		pGameObj = CTestPlayer::Create(m_pGraphicDevice, m_pCommandList,
-									   L"PoporiR19",					// MeshTag
-									   _vec3(0.05f, 0.05f, 0.05f),		// Scale
-									   _vec3(0.0f, 0.0f, 0.0f),			// Angle
-									   _vec3(packet->posX, packet->posY, packet->posZ));		// Pos
-
-		//pGameObj = CTestColPlayer::Create(m_pGraphicDevice, m_pCommandList,
-		//							   _vec3(10.f, 10.f, 10.f),			// Scale
+		//pGameObj = CTestPlayer::Create(m_pGraphicDevice, m_pCommandList,
+		//							   L"PoporiR19",					// MeshTag
+		//							   _vec3(0.05f, 0.05f, 0.05f),		// Scale
 		//							   _vec3(0.0f, 0.0f, 0.0f),			// Angle
 		//							   _vec3(packet->posX, packet->posY, packet->posZ));		// Pos
 
+		pGameObj = CTestColPlayer::Create(m_pGraphicDevice, m_pCommandList,
+									   _vec3(1.f, 1.f, 1.f),			// Scale
+									   _vec3(0.0f, 0.0f, 0.0f),			// Angle
+									   _vec3(packet->posX, packet->posY, packet->posZ));		// Pos
+
 		pGameObj->Set_ServerNumber(g_iSNum);
+		pGameObj->Set_Info(packet->level, packet->hp, packet->maxHp, packet->mp, packet->maxMp, packet->exp, packet->maxExp, packet->att, packet->spd);
+		
 		Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"Popori_F", pGameObj), E_FAIL);
 
 		/* Camera Target Setting */
@@ -283,6 +285,27 @@ void CPacketMgr::ProcessPacket(char* ptr)
 	}
 	break;
 
+	case SC_PACKET_STAT_CHANGE:
+	{
+		sc_packet_stat_change* packet = reinterpret_cast<sc_packet_stat_change*>(ptr);
+
+		int s_num = packet->id;
+
+		Engine::CGameObject* pObj = nullptr;
+		/* 현재 클라이언트의 스탯이 갱신된 경우 */
+		if (s_num == g_iSNum)
+			pObj = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"Popori_F", 0);	
+		/* 다른 클라이언트의 스탯이 갱신된 경우 */
+		else
+			pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+					
+		pObj->Get_Info()->m_iHp = packet->hp;
+		pObj->Get_Info()->m_iMp = packet->mp;
+		pObj->Get_Info()->m_iExp = packet->exp;
+
+	}
+	break;
+
 	case SC_PACKET_LEAVE:
 	{
 		sc_packet_leave* packet = reinterpret_cast<sc_packet_leave*>(ptr);
@@ -364,21 +387,21 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		____________________________________________________________________________________________________________*/
 		Engine::CGameObject* pGameObj = nullptr;
 
-		pGameObj = CMonster_Normal::Create(m_pGraphicDevice, m_pCommandList,
-										   wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
-										   wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
-										   _vec3(0.05f, 0.05f, 0.05f),										// Scale
-										   _vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
-										   _vec3(packet->posX, packet->posY, packet->posZ));
+		//pGameObj = CMonster_Normal::Create(m_pGraphicDevice, m_pCommandList,
+		//								   wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
+		//								   wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
+		//								   _vec3(0.05f, 0.05f, 0.05f),										// Scale
+		//								   _vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
+		//								   _vec3(packet->posX, packet->posY, packet->posZ));
 
 		// hp + maxhp 정보도 저장해야 함.
 
 
 
-		//pGameObj = CTestColMonster::Create(m_pGraphicDevice, m_pCommandList,
-		//	_vec3(10.f, 10.f, 10.f),			// Scale
-		//	_vec3(0.0f, 0.0f, 0.0f),			// Angle
-		//	_vec3(packet->posX, packet->posY, packet->posZ));		// Pos
+		pGameObj = CTestColMonster::Create(m_pGraphicDevice, m_pCommandList,
+			_vec3(1.f, 1.f, 1.f),			// Scale
+			_vec3(0.0f, 0.0f, 0.0f),			// Angle
+			_vec3(packet->posX, packet->posY, packet->posZ));		// Pos
 
 		pGameObj->Set_ServerNumber(packet->id);
 		Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);
@@ -397,8 +420,6 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 		pObj->Set_MoveStop(false);
-
-		cout << "몬스터 무브 패킷" << endl;
 	}
 	break;
 
@@ -472,6 +493,17 @@ void CPacketMgr::send_move_stop(const _vec3& vPos, const _vec3& vDir)
 	p.dirX = vDir.x;
 	p.dirY = vDir.y;
 	p.dirZ = vDir.z;
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_collision_monster_attck(int objID)
+{
+	cs_packet_player_collision p;
+
+	p.size = sizeof(p);
+	p.type = CS_COLLIDE;
+	p.col_id = objID;
 
 	send_packet(&p);
 }

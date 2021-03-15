@@ -46,38 +46,51 @@ void CGameObject::Set_DeadReckoning(const _vec3& vPos)
 	m_pInfoCom->m_vecArivePos = vPos;	
 }
 
-void CGameObject::Set_npc_moveDir(const char& dir)
+void CGameObject::Set_Info(int lev, int hp, int maxHp, int mp, int maxMp, int exp, int maxExp, int att, float spd)
 {
-	m_npc_moveDir = dir;
-
-	switch (m_npc_moveDir)
-	{
-	case MV_FRONT:
-		m_pTransCom->m_vAngle.y = 0.f;
-		break;
-	case MV_BACK:
-		m_pTransCom->m_vAngle.y = 180.f;
-		break;
-	case MV_RIGHT:
-		m_pTransCom->m_vAngle.y = 90.f;
-		break;
-	case MV_RIGHT_UP:
-		m_pTransCom->m_vAngle.y = 45.f;
-		break;
-	case MV_RIGHT_DOWN:
-		m_pTransCom->m_vAngle.y = 135.f;
-		break;
-	case MV_LEFT:
-		m_pTransCom->m_vAngle.y = 270.f;
-		break;
-	case MV_LEFT_UP:
-		m_pTransCom->m_vAngle.y = 315.f;
-		break;
-	case MV_LEFT_DOWN:
-		m_pTransCom->m_vAngle.y = 225.f;
-		break;
-	}
+	m_pInfoCom->m_iLev = lev;
+	m_pInfoCom->m_iHp = hp;
+	m_pInfoCom->m_iMaxHp = maxHp;
+	m_pInfoCom->m_iMp = mp;
+	m_pInfoCom->m_iMaxMp = maxMp;
+	m_pInfoCom->m_iExp = exp;
+	m_pInfoCom->m_iMaxExp = maxExp;
+	m_pInfoCom->m_iAttack = att;
+	m_pInfoCom->m_fSpeed = spd;
 }
+
+//void CGameObject::Set_npc_moveDir(const char& dir)
+//{
+//	m_npc_moveDir = dir;
+//
+//	switch (m_npc_moveDir)
+//	{
+//	case MV_FRONT:
+//		m_pTransCom->m_vAngle.y = 0.f;
+//		break;
+//	case MV_BACK:
+//		m_pTransCom->m_vAngle.y = 180.f;
+//		break;
+//	case MV_RIGHT:
+//		m_pTransCom->m_vAngle.y = 90.f;
+//		break;
+//	case MV_RIGHT_UP:
+//		m_pTransCom->m_vAngle.y = 45.f;
+//		break;
+//	case MV_RIGHT_DOWN:
+//		m_pTransCom->m_vAngle.y = 135.f;
+//		break;
+//	case MV_LEFT:
+//		m_pTransCom->m_vAngle.y = 270.f;
+//		break;
+//	case MV_LEFT_UP:
+//		m_pTransCom->m_vAngle.y = 315.f;
+//		break;
+//	case MV_LEFT_DOWN:
+//		m_pTransCom->m_vAngle.y = 225.f;
+//		break;
+//	}
+//}
 
 void CGameObject::Set_Other_direction(_vec3& vDir)
 {

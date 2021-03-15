@@ -119,7 +119,6 @@ void CTestColMonster::Active_Monster(const _float& fTimeDelta)
 		// NaviMesh 이동.		
 		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vecArivePos))
 		{
-			cout << "몬스터 움직이는 중 - x: " << m_pTransCom->m_vPos.x << ", " << m_pTransCom->m_vPos.z << endl;
 			m_pTransCom->m_vPos += m_pTransCom->m_vDir * m_pInfoCom->m_fSpeed * fTimeDelta;
 		}
 		else
