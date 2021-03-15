@@ -143,6 +143,7 @@ namespace Engine
 	public:
 		ID3D12Resource*	Resource() const { return m_pUploadBuffer; }
 		const _uint&	GetElementByteSize() { return m_uiElementByteSize; }
+		const _uint&	GetElementCount() { return m_uiElementCount; }
 		void			CopyData(_int iElementIndex, const T& data) { memcpy(&m_pMappedData[iElementIndex * m_uiElementByteSize], &data, sizeof(T)); }
 	private:
 		HRESULT			Ready_UploadBuffer(_uint uiElementCount = 1, _bool bIsConstantBuffer = true)

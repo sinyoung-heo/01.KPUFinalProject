@@ -56,6 +56,7 @@ void CShaderColorInstancing::SetUp_Instancing()
 	}
 }
 
+
 void CShaderColorInstancing::SetUp_ConstantBuffer(ID3D12Device* pGraphicDevice)
 {
 	for (_uint i = 0; i < COLOR_BUFFER::COLORBUFFER_END; ++i)
@@ -65,6 +66,28 @@ void CShaderColorInstancing::SetUp_ConstantBuffer(ID3D12Device* pGraphicDevice)
 	}
 
 }
+
+void CShaderColorInstancing::Resize_ConstantBuffer(ID3D12Device* pGraphicDevice)
+{
+	// Rect, Cube, ColliderSphere, ColliderBox
+	for (_uint i = 0; i < COLOR_BUFFER::COLORBUFFER_END; ++i)
+	{
+		// Each PipelineStatePass
+		for (auto& pCB_ShaderCorlr : m_vecCB_ShaderColor[i])
+		{
+			if (nullptr == pCB_ShaderCorlr)
+				continue;
+			if (pCB_ShaderCorlr->GetElementCount() <= m_uiTotalInstanceCnt[i])
+			{
+				_uint iNewSize = (_uint)((_float)m_uiTotalInstanceCnt[i] * 1.25f);
+
+				Safe_Delete(pCB_ShaderCorlr);
+				pCB_ShaderCorlr = CUploadBuffer<CB_SHADER_COLOR>::Create(pGraphicDevice, iNewSize, false);
+			}
+		}
+	}
+}
+
 
 void CShaderColorInstancing::Reset_Instance()
 {

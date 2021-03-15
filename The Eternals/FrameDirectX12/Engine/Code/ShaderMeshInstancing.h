@@ -19,6 +19,8 @@ public:
 	HRESULT Ready_Shader(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 	void	SetUp_Instancing(wstring wstrMeshTag);
 	void	SetUp_ConstantBuffer(ID3D12Device* pGraphicDevice);
+	void	Resize_ConstantBuffer(ID3D12Device* pGraphicDevice);
+	void	Add_TotalInstanceCount(wstring wstrMeshTag);
 	void	Add_Instance(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& iPipelineStateIdx);
 	void	Reset_Instance();
 	void	Reset_InstancingContainer();
@@ -42,9 +44,10 @@ private:
 	Key값은 ResourceTag
 	vector의 Index는 PipelineStateIndex, Size는 Instance개수.
 	____________________________________________________________________________________________________________*/
-	map<wstring, vector<INSTANCING_DESC>>						m_mapInstancing[CONTEXT::CONTEXT_END];
-	map<wstring, vector<CUploadBuffer<CB_SHADER_MESH>*>>		m_mapCB_ShaderMesh[CONTEXT::CONTEXT_END];
-	_uint														m_uiPipelineStateCnt = 0;
+	map<wstring, vector<INSTANCING_DESC>>					m_mapInstancing[CONTEXT::CONTEXT_END];
+	map<wstring, vector<CUploadBuffer<CB_SHADER_MESH>*>>	m_mapCB_ShaderMesh[CONTEXT::CONTEXT_END];
+	map<wstring, _uint>										m_mapTotalInstanceCnt;
+	_uint													m_uiPipelineStateCnt = 0;
 
 
 private:

@@ -277,6 +277,12 @@ Engine::CGameObject* CStaticMeshObject::Create(ID3D12Device * pGraphicDevice, ID
 										   vBoundingSpherePos)))
 		Engine::Safe_Release(pInstance);
 
+	// SetUp InstanceShader and Add Instance Count.
+	Engine::CShaderShadowInstancing::Get_Instance()->SetUp_Instancing(wstrMeshTag);
+	Engine::CShaderShadowInstancing::Get_Instance()->Add_TotalInstanceCount(wstrMeshTag);
+	Engine::CShaderMeshInstancing::Get_Instance()->SetUp_Instancing(wstrMeshTag);
+	Engine::CShaderMeshInstancing::Get_Instance()->Add_TotalInstanceCount(wstrMeshTag);
+
 	return pInstance;
 }
 
