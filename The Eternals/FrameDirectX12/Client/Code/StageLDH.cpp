@@ -267,9 +267,6 @@ HRESULT CStageLDH::Ready_LayerGameObject(wstring wstrLayerTag)
 											 vBoundingSpherePos);	// Bounding Sphere Pos
 
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", wstrMeshTag, pGameObj), E_FAIL);
-
-		Engine::CShaderMeshInstancing::Get_Instance()->SetUp_Instancing(wstrMeshTag);
-		Engine::CShaderShadowInstancing::Get_Instance()->SetUp_Instancing(wstrMeshTag);
 	}
 
 	/*__________________________________________________________________________________________________________

@@ -21,6 +21,7 @@ public:
 	HRESULT Ready_Shader(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 	void	SetUp_VIBuffer();
 	void	SetUp_ConstantBuffer(ID3D12Device* pGraphicDevice);
+	void	Resize_ConstantBuffer(ID3D12Device* pGraphicDevice);
 	void	Add_Instance(const COLOR_BUFFER& eBuffer,const _uint& iPipelineStateIdx)	{ ++(m_vecInstancing[eBuffer][iPipelineStateIdx].iInstanceCount); };
 	void	Add_TotalInstancCount(const COLOR_BUFFER& eBuffer)							{ ++m_uiTotalInstanceCnt[eBuffer]; }
 	void	Reset_Instance();

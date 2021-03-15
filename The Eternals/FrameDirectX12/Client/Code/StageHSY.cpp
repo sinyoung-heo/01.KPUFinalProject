@@ -51,10 +51,10 @@ HRESULT CStageHSY::Ready_Scene()
 	Engine::FAILED_CHECK_RETURN(Ready_LayerFont(L"Layer_Font"), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
-	// Ready Instnacing
-	Engine::CShaderColorInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
+	// Ready Instnace ConstantBuffer.
 	Engine::CShaderShadowInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderMeshInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
+	Engine::CShaderColorInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderTextureInstancing::Get_Instance()->SetUp_ConstantBuffer(Engine::INSTANCE::INSTANCE_DISTORTION ,m_pGraphicDevice);
 	Engine::CShaderTextureInstancing::Get_Instance()->SetUp_ConstantBuffer(Engine::INSTANCE::INSTANCE_ALPHA, m_pGraphicDevice);
 
@@ -163,40 +163,6 @@ HRESULT CStageHSY::Ready_LayerEnvironment(wstring wstrLayerTag)
 	//						   _vec3(0.0f, 0.0f, 0.0f));			// Pos
 	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SkyBox", pGameObj), E_FAIL);
 
-	/*__________________________________________________________________________________________________________
-	[ Sector Grid ]
-	____________________________________________________________________________________________________________*/
-	//_int world_width	= 256;
-	//_int world_height	= 256;
-	//_int sector_size	= 256;
-
-	//_vec3 vOffset(_float(sector_size), 0.0f, _float(sector_size));
-	//_vec3 vCount((_float)(world_width / sector_size), 0.0f, _float(world_height / sector_size));
-
-	//_vec3 vPos = _vec3(0.0f, 0.0f, (_float)world_height / 2);
-	//for (_int i = 0; i < vCount.x + 1; ++i)
-	//{
-	//	pGameObj = CCubeObject::Create(m_pGraphicDevice, m_pCommandList,
-	//								   _vec3(0.25f, 1.0f, (_float)world_height),	// Scale
-	//								   _vec3(0.0f),								// Angle
-	//								   vPos);									// Pos
-	//	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Grid_Width", pGameObj), E_FAIL);
-
-	//	vPos.x += vOffset.x;
-	//}
-
-	//vPos = _vec3((_float)world_width / 2, 0.0f, 0.0f);
-	//for (_int i = 0; i < vCount.z + 1; ++i)
-	//{
-	//	pGameObj = CCubeObject::Create(m_pGraphicDevice, m_pCommandList,
-	//								   _vec3((_float)world_width, 1.0f, 0.25f),	// Scale
-	//								   _vec3(0.0f),								// Angle
-	//								   vPos);									// Pos
-	//	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Grid_Height", pGameObj), E_FAIL);
-
-	//	vPos.z += vOffset.z;
-	//}
-
 
 	return S_OK;
 }
@@ -238,60 +204,57 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ StaticMeshObject ]
 	____________________________________________________________________________________________________________*/
-	//wifstream fin { L"../../Bin/ToolData/TestStaticMesh.staticmesh" };
-	//if (fin.fail())
-	//	return E_FAIL;
+	wifstream fin { L"../../Bin/ToolData/TestStaticMesh.staticmesh" };
+	if (fin.fail())
+		return E_FAIL;
 
-	//wstring	wstrMeshTag				= L"";
-	//_vec3	vScale					= _vec3(0.0f);
-	//_vec3	vAngle					= _vec3(0.0f);
-	//_vec3	vPos					= _vec3(0.0f);
-	//_bool	bIsRenderShadow			= false;
-	//_bool	bIsCollision			= false;
-	//_vec3	vBoundingSphereScale	= _vec3(0.0f);
-	//_vec3	vBoundingSpherePos      = _vec3(0.0f);
-	//_bool	bIsMousePicking			= false;
+	wstring	wstrMeshTag				= L"";
+	_vec3	vScale					= _vec3(0.0f);
+	_vec3	vAngle					= _vec3(0.0f);
+	_vec3	vPos					= _vec3(0.0f);
+	_bool	bIsRenderShadow			= false;
+	_bool	bIsCollision			= false;
+	_vec3	vBoundingSphereScale	= _vec3(0.0f);
+	_vec3	vBoundingSpherePos      = _vec3(0.0f);
+	_bool	bIsMousePicking			= false;
 
-	//while (true)
-	//{
-	//	fin >> wstrMeshTag 				// MeshTag
-	//		>> vScale.x
-	//		>> vScale.y
-	//		>> vScale.z					// Scale
-	//		>> vAngle.x
-	//		>> vAngle.y
-	//		>> vAngle.z					// Angle
-	//		>> vPos.x
-	//		>> vPos.y
-	//		>> vPos.z					// Pos
-	//		>> bIsRenderShadow			// Is Render Shadow
-	//		>> bIsCollision 			// Is Collision
-	//		>> vBoundingSphereScale.x	// BoundingSphere Scale
-	//		>> vBoundingSphereScale.y
-	//		>> vBoundingSphereScale.z
-	//		>> vBoundingSpherePos.x		// BoundingSphere Pos
-	//		>> vBoundingSpherePos.y
-	//		>> vBoundingSpherePos.z
-	//		>> bIsMousePicking;
+	while (true)
+	{
+		fin >> wstrMeshTag 				// MeshTag
+			>> vScale.x
+			>> vScale.y
+			>> vScale.z					// Scale
+			>> vAngle.x
+			>> vAngle.y
+			>> vAngle.z					// Angle
+			>> vPos.x
+			>> vPos.y
+			>> vPos.z					// Pos
+			>> bIsRenderShadow			// Is Render Shadow
+			>> bIsCollision 			// Is Collision
+			>> vBoundingSphereScale.x	// BoundingSphere Scale
+			>> vBoundingSphereScale.y
+			>> vBoundingSphereScale.z
+			>> vBoundingSpherePos.x		// BoundingSphere Pos
+			>> vBoundingSpherePos.y
+			>> vBoundingSpherePos.z
+			>> bIsMousePicking;
 
-	//	if (fin.eof())
-	//		break;
+		if (fin.eof())
+			break;
 
-	//	pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-	//										 wstrMeshTag,			// MeshTag
-	//										 vScale,				// Scale
-	//										 vAngle,				// Angle
-	//										 vPos,					// Pos
-	//										 bIsRenderShadow,		// Render Shadow
-	//										 bIsCollision,			// Bounding Sphere
-	//										 vBoundingSphereScale,	// Bounding Sphere Scale
-	//										 vBoundingSpherePos);	// Bounding Sphere Pos
+		pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+											 wstrMeshTag,			// MeshTag
+											 vScale,				// Scale
+											 vAngle,				// Angle
+											 vPos,					// Pos
+											 bIsRenderShadow,		// Render Shadow
+											 bIsCollision,			// Bounding Sphere
+											 vBoundingSphereScale,	// Bounding Sphere Scale
+											 vBoundingSpherePos);	// Bounding Sphere Pos
 
-	//	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, wstrMeshTag, pGameObj), E_FAIL);
-
-	//	Engine::CShaderShadowInstancing::Get_Instance()->SetUp_Instancing(wstrMeshTag);
-	//	Engine::CShaderMeshInstancing::Get_Instance()->SetUp_Instancing(wstrMeshTag);
-	//}
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, wstrMeshTag, pGameObj), E_FAIL);
+	}
 	
 	/*__________________________________________________________________________________________________________
 	[ Popori_F ]

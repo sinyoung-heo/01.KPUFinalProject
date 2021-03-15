@@ -79,6 +79,16 @@ void CShaderMeshInstancing::SetUp_ConstantBuffer(ID3D12Device* pGraphicDevice)
 	}
 }
 
+void CShaderMeshInstancing::Add_TotalInstanceCount(wstring wstrMeshTag)
+{
+	auto iter_find = m_mapTotalInstanceCnt.find(wstrMeshTag);
+
+	if (iter_find == m_mapTotalInstanceCnt.end())
+		m_mapTotalInstanceCnt[wstrMeshTag] = 1;
+	else
+		++m_mapTotalInstanceCnt[wstrMeshTag];
+}
+
 void CShaderMeshInstancing::Add_Instance(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& iPipelineStateIdx)
 {
 	auto iter_find = m_mapInstancing[iContextIdx].find(wstrMeshTag);

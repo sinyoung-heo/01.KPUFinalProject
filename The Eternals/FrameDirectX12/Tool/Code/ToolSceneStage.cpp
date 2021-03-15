@@ -81,13 +81,13 @@ HRESULT CToolSceneStage::Ready_Scene()
 	pMyForm->m_TabUI.m_Tab2DUI.Ready_Tab2DUI();
 	pMyForm->m_TabUI.m_TabTexSpriteUV.m_pToolUICanvas = m_pUICanvas;
 
-	for (_uint i = 0; i < 512; ++i)
-	{
-		// Engine::CShaderColorInstancing::Get_Instance()->Add_TotalInstancCount(Engine::COLOR_BUFFER::BUFFER_RECT);
-		// Engine::CShaderColorInstancing::Get_Instance()->Add_TotalInstancCount(Engine::COLOR_BUFFER::BUFFER_CUBE);
-		Engine::CShaderColorInstancing::Get_Instance()->Add_TotalInstancCount(Engine::COLOR_BUFFER::BUFFER_BOX);
-		Engine::CShaderColorInstancing::Get_Instance()->Add_TotalInstancCount(Engine::COLOR_BUFFER::BUFFER_SPHERE);
-	}
+	//for (_uint i = 0; i < 512; ++i)
+	//{
+	//	// Engine::CShaderColorInstancing::Get_Instance()->Add_TotalInstancCount(Engine::COLOR_BUFFER::BUFFER_RECT);
+	//	// Engine::CShaderColorInstancing::Get_Instance()->Add_TotalInstancCount(Engine::COLOR_BUFFER::BUFFER_CUBE);
+	//	Engine::CShaderColorInstancing::Get_Instance()->Add_TotalInstancCount(Engine::COLOR_BUFFER::BUFFER_BOX);
+	//	Engine::CShaderColorInstancing::Get_Instance()->Add_TotalInstancCount(Engine::COLOR_BUFFER::BUFFER_SPHERE);
+	//}
 
 	Engine::CShaderColorInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 

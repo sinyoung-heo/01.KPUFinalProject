@@ -1,8 +1,10 @@
 #include "Management.h"
 #include "Scene.h"
+#include "GraphicDevice.h"
 #include "LightMgr.h"
 #include "CollisionMgr.h"
 #include "ShaderMgr.h"
+
 USING(Engine)
 IMPLEMENT_SINGLETON(CManagement)
 
@@ -28,6 +30,7 @@ _int CManagement::Update_Management(const _float & fTimeDelta)
 
 	CLightMgr::Get_Instance()->Update_Light();
 	CShaderMgr::Get_Instance()->Input_ShaderKey();
+
 	return 0;
 }
 
@@ -40,6 +43,9 @@ _int CManagement::LateUpdate_Management(const _float & fTimeDelta)
 		m_pCurrentScene->LateUpdate_Scene(fTimeDelta);
 
 	CCollisionMgr::Get_Instance()->Clear_CollisionContainer();
+
+	// Resize Shader Instance ConstantBuffer ElementSize.
+	CShaderColorInstancing::Get_Instance()->Resize_ConstantBuffer(CGraphicDevice::Get_Instance()->Get_GraphicDevice());
 
 	return 0;
 }
