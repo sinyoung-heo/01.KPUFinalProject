@@ -3,12 +3,13 @@
 USING(Engine)
 
 CInfo::CInfo()
-{
+{	
 }
 
-CInfo::CInfo(const CInfo & rhs)
-	: m_fSpeed(rhs.m_fSpeed)
-	, m_fRadius(rhs.m_fRadius)
+CInfo::CInfo(const CInfo& rhs)
+	: m_fSpeed(rhs.m_fSpeed), m_iLev(0), m_iAttack(0),
+	m_iHp(0), m_iMaxHp(0), m_iMp(0), m_iMaxMp(0),
+	m_iExp(0), m_iMaxExp(0), m_fRadius(rhs.m_fRadius)
 	, m_vecArivePos(rhs.m_vecArivePos)
 {
 }

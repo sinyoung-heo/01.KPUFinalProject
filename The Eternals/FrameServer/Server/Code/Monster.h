@@ -14,8 +14,7 @@ private:
 	void Change_Animation(const float& fTimeDelta);
 	void Move_NormalMonster(const float& fTimeDelta);
 	void Move_ChaseMonster(const float& fTimeDelta);
-	
-	void ComeBack_Monster(const float& fTimeDelta);
+
 public:
 	/* SEND PACKET */
 	void send_Monster_enter_packet(int to_client);
@@ -27,6 +26,10 @@ public:
 	char	m_monNum;
 	int		Hp			= 0;
 	int		maxHp		= 0;
+	int		Exp			= 0;
+	int		att			= 0;
+	float   spd			= 0;
+
 	int		targetNum	= -1;
 	int		m_AnimIdx	= 0;
 	STATUS	pre_state	= STATUS::ST_END;

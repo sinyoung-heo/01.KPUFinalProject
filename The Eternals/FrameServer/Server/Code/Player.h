@@ -22,6 +22,8 @@ public:
 	int	level	= 0;
 	int Hp		= 0; 
 	int maxHp	= 0;
+	int Mp		= 0;
+	int maxMp	= 0;
 	int Exp		= 0;
 	int maxExp	= 0;
 	int att		= 0;

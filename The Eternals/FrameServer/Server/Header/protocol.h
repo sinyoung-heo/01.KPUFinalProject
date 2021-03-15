@@ -43,8 +43,7 @@ constexpr char CS_MOVE_STOP = 2;
 constexpr char CS_ATTACK = 3;
 constexpr char CS_CHAT = 4;
 constexpr char CS_LOGOUT = 5;
-constexpr char CS_NPC_MOVE = 6;
-constexpr char CS_NPC_MOVE_STOP = 7;
+constexpr char CS_COLLIDE = 6;
 
 struct sc_packet_login_ok 
 {
@@ -54,6 +53,8 @@ struct sc_packet_login_ok
 
 	int hp;
 	int maxHp;
+	int mp;
+	int maxMp;
 	int exp;
 	int maxExp;
 	int level;
@@ -169,10 +170,11 @@ struct sc_packet_stat_change
 {
 	unsigned char size;
 	char type;
-	int  id;
-	short hp;
-	short level;
-	int   exp;
+
+	int		id;
+	int		hp;
+	int		mp;
+	int		exp;
 };
 
 struct cs_packet_login 
@@ -206,6 +208,14 @@ struct cs_packet_attack
 {
 	unsigned char	size;
 	char	type;
+};
+
+struct cs_packet_player_collision
+{
+	unsigned char	size;
+	char	type;
+
+	int col_id;
 };
 
 struct cs_packet_chat 

@@ -15,6 +15,14 @@ public:
 	virtual void	Update_Component(const _float& fTimeDelta);
 
 public:
+	_int	m_iLev			= 1;
+	_int	m_iAttack		= 1;
+	_int	m_iHp			= 0;
+	_int	m_iMaxHp		= 0;
+	_int	m_iMp			= 0;
+	_int	m_iMaxMp		= 0;
+	_int	m_iExp			= 0;
+	_int	m_iMaxExp		= 0;
 	_float	m_fSpeed		= 0.0f;
 	_float	m_fRadius		= 0.0f;
 	_vec3	m_vecArivePos	= _vec3(0.f);

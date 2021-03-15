@@ -150,6 +150,12 @@ void process_packet(int id)
 		break;
 	case CS_LOGOUT:
 		break;
+	case CS_COLLIDE: 
+	{
+		cs_packet_player_collision* p = reinterpret_cast<cs_packet_player_collision*>(pPlayer->m_packet_start);
+		process_collide(id, p->col_id);
+	}
+	break;
 	}
 }
 /* ========================패킷 재조립========================*/
@@ -245,12 +251,14 @@ void send_login_ok(int id)
 	p.type = SC_PACKET_LOGIN_OK;
 	p.id = id;
 
-	p.att = pPlayer->att;
-	p.exp = pPlayer->Exp;
-	p.hp = pPlayer->Hp;
 	p.level = pPlayer->level;
-	p.maxExp = pPlayer->maxExp;
+	p.hp = pPlayer->Hp;
 	p.maxHp = pPlayer->maxHp;
+	p.mp = pPlayer->Mp;
+	p.maxMp = pPlayer->maxMp;
+	p.exp = pPlayer->Exp;
+	p.maxExp = pPlayer->maxExp;
+	p.att = pPlayer->att;
 	p.spd = pPlayer->spd;
 
 	p.posX = pPlayer->m_vPos.x;
@@ -344,6 +352,24 @@ void send_move_stop_packet(int to_client, int id)
 	p.dirX = pPlayer->m_vDir.x;
 	p.dirY = pPlayer->m_vDir.y;
 	p.dirZ = pPlayer->m_vDir.z;
+
+	send_packet(to_client, &p);
+}
+
+void send_change_stat(int to_client, int id)
+{
+	sc_packet_stat_change p;
+
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pPlayer == nullptr) return;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_STAT_CHANGE;
+
+	p.id = id;
+	p.hp = pPlayer->Hp;
+	p.mp = pPlayer->Mp;
+	p.exp = pPlayer->Exp;
 
 	send_packet(to_client, &p);
 }
@@ -754,6 +780,51 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 	for (int server_obj : new_viewlist)
 		cout << "move_stop" << server_obj << "시야 내에 존재합니다." << endl;
 #endif
+}
+
+void process_collide(int id, int colID)
+{
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pPlayer == nullptr) return;
+
+	/* COLLIDE PLAYER - NPC */
+	if (colID >= NPC_NUM_START && colID < MON_NUM_START){}
+
+	/* COLLIDE PLAYER - MONSTER */
+	else if (colID >= MON_NUM_START)
+	{
+		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", colID));
+		if (nullptr == pMonster) return;
+
+		/* Decrease Player HP */
+		if (pPlayer->Hp > 0)
+			pPlayer->Hp -= pMonster->att;
+		else
+		{
+			/* Player Dead */
+			pPlayer->Hp = 0;
+			pPlayer->Set_IsDead(true);
+		}
+
+		/* 해당 플레이어의 시야 목록 */
+		pPlayer->v_lock.lock();
+		unordered_set<int> viewlist = pPlayer->view_list;
+		pPlayer->v_lock.unlock();
+
+		/* 해당 유저에게 바뀐 stat 전송 */
+		send_change_stat(id, id);
+
+		/* 시야 목록 내의 객체 처리 */
+		for (int server_num : viewlist)
+		{
+			if (server_num == id) continue;
+			// 시야 내의 다른 유저들에게 바뀐 스탯 전송
+			if (true == CObjMgr::GetInstance()->Is_Player(server_num))
+			{
+				send_change_stat(server_num, id);
+			}
+		}
+	}
 }
 
 /*============================================NPC======================================================*/
