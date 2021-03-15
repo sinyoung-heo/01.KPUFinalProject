@@ -26,6 +26,7 @@
 #include "MainMenuInventory.h"
 #include "MainMenuLogout.h"
 #include "MainMenuSetting.h"
+#include "SampleNPC.h"
 
 
 CStageHSY::CStageHSY(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -295,14 +296,65 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ Popori_F ]
 	____________________________________________________________________________________________________________*/
-	pGameObj =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
-								  L"PoporiR19",					// MeshTag
-								  L"TestNaviMesh",				// NaviMeshTag
-								  _vec3(1.0f, 1.0f, 1.0f),		// Scale
-								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-								  _vec3(0.0f, 0.0f, 0.0f));		// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PoporiR19", pGameObj), E_FAIL);
+	//pGameObj =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
+	//							  L"PoporiR19",					// MeshTag
+	//							  L"TestNaviMesh",				// NaviMeshTag
+	//							  _vec3(1.0f, 1.0f, 1.0f),		// Scale
+	//							  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+	//							  _vec3(0.0f, 0.0f, 0.0f));		// Pos
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PoporiR19", pGameObj), E_FAIL);
 
+	/*__________________________________________________________________________________________________________
+	[ SampleNPC ]
+	____________________________________________________________________________________________________________*/
+	pGameObj =	CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
+								   L"Baraka_M_Extractor",		// MeshTag
+								   _vec3(1.0f, 1.0f, 1.0f),		// Scale
+								   _vec3(0.0f, 0.0f, 0.0f),		// Angle
+								   _vec3(0.0f, 0.0f, 0.0f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SampleNPC", pGameObj), E_FAIL);
+
+	pGameObj =	CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
+								   L"Baraka_M_Merchant",		// MeshTag
+								   _vec3(1.0f, 1.0f, 1.0f),		// Scale
+								   _vec3(0.0f, 0.0f, 0.0f),		// Angle
+								   _vec3(25.0f, 0.0f, 0.0f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SampleNPC", pGameObj), E_FAIL);
+
+	pGameObj =	CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
+								   L"Baraka_M_Mystellium",		// MeshTag
+								   _vec3(1.0f, 1.0f, 1.0f),		// Scale
+								   _vec3(0.0f, 0.0f, 0.0f),		// Angle
+								   _vec3(70.0f, 0.0f, 0.0f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SampleNPC", pGameObj), E_FAIL);
+
+	pGameObj =	CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
+								   L"Castanic_M_Lsmith",		// MeshTag
+								   _vec3(1.0f, 1.0f, 1.0f),		// Scale
+								   _vec3(0.0f, 0.0f, 0.0f),		// Angle
+								   _vec3(90.0f, 0.0f, 0.0f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SampleNPC", pGameObj), E_FAIL);
+
+	pGameObj =	CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
+								   L"Human_girl",		// MeshTag
+								   _vec3(1.0f, 1.0f, 1.0f),		// Scale
+								   _vec3(0.0f, 0.0f, 0.0f),		// Angle
+								   _vec3(110.0f, 0.0f, 0.0f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SampleNPC", pGameObj), E_FAIL);
+
+	pGameObj =	CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
+								   L"Highelf_girl",		// MeshTag
+								   _vec3(1.0f, 1.0f, 1.0f),		// Scale
+								   _vec3(0.0f, 0.0f, 0.0f),		// Angle
+								   _vec3(130.0f, 0.0f, 0.0f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SampleNPC", pGameObj), E_FAIL);
+
+	pGameObj =	CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
+								   L"Popori_M_Merchant",		// MeshTag
+								   _vec3(1.0f, 1.0f, 1.0f),		// Scale
+								   _vec3(0.0f, 0.0f, 0.0f),		// Angle
+								   _vec3(150.0f, 0.0f, 0.0f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SampleNPC", pGameObj), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
 	[ Texture Effect ]

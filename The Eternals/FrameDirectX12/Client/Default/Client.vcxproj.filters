@@ -190,6 +190,9 @@
     <Filter Include="99.Etc\SampleObject\15.Monster\01.Monster_Chase">
       <UniqueIdentifier>{994676e4-5b5b-4bda-a01c-41800c66e29a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99.Etc\SampleObject\16.SampleNPC">
+      <UniqueIdentifier>{431bf517-447b-4e8a-8a96-a057612d2bba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -375,6 +378,9 @@
     <ClInclude Include="..\Code\Monster_Normal.h">
       <Filter>99.Etc\SampleObject\15.Monster\00.Monster_Normal</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\SampleNPC.h">
+      <Filter>99.Etc\SampleObject\16.SampleNPC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -526,6 +532,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\Monster_Normal.cpp">
       <Filter>99.Etc\SampleObject\15.Monster\00.Monster_Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\SampleNPC.cpp">
+      <Filter>99.Etc\SampleObject\16.SampleNPC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

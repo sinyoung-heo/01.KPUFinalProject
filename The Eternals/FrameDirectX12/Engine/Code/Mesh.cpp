@@ -27,6 +27,9 @@ CMesh::CMesh(const CMesh & rhs)
 
 HRESULT CMesh::Ready_Mesh(wstring wstrFilePath, wstring wstrFileName)
 {
+	if (wstrFileName == L"Baraka_M_Extractor.X")
+		_int i = 0;
+
 	/*__________________________________________________________________________________________________________
 	wstrFilePath	: ../../Bin/Resource/Mesh/
 	wstrFileName	: OOO.X

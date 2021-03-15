@@ -86,11 +86,15 @@ StaticMesh|StageVelika|VK_OBJ_Statu_03_Wing_SM
 DynamicMesh|Character|PoporiH25
 DynamicMesh|Character|PoporiR19
 DynamicMesh|NPC|Aman_boy
+DynamicMesh|NPC|Baraka_M_Extractor
+DynamicMesh|NPC|Baraka_M_Merchant
+DynamicMesh|NPC|Baraka_M_Mystellium
 DynamicMesh|NPC|Castanic_M_Lsmith
 DynamicMesh|NPC|Cat
 DynamicMesh|NPC|Chicken
 DynamicMesh|NPC|Highelf_girl
 DynamicMesh|NPC|Human_boy
+DynamicMesh|NPC|Human_girl
 DynamicMesh|NPC|NPC_Villagers
 DynamicMesh|NPC|Popori_boy
 DynamicMesh|NPC|Popori_M_Merchant

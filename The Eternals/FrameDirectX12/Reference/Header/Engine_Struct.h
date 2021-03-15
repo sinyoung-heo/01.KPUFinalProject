@@ -864,33 +864,12 @@ namespace Engine
 
 	typedef struct tagConstnatBufferSkinningMatrix
 	{
-		tagConstnatBufferSkinningMatrix() = default;
-		tagConstnatBufferSkinningMatrix(const tagConstnatBufferSkinningMatrix& rhs)
-		{
-			//memcpy(matBoneOffset, rhs.matBoneOffset, sizeof(XMFLOAT4X4) * 64);
-			//memcpy(matBoneScale, rhs.matBoneScale, sizeof(XMFLOAT4X4) * 64);
-			//memcpy(matBoneRotation, rhs.matBoneRotation, sizeof(XMFLOAT4X4) * 64);
-			//memcpy(matBoneTrans, rhs.matBoneTrans, sizeof(XMFLOAT4X4) * 64);
-			//memcpy(matParentTransform, rhs.matParentTransform, sizeof(XMFLOAT4X4) * 64);
-			//memcpy(matRootTransform, rhs.matRootTransform, sizeof(XMFLOAT4X4) * 64);
-
-			for (_uint i = 0; i < 64; ++i)
-			{
-				matBoneOffset[i]      = rhs.matBoneOffset[i];
-				matBoneScale[i]       = rhs.matBoneScale[i];
-				matBoneRotation[i]    = rhs.matBoneRotation[i];
-				matBoneTrans[i]       = rhs.matBoneTrans[i];
-				matParentTransform[i] = rhs.matParentTransform[i];
-				matRootTransform[i]   = rhs.matRootTransform[i];
-			}
-		}
-
-		XMFLOAT4X4	matBoneOffset[64];
-		XMFLOAT4X4	matBoneScale[64];
-		XMFLOAT4X4	matBoneRotation[64];
-		XMFLOAT4X4	matBoneTrans[64];
-		XMFLOAT4X4	matParentTransform[64];
-		XMFLOAT4X4	matRootTransform[64];
+		XMFLOAT4X4	matBoneOffset[MAX_PALETTE];
+		XMFLOAT4X4	matBoneScale[MAX_PALETTE];
+		XMFLOAT4X4	matBoneRotation[MAX_PALETTE];
+		XMFLOAT4X4	matBoneTrans[MAX_PALETTE];
+		XMFLOAT4X4	matParentTransform[MAX_PALETTE];
+		XMFLOAT4X4	matRootTransform[MAX_PALETTE];
 
 	} CB_SKINNING_MATRIX;
 

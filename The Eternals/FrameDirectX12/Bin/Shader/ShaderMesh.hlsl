@@ -46,14 +46,15 @@ cbuffer cbShaderMesh : register(b1)
 	float4		g_fAfterImgColor	: packoffset(c14);
 };
 
+#define MAX_PALETTE 128
 cbuffer cbSkinningMatrix : register(b2)
 {
-	float4x4	g_matBoneOffset[64];
-	float4x4	g_matBoneScale[64];
-	float4x4	g_matBoneRotation[64];
-	float4x4	g_matBoneTrans[64];
-	float4x4	g_matParentTransform[64];
-	float4x4	g_matRootTransform[64];
+	float4x4 g_matBoneOffset[MAX_PALETTE];
+	float4x4 g_matBoneScale[MAX_PALETTE];
+	float4x4 g_matBoneRotation[MAX_PALETTE];
+	float4x4 g_matBoneTrans[MAX_PALETTE];
+	float4x4 g_matParentTransform[MAX_PALETTE];
+	float4x4 g_matRootTransform[MAX_PALETTE];
 };
 
 // VS_MAIN
