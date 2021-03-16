@@ -47,12 +47,13 @@ public:
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 
 	// SingleThread Rendering.
+	virtual void	Render_GameObject(const _float& fTimeDelta);
+	void			Render_AfterImage(const _float& fTimeDelta);
 	virtual void	Render_EdgeGameObject(const _float& fTimeDelta);
 	virtual void	Render_ShadowDepth(const _float & fTimeDelta);
 
 	// MultiThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
-	void			Render_AfterImage(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 
 private:
@@ -70,7 +71,6 @@ private:
 	Engine::CMesh*				m_pMeshCom				= nullptr;
 	Engine::CShaderMesh*		m_pShaderCom			= nullptr;
 	Engine::CShaderMesh*		m_pEdgeObjectShaderCom = nullptr;
-
 	Engine::CShaderShadow*		m_pShadowCom			= nullptr;
 	Engine::CColliderSphere*	m_pColliderSphereCom	= nullptr;
 	Engine::CColliderBox*		m_pColliderBoxCom		= nullptr;
@@ -86,9 +86,9 @@ private:
 
 	// AfterImage
 	list<_matrix>	m_lstAFWorldMatrix;
+	list<_rgba>	m_lstAFAlpha;
 	_uint			m_uiAfterImgSize = 0;
-	_rgba			m_vAfterImgColor = _rgba(1.0f);
-
+	_float			m_fAfterImgTime = 0.f;
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]
 	____________________________________________________________________________________________________________*/

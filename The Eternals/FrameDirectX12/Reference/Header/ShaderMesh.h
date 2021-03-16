@@ -37,6 +37,7 @@ public:
 								 const _uint& iSubMeshIdx,
 								 const _uint& iAfterImgIdx);
 
+	virtual void	Begin_Shader(const _int& iSubMeshIdx, const _int& AfterIdx);
 private:
 	virtual HRESULT								Create_RootSignature();
 	virtual HRESULT								Create_PipelineState();

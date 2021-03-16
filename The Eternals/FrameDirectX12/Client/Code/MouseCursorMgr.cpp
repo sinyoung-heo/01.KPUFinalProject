@@ -119,4 +119,5 @@ POINT CMouseCursorMgr::Get_CursorPoint()
 
 void CMouseCursorMgr::Free()
 {
+
 }

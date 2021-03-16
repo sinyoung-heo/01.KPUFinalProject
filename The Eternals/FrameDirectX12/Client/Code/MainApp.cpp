@@ -318,7 +318,7 @@ HRESULT CMainApp::SetUp_StartScene(Engine::SCENEID eScebeID)
 
 void CMainApp::SetUp_WindowMouseSetting()
 {
-	ShowCursor(false);
+	//ShowCursor(false);
 
 	RECT rc, rc2;
 	POINT p1, p2;
