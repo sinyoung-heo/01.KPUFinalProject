@@ -90,7 +90,7 @@ HRESULT CToolSceneStage::Ready_Scene()
 	//}
 
 	Engine::CShaderColorInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
-
+	Engine::CShaderLightingInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 
 	return S_OK;
 }

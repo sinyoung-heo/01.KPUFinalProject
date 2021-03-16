@@ -33,14 +33,6 @@ HRESULT CShaderColorInstancing::Ready_Shader(ID3D12Device* pGraphicDevice, ID3D1
 	return S_OK;
 }
 
-void CShaderColorInstancing::SetUp_VIBuffer()
-{
-	m_arrVIBuffer[BUFFER_RECT]   = static_cast<CRcCol*>(CComponentMgr::Get_Instance()->Clone_Component(L"RcCol", COMPONENTID::ID_STATIC));
-	m_arrVIBuffer[BUFFER_CUBE]   = static_cast<CCubeCol*>(CComponentMgr::Get_Instance()->Clone_Component(L"CubeCol", COMPONENTID::ID_STATIC));
-	m_arrVIBuffer[BUFFER_BOX]    = static_cast<CColliderBox*>(CComponentMgr::Get_Instance()->Clone_Component(L"ColliderBox", COMPONENTID::ID_DYNAMIC));
-	m_arrVIBuffer[BUFFER_SPHERE] = static_cast<CColliderSphere*>(CComponentMgr::Get_Instance()->Clone_Component(L"ColliderSphere", COMPONENTID::ID_DYNAMIC));
-}
-
 void CShaderColorInstancing::SetUp_Instancing()
 {
 	for (auto& vecInstancing : m_vecInstancing)
@@ -56,6 +48,13 @@ void CShaderColorInstancing::SetUp_Instancing()
 	}
 }
 
+void CShaderColorInstancing::SetUp_VIBuffer()
+{
+	m_arrVIBuffer[BUFFER_RECT]   = static_cast<CRcCol*>(CComponentMgr::Get_Instance()->Clone_Component(L"RcCol", COMPONENTID::ID_STATIC));
+	m_arrVIBuffer[BUFFER_CUBE]   = static_cast<CCubeCol*>(CComponentMgr::Get_Instance()->Clone_Component(L"CubeCol", COMPONENTID::ID_STATIC));
+	m_arrVIBuffer[BUFFER_BOX]    = static_cast<CColliderBox*>(CComponentMgr::Get_Instance()->Clone_Component(L"ColliderBox", COMPONENTID::ID_DYNAMIC));
+	m_arrVIBuffer[BUFFER_SPHERE] = static_cast<CColliderSphere*>(CComponentMgr::Get_Instance()->Clone_Component(L"ColliderSphere", COMPONENTID::ID_DYNAMIC));
+}
 
 void CShaderColorInstancing::SetUp_ConstantBuffer(ID3D12Device* pGraphicDevice)
 {
@@ -64,7 +63,6 @@ void CShaderColorInstancing::SetUp_ConstantBuffer(ID3D12Device* pGraphicDevice)
 		for (auto& pUploadBuffer : m_vecCB_ShaderColor[i])
 			pUploadBuffer = CUploadBuffer<CB_SHADER_COLOR>::Create(pGraphicDevice, m_uiTotalInstanceCnt[i], false);
 	}
-
 }
 
 void CShaderColorInstancing::Resize_ConstantBuffer(ID3D12Device* pGraphicDevice)
@@ -77,7 +75,7 @@ void CShaderColorInstancing::Resize_ConstantBuffer(ID3D12Device* pGraphicDevice)
 		{
 			if (nullptr == pCB_ShaderCorlr)
 				continue;
-			if (pCB_ShaderCorlr->GetElementCount() <= m_uiTotalInstanceCnt[i])
+			if (pCB_ShaderCorlr->GetElementCount() < m_uiTotalInstanceCnt[i])
 			{
 				_uint iNewSize = (_uint)((_float)m_uiTotalInstanceCnt[i] * 1.25f);
 

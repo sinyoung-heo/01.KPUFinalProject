@@ -7,6 +7,7 @@ BEGIN(Engine)
 class CScreenTex;
 class CShaderLighting;
 class CColliderBox;
+class CShaderLightingInstancing;
 
 class ENGINE_DLL CLight final : public CBase
 {
@@ -31,10 +32,8 @@ public:
 	// Method
 	HRESULT			Ready_Light(const D3DLIGHT& tLightInfo);
 	_int			Update_Light();
-	void			Render_Light(vector<ComPtr<ID3D12Resource>> pvecTargetTexture);
-private:
-	void			Set_ConstantTable();
-
+	void			Render_Light();
+	void			Set_ConstantTable(const _int& iInstanceIdx);
 private:
 	/*__________________________________________________________________________________________________________
 	[ Graphic Device ]
@@ -45,9 +44,9 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
 	____________________________________________________________________________________________________________*/
-	CScreenTex*			m_pBufferCom	= nullptr;
-	CShaderLighting*	m_pShaderCom	= nullptr;
-	CColliderBox*		m_pColliderCom	= nullptr;
+	CScreenTex*					m_pBufferCom	    = nullptr;
+	CShaderLightingInstancing*	m_pShaderInstancing = nullptr;
+	CColliderBox*				m_pColliderCom	    = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]
@@ -57,6 +56,7 @@ private:
 	_bool		m_bIsSetTexture	= false;
 	_bool		m_bIsDead		= false;
 
+	_uint		m_iPipelineStatePass = 0;
 
 public:
 	static CLight* Create(ID3D12Device* pGraphicDevice,

@@ -52,9 +52,9 @@ namespace Engine
 	____________________________________________________________________________________________________________*/
 	typedef enum tagD3DLightType
 	{
+		D3DLIGHT_DIRECTIONAL,
 		D3DLIGHT_POINT,
 		D3DLIGHT_SPOT,
-		D3DLIGHT_DIRECTIONAL,
 		D3DLIGHT_END,
 		D3DLIGHT_FORCE_DWORD	= 0x7fffffff,
 

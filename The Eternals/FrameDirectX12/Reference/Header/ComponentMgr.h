@@ -27,6 +27,7 @@
 #include "ShaderShadow.h"
 #include "ShaderShadowInstancing.h"
 #include "ShaderLighting.h"
+#include "ShaderLightingInstancing.h"
 #include "ShaderBlend.h"
 #include "ShaderLuminance.h"
 #include "ShaderDownSampling.h"

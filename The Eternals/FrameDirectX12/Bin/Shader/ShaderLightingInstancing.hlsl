@@ -20,21 +20,21 @@ Texture2D g_TexDepth	: register(t2);
 /*____________________________________________________________________
 [ Constant Buffer ]
 ______________________________________________________________________*/
-cbuffer cbShaderLighting : register(b0)
+typedef struct tagShaderLighting
 {
-	float4x4	g_matViewInv		: packoffset(c0);
-	float4x4	g_matProjInv		: packoffset(c4);
-	float4		g_vCameraPos		: packoffset(c8);
-	float4		g_vProjFar			: packoffset(c9);
+	float4x4	matViewInv;
+	float4x4	matProjInv;
+	float4		vCameraPos;
+	float4		vProjFar;
+	float4		vLightDiffuse;
+	float4		vLightSpecular;
+	float4		vLightAmbient;
+	float4		vLightDir;
+	float4		vLightPos;
+	float4		vLightRange;
 	
-	float4		g_vLightDiffuse		: packoffset(c10);
-	float4		g_vLightSpecular	: packoffset(c11);
-	float4		g_vLightAmibient	: packoffset(c12);
-	float4		g_vLightDir			: packoffset(c13);
-	float4		g_vLightPos			: packoffset(c14);
-	float4		g_vLightRange		: packoffset(c15);
-									
-};
+} SHADER_LIGHTING;
+StructuredBuffer<SHADER_LIGHTING> g_ShaderLighting : register(t0, space1);
 
 
 // VS_MAIN
@@ -46,16 +46,37 @@ struct VS_IN
 
 struct VS_OUT
 {
-	float4 Pos		: SV_POSITION;
-	float2 TexUV	: TEXCOORD;
+	float4		Pos				: SV_POSITION;
+	float2		TexUV			: TEXCOORD0;
+	float4x4	ViewInv			: TEXCOORD1;
+	float4x4	ProjInv			: TEXCOORD5;
+	float4		CameraPos		: TEXCOORD9;
+	float4		ProjFar			: TEXCOORD10;
+	float4		LightDiffuse	: TEXCOORD11;
+	float4		LightSpecular	: TEXCOORD12;
+	float4		LightAmbient	: TEXCOORD13;
+	float4		LightDir		: TEXCOORD14;
+	float4		LightPos		: TEXCOORD15;
+	float4		LightRange		: TEXCOORD16;
 };
 
-VS_OUT VS_MAIN(VS_IN vs_input)
+VS_OUT VS_MAIN(VS_IN vs_input, uint iInstanceID : SV_InstanceID)
 {
 	VS_OUT vs_output = (VS_OUT) 0;
 	
 	vs_output.Pos	= float4(vs_input.Pos, 1.f);
 	vs_output.TexUV = vs_input.TexUV;
+	
+	vs_output.ViewInv       = g_ShaderLighting[iInstanceID].matViewInv;
+	vs_output.ProjInv       = g_ShaderLighting[iInstanceID].matProjInv;
+	vs_output.CameraPos     = g_ShaderLighting[iInstanceID].vCameraPos;
+	vs_output.ProjFar       = g_ShaderLighting[iInstanceID].vProjFar;
+	vs_output.LightDiffuse  = g_ShaderLighting[iInstanceID].vLightDiffuse;
+	vs_output.LightSpecular = g_ShaderLighting[iInstanceID].vLightSpecular;
+	vs_output.LightAmbient  = g_ShaderLighting[iInstanceID].vLightAmbient;
+	vs_output.LightDir      = g_ShaderLighting[iInstanceID].vLightDir;
+	vs_output.LightPos      = g_ShaderLighting[iInstanceID].vLightPos;
+	vs_output.LightRange    = g_ShaderLighting[iInstanceID].vLightRange;
 	
 	return vs_output;
 }
@@ -79,9 +100,9 @@ PS_OUT PS_DIRECTION(VS_OUT ps_input) : SV_TARGET
 	float4 TexNormal	= g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
 	float4 Normal		= vector(TexNormal.xyz * 2.f - 1.f, 0.f);
 	
-	float4 vDirection = g_vLightDir * -1.0f;
+	float4 vDirection	= ps_input.LightDir * -1.0f;
 	float4 Shade		= saturate(dot(normalize(vDirection), Normal));
-	ps_output.Shade		= (g_vLightDiffuse) * (Shade + (g_vLightAmibient));
+	ps_output.Shade		= (ps_input.LightDiffuse) * (Shade + (ps_input.LightAmbient));
 	ps_output.Shade.a	= 1.0f;
 	
 	/*__________________________________________________________________________________________________________
@@ -91,26 +112,26 @@ PS_OUT PS_DIRECTION(VS_OUT ps_input) : SV_TARGET
 	- ViewZ		0 ~ 1 값에 다시 Far를 곱하여 0 ~ Far깊이 값을 복구.
 	____________________________________________________________________________________________________________*/
 	float4	Depth	= g_TexDepth.Sample(g_samLinearWrap, ps_input.TexUV);
-	
-	float	ViewZ	= Depth.y * g_vProjFar.x;
+	float ViewZ		= Depth.y * ps_input.ProjFar.x;
 	float4	Pos		= Depth;
+	
 	// (0, 0) ~ (1, 1) => (-1, 1) ~ (1, -1)
 	Pos.x = (ps_input.TexUV.x *  2.0f - 1.0f) * ViewZ;	// UV좌표 -> 투영좌표 * ViewZ
 	Pos.y = (ps_input.TexUV.y * -2.0f + 1.0f) * ViewZ;	// UV좌표 -> 투영좌표 * ViewZ
 	Pos.z = Depth.x * ViewZ;							// 투영영역의 z값 * ViewZ
 	Pos.w = ViewZ;
 	
-	Pos = mul(Pos, g_matProjInv);	// Proj의 역행렬을 곱하여 View영역의 Pos.
-	Pos = mul(Pos, g_matViewInv);	// View의 역행렬을 곱하여 World영역의 Pos.
+	Pos = mul(Pos, ps_input.ProjInv); // Proj의 역행렬을 곱하여 View영역의 Pos.
+	Pos = mul(Pos, ps_input.ViewInv); // View의 역행렬을 곱하여 World영역의 Pos.
 	
 	float3 LightDir		= normalize(vDirection.xyz);
 	float3 Reflection	= normalize(reflect(LightDir, Normal.xyz));
-	float3 Look			= normalize(Pos.xyz - g_vCameraPos.xyz);
+	float3 Look = normalize(Pos.xyz - ps_input.CameraPos.xyz);
 	
 	float4	TexSpecular	= g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
 	TexSpecular			= TexSpecular * 2.0f - 1.0f;
 	float	SpecPower	= 1.15f;
-	ps_output.Specular	= pow(saturate(dot(Reflection, -Look)), 0.0f) * (g_vLightSpecular * TexSpecular * SpecPower);
+	ps_output.Specular	= pow(saturate(dot(Reflection, -Look)), 0.0f) * (ps_input.LightSpecular * TexSpecular * SpecPower);
 	
 	return (ps_output);
 	
@@ -132,7 +153,7 @@ PS_OUT PS_POINT(VS_OUT ps_input)
 	float4	Normal		= float4(TexNormal.xyz * 2.f - 1.f, 0.f);
 	
 	float4	Depth		= g_TexDepth.Sample(g_samLinearWrap, ps_input.TexUV);
-	float	ViewZ		= Depth.y * g_vProjFar.x;
+	float ViewZ			= Depth.y * ps_input.ProjFar.x;
 	
 	// (0, 0) ~ (1, 1) => (-1, 1) ~ (1, -1)
 	float4	Pos;
@@ -141,27 +162,27 @@ PS_OUT PS_POINT(VS_OUT ps_input)
 	Pos.z = Depth.x * ViewZ;							// 투영영역의 z값 * ViewZ
 	Pos.w = ViewZ;
 	
-	Pos	= mul(Pos, g_matProjInv);	// Proj의 역행렬을 곱하여 View영역의 Pos.
-	Pos	= mul(Pos, g_matViewInv);	// View의 역행렬을 곱하여 World영역의 Pos.
+	Pos	= mul(Pos, ps_input.ProjInv);	// Proj의 역행렬을 곱하여 View영역의 Pos.
+	Pos = mul(Pos, ps_input.ViewInv);	// View의 역행렬을 곱하여 World영역의 Pos.
 	
-	float4	LightDir = Pos - g_vLightPos;
-	float	Distnace = length(LightDir);
-	float	Att		 = saturate((g_vLightRange.x - Distnace) / g_vLightRange.x);
+	float4	LightDir	= Pos - ps_input.LightPos;
+	float	Distnace	= length(LightDir);
+	float	Att			= saturate((ps_input.LightRange.x - Distnace) / ps_input.LightRange.x);
 	
 	// Shade
 	float4 Shade		= saturate(dot(normalize(LightDir) * -1.0f, Normal));
-	ps_output.Shade		= (Shade + g_vLightAmibient) * g_vLightDiffuse * Att;
+	ps_output.Shade		= (Shade + ps_input.LightAmbient) * ps_input.LightDiffuse * Att;
 	ps_output.Shade.a	= 1.0f;
 	
 	
 	// Specular
 	float3 Reflection	= normalize(reflect(normalize(LightDir.xyz), Normal.xyz));
-	float3 Look			= normalize(Pos.xyz - g_vCameraPos.xyz);
+	float3 Look			= normalize(Pos.xyz - ps_input.CameraPos.xyz);
 	
 	float4	TexSpecular	= g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
 	TexSpecular			= TexSpecular * 2.0f - 1.0f;
 	float	SpecPower	= 1.15f;
-	ps_output.Specular  = pow(saturate(dot(Reflection, -Look)), 0.0f) * (g_vLightSpecular * TexSpecular * Att) * SpecPower;
+	ps_output.Specular	= pow(saturate(dot(Reflection, -Look)), 0.0f) * (ps_input.LightSpecular * TexSpecular * Att) * SpecPower;
 	
 	return (ps_output);
 }

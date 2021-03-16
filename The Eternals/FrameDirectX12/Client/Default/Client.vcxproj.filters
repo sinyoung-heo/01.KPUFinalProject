@@ -91,9 +91,6 @@
     <Filter Include="99.Etc\SampleObject\03.TerrainObject">
       <UniqueIdentifier>{ef54af93-bffa-4e2a-ae60-069505659442}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99.Etc\SampleObject\05.StaticMeshObject">
-      <UniqueIdentifier>{2351c006-4ada-445d-8e86-d03ee28c66bc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99.Etc\SampleObject\06.Popori_F">
       <UniqueIdentifier>{c3511f7c-4ce1-4a91-abc0-8f5afd0bef91}</UniqueIdentifier>
     </Filter>
@@ -198,6 +195,9 @@
     </Filter>
     <Filter Include="99.Etc\SampleObject\18.TestColMonster">
       <UniqueIdentifier>{af8cf5a3-7573-4bee-ae7f-005905d751aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Etc\SampleObject\05.StaticMeshObject">
+      <UniqueIdentifier>{2351c006-4ada-445d-8e86-d03ee28c66bc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

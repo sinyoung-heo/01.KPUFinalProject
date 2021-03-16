@@ -42,7 +42,7 @@ public:
 	void			Set_RenderGroup(Engine::CRenderer::RENDERGROUP eGroup) { m_eRenderGroup = eGroup; }
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
-	void			Set_ConstantTable(const _int& iContextIdx, const _int& iInstancingIdx);
+	void			Set_ConstantTable(const _int& iContextIdx, const _int& iInstanceIdx);
 	void			Set_ConstantTable();
 
 	void			Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int& iInstanceIdx);

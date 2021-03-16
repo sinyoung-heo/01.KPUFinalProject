@@ -111,7 +111,7 @@ HRESULT CGameObject::Ready_GameObject(const _bool & bIsCreate_Transform,
 	{
 		m_pTransCom = CTransform::Create();
 		NULL_CHECK_RETURN(m_pTransCom, E_FAIL);
-		m_mapComponent[ID_DYNAMIC].emplace(L"Com_Transform", m_pTransCom);
+		m_mapComponent[ID_STATIC].emplace(L"Com_Transform", m_pTransCom);
 	}
 
 	if (bIsCreate_Info)
@@ -155,10 +155,11 @@ HRESULT CGameObject::LateInit_GameObject()
 
 _int CGameObject::Update_GameObject(const _float & fTimeDelta)
 {
+	if (nullptr != m_pTransCom)
+		m_pTransCom->Update_Component(fTimeDelta);
+
 	for (auto& iter : m_mapComponent[ID_DYNAMIC])
 		iter.second->Update_Component(fTimeDelta);
-
-
 
 	return NO_EVENT;
 }

@@ -158,7 +158,7 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	if(RENDERID::MULTI_THREAD == eID)
 		Render_MultiThread(fTimeDelta);
 
-	Render_Priority(fTimeDelta);		// SkyBox
+	Render_Priority(fTimeDelta);
 
 	if (RENDERID::SINGLE_THREAD == eID)
 	{
@@ -196,8 +196,9 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	Clear_RenderGroup();
 	CShaderShadowInstancing::Get_Instance()->Reset_Instance();
 	CShaderMeshInstancing::Get_Instance()->Reset_Instance();
-	CShaderTextureInstancing::Get_Instance()->Reset_Instance();
+	CShaderLightingInstancing::Get_Instance()->Reset_Instance();
 	CShaderColorInstancing::Get_Instance()->Reset_Instance();
+	CShaderTextureInstancing::Get_Instance()->Reset_Instance();
 
 	return S_OK;
 }
@@ -240,12 +241,14 @@ void CRenderer::Render_NonAlpha(const _float& fTimeDelta)
 
 void CRenderer::Render_Light()
 {
+	CShaderLightingInstancing::Get_Instance()->SetUp_DescriptorHeap(m_pTargetDeferred->Get_TargetTexture());
+
 	m_pTargetLight->SetUp_OnGraphicDevice(TARGETID::TYPE_LIGHTING);
 
-	CLightMgr::Get_Instance()->Render_Light(m_pTargetDeferred->Get_TargetTexture());
+	CLightMgr::Get_Instance()->Render_Light();
+	CShaderLightingInstancing::Get_Instance()->Render_Instance();
 
 	m_pTargetLight->Release_OnGraphicDevice(TARGETID::TYPE_LIGHTING);
-
 }
 
 void CRenderer::Render_Blend()
@@ -679,6 +682,10 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 
 	// ShaderColorInstancing
 	CShaderColorInstancing::Get_Instance()->Ready_Shader(m_pGraphicDevice, m_pCommandList);
+	++m_uiCnt_ShaderFile;
+
+	// ShaderLightingInstancing
+	CShaderLightingInstancing::Get_Instance()->Ready_Shader(m_pGraphicDevice, m_pCommandList);
 	++m_uiCnt_ShaderFile;
 
 	return S_OK;

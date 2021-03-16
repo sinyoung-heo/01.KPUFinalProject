@@ -50,6 +50,7 @@ HRESULT CScene_StageVelika::Ready_Scene()
 	// Ready Instancing 
 	Engine::CShaderShadowInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderMeshInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
+	Engine::CShaderLightingInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderColorInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 
 	// Ready MouseCursorMgr
@@ -799,6 +800,8 @@ void CScene_StageVelika::Free()
 	Engine::CShaderShadowInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
 	Engine::CShaderMeshInstancing::Get_Instance()->Reset_InstancingContainer();
 	Engine::CShaderMeshInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
+	Engine::CShaderLightingInstancing::Get_Instance()->Reset_Instance();
+	Engine::CShaderLightingInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
 	Engine::CShaderColorInstancing::Get_Instance()->Reset_Instance();
 	Engine::CShaderColorInstancing::Get_Instance()->Reset_InstancingConstantBuffer();
 }

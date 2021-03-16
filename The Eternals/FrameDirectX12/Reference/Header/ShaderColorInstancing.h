@@ -19,7 +19,6 @@ public:
 	CUploadBuffer<CB_SHADER_COLOR>*	Get_UploadBuffer_ShaderColor(const COLOR_BUFFER& eBuffer, const _uint& uiPipelineStatepass);
 
 	HRESULT Ready_Shader(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	void	SetUp_VIBuffer();
 	void	SetUp_ConstantBuffer(ID3D12Device* pGraphicDevice);
 	void	Resize_ConstantBuffer(ID3D12Device* pGraphicDevice);
 	void	Add_Instance(const COLOR_BUFFER& eBuffer,const _uint& iPipelineStateIdx)	{ ++(m_vecInstancing[eBuffer][iPipelineStateIdx].iInstanceCount); };
@@ -30,6 +29,7 @@ public:
 
 private:
 	void	SetUp_Instancing();
+	void	SetUp_VIBuffer();
 	virtual HRESULT	Create_RootSignature();
 	virtual HRESULT	Create_PipelineState();
 	virtual vector<D3D12_INPUT_ELEMENT_DESC> Create_InputLayout(string VS_EntryPoint = "VS_MAIN", string PS_EntryPoint = "PS_MAIN");

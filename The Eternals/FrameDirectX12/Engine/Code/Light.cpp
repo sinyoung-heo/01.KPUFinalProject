@@ -1,5 +1,4 @@
 #include "Light.h"
-
 #include "GraphicDevice.h"
 #include "ComponentMgr.h"
 #include "Renderer.h"
@@ -9,6 +8,7 @@ USING(Engine)
 CLight::CLight(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: m_pGraphicDevice(pGraphicDevice)
 	, m_pCommandList(pCommandList)
+	, m_pShaderInstancing(CShaderLightingInstancing::Get_Instance())
 {
 }
 
@@ -36,20 +36,18 @@ HRESULT CLight::Ready_Light(const D3DLIGHT & tLightInfo)
 	// Buffer
 	m_pBufferCom = static_cast<Engine::CScreenTex*>(CComponentMgr::Get_Instance()->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
-
+	
 	if (m_tLightInfo.Type == LIGHTTYPE::D3DLIGHT_DIRECTIONAL)
 	{
-		// Shader
-		m_pShaderCom = static_cast<Engine::CShaderLighting*>(CComponentMgr::Get_Instance()->Clone_Component(L"ShaderLighting", COMPONENTID::ID_STATIC));
-		NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
-		FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(0), E_FAIL);
+		// SetUp Instancing
+		m_iPipelineStatePass = 0;
+		m_pShaderInstancing->Add_TotalInstancCount(m_iPipelineStatePass);
 	}
 	if (m_tLightInfo.Type == LIGHTTYPE::D3DLIGHT_POINT)
 	{
-		// Shader
-		m_pShaderCom = static_cast<Engine::CShaderLighting*>(CComponentMgr::Get_Instance()->Clone_Component(L"ShaderLighting", COMPONENTID::ID_STATIC));
-		NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
-		FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(1), E_FAIL);
+		// SetUp Instancing
+		m_iPipelineStatePass = 1;
+		m_pShaderInstancing->Add_TotalInstancCount(m_iPipelineStatePass);
 
 		// Collider
 		m_pColliderCom = static_cast<Engine::CColliderBox*>(CComponentMgr::Get_Instance()->Clone_Component(L"ColliderBox", COMPONENTID::ID_DYNAMIC));
@@ -60,10 +58,7 @@ HRESULT CLight::Ready_Light(const D3DLIGHT & tLightInfo)
 		m_pColliderCom->Set_Extents(_vec3(1.0f));
 		m_pColliderCom->Set_Color(m_tLightInfo.Diffuse);
 		m_pColliderCom->Update_Component(0.0f);
-		// m_pColliderCom->Get_Transform()->Update_Component(0.0f);
 	}
-
-
 
 	return S_OK;
 }
@@ -82,39 +77,33 @@ _int CLight::Update_Light()
 	return NO_EVENT;
 }
 
-void CLight::Render_Light(vector<ComPtr<ID3D12Resource>> pvecTargetTexture)
+void CLight::Render_Light()
 {
-	if (!m_bIsSetTexture)
-	{
-		m_bIsSetTexture = true;
-
-		// TargetTexture를 Set해준다.
-		m_pShaderCom->SetUp_ShaderTexture(pvecTargetTexture);
-	}
-
 	// Frustum Culling
 	if (D3DLIGHT_POINT == m_tLightInfo.Type &&
 		CRenderer::Get_Instance()->Get_Frustum().Contains(m_pColliderCom->Get_BoundingInfo()) != DirectX::DISJOINT)
 	{
-		Set_ConstantTable();
-
-		m_pShaderCom->Begin_Shader();
-		m_pBufferCom->Begin_Buffer();
-
-		m_pBufferCom->Render_Buffer();
+		/*__________________________________________________________________________________________________________
+		[ Add Instance ]
+		____________________________________________________________________________________________________________*/
+		m_pShaderInstancing->Add_Instance(m_iPipelineStatePass);
+		_uint iInstanceIdx = m_pShaderInstancing->Get_InstanceCount(m_iPipelineStatePass) - 1;
+		
+		Set_ConstantTable(iInstanceIdx);
 	}
 	else if (D3DLIGHT_DIRECTIONAL == m_tLightInfo.Type)
 	{
-		Set_ConstantTable();
+		/*__________________________________________________________________________________________________________
+		[ Add Instance ]
+		____________________________________________________________________________________________________________*/
+		m_pShaderInstancing->Add_Instance(m_iPipelineStatePass);
+		_uint iInstanceIdx = m_pShaderInstancing->Get_InstanceCount(m_iPipelineStatePass) - 1;
 
-		m_pShaderCom->Begin_Shader();
-		m_pBufferCom->Begin_Buffer();
-
-		m_pBufferCom->Render_Buffer();
+		Set_ConstantTable(iInstanceIdx);
 	}
 }
 
-void CLight::Set_ConstantTable()
+void CLight::Set_ConstantTable(const _int& iInstanceIdx)
 {
 	_matrix* pmatView = CGraphicDevice::Get_Instance()->Get_Transform(MATRIXID::VIEW);
 	_matrix* pmatProj = CGraphicDevice::Get_Instance()->Get_Transform(MATRIXID::PROJECTION);
@@ -140,7 +129,7 @@ void CLight::Set_ConstantTable()
 	tCB_ShaderLighting.vLightPos		= m_tLightInfo.Position;
 	tCB_ShaderLighting.vLightRange		= _vec4(m_tLightInfo.Range);
 
-	m_pShaderCom->Get_UploadBuffer_ShaderLighting()->CopyData(0, tCB_ShaderLighting);
+	m_pShaderInstancing->Get_UploadBuffer_ShaderLighting(m_iPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderLighting);
 }
 
 CLight * CLight::Create(ID3D12Device * pGraphicDevice,
@@ -158,7 +147,6 @@ CLight * CLight::Create(ID3D12Device * pGraphicDevice,
 void CLight::Free()
 {
 	Safe_Release(m_pBufferCom);
-	Safe_Release(m_pShaderCom);
 
 	if (m_tLightInfo.Type == D3DLIGHT_POINT)
 		Safe_Release(m_pColliderCom);

@@ -224,6 +224,7 @@ call CopyEngine.bat</Command>
     <ClInclude Include="..\Code\ShaderDownSampling.h" />
     <ClInclude Include="..\Code\ShaderEdge.h" />
     <ClInclude Include="..\Code\ShaderLighting.h" />
+    <ClInclude Include="..\Code\ShaderLightingInstancing.h" />
     <ClInclude Include="..\Code\ShaderLuminance.h" />
     <ClInclude Include="..\Code\ShaderMesh.h" />
     <ClInclude Include="..\Code\ShaderMgr.h" />
@@ -293,9 +294,11 @@ call CopyEngine.bat</Command>
     <ClCompile Include="..\Code\ShaderBlend.cpp" />
     <ClCompile Include="..\Code\ShaderBlur.cpp" />
     <ClCompile Include="..\Code\ShaderColor.cpp" />
+    <ClCompile Include="..\Code\ShaderColorInstancing.cpp" />
     <ClCompile Include="..\Code\ShaderDownSampling.cpp" />
     <ClCompile Include="..\Code\ShaderEdge.cpp" />
     <ClCompile Include="..\Code\ShaderLighting.cpp" />
+    <ClCompile Include="..\Code\ShaderLightingInstancing.cpp" />
     <ClCompile Include="..\Code\ShaderLuminance.cpp" />
     <ClCompile Include="..\Code\ShaderMesh.cpp" />
     <ClCompile Include="..\Code\ShaderMgr.cpp" />
@@ -314,7 +317,6 @@ call CopyEngine.bat</Command>
     <ClCompile Include="..\Code\Transform.cpp" />
     <ClCompile Include="..\Code\VIBuffer.cpp" />
     <ClCompile Include="..\Code\VIMesh.cpp" />
-    <ClCompile Include="ShaderColorInstancing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Bin\Shader\ShaderBlend.hlsl">
@@ -344,6 +346,10 @@ call CopyEngine.bat</Command>
     <FxCompile Include="..\..\Bin\Shader\ShaderLighting.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\Bin\Shader\ShaderLightingInstancing.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderLuminance.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

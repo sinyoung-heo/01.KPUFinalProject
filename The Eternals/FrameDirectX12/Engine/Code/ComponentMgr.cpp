@@ -82,4 +82,5 @@ void CComponentMgr::Free()
 	CShaderMeshInstancing::Get_Instance()->Destroy_Instance();
 	CShaderTextureInstancing::Get_Instance()->Destroy_Instance();
 	CShaderColorInstancing::Get_Instance()->Destroy_Instance();
+	CShaderLightingInstancing::Get_Instance()->Destroy_Instance();
 }

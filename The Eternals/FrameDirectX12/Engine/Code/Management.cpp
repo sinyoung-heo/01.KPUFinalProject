@@ -46,6 +46,7 @@ _int CManagement::LateUpdate_Management(const _float & fTimeDelta)
 
 	// Resize Shader Instance ConstantBuffer ElementSize.
 	CShaderColorInstancing::Get_Instance()->Resize_ConstantBuffer(CGraphicDevice::Get_Instance()->Get_GraphicDevice());
+	CShaderLightingInstancing::Get_Instance()->Resize_ConstantBuffer(CGraphicDevice::Get_Instance()->Get_GraphicDevice());
 
 	return 0;
 }

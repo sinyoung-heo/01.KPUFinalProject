@@ -94,14 +94,14 @@ void CLightMgr::Update_Light()
 	}
 }
 
-void CLightMgr::Render_Light(vector<ComPtr<ID3D12Resource>> pvecTargetTexture)
+void CLightMgr::Render_Light()
 {
 	for (auto& vecLight : m_vecLight)
 	{
 		for (auto& pLight : vecLight)
 		{
 			if (nullptr != pLight)
-				pLight->Render_Light(pvecTargetTexture);
+				pLight->Render_Light();
 		}
 
 	}

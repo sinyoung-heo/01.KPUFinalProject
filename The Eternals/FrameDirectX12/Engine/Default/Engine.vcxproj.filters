@@ -399,6 +399,9 @@
     <ClInclude Include="..\Code\ShaderMgr.h">
       <Filter>97.Mgr\03.ShaderMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ShaderLightingInstancing.h">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\05.ShaderLight</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\DirectInput.cpp">
@@ -572,9 +575,6 @@
     <ClCompile Include="..\Code\ShaderTextureInstancing.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\01.ShaderTexture</Filter>
     </ClCompile>
-    <ClCompile Include="ShaderColorInstancing.cpp">
-      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\00.ShaderColor</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CollisionMgr.cpp">
       <Filter>97.Mgr\02.CollisionMgr</Filter>
     </ClCompile>
@@ -586,6 +586,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\ShaderMgr.cpp">
       <Filter>97.Mgr\03.ShaderMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ShaderColorInstancing.cpp">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\00.ShaderColor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ShaderLightingInstancing.cpp">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\05.ShaderLight</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -639,6 +645,9 @@
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderEdge.hlsl">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\12.ShaderEdge</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Bin\Shader\ShaderLightingInstancing.hlsl">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\05.ShaderLight</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -29,7 +29,7 @@ public:
 						  const LIGHTTYPE& eLightID,
 						  const D3DLIGHT& tLightInfo);
 	void		Update_Light();
-	void		Render_Light(vector<ComPtr<ID3D12Resource>> pvecTargetTexture);
+	void		Render_Light();
 
 private:
 	/*__________________________________________________________________________________________________________
