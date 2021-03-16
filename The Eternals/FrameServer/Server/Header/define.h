@@ -23,6 +23,7 @@ constexpr int SERVER_CORE		= 4;
 //constexpr int INIT_SPEED		= 5;			// 플레이어 초기 SPEED
 
 constexpr int CHASE_RANGE		= 5;			// CHASE MONSTER 추적 범위
+constexpr int ATTACK_RANGE		= 2;			// MONSTER 공격 범위
 
 /*____________________________________________________________________
 Player Direction

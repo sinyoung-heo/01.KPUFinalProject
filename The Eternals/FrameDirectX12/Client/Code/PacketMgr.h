@@ -24,7 +24,7 @@ public:
 	void	send_login();
 	void	send_move(const _vec3& vDir, const _vec3& vPos);
 	void	send_move_stop(const _vec3& vPos, const _vec3& vDir);
-	void    send_collision_monster_attck(int objID);
+	void    send_attackByMonster(int objID);
 
 public:
 	bool	change_MoveKey(MVKEY eKey);

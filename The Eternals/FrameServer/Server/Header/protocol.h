@@ -36,6 +36,7 @@ constexpr char SC_PACKET_NPC_MOVE = 8;
 constexpr char SC_PACKET_NPC_ENTER = 9;
 constexpr char SC_PACKET_MONSTER_ENTER = 10;
 constexpr char SC_PACKET_MONSTER_MOVE = 11;
+constexpr char SC_PACKET_MONSTER_ATTACK = 12;
 
 constexpr char CS_LOGIN = 0;
 constexpr char CS_MOVE = 1;
@@ -175,6 +176,14 @@ struct sc_packet_stat_change
 	int		hp;
 	int		mp;
 	int		exp;
+};
+
+struct sc_packet_monster_attack
+{
+	unsigned char size;
+	char type;
+
+	int		id;
 };
 
 struct cs_packet_login 
