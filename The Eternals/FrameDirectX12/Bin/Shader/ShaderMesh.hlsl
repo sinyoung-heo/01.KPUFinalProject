@@ -42,7 +42,6 @@ cbuffer cbShaderMesh : register(b1)
     float		g_fDissolve			: packoffset(c13.y);
 	float		g_fOffset1			: packoffset(c13.z);
 	float		g_fOffset2			: packoffset(c13.w);
-	
 	float4		g_fAfterImgColor	: packoffset(c14);
 };
 
@@ -78,6 +77,7 @@ struct VS_OUT
 	
 	float4 ProjPos		: TEXCOORD5;
 	float4 LightPos		: TEXCOORD6;
+    float4 WorldPos : TEXCOORD7;
 };
 
 /*__________________________________________________________________________________________________________
@@ -182,13 +182,13 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 								 ps_input.ProjPos.w / g_fProjFar,			// posWVP.w / Far : 0~1로 만든 View영역의 Z.
 								 1.0f, 1.0f);
    
-    float Normal_fDissolve = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV).r;
+    //float Normal_fDissolve = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV).r;
 
-    if ((0.05f > (1.f - g_fDissolve) - Normal_fDissolve) && ((1.f - g_fDissolve) - Normal_fDissolve) > 0.f)
-    {
-        ps_output.Emissive = float4(1, Normal_fDissolve, 0, 1);
-    }
-    clip((1.f - g_fDissolve) - Normal_fDissolve);
+    //if ((0.05f > (1.f - g_fDissolve) - Normal_fDissolve) && ((1.f - g_fDissolve) - Normal_fDissolve) > 0.f)
+    //{
+    //    ps_output.Emissive = float4(1, Normal_fDissolve, 0, 1);
+    //}
+    //clip((1.f - g_fDissolve) - Normal_fDissolve);
 
 	return (ps_output);
 }
@@ -433,6 +433,7 @@ VS_OUT VS_AFTERIMAGE(VS_IN vs_input)
 	vs_output.Normal	= vs_input.Normal;
 	
 	// ProjPos
+    vs_output.WorldPos = mul(float4(vs_input.Pos, 1.f), g_matWorld);
 	vs_output.ProjPos	= vs_output.Pos;
 	
 	return (vs_output);
@@ -445,18 +446,21 @@ VS_OUT VS_AFTERIMAGE(VS_IN vs_input)
 //	float4 Emissive		: SV_TARGET4;	// 4번 RenderTarget - Emissive
 //};
 
-PS_OUT PS_AFTERIMAGE(VS_OUT ps_input) : SV_TARGET
-{
-	PS_OUT ps_output = (PS_OUT) 0;
-	
-	// Diffuse
-	ps_output.Diffuse = g_fAfterImgColor;
-	
-	
-	// Depth
-	ps_output.Depth = float4(ps_input.ProjPos.z / ps_input.ProjPos.w,	// (posWVP.z / posWVP.w) : Proj 영역의 Z.
-							 ps_input.ProjPos.w / g_fProjFar,			// posWVP.w / Far : 0~1로 만든 View영역의 Z.
-							 0.0f, 1.0f);
+static float g_fRimWidth = 0.2f;
+float4 PS_AFTERIMAGE(VS_OUT ps_input) : SV_TARGET
+{	
+	//// Diffuse
 
-	return (ps_output);
+	//// Depth
+	//ps_output.Depth = float4(ps_input.ProjPos.z / ps_input.ProjPos.w,	// (posWVP.z / posWVP.w) : Proj 영역의 Z.
+	//						 ps_input.ProjPos.w / g_fProjFar,			// posWVP.w / Far : 0~1로 만든 View영역의 Z.
+	//						 1.0f, 1.0f);
+
+    vector vCamPos = vector(normalize(g_vCameraPos.xyz - ps_input.WorldPos.xyz), 1.f);
+    float fRimLightColor = smoothstep(1.f - g_fAfterImgColor.xyz, 1.f, 1.f - max(0, dot(ps_input.Normal.xyz, vCamPos.xyz)));
+
+    float4 Color;
+	Color.xyz= g_fAfterImgColor.xyz;
+    Color.a = g_fAfterImgColor.a;// * fRimLightColor;
+    return Color;
 }

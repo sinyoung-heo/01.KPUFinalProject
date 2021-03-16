@@ -230,7 +230,7 @@ HRESULT CShaderSkyBox::Create_PipelineState()
 	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.BlendState			= Create_BlendState();
 	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
-	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState();	// SkyBox의 Depth는 false.
+	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState(false);	// SkyBox의 Depth는 false.
 
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)),  E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);

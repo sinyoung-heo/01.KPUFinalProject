@@ -33,7 +33,9 @@ public:
 	void							Set_AniCtrl(CAniCtrl* pAniCtrl)			{ m_pAniCtrl = pAniCtrl; }
 	void							Set_FileName(wstring& wstrFileName)		{ m_wstrFileName = wstrFileName; }
 	void							Set_AfterImgSize(const _uint& uiSize)	{ m_uiAfterImgSize = uiSize; }
-	 
+	void							Set_AfterImgAlpha(const _float& fAlpha) {m_fAlpha = fAlpha;}
+	void							Set_AfterImgTime(const _float& fTime) { m_fDeltaTime = fTime; }
+
 	// Method
 	HRESULT			Ready_Component(const aiScene* pScene, wstring wstrFileName, wstring wstrPath);
 	HRESULT			Ready_Mesh(const aiMesh* pAiMesh, vector<VTXMESH>& vecVertex, vector<_uint>& vecIndex);
@@ -49,7 +51,7 @@ public:
 	void Render_StaticMesh(CShader* pShader);
 	void Render_DynamicMeshShadowDepth(CShader* pShader);
 	void Render_StaticMeshShadowDepth(CShader* pShader);
-	void Render_AfterDynamicMesh(CShader* pShader);
+	void Render_DynamicMeshAfterImage(CShader* pShader, const _uint& iAfterImgIdx);
 	// MultiThread Rendering
 	void Render_DynamicMesh(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 	void Render_DynamicMeshAfterImage(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader, const _uint& iAfterImgIdx);
@@ -118,9 +120,11 @@ private:
 	_vec3	m_vMax			= _vec3(0.0f);
 
 	// AfterImage
+	list<_rgba>				m_lstAFAlpha;
 	list<CB_SKINNING_MATRIX>	m_lstAFSkinningMatrix;
 	_uint						m_uiAfterImgSize = 0;
-
+	_float						m_fAlpha = 0.f;
+	_float						m_fDeltaTime = 0.f;
 public:
 	virtual CComponent* Clone();
 	static CVIMesh*		Create(ID3D12Device* pGraphicDevice,

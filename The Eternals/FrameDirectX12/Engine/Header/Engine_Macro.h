@@ -104,6 +104,8 @@ ______________________________________________________________________*/
 #define ENGINE_LOG 0
 #define COUT_STR(STR)	cout << STR << endl;
 
+//AfterImageTerm
+#define AFTERIMAGE_TERM 0.09f
 #endif
 
 

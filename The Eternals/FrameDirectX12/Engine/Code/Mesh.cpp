@@ -72,6 +72,12 @@ void CMesh::Render_DynamicMesh(CShader * pShader)
 		m_pVIMesh->Render_DynamicMesh(pShader);
 }
 
+void CMesh::Render_DynamicMeshAfterImage(CShader* pShader, const _uint& iAfterImgIdx)
+{
+	if (nullptr != m_pVIMesh)
+		m_pVIMesh->Render_DynamicMeshAfterImage(pShader, iAfterImgIdx);
+}
+
 void CMesh::Render_StaticMesh(CShader * pShader)
 {
 	if (nullptr != m_pVIMesh)
