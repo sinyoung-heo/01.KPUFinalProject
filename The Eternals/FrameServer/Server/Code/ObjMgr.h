@@ -27,6 +27,7 @@ public:
 
 	bool		Is_Near(const CObj* me, const CObj* other);
 	bool		Is_Monster_Target(const CObj* me, const CObj* other);
+	bool		Is_Monster_AttackTarget(const CObj* me, const CObj* other);
 
 public:
 	HRESULT		Add_GameObject(wstring wstrObjTag, CObj* pObj, int server_num);

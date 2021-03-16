@@ -1188,6 +1188,13 @@ void worker_thread()
 		}
 		break;
 
+		case OPMODE::OP_MODE_ATTACK_MONSTER:
+		{
+			start_attck_monster(key);
+			delete over_ex;
+		}
+		break;
+
 		default:
 #ifdef TEST
 			cout << "[ERROR] Unknown Type MODE in Worker Thread!" << endl;

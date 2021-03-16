@@ -423,6 +423,16 @@ void CPacketMgr::ProcessPacket(char* ptr)
 	}
 	break;
 
+	case SC_PACKET_MONSTER_ATTACK:
+	{
+		sc_packet_monster_attack* packet = reinterpret_cast<sc_packet_monster_attack*>(ptr);
+
+		int s_num = packet->id;
+		Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
+		cout << "몬스터 공격 패킷 받음" << endl;
+	}
+	break;
+
 	default:
 #ifdef ERR_CHECK
 		printf("Unknown PACKET type [%d]\n", ptr[1]);
@@ -497,7 +507,7 @@ void CPacketMgr::send_move_stop(const _vec3& vPos, const _vec3& vDir)
 	send_packet(&p);
 }
 
-void CPacketMgr::send_collision_monster_attck(int objID)
+void CPacketMgr::send_attackByMonster(int objID)
 {
 	cs_packet_player_collision p;
 

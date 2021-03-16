@@ -356,7 +356,7 @@ void send_move_stop_packet(int to_client, int id)
 	send_packet(to_client, &p);
 }
 
-void send_change_stat(int to_client, int id)
+void send_player_stat(int to_client, int id)
 {
 	sc_packet_stat_change p;
 
@@ -812,7 +812,7 @@ void process_collide(int id, int colID)
 		pPlayer->v_lock.unlock();
 
 		/* 해당 유저에게 바뀐 stat 전송 */
-		send_change_stat(id, id);
+		send_player_stat(id, id);
 
 		/* 시야 목록 내의 객체 처리 */
 		for (int server_num : viewlist)
@@ -821,7 +821,7 @@ void process_collide(int id, int colID)
 			// 시야 내의 다른 유저들에게 바뀐 스탯 전송
 			if (true == CObjMgr::GetInstance()->Is_Player(server_num))
 			{
-				send_change_stat(server_num, id);
+				send_player_stat(server_num, id);
 			}
 		}
 	}
@@ -1115,7 +1115,7 @@ void active_monster(int id)
 	if (nullptr == pMonster) return;
 
 	/* Monster가 활성화되어 있지 않을 경우 활성화 */
-	if (pMonster->m_status != ST_ACTIVE)
+	if (pMonster->m_status == ST_NONACTIVE)
 	{
 		STATUS prev_state = pMonster->m_status;
 		atomic_compare_exchange_strong(&pMonster->m_status, &prev_state, ST_ACTIVE);	
@@ -1132,6 +1132,17 @@ void nonActive_monster(int id)
 	{
 		STATUS prev_state = pMonster->m_status;
 		atomic_compare_exchange_strong(&pMonster->m_status, &prev_state, ST_NONACTIVE);
+	}
+}
+
+void start_attck_monster(int id)
+{
+	CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", id));
+	if (nullptr == pMonster) return;
+
+	if (pMonster->m_status == ST_ATTACK)
+	{
+		pMonster->Set_Start_Attack();
 	}
 }
 
