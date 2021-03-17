@@ -33,18 +33,19 @@ public:
 	const bool&			Get_MoveStop()			{ return m_bIsMoveStop; }
 
 	// Set
-	void				Set_UIDepth(const _long& iUIDepth)					{ m_UIDepth = iUIDepth; }
-	void				Set_DeadGameObject()								{ m_bIsDead = true; }
-	void				Set_BoundingBoxColor(const _rgba& vColor)			{ m_pBoundingBoxCom->Set_Color(vColor); }
-	void				Set_BoundingSphereColor(const _rgba& vColor)		{ m_pBoundingSphereCom->Set_Color(vColor); }
-	void				Set_IsCollision(const _bool& bIsCollision)			{ m_bIsCollision = bIsCollision; }
-	void				Set_IsRenderShadow(const _bool& bIsRenderShadow)	{ m_bIsRenderShadow = bIsRenderShadow; }
-	void				Set_ServerNumber(const int& num)					{ m_iSNum = num; }
-	void				Set_LastMoveTime(const steady_clock::time_point& last) { m_last_move_time = last; }
+	void				Set_UIDepth(const _long& iUIDepth)						{ m_UIDepth = iUIDepth; }
+	void				Set_DeadGameObject()									{ m_bIsDead = true; }
+	void				Set_BoundingBoxColor(const _rgba& vColor)				{ m_pBoundingBoxCom->Set_Color(vColor); }
+	void				Set_BoundingSphereColor(const _rgba& vColor)			{ m_pBoundingSphereCom->Set_Color(vColor); }
+	void				Set_IsCollision(const _bool& bIsCollision)				{ m_bIsCollision = bIsCollision; }
+	void				Set_IsRenderShadow(const _bool& bIsRenderShadow)		{ m_bIsRenderShadow = bIsRenderShadow; }
+	void				Set_ServerNumber(const int& num)						{ m_iSNum = num; }
+	void				Set_LastMoveTime(const steady_clock::time_point& last)	{ m_last_move_time = last; }
+	void				Set_MoveStop(const bool& b)								{ m_bIsMoveStop = b; }
+	void				Set_Attack(const bool& b)								{ m_bIsAttack = b; }
 	void				Set_DeadReckoning(const _vec3& vPos);
-	void				Set_MoveStop(const bool& b)							{ m_bIsMoveStop = b; }
 	void				Set_Info(int lev, int hp, int maxHp, int mp, int maxMp, int exp, int maxExp, int att, float spd);
-	//void				Set_npc_moveDir(const char& dir);
+	
 	void				Set_Other_direction(_vec3& vDir);
 
 	// CGameObject을(를) 통해 상속됨
@@ -102,7 +103,7 @@ protected:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	_float m_fDeltaTime = 0.f;
+	_float m_fDeltaTime			= 0.f;
 	_bool	m_bIsDead			= false;
 	_bool	m_bIsLateInit		= false;
 	_float	m_fViewZ			= 0.0f;
@@ -122,7 +123,7 @@ protected:
 	/* server */
 	int		m_iSNum				= 0;
 	bool	m_bIsMoveStop		= false;
-	char	m_npc_moveDir		= 0;
+	bool	m_bIsAttack			= false;
 	high_resolution_clock::time_point m_last_move_time;
 
 public:

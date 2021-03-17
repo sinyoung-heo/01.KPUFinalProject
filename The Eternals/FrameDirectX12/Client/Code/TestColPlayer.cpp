@@ -32,8 +32,11 @@ HRESULT CTestColPlayer::Ready_GameObject(const _vec3& vScale, const _vec3& vAngl
 	m_bIsSameDir = false;
 	m_vecPreAngle = m_pTransCom->m_vAngle.y;
 
+	m_fAttackTime = 3.f;
+	m_bIsAttack = false;
 
 	m_bIsCollision = true;
+
 	// BoundingBox.
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
 										   m_pTransCom->m_vScale,
@@ -121,6 +124,8 @@ _int CTestColPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 		}
 	}
 
+	Attack(fTimeDelta);
+
 	return NO_EVENT;
 }
 
@@ -141,6 +146,9 @@ void CTestColPlayer::Process_Collision()
 
 			/* Player HP Decrease */
 			CPacketMgr::Get_Instance()->send_attackByMonster(pDst->Get_ServerNumber());
+
+			/* Player Attack to Monster */
+			CPacketMgr::Get_Instance()->send_attackToMonster(pDst->Get_ServerNumber());
 		}
 	}
 }
@@ -154,7 +162,7 @@ HRESULT CTestColPlayer::Add_Component()
 void CTestColPlayer::Key_Input(const _float& fTimeDelta)
 {
 #ifdef SERVER
-	if (!g_bIsActive) return;
+	if (!g_bIsActive || m_bIsAttack) return;
 #endif 
 
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
@@ -288,6 +296,7 @@ void CTestColPlayer::Key_Input(const _float& fTimeDelta)
 			m_bIsSameDir = true;
 		}
 	}
+
 }
 
 void CTestColPlayer::Send_Player_Move()
@@ -334,6 +343,51 @@ bool CTestColPlayer::Is_Change_CamDirection()
 		return true;
 
 	return false;
+}
+
+void CTestColPlayer::Attack(const _float& fTimeDelta)
+{
+	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+	m_pTransCom->m_vDir.Normalize();
+
+	m_fAttackTime += fTimeDelta;
+
+	/* 마우스 왼쪽 버튼 - 공격 */
+	if (Engine::MOUSE_PRESSING(Engine::DIM_LB))
+	{
+		m_bIsAttack = true;
+		if (m_fAttackTime > 3.f)
+		{
+			CPacketMgr::Get_Instance()->send_attack(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+			m_fAttackTime = 0.f;
+		}
+	}
+
+	/* 공격 중지 */
+	if (Engine::MOUSE_KEYUP(Engine::DIM_LB))
+	{
+		cout << "공격 중지" << endl;
+		m_bIsAttack = false;
+		m_pBoundingSphereCom->Set_Color(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
+		m_pBoundingBoxCom->Set_Color(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
+		CPacketMgr::Get_Instance()->send_attack_stop(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+	}
+
+	/* Attack Moving */
+	if (m_bIsAttack)
+	{
+		m_bIsKeyDown = false;
+		m_bIsSameDir = true;
+
+		m_pBoundingSphereCom->Set_Color(_rgba(1.0f, 0.0f, 1.0f, 1.0f));
+		m_pBoundingBoxCom->Set_Color(_rgba(1.0f, 0.0f, 1.0f, 1.0f));
+
+		// NaviMesh 이동.
+		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vecArivePos))
+		{
+			m_pTransCom->m_vPos += m_pTransCom->m_vDir * 2.f * fTimeDelta;
+		}
+	}
 }
 
 Engine::CGameObject* CTestColPlayer::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, 

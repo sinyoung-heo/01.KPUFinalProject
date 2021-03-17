@@ -41,6 +41,8 @@ private:
 	void			Send_Player_Move();
 	bool			Is_Change_CamDirection();
 
+	void			Attack(const _float& fTimeDelta);
+
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -53,11 +55,13 @@ private:
 	[ Value ]
 	____________________________________________________________________________________________________________*/
 	_float			m_fMove = 1.0f;
+	_float			m_fAttackTime = 0.f;
 
 	CDynamicCamera* m_pDynamicCamera = nullptr;
 	/* Server */
 	bool			m_bIsKeyDown = false;
 	bool			m_bIsSameDir = false;
+	bool			m_bIsAttack = false;
 	float			m_fBazierSpeed = 0.f;
 	MVKEY			m_eKeyState = MVKEY::K_END;
 	float			m_vecPreAngle = 0.f;

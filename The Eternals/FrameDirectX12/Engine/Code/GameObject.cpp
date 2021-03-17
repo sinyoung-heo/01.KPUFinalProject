@@ -28,6 +28,8 @@ CGameObject::CGameObject(const CGameObject & rhs)
 	, m_bIsLateInit(rhs.m_bIsLateInit)
 	, m_fViewZ(rhs.m_fViewZ)
 	, m_UIDepth(rhs.m_UIDepth)
+	, m_bIsAttack(rhs.m_bIsAttack)
+	, m_bIsMoveStop(rhs.m_bIsMoveStop)
 {
 }
 
@@ -58,39 +60,6 @@ void CGameObject::Set_Info(int lev, int hp, int maxHp, int mp, int maxMp, int ex
 	m_pInfoCom->m_iAttack = att;
 	m_pInfoCom->m_fSpeed = spd;
 }
-
-//void CGameObject::Set_npc_moveDir(const char& dir)
-//{
-//	m_npc_moveDir = dir;
-//
-//	switch (m_npc_moveDir)
-//	{
-//	case MV_FRONT:
-//		m_pTransCom->m_vAngle.y = 0.f;
-//		break;
-//	case MV_BACK:
-//		m_pTransCom->m_vAngle.y = 180.f;
-//		break;
-//	case MV_RIGHT:
-//		m_pTransCom->m_vAngle.y = 90.f;
-//		break;
-//	case MV_RIGHT_UP:
-//		m_pTransCom->m_vAngle.y = 45.f;
-//		break;
-//	case MV_RIGHT_DOWN:
-//		m_pTransCom->m_vAngle.y = 135.f;
-//		break;
-//	case MV_LEFT:
-//		m_pTransCom->m_vAngle.y = 270.f;
-//		break;
-//	case MV_LEFT_UP:
-//		m_pTransCom->m_vAngle.y = 315.f;
-//		break;
-//	case MV_LEFT_DOWN:
-//		m_pTransCom->m_vAngle.y = 225.f;
-//		break;
-//	}
-//}
 
 void CGameObject::Set_Other_direction(_vec3& vDir)
 {

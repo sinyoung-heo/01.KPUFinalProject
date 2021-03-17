@@ -302,7 +302,31 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		pObj->Get_Info()->m_iHp = packet->hp;
 		pObj->Get_Info()->m_iMp = packet->mp;
 		pObj->Get_Info()->m_iExp = packet->exp;
+	}
+	break;
 
+	case SC_PACKET_ATTACK:
+	{
+		sc_packet_attack* packet= reinterpret_cast<sc_packet_attack*>(ptr);
+
+		int s_num = packet->id;
+
+		/* 현재 클라이언트가 공격한 경우 */
+		if (s_num == g_iSNum)
+		{
+			Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"Popori_F", 0);
+			pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
+		}
+		/* 다른 클라이언트가 공격한 경우 */
+		else
+		{
+			Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+
+			pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
+			pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
+
+			pObj->Set_Attack(true);
+		}
 	}
 	break;
 
@@ -399,11 +423,13 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 
 		pGameObj = CTestColMonster::Create(m_pGraphicDevice, m_pCommandList,
-			_vec3(1.f, 1.f, 1.f),			// Scale
-			_vec3(0.0f, 0.0f, 0.0f),			// Angle
+			_vec3(1.f, 1.f, 1.f),									// Scale
+			_vec3(0.0f, 0.0f, 0.0f),								// Angle
 			_vec3(packet->posX, packet->posY, packet->posZ));		// Pos
 
 		pGameObj->Set_ServerNumber(packet->id);
+		pGameObj->Set_Info(1, packet->Hp, packet->maxHp, 0, 0, 0, 0, 0, 5.f);
+
 		Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);
 
 	}
@@ -430,6 +456,19 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		int s_num = packet->id;
 		Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
 		cout << "몬스터 공격 패킷 받음" << endl;
+	}
+	break;
+
+	case SC_PACKET_MONSTER_STAT:
+	{
+		sc_packet_stat_change* packet = reinterpret_cast<sc_packet_stat_change*>(ptr);
+
+		int s_num = packet->id;
+		Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
+
+		pObj->Get_Info()->m_iHp = packet->hp;
+		pObj->Get_Info()->m_iMp = packet->mp;
+		pObj->Get_Info()->m_iExp = packet->exp;
 	}
 	break;
 
@@ -507,12 +546,59 @@ void CPacketMgr::send_move_stop(const _vec3& vPos, const _vec3& vDir)
 	send_packet(&p);
 }
 
+void CPacketMgr::send_attack(const _vec3& vDir, const _vec3& vPos)
+{
+	cs_packet_attack p;
+
+	p.size = sizeof(p);
+	p.type = CS_ATTACK;
+
+	p.posX = vPos.x;
+	p.posY = vPos.y;
+	p.posZ = vPos.z;
+
+	p.dirX = vDir.x;
+	p.dirY = vDir.y;
+	p.dirZ = vDir.z;
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_attack_stop(const _vec3& vDir, const _vec3& vPos)
+{
+	cs_packet_attack p;
+
+	p.size = sizeof(p);
+	p.type = CS_ATTACK_STOP;
+
+	p.posX = vPos.x;
+	p.posY = vPos.y;
+	p.posZ = vPos.z;
+
+	p.dirX = vDir.x;
+	p.dirY = vDir.y;
+	p.dirZ = vDir.z;
+
+	send_packet(&p);
+}
+
 void CPacketMgr::send_attackByMonster(int objID)
 {
 	cs_packet_player_collision p;
 
 	p.size = sizeof(p);
 	p.type = CS_COLLIDE;
+	p.col_id = objID;
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_attackToMonster(int objID)
+{
+	cs_packet_player_collision p;
+
+	p.size = sizeof(p);
+	p.type = CS_COLLIDE_MONSTER;
 	p.col_id = objID;
 
 	send_packet(&p);

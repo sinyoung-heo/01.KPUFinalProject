@@ -890,8 +890,8 @@ void Initialize_Monster()
 		pNew->m_vOriPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 90.f, 0.f);
-		pNew->Hp = 100;
-		pNew->maxHp = 100;
+		pNew->Hp = 1000;
+		pNew->maxHp = 1000;
 		pNew->att = 1;
 		pNew->Exp = 0;
 		pNew->m_type = TYPE_MONSTER;

@@ -24,27 +24,31 @@ constexpr int VIEW_LIMIT = 20;
 
 #pragma pack (push, 1)
 
-constexpr char SC_PACKET_LOGIN_OK = 0;
-constexpr char SC_PACKET_MOVE = 1;
-constexpr char SC_PACKET_MOVE_STOP = 2;
-constexpr char SC_PACKET_ENTER = 3;
-constexpr char SC_PACKET_LEAVE = 4;
-constexpr char SC_PACKET_CHAT = 5;
-constexpr char SC_PACKET_LOGIN_FAIL = 6;
-constexpr char SC_PACKET_STAT_CHANGE = 7;
-constexpr char SC_PACKET_NPC_MOVE = 8;
-constexpr char SC_PACKET_NPC_ENTER = 9;
-constexpr char SC_PACKET_MONSTER_ENTER = 10;
-constexpr char SC_PACKET_MONSTER_MOVE = 11;
-constexpr char SC_PACKET_MONSTER_ATTACK = 12;
+constexpr char SC_PACKET_LOGIN_OK		= 0;
+constexpr char SC_PACKET_MOVE			= 1;
+constexpr char SC_PACKET_MOVE_STOP		= 2;
+constexpr char SC_PACKET_ENTER			= 3;
+constexpr char SC_PACKET_LEAVE			= 4;
+constexpr char SC_PACKET_CHAT			= 5;
+constexpr char SC_PACKET_LOGIN_FAIL		= 6;
+constexpr char SC_PACKET_STAT_CHANGE	= 7;
+constexpr char SC_PACKET_ATTACK			= 8;
+constexpr char SC_PACKET_NPC_MOVE		= 9;
+constexpr char SC_PACKET_NPC_ENTER		= 10;
+constexpr char SC_PACKET_MONSTER_ENTER	= 11;
+constexpr char SC_PACKET_MONSTER_MOVE	= 12;
+constexpr char SC_PACKET_MONSTER_ATTACK = 13;
+constexpr char SC_PACKET_MONSTER_STAT	= 14;
 
-constexpr char CS_LOGIN = 0;
-constexpr char CS_MOVE = 1;
-constexpr char CS_MOVE_STOP = 2;
-constexpr char CS_ATTACK = 3;
-constexpr char CS_CHAT = 4;
-constexpr char CS_LOGOUT = 5;
-constexpr char CS_COLLIDE = 6;
+constexpr char CS_LOGIN				= 0;
+constexpr char CS_MOVE				= 1;
+constexpr char CS_MOVE_STOP			= 2;
+constexpr char CS_ATTACK			= 3;
+constexpr char CS_ATTACK_STOP		= 4;
+constexpr char CS_CHAT				= 5;
+constexpr char CS_LOGOUT			= 6;
+constexpr char CS_COLLIDE			= 7;   // Player가 다른 Object에게 충돌당했을 경우
+constexpr char CS_COLLIDE_MONSTER	= 8;   // Player가 Monster 공격
 
 struct sc_packet_login_ok 
 {
@@ -80,6 +84,17 @@ struct sc_packet_move
 	int id;
 
 	int move_time;
+	float posX, posY, posZ;
+	float dirX, dirY, dirZ;
+};
+
+struct sc_packet_attack
+{
+	unsigned char size;
+	char type;
+	int id;
+
+	int animIdx;
 	float posX, posY, posZ;
 	float dirX, dirY, dirZ;
 };
@@ -217,6 +232,9 @@ struct cs_packet_attack
 {
 	unsigned char	size;
 	char	type;
+
+	float posX, posY, posZ;
+	float dirX, dirY, dirZ;
 };
 
 struct cs_packet_player_collision

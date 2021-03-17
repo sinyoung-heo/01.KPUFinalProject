@@ -12,6 +12,7 @@ public:
 	void Set_Start_Attack();
 
 	int	 Update_Monster(const float& fTimeDelta);
+	void Hurt_Monster(const int& damage);				// ATTACKED BY PLAYER
 
 private:
 	void Change_Animation(const float& fTimeDelta);
@@ -28,6 +29,8 @@ public:
 	void send_Monster_enter_packet(int to_client);
 	void send_Monster_move_packet(int to_client);		
 	void send_Monster_NormalAttack(int to_client);
+
+	void send_Monster_Stat(int to_client);
 
 	virtual DWORD Release();
 
