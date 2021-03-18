@@ -34,7 +34,6 @@ HRESULT CTestOthers::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, 
 										   m_pMeshCom->Get_MinVector(),
 										   m_pMeshCom->Get_MaxVector());
 
-
 	m_pInfoCom->m_fSpeed = 5.0f;
 	m_pInfoCom->m_vecArivePos = m_pTransCom->m_vPos;
 

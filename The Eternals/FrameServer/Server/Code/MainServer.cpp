@@ -890,10 +890,10 @@ void Initialize_Monster()
 		pNew->m_vOriPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 90.f, 0.f);
-		pNew->Hp = 1000;
-		pNew->maxHp = 1000;
-		pNew->att = 1;
-		pNew->Exp = 0;
+		pNew->m_iHp = 1000;
+		pNew->m_iMaxHp = 1000;
+		pNew->m_iAtt = 1;
+		pNew->m_iExp = 0;
 		pNew->m_type = TYPE_MONSTER;
 		pNew->m_monNum = MON_CHASE;
 		pNew->m_status = STATUS::ST_NONACTIVE;
@@ -963,15 +963,15 @@ void add_new_client(SOCKET ns)
 		pNew->m_recv_start = pNew->m_recv_over.iocp_buf;
 
 		pNew->m_type = TYPE_PLAYER;
-		pNew->level = 1;
-		pNew->Hp = 100;
-		pNew->maxHp = 100;
-		pNew->Mp = 100;
-		pNew->maxMp = 100;
-		pNew->Exp = 0;
-		pNew->maxExp = 100;
-		pNew->att = 10;
-		pNew->spd = 5.f;
+		pNew->m_iLevel = 1;
+		pNew->m_iHp = 100;
+		pNew->m_iMaxHp = 100;
+		pNew->m_iMp = 100;
+		pNew->m_iMaxMp = 100;
+		pNew->m_iExp = 0;
+		pNew->m_iMaxExp = 100;
+		pNew->m_iAtt = 10;
+		pNew->m_fSpd = 5.f;
 
 		pNew->m_vPos = _vec3(143.0f, 0.f, 73.0f);
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);

@@ -185,7 +185,7 @@ void process_packet(int id)
 		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", p->col_id));
 		if (nullptr == pMonster) return;
 
-		pMonster->Hurt_Monster(pPlayer->att);
+		pMonster->Hurt_Monster(pPlayer->m_iAtt);
 	}
 	break;
 	}
@@ -283,19 +283,19 @@ void send_login_ok(int id)
 	p.type = SC_PACKET_LOGIN_OK;
 	p.id = id;
 
-	p.level = pPlayer->level;
-	p.hp = pPlayer->Hp;
-	p.maxHp = pPlayer->maxHp;
-	p.mp = pPlayer->Mp;
-	p.maxMp = pPlayer->maxMp;
-	p.exp = pPlayer->Exp;
-	p.maxExp = pPlayer->maxExp;
-	p.att = pPlayer->att;
-	p.spd = pPlayer->spd;
+	p.level		= pPlayer->m_iLevel;
+	p.hp		= pPlayer->m_iHp;
+	p.maxHp		= pPlayer->m_iMaxHp;
+	p.mp		= pPlayer->m_iMp;
+	p.maxMp		= pPlayer->m_iMaxMp;
+	p.exp		= pPlayer->m_iExp;
+	p.maxExp	= pPlayer->m_iMaxExp;
+	p.att		= pPlayer->m_iAtt;
+	p.spd		= pPlayer->m_fSpd;
 
-	p.posX = pPlayer->m_vPos.x;
-	p.posY = pPlayer->m_vPos.y;
-	p.posZ = pPlayer->m_vPos.z;
+	p.posX		= pPlayer->m_vPos.x;
+	p.posY		= pPlayer->m_vPos.y;
+	p.posZ		= pPlayer->m_vPos.z;
 
 	send_packet(id, &p);
 }
@@ -397,7 +397,7 @@ void send_attack_packet(int to_client, int id, int animIdx)
 	if (pPlayer == nullptr) return;
 
 	p.size = sizeof(p);
-	p.type = SC_PACKET_MOVE_STOP;
+	p.type = SC_PACKET_ATTACK;
 	p.id = id;
 
 	p.posX = pPlayer->m_vTempPos.x;
@@ -424,9 +424,9 @@ void send_player_stat(int to_client, int id)
 	p.type = SC_PACKET_STAT_CHANGE;
 
 	p.id = id;
-	p.hp = pPlayer->Hp;
-	p.mp = pPlayer->Mp;
-	p.exp = pPlayer->Exp;
+	p.hp = pPlayer->m_iHp;
+	p.mp = pPlayer->m_iMp;
+	p.exp = pPlayer->m_iExp;
 
 	send_packet(to_client, &p);
 }
@@ -854,12 +854,12 @@ void process_collide(int id, int colID)
 		if (nullptr == pMonster) return;
 
 		/* Decrease Player HP */
-		if (pPlayer->Hp > 0)
-			pPlayer->Hp -= pMonster->att;
+		if (pPlayer->m_iHp > 0)
+			pPlayer->m_iHp -= pMonster->m_iAtt;
 		else
 		{
 			/* Player Dead */
-			pPlayer->Hp = 0;
+			pPlayer->m_iHp = 0;
 			pPlayer->Set_IsDead(true);
 		}
 

@@ -3,7 +3,7 @@
 #include "Player.h"
 
 CMonster::CMonster()
-	:Hp(0), maxHp(0), Exp(0), att(0), spd(0.f),
+	:m_iHp(0), m_iMaxHp(0), m_iExp(0), m_iAtt(0), m_fSpd(0.f),
 	targetNum(-1), m_bIsAttack(false), m_bIsComeBack(false)
 {
 }
@@ -673,7 +673,7 @@ void CMonster::Attack_Monster(const float& fTimeDelta)
 			if (true == CObjMgr::GetInstance()->Is_Player(pl))
 			{
 				if (!m_bIsAttack) return;
-				cout << "몬스터 공격 패킷 전송" << endl;
+				cout << pl << "님에게 몬스터 공격 패킷 전송" << endl;
 				send_Monster_NormalAttack(pl);
 			}
 		}		
@@ -728,11 +728,11 @@ void CMonster::Hurt_Monster(const int& damage)
 	}
 
 	/* 피격 당함 */
-	if (Hp >= 0)
+	if (m_iHp >= 0)
 	{
-		Hp -= damage;
-		if (Hp < 0)
-			Hp = 0;
+		m_iHp -= damage;
+		if (m_iHp < 0)
+			m_iHp = 0;
 	}
 
 	// Monster View List 내의 유저들에게 해당 Monster의 변경된 stat을 알림.
@@ -742,10 +742,12 @@ void CMonster::Hurt_Monster(const int& damage)
 		if (true == CObjMgr::GetInstance()->Is_Player(pl))
 		{
 			if (m_bIsDead) return;
-			cout << "몬스터 피격당함 패킷 전송" << endl;
 			send_Monster_Stat(pl);
 		}
 	}
+
+	/* 전투 상태로 변경 */
+	Change_AttackMode();
 }
 
 void CMonster::Change_AttackMode()
@@ -754,10 +756,9 @@ void CMonster::Change_AttackMode()
 	if (m_status != ST_ATTACK)
 	{
 		STATUS prev_state = m_status;
-		atomic_compare_exchange_strong(&m_status, &prev_state, ST_ATTACK);
+		if (true == atomic_compare_exchange_strong(&m_status, &prev_state, ST_ATTACK))
+			Set_Start_Attack();
 	}
-
-	Set_Start_Attack();
 }
 
 void CMonster::Set_Stop_Attack()
@@ -803,8 +804,8 @@ void CMonster::send_Monster_enter_packet(int to_client)
 	p.angleY = m_vAngle.y;
 	p.angleZ = m_vAngle.z;
 
-	p.Hp = Hp;
-	p.maxHp = maxHp;
+	p.Hp = m_iHp;
+	p.maxHp = m_iMaxHp;
 
 	send_packet(to_client, &p);
 }
@@ -847,9 +848,9 @@ void CMonster::send_Monster_Stat(int to_client)
 	p.type = SC_PACKET_MONSTER_STAT;
 
 	p.id = m_sNum;
-	p.hp = Hp;
+	p.hp = m_iHp;
 	p.mp = 0;
-	p.exp = Exp;
+	p.exp = m_iExp;
 
 	send_packet(to_client, &p);
 }

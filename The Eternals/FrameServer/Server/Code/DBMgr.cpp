@@ -109,15 +109,15 @@ bool CDBMgr::Check_ID(int id, char* pw)
 			/* player info를 올바르게 로드했다면 정보 저장 */
 			if (m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO)
 			{
-				pPlayer->m_vPos = _vec3((float)u_posX, (float)u_posY, (float)u_posZ);
-				pPlayer->m_type = (char)u_type;
-				pPlayer->level = u_level;
-				pPlayer->Hp = u_Hp;
-				pPlayer->maxHp = u_maxHp;
-				pPlayer->Exp = u_Exp;
-				pPlayer->maxExp = u_maxExp;
-				pPlayer->att = u_att;
-				pPlayer->spd = (float)u_speed;
+				pPlayer->m_vPos		= _vec3((float)u_posX, (float)u_posY, (float)u_posZ);
+				pPlayer->m_type		= (char)u_type;
+				pPlayer->m_iLevel	= u_level;
+				pPlayer->m_iHp		= u_Hp;
+				pPlayer->m_iMaxHp	= u_maxHp;
+				pPlayer->m_iExp		= u_Exp;
+				pPlayer->m_iMaxExp	= u_maxExp;
+				pPlayer->m_iAtt		= u_att;
+				pPlayer->m_fSpd		= (float)u_speed;
 
 				SQLCloseCursor(m_hstmt);
 				return true;
@@ -153,13 +153,13 @@ void CDBMgr::Insert_NewPlayer_DB(int id, char* pw)
 		+ to_string(pPlayer->m_vPos.y) + ", "
 		+ to_string(pPlayer->m_vPos.z) + ", "
 		+ to_string(pPlayer->m_type) + ", "
-		+ to_string(pPlayer->level) + ", "
-		+ to_string(pPlayer->Hp) + ", "
-		+ to_string(pPlayer->maxHp) + ", "
-		+ to_string(pPlayer->Exp) + ", "
-		+ to_string(pPlayer->maxExp) + ", "
-		+ to_string(pPlayer->att) + ", "
-		+ to_string(pPlayer->spd);
+		+ to_string(pPlayer->m_iLevel) + ", "
+		+ to_string(pPlayer->m_iHp) + ", "
+		+ to_string(pPlayer->m_iMaxHp) + ", "
+		+ to_string(pPlayer->m_iExp) + ", "
+		+ to_string(pPlayer->m_iMaxExp) + ", "
+		+ to_string(pPlayer->m_iAtt) + ", "
+		+ to_string(pPlayer->m_fSpd);
 
 	std::wstring wstr_order = L"";
 	wstr_order.assign(str_order.begin(), str_order.end());
@@ -194,13 +194,13 @@ void CDBMgr::Update_stat_DB(int id)
 		+ to_string(pPlayer->m_vPos.x) + ", "
 		+ to_string(pPlayer->m_vPos.y) + ", "
 		+ to_string(pPlayer->m_vPos.z) + ", "
-		+ to_string(pPlayer->level) + ", "
-		+ to_string(pPlayer->Hp) + ", "
-		+ to_string(pPlayer->maxHp) + ", "
-		+ to_string(pPlayer->Exp) + ", "
-		+ to_string(pPlayer->maxExp) + ", "
-		+ to_string(pPlayer->att) + ", "
-		+ to_string(pPlayer->spd) + ", "
+		+ to_string(pPlayer->m_iLevel) + ", "
+		+ to_string(pPlayer->m_iHp) + ", "
+		+ to_string(pPlayer->m_iMaxHp) + ", "
+		+ to_string(pPlayer->m_iExp) + ", "
+		+ to_string(pPlayer->m_iMaxExp) + ", "
+		+ to_string(pPlayer->m_iAtt) + ", "
+		+ to_string(pPlayer->m_fSpd) + ", "
 		+ name;
 		
 	std::wstring wstr_order = L"";

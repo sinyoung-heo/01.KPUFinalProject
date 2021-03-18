@@ -356,7 +356,7 @@ void CTestColPlayer::Attack(const _float& fTimeDelta)
 	if (Engine::MOUSE_PRESSING(Engine::DIM_LB))
 	{
 		m_bIsAttack = true;
-		if (m_fAttackTime > 3.f)
+		if (m_fAttackTime > 2.f)
 		{
 			CPacketMgr::Get_Instance()->send_attack(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 			m_fAttackTime = 0.f;
@@ -366,7 +366,6 @@ void CTestColPlayer::Attack(const _float& fTimeDelta)
 	/* 공격 중지 */
 	if (Engine::MOUSE_KEYUP(Engine::DIM_LB))
 	{
-		cout << "공격 중지" << endl;
 		m_bIsAttack = false;
 		m_pBoundingSphereCom->Set_Color(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
 		m_pBoundingBoxCom->Set_Color(_rgba(0.0f, 1.0f, 0.0f, 1.0f));

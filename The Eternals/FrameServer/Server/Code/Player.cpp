@@ -2,9 +2,9 @@
 #include "Player.h"
 
 CPlayer::CPlayer()
-    :level(0), Hp(0), maxHp(0),
-    Mp(0), maxMp(0), Exp(0), maxExp(0),
-    att(0), spd(0.f)
+    :m_iLevel(0), m_iHp(0), m_iMaxHp(0),
+    m_iMp(0), m_iMaxMp(0), m_iExp(0), m_iMaxExp(0),
+    m_iAtt(0), m_fSpd(0.f)
 {
 }
 

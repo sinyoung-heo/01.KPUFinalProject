@@ -19,15 +19,15 @@ public:
 
 public:
 	/*=============∞‘¿” ƒ¡≈Ÿ√˜===============*/
-	int	level	= 0;
-	int Hp		= 0; 
-	int maxHp	= 0;
-	int Mp		= 0;
-	int maxMp	= 0;
-	int Exp		= 0;
-	int maxExp	= 0;
-	int att		= 0;
-	float spd	= 0;
+	int		m_iLevel	= 0;
+	int		m_iHp		= 0; 
+	int		m_iMaxHp	= 0;
+	int		m_iMp		= 0;
+	int		m_iMaxMp	= 0;
+	int		m_iExp		= 0;
+	int		m_iMaxExp	= 0;
+	int		m_iAtt		= 0;
+	float	m_fSpd		= 0;
 	
 	unordered_set<int> view_list; 
 	mutex v_lock; 

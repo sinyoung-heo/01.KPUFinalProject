@@ -247,7 +247,6 @@ void CPacketMgr::ProcessPacket(char* ptr)
 			auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
 			pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
-
 			pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 			pObj->Set_MoveStop(false);
 		}
