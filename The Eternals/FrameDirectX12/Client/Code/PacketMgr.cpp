@@ -184,7 +184,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		pGameObj->Set_ServerNumber(g_iSNum);
 		pGameObj->Set_Info(packet->level, packet->hp, packet->maxHp, packet->mp, packet->maxMp, packet->exp, packet->maxExp, packet->att, packet->spd);
 		
-		Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"Popori_F", pGameObj), E_FAIL);
+		Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"ThisPlayer", pGameObj), E_FAIL);
 
 		/* Camera Target Setting */
 		CDynamicCamera* pCamera = static_cast<CDynamicCamera*>(Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
@@ -232,7 +232,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		/* 현재 클라이언트가 움직인 경우 */
 		if (s_num == g_iSNum)
 		{
-			Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"Popori_F", 0);
+			Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
 
 			auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
@@ -263,7 +263,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		/* 현재 클라이언트가 움직인 경우 */
 		if (s_num == g_iSNum)
 		{
-			Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"Popori_F", 0);
+			Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
 
 			auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
@@ -294,7 +294,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		Engine::CGameObject* pObj = nullptr;
 		/* 현재 클라이언트의 스탯이 갱신된 경우 */
 		if (s_num == g_iSNum)
-			pObj = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"Popori_F", 0);	
+			pObj = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);	
 		/* 다른 클라이언트의 스탯이 갱신된 경우 */
 		else
 			pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
@@ -314,7 +314,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		/* 현재 클라이언트가 공격한 경우 */
 		if (s_num == g_iSNum)
 		{
-			Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"Popori_F", 0);
+			Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
 			pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
 		}
 		/* 다른 클라이언트가 공격한 경우 */

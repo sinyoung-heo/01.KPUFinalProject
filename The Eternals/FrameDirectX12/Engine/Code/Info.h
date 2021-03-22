@@ -25,7 +25,7 @@ public:
 	_int	m_iMaxExp		= 0;
 	_float	m_fSpeed		= 0.0f;
 	_float	m_fRadius		= 0.0f;
-	_vec3	m_vecArivePos	= _vec3(0.f);
+	_vec3	m_vArrivePos	= _vec3(0.f);
 
 public:
 	virtual CComponent* Clone();

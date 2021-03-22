@@ -39,18 +39,12 @@ HRESULT CDynamicCamera::Ready_GameObject(const Engine::CAMERA_DESC& tCameraInfo,
 
 HRESULT CDynamicCamera::LateInit_GameObject()
 {
-	m_pTarget = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"Popori_F");
-	Engine::NULL_CHECK_RETURN(m_pTarget, E_FAIL);
-
 	return S_OK;
 }
 
 _int CDynamicCamera::Update_GameObject(const _float & fTimeDelta)
 {
-#ifndef SERVER
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
-#endif // !SERVER
-
 
 	if (!g_bIsOnDebugCaemra)
 	{
@@ -67,11 +61,16 @@ _int CDynamicCamera::Update_GameObject(const _float & fTimeDelta)
 			[ Target의 Position과 Distance를 기준으로 Camera의 Eye값 계산. ]
 			____________________________________________________________________________________________________________*/
 			m_pTransCom->m_vScale = _vec3(0.0f, 0.0f, m_fDistFromTarget);
-			m_pTransCom->m_vPos = m_pTarget->Get_Transform()->m_vPos;
+			m_pTransCom->m_vPos   = m_pTarget->Get_Transform()->m_vPos;
 			Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 			m_tCameraInfo.vEye.TransformCoord(_vec3(0.0f, 0.0f, -1.0f), m_pTransCom->m_matWorld);
-			m_tCameraInfo.vAt = m_pTransCom->m_vPos;
+			m_tCameraInfo.vAt    = m_pTransCom->m_vPos;
+			m_tCameraInfo.vAt.y += CAM_AT_HEIGHT_OFFSET;
+		}
+		else
+		{
+			m_pTarget = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
 		}
 
 		/*__________________________________________________________________________________________________________

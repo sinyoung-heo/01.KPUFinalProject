@@ -36,7 +36,7 @@ HRESULT CTestPlayer::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, 
 
 
 	m_pInfoCom->m_fSpeed = 5.0f;
-	m_pInfoCom->m_vecArivePos = m_pTransCom->m_vPos;
+	m_pInfoCom->m_vArrivePos = m_pTransCom->m_vPos;
 
 	m_eKeyState = MVKEY::K_END;
 	m_bIsKeyDown = false;
@@ -197,7 +197,7 @@ void CTestPlayer::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsComm
 		}
 
 		// NaviMesh ÀÌµ¿.
-		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vecArivePos))
+		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
 		{
 			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
 														 &m_pTransCom->m_vDir,

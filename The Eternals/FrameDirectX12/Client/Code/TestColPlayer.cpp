@@ -25,7 +25,7 @@ HRESULT CTestColPlayer::Ready_GameObject(const _vec3& vScale, const _vec3& vAngl
 	m_pTransCom->m_vPos		= vPos;
 	m_wstrCollisionTag      = L"TestCollision";
 
-	m_pInfoCom->m_vecArivePos = m_pTransCom->m_vPos;
+	m_pInfoCom->m_vArrivePos = m_pTransCom->m_vPos;
 
 	m_eKeyState = MVKEY::K_END;
 	m_bIsKeyDown = false;
@@ -118,7 +118,7 @@ _int CTestColPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 		}
 
 		// NaviMesh 이동.
-		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vecArivePos))
+		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
 		{
 			m_pTransCom->m_vPos += m_pTransCom->m_vDir * m_pInfoCom->m_fSpeed * fTimeDelta;
 		}
@@ -383,7 +383,7 @@ void CTestColPlayer::Attack(const _float& fTimeDelta)
 		m_pBoundingBoxCom->Set_Color(_rgba(1.0f, 0.0f, 1.0f, 1.0f));
 
 		// NaviMesh 이동.
-		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vecArivePos))
+		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
 		{
 			m_pTransCom->m_vPos += m_pTransCom->m_vDir * 2.f * fTimeDelta;
 		}

@@ -25,7 +25,7 @@ HRESULT CTestColMonster::Ready_GameObject(const _vec3& vScale, const _vec3& vAng
 	m_pTransCom->m_vPos		= vPos;
 	m_wstrCollisionTag      = L"TestCollision";
 
-	m_pInfoCom->m_vecArivePos = m_pTransCom->m_vPos;
+	m_pInfoCom->m_vArrivePos = m_pTransCom->m_vPos;
 
 	m_bIsCollision = true;
 	// BoundingBox.
@@ -117,7 +117,7 @@ void CTestColMonster::Active_Monster(const _float& fTimeDelta)
 	if (!m_bIsMoveStop)
 	{
 		// NaviMesh ÀÌµ¿.		
-		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vecArivePos))
+		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
 		{
 			m_pTransCom->m_vPos += m_pTransCom->m_vDir * m_pInfoCom->m_fSpeed * fTimeDelta;
 		}
