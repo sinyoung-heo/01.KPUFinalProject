@@ -85,6 +85,7 @@ StaticMesh|StageVelika|VK_OBJ_Statu_03_Body_SM
 StaticMesh|StageVelika|VK_OBJ_Statu_03_Wing_SM
 DynamicMesh|Character|PoporiH25
 DynamicMesh|Character|PoporiR19
+DynamicMesh|Character|PoporiR27Gladiator
 DynamicMesh|NPC|Aman_boy
 DynamicMesh|NPC|Baraka_M_Extractor
 DynamicMesh|NPC|Baraka_M_Merchant

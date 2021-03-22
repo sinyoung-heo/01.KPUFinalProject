@@ -85,6 +85,7 @@ VK_OBJ_Statu_03_Body_SM|VK_OBJ_Statu_03_Body_SM.X|..\..\Bin\Resource\ResourceSta
 VK_OBJ_Statu_03_Wing_SM|VK_OBJ_Statu_03_Wing_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_OBJ_Statu_03_Wing_SM\
 PoporiH25|PoporiH25.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\PoporiH25\
 PoporiR19|PoporiR19.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\PoporiR19\
+PoporiR27Gladiator|PoporiR27Gladiator.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\PoporiR27Gladiator\
 Aman_boy|Aman_boy.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Aman_boy\
 Baraka_M_Extractor|Baraka_M_Extractor.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Baraka_M_Extractor\
 Baraka_M_Merchant|Baraka_M_Merchant.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Baraka_M_Merchant\

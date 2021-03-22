@@ -213,7 +213,8 @@ void CRenderer::Clear_RenderGroup()
 
 void CRenderer::Render_Priority(const _float& fTimeDelta)
 {
-	
+	for (auto& pGameObject : m_RenderList[RENDER_PRIORITY])
+		pGameObject->Render_GameObject(fTimeDelta);
 }
 
 void CRenderer::Render_ShadowDepth(const _float & fTimeDelta)
@@ -231,8 +232,8 @@ void CRenderer::Render_NonAlpha(const _float& fTimeDelta)
 {
 	m_pTargetDeferred->SetUp_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
 
-	for (auto& pGameObject : m_RenderList[RENDER_PRIORITY])
-		pGameObject->Render_GameObject(fTimeDelta);
+	//for (auto& pGameObject : m_RenderList[RENDER_PRIORITY])
+	//	pGameObject->Render_GameObject(fTimeDelta);
 	for (auto& pGameObject : m_RenderList[RENDER_NONALPHA])
 		pGameObject->Render_GameObject(fTimeDelta);
 

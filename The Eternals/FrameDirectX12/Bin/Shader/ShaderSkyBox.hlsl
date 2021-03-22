@@ -57,6 +57,15 @@ VS_OUT VS_MAIN(VS_IN vs_input)
 	return vs_output;
 }
 
+float4 PS_MAIN_TOOL(VS_OUT ps_input) : SV_TARGET
+{
+	float4 ps_output = (float4) 0;
+	
+	ps_output = g_CubeTex.Sample(g_samLinearWrap, ps_input.vTexUV);
+	
+	return ps_output;
+}
+
 // PS_MAIN
 struct PS_OUT
 {

@@ -54,6 +54,7 @@ HRESULT CStageHSY::Ready_Scene()
 	// Ready Instnace ConstantBuffer.
 	Engine::CShaderShadowInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderMeshInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
+	Engine::CShaderLightingInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderColorInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderTextureInstancing::Get_Instance()->SetUp_ConstantBuffer(Engine::INSTANCE::INSTANCE_DISTORTION ,m_pGraphicDevice);
 	Engine::CShaderTextureInstancing::Get_Instance()->SetUp_ConstantBuffer(Engine::INSTANCE::INSTANCE_ALPHA, m_pGraphicDevice);
@@ -270,12 +271,12 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ SampleNPC ]
 	____________________________________________________________________________________________________________*/
-	//pGameObj =	CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
-	//							   L"Baraka_M_Extractor",		// MeshTag
-	//							   _vec3(1.0f, 1.0f, 1.0f),		// Scale
-	//							   _vec3(0.0f, 0.0f, 0.0f),		// Angle
-	//							   _vec3(0.0f, 0.0f, 0.0f));	// Pos
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SampleNPC", pGameObj), E_FAIL);
+	pGameObj =	CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
+								   L"PoporiR27Gladiator",		// MeshTag
+								   _vec3(1.0f, 1.0f, 1.0f),		// Scale
+								   _vec3(0.0f, 0.0f, 0.0f),		// Angle
+								   _vec3(0.0f, 0.0f, 0.0f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SampleNPC", pGameObj), E_FAIL);
 
 	//pGameObj =	CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
 	//							   L"Baraka_M_Merchant",		// MeshTag
