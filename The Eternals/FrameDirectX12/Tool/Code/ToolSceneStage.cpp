@@ -981,17 +981,17 @@ void CToolSceneStage::KeyInput_TabMapModeChange(CTabMap& TabMap)
 		// Object 생성 모드일 경우.
 		if (TabMap.m_bIsCreateMode)
 		{
-			TabMap.m_fStaticMeshScaleX = 0.01f;
-			TabMap.m_fStaticMeshScaleY = 0.01f;
-			TabMap.m_fStaticMeshScaleZ = 0.01f;
-			TabMap.m_fStaticMeshAngleX = 0.0f;
-			TabMap.m_fStaticMeshAngleY = 0.0f;
-			TabMap.m_fStaticMeshAngleZ = 0.0f;
+			//TabMap.m_fStaticMeshScaleX = 0.01f;
+			//TabMap.m_fStaticMeshScaleY = 0.01f;
+			//TabMap.m_fStaticMeshScaleZ = 0.01f;
+			//TabMap.m_fStaticMeshAngleX = 0.0f;
+			//TabMap.m_fStaticMeshAngleY = 0.0f;
+			//TabMap.m_fStaticMeshAngleZ = 0.0f;
 
-			TabMap.m_fStaticMeshColliderScale = 0.0f;
-			TabMap.m_fStaticMeshColliderPosX = 0.0f;
-			TabMap.m_fStaticMeshColliderPosY = 0.0f;
-			TabMap.m_fStaticMeshColliderPosZ = 0.0f;
+			//TabMap.m_fStaticMeshColliderScale = 0.0f;
+			//TabMap.m_fStaticMeshColliderPosX = 0.0f;
+			//TabMap.m_fStaticMeshColliderPosY = 0.0f;
+			//TabMap.m_fStaticMeshColliderPosZ = 0.0f;
 		}
 		// Object 수정 모드일 경우.
 		else if (TabMap.m_bIsModifyMode)

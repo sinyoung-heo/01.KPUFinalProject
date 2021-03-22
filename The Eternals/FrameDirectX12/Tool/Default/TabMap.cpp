@@ -2429,17 +2429,17 @@ void CTabMap::OnBnClickedRadio1005_StaticMeshCreateMode()
 	m_bIsCreateMode = true;
 	m_bIsModifyMode = false;
 
-	m_fStaticMeshScaleX = 0.01f;
-	m_fStaticMeshScaleY = 0.01f;
-	m_fStaticMeshScaleZ = 0.01f;
-	m_fStaticMeshAngleX = 0.0f;
-	m_fStaticMeshAngleY = 0.0f;
-	m_fStaticMeshAngleZ = 0.0f;
+	//m_fStaticMeshScaleX = 0.01f;
+	//m_fStaticMeshScaleY = 0.01f;
+	//m_fStaticMeshScaleZ = 0.01f;
+	//m_fStaticMeshAngleX = 0.0f;
+	//m_fStaticMeshAngleY = 0.0f;
+	//m_fStaticMeshAngleZ = 0.0f;
 
-	m_fStaticMeshColliderScale	= 0.0f;
-	m_fStaticMeshColliderPosX	= 0.0f;
-	m_fStaticMeshColliderPosY	= 0.0f;
-	m_fStaticMeshColliderPosZ	= 0.0f;
+	//m_fStaticMeshColliderScale	= 0.0f;
+	//m_fStaticMeshColliderPosX	= 0.0f;
+	//m_fStaticMeshColliderPosY	= 0.0f;
+	//m_fStaticMeshColliderPosZ	= 0.0f;
 
 	UpdateData(FALSE);
 }

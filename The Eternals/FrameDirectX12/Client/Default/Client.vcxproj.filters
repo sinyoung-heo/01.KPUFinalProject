@@ -199,6 +199,9 @@
     <Filter Include="99.Etc\SampleObject\05.StaticMeshObject">
       <UniqueIdentifier>{2351c006-4ada-445d-8e86-d03ee28c66bc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\02.PlayerCharacter\PCGladitor">
+      <UniqueIdentifier>{3b49a529-bab1-4a53-9827-4cde6e9b65f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
