@@ -456,10 +456,6 @@ float4 PS_AFTERIMAGE(VS_OUT ps_input) : SV_TARGET
 	//ps_output.Depth = float4(ps_input.ProjPos.z / ps_input.ProjPos.w,	// (posWVP.z / posWVP.w) : Proj 영역의 Z.
 	//						 ps_input.ProjPos.w / g_fProjFar,			// posWVP.w / Far : 0~1로 만든 View영역의 Z.
 	//						 1.0f, 1.0f);
-
-    vector vCamPos = vector(normalize(g_vCameraPos.xyz - ps_input.WorldPos.xyz), 1.f);
-    float fRimLightColor = smoothstep(1.f - g_fAfterImgColor.xyz, 1.f, 1.f - max(0, dot(ps_input.Normal.xyz, vCamPos.xyz)));
-
     float4 Color;
 	Color.xyz= g_fAfterImgColor.xyz;
     Color.a = g_fAfterImgColor.a;// * fRimLightColor;
