@@ -90,6 +90,13 @@ HRESULT CPopori_F::Ready_GameObject(wstring wstrMeshTag,
 	Engine::NULL_CHECK_RETURN(m_pFont, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pFont->Ready_GameObject(L"", _vec2(900.f, 0.f), D2D1::ColorF::Yellow), E_FAIL);
 
+
+	m_uiAfterImgSize = 20;
+	m_fAfterImgMakeTime = 0.1f;
+	m_fAfterSubAlpha = 0.05f;
+	m_pMeshCom->Set_AfterImgMakeTime(m_fAfterImgMakeTime);
+	m_pMeshCom->Set_AfterImgSize(m_uiAfterImgSize);
+	m_pMeshCom->Set_AfterImgSubAlpha(m_fAfterSubAlpha);
 	return S_OK;
 }
 
@@ -103,12 +110,9 @@ HRESULT CPopori_F::LateInit_GameObject()
 	m_pDynamicCamera->AddRef();
 
 	// SetUp Shader ConstantBuffer
-	m_uiAfterImgSize = 20;
-
-
 	
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()), m_uiAfterImgSize);
-	m_pMeshCom->Set_AfterImgSize(m_uiAfterImgSize);
+	
 
 	m_pEdgeObjectShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
@@ -152,7 +156,7 @@ _int CPopori_F::Update_GameObject(const _float & fTimeDelta)
 	// AfterImage
 	m_fAfterImgTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
 	m_pMeshCom->Set_AfterImgTime(m_fAfterImgTime);
-	if (m_fAfterImgTime > 0.05f)
+	if (m_fAfterImgTime > m_fAfterImgMakeTime)
 	{
 		m_fAfterImgTime = 0.f;
 		m_lstAFWorldMatrix.emplace_back(m_pTransCom->m_matWorld);
@@ -162,7 +166,7 @@ _int CPopori_F::Update_GameObject(const _float & fTimeDelta)
 	{
 		for (list<_rgba>::iterator& iterFade = m_lstAFAlpha.begin(); iterFade != m_lstAFAlpha.end();)
 		{
-			(*iterFade).w -= 0.05f;
+			(*iterFade).w -= m_fAfterSubAlpha;
 			(*iterFade).x -= (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"))*2.f;
 			(*iterFade).y -= (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
 			if (0 > (*iterFade).w)
