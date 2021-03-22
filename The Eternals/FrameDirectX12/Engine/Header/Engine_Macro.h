@@ -105,7 +105,7 @@ ______________________________________________________________________*/
 #define COUT_STR(STR)	cout << STR << endl;
 
 //AfterImageTerm
-#define AFTERIMAGE_TERM 0.09f
+#define AFTERIMAGE_MAKETERM 0.05f
 #endif
 
 

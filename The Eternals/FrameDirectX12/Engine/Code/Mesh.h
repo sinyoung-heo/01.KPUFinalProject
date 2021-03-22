@@ -30,8 +30,9 @@ public:
 	_bool							Is_AnimationSetEnd(const _float& fTimeDelta) { return m_pAniCtrl->Is_AnimationSetEnd(fTimeDelta); };
 
 	void							Set_AfterImgSize(const _uint& uiSize) { m_pVIMesh->Set_AfterImgSize(uiSize); }
-	void							Set_AfterImgAlpha(const _float& fAlpha) { m_pVIMesh->Set_AfterImgAlpha(fAlpha); }
 	void							Set_AfterImgTime(const _float& fTime) { m_pVIMesh->Set_AfterImgTime(fTime); }
+	void							Set_AfterImgMakeTime(const _float& fTime) { m_pVIMesh->Set_AfterImgMakeTime(fTime); }
+	void							Set_AfterImgSubAlpha(const _float& fSub) { m_pVIMesh->Set_AfterImgSubAlpha(fSub); }
 
 	// Method
 	HRESULT Ready_Mesh(wstring wstrFilePath, wstring wstrFileName);

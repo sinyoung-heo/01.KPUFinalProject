@@ -89,6 +89,8 @@ private:
 	list<_rgba>	m_lstAFAlpha;
 	_uint			m_uiAfterImgSize = 0;
 	_float			m_fAfterImgTime = 0.f;
+	_float			m_fAfterImgMakeTime = 0.f;
+	_float			m_fAfterSubAlpha = 0.f;
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]
 	____________________________________________________________________________________________________________*/

@@ -749,7 +749,7 @@ void CVIMesh::Render_DynamicMesh(ID3D12GraphicsCommandList * pCommandList,
 {
 	vector<VECTOR_SKINNING_MATRIX>*	pvecSkinningMatrix = m_pAniCtrl->Get_VecSkinningMatrix();
 
-	if (m_fDeltaTime > 0.05f)
+	if (m_fDeltaTime > m_fAfterImgMakeTime)
 	{
 		m_lstAFAlpha.emplace_back(_rgba(0.f, 0.f, 0.f, 1.f));
 	}
@@ -773,7 +773,7 @@ void CVIMesh::Render_DynamicMesh(ID3D12GraphicsCommandList * pCommandList,
 		// Mesh AfterImage
 		if (m_uiAfterImgSize)
 		{
-			if (m_fDeltaTime > 0.05f &&
+			if (m_fDeltaTime > m_fAfterImgMakeTime &&
 				m_lstAFSkinningMatrix.size() < m_uiAfterImgSize * m_vecMeshEntry.size())
 				m_lstAFSkinningMatrix.emplace_back(tCB_SkinningMatrix);
 			/*
@@ -791,7 +791,7 @@ void CVIMesh::Render_DynamicMesh(ID3D12GraphicsCommandList * pCommandList,
 	{
 		for (list<_rgba>::iterator& iterFade = m_lstAFAlpha.begin(); iterFade != m_lstAFAlpha.end();)
 		{
-			(*iterFade).w -= 0.05f;
+			(*iterFade).w -= m_fAfterImgSubAlpha;
 			if (0 > (*iterFade).w)
 			{
 				for(int i=0; i< m_vecMeshEntry.size(); ++i)

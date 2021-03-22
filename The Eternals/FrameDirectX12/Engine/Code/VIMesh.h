@@ -33,8 +33,9 @@ public:
 	void							Set_AniCtrl(CAniCtrl* pAniCtrl)			{ m_pAniCtrl = pAniCtrl; }
 	void							Set_FileName(wstring& wstrFileName)		{ m_wstrFileName = wstrFileName; }
 	void							Set_AfterImgSize(const _uint& uiSize)	{ m_uiAfterImgSize = uiSize; }
-	void							Set_AfterImgAlpha(const _float& fAlpha) {m_fAlpha = fAlpha;}
 	void							Set_AfterImgTime(const _float& fTime) { m_fDeltaTime = fTime; }
+	void							Set_AfterImgMakeTime(const _float& fTime) { m_fAfterImgMakeTime = fTime; }
+	void							Set_AfterImgSubAlpha(const _float& fSub) { m_fAfterImgSubAlpha = fSub; }
 
 	// Method
 	HRESULT			Ready_Component(const aiScene* pScene, wstring wstrFileName, wstring wstrPath);
@@ -123,8 +124,9 @@ private:
 	list<_rgba>				m_lstAFAlpha;
 	list<CB_SKINNING_MATRIX>	m_lstAFSkinningMatrix;
 	_uint						m_uiAfterImgSize = 0;
-	_float						m_fAlpha = 0.f;
 	_float						m_fDeltaTime = 0.f;
+	_float						m_fAfterImgMakeTime = 0.f;
+	_float						m_fAfterImgSubAlpha = 0.f;
 public:
 	virtual CComponent* Clone();
 	static CVIMesh*		Create(ID3D12Device* pGraphicDevice,
