@@ -23,6 +23,7 @@
 #include "MainMenuInventory.h"
 #include "MainMenuLogout.h"
 #include "MainMenuSetting.h"
+#include "PCGladiator.h"
 
 
 CScene_StageVelika::CScene_StageVelika(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -155,7 +156,7 @@ HRESULT CScene_StageVelika::Ready_LayerEnvironment(wstring wstrLayerTag)
 	____________________________________________________________________________________________________________*/
 	pGameObj = CSkyBox::Create(m_pGraphicDevice, m_pCommandList,
 							   L"SkyBox",						// Texture Tag
-							   _vec3(900.0f, 900.0f, 900.0f),	// Scale
+							   _vec3(990.0f, 990.0f, 990.0f),	// Scale
 							   _vec3(0.0f, 0.0f, 0.0f),			// Angle
 							   _vec3(0.0f, 0.0f, 0.0f),			// Pos
 							   1);								// Tex Index

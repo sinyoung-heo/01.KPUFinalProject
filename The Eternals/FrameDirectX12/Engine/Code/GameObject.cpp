@@ -45,7 +45,7 @@ CComponent * CGameObject::Get_Component(wstring wstrComponentTag, COMPONENTID eI
 
 void CGameObject::Set_DeadReckoning(const _vec3& vPos)
 {
-	m_pInfoCom->m_vecArivePos = vPos;	
+	m_pInfoCom->m_vArrivePos = vPos;	
 }
 
 void CGameObject::Set_Info(int lev, int hp, int maxHp, int mp, int maxMp, int exp, int maxExp, int att, float spd)

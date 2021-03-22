@@ -245,7 +245,7 @@ void CNPC_Boy::Active_NPC(const _float& fTimeDelta)
 		m_bIsNormalNpc = true;
 
 		// NaviMesh ÀÌµ¿.		
-		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vecArivePos))
+		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
 		{
 			m_eCurAnimation = A_WALK;
 

@@ -170,6 +170,7 @@
     <ClInclude Include="..\..\..\FrameServer\Server\Header\protocol.h" />
     <ClInclude Include="..\Code\CharacterHpGauge.h" />
     <ClInclude Include="..\Code\CharacterMpGauge.h" />
+    <ClInclude Include="..\Code\PCGladiator.h" />
     <ClInclude Include="..\Code\SampleNPC.h" />
     <ClInclude Include="..\Code\GameUIChild.h" />
     <ClInclude Include="..\Code\GameUIRoot.h" />
@@ -223,6 +224,7 @@
     <ClInclude Include="..\Header\Macro.h" />
     <ClInclude Include="..\Header\Struct.h" />
     <ClInclude Include="..\Header\Typedef.h" />
+    <ClInclude Include="GladiatorAnimation.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -253,6 +255,7 @@
     <ClCompile Include="..\Code\NPC_Merchant.cpp" />
     <ClCompile Include="..\Code\NPC_Villagers.cpp" />
     <ClCompile Include="..\Code\PacketMgr.cpp" />
+    <ClCompile Include="..\Code\PCGladiator.cpp" />
     <ClCompile Include="..\Code\Popori_F.cpp" />
     <ClCompile Include="..\Code\RectObject.cpp" />
     <ClCompile Include="..\Code\SampleNPC.cpp" />

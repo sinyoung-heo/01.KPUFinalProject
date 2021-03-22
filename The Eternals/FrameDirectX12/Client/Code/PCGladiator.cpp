@@ -1,41 +1,44 @@
 #include "stdafx.h"
-#include "TestOthers.h"
-
+#include "PCGladiator.h"
 #include "GraphicDevice.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
 #include "LightMgr.h"
-#include "DynamicCamera.h"
 #include "Font.h"
 #include "RenderTarget.h"
+#include "DynamicCamera.h"
 
-CTestOthers::CTestOthers(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
 }
 
-CTestOthers::CTestOthers(const CTestOthers& rhs)
-	: Engine::CGameObject(rhs)
-	, m_wstrMeshTag(rhs.m_wstrMeshTag)
-{
-}
-
-HRESULT CTestOthers::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
+HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag, 
+									   wstring wstrNaviMeshTag, 
+									   const _vec3& vScale,
+									   const _vec3& vAngle, 
+									   const _vec3& vPos)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
-	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag, wstrNaviMeshTag), E_FAIL);
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
-	m_pTransCom->m_vPos = vPos;
+	m_pTransCom->m_vPos   = vPos;
 	m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(vPos));
+
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
 										   m_pTransCom->m_vScale,
 										   m_pMeshCom->Get_CenterPos(),
 										   m_pMeshCom->Get_MinVector(),
 										   m_pMeshCom->Get_MaxVector());
 
-	m_pInfoCom->m_fSpeed = 5.0f;
+	m_pInfoCom->m_fSpeed      = 5.0f;
 	m_pInfoCom->m_vArrivePos = m_pTransCom->m_vPos;
+
+	m_eKeyState   = MVKEY::K_END;
+	m_bIsKeyDown  = false;
+	m_bIsSameDir  = false;
+	m_vecPreAngle = m_pTransCom->m_vAngle.y;
 
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
@@ -50,7 +53,6 @@ HRESULT CTestOthers::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, 
 	_matrix* pmatParent = nullptr;
 
 	// ColliderSphere
-	// pmatSkinning	= m_pMeshCom->Find_SkinningMatrix("Bip01-L-Hand");
 	pmatSkinning = m_pMeshCom->Find_SkinningMatrix("Bip01-R-Hand");
 	pmatParent = &(m_pTransCom->m_matWorld);
 	Engine::NULL_CHECK_RETURN(pmatSkinning, E_FAIL);
@@ -75,10 +77,11 @@ HRESULT CTestOthers::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, 
 	Engine::NULL_CHECK_RETURN(m_pFont, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pFont->Ready_GameObject(L"", _vec2(900.f, 0.f), D2D1::ColorF::Yellow), E_FAIL);
 
+
 	return S_OK;
 }
 
-HRESULT CTestOthers::LateInit_GameObject()
+HRESULT CPCGladiator::LateInit_GameObject()
 {
 	/*__________________________________________________________________________________________________________
 	[ Get GameObject - DynamicCamera ]
@@ -94,12 +97,20 @@ HRESULT CTestOthers::LateInit_GameObject()
 	return S_OK;
 }
 
-_int CTestOthers::Update_GameObject(const _float& fTimeDelta)
+_int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
+
+	/*__________________________________________________________________________________________________________
+	[ Key Input ]
+	____________________________________________________________________________________________________________*/
+	if (!g_bIsOnDebugCaemra)
+	{
+		// Key_Input(fTimeDelta);
+	}
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
@@ -114,48 +125,72 @@ _int CTestOthers::Update_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CTestOthers::LateUpdate_GameObject(const _float& fTimeDelta)
+_int CPCGladiator::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
+
+	/*__________________________________________________________________________________________________________
+	[ Font Update ]
+	____________________________________________________________________________________________________________*/
+	if (Engine::CRenderer::Get_Instance()->Get_RenderOnOff(L"DebugFont"))
+	{
+		m_wstrText = wstring(L"[ Character Info ] \n") +
+					 wstring(L"Num Animation \t %d \n") +
+					 wstring(L"Current Ani Index \t %d \n") +
+					 wstring(L"Max Frame \t %d \n") +
+					 wstring(L"Current Frame \t %d");
+
+		wsprintf(m_szText, m_wstrText.c_str(),
+				 *(m_pMeshCom->Get_NumAnimation()),
+				 m_uiAnimIdx,
+				 m_ui3DMax_NumFrame,
+				 m_ui3DMax_CurFrame);
+
+		m_pFont->Update_GameObject(fTimeDelta);
+		m_pFont->Set_Text(wstring(m_szText));
+	}
+
+	/*__________________________________________________________________________________________________________
+	[ Animation KeyFrame Index ]
+	____________________________________________________________________________________________________________*/
+	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
+	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
 	return NO_EVENT;
 }
 
-void CTestOthers::Render_GameObject(const _float& fTimeDelta)
+void CPCGladiator::Render_GameObject(const _float& fTimeDelta)
 {
-	/*__________________________________________________________________________________________________________
-	[ Play Animation ]
-	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
-
-	Set_ConstantTable();
-	m_pMeshCom->Render_DynamicMesh(m_pShaderCom);
 }
 
-void CTestOthers::Render_ShadowDepth(const _float& fTimeDelta)
+void CPCGladiator::Render_GameObject(const _float& fTimeDelta, 
+									 ID3D12GraphicsCommandList* pCommandList, 
+									 const _int& iContextIdx)
 {
-	Set_ConstantTableShadowDepth();
-	m_pMeshCom->Render_DynamicMeshShadowDepth(m_pShadowCom);
-}
+	///* 움직이고 있는 중일 경우 */
+	//if (m_bIsKeyDown)
+	//{
+	//	if (CPacketMgr::Get_Instance()->change_MoveKey(m_eKeyState) || m_bIsSameDir == true)
+	//	{
+	//		Send_Player_Move();
+	//		m_bIsSameDir = false;
+	//	}
 
-void CTestOthers::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
-{
-	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
-	m_pTransCom->m_vDir.Normalize();
+	//	if (Is_Change_CamDirection())
+	//	{
+	//		Send_Player_Move();
+	//	}
 
-	if (!m_bIsMoveStop)
-	{
-		// NaviMesh 이동.		
-		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
-		{
-			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
-														 &m_pTransCom->m_vDir,
-														 m_pInfoCom->m_fSpeed * fTimeDelta);
-			m_pTransCom->m_vPos = vPos;
-		}
-	}
-	
+	//	// NaviMesh 이동.
+	//	if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
+	//	{
+	//		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+	//													 &m_pTransCom->m_vDir,
+	//													 m_pInfoCom->m_fSpeed * fTimeDelta);
+	//		m_pTransCom->m_vPos = vPos;
+	//	}
+	//}
+
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
@@ -166,13 +201,15 @@ void CTestOthers::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsComm
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
-void CTestOthers::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
+void CPCGladiator::Render_ShadowDepth(const _float& fTimeDelta, 
+									  ID3D12GraphicsCommandList* pCommandList, 
+									  const _int& iContextIdx)
 {
 	Set_ConstantTableShadowDepth();
 	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 }
 
-HRESULT CTestOthers::Add_Component(wstring wstrMeshTag)
+HRESULT CPCGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -209,16 +246,15 @@ HRESULT CTestOthers::Add_Component(wstring wstrMeshTag)
 	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderBox", m_pColliderBoxCom);
 
 	// NaviMesh
-	m_pNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"StageVelika_NaviMesh", Engine::ID_DYNAMIC));
+	m_pNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(wstrNaviMeshTag, Engine::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);
 	m_pNaviMeshCom->AddRef();
-	m_pNaviMeshCom->Set_CurrentCellIndex(0);
 	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
 
 	return S_OK;
 }
 
-void CTestOthers::Set_ConstantTable()
+void CPCGladiator::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -227,16 +263,16 @@ void CTestOthers::Set_ConstantTable()
 
 	Engine::CB_SHADER_MESH tCB_ShaderMesh;
 	ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
-	tCB_ShaderMesh.matWorld = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderMesh.matLightView = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
-	tCB_ShaderMesh.matLightProj = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
-	tCB_ShaderMesh.vLightPos = tShadowDesc.vLightPosition;
+	tCB_ShaderMesh.matWorld      = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderMesh.matLightView  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
+	tCB_ShaderMesh.matLightProj  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
+	tCB_ShaderMesh.vLightPos     = tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 }
 
-void CTestOthers::Set_ConstantTableShadowDepth()
+void CPCGladiator::Set_ConstantTableShadowDepth()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -246,35 +282,172 @@ void CTestOthers::Set_ConstantTableShadowDepth()
 	Engine::CB_SHADER_SHADOW tCB_ShaderShadow;
 	ZeroMemory(&tCB_ShaderShadow, sizeof(Engine::CB_SHADER_SHADOW));
 	tCB_ShaderShadow.matWorld = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderShadow.matView = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
-	tCB_ShaderShadow.matProj = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
+	tCB_ShaderShadow.matView  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
+	tCB_ShaderShadow.matProj  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
 	tCB_ShaderShadow.fProjFar = tShadowDesc.fLightPorjFar;
 
 	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
 }
 
-Engine::CGameObject* CTestOthers::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
+void CPCGladiator::Key_Input(const _float& fTimeDelta)
 {
-	CTestOthers* pInstance = new CTestOthers(pGraphicDevice, pCommandList);
+	if (!g_bIsActive) return;
 
-	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos)))
+
+	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+	m_pTransCom->m_vDir.Normalize();
+
+	if (Engine::KEY_PRESSING(DIK_W))
+	{
+		// 대각선 - 우 상단.
+		if (Engine::KEY_PRESSING(DIK_D))
+		{
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_UP;
+			m_eKeyState             = MVKEY::K_RIGHT_UP;			
+		}
+		// 대각선 - 좌 상단.
+		else if (Engine::KEY_PRESSING(DIK_A))
+		{
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_UP;
+			m_eKeyState             = MVKEY::K_LEFT_UP;
+		}
+		// 직진.
+		else
+		{
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + FRONT;
+			m_eKeyState             = MVKEY::K_FRONT;
+		}
+
+		m_last_move_time = high_resolution_clock::now();
+		m_bIsKeyDown     = true;
+	}
+
+	else if (Engine::KEY_PRESSING(DIK_S))
+	{
+		// 대각선 - 우 하단.
+		if (Engine::KEY_PRESSING(DIK_D))
+		{
+
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_DOWN;
+			m_eKeyState             = MVKEY::K_RIGHT_DOWN;
+		}
+		// 대각선 - 좌 하단.
+		else if (Engine::KEY_PRESSING(DIK_A))
+		{
+
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_DOWN;
+			m_eKeyState             = MVKEY::K_LEFT_DOWN;
+		}
+		// 후진.
+		else
+		{
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + BACK;
+			m_eKeyState             = MVKEY::K_BACK;
+		}
+
+		m_last_move_time = high_resolution_clock::now();
+		m_bIsKeyDown     = true;
+	}
+	// 좌로 이동.
+	else if (Engine::KEY_PRESSING(DIK_A))
+	{
+		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT;
+		m_last_move_time        = high_resolution_clock::now();
+		m_eKeyState             = MVKEY::K_LEFT;
+		m_bIsKeyDown            = true;
+	}
+	// 우로 이동.	
+	else if (Engine::KEY_PRESSING(DIK_D))
+	{
+		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT;
+		m_last_move_time        = high_resolution_clock::now();
+		m_eKeyState             = MVKEY::K_RIGHT;
+		m_bIsKeyDown            = true;
+	}
+	// 움직임 Stop
+	else
+	{
+		if (m_bIsKeyDown)
+		{
+			CPacketMgr::Get_Instance()->send_move_stop(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
+			m_bIsKeyDown = false;
+			m_bIsSameDir = true;
+		}
+	}
+}
+
+void CPCGladiator::Send_Player_Move()
+{
+	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+	m_pTransCom->m_vDir.Normalize();
+	
+	switch (m_eKeyState)
+	{
+	case K_FRONT:
+		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		break;
+	case K_BACK:
+		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		break;
+	case K_RIGHT:
+		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		break;
+	case K_RIGHT_UP:
+		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		break;
+	case K_RIGHT_DOWN:
+		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		break;
+	case K_LEFT:
+		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		break;
+	case K_LEFT_UP:
+		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		break;
+	case K_LEFT_DOWN:
+		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		break;
+	}
+
+	m_vecPreAngle = m_pTransCom->m_vAngle.y;
+}
+
+bool CPCGladiator::Is_Change_CamDirection()
+{
+	if (m_vecPreAngle + 5.f < m_pTransCom->m_vAngle.y)
+		return true;
+	else if (m_vecPreAngle - 5.f > m_pTransCom->m_vAngle.y)
+		return true;
+
+	return false;
+}
+
+Engine::CGameObject* CPCGladiator::Create(ID3D12Device* pGraphicDevice, 
+										  ID3D12GraphicsCommandList* pCommandList,
+										  wstring wstrMeshTag, 
+										  wstring wstrNaviMeshTag, 
+										  const _vec3& vScale,
+										  const _vec3& vAngle, 
+										  const _vec3& vPos)
+{
+	CPCGladiator* pInstance = new CPCGladiator(pGraphicDevice, pCommandList);
+
+	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, wstrNaviMeshTag, vScale, vAngle, vPos)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
 }
 
-void CTestOthers::Free()
+void CPCGladiator::Free()
 {
 	Engine::CGameObject::Free();
 
 	Engine::Safe_Release(m_pDynamicCamera);
-
 	Engine::Safe_Release(m_pMeshCom);
 	Engine::Safe_Release(m_pShaderCom);
 	Engine::Safe_Release(m_pShadowCom);
 	Engine::Safe_Release(m_pColliderSphereCom);
 	Engine::Safe_Release(m_pColliderBoxCom);
 	Engine::Safe_Release(m_pNaviMeshCom);
-
 	Engine::Safe_Release(m_pFont);
 }

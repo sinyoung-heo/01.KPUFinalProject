@@ -199,7 +199,7 @@
     <Filter Include="99.Etc\SampleObject\05.StaticMeshObject">
       <UniqueIdentifier>{2351c006-4ada-445d-8e86-d03ee28c66bc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\02.PlayerCharacter\PCGladitor">
+    <Filter Include="02.GameObject\02.PlayerCharacter\PCGladiator">
       <UniqueIdentifier>{3b49a529-bab1-4a53-9827-4cde6e9b65f7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -396,6 +396,12 @@
     <ClInclude Include="..\Code\TestColMonster.h">
       <Filter>99.Etc\SampleObject\18.TestColMonster</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\PCGladiator.h">
+      <Filter>02.GameObject\02.PlayerCharacter\PCGladiator</Filter>
+    </ClInclude>
+    <ClInclude Include="GladiatorAnimation.h">
+      <Filter>02.GameObject\02.PlayerCharacter\PCGladiator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -556,6 +562,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\TestColMonster.cpp">
       <Filter>99.Etc\SampleObject\18.TestColMonster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PCGladiator.cpp">
+      <Filter>02.GameObject\02.PlayerCharacter\PCGladiator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

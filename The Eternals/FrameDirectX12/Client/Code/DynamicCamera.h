@@ -8,6 +8,9 @@ namespace Engine
 	class CFont;
 }
 
+const _float CAM_AT_HEIGHT_OFFSET = 1.0f;
+
+
 class CDynamicCamera final : public Engine::CCamera
 {
 private:
@@ -16,7 +19,7 @@ private:
 	virtual ~CDynamicCamera() = default;
 
 public:
-	void	Set_Target(Engine::CGameObject* pTarget) { m_pTarget = pTarget; }
+	void Set_Target(Engine::CGameObject* pTarget) { m_pTarget = pTarget; }
 public:
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(const Engine::CAMERA_DESC& tCameraInfo,
@@ -26,8 +29,6 @@ public:
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Render_GameObject(const _float& fTimeDelta);
-
-
 private:
 	void			Key_Input(const _float& fTimeDelta);
 
