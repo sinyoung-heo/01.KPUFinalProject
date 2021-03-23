@@ -39,7 +39,7 @@ HRESULT CPopori_F::Ready_GameObject(wstring wstrMeshTag,
 										   m_pMeshCom->Get_MaxVector());
 
 
-	m_pInfoCom->m_fSpeed = 135.0f;
+	m_pInfoCom->m_fSpeed = 10.0f;
 
 	/*__________________________________________________________________________________________________________
 	[ PipelineStatePass ]

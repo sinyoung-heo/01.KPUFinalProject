@@ -28,6 +28,7 @@
 #include "MainMenuSetting.h"
 #include "SampleNPC.h"
 #include "PCGladiator.h"
+#include "TerrainMeshObject.h"
 
 CStageHSY::CStageHSY(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -109,7 +110,7 @@ HRESULT CStageHSY::Ready_LayerCamera(wstring wstrLayerTag)
 									Engine::CAMERA_DESC(_vec3(41.0f, 79.0f, -124.0f),	// Eye
 														_vec3(43.0f, 79.0f, -115.0f),	// At
 														_vec3(0.0f, 1.0f, 0.f)),		// Up
-									Engine::PROJ_DESC(60.0f,							// FovY
+									Engine::PROJ_DESC(45.0f,							// FovY
 													  _float(WINCX) / _float(WINCY),	// Aspect
 													  0.1f,								// Near
 													  1000.0f),							// Far
@@ -126,7 +127,7 @@ HRESULT CStageHSY::Ready_LayerCamera(wstring wstrLayerTag)
 									  Engine::CAMERA_DESC(_vec3(41.0f, 79.0f, -124.0f),	// Eye
 									  					  _vec3(43.0f, 79.0f, -115.0f),	// At
 									  					  _vec3(0.0f, 1.0f, 0.0f)),		// Up
-									  Engine::PROJ_DESC(60.0f,							// FovY
+									  Engine::PROJ_DESC(45.0f,							// FovY
 									  					_float(WINCX) / _float(WINCY),	// Aspect
 									  					0.1f,							// Near
 									  					1000.0f),						// Far
@@ -182,6 +183,18 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 
 
 	Engine::CGameObject* pGameObj = nullptr;
+
+	/*__________________________________________________________________________________________________________
+	[ BumpTerrainMesh ]
+	____________________________________________________________________________________________________________*/
+	pGameObj = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+										  L"BumpTerrainMesh01",
+										  _vec3(0.075f),
+										  _vec3(90.0f, 0.0f ,0.0f),
+										  _vec3(128.0f, -0.01f, 128.0f));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpTerrainMesh01", pGameObj), E_FAIL);
+
+
 	/*__________________________________________________________________________________________________________
 	[ PCGladiator ]
 	____________________________________________________________________________________________________________*/
@@ -877,42 +890,42 @@ HRESULT CStageHSY::Ready_LightInfo()
 	}
 
 
-	wifstream fin2 { "../../Bin/ToolData/StageVelika_PointLight.lightinginfo" };
-	if (fin2.fail())
-		return E_FAIL;
+	//wifstream fin2 { "../../Bin/ToolData/StageVelika_PointLight.lightinginfo" };
+	//if (fin2.fail())
+	//	return E_FAIL;
 
-	while (true)
-	{
-		// PointLight 정보 저장.
-		Engine::D3DLIGHT tLightInfo { };
-		tLightInfo.Type = Engine::D3DLIGHT_POINT;
+	//while (true)
+	//{
+	//	// PointLight 정보 저장.
+	//	Engine::D3DLIGHT tLightInfo { };
+	//	tLightInfo.Type = Engine::D3DLIGHT_POINT;
 
-				// PointLight Data 불러오기.
-		fin2	>> tLightInfo.Diffuse.x		// Diffuse
-				>> tLightInfo.Diffuse.y
-				>> tLightInfo.Diffuse.z
-				>> tLightInfo.Diffuse.w
-				>> tLightInfo.Specular.x	// Specular
-				>> tLightInfo.Specular.y
-				>> tLightInfo.Specular.z
-				>> tLightInfo.Specular.w
-				>> tLightInfo.Ambient.x		// Ambient
-				>> tLightInfo.Ambient.y
-				>> tLightInfo.Ambient.z
-				>> tLightInfo.Ambient.w
-				>> tLightInfo.Position.x	// Position
-				>> tLightInfo.Position.y
-				>> tLightInfo.Position.z
-				>> tLightInfo.Position.w
-				>> tLightInfo.Range;		// Range
+	//			// PointLight Data 불러오기.
+	//	fin2	>> tLightInfo.Diffuse.x		// Diffuse
+	//			>> tLightInfo.Diffuse.y
+	//			>> tLightInfo.Diffuse.z
+	//			>> tLightInfo.Diffuse.w
+	//			>> tLightInfo.Specular.x	// Specular
+	//			>> tLightInfo.Specular.y
+	//			>> tLightInfo.Specular.z
+	//			>> tLightInfo.Specular.w
+	//			>> tLightInfo.Ambient.x		// Ambient
+	//			>> tLightInfo.Ambient.y
+	//			>> tLightInfo.Ambient.z
+	//			>> tLightInfo.Ambient.w
+	//			>> tLightInfo.Position.x	// Position
+	//			>> tLightInfo.Position.y
+	//			>> tLightInfo.Position.z
+	//			>> tLightInfo.Position.w
+	//			>> tLightInfo.Range;		// Range
 
-		if (fin2.eof())
-			break;
+	//	if (fin2.eof())
+	//		break;
 
-		Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, m_pCommandList,
-																				 Engine::LIGHTTYPE::D3DLIGHT_POINT,
-																				 tLightInfo), E_FAIL);
-	}
+	//	Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, m_pCommandList,
+	//																			 Engine::LIGHTTYPE::D3DLIGHT_POINT,
+	//																			 tLightInfo), E_FAIL);
+	//}
 
 	return S_OK;
 }

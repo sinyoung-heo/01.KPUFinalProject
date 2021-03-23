@@ -78,7 +78,7 @@ struct VS_OUT
 	
 	float4 ProjPos		: TEXCOORD5;
 	float4 LightPos		: TEXCOORD6;
-    float4 WorldPos : TEXCOORD7;
+    float4 WorldPos		: TEXCOORD7;
 };
 
 /*__________________________________________________________________________________________________________
