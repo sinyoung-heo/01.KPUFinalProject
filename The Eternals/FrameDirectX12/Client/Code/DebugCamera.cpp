@@ -88,11 +88,13 @@ _int CDebugCamera::LateUpdate_GameObject(const _float & fTimeDelta)
 		{
 			m_wstrText = wstring(L"[ Camera Info ] \n") +
 						 wstring(L"Eye\t(%d, %d, %d) \n") +
-						 wstring(L"At\t(%d, %d, %d)\n");
+						 wstring(L"At\t(%d, %d, %d)\n") +
+						 wstring(L"Speed\t %d\n");
 
 			wsprintf(m_szText, m_wstrText.c_str(),
 					(_int)m_tCameraInfo.vEye.x, (_int)m_tCameraInfo.vEye.y, (_int)m_tCameraInfo.vEye.z,
-					(_int)m_tCameraInfo.vAt.x, (_int)m_tCameraInfo.vAt.y, (_int)m_tCameraInfo.vAt.z);
+					(_int)m_tCameraInfo.vAt.x, (_int)m_tCameraInfo.vAt.y, (_int)m_tCameraInfo.vAt.z,
+					(_int)m_fSpeed);
 
 			m_pFont->Update_GameObject(fTimeDelta);
 			m_pFont->Set_Text(wstring(m_szText));
@@ -115,8 +117,16 @@ void CDebugCamera::Key_Input(const _float & fTimeDelta)
 	_matrix matWorld = INIT_MATRIX;
 	matWorld = MATRIX_INVERSE(m_tCameraInfo.matView);
 
-	_long   dwMouseMove = 0;
+	if (Engine::KEY_DOWN(DIK_MINUS))
+	{
+		--m_fSpeed;
+		if (m_fSpeed < 0.0f)
+			m_fSpeed = 1.0f;
+	}
+	else if (Engine::KEY_DOWN(DIK_EQUALS))
+		++m_fSpeed;
 
+	_long   dwMouseMove = 0;
 	/*__________________________________________________________________________________________________________
 	[ 마우스 상, 하 이동 ]
 	____________________________________________________________________________________________________________*/

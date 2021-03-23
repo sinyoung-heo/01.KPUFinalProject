@@ -8,7 +8,9 @@ namespace Engine
 	class CFont;
 }
 
-const _float CAM_AT_HEIGHT_OFFSET = 1.0f;
+const _float CAM_AT_HEIGHT_OFFSET = 1.5f;
+const _float CAM_ANGLE_OFFSETMAX_X = 75.0f;
+const _float CAM_ANGLE_OFFSETMIN_X = 5.0f;
 
 
 class CDynamicCamera final : public Engine::CCamera
@@ -19,7 +21,8 @@ private:
 	virtual ~CDynamicCamera() = default;
 
 public:
-	void Set_Target(Engine::CGameObject* pTarget) { m_pTarget = pTarget; }
+	void Set_Target(Engine::CGameObject* pTarget)							{ m_pTarget = pTarget; }
+	void Set_CameraAtParentMatrix(Engine::SKINNING_MATRIX* pSkinningMatrix)	{ m_pCameraAtSkinningMatrix = pSkinningMatrix; }
 public:
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(const Engine::CAMERA_DESC& tCameraInfo,
@@ -36,8 +39,10 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	Engine::CGameObject*	m_pTarget			= nullptr;
-	_float					m_fDistFromTarget	= 3.0f;
+	Engine::CGameObject*		m_pTarget					= nullptr;
+	Engine::SKINNING_MATRIX*	m_pCameraAtSkinningMatrix	= nullptr;
+	_float						m_fDistFromTarget			= 3.0f;
+	_vec3						m_fCameraMoveResponsiveness = _vec3(0.0f);
 
 	/*__________________________________________________________________________________________________________
 	[ Font ]

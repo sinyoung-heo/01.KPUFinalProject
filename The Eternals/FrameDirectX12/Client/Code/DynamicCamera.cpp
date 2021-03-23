@@ -65,12 +65,28 @@ _int CDynamicCamera::Update_GameObject(const _float & fTimeDelta)
 			Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 			m_tCameraInfo.vEye.TransformCoord(_vec3(0.0f, 0.0f, -1.0f), m_pTransCom->m_matWorld);
-			m_tCameraInfo.vAt    = m_pTransCom->m_vPos;
-			m_tCameraInfo.vAt.y += CAM_AT_HEIGHT_OFFSET;
+			if (nullptr == m_pCameraAtSkinningMatrix)
+			{
+				m_tCameraInfo.vAt	= m_pTransCom->m_vPos;
+				m_tCameraInfo.vAt.y = m_pTarget->Get_BoundingBox()->Get_MaxConerPosY();
+			}
+			else
+			{
+				_matrix matWorld = m_pTransCom->m_matWorld;
+				_matrix matBoneFinalTransform = ((m_pCameraAtSkinningMatrix->matBoneScale
+											  * m_pCameraAtSkinningMatrix->matBoneRotation
+											  * m_pCameraAtSkinningMatrix->matBoneTrans)
+											  * m_pCameraAtSkinningMatrix->matParentTransform)
+											  * m_pCameraAtSkinningMatrix->matRootTransform;
+
+				matWorld = (matBoneFinalTransform) * (m_pTarget->Get_Transform()->m_matWorld);
+				m_tCameraInfo.vAt = _vec3(m_pTransCom->m_vPos.x, matWorld._42, m_pTransCom->m_vPos.z);
+			}
 		}
 		else
 		{
 			m_pTarget = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+			m_pTarget->Get_BoundingBox()->Set_SetUpCameraAt(true);
 		}
 
 		/*__________________________________________________________________________________________________________
@@ -97,16 +113,18 @@ _int CDynamicCamera::LateUpdate_GameObject(const _float & fTimeDelta)
 		if (Engine::CRenderer::Get_Instance()->Get_RenderOnOff(L"DebugFont"))
 		{
 			m_wstrText = wstring(L"[ Camera Info ] \n") +
-						 wstring(L"Eye\t(%d, %d, %d) \n") +
-						 wstring(L"At\t(%d, %d, %d)\n") +
-						 wstring(L"Angle X    %d \n") +
-						 wstring(L"Angle Y    %d \n") +
-						 wstring(L"TargetDist %d \n");
+						 wstring(L"Eye (%d, %d, %d) \n") +
+						 wstring(L"At (%d, %d, %d)\n") +
+						 wstring(L"Angle (%d, %d) \n") +
+						 wstring(L"MoveSpeed (%d, %d, %d) \n") +
+						 wstring(L"TargetDist : %d \n");
 
 			wsprintf(m_szText, m_wstrText.c_str(),
 					(_int)m_tCameraInfo.vEye.x, (_int)m_tCameraInfo.vEye.y, (_int)m_tCameraInfo.vEye.z,
 					(_int)m_tCameraInfo.vAt.x, (_int)m_tCameraInfo.vAt.y, (_int)m_tCameraInfo.vAt.z,
-					(_int)m_pTransCom->m_vAngle.x, (_int)m_pTransCom->m_vAngle.y, (_int)m_fDistFromTarget);
+					(_int)m_pTransCom->m_vAngle.x, (_int)m_pTransCom->m_vAngle.y,
+					(_int)(m_fCameraMoveResponsiveness.x * 100.0f), (_int)(m_fCameraMoveResponsiveness.y * 100.0f), (_int)(m_fCameraMoveResponsiveness.z * 100.0f),
+					(_int)m_fDistFromTarget);
 
 			m_pFont->Update_GameObject(fTimeDelta);
 			m_pFont->Set_Text(wstring(m_szText));
@@ -131,36 +149,38 @@ void CDynamicCamera::Key_Input(const _float & fTimeDelta)
 	_matrix matWorld = INIT_MATRIX;
 	matWorld = MATRIX_INVERSE(m_tCameraInfo.matView);
 
-	_long   dwMouseMove = 0;
-
-	/*__________________________________________________________________________________________________________
-	[ 마우스 상, 하 이동 ]
-	____________________________________________________________________________________________________________*/
-	if (dwMouseMove = Engine::GetDIMouseMove(Engine::MOUSEMOVESTATE::DIMS_Y))
-	{
-		m_pTransCom->m_vAngle.x += static_cast<_float>(dwMouseMove) / 30.f;
-
-		//// At의 Y값 조정.
-		//m_pTransCom->m_vAt.y += static_cast<_float>(-dwMouseMove) / 150.f;
-	}
-
 	/*__________________________________________________________________________________________________________
 	[ 마우스 좌, 우 이동 ]
 	____________________________________________________________________________________________________________*/
-	if (dwMouseMove = Engine::GetDIMouseMove(Engine::MOUSEMOVESTATE::DIMS_X))
+	_long dwMouseMoveX      = 0;
+	if (dwMouseMoveX = Engine::GetDIMouseMove(Engine::MOUSEMOVESTATE::DIMS_X))
 	{
-		m_pTransCom->m_vAngle.y += static_cast<_float>(dwMouseMove) / 24.f;
-		//_vec3 vUp = _vec3(0.f, 1.f, 0.f);
+		m_pTransCom->m_vAngle.y += static_cast<_float>(dwMouseMoveX) * (1.0f + m_fCameraMoveResponsiveness.x) * fTimeDelta;
 	}
 
+	/*__________________________________________________________________________________________________________
+	[ 마우스 상, 하 이동 ]
+	___________________________________________________________________________________________________________*/
+	_long dwMouseMoveY = 0;
+	if (dwMouseMoveY = Engine::GetDIMouseMove(Engine::MOUSEMOVESTATE::DIMS_Y))
+	{
+		m_pTransCom->m_vAngle.x += static_cast<_float>(dwMouseMoveY) * (1.0f + m_fCameraMoveResponsiveness.y) * fTimeDelta;
+	}
+
+
 	/*____________________________________________________________________
-	[ Angle Y값 보정. ]
+	[ Angle 보정. ]
 	______________________________________________________________________*/
 	if (m_pTransCom->m_vAngle.y < 0.f)
 		m_pTransCom->m_vAngle.y = 359.9f;
 
 	if (m_pTransCom->m_vAngle.y >= 360.f)
 		m_pTransCom->m_vAngle.y = (_float)(static_cast<_int>(m_pTransCom->m_vAngle.y) % 360);
+
+	if (m_pTransCom->m_vAngle.x > CAM_ANGLE_OFFSETMAX_X)
+		m_pTransCom->m_vAngle.x = CAM_ANGLE_OFFSETMAX_X;
+	else if (m_pTransCom->m_vAngle.x < CAM_ANGLE_OFFSETMIN_X)
+		m_pTransCom->m_vAngle.x = CAM_ANGLE_OFFSETMIN_X;
 }
 
 Engine::CGameObject* CDynamicCamera::Create(ID3D12Device * pGraphicDevice,

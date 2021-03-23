@@ -160,6 +160,14 @@ void CColliderBox::Update_Component(const _float & fTimeDelta)
 	m_BoundingInfo.Center = m_pTransCom->Get_PositionVector();
 	m_BoundingInfo.GetCorners(m_arrCorners.data());
 
+	if (m_bIsSetUpCameraAt)
+	{
+		sort(m_arrCorners.begin(), m_arrCorners.end(), [](const _vec3& v1, const _vec3& v2)
+			{
+				return v1.y < v2.y;
+			});
+		m_fMaxConerPosY = (*--m_arrCorners.end()).y;
+	}
 }
 
 void CColliderBox::Render_Component(const _float & fTimeDelta)
