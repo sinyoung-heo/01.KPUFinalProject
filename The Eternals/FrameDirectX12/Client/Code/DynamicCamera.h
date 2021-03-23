@@ -4,14 +4,15 @@
 
 namespace Engine
 {
-	class CColliderSphere;
 	class CFont;
 }
 
-const _float CAM_AT_HEIGHT_OFFSET = 1.5f;
-const _float CAM_ANGLE_OFFSETMAX_X = 75.0f;
-const _float CAM_ANGLE_OFFSETMIN_X = 5.0f;
-
+const _float CAM_AT_HEIFHT_MIN        = 1.0f;
+const _float CAM_AT_HEIFHT_MAX        = 6.0f;
+const _float CAM_ANGLE_OFFSETMIN_X    = 1.0f;
+const _float CAM_ANGLE_OFFSETMAX_X    = 75.0f;
+const _float MIN_TARGETDIST           = 3.0f;
+const _float MAX_TARGETDIST           = 12.0f;
 
 class CDynamicCamera final : public Engine::CCamera
 {
@@ -33,7 +34,12 @@ public:
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 private:
-	void			Key_Input(const _float& fTimeDelta);
+	void SetUp_DynamicCameraFromTarget(const _float& fTimeDelta);
+	void SetUp_CameraFont(const _float& fTimeDelta);
+	void Key_Input(const _float& fTimeDelta);
+	void SetUp_TargetFromDist(const _float& fTimeDelta);
+	void SetUp_CameraAngle();
+	void SetUp_CameraAtHeightByTargetDist();
 
 private:
 	/*__________________________________________________________________________________________________________
@@ -41,8 +47,10 @@ private:
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject*		m_pTarget					= nullptr;
 	Engine::SKINNING_MATRIX*	m_pCameraAtSkinningMatrix	= nullptr;
-	_float						m_fDistFromTarget			= 3.0f;
-	_vec3						m_fCameraMoveResponsiveness = _vec3(0.0f);
+	_float						m_fAtHeightOffset			= 0.0f;
+	_float						m_fDistFromTarget			= (MIN_TARGETDIST + MAX_TARGETDIST) / 2.0f;
+	_float						m_fTarget_DistFromTarget	= (MIN_TARGETDIST + MAX_TARGETDIST) / 2.0f;
+	_vec3						m_fCameraMoveResponsiveness = _vec3(0.0f, 0.0f, 6.0f);
 
 	/*__________________________________________________________________________________________________________
 	[ Font ]

@@ -248,12 +248,12 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 	[ Popori_F ]
 	____________________________________________________________________________________________________________*/
 	pGameObj =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
-								  L"PoporiR19",					// MeshTag
+								  L"PoporiR27Gladiator",		// MeshTag
 								  L"StageVelika_NaviMesh",		// NaviMeshTag
-								  _vec3(1.25f, 1.25f, 1.25f),	// Scale
+								  _vec3(0.05f, 0.05f, 0.05f),	// Scale
 								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
 								  _vec3(120.0f, 0.f, 75.0f));	// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PoporiR19", pGameObj), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"ThisPlayer", pGameObj), E_FAIL);
 
 
 	/*__________________________________________________________________________________________________________
@@ -734,42 +734,42 @@ HRESULT CScene_StageVelika::Ready_LightInfo()
 	}
 
 
-	wifstream fin2 { "../../Bin/ToolData/StageVelika_PointLight.lightinginfo" };
-	if (fin2.fail())
-		return E_FAIL;
+	//wifstream fin2 { "../../Bin/ToolData/StageVelika_PointLight.lightinginfo" };
+	//if (fin2.fail())
+	//	return E_FAIL;
 
-	while (true)
-	{
-		// PointLight 정보 저장.
-		Engine::D3DLIGHT tLightInfo { };
-		tLightInfo.Type = Engine::D3DLIGHT_POINT;
+	//while (true)
+	//{
+	//	// PointLight 정보 저장.
+	//	Engine::D3DLIGHT tLightInfo { };
+	//	tLightInfo.Type = Engine::D3DLIGHT_POINT;
 
-				// PointLight Data 불러오기.
-		fin2	>> tLightInfo.Diffuse.x		// Diffuse
-				>> tLightInfo.Diffuse.y
-				>> tLightInfo.Diffuse.z
-				>> tLightInfo.Diffuse.w
-				>> tLightInfo.Specular.x	// Specular
-				>> tLightInfo.Specular.y
-				>> tLightInfo.Specular.z
-				>> tLightInfo.Specular.w
-				>> tLightInfo.Ambient.x		// Ambient
-				>> tLightInfo.Ambient.y
-				>> tLightInfo.Ambient.z
-				>> tLightInfo.Ambient.w
-				>> tLightInfo.Position.x	// Position
-				>> tLightInfo.Position.y
-				>> tLightInfo.Position.z
-				>> tLightInfo.Position.w
-				>> tLightInfo.Range;		// Range
+	//			// PointLight Data 불러오기.
+	//	fin2	>> tLightInfo.Diffuse.x		// Diffuse
+	//			>> tLightInfo.Diffuse.y
+	//			>> tLightInfo.Diffuse.z
+	//			>> tLightInfo.Diffuse.w
+	//			>> tLightInfo.Specular.x	// Specular
+	//			>> tLightInfo.Specular.y
+	//			>> tLightInfo.Specular.z
+	//			>> tLightInfo.Specular.w
+	//			>> tLightInfo.Ambient.x		// Ambient
+	//			>> tLightInfo.Ambient.y
+	//			>> tLightInfo.Ambient.z
+	//			>> tLightInfo.Ambient.w
+	//			>> tLightInfo.Position.x	// Position
+	//			>> tLightInfo.Position.y
+	//			>> tLightInfo.Position.z
+	//			>> tLightInfo.Position.w
+	//			>> tLightInfo.Range;		// Range
 
-		if (fin2.eof())
-			break;
+	//	if (fin2.eof())
+	//		break;
 
-		Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, m_pCommandList,
-																				 Engine::LIGHTTYPE::D3DLIGHT_POINT,
-																				 tLightInfo), E_FAIL);
-	}
+	//	Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, m_pCommandList,
+	//																			 Engine::LIGHTTYPE::D3DLIGHT_POINT,
+	//																			 tLightInfo), E_FAIL);
+	//}
 
 	return S_OK;
 }

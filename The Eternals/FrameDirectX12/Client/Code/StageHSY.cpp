@@ -201,9 +201,9 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 	pGameObj =	CPCGladiator::Create(m_pGraphicDevice, m_pCommandList,
 									 L"PoporiR27Gladiator",			// MeshTag
 									 L"StageVelika_NaviMesh",		// NaviMeshTag
-									 _vec3(0.06f, 0.06f, 0.06f),	// Scale
+									 _vec3(0.05f, 0.05f, 0.05f),	// Scale
 									 _vec3(0.0f, 0.0f, 0.0f),		// Angle
-									 _vec3(95, 0.f, 85.0f));		// Pos
+									 _vec3(120.0f, 0.f, 75.0f));	// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"ThisPlayer", pGameObj), E_FAIL);
 
 	/*__________________________________________________________________________________________________________

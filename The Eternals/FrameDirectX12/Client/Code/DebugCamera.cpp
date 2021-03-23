@@ -136,7 +136,7 @@ void CDebugCamera::Key_Input(const _float & fTimeDelta)
 		memcpy(&vRight, &matWorld.m[0][0], sizeof(_vec3));
 
 		_matrix matRot;
-		matRot = XMMatrixRotationAxis(vRight.Get_XMVECTOR(), XMConvertToRadians(dwMouseMove / 10.f));
+		matRot = XMMatrixRotationAxis(vRight.Get_XMVECTOR(), XMConvertToRadians(dwMouseMove / 20.f));
 
 		_vec3 vLook = m_tCameraInfo.vAt - m_tCameraInfo.vEye;
 		vLook.TransformCoord(vLook, matRot);
@@ -152,7 +152,7 @@ void CDebugCamera::Key_Input(const _float & fTimeDelta)
 		_vec3 vUp = _vec3(0.f, 1.f, 0.f);
 
 		_matrix matRot;
-		matRot = XMMatrixRotationAxis(vUp.Get_XMVECTOR(), XMConvertToRadians(dwMouseMove / 10.f));
+		matRot = XMMatrixRotationAxis(vUp.Get_XMVECTOR(), XMConvertToRadians(dwMouseMove / 20.f));
 
 		_vec3   vLook = m_tCameraInfo.vAt - m_tCameraInfo.vEye;
 		vLook.TransformCoord(vLook, matRot);

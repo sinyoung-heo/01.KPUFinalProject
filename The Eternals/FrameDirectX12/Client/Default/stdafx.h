@@ -13,7 +13,7 @@ OFF: SERVER DISCONNECT MODE
 
 #ifdef _DEBUG
 
-//#include "vld.h"
+#include "vld.h"
 
 #endif
 
@@ -77,7 +77,7 @@ ______________________________________________________________________*/
 /*____________________________________________________________________
 Window Console창.
 ______________________________________________________________________*/
-#ifdef _DEBUG
+//#ifdef _DEBUG
 
 #ifdef UNICODE
 #pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console") 
@@ -85,6 +85,6 @@ ______________________________________________________________________*/
 #pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console") 
 #endif
 
-#endif
+//#endif
 
 #pragma warning(disable : 4251)
