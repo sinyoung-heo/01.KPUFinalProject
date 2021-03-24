@@ -13,12 +13,6 @@ CDynamicCamera::CDynamicCamera(ID3D12Device* pGraphicDevice, ID3D12GraphicsComma
 {
 }
 
-CDynamicCamera::CDynamicCamera(const CDynamicCamera & rhs)
-	: Engine::CCamera(rhs)
-{
-}
-
-
 HRESULT CDynamicCamera::Ready_GameObject(const Engine::CAMERA_DESC& tCameraInfo,
 										 const Engine::PROJ_DESC& tProjInfo,
 										 const Engine::ORTHO_DESC& tOrthoInfo)

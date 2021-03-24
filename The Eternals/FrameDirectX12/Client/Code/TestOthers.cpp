@@ -15,12 +15,6 @@ CTestOthers::CTestOthers(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList
 {
 }
 
-CTestOthers::CTestOthers(const CTestOthers& rhs)
-	: Engine::CGameObject(rhs)
-	, m_wstrMeshTag(rhs.m_wstrMeshTag)
-{
-}
-
 HRESULT CTestOthers::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
@@ -68,13 +62,6 @@ HRESULT CTestOthers::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, 
 	m_pColliderBoxCom->Set_ParentMatrix(pmatParent);		// Parent Matrix
 	m_pColliderBoxCom->Set_Scale(_vec3(3.f, 3.f, 3.f));		// Collider Scale
 	m_pColliderBoxCom->Set_Extents(m_pTransCom->m_vScale);	// Box Offset From Center
-
-	/*__________________________________________________________________________________________________________
-	[ Font »ý¼º ]
-	____________________________________________________________________________________________________________*/
-	m_pFont = static_cast<Engine::CFont*>(Engine::CObjectMgr::Get_Instance()->Clone_GameObjectPrototype(L"Font_NetmarbleLight"));
-	Engine::NULL_CHECK_RETURN(m_pFont, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pFont->Ready_GameObject(L"", _vec2(900.f, 0.f), D2D1::ColorF::Yellow), E_FAIL);
 
 	return S_OK;
 }
@@ -261,6 +248,4 @@ void CTestOthers::Free()
 	Engine::Safe_Release(m_pColliderSphereCom);
 	Engine::Safe_Release(m_pColliderBoxCom);
 	Engine::Safe_Release(m_pNaviMeshCom);
-
-	Engine::Safe_Release(m_pFont);
 }

@@ -8,11 +8,8 @@
 CTestColPlayer::CTestColPlayer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pShaderColorInstancing(Engine::CShaderColorInstancing::Get_Instance())
-{
-}
-
-CTestColPlayer::CTestColPlayer(const CTestColPlayer& rhs)
-	: Engine::CGameObject(rhs)
+	, m_pPacketMgr(CPacketMgr::Get_Instance())
+	, m_pServerMath(CServerMath::Get_Instance())
 {
 }
 
@@ -84,6 +81,17 @@ _int CTestColPlayer::Update_GameObject(const _float& fTimeDelta)
 		Key_Input(fTimeDelta);
 	}
 
+	if (m_bIsKeyDown)
+	{
+		// NaviMesh 이동.
+		if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
+		{
+			m_pTransCom->m_vPos += m_pTransCom->m_vDir * m_pInfoCom->m_fSpeed * fTimeDelta;
+		}
+	}
+
+	Attack(fTimeDelta);
+
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
@@ -102,35 +110,8 @@ _int CTestColPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
 	Process_Collision();
-
-	/* 움직이고 있는 중일 경우 */
-	if (m_bIsKeyDown)
-	{
-		if (CPacketMgr::Get_Instance()->change_MoveKey(m_eKeyState) || m_bIsSameDir == true)
-		{
-			Send_Player_Move();
-			m_bIsSameDir = false;
-		}
-
-		if (Is_Change_CamDirection())
-		{
-			Send_Player_Move();
-		}
-
-		// NaviMesh 이동.
-		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
-		{
-			m_pTransCom->m_vPos += m_pTransCom->m_vDir * m_pInfoCom->m_fSpeed * fTimeDelta;
-		}
-	}
-
-	Attack(fTimeDelta);
-
+	
 	return NO_EVENT;
-}
-
-void CTestColPlayer::Render_GameObject(const _float& fTimeDelta)
-{
 }
 
 void CTestColPlayer::Process_Collision()
@@ -145,12 +126,34 @@ void CTestColPlayer::Process_Collision()
 			pDst->Get_BoundingBox()->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 
 			/* Player HP Decrease */
-			CPacketMgr::Get_Instance()->send_attackByMonster(pDst->Get_ServerNumber());
+			m_pPacketMgr->send_attackByMonster(pDst->Get_ServerNumber());
 
 			/* Player Attack to Monster */
-			CPacketMgr::Get_Instance()->send_attackToMonster(pDst->Get_ServerNumber());
+			m_pPacketMgr->send_attackToMonster(pDst->Get_ServerNumber());
 		}
 	}
+}
+
+void CTestColPlayer::Send_PacketToServer()
+{
+	/* 움직이고 있는 중일 경우 */
+	if (m_bIsKeyDown)
+	{
+		if (m_pPacketMgr->change_MoveKey(m_eKeyState) || m_bIsSameDir == true)
+		{
+			Send_Player_Move();
+			m_bIsSameDir = false;
+		}
+
+		if (Is_Change_CamDirection())
+		{
+			Send_Player_Move();
+		}
+	}
+}
+
+void CTestColPlayer::Render_GameObject(const _float& fTimeDelta)
+{
 }
 
 HRESULT CTestColPlayer::Add_Component()
@@ -290,7 +293,7 @@ void CTestColPlayer::Key_Input(const _float& fTimeDelta)
 		if (m_bIsKeyDown)
 		{
 #ifdef SERVER
-			CPacketMgr::Get_Instance()->send_move_stop(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
+			m_pPacketMgr->send_move_stop(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
 #endif
 			m_bIsKeyDown = false;
 			m_bIsSameDir = true;
@@ -307,28 +310,28 @@ void CTestColPlayer::Send_Player_Move()
 	switch (m_eKeyState)
 	{
 	case K_FRONT:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_BACK:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_RIGHT:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_RIGHT_UP:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_RIGHT_DOWN:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_LEFT:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_LEFT_UP:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_LEFT_DOWN:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	}
 
@@ -358,7 +361,7 @@ void CTestColPlayer::Attack(const _float& fTimeDelta)
 		m_bIsAttack = true;
 		if (m_fAttackTime > 3.f)
 		{
-			CPacketMgr::Get_Instance()->send_attack(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+			m_pPacketMgr->send_attack(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 			m_fAttackTime = 0.f;
 		}
 	}
@@ -370,7 +373,7 @@ void CTestColPlayer::Attack(const _float& fTimeDelta)
 		m_bIsAttack = false;
 		m_pBoundingSphereCom->Set_Color(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
 		m_pBoundingBoxCom->Set_Color(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
-		CPacketMgr::Get_Instance()->send_attack_stop(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_attack_stop(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 
 	/* Attack Moving */
@@ -383,7 +386,7 @@ void CTestColPlayer::Attack(const _float& fTimeDelta)
 		m_pBoundingBoxCom->Set_Color(_rgba(1.0f, 0.0f, 1.0f, 1.0f));
 
 		// NaviMesh 이동.
-		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
+		if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
 		{
 			m_pTransCom->m_vPos += m_pTransCom->m_vDir * 2.f * fTimeDelta;
 		}

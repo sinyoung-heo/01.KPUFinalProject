@@ -11,7 +11,6 @@ class CDebugCamera final : public Engine::CCamera
 {
 private:
 	explicit CDebugCamera(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CDebugCamera(const CDebugCamera& rhs);
 	virtual ~CDebugCamera() = default;
 
 public:

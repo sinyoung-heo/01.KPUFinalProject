@@ -10,12 +10,6 @@ CSkyBox::CSkyBox(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCom
 {
 }
 
-CSkyBox::CSkyBox(const CSkyBox & rhs)
-	: Engine::CGameObject(rhs)
-{
-}
-
-
 HRESULT CSkyBox::Ready_GameObject(wstring wstrTextureTag, 
 								  const _vec3 & vScale,
 								  const _vec3 & vAngle,

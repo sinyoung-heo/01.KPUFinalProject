@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "TestPlayer.h"
-
 #include "GraphicDevice.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
@@ -13,12 +12,6 @@ CTestPlayer::CTestPlayer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pPacketMgr(CPacketMgr::Get_Instance())
 	, m_pServerMath(CServerMath::Get_Instance())
-{
-}
-
-CTestPlayer::CTestPlayer(const CTestPlayer& rhs)
-	: Engine::CGameObject(rhs)
-	, m_wstrMeshTag(rhs.m_wstrMeshTag)
 {
 }
 
@@ -117,16 +110,6 @@ _int CTestPlayer::Update_GameObject(const _float& fTimeDelta)
 		Key_Input(fTimeDelta);
 	}
 
-	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
-
-	/*__________________________________________________________________________________________________________
-	[ TransCom - Update WorldMatrix ]
-	____________________________________________________________________________________________________________*/
-	Engine::CGameObject::Update_GameObject(fTimeDelta);
-
 	if (m_bIsKeyDown)
 	{
 		// NaviMesh ÀÌµ¿.
@@ -138,6 +121,16 @@ _int CTestPlayer::Update_GameObject(const _float& fTimeDelta)
 			m_pTransCom->m_vPos = vPos;
 		}
 	}
+
+	/*__________________________________________________________________________________________________________
+	[ Renderer - Add Render Group ]
+	____________________________________________________________________________________________________________*/
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+
+	/*__________________________________________________________________________________________________________
+	[ TransCom - Update WorldMatrix ]
+	____________________________________________________________________________________________________________*/
+	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 	return NO_EVENT;
 }

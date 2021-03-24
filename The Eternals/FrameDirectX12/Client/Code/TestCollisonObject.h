@@ -19,7 +19,6 @@ class CTestCollisonObject final : public Engine::CGameObject
 {
 private:
 	explicit CTestCollisonObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CTestCollisonObject(const CTestCollisonObject& rhs);
 	virtual ~CTestCollisonObject() = default;
 
 public:

@@ -13,7 +13,6 @@ class CSampleNPC : public Engine::CGameObject
 {
 private:
 	explicit CSampleNPC(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CSampleNPC(const CSampleNPC& rhs);
 	virtual ~CSampleNPC() = default;
 
 public:

@@ -13,7 +13,6 @@ class CTextureEffect : public Engine::CGameObject
 {
 private:
 	explicit CTextureEffect(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CTextureEffect(const CTextureEffect& rhs);
 	virtual ~CTextureEffect() = default;
 
 public:

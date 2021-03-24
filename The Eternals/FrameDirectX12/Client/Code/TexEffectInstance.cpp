@@ -10,11 +10,6 @@ CTexEffectInstance::CTexEffectInstance(ID3D12Device* pGraphicDevice, ID3D12Graph
 {
 }
 
-CTexEffectInstance::CTexEffectInstance(const CTexEffectInstance& rhs)
-	: Engine::CGameObject(rhs)
-{
-}
-
 HRESULT CTexEffectInstance::Ready_GameObject(wstring wstrTextureTag, 
 											 const _vec3& vScale, 
 											 const _vec3& vAngle,

@@ -13,7 +13,6 @@ class CSkyBox : public Engine::CGameObject
 {
 private:
 	explicit CSkyBox(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CSkyBox(const CSkyBox& rhs);
 	virtual ~CSkyBox() = default;
 
 public:

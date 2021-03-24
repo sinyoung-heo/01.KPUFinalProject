@@ -10,7 +10,6 @@ namespace Engine
 	class CShaderShadow;
 	class CColliderSphere;
 	class CColliderBox;
-	class CFont;
 	class CNaviMesh;
 }
 
@@ -18,7 +17,6 @@ class CTestOthers : public Engine::CGameObject
 {
 private:
 	explicit CTestOthers(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CTestOthers(const CTestOthers& rhs);
 	virtual ~CTestOthers() = default;
 
 public:
@@ -78,14 +76,5 @@ private:
 	[ Animation Frame ]
 	____________________________________________________________________________________________________________*/
 	_uint			m_uiAnimIdx = 0;	// 현재 애니메이션 Index
-	_uint			m_ui3DMax_NumFrame = 0;	// 3DMax에서 애니메이션의 총 Frame 개수
-	_uint			m_ui3DMax_CurFrame = 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
-
-	/*__________________________________________________________________________________________________________
-	[ Font ]
-	____________________________________________________________________________________________________________*/
-	Engine::CFont*	m_pFont = nullptr;
-	wstring			m_wstrText = L"";
-	_tchar			m_szText[MAX_STR] = L"";
 };
 

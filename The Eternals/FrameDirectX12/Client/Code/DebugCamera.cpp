@@ -13,11 +13,6 @@ CDebugCamera::CDebugCamera(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandL
 {
 }
 
-CDebugCamera::CDebugCamera(const CDebugCamera & rhs)
-	: Engine::CCamera(rhs)
-{
-}
-
 HRESULT CDebugCamera::Ready_GameObject(const Engine::CAMERA_DESC& tCameraInfo,
 									   const Engine::PROJ_DESC& tProjInfo,
 									   const Engine::ORTHO_DESC& tOrthoInfo)

@@ -11,12 +11,8 @@
 
 CMonster_Normal::CMonster_Normal(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
-{
-}
-
-CMonster_Normal::CMonster_Normal(const CMonster_Normal& rhs)
-	: Engine::CGameObject(rhs)
-	, m_wstrMeshTag(rhs.m_wstrMeshTag)
+	, m_pPacketMgr(CPacketMgr::Get_Instance())
+	, m_pServerMath(CServerMath::Get_Instance())
 {
 }
 
@@ -94,24 +90,6 @@ _int CMonster_Normal::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
 	return NO_EVENT;
-}
-
-void CMonster_Normal::Render_GameObject(const _float& fTimeDelta)
-{
-	/*__________________________________________________________________________________________________________
-	[ Play Animation ]
-	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
-
-	Set_ConstantTable();
-	m_pMeshCom->Render_DynamicMesh(m_pShaderCom);
-}
-
-void CMonster_Normal::Render_ShadowDepth(const _float& fTimeDelta)
-{
-	Set_ConstantTableShadowDepth();
-	m_pMeshCom->Render_DynamicMeshShadowDepth(m_pShadowCom);
 }
 
 void CMonster_Normal::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
@@ -316,6 +294,4 @@ void CMonster_Normal::Free()
 	Engine::Safe_Release(m_pColliderSphereCom);
 	Engine::Safe_Release(m_pColliderBoxCom);
 	Engine::Safe_Release(m_pNaviMeshCom);
-
-	Engine::Safe_Release(m_pFont);
 }

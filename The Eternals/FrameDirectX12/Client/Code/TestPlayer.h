@@ -20,7 +20,6 @@ class CTestPlayer : public Engine::CGameObject
 {
 private:
 	explicit CTestPlayer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CTestPlayer(const CTestPlayer& rhs);
 	virtual ~CTestPlayer() = default;
 
 public:

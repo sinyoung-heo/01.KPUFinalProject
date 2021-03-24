@@ -18,7 +18,6 @@ class CDynamicCamera final : public Engine::CCamera
 {
 private:
 	explicit CDynamicCamera(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CDynamicCamera(const CDynamicCamera& rhs);
 	virtual ~CDynamicCamera() = default;
 
 public:

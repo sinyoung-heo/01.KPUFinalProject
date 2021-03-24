@@ -9,12 +9,6 @@ CTextureEffect::CTextureEffect(ID3D12Device * pGraphicDevice, ID3D12GraphicsComm
 {
 }
 
-CTextureEffect::CTextureEffect(const CTextureEffect & rhs)
-	: Engine::CGameObject(rhs)
-{
-}
-
-
 HRESULT CTextureEffect::Ready_GameObject(wstring wstrTextureTag, 
 										 const _vec3 & vScale,
 										 const _vec3 & vAngle,

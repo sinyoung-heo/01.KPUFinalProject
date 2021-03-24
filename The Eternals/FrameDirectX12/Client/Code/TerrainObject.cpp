@@ -9,12 +9,6 @@ CTerrainObject::CTerrainObject(ID3D12Device * pGraphicDevice, ID3D12GraphicsComm
 {
 }
 
-CTerrainObject::CTerrainObject(const CTerrainObject & rhs)
-	: Engine::CGameObject(rhs)
-{
-}
-
-
 HRESULT CTerrainObject::Ready_GameObject()
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true), E_FAIL);

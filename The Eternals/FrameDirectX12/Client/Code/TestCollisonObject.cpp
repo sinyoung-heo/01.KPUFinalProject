@@ -8,11 +8,6 @@ CTestCollisonObject::CTestCollisonObject(ID3D12Device* pGraphicDevice, ID3D12Gra
 {
 }
 
-CTestCollisonObject::CTestCollisonObject(const CTestCollisonObject& rhs)
-	: Engine::CGameObject(rhs)
-{
-}
-
 HRESULT CTestCollisonObject::Ready_GameObject(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true, true), E_FAIL);

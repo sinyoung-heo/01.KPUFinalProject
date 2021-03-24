@@ -16,14 +16,6 @@ CStaticMeshObject::CStaticMeshObject(ID3D12Device * pGraphicDevice, ID3D12Graphi
 {
 }
 
-CStaticMeshObject::CStaticMeshObject(const CStaticMeshObject & rhs)
-	: Engine::CGameObject(rhs)
-	, m_wstrMeshTag(rhs.m_wstrMeshTag)
-	, m_pDynamicCamera(rhs.m_pDynamicCamera)
-{
-}
-
-
 HRESULT CStaticMeshObject::Ready_GameObject(wstring wstrMeshTag, 
 											const _vec3 & vScale, 
 											const _vec3 & vAngle, 

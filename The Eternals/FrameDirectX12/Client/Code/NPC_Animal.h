@@ -8,13 +8,8 @@ namespace Engine
 	class CMesh;
 	class CShaderMesh;
 	class CShaderShadow;
-	class CColliderSphere;
-	class CColliderBox;
-	class CFont;
 	class CNaviMesh;
 }
-
-class CDynamicCamera;
 
 class CNPC_Animal : public Engine::CGameObject
 {
@@ -22,7 +17,6 @@ class CNPC_Animal : public Engine::CGameObject
 
 private:
 	explicit CNPC_Animal(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CNPC_Animal(const CNPC_Animal& rhs);
 	virtual ~CNPC_Animal() = default;
 
 public:
@@ -35,11 +29,7 @@ public:
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
-
-	// SingleThread Rendering.
-	virtual void	Render_GameObject(const _float& fTimeDelta);
-	virtual void	Render_ShadowDepth(const _float & fTimeDelta);
-
+	virtual void	Send_PacketToServer();
 	// MultiThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
@@ -56,34 +46,28 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
 	____________________________________________________________________________________________________________*/
-	Engine::CMesh*				m_pMeshCom				= nullptr;
-	Engine::CShaderMesh*		m_pShaderCom			= nullptr;
-	Engine::CShaderShadow*		m_pShadowCom			= nullptr;
-	Engine::CColliderSphere*	m_pColliderSphereCom	= nullptr;
-	Engine::CColliderBox*		m_pColliderBoxCom		= nullptr;
-	Engine::CNaviMesh*			m_pNaviMeshCom			= nullptr;
+	Engine::CMesh*			m_pMeshCom	   = nullptr;
+	Engine::CShaderMesh*	m_pShaderCom   = nullptr;
+	Engine::CShaderShadow*	m_pShadowCom   = nullptr;
+	Engine::CNaviMesh*		m_pNaviMeshCom = nullptr;
+
+	/*__________________________________________________________________________________________________________
+	[ Manager ]
+	____________________________________________________________________________________________________________*/
+	CPacketMgr*		m_pPacketMgr  = nullptr;
+	CServerMath*	m_pServerMath = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	CDynamicCamera*	m_pDynamicCamera					= nullptr;
-	wstring			m_wstrMeshTag						= L"";
-	/*__________________________________________________________________________________________________________
-	[ Animation Frame ]
-	____________________________________________________________________________________________________________*/
-	_uint			m_uiAnimIdx							= 0;	// 현재 애니메이션 Index
-	_uint			m_ui3DMax_NumFrame					= 0;	// 3DMax에서 애니메이션의 총 Frame 개수
-	_uint			m_ui3DMax_CurFrame					= 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
+	wstring			m_wstrMeshTag = L"";
 
-	ANIM			m_eCurAnimation						= ANIM::A_END;
-	ANIM			m_ePreAnimation						= ANIM::A_END;
 	/*__________________________________________________________________________________________________________
-	[ Font ]
+	[ Animation ]
 	____________________________________________________________________________________________________________*/
-	Engine::CFont*	m_pFont								= nullptr;
-	wstring			m_wstrText							= L"";
-	_tchar			m_szText[MAX_STR]					= L"";
-
+	_uint			m_uiAnimIdx		= 0;	// 현재 애니메이션 Index
+	ANIM			m_eCurAnimation	= ANIM::A_END;
+	ANIM			m_ePreAnimation	= ANIM::A_END;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

@@ -10,12 +10,6 @@ CRectObject::CRectObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList
 {
 }
 
-CRectObject::CRectObject(const CRectObject & rhs)
-	: Engine::CGameObject(rhs)
-{
-}
-
-
 HRESULT CRectObject::Ready_GameObject(const _vec3 & vScale,
 									  const _vec3 & vAngle,
 									  const _vec3 & vPos)
