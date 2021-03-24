@@ -36,6 +36,7 @@ private:
 
 	void	Key_Input();
 	void	Show_FontLog(const _float& fTimeDelta);
+	void	Show_FontFPS(const _float& fTimeDelta);
 
 private:
 	/*__________________________________________________________________________________________________________

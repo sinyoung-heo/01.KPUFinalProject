@@ -103,6 +103,8 @@ _int CMainApp::LateUpdate_MainApp(const _float & fTimeDelta)
 	if (m_pRenderer->Get_RenderOnOff(L"DebugFont"))
 		Show_FontLog(fTimeDelta);
 
+	Show_FontFPS(fTimeDelta);
+
 	return 0;
 }
 
@@ -397,26 +399,6 @@ void CMainApp::Key_Input()
 void CMainApp::Show_FontLog(const _float& fTimeDelta)
 {
 	/*__________________________________________________________________________________________________________
-	[ Text - FPS ]
-	____________________________________________________________________________________________________________*/
-	if (nullptr != m_pFont_FPS)
-	{
-		m_pFont_FPS->Update_GameObject(fTimeDelta);
-
-		m_fTime += fTimeDelta;
-		++m_uiFPS;
-
-		if (m_fTime >= 1.0f)
-		{
-			wsprintf(m_szFPS, L"FPS : %d", m_uiFPS);
-			m_pFont_FPS->Set_Text(wstring(m_szFPS));
-
-			m_fTime = 0.0f;
-			m_uiFPS = 0;
-		}
-	}
-
-	/*__________________________________________________________________________________________________________
 	[ Text - PipelineState ]
 	____________________________________________________________________________________________________________*/
 	if (nullptr != m_pRenderer)
@@ -477,6 +459,26 @@ void CMainApp::Show_FontLog(const _float& fTimeDelta)
 	{
 		m_pFont_RenderList->Update_GameObject(fTimeDelta);
 		m_pFont_RenderList->Set_Text(wstring(m_szRenderList));
+	}
+}
+
+void CMainApp::Show_FontFPS(const _float& fTimeDelta)
+{
+	if (nullptr != m_pFont_FPS)
+	{
+		m_pFont_FPS->Update_GameObject(fTimeDelta);
+
+		m_fTime += fTimeDelta;
+		++m_uiFPS;
+
+		if (m_fTime >= 1.0f)
+		{
+			wsprintf(m_szFPS, L"FPS : %d", m_uiFPS);
+			m_pFont_FPS->Set_Text(wstring(m_szFPS));
+
+			m_fTime = 0.0f;
+			m_uiFPS = 0;
+		}
 	}
 }
 

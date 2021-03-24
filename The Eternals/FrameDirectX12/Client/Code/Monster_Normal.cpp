@@ -92,6 +92,10 @@ _int CMonster_Normal::LateUpdate_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
+void CMonster_Normal::Send_PacketToServer()
+{
+}
+
 void CMonster_Normal::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
 	Active_Monster(fTimeDelta);
