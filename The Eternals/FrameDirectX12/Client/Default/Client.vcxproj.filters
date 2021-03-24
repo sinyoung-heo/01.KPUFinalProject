@@ -139,36 +139,6 @@
     <Filter Include="02.GameObject\04.Monster">
       <UniqueIdentifier>{3b8e7fab-087e-47c3-9828-af65a341aa00}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\99.GameUIRoot">
-      <UniqueIdentifier>{1973f2c6-5836-47cb-bd97-d4f5c3e326cf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\98.GameUIChild">
-      <UniqueIdentifier>{555091cb-f50e-4c4a-a5f5-521bb05df904}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\98.GameUIChild\00.CharacterClassFrameChild">
-      <UniqueIdentifier>{5ed0d699-bd40-49a6-bc6c-1c696fe78735}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\98.GameUIChild\00.CharacterClassFrameChild\CharacterHpGauge">
-      <UniqueIdentifier>{f7913948-159f-419e-8367-574ce62397dc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\98.GameUIChild\00.CharacterClassFrameChild\CharacterMpGauge">
-      <UniqueIdentifier>{64e89467-e110-46da-8a5e-4497e69db895}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUIRoot\00.MainMenu">
-      <UniqueIdentifier>{520b2294-6849-4ef2-b7c0-c141dbaaa4ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuEquipment">
-      <UniqueIdentifier>{dc3b6a8b-70b1-4f14-a8ee-58ef8bd9f1e5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuSetting">
-      <UniqueIdentifier>{0d01a10a-66db-4d61-bb8a-5afb5336c0d2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuLogout">
-      <UniqueIdentifier>{4303e244-71b2-48ef-b0e2-198755843a15}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuInventory">
-      <UniqueIdentifier>{9c82edd5-757a-4969-90b0-4dff9650f064}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.Mgr\04.MouseCursorMgr">
       <UniqueIdentifier>{9f593d0a-4f7e-4583-a859-a2cb29f4762e}</UniqueIdentifier>
     </Filter>
@@ -201,6 +171,39 @@
     </Filter>
     <Filter Include="02.GameObject\02.PlayerCharacter\PCGladiator">
       <UniqueIdentifier>{3b49a529-bab1-4a53-9827-4cde6e9b65f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI">
+      <UniqueIdentifier>{b30b9034-b059-4f37-b27b-eaef8067d730}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild">
+      <UniqueIdentifier>{555091cb-f50e-4c4a-a5f5-521bb05df904}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\00.CharacterClassFrameChild">
+      <UniqueIdentifier>{5ed0d699-bd40-49a6-bc6c-1c696fe78735}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\00.CharacterClassFrameChild\CharacterHpGauge">
+      <UniqueIdentifier>{f7913948-159f-419e-8367-574ce62397dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\00.CharacterClassFrameChild\CharacterMpGauge">
+      <UniqueIdentifier>{64e89467-e110-46da-8a5e-4497e69db895}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot">
+      <UniqueIdentifier>{1973f2c6-5836-47cb-bd97-d4f5c3e326cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu">
+      <UniqueIdentifier>{520b2294-6849-4ef2-b7c0-c141dbaaa4ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuEquipment">
+      <UniqueIdentifier>{dc3b6a8b-70b1-4f14-a8ee-58ef8bd9f1e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuSetting">
+      <UniqueIdentifier>{0d01a10a-66db-4d61-bb8a-5afb5336c0d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuLogout">
+      <UniqueIdentifier>{4303e244-71b2-48ef-b0e2-198755843a15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuInventory">
+      <UniqueIdentifier>{9c82edd5-757a-4969-90b0-4dff9650f064}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -344,31 +347,31 @@
       <Filter>97.Mgr\03.ServerMath</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\GameUIChild.h">
-      <Filter>02.GameObject\98.GameUIChild</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\GameUIRoot.h">
-      <Filter>02.GameObject\99.GameUIRoot</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\CharacterHpGauge.h">
-      <Filter>02.GameObject\98.GameUIChild\00.CharacterClassFrameChild\CharacterHpGauge</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\00.CharacterClassFrameChild\CharacterHpGauge</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\enum.h">
       <Filter>98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\CharacterMpGauge.h">
-      <Filter>02.GameObject\98.GameUIChild\00.CharacterClassFrameChild\CharacterMpGauge</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\00.CharacterClassFrameChild\CharacterMpGauge</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\MainMenuLogout.h">
-      <Filter>02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuLogout</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuLogout</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\MainMenuSetting.h">
-      <Filter>02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuSetting</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuSetting</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\MainMenuInventory.h">
-      <Filter>02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuInventory</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuInventory</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\MainMenuEquipment.h">
-      <Filter>02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuEquipment</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuEquipment</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\MouseCursorMgr.h">
       <Filter>97.Mgr\04.MouseCursorMgr</Filter>
@@ -514,28 +517,28 @@
       <Filter>97.Mgr\03.ServerMath</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\GameUIChild.cpp">
-      <Filter>02.GameObject\98.GameUIChild</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\GameUIRoot.cpp">
-      <Filter>02.GameObject\99.GameUIRoot</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CharacterHpGauge.cpp">
-      <Filter>02.GameObject\98.GameUIChild\00.CharacterClassFrameChild\CharacterHpGauge</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\00.CharacterClassFrameChild\CharacterHpGauge</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CharacterMpGauge.cpp">
-      <Filter>02.GameObject\98.GameUIChild\00.CharacterClassFrameChild\CharacterMpGauge</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\00.CharacterClassFrameChild\CharacterMpGauge</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\MainMenuLogout.cpp">
-      <Filter>02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuLogout</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuLogout</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\MainMenuSetting.cpp">
-      <Filter>02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuSetting</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuSetting</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\MainMenuInventory.cpp">
-      <Filter>02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuInventory</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuInventory</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\MainMenuEquipment.cpp">
-      <Filter>02.GameObject\99.GameUIRoot\00.MainMenu\MainMenuEquipment</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuEquipment</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\MouseCursorMgr.cpp">
       <Filter>97.Mgr\04.MouseCursorMgr</Filter>

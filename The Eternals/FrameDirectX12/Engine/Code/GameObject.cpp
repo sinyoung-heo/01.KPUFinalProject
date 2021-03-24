@@ -142,6 +142,10 @@ void CGameObject::Process_Collision()
 {
 }
 
+void CGameObject::Send_PacketToServer()
+{
+}
+
 void CGameObject::Render_GameObject(const _float & fTimeDelta)
 {
 }

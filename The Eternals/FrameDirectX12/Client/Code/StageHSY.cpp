@@ -63,6 +63,11 @@ HRESULT CStageHSY::Ready_Scene()
 	// Ready MouseCursorMgr
 	CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(false);
 
+#ifdef SERVER
+	Engine::FAILED_CHECK_RETURN(CPacketMgr::Get_Instance()->Ready_Server(m_pGraphicDevice, m_pCommandList), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(CPacketMgr::Get_Instance()->Connect_Server(), E_FAIL);
+#endif
+
 	return S_OK;
 }
 
@@ -83,12 +88,23 @@ _int CStageHSY::LateUpdate_Scene(const _float & fTimeDelta)
 	return Engine::CScene::LateUpdate_Scene(fTimeDelta);
 }
 
+void CStageHSY::Send_PacketToServer()
+{
+	Engine::CScene::Send_PacketToServer();
+}
+
 HRESULT CStageHSY::Render_Scene(const _float & fTimeDelta, const Engine::RENDERID& eID)
 {
 	Engine::FAILED_CHECK_RETURN(CScene::Render_Scene(fTimeDelta, eID), E_FAIL);
 
 	return S_OK;
 }
+
+void CStageHSY::Process_PacketFromServer()
+{
+	CPacketMgr::Get_Instance()->recv_packet();
+}
+
 
 HRESULT CStageHSY::Ready_LayerCamera(wstring wstrLayerTag)
 {
@@ -198,13 +214,13 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ PCGladiator ]
 	____________________________________________________________________________________________________________*/
-	pGameObj =	CPCGladiator::Create(m_pGraphicDevice, m_pCommandList,
-									 L"PoporiR27Gladiator",			// MeshTag
-									 L"StageVelika_NaviMesh",		// NaviMeshTag
-									 _vec3(0.05f, 0.05f, 0.05f),	// Scale
-									 _vec3(0.0f, 0.0f, 0.0f),		// Angle
-									 _vec3(120.0f, 0.f, 75.0f));	// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"ThisPlayer", pGameObj), E_FAIL);
+	//pGameObj =	CPCGladiator::Create(m_pGraphicDevice, m_pCommandList,
+	//								 L"PoporiR27Gladiator",			// MeshTag
+	//								 L"StageVelika_NaviMesh",		// NaviMeshTag
+	//								 _vec3(0.05f, 0.05f, 0.05f),	// Scale
+	//								 _vec3(0.0f, 0.0f, 0.0f),		// Angle
+	//								 _vec3(120.0f, 0.f, 75.0f));	// Pos
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"ThisPlayer", pGameObj), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
 	[ TestCollisionObject ]

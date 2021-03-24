@@ -7,9 +7,12 @@
 #include "Font.h"
 #include "RenderTarget.h"
 #include "DynamicCamera.h"
+#include "TimeMgr.h"
 
 CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
+	, m_pPacketMgr(CPacketMgr::Get_Instance())
+	, m_pServerMath(CServerMath::Get_Instance())
 {
 }
 
@@ -109,7 +112,18 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	if (!g_bIsOnDebugCaemra)
 	{
-		// Key_Input(fTimeDelta);
+		Key_Input(fTimeDelta);
+	}
+
+	// NaviMesh 이동.
+	if (m_bIsKeyDown)
+	{
+		if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
+		{
+			m_pTransCom->m_vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+																  &m_pTransCom->m_vDir,
+																  m_pInfoCom->m_fSpeed * fTimeDelta);
+		}
 	}
 
 	/*__________________________________________________________________________________________________________
@@ -159,38 +173,28 @@ _int CPCGladiator::LateUpdate_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-void CPCGladiator::Render_GameObject(const _float& fTimeDelta)
+void CPCGladiator::Send_PacketToServer()
 {
+	// 움직이고 있는 중일 경우
+	if (m_bIsKeyDown)
+	{
+		if (m_pPacketMgr->change_MoveKey(m_eKeyState) || m_bIsSameDir == true)
+		{
+			Send_Player_Move();
+			m_bIsSameDir = false;
+		}
+
+		if (Is_Change_CamDirection())
+		{
+			Send_Player_Move();
+		}
+	}
 }
 
 void CPCGladiator::Render_GameObject(const _float& fTimeDelta, 
 									 ID3D12GraphicsCommandList* pCommandList, 
 									 const _int& iContextIdx)
 {
-	///* 움직이고 있는 중일 경우 */
-	//if (m_bIsKeyDown)
-	//{
-	//	if (CPacketMgr::Get_Instance()->change_MoveKey(m_eKeyState) || m_bIsSameDir == true)
-	//	{
-	//		Send_Player_Move();
-	//		m_bIsSameDir = false;
-	//	}
-
-	//	if (Is_Change_CamDirection())
-	//	{
-	//		Send_Player_Move();
-	//	}
-
-	//	// NaviMesh 이동.
-	//	if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
-	//	{
-	//		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
-	//													 &m_pTransCom->m_vDir,
-	//													 m_pInfoCom->m_fSpeed * fTimeDelta);
-	//		m_pTransCom->m_vPos = vPos;
-	//	}
-	//}
-
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
@@ -369,7 +373,7 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 	{
 		if (m_bIsKeyDown)
 		{
-			CPacketMgr::Get_Instance()->send_move_stop(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
+			m_pPacketMgr->send_move_stop(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
 			m_bIsKeyDown = false;
 			m_bIsSameDir = true;
 		}
@@ -384,28 +388,28 @@ void CPCGladiator::Send_Player_Move()
 	switch (m_eKeyState)
 	{
 	case K_FRONT:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_BACK:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_RIGHT:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_RIGHT_UP:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_RIGHT_DOWN:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_LEFT:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_LEFT_UP:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_LEFT_DOWN:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	}
 

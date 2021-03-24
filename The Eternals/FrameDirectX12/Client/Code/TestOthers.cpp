@@ -5,12 +5,13 @@
 #include "DirectInput.h"
 #include "ObjectMgr.h"
 #include "LightMgr.h"
-#include "DynamicCamera.h"
 #include "Font.h"
 #include "RenderTarget.h"
 
 CTestOthers::CTestOthers(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
+	, m_pPacketMgr(CPacketMgr::Get_Instance())
+	, m_pServerMath(CServerMath::Get_Instance())
 {
 }
 
@@ -51,7 +52,6 @@ HRESULT CTestOthers::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, 
 	_matrix* pmatParent = nullptr;
 
 	// ColliderSphere
-	// pmatSkinning	= m_pMeshCom->Find_SkinningMatrix("Bip01-L-Hand");
 	pmatSkinning = m_pMeshCom->Find_SkinningMatrix("Bip01-R-Hand");
 	pmatParent = &(m_pTransCom->m_matWorld);
 	Engine::NULL_CHECK_RETURN(pmatSkinning, E_FAIL);
@@ -81,13 +81,6 @@ HRESULT CTestOthers::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, 
 
 HRESULT CTestOthers::LateInit_GameObject()
 {
-	/*__________________________________________________________________________________________________________
-	[ Get GameObject - DynamicCamera ]
-	____________________________________________________________________________________________________________*/
-	m_pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
-	Engine::NULL_CHECK_RETURN(m_pDynamicCamera, E_FAIL);
-	m_pDynamicCamera->AddRef();
-
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	m_pShadowCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
@@ -110,6 +103,7 @@ _int CTestOthers::Update_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
+	Move_OnNaviMesh(fTimeDelta);
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 	return NO_EVENT;
@@ -122,41 +116,13 @@ _int CTestOthers::LateUpdate_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-void CTestOthers::Render_GameObject(const _float& fTimeDelta)
+void CTestOthers::Send_PacketToServer()
 {
-	/*__________________________________________________________________________________________________________
-	[ Play Animation ]
-	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
 
-	Set_ConstantTable();
-	m_pMeshCom->Render_DynamicMesh(m_pShaderCom);
-}
-
-void CTestOthers::Render_ShadowDepth(const _float& fTimeDelta)
-{
-	Set_ConstantTableShadowDepth();
-	m_pMeshCom->Render_DynamicMeshShadowDepth(m_pShadowCom);
 }
 
 void CTestOthers::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
-	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
-	m_pTransCom->m_vDir.Normalize();
-
-	if (!m_bIsMoveStop)
-	{
-		// NaviMesh 이동.		
-		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
-		{
-			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
-														 &m_pTransCom->m_vDir,
-														 m_pInfoCom->m_fSpeed * fTimeDelta);
-			m_pTransCom->m_vPos = vPos;
-		}
-	}
-	
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
@@ -254,7 +220,28 @@ void CTestOthers::Set_ConstantTableShadowDepth()
 	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
 }
 
-Engine::CGameObject* CTestOthers::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
+void CTestOthers::Move_OnNaviMesh(const _float& fTimeDelta)
+{
+	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+	m_pTransCom->m_vDir.Normalize();
+	if (!m_bIsMoveStop)
+	{
+		// NaviMesh 이동.		
+		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
+		{
+			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+														 &m_pTransCom->m_vDir,
+														 m_pInfoCom->m_fSpeed * fTimeDelta);
+			m_pTransCom->m_vPos = vPos;
+		}
+	}
+}
+
+Engine::CGameObject* CTestOthers::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, 
+										 wstring wstrMeshTag, 
+										 const _vec3& vScale, 
+										 const _vec3& vAngle, 
+										 const _vec3& vPos)
 {
 	CTestOthers* pInstance = new CTestOthers(pGraphicDevice, pCommandList);
 
@@ -267,8 +254,6 @@ Engine::CGameObject* CTestOthers::Create(ID3D12Device* pGraphicDevice, ID3D12Gra
 void CTestOthers::Free()
 {
 	Engine::CGameObject::Free();
-
-	Engine::Safe_Release(m_pDynamicCamera);
 
 	Engine::Safe_Release(m_pMeshCom);
 	Engine::Safe_Release(m_pShaderCom);

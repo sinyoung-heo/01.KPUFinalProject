@@ -124,6 +124,14 @@ HRESULT CGraphicDevice::Render_Begin(const _rgba& vRGBA)
 
 HRESULT CGraphicDevice::Render_ExcuteCmdList()
 {
+	if (!CRenderer::Get_Instance()->Get_RenderLstSize(CRenderer::RENDERGROUP::RENDER_FONT))
+	{
+		m_arrCommandList[CMDID::CMD_MAIN]->ResourceBarrier(1,
+														   &CD3DX12_RESOURCE_BARRIER::Transition(m_arrSwapChainBuffer[m_iCurrBackBuffer],
+														   D3D12_RESOURCE_STATE_RENDER_TARGET, 
+														   D3D12_RESOURCE_STATE_PRESENT));
+	}
+
 	/*__________________________________________________________________________________________________________
 	- 명령들의 기록을 마친다.
 	- ExecuteCommandLists로 명령 목록을 제출하기 전에 

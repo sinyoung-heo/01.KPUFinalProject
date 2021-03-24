@@ -30,6 +30,11 @@ _int CScene::LateUpdate_Scene(const _float & fTimeDelta)
 	return m_pObjectMgr->LateUpdate_ObjectMgr(fTimeDelta);
 }
 
+void CScene::Send_PacketToServer()
+{
+	m_pObjectMgr->Send_PacketToServer();
+}
+
 HRESULT CScene::Render_Scene(const _float & fTimeDelta, const RENDERID& eID)
 {
 	/*__________________________________________________________________________________________________________
@@ -41,6 +46,10 @@ HRESULT CScene::Render_Scene(const _float & fTimeDelta, const RENDERID& eID)
 	FAILED_CHECK_RETURN(m_pRenderer->Render_Renderer(fTimeDelta, eID), E_FAIL);
 
 	return S_OK;
+}
+
+void CScene::Process_PacketFromServer()
+{
 }
 
 void CScene::Free()

@@ -14,8 +14,6 @@ namespace Engine
 	class CNaviMesh;
 }
 
-class CDynamicCamera;
-
 class CTestOthers : public Engine::CGameObject
 {
 private:
@@ -32,10 +30,7 @@ public:
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
-
-	// SingleThread Rendering.
-	virtual void	Render_GameObject(const _float& fTimeDelta);
-	virtual void	Render_ShadowDepth(const _float& fTimeDelta);
+	virtual void	Send_PacketToServer();
 
 	// MultiThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
@@ -45,6 +40,7 @@ private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
+	void			Move_OnNaviMesh(const _float& fTimeDelta);
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
@@ -68,10 +64,16 @@ private:
 	Engine::CNaviMesh*			m_pNaviMeshCom			= nullptr;
 
 	/*__________________________________________________________________________________________________________
+	[ Manager ]
+	____________________________________________________________________________________________________________*/
+	CPacketMgr*		m_pPacketMgr  = nullptr;
+	CServerMath*	m_pServerMath = nullptr;
+
+	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	CDynamicCamera* m_pDynamicCamera = nullptr;
 	wstring			m_wstrMeshTag = L"";
+
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]
 	____________________________________________________________________________________________________________*/

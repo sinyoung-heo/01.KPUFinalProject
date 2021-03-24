@@ -155,6 +155,12 @@ _int CObjectMgr::LateUpdate_ObjectMgr(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
+void CObjectMgr::Send_PacketToServer()
+{
+	for (auto& iter : m_mapLayer)
+		iter.second->Send_PacketToServer();
+}
+
 void CObjectMgr::Render_ObjectMgr(const _float & fTimeDelta)
 {
 	for (auto& iter : m_mapLayer)

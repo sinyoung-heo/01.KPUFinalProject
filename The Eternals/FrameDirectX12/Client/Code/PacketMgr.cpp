@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "PacketMgr.h"
 #include "ObjectMgr.h"
-
+#include "Management.h"
+#include "Renderer.h"
 #include "TestPlayer.h"
 #include "TestOthers.h"
 #include "NPC_Animal.h"
@@ -10,13 +11,16 @@
 #include "NPC_Merchant.h"
 #include "Monster_Normal.h"
 #include "DynamicCamera.h"
-
 #include "TestColPlayer.h"
 #include "TestColMonster.h"
+#include "PCGladiator.h"
 
 IMPLEMENT_SINGLETON(CPacketMgr)
 
 CPacketMgr::CPacketMgr()
+	: m_pObjectMgr(Engine::CObjectMgr::Get_Instance())
+	, m_pManagement(Engine::CManagement::Get_Instance())
+	, m_pRenderer(Engine::CRenderer::Get_Instance())
 {
 
 }
@@ -170,6 +174,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		
 		Engine::CGameObject* pGameObj = nullptr;
 
+#ifdef STAGE_LDH
 		//pGameObj = CTestPlayer::Create(m_pGraphicDevice, m_pCommandList,
 		//							   L"PoporiR19",					// MeshTag
 		//							   _vec3(0.05f, 0.05f, 0.05f),		// Scale
@@ -181,14 +186,18 @@ void CPacketMgr::ProcessPacket(char* ptr)
 									   _vec3(0.0f, 0.0f, 0.0f),			// Angle
 									   _vec3(packet->posX, packet->posY, packet->posZ));		// Pos
 
+#else
+		pGameObj =	CPCGladiator::Create(m_pGraphicDevice, m_pCommandList,
+										 L"PoporiR27Gladiator",			// MeshTag
+										 L"StageVelika_NaviMesh",		// NaviMeshTag
+										 _vec3(0.05f, 0.05f, 0.05f),	// Scale
+										 _vec3(0.0f, 0.0f, 0.0f),		// Angle
+										 _vec3(120.0f, 0.f, 75.0f));	// Pos
+
+#endif
 		pGameObj->Set_ServerNumber(g_iSNum);
 		pGameObj->Set_Info(packet->level, packet->hp, packet->maxHp, packet->mp, packet->maxMp, packet->exp, packet->maxExp, packet->att, packet->spd);
-		
-		Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"ThisPlayer", pGameObj), E_FAIL);
-
-		/* Camera Target Setting */
-		CDynamicCamera* pCamera = static_cast<CDynamicCamera*>(Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
-		pCamera->Set_Target(pGameObj);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"ThisPlayer", pGameObj), E_FAIL);
 		
 #ifdef ERR_CHECK
 		cout << "Login OK! 접속완료!" << endl;
@@ -219,7 +228,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 		pGameObj->Set_ServerNumber(packet->id);
 
-		Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"Others", pGameObj), E_FAIL);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Others", pGameObj), E_FAIL);
 	}
 	break;
 
@@ -232,7 +241,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		/* 현재 클라이언트가 움직인 경우 */
 		if (s_num == g_iSNum)
 		{
-			Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
+			Engine::CGameObject* pObj = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
 
 			auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
@@ -242,7 +251,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		/* 다른 클라이언트가 움직인 경우 */
 		else
 		{
-			Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+			Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
 
 			auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
@@ -263,7 +272,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		/* 현재 클라이언트가 움직인 경우 */
 		if (s_num == g_iSNum)
 		{
-			Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
+			Engine::CGameObject* pObj = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
 
 			auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
@@ -273,7 +282,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		/* 다른 클라이언트가 움직인 경우 */
 		else	
 		{
-			Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+			Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
 
 			auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
@@ -294,10 +303,10 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		Engine::CGameObject* pObj = nullptr;
 		/* 현재 클라이언트의 스탯이 갱신된 경우 */
 		if (s_num == g_iSNum)
-			pObj = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);	
+			pObj = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);	
 		/* 다른 클라이언트의 스탯이 갱신된 경우 */
 		else
-			pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+			pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
 					
 		pObj->Get_Info()->m_iHp = packet->hp;
 		pObj->Get_Info()->m_iMp = packet->mp;
@@ -314,13 +323,13 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		/* 현재 클라이언트가 공격한 경우 */
 		if (s_num == g_iSNum)
 		{
-			Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
+			Engine::CGameObject* pObj = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
 			pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
 		}
 		/* 다른 클라이언트가 공격한 경우 */
 		else
 		{
-			Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+			Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
 
 			pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
 			pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
@@ -337,11 +346,11 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		if (packet->id == g_iSNum) break;
 
 		if (packet->id >= NPC_NUM_START && packet->id < MON_NUM_START)
-			Engine::CObjectMgr::Get_Instance()->Delete_ServerObject(L"Layer_GameObject", L"NPC", packet->id);
+			m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"NPC", packet->id);
 		else if (packet->id >= MON_NUM_START)
-			Engine::CObjectMgr::Get_Instance()->Delete_ServerObject(L"Layer_GameObject", L"MONSTER", packet->id);
+			m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"MONSTER", packet->id);
 		else
-			Engine::CObjectMgr::Get_Instance()->Delete_ServerObject(L"Layer_GameObject", L"Others", packet->id);
+			m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"Others", packet->id);
 	}
 	break;
 
@@ -384,7 +393,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		}
 		
 		pGameObj->Set_ServerNumber(packet->id);
-		Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"NPC", pGameObj), E_FAIL);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"NPC", pGameObj), E_FAIL);
 	}
 	break;
 
@@ -394,7 +403,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 		int s_num = packet->id;
 
-		Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"NPC", s_num);
+		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"NPC", s_num);
 		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
 
 		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
@@ -430,7 +439,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		pGameObj->Set_ServerNumber(packet->id);
 		pGameObj->Set_Info(1, packet->Hp, packet->maxHp, 0, 0, 0, 0, 0, 5.f);
 
-		Engine::FAILED_CHECK_RETURN(Engine::CObjectMgr::Get_Instance()->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);
 
 	}
 	break;
@@ -441,7 +450,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 		int s_num = packet->id;
 
-		Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
+		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
 		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
 
 		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
@@ -454,7 +463,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		sc_packet_monster_attack* packet = reinterpret_cast<sc_packet_monster_attack*>(ptr);
 
 		int s_num = packet->id;
-		Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
+		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
 		cout << "몬스터 공격 패킷 받음" << endl;
 	}
 	break;
@@ -464,7 +473,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		sc_packet_stat_change* packet = reinterpret_cast<sc_packet_stat_change*>(ptr);
 
 		int s_num = packet->id;
-		Engine::CGameObject* pObj = Engine::CObjectMgr::Get_Instance()->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
+		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
 
 		pObj->Get_Info()->m_iHp = packet->hp;
 		pObj->Get_Info()->m_iMp = packet->mp;

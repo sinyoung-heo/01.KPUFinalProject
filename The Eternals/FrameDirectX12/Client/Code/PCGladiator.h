@@ -32,9 +32,7 @@ public:
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
-
-	// SingleThread Rendering.
-	virtual void	Render_GameObject(const _float& fTimeDelta);
+	virtual void	Send_PacketToServer();
 
 	// MultiThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
@@ -59,6 +57,12 @@ private:
 	Engine::CColliderSphere*	m_pColliderSphereCom = nullptr;
 	Engine::CColliderBox*		m_pColliderBoxCom    = nullptr;
 	Engine::CNaviMesh*			m_pNaviMeshCom       = nullptr;
+
+	/*__________________________________________________________________________________________________________
+	[ Manager ]
+	____________________________________________________________________________________________________________*/
+	CPacketMgr*		m_pPacketMgr  = nullptr;
+	CServerMath*	m_pServerMath = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]

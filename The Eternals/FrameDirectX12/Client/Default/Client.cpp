@@ -162,7 +162,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 				
 				pMainApp->Update_MainApp(fTime_TimeDelta);
 				pMainApp->LateUpdate_MainApp(fTime_TimeDelta);
+				pMainApp->Send_PacketToServer();
 				pMainApp->Render_MainApp(fTime_TimeDelta);
+				pMainApp->Process_PacketFromServer();
 
 				algorithm_time = chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - start);
 

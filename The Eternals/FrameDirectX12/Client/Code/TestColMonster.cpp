@@ -79,7 +79,6 @@ _int CTestColMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
 	Process_Collision();
-	cout << "Monster HP: " << m_pInfoCom->m_iHp << endl;
 	Active_Monster(fTimeDelta);
 
 	return NO_EVENT;
