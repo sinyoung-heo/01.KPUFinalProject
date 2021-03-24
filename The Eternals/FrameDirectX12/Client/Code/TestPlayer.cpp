@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "TestPlayer.h"
-
 #include "GraphicDevice.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
@@ -11,12 +10,8 @@
 
 CTestPlayer::CTestPlayer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
-{
-}
-
-CTestPlayer::CTestPlayer(const CTestPlayer& rhs)
-	: Engine::CGameObject(rhs)
-	, m_wstrMeshTag(rhs.m_wstrMeshTag)
+	, m_pPacketMgr(CPacketMgr::Get_Instance())
+	, m_pServerMath(CServerMath::Get_Instance())
 {
 }
 
@@ -115,6 +110,18 @@ _int CTestPlayer::Update_GameObject(const _float& fTimeDelta)
 		Key_Input(fTimeDelta);
 	}
 
+	if (m_bIsKeyDown)
+	{
+		// NaviMesh 이동.
+		if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
+		{
+			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+														 &m_pTransCom->m_vDir,
+														 m_pInfoCom->m_fSpeed * fTimeDelta);
+			m_pTransCom->m_vPos = vPos;
+		}
+	}
+
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
@@ -162,30 +169,12 @@ _int CTestPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-void CTestPlayer::Render_GameObject(const _float& fTimeDelta)
+void CTestPlayer::Send_PacketToServer()
 {
-	/*__________________________________________________________________________________________________________
-	[ Play Animation ]
-	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
-
-	Set_ConstantTable();
-	m_pMeshCom->Render_DynamicMesh(m_pShaderCom);
-}
-
-void CTestPlayer::Render_ShadowDepth(const _float& fTimeDelta)
-{
-	Set_ConstantTableShadowDepth();
-	m_pMeshCom->Render_DynamicMeshShadowDepth(m_pShadowCom);
-}
-
-void CTestPlayer::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
-{
-	/* 움직이고 있는 중일 경우 */
+	// 움직이고 있는 중일 경우
 	if (m_bIsKeyDown)
 	{
-		if (CPacketMgr::Get_Instance()->change_MoveKey(m_eKeyState) || m_bIsSameDir == true)
+		if (m_pPacketMgr->change_MoveKey(m_eKeyState) || m_bIsSameDir == true)
 		{
 			Send_Player_Move();
 			m_bIsSameDir = false;
@@ -195,17 +184,11 @@ void CTestPlayer::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsComm
 		{
 			Send_Player_Move();
 		}
-
-		// NaviMesh 이동.
-		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
-		{
-			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
-														 &m_pTransCom->m_vDir,
-														 m_pInfoCom->m_fSpeed * fTimeDelta);
-			m_pTransCom->m_vPos = vPos;
-		}
 	}
+}
 
+void CTestPlayer::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
+{
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
@@ -439,7 +422,7 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 		if (m_bIsKeyDown)
 		{
 #ifdef SERVER
-			CPacketMgr::Get_Instance()->send_move_stop(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
+			m_pPacketMgr->send_move_stop(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
 #endif
 			m_bIsKeyDown = false;
 			m_bIsSameDir = true;
@@ -455,28 +438,28 @@ void CTestPlayer::Send_Player_Move()
 	switch (m_eKeyState)
 	{
 	case K_FRONT:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_BACK:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_RIGHT:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_RIGHT_UP:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_RIGHT_DOWN:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_LEFT:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_LEFT_UP:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	case K_LEFT_DOWN:
-		CPacketMgr::Get_Instance()->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 		break;
 	}
 

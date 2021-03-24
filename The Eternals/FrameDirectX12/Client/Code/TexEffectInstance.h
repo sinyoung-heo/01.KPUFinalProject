@@ -12,7 +12,6 @@ class CTexEffectInstance final : public Engine::CGameObject
 {
 private:
 	explicit CTexEffectInstance(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CTexEffectInstance(const CTexEffectInstance& rhs);
 	virtual ~CTexEffectInstance() = default;
 
 public:

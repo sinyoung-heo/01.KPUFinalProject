@@ -11,7 +11,6 @@ class CDebugCamera final : public Engine::CCamera
 {
 private:
 	explicit CDebugCamera(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CDebugCamera(const CDebugCamera& rhs);
 	virtual ~CDebugCamera() = default;
 
 public:
@@ -32,7 +31,7 @@ private:
 	[ Value ]
 	____________________________________________________________________________________________________________*/
 	_bool	m_bIsResetDebugCamera		= false;	// Debug Camera <-> Dynamic Camera
-	_float	m_fSpeed					= 25.0f;	// Camera 이동속도.
+	_float	m_fSpeed					= 5.0f;		// Camera 이동속도.
 
 	/*__________________________________________________________________________________________________________
 	[ Font ]

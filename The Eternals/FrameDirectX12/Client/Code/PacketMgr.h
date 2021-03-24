@@ -4,6 +4,13 @@
 
 #define ERR_CHECK
 
+namespace Engine
+{
+	class CObjectMgr;
+	class CManagement;
+	class CRenderer;
+}
+
 class CPacketMgr : public Engine::CBase
 {
 	DECLARE_SINGLETON(CPacketMgr)
@@ -39,8 +46,14 @@ private:
 	virtual void Free();
 
 private:
-	ID3D12Device* m_pGraphicDevice = nullptr;
-	ID3D12GraphicsCommandList* m_pCommandList = nullptr;
+	/*__________________________________________________________________________________________________________
+	[ GraphicDevice / Mgr ]
+	____________________________________________________________________________________________________________*/
+	Engine::CObjectMgr*			m_pObjectMgr	 = nullptr;
+	Engine::CManagement*		m_pManagement	 = nullptr;
+	Engine::CRenderer*			m_pRenderer		 = nullptr;
+	ID3D12Device*				m_pGraphicDevice = nullptr;
+	ID3D12GraphicsCommandList*	m_pCommandList   = nullptr;
 
 	MVKEY m_eCurKey;
 	MVKEY m_ePreKey;

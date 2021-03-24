@@ -13,7 +13,6 @@ class CTerrainObject : public Engine::CGameObject
 {
 private:
 	explicit CTerrainObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CTerrainObject(const CTerrainObject& rhs);
 	virtual ~CTerrainObject() = default;
 
 public:

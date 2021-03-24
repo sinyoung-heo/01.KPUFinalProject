@@ -32,6 +32,7 @@ public:
 	HRESULT			Ready_Layer();
 	_int			Update_Layer(const _float& fTimeDelta);
 	_int			LateUpdate_Layer(const _float& fTimeDelta);
+	void			Send_PacketToServer();
 	void			Render_Layer(const _float& fTimeDelta);
 
 private:

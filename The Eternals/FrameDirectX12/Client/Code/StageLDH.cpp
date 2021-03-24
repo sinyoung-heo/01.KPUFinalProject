@@ -43,6 +43,9 @@ HRESULT CStageLDH::Ready_Scene()
 	Engine::CShaderMeshInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderLightingInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 
+	// Ready MouseCursorMgr
+	CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(false);
+
 #ifdef SERVER
 	Engine::FAILED_CHECK_RETURN(CPacketMgr::Get_Instance()->Ready_Server(m_pGraphicDevice,m_pCommandList), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(CPacketMgr::Get_Instance()->Connect_Server(), E_FAIL);
@@ -53,6 +56,13 @@ HRESULT CStageLDH::Ready_Scene()
 
 _int CStageLDH::Update_Scene(const _float & fTimeDelta)
 {
+	// MouseCursorMgr
+	if (!m_bIsReadyMouseCursorMgr)
+	{
+		m_bIsReadyMouseCursorMgr = true;
+		CMouseCursorMgr::Get_Instance()->Ready_MouseCursorMgr();
+	}
+
 	return Engine::CScene::Update_Scene(fTimeDelta);
 }
 
@@ -61,15 +71,23 @@ _int CStageLDH::LateUpdate_Scene(const _float & fTimeDelta)
 	return Engine::CScene::LateUpdate_Scene(fTimeDelta);
 }
 
+void CStageLDH::Send_PacketToServer()
+{
+	Engine::CScene::Send_PacketToServer();
+}
+
 HRESULT CStageLDH::Render_Scene(const _float & fTimeDelta, const Engine::RENDERID& eID)
 {
 	Engine::FAILED_CHECK_RETURN(CScene::Render_Scene(fTimeDelta, eID), E_FAIL);
 
+	return S_OK;
+}
+
+void CStageLDH::Process_PacketFromServer()
+{
 #ifdef SERVER
 	CPacketMgr::Get_Instance()->recv_packet();
 #endif
-
-	return S_OK;
 }
 
 HRESULT CStageLDH::Ready_LayerCamera(wstring wstrLayerTag)

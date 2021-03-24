@@ -25,20 +25,21 @@ public:
 	CGameObject*	Clone_GameObjectPrototype(wstring wstrPrototypeTag);
 
 	// Add
-	void			Add_Layer(wstring wstrLayerTag, CLayer* pLayer) { m_mapLayer.emplace(wstrLayerTag, pLayer); }
-	HRESULT			Add_GameObject(wstring wstrLayerTag, wstring wstrObjTag, CGameObject* pGameObject);
+	void	Add_Layer(wstring wstrLayerTag, CLayer* pLayer) { m_mapLayer.emplace(wstrLayerTag, pLayer); }
+	HRESULT	Add_GameObject(wstring wstrLayerTag, wstring wstrObjTag, CGameObject* pGameObject);
 	
 	//  Method
-	_int			Update_ObjectMgr(const _float& fTimeDelta);
-	_int			LateUpdate_ObjectMgr(const _float& fTimeDelta);
-	void			Render_ObjectMgr(const _float& fTimeDelta);
+	_int Update_ObjectMgr(const _float& fTimeDelta);
+	_int LateUpdate_ObjectMgr(const _float& fTimeDelta);
+	void Send_PacketToServer();
+	void Render_ObjectMgr(const _float& fTimeDelta);
 
 	// Delete
-	HRESULT			Delete_GameObject(wstring wstrLayerTag, wstring wstrObjTag, _int iIdx = 0);
-	HRESULT			Delete_ServerObject(wstring wstrLayerTag, wstring wstrObjTag, int num);
-	HRESULT			Clear_OBJLIST(wstring wstrLayerTag, wstring wstrObjTag);
-	void			Clear_Layer();
-	void			Clear_Prototype();
+	HRESULT	Delete_GameObject(wstring wstrLayerTag, wstring wstrObjTag, _int iIdx = 0);
+	HRESULT	Delete_ServerObject(wstring wstrLayerTag, wstring wstrObjTag, int num);
+	HRESULT	Clear_OBJLIST(wstring wstrLayerTag, wstring wstrObjTag);
+	void	Clear_Layer();
+	void	Clear_Prototype();
 
 private:
 	map<wstring, CLayer*>		m_mapLayer;

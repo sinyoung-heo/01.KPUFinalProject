@@ -14,7 +14,6 @@ class CTextureDistortion : public Engine::CGameObject
 {
 private:
 	explicit CTextureDistortion(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CTextureDistortion(const CTextureDistortion& rhs);
 	virtual ~CTextureDistortion() = default;
 
 public:

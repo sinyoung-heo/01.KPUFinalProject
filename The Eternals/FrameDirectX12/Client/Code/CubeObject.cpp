@@ -10,12 +10,6 @@ CCubeObject::CCubeObject(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandLis
 {
 }
 
-CCubeObject::CCubeObject(const CCubeObject & rhs)
-	: Engine::CGameObject(rhs)
-{
-}
-
-
 HRESULT CCubeObject::Ready_GameObject(const _vec3 & vScale,
 									  const _vec3 & vAngle,
 									  const _vec3 & vPos)

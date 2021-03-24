@@ -32,7 +32,6 @@ class CPopori_F : public Engine::CGameObject
 {
 private:
 	explicit CPopori_F(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CPopori_F(const CPopori_F& rhs);
 	virtual ~CPopori_F() = default;
 
 public:

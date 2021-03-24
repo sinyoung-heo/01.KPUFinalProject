@@ -4,6 +4,8 @@
 #define	TAGMSG_BOX(_tag,_message)	MessageBoxW(NULL, TEXT(_message), _tag, MB_OK)
 
 
+// #define STAGE_LDH
+#define STAGE_HSY
 
 #ifdef _DEBUG
 

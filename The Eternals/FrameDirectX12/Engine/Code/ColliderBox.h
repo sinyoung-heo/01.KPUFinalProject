@@ -17,6 +17,7 @@ public:
 	CTransform*			Get_Transform()		{ return m_pTransCom; }
 	BoundingBox&		Get_BoundingInfo() 	{ return m_BoundingInfo; }
 	const _vec3&		Get_Length() const	{ return m_vLength; }
+	const _float&		Get_MaxConerPosY()	{ return m_fMaxConerPosY; }
 
 	// Set
 	void				Set_Pos(const _vec3& vPos)						{ m_pTransCom->m_vPos	= vPos; }
@@ -26,7 +27,8 @@ public:
 	void				Set_SkinningMatrix(SKINNING_MATRIX* pMatrix)	{ m_pSkinningMatrix = pMatrix; }
 	void				Set_PipelineStatePass(const _uint& iIdx = 0)	{ m_uiColorPipelineStatePass = iIdx; }
 	void				Set_Extents(const _vec3& vParentScale);
-	
+	void				Set_SetUpCameraAt(const _bool& bIsSetUpCameraAt) { m_bIsSetUpCameraAt = bIsSetUpCameraAt; }
+
 	// Method
 	HRESULT				Ready_Buffer();			
 	HRESULT				Ready_Collider();		
@@ -59,6 +61,8 @@ private:
 	_matrix*								m_pParentMatrix		       = nullptr;
 	_uint									m_uiColorPipelineStatePass = 0;
 
+	_bool									m_bIsSetUpCameraAt = false;
+	_float									m_fMaxConerPosY    = 0.0f;
 public:
 	virtual CComponent*		Clone();
 	static	CColliderBox*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);

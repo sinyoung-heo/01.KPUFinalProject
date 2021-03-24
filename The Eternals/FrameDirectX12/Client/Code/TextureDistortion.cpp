@@ -11,12 +11,6 @@ CTextureDistortion::CTextureDistortion(ID3D12Device * pGraphicDevice, ID3D12Grap
 {
 }
 
-CTextureDistortion::CTextureDistortion(const CTextureDistortion & rhs)
-	: Engine::CGameObject(rhs)
-{
-}
-
-
 HRESULT CTextureDistortion::Ready_GameObject(wstring wstrTextureTag, 
 										 const _vec3 & vScale,
 										 const _vec3 & vAngle,

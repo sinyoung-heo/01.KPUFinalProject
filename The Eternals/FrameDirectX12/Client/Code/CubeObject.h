@@ -13,7 +13,6 @@ class CCubeObject : public Engine::CGameObject
 {
 private:
 	explicit CCubeObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CCubeObject(const CCubeObject& rhs);
 	virtual ~CCubeObject() = default;
 
 public:

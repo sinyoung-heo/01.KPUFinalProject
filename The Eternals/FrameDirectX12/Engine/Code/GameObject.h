@@ -58,6 +58,7 @@ public:
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Process_Collision();
+	virtual void	Send_PacketToServer();
 
 	// SingleThread Rendering.
 	virtual void	Render_GameObject(const _float& fTimeDelta);

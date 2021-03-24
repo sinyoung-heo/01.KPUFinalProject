@@ -23,8 +23,9 @@ public:
 	HRESULT Ready_MainApp();
 	_int	Update_MainApp(const _float& fTimeDelta);
 	_int	LateUpdate_MainApp(const _float& fTimeDelta);
+	void	Send_PacketToServer();
 	void	Render_MainApp(const _float& fTimeDelta);
-
+	void	Process_PacketFromServer();
 private:
 	HRESULT	SetUp_DefaultSetting(Engine::WINMODE eMode, const _uint& dwWidth, const _uint& dwHeight);
 	HRESULT	SetUp_Font();

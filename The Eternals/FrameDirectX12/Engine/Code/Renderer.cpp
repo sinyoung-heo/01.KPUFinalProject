@@ -112,7 +112,7 @@ HRESULT CRenderer::Ready_Renderer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCo
 	FAILED_CHECK_RETURN(Ready_ShaderPrototype(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_RenderTarget(), E_FAIL);
 
-	m_mapRenderOnOff[L"RenderTarget"]	= true;
+	m_mapRenderOnOff[L"RenderTarget"]	= false;
 	m_mapRenderOnOff[L"DebugFont"]		= false;
 	m_mapRenderOnOff[L"Collider"]		= true;
 	m_mapRenderOnOff[L"SectorGrid"]		= true;
@@ -232,8 +232,6 @@ void CRenderer::Render_NonAlpha(const _float& fTimeDelta)
 {
 	m_pTargetDeferred->SetUp_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
 
-	//for (auto& pGameObject : m_RenderList[RENDER_PRIORITY])
-	//	pGameObject->Render_GameObject(fTimeDelta);
 	for (auto& pGameObject : m_RenderList[RENDER_NONALPHA])
 		pGameObject->Render_GameObject(fTimeDelta);
 
@@ -578,6 +576,9 @@ void CRenderer::Render_RenderTarget()
 
 void CRenderer::Render_Font(const _float & fTimeDelta)
 {
+	if (m_RenderList[RENDER_FONT].empty())
+		return;
+
 	CGraphicDevice::Get_Instance()->Render_TextBegin();
 
 	for (auto& pGameObject : m_RenderList[RENDER_FONT])

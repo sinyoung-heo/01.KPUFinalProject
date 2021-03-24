@@ -14,7 +14,6 @@ class CTexDistortionInstance final : public Engine::CGameObject
 {
 private:
 	explicit CTexDistortionInstance(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CTexDistortionInstance(const CTexDistortionInstance& rhs);
 	virtual ~CTexDistortionInstance() = default;
 
 public:

@@ -12,12 +12,6 @@ CSampleNPC::CSampleNPC(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList 
 {
 }
 
-CSampleNPC::CSampleNPC(const CSampleNPC & rhs)
-	: Engine::CGameObject(rhs)
-	, m_wstrMeshTag(rhs.m_wstrMeshTag)
-{
-}
-
 HRESULT CSampleNPC::Ready_GameObject(wstring wstrMeshTag,
 									const _vec3 & vScale, 
 									const _vec3 & vAngle, 

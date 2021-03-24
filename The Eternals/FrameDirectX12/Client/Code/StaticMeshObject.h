@@ -14,7 +14,6 @@ class CStaticMeshObject : public Engine::CGameObject
 {
 private:
 	explicit CStaticMeshObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CStaticMeshObject(const CStaticMeshObject& rhs);
 	virtual ~CStaticMeshObject() = default;
 
 public:

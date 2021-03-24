@@ -14,12 +14,6 @@ CPopori_F::CPopori_F(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * 
 {
 }
 
-CPopori_F::CPopori_F(const CPopori_F & rhs)
-	: Engine::CGameObject(rhs)
-	, m_wstrMeshTag(rhs.m_wstrMeshTag)
-{
-}
-
 HRESULT CPopori_F::Ready_GameObject(wstring wstrMeshTag,
 									wstring wstrNaviMeshTag,
 									const _vec3 & vScale, 
@@ -39,7 +33,7 @@ HRESULT CPopori_F::Ready_GameObject(wstring wstrMeshTag,
 										   m_pMeshCom->Get_MaxVector());
 
 
-	m_pInfoCom->m_fSpeed = 135.0f;
+	m_pInfoCom->m_fSpeed = 10.0f;
 
 	/*__________________________________________________________________________________________________________
 	[ PipelineStatePass ]

@@ -10,17 +10,13 @@ namespace Engine
 	class CShaderShadow;
 	class CColliderSphere;
 	class CColliderBox;
-	class CFont;
 	class CNaviMesh;
 }
-
-class CDynamicCamera;
 
 class CTestOthers : public Engine::CGameObject
 {
 private:
 	explicit CTestOthers(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CTestOthers(const CTestOthers& rhs);
 	virtual ~CTestOthers() = default;
 
 public:
@@ -32,10 +28,7 @@ public:
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
-
-	// SingleThread Rendering.
-	virtual void	Render_GameObject(const _float& fTimeDelta);
-	virtual void	Render_ShadowDepth(const _float& fTimeDelta);
+	virtual void	Send_PacketToServer();
 
 	// MultiThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
@@ -45,6 +38,7 @@ private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
+	void			Move_OnNaviMesh(const _float& fTimeDelta);
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
@@ -68,22 +62,19 @@ private:
 	Engine::CNaviMesh*			m_pNaviMeshCom			= nullptr;
 
 	/*__________________________________________________________________________________________________________
+	[ Manager ]
+	____________________________________________________________________________________________________________*/
+	CPacketMgr*		m_pPacketMgr  = nullptr;
+	CServerMath*	m_pServerMath = nullptr;
+
+	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	CDynamicCamera* m_pDynamicCamera = nullptr;
 	wstring			m_wstrMeshTag = L"";
+
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]
 	____________________________________________________________________________________________________________*/
 	_uint			m_uiAnimIdx = 0;	// 현재 애니메이션 Index
-	_uint			m_ui3DMax_NumFrame = 0;	// 3DMax에서 애니메이션의 총 Frame 개수
-	_uint			m_ui3DMax_CurFrame = 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
-
-	/*__________________________________________________________________________________________________________
-	[ Font ]
-	____________________________________________________________________________________________________________*/
-	Engine::CFont*	m_pFont = nullptr;
-	wstring			m_wstrText = L"";
-	_tchar			m_szText[MAX_STR] = L"";
 };
 

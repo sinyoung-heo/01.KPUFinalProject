@@ -224,6 +224,15 @@ _int CLayer::LateUpdate_Layer(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
+void CLayer::Send_PacketToServer()
+{
+	for (auto& MyPair : m_mapObjLst)
+	{
+		for (auto& pGameObject : MyPair.second)
+			pGameObject->Send_PacketToServer();
+	}
+}
+
 void CLayer::Render_Layer(const _float & fTimeDelta)
 {
 	for (auto& MyPair : m_mapObjLst)

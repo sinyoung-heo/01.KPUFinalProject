@@ -8,11 +8,8 @@
 CTestColMonster::CTestColMonster(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pShaderColorInstancing(Engine::CShaderColorInstancing::Get_Instance())
-{
-}
-
-CTestColMonster::CTestColMonster(const CTestColMonster& rhs)
-	: Engine::CGameObject(rhs)
+	, m_pPacketMgr(CPacketMgr::Get_Instance())
+	, m_pServerMath(CServerMath::Get_Instance())
 {
 }
 
@@ -61,6 +58,8 @@ _int CTestColMonster::Update_GameObject(const _float& fTimeDelta)
 	m_pBoundingSphereCom->Set_Color(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
 	m_pBoundingBoxCom->Set_Color(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
 
+	Active_Monster(fTimeDelta);
+
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
@@ -79,14 +78,10 @@ _int CTestColMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
 	Process_Collision();
-	Active_Monster(fTimeDelta);
 
 	return NO_EVENT;
 }
 
-void CTestColMonster::Render_GameObject(const _float& fTimeDelta)
-{
-}
 
 void CTestColMonster::Process_Collision()
 {
@@ -100,6 +95,14 @@ void CTestColMonster::Process_Collision()
 			pDst->Get_BoundingBox()->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 		}
 	}
+}
+
+void CTestColMonster::Send_PacketToServer()
+{
+}
+
+void CTestColMonster::Render_GameObject(const _float& fTimeDelta)
+{
 }
 
 HRESULT CTestColMonster::Add_Component()
@@ -116,7 +119,7 @@ void CTestColMonster::Active_Monster(const _float& fTimeDelta)
 	if (!m_bIsMoveStop)
 	{
 		// NaviMesh ÀÌµ¿.		
-		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
+		if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
 		{
 			m_pTransCom->m_vPos += m_pTransCom->m_vDir * m_pInfoCom->m_fSpeed * fTimeDelta;
 		}

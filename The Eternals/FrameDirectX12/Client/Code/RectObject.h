@@ -13,7 +13,6 @@ class CRectObject : public Engine::CGameObject
 {
 private:
 	explicit CRectObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	explicit CRectObject(const CRectObject& rhs);
 	virtual ~CRectObject() = default;
 
 public:
