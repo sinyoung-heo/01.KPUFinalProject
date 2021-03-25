@@ -15,6 +15,7 @@
 #include "TextureEffect.h"
 #include "SkyBox.h"
 #include "TerrainMeshObject.h"
+#include "WaterMeshObject.h"
 #include "GameUIRoot.h"
 #include "GameUIChild.h"
 #include "CharacterHpGauge.h"
@@ -182,13 +183,30 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ BumpTerrainMesh ]
 	____________________________________________________________________________________________________________*/
+	//pGameObj = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+	//									  L"BumpTerrainMesh01",
+	//									  _vec3(0.075f),
+	//									  _vec3(90.0f, 0.0f ,0.0f),
+	//									  _vec3(128.0f, -0.01f, 128.0f));
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpTerrainMesh01", pGameObj), E_FAIL);
+
+	/*__________________________________________________________________________________________________________
+	[ BumpTerrainMesh ]
+	____________________________________________________________________________________________________________*/
 	pGameObj = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-										  L"BumpTerrainMesh01",
-										  _vec3(0.075f),
-										  _vec3(90.0f, 0.0f ,0.0f),
-										  _vec3(128.0f, -0.01f, 128.0f));
+		L"BumpTerrainMesh01",
+		_vec3(0.075f),
+		_vec3(90.0f, 0.0f, 0.0f),
+		_vec3(128.0f, 0.01f, 128.0f));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpTerrainMesh01", pGameObj), E_FAIL);
 
+	pGameObj = CWaterMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+		L"BumpWaterMesh00",
+		_vec3(0.075f),
+		_vec3(90.0f, 0.0f, 0.0f),
+		_vec3(128.0f, 0.01f, 128.0f));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpWaterMesh00", pGameObj), E_FAIL);
+	
 	/*__________________________________________________________________________________________________________
 	[ StaticMeshObject ]
 	____________________________________________________________________________________________________________*/
@@ -253,7 +271,7 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 								  _vec3(1.25f, 1.25f, 1.25f),	// Scale
 								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
 								  _vec3(120.0f, 0.f, 75.0f));	// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PoporiR19", pGameObj), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"ThisPlayer", pGameObj), E_FAIL);
 
 
 	/*__________________________________________________________________________________________________________

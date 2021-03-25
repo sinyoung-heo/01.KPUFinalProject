@@ -899,6 +899,22 @@ void CVIMesh::Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList * pCommandL
 	}
 }
 
+void CVIMesh::Render_WaterMesh(ID3D12GraphicsCommandList* pCommandList,
+	const _int& iContextIdx, 
+	CShader* pShader,
+	ID3D12DescriptorHeap* pTexnormalDescriptorHeap,
+	_uint uiNormalTextureIdx, _uint uiPatternMapIdx)
+{
+	for (_int i = 0; i < m_vecMeshEntry.size(); ++i)
+	{
+		static_cast<CShaderMesh*>(pShader)->Begin_Shader(pCommandList, iContextIdx, m_pTexDescriptorHeap
+			, pTexnormalDescriptorHeap, uiNormalTextureIdx, uiPatternMapIdx, i);
+		Begin_Buffer(pCommandList, i);
+
+		Render_Buffer(pCommandList, i);
+	}
+}
+
 void CVIMesh::Begin_Buffer(ID3D12GraphicsCommandList* pCommandList, const _int& iSubMeshIdx)
 {
 	pCommandList->IASetVertexBuffers(0, 1, &Get_VertexBufferView(iSubMeshIdx));

@@ -79,6 +79,7 @@ struct VS_OUT
 	float4 ProjPos		: TEXCOORD5;
 	float4 LightPos		: TEXCOORD6;
     float4 WorldPos : TEXCOORD7;
+    float2 AniUV : TEXCOORD8;
 };
 
 /*__________________________________________________________________________________________________________
@@ -460,4 +461,99 @@ float4 PS_AFTERIMAGE(VS_OUT ps_input) : SV_TARGET
 	Color.xyz= g_fAfterImgColor.xyz;
     Color.a = g_fAfterImgColor.a;// * fRimLightColor;
     return Color;
+}
+
+
+/*__________________________________________________________________________________________________________
+[ TerrainMesh  ]
+____________________________________________________________________________________________________________*/
+static float fDetails = 80.0f;
+
+VS_OUT VS_TERRAIN_MAIN(VS_IN vs_input)
+{
+    VS_OUT vs_output = (VS_OUT) 0;
+	
+    float4x4 matWV, matWVP;
+
+    matWV = mul(g_matWorld, g_matView);
+    matWVP = mul(matWV, g_matProj);
+	
+    vs_output.Pos = mul(float4(vs_input.Pos, 1.0f), matWVP);
+	
+   
+    vs_output.TexUV = vs_input.TexUV;
+	
+	
+    vs_output.AniUV = vs_input.TexUV + float2(g_fOffset1, g_fOffset1);
+    vs_output.Normal = vs_input.Normal;
+	
+	// N
+    float3 WorldNormal = mul(vs_input.Normal, (float3x3)g_matWorld);
+    vs_output.N = normalize(WorldNormal);
+	
+	// T
+    float3 Tangent = cross(float3(0.f, 1.f, 0.f), (float3) vs_input.Normal);
+    float3 WorldTangent = mul(Tangent, (float3x3) g_matWorld);
+    vs_output.T = normalize(WorldTangent);
+	
+	// B
+    float3 Binormal = cross((float3) vs_input.Normal, Tangent);
+    float3 WorldBinormal = mul(Binormal, (float3x3) g_matWorld);
+    vs_output.B = normalize(WorldBinormal);
+	
+	// ProjPos
+    vs_output.ProjPos = vs_output.Pos;
+	
+	// 광원 위치에서의 투영 좌표
+    float4 matLightPosW = mul(float4(vs_input.Pos.xyz, 1.0f), g_matWorld);
+    float4 matLightPosWV = mul(float4(matLightPosW.xyz, 1.0f), g_matLightView);
+    vs_output.LightPos = mul(float4(matLightPosWV.xyz, 1.0f), g_matLightProj);
+    vs_output.LightPos.z = vs_output.LightPos.z * vs_output.LightPos.w / g_fLightPorjFar;
+	
+   
+    return (vs_output);
+}
+
+PS_OUT PS_TERRAIN_MAIN(VS_OUT ps_input) : SV_TARGET
+{
+    PS_OUT ps_output = (PS_OUT) 0;
+	
+   // float2 DistUV = ps_input.TexUV * 30.f+g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV).xy;
+    
+	// Diffuse
+    float4 AlphaSea = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV * 30.f);
+    float4 Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.AniUV * 10.f) + AlphaSea;
+	
+    ps_output.Diffuse = Diffuse+ float4(0.2, 0.2, 1.f, 1.f);
+	//ps_output.Diffuse = float4(0.2, 0.2, 1.f, 1.f) * AlphaSea;
+	
+	// Normal
+    float4 TexNormal = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV * 30.f);
+    TexNormal = (TexNormal * 2.0f) - 1.0f; // 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.
+    float3 Normal = (TexNormal.x * ps_input.T) + (TexNormal.y * ps_input.B) + (TexNormal.z * ps_input.N);
+    ps_output.Normal = float4(Normal.xyz * 0.5f + 0.5f, 1.f); // 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
+	
+	// Specular
+    //ps_output.Specular = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV*0.5f);
+    
+    //ps_output.Diffuse *= ps_output.Specular;
+    //Depth
+
+    ps_output.Depth = float4(ps_input.ProjPos.z / ps_input.ProjPos.w, // (posWVP.z / posWVP.w) : Proj 영역의 Z.
+								 ps_input.ProjPos.w / g_fProjFar, // posWVP.w / Far : 0~1로 만든 View영역의 Z.
+								 1.0f, 1.0f);
+	
+	/*__________________________________________________________________________________________________________
+	[ 현재의 깊이와 그림자 깊이 비교 ]
+	____________________________________________________________________________________________________________*/
+    float2 uv = ps_input.LightPos.xy / ps_input.LightPos.w;
+    uv.y = uv.y * -0.5f + 0.5f;
+    uv.x = uv.x * 0.5f + 0.5f;
+	
+    float CurrentDepth = ps_input.LightPos.z / ps_input.LightPos.w;
+    float ShadowDepth = g_TexShadowDepth.Sample(g_samLinearWrap, uv).x;
+    if (CurrentDepth > ShadowDepth + 0.0000125f)
+        ps_output.Diffuse.rgb *= 0.5;
+	
+    return (ps_output);
 }
