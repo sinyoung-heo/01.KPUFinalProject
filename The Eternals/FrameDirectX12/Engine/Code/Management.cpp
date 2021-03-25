@@ -23,6 +23,12 @@ HRESULT CManagement::SetUp_CurrentScene(CScene * pNewScene)
 	return S_OK;
 }
 
+void CManagement::Process_PacketFromServer()
+{
+	if (nullptr != m_pCurrentScene)
+		m_pCurrentScene->Process_PacketFromServer();
+}
+
 _int CManagement::Update_Management(const _float & fTimeDelta)
 {
 	if (m_pCurrentScene != nullptr)
@@ -44,10 +50,6 @@ _int CManagement::LateUpdate_Management(const _float & fTimeDelta)
 
 	CCollisionMgr::Get_Instance()->Clear_CollisionContainer();
 
-	// Resize Shader Instance ConstantBuffer ElementSize.
-	CShaderColorInstancing::Get_Instance()->Resize_ConstantBuffer(CGraphicDevice::Get_Instance()->Get_GraphicDevice());
-	CShaderLightingInstancing::Get_Instance()->Resize_ConstantBuffer(CGraphicDevice::Get_Instance()->Get_GraphicDevice());
-
 	return 0;
 }
 
@@ -58,16 +60,14 @@ void CManagement::Send_PacketToServer()
 
 HRESULT CManagement::Render_Management(const _float & fTimeDelta, const RENDERID& eID)
 {
+	// Resize Shader Instance ConstantBuffer ElementSize.
+	CShaderColorInstancing::Get_Instance()->Resize_ConstantBuffer(CGraphicDevice::Get_Instance()->Get_GraphicDevice());
+	CShaderLightingInstancing::Get_Instance()->Resize_ConstantBuffer(CGraphicDevice::Get_Instance()->Get_GraphicDevice());
+
 	if (nullptr != m_pCurrentScene)
 		FAILED_CHECK_RETURN(m_pCurrentScene->Render_Scene(fTimeDelta, eID), E_FAIL);
 
 	return S_OK;
-}
-
-void CManagement::Process_PacketFromServer()
-{
-	if (nullptr != m_pCurrentScene)
-		m_pCurrentScene->Process_PacketFromServer();
 }
 
 void CManagement::Free()

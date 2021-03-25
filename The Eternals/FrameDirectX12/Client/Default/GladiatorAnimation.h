@@ -31,4 +31,6 @@ namespace Gladiator
 	const int DRAW_SWORD_LOOP   = 26;
 	const int DRAW_SWORD        = 27;
 	const int DRAW_SWORD_END    = 28;
+
+	enum STANCE { STANCE_NONEATTACK, STANCE_ATTACK, STANCE_END };
 }

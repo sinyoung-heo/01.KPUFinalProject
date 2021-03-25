@@ -1,6 +1,7 @@
 #pragma once
 #include "VIBuffer.h"
 #include "Transform.h"
+#include "ShaderColor.h"
 #include "ShaderColorInstancing.h"
 
 BEGIN(Engine)
@@ -41,6 +42,7 @@ public:
 	void				Render_Buffer();
 private:
 	HRESULT				Add_Component();
+	void				Set_ConstantTable();
 	void				Set_ConstantTable(const COLOR_BUFFER& eBuffer, const _int& iInstanceIdx);
 
 private:
@@ -48,6 +50,7 @@ private:
 	[ Component ]
 	____________________________________________________________________________________________________________*/
 	CTransform*				m_pTransCom			     = nullptr;
+	CShaderColor*			m_pShaderCom             = nullptr;
 	CShaderColorInstancing* m_pShaderColorInstancing = nullptr;
 
 	/*__________________________________________________________________________________________________________

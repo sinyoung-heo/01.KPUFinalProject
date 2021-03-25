@@ -54,6 +54,13 @@ HRESULT CStageLDH::Ready_Scene()
 	return S_OK;
 }
 
+void CStageLDH::Process_PacketFromServer()
+{
+#ifdef SERVER
+	CPacketMgr::Get_Instance()->recv_packet();
+#endif
+}
+
 _int CStageLDH::Update_Scene(const _float & fTimeDelta)
 {
 	// MouseCursorMgr
@@ -81,13 +88,6 @@ HRESULT CStageLDH::Render_Scene(const _float & fTimeDelta, const Engine::RENDERI
 	Engine::FAILED_CHECK_RETURN(CScene::Render_Scene(fTimeDelta, eID), E_FAIL);
 
 	return S_OK;
-}
-
-void CStageLDH::Process_PacketFromServer()
-{
-#ifdef SERVER
-	CPacketMgr::Get_Instance()->recv_packet();
-#endif
 }
 
 HRESULT CStageLDH::Ready_LayerCamera(wstring wstrLayerTag)

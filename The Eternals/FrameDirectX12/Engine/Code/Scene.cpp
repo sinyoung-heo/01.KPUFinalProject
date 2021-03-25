@@ -16,6 +16,10 @@ HRESULT CScene::Ready_Scene()
 	return S_OK;
 }
 
+void CScene::Process_PacketFromServer()
+{
+}
+
 _int CScene::Update_Scene(const _float & fTimeDelta)
 {
 	NULL_CHECK_RETURN(m_pObjectMgr, -1);
@@ -46,10 +50,6 @@ HRESULT CScene::Render_Scene(const _float & fTimeDelta, const RENDERID& eID)
 	FAILED_CHECK_RETURN(m_pRenderer->Render_Renderer(fTimeDelta, eID), E_FAIL);
 
 	return S_OK;
-}
-
-void CScene::Process_PacketFromServer()
-{
 }
 
 void CScene::Free()

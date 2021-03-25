@@ -35,7 +35,7 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 										   m_pMeshCom->Get_MinVector(),
 										   m_pMeshCom->Get_MaxVector());
 
-	m_pInfoCom->m_fSpeed      = 5.0f;
+	m_pInfoCom->m_fSpeed     = GladiatorConst::MIN_SPEED;
 	m_pInfoCom->m_vArrivePos = m_pTransCom->m_vPos;
 
 	m_eKeyState   = MVKEY::K_END;
@@ -46,8 +46,10 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
+	m_eStance   = Gladiator::STANCE_NONEATTACK;
 	m_uiAnimIdx = Gladiator::NONE_ATTACK_IDLE;
 	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
 
 	/*__________________________________________________________________________________________________________
 	[ Collider Bone Setting ]
@@ -116,15 +118,7 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	// NaviMesh 이동.
-	if (m_bIsKeyDown)
-	{
-		if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
-		{
-			m_pTransCom->m_vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
-																  &m_pTransCom->m_vDir,
-																  m_pInfoCom->m_fSpeed * fTimeDelta);
-		}
-	}
+	Move_OnNaviMesh(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
@@ -297,7 +291,11 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 {
 	if (!g_bIsActive) return;
 
+	KeyInput_Move(fTimeDelta);
+}
 
+void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
+{
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 	m_pTransCom->m_vDir.Normalize();
 
@@ -373,9 +371,31 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 	{
 		if (m_bIsKeyDown)
 		{
-			m_pPacketMgr->send_move_stop(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
 			m_bIsKeyDown = false;
 			m_bIsSameDir = true;
+		}
+		else if (!m_bIsKeyDown &&
+				 GladiatorConst::MIN_SPEED == m_pInfoCom->m_fSpeed)
+		{
+			m_pPacketMgr->send_move_stop(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
+		}
+	}
+
+	SetUp_NoneAttackRunMoveSpeed(fTimeDelta);
+	SetUp_NoneAttackRunAnimation();
+	SetUp_NoneAttackRunToIdleAnimation(fTimeDelta);
+}
+
+void CPCGladiator::Move_OnNaviMesh(const _float& fTimeDelta)
+{
+	if (m_bIsKeyDown || 
+		GladiatorConst::MIN_SPEED != m_pInfoCom->m_fSpeed)
+	{
+		if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
+		{
+			m_pTransCom->m_vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+																  &m_pTransCom->m_vDir,
+																  m_pInfoCom->m_fSpeed * fTimeDelta);
 		}
 	}
 }
@@ -424,6 +444,47 @@ bool CPCGladiator::Is_Change_CamDirection()
 		return true;
 
 	return false;
+}
+
+void CPCGladiator::SetUp_NoneAttackRunMoveSpeed(const _float& fTimeDelta)
+{
+	if (Gladiator::STANCE_NONEATTACK == m_eStance)
+	{
+		// Move On
+		if (m_bIsKeyDown)
+		{
+			m_pInfoCom->m_fSpeed += ((GladiatorConst::MAX_SPEED + GladiatorConst::MAX_SPEED) / 2.0f) * fTimeDelta;
+			if (m_pInfoCom->m_fSpeed > GladiatorConst::MAX_SPEED)
+				m_pInfoCom->m_fSpeed = GladiatorConst::MAX_SPEED;
+		}
+		// Move Off
+		else if (!m_bIsKeyDown)
+		{
+			m_pInfoCom->m_fSpeed -= GladiatorConst::MAX_SPEED * 4.0f * fTimeDelta;
+			if (m_pInfoCom->m_fSpeed < GladiatorConst::MIN_SPEED)
+				m_pInfoCom->m_fSpeed = GladiatorConst::MIN_SPEED;
+		}
+	}
+
+}
+
+void CPCGladiator::SetUp_NoneAttackRunAnimation()
+{
+	if (m_bIsKeyDown && 
+		Gladiator::STANCE_NONEATTACK == m_eStance)
+	{
+		m_uiAnimIdx = Gladiator::NONE_ATTACK_WALK;
+	}
+}
+
+void CPCGladiator::SetUp_NoneAttackRunToIdleAnimation(const _float& fTimeDelta)
+{
+	if (!m_bIsKeyDown &&
+		Gladiator::NONE_ATTACK_WALK == m_uiAnimIdx &&
+		Gladiator::STANCE_NONEATTACK == m_eStance)
+	{
+		m_uiAnimIdx = Gladiator::NONE_ATTACK_IDLE;
+	}
 }
 
 Engine::CGameObject* CPCGladiator::Create(ID3D12Device* pGraphicDevice, 

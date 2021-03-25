@@ -131,4 +131,6 @@ CCubeCol * CCubeCol::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommand
 void CCubeCol::Free()
 {
 	CVIBuffer::Free();
+	CShaderColorInstancing::Get_Instance()->Erase_TotalInstanceCount(COLOR_BUFFER::BUFFER_CUBE);
+
 }

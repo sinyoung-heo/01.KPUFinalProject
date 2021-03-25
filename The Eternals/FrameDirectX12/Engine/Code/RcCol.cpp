@@ -106,4 +106,5 @@ CRcCol * CRcCol::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList*
 void CRcCol::Free()
 {
 	CVIBuffer::Free();
+	CShaderColorInstancing::Get_Instance()->Erase_TotalInstanceCount(COLOR_BUFFER::BUFFER_RECT);
 }
