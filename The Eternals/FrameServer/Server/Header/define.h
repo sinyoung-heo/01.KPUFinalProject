@@ -22,6 +22,7 @@ constexpr int SERVER_CORE		= 4;
 //constexpr int INIT_ATT		= 5;			// 플레이어 초기 ATTACK
 //constexpr int INIT_SPEED		= 5;			// 플레이어 초기 SPEED
 
+constexpr int MOVE_LIMIT		= 7;			// MONSTER MOVE OFFSET
 constexpr int CHASE_RANGE		= 5;			// CHASE MONSTER 추적 범위
 constexpr int ATTACK_RANGE		= 2;			// MONSTER 공격 범위
 

@@ -8,33 +8,34 @@ public:
 	virtual ~CMonster();
 
 public:
+	/* SEND PACKET */
+	void send_Monster_enter_packet(int to_client);
+	void send_Monster_move_packet(int to_client);		
+	void send_Monster_NormalAttack(int to_client);
+	void send_Monster_Stat(int to_client);
+
 	void Set_Stop_Attack();
 	void Set_Start_Attack();
-
+public:
 	int	 Update_Monster(const float& fTimeDelta);
 	void Hurt_Monster(const int& damage);				// ATTACKED BY PLAYER
 
 private:
 	void Change_Animation(const float& fTimeDelta);
+	void Change_Crab_Animation(const float& fTimeDelta);
+
 	void Change_AttackMode();							// STATUS == ATTACK
+	void Attack_Monster(const float& fTimeDelta);		// ATTACK PROCESS
 
 	void Move_ComeBack(const float& fTimeDelta);		// MOVE PROCESS
 	void Move_NormalMonster(const float& fTimeDelta);	// MOVE PROCESS
 	void Move_ChaseMonster(const float& fTimeDelta);	// MOVE PROCESS
-	void Attack_Monster(const float& fTimeDelta);		// ATTACK PROCESS
 
 public:
-	/* SEND PACKET */
-	void send_Monster_enter_packet(int to_client);
-	void send_Monster_move_packet(int to_client);		
-	void send_Monster_NormalAttack(int to_client);
-
-	void send_Monster_Stat(int to_client);
-
 	virtual DWORD Release();
 
 public:
-	char			m_monNum;
+	char			m_monNum		= MONSTER_NUMBER::MON_END;
 	int				m_iHp			= 0;
 	int				m_iMaxHp		= 0;
 	int				m_iExp			= 0;

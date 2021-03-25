@@ -433,7 +433,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		//	_vec3(packet->posX, packet->posY, packet->posZ));		// Pos
 
 		pGameObj->Set_ServerNumber(packet->id);
-		pGameObj->Set_Info(1, packet->Hp, packet->maxHp, 0, 0, 0, 0, 0, 5.f);
+		pGameObj->Set_Info(1, packet->Hp, packet->maxHp, 0, 0, 0, 0, 0, 1.f);
 
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);
 
@@ -447,8 +447,9 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		int s_num = packet->id;
 
 		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
-		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
-
+		
+		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ)); // 실질적으로 안씀
+		
 		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 		pObj->Set_MoveStop(false);
 	}
