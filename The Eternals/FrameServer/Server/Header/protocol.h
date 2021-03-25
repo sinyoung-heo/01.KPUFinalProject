@@ -121,7 +121,7 @@ constexpr char NPC_QUEST = 2;
 constexpr char NPC_BG = 3;
 
 /*____________________________________________________________________
-MONSTER NUMBER
+MONSTER TYPE
 ______________________________________________________________________*/
 constexpr char MON_NORMAL = 0;
 constexpr char MON_CHASE = 1;

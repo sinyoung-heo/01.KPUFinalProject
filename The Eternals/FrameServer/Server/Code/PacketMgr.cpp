@@ -23,7 +23,7 @@ void process_packet(int id)
 
 		pPlayer->Get_ClientLock().lock();
 		strncpy_s(pPlayer->m_ID, p->name, strlen(p->name));
-		
+		pPlayer->m_type = p->o_type;
 		pPlayer->Get_ClientLock().unlock();
 
 #ifndef DUMMY
@@ -283,6 +283,7 @@ void send_login_ok(int id)
 	p.type = SC_PACKET_LOGIN_OK;
 	p.id = id;
 
+	p.o_type	= pPlayer->m_type;
 	p.level		= pPlayer->m_iLevel;
 	p.hp		= pPlayer->m_iHp;
 	p.maxHp		= pPlayer->m_iMaxHp;

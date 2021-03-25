@@ -419,21 +419,18 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		____________________________________________________________________________________________________________*/
 		Engine::CGameObject* pGameObj = nullptr;
 
-		//pGameObj = CMonster_Normal::Create(m_pGraphicDevice, m_pCommandList,
-		//								   wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
-		//								   wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
-		//								   _vec3(0.05f, 0.05f, 0.05f),										// Scale
-		//								   _vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
-		//								   _vec3(packet->posX, packet->posY, packet->posZ));
+		pGameObj = CMonster_Normal::Create(m_pGraphicDevice, m_pCommandList,
+										   wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
+										   wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
+										   _vec3(0.05f, 0.05f, 0.05f),										// Scale
+										   _vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
+										   _vec3(packet->posX, packet->posY, packet->posZ));
 
-		// hp + maxhp 정보도 저장해야 함.
-
-
-
-		pGameObj = CTestColMonster::Create(m_pGraphicDevice, m_pCommandList,
-			_vec3(1.f, 1.f, 1.f),									// Scale
-			_vec3(0.0f, 0.0f, 0.0f),								// Angle
-			_vec3(packet->posX, packet->posY, packet->posZ));		// Pos
+		
+		//pGameObj = CTestColMonster::Create(m_pGraphicDevice, m_pCommandList,
+		//	_vec3(1.f, 1.f, 1.f),									// Scale
+		//	_vec3(0.0f, 0.0f, 0.0f),								// Angle
+		//	_vec3(packet->posX, packet->posY, packet->posZ));		// Pos
 
 		pGameObj->Set_ServerNumber(packet->id);
 		pGameObj->Set_Info(1, packet->Hp, packet->maxHp, 0, 0, 0, 0, 0, 5.f);
