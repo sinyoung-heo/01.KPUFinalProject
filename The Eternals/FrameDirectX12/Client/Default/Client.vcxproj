@@ -207,6 +207,7 @@
     <ClInclude Include="..\Code\StagePJO.h" />
     <ClInclude Include="..\Code\StaticMeshObject.h" />
     <ClInclude Include="..\Code\TerrainMeshObject.h" />
+    <ClInclude Include="..\Code\WaterMeshObject.h" />
     <ClInclude Include="..\Code\TerrainObject.h" />
     <ClInclude Include="..\Code\TestCollisonObject.h" />
     <ClInclude Include="..\Code\TestColMonster.h" />
@@ -270,6 +271,7 @@
     <ClCompile Include="..\Code\StagePJO.cpp" />
     <ClCompile Include="..\Code\StaticMeshObject.cpp" />
     <ClCompile Include="..\Code\TerrainMeshObject.cpp" />
+    <ClCompile Include="..\Code\WaterMeshObject.cpp" />
     <ClCompile Include="..\Code\TerrainObject.cpp" />
     <ClCompile Include="..\Code\TestCollisonObject.cpp" />
     <ClCompile Include="..\Code\TestColMonster.cpp" />

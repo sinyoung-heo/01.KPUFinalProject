@@ -384,9 +384,6 @@
     <ClInclude Include="..\Code\TestPlayer.h">
       <Filter>99.Etc\SampleObject\09.TestPlayer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\TerrainMeshObject.h">
-      <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\Monster_Normal.h">
       <Filter>99.Etc\SampleObject\15.Monster\00.Monster_Normal</Filter>
     </ClInclude>
@@ -404,6 +401,12 @@
     </ClInclude>
     <ClInclude Include="GladiatorAnimation.h">
       <Filter>02.GameObject\02.PlayerCharacter\PCGladiator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\WaterMeshObject.h">
+      <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\TerrainMeshObject.h">
+      <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -551,9 +554,6 @@
     <ClCompile Include="..\Code\TestPlayer.cpp">
       <Filter>99.Etc\SampleObject\09.TestPlayer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\TerrainMeshObject.cpp">
-      <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\Monster_Normal.cpp">
       <Filter>99.Etc\SampleObject\15.Monster\00.Monster_Normal</Filter>
     </ClCompile>
@@ -568,6 +568,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\PCGladiator.cpp">
       <Filter>02.GameObject\02.PlayerCharacter\PCGladiator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\WaterMeshObject.cpp">
+      <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TerrainMeshObject.cpp">
+      <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

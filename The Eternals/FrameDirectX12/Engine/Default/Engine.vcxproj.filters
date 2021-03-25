@@ -184,6 +184,9 @@
     <Filter Include="97.Mgr\03.ShaderMgr">
       <UniqueIdentifier>{4d399a26-7cec-47b3-add0-2b3dc5604774}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\13.ShaderWater">
+      <UniqueIdentifier>{d249f8f9-6deb-4866-ae57-3fc9d4408c7a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\Engine_Functor.h">

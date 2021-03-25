@@ -59,7 +59,11 @@ public:
 	void Render_StaticMesh(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 	void Render_DynamicMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 	void Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
-
+	
+	void Render_WaterMesh(ID3D12GraphicsCommandList* pCommandList, 
+		const _int& iContextIdx,
+		CShader* pShader,
+		ID3D12DescriptorHeap *pTexnormalDescriptorHeap,_uint uiNormalTextureIdx, _uint uiPatternMapIdx);
 	void Begin_Buffer(ID3D12GraphicsCommandList* pCommandList, const _int& iSubMeshIdx);
 	void Render_Buffer(ID3D12GraphicsCommandList* pCommandList, const _int& iSubMeshIdx);
 

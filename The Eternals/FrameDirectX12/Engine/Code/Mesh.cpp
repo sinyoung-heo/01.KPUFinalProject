@@ -140,6 +140,13 @@ void CMesh::Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList * pCommandLis
 		m_pVIMesh->Render_StaticMeshShadowDepth(pCommandList, iContextIdx, pShader);
 }
 
+void CMesh::Render_WaterMesh(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx,
+	CShader* pShader, ID3D12DescriptorHeap* pTexnormalDescriptorHeap, _uint uiNormalTextureIdx,_uint uiPatternMapIdx)
+{
+	if (nullptr != m_pVIMesh && nullptr != pCommandList)
+		m_pVIMesh->Render_WaterMesh(pCommandList, iContextIdx, pShader, pTexnormalDescriptorHeap,uiNormalTextureIdx, uiPatternMapIdx);
+}
+
 void CMesh::Set_AnimationKey(const _uint & uiAniKey)
 {
 	if (nullptr != m_pAniCtrl)

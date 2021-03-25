@@ -24,6 +24,7 @@ Popori_boy|Popori_boy.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Popori_
 Popori_M_Merchant|Popori_M_Merchant.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Popori_M_Merchant\
 BumpTerrainMesh00|BumpTerrainMesh00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpTerrainMesh00\
 BumpTerrainMesh01|BumpTerrainMesh01.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpTerrainMesh01\
+BumpWaterMesh00|BumpWaterMesh00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpWaterMesh00\
 DistortDisk|DistortDisk.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\DistortDisk\
 LandMark|LandMark.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\LandMark\
 LandMarkBoundary|LandMarkBoundary.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\LandMarkBoundary\

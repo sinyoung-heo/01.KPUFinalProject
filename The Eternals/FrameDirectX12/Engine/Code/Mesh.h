@@ -53,7 +53,10 @@ public:
 	void Render_StaticMesh(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 	void Render_DynamicMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 	void Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
-
+	void Render_WaterMesh(ID3D12GraphicsCommandList* pCommandList,
+		const _int& iContextIdx,
+		CShader* pShader,
+		ID3D12DescriptorHeap* pTexnormalDescriptorHeap, _uint uiNormalTextureIdx, _uint uiPatternMapIdx);
 	void Set_AnimationKey(const _uint& uiAniKey);
 	void Play_Animation(_float fAnimationTime);
 	SKINNING_MATRIX* Find_SkinningMatrix(string strBoneName);
