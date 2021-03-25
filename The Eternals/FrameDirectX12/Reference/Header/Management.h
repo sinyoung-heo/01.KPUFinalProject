@@ -18,11 +18,11 @@ public:
 	CScene* Get_CurrentScene() { return m_pCurrentScene; }
 public:
 	HRESULT	SetUp_CurrentScene(CScene* pNewScene);
+	void	Process_PacketFromServer();
 	_int	Update_Management(const _float& fTimeDelta);
 	_int	LateUpdate_Management(const _float& fTimeDelta);
 	void	Send_PacketToServer();
 	HRESULT	Render_Management(const _float& fTimeDelta, const RENDERID& eID = RENDERID::MULTI_THREAD);
-	void	Process_PacketFromServer();
 protected:
 	CScene* m_pCurrentScene = nullptr;
 

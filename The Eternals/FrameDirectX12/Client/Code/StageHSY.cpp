@@ -71,6 +71,12 @@ HRESULT CStageHSY::Ready_Scene()
 	return S_OK;
 }
 
+void CStageHSY::Process_PacketFromServer()
+{
+	CPacketMgr::Get_Instance()->recv_packet();
+}
+
+
 _int CStageHSY::Update_Scene(const _float & fTimeDelta)
 {
 	// MouseCursorMgr
@@ -99,12 +105,6 @@ HRESULT CStageHSY::Render_Scene(const _float & fTimeDelta, const Engine::RENDERI
 
 	return S_OK;
 }
-
-void CStageHSY::Process_PacketFromServer()
-{
-	CPacketMgr::Get_Instance()->recv_packet();
-}
-
 
 HRESULT CStageHSY::Ready_LayerCamera(wstring wstrLayerTag)
 {

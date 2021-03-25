@@ -188,11 +188,11 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 #else
 		pGameObj =	CPCGladiator::Create(m_pGraphicDevice, m_pCommandList,
-										 L"PoporiR27Gladiator",			// MeshTag
-										 L"StageVelika_NaviMesh",		// NaviMeshTag
-										 _vec3(0.05f, 0.05f, 0.05f),	// Scale
-										 _vec3(0.0f, 0.0f, 0.0f),		// Angle
-										 _vec3(120.0f, 0.f, 75.0f));	// Pos
+										 L"PoporiR27Gladiator",								// MeshTag
+										 L"StageVelika_NaviMesh",							// NaviMeshTag
+										 _vec3(0.05f, 0.05f, 0.05f),						// Scale
+										 _vec3(0.0f, 0.0f, 0.0f),							// Angle
+										 _vec3(packet->posX, packet->posY, packet->posZ));	// Pos
 
 #endif
 		pGameObj->Set_ServerNumber(g_iSNum);

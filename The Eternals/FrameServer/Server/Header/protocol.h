@@ -50,12 +50,20 @@ constexpr char CS_LOGOUT			= 6;
 constexpr char CS_COLLIDE			= 7;   // Player가 다른 Object에게 충돌당했을 경우
 constexpr char CS_COLLIDE_MONSTER	= 8;   // Player가 Monster 공격
 
+/*__________________________________________________________________________________________________________
+[ PLAYER CHARACPTER TYPE ]
+____________________________________________________________________________________________________________*/
+constexpr char PC_GLADIATOR = 0;
+constexpr char PC_ARCHER = 1;
+constexpr char PC_PRIEST = 2;
+
 struct sc_packet_login_ok 
 {
 	unsigned char size;
 	char type;
 	int  id;
 
+	char o_type;
 	int hp;
 	int maxHp;
 	int mp;
@@ -205,6 +213,7 @@ struct cs_packet_login
 {
 	unsigned char  size;
 	char  type;
+	char  o_type;
 	char  name[MAX_ID_LEN];
 	char  password[MAX_PW_LEN];
 };

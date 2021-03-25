@@ -65,6 +65,14 @@ HRESULT CMainApp::Ready_MainApp()
 	return S_OK;
 }
 
+void CMainApp::Process_PacketFromServer()
+{
+	if (nullptr == m_pManagement)
+		return;
+
+	m_pManagement->Process_PacketFromServer();
+}
+
 _int CMainApp::Update_MainApp(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pManagement, -1);
@@ -126,16 +134,6 @@ void CMainApp::Render_MainApp(const _float& fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	m_pManagement->Render_Management(fTimeDelta, Engine::RENDERID::MULTI_THREAD);
 }
-
-void CMainApp::Process_PacketFromServer()
-{
-	if (nullptr == m_pManagement)
-		return;
-
-	m_pManagement->Process_PacketFromServer();
-}
-
-
 
 HRESULT CMainApp::SetUp_DefaultSetting(Engine::WINMODE eMode, const _uint& uiWidth, const _uint& uiHeight)
 {
