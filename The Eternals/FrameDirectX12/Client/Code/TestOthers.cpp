@@ -29,7 +29,7 @@ HRESULT CTestOthers::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, 
 										   m_pMeshCom->Get_MinVector(),
 										   m_pMeshCom->Get_MaxVector());
 
-	m_pInfoCom->m_fSpeed = 5.0f;
+	m_pInfoCom->m_fSpeed = PCOthersConst::MIN_SPEED;
 	m_pInfoCom->m_vArrivePos = m_pTransCom->m_vPos;
 
 	/*__________________________________________________________________________________________________________
@@ -210,7 +210,11 @@ void CTestOthers::Move_OnNaviMesh(const _float& fTimeDelta)
 {
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 	m_pTransCom->m_vDir.Normalize();
-	if (!m_bIsMoveStop)
+
+	SetUp_MoveSpeed(fTimeDelta);
+
+	if (!m_bIsMoveStop || 
+		m_pInfoCom->m_fSpeed == PCOthersConst::MIN_SPEED)
 	{
 		// NaviMesh ÀÌµ¿.		
 		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
@@ -220,6 +224,22 @@ void CTestOthers::Move_OnNaviMesh(const _float& fTimeDelta)
 														 m_pInfoCom->m_fSpeed * fTimeDelta);
 			m_pTransCom->m_vPos = vPos;
 		}
+	}
+}
+
+void CTestOthers::SetUp_MoveSpeed(const _float& fTimeDelta)
+{
+	if (!m_bIsMoveStop)
+	{
+		m_pInfoCom->m_fSpeed += ((PCOthersConst::MAX_SPEED + PCOthersConst::MAX_SPEED) / 2.0f) * fTimeDelta;
+		if (m_pInfoCom->m_fSpeed > PCOthersConst::MAX_SPEED)
+			m_pInfoCom->m_fSpeed = PCOthersConst::MAX_SPEED;
+	}
+	else
+	{
+		m_pInfoCom->m_fSpeed -= PCOthersConst::MAX_SPEED * 4.0f * fTimeDelta;
+		if (m_pInfoCom->m_fSpeed < PCOthersConst::MIN_SPEED)
+			m_pInfoCom->m_fSpeed = PCOthersConst::MIN_SPEED;
 	}
 }
 

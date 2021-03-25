@@ -3,6 +3,12 @@
 #include "Include.h"
 #include "GameObject.h"
 
+namespace PCOthersConst
+{
+	const _float MAX_SPEED = 5.0f;
+	const _float MIN_SPEED = 0.0f;
+}
+
 namespace Engine
 {
 	class CMesh;
@@ -39,6 +45,7 @@ private:
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
 	void			Move_OnNaviMesh(const _float& fTimeDelta);
+	void			SetUp_MoveSpeed(const _float& fTimeDelta);
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
