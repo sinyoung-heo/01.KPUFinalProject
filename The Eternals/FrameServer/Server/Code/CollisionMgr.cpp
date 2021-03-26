@@ -89,6 +89,15 @@ bool CCollisionMgr::Is_Arrive(const _vec3& _vStart, const _vec3& _vEnd)
 	return dist <= 0.5f;
 }
 
+bool CCollisionMgr::Is_InMoveLimit(const _vec3& _vStart, const _vec3& _vEnd)
+{
+	float dist = (_vEnd.x - _vStart.x) * (_vEnd.x - _vStart.x);
+	dist += (_vEnd.y - _vStart.y) * (_vEnd.y - _vStart.y);
+	dist += (_vEnd.z - _vStart.z) * (_vEnd.z - _vStart.z);
+
+	return dist <= (MOVE_LIMIT * MOVE_LIMIT);
+}
+
 void CCollisionMgr::Release()
 {
 }

@@ -31,7 +31,7 @@ HRESULT CMonster_Normal::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviM
 		m_pMeshCom->Get_MaxVector());
 
 
-	m_pInfoCom->m_fSpeed = 1.f;
+	m_pInfoCom->m_fSpeed = 0.1f;
 	m_bIsMoveStop = true;
 
 	/*__________________________________________________________________________________________________________
@@ -205,21 +205,29 @@ void CMonster_Normal::Active_Monster(const _float& fTimeDelta)
 	/* Monster MOVE */
 	if (!m_bIsMoveStop)
 	{
-		// NaviMesh 이동.		
-		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
-		{
-			m_eCurAnimation = A_WALK;
+		m_eCurAnimation = A_TALK;
+		//m_eCurAnimation = A_WALK;
 
-			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
-				&m_pTransCom->m_vDir,
-				m_pInfoCom->m_fSpeed * fTimeDelta);
-			m_pTransCom->m_vPos = vPos;
-		}
-		else
-		{
-			m_eCurAnimation = A_WAIT;
-			m_bIsMoveStop = true;
-		}
+		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+			&m_pTransCom->m_vDir,
+			m_pInfoCom->m_fSpeed * fTimeDelta);
+		m_pTransCom->m_vPos = vPos;
+
+		//// NaviMesh 이동.		
+		//if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
+		//{
+		//	m_eCurAnimation = A_WALK;
+
+		//	_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+		//		&m_pTransCom->m_vDir,
+		//		m_pInfoCom->m_fSpeed * fTimeDelta);
+		//	m_pTransCom->m_vPos = vPos;
+		//}
+		//else
+		//{
+		//	m_eCurAnimation = A_WAIT;
+		//	m_bIsMoveStop = true;
+		//}
 	}
 }
 

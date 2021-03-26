@@ -885,18 +885,19 @@ void Initialize_Monster()
 		strncpy_s(pNew->m_ID, "Crab", strlen("Crab"));
 		strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
 
-		pNew->m_vPos = _vec3(133.0f, 0.f, 75.0f);
-		pNew->m_vTempPos = pNew->m_vPos;
-		pNew->m_vOriPos = pNew->m_vPos;
-		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-		pNew->m_vAngle = _vec3(0.f, 90.f, 0.f);
-		pNew->m_iHp = 1000;
-		pNew->m_iMaxHp = 1000;
-		pNew->m_iAtt = 1;
-		pNew->m_iExp = 0;
-		pNew->m_type = MON_CHASE;
-		pNew->m_monNum = MONSTER_NUMBER::MON_CRAB;
-		pNew->m_status = STATUS::ST_NONACTIVE;
+		pNew->m_vPos		= _vec3(133.0f, 0.f, 75.0f);
+		pNew->m_vTempPos	= pNew->m_vPos;
+		pNew->m_vOriPos		= pNew->m_vPos;
+		pNew->m_vDir		= _vec3(0.f, 0.f, 1.f);
+		pNew->m_vAngle		= _vec3(0.f, 90.f, 0.f);
+		pNew->m_iHp			= 1000;
+		pNew->m_iMaxHp		= 1000;
+		pNew->m_iAtt		= 1;
+		pNew->m_iExp		= 0;
+		pNew->m_fSpd		= 1.f;
+		pNew->m_type		= MON_NORMAL;
+		pNew->m_monNum		= MONSTER_NUMBER::MON_CRAB;
+		pNew->m_status		= STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
 		CObjMgr::GetInstance()->Add_GameObject(L"MONSTER", pNew, s_num);
@@ -962,20 +963,20 @@ void add_new_client(SOCKET ns)
 		ZeroMemory(&pNew->m_recv_over.wsa_over, sizeof(pNew->m_recv_over.wsa_over));
 		pNew->m_recv_start = pNew->m_recv_over.iocp_buf;
 
-		pNew->m_type = TYPE_PLAYER;
-		pNew->m_iLevel = 1;
-		pNew->m_iHp = 100;
-		pNew->m_iMaxHp = 100;
-		pNew->m_iMp = 100;
-		pNew->m_iMaxMp = 100;
-		pNew->m_iExp = 0;
+		pNew->m_type	= TYPE_PLAYER;
+		pNew->m_iLevel	= 1;
+		pNew->m_iHp		= 100;
+		pNew->m_iMaxHp	= 100;
+		pNew->m_iMp		= 100;
+		pNew->m_iMaxMp	= 100;
+		pNew->m_iExp	= 0;
 		pNew->m_iMaxExp = 100;
-		pNew->m_iAtt = 10;
-		pNew->m_fSpd = 5.f;
+		pNew->m_iAtt	= 10;
+		pNew->m_fSpd	= 5.f;
 
-		pNew->m_vPos = _vec3(143.0f, 0.f, 73.0f);
-		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
+		pNew->m_vPos	= _vec3(143.0f, 0.f, 73.0f);
+		pNew->m_vDir	= _vec3(0.f, 0.f, 1.f);
+		pNew->m_vAngle	= _vec3(0.f, 0.f, 0.f);
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector((int)s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
 		CObjMgr::GetInstance()->Add_GameObject(L"PLAYER", pNew, (int)s_num);
@@ -1069,11 +1070,11 @@ void disconnect_client(int id)
 	CObjMgr::GetInstance()->Delete_GameObject(L"PLAYER", pPlayer);
 	pPlayer->Set_IsConnected(false);
 	closesocket(pPlayer->m_sock);
-	pPlayer->m_sock = 0;
-	pPlayer->m_vPos = _vec3(0.f, 0.f, 0.f);
-	pPlayer->m_vDir = _vec3(0.f, 0.f, 0.f);
-	pPlayer->m_ID[0] = 0;
-	pPlayer->m_type = 0;
+	pPlayer->m_sock		= 0;
+	pPlayer->m_vPos		= _vec3(0.f, 0.f, 0.f);
+	pPlayer->m_vDir		= _vec3(0.f, 0.f, 0.f);
+	pPlayer->m_ID[0]	= 0;
+	pPlayer->m_type		= 0;
 	pPlayer->Get_ClientLock().unlock();
 
 	if (CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER")->size() <= 0)

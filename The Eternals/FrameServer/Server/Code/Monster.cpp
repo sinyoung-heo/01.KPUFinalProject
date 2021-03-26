@@ -4,7 +4,8 @@
 
 CMonster::CMonster()
 	:m_iHp(0), m_iMaxHp(0), m_iExp(0), m_iAtt(0), m_fSpd(0.f),
-	targetNum(-1), m_bIsAttack(false), m_bIsComeBack(false)
+	targetNum(-1), m_bIsAttack(false), m_bIsComeBack(false), 
+	m_monNum(MONSTER_NUMBER::MON_END)
 {
 }
 
@@ -20,7 +21,8 @@ int CMonster::Update_Monster(const float& fTimeDelta)
 	if (fTimeDelta > 1.f)
 		return NO_EVENT;
 
-	Change_Animation(fTimeDelta);
+	//Change_Animation(fTimeDelta);
+	Change_Crab_Animation(fTimeDelta);
 
 	return NO_EVENT;
 }
@@ -48,6 +50,36 @@ void CMonster::Change_Animation(const float& fTimeDelta)
 	break;
 
 	case STATUS::ST_NONACTIVE:	
+	{
+		m_bIsComeBack = false;
+	}
+	break;
+	case STATUS::ST_WAIT:
+		break;
+	case STATUS::ST_IDLE:
+		break;
+	case STATUS::ST_ATTACK:
+	{
+		Attack_Monster(fTimeDelta);
+	}
+	break;
+	case STATUS::ST_DEAD:
+		break;
+	}
+}
+
+void CMonster::Change_Crab_Animation(const float& fTimeDelta)
+{
+	switch (m_status)
+	{
+		
+	case STATUS::ST_ACTIVE:
+	{
+		Move_NormalMonster(fTimeDelta);
+	}
+	break;
+
+	case STATUS::ST_NONACTIVE:
 	{
 		m_bIsComeBack = false;
 	}
@@ -294,11 +326,17 @@ void CMonster::Move_NormalMonster(const float& fTimeDelta)
 		}
 
 		/* 해당 NPC의 미래 위치 좌표 산출 -> 미래 위치좌표는 임시 변수에 저장 */
-		m_vTempPos += m_vDir * 3.f;
+		m_vTempPos += m_vDir * 5.f;
+
+		if (false == CCollisionMgr::GetInstance()->Is_InMoveLimit(m_vTempPos, m_vOriPos))
+		{
+			m_vTempPos = m_vPos;
+			return;
+		}
 	}
-	
+
 	/* Monster Move */
-	m_vPos += m_vDir * fTimeDelta * 3.f;
+	m_vPos += m_vDir * m_fSpd * fTimeDelta;
 
 	/* NaviMesh를 벗어날 경우 움직임 X */
 	if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
