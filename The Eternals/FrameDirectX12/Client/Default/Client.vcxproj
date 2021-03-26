@@ -171,6 +171,7 @@
     <ClInclude Include="..\Code\CharacterHpGauge.h" />
     <ClInclude Include="..\Code\CharacterMpGauge.h" />
     <ClInclude Include="..\Code\PCGladiator.h" />
+    <ClInclude Include="..\Code\PCOthers.h" />
     <ClInclude Include="..\Code\SampleNPC.h" />
     <ClInclude Include="..\Code\GameUIChild.h" />
     <ClInclude Include="..\Code\GameUIRoot.h" />
@@ -257,6 +258,7 @@
     <ClCompile Include="..\Code\NPC_Villagers.cpp" />
     <ClCompile Include="..\Code\PacketMgr.cpp" />
     <ClCompile Include="..\Code\PCGladiator.cpp" />
+    <ClCompile Include="..\Code\PCOthers.cpp" />
     <ClCompile Include="..\Code\Popori_F.cpp" />
     <ClCompile Include="..\Code\RectObject.cpp" />
     <ClCompile Include="..\Code\SampleNPC.cpp" />

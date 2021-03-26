@@ -14,19 +14,22 @@ private:
 
 public:
 	// Get
-	vector<ComPtr<ID3D12Resource>>	Get_DiffTexture()		{ return m_pVIMesh->Get_DiffTexture(); };
-	vector<ComPtr<ID3D12Resource>>	Get_NormTexture()		{ return m_pVIMesh->Get_NormTexture(); };
-	vector<ComPtr<ID3D12Resource>>	Get_SpecTexture()		{ return m_pVIMesh->Get_SpecTexture(); };
-	ID3D12DescriptorHeap*			Get_TexDescriptorHeap()	{ return m_pVIMesh->Get_TexDescriptorHeap(); }
-	CVIMesh*						Get_VIMesh()			{ return m_pVIMesh; }
-	CAniCtrl*						Get_AniCtrl()			{ return m_pAniCtrl; };
-	_uint*							Get_NumAnimation()		{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_NumAnimation(); else return nullptr; }
-	_uint*							Get_3DMaxNumFrame()		{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_3DMaxNumFrame(); else return nullptr;}
-	_uint*							Get_3DMaxCurFrame()		{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_3DMaxCurFrame(); else return nullptr;}
-	const _vec3&					Get_CenterPos()			{ return m_pVIMesh->Get_CenterPos(); }
-	const _vec3&					Get_MinVector()			{ return m_pVIMesh->Get_MinVector(); }
-	const _vec3&					Get_MaxVector()			{ return m_pVIMesh->Get_MaxVector(); }
-	wstring							Get_FileName()			{ return m_pVIMesh->Get_FileName(); }
+	vector<ComPtr<ID3D12Resource>>	Get_DiffTexture()			{ return m_pVIMesh->Get_DiffTexture(); };
+	vector<ComPtr<ID3D12Resource>>	Get_NormTexture()			{ return m_pVIMesh->Get_NormTexture(); };
+	vector<ComPtr<ID3D12Resource>>	Get_SpecTexture()			{ return m_pVIMesh->Get_SpecTexture(); };
+	ID3D12DescriptorHeap*			Get_TexDescriptorHeap()		{ return m_pVIMesh->Get_TexDescriptorHeap(); }
+	CVIMesh*						Get_VIMesh()				{ return m_pVIMesh; }
+	CAniCtrl*						Get_AniCtrl()				{ return m_pAniCtrl; };
+	_uint*							Get_NumAnimation()			{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_NumAnimation(); else return nullptr; }
+	_uint*							Get_3DMaxNumFrame()			{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_3DMaxNumFrame(); else return nullptr;}
+	_uint*							Get_3DMaxCurFrame()			{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_3DMaxCurFrame(); else return nullptr;}
+	const _float&					Get_AnimationTime()			{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_AnimationTime(); else 0.0f; }
+	const _float&					Get_BlendTime()				{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_BlendTime(); else 0.0f; }
+	const _float&					Get_BlendAnimationTime()	{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_BlendAnimationTime(); else 0.0f; }
+	const _vec3&					Get_CenterPos()				{ return m_pVIMesh->Get_CenterPos(); }
+	const _vec3&					Get_MinVector()				{ return m_pVIMesh->Get_MinVector(); }
+	const _vec3&					Get_MaxVector()				{ return m_pVIMesh->Get_MaxVector(); }
+	wstring							Get_FileName()				{ return m_pVIMesh->Get_FileName(); }
 	_bool							Is_AnimationSetEnd(const _float& fTimeDelta) { return m_pAniCtrl->Is_AnimationSetEnd(fTimeDelta); };
 
 	void							Set_AfterImgSize(const _uint& uiSize) { m_pVIMesh->Set_AfterImgSize(uiSize); }

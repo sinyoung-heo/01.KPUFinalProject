@@ -158,12 +158,12 @@ HRESULT CAniCtrl::Ready_AniCtrl()
 
 void CAniCtrl::Set_AnimationKey(const _uint & uiAniKey)
 {
-	if (m_uiNewAniIndex != uiAniKey)
+	if (m_uiNewAniIdx != uiAniKey)
 	{
-		m_uiNewAniIndex = uiAniKey;
+		m_uiNewAniIdx = uiAniKey;
 
-		m_fBlendAnimationTime	= m_fAnimationTime;
-		m_fBlendingTime			= 1.0f;
+		m_fBlendAnimationTime = m_fAnimationTime;
+		m_fBlendingTime	= 1.0f;
 	}
 }
 
@@ -185,7 +185,7 @@ void CAniCtrl::Play_Animation(_float fTimeDelta)
 	m_ui3DMax_CurFrame = (_uint)(_3DMAX_FPS * (m_fAnimationTime / m_pScene->mAnimations[m_uiCurAniIndex]->mTicksPerSecond));
 
 
-	if (m_uiNewAniIndex != m_uiCurAniIndex)
+	if (m_uiNewAniIdx != m_uiCurAniIndex)
 	{
 		m_fAnimationTime	= m_fBlendAnimationTime;
 		m_fAnimationTime	= (_float)(fmod(m_fAnimationTime, (m_pScene->mAnimations[m_uiCurAniIndex]->mDuration)));
@@ -202,10 +202,10 @@ void CAniCtrl::Play_Animation(_float fTimeDelta)
 
 	if (m_fBlendingTime <= 0.0f)
 	{
-		m_fBlendingTime		= 0.f;
-		m_uiCurAniIndex		= m_uiNewAniIndex;
-		m_fBlendingTime		= 1.f;
-		m_fAnimationTime	= 0.f;
+		m_fBlendingTime  = 0.f;
+		m_uiCurAniIndex	  = m_uiNewAniIdx;
+		m_fBlendingTime  = 1.f;
+		m_fAnimationTime = 0.f;
 	}
 
 }
@@ -311,7 +311,7 @@ void CAniCtrl::Update_NodeHierarchy(_float fAnimationTime,
 	HIERARCHY_DESC*		pHierarchyInfo		= m_mapNodeHierarchy[strNodeName];
 
 	const aiNodeAnim*	pNodeAnimation		= pHierarchyInfo->mapNodeAnim[m_uiCurAniIndex];
-	const aiNodeAnim*	pNewNodeAnimation	= pHierarchyInfo->mapNodeAnim[m_uiNewAniIndex];
+	const aiNodeAnim*	pNewNodeAnimation	= pHierarchyInfo->mapNodeAnim[m_uiNewAniIdx];
 
 	pHierarchyInfo->matParentTransform		= matParentTransform;
 
@@ -443,7 +443,7 @@ aiVector3D CAniCtrl::Calc_InterPolatedValue_From_Key(const _float & fAnimationTi
 	ret1.z = StartValue.z + (EndValue.z - StartValue.z) * fFactor;
 
 
-	if (m_uiCurAniIndex != m_uiNewAniIndex)
+	if (m_uiCurAniIndex != m_uiNewAniIdx)
 	{
 		uiKeyIndex		= Find_KeyIndex(0, uiNewNumKeys, pNewVectorKey);
 		uiNextKeyIndex	= uiKeyIndex + 1;
@@ -499,7 +499,7 @@ aiQuaternion CAniCtrl::Calc_InterPolatedValue_From_Key(const _float & fAnimation
 	ret1 = ret1.Normalize();
 
 
-	if (m_uiCurAniIndex != m_uiNewAniIndex)
+	if (m_uiCurAniIndex != m_uiNewAniIdx)
 	{
 		_uint uiKeyIndex		= Find_KeyIndex(0, uiNewNumKeys, pNewQuatKey);
 		_uint uiNextKeyIndex	= uiKeyIndex + 1;

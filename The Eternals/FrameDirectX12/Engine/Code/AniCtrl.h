@@ -53,22 +53,24 @@ public:
 	_uint*							Get_3DMaxNumFrame()		{ return &m_ui3DMax_NumFrame; }
 	_uint*							Get_3DMaxCurFrame()		{ return &m_ui3DMax_CurFrame; }
 	const _uint&					Get_CurAnimationIdx()	{ return m_uiCurAniIndex; }
-	const _uint&					Get_NewAnimationIdx()	{ return m_uiNewAniIndex; }
-
+	const _uint&					Get_NewAnimationIdx()	{ return m_uiNewAniIdx; }
+	const _float&					Get_AnimationTime()		{ return m_fAnimationTime; }
+	const _float&					Get_BlendTime()			{ return m_fBlendingTime; }
+	const _float&					Get_BlendAnimationTime() { return m_fBlendAnimationTime; }
 	// Set
-	void							Set_AnimationKey(const _uint& uiAniKey);
+	void Set_AnimationKey(const _uint& uiAniKey);
 
 	// Method
-	void							Play_Animation(_float fTimeDelta);
-	SKINNING_MATRIX*				Find_SkinningMatrix(string strBoneName);
-	_bool							Is_AnimationSetEnd(const _float& fTimeDelta);
+	void				Play_Animation(_float fTimeDelta);
+	SKINNING_MATRIX*	Find_SkinningMatrix(string strBoneName);
+	_bool				Is_AnimationSetEnd(const _float& fTimeDelta);
 
 private:
-	HRESULT			Ready_AniCtrl();
-	void			Ready_NodeHierarchy(const aiNode* pNode);
-	void			Update_NodeHierarchy(_float fAnimationTime, 
-										 const aiNode* pNode, 
-										 const _matrix& matParentTransform);
+	HRESULT	Ready_AniCtrl();
+	void	Ready_NodeHierarchy(const aiNode* pNode);
+	void	Update_NodeHierarchy(_float fAnimationTime, 
+								 const aiNode* pNode, 
+								 const _matrix& matParentTransform);
 	aiNodeAnim*		Find_NodeAnimation(const aiAnimation* pAnimation, const string strNodeName);
 	aiVector3D		Calc_InterPolatedValue_From_Key(const _float& fAnimationTime, 
 													const _uint& uiNumKeys, 
@@ -80,10 +82,10 @@ private:
 													const aiQuatKey* pQuatKey,
 													const _uint& uiNewNumKeys,
 													const aiQuatKey* pNewQuatKey);
-	_uint			Find_KeyIndex(const _float& fAnimationTime, const _uint& uiNumKey, const aiVectorKey* pVectorKey);
-	_uint			Find_KeyIndex(const _float& fAnimationTime, const _uint& uiNumKey, const aiQuatKey* pQuatKey);
-	_matrix			Convert_AiToMat4(const aiMatrix4x4& m);
-	_matrix			Convert_AiToMat3(const aiMatrix3x3& m);
+	_uint	Find_KeyIndex(const _float& fAnimationTime, const _uint& uiNumKey, const aiVectorKey* pVectorKey);
+	_uint	Find_KeyIndex(const _float& fAnimationTime, const _uint& uiNumKey, const aiQuatKey* pQuatKey);
+	_matrix	Convert_AiToMat4(const aiMatrix4x4& m);
+	_matrix	Convert_AiToMat3(const aiMatrix3x3& m);
 
 private:
 	/*__________________________________________________________________________________________________________
@@ -95,10 +97,8 @@ private:
 	[ Mesh Skinning Matrix ]
 	____________________________________________________________________________________________________________*/
 	vector<MAP_BONENAME>			m_vecBoneNameMap;				// Bone의 이름이 속해있는 SubsetMesh와 Index 정보.
-
 	vector<VECTOR_BONE_DESC>*		m_vecBoneDesc		= nullptr;	// Bone의 행렬 정보를 갖고있는 컨테이너.
 	vector<VECTOR_MATRIX>*			m_vecBoneTransform	= nullptr;	// Bone의 애니메이션 최종 변환 행렬.
-
 	vector<VECTOR_SKINNING_MATRIX>*	m_vecSkinningMatrix = nullptr;	// Bone Skinning에 필요한 행렬 정보들.
 
 	/*__________________________________________________________________________________________________________
@@ -111,10 +111,10 @@ private:
 	____________________________________________________________________________________________________________*/
 	_uint	m_uiNumAnimation		= 0;
 	_uint	m_uiCurAniIndex			= 0;
-	_uint	m_uiNewAniIndex			= 0;
+	_uint	m_uiNewAniIdx			= 0;
 
 	_float	m_fAnimationTime		= 0.0f;
-	_float	m_fBlendingTime			= 1.0f;
+	_float	m_fBlendingTime			= 0.0f;
 	_float	m_fBlendAnimationTime	= 0.0f;
 
 	_uint	m_ui3DMax_NumFrame		= 0;	// 3DMax에서 애니메이션의 총 Frame 개수.

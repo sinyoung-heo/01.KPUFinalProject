@@ -38,7 +38,6 @@ HRESULT CMonster_Normal::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviM
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 4;
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 	m_eCurAnimation = ANIM::A_WAIT;
 	m_ePreAnimation = ANIM::A_WAIT;
@@ -84,8 +83,10 @@ _int CMonster_Normal::LateUpdate_GameObject(const _float& fTimeDelta)
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 
 	/*__________________________________________________________________________________________________________
-	[ Animation KeyFrame Index ]
+	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
+	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
 	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
 	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
@@ -99,12 +100,6 @@ void CMonster_Normal::Send_PacketToServer()
 void CMonster_Normal::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
 	Active_Monster(fTimeDelta);
-
-	/*__________________________________________________________________________________________________________
-	[ Play Animation ]
-	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
 
 	Set_ConstantTable();
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);

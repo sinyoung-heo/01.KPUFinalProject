@@ -29,14 +29,13 @@ HRESULT CTestOthers::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, 
 										   m_pMeshCom->Get_MinVector(),
 										   m_pMeshCom->Get_MaxVector());
 
-	m_pInfoCom->m_fSpeed = PCOthersConst::MIN_SPEED;
+	m_pInfoCom->m_fSpeed = 0.0f;
 	m_pInfoCom->m_vArrivePos = m_pTransCom->m_vPos;
 
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 1;
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 	/*__________________________________________________________________________________________________________
 	[ Collider Bone Setting ]
@@ -99,6 +98,12 @@ _int CTestOthers::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
+	/*__________________________________________________________________________________________________________
+	[ Play Animation ]
+	____________________________________________________________________________________________________________*/
+	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+
 	return NO_EVENT;
 }
 
@@ -109,12 +114,6 @@ void CTestOthers::Send_PacketToServer()
 
 void CTestOthers::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
-	/*__________________________________________________________________________________________________________
-	[ Play Animation ]
-	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
-
 	Set_ConstantTable();
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
@@ -213,8 +212,8 @@ void CTestOthers::Move_OnNaviMesh(const _float& fTimeDelta)
 
 	SetUp_MoveSpeed(fTimeDelta);
 
-	if (!m_bIsMoveStop || 
-		m_pInfoCom->m_fSpeed == PCOthersConst::MIN_SPEED)
+	if (!m_bIsMoveStop /*|| 
+		m_pInfoCom->m_fSpeed == PCOthersConst::MIN_SPEED*/)
 	{
 		// NaviMesh 이동.		
 		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
@@ -229,18 +228,18 @@ void CTestOthers::Move_OnNaviMesh(const _float& fTimeDelta)
 
 void CTestOthers::SetUp_MoveSpeed(const _float& fTimeDelta)
 {
-	if (!m_bIsMoveStop)
-	{
-		m_pInfoCom->m_fSpeed += ((PCOthersConst::MAX_SPEED + PCOthersConst::MAX_SPEED) / 2.0f) * fTimeDelta;
-		if (m_pInfoCom->m_fSpeed > PCOthersConst::MAX_SPEED)
-			m_pInfoCom->m_fSpeed = PCOthersConst::MAX_SPEED;
-	}
-	else
-	{
-		m_pInfoCom->m_fSpeed -= PCOthersConst::MAX_SPEED * 4.0f * fTimeDelta;
-		if (m_pInfoCom->m_fSpeed < PCOthersConst::MIN_SPEED)
-			m_pInfoCom->m_fSpeed = PCOthersConst::MIN_SPEED;
-	}
+	//if (!m_bIsMoveStop)
+	//{
+	//	m_pInfoCom->m_fSpeed += ((PCOthersConst::MAX_SPEED + PCOthersConst::MAX_SPEED) / 2.0f) * fTimeDelta;
+	//	if (m_pInfoCom->m_fSpeed > PCOthersConst::MAX_SPEED)
+	//		m_pInfoCom->m_fSpeed = PCOthersConst::MAX_SPEED;
+	//}
+	//else
+	//{
+	//	m_pInfoCom->m_fSpeed -= PCOthersConst::MAX_SPEED * 3.0f * fTimeDelta;
+	//	if (m_pInfoCom->m_fSpeed < PCOthersConst::MIN_SPEED)
+	//		m_pInfoCom->m_fSpeed = PCOthersConst::MIN_SPEED;
+	//}
 }
 
 Engine::CGameObject* CTestOthers::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, 

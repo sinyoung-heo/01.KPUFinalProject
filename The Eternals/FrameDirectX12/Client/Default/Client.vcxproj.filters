@@ -169,9 +169,6 @@
     <Filter Include="99.Etc\SampleObject\05.StaticMeshObject">
       <UniqueIdentifier>{2351c006-4ada-445d-8e86-d03ee28c66bc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\02.PlayerCharacter\PCGladiator">
-      <UniqueIdentifier>{3b49a529-bab1-4a53-9827-4cde6e9b65f7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\99.GameUI">
       <UniqueIdentifier>{b30b9034-b059-4f37-b27b-eaef8067d730}</UniqueIdentifier>
     </Filter>
@@ -204,6 +201,18 @@
     </Filter>
     <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuInventory">
       <UniqueIdentifier>{9c82edd5-757a-4969-90b0-4dff9650f064}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.PlayerCharacter\00.PCGladiator">
+      <UniqueIdentifier>{3b49a529-bab1-4a53-9827-4cde6e9b65f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.PlayerCharacter\01.PCArcher">
+      <UniqueIdentifier>{1e304c41-821d-4b92-9364-958779beefe7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.PlayerCharacter\03.PCPriest">
+      <UniqueIdentifier>{6eed4051-b07f-4440-9510-50ef60d1266f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.PlayerCharacter\99.PCOthers">
+      <UniqueIdentifier>{594ee94f-a685-47a0-a2d0-625cb16c00fc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -397,10 +406,13 @@
       <Filter>99.Etc\SampleObject\18.TestColMonster</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\PCGladiator.h">
-      <Filter>02.GameObject\02.PlayerCharacter\PCGladiator</Filter>
+      <Filter>02.GameObject\02.PlayerCharacter\00.PCGladiator</Filter>
     </ClInclude>
     <ClInclude Include="GladiatorAnimation.h">
-      <Filter>02.GameObject\02.PlayerCharacter\PCGladiator</Filter>
+      <Filter>02.GameObject\02.PlayerCharacter\00.PCGladiator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PCOthers.h">
+      <Filter>02.GameObject\02.PlayerCharacter\99.PCOthers</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\WaterMeshObject.h">
       <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
@@ -567,7 +579,10 @@
       <Filter>99.Etc\SampleObject\18.TestColMonster</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\PCGladiator.cpp">
-      <Filter>02.GameObject\02.PlayerCharacter\PCGladiator</Filter>
+      <Filter>02.GameObject\02.PlayerCharacter\00.PCGladiator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PCOthers.cpp">
+      <Filter>02.GameObject\02.PlayerCharacter\99.PCOthers</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\WaterMeshObject.cpp">
       <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
