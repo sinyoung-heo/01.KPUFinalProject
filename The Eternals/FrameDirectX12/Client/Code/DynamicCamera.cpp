@@ -106,7 +106,8 @@ void CDynamicCamera::SetUp_DynamicCameraFromTarget(const _float& fTimeDelta)
 	else
 	{
 		m_pTarget = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
-		m_pTarget->Get_BoundingBox()->Set_SetUpCameraAt(true);
+		if (nullptr != m_pTarget)
+			m_pTarget->Get_BoundingBox()->Set_SetUpCameraAt(true);
 	}
 }
 

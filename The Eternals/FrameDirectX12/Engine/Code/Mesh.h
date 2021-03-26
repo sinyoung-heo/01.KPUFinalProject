@@ -23,9 +23,9 @@ public:
 	_uint*							Get_NumAnimation()			{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_NumAnimation(); else return nullptr; }
 	_uint*							Get_3DMaxNumFrame()			{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_3DMaxNumFrame(); else return nullptr;}
 	_uint*							Get_3DMaxCurFrame()			{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_3DMaxCurFrame(); else return nullptr;}
-	const _float&					Get_AnimationTime()			{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_AnimationTime(); else 0.0f; }
-	const _float&					Get_BlendTime()				{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_BlendTime(); else 0.0f; }
-	const _float&					Get_BlendAnimationTime()	{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_BlendAnimationTime(); else 0.0f; }
+	const _float&					Get_AnimationTime()			{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_AnimationTime(); else return 0.0f; }
+	const _float&					Get_BlendTime()				{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_BlendTime(); else return 0.0f; }
+	const _float&					Get_BlendAnimationTime()	{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_BlendAnimationTime(); else return 0.0f; }
 	const _vec3&					Get_CenterPos()				{ return m_pVIMesh->Get_CenterPos(); }
 	const _vec3&					Get_MinVector()				{ return m_pVIMesh->Get_MinVector(); }
 	const _vec3&					Get_MaxVector()				{ return m_pVIMesh->Get_MaxVector(); }
