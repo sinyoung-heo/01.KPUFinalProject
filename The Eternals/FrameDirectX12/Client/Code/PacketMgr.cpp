@@ -166,14 +166,13 @@ void CPacketMgr::ProcessPacket(char* ptr)
 	case SC_PACKET_LOGIN_OK:
 	{
 		sc_packet_login_ok* packet = reinterpret_cast<sc_packet_login_ok*>(ptr);
-
 		g_iSNum = packet->id;
 
 		/*__________________________________________________________________________________________________________
-		[ GameLogic Object(player) 持失 ]
+		[ GameLogic Object(ThisPlayer) 持失 ]
 		____________________________________________________________________________________________________________*/
-		
 		Engine::CGameObject* pGameObj = nullptr;
+		wstring wstrMeshTag = L"";
 
 #ifdef STAGE_LDH
 		//pGameObj = CTestPlayer::Create(m_pGraphicDevice, m_pCommandList,
@@ -188,8 +187,21 @@ void CPacketMgr::ProcessPacket(char* ptr)
 									   _vec3(packet->posX, packet->posY, packet->posZ));		// Pos
 
 #else
+		if (PC_GLADIATOR == packet->o_type)
+			wstrMeshTag = L"PoporiR27Gladiator";
+		else if (PC_ARCHER == packet->o_type)
+		{
+
+		}
+		else if (PC_PRIEST == packet->o_type)
+		{
+
+		}
+		else
+			wstrMeshTag = L"PoporiR27Gladiator";
+
 		pGameObj =	CPCGladiator::Create(m_pGraphicDevice, m_pCommandList,
-										 L"PoporiR27Gladiator",								// MeshTag
+										 wstrMeshTag,										// MeshTag
 										 L"StageVelika_NaviMesh",							// NaviMeshTag
 										 _vec3(0.05f, 0.05f, 0.05f),						// Scale
 										 _vec3(0.0f, 0.0f, 0.0f),							// Angle
@@ -262,6 +274,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 			auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
+			static_cast<CPCOthers*>(pObj)->Set_AnimationIdx(packet->animIdx);
 			pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
 			pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 			pObj->Set_MoveStop(false);
@@ -292,8 +305,8 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 			auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
+			static_cast<CPCOthers*>(pObj)->Set_AnimationIdx(packet->animIdx);
 			pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
-
 			pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 			pObj->Set_MoveStop(true);
 		}
@@ -496,8 +509,9 @@ void CPacketMgr::send_login()
 {
 	cs_packet_login p;
 
-	p.size = sizeof(p);
-	p.type = CS_LOGIN;
+	p.size   = sizeof(p);
+	p.type   = CS_LOGIN;
+	// p.o_type = PC_GLADIATOR;
 
 	int t_id = GetCurrentProcessId();
 	sprintf_s(p.name, "P%03d", t_id % 1000);
@@ -506,13 +520,13 @@ void CPacketMgr::send_login()
 	send_packet(&p);
 }
 
-void CPacketMgr::send_move(const _vec3& vDir, const _vec3& vPos)
+void CPacketMgr::send_move(const _vec3& vDir, const _vec3& vPos, const _int& iAniIdx)
 {
 	cs_packet_move p;
 
 	p.size = sizeof(p);
 	p.type = CS_MOVE;
-
+	p.animIdx = iAniIdx;
 	p.posX = vPos.x;
 	p.posY = vPos.y;
 	p.posZ = vPos.z;
@@ -540,13 +554,13 @@ bool CPacketMgr::change_MoveKey(MVKEY eKey)
 	return false;
 }
 
-void CPacketMgr::send_move_stop(const _vec3& vPos, const _vec3& vDir)
+void CPacketMgr::send_move_stop(const _vec3& vPos, const _vec3& vDir, const _int& iAniIdx)
 {
 	cs_packet_move_stop p;
 
 	p.size = sizeof(p);
 	p.type = CS_MOVE_STOP;
-
+	p.animIdx = iAniIdx;
 	p.posX = vPos.x;
 	p.posY = vPos.y;
 	p.posZ = vPos.z;

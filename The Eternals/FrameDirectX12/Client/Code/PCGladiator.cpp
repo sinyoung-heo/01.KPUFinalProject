@@ -371,7 +371,7 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 		else if (!m_bIsKeyDown &&
 				 GladiatorConst::MIN_SPEED == m_pInfoCom->m_fSpeed)
 		{
-			m_pPacketMgr->send_move_stop(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
+			m_pPacketMgr->send_move_stop(m_pTransCom->m_vPos, m_pTransCom->m_vDir, m_uiAnimIdx);
 		}
 	}
 
@@ -402,28 +402,28 @@ void CPCGladiator::Send_Player_Move()
 	switch (m_eKeyState)
 	{
 	case K_FRONT:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_uiAnimIdx);
 		break;
 	case K_BACK:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_uiAnimIdx);
 		break;
 	case K_RIGHT:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_uiAnimIdx);
 		break;
 	case K_RIGHT_UP:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_uiAnimIdx);
 		break;
 	case K_RIGHT_DOWN:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_uiAnimIdx);
 		break;
 	case K_LEFT:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_uiAnimIdx);
 		break;
 	case K_LEFT_UP:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_uiAnimIdx);
 		break;
 	case K_LEFT_DOWN:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_uiAnimIdx);
 		break;
 	}
 

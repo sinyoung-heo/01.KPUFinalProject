@@ -126,6 +126,7 @@ void process_packet(int id)
 		cs_packet_move* p = reinterpret_cast<cs_packet_move*>(pPlayer->m_packet_start);
 		
 		pPlayer->move_time = p->move_time;
+		pPlayer->m_iAniIdx = p->animIdx;
 		_vec3 vPos = _vec3(p->posX, p->posY, p->posZ);
 		_vec3 vDir = _vec3(p->dirX, p->dirY, p->dirZ);
 
@@ -137,6 +138,7 @@ void process_packet(int id)
 	{
 		cs_packet_move_stop* p = reinterpret_cast<cs_packet_move_stop*>(pPlayer->m_packet_start);
 
+		pPlayer->m_iAniIdx = p->animIdx;
 		_vec3 vPos = _vec3(p->posX, p->posY, p->posZ);
 		_vec3 vDir = _vec3(p->dirX, p->dirY, p->dirZ);
 
@@ -350,7 +352,7 @@ void send_move_packet(int to_client, int id)
 	p.size = sizeof(p);
 	p.type = SC_PACKET_MOVE;
 	p.id = id;
-
+	p.animIdx = pPlayer->m_iAniIdx;
 	p.move_time = pPlayer->move_time;
 
 	p.posX = pPlayer->m_vTempPos.x;
@@ -375,7 +377,7 @@ void send_move_stop_packet(int to_client, int id)
 	p.size = sizeof(p);
 	p.type = SC_PACKET_MOVE_STOP;
 	p.id = id;
-
+	p.animIdx = pPlayer->m_iAniIdx;
 	p.move_time = pPlayer->move_time;
 
 	p.posX = pPlayer->m_vPos.x;

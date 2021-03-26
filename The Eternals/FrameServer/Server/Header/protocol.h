@@ -90,7 +90,7 @@ struct sc_packet_move
 	unsigned char size;
 	char type;
 	int id;
-
+	int animIdx;
 	int move_time;
 	float posX, posY, posZ;
 	float dirX, dirY, dirZ;
@@ -222,7 +222,7 @@ struct cs_packet_move
 {
 	unsigned char  size;
 	char  type;
-
+	int	  animIdx;
 	int	  move_time; 
 	float dirX, dirY, dirZ;
 	float posX, posY, posZ;
@@ -232,7 +232,7 @@ struct cs_packet_move_stop
 {
 	unsigned char  size;
 	char  type;
-
+	int	  animIdx;
 	float posX, posY, posZ;
 	float dirX, dirY, dirZ;
 };
