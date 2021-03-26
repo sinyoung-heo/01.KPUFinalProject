@@ -48,8 +48,6 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 	____________________________________________________________________________________________________________*/
 	m_eStance   = Gladiator::STANCE_NONEATTACK;
 	m_uiAnimIdx = Gladiator::NONE_ATTACK_IDLE;
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-
 
 	/*__________________________________________________________________________________________________________
 	[ Collider Bone Setting ]
@@ -159,8 +157,10 @@ _int CPCGladiator::LateUpdate_GameObject(const _float& fTimeDelta)
 	}
 
 	/*__________________________________________________________________________________________________________
-	[ Animation KeyFrame Index ]
+	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
+	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
 	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
 	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
@@ -189,12 +189,6 @@ void CPCGladiator::Render_GameObject(const _float& fTimeDelta,
 									 ID3D12GraphicsCommandList* pCommandList, 
 									 const _int& iContextIdx)
 {
-	/*__________________________________________________________________________________________________________
-	[ Play Animation ]
-	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
-
 	Set_ConstantTable();
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }

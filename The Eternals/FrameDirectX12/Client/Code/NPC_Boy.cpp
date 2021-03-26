@@ -44,7 +44,6 @@ HRESULT CNPC_Boy::Ready_GameObject(wstring wstrMeshTag,
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 4;
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 	m_eCurAnimation = ANIM::A_WAIT;
 	m_ePreAnimation = ANIM::A_WAIT;
@@ -90,6 +89,12 @@ _int CNPC_Boy::LateUpdate_GameObject(const _float & fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 
+	/*__________________________________________________________________________________________________________
+	[ Play Animation ]
+	____________________________________________________________________________________________________________*/
+	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+
 	return NO_EVENT;
 }
 
@@ -100,12 +105,6 @@ void CNPC_Boy::Send_PacketToServer()
 
 void CNPC_Boy::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList * pCommandList, const _int& iContextIdx)
 {
-	/*__________________________________________________________________________________________________________
-	[ Play Animation ]
-	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
-
 	Set_ConstantTable();
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }

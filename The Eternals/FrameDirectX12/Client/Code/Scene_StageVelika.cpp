@@ -24,6 +24,7 @@
 #include "MainMenuLogout.h"
 #include "MainMenuSetting.h"
 #include "PCGladiator.h"
+#include "SampleNPC.h"
 
 
 CScene_StageVelika::CScene_StageVelika(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -180,6 +181,31 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 	Engine::CGameObject* pGameObj = nullptr;
 
 	/*__________________________________________________________________________________________________________
+	[ SampleNPC ]
+	____________________________________________________________________________________________________________*/
+	pGameObj =	CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
+								   L"PoporiR27Gladiator",		// MeshTag
+								   _vec3(0.05f, 0.05f, 0.05f),	// Scale
+								   _vec3(0.0f, 0.0f, 0.0f),		// Angle
+								   _vec3(143.0f, 0.0f, 73.0f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SampleNPC", pGameObj), E_FAIL);
+
+	pGameObj =	CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
+								   L"PoporiR27Gladiator",		// MeshTag
+								   _vec3(0.05f, 0.05f, 0.05f),		// Scale
+								   _vec3(0.0f, 0.0f, 0.0f),		// Angle
+								   _vec3(145.0f, 0.0f, 73.0f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SampleNPC", pGameObj), E_FAIL);
+
+	pGameObj =	CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
+								   L"PoporiR27Gladiator",		// MeshTag
+								   _vec3(0.05f, 0.05f, 0.05f),	// Scale
+								   _vec3(0.0f, 0.0f, 0.0f),		// Angle
+								   _vec3(147.0f, 0.0f, 73.0f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SampleNPC", pGameObj), E_FAIL);
+
+
+	/*__________________________________________________________________________________________________________
 	[ BumpTerrainMesh ]
 	____________________________________________________________________________________________________________*/
 	pGameObj = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
@@ -247,13 +273,13 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ Popori_F ]
 	____________________________________________________________________________________________________________*/
-	pGameObj =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
-								  L"PoporiR27Gladiator",		// MeshTag
-								  L"StageVelika_NaviMesh",		// NaviMeshTag
-								  _vec3(0.05f, 0.05f, 0.05f),	// Scale
-								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-								  _vec3(120.0f, 0.f, 75.0f));	// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"ThisPlayer", pGameObj), E_FAIL);
+	//pGameObj =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
+	//							  L"PoporiR27Gladiator",		// MeshTag
+	//							  L"StageVelika_NaviMesh",		// NaviMeshTag
+	//							  _vec3(0.05f, 0.05f, 0.05f),	// Scale
+	//							  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+	//							  _vec3(120.0f, 0.f, 75.0f));	// Pos
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"ThisPlayer", pGameObj), E_FAIL);
 
 
 	/*__________________________________________________________________________________________________________

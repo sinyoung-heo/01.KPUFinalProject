@@ -13,6 +13,7 @@
 #include "DynamicCamera.h"
 #include "TestColPlayer.h"
 #include "TestColMonster.h"
+#include "PCOthers.h"
 #include "PCGladiator.h"
 
 IMPLEMENT_SINGLETON(CPacketMgr)
@@ -220,12 +221,18 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 		Engine::CGameObject* pGameObj = nullptr;
 
-		pGameObj = CTestOthers::Create(m_pGraphicDevice, m_pCommandList,
-									   L"PoporiH25",											// MeshTag
-									   _vec3(0.05f, 0.05f, 0.05f),								// Scale
-									   _vec3(0.0f, 0.0f, 0.0f),									// Angle
-									   _vec3(packet->posX, packet->posY, packet->posZ));		// Pos
+		//pGameObj = CTestOthers::Create(m_pGraphicDevice, m_pCommandList,
+		//							   L"PoporiH25",											// MeshTag
+		//							   _vec3(0.05f, 0.05f, 0.05f),								// Scale
+		//							   _vec3(0.0f, 0.0f, 0.0f),									// Angle
+		//							   _vec3(packet->posX, packet->posY, packet->posZ));		// Pos
 
+		pGameObj = CPCOthers::Create(m_pGraphicDevice, m_pCommandList,
+									 L"PoporiR27Gladiator",								// MeshTag
+									 L"StageVelika_NaviMesh",							// NaviMeshTag
+									 _vec3(0.05f, 0.05f, 0.05f),						// Scale
+									 _vec3(0.0f, 0.0f, 0.0f),							// Angle
+									 _vec3(packet->posX, packet->posY, packet->posZ));	// Pos
 		pGameObj->Set_ServerNumber(packet->id);
 
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Others", pGameObj), E_FAIL);
