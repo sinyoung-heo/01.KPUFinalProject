@@ -16,8 +16,8 @@ CTexture::CTexture(const CTexture & rhs)
 	, m_uiTexSize(rhs.m_uiTexSize)
 	, m_wstrFileName(rhs.m_wstrFileName)
 {
-	for (auto& pTexture : m_vecResource)
-		pTexture->AddRef();
+	//for (auto& pTexture : m_vecResource)
+	//	pTexture->AddRef();
 
 	if(nullptr != m_pTexDescriptorHeap)
 		m_pTexDescriptorHeap->AddRef();

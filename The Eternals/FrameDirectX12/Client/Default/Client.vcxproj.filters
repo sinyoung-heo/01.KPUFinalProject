@@ -133,12 +133,6 @@
     <Filter Include="02.GameObject\02.PlayerCharacter">
       <UniqueIdentifier>{30ac5964-93ee-4c7c-bbb1-173e35ff9b0d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\03.NPC">
-      <UniqueIdentifier>{47df4906-7eaf-475a-9510-a7ba998fbd98}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\04.Monster">
-      <UniqueIdentifier>{3b8e7fab-087e-47c3-9828-af65a341aa00}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.Mgr\04.MouseCursorMgr">
       <UniqueIdentifier>{9f593d0a-4f7e-4583-a859-a2cb29f4762e}</UniqueIdentifier>
     </Filter>
@@ -213,6 +207,24 @@
     </Filter>
     <Filter Include="02.GameObject\02.PlayerCharacter\99.PCOthers">
       <UniqueIdentifier>{594ee94f-a685-47a0-a2d0-625cb16c00fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\04.NPC">
+      <UniqueIdentifier>{47df4906-7eaf-475a-9510-a7ba998fbd98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Monster">
+      <UniqueIdentifier>{3b8e7fab-087e-47c3-9828-af65a341aa00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.PCWeapon">
+      <UniqueIdentifier>{8d0f98d6-5ed9-459b-a35a-c8242f7c2d25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.PCWeapon\00.PCWeaponTwoHand">
+      <UniqueIdentifier>{efa51c3e-7310-4166-bd30-a27678104302}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.PCWeapon\01.PCWeaponBow">
+      <UniqueIdentifier>{5472775e-f1d9-4f74-9e24-1790d0f35fcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.PCWeapon\02.PCWeaponRod">
+      <UniqueIdentifier>{aebd49b0-2d25-4b5f-9cdf-7cbfff372012}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
