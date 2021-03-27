@@ -5,7 +5,7 @@
 CMonster::CMonster()
 	:m_iHp(0), m_iMaxHp(0), m_iExp(0), m_iAtt(0), m_fSpd(0.f),
 	targetNum(-1), m_bIsAttack(false), m_bIsComeBack(false), 
-	m_monNum(MONSTER_NUMBER::MON_END)
+	m_monNum(0)
 {
 }
 
@@ -310,7 +310,7 @@ void CMonster::Move_NormalMonster(const float& fTimeDelta)
 		}
 	}
 
-	/* Monster 框流烙 贸府 */
+	/* Monster 框流烙 规氢 贸府 */
 	if (CCollisionMgr::GetInstance()->Is_Arrive(m_vPos, m_vTempPos))
 	{
 		switch (rand() % 8)

@@ -896,7 +896,7 @@ void Initialize_Monster()
 		pNew->m_iExp		= 0;
 		pNew->m_fSpd		= 1.f;
 		pNew->m_type		= MON_NORMAL;
-		pNew->m_monNum		= MONSTER_NUMBER::MON_CRAB;
+		pNew->m_monNum		= MON_CRAB;
 		pNew->m_status		= STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));

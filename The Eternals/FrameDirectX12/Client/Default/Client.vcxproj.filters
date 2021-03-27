@@ -214,6 +214,9 @@
     <Filter Include="02.GameObject\02.PlayerCharacter\99.PCOthers">
       <UniqueIdentifier>{594ee94f-a685-47a0-a2d0-625cb16c00fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\04.Monster\00.Crab">
+      <UniqueIdentifier>{f52b8195-0115-416c-a1ab-1aa1e413e775}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -420,6 +423,9 @@
     <ClInclude Include="..\Code\TerrainMeshObject.h">
       <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\Crab.h">
+      <Filter>02.GameObject\04.Monster\00.Crab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -589,6 +595,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\TerrainMeshObject.cpp">
       <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Crab.cpp">
+      <Filter>02.GameObject\04.Monster\00.Crab</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -35,7 +35,7 @@ public:
 	virtual DWORD Release();
 
 public:
-	char			m_monNum		= MONSTER_NUMBER::MON_END;
+	char			m_monNum		= 0;
 	int				m_iHp			= 0;
 	int				m_iMaxHp		= 0;
 	int				m_iExp			= 0;

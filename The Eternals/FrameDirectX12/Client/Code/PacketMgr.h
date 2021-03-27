@@ -38,6 +38,7 @@ public:
 
 public:
 	bool	change_MoveKey(MVKEY eKey);
+	void	Enter_Monster(sc_packet_monster_enter* packet);
 
 private:
 	void	send_packet(void* packet);

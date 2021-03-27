@@ -9,7 +9,7 @@
 #include "NPC_Boy.h"
 #include "NPC_Villagers.h"
 #include "NPC_Merchant.h"
-#include "Monster_Normal.h"
+#include "Crab.h"
 #include "DynamicCamera.h"
 #include "TestColPlayer.h"
 #include "TestColMonster.h"
@@ -233,12 +233,6 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 		Engine::CGameObject* pGameObj = nullptr;
 
-		//pGameObj = CTestOthers::Create(m_pGraphicDevice, m_pCommandList,
-		//							   L"PoporiH25",											// MeshTag
-		//							   _vec3(0.05f, 0.05f, 0.05f),								// Scale
-		//							   _vec3(0.0f, 0.0f, 0.0f),									// Angle
-		//							   _vec3(packet->posX, packet->posY, packet->posZ));		// Pos
-
 		pGameObj = CPCOthers::Create(m_pGraphicDevice, m_pCommandList,
 									 L"PoporiR27Gladiator",								// MeshTag
 									 L"StageVelika_NaviMesh",							// NaviMeshTag
@@ -433,30 +427,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 	case SC_PACKET_MONSTER_ENTER:
 	{
 		sc_packet_monster_enter* packet = reinterpret_cast<sc_packet_monster_enter*>(ptr);
-
-		/*__________________________________________________________________________________________________________
-		[ GameLogic Object(MONSTER) 생성 ]
-		____________________________________________________________________________________________________________*/
-		Engine::CGameObject* pGameObj = nullptr;
-
-		pGameObj = CMonster_Normal::Create(m_pGraphicDevice, m_pCommandList,
-										   wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
-										   wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
-										   _vec3(0.05f, 0.05f, 0.05f),										// Scale
-										   _vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
-										   _vec3(packet->posX, packet->posY, packet->posZ));
-
-		
-		//pGameObj = CTestColMonster::Create(m_pGraphicDevice, m_pCommandList,
-		//	_vec3(1.f, 1.f, 1.f),									// Scale
-		//	_vec3(0.0f, 0.0f, 0.0f),								// Angle
-		//	_vec3(packet->posX, packet->posY, packet->posZ));		// Pos
-
-		pGameObj->Set_ServerNumber(packet->id);
-		pGameObj->Set_Info(1, packet->Hp, packet->maxHp, 0, 0, 0, 0, 0, 1.f);
-
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);
-
+		Enter_Monster(packet);
 	}
 	break;
 
@@ -468,8 +439,8 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
 		
-		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ)); // 실질적으로 안씀
-		
+		pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+
 		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 		pObj->Set_MoveStop(false);
 	}
@@ -504,6 +475,27 @@ void CPacketMgr::ProcessPacket(char* ptr)
 #endif 
 		break;
 	}
+}
+
+void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
+{
+	Engine::CGameObject* pGameObj = nullptr;
+
+	if (packet->mon_num == MON_CRAB)
+	{
+		pGameObj = CCrab::Create(m_pGraphicDevice, m_pCommandList,
+								 wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
+								 wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
+								 _vec3(0.05f, 0.05f, 0.05f),									// Scale
+								 _vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
+								 _vec3(packet->posX, packet->posY, packet->posZ));
+	}
+
+
+	pGameObj->Set_ServerNumber(packet->id);
+	pGameObj->Set_Info(1, packet->Hp, packet->maxHp, 0, 0, 0, 0, 0, 1.f);
+
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);
 }
 
 void CPacketMgr::send_login()
