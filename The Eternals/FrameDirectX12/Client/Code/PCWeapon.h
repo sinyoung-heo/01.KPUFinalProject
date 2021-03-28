@@ -16,6 +16,9 @@ protected:
 	virtual ~CPCWeapon() = default;
 
 public:
+	void Set_HierarchyDesc(Engine::HIERARCHY_DESC* pHierarchyDesc) { m_pHierarchyDesc = pHierarchyDesc; };
+	// void Set_TargetAngle(const _vec3& vAngle) { m_vTargetAngle = vAngle; }
+
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
 									 const _vec3& vScale,
@@ -35,6 +38,7 @@ private:
 	void			Set_ConstantTableShadowDepth();
 	void			Set_ConstantTable(const _int& iContextIdx, const _int& iInstanceIdx);
 	void			Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int& iInstanceIdx);
+	// void			SetUp_TargetAngle(const _float& fTimeDelta);
 
 protected:
 	/*__________________________________________________________________________________________________________
@@ -50,6 +54,7 @@ protected:
 	[ Value ]
 	____________________________________________________________________________________________________________*/
 	_uint	m_iAttackPower             = 0;
+	// _vec3	m_vTargetAngle             = _vec3(0.0f);
 	wstring	m_wstrMeshTag		       = L"";
 	_uint	m_iMeshPipelineStatePass   = 0;
 	_uint	m_iShadowPipelineStatePass = 0;

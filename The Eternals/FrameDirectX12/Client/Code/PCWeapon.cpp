@@ -17,16 +17,24 @@ HRESULT CPCWeapon::Ready_GameObject(wstring wstrMeshTag,
 									Engine::HIERARCHY_DESC* pHierarchyDesc,
 									_matrix* pParentMatrix)
 {
-	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, false, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
 	
+	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
+										   m_pTransCom->m_vScale,
+										   m_pMeshCom->Get_CenterPos(),
+										   m_pMeshCom->Get_MinVector(),
+										   m_pMeshCom->Get_MaxVector(),
+										   1.0f,
+										   _vec3(0.0f, 10.0f, 0.0f));
+
 	m_wstrMeshTag		  = wstrMeshTag;
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos	  = vPos;
-
-	m_pHierarchyDesc = pHierarchyDesc;
-	m_pParentMatrix  = pParentMatrix;
+	// m_vTargetAngle		  = m_pTransCom->m_vAngle;
+	m_pHierarchyDesc      = pHierarchyDesc;
+	m_pParentMatrix       = pParentMatrix;
 
 	// PipelineState.
 	m_iMeshPipelineStatePass   = 1;
@@ -51,6 +59,8 @@ _int CPCWeapon::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	// SetUp_TargetAngle(fTimeDelta);
+
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
@@ -67,6 +77,7 @@ _int CPCWeapon::Update_GameObject(const _float& fTimeDelta)
 									 * m_pHierarchyDesc->matGlobalTransform;
 
 	m_pTransCom->m_matWorld *= matBoneFinalTransform * (*m_pParentMatrix);
+	m_pBoundingBoxCom->Update_Component(fTimeDelta);
 
 	return NO_EVENT;
 }
@@ -209,6 +220,27 @@ void CPCWeapon::Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int
 
 	m_pShaderShadowInstancing->Get_UploadBuffer_ShaderShadow(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderShadow);
 }
+
+//void CPCWeapon::SetUp_TargetAngle(const _float& fTimeDelta)
+//{
+//	if (m_vTargetAngle != m_pTransCom->m_vAngle)
+//	{
+//		if (m_vTargetAngle.z < m_pTransCom->m_vAngle.z)
+//		{
+//			m_pTransCom->m_vAngle.z -= 150.0f * fTimeDelta;
+//			if (m_pTransCom->m_vAngle.z < m_vTargetAngle.z)
+//				m_pTransCom->m_vAngle.z = m_vTargetAngle.z;
+//		}
+//		else if (m_vTargetAngle.z > m_pTransCom->m_vAngle.z)
+//		{
+//			m_pTransCom->m_vAngle.z += 150.0f * fTimeDelta;
+//			if (m_pTransCom->m_vAngle.z > m_vTargetAngle.z)
+//				m_pTransCom->m_vAngle.z = m_vTargetAngle.z;
+//		}
+//
+//		cout << m_pTransCom->m_vAngle.z << endl;
+//	}
+//}
 
 void CPCWeapon::Free()
 {

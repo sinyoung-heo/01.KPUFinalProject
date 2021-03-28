@@ -33,7 +33,9 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 										   m_pTransCom->m_vScale,
 										   m_pMeshCom->Get_CenterPos(),
 										   m_pMeshCom->Get_MinVector(),
-										   m_pMeshCom->Get_MaxVector());
+										   m_pMeshCom->Get_MaxVector(),
+										   1.0f,
+										   _vec3(0.0f, 5.0f, 0.0f));
 
 	m_pInfoCom->m_fSpeed     = GladiatorConst::MIN_SPEED;
 	m_pInfoCom->m_vArrivePos = m_pTransCom->m_vPos;
@@ -41,7 +43,7 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 	m_eKeyState   = MVKEY::K_END;
 	m_bIsKeyDown  = false;
 	m_bIsSameDir  = false;
-	m_vecPreAngle = m_pTransCom->m_vAngle.y;
+	m_fPreAngle   = m_pTransCom->m_vAngle.y;
 
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
@@ -99,7 +101,7 @@ HRESULT CPCGladiator::LateInit_GameObject()
 	m_pWeapon = CPCWeaponTwoHand::Create(m_pGraphicDevice, m_pCommandList,
 										 L"Twohand19_A_SM",
 										 _vec3(0.75f),
-										 _vec3(0.0f, 0.0f ,90.0f),
+										 _vec3(0.0f, 0.0f, 180.0f),
 										 _vec3(0.0f, 0.0f, 0.0f),
 										 m_pMeshCom->Find_HierarchyDesc("Weapon_Back"),
 										 // m_pMeshCom->Find_HierarchyDesc("L_Sword"),
@@ -295,6 +297,7 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 	if (!g_bIsActive) return;
 
 	KeyInput_Move(fTimeDelta);
+	KeyInput_Attack(fTimeDelta);
 
 	/* Player Attack to Monster --- TEST */
 	if (Engine::KEY_PRESSING(DIK_M))
@@ -303,6 +306,9 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 
 void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 {
+	if (!g_bIsActive || m_bIsAttack) 
+		return;
+
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 	m_pTransCom->m_vDir.Normalize();
 
@@ -388,9 +394,29 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 		}
 	}
 
-	SetUp_NoneAttackRunMoveSpeed(fTimeDelta);
-	SetUp_NoneAttackRunAnimation();
-	SetUp_NoneAttackRunToIdleAnimation(fTimeDelta);
+	SetUp_RunMoveSpeed(fTimeDelta);
+	SetUp_RunAnimation();
+	SetUp_RunToIdleAnimation(fTimeDelta);
+}
+
+void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
+{
+	if (Engine::KEY_DOWN(DIK_LSHIFT) &&
+		!m_bIsKeyDown &&
+		m_bIsCompleteStanceChange)
+	{
+		SetUp_PlayerStance();
+	}
+	Change_PlayerStance(fTimeDelta);
+
+	//if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB))
+	//{
+	//	if (Gladiator::STANCE_NONEATTACK != m_eStance)
+	//		m_eStance = Gladiator::STANCE_ATTACK;
+	//	else
+	//		m_eStance = Gladiator::STANCE_NONEATTACK;
+	//}
+
 }
 
 void CPCGladiator::Move_OnNaviMesh(const _float& fTimeDelta)
@@ -440,22 +466,22 @@ void CPCGladiator::Send_Player_Move()
 		break;
 	}
 
-	m_vecPreAngle = m_pTransCom->m_vAngle.y;
+	m_fPreAngle = m_pTransCom->m_vAngle.y;
 }
 
 bool CPCGladiator::Is_Change_CamDirection()
 {
-	if (m_vecPreAngle + 5.f < m_pTransCom->m_vAngle.y)
+	if (m_fPreAngle + 5.f < m_pTransCom->m_vAngle.y)
 		return true;
-	else if (m_vecPreAngle - 5.f > m_pTransCom->m_vAngle.y)
+	else if (m_fPreAngle - 5.f > m_pTransCom->m_vAngle.y)
 		return true;
 
 	return false;
 }
 
-void CPCGladiator::SetUp_NoneAttackRunMoveSpeed(const _float& fTimeDelta)
+void CPCGladiator::SetUp_RunMoveSpeed(const _float& fTimeDelta)
 {
-	if (Gladiator::STANCE_NONEATTACK == m_eStance)
+	// if (Gladiator::STANCE_NONEATTACK == m_eStance )
 	{
 		// Move On
 		if (m_bIsKeyDown)
@@ -472,25 +498,90 @@ void CPCGladiator::SetUp_NoneAttackRunMoveSpeed(const _float& fTimeDelta)
 				m_pInfoCom->m_fSpeed = GladiatorConst::MIN_SPEED;
 		}
 	}
-
 }
 
-void CPCGladiator::SetUp_NoneAttackRunAnimation()
+void CPCGladiator::SetUp_RunAnimation()
 {
-	if (m_bIsKeyDown && 
-		Gladiator::STANCE_NONEATTACK == m_eStance)
-	{
+	if (m_bIsKeyDown && Gladiator::STANCE_NONEATTACK == m_eStance)
 		m_uiAnimIdx = Gladiator::NONE_ATTACK_WALK;
-	}
+	else if (m_bIsKeyDown && Gladiator::STANCE_ATTACK == m_eStance)
+		m_uiAnimIdx = Gladiator::ATTACK_RUN;
+
 }
 
-void CPCGladiator::SetUp_NoneAttackRunToIdleAnimation(const _float& fTimeDelta)
+void CPCGladiator::SetUp_RunToIdleAnimation(const _float& fTimeDelta)
 {
 	if (!m_bIsKeyDown &&
 		Gladiator::NONE_ATTACK_WALK == m_uiAnimIdx &&
 		Gladiator::STANCE_NONEATTACK == m_eStance)
 	{
 		m_uiAnimIdx = Gladiator::NONE_ATTACK_IDLE;
+	}
+	else if (!m_bIsKeyDown &&
+			 Gladiator::ATTACK_RUN == m_uiAnimIdx &&
+			 Gladiator::STANCE_ATTACK == m_eStance)
+	{
+		m_uiAnimIdx = Gladiator::ATTACK_WAIT;
+	}
+}
+
+void CPCGladiator::SetUp_PlayerStance()
+{
+	m_bIsCompleteStanceChange = false;
+
+	// NONE_ATTACK -> ATTACK
+	if (Gladiator::STANCE_NONEATTACK == m_eStance)
+	{
+		if (Gladiator::NONE_ATTACK_IDLE == m_uiAnimIdx)
+		{
+			m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("L_Sword"));
+			// m_pWeapon->Set_TargetAngle(_vec3(0.0f, 0.0f, 180.0f));
+		}
+
+		m_eStance   = Gladiator::STANCE_ATTACK;
+		m_uiAnimIdx = Gladiator::OUT_WEAPON;
+	}
+	// ATTACK -> NONE_ATTACK
+	else if (Gladiator::STANCE_ATTACK == m_eStance)
+	{
+		// m_pWeapon->Set_TargetAngle(_vec3(0.0f, 0.0f, 90.0f));
+
+		m_eStance   = Gladiator::STANCE_NONEATTACK;
+		m_uiAnimIdx = Gladiator::IN_WEAPON;
+	}
+}
+
+void CPCGladiator::Change_PlayerStance(const _float& fTimeDelta)
+{
+	if (!m_bIsCompleteStanceChange)
+	{
+		// NONE_ATTACK -> ATACK
+		if (Gladiator::STANCE_ATTACK == m_eStance &&
+			Gladiator::OUT_WEAPON == m_uiAnimIdx &&
+			m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+		{
+			m_uiAnimIdx = Gladiator::ATTACK_WAIT;
+			m_bIsCompleteStanceChange = true;
+
+		}
+
+		// ATTACK -> NONE_ATTACK
+		else if (Gladiator::STANCE_NONEATTACK == m_eStance  &&
+				 Gladiator::IN_WEAPON == m_uiAnimIdx &&
+				 m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+		{
+			m_uiAnimIdx = Gladiator::NONE_ATTACK_IDLE;
+			m_bIsCompleteStanceChange = true;
+		}
+
+		if (Gladiator::IN_WEAPON == m_uiAnimIdx && m_ui3DMax_CurFrame > 20)
+			m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("Weapon_Back"));
+
+		if (Gladiator::NONE_ATTACK_IDLE == m_uiAnimIdx ||
+			Gladiator::ATTACK_WAIT == m_uiAnimIdx)
+		{
+			m_bIsCompleteStanceChange = true;
+		}
 	}
 }
 
