@@ -21,49 +21,17 @@ int CMonster::Update_Monster(const float& fTimeDelta)
 	if (fTimeDelta > 1.f)
 		return NO_EVENT;
 
-	//Change_Animation(fTimeDelta);
-	Change_Crab_Animation(fTimeDelta);
+	Change_Animation(fTimeDelta);
 
 	return NO_EVENT;
 }
 
 void CMonster::Change_Animation(const float& fTimeDelta)
 {
-	switch (m_status)
-	{
-	/* 정찰 */
-	case STATUS::ST_ACTIVE:
-	{
-		if (m_monNum == MON_NORMAL)
-		{
-			Move_NormalMonster(fTimeDelta);
-		}
-		else if (m_monNum == MON_CHASE)
-		{
-			Move_ChaseMonster(fTimeDelta);
-		}
-		else if (m_monNum == MON_BOSS)
-		{
-
-		}
-	}
-	break;
-
-	case STATUS::ST_NONACTIVE:	
-	{
-		m_bIsComeBack = false;
-	}
-	break;
-	case STATUS::ST_CHASE:
-		break;
-
-	case STATUS::ST_ATTACK:
-	{
-	}
-	break;
-	case STATUS::ST_DEAD:
-		break;
-	}
+	if (m_monNum == MON_CRAB)
+		Change_Crab_Animation(fTimeDelta);
+	else if (m_monNum == MON_MONKEY)
+		Change_Monkey_Animation(fTimeDelta);
 }
 
 void CMonster::Change_Crab_Animation(const float& fTimeDelta)
@@ -82,9 +50,10 @@ void CMonster::Change_Crab_Animation(const float& fTimeDelta)
 		m_bIsComeBack = false;
 	}
 	break;
+
 	case STATUS::ST_CHASE:
 	{
-		Move_ChaseMonster(fTimeDelta);
+		Chase_NormalMonster(fTimeDelta);
 	}
 	break;
 	
@@ -93,6 +62,42 @@ void CMonster::Change_Crab_Animation(const float& fTimeDelta)
 		Attack_Crab(fTimeDelta);
 	}
 	break;
+
+	case STATUS::ST_DEAD:
+		break;
+	}
+}
+
+void CMonster::Change_Monkey_Animation(const float& fTimeDelta)
+{
+	switch (m_status)
+	{
+
+	case STATUS::ST_ACTIVE:
+	{
+		Move_NormalMonster(fTimeDelta);
+	}
+	break;
+
+	case STATUS::ST_NONACTIVE:
+	{
+		m_bIsComeBack = false;
+	}
+	break;
+
+	case STATUS::ST_CHASE:
+	{
+		Chase_NormalMonster(fTimeDelta);
+	}
+	break;
+
+	case STATUS::ST_ATTACK:
+	{
+		/* Attak - Monkey 함수 만든 후 작업해야 됨*/
+		Attack_Crab(fTimeDelta);
+	}
+	break;
+
 	case STATUS::ST_DEAD:
 		break;
 	}
@@ -151,7 +156,6 @@ void CMonster::Move_ComeBack(const float& fTimeDelta)
 	else
 		nonActive_monster(m_sNum);
 	
-
 	/* NaviMesh를 벗어날 경우 움직임 X */
 	if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
 		return;
@@ -206,7 +210,7 @@ void CMonster::Move_ComeBack(const float& fTimeDelta)
 				{
 					pPlayer->v_lock.unlock();
 					/* 해당 유저에게 NPC가 움직인 후의 위치를 전송 */
-					send_Monster_move_packet(pl, A_WALK);
+					send_Monster_move_packet(pl, Monster_Normal::WALK);
 				}
 				/* 해당 유저의 시야 목록에 현재 Monster가 존재하지 않을 경우 */
 				else
@@ -259,7 +263,7 @@ void CMonster::Move_ComeBack(const float& fTimeDelta)
 				else
 				{
 					pPlayer->v_lock.unlock();
-					send_Monster_move_packet(pl,A_WALK);
+					send_Monster_move_packet(pl, Monster_Normal::WALK);
 				}
 			}
 			else
@@ -394,7 +398,7 @@ void CMonster::Move_NormalMonster(const float& fTimeDelta)
 				{
 					pPlayer->v_lock.unlock();
 					/* 해당 유저에게 NPC가 움직인 후의 위치를 전송 */
-					send_Monster_move_packet(pl, A_WALK);
+					send_Monster_move_packet(pl, Monster_Normal::WALK);
 				}
 				/* 해당 유저의 시야 목록에 현재 Monster가 존재하지 않을 경우 */
 				else
@@ -447,7 +451,7 @@ void CMonster::Move_NormalMonster(const float& fTimeDelta)
 				else
 				{
 					pPlayer->v_lock.unlock();
-					send_Monster_move_packet(pl, A_WALK);
+					send_Monster_move_packet(pl, Monster_Normal::WALK);
 				}
 			}
 			else
@@ -461,7 +465,7 @@ void CMonster::Move_NormalMonster(const float& fTimeDelta)
 		nonActive_monster(m_sNum);
 }
 
-void CMonster::Move_ChaseMonster(const float& fTimeDelta)
+void CMonster::Chase_NormalMonster(const float& fTimeDelta)
 {
 	/* 해당 Monster의 원래 위치값 */
 	float ori_x, ori_y, ori_z;
@@ -594,7 +598,7 @@ void CMonster::Move_ChaseMonster(const float& fTimeDelta)
 				{
 					pPlayer->v_lock.unlock();
 					/* 해당 유저에게 NPC가 움직인 후의 위치를 전송 */
-					send_Monster_move_packet(pl, A_RUN);
+					send_Monster_move_packet(pl, Monster_Normal::RUN);
 				}
 				/* 해당 유저의 시야 목록에 현재 Monster가 존재하지 않을 경우 */
 				else
@@ -647,7 +651,7 @@ void CMonster::Move_ChaseMonster(const float& fTimeDelta)
 				else
 				{
 					pPlayer->v_lock.unlock();
-					send_Monster_move_packet(pl,A_RUN);
+					send_Monster_move_packet(pl, Monster_Normal::RUN);
 				}
 			}
 			else
@@ -716,7 +720,7 @@ void CMonster::Attack_Crab(const float& fTimeDelta)
 			{
 				if (!m_bIsAttack) return;
 				cout << pl << "님에게 몬스터 공격 패킷 전송" << endl;
-				send_Monster_NormalAttack(pl, ANIM_CRAB::A_ATTACK);
+				send_Monster_NormalAttack(pl, Monster_Normal::ATTACK);
 			}
 		}		
 		// 주변 유저에게 monster_attack_start를 알렸다면 잠시 공격 중지 -> 일정 시간 후 재공격

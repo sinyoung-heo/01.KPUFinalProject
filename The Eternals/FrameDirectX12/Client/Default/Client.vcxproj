@@ -169,10 +169,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\FrameServer\Server\Header\MonsterAnimation.h" />
     <ClInclude Include="..\..\..\FrameServer\Server\Header\protocol.h" />
     <ClInclude Include="..\Code\CharacterHpGauge.h" />
     <ClInclude Include="..\Code\CharacterMpGauge.h" />
     <ClInclude Include="..\Code\Crab.h" />
+    <ClInclude Include="..\Code\Monkey.h" />
     <ClInclude Include="..\Code\PCGladiator.h" />
     <ClInclude Include="..\Code\PCOthers.h" />
     <ClInclude Include="..\Code\PCWeapon.h" />
@@ -247,6 +249,7 @@
     <ClCompile Include="..\Code\MainMenuInventory.cpp" />
     <ClCompile Include="..\Code\MainMenuLogout.cpp" />
     <ClCompile Include="..\Code\MainMenuSetting.cpp" />
+    <ClCompile Include="..\Code\Monkey.cpp" />
     <ClCompile Include="..\Code\Monster_Normal.cpp" />
     <ClCompile Include="..\Code\MouseCursorMgr.cpp" />
     <ClCompile Include="..\Code\NPC_Animal.cpp" />

@@ -13,11 +13,11 @@ namespace Engine
 	class CNaviMesh;
 }
 
-class CCrab : public Engine::CGameObject
+class CMonkey : public Engine::CGameObject
 {
 private:
-	explicit CCrab(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CCrab() = default;
+	explicit CMonkey(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CMonkey() = default;
 
 public:
 	// CGameObject을(를) 통해 상속됨
@@ -70,7 +70,7 @@ private:
 	_uint	m_uiAnimIdx			= 0;	// 현재 애니메이션 Index
 	_uint	m_ui3DMax_NumFrame	= 0;	// 3DMax에서 애니메이션의 총 Frame 개수
 	_uint	m_ui3DMax_CurFrame	= 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
-
+	
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

@@ -229,6 +229,12 @@
     <Filter Include="02.GameObject\03.PCWeapon\03.PCWeaponRod">
       <UniqueIdentifier>{ac799807-47db-404f-9962-ec39d0fab803}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.Monster\01.Monkey">
+      <UniqueIdentifier>{619c65d5-6d04-4253-bd5f-839dc09a18a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Header\00.protocol">
+      <UniqueIdentifier>{745f0be7-2082-47b9-96f0-48a3569569a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -320,9 +326,6 @@
     </ClInclude>
     <ClInclude Include="..\Code\LoadingProgress.h">
       <Filter>01.Scene\01.Logo\02.LoadingProgress</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\FrameServer\Server\Header\protocol.h">
-      <Filter>98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\Scene_StageVelika.h">
       <Filter>01.Scene\03.StageVelika</Filter>
@@ -443,6 +446,15 @@
     </ClInclude>
     <ClInclude Include="..\Code\PCWeaponTwoHand.h">
       <Filter>02.GameObject\03.PCWeapon\00.PCWeaponTwoHand</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Monkey.h">
+      <Filter>02.GameObject\05.Monster\01.Monkey</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\FrameServer\Server\Header\protocol.h">
+      <Filter>98.Header\00.protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\FrameServer\Server\Header\MonsterAnimation.h">
+      <Filter>98.Header\00.protocol</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -622,6 +634,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\PCWeaponTwoHand.cpp">
       <Filter>02.GameObject\03.PCWeapon\00.PCWeaponTwoHand</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Monkey.cpp">
+      <Filter>02.GameObject\05.Monster\01.Monkey</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

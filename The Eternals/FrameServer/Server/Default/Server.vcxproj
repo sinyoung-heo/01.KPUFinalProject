@@ -54,6 +54,7 @@
     <ClInclude Include="..\Code\Sector.h" />
     <ClInclude Include="..\Code\SectorMgr.h" />
     <ClInclude Include="..\Code\Timer.h" />
+    <ClInclude Include="..\Header\MonsterAnimation.h" />
     <ClInclude Include="..\Header\dataType.h" />
     <ClInclude Include="..\Header\define.h" />
     <ClInclude Include="..\Header\enum.h" />

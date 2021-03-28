@@ -1,9 +1,12 @@
 #pragma once
 #include "Obj.h"
+
+
 class CMonster :
     public CObj
 {
-	enum ANIM_CRAB { A_WAIT, A_WALK, A_RUN, A_ATTACK, A_DEATH, A_END };
+	//enum ANIM_CRAB { A_WAIT, A_WALK, A_RUN, A_ATTACK, A_DEATH, A_END };
+	//enum ANIM_MONKEY { A_WAIT, A_WALK, A_RUN, A_ATTACK, A_ATTACK_THROW, A_DEATH, A_END };
 
 public:
 	CMonster();
@@ -18,13 +21,15 @@ public:
 
 	void Set_Stop_Attack();
 	void Set_Start_Attack();
+
 public:
 	int	 Update_Monster(const float& fTimeDelta);
 	void Hurt_Monster(const int& damage);					// ATTACKED BY PLAYER
 
 private:
-	/* MONSTER CRAB */
+	/* MONSTER NORMAL */
 	void Change_Crab_Animation(const float& fTimeDelta);
+	void Change_Monkey_Animation(const float& fTimeDelta);
 	void Attack_Crab(const float& fTimeDelta);				// ATTACK PROCESS
 
 	/* MONSTER ALL */
@@ -35,7 +40,7 @@ private:
 
 	void Move_ComeBack(const float& fTimeDelta);			// MOVE PROCESS
 	void Move_NormalMonster(const float& fTimeDelta);		// MOVE PROCESS
-	void Move_ChaseMonster(const float& fTimeDelta);		// MOVE PROCESS
+	void Chase_NormalMonster(const float& fTimeDelta);		// MOVE PROCESS
 
 public:
 	virtual DWORD Release();
@@ -51,7 +56,7 @@ public:
 	volatile bool	m_bIsAttack		= false;
 
 	int				targetNum		= -1;
-	int				m_AnimIdx		= 0;
+	//int			m_AnimIdx		= 0;
 	_vec3			m_vOriPos		= _vec3(0.f);
 };
 

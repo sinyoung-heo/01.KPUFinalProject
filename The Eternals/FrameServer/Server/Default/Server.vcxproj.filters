@@ -70,6 +70,9 @@
     <Filter Include="97.TImer">
       <UniqueIdentifier>{ca7782c9-497b-4fc6-b912-f0b6371f573b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99.Header\01.User\00.Animation_Protocol">
+      <UniqueIdentifier>{4fe8ba5f-d1f4-427d-ad4b-557391b69812}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainServer.cpp">
@@ -196,6 +199,9 @@
     </ClInclude>
     <ClInclude Include="..\Code\Timer.h">
       <Filter>97.TImer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\MonsterAnimation.h">
+      <Filter>99.Header\01.User\00.Animation_Protocol</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

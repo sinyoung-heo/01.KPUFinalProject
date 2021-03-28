@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Crab.h"
+#include "Monkey.h"
 
 #include "GraphicDevice.h"
 #include "DirectInput.h"
@@ -9,14 +9,14 @@
 #include "RenderTarget.h"
 #include "TimeMgr.h"
 
-CCrab::CCrab(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CMonkey::CMonkey(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pPacketMgr(CPacketMgr::Get_Instance())
 	, m_pServerMath(CServerMath::Get_Instance())
 {
 }
 
-HRESULT CCrab::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
+HRESULT CMonkey::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag, wstrNaviMeshTag), E_FAIL);
@@ -38,12 +38,12 @@ HRESULT CCrab::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, co
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
-	m_iCurAnim = Crab::A_WAIT;
+	m_iCurAnim = Monkey::A_WAIT;
 
 	return S_OK;
 }
 
-HRESULT CCrab::LateInit_GameObject()
+HRESULT CMonkey::LateInit_GameObject()
 {
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
@@ -52,7 +52,7 @@ HRESULT CCrab::LateInit_GameObject()
 	return S_OK;
 }
 
-_int CCrab::Update_GameObject(const _float& fTimeDelta)
+_int CMonkey::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
@@ -74,7 +74,7 @@ _int CCrab::Update_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CCrab::LateUpdate_GameObject(const _float& fTimeDelta)
+_int CMonkey::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
@@ -94,23 +94,23 @@ _int CCrab::LateUpdate_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-void CCrab::Send_PacketToServer()
+void CMonkey::Send_PacketToServer()
 {
 }
 
-void CCrab::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
+void CMonkey::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
 	Set_ConstantTable();
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
-void CCrab::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
+void CMonkey::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
 	Set_ConstantTableShadowDepth();
 	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 }
 
-HRESULT CCrab::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
+HRESULT CMonkey::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -155,7 +155,7 @@ HRESULT CCrab::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 	return S_OK;
 }
 
-void CCrab::Set_ConstantTable()
+void CMonkey::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -178,7 +178,7 @@ void CCrab::Set_ConstantTable()
 		m_fDeltaTime = 0.f;
 }
 
-void CCrab::Set_ConstantTableShadowDepth()
+void CMonkey::Set_ConstantTableShadowDepth()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -196,7 +196,7 @@ void CCrab::Set_ConstantTableShadowDepth()
 
 }
 
-void CCrab::Active_Monster(const _float& fTimeDelta)
+void CMonkey::Active_Monster(const _float& fTimeDelta)
 {
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 	m_pTransCom->m_vDir.Normalize();
@@ -211,45 +211,55 @@ void CCrab::Active_Monster(const _float& fTimeDelta)
 	}
 }
 
-void CCrab::Change_Animation(const _float& fTimeDelta)
+void CMonkey::Change_Animation(const _float& fTimeDelta)
 {
 	switch (m_iCurAnim)
 	{
 
-	case Crab::A_WAIT:
+	case Monkey::A_WAIT:
 	{
 		m_uiAnimIdx = 0;
 		m_bIsMoveStop = true;
 	}
 	break;
 
-	case Crab::A_WALK:
+	case Monkey::A_WALK:
 	{
 		m_uiAnimIdx = 1;		
 		m_bIsMoveStop = false;
 	}
 	break;
 
-	case Crab::A_RUN:
+	case Monkey::A_RUN:
 	{
 		m_uiAnimIdx = 2;
 		m_bIsMoveStop = false;
 	}
 	break;
 
-	case Crab::A_ATTACK:
+	case Monkey::A_ATTACK:
 	{
 		m_uiAnimIdx = 3;
 		m_bIsMoveStop = true;
 
 		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-			m_iCurAnim = Crab::A_WAIT;
+			m_iCurAnim = Monkey::A_WAIT;
 	}
 	break;
 
-	case Crab::A_DEATH:
+	case Monkey::A_ATTACK_THROW:
 	{
 		m_uiAnimIdx = 4;
+		m_bIsMoveStop = true;
+
+		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			m_iCurAnim = Monkey::A_WAIT;
+	}
+	break;
+
+	case Monkey::A_DEATH:
+	{
+		m_uiAnimIdx = 5;
 		m_bIsMoveStop = true;
 		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) {}		
 	}
@@ -258,9 +268,9 @@ void CCrab::Change_Animation(const _float& fTimeDelta)
 	}
 }
 
-Engine::CGameObject* CCrab::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
+Engine::CGameObject* CMonkey::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
 {
-	CCrab* pInstance = new CCrab(pGraphicDevice, pCommandList);
+	CMonkey* pInstance = new CMonkey(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, wstrNaviMeshTag, vScale, vAngle, vPos)))
 		Engine::Safe_Release(pInstance);
@@ -268,7 +278,7 @@ Engine::CGameObject* CCrab::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsC
 	return pInstance;
 }
 
-void CCrab::Free()
+void CMonkey::Free()
 {
 	Engine::CGameObject::Free();
 

@@ -28,6 +28,7 @@ OFF: SERVER DISCONNECT MODE
 #include <WinSock2.h>
 // Server Protocol Header
 #include "..\..\..\FrameServer\Server\Header\protocol.h"
+#include "..\..\..\FrameServer\Server\Header\MonsterAnimation.h"
 
 // C 런타임 헤더 파일입니다.
 #include <stdlib.h>

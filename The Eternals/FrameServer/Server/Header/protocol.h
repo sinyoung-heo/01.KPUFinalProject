@@ -62,7 +62,7 @@ constexpr char PC_PRIEST				= 2;
 
 /* MONSTER TYPE */
 constexpr char MON_NORMAL				= 0;
-constexpr char MON_CHASE				= 1;
+constexpr char MON_EPIC					= 1;
 constexpr char MON_BOSS					= 2;
 
 /* MONSTER NUMBER */
