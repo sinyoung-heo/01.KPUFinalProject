@@ -434,25 +434,14 @@ void CPacketMgr::ProcessPacket(char* ptr)
 	case SC_PACKET_MONSTER_MOVE:
 	{
 		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
-
-		int s_num = packet->id;
-
-		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
-		
-		pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
-
-		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
-		pObj->Set_MoveStop(false);
+		Move_Monster(packet);
 	}
 	break;
 
 	case SC_PACKET_MONSTER_ATTACK:
 	{
 		sc_packet_monster_attack* packet = reinterpret_cast<sc_packet_monster_attack*>(ptr);
-
-		int s_num = packet->id;
-		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
-		cout << "몬스터 공격 패킷 받음" << endl;
+		Attack_Monster(packet);		
 	}
 	break;
 
@@ -477,6 +466,27 @@ void CPacketMgr::ProcessPacket(char* ptr)
 	}
 }
 
+void CPacketMgr::Attack_Monster(sc_packet_monster_attack* packet)
+{
+	int s_num = packet->id;
+	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
+	pObj->Set_State(packet->animIdx);
+	pObj->Set_MoveStop(true);
+}
+
+void CPacketMgr::Move_Monster(sc_packet_move* packet)
+{
+	int s_num = packet->id;
+
+	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
+
+	pObj->Get_Info()->m_fSpeed = packet->spd;
+	pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+	pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
+	pObj->Set_State(packet->animIdx);
+	pObj->Set_MoveStop(false);
+}
+
 void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 {
 	Engine::CGameObject* pGameObj = nullptr;
@@ -493,7 +503,7 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 
 
 	pGameObj->Set_ServerNumber(packet->id);
-	pGameObj->Set_Info(1, packet->Hp, packet->maxHp, 0, 0, 0, 0, 0, 1.f);
+	pGameObj->Set_Info(1, packet->Hp, packet->maxHp, 0, 0, 0, 0, 0, packet->spd);
 
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);
 }

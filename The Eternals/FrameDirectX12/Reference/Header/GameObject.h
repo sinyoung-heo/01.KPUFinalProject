@@ -45,7 +45,7 @@ public:
 	void				Set_Attack(const bool& b)								{ m_bIsAttack = b; }
 	void				Set_DeadReckoning(const _vec3& vPos);
 	void				Set_Info(int lev, int hp, int maxHp, int mp, int maxMp, int exp, int maxExp, int att, float spd);
-	
+	void				Set_State(int cur) { m_iCurAnim = cur; }
 	void				Set_Other_direction(_vec3& vDir);
 
 	// CGameObject을(를) 통해 상속됨
@@ -71,6 +71,7 @@ public:
 
 	void			Add_CollisionList(CGameObject* pDst);
 	void			Clear_CollisionList();
+
 protected:
 	virtual HRESULT Add_Component();
 	void			SetUp_BillboardMatrix();
@@ -121,8 +122,11 @@ protected:
 	wstring				m_wstrCollisionTag;
 	list<CGameObject*>	m_lstCollisionDst;
 
-	/* server */
+	/*__________________________________________________________________________________________________________
+	SERVER
+	__________________________________________________________________________________________________________*/
 	int		m_iSNum				= 0;
+	int		m_iCurAnim			= 0;
 	bool	m_bIsMoveStop		= false;
 	bool	m_bIsAttack			= false;
 	high_resolution_clock::time_point m_last_move_time;

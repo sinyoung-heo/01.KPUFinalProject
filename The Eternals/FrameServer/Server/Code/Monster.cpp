@@ -54,13 +54,11 @@ void CMonster::Change_Animation(const float& fTimeDelta)
 		m_bIsComeBack = false;
 	}
 	break;
-	case STATUS::ST_WAIT:
+	case STATUS::ST_CHASE:
 		break;
-	case STATUS::ST_IDLE:
-		break;
+
 	case STATUS::ST_ATTACK:
 	{
-		Attack_Monster(fTimeDelta);
 	}
 	break;
 	case STATUS::ST_DEAD:
@@ -84,13 +82,15 @@ void CMonster::Change_Crab_Animation(const float& fTimeDelta)
 		m_bIsComeBack = false;
 	}
 	break;
-	case STATUS::ST_WAIT:
-		break;
-	case STATUS::ST_IDLE:
-		break;
+	case STATUS::ST_CHASE:
+	{
+		Move_ChaseMonster(fTimeDelta);
+	}
+	break;
+	
 	case STATUS::ST_ATTACK:
 	{
-		Attack_Monster(fTimeDelta);
+		Attack_Crab(fTimeDelta);
 	}
 	break;
 	case STATUS::ST_DEAD:
@@ -206,7 +206,7 @@ void CMonster::Move_ComeBack(const float& fTimeDelta)
 				{
 					pPlayer->v_lock.unlock();
 					/* 해당 유저에게 NPC가 움직인 후의 위치를 전송 */
-					send_Monster_move_packet(pl);
+					send_Monster_move_packet(pl, A_WALK);
 				}
 				/* 해당 유저의 시야 목록에 현재 Monster가 존재하지 않을 경우 */
 				else
@@ -259,7 +259,7 @@ void CMonster::Move_ComeBack(const float& fTimeDelta)
 				else
 				{
 					pPlayer->v_lock.unlock();
-					send_Monster_move_packet(pl);
+					send_Monster_move_packet(pl,A_WALK);
 				}
 			}
 			else
@@ -276,6 +276,8 @@ void CMonster::Move_NormalMonster(const float& fTimeDelta)
 	ori_x = m_vPos.x;
 	ori_y = m_vPos.y;
 	ori_z = m_vPos.z;
+
+	m_fSpd = 1.f;
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
@@ -392,7 +394,7 @@ void CMonster::Move_NormalMonster(const float& fTimeDelta)
 				{
 					pPlayer->v_lock.unlock();
 					/* 해당 유저에게 NPC가 움직인 후의 위치를 전송 */
-					send_Monster_move_packet(pl);
+					send_Monster_move_packet(pl, A_WALK);
 				}
 				/* 해당 유저의 시야 목록에 현재 Monster가 존재하지 않을 경우 */
 				else
@@ -445,7 +447,7 @@ void CMonster::Move_NormalMonster(const float& fTimeDelta)
 				else
 				{
 					pPlayer->v_lock.unlock();
-					send_Monster_move_packet(pl);
+					send_Monster_move_packet(pl, A_WALK);
 				}
 			}
 			else
@@ -466,6 +468,8 @@ void CMonster::Move_ChaseMonster(const float& fTimeDelta)
 	ori_x = m_vPos.x;
 	ori_y = m_vPos.y;
 	ori_z = m_vPos.z;
+
+	m_fSpd = 2.0f;
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
@@ -519,7 +523,7 @@ void CMonster::Move_ChaseMonster(const float& fTimeDelta)
 
 		/* monster chase move -> arrive at player -> start to attack */
 		if (!CCollisionMgr::GetInstance()->Is_Arrive(m_vPos, pTarget->m_vPos))
-			m_vPos += m_vDir * fTimeDelta;
+			m_vPos += m_vDir * m_fSpd * fTimeDelta;
 		else
 			Change_AttackMode();
 	}
@@ -590,7 +594,7 @@ void CMonster::Move_ChaseMonster(const float& fTimeDelta)
 				{
 					pPlayer->v_lock.unlock();
 					/* 해당 유저에게 NPC가 움직인 후의 위치를 전송 */
-					send_Monster_move_packet(pl);
+					send_Monster_move_packet(pl, A_RUN);
 				}
 				/* 해당 유저의 시야 목록에 현재 Monster가 존재하지 않을 경우 */
 				else
@@ -643,7 +647,7 @@ void CMonster::Move_ChaseMonster(const float& fTimeDelta)
 				else
 				{
 					pPlayer->v_lock.unlock();
-					send_Monster_move_packet(pl);
+					send_Monster_move_packet(pl,A_RUN);
 				}
 			}
 			else
@@ -656,7 +660,7 @@ void CMonster::Move_ChaseMonster(const float& fTimeDelta)
 		nonActive_monster(m_sNum);
 }
 
-void CMonster::Attack_Monster(const float& fTimeDelta)
+void CMonster::Attack_Crab(const float& fTimeDelta)
 {
 	/* 해당 Monster의 원래 위치값 */
 	float ori_x, ori_y, ori_z;
@@ -712,7 +716,7 @@ void CMonster::Attack_Monster(const float& fTimeDelta)
 			{
 				if (!m_bIsAttack) return;
 				cout << pl << "님에게 몬스터 공격 패킷 전송" << endl;
-				send_Monster_NormalAttack(pl);
+				send_Monster_NormalAttack(pl, ANIM_CRAB::A_ATTACK);
 			}
 		}		
 		// 주변 유저에게 monster_attack_start를 알렸다면 잠시 공격 중지 -> 일정 시간 후 재공격
@@ -721,7 +725,7 @@ void CMonster::Attack_Monster(const float& fTimeDelta)
 	/* 타겟(공격 대상)이 존재하지 않을 경우 -> 생성된 위치로 돌아감 */
 	else
 	{
-		Move_ComeBack(fTimeDelta);
+		Change_ChaseMode();
 	}
 }
 
@@ -785,7 +789,7 @@ void CMonster::Hurt_Monster(const int& damage)
 	}
 
 	/* 전투 상태로 변경 */
-	Change_AttackMode();
+	Change_ChaseMode();
 }
 
 void CMonster::Change_AttackMode()
@@ -799,6 +803,16 @@ void CMonster::Change_AttackMode()
 	}
 }
 
+void CMonster::Change_ChaseMode()
+{
+	/* Monster가 활성화되어 있지 않을 경우 활성화 */
+	if (m_status != ST_CHASE)
+	{
+		STATUS prev_state = m_status;
+		atomic_compare_exchange_strong(&m_status, &prev_state, ST_CHASE);
+	}
+}
+
 void CMonster::Set_Stop_Attack()
 {
 	if (m_bIsAttack)
@@ -806,7 +820,7 @@ void CMonster::Set_Stop_Attack()
 		bool prev_state = m_bIsAttack;
 
 		if (true == atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsAttack), &prev_state, false))
-			add_timer(m_sNum, OP_MODE_ATTACK_MONSTER, system_clock::now() + 3s);
+			add_timer(m_sNum, OP_MODE_ATTACK_MONSTER, system_clock::now() + 5s);
 	}
 }
 
@@ -844,17 +858,21 @@ void CMonster::send_Monster_enter_packet(int to_client)
 
 	p.Hp = m_iHp;
 	p.maxHp = m_iMaxHp;
+	p.spd = m_fSpd;
 
 	send_packet(to_client, &p);
 }
 
-void CMonster::send_Monster_move_packet(int to_client)
+void CMonster::send_Monster_move_packet(int to_client, int ani)
 {
 	sc_packet_move p;
 
 	p.size = sizeof(p);
 	p.type = SC_PACKET_MONSTER_MOVE;
 	p.id = m_sNum;
+
+	p.animIdx = ani;
+	p.spd  = m_fSpd;
 
 	p.posX = m_vPos.x;
 	p.posY = m_vPos.y;
@@ -867,13 +885,15 @@ void CMonster::send_Monster_move_packet(int to_client)
 	send_packet(to_client, &p);
 }
 
-void CMonster::send_Monster_NormalAttack(int to_client)
+void CMonster::send_Monster_NormalAttack(int to_client,int ani)
 {
 	sc_packet_monster_attack p;
 
 	p.size = sizeof(p);
 	p.type = SC_PACKET_MONSTER_ATTACK;
 	p.id = m_sNum;
+
+	p.animIdx = ani;
 
 	send_packet(to_client, &p);
 }
@@ -884,8 +904,8 @@ void CMonster::send_Monster_Stat(int to_client)
 
 	p.size = sizeof(p);
 	p.type = SC_PACKET_MONSTER_STAT;
-
 	p.id = m_sNum;
+
 	p.hp = m_iHp;
 	p.mp = 0;
 	p.exp = m_iExp;

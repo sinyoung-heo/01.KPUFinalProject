@@ -3,6 +3,8 @@
 class CMonster :
     public CObj
 {
+	enum ANIM_CRAB { A_WAIT, A_WALK, A_RUN, A_ATTACK, A_DEATH, A_END };
+
 public:
 	CMonster();
 	virtual ~CMonster();
@@ -10,26 +12,30 @@ public:
 public:
 	/* SEND PACKET */
 	void send_Monster_enter_packet(int to_client);
-	void send_Monster_move_packet(int to_client);		
-	void send_Monster_NormalAttack(int to_client);
+	void send_Monster_move_packet(int to_client, int ani);
+	void send_Monster_NormalAttack(int to_client, int ani);
 	void send_Monster_Stat(int to_client);
 
 	void Set_Stop_Attack();
 	void Set_Start_Attack();
 public:
 	int	 Update_Monster(const float& fTimeDelta);
-	void Hurt_Monster(const int& damage);				// ATTACKED BY PLAYER
+	void Hurt_Monster(const int& damage);					// ATTACKED BY PLAYER
 
 private:
-	void Change_Animation(const float& fTimeDelta);
+	/* MONSTER CRAB */
 	void Change_Crab_Animation(const float& fTimeDelta);
+	void Attack_Crab(const float& fTimeDelta);				// ATTACK PROCESS
 
-	void Change_AttackMode();							// STATUS == ATTACK
-	void Attack_Monster(const float& fTimeDelta);		// ATTACK PROCESS
+	/* MONSTER ALL */
+	void Change_Animation(const float& fTimeDelta);
 
-	void Move_ComeBack(const float& fTimeDelta);		// MOVE PROCESS
-	void Move_NormalMonster(const float& fTimeDelta);	// MOVE PROCESS
-	void Move_ChaseMonster(const float& fTimeDelta);	// MOVE PROCESS
+	void Change_AttackMode();								// STATUS == ATTACK
+	void Change_ChaseMode();								// STATUS == CHASE
+
+	void Move_ComeBack(const float& fTimeDelta);			// MOVE PROCESS
+	void Move_NormalMonster(const float& fTimeDelta);		// MOVE PROCESS
+	void Move_ChaseMonster(const float& fTimeDelta);		// MOVE PROCESS
 
 public:
 	virtual DWORD Release();
