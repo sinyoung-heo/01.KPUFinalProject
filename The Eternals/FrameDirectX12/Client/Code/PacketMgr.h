@@ -28,6 +28,10 @@ public:
 	void	ProcessData(unsigned char* net_buf, size_t io_byte);
 	void	ProcessPacket(char* ptr);
 
+	void Attack_Monster(sc_packet_monster_attack* packet);
+
+	void Move_Monster(sc_packet_move* packet);
+
 	void	send_login();
 	void	send_move(const _vec3& vDir, const _vec3& vPos, const _int& iAniIdx);
 	void	send_move_stop(const _vec3& vPos, const _vec3& vDir, const _int& iAniIdx);
@@ -39,6 +43,7 @@ public:
 public:
 	bool	change_MoveKey(MVKEY eKey);
 	void	Enter_Monster(sc_packet_monster_enter* packet);
+
 
 private:
 	void	send_packet(void* packet);

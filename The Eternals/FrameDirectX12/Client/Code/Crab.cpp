@@ -39,7 +39,7 @@ HRESULT CCrab::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, co
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
 
-	m_eCurAnimation = ANIM::A_WAIT;
+	m_iCurAnim = ANIM::A_WAIT;
 	m_ePreAnimation = ANIM::A_WAIT;
 
 	return S_OK;
@@ -206,8 +206,6 @@ void CCrab::Active_Monster(const _float& fTimeDelta)
 	/* Monster MOVE */
 	if (!m_bIsMoveStop)
 	{
-		m_eCurAnimation = A_WALK;
-
 		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
 													 &m_pTransCom->m_vDir,
 													 m_pInfoCom->m_fSpeed * fTimeDelta);
@@ -217,7 +215,7 @@ void CCrab::Active_Monster(const _float& fTimeDelta)
 
 void CCrab::Change_Animation(const _float& fTimeDelta)
 {
-	switch (m_eCurAnimation)
+	switch (m_iCurAnim)
 	{
 
 	case A_WAIT:
@@ -230,12 +228,14 @@ void CCrab::Change_Animation(const _float& fTimeDelta)
 	case A_WALK:
 	{
 		m_uiAnimIdx = 1;		
+		m_bIsMoveStop = false;
 	}
 	break;
 
 	case A_RUN:
 	{
 		m_uiAnimIdx = 2;
+		m_bIsMoveStop = false;
 	}
 	break;
 
@@ -243,6 +243,9 @@ void CCrab::Change_Animation(const _float& fTimeDelta)
 	{
 		m_uiAnimIdx = 3;
 		m_bIsMoveStop = true;
+
+		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			m_iCurAnim = A_WAIT;
 	}
 	break;
 
@@ -255,7 +258,7 @@ void CCrab::Change_Animation(const _float& fTimeDelta)
 	break;
 
 	}
-	m_ePreAnimation = m_eCurAnimation;
+	m_ePreAnimation = (ANIM)m_iCurAnim;
 }
 
 Engine::CGameObject* CCrab::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)

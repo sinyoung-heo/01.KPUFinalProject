@@ -894,7 +894,7 @@ void Initialize_Monster()
 		pNew->m_iMaxHp		= 1000;
 		pNew->m_iAtt		= 1;
 		pNew->m_iExp		= 0;
-		pNew->m_fSpd		= 1.f;
+		pNew->m_fSpd		= 0.5f;
 		pNew->m_type		= MON_NORMAL;
 		pNew->m_monNum		= MON_CRAB;
 		pNew->m_status		= STATUS::ST_NONACTIVE;

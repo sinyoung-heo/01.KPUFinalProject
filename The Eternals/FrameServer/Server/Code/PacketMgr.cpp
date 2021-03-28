@@ -352,6 +352,8 @@ void send_move_packet(int to_client, int id)
 	p.size = sizeof(p);
 	p.type = SC_PACKET_MOVE;
 	p.id = id;
+
+	p.spd = pPlayer->m_fSpd;
 	p.animIdx = pPlayer->m_iAniIdx;
 	p.move_time = pPlayer->move_time;
 
@@ -377,6 +379,8 @@ void send_move_stop_packet(int to_client, int id)
 	p.size = sizeof(p);
 	p.type = SC_PACKET_MOVE_STOP;
 	p.id = id;
+
+	p.spd = pPlayer->m_fSpd;
 	p.animIdx = pPlayer->m_iAniIdx;
 	p.move_time = pPlayer->move_time;
 
@@ -1139,6 +1143,9 @@ void send_NPC_move_packet(int to_client, int id)
 	p.type = SC_PACKET_NPC_MOVE;
 	p.id = id;
 
+	p.animIdx = 0;
+	p.spd = 0;
+
 	p.posX = pNPC->m_vTempPos.x;
 	p.posY = pNPC->m_vTempPos.y;
 	p.posZ = pNPC->m_vTempPos.z;
@@ -1398,7 +1405,8 @@ void nonActive_monster(int id)
 	if (pMonster->m_status != ST_NONACTIVE)
 	{
 		STATUS prev_state = pMonster->m_status;
-		atomic_compare_exchange_strong(&pMonster->m_status, &prev_state, ST_NONACTIVE);
+		if (true == atomic_compare_exchange_strong(&pMonster->m_status, &prev_state, ST_NONACTIVE))
+			pMonster->m_vTempPos = pMonster->m_vPos;
 	}
 }
 

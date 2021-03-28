@@ -18,7 +18,7 @@ CGameObject::CGameObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList
 {
 }
 
-CGameObject::CGameObject(const CGameObject & rhs)
+CGameObject::CGameObject(const CGameObject& rhs)
 	: m_pGraphicDevice(rhs.m_pGraphicDevice)
 	, m_pCommandList(rhs.m_pCommandList)
 	, m_pRenderer(rhs.m_pRenderer)
@@ -30,6 +30,7 @@ CGameObject::CGameObject(const CGameObject & rhs)
 	, m_UIDepth(rhs.m_UIDepth)
 	, m_bIsAttack(rhs.m_bIsAttack)
 	, m_bIsMoveStop(rhs.m_bIsMoveStop)
+	, m_iCurAnim(0)
 {
 }
 
