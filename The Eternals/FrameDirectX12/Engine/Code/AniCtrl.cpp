@@ -1,5 +1,4 @@
 #include "AniCtrl.h"
-
 #include "TimeMgr.h"
 #include "FrameMgr.h"
 
@@ -121,7 +120,7 @@ HRESULT CAniCtrl::Ready_AniCtrl()
 		{
 			_uint	uiboneindex = 0;
 			string	strBoneName(pSubsetMesh->mBones[j]->mName.data);
-			assert(m_vecBoneNameMap[i].find(strBoneName) == m_vecBoneNameMap[i].end());
+			//assert(m_vecBoneNameMap[i].find(strBoneName) == m_vecBoneNameMap[i].end());
 
 			uiboneindex = iNumBones;
 
@@ -151,6 +150,9 @@ HRESULT CAniCtrl::Ready_AniCtrl()
 	____________________________________________________________________________________________________________*/
 	Ready_NodeHierarchy(m_pScene->mRootNode);
 
+#ifdef ENGINE_LOG
+	COUT_STR("--------------------------------------------------------------------------------");
+#endif
 
 	return S_OK;
 
@@ -244,6 +246,17 @@ SKINNING_MATRIX * CAniCtrl::Find_SkinningMatrix(string strBoneName)
 	return nullptr;
 }
 
+HIERARCHY_DESC* CAniCtrl::Find_HierarchyDesc(string strBoneName)
+{
+	// iter_find = i번째 SubMesh의 Index번호.
+	auto iter_find = m_mapNodeHierarchy.find(strBoneName);
+
+	if (iter_find == m_mapNodeHierarchy.end())
+		nullptr;
+
+	return iter_find->second;
+}
+
 _bool CAniCtrl::Is_AnimationSetEnd(const _float& fTimeDelta)
 {
 	if (m_fAnimationTime >= m_pScene->mAnimations[m_uiCurAniIndex]->mDuration -
@@ -288,6 +301,10 @@ void CAniCtrl::Ready_NodeHierarchy(const aiNode * pNode)
 	
 
 	m_mapNodeHierarchy.emplace(strNodeName, pNodeHierarchy);
+
+#ifdef ENGINE_LOG
+	COUT_STR("Hierarchy Node Name : " << strNodeName);
+#endif
 
 	/*__________________________________________________________________________________________________________
 	[ 모든 자식 노드에 대해 재귀호출 ]

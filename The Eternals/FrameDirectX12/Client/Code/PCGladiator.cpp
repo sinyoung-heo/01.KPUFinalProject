@@ -86,9 +86,7 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 
 HRESULT CPCGladiator::LateInit_GameObject()
 {
-	/*__________________________________________________________________________________________________________
-	[ Get GameObject - DynamicCamera ]
-	____________________________________________________________________________________________________________*/
+	//DynamicCamera ]
 	m_pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
 	Engine::NULL_CHECK_RETURN(m_pDynamicCamera, E_FAIL);
 	m_pDynamicCamera->AddRef();
@@ -96,6 +94,17 @@ HRESULT CPCGladiator::LateInit_GameObject()
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	m_pShadowCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
+
+	// Weapon
+	m_pWeapon = CPCWeaponTwoHand::Create(m_pGraphicDevice, m_pCommandList,
+										 L"Twohand19_A_SM",
+										 _vec3(0.75f),
+										 _vec3(0.0f, 0.0f ,90.0f),
+										 _vec3(0.0f, 0.0f, 0.0f),
+										 m_pMeshCom->Find_HierarchyDesc("Weapon_Back"),
+										 // m_pMeshCom->Find_HierarchyDesc("L_Sword"),
+										 &m_pTransCom->m_matWorld);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"ThisPlayerWeaponTwoHand", m_pWeapon), E_FAIL);
 
 	return S_OK;
 }

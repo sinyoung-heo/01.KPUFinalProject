@@ -432,6 +432,12 @@
     <ClInclude Include="..\Code\TerrainMeshObject.h">
       <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\PCWeapon.h">
+      <Filter>02.GameObject\03.PCWeapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PCWeaponTwoHand.h">
+      <Filter>02.GameObject\03.PCWeapon\00.PCWeaponTwoHand</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -601,6 +607,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\TerrainMeshObject.cpp">
       <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PCWeapon.cpp">
+      <Filter>02.GameObject\03.PCWeapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PCWeaponTwoHand.cpp">
+      <Filter>02.GameObject\03.PCWeapon\00.PCWeaponTwoHand</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

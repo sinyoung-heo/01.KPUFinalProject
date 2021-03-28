@@ -8,8 +8,8 @@
 #include "GameObject.h"
 #include "RenderTarget.h"
 #include "Font.h"
-
 #include "ShaderMgr.h"
+
 USING(Engine)
 IMPLEMENT_SINGLETON(CRenderer)
 

@@ -23,9 +23,6 @@ public:
 	_uint*							Get_NumAnimation()			{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_NumAnimation(); else return nullptr; }
 	_uint*							Get_3DMaxNumFrame()			{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_3DMaxNumFrame(); else return nullptr;}
 	_uint*							Get_3DMaxCurFrame()			{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_3DMaxCurFrame(); else return nullptr;}
-	const _float&					Get_AnimationTime()			{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_AnimationTime(); else return 0.0f; }
-	const _float&					Get_BlendTime()				{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_BlendTime(); else return 0.0f; }
-	const _float&					Get_BlendAnimationTime()	{ if (nullptr != m_pAniCtrl) return m_pAniCtrl->Get_BlendAnimationTime(); else return 0.0f; }
 	const _vec3&					Get_CenterPos()				{ return m_pVIMesh->Get_CenterPos(); }
 	const _vec3&					Get_MinVector()				{ return m_pVIMesh->Get_MinVector(); }
 	const _vec3&					Get_MaxVector()				{ return m_pVIMesh->Get_MaxVector(); }
@@ -43,26 +40,24 @@ public:
 	// SingleThread Rendering
 	void Render_DynamicMesh(CShader* pShader);
 	void Render_DynamicMeshAfterImage(CShader* pShader, const _uint& iAfterImgIdx);
-
 	void Render_StaticMesh(CShader* pShader);
 	void Render_DynamicMeshShadowDepth(CShader* pShader);
-	
 	void Render_StaticMeshShadowDepth(CShader* pShader);
 
 	// MultiThread Rendering
 	void Render_DynamicMesh(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 	void Render_DynamicMeshAfterImage(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader, const _uint& iAfterImgIdx);
-
 	void Render_StaticMesh(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 	void Render_DynamicMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 	void Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 	void Render_WaterMesh(ID3D12GraphicsCommandList* pCommandList,
-		const _int& iContextIdx,
-		CShader* pShader,
-		ID3D12DescriptorHeap* pTexnormalDescriptorHeap, _uint uiNormalTextureIdx, _uint uiPatternMapIdx);
+						  const _int& iContextIdx,
+						  CShader* pShader,
+						  ID3D12DescriptorHeap* pTexnormalDescriptorHeap, _uint uiNormalTextureIdx, _uint uiPatternMapIdx);
 	void Set_AnimationKey(const _uint& uiAniKey);
 	void Play_Animation(_float fAnimationTime);
 	SKINNING_MATRIX* Find_SkinningMatrix(string strBoneName);
+	HIERARCHY_DESC* Find_HierarchyDesc(string strBoneName);
 
 private:
 	/*__________________________________________________________________________________________________________
