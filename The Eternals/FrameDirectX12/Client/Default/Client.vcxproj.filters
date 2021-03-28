@@ -133,12 +133,6 @@
     <Filter Include="02.GameObject\02.PlayerCharacter">
       <UniqueIdentifier>{30ac5964-93ee-4c7c-bbb1-173e35ff9b0d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\03.NPC">
-      <UniqueIdentifier>{47df4906-7eaf-475a-9510-a7ba998fbd98}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\04.Monster">
-      <UniqueIdentifier>{3b8e7fab-087e-47c3-9828-af65a341aa00}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.Mgr\04.MouseCursorMgr">
       <UniqueIdentifier>{9f593d0a-4f7e-4583-a859-a2cb29f4762e}</UniqueIdentifier>
     </Filter>
@@ -214,8 +208,26 @@
     <Filter Include="02.GameObject\02.PlayerCharacter\99.PCOthers">
       <UniqueIdentifier>{594ee94f-a685-47a0-a2d0-625cb16c00fc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\04.Monster\00.Crab">
+    <Filter Include="02.GameObject\04.NPC">
+      <UniqueIdentifier>{47df4906-7eaf-475a-9510-a7ba998fbd98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Monster">
+      <UniqueIdentifier>{3b8e7fab-087e-47c3-9828-af65a341aa00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Monster\00.Crab">
       <UniqueIdentifier>{f52b8195-0115-416c-a1ab-1aa1e413e775}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.PCWeapon">
+      <UniqueIdentifier>{5ab5c278-b452-41c5-9294-cfc9e548abb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.PCWeapon\00.PCWeaponTwoHand">
+      <UniqueIdentifier>{e8da9dc5-c8be-4b17-a546-9a5417c3cbc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.PCWeapon\01.PCWeaponBow">
+      <UniqueIdentifier>{fb13d691-ea2e-4e07-af00-19ee06ada963}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.PCWeapon\03.PCWeaponRod">
+      <UniqueIdentifier>{ac799807-47db-404f-9962-ec39d0fab803}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -424,7 +436,13 @@
       <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\Crab.h">
-      <Filter>02.GameObject\04.Monster\00.Crab</Filter>
+      <Filter>02.GameObject\05.Monster\00.Crab</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PCWeapon.h">
+      <Filter>02.GameObject\03.PCWeapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PCWeaponTwoHand.h">
+      <Filter>02.GameObject\03.PCWeapon\00.PCWeaponTwoHand</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -597,7 +615,13 @@
       <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Crab.cpp">
-      <Filter>02.GameObject\04.Monster\00.Crab</Filter>
+      <Filter>02.GameObject\05.Monster\00.Crab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PCWeapon.cpp">
+      <Filter>02.GameObject\03.PCWeapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PCWeaponTwoHand.cpp">
+      <Filter>02.GameObject\03.PCWeapon\00.PCWeaponTwoHand</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
