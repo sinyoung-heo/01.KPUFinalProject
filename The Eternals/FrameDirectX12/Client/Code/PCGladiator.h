@@ -2,6 +2,7 @@
 #include "Include.h"
 #include "GameObject.h"
 #include "GladiatorAnimation.h"
+#include "PCWeaponTwoHand.h"
 
 namespace GladiatorConst
 {
@@ -78,8 +79,9 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	CDynamicCamera* m_pDynamicCamera = nullptr;
-	wstring			m_wstrMeshTag    = L"";
+	CPCWeaponTwoHand*	m_pWeapon        = nullptr;
+	CDynamicCamera*		m_pDynamicCamera = nullptr;
+	wstring				m_wstrMeshTag    = L"";
 
 	// Server
 	_bool			m_bIsKeyDown   = false;

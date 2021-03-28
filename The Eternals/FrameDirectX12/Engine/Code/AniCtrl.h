@@ -1,7 +1,5 @@
 #pragma once
 #include "Component.h"
-#include <process.h>
-
 
 BEGIN(Engine)
 
@@ -15,23 +13,16 @@ typedef vector<SKINNING_MATRIX>	VECTOR_SKINNING_MATRIX;
 
 typedef struct tagHierarchyDesc 
 {
-	tagHierarchyDesc(const aiNode* pNode)
-	{
-		pAiNode = pNode;
-	}
-	~tagHierarchyDesc()
-	{
-	}
+	tagHierarchyDesc(const aiNode* pNode) : pAiNode(pNode) {}
+	~tagHierarchyDesc() = default;
 
-	const aiNode*					pAiNode				= nullptr;	// AiNode 정보.
-
-	_matrix							matScale			{ INIT_MATRIX };
-	_matrix							matRotate			{ INIT_MATRIX };
-	_matrix							matTrans			{ INIT_MATRIX };
-	_matrix							matBoneTransform	{ INIT_MATRIX };
-	_matrix							matParentTransform	{ INIT_MATRIX };
-	_matrix							matGlobalTransform	{ INIT_MATRIX };
-
+	const aiNode*	pAiNode				= nullptr;	// AiNode 정보.
+	_matrix			matScale			= INIT_MATRIX;
+	_matrix			matRotate			= INIT_MATRIX;
+	_matrix			matTrans			= INIT_MATRIX;
+	_matrix			matBoneTransform	= INIT_MATRIX;
+	_matrix			matParentTransform	= INIT_MATRIX;
+	_matrix			matGlobalTransform	= INIT_MATRIX;
 	vector<_uint>					vecBoneMapIdx;		// 영향을 받는 BoneMap Index 정보.
 	map<_uint, const aiNodeAnim*>	mapNodeAnim;		// <AnimationIdx, aiNodeAnim*>
 
@@ -54,15 +45,13 @@ public:
 	_uint*							Get_3DMaxCurFrame()		{ return &m_ui3DMax_CurFrame; }
 	const _uint&					Get_CurAnimationIdx()	{ return m_uiCurAniIndex; }
 	const _uint&					Get_NewAnimationIdx()	{ return m_uiNewAniIdx; }
-	const _float&					Get_AnimationTime()		{ return m_fAnimationTime; }
-	const _float&					Get_BlendTime()			{ return m_fBlendingTime; }
-	const _float&					Get_BlendAnimationTime() { return m_fBlendAnimationTime; }
 	// Set
 	void Set_AnimationKey(const _uint& uiAniKey);
 
 	// Method
 	void				Play_Animation(_float fTimeDelta);
 	SKINNING_MATRIX*	Find_SkinningMatrix(string strBoneName);
+	HIERARCHY_DESC*		Find_HierarchyDesc(string strBoneName);
 	_bool				Is_AnimationSetEnd(const _float& fTimeDelta);
 
 private:

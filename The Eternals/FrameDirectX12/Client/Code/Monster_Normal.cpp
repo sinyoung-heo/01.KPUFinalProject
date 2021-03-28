@@ -65,19 +65,6 @@ _int CMonster_Normal::Update_GameObject(const _float& fTimeDelta)
 	Change_Animation(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
-	[ TransCom - Update WorldMatrix ]
-	____________________________________________________________________________________________________________*/
-	Engine::CGameObject::Update_GameObject(fTimeDelta);
-
-
-	return NO_EVENT;
-}
-
-_int CMonster_Normal::LateUpdate_GameObject(const _float& fTimeDelta)
-{
-	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
-
-	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
@@ -89,6 +76,19 @@ _int CMonster_Normal::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
 	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
 	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
+
+	/*__________________________________________________________________________________________________________
+	[ TransCom - Update WorldMatrix ]
+	____________________________________________________________________________________________________________*/
+	Engine::CGameObject::Update_GameObject(fTimeDelta);
+
+
+	return NO_EVENT;
+}
+
+_int CMonster_Normal::LateUpdate_GameObject(const _float& fTimeDelta)
+{
+	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
 	return NO_EVENT;
 }
@@ -151,7 +151,7 @@ HRESULT CMonster_Normal::Add_Component(wstring wstrMeshTag, wstring wstrNaviMesh
 	m_pNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(wstrNaviMeshTag.c_str(), Engine::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);
 	m_pNaviMeshCom->AddRef();
-	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
+	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
 
 	return S_OK;
 }

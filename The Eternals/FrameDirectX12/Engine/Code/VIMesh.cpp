@@ -64,21 +64,21 @@ CVIMesh::CVIMesh(const CVIMesh & rhs)
 			iter->AddRef();
 	}
 
-	for (auto& iter : m_vecDiffResource)
-	{
-		if (nullptr != iter)
-			iter->AddRef();
-	}
-	for (auto& iter : m_vecNormResource)
-	{
-		if (nullptr != iter)
-			iter->AddRef();
-	}
-	for (auto& iter : m_vecSpecResource)
-	{
-		if (nullptr != iter)
-			iter->AddRef();
-	}
+	//for (auto& iter : m_vecDiffResource)
+	//{
+	//	if (nullptr != iter)
+	//		iter->AddRef();
+	//}
+	//for (auto& iter : m_vecNormResource)
+	//{
+	//	if (nullptr != iter)
+	//		iter->AddRef();
+	//}
+	//for (auto& iter : m_vecSpecResource)
+	//{
+	//	if (nullptr != iter)
+	//		iter->AddRef();
+	//}
 
 	if (nullptr != m_pTexDescriptorHeap)
 		m_pTexDescriptorHeap->AddRef();

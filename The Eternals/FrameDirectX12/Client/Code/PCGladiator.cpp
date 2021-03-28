@@ -86,9 +86,7 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 
 HRESULT CPCGladiator::LateInit_GameObject()
 {
-	/*__________________________________________________________________________________________________________
-	[ Get GameObject - DynamicCamera ]
-	____________________________________________________________________________________________________________*/
+	//DynamicCamera ]
 	m_pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
 	Engine::NULL_CHECK_RETURN(m_pDynamicCamera, E_FAIL);
 	m_pDynamicCamera->AddRef();
@@ -96,6 +94,17 @@ HRESULT CPCGladiator::LateInit_GameObject()
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	m_pShadowCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
+
+	// Weapon
+	m_pWeapon = CPCWeaponTwoHand::Create(m_pGraphicDevice, m_pCommandList,
+										 L"Twohand19_A_SM",
+										 _vec3(0.75f),
+										 _vec3(0.0f, 0.0f ,90.0f),
+										 _vec3(0.0f, 0.0f, 0.0f),
+										 m_pMeshCom->Find_HierarchyDesc("Weapon_Back"),
+										 // m_pMeshCom->Find_HierarchyDesc("L_Sword"),
+										 &m_pTransCom->m_matWorld);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"ThisPlayerWeaponTwoHand", m_pWeapon), E_FAIL);
 
 	return S_OK;
 }
@@ -122,6 +131,14 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+
+	/*__________________________________________________________________________________________________________
+	[ Play Animation ]
+	____________________________________________________________________________________________________________*/
+	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
+	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
@@ -155,14 +172,6 @@ _int CPCGladiator::LateUpdate_GameObject(const _float& fTimeDelta)
 		m_pFont->Update_GameObject(fTimeDelta);
 		m_pFont->Set_Text(wstring(m_szText));
 	}
-
-	/*__________________________________________________________________________________________________________
-	[ Play Animation ]
-	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
-	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
-	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
 	return NO_EVENT;
 }
