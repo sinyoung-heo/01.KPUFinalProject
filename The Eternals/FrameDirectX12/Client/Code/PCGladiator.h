@@ -51,13 +51,17 @@ private:
 	// KeyInput
 	void Key_Input(const _float& fTimeDelta);
 	void KeyInput_Move(const _float& fTimeDelta);
+	void KeyInput_Attack(const _float& fTimeDelta);
 	void Move_OnNaviMesh(const _float& fTimeDelta);
 	void Send_Player_Move();
 	bool Is_Change_CamDirection();
 
-	void SetUp_NoneAttackRunMoveSpeed(const _float& fTimeDelta);
-	void SetUp_NoneAttackRunAnimation();
-	void SetUp_NoneAttackRunToIdleAnimation(const _float& fTimeDelta);
+	void SetUp_RunMoveSpeed(const _float& fTimeDelta);
+	void SetUp_RunAnimation();
+	void SetUp_RunToIdleAnimation(const _float& fTimeDelta);
+	void SetUp_PlayerStance_FromAttackToNoneAttack();
+	void SetUp_PlayerStance_FromNoneAttackToAttack();
+	void Change_PlayerStance(const _float& fTimeDelta);
 
 private:
 	/*__________________________________________________________________________________________________________
@@ -83,12 +87,16 @@ private:
 	CDynamicCamera*		m_pDynamicCamera = nullptr;
 	wstring				m_wstrMeshTag    = L"";
 
+	// Speed Linear Interpolation
+
+
 	// Server
 	_bool			m_bIsKeyDown   = false;
 	_bool			m_bIsSameDir   = false;
+	_bool			m_bIsAttack    = false;
 	_float			m_fBazierSpeed = 0.f;
 	MVKEY			m_eKeyState    = MVKEY::K_END;
-	_float			m_vecPreAngle  = 0.f;
+	_float			m_fPreAngle    = 0.f;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation ]
@@ -97,7 +105,8 @@ private:
 	_uint m_ui3DMax_NumFrame = 0;	// 3DMax에서 애니메이션의 총 Frame 개수
 	_uint m_ui3DMax_CurFrame = 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
 
-	Gladiator::STANCE m_eStance = Gladiator::STANCE_END;
+	Gladiator::STANCE	m_eStance                 = Gladiator::STANCE_END;
+	_bool				m_bIsCompleteStanceChange = true;
 
 	/*__________________________________________________________________________________________________________
 	[ Font ]

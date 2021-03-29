@@ -238,7 +238,7 @@ void CPopori_F::Render_AfterImage(const _float& fTimeDelta)
 		Engine::CB_SHADER_MESH tCB_ShaderMesh;
 		ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
 		tCB_ShaderMesh.matWorld = Engine::CShader::Compute_MatrixTranspose(*iter_begin);
-		tCB_ShaderMesh.fAfterImgColor = *Alpha_begin;
+		tCB_ShaderMesh.vAfterImgColor = *Alpha_begin;
 		if (Alpha_begin != Alpha_end)
 			Alpha_begin++;
 		m_pShaderCom->Get_UploadBuffer_AFShaderMesh()->CopyData(i, tCB_ShaderMesh);
@@ -349,7 +349,7 @@ void CPopori_F::Set_ConstantTable()
 	tCB_ShaderMesh.fLightPorjFar	= tShadowDesc.fLightPorjFar;
 
 	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.15f;
-	tCB_ShaderMesh.fDeltaTime = m_fDeltaTime;
+	tCB_ShaderMesh.fDissolve = m_fDeltaTime;
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 	m_pEdgeObjectShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 

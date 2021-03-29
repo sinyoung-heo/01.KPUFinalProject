@@ -150,7 +150,7 @@ HRESULT CCrab::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 	m_pNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(wstrNaviMeshTag.c_str(), Engine::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);
 	m_pNaviMeshCom->AddRef();
-	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
+	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
 
 	return S_OK;
 }
@@ -171,7 +171,7 @@ void CCrab::Set_ConstantTable()
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 
 	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.15f;
-	tCB_ShaderMesh.fDeltaTime = m_fDeltaTime;
+	tCB_ShaderMesh.fDissolve = m_fDeltaTime;
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 
 	if (m_fDeltaTime > 1.f)

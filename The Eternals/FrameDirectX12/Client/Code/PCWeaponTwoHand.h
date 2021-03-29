@@ -14,7 +14,8 @@ public:
 									 const _vec3& vAngle,
 									 const _vec3& vPos,
 									 Engine::HIERARCHY_DESC* pHierarchyDesc,
-									 _matrix* pParentMatrix);
+									 _matrix* pParentMatrix,
+									 const _rgba& vEmissiveColor);
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
@@ -29,7 +30,8 @@ public:
 									const _vec3 & vAngle, 
 									const _vec3 & vPos,
 									Engine::HIERARCHY_DESC* pHierarchyDesc,
-									_matrix* pParentMatrix);
+									_matrix* pParentMatrix,
+									const _rgba& vEmissiveColor);
 private:
 	virtual void Free();
 

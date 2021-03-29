@@ -825,11 +825,12 @@ namespace Engine
 		XMFLOAT4X4	matLightProj;
 		_vec4		vLightPos;
 		_float		fLightPorjFar;
-		_float		fDeltaTime;
+		_float		fDissolve;
 		_float		fOffset1;
 		_float		fOffset2;
 
-		_rgba		fAfterImgColor;
+		_rgba		vAfterImgColor;
+		_rgba		vEmissiveColor;
 
 	} CB_SHADER_MESH;
 

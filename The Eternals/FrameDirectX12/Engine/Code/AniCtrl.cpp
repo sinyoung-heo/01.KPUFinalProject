@@ -165,6 +165,7 @@ void CAniCtrl::Set_AnimationKey(const _uint & uiAniKey)
 		m_uiNewAniIdx = uiAniKey;
 
 		m_fBlendAnimationTime = m_fAnimationTime;
+		// m_fBlendAnimationTime = m_pScene->mAnimations[m_uiNewAniIdx]->mDuration;
 		m_fBlendingTime	= 1.0f;
 	}
 }
@@ -180,13 +181,6 @@ void CAniCtrl::Play_Animation(_float fTimeDelta)
 	m_fAnimationTime += fTimeDelta;
 	m_fAnimationTime = (_float)(fmod(m_fAnimationTime, (m_pScene->mAnimations[m_uiCurAniIndex]->mDuration)));
 	
-	/*__________________________________________________________________________________________________________
-	[ 3DMax 상에서의 Frame 계산 ]
-	____________________________________________________________________________________________________________*/
-	m_ui3DMax_NumFrame = (_uint)(_3DMAX_FPS * (m_pScene->mAnimations[m_uiCurAniIndex]->mDuration / m_pScene->mAnimations[m_uiCurAniIndex]->mTicksPerSecond));
-	m_ui3DMax_CurFrame = (_uint)(_3DMAX_FPS * (m_fAnimationTime / m_pScene->mAnimations[m_uiCurAniIndex]->mTicksPerSecond));
-
-
 	if (m_uiNewAniIdx != m_uiCurAniIndex)
 	{
 		m_fAnimationTime	= m_fBlendAnimationTime;
@@ -197,6 +191,12 @@ void CAniCtrl::Play_Animation(_float fTimeDelta)
 		m_fBlendingTime = 0.0f;
 
 	/*__________________________________________________________________________________________________________
+	[ 3DMax 상에서의 Frame 계산 ]
+	____________________________________________________________________________________________________________*/
+	m_ui3DMax_NumFrame = (_uint)(_3DMAX_FPS * (m_pScene->mAnimations[m_uiCurAniIndex]->mDuration / m_pScene->mAnimations[m_uiCurAniIndex]->mTicksPerSecond));
+	m_ui3DMax_CurFrame = (_uint)(_3DMAX_FPS * (m_fAnimationTime / m_pScene->mAnimations[m_uiCurAniIndex]->mTicksPerSecond));
+
+	/*__________________________________________________________________________________________________________
 	- Root Node와 단위 행렬을 인자로 넘겨주면 재귀 호출을 통하여 BONE_DESC에 데이터를 저장하는 함수.
 	- Read_NodeHierarchy() 함수 호출이 끝나고 나면, 멤버 변수인 m_vecBoneTransform배열에 데이터를 채우고 리턴.
 	____________________________________________________________________________________________________________*/
@@ -204,10 +204,10 @@ void CAniCtrl::Play_Animation(_float fTimeDelta)
 
 	if (m_fBlendingTime <= 0.0f)
 	{
-		m_fBlendingTime  = 0.f;
+		m_fBlendingTime   = 0.f;
 		m_uiCurAniIndex	  = m_uiNewAniIdx;
-		m_fBlendingTime  = 1.f;
-		m_fAnimationTime = 0.f;
+		m_fBlendingTime   = 1.f;
+		m_fAnimationTime  = 0.f;
 	}
 
 }
@@ -262,7 +262,8 @@ _bool CAniCtrl::Is_AnimationSetEnd(const _float& fTimeDelta)
 	if (m_fAnimationTime >= m_pScene->mAnimations[m_uiCurAniIndex]->mDuration -
 							m_pScene->mAnimations[m_uiCurAniIndex]->mTicksPerSecond * ANIMA_INTERPOLATION * fTimeDelta)
 	{
-		m_fAnimationTime = 0.0f;
+		//m_fAnimationTime = 0.0f;
+		m_fBlendAnimationTime = m_fAnimationTime;
 		return true;
 	}
 

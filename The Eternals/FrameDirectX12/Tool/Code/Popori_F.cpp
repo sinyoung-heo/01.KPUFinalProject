@@ -211,7 +211,7 @@ void CPopori_F::Set_ConstantTable()
 	m_fDeltaTime += 0.01f;
 	if (m_fDeltaTime > 1.f)
 		m_fDeltaTime = 0.0f;
-	tCB_ShaderMesh.fDeltaTime = m_fDeltaTime;
+	tCB_ShaderMesh.fDissolve = m_fDeltaTime;
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 }
 

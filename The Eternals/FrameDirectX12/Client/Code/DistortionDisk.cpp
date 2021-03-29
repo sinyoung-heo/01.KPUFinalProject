@@ -145,7 +145,7 @@ void CDistortionDisk::Set_ConstantTable()
 	tCB_ShaderMesh.matWorld = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
 
 	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.05f;
-	tCB_ShaderMesh.fDeltaTime = m_fDeltaTime;
+	tCB_ShaderMesh.fDissolve = m_fDeltaTime;
 	if (m_fDeltaTime > 1.f)
 		m_fDeltaTime = 0.f;
 
