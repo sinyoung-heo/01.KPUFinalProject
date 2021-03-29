@@ -492,17 +492,19 @@ void CPCGladiator::SetUp_RunMoveSpeed(const _float& fTimeDelta)
 	// Move On
 	if (m_bIsKeyDown)
 	{
-		m_pInfoCom->m_fSpeed += ((GladiatorConst::MAX_SPEED + GladiatorConst::MAX_SPEED) / 2.0f) * fTimeDelta;
-		if (m_pInfoCom->m_fSpeed > GladiatorConst::MAX_SPEED)
-			m_pInfoCom->m_fSpeed = GladiatorConst::MAX_SPEED;
+		m_fLinearRatio += fTimeDelta;
+		if (m_fLinearRatio > 1.0f)
+			m_fLinearRatio = 1.0f;
 	}
 	// Move Off
 	else if (!m_bIsKeyDown)
 	{
-		m_pInfoCom->m_fSpeed -= GladiatorConst::MAX_SPEED * 4.0f * fTimeDelta;
-		if (m_pInfoCom->m_fSpeed < GladiatorConst::MIN_SPEED)
-			m_pInfoCom->m_fSpeed = GladiatorConst::MIN_SPEED;
+		m_fLinearRatio -= GladiatorConst::MOVE_STOP_SPEED * fTimeDelta;
+		if (m_fLinearRatio < 0.0f)
+			m_fLinearRatio = 0.0f;
 	}
+
+	m_pInfoCom->m_fSpeed = GladiatorConst::MIN_SPEED * (1.0f - m_fLinearRatio) + GladiatorConst::MAX_SPEED * m_fLinearRatio;
 }
 
 void CPCGladiator::SetUp_RunAnimation()

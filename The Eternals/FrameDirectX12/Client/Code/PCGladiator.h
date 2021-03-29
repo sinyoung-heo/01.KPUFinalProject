@@ -6,8 +6,9 @@
 
 namespace GladiatorConst
 {
-	const _float MAX_SPEED = 5.0f;
-	const _float MIN_SPEED = 0.0f;
+	const _float MAX_SPEED       = 5.0f;
+	const _float MIN_SPEED       = 0.0f;
+	const _float MOVE_STOP_SPEED = 3.0f;
 }
 
 namespace Engine
@@ -88,7 +89,7 @@ private:
 	wstring				m_wstrMeshTag    = L"";
 
 	// Speed Linear Interpolation
-
+	_float	m_fLinearRatio = 0.0f;
 
 	// Server
 	_bool			m_bIsKeyDown   = false;
