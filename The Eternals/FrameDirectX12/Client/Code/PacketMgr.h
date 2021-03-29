@@ -28,14 +28,10 @@ public:
 	void	ProcessData(unsigned char* net_buf, size_t io_byte);
 	void	ProcessPacket(char* ptr);
 
-	void Attack_Monster(sc_packet_monster_attack* packet);
-
-	void Move_Monster(sc_packet_move* packet);
-
 	void	send_login();
 	void	send_move(const _vec3& vDir, const _vec3& vPos, const _int& iAniIdx);
 	void	send_move_stop(const _vec3& vPos, const _vec3& vDir, const _int& iAniIdx);
-	void	send_stance_change(const _int& iAniIdx, const _bool& bIsStanceAttack/*, const char& chOType*/);
+	void	send_stance_change(const _int& iAniIdx, const _bool& bIsStanceAttack);
 	void	send_attack(const _vec3& vDir, const _vec3& vPos);
 	void    send_attack_stop(const _vec3& vDir, const _vec3& vPos);
 	void    send_attackByMonster(int objID);
@@ -44,7 +40,8 @@ public:
 public:
 	bool	change_MoveKey(MVKEY eKey);
 	void	Enter_Monster(sc_packet_monster_enter* packet);
-
+	void	Attack_Monster(sc_packet_monster_attack* packet);
+	void	Move_Monster(sc_packet_move* packet);
 
 private:
 	void	send_packet(void* packet);
@@ -62,7 +59,7 @@ private:
 	ID3D12Device*				m_pGraphicDevice = nullptr;
 	ID3D12GraphicsCommandList*	m_pCommandList   = nullptr;
 
-	MVKEY m_eCurKey;
-	MVKEY m_ePreKey;
+	MVKEY m_eCurKey = MVKEY::K_END;
+	MVKEY m_ePreKey = MVKEY::K_END;
 };
 

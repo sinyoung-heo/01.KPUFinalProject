@@ -95,7 +95,6 @@ void CMonster::Change_Monkey_Animation(const float& fTimeDelta)
 
 	case STATUS::ST_ATTACK:
 	{
-		/* Attak - Monkey 함수 만든 후 작업해야 됨*/
 		Attack_Monkey(fTimeDelta);
 	}
 	break;

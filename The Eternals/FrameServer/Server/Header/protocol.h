@@ -33,13 +33,13 @@ constexpr char SC_PACKET_CHAT			= 5;
 constexpr char SC_PACKET_LOGIN_FAIL		= 6;
 constexpr char SC_PACKET_STAT_CHANGE	= 7;
 constexpr char SC_PACKET_ATTACK			= 8;
-constexpr char SC_PACKET_NPC_MOVE		= 9;
-constexpr char SC_PACKET_NPC_ENTER		= 10;
-constexpr char SC_PACKET_MONSTER_ENTER	= 11;
-constexpr char SC_PACKET_MONSTER_MOVE	= 12;
-constexpr char SC_PACKET_MONSTER_ATTACK = 13;
-constexpr char SC_PACKET_MONSTER_STAT	= 14;
-constexpr char SC_PACKET_STANCE_CHANGE  = 15;
+constexpr char SC_PACKET_STANCE_CHANGE  = 9;
+constexpr char SC_PACKET_NPC_MOVE		= 10;
+constexpr char SC_PACKET_NPC_ENTER		= 11;
+constexpr char SC_PACKET_MONSTER_ENTER	= 12;
+constexpr char SC_PACKET_MONSTER_MOVE	= 13;
+constexpr char SC_PACKET_MONSTER_ATTACK = 14;
+constexpr char SC_PACKET_MONSTER_STAT	= 15;
 
 
 constexpr char CS_LOGIN					= 0;
@@ -89,142 +89,144 @@ constexpr char NPC_BG					= 3;
 /* ___________________________________________________________________________________________________________________*/
 struct sc_packet_login_ok 
 {
-	unsigned char size;
-	char type;
-	int  id;
+	unsigned char	size;
+	char			type;
+	int				id;
 
-	char o_type;
-	int hp;
-	int maxHp;
-	int mp;
-	int maxMp;
-	int exp;
-	int maxExp;
-	int level;
-	int att;
-	float spd;
-	float posX, posY, posZ;
+	char			o_type;
+	int				hp;
+	int				maxHp;
+	int				mp;
+	int				maxMp;
+	int				exp;
+	int				maxExp;
+	int				level;
+	int				att;
+	float			spd;
+	float			posX, posY, posZ;
 };
 
 struct sc_packet_move 
 {
-	unsigned char size;
-	char type;
-	int id;
+	unsigned char	size;
+	char			type;
+	int				id;
 
-	int animIdx;
-	int move_time;
-	float spd;
-	float posX, posY, posZ;
-	float dirX, dirY, dirZ;
+	int				animIdx;
+	int				move_time;
+	float			spd;
+	float			posX, posY, posZ;
+	float			dirX, dirY, dirZ;
 };
 
 struct sc_packet_attack
 {
-	unsigned char size;
-	char type;
-	int id;
+	unsigned char	size;
+	char			type;
+	int				id;
 
-	int animIdx;
-	float posX, posY, posZ;
-	float dirX, dirY, dirZ;
+	int				animIdx;
+	float			posX, posY, posZ;
+	float			dirX, dirY, dirZ;
 };
 
 struct sc_packet_enter 
 {
-	unsigned char size;
-	char type;
-	int  id;
+	unsigned char	size;
+	char			type;
+	int				id;
 
-	char name[MAX_ID_LEN];
-	char o_type;
-	float posX, posY, posZ;
-	float dirX, dirY, dirZ;
+	char			name[MAX_ID_LEN];
+	char			o_type;
+	float			posX, posY, posZ;
+	float			dirX, dirY, dirZ;
 };
 
 struct sc_packet_leave 
 {
-	unsigned char size;
-	char type;
-	int  id;
+	unsigned char	size;
+	char			type;
+	int				id;
 };
 
 struct sc_packet_stat_change 
 {
-	unsigned char size;
-	char type;
+	unsigned char	size;
+	char			type;
+	int				id;
 
-	int		id;
-	int		hp;
-	int		mp;
-	int		exp;
+	int				hp;
+	int				mp;
+	int				exp;
 };
 
 struct sc_packet_chat 
 {
-	unsigned char  size;
-	char  type;
-	int	  id;			// teller
-	char  message[MAX_STR_LEN];
+	unsigned char	size;
+	char			type;
+	int				id;						// teller
+
+	char			message[MAX_STR_LEN];
 };
 
 struct sc_packet_login_fail 
 {
-	unsigned char  size;
-	char  type;
-	int	  id;
-	char  message[MAX_STR_LEN];
+	unsigned char	size;
+	char			type;
+	int				id;
+
+	char			message[MAX_STR_LEN];
 };
 
 struct sc_packet_stance_change
 {
-	unsigned char  size;
-	char  type;
-	int	  id;
+	unsigned char	size;
+	char			type;
+	int				id;
 
-	char	o_type;
-	int		animIdx;
-	bool	is_stance_attack;
+	char			o_type;
+	int				animIdx;
+	bool			is_stance_attack;
 };
 
 
 struct sc_packet_npc_enter
 {
-	unsigned char size;
-	char type;
-	int  id;
+	unsigned char	size;
+	char			type;
+	int				id;
 
-	char name[MAX_ID_LEN];
-	char naviType[MIDDLE_STR_LEN];
-	char o_type;
-	char npc_num;
-	float posX, posY, posZ;
-	float angleX, angleY, angleZ;
+	char			name[MAX_ID_LEN];
+	char			naviType[MIDDLE_STR_LEN];
+	char			o_type;
+	char			npc_num;
+	float			posX, posY, posZ;
+	float			angleX, angleY, angleZ;
 };
 
 struct sc_packet_monster_enter
 {
-	unsigned char size;
-	char type;
-	int  id;
+	unsigned char	size;
+	char			type;
+	int				id;
 
-	char name[MAX_ID_LEN];
-	char naviType[MIDDLE_STR_LEN];
-	char mon_num;
-	int Hp, maxHp;
-	float spd;
-	float posX, posY, posZ;
-	float angleX, angleY, angleZ;
+	char			name[MAX_ID_LEN];
+	char			naviType[MIDDLE_STR_LEN];
+	char			mon_num;
+	int				Hp, maxHp;
+	float			spd;
+	float			posX, posY, posZ;
+	float			angleX, angleY, angleZ;
 };
 
 struct sc_packet_monster_attack
 {
-	unsigned char size;
-	char	type;
+	unsigned char	size;
+	char			type;
+	int				id;
 
-	int		id;
-	int		animIdx;
-	float	dirX, dirY, dirZ;
+	int				animIdx;
+	float			dirX, dirY, dirZ;
 };
 
 /* ___________________________________________________________________________________________________________________*/
@@ -232,37 +234,40 @@ struct sc_packet_monster_attack
 /* ___________________________________________________________________________________________________________________*/
 struct cs_packet_login 
 {
-	unsigned char  size;
-	char  type;
-	char  o_type;
-	char  name[MAX_ID_LEN];
-	char  password[MAX_PW_LEN];
+	unsigned char	size;
+	char			type;
+
+	char			o_type;
+	char			name[MAX_ID_LEN];
+	char			password[MAX_PW_LEN];
 };
 
 struct cs_packet_move 
 {
-	unsigned char  size;
-	char  type;
-	int	  animIdx;
-	int	  move_time; 
-	float dirX, dirY, dirZ;
-	float posX, posY, posZ;
+	unsigned char	size;
+	char			type;
+
+	int				animIdx;
+	int				move_time; 
+	float			dirX, dirY, dirZ;
+	float			posX, posY, posZ;
 };
 
 struct cs_packet_move_stop
 {
-	unsigned char  size;
-	char  type;
-	int	  animIdx;
-	float posX, posY, posZ;
-	float dirX, dirY, dirZ;
+	unsigned char	size;
+	char			type;
+
+	int				animIdx;
+	float			posX, posY, posZ;
+	float			dirX, dirY, dirZ;
 };
 
 struct cs_packet_stance_change
 {
 	unsigned char	size;
 	char			type;
-	// char			o_type;
+	
 	int				animIdx;
 	bool			is_stance_attack;
 };
@@ -270,38 +275,41 @@ struct cs_packet_stance_change
 struct cs_packet_attack 
 {
 	unsigned char	size;
-	char	type;
-	int		animIdx;
-	float posX, posY, posZ;
-	float dirX, dirY, dirZ;
+	char			type;
+
+	int				animIdx;
+	float			posX, posY, posZ;
+	float			dirX, dirY, dirZ;
 };
 
 struct cs_packet_player_collision
 {
 	unsigned char	size;
-	char	type;
+	char			type;
 
-	int col_id;
+	int				col_id;
 };
 
 struct cs_packet_chat 
 {
 	unsigned char	size;
-	char	type;
-	char	message[MAX_STR_LEN];
+	char			type;
+
+	char			message[MAX_STR_LEN];
 };
 
 struct cs_packet_logout 
 {
 	unsigned char	size;
-	char	type;
+	char			type;
 };
 
 struct cs_packet_teleport 
 {
-	unsigned char size;
-	char type;
-	short x, y;
+	unsigned char	size;
+	char			type;
+
+	float			posX, posY, posZ;
 };
 
 #pragma pack (pop)

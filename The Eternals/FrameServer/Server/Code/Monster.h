@@ -28,8 +28,8 @@ private:
 	void Change_Crab_Animation(const float& fTimeDelta);
 	void Change_Monkey_Animation(const float& fTimeDelta);
 	void Attack_Crab(const float& fTimeDelta);				// ATTACK PROCESS
-	void Attack_Monkey(const float& fTimeDelta);
 	void Chase_Monkey(const float& fTimeDelta);
+	void Attack_Monkey(const float& fTimeDelta);
 
 	/* MONSTER ALL */
 	void Change_Animation(const float& fTimeDelta);
@@ -58,7 +58,6 @@ public:
 	volatile bool	m_bIsShortAttack = true;
 
 	int				m_iTargetNum	= -1;
-	//int			m_AnimIdx		= 0;
 	_vec3			m_vOriPos		= _vec3(0.f);
 };
 

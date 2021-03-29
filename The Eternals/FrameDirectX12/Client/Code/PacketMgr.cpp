@@ -23,6 +23,7 @@ CPacketMgr::CPacketMgr()
 	: m_pObjectMgr(Engine::CObjectMgr::Get_Instance())
 	, m_pManagement(Engine::CManagement::Get_Instance())
 	, m_pRenderer(Engine::CRenderer::Get_Instance())
+	, m_eCurKey(MVKEY::K_END), m_ePreKey(MVKEY::K_END)
 {
 
 }
@@ -635,13 +636,13 @@ void CPacketMgr::send_move_stop(const _vec3& vPos, const _vec3& vDir, const _int
 	send_packet(&p);
 }
 
-void CPacketMgr::send_stance_change(const _int& iAniIdx, const _bool& bIsStanceAttack/*, const char& chOType*/)
+void CPacketMgr::send_stance_change(const _int& iAniIdx, const _bool& bIsStanceAttack)
 {
 	cs_packet_stance_change p;
 
 	p.size             = sizeof(p);
 	p.type             = CS_STANCE_CHANGE;
-	// p.o_type		   = chOType;
+	
 	p.animIdx          = iAniIdx;
 	p.is_stance_attack = bIsStanceAttack;
 
