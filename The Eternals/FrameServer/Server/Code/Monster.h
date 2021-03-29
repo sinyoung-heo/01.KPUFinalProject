@@ -21,13 +21,15 @@ public:
 
 public:
 	int	 Update_Monster(const float& fTimeDelta);
-	void Hurt_Monster(const int& damage);					// ATTACKED BY PLAYER
+	void Hurt_Monster(const int& p_id, const int& damage);					// ATTACKED BY PLAYER
 
 private:
 	/* MONSTER NORMAL */
 	void Change_Crab_Animation(const float& fTimeDelta);
 	void Change_Monkey_Animation(const float& fTimeDelta);
 	void Attack_Crab(const float& fTimeDelta);				// ATTACK PROCESS
+	void Attack_Monkey(const float& fTimeDelta);
+	void Chase_Monkey(const float& fTimeDelta);
 
 	/* MONSTER ALL */
 	void Change_Animation(const float& fTimeDelta);
@@ -38,6 +40,8 @@ private:
 	void Move_ComeBack(const float& fTimeDelta);			// MOVE PROCESS
 	void Move_NormalMonster(const float& fTimeDelta);		// MOVE PROCESS
 	void Chase_NormalMonster(const float& fTimeDelta);		// MOVE PROCESS
+
+	bool Is_InAttackRange(const _vec3& vPos, const int& range);
 
 public:
 	virtual DWORD Release();
@@ -51,8 +55,9 @@ public:
 	float			m_fSpd			= 0;
 	bool			m_bIsComeBack	= false;
 	volatile bool	m_bIsAttack		= false;
+	volatile bool	m_bIsShortAttack = true;
 
-	int				targetNum		= -1;
+	int				m_iTargetNum	= -1;
 	//int			m_AnimIdx		= 0;
 	_vec3			m_vOriPos		= _vec3(0.f);
 };

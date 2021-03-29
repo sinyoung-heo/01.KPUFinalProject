@@ -116,13 +116,13 @@ bool CObjMgr::Is_Monster_Target(const CObj* me, const CObj* other)
 	return dist <= CHASE_RANGE * CHASE_RANGE;
 }
 
-bool CObjMgr::Is_Monster_AttackTarget(const CObj* me, const CObj* other)
+bool CObjMgr::Is_Monster_AttackTarget(const CObj* me, const CObj* other, const int& range)
 {
 	float dist = (other->m_vPos.x - me->m_vPos.x) * (other->m_vPos.x - me->m_vPos.x);
 	dist += (other->m_vPos.y - me->m_vPos.y) * (other->m_vPos.y - me->m_vPos.y);
 	dist += (other->m_vPos.z - me->m_vPos.z) * (other->m_vPos.z - me->m_vPos.z);
 
-	return dist <= ATTACK_RANGE * ATTACK_RANGE;
+	return dist <= range * range;
 }
 
 HRESULT CObjMgr::Add_GameObject(wstring wstrObjTag, CObj* pObj, int server_num)

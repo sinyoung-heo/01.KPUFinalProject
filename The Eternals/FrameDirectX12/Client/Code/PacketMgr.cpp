@@ -517,9 +517,12 @@ void CPacketMgr::ProcessPacket(char* ptr)
 void CPacketMgr::Attack_Monster(sc_packet_monster_attack* packet)
 {
 	int s_num = packet->id;
+
 	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
+	
 	pObj->Set_State(packet->animIdx);
 	pObj->Set_MoveStop(true);
+	pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 }
 
 void CPacketMgr::Move_Monster(sc_packet_move* packet)
