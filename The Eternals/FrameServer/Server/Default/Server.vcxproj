@@ -60,6 +60,7 @@
     <ClInclude Include="..\Header\enum.h" />
     <ClInclude Include="..\Header\extern.h" />
     <ClInclude Include="..\Header\function.h" />
+    <ClInclude Include="..\Header\PCWeaponType.h" />
     <ClInclude Include="..\Header\protocol.h" />
     <ClInclude Include="..\Header\stdafx.h" />
     <ClInclude Include="..\Header\struct.h" />

@@ -26,7 +26,8 @@ HRESULT CPCWeapon::Ready_GameObject(wstring wstrMeshTag,
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, false, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
-	
+	SetUp_WeaponType();
+
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
 										   m_pTransCom->m_vScale,
 										   m_pMeshCom->Get_CenterPos(),
@@ -153,6 +154,24 @@ HRESULT CPCWeapon::Add_Component(wstring wstrMeshTag)
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shadow", m_pShadowCom);
 
 	return S_OK;
+}
+
+void CPCWeapon::SetUp_WeaponType()
+{
+	if (L"Twohand19_A_SM" == m_wstrMeshTag)
+		m_chWeaponType = Twohand19_A_SM;
+	else if (L"TwoHand19_SM" == m_wstrMeshTag)
+		m_chWeaponType = TwoHand19_SM;
+	else if (L"TwoHand27_SM" == m_wstrMeshTag)
+		m_chWeaponType = TwoHand27_SM;
+	else if (L"TwoHand29_SM" == m_wstrMeshTag)
+		m_chWeaponType = TwoHand29_SM;
+	else if (L"TwoHand31_SM" == m_wstrMeshTag)
+		m_chWeaponType = TwoHand31_SM;
+	else if (L"TwoHand33_B_SM" == m_wstrMeshTag)
+		m_chWeaponType = TwoHand33_B_SM;
+	else if (L"TwoHand33_SM" == m_wstrMeshTag)
+		m_chWeaponType = TwoHand33_SM;
 }
 
 void CPCWeapon::Set_ConstantTable()

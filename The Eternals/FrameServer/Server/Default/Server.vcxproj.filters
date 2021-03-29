@@ -73,6 +73,9 @@
     <Filter Include="99.Header\01.User\00.Animation_Protocol">
       <UniqueIdentifier>{4fe8ba5f-d1f4-427d-ad4b-557391b69812}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99.Header\01.User\01.PCWeaponType">
+      <UniqueIdentifier>{e1ac9924-d966-4ad0-a9cf-06720ca2e981}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainServer.cpp">
@@ -202,6 +205,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\MonsterAnimation.h">
       <Filter>99.Header\01.User\00.Animation_Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\PCWeaponType.h">
+      <Filter>99.Header\01.User\01.PCWeaponType</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

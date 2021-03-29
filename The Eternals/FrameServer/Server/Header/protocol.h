@@ -39,6 +39,8 @@ constexpr char SC_PACKET_MONSTER_ENTER	= 11;
 constexpr char SC_PACKET_MONSTER_MOVE	= 12;
 constexpr char SC_PACKET_MONSTER_ATTACK = 13;
 constexpr char SC_PACKET_MONSTER_STAT	= 14;
+constexpr char SC_PACKET_STANCE_CHANGE  = 15;
+
 
 constexpr char CS_LOGIN					= 0;
 constexpr char CS_MOVE					= 1;
@@ -49,6 +51,8 @@ constexpr char CS_CHAT					= 5;
 constexpr char CS_LOGOUT				= 6;
 constexpr char CS_COLLIDE				= 7;   // Player가 다른 Object에게 충돌당했을 경우
 constexpr char CS_COLLIDE_MONSTER		= 8;   // Player가 Monster 공격
+constexpr char CS_STANCE_CHANGE         = 9;
+
 
 /* CHARACTER TYPE */   // 추후 삭제 예정
 constexpr char TYPE_PLAYER				= 0;
@@ -172,6 +176,18 @@ struct sc_packet_login_fail
 	char  message[MAX_STR_LEN];
 };
 
+struct sc_packet_stance_change
+{
+	unsigned char  size;
+	char  type;
+	int	  id;
+
+	char	o_type;
+	int		animIdx;
+	bool	is_stance_attack;
+};
+
+
 struct sc_packet_npc_enter
 {
 	unsigned char size;
@@ -241,11 +257,20 @@ struct cs_packet_move_stop
 	float dirX, dirY, dirZ;
 };
 
+struct cs_packet_stance_change
+{
+	unsigned char	size;
+	char			type;
+	// char			o_type;
+	int				animIdx;
+	bool			is_stance_attack;
+};
+
 struct cs_packet_attack 
 {
 	unsigned char	size;
 	char	type;
-
+	int		animIdx;
 	float posX, posY, posZ;
 	float dirX, dirY, dirZ;
 };

@@ -31,6 +31,7 @@ public:
 	const int&			Get_ServerNumber()		{ return m_iSNum; }
 	const high_resolution_clock::time_point& Get_LastMoveTime() { return m_last_move_time; }
 	const bool&			Get_MoveStop()			{ return m_bIsMoveStop; }
+	const char&			Get_OType()				{ return m_chO_Type; }
 
 	// Set
 	void				Set_UIDepth(const _long& iUIDepth)						{ m_UIDepth = iUIDepth; }
@@ -47,6 +48,7 @@ public:
 	void				Set_Info(int lev, int hp, int maxHp, int mp, int maxMp, int exp, int maxExp, int att, float spd);
 	void				Set_State(int cur) { m_iCurAnim = cur; }
 	void				Set_Other_direction(_vec3& vDir);
+	void				Set_OType(const char& chType) { m_chO_Type = chType; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT Ready_GameObjectPrototype();
@@ -129,6 +131,7 @@ protected:
 	int		m_iCurAnim			= 0;
 	bool	m_bIsMoveStop		= false;
 	bool	m_bIsAttack			= false;
+	char	m_chO_Type			= 0;
 	high_resolution_clock::time_point m_last_move_time;
 
 public:

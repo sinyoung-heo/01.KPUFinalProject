@@ -1,8 +1,10 @@
 #pragma once
 #include "Include.h"
 #include "GameObject.h"
+#include "GladiatorAnimation.h"
+#include "PCWeaponTwoHand.h"
 
-namespace PCOthersConst
+namespace PCOthersGladiatorConst
 {
 	const _float MAX_SPEED = 4.5f;
 	const _float MIN_SPEED = 0.0f;
@@ -16,11 +18,11 @@ namespace Engine
 	class CNaviMesh;
 }
 
-class CPCOthers : public Engine::CGameObject
+class CPCOthersGladiator : public Engine::CGameObject
 {
 private:
-	explicit CPCOthers(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CPCOthers() = default;
+	explicit CPCOthersGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CPCOthersGladiator() = default;
 
 public:
 	void Set_AnimationIdx(const _uint& iIdx) { m_uiAnimIdx = iIdx; }
@@ -30,12 +32,11 @@ public:
 									 wstring wstrNaviMeshTag,
 									 const _vec3& vScale,
 									 const _vec3& vAngle,
-									 const _vec3& vPos);
+									 const _vec3& vPos,
+									 const char& chWeaponType);
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
-	virtual void	Send_PacketToServer();
-
 	// MultiThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
@@ -59,12 +60,16 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	wstring	m_wstrMeshTag = L"";
+	CPCWeaponTwoHand*	m_pWeapon      = nullptr;
+	wstring				m_wstrMeshTag  = L"";
+	Gladiator::STANCE	m_ePreStance   = Gladiator::STANCE_END;
+	Gladiator::STANCE	m_eCurStance   = Gladiator::STANCE_END;
+	char				m_chWeaponType = -1;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]
 	____________________________________________________________________________________________________________*/
-	_uint			m_uiAnimIdx = 0;	// 현재 애니메이션 Index
+	_uint m_uiAnimIdx = 0;	// 현재 애니메이션 Index
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
@@ -73,7 +78,8 @@ public:
 									   wstring wstrNaviMeshTag,
 									   const _vec3& vScale,
 									   const _vec3& vAngle,
-									   const _vec3& vPos);
+									   const _vec3& vPos,
+									   const char& chWeaponType);
 private:
 	virtual void Free();
 };

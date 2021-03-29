@@ -16,6 +16,8 @@ protected:
 	virtual ~CPCWeapon() = default;
 
 public:
+	const char& Get_WeaponType() { return m_chWeaponType; }
+
 	void Set_HierarchyDesc(Engine::HIERARCHY_DESC* pHierarchyDesc) { m_pHierarchyDesc = pHierarchyDesc; };
 	void Set_DissolveInterpolation(const _float& fDissolveSpeed);
 	void Set_IsRenderShadow(const _bool& bIsRenderShadow) { m_bIsRenderShadow = bIsRenderShadow; }
@@ -36,6 +38,7 @@ public:
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
+	void			SetUp_WeaponType();
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
 	void			Set_ConstantTable(const _int& iContextIdx, const _int& iInstanceIdx);
@@ -71,6 +74,7 @@ protected:
 	Engine::HIERARCHY_DESC*	m_pHierarchyDesc = nullptr;
 	_matrix*				m_pParentMatrix  = nullptr;
 
+	char m_chWeaponType = -1;
 
 protected:
 	virtual void Free();

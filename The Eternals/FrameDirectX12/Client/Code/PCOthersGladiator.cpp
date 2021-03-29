@@ -1,27 +1,29 @@
 #include "stdafx.h"
-#include "PCOthers.h"
+#include "PCOthersGladiator.h"
 #include "GraphicDevice.h"
 #include "ObjectMgr.h"
 #include "LightMgr.h"
 #include "RenderTarget.h"
 
-CPCOthers::CPCOthers(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CPCOthersGladiator::CPCOthersGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
 
 }
 
-HRESULT CPCOthers::Ready_GameObject(wstring wstrMeshTag, 
-									wstring wstrNaviMeshTag,
-									const _vec3& vScale, 
-									const _vec3& vAngle,
-									const _vec3& vPos)
+HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag, 
+											 wstring wstrNaviMeshTag,
+											 const _vec3& vScale, 
+											 const _vec3& vAngle,
+											 const _vec3& vPos,
+											 const char& chWeaponType)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag, wstrNaviMeshTag), E_FAIL);
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos   = vPos;
+	m_chWeaponType        = chWeaponType;
 
 	m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(vPos));
 
@@ -31,7 +33,7 @@ HRESULT CPCOthers::Ready_GameObject(wstring wstrMeshTag,
 										   m_pMeshCom->Get_MinVector(),
 										   m_pMeshCom->Get_MaxVector());
 
-	m_pInfoCom->m_fSpeed     = PCOthersConst::MIN_SPEED;
+	m_pInfoCom->m_fSpeed     = PCOthersGladiatorConst::MIN_SPEED;
 	m_pInfoCom->m_vArrivePos = m_pTransCom->m_vPos;
 
 	/*__________________________________________________________________________________________________________
@@ -39,19 +41,39 @@ HRESULT CPCOthers::Ready_GameObject(wstring wstrMeshTag,
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
 
+	m_ePreStance = Gladiator::STANCE_NONEATTACK;
+	m_eCurStance = Gladiator::STANCE_NONEATTACK;
+
 	return S_OK;
 }
 
-HRESULT CPCOthers::LateInit_GameObject()
+HRESULT CPCOthersGladiator::LateInit_GameObject()
 {
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	m_pShadowCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
+	// Create Weapon
+	wstring wstrWeaponMeshTag = L"";
+
+	if (m_chWeaponType == Twohand19_A_SM)
+		wstrWeaponMeshTag = L"Twohand19_A_SM";
+
+	m_pWeapon = CPCWeaponTwoHand::Create(m_pGraphicDevice, m_pCommandList,
+										 wstrWeaponMeshTag,
+										 _vec3(0.75f),
+										 _vec3(0.0f, 0.0f, 180.0f),
+										 _vec3(0.0f, 0.0f, 0.0f),
+										 m_pMeshCom->Find_HierarchyDesc("Weapon_Back"),
+										 &m_pTransCom->m_matWorld,
+										 _rgba(0.64f, 0.96f, 0.97f, 1.0f));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"OthersWeaponTwoHand", m_pWeapon), E_FAIL);
+
+
 	return S_OK;
 }
 
-_int CPCOthers::Update_GameObject(const _float& fTimeDelta)
+_int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
@@ -78,26 +100,22 @@ _int CPCOthers::Update_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CPCOthers::LateUpdate_GameObject(const _float& fTimeDelta)
+_int CPCOthersGladiator::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
 	return NO_EVENT;
 }
 
-void CPCOthers::Send_PacketToServer()
-{
-}
-
-void CPCOthers::Render_GameObject(const _float& fTimeDelta, 
-								  ID3D12GraphicsCommandList* pCommandList, 
-								  const _int& iContextIdx)
+void CPCOthersGladiator::Render_GameObject(const _float& fTimeDelta, 
+										   ID3D12GraphicsCommandList* pCommandList, 
+										   const _int& iContextIdx)
 {
 	Set_ConstantTable();
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
-void CPCOthers::Render_ShadowDepth(const _float& fTimeDelta, 
+void CPCOthersGladiator::Render_ShadowDepth(const _float& fTimeDelta, 
 								   ID3D12GraphicsCommandList* pCommandList, 
 								   const _int& iContextIdx)
 {
@@ -105,7 +123,7 @@ void CPCOthers::Render_ShadowDepth(const _float& fTimeDelta,
 	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 }
 
-HRESULT CPCOthers::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
+HRESULT CPCOthersGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -139,7 +157,7 @@ HRESULT CPCOthers::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 	return S_OK;
 }
 
-void CPCOthers::Set_ConstantTable()
+void CPCOthersGladiator::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -157,7 +175,7 @@ void CPCOthers::Set_ConstantTable()
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 }
 
-void CPCOthers::Set_ConstantTableShadowDepth()
+void CPCOthersGladiator::Set_ConstantTableShadowDepth()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -174,7 +192,7 @@ void CPCOthers::Set_ConstantTableShadowDepth()
 	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
 }
 
-void CPCOthers::Move_OnNaviMesh(const _float& fTimeDelta)
+void CPCOthersGladiator::Move_OnNaviMesh(const _float& fTimeDelta)
 {
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 	m_pTransCom->m_vDir.Normalize();
@@ -182,7 +200,7 @@ void CPCOthers::Move_OnNaviMesh(const _float& fTimeDelta)
 	SetUp_MoveSpeed(fTimeDelta);
 
 	if (!m_bIsMoveStop || 
-		m_pInfoCom->m_fSpeed == PCOthersConst::MIN_SPEED)
+		m_pInfoCom->m_fSpeed == PCOthersGladiatorConst::MIN_SPEED)
 	{
 		// NaviMesh ÀÌµ¿.		
 		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
@@ -195,38 +213,39 @@ void CPCOthers::Move_OnNaviMesh(const _float& fTimeDelta)
 	}
 }
 
-void CPCOthers::SetUp_MoveSpeed(const _float& fTimeDelta)
+void CPCOthersGladiator::SetUp_MoveSpeed(const _float& fTimeDelta)
 {
 	if (!m_bIsMoveStop)
 	{
-		m_pInfoCom->m_fSpeed += ((PCOthersConst::MAX_SPEED + PCOthersConst::MAX_SPEED) / 2.0f) * fTimeDelta;
-		if (m_pInfoCom->m_fSpeed > PCOthersConst::MAX_SPEED)
-			m_pInfoCom->m_fSpeed = PCOthersConst::MAX_SPEED;
+		m_pInfoCom->m_fSpeed += ((PCOthersGladiatorConst::MAX_SPEED + PCOthersGladiatorConst::MAX_SPEED) / 2.0f) * fTimeDelta;
+		if (m_pInfoCom->m_fSpeed > PCOthersGladiatorConst::MAX_SPEED)
+			m_pInfoCom->m_fSpeed = PCOthersGladiatorConst::MAX_SPEED;
 	}
 	else
 	{
-		m_pInfoCom->m_fSpeed -= PCOthersConst::MAX_SPEED * 3.0f * fTimeDelta;
-		if (m_pInfoCom->m_fSpeed < PCOthersConst::MIN_SPEED)
-			m_pInfoCom->m_fSpeed = PCOthersConst::MIN_SPEED;
+		m_pInfoCom->m_fSpeed -= PCOthersGladiatorConst::MAX_SPEED * 3.0f * fTimeDelta;
+		if (m_pInfoCom->m_fSpeed < PCOthersGladiatorConst::MIN_SPEED)
+			m_pInfoCom->m_fSpeed = PCOthersGladiatorConst::MIN_SPEED;
 	}
 }
 
-Engine::CGameObject* CPCOthers::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, 
-									   wstring wstrMeshTag, 
-									   wstring wstrNaviMeshTag, 
-									   const _vec3& vScale,
-									   const _vec3& vAngle,
-									   const _vec3& vPos)
+Engine::CGameObject* CPCOthersGladiator::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, 
+												wstring wstrMeshTag, 
+												wstring wstrNaviMeshTag, 
+												const _vec3& vScale,
+												const _vec3& vAngle,
+												const _vec3& vPos,
+												const char& chWeaponType)
 {
-	CPCOthers* pInstance = new CPCOthers(pGraphicDevice, pCommandList);
+	CPCOthersGladiator* pInstance = new CPCOthersGladiator(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, wstrNaviMeshTag, vScale, vAngle, vPos)))
+	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, wstrNaviMeshTag, vScale, vAngle, vPos, chWeaponType)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
 }
 
-void CPCOthers::Free()
+void CPCOthersGladiator::Free()
 {
 	Engine::CGameObject::Free();
 

@@ -14,8 +14,8 @@
 #include "DynamicCamera.h"
 #include "TestColPlayer.h"
 #include "TestColMonster.h"
-#include "PCOthers.h"
 #include "PCGladiator.h"
+#include "PCOthersGladiator.h"
 
 IMPLEMENT_SINGLETON(CPacketMgr)
 
@@ -189,7 +189,9 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 #else
 		if (PC_GLADIATOR == packet->o_type)
+		{
 			wstrMeshTag = L"PoporiR27Gladiator";
+		}
 		else if (PC_ARCHER == packet->o_type)
 		{
 
@@ -209,6 +211,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 										 _vec3(packet->posX, packet->posY, packet->posZ));	// Pos
 
 #endif
+		pGameObj->Set_OType(packet->o_type);
 		pGameObj->Set_ServerNumber(g_iSNum);
 		pGameObj->Set_Info(packet->level, packet->hp, packet->maxHp, packet->mp, packet->maxMp, packet->exp, packet->maxExp, packet->att, packet->spd);
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"ThisPlayer", pGameObj), E_FAIL);
@@ -231,15 +234,42 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		/*__________________________________________________________________________________________________________
 		[ GameLogic Object(player) »ý¼º ]
 		____________________________________________________________________________________________________________*/
-
 		Engine::CGameObject* pGameObj = nullptr;
+		wstring wstrMeshTag = L"";
 
-		pGameObj = CPCOthers::Create(m_pGraphicDevice, m_pCommandList,
-									 L"PoporiR27Gladiator",								// MeshTag
-									 L"StageVelika_NaviMesh",							// NaviMeshTag
-									 _vec3(0.05f, 0.05f, 0.05f),						// Scale
-									 _vec3(0.0f, 0.0f, 0.0f),							// Angle
-									 _vec3(packet->posX, packet->posY, packet->posZ));	// Pos
+		if (PC_GLADIATOR == packet->o_type)
+		{
+			wstrMeshTag = L"PoporiR27Gladiator";
+			pGameObj = CPCOthersGladiator::Create(m_pGraphicDevice, m_pCommandList,
+												  L"PoporiR27Gladiator",							// MeshTag
+												  L"StageVelika_NaviMesh",							// NaviMeshTag
+												  _vec3(0.05f, 0.05f, 0.05f),						// Scale
+												  _vec3(0.0f, 0.0f, 0.0f),							// Angle
+												  _vec3(packet->posX, packet->posY, packet->posZ),	// Pos
+												   Twohand19_A_SM);									// WeaponType
+
+		}
+		else if (PC_ARCHER == packet->o_type)
+		{
+
+		}
+		else if (PC_PRIEST == packet->o_type)
+		{
+
+		}
+		else
+		{
+			wstrMeshTag = L"PoporiR27Gladiator";
+			pGameObj = CPCOthersGladiator::Create(m_pGraphicDevice, m_pCommandList,
+												  L"PoporiR27Gladiator",							// MeshTag
+												  L"StageVelika_NaviMesh",							// NaviMeshTag
+												  _vec3(0.05f, 0.05f, 0.05f),						// Scale
+												  _vec3(0.0f, 0.0f, 0.0f),							// Angle
+												  _vec3(packet->posX, packet->posY, packet->posZ),	// Pos
+												  Twohand19_A_SM);									// WeaponType
+		}
+
+		pGameObj->Set_OType(packet->o_type);
 		pGameObj->Set_ServerNumber(packet->id);
 
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Others", pGameObj), E_FAIL);
@@ -269,7 +299,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 			auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
-			static_cast<CPCOthers*>(pObj)->Set_AnimationIdx(packet->animIdx);
+			static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
 			pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
 			pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 			pObj->Set_MoveStop(false);
@@ -300,7 +330,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 			auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
-			static_cast<CPCOthers*>(pObj)->Set_AnimationIdx(packet->animIdx);
+			static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
 			pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
 			pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 			pObj->Set_MoveStop(true);
@@ -365,6 +395,23 @@ void CPacketMgr::ProcessPacket(char* ptr)
 			m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"MONSTER", packet->id);
 		else
 			m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"Others", packet->id);
+	}
+	break;
+
+	case SC_PACKET_STANCE_CHANGE:
+	{
+		sc_packet_stance_change* packet = reinterpret_cast<sc_packet_stance_change*>(ptr);
+
+		int s_num = packet->id;
+
+		if (s_num == g_iSNum) break;
+		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+		if (PC_GLADIATOR == packet->o_type)
+		{
+			static_cast<CPCOthersGladiator*>(pObj);
+
+		}
+
 	}
 	break;
 
@@ -581,6 +628,19 @@ void CPacketMgr::send_move_stop(const _vec3& vPos, const _vec3& vDir, const _int
 	p.dirX = vDir.x;
 	p.dirY = vDir.y;
 	p.dirZ = vDir.z;
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_stance_change(const _int& iAniIdx, const _bool& bIsStanceAttack/*, const char& chOType*/)
+{
+	cs_packet_stance_change p;
+
+	p.size             = sizeof(p);
+	p.type             = CS_STANCE_CHANGE;
+	// p.o_type		   = chOType;
+	p.animIdx          = iAniIdx;
+	p.is_stance_attack = bIsStanceAttack;
 
 	send_packet(&p);
 }

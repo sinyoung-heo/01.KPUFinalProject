@@ -146,6 +146,11 @@ void process_packet(int id)
 	}
 	break;
 
+	case CS_STANCE_CHANGE:
+	{
+
+	}
+	break;
 	case CS_ATTACK:
 	{
 		cs_packet_attack* p = reinterpret_cast<cs_packet_attack*>(pPlayer->m_packet_start);
@@ -317,7 +322,8 @@ void send_enter_packet(int to_client, int new_id)
 	strncpy_s(p.name, pNewPlayer->m_ID, strlen(pNewPlayer->m_ID));
 
 	pNewPlayer->Get_ClientLock().unlock();
-	p.o_type = pNewPlayer->m_type;
+	//p.o_type = pNewPlayer->m_type;
+	p.o_type = PC_GLADIATOR;
 
 	p.posX = pNewPlayer->m_vPos.x;
 	p.posY = pNewPlayer->m_vPos.y;

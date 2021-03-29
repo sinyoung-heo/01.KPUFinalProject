@@ -205,9 +205,6 @@
     <Filter Include="02.GameObject\02.PlayerCharacter\03.PCPriest">
       <UniqueIdentifier>{6eed4051-b07f-4440-9510-50ef60d1266f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\02.PlayerCharacter\99.PCOthers">
-      <UniqueIdentifier>{594ee94f-a685-47a0-a2d0-625cb16c00fc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\04.NPC">
       <UniqueIdentifier>{47df4906-7eaf-475a-9510-a7ba998fbd98}</UniqueIdentifier>
     </Filter>
@@ -429,9 +426,6 @@
     <ClInclude Include="GladiatorAnimation.h">
       <Filter>02.GameObject\02.PlayerCharacter\00.PCGladiator</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\PCOthers.h">
-      <Filter>02.GameObject\02.PlayerCharacter\99.PCOthers</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\WaterMeshObject.h">
       <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
     </ClInclude>
@@ -455,6 +449,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\FrameServer\Server\Header\MonsterAnimation.h">
       <Filter>98.Header\00.protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\FrameServer\Server\Header\PCWeaponType.h">
+      <Filter>98.Header\00.protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PCOthersGladiator.h">
+      <Filter>02.GameObject\02.PlayerCharacter\00.PCGladiator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -617,9 +617,6 @@
     <ClCompile Include="..\Code\PCGladiator.cpp">
       <Filter>02.GameObject\02.PlayerCharacter\00.PCGladiator</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\PCOthers.cpp">
-      <Filter>02.GameObject\02.PlayerCharacter\99.PCOthers</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\WaterMeshObject.cpp">
       <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
     </ClCompile>
@@ -637,6 +634,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\Monkey.cpp">
       <Filter>02.GameObject\05.Monster\01.Monkey</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PCOthersGladiator.cpp">
+      <Filter>02.GameObject\02.PlayerCharacter\00.PCGladiator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
