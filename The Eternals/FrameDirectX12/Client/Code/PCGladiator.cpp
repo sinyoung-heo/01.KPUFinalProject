@@ -298,7 +298,7 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 
 	/* Player Attack to Monster --- TEST */
 	if (Engine::KEY_PRESSING(DIK_M))
-		m_pPacketMgr->send_attackToMonster(5001);
+		m_pPacketMgr->send_attackToMonster(5000);
 }
 
 void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
