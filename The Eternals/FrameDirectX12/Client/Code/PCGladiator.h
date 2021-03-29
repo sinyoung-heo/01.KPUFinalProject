@@ -59,7 +59,8 @@ private:
 	void SetUp_RunMoveSpeed(const _float& fTimeDelta);
 	void SetUp_RunAnimation();
 	void SetUp_RunToIdleAnimation(const _float& fTimeDelta);
-	void SetUp_PlayerStance();
+	void SetUp_PlayerStance_FromAttackToNoneAttack();
+	void SetUp_PlayerStance_FromNoneAttackToAttack();
 	void Change_PlayerStance(const _float& fTimeDelta);
 
 private:
@@ -85,6 +86,9 @@ private:
 	CPCWeaponTwoHand*	m_pWeapon        = nullptr;
 	CDynamicCamera*		m_pDynamicCamera = nullptr;
 	wstring				m_wstrMeshTag    = L"";
+
+	// Speed Linear Interpolation
+
 
 	// Server
 	_bool			m_bIsKeyDown   = false;

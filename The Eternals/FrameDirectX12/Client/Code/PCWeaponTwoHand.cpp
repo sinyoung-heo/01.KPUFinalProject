@@ -11,14 +11,16 @@ HRESULT CPCWeaponTwoHand::Ready_GameObject(wstring wstrMeshTag,
 										   const _vec3& vAngle, 
 										   const _vec3& vPos, 
 										   Engine::HIERARCHY_DESC* pHierarchyDesc,
-										   _matrix* pParentMatrix)
+										   _matrix* pParentMatrix,
+										   const _rgba& vEmissiveColor)
 {
 	Engine::FAILED_CHECK_RETURN(CPCWeapon::Ready_GameObject(wstrMeshTag,
 															vScale, 
 															vAngle, 
 															vPos, 
 															pHierarchyDesc, 
-															pParentMatrix), E_FAIL);
+															pParentMatrix,
+															vEmissiveColor), E_FAIL);
 
 	return S_OK;
 }
@@ -63,7 +65,8 @@ CPCWeaponTwoHand* CPCWeaponTwoHand::Create(ID3D12Device* pGraphicDevice, ID3D12G
 										   const _vec3& vAngle, 
 										   const _vec3& vPos, 
 										   Engine::HIERARCHY_DESC* pHierarchyDesc,
-										   _matrix* pParentMatrix)
+										   _matrix* pParentMatrix,
+										   const _rgba& vEmissiveColor)
 {
 	CPCWeaponTwoHand* pInstance = new CPCWeaponTwoHand(pGraphicDevice, pCommandList);
 
@@ -72,7 +75,8 @@ CPCWeaponTwoHand* CPCWeaponTwoHand::Create(ID3D12Device* pGraphicDevice, ID3D12G
 										   vAngle,
 										   vPos,
 										   pHierarchyDesc,
-										   pParentMatrix)))
+										   pParentMatrix,
+										   vEmissiveColor)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;

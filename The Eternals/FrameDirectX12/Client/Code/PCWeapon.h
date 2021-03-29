@@ -17,7 +17,8 @@ protected:
 
 public:
 	void Set_HierarchyDesc(Engine::HIERARCHY_DESC* pHierarchyDesc) { m_pHierarchyDesc = pHierarchyDesc; };
-	// void Set_TargetAngle(const _vec3& vAngle) { m_vTargetAngle = vAngle; }
+	void Set_DissolveInterpolation(const _float& fDissolveSpeed);
+	void Set_IsRenderShadow(const _bool& bIsRenderShadow) { m_bIsRenderShadow = bIsRenderShadow; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
@@ -25,7 +26,8 @@ public:
 									 const _vec3& vAngle,
 									 const _vec3& vPos,
 									 Engine::HIERARCHY_DESC* pHierarchyDesc,
-									 _matrix* pParentMatrix);
+									 _matrix* pParentMatrix,
+									 const _rgba& vEmissiveColor);
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
@@ -38,8 +40,7 @@ private:
 	void			Set_ConstantTableShadowDepth();
 	void			Set_ConstantTable(const _int& iContextIdx, const _int& iInstanceIdx);
 	void			Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int& iInstanceIdx);
-	// void			SetUp_TargetAngle(const _float& fTimeDelta);
-
+	void			SetUp_Dissolve(const _float& fTimeDelta);
 protected:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -54,10 +55,18 @@ protected:
 	[ Value ]
 	____________________________________________________________________________________________________________*/
 	_uint	m_iAttackPower             = 0;
-	// _vec3	m_vTargetAngle             = _vec3(0.0f);
 	wstring	m_wstrMeshTag		       = L"";
 	_uint	m_iMeshPipelineStatePass   = 0;
 	_uint	m_iShadowPipelineStatePass = 0;
+	_bool	m_bIsRenderShadow	       = false;
+
+	_bool	m_bIsStartInterpolation = false;
+	_float	m_fLinearRatio	        = 1.0f;
+	_float	m_fMinDissolve          = 0.0f;
+	_float	m_fMaxDissolve          = 1.0f;
+	_float	m_fDissolve             = 1.0f;
+	_float	m_fDissolveSpeed        = 1.0f;
+	_rgba	m_vEmissiveColor		= _rgba(1.0f);
 
 	Engine::HIERARCHY_DESC*	m_pHierarchyDesc = nullptr;
 	_matrix*				m_pParentMatrix  = nullptr;

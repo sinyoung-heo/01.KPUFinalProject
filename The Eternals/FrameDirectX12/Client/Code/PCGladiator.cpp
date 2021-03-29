@@ -104,8 +104,8 @@ HRESULT CPCGladiator::LateInit_GameObject()
 										 _vec3(0.0f, 0.0f, 180.0f),
 										 _vec3(0.0f, 0.0f, 0.0f),
 										 m_pMeshCom->Find_HierarchyDesc("Weapon_Back"),
-										 // m_pMeshCom->Find_HierarchyDesc("L_Sword"),
-										 &m_pTransCom->m_matWorld);
+										 &m_pTransCom->m_matWorld,
+										 _rgba(0.64f, 0.96f, 0.97f, 1.0f));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"ThisPlayerWeaponTwoHand", m_pWeapon), E_FAIL);
 
 	return S_OK;
@@ -128,6 +128,7 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 
 	// NaviMesh ÀÌµ¿.
 	Move_OnNaviMesh(fTimeDelta);
+	SetUp_RunMoveSpeed(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
@@ -306,7 +307,7 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 
 void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 {
-	if (!g_bIsActive || m_bIsAttack) 
+	if (!g_bIsActive || m_bIsAttack || !m_bIsCompleteStanceChange)
 		return;
 
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
@@ -394,28 +395,34 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 		}
 	}
 
-	SetUp_RunMoveSpeed(fTimeDelta);
 	SetUp_RunAnimation();
 	SetUp_RunToIdleAnimation(fTimeDelta);
 }
 
 void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 {
-	if (Engine::KEY_DOWN(DIK_LSHIFT) &&
-		!m_bIsKeyDown &&
-		m_bIsCompleteStanceChange)
+	// ATTACK -> NONE_ATTACK
+	if (Engine::KEY_DOWN(DIK_LSHIFT) && Gladiator::STANCE_ATTACK == m_eStance &&
+		!m_bIsKeyDown && m_pInfoCom->m_fSpeed == GladiatorConst::MIN_SPEED &&
+		m_bIsCompleteStanceChange &&
+		m_uiAnimIdx != Gladiator::NONE_ATTACK_WALK && m_uiAnimIdx != Gladiator::ATTACK_RUN &&
+		m_uiAnimIdx != Gladiator::IN_WEAPON && m_uiAnimIdx != Gladiator::OUT_WEAPON)
 	{
-		SetUp_PlayerStance();
+		m_bIsCompleteStanceChange = false;
+		SetUp_PlayerStance_FromAttackToNoneAttack();
 	}
-	Change_PlayerStance(fTimeDelta);
 
-	//if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB))
-	//{
-	//	if (Gladiator::STANCE_NONEATTACK != m_eStance)
-	//		m_eStance = Gladiator::STANCE_ATTACK;
-	//	else
-	//		m_eStance = Gladiator::STANCE_NONEATTACK;
-	//}
+	// NONE_ATTACK -> ATTACK
+	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) && Gladiator::STANCE_NONEATTACK == m_eStance &&
+		m_bIsCompleteStanceChange &&
+		m_uiAnimIdx != Gladiator::IN_WEAPON && m_uiAnimIdx != Gladiator::OUT_WEAPON)
+	{
+		m_bIsKeyDown = false;
+		m_bIsCompleteStanceChange = false;
+		SetUp_PlayerStance_FromNoneAttackToAttack();
+	}
+
+	Change_PlayerStance(fTimeDelta);
 
 }
 
@@ -473,6 +480,7 @@ bool CPCGladiator::Is_Change_CamDirection()
 {
 	if (m_fPreAngle + 5.f < m_pTransCom->m_vAngle.y)
 		return true;
+
 	else if (m_fPreAngle - 5.f > m_pTransCom->m_vAngle.y)
 		return true;
 
@@ -481,22 +489,19 @@ bool CPCGladiator::Is_Change_CamDirection()
 
 void CPCGladiator::SetUp_RunMoveSpeed(const _float& fTimeDelta)
 {
-	// if (Gladiator::STANCE_NONEATTACK == m_eStance )
+	// Move On
+	if (m_bIsKeyDown)
 	{
-		// Move On
-		if (m_bIsKeyDown)
-		{
-			m_pInfoCom->m_fSpeed += ((GladiatorConst::MAX_SPEED + GladiatorConst::MAX_SPEED) / 2.0f) * fTimeDelta;
-			if (m_pInfoCom->m_fSpeed > GladiatorConst::MAX_SPEED)
-				m_pInfoCom->m_fSpeed = GladiatorConst::MAX_SPEED;
-		}
-		// Move Off
-		else if (!m_bIsKeyDown)
-		{
-			m_pInfoCom->m_fSpeed -= GladiatorConst::MAX_SPEED * 4.0f * fTimeDelta;
-			if (m_pInfoCom->m_fSpeed < GladiatorConst::MIN_SPEED)
-				m_pInfoCom->m_fSpeed = GladiatorConst::MIN_SPEED;
-		}
+		m_pInfoCom->m_fSpeed += ((GladiatorConst::MAX_SPEED + GladiatorConst::MAX_SPEED) / 2.0f) * fTimeDelta;
+		if (m_pInfoCom->m_fSpeed > GladiatorConst::MAX_SPEED)
+			m_pInfoCom->m_fSpeed = GladiatorConst::MAX_SPEED;
+	}
+	// Move Off
+	else if (!m_bIsKeyDown)
+	{
+		m_pInfoCom->m_fSpeed -= GladiatorConst::MAX_SPEED * 4.0f * fTimeDelta;
+		if (m_pInfoCom->m_fSpeed < GladiatorConst::MIN_SPEED)
+			m_pInfoCom->m_fSpeed = GladiatorConst::MIN_SPEED;
 	}
 }
 
@@ -504,9 +509,9 @@ void CPCGladiator::SetUp_RunAnimation()
 {
 	if (m_bIsKeyDown && Gladiator::STANCE_NONEATTACK == m_eStance)
 		m_uiAnimIdx = Gladiator::NONE_ATTACK_WALK;
+
 	else if (m_bIsKeyDown && Gladiator::STANCE_ATTACK == m_eStance)
 		m_uiAnimIdx = Gladiator::ATTACK_RUN;
-
 }
 
 void CPCGladiator::SetUp_RunToIdleAnimation(const _float& fTimeDelta)
@@ -525,29 +530,34 @@ void CPCGladiator::SetUp_RunToIdleAnimation(const _float& fTimeDelta)
 	}
 }
 
-void CPCGladiator::SetUp_PlayerStance()
+void CPCGladiator::SetUp_PlayerStance_FromAttackToNoneAttack()
 {
-	m_bIsCompleteStanceChange = false;
+	// NONE_ATTACK -> ATTACK
+	if (Gladiator::STANCE_ATTACK == m_eStance)
+	{
+		m_pWeapon->Set_DissolveInterpolation(1.0f);
+		m_pWeapon->Set_IsRenderShadow(false);
 
+		m_eStance   = Gladiator::STANCE_NONEATTACK;
+		m_uiAnimIdx = Gladiator::IN_WEAPON;
+	}
+}
+
+void CPCGladiator::SetUp_PlayerStance_FromNoneAttackToAttack()
+{
 	// NONE_ATTACK -> ATTACK
 	if (Gladiator::STANCE_NONEATTACK == m_eStance)
 	{
-		if (Gladiator::NONE_ATTACK_IDLE == m_uiAnimIdx)
+		if (Gladiator::NONE_ATTACK_IDLE == m_uiAnimIdx ||
+			Gladiator::NONE_ATTACK_WALK == m_uiAnimIdx)
 		{
+			m_pWeapon->Set_DissolveInterpolation(-1.0f);
+			m_pWeapon->Set_IsRenderShadow(true);
 			m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("L_Sword"));
-			// m_pWeapon->Set_TargetAngle(_vec3(0.0f, 0.0f, 180.0f));
 		}
 
 		m_eStance   = Gladiator::STANCE_ATTACK;
 		m_uiAnimIdx = Gladiator::OUT_WEAPON;
-	}
-	// ATTACK -> NONE_ATTACK
-	else if (Gladiator::STANCE_ATTACK == m_eStance)
-	{
-		// m_pWeapon->Set_TargetAngle(_vec3(0.0f, 0.0f, 90.0f));
-
-		m_eStance   = Gladiator::STANCE_NONEATTACK;
-		m_uiAnimIdx = Gladiator::IN_WEAPON;
 	}
 }
 
@@ -577,6 +587,7 @@ void CPCGladiator::Change_PlayerStance(const _float& fTimeDelta)
 		if (Gladiator::IN_WEAPON == m_uiAnimIdx && m_ui3DMax_CurFrame > 20)
 			m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("Weapon_Back"));
 
+		// Check Is Complete Stance Change
 		if (Gladiator::NONE_ATTACK_IDLE == m_uiAnimIdx ||
 			Gladiator::ATTACK_WAIT == m_uiAnimIdx)
 		{

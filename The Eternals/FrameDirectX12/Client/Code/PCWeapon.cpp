@@ -10,12 +10,19 @@ CPCWeapon::CPCWeapon(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pC
 {
 }
 
-HRESULT CPCWeapon::Ready_GameObject(wstring wstrMeshTag, 
+void CPCWeapon::Set_DissolveInterpolation(const _float& fDissolveSpeed)
+{
+	m_fDissolveSpeed = fDissolveSpeed;
+	m_bIsStartInterpolation = true;
+}
+
+HRESULT CPCWeapon::Ready_GameObject(wstring wstrMeshTag,
 									const _vec3& vScale, 
 									const _vec3& vAngle, 
 									const _vec3& vPos,
 									Engine::HIERARCHY_DESC* pHierarchyDesc,
-									_matrix* pParentMatrix)
+									_matrix* pParentMatrix,
+									const _rgba& vEmissiveColor)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, false, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
@@ -32,12 +39,12 @@ HRESULT CPCWeapon::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos	  = vPos;
-	// m_vTargetAngle		  = m_pTransCom->m_vAngle;
 	m_pHierarchyDesc      = pHierarchyDesc;
 	m_pParentMatrix       = pParentMatrix;
+	m_vEmissiveColor      = vEmissiveColor;
 
 	// PipelineState.
-	m_iMeshPipelineStatePass   = 1;
+	m_iMeshPipelineStatePass   = 7;
 	m_iShadowPipelineStatePass = 0;
 	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(m_iMeshPipelineStatePass), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pShadowCom->Set_PipelineStatePass(m_iShadowPipelineStatePass), E_FAIL);
@@ -60,6 +67,7 @@ _int CPCWeapon::Update_GameObject(const _float& fTimeDelta)
 		return DEAD_OBJ;
 
 	// SetUp_TargetAngle(fTimeDelta);
+	SetUp_Dissolve(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
@@ -107,16 +115,19 @@ void CPCWeapon::Render_ShadowDepth(const _float& fTimeDelta,
 								   ID3D12GraphicsCommandList* pCommandList, 
 								   const _int& iContextIdx)
 {
-	///*__________________________________________________________________________________________________________
-	//[ Add Instance ]
-	//____________________________________________________________________________________________________________*/
-	//m_pShaderShadowInstancing->Add_Instance(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass);
-	//_uint iInstanceIdx = m_pShaderShadowInstancing->Get_InstanceCount(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass) - 1;
+	if (m_bIsRenderShadow)
+	{
+		///*__________________________________________________________________________________________________________
+		//[ Add Instance ]
+		//____________________________________________________________________________________________________________*/
+		//m_pShaderShadowInstancing->Add_Instance(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass);
+		//_uint iInstanceIdx = m_pShaderShadowInstancing->Get_InstanceCount(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass) - 1;
 
-	//Set_ConstantTableShadowDepth(iContextIdx, iInstanceIdx);
+		//Set_ConstantTableShadowDepth(iContextIdx, iInstanceIdx);
 
-	Set_ConstantTableShadowDepth();
-	m_pMeshCom->Render_StaticMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
+		Set_ConstantTableShadowDepth();
+		m_pMeshCom->Render_StaticMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
+	}
 }
 
 HRESULT CPCWeapon::Add_Component(wstring wstrMeshTag)
@@ -133,14 +144,12 @@ HRESULT CPCWeapon::Add_Component(wstring wstrMeshTag)
 	m_pShaderCom = static_cast<Engine::CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->AddRef();
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(0), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
 	// Shadow
 	m_pShadowCom = static_cast<Engine::CShaderShadow*>(m_pComponentMgr->Clone_Component(L"ShaderShadow", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShadowCom, E_FAIL);
 	m_pShadowCom->AddRef();
-	Engine::FAILED_CHECK_RETURN(m_pShadowCom->Set_PipelineStatePass(0), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shadow", m_pShadowCom);
 
 	return S_OK;
@@ -155,11 +164,13 @@ void CPCWeapon::Set_ConstantTable()
 
 	Engine::CB_SHADER_MESH tCB_ShaderMesh;
 	ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
-	tCB_ShaderMesh.matWorld      = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderMesh.matLightView  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
-	tCB_ShaderMesh.matLightProj  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
-	tCB_ShaderMesh.vLightPos     = tShadowDesc.vLightPosition;
-	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
+	tCB_ShaderMesh.matWorld       = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderMesh.matLightView   = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
+	tCB_ShaderMesh.matLightProj   = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
+	tCB_ShaderMesh.vLightPos      = tShadowDesc.vLightPosition;
+	tCB_ShaderMesh.fLightPorjFar  = tShadowDesc.fLightPorjFar;
+	tCB_ShaderMesh.fDissolve	  = m_fDissolve;
+	tCB_ShaderMesh.vEmissiveColor = m_vEmissiveColor;
 
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 }
@@ -195,11 +206,8 @@ void CPCWeapon::Set_ConstantTable(const _int& iContextIdx, const _int& iInstance
 	tCB_ShaderMesh.matLightProj  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
 	tCB_ShaderMesh.vLightPos     = tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
+	tCB_ShaderMesh.fDissolve     = m_fDissolve;
 
-	//m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.05f;
-	//tCB_ShaderMesh.fDeltaTime = m_fDeltaTime;
-	//if (m_fDeltaTime > 1.f)
-	//	m_fDeltaTime = 0.f;
 
 	m_pShaderMeshInstancing->Get_UploadBuffer_ShaderMesh(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderMesh);
 }
@@ -221,26 +229,26 @@ void CPCWeapon::Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int
 	m_pShaderShadowInstancing->Get_UploadBuffer_ShaderShadow(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderShadow);
 }
 
-//void CPCWeapon::SetUp_TargetAngle(const _float& fTimeDelta)
-//{
-//	if (m_vTargetAngle != m_pTransCom->m_vAngle)
-//	{
-//		if (m_vTargetAngle.z < m_pTransCom->m_vAngle.z)
-//		{
-//			m_pTransCom->m_vAngle.z -= 150.0f * fTimeDelta;
-//			if (m_pTransCom->m_vAngle.z < m_vTargetAngle.z)
-//				m_pTransCom->m_vAngle.z = m_vTargetAngle.z;
-//		}
-//		else if (m_vTargetAngle.z > m_pTransCom->m_vAngle.z)
-//		{
-//			m_pTransCom->m_vAngle.z += 150.0f * fTimeDelta;
-//			if (m_pTransCom->m_vAngle.z > m_vTargetAngle.z)
-//				m_pTransCom->m_vAngle.z = m_vTargetAngle.z;
-//		}
-//
-//		cout << m_pTransCom->m_vAngle.z << endl;
-//	}
-//}
+void CPCWeapon::SetUp_Dissolve(const _float& fTimeDelta)
+{
+	if (m_bIsStartInterpolation)
+	{
+		m_fLinearRatio += m_fDissolveSpeed * fTimeDelta;
+
+		if (m_fLinearRatio > 1.0f)
+		{
+			m_fLinearRatio = 1.0f;
+			m_bIsStartInterpolation = false;
+		}
+		else if (m_fLinearRatio < 0.0f)
+		{
+			m_fLinearRatio = 0.0f;
+			m_bIsStartInterpolation = false;
+		}
+
+		m_fDissolve = m_fMinDissolve * (1.0f - m_fLinearRatio) + m_fMaxDissolve * m_fLinearRatio;
+	}
+}
 
 void CPCWeapon::Free()
 {

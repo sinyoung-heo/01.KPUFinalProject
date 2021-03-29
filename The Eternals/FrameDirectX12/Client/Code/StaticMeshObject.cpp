@@ -195,7 +195,7 @@ void CStaticMeshObject::Set_ConstantTable(const _int& iContextIdx, const _int& i
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 
 	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.05f;
-	tCB_ShaderMesh.fDeltaTime = m_fDeltaTime;
+	tCB_ShaderMesh.fDissolve = m_fDeltaTime;
 	if (m_fDeltaTime > 1.f)
 		m_fDeltaTime = 0.f;
 

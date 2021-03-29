@@ -42,7 +42,8 @@ cbuffer cbShaderMesh : register(b1)
     float		g_fDissolve			: packoffset(c13.y);
 	float		g_fOffset1			: packoffset(c13.z);
 	float		g_fOffset2			: packoffset(c13.w);
-	float4		g_fAfterImgColor	: packoffset(c14);
+	float4		g_vAfterImgColor	: packoffset(c14);
+	float4		g_vEmissiveColor	: packoffset(c15);
 };
 
 #define MAX_PALETTE 128
@@ -78,8 +79,8 @@ struct VS_OUT
 	
 	float4 ProjPos		: TEXCOORD5;
 	float4 LightPos		: TEXCOORD6;
-    float4 WorldPos : TEXCOORD7;
-    float2 AniUV : TEXCOORD8;
+    float4 WorldPos		: TEXCOORD7;
+    float2 AniUV		: TEXCOORD8;
 };
 
 /*__________________________________________________________________________________________________________
@@ -188,7 +189,7 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 
     //if ((0.05f > (1.f - g_fDissolve) - Normal_fDissolve) && ((1.f - g_fDissolve) - Normal_fDissolve) > 0.f)
     //{
-    //    ps_output.Emissive = float4(1, Normal_fDissolve, 0, 1);
+    //    ps_output.Emissive = g_vEmissiveColor;
     //}
     //clip((1.f - g_fDissolve) - Normal_fDissolve);
 
@@ -308,6 +309,57 @@ PS_OUT PS_SHADOW_MAIN(VS_OUT ps_input) : SV_TARGET
 	
 	return (ps_output);
 }
+
+PS_OUT PS_SHADOW_DISSOLVE(VS_OUT ps_input) : SV_TARGET
+{
+	PS_OUT ps_output = (PS_OUT) 0;
+	
+	// Diffuse
+	ps_output.Diffuse	= g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
+	
+	// Normal
+	float4 TexNormal	= g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
+	TexNormal			= (TexNormal * 2.0f) - 1.0f;			// 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.
+	float3 Normal		= (TexNormal.x * ps_input.T) + (TexNormal.y * ps_input.B) + (TexNormal.z * ps_input.N);
+	ps_output.Normal	= float4(Normal.xyz * 0.5f + 0.5f, 1.f);// 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
+	
+	// Specular
+	ps_output.Specular	= g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
+	
+	// Depth
+	ps_output.Depth		= float4(ps_input.ProjPos.z / ps_input.ProjPos.w,	// (posWVP.z / posWVP.w) : Proj 영역의 Z.
+								 ps_input.ProjPos.w / g_fProjFar,			// posWVP.w / Far : 0~1로 만든 View영역의 Z.
+								 1.0f, 1.0f);
+	
+	/*__________________________________________________________________________________________________________
+	[ 현재의 깊이와 그림자 깊이 비교 ]
+	____________________________________________________________________________________________________________*/
+	float2 uv = ps_input.LightPos.xy / ps_input.LightPos.w;
+	uv.y = uv.y * -0.5f + 0.5f;
+	uv.x = uv.x * 0.5f + 0.5f;
+	
+	float CurrentDepth	= ps_input.LightPos.z / ps_input.LightPos.w;
+	float ShadowDepth	= g_TexShadowDepth.Sample(g_samLinearWrap, uv).x;
+	if (CurrentDepth > ShadowDepth + 0.0000125f)
+		ps_output.Diffuse.rgb *= 0.5;
+	
+	
+	/*__________________________________________________________________________________________________________
+	[ Dissolve ]
+	____________________________________________________________________________________________________________*/
+	float Normal_fDissolve = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV).r;
+
+	if ((0.05f > (1.f - g_fDissolve) - Normal_fDissolve) && ((1.f - g_fDissolve) - Normal_fDissolve) > 0.f)
+	{
+		ps_output.Emissive = g_vEmissiveColor;
+	}
+	clip((1.f - g_fDissolve) - Normal_fDissolve);
+	
+	
+	return (ps_output);
+}
+
+
 
 
 VS_OUT VS_DISTORTION(VS_IN vs_input)
@@ -458,8 +510,8 @@ float4 PS_AFTERIMAGE(VS_OUT ps_input) : SV_TARGET
 	//						 ps_input.ProjPos.w / g_fProjFar,			// posWVP.w / Far : 0~1로 만든 View영역의 Z.
 	//						 1.0f, 1.0f);
     float4 Color;
-	Color.xyz= g_fAfterImgColor.xyz;
-    Color.a = g_fAfterImgColor.a;// * fRimLightColor;
+	Color.xyz = g_vAfterImgColor.xyz;
+	Color.a = g_vAfterImgColor.a; // * fRimLightColor;
     return Color;
 }
 
