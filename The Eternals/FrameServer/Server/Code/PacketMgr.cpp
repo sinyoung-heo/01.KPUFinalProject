@@ -148,9 +148,13 @@ void process_packet(int id)
 
 	case CS_STANCE_CHANGE:
 	{
+		cs_packet_stance_change* p = reinterpret_cast<cs_packet_stance_change*>(pPlayer->m_packet_start);
 
+		pPlayer->m_iAniIdx = p->animIdx;
+		process_stance_change(id, p->is_stance_attack);
 	}
 	break;
+
 	case CS_ATTACK:
 	{
 		cs_packet_attack* p = reinterpret_cast<cs_packet_attack*>(pPlayer->m_packet_start);
@@ -442,6 +446,22 @@ void send_player_stat(int to_client, int id)
 	p.exp = pPlayer->m_iExp;
 
 	send_packet(to_client, &p);
+}
+
+void send_player_stance_change(int to_client, int id, const bool& st)
+{
+	sc_packet_stance_change p;
+
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pPlayer == nullptr) return;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_STANCE_CHANGE;
+
+	p.id = id;
+	p.animIdx = pPlayer->m_iAniIdx;
+	p.o_type = pPlayer->m_type;
+	p.is_stance_attack = st;
 }
 
 void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
@@ -1102,6 +1122,32 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx)
 	for (int server_obj : new_viewlist)
 		cout << "attack" << server_obj << "시야 내에 존재합니다." << endl;
 #endif
+}
+
+void process_stance_change(int id, const bool& stance)
+{
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+
+	if (pPlayer == nullptr) return;
+
+	
+	/* 해당 플레이어의 원래 시야 목록 */
+	pPlayer->v_lock.lock();
+	unordered_set<int> old_viewlist = pPlayer->view_list;
+	pPlayer->v_lock.unlock();
+
+	for (int server_num : old_viewlist)
+	{
+		if (id == server_num) continue;
+		if (true == CObjMgr::GetInstance()->Is_Player(server_num))
+		{
+			CPlayer* pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", server_num));
+			if (pOther == nullptr) continue;
+			if (!pOther->m_bIsConnect) continue;
+
+			send_player_stance_change(server_num, id, stance);
+		}
+	}
 }
 
 /*============================================NPC======================================================*/
