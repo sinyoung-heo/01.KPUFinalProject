@@ -1,13 +1,10 @@
 #pragma once
 #include "Obj.h"
 
-
 class CMonster :
     public CObj
 {
-	//enum ANIM_CRAB { A_WAIT, A_WALK, A_RUN, A_ATTACK, A_DEATH, A_END };
-	//enum ANIM_MONKEY { A_WAIT, A_WALK, A_RUN, A_ATTACK, A_ATTACK_THROW, A_DEATH, A_END };
-
+	
 public:
 	CMonster();
 	virtual ~CMonster();
