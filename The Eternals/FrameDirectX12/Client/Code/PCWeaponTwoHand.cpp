@@ -35,6 +35,8 @@ HRESULT CPCWeaponTwoHand::LateInit_GameObject()
 _int CPCWeaponTwoHand::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
+	if (fTimeDelta > TIME_OFFSET)
+		return NO_EVENT;
 
 	return CPCWeapon::Update_GameObject(fTimeDelta);
 }

@@ -14,11 +14,23 @@ CPCOthersGladiator::CPCOthersGladiator(ID3D12Device* pGraphicDevice, ID3D12Graph
 void CPCOthersGladiator::Set_StanceChange(const _uint& uiAniIdx, const _bool& bIsStanceAttack)
 {
 	m_uiAnimIdx = uiAniIdx;
+	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
-	if(bIsStanceAttack)
+	if (bIsStanceAttack)
+	{
 		m_eCurStance = Gladiator::STANCE_ATTACK;
+		m_pWeapon->Set_DissolveInterpolation(-1.0f);
+		m_pWeapon->Set_IsRenderShadow(true);
+		m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("L_Sword"));
+	}
 	else
+	{
 		m_eCurStance = Gladiator::STANCE_NONEATTACK;
+		m_pWeapon->Set_DissolveInterpolation(1.0f);
+		m_pWeapon->Set_IsRenderShadow(false);
+	}
+
+	m_bIsCompleteStanceChange = false;
 }
 
 HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag,
@@ -86,11 +98,14 @@ HRESULT CPCOthersGladiator::LateInit_GameObject()
 _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
-
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	if (fTimeDelta > TIME_OFFSET)
+		return NO_EVENT;
+
 	SetUp_StanceChange(fTimeDelta);
+	cout << m_pWeapon->Get_LinearRatio() << "\t" << m_pWeapon->Get_DissolveSpeed() << endl;
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
@@ -102,6 +117,8 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
+	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
@@ -245,9 +262,35 @@ void CPCOthersGladiator::SetUp_MoveSpeed(const _float& fTimeDelta)
 
 void CPCOthersGladiator::SetUp_StanceChange(const _float& fTimeDelta)
 {
-	if (m_ePreStance != m_eCurStance)
+	if ((m_ePreStance != m_eCurStance) && !m_bIsCompleteStanceChange)
 	{
+		// NONE_ATTACK -> ATTACK
+		if (Gladiator::STANCE_ATTACK == m_eCurStance)
+		{
+			// NONE_ATTACK -> ATACK
+			if (Gladiator::OUT_WEAPON == m_uiAnimIdx &&
+				m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				m_uiAnimIdx               = Gladiator::ATTACK_WAIT;
+				m_bIsCompleteStanceChange = true;
+				m_ePreStance              = m_eCurStance;
+			}
+		}
 
+		// ATTACK -> NONE_ATTACK
+		else if (Gladiator::STANCE_NONEATTACK == m_eCurStance)
+		{
+			if (Gladiator::IN_WEAPON == m_uiAnimIdx &&
+				 m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				m_uiAnimIdx               = Gladiator::NONE_ATTACK_IDLE;
+				m_bIsCompleteStanceChange = true;
+				m_ePreStance              = m_eCurStance;
+			}
+
+			if (Gladiator::IN_WEAPON == m_uiAnimIdx && m_ui3DMax_CurFrame > 20)
+				m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("Weapon_Back"));
+		}
 	}
 }
 

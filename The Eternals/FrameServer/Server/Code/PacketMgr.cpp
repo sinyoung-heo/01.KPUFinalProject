@@ -461,6 +461,8 @@ void send_player_stance_change(int to_client, int id, const bool& st)
 	p.animIdx          = pPlayer->m_iAniIdx;
 	p.o_type           = pPlayer->m_type;
 	p.is_stance_attack = st;
+
+	send_packet(to_client, &p);
 }
 
 void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)

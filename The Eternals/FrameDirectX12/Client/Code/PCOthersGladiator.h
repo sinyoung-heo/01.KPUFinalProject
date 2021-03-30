@@ -63,11 +63,12 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	CPCWeaponTwoHand*	m_pWeapon      = nullptr;
-	wstring				m_wstrMeshTag  = L"";
-	Gladiator::STANCE	m_ePreStance   = Gladiator::STANCE_END;
-	Gladiator::STANCE	m_eCurStance   = Gladiator::STANCE_END;
-	char				m_chWeaponType = -1;
+	CPCWeaponTwoHand*	m_pWeapon                 = nullptr;
+	wstring				m_wstrMeshTag             = L"";
+	Gladiator::STANCE	m_ePreStance              = Gladiator::STANCE_END;
+	Gladiator::STANCE	m_eCurStance              = Gladiator::STANCE_END;
+	_bool				m_bIsCompleteStanceChange = true;
+	char				m_chWeaponType            = -1;
 
 	// Speed Linear Interpolation
 	_float	m_fLinearRatio = 0.0f;
@@ -75,7 +76,9 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]
 	____________________________________________________________________________________________________________*/
-	_uint m_uiAnimIdx = 0;	// 현재 애니메이션 Index
+	_uint m_uiAnimIdx        = 0;	// 현재 애니메이션 Index
+	_uint m_ui3DMax_NumFrame = 0;	// 3DMax에서 애니메이션의 총 Frame 개수
+	_uint m_ui3DMax_CurFrame = 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,

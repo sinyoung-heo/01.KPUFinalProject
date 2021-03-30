@@ -118,6 +118,9 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	if (fTimeDelta > TIME_OFFSET)
+		return NO_EVENT;
+
 	/*__________________________________________________________________________________________________________
 	[ Key Input ]
 	____________________________________________________________________________________________________________*/
