@@ -4,7 +4,7 @@
 BEGIN(Engine)
 
 #define _3DMAX_FPS			30.0f
-#define ANIMA_INTERPOLATION 1.5f
+#define ANIMA_INTERPOLATION 1.f
 
 typedef map<string, _uint>		MAP_BONENAME;
 typedef vector<BONE_DESC>		VECTOR_BONE_DESC;
@@ -103,6 +103,8 @@ private:
 	_uint	m_uiNewAniIdx			= 0;
 
 	_float	m_fAnimationTime		= 0.0f;
+	_float	m_fNewAnimationTime     = 0.0f;
+
 	_float	m_fBlendingTime			= 0.0f;
 	_float	m_fBlendAnimationTime	= 0.0f;
 

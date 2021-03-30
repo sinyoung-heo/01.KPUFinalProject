@@ -120,7 +120,6 @@ HRESULT CAniCtrl::Ready_AniCtrl()
 		{
 			_uint	uiboneindex = 0;
 			string	strBoneName(pSubsetMesh->mBones[j]->mName.data);
-			//assert(m_vecBoneNameMap[i].find(strBoneName) == m_vecBoneNameMap[i].end());
 
 			uiboneindex = iNumBones;
 
@@ -162,11 +161,9 @@ void CAniCtrl::Set_AnimationKey(const _uint & uiAniKey)
 {
 	if (m_uiNewAniIdx != uiAniKey)
 	{
-		m_uiNewAniIdx = uiAniKey;
-
+		m_uiNewAniIdx         = uiAniKey;
+		m_fBlendingTime	      = 1.0f;
 		m_fBlendAnimationTime = m_fAnimationTime;
-		// m_fBlendAnimationTime = 0.0f;
-		m_fBlendingTime	= 1.0f;
 	}
 }
 
@@ -179,14 +176,15 @@ void CAniCtrl::Play_Animation(_float fTimeDelta)
 	[ 애니메이션이 계속 반복되도록 fmod 수행 ]
 	____________________________________________________________________________________________________________*/
 	m_fAnimationTime += fTimeDelta;
-	m_fAnimationTime = (_float)(fmod(m_fAnimationTime, (m_pScene->mAnimations[m_uiCurAniIndex]->mDuration)));
 	
 	if (m_uiNewAniIdx != m_uiCurAniIndex)
 	{
-		m_fAnimationTime	= m_fBlendAnimationTime;
-		m_fAnimationTime	= (_float)(fmod(m_fAnimationTime, (m_pScene->mAnimations[m_uiCurAniIndex]->mDuration)));
-		m_fBlendingTime		-= 0.001f * fTimeDelta;
+		m_fAnimationTime = m_fBlendAnimationTime;
+		m_fBlendingTime	 -= 0.001f * fTimeDelta;
 	}
+
+	m_fAnimationTime = (_float)(fmod(m_fAnimationTime, (m_pScene->mAnimations[m_uiCurAniIndex]->mDuration)));
+
 	if (m_fBlendingTime <= 0.0f)
 		m_fBlendingTime = 0.0f;
 
@@ -204,10 +202,10 @@ void CAniCtrl::Play_Animation(_float fTimeDelta)
 
 	if (m_fBlendingTime <= 0.0f)
 	{
-		m_fBlendingTime   = 0.f;
-		m_uiCurAniIndex	  = m_uiNewAniIdx;
-		m_fBlendingTime   = 1.f;
-		m_fAnimationTime  = 0.f;
+		m_uiCurAniIndex	      = m_uiNewAniIdx;
+		m_fAnimationTime      = 0.0f;
+		m_fBlendAnimationTime = 0.0f;
+		m_fBlendingTime       = 1.f;
 	}
 
 }
@@ -262,7 +260,7 @@ _bool CAniCtrl::Is_AnimationSetEnd(const _float& fTimeDelta)
 	if (m_fAnimationTime >= m_pScene->mAnimations[m_uiCurAniIndex]->mDuration -
 							m_pScene->mAnimations[m_uiCurAniIndex]->mTicksPerSecond * ANIMA_INTERPOLATION * fTimeDelta)
 	{
-		//m_fAnimationTime = 0.0f;
+		// m_fAnimationTime = 0.0f;
 
 		//m_fBlendAnimationTime = m_fAnimationTime;
 		//m_fBlendAnimationTime = 0.0f;
@@ -356,7 +354,7 @@ void CAniCtrl::Update_NodeHierarchy(_float fAnimationTime,
 																	  pNewNodeAnimation->mNumRotationKeys, 
 																	  pNewNodeAnimation->mRotationKeys);
 		// Trans
-		const aiVector3D&	vTrans	= Calc_InterPolatedValue_From_Key(fAnimationTime, 
+		const aiVector3D&	vTrans	= Calc_InterPolatedValue_From_Key(fAnimationTime,
 																	  pNodeAnimation->mNumPositionKeys,
 																	  pNodeAnimation->mPositionKeys, 
 																	  pNewNodeAnimation->mNumPositionKeys, 
@@ -548,7 +546,6 @@ aiQuaternion CAniCtrl::Calc_InterPolatedValue_From_Key(const _float & fAnimation
 
 		ret1 = ret1.Normalize();
 	}
-
 
 	return ret1;
 }
