@@ -331,17 +331,17 @@ PS_OUT PS_SHADOW_DISSOLVE(VS_OUT ps_input) : SV_TARGET
 								 ps_input.ProjPos.w / g_fProjFar,			// posWVP.w / Far : 0~1로 만든 View영역의 Z.
 								 1.0f, 1.0f);
 	
-	/*__________________________________________________________________________________________________________
-	[ 현재의 깊이와 그림자 깊이 비교 ]
-	____________________________________________________________________________________________________________*/
-	float2 uv = ps_input.LightPos.xy / ps_input.LightPos.w;
-	uv.y = uv.y * -0.5f + 0.5f;
-	uv.x = uv.x * 0.5f + 0.5f;
+	///*__________________________________________________________________________________________________________
+	//[ 현재의 깊이와 그림자 깊이 비교 ]
+	//____________________________________________________________________________________________________________*/
+	//float2 uv = ps_input.LightPos.xy / ps_input.LightPos.w;
+	//uv.y = uv.y * -0.5f + 0.5f;
+	//uv.x = uv.x * 0.5f + 0.5f;
 	
-	float CurrentDepth	= ps_input.LightPos.z / ps_input.LightPos.w;
-	float ShadowDepth	= g_TexShadowDepth.Sample(g_samLinearWrap, uv).x;
-	if (CurrentDepth > ShadowDepth + 0.0000125f)
-		ps_output.Diffuse.rgb *= 0.5;
+	//float CurrentDepth	= ps_input.LightPos.z / ps_input.LightPos.w;
+	//float ShadowDepth	= g_TexShadowDepth.Sample(g_samLinearWrap, uv).x;
+	//if (CurrentDepth > ShadowDepth + 0.0000125f)
+	//	ps_output.Diffuse.rgb *= 0.5;
 	
 	
 	/*__________________________________________________________________________________________________________

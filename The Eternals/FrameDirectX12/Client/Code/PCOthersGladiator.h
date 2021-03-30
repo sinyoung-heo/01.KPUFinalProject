@@ -45,6 +45,7 @@ public:
 
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag);
+	HRESULT			SetUp_PCWeapon();
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
 	void			Move_OnNaviMesh(const _float& fTimeDelta);

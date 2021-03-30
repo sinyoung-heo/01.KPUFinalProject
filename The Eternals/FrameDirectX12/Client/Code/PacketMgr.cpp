@@ -209,7 +209,8 @@ void CPacketMgr::ProcessPacket(char* ptr)
 										 L"StageVelika_NaviMesh",							// NaviMeshTag
 										 _vec3(0.05f, 0.05f, 0.05f),						// Scale
 										 _vec3(0.0f, 0.0f, 0.0f),							// Angle
-										 _vec3(packet->posX, packet->posY, packet->posZ));	// Pos
+										 _vec3(packet->posX, packet->posY, packet->posZ),	// Pos
+										 TwoHand33_B_SM);									// WeaponType
 
 #endif
 		pGameObj->Set_OType(packet->o_type);

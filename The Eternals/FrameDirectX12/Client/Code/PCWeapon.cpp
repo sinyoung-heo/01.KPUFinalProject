@@ -161,6 +161,7 @@ HRESULT CPCWeapon::Add_Component(wstring wstrMeshTag)
 
 void CPCWeapon::SetUp_WeaponType()
 {
+	// WeaponTwoHand
 	if (L"Twohand19_A_SM" == m_wstrMeshTag)
 		m_chWeaponType = Twohand19_A_SM;
 	else if (L"TwoHand19_SM" == m_wstrMeshTag)
