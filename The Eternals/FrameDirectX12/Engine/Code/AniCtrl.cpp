@@ -165,7 +165,7 @@ void CAniCtrl::Set_AnimationKey(const _uint & uiAniKey)
 		m_uiNewAniIdx = uiAniKey;
 
 		m_fBlendAnimationTime = m_fAnimationTime;
-		// m_fBlendAnimationTime = m_pScene->mAnimations[m_uiNewAniIdx]->mDuration;
+		// m_fBlendAnimationTime = 0.0f;
 		m_fBlendingTime	= 1.0f;
 	}
 }
@@ -263,7 +263,9 @@ _bool CAniCtrl::Is_AnimationSetEnd(const _float& fTimeDelta)
 							m_pScene->mAnimations[m_uiCurAniIndex]->mTicksPerSecond * ANIMA_INTERPOLATION * fTimeDelta)
 	{
 		//m_fAnimationTime = 0.0f;
-		m_fBlendAnimationTime = m_fAnimationTime;
+
+		//m_fBlendAnimationTime = m_fAnimationTime;
+		//m_fBlendAnimationTime = 0.0f;
 		return true;
 	}
 
@@ -342,11 +344,23 @@ void CAniCtrl::Update_NodeHierarchy(_float fAnimationTime,
 		- 주어진 KeyFrame의 정보와 AnimationTime정보를 이용해 Interpolation(보간)을 하고 값을 저장.
 		____________________________________________________________________________________________________________*/
 		// Scale
-		const aiVector3D&	vScale	= Calc_InterPolatedValue_From_Key(fAnimationTime, pNodeAnimation->mNumScalingKeys, pNodeAnimation->mScalingKeys, pNewNodeAnimation->mNumScalingKeys, pNewNodeAnimation->mScalingKeys);
+		const aiVector3D&	vScale	= Calc_InterPolatedValue_From_Key(fAnimationTime, 
+																	  pNodeAnimation->mNumScalingKeys, 
+																	  pNodeAnimation->mScalingKeys, 
+																	  pNewNodeAnimation->mNumScalingKeys, 
+																	  pNewNodeAnimation->mScalingKeys);
 		// Rotation
-		const aiQuaternion& vRotate	= Calc_InterPolatedValue_From_Key(fAnimationTime, pNodeAnimation->mNumRotationKeys, pNodeAnimation->mRotationKeys, pNewNodeAnimation->mNumRotationKeys, pNewNodeAnimation->mRotationKeys);
+		const aiQuaternion& vRotate	= Calc_InterPolatedValue_From_Key(fAnimationTime, 
+																	  pNodeAnimation->mNumRotationKeys, 
+																	  pNodeAnimation->mRotationKeys, 
+																	  pNewNodeAnimation->mNumRotationKeys, 
+																	  pNewNodeAnimation->mRotationKeys);
 		// Trans
-		const aiVector3D&	vTrans	= Calc_InterPolatedValue_From_Key(fAnimationTime, pNodeAnimation->mNumPositionKeys, pNodeAnimation->mPositionKeys, pNewNodeAnimation->mNumPositionKeys, pNewNodeAnimation->mPositionKeys);
+		const aiVector3D&	vTrans	= Calc_InterPolatedValue_From_Key(fAnimationTime, 
+																	  pNodeAnimation->mNumPositionKeys,
+																	  pNodeAnimation->mPositionKeys, 
+																	  pNewNodeAnimation->mNumPositionKeys, 
+																	  pNewNodeAnimation->mPositionKeys);
 
 		/*__________________________________________________________________________________________________________
 		- 각각의 vector와 quaternion은 matrix로 변환되고, 이동/회전/크기 변환을 통해 NodeTransform(Bone Transform)이 완성.
@@ -442,16 +456,11 @@ aiVector3D CAniCtrl::Calc_InterPolatedValue_From_Key(const _float & fAnimationTi
 	_uint uiKeyIndex		= Find_KeyIndex(fAnimationTime, uiNumKeys, pVectorKey);
 	_uint uiNextKeyIndex	= uiKeyIndex + 1;
 
-
 	/*__________________________________________________________________________________________________________
 	[ Key Frame 사이를 보간하여 특정 시간의 Node의 Transformation을 구하는 부분 ]
 	____________________________________________________________________________________________________________*/
-	// assert(uiNextKeyIndex < uiNumKeys);
-
 	_float fTimeDelta	= (_float)(pVectorKey[uiNextKeyIndex].mTime - pVectorKey[uiKeyIndex].mTime);
 	_float fFactor		= (fAnimationTime - (_float)pVectorKey[uiKeyIndex].mTime) / fTimeDelta;
-
-	// assert(fFactor >= 0.0f && fFactor <= 1.0f);
 
 	const aiVector3D& StartValue	= pVectorKey[uiKeyIndex].mValue;
 	const aiVector3D& EndValue		= pVectorKey[uiNextKeyIndex].mValue;

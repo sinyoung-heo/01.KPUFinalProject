@@ -442,7 +442,7 @@ void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 
 	if (Gladiator::STANCE_ATTACK == m_eStance && m_bIsCompleteStanceChange)
 	{
-
+		KeyInput_ComboAttack(fTimeDelta);
 	}
 
 }
@@ -477,6 +477,79 @@ void CPCGladiator::KeyInput_StanceChange(const _float& fTimeDelta)
 	}
 
 	Change_PlayerStance(fTimeDelta);
+}
+
+void CPCGladiator::KeyInput_ComboAttack(const _float& fTimeDelta)
+{
+	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
+		GladiatorConst::COMBOCNT_0 == m_uiComoboCnt)
+	{
+		++m_uiComoboCnt;
+		m_bIsAttack = true;
+		m_uiAnimIdx = Gladiator::COMBO1;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	}
+	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
+			GladiatorConst::COMBOCNT_1 == m_uiComoboCnt &&
+			(Gladiator::COMBO1 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)))
+	{
+		++m_uiComoboCnt;
+		m_bIsAttack = true;
+		m_uiAnimIdx = Gladiator::COMBO2;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	}
+	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
+			GladiatorConst::COMBOCNT_2 == m_uiComoboCnt &&
+			(Gladiator::COMBO2 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)))
+	{
+		++m_uiComoboCnt;
+		m_bIsAttack = true;
+		m_uiAnimIdx = Gladiator::COMBO3;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	}
+	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
+			GladiatorConst::COMBOCNT_3 == m_uiComoboCnt &&
+			(Gladiator::COMBO3 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)))
+	{
+		++m_uiComoboCnt;
+		m_bIsAttack = true;
+		m_uiAnimIdx = Gladiator::COMBO4;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	}
+
+	// Return to Attack Wait
+	if (Gladiator::COMBO1 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+	{
+		m_uiAnimIdx = Gladiator::COMBO1R;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	}
+	else if (Gladiator::COMBO2 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+	{
+		m_uiAnimIdx = Gladiator::COMBO2R;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	}
+	else if (Gladiator::COMBO3 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+	{
+		m_uiAnimIdx = Gladiator::COMBO3R;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	}
+	else if (Gladiator::COMBO4 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+	{
+		m_uiComoboCnt = GladiatorConst::COMBOCNT_0;
+		m_bIsAttack   = false;
+		m_uiAnimIdx   = Gladiator::ATTACK_WAIT;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	}
+
+	if ((Gladiator::COMBO1R == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) ||
+		(Gladiator::COMBO2R == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) ||
+		(Gladiator::COMBO3R == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)))
+	{
+		m_uiComoboCnt = GladiatorConst::COMBOCNT_0;
+		m_bIsAttack   = false;
+		m_uiAnimIdx   = Gladiator::ATTACK_WAIT;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	}
 }
 
 void CPCGladiator::Move_OnNaviMesh(const _float& fTimeDelta)
