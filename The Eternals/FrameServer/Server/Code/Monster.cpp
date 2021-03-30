@@ -673,7 +673,7 @@ void CMonster::Chase_Monkey(const float& fTimeDelta)
 	ori_y = m_vPos.y;
 	ori_z = m_vPos.z;
 
-	m_fSpd = 2.0f;
+	m_fSpd = 3.0f;
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
@@ -705,7 +705,7 @@ void CMonster::Chase_Monkey(const float& fTimeDelta)
 						old_viewlist.insert(obj_num);
 
 					// 몬스터 추적 범위 내에 있는 유저 탐색한다.
-					if (CObjMgr::GetInstance()->Is_Monster_Target(this, pPlayer))
+					if (CObjMgr::GetInstance()->Is_Monster_AttackTarget(this, pPlayer, THROW_RANGE_MONKEY))
 						old_targetList.insert(obj_num);
 				}
 			}
@@ -731,13 +731,11 @@ void CMonster::Chase_Monkey(const float& fTimeDelta)
 		/* 원거리 & 근거리 공격 타입 설정 */
 		if (!Is_InAttackRange(pTarget->m_vPos, ATTACK_RANGE_MONKEY))
 		{
-			cout << "chase 원거리 공격" << endl;
 			m_bIsShortAttack = false;
 			Change_AttackMode();
 		}
 		else if(Is_InAttackRange(pTarget->m_vPos, ATTACK_RANGE_MONKEY))
 		{
-			cout << "chase 근거리 공격" << endl;
 			m_bIsShortAttack = true;
 			Change_AttackMode();
 		}
@@ -999,12 +997,10 @@ void CMonster::Attack_Monkey(const float& fTimeDelta)
 		/* 원거리 & 근거리 공격 타입 설정 */
 		if (!Is_InAttackRange(pTarget->m_vPos, ATTACK_RANGE_MONKEY))
 		{
-			cout << "원거리 공격" << endl;
 			m_bIsShortAttack = false;
 		}
 		else
 		{
-			cout << "근거리 공격" << endl;
 			m_bIsShortAttack = true;
 		}
 		

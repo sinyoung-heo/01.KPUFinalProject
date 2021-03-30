@@ -1,7 +1,7 @@
 #pragma once
 #include "Obj.h"
 
-typedef /*unordered_*/map <int,CObj*>	OBJLIST;
+typedef map <int,CObj*>	OBJLIST;
 typedef OBJLIST::iterator				OBJITER;
 typedef lock_guard<recursive_mutex>		objmgr_lock;
 

@@ -524,6 +524,7 @@ void CPacketMgr::Attack_Monster(sc_packet_monster_attack* packet)
 	pObj->Set_State(packet->animIdx);
 	pObj->Set_MoveStop(true);
 	pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
+	pObj->Set_DeadReckoning(pObj->Get_Transform()->m_vPos);
 }
 
 void CPacketMgr::Move_Monster(sc_packet_move* packet)

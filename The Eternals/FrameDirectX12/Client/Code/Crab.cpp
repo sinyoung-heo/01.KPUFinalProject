@@ -31,6 +31,7 @@ HRESULT CCrab::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, co
 		m_pMeshCom->Get_MaxVector());
 
 
+	m_vPreMovePos = m_pTransCom->m_vPos;
 	m_pInfoCom->m_fSpeed = 1.f;
 	m_bIsMoveStop = true;
 
@@ -211,6 +212,28 @@ void CCrab::Active_Monster(const _float& fTimeDelta)
 	}
 }
 
+void CCrab::Attack_Moving(const _float& fTimeDelta, const float& fSpd, const bool& bStraight)
+{
+	if (m_iCurAnim != Crab::A_ATTACK) return;
+
+	_vec3 vtempDir = m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+	
+	/* back step */
+	// 방향 벡터를 이 순간만 바꿔준다.
+	if (!bStraight)
+		m_pTransCom->m_vDir *= -1.f;	
+	m_pTransCom->m_vDir.Normalize();
+
+	_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+												 &m_pTransCom->m_vDir,
+												 fSpd * fTimeDelta);
+
+	m_pTransCom->m_vPos = vPos;
+
+	/* 방향 벡터를 공격 전 방향 벡터로 복구 */
+	m_pTransCom->m_vDir = vtempDir;
+}
+
 void CCrab::Change_Animation(const _float& fTimeDelta)
 {
 	switch (m_iCurAnim)
@@ -242,8 +265,20 @@ void CCrab::Change_Animation(const _float& fTimeDelta)
 		m_uiAnimIdx = 3;
 		m_bIsMoveStop = true;
 
+		/* Back Step (0~27 tick)*/
+		if (m_ui3DMax_CurFrame < 28)
+			Attack_Moving(fTimeDelta, (m_pInfoCom->m_fSpeed * 0.4f), false);
+		/* Front Step (28~65 tick) */
+		else if (28 <= m_ui3DMax_CurFrame)
+			Attack_Moving(fTimeDelta, (m_pInfoCom->m_fSpeed * 0.4f), true);
+
 		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+		{
+			/* 공격 애니메이션 중 움직인 위치를 공격 전 위치로 되돌림. */
+			// m_vArrivePos : 공격 시작 위치 (패킷 수신 시 설정)
+			m_pTransCom->m_vPos = m_pInfoCom->m_vArrivePos;
 			m_iCurAnim = Crab::A_WAIT;
+		}
 	}
 	break;
 
