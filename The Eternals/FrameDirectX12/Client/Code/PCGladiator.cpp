@@ -412,7 +412,7 @@ void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 		SetUp_PlayerStance_FromAttackToNoneAttack();
 
 		// Send Packet.
-		m_pPacketMgr->send_stance_change(m_uiAnimIdx, false/*, m_chO_Type*/);
+		m_pPacketMgr->send_stance_change(m_uiAnimIdx, false);
 	}
 
 	// NONE_ATTACK -> ATTACK
@@ -425,7 +425,7 @@ void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 		SetUp_PlayerStance_FromNoneAttackToAttack();
 
 		// Send Packet.
-		m_pPacketMgr->send_stance_change(m_uiAnimIdx, true/*, m_chO_Type*/);
+		m_pPacketMgr->send_stance_change(m_uiAnimIdx, true);
 	}
 
 	Change_PlayerStance(fTimeDelta);

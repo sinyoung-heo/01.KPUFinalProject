@@ -11,7 +11,17 @@ CPCOthersGladiator::CPCOthersGladiator(ID3D12Device* pGraphicDevice, ID3D12Graph
 
 }
 
-HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag, 
+void CPCOthersGladiator::Set_StanceChange(const _uint& uiAniIdx, const _bool& bIsStanceAttack)
+{
+	m_uiAnimIdx = uiAniIdx;
+
+	if(bIsStanceAttack)
+		m_eCurStance = Gladiator::STANCE_ATTACK;
+	else
+		m_eCurStance = Gladiator::STANCE_NONEATTACK;
+}
+
+HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag,
 											 wstring wstrNaviMeshTag,
 											 const _vec3& vScale, 
 											 const _vec3& vAngle,
@@ -79,6 +89,8 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
+
+	SetUp_StanceChange(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
@@ -217,15 +229,25 @@ void CPCOthersGladiator::SetUp_MoveSpeed(const _float& fTimeDelta)
 {
 	if (!m_bIsMoveStop)
 	{
-		m_pInfoCom->m_fSpeed += ((PCOthersGladiatorConst::MAX_SPEED + PCOthersGladiatorConst::MAX_SPEED) / 2.0f) * fTimeDelta;
-		if (m_pInfoCom->m_fSpeed > PCOthersGladiatorConst::MAX_SPEED)
-			m_pInfoCom->m_fSpeed = PCOthersGladiatorConst::MAX_SPEED;
+		m_fLinearRatio += fTimeDelta;
+		if (m_fLinearRatio > 1.0f)
+			m_fLinearRatio = 1.0f;
 	}
 	else
 	{
-		m_pInfoCom->m_fSpeed -= PCOthersGladiatorConst::MAX_SPEED * 3.0f * fTimeDelta;
-		if (m_pInfoCom->m_fSpeed < PCOthersGladiatorConst::MIN_SPEED)
-			m_pInfoCom->m_fSpeed = PCOthersGladiatorConst::MIN_SPEED;
+		m_fLinearRatio -= PCOthersGladiatorConst::MOVE_STOP_SPEED * fTimeDelta;
+		if (m_fLinearRatio < 0.0f)
+			m_fLinearRatio = 0.0f;
+	}
+
+	m_pInfoCom->m_fSpeed = PCOthersGladiatorConst::MIN_SPEED * (1.0f - m_fLinearRatio) + PCOthersGladiatorConst::MAX_SPEED * m_fLinearRatio;
+}
+
+void CPCOthersGladiator::SetUp_StanceChange(const _float& fTimeDelta)
+{
+	if (m_ePreStance != m_eCurStance)
+	{
+
 	}
 }
 

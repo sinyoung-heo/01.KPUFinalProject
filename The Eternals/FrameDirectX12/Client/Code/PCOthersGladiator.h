@@ -8,6 +8,7 @@ namespace PCOthersGladiatorConst
 {
 	const _float MAX_SPEED = 4.5f;
 	const _float MIN_SPEED = 0.0f;
+	const _float MOVE_STOP_SPEED = 3.0f;
 }
 
 namespace Engine
@@ -26,6 +27,7 @@ private:
 
 public:
 	void Set_AnimationIdx(const _uint& iIdx) { m_uiAnimIdx = iIdx; }
+	void Set_StanceChange(const _uint& uiAniIdx, const _bool& bIsStanceAttack);
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
@@ -47,6 +49,7 @@ private:
 	void			Set_ConstantTableShadowDepth();
 	void			Move_OnNaviMesh(const _float& fTimeDelta);
 	void			SetUp_MoveSpeed(const _float& fTimeDelta);
+	void			SetUp_StanceChange(const _float& fTimeDelta);
 
 private:
 	/*__________________________________________________________________________________________________________
@@ -65,6 +68,9 @@ private:
 	Gladiator::STANCE	m_ePreStance   = Gladiator::STANCE_END;
 	Gladiator::STANCE	m_eCurStance   = Gladiator::STANCE_END;
 	char				m_chWeaponType = -1;
+
+	// Speed Linear Interpolation
+	_float	m_fLinearRatio = 0.0f;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]

@@ -409,8 +409,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
 		if (PC_GLADIATOR == packet->o_type)
 		{
-			static_cast<CPCOthersGladiator*>(pObj);
-
+			static_cast<CPCOthersGladiator*>(pObj)->Set_StanceChange(packet->animIdx, packet->is_stance_attack);
 		}
 
 	}
