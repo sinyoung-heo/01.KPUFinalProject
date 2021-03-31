@@ -361,7 +361,7 @@ void CTestColPlayer::Attack(const _float& fTimeDelta)
 		m_bIsAttack = true;
 		if (m_fAttackTime > 2.f)
 		{
-			m_pPacketMgr->send_attack(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+			m_pPacketMgr->send_attack(0, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 			m_fAttackTime = 0.f;
 		}
 	}
@@ -372,7 +372,7 @@ void CTestColPlayer::Attack(const _float& fTimeDelta)
 		m_bIsAttack = false;
 		m_pBoundingSphereCom->Set_Color(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
 		m_pBoundingBoxCom->Set_Color(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
-		m_pPacketMgr->send_attack_stop(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_attack_stop(0, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 
 	/* Attack Moving */

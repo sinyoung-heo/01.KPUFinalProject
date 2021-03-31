@@ -482,38 +482,54 @@ void CPCGladiator::KeyInput_StanceChange(const _float& fTimeDelta)
 void CPCGladiator::KeyInput_ComboAttack(const _float& fTimeDelta)
 {
 	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
-		GladiatorConst::COMBOCNT_0 == m_uiComoboCnt)
+		GladiatorConst::COMBOCNT_0 == m_uiComoboCnt && m_pMeshCom->Is_BlendingComplete())
 	{
 		++m_uiComoboCnt;
 		m_bIsAttack = true;
 		m_uiAnimIdx = Gladiator::COMBO1;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+		// Send Paccket
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
 			GladiatorConst::COMBOCNT_1 == m_uiComoboCnt &&
-			(Gladiator::COMBO1 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)))
+			(Gladiator::COMBO1 == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete() &&
+			(m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.75f)))
 	{
 		++m_uiComoboCnt;
 		m_bIsAttack = true;
 		m_uiAnimIdx = Gladiator::COMBO2;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+		// Send Paccket
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
 			GladiatorConst::COMBOCNT_2 == m_uiComoboCnt &&
-			(Gladiator::COMBO2 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)))
+			(Gladiator::COMBO2 == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete() &&
+			(m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.75f)))
 	{
 		++m_uiComoboCnt;
 		m_bIsAttack = true;
 		m_uiAnimIdx = Gladiator::COMBO3;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+		// Send Paccket
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
 			GladiatorConst::COMBOCNT_3 == m_uiComoboCnt &&
-			(Gladiator::COMBO3 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)))
+			(Gladiator::COMBO3 == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete() &&
+			(m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.75f)))
 	{
 		++m_uiComoboCnt;
 		m_bIsAttack = true;
 		m_uiAnimIdx = Gladiator::COMBO4;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+		// Send Paccket
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 
 	// Return to Attack Wait
@@ -521,16 +537,28 @@ void CPCGladiator::KeyInput_ComboAttack(const _float& fTimeDelta)
 	{
 		m_uiAnimIdx = Gladiator::COMBO1R;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+		// Send Paccket
+		//m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 	else if (Gladiator::COMBO2 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 	{
 		m_uiAnimIdx = Gladiator::COMBO2R;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+		// Send Paccket
+		//m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 	else if (Gladiator::COMBO3 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 	{
 		m_uiAnimIdx = Gladiator::COMBO3R;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+		// Send Paccket
+		//m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 	else if (Gladiator::COMBO4 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 	{
@@ -538,6 +566,10 @@ void CPCGladiator::KeyInput_ComboAttack(const _float& fTimeDelta)
 		m_bIsAttack   = false;
 		m_uiAnimIdx   = Gladiator::ATTACK_WAIT;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+		// Send Paccket
+		//m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 
 	else if ((Gladiator::COMBO1R == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) ||
@@ -548,6 +580,10 @@ void CPCGladiator::KeyInput_ComboAttack(const _float& fTimeDelta)
 		m_bIsAttack   = false;
 		m_uiAnimIdx   = Gladiator::ATTACK_WAIT;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+		// Send Paccket
+		//m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 }
 

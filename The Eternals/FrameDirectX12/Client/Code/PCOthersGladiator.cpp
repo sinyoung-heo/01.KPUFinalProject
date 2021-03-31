@@ -91,7 +91,6 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 		return NO_EVENT;
 
 	SetUp_StanceChange(fTimeDelta);
-	cout << m_pWeapon->Get_LinearRatio() << "\t" << m_pWeapon->Get_DissolveSpeed() << endl;
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
@@ -295,7 +294,9 @@ void CPCOthersGladiator::SetUp_StanceChange(const _float& fTimeDelta)
 			if (Gladiator::OUT_WEAPON == m_uiAnimIdx &&
 				m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_uiAnimIdx               = Gladiator::ATTACK_WAIT;
+				m_uiAnimIdx = Gladiator::ATTACK_WAIT;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
 				m_bIsCompleteStanceChange = true;
 				m_ePreStance              = m_eCurStance;
 			}
@@ -307,7 +308,8 @@ void CPCOthersGladiator::SetUp_StanceChange(const _float& fTimeDelta)
 			if (Gladiator::IN_WEAPON == m_uiAnimIdx &&
 				 m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_uiAnimIdx               = Gladiator::NONE_ATTACK_IDLE;
+				m_uiAnimIdx = Gladiator::NONE_ATTACK_IDLE;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 				m_bIsCompleteStanceChange = true;
 				m_ePreStance              = m_eCurStance;
 			}
