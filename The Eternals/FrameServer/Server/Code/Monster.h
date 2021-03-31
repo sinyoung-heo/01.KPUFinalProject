@@ -41,7 +41,7 @@ private:
 	void Move_NormalMonster(const float& fTimeDelta);		// MOVE PROCESS
 	void Chase_NormalMonster(const float& fTimeDelta);		// MOVE PROCESS
 
-	bool Is_InAttackRange(const _vec3& vPos, const int& range);
+	float Calculate_TargetDist(const _vec3& vPos);
 
 public:
 	virtual DWORD Release();

@@ -729,18 +729,20 @@ void CMonster::Chase_Monkey(const float& fTimeDelta)
 		/* monster chase move -> arrive at player -> start to attack */
 
 		/* 원거리 & 근거리 공격 타입 설정 */
-		if (!Is_InAttackRange(pTarget->m_vPos, ATTACK_RANGE_MONKEY))
+		float fDist = Calculate_TargetDist(pTarget->m_vPos);
+		if ((100) < fDist && fDist < (THROW_RANGE_MONKEY * THROW_RANGE_MONKEY))
 		{
 			m_bIsShortAttack = false;
 			Change_AttackMode();
 		}
-		else if(Is_InAttackRange(pTarget->m_vPos, ATTACK_RANGE_MONKEY))
+
+		else if ((ATTACK_RANGE_MONKEY * ATTACK_RANGE_MONKEY) < fDist)
+			m_vPos += m_vDir * m_fSpd * fTimeDelta;
+		else if ((ATTACK_RANGE_MONKEY * ATTACK_RANGE_MONKEY) >= fDist)
 		{
 			m_bIsShortAttack = true;
 			Change_AttackMode();
 		}
-		else
-			m_vPos += m_vDir * m_fSpd * fTimeDelta;
 	}
 	/* 타겟(공격 대상)이 존재하지 않을 경우 -> 생성된 위치로 돌아감 */
 	else
@@ -871,10 +873,6 @@ void CMonster::Chase_Monkey(const float& fTimeDelta)
 				pPlayer->v_lock.unlock();
 		}
 	}
-
-	// Monster 시야 내에 아무도 없다면 NON ACTIVE로 상태 변경
-	if (new_viewlist.empty() == true)
-		nonActive_monster(m_sNum);
 }
 
 void CMonster::Attack_Crab(const float& fTimeDelta)
@@ -995,19 +993,15 @@ void CMonster::Attack_Monkey(const float& fTimeDelta)
 		m_vDir.Normalize();
 
 		/* 원거리 & 근거리 공격 타입 설정 */
-		if (!Is_InAttackRange(pTarget->m_vPos, ATTACK_RANGE_MONKEY))
+		float fDist = Calculate_TargetDist(pTarget->m_vPos);
+		if ((100) < fDist && fDist < (THROW_RANGE_MONKEY * THROW_RANGE_MONKEY))
 		{
 			m_bIsShortAttack = false;
 		}
-		else
+		else if ((ATTACK_RANGE_MONKEY * ATTACK_RANGE_MONKEY) < fDist)
 		{
-			m_bIsShortAttack = true;
-		}
-		
-		/* 원거리 공격 범위를 벗어났을 경우 -> 타겟 해제 */
-		if (!Is_InAttackRange(pTarget->m_vPos, THROW_RANGE_MONKEY))
-		{
-			m_iTargetNum = -1;
+			Change_ChaseMode();
+			return;
 		}
 
 		// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
@@ -1121,13 +1115,13 @@ void CMonster::Change_ChaseMode()
 	}
 }
 
-bool CMonster::Is_InAttackRange(const _vec3& vPos, const int& range)
+float CMonster::Calculate_TargetDist(const _vec3& vPos)
 {
 	float dist = (vPos.x - m_vPos.x) * (vPos.x - m_vPos.x);
 	dist += (vPos.y - m_vPos.y) * (vPos.y - m_vPos.y);
 	dist += (vPos.z - m_vPos.z) * (vPos.z - m_vPos.z);
 
-	return dist <= range * range;
+	return dist;
 }
 
 void CMonster::Set_Stop_Attack()

@@ -27,7 +27,7 @@ constexpr int CHASE_RANGE			= 8;			// MONSTER 추적 범위
 
 constexpr int ATTACK_RANGE_CRAB		= 2;			// MONSTER CRAB 공격 범위
 constexpr int ATTACK_RANGE_MONKEY	= 3;			// MONSTER MONKEY NORMAL 공격 범위
-constexpr int THROW_RANGE_MONKEY	= 10;
+constexpr int THROW_RANGE_MONKEY	= 15;
 
 /*____________________________________________________________________
 Player Direction
