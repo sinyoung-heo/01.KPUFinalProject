@@ -206,7 +206,7 @@ void CAniCtrl::Play_Animation(_float fTimeDelta)
 	{
 		m_uiCurAniIndex	 = m_uiNewAniIdx;
 		m_fAnimationTime = 0.0f;
-		m_fAnimationTime += fTimeDelta;
+		//m_fAnimationTime += fTimeDelta;
 		m_fBlendingTime  = 1.f;
 	}
 
@@ -265,6 +265,15 @@ _bool CAniCtrl::Is_AnimationSetEnd(const _float& fTimeDelta)
 	{
 		return true;
 	}
+
+	return false;
+}
+
+_bool CAniCtrl::Is_BlendingComplete()
+{
+	if (m_fBlendingTime == 1.0f &&
+		m_uiCurAniIndex == m_uiNewAniIdx)
+		return true;
 
 	return false;
 }

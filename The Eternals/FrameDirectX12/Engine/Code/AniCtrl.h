@@ -53,6 +53,7 @@ public:
 	SKINNING_MATRIX*	Find_SkinningMatrix(string strBoneName);
 	HIERARCHY_DESC*		Find_HierarchyDesc(string strBoneName);
 	_bool				Is_AnimationSetEnd(const _float& fTimeDelta);
+	_bool				Is_BlendingComplete();
 
 private:
 	HRESULT	Ready_AniCtrl();
