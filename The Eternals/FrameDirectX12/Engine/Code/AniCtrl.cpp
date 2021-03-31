@@ -175,18 +175,20 @@ void CAniCtrl::Play_Animation(_float fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션이 계속 반복되도록 fmod 수행 ]
 	____________________________________________________________________________________________________________*/
-	m_fAnimationTime += fTimeDelta;
-	
 	if (m_uiNewAniIdx != m_uiCurAniIndex)
 	{
 		m_fAnimationTime = m_fBlendAnimationTime;
 		m_fBlendingTime	 -= 0.001f * fTimeDelta;
+
+		if (m_fBlendingTime <= 0.0f)
+			m_fBlendingTime = 0.0f;
+	}
+	else
+	{
+		m_fAnimationTime += fTimeDelta;
 	}
 
 	m_fAnimationTime = (_float)(fmod(m_fAnimationTime, (m_pScene->mAnimations[m_uiCurAniIndex]->mDuration)));
-
-	if (m_fBlendingTime <= 0.0f)
-		m_fBlendingTime = 0.0f;
 
 	/*__________________________________________________________________________________________________________
 	[ 3DMax 상에서의 Frame 계산 ]
@@ -202,10 +204,10 @@ void CAniCtrl::Play_Animation(_float fTimeDelta)
 
 	if (m_fBlendingTime <= 0.0f)
 	{
-		m_uiCurAniIndex	      = m_uiNewAniIdx;
-		m_fAnimationTime      = 0.0f;
-		m_fBlendAnimationTime = 0.0f;
-		m_fBlendingTime       = 1.f;
+		m_uiCurAniIndex	 = m_uiNewAniIdx;
+		m_fAnimationTime = 0.0f;
+		m_fAnimationTime += fTimeDelta;
+		m_fBlendingTime  = 1.f;
 	}
 
 }
@@ -257,13 +259,10 @@ HIERARCHY_DESC* CAniCtrl::Find_HierarchyDesc(string strBoneName)
 
 _bool CAniCtrl::Is_AnimationSetEnd(const _float& fTimeDelta)
 {
-	if (m_fAnimationTime >= m_pScene->mAnimations[m_uiCurAniIndex]->mDuration -
-							m_pScene->mAnimations[m_uiCurAniIndex]->mTicksPerSecond * ANIMA_INTERPOLATION * fTimeDelta)
+	if ((m_fAnimationTime >= m_pScene->mAnimations[m_uiCurAniIndex]->mDuration - 
+							m_pScene->mAnimations[m_uiCurAniIndex]->mTicksPerSecond * ANIMA_INTERPOLATION * fTimeDelta) &&
+		(m_uiCurAniIndex == m_uiNewAniIdx))
 	{
-		// m_fAnimationTime = 0.0f;
-
-		//m_fBlendAnimationTime = m_fAnimationTime;
-		//m_fBlendAnimationTime = 0.0f;
 		return true;
 	}
 
