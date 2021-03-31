@@ -71,6 +71,8 @@ private:
 	void SetUp_PlayerStance_FromAttackToNoneAttack();
 	void SetUp_PlayerStance_FromNoneAttackToAttack();
 	void Change_PlayerStance(const _float& fTimeDelta);
+	void Ready_AnhleInterpolationValue(const _float& fEndAngle);
+	void SetUp_AngleInterpolation(const _float& fTimeDelta);
 
 private:
 	/*__________________________________________________________________________________________________________
@@ -97,7 +99,14 @@ private:
 	wstring				m_wstrMeshTag    = L"";
 
 	// Speed Linear Interpolation
-	_float	m_fLinearRatio = 0.0f;
+	_float m_fLinearRatio = 0.0f;
+
+	// Angle Linear Interpolation
+	_bool	m_bIsStartAngleLinearInterpolation = false;
+	_float	m_fAngleLinearRatio                = 0.0f;
+	_float	m_fStartAngle                      = 0.0f;
+	_float	m_fEndAngle                        = 0.0f;
+	_float	m_fAngleInterpolationSpeed         = 1.0f;
 
 	// Server
 	_bool			m_bIsKeyDown   = false;
