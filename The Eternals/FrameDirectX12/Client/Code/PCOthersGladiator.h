@@ -26,7 +26,7 @@ private:
 	virtual ~CPCOthersGladiator() = default;
 
 public:
-	void Set_AnimationIdx(const _uint& iIdx) { m_uiAnimIdx = iIdx; }
+	void Set_AnimationIdx(const _uint& iIdx) { m_uiAnimIdx = iIdx; m_pMeshCom->Set_AnimationKey(m_uiAnimIdx); }
 	void Set_StanceChange(const _uint& uiAniIdx, const _bool& bIsStanceAttack);
 
 	// CGameObject을(를) 통해 상속됨

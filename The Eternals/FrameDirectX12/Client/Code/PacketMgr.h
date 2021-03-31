@@ -32,8 +32,8 @@ public:
 	void	send_move(const _vec3& vDir, const _vec3& vPos, const _int& iAniIdx);
 	void	send_move_stop(const _vec3& vPos, const _vec3& vDir, const _int& iAniIdx);
 	void	send_stance_change(const _int& iAniIdx, const _bool& bIsStanceAttack);
-	void	send_attack(const _vec3& vDir, const _vec3& vPos);
-	void    send_attack_stop(const _vec3& vDir, const _vec3& vPos);
+	void	send_attack(const _int& iAniIdx, const _vec3& vDir, const _vec3& vPos);
+	void    send_attack_stop(const _int& iAniIdx, const _vec3& vDir, const _vec3& vPos);
 	void    send_attackByMonster(int objID);
 	void    send_attackToMonster(int objID);
 

@@ -376,6 +376,19 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		else
 		{
 			Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+			
+			if (PC_GLADIATOR == packet->o_type)
+			{
+				static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
+			}
+			else if (PC_ARCHER == packet->o_type)
+			{
+			}
+			else if (PC_PRIEST == packet->o_type)
+			{
+			}
+			else
+				static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
 
 			pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
 			pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
@@ -661,38 +674,38 @@ void CPacketMgr::send_stance_change(const _int& iAniIdx, const _bool& bIsStanceA
 	send_packet(&p);
 }
 
-void CPacketMgr::send_attack(const _vec3& vDir, const _vec3& vPos)
+void CPacketMgr::send_attack(const _int& iAniIdx, const _vec3& vDir, const _vec3& vPos)
 {
 	cs_packet_attack p;
 
 	p.size = sizeof(p);
 	p.type = CS_ATTACK;
 
-	p.posX = vPos.x;
-	p.posY = vPos.y;
-	p.posZ = vPos.z;
-
-	p.dirX = vDir.x;
-	p.dirY = vDir.y;
-	p.dirZ = vDir.z;
+	p.animIdx = iAniIdx;
+	p.posX    = vPos.x;
+	p.posY    = vPos.y;
+	p.posZ    = vPos.z;
+	p.dirX    = vDir.x;
+	p.dirY    = vDir.y;
+	p.dirZ    = vDir.z;
 
 	send_packet(&p);
 }
 
-void CPacketMgr::send_attack_stop(const _vec3& vDir, const _vec3& vPos)
+void CPacketMgr::send_attack_stop(const _int& iAniIdx, const _vec3& vDir, const _vec3& vPos)
 {
 	cs_packet_attack p;
 
 	p.size = sizeof(p);
 	p.type = CS_ATTACK_STOP;
 
-	p.posX = vPos.x;
-	p.posY = vPos.y;
-	p.posZ = vPos.z;
-
-	p.dirX = vDir.x;
-	p.dirY = vDir.y;
-	p.dirZ = vDir.z;
+	p.animIdx = iAniIdx;
+	p.posX    = vPos.x;
+	p.posY    = vPos.y;
+	p.posZ    = vPos.z;
+	p.dirX    = vDir.x;
+	p.dirY    = vDir.y;
+	p.dirZ    = vDir.z;
 
 	send_packet(&p);
 }

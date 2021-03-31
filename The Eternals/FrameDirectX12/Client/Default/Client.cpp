@@ -30,7 +30,7 @@ ________________________________________________________________________________
 HINSTANCE	g_hInst;							// 현재 인스턴스입니다.
 HWND		g_hWnd;
 
-_bool		g_bIsOnDebugCaemra = true;
+_bool		g_bIsOnDebugCaemra = false;
 
 
 _ulong Release_Singleton();

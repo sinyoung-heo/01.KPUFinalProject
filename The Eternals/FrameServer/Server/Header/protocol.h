@@ -124,6 +124,7 @@ struct sc_packet_attack
 	unsigned char	size;
 	char			type;
 	int				id;
+	char			o_type;
 
 	int				animIdx;
 	float			posX, posY, posZ;

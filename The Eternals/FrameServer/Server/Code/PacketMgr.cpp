@@ -159,10 +159,11 @@ void process_packet(int id)
 	{
 		cs_packet_attack* p = reinterpret_cast<cs_packet_attack*>(pPlayer->m_packet_start);
 
-		_vec3 vPos = _vec3(p->posX, p->posY, p->posZ);
-		_vec3 vDir = _vec3(p->dirX, p->dirY, p->dirZ);
+		int iAniIdx = p->animIdx;
+		_vec3 vPos  = _vec3(p->posX, p->posY, p->posZ);
+		_vec3 vDir  = _vec3(p->dirX, p->dirY, p->dirZ);
 
-		process_attack(id, vDir, vPos, 1); // 스킬 or 기본 공격 애니메이션 인덱스 부여 필요함
+		process_attack(id, vDir, vPos, iAniIdx); // 스킬 or 기본 공격 애니메이션 인덱스 부여 필요함
 	}
 	break;
 
@@ -170,8 +171,9 @@ void process_packet(int id)
 	{
 		cs_packet_attack* p = reinterpret_cast<cs_packet_attack*>(pPlayer->m_packet_start);
 
-		_vec3 vPos = _vec3(p->posX, p->posY, p->posZ);
-		_vec3 vDir = _vec3(p->dirX, p->dirY, p->dirZ);
+		int iAniIdx = p->animIdx;
+		_vec3 vPos  = _vec3(p->posX, p->posY, p->posZ);
+		_vec3 vDir  = _vec3(p->dirX, p->dirY, p->dirZ);
 
 		process_move_stop(id, vPos, vDir);
 	}
@@ -415,7 +417,9 @@ void send_attack_packet(int to_client, int id, int animIdx)
 
 	p.size = sizeof(p);
 	p.type = SC_PACKET_ATTACK;
+
 	p.id = id;
+	p.o_type = pPlayer->m_type;
 
 	p.posX = pPlayer->m_vTempPos.x;
 	p.posY = pPlayer->m_vTempPos.y;
