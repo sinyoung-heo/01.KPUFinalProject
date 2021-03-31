@@ -9,6 +9,8 @@ namespace GladiatorConst
 	const _float MAX_SPEED       = 5.0f;
 	const _float MIN_SPEED       = 0.0f;
 	const _float MOVE_STOP_SPEED = 3.0f;
+
+	enum COMBOCNT { COMBOCNT_0, COMBOCNT_1, COMBOCNT_2, COMBOCNT_3, COMOB_END };
 }
 
 namespace Engine
@@ -36,7 +38,8 @@ public:
 									 wstring wstrNaviMeshTag,
 									 const _vec3& vScale,
 									 const _vec3& vAngle,
-									 const _vec3& vPos);
+									 const _vec3& vPos,
+									 const char& chWeaponType);
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
@@ -46,6 +49,7 @@ public:
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag);
+	HRESULT			SetUp_PCWeapon();
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
 
@@ -53,6 +57,8 @@ private:
 	void Key_Input(const _float& fTimeDelta);
 	void KeyInput_Move(const _float& fTimeDelta);
 	void KeyInput_Attack(const _float& fTimeDelta);
+	void KeyInput_StanceChange(const _float& fTimeDelta);
+	void KeyInput_ComboAttack(const _float& fTimeDelta);
 	void Move_OnNaviMesh(const _float& fTimeDelta);
 	void Send_Player_Move();
 	bool Is_Change_CamDirection();
@@ -98,6 +104,7 @@ private:
 	_float			m_fBazierSpeed = 0.f;
 	MVKEY			m_eKeyState    = MVKEY::K_END;
 	_float			m_fPreAngle    = 0.f;
+	char			m_chWeaponType = -1;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation ]
@@ -108,6 +115,7 @@ private:
 
 	Gladiator::STANCE	m_eStance                 = Gladiator::STANCE_END;
 	_bool				m_bIsCompleteStanceChange = true;
+	_uint				m_uiComoboCnt             = 0;
 
 	/*__________________________________________________________________________________________________________
 	[ Font ]
@@ -123,7 +131,8 @@ public:
 									   wstring wstrNaviMeshTag,
 									   const _vec3& vScale,
 									   const _vec3& vAngle,
-									   const _vec3& vPos);
+									   const _vec3& vPos,
+									   const char& chWeaponType);
 private:
 	virtual void Free();
 };

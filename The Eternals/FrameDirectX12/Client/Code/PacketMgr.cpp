@@ -209,7 +209,8 @@ void CPacketMgr::ProcessPacket(char* ptr)
 										 L"StageVelika_NaviMesh",							// NaviMeshTag
 										 _vec3(0.05f, 0.05f, 0.05f),						// Scale
 										 _vec3(0.0f, 0.0f, 0.0f),							// Angle
-										 _vec3(packet->posX, packet->posY, packet->posZ));	// Pos
+										 _vec3(packet->posX, packet->posY, packet->posZ),	// Pos
+										 TwoHand33_B_SM);									// WeaponType
 
 #endif
 		pGameObj->Set_OType(packet->o_type);
@@ -402,17 +403,28 @@ void CPacketMgr::ProcessPacket(char* ptr)
 	case SC_PACKET_STANCE_CHANGE:
 	{
 		sc_packet_stance_change* packet = reinterpret_cast<sc_packet_stance_change*>(ptr);
-
 		int s_num = packet->id;
 
 		if (s_num == g_iSNum) break;
+
 		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+
 		if (PC_GLADIATOR == packet->o_type)
 		{
-			static_cast<CPCOthersGladiator*>(pObj);
+			static_cast<CPCOthersGladiator*>(pObj)->Set_StanceChange(packet->animIdx, packet->is_stance_attack);
+		}
+		else if (PC_ARCHER == packet->o_type)
+		{
 
 		}
+		else if (PC_PRIEST == packet->o_type)
+		{
 
+		}
+		else
+		{
+			static_cast<CPCOthersGladiator*>(pObj)->Set_StanceChange(packet->animIdx, packet->is_stance_attack);
+		}
 	}
 	break;
 

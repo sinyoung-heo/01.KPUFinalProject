@@ -17,6 +17,8 @@ protected:
 
 public:
 	const char& Get_WeaponType() { return m_chWeaponType; }
+	const _float& Get_LinearRatio() { return m_fLinearRatio; }
+	const _float& Get_DissolveSpeed() { return m_fDissolveSpeed; }
 
 	void Set_HierarchyDesc(Engine::HIERARCHY_DESC* pHierarchyDesc) { m_pHierarchyDesc = pHierarchyDesc; };
 	void Set_DissolveInterpolation(const _float& fDissolveSpeed);

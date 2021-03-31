@@ -67,6 +67,9 @@ _int CPCWeapon::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	if (fTimeDelta > TIME_OFFSET)
+		return NO_EVENT;
+
 	// SetUp_TargetAngle(fTimeDelta);
 	SetUp_Dissolve(fTimeDelta);
 
@@ -158,6 +161,7 @@ HRESULT CPCWeapon::Add_Component(wstring wstrMeshTag)
 
 void CPCWeapon::SetUp_WeaponType()
 {
+	// WeaponTwoHand
 	if (L"Twohand19_A_SM" == m_wstrMeshTag)
 		m_chWeaponType = Twohand19_A_SM;
 	else if (L"TwoHand19_SM" == m_wstrMeshTag)
@@ -250,23 +254,20 @@ void CPCWeapon::Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int
 
 void CPCWeapon::SetUp_Dissolve(const _float& fTimeDelta)
 {
-	if (m_bIsStartInterpolation)
+	m_fLinearRatio += m_fDissolveSpeed * fTimeDelta;
+
+	if (m_fLinearRatio >= 1.0f)
 	{
-		m_fLinearRatio += m_fDissolveSpeed * fTimeDelta;
-
-		if (m_fLinearRatio > 1.0f)
-		{
-			m_fLinearRatio = 1.0f;
-			m_bIsStartInterpolation = false;
-		}
-		else if (m_fLinearRatio < 0.0f)
-		{
-			m_fLinearRatio = 0.0f;
-			m_bIsStartInterpolation = false;
-		}
-
-		m_fDissolve = m_fMinDissolve * (1.0f - m_fLinearRatio) + m_fMaxDissolve * m_fLinearRatio;
+		m_fLinearRatio = 1.0f;
+		m_bIsStartInterpolation = false;
 	}
+	else if (m_fLinearRatio <= 0.0f)
+	{
+		m_fLinearRatio = 0.0f;
+		m_bIsStartInterpolation = false;
+	}
+
+	m_fDissolve = m_fMinDissolve * (1.0f - m_fLinearRatio) + m_fMaxDissolve * m_fLinearRatio;
 }
 
 void CPCWeapon::Free()

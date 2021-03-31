@@ -8,6 +8,7 @@ namespace PCOthersGladiatorConst
 {
 	const _float MAX_SPEED = 4.5f;
 	const _float MIN_SPEED = 0.0f;
+	const _float MOVE_STOP_SPEED = 3.0f;
 }
 
 namespace Engine
@@ -26,6 +27,7 @@ private:
 
 public:
 	void Set_AnimationIdx(const _uint& iIdx) { m_uiAnimIdx = iIdx; }
+	void Set_StanceChange(const _uint& uiAniIdx, const _bool& bIsStanceAttack);
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
@@ -43,10 +45,12 @@ public:
 
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag);
+	HRESULT			SetUp_PCWeapon();
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
 	void			Move_OnNaviMesh(const _float& fTimeDelta);
 	void			SetUp_MoveSpeed(const _float& fTimeDelta);
+	void			SetUp_StanceChange(const _float& fTimeDelta);
 
 private:
 	/*__________________________________________________________________________________________________________
@@ -60,16 +64,22 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	CPCWeaponTwoHand*	m_pWeapon      = nullptr;
-	wstring				m_wstrMeshTag  = L"";
-	Gladiator::STANCE	m_ePreStance   = Gladiator::STANCE_END;
-	Gladiator::STANCE	m_eCurStance   = Gladiator::STANCE_END;
-	char				m_chWeaponType = -1;
+	CPCWeaponTwoHand*	m_pWeapon                 = nullptr;
+	wstring				m_wstrMeshTag             = L"";
+	Gladiator::STANCE	m_ePreStance              = Gladiator::STANCE_END;
+	Gladiator::STANCE	m_eCurStance              = Gladiator::STANCE_END;
+	_bool				m_bIsCompleteStanceChange = true;
+	char				m_chWeaponType            = -1;
+
+	// Speed Linear Interpolation
+	_float	m_fLinearRatio = 0.0f;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]
 	____________________________________________________________________________________________________________*/
-	_uint m_uiAnimIdx = 0;	// 현재 애니메이션 Index
+	_uint m_uiAnimIdx        = 0;	// 현재 애니메이션 Index
+	_uint m_ui3DMax_NumFrame = 0;	// 3DMax에서 애니메이션의 총 Frame 개수
+	_uint m_ui3DMax_CurFrame = 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,

@@ -455,13 +455,14 @@ void send_player_stance_change(int to_client, int id, const bool& st)
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 	if (pPlayer == nullptr) return;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_STANCE_CHANGE;
-
-	p.id = id;
-	p.animIdx = pPlayer->m_iAniIdx;
-	p.o_type = pPlayer->m_type;
+	p.size             = sizeof(p);
+	p.type             = SC_PACKET_STANCE_CHANGE;
+	p.id               = id;
+	p.animIdx          = pPlayer->m_iAniIdx;
+	p.o_type           = pPlayer->m_type;
 	p.is_stance_attack = st;
+
+	send_packet(to_client, &p);
 }
 
 void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)

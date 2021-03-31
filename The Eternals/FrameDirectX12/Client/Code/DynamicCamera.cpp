@@ -221,7 +221,7 @@ void CDynamicCamera::SetUp_CameraAngle()
 
 void CDynamicCamera::SetUp_CameraAtHeightByTargetDist()
 {
-	m_fAtHeightOffset = (m_fDistFromTarget / (MIN_TARGETDIST + MAX_TARGETDIST)) * 2.5f;
+	m_fAtHeightOffset = (m_fDistFromTarget / (MIN_TARGETDIST + MAX_TARGETDIST)) * 1.5f;
 }
 
 Engine::CGameObject* CDynamicCamera::Create(ID3D12Device * pGraphicDevice,

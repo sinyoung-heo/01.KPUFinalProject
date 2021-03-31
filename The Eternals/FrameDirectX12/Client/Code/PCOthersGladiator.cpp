@@ -11,7 +11,29 @@ CPCOthersGladiator::CPCOthersGladiator(ID3D12Device* pGraphicDevice, ID3D12Graph
 
 }
 
-HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag, 
+void CPCOthersGladiator::Set_StanceChange(const _uint& uiAniIdx, const _bool& bIsStanceAttack)
+{
+	m_uiAnimIdx = uiAniIdx;
+	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+	if (bIsStanceAttack)
+	{
+		m_eCurStance = Gladiator::STANCE_ATTACK;
+		m_pWeapon->Set_DissolveInterpolation(-1.0f);
+		m_pWeapon->Set_IsRenderShadow(true);
+		m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("L_Sword"));
+	}
+	else
+	{
+		m_eCurStance = Gladiator::STANCE_NONEATTACK;
+		m_pWeapon->Set_DissolveInterpolation(1.0f);
+		m_pWeapon->Set_IsRenderShadow(false);
+	}
+
+	m_bIsCompleteStanceChange = false;
+}
+
+HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag,
 											 wstring wstrNaviMeshTag,
 											 const _vec3& vScale, 
 											 const _vec3& vAngle,
@@ -54,21 +76,7 @@ HRESULT CPCOthersGladiator::LateInit_GameObject()
 	m_pShadowCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
 	// Create Weapon
-	wstring wstrWeaponMeshTag = L"";
-
-	if (m_chWeaponType == Twohand19_A_SM)
-		wstrWeaponMeshTag = L"Twohand19_A_SM";
-
-	m_pWeapon = CPCWeaponTwoHand::Create(m_pGraphicDevice, m_pCommandList,
-										 wstrWeaponMeshTag,
-										 _vec3(0.75f),
-										 _vec3(0.0f, 0.0f, 180.0f),
-										 _vec3(0.0f, 0.0f, 0.0f),
-										 m_pMeshCom->Find_HierarchyDesc("Weapon_Back"),
-										 &m_pTransCom->m_matWorld,
-										 _rgba(0.64f, 0.96f, 0.97f, 1.0f));
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"OthersWeaponTwoHand", m_pWeapon), E_FAIL);
-
+	Engine::FAILED_CHECK_RETURN(SetUp_PCWeapon(), E_FAIL);
 
 	return S_OK;
 }
@@ -76,9 +84,14 @@ HRESULT CPCOthersGladiator::LateInit_GameObject()
 _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
-
 	if (m_bIsDead)
 		return DEAD_OBJ;
+
+	if (fTimeDelta > TIME_OFFSET)
+		return NO_EVENT;
+
+	SetUp_StanceChange(fTimeDelta);
+	cout << m_pWeapon->Get_LinearRatio() << "\t" << m_pWeapon->Get_DissolveSpeed() << endl;
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
@@ -90,6 +103,8 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
+	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
@@ -157,6 +172,44 @@ HRESULT CPCOthersGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviM
 	return S_OK;
 }
 
+HRESULT CPCOthersGladiator::SetUp_PCWeapon()
+{
+	wstring wstrWeaponMeshTag = L"";
+
+	if (m_chWeaponType == Twohand19_A_SM)
+		wstrWeaponMeshTag = L"Twohand19_A_SM";
+
+	else if (m_chWeaponType == TwoHand19_SM)
+		wstrWeaponMeshTag = L"TwoHand19_SM";
+
+	else if (m_chWeaponType == TwoHand27_SM)
+		wstrWeaponMeshTag = L"TwoHand27_SM";
+
+	else if (m_chWeaponType == TwoHand29_SM)
+		wstrWeaponMeshTag = L"TwoHand29_SM";
+
+	else if (m_chWeaponType == TwoHand31_SM)
+		wstrWeaponMeshTag = L"TwoHand31_SM";
+
+	else if (m_chWeaponType == TwoHand33_B_SM)
+		wstrWeaponMeshTag = L"TwoHand33_B_SM";
+
+	else if (m_chWeaponType == TwoHand33_SM)
+		wstrWeaponMeshTag = L"TwoHand33_SM";
+
+	m_pWeapon = CPCWeaponTwoHand::Create(m_pGraphicDevice, m_pCommandList,
+										 wstrWeaponMeshTag,
+										 _vec3(0.75f),
+										 _vec3(0.0f, 0.0f, 180.0f),
+										 _vec3(0.0f, 0.0f, 0.0f),
+										 m_pMeshCom->Find_HierarchyDesc("Weapon_Back"),
+										 &m_pTransCom->m_matWorld,
+										 _rgba(0.64f, 0.96f, 0.97f, 1.0f));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"OthersWeaponTwoHand", m_pWeapon), E_FAIL);
+
+	return S_OK;
+}
+
 void CPCOthersGladiator::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
@@ -217,15 +270,51 @@ void CPCOthersGladiator::SetUp_MoveSpeed(const _float& fTimeDelta)
 {
 	if (!m_bIsMoveStop)
 	{
-		m_pInfoCom->m_fSpeed += ((PCOthersGladiatorConst::MAX_SPEED + PCOthersGladiatorConst::MAX_SPEED) / 2.0f) * fTimeDelta;
-		if (m_pInfoCom->m_fSpeed > PCOthersGladiatorConst::MAX_SPEED)
-			m_pInfoCom->m_fSpeed = PCOthersGladiatorConst::MAX_SPEED;
+		m_fLinearRatio += fTimeDelta;
+		if (m_fLinearRatio > 1.0f)
+			m_fLinearRatio = 1.0f;
 	}
 	else
 	{
-		m_pInfoCom->m_fSpeed -= PCOthersGladiatorConst::MAX_SPEED * 3.0f * fTimeDelta;
-		if (m_pInfoCom->m_fSpeed < PCOthersGladiatorConst::MIN_SPEED)
-			m_pInfoCom->m_fSpeed = PCOthersGladiatorConst::MIN_SPEED;
+		m_fLinearRatio -= PCOthersGladiatorConst::MOVE_STOP_SPEED * fTimeDelta;
+		if (m_fLinearRatio < 0.0f)
+			m_fLinearRatio = 0.0f;
+	}
+
+	m_pInfoCom->m_fSpeed = PCOthersGladiatorConst::MIN_SPEED * (1.0f - m_fLinearRatio) + PCOthersGladiatorConst::MAX_SPEED * m_fLinearRatio;
+}
+
+void CPCOthersGladiator::SetUp_StanceChange(const _float& fTimeDelta)
+{
+	if ((m_ePreStance != m_eCurStance) && !m_bIsCompleteStanceChange)
+	{
+		// NONE_ATTACK -> ATTACK
+		if (Gladiator::STANCE_ATTACK == m_eCurStance)
+		{
+			// NONE_ATTACK -> ATACK
+			if (Gladiator::OUT_WEAPON == m_uiAnimIdx &&
+				m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				m_uiAnimIdx               = Gladiator::ATTACK_WAIT;
+				m_bIsCompleteStanceChange = true;
+				m_ePreStance              = m_eCurStance;
+			}
+		}
+
+		// ATTACK -> NONE_ATTACK
+		else if (Gladiator::STANCE_NONEATTACK == m_eCurStance)
+		{
+			if (Gladiator::IN_WEAPON == m_uiAnimIdx &&
+				 m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				m_uiAnimIdx               = Gladiator::NONE_ATTACK_IDLE;
+				m_bIsCompleteStanceChange = true;
+				m_ePreStance              = m_eCurStance;
+			}
+
+			if (Gladiator::IN_WEAPON == m_uiAnimIdx && m_ui3DMax_CurFrame > 20)
+				m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("Weapon_Back"));
+		}
 	}
 }
 

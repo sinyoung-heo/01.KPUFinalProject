@@ -20,13 +20,16 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 									   wstring wstrNaviMeshTag, 
 									   const _vec3& vScale,
 									   const _vec3& vAngle, 
-									   const _vec3& vPos)
+									   const _vec3& vPos,
+									   const char& chWeaponType)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag, wstrNaviMeshTag), E_FAIL);
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos   = vPos;
+	m_chWeaponType        = chWeaponType;
+
 	m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(vPos));
 
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
@@ -97,16 +100,8 @@ HRESULT CPCGladiator::LateInit_GameObject()
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	m_pShadowCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
-	// Weapon
-	m_pWeapon = CPCWeaponTwoHand::Create(m_pGraphicDevice, m_pCommandList,
-										 L"Twohand19_A_SM",
-										 _vec3(0.75f),
-										 _vec3(0.0f, 0.0f, 180.0f),
-										 _vec3(0.0f, 0.0f, 0.0f),
-										 m_pMeshCom->Find_HierarchyDesc("Weapon_Back"),
-										 &m_pTransCom->m_matWorld,
-										 _rgba(0.64f, 0.96f, 0.97f, 1.0f));
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"ThisPlayerWeaponTwoHand", m_pWeapon), E_FAIL);
+	// Create Weapon
+	Engine::FAILED_CHECK_RETURN(SetUp_PCWeapon(), E_FAIL);
 
 	return S_OK;
 }
@@ -117,6 +112,9 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
+
+	if (fTimeDelta > TIME_OFFSET)
+		return NO_EVENT;
 
 	/*__________________________________________________________________________________________________________
 	[ Key Input ]
@@ -254,6 +252,45 @@ HRESULT CPCGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag
 	Engine::NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);
 	m_pNaviMeshCom->AddRef();
 	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
+
+	return S_OK;
+}
+
+HRESULT CPCGladiator::SetUp_PCWeapon()
+{
+	wstring wstrWeaponMeshTag = L"";
+
+	if (m_chWeaponType == Twohand19_A_SM)
+		wstrWeaponMeshTag = L"Twohand19_A_SM";
+
+	else if (m_chWeaponType == TwoHand19_SM)
+		wstrWeaponMeshTag = L"TwoHand19_SM";
+
+	else if (m_chWeaponType == TwoHand27_SM)
+		wstrWeaponMeshTag = L"TwoHand27_SM";
+
+	else if (m_chWeaponType == TwoHand29_SM)
+		wstrWeaponMeshTag = L"TwoHand29_SM";
+
+	else if (m_chWeaponType == TwoHand31_SM)
+		wstrWeaponMeshTag = L"TwoHand31_SM";
+
+	else if (m_chWeaponType == TwoHand33_B_SM)
+		wstrWeaponMeshTag = L"TwoHand33_B_SM";
+
+	else if (m_chWeaponType == TwoHand33_SM)
+		wstrWeaponMeshTag = L"TwoHand33_SM";
+
+	m_pWeapon = CPCWeaponTwoHand::Create(m_pGraphicDevice, m_pCommandList,
+										 wstrWeaponMeshTag,
+										 _vec3(0.75f),
+										 _vec3(0.0f, 0.0f, 180.0f),
+										 _vec3(0.0f, 0.0f, 0.0f),
+										 m_pMeshCom->Find_HierarchyDesc("Weapon_Back"),
+										 &m_pTransCom->m_matWorld,
+										 _rgba(0.64f, 0.96f, 0.97f, 1.0f));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"ThisPlayerWeaponTwoHand", m_pWeapon), E_FAIL);
+
 
 	return S_OK;
 }
@@ -401,6 +438,17 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 
 void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 {
+	KeyInput_StanceChange(fTimeDelta);
+
+	if (Gladiator::STANCE_ATTACK == m_eStance && m_bIsCompleteStanceChange)
+	{
+		KeyInput_ComboAttack(fTimeDelta);
+	}
+
+}
+
+void CPCGladiator::KeyInput_StanceChange(const _float& fTimeDelta)
+{
 	// ATTACK -> NONE_ATTACK
 	if (Engine::KEY_DOWN(DIK_LSHIFT) && Gladiator::STANCE_ATTACK == m_eStance &&
 		!m_bIsKeyDown && m_pInfoCom->m_fSpeed == GladiatorConst::MIN_SPEED &&
@@ -412,7 +460,7 @@ void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 		SetUp_PlayerStance_FromAttackToNoneAttack();
 
 		// Send Packet.
-		m_pPacketMgr->send_stance_change(m_uiAnimIdx, false/*, m_chO_Type*/);
+		m_pPacketMgr->send_stance_change(m_uiAnimIdx, false);
 	}
 
 	// NONE_ATTACK -> ATTACK
@@ -425,11 +473,82 @@ void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 		SetUp_PlayerStance_FromNoneAttackToAttack();
 
 		// Send Packet.
-		m_pPacketMgr->send_stance_change(m_uiAnimIdx, true/*, m_chO_Type*/);
+		m_pPacketMgr->send_stance_change(m_uiAnimIdx, true);
 	}
 
 	Change_PlayerStance(fTimeDelta);
+}
 
+void CPCGladiator::KeyInput_ComboAttack(const _float& fTimeDelta)
+{
+	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
+		GladiatorConst::COMBOCNT_0 == m_uiComoboCnt)
+	{
+		++m_uiComoboCnt;
+		m_bIsAttack = true;
+		m_uiAnimIdx = Gladiator::COMBO1;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	}
+	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
+			GladiatorConst::COMBOCNT_1 == m_uiComoboCnt &&
+			(Gladiator::COMBO1 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)))
+	{
+		++m_uiComoboCnt;
+		m_bIsAttack = true;
+		m_uiAnimIdx = Gladiator::COMBO2;
+	}
+	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
+			GladiatorConst::COMBOCNT_2 == m_uiComoboCnt &&
+			(Gladiator::COMBO2 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)))
+	{
+		++m_uiComoboCnt;
+		m_bIsAttack = true;
+		m_uiAnimIdx = Gladiator::COMBO3;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	}
+	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
+			GladiatorConst::COMBOCNT_3 == m_uiComoboCnt &&
+			(Gladiator::COMBO3 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)))
+	{
+		++m_uiComoboCnt;
+		m_bIsAttack = true;
+		m_uiAnimIdx = Gladiator::COMBO4;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	}
+
+	// Return to Attack Wait
+	if (Gladiator::COMBO1 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+	{
+		m_uiAnimIdx = Gladiator::COMBO1R;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	}
+	else if (Gladiator::COMBO2 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+	{
+		m_uiAnimIdx = Gladiator::COMBO2R;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	}
+	else if (Gladiator::COMBO3 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+	{
+		m_uiAnimIdx = Gladiator::COMBO3R;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	}
+	else if (Gladiator::COMBO4 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+	{
+		m_uiComoboCnt = GladiatorConst::COMBOCNT_0;
+		m_bIsAttack   = false;
+		m_uiAnimIdx   = Gladiator::ATTACK_WAIT;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	}
+
+	else if ((Gladiator::COMBO1R == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) ||
+			 (Gladiator::COMBO2R == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) ||
+			 (Gladiator::COMBO3R == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)))
+	{
+		m_uiComoboCnt = GladiatorConst::COMBOCNT_0;
+		m_bIsAttack   = false;
+		m_uiAnimIdx   = Gladiator::ATTACK_WAIT;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	}
 }
 
 void CPCGladiator::Move_OnNaviMesh(const _float& fTimeDelta)
@@ -516,10 +635,16 @@ void CPCGladiator::SetUp_RunMoveSpeed(const _float& fTimeDelta)
 void CPCGladiator::SetUp_RunAnimation()
 {
 	if (m_bIsKeyDown && Gladiator::STANCE_NONEATTACK == m_eStance)
+	{
 		m_uiAnimIdx = Gladiator::NONE_ATTACK_WALK;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	}
 
 	else if (m_bIsKeyDown && Gladiator::STANCE_ATTACK == m_eStance)
+	{
 		m_uiAnimIdx = Gladiator::ATTACK_RUN;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	}
 }
 
 void CPCGladiator::SetUp_RunToIdleAnimation(const _float& fTimeDelta)
@@ -529,12 +654,14 @@ void CPCGladiator::SetUp_RunToIdleAnimation(const _float& fTimeDelta)
 		Gladiator::STANCE_NONEATTACK == m_eStance)
 	{
 		m_uiAnimIdx = Gladiator::NONE_ATTACK_IDLE;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 	}
 	else if (!m_bIsKeyDown &&
 			 Gladiator::ATTACK_RUN == m_uiAnimIdx &&
 			 Gladiator::STANCE_ATTACK == m_eStance)
 	{
 		m_uiAnimIdx = Gladiator::ATTACK_WAIT;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 	}
 }
 
@@ -548,6 +675,7 @@ void CPCGladiator::SetUp_PlayerStance_FromAttackToNoneAttack()
 
 		m_eStance   = Gladiator::STANCE_NONEATTACK;
 		m_uiAnimIdx = Gladiator::IN_WEAPON;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 	}
 }
 
@@ -566,6 +694,7 @@ void CPCGladiator::SetUp_PlayerStance_FromNoneAttackToAttack()
 
 		m_eStance   = Gladiator::STANCE_ATTACK;
 		m_uiAnimIdx = Gladiator::OUT_WEAPON;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 	}
 }
 
@@ -579,6 +708,7 @@ void CPCGladiator::Change_PlayerStance(const _float& fTimeDelta)
 			m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 		{
 			m_uiAnimIdx = Gladiator::ATTACK_WAIT;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			m_bIsCompleteStanceChange = true;
 
 		}
@@ -589,6 +719,7 @@ void CPCGladiator::Change_PlayerStance(const _float& fTimeDelta)
 				 m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 		{
 			m_uiAnimIdx = Gladiator::NONE_ATTACK_IDLE;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			m_bIsCompleteStanceChange = true;
 		}
 
@@ -610,11 +741,12 @@ Engine::CGameObject* CPCGladiator::Create(ID3D12Device* pGraphicDevice,
 										  wstring wstrNaviMeshTag, 
 										  const _vec3& vScale,
 										  const _vec3& vAngle, 
-										  const _vec3& vPos)
+										  const _vec3& vPos,
+										  const char& chWeaponType)
 {
 	CPCGladiator* pInstance = new CPCGladiator(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, wstrNaviMeshTag, vScale, vAngle, vPos)))
+	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, wstrNaviMeshTag, vScale, vAngle, vPos, chWeaponType)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
