@@ -33,13 +33,14 @@ constexpr char SC_PACKET_CHAT			= 5;
 constexpr char SC_PACKET_LOGIN_FAIL		= 6;
 constexpr char SC_PACKET_STAT_CHANGE	= 7;
 constexpr char SC_PACKET_ATTACK			= 8;
-constexpr char SC_PACKET_STANCE_CHANGE  = 9;
-constexpr char SC_PACKET_NPC_MOVE		= 10;
-constexpr char SC_PACKET_NPC_ENTER		= 11;
-constexpr char SC_PACKET_MONSTER_ENTER	= 12;
-constexpr char SC_PACKET_MONSTER_MOVE	= 13;
-constexpr char SC_PACKET_MONSTER_ATTACK = 14;
-constexpr char SC_PACKET_MONSTER_STAT	= 15;
+constexpr char SC_PACKET_ATTACK_STOP	= 9;
+constexpr char SC_PACKET_STANCE_CHANGE  = 10;
+constexpr char SC_PACKET_NPC_MOVE		= 11;
+constexpr char SC_PACKET_NPC_ENTER		= 12;
+constexpr char SC_PACKET_MONSTER_ENTER	= 13;
+constexpr char SC_PACKET_MONSTER_MOVE	= 14;
+constexpr char SC_PACKET_MONSTER_ATTACK = 15;
+constexpr char SC_PACKET_MONSTER_STAT	= 16;
 
 
 constexpr char CS_LOGIN					= 0;

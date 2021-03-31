@@ -398,6 +398,27 @@ void CPacketMgr::ProcessPacket(char* ptr)
 	}
 	break;
 
+	case SC_PACKET_ATTACK_STOP:
+	{
+		sc_packet_attack* packet = reinterpret_cast<sc_packet_attack*>(ptr);
+
+		int s_num = packet->id;
+
+		/* 현재 클라이언트가 공격을 멈춘 경우 */
+		if (s_num == g_iSNum)
+			return;	
+		/* 다른 클라이언트가 공격을 멈춘 경우 */
+		else
+		{
+			Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+
+			static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
+			pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+			pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
+		}
+	}
+	break;
+
 	case SC_PACKET_LEAVE:
 	{
 		sc_packet_leave* packet = reinterpret_cast<sc_packet_leave*>(ptr);

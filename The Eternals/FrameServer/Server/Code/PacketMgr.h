@@ -9,6 +9,7 @@ void send_leave_packet(int to_client, int leave_id);							// 떠남 패킷
 void send_move_packet(int to_client, int id);									// 움직임 패킷
 void send_move_stop_packet(int to_client, int id);								// 움직임 패킷
 void send_attack_packet(int to_client, int id, int animIdx);
+void send_attack_stop_packet(int to_client, int id, int animIdx);
 void send_player_stat(int to_client, int id);
 void send_player_stance_change(int to_client, int id, const bool& st);
 
@@ -16,6 +17,7 @@ void process_move(int id, const _vec3& _vDir, const _vec3& _vPos);					// 움직임
 void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir);
 void process_collide(int id, int colID);											// 다른 OBJECT와 충돌했을 경우
 void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx);	// 공격 처리
+void process_attack_stop(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx);	// 공격 중단 처리
 void process_stance_change(int id, const bool& stance);
 
 /* 패킷 관리 및 처리 함수 */
