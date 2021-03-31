@@ -996,7 +996,7 @@ void add_new_client(SOCKET ns)
 		ZeroMemory(&pNew->m_recv_over.wsa_over, sizeof(pNew->m_recv_over.wsa_over));
 		pNew->m_recv_start = pNew->m_recv_over.iocp_buf;
 
-		pNew->m_type	= TYPE_PLAYER;
+		pNew->m_type	= PC_GLADIATOR;
 		pNew->m_iLevel	= 1;
 		pNew->m_iHp		= 100;
 		pNew->m_iMaxHp	= 100;
