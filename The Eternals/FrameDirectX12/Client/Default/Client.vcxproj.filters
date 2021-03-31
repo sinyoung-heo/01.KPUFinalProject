@@ -456,6 +456,9 @@
     <ClInclude Include="..\Code\PCOthersGladiator.h">
       <Filter>02.GameObject\02.PlayerCharacter\00.PCGladiator</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\Template.h">
+      <Filter>98.Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">

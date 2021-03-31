@@ -233,6 +233,7 @@
     <ClInclude Include="..\Header\Include.h" />
     <ClInclude Include="..\Header\Macro.h" />
     <ClInclude Include="..\Header\Struct.h" />
+    <ClInclude Include="..\Header\Template.h" />
     <ClInclude Include="..\Header\Typedef.h" />
     <ClInclude Include="GladiatorAnimation.h" />
     <ClInclude Include="Client.h" />

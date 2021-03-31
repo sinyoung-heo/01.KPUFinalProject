@@ -10,7 +10,7 @@ namespace GladiatorConst
 	const _float MIN_SPEED       = 0.0f;
 	const _float MOVE_STOP_SPEED = 3.0f;
 
-	enum COMBOCNT { COMBOCNT_0, COMBOCNT_1, COMBOCNT_2, COMBOCNT_3, COMOB_END };
+	enum COMBOCNT { COMBOCNT_0, COMBOCNT_1, COMBOCNT_2, COMBOCNT_3, COMBO_END };
 }
 
 namespace Engine
@@ -59,6 +59,8 @@ private:
 	void KeyInput_Attack(const _float& fTimeDelta);
 	void KeyInput_StanceChange(const _float& fTimeDelta);
 	void KeyInput_ComboAttack(const _float& fTimeDelta);
+	void SetUp_ComboAttackAnimation();
+	void SetUp_FromComboAttackToAttackWait(const _float& fTimeDelta);
 	void Move_OnNaviMesh(const _float& fTimeDelta);
 	void Send_Player_Move();
 	bool Is_Change_CamDirection();

@@ -415,6 +415,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 			static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
 			pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
 			pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
+			pObj->Set_MoveStop(true);
 		}
 	}
 	break;

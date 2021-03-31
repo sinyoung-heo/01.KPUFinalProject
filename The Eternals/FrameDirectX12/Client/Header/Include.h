@@ -6,3 +6,4 @@
 #include "Extern.h"
 #include "Macro.h"
 #include "enum.h"
+#include "Template.h"
