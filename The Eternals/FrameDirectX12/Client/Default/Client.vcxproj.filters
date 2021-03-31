@@ -232,6 +232,9 @@
     <Filter Include="98.Header\00.protocol">
       <UniqueIdentifier>{745f0be7-2082-47b9-96f0-48a3569569a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.Monster\02.CloderA">
+      <UniqueIdentifier>{bc3c5eac-51e7-4ec7-94fa-47a9d686f3fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -456,6 +459,9 @@
     <ClInclude Include="..\Code\PCOthersGladiator.h">
       <Filter>02.GameObject\02.PlayerCharacter\00.PCGladiator</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\CloderA.h">
+      <Filter>02.GameObject\05.Monster\02.CloderA</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -637,6 +643,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\PCOthersGladiator.cpp">
       <Filter>02.GameObject\02.PlayerCharacter\00.PCGladiator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CloderA.cpp">
+      <Filter>02.GameObject\05.Monster\02.CloderA</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

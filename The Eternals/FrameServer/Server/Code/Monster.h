@@ -26,10 +26,16 @@ public:
 private:
 	/* MONSTER NORMAL */
 	void Change_Crab_Animation(const float& fTimeDelta);
+	void Chase_Crab(const float& fTimeDelta);				
+	void Attack_Crab(const float& fTimeDelta);	
+
 	void Change_Monkey_Animation(const float& fTimeDelta);
-	void Attack_Crab(const float& fTimeDelta);				// ATTACK PROCESS
 	void Chase_Monkey(const float& fTimeDelta);
 	void Attack_Monkey(const float& fTimeDelta);
+
+	void Change_Cloder_Animation(const float& fTimeDelta);
+	void Chase_Cloder(const float& fTimeDelta);
+	void Attack_Cloder(const float& fTimeDelta);
 
 	/* MONSTER ALL */
 	void Change_Animation(const float& fTimeDelta);
@@ -39,7 +45,7 @@ private:
 
 	void Move_ComeBack(const float& fTimeDelta);			// MOVE PROCESS
 	void Move_NormalMonster(const float& fTimeDelta);		// MOVE PROCESS
-	void Chase_NormalMonster(const float& fTimeDelta);		// MOVE PROCESS
+	
 
 	float Calculate_TargetDist(const _vec3& vPos);
 

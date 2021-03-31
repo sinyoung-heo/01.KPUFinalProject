@@ -23,3 +23,11 @@ namespace Monkey
 }
 
 /* EPIC MONSTER */
+namespace Cloder
+{
+	constexpr int ATTACK_POKE	= 4;
+	constexpr int ATTACK_SWING	= 5;
+	constexpr int ATTACK_DEATH	= 6;
+
+	enum ANIM_CLODER { A_WAIT, A_WALK, A_RUN, A_ATTACK, A_ATTACK_POKE, A_ATTACK_SWING, A_DEATH, A_END };
+}
