@@ -123,14 +123,14 @@ void CDynamicCamera::SetUp_CameraFont(const _float& fTimeDelta)
 			m_wstrText = wstring(L"[ Camera Info ] \n") +
 						 wstring(L"Eye (%d, %d, %d) \n") +
 						 wstring(L"At (%d, %d, %d)\n") +
-						 wstring(L"Angle (%d, %d) \n") +
+						 wstring(L"Angle (%d, %d, %d) \n") +
 						 wstring(L"MoveSpeed (%d, %d, %d) \n") +
 						 wstring(L"TargetDist : %d \n");
 
 			wsprintf(m_szText, m_wstrText.c_str(),
 					 (_int)m_tCameraInfo.vEye.x, (_int)m_tCameraInfo.vEye.y, (_int)m_tCameraInfo.vEye.z,
 					 (_int)m_tCameraInfo.vAt.x, (_int)m_tCameraInfo.vAt.y, (_int)m_tCameraInfo.vAt.z,
-					 (_int)m_pTransCom->m_vAngle.x, (_int)m_pTransCom->m_vAngle.y,
+					 (_int)m_pTransCom->m_vAngle.x, (_int)m_pTransCom->m_vAngle.y, (_int)m_pTransCom->m_vAngle.z,
 					 (_int)(m_fCameraMoveResponsiveness.x * 100.0f), (_int)(m_fCameraMoveResponsiveness.y * 100.0f), (_int)(m_fCameraMoveResponsiveness.z),
 					 (_int)m_fDistFromTarget);
 

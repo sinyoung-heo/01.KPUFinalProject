@@ -128,6 +128,9 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	Move_OnNaviMesh(fTimeDelta);
 	SetUp_RunMoveSpeed(fTimeDelta);
 
+	// Angle Linear Interpolation
+	SetUp_AngleInterpolation(fTimeDelta);
+
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
@@ -159,13 +162,17 @@ _int CPCGladiator::LateUpdate_GameObject(const _float& fTimeDelta)
 	if (Engine::CRenderer::Get_Instance()->Get_RenderOnOff(L"DebugFont"))
 	{
 		m_wstrText = wstring(L"[ Character Info ] \n") +
-					 wstring(L"Num Animation \t %d \n") +
-					 wstring(L"Current Ani Index \t %d \n") +
-					 wstring(L"Max Frame \t %d \n") +
-					 wstring(L"Current Frame \t %d");
+					 wstring(L"Pos\t %d, %d, %d\n") +
+					 wstring(L"AngleY\t %d\n") +
+					 wstring(L"Start/End/Speed %d, %d, %d\n") +
+					 wstring(L"AniIndex \t %d\n") +
+					 wstring(L"MaxFrame \t %d\n") +
+					 wstring(L"CurrentFrame \t%d");
 
 		wsprintf(m_szText, m_wstrText.c_str(),
-				 *(m_pMeshCom->Get_NumAnimation()),
+				 (_int)m_pTransCom->m_vPos.x, (_int)m_pTransCom->m_vPos.y, (_int)m_pTransCom->m_vPos.z,
+				 (_int)m_pTransCom->m_vAngle.y,
+				 (_int)m_fStartAngle, (_int)m_fEndAngle, (_int)m_fAngleInterpolationSpeed,
 				 m_uiAnimIdx,
 				 m_ui3DMax_NumFrame,
 				 m_ui3DMax_CurFrame);
@@ -491,8 +498,8 @@ void CPCGladiator::KeyInput_ComboAttack(const _float& fTimeDelta)
 	{
 		m_bIsSameDir = true;
 
-		// Angle Linear Interpolation
-		SetUp_AngleInterpolation(fTimeDelta);
+		if (Is_Change_CamDirection())
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 }
 
@@ -502,7 +509,6 @@ void CPCGladiator::SetUp_ComboAttackAnimation()
 		GladiatorConst::COMBOCNT_0 == m_uiComoboCnt && m_pMeshCom->Is_BlendingComplete())
 	{
 		Ready_AnhleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
-		// m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y;
 
 		m_bIsKeyDown  = false;
 		m_bIsAttack   = true;
@@ -517,7 +523,6 @@ void CPCGladiator::SetUp_ComboAttackAnimation()
 			(m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.75f)))
 	{
 		Ready_AnhleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
-		//m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y;
 
 		m_bIsKeyDown  = false;
 		m_bIsAttack   = true;
@@ -532,7 +537,6 @@ void CPCGladiator::SetUp_ComboAttackAnimation()
 			(m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.75f)))
 	{
 		Ready_AnhleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
-		//m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y;
 
 		m_bIsKeyDown  = false;
 		m_bIsAttack   = true;
@@ -547,7 +551,6 @@ void CPCGladiator::SetUp_ComboAttackAnimation()
 			(m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.75f)))
 	{
 		Ready_AnhleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
-		//m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y;
 
 		m_bIsKeyDown  = false;
 		m_bIsAttack   = true;
@@ -781,34 +784,28 @@ void CPCGladiator::Change_PlayerStance(const _float& fTimeDelta)
 
 void CPCGladiator::Ready_AnhleInterpolationValue(const _float& fEndAngle)
 {
-	if (m_pTransCom->m_vAngle.y != fEndAngle)
-	{
-		m_bIsStartAngleLinearInterpolation = true;
-		m_fStartAngle = m_pTransCom->m_vAngle.y;
-		m_fEndAngle   = fEndAngle;
+	m_bIsStartAngleLinearInterpolation = true;
 
-		if (m_fStartAngle < m_fEndAngle)
-		{
-			m_fAngleLinearRatio        = 0.0f;
-			m_fAngleInterpolationSpeed = 1.0f;
-		}
-		else
-		{
-			m_fAngleLinearRatio        = 1.0f;
-			m_fAngleInterpolationSpeed = -1.0f;
-		}
-	}
+	m_fStartAngle              = m_pTransCom->m_vAngle.y;
+	m_fEndAngle                = fEndAngle;
+	m_fAngleLinearRatio        = 0.0f;
+	m_fAngleInterpolationSpeed = 3.0f;
 }
 
 void CPCGladiator::SetUp_AngleInterpolation(const _float& fTimeDelta)
 {
 	if (m_bIsStartAngleLinearInterpolation)
 	{
+
 		m_fAngleLinearRatio += m_fAngleInterpolationSpeed * fTimeDelta;
 		m_pTransCom->m_vAngle.y = LinearInterpolation(m_fStartAngle, m_fEndAngle, m_fAngleLinearRatio);
 
-		if (m_pTransCom->m_vAngle.y == m_fEndAngle)
+		if ((m_fAngleLinearRatio == MIN_RATIO ||
+			m_fAngleLinearRatio == MAX_RATIO) ||
+			m_pTransCom->m_vAngle.y == m_fEndAngle)
+		{
 			m_bIsStartAngleLinearInterpolation = false;
+		}
 	}
 }
 
