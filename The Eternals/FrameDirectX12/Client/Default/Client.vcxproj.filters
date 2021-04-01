@@ -462,6 +462,9 @@
     <ClInclude Include="..\Code\CloderA.h">
       <Filter>02.GameObject\05.Monster\02.CloderA</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\Template.h">
+      <Filter>98.Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
