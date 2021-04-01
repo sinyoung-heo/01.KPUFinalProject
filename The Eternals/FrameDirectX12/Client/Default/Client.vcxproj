@@ -231,12 +231,12 @@
     <ClInclude Include="..\Header\Const.h" />
     <ClInclude Include="..\Header\enum.h" />
     <ClInclude Include="..\Header\Extern.h" />
+    <ClInclude Include="..\Header\GladiatorAnimation.h" />
     <ClInclude Include="..\Header\Include.h" />
     <ClInclude Include="..\Header\Macro.h" />
     <ClInclude Include="..\Header\Struct.h" />
     <ClInclude Include="..\Header\Template.h" />
     <ClInclude Include="..\Header\Typedef.h" />
-    <ClInclude Include="GladiatorAnimation.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />

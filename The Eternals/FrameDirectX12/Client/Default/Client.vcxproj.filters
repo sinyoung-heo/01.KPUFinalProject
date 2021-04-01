@@ -426,9 +426,6 @@
     <ClInclude Include="..\Code\PCGladiator.h">
       <Filter>02.GameObject\02.PlayerCharacter\00.PCGladiator</Filter>
     </ClInclude>
-    <ClInclude Include="GladiatorAnimation.h">
-      <Filter>02.GameObject\02.PlayerCharacter\00.PCGladiator</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\WaterMeshObject.h">
       <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
     </ClInclude>
@@ -464,6 +461,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\Template.h">
       <Filter>98.Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\GladiatorAnimation.h">
+      <Filter>02.GameObject\02.PlayerCharacter\00.PCGladiator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
