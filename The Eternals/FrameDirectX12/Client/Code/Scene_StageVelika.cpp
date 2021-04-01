@@ -291,13 +291,13 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ Popori_F ]
 	____________________________________________________________________________________________________________*/
-	//pGameObj =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
-	//							  L"PoporiR27Gladiator",		// MeshTag
-	//							  L"StageVelika_NaviMesh",		// NaviMeshTag
-	//							  _vec3(0.05f, 0.05f, 0.05f),	// Scale
-	//							  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-	//							  _vec3(120.0f, 0.f, 75.0f));	// Pos
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"ThisPlayer", pGameObj), E_FAIL);
+	pGameObj =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
+								  L"PoporiR27Gladiator",		// MeshTag
+								  L"StageVelika_NaviMesh",		// NaviMeshTag
+								  _vec3(0.05f, 0.05f, 0.05f),	// Scale
+								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+								  _vec3(120.0f, 0.f, 75.0f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"ThisPlayer", pGameObj), E_FAIL);
 
 
 	/*__________________________________________________________________________________________________________

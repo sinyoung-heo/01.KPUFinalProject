@@ -28,6 +28,10 @@ public:
 	void	ProcessData(unsigned char* net_buf, size_t io_byte);
 	void	ProcessPacket(char* ptr);
 
+	//test
+	void	Process_recv_test(size_t iosize);
+	void	Process_packet_test();
+
 	void	send_login();
 	void	send_move(const _vec3& vDir, const _vec3& vPos, const _int& iAniIdx);
 	void	send_move_stop(const _vec3& vPos, const _vec3& vDir, const _int& iAniIdx);
@@ -61,5 +65,10 @@ private:
 
 	MVKEY m_eCurKey = MVKEY::K_END;
 	MVKEY m_ePreKey = MVKEY::K_END;
+
+	unsigned char* m_packet_start;
+	unsigned char* m_recv_start;
+	unsigned char* m_next_recv_ptr;
+	unsigned char m_recv_buf[MAX_BUF_SIZE];
 };
 
