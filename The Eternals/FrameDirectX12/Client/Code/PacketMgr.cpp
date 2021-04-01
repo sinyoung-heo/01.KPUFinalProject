@@ -184,11 +184,6 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		//							   _vec3(0.0f, 0.0f, 0.0f),			// Angle
 		//							   _vec3(packet->posX, packet->posY, packet->posZ));		// Pos
 
-		pGameObj = CTestColPlayer::Create(m_pGraphicDevice, m_pCommandList,
-									   _vec3(1.f, 1.f, 1.f),			// Scale
-									   _vec3(0.0f, 0.0f, 0.0f),			// Angle
-									   _vec3(packet->posX, packet->posY, packet->posZ));		// Pos
-
 #else
 		if (PC_GLADIATOR == packet->o_type)
 		{
@@ -408,7 +403,10 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 		/* 현재 클라이언트가 공격을 멈춘 경우 */
 		if (s_num == g_iSNum)
-			return;	
+		{
+			Engine::CGameObject* pObj = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
+			pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+		}
 		/* 다른 클라이언트가 공격을 멈춘 경우 */
 		else
 		{
@@ -427,6 +425,7 @@ void CPacketMgr::ProcessPacket(char* ptr)
 			else
 				static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
 
+			cout << "recv position" << packet->posX << "," << packet->posX << endl;
 			pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
 			pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 			pObj->Set_Attack(false);
@@ -747,9 +746,11 @@ void CPacketMgr::send_attack_stop(const _int& iAniIdx, const _vec3& vDir, const 
 	p.type = CS_ATTACK_STOP;
 
 	p.animIdx = iAniIdx;
+
 	p.posX    = vPos.x;
 	p.posY    = vPos.y;
 	p.posZ    = vPos.z;
+
 	p.dirX    = vDir.x;
 	p.dirY    = vDir.y;
 	p.dirZ    = vDir.z;
