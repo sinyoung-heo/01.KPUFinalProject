@@ -132,7 +132,7 @@ protected:
 	__________________________________________________________________________________________________________*/
 	int		m_iSNum				= 0;
 	int		m_iCurAnim			= 0;
-	bool	m_bIsMoveStop		= false;
+	bool	m_bIsMoveStop		= true;
 	bool	m_bIsAttack			= false;
 	char	m_chO_Type			= 0;
 
