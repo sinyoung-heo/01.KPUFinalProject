@@ -67,6 +67,11 @@ void CGameObject::Set_Other_direction(_vec3& vDir)
 	m_pTransCom->m_vAngle.y = vDir.Get_Angle(g_vLook);
 }
 
+float CGameObject::Set_Other_Angle(_vec3& vDir)
+{
+	return vDir.Get_Angle(g_vLook);
+}
+
 HRESULT CGameObject::Ready_GameObjectPrototype()
 {
 	return S_OK;

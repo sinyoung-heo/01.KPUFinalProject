@@ -173,8 +173,8 @@ void process_packet(int id)
 
 		_vec3 vPos  = _vec3(p->posX, p->posY, p->posZ);
 		_vec3 vDir  = _vec3(p->dirX, p->dirY, p->dirZ);
-		
-		process_attack_stop(id, vPos, vDir, p->animIdx);
+	
+		process_attack_stop(id, vDir, vPos, p->animIdx);
 	}
 	break;
 
@@ -714,18 +714,15 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 	ori_y = pPlayer->m_vPos.y;
 	ori_z = pPlayer->m_vPos.z;
 
-	pPlayer->m_vDir = _vDir;
-
 	/* 해당 플레이어의 원래 시야 목록 */
 	pPlayer->v_lock.lock();
 	unordered_set<int> old_viewlist = pPlayer->view_list;
 	pPlayer->v_lock.unlock();
 
 	/* 해당 플레이어로부터 받은 최종 위치값 저장 */
-	pPlayer->m_vPos.x = _vPos.x;
-	pPlayer->m_vPos.y = _vPos.y;
-	pPlayer->m_vPos.z = _vPos.z;
-
+	pPlayer->m_vDir = _vDir;
+	pPlayer->m_vPos = _vPos;
+	
 	send_move_stop_packet(id, id);
 
 	/* 변경된 좌표로 섹터 갱신 */
@@ -1167,17 +1164,16 @@ void process_attack_stop(int id, const _vec3& _vDir, const _vec3& _vPos, int ani
 	ori_y = pPlayer->m_vPos.y;
 	ori_z = pPlayer->m_vPos.z;
 
-	pPlayer->m_vDir = _vDir;
-
 	/* 해당 플레이어의 원래 시야 목록 */
 	pPlayer->v_lock.lock();
 	unordered_set<int> old_viewlist = pPlayer->view_list;
 	pPlayer->v_lock.unlock();
 
 	/* 해당 플레이어로부터 받은 최종 위치값 저장 */
-	pPlayer->m_vPos.x = _vPos.x;
-	pPlayer->m_vPos.y = _vPos.y;
-	pPlayer->m_vPos.z = _vPos.z;
+	pPlayer->m_vDir = _vDir;
+	pPlayer->m_vPos = _vPos;
+
+	send_attack_stop_packet(id, id, aniIdx);
 
 	/* 변경된 좌표로 섹터 갱신 */
 	CSectorMgr::GetInstance()->Compare_exchange_Sector(id, (int)ori_z, (int)ori_x, (int)(pPlayer->m_vPos.z), (int)(pPlayer->m_vPos.x));
@@ -1359,7 +1355,6 @@ void process_stance_change(int id, const bool& stance)
 
 	if (pPlayer == nullptr) return;
 
-	
 	/* 해당 플레이어의 원래 시야 목록 */
 	pPlayer->v_lock.lock();
 	unordered_set<int> old_viewlist = pPlayer->view_list;

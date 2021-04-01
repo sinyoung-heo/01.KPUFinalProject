@@ -49,6 +49,7 @@ public:
 	void				Set_Info(int lev, int hp, int maxHp, int mp, int maxMp, int exp, int maxExp, int att, float spd);
 	void				Set_State(int cur) { m_iCurAnim = cur; }
 	void				Set_Other_direction(_vec3& vDir);
+	float				Set_Other_Angle(_vec3& vDir);
 	
 	void				Set_IdleAniIdx(const _uint& uiAniIdx)						{ m_uiIdleAniIdx = uiAniIdx; }
 	void				Set_IsStartPosInterpolation(const _bool& bIsStart)			{ m_bIsStartPosInterpolation = bIsStart; }
