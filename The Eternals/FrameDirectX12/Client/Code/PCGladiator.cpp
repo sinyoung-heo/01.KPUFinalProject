@@ -456,6 +456,9 @@ void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 
 void CPCGladiator::KeyInput_StanceChange(const _float& fTimeDelta)
 {
+	if (m_bIsAttack)
+		return;
+
 	// ATTACK -> NONE_ATTACK
 	if (Engine::KEY_DOWN(DIK_LSHIFT) && Gladiator::STANCE_ATTACK == m_eStance &&
 		!m_bIsKeyDown && m_pInfoCom->m_fSpeed == GladiatorConst::MIN_SPEED &&
@@ -498,8 +501,8 @@ void CPCGladiator::KeyInput_ComboAttack(const _float& fTimeDelta)
 	{
 		m_bIsSameDir = true;
 
-		if (Is_Change_CamDirection())
-			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		//if (Is_Change_CamDirection())
+		//	m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 }
 
@@ -516,6 +519,8 @@ void CPCGladiator::SetUp_ComboAttackAnimation()
 		m_uiAnimIdx   = Gladiator::COMBO1;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+
+		m_fPreAngle = m_pTransCom->m_vAngle.y;
 	}
 	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
 			GladiatorConst::COMBOCNT_1 == m_uiComoboCnt &&
@@ -530,6 +535,8 @@ void CPCGladiator::SetUp_ComboAttackAnimation()
 		m_uiAnimIdx   = Gladiator::COMBO2;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+
+		m_fPreAngle = m_pTransCom->m_vAngle.y;
 	}
 	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
 			GladiatorConst::COMBOCNT_2 == m_uiComoboCnt &&
@@ -544,6 +551,8 @@ void CPCGladiator::SetUp_ComboAttackAnimation()
 		m_uiAnimIdx   = Gladiator::COMBO3;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+
+		m_fPreAngle = m_pTransCom->m_vAngle.y;
 	}
 	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
 			GladiatorConst::COMBOCNT_3 == m_uiComoboCnt &&
@@ -558,6 +567,8 @@ void CPCGladiator::SetUp_ComboAttackAnimation()
 		m_uiAnimIdx   = Gladiator::COMBO4;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+
+		m_fPreAngle = m_pTransCom->m_vAngle.y;
 	}
 }
 
@@ -784,19 +795,23 @@ void CPCGladiator::Change_PlayerStance(const _float& fTimeDelta)
 
 void CPCGladiator::Ready_AnhleInterpolationValue(const _float& fEndAngle)
 {
-	m_bIsStartAngleLinearInterpolation = true;
+	m_tAngleInterpolationDesc;
+	m_tAngleInterpolationDesc;
+	m_tAngleInterpolationDesc;
+	m_tAngleInterpolationDesc;
+	m_tAngleInterpolationDesc;
 
-	m_fStartAngle              = m_pTransCom->m_vAngle.y;
-	m_fEndAngle                = fEndAngle;
-	m_fAngleLinearRatio        = 0.0f;
-	m_fAngleInterpolationSpeed = 3.0f;
+	m_bIsStartAngleLinearInterpolation = true;
+	m_fStartAngle						= m_pTransCom->m_vAngle.y;
+	m_fEndAngle							= fEndAngle;
+	m_fAngleLinearRatio					= 0.0f;
+	m_fAngleInterpolationSpeed			= 3.0f;
 }
 
 void CPCGladiator::SetUp_AngleInterpolation(const _float& fTimeDelta)
 {
 	if (m_bIsStartAngleLinearInterpolation)
 	{
-
 		m_fAngleLinearRatio += m_fAngleInterpolationSpeed * fTimeDelta;
 		m_pTransCom->m_vAngle.y = LinearInterpolation(m_fStartAngle, m_fEndAngle, m_fAngleLinearRatio);
 
