@@ -568,21 +568,21 @@ void CPCGladiator::SetUp_FromComboAttackToAttackWait(const _float& fTimeDelta)
 		m_bIsKeyDown = false;
 		m_uiAnimIdx  = Gladiator::COMBO1R;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 	else if (Gladiator::COMBO2 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 	{
 		m_bIsKeyDown = false;
 		m_uiAnimIdx  = Gladiator::COMBO2R;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 	else if (Gladiator::COMBO3 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 	{
 		m_bIsKeyDown = false;
 		m_uiAnimIdx  = Gladiator::COMBO3R;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 	else if (Gladiator::COMBO4 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 	{
@@ -591,7 +591,7 @@ void CPCGladiator::SetUp_FromComboAttackToAttackWait(const _float& fTimeDelta)
 		m_uiComoboCnt = GladiatorConst::COMBOCNT_0;
 		m_uiAnimIdx   = Gladiator::ATTACK_WAIT;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 
 	else if ((Gladiator::COMBO1R == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) ||
@@ -602,7 +602,7 @@ void CPCGladiator::SetUp_FromComboAttackToAttackWait(const _float& fTimeDelta)
 		m_uiComoboCnt = GladiatorConst::COMBOCNT_0;
 		m_uiAnimIdx   = Gladiator::ATTACK_WAIT;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 }
 
