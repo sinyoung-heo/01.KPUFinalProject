@@ -125,6 +125,8 @@ HRESULT CGameObject::LateInit_GameObject()
 
 _int CGameObject::Update_GameObject(const _float & fTimeDelta)
 {
+	SetUp_PosInterpolation(fTimeDelta);
+
 	if (nullptr != m_pTransCom)
 		m_pTransCom->Update_Component(fTimeDelta);
 
@@ -283,6 +285,26 @@ CComponent * CGameObject::Find_Component(wstring wstrComponentTag, const COMPONE
 		return nullptr;
 
 	return iter_find->second;
+}
+
+void CGameObject::SetUp_PosInterpolation(const _float& fTimeDelta)
+{
+	if (m_bIsStartPosInterpolation)
+	{
+		m_fPosLinearRatio += 1.25f * fTimeDelta;
+
+		if (m_fPosLinearRatio >= 1.0f)
+		{
+			m_fPosLinearRatio = 1.0f;
+			m_bIsStartPosInterpolation = false;
+		}
+
+		m_pTransCom->m_vPos = m_vLinearStartPos * (1.0f - m_fPosLinearRatio) + m_vLinearEndPos * m_fPosLinearRatio;
+	}
+	else
+	{
+		m_fPosLinearRatio          = 0.0f;
+	}
 }
 
 

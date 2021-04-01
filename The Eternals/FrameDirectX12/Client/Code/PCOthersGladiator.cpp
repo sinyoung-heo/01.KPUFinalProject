@@ -252,7 +252,7 @@ void CPCOthersGladiator::Move_OnNaviMesh(const _float& fTimeDelta)
 	SetUp_MoveSpeed(fTimeDelta);
 
 	if (!m_bIsMoveStop || 
-		m_pInfoCom->m_fSpeed == PCOthersGladiatorConst::MIN_SPEED)
+		PCOthersGladiatorConst::MIN_SPEED != m_pInfoCom->m_fSpeed)
 	{
 		// NaviMesh ÀÌµ¿.		
 		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
@@ -268,19 +268,13 @@ void CPCOthersGladiator::Move_OnNaviMesh(const _float& fTimeDelta)
 void CPCOthersGladiator::SetUp_MoveSpeed(const _float& fTimeDelta)
 {
 	if (!m_bIsMoveStop)
-	{
 		m_fLinearRatio += fTimeDelta;
-		if (m_fLinearRatio > 1.0f)
-			m_fLinearRatio = 1.0f;
-	}
 	else
-	{
 		m_fLinearRatio -= PCOthersGladiatorConst::MOVE_STOP_SPEED * fTimeDelta;
-		if (m_fLinearRatio < 0.0f)
-			m_fLinearRatio = 0.0f;
-	}
 
-	m_pInfoCom->m_fSpeed = PCOthersGladiatorConst::MIN_SPEED * (1.0f - m_fLinearRatio) + PCOthersGladiatorConst::MAX_SPEED * m_fLinearRatio;
+	m_pInfoCom->m_fSpeed = LinearInterpolation(PCOthersGladiatorConst::MIN_SPEED, 
+											   PCOthersGladiatorConst::MAX_SPEED, 
+											   m_fLinearRatio);
 }
 
 void CPCOthersGladiator::SetUp_StanceChange(const _float& fTimeDelta)

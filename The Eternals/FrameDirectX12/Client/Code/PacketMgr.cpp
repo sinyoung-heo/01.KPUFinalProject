@@ -330,11 +330,13 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		else	
 		{
 			Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
-
+			cout << SC_PACKET_MOVE_STOP << endl;
 			auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
 			static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
-			pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+			pObj->Set_IsStartPosInterpolation(true);
+			pObj->Set_LinearPos(pObj->Get_Transform()->m_vPos, _vec3(packet->posX, packet->posY, packet->posZ));
+			//pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
 			pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 			pObj->Set_MoveStop(true);
 		}
@@ -413,9 +415,23 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		{
 			Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
 
-			static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
+			if (PC_GLADIATOR == packet->o_type)
+			{
+				static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
+			}
+			else if (PC_ARCHER == packet->o_type)
+			{
+			}
+			else if (PC_PRIEST == packet->o_type)
+			{
+			}
+			else
+				static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
+
 			pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
 			pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
+			pObj->Set_Attack(false);
+			pObj->Set_MoveStop(true);
 		}
 	}
 	break;
