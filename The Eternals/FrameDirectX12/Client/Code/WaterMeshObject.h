@@ -59,6 +59,8 @@ private:
 
 	float m_fNormalMapDeltatime = 0.f;
 	float m_fDeltatime = 0.f;
+	float m_fDeltatime2 = 0.f;
+	float m_fDeltatime3 = 0.f;
 	float m_fPatternMapDeltatime = 0.f;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,

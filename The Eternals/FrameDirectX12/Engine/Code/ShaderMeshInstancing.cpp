@@ -353,8 +353,9 @@ HRESULT CShaderMeshInstancing::Create_PipelineState()
 	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
 	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.BlendState			= Create_BlendState();
-	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState();
+	PipelineStateDesc.BlendState = Create_BlendState(false, D3D12_BLEND_ONE, D3D12_BLEND_ZERO, D3D12_BLEND_OP_ADD, D3D12_BLEND_ONE,
+		D3D12_BLEND_ZERO, D3D12_BLEND_OP_ADD, TRUE);
+	PipelineStateDesc.RasterizerState = CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
 	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState();
 
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
@@ -388,8 +389,9 @@ HRESULT CShaderMeshInstancing::Create_PipelineState()
 	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
 	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.BlendState			= Create_BlendState();
-	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState();
+	PipelineStateDesc.BlendState = Create_BlendState(false, D3D12_BLEND_ONE, D3D12_BLEND_ZERO, D3D12_BLEND_OP_ADD, D3D12_BLEND_ONE,
+		D3D12_BLEND_ZERO, D3D12_BLEND_OP_ADD, TRUE);
+	PipelineStateDesc.RasterizerState = CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
 	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState();
 
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
@@ -423,8 +425,8 @@ HRESULT CShaderMeshInstancing::Create_PipelineState()
 	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
 	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.BlendState			= Create_BlendState();
-	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState();
+	PipelineStateDesc.BlendState = Create_BlendState();
+	PipelineStateDesc.RasterizerState = CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
 	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState();
 
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
@@ -462,12 +464,13 @@ D3D12_BLEND_DESC CShaderMeshInstancing::Create_BlendState(const _bool& bIsBlendE
 														  const D3D12_BLEND_OP& BlendOp, 
 														  const D3D12_BLEND& SrcBlendAlpha,
 														  const D3D12_BLEND& DstBlendAlpha, 
-														  const D3D12_BLEND_OP& BlendOpAlpha)
+														  const D3D12_BLEND_OP& BlendOpAlpha,
+														  const _bool& bIsAlphaTest)
 {
 	D3D12_BLEND_DESC BlendDesc = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 	// ºí·»µå ¼³Á¤.
 	ZeroMemory(&BlendDesc, sizeof(D3D12_BLEND_DESC));
-	BlendDesc.AlphaToCoverageEnable					= TRUE;
+	BlendDesc.AlphaToCoverageEnable					= bIsAlphaTest;
 	BlendDesc.IndependentBlendEnable				= FALSE;
 	BlendDesc.RenderTarget[0].BlendEnable			= bIsBlendEnable;
 	BlendDesc.RenderTarget[0].LogicOpEnable			= FALSE;

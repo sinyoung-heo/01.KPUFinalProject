@@ -475,11 +475,21 @@ VS_OUT VS_TERRAIN_MAIN(VS_IN vs_input)
 	
     float4x4 matWV, matWVP;
 
+    vector vHorizontal;
+    vector vVertical;
+
+	//세로축의 웨이브 펙터 Wave, Lava
+    vVertical.xyz = vs_input.Pos.xyz + (sin(g_fOffset2 * 1.f + vs_input.Pos.z * 1.f)) * 10.205f;
+	//가로축의 웨이브 펙터 Wave, Lava
+    vHorizontal.xyz = vs_input.Pos.xyz + (sin(g_fOffset2 * 1.f + vs_input.Pos.x * 1.f)) * 10.205f;
+    vector vLocalPos = vector(vVertical.xyz + vHorizontal.xyz, 1.f);
+
+	
     matWV = mul(g_matWorld, g_matView);
     matWVP = mul(matWV, g_matProj);
 	
-    vs_output.Pos = mul(float4(vs_input.Pos, 1.0f), matWVP);
-	
+  //  vs_output.Pos = mul(float4(vs_input.Pos, 1.0f), matWVP);
+    vs_output.Pos = mul(vLocalPos, matWVP);
    
     vs_output.TexUV = vs_input.TexUV;
 	
@@ -514,31 +524,45 @@ VS_OUT VS_TERRAIN_MAIN(VS_IN vs_input)
     return (vs_output);
 }
 
+static float WAVE = 0.01f; //0.004f;
 PS_OUT PS_TERRAIN_MAIN(VS_OUT ps_input) : SV_TARGET
 {
     PS_OUT ps_output = (PS_OUT) 0;
+    float clipSpace = (1 - ps_input.TexUV.y) - 0.2f + cos(g_fOffset2 * 0.5f) * 0.1f - sin(ps_input.TexUV.x * 50.f) * (g_fDissolve * WAVE);
+ 
+    float2 vTexUV = ps_input.AniUV * 30.f;
+    vTexUV += g_fOffset2 * 0.05f;
+  
+    float2 TempUV = ps_input.TexUV;
+    TempUV.y *= (10.f * (ps_input.TexUV.y));
 	
-   // float2 DistUV = ps_input.TexUV * 30.f+g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV).xy;
-    
+    TempUV.y -= (g_fOffset2*0.5f);
+    ps_output.Specular = g_TexSpecular.Sample(g_samLinearWrap, TempUV) * ps_input.TexUV.y;
+  
+	
 	// Diffuse
     float4 AlphaSea = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV * 30.f);
-    float4 Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.AniUV * 10.f) + AlphaSea;
+    float4 Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, vTexUV) ;
+   // float Temp = (1 - ps_input.TexUV.y)+ cos(g_fOffset2 * 0.5f);
+    ps_output.Diffuse = Diffuse + float4(0.2, 0.2, 1.f, 1.f) + AlphaSea;
+  
+    float fCos = (cos(g_fOffset2 * 0.5f) * 0.5f + 0.5f) * ps_input.TexUV.y;
 	
-    ps_output.Diffuse = Diffuse+ float4(0.2, 0.2, 1.f, 1.f);
-	//ps_output.Diffuse = float4(0.2, 0.2, 1.f, 1.f) * AlphaSea;
-	
+    ps_output.Diffuse += ((1 - ps_output.Specular) + g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV * 5.f)) * fCos;
+  
+    if (0.13f > clipSpace && clipSpace > 0.03f)
+        ps_output.Diffuse += (float4(0.2f, 0.2f, 0.2f, 1.f)) * fCos;
+    if (0.03f > clipSpace && clipSpace > 0.f)
+        ps_output.Diffuse += (float4(0.6f, 0.6f, 0.6f, 1.f)) * fCos;
+ 
+    clip(clipSpace);
+
 	// Normal
-    float4 TexNormal = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV * 30.f);
+    float4 TexNormal = normalize(g_TexNormal.Sample(g_samLinearWrap, vTexUV) /*+ g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV*100)*/);
     TexNormal = (TexNormal * 2.0f) - 1.0f; // 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.
     float3 Normal = (TexNormal.x * ps_input.T) + (TexNormal.y * ps_input.B) + (TexNormal.z * ps_input.N);
     ps_output.Normal = float4(Normal.xyz * 0.5f + 0.5f, 1.f); // 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
 	
-	// Specular
-    //ps_output.Specular = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV*0.5f);
-    
-    //ps_output.Diffuse *= ps_output.Specular;
-    //Depth
-
     ps_output.Depth = float4(ps_input.ProjPos.z / ps_input.ProjPos.w, // (posWVP.z / posWVP.w) : Proj 영역의 Z.
 								 ps_input.ProjPos.w / g_fProjFar, // posWVP.w / Far : 0~1로 만든 View영역의 Z.
 								 1.0f, 1.0f);

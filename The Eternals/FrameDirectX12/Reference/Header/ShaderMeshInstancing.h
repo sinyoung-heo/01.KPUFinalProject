@@ -38,7 +38,8 @@ private:
 							 				   const D3D12_BLEND_OP& BlendOp		= D3D12_BLEND_OP_ADD,
 							 				   const D3D12_BLEND& SrcBlendAlpha		= D3D12_BLEND_ONE,
 							 				   const D3D12_BLEND& DstBlendAlpha		= D3D12_BLEND_ZERO,
-							 				   const D3D12_BLEND_OP& BlendOpAlpha	= D3D12_BLEND_OP_ADD);
+							 				   const D3D12_BLEND_OP& BlendOpAlpha	= D3D12_BLEND_OP_ADD,
+											   const _bool& bIsAlphaTest = false);
 private:
 	/*__________________________________________________________________________________________________________
 	Key°ªÀº ResourceTag

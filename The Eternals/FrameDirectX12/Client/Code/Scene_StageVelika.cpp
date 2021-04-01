@@ -193,26 +193,33 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ BumpTerrainMesh ]
 	____________________________________________________________________________________________________________*/
-	pGameObj = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+	/*pGameObj = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
 		L"BumpTerrainMesh01",
 		_vec3(0.075f),
 		_vec3(90.0f, 0.0f, 0.0f),
 		_vec3(128.0f, 0.01f, 128.0f));
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpTerrainMesh01", pGameObj), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpTerrainMesh01", pGameObj), E_FAIL);*/
+
+	pGameObj = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+		L"BumpDesertMesh00",
+		_vec3(0.175f),
+		_vec3(90.0f, 0.0f, 0.0f),
+		_vec3(128.0f, 0.01f, 128.0f));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpDesertMesh00", pGameObj), E_FAIL); 
 
 	pGameObj = CWaterMeshObject::Create(m_pGraphicDevice, m_pCommandList,
 		L"BumpWaterMesh00",
 		_vec3(0.075f),
-		_vec3(90.0f, 0.0f, 0.0f),
-		_vec3(128.0f, 0.01f, 128.0f));
+		_vec3(90.0f, 40.0f, 0.0f),
+		_vec3(256.0f , 5.1f, 300.0f));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpWaterMesh00", pGameObj), E_FAIL);
 	
-	/*__________________________________________________________________________________________________________
-	[ StaticMeshObject ]
-	____________________________________________________________________________________________________________*/
-	wifstream fin { L"../../Bin/ToolData/StageVelika_StaticMesh.staticmesh" };
-	if (fin.fail())
-		return E_FAIL;
+	///*__________________________________________________________________________________________________________
+	//[ StaticMeshObject ]
+	//____________________________________________________________________________________________________________*/
+	//wifstream fin { L"../../Bin/ToolData/StageVelika_StaticMesh.staticmesh" };
+	//if (fin.fail())
+	//	return E_FAIL;
 
 	wstring	wstrMeshTag				= L"";
 	_vec3	vScale					= _vec3(0.0f);
@@ -224,9 +231,53 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 	_vec3	vBoundingSpherePos      = _vec3(0.0f);
 	_bool	bIsMousePicking			= false;
 
+	//while (true)
+	//{
+	//	fin >> wstrMeshTag 				// MeshTag
+	//		>> vScale.x
+	//		>> vScale.y
+	//		>> vScale.z					// Scale
+	//		>> vAngle.x
+	//		>> vAngle.y
+	//		>> vAngle.z					// Angle
+	//		>> vPos.x
+	//		>> vPos.y
+	//		>> vPos.z					// Pos
+	//		>> bIsRenderShadow			// Is Render Shadow
+	//		>> bIsCollision 			// Is Collision
+	//		>> vBoundingSphereScale.x	// BoundingSphere Scale
+	//		>> vBoundingSphereScale.y
+	//		>> vBoundingSphereScale.z
+	//		>> vBoundingSpherePos.x		// BoundingSphere Pos
+	//		>> vBoundingSpherePos.y
+	//		>> vBoundingSpherePos.z
+	//		>> bIsMousePicking;
+
+	//	if (fin.eof())
+	//		break;
+
+	//	pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+	//										 wstrMeshTag,			// MeshTag
+	//										 vScale,				// Scale
+	//										 vAngle,				// Angle
+	//										 vPos,					// Pos
+	//										 bIsRenderShadow,		// Render Shadow
+	//										 bIsCollision,			// Bounding Sphere
+	//										 vBoundingSphereScale,	// Bounding Sphere Scale
+	//										 vBoundingSpherePos);	// Bounding Sphere Pos
+
+	//	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", wstrMeshTag, pGameObj), E_FAIL);
+	//}
+
+	//
+
+	wifstream fin2{ L"../../Bin/ToolData/StageBeach3.staticmesh" };
+	if (fin2.fail())
+		return E_FAIL;
+
 	while (true)
 	{
-		fin >> wstrMeshTag 				// MeshTag
+		fin2 >> wstrMeshTag 				// MeshTag
 			>> vScale.x
 			>> vScale.y
 			>> vScale.z					// Scale
@@ -246,21 +297,22 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 			>> vBoundingSpherePos.z
 			>> bIsMousePicking;
 
-		if (fin.eof())
+		if (fin2.eof())
 			break;
 
 		pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-											 wstrMeshTag,			// MeshTag
-											 vScale,				// Scale
-											 vAngle,				// Angle
-											 vPos,					// Pos
-											 bIsRenderShadow,		// Render Shadow
-											 bIsCollision,			// Bounding Sphere
-											 vBoundingSphereScale,	// Bounding Sphere Scale
-											 vBoundingSpherePos);	// Bounding Sphere Pos
+			wstrMeshTag,			// MeshTag
+			vScale,				// Scale
+			vAngle,				// Angle
+			vPos,					// Pos
+			bIsRenderShadow,		// Render Shadow
+			bIsCollision,			// Bounding Sphere
+			vBoundingSphereScale,	// Bounding Sphere Scale
+			vBoundingSpherePos);	// Bounding Sphere Pos
 
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", wstrMeshTag, pGameObj), E_FAIL);
 	}
+	//
 
 	/*__________________________________________________________________________________________________________
 	[ Popori_F ]

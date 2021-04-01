@@ -89,8 +89,8 @@ void CWaterMeshObject::Render_GameObject(const _float& fTimeDelta,
 	// ID3D12DescriptorHeap* pDescriptorHeap= Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(L"WaterNormal");
 
 	Set_ConstantTable();
-	m_fPatternMapDeltatime+=(Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 15.f;
-	if (m_fPatternMapDeltatime > 138.f)
+	m_fPatternMapDeltatime+=(Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 10.f;
+	if (m_fPatternMapDeltatime > 133.f)
 		m_fPatternMapDeltatime = 123.f;
 	m_fNormalMapDeltatime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 15.f;
 	if (m_fNormalMapDeltatime > 120.f)
@@ -149,12 +149,17 @@ void CWaterMeshObject::Set_ConstantTable()
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 
 	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.005f;
+	m_fDeltatime2 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
+	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
 	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
+	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
+	tCB_ShaderMesh.fDeltaTime = sin(m_fDeltatime3);
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 
 
 	if (m_fDeltaTime > 1.f)
 		m_fDeltaTime = 0.f;
+	
 }
 
 void CWaterMeshObject::Set_ConstantTableShadowDepth()
