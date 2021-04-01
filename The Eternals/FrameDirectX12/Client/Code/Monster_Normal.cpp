@@ -31,14 +31,13 @@ HRESULT CMonster_Normal::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviM
 		m_pMeshCom->Get_MaxVector());
 
 
-	m_pInfoCom->m_fSpeed = 1.f;
+	m_pInfoCom->m_fSpeed = 0.1f;
 	m_bIsMoveStop = true;
 
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 4;
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 	m_eCurAnimation = ANIM::A_WAIT;
 	m_ePreAnimation = ANIM::A_WAIT;
@@ -66,6 +65,19 @@ _int CMonster_Normal::Update_GameObject(const _float& fTimeDelta)
 	Change_Animation(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
+	[ Renderer - Add Render Group ]
+	____________________________________________________________________________________________________________*/
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+
+	/*__________________________________________________________________________________________________________
+	[ Play Animation ]
+	____________________________________________________________________________________________________________*/
+	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
+	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
+
+	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
@@ -78,17 +90,6 @@ _int CMonster_Normal::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
-	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
-
-	/*__________________________________________________________________________________________________________
-	[ Animation KeyFrame Index ]
-	____________________________________________________________________________________________________________*/
-	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
-	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
-
 	return NO_EVENT;
 }
 
@@ -99,12 +100,6 @@ void CMonster_Normal::Send_PacketToServer()
 void CMonster_Normal::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
 	Active_Monster(fTimeDelta);
-
-	/*__________________________________________________________________________________________________________
-	[ Play Animation ]
-	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
 
 	Set_ConstantTable();
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
@@ -156,7 +151,7 @@ HRESULT CMonster_Normal::Add_Component(wstring wstrMeshTag, wstring wstrNaviMesh
 	m_pNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(wstrNaviMeshTag.c_str(), Engine::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);
 	m_pNaviMeshCom->AddRef();
-	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
+	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
 
 	return S_OK;
 }
@@ -177,7 +172,7 @@ void CMonster_Normal::Set_ConstantTable()
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 
 	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.15f;
-	tCB_ShaderMesh.fDeltaTime = m_fDeltaTime;
+	tCB_ShaderMesh.fDissolve = m_fDeltaTime;
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 
 	if (m_fDeltaTime > 1.f)
@@ -210,21 +205,29 @@ void CMonster_Normal::Active_Monster(const _float& fTimeDelta)
 	/* Monster MOVE */
 	if (!m_bIsMoveStop)
 	{
-		// NaviMesh 이동.		
-		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
-		{
-			m_eCurAnimation = A_WALK;
+		m_eCurAnimation = A_TALK;
+		//m_eCurAnimation = A_WALK;
 
-			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
-				&m_pTransCom->m_vDir,
-				m_pInfoCom->m_fSpeed * fTimeDelta);
-			m_pTransCom->m_vPos = vPos;
-		}
-		else
-		{
-			m_eCurAnimation = A_WAIT;
-			m_bIsMoveStop = true;
-		}
+		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+			&m_pTransCom->m_vDir,
+			m_pInfoCom->m_fSpeed * fTimeDelta);
+		m_pTransCom->m_vPos = vPos;
+
+		//// NaviMesh 이동.		
+		//if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
+		//{
+		//	m_eCurAnimation = A_WALK;
+
+		//	_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+		//		&m_pTransCom->m_vDir,
+		//		m_pInfoCom->m_fSpeed * fTimeDelta);
+		//	m_pTransCom->m_vPos = vPos;
+		//}
+		//else
+		//{
+		//	m_eCurAnimation = A_WAIT;
+		//	m_bIsMoveStop = true;
+		//}
 	}
 }
 

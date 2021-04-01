@@ -1,7 +1,7 @@
 #pragma once
 #include "Obj.h"
 
-typedef /*unordered_*/map <int,CObj*>	OBJLIST;
+typedef map <int,CObj*>	OBJLIST;
 typedef OBJLIST::iterator				OBJITER;
 typedef lock_guard<recursive_mutex>		objmgr_lock;
 
@@ -27,7 +27,7 @@ public:
 
 	bool		Is_Near(const CObj* me, const CObj* other);
 	bool		Is_Monster_Target(const CObj* me, const CObj* other);
-	bool		Is_Monster_AttackTarget(const CObj* me, const CObj* other);
+	bool		Is_Monster_AttackTarget(const CObj* me, const CObj* other, const int& range);
 
 public:
 	HRESULT		Add_GameObject(wstring wstrObjTag, CObj* pObj, int server_num);

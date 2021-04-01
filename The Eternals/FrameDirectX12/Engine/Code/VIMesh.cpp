@@ -64,21 +64,21 @@ CVIMesh::CVIMesh(const CVIMesh & rhs)
 			iter->AddRef();
 	}
 
-	for (auto& iter : m_vecDiffResource)
-	{
-		if (nullptr != iter)
-			iter->AddRef();
-	}
-	for (auto& iter : m_vecNormResource)
-	{
-		if (nullptr != iter)
-			iter->AddRef();
-	}
-	for (auto& iter : m_vecSpecResource)
-	{
-		if (nullptr != iter)
-			iter->AddRef();
-	}
+	//for (auto& iter : m_vecDiffResource)
+	//{
+	//	if (nullptr != iter)
+	//		iter->AddRef();
+	//}
+	//for (auto& iter : m_vecNormResource)
+	//{
+	//	if (nullptr != iter)
+	//		iter->AddRef();
+	//}
+	//for (auto& iter : m_vecSpecResource)
+	//{
+	//	if (nullptr != iter)
+	//		iter->AddRef();
+	//}
 
 	if (nullptr != m_pTexDescriptorHeap)
 		m_pTexDescriptorHeap->AddRef();
@@ -256,8 +256,6 @@ HRESULT CVIMesh::Ready_Mesh(const aiMesh * pAiMesh,
 			}
 			else
 				vtxMesh.vNormal = _vec3(pAiMesh->mNormals[i].x, pAiMesh->mNormals[i].y, pAiMesh->mNormals[i].z);
-
-			vtxMesh.vNormal.Normalize();
 		}
 
 		// - Texture 정보가 있다면, TexUV값 입력.

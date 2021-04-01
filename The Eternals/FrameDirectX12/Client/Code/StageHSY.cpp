@@ -310,29 +310,6 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PoporiR19", pGameObj), E_FAIL);
 
 #pragma region SAMPLE_NPC
-	/*__________________________________________________________________________________________________________
-	[ SampleNPC ]
-	____________________________________________________________________________________________________________*/
-	//pGameObj =	CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
-	//							   L"PoporiR27Gladiator",		// MeshTag
-	//							   _vec3(1.0f, 1.0f, 1.0f),		// Scale
-	//							   _vec3(0.0f, 0.0f, 0.0f),		// Angle
-	//							   _vec3(0.0f, 0.0f, 0.0f));	// Pos
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SampleNPC", pGameObj), E_FAIL);
-
-	//pGameObj =	CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
-	//							   L"Baraka_M_Merchant",		// MeshTag
-	//							   _vec3(1.0f, 1.0f, 1.0f),		// Scale
-	//							   _vec3(0.0f, 0.0f, 0.0f),		// Angle
-	//							   _vec3(25.0f, 0.0f, 0.0f));	// Pos
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SampleNPC", pGameObj), E_FAIL);
-
-	//pGameObj =	CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
-	//							   L"Baraka_M_Mystellium",		// MeshTag
-	//							   _vec3(1.0f, 1.0f, 1.0f),		// Scale
-	//							   _vec3(0.0f, 0.0f, 0.0f),		// Angle
-	//							   _vec3(70.0f, 0.0f, 0.0f));	// Pos
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SampleNPC", pGameObj), E_FAIL);
 
 	//pGameObj =	CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
 	//							   L"Castanic_M_Lsmith",		// MeshTag

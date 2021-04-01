@@ -18,7 +18,7 @@ CGameObject::CGameObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList
 {
 }
 
-CGameObject::CGameObject(const CGameObject & rhs)
+CGameObject::CGameObject(const CGameObject& rhs)
 	: m_pGraphicDevice(rhs.m_pGraphicDevice)
 	, m_pCommandList(rhs.m_pCommandList)
 	, m_pRenderer(rhs.m_pRenderer)
@@ -30,6 +30,7 @@ CGameObject::CGameObject(const CGameObject & rhs)
 	, m_UIDepth(rhs.m_UIDepth)
 	, m_bIsAttack(rhs.m_bIsAttack)
 	, m_bIsMoveStop(rhs.m_bIsMoveStop)
+	, m_iCurAnim(0)
 {
 }
 
@@ -64,6 +65,11 @@ void CGameObject::Set_Info(int lev, int hp, int maxHp, int mp, int maxMp, int ex
 void CGameObject::Set_Other_direction(_vec3& vDir)
 {
 	m_pTransCom->m_vAngle.y = vDir.Get_Angle(g_vLook);
+}
+
+float CGameObject::Set_Other_Angle(_vec3& vDir)
+{
+	return vDir.Get_Angle(g_vLook);
 }
 
 HRESULT CGameObject::Ready_GameObjectPrototype()
@@ -124,6 +130,8 @@ HRESULT CGameObject::LateInit_GameObject()
 
 _int CGameObject::Update_GameObject(const _float & fTimeDelta)
 {
+	SetUp_PosInterpolation(fTimeDelta);
+
 	if (nullptr != m_pTransCom)
 		m_pTransCom->Update_Component(fTimeDelta);
 
@@ -227,7 +235,8 @@ void CGameObject::SetUp_BoundingBox(_matrix* pParent,
 									const _vec3& vCenter, 
 									const _vec3& vMin,
 									const _vec3& vMax,
-									const _float& fScaleOffset)
+									const _float& fScaleOffset,
+									const _vec3& vPosOffset)
 {
 	if (nullptr != m_pBoundingBoxCom)
 	{
@@ -235,13 +244,12 @@ void CGameObject::SetUp_BoundingBox(_matrix* pParent,
 		vScale.x = abs(vMax.x - vMin.x);
 		vScale.y = abs(vMax.y - vMin.y);
 		vScale.z = abs(vMax.z - vMin.z);
-
 		vScale *= fScaleOffset;
 
 		m_pBoundingBoxCom->Set_ParentMatrix(pParent);
 		m_pBoundingBoxCom->Set_Scale(vScale);
 		m_pBoundingBoxCom->Set_Extents(vParentScale);
-		m_pBoundingBoxCom->Set_Pos(vCenter);
+		m_pBoundingBoxCom->Set_Pos(vCenter + vPosOffset);
 	}
 }
 
@@ -282,6 +290,26 @@ CComponent * CGameObject::Find_Component(wstring wstrComponentTag, const COMPONE
 		return nullptr;
 
 	return iter_find->second;
+}
+
+void CGameObject::SetUp_PosInterpolation(const _float& fTimeDelta)
+{
+	if (m_bIsStartPosInterpolation)
+	{
+		m_fPosLinearRatio += 1.25f * fTimeDelta;
+
+		if (m_fPosLinearRatio >= 1.0f)
+		{
+			m_fPosLinearRatio = 1.0f;
+			m_bIsStartPosInterpolation = false;
+		}
+
+		m_pTransCom->m_vPos = m_vLinearStartPos * (1.0f - m_fPosLinearRatio) + m_vLinearEndPos * m_fPosLinearRatio;
+	}
+	else
+	{
+		m_fPosLinearRatio          = 0.0f;
+	}
 }
 
 

@@ -36,7 +36,6 @@ HRESULT CSampleNPC::Ready_GameObject(wstring wstrMeshTag,
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 	return S_OK;
 }
@@ -67,6 +66,14 @@ _int CSampleNPC::Update_GameObject(const _float & fTimeDelta)
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 	
 	/*__________________________________________________________________________________________________________
+	[ Play Animation ]
+	____________________________________________________________________________________________________________*/
+	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
+	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
+
+	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
@@ -78,12 +85,6 @@ _int CSampleNPC::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
-	/*__________________________________________________________________________________________________________
-	[ Animation KeyFrame Index ]
-	____________________________________________________________________________________________________________*/
-	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
-	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
-
 	return NO_EVENT;
 }
 
@@ -91,12 +92,6 @@ void CSampleNPC::Render_GameObject(const _float& fTimeDelta,
 								  ID3D12GraphicsCommandList * pCommandList, 
 								  const _int& iContextIdx)
 {
-	/*__________________________________________________________________________________________________________
-	[ Play Animation ]
-	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
-
 	Set_ConstantTable();
 	m_pShaderCom->Set_PipelineStatePass(0);
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);

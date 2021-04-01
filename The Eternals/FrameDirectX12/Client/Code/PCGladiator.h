@@ -2,11 +2,15 @@
 #include "Include.h"
 #include "GameObject.h"
 #include "GladiatorAnimation.h"
+#include "PCWeaponTwoHand.h"
 
 namespace GladiatorConst
 {
-	const _float MAX_SPEED = 5.0f;
-	const _float MIN_SPEED = 0.0f;
+	const _float MAX_SPEED       = 5.0f;
+	const _float MIN_SPEED       = 0.0f;
+	const _float MOVE_STOP_SPEED = 3.0f;
+
+	enum COMBOCNT { COMBOCNT_0, COMBOCNT_1, COMBOCNT_2, COMBOCNT_3, COMBO_END };
 }
 
 namespace Engine
@@ -34,7 +38,8 @@ public:
 									 wstring wstrNaviMeshTag,
 									 const _vec3& vScale,
 									 const _vec3& vAngle,
-									 const _vec3& vPos);
+									 const _vec3& vPos,
+									 const char& chWeaponType);
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
@@ -44,19 +49,30 @@ public:
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag);
+	HRESULT			SetUp_PCWeapon();
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
 
 	// KeyInput
 	void Key_Input(const _float& fTimeDelta);
 	void KeyInput_Move(const _float& fTimeDelta);
+	void KeyInput_Attack(const _float& fTimeDelta);
+	void KeyInput_StanceChange(const _float& fTimeDelta);
+	void KeyInput_ComboAttack(const _float& fTimeDelta);
+	void SetUp_ComboAttackAnimation();
+	void SetUp_FromComboAttackToAttackWait(const _float& fTimeDelta);
 	void Move_OnNaviMesh(const _float& fTimeDelta);
 	void Send_Player_Move();
 	bool Is_Change_CamDirection();
 
-	void SetUp_NoneAttackRunMoveSpeed(const _float& fTimeDelta);
-	void SetUp_NoneAttackRunAnimation();
-	void SetUp_NoneAttackRunToIdleAnimation(const _float& fTimeDelta);
+	void SetUp_RunMoveSpeed(const _float& fTimeDelta);
+	void SetUp_RunAnimation();
+	void SetUp_RunToIdleAnimation(const _float& fTimeDelta);
+	void SetUp_PlayerStance_FromAttackToNoneAttack();
+	void SetUp_PlayerStance_FromNoneAttackToAttack();
+	void Change_PlayerStance(const _float& fTimeDelta);
+	void Ready_AnhleInterpolationValue(const _float& fEndAngle);
+	void SetUp_AngleInterpolation(const _float& fTimeDelta);
 
 private:
 	/*__________________________________________________________________________________________________________
@@ -78,15 +94,28 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	CDynamicCamera* m_pDynamicCamera = nullptr;
-	wstring			m_wstrMeshTag    = L"";
+	CPCWeaponTwoHand*	m_pWeapon        = nullptr;
+	CDynamicCamera*		m_pDynamicCamera = nullptr;
+	wstring				m_wstrMeshTag    = L"";
+
+	// Speed Linear Interpolation
+	_float m_fLinearRatio = 0.0f;
+
+	// Angle Linear Interpolation
+	_bool	m_bIsStartAngleLinearInterpolation = false;
+	_float	m_fAngleLinearRatio                = 0.0f;
+	_float	m_fStartAngle                      = 0.0f;
+	_float	m_fEndAngle                        = 0.0f;
+	_float	m_fAngleInterpolationSpeed         = 1.0f;
 
 	// Server
 	_bool			m_bIsKeyDown   = false;
 	_bool			m_bIsSameDir   = false;
+	_bool			m_bIsAttack    = false;
 	_float			m_fBazierSpeed = 0.f;
 	MVKEY			m_eKeyState    = MVKEY::K_END;
-	_float			m_vecPreAngle  = 0.f;
+	_float			m_fPreAngle    = 0.f;
+	char			m_chWeaponType = -1;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation ]
@@ -95,7 +124,9 @@ private:
 	_uint m_ui3DMax_NumFrame = 0;	// 3DMax에서 애니메이션의 총 Frame 개수
 	_uint m_ui3DMax_CurFrame = 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
 
-	Gladiator::STANCE m_eStance = Gladiator::STANCE_END;
+	Gladiator::STANCE	m_eStance                 = Gladiator::STANCE_END;
+	_bool				m_bIsCompleteStanceChange = true;
+	_uint				m_uiComoboCnt             = 0;
 
 	/*__________________________________________________________________________________________________________
 	[ Font ]
@@ -111,7 +142,8 @@ public:
 									   wstring wstrNaviMeshTag,
 									   const _vec3& vScale,
 									   const _vec3& vAngle,
-									   const _vec3& vPos);
+									   const _vec3& vPos,
+									   const char& chWeaponType);
 private:
 	virtual void Free();
 };

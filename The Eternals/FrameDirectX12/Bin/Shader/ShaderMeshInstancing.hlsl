@@ -32,7 +32,8 @@ typedef struct tagShaderMesh
 	float		fOffset1;
 	float		fOffset2;
 	
-	float4		fAfterImgColor;
+	float4		vAfterImgColor;
+	float4		vEmissiveColor;
 	
 } SHADER_MESH;
 StructuredBuffer<SHADER_MESH> g_ShaderMesh : register(t0, space1);

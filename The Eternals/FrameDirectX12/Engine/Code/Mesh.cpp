@@ -27,7 +27,7 @@ CMesh::CMesh(const CMesh & rhs)
 
 HRESULT CMesh::Ready_Mesh(wstring wstrFilePath, wstring wstrFileName)
 {
-	if (wstrFileName == L"Baraka_M_Extractor.X")
+	if (wstrFileName == L"PoporiR27Gladiator.X")
 		_int i = 0;
 
 	/*__________________________________________________________________________________________________________
@@ -163,6 +163,14 @@ SKINNING_MATRIX * CMesh::Find_SkinningMatrix(string strBoneName)
 {
 	if (nullptr != m_pAniCtrl)
 		return m_pAniCtrl->Find_SkinningMatrix(strBoneName);
+
+	return nullptr;
+}
+
+HIERARCHY_DESC* CMesh::Find_HierarchyDesc(string strBoneName)
+{
+	if (nullptr != m_pAniCtrl)
+		return m_pAniCtrl->Find_HierarchyDesc(strBoneName);
 
 	return nullptr;
 }

@@ -133,12 +133,6 @@
     <Filter Include="02.GameObject\02.PlayerCharacter">
       <UniqueIdentifier>{30ac5964-93ee-4c7c-bbb1-173e35ff9b0d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\03.NPC">
-      <UniqueIdentifier>{47df4906-7eaf-475a-9510-a7ba998fbd98}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\04.Monster">
-      <UniqueIdentifier>{3b8e7fab-087e-47c3-9828-af65a341aa00}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.Mgr\04.MouseCursorMgr">
       <UniqueIdentifier>{9f593d0a-4f7e-4583-a859-a2cb29f4762e}</UniqueIdentifier>
     </Filter>
@@ -168,9 +162,6 @@
     </Filter>
     <Filter Include="99.Etc\SampleObject\05.StaticMeshObject">
       <UniqueIdentifier>{2351c006-4ada-445d-8e86-d03ee28c66bc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\02.PlayerCharacter\PCGladiator">
-      <UniqueIdentifier>{3b49a529-bab1-4a53-9827-4cde6e9b65f7}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\99.GameUI">
       <UniqueIdentifier>{b30b9034-b059-4f37-b27b-eaef8067d730}</UniqueIdentifier>
@@ -204,6 +195,45 @@
     </Filter>
     <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuInventory">
       <UniqueIdentifier>{9c82edd5-757a-4969-90b0-4dff9650f064}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.PlayerCharacter\00.PCGladiator">
+      <UniqueIdentifier>{3b49a529-bab1-4a53-9827-4cde6e9b65f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.PlayerCharacter\01.PCArcher">
+      <UniqueIdentifier>{1e304c41-821d-4b92-9364-958779beefe7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.PlayerCharacter\03.PCPriest">
+      <UniqueIdentifier>{6eed4051-b07f-4440-9510-50ef60d1266f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\04.NPC">
+      <UniqueIdentifier>{47df4906-7eaf-475a-9510-a7ba998fbd98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Monster">
+      <UniqueIdentifier>{3b8e7fab-087e-47c3-9828-af65a341aa00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Monster\00.Crab">
+      <UniqueIdentifier>{f52b8195-0115-416c-a1ab-1aa1e413e775}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.PCWeapon">
+      <UniqueIdentifier>{5ab5c278-b452-41c5-9294-cfc9e548abb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.PCWeapon\00.PCWeaponTwoHand">
+      <UniqueIdentifier>{e8da9dc5-c8be-4b17-a546-9a5417c3cbc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.PCWeapon\01.PCWeaponBow">
+      <UniqueIdentifier>{fb13d691-ea2e-4e07-af00-19ee06ada963}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\03.PCWeapon\03.PCWeaponRod">
+      <UniqueIdentifier>{ac799807-47db-404f-9962-ec39d0fab803}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Monster\01.Monkey">
+      <UniqueIdentifier>{619c65d5-6d04-4253-bd5f-839dc09a18a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Header\00.protocol">
+      <UniqueIdentifier>{745f0be7-2082-47b9-96f0-48a3569569a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Monster\02.CloderA">
+      <UniqueIdentifier>{bc3c5eac-51e7-4ec7-94fa-47a9d686f3fa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -296,9 +326,6 @@
     </ClInclude>
     <ClInclude Include="..\Code\LoadingProgress.h">
       <Filter>01.Scene\01.Logo\02.LoadingProgress</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\FrameServer\Server\Header\protocol.h">
-      <Filter>98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\Scene_StageVelika.h">
       <Filter>01.Scene\03.StageVelika</Filter>
@@ -397,16 +424,46 @@
       <Filter>99.Etc\SampleObject\18.TestColMonster</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\PCGladiator.h">
-      <Filter>02.GameObject\02.PlayerCharacter\PCGladiator</Filter>
-    </ClInclude>
-    <ClInclude Include="GladiatorAnimation.h">
-      <Filter>02.GameObject\02.PlayerCharacter\PCGladiator</Filter>
+      <Filter>02.GameObject\02.PlayerCharacter\00.PCGladiator</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\WaterMeshObject.h">
       <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\TerrainMeshObject.h">
       <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Crab.h">
+      <Filter>02.GameObject\05.Monster\00.Crab</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PCWeapon.h">
+      <Filter>02.GameObject\03.PCWeapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PCWeaponTwoHand.h">
+      <Filter>02.GameObject\03.PCWeapon\00.PCWeaponTwoHand</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Monkey.h">
+      <Filter>02.GameObject\05.Monster\01.Monkey</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\FrameServer\Server\Header\protocol.h">
+      <Filter>98.Header\00.protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\FrameServer\Server\Header\MonsterAnimation.h">
+      <Filter>98.Header\00.protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\FrameServer\Server\Header\PCWeaponType.h">
+      <Filter>98.Header\00.protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PCOthersGladiator.h">
+      <Filter>02.GameObject\02.PlayerCharacter\00.PCGladiator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\CloderA.h">
+      <Filter>02.GameObject\05.Monster\02.CloderA</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Template.h">
+      <Filter>98.Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\GladiatorAnimation.h">
+      <Filter>02.GameObject\02.PlayerCharacter\00.PCGladiator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -567,13 +624,31 @@
       <Filter>99.Etc\SampleObject\18.TestColMonster</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\PCGladiator.cpp">
-      <Filter>02.GameObject\02.PlayerCharacter\PCGladiator</Filter>
+      <Filter>02.GameObject\02.PlayerCharacter\00.PCGladiator</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\WaterMeshObject.cpp">
       <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\TerrainMeshObject.cpp">
       <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Crab.cpp">
+      <Filter>02.GameObject\05.Monster\00.Crab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PCWeapon.cpp">
+      <Filter>02.GameObject\03.PCWeapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PCWeaponTwoHand.cpp">
+      <Filter>02.GameObject\03.PCWeapon\00.PCWeaponTwoHand</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Monkey.cpp">
+      <Filter>02.GameObject\05.Monster\01.Monkey</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PCOthersGladiator.cpp">
+      <Filter>02.GameObject\02.PlayerCharacter\00.PCGladiator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CloderA.cpp">
+      <Filter>02.GameObject\05.Monster\02.CloderA</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

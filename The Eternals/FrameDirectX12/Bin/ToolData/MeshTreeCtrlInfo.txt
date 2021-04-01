@@ -23,6 +23,13 @@ DynamicMesh|NPC|NPC_Villagers
 DynamicMesh|NPC|Popori_boy
 DynamicMesh|NPC|Popori_M_Merchant
 StaticMesh|Plane|BumpDesertMesh00
+PCWeapon|TwoHand|Twohand19_A_SM
+PCWeapon|TwoHand|TwoHand19_SM
+PCWeapon|TwoHand|TwoHand27_SM
+PCWeapon|TwoHand|TwoHand29_SM
+PCWeapon|TwoHand|TwoHand31_SM
+PCWeapon|TwoHand|TwoHand33_B_SM
+PCWeapon|TwoHand|TwoHand33_SM
 StaticMesh|Plane|BumpTerrainMesh00
 StaticMesh|Plane|BumpTerrainMesh01
 StaticMesh|Plane|BumpWaterMesh00

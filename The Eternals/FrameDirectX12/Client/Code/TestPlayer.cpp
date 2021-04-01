@@ -42,7 +42,6 @@ HRESULT CTestPlayer::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, 
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 1;
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 	/*__________________________________________________________________________________________________________
 	[ Collider Bone Setting ]
@@ -128,6 +127,14 @@ _int CTestPlayer::Update_GameObject(const _float& fTimeDelta)
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 
 	/*__________________________________________________________________________________________________________
+	[ Play Animation ]
+	____________________________________________________________________________________________________________*/
+	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
+	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
+
+	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
@@ -160,12 +167,6 @@ _int CTestPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 		m_pFont->Set_Text(wstring(m_szText));
 	}
 
-	/*__________________________________________________________________________________________________________
-	[ Animation KeyFrame Index ]
-	____________________________________________________________________________________________________________*/
-	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
-	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
-
 	return NO_EVENT;
 }
 
@@ -189,12 +190,6 @@ void CTestPlayer::Send_PacketToServer()
 
 void CTestPlayer::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
-	/*__________________________________________________________________________________________________________
-	[ Play Animation ]
-	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
-
 	Set_ConstantTable();
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
@@ -422,7 +417,7 @@ void CTestPlayer::Key_Input(const _float& fTimeDelta)
 		if (m_bIsKeyDown)
 		{
 #ifdef SERVER
-			m_pPacketMgr->send_move_stop(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
+			m_pPacketMgr->send_move_stop(m_pTransCom->m_vPos, m_pTransCom->m_vDir, m_uiAnimIdx);
 #endif
 			m_bIsKeyDown = false;
 			m_bIsSameDir = true;
@@ -438,28 +433,28 @@ void CTestPlayer::Send_Player_Move()
 	switch (m_eKeyState)
 	{
 	case K_FRONT:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_uiAnimIdx);
 		break;
 	case K_BACK:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_uiAnimIdx);
 		break;
 	case K_RIGHT:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_uiAnimIdx);
 		break;
 	case K_RIGHT_UP:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_uiAnimIdx);
 		break;
 	case K_RIGHT_DOWN:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_uiAnimIdx);
 		break;
 	case K_LEFT:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_uiAnimIdx);
 		break;
 	case K_LEFT_UP:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_uiAnimIdx);
 		break;
 	case K_LEFT_DOWN:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_uiAnimIdx);
 		break;
 	}
 

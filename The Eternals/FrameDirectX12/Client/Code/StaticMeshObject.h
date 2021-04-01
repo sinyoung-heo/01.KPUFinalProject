@@ -8,8 +8,6 @@ namespace Engine
 	class CMesh;
 }
 
-class CDynamicCamera;
-
 class CStaticMeshObject : public Engine::CGameObject
 {
 private:
@@ -65,7 +63,6 @@ private:
 	wstring			m_wstrMeshTag		       = L"";
 	_uint			m_iMeshPipelineStatePass   = 0;
 	_uint			m_iShadowPipelineStatePass = 0;
-	CDynamicCamera*	m_pDynamicCamera	       = nullptr;
 
 	int m_iRandomnumber = 0;
 	Engine::CRenderer::RENDERGROUP m_eRenderGroup;

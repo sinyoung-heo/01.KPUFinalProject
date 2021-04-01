@@ -1,40 +1,59 @@
 #pragma once
 #include "Obj.h"
+
 class CMonster :
     public CObj
 {
+	
 public:
 	CMonster();
 	virtual ~CMonster();
 
 public:
+	/* SEND PACKET */
+	void send_Monster_enter_packet(int to_client);
+	void send_Monster_move_packet(int to_client, int ani);
+	void send_Monster_NormalAttack(int to_client, int ani);
+	void send_Monster_Stat(int to_client);
+
 	void Set_Stop_Attack();
 	void Set_Start_Attack();
 
+public:
 	int	 Update_Monster(const float& fTimeDelta);
-	void Hurt_Monster(const int& damage);				// ATTACKED BY PLAYER
+	void Hurt_Monster(const int& p_id, const int& damage);					// ATTACKED BY PLAYER
 
 private:
-	void Change_Animation(const float& fTimeDelta);
-	void Change_AttackMode();							// STATUS == ATTACK
+	/* MONSTER NORMAL */
+	void Change_Crab_Animation(const float& fTimeDelta);
+	void Chase_Crab(const float& fTimeDelta);				
+	void Attack_Crab(const float& fTimeDelta);	
 
-	void Move_ComeBack(const float& fTimeDelta);		// MOVE PROCESS
-	void Move_NormalMonster(const float& fTimeDelta);	// MOVE PROCESS
-	void Move_ChaseMonster(const float& fTimeDelta);	// MOVE PROCESS
-	void Attack_Monster(const float& fTimeDelta);		// ATTACK PROCESS
+	void Change_Monkey_Animation(const float& fTimeDelta);
+	void Chase_Monkey(const float& fTimeDelta);
+	void Attack_Monkey(const float& fTimeDelta);
+
+	void Change_Cloder_Animation(const float& fTimeDelta);
+	void Chase_Cloder(const float& fTimeDelta);
+	void Attack_Cloder(const float& fTimeDelta);
+
+	/* MONSTER ALL */
+	void Change_Animation(const float& fTimeDelta);
+
+	void Change_AttackMode();								// STATUS == ATTACK
+	void Change_ChaseMode();								// STATUS == CHASE
+
+	void Move_ComeBack(const float& fTimeDelta);			// MOVE PROCESS
+	void Move_NormalMonster(const float& fTimeDelta);		// MOVE PROCESS
+	
+
+	float Calculate_TargetDist(const _vec3& vPos);
 
 public:
-	/* SEND PACKET */
-	void send_Monster_enter_packet(int to_client);
-	void send_Monster_move_packet(int to_client);		
-	void send_Monster_NormalAttack(int to_client);
-
-	void send_Monster_Stat(int to_client);
-
 	virtual DWORD Release();
 
 public:
-	char			m_monNum;
+	char			m_monNum		= 0;
 	int				m_iHp			= 0;
 	int				m_iMaxHp		= 0;
 	int				m_iExp			= 0;
@@ -42,9 +61,9 @@ public:
 	float			m_fSpd			= 0;
 	bool			m_bIsComeBack	= false;
 	volatile bool	m_bIsAttack		= false;
+	volatile bool	m_bIsShortAttack = true;
 
-	int				targetNum		= -1;
-	int				m_AnimIdx		= 0;
+	int				m_iTargetNum	= -1;
 	_vec3			m_vOriPos		= _vec3(0.f);
 };
 

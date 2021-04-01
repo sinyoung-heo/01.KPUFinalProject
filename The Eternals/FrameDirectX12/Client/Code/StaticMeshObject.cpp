@@ -61,13 +61,6 @@ HRESULT CStaticMeshObject::Ready_GameObject(wstring wstrMeshTag,
 
 HRESULT CStaticMeshObject::LateInit_GameObject()
 {
-	/*__________________________________________________________________________________________________________
-	[ Get GameObject - DynamicCamera ]
-	____________________________________________________________________________________________________________*/
-	m_pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
-	Engine::NULL_CHECK_RETURN(m_pDynamicCamera, E_FAIL);
-	m_pDynamicCamera->AddRef();
-
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	m_pCrossFilterShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	m_pEdgeObjectShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
@@ -202,7 +195,7 @@ void CStaticMeshObject::Set_ConstantTable(const _int& iContextIdx, const _int& i
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 
 	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.05f;
-	tCB_ShaderMesh.fDeltaTime = m_fDeltaTime;
+	tCB_ShaderMesh.fDissolve = m_fDeltaTime;
 	if (m_fDeltaTime > 1.f)
 		m_fDeltaTime = 0.f;
 
@@ -282,12 +275,8 @@ Engine::CGameObject* CStaticMeshObject::Create(ID3D12Device * pGraphicDevice, ID
 void CStaticMeshObject::Free()
 {
 	Engine::CGameObject::Free();
-
-	Engine::Safe_Release(m_pDynamicCamera);
 	Engine::Safe_Release(m_pMeshCom);
 	Engine::Safe_Release(m_pShaderCom);
 	Engine::Safe_Release(m_pCrossFilterShaderCom);
 	Engine::Safe_Release(m_pEdgeObjectShaderCom);
-	
-	
 }

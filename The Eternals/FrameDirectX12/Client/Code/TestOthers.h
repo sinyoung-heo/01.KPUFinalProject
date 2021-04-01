@@ -3,11 +3,11 @@
 #include "Include.h"
 #include "GameObject.h"
 
-namespace PCOthersConst
-{
-	const _float MAX_SPEED = 5.0f;
-	const _float MIN_SPEED = 0.0f;
-}
+//namespace PCOthersConst
+//{
+//	const _float MAX_SPEED = 4.5f;
+//	const _float MIN_SPEED = 0.0f;
+//}
 
 namespace Engine
 {

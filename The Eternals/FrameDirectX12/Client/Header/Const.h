@@ -26,5 +26,7 @@ const _float PI		= 3.141592f;
 // Animation Tick Per Seconds
 const _float TPS	= 4'800.0f;
 
+const _float TIME_OFFSET = 1.0f;
+
 /* SERVER */
 constexpr int MAX_BUF_SIZE = 1024;

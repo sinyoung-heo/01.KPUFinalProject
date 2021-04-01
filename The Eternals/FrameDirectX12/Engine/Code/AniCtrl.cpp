@@ -1,5 +1,4 @@
 #include "AniCtrl.h"
-
 #include "TimeMgr.h"
 #include "FrameMgr.h"
 
@@ -121,7 +120,6 @@ HRESULT CAniCtrl::Ready_AniCtrl()
 		{
 			_uint	uiboneindex = 0;
 			string	strBoneName(pSubsetMesh->mBones[j]->mName.data);
-			assert(m_vecBoneNameMap[i].find(strBoneName) == m_vecBoneNameMap[i].end());
 
 			uiboneindex = iNumBones;
 
@@ -151,6 +149,9 @@ HRESULT CAniCtrl::Ready_AniCtrl()
 	____________________________________________________________________________________________________________*/
 	Ready_NodeHierarchy(m_pScene->mRootNode);
 
+#ifdef ENGINE_LOG
+	COUT_STR("--------------------------------------------------------------------------------");
+#endif
 
 	return S_OK;
 
@@ -158,12 +159,11 @@ HRESULT CAniCtrl::Ready_AniCtrl()
 
 void CAniCtrl::Set_AnimationKey(const _uint & uiAniKey)
 {
-	if (m_uiNewAniIndex != uiAniKey)
+	if (m_uiNewAniIdx != uiAniKey)
 	{
-		m_uiNewAniIndex = uiAniKey;
-
-		m_fBlendAnimationTime	= m_fAnimationTime;
-		m_fBlendingTime			= 1.0f;
+		m_uiNewAniIdx         = uiAniKey;
+		m_fBlendingTime	      = 1.0f;
+		m_fBlendAnimationTime = m_fAnimationTime;
 	}
 }
 
@@ -175,24 +175,26 @@ void CAniCtrl::Play_Animation(_float fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션이 계속 반복되도록 fmod 수행 ]
 	____________________________________________________________________________________________________________*/
-	m_fAnimationTime += fTimeDelta;
+	if (m_uiNewAniIdx != m_uiCurAniIndex)
+	{
+		m_fAnimationTime = m_fBlendAnimationTime;
+		m_fBlendingTime	 -= 0.001f * fTimeDelta;
+
+		if (m_fBlendingTime <= 0.0f)
+			m_fBlendingTime = 0.0f;
+	}
+	else
+	{
+		m_fAnimationTime += fTimeDelta;
+	}
+
 	m_fAnimationTime = (_float)(fmod(m_fAnimationTime, (m_pScene->mAnimations[m_uiCurAniIndex]->mDuration)));
-	
+
 	/*__________________________________________________________________________________________________________
 	[ 3DMax 상에서의 Frame 계산 ]
 	____________________________________________________________________________________________________________*/
 	m_ui3DMax_NumFrame = (_uint)(_3DMAX_FPS * (m_pScene->mAnimations[m_uiCurAniIndex]->mDuration / m_pScene->mAnimations[m_uiCurAniIndex]->mTicksPerSecond));
 	m_ui3DMax_CurFrame = (_uint)(_3DMAX_FPS * (m_fAnimationTime / m_pScene->mAnimations[m_uiCurAniIndex]->mTicksPerSecond));
-
-
-	if (m_uiNewAniIndex != m_uiCurAniIndex)
-	{
-		m_fAnimationTime	= m_fBlendAnimationTime;
-		m_fAnimationTime	= (_float)(fmod(m_fAnimationTime, (m_pScene->mAnimations[m_uiCurAniIndex]->mDuration)));
-		m_fBlendingTime		-= 0.001f * fTimeDelta;
-	}
-	if (m_fBlendingTime <= 0.0f)
-		m_fBlendingTime = 0.0f;
 
 	/*__________________________________________________________________________________________________________
 	- Root Node와 단위 행렬을 인자로 넘겨주면 재귀 호출을 통하여 BONE_DESC에 데이터를 저장하는 함수.
@@ -202,10 +204,10 @@ void CAniCtrl::Play_Animation(_float fTimeDelta)
 
 	if (m_fBlendingTime <= 0.0f)
 	{
-		m_fBlendingTime		= 0.f;
-		m_uiCurAniIndex		= m_uiNewAniIndex;
-		m_fBlendingTime		= 1.f;
-		m_fAnimationTime	= 0.f;
+		m_uiCurAniIndex	 = m_uiNewAniIdx;
+		m_fAnimationTime = 0.0f;
+		//m_fAnimationTime += fTimeDelta;
+		m_fBlendingTime  = 1.f;
 	}
 
 }
@@ -244,14 +246,34 @@ SKINNING_MATRIX * CAniCtrl::Find_SkinningMatrix(string strBoneName)
 	return nullptr;
 }
 
+HIERARCHY_DESC* CAniCtrl::Find_HierarchyDesc(string strBoneName)
+{
+	// iter_find = i번째 SubMesh의 Index번호.
+	auto iter_find = m_mapNodeHierarchy.find(strBoneName);
+
+	if (iter_find == m_mapNodeHierarchy.end())
+		nullptr;
+
+	return iter_find->second;
+}
+
 _bool CAniCtrl::Is_AnimationSetEnd(const _float& fTimeDelta)
 {
-	if (m_fAnimationTime >= m_pScene->mAnimations[m_uiCurAniIndex]->mDuration -
-							m_pScene->mAnimations[m_uiCurAniIndex]->mTicksPerSecond * ANIMA_INTERPOLATION * fTimeDelta)
+	if ((m_fAnimationTime >= m_pScene->mAnimations[m_uiCurAniIndex]->mDuration - 
+							m_pScene->mAnimations[m_uiCurAniIndex]->mTicksPerSecond * ANIMA_INTERPOLATION * fTimeDelta) &&
+		(m_uiCurAniIndex == m_uiNewAniIdx))
 	{
-		m_fAnimationTime = 0.0f;
 		return true;
 	}
+
+	return false;
+}
+
+_bool CAniCtrl::Is_BlendingComplete()
+{
+	if (m_fBlendingTime == 1.0f &&
+		m_uiCurAniIndex == m_uiNewAniIdx)
+		return true;
 
 	return false;
 }
@@ -289,6 +311,10 @@ void CAniCtrl::Ready_NodeHierarchy(const aiNode * pNode)
 
 	m_mapNodeHierarchy.emplace(strNodeName, pNodeHierarchy);
 
+#ifdef ENGINE_LOG
+	COUT_STR("Hierarchy Node Name : " << strNodeName);
+#endif
+
 	/*__________________________________________________________________________________________________________
 	[ 모든 자식 노드에 대해 재귀호출 ]
 	____________________________________________________________________________________________________________*/
@@ -311,7 +337,7 @@ void CAniCtrl::Update_NodeHierarchy(_float fAnimationTime,
 	HIERARCHY_DESC*		pHierarchyInfo		= m_mapNodeHierarchy[strNodeName];
 
 	const aiNodeAnim*	pNodeAnimation		= pHierarchyInfo->mapNodeAnim[m_uiCurAniIndex];
-	const aiNodeAnim*	pNewNodeAnimation	= pHierarchyInfo->mapNodeAnim[m_uiNewAniIndex];
+	const aiNodeAnim*	pNewNodeAnimation	= pHierarchyInfo->mapNodeAnim[m_uiNewAniIdx];
 
 	pHierarchyInfo->matParentTransform		= matParentTransform;
 
@@ -324,11 +350,23 @@ void CAniCtrl::Update_NodeHierarchy(_float fAnimationTime,
 		- 주어진 KeyFrame의 정보와 AnimationTime정보를 이용해 Interpolation(보간)을 하고 값을 저장.
 		____________________________________________________________________________________________________________*/
 		// Scale
-		const aiVector3D&	vScale	= Calc_InterPolatedValue_From_Key(fAnimationTime, pNodeAnimation->mNumScalingKeys, pNodeAnimation->mScalingKeys, pNewNodeAnimation->mNumScalingKeys, pNewNodeAnimation->mScalingKeys);
+		const aiVector3D&	vScale	= Calc_InterPolatedValue_From_Key(fAnimationTime, 
+																	  pNodeAnimation->mNumScalingKeys, 
+																	  pNodeAnimation->mScalingKeys, 
+																	  pNewNodeAnimation->mNumScalingKeys, 
+																	  pNewNodeAnimation->mScalingKeys);
 		// Rotation
-		const aiQuaternion& vRotate	= Calc_InterPolatedValue_From_Key(fAnimationTime, pNodeAnimation->mNumRotationKeys, pNodeAnimation->mRotationKeys, pNewNodeAnimation->mNumRotationKeys, pNewNodeAnimation->mRotationKeys);
+		const aiQuaternion& vRotate	= Calc_InterPolatedValue_From_Key(fAnimationTime, 
+																	  pNodeAnimation->mNumRotationKeys, 
+																	  pNodeAnimation->mRotationKeys, 
+																	  pNewNodeAnimation->mNumRotationKeys, 
+																	  pNewNodeAnimation->mRotationKeys);
 		// Trans
-		const aiVector3D&	vTrans	= Calc_InterPolatedValue_From_Key(fAnimationTime, pNodeAnimation->mNumPositionKeys, pNodeAnimation->mPositionKeys, pNewNodeAnimation->mNumPositionKeys, pNewNodeAnimation->mPositionKeys);
+		const aiVector3D&	vTrans	= Calc_InterPolatedValue_From_Key(fAnimationTime,
+																	  pNodeAnimation->mNumPositionKeys,
+																	  pNodeAnimation->mPositionKeys, 
+																	  pNewNodeAnimation->mNumPositionKeys, 
+																	  pNewNodeAnimation->mPositionKeys);
 
 		/*__________________________________________________________________________________________________________
 		- 각각의 vector와 quaternion은 matrix로 변환되고, 이동/회전/크기 변환을 통해 NodeTransform(Bone Transform)이 완성.
@@ -424,16 +462,11 @@ aiVector3D CAniCtrl::Calc_InterPolatedValue_From_Key(const _float & fAnimationTi
 	_uint uiKeyIndex		= Find_KeyIndex(fAnimationTime, uiNumKeys, pVectorKey);
 	_uint uiNextKeyIndex	= uiKeyIndex + 1;
 
-
 	/*__________________________________________________________________________________________________________
 	[ Key Frame 사이를 보간하여 특정 시간의 Node의 Transformation을 구하는 부분 ]
 	____________________________________________________________________________________________________________*/
-	// assert(uiNextKeyIndex < uiNumKeys);
-
 	_float fTimeDelta	= (_float)(pVectorKey[uiNextKeyIndex].mTime - pVectorKey[uiKeyIndex].mTime);
 	_float fFactor		= (fAnimationTime - (_float)pVectorKey[uiKeyIndex].mTime) / fTimeDelta;
-
-	// assert(fFactor >= 0.0f && fFactor <= 1.0f);
 
 	const aiVector3D& StartValue	= pVectorKey[uiKeyIndex].mValue;
 	const aiVector3D& EndValue		= pVectorKey[uiNextKeyIndex].mValue;
@@ -443,7 +476,7 @@ aiVector3D CAniCtrl::Calc_InterPolatedValue_From_Key(const _float & fAnimationTi
 	ret1.z = StartValue.z + (EndValue.z - StartValue.z) * fFactor;
 
 
-	if (m_uiCurAniIndex != m_uiNewAniIndex)
+	if (m_uiCurAniIndex != m_uiNewAniIdx)
 	{
 		uiKeyIndex		= Find_KeyIndex(0, uiNewNumKeys, pNewVectorKey);
 		uiNextKeyIndex	= uiKeyIndex + 1;
@@ -499,7 +532,7 @@ aiQuaternion CAniCtrl::Calc_InterPolatedValue_From_Key(const _float & fAnimation
 	ret1 = ret1.Normalize();
 
 
-	if (m_uiCurAniIndex != m_uiNewAniIndex)
+	if (m_uiCurAniIndex != m_uiNewAniIdx)
 	{
 		_uint uiKeyIndex		= Find_KeyIndex(0, uiNewNumKeys, pNewQuatKey);
 		_uint uiNextKeyIndex	= uiKeyIndex + 1;
@@ -521,7 +554,6 @@ aiQuaternion CAniCtrl::Calc_InterPolatedValue_From_Key(const _float & fAnimation
 
 		ret1 = ret1.Normalize();
 	}
-
 
 	return ret1;
 }

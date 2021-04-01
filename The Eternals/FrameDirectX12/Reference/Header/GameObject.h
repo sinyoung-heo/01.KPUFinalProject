@@ -31,6 +31,7 @@ public:
 	const int&			Get_ServerNumber()		{ return m_iSNum; }
 	const high_resolution_clock::time_point& Get_LastMoveTime() { return m_last_move_time; }
 	const bool&			Get_MoveStop()			{ return m_bIsMoveStop; }
+	const char&			Get_OType()				{ return m_chO_Type; }
 
 	// Set
 	void				Set_UIDepth(const _long& iUIDepth)						{ m_UIDepth = iUIDepth; }
@@ -43,10 +44,16 @@ public:
 	void				Set_LastMoveTime(const steady_clock::time_point& last)	{ m_last_move_time = last; }
 	void				Set_MoveStop(const bool& b)								{ m_bIsMoveStop = b; }
 	void				Set_Attack(const bool& b)								{ m_bIsAttack = b; }
+	void				Set_OType(const char& chType)							{ m_chO_Type = chType; }
 	void				Set_DeadReckoning(const _vec3& vPos);
 	void				Set_Info(int lev, int hp, int maxHp, int mp, int maxMp, int exp, int maxExp, int att, float spd);
-	
+	void				Set_State(int cur) { m_iCurAnim = cur; }
 	void				Set_Other_direction(_vec3& vDir);
+	float				Set_Other_Angle(_vec3& vDir);
+	
+	void				Set_IdleAniIdx(const _uint& uiAniIdx)						{ m_uiIdleAniIdx = uiAniIdx; }
+	void				Set_IsStartPosInterpolation(const _bool& bIsStart)			{ m_bIsStartPosInterpolation = bIsStart; }
+	void				Set_LinearPos(const _vec3& vStart, const _vec3& vEndPos)	{ m_vLinearStartPos = vStart; m_vLinearEndPos = vEndPos; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT Ready_GameObjectPrototype();
@@ -72,14 +79,14 @@ public:
 	void			Add_CollisionList(CGameObject* pDst);
 	void			Clear_CollisionList();
 protected:
-	virtual HRESULT Add_Component();
+	HRESULT			Add_Component();
 	void			SetUp_BillboardMatrix();
-	void			SetUp_BoundingBox(_matrix* pParent, const _vec3& vParentScale, const _vec3& vCenter, const _vec3& vMin, const _vec3& vMax, const _float& fScaleOffset = 1.0f);
+	void			SetUp_BoundingBox(_matrix* pParent, const _vec3& vParentScale, const _vec3& vCenter, const _vec3& vMin, const _vec3& vMax, const _float& fScaleOffset = 1.0f, const _vec3& vPosOffset = _vec3(0.0f));
 	void			SetUp_BoundingSphere(_matrix* pParent, const _vec3& vParentScale, const _vec3& vScale, const _vec3& vPos);
 	void			Compute_ViewZ(_vec4& vPosInWorld);
-
 	CComponent*		Find_Component(wstring wstrComponentTag, const COMPONENTID& eID);
-
+private:
+	void			SetUp_PosInterpolation(const _float& fTimeDelta);
 
 protected:
 	/*__________________________________________________________________________________________________________
@@ -104,7 +111,7 @@ protected:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	_float m_fDeltaTime			= 0.f;
+	_float	m_fDeltaTime		= 0.f;
 	_bool	m_bIsDead			= false;
 	_bool	m_bIsLateInit		= false;
 	_float	m_fViewZ			= 0.0f;
@@ -121,10 +128,20 @@ protected:
 	wstring				m_wstrCollisionTag;
 	list<CGameObject*>	m_lstCollisionDst;
 
-	/* server */
+	/*__________________________________________________________________________________________________________
+	SERVER
+	__________________________________________________________________________________________________________*/
 	int		m_iSNum				= 0;
-	bool	m_bIsMoveStop		= false;
+	int		m_iCurAnim			= 0;
+	bool	m_bIsMoveStop		= true;
 	bool	m_bIsAttack			= false;
+	char	m_chO_Type			= 0;
+
+	_uint	m_uiIdleAniIdx		       = 0;
+	_bool	m_bIsStartPosInterpolation = false;
+	_float	m_fPosLinearRatio		   = 0.0f;
+	_vec3	m_vLinearStartPos		   = _vec3(0.0f);
+	_vec3	m_vLinearEndPos		       = _vec3(0.0f);
 	high_resolution_clock::time_point m_last_move_time;
 
 public:

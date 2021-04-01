@@ -293,7 +293,7 @@ void CTestColPlayer::Key_Input(const _float& fTimeDelta)
 		if (m_bIsKeyDown)
 		{
 #ifdef SERVER
-			m_pPacketMgr->send_move_stop(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
+			m_pPacketMgr->send_move_stop(m_pTransCom->m_vPos, m_pTransCom->m_vDir, 0);
 #endif
 			m_bIsKeyDown = false;
 			m_bIsSameDir = true;
@@ -310,28 +310,28 @@ void CTestColPlayer::Send_Player_Move()
 	switch (m_eKeyState)
 	{
 	case K_FRONT:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, 0);
 		break;
 	case K_BACK:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, 0);
 		break;
 	case K_RIGHT:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, 0);
 		break;
 	case K_RIGHT_UP:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, 0);
 		break;
 	case K_RIGHT_DOWN:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, 0);
 		break;
 	case K_LEFT:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, 0);
 		break;
 	case K_LEFT_UP:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, 0);
 		break;
 	case K_LEFT_DOWN:
-		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_move(m_pTransCom->m_vDir, m_pTransCom->m_vPos, 0);
 		break;
 	}
 
@@ -361,7 +361,7 @@ void CTestColPlayer::Attack(const _float& fTimeDelta)
 		m_bIsAttack = true;
 		if (m_fAttackTime > 2.f)
 		{
-			m_pPacketMgr->send_attack(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+			m_pPacketMgr->send_attack(0, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 			m_fAttackTime = 0.f;
 		}
 	}
@@ -372,7 +372,7 @@ void CTestColPlayer::Attack(const _float& fTimeDelta)
 		m_bIsAttack = false;
 		m_pBoundingSphereCom->Set_Color(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
 		m_pBoundingBoxCom->Set_Color(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
-		m_pPacketMgr->send_attack_stop(m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_attack_stop(0, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 
 	/* Attack Moving */

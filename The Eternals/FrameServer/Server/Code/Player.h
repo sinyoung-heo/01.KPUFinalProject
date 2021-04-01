@@ -19,6 +19,7 @@ public:
 
 public:
 	/*=============°ÔÀÓ ÄÁÅÙÃ÷===============*/
+	int		m_iAniIdx	= 0;
 	int		m_iLevel	= 0;
 	int		m_iHp		= 0; 
 	int		m_iMaxHp	= 0;

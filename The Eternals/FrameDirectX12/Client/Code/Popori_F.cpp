@@ -50,7 +50,6 @@ HRESULT CPopori_F::Ready_GameObject(wstring wstrMeshTag,
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 1;
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 	/*__________________________________________________________________________________________________________
 	[ Collider Bone Setting ]
@@ -137,10 +136,16 @@ _int CPopori_F::Update_GameObject(const _float & fTimeDelta)
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
-	
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_EDGE, this), -1);
-	
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);
+
+	/*__________________________________________________________________________________________________________
+	[ Play Animation ]
+	____________________________________________________________________________________________________________*/
+	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
+	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
@@ -205,12 +210,6 @@ _int CPopori_F::LateUpdate_GameObject(const _float & fTimeDelta)
 		m_pFont->Set_Text(wstring(m_szText));
 	}
 
-	/*__________________________________________________________________________________________________________
-	[ Animation KeyFrame Index ]
-	____________________________________________________________________________________________________________*/
-	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
-	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
-
 	return NO_EVENT;
 }
 
@@ -239,7 +238,7 @@ void CPopori_F::Render_AfterImage(const _float& fTimeDelta)
 		Engine::CB_SHADER_MESH tCB_ShaderMesh;
 		ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
 		tCB_ShaderMesh.matWorld = Engine::CShader::Compute_MatrixTranspose(*iter_begin);
-		tCB_ShaderMesh.fAfterImgColor = *Alpha_begin;
+		tCB_ShaderMesh.vAfterImgColor = *Alpha_begin;
 		if (Alpha_begin != Alpha_end)
 			Alpha_begin++;
 		m_pShaderCom->Get_UploadBuffer_AFShaderMesh()->CopyData(i, tCB_ShaderMesh);
@@ -267,12 +266,6 @@ void CPopori_F::Render_GameObject(const _float& fTimeDelta,
 								  ID3D12GraphicsCommandList * pCommandList, 
 								  const _int& iContextIdx)
 {
-	/*__________________________________________________________________________________________________________
-	[ Play Animation ]
-	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
-
 	Set_ConstantTable();
 	m_pShaderCom->Set_PipelineStatePass(0);
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
@@ -356,7 +349,7 @@ void CPopori_F::Set_ConstantTable()
 	tCB_ShaderMesh.fLightPorjFar	= tShadowDesc.fLightPorjFar;
 
 	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.15f;
-	tCB_ShaderMesh.fDeltaTime = m_fDeltaTime;
+	tCB_ShaderMesh.fDissolve = m_fDeltaTime;
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 	m_pEdgeObjectShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 

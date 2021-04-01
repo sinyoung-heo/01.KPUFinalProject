@@ -588,6 +588,43 @@ HRESULT CShaderMesh::Create_PipelineState()
 	m_vecPipelineState.emplace_back(pPipelineState);
 	CRenderer::Get_Instance()->Add_PipelineStateCnt();
 
+
+
+	/*__________________________________________________________________________________________________________
+	[ 7번 PipelineState Pass ]
+	- "VS_SHADOW_MAIN"
+	- "PS_SHADOW_MAIN"
+	- FILL_MODE_SOLID
+	- CULL_MODE_BACK
+	- Blend		(X)
+	- Z Write	(O)
+	____________________________________________________________________________________________________________*/
+	ZeroMemory(&PipelineStateDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
+	PipelineStateDesc.pRootSignature        = m_pRootSignature;
+	PipelineStateDesc.SampleMask            = UINT_MAX;
+	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	PipelineStateDesc.NumRenderTargets      = 6;								// PS에서 사용할 RenderTarget 개수.
+	PipelineStateDesc.RTVFormats[0]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
+	PipelineStateDesc.RTVFormats[1]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Normal Target
+	PipelineStateDesc.RTVFormats[2]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Specular Target
+	PipelineStateDesc.RTVFormats[3]         = DXGI_FORMAT_R32G32B32A32_FLOAT;	// Depth Target
+	PipelineStateDesc.RTVFormats[4]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
+	PipelineStateDesc.RTVFormats[5]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
+	PipelineStateDesc.SampleDesc.Count      = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality    = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat             = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	vecInputLayout                          = Create_InputLayout("VS_SHADOW_MAIN", "PS_SHADOW_DISSOLVE");
+	PipelineStateDesc.InputLayout           = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS                    = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS                    = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState            = Create_BlendState();
+	PipelineStateDesc.RasterizerState       = CShader::Create_RasterizerState();
+	PipelineStateDesc.DepthStencilState     = CShader::Create_DepthStencilState();
+
+	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
+	m_vecPipelineState.emplace_back(pPipelineState);
+	CRenderer::Get_Instance()->Add_PipelineStateCnt();
+
 	return S_OK;
 }
 

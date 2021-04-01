@@ -112,6 +112,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_XM_NO_INTRINSICS_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>../Default;../Header;../Code;../../Reference/Header;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).stdafx</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -154,6 +155,7 @@
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>../Default;../Header;../Code;../../Reference/Header;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).stdafx</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -167,10 +169,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\FrameServer\Server\Header\MonsterAnimation.h" />
+    <ClInclude Include="..\..\..\FrameServer\Server\Header\PCWeaponType.h" />
     <ClInclude Include="..\..\..\FrameServer\Server\Header\protocol.h" />
     <ClInclude Include="..\Code\CharacterHpGauge.h" />
     <ClInclude Include="..\Code\CharacterMpGauge.h" />
+    <ClInclude Include="..\Code\CloderA.h" />
+    <ClInclude Include="..\Code\Crab.h" />
+    <ClInclude Include="..\Code\Monkey.h" />
     <ClInclude Include="..\Code\PCGladiator.h" />
+    <ClInclude Include="..\Code\PCOthersGladiator.h" />
+    <ClInclude Include="..\Code\PCWeapon.h" />
+    <ClInclude Include="..\Code\PCWeaponTwoHand.h" />
     <ClInclude Include="..\Code\SampleNPC.h" />
     <ClInclude Include="..\Code\GameUIChild.h" />
     <ClInclude Include="..\Code\GameUIRoot.h" />
@@ -221,11 +231,12 @@
     <ClInclude Include="..\Header\Const.h" />
     <ClInclude Include="..\Header\enum.h" />
     <ClInclude Include="..\Header\Extern.h" />
+    <ClInclude Include="..\Header\GladiatorAnimation.h" />
     <ClInclude Include="..\Header\Include.h" />
     <ClInclude Include="..\Header\Macro.h" />
     <ClInclude Include="..\Header\Struct.h" />
+    <ClInclude Include="..\Header\Template.h" />
     <ClInclude Include="..\Header\Typedef.h" />
-    <ClInclude Include="GladiatorAnimation.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -234,12 +245,15 @@
   <ItemGroup>
     <ClCompile Include="..\Code\CharacterHpGauge.cpp" />
     <ClCompile Include="..\Code\CharacterMpGauge.cpp" />
+    <ClCompile Include="..\Code\CloderA.cpp" />
+    <ClCompile Include="..\Code\Crab.cpp" />
     <ClCompile Include="..\Code\GameUIChild.cpp" />
     <ClCompile Include="..\Code\GameUIRoot.cpp" />
     <ClCompile Include="..\Code\MainMenuEquipment.cpp" />
     <ClCompile Include="..\Code\MainMenuInventory.cpp" />
     <ClCompile Include="..\Code\MainMenuLogout.cpp" />
     <ClCompile Include="..\Code\MainMenuSetting.cpp" />
+    <ClCompile Include="..\Code\Monkey.cpp" />
     <ClCompile Include="..\Code\Monster_Normal.cpp" />
     <ClCompile Include="..\Code\MouseCursorMgr.cpp" />
     <ClCompile Include="..\Code\NPC_Animal.cpp" />
@@ -257,6 +271,9 @@
     <ClCompile Include="..\Code\NPC_Villagers.cpp" />
     <ClCompile Include="..\Code\PacketMgr.cpp" />
     <ClCompile Include="..\Code\PCGladiator.cpp" />
+    <ClCompile Include="..\Code\PCOthersGladiator.cpp" />
+    <ClCompile Include="..\Code\PCWeapon.cpp" />
+    <ClCompile Include="..\Code\PCWeaponTwoHand.cpp" />
     <ClCompile Include="..\Code\Popori_F.cpp" />
     <ClCompile Include="..\Code\RectObject.cpp" />
     <ClCompile Include="..\Code\SampleNPC.cpp" />

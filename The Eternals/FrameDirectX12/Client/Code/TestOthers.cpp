@@ -29,14 +29,13 @@ HRESULT CTestOthers::Ready_GameObject(wstring wstrMeshTag, const _vec3& vScale, 
 										   m_pMeshCom->Get_MinVector(),
 										   m_pMeshCom->Get_MaxVector());
 
-	m_pInfoCom->m_fSpeed = PCOthersConst::MIN_SPEED;
+	m_pInfoCom->m_fSpeed = 0.0f;
 	m_pInfoCom->m_vArrivePos = m_pTransCom->m_vPos;
 
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 1;
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 	/*__________________________________________________________________________________________________________
 	[ Collider Bone Setting ]
@@ -87,6 +86,12 @@ _int CTestOthers::Update_GameObject(const _float& fTimeDelta)
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 
 	/*__________________________________________________________________________________________________________
+	[ Play Animation ]
+	____________________________________________________________________________________________________________*/
+	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+
+	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Move_OnNaviMesh(fTimeDelta);
@@ -109,12 +114,6 @@ void CTestOthers::Send_PacketToServer()
 
 void CTestOthers::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
-	/*__________________________________________________________________________________________________________
-	[ Play Animation ]
-	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
-
 	Set_ConstantTable();
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
@@ -166,7 +165,7 @@ HRESULT CTestOthers::Add_Component(wstring wstrMeshTag)
 	Engine::NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);
 	m_pNaviMeshCom->AddRef();
 	m_pNaviMeshCom->Set_CurrentCellIndex(0);
-	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
+	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
 
 	return S_OK;
 }
@@ -213,8 +212,8 @@ void CTestOthers::Move_OnNaviMesh(const _float& fTimeDelta)
 
 	SetUp_MoveSpeed(fTimeDelta);
 
-	if (!m_bIsMoveStop || 
-		m_pInfoCom->m_fSpeed == PCOthersConst::MIN_SPEED)
+	if (!m_bIsMoveStop /*|| 
+		m_pInfoCom->m_fSpeed == PCOthersConst::MIN_SPEED*/)
 	{
 		// NaviMesh 이동.		
 		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
@@ -229,18 +228,18 @@ void CTestOthers::Move_OnNaviMesh(const _float& fTimeDelta)
 
 void CTestOthers::SetUp_MoveSpeed(const _float& fTimeDelta)
 {
-	if (!m_bIsMoveStop)
-	{
-		m_pInfoCom->m_fSpeed += ((PCOthersConst::MAX_SPEED + PCOthersConst::MAX_SPEED) / 2.0f) * fTimeDelta;
-		if (m_pInfoCom->m_fSpeed > PCOthersConst::MAX_SPEED)
-			m_pInfoCom->m_fSpeed = PCOthersConst::MAX_SPEED;
-	}
-	else
-	{
-		m_pInfoCom->m_fSpeed -= PCOthersConst::MAX_SPEED * 4.0f * fTimeDelta;
-		if (m_pInfoCom->m_fSpeed < PCOthersConst::MIN_SPEED)
-			m_pInfoCom->m_fSpeed = PCOthersConst::MIN_SPEED;
-	}
+	//if (!m_bIsMoveStop)
+	//{
+	//	m_pInfoCom->m_fSpeed += ((PCOthersConst::MAX_SPEED + PCOthersConst::MAX_SPEED) / 2.0f) * fTimeDelta;
+	//	if (m_pInfoCom->m_fSpeed > PCOthersConst::MAX_SPEED)
+	//		m_pInfoCom->m_fSpeed = PCOthersConst::MAX_SPEED;
+	//}
+	//else
+	//{
+	//	m_pInfoCom->m_fSpeed -= PCOthersConst::MAX_SPEED * 3.0f * fTimeDelta;
+	//	if (m_pInfoCom->m_fSpeed < PCOthersConst::MIN_SPEED)
+	//		m_pInfoCom->m_fSpeed = PCOthersConst::MIN_SPEED;
+	//}
 }
 
 Engine::CGameObject* CTestOthers::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, 
