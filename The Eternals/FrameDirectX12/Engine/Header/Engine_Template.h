@@ -44,7 +44,16 @@ namespace Engine
 	template<class T1>
 	struct LINEAR_INTERPOLATION_DESC
 	{
-		LINEAR_INTERPOLATION_DESC() = default;
+		LINEAR_INTERPOLATION_DESC()
+			: is_start_interpolation(false)
+			, linear_ratio(0.0f)
+			, interpolation_speed(1.0f)
+		{
+			ZeroMemory(&v1, sizeof(T1));
+			ZeroMemory(&v2, sizeof(T1));
+		}
+
+
 		LINEAR_INTERPOLATION_DESC(const bool& is_start_interpolation, const float& linear_ratio, const float& interpolation_speed, const T1& v1, const T1& v2)
 			: is_start_interpolation(is_start_interpolation)
 			, linear_ratio(linear_ratio)

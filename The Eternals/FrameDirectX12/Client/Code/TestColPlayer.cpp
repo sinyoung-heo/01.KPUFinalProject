@@ -361,7 +361,7 @@ void CTestColPlayer::Attack(const _float& fTimeDelta)
 		m_bIsAttack = true;
 		if (m_fAttackTime > 2.f)
 		{
-			m_pPacketMgr->send_attack(0, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+			m_pPacketMgr->send_attack(0, m_pTransCom->m_vDir, m_pTransCom->m_vPos, 0.0f);
 			m_fAttackTime = 0.f;
 		}
 	}

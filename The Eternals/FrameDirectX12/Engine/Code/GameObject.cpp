@@ -16,19 +16,6 @@ CGameObject::CGameObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList
 	, m_pComponentMgr(CComponentMgr::Get_Instance())
 	, m_pCollisonMgr(CCollisionMgr::Get_Instance())
 {
-	// Pos Interpolation Desc
-	m_tPosInterpolationDesc.is_start_interpolation = false;
-	m_tPosInterpolationDesc.linear_ratio           = 0.0f;
-	m_tPosInterpolationDesc.interpolation_speed    = 1.25f;
-	m_tPosInterpolationDesc.v1                     = _vec3(0.0f);
-	m_tPosInterpolationDesc.v2                     = _vec3(0.0f);
-
-	// Angle Interpolation Desc
-	m_tAngleInterpolationDesc.is_start_interpolation = false;
-	m_tAngleInterpolationDesc.linear_ratio           = 0.0f;
-	m_tAngleInterpolationDesc.interpolation_speed    = 0.0f;
-	m_tAngleInterpolationDesc.v1                     = 0.0f;
-	m_tAngleInterpolationDesc.v2                     = 1.0f;
 }
 
 CGameObject::CGameObject(const CGameObject& rhs)
@@ -144,6 +131,7 @@ HRESULT CGameObject::LateInit_GameObject()
 _int CGameObject::Update_GameObject(const _float & fTimeDelta)
 {
 	SetUp_PosInterpolation(fTimeDelta);
+	SetUp_AngleInterpolation(fTimeDelta);
 
 	if (nullptr != m_pTransCom)
 		m_pTransCom->Update_Component(fTimeDelta);
@@ -322,6 +310,26 @@ void CGameObject::SetUp_PosInterpolation(const _float& fTimeDelta)
 	else
 	{
 		m_tPosInterpolationDesc.linear_ratio = 0.0f;
+	}
+}
+
+void CGameObject::SetUp_AngleInterpolation(const _float& fTimeDelta)
+{
+	if (m_tAngleInterpolationDesc.is_start_interpolation)
+	{
+		m_tAngleInterpolationDesc.linear_ratio += m_tAngleInterpolationDesc.interpolation_speed * fTimeDelta;
+
+		if (m_tAngleInterpolationDesc.linear_ratio >= MAX_LINEAR_RATIO)
+		{
+			m_tAngleInterpolationDesc.linear_ratio = MAX_LINEAR_RATIO;
+			m_tAngleInterpolationDesc.is_start_interpolation = false;
+		}
+
+		m_pTransCom->m_vAngle.y = LinearInterpolation(m_tAngleInterpolationDesc.v1, m_tAngleInterpolationDesc.v2, m_tAngleInterpolationDesc.linear_ratio);
+	}
+	else
+	{
+		m_tAngleInterpolationDesc.linear_ratio = 0.0f;
 	}
 }
 

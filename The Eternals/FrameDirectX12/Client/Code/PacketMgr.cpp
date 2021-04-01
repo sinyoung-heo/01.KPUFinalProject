@@ -388,7 +388,8 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 			pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
 			pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
-
+			pObj->Set_IsStartAngleInterpolation(true);
+			pObj->Set_LinearAngle(pObj->Get_Transform()->m_vAngle.y, packet->end_angleY);
 			pObj->Set_Attack(true);
 		}
 	}
@@ -719,7 +720,7 @@ void CPacketMgr::send_stance_change(const _int& iAniIdx, const _bool& bIsStanceA
 	send_packet(&p);
 }
 
-void CPacketMgr::send_attack(const _int& iAniIdx, const _vec3& vDir, const _vec3& vPos)
+void CPacketMgr::send_attack(const _int& iAniIdx, const _vec3& vDir, const _vec3& vPos, const _float& fEndAngleY)
 {
 	cs_packet_attack p;
 
@@ -733,6 +734,7 @@ void CPacketMgr::send_attack(const _int& iAniIdx, const _vec3& vDir, const _vec3
 	p.dirX    = vDir.x;
 	p.dirY    = vDir.y;
 	p.dirZ    = vDir.z;
+	p.end_angleY = fEndAngleY;
 
 	send_packet(&p);
 }

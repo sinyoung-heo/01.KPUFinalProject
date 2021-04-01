@@ -159,11 +159,12 @@ void process_packet(int id)
 	{
 		cs_packet_attack* p = reinterpret_cast<cs_packet_attack*>(pPlayer->m_packet_start);
 
-		int iAniIdx = p->animIdx;
-		_vec3 vPos  = _vec3(p->posX, p->posY, p->posZ);
-		_vec3 vDir  = _vec3(p->dirX, p->dirY, p->dirZ);
+		int		iAniIdx    = p->animIdx;
+		_vec3	vPos       = _vec3(p->posX, p->posY, p->posZ);
+		_vec3	vDir       = _vec3(p->dirX, p->dirY, p->dirZ);
+		float	fEndAngleY = p->end_angleY;
 
-		process_attack(id, vDir, vPos, iAniIdx); // 스킬 or 기본 공격 애니메이션 인덱스 부여 필요함
+		process_attack(id, vDir, vPos, iAniIdx, fEndAngleY); // 스킬 or 기본 공격 애니메이션 인덱스 부여 필요함
 	}
 	break;
 
@@ -406,7 +407,7 @@ void send_move_stop_packet(int to_client, int id)
 	send_packet(to_client, &p);
 }
 
-void send_attack_packet(int to_client, int id, int animIdx)
+void send_attack_packet(int to_client, int id, int animIdx, float end_angleY)
 {
 	sc_packet_attack p;
 
@@ -429,6 +430,7 @@ void send_attack_packet(int to_client, int id, int animIdx)
 	p.dirZ = pPlayer->m_vDir.z;
 
 	p.animIdx = animIdx;
+	p.end_angleY = end_angleY;
 
 	send_packet(to_client, &p);
 }
@@ -944,7 +946,7 @@ void process_collide(int id, int colID)
 	}
 }
 
-void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx)
+void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx, float end_angleY)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 
@@ -975,7 +977,7 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx)
 		pPlayer->m_vTempPos.z = coll_pos.y;
 	}
 
-	send_attack_packet(id, id, aniIdx);
+	send_attack_packet(id, id, aniIdx, end_angleY);
 
 	/* 변경된 좌표로 섹터 갱신 */
 	CSectorMgr::GetInstance()->Compare_exchange_Sector(id, (int)ori_z, (int)ori_x, (int)(pPlayer->m_vPos.z), (int)(pPlayer->m_vPos.x));
@@ -1069,7 +1071,7 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx)
 				else
 				{
 					pOther->v_lock.unlock();
-					send_attack_packet(server_num, id,aniIdx);
+					send_attack_packet(server_num, id,aniIdx, end_angleY);
 				}
 			}
 			// 새로 시야에 들어온 NPC일 경우 처리
@@ -1100,7 +1102,7 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx)
 				if (0 != pOther->view_list.count(id))
 				{
 					pOther->v_lock.unlock();
-					send_attack_packet(server_num, id, aniIdx);
+					send_attack_packet(server_num, id, aniIdx, end_angleY);
 				}
 				// 타 유저의 시야 목록에 '나'가 새로 들어온 경우
 				else

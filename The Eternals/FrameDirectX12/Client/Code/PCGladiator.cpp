@@ -164,7 +164,6 @@ _int CPCGladiator::LateUpdate_GameObject(const _float& fTimeDelta)
 		m_wstrText = wstring(L"[ Character Info ] \n") +
 					 wstring(L"Pos\t %d, %d, %d\n") +
 					 wstring(L"AngleY\t %d\n") +
-					 wstring(L"Start/End/Speed %d, %d, %d\n") +
 					 wstring(L"AniIndex \t %d\n") +
 					 wstring(L"MaxFrame \t %d\n") +
 					 wstring(L"CurrentFrame \t%d");
@@ -172,7 +171,6 @@ _int CPCGladiator::LateUpdate_GameObject(const _float& fTimeDelta)
 		wsprintf(m_szText, m_wstrText.c_str(),
 				 (_int)m_pTransCom->m_vPos.x, (_int)m_pTransCom->m_vPos.y, (_int)m_pTransCom->m_vPos.z,
 				 (_int)m_pTransCom->m_vAngle.y,
-				 (_int)m_fStartAngle, (_int)m_fEndAngle, (_int)m_fAngleInterpolationSpeed,
 				 m_uiAnimIdx,
 				 m_ui3DMax_NumFrame,
 				 m_ui3DMax_CurFrame);
@@ -511,14 +509,14 @@ void CPCGladiator::SetUp_ComboAttackAnimation()
 	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
 		GladiatorConst::COMBOCNT_0 == m_uiComoboCnt && m_pMeshCom->Is_BlendingComplete())
 	{
-		Ready_AnhleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 
 		m_bIsKeyDown  = false;
 		m_bIsAttack   = true;
 		m_uiComoboCnt = GladiatorConst::COMBOCNT_1;
 		m_uiAnimIdx   = Gladiator::COMBO1;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 
 		m_fPreAngle = m_pTransCom->m_vAngle.y;
 	}
@@ -527,14 +525,14 @@ void CPCGladiator::SetUp_ComboAttackAnimation()
 			(Gladiator::COMBO1 == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete() &&
 			(m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.75f)))
 	{
-		Ready_AnhleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 
 		m_bIsKeyDown  = false;
 		m_bIsAttack   = true;
 		m_uiComoboCnt = GladiatorConst::COMBOCNT_2;
 		m_uiAnimIdx   = Gladiator::COMBO2;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 
 		m_fPreAngle = m_pTransCom->m_vAngle.y;
 	}
@@ -543,14 +541,14 @@ void CPCGladiator::SetUp_ComboAttackAnimation()
 			(Gladiator::COMBO2 == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete() &&
 			(m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.75f)))
 	{
-		Ready_AnhleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 
 		m_bIsKeyDown  = false;
 		m_bIsAttack   = true;
 		m_uiComoboCnt = GladiatorConst::COMBOCNT_3;
 		m_uiAnimIdx   = Gladiator::COMBO3;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 
 		m_fPreAngle = m_pTransCom->m_vAngle.y;
 	}
@@ -559,14 +557,14 @@ void CPCGladiator::SetUp_ComboAttackAnimation()
 			(Gladiator::COMBO3 == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete() &&
 			(m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.75f)))
 	{
-		Ready_AnhleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 
 		m_bIsKeyDown  = false;
 		m_bIsAttack   = true;
 		m_uiComoboCnt = GladiatorConst::COMBO_END;
 		m_uiAnimIdx   = Gladiator::COMBO4;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 
 		m_fPreAngle = m_pTransCom->m_vAngle.y;
 	}
@@ -687,7 +685,7 @@ void CPCGladiator::SetUp_RunMoveSpeed(const _float& fTimeDelta)
 	else if (!m_bIsKeyDown)
 		m_fLinearRatio -= GladiatorConst::MOVE_STOP_SPEED * fTimeDelta;
 
-	m_pInfoCom->m_fSpeed = LinearInterpolation(GladiatorConst::MIN_SPEED, GladiatorConst::MAX_SPEED, m_fLinearRatio);
+	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(GladiatorConst::MIN_SPEED, GladiatorConst::MAX_SPEED, m_fLinearRatio);
 }
 
 void CPCGladiator::SetUp_RunAnimation()
@@ -793,33 +791,28 @@ void CPCGladiator::Change_PlayerStance(const _float& fTimeDelta)
 	}
 }
 
-void CPCGladiator::Ready_AnhleInterpolationValue(const _float& fEndAngle)
+void CPCGladiator::Ready_AngleInterpolationValue(const _float& fEndAngle)
 {
-	m_tAngleInterpolationDesc;
-	m_tAngleInterpolationDesc;
-	m_tAngleInterpolationDesc;
-	m_tAngleInterpolationDesc;
-	m_tAngleInterpolationDesc;
-
-	m_bIsStartAngleLinearInterpolation = true;
-	m_fStartAngle						= m_pTransCom->m_vAngle.y;
-	m_fEndAngle							= fEndAngle;
-	m_fAngleLinearRatio					= 0.0f;
-	m_fAngleInterpolationSpeed			= 3.0f;
+	m_tAngleInterpolationDesc.is_start_interpolation = true;
+	m_tAngleInterpolationDesc.v1                     = m_pTransCom->m_vAngle.y;
+	m_tAngleInterpolationDesc.v2                     = fEndAngle;
+	m_tAngleInterpolationDesc.linear_ratio           = Engine::MIN_LINEAR_RATIO;
+	m_tAngleInterpolationDesc.interpolation_speed    = 3.0f;
 }
 
 void CPCGladiator::SetUp_AngleInterpolation(const _float& fTimeDelta)
 {
-	if (m_bIsStartAngleLinearInterpolation)
+	if (m_tAngleInterpolationDesc.is_start_interpolation)
 	{
-		m_fAngleLinearRatio += m_fAngleInterpolationSpeed * fTimeDelta;
-		m_pTransCom->m_vAngle.y = LinearInterpolation(m_fStartAngle, m_fEndAngle, m_fAngleLinearRatio);
+		m_tAngleInterpolationDesc.linear_ratio += m_tAngleInterpolationDesc.interpolation_speed * fTimeDelta;
 
-		if ((m_fAngleLinearRatio == MIN_RATIO ||
-			m_fAngleLinearRatio == MAX_RATIO) ||
-			m_pTransCom->m_vAngle.y == m_fEndAngle)
+		m_pTransCom->m_vAngle.y = Engine::LinearInterpolation(m_tAngleInterpolationDesc.v1, 
+															  m_tAngleInterpolationDesc.v2, 
+															  m_tAngleInterpolationDesc.linear_ratio);
+
+		if (m_tAngleInterpolationDesc.linear_ratio == Engine::MAX_LINEAR_RATIO)
 		{
-			m_bIsStartAngleLinearInterpolation = false;
+			m_tAngleInterpolationDesc.is_start_interpolation = false;
 		}
 	}
 }
