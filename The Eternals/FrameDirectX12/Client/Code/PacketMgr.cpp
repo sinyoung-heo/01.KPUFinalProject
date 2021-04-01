@@ -330,7 +330,6 @@ void CPacketMgr::ProcessPacket(char* ptr)
 		else	
 		{
 			Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
-			cout << SC_PACKET_MOVE_STOP << endl;
 			auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
 			static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
