@@ -130,6 +130,7 @@ struct sc_packet_attack
 	int				animIdx;
 	float			posX, posY, posZ;
 	float			dirX, dirY, dirZ;
+	float			end_angleY;
 };
 
 struct sc_packet_enter 
@@ -282,6 +283,7 @@ struct cs_packet_attack
 	int				animIdx;
 	float			posX, posY, posZ;
 	float			dirX, dirY, dirZ;
+	float			end_angleY;
 };
 
 struct cs_packet_player_collision

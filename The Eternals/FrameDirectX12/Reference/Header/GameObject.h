@@ -51,9 +51,11 @@ public:
 	void				Set_Other_direction(_vec3& vDir);
 	float				Set_Other_Angle(_vec3& vDir);
 	
-	void				Set_IdleAniIdx(const _uint& uiAniIdx)						{ m_uiIdleAniIdx = uiAniIdx; }
-	void				Set_IsStartPosInterpolation(const _bool& bIsStart)			{ m_bIsStartPosInterpolation = bIsStart; }
-	void				Set_LinearPos(const _vec3& vStart, const _vec3& vEndPos)	{ m_vLinearStartPos = vStart; m_vLinearEndPos = vEndPos; }
+	void				Set_IsStartPosInterpolation(const _bool& bIsStart)		{ m_tPosInterpolationDesc.is_start_interpolation = bIsStart; }
+	void				Set_LinearPos(const _vec3& v1, const _vec3& v2)			{ m_tPosInterpolationDesc.v1 = v1; m_tPosInterpolationDesc.v2 = v2; }
+	void				Set_IsStartAngleInterpolation(const _bool& bIsStart)	{ m_tAngleInterpolationDesc.is_start_interpolation = bIsStart; }
+	void				Set_LinearAngle(const _float& v1, const _float& v2)		{ m_tAngleInterpolationDesc.v1 = v1; m_tAngleInterpolationDesc.v2 = v2; }
+
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT Ready_GameObjectPrototype();
@@ -87,6 +89,7 @@ protected:
 	CComponent*		Find_Component(wstring wstrComponentTag, const COMPONENTID& eID);
 private:
 	void			SetUp_PosInterpolation(const _float& fTimeDelta);
+	void			SetUp_AngleInterpolation(const _float& fTimeDelta);
 
 protected:
 	/*__________________________________________________________________________________________________________
@@ -137,11 +140,10 @@ protected:
 	bool	m_bIsAttack			= false;
 	char	m_chO_Type			= 0;
 
-	_uint	m_uiIdleAniIdx		       = 0;
-	_bool	m_bIsStartPosInterpolation = false;
-	_float	m_fPosLinearRatio		   = 0.0f;
-	_vec3	m_vLinearStartPos		   = _vec3(0.0f);
-	_vec3	m_vLinearEndPos		       = _vec3(0.0f);
+	// Linear Interpolation Desc
+	LINEAR_INTERPOLATION_DESC<_vec3>	m_tPosInterpolationDesc;
+	LINEAR_INTERPOLATION_DESC<_float>	m_tAngleInterpolationDesc;
+
 	high_resolution_clock::time_point m_last_move_time;
 
 public:

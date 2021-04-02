@@ -66,6 +66,9 @@ HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag,
 	m_ePreStance = Gladiator::STANCE_NONEATTACK;
 	m_eCurStance = Gladiator::STANCE_NONEATTACK;
 
+	// Angle Linear Interpolation Desc
+	m_tAngleInterpolationDesc.interpolation_speed = 3.0f;
+
 	return S_OK;
 }
 
@@ -261,6 +264,7 @@ void CPCOthersGladiator::Move_OnNaviMesh(const _float& fTimeDelta)
 														 &m_pTransCom->m_vDir,
 														 m_pInfoCom->m_fSpeed * fTimeDelta);
 			m_pTransCom->m_vPos = vPos;
+			cout << m_bIsMoveStop << "   " << m_pInfoCom->m_fSpeed << endl;
 		}
 	}
 }
@@ -272,9 +276,9 @@ void CPCOthersGladiator::SetUp_MoveSpeed(const _float& fTimeDelta)
 	else
 		m_fLinearRatio -= PCOthersGladiatorConst::MOVE_STOP_SPEED * fTimeDelta;
 
-	m_pInfoCom->m_fSpeed = LinearInterpolation(PCOthersGladiatorConst::MIN_SPEED, 
-											   PCOthersGladiatorConst::MAX_SPEED, 
-											   m_fLinearRatio);
+	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(PCOthersGladiatorConst::MIN_SPEED, 
+													   PCOthersGladiatorConst::MAX_SPEED, 
+													   m_fLinearRatio);
 }
 
 void CPCOthersGladiator::SetUp_StanceChange(const _float& fTimeDelta)
