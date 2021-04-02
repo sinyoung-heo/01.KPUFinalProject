@@ -112,6 +112,11 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Move_OnNaviMesh(fTimeDelta);
+
+	// Linear Interpolation
+	Engine::SetUp_LinearInterpolation(fTimeDelta, m_pTransCom->m_vPos, m_tPosInterpolationDesc);
+	Engine::SetUp_LinearInterpolation(fTimeDelta, m_pTransCom->m_vAngle.y, m_tAngleInterpolationDesc);
+
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 	return NO_EVENT;
@@ -264,7 +269,6 @@ void CPCOthersGladiator::Move_OnNaviMesh(const _float& fTimeDelta)
 														 &m_pTransCom->m_vDir,
 														 m_pInfoCom->m_fSpeed * fTimeDelta);
 			m_pTransCom->m_vPos = vPos;
-			cout << m_bIsMoveStop << "   " << m_pInfoCom->m_fSpeed << endl;
 		}
 	}
 }
@@ -272,13 +276,13 @@ void CPCOthersGladiator::Move_OnNaviMesh(const _float& fTimeDelta)
 void CPCOthersGladiator::SetUp_MoveSpeed(const _float& fTimeDelta)
 {
 	if (!m_bIsMoveStop)
-		m_fLinearRatio += fTimeDelta;
+		m_fSpeedInterpolationRatio += fTimeDelta;
 	else
-		m_fLinearRatio -= PCOthersGladiatorConst::MOVE_STOP_SPEED * fTimeDelta;
+		m_fSpeedInterpolationRatio -= PCOthersGladiatorConst::MOVE_STOP_SPEED * fTimeDelta;
 
 	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(PCOthersGladiatorConst::MIN_SPEED, 
 													   PCOthersGladiatorConst::MAX_SPEED, 
-													   m_fLinearRatio);
+													   m_fSpeedInterpolationRatio);
 }
 
 void CPCOthersGladiator::SetUp_StanceChange(const _float& fTimeDelta)

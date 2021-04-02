@@ -60,23 +60,23 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 	Engine::SKINNING_MATRIX* pmatSkinning = nullptr;
 	_matrix* pmatParent = nullptr;
 
-	// ColliderSphere
-	pmatSkinning = m_pMeshCom->Find_SkinningMatrix("Bip01-R-Hand");
-	pmatParent = &(m_pTransCom->m_matWorld);
-	Engine::NULL_CHECK_RETURN(pmatSkinning, E_FAIL);
-	m_pColliderSphereCom->Set_SkinningMatrix(pmatSkinning);		// Bone Matrix
-	m_pColliderSphereCom->Set_ParentMatrix(pmatParent);			// Parent Matrix
-	m_pColliderSphereCom->Set_Scale(_vec3(3.f, 3.f, 3.f));		// Collider Scale
-	m_pColliderSphereCom->Set_Radius(m_pTransCom->m_vScale);	// Collider Radius
+	//// ColliderSphere
+	//pmatSkinning = m_pMeshCom->Find_SkinningMatrix("Bip01-R-Hand");
+	//pmatParent = &(m_pTransCom->m_matWorld);
+	//Engine::NULL_CHECK_RETURN(pmatSkinning, E_FAIL);
+	//m_pColliderSphereCom->Set_SkinningMatrix(pmatSkinning);		// Bone Matrix
+	//m_pColliderSphereCom->Set_ParentMatrix(pmatParent);			// Parent Matrix
+	//m_pColliderSphereCom->Set_Scale(_vec3(3.f, 3.f, 3.f));		// Collider Scale
+	//m_pColliderSphereCom->Set_Radius(m_pTransCom->m_vScale);	// Collider Radius
 
-	// ColliderBox
-	pmatSkinning = m_pMeshCom->Find_SkinningMatrix("Bip01-R-Hand");
-	pmatParent = &(m_pTransCom->m_matWorld);
-	Engine::NULL_CHECK_RETURN(pmatSkinning, E_FAIL);
-	m_pColliderBoxCom->Set_SkinningMatrix(pmatSkinning);	// Bone Matrix
-	m_pColliderBoxCom->Set_ParentMatrix(pmatParent);		// Parent Matrix
-	m_pColliderBoxCom->Set_Scale(_vec3(3.f, 3.f, 3.f));		// Collider Scale
-	m_pColliderBoxCom->Set_Extents(m_pTransCom->m_vScale);	// Box Offset From Center
+	//// ColliderBox
+	//pmatSkinning = m_pMeshCom->Find_SkinningMatrix("Bip01-R-Hand");
+	//pmatParent = &(m_pTransCom->m_matWorld);
+	//Engine::NULL_CHECK_RETURN(pmatSkinning, E_FAIL);
+	//m_pColliderBoxCom->Set_SkinningMatrix(pmatSkinning);	// Bone Matrix
+	//m_pColliderBoxCom->Set_ParentMatrix(pmatParent);		// Parent Matrix
+	//m_pColliderBoxCom->Set_Scale(_vec3(3.f, 3.f, 3.f));		// Collider Scale
+	//m_pColliderBoxCom->Set_Extents(m_pTransCom->m_vScale);	// Box Offset From Center
 
 	/*__________________________________________________________________________________________________________
 	[ Font »ý¼º ]
@@ -240,17 +240,17 @@ HRESULT CPCGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag
 	Engine::FAILED_CHECK_RETURN(m_pShadowCom->Set_PipelineStatePass(0), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shadow", m_pShadowCom);
 
-	// Collider - Sphere
-	m_pColliderSphereCom = static_cast<Engine::CColliderSphere*>(m_pComponentMgr->Clone_Component(L"ColliderSphere", Engine::COMPONENTID::ID_DYNAMIC));
-	Engine::NULL_CHECK_RETURN(m_pColliderSphereCom, E_FAIL);
-	m_pColliderSphereCom->AddRef();
-	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderSphere", m_pColliderSphereCom);
+	//// Collider - Sphere
+	//m_pColliderSphereCom = static_cast<Engine::CColliderSphere*>(m_pComponentMgr->Clone_Component(L"ColliderSphere", Engine::COMPONENTID::ID_DYNAMIC));
+	//Engine::NULL_CHECK_RETURN(m_pColliderSphereCom, E_FAIL);
+	//m_pColliderSphereCom->AddRef();
+	//m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderSphere", m_pColliderSphereCom);
 
-	// Collider - Box
-	m_pColliderBoxCom = static_cast<Engine::CColliderBox*>(m_pComponentMgr->Clone_Component(L"ColliderBox", Engine::COMPONENTID::ID_DYNAMIC));
-	Engine::NULL_CHECK_RETURN(m_pColliderBoxCom, E_FAIL);
-	m_pColliderBoxCom->AddRef();
-	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderBox", m_pColliderBoxCom);
+	//// Collider - Box
+	//m_pColliderBoxCom = static_cast<Engine::CColliderBox*>(m_pComponentMgr->Clone_Component(L"ColliderBox", Engine::COMPONENTID::ID_DYNAMIC));
+	//Engine::NULL_CHECK_RETURN(m_pColliderBoxCom, E_FAIL);
+	//m_pColliderBoxCom->AddRef();
+	//m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderBox", m_pColliderBoxCom);
 
 	// NaviMesh
 	m_pNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(wstrNaviMeshTag, Engine::ID_DYNAMIC));
@@ -680,12 +680,13 @@ void CPCGladiator::SetUp_RunMoveSpeed(const _float& fTimeDelta)
 {
 	// Move On
 	if (m_bIsKeyDown)
-		m_fLinearRatio += fTimeDelta;
+		m_fSpeedInterpolationRatio += fTimeDelta;
+
 	// Move Off
 	else if (!m_bIsKeyDown)
-		m_fLinearRatio -= GladiatorConst::MOVE_STOP_SPEED * fTimeDelta;
+		m_fSpeedInterpolationRatio -= GladiatorConst::MOVE_STOP_SPEED * fTimeDelta;
 
-	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(GladiatorConst::MIN_SPEED, GladiatorConst::MAX_SPEED, m_fLinearRatio);
+	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(GladiatorConst::MIN_SPEED, GladiatorConst::MAX_SPEED, m_fSpeedInterpolationRatio);
 }
 
 void CPCGladiator::SetUp_RunAnimation()

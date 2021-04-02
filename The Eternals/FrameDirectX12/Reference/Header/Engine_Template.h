@@ -1,6 +1,7 @@
 #pragma once
 #include "Engine_Typedef.h"
 #include "Engine_Macro.h"
+#include "Engine_Struct.h"
 
 /*__________________________________________________________________________________________________________
 [ inline ÇÔ¼ö ]
@@ -82,6 +83,27 @@ namespace Engine
 			ratio = MIN_LINEAR_RATIO;
 
 		return v1 * (1.0f - ratio) + v2 * ratio;
+	}
+
+	template<class T1>
+	void SetUp_LinearInterpolation(const _float& time_delta ,T1& src, LINEAR_INTERPOLATION_DESC<T1>& linear_desc)
+	{
+		if (linear_desc.is_start_interpolation)
+		{
+			linear_desc.linear_ratio += linear_desc.interpolation_speed * time_delta;
+
+			if (linear_desc.linear_ratio >= MAX_LINEAR_RATIO)
+			{
+				linear_desc.linear_ratio = MAX_LINEAR_RATIO;
+				linear_desc.is_start_interpolation = false;
+			}
+
+			src = LinearInterpolation<T1>(linear_desc.v1, linear_desc.v2, linear_desc.linear_ratio);
+		}
+		else
+		{
+			linear_desc.linear_ratio = 0.0f;
+		}
 	}
 
 

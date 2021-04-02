@@ -22,7 +22,6 @@ DynamicMesh|NPC|Human_girl
 DynamicMesh|NPC|NPC_Villagers
 DynamicMesh|NPC|Popori_boy
 DynamicMesh|NPC|Popori_M_Merchant
-StaticMesh|Plane|BumpDesertMesh00
 PCWeapon|TwoHand|Twohand19_A_SM
 PCWeapon|TwoHand|TwoHand19_SM
 PCWeapon|TwoHand|TwoHand27_SM

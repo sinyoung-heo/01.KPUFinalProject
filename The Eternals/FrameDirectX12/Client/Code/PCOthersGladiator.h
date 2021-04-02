@@ -6,8 +6,8 @@
 
 namespace PCOthersGladiatorConst
 {
-	const _float MAX_SPEED = 4.5f;
-	const _float MIN_SPEED = 0.0f;
+	const _float MAX_SPEED       = 4.0f;
+	const _float MIN_SPEED       = 0.0f;
 	const _float MOVE_STOP_SPEED = 3.0f;
 }
 
@@ -72,7 +72,7 @@ private:
 	char				m_chWeaponType            = -1;
 
 	// Speed Linear Interpolation
-	_float	m_fLinearRatio = 0.0f;
+	_float	m_fSpeedInterpolationRatio = 0.0f;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]

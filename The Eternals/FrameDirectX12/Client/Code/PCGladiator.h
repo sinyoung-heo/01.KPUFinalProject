@@ -99,7 +99,7 @@ private:
 	wstring				m_wstrMeshTag    = L"";
 
 	// Speed Linear Interpolation
-	_float m_fLinearRatio = 0.0f;
+	_float m_fSpeedInterpolationRatio = 0.0f;
 
 	// Server
 	_bool			m_bIsKeyDown   = false;

@@ -130,9 +130,6 @@ HRESULT CGameObject::LateInit_GameObject()
 
 _int CGameObject::Update_GameObject(const _float & fTimeDelta)
 {
-	SetUp_PosInterpolation(fTimeDelta);
-	SetUp_AngleInterpolation(fTimeDelta);
-
 	if (nullptr != m_pTransCom)
 		m_pTransCom->Update_Component(fTimeDelta);
 
@@ -292,47 +289,6 @@ CComponent * CGameObject::Find_Component(wstring wstrComponentTag, const COMPONE
 
 	return iter_find->second;
 }
-
-void CGameObject::SetUp_PosInterpolation(const _float& fTimeDelta)
-{
-	if (m_tPosInterpolationDesc.is_start_interpolation)
-	{
-		m_tPosInterpolationDesc.linear_ratio += m_tPosInterpolationDesc.interpolation_speed * fTimeDelta;
-
-		if (m_tPosInterpolationDesc.linear_ratio >= MAX_LINEAR_RATIO)
-		{
-			m_tPosInterpolationDesc.linear_ratio = MAX_LINEAR_RATIO;
-			m_tPosInterpolationDesc.is_start_interpolation = false;
-		}
-
-		m_pTransCom->m_vPos = LinearInterpolation(m_tPosInterpolationDesc.v1, m_tPosInterpolationDesc.v2, m_tPosInterpolationDesc.linear_ratio);
-	}
-	else
-	{
-		m_tPosInterpolationDesc.linear_ratio = 0.0f;
-	}
-}
-
-void CGameObject::SetUp_AngleInterpolation(const _float& fTimeDelta)
-{
-	if (m_tAngleInterpolationDesc.is_start_interpolation)
-	{
-		m_tAngleInterpolationDesc.linear_ratio += m_tAngleInterpolationDesc.interpolation_speed * fTimeDelta;
-
-		if (m_tAngleInterpolationDesc.linear_ratio >= MAX_LINEAR_RATIO)
-		{
-			m_tAngleInterpolationDesc.linear_ratio = MAX_LINEAR_RATIO;
-			m_tAngleInterpolationDesc.is_start_interpolation = false;
-		}
-
-		m_pTransCom->m_vAngle.y = LinearInterpolation(m_tAngleInterpolationDesc.v1, m_tAngleInterpolationDesc.v2, m_tAngleInterpolationDesc.linear_ratio);
-	}
-	else
-	{
-		m_tAngleInterpolationDesc.linear_ratio = 0.0f;
-	}
-}
-
 
 CGameObject * CGameObject::Clone_GameObject()
 {

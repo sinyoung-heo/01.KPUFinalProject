@@ -87,10 +87,6 @@ protected:
 	void			SetUp_BoundingSphere(_matrix* pParent, const _vec3& vParentScale, const _vec3& vScale, const _vec3& vPos);
 	void			Compute_ViewZ(_vec4& vPosInWorld);
 	CComponent*		Find_Component(wstring wstrComponentTag, const COMPONENTID& eID);
-private:
-	void			SetUp_PosInterpolation(const _float& fTimeDelta);
-	void			SetUp_AngleInterpolation(const _float& fTimeDelta);
-
 protected:
 	/*__________________________________________________________________________________________________________
 	[ GraphicDevice & Mgr ]

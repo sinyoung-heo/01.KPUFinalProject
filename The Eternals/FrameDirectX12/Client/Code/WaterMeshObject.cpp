@@ -153,7 +153,7 @@ void CWaterMeshObject::Set_ConstantTable()
 	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
 	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
 	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
-	tCB_ShaderMesh.fDeltaTime = sin(m_fDeltatime3);
+	tCB_ShaderMesh.fDissolve = sin(m_fDeltatime3);
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 
 

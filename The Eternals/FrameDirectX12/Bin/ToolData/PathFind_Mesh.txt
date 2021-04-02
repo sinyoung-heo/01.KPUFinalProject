@@ -22,7 +22,6 @@ Human_girl|Human_girl.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Human_g
 NPC_Villagers|NPC_Villagers.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\NPC_Villagers\
 Popori_boy|Popori_boy.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Popori_boy\
 Popori_M_Merchant|Popori_M_Merchant.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Popori_M_Merchant\
-BumpDesertMesh00|BumpDesertMesh00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpDesertMesh00\
 Twohand19_A_SM|Twohand19_A_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\PCWeapon\TwoHand\Twohand19_A_SM\
 TwoHand19_SM|TwoHand19_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\PCWeapon\TwoHand\TwoHand19_SM\
 TwoHand27_SM|TwoHand27_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\PCWeapon\TwoHand\TwoHand27_SM\
