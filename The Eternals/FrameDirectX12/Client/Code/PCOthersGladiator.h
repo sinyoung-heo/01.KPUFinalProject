@@ -72,7 +72,7 @@ private:
 	char				m_chWeaponType            = -1;
 
 	// Speed Linear Interpolation
-	_float	m_fSpeedInterpolationRatio = 0.0f;
+	Engine::LINEAR_INTERPOLATION_DESC<_float> m_tMoveSpeedInterpolationDesc;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]

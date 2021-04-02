@@ -62,12 +62,21 @@ HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag,
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
-
 	m_ePreStance = Gladiator::STANCE_NONEATTACK;
 	m_eCurStance = Gladiator::STANCE_NONEATTACK;
 
 	// Angle Linear Interpolation Desc
+
+	/*__________________________________________________________________________________________________________
+	[ 선형보간 설정 ]
+	____________________________________________________________________________________________________________*/
+	// Angle
 	m_tAngleInterpolationDesc.interpolation_speed = 3.0f;
+
+	// Move Speed
+	m_tMoveSpeedInterpolationDesc.linear_ratio = 0.0f;
+	m_tMoveSpeedInterpolationDesc.v1           = PCOthersGladiatorConst::MIN_SPEED;
+	m_tMoveSpeedInterpolationDesc.v2           = PCOthersGladiatorConst::MAX_SPEED;
 
 	return S_OK;
 }
@@ -275,14 +284,18 @@ void CPCOthersGladiator::Move_OnNaviMesh(const _float& fTimeDelta)
 
 void CPCOthersGladiator::SetUp_MoveSpeed(const _float& fTimeDelta)
 {
+	// Move On
 	if (!m_bIsMoveStop)
-		m_fSpeedInterpolationRatio += fTimeDelta;
-	else
-		m_fSpeedInterpolationRatio -= PCOthersGladiatorConst::MOVE_STOP_SPEED * fTimeDelta;
+		m_tMoveSpeedInterpolationDesc.interpolation_speed = 1.0f;
 
-	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(PCOthersGladiatorConst::MIN_SPEED, 
-													   PCOthersGladiatorConst::MAX_SPEED, 
-													   m_fSpeedInterpolationRatio);
+	// Move Off
+	else
+		m_tMoveSpeedInterpolationDesc.interpolation_speed = -PCOthersGladiatorConst::MOVE_STOP_SPEED;
+
+	m_tMoveSpeedInterpolationDesc.linear_ratio += m_tMoveSpeedInterpolationDesc.interpolation_speed * fTimeDelta;
+	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(m_tMoveSpeedInterpolationDesc.v1, 
+													   m_tMoveSpeedInterpolationDesc.v2, 
+													   m_tMoveSpeedInterpolationDesc.linear_ratio);
 }
 
 void CPCOthersGladiator::SetUp_StanceChange(const _float& fTimeDelta)
