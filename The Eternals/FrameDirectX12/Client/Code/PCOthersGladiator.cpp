@@ -364,6 +364,7 @@ void CPCOthersGladiator::AttackMove_OnNaviMesh(const _float& fTimeDelta)
 	SetUp_OthersComoboAttackMove(fTimeDelta, Gladiator::COMBO1, Gladiator::COMBO1_MOVESTOP_TICK, 1.0f, -3.0f);
 	SetUp_OthersComoboAttackMove(fTimeDelta, Gladiator::COMBO2, Gladiator::COMBO2_MOVESTOP_TICK, 1.0f, -3.5f);
 	SetUp_OthersComoboAttackMove(fTimeDelta, Gladiator::COMBO3, Gladiator::COMBO3_MOVESTOP_TICK, 1.0f, -3.5f);
+	SetUp_OthersComoboAttackMove(fTimeDelta, Gladiator::COMBO4, Gladiator::COMBO4_MOVESTOP_TICK, 0.9f, -0.95f);
 
 	if (!m_bIsAttack)
 		return;

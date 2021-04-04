@@ -511,6 +511,7 @@ void CPCGladiator::KeyInput_ComboAttack(const _float& fTimeDelta)
 		SetUp_ComoboAttackMove(fTimeDelta, Gladiator::COMBOCNT_1, Gladiator::COMBO1, Gladiator::COMBO1_MOVESTOP_TICK, 1.0f, -3.0f);
 		SetUp_ComoboAttackMove(fTimeDelta, Gladiator::COMBOCNT_2, Gladiator::COMBO2, Gladiator::COMBO2_MOVESTOP_TICK, 1.0f, -3.5f);
 		SetUp_ComoboAttackMove(fTimeDelta, Gladiator::COMBOCNT_3, Gladiator::COMBO3, Gladiator::COMBO3_MOVESTOP_TICK, 1.0f, -3.5f);
+		SetUp_ComoboAttackMove(fTimeDelta, Gladiator::COMBO_END, Gladiator::COMBO4, Gladiator::COMBO4_MOVESTOP_TICK, 0.75f, -1.0f);
 
 		AttackMove_OnNaviMesh(fTimeDelta);
 	}

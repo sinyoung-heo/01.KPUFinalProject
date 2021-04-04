@@ -43,4 +43,5 @@ namespace Gladiator
 	const _uint COMBO1_MOVESTOP_TICK = 16;
 	const _uint COMBO2_MOVESTOP_TICK = 20;
 	const _uint COMBO3_MOVESTOP_TICK = 15;
+	const _uint COMBO4_MOVESTOP_TICK = 30;
 }
