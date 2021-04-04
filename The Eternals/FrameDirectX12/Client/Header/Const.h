@@ -29,4 +29,5 @@ const _float TPS	= 4'800.0f;
 const _float TIME_OFFSET = 1.0f;
 
 /* SERVER */
-constexpr int MAX_BUF_SIZE = 1024;
+constexpr int MAX_BUF_SIZE = 4096;
+constexpr int MIN_BUF_SIZE = 1024;
