@@ -12,6 +12,7 @@ Smoke0|64|..\..\Bin\Resource\ResourceStage\Texture\EffectMultiTexture\Smoke0\%d.
 Smoke1|30|..\..\Bin\Resource\ResourceStage\Texture\EffectMultiTexture\Smoke1\%d.dds
 Fire|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Fire\%d.dds
 Torch|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Torch\%d.dds
+EffectTrailTexture|11|..\..\Bin\Resource\ResourceStage\Texture\EffectTrailTexture\%d.dds
 SkyBox|7|..\..\Bin\Resource\ResourceStage\Texture\Environment\SkyBox\%d.dds
 Terrain|8|..\..\Bin\Resource\ResourceStage\Texture\Environment\Terrain\%d.dds
 WaterNormal|139|..\..\Bin\Resource\ResourceStage\Texture\Environment\WaterNormal\%d.dds

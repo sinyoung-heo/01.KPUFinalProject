@@ -235,6 +235,12 @@
     <Filter Include="02.GameObject\05.Monster\02.CloderA">
       <UniqueIdentifier>{bc3c5eac-51e7-4ec7-94fa-47a9d686f3fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.GameEffect">
+      <UniqueIdentifier>{c648deae-aed7-42f0-b7c7-d7c20560400d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.GameEffect\00.EffectTrail">
+      <UniqueIdentifier>{db11dad0-fb7d-463c-baf4-888e52d600db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -465,6 +471,9 @@
     <ClInclude Include="..\Header\GladiatorAnimation.h">
       <Filter>02.GameObject\02.PlayerCharacter\00.PCGladiator</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\EffectTrail.h">
+      <Filter>02.GameObject\98.GameEffect\00.EffectTrail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -649,6 +658,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CloderA.cpp">
       <Filter>02.GameObject\05.Monster\02.CloderA</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\EffectTrail.cpp">
+      <Filter>02.GameObject\98.GameEffect\00.EffectTrail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
