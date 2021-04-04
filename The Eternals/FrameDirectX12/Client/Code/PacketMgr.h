@@ -25,14 +25,12 @@ public:
 
 public:
 	void	recv_packet();
-	// Server Data Receive - Version 1 (Copy Data)
-	void	ProcessData(unsigned char* net_buf, size_t io_byte);
-	void	ProcessPacket(char* ptr);
 
-	// Server Data Receive - Version 2 (Ring Buffer)
-	void	Process_recv_test(size_t iosize);
-	void	Process_packet_test();
+	// Server Data Receive - Version Ring Buffer
+	void	Process_recv_reassembly(size_t iosize);
+	void	Process_packet();
 
+public:
 	void	send_login();
 	void	send_move(const _vec3& vDir, const _vec3& vPos, const _int& iAniIdx);
 	void	send_move_stop(const _vec3& vPos, const _vec3& vDir, const _int& iAniIdx);
@@ -44,9 +42,23 @@ public:
 
 public:
 	bool	change_MoveKey(MVKEY eKey);
+
+	void	Login_Player(sc_packet_login_ok* packet);
+	void	Enter_Others(sc_packet_enter* packet, int& retflag);
+	void	Move_User(sc_packet_move* packet);
+	void	MoveStop_User(sc_packet_move* packet);
+	void	Attack_User(sc_packet_attack* packet);
+	void	AttackStop_User(sc_packet_attack* packet);
+	void	ChangeStat_User(sc_packet_stat_change* packet);
+	void	Change_Stance_Others(sc_packet_stance_change* packet, int& retflag);
+	void	Leave_Object(sc_packet_leave* packet, int& retflag);
+
 	void	Enter_Monster(sc_packet_monster_enter* packet);
 	void	Attack_Monster(sc_packet_monster_attack* packet);
 	void	Move_Monster(sc_packet_move* packet);
+	void	Change_Monster_Stat(sc_packet_stat_change* packet);
+	void	Move_NPC(sc_packet_move* packet);
+	void	Enter_NPC(sc_packet_npc_enter* packet);
 
 private:
 	void	send_packet(void* packet);
