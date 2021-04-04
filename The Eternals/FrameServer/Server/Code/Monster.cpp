@@ -34,6 +34,8 @@ void CMonster::Change_Animation(const float& fTimeDelta)
 		Change_Monkey_Animation(fTimeDelta);
 	else if (m_monNum == MON_CLODER)
 		Change_Cloder_Animation(fTimeDelta);
+	else if (m_monNum == MON_SAILOR)
+		Change_DrownedSailor_Animation(fTimeDelta);
 }
 
 void CMonster::Change_Crab_Animation(const float& fTimeDelta)
@@ -133,6 +135,41 @@ void CMonster::Change_Cloder_Animation(const float& fTimeDelta)
 	case STATUS::ST_ATTACK:
 	{
 		Attack_Cloder(fTimeDelta);
+	}
+	break;
+
+	case STATUS::ST_DEAD:
+		break;
+	}
+}
+
+void CMonster::Change_DrownedSailor_Animation(const float& fTimeDelta)
+{
+	switch (m_status)
+	{
+
+	case STATUS::ST_ACTIVE:
+	{
+		Move_NormalMonster(fTimeDelta);
+	}
+	break;
+
+	case STATUS::ST_NONACTIVE:
+	{
+		m_iTargetNum = -1;
+		m_bIsComeBack = false;
+	}
+	break;
+
+	case STATUS::ST_CHASE:
+	{
+		//Chase_DrownedSailor(fTimeDelta);
+	}
+	break;
+
+	case STATUS::ST_ATTACK:
+	{
+		//Attack_DrownedSailor(fTimeDelta);
 	}
 	break;
 

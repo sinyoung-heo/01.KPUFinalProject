@@ -37,6 +37,8 @@ private:
 	void Chase_Cloder(const float& fTimeDelta);
 	void Attack_Cloder(const float& fTimeDelta);
 
+	void Change_DrownedSailor_Animation(const float& fTimeDelta);
+
 	/* MONSTER ALL */
 	void Change_Animation(const float& fTimeDelta);
 
