@@ -341,23 +341,29 @@ void CPCOthersGladiator::SetUp_StanceChange(const _float& fTimeDelta)
 	}
 }
 
-void CPCOthersGladiator::SetUp_Combo1AttackMove(const _float& fTimeDelta)
+void CPCOthersGladiator::SetUp_OthersComoboAttackMove(const _float& fTimeDelta,
+													  const _uint& uiAniIdx, 
+													  const _uint& uiStopTick, 
+													  const _float& fMoveSpeed,
+													  const _float& fStopSpeed)
 {
-	if (Gladiator::COMBO1 == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
+	if (uiAniIdx == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
 	{
 		// Move On
-		if (m_ui3DMax_CurFrame < Gladiator::COMBO1_MOVESTOP_TICK)
-			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = 1.0f;
+		if (m_ui3DMax_CurFrame < uiStopTick)
+			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = fMoveSpeed;
 
 		// Move Off
 		else
-			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = -3.0f * Gladiator::OTHERS_OFFSET;
+			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = fStopSpeed * Gladiator::OTHERS_OFFSET;
 	}
 }
 
 void CPCOthersGladiator::AttackMove_OnNaviMesh(const _float& fTimeDelta)
 {
-	SetUp_Combo1AttackMove(fTimeDelta);
+	SetUp_OthersComoboAttackMove(fTimeDelta, Gladiator::COMBO1, Gladiator::COMBO1_MOVESTOP_TICK, 1.0f, -3.0f);
+	SetUp_OthersComoboAttackMove(fTimeDelta, Gladiator::COMBO2, Gladiator::COMBO2_MOVESTOP_TICK, 1.0f, -3.5f);
+	SetUp_OthersComoboAttackMove(fTimeDelta, Gladiator::COMBO3, Gladiator::COMBO3_MOVESTOP_TICK, 1.0f, -3.5f);
 
 	if (!m_bIsAttack)
 		return;

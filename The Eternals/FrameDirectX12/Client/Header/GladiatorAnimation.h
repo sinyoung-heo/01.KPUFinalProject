@@ -41,4 +41,6 @@ namespace Gladiator
 	const _float MOVE_STOP_SPEED = 3.0f;
 
 	const _uint COMBO1_MOVESTOP_TICK = 16;
+	const _uint COMBO2_MOVESTOP_TICK = 20;
+	const _uint COMBO3_MOVESTOP_TICK = 15;
 }

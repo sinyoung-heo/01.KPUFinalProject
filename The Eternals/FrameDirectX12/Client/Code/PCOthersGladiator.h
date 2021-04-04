@@ -36,18 +36,18 @@ public:
 	// MultiThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
-
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag);
-	HRESULT			SetUp_PCWeapon();
-	void			Set_ConstantTable();
-	void			Set_ConstantTableShadowDepth();
-	void			Move_OnNaviMesh(const _float& fTimeDelta);
-	void			SetUp_MoveSpeed(const _float& fTimeDelta);
-	void			SetUp_StanceChange(const _float& fTimeDelta);
+private:
+	HRESULT	SetUp_PCWeapon();
+	void	Set_ConstantTable();
+	void	Set_ConstantTableShadowDepth();
+	void	Move_OnNaviMesh(const _float& fTimeDelta);
+	void	SetUp_MoveSpeed(const _float& fTimeDelta);
+	void	SetUp_StanceChange(const _float& fTimeDelta);
 
-	void			SetUp_Combo1AttackMove(const _float& fTimeDelta);
-	void			AttackMove_OnNaviMesh(const _float& fTimeDelta);
+	void	SetUp_OthersComoboAttackMove(const _float& fTimeDelta, const _uint& uiAniIdx, const _uint& uiStopTick, const _float& fMoveSpeed, const _float& fStopSpeed);
+	void	AttackMove_OnNaviMesh(const _float& fTimeDelta);
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
