@@ -4,13 +4,6 @@
 #include "GladiatorAnimation.h"
 #include "PCWeaponTwoHand.h"
 
-namespace PCOthersGladiatorConst
-{
-	const _float MAX_SPEED       = 4.0f;
-	const _float MIN_SPEED       = 0.0f;
-	const _float MOVE_STOP_SPEED = 3.0f;
-}
-
 namespace Engine
 {
 	class CMesh;
@@ -26,8 +19,9 @@ private:
 	virtual ~CPCOthersGladiator() = default;
 
 public:
-	void Set_AnimationIdx(const _uint& iIdx) { m_uiAnimIdx = iIdx; m_pMeshCom->Set_AnimationKey(m_uiAnimIdx); }
+	void Set_AnimationIdx(const _uint& iIdx) { m_uiAnimIdx = iIdx;/* m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);*/ }
 	void Set_StanceChange(const _uint& uiAniIdx, const _bool& bIsStanceAttack);
+	void Reset_AttackMoveInterpolationRatio() { m_tAttackMoveSpeedInterpolationDesc.linear_ratio = 0.0f; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
@@ -42,16 +36,18 @@ public:
 	// MultiThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
-
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag);
-	HRESULT			SetUp_PCWeapon();
-	void			Set_ConstantTable();
-	void			Set_ConstantTableShadowDepth();
-	void			Move_OnNaviMesh(const _float& fTimeDelta);
-	void			SetUp_MoveSpeed(const _float& fTimeDelta);
-	void			SetUp_StanceChange(const _float& fTimeDelta);
+private:
+	HRESULT	SetUp_PCWeapon();
+	void	Set_ConstantTable();
+	void	Set_ConstantTableShadowDepth();
+	void	Move_OnNaviMesh(const _float& fTimeDelta);
+	void	SetUp_MoveSpeed(const _float& fTimeDelta);
+	void	SetUp_StanceChange(const _float& fTimeDelta);
 
+	void	SetUp_OthersComoboAttackMove(const _float& fTimeDelta, const _uint& uiAniIdx, const _uint& uiStopTick, const _float& fMoveSpeed, const _float& fStopSpeed);
+	void	AttackMove_OnNaviMesh(const _float& fTimeDelta);
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -64,6 +60,7 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
+	CServerMath*		m_pServerMath             = nullptr;
 	CPCWeaponTwoHand*	m_pWeapon                 = nullptr;
 	wstring				m_wstrMeshTag             = L"";
 	Gladiator::STANCE	m_ePreStance              = Gladiator::STANCE_END;
@@ -73,6 +70,7 @@ private:
 
 	// Speed Linear Interpolation
 	Engine::LINEAR_INTERPOLATION_DESC<_float> m_tMoveSpeedInterpolationDesc;
+	Engine::LINEAR_INTERPOLATION_DESC<_float> m_tAttackMoveSpeedInterpolationDesc;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]

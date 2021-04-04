@@ -4,17 +4,6 @@
 #include "GladiatorAnimation.h"
 #include "PCWeaponTwoHand.h"
 
-namespace GladiatorConst
-{
-	const _float MIN_SPEED       = 0.0f;
-	const _float MAX_SPEED       = 5.0f;
-	const _float MOVE_STOP_SPEED = 3.0f;
-
-	enum COMBOCNT { COMBOCNT_0, COMBOCNT_1, COMBOCNT_2, COMBOCNT_3, COMBO_END };
-
-	const _uint COMBO1_MOVESTOP_TICK = 16;
-}
-
 namespace Engine
 {
 	class CMesh;
@@ -77,7 +66,7 @@ private:
 
 	void Ready_AngleInterpolationValue(const _float& fEndAngle);
 	void SetUp_AngleInterpolation(const _float& fTimeDelta);
-	void SetUp_Combo1AttackMove(const _float& fTimeDelta);
+	void SetUp_ComoboAttackMove(const _float& fTimeDelta, const _uint& uiComboCnt, const _uint& uiAniIdx, const _uint& uiStopTick, const _float& fMoveSpeed, const _float& fStopSpeed);
 
 private:
 	/*__________________________________________________________________________________________________________
