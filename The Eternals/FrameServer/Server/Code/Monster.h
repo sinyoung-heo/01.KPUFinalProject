@@ -10,6 +10,7 @@ public:
 
 public:
 	void Set_AnimDuration(double arr[]);
+	void Set_NumAnimation(const _uint& num) { m_uiNumAniIndex = num; }
 public:
 	/* SEND PACKET */
 	void send_Monster_enter_packet(int to_client);
@@ -86,5 +87,7 @@ public:
 	float m_fBlendingTime = 0.f;
 
 	double m_arrDuration[MAX_ANI] = { 0 };
+
+	_uint m_uiAnimIdx = 0;
 };
 

@@ -5,7 +5,7 @@
 CMonster::CMonster()
 	:m_iHp(0), m_iMaxHp(0), m_iExp(0), m_iAtt(0), m_fSpd(0.f),
 	m_iTargetNum(-1), m_bIsAttack(false), m_bIsComeBack(false),
-	m_monNum(0), m_bIsShortAttack(true)
+	m_monNum(0), m_bIsShortAttack(true), m_uiAnimIdx(0)
 {
 }
 
@@ -31,7 +31,7 @@ int CMonster::Update_Monster(const float& fTimeDelta)
 	Change_Animation(fTimeDelta);
 
 	/* Calculate Animation frame */
-	//Set_AnimationKey(m_uiAnimIdx);
+	Set_AnimationKey(m_uiAnimIdx);
 	Play_Animation(fTimeDelta * Monster_Normal::TPS);
 
 	return NO_EVENT;
@@ -161,6 +161,7 @@ void CMonster::Change_DrownedSailor_Animation(const float& fTimeDelta)
 
 	case STATUS::ST_ACTIVE:
 	{
+		m_uiAnimIdx = Monster_Normal::WALK;
 		Move_NormalMonster(fTimeDelta);
 	}
 	break;
@@ -169,11 +170,13 @@ void CMonster::Change_DrownedSailor_Animation(const float& fTimeDelta)
 	{
 		m_iTargetNum = -1;
 		m_bIsComeBack = false;
+		m_uiAnimIdx = Monster_Normal::WAIT;
 	}
 	break;
 
 	case STATUS::ST_CHASE:
 	{
+		m_uiAnimIdx = Monster_Normal::RUN;
 		Chase_DrownedSailor(fTimeDelta);
 	}
 	break;
@@ -1639,7 +1642,7 @@ void CMonster::Attack_DrownedSailor(const float& fTimeDelta)
 
 		/* 공격 스킬 설정 */
 		float fDist = Calculate_TargetDist(pTarget->m_vPos);
-		if ((ATTACK_RANGE_EPIC * ATTACK_RANGE_EPIC) < fDist)
+		if ((ATTACK_RANGE_CRAB * ATTACK_RANGE_CRAB) < fDist)
 		{
 			Change_ChaseMode();
 			return;
@@ -1652,8 +1655,9 @@ void CMonster::Attack_DrownedSailor(const float& fTimeDelta)
 			if (true == CObjMgr::GetInstance()->Is_Player(pl))
 			{
 				if (!m_bIsAttack) return;
-
-				send_Monster_NormalAttack(pl, rand() % 5 + 3);
+				int ani = rand() % 5 + 3;
+				Set_AnimationKey(ani);
+				send_Monster_NormalAttack(pl, ani);
 			}
 		}
 		// 주변 유저에게 monster_attack_start를 알렸다면 잠시 공격 중지 -> 일정 시간 후 재공격
@@ -1789,6 +1793,13 @@ void CMonster::Play_Animation(float fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	m_ui3DMax_NumFrame = (_uint)(_3DMAX_FPS * (m_arrDuration[m_uiCurAniIndex] / Monster_Normal::TPS));
 	m_ui3DMax_CurFrame = (_uint)(_3DMAX_FPS * (m_fAnimationTime / Monster_Normal::TPS));
+
+	if (m_fBlendingTime <= 0.0f)
+	{
+		m_uiCurAniIndex = m_uiNewAniIndex;
+		m_fAnimationTime = 0.0f;
+		m_fBlendingTime = 1.f;
+	}
 
 }
 

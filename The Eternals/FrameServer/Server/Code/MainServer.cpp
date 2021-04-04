@@ -997,6 +997,9 @@ void Initialize_Monster()
 		pNew->m_type = MON_NORMAL;
 		pNew->m_monNum = MON_SAILOR;
 		pNew->m_status = STATUS::ST_NONACTIVE;
+
+		pNew->Set_AnimDuration(DrownedSailor::duration);
+		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
 	
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
 		CObjMgr::GetInstance()->Add_GameObject(L"MONSTER", pNew, s_num);
