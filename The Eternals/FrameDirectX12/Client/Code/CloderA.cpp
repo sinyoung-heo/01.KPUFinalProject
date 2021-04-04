@@ -38,7 +38,7 @@ HRESULT CCloderA::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag,
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
-	m_iCurAnim = Monkey::A_WAIT;
+	m_iCurAnim = Cloder::A_WAIT;
 
 	return S_OK;
 }

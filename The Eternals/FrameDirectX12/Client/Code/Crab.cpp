@@ -135,18 +135,6 @@ HRESULT CCrab::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 	Engine::FAILED_CHECK_RETURN(m_pShadowCom->Set_PipelineStatePass(0), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shadow", m_pShadowCom);
 
-	// Collider - Sphere
-	m_pColliderSphereCom = static_cast<Engine::CColliderSphere*>(m_pComponentMgr->Clone_Component(L"ColliderSphere", Engine::COMPONENTID::ID_DYNAMIC));
-	Engine::NULL_CHECK_RETURN(m_pColliderSphereCom, E_FAIL);
-	m_pColliderSphereCom->AddRef();
-	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderSphere", m_pColliderSphereCom);
-
-	// Collider - Box
-	m_pColliderBoxCom = static_cast<Engine::CColliderBox*>(m_pComponentMgr->Clone_Component(L"ColliderBox", Engine::COMPONENTID::ID_DYNAMIC));
-	Engine::NULL_CHECK_RETURN(m_pColliderBoxCom, E_FAIL);
-	m_pColliderBoxCom->AddRef();
-	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderBox", m_pColliderBoxCom);
-
 	// NaviMesh
 	m_pNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(wstrNaviMeshTag.c_str(), Engine::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);

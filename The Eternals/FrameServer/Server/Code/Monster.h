@@ -4,11 +4,13 @@
 class CMonster :
     public CObj
 {
-	
 public:
 	CMonster();
 	virtual ~CMonster();
 
+public:
+	void Set_AnimDuration(double arr[]);
+	void Set_NumAnimation(const _uint& num) { m_uiNumAniIndex = num; }
 public:
 	/* SEND PACKET */
 	void send_Monster_enter_packet(int to_client);
@@ -38,6 +40,8 @@ private:
 	void Attack_Cloder(const float& fTimeDelta);
 
 	void Change_DrownedSailor_Animation(const float& fTimeDelta);
+	void Chase_DrownedSailor(const float& fTimeDelta);
+	void Attack_DrownedSailor(const float& fTimeDelta);
 
 	/* MONSTER ALL */
 	void Change_Animation(const float& fTimeDelta);
@@ -48,8 +52,11 @@ private:
 	void Move_ComeBack(const float& fTimeDelta);			// MOVE PROCESS
 	void Move_NormalMonster(const float& fTimeDelta);		// MOVE PROCESS
 	
-
+private:
 	float Calculate_TargetDist(const _vec3& vPos);
+	void Play_Animation(float fTimeDelta);
+	void Set_AnimationKey(const _uint& uiAniKey);
+	bool Is_AnimationSetEnd(const float& fTimeDelta);
 
 public:
 	virtual DWORD Release();
@@ -67,5 +74,20 @@ public:
 
 	int				m_iTargetNum	= -1;
 	_vec3			m_vOriPos		= _vec3(0.f);
+
+	/* Animation */
+	_uint m_uiNewAniIndex = 0;
+	_uint m_uiCurAniIndex = 0;
+	_uint m_uiNumAniIndex = 0;
+	_uint m_ui3DMax_NumFrame = 0;
+	_uint m_ui3DMax_CurFrame = 0;
+
+	float m_fAnimationTime = 0.f;
+	float m_fBlendAnimationTime = 0.f;
+	float m_fBlendingTime = 0.f;
+
+	double m_arrDuration[MAX_ANI] = { 0 };
+
+	_uint m_uiAnimIdx = 0;
 };
 

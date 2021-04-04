@@ -235,6 +235,9 @@
     <Filter Include="02.GameObject\05.Monster\02.CloderA">
       <UniqueIdentifier>{bc3c5eac-51e7-4ec7-94fa-47a9d686f3fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.Monster\03.DrownedSailor">
+      <UniqueIdentifier>{713aa426-3981-45d9-8771-b82e6792d412}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -465,6 +468,9 @@
     <ClInclude Include="..\Header\GladiatorAnimation.h">
       <Filter>02.GameObject\02.PlayerCharacter\00.PCGladiator</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\DrownedSailor.h">
+      <Filter>02.GameObject\05.Monster\03.DrownedSailor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -649,6 +655,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CloderA.cpp">
       <Filter>02.GameObject\05.Monster\02.CloderA</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\DrownedSailor.cpp">
+      <Filter>02.GameObject\05.Monster\03.DrownedSailor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

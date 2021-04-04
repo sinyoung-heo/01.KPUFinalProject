@@ -12,6 +12,7 @@
 #include "Crab.h"
 #include "Monkey.h"
 #include "CloderA.h"
+#include "DrownedSailor.h"
 #include "DynamicCamera.h"
 #include "TestColPlayer.h"
 #include "TestColMonster.h"
@@ -699,6 +700,15 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 								   _vec3(0.05f, 0.05f, 0.05f),										// Scale
 								   _vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
 								   _vec3(packet->posX, packet->posY, packet->posZ));
+	}
+	else if (packet->mon_num == MON_SAILOR)
+	{
+		pGameObj = CDrownedSailor::Create(m_pGraphicDevice, m_pCommandList,
+										  wstring(packet->name, &packet->name[MAX_ID_LEN]),					// MeshTag
+										  wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),		// NaviMeshTag
+										  _vec3(0.05f, 0.05f, 0.05f),										// Scale
+										  _vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
+										  _vec3(packet->posX, packet->posY, packet->posZ));
 	}
 
 

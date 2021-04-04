@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Monkey.h"
+#include "DrownedSailor.h"
 
 #include "GraphicDevice.h"
 #include "DirectInput.h"
@@ -9,14 +9,14 @@
 #include "RenderTarget.h"
 #include "TimeMgr.h"
 
-CMonkey::CMonkey(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CDrownedSailor::CDrownedSailor(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pPacketMgr(CPacketMgr::Get_Instance())
 	, m_pServerMath(CServerMath::Get_Instance())
 {
 }
 
-HRESULT CMonkey::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
+HRESULT CDrownedSailor::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag, wstrNaviMeshTag), E_FAIL);
@@ -38,12 +38,12 @@ HRESULT CMonkey::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, 
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
-	m_iCurAnim = Monkey::A_WAIT;
+	m_iCurAnim = DrownedSailor::A_WAIT;
 
 	return S_OK;
 }
 
-HRESULT CMonkey::LateInit_GameObject()
+HRESULT CDrownedSailor::LateInit_GameObject()
 {
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
@@ -52,7 +52,7 @@ HRESULT CMonkey::LateInit_GameObject()
 	return S_OK;
 }
 
-_int CMonkey::Update_GameObject(const _float& fTimeDelta)
+_int CDrownedSailor::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
@@ -74,7 +74,7 @@ _int CMonkey::Update_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CMonkey::LateUpdate_GameObject(const _float& fTimeDelta)
+_int CDrownedSailor::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
@@ -94,23 +94,23 @@ _int CMonkey::LateUpdate_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-void CMonkey::Send_PacketToServer()
+void CDrownedSailor::Send_PacketToServer()
 {
 }
 
-void CMonkey::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
+void CDrownedSailor::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
 	Set_ConstantTable();
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
-void CMonkey::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
+void CDrownedSailor::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
 	Set_ConstantTableShadowDepth();
 	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 }
 
-HRESULT CMonkey::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
+HRESULT CDrownedSailor::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -143,7 +143,7 @@ HRESULT CMonkey::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 	return S_OK;
 }
 
-void CMonkey::Set_ConstantTable()
+void CDrownedSailor::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -166,7 +166,7 @@ void CMonkey::Set_ConstantTable()
 		m_fDeltaTime = 0.f;
 }
 
-void CMonkey::Set_ConstantTableShadowDepth()
+void CDrownedSailor::Set_ConstantTableShadowDepth()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -184,7 +184,7 @@ void CMonkey::Set_ConstantTableShadowDepth()
 
 }
 
-void CMonkey::Active_Monster(const _float& fTimeDelta)
+void CDrownedSailor::Active_Monster(const _float& fTimeDelta)
 {
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 	m_pTransCom->m_vDir.Normalize();
@@ -199,55 +199,85 @@ void CMonkey::Active_Monster(const _float& fTimeDelta)
 	}
 }
 
-void CMonkey::Change_Animation(const _float& fTimeDelta)
+void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 {
 	switch (m_iCurAnim)
 	{
 
-	case Monkey::A_WAIT:
+	case DrownedSailor::A_WAIT:
 	{
 		m_uiAnimIdx = 0;
 		m_bIsMoveStop = true;
 	}
 	break;
 
-	case Monkey::A_WALK:
+	case DrownedSailor::A_WALK:
 	{
 		m_uiAnimIdx = 1;		
 		m_bIsMoveStop = false;
 	}
 	break;
 
-	case Monkey::A_RUN:
+	case DrownedSailor::A_RUN:
 	{
 		m_uiAnimIdx = 2;
 		m_bIsMoveStop = false;
 	}
 	break;
 
-	case Monkey::A_ATTACK:
+	case DrownedSailor::A_ATTACK_SPIN:
 	{
 		m_uiAnimIdx = 3;
 		m_bIsMoveStop = true;
 
 		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-			m_iCurAnim = Monkey::A_WAIT;
+			m_iCurAnim = Cloder::A_WAIT;
 	}
 	break;
 
-	case Monkey::A_ATTACK_THROW:
+	case DrownedSailor::A_ATTACK:
 	{
 		m_uiAnimIdx = 4;
 		m_bIsMoveStop = true;
 
 		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-			m_iCurAnim = Monkey::A_WAIT;
+			m_iCurAnim = Cloder::A_WAIT;
 	}
 	break;
 
-	case Monkey::A_DEATH:
+	case DrownedSailor::A_ATTACK_STRONG:
 	{
 		m_uiAnimIdx = 5;
+		m_bIsMoveStop = true;
+
+		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			m_iCurAnim = Cloder::A_WAIT;
+	}
+	break;
+
+	case DrownedSailor::A_ATTACK_RUSH:
+	{
+		m_uiAnimIdx = 6;
+		m_bIsMoveStop = true;
+
+		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			m_iCurAnim = Cloder::A_WAIT;
+	}
+	break;
+
+	case DrownedSailor::A_ATTACK_HOOK:
+	{
+		m_uiAnimIdx = 7;
+		m_bIsMoveStop = true;
+
+		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			m_iCurAnim = Cloder::A_WAIT;
+	}
+	break;
+
+	case DrownedSailor::A_DEATH:
+	{
+		m_uiAnimIdx = 8;
 		m_bIsMoveStop = true;
 		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) {}		
 	}
@@ -256,9 +286,9 @@ void CMonkey::Change_Animation(const _float& fTimeDelta)
 	}
 }
 
-Engine::CGameObject* CMonkey::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
+Engine::CGameObject* CDrownedSailor::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
 {
-	CMonkey* pInstance = new CMonkey(pGraphicDevice, pCommandList);
+	CDrownedSailor* pInstance = new CDrownedSailor(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, wstrNaviMeshTag, vScale, vAngle, vPos)))
 		Engine::Safe_Release(pInstance);
@@ -266,7 +296,7 @@ Engine::CGameObject* CMonkey::Create(ID3D12Device* pGraphicDevice, ID3D12Graphic
 	return pInstance;
 }
 
-void CMonkey::Free()
+void CDrownedSailor::Free()
 {
 	Engine::CGameObject::Free();
 
