@@ -34,6 +34,8 @@ namespace Gladiator
 	enum STANCE		{ STANCE_NONEATTACK, STANCE_ATTACK, STANCE_END };
 	enum COMBOCNT	{ COMBOCNT_0, COMBOCNT_1, COMBOCNT_2, COMBOCNT_3, COMBO_END };
 
+	const _float OTHERS_OFFSET	= 0.85f;
+
 	const _float MIN_SPEED       = 0.0f;
 	const _float MAX_SPEED       = 5.0f;
 	const _float MOVE_STOP_SPEED = 3.0f;

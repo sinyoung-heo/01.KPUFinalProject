@@ -7,6 +7,7 @@
 
 CPCOthersGladiator::CPCOthersGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
+	, m_pServerMath(CServerMath::Get_Instance())
 {
 
 }
@@ -74,12 +75,11 @@ HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag,
 	// Move Speed
 	m_tMoveSpeedInterpolationDesc.linear_ratio = 0.0f;
 	m_tMoveSpeedInterpolationDesc.v1           = Gladiator::MIN_SPEED;
-	m_tMoveSpeedInterpolationDesc.v2           = Gladiator::MAX_SPEED;
+	m_tMoveSpeedInterpolationDesc.v2           = Gladiator::MAX_SPEED * Gladiator::OTHERS_OFFSET;
 
 	m_tAttackMoveSpeedInterpolationDesc.linear_ratio        = 0.0f;
 	m_tAttackMoveSpeedInterpolationDesc.v1                  = Gladiator::MIN_SPEED;
-	m_tAttackMoveSpeedInterpolationDesc.v2                  = Gladiator::MAX_SPEED;
-	m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = 1.0f;
+	m_tAttackMoveSpeedInterpolationDesc.v2                  = Gladiator::MAX_SPEED * Gladiator::OTHERS_OFFSET;
 
 	return S_OK;
 }
@@ -124,7 +124,7 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Move_OnNaviMesh(fTimeDelta);
-	// AttackMove_OnNaviMesh(fTimeDelta);
+	AttackMove_OnNaviMesh(fTimeDelta);
 
 	// Linear Interpolation
 	Engine::SetUp_LinearInterpolation(fTimeDelta, m_pTransCom->m_vPos, m_tPosInterpolationDesc);
@@ -267,8 +267,8 @@ void CPCOthersGladiator::Set_ConstantTableShadowDepth()
 
 void CPCOthersGladiator::Move_OnNaviMesh(const _float& fTimeDelta)
 {
-	//if (m_bIsAttack)
-	//	return;
+	if (m_bIsAttack)
+		return;
 
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 	m_pTransCom->m_vDir.Normalize();
@@ -278,7 +278,7 @@ void CPCOthersGladiator::Move_OnNaviMesh(const _float& fTimeDelta)
 	if (!m_bIsMoveStop || Gladiator::MIN_SPEED != m_pInfoCom->m_fSpeed)
 	{
 		// NaviMesh 이동.		
-		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
+		if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
 		{
 			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
 														 &m_pTransCom->m_vDir,
@@ -292,11 +292,11 @@ void CPCOthersGladiator::SetUp_MoveSpeed(const _float& fTimeDelta)
 {
 	// Move On
 	if (!m_bIsMoveStop)
-		m_tMoveSpeedInterpolationDesc.interpolation_speed = 1.0f;
+		m_tMoveSpeedInterpolationDesc.interpolation_speed = 1.0f * Gladiator::OTHERS_OFFSET;
 
 	// Move Off
 	else
-		m_tMoveSpeedInterpolationDesc.interpolation_speed = -Gladiator::MOVE_STOP_SPEED;
+		m_tMoveSpeedInterpolationDesc.interpolation_speed = -Gladiator::MOVE_STOP_SPEED * Gladiator::OTHERS_OFFSET;
 
 	m_tMoveSpeedInterpolationDesc.linear_ratio += m_tMoveSpeedInterpolationDesc.interpolation_speed * fTimeDelta;
 	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(m_tMoveSpeedInterpolationDesc.v1, 
@@ -351,20 +351,31 @@ void CPCOthersGladiator::SetUp_Combo1AttackMove(const _float& fTimeDelta)
 
 		// Move Off
 		else
-			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = -3.0f;
+			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = -3.0f * Gladiator::OTHERS_OFFSET;
 	}
 }
 
 void CPCOthersGladiator::AttackMove_OnNaviMesh(const _float& fTimeDelta)
 {
+	SetUp_Combo1AttackMove(fTimeDelta);
+
 	if (!m_bIsAttack)
 		return;
 
-	SetUp_Combo1AttackMove(fTimeDelta);
-
-	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
-	m_pTransCom->m_vDir.Normalize();
-
+	// Set Speed
+	m_tAttackMoveSpeedInterpolationDesc.linear_ratio += m_tAttackMoveSpeedInterpolationDesc.interpolation_speed * fTimeDelta;
+	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(m_tAttackMoveSpeedInterpolationDesc.v1,
+													   m_tAttackMoveSpeedInterpolationDesc.v2,
+													   m_tAttackMoveSpeedInterpolationDesc.linear_ratio);
+	// NaviMesh 이동.
+	if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
+	{
+		m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+		m_pTransCom->m_vDir.Normalize();
+		m_pTransCom->m_vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+															  &m_pTransCom->m_vDir,
+															  m_pInfoCom->m_fSpeed * fTimeDelta);
+	}
 }
 
 Engine::CGameObject* CPCOthersGladiator::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, 
@@ -386,9 +397,9 @@ Engine::CGameObject* CPCOthersGladiator::Create(ID3D12Device* pGraphicDevice, ID
 void CPCOthersGladiator::Free()
 {
 	Engine::CGameObject::Free();
-
 	Engine::Safe_Release(m_pMeshCom);
 	Engine::Safe_Release(m_pShaderCom);
 	Engine::Safe_Release(m_pShadowCom);
 	Engine::Safe_Release(m_pNaviMeshCom);
+	m_pWeapon->Set_DeadGameObject();
 }
