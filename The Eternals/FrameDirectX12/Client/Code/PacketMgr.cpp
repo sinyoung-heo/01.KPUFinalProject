@@ -26,6 +26,7 @@ CPacketMgr::CPacketMgr()
 	, m_pRenderer(Engine::CRenderer::Get_Instance())
 	, m_eCurKey(MVKEY::K_END), m_ePreKey(MVKEY::K_END)
 {
+	memset(m_recv_buf, 0, sizeof(m_recv_buf));
 	m_packet_start = m_recv_buf;
 	m_recv_start = m_recv_buf;
 	m_next_recv_ptr = m_recv_buf;
@@ -93,9 +94,9 @@ void CPacketMgr::recv_packet()
 	// Server Data Receive.
 	//int retval = recv(g_hSocket, reinterpret_cast<char*>(net_buf), MAX_BUF_SIZE, 0);
 
-	// test
-	int retval = recv(g_hSocket, reinterpret_cast<CHAR*>(m_next_recv_ptr),
-		MAX_BUF_SIZE - static_cast<int>(m_next_recv_ptr - m_recv_buf), 0);
+	// Server Data Receive Version 2 - Ring Buffer
+	int iLen = MAX_BUF_SIZE - static_cast<int>(m_next_recv_ptr - m_recv_buf);
+	int retval = recv(g_hSocket, reinterpret_cast<CHAR*>(m_recv_start), iLen, 0);
 
 #ifdef ERR_CHECK
 	if (retval == SOCKET_ERROR)
@@ -115,7 +116,7 @@ void CPacketMgr::recv_packet()
 		// 패킷 재조립
 		//ProcessData(m_recv_buf, static_cast<size_t>(retval));
 
-		// test
+		// 패킷 재조립(Version 2 - Ring Buffer)
 		Process_recv_test(static_cast<size_t>(retval));
 	}
 }
@@ -616,7 +617,9 @@ void CPacketMgr::Process_recv_test(size_t iosize)
 	// recv 처리 종료 -> 다시 recv를 해야 한다.
 	// 다시 recv를 하기 전에 링 버퍼의 여유 공간을 확인 후 다 사용했을 경우 초기화한다.
 	// 남아있는 공간이 MIN_BUFFER 보다 작으면 남은 데이터를 링 버퍼 맨 앞으로 옮겨준다.
-	if ((MAX_BUF_SIZE - (m_next_recv_ptr - m_recv_buf)) < MIN_BUF_SIZE)
+	
+	cout << (int)(m_next_recv_ptr - m_recv_buf) << endl;
+	if ((MAX_BUF_SIZE - (int)(m_next_recv_ptr - m_recv_buf)) < MIN_BUF_SIZE)
 	{
 		// 남은 데이터 버퍼를 recv_buf에 복사한다.
 		memcpy(m_recv_buf, m_packet_start, left_data);
@@ -648,14 +651,6 @@ void CPacketMgr::Process_packet_test()
 		Engine::CGameObject* pGameObj = nullptr;
 		wstring wstrMeshTag = L"";
 
-#ifdef STAGE_LDH
-		//pGameObj = CTestPlayer::Create(m_pGraphicDevice, m_pCommandList,
-		//							   L"PoporiR19",					// MeshTag
-		//							   _vec3(0.05f, 0.05f, 0.05f),		// Scale
-		//							   _vec3(0.0f, 0.0f, 0.0f),			// Angle
-		//							   _vec3(packet->posX, packet->posY, packet->posZ));		// Pos
-
-#else
 		if (PC_GLADIATOR == packet->o_type)
 		{
 			wstrMeshTag = L"PoporiR27Gladiator";
@@ -679,7 +674,6 @@ void CPacketMgr::Process_packet_test()
 			_vec3(packet->posX, packet->posY, packet->posZ),	// Pos
 			TwoHand33_B_SM);									// WeaponType
 
-#endif
 		pGameObj->Set_OType(packet->o_type);
 		pGameObj->Set_ServerNumber(g_iSNum);
 		pGameObj->Set_Info(packet->level, packet->hp, packet->maxHp, packet->mp, packet->maxMp, packet->exp, packet->maxExp, packet->att, packet->spd);

@@ -25,10 +25,11 @@ public:
 
 public:
 	void	recv_packet();
+	// Server Data Receive - Version 1 (Copy Data)
 	void	ProcessData(unsigned char* net_buf, size_t io_byte);
 	void	ProcessPacket(char* ptr);
 
-	//test
+	// Server Data Receive - Version 2 (Ring Buffer)
 	void	Process_recv_test(size_t iosize);
 	void	Process_packet_test();
 
@@ -66,6 +67,7 @@ private:
 	MVKEY m_eCurKey = MVKEY::K_END;
 	MVKEY m_ePreKey = MVKEY::K_END;
 
+	/* 패킷 재조립 - Ring Buffer */
 	unsigned char* m_packet_start;
 	unsigned char* m_recv_start;
 	unsigned char* m_next_recv_ptr;
