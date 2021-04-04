@@ -465,6 +465,8 @@ void CPacketMgr::Attack_User(sc_packet_attack* packet)
 
 		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
 		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
+		pObj->Set_IsStartAngleInterpolation(true);
+		pObj->Set_LinearAngle(pObj->Get_Transform()->m_vAngle.y, packet->end_angleY);
 		pObj->Set_Attack(true);
 	}
 }
