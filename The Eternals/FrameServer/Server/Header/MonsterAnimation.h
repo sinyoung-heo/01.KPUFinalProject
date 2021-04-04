@@ -6,6 +6,8 @@ namespace Monster_Normal
 	constexpr int WALK		= 1;
 	constexpr int RUN		= 2;
 	constexpr int ATTACK	= 3;
+
+	constexpr int TPS		= 4800;
 }
 namespace Crab
 {
@@ -41,9 +43,16 @@ namespace DrownedSailor
 	constexpr int ATTACK_HOOK	= 7;
 	constexpr int DEATH			= 8;
 
+	constexpr int NUM_ANIMATION = 9;
+	
 	enum ANIM_SAILOR {
 		A_WAIT, A_WALK, A_RUN,
 		A_ATTACK_SPIN, A_ATTACK, A_ATTACK_STRONG,
 		A_ATTACK_RUSH, A_ATTACK_HOOK, A_DEATH, A_END
+	};
+
+	static double duration[NUM_ANIMATION] =
+	{
+		10080, 6400, 5440, 9600, 9600, 12800, 12800, 7200, 18880
 	};
 }

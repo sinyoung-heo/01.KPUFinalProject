@@ -257,7 +257,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 
 	case DrownedSailor::A_ATTACK_RUSH:
 	{
-		m_uiAnimIdx = 4;
+		m_uiAnimIdx = 6;
 		m_bIsMoveStop = true;
 
 		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
@@ -267,7 +267,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 
 	case DrownedSailor::A_ATTACK_HOOK:
 	{
-		m_uiAnimIdx = 5;
+		m_uiAnimIdx = 7;
 		m_bIsMoveStop = true;
 
 		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
@@ -277,7 +277,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 
 	case DrownedSailor::A_DEATH:
 	{
-		m_uiAnimIdx = 6;
+		m_uiAnimIdx = 8;
 		m_bIsMoveStop = true;
 		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) {}		
 	}
