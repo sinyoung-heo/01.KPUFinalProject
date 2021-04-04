@@ -6,11 +6,13 @@
 
 namespace GladiatorConst
 {
-	const _float MAX_SPEED       = 5.0f;
 	const _float MIN_SPEED       = 0.0f;
+	const _float MAX_SPEED       = 5.0f;
 	const _float MOVE_STOP_SPEED = 3.0f;
 
 	enum COMBOCNT { COMBOCNT_0, COMBOCNT_1, COMBOCNT_2, COMBOCNT_3, COMBO_END };
+
+	const _uint COMBO1_MOVESTOP_TICK = 16;
 }
 
 namespace Engine
@@ -62,6 +64,7 @@ private:
 	void SetUp_ComboAttackAnimation();
 	void SetUp_FromComboAttackToAttackWait(const _float& fTimeDelta);
 	void Move_OnNaviMesh(const _float& fTimeDelta);
+	void AttackMove_OnNaviMesh(const _float& fTimeDelta);
 	void Send_Player_Move();
 	bool Is_Change_CamDirection();
 
@@ -102,6 +105,8 @@ private:
 
 	// Speed Linear Interpolation
 	Engine::LINEAR_INTERPOLATION_DESC<_float> m_tMoveSpeedInterpolationDesc;
+	Engine::LINEAR_INTERPOLATION_DESC<_float> m_tAttackMoveSpeedInterpolationDesc;
+
 
 	// Server
 	_bool			m_bIsKeyDown   = false;

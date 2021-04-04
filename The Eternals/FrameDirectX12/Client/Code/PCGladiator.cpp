@@ -55,6 +55,10 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 	m_tMoveSpeedInterpolationDesc.v1           = GladiatorConst::MIN_SPEED;
 	m_tMoveSpeedInterpolationDesc.v2           = GladiatorConst::MAX_SPEED;
 
+	m_tAttackMoveSpeedInterpolationDesc.linear_ratio        = 0.0f;
+	m_tAttackMoveSpeedInterpolationDesc.v1                  = GladiatorConst::MIN_SPEED;
+	m_tAttackMoveSpeedInterpolationDesc.v2                  = GladiatorConst::MAX_SPEED;
+	m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = 1.0f;
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
@@ -132,8 +136,8 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	// NaviMesh 이동.
-	Move_OnNaviMesh(fTimeDelta);
 	SetUp_RunMoveSpeed(fTimeDelta);
+	Move_OnNaviMesh(fTimeDelta);
 
 	// Angle Linear Interpolation
 	SetUp_AngleInterpolation(fTimeDelta);
@@ -504,119 +508,118 @@ void CPCGladiator::KeyInput_ComboAttack(const _float& fTimeDelta)
 	if (m_bIsAttack)
 	{
 		m_bIsSameDir = true;
+		SetUp_Combo1AttackMove(fTimeDelta);
 
+		AttackMove_OnNaviMesh(fTimeDelta);
 	}
 }
 
 void CPCGladiator::SetUp_ComboAttackAnimation()
 {
-	// ATTACK_WAIT ==> COMBO1
-	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
-		GladiatorConst::COMBOCNT_0 == m_uiComoboCnt && m_pMeshCom->Is_BlendingComplete())
+	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB))
 	{
-		Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		// ATTACK_WAIT ==> COMBO1
+		if (GladiatorConst::COMBOCNT_0 == m_uiComoboCnt && 
+			m_pMeshCom->Is_BlendingComplete())
+		{
+			m_tAttackMoveSpeedInterpolationDesc.linear_ratio = 0.0f;
 
-		m_bIsAttack   = true;
-		m_bIsKeyDown  = false;
-		m_uiComoboCnt = GladiatorConst::COMBOCNT_1;
-		m_uiAnimIdx   = Gladiator::COMBO1;
-		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
-	}
+			Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+			m_bIsAttack   = true;
+			m_bIsKeyDown  = false;
+			m_uiComoboCnt = GladiatorConst::COMBOCNT_1;
+			m_uiAnimIdx   = Gladiator::COMBO1;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
 
-	// COMBO1 ==> COMBO2
-	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
-			GladiatorConst::COMBOCNT_1 == m_uiComoboCnt &&
-			(Gladiator::COMBO1 == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete() &&
-			(m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.75f)))
-	{
-		Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		// COMBO1 ==> COMBO2
+		else if (GladiatorConst::COMBOCNT_1 == m_uiComoboCnt &&
+				 Gladiator::COMBO1 == m_uiAnimIdx && 
+				 m_pMeshCom->Is_BlendingComplete() &&
+				 m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.75f)
+		{
+			Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+			m_bIsKeyDown  = false;
+			m_bIsAttack   = true;
+			m_uiComoboCnt = GladiatorConst::COMBOCNT_2;
+			m_uiAnimIdx   = Gladiator::COMBO2;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
 
-		m_bIsKeyDown  = false;
-		m_bIsAttack   = true;
-		m_uiComoboCnt = GladiatorConst::COMBOCNT_2;
-		m_uiAnimIdx   = Gladiator::COMBO2;
-		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
-	}
+		// COMBO1R ==> COMBO2 
+		else if (GladiatorConst::COMBOCNT_1 == m_uiComoboCnt &&
+				 Gladiator::COMBO1R == m_uiAnimIdx && 
+				 m_pMeshCom->Is_BlendingComplete() &&
+				 m_ui3DMax_CurFrame <= 10)
+		{
+			Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+			m_bIsAttack   = true;
+			m_bIsKeyDown  = false;
+			m_uiComoboCnt = GladiatorConst::COMBOCNT_2;
+			m_uiAnimIdx   = Gladiator::COMBO2;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
 
-	// COMBO1R ==> COMBO2 
-	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
-			GladiatorConst::COMBOCNT_1 == m_uiComoboCnt &&
-			(Gladiator::COMBO1R == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete()) &&
-			m_ui3DMax_CurFrame <= 10)
-	{
-		Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		// COMBO2 ==> COMBO3
+		else if (GladiatorConst::COMBOCNT_2 == m_uiComoboCnt &&
+				 Gladiator::COMBO2 == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete() &&
+				 m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.75f)
+		{
+			Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+			m_bIsAttack   = true;
+			m_bIsKeyDown  = false;
+			m_uiComoboCnt = GladiatorConst::COMBOCNT_3;
+			m_uiAnimIdx   = Gladiator::COMBO3;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
 
-		m_bIsAttack   = true;
-		m_bIsKeyDown  = false;
-		m_uiComoboCnt = GladiatorConst::COMBOCNT_2;
-		m_uiAnimIdx   = Gladiator::COMBO2;
-		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
-	}
+		// COMBO2R ==> COMBO3
+		else if (GladiatorConst::COMBOCNT_2 == m_uiComoboCnt &&
+				 Gladiator::COMBO2R == m_uiAnimIdx && 
+				 m_pMeshCom->Is_BlendingComplete() &&
+				 m_ui3DMax_CurFrame <= m_ui3DMax_NumFrame * 0.5f)
+		{
+			Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+			m_bIsAttack   = true;
+			m_bIsKeyDown  = false;
+			m_uiComoboCnt = GladiatorConst::COMBOCNT_3;
+			m_uiAnimIdx   = Gladiator::COMBO3;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
 
-
-	// COMBO2 ==> COMBO3
-	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
-			GladiatorConst::COMBOCNT_2 == m_uiComoboCnt &&
-			(Gladiator::COMBO2 == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete() &&
-			(m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.75f)))
-	{
-		Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
-
-		m_bIsAttack   = true;
-		m_bIsKeyDown  = false;
-		m_uiComoboCnt = GladiatorConst::COMBOCNT_3;
-		m_uiAnimIdx   = Gladiator::COMBO3;
-		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
-	}
-	// COMBO2R ==> COMBO3
-	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
-			GladiatorConst::COMBOCNT_2 == m_uiComoboCnt &&
-			(Gladiator::COMBO2R == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete() &&
-			(m_ui3DMax_CurFrame <= m_ui3DMax_NumFrame * 0.5f)))
-	{
-		Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
-
-		m_bIsAttack   = true;
-		m_bIsKeyDown  = false;
-		m_uiComoboCnt = GladiatorConst::COMBOCNT_3;
-		m_uiAnimIdx   = Gladiator::COMBO3;
-		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
-	}
-
-	// COMBO3 ==> COMBO4
-	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
-			GladiatorConst::COMBOCNT_3 == m_uiComoboCnt &&
-			(Gladiator::COMBO3 == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete() &&
-			(m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.85f)))
-	{
-		Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
-
-		m_bIsAttack   = true;
-		m_bIsKeyDown  = false;
-		m_uiComoboCnt = GladiatorConst::COMBO_END;
-		m_uiAnimIdx   = Gladiator::COMBO4;
-		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
-	}
-	// COMBO3R ==> COMBO4
-	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
-			GladiatorConst::COMBOCNT_3 == m_uiComoboCnt &&
-			(Gladiator::COMBO3R == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete() &&
-			(m_ui3DMax_CurFrame <= m_ui3DMax_NumFrame * 0.55f)))
-	{
-		Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
-
-		m_bIsAttack   = true;
-		m_bIsKeyDown  = false;
-		m_uiComoboCnt = GladiatorConst::COMBO_END;
-		m_uiAnimIdx   = Gladiator::COMBO4;
-		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		// COMBO3 ==> COMBO4
+		else if (GladiatorConst::COMBOCNT_3 == m_uiComoboCnt &&
+				 Gladiator::COMBO3 == m_uiAnimIdx && 
+				 m_pMeshCom->Is_BlendingComplete() &&
+				 m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.85f)
+		{
+			Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+			m_bIsAttack   = true;
+			m_bIsKeyDown  = false;
+			m_uiComoboCnt = GladiatorConst::COMBO_END;
+			m_uiAnimIdx   = Gladiator::COMBO4;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
+		// COMBO3R ==> COMBO4
+		else if (GladiatorConst::COMBOCNT_3 == m_uiComoboCnt &&
+				 Gladiator::COMBO3R == m_uiAnimIdx && 
+				 m_pMeshCom->Is_BlendingComplete() &&
+				 m_ui3DMax_CurFrame <= m_ui3DMax_NumFrame * 0.55f)
+		{
+			Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+			m_bIsAttack   = true;
+			m_bIsKeyDown  = false;
+			m_uiComoboCnt = GladiatorConst::COMBO_END;
+			m_uiAnimIdx   = Gladiator::COMBO4;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
 	}
 }
 
@@ -668,6 +671,24 @@ void CPCGladiator::Move_OnNaviMesh(const _float& fTimeDelta)
 																  &m_pTransCom->m_vDir,
 																  m_pInfoCom->m_fSpeed * fTimeDelta);
 		}
+	}
+}
+
+void CPCGladiator::AttackMove_OnNaviMesh(const _float& fTimeDelta)
+{
+	// Set Speed
+	m_tAttackMoveSpeedInterpolationDesc.linear_ratio += m_tAttackMoveSpeedInterpolationDesc.interpolation_speed * fTimeDelta;
+	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(m_tAttackMoveSpeedInterpolationDesc.v1,
+													   m_tAttackMoveSpeedInterpolationDesc.v2,
+													   m_tAttackMoveSpeedInterpolationDesc.linear_ratio);
+	// NaviMesh 이동.
+	if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
+	{
+		m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+		m_pTransCom->m_vDir.Normalize();
+		m_pTransCom->m_vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+															  &m_pTransCom->m_vDir,
+															  m_pInfoCom->m_fSpeed * fTimeDelta);
 	}
 }
 
@@ -861,6 +882,24 @@ void CPCGladiator::SetUp_AngleInterpolation(const _float& fTimeDelta)
 			m_tAngleInterpolationDesc.is_start_interpolation = false;
 		}
 	}
+}
+
+void CPCGladiator::SetUp_Combo1AttackMove(const _float& fTimeDelta)
+{
+	if (GladiatorConst::COMBOCNT_1 == m_uiComoboCnt &&
+		Gladiator::COMBO1 == m_uiAnimIdx && 
+		m_pMeshCom->Is_BlendingComplete())
+	{
+		// Move On
+		if (m_ui3DMax_CurFrame < GladiatorConst::COMBO1_MOVESTOP_TICK)
+			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = 1.0f;
+
+		// Move Off
+		else
+			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = -3.0f;
+	}
+
+
 }
 
 Engine::CGameObject* CPCGladiator::Create(ID3D12Device* pGraphicDevice, 
