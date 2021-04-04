@@ -4,13 +4,6 @@
 #include "GladiatorAnimation.h"
 #include "PCWeaponTwoHand.h"
 
-namespace PCOthersGladiatorConst
-{
-	const _float MAX_SPEED       = 4.0f;
-	const _float MIN_SPEED       = 0.0f;
-	const _float MOVE_STOP_SPEED = 3.0f;
-}
-
 namespace Engine
 {
 	class CMesh;
@@ -28,6 +21,7 @@ private:
 public:
 	void Set_AnimationIdx(const _uint& iIdx) { m_uiAnimIdx = iIdx; m_pMeshCom->Set_AnimationKey(m_uiAnimIdx); }
 	void Set_StanceChange(const _uint& uiAniIdx, const _bool& bIsStanceAttack);
+	void Reset_AttackMoveIterpolationRatio() { m_tAttackMoveSpeedInterpolationDesc.linear_ratio = 0.0f; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
@@ -52,6 +46,8 @@ private:
 	void			SetUp_MoveSpeed(const _float& fTimeDelta);
 	void			SetUp_StanceChange(const _float& fTimeDelta);
 
+	void			SetUp_Combo1AttackMove(const _float& fTimeDelta);
+	void			AttackMove_OnNaviMesh(const _float& fTimeDelta);
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -73,6 +69,7 @@ private:
 
 	// Speed Linear Interpolation
 	Engine::LINEAR_INTERPOLATION_DESC<_float> m_tMoveSpeedInterpolationDesc;
+	Engine::LINEAR_INTERPOLATION_DESC<_float> m_tAttackMoveSpeedInterpolationDesc;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]

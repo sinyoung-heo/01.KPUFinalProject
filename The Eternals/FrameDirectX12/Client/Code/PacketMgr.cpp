@@ -452,6 +452,7 @@ void CPacketMgr::Attack_User(sc_packet_attack* packet)
 		if (PC_GLADIATOR == packet->o_type)
 		{
 			static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
+			static_cast<CPCOthersGladiator*>(pObj)->Reset_AttackMoveIterpolationRatio();
 		}
 		else if (PC_ARCHER == packet->o_type)
 		{
@@ -464,7 +465,6 @@ void CPacketMgr::Attack_User(sc_packet_attack* packet)
 
 		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
 		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
-
 		pObj->Set_Attack(true);
 	}
 }

@@ -4,17 +4,6 @@
 #include "GladiatorAnimation.h"
 #include "PCWeaponTwoHand.h"
 
-namespace GladiatorConst
-{
-	const _float MIN_SPEED       = 0.0f;
-	const _float MAX_SPEED       = 5.0f;
-	const _float MOVE_STOP_SPEED = 3.0f;
-
-	enum COMBOCNT { COMBOCNT_0, COMBOCNT_1, COMBOCNT_2, COMBOCNT_3, COMBO_END };
-
-	const _uint COMBO1_MOVESTOP_TICK = 16;
-}
-
 namespace Engine
 {
 	class CMesh;

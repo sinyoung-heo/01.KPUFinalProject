@@ -55,7 +55,7 @@ HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag,
 										   m_pMeshCom->Get_MinVector(),
 										   m_pMeshCom->Get_MaxVector());
 
-	m_pInfoCom->m_fSpeed     = PCOthersGladiatorConst::MIN_SPEED;
+	m_pInfoCom->m_fSpeed     = Gladiator::MIN_SPEED;
 	m_pInfoCom->m_vArrivePos = m_pTransCom->m_vPos;
 
 	/*__________________________________________________________________________________________________________
@@ -65,8 +65,6 @@ HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag,
 	m_ePreStance = Gladiator::STANCE_NONEATTACK;
 	m_eCurStance = Gladiator::STANCE_NONEATTACK;
 
-	// Angle Linear Interpolation Desc
-
 	/*__________________________________________________________________________________________________________
 	[ 선형보간 설정 ]
 	____________________________________________________________________________________________________________*/
@@ -75,8 +73,13 @@ HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag,
 
 	// Move Speed
 	m_tMoveSpeedInterpolationDesc.linear_ratio = 0.0f;
-	m_tMoveSpeedInterpolationDesc.v1           = PCOthersGladiatorConst::MIN_SPEED;
-	m_tMoveSpeedInterpolationDesc.v2           = PCOthersGladiatorConst::MAX_SPEED;
+	m_tMoveSpeedInterpolationDesc.v1           = Gladiator::MIN_SPEED;
+	m_tMoveSpeedInterpolationDesc.v2           = Gladiator::MAX_SPEED;
+
+	m_tAttackMoveSpeedInterpolationDesc.linear_ratio        = 0.0f;
+	m_tAttackMoveSpeedInterpolationDesc.v1                  = Gladiator::MIN_SPEED;
+	m_tAttackMoveSpeedInterpolationDesc.v2                  = Gladiator::MAX_SPEED;
+	m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = 1.0f;
 
 	return S_OK;
 }
@@ -121,6 +124,7 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Move_OnNaviMesh(fTimeDelta);
+	// AttackMove_OnNaviMesh(fTimeDelta);
 
 	// Linear Interpolation
 	Engine::SetUp_LinearInterpolation(fTimeDelta, m_pTransCom->m_vPos, m_tPosInterpolationDesc);
@@ -263,13 +267,15 @@ void CPCOthersGladiator::Set_ConstantTableShadowDepth()
 
 void CPCOthersGladiator::Move_OnNaviMesh(const _float& fTimeDelta)
 {
+	//if (m_bIsAttack)
+	//	return;
+
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 	m_pTransCom->m_vDir.Normalize();
 
 	SetUp_MoveSpeed(fTimeDelta);
 
-	if (!m_bIsMoveStop || 
-		PCOthersGladiatorConst::MIN_SPEED != m_pInfoCom->m_fSpeed)
+	if (!m_bIsMoveStop || Gladiator::MIN_SPEED != m_pInfoCom->m_fSpeed)
 	{
 		// NaviMesh 이동.		
 		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
@@ -290,7 +296,7 @@ void CPCOthersGladiator::SetUp_MoveSpeed(const _float& fTimeDelta)
 
 	// Move Off
 	else
-		m_tMoveSpeedInterpolationDesc.interpolation_speed = -PCOthersGladiatorConst::MOVE_STOP_SPEED;
+		m_tMoveSpeedInterpolationDesc.interpolation_speed = -Gladiator::MOVE_STOP_SPEED;
 
 	m_tMoveSpeedInterpolationDesc.linear_ratio += m_tMoveSpeedInterpolationDesc.interpolation_speed * fTimeDelta;
 	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(m_tMoveSpeedInterpolationDesc.v1, 
@@ -333,6 +339,32 @@ void CPCOthersGladiator::SetUp_StanceChange(const _float& fTimeDelta)
 				m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("Weapon_Back"));
 		}
 	}
+}
+
+void CPCOthersGladiator::SetUp_Combo1AttackMove(const _float& fTimeDelta)
+{
+	if (Gladiator::COMBO1 == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
+	{
+		// Move On
+		if (m_ui3DMax_CurFrame < Gladiator::COMBO1_MOVESTOP_TICK)
+			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = 1.0f;
+
+		// Move Off
+		else
+			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = -3.0f;
+	}
+}
+
+void CPCOthersGladiator::AttackMove_OnNaviMesh(const _float& fTimeDelta)
+{
+	if (!m_bIsAttack)
+		return;
+
+	SetUp_Combo1AttackMove(fTimeDelta);
+
+	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+	m_pTransCom->m_vDir.Normalize();
+
 }
 
 Engine::CGameObject* CPCOthersGladiator::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, 
