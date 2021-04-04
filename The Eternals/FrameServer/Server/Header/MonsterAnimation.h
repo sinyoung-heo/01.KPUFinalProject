@@ -41,7 +41,9 @@ namespace DrownedSailor
 	constexpr int ATTACK_HOOK	= 7;
 	constexpr int DEATH			= 8;
 
-	enum ANIM_SAILOR { A_WAIT, A_WALK, A_RUN,
-					   A_ATTACK_SPIN,A_ATTACK, A_ATTACK_STRONG,
-					   A_ATTACK_RUSH, A_ATTACK_HOOK, A_DEATH, A_END };
+	enum ANIM_SAILOR {
+		A_WAIT, A_WALK, A_RUN,
+		A_ATTACK_SPIN, A_ATTACK, A_ATTACK_STRONG,
+		A_ATTACK_RUSH, A_ATTACK_HOOK, A_DEATH, A_END
+	};
 }
