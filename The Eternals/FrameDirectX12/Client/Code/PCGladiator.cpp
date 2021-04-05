@@ -927,8 +927,9 @@ Engine::CGameObject* CPCGladiator::Create(ID3D12Device* pGraphicDevice,
 
 void CPCGladiator::Free()
 {
-	Engine::CGameObject::Free();
+	m_pWeapon->Set_DeadGameObject();
 
+	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pDynamicCamera);
 	Engine::Safe_Release(m_pMeshCom);
 	Engine::Safe_Release(m_pShaderCom);

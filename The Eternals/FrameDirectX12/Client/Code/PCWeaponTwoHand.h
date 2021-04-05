@@ -1,5 +1,6 @@
 #pragma once
 #include "PCWeapon.h"
+#include "EffectTrail.h"
 
 class CPCWeaponTwoHand : public CPCWeapon
 {
@@ -22,6 +23,9 @@ public:
 	// MultiThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
+
+private:
+	CEffectTrail* m_pTrail = nullptr;
 
 public:
 	static CPCWeaponTwoHand* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
