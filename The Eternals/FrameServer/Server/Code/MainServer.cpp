@@ -899,6 +899,9 @@ void Initialize_Monster()
 	//	pNew->m_monNum		= MON_CRAB;
 	//	pNew->m_status		= STATUS::ST_NONACTIVE;
 
+	//	pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
+	//	pNew->Set_AnimDuration(Crab::duration);
+
 	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
 	//	CObjMgr::GetInstance()->Add_GameObject(L"MONSTER", pNew, s_num);
 	//}
@@ -931,6 +934,9 @@ void Initialize_Monster()
 	//	pNew->m_type = MON_NORMAL;
 	//	pNew->m_monNum = MON_MONKEY;
 	//	pNew->m_status = STATUS::ST_NONACTIVE;
+
+	//	pNew->Set_NumAnimation(Monkey::NUM_ANIMATION);
+	//	pNew->Set_AnimDuration(Monkey::duration);
 
 	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
 	//	CObjMgr::GetInstance()->Add_GameObject(L"MONSTER", pNew, s_num);
@@ -965,6 +971,9 @@ void Initialize_Monster()
 	//	pNew->m_monNum = MON_CLODER;
 	//	pNew->m_status = STATUS::ST_NONACTIVE;
 
+	//	pNew->Set_NumAnimation(Cloder::NUM_ANIMATION);
+	//	pNew->Set_AnimDuration(Cloder::duration);
+
 	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
 	//	CObjMgr::GetInstance()->Add_GameObject(L"MONSTER", pNew, s_num);
 	//}
@@ -998,8 +1007,8 @@ void Initialize_Monster()
 		pNew->m_monNum = MON_SAILOR;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
-		pNew->Set_AnimDuration(DrownedSailor::duration);
 		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
+		pNew->Set_AnimDuration(DrownedSailor::duration);
 	
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
 		CObjMgr::GetInstance()->Add_GameObject(L"MONSTER", pNew, s_num);
@@ -1087,7 +1096,7 @@ void add_new_client(SOCKET ns)
 		CreateIoCompletionPort(reinterpret_cast<HANDLE>(ns), g_hIocp, s_num, 0);
 
 		DWORD flags = 0;
-		int ret;
+		int ret = -1;
 
 		/* 해당 클라이언트로부터 정보를 RECV */
 		pNew->Get_ClientLock().lock();

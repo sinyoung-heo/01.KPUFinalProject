@@ -3,9 +3,9 @@
 #include "Player.h"
 
 CMonster::CMonster()
-	:m_iHp(0), m_iMaxHp(0), m_iExp(0), m_iAtt(0), m_fSpd(0.f),
+	:m_iHp(0), m_iMaxHp(0), m_iExp(0), m_iAtt(0), m_fSpd(0.f), m_vRushPos(_vec3(0.f)),
 	m_iTargetNum(-1), m_bIsAttack(false), m_bIsComeBack(false),
-	m_monNum(0), m_bIsShortAttack(true), m_uiAnimIdx(0)
+	m_monNum(0), m_bIsShortAttack(true), m_bIsRushAttack(false), m_uiAnimIdx(0)
 {
 }
 
@@ -16,9 +16,11 @@ CMonster::~CMonster()
 void CMonster::Set_AnimDuration(double arr[])
 {
 	for (int i = 0; i < MAX_ANI; ++i)
-		m_arrDuration[i] = arr[i];
+	{
+		if (m_uiNumAniIndex > i)
+			m_arrDuration[i] = arr[i];
+	}
 }
-
 
 int CMonster::Update_Monster(const float& fTimeDelta)
 {
@@ -183,6 +185,10 @@ void CMonster::Change_DrownedSailor_Animation(const float& fTimeDelta)
 
 	case STATUS::ST_ATTACK:
 	{
+		if (m_bIsRushAttack)
+		{
+			Rush_DrownedSailor(fTimeDelta);
+		}
 		Attack_DrownedSailor(fTimeDelta);
 	}
 	break;
@@ -1641,12 +1647,12 @@ void CMonster::Attack_DrownedSailor(const float& fTimeDelta)
 		m_vDir.Normalize();
 
 		/* 공격 스킬 설정 */
-		float fDist = Calculate_TargetDist(pTarget->m_vPos);
+		/*float fDist = Calculate_TargetDist(pTarget->m_vPos);
 		if ((ATTACK_RANGE_CRAB * ATTACK_RANGE_CRAB) < fDist)
-		{
+		{			
 			Change_ChaseMode();
 			return;
-		}
+		}*/
 
 		// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
 		for (auto pl : old_viewlist)
@@ -1655,9 +1661,24 @@ void CMonster::Attack_DrownedSailor(const float& fTimeDelta)
 			if (true == CObjMgr::GetInstance()->Is_Player(pl))
 			{
 				if (!m_bIsAttack) return;
-				int ani = rand() % 5 + 3;
-				Set_AnimationKey(ani);
-				send_Monster_NormalAttack(pl, ani);
+			
+				//m_uiAnimIdx = rand() % 5 + 3;
+				m_uiAnimIdx = DrownedSailor::ATTACK_RUSH;
+
+				Set_AnimationKey(m_uiAnimIdx);
+
+				if (m_uiAnimIdx == DrownedSailor::ATTACK_RUSH)
+				{
+					m_bIsRushAttack = true;
+					m_vRushPos = m_vPos + m_vDir * 3.f;
+					send_Monster_RushAttack(pl, m_uiAnimIdx);
+				}
+				else
+				{
+					m_bIsRushAttack = false;
+					m_vRushPos = m_vPos;
+					send_Monster_NormalAttack(pl, m_uiAnimIdx);
+				}
 			}
 		}
 		// 주변 유저에게 monster_attack_start를 알렸다면 잠시 공격 중지 -> 일정 시간 후 재공격
@@ -1667,6 +1688,18 @@ void CMonster::Attack_DrownedSailor(const float& fTimeDelta)
 	else
 	{
 		Change_ChaseMode();
+	}
+}
+
+void CMonster::Rush_DrownedSailor(const float& fTimeDelta)
+{
+	if (m_uiAnimIdx != DrownedSailor::ATTACK_RUSH) return;
+
+	if (Is_AnimationSetEnd(fTimeDelta))
+	{
+		m_vPos = m_vRushPos;
+		m_bIsRushAttack = false;
+		cout << "rush ani end" << endl;
 	}
 }
 
@@ -1816,7 +1849,7 @@ void CMonster::Set_AnimationKey(const _uint& uiAniKey)
 bool CMonster::Is_AnimationSetEnd(const float& fTimeDelta)
 {
 	if ((m_fAnimationTime >= m_arrDuration[m_uiCurAniIndex] -
-		Monster_Normal::TPS * ANIMA_INTERPOLATION * fTimeDelta) &&
+		static_cast<double>(Monster_Normal::TPS * ANIMA_INTERPOLATION * fTimeDelta)) &&
 		(m_uiCurAniIndex == m_uiNewAniIndex))
 	{
 		return true;
@@ -1832,7 +1865,7 @@ void CMonster::Set_Stop_Attack()
 		bool prev_state = m_bIsAttack;
 
 		if (true == atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsAttack), &prev_state, false))
-			add_timer(m_sNum, OP_MODE_ATTACK_MONSTER, system_clock::now() + 5s);
+			add_timer(m_sNum, OP_MODE_ATTACK_MONSTER, system_clock::now() + 7s);
 	}
 }
 
@@ -1910,6 +1943,28 @@ void CMonster::send_Monster_NormalAttack(int to_client,int ani)
 	p.dirX = m_vDir.x;
 	p.dirY = m_vDir.y;
 	p.dirZ = m_vDir.z;
+
+	send_packet(to_client, &p);
+}
+
+void CMonster::send_Monster_RushAttack(int to_client, int ani)
+{
+	cout << "rush send" << m_vRushPos.x << "," << m_vRushPos.z << endl;
+	sc_packet_monster_rushAttack p;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_MONSTER_RUSH;
+	p.id = m_sNum;
+
+	p.animIdx = ani;
+
+	p.dirX = m_vDir.x;
+	p.dirY = m_vDir.y;
+	p.dirZ = m_vDir.z;
+
+	p.posX = m_vRushPos.x;
+	p.posY = m_vRushPos.y;
+	p.posZ = m_vRushPos.z;
 
 	send_packet(to_client, &p);
 }

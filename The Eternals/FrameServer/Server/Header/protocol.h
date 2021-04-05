@@ -40,7 +40,8 @@ constexpr char SC_PACKET_NPC_ENTER		= 12;
 constexpr char SC_PACKET_MONSTER_ENTER	= 13;
 constexpr char SC_PACKET_MONSTER_MOVE	= 14;
 constexpr char SC_PACKET_MONSTER_ATTACK = 15;
-constexpr char SC_PACKET_MONSTER_STAT	= 16;
+constexpr char SC_PACKET_MONSTER_RUSH	= 16;
+constexpr char SC_PACKET_MONSTER_STAT	= 17;
 
 
 constexpr char CS_LOGIN					= 0;
@@ -229,6 +230,17 @@ struct sc_packet_monster_attack
 	int				id;
 
 	int				animIdx;
+	float			dirX, dirY, dirZ;
+};
+
+struct sc_packet_monster_rushAttack
+{
+	unsigned char	size;
+	char			type;
+	int				id;
+
+	int				animIdx;
+	float			posX, posY, posZ;
 	float			dirX, dirY, dirZ;
 };
 

@@ -16,6 +16,7 @@ public:
 	void send_Monster_enter_packet(int to_client);
 	void send_Monster_move_packet(int to_client, int ani);
 	void send_Monster_NormalAttack(int to_client, int ani);
+	void send_Monster_RushAttack(int to_client, int ani);
 	void send_Monster_Stat(int to_client);
 
 	void Set_Stop_Attack();
@@ -42,6 +43,7 @@ private:
 	void Change_DrownedSailor_Animation(const float& fTimeDelta);
 	void Chase_DrownedSailor(const float& fTimeDelta);
 	void Attack_DrownedSailor(const float& fTimeDelta);
+	void Rush_DrownedSailor(const float& fTimeDelta);
 
 	/* MONSTER ALL */
 	void Change_Animation(const float& fTimeDelta);
@@ -69,11 +71,13 @@ public:
 	int				m_iAtt			= 0;
 	float			m_fSpd			= 0;
 	bool			m_bIsComeBack	= false;
+	bool			m_bIsRushAttack = false;	// 돌진기 스킬
 	volatile bool	m_bIsAttack		= false;
-	volatile bool	m_bIsShortAttack = true;
+	volatile bool	m_bIsShortAttack = true;	// 근거리 공격
 
 	int				m_iTargetNum	= -1;
 	_vec3			m_vOriPos		= _vec3(0.f);
+	_vec3			m_vRushPos		= _vec3(0.f);
 
 	/* Animation */
 	_uint m_uiNewAniIndex = 0;

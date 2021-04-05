@@ -41,6 +41,7 @@ private:
 
 	void			Active_Monster(const _float& fTimeDelta);
 	void			Change_Animation(const _float& fTimeDelta);
+	void			Attack_Moving(const _float& fTimeDelta, const float& fSpd);
 
 private:
 	/*__________________________________________________________________________________________________________

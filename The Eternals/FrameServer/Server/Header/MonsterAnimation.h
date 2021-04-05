@@ -13,7 +13,14 @@ namespace Crab
 {
 	constexpr int DEATH		= 4;
 	
+	constexpr int NUM_ANIMATION = 5;
+
 	enum ANIM_CRAB { A_WAIT, A_WALK, A_RUN, A_ATTACK, A_DEATH, A_END };
+
+	static double duration[NUM_ANIMATION] =
+	{
+		8000, 4800, 2240, 10400, 10720
+	};
 }
 
 namespace Monkey
@@ -21,7 +28,14 @@ namespace Monkey
 	constexpr int ATTACK_THROW	= 4;
 	constexpr int DEATH			= 5;
 
+	constexpr int NUM_ANIMATION = 6;
+
 	enum ANIM_CRAB { A_WAIT, A_WALK, A_RUN, A_ATTACK, A_ATTACK_THROW, A_DEATH, A_END };
+
+	static double duration[NUM_ANIMATION] =
+	{
+		4800, 6400, 4480, 9600, 12800, 17600
+	};
 }
 
 /* EPIC MONSTER */
@@ -31,7 +45,14 @@ namespace Cloder
 	constexpr int ATTACK_SWING	= 5;
 	constexpr int ATTACK_DEATH	= 6;
 
+	constexpr int NUM_ANIMATION = 7;
+
 	enum ANIM_CLODER { A_WAIT, A_WALK, A_RUN, A_ATTACK, A_ATTACK_POKE, A_ATTACK_SWING, A_DEATH, A_END };
+
+	static double duration[NUM_ANIMATION] =
+	{
+		4800, 6400, 2240, 9600, 14400, 14400, 10720
+	};
 }
 
 namespace DrownedSailor
