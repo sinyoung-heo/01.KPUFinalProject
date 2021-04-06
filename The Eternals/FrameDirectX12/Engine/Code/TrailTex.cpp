@@ -13,6 +13,7 @@ CTrailTex::CTrailTex(const CTrailTex& rhs)
 {
 	const _int uiVB_ByteSize = (_uint)m_arrVertices.size() * sizeof(Engine::VTXTEX);
 	m_pVB_GPU = Create_DynamicBuffer(m_arrVertices.data(), uiVB_ByteSize, m_pVB_Uploader);
+	m_pVB_GPU->AddRef();
 }
 
 HRESULT CTrailTex::Ready_Buffer()
