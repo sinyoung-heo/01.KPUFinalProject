@@ -908,112 +908,112 @@ void Initialize_Monster()
 	else return;
 
 	// TEST MONSTER - monkey
-	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
 
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += MON_NUM_START;
-	//	s_num = pNew->m_sNum;
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->m_sNum += MON_NUM_START;
+		s_num = pNew->m_sNum;
 
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "Monkey", strlen("Monkey"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
+		pNew->Set_IsConnected(true);
+		pNew->Set_IsDead(false);
+		strncpy_s(pNew->m_ID, "Monkey", strlen("Monkey"));
+		strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
 
-	//	pNew->m_vPos = _vec3(143.0f, 0.f, 60.0f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vOriPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 90.f, 0.f);
-	//	pNew->m_iHp = 1000;
-	//	pNew->m_iMaxHp = 1000;
-	//	pNew->m_iAtt = 1;
-	//	pNew->m_iExp = 0;
-	//	pNew->m_fSpd = 0.5f;
-	//	pNew->m_type = MON_NORMAL;
-	//	pNew->m_monNum = MON_MONKEY;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
+		pNew->m_vPos = _vec3(143.0f, 0.f, 60.0f);
+		pNew->m_vTempPos = pNew->m_vPos;
+		pNew->m_vOriPos = pNew->m_vPos;
+		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
+		pNew->m_vAngle = _vec3(0.f, 90.f, 0.f);
+		pNew->m_iHp = 1000;
+		pNew->m_iMaxHp = 1000;
+		pNew->m_iAtt = 1;
+		pNew->m_iExp = 0;
+		pNew->m_fSpd = 0.5f;
+		pNew->m_type = MON_NORMAL;
+		pNew->m_monNum = MON_MONKEY;
+		pNew->m_status = STATUS::ST_NONACTIVE;
 
-	//	pNew->Set_NumAnimation(Monkey::NUM_ANIMATION);
-	//	pNew->Set_AnimDuration(Monkey::duration);
+		pNew->Set_NumAnimation(Monkey::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Monkey::duration);
 
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"MONSTER", pNew, s_num);
-	//}
-	//else return;
+		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
+		CObjMgr::GetInstance()->Add_GameObject(L"MONSTER", pNew, s_num);
+	}
+	else return;
 
 	// TEST MONSTER - cloder
-	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
 
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += MON_NUM_START;
-	//	s_num = pNew->m_sNum;
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->m_sNum += MON_NUM_START;
+		s_num = pNew->m_sNum;
 
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "CloderA", strlen("CloderA"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
+		pNew->Set_IsConnected(true);
+		pNew->Set_IsDead(false);
+		strncpy_s(pNew->m_ID, "CloderA", strlen("CloderA"));
+		strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
 
-	//	pNew->m_vPos = _vec3(143.0f, 0.f, 60.0f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vOriPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 90.f, 0.f);
-	//	pNew->m_iHp = 1000;
-	//	pNew->m_iMaxHp = 1000;
-	//	pNew->m_iAtt = 1;
-	//	pNew->m_iExp = 0;
-	//	pNew->m_fSpd = 0.5f;
-	//	pNew->m_type = MON_NORMAL;
-	//	pNew->m_monNum = MON_CLODER;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
+		pNew->m_vPos = _vec3(143.0f, 0.f, 60.0f);
+		pNew->m_vTempPos = pNew->m_vPos;
+		pNew->m_vOriPos = pNew->m_vPos;
+		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
+		pNew->m_vAngle = _vec3(0.f, 90.f, 0.f);
+		pNew->m_iHp = 1000;
+		pNew->m_iMaxHp = 1000;
+		pNew->m_iAtt = 1;
+		pNew->m_iExp = 0;
+		pNew->m_fSpd = 0.5f;
+		pNew->m_type = MON_NORMAL;
+		pNew->m_monNum = MON_CLODER;
+		pNew->m_status = STATUS::ST_NONACTIVE;
 
-	//	pNew->Set_NumAnimation(Cloder::NUM_ANIMATION);
-	//	pNew->Set_AnimDuration(Cloder::duration);
+		pNew->Set_NumAnimation(Cloder::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Cloder::duration);
 
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"MONSTER", pNew, s_num);
-	//}
-	//else return;
+		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
+		CObjMgr::GetInstance()->Add_GameObject(L"MONSTER", pNew, s_num);
+	}
+	else return;
 
 	// TEST MONSTER - drowned sailor
-	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
-	//
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += MON_NUM_START;
-	//	s_num = pNew->m_sNum;
-	//
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "DrownedSailor", strlen("DrownedSailor"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-	//
-	//	pNew->m_vPos = _vec3(143.0f, 0.f, 60.0f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vOriPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 90.f, 0.f);
-	//	pNew->m_iHp = 1000;
-	//	pNew->m_iMaxHp = 1000;
-	//	pNew->m_iAtt = 1;
-	//	pNew->m_iExp = 0;
-	//	pNew->m_fSpd = 0.5f;
-	//	pNew->m_type = MON_NORMAL;
-	//	pNew->m_monNum = MON_SAILOR;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+	
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->m_sNum += MON_NUM_START;
+		s_num = pNew->m_sNum;
+	
+		pNew->Set_IsConnected(true);
+		pNew->Set_IsDead(false);
+		strncpy_s(pNew->m_ID, "DrownedSailor", strlen("DrownedSailor"));
+		strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
+	
+		pNew->m_vPos = _vec3(143.0f, 0.f, 60.0f);
+		pNew->m_vTempPos = pNew->m_vPos;
+		pNew->m_vOriPos = pNew->m_vPos;
+		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
+		pNew->m_vAngle = _vec3(0.f, 90.f, 0.f);
+		pNew->m_iHp = 1000;
+		pNew->m_iMaxHp = 1000;
+		pNew->m_iAtt = 1;
+		pNew->m_iExp = 0;
+		pNew->m_fSpd = 0.5f;
+		pNew->m_type = MON_NORMAL;
+		pNew->m_monNum = MON_SAILOR;
+		pNew->m_status = STATUS::ST_NONACTIVE;
 
-	//	pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
-	//	pNew->Set_AnimDuration(DrownedSailor::duration);
-	//
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"MONSTER", pNew, s_num);
-	//}
-	//else return;
+		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
+		pNew->Set_AnimDuration(DrownedSailor::duration);
+	
+		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
+		CObjMgr::GetInstance()->Add_GameObject(L"MONSTER", pNew, s_num);
+	}
+	else return;
 }
 
 void Delete_Monster()
@@ -1296,13 +1296,6 @@ void worker_thread()
 		case OPMODE::OP_RANDOM_MOVE_NPC:
 		{
 			random_move_npc(key);
-			delete over_ex;
-		}
-		break;
-
-		case OPMODE::OP_MODE_ATTACK_MONSTER:
-		{
-			start_attck_monster(key);
 			delete over_ex;
 		}
 		break;

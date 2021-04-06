@@ -8,7 +8,7 @@ void send_enter_packet(int to_client, int new_id);								// 등장 패킷
 void send_leave_packet(int to_client, int leave_id);							// 떠남 패킷
 void send_move_packet(int to_client, int id);									// 움직임 패킷
 void send_move_stop_packet(int to_client, int id);								// 움직임 패킷
-void send_attack_packet(int to_client, int id, int animIdx);
+void send_attack_packet(int to_client, int id, int animIdx, float end_angleY);
 void send_attack_stop_packet(int to_client, int id, int animIdx);
 void send_player_stat(int to_client, int id);
 void send_player_stance_change(int to_client, int id, const bool& st);
@@ -34,7 +34,6 @@ void random_move_npc(int id);													// NPC 랜덤 움직임
 /* ==========================MONSTER========================== */
 void active_monster(int id);													// 해당 Monster의 STATUS = ST_ACTIVE
 void nonActive_monster(int id);													// 해당 Monster의 STATUS = ST_NONACTIVE
-void start_attck_monster(int id);
 
 /* =========================FUNC========================== */
 void add_timer(int obj_id, OPMODE ev_type, system_clock::time_point t);
