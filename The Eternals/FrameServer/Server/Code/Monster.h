@@ -48,6 +48,7 @@ private:
 	/* MONSTER ALL */
 	void Change_Animation(const float& fTimeDelta);
 
+public:
 	void Change_AttackMode();								// STATUS == ATTACK
 	void Change_ChaseMode();								// STATUS == CHASE
 
