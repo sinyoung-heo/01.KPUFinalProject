@@ -30,7 +30,7 @@ HRESULT CPCWeaponTwoHand::Ready_GameObject(wstring wstrMeshTag,
 										   m_pMeshCom->Get_MinVector(),
 										   m_pMeshCom->Get_MaxVector(),
 										   1.0f,
-										   _vec3(0.0f, 10.0f, 0.0f));
+										   _vec3(0.0f, 25.0f, 0.0f));
 
 	return S_OK;
 }
@@ -81,10 +81,10 @@ _int CPCWeaponTwoHand::Update_GameObject(const _float& fTimeDelta)
 
 	// Update Trail
 	m_pBoundingBoxCom->Update_Component(fTimeDelta);
-	//_vec3 vMin = _vec3(matSkinngingTransform._41, matSkinngingTransform._42, matSkinngingTransform._43);
+	_vec3 vMin = _vec3(matSkinngingTransform._41, matSkinngingTransform._42, matSkinngingTransform._43);
 	//_vec3 vMax = _vec3(m_pBoundingBoxCom->Get_BoundingInfo().Center);
 
-	_vec3 vMin = _vec3(m_pBoundingBoxCom->Get_BoundingInfo().Center);
+	//_vec3 vMin = _vec3(m_pBoundingBoxCom->Get_BoundingInfo().Center);
 	_vec3 vMax = _vec3(m_pBoundingBoxCom->Get_TopPlaneCenter());
 
 	m_pTrail->SetUp_TrailByCatmullRom(&vMin, &vMax);

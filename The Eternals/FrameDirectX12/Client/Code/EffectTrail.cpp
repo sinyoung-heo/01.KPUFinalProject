@@ -94,7 +94,7 @@ void CEffectTrail::SetUp_TrailByCatmullRom(_vec3* vMin, _vec3* vMax)
 
 	// SetUp Vertex
 	m_pBufferCom->Get_ArrayVerteices()[0].vPos = _vec3(vMin->x, vMin->y, vMin->z);
-	m_pBufferCom->Get_ArrayVerteices()[0].vTexUV = _vec2(0.0f, 1.0f);
+	m_pBufferCom->Get_ArrayVerteices()[0].vTexUV = _vec2(1.0f, 0.0f);
 
 	for (int i = 0; i < Engine::TRAIL_SIZE - 1; ++i)
 	{
@@ -103,12 +103,12 @@ void CEffectTrail::SetUp_TrailByCatmullRom(_vec3* vMin, _vec3* vMax)
 		if (i > 2 && i < Engine::TRAIL_SIZE - 2)
 		{
 			m_pBufferCom->Get_ArrayVerteices()[i + 1].vPos = _vec3(m_arrMax[i].x, m_arrMax[i].y, m_arrMax[i].z);
-			m_pBufferCom->Get_ArrayVerteices()[i + 1].vTexUV = _vec2(fTex, 0.f);
+			m_pBufferCom->Get_ArrayVerteices()[i + 1].vTexUV = _vec2(0.0f, fTex);
 		}
 		else
 		{
 			m_pBufferCom->Get_ArrayVerteices()[i + 1].vPos = _vec3(m_arrMax[i].x, m_arrMax[i].y, m_arrMax[i].z);
-			m_pBufferCom->Get_ArrayVerteices()[i + 1].vTexUV = _vec2(fTex, 0.f);
+			m_pBufferCom->Get_ArrayVerteices()[i + 1].vTexUV = _vec2(0.0f, fTex);
 		}
 	}
 }
