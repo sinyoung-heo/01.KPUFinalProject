@@ -208,6 +208,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 	{
 		m_uiAnimIdx = 0;
 		m_bIsMoveStop = true;
+		m_bIsAttack = false;
 	}
 	break;
 
@@ -215,6 +216,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 	{
 		m_uiAnimIdx = 1;		
 		m_bIsMoveStop = false;
+		m_bIsAttack = false;
 	}
 	break;
 
@@ -222,6 +224,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 	{
 		m_uiAnimIdx = 2;
 		m_bIsMoveStop = false;
+		m_bIsAttack = false;
 	}
 	break;
 
@@ -229,9 +232,10 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 	{
 		m_uiAnimIdx = 3;
 		m_bIsMoveStop = true;
+		m_bIsAttack = false;
 
 		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-			m_iCurAnim = Cloder::A_WAIT;
+			m_iCurAnim = DrownedSailor::A_WAIT;
 	}
 	break;
 
@@ -239,9 +243,10 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 	{
 		m_uiAnimIdx = 4;
 		m_bIsMoveStop = true;
+		m_bIsAttack = false;
 
 		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-			m_iCurAnim = Cloder::A_WAIT;
+			m_iCurAnim = DrownedSailor::A_WAIT;
 	}
 	break;
 
@@ -249,9 +254,10 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 	{
 		m_uiAnimIdx = 5;
 		m_bIsMoveStop = true;
+		m_bIsAttack = false;
 
 		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-			m_iCurAnim = Cloder::A_WAIT;
+			m_iCurAnim = DrownedSailor::A_WAIT;
 	}
 	break;
 
@@ -260,8 +266,16 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 		m_uiAnimIdx = 6;
 		m_bIsMoveStop = true;
 
+		/* Rush (343~423 tick)*/
+		if (39 <= m_ui3DMax_CurFrame)
+			Attack_Moving(fTimeDelta, (m_pInfoCom->m_fSpeed * 8.f));
+
 		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-			m_iCurAnim = Cloder::A_WAIT;
+		{
+			m_pTransCom->m_vPos = m_pInfoCom->m_vArrivePos;
+			m_iCurAnim = DrownedSailor::A_WAIT;
+			m_bIsAttack = false;
+		}
 	}
 	break;
 
@@ -269,9 +283,10 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 	{
 		m_uiAnimIdx = 7;
 		m_bIsMoveStop = true;
+		m_bIsAttack = false;
 
 		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-			m_iCurAnim = Cloder::A_WAIT;
+			m_iCurAnim = DrownedSailor::A_WAIT;
 	}
 	break;
 
@@ -283,6 +298,28 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 	}
 	break;
 
+	}
+}
+
+void CDrownedSailor::Attack_Moving(const _float& fTimeDelta, const float& fSpd)
+{
+	if (m_iCurAnim != DrownedSailor::A_ATTACK_RUSH) return;
+
+	m_pTransCom->m_vDir.Normalize();
+
+	if (m_bIsAttack)
+	{
+		if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
+		{
+			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+				&m_pTransCom->m_vDir,
+				m_pInfoCom->m_fSpeed * fTimeDelta);
+			m_pTransCom->m_vPos = vPos;
+		}
+		else
+		{
+			m_bIsAttack = false;
+		}
 	}
 }
 

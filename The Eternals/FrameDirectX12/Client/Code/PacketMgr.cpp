@@ -283,6 +283,23 @@ void CPacketMgr::Process_packet()
 	}
 	break;
 
+	case SC_PACKET_MONSTER_RUSH:
+	{
+		sc_packet_monster_rushAttack* packet = reinterpret_cast<sc_packet_monster_rushAttack*>(m_packet_start);
+
+		int s_num = packet->id;
+
+		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
+
+		pObj->Set_State(packet->animIdx);
+		pObj->Set_MoveStop(true);
+		pObj->Set_Attack(true);
+		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
+		//pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
+	}
+	break;
+
 	case SC_PACKET_MONSTER_STAT:
 	{
 		sc_packet_stat_change* packet = reinterpret_cast<sc_packet_stat_change*>(m_packet_start);

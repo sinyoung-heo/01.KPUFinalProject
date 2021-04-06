@@ -1688,17 +1688,6 @@ void nonActive_monster(int id)
 	}
 }
 
-void start_attck_monster(int id)
-{
-	CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", id));
-	if (nullptr == pMonster) return;
-
-	if (pMonster->m_status == ST_ATTACK)
-	{
-		pMonster->Set_Start_Attack();
-	}
-}
-
 /*===========================================FUNC====================================================*/
 void add_timer(int obj_id, OPMODE ev_type, system_clock::time_point t)
 {
