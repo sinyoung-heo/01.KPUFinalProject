@@ -74,20 +74,19 @@ _int CPCWeaponTwoHand::Update_GameObject(const _float& fTimeDelta)
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 	// Upate BoneMatrix
-	m_matBoneFinalTransform = (m_pHierarchyDesc->matScale * m_pHierarchyDesc->matRotate * m_pHierarchyDesc->matTrans) * m_pHierarchyDesc->matGlobalTransform;
+	m_matBoneFinalTransform       = (m_pHierarchyDesc->matScale * m_pHierarchyDesc->matRotate * m_pHierarchyDesc->matTrans) * m_pHierarchyDesc->matGlobalTransform;
 	_matrix matSkinngingTransform = m_matBoneFinalTransform * (*m_pParentMatrix);
 
 	m_pTransCom->m_matWorld *= matSkinngingTransform;
 
 	// Update Trail
-	m_pBoundingBoxCom->Update_Component(fTimeDelta);
-	_vec3 vMin = _vec3(matSkinngingTransform._41, matSkinngingTransform._42, matSkinngingTransform._43);
-	//_vec3 vMax = _vec3(m_pBoundingBoxCom->Get_BoundingInfo().Center);
-
-	//_vec3 vMin = _vec3(m_pBoundingBoxCom->Get_BoundingInfo().Center);
-	_vec3 vMax = _vec3(m_pBoundingBoxCom->Get_TopPlaneCenter());
-
-	m_pTrail->SetUp_TrailByCatmullRom(&vMin, &vMax);
+	if (nullptr != m_pTrail)
+	{
+		m_pBoundingBoxCom->Update_Component(fTimeDelta);
+		_vec3 vMin = _vec3(matSkinngingTransform._41, matSkinngingTransform._42, matSkinngingTransform._43);
+		_vec3 vMax = _vec3(m_pBoundingBoxCom->Get_TopPlaneCenter());
+		m_pTrail->SetUp_TrailByCatmullRom(&vMin, &vMax);
+	}
 
 	return NO_EVENT;
 }

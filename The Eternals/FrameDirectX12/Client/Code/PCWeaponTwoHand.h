@@ -9,6 +9,10 @@ private:
 	virtual ~CPCWeaponTwoHand() = default;
 
 public:
+	const _bool& Get_IsRenderTrail() { return m_pTrail->Get_IsRenderTrail(); }
+
+	void Set_IsRenderTrail(const _bool& bIsRenderTrail) { m_pTrail->Set_IsRenderTrail(bIsRenderTrail); }
+
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
 									 const _vec3& vScale,

@@ -508,10 +508,16 @@ void CPCGladiator::KeyInput_ComboAttack(const _float& fTimeDelta)
 	if (m_bIsAttack)
 	{
 		m_bIsSameDir = true;
-		SetUp_ComoboAttackMove(fTimeDelta, Gladiator::COMBOCNT_1, Gladiator::COMBO1, Gladiator::COMBO1_MOVESTOP_TICK, 1.0f, -3.0f);
-		SetUp_ComoboAttackMove(fTimeDelta, Gladiator::COMBOCNT_2, Gladiator::COMBO2, Gladiator::COMBO2_MOVESTOP_TICK, 1.0f, -3.5f);
-		SetUp_ComoboAttackMove(fTimeDelta, Gladiator::COMBOCNT_3, Gladiator::COMBO3, Gladiator::COMBO3_MOVESTOP_TICK, 1.0f, -3.5f);
-		SetUp_ComoboAttackMove(fTimeDelta, Gladiator::COMBO_END, Gladiator::COMBO4, Gladiator::COMBO4_MOVESTOP_TICK, 0.75f, -1.0f);
+
+		SetUp_ComboAttackMove(fTimeDelta, Gladiator::COMBOCNT_1, Gladiator::COMBO1, Gladiator::COMBO1_MOVESTOP_TICK, 1.0f, -3.0f);
+		SetUp_ComboAttackMove(fTimeDelta, Gladiator::COMBOCNT_2, Gladiator::COMBO2, Gladiator::COMBO2_MOVESTOP_TICK, 1.0f, -3.5f);
+		SetUp_ComboAttackMove(fTimeDelta, Gladiator::COMBOCNT_3, Gladiator::COMBO3, Gladiator::COMBO3_MOVESTOP_TICK, 1.0f, -3.5f);
+		SetUp_ComboAttackMove(fTimeDelta, Gladiator::COMBO_END, Gladiator::COMBO4, Gladiator::COMBO4_MOVESTOP_TICK, 0.75f, -1.0f);
+
+		SetUp_ComboAttackTrail(Gladiator::COMBOCNT_1, Gladiator::COMBO1, Gladiator::COMBO1_TRAIL_START_TICK, Gladiator::COMBO1_TRAIL_STOP_TICK);
+		//SetUp_ComboAttackTrail();
+		//SetUp_ComboAttackTrail();
+		//SetUp_ComboAttackTrail();
 
 		AttackMove_OnNaviMesh(fTimeDelta);
 	}
@@ -887,7 +893,7 @@ void CPCGladiator::SetUp_AngleInterpolation(const _float& fTimeDelta)
 	}
 }
 
-void CPCGladiator::SetUp_ComoboAttackMove(const _float& fTimeDelta, 
+void CPCGladiator::SetUp_ComboAttackMove(const _float& fTimeDelta, 
 										  const _uint& uiComboCnt,
 										  const _uint& uiAniIdx, 
 										  const _uint& uiStopTick,
@@ -905,6 +911,23 @@ void CPCGladiator::SetUp_ComoboAttackMove(const _float& fTimeDelta,
 		// Move Off
 		else
 			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = fStopSpeed;
+	}
+}
+
+void CPCGladiator::SetUp_ComboAttackTrail(const _uint& uiComboCnt,
+										  const _uint& uiAniIdx,
+										  const _uint& uiStartTick,
+										  const _uint& uiStopTick)
+{
+	if (uiComboCnt == m_uiComoboCnt && uiAniIdx == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
+	{
+		// Trail On
+		if (m_ui3DMax_CurFrame >= uiStartTick && m_ui3DMax_CurFrame < uiStopTick)
+			m_pWeapon->Set_IsRenderTrail(true);
+
+		// Trail Off
+		else if (m_ui3DMax_CurFrame >= uiStopTick)
+			m_pWeapon->Set_IsRenderTrail(false);
 	}
 }
 

@@ -47,15 +47,36 @@ _int CEffectTrail::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
-	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);
+	if (m_bIsRender)
+	{
+		if (m_fAlpha < 1.0f)
+		{
+			m_fAlpha += 4.0f * fTimeDelta;
 
-	/*__________________________________________________________________________________________________________
-	[ TransCom - Update WorldMatrix ]
-	____________________________________________________________________________________________________________*/
-	Engine::CGameObject::Update_GameObject(fTimeDelta);
+			if (m_fAlpha >= 1.0f)
+				m_fAlpha = 1.0f;
+		}
+
+		/*__________________________________________________________________________________________________________
+		[ Renderer - Add Render Group ]
+		____________________________________________________________________________________________________________*/
+		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);
+
+		/*__________________________________________________________________________________________________________
+		[ TransCom - Update WorldMatrix ]
+		____________________________________________________________________________________________________________*/
+		Engine::CGameObject::Update_GameObject(fTimeDelta);
+	}
+	else
+	{
+		if (m_fAlpha > 0.0f)
+		{
+			m_fAlpha -= 4.0f * fTimeDelta;
+
+			if (m_fAlpha <= 0.0f)
+				m_fAlpha = 0.0f;
+		}
+	}
 
 	return NO_EVENT;
 }
@@ -149,6 +170,11 @@ void CEffectTrail::Set_ConstantTable()
 	tCB_ShaderTexture.fAlpha    = m_fAlpha;
 
 	m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
+}
+
+void CEffectTrail::SetUp_TrailAlpha(const _float& fTimeDelta)
+{
+
 }
 
 CEffectTrail* CEffectTrail::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
