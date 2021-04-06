@@ -240,6 +240,7 @@ call CopyEngine.bat</Command>
     <ClInclude Include="..\Code\Texture.h" />
     <ClInclude Include="..\Code\TimeMgr.h" />
     <ClInclude Include="..\Code\Timer.h" />
+    <ClInclude Include="..\Code\TrailTex.h" />
     <ClInclude Include="..\Code\Transform.h" />
     <ClInclude Include="..\Code\VIBuffer.h" />
     <ClInclude Include="..\Code\VIMesh.h" />
@@ -314,6 +315,7 @@ call CopyEngine.bat</Command>
     <ClCompile Include="..\Code\Texture.cpp" />
     <ClCompile Include="..\Code\TimeMgr.cpp" />
     <ClCompile Include="..\Code\Timer.cpp" />
+    <ClCompile Include="..\Code\TrailTex.cpp" />
     <ClCompile Include="..\Code\Transform.cpp" />
     <ClCompile Include="..\Code\VIBuffer.cpp" />
     <ClCompile Include="..\Code\VIMesh.cpp" />

@@ -187,6 +187,9 @@
     <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\13.ShaderWater">
       <UniqueIdentifier>{d249f8f9-6deb-4866-ae57-3fc9d4408c7a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\04.SuperClass\04.Component\02.Resource\00.Buffer\07.TrailTex">
+      <UniqueIdentifier>{1607e280-de2e-4750-8851-bf087b643089}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\Engine_Functor.h">
@@ -405,6 +408,9 @@
     <ClInclude Include="..\Code\ShaderLightingInstancing.h">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\05.ShaderLight</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\TrailTex.h">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\00.Buffer\07.TrailTex</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\DirectInput.cpp">
@@ -595,6 +601,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\ShaderLightingInstancing.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\99.Shader\05.ShaderLight</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TrailTex.cpp">
+      <Filter>01.Utility\04.SuperClass\04.Component\02.Resource\00.Buffer\07.TrailTex</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
