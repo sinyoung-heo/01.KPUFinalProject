@@ -862,7 +862,7 @@ void CMonster::Chase_Cloder(const float& fTimeDelta)
 
 		/* monster chase move -> arrive at player -> start to attack */
 		float fDist = Calculate_TargetDist(pTarget->m_vPos);
-		if ((ATTACK_RANGE_EPIC * ATTACK_RANGE_EPIC) < fDist)
+		if ((ATTACK_RANGE_CLODER * ATTACK_RANGE_CLODER) < fDist)
 			m_vPos += m_vDir * m_fSpd * fTimeDelta;
 		else
 			Change_AttackMode();
@@ -1061,7 +1061,7 @@ void CMonster::Chase_DrownedSailor(const float& fTimeDelta)
 
 		/* monster chase move -> arrive at player -> start to attack */
 		float fDist = Calculate_TargetDist(pTarget->m_vPos);
-		if ((ATTACK_RANGE_CRAB * ATTACK_RANGE_CRAB) < fDist)
+		if ((ATTACK_RANGE_SAILOR * ATTACK_RANGE_SAILOR) < fDist)
 			m_vPos += m_vDir * m_fSpd * fTimeDelta;
 		else
 			Change_AttackMode();
@@ -1518,12 +1518,13 @@ void CMonster::Attack_DrownedSailor(const float& fTimeDelta)
 				
 				m_uiAnimIdx = rand() % 5 + 3;
 				Set_AnimationKey(m_uiAnimIdx);
-
+		
 				if (m_uiAnimIdx == DrownedSailor::ATTACK_RUSH)
 				{
 					m_bIsRushAttack = true;
 					m_vRushPos = m_vPos /*+ m_vDir * 3.f*/;
-					send_Monster_RushAttack(pl, m_uiAnimIdx);
+					//send_Monster_RushAttack(pl, m_uiAnimIdx);
+					send_Monster_NormalAttack(pl, m_uiAnimIdx);
 				}
 				else
 				{

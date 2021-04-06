@@ -66,10 +66,17 @@ _int CDrownedSailor::Update_GameObject(const _float& fTimeDelta)
 	Change_Animation(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
+	[ Play Animation ]
+	____________________________________________________________________________________________________________*/
+	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
+	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
+
+	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
-
 
 	return NO_EVENT;
 }
@@ -82,14 +89,6 @@ _int CDrownedSailor::LateUpdate_GameObject(const _float& fTimeDelta)
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
-
-	/*__________________________________________________________________________________________________________
-	[ Play Animation ]
-	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
-	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
-	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
 	return NO_EVENT;
 }
@@ -234,7 +233,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 		m_bIsMoveStop = true;
 		m_bIsAttack = false;
 
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete())
 			m_iCurAnim = DrownedSailor::A_WAIT;
 	}
 	break;
@@ -244,8 +243,8 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 		m_uiAnimIdx = 4;
 		m_bIsMoveStop = true;
 		m_bIsAttack = false;
-
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+		
+		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete())
 			m_iCurAnim = DrownedSailor::A_WAIT;
 	}
 	break;
@@ -255,8 +254,8 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 		m_uiAnimIdx = 5;
 		m_bIsMoveStop = true;
 		m_bIsAttack = false;
-
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+		
+		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete())
 			m_iCurAnim = DrownedSailor::A_WAIT;
 	}
 	break;
@@ -266,13 +265,13 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 		m_uiAnimIdx = 6;
 		m_bIsMoveStop = true;
 
-		/* Rush (343~423 tick)*/
-		if (39 <= m_ui3DMax_CurFrame)
-			Attack_Moving(fTimeDelta, (m_pInfoCom->m_fSpeed * 8.f));
+		///* Rush (343~423 tick)*/
+		//if (39 <= m_ui3DMax_CurFrame)
+		//	Attack_Moving(fTimeDelta, (m_pInfoCom->m_fSpeed * 8.f));
 
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete())
 		{
-			m_pTransCom->m_vPos = m_pInfoCom->m_vArrivePos;
+			//m_pTransCom->m_vPos = m_pInfoCom->m_vArrivePos;
 			m_iCurAnim = DrownedSailor::A_WAIT;
 			m_bIsAttack = false;
 		}
@@ -285,7 +284,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 		m_bIsMoveStop = true;
 		m_bIsAttack = false;
 
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete())
 			m_iCurAnim = DrownedSailor::A_WAIT;
 	}
 	break;
@@ -294,7 +293,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 	{
 		m_uiAnimIdx = 8;
 		m_bIsMoveStop = true;
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) {}		
+		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete()) {}
 	}
 	break;
 

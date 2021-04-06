@@ -680,11 +680,11 @@ void CPacketMgr::Move_Monster(sc_packet_move* packet)
 
 	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
 
-	pObj->Get_Info()->m_fSpeed = packet->spd;
+	//pObj->Get_Info()->m_fSpeed = packet->spd;
+	//pObj->Set_MoveStop(false);
 	pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
 	pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 	pObj->Set_State(packet->animIdx);
-	pObj->Set_MoveStop(false);
 }
 
 void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)

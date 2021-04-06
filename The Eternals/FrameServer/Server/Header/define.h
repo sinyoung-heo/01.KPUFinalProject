@@ -23,16 +23,17 @@ constexpr int KEY_SERVER		= 1000000;
 //constexpr int INIT_LEV		= 1;			// 플레이어 초기 LEVEL
 //constexpr int INIT_ATT		= 5;			// 플레이어 초기 ATTACK
 //constexpr int INIT_SPEED		= 5;			// 플레이어 초기 SPEED
-constexpr int SERVER_CORE		= 4;
+constexpr int	SERVER_CORE					= 4;
 
-constexpr int MOVE_LIMIT				= 7;			// MONSTER MOVE OFFSET
-constexpr int CHASE_RANGE				= 8;			// MONSTER 추적 범위
+constexpr int	MOVE_LIMIT					= 7;			// MONSTER MOVE OFFSET
+constexpr int	CHASE_RANGE					= 8;			// MONSTER 추적 범위
 
-constexpr int ATTACK_RANGE_CRAB			= 2;			// MONSTER CRAB 공격 범위
-constexpr int ATTACK_RANGE_MONKEY		= 3;			// MONSTER MONKEY NORMAL 공격 범위
-constexpr int THROW_RANGE_MONKEY_START	= 10;			// MONSTER MONKEY 원거리 공격 범위
-constexpr int THROW_RANGE_MONKEY_END	= 15;			// MONSTER MONKEY 원거리 공격 범위
-constexpr int ATTACK_RANGE_EPIC			= 4;
+constexpr int	ATTACK_RANGE_CRAB			= 2;			// MONSTER CRAB 공격 범위
+constexpr int	ATTACK_RANGE_MONKEY			= 3;			// MONSTER MONKEY 근거리 공격 범위
+constexpr int	THROW_RANGE_MONKEY_START	= 10;			// MONSTER MONKEY 원거리 공격 범위
+constexpr int	THROW_RANGE_MONKEY_END		= 15;			// MONSTER MONKEY 원거리 공격 범위
+constexpr int	ATTACK_RANGE_CLODER			= 4;			// MONSTER CLODER 공격 범위
+constexpr float ATTACK_RANGE_SAILOR			= 2.5f;			// MONSTER SAILOR 공격 범위
 
 /*____________________________________________________________________
 Player Direction
