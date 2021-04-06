@@ -8,13 +8,8 @@ namespace Engine
 	class CShaderTexture;
 }
 
-const _uint TRAIL_SIZE = 22;
+const _uint TRAIL_SIZE = 25;
 
-typedef	struct	tagIndex32
-{
-	_uint _1, _2, _3;
-
-}INDEX32;
 
 class CEffectTrail : public Engine::CGameObject
 {

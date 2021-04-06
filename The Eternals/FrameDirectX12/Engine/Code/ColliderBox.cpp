@@ -15,6 +15,7 @@ CColliderBox::CColliderBox(const CColliderBox & rhs)
 	: CVIBuffer(rhs)
 	, m_BoundingInfo(rhs.m_BoundingInfo)
 	, m_arrCorners(rhs.m_arrCorners)
+	, m_arrOriginCorners(rhs.m_arrOriginCorners)
 	, m_pShaderColorInstancing(CShaderColorInstancing::Get_Instance())
 {
 }
@@ -37,26 +38,26 @@ HRESULT CColliderBox::Ready_Buffer()
 
 	m_PrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
-	m_BoundingInfo.Center		= _vec3(0.0f, 0.0f, 0.0f);
-	m_BoundingInfo.Extents.x	= 0.5f;	// +,- offset
-	m_BoundingInfo.Extents.y	= 0.5f;	// +,- offset
-	m_BoundingInfo.Extents.z	= 0.5f;	// +,- offset
+	m_BoundingInfo.Center	 = _vec3(0.0f, 0.0f, 0.0f);
+	m_BoundingInfo.Extents.x = 0.5f;	// +,- offset
+	m_BoundingInfo.Extents.y = 0.5f;	// +,- offset
+	m_BoundingInfo.Extents.z = 0.5f;	// +,- offset
 
-	m_BoundingInfo.GetCorners(m_arrCorners.data());
+	m_BoundingInfo.GetCorners(m_arrOriginCorners.data());
 
 	/*__________________________________________________________________________________________________________
 	[ Vertex Buffer ]
 	____________________________________________________________________________________________________________*/
 	array<VTXCOL, 8> vertices =
 	{
-		VTXCOL(_vec3(m_arrCorners[0]), _rgba(RANDOM_COLOR)),
-		VTXCOL(_vec3(m_arrCorners[1]), _rgba(RANDOM_COLOR)),
-		VTXCOL(_vec3(m_arrCorners[2]), _rgba(RANDOM_COLOR)),
-		VTXCOL(_vec3(m_arrCorners[3]), _rgba(RANDOM_COLOR)),
-		VTXCOL(_vec3(m_arrCorners[4]), _rgba(RANDOM_COLOR)),
-		VTXCOL(_vec3(m_arrCorners[5]), _rgba(RANDOM_COLOR)),
-		VTXCOL(_vec3(m_arrCorners[6]), _rgba(RANDOM_COLOR)),
-		VTXCOL(_vec3(m_arrCorners[7]), _rgba(RANDOM_COLOR))
+		VTXCOL(_vec3(m_arrOriginCorners[0]), _rgba(RANDOM_COLOR)),
+		VTXCOL(_vec3(m_arrOriginCorners[1]), _rgba(RANDOM_COLOR)),
+		VTXCOL(_vec3(m_arrOriginCorners[2]), _rgba(RANDOM_COLOR)),
+		VTXCOL(_vec3(m_arrOriginCorners[3]), _rgba(RANDOM_COLOR)),
+		VTXCOL(_vec3(m_arrOriginCorners[4]), _rgba(RANDOM_COLOR)),
+		VTXCOL(_vec3(m_arrOriginCorners[5]), _rgba(RANDOM_COLOR)),
+		VTXCOL(_vec3(m_arrOriginCorners[6]), _rgba(RANDOM_COLOR)),
+		VTXCOL(_vec3(m_arrOriginCorners[7]), _rgba(RANDOM_COLOR))
 	};
 
 	/*__________________________________________________________________________________________________________
@@ -146,9 +147,7 @@ void CColliderBox::Update_Component(const _float & fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	if (nullptr != m_pSkinningMatrix && nullptr != m_pParentMatrix)
 	{
-		_matrix matBoneFinalTransform = ((m_pSkinningMatrix->matBoneScale
-									  * m_pSkinningMatrix->matBoneRotation
-									  * m_pSkinningMatrix->matBoneTrans)
+		_matrix matBoneFinalTransform = ((m_pSkinningMatrix->matBoneScale * m_pSkinningMatrix->matBoneRotation * m_pSkinningMatrix->matBoneTrans)
 									  * m_pSkinningMatrix->matParentTransform)
 									  * m_pSkinningMatrix->matRootTransform;
 
@@ -157,8 +156,15 @@ void CColliderBox::Update_Component(const _float & fTimeDelta)
 	else if (nullptr == m_pSkinningMatrix && nullptr != m_pParentMatrix)
 		m_pTransCom->m_matWorld *= (*m_pParentMatrix);
 
+	// Update Center
 	m_BoundingInfo.Center = m_pTransCom->Get_PositionVector();
-	m_BoundingInfo.GetCorners(m_arrCorners.data());
+
+	// Update Coners
+	for (_uint i = 0; i < m_arrOriginCorners.size(); ++i)
+		m_arrCorners[i].TransformCoord(m_arrOriginCorners[i], m_pTransCom->m_matWorld);
+
+	m_vTopPlaneCenter    = (m_arrCorners[2] + m_arrCorners[3] + m_arrCorners[6] + m_arrCorners[7]) / 4.0f;
+	m_vBottomPlaneCenter = (m_arrCorners[0] + m_arrCorners[1] + m_arrCorners[4] + m_arrCorners[5]) / 4.0f;
 
 	if (m_bIsSetUpCameraAt)
 	{

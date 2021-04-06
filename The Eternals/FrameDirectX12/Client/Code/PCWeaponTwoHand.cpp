@@ -40,7 +40,10 @@ HRESULT CPCWeaponTwoHand::LateInit_GameObject()
 	Engine::FAILED_CHECK_RETURN(CPCWeapon::LateInit_GameObject(), E_FAIL);
 
 	// Create Trail
-	m_pTrail = CEffectTrail::Create(m_pGraphicDevice, m_pCommandList, L"EffectTrailTexture", 0, _vec3(3.0f, 3.0f, 0.0f));
+	m_pTrail = CEffectTrail::Create(m_pGraphicDevice, m_pCommandList, 
+									L"EffectTrailTexture",		// TextureTag
+									0,							// TextureIdx
+									_vec3(1.0f, 1.0f, 1.0f));	// Scale
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"TestTrail", m_pTrail), E_FAIL);
 
 	return S_OK;
@@ -64,24 +67,26 @@ _int CPCWeaponTwoHand::Update_GameObject(const _float& fTimeDelta)
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 
 
-	// Upate BoneMatrix
-	m_matBoneFinalTransform = (m_pHierarchyDesc->matScale * m_pHierarchyDesc->matRotate * m_pHierarchyDesc->matTrans)
-						 	 * m_pHierarchyDesc->matGlobalTransform;
 
 	/*____________________________________________________________________
 	TransCom - Update WorldMatrix.
 	______________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
+	// Upate BoneMatrix
+	m_matBoneFinalTransform = (m_pHierarchyDesc->matScale * m_pHierarchyDesc->matRotate * m_pHierarchyDesc->matTrans) * m_pHierarchyDesc->matGlobalTransform;
+	_matrix matSkinngingTransform = m_matBoneFinalTransform * (*m_pParentMatrix);
+
+	m_pTransCom->m_matWorld *= matSkinngingTransform;
+
 	// Update Trail
-	_matrix matWorld = m_pTransCom->m_matWorld;
-
-	m_pTransCom->m_matWorld *= m_matBoneFinalTransform * (*m_pParentMatrix);
 	m_pBoundingBoxCom->Update_Component(fTimeDelta);
+	//_vec3 vMin = _vec3(matSkinngingTransform._41, matSkinngingTransform._42, matSkinngingTransform._43);
+	//_vec3 vMax = _vec3(m_pBoundingBoxCom->Get_BoundingInfo().Center);
 
-	_matrix matTrail = m_matBoneFinalTransform * (*m_pParentMatrix);
-	_vec3 vMin = _vec3(matTrail._41, matTrail._42, matTrail._43);
-	_vec3 vMax = _vec3(m_pBoundingBoxCom->Get_BoundingInfo().Center);
+	_vec3 vMin = _vec3(m_pBoundingBoxCom->Get_BoundingInfo().Center);
+	_vec3 vMax = _vec3(m_pBoundingBoxCom->Get_TopPlaneCenter());
+
 	m_pTrail->SetUp_TrailByCatmullRom(&vMin, &vMax);
 
 	return NO_EVENT;

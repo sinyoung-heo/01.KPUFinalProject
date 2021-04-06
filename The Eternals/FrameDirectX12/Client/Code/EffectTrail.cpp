@@ -145,16 +145,9 @@ HRESULT CEffectTrail::Add_Component(wstring wstrTextureTag)
 	/*__________________________________________________________________________________________________________
 	[ Index Buffer ]
 	____________________________________________________________________________________________________________*/
-	//array<INDEX32, TRAIL_SIZE - 1> indices;
-	//for (_uint i = 0; i < TRAIL_SIZE - 2; ++i)
-	//{
-	//	indices[i]._1 = 0;
-	//	indices[i]._2 = i + 1;
-	//	indices[i]._3 = i + 2;
-	//}
 	array<_uint, (TRAIL_SIZE - 2) * 3> indices;
-	_uint j = 0;
-	for (_uint i = 0; i < (TRAIL_SIZE - 3) * 3; i += 3, ++j)
+	// _uint j = 0;
+	for (_uint i = 0, j = 0; i < (TRAIL_SIZE - 3) * 3; i += 3, ++j)
 	{
 		indices[i]		= 0;
 		indices[i + 1]	= j + 1;
