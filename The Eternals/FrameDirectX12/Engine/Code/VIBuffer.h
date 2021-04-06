@@ -22,9 +22,9 @@ public:
 	virtual void				Release_UploadBuffer();
 
 protected:
-	ID3D12Resource*				Create_DefaultBuffer(const void* InitData,
-													 UINT64 uiByteSize, 
-													 ID3D12Resource*& pUploadBuffer);
+	ID3D12Resource*	Create_DefaultBuffer(const void* InitData, UINT64 uiByteSize, ID3D12Resource*& pUploadBuffer);
+	ID3D12Resource* Create_DynamicBuffer(const void* InitData, UINT64 uiByteSize, ID3D12Resource*& pUploadBuffer);
+
 
 protected:
 	/*__________________________________________________________________________________________________________
@@ -48,6 +48,9 @@ protected:
 
 	SUBMESH_GEOMETRY			m_tSubMeshGeometry;
 	D3D12_PRIMITIVE_TOPOLOGY	m_PrimitiveTopology	= D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+	// Dynamic Vertex
+	UINT8* m_pVetexData = nullptr;
 
 public:
 	virtual CComponent* Clone(void);

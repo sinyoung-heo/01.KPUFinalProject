@@ -16,6 +16,7 @@
 #include "ColliderBox.h"
 #include "ColliderSphere.h"
 #include "CoordinateCol.h"
+#include "TrailTex.h"
 
 #include "ShaderColor.h"
 #include "ShaderColorInstancing.h"

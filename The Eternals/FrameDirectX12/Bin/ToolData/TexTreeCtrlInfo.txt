@@ -12,6 +12,7 @@ Texture|EffectMultiTexture|Smoke0
 Texture|EffectMultiTexture|Smoke1
 Texture|EffectSpriteTexture|Fire
 Texture|EffectSpriteTexture|Torch
+ResourceStage|Texture|EffectTrailTexture
 Texture|Environment|SkyBox
 Texture|Environment|Terrain
 Texture|Environment|WaterNormal

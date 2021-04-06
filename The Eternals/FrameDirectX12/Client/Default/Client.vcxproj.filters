@@ -238,6 +238,12 @@
     <Filter Include="02.GameObject\05.Monster\03.DrownedSailor">
       <UniqueIdentifier>{713aa426-3981-45d9-8771-b82e6792d412}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.GameEffect">
+      <UniqueIdentifier>{9afafac1-18e0-482b-8f50-b6c06c0bf845}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.GameEffect\01.EffectTrail">
+      <UniqueIdentifier>{ecfa5090-5ac4-4c60-8258-468da564ef49}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -471,6 +477,9 @@
     <ClInclude Include="..\Code\DrownedSailor.h">
       <Filter>02.GameObject\05.Monster\03.DrownedSailor</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\EffectTrail.h">
+      <Filter>02.GameObject\98.GameEffect\01.EffectTrail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -658,6 +667,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\DrownedSailor.cpp">
       <Filter>02.GameObject\05.Monster\03.DrownedSailor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\EffectTrail.cpp">
+      <Filter>02.GameObject\98.GameEffect\01.EffectTrail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

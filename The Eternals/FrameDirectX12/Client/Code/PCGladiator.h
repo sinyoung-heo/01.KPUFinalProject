@@ -88,8 +88,8 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	CPCWeaponTwoHand*	m_pWeapon        = nullptr;
 	CDynamicCamera*		m_pDynamicCamera = nullptr;
+	CPCWeaponTwoHand*	m_pWeapon        = nullptr;
 	wstring				m_wstrMeshTag    = L"";
 
 	// Speed Linear Interpolation

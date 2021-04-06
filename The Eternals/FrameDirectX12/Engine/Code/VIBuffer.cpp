@@ -19,7 +19,6 @@ CVIBuffer::CVIBuffer(const CVIBuffer & rhs)
 	, m_uiVB_ByteSize(rhs.m_uiVB_ByteSize)
 	, m_uiIB_ByteSize(rhs.m_uiIB_ByteSize)
 	, m_IndexFormat(rhs.m_IndexFormat)
-
 	, m_tSubMeshGeometry(rhs.m_tSubMeshGeometry)
 	, m_PrimitiveTopology(rhs.m_PrimitiveTopology)
 {
@@ -164,6 +163,30 @@ ID3D12Resource * CVIBuffer::Create_DefaultBuffer(const void * InitData,
 	return pDefaultBuffer;
 }
 
+ID3D12Resource* CVIBuffer::Create_DynamicBuffer(const void* InitData,
+												UINT64 uiByteSize, 
+												ID3D12Resource*& pUploadBuffer)
+{
+	Engine::CGraphicDevice::Get_Instance()->Begin_ResetCmdList(Engine::CMDID::CMD_MAIN);
+
+	ID3D12Resource* pDefaultBuffer = nullptr;
+
+	Engine::FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+																		  D3D12_HEAP_FLAG_NONE,
+																		  &CD3DX12_RESOURCE_DESC::Buffer(uiByteSize),
+																		  D3D12_RESOURCE_STATE_GENERIC_READ,
+																		  nullptr,
+																		  IID_PPV_ARGS(&pDefaultBuffer)),
+																		  NULL);
+
+	// Write Vertex Data to pVertexDataBegin dynamically
+	pDefaultBuffer->Map(0, nullptr, (void**)&m_pVetexData);
+	
+	Engine::CGraphicDevice::Get_Instance()->End_ResetCmdList(Engine::CMDID::CMD_MAIN);
+
+	return pDefaultBuffer;
+}
+
 CComponent* CVIBuffer::Clone(void)
 {
 	return nullptr;
@@ -172,10 +195,9 @@ CComponent* CVIBuffer::Clone(void)
 void CVIBuffer::Free()
 {
 	CComponent::Free();
-
-	Engine::Safe_Release(m_pVB_CPU);
-	Engine::Safe_Release(m_pIB_CPU);
-	Engine::Safe_Release(m_pVB_GPU);
-	Engine::Safe_Release(m_pIB_GPU);
+	Safe_Release(m_pVB_CPU);
+	Safe_Release(m_pIB_CPU);
+	Safe_Release(m_pVB_GPU);
+	Safe_Release(m_pIB_GPU);
 
 }
