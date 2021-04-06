@@ -9,7 +9,7 @@ namespace Engine
 	class CShaderTexture;
 }
 
-const _uint TRAIL_SIZE = 25;
+// const _uint TRAIL_SIZE = 25;
 
 
 class CEffectTrail : public Engine::CGameObject
@@ -47,7 +47,7 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Trail Buffer ]
 	____________________________________________________________________________________________________________*/
-	array<_vec3, TRAIL_SIZE - 1> m_arrMax;
+	array<_vec3, Engine::TRAIL_SIZE - 1> m_arrMax;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]

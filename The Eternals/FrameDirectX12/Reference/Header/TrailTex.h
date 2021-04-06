@@ -3,8 +3,6 @@
 
 BEGIN(Engine)
 
-const _uint TRAIL_SIZE = 25;
-
 class ENGINE_DLL CTrailTex final : public CVIBuffer
 {
 private:

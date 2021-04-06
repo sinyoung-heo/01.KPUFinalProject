@@ -68,29 +68,21 @@ _int CEffectTrail::LateUpdate_GameObject(const _float& fTimeDelta)
 void CEffectTrail::Render_GameObject(const _float& fTimeDelta)
 {
 	Set_ConstantTable();
-	// Vertex버퍼 정보 CopyData.
-	//memcpy(m_pVetexData, m_arrVertices.data(), m_uiVB_ByteSize);
 
 	m_pBufferCom->Begin_Buffer();
 	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), 0, m_uiTexIdx, Engine::MATRIXID::PROJECTION);
 	m_pBufferCom->Render_Buffer();
-
-	//m_pCommandList->IASetVertexBuffers(0, 1, &Get_VertexBufferView());
-	//m_pCommandList->IASetIndexBuffer(&Get_IndexBufferView());
-	//m_pCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	//m_pCommandList->DrawIndexedInstanced(m_tSubMeshGeometry.uiIndexCount, 1, 0, 0, 0);	
 }
 
 void CEffectTrail::SetUp_TrailByCatmullRom(_vec3* vMin, _vec3* vMax)
 {
-	for (_int i = TRAIL_SIZE - 2; i > 0; --i)
+	for (_int i = Engine::TRAIL_SIZE - 2; i > 0; --i)
 		m_arrMax[i] = m_arrMax[i - 1];
 
 	m_arrMax[0] = *vMax;
 
 	// CatmullRom
-	for (_int i = 2; i < TRAIL_SIZE - 2; ++i)
+	for (_int i = 2; i < Engine::TRAIL_SIZE - 2; ++i)
 	{
 		_vec3 catmullrom;
 		catmullrom.Vector3CatmullRom(m_arrMax[i - 2], m_arrMax[i - 1], m_arrMax[i], m_arrMax[i + 1], 0.5f);
@@ -104,11 +96,11 @@ void CEffectTrail::SetUp_TrailByCatmullRom(_vec3* vMin, _vec3* vMax)
 	m_pBufferCom->Get_ArrayVerteices()[0].vPos = _vec3(vMin->x, vMin->y, vMin->z);
 	m_pBufferCom->Get_ArrayVerteices()[0].vTexUV = _vec2(0.0f, 1.0f);
 
-	for (int i = 0; i < TRAIL_SIZE - 1; ++i)
+	for (int i = 0; i < Engine::TRAIL_SIZE - 1; ++i)
 	{
-		float fTex = _float(i) / (TRAIL_SIZE - 2);
+		float fTex = _float(i) / (Engine::TRAIL_SIZE - 2);
 
-		if (i > 2 && i < TRAIL_SIZE - 2)
+		if (i > 2 && i < Engine::TRAIL_SIZE - 2)
 		{
 			m_pBufferCom->Get_ArrayVerteices()[i + 1].vPos = _vec3(m_arrMax[i].x, m_arrMax[i].y, m_arrMax[i].z);
 			m_pBufferCom->Get_ArrayVerteices()[i + 1].vTexUV = _vec2(fTex, 0.f);

@@ -16,4 +16,6 @@ namespace Engine
 	const _float SHADOWTEX_HEIGHT	= 4096.0f;
 
 	const _int	MAX_PALETTE			= 128;
+
+	const _uint TRAIL_SIZE = 25;
 }
