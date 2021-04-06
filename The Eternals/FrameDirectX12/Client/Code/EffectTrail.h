@@ -45,15 +45,14 @@ private:
 	Engine::CShaderTexture*	m_pShaderCom  = nullptr;
 
 	/*__________________________________________________________________________________________________________
-	[ Trail Buffer ]
-	____________________________________________________________________________________________________________*/
-	array<_vec3, Engine::TRAIL_SIZE - 1> m_arrMax;
-
-	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
+	array<_vec3, Engine::TRAIL_SIZE - 1> m_arrMax;
 	wstring	m_wstrTextureTag = L"";
 	_uint	m_uiTexIdx		 = 0;
+	_float	m_fAlpha		 = 1.0f;
+	_bool	m_bIsRender      = true;
+
 
 public:
 	static CEffectTrail* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,

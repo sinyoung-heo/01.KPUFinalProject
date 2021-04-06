@@ -146,6 +146,7 @@ void CEffectTrail::Set_ConstantTable()
 	Engine::CB_SHADER_TEXTURE tCB_ShaderTexture;
 	ZeroMemory(&tCB_ShaderTexture, sizeof(Engine::CB_SHADER_TEXTURE));
 	tCB_ShaderTexture.matWorld	= Engine::CShader::Compute_MatrixTranspose(INIT_MATRIX);
+	tCB_ShaderTexture.fAlpha    = m_fAlpha;
 
 	m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 }
