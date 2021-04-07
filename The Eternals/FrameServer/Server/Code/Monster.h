@@ -13,7 +13,7 @@ public:
 	void	Set_NumAnimation(const _uint& num) { m_uiNumAniIndex = num; }
 	void	Set_AnimationKey(const _uint& uiAniKey);
 
-	void	Set_Stop_Attack();
+	void	Set_Stop_Attack(chrono::seconds t = 3s);
 	void	Set_Start_Attack();
 
 public:
@@ -56,41 +56,41 @@ public:
 	virtual DWORD Release();
 
 	/* SEND PACKET */
-	void send_Monster_enter_packet(int to_client);
-	void send_Monster_move_packet(int to_client, int ani);
-	void send_Monster_NormalAttack(int to_client, int ani);
-	void send_Monster_RushAttack(int to_client, int ani);
-	void send_Monster_Stat(int to_client);
+	void	send_Monster_enter_packet(int to_client);
+	void	send_Monster_move_packet(int to_client, int ani);
+	void	send_Monster_NormalAttack(int to_client, int ani);
+	void	send_Monster_RushAttack(int to_client, int ani);
+	void	send_Monster_Stat(int to_client);
 
 public:
-	char			m_monNum		= 0;
-	int				m_iHp			= 0;
-	int				m_iMaxHp		= 0;
-	int				m_iExp			= 0;
-	int				m_iAtt			= 0;
-	float			m_fSpd			= 0;
+	char			m_monNum			= 0;
+	int				m_iHp				= 0;
+	int				m_iMaxHp			= 0;
+	int				m_iExp				= 0;
+	int				m_iAtt				= 0;
+	float			m_fSpd				= 0;
 	
-	bool			m_bIsRushAttack = false;	// 돌진기 스킬
-	volatile bool	m_bIsAttack		= false;
-	volatile bool	m_bIsShortAttack = true;	// 근거리 공격
+	bool			m_bIsRushAttack		= false;	// 돌진기 스킬
+	volatile bool	m_bIsAttack			= false;
+	volatile bool	m_bIsShortAttack	= true;		// 근거리 공격
 
-	int				m_iTargetNum	= -1;
-	_vec3			m_vOriPos		= _vec3(0.f);
-	_vec3			m_vRushPos		= _vec3(0.f);
+	int				m_iTargetNum		= -1;
+	_vec3			m_vOriPos			= _vec3(0.f);
+	_vec3			m_vRushPos			= _vec3(0.f);
 
 	/* Animation */
-	_uint m_uiNewAniIndex = 0;
-	_uint m_uiCurAniIndex = 0;
-	_uint m_uiNumAniIndex = 0;
-	_uint m_ui3DMax_NumFrame = 0;
-	_uint m_ui3DMax_CurFrame = 0;
+	_uint			m_uiNewAniIndex			= 0;
+	_uint			m_uiCurAniIndex			= 0;
+	_uint			m_uiNumAniIndex			= 0;
+	_uint			m_ui3DMax_NumFrame		= 0;
+	_uint			m_ui3DMax_CurFrame		= 0;
 
-	float m_fAnimationTime = 0.f;
-	float m_fBlendAnimationTime = 0.f;
-	float m_fBlendingTime = 0.f;
+	float			m_fAnimationTime		= 0.f;
+	float			m_fBlendAnimationTime	= 0.f;
+	float			m_fBlendingTime			= 0.f;
 
-	double m_arrDuration[MAX_ANI] = { 0 };
+	double			m_arrDuration[MAX_ANI]	= { 0 };
 
-	_uint m_uiAnimIdx = 0;
+	_uint			m_uiAnimIdx				= 0;   // Apply Animation Index
 };
 

@@ -236,7 +236,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 		{
 			m_uiAnimIdx = 3;
 			m_bIsMoveStop = true;
-			m_bIsAttack = false;
+			m_bIsAttack = true;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
@@ -250,7 +250,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 		{
 			m_uiAnimIdx = 4;
 			m_bIsMoveStop = true;
-			m_bIsAttack = false;
+			m_bIsAttack = true;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
@@ -264,7 +264,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 		{
 			m_uiAnimIdx = 5;
 			m_bIsMoveStop = true;
-			m_bIsAttack = false;
+			m_bIsAttack = true;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
@@ -278,6 +278,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 		{
 			m_uiAnimIdx = 6;
 			m_bIsMoveStop = true;
+			m_bIsAttack = true;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			///* Rush (343~423 tick)*/
@@ -297,7 +298,8 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 		{
 			m_uiAnimIdx = 7;
 			m_bIsMoveStop = true;
-			m_bIsAttack = false;
+			m_bIsAttack = true;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete())
 			{
@@ -310,6 +312,8 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 		{
 			m_uiAnimIdx = 8;
 			m_bIsMoveStop = true;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete()) {}
 		}
 		break;

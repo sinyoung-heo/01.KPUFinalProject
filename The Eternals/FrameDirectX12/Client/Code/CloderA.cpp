@@ -66,10 +66,17 @@ _int CCloderA::Update_GameObject(const _float& fTimeDelta)
 	Change_Animation(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
+	[ Play Animation ]
+	____________________________________________________________________________________________________________*/
+	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
+	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
+
+	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
-
 
 	return NO_EVENT;
 }
@@ -82,14 +89,6 @@ _int CCloderA::LateUpdate_GameObject(const _float& fTimeDelta)
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
-
-	/*__________________________________________________________________________________________________________
-	[ Play Animation ]
-	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
-	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
-	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
 	return NO_EVENT;
 }
@@ -201,69 +200,81 @@ void CCloderA::Active_Monster(const _float& fTimeDelta)
 
 void CCloderA::Change_Animation(const _float& fTimeDelta)
 {
-	switch (m_iCurAnim)
+	if (m_pMeshCom->Is_BlendingComplete())
 	{
+		switch (m_iCurAnim)
+		{
 
-	case Cloder::A_WAIT:
-	{
-		m_uiAnimIdx = 0;
-		m_bIsMoveStop = true;
+		case Cloder::A_WAIT:
+		{
+			m_uiAnimIdx = 0;
+			m_bIsMoveStop = true;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		}
+		break;
+
+		case Cloder::A_WALK:
+		{
+			m_uiAnimIdx = 1;
+			m_bIsMoveStop = false;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		}
+		break;
+
+		case Cloder::A_RUN:
+		{
+			m_uiAnimIdx = 2;
+			m_bIsMoveStop = false;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		}
+		break;
+
+		case Cloder::A_ATTACK:
+		{
+			m_uiAnimIdx = 3;
+			m_bIsMoveStop = true;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+				m_iCurAnim = Cloder::A_WAIT;
+		}
+		break;
+
+		case Cloder::A_ATTACK_POKE:
+		{
+			m_uiAnimIdx = 4;
+			m_bIsMoveStop = true;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+				m_iCurAnim = Cloder::A_WAIT;
+		}
+		break;
+
+		case Cloder::A_ATTACK_SWING:
+		{
+			m_uiAnimIdx = 5;
+			m_bIsMoveStop = true;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+				m_iCurAnim = Cloder::A_WAIT;
+		}
+		break;
+
+		case Cloder::A_DEATH:
+		{
+			m_uiAnimIdx = 6;
+			m_bIsMoveStop = true;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) {}
+		}
+		break;
+
+		}
 	}
-	break;
 
-	case Cloder::A_WALK:
-	{
-		m_uiAnimIdx = 1;		
-		m_bIsMoveStop = false;
-	}
-	break;
-
-	case Cloder::A_RUN:
-	{
-		m_uiAnimIdx = 2;
-		m_bIsMoveStop = false;
-	}
-	break;
-
-	case Cloder::A_ATTACK:
-	{
-		m_uiAnimIdx = 3;
-		m_bIsMoveStop = true;
-
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-			m_iCurAnim = Cloder::A_WAIT;
-	}
-	break;
-
-	case Cloder::A_ATTACK_POKE:
-	{
-		m_uiAnimIdx = 4;
-		m_bIsMoveStop = true;
-
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-			m_iCurAnim = Cloder::A_WAIT;
-	}
-	break;
-
-	case Cloder::A_ATTACK_SWING:
-	{
-		m_uiAnimIdx = 5;
-		m_bIsMoveStop = true;
-
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-			m_iCurAnim = Cloder::A_WAIT;
-	}
-	break;
-
-	case Cloder::A_DEATH:
-	{
-		m_uiAnimIdx = 6;
-		m_bIsMoveStop = true;
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) {}		
-	}
-	break;
-
-	}
 }
 
 Engine::CGameObject* CCloderA::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)

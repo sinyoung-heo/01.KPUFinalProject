@@ -211,7 +211,10 @@ void CMonster::Move_NormalMonster(const float& fTimeDelta)
 	ori_y = m_vPos.y;
 	ori_z = m_vPos.z;
 
-	m_fSpd = 1.f;
+	if (m_monNum == MON_CRAB)
+		m_fSpd = 0.5f;
+	else
+		m_fSpd = 1.f;
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
@@ -459,7 +462,10 @@ void CMonster::Chase_Crab(const float& fTimeDelta)
 		if (!CCollisionMgr::GetInstance()->Is_Arrive(m_vPos, pTarget->m_vPos))
 			m_vPos += m_vDir * m_fSpd * fTimeDelta;
 		else
+		{
 			Change_AttackMode();
+			return;
+		}
 	}
 	/* 타겟(공격 대상)이 존재하지 않을 경우 -> 생성된 위치로 돌아감 */
 	else
@@ -659,6 +665,7 @@ void CMonster::Chase_Monkey(const float& fTimeDelta)
 		{
 			m_bIsShortAttack = false;
 			Change_AttackMode();
+			return;
 		}
 		else if ((ATTACK_RANGE_MONKEY * ATTACK_RANGE_MONKEY) < fDist)
 			m_vPos += m_vDir * m_fSpd * fTimeDelta;
@@ -666,6 +673,7 @@ void CMonster::Chase_Monkey(const float& fTimeDelta)
 		{
 			m_bIsShortAttack = true;
 			Change_AttackMode();
+			return;
 		}
 	}
 	/* 타겟(공격 대상)이 존재하지 않을 경우 -> 생성된 위치로 돌아감 */
@@ -865,7 +873,10 @@ void CMonster::Chase_Cloder(const float& fTimeDelta)
 		if ((ATTACK_RANGE_CLODER * ATTACK_RANGE_CLODER) < fDist)
 			m_vPos += m_vDir * m_fSpd * fTimeDelta;
 		else
+		{
 			Change_AttackMode();
+			return;
+		}
 	}
 	/* 타겟(공격 대상)이 존재하지 않을 경우 -> 생성된 위치로 돌아감 */
 	else
@@ -1064,7 +1075,10 @@ void CMonster::Chase_DrownedSailor(const float& fTimeDelta)
 		if ((ATTACK_RANGE_SAILOR * ATTACK_RANGE_SAILOR) < fDist)
 			m_vPos += m_vDir * m_fSpd * fTimeDelta;
 		else
+		{
 			Change_AttackMode();
+			return;
+		}
 	}
 	/* 타겟(공격 대상)이 존재하지 않을 경우 -> 생성된 위치로 돌아감 */
 	else
@@ -1205,7 +1219,10 @@ void CMonster::Attack_Crab(const float& fTimeDelta)
 		if (!Is_AnimationSetEnd(fTimeDelta))
 			return;
 		else
+		{
 			Set_Stop_Attack();
+			return;
+		}
 	}
 
 	/* 해당 Monster의 원래 위치값 */
@@ -1273,6 +1290,7 @@ void CMonster::Attack_Crab(const float& fTimeDelta)
 	else
 	{
 		Change_ChaseMode();
+		return;
 	}
 }
 
@@ -1284,7 +1302,10 @@ void CMonster::Attack_Monkey(const float& fTimeDelta)
 		if (!Is_AnimationSetEnd(fTimeDelta))
 			return;
 		else
+		{
 			Set_Stop_Attack();
+			return;
+		}
 	}
 
 	/* 해당 Monster의 원래 위치값 */
@@ -1365,6 +1386,7 @@ void CMonster::Attack_Monkey(const float& fTimeDelta)
 	else
 	{
 		Change_ChaseMode();
+		return;
 	}
 }
 
@@ -1376,7 +1398,10 @@ void CMonster::Attack_Cloder(const float& fTimeDelta)
 		if (!Is_AnimationSetEnd(fTimeDelta))
 			return;
 		else
+		{
 			Set_Stop_Attack();
+			return;
+		}
 	}
 
 	/* 해당 Monster의 원래 위치값 */
@@ -1446,6 +1471,7 @@ void CMonster::Attack_Cloder(const float& fTimeDelta)
 	else
 	{
 		Change_ChaseMode();
+		return;
 	}
 }
 
@@ -1457,7 +1483,10 @@ void CMonster::Attack_DrownedSailor(const float& fTimeDelta)
 		if (!Is_AnimationSetEnd(fTimeDelta))
 			return;
 		else
-			Set_Stop_Attack();
+		{
+			Set_Stop_Attack(3s);
+			return;
+		}
 	}
 
 	/* 해당 Monster의 원래 위치값 */
@@ -1539,6 +1568,7 @@ void CMonster::Attack_DrownedSailor(const float& fTimeDelta)
 	else
 	{
 		Change_ChaseMode();
+		return;
 	}
 }
 
@@ -1709,7 +1739,7 @@ bool CMonster::Is_AnimationSetEnd(const float& fTimeDelta)
 	return false;
 }
 
-void CMonster::Set_Stop_Attack()
+void CMonster::Set_Stop_Attack(chrono::seconds t)
 {
 	/* 공격이 끝나면 추적 모드로 변경 */
 	if (m_bIsAttack)
@@ -1718,7 +1748,7 @@ void CMonster::Set_Stop_Attack()
 
 		if (true == atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsAttack), &prev_state, false))
 		{
-			add_timer(m_sNum, OP_MODE_CHASE_MONSTER, system_clock::now() + 3s);
+			add_timer(m_sNum, OP_MODE_CHASE_MONSTER, system_clock::now() + t);
 		}
 	}
 }

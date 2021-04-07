@@ -67,10 +67,17 @@ _int CCrab::Update_GameObject(const _float& fTimeDelta)
 	Change_Animation(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
+	[ Play Animation ]
+	____________________________________________________________________________________________________________*/
+	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
+	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
+
+	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
-
 
 	return NO_EVENT;
 }
@@ -83,14 +90,6 @@ _int CCrab::LateUpdate_GameObject(const _float& fTimeDelta)
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
-
-	/*__________________________________________________________________________________________________________
-	[ Play Animation ]
-	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
-	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
-	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
 	return NO_EVENT;
 }
@@ -224,60 +223,68 @@ void CCrab::Attack_Moving(const _float& fTimeDelta, const float& fSpd, const boo
 
 void CCrab::Change_Animation(const _float& fTimeDelta)
 {
-	switch (m_iCurAnim)
+	if (m_pMeshCom->Is_BlendingComplete())
 	{
-
-	case Crab::A_WAIT:
-	{
-		m_uiAnimIdx = 0;
-		m_bIsMoveStop = true;
-	}
-	break;
-
-	case Crab::A_WALK:
-	{
-		m_uiAnimIdx = 1;		
-		m_bIsMoveStop = false;
-	}
-	break;
-
-	case Crab::A_RUN:
-	{
-		m_uiAnimIdx = 2;
-		m_bIsMoveStop = false;
-	}
-	break;
-
-	case Crab::A_ATTACK:
-	{
-		m_uiAnimIdx = 3;
-		m_bIsMoveStop = true;
-
-		/* Back Step (0~27 tick)*/
-		if (m_ui3DMax_CurFrame < 28)
-			Attack_Moving(fTimeDelta, (m_pInfoCom->m_fSpeed * 0.4f), false);
-		/* Front Step (28~65 tick) */
-		else if (28 <= m_ui3DMax_CurFrame)
-			Attack_Moving(fTimeDelta, (m_pInfoCom->m_fSpeed * 0.4f), true);
-
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+		switch (m_iCurAnim)
 		{
-			/* 공격 애니메이션 중 움직인 위치를 공격 전 위치로 되돌림. */
-			// m_vArrivePos : 공격 시작 위치 (패킷 수신 시 설정)
-			m_pTransCom->m_vPos = m_pInfoCom->m_vArrivePos;
-			m_iCurAnim = Crab::A_WAIT;
+
+		case Crab::A_WAIT:
+		{
+			m_uiAnimIdx = 0;
+			m_bIsMoveStop = true;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
-	}
-	break;
+		break;
 
-	case Crab::A_DEATH:
-	{
-		m_uiAnimIdx = 4;
-		m_bIsMoveStop = true;
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) {}		
-	}
-	break;
+		case Crab::A_WALK:
+		{
+			m_uiAnimIdx = 1;
+			m_bIsMoveStop = false;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		}
+		break;
 
+		case Crab::A_RUN:
+		{
+			m_uiAnimIdx = 2;
+			m_bIsMoveStop = false;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		}
+		break;
+
+		case Crab::A_ATTACK:
+		{
+			m_uiAnimIdx = 3;
+			m_bIsMoveStop = true;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			/* Back Step (0~27 tick)*/
+			if (m_ui3DMax_CurFrame < 28)
+				Attack_Moving(fTimeDelta, (m_pInfoCom->m_fSpeed * 1.f), false);
+			/* Front Step (28~65 tick) */
+			else if (28 <= m_ui3DMax_CurFrame)
+				Attack_Moving(fTimeDelta, (m_pInfoCom->m_fSpeed * 1.f), true);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				/* 공격 애니메이션 중 움직인 위치를 공격 전 위치로 되돌림. */
+				// m_vArrivePos : 공격 시작 위치 (패킷 수신 시 설정)
+				m_pTransCom->m_vPos = m_pInfoCom->m_vArrivePos;
+				m_iCurAnim = Crab::A_WAIT;
+			}
+		}
+		break;
+
+		case Crab::A_DEATH:
+		{
+			m_uiAnimIdx = 4;
+			m_bIsMoveStop = true;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) {}
+		}
+		break;
+		}
 	}
 }
 
