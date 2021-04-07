@@ -200,104 +200,123 @@ void CDrownedSailor::Active_Monster(const _float& fTimeDelta)
 
 void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 {
-	switch (m_iCurAnim)
+	if (m_pMeshCom->Is_BlendingComplete())
 	{
-
-	case DrownedSailor::A_WAIT:
-	{
-		m_uiAnimIdx = 0;
-		m_bIsMoveStop = true;
-		m_bIsAttack = false;
-	}
-	break;
-
-	case DrownedSailor::A_WALK:
-	{
-		m_uiAnimIdx = 1;		
-		m_bIsMoveStop = false;
-		m_bIsAttack = false;
-	}
-	break;
-
-	case DrownedSailor::A_RUN:
-	{
-		m_uiAnimIdx = 2;
-		m_bIsMoveStop = false;
-		m_bIsAttack = false;
-	}
-	break;
-
-	case DrownedSailor::A_ATTACK_SPIN:
-	{
-		m_uiAnimIdx = 3;
-		m_bIsMoveStop = true;
-		m_bIsAttack = false;
-
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete())
-			m_iCurAnim = DrownedSailor::A_WAIT;
-	}
-	break;
-
-	case DrownedSailor::A_ATTACK:
-	{
-		m_uiAnimIdx = 4;
-		m_bIsMoveStop = true;
-		m_bIsAttack = false;
-		
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete())
-			m_iCurAnim = DrownedSailor::A_WAIT;
-	}
-	break;
-
-	case DrownedSailor::A_ATTACK_STRONG:
-	{
-		m_uiAnimIdx = 5;
-		m_bIsMoveStop = true;
-		m_bIsAttack = false;
-		
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete())
-			m_iCurAnim = DrownedSailor::A_WAIT;
-	}
-	break;
-
-	case DrownedSailor::A_ATTACK_RUSH:
-	{
-		m_uiAnimIdx = 6;
-		m_bIsMoveStop = true;
-
-		///* Rush (343~423 tick)*/
-		//if (39 <= m_ui3DMax_CurFrame)
-		//	Attack_Moving(fTimeDelta, (m_pInfoCom->m_fSpeed * 8.f));
-
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete())
+		switch (m_iCurAnim)
 		{
-			//m_pTransCom->m_vPos = m_pInfoCom->m_vArrivePos;
-			m_iCurAnim = DrownedSailor::A_WAIT;
+
+		case DrownedSailor::A_WAIT:
+		{
+			m_uiAnimIdx = 0;
+			m_bIsMoveStop = true;
 			m_bIsAttack = false;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		}
+		break;
+
+		case DrownedSailor::A_WALK:
+		{
+			m_uiAnimIdx = 1;
+			m_bIsMoveStop = false;
+			m_bIsAttack = false;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		}
+		break;
+
+		case DrownedSailor::A_RUN:
+		{
+			m_uiAnimIdx = 2;
+			m_bIsMoveStop = false;
+			m_bIsAttack = false;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		}
+		break;
+
+		case DrownedSailor::A_ATTACK_SPIN:
+		{
+			m_uiAnimIdx = 3;
+			m_bIsMoveStop = true;
+			m_bIsAttack = false;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				m_iCurAnim = DrownedSailor::A_WAIT;
+			}
+		}
+		break;
+
+		case DrownedSailor::A_ATTACK:
+		{
+			m_uiAnimIdx = 4;
+			m_bIsMoveStop = true;
+			m_bIsAttack = false;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				m_iCurAnim = DrownedSailor::A_WAIT;
+			}
+		}
+		break;
+
+		case DrownedSailor::A_ATTACK_STRONG:
+		{
+			m_uiAnimIdx = 5;
+			m_bIsMoveStop = true;
+			m_bIsAttack = false;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				m_iCurAnim = DrownedSailor::A_WAIT;
+			}
+		}
+		break;
+
+		case DrownedSailor::A_ATTACK_RUSH:
+		{
+			m_uiAnimIdx = 6;
+			m_bIsMoveStop = true;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			///* Rush (343~423 tick)*/
+			//if (39 <= m_ui3DMax_CurFrame)
+			//	Attack_Moving(fTimeDelta, (m_pInfoCom->m_fSpeed * 8.f));
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				//m_pTransCom->m_vPos = m_pInfoCom->m_vArrivePos;
+				m_iCurAnim = DrownedSailor::A_WAIT;
+				m_bIsAttack = false;
+			}
+		}
+		break;
+
+		case DrownedSailor::A_ATTACK_HOOK:
+		{
+			m_uiAnimIdx = 7;
+			m_bIsMoveStop = true;
+			m_bIsAttack = false;
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete())
+			{
+				m_iCurAnim = DrownedSailor::A_WAIT;
+			}
+		}
+		break;
+
+		case DrownedSailor::A_DEATH:
+		{
+			m_uiAnimIdx = 8;
+			m_bIsMoveStop = true;
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete()) {}
+		}
+		break;
+
 		}
 	}
-	break;
 
-	case DrownedSailor::A_ATTACK_HOOK:
-	{
-		m_uiAnimIdx = 7;
-		m_bIsMoveStop = true;
-		m_bIsAttack = false;
-
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete())
-			m_iCurAnim = DrownedSailor::A_WAIT;
-	}
-	break;
-
-	case DrownedSailor::A_DEATH:
-	{
-		m_uiAnimIdx = 8;
-		m_bIsMoveStop = true;
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete()) {}
-	}
-	break;
-
-	}
 }
 
 void CDrownedSailor::Attack_Moving(const _float& fTimeDelta, const float& fSpd)
