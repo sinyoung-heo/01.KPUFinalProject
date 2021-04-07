@@ -51,7 +51,7 @@ _int CEffectTrail::Update_GameObject(const _float& fTimeDelta)
 	{
 		if (m_fAlpha < 1.0f)
 		{
-			m_fAlpha += 4.0f * fTimeDelta;
+			m_fAlpha += 10.0f * fTimeDelta;
 
 			if (m_fAlpha >= 1.0f)
 				m_fAlpha = 1.0f;
@@ -71,7 +71,7 @@ _int CEffectTrail::Update_GameObject(const _float& fTimeDelta)
 	{
 		if (m_fAlpha > 0.0f)
 		{
-			m_fAlpha -= 4.0f * fTimeDelta;
+			m_fAlpha -= 10.0f * fTimeDelta;
 
 			if (m_fAlpha <= 0.0f)
 				m_fAlpha = 0.0f;

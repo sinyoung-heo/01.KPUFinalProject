@@ -45,12 +45,12 @@ namespace Gladiator
 	const _uint COMBO3_MOVESTOP_TICK = 15;
 	const _uint COMBO4_MOVESTOP_TICK = 30;
 
-	const _uint COMBO1_TRAIL_START_TICK = 13;
-	const _uint COMBO1_TRAIL_STOP_TICK  = 29;
-	const _uint COMBO2_TRAIL_START_TICK = 0;
-	const _uint COMBO2_TRAIL_STOP_TICK  = 0;
-	const _uint COMBO3_TRAIL_START_TICK = 0;
-	const _uint COMBO3_TRAIL_STOP_TICK  = 0;
-	const _uint COMBO4_TRAIL_START_TICK = 0;
-	const _uint COMBO4_TRAIL_STOP_TICK  = 0;
+	const _uint COMBO1_TRAIL_START_TICK = 12;
+	const _uint COMBO1_TRAIL_STOP_TICK  = 27;
+	const _uint COMBO2_TRAIL_START_TICK = 13;
+	const _uint COMBO2_TRAIL_STOP_TICK  = 28;
+	const _uint COMBO3_TRAIL_START_TICK = 10;
+	const _uint COMBO3_TRAIL_STOP_TICK  = 26;
+	const _uint COMBO4_TRAIL_START_TICK = 20;
+	const _uint COMBO4_TRAIL_STOP_TICK  = 56;
 }
