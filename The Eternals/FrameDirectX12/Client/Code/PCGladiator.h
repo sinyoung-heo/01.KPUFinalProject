@@ -66,8 +66,8 @@ private:
 
 	void Ready_AngleInterpolationValue(const _float& fEndAngle);
 	void SetUp_AngleInterpolation(const _float& fTimeDelta);
-	void SetUp_ComoboAttackMove(const _float& fTimeDelta, const _uint& uiComboCnt, const _uint& uiAniIdx, const _uint& uiStopTick, const _float& fMoveSpeed, const _float& fStopSpeed);
-
+	void SetUp_ComboAttackMove(const _float& fTimeDelta, const _uint& uiComboCnt, const _uint& uiAniIdx, const _uint& uiStopTick, const _float& fMoveSpeed, const _float& fStopSpeed);
+	void SetUp_ComboAttackTrail(const _uint& uiComboCnt, const _uint& uiAniIdx, const _uint& uiStartTick, const _uint& uiStopTick);
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]

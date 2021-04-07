@@ -382,7 +382,7 @@ HRESULT CShaderTexture::Create_PipelineState()
 	/*__________________________________________________________________________________________________________
 	[ 7¹ø PipelineState Pass ]
 	- "VS_MAIN"
-	- "PS_MAIN"
+	- "PS_MAIN_ALPHA"
 	- FILL_MODE_SOLID
 	- CULL_MODE_BACK
 	- Blend		(O)
@@ -396,7 +396,7 @@ HRESULT CShaderTexture::Create_PipelineState()
 	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;
 	PipelineStateDesc.NumRenderTargets		= 1;
 	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R8G8B8A8_UNORM;
-	vecInputLayout							= Create_InputLayout("VS_MAIN", "PS_MAIN");
+	vecInputLayout							= Create_InputLayout("VS_MAIN", "PS_MAIN_ALPHA");
 	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
 	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
