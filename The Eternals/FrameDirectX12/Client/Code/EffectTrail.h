@@ -19,6 +19,10 @@ private:
 	virtual ~CEffectTrail() = default;
 
 public:
+	const _bool& Get_IsRenderTrail() { return m_bIsRender; }
+
+	void Set_IsRenderTrail(const _bool& bIsRenderTrail) { m_bIsRender = bIsRenderTrail;  }
+
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrTextureTag,
 									 const _uint& uiTexIdx,
@@ -35,6 +39,7 @@ private:
 	virtual HRESULT Add_Component(wstring wstrTextureTag);
 private:
 	void Set_ConstantTable();
+	void SetUp_TrailAlpha(const _float& fTimeDelta);
 
 private:
 	/*__________________________________________________________________________________________________________
@@ -45,15 +50,14 @@ private:
 	Engine::CShaderTexture*	m_pShaderCom  = nullptr;
 
 	/*__________________________________________________________________________________________________________
-	[ Trail Buffer ]
-	____________________________________________________________________________________________________________*/
-	array<_vec3, Engine::TRAIL_SIZE - 1> m_arrMax;
-
-	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
+	array<_vec3, Engine::TRAIL_SIZE - 1> m_arrMax;
 	wstring	m_wstrTextureTag = L"";
 	_uint	m_uiTexIdx		 = 0;
+	_float	m_fAlpha		 = 0.0f;
+	_bool	m_bIsRender      = false;
+
 
 public:
 	static CEffectTrail* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,

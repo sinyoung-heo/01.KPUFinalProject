@@ -513,10 +513,16 @@ void CPCGladiator::KeyInput_ComboAttack(const _float& fTimeDelta)
 	if (m_bIsAttack)
 	{
 		m_bIsSameDir = true;
-		SetUp_ComoboAttackMove(fTimeDelta, Gladiator::COMBOCNT_1, Gladiator::COMBO1, Gladiator::COMBO1_MOVESTOP_TICK, 1.0f, -3.0f);
-		SetUp_ComoboAttackMove(fTimeDelta, Gladiator::COMBOCNT_2, Gladiator::COMBO2, Gladiator::COMBO2_MOVESTOP_TICK, 1.0f, -3.5f);
-		SetUp_ComoboAttackMove(fTimeDelta, Gladiator::COMBOCNT_3, Gladiator::COMBO3, Gladiator::COMBO3_MOVESTOP_TICK, 1.0f, -3.5f);
-		SetUp_ComoboAttackMove(fTimeDelta, Gladiator::COMBO_END, Gladiator::COMBO4, Gladiator::COMBO4_MOVESTOP_TICK, 0.75f, -1.0f);
+
+		SetUp_ComboAttackMove(fTimeDelta, Gladiator::COMBOCNT_1, Gladiator::COMBO1, Gladiator::COMBO1_MOVESTOP_TICK, 1.0f, -3.0f);
+		SetUp_ComboAttackMove(fTimeDelta, Gladiator::COMBOCNT_2, Gladiator::COMBO2, Gladiator::COMBO2_MOVESTOP_TICK, 1.0f, -3.5f);
+		SetUp_ComboAttackMove(fTimeDelta, Gladiator::COMBOCNT_3, Gladiator::COMBO3, Gladiator::COMBO3_MOVESTOP_TICK, 1.0f, -3.5f);
+		SetUp_ComboAttackMove(fTimeDelta, Gladiator::COMBO_END, Gladiator::COMBO4, Gladiator::COMBO4_MOVESTOP_TICK, 0.75f, -1.0f);
+
+		SetUp_ComboAttackTrail(Gladiator::COMBOCNT_1, Gladiator::COMBO1, Gladiator::COMBO1_TRAIL_START_TICK, Gladiator::COMBO1_TRAIL_STOP_TICK);
+		SetUp_ComboAttackTrail(Gladiator::COMBOCNT_2, Gladiator::COMBO2, Gladiator::COMBO2_TRAIL_START_TICK, Gladiator::COMBO2_TRAIL_STOP_TICK);
+		SetUp_ComboAttackTrail(Gladiator::COMBOCNT_3, Gladiator::COMBO3, Gladiator::COMBO3_TRAIL_START_TICK, Gladiator::COMBO3_TRAIL_STOP_TICK);
+		SetUp_ComboAttackTrail(Gladiator::COMBO_END, Gladiator::COMBO4, Gladiator::COMBO4_TRAIL_START_TICK, Gladiator::COMBO4_TRAIL_STOP_TICK);
 
 		AttackMove_OnNaviMesh(fTimeDelta);
 	}
@@ -524,14 +530,15 @@ void CPCGladiator::KeyInput_ComboAttack(const _float& fTimeDelta)
 
 void CPCGladiator::SetUp_ComboAttackAnimation()
 {
-	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB))
+	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) && 
+		m_pMeshCom->Is_BlendingComplete())
 	{
 		// ATTACK_WAIT ==> COMBO1
-		if (Gladiator::COMBOCNT_0 == m_uiComoboCnt && 
-			m_pMeshCom->Is_BlendingComplete())
+		if (Gladiator::COMBOCNT_0 == m_uiComoboCnt)
 		{
 			m_tAttackMoveSpeedInterpolationDesc.linear_ratio = 0.0f;
 			Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+			m_pWeapon->Set_IsRenderTrail(false);
 			m_bIsAttack   = true;
 			m_bIsKeyDown  = false;
 			m_uiComoboCnt = Gladiator::COMBOCNT_1;
@@ -543,11 +550,11 @@ void CPCGladiator::SetUp_ComboAttackAnimation()
 		// COMBO1 ==> COMBO2
 		else if (Gladiator::COMBOCNT_1 == m_uiComoboCnt &&
 				 Gladiator::COMBO1 == m_uiAnimIdx && 
-				 m_pMeshCom->Is_BlendingComplete() &&
 				 m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.75f)
 		{
 			m_tAttackMoveSpeedInterpolationDesc.linear_ratio = 0.0f;
 			Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+			m_pWeapon->Set_IsRenderTrail(false);
 			m_bIsKeyDown  = false;
 			m_bIsAttack   = true;
 			m_uiComoboCnt = Gladiator::COMBOCNT_2;
@@ -559,11 +566,11 @@ void CPCGladiator::SetUp_ComboAttackAnimation()
 		// COMBO1R ==> COMBO2 
 		else if (Gladiator::COMBOCNT_1 == m_uiComoboCnt &&
 				 Gladiator::COMBO1R == m_uiAnimIdx && 
-				 m_pMeshCom->Is_BlendingComplete() &&
 				 m_ui3DMax_CurFrame <= 10)
 		{
 			m_tAttackMoveSpeedInterpolationDesc.linear_ratio = 0.0f;
 			Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+			m_pWeapon->Set_IsRenderTrail(false);
 			m_bIsAttack   = true;
 			m_bIsKeyDown  = false;
 			m_uiComoboCnt = Gladiator::COMBOCNT_2;
@@ -574,10 +581,12 @@ void CPCGladiator::SetUp_ComboAttackAnimation()
 
 		// COMBO2 ==> COMBO3
 		else if (Gladiator::COMBOCNT_2 == m_uiComoboCnt &&
-				 Gladiator::COMBO2 == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete() &&
+				 Gladiator::COMBO2 == m_uiAnimIdx &&
 				 m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.75f)
 		{
+			m_tAttackMoveSpeedInterpolationDesc.linear_ratio = 0.0f;
 			Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+			m_pWeapon->Set_IsRenderTrail(false);
 			m_bIsAttack   = true;
 			m_bIsKeyDown  = false;
 			m_uiComoboCnt = Gladiator::COMBOCNT_3;
@@ -589,10 +598,11 @@ void CPCGladiator::SetUp_ComboAttackAnimation()
 		// COMBO2R ==> COMBO3
 		else if (Gladiator::COMBOCNT_2 == m_uiComoboCnt &&
 				 Gladiator::COMBO2R == m_uiAnimIdx && 
-				 m_pMeshCom->Is_BlendingComplete() &&
 				 m_ui3DMax_CurFrame <= m_ui3DMax_NumFrame * 0.5f)
 		{
+			m_tAttackMoveSpeedInterpolationDesc.linear_ratio = 0.0f;
 			Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+			m_pWeapon->Set_IsRenderTrail(false);
 			m_bIsAttack   = true;
 			m_bIsKeyDown  = false;
 			m_uiComoboCnt = Gladiator::COMBOCNT_3;
@@ -604,7 +614,6 @@ void CPCGladiator::SetUp_ComboAttackAnimation()
 		// COMBO3 ==> COMBO4
 		else if (Gladiator::COMBOCNT_3 == m_uiComoboCnt &&
 				 Gladiator::COMBO3 == m_uiAnimIdx && 
-				 m_pMeshCom->Is_BlendingComplete() &&
 				 m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.85f)
 		{
 			Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
@@ -618,7 +627,6 @@ void CPCGladiator::SetUp_ComboAttackAnimation()
 		// COMBO3R ==> COMBO4
 		else if (Gladiator::COMBOCNT_3 == m_uiComoboCnt &&
 				 Gladiator::COMBO3R == m_uiAnimIdx && 
-				 m_pMeshCom->Is_BlendingComplete() &&
 				 m_ui3DMax_CurFrame <= m_ui3DMax_NumFrame * 0.55f)
 		{
 			Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
@@ -639,6 +647,7 @@ void CPCGladiator::SetUp_FromComboAttackToAttackWait(const _float& fTimeDelta)
 		m_bIsKeyDown = false;
 		m_uiAnimIdx  = Gladiator::COMBO1R;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		m_pWeapon->Set_IsRenderTrail(false);
 		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 	else if (Gladiator::COMBO2 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
@@ -646,6 +655,7 @@ void CPCGladiator::SetUp_FromComboAttackToAttackWait(const _float& fTimeDelta)
 		m_bIsKeyDown = false;
 		m_uiAnimIdx  = Gladiator::COMBO2R;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		m_pWeapon->Set_IsRenderTrail(false);
 		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 	else if (Gladiator::COMBO3 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
@@ -653,6 +663,7 @@ void CPCGladiator::SetUp_FromComboAttackToAttackWait(const _float& fTimeDelta)
 		m_bIsKeyDown = false;
 		m_uiAnimIdx  = Gladiator::COMBO3R;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		m_pWeapon->Set_IsRenderTrail(false);
 		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 
@@ -665,6 +676,7 @@ void CPCGladiator::SetUp_FromComboAttackToAttackWait(const _float& fTimeDelta)
 		m_uiComoboCnt = Gladiator::COMBOCNT_0;
 		m_uiAnimIdx   = Gladiator::ATTACK_WAIT;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		m_pWeapon->Set_IsRenderTrail(false);
 		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
 }
@@ -892,7 +904,7 @@ void CPCGladiator::SetUp_AngleInterpolation(const _float& fTimeDelta)
 	}
 }
 
-void CPCGladiator::SetUp_ComoboAttackMove(const _float& fTimeDelta, 
+void CPCGladiator::SetUp_ComboAttackMove(const _float& fTimeDelta, 
 										  const _uint& uiComboCnt,
 										  const _uint& uiAniIdx, 
 										  const _uint& uiStopTick,
@@ -910,6 +922,28 @@ void CPCGladiator::SetUp_ComoboAttackMove(const _float& fTimeDelta,
 		// Move Off
 		else
 			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = fStopSpeed;
+	}
+}
+
+void CPCGladiator::SetUp_ComboAttackTrail(const _uint& uiComboCnt,
+										  const _uint& uiAniIdx,
+										  const _uint& uiStartTick,
+										  const _uint& uiStopTick)
+{
+	if (uiComboCnt == m_uiComoboCnt && 
+		uiAniIdx == m_uiAnimIdx && 
+		m_pMeshCom->Is_BlendingComplete())
+	{
+		// Trail On
+		if (m_ui3DMax_CurFrame >= uiStartTick && m_ui3DMax_CurFrame < uiStopTick)
+			m_pWeapon->Set_IsRenderTrail(true);
+
+		// Trail Off
+		else if (m_ui3DMax_CurFrame >= uiStopTick)
+			m_pWeapon->Set_IsRenderTrail(false);
+
+		else
+			m_pWeapon->Set_IsRenderTrail(false);
 	}
 }
 

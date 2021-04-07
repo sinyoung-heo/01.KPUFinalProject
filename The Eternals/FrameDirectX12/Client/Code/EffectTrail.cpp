@@ -47,15 +47,36 @@ _int CEffectTrail::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
-	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);
+	if (m_bIsRender)
+	{
+		if (m_fAlpha < 1.0f)
+		{
+			m_fAlpha += 10.0f * fTimeDelta;
 
-	/*__________________________________________________________________________________________________________
-	[ TransCom - Update WorldMatrix ]
-	____________________________________________________________________________________________________________*/
-	Engine::CGameObject::Update_GameObject(fTimeDelta);
+			if (m_fAlpha >= 1.0f)
+				m_fAlpha = 1.0f;
+		}
+
+		/*__________________________________________________________________________________________________________
+		[ Renderer - Add Render Group ]
+		____________________________________________________________________________________________________________*/
+		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);
+
+		/*__________________________________________________________________________________________________________
+		[ TransCom - Update WorldMatrix ]
+		____________________________________________________________________________________________________________*/
+		Engine::CGameObject::Update_GameObject(fTimeDelta);
+	}
+	else
+	{
+		if (m_fAlpha > 0.0f)
+		{
+			m_fAlpha -= 10.0f * fTimeDelta;
+
+			if (m_fAlpha <= 0.0f)
+				m_fAlpha = 0.0f;
+		}
+	}
 
 	return NO_EVENT;
 }
@@ -94,7 +115,7 @@ void CEffectTrail::SetUp_TrailByCatmullRom(_vec3* vMin, _vec3* vMax)
 
 	// SetUp Vertex
 	m_pBufferCom->Get_ArrayVerteices()[0].vPos = _vec3(vMin->x, vMin->y, vMin->z);
-	m_pBufferCom->Get_ArrayVerteices()[0].vTexUV = _vec2(0.0f, 1.0f);
+	m_pBufferCom->Get_ArrayVerteices()[0].vTexUV = _vec2(1.0f, 0.0f);
 
 	for (int i = 0; i < Engine::TRAIL_SIZE - 1; ++i)
 	{
@@ -103,12 +124,12 @@ void CEffectTrail::SetUp_TrailByCatmullRom(_vec3* vMin, _vec3* vMax)
 		if (i > 2 && i < Engine::TRAIL_SIZE - 2)
 		{
 			m_pBufferCom->Get_ArrayVerteices()[i + 1].vPos = _vec3(m_arrMax[i].x, m_arrMax[i].y, m_arrMax[i].z);
-			m_pBufferCom->Get_ArrayVerteices()[i + 1].vTexUV = _vec2(fTex, 0.f);
+			m_pBufferCom->Get_ArrayVerteices()[i + 1].vTexUV = _vec2(0.0f, fTex);
 		}
 		else
 		{
 			m_pBufferCom->Get_ArrayVerteices()[i + 1].vPos = _vec3(m_arrMax[i].x, m_arrMax[i].y, m_arrMax[i].z);
-			m_pBufferCom->Get_ArrayVerteices()[i + 1].vTexUV = _vec2(fTex, 0.f);
+			m_pBufferCom->Get_ArrayVerteices()[i + 1].vTexUV = _vec2(0.0f, fTex);
 		}
 	}
 }
@@ -146,8 +167,14 @@ void CEffectTrail::Set_ConstantTable()
 	Engine::CB_SHADER_TEXTURE tCB_ShaderTexture;
 	ZeroMemory(&tCB_ShaderTexture, sizeof(Engine::CB_SHADER_TEXTURE));
 	tCB_ShaderTexture.matWorld	= Engine::CShader::Compute_MatrixTranspose(INIT_MATRIX);
+	tCB_ShaderTexture.fAlpha    = m_fAlpha;
 
 	m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
+}
+
+void CEffectTrail::SetUp_TrailAlpha(const _float& fTimeDelta)
+{
+
 }
 
 CEffectTrail* CEffectTrail::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,

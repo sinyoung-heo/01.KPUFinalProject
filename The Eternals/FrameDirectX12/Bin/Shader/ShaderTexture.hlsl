@@ -36,7 +36,7 @@ cbuffer cbShaderTexture : register(b1)
 	
 	// Texture Gauge.
 	float		g_fGauge	: packoffset(c5.x);
-	float		fOffset1	: packoffset(c5.y);
+	float		g_fAlpha	: packoffset(c5.y);
 	float		fOffset2	: packoffset(c5.z);
 	float		fOffset3	: packoffset(c5.w);
 	
@@ -73,6 +73,14 @@ VS_OUT VS_MAIN(VS_IN vs_input)
 float4 PS_MAIN(VS_OUT ps_input) : SV_TARGET
 {
 	float4 Color = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
+	
+	return (Color);
+}
+
+float4 PS_MAIN_ALPHA(VS_OUT ps_input) : SV_TARGET
+{
+	float4 Color = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
+	Color.a *= g_fAlpha;
 	
 	return (Color);
 }
@@ -123,8 +131,6 @@ VS_OUT VS_GAUAGE(VS_IN vs_input)
 	return (vs_output);
 }
 
-
-
 float4 PS_GAUAGE(VS_OUT ps_input) : SV_TARGET
 {
 	float4 vDiffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
@@ -137,14 +143,13 @@ float4 PS_GAUAGE(VS_OUT ps_input) : SV_TARGET
 
 float4 PS_GAUAGE_SPRITE(VS_OUT ps_input) : SV_TARGET
 {
-	float u = (ps_input.TexUV.x / g_fFrameCnt) + g_fCurFrame * (1.0f / g_fFrameCnt);
-	float v = (ps_input.TexUV.y / g_fSceneCnt) + g_fCurScene * (1.0f / g_fSceneCnt);
-	
+	float u        = (ps_input.TexUV.x / g_fFrameCnt) + g_fCurFrame * (1.0f / g_fFrameCnt);
+	float v        = (ps_input.TexUV.y / g_fSceneCnt) + g_fCurScene * (1.0f / g_fSceneCnt);
 	float fPercent = (g_fGauge / g_fFrameCnt) + g_fCurFrame * (1.0f / g_fFrameCnt);
 	
 	float4	vDiffuse = g_TexDiffuse.Sample(g_samLinearWrap, float2(u, v));
-	float	fGauge = ceil(fPercent - u);
-	float4	vColor = vDiffuse * fGauge;
+	float	fGauge   = ceil(fPercent - u);
+	float4	vColor   = vDiffuse * fGauge;
 	
 	return (vColor);
 }
