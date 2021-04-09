@@ -70,9 +70,9 @@ public:
 	int				m_iAtt				= 0;
 	float			m_fSpd				= 0;
 	
-	bool			m_bIsRushAttack		= false;	// 돌진기 스킬
 	volatile bool	m_bIsAttack			= false;
 	volatile bool	m_bIsShortAttack	= true;		// 근거리 공격
+	bool			m_bIsRushAttack		= false;
 
 	int				m_iTargetNum		= -1;
 	_vec3			m_vOriPos			= _vec3(0.f);

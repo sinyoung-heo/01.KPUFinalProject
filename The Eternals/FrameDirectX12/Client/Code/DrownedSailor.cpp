@@ -281,13 +281,8 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 			m_bIsAttack = true;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
-			///* Rush (343~423 tick)*/
-			//if (39 <= m_ui3DMax_CurFrame)
-			//	Attack_Moving(fTimeDelta, (m_pInfoCom->m_fSpeed * 8.f));
-
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				//m_pTransCom->m_vPos = m_pInfoCom->m_vArrivePos;
 				m_iCurAnim = DrownedSailor::A_WAIT;
 				m_bIsAttack = false;
 			}

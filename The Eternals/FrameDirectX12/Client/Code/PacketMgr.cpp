@@ -291,12 +291,9 @@ void CPacketMgr::Process_packet()
 
 		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
 
-		pObj->Set_State(packet->animIdx);
-		pObj->Set_MoveStop(true);
-		pObj->Set_Attack(true);
+		pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
 		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
-		//pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
-		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
+		pObj->Set_State(packet->animIdx);
 	}
 	break;
 

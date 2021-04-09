@@ -4,8 +4,8 @@
 
 CMonster::CMonster()
 	:m_iHp(0), m_iMaxHp(0), m_iExp(0), m_iAtt(0), m_fSpd(0.f), m_vRushPos(_vec3(0.f)),
-	m_iTargetNum(-1), m_bIsAttack(false),
-	m_monNum(0), m_bIsShortAttack(true), m_bIsRushAttack(false), m_uiAnimIdx(0)
+	m_iTargetNum(-1), m_bIsAttack(false), m_bIsShortAttack(true),
+	m_bIsRushAttack(false) ,m_monNum(0), m_uiAnimIdx(0)
 {
 }
 
@@ -190,11 +190,16 @@ void CMonster::Change_DrownedSailor_Animation(const float& fTimeDelta)
 
 	case STATUS::ST_ATTACK:
 	{
+		Attack_DrownedSailor(fTimeDelta);
+
 		if (m_bIsRushAttack)
 		{
-			//Rush_DrownedSailor(fTimeDelta);
+			if (30 <= m_ui3DMax_CurFrame && m_ui3DMax_CurFrame <= 55)
+			{
+				m_vPos += m_vDir * 2.f * fTimeDelta;
+			}
+			Rush_DrownedSailor(fTimeDelta);
 		}
-		Attack_DrownedSailor(fTimeDelta);
 	}
 	break;
 
@@ -1070,15 +1075,34 @@ void CMonster::Chase_DrownedSailor(const float& fTimeDelta)
 		m_vDir = pTarget->m_vPos - m_vPos;
 		m_vDir.Normalize();
 
-		/* monster chase move -> arrive at player -> start to attack */
+		/* 원거리 & 근거리 공격 타입 설정 */
 		float fDist = Calculate_TargetDist(pTarget->m_vPos);
+		if ((ATTACK_RANGE_MONKEY * ATTACK_RANGE_MONKEY) < fDist && fDist < (ATTACK_RANGE_CLODER * ATTACK_RANGE_CLODER))
+		{
+			m_bIsShortAttack = false;
+			Change_AttackMode();
+			return;
+		}
+		else if ((ATTACK_RANGE_SAILOR * ATTACK_RANGE_SAILOR) < fDist)
+			m_vPos += m_vDir * m_fSpd * fTimeDelta;
+		else if ((ATTACK_RANGE_SAILOR * ATTACK_RANGE_SAILOR) >= fDist)
+		{
+			m_bIsShortAttack = true;
+			Change_AttackMode();
+			return;
+		}
+
+
+
+		/* monster chase move -> arrive at player -> start to attack */
+		/*float fDist = Calculate_TargetDist(pTarget->m_vPos);
 		if ((ATTACK_RANGE_SAILOR * ATTACK_RANGE_SAILOR) < fDist)
 			m_vPos += m_vDir * m_fSpd * fTimeDelta;
 		else
 		{
 			Change_AttackMode();
 			return;
-		}
+		}*/
 	}
 	/* 타겟(공격 대상)이 존재하지 않을 경우 -> 생성된 위치로 돌아감 */
 	else
@@ -1377,7 +1401,6 @@ void CMonster::Attack_Monkey(const float& fTimeDelta)
 					m_uiAnimIdx = Monkey::ATTACK_THROW;
 			
 				Set_AnimationKey(m_uiAnimIdx);
-
 				send_Monster_NormalAttack(pl, m_uiAnimIdx);
 			}
 		}
@@ -1484,6 +1507,7 @@ void CMonster::Attack_DrownedSailor(const float& fTimeDelta)
 			return;
 		else
 		{
+			m_bIsRushAttack = false;
 			Set_Stop_Attack(3s);
 			return;
 		}
@@ -1537,6 +1561,13 @@ void CMonster::Attack_DrownedSailor(const float& fTimeDelta)
 		m_vDir = pTarget->m_vPos - m_vPos;
 		m_vDir.Normalize();
 
+		/* 원거리 & 근거리 공격 타입 설정 */
+		float fDist = Calculate_TargetDist(pTarget->m_vPos);
+		if ((ATTACK_RANGE_MONKEY * ATTACK_RANGE_MONKEY) < fDist && fDist < (ATTACK_RANGE_CLODER * ATTACK_RANGE_CLODER))
+		{
+			m_bIsShortAttack = false;
+		}
+
 		// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
 		for (auto pl : old_viewlist)
 		{
@@ -1544,22 +1575,25 @@ void CMonster::Attack_DrownedSailor(const float& fTimeDelta)
 			if (true == CObjMgr::GetInstance()->Is_Player(pl))
 			{
 				if (!m_bIsAttack) return;
-				
-				m_uiAnimIdx = rand() % 5 + 3;
-				Set_AnimationKey(m_uiAnimIdx);
-		
-				if (m_uiAnimIdx == DrownedSailor::ATTACK_RUSH)
+
+				if (m_bIsShortAttack)
 				{
-					m_bIsRushAttack = true;
-					m_vRushPos = m_vPos /*+ m_vDir * 3.f*/;
-					//send_Monster_RushAttack(pl, m_uiAnimIdx);
+					m_bIsRushAttack = false;
+
+					m_uiAnimIdx = rand() % 5 + 3;
+					if (m_uiAnimIdx == DrownedSailor::ATTACK_RUSH)
+						m_uiAnimIdx = DrownedSailor::ATTACK_HOOK;
+
+					Set_AnimationKey(m_uiAnimIdx);
+
 					send_Monster_NormalAttack(pl, m_uiAnimIdx);
 				}
 				else
 				{
-					m_bIsRushAttack = false;
-					m_vRushPos = m_vPos;
-					send_Monster_NormalAttack(pl, m_uiAnimIdx);
+					m_bIsRushAttack = true;
+					m_uiAnimIdx = DrownedSailor::ATTACK_RUSH;
+
+					Set_AnimationKey(m_uiAnimIdx);
 				}
 			}
 		}
@@ -1575,13 +1609,58 @@ void CMonster::Attack_DrownedSailor(const float& fTimeDelta)
 void CMonster::Rush_DrownedSailor(const float& fTimeDelta)
 {
 	if (m_uiAnimIdx != DrownedSailor::ATTACK_RUSH) return;
+	if (m_bIsRushAttack == false) return;
 
-	if (Is_AnimationSetEnd(fTimeDelta))
+	/* 해당 Monster의 원래 위치값 */
+	float ori_x, ori_y, ori_z;
+	ori_x = m_vPos.x;
+	ori_y = m_vPos.y;
+	ori_z = m_vPos.z;
+
+	// 공격 전 위치에서의 viewlist (시야 내에 플레이어 저장)
+	unordered_set<pair<int, int>> oldnearSector;
+	oldnearSector.reserve(5);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
+
+	unordered_set <int> old_viewlist;
+	unordered_set <int> old_targetList;
+
+	// 공격 전: 인접 섹터 순회 (몬스터 시야 파악)
+	for (auto& s : oldnearSector)
 	{
-		m_vPos = m_vRushPos;
-		m_bIsRushAttack = false;
-		cout << "rush ani end" << endl;
+		// 인접 섹터 내의 타 유저들이 있는지 검사
+		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+		{
+			// 유저의 서버 번호 추출
+			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			{
+				/* 유저일 경우 처리 */
+				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+
+					// 접속한 유저만 시야 목록에 등록한다.
+					if (!pPlayer->Get_IsConnected()) continue;
+
+					// 시야 내에 있다면 시야 목록에 등록한다.
+					if (CObjMgr::GetInstance()->Is_Near(this, pPlayer))
+						old_viewlist.insert(obj_num);
+				}
+			}
+		}
 	}
+
+	for (auto pl : old_viewlist)
+	{
+		/* 유저일 경우 처리 */
+		if (true == CObjMgr::GetInstance()->Is_Player(pl))
+		{		
+			if (m_uiAnimIdx == DrownedSailor::ATTACK_RUSH)
+			{
+				send_Monster_RushAttack(pl, m_uiAnimIdx);
+			}
+		}
+	}	
 }
 
 void CMonster::Hurt_Monster(const int& p_id,const int& damage)
@@ -1845,9 +1924,9 @@ void CMonster::send_Monster_RushAttack(int to_client, int ani)
 	p.dirY = m_vDir.y;
 	p.dirZ = m_vDir.z;
 
-	p.posX = m_vRushPos.x;
-	p.posY = m_vRushPos.y;
-	p.posZ = m_vRushPos.z;
+	p.posX = m_vPos.x;
+	p.posY = m_vPos.y;
+	p.posZ = m_vPos.z;
 
 	send_packet(to_client, &p);
 }
