@@ -362,14 +362,14 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Torch", pGameObj), E_FAIL);
 
 
-	// Torch
-	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-									  L"Bomb00",						// TextureTag
-									  _vec3(2.5f, 2.5f, 1.0f),		// Scale
-									  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-									  _vec3(140.0f, 2.0f, 80.0f),	// Pos
-									  FRAME(10, 9, 64.0f));			// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Torch", pGameObj), E_FAIL);
+	//// TestEffect
+	//pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+	//								  L"Smoke1",						// TextureTag
+	//								  _vec3(10.0f, 10.0f, 1.0f),		// Scale
+	//								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+	//								  _vec3(140.0f, 5.0f, 80.0f),	// Pos
+	//								  FRAME(5, 6, 64.0f));			// Sprite Image Frame
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Torch", pGameObj), E_FAIL);
 
 #pragma region TEXTURE_INSTANCING
 	///*__________________________________________________________________________________________________________
