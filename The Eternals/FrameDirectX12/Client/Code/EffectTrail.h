@@ -25,9 +25,7 @@ public:
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrTextureTag,
-									 const _uint& uiTexIdx,
-									 const _vec3& vScale,
-									 const _vec3& vAngle);
+									 const _uint& uiTexIdx);
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
@@ -62,9 +60,7 @@ private:
 public:
 	static CEffectTrail* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 								wstring wstrTextureTag,
-								const _uint& uiTexIdx,
-								const _vec3& vScale = _vec3(0.1f),
-								const _vec3& vAngle = _vec3(0.0f));
+								const _uint& uiTexIdx);
 private:
 	virtual void Free();
 };

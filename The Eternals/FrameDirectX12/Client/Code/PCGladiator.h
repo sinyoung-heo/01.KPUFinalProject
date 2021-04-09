@@ -50,6 +50,8 @@ private:
 	void KeyInput_Attack(const _float& fTimeDelta);
 	void KeyInput_StanceChange(const _float& fTimeDelta);
 	void KeyInput_ComboAttack(const _float& fTimeDelta);
+	void KeyInput_SkillAttack(const _float& fTimeDelta);
+	void SetUp_AttackSetting();
 	void SetUp_ComboAttackAnimation();
 	void SetUp_FromComboAttackToAttackWait(const _float& fTimeDelta);
 	void Move_OnNaviMesh(const _float& fTimeDelta);
@@ -68,6 +70,10 @@ private:
 	void SetUp_AngleInterpolation(const _float& fTimeDelta);
 	void SetUp_ComboAttackMove(const _float& fTimeDelta, const _uint& uiComboCnt, const _uint& uiAniIdx, const _uint& uiStopTick, const _float& fMoveSpeed, const _float& fStopSpeed);
 	void SetUp_ComboAttackTrail(const _uint& uiComboCnt, const _uint& uiAniIdx, const _uint& uiStartTick, const _uint& uiStopTick);
+	void SetUp_WeaponRHand();
+	void SetUp_WeaponLHand();
+	void SetUp_WeaponBack();
+
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -116,6 +122,9 @@ private:
 	Gladiator::STANCE	m_eStance                 = Gladiator::STANCE_END;
 	_bool				m_bIsCompleteStanceChange = true;
 	_uint				m_uiComoboCnt             = 0;
+	_bool				m_bIsSkill				  = false;
+	_bool				m_bIsSkillLoop			  = false;
+	map<wstring, _int>	m_mapSkillKeyInput;
 
 	/*__________________________________________________________________________________________________________
 	[ Font ]

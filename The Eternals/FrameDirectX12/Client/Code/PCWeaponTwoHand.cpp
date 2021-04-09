@@ -40,10 +40,7 @@ HRESULT CPCWeaponTwoHand::LateInit_GameObject()
 	Engine::FAILED_CHECK_RETURN(CPCWeapon::LateInit_GameObject(), E_FAIL);
 
 	// Create Trail
-	m_pTrail = CEffectTrail::Create(m_pGraphicDevice, m_pCommandList, 
-									L"EffectTrailTexture",		// TextureTag
-									0,							// TextureIdx
-									_vec3(1.0f, 1.0f, 1.0f));	// Scale
+	m_pTrail = CEffectTrail::Create(m_pGraphicDevice, m_pCommandList, L"EffectTrailTexture", 0);		
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"TestTrail", m_pTrail), E_FAIL);
 
 	return S_OK;
@@ -66,15 +63,16 @@ _int CPCWeaponTwoHand::Update_GameObject(const _float& fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 
-
-
 	/*____________________________________________________________________
 	TransCom - Update WorldMatrix.
 	______________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 	// Upate BoneMatrix
-	m_matBoneFinalTransform       = (m_pHierarchyDesc->matScale * m_pHierarchyDesc->matRotate * m_pHierarchyDesc->matTrans) * m_pHierarchyDesc->matGlobalTransform;
+	m_matBoneFinalTransform = (m_pHierarchyDesc->matScale * 
+							   m_pHierarchyDesc->matRotate * 
+							   m_pHierarchyDesc->matTrans) * 
+							   m_pHierarchyDesc->matGlobalTransform;
 	_matrix matSkinngingTransform = m_matBoneFinalTransform * (*m_pParentMatrix);
 
 	m_pTransCom->m_matWorld *= matSkinngingTransform;

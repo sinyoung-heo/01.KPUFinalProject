@@ -46,7 +46,7 @@ namespace Gladiator
 	const _uint COMBO4_MOVESTOP_TICK = 30;
 
 	const _uint COMBO1_TRAIL_START_TICK = 12;
-	const _uint COMBO1_TRAIL_STOP_TICK  = 27;
+	const _uint COMBO1_TRAIL_STOP_TICK  = 28;
 	const _uint COMBO2_TRAIL_START_TICK = 13;
 	const _uint COMBO2_TRAIL_STOP_TICK  = 28;
 	const _uint COMBO3_TRAIL_START_TICK = 10;

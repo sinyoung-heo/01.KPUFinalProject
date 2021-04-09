@@ -105,13 +105,6 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 	if (fTimeDelta > TIME_OFFSET)
 		return NO_EVENT;
 
-	SetUp_StanceChange(fTimeDelta);
-
-	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
-
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
@@ -119,6 +112,9 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
 	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
 	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
+
+	SetUp_StanceChange(fTimeDelta);
+
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
@@ -129,6 +125,11 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 	// Linear Interpolation
 	Engine::SetUp_LinearInterpolation(fTimeDelta, m_pTransCom->m_vPos, m_tPosInterpolationDesc);
 	Engine::SetUp_LinearInterpolation(fTimeDelta, m_pTransCom->m_vAngle.y, m_tAngleInterpolationDesc);
+
+	/*__________________________________________________________________________________________________________
+	[ Renderer - Add Render Group ]
+	____________________________________________________________________________________________________________*/
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 

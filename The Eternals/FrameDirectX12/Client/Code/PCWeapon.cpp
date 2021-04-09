@@ -62,7 +62,6 @@ _int CPCWeapon::Update_GameObject(const _float& fTimeDelta)
 	if (fTimeDelta > TIME_OFFSET)
 		return NO_EVENT;
 
-	// SetUp_TargetAngle(fTimeDelta);
 	SetUp_Dissolve(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________

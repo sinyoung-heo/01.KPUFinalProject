@@ -9,18 +9,15 @@ CEffectTrail::CEffectTrail(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandLi
 {
 }
 
-HRESULT CEffectTrail::Ready_GameObject(wstring wstrTextureTag, 
-									   const _uint& uiTexIdx, 
-									   const _vec3& vScale, 
-									   const _vec3& vAngle)
+HRESULT CEffectTrail::Ready_GameObject(wstring wstrTextureTag, const _uint& uiTexIdx)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrTextureTag), E_FAIL);
 
 	m_wstrTextureTag      = wstrTextureTag;
 	m_uiTexIdx            = uiTexIdx;
-	m_pTransCom->m_vScale = vScale;
-	m_pTransCom->m_vAngle = vAngle;
+	m_pTransCom->m_vScale = _vec3(1.0f);
+	m_pTransCom->m_vAngle = _vec3(0.0f);
 	m_pTransCom->m_vPos	  = _vec3(0.0f);
 
 	// Trail Buffer
@@ -62,10 +59,6 @@ _int CEffectTrail::Update_GameObject(const _float& fTimeDelta)
 		____________________________________________________________________________________________________________*/
 		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);
 
-		/*__________________________________________________________________________________________________________
-		[ TransCom - Update WorldMatrix ]
-		____________________________________________________________________________________________________________*/
-		Engine::CGameObject::Update_GameObject(fTimeDelta);
 	}
 	else
 	{
@@ -77,6 +70,11 @@ _int CEffectTrail::Update_GameObject(const _float& fTimeDelta)
 				m_fAlpha = 0.0f;
 		}
 	}
+
+	/*__________________________________________________________________________________________________________
+	[ TransCom - Update WorldMatrix ]
+	____________________________________________________________________________________________________________*/
+	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 	return NO_EVENT;
 }
@@ -97,6 +95,8 @@ void CEffectTrail::Render_GameObject(const _float& fTimeDelta)
 
 void CEffectTrail::SetUp_TrailByCatmullRom(_vec3* vMin, _vec3* vMax)
 {
+	m_pTransCom->m_vPos = *vMin;
+
 	for (_int i = Engine::TRAIL_SIZE - 2; i > 0; --i)
 		m_arrMax[i] = m_arrMax[i - 1];
 
@@ -179,13 +179,11 @@ void CEffectTrail::SetUp_TrailAlpha(const _float& fTimeDelta)
 
 CEffectTrail* CEffectTrail::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 								   wstring wstrTextureTag,
-								   const _uint& uiTexIdx, 
-								   const _vec3& vScale, 
-								   const _vec3& vAngle)
+								   const _uint& uiTexIdx)
 {
 	CEffectTrail* pInstance = new CEffectTrail(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(wstrTextureTag, uiTexIdx, vScale, vAngle)))
+	if (FAILED(pInstance->Ready_GameObject(wstrTextureTag, uiTexIdx)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
