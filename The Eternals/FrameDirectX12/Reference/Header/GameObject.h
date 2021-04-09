@@ -56,6 +56,7 @@ public:
 	void				Set_IsStartAngleInterpolation(const _bool& bIsStart)	{ m_tAngleInterpolationDesc.is_start_interpolation = bIsStart; }
 	void				Set_LinearAngle(const _float& v1, const _float& v2)		{ m_tAngleInterpolationDesc.v1 = v1; m_tAngleInterpolationDesc.v2 = v2; }
 
+	void				Ready_AngleInterpolationValue(const _float& fEndAngle);
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT Ready_GameObjectPrototype();

@@ -72,6 +72,15 @@ float CGameObject::Set_Other_Angle(_vec3& vDir)
 	return vDir.Get_Angle(g_vLook);
 }
 
+void CGameObject::Ready_AngleInterpolationValue(const _float& fEndAngle)
+{
+	m_tAngleInterpolationDesc.is_start_interpolation = true;
+	m_tAngleInterpolationDesc.v1 = m_pTransCom->m_vAngle.y;
+	m_tAngleInterpolationDesc.v2 = fEndAngle;
+	m_tAngleInterpolationDesc.linear_ratio = Engine::MIN_LINEAR_RATIO;
+	m_tAngleInterpolationDesc.interpolation_speed = 3.0f;
+}
+
 HRESULT CGameObject::Ready_GameObjectPrototype()
 {
 	return S_OK;

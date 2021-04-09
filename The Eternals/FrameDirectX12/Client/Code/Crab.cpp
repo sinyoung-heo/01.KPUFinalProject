@@ -62,6 +62,9 @@ _int CCrab::Update_GameObject(const _float& fTimeDelta)
 	
 	/* Move */
 	Active_Monster(fTimeDelta);
+
+	// Angle Linear Interpolation
+	SetUp_AngleInterpolation(fTimeDelta);
 	
 	/* Animation AI */
 	Change_Animation(fTimeDelta);
@@ -184,6 +187,23 @@ void CCrab::Set_ConstantTableShadowDepth()
 
 }
 
+void CCrab::SetUp_AngleInterpolation(const _float& fTimeDelta)
+{
+	if (m_tAngleInterpolationDesc.is_start_interpolation)
+	{
+		m_tAngleInterpolationDesc.linear_ratio += m_tAngleInterpolationDesc.interpolation_speed * fTimeDelta;
+
+		m_pTransCom->m_vAngle.y = Engine::LinearInterpolation(m_tAngleInterpolationDesc.v1,
+			m_tAngleInterpolationDesc.v2,
+			m_tAngleInterpolationDesc.linear_ratio);
+
+		if (m_tAngleInterpolationDesc.linear_ratio == Engine::MAX_LINEAR_RATIO)
+		{
+			m_tAngleInterpolationDesc.is_start_interpolation = false;
+		}
+	}
+}
+
 void CCrab::Active_Monster(const _float& fTimeDelta)
 {
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
@@ -269,7 +289,7 @@ void CCrab::Change_Animation(const _float& fTimeDelta)
 			{
 				/* 공격 애니메이션 중 움직인 위치를 공격 전 위치로 되돌림. */
 				// m_vArrivePos : 공격 시작 위치 (패킷 수신 시 설정)
-				m_pTransCom->m_vPos = m_pInfoCom->m_vArrivePos;
+				//m_pTransCom->m_vPos = m_pInfoCom->m_vArrivePos;
 				m_iCurAnim = Crab::A_WAIT;
 			}
 		}

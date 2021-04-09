@@ -61,6 +61,9 @@ _int CMonkey::Update_GameObject(const _float& fTimeDelta)
 	
 	/* Move */
 	Active_Monster(fTimeDelta);
+
+	// Angle Linear Interpolation
+	SetUp_AngleInterpolation(fTimeDelta);
 	
 	/* Animation AI */
 	Change_Animation(fTimeDelta);
@@ -181,6 +184,23 @@ void CMonkey::Set_ConstantTableShadowDepth()
 
 	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
 
+}
+
+void CMonkey::SetUp_AngleInterpolation(const _float& fTimeDelta)
+{
+	if (m_tAngleInterpolationDesc.is_start_interpolation)
+	{
+		m_tAngleInterpolationDesc.linear_ratio += m_tAngleInterpolationDesc.interpolation_speed * fTimeDelta;
+
+		m_pTransCom->m_vAngle.y = Engine::LinearInterpolation(m_tAngleInterpolationDesc.v1,
+			m_tAngleInterpolationDesc.v2,
+			m_tAngleInterpolationDesc.linear_ratio);
+
+		if (m_tAngleInterpolationDesc.linear_ratio == Engine::MAX_LINEAR_RATIO)
+		{
+			m_tAngleInterpolationDesc.is_start_interpolation = false;
+		}
+	}
 }
 
 void CMonkey::Active_Monster(const _float& fTimeDelta)

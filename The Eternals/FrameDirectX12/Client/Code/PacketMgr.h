@@ -54,11 +54,13 @@ public:
 	void	Leave_Object(sc_packet_leave* packet, int& retflag);
 
 	void	Enter_Monster(sc_packet_monster_enter* packet);
-	void	Attack_Monster(sc_packet_monster_attack* packet);
 	void	Move_Monster(sc_packet_move* packet);
+	void	Attack_Monster(sc_packet_monster_attack* packet);
+	void	Rush_Monster(sc_packet_monster_rushAttack* packet);
 	void	Change_Monster_Stat(sc_packet_stat_change* packet);
-	void	Move_NPC(sc_packet_move* packet);
+
 	void	Enter_NPC(sc_packet_npc_enter* packet);
+	void	Move_NPC(sc_packet_move* packet);
 
 private:
 	void	send_packet(void* packet);

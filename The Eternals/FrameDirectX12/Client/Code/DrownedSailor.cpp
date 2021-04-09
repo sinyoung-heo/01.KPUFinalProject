@@ -61,6 +61,9 @@ _int CDrownedSailor::Update_GameObject(const _float& fTimeDelta)
 	
 	/* Move */
 	Active_Monster(fTimeDelta);
+
+	// Angle Linear Interpolation
+	SetUp_AngleInterpolation(fTimeDelta);
 	
 	/* Animation AI */
 	Change_Animation(fTimeDelta);
@@ -181,6 +184,23 @@ void CDrownedSailor::Set_ConstantTableShadowDepth()
 
 	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
 
+}
+
+void CDrownedSailor::SetUp_AngleInterpolation(const _float& fTimeDelta)
+{
+	if (m_tAngleInterpolationDesc.is_start_interpolation)
+	{
+		m_tAngleInterpolationDesc.linear_ratio += m_tAngleInterpolationDesc.interpolation_speed * fTimeDelta;
+
+		m_pTransCom->m_vAngle.y = Engine::LinearInterpolation(m_tAngleInterpolationDesc.v1,
+			m_tAngleInterpolationDesc.v2,
+			m_tAngleInterpolationDesc.linear_ratio);
+
+		if (m_tAngleInterpolationDesc.linear_ratio == Engine::MAX_LINEAR_RATIO)
+		{
+			m_tAngleInterpolationDesc.is_start_interpolation = false;
+		}
+	}
 }
 
 void CDrownedSailor::Active_Monster(const _float& fTimeDelta)
@@ -316,28 +336,6 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 		}
 	}
 
-}
-
-void CDrownedSailor::Attack_Moving(const _float& fTimeDelta, const float& fSpd)
-{
-	if (m_iCurAnim != DrownedSailor::A_ATTACK_RUSH) return;
-
-	m_pTransCom->m_vDir.Normalize();
-
-	if (m_bIsAttack)
-	{
-		if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
-		{
-			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
-				&m_pTransCom->m_vDir,
-				m_pInfoCom->m_fSpeed * fTimeDelta);
-			m_pTransCom->m_vPos = vPos;
-		}
-		else
-		{
-			m_bIsAttack = false;
-		}
-	}
 }
 
 Engine::CGameObject* CDrownedSailor::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)

@@ -286,14 +286,7 @@ void CPacketMgr::Process_packet()
 	case SC_PACKET_MONSTER_RUSH:
 	{
 		sc_packet_monster_rushAttack* packet = reinterpret_cast<sc_packet_monster_rushAttack*>(m_packet_start);
-
-		int s_num = packet->id;
-
-		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
-
-		pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
-		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
-		pObj->Set_State(packet->animIdx);
+		Rush_Monster(packet);
 	}
 	break;
 
@@ -311,6 +304,17 @@ void CPacketMgr::Process_packet()
 #endif 
 		break;
 	}
+}
+
+void CPacketMgr::Rush_Monster(sc_packet_monster_rushAttack* packet)
+{
+	int s_num = packet->id;
+
+	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
+
+	pObj->Set_State(packet->animIdx);
+	pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+	pObj->Ready_AngleInterpolationValue(pObj->Set_Other_Angle(_vec3(packet->dirX, packet->dirY, packet->dirZ)));
 }
 
 void CPacketMgr::Change_Monster_Stat(sc_packet_stat_change* packet)
@@ -667,8 +671,7 @@ void CPacketMgr::Attack_Monster(sc_packet_monster_attack* packet)
 	
 	pObj->Set_State(packet->animIdx);
 	pObj->Set_MoveStop(true);
-	pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
-	pObj->Set_DeadReckoning(pObj->Get_Transform()->m_vPos);
+	pObj->Ready_AngleInterpolationValue(pObj->Set_Other_Angle(_vec3(packet->dirX, packet->dirY, packet->dirZ)));
 }
 
 void CPacketMgr::Move_Monster(sc_packet_move* packet)
@@ -679,9 +682,9 @@ void CPacketMgr::Move_Monster(sc_packet_move* packet)
 
 	//pObj->Get_Info()->m_fSpeed = packet->spd;
 	//pObj->Set_MoveStop(false);
-	pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
-	pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 	pObj->Set_State(packet->animIdx);
+	pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+	pObj->Ready_AngleInterpolationValue(pObj->Set_Other_Angle(_vec3(packet->dirX, packet->dirY, packet->dirZ)));
 }
 
 void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
