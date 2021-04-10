@@ -77,3 +77,27 @@ namespace DrownedSailor
 		10080, 6400, 5440, 9600, 9600, 12800, 12800, 7200, 18880
 	};
 }
+
+namespace GiantBeetle
+{
+	constexpr int ATTACK_UP			= 2;
+	constexpr int ATTACK_DOWN		= 3;
+	constexpr int ATTACK_RUSH		= 4;
+	constexpr int ATTACK_FLYSTAMP	= 5;
+	constexpr int ROTATE_LEFT		= 6;
+	constexpr int ROTATE_RIGHT		= 7;
+	constexpr int DEATH				= 8;
+
+	constexpr int NUM_ANIMATION		= 9;
+
+	enum ANIM_GIANTBEETLE {
+		A_WAIT, A_WALK, 
+		A_ATTACK_UP, A_ATTACK_DOWN, A_ATTACK_RUSH, A_ATTACK_FLYSTAMP,
+		A_ROTATE_LEFT, A_ROTATE_RIGHT, A_DEATH, A_END
+	};
+
+	static double duration[NUM_ANIMATION] =
+	{
+		11200, 9600, 16000, 16160, 27360, 28480, 9600, 9600, 17600
+	};
+}

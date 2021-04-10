@@ -47,9 +47,14 @@ private:
 	void	Attack_DrownedSailor(const float& fTimeDelta);
 	void	Rush_DrownedSailor(const float& fTimeDelta);
 
+	void	Change_GiantBeetle_Animation(const float& fTimeDelta);
+	void	Chase_GiantBeetle(const float& fTimeDelta);
+	void	Attack_GiantBeetle(const float& fTimeDelta);
+
 private:
 	void	Play_Animation(float fTimeDelta);	
 	bool	Is_AnimationSetEnd(const float& fTimeDelta);
+
 	float	Calculate_TargetDist(const _vec3& vPos);
 
 public:
@@ -63,20 +68,20 @@ public:
 	void	send_Monster_Stat(int to_client);
 
 public:
-	char			m_monNum			= 0;
-	int				m_iHp				= 0;
-	int				m_iMaxHp			= 0;
-	int				m_iExp				= 0;
-	int				m_iAtt				= 0;
-	float			m_fSpd				= 0;
+	char			m_monNum				= 0;
+	int				m_iHp					= 0;
+	int				m_iMaxHp				= 0;
+	int				m_iExp					= 0;
+	int				m_iAtt					= 0;
+	float			m_fSpd					= 0;
 	
-	volatile bool	m_bIsAttack			= false;
-	volatile bool	m_bIsShortAttack	= true;		// 근거리 공격
-	bool			m_bIsRushAttack		= false;
+	volatile bool	m_bIsAttack				= false;
+	volatile bool	m_bIsShortAttack		= true;		// 근거리 공격
+	bool			m_bIsRushAttack			= false;
 
-	int				m_iTargetNum		= -1;
-	_vec3			m_vOriPos			= _vec3(0.f);
-	_vec3			m_vRushPos			= _vec3(0.f);
+	int				m_iTargetNum			= -1;
+	_vec3			m_vOriPos				= _vec3(0.f);
+	_vec3			m_vRushPos				= _vec3(0.f);
 
 	/* Animation */
 	_uint			m_uiNewAniIndex			= 0;

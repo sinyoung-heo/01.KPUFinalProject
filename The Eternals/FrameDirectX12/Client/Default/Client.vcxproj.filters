@@ -244,6 +244,9 @@
     <Filter Include="02.GameObject\98.GameEffect\01.EffectTrail">
       <UniqueIdentifier>{ecfa5090-5ac4-4c60-8258-468da564ef49}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.Monster\04.GiantBeetle">
+      <UniqueIdentifier>{015b6714-c2a6-4a34-ac83-056edb880e66}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -480,6 +483,9 @@
     <ClInclude Include="..\Code\EffectTrail.h">
       <Filter>02.GameObject\98.GameEffect\01.EffectTrail</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\GiantBeetle.h">
+      <Filter>02.GameObject\05.Monster\04.GiantBeetle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -670,6 +676,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\EffectTrail.cpp">
       <Filter>02.GameObject\98.GameEffect\01.EffectTrail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\GiantBeetle.cpp">
+      <Filter>02.GameObject\05.Monster\04.GiantBeetle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
