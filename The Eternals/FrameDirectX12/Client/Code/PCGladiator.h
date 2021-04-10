@@ -43,7 +43,8 @@ private:
 	HRESULT			SetUp_PCWeapon();
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
-
+	void			Set_AnimationSpeed();
+	void			Set_BlendingSpeed();
 	// KeyInput
 	void Key_Input(const _float& fTimeDelta);
 	void KeyInput_Move(const _float& fTimeDelta);
@@ -118,6 +119,7 @@ private:
 	_uint m_uiAnimIdx        = 0;	// 현재 애니메이션 Index
 	_uint m_ui3DMax_NumFrame = 0;	// 3DMax에서 애니메이션의 총 Frame 개수
 	_uint m_ui3DMax_CurFrame = 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
+	_float m_fAnimationSpeed = TPS;
 
 	Gladiator::STANCE	m_eStance                 = Gladiator::STANCE_END;
 	_bool				m_bIsCompleteStanceChange = true;
@@ -125,6 +127,7 @@ private:
 	_bool				m_bIsSkill				  = false;
 	_bool				m_bIsSkillLoop			  = false;
 	map<wstring, _int>	m_mapSkillKeyInput;
+	_float				m_fBlendingSpeed		  = 0.001f;
 
 	/*__________________________________________________________________________________________________________
 	[ Font ]
