@@ -32,7 +32,7 @@ namespace Gladiator
 	const int DRAW_SWORD_END    = 28;
 
 	enum STANCE		{ STANCE_NONEATTACK, STANCE_ATTACK, STANCE_END };
-	enum COMBOCNT	{ COMBOCNT_0, COMBOCNT_1, COMBOCNT_2, COMBOCNT_3, COMBO_END };
+	enum COMBOCNT	{ COMBOCNT_0, COMBOCNT_1, COMBOCNT_2, COMBOCNT_3, COMBOCNT_4 };
 
 	const _float OTHERS_OFFSET	= 0.85f;
 
@@ -40,17 +40,24 @@ namespace Gladiator
 	const _float MAX_SPEED       = 5.0f;
 	const _float MOVE_STOP_SPEED = 3.0f;
 
-	const _uint COMBO1_MOVESTOP_TICK = 16;
-	const _uint COMBO2_MOVESTOP_TICK = 20;
-	const _uint COMBO3_MOVESTOP_TICK = 15;
-	const _uint COMBO4_MOVESTOP_TICK = 30;
+	const _uint COMBO1_MOVE_STOP = 16;
+	const _uint COMBO2_MOVE_STOP = 20;
+	const _uint COMBO3_MOVE_STOP = 15;
+	const _uint COMBO4_MOVE_STOP = 30;
 
-	const _uint COMBO1_TRAIL_START_TICK = 12;
-	const _uint COMBO1_TRAIL_STOP_TICK  = 28;
-	const _uint COMBO2_TRAIL_START_TICK = 13;
-	const _uint COMBO2_TRAIL_STOP_TICK  = 28;
-	const _uint COMBO3_TRAIL_START_TICK = 10;
-	const _uint COMBO3_TRAIL_STOP_TICK  = 26;
-	const _uint COMBO4_TRAIL_START_TICK = 20;
-	const _uint COMBO4_TRAIL_STOP_TICK  = 56;
+	const _uint COMBO1_TRAIL_START = 12;
+	const _uint COMBO1_TRAIL_STOP  = 28;
+	const _uint COMBO2_TRAIL_START = 13;
+	const _uint COMBO2_TRAIL_STOP  = 28;
+	const _uint COMBO3_TRAIL_START = 10;
+	const _uint COMBO3_TRAIL_STOP  = 26;
+	const _uint COMBO4_TRAIL_START = 20;
+	const _uint COMBO4_TRAIL_STOP  = 56;
+
+	const _uint STINGER_BLADE_MOVE_START = 20;
+	const _uint STINGER_BLADE_MOVE_STOP  = 30;
+	const _uint CUTTING_SLASH_MOVE_START = 0;
+	const _uint CUTTING_SLASH_MOVE_STOP  = 20;
+	const _uint JAW_BREAKER_MOVE_START   = 0;
+	const _uint JAW_BREAKER_MOVE_STOP    = 10;
 }
