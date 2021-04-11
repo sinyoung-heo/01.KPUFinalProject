@@ -101,3 +101,29 @@ namespace GiantBeetle
 		11200, 9600, 16000, 16160, 27360, 28480, 9600, 9600, 17600
 	};
 }
+
+namespace GiantMonkey
+{
+	constexpr int ATTACK_RIGHT		= 2;
+	constexpr int ATTACK_LEFT		= 3;
+	constexpr int ATTACK_STAMP		= 4;
+	constexpr int ATTACK_HOOK		= 5;
+	constexpr int ATTACK_JUMPING	= 6;
+	constexpr int ATTACK_FLYSTAMP	= 7;
+	constexpr int ATTACK_COMBO		= 8;
+	constexpr int DEATH				= 9;
+
+	constexpr int NUM_ANIMATION		= 10;
+
+	enum ANIM_GIANTMONKEY {
+		A_WAIT, A_WALK,
+		A_ATTACK_RIGHT, A_ATTACK_LEFT, A_ATTACK_STAMP, A_ATTACK_HOOK,
+		A_ATTACK_JUMPING, A_ATTACK_FLYSTAMP, A_ATTACK_COMBO,
+		A_DEATH, A_END
+	};
+
+	static double duration[NUM_ANIMATION] =
+	{
+		19200, 6400, 12800, 9600, 17600, 17600, 16000, 22400, 30560, 22400
+	};
+}

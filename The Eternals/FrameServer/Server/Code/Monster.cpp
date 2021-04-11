@@ -51,6 +51,8 @@ void CMonster::Change_Animation(const float& fTimeDelta)
 		Change_DrownedSailor_Animation(fTimeDelta);
 	else if (m_monNum == MON_GBEETLE)
 		Change_GiantBeetle_Animation(fTimeDelta);
+	else if (m_monNum == MON_GMONKEY)
+		Change_GiantMonkey_Animation(fTimeDelta);
 }
 
 void CMonster::Change_Crab_Animation(const float& fTimeDelta)
@@ -248,6 +250,41 @@ void CMonster::Change_GiantBeetle_Animation(const float& fTimeDelta)
 			}
 			Rush_GiantBeetle(fTimeDelta);
 		}
+	}
+	break;
+
+	case STATUS::ST_DEAD:
+		break;
+	}
+}
+
+void CMonster::Change_GiantMonkey_Animation(const float& fTimeDelta)
+{
+	switch (m_status)
+	{
+
+	case STATUS::ST_ACTIVE:
+	{
+		m_uiAnimIdx = Monster_Normal::WALK;
+		Move_NormalMonster(fTimeDelta);
+	}
+	break;
+
+	case STATUS::ST_NONACTIVE:
+	{
+		m_iTargetNum = -1;
+		m_uiAnimIdx = Monster_Normal::WAIT;
+	}
+	break;
+
+	case STATUS::ST_CHASE:
+	{
+		m_uiAnimIdx = Monster_Normal::WALK;
+	}
+	break;
+
+	case STATUS::ST_ATTACK:
+	{
 	}
 	break;
 

@@ -247,6 +247,9 @@
     <Filter Include="02.GameObject\05.Monster\04.GiantBeetle">
       <UniqueIdentifier>{015b6714-c2a6-4a34-ac83-056edb880e66}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.Monster\05.GiantMonkey">
+      <UniqueIdentifier>{632a9c57-7803-4c3f-8918-3d76c1f4aa9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -486,6 +489,9 @@
     <ClInclude Include="..\Code\GiantBeetle.h">
       <Filter>02.GameObject\05.Monster\04.GiantBeetle</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\GiantMonkey.h">
+      <Filter>02.GameObject\05.Monster\05.GiantMonkey</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -679,6 +685,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\GiantBeetle.cpp">
       <Filter>02.GameObject\05.Monster\04.GiantBeetle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\GiantMonkey.cpp">
+      <Filter>02.GameObject\05.Monster\05.GiantMonkey</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
