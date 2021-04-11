@@ -68,5 +68,10 @@ namespace Gladiator
 	const _uint WIND_CUTTER2_MOVE_STOP   = 8;
 	const _uint WIND_CUTTER3_MOVE_START  = 0;
 	const _uint WIND_CUTTER3_MOVE_STOP   = 15;
-
+	const _uint GAIA_CRUSH1_MOVE_START   = 4;
+	const _uint GAIA_CRUSH1_MOVE_STOP    = 19;
+	const _uint GAIA_CRUSH2_MOVE_START   = 0;
+	const _uint GAIA_CRUSH2_MOVE_STOP    = 12;
+	const _uint DRAW_SWORD_MOVE_START    = 4;
+	const _uint DRAW_SWORD_MOVE_STOP     = 18;
 }
