@@ -681,8 +681,6 @@ void CPacketMgr::Move_Monster(sc_packet_move* packet)
 
 	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
 
-	//pObj->Get_Info()->m_fSpeed = packet->spd;
-	//pObj->Set_MoveStop(false);
 	pObj->Set_State(packet->animIdx);
 	pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
 	pObj->Ready_AngleInterpolationValue(pObj->Set_Other_Angle(_vec3(packet->dirX, packet->dirY, packet->dirZ)));

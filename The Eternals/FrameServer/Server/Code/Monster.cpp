@@ -239,6 +239,15 @@ void CMonster::Change_GiantBeetle_Animation(const float& fTimeDelta)
 	case STATUS::ST_ATTACK:
 	{
 		Attack_GiantBeetle(fTimeDelta);
+
+		if (m_bIsRushAttack)
+		{
+			if (30 <= m_ui3DMax_CurFrame && m_ui3DMax_CurFrame <= 45)
+			{
+				m_vPos += m_vDir * 15.f * fTimeDelta;
+			}
+			Rush_GiantBeetle(fTimeDelta);
+		}
 	}
 	break;
 
@@ -1303,7 +1312,7 @@ void CMonster::Chase_GiantBeetle(const float& fTimeDelta)
 						old_viewlist.insert(obj_num);
 
 					// 몬스터 추적 범위 내에 있는 유저 탐색한다.
-					if (CObjMgr::GetInstance()->Is_Monster_Target(this, pPlayer))
+					if (CObjMgr::GetInstance()->Is_Monster_AttackTarget(this, pPlayer, THROW_RANGE_MONKEY_END))
 						old_targetList.insert(obj_num);
 				}
 			}
@@ -1326,15 +1335,15 @@ void CMonster::Chase_GiantBeetle(const float& fTimeDelta)
 
 		/* 원거리 & 근거리 공격 타입 설정 */
 		float fDist = Calculate_TargetDist(pTarget->m_vPos);
-		if ((ATTACK_RANGE_MONKEY * ATTACK_RANGE_MONKEY) < fDist && fDist < (ATTACK_RANGE_CLODER * ATTACK_RANGE_CLODER))
+		if ((RUSH_RANGE_GBEETEL_START * RUSH_RANGE_GBEETEL_START) < fDist && fDist < (RUSH_RANGE_GBEETEL_END * RUSH_RANGE_GBEETEL_END))
 		{
 			m_bIsShortAttack = false;
 			Change_AttackMode();
 			return;
 		}
-		else if ((ATTACK_RANGE_SAILOR * ATTACK_RANGE_SAILOR) < fDist)
+		else if ((ATTACK_RANGE_GBEETEL * ATTACK_RANGE_GBEETEL) < fDist)
 			m_vPos += m_vDir * m_fSpd * fTimeDelta;
-		else if ((ATTACK_RANGE_SAILOR * ATTACK_RANGE_SAILOR) >= fDist)
+		else if ((ATTACK_RANGE_GBEETEL * ATTACK_RANGE_GBEETEL) >= fDist)
 		{
 			m_bIsShortAttack = true;
 			Change_AttackMode();
@@ -1853,7 +1862,7 @@ void CMonster::Attack_GiantBeetle(const float& fTimeDelta)
 		else
 		{
 			m_bIsRushAttack = false;
-			Set_Stop_Attack(7s);
+			Set_Stop_Attack(5s);
 			return;
 		}
 	}
@@ -1908,7 +1917,7 @@ void CMonster::Attack_GiantBeetle(const float& fTimeDelta)
 
 		/* 원거리 & 근거리 공격 타입 설정 */
 		float fDist = Calculate_TargetDist(pTarget->m_vPos);
-		if ((ATTACK_RANGE_MONKEY * ATTACK_RANGE_MONKEY) < fDist && fDist < (ATTACK_RANGE_CLODER * ATTACK_RANGE_CLODER))
+		if ((RUSH_RANGE_GBEETEL_START * RUSH_RANGE_GBEETEL_START) < fDist && fDist < (RUSH_RANGE_GBEETEL_END * RUSH_RANGE_GBEETEL_END))
 		{
 			m_bIsShortAttack = false;
 		}
@@ -1921,10 +1930,25 @@ void CMonster::Attack_GiantBeetle(const float& fTimeDelta)
 			{
 				if (!m_bIsAttack) return;
 
-				m_uiAnimIdx = rand() % 4 + 2;
-				Set_AnimationKey(m_uiAnimIdx);
+				if (m_bIsShortAttack)
+				{
+					m_bIsRushAttack = false;
 
-				send_Monster_NormalAttack(pl, m_uiAnimIdx);
+					m_uiAnimIdx = rand() % 4 + 2;
+					if (m_uiAnimIdx == GiantBeetle::ATTACK_RUSH)
+						m_uiAnimIdx = GiantBeetle::ATTACK_DOWN;
+
+					Set_AnimationKey(m_uiAnimIdx);
+
+					send_Monster_NormalAttack(pl, m_uiAnimIdx);
+				}
+				else
+				{
+					m_bIsRushAttack = true;
+					m_uiAnimIdx = GiantBeetle::ATTACK_RUSH;
+
+					Set_AnimationKey(m_uiAnimIdx);
+				}
 			}
 		}
 	}
@@ -1991,6 +2015,63 @@ void CMonster::Rush_DrownedSailor(const float& fTimeDelta)
 			}
 		}
 	}	
+}
+
+void CMonster::Rush_GiantBeetle(const float& fTimeDelta)
+{
+	if (m_uiAnimIdx != GiantBeetle::ATTACK_RUSH) return;
+	if (m_bIsRushAttack == false) return;
+
+	/* 해당 Monster의 원래 위치값 */
+	float ori_x, ori_y, ori_z;
+	ori_x = m_vPos.x;
+	ori_y = m_vPos.y;
+	ori_z = m_vPos.z;
+
+	// 공격 전 위치에서의 viewlist (시야 내에 플레이어 저장)
+	unordered_set<pair<int, int>> oldnearSector;
+	oldnearSector.reserve(5);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
+
+	unordered_set <int> old_viewlist;
+	unordered_set <int> old_targetList;
+
+	// 공격 전: 인접 섹터 순회 (몬스터 시야 파악)
+	for (auto& s : oldnearSector)
+	{
+		// 인접 섹터 내의 타 유저들이 있는지 검사
+		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+		{
+			// 유저의 서버 번호 추출
+			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			{
+				/* 유저일 경우 처리 */
+				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+
+					// 접속한 유저만 시야 목록에 등록한다.
+					if (!pPlayer->Get_IsConnected()) continue;
+
+					// 시야 내에 있다면 시야 목록에 등록한다.
+					if (CObjMgr::GetInstance()->Is_Near(this, pPlayer))
+						old_viewlist.insert(obj_num);
+				}
+			}
+		}
+	}
+
+	for (auto pl : old_viewlist)
+	{
+		/* 유저일 경우 처리 */
+		if (true == CObjMgr::GetInstance()->Is_Player(pl))
+		{
+			if (m_uiAnimIdx == GiantBeetle::ATTACK_RUSH)
+			{
+				send_Monster_RushAttack(pl, m_uiAnimIdx);
+			}
+		}
+	}
 }
 
 void CMonster::Hurt_Monster(const int& p_id,const int& damage)

@@ -34,7 +34,9 @@ constexpr int	THROW_RANGE_MONKEY_START	= 10;			// MONSTER MONKEY 원거리 공격 범�
 constexpr int	THROW_RANGE_MONKEY_END		= 15;			// MONSTER MONKEY 원거리 공격 범위
 constexpr int	ATTACK_RANGE_CLODER			= 4;			// MONSTER CLODER 공격 범위
 constexpr float ATTACK_RANGE_SAILOR			= 2.5f;			// MONSTER SAILOR 공격 범위
-
+constexpr int	ATTACK_RANGE_GBEETEL		= 5;			// MONSTER GIANT BEETLE 공격 범위
+constexpr int	RUSH_RANGE_GBEETEL_START	= 9;			// MONSTER GIANT BEETLE 돌진 범위
+constexpr int	RUSH_RANGE_GBEETEL_END		= 10;			// MONSTER GIANT BEETLE 돌진 범위
 /*____________________________________________________________________
 Player Direction
 ______________________________________________________________________*/

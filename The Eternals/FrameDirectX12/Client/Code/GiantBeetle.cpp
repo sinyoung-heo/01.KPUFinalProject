@@ -193,8 +193,8 @@ void CGiantBeetle::SetUp_AngleInterpolation(const _float& fTimeDelta)
 		m_tAngleInterpolationDesc.linear_ratio += m_tAngleInterpolationDesc.interpolation_speed * fTimeDelta;
 
 		m_pTransCom->m_vAngle.y = Engine::LinearInterpolation(m_tAngleInterpolationDesc.v1,
-			m_tAngleInterpolationDesc.v2,
-			m_tAngleInterpolationDesc.linear_ratio);
+															  m_tAngleInterpolationDesc.v2,
+															  m_tAngleInterpolationDesc.linear_ratio);
 
 		if (m_tAngleInterpolationDesc.linear_ratio == Engine::MAX_LINEAR_RATIO)
 		{
@@ -243,6 +243,11 @@ void CGiantBeetle::Change_Animation(const _float& fTimeDelta)
 		{
 			m_uiAnimIdx = 2;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				m_iCurAnim = GiantBeetle::A_WAIT;
+			}
 		}
 		break;
 
@@ -266,6 +271,8 @@ void CGiantBeetle::Change_Animation(const _float& fTimeDelta)
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
 				m_iCurAnim = GiantBeetle::A_WAIT;
+				m_uiAnimIdx = 0;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
 		break;
@@ -278,6 +285,8 @@ void CGiantBeetle::Change_Animation(const _float& fTimeDelta)
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
 				m_iCurAnim = GiantBeetle::A_WAIT;
+				m_uiAnimIdx = 0;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
 		break;
@@ -286,11 +295,6 @@ void CGiantBeetle::Change_Animation(const _float& fTimeDelta)
 		{
 			m_uiAnimIdx = 6;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-
-			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-			{
-				m_iCurAnim = GiantBeetle::A_WAIT;
-			}
 		}
 		break;
 
@@ -298,11 +302,6 @@ void CGiantBeetle::Change_Animation(const _float& fTimeDelta)
 		{
 			m_uiAnimIdx = 7;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-
-			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete())
-			{
-				m_iCurAnim = GiantBeetle::A_WAIT;
-			}
 		}
 		break;
 
@@ -311,7 +310,7 @@ void CGiantBeetle::Change_Animation(const _float& fTimeDelta)
 			m_uiAnimIdx = 8;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
-			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete()) {}
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) {}
 		}
 		break;
 

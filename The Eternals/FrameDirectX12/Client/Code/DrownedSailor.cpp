@@ -316,7 +316,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 			m_bIsAttack = true;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
-			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete())
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
 				m_iCurAnim = DrownedSailor::A_WAIT;
 			}
@@ -329,7 +329,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 			m_bIsMoveStop = true;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
-			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete()) {}
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) {}
 		}
 		break;
 
