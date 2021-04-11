@@ -384,7 +384,10 @@ void CPCGladiator::Set_BlendingSpeed()
 	if (m_uiAnimIdx == Gladiator::NONE_ATTACK_IDLE ||
 		m_uiAnimIdx == Gladiator::NONE_ATTACK_WALK ||
 		m_uiAnimIdx == Gladiator::ATTACK_WAIT ||
-		m_uiAnimIdx == Gladiator::ATTACK_RUN)
+		m_uiAnimIdx == Gladiator::ATTACK_RUN ||
+		m_uiAnimIdx == Gladiator::GAIA_CRUSH1 ||
+		m_uiAnimIdx == Gladiator::GAIA_CRUSH2 ||
+		m_uiAnimIdx == Gladiator::GAIA_CRUSH3)
 	{
 		m_fBlendingSpeed = 0.001f;
 	}
@@ -539,8 +542,13 @@ void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 
 			// SkillAttack Move
 			SetUp_AttackMove(Gladiator::STINGER_BLADE, Gladiator::STINGER_BLADE_MOVE_START, Gladiator::STINGER_BLADE_MOVE_STOP, 3.0f, -3.0f);
-			SetUp_AttackMove(Gladiator::CUTTING_SLASH, Gladiator::CUTTING_SLASH_MOVE_START, Gladiator::CUTTING_SLASH_MOVE_STOP, 1.25f, -1.25f);
+			SetUp_AttackMove(Gladiator::CUTTING_SLASH, Gladiator::CUTTING_SLASH_MOVE_START, Gladiator::CUTTING_SLASH_MOVE_STOP, 1.25f, -1.75f);
 			SetUp_AttackMove(Gladiator::JAW_BREAKER, Gladiator::JAW_BREAKER_MOVE_START, Gladiator::JAW_BREAKER_MOVE_STOP, 4.0f, -4.0f);
+			SetUp_AttackMove(Gladiator::CUT_HEAD, Gladiator::CUT_HEAD_MOVE_START, Gladiator::CUT_HEAD_MOVE_END, 1.5f, -8.0f);
+			SetUp_AttackMove(Gladiator::WIND_CUTTER1, Gladiator::WIND_CUTTER1_MOVE_START, Gladiator::WIND_CUTTER1_MOVE_STOP, 3.0f, -4.0f);
+			SetUp_AttackMove(Gladiator::WIND_CUTTER2, Gladiator::WIND_CUTTER2_MOVE_START, Gladiator::WIND_CUTTER2_MOVE_STOP, 3.0f, -4.0f);
+			SetUp_AttackMove(Gladiator::WIND_CUTTER3, Gladiator::WIND_CUTTER3_MOVE_START, Gladiator::WIND_CUTTER3_MOVE_STOP, 2.0f, -4.0f);
+
 
 
 			AttackMove_OnNaviMesh(fTimeDelta);
@@ -672,13 +680,13 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 		{
 			m_uiAnimIdx = Gladiator::WIND_CUTTER2;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (m_uiAnimIdx == Gladiator::WIND_CUTTER2 && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
 		{
 			m_uiAnimIdx = Gladiator::WIND_CUTTER3;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 
 		// GAIA_CRUSH

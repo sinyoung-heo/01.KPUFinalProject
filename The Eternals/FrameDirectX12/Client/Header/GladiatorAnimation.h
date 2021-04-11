@@ -57,7 +57,16 @@ namespace Gladiator
 	const _uint STINGER_BLADE_MOVE_START = 20;
 	const _uint STINGER_BLADE_MOVE_STOP  = 30;
 	const _uint CUTTING_SLASH_MOVE_START = 0;
-	const _uint CUTTING_SLASH_MOVE_STOP  = 20;
+	const _uint CUTTING_SLASH_MOVE_STOP  = 18;
 	const _uint JAW_BREAKER_MOVE_START   = 0;
 	const _uint JAW_BREAKER_MOVE_STOP    = 10;
+	const _uint CUT_HEAD_MOVE_START      = 34;
+	const _uint CUT_HEAD_MOVE_END        = 50;
+	const _uint WIND_CUTTER1_MOVE_START  = 0;
+	const _uint WIND_CUTTER1_MOVE_STOP   = 10;
+	const _uint WIND_CUTTER2_MOVE_START  = 0;
+	const _uint WIND_CUTTER2_MOVE_STOP   = 8;
+	const _uint WIND_CUTTER3_MOVE_START  = 0;
+	const _uint WIND_CUTTER3_MOVE_STOP   = 15;
+
 }
