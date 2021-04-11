@@ -246,7 +246,9 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iCurAnim = GiantBeetle::A_WAIT;
+				m_iCurAnim = GiantMonkey::A_WAIT;
+				m_uiAnimIdx = 0;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
 		break;
@@ -258,7 +260,9 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iCurAnim = GiantBeetle::A_WAIT;
+				m_iCurAnim = GiantMonkey::A_WAIT;
+				m_uiAnimIdx = 0;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
 		break;
@@ -270,9 +274,9 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iCurAnim = GiantBeetle::A_WAIT;
-				//m_uiAnimIdx = 0;
-				//m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+				m_iCurAnim = GiantMonkey::A_WAIT;
+				m_uiAnimIdx = 0;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
 		break;
@@ -284,9 +288,9 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iCurAnim = GiantBeetle::A_WAIT;
-				//m_uiAnimIdx = 0;
-				//m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+				m_iCurAnim = GiantMonkey::A_WAIT;
+				m_uiAnimIdx = 0;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
 		break;
@@ -298,7 +302,9 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iCurAnim = GiantBeetle::A_WAIT;
+				m_iCurAnim = GiantMonkey::A_WAIT;
+				m_uiAnimIdx = 0;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
 		break;
@@ -310,7 +316,9 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iCurAnim = GiantBeetle::A_WAIT;
+				m_iCurAnim = GiantMonkey::A_WAIT;
+				m_uiAnimIdx = 0;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
 		break;
@@ -322,7 +330,9 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iCurAnim = GiantBeetle::A_WAIT;
+				m_iCurAnim = GiantMonkey::A_WAIT;
+				m_uiAnimIdx = 0;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
 		break;

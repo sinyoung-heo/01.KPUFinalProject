@@ -53,6 +53,8 @@ private:
 	void	Rush_GiantBeetle(const float& fTimeDelta);
 
 	void	Change_GiantMonkey_Animation(const float& fTimeDelta);
+	void	Chase_GiantMonkey(const float& fTimeDelta);
+	void	Attack_GiantMonkey(const float& fTimeDelta);
 
 private:
 	void	Play_Animation(float fTimeDelta);	
