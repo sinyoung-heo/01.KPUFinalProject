@@ -4,6 +4,10 @@
 class CMonster :
     public CObj
 {
+	enum ATTACK_DIST
+	{
+		DIST_SHORT = 0, DIST_MIDDLE, DIST_LONG, DIST_END
+	};
 public:
 	CMonster();
 	virtual ~CMonster();
@@ -55,6 +59,7 @@ private:
 	void	Change_GiantMonkey_Animation(const float& fTimeDelta);
 	void	Chase_GiantMonkey(const float& fTimeDelta);
 	void	Attack_GiantMonkey(const float& fTimeDelta);
+	void	Rush_GiantMonkey(const float& fTimeDelta);
 
 private:
 	void	Play_Animation(float fTimeDelta);	
@@ -81,12 +86,12 @@ public:
 	float			m_fSpd					= 0;
 	
 	volatile bool	m_bIsAttack				= false;
-	volatile bool	m_bIsShortAttack		= true;		// 근거리 공격
+	bool			m_bIsShortAttack		= true;		// 근거리 공격
 	bool			m_bIsRushAttack			= false;
 
 	int				m_iTargetNum			= -1;
 	_vec3			m_vOriPos				= _vec3(0.f);
-	_vec3			m_vRushPos				= _vec3(0.f);
+	ATTACK_DIST		m_eAttackDist			= ATTACK_DIST::DIST_END;
 
 	/* Animation */
 	_uint			m_uiNewAniIndex			= 0;

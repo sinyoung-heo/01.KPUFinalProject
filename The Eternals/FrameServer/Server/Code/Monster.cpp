@@ -3,9 +3,10 @@
 #include "Player.h"
 
 CMonster::CMonster()
-	:m_iHp(0), m_iMaxHp(0), m_iExp(0), m_iAtt(0), m_fSpd(0.f), m_vRushPos(_vec3(0.f)),
+	:m_iHp(0), m_iMaxHp(0), m_iExp(0), m_iAtt(0), m_fSpd(0.f),
 	m_iTargetNum(-1), m_bIsAttack(false), m_bIsShortAttack(true),
-	m_bIsRushAttack(false) ,m_monNum(0), m_uiAnimIdx(0)
+	m_bIsRushAttack(false), m_monNum(0), m_uiAnimIdx(0),
+	m_eAttackDist(ATTACK_DIST::DIST_END)
 {
 }
 
@@ -287,6 +288,26 @@ void CMonster::Change_GiantMonkey_Animation(const float& fTimeDelta)
 	case STATUS::ST_ATTACK:
 	{
 		Attack_GiantMonkey(fTimeDelta);
+
+		if (m_bIsRushAttack)
+		{
+			if (m_uiAnimIdx == GiantMonkey::ATTACK_COMBO)
+			{
+				if (65 <= m_ui3DMax_CurFrame && m_ui3DMax_CurFrame <= 125)
+				{
+					m_vPos += m_vDir * 5.f * fTimeDelta;
+				}
+			}
+			else if (m_uiAnimIdx <= GiantMonkey::ATTACK_JUMPING)
+			{
+				if (49 <= m_ui3DMax_CurFrame && m_ui3DMax_CurFrame <= 63)
+				{
+					m_vPos += m_vDir * 10.f * fTimeDelta;
+				}
+			}
+		
+			Rush_GiantMonkey(fTimeDelta);
+		}
 	}
 	break;
 
@@ -1583,20 +1604,31 @@ void CMonster::Chase_GiantMonkey(const float& fTimeDelta)
 
 		/* 원거리 & 근거리 공격 타입 설정 */
 		float fDist = Calculate_TargetDist(pTarget->m_vPos);
-		/*if ((RUSH_RANGE_GBEETEL_START * RUSH_RANGE_GBEETEL_START) < fDist && fDist < (RUSH_RANGE_GBEETEL_END * RUSH_RANGE_GBEETEL_END))
+
+		// ATTACK JUMPING
+		if ((RUSH_RANGE_GMONKEY_START * RUSH_RANGE_GMONKEY_START) < fDist && fDist < (RUSH_RANGE_GMONKEY_END * RUSH_RANGE_GMONKEY_END))
 		{
-			m_bIsShortAttack = false;
-			Change_AttackMode();
+			m_eAttackDist = ATTACK_DIST::DIST_LONG;
+			Change_AttackMode(); 
 			return;
 		}
-		else */if ((ATTACK_RANGE_MONKEY * ATTACK_RANGE_MONKEY) < fDist)
-			m_vPos += m_vDir * m_fSpd * fTimeDelta;
+		// ATTACK COMBO, FLYSTAMP
+		else if ((ATTACK_RANGE_CLODER * ATTACK_RANGE_CLODER) < fDist && fDist < (ATTACK_RANGE_GBEETEL * ATTACK_RANGE_GBEETEL))
+		{
+			m_eAttackDist = ATTACK_DIST::DIST_MIDDLE;
+			Change_AttackMode(); 
+			return;
+		}		
+		// ATTACK 1~3
 		else if ((ATTACK_RANGE_MONKEY * ATTACK_RANGE_MONKEY) >= fDist)
 		{
-			m_bIsShortAttack = true;
-			Change_AttackMode();
+			m_eAttackDist = ATTACK_DIST::DIST_SHORT;
+			Change_AttackMode(); 
 			return;
 		}
+		// CHASE
+		else if ((ATTACK_RANGE_MONKEY * ATTACK_RANGE_MONKEY) < fDist)
+			m_vPos += m_vDir * m_fSpd * fTimeDelta;
 	}
 	/* 타겟(공격 대상)이 존재하지 않을 경우 -> 생성된 위치로 돌아감 */
 	else
@@ -2271,12 +2303,21 @@ void CMonster::Attack_GiantMonkey(const float& fTimeDelta)
 		m_vDir = pTarget->m_vPos - m_vPos;
 		m_vDir.Normalize();
 
-		/* 원거리 & 근거리 공격 타입 설정 */
+		/* 공격 타입 설정 */
 		float fDist = Calculate_TargetDist(pTarget->m_vPos);
-		if ((RUSH_RANGE_GBEETEL_START * RUSH_RANGE_GBEETEL_START) < fDist && fDist < (RUSH_RANGE_GBEETEL_END * RUSH_RANGE_GBEETEL_END))
-		{
-			m_bIsShortAttack = false;
-		}
+
+		// ATTACK JUMPING
+		if ((RUSH_RANGE_GMONKEY_START * RUSH_RANGE_GMONKEY_START) < fDist && fDist < (RUSH_RANGE_GMONKEY_END * RUSH_RANGE_GMONKEY_END))
+			m_eAttackDist = ATTACK_DIST::DIST_LONG;
+
+		// ATTACK COMBO, FLYSTAMP
+		else if ((ATTACK_RANGE_CLODER * ATTACK_RANGE_CLODER) < fDist && fDist < (ATTACK_RANGE_GBEETEL * ATTACK_RANGE_GBEETEL))
+			m_eAttackDist = ATTACK_DIST::DIST_MIDDLE;
+
+		// ATTACK 1~3
+		else if ((ATTACK_RANGE_MONKEY * ATTACK_RANGE_MONKEY) >= fDist)
+			m_eAttackDist = ATTACK_DIST::DIST_SHORT;
+		
 
 		// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
 		for (auto pl : old_viewlist)
@@ -2286,10 +2327,41 @@ void CMonster::Attack_GiantMonkey(const float& fTimeDelta)
 			{
 				if (!m_bIsAttack) return;
 
-				m_uiAnimIdx = rand() % 7 + 2;
-				Set_AnimationKey(m_uiAnimIdx);
-				send_Monster_NormalAttack(pl, m_uiAnimIdx);
+				// ATTACK 1~3 & HOOK
+				if (m_eAttackDist == ATTACK_DIST::DIST_SHORT)
+				{
+					m_bIsRushAttack = false;
 
+					m_uiAnimIdx = rand() % 4 + 2;				
+					Set_AnimationKey(m_uiAnimIdx);
+					send_Monster_NormalAttack(pl, m_uiAnimIdx);
+				}
+
+				// ATTACK COMBO, FLYSTAMP
+				else if (m_eAttackDist == ATTACK_DIST::DIST_MIDDLE)
+				{
+					m_uiAnimIdx = rand() % 2 + 7;
+					
+					if (m_uiAnimIdx == GiantMonkey::ATTACK_FLYSTAMP)
+					{
+						m_bIsRushAttack = false;
+						Set_AnimationKey(m_uiAnimIdx);
+						send_Monster_NormalAttack(pl, m_uiAnimIdx);
+					}
+					else if (m_uiAnimIdx == GiantMonkey::ATTACK_COMBO)
+					{
+						m_bIsRushAttack = true;
+						Set_AnimationKey(m_uiAnimIdx);
+					}
+				}
+				// ATTACK JUMPING
+				else if (m_eAttackDist == ATTACK_DIST::DIST_LONG)
+				{
+					m_bIsRushAttack = true;
+					m_uiAnimIdx = GiantMonkey::ATTACK_JUMPING;
+					Set_AnimationKey(m_uiAnimIdx);
+					
+				}
 			}
 		}
 	}
@@ -2408,6 +2480,63 @@ void CMonster::Rush_GiantBeetle(const float& fTimeDelta)
 		if (true == CObjMgr::GetInstance()->Is_Player(pl))
 		{
 			if (m_uiAnimIdx == GiantBeetle::ATTACK_RUSH)
+			{
+				send_Monster_RushAttack(pl, m_uiAnimIdx);
+			}
+		}
+	}
+}
+
+void CMonster::Rush_GiantMonkey(const float& fTimeDelta)
+{
+	if (m_uiAnimIdx != GiantMonkey::ATTACK_JUMPING && m_uiAnimIdx != GiantMonkey::ATTACK_COMBO) return;
+	if (m_bIsRushAttack == false) return;
+
+	/* 해당 Monster의 원래 위치값 */
+	float ori_x, ori_y, ori_z;
+	ori_x = m_vPos.x;
+	ori_y = m_vPos.y;
+	ori_z = m_vPos.z;
+
+	// 공격 전 위치에서의 viewlist (시야 내에 플레이어 저장)
+	unordered_set<pair<int, int>> oldnearSector;
+	oldnearSector.reserve(5);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
+
+	unordered_set <int> old_viewlist;
+	unordered_set <int> old_targetList;
+
+	// 공격 전: 인접 섹터 순회 (몬스터 시야 파악)
+	for (auto& s : oldnearSector)
+	{
+		// 인접 섹터 내의 타 유저들이 있는지 검사
+		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+		{
+			// 유저의 서버 번호 추출
+			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			{
+				/* 유저일 경우 처리 */
+				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+
+					// 접속한 유저만 시야 목록에 등록한다.
+					if (!pPlayer->Get_IsConnected()) continue;
+
+					// 시야 내에 있다면 시야 목록에 등록한다.
+					if (CObjMgr::GetInstance()->Is_Near(this, pPlayer))
+						old_viewlist.insert(obj_num);
+				}
+			}
+		}
+	}
+
+	for (auto pl : old_viewlist)
+	{
+		/* 유저일 경우 처리 */
+		if (true == CObjMgr::GetInstance()->Is_Player(pl))
+		{
+			if (m_uiAnimIdx == GiantMonkey::ATTACK_JUMPING || m_uiAnimIdx == GiantMonkey::ATTACK_COMBO)
 			{
 				send_Monster_RushAttack(pl, m_uiAnimIdx);
 			}
