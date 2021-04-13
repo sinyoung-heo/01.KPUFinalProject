@@ -488,8 +488,11 @@ void CPacketMgr::Attack_User(sc_packet_attack* packet)
 
 		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
 		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
-		pObj->Set_IsStartAngleInterpolation(true);
-		pObj->Set_LinearAngle(pObj->Get_Transform()->m_vAngle.y, packet->end_angleY);
+		if (-1 != packet->end_angleY)
+		{
+			pObj->Set_IsStartAngleInterpolation(true);
+			pObj->Set_LinearAngle(pObj->Get_Transform()->m_vAngle.y, packet->end_angleY);
+		}
 		pObj->Set_Attack(true);
 	}
 }
@@ -648,12 +651,12 @@ void CPacketMgr::Login_Player(sc_packet_login_ok* packet)
 		wstrMeshTag = L"PoporiR27Gladiator";
 
 	pGameObj = CPCGladiator::Create(m_pGraphicDevice, m_pCommandList,
-		wstrMeshTag,										// MeshTag
-		L"StageVelika_NaviMesh",							// NaviMeshTag
-		_vec3(0.05f, 0.05f, 0.05f),						// Scale
-		_vec3(0.0f, 0.0f, 0.0f),							// Angle
-		_vec3(packet->posX, packet->posY, packet->posZ),	// Pos
-		TwoHand33_B_SM);									// WeaponType
+									wstrMeshTag,										// MeshTag
+									L"StageVelika_NaviMesh",							// NaviMeshTag
+									_vec3(0.05f, 0.05f, 0.05f),							// Scale
+									_vec3(0.0f, 0.0f, 0.0f),							// Angle
+									_vec3(packet->posX, packet->posY, packet->posZ),	// Pos
+									TwoHand33_B_SM);									// WeaponType
 
 	pGameObj->Set_OType(packet->o_type);
 	pGameObj->Set_ServerNumber(g_iSNum);

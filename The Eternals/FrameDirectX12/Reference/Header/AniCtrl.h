@@ -4,7 +4,7 @@
 BEGIN(Engine)
 
 #define _3DMAX_FPS			30.0f
-#define ANIMA_INTERPOLATION 1.f
+#define ANIMA_INTERPOLATION 1.0f
 
 typedef map<string, _uint>		MAP_BONENAME;
 typedef vector<BONE_DESC>		VECTOR_BONE_DESC;
@@ -47,13 +47,14 @@ public:
 	const _uint&					Get_NewAnimationIdx()	{ return m_uiNewAniIdx; }
 	// Set
 	void Set_AnimationKey(const _uint& uiAniKey);
+	void Set_BlendingSpeed(const _float& fBlendingSpeed) { m_fBlendingSpeed = fBlendingSpeed; }
 
 	// Method
 	void				Play_Animation(_float fTimeDelta);
 	SKINNING_MATRIX*	Find_SkinningMatrix(string strBoneName);
 	HIERARCHY_DESC*		Find_HierarchyDesc(string strBoneName);
-	_bool				Is_AnimationSetEnd(const _float& fTimeDelta);
-	_bool				Is_BlendingComplete();
+	_bool				Is_AnimationSetEnd(const _float& fTimeDelta, const _float& fAnimationSpeed = 4'800.0f);
+	_bool				Is_BlendingComplete() { return m_bIsBlendingComplete; };
 
 private:
 	HRESULT	Ready_AniCtrl();
@@ -108,6 +109,8 @@ private:
 
 	_float	m_fBlendingTime			= 0.0f;
 	_float	m_fBlendAnimationTime	= 0.0f;
+	_bool	m_bIsBlendingComplete	= true;
+	_float	m_fBlendingSpeed		= 0.001f;
 
 	_uint	m_ui3DMax_NumFrame		= 0;	// 3DMax에서 애니메이션의 총 Frame 개수.
 	_uint	m_ui3DMax_CurFrame		= 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치.

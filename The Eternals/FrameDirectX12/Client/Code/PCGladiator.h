@@ -43,13 +43,16 @@ private:
 	HRESULT			SetUp_PCWeapon();
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
-
+	void			Set_AnimationSpeed();
+	void			Set_BlendingSpeed();
 	// KeyInput
 	void Key_Input(const _float& fTimeDelta);
 	void KeyInput_Move(const _float& fTimeDelta);
 	void KeyInput_Attack(const _float& fTimeDelta);
 	void KeyInput_StanceChange(const _float& fTimeDelta);
 	void KeyInput_ComboAttack(const _float& fTimeDelta);
+	void KeyInput_SkillAttack(const _float& fTimeDelta);
+	void SetUp_AttackSetting();
 	void SetUp_ComboAttackAnimation();
 	void SetUp_FromComboAttackToAttackWait(const _float& fTimeDelta);
 	void Move_OnNaviMesh(const _float& fTimeDelta);
@@ -66,8 +69,14 @@ private:
 
 	void Ready_AngleInterpolationValue(const _float& fEndAngle);
 	void SetUp_AngleInterpolation(const _float& fTimeDelta);
-	void SetUp_ComboAttackMove(const _float& fTimeDelta, const _uint& uiComboCnt, const _uint& uiAniIdx, const _uint& uiStopTick, const _float& fMoveSpeed, const _float& fStopSpeed);
-	void SetUp_ComboAttackTrail(const _uint& uiComboCnt, const _uint& uiAniIdx, const _uint& uiStartTick, const _uint& uiStopTick);
+	void SetUp_AttackMove(const _uint& uiComboCnt, const _uint& uiAniIdx, const _uint& uiStartTick, const _uint& uiStopTick, const _float& fMoveSpeed, const _float& fStopSpeed);
+	void SetUp_AttackMove(const _uint& uiAniIdx, const _uint& uiStartTick, const _uint& uiStopTick, const _float& fMoveSpeed, const _float& fStopSpeed);
+	void SetUp_AttackTrail(const _uint& uiComboCnt, const _uint& uiAniIdx, const _uint& uiStartTick, const _uint& uiStopTick);
+	void SetUp_AttackTrail(const _uint& uiAniIdx, const _uint& uiStartTick, const _uint& uiStopTick);
+	void SetUp_WeaponRHand();
+	void SetUp_WeaponLHand();
+	void SetUp_WeaponBack();
+
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -112,10 +121,15 @@ private:
 	_uint m_uiAnimIdx        = 0;	// 현재 애니메이션 Index
 	_uint m_ui3DMax_NumFrame = 0;	// 3DMax에서 애니메이션의 총 Frame 개수
 	_uint m_ui3DMax_CurFrame = 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
+	_float m_fAnimationSpeed = TPS;
 
 	Gladiator::STANCE	m_eStance                 = Gladiator::STANCE_END;
 	_bool				m_bIsCompleteStanceChange = true;
 	_uint				m_uiComoboCnt             = 0;
+	_bool				m_bIsSkill				  = false;
+	_bool				m_bIsSkillLoop			  = false;
+	map<wstring, _int>	m_mapSkillKeyInput;
+	_float				m_fBlendingSpeed		  = 0.001f;
 
 	/*__________________________________________________________________________________________________________
 	[ Font ]
