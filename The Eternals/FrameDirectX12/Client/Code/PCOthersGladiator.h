@@ -19,7 +19,7 @@ private:
 	virtual ~CPCOthersGladiator() = default;
 
 public:
-	void Set_AnimationIdx(const _uint& iIdx) { m_uiAnimIdx = iIdx;/* m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);*/ }
+	void Set_AnimationIdx(const _uint& iIdx) { m_uiAnimIdx = iIdx; m_pMeshCom->Set_AnimationKey(m_uiAnimIdx); }
 	void Set_StanceChange(const _uint& uiAniIdx, const _bool& bIsStanceAttack);
 	void Reset_AttackMoveInterpolationRatio() { m_tAttackMoveSpeedInterpolationDesc.linear_ratio = 0.0f; }
 
@@ -40,14 +40,20 @@ private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag);
 private:
 	HRESULT	SetUp_PCWeapon();
+	void	Set_WeaponHierarchy();
+	void	Set_AnimationSpeed();
+	void	Set_BlendingSpeed();
 	void	Set_ConstantTable();
 	void	Set_ConstantTableShadowDepth();
 	void	Move_OnNaviMesh(const _float& fTimeDelta);
 	void	SetUp_MoveSpeed(const _float& fTimeDelta);
 	void	SetUp_StanceChange(const _float& fTimeDelta);
-
-	void	SetUp_OthersComoboAttackMove(const _float& fTimeDelta, const _uint& uiAniIdx, const _uint& uiStopTick, const _float& fMoveSpeed, const _float& fStopSpeed);
+	void	SetUp_OthersAttackMove(const _uint& uiAniIdx, const _uint& uiStartTick, const _uint& uiStopTick, const _float& fMoveSpeed, const _float& fStopSpeed);
+	void	SetUp_AttackTrail(const _uint& uiAniIdx, const _uint& uiStartTick, const _uint& uiStopTick);
 	void	AttackMove_OnNaviMesh(const _float& fTimeDelta);
+	void	SetUp_WeaponRHand();
+	void	SetUp_WeaponLHand();
+	void	SetUp_WeaponBack();
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -79,6 +85,8 @@ private:
 	_uint m_ui3DMax_NumFrame = 0;	// 3DMax에서 애니메이션의 총 Frame 개수
 	_uint m_ui3DMax_CurFrame = 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
 
+	_float m_fBlendingSpeed  = 0.001f;
+	_float m_fAnimationSpeed = TPS;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

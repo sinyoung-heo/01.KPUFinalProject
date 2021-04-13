@@ -22,7 +22,7 @@ void CPCOthersGladiator::Set_StanceChange(const _uint& uiAniIdx, const _bool& bI
 		m_eCurStance = Gladiator::STANCE_ATTACK;
 		m_pWeapon->Set_DissolveInterpolation(-1.0f);
 		m_pWeapon->Set_IsRenderShadow(true);
-		m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("L_Sword"));
+		SetUp_WeaponLHand();
 	}
 	else
 	{
@@ -77,9 +77,9 @@ HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag,
 	m_tMoveSpeedInterpolationDesc.v1           = Gladiator::MIN_SPEED;
 	m_tMoveSpeedInterpolationDesc.v2           = Gladiator::MAX_SPEED * Gladiator::OTHERS_OFFSET;
 
-	m_tAttackMoveSpeedInterpolationDesc.linear_ratio        = 0.0f;
-	m_tAttackMoveSpeedInterpolationDesc.v1                  = Gladiator::MIN_SPEED;
-	m_tAttackMoveSpeedInterpolationDesc.v2                  = Gladiator::MAX_SPEED * Gladiator::OTHERS_OFFSET;
+	m_tAttackMoveSpeedInterpolationDesc.linear_ratio = 0.0f;
+	m_tAttackMoveSpeedInterpolationDesc.v1           = Gladiator::MIN_SPEED;
+	m_tAttackMoveSpeedInterpolationDesc.v2           = Gladiator::MAX_SPEED * Gladiator::OTHERS_OFFSET;
 
 	return S_OK;
 }
@@ -105,11 +105,16 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 	if (fTimeDelta > TIME_OFFSET)
 		return NO_EVENT;
 
+	Set_WeaponHierarchy();
+
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
+	Set_AnimationSpeed();
+	Set_BlendingSpeed();
+	m_pMeshCom->Set_BlendingSpeed(m_fBlendingSpeed);
 	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+	m_pMeshCom->Play_Animation(fTimeDelta * m_fAnimationSpeed);
 	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
 	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
@@ -230,6 +235,62 @@ HRESULT CPCOthersGladiator::SetUp_PCWeapon()
 	return S_OK;
 }
 
+void CPCOthersGladiator::Set_WeaponHierarchy()
+{
+	if (m_uiAnimIdx == Gladiator::CUTTING_SLASH ||
+		m_uiAnimIdx == Gladiator::JAW_BREAKER ||
+		m_uiAnimIdx == Gladiator::CUT_HEAD ||
+		m_uiAnimIdx == Gladiator::WIND_CUTTER1 || 
+		m_uiAnimIdx == Gladiator::WIND_CUTTER2 || 
+		m_uiAnimIdx == Gladiator::WIND_CUTTER3 ||
+		m_uiAnimIdx == Gladiator::DRAW_SWORD_CHARGE ||
+		m_uiAnimIdx == Gladiator::DRAW_SWORD_LOOP ||
+		m_uiAnimIdx == Gladiator::DRAW_SWORD ||
+		m_uiAnimIdx == Gladiator::DRAW_SWORD_END ||
+		m_uiAnimIdx == Gladiator::ATTACK_RUN)
+	{
+		SetUp_WeaponRHand();
+	}
+	else
+		SetUp_WeaponLHand();
+
+}
+
+void CPCOthersGladiator::Set_AnimationSpeed()
+{
+	if (m_uiAnimIdx == Gladiator::WIND_CUTTER1 ||
+		m_uiAnimIdx == Gladiator::WIND_CUTTER2 ||
+		m_uiAnimIdx == Gladiator::WIND_CUTTER3)
+	{
+		m_fAnimationSpeed = TPS * 0.75f;
+	}
+
+	else if (m_uiAnimIdx == Gladiator::DRAW_SWORD_CHARGE ||
+			 m_uiAnimIdx == Gladiator::DRAW_SWORD_LOOP)
+	{
+		m_fAnimationSpeed = TPS * 2.f;
+	}
+	else
+		m_fAnimationSpeed = TPS;
+}
+
+void CPCOthersGladiator::Set_BlendingSpeed()
+{
+	if (m_uiAnimIdx == Gladiator::NONE_ATTACK_IDLE ||
+		m_uiAnimIdx == Gladiator::NONE_ATTACK_WALK ||
+		m_uiAnimIdx == Gladiator::ATTACK_WAIT ||
+		m_uiAnimIdx == Gladiator::ATTACK_RUN ||
+		m_uiAnimIdx == Gladiator::GAIA_CRUSH1 ||
+		m_uiAnimIdx == Gladiator::GAIA_CRUSH2 ||
+		m_uiAnimIdx == Gladiator::GAIA_CRUSH3)
+	{
+		m_fBlendingSpeed = 0.001f;
+	}
+	else
+		m_fBlendingSpeed = 0.005f;
+}
+
+
 void CPCOthersGladiator::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
@@ -280,9 +341,7 @@ void CPCOthersGladiator::Move_OnNaviMesh(const _float& fTimeDelta)
 		// NaviMesh 이동.		
 		if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
 		{
-			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
-														 &m_pTransCom->m_vDir,
-														 m_pInfoCom->m_fSpeed * fTimeDelta);
+			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos, &m_pTransCom->m_vDir, m_pInfoCom->m_fSpeed * fTimeDelta);
 			m_pTransCom->m_vPos = vPos;
 		}
 	}
@@ -299,9 +358,7 @@ void CPCOthersGladiator::SetUp_MoveSpeed(const _float& fTimeDelta)
 		m_tMoveSpeedInterpolationDesc.interpolation_speed = -Gladiator::MOVE_STOP_SPEED * Gladiator::OTHERS_OFFSET;
 
 	m_tMoveSpeedInterpolationDesc.linear_ratio += m_tMoveSpeedInterpolationDesc.interpolation_speed * fTimeDelta;
-	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(m_tMoveSpeedInterpolationDesc.v1, 
-													   m_tMoveSpeedInterpolationDesc.v2, 
-													   m_tMoveSpeedInterpolationDesc.linear_ratio);
+	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(m_tMoveSpeedInterpolationDesc.v1, m_tMoveSpeedInterpolationDesc.v2, m_tMoveSpeedInterpolationDesc.linear_ratio);
 }
 
 void CPCOthersGladiator::SetUp_StanceChange(const _float& fTimeDelta)
@@ -336,53 +393,118 @@ void CPCOthersGladiator::SetUp_StanceChange(const _float& fTimeDelta)
 			}
 
 			if (Gladiator::IN_WEAPON == m_uiAnimIdx && m_ui3DMax_CurFrame > 20)
-				m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("Weapon_Back"));
+				SetUp_WeaponBack();
 		}
 	}
 }
 
-void CPCOthersGladiator::SetUp_OthersComoboAttackMove(const _float& fTimeDelta,
-													  const _uint& uiAniIdx, 
-													  const _uint& uiStopTick, 
-													  const _float& fMoveSpeed,
-													  const _float& fStopSpeed)
+void CPCOthersGladiator::SetUp_OthersAttackMove(const _uint& uiAniIdx, 
+												const _uint& uiStartTick,
+												const _uint& uiStopTick, 
+												const _float& fMoveSpeed,
+												const _float& fStopSpeed)
 {
 	if (uiAniIdx == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
 	{
 		// Move On
-		if (m_ui3DMax_CurFrame < uiStopTick)
+		if (m_ui3DMax_CurFrame >= uiStartTick && m_ui3DMax_CurFrame < uiStopTick)
 			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = fMoveSpeed;
 
 		// Move Off
 		else
-			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = fStopSpeed * Gladiator::OTHERS_OFFSET;
+			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = fStopSpeed;
+	}
+}
+
+void CPCOthersGladiator::SetUp_AttackTrail(const _uint& uiAniIdx, const _uint& uiStartTick, const _uint& uiStopTick)
+{
+	if (uiAniIdx == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
+	{
+		// Trail On
+		if (m_ui3DMax_CurFrame >= uiStartTick && m_ui3DMax_CurFrame < uiStopTick)
+			m_pWeapon->Set_IsRenderTrail(true);
+
+		// Trail Off
+		else if (m_ui3DMax_CurFrame >= uiStopTick)
+			m_pWeapon->Set_IsRenderTrail(false);
+
+		else
+			m_pWeapon->Set_IsRenderTrail(false);
 	}
 }
 
 void CPCOthersGladiator::AttackMove_OnNaviMesh(const _float& fTimeDelta)
 {
-	SetUp_OthersComoboAttackMove(fTimeDelta, Gladiator::COMBO1, Gladiator::COMBO1_MOVE_STOP, 1.0f, -3.0f);
-	SetUp_OthersComoboAttackMove(fTimeDelta, Gladiator::COMBO2, Gladiator::COMBO2_MOVE_STOP, 1.0f, -3.5f);
-	SetUp_OthersComoboAttackMove(fTimeDelta, Gladiator::COMBO3, Gladiator::COMBO3_MOVE_STOP, 1.0f, -3.5f);
-	SetUp_OthersComoboAttackMove(fTimeDelta, Gladiator::COMBO4, Gladiator::COMBO4_MOVE_STOP, 0.9f, -0.95f);
+	// ComboAttack Move
+	SetUp_OthersAttackMove(Gladiator::COMBO1, 0, Gladiator::COMBO1_MOVE_STOP, 1.0f, -3.0f);
+	SetUp_OthersAttackMove(Gladiator::COMBO2, 0, Gladiator::COMBO2_MOVE_STOP, 1.0f, -3.5f);
+	SetUp_OthersAttackMove(Gladiator::COMBO3, 0, Gladiator::COMBO3_MOVE_STOP, 1.0f, -3.5f);
+	SetUp_OthersAttackMove(Gladiator::COMBO4, 0, Gladiator::COMBO4_MOVE_STOP, 0.9f, -0.95f);
+	//// ComoboAttack Trail
+	//SetUp_AttackTrail(Gladiator::COMBO1, Gladiator::COMBO1_TRAIL_START, Gladiator::COMBO1_TRAIL_STOP);
+	//SetUp_AttackTrail(Gladiator::COMBO2, Gladiator::COMBO2_TRAIL_START, Gladiator::COMBO2_TRAIL_STOP);
+	//SetUp_AttackTrail(Gladiator::COMBO3, Gladiator::COMBO3_TRAIL_START, Gladiator::COMBO3_TRAIL_STOP);
+	//SetUp_AttackTrail(Gladiator::COMBO4, Gladiator::COMBO4_TRAIL_START, Gladiator::COMBO4_TRAIL_STOP);
+
+	// SkillAttack Move
+	SetUp_OthersAttackMove(Gladiator::STINGER_BLADE, Gladiator::STINGER_BLADE_MOVE_START, Gladiator::STINGER_BLADE_MOVE_STOP, 3.0f, -3.0f);
+	SetUp_OthersAttackMove(Gladiator::CUTTING_SLASH, Gladiator::CUTTING_SLASH_MOVE_START, Gladiator::CUTTING_SLASH_MOVE_STOP, 1.25f, -1.75f);
+	SetUp_OthersAttackMove(Gladiator::JAW_BREAKER, Gladiator::JAW_BREAKER_MOVE_START, Gladiator::JAW_BREAKER_MOVE_STOP, 4.0f, -4.0f);
+	SetUp_OthersAttackMove(Gladiator::CUT_HEAD, Gladiator::CUT_HEAD_MOVE_START, Gladiator::CUT_HEAD_MOVE_END, 1.5f, -8.0f);
+	SetUp_OthersAttackMove(Gladiator::WIND_CUTTER1, Gladiator::WIND_CUTTER1_MOVE_START, Gladiator::WIND_CUTTER1_MOVE_STOP, 3.0f, -4.0f);
+	SetUp_OthersAttackMove(Gladiator::WIND_CUTTER2, Gladiator::WIND_CUTTER2_MOVE_START, Gladiator::WIND_CUTTER2_MOVE_STOP, 3.0f, -4.0f);
+	SetUp_OthersAttackMove(Gladiator::WIND_CUTTER3, Gladiator::WIND_CUTTER3_MOVE_START, Gladiator::WIND_CUTTER3_MOVE_STOP, 2.0f, -4.0f);
+	SetUp_OthersAttackMove(Gladiator::GAIA_CRUSH1, Gladiator::GAIA_CRUSH1_MOVE_START, Gladiator::GAIA_CRUSH1_MOVE_STOP, 0.75f, 0.0f);
+	SetUp_OthersAttackMove(Gladiator::GAIA_CRUSH2, Gladiator::GAIA_CRUSH2_MOVE_START, Gladiator::GAIA_CRUSH2_MOVE_STOP, 0.75f, -2.0f);
+	SetUp_OthersAttackMove(Gladiator::DRAW_SWORD, Gladiator::DRAW_SWORD_MOVE_START, Gladiator::DRAW_SWORD_MOVE_STOP, 2.5f, -3.0f);
+	//// SkillAttck Trail
+	//SetUp_AttackTrail(Gladiator::STINGER_BLADE, Gladiator::STINGER_BLADE_TRAIL_START, Gladiator::STINGER_BLADE_TRAIL_STOP);
+	//SetUp_AttackTrail(Gladiator::CUTTING_SLASH, Gladiator::CUTTING_SLASH_TRAIL_START, Gladiator::CUTTING_SLASH_TRAIL_STOP);
+	//SetUp_AttackTrail(Gladiator::JAW_BREAKER, Gladiator::JAW_BREAKER_TRAIL_START, Gladiator::JAW_BREAKER_TRAIL_STOP);
+	//SetUp_AttackTrail(Gladiator::CUT_HEAD, Gladiator::CUT_HEAD_TRAIL_START, Gladiator::CUT_HEAD_TRAIL_STOP);
+	//SetUp_AttackTrail(Gladiator::WIND_CUTTER1, Gladiator::WIND_CUTTER1_TRAIL_START, Gladiator::WIND_CUTTER1_TRAIL_STOP);
+	//SetUp_AttackTrail(Gladiator::WIND_CUTTER2, Gladiator::WIND_CUTTER2_TRAIL_START, Gladiator::WIND_CUTTER2_TRAIL_STOP);
+	//SetUp_AttackTrail(Gladiator::WIND_CUTTER3, Gladiator::WIND_CUTTER3_TRAIL_START, Gladiator::WIND_CUTTER3_TRAIL_STOP);
+	//SetUp_AttackTrail(Gladiator::GAIA_CRUSH1, Gladiator::GAIA_CRUSH1_TRAIL_START, Gladiator::GAIA_CRUSH1_TRAIL_STOP);
+	//SetUp_AttackTrail(Gladiator::GAIA_CRUSH2, Gladiator::GAIA_CRUSH2_TRAIL_START, Gladiator::GAIA_CRUSH2_TRAIL_STOP);
+	//SetUp_AttackTrail(Gladiator::DRAW_SWORD, Gladiator::DRAW_SWORD_TRAIL_START, Gladiator::DRAW_SWORD_TRAIL_STOP);
+	//SetUp_AttackTrail(Gladiator::DRAW_SWORD_END, Gladiator::DRAW_SWORD_END_TRAIL_START, Gladiator::DRAW_SWORD_END_TRAIL_STOP);
 
 	if (!m_bIsAttack)
 		return;
 
 	// Set Speed
 	m_tAttackMoveSpeedInterpolationDesc.linear_ratio += m_tAttackMoveSpeedInterpolationDesc.interpolation_speed * fTimeDelta;
-	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(m_tAttackMoveSpeedInterpolationDesc.v1,
-													   m_tAttackMoveSpeedInterpolationDesc.v2,
-													   m_tAttackMoveSpeedInterpolationDesc.linear_ratio);
+	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(m_tAttackMoveSpeedInterpolationDesc.v1, m_tAttackMoveSpeedInterpolationDesc.v2, m_tAttackMoveSpeedInterpolationDesc.linear_ratio);
+
 	// NaviMesh 이동.
 	if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
 	{
 		m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 		m_pTransCom->m_vDir.Normalize();
-		m_pTransCom->m_vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
-															  &m_pTransCom->m_vDir,
-															  m_pInfoCom->m_fSpeed * fTimeDelta);
+		m_pTransCom->m_vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos, &m_pTransCom->m_vDir, m_pInfoCom->m_fSpeed * fTimeDelta);
 	}
+}
+
+void CPCOthersGladiator::SetUp_WeaponRHand()
+{
+	m_pWeapon->Get_Transform()->m_vAngle.y = 180.0f;
+	m_pWeapon->Get_Transform()->m_vAngle.z = 0.0f;
+	m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("R_Sword"));
+}
+
+void CPCOthersGladiator::SetUp_WeaponLHand()
+{
+	m_pWeapon->Get_Transform()->m_vAngle.y = 0.0f;
+	m_pWeapon->Get_Transform()->m_vAngle.z = 180.0f;
+	m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("L_Sword"));
+}
+
+void CPCOthersGladiator::SetUp_WeaponBack()
+{
+	m_pWeapon->Get_Transform()->m_vAngle.y = 0.0f;
+	m_pWeapon->Get_Transform()->m_vAngle.z = 180.0f;
+	m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("Weapon_Back"));
 }
 
 Engine::CGameObject* CPCOthersGladiator::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, 
