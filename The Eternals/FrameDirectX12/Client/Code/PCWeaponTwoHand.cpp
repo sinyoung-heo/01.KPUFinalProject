@@ -85,6 +85,7 @@ _int CPCWeaponTwoHand::Update_GameObject(const _float& fTimeDelta)
 		_vec3 vMin = _vec3(m_pBoundingBoxCom->Get_BottomPlaneCenter());
 		_vec3 vMax = _vec3(m_pBoundingBoxCom->Get_TopPlaneCenter());
 		m_pTrail->SetUp_TrailByCatmullRom(&vMin, &vMax);
+		m_pTrail->Get_Transform()->m_vPos = _vec3(0.f, 0.f, 0.0f);
 	}
 
 	return NO_EVENT;

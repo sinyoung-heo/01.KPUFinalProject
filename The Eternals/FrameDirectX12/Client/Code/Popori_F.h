@@ -85,7 +85,7 @@ private:
 
 	// AfterImage
 	list<_matrix>	m_lstAFWorldMatrix;
-	list<_rgba>	m_lstAFAlpha;
+	list<_rgba>		m_lstAFAlpha;
 	_uint			m_uiAfterImgSize = 0;
 	_float			m_fAfterImgTime = 0.f;
 	_float			m_fAfterImgMakeTime = 0.f;

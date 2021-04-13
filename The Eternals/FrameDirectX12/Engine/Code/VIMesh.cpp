@@ -743,15 +743,9 @@ void CVIMesh::Render_StaticMeshShadowDepth(CShader * pShader)
 
 void CVIMesh::Render_DynamicMesh(ID3D12GraphicsCommandList * pCommandList,
 								 const _int& iContextIdx,
-								 CShader * pShader
-								)
+								 CShader * pShader)
 {
 	vector<VECTOR_SKINNING_MATRIX>*	pvecSkinningMatrix = m_pAniCtrl->Get_VecSkinningMatrix();
-
-	if (m_fDeltaTime > m_fAfterImgMakeTime)
-	{
-		m_lstAFAlpha.emplace_back(_rgba(0.f, 0.f, 0.f, 1.f));
-	}
 
 	for (_int i = 0; i < m_vecMeshEntry.size(); ++i)
 	{
@@ -772,12 +766,10 @@ void CVIMesh::Render_DynamicMesh(ID3D12GraphicsCommandList * pCommandList,
 		// Mesh AfterImage
 		if (m_uiAfterImgSize)
 		{
-			if (m_fDeltaTime > m_fAfterImgMakeTime &&
-				m_lstAFSkinningMatrix.size() < m_uiAfterImgSize * m_vecMeshEntry.size())
+			if (m_fDeltaTime > m_fAfterImgMakeTime && m_lstAFSkinningMatrix.size() < m_uiAfterImgSize * m_vecMeshEntry.size())
+			{
 				m_lstAFSkinningMatrix.emplace_back(tCB_SkinningMatrix);
-			/*
-			if (m_lstAFSkinningMatrix.size() > m_uiAfterImgSize * m_vecMeshEntry.size())
-				m_lstAFSkinningMatrix.pop_front();*/
+			}
 		}
 
 		pShader->Begin_Shader(pCommandList, iContextIdx, m_pTexDescriptorHeap, i);
@@ -786,16 +778,25 @@ void CVIMesh::Render_DynamicMesh(ID3D12GraphicsCommandList * pCommandList,
 		Render_Buffer(pCommandList, i);
 	}
 
+	if (m_fDeltaTime > m_fAfterImgMakeTime && m_lstAFAlpha.size() < m_uiAfterImgSize)
+	{
+		m_lstAFAlpha.emplace_back(_rgba(0.f, 0.f, 0.f, 1.f));
+		m_fDeltaTime = 0.0f;
+	}
+
 	if (m_uiAfterImgSize)
 	{
 		for (list<_rgba>::iterator& iterFade = m_lstAFAlpha.begin(); iterFade != m_lstAFAlpha.end();)
 		{
-			(*iterFade).w -= m_fAfterImgSubAlpha;
+			(*iterFade).w -= m_fAfterImgSubAlpha * CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta");
+
 			if (0 > (*iterFade).w)
 			{
-				for(int i=0; i< m_vecMeshEntry.size(); ++i)
+				for (_int i = 0; i < m_vecMeshEntry.size(); ++i)
 					m_lstAFSkinningMatrix.pop_front();
+
 				iterFade = m_lstAFAlpha.erase(iterFade);
+
 				continue;
 			}
 			else
