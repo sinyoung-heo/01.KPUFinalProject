@@ -29,9 +29,6 @@ HRESULT CWaterMeshObject::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos		= vPos;
 
-	// PipelineState.
-	m_iMeshPipelineStatePass	= 2;
-	m_iShadowPipelineStatePass	= 0;
 
 	return S_OK;
 }
@@ -162,60 +159,6 @@ void CWaterMeshObject::Set_ConstantTable()
 	
 }
 
-void CWaterMeshObject::Set_ConstantTableShadowDepth()
-{
-	/*__________________________________________________________________________________________________________
-	[ Set ConstantBuffer Data ]
-	____________________________________________________________________________________________________________*/
-	//Engine::SHADOW_DESC tShadowDesc = CShadowLightMgr::Get_Instance()->Get_ShadowDesc();
-
-	//Engine::CB_SHADER_SHADOW tCB_ShaderShadow;
-	//ZeroMemory(&tCB_ShaderShadow, sizeof(Engine::CB_SHADER_SHADOW));
-	//tCB_ShaderShadow.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	//tCB_ShaderShadow.matView	= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
-	//tCB_ShaderShadow.matProj	= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
-	//tCB_ShaderShadow.fProjFar	= tShadowDesc.fLightPorjFar;
-
-	//m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
-}
-
-void CWaterMeshObject::Set_ConstantTable(const _int& iContextIdx, const _int& iInstanceIdx)
-{
-	/*__________________________________________________________________________________________________________
-	[ Set ShaderResource Data ]
-	____________________________________________________________________________________________________________*/
-	Engine::SHADOW_DESC tShadowDesc = CShadowLightMgr::Get_Instance()->Get_ShadowDesc();
-
-	m_fDeltatime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.1f;
-	Engine::CB_SHADER_MESH tCB_ShaderMesh;
-	ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
-	tCB_ShaderMesh.matWorld      = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderMesh.matLightView  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
-	tCB_ShaderMesh.matLightProj  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
-	tCB_ShaderMesh.vLightPos     = tShadowDesc.vLightPosition;
-	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
-	tCB_ShaderMesh.fOffset1 = m_fDeltatime;
-	m_pShaderMeshInstancing->Get_UploadBuffer_ShaderMesh(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderMesh);
-}
-
-void CWaterMeshObject::Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int& iInstanceIdx)
-{
-	/*__________________________________________________________________________________________________________
-	[ Set ConstantBuffer Data ]
-	____________________________________________________________________________________________________________*/
-	Engine::SHADOW_DESC tShadowDesc = CShadowLightMgr::Get_Instance()->Get_ShadowDesc();
-
-	
-	Engine::CB_SHADER_SHADOW tCB_ShaderShadow;
-	ZeroMemory(&tCB_ShaderShadow, sizeof(Engine::CB_SHADER_SHADOW));
-	tCB_ShaderShadow.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderShadow.matView	= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
-	tCB_ShaderShadow.matProj	= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
-	tCB_ShaderShadow.fProjFar	= tShadowDesc.fLightPorjFar;
-
-	
-	m_pShaderShadowInstancing->Get_UploadBuffer_ShaderShadow(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderShadow);
-}
 
 HRESULT CWaterMeshObject::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth)
 {

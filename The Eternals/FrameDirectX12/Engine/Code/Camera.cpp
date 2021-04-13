@@ -87,6 +87,9 @@ HRESULT CCamera::Ready_GameObject(const CAMERA_DESC& tCameraInfo,
 	m_pShaderNPathDir = static_cast<CShaderNPathDir*>(m_pComponentMgr->Clone_Component(L"ShaderNPathDir", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pShaderNPathDir, E_FAIL);
 
+	m_pShaderMeshTerrain = static_cast<CShaderMeshTerrain*>(m_pComponentMgr->Clone_Component(L"ShaderMeshTerrain", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pShaderMeshTerrain, E_FAIL);
+
 	m_pShaderColorInstancing    = CShaderColorInstancing::Get_Instance();
 	m_pShaderTextureInstancing	= CShaderTextureInstancing::Get_Instance();
 	m_pShaderMeshInstancing		= CShaderMeshInstancing::Get_Instance();
@@ -166,7 +169,7 @@ void CCamera::Set_ConstantTable()
 
 	// ShaderMesh
 	m_pShaderMesh->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
-
+	m_pShaderMeshTerrain->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 	// ShaderMeshInstancing
 	m_pShaderMeshInstancing->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 
@@ -195,4 +198,5 @@ void CCamera::Free()
 	Safe_Release(m_pShaderMesh);
 	Safe_Release(m_pShaderSSAO);
 	Safe_Release(m_pShaderNPathDir);
+	Safe_Release(m_pShaderMeshTerrain);
 }

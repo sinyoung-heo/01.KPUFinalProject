@@ -3,7 +3,7 @@
 
 namespace Engine
 {
-	class CShaderMesh;
+	class CShaderMeshTerrain;
 	class CMesh;
 }
 
@@ -33,9 +33,7 @@ private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
-	// Instancing
-	void			Set_ConstantTable(const _int& iContextIdx, const _int& iInstancingIdx);
-	void			Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int& iInstanceIdx);
+	
 
 private:
 	/*__________________________________________________________________________________________________________
@@ -45,12 +43,12 @@ private:
 	Engine::CShaderShadowInstancing*	m_pShaderShadowInstancing = nullptr;
 	Engine::CShaderMeshInstancing*		m_pShaderMeshInstancing   = nullptr;
 
+	Engine::CShaderMeshTerrain* m_pShaderCom = nullptr;
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
 	wstring			m_wstrMeshTag		       = L"";
-	_uint			m_iMeshPipelineStatePass   = 0;
-	_uint			m_iShadowPipelineStatePass = 0;
+	
 	float m_fDeltatime = 0.f;
 	float m_fDeltatime2 = 0.f;
 	float m_fDeltatime3 = 0.f;
