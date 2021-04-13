@@ -44,7 +44,6 @@ namespace Gladiator
 	const _uint COMBO2_MOVE_STOP = 20;
 	const _uint COMBO3_MOVE_STOP = 15;
 	const _uint COMBO4_MOVE_STOP = 30;
-
 	const _uint COMBO1_TRAIL_START = 12;
 	const _uint COMBO1_TRAIL_STOP  = 28;
 	const _uint COMBO2_TRAIL_START = 13;
@@ -74,4 +73,27 @@ namespace Gladiator
 	const _uint GAIA_CRUSH2_MOVE_STOP    = 12;
 	const _uint DRAW_SWORD_MOVE_START    = 4;
 	const _uint DRAW_SWORD_MOVE_STOP     = 18;
+
+	const _uint STINGER_BLADE_TRAIL_START  = 15;
+	const _uint STINGER_BLADE_TRAIL_STOP   = 70;
+	const _uint CUTTING_SLASH_TRAIL_START  = 30;
+	const _uint CUTTING_SLASH_TRAIL_STOP   = 42;
+	const _uint JAW_BREAKER_TRAIL_START    = 8;
+	const _uint JAW_BREAKER_TRAIL_STOP     = 27;
+	const _uint CUT_HEAD_TRAIL_START       = 25;
+	const _uint CUT_HEAD_TRAIL_STOP        = 70;
+	const _uint WIND_CUTTER1_TRAIL_START   = 6;
+	const _uint WIND_CUTTER1_TRAIL_STOP    = 16;
+	const _uint WIND_CUTTER2_TRAIL_START   = 4;
+	const _uint WIND_CUTTER2_TRAIL_STOP    = 16;
+	const _uint WIND_CUTTER3_TRAIL_START   = 10;
+	const _uint WIND_CUTTER3_TRAIL_STOP    = 36;
+	const _uint GAIA_CRUSH1_TRAIL_START    = 16;
+	const _uint GAIA_CRUSH1_TRAIL_STOP     = 999;
+	const _uint GAIA_CRUSH2_TRAIL_START    = 0;
+	const _uint GAIA_CRUSH2_TRAIL_STOP     = 40;
+	const _uint DRAW_SWORD_TRAIL_START     = 8;
+	const _uint DRAW_SWORD_TRAIL_STOP      = 999;
+	const _uint DRAW_SWORD_END_TRAIL_START = 0;
+	const _uint DRAW_SWORD_END_TRAIL_STOP  = 50;
 }

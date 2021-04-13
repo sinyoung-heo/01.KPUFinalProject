@@ -81,7 +81,8 @@ _int CPCWeaponTwoHand::Update_GameObject(const _float& fTimeDelta)
 	if (nullptr != m_pTrail)
 	{
 		m_pBoundingBoxCom->Update_Component(fTimeDelta);
-		_vec3 vMin = _vec3(matSkinngingTransform._41, matSkinngingTransform._42, matSkinngingTransform._43);
+		//_vec3 vMin = _vec3(matSkinngingTransform._41, matSkinngingTransform._42, matSkinngingTransform._43);
+		_vec3 vMin = _vec3(m_pBoundingBoxCom->Get_BottomPlaneCenter());
 		_vec3 vMax = _vec3(m_pBoundingBoxCom->Get_TopPlaneCenter());
 		m_pTrail->SetUp_TrailByCatmullRom(&vMin, &vMax);
 	}

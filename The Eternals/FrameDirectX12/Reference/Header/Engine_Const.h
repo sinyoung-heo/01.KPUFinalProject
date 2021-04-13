@@ -17,5 +17,5 @@ namespace Engine
 
 	const _int	MAX_PALETTE			= 128;
 
-	const _uint TRAIL_SIZE = 25;
+	const _uint TRAIL_SIZE = (3 * 9) + 1;
 }

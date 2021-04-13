@@ -72,6 +72,7 @@ private:
 	void SetUp_AttackMove(const _uint& uiComboCnt, const _uint& uiAniIdx, const _uint& uiStartTick, const _uint& uiStopTick, const _float& fMoveSpeed, const _float& fStopSpeed);
 	void SetUp_AttackMove(const _uint& uiAniIdx, const _uint& uiStartTick, const _uint& uiStopTick, const _float& fMoveSpeed, const _float& fStopSpeed);
 	void SetUp_AttackTrail(const _uint& uiComboCnt, const _uint& uiAniIdx, const _uint& uiStartTick, const _uint& uiStopTick);
+	void SetUp_AttackTrail(const _uint& uiAniIdx, const _uint& uiStartTick, const _uint& uiStopTick);
 	void SetUp_WeaponRHand();
 	void SetUp_WeaponLHand();
 	void SetUp_WeaponBack();
