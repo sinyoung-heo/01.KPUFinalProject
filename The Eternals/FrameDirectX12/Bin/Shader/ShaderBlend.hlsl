@@ -133,8 +133,15 @@ float4 PS_FINAL(VS_OUT ps_input) : SV_TARGET
     //50 : 1000 = 1600 : 650
     //50 : 1000 = 900 : 
   
-    float4 SkyBox = g_TexSkyBox.Sample(g_samLinearWrap, ps_input.TexUV) * (1 - Depth.b);
-   
+    //SkyDistortion
+    vector vDistortionInfo = g_TexDistortion.Sample(g_samLinearWrap, ps_input.TexUV);
+    float2 vDistortion = (vDistortionInfo.xy * 2.f) - 1.f;
+    vDistortion *= 0.05f; //°­µµ
+    float2 TexUV = float2(ps_input.TexUV.x + vDistortion.x * vDistortionInfo.b, ps_input.TexUV.y + vDistortion.y * vDistortionInfo.b);
+    TexUV = saturate(TexUV);
+    float4 SkyBox = g_TexSkyBox.Sample(g_samLinearWrap, TexUV) * (1 - Depth.b);
+    //
+    
     float2 vGausTexUV = float2(0, 0);
     if (ViewZ > 0.05f && fDepthOfField){ for (int i = 0; i < 13; i++){
             vGausTexUV.x = ps_input.TexUV.x + (g_fOffSet[i]) / (3200.f - ViewZ *2000.f );

@@ -93,8 +93,8 @@ void CWaterMeshObject::Render_GameObject(const _float& fTimeDelta,
 	if (m_fPatternMapDeltatime > 133.f)
 		m_fPatternMapDeltatime = 123.f;
 	m_fNormalMapDeltatime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 15.f;
-	if (m_fNormalMapDeltatime > 120.f)
-		m_fNormalMapDeltatime = 0.f;
+	if (m_fNormalMapDeltatime > 123.f)
+		m_fNormalMapDeltatime = 3.f;
 	m_pMeshCom->Render_WaterMesh(pCommandList, iContextIdx, m_pShaderCom, m_pDescriptorHeaps, (_int)m_fNormalMapDeltatime, (_int)m_fPatternMapDeltatime);
 }
 
@@ -153,7 +153,7 @@ void CWaterMeshObject::Set_ConstantTable()
 	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
 	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
 	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
-	tCB_ShaderMesh.fDeltaTime = sin(m_fDeltatime3);
+	tCB_ShaderMesh.fDissolve = sin(m_fDeltatime3);
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 
 

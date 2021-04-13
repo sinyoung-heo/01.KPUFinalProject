@@ -6,7 +6,7 @@
 #include "LightMgr.h"
 #include "DynamicCamera.h"
 #include "RenderTarget.h"
-
+#include "TimeMgr.h"
 
 CTerrainMeshObject::CTerrainMeshObject(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -32,7 +32,7 @@ HRESULT CTerrainMeshObject::Ready_GameObject(wstring wstrMeshTag,
 	// PipelineState.
 	m_iMeshPipelineStatePass	= 2;
 	m_iShadowPipelineStatePass	= 0;
-
+	m_fDeltatime2 = 4.f;
 	return S_OK;
 }
 
@@ -157,8 +157,16 @@ void CTerrainMeshObject::Set_ConstantTable(const _int& iContextIdx, const _int& 
 	tCB_ShaderMesh.matLightProj  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
 	tCB_ShaderMesh.vLightPos     = tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
-
+	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.005f;
+	m_fDeltatime2 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
+	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
+	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
+	tCB_ShaderMesh.fOffset2 = 0.5+m_fDeltatime2;
+	tCB_ShaderMesh.fDissolve = sin(m_fDeltatime3);
 	m_pShaderMeshInstancing->Get_UploadBuffer_ShaderMesh(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderMesh);
+
+	if (m_fDeltaTime > 1.f)
+		m_fDeltaTime = 0.f;
 }
 
 void CTerrainMeshObject::Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int& iInstanceIdx)
@@ -174,7 +182,6 @@ void CTerrainMeshObject::Set_ConstantTableShadowDepth(const _int& iContextIdx, c
 	tCB_ShaderShadow.matView	= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
 	tCB_ShaderShadow.matProj	= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
 	tCB_ShaderShadow.fProjFar	= tShadowDesc.fLightPorjFar;
-
 	m_pShaderShadowInstancing->Get_UploadBuffer_ShaderShadow(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderShadow);
 }
 

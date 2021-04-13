@@ -14,6 +14,7 @@ Texture|EffectSpriteTexture|Fire
 Texture|EffectSpriteTexture|Torch
 Texture|Environment|SkyBox
 Texture|Environment|Terrain
+Texture|Environment|WaterFall
 Texture|Environment|WaterNormal
 Texture|UI|S1UI_CharacterWindow
 Texture|UI|S1UI_Chat

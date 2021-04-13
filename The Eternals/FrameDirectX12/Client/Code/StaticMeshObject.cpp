@@ -7,7 +7,7 @@
 #include "TimeMgr.h"
 #include "DynamicCamera.h"
 #include "RenderTarget.h"
-
+#include "ShaderMgr.h"
 
 CStaticMeshObject::CStaticMeshObject(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -238,6 +238,8 @@ void CStaticMeshObject::Set_ConstantTableShadowDepth(const _int& iContextIdx, co
 	tCB_ShaderShadow.matProj	= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
 	tCB_ShaderShadow.fProjFar	= tShadowDesc.fLightPorjFar;
 
+
+	tCB_ShaderShadow.fOffset1 = Engine::CShaderMgr::Get_Instance()->Get_ShaderInfo().TreeAlphaTest;
 	m_pShaderShadowInstancing->Get_UploadBuffer_ShaderShadow(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderShadow);
 }
 

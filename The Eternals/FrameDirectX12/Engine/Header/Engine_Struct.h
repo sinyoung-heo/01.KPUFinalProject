@@ -847,7 +847,7 @@ namespace Engine
 		_float ToneMapping;
 		_float Distortion;
 		_float Specular;
-		_float Offset2;
+		_float TreeAlphaTest;
 		_float Offset3;
 	}CB_SHADER_INFORMATION;
 	// Shader Shadow

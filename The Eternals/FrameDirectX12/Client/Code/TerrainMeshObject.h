@@ -51,7 +51,9 @@ private:
 	wstring			m_wstrMeshTag		       = L"";
 	_uint			m_iMeshPipelineStatePass   = 0;
 	_uint			m_iShadowPipelineStatePass = 0;
-
+	float m_fDeltatime = 0.f;
+	float m_fDeltatime2 = 0.f;
+	float m_fDeltatime3 = 0.f;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

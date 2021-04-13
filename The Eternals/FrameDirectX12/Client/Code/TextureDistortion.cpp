@@ -63,7 +63,7 @@ _int CTextureDistortion::Update_GameObject(const _float & fTimeDelta)
 	_vec3 Dir = (*m_pParentPosition) - Src;
 	Dir.y = 0.f;
 	Dir.Normalize();
-	m_pTransCom->m_vPos = (*m_pParentPosition) + Dir * 2.f;
+	m_pTransCom->m_vPos = (*m_pParentPosition) + Dir;
 	/*__________________________________________________________________________________________________________
 	[ Update Sprite Frame ]
 	____________________________________________________________________________________________________________*/

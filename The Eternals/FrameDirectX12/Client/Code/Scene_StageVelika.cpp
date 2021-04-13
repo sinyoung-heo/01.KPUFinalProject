@@ -16,6 +16,7 @@
 #include "SkyBox.h"
 #include "TerrainMeshObject.h"
 #include "WaterMeshObject.h"
+#include "WaterFall.h"
 #include "GameUIRoot.h"
 #include "GameUIChild.h"
 #include "CharacterHpGauge.h"
@@ -228,16 +229,16 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 
 	pGameObj = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
 		L"BumpDesertMesh00",
-		_vec3(0.175f),
-		_vec3(90.0f, 0.0f, 0.0f),
+		_vec3(0.145f),
+		_vec3(90.0f, 40.0f, 0.0f),
 		_vec3(128.0f, 0.01f, 128.0f));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpDesertMesh00", pGameObj), E_FAIL); 
 
 	pGameObj = CWaterMeshObject::Create(m_pGraphicDevice, m_pCommandList,
 		L"BumpWaterMesh00",
-		_vec3(0.075f),
-		_vec3(90.0f, 40.0f, 0.0f),
-		_vec3(256.0f , 5.1f, 300.0f));
+		_vec3(0.145f),
+		_vec3(90.f, 40.0f, 0.0f),
+		_vec3(256.0f , 0.7f, 276.0f));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpWaterMesh00", pGameObj), E_FAIL);
 	
 	///*__________________________________________________________________________________________________________
@@ -297,7 +298,7 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 
 	//
 
-	wifstream fin2{ L"../../Bin/ToolData/StageBeach3.staticmesh" };
+	wifstream fin2{ L"../../Bin/ToolData/StageBeach4.staticmesh" };
 	if (fin2.fail())
 		return E_FAIL;
 
@@ -326,16 +327,27 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 		if (fin2.eof())
 			break;
 
-		pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-			wstrMeshTag,			// MeshTag
-			vScale,				// Scale
-			vAngle,				// Angle
-			vPos,					// Pos
-			bIsRenderShadow,		// Render Shadow
-			bIsCollision,			// Bounding Sphere
-			vBoundingSphereScale,	// Bounding Sphere Scale
-			vBoundingSpherePos);	// Bounding Sphere Pos
-
+		if (wstrMeshTag.find(L"WaterFall") != wstring::npos)
+		{
+			pGameObj = CWaterFall::Create(m_pGraphicDevice, m_pCommandList,
+				wstrMeshTag,			// MeshTag
+				vScale,				// Scale
+				vAngle,				// Angle
+				vPos					// Pos
+				);	// Bounding Sphere Pos
+		}
+		else
+		{
+			pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+				wstrMeshTag,			// MeshTag
+				vScale,				// Scale
+				vAngle,				// Angle
+				vPos,					// Pos
+				bIsRenderShadow,		// Render Shadow
+				bIsCollision,			// Bounding Sphere
+				vBoundingSphereScale,	// Bounding Sphere Scale
+				vBoundingSpherePos);	// Bounding Sphere Pos
+		}
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", wstrMeshTag, pGameObj), E_FAIL);
 	}
 	//
@@ -343,27 +355,35 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ Popori_F ]
 	____________________________________________________________________________________________________________*/
-	//pGameObj =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
-	//							  L"PoporiR27Gladiator",		// MeshTag
-	//							  L"StageVelika_NaviMesh",		// NaviMeshTag
-	//							  _vec3(0.05f, 0.05f, 0.05f),	// Scale
-	//							  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-	//							  _vec3(120.0f, 0.f, 75.0f));	// Pos
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"ThisPlayer", pGameObj), E_FAIL);
+	pGameObj =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
+								  L"PoporiR27Gladiator",		// MeshTag
+								  L"StageVelika_NaviMesh",		// NaviMeshTag
+								  _vec3(0.05f, 0.05f, 0.05f),	// Scale
+								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+								  _vec3(120.0f, 0.f, 75.0f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"ThisPlayer", pGameObj), E_FAIL);
 
 
 	/*__________________________________________________________________________________________________________
 	[ TexEffect ]
 	____________________________________________________________________________________________________________*/
-	//// Fire
-	//pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-	//								  L"Fire",						// TextureTag
-	//								  _vec3(2.5f, 2.5f, 1.0f),		// Scale
-	//								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-	//								  _vec3(26.0f, 1.5f, 26.5f),	// Pos
-	//								  FRAME(8, 8, 64.0f));			// Sprite Image Frame
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TexEffect", pGameObj), E_FAIL);
+	// Torch
+	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+		L"Torch",						// TextureTag
+		_vec3(2.5f, 2.5f, 1.0f),		// Scale
+		_vec3(0.0f, 0.0f, 0.0f),		// Angle
+		_vec3(82.9f, 0.0f, 149.7f),	// Pos
+		FRAME(8, 8, 64.0f));			// Sprite Image Frame
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Torch", pGameObj), E_FAIL);
 
+	// Torch
+	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+		L"Torch",						// TextureTag
+		_vec3(2.5f, 4.5f, 1.0f),		// Scale
+		_vec3(0.0f, 0.0f, 0.0f),		// Angle
+		_vec3(80.6F, 2.0f, 157.75f),	// Pos
+		FRAME(8, 8, 64.0f));			// Sprite Image Frame
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Torch", pGameObj), E_FAIL);
 	//// Torch
 	//pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
 	//								  L"Torch",						// TextureTag
@@ -816,6 +836,11 @@ HRESULT CScene_StageVelika::Ready_LightInfo()
 			>> fFovY						// ShadowLight FovY
 			>> fFar;						// ShadowLight Far
 
+
+		//vLightAt.x += tDirLightInfo.Direction.x * 600.f;
+		//vLightAt.y += tDirLightInfo.Direction.y * 600.f;
+		//vLightAt.z += tDirLightInfo.Direction.z * 600.f;
+		//fHeight -= 600;
 		if (fin.eof())
 			break;
 
