@@ -250,6 +250,9 @@
     <Filter Include="02.GameObject\05.Monster\05.GiantMonkey">
       <UniqueIdentifier>{632a9c57-7803-4c3f-8918-3d76c1f4aa9c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.Monster\06.CraftyArachne">
+      <UniqueIdentifier>{53d529ed-bf47-47fa-bbe1-0542401ebe4e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -492,6 +495,9 @@
     <ClInclude Include="..\Code\GiantMonkey.h">
       <Filter>02.GameObject\05.Monster\05.GiantMonkey</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\CraftyArachne.h">
+      <Filter>02.GameObject\05.Monster\06.CraftyArachne</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -688,6 +694,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\GiantMonkey.cpp">
       <Filter>02.GameObject\05.Monster\05.GiantMonkey</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CraftyArachne.cpp">
+      <Filter>02.GameObject\05.Monster\06.CraftyArachne</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

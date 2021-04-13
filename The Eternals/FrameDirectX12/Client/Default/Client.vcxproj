@@ -176,6 +176,7 @@
     <ClInclude Include="..\Code\CharacterMpGauge.h" />
     <ClInclude Include="..\Code\CloderA.h" />
     <ClInclude Include="..\Code\Crab.h" />
+    <ClInclude Include="..\Code\CraftyArachne.h" />
     <ClInclude Include="..\Code\DrownedSailor.h" />
     <ClInclude Include="..\Code\EffectTrail.h" />
     <ClInclude Include="..\Code\GiantBeetle.h" />
@@ -251,6 +252,7 @@
     <ClCompile Include="..\Code\CharacterMpGauge.cpp" />
     <ClCompile Include="..\Code\CloderA.cpp" />
     <ClCompile Include="..\Code\Crab.cpp" />
+    <ClCompile Include="..\Code\CraftyArachne.cpp" />
     <ClCompile Include="..\Code\DrownedSailor.cpp" />
     <ClCompile Include="..\Code\EffectTrail.cpp" />
     <ClCompile Include="..\Code\GameUIChild.cpp" />

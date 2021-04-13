@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "GiantMonkey.h"
+#include "CraftyArachne.h"
 
 #include "GraphicDevice.h"
 #include "DirectInput.h"
@@ -9,14 +9,14 @@
 #include "RenderTarget.h"
 #include "TimeMgr.h"
 
-CGiantMonkey::CGiantMonkey(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CCraftyArachne::CCraftyArachne(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pPacketMgr(CPacketMgr::Get_Instance())
 	, m_pServerMath(CServerMath::Get_Instance())
 {
 }
 
-HRESULT CGiantMonkey::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
+HRESULT CCraftyArachne::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag, wstrNaviMeshTag), E_FAIL);
@@ -38,12 +38,12 @@ HRESULT CGiantMonkey::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMesh
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
-	m_iCurAnim = GiantMonkey::A_WAIT;
+	m_iCurAnim = CraftyArachne::A_WAIT;
 
 	return S_OK;
 }
 
-HRESULT CGiantMonkey::LateInit_GameObject()
+HRESULT CCraftyArachne::LateInit_GameObject()
 {
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
@@ -52,7 +52,7 @@ HRESULT CGiantMonkey::LateInit_GameObject()
 	return S_OK;
 }
 
-_int CGiantMonkey::Update_GameObject(const _float& fTimeDelta)
+_int CCraftyArachne::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
@@ -84,7 +84,7 @@ _int CGiantMonkey::Update_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CGiantMonkey::LateUpdate_GameObject(const _float& fTimeDelta)
+_int CCraftyArachne::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
@@ -96,23 +96,23 @@ _int CGiantMonkey::LateUpdate_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-void CGiantMonkey::Send_PacketToServer()
+void CCraftyArachne::Send_PacketToServer()
 {
 }
 
-void CGiantMonkey::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
+void CCraftyArachne::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
 	Set_ConstantTable();
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
-void CGiantMonkey::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
+void CCraftyArachne::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
 	Set_ConstantTableShadowDepth();
 	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 }
 
-HRESULT CGiantMonkey::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
+HRESULT CCraftyArachne::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -145,7 +145,7 @@ HRESULT CGiantMonkey::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag
 	return S_OK;
 }
 
-void CGiantMonkey::Set_ConstantTable()
+void CCraftyArachne::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -168,7 +168,7 @@ void CGiantMonkey::Set_ConstantTable()
 		m_fDeltaTime = 0.f;
 }
 
-void CGiantMonkey::Set_ConstantTableShadowDepth()
+void CCraftyArachne::Set_ConstantTableShadowDepth()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -186,7 +186,7 @@ void CGiantMonkey::Set_ConstantTableShadowDepth()
 
 }
 
-void CGiantMonkey::SetUp_AngleInterpolation(const _float& fTimeDelta)
+void CCraftyArachne::SetUp_AngleInterpolation(const _float& fTimeDelta)
 {
 	if (m_tAngleInterpolationDesc.is_start_interpolation)
 	{
@@ -203,7 +203,7 @@ void CGiantMonkey::SetUp_AngleInterpolation(const _float& fTimeDelta)
 	}
 }
 
-void CGiantMonkey::Active_Monster(const _float& fTimeDelta)
+void CCraftyArachne::Active_Monster(const _float& fTimeDelta)
 {
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 	m_pTransCom->m_vDir.Normalize();
@@ -218,142 +218,99 @@ void CGiantMonkey::Active_Monster(const _float& fTimeDelta)
 	}
 }
 
-void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
+void CCraftyArachne::Change_Animation(const _float& fTimeDelta)
 {
 	if (m_pMeshCom->Is_BlendingComplete())
 	{
 		switch (m_iCurAnim)
 		{
 
-		case GiantMonkey::A_WAIT:
+		case CraftyArachne::A_WAIT:
 		{
 			m_uiAnimIdx = 0;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
 		break;
 
-		case GiantMonkey::A_WALK:
+		case CraftyArachne::A_WALK:
 		{
 			m_uiAnimIdx = 1;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
 		break;
 
-		case GiantMonkey::A_ATTACK_RIGHT:
+		case CraftyArachne::A_ATTACK_POUND:
 		{
 			m_uiAnimIdx = 2;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iCurAnim = GiantMonkey::A_WAIT;
+				m_iCurAnim = CraftyArachne::A_WAIT;
 				m_uiAnimIdx = 0;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
 		break;
 
-		case GiantMonkey::A_ATTACK_LEFT:
+		case CraftyArachne::A_ATTACK_NORMAL:
 		{
 			m_uiAnimIdx = 3;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iCurAnim = GiantMonkey::A_WAIT;
+				m_iCurAnim = CraftyArachne::A_WAIT;
 				m_uiAnimIdx = 0;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
 		break;
 
-		case GiantMonkey::A_ATTACK_STAMP:
+		case CraftyArachne::A_ATTACK_SPIN:
 		{
 			m_uiAnimIdx = 4;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iCurAnim = GiantMonkey::A_WAIT;
+				m_iCurAnim = CraftyArachne::A_WAIT;
 				m_uiAnimIdx = 0;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
 		break;
 
-		case GiantMonkey::A_ATTACK_HOOK:
+		case CraftyArachne::A_ATTACK_FLYSTAMP:
 		{
 			m_uiAnimIdx = 5;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iCurAnim = GiantMonkey::A_WAIT;
+				m_iCurAnim = CraftyArachne::A_WAIT;
 				m_uiAnimIdx = 0;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
 		break;
 
-		case GiantMonkey::A_ATTACK_JUMPING:
+		case CraftyArachne::A_DEATH:
 		{
 			m_uiAnimIdx = 6;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
-			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-			{
-				m_iCurAnim = GiantMonkey::A_WAIT;
-				m_uiAnimIdx = 0;
-				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-			}
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)){}
 		}
 		break;
-
-		case GiantMonkey::A_ATTACK_FLYSTAMP:
-		{
-			m_uiAnimIdx = 7;
-			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-
-			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-			{
-				m_iCurAnim = GiantMonkey::A_WAIT;
-				m_uiAnimIdx = 0;
-				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-			}
-		}
-		break;
-
-		case GiantMonkey::A_ATTACK_COMBO:
-		{
-			m_uiAnimIdx = 8;
-			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-
-			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-			{
-				m_iCurAnim = GiantMonkey::A_WAIT;
-				m_uiAnimIdx = 0;
-				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-			}
-		}
-		break;
-
-		case GiantMonkey::A_DEATH:
-		{
-			m_uiAnimIdx = 9;
-			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-
-			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) {}
-		}
-		break;
-
 		}
 	}
 
 }
 
-Engine::CGameObject* CGiantMonkey::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
+Engine::CGameObject* CCraftyArachne::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
 {
-	CGiantMonkey* pInstance = new CGiantMonkey(pGraphicDevice, pCommandList);
+	CCraftyArachne* pInstance = new CCraftyArachne(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, wstrNaviMeshTag, vScale, vAngle, vPos)))
 		Engine::Safe_Release(pInstance);
@@ -361,7 +318,7 @@ Engine::CGameObject* CGiantMonkey::Create(ID3D12Device* pGraphicDevice, ID3D12Gr
 	return pInstance;
 }
 
-void CGiantMonkey::Free()
+void CCraftyArachne::Free()
 {
 	Engine::CGameObject::Free();
 
