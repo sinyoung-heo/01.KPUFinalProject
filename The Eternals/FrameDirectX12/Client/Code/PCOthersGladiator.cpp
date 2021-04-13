@@ -115,7 +115,6 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 
 	SetUp_StanceChange(fTimeDelta);
 
-
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/

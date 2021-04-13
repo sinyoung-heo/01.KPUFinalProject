@@ -51,13 +51,13 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 	/*__________________________________________________________________________________________________________
 	[ Skill KeyInput ]
 	____________________________________________________________________________________________________________*/
-	m_mapSkillKeyInput[L"STINGER_BLADE"]     = DIK_1;
-	m_mapSkillKeyInput[L"CUTTING_SLASH"]     = DIK_2;
-	m_mapSkillKeyInput[L"JAW_BREAKER"]       = DIK_3;
-	m_mapSkillKeyInput[L"CUT_HEAD"]          = DIK_4;
-	m_mapSkillKeyInput[L"WIND_CUTTER"]      = DIK_5;
-	m_mapSkillKeyInput[L"GAIA_CRUSH"]       = DIK_6;
-	m_mapSkillKeyInput[L"DRAW_SWORD"] = DIK_7;
+	m_mapSkillKeyInput[L"STINGER_BLADE"] = DIK_1;
+	m_mapSkillKeyInput[L"CUTTING_SLASH"] = DIK_2;
+	m_mapSkillKeyInput[L"JAW_BREAKER"]   = DIK_3;
+	m_mapSkillKeyInput[L"CUT_HEAD"]      = DIK_4;
+	m_mapSkillKeyInput[L"WIND_CUTTER"]   = DIK_5;
+	m_mapSkillKeyInput[L"GAIA_CRUSH"]    = DIK_6;
+	m_mapSkillKeyInput[L"DRAW_SWORD"]    = DIK_7;
 
 	/*__________________________________________________________________________________________________________
 	[ 선형보간 설정 ]
@@ -590,7 +590,15 @@ void CPCGladiator::KeyInput_StanceChange(const _float& fTimeDelta)
 	}
 
 	// NONE_ATTACK -> ATTACK
-	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) && Gladiator::STANCE_NONEATTACK == m_eStance &&
+	if ((Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) || 
+		Engine::KEY_DOWN(m_mapSkillKeyInput[L"STINGER_BLADE"]) ||
+		Engine::KEY_DOWN(m_mapSkillKeyInput[L"CUTTING_SLASH"]) ||
+		Engine::KEY_DOWN(m_mapSkillKeyInput[L"JAW_BREAKER"]) || 
+		Engine::KEY_DOWN(m_mapSkillKeyInput[L"CUT_HEAD"]) || 
+		Engine::KEY_DOWN(m_mapSkillKeyInput[L"WIND_CUTTER"]) || 
+		Engine::KEY_DOWN(m_mapSkillKeyInput[L"GAIA_CRUSH"]) || 
+		Engine::KEY_DOWN(m_mapSkillKeyInput[L"DRAW_SWORD"])) &&
+		Gladiator::STANCE_NONEATTACK == m_eStance &&
 		m_bIsCompleteStanceChange &&
 		m_uiAnimIdx != Gladiator::IN_WEAPON && m_uiAnimIdx != Gladiator::OUT_WEAPON)
 	{
