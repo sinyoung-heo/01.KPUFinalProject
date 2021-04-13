@@ -38,7 +38,7 @@ HRESULT CGiantMonkey::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMesh
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
-	m_iCurAnim = GiantMonkey::A_WAIT;
+	m_iMonsterStatus = GiantMonkey::A_WAIT;
 
 	return S_OK;
 }
@@ -59,9 +59,6 @@ _int CGiantMonkey::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 	
-	/* Move */
-	Active_Monster(fTimeDelta);
-
 	// Angle Linear Interpolation
 	SetUp_AngleInterpolation(fTimeDelta);
 	
@@ -222,32 +219,33 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 {
 	if (m_pMeshCom->Is_BlendingComplete())
 	{
-		switch (m_iCurAnim)
+		switch (m_iMonsterStatus)
 		{
 
 		case GiantMonkey::A_WAIT:
 		{
-			m_uiAnimIdx = 0;
+			m_uiAnimIdx = GiantMonkey::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
 		break;
 
 		case GiantMonkey::A_WALK:
 		{
-			m_uiAnimIdx = 1;
+			m_uiAnimIdx = GiantMonkey::A_WALK;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
 		break;
 
 		case GiantMonkey::A_ATTACK_RIGHT:
 		{
-			m_uiAnimIdx = 2;
+			m_uiAnimIdx = GiantMonkey::A_ATTACK_RIGHT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iCurAnim = GiantMonkey::A_WAIT;
-				m_uiAnimIdx = 0;
+				m_iMonsterStatus	= GiantMonkey::A_WAIT;
+
+				m_uiAnimIdx			= GiantMonkey::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
@@ -255,13 +253,14 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 
 		case GiantMonkey::A_ATTACK_LEFT:
 		{
-			m_uiAnimIdx = 3;
+			m_uiAnimIdx = GiantMonkey::A_ATTACK_LEFT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iCurAnim = GiantMonkey::A_WAIT;
-				m_uiAnimIdx = 0;
+				m_iMonsterStatus	= GiantMonkey::A_WAIT;
+
+				m_uiAnimIdx			= GiantMonkey::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
@@ -269,13 +268,14 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 
 		case GiantMonkey::A_ATTACK_STAMP:
 		{
-			m_uiAnimIdx = 4;
+			m_uiAnimIdx = GiantMonkey::A_ATTACK_STAMP;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iCurAnim = GiantMonkey::A_WAIT;
-				m_uiAnimIdx = 0;
+				m_iMonsterStatus	= GiantMonkey::A_WAIT;
+
+				m_uiAnimIdx			= GiantMonkey::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
@@ -283,13 +283,14 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 
 		case GiantMonkey::A_ATTACK_HOOK:
 		{
-			m_uiAnimIdx = 5;
+			m_uiAnimIdx = GiantMonkey::A_ATTACK_HOOK;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iCurAnim = GiantMonkey::A_WAIT;
-				m_uiAnimIdx = 0;
+				m_iMonsterStatus	= GiantMonkey::A_WAIT;
+
+				m_uiAnimIdx			= GiantMonkey::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
@@ -297,13 +298,14 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 
 		case GiantMonkey::A_ATTACK_JUMPING:
 		{
-			m_uiAnimIdx = 6;
+			m_uiAnimIdx = GiantMonkey::A_ATTACK_JUMPING;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iCurAnim = GiantMonkey::A_WAIT;
-				m_uiAnimIdx = 0;
+				m_iMonsterStatus	= GiantMonkey::A_WAIT;
+
+				m_uiAnimIdx			= GiantMonkey::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
@@ -311,13 +313,14 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 
 		case GiantMonkey::A_ATTACK_FLYSTAMP:
 		{
-			m_uiAnimIdx = 7;
+			m_uiAnimIdx = GiantMonkey::A_ATTACK_FLYSTAMP;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iCurAnim = GiantMonkey::A_WAIT;
-				m_uiAnimIdx = 0;
+				m_iMonsterStatus	= GiantMonkey::A_WAIT;
+
+				m_uiAnimIdx			= GiantMonkey::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
@@ -325,13 +328,14 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 
 		case GiantMonkey::A_ATTACK_COMBO:
 		{
-			m_uiAnimIdx = 8;
+			m_uiAnimIdx = GiantMonkey::A_ATTACK_COMBO;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iCurAnim = GiantMonkey::A_WAIT;
-				m_uiAnimIdx = 0;
+				m_iMonsterStatus	= GiantMonkey::A_WAIT;
+
+				m_uiAnimIdx			= GiantMonkey::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
@@ -339,7 +343,7 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 
 		case GiantMonkey::A_DEATH:
 		{
-			m_uiAnimIdx = 9;
+			m_uiAnimIdx = GiantMonkey::A_DEATH;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) {}

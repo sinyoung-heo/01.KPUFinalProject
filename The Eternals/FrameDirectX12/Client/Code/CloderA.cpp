@@ -38,7 +38,7 @@ HRESULT CCloderA::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag,
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
-	m_iCurAnim = Cloder::A_WAIT;
+	m_iMonsterStatus = Cloder::A_WAIT;
 
 	return S_OK;
 }
@@ -59,9 +59,6 @@ _int CCloderA::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 	
-	/* Move */
-	Active_Monster(fTimeDelta);
-
 	// Angle Linear Interpolation
 	SetUp_AngleInterpolation(fTimeDelta);
 	
@@ -222,70 +219,78 @@ void CCloderA::Change_Animation(const _float& fTimeDelta)
 {
 	if (m_pMeshCom->Is_BlendingComplete())
 	{
-		switch (m_iCurAnim)
+		switch (m_iMonsterStatus)
 		{
 
 		case Cloder::A_WAIT:
 		{
-			m_uiAnimIdx = 0;
-			m_bIsMoveStop = true;
+			m_uiAnimIdx = Cloder::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
 		break;
 
 		case Cloder::A_WALK:
 		{
-			m_uiAnimIdx = 1;
-			m_bIsMoveStop = false;
+			m_uiAnimIdx = Cloder::A_WALK;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
 		break;
 
 		case Cloder::A_RUN:
 		{
-			m_uiAnimIdx = 2;
-			m_bIsMoveStop = false;
+			m_uiAnimIdx = Cloder::A_RUN;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
 		break;
 
 		case Cloder::A_ATTACK:
 		{
-			m_uiAnimIdx = 3;
-			m_bIsMoveStop = true;
+			m_uiAnimIdx = Cloder::A_ATTACK;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-				m_iCurAnim = Cloder::A_WAIT;
+			{
+				m_iMonsterStatus	= Cloder::A_WAIT;
+
+				m_uiAnimIdx			= Cloder::A_WAIT;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			}
 		}
 		break;
 
 		case Cloder::A_ATTACK_POKE:
 		{
-			m_uiAnimIdx = 4;
-			m_bIsMoveStop = true;
+			m_uiAnimIdx = Cloder::A_ATTACK_POKE;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-				m_iCurAnim = Cloder::A_WAIT;
+			{
+				m_iMonsterStatus	= Cloder::A_WAIT;
+
+				m_uiAnimIdx			= Cloder::A_WAIT;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			}
 		}
 		break;
 
 		case Cloder::A_ATTACK_SWING:
 		{
-			m_uiAnimIdx = 5;
-			m_bIsMoveStop = true;
+			m_uiAnimIdx = Cloder::A_ATTACK_SWING;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-				m_iCurAnim = Cloder::A_WAIT;
+			{
+				m_iMonsterStatus	= Cloder::A_WAIT;
+
+				m_uiAnimIdx			= Cloder::A_WAIT;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			}
 		}
 		break;
 
 		case Cloder::A_DEATH:
 		{
-			m_uiAnimIdx = 6;
-			m_bIsMoveStop = true;
+			m_uiAnimIdx = Cloder::A_DEATH;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) {}

@@ -47,7 +47,7 @@ public:
 	void				Set_OType(const char& chType)							{ m_chO_Type = chType; }
 	void				Set_DeadReckoning(const _vec3& vPos);
 	void				Set_Info(int lev, int hp, int maxHp, int mp, int maxMp, int exp, int maxExp, int att, float spd);
-	void				Set_State(int cur) { m_iCurAnim = cur; }
+	void				Set_State(int cur) { m_iMonsterStatus = cur; }
 	void				Set_Other_direction(_vec3& vDir);
 	float				Set_Other_Angle(_vec3& vDir);
 	
@@ -132,7 +132,7 @@ protected:
 	SERVER
 	__________________________________________________________________________________________________________*/
 	int		m_iSNum				= 0;
-	int		m_iCurAnim			= 0;
+	int		m_iMonsterStatus	= 0;
 	bool	m_bIsMoveStop		= true;
 	bool	m_bIsAttack			= false;
 	char	m_chO_Type			= 0;

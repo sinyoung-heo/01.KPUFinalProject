@@ -62,6 +62,8 @@ private:
 	void	Rush_GiantMonkey(const float& fTimeDelta);
 
 	void	Change_CraftyArachne_Animation(const float& fTimeDelta);
+	void	Chase_CraftyArachne(const float& fTimeDelta);
+	void	Attack_CraftyArachne(const float& fTimeDelta);
 
 private:
 	void	Play_Animation(float fTimeDelta);	

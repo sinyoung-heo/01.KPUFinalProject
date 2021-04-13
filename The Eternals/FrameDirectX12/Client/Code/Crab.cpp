@@ -39,7 +39,7 @@ HRESULT CCrab::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, co
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
-	m_iCurAnim = Crab::A_WAIT;
+	m_iMonsterStatus = Crab::A_WAIT;
 
 	return S_OK;
 }
@@ -60,9 +60,6 @@ _int CCrab::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 	
-	/* Move */
-	Active_Monster(fTimeDelta);
-
 	// Angle Linear Interpolation
 	SetUp_AngleInterpolation(fTimeDelta);
 	
@@ -221,7 +218,7 @@ void CCrab::Active_Monster(const _float& fTimeDelta)
 
 void CCrab::Attack_Moving(const _float& fTimeDelta, const float& fSpd, const bool& bStraight)
 {
-	if (m_iCurAnim != Crab::A_ATTACK) return;
+	if (m_iMonsterStatus != Crab::A_ATTACK) return;
 
 	_vec3 vtempDir = m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 	
@@ -245,37 +242,33 @@ void CCrab::Change_Animation(const _float& fTimeDelta)
 {
 	if (m_pMeshCom->Is_BlendingComplete())
 	{
-		switch (m_iCurAnim)
+		switch (m_iMonsterStatus)
 		{
 
 		case Crab::A_WAIT:
 		{
-			m_uiAnimIdx = 0;
-			m_bIsMoveStop = true;
+			m_uiAnimIdx = Crab::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
 		break;
 
 		case Crab::A_WALK:
 		{
-			m_uiAnimIdx = 1;
-			m_bIsMoveStop = false;
+			m_uiAnimIdx = Crab::A_WALK;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
 		break;
 
 		case Crab::A_RUN:
 		{
-			m_uiAnimIdx = 2;
-			m_bIsMoveStop = false;
+			m_uiAnimIdx = Crab::A_RUN;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
 		break;
 
 		case Crab::A_ATTACK:
 		{
-			m_uiAnimIdx = 3;
-			m_bIsMoveStop = true;
+			m_uiAnimIdx = Crab::A_ATTACK;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			/* Back Step (0~27 tick)*/
@@ -287,18 +280,16 @@ void CCrab::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				/* 공격 애니메이션 중 움직인 위치를 공격 전 위치로 되돌림. */
-				// m_vArrivePos : 공격 시작 위치 (패킷 수신 시 설정)
-				//m_pTransCom->m_vPos = m_pInfoCom->m_vArrivePos;
-				m_iCurAnim = Crab::A_WAIT;
+				m_iMonsterStatus	= Crab::A_WAIT;
+				m_uiAnimIdx			= Crab::A_WAIT;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
 		break;
 
 		case Crab::A_DEATH:
 		{
-			m_uiAnimIdx = 4;
-			m_bIsMoveStop = true;
+			m_uiAnimIdx = Crab::A_DEATH;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) {}

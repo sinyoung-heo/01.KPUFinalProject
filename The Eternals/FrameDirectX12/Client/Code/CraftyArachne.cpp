@@ -38,7 +38,7 @@ HRESULT CCraftyArachne::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMe
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
-	m_iCurAnim = CraftyArachne::A_WAIT;
+	m_iMonsterStatus = CraftyArachne::A_WAIT;
 
 	return S_OK;
 }
@@ -59,9 +59,6 @@ _int CCraftyArachne::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 	
-	/* Move */
-	Active_Monster(fTimeDelta);
-
 	// Angle Linear Interpolation
 	SetUp_AngleInterpolation(fTimeDelta);
 	
@@ -222,32 +219,33 @@ void CCraftyArachne::Change_Animation(const _float& fTimeDelta)
 {
 	if (m_pMeshCom->Is_BlendingComplete())
 	{
-		switch (m_iCurAnim)
+		switch (m_iMonsterStatus)
 		{
 
 		case CraftyArachne::A_WAIT:
 		{
-			m_uiAnimIdx = 0;
+			m_uiAnimIdx = CraftyArachne::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
 		break;
 
 		case CraftyArachne::A_WALK:
 		{
-			m_uiAnimIdx = 1;
+			m_uiAnimIdx = CraftyArachne::A_WALK;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
 		break;
 
 		case CraftyArachne::A_ATTACK_POUND:
 		{
-			m_uiAnimIdx = 2;
+			m_uiAnimIdx = CraftyArachne::A_ATTACK_POUND;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iCurAnim = CraftyArachne::A_WAIT;
-				m_uiAnimIdx = 0;
+				m_iMonsterStatus	= CraftyArachne::A_WAIT;
+
+				m_uiAnimIdx			= CraftyArachne::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
@@ -255,13 +253,14 @@ void CCraftyArachne::Change_Animation(const _float& fTimeDelta)
 
 		case CraftyArachne::A_ATTACK_NORMAL:
 		{
-			m_uiAnimIdx = 3;
+			m_uiAnimIdx = CraftyArachne::A_ATTACK_NORMAL;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iCurAnim = CraftyArachne::A_WAIT;
-				m_uiAnimIdx = 0;
+				m_iMonsterStatus	= CraftyArachne::A_WAIT;
+
+				m_uiAnimIdx			= CraftyArachne::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
@@ -269,13 +268,14 @@ void CCraftyArachne::Change_Animation(const _float& fTimeDelta)
 
 		case CraftyArachne::A_ATTACK_SPIN:
 		{
-			m_uiAnimIdx = 4;
+			m_uiAnimIdx = CraftyArachne::A_ATTACK_SPIN;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iCurAnim = CraftyArachne::A_WAIT;
-				m_uiAnimIdx = 0;
+				m_iMonsterStatus	= CraftyArachne::A_WAIT;
+
+				m_uiAnimIdx			= CraftyArachne::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
@@ -283,13 +283,14 @@ void CCraftyArachne::Change_Animation(const _float& fTimeDelta)
 
 		case CraftyArachne::A_ATTACK_FLYSTAMP:
 		{
-			m_uiAnimIdx = 5;
+			m_uiAnimIdx = CraftyArachne::A_ATTACK_FLYSTAMP;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iCurAnim = CraftyArachne::A_WAIT;
-				m_uiAnimIdx = 0;
+				m_iMonsterStatus	= CraftyArachne::A_WAIT;
+
+				m_uiAnimIdx			= CraftyArachne::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
@@ -297,7 +298,7 @@ void CCraftyArachne::Change_Animation(const _float& fTimeDelta)
 
 		case CraftyArachne::A_DEATH:
 		{
-			m_uiAnimIdx = 6;
+			m_uiAnimIdx = CraftyArachne::A_DEATH;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)){}

@@ -30,7 +30,7 @@ CGameObject::CGameObject(const CGameObject& rhs)
 	, m_UIDepth(rhs.m_UIDepth)
 	, m_bIsAttack(rhs.m_bIsAttack)
 	, m_bIsMoveStop(rhs.m_bIsMoveStop)
-	, m_iCurAnim(0)
+	, m_iMonsterStatus(0)
 {
 }
 

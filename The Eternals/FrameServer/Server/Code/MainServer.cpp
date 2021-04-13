@@ -871,7 +871,7 @@ void Initialize_Monster()
 	/*											SCENE - TEST												 */
 	/* ______________________________________________________________________________________________________*/
 
-	//// TEST MONSTER - crab
+	// TEST MONSTER - crab
 	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
 
 	//if (pNew)
@@ -907,7 +907,7 @@ void Initialize_Monster()
 	//}
 	//else return;
 
-	//// TEST MONSTER - monkey
+	// TEST MONSTER - monkey
 	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
 
 	//if (pNew)
@@ -943,7 +943,7 @@ void Initialize_Monster()
 	//}
 	//else return;
 
-	//// TEST MONSTER - cloder
+	// TEST MONSTER - cloder
 	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
 
 	//if (pNew)
@@ -979,7 +979,7 @@ void Initialize_Monster()
 	//}
 	//else return;
 
-	//// TEST MONSTER - drowned sailor
+	// TEST MONSTER - drowned sailor
 	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
 	//
 	//if (pNew)
@@ -1015,7 +1015,7 @@ void Initialize_Monster()
 	//}
 	//else return;
 
-	//// TEST MONSTER - Giant Beetle
+	// TEST MONSTER - Giant Beetle
 	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
 
 	//if (pNew)
