@@ -68,8 +68,8 @@ _int CLight::Update_Light()
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
-	if (D3DLIGHT_POINT == m_tLightInfo.Type &&
-		CRenderer::Get_Instance()->Get_Frustum().Contains(m_pColliderCom->Get_BoundingInfo()) != DirectX::DISJOINT)
+	if (D3DLIGHT_POINT == m_tLightInfo.Type /*&&
+		CRenderer::Get_Instance()->Get_Frustum().Contains(m_pColliderCom->Get_BoundingInfo()) != DirectX::DISJOINT*/)
 	{
 		m_pColliderCom->Update_Component(0.0f);
 	}
@@ -80,8 +80,8 @@ _int CLight::Update_Light()
 void CLight::Render_Light()
 {
 	// Frustum Culling
-	if (D3DLIGHT_POINT == m_tLightInfo.Type &&
-		CRenderer::Get_Instance()->Get_Frustum().Contains(m_pColliderCom->Get_BoundingInfo()) != DirectX::DISJOINT)
+	if (D3DLIGHT_POINT == m_tLightInfo.Type /*&&
+		CRenderer::Get_Instance()->Get_Frustum().Contains(m_pColliderCom->Get_BoundingInfo()) != DirectX::DISJOINT*/)
 	{
 		/*__________________________________________________________________________________________________________
 		[ Add Instance ]
