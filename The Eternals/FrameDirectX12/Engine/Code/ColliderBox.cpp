@@ -178,19 +178,19 @@ void CColliderBox::Update_Component(const _float & fTimeDelta)
 
 void CColliderBox::Render_Component(const _float & fTimeDelta)
 {
-	Set_ConstantTable();
+	//Set_ConstantTable();
 
-	m_pShaderCom->Begin_Shader();
-	Begin_Buffer();
-	Render_Buffer();
+	//m_pShaderCom->Begin_Shader();
+	//Begin_Buffer();
+	//Render_Buffer();
 
-	///*__________________________________________________________________________________________________________
-	//[ Add Instance ]
-	//____________________________________________________________________________________________________________*/
-	//m_pShaderColorInstancing->Add_Instance(COLOR_BUFFER::BUFFER_BOX, m_uiColorPipelineStatePass);
-	//_uint iInstanceIdx = m_pShaderColorInstancing->Get_InstanceCount(COLOR_BUFFER::BUFFER_BOX, m_uiColorPipelineStatePass) - 1;
+	/*__________________________________________________________________________________________________________
+	[ Add Instance ]
+	____________________________________________________________________________________________________________*/
+	m_pShaderColorInstancing->Add_Instance(COLOR_BUFFER::BUFFER_BOX, m_uiColorPipelineStatePass);
+	_uint iInstanceIdx = m_pShaderColorInstancing->Get_InstanceCount(COLOR_BUFFER::BUFFER_BOX, m_uiColorPipelineStatePass) - 1;
 
-	//Set_ConstantTable(COLOR_BUFFER::BUFFER_BOX, iInstanceIdx);
+	Set_ConstantTable(COLOR_BUFFER::BUFFER_BOX, iInstanceIdx);
 }
 
 void CColliderBox::Begin_Buffer()
