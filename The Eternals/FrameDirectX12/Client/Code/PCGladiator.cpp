@@ -77,29 +77,13 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 	m_eStance   = Gladiator::STANCE_NONEATTACK;
 	m_uiAnimIdx = Gladiator::NONE_ATTACK_IDLE;
 
-	/*__________________________________________________________________________________________________________
-	[ Collider Bone Setting ]
-	____________________________________________________________________________________________________________*/
-	//Engine::SKINNING_MATRIX* pmatSkinning = nullptr;
-	//_matrix* pmatParent = nullptr;
-
-	//// ColliderSphere
-	//pmatSkinning = m_pMeshCom->Find_SkinningMatrix("Bip01-R-Hand");
-	//pmatParent = &(m_pTransCom->m_matWorld);
-	//Engine::NULL_CHECK_RETURN(pmatSkinning, E_FAIL);
-	//m_pColliderSphereCom->Set_SkinningMatrix(pmatSkinning);		// Bone Matrix
-	//m_pColliderSphereCom->Set_ParentMatrix(pmatParent);			// Parent Matrix
-	//m_pColliderSphereCom->Set_Scale(_vec3(3.f, 3.f, 3.f));		// Collider Scale
-	//m_pColliderSphereCom->Set_Radius(m_pTransCom->m_vScale);	// Collider Radius
-
-	//// ColliderBox
-	//pmatSkinning = m_pMeshCom->Find_SkinningMatrix("Bip01-R-Hand");
-	//pmatParent = &(m_pTransCom->m_matWorld);
-	//Engine::NULL_CHECK_RETURN(pmatSkinning, E_FAIL);
-	//m_pColliderBoxCom->Set_SkinningMatrix(pmatSkinning);	// Bone Matrix
-	//m_pColliderBoxCom->Set_ParentMatrix(pmatParent);		// Parent Matrix
-	//m_pColliderBoxCom->Set_Scale(_vec3(3.f, 3.f, 3.f));		// Collider Scale
-	//m_pColliderBoxCom->Set_Extents(m_pTransCom->m_vScale);	// Box Offset From Center
+	// AfterImage
+	m_uiAfterImgSize    = 15;
+	m_fAfterImgMakeTime = 0.2f;
+	m_fAfterSubAlpha    = 0.75f;
+	m_pMeshCom->Set_AfterImgMakeTime(m_fAfterImgMakeTime);
+	m_pMeshCom->Set_AfterImgSize(m_uiAfterImgSize);
+	m_pMeshCom->Set_AfterImgSubAlpha(m_fAfterSubAlpha);
 
 	/*__________________________________________________________________________________________________________
 	[ Font »ý¼º ]
@@ -114,13 +98,16 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 
 HRESULT CPCGladiator::LateInit_GameObject()
 {
-	//DynamicCamera ]
+	// DynamicCamera
 	m_pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
 	Engine::NULL_CHECK_RETURN(m_pDynamicCamera, E_FAIL);
 	m_pDynamicCamera->AddRef();
 
+	// ShadowLight
+	CShadowLightMgr::Get_Instance()->Set_ShadowType(SHADOW_TYPE::SHADOW_TYPE_PLAYER);
+
 	// SetUp Shader ConstantBuffer
-	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
+	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()), m_uiAfterImgSize);
 	m_pShadowCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
 	// Create Weapon
@@ -169,11 +156,15 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
+
+	// AfterImage
+	Make_AfterImage(fTimeDelta);
 
 	return NO_EVENT;
 }
@@ -226,11 +217,50 @@ void CPCGladiator::Send_PacketToServer()
 	}
 }
 
+void CPCGladiator::Render_GameObject(const _float& fTimeDelta)
+{
+	// Render AfterImage
+	if (m_uiAfterImgSize)
+	{
+		m_pShaderCom->Set_PipelineStatePass(5);
+		Render_AfterImage(fTimeDelta);
+	}
+}
+
+void CPCGladiator::Render_AfterImage(const _float& fTimeDelta)
+{
+	auto iter_begin = m_lstAFWorldMatrix.begin();
+	auto iter_end   = m_lstAFWorldMatrix.end();
+
+	auto Alpha_begin = m_lstAFAlpha.begin();
+	auto Alpha_end   = m_lstAFAlpha.end();
+
+	for (_uint i = 0; iter_begin != iter_end; ++i, ++iter_begin)
+	{
+		/*__________________________________________________________________________________________________________
+		[ Set ConstantBuffer Data ]
+		____________________________________________________________________________________________________________*/
+		Engine::CB_SHADER_MESH tCB_ShaderMesh;
+		ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
+		tCB_ShaderMesh.matWorld       = Engine::CShader::Compute_MatrixTranspose(*iter_begin);
+		tCB_ShaderMesh.vAfterImgColor = *Alpha_begin;
+		if (Alpha_begin != Alpha_end)
+			Alpha_begin++;
+
+		m_pShaderCom->Get_UploadBuffer_AFShaderMesh()->CopyData(i, tCB_ShaderMesh);
+
+		// Render Buffer
+		m_pMeshCom->Render_DynamicMeshAfterImage(m_pShaderCom, i);
+
+	}
+}
+
 void CPCGladiator::Render_GameObject(const _float& fTimeDelta, 
 									 ID3D12GraphicsCommandList* pCommandList, 
 									 const _int& iContextIdx)
 {
 	Set_ConstantTable();
+	m_pShaderCom->Set_PipelineStatePass(0);
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
@@ -265,18 +295,6 @@ HRESULT CPCGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag
 	m_pShadowCom->AddRef();
 	Engine::FAILED_CHECK_RETURN(m_pShadowCom->Set_PipelineStatePass(0), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shadow", m_pShadowCom);
-
-	//// Collider - Sphere
-	//m_pColliderSphereCom = static_cast<Engine::CColliderSphere*>(m_pComponentMgr->Clone_Component(L"ColliderSphere", Engine::COMPONENTID::ID_DYNAMIC));
-	//Engine::NULL_CHECK_RETURN(m_pColliderSphereCom, E_FAIL);
-	//m_pColliderSphereCom->AddRef();
-	//m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderSphere", m_pColliderSphereCom);
-
-	//// Collider - Box
-	//m_pColliderBoxCom = static_cast<Engine::CColliderBox*>(m_pComponentMgr->Clone_Component(L"ColliderBox", Engine::COMPONENTID::ID_DYNAMIC));
-	//Engine::NULL_CHECK_RETURN(m_pColliderBoxCom, E_FAIL);
-	//m_pColliderBoxCom->AddRef();
-	//m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderBox", m_pColliderBoxCom);
 
 	// NaviMesh
 	m_pNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(wstrNaviMeshTag, Engine::ID_DYNAMIC));
@@ -563,6 +581,14 @@ void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 			SetUp_AttackTrail(Gladiator::GAIA_CRUSH2, Gladiator::GAIA_CRUSH2_TRAIL_START, Gladiator::GAIA_CRUSH2_TRAIL_STOP);
 			SetUp_AttackTrail(Gladiator::DRAW_SWORD, Gladiator::DRAW_SWORD_TRAIL_START, Gladiator::DRAW_SWORD_TRAIL_STOP);
 			SetUp_AttackTrail(Gladiator::DRAW_SWORD_END, Gladiator::DRAW_SWORD_END_TRAIL_START, Gladiator::DRAW_SWORD_END_TRAIL_STOP);
+
+			// SkillAttack AfterImage
+			SetUp_AttackAfterImage(Gladiator::WIND_CUTTER1, 0, 18, 0.05f, 1.75f);
+			SetUp_AttackAfterImage(Gladiator::WIND_CUTTER2, 0, 10, 0.05f, 1.75f);
+			SetUp_AttackAfterImage(Gladiator::WIND_CUTTER3, 0, 20, 0.05f, 1.75f);
+			SetUp_AttackAfterImage(Gladiator::GAIA_CRUSH1, 5, 99, 0.15f, 1.25f);
+			SetUp_AttackAfterImage(Gladiator::GAIA_CRUSH2, 0, 30, 0.15f, 1.25f);
+			SetUp_AttackAfterImage(Gladiator::DRAW_SWORD, 0, 20, 0.05f, 1.05f);
 
 			AttackMove_OnNaviMesh(fTimeDelta);
 		}
@@ -1232,6 +1258,70 @@ void CPCGladiator::SetUp_WeaponBack()
 	m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("Weapon_Back"));
 }
 
+void CPCGladiator::SetUp_AttackAfterImage(const _uint& uiAnimIdx,
+										  const _uint& uiStartTick,
+										  const _uint& uiStopTick,
+										  const _float& fMakeTime,
+										  const _float& fAlphaSpeed)
+{
+	if (uiAnimIdx == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
+	{
+		if (m_ui3DMax_CurFrame >= uiStartTick && m_ui3DMax_CurFrame < uiStopTick)
+		{
+			if (!m_bIsMakeAfterImage)
+				m_fAfterImgTime = fMakeTime;
+
+			m_bIsMakeAfterImage = true;
+			m_fAfterImgMakeTime = fMakeTime;
+			m_fAfterSubAlpha    = fAlphaSpeed;
+			m_pMeshCom->Set_AfterImgMakeTime(m_fAfterImgMakeTime);
+			m_pMeshCom->Set_AfterImgSubAlpha(m_fAfterSubAlpha);
+		}
+		else if (m_ui3DMax_CurFrame >= uiStopTick)
+		{
+			m_bIsMakeAfterImage = false;
+		}
+	}
+}
+
+void CPCGladiator::Make_AfterImage(const _float& fTimeDelta)
+{
+	if (m_bIsMakeAfterImage)
+	{
+		m_fAfterImgTime += fTimeDelta;
+		if (m_fAfterImgTime > m_fAfterImgMakeTime)
+		{
+			if (m_lstAFWorldMatrix.size() < m_uiAfterImgSize)
+			{
+				m_lstAFWorldMatrix.emplace_back(m_pTransCom->m_matWorld);
+				m_lstAFAlpha.emplace_back(_rgba(0.0f, 0.0f, 0.0f, 1.f));
+				m_pMeshCom->Set_AfterImgTime(m_fAfterImgTime);
+			}
+
+			m_fAfterImgTime = 0.f;
+		}
+	}
+
+	if (m_lstAFWorldMatrix.size())
+	{
+		for (list<_rgba>::iterator& iterFade = m_lstAFAlpha.begin(); iterFade != m_lstAFAlpha.end();)
+		{
+			(*iterFade).w -= m_fAfterSubAlpha * fTimeDelta;
+			//(*iterFade).x -= fTimeDelta;
+			//(*iterFade).y -= fTimeDelta;
+
+			if (0 > (*iterFade).w)
+			{
+				m_lstAFWorldMatrix.pop_front();
+				iterFade = m_lstAFAlpha.erase(iterFade);
+				continue;
+			}
+			else
+				++iterFade;
+		}
+	}
+}
+
 Engine::CGameObject* CPCGladiator::Create(ID3D12Device* pGraphicDevice, 
 										  ID3D12GraphicsCommandList* pCommandList,
 										  wstring wstrMeshTag, 
@@ -1258,8 +1348,6 @@ void CPCGladiator::Free()
 	Engine::Safe_Release(m_pMeshCom);
 	Engine::Safe_Release(m_pShaderCom);
 	Engine::Safe_Release(m_pShadowCom);
-	Engine::Safe_Release(m_pColliderSphereCom);
-	Engine::Safe_Release(m_pColliderBoxCom);
 	Engine::Safe_Release(m_pNaviMeshCom);
 	Engine::Safe_Release(m_pFont);
 }

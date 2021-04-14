@@ -25,16 +25,14 @@ private:
 
 public:
 	// CGameObject을(를) 통해 상속됨
-	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
-									 wstring wstrNaviMeshTag,
-									 const _vec3& vScale,
-									 const _vec3& vAngle,
-									 const _vec3& vPos,
-									 const char& chWeaponType);
+	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, const char& chWeaponType);
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Send_PacketToServer();
+	// SingleThread Rendering.
+	virtual void	Render_GameObject(const _float& fTimeDelta);
+	void			Render_AfterImage(const _float& fTimeDelta);
 	// MultiThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
@@ -45,6 +43,7 @@ private:
 	void			Set_ConstantTableShadowDepth();
 	void			Set_AnimationSpeed();
 	void			Set_BlendingSpeed();
+
 	// KeyInput
 	void Key_Input(const _float& fTimeDelta);
 	void KeyInput_Move(const _float& fTimeDelta);
@@ -76,6 +75,9 @@ private:
 	void SetUp_WeaponRHand();
 	void SetUp_WeaponLHand();
 	void SetUp_WeaponBack();
+	void SetUp_AttackAfterImage(const _uint& uiAnimIdx, const _uint& uiStartTick, const _uint& uiStopTick, const _float& fMakeTime, const _float& fAlphaSpeed);
+
+	void Make_AfterImage(const _float& fTimeDelta);
 
 private:
 	/*__________________________________________________________________________________________________________
@@ -84,8 +86,6 @@ private:
 	Engine::CMesh*				m_pMeshCom           = nullptr;
 	Engine::CShaderMesh*		m_pShaderCom         = nullptr;
 	Engine::CShaderShadow*		m_pShadowCom         = nullptr;
-	Engine::CColliderSphere*	m_pColliderSphereCom = nullptr;
-	Engine::CColliderBox*		m_pColliderBoxCom    = nullptr;
 	Engine::CNaviMesh*			m_pNaviMeshCom       = nullptr;
 
 	/*__________________________________________________________________________________________________________
@@ -105,6 +105,14 @@ private:
 	Engine::LINEAR_INTERPOLATION_DESC<_float> m_tMoveSpeedInterpolationDesc;
 	Engine::LINEAR_INTERPOLATION_DESC<_float> m_tAttackMoveSpeedInterpolationDesc;
 
+	// AfterImage
+	list<_matrix>	m_lstAFWorldMatrix;
+	list<_rgba>		m_lstAFAlpha;
+	_uint			m_uiAfterImgSize    = 0;
+	_float			m_fAfterImgTime     = 0.f;
+	_float			m_fAfterImgMakeTime = 0.f;
+	_float			m_fAfterSubAlpha    = 0.f;
+	_bool			m_bIsMakeAfterImage = false;
 
 	// Server
 	_bool			m_bIsKeyDown   = false;
