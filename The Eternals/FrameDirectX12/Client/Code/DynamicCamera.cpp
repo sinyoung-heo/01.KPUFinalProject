@@ -20,8 +20,11 @@ HRESULT CDynamicCamera::Ready_GameObject(const Engine::CAMERA_DESC& tCameraInfo,
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Engine::CCamera::Ready_GameObject(tCameraInfo, tProjInfo, tOrthoInfo), E_FAIL);
 	
-	m_pTransCom->m_vAngle.x = (CAM_ANGLE_OFFSETMIN_X + CAM_ANGLE_OFFSETMAX_X) / 2.0f;
-	m_pTransCom->m_vAngle.y = 0.0f;
+	//m_pTransCom->m_vAngle.x = (CAM_ANGLE_OFFSETMIN_X + CAM_ANGLE_OFFSETMAX_X) / 2.0f;
+	//m_pTransCom->m_vAngle.y = 0.0f;
+	m_pTransCom->m_vAngle.x = 15.0f;
+	m_pTransCom->m_vAngle.y = 330.0f;
+	m_fDistFromTarget = 6.0f;
 
 	// Font »ý¼º.
 	m_pFont = static_cast<Engine::CFont*>(Engine::CObjectMgr::Get_Instance()->Clone_GameObjectPrototype(L"Font_NetmarbleLight"));

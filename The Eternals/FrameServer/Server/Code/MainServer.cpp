@@ -1193,7 +1193,7 @@ void add_new_client(SOCKET ns)
 		pNew->m_iAtt	= 10;
 		pNew->m_fSpd	= 5.f;
 
-		pNew->m_vPos	= _vec3(143.0f, 0.f, 73.0f);
+		pNew->m_vPos	= _vec3(130.0f, 0.f, 70.0f);
 		pNew->m_vDir	= _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle	= _vec3(0.f, 0.f, 0.f);
 
