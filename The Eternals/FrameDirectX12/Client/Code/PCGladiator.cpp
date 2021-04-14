@@ -77,32 +77,8 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 	m_eStance   = Gladiator::STANCE_NONEATTACK;
 	m_uiAnimIdx = Gladiator::NONE_ATTACK_IDLE;
 
-	/*__________________________________________________________________________________________________________
-	[ Collider Bone Setting ]
-	____________________________________________________________________________________________________________*/
-	//Engine::SKINNING_MATRIX* pmatSkinning = nullptr;
-	//_matrix* pmatParent = nullptr;
-
-	//// ColliderSphere
-	//pmatSkinning = m_pMeshCom->Find_SkinningMatrix("Bip01-R-Hand");
-	//pmatParent = &(m_pTransCom->m_matWorld);
-	//Engine::NULL_CHECK_RETURN(pmatSkinning, E_FAIL);
-	//m_pColliderSphereCom->Set_SkinningMatrix(pmatSkinning);		// Bone Matrix
-	//m_pColliderSphereCom->Set_ParentMatrix(pmatParent);			// Parent Matrix
-	//m_pColliderSphereCom->Set_Scale(_vec3(3.f, 3.f, 3.f));		// Collider Scale
-	//m_pColliderSphereCom->Set_Radius(m_pTransCom->m_vScale);	// Collider Radius
-
-	//// ColliderBox
-	//pmatSkinning = m_pMeshCom->Find_SkinningMatrix("Bip01-R-Hand");
-	//pmatParent = &(m_pTransCom->m_matWorld);
-	//Engine::NULL_CHECK_RETURN(pmatSkinning, E_FAIL);
-	//m_pColliderBoxCom->Set_SkinningMatrix(pmatSkinning);	// Bone Matrix
-	//m_pColliderBoxCom->Set_ParentMatrix(pmatParent);		// Parent Matrix
-	//m_pColliderBoxCom->Set_Scale(_vec3(3.f, 3.f, 3.f));		// Collider Scale
-	//m_pColliderBoxCom->Set_Extents(m_pTransCom->m_vScale);	// Box Offset From Center
-
 	// AfterImage
-	m_uiAfterImgSize    = 10;
+	m_uiAfterImgSize    = 15;
 	m_fAfterImgMakeTime = 0.2f;
 	m_fAfterSubAlpha    = 0.75f;
 	m_pMeshCom->Set_AfterImgMakeTime(m_fAfterImgMakeTime);
@@ -317,18 +293,6 @@ HRESULT CPCGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag
 	Engine::FAILED_CHECK_RETURN(m_pShadowCom->Set_PipelineStatePass(0), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shadow", m_pShadowCom);
 
-	//// Collider - Sphere
-	//m_pColliderSphereCom = static_cast<Engine::CColliderSphere*>(m_pComponentMgr->Clone_Component(L"ColliderSphere", Engine::COMPONENTID::ID_DYNAMIC));
-	//Engine::NULL_CHECK_RETURN(m_pColliderSphereCom, E_FAIL);
-	//m_pColliderSphereCom->AddRef();
-	//m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderSphere", m_pColliderSphereCom);
-
-	//// Collider - Box
-	//m_pColliderBoxCom = static_cast<Engine::CColliderBox*>(m_pComponentMgr->Clone_Component(L"ColliderBox", Engine::COMPONENTID::ID_DYNAMIC));
-	//Engine::NULL_CHECK_RETURN(m_pColliderBoxCom, E_FAIL);
-	//m_pColliderBoxCom->AddRef();
-	//m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderBox", m_pColliderBoxCom);
-
 	// NaviMesh
 	m_pNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(wstrNaviMeshTag, Engine::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);
@@ -444,16 +408,6 @@ void CPCGladiator::Set_BlendingSpeed()
 	}
 	else
 		m_fBlendingSpeed = 0.005f;
-}
-
-void CPCGladiator::Set_AttackAfterImage(const _bool& bIsMakeAfterImage, const _float& fMakeTime, const _float& fAlphaSpeed)
-{
-	m_bIsMakeAfterImage = bIsMakeAfterImage;
-	m_fAfterImgMakeTime = fMakeTime;
-	m_fAfterSubAlpha    = fAlphaSpeed;
-
-	m_pMeshCom->Set_AfterImgMakeTime(m_fAfterImgMakeTime);
-	m_pMeshCom->Set_AfterImgSubAlpha(m_fAfterSubAlpha);
 }
 
 void CPCGladiator::Key_Input(const _float& fTimeDelta)
@@ -624,6 +578,14 @@ void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 			SetUp_AttackTrail(Gladiator::GAIA_CRUSH2, Gladiator::GAIA_CRUSH2_TRAIL_START, Gladiator::GAIA_CRUSH2_TRAIL_STOP);
 			SetUp_AttackTrail(Gladiator::DRAW_SWORD, Gladiator::DRAW_SWORD_TRAIL_START, Gladiator::DRAW_SWORD_TRAIL_STOP);
 			SetUp_AttackTrail(Gladiator::DRAW_SWORD_END, Gladiator::DRAW_SWORD_END_TRAIL_START, Gladiator::DRAW_SWORD_END_TRAIL_STOP);
+
+			// SkillAttack AfterImage
+			SetUp_AttackAfterImage(Gladiator::WIND_CUTTER1, 0, 18, 0.05f, 1.75f);
+			SetUp_AttackAfterImage(Gladiator::WIND_CUTTER2, 0, 10, 0.05f, 1.75f);
+			SetUp_AttackAfterImage(Gladiator::WIND_CUTTER3, 0, 20, 0.05f, 1.75f);
+			SetUp_AttackAfterImage(Gladiator::GAIA_CRUSH1, 5, 99, 0.15f, 1.25f);
+			SetUp_AttackAfterImage(Gladiator::GAIA_CRUSH2, 0, 30, 0.15f, 1.25f);
+			SetUp_AttackAfterImage(Gladiator::DRAW_SWORD, 0, 20, 0.05f, 1.05f);
 
 			AttackMove_OnNaviMesh(fTimeDelta);
 		}
@@ -1293,6 +1255,32 @@ void CPCGladiator::SetUp_WeaponBack()
 	m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("Weapon_Back"));
 }
 
+void CPCGladiator::SetUp_AttackAfterImage(const _uint& uiAnimIdx,
+										  const _uint& uiStartTick,
+										  const _uint& uiStopTick,
+										  const _float& fMakeTime,
+										  const _float& fAlphaSpeed)
+{
+	if (uiAnimIdx == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
+	{
+		if (m_ui3DMax_CurFrame >= uiStartTick && m_ui3DMax_CurFrame < uiStopTick)
+		{
+			if (!m_bIsMakeAfterImage)
+				m_fAfterImgTime = fMakeTime;
+
+			m_bIsMakeAfterImage = true;
+			m_fAfterImgMakeTime = fMakeTime;
+			m_fAfterSubAlpha    = fAlphaSpeed;
+			m_pMeshCom->Set_AfterImgMakeTime(m_fAfterImgMakeTime);
+			m_pMeshCom->Set_AfterImgSubAlpha(m_fAfterSubAlpha);
+		}
+		else if (m_ui3DMax_CurFrame >= uiStopTick)
+		{
+			m_bIsMakeAfterImage = false;
+		}
+	}
+}
+
 void CPCGladiator::Make_AfterImage(const _float& fTimeDelta)
 {
 	if (m_bIsMakeAfterImage)
@@ -1303,7 +1291,7 @@ void CPCGladiator::Make_AfterImage(const _float& fTimeDelta)
 			if (m_lstAFWorldMatrix.size() < m_uiAfterImgSize)
 			{
 				m_lstAFWorldMatrix.emplace_back(m_pTransCom->m_matWorld);
-				m_lstAFAlpha.emplace_back(_rgba(0.f, 0.f, 0.f, 1.f));
+				m_lstAFAlpha.emplace_back(_rgba(0.0f, 0.0f, 0.0f, 1.f));
 				m_pMeshCom->Set_AfterImgTime(m_fAfterImgTime);
 			}
 
@@ -1357,8 +1345,6 @@ void CPCGladiator::Free()
 	Engine::Safe_Release(m_pMeshCom);
 	Engine::Safe_Release(m_pShaderCom);
 	Engine::Safe_Release(m_pShadowCom);
-	Engine::Safe_Release(m_pColliderSphereCom);
-	Engine::Safe_Release(m_pColliderBoxCom);
 	Engine::Safe_Release(m_pNaviMeshCom);
 	Engine::Safe_Release(m_pFont);
 }

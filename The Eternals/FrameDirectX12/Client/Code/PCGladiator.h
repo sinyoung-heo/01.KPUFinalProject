@@ -43,7 +43,6 @@ private:
 	void			Set_ConstantTableShadowDepth();
 	void			Set_AnimationSpeed();
 	void			Set_BlendingSpeed();
-	void			Set_AttackAfterImage(const _bool& bIsMakeAfterImage, const _float& fMakeTime, const _float& fAlphaSpeed);
 
 	// KeyInput
 	void Key_Input(const _float& fTimeDelta);
@@ -76,6 +75,8 @@ private:
 	void SetUp_WeaponRHand();
 	void SetUp_WeaponLHand();
 	void SetUp_WeaponBack();
+	void SetUp_AttackAfterImage(const _uint& uiAnimIdx, const _uint& uiStartTick, const _uint& uiStopTick, const _float& fMakeTime, const _float& fAlphaSpeed);
+
 	void Make_AfterImage(const _float& fTimeDelta);
 
 private:
@@ -85,8 +86,6 @@ private:
 	Engine::CMesh*				m_pMeshCom           = nullptr;
 	Engine::CShaderMesh*		m_pShaderCom         = nullptr;
 	Engine::CShaderShadow*		m_pShadowCom         = nullptr;
-	Engine::CColliderSphere*	m_pColliderSphereCom = nullptr;
-	Engine::CColliderBox*		m_pColliderBoxCom    = nullptr;
 	Engine::CNaviMesh*			m_pNaviMeshCom       = nullptr;
 
 	/*__________________________________________________________________________________________________________
@@ -113,7 +112,7 @@ private:
 	_float			m_fAfterImgTime     = 0.f;
 	_float			m_fAfterImgMakeTime = 0.f;
 	_float			m_fAfterSubAlpha    = 0.f;
-	_bool			m_bIsMakeAfterImage = true;
+	_bool			m_bIsMakeAfterImage = false;
 
 	// Server
 	_bool			m_bIsKeyDown   = false;
