@@ -18,7 +18,7 @@ CRenderer::CRenderer()
 {
 }
 
-_uint CRenderer::Get_RenderLstSize(const RENDERGROUP & eRenderGroup)
+_uint CRenderer::Get_RenderLstSize(const RENDERGROUP& eRenderGroup)
 {
 	if (RENDER_END == eRenderGroup)
 		return 0;
@@ -41,7 +41,7 @@ _bool CRenderer::Get_RenderOnOff(wstring wstrTag)
 	return iter_find->second;
 }
 
-HRESULT CRenderer::Set_CurPipelineState(ID3D12PipelineState * pPipelineState)
+HRESULT CRenderer::Set_CurPipelineState(ID3D12PipelineState* pPipelineState)
 {
 	NULL_CHECK_RETURN(pPipelineState, E_FAIL);
 	m_pCurPipelineState = pPipelineState;
@@ -62,9 +62,9 @@ HRESULT CRenderer::Set_CurPipelineState(ID3D12PipelineState * pPipelineState)
 	return S_OK;
 }
 
-HRESULT CRenderer::Set_CurPipelineState(ID3D12GraphicsCommandList * pCommandList,
-										ID3D12PipelineState * pPipelineState,
-										const _int& iContextIdx)
+HRESULT CRenderer::Set_CurPipelineState(ID3D12GraphicsCommandList* pCommandList,
+	ID3D12PipelineState* pPipelineState,
+	const _int& iContextIdx)
 {
 	NULL_CHECK_RETURN(pPipelineState, E_FAIL);
 	m_arrContextCurPipelineState[iContextIdx] = pPipelineState;
@@ -105,17 +105,17 @@ HRESULT CRenderer::Ready_Renderer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCo
 	m_pCommandList = pCommandList;
 	NULL_CHECK_RETURN(m_pCommandList, E_FAIL);
 
-	m_uiCnt_ShaderFile			= 0;
-	m_uiCnt_PipelineState		= 0;
-	m_uiCnt_SetPipelineState	= 0;
+	m_uiCnt_ShaderFile = 0;
+	m_uiCnt_PipelineState = 0;
+	m_uiCnt_SetPipelineState = 0;
 
 	FAILED_CHECK_RETURN(Ready_ShaderPrototype(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_RenderTarget(), E_FAIL);
 
-	m_mapRenderOnOff[L"RenderTarget"]	= false;
-	m_mapRenderOnOff[L"DebugFont"]		= false;
-	m_mapRenderOnOff[L"Collider"]		= true;
-	m_mapRenderOnOff[L"SectorGrid"]		= true;
+	m_mapRenderOnOff[L"RenderTarget"] = false;
+	m_mapRenderOnOff[L"DebugFont"] = false;
+	m_mapRenderOnOff[L"Collider"] = true;
+	m_mapRenderOnOff[L"SectorGrid"] = true;
 
 	/*__________________________________________________________________________________________________________
 	2020.06.07 MultiThreadRendering
@@ -126,7 +126,7 @@ HRESULT CRenderer::Ready_Renderer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCo
 	return S_OK;
 }
 
-HRESULT CRenderer::Add_Renderer(const RENDERGROUP & eRenderID, CGameObject * pGameObject)
+HRESULT CRenderer::Add_Renderer(const RENDERGROUP& eRenderID, CGameObject* pGameObject)
 {
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	m_RenderList[eRenderID].emplace_back(pGameObject);
@@ -134,7 +134,7 @@ HRESULT CRenderer::Add_Renderer(const RENDERGROUP & eRenderID, CGameObject * pGa
 	return S_OK;
 }
 
-HRESULT CRenderer::Add_Renderer(CComponent * pComponent)
+HRESULT CRenderer::Add_Renderer(CComponent* pComponent)
 {
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_ColliderList.emplace_back(pComponent);
@@ -155,7 +155,7 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	/*__________________________________________________________________________________________________________
 	LoadingThread가 끝나고 나서 쓰레드를 만들어줘야 한다.
 	____________________________________________________________________________________________________________*/
-	if(RENDERID::MULTI_THREAD == eID)
+	if (RENDERID::MULTI_THREAD == eID)
 		Render_MultiThread(fTimeDelta);
 
 	Render_Priority(fTimeDelta);
@@ -174,7 +174,7 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	Render_SSAO();
 	Render_DownSampling();
 	Render_Blur();
-	
+
 	Render_Distortion(fTimeDelta);
 	Render_Blend();						// Target Blend
 	Render_Luminance();					// Luminance(고휘도추출)
@@ -187,7 +187,7 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 
 	// [ Excute CommandList ]
 	FAILED_CHECK_RETURN(CGraphicDevice::Get_Instance()->Render_ExcuteCmdList(), E_FAIL);
-	
+
 	Render_Font(fTimeDelta);			// 11on12 Text Render
 
 	// [ Render End ]
@@ -217,7 +217,7 @@ void CRenderer::Render_Priority(const _float& fTimeDelta)
 		pGameObject->Render_GameObject(fTimeDelta);
 }
 
-void CRenderer::Render_ShadowDepth(const _float & fTimeDelta)
+void CRenderer::Render_ShadowDepth(const _float& fTimeDelta)
 {
 	m_pTargetShadowDepth->SetUp_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
 
@@ -256,14 +256,14 @@ void CRenderer::Render_Blend()
 	{
 		m_bIsSetBlendTexture = true;
 
-		vector<ComPtr<ID3D12Resource>> vecDeferredTarget	= m_pTargetDeferred->Get_TargetTexture();
-		vector<ComPtr<ID3D12Resource>> vecShadeTarget		= m_pTargetLight->Get_TargetTexture();
+		vector<ComPtr<ID3D12Resource>> vecDeferredTarget = m_pTargetDeferred->Get_TargetTexture();
+		vector<ComPtr<ID3D12Resource>> vecShadeTarget = m_pTargetLight->Get_TargetTexture();
 
 		vector<ComPtr<ID3D12Resource>> vecBlurTarget = m_pTargetBlur->Get_TargetTexture();
 		vector<ComPtr<ID3D12Resource>> vecSSAOTarget = m_pTargetSSAO->Get_TargetTexture();
 		vector<ComPtr<ID3D12Resource>> vecDistortionTarget = m_pTargetDistortion->Get_TargetTexture();
 		vector<ComPtr<ID3D12Resource>> vecAverageColorTarget = m_pTargetLuminance[5]->Get_TargetTexture();
-	
+
 
 		vector<ComPtr<ID3D12Resource>> vecBlendTarget;
 		vecBlendTarget.emplace_back(vecDeferredTarget[0]);	// RenderTarget - Diffuse
@@ -346,12 +346,12 @@ void CRenderer::Render_Edge()
 	m_pEdgeBuffer->Begin_Buffer();
 	m_pEdgeBuffer->Render_Buffer();
 	m_pTargetEdge->Release_OnGraphicDevice();
-	
+
 }
 
 void CRenderer::Render_Distortion(const _float& fTimeDelta)
 {
-	sort(m_RenderList[RENDER_DISTORTION].begin(), m_RenderList[RENDER_DISTORTION ].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
+	sort(m_RenderList[RENDER_DISTORTION].begin(), m_RenderList[RENDER_DISTORTION].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
 		{
 			return pSour->Get_DepthOfView() > pDest->Get_DepthOfView();
 		});
@@ -380,7 +380,7 @@ void CRenderer::Render_Luminance()
 		{
 			vecLuminanceTarget.emplace_back(m_pTargetLuminance[i]->Get_TargetTexture()[0]);	// RenderTarget - Blend
 		}
-		for(auto & Shader: m_pLuminanceShader)
+		for (auto& Shader : m_pLuminanceShader)
 			Shader->SetUp_ShaderTexture(vecLuminanceTarget);
 	}
 	for (_int i = 0; i < 6; i++)
@@ -429,7 +429,7 @@ void CRenderer::Render_DownSampling()
 {
 	if (!m_bIsSetDownSamplingTexture)
 	{
-		m_bIsSetDownSamplingTexture = true; 
+		m_bIsSetDownSamplingTexture = true;
 		vector<ComPtr<ID3D12Resource>> vecDeferredTarget = m_pTargetDeferred->Get_TargetTexture();
 		vector<ComPtr<ID3D12Resource>> vecSSAOTarget = m_pTargetSSAO->Get_TargetTexture();
 		vector<ComPtr<ID3D12Resource>> vecNPathDirTarget = m_pTargetNPathDir->Get_TargetTexture();
@@ -441,7 +441,7 @@ void CRenderer::Render_DownSampling()
 		vecDownSamplingTarget.emplace_back(vecSSAOTarget[0]);	// RenderTarget - SSAO
 		vecDownSamplingTarget.emplace_back(vecEdgeTarget[0]);	// RenderTarget - Edge
 		m_pDownSamplingShader->SetUp_ShaderTexture(vecDownSamplingTarget);
-	
+
 	}
 	m_pTargetDownSampling->SetUp_OnGraphicDevice_DownSampling(4);
 	m_pDownSamplingShader->Begin_Shader();
@@ -496,9 +496,9 @@ void CRenderer::Render_SSAO()
 
 void CRenderer::Render_Alpha(const _float& fTimeDelta)
 {
-	sort(m_RenderList[RENDER_ALPHA].begin(), m_RenderList[RENDER_ALPHA].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool 
-		{ 
-			return pSour->Get_DepthOfView() > pDest->Get_DepthOfView(); 
+	sort(m_RenderList[RENDER_ALPHA].begin(), m_RenderList[RENDER_ALPHA].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
+		{
+			return pSour->Get_DepthOfView() > pDest->Get_DepthOfView();
 		});
 
 	for (auto& pGameObject : m_RenderList[RENDER_ALPHA])
@@ -511,7 +511,7 @@ void CRenderer::Render_Alpha(const _float& fTimeDelta)
 void CRenderer::Render_UI(const _float& fTimeDelta)
 {
 	sort(m_RenderList[RENDER_UI].begin(), m_RenderList[RENDER_UI].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
-		{ 
+		{
 			return pSour->Get_UIDepth() > pDest->Get_UIDepth();
 		});
 
@@ -519,7 +519,7 @@ void CRenderer::Render_UI(const _float& fTimeDelta)
 		pGameObject->Render_GameObject(fTimeDelta);
 }
 
-void CRenderer::Render_Collider(const _float & fTimeDelta)
+void CRenderer::Render_Collider(const _float& fTimeDelta)
 {
 	for (auto& pGameObject : m_RenderList[RENDER_COLLIDER])
 		pGameObject->Render_GameObject(fTimeDelta);
@@ -546,7 +546,7 @@ void CRenderer::Render_RenderTarget()
 
 		if (nullptr != m_pTargetLuminance[0])
 		{
-			for(auto & Target: m_pTargetLuminance)
+			for (auto& Target : m_pTargetLuminance)
 				Target->Render_RenderTarget();
 		}
 		if (nullptr != m_pTargetDownSampling)
@@ -574,7 +574,7 @@ void CRenderer::Render_RenderTarget()
 
 }
 
-void CRenderer::Render_Font(const _float & fTimeDelta)
+void CRenderer::Render_Font(const _float& fTimeDelta)
 {
 	if (m_RenderList[RENDER_FONT].empty())
 		return;
@@ -614,6 +614,12 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	pShader = CShaderMesh::Create(m_pGraphicDevice, m_pCommandList);
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderMesh", ID_STATIC, pShader), E_FAIL);
+	++m_uiCnt_ShaderFile;
+
+	// ShaderMeshTerrain
+	pShader = CShaderMeshTerrain::Create(m_pGraphicDevice, m_pCommandList);
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderMeshTerrain", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
 	// ShaderShadow
@@ -674,6 +680,7 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	CShaderShadowInstancing::Get_Instance()->Ready_Shader(m_pGraphicDevice, m_pCommandList);
 	++m_uiCnt_ShaderFile;
 
+
 	// ShaderMeshInstancing
 	CShaderMeshInstancing::Get_Instance()->Ready_Shader(m_pGraphicDevice, m_pCommandList);
 	++m_uiCnt_ShaderFile;
@@ -719,7 +726,7 @@ HRESULT CRenderer::Ready_RenderTarget()
 	m_pTargetLight->Set_TargetClearColor(1, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Specular
 	FAILED_CHECK_RETURN(m_pTargetLight->SetUp_DefaultSetting(TARGETID::TYPE_LIGHTING), E_FAIL);
 
-	m_pTargetLight->Set_TargetRenderPos(_vec3(WIDTH_SECOND, HEIGHT_FIRST , 1.0f));
+	m_pTargetLight->Set_TargetRenderPos(_vec3(WIDTH_SECOND, HEIGHT_FIRST, 1.0f));
 
 	/*__________________________________________________________________________________________________________
 	[ ShadowDepth RenderTarget ]
@@ -750,15 +757,15 @@ HRESULT CRenderer::Ready_RenderTarget()
 
 		FAILED_CHECK_RETURN(m_pTargetLuminance[i]->SetUp_DefaultSetting(), E_FAIL);
 
-		
-		m_pTargetLuminance[i]->Set_TargetRenderScale(_vec3(20.0f,20.0f, 20.0f));
-		m_pTargetLuminance[i]->Set_TargetRenderPos(_vec3(WINCX-20, 20 + i*(40), 1.0f));
+
+		m_pTargetLuminance[i]->Set_TargetRenderScale(_vec3(20.0f, 20.0f, 20.0f));
+		m_pTargetLuminance[i]->Set_TargetRenderPos(_vec3(WINCX - 20, 20 + i * (40), 1.0f));
 
 		m_pLuminanceShader[i] = static_cast<CShaderLuminance*>(m_pComponentMgr->Clone_Component(L"ShaderLuminance", COMPONENTID::ID_STATIC));
 		NULL_CHECK_RETURN(m_pLuminanceShader[i], E_FAIL);
 		FAILED_CHECK_RETURN(m_pLuminanceShader[i]->Set_PipelineStatePass(i), E_FAIL);
 	}
-	
+
 	m_pLuminanceBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pLuminanceBuffer, E_FAIL);
 
@@ -766,14 +773,14 @@ HRESULT CRenderer::Ready_RenderTarget()
 	/*__________________________________________________________________________________________________________
 	[ DownSample RenderTarget ]
 	____________________________________________________________________________________________________________*/
-	m_pTargetDownSampling = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList,4);
+	m_pTargetDownSampling = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 4);
 	NULL_CHECK_RETURN(m_pTargetDownSampling, E_FAIL);
 	m_pTargetDownSampling->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
 	m_pTargetDownSampling->Set_TargetClearColor(1, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
 	m_pTargetDownSampling->Set_TargetClearColor(2, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
 	m_pTargetDownSampling->Set_TargetClearColor(3, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
-	m_pTargetDownSampling->Set_TargetTextureSize(0, WINCX / 4 , WINCY / 4, false);
-	m_pTargetDownSampling->Set_TargetTextureSize(1, WINCX / 4 , WINCY / 4, false);
+	m_pTargetDownSampling->Set_TargetTextureSize(0, WINCX / 4, WINCY / 4, false);
+	m_pTargetDownSampling->Set_TargetTextureSize(1, WINCX / 4, WINCY / 4, false);
 	m_pTargetDownSampling->Set_TargetTextureSize(2, WINCX / 4, WINCY / 4, false);
 	m_pTargetDownSampling->Set_TargetTextureSize(3, WINCX / 4, WINCY / 4, false);
 	FAILED_CHECK_RETURN(m_pTargetDownSampling->SetUp_DefaultSetting(), E_FAIL);
@@ -819,7 +826,7 @@ HRESULT CRenderer::Ready_RenderTarget()
 	m_pSSAOBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pSSAOBuffer, E_FAIL);
 
-	
+
 	//Distortion
 
 	m_pTargetDistortion = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
@@ -834,7 +841,7 @@ HRESULT CRenderer::Ready_RenderTarget()
 	m_pTargetEdgeObject->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
 	FAILED_CHECK_RETURN(m_pTargetEdgeObject->SetUp_DefaultSetting(TARGETID::TYPE_SHADOWDEPTH), E_FAIL);
 	m_pTargetEdgeObject->Set_TargetRenderPos(_vec3(WIDTH_SECOND, HEIGHT_FIFTH, 1.0f));
-	
+
 	//Edge
 	m_pTargetEdge = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
 	NULL_CHECK_RETURN(m_pTargetEdge, E_FAIL);
@@ -853,7 +860,7 @@ HRESULT CRenderer::Ready_RenderTarget()
 	m_pTargetCrossFilter = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 2);
 	NULL_CHECK_RETURN(m_pTargetCrossFilter, E_FAIL);
 	m_pTargetCrossFilter->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R16G16B16A16_UNORM);
-	m_pTargetCrossFilter->Set_TargetClearColor(1, _rgba(1.0f, 1.0f,1.0f, 1.0f), DXGI_FORMAT_R16G16B16A16_UNORM);
+	m_pTargetCrossFilter->Set_TargetClearColor(1, _rgba(1.0f, 1.0f, 1.0f, 1.0f), DXGI_FORMAT_R16G16B16A16_UNORM);
 
 	FAILED_CHECK_RETURN(m_pTargetCrossFilter->SetUp_DefaultSetting(TARGETID::TYPE_SHADOWDEPTH), E_FAIL);
 	m_pTargetCrossFilter->Set_TargetRenderPos(_vec3(WIDTH_THIRD, HEIGHT_SECOND, 1.0f));
@@ -926,26 +933,26 @@ void CRenderer::Create_ThreadContext()
 
 	for (_int i = 0; i < CONTEXT::CONTEXT_END; ++i)
 	{
-		m_hWorkerBeginRender[i]				= CreateEvent(NULL,	// 핸들 상속과 보안 디스크립터.
-														  FALSE,// TRUE면 수동 리셋, FALSE면 자동 리셋 이벤트.
-														  FALSE,// TRUE면 신호, FALSE면 비신호 상태로 시작.
-														  NULL);// 이벤트에 부여할 이름.
-		m_hWorkerFinishShadow[i]			= CreateEvent(NULL, FALSE, FALSE, NULL);
-		m_hWorkerFinishedRenderPriority[i]	= CreateEvent(NULL, TRUE, FALSE, NULL);
+		m_hWorkerBeginRender[i] = CreateEvent(NULL,	// 핸들 상속과 보안 디스크립터.
+			FALSE,// TRUE면 수동 리셋, FALSE면 자동 리셋 이벤트.
+			FALSE,// TRUE면 신호, FALSE면 비신호 상태로 시작.
+			NULL);// 이벤트에 부여할 이름.
+		m_hWorkerFinishShadow[i] = CreateEvent(NULL, FALSE, FALSE, NULL);
+		m_hWorkerFinishedRenderPriority[i] = CreateEvent(NULL, TRUE, FALSE, NULL);
 		m_hWorkerFinishedRenderNoneAlpha[i] = CreateEvent(NULL, FALSE, FALSE, NULL);
 
 		m_tThreadParameter[i].threadIdx = i;
 
 		m_hThreadHandle[i] = reinterpret_cast<HANDLE>(_beginthreadex(nullptr,
-																	 0,
-																	 thread_wrapper::thunk,
-																	 reinterpret_cast<LPVOID>(&m_tThreadParameter[i]),
-																	 0,
-																	 nullptr));
+			0,
+			thread_wrapper::thunk,
+			reinterpret_cast<LPVOID>(&m_tThreadParameter[i]),
+			0,
+			nullptr));
 
-		assert(m_hWorkerBeginRender[i]	!= NULL);
+		assert(m_hWorkerBeginRender[i] != NULL);
 		assert(m_hWorkerFinishShadow[i] != NULL);
-		assert(m_hThreadHandle[i]		!= NULL);
+		assert(m_hThreadHandle[i] != NULL);
 	}
 }
 
@@ -953,25 +960,25 @@ HRESULT CRenderer::Create_ThreadCommandList()
 {
 	for (_int i = 0; i < CONTEXT::CONTEXT_END; ++i)
 	{
-		FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, 
-																	 IID_PPV_ARGS(&m_arrShadowCommandAllocator[i])), 
-																	 E_FAIL);
 		FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,
-																	 IID_PPV_ARGS(&m_arrSceneCommandAllocator[i])),
-																	 E_FAIL);
+			IID_PPV_ARGS(&m_arrShadowCommandAllocator[i])),
+			E_FAIL);
+		FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,
+			IID_PPV_ARGS(&m_arrSceneCommandAllocator[i])),
+			E_FAIL);
 
 		FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommandList(0,
-																D3D12_COMMAND_LIST_TYPE_DIRECT,
-																m_arrShadowCommandAllocator[i],// Associated command allocator
-																m_pCurPipelineState,			// Initial PipelineStateObject
-																IID_PPV_ARGS(&m_arrShadowCommandList[i])),
-																E_FAIL);
+			D3D12_COMMAND_LIST_TYPE_DIRECT,
+			m_arrShadowCommandAllocator[i],// Associated command allocator
+			m_pCurPipelineState,			// Initial PipelineStateObject
+			IID_PPV_ARGS(&m_arrShadowCommandList[i])),
+			E_FAIL);
 		FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommandList(0,
-																D3D12_COMMAND_LIST_TYPE_DIRECT,
-																m_arrSceneCommandAllocator[i],	// Associated command allocator
-																m_pCurPipelineState,			// Initial PipelineStateObject
-																IID_PPV_ARGS(&m_arrSceneCommandList[i])),
-																E_FAIL);
+			D3D12_COMMAND_LIST_TYPE_DIRECT,
+			m_arrSceneCommandAllocator[i],	// Associated command allocator
+			m_pCurPipelineState,			// Initial PipelineStateObject
+			IID_PPV_ARGS(&m_arrSceneCommandList[i])),
+			E_FAIL);
 
 		FAILED_CHECK_RETURN(m_arrShadowCommandList[i]->Close(), E_FAIL);
 		FAILED_CHECK_RETURN(m_arrSceneCommandList[i]->Close(), E_FAIL);
@@ -986,25 +993,25 @@ HRESULT CRenderer::Create_ThreadCommandList()
 	}
 
 	// PreCommandList - ShadowDepth
-	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, 
-																	 IID_PPV_ARGS(&m_pPreShadowCommandAllocator)),
-																	 E_FAIL);
-	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, 
-																	 IID_PPV_ARGS(&m_pEndShadowCommandAllocator)),
-																	 E_FAIL);
+	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,
+		IID_PPV_ARGS(&m_pPreShadowCommandAllocator)),
+		E_FAIL);
+	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,
+		IID_PPV_ARGS(&m_pEndShadowCommandAllocator)),
+		E_FAIL);
 
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommandList(0,
-															D3D12_COMMAND_LIST_TYPE_DIRECT,
-															m_pPreShadowCommandAllocator,	// Associated command allocator
-															m_pCurPipelineState,			// Initial PipelineStateObject
-															IID_PPV_ARGS(&m_pPreShadowCommandList)),
-															E_FAIL);
+		D3D12_COMMAND_LIST_TYPE_DIRECT,
+		m_pPreShadowCommandAllocator,	// Associated command allocator
+		m_pCurPipelineState,			// Initial PipelineStateObject
+		IID_PPV_ARGS(&m_pPreShadowCommandList)),
+		E_FAIL);
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommandList(0,
-															D3D12_COMMAND_LIST_TYPE_DIRECT,
-															m_pEndShadowCommandAllocator,	// Associated command allocator
-															m_pCurPipelineState,			// Initial PipelineStateObject
-															IID_PPV_ARGS(&m_pEndShadowCommandList)),
-															E_FAIL);
+		D3D12_COMMAND_LIST_TYPE_DIRECT,
+		m_pEndShadowCommandAllocator,	// Associated command allocator
+		m_pCurPipelineState,			// Initial PipelineStateObject
+		IID_PPV_ARGS(&m_pEndShadowCommandList)),
+		E_FAIL);
 
 	FAILED_CHECK_RETURN(m_pPreShadowCommandList->Close(), E_FAIL);
 	m_pPreShadowCommandList->SetName(L"COMMANDLIST_MULTITHREAD_PRE_SHADOW");
@@ -1013,25 +1020,25 @@ HRESULT CRenderer::Create_ThreadCommandList()
 
 
 	// PreCommandList - Scene
-	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, 
-																 IID_PPV_ARGS(&m_pPreSceneCommandAllocator)),
-																 E_FAIL);
-	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, 
-																 IID_PPV_ARGS(&m_pEndSceneCommandAllocator)),
-																 E_FAIL);
+	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,
+		IID_PPV_ARGS(&m_pPreSceneCommandAllocator)),
+		E_FAIL);
+	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,
+		IID_PPV_ARGS(&m_pEndSceneCommandAllocator)),
+		E_FAIL);
 
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommandList(0,
-															D3D12_COMMAND_LIST_TYPE_DIRECT,
-															m_pPreSceneCommandAllocator,	// Associated command allocator
-															m_pCurPipelineState,			// Initial PipelineStateObject
-															IID_PPV_ARGS(&m_pPreSceneCommandList)),
-															E_FAIL);
+		D3D12_COMMAND_LIST_TYPE_DIRECT,
+		m_pPreSceneCommandAllocator,	// Associated command allocator
+		m_pCurPipelineState,			// Initial PipelineStateObject
+		IID_PPV_ARGS(&m_pPreSceneCommandList)),
+		E_FAIL);
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateCommandList(0,
-															D3D12_COMMAND_LIST_TYPE_DIRECT,
-															m_pEndSceneCommandAllocator,	// Associated command allocator
-															m_pCurPipelineState,			// Initial PipelineStateObject
-															IID_PPV_ARGS(&m_pEndSceneCommandList)),
-															E_FAIL);
+		D3D12_COMMAND_LIST_TYPE_DIRECT,
+		m_pEndSceneCommandAllocator,	// Associated command allocator
+		m_pCurPipelineState,			// Initial PipelineStateObject
+		IID_PPV_ARGS(&m_pEndSceneCommandList)),
+		E_FAIL);
 
 	FAILED_CHECK_RETURN(m_pPreSceneCommandList->Close(), E_FAIL);
 	m_pPreSceneCommandList->SetName(L"COMMANDLIST_MULTITHREAD_PRE_SCENE");
@@ -1101,8 +1108,8 @@ HRESULT CRenderer::Render_MultiThread(const _float& fTimeDelta)
 		m_pPreShadowCommandList->Close();
 		m_pEndShadowCommandList->Close();
 
-		ID3D12CommandList* ppShadowCommandLists[CONTEXT::CONTEXT_END + 2] = 
-		{ 
+		ID3D12CommandList* ppShadowCommandLists[CONTEXT::CONTEXT_END + 2] =
+		{
 			m_pPreShadowCommandList,
 			m_arrShadowCommandList[CONTEXT::CONTEXT0],
 			m_arrShadowCommandList[CONTEXT::CONTEXT1],
@@ -1119,7 +1126,7 @@ HRESULT CRenderer::Render_MultiThread(const _float& fTimeDelta)
 		____________________________________________________________________________________________________________*/
 		// Begin Render Scene Pass.
 		m_pTargetDeferred->Begin_RenderTargetOnContext(m_pPreSceneCommandList, THREADID::SCENE);
-		
+
 		// Scene이 전부 그려질 때 까지 대기하자. 전부 그려졌으면 명령 제출.
 		WaitForMultipleObjects(CONTEXT::CONTEXT_END, m_hWorkerFinishedRenderNoneAlpha, TRUE, INFINITE);
 
@@ -1130,7 +1137,7 @@ HRESULT CRenderer::Render_MultiThread(const _float& fTimeDelta)
 		m_pPreSceneCommandList->Close();
 		m_pEndSceneCommandList->Close();
 
-		ID3D12CommandList* ppSceneCommandLists[CONTEXT::CONTEXT_END + 2] = 
+		ID3D12CommandList* ppSceneCommandLists[CONTEXT::CONTEXT_END + 2] =
 		{
 			m_pPreSceneCommandList,
 			m_arrSceneCommandList[CONTEXT::CONTEXT0],
@@ -1171,8 +1178,8 @@ void CRenderer::Worker_Thread(_int threadIndex)
 		for (_int i = threadIndex; i < m_RenderList[RENDER_NONALPHA].size(); i += CONTEXT::CONTEXT_END)
 		{
 			m_RenderList[RENDER_NONALPHA][i]->Render_ShadowDepth(CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"),
-																 m_arrShadowCommandList[threadIndex], 
-																 threadIndex);
+				m_arrShadowCommandList[threadIndex],
+				threadIndex);
 		}
 
 		// Render Shadow Instance
@@ -1180,7 +1187,7 @@ void CRenderer::Worker_Thread(_int threadIndex)
 
 		// Submit Shadow Pass.
 		m_arrShadowCommandList[threadIndex]->Close();
-		
+
 		// End Render ShadowDepth.
 		// None-Signal -> Signal
 		SetEvent(m_hWorkerFinishShadow[threadIndex]);
@@ -1199,8 +1206,8 @@ void CRenderer::Worker_Thread(_int threadIndex)
 		for (_int i = threadIndex; i < m_RenderList[RENDER_PRIORITY].size(); i += CONTEXT::CONTEXT_END)
 		{
 			m_RenderList[RENDER_PRIORITY][i]->Render_GameObject(CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"),
-																m_arrSceneCommandList[threadIndex],
-																threadIndex);
+				m_arrSceneCommandList[threadIndex],
+				threadIndex);
 		}
 
 		// None-Signal -> Signal
@@ -1210,9 +1217,9 @@ void CRenderer::Worker_Thread(_int threadIndex)
 		// Start Render NoneAlpha.
 		for (_int i = threadIndex; i < m_RenderList[RENDER_NONALPHA].size(); i += CONTEXT::CONTEXT_END)
 		{
-			m_RenderList[RENDER_NONALPHA][i]->Render_GameObject(CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"), 
-																m_arrSceneCommandList[threadIndex],
-																threadIndex);
+			m_RenderList[RENDER_NONALPHA][i]->Render_GameObject(CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"),
+				m_arrSceneCommandList[threadIndex],
+				threadIndex);
 		}
 
 		// Render Mesh Instance
@@ -1220,7 +1227,7 @@ void CRenderer::Worker_Thread(_int threadIndex)
 
 		// End Scene Pass.
 		m_arrSceneCommandList[threadIndex]->Close();
-	
+
 		// Tell main thread that we are done.
 		// 메인 쓰레드에 우리는 끝났다고 말해라.
 		// None-Signal -> Signal
@@ -1240,7 +1247,7 @@ void CRenderer::Free()
 	Safe_Release(m_pTargetDeferred);
 	Safe_Release(m_pTargetLight);
 	Safe_Release(m_pTargetShadowDepth);
-	
+
 
 	Safe_Release(m_pBlendBuffer);
 	Safe_Release(m_pBlendShader);
@@ -1264,7 +1271,7 @@ void CRenderer::Free()
 	Safe_Release(m_pTargetSSAO);
 	Safe_Release(m_pSSAOShader);
 	Safe_Release(m_pSSAOBuffer);
-	
+
 	Safe_Release(m_pTargetBlend);
 	//Distort
 	Safe_Release(m_pTargetDistortion);

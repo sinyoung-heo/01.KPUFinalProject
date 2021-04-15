@@ -21,7 +21,7 @@ CCamera::CCamera(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pComma
 	ZeroMemory(&tCB_ShaderVariable, sizeof(Engine::CB_SHADER_VARIABLE));
 }
 
-CCamera::CCamera(const CCamera & rhs)
+CCamera::CCamera(const CCamera& rhs)
 	: CGameObject(rhs)
 	, m_tCameraInfo(rhs.m_tCameraInfo)
 	, m_tProjInfo(rhs.m_tProjInfo)
@@ -31,28 +31,28 @@ CCamera::CCamera(const CCamera & rhs)
 
 
 HRESULT CCamera::Ready_GameObject(const CAMERA_DESC& tCameraInfo,
-								  const PROJ_DESC& tProjInfo,
-								  const ORTHO_DESC& tOrthoInfo)
+	const PROJ_DESC& tProjInfo,
+	const ORTHO_DESC& tOrthoInfo)
 {
-	m_tCameraInfo	= tCameraInfo;
-	m_tProjInfo		= tProjInfo;
-	m_tOrthoInfo	= tOrthoInfo;
+	m_tCameraInfo = tCameraInfo;
+	m_tProjInfo = tProjInfo;
+	m_tOrthoInfo = tOrthoInfo;
 
 	/*__________________________________________________________________________________________________________
 	[ 원근 투영 행렬 ]
 	____________________________________________________________________________________________________________*/
 	m_tProjInfo.matProj = XMMatrixPerspectiveFovLH(XMConvertToRadians(m_tProjInfo.fFovY),
-												   m_tProjInfo.fAspect,
-												   m_tProjInfo.fNearZ,
-												   m_tProjInfo.fFarZ);
+		m_tProjInfo.fAspect,
+		m_tProjInfo.fNearZ,
+		m_tProjInfo.fFarZ);
 
 	/*__________________________________________________________________________________________________________
 	[ 직교 투영 행렬 ]
 	____________________________________________________________________________________________________________*/
 	m_tOrthoInfo.matProj = XMMatrixOrthographicLH(m_tOrthoInfo.fWidth,
-												  m_tOrthoInfo.fHeight,
-												  m_tOrthoInfo.fNearZ, 
-												  m_tOrthoInfo.fFarZ);
+		m_tOrthoInfo.fHeight,
+		m_tOrthoInfo.fNearZ,
+		m_tOrthoInfo.fFarZ);
 
 	/*__________________________________________________________________________________________________________
 	[ Set Transform ]
@@ -87,23 +87,26 @@ HRESULT CCamera::Ready_GameObject(const CAMERA_DESC& tCameraInfo,
 	m_pShaderNPathDir = static_cast<CShaderNPathDir*>(m_pComponentMgr->Clone_Component(L"ShaderNPathDir", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pShaderNPathDir, E_FAIL);
 
-	m_pShaderColorInstancing    = CShaderColorInstancing::Get_Instance();
-	m_pShaderTextureInstancing	= CShaderTextureInstancing::Get_Instance();
-	m_pShaderMeshInstancing		= CShaderMeshInstancing::Get_Instance();
+	m_pShaderMeshTerrain = static_cast<CShaderMeshTerrain*>(m_pComponentMgr->Clone_Component(L"ShaderMeshTerrain", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pShaderMeshTerrain, E_FAIL);
+
+	m_pShaderColorInstancing = CShaderColorInstancing::Get_Instance();
+	m_pShaderTextureInstancing = CShaderTextureInstancing::Get_Instance();
+	m_pShaderMeshInstancing = CShaderMeshInstancing::Get_Instance();
 
 	return S_OK;
 }
 
-_int CCamera::Update_GameObject(const _float & fTimeDelta)
+_int CCamera::Update_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
 	[ 뷰 행렬 Update ]
 	____________________________________________________________________________________________________________*/
-	m_tCameraInfo.matView = XMMatrixLookAtLH(m_tCameraInfo.vEye.Get_XMVECTOR(), 
-											 m_tCameraInfo.vAt.Get_XMVECTOR(), 
-											 m_tCameraInfo.vUp.Get_XMVECTOR());
+	m_tCameraInfo.matView = XMMatrixLookAtLH(m_tCameraInfo.vEye.Get_XMVECTOR(),
+		m_tCameraInfo.vAt.Get_XMVECTOR(),
+		m_tCameraInfo.vUp.Get_XMVECTOR());
 
 	/*__________________________________________________________________________________________________________
 	[ 절두체 Update ]
@@ -112,8 +115,8 @@ _int CCamera::Update_GameObject(const _float & fTimeDelta)
 	vDir.Normalize();
 
 	_matrix matFrustumView = XMMatrixLookAtLH(_vec3(m_tCameraInfo.vEye + vDir * 25.0f).Get_XMVECTOR(),
-											  m_tCameraInfo.vAt.Get_XMVECTOR(), 
-											  m_tCameraInfo.vUp.Get_XMVECTOR());
+		m_tCameraInfo.vAt.Get_XMVECTOR(),
+		m_tCameraInfo.vUp.Get_XMVECTOR());
 	_matrix matViewInv;
 	matViewInv = XMMatrixInverse(nullptr, matFrustumView);
 	m_tFrustum.CreateFromMatrix(m_tFrustum, m_tProjInfo.matProj);
@@ -134,17 +137,17 @@ void CCamera::Set_ConstantTable()
 	// 원근 투영 행렬
 	CB_CAMERA_MATRIX tCB_CameraProjMatrix;
 	ZeroMemory(&tCB_CameraProjMatrix, sizeof(CB_CAMERA_MATRIX));
-	tCB_CameraProjMatrix.matView	= CShader::Compute_MatrixTranspose(m_tCameraInfo.matView);
-	tCB_CameraProjMatrix.matProj	= CShader::Compute_MatrixTranspose(m_tProjInfo.matProj);
+	tCB_CameraProjMatrix.matView = CShader::Compute_MatrixTranspose(m_tCameraInfo.matView);
+	tCB_CameraProjMatrix.matProj = CShader::Compute_MatrixTranspose(m_tProjInfo.matProj);
 	tCB_CameraProjMatrix.vCameraPos = _vec4(m_tCameraInfo.vEye, 1.0f);
-	tCB_CameraProjMatrix.fProjFar	= m_tProjInfo.fFarZ;
+	tCB_CameraProjMatrix.fProjFar = m_tProjInfo.fFarZ;
 
 	// 직교 투영 행렬
 	CB_CAMERA_MATRIX tCB_CamerOrthoMatrix;
 	ZeroMemory(&tCB_CamerOrthoMatrix, sizeof(CB_CAMERA_MATRIX));
-	tCB_CamerOrthoMatrix.matView	= CShader::Compute_MatrixTranspose(INIT_MATRIX);
-	tCB_CamerOrthoMatrix.matProj	= CShader::Compute_MatrixTranspose(m_tOrthoInfo.matProj);
-	tCB_CamerOrthoMatrix.fProjFar	= m_tOrthoInfo.fFarZ;
+	tCB_CamerOrthoMatrix.matView = CShader::Compute_MatrixTranspose(INIT_MATRIX);
+	tCB_CamerOrthoMatrix.matProj = CShader::Compute_MatrixTranspose(m_tOrthoInfo.matProj);
+	tCB_CamerOrthoMatrix.fProjFar = m_tOrthoInfo.fFarZ;
 
 	// ShaderColor
 	m_pShaderColor->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
@@ -166,7 +169,7 @@ void CCamera::Set_ConstantTable()
 
 	// ShaderMesh
 	m_pShaderMesh->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
-
+	m_pShaderMeshTerrain->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 	// ShaderMeshInstancing
 	m_pShaderMeshInstancing->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 
@@ -195,4 +198,5 @@ void CCamera::Free()
 	Safe_Release(m_pShaderMesh);
 	Safe_Release(m_pShaderSSAO);
 	Safe_Release(m_pShaderNPathDir);
+	Safe_Release(m_pShaderMeshTerrain);
 }

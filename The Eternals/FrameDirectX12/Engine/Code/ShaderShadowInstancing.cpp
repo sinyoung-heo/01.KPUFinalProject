@@ -2,13 +2,14 @@
 #include "GraphicDevice.h"
 #include "Renderer.h"
 #include "ObjectMgr.h"
+#include "DescriptorHeapMgr.h"
 
 USING(Engine)
 IMPLEMENT_SINGLETON(CShaderShadowInstancing)
 
-CUploadBuffer<CB_SHADER_SHADOW>* CShaderShadowInstancing::Get_UploadBuffer_ShaderShadow(const _uint& iContextIdx, 
-																						wstring wstrMeshTag, 
-																						const _uint& uiPipelineStatepass)
+CUploadBuffer<CB_SHADER_SHADOW>* CShaderShadowInstancing::Get_UploadBuffer_ShaderShadow(const _uint& iContextIdx,
+	wstring wstrMeshTag,
+	const _uint& uiPipelineStatepass)
 {
 	auto& iter_find = m_mapCB_ShaderShadow[iContextIdx].find(wstrMeshTag);
 
@@ -20,8 +21,8 @@ CUploadBuffer<CB_SHADER_SHADOW>* CShaderShadowInstancing::Get_UploadBuffer_Shade
 
 HRESULT CShaderShadowInstancing::Ready_Shader(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 {
-	m_pGraphicDevice	= pGraphicDevice;
-	m_pCommandList		= pCommandList;
+	m_pGraphicDevice = pGraphicDevice;
+	m_pCommandList = pCommandList;
 
 	CShader::Ready_Shader();
 	FAILED_CHECK_RETURN(Create_RootSignature(), E_FAIL);
@@ -165,6 +166,13 @@ void CShaderShadowInstancing::Render_Instance(ID3D12GraphicsCommandList* pComman
 			CRenderer::Get_Instance()->Set_CurPipelineState(pCommandList, m_pPipelineState, iContextIdx);
 
 			/*__________________________________________________________________________________________________________
+			[ SRV를 루트 서술자에 묶는다 ]
+			____________________________________________________________________________________________________________*/
+			ID3D12DescriptorHeap* pTexDescriptorHeap = CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(wstring(wstrMeshTag) + L".X");
+			ID3D12DescriptorHeap* pDescriptorHeaps[] = { pTexDescriptorHeap };
+			pCommandList->SetDescriptorHeaps(_countof(pDescriptorHeaps), pDescriptorHeaps);
+
+			/*__________________________________________________________________________________________________________
 			[ SRV, CBV를 루트 서술자에 묶는다 ]
 			____________________________________________________________________________________________________________*/
 			pCommandList->SetGraphicsRootShaderResourceView(0,	// RootParameter Index
@@ -173,21 +181,29 @@ void CShaderShadowInstancing::Render_Instance(ID3D12GraphicsCommandList* pComman
 			/*__________________________________________________________________________________________________________
 			[ Render Buffer ]
 			____________________________________________________________________________________________________________*/
-			CMesh*		pMesh				= static_cast<CMesh*>(CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", wstrMeshTag)->Get_Component(L"Com_Mesh", ID_STATIC));
-			CVIMesh*	pVIMesh				= pMesh->Get_VIMesh();
-			_uint		uiSubsetMeshSize	= (_uint)(pVIMesh->Get_SubMeshGeometry().size());
+			CMesh* pMesh = static_cast<CMesh*>(CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", wstrMeshTag)->Get_Component(L"Com_Mesh", ID_STATIC));
+			CVIMesh* pVIMesh = pMesh->Get_VIMesh();
+			_uint		uiSubsetMeshSize = (_uint)(pVIMesh->Get_SubMeshGeometry().size());
 
 			for (_uint iSubMeshIdx = 0; iSubMeshIdx < uiSubsetMeshSize; ++iSubMeshIdx)
 			{
+				/*__________________________________________________________________________________________________________
+				[ SRV를 루트 서술자에 묶는다 ]
+				____________________________________________________________________________________________________________*/
+				CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexDiffuseDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+				SRV_TexDiffuseDescriptorHandle.Offset(iSubMeshIdx + (uiSubsetMeshSize * TEX_DIFFUSE), m_uiCBV_SRV_UAV_DescriptorSize);
+				pCommandList->SetGraphicsRootDescriptorTable(1,		// RootParameter Index - TexDiffuse
+					SRV_TexDiffuseDescriptorHandle);
+
 				pCommandList->IASetVertexBuffers(0, 1, &pVIMesh->Get_VertexBufferView(iSubMeshIdx));
 				pCommandList->IASetIndexBuffer(&pVIMesh->Get_IndexBufferView(iSubMeshIdx));
 				pCommandList->IASetPrimitiveTopology(pVIMesh->Get_PrimitiveTopology());
 
 				pCommandList->DrawIndexedInstanced(pVIMesh->Get_SubMeshGeometry()[iSubMeshIdx].uiIndexCount,
-												   pair.second[iPipelineStatePass].iInstanceCount,
-												   pVIMesh->Get_SubMeshGeometry()[iSubMeshIdx].uiStartIndexLocation,
-												   pVIMesh->Get_SubMeshGeometry()[iSubMeshIdx].iBaseVertexLocation,
-												   0);
+					pair.second[iPipelineStatePass].iInstanceCount,
+					pVIMesh->Get_SubMeshGeometry()[iSubMeshIdx].uiStartIndexLocation,
+					pVIMesh->Get_SubMeshGeometry()[iSubMeshIdx].iBaseVertexLocation,
+					0);
 			}
 		}
 	}
@@ -195,28 +211,47 @@ void CShaderShadowInstancing::Render_Instance(ID3D12GraphicsCommandList* pComman
 
 HRESULT CShaderShadowInstancing::Create_RootSignature()
 {
+
+	/*__________________________________________________________________________________________________________
+	[ SRV를 담는 서술자 테이블을 생성 ]
+	____________________________________________________________________________________________________________*/
+	CD3DX12_DESCRIPTOR_RANGE SRV_Table[1];
+
+	// TexDiffuse
+	SRV_Table[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,	// 서술자의 종류 - Shader Resource View.
+		1,								// 서술자의 개수 - Texture2D의 개수.
+		1,								// 셰이더 인수들의 기준 레지스터 번호. (register t0)
+		0);								// 레지스터 공간.
+
 	/*__________________________________________________________________________________________________________
 	- 루트 매개변수는 테이블이거나, 루트 서술자 또는 루트 상수이다.
 	____________________________________________________________________________________________________________*/
-	CD3DX12_ROOT_PARAMETER RootParameter[1];
+	CD3DX12_ROOT_PARAMETER RootParameter[2];
 	RootParameter[0].InitAsShaderResourceView(0, 1);	// register t0, space1..
+	RootParameter[1].InitAsDescriptorTable(1, &SRV_Table[0], D3D12_SHADER_VISIBILITY_PIXEL);
+
+
+	auto StaticSamplers = Get_StaticSamplers();
 
 	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(_countof(RootParameter),	// 루트 파라미터 개수. (CBV 2)
-												  RootParameter,
-												  0,	
-												  nullptr,
-												  D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+		RootParameter,
+		(UINT)StaticSamplers.size(),
+		StaticSamplers.data(),
+		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+
+
 
 	/*__________________________________________________________________________________________________________
 	[ RootSignature를 생성 ]
 	____________________________________________________________________________________________________________*/
-	ID3DBlob* pSignatureBlob	= nullptr;
-	ID3DBlob* pErrorBlob		= nullptr;
+	ID3DBlob* pSignatureBlob = nullptr;
+	ID3DBlob* pErrorBlob = nullptr;
 
 	FAILED_CHECK_RETURN(D3D12SerializeRootSignature(&RootSignatureDesc,
-													D3D_ROOT_SIGNATURE_VERSION_1,
-													&pSignatureBlob,
-													&pErrorBlob), E_FAIL);
+		D3D_ROOT_SIGNATURE_VERSION_1,
+		&pSignatureBlob,
+		&pErrorBlob), E_FAIL);
 
 	if (nullptr != pErrorBlob)
 	{
@@ -225,10 +260,10 @@ HRESULT CShaderShadowInstancing::Create_RootSignature()
 	}
 
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateRootSignature(0,
-															  pSignatureBlob->GetBufferPointer(),
-															  pSignatureBlob->GetBufferSize(),
-															  IID_PPV_ARGS(&m_pRootSignature)),
-															  E_FAIL);
+		pSignatureBlob->GetBufferPointer(),
+		pSignatureBlob->GetBufferSize(),
+		IID_PPV_ARGS(&m_pRootSignature)),
+		E_FAIL);
 	Safe_Release(pSignatureBlob);
 	Safe_Release(pErrorBlob);
 
@@ -240,7 +275,7 @@ HRESULT CShaderShadowInstancing::Create_PipelineState()
 	/*__________________________________________________________________________________________________________
 	[ PipelineState 기본 설정 ]
 	____________________________________________________________________________________________________________*/
-	ID3D12PipelineState*				pPipelineState = nullptr;
+	ID3D12PipelineState* pPipelineState = nullptr;
 	vector<D3D12_INPUT_ELEMENT_DESC>	vecInputLayout;
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC	PipelineStateDesc;
 	ZeroMemory(&PipelineStateDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
@@ -254,21 +289,21 @@ HRESULT CShaderShadowInstancing::Create_PipelineState()
 	- Blend		(X)
 	- Z Write	(O)
 	____________________________________________________________________________________________________________*/
-	PipelineStateDesc.pRootSignature		= m_pRootSignature;
-	PipelineStateDesc.SampleMask			= UINT_MAX;
+	PipelineStateDesc.pRootSignature = m_pRootSignature;
+	PipelineStateDesc.SampleMask = UINT_MAX;
 	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	PipelineStateDesc.NumRenderTargets		= 1;								// PS에서 사용할 RenderTarget 개수.
-	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R32G32B32A32_FLOAT;	// ShadowDepth
-	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
-	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
-	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;
-	vecInputLayout							= Create_InputLayout("VS_MAIN", "PS_MAIN");
-	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
-	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.BlendState			= Create_BlendState();
-	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
-	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState();
+	PipelineStateDesc.NumRenderTargets = 1;								// PS에서 사용할 RenderTarget 개수.
+	PipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;	// ShadowDepth
+	PipelineStateDesc.SampleDesc.Count = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	vecInputLayout = Create_InputLayout("VS_MAIN", "PS_MAIN");
+	PipelineStateDesc.InputLayout = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState = Create_BlendState();
+	PipelineStateDesc.RasterizerState = CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
+	PipelineStateDesc.DepthStencilState = CShader::Create_DepthStencilState();
 
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
@@ -299,29 +334,29 @@ vector<D3D12_INPUT_ELEMENT_DESC> CShaderShadowInstancing::Create_InputLayout(str
 	return vecInputLayout;
 }
 
-D3D12_BLEND_DESC CShaderShadowInstancing::Create_BlendState(const _bool& bIsBlendEnable, 
-															const D3D12_BLEND& SrcBlend, 
-															const D3D12_BLEND& DstBlend, 
-															const D3D12_BLEND_OP& BlendOp, 
-															const D3D12_BLEND& SrcBlendAlpha,
-															const D3D12_BLEND& DstBlendAlpha, 
-															const D3D12_BLEND_OP& BlendOpAlpha)
+D3D12_BLEND_DESC CShaderShadowInstancing::Create_BlendState(const _bool& bIsBlendEnable,
+	const D3D12_BLEND& SrcBlend,
+	const D3D12_BLEND& DstBlend,
+	const D3D12_BLEND_OP& BlendOp,
+	const D3D12_BLEND& SrcBlendAlpha,
+	const D3D12_BLEND& DstBlendAlpha,
+	const D3D12_BLEND_OP& BlendOpAlpha)
 {
 	D3D12_BLEND_DESC BlendDesc = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 	// 블렌드 설정.
 	ZeroMemory(&BlendDesc, sizeof(D3D12_BLEND_DESC));
-	BlendDesc.AlphaToCoverageEnable					= TRUE;
-	BlendDesc.IndependentBlendEnable				= FALSE;
-	BlendDesc.RenderTarget[0].BlendEnable			= bIsBlendEnable;
-	BlendDesc.RenderTarget[0].LogicOpEnable			= FALSE;
-	BlendDesc.RenderTarget[0].SrcBlend				= SrcBlend;
-	BlendDesc.RenderTarget[0].DestBlend				= DstBlend;
-	BlendDesc.RenderTarget[0].BlendOp				= BlendOp;
-	BlendDesc.RenderTarget[0].SrcBlendAlpha			= SrcBlendAlpha;
-	BlendDesc.RenderTarget[0].DestBlendAlpha		= DstBlendAlpha;
-	BlendDesc.RenderTarget[0].BlendOpAlpha			= BlendOpAlpha;
-	BlendDesc.RenderTarget[0].LogicOp				= D3D12_LOGIC_OP_NOOP;
-	BlendDesc.RenderTarget[0].RenderTargetWriteMask	= D3D12_COLOR_WRITE_ENABLE_ALL;
+	BlendDesc.AlphaToCoverageEnable = TRUE;
+	BlendDesc.IndependentBlendEnable = FALSE;
+	BlendDesc.RenderTarget[0].BlendEnable = bIsBlendEnable;
+	BlendDesc.RenderTarget[0].LogicOpEnable = FALSE;
+	BlendDesc.RenderTarget[0].SrcBlend = SrcBlend;
+	BlendDesc.RenderTarget[0].DestBlend = DstBlend;
+	BlendDesc.RenderTarget[0].BlendOp = BlendOp;
+	BlendDesc.RenderTarget[0].SrcBlendAlpha = SrcBlendAlpha;
+	BlendDesc.RenderTarget[0].DestBlendAlpha = DstBlendAlpha;
+	BlendDesc.RenderTarget[0].BlendOpAlpha = BlendOpAlpha;
+	BlendDesc.RenderTarget[0].LogicOp = D3D12_LOGIC_OP_NOOP;
+	BlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 
 	return BlendDesc;
 }

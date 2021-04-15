@@ -16,6 +16,7 @@
 #include "SkyBox.h"
 #include "TerrainMeshObject.h"
 #include "WaterMeshObject.h"
+#include "WaterFall.h"
 #include "GameUIRoot.h"
 #include "GameUIChild.h"
 #include "CharacterHpGauge.h"
@@ -26,7 +27,6 @@
 #include "MainMenuSetting.h"
 #include "PCGladiator.h"
 #include "SampleNPC.h"
-
 
 CScene_StageVelika::CScene_StageVelika(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -62,7 +62,7 @@ HRESULT CScene_StageVelika::Ready_Scene()
 	return S_OK;
 }
 
-_int CScene_StageVelika::Update_Scene(const _float & fTimeDelta)
+_int CScene_StageVelika::Update_Scene(const _float& fTimeDelta)
 {
 	// MouseCursorMgr
 	if (!m_bIsReadyMouseCursorMgr)
@@ -74,12 +74,12 @@ _int CScene_StageVelika::Update_Scene(const _float & fTimeDelta)
 	return Engine::CScene::Update_Scene(fTimeDelta);
 }
 
-_int CScene_StageVelika::LateUpdate_Scene(const _float & fTimeDelta)
+_int CScene_StageVelika::LateUpdate_Scene(const _float& fTimeDelta)
 {
 	return Engine::CScene::LateUpdate_Scene(fTimeDelta);
 }
 
-HRESULT CScene_StageVelika::Render_Scene(const _float & fTimeDelta, const Engine::RENDERID& eID)
+HRESULT CScene_StageVelika::Render_Scene(const _float& fTimeDelta, const Engine::RENDERID& eID)
 {
 	Engine::FAILED_CHECK_RETURN(CScene::Render_Scene(fTimeDelta, eID), E_FAIL);
 
@@ -89,7 +89,7 @@ HRESULT CScene_StageVelika::Render_Scene(const _float & fTimeDelta, const Engine
 HRESULT CScene_StageVelika::Ready_LayerCamera(wstring wstrLayerTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
-	
+
 	/*__________________________________________________________________________________________________________
 	[ Camera Layer 持失 ]
 	____________________________________________________________________________________________________________*/
@@ -103,36 +103,36 @@ HRESULT CScene_StageVelika::Ready_LayerCamera(wstring wstrLayerTag)
 	[ DebugCamera ]
 	____________________________________________________________________________________________________________*/
 	pGameObj = CDebugCamera::Create(m_pGraphicDevice, m_pCommandList,
-									Engine::CAMERA_DESC(_vec3(95.0f, 45.0f, -20.0f),	// Eye
-														_vec3(95.0f, 40.0f, 15.0f),		// At
-														_vec3(0.0f, 1.0f, 0.f)),		// Up
-									Engine::PROJ_DESC(60.0f,							// FovY
-													  _float(WINCX) / _float(WINCY),	// Aspect
-													  0.1f,								// Near
-													  1000.0f),							// Far
-									Engine::ORTHO_DESC(WINCX,							// Viewport Width
-													   WINCY,							// Viewport Height
-													   0.0f,							// Near
-													   1.0f));							// Far
+		Engine::CAMERA_DESC(_vec3(95.0f, 45.0f, -20.0f),	// Eye
+			_vec3(95.0f, 40.0f, 15.0f),		// At
+			_vec3(0.0f, 1.0f, 0.f)),		// Up
+		Engine::PROJ_DESC(60.0f,							// FovY
+			_float(WINCX) / _float(WINCY),	// Aspect
+			0.1f,								// Near
+			1000.0f),							// Far
+		Engine::ORTHO_DESC(WINCX,							// Viewport Width
+			WINCY,							// Viewport Height
+			0.0f,							// Near
+			1.0f));							// Far
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"DebugCamera", pGameObj), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
 	[ DynamicCamera ]
 	____________________________________________________________________________________________________________*/
 	pGameObj = CDynamicCamera::Create(m_pGraphicDevice, m_pCommandList,
-									  Engine::CAMERA_DESC(_vec3(95.0f, 45.0f, -20.0f),	// Eye
-									  					  _vec3(95.0f, 40.0f, 15.0f),	// At
-									  					  _vec3(0.0f, 1.0f, 0.0f)),		// Up
-									  
-									  Engine::PROJ_DESC(60.0f,							// FovY
-									  					_float(WINCX) / _float(WINCY),	// Aspect
-									  					0.1f,							// Near
-									  					1000.0f),						// Far
-									  
-									  Engine::ORTHO_DESC(WINCX,							// Viewport Width
-									  					 WINCY,							// Viewport Height
-									  					 0.0f,							// Near
-									  					 1.0f));						// Far
+		Engine::CAMERA_DESC(_vec3(95.0f, 45.0f, -20.0f),	// Eye
+			_vec3(95.0f, 40.0f, 15.0f),	// At
+			_vec3(0.0f, 1.0f, 0.0f)),		// Up
+
+		Engine::PROJ_DESC(60.0f,							// FovY
+			_float(WINCX) / _float(WINCY),	// Aspect
+			0.1f,							// Near
+			1000.0f),						// Far
+
+		Engine::ORTHO_DESC(WINCX,							// Viewport Width
+			WINCY,							// Viewport Height
+			0.0f,							// Near
+			1.0f));						// Far
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"DynamicCamera", pGameObj), E_FAIL);
 
 
@@ -157,11 +157,11 @@ HRESULT CScene_StageVelika::Ready_LayerEnvironment(wstring wstrLayerTag)
 	[ SkyBox ]
 	____________________________________________________________________________________________________________*/
 	pGameObj = CSkyBox::Create(m_pGraphicDevice, m_pCommandList,
-							   L"SkyBox",						// Texture Tag
-							   _vec3(990.0f, 990.0f, 990.0f),	// Scale
-							   _vec3(0.0f, 0.0f, 0.0f),			// Angle
-							   _vec3(0.0f, 0.0f, 0.0f),			// Pos
-							   1);								// Tex Index
+		L"SkyBox",						// Texture Tag
+		_vec3(990.0f, 990.0f, 990.0f),	// Scale
+		_vec3(0.0f, 0.0f, 0.0f),			// Angle
+		_vec3(0.0f, 0.0f, 0.0f),			// Pos
+		1);								// Tex Index
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SkyBox", pGameObj), E_FAIL);
 
 	return S_OK;
@@ -184,25 +184,25 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ SampleNPC ]
 	____________________________________________________________________________________________________________*/
-	pGameObj =	CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
-								   L"PoporiR27Gladiator",		// MeshTag
-								   _vec3(0.05f, 0.05f, 0.05f),	// Scale
-								   _vec3(0.0f, 0.0f, 0.0f),		// Angle
-								   _vec3(143.0f, 0.0f, 73.0f));	// Pos
+	pGameObj = CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
+		L"PoporiR27Gladiator",		// MeshTag
+		_vec3(0.05f, 0.05f, 0.05f),	// Scale
+		_vec3(0.0f, 0.0f, 0.0f),		// Angle
+		_vec3(143.0f, 0.0f, 73.0f));	// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SampleNPC", pGameObj), E_FAIL);
 
-	pGameObj =	CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
-								   L"PoporiR27Gladiator",		// MeshTag
-								   _vec3(0.05f, 0.05f, 0.05f),		// Scale
-								   _vec3(0.0f, 0.0f, 0.0f),		// Angle
-								   _vec3(145.0f, 0.0f, 73.0f));	// Pos
+	pGameObj = CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
+		L"PoporiR27Gladiator",		// MeshTag
+		_vec3(0.05f, 0.05f, 0.05f),		// Scale
+		_vec3(0.0f, 0.0f, 0.0f),		// Angle
+		_vec3(145.0f, 0.0f, 73.0f));	// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SampleNPC", pGameObj), E_FAIL);
 
-	pGameObj =	CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
-								   L"PoporiR27Gladiator",		// MeshTag
-								   _vec3(0.05f, 0.05f, 0.05f),	// Scale
-								   _vec3(0.0f, 0.0f, 0.0f),		// Angle
-								   _vec3(147.0f, 0.0f, 73.0f));	// Pos
+	pGameObj = CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
+		L"PoporiR27Gladiator",		// MeshTag
+		_vec3(0.05f, 0.05f, 0.05f),	// Scale
+		_vec3(0.0f, 0.0f, 0.0f),		// Angle
+		_vec3(147.0f, 0.0f, 73.0f));	// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SampleNPC", pGameObj), E_FAIL);
 
 
@@ -228,18 +228,18 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 
 	pGameObj = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
 		L"BumpDesertMesh00",
-		_vec3(0.175f),
-		_vec3(90.0f, 0.0f, 0.0f),
+		_vec3(0.145f),
+		_vec3(90.0f, 40.0f, 0.0f),
 		_vec3(128.0f, 0.01f, 128.0f));
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpDesertMesh00", pGameObj), E_FAIL); 
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpDesertMesh00", pGameObj), E_FAIL);
 
 	pGameObj = CWaterMeshObject::Create(m_pGraphicDevice, m_pCommandList,
 		L"BumpWaterMesh00",
-		_vec3(0.075f),
-		_vec3(90.0f, 40.0f, 0.0f),
-		_vec3(256.0f , 5.1f, 300.0f));
+		_vec3(0.145f),
+		_vec3(90.f, 40.0f, 0.0f),
+		_vec3(256.0f, 0.7f, 276.0f));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpWaterMesh00", pGameObj), E_FAIL);
-	
+
 	///*__________________________________________________________________________________________________________
 	//[ StaticMeshObject ]
 	//____________________________________________________________________________________________________________*/
@@ -247,15 +247,15 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 	//if (fin.fail())
 	//	return E_FAIL;
 
-	wstring	wstrMeshTag				= L"";
-	_vec3	vScale					= _vec3(0.0f);
-	_vec3	vAngle					= _vec3(0.0f);
-	_vec3	vPos					= _vec3(0.0f);
-	_bool	bIsRenderShadow			= false;
-	_bool	bIsCollision			= false;
-	_vec3	vBoundingSphereScale	= _vec3(0.0f);
-	_vec3	vBoundingSpherePos      = _vec3(0.0f);
-	_bool	bIsMousePicking			= false;
+	wstring	wstrMeshTag = L"";
+	_vec3	vScale = _vec3(0.0f);
+	_vec3	vAngle = _vec3(0.0f);
+	_vec3	vPos = _vec3(0.0f);
+	_bool	bIsRenderShadow = false;
+	_bool	bIsCollision = false;
+	_vec3	vBoundingSphereScale = _vec3(0.0f);
+	_vec3	vBoundingSpherePos = _vec3(0.0f);
+	_bool	bIsMousePicking = false;
 
 	//while (true)
 	//{
@@ -297,7 +297,7 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 
 	//
 
-	wifstream fin2{ L"../../Bin/ToolData/StageBeach3.staticmesh" };
+	wifstream fin2{ L"../../Bin/ToolData/StageBeach4.staticmesh" };
 	if (fin2.fail())
 		return E_FAIL;
 
@@ -326,16 +326,27 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 		if (fin2.eof())
 			break;
 
-		pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-			wstrMeshTag,			// MeshTag
-			vScale,				// Scale
-			vAngle,				// Angle
-			vPos,					// Pos
-			bIsRenderShadow,		// Render Shadow
-			bIsCollision,			// Bounding Sphere
-			vBoundingSphereScale,	// Bounding Sphere Scale
-			vBoundingSpherePos);	// Bounding Sphere Pos
-
+		if (wstrMeshTag.find(L"WaterFall") != wstring::npos)
+		{
+			pGameObj = CWaterFall::Create(m_pGraphicDevice, m_pCommandList,
+				wstrMeshTag,			// MeshTag
+				vScale,				// Scale
+				vAngle,				// Angle
+				vPos					// Pos
+			);	// Bounding Sphere Pos
+		}
+		else
+		{
+			pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+				wstrMeshTag,			// MeshTag
+				vScale,				// Scale
+				vAngle,				// Angle
+				vPos,					// Pos
+				bIsRenderShadow,		// Render Shadow
+				bIsCollision,			// Bounding Sphere
+				vBoundingSphereScale,	// Bounding Sphere Scale
+				vBoundingSpherePos);	// Bounding Sphere Pos
+		}
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", wstrMeshTag, pGameObj), E_FAIL);
 	}
 	//
@@ -343,27 +354,35 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ Popori_F ]
 	____________________________________________________________________________________________________________*/
-	pGameObj =	CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
-								  L"PoporiR27Gladiator",		// MeshTag
-								  L"StageVelika_NaviMesh",		// NaviMeshTag
-								  _vec3(0.05f, 0.05f, 0.05f),	// Scale
-								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-								  _vec3(120.0f, 0.f, 75.0f));	// Pos
+	pGameObj = CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
+		L"PoporiR27Gladiator",		// MeshTag
+		L"StageVelika_NaviMesh",		// NaviMeshTag
+		_vec3(0.05f, 0.05f, 0.05f),	// Scale
+		_vec3(0.0f, 0.0f, 0.0f),		// Angle
+		_vec3(120.0f, 0.f, 75.0f));	// Pos
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"ThisPlayer", pGameObj), E_FAIL);
 
 
 	/*__________________________________________________________________________________________________________
 	[ TexEffect ]
 	____________________________________________________________________________________________________________*/
-	//// Fire
-	//pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-	//								  L"Fire",						// TextureTag
-	//								  _vec3(2.5f, 2.5f, 1.0f),		// Scale
-	//								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-	//								  _vec3(26.0f, 1.5f, 26.5f),	// Pos
-	//								  FRAME(8, 8, 64.0f));			// Sprite Image Frame
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"TexEffect", pGameObj), E_FAIL);
+	// Torch
+	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+		L"Torch",						// TextureTag
+		_vec3(2.5f, 2.5f, 1.0f),		// Scale
+		_vec3(0.0f, 0.0f, 0.0f),		// Angle
+		_vec3(82.9f, 0.0f, 149.7f),	// Pos
+		FRAME(8, 8, 64.0f));			// Sprite Image Frame
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Torch", pGameObj), E_FAIL);
 
+	// Torch
+	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+		L"Torch",						// TextureTag
+		_vec3(2.5f, 4.5f, 1.0f),		// Scale
+		_vec3(0.0f, 0.0f, 0.0f),		// Angle
+		_vec3(80.6F, 2.0f, 157.75f),	// Pos
+		FRAME(8, 8, 64.0f));			// Sprite Image Frame
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Torch", pGameObj), E_FAIL);
 	//// Torch
 	//pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
 	//								  L"Torch",						// TextureTag
@@ -394,21 +413,21 @@ HRESULT CScene_StageVelika::Ready_LayerUI(wstring wstrLayerTag)
 	[ CharacterClassFrame ]
 	____________________________________________________________________________________________________________*/
 	{
-		wifstream fin { L"../../Bin/ToolData/2DUICharacterClassFrameArcher.2DUI" };
+		wifstream fin{ L"../../Bin/ToolData/2DUICharacterClassFrameArcher.2DUI" };
 		if (fin.fail())
 			return E_FAIL;
 
 		// RootUI Data
-		wstring wstrDataFilePath   = L"";			// DataFilePath
-		wstring wstrRootObjectTag  = L"";			// ObjectTag
-		_vec3	vPos               = _vec3(0.0f);	// Pos
-		_vec3	vScale             = _vec3(1.0f);	// Scale
-		_long	UIDepth            = 0;				// UIDepth
+		wstring wstrDataFilePath = L"";			// DataFilePath
+		wstring wstrRootObjectTag = L"";			// ObjectTag
+		_vec3	vPos = _vec3(0.0f);	// Pos
+		_vec3	vScale = _vec3(1.0f);	// Scale
+		_long	UIDepth = 0;				// UIDepth
 		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
-		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
-		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
-		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
-		_int	iChildUISize       = 0;				// ChildUI Size
+		_float	fFrameSpeed = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale = _vec3(1.0f);	// RectScale
+		_int	iChildUISize = 0;				// ChildUI Size
 
 		// ChildUI Data
 		vector<wstring> vecDataFilePath;
@@ -450,19 +469,19 @@ HRESULT CScene_StageVelika::Ready_LayerUI(wstring wstrLayerTag)
 
 			for (_int i = 0; i < iChildUISize; ++i)
 			{
-			fin >> vecDataFilePath[i]			// DataFilePath
-				>> vecObjectTag[i]				// Object Tag
-				>> vecPos[i].x					// Pos X
-				>> vecPos[i].y					// Pos Y
-				>> vecScale[i].x				// Scale X
-				>> vecScale[i].y				// Scale Y
-				>> vecUIDepth[i]				// UI Depth
-				>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
-				>> vecFrameSpeed[i]				// Frame Speed
-				>> vecRectPosOffset[i].x		// RectPosOffset X
-				>> vecRectPosOffset[i].y		// RectPosOffset Y
-				>> vecRectScale[i].x			// RectScale X
-				>> vecRectScale[i].y;			// RectScale Y
+				fin >> vecDataFilePath[i]			// DataFilePath
+					>> vecObjectTag[i]				// Object Tag
+					>> vecPos[i].x					// Pos X
+					>> vecPos[i].y					// Pos Y
+					>> vecScale[i].x				// Scale X
+					>> vecScale[i].y				// Scale Y
+					>> vecUIDepth[i]				// UI Depth
+					>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
+					>> vecFrameSpeed[i]				// Frame Speed
+					>> vecRectPosOffset[i].x		// RectPosOffset X
+					>> vecRectPosOffset[i].y		// RectPosOffset Y
+					>> vecRectScale[i].x			// RectScale X
+					>> vecRectScale[i].y;			// RectScale Y
 			}
 
 			if (fin.eof())
@@ -471,15 +490,15 @@ HRESULT CScene_StageVelika::Ready_LayerUI(wstring wstrLayerTag)
 			// UIRoot 持失.
 			Engine::CGameObject* pRootUI = nullptr;
 			pRootUI = CGameUIRoot::Create(m_pGraphicDevice, m_pCommandList,
-										  wstrRootObjectTag,
-										  wstrDataFilePath,
-										  vPos,
-										  vScale,
-										  bIsSpriteAnimation,
-										  fFrameSpeed,
-										  vRectPosOffset,
-										  vRectScale,
-										  UIDepth);
+				wstrRootObjectTag,
+				wstrDataFilePath,
+				vPos,
+				vScale,
+				bIsSpriteAnimation,
+				fFrameSpeed,
+				vRectPosOffset,
+				vRectScale,
+				UIDepth);
 			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
 
 			// UIChild 持失.
@@ -489,44 +508,44 @@ HRESULT CScene_StageVelika::Ready_LayerUI(wstring wstrLayerTag)
 				if (L"ClassFrameHpFront" == vecObjectTag[i])
 				{
 					pChildUI = CCharacterHpGauge::Create(m_pGraphicDevice, m_pCommandList,
-														 wstrRootObjectTag,				// RootObjectTag
-														 vecObjectTag[i],				// ObjectTag
-														 vecDataFilePath[i],			// DataFilePath
-														 vecPos[i],						// Pos
-														 vecScale[i],					// Scane
-														 (_bool)vecIsSpriteAnimation[i],// Is Animation
-														 vecFrameSpeed[i],				// FrameSpeed
-														 vecRectPosOffset[i],			// RectPosOffset
-														 vecRectScale[i],				// RectScaleOffset
-														 vecUIDepth[i]);				// UI Depth
+						wstrRootObjectTag,				// RootObjectTag
+						vecObjectTag[i],				// ObjectTag
+						vecDataFilePath[i],			// DataFilePath
+						vecPos[i],						// Pos
+						vecScale[i],					// Scane
+						(_bool)vecIsSpriteAnimation[i],// Is Animation
+						vecFrameSpeed[i],				// FrameSpeed
+						vecRectPosOffset[i],			// RectPosOffset
+						vecRectScale[i],				// RectScaleOffset
+						vecUIDepth[i]);				// UI Depth
 				}
 				else if (L"ClassFrameMpFront" == vecObjectTag[i])
 				{
 					pChildUI = CCharacterMpGauge::Create(m_pGraphicDevice, m_pCommandList,
-														 wstrRootObjectTag,				// RootObjectTag
-														 vecObjectTag[i],				// ObjectTag
-														 vecDataFilePath[i],			// DataFilePath
-														 vecPos[i],						// Pos
-														 vecScale[i],					// Scane
-														 (_bool)vecIsSpriteAnimation[i],// Is Animation
-														 vecFrameSpeed[i],				// FrameSpeed
-														 vecRectPosOffset[i],			// RectPosOffset
-														 vecRectScale[i],				// RectScaleOffset
-														 vecUIDepth[i]);				// UI Depth
+						wstrRootObjectTag,				// RootObjectTag
+						vecObjectTag[i],				// ObjectTag
+						vecDataFilePath[i],			// DataFilePath
+						vecPos[i],						// Pos
+						vecScale[i],					// Scane
+						(_bool)vecIsSpriteAnimation[i],// Is Animation
+						vecFrameSpeed[i],				// FrameSpeed
+						vecRectPosOffset[i],			// RectPosOffset
+						vecRectScale[i],				// RectScaleOffset
+						vecUIDepth[i]);				// UI Depth
 				}
 				else
 				{
 					pChildUI = CGameUIChild::Create(m_pGraphicDevice, m_pCommandList,
-													wstrRootObjectTag,				// RootObjectTag
-													vecObjectTag[i],				// ObjectTag
-													vecDataFilePath[i],				// DataFilePath
-													vecPos[i],						// Pos
-													vecScale[i],					// Scane
-													(_bool)vecIsSpriteAnimation[i],	// Is Animation
-													vecFrameSpeed[i],				// FrameSpeed
-													vecRectPosOffset[i],			// RectPosOffset
-													vecRectScale[i],				// RectScaleOffset
-													vecUIDepth[i]);					// UI Depth
+						wstrRootObjectTag,				// RootObjectTag
+						vecObjectTag[i],				// ObjectTag
+						vecDataFilePath[i],				// DataFilePath
+						vecPos[i],						// Pos
+						vecScale[i],					// Scane
+						(_bool)vecIsSpriteAnimation[i],	// Is Animation
+						vecFrameSpeed[i],				// FrameSpeed
+						vecRectPosOffset[i],			// RectPosOffset
+						vecRectScale[i],				// RectScaleOffset
+						vecUIDepth[i]);					// UI Depth
 				}
 				m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
 				static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
@@ -538,21 +557,21 @@ HRESULT CScene_StageVelika::Ready_LayerUI(wstring wstrLayerTag)
 	[ MainMenuLogout ]
 	____________________________________________________________________________________________________________*/
 	{
-		wifstream fin { L"../../Bin/ToolData/2DUIMainMenuLogout_Normal.2DUI" };
+		wifstream fin{ L"../../Bin/ToolData/2DUIMainMenuLogout_Normal.2DUI" };
 		if (fin.fail())
 			return E_FAIL;
 
 		// RootUI Data
-		wstring wstrDataFilePath   = L"";			// DataFilePath
-		wstring wstrRootObjectTag  = L"";			// ObjectTag
-		_vec3	vPos               = _vec3(0.0f);	// Pos
-		_vec3	vScale             = _vec3(1.0f);	// Scale
-		_long	UIDepth            = 0;				// UIDepth
+		wstring wstrDataFilePath = L"";			// DataFilePath
+		wstring wstrRootObjectTag = L"";			// ObjectTag
+		_vec3	vPos = _vec3(0.0f);	// Pos
+		_vec3	vScale = _vec3(1.0f);	// Scale
+		_long	UIDepth = 0;				// UIDepth
 		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
-		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
-		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
-		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
-		_int	iChildUISize       = 0;				// ChildUI Size
+		_float	fFrameSpeed = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale = _vec3(1.0f);	// RectScale
+		_int	iChildUISize = 0;				// ChildUI Size
 
 		while (true)
 		{
@@ -577,15 +596,15 @@ HRESULT CScene_StageVelika::Ready_LayerUI(wstring wstrLayerTag)
 			// UIRoot 持失.
 			Engine::CGameObject* pRootUI = nullptr;
 			pRootUI = CMainMenuLogout::Create(m_pGraphicDevice, m_pCommandList,
-											  wstrRootObjectTag,
-											  wstrDataFilePath,
-											  vPos,
-											  vScale,
-											  bIsSpriteAnimation,
-											  fFrameSpeed,
-											  vRectPosOffset,
-											  vRectScale,
-											  UIDepth);
+				wstrRootObjectTag,
+				wstrDataFilePath,
+				vPos,
+				vScale,
+				bIsSpriteAnimation,
+				fFrameSpeed,
+				vRectPosOffset,
+				vRectScale,
+				UIDepth);
 			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
 		}
 	}
@@ -594,21 +613,21 @@ HRESULT CScene_StageVelika::Ready_LayerUI(wstring wstrLayerTag)
 	[ MainMenuSetting ]
 	____________________________________________________________________________________________________________*/
 	{
-		wifstream fin { L"../../Bin/ToolData/2DUIMainMenuSetting_Normal.2DUI" };
+		wifstream fin{ L"../../Bin/ToolData/2DUIMainMenuSetting_Normal.2DUI" };
 		if (fin.fail())
 			return E_FAIL;
 
 		// RootUI Data
-		wstring wstrDataFilePath   = L"";			// DataFilePath
-		wstring wstrRootObjectTag  = L"";			// ObjectTag
-		_vec3	vPos               = _vec3(0.0f);	// Pos
-		_vec3	vScale             = _vec3(1.0f);	// Scale
-		_long	UIDepth            = 0;				// UIDepth
+		wstring wstrDataFilePath = L"";			// DataFilePath
+		wstring wstrRootObjectTag = L"";			// ObjectTag
+		_vec3	vPos = _vec3(0.0f);	// Pos
+		_vec3	vScale = _vec3(1.0f);	// Scale
+		_long	UIDepth = 0;				// UIDepth
 		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
-		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
-		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
-		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
-		_int	iChildUISize       = 0;				// ChildUI Size
+		_float	fFrameSpeed = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale = _vec3(1.0f);	// RectScale
+		_int	iChildUISize = 0;				// ChildUI Size
 
 		while (true)
 		{
@@ -633,15 +652,15 @@ HRESULT CScene_StageVelika::Ready_LayerUI(wstring wstrLayerTag)
 			// UIRoot 持失.
 			Engine::CGameObject* pRootUI = nullptr;
 			pRootUI = CMainMenuSetting::Create(m_pGraphicDevice, m_pCommandList,
-											   wstrRootObjectTag,
-											   wstrDataFilePath,
-											   vPos,
-											   vScale,
-											   bIsSpriteAnimation,
-											   fFrameSpeed,
-											   vRectPosOffset,
-											   vRectScale,
-											   UIDepth);
+				wstrRootObjectTag,
+				wstrDataFilePath,
+				vPos,
+				vScale,
+				bIsSpriteAnimation,
+				fFrameSpeed,
+				vRectPosOffset,
+				vRectScale,
+				UIDepth);
 			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
 		}
 	}
@@ -650,21 +669,21 @@ HRESULT CScene_StageVelika::Ready_LayerUI(wstring wstrLayerTag)
 	[ MainMenuInventory ]
 	____________________________________________________________________________________________________________*/
 	{
-		wifstream fin { L"../../Bin/ToolData/2DUIMainMenuInventory_Normal.2DUI" };
+		wifstream fin{ L"../../Bin/ToolData/2DUIMainMenuInventory_Normal.2DUI" };
 		if (fin.fail())
 			return E_FAIL;
 
 		// RootUI Data
-		wstring wstrDataFilePath   = L"";			// DataFilePath
-		wstring wstrRootObjectTag  = L"";			// ObjectTag
-		_vec3	vPos               = _vec3(0.0f);	// Pos
-		_vec3	vScale             = _vec3(1.0f);	// Scale
-		_long	UIDepth            = 0;				// UIDepth
+		wstring wstrDataFilePath = L"";			// DataFilePath
+		wstring wstrRootObjectTag = L"";			// ObjectTag
+		_vec3	vPos = _vec3(0.0f);	// Pos
+		_vec3	vScale = _vec3(1.0f);	// Scale
+		_long	UIDepth = 0;				// UIDepth
 		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
-		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
-		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
-		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
-		_int	iChildUISize       = 0;				// ChildUI Size
+		_float	fFrameSpeed = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale = _vec3(1.0f);	// RectScale
+		_int	iChildUISize = 0;				// ChildUI Size
 
 		while (true)
 		{
@@ -689,15 +708,15 @@ HRESULT CScene_StageVelika::Ready_LayerUI(wstring wstrLayerTag)
 			// UIRoot 持失.
 			Engine::CGameObject* pRootUI = nullptr;
 			pRootUI = CMainMenuInventory::Create(m_pGraphicDevice, m_pCommandList,
-												 wstrRootObjectTag,
-												 wstrDataFilePath,
-												 vPos,
-												 vScale,
-												 bIsSpriteAnimation,
-												 fFrameSpeed,
-												 vRectPosOffset,
-												 vRectScale,
-												 UIDepth);
+				wstrRootObjectTag,
+				wstrDataFilePath,
+				vPos,
+				vScale,
+				bIsSpriteAnimation,
+				fFrameSpeed,
+				vRectPosOffset,
+				vRectScale,
+				UIDepth);
 			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
 		}
 	}
@@ -706,21 +725,21 @@ HRESULT CScene_StageVelika::Ready_LayerUI(wstring wstrLayerTag)
 	[ MainMenuEquipment ]
 	____________________________________________________________________________________________________________*/
 	{
-		wifstream fin { L"../../Bin/ToolData/2DUIMainMenuEquipment_Normal.2DUI" };
+		wifstream fin{ L"../../Bin/ToolData/2DUIMainMenuEquipment_Normal.2DUI" };
 		if (fin.fail())
 			return E_FAIL;
 
 		// RootUI Data
-		wstring wstrDataFilePath   = L"";			// DataFilePath
-		wstring wstrRootObjectTag  = L"";			// ObjectTag
-		_vec3	vPos               = _vec3(0.0f);	// Pos
-		_vec3	vScale             = _vec3(1.0f);	// Scale
-		_long	UIDepth            = 0;				// UIDepth
+		wstring wstrDataFilePath = L"";			// DataFilePath
+		wstring wstrRootObjectTag = L"";			// ObjectTag
+		_vec3	vPos = _vec3(0.0f);	// Pos
+		_vec3	vScale = _vec3(1.0f);	// Scale
+		_long	UIDepth = 0;				// UIDepth
 		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
-		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
-		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
-		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
-		_int	iChildUISize       = 0;				// ChildUI Size
+		_float	fFrameSpeed = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale = _vec3(1.0f);	// RectScale
+		_int	iChildUISize = 0;				// ChildUI Size
 
 		while (true)
 		{
@@ -745,15 +764,15 @@ HRESULT CScene_StageVelika::Ready_LayerUI(wstring wstrLayerTag)
 			// UIRoot 持失.
 			Engine::CGameObject* pRootUI = nullptr;
 			pRootUI = CMainMenuEquipment::Create(m_pGraphicDevice, m_pCommandList,
-												 wstrRootObjectTag,
-												 wstrDataFilePath,
-												 vPos,
-												 vScale,
-												 bIsSpriteAnimation,
-												 fFrameSpeed,
-												 vRectPosOffset,
-												 vRectScale,
-												 UIDepth);
+				wstrRootObjectTag,
+				wstrDataFilePath,
+				vPos,
+				vScale,
+				bIsSpriteAnimation,
+				fFrameSpeed,
+				vRectPosOffset,
+				vRectScale,
+				UIDepth);
 			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
 		}
 	}
@@ -816,12 +835,17 @@ HRESULT CScene_StageVelika::Ready_LightInfo()
 			>> fFovY						// ShadowLight FovY
 			>> fFar;						// ShadowLight Far
 
+
+		vLightAt.x += tDirLightInfo.Direction.x * 600.f;
+		vLightAt.y += tDirLightInfo.Direction.y * 600.f;
+		vLightAt.z += tDirLightInfo.Direction.z * 600.f;
+		fHeight -= 600;
 		if (fin.eof())
 			break;
 
-		Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, m_pCommandList, 
-																				 Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL,
-																				 tDirLightInfo), E_FAIL);
+		Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, m_pCommandList,
+			Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL,
+			tDirLightInfo), E_FAIL);
 		CShadowLightMgr::Get_Instance()->Set_LightAt(vLightAt);
 		CShadowLightMgr::Get_Instance()->Set_LightHeight(fHeight);
 		CShadowLightMgr::Get_Instance()->Set_LightFovY(fFovY);
@@ -872,14 +896,14 @@ HRESULT CScene_StageVelika::Ready_LightInfo()
 
 HRESULT CScene_StageVelika::Ready_NaviMesh()
 {
-	Engine::CNaviMesh* pNaviMesh = Engine::CNaviMesh::Create(m_pGraphicDevice,  m_pCommandList,
-															 wstring(L"../../Bin/ToolData/StageVelika_NaviMesh.navimeshcellinfo"));
+	Engine::CNaviMesh* pNaviMesh = Engine::CNaviMesh::Create(m_pGraphicDevice, m_pCommandList,
+		wstring(L"../../Bin/ToolData/StageVelika_NaviMesh.navimeshcellinfo"));
 	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"StageVelika_NaviMesh", Engine::ID_DYNAMIC, pNaviMesh), E_FAIL);
 
 	return S_OK;
 }
 
-CScene_StageVelika * CScene_StageVelika::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CScene_StageVelika* CScene_StageVelika::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 {
 	CScene_StageVelika* pInstance = new CScene_StageVelika(pGraphicDevice, pCommandList);
 

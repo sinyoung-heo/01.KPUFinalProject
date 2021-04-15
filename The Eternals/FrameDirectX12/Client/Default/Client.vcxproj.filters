@@ -253,6 +253,9 @@
     <Filter Include="02.GameObject\05.Monster\06.CraftyArachne">
       <UniqueIdentifier>{53d529ed-bf47-47fa-bbe1-0542401ebe4e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\01.Environment\03.WatarFall">
+      <UniqueIdentifier>{329d9f35-9674-466a-809c-f95413a01752}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -498,6 +501,9 @@
     <ClInclude Include="..\Code\CraftyArachne.h">
       <Filter>02.GameObject\05.Monster\06.CraftyArachne</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\WaterFall.h">
+      <Filter>02.GameObject\01.Environment\03.WatarFall</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -697,6 +703,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CraftyArachne.cpp">
       <Filter>02.GameObject\05.Monster\06.CraftyArachne</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\WaterFall.cpp">
+      <Filter>02.GameObject\01.Environment\03.WatarFall</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

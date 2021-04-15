@@ -8,8 +8,10 @@ Texture|EffectSpriteTexture|Smoke0
 Texture|EffectSpriteTexture|Smoke1
 Texture|EffectSpriteTexture|Torch
 ResourceStage|Texture|EffectTrailTexture
+Texture|Environment|PublicMagic
 Texture|Environment|SkyBox
 Texture|Environment|Terrain
+Texture|Environment|TexWaterFall
 Texture|Environment|WaterNormal
 Texture|UI|S1UI_CharacterWindow
 Texture|UI|S1UI_Chat

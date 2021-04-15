@@ -3,12 +3,12 @@
 
 USING(Engine)
 
-CMesh::CMesh(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CMesh::CMesh(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CComponent(pGraphicDevice, pCommandList)
 {
 }
 
-CMesh::CMesh(const CMesh & rhs)
+CMesh::CMesh(const CMesh& rhs)
 	: CComponent(rhs)
 	, m_pScene(rhs.m_pScene)
 	, m_wstrVIMeshTag(rhs.m_wstrVIMeshTag)
@@ -48,8 +48,8 @@ HRESULT CMesh::Ready_Mesh(wstring wstrFilePath, wstring wstrFileName)
 
 	m_pScene = m_Importer.ReadFile(strFullPath.c_str(), aiProcess_ConvertToLeftHanded | aiProcess_OptimizeMeshes);
 
-	m_wstrVIMeshTag		= wstrFileName + L"VIMesh";
-	m_wstrAniCtrlTag	= wstrFileName + L"AniCtrl";
+	m_wstrVIMeshTag = wstrFileName + L"VIMesh";
+	m_wstrAniCtrlTag = wstrFileName + L"AniCtrl";
 
 	CComponent* pComonent = nullptr;
 	if (m_pScene->mNumMeshes)
@@ -69,7 +69,7 @@ HRESULT CMesh::Ready_Mesh(wstring wstrFilePath, wstring wstrFileName)
 	return S_OK;
 }
 
-void CMesh::Render_DynamicMesh(CShader * pShader)
+void CMesh::Render_DynamicMesh(CShader* pShader)
 {
 	if (nullptr != m_pVIMesh)
 		m_pVIMesh->Render_DynamicMesh(pShader);
@@ -81,73 +81,79 @@ void CMesh::Render_DynamicMeshAfterImage(CShader* pShader, const _uint& iAfterIm
 		m_pVIMesh->Render_DynamicMeshAfterImage(pShader, iAfterImgIdx);
 }
 
-void CMesh::Render_StaticMesh(CShader * pShader)
+void CMesh::Render_StaticMesh(CShader* pShader)
 {
 	if (nullptr != m_pVIMesh)
 		m_pVIMesh->Render_StaticMesh(pShader);
 }
 
-void CMesh::Render_DynamicMeshShadowDepth(CShader * pShader)
+void CMesh::Render_DynamicMeshShadowDepth(CShader* pShader)
 {
 	if (nullptr != m_pVIMesh)
 		m_pVIMesh->Render_DynamicMeshShadowDepth(pShader);
 }
 
-void CMesh::Render_StaticMeshShadowDepth(CShader * pShader)
+void CMesh::Render_StaticMeshShadowDepth(CShader* pShader)
 {
 	if (nullptr != m_pVIMesh)
 		m_pVIMesh->Render_StaticMeshShadowDepth(pShader);
 }
 
-void CMesh::Render_DynamicMesh(ID3D12GraphicsCommandList * pCommandList, 
-							   const _int& iContextIdx,
-							   CShader * pShader)
+void CMesh::Render_DynamicMesh(ID3D12GraphicsCommandList* pCommandList,
+	const _int& iContextIdx,
+	CShader* pShader)
 {
 	if (nullptr != m_pVIMesh && nullptr != pCommandList)
 		m_pVIMesh->Render_DynamicMesh(pCommandList, iContextIdx, pShader);
 }
 
-void CMesh::Render_DynamicMeshAfterImage(ID3D12GraphicsCommandList* pCommandList, 
-										 const _int& iContextIdx, 
-										 CShader* pShader,
-										 const _uint& iAfterImgIdx)
+void CMesh::Render_DynamicMeshAfterImage(ID3D12GraphicsCommandList* pCommandList,
+	const _int& iContextIdx,
+	CShader* pShader,
+	const _uint& iAfterImgIdx)
 {
 	if (nullptr != m_pVIMesh && nullptr != pCommandList)
 		m_pVIMesh->Render_DynamicMeshAfterImage(pCommandList, iContextIdx, pShader, iAfterImgIdx);
 }
 
-void CMesh::Render_StaticMesh(ID3D12GraphicsCommandList * pCommandList, 
-							  const _int& iContextIdx,
-							  CShader * pShader)
+void CMesh::Render_StaticMesh(ID3D12GraphicsCommandList* pCommandList,
+	const _int& iContextIdx,
+	CShader* pShader)
 {
 	if (nullptr != m_pVIMesh && nullptr != pCommandList)
 		m_pVIMesh->Render_StaticMesh(pCommandList, iContextIdx, pShader);
 }
 
-void CMesh::Render_DynamicMeshShadowDepth(ID3D12GraphicsCommandList * pCommandList,
-										  const _int& iContextIdx,
-										  CShader * pShader)
+void CMesh::Render_DynamicMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList,
+	const _int& iContextIdx,
+	CShader* pShader)
 {
 	if (nullptr != m_pVIMesh && nullptr != pCommandList)
 		m_pVIMesh->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, pShader);
 }
 
-void CMesh::Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList * pCommandList,
-										 const _int& iContextIdx,
-										 CShader * pShader)
+void CMesh::Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList,
+	const _int& iContextIdx,
+	CShader* pShader)
 {
 	if (nullptr != m_pVIMesh && nullptr != pCommandList)
 		m_pVIMesh->Render_StaticMeshShadowDepth(pCommandList, iContextIdx, pShader);
 }
 
 void CMesh::Render_WaterMesh(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx,
-	CShader* pShader, ID3D12DescriptorHeap* pTexnormalDescriptorHeap, _uint uiNormalTextureIdx,_uint uiPatternMapIdx)
+	CShader* pShader, ID3D12DescriptorHeap* pTexnormalDescriptorHeap, _uint uiNormalTextureIdx, _uint uiPatternMapIdx)
 {
 	if (nullptr != m_pVIMesh && nullptr != pCommandList)
-		m_pVIMesh->Render_WaterMesh(pCommandList, iContextIdx, pShader, pTexnormalDescriptorHeap,uiNormalTextureIdx, uiPatternMapIdx);
+		m_pVIMesh->Render_WaterMesh(pCommandList, iContextIdx, pShader, pTexnormalDescriptorHeap, uiNormalTextureIdx, uiPatternMapIdx);
 }
 
-void CMesh::Set_AnimationKey(const _uint & uiAniKey)
+void CMesh::Render_MagicCircleMesh(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader, ID3D12DescriptorHeap* pTexnormalDescriptorHeap, _uint AlbedoIdx)
+{
+	if (nullptr != m_pVIMesh && nullptr != pCommandList)
+		m_pVIMesh->Render_MagicCircleMesh(pCommandList, iContextIdx, pShader, pTexnormalDescriptorHeap, AlbedoIdx);
+}
+
+void CMesh::Set_AnimationKey(const _uint& uiAniKey)
 {
 	if (nullptr != m_pAniCtrl)
 		m_pAniCtrl->Set_AnimationKey(uiAniKey);
@@ -159,7 +165,7 @@ void CMesh::Play_Animation(_float fTimeDelta)
 		m_pAniCtrl->Play_Animation(fTimeDelta);
 }
 
-SKINNING_MATRIX * CMesh::Find_SkinningMatrix(string strBoneName)
+SKINNING_MATRIX* CMesh::Find_SkinningMatrix(string strBoneName)
 {
 	if (nullptr != m_pAniCtrl)
 		return m_pAniCtrl->Find_SkinningMatrix(strBoneName);
@@ -175,15 +181,15 @@ HIERARCHY_DESC* CMesh::Find_HierarchyDesc(string strBoneName)
 	return nullptr;
 }
 
-CComponent * CMesh::Clone()
+CComponent* CMesh::Clone()
 {
 	return new CMesh(*this);
 }
 
-CMesh * CMesh::Create(ID3D12Device * pGraphicDevice, 
-					  ID3D12GraphicsCommandList * pCommandList,
-					  wstring wstrFilePath, 
-					  wstring wstrFileName)
+CMesh* CMesh::Create(ID3D12Device* pGraphicDevice,
+	ID3D12GraphicsCommandList* pCommandList,
+	wstring wstrFilePath,
+	wstring wstrFileName)
 {
 	CMesh* pInstance = new CMesh(pGraphicDevice, pCommandList);
 
