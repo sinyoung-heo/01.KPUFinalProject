@@ -1,5 +1,4 @@
 #include "GameObject.h"
-
 #include "GraphicDevice.h"
 #include "ObjectMgr.h"
 #include "Renderer.h"
@@ -7,6 +6,14 @@
 #include "Renderer.h"
 
 USING(Engine)
+
+CGameObject::CGameObject()
+	: m_pObjectMgr(CObjectMgr::Get_Instance())
+	, m_pRenderer(CRenderer::Get_Instance())
+	, m_pComponentMgr(CComponentMgr::Get_Instance())
+	, m_pCollisonMgr(CCollisionMgr::Get_Instance())
+{
+}
 
 CGameObject::CGameObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: m_pGraphicDevice(pGraphicDevice)

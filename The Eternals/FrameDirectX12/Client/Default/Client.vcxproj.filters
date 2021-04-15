@@ -256,6 +256,9 @@
     <Filter Include="02.GameObject\06.CollisionTick">
       <UniqueIdentifier>{46392a5c-e300-4239-b145-a33d4fb5620f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.Mgr\05.InstancePoolMgr">
+      <UniqueIdentifier>{782ae5d2-11c5-4a86-a19c-e951b3e41635}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -504,6 +507,9 @@
     <ClInclude Include="..\Code\CollisionTick.h">
       <Filter>02.GameObject\06.CollisionTick</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\InstancePoolMgr.h">
+      <Filter>97.Mgr\05.InstancePoolMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -706,6 +712,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CollisionTick.cpp">
       <Filter>02.GameObject\06.CollisionTick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\InstancePoolMgr.cpp">
+      <Filter>97.Mgr\05.InstancePoolMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

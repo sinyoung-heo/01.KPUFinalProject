@@ -201,6 +201,10 @@ _int CLayer::Update_Layer(const _float & fTimeDelta)
 				Engine::Safe_Release(*iter_begin);
 				iter_begin = MyPair.second.erase(iter_begin);
 			}
+			else if (RETURN_OBJ == iEvent)
+			{
+				iter_begin = MyPair.second.erase(iter_begin);
+			}
 			else
 				++iter_begin;
 		}

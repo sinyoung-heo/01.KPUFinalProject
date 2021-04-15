@@ -182,6 +182,7 @@
     <ClInclude Include="..\Code\EffectTrail.h" />
     <ClInclude Include="..\Code\GiantBeetle.h" />
     <ClInclude Include="..\Code\GiantMonkey.h" />
+    <ClInclude Include="..\Code\InstancePoolMgr.h" />
     <ClInclude Include="..\Code\Monkey.h" />
     <ClInclude Include="..\Code\PCGladiator.h" />
     <ClInclude Include="..\Code\PCOthersGladiator.h" />
@@ -261,6 +262,7 @@
     <ClCompile Include="..\Code\GameUIRoot.cpp" />
     <ClCompile Include="..\Code\GiantBeetle.cpp" />
     <ClCompile Include="..\Code\GiantMonkey.cpp" />
+    <ClCompile Include="..\Code\InstancePoolMgr.cpp" />
     <ClCompile Include="..\Code\MainMenuEquipment.cpp" />
     <ClCompile Include="..\Code\MainMenuInventory.cpp" />
     <ClCompile Include="..\Code\MainMenuLogout.cpp" />

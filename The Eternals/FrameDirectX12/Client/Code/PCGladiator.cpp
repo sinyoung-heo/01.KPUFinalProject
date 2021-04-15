@@ -7,6 +7,7 @@
 #include "Font.h"
 #include "DynamicCamera.h"
 #include "CollisionMgr.h"
+#include "CollisionTick.h"
 
 CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -448,6 +449,22 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 		m_pPacketMgr->send_attackToMonster(5001);
 		m_pPacketMgr->send_attackToMonster(5002);
 		m_pPacketMgr->send_attackToMonster(5003);
+	}
+
+	if (Engine::KEY_DOWN(DIK_P))
+	{
+		m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+		m_pTransCom->m_vDir.Normalize();
+		_vec3 vPos = m_pTransCom->m_vPos + m_pTransCom->m_vDir * 2.0f;
+		vPos.y = 1.f;
+
+		Engine::CGameObject* pGameObj = CCollisionTick::Create(m_pGraphicDevice, m_pCommandList,
+															   L"CollisionTick_Player",
+															   _vec3(2.0f), 
+															   vPos, 
+															   m_pInfoCom->m_iAttack, 
+															   1.0f);
+		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_Player", pGameObj);
 	}
 }
 
