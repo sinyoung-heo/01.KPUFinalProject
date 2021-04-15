@@ -54,8 +54,6 @@ void CMonster::Change_Animation(const float& fTimeDelta)
 		Change_GiantBeetle_Animation(fTimeDelta);
 	else if (m_monNum == MON_GMONKEY)
 		Change_GiantMonkey_Animation(fTimeDelta);
-	else if (m_monNum == MON_ARACHNE)
-		Change_CraftyArachne_Animation(fTimeDelta);
 }
 
 void CMonster::Change_Crab_Animation(const float& fTimeDelta)
@@ -318,6 +316,7 @@ void CMonster::Change_GiantMonkey_Animation(const float& fTimeDelta)
 	}
 }
 
+
 void CMonster::Change_CraftyArachne_Animation(const float& fTimeDelta)
 {
 	switch (m_status)
@@ -354,6 +353,7 @@ void CMonster::Change_CraftyArachne_Animation(const float& fTimeDelta)
 		break;
 	}
 }
+
 
 void CMonster::Move_NormalMonster(const float& fTimeDelta)
 {
