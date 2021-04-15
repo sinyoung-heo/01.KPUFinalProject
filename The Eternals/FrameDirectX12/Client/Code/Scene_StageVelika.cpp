@@ -28,7 +28,8 @@
 #include "PCGladiator.h"
 #include "SampleNPC.h"
 
-
+//
+#include "MagicCircle.h"
 CScene_StageVelika::CScene_StageVelika(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
 {
@@ -207,6 +208,14 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SampleNPC", pGameObj), E_FAIL);
 
 
+	pGameObj = CMagicCircle::Create(m_pGraphicDevice, m_pCommandList,
+		L"PublicPlane00",		// MeshTag
+		_vec3(0.01f, 0.01f, 0.01f),	// Scale
+		_vec3(0.0f, 0.0f, 0.0f),		// Angle
+		_vec3(143.0f, 1.0f, 73.0f));	// Pos
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PublicPlane00", pGameObj), E_FAIL);
+
+	
 	/*__________________________________________________________________________________________________________
 	[ BumpTerrainMesh ]
 	____________________________________________________________________________________________________________*/

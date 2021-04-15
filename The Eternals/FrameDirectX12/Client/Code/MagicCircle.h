@@ -5,15 +5,16 @@ namespace Engine
 {
 	class CShaderMeshTerrain;
 	class CMesh;
+	class CTexture;
 }
 
 class CDynamicCamera;
 
-class CTerrainMeshObject : public Engine::CGameObject
+class CMagicCircle : public Engine::CGameObject
 {
 private:
-	explicit CTerrainMeshObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CTerrainMeshObject() = default; 
+	explicit CMagicCircle(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CMagicCircle() = default; 
 
 public:
 	// CGameObject을(를) 통해 상속됨
@@ -29,11 +30,19 @@ public:
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 
+
+	virtual void	Render_GameObject(const _float& fTimeDelta);
+	virtual void	Render_EdgeGameObject(const _float& fTimeDelta);
+	virtual void	Render_CrossFilterGameObject(const _float& fTimeDelta);
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
-	
+	// Instancing
+	void			Set_ConstantTable(const _int& iContextIdx, const _int& iInstancingIdx);
+	void			Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int& iInstanceIdx);
+
+	HRESULT SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth);
 
 private:
 	/*__________________________________________________________________________________________________________
@@ -43,15 +52,23 @@ private:
 	Engine::CShaderShadowInstancing*	m_pShaderShadowInstancing = nullptr;
 	Engine::CShaderMeshInstancing*		m_pShaderMeshInstancing   = nullptr;
 
-	Engine::CShaderMeshTerrain* m_pShaderCom = nullptr;
+	Engine::CShaderMesh* m_pShaderCom = nullptr;
+	Engine::CShaderMesh* m_pCrossFilterShaderCom = nullptr;
+	Engine::CShaderMesh* m_pEdgeObjectShaderCom = nullptr;
+
+	ID3D12DescriptorHeap* m_pDescriptorHeaps = nullptr;
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
 	wstring			m_wstrMeshTag		       = L"";
-	
+	_uint			m_iMeshPipelineStatePass   = 0;
+	_uint			m_iShadowPipelineStatePass = 0;
+
+	float m_fNormalMapDeltatime = 0.f;
 	float m_fDeltatime = 0.f;
 	float m_fDeltatime2 = 0.f;
 	float m_fDeltatime3 = 0.f;
+	float m_fPatternMapDeltatime = 0.f;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

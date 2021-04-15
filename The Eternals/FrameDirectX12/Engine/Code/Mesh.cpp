@@ -147,6 +147,12 @@ void CMesh::Render_WaterMesh(ID3D12GraphicsCommandList* pCommandList, const _int
 		m_pVIMesh->Render_WaterMesh(pCommandList, iContextIdx, pShader, pTexnormalDescriptorHeap,uiNormalTextureIdx, uiPatternMapIdx);
 }
 
+void CMesh::Render_MagicCircleMesh(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader, ID3D12DescriptorHeap* pTexnormalDescriptorHeap, _uint AlbedoIdx)
+{
+	if (nullptr != m_pVIMesh && nullptr != pCommandList)
+		m_pVIMesh->Render_MagicCircleMesh(pCommandList, iContextIdx, pShader, pTexnormalDescriptorHeap, AlbedoIdx);
+}
+
 void CMesh::Set_AnimationKey(const _uint & uiAniKey)
 {
 	if (nullptr != m_pAniCtrl)

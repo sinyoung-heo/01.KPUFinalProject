@@ -64,6 +64,11 @@ public:
 		const _int& iContextIdx,
 		CShader* pShader,
 		ID3D12DescriptorHeap *pTexnormalDescriptorHeap,_uint uiNormalTextureIdx, _uint uiPatternMapIdx);
+
+	void Render_MagicCircleMesh(ID3D12GraphicsCommandList* pCommandList,
+		const _int& iContextIdx,
+		CShader* pShader,
+		ID3D12DescriptorHeap* pTexnormalDescriptorHeap, _uint AlbedoIdx);
 	void Begin_Buffer(ID3D12GraphicsCommandList* pCommandList, const _int& iSubMeshIdx);
 	void Render_Buffer(ID3D12GraphicsCommandList* pCommandList, const _int& iSubMeshIdx);
 

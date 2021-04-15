@@ -42,8 +42,13 @@ cbuffer cbShaderMesh : register(b1)
     float		g_fDissolve			: packoffset(c13.y);
 	float		g_fOffset1			: packoffset(c13.z);
 	float		g_fOffset2			: packoffset(c13.w);
-	float4		g_vAfterImgColor	: packoffset(c14);
-	float4		g_vEmissiveColor	: packoffset(c15);
+    float g_fOffset3 : packoffset(c14.x);
+    float g_fOffset4 : packoffset(c14.y);
+    float g_fOffset5 : packoffset(c14.z);
+    float g_fOffset6 : packoffset(c14.w);
+	float4		g_vAfterImgColor	: packoffset(c15);
+	float4		g_vEmissiveColor	: packoffset(c16);
+    float4 g_vTexPos : packoffset(c17);
 };
 
 #define MAX_PALETTE 128

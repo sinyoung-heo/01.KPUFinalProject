@@ -616,6 +616,12 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderMesh", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
+	// ShaderMeshTerrain
+	pShader = CShaderMeshTerrain::Create(m_pGraphicDevice, m_pCommandList);
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderMeshTerrain", ID_STATIC, pShader), E_FAIL);
+	++m_uiCnt_ShaderFile;
+
 	// ShaderShadow
 	pShader = CShaderShadow::Create(m_pGraphicDevice, m_pCommandList);
 	NULL_CHECK_RETURN(pShader, E_FAIL);
@@ -673,6 +679,7 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	// ShaderShadowInstancing
 	CShaderShadowInstancing::Get_Instance()->Ready_Shader(m_pGraphicDevice, m_pCommandList);
 	++m_uiCnt_ShaderFile;
+
 
 	// ShaderMeshInstancing
 	CShaderMeshInstancing::Get_Instance()->Ready_Shader(m_pGraphicDevice, m_pCommandList);
