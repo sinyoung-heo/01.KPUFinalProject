@@ -209,5 +209,8 @@
     <ClInclude Include="..\Header\PCWeaponType.h">
       <Filter>99.Header\01.User\01.PCWeaponType</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\NPCAnimation.h">
+      <Filter>99.Header\01.User\00.Animation_Protocol</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -38,12 +38,7 @@ public:
 		ID3D12DescriptorHeap* pTexNormalDescriptorHeap,
 		_uint uiTexnormalIdx,_uint uiPatternMapIdx,
 		const _uint& iSubMeshIdx);
-	virtual void	Begin_Shader(ID3D12GraphicsCommandList* pCommandList,
-		const _int& iContextIdx,
-		ID3D12DescriptorHeap* pTexDescriptorHeap,
-		ID3D12DescriptorHeap* pTexNormalDescriptorHeap,
-		_uint AlbedoIdx,
-		const _uint& iSubMeshIdx);
+
 	virtual void	Begin_Shader(ID3D12GraphicsCommandList* pCommandList,
 								 const _int& iContextIdx,
 								 const _uint& iSubMeshIdx,

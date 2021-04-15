@@ -36,11 +36,6 @@ void CShaderMgr::Input_ShaderKey()
 		m_pCB_ShaderInformation.Specular == 0.f ? m_pCB_ShaderInformation.Specular = 1.f
 			: m_pCB_ShaderInformation.Specular = 0.f;
 	}
-	if (KEY_DOWN(DIK_NUMPAD5))
-	{
-		m_pCB_ShaderInformation.TreeAlphaTest == 0.f ? m_pCB_ShaderInformation.TreeAlphaTest = 1.f
-			: m_pCB_ShaderInformation.TreeAlphaTest = 0.f;
-	}
 }
 
 void CShaderMgr::Free()

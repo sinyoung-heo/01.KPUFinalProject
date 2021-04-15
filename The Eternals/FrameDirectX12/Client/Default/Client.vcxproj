@@ -176,15 +176,11 @@
     <ClInclude Include="..\Code\CharacterMpGauge.h" />
     <ClInclude Include="..\Code\CloderA.h" />
     <ClInclude Include="..\Code\Crab.h" />
-<<<<<<< HEAD
     <ClInclude Include="..\Code\CraftyArachne.h" />
     <ClInclude Include="..\Code\DrownedSailor.h" />
     <ClInclude Include="..\Code\EffectTrail.h" />
     <ClInclude Include="..\Code\GiantBeetle.h" />
     <ClInclude Include="..\Code\GiantMonkey.h" />
-=======
-    <ClInclude Include="..\Code\MagicCircle.h" />
->>>>>>> JunOPark9
     <ClInclude Include="..\Code\Monkey.h" />
     <ClInclude Include="..\Code\PCGladiator.h" />
     <ClInclude Include="..\Code\PCOthersGladiator.h" />
@@ -226,7 +222,6 @@
     <ClInclude Include="..\Code\StagePJO.h" />
     <ClInclude Include="..\Code\StaticMeshObject.h" />
     <ClInclude Include="..\Code\TerrainMeshObject.h" />
-    <ClInclude Include="..\Code\WaterFall.h" />
     <ClInclude Include="..\Code\WaterMeshObject.h" />
     <ClInclude Include="..\Code\TerrainObject.h" />
     <ClInclude Include="..\Code\TestCollisonObject.h" />
@@ -262,12 +257,8 @@
     <ClCompile Include="..\Code\EffectTrail.cpp" />
     <ClCompile Include="..\Code\GameUIChild.cpp" />
     <ClCompile Include="..\Code\GameUIRoot.cpp" />
-<<<<<<< HEAD
     <ClCompile Include="..\Code\GiantBeetle.cpp" />
     <ClCompile Include="..\Code\GiantMonkey.cpp" />
-=======
-    <ClCompile Include="..\Code\MagicCircle.cpp" />
->>>>>>> JunOPark9
     <ClCompile Include="..\Code\MainMenuEquipment.cpp" />
     <ClCompile Include="..\Code\MainMenuInventory.cpp" />
     <ClCompile Include="..\Code\MainMenuLogout.cpp" />
@@ -307,7 +298,6 @@
     <ClCompile Include="..\Code\StagePJO.cpp" />
     <ClCompile Include="..\Code\StaticMeshObject.cpp" />
     <ClCompile Include="..\Code\TerrainMeshObject.cpp" />
-    <ClCompile Include="..\Code\WaterFall.cpp" />
     <ClCompile Include="..\Code\WaterMeshObject.cpp" />
     <ClCompile Include="..\Code\TerrainObject.cpp" />
     <ClCompile Include="..\Code\TestCollisonObject.cpp" />

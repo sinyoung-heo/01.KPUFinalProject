@@ -10,7 +10,6 @@ class CShaderTextureInstancing;
 class CShaderBumpTerrain;
 class CShaderSkyBox;
 class CShaderMesh;
-class CShaderMeshTerrain;
 class CShaderMeshInstancing;
 class CShaderSSAO;
 class CShaderNPathDir;
@@ -66,7 +65,7 @@ protected:
 	CShaderMesh*				m_pShaderMesh		       = nullptr;
 	CShaderMeshInstancing*		m_pShaderMeshInstancing    = nullptr;
 	CShaderSSAO*				m_pShaderSSAO              = nullptr;
-	CShaderMeshTerrain*			m_pShaderMeshTerrain = nullptr;
+
 	Engine::CB_SHADER_VARIABLE tCB_ShaderVariable;
 	CShaderNPathDir* m_pShaderNPathDir = nullptr;
 protected:

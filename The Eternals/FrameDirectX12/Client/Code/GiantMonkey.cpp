@@ -38,11 +38,7 @@ HRESULT CGiantMonkey::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMesh
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
-<<<<<<< HEAD
 	m_iMonsterStatus = GiantMonkey::A_WAIT;
-=======
-	m_iCurAnim = GiantBeetle::A_WAIT;
->>>>>>> parent of adf35e7... Create Monster Crafty Arachne in client & server
 
 	return S_OK;
 }

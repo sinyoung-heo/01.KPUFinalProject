@@ -235,8 +235,23 @@
     <Filter Include="02.GameObject\05.Monster\02.CloderA">
       <UniqueIdentifier>{bc3c5eac-51e7-4ec7-94fa-47a9d686f3fa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\01.Environment\03.WaterFall">
-      <UniqueIdentifier>{d7f59dea-7057-4833-a964-88f145247660}</UniqueIdentifier>
+    <Filter Include="02.GameObject\05.Monster\03.DrownedSailor">
+      <UniqueIdentifier>{713aa426-3981-45d9-8771-b82e6792d412}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.GameEffect">
+      <UniqueIdentifier>{9afafac1-18e0-482b-8f50-b6c06c0bf845}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.GameEffect\01.EffectTrail">
+      <UniqueIdentifier>{ecfa5090-5ac4-4c60-8258-468da564ef49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Monster\04.GiantBeetle">
+      <UniqueIdentifier>{015b6714-c2a6-4a34-ac83-056edb880e66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Monster\05.GiantMonkey">
+      <UniqueIdentifier>{632a9c57-7803-4c3f-8918-3d76c1f4aa9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Monster\06.CraftyArachne">
+      <UniqueIdentifier>{53d529ed-bf47-47fa-bbe1-0542401ebe4e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -468,11 +483,20 @@
     <ClInclude Include="..\Header\GladiatorAnimation.h">
       <Filter>02.GameObject\02.PlayerCharacter\00.PCGladiator</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\WaterFall.h">
-      <Filter>02.GameObject\01.Environment\03.WaterFall</Filter>
+    <ClInclude Include="..\Code\DrownedSailor.h">
+      <Filter>02.GameObject\05.Monster\03.DrownedSailor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\MagicCircle.h">
-      <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
+    <ClInclude Include="..\Code\EffectTrail.h">
+      <Filter>02.GameObject\98.GameEffect\01.EffectTrail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\GiantBeetle.h">
+      <Filter>02.GameObject\05.Monster\04.GiantBeetle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\GiantMonkey.h">
+      <Filter>02.GameObject\05.Monster\05.GiantMonkey</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\CraftyArachne.h">
+      <Filter>02.GameObject\05.Monster\06.CraftyArachne</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -659,11 +683,20 @@
     <ClCompile Include="..\Code\CloderA.cpp">
       <Filter>02.GameObject\05.Monster\02.CloderA</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\WaterFall.cpp">
-      <Filter>02.GameObject\01.Environment\03.WaterFall</Filter>
+    <ClCompile Include="..\Code\DrownedSailor.cpp">
+      <Filter>02.GameObject\05.Monster\03.DrownedSailor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\MagicCircle.cpp">
-      <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
+    <ClCompile Include="..\Code\EffectTrail.cpp">
+      <Filter>02.GameObject\98.GameEffect\01.EffectTrail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\GiantBeetle.cpp">
+      <Filter>02.GameObject\05.Monster\04.GiantBeetle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\GiantMonkey.cpp">
+      <Filter>02.GameObject\05.Monster\05.GiantMonkey</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CraftyArachne.cpp">
+      <Filter>02.GameObject\05.Monster\06.CraftyArachne</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

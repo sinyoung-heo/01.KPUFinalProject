@@ -1,18 +1,6 @@
 /*__________________________________________________________________________________________________________
 [ Shader Resource ]
 ____________________________________________________________________________________________________________*/
-
-/*__________________________________________________________________________________________________________
-[ Sampler ]
-____________________________________________________________________________________________________________*/
-SamplerState g_samPointWrap : register(s0);
-SamplerState g_samPointClamp : register(s1);
-SamplerState g_samLinearWrap : register(s2);
-SamplerState g_samLinearClamp : register(s3);
-SamplerState g_samAnisotropicWrap : register(s4);
-SamplerState g_samAnisotropicClamp : register(s5);
-
-
 typedef struct tagShaderMesh
 {
 	float4x4	matWorld;				
@@ -26,10 +14,6 @@ typedef struct tagShaderMesh
 } SHADER_SHADOW;
 StructuredBuffer<SHADER_SHADOW> g_ShaderShadow : register(t0, space1);
 
-/*__________________________________________________________________________________________________________
-[ Texture ]
-____________________________________________________________________________________________________________*/
-Texture2D g_TexDiffuse : register(t1); // Diffuse 색상.
 
 // VS_MAIN
 struct VS_IN
@@ -44,9 +28,7 @@ struct VS_IN
 struct VS_OUT
 {
 	float4 Pos		: SV_POSITION;
-    float2 TexUV    : TEXCOORD0;
-	float4 ProjPos	: TEXCOORD1;
-    float AlphaTest : TEXCOORD2;
+	float4 ProjPos	: TEXCOORD0;
 };
 
 
@@ -64,9 +46,6 @@ VS_OUT VS_MAIN(VS_IN vs_input, uint iInstanceID : SV_InstanceID)
 	vPos.z				= vPos.z * vPos.w / g_ShaderShadow[iInstanceID].fProjFar;
 	vs_output.ProjPos	= vPos;
 	
-    vs_output.TexUV = vs_input.TexUV;
-	
-    vs_output.AlphaTest = g_ShaderShadow[iInstanceID].fOffset1;
 	return (vs_output);
 }
 
@@ -81,17 +60,10 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 {
 	PS_OUT ps_output = (PS_OUT) 0;
 	
-    float4 Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
-	
-	
 	// ShadowDepth - 광원 위치에서의 깊이 값 기록.
 	float Depth = ps_input.ProjPos.z / ps_input.ProjPos.w; // (posWVP.z / posWVP.w) : Proj 영역의 Z.
 	
-    if (ps_input.AlphaTest) {
-        ps_output.ShadowDepth = Diffuse; //Diffuse;
-        ps_output.ShadowDepth.x = Depth;
-    }
-	else
-        ps_output.ShadowDepth = float4(Diffuse.x, 0.f, 0.f, 1.f);
+	ps_output.ShadowDepth = float4(Depth.x, 0.0f, 0.0f, 1.0f);
+	
 	return (ps_output);
 }

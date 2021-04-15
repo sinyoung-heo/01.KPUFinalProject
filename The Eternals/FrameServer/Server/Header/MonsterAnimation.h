@@ -7,7 +7,7 @@ namespace Monster_Normal
 	constexpr int RUN		= 2;
 	constexpr int ATTACK	= 3;
 
-	constexpr int TPS		= 4800;
+	constexpr double TPS	= 4800.0;
 }
 namespace Crab
 {
@@ -125,5 +125,28 @@ namespace GiantMonkey
 	static double duration[NUM_ANIMATION] =
 	{
 		19200, 6400, 12800, 9600, 17600, 17600, 16000, 22400, 30560, 22400
+	};
+}
+
+namespace CraftyArachne
+{
+	constexpr int ATTACK_POUND		= 2;
+	constexpr int ATTACK_NORMAL		= 3;
+	constexpr int ATTACK_SPIN		= 4;
+	constexpr int ATTACK_FLYSTAMP	= 5;
+	constexpr int DEATH				= 6;
+
+	constexpr int NUM_ANIMATION		= 7;
+
+	enum ANIM_CRAFTYARACHNE {
+		A_WAIT, A_WALK,
+		A_ATTACK_POUND, A_ATTACK_NORMAL,
+		A_ATTACK_SPIN, A_ATTACK_FLYSTAMP,
+		A_DEATH, A_END
+	};
+
+	static double duration[NUM_ANIMATION] =
+	{
+		27200, 4800, 12000, 12000, 22400, 32000, 14400
 	};
 }

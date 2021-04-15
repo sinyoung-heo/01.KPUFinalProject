@@ -123,8 +123,6 @@ HRESULT CLoading::Loading_TextureFromFilePath()
 		wstrTextureTag	= szTextureTag;
 		wstrPath		= szPath;
 
-		if (wstrTextureTag == L"WaterFall")
-			int i = 0;
 		pComponent = Engine::CTexture::Create(m_pGraphicDevice, m_pCommandList,
 											  wstrTextureTag,
 											  wstrPath, 
