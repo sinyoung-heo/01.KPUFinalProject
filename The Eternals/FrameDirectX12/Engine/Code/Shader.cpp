@@ -162,7 +162,8 @@ D3D12_BLEND_DESC CShader::Create_BlendState(const _bool & bIsBlendEnable,
 											const D3D12_BLEND_OP & BlendOp, 
 											const D3D12_BLEND & SrcBlendAlpha, 
 											const D3D12_BLEND & DstBlendAlpha, 
-											const D3D12_BLEND_OP & BlendOpAlpha)
+											const D3D12_BLEND_OP & BlendOpAlpha,
+											const _bool& bIsAlphaTest)
 {
 	D3D12_BLEND_DESC BlendDesc = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 

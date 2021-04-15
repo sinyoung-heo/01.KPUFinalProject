@@ -176,6 +176,11 @@
     <ClInclude Include="..\Code\CharacterMpGauge.h" />
     <ClInclude Include="..\Code\CloderA.h" />
     <ClInclude Include="..\Code\Crab.h" />
+    <ClInclude Include="..\Code\CraftyArachne.h" />
+    <ClInclude Include="..\Code\DrownedSailor.h" />
+    <ClInclude Include="..\Code\EffectTrail.h" />
+    <ClInclude Include="..\Code\GiantBeetle.h" />
+    <ClInclude Include="..\Code\GiantMonkey.h" />
     <ClInclude Include="..\Code\Monkey.h" />
     <ClInclude Include="..\Code\PCGladiator.h" />
     <ClInclude Include="..\Code\PCOthersGladiator.h" />
@@ -248,8 +253,13 @@
     <ClCompile Include="..\Code\CharacterMpGauge.cpp" />
     <ClCompile Include="..\Code\CloderA.cpp" />
     <ClCompile Include="..\Code\Crab.cpp" />
+    <ClCompile Include="..\Code\CraftyArachne.cpp" />
+    <ClCompile Include="..\Code\DrownedSailor.cpp" />
+    <ClCompile Include="..\Code\EffectTrail.cpp" />
     <ClCompile Include="..\Code\GameUIChild.cpp" />
     <ClCompile Include="..\Code\GameUIRoot.cpp" />
+    <ClCompile Include="..\Code\GiantBeetle.cpp" />
+    <ClCompile Include="..\Code\GiantMonkey.cpp" />
     <ClCompile Include="..\Code\MainMenuEquipment.cpp" />
     <ClCompile Include="..\Code\MainMenuInventory.cpp" />
     <ClCompile Include="..\Code\MainMenuLogout.cpp" />

@@ -12,6 +12,10 @@
 #include "Crab.h"
 #include "Monkey.h"
 #include "CloderA.h"
+#include "DrownedSailor.h"
+#include "GiantBeetle.h"
+#include "GiantMonkey.h"
+#include "CraftyArachne.h"
 #include "DynamicCamera.h"
 #include "TestColPlayer.h"
 #include "TestColMonster.h"
@@ -26,7 +30,10 @@ CPacketMgr::CPacketMgr()
 	, m_pRenderer(Engine::CRenderer::Get_Instance())
 	, m_eCurKey(MVKEY::K_END), m_ePreKey(MVKEY::K_END)
 {
-
+	memset(m_recv_buf, 0, sizeof(m_recv_buf));
+	m_packet_start = m_recv_buf;
+	m_recv_start = m_recv_buf;
+	m_next_recv_ptr = m_recv_buf;
 }
 
 HRESULT CPacketMgr::Ready_Server(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -86,10 +93,9 @@ HRESULT CPacketMgr::Connect_Server()
 
 void CPacketMgr::recv_packet()
 {
-	unsigned char net_buf[MAX_BUF_SIZE];
-
-	// Server Data Receive.
-	int retval = recv(g_hSocket, reinterpret_cast<char*>(net_buf), MAX_BUF_SIZE, 0);
+	// Server Data Receive Version - Ring Buffer
+	int iLen = MAX_BUF_SIZE - static_cast<int>(m_next_recv_ptr - m_recv_buf);
+	int retval = recv(g_hSocket, reinterpret_cast<CHAR*>(m_recv_start), iLen, 0);
 
 #ifdef ERR_CHECK
 	if (retval == SOCKET_ERROR)
@@ -106,117 +112,69 @@ void CPacketMgr::recv_packet()
 	// 데이터 수신 성공
 	if (retval > 0)
 	{
-		// 패킷 재조립
-		ProcessData(net_buf, static_cast<size_t>(retval));
+		// 패킷 재조립(Version - Ring Buffer)
+		Process_recv_reassembly(static_cast<size_t>(retval));
 	}
 }
 
-void CPacketMgr::ProcessData(unsigned char* net_buf, size_t io_byte)
+void CPacketMgr::Process_recv_reassembly(size_t iosize)
 {
-	unsigned char* ptr = net_buf;
+	// m_packet_start		: 처리할 데이터 버퍼 및 위치 (= iocp_buffer)
+	// m_packet_start[0]	: 처리할 패킷의 크기
+	unsigned char p_size = m_packet_start[0];
 
-	/* 처리해야 할 Original Packet Size */
-	static size_t in_packet_size = 0;
-	/* 처리하지 못한 Remain Packet Size */
-	static size_t saved_packet_size = 0;
-	/* recv packet을 저장한 Buffer */
-	static char packet_buffer[MAX_BUF_SIZE];
+	/* 다음 패킷을 받을 링버퍼 위치 설정 */
+	// m_recv_start			: 수신한 패킷의 시작 위치
+	m_next_recv_ptr = m_recv_start + iosize;
 
-	/* 처리해야 할 패킷이 있을 경우 */
-	while (0 != io_byte)
+	// 처리할 패킷 크기보다 남아있는 공간이 적당할 경우 패킷 처리 시작
+	while (p_size <= m_next_recv_ptr - m_packet_start)
 	{
-		/* 처리해야 할 Packet Size 갱신 */
-		if (0 == in_packet_size)
-			in_packet_size = ptr[0];
+		// 패킷 처리
+		Process_packet();
 
-		/* 패킷을 처리할 수 있을 경우 -> 패킷 처리 */
-		if (io_byte + saved_packet_size >= in_packet_size)
-		{
-			/* 
-			이전에 처리하지 못한 패킷(saved_packet_size)이 존재할 수 있으므로,
-			Packet_buffer의 다음 메모리 공간(packet_buffer + saved_packet_size)에
-			새로 들어온 패킷(ptr) 저장
-			*/
-			memcpy(packet_buffer + saved_packet_size, ptr, in_packet_size - saved_packet_size);
+		// 패킷 처리 후 유저의 데이터 처리 버퍼 시작 위치 변경
+		m_packet_start += p_size;
 
-			/* 패킷 처리 */
-			ProcessPacket(packet_buffer);
-
-			/* 다음 recv 받을 메모리 공간 갱신 */
-			ptr += in_packet_size - saved_packet_size;
-		
-			/* 패킷을 처리하고 남은 recv size 갱신 */
-			io_byte -= in_packet_size - saved_packet_size;
-
-			/* Original Packet을 처리했으므로 다음 들어올 패킷을 위해 Original Packet Size 초기화 */
-			in_packet_size = 0;
-			saved_packet_size = 0;
-		}
-		/* 패킷을 처리할 수 없을 경우 -> 패킷 저장 */
-		else
-		{
-			memcpy(packet_buffer + saved_packet_size, ptr, io_byte);
-			saved_packet_size += io_byte;
-			io_byte = 0;
-		}
+		// recv한 데이터를 처리했는데 아직 처리하지 못한 데이터를 가지고 있을 수도 있다.
+		// 처리해야 할 패킷 크기 갱신
+		if (m_packet_start < m_next_recv_ptr)
+			p_size = m_packet_start[0];
+		else break;
 	}
+
+	// 처리하지 못한(남아있는) 데이터의 시작 위치
+	long long left_data = m_next_recv_ptr - m_packet_start;
+
+	// recv 처리 종료 -> 다시 recv를 해야 한다.
+	// 다시 recv를 하기 전에 링 버퍼의 여유 공간을 확인 후 다 사용했을 경우 초기화한다.
+	// 남아있는 공간이 MIN_BUFFER 보다 작으면 남은 데이터를 링 버퍼 맨 앞으로 옮겨준다.
+	
+	if ((MAX_BUF_SIZE - (int)(m_next_recv_ptr - m_recv_buf)) < MIN_BUF_SIZE)
+	{
+		// 남은 데이터 버퍼를 recv_buf에 복사한다.
+		memcpy(m_recv_buf, m_packet_start, left_data);
+		// 처리할 데이터 버퍼 갱신한다.
+		m_packet_start = m_recv_buf;
+		// 다음 패킷을 받을 버퍼의 시작 위치를 갱신한다.
+		m_next_recv_ptr = m_packet_start + left_data;
+	}
+
+	/* 다음 recv 준비 */
+	m_recv_start = m_next_recv_ptr;
 }
 
-void CPacketMgr::ProcessPacket(char* ptr)
+void CPacketMgr::Process_packet()
 {
-	switch (ptr[1])
+	// 패킷 타입
+	char p_type = m_packet_start[1];
+
+	switch (p_type)
 	{
 	case SC_PACKET_LOGIN_OK:
 	{
-		sc_packet_login_ok* packet = reinterpret_cast<sc_packet_login_ok*>(ptr);
-		g_iSNum = packet->id;
-
-		/*__________________________________________________________________________________________________________
-		[ GameLogic Object(ThisPlayer) 생성 ]
-		____________________________________________________________________________________________________________*/
-		Engine::CGameObject* pGameObj = nullptr;
-		wstring wstrMeshTag = L"";
-
-#ifdef STAGE_LDH
-		//pGameObj = CTestPlayer::Create(m_pGraphicDevice, m_pCommandList,
-		//							   L"PoporiR19",					// MeshTag
-		//							   _vec3(0.05f, 0.05f, 0.05f),		// Scale
-		//							   _vec3(0.0f, 0.0f, 0.0f),			// Angle
-		//							   _vec3(packet->posX, packet->posY, packet->posZ));		// Pos
-
-#else
-		if (PC_GLADIATOR == packet->o_type)
-		{
-			wstrMeshTag = L"PoporiR27Gladiator";
-		}
-		else if (PC_ARCHER == packet->o_type)
-		{
-
-		}
-		else if (PC_PRIEST == packet->o_type)
-		{
-
-		}
-		else
-			wstrMeshTag = L"PoporiR27Gladiator";
-
-		pGameObj =	CPCGladiator::Create(m_pGraphicDevice, m_pCommandList,
-										 wstrMeshTag,										// MeshTag
-										 L"StageVelika_NaviMesh",							// NaviMeshTag
-										 _vec3(0.05f, 0.05f, 0.05f),						// Scale
-										 _vec3(0.0f, 0.0f, 0.0f),							// Angle
-										 _vec3(packet->posX, packet->posY, packet->posZ),	// Pos
-										 TwoHand33_B_SM);									// WeaponType
-
-#endif
-		pGameObj->Set_OType(packet->o_type);
-		pGameObj->Set_ServerNumber(g_iSNum);
-		pGameObj->Set_Info(packet->level, packet->hp, packet->maxHp, packet->mp, packet->maxMp, packet->exp, packet->maxExp, packet->att, packet->spd);
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"ThisPlayer", pGameObj), E_FAIL);
-		
-#ifdef ERR_CHECK
-		cout << "Login OK! 접속완료!" << endl;
-#endif
+		sc_packet_login_ok* packet = reinterpret_cast<sc_packet_login_ok*>(m_packet_start);
+		Login_Player(packet);
 	}
 	break;
 
@@ -225,355 +183,490 @@ void CPacketMgr::ProcessPacket(char* ptr)
 
 	case SC_PACKET_ENTER:
 	{
-		sc_packet_enter* packet = reinterpret_cast<sc_packet_enter*>(ptr);
+		sc_packet_enter* packet = reinterpret_cast<sc_packet_enter*>(m_packet_start);
 
-		if (packet->id == g_iSNum) break;
-
-		/*__________________________________________________________________________________________________________
-		[ GameLogic Object(player) 생성 ]
-		____________________________________________________________________________________________________________*/
-		Engine::CGameObject* pGameObj = nullptr;
-		wstring wstrMeshTag = L"";
-
-		if (PC_GLADIATOR == packet->o_type)
-		{
-			wstrMeshTag = L"PoporiR27Gladiator";
-			pGameObj = CPCOthersGladiator::Create(m_pGraphicDevice, m_pCommandList,
-												  L"PoporiR27Gladiator",							// MeshTag
-												  L"StageVelika_NaviMesh",							// NaviMeshTag
-												  _vec3(0.05f, 0.05f, 0.05f),						// Scale
-												  _vec3(0.0f, 0.0f, 0.0f),							// Angle
-												  _vec3(packet->posX, packet->posY, packet->posZ),	// Pos
-												   Twohand19_A_SM);									// WeaponType
-
-		}
-		else if (PC_ARCHER == packet->o_type)
-		{
-
-		}
-		else if (PC_PRIEST == packet->o_type)
-		{
-
-		}
-		else
-		{
-			wstrMeshTag = L"PoporiR27Gladiator";
-			pGameObj = CPCOthersGladiator::Create(m_pGraphicDevice, m_pCommandList,
-												  L"PoporiR27Gladiator",							// MeshTag
-												  L"StageVelika_NaviMesh",							// NaviMeshTag
-												  _vec3(0.05f, 0.05f, 0.05f),						// Scale
-												  _vec3(0.0f, 0.0f, 0.0f),							// Angle
-												  _vec3(packet->posX, packet->posY, packet->posZ),	// Pos
-												  Twohand19_A_SM);									// WeaponType
-		}
-
-		pGameObj->Set_OType(packet->o_type);
-		pGameObj->Set_ServerNumber(packet->id);
-
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Others", pGameObj), E_FAIL);
+		int retflag;
+		Enter_Others(packet, retflag);
+		if (retflag == 2) break;
 	}
 	break;
 
 	case SC_PACKET_MOVE:
 	{
-		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
+		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(m_packet_start);
 
-		int s_num = packet->id;
-
-		/* 현재 클라이언트가 움직인 경우 */
-		if (s_num == g_iSNum)
-		{
-			Engine::CGameObject* pObj = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
-
-			auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
-
-			pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
-
-		}
-		/* 다른 클라이언트가 움직인 경우 */
-		else
-		{
-			Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
-
-			auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
-
-			static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
-			pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
-			pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
-			pObj->Set_MoveStop(false);
-		}
+		Move_User(packet);
 	}
 	break;
 
 	case SC_PACKET_MOVE_STOP:
 	{
-		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
+		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(m_packet_start);
 
-		int s_num = packet->id;
-
-		/* 현재 클라이언트가 움직인 경우 */
-		if (s_num == g_iSNum)
-		{
-			Engine::CGameObject* pObj = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
-
-			auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
-
-			pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
-		}
-
-		/* 다른 클라이언트가 움직인 경우 */
-		else	
-		{
-			Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
-			auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
-
-			static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
-			pObj->Set_IsStartPosInterpolation(true);
-			pObj->Set_LinearPos(pObj->Get_Transform()->m_vPos, _vec3(packet->posX, packet->posY, packet->posZ));
-			pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
-			pObj->Set_MoveStop(true);
-		}
+		MoveStop_User(packet);
 	}
 	break;
 
 	case SC_PACKET_STAT_CHANGE:
 	{
-		sc_packet_stat_change* packet = reinterpret_cast<sc_packet_stat_change*>(ptr);
+		sc_packet_stat_change* packet = reinterpret_cast<sc_packet_stat_change*>(m_packet_start);
 
-		int s_num = packet->id;
-
-		Engine::CGameObject* pObj = nullptr;
-		/* 현재 클라이언트의 스탯이 갱신된 경우 */
-		if (s_num == g_iSNum)
-			pObj = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);	
-		/* 다른 클라이언트의 스탯이 갱신된 경우 */
-		else
-			pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
-					
-		pObj->Get_Info()->m_iHp = packet->hp;
-		pObj->Get_Info()->m_iMp = packet->mp;
-		pObj->Get_Info()->m_iExp = packet->exp;
+		ChangeStat_User(packet);
 	}
 	break;
 
 	case SC_PACKET_ATTACK:
 	{
-		sc_packet_attack* packet= reinterpret_cast<sc_packet_attack*>(ptr);
+		sc_packet_attack* packet = reinterpret_cast<sc_packet_attack*>(m_packet_start);
 
-		int s_num = packet->id;
-
-		/* 현재 클라이언트가 공격한 경우 */
-		if (s_num == g_iSNum)
-		{
-			Engine::CGameObject* pObj = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
-			pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
-		}
-		/* 다른 클라이언트가 공격한 경우 */
-		else
-		{
-			Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
-			
-			if (PC_GLADIATOR == packet->o_type)
-			{
-				static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
-			}
-			else if (PC_ARCHER == packet->o_type)
-			{
-			}
-			else if (PC_PRIEST == packet->o_type)
-			{
-			}
-			else
-				static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
-
-			pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
-			pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
-			pObj->Set_IsStartAngleInterpolation(true);
-			pObj->Set_LinearAngle(pObj->Get_Transform()->m_vAngle.y, packet->end_angleY);
-			pObj->Set_Attack(true);
-		}
+		Attack_User(packet);
 	}
 	break;
 
 	case SC_PACKET_ATTACK_STOP:
 	{
-		sc_packet_attack* packet = reinterpret_cast<sc_packet_attack*>(ptr);
+		sc_packet_attack* packet = reinterpret_cast<sc_packet_attack*>(m_packet_start);
 
-		int s_num = packet->id;
-
-		/* 현재 클라이언트가 공격을 멈춘 경우 */
-		if (s_num == g_iSNum)
-		{
-			Engine::CGameObject* pObj = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
-			pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
-		}
-		/* 다른 클라이언트가 공격을 멈춘 경우 */
-		else
-		{
-			Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
-
-			if (PC_GLADIATOR == packet->o_type)
-			{
-				static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
-			}
-			else if (PC_ARCHER == packet->o_type)
-			{
-			}
-			else if (PC_PRIEST == packet->o_type)
-			{
-			}
-			else
-				static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
-
-			cout << "recv position" << packet->posX << "," << packet->posX << endl;
-			pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
-			// pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
-			pObj->Set_Attack(false);
-			pObj->Set_MoveStop(true);
-		}
+		AttackStop_User(packet);
 	}
 	break;
 
 	case SC_PACKET_LEAVE:
 	{
-		sc_packet_leave* packet = reinterpret_cast<sc_packet_leave*>(ptr);
+		sc_packet_leave* packet = reinterpret_cast<sc_packet_leave*>(m_packet_start);
 
-		if (packet->id == g_iSNum) break;
-
-		if (packet->id >= NPC_NUM_START && packet->id < MON_NUM_START)
-			m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"NPC", packet->id);
-		else if (packet->id >= MON_NUM_START)
-			m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"MONSTER", packet->id);
-		else
-			m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"Others", packet->id);
+		int retflag;
+		Leave_Object(packet, retflag);
+		if (retflag == 2) break;
 	}
 	break;
 
 	case SC_PACKET_STANCE_CHANGE:
 	{
-		sc_packet_stance_change* packet = reinterpret_cast<sc_packet_stance_change*>(ptr);
-		int s_num = packet->id;
-
-		if (s_num == g_iSNum) break;
-
-		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
-
-		if (PC_GLADIATOR == packet->o_type)
-		{
-			static_cast<CPCOthersGladiator*>(pObj)->Set_StanceChange(packet->animIdx, packet->is_stance_attack);
-		}
-		else if (PC_ARCHER == packet->o_type)
-		{
-
-		}
-		else if (PC_PRIEST == packet->o_type)
-		{
-
-		}
-		else
-		{
-			static_cast<CPCOthersGladiator*>(pObj)->Set_StanceChange(packet->animIdx, packet->is_stance_attack);
-		}
+		sc_packet_stance_change* packet = reinterpret_cast<sc_packet_stance_change*>(m_packet_start);
+		int retflag;
+		Change_Stance_Others(packet, retflag);
+		if (retflag == 2) break;
 	}
 	break;
 
 	case SC_PACKET_NPC_ENTER:
 	{
-		sc_packet_npc_enter* packet = reinterpret_cast<sc_packet_npc_enter*>(ptr);
-
-		/*__________________________________________________________________________________________________________
-		[ GameLogic Object(NPC) 생성 ]
-		____________________________________________________________________________________________________________*/
-		Engine::CGameObject* pGameObj = nullptr;
-
-		if (!strcmp(packet->name, "Chicken") || !strcmp(packet->name, "Cat"))
-		{
-			pGameObj = CNPC_Animal::Create(m_pGraphicDevice, m_pCommandList,
-										wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
-										wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
-										_vec3(0.05f, 0.05f, 0.05f),										// Scale
-										_vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
-										_vec3(packet->posX, packet->posY, packet->posZ));				// Pos
-		}
-		else if (!strcmp(packet->name, "Aman_boy") || !strcmp(packet->name, "Human_boy") 
-				 || !strcmp(packet->name, "Popori_boy"))
-		{
-			pGameObj = CNPC_Boy::Create(m_pGraphicDevice, m_pCommandList,
-										wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
-										wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
-										_vec3(0.05f, 0.05f, 0.05f),										// Scale
-										_vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
-										_vec3(packet->posX, packet->posY, packet->posZ));				// Pos
-		}
-		else if (!strcmp(packet->name, "NPC_Villagers"))
-		{
-			pGameObj = CNPC_Villagers::Create(m_pGraphicDevice, m_pCommandList,
-										wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
-										wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
-										_vec3(0.05f, 0.05f, 0.05f),										// Scale
-										_vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
-										_vec3(packet->posX, packet->posY, packet->posZ));				// Pos
-		}
-		
-		pGameObj->Set_ServerNumber(packet->id);
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"NPC", pGameObj), E_FAIL);
+		sc_packet_npc_enter* packet = reinterpret_cast<sc_packet_npc_enter*>(m_packet_start);
+		Enter_NPC(packet);
 	}
 	break;
 
 	case SC_PACKET_NPC_MOVE:
 	{
-		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
+		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(m_packet_start);
 
-		int s_num = packet->id;
-
-		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"NPC", s_num);
-		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
-
-		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
-		pObj->Set_MoveStop(false);
+		Move_NPC(packet);
 	}
 	break;
 
 	case SC_PACKET_MONSTER_ENTER:
 	{
-		sc_packet_monster_enter* packet = reinterpret_cast<sc_packet_monster_enter*>(ptr);
+		sc_packet_monster_enter* packet = reinterpret_cast<sc_packet_monster_enter*>(m_packet_start);
 		Enter_Monster(packet);
 	}
 	break;
 
 	case SC_PACKET_MONSTER_MOVE:
 	{
-		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(ptr);
+		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(m_packet_start);
 		Move_Monster(packet);
 	}
 	break;
 
 	case SC_PACKET_MONSTER_ATTACK:
 	{
-		sc_packet_monster_attack* packet = reinterpret_cast<sc_packet_monster_attack*>(ptr);
-		Attack_Monster(packet);		
+		sc_packet_monster_attack* packet = reinterpret_cast<sc_packet_monster_attack*>(m_packet_start);
+		Attack_Monster(packet);
+	}
+	break;
+
+	case SC_PACKET_MONSTER_RUSH:
+	{
+		sc_packet_monster_rushAttack* packet = reinterpret_cast<sc_packet_monster_rushAttack*>(m_packet_start);
+		Rush_Monster(packet);
 	}
 	break;
 
 	case SC_PACKET_MONSTER_STAT:
 	{
-		sc_packet_stat_change* packet = reinterpret_cast<sc_packet_stat_change*>(ptr);
+		sc_packet_stat_change* packet = reinterpret_cast<sc_packet_stat_change*>(m_packet_start);
 
-		int s_num = packet->id;
-		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
-
-		pObj->Get_Info()->m_iHp = packet->hp;
-		pObj->Get_Info()->m_iMp = packet->mp;
-		pObj->Get_Info()->m_iExp = packet->exp;
+		Change_Monster_Stat(packet);
 	}
 	break;
 
 	default:
 #ifdef ERR_CHECK
-		printf("Unknown PACKET type [%d]\n", ptr[1]);
+		printf("Unknown PACKET type [%d]\n", m_packet_start[1]);
 #endif 
 		break;
 	}
+}
+
+void CPacketMgr::Rush_Monster(sc_packet_monster_rushAttack* packet)
+{
+	int s_num = packet->id;
+
+	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
+
+	pObj->Set_State(packet->animIdx);
+	pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+	pObj->Ready_AngleInterpolationValue(pObj->Set_Other_Angle(_vec3(packet->dirX, packet->dirY, packet->dirZ)));
+}
+
+void CPacketMgr::Change_Monster_Stat(sc_packet_stat_change* packet)
+{
+	int s_num = packet->id;
+	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
+
+	pObj->Get_Info()->m_iHp = packet->hp;
+	pObj->Get_Info()->m_iMp = packet->mp;
+	pObj->Get_Info()->m_iExp = packet->exp;
+}
+
+void CPacketMgr::Move_NPC(sc_packet_move* packet)
+{
+	int s_num = packet->id;
+
+	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"NPC", s_num);
+	pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
+
+	pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
+	pObj->Set_MoveStop(false);
+}
+
+void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
+{
+	/*__________________________________________________________________________________________________________
+	[ GameLogic Object(NPC) 생성 ]
+	____________________________________________________________________________________________________________*/
+	Engine::CGameObject* pGameObj = nullptr;
+
+	if (!strcmp(packet->name, "Chicken") || !strcmp(packet->name, "Cat"))
+	{
+		pGameObj = CNPC_Animal::Create(m_pGraphicDevice, m_pCommandList,
+			wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
+			wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
+			_vec3(0.05f, 0.05f, 0.05f),										// Scale
+			_vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
+			_vec3(packet->posX, packet->posY, packet->posZ));				// Pos
+	}
+	else if (!strcmp(packet->name, "Aman_boy") || !strcmp(packet->name, "Human_boy")
+		|| !strcmp(packet->name, "Popori_boy"))
+	{
+		pGameObj = CNPC_Boy::Create(m_pGraphicDevice, m_pCommandList,
+			wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
+			wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
+			_vec3(0.05f, 0.05f, 0.05f),										// Scale
+			_vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
+			_vec3(packet->posX, packet->posY, packet->posZ));				// Pos
+	}
+	else if (!strcmp(packet->name, "NPC_Villagers"))
+	{
+		pGameObj = CNPC_Villagers::Create(m_pGraphicDevice, m_pCommandList,
+			wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
+			wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
+			_vec3(0.05f, 0.05f, 0.05f),										// Scale
+			_vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
+			_vec3(packet->posX, packet->posY, packet->posZ));				// Pos
+	}
+
+	pGameObj->Set_ServerNumber(packet->id);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"NPC", pGameObj), E_FAIL);
+}
+
+void CPacketMgr::Change_Stance_Others(sc_packet_stance_change* packet, int& retflag)
+{
+	retflag = 1;
+	int s_num = packet->id;
+
+	if (s_num == g_iSNum) { retflag = 2; return; };
+
+	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+
+	if (PC_GLADIATOR == packet->o_type)
+	{
+		static_cast<CPCOthersGladiator*>(pObj)->Set_StanceChange(packet->animIdx, packet->is_stance_attack);
+	}
+	else if (PC_ARCHER == packet->o_type)
+	{
+
+	}
+	else if (PC_PRIEST == packet->o_type)
+	{
+
+	}
+	else
+	{
+		static_cast<CPCOthersGladiator*>(pObj)->Set_StanceChange(packet->animIdx, packet->is_stance_attack);
+	}
+}
+
+void CPacketMgr::Leave_Object(sc_packet_leave* packet, int& retflag)
+{
+	retflag = 1;
+	if (packet->id == g_iSNum) { retflag = 2; return; };
+
+	if (packet->id >= NPC_NUM_START && packet->id < MON_NUM_START)
+		m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"NPC", packet->id);
+	else if (packet->id >= MON_NUM_START)
+		m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"MONSTER", packet->id);
+	else
+		m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"Others", packet->id);
+}
+
+void CPacketMgr::AttackStop_User(sc_packet_attack* packet)
+{
+	int s_num = packet->id;
+
+	/* 현재 클라이언트가 공격을 멈춘 경우 */
+	if (s_num == g_iSNum)
+	{
+		Engine::CGameObject* pObj = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
+		pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+	}
+	/* 다른 클라이언트가 공격을 멈춘 경우 */
+	else
+	{
+		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+
+		if (PC_GLADIATOR == packet->o_type)
+		{
+			static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
+		}
+		else if (PC_ARCHER == packet->o_type)
+		{
+		}
+		else if (PC_PRIEST == packet->o_type)
+		{
+		}
+		else
+			static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
+
+		pObj->Set_IsStartPosInterpolation(true);
+		pObj->Set_LinearPos(pObj->Get_Transform()->m_vPos, _vec3(packet->posX, packet->posY, packet->posZ));
+		//pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
+		pObj->Set_Attack(false);
+		pObj->Set_MoveStop(true);
+	}
+}
+
+void CPacketMgr::Attack_User(sc_packet_attack* packet)
+{
+	int s_num = packet->id;
+
+	/* 현재 클라이언트가 공격한 경우 */
+	if (s_num == g_iSNum)
+	{
+		Engine::CGameObject* pObj = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
+		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
+	}
+	/* 다른 클라이언트가 공격한 경우 */
+	else
+	{
+		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+
+		if (PC_GLADIATOR == packet->o_type)
+		{
+			static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
+			static_cast<CPCOthersGladiator*>(pObj)->Reset_AttackMoveInterpolationRatio();
+		}
+		else if (PC_ARCHER == packet->o_type)
+		{
+		}
+		else if (PC_PRIEST == packet->o_type)
+		{
+		}
+		else
+			static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
+
+		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
+		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
+		if (-1 != packet->end_angleY)
+		{
+			pObj->Set_IsStartAngleInterpolation(true);
+			pObj->Set_LinearAngle(pObj->Get_Transform()->m_vAngle.y, packet->end_angleY);
+		}
+		pObj->Set_Attack(true);
+	}
+}
+
+void CPacketMgr::ChangeStat_User(sc_packet_stat_change* packet)
+{
+	int s_num = packet->id;
+
+	Engine::CGameObject* pObj = nullptr;
+	/* 현재 클라이언트의 스탯이 갱신된 경우 */
+	if (s_num == g_iSNum)
+		pObj = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
+	/* 다른 클라이언트의 스탯이 갱신된 경우 */
+	else
+		pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+
+	pObj->Get_Info()->m_iHp = packet->hp;
+	pObj->Get_Info()->m_iMp = packet->mp;
+	pObj->Get_Info()->m_iExp = packet->exp;
+}
+
+void CPacketMgr::MoveStop_User(sc_packet_move* packet)
+{
+	int s_num = packet->id;
+
+	/* 현재 클라이언트가 움직인 경우 */
+	if (s_num == g_iSNum)
+	{
+		Engine::CGameObject* pObj = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
+
+		auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
+
+		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
+	}
+
+	/* 다른 클라이언트가 움직인 경우 */
+	else
+	{
+		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+		auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
+
+		static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
+		pObj->Set_IsStartPosInterpolation(true);
+		pObj->Set_LinearPos(pObj->Get_Transform()->m_vPos, _vec3(packet->posX, packet->posY, packet->posZ));
+		//pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
+		pObj->Set_MoveStop(true);
+	}
+}
+
+void CPacketMgr::Move_User(sc_packet_move* packet)
+{
+	int s_num = packet->id;
+
+	/* 현재 클라이언트가 움직인 경우 */
+	if (s_num == g_iSNum)
+	{
+		Engine::CGameObject* pObj = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
+
+		auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
+
+		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
+
+	}
+	/* 다른 클라이언트가 움직인 경우 */
+	else
+	{
+		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+
+		auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
+
+		static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
+		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
+		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
+		pObj->Set_MoveStop(false);
+	}
+}
+
+void CPacketMgr::Enter_Others(sc_packet_enter* packet, int& retflag)
+{
+	retflag = 1;
+	if (packet->id == g_iSNum) { retflag = 2; return; };
+
+	/*__________________________________________________________________________________________________________
+	[ GameLogic Object(Ohters) 생성 ]
+	____________________________________________________________________________________________________________*/
+	Engine::CGameObject* pGameObj = nullptr;
+	wstring wstrMeshTag = L"";
+
+	if (PC_GLADIATOR == packet->o_type)
+	{
+		wstrMeshTag = L"PoporiR27Gladiator";
+		pGameObj = CPCOthersGladiator::Create(m_pGraphicDevice, m_pCommandList,
+			L"PoporiR27Gladiator",							// MeshTag
+			L"StageVelika_NaviMesh",							// NaviMeshTag
+			_vec3(0.05f, 0.05f, 0.05f),						// Scale
+			_vec3(0.0f, 0.0f, 0.0f),							// Angle
+			_vec3(packet->posX, packet->posY, packet->posZ),	// Pos
+			Twohand19_A_SM);									// WeaponType
+
+	}
+	else if (PC_ARCHER == packet->o_type)
+	{
+
+	}
+	else if (PC_PRIEST == packet->o_type)
+	{
+
+	}
+	else
+	{
+		wstrMeshTag = L"PoporiR27Gladiator";
+
+		pGameObj = CPCOthersGladiator::Create(m_pGraphicDevice, m_pCommandList,
+			wstrMeshTag,							// MeshTag
+			L"StageVelika_NaviMesh",							// NaviMeshTag
+			_vec3(0.05f, 0.05f, 0.05f),						// Scale
+			_vec3(0.0f, 0.0f, 0.0f),							// Angle
+			_vec3(packet->posX, packet->posY, packet->posZ),	// Pos
+			Twohand19_A_SM);									// WeaponType
+	}
+
+	pGameObj->Set_OType(packet->o_type);
+	pGameObj->Set_ServerNumber(packet->id);
+
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Others", pGameObj), E_FAIL);
+
+#ifdef ERR_CHECK
+	cout << "Others 등장!" << endl;
+#endif
+}
+
+void CPacketMgr::Login_Player(sc_packet_login_ok* packet)
+{
+	g_iSNum = packet->id;
+
+	/*__________________________________________________________________________________________________________
+	[ GameLogic Object(ThisPlayer) 생성 ]
+	____________________________________________________________________________________________________________*/
+	Engine::CGameObject* pGameObj = nullptr;
+	wstring wstrMeshTag = L"";
+
+	if (PC_GLADIATOR == packet->o_type)
+	{
+		wstrMeshTag = L"PoporiR27Gladiator";
+	}
+	else if (PC_ARCHER == packet->o_type)
+	{
+
+	}
+	else if (PC_PRIEST == packet->o_type)
+	{
+
+	}
+	else
+		wstrMeshTag = L"PoporiR27Gladiator";
+
+	pGameObj = CPCGladiator::Create(m_pGraphicDevice, m_pCommandList,
+									wstrMeshTag,										// MeshTag
+									L"StageVelika_NaviMesh",							// NaviMeshTag
+									_vec3(0.05f, 0.05f, 0.05f),							// Scale
+									_vec3(0.0f, 0.0f, 0.0f),							// Angle
+									_vec3(packet->posX, packet->posY, packet->posZ),	// Pos
+									TwoHand33_B_SM);									// WeaponType
+
+	pGameObj->Set_OType(packet->o_type);
+	pGameObj->Set_ServerNumber(g_iSNum);
+	pGameObj->Set_Info(packet->level, packet->hp, packet->maxHp, packet->mp, packet->maxMp, packet->exp, packet->maxExp, packet->att, packet->spd);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"ThisPlayer", pGameObj), E_FAIL);
+
+#ifdef ERR_CHECK
+	cout << "Login OK! 접속완료!" << endl;
+#endif
 }
 
 void CPacketMgr::Attack_Monster(sc_packet_monster_attack* packet)
@@ -584,8 +677,7 @@ void CPacketMgr::Attack_Monster(sc_packet_monster_attack* packet)
 	
 	pObj->Set_State(packet->animIdx);
 	pObj->Set_MoveStop(true);
-	pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
-	pObj->Set_DeadReckoning(pObj->Get_Transform()->m_vPos);
+	pObj->Ready_AngleInterpolationValue(pObj->Set_Other_Angle(_vec3(packet->dirX, packet->dirY, packet->dirZ)));
 }
 
 void CPacketMgr::Move_Monster(sc_packet_move* packet)
@@ -594,11 +686,9 @@ void CPacketMgr::Move_Monster(sc_packet_move* packet)
 
 	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
 
-	pObj->Get_Info()->m_fSpeed = packet->spd;
-	pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
-	pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 	pObj->Set_State(packet->animIdx);
-	pObj->Set_MoveStop(false);
+	pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+	pObj->Ready_AngleInterpolationValue(pObj->Set_Other_Angle(_vec3(packet->dirX, packet->dirY, packet->dirZ)));
 }
 
 void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
@@ -631,6 +721,42 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 								   _vec3(0.05f, 0.05f, 0.05f),										// Scale
 								   _vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
 								   _vec3(packet->posX, packet->posY, packet->posZ));
+	}
+	else if (packet->mon_num == MON_SAILOR)
+	{
+		pGameObj = CDrownedSailor::Create(m_pGraphicDevice, m_pCommandList,
+										  wstring(packet->name, &packet->name[MAX_ID_LEN]),					// MeshTag
+										  wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),		// NaviMeshTag
+										  _vec3(0.05f, 0.05f, 0.05f),										// Scale
+										  _vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
+										  _vec3(packet->posX, packet->posY, packet->posZ));
+	}
+	else if (packet->mon_num == MON_GBEETLE)
+	{
+		pGameObj = CGiantBeetle::Create(m_pGraphicDevice, m_pCommandList,
+										wstring(packet->name, &packet->name[MAX_ID_LEN]),					// MeshTag
+										wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),		// NaviMeshTag
+										_vec3(0.05f, 0.05f, 0.05f),											// Scale
+										_vec3(packet->angleX, packet->angleY, packet->angleZ),				// Angle
+										_vec3(packet->posX, packet->posY, packet->posZ));
+	}
+	else if (packet->mon_num == MON_GMONKEY)
+	{
+		pGameObj = CGiantMonkey::Create(m_pGraphicDevice, m_pCommandList,
+										wstring(packet->name, &packet->name[MAX_ID_LEN]),					// MeshTag
+										wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),		// NaviMeshTag
+										_vec3(0.05f, 0.05f, 0.05f),											// Scale
+										_vec3(packet->angleX, packet->angleY, packet->angleZ),				// Angle
+										_vec3(packet->posX, packet->posY, packet->posZ));
+	}
+	else if (packet->mon_num == MON_ARACHNE)
+	{
+		pGameObj = CCraftyArachne::Create(m_pGraphicDevice, m_pCommandList,
+										  wstring(packet->name, &packet->name[MAX_ID_LEN]),					// MeshTag
+										  wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),		// NaviMeshTag
+										  _vec3(0.05f, 0.05f, 0.05f),										// Scale
+										  _vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
+										  _vec3(packet->posX, packet->posY, packet->posZ));
 	}
 
 

@@ -40,7 +40,7 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 										   1.0f,
 										   _vec3(0.0f, 5.0f, 0.0f));
 
-	m_pInfoCom->m_fSpeed     = GladiatorConst::MIN_SPEED;
+	m_pInfoCom->m_fSpeed     = Gladiator::MIN_SPEED;
 	m_pInfoCom->m_vArrivePos = m_pTransCom->m_vPos;
 
 	m_eKeyState   = MVKEY::K_END;
@@ -49,34 +49,41 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 	m_fPreAngle   = m_pTransCom->m_vAngle.y;
 
 	/*__________________________________________________________________________________________________________
+	[ Skill KeyInput ]
+	____________________________________________________________________________________________________________*/
+	m_mapSkillKeyInput[L"STINGER_BLADE"] = DIK_1;
+	m_mapSkillKeyInput[L"CUTTING_SLASH"] = DIK_2;
+	m_mapSkillKeyInput[L"JAW_BREAKER"]   = DIK_3;
+	m_mapSkillKeyInput[L"CUT_HEAD"]      = DIK_4;
+	m_mapSkillKeyInput[L"WIND_CUTTER"]   = DIK_5;
+	m_mapSkillKeyInput[L"GAIA_CRUSH"]    = DIK_6;
+	m_mapSkillKeyInput[L"DRAW_SWORD"]    = DIK_7;
+
+	/*__________________________________________________________________________________________________________
+	[ 선형보간 설정 ]
+	____________________________________________________________________________________________________________*/
+	m_tMoveSpeedInterpolationDesc.linear_ratio = 0.0f;
+	m_tMoveSpeedInterpolationDesc.v1           = Gladiator::MIN_SPEED;
+	m_tMoveSpeedInterpolationDesc.v2           = Gladiator::MAX_SPEED;
+
+	m_tAttackMoveSpeedInterpolationDesc.linear_ratio        = 0.0f;
+	m_tAttackMoveSpeedInterpolationDesc.v1                  = Gladiator::MIN_SPEED;
+	m_tAttackMoveSpeedInterpolationDesc.v2                  = Gladiator::MAX_SPEED;
+	m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = 0.0f;
+
+	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_eStance   = Gladiator::STANCE_NONEATTACK;
 	m_uiAnimIdx = Gladiator::NONE_ATTACK_IDLE;
 
-	/*__________________________________________________________________________________________________________
-	[ Collider Bone Setting ]
-	____________________________________________________________________________________________________________*/
-	Engine::SKINNING_MATRIX* pmatSkinning = nullptr;
-	_matrix* pmatParent = nullptr;
-
-	// ColliderSphere
-	pmatSkinning = m_pMeshCom->Find_SkinningMatrix("Bip01-R-Hand");
-	pmatParent = &(m_pTransCom->m_matWorld);
-	Engine::NULL_CHECK_RETURN(pmatSkinning, E_FAIL);
-	m_pColliderSphereCom->Set_SkinningMatrix(pmatSkinning);		// Bone Matrix
-	m_pColliderSphereCom->Set_ParentMatrix(pmatParent);			// Parent Matrix
-	m_pColliderSphereCom->Set_Scale(_vec3(3.f, 3.f, 3.f));		// Collider Scale
-	m_pColliderSphereCom->Set_Radius(m_pTransCom->m_vScale);	// Collider Radius
-
-	// ColliderBox
-	pmatSkinning = m_pMeshCom->Find_SkinningMatrix("Bip01-R-Hand");
-	pmatParent = &(m_pTransCom->m_matWorld);
-	Engine::NULL_CHECK_RETURN(pmatSkinning, E_FAIL);
-	m_pColliderBoxCom->Set_SkinningMatrix(pmatSkinning);	// Bone Matrix
-	m_pColliderBoxCom->Set_ParentMatrix(pmatParent);		// Parent Matrix
-	m_pColliderBoxCom->Set_Scale(_vec3(3.f, 3.f, 3.f));		// Collider Scale
-	m_pColliderBoxCom->Set_Extents(m_pTransCom->m_vScale);	// Box Offset From Center
+	// AfterImage
+	m_uiAfterImgSize    = 15;
+	m_fAfterImgMakeTime = 0.2f;
+	m_fAfterSubAlpha    = 0.75f;
+	m_pMeshCom->Set_AfterImgMakeTime(m_fAfterImgMakeTime);
+	m_pMeshCom->Set_AfterImgSize(m_uiAfterImgSize);
+	m_pMeshCom->Set_AfterImgSubAlpha(m_fAfterSubAlpha);
 
 	/*__________________________________________________________________________________________________________
 	[ Font 생성 ]
@@ -91,13 +98,16 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 
 HRESULT CPCGladiator::LateInit_GameObject()
 {
-	//DynamicCamera ]
+	// DynamicCamera
 	m_pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
 	Engine::NULL_CHECK_RETURN(m_pDynamicCamera, E_FAIL);
 	m_pDynamicCamera->AddRef();
 
+	// ShadowLight
+	CShadowLightMgr::Get_Instance()->Set_ShadowType(SHADOW_TYPE::SHADOW_TYPE_PLAYER);
+
 	// SetUp Shader ConstantBuffer
-	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
+	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()), m_uiAfterImgSize);
 	m_pShadowCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
 	// Create Weapon
@@ -117,6 +127,17 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 		return NO_EVENT;
 
 	/*__________________________________________________________________________________________________________
+	[ Play Animation ]
+	____________________________________________________________________________________________________________*/
+	Set_AnimationSpeed();
+	Set_BlendingSpeed();
+	m_pMeshCom->Set_BlendingSpeed(m_fBlendingSpeed);
+	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	m_pMeshCom->Play_Animation(fTimeDelta * m_fAnimationSpeed);
+	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
+	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
+
+	/*__________________________________________________________________________________________________________
 	[ Key Input ]
 	____________________________________________________________________________________________________________*/
 	if (!g_bIsOnDebugCaemra)
@@ -125,8 +146,8 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	// NaviMesh 이동.
-	Move_OnNaviMesh(fTimeDelta);
 	SetUp_RunMoveSpeed(fTimeDelta);
+	Move_OnNaviMesh(fTimeDelta);
 
 	// Angle Linear Interpolation
 	SetUp_AngleInterpolation(fTimeDelta);
@@ -135,19 +156,15 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
-
-	/*__________________________________________________________________________________________________________
-	[ Play Animation ]
-	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
-	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
-	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
+
+	// AfterImage
+	Make_AfterImage(fTimeDelta);
 
 	return NO_EVENT;
 }
@@ -200,11 +217,50 @@ void CPCGladiator::Send_PacketToServer()
 	}
 }
 
+void CPCGladiator::Render_GameObject(const _float& fTimeDelta)
+{
+	// Render AfterImage
+	if (m_uiAfterImgSize)
+	{
+		m_pShaderCom->Set_PipelineStatePass(5);
+		Render_AfterImage(fTimeDelta);
+	}
+}
+
+void CPCGladiator::Render_AfterImage(const _float& fTimeDelta)
+{
+	auto iter_begin = m_lstAFWorldMatrix.begin();
+	auto iter_end   = m_lstAFWorldMatrix.end();
+
+	auto Alpha_begin = m_lstAFAlpha.begin();
+	auto Alpha_end   = m_lstAFAlpha.end();
+
+	for (_uint i = 0; iter_begin != iter_end; ++i, ++iter_begin)
+	{
+		/*__________________________________________________________________________________________________________
+		[ Set ConstantBuffer Data ]
+		____________________________________________________________________________________________________________*/
+		Engine::CB_SHADER_MESH tCB_ShaderMesh;
+		ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
+		tCB_ShaderMesh.matWorld       = Engine::CShader::Compute_MatrixTranspose(*iter_begin);
+		tCB_ShaderMesh.vAfterImgColor = *Alpha_begin;
+		if (Alpha_begin != Alpha_end)
+			Alpha_begin++;
+
+		m_pShaderCom->Get_UploadBuffer_AFShaderMesh()->CopyData(i, tCB_ShaderMesh);
+
+		// Render Buffer
+		m_pMeshCom->Render_DynamicMeshAfterImage(m_pShaderCom, i);
+
+	}
+}
+
 void CPCGladiator::Render_GameObject(const _float& fTimeDelta, 
 									 ID3D12GraphicsCommandList* pCommandList, 
 									 const _int& iContextIdx)
 {
 	Set_ConstantTable();
+	m_pShaderCom->Set_PipelineStatePass(0);
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
@@ -239,18 +295,6 @@ HRESULT CPCGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag
 	m_pShadowCom->AddRef();
 	Engine::FAILED_CHECK_RETURN(m_pShadowCom->Set_PipelineStatePass(0), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shadow", m_pShadowCom);
-
-	// Collider - Sphere
-	m_pColliderSphereCom = static_cast<Engine::CColliderSphere*>(m_pComponentMgr->Clone_Component(L"ColliderSphere", Engine::COMPONENTID::ID_DYNAMIC));
-	Engine::NULL_CHECK_RETURN(m_pColliderSphereCom, E_FAIL);
-	m_pColliderSphereCom->AddRef();
-	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderSphere", m_pColliderSphereCom);
-
-	// Collider - Box
-	m_pColliderBoxCom = static_cast<Engine::CColliderBox*>(m_pComponentMgr->Clone_Component(L"ColliderBox", Engine::COMPONENTID::ID_DYNAMIC));
-	Engine::NULL_CHECK_RETURN(m_pColliderBoxCom, E_FAIL);
-	m_pColliderBoxCom->AddRef();
-	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderBox", m_pColliderBoxCom);
 
 	// NaviMesh
 	m_pNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(wstrNaviMeshTag, Engine::ID_DYNAMIC));
@@ -288,7 +332,7 @@ HRESULT CPCGladiator::SetUp_PCWeapon()
 
 	m_pWeapon = CPCWeaponTwoHand::Create(m_pGraphicDevice, m_pCommandList,
 										 wstrWeaponMeshTag,
-										 _vec3(0.75f),
+										 _vec3(0.65f),
 										 _vec3(0.0f, 0.0f, 180.0f),
 										 _vec3(0.0f, 0.0f, 0.0f),
 										 m_pMeshCom->Find_HierarchyDesc("Weapon_Back"),
@@ -335,6 +379,40 @@ void CPCGladiator::Set_ConstantTableShadowDepth()
 	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
 }
 
+void CPCGladiator::Set_AnimationSpeed()
+{
+	if (m_uiAnimIdx == Gladiator::WIND_CUTTER1 ||
+		m_uiAnimIdx == Gladiator::WIND_CUTTER2 ||
+		m_uiAnimIdx == Gladiator::WIND_CUTTER3)
+	{
+		m_fAnimationSpeed = TPS * 0.75f;
+	}
+
+	else if (m_uiAnimIdx == Gladiator::DRAW_SWORD_CHARGE ||
+			 m_uiAnimIdx == Gladiator::DRAW_SWORD_LOOP)
+	{
+		m_fAnimationSpeed = TPS * 2.f;
+	}
+	else
+		m_fAnimationSpeed = TPS;
+}
+
+void CPCGladiator::Set_BlendingSpeed()
+{
+	if (m_uiAnimIdx == Gladiator::NONE_ATTACK_IDLE ||
+		m_uiAnimIdx == Gladiator::NONE_ATTACK_WALK ||
+		m_uiAnimIdx == Gladiator::ATTACK_WAIT ||
+		m_uiAnimIdx == Gladiator::ATTACK_RUN ||
+		m_uiAnimIdx == Gladiator::GAIA_CRUSH1 ||
+		m_uiAnimIdx == Gladiator::GAIA_CRUSH2 ||
+		m_uiAnimIdx == Gladiator::GAIA_CRUSH3)
+	{
+		m_fBlendingSpeed = 0.001f;
+	}
+	else
+		m_fBlendingSpeed = 0.005f;
+}
+
 void CPCGladiator::Key_Input(const _float& fTimeDelta)
 {
 	if (!g_bIsActive) return;
@@ -344,12 +422,17 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 
 	/* Player Attack to Monster --- TEST */
 	if (Engine::KEY_PRESSING(DIK_M))
+	{
 		m_pPacketMgr->send_attackToMonster(5000);
+		m_pPacketMgr->send_attackToMonster(5001);
+		m_pPacketMgr->send_attackToMonster(5002);
+		m_pPacketMgr->send_attackToMonster(5003);
+	}
 }
 
 void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 {
-	if (!g_bIsActive || m_bIsAttack || !m_bIsCompleteStanceChange)
+	if (!g_bIsActive || m_bIsAttack || !m_bIsCompleteStanceChange || m_bIsSkillLoop)
 		return;
 
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
@@ -378,6 +461,7 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 
 		m_last_move_time = high_resolution_clock::now();
 		m_bIsKeyDown     = true;
+		SetUp_WeaponRHand();
 	}
 
 	else if (Engine::KEY_PRESSING(DIK_S))
@@ -405,6 +489,7 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 
 		m_last_move_time = high_resolution_clock::now();
 		m_bIsKeyDown     = true;
+		SetUp_WeaponRHand();
 	}
 	// 좌로 이동.
 	else if (Engine::KEY_PRESSING(DIK_A))
@@ -413,6 +498,7 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 		m_last_move_time        = high_resolution_clock::now();
 		m_eKeyState             = MVKEY::K_LEFT;
 		m_bIsKeyDown            = true;
+		SetUp_WeaponRHand();
 	}
 	// 우로 이동.	
 	else if (Engine::KEY_PRESSING(DIK_D))
@@ -421,6 +507,7 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 		m_last_move_time        = high_resolution_clock::now();
 		m_eKeyState             = MVKEY::K_RIGHT;
 		m_bIsKeyDown            = true;
+		SetUp_WeaponRHand();
 	}
 	// 움직임 Stop
 	else
@@ -431,9 +518,10 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 			m_bIsSameDir = true;
 		}
 		else if (!m_bIsKeyDown &&
-				 GladiatorConst::MIN_SPEED == m_pInfoCom->m_fSpeed)
+				 Gladiator::MIN_SPEED == m_pInfoCom->m_fSpeed)
 		{
 			m_pPacketMgr->send_move_stop(m_pTransCom->m_vPos, m_pTransCom->m_vDir, m_uiAnimIdx);
+			//SetUp_WeaponLHand();
 		}
 	}
 
@@ -447,7 +535,63 @@ void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 
 	if (Gladiator::STANCE_ATTACK == m_eStance && m_bIsCompleteStanceChange)
 	{
-		KeyInput_ComboAttack(fTimeDelta);
+		// 기본공격 (스킬공격 중에는 사용 X)
+		if (!m_bIsSkill && !m_bIsSkillLoop)
+			KeyInput_ComboAttack(fTimeDelta);
+
+		// 스킬공격
+		if (m_pMeshCom->Is_BlendingComplete())
+			KeyInput_SkillAttack(fTimeDelta);
+
+		if (m_bIsAttack)
+		{
+			m_bIsSameDir = true;
+
+			// ComboAttack Move
+			SetUp_AttackMove(Gladiator::COMBOCNT_1, Gladiator::COMBO1, 0, Gladiator::COMBO1_MOVE_STOP, 1.0f, -3.0f);
+			SetUp_AttackMove(Gladiator::COMBOCNT_2, Gladiator::COMBO2, 0, Gladiator::COMBO2_MOVE_STOP, 1.0f, -3.5f);
+			SetUp_AttackMove(Gladiator::COMBOCNT_3, Gladiator::COMBO3, 0, Gladiator::COMBO3_MOVE_STOP, 1.0f, -3.5f);
+			SetUp_AttackMove(Gladiator::COMBOCNT_4, Gladiator::COMBO4, 0, Gladiator::COMBO4_MOVE_STOP, 0.75f, -1.0f);
+			// ComoboAttack Trail
+			SetUp_AttackTrail(Gladiator::COMBOCNT_1, Gladiator::COMBO1, Gladiator::COMBO1_TRAIL_START, Gladiator::COMBO1_TRAIL_STOP);
+			SetUp_AttackTrail(Gladiator::COMBOCNT_2, Gladiator::COMBO2, Gladiator::COMBO2_TRAIL_START, Gladiator::COMBO2_TRAIL_STOP);
+			SetUp_AttackTrail(Gladiator::COMBOCNT_3, Gladiator::COMBO3, Gladiator::COMBO3_TRAIL_START, Gladiator::COMBO3_TRAIL_STOP);
+			SetUp_AttackTrail(Gladiator::COMBOCNT_4, Gladiator::COMBO4, Gladiator::COMBO4_TRAIL_START, Gladiator::COMBO4_TRAIL_STOP);
+
+			// SkillAttack Move
+			SetUp_AttackMove(Gladiator::STINGER_BLADE, Gladiator::STINGER_BLADE_MOVE_START, Gladiator::STINGER_BLADE_MOVE_STOP, 3.0f, -3.0f);
+			SetUp_AttackMove(Gladiator::CUTTING_SLASH, Gladiator::CUTTING_SLASH_MOVE_START, Gladiator::CUTTING_SLASH_MOVE_STOP, 1.25f, -1.75f);
+			SetUp_AttackMove(Gladiator::JAW_BREAKER, Gladiator::JAW_BREAKER_MOVE_START, Gladiator::JAW_BREAKER_MOVE_STOP, 4.0f, -4.0f);
+			SetUp_AttackMove(Gladiator::CUT_HEAD, Gladiator::CUT_HEAD_MOVE_START, Gladiator::CUT_HEAD_MOVE_END, 1.5f, -8.0f);
+			SetUp_AttackMove(Gladiator::WIND_CUTTER1, Gladiator::WIND_CUTTER1_MOVE_START, Gladiator::WIND_CUTTER1_MOVE_STOP, 3.0f, -4.0f);
+			SetUp_AttackMove(Gladiator::WIND_CUTTER2, Gladiator::WIND_CUTTER2_MOVE_START, Gladiator::WIND_CUTTER2_MOVE_STOP, 3.0f, -4.0f);
+			SetUp_AttackMove(Gladiator::WIND_CUTTER3, Gladiator::WIND_CUTTER3_MOVE_START, Gladiator::WIND_CUTTER3_MOVE_STOP, 2.0f, -4.0f);
+			SetUp_AttackMove(Gladiator::GAIA_CRUSH1, Gladiator::GAIA_CRUSH1_MOVE_START, Gladiator::GAIA_CRUSH1_MOVE_STOP, 0.75f, 0.0f);
+			SetUp_AttackMove(Gladiator::GAIA_CRUSH2, Gladiator::GAIA_CRUSH2_MOVE_START, Gladiator::GAIA_CRUSH2_MOVE_STOP, 0.75f, -2.0f);
+			SetUp_AttackMove(Gladiator::DRAW_SWORD, Gladiator::DRAW_SWORD_MOVE_START, Gladiator::DRAW_SWORD_MOVE_STOP, 2.5f, -3.0f);
+			// SkillAttck Trail
+			SetUp_AttackTrail(Gladiator::STINGER_BLADE, Gladiator::STINGER_BLADE_TRAIL_START, Gladiator::STINGER_BLADE_TRAIL_STOP);
+			SetUp_AttackTrail(Gladiator::CUTTING_SLASH, Gladiator::CUTTING_SLASH_TRAIL_START, Gladiator::CUTTING_SLASH_TRAIL_STOP);
+			SetUp_AttackTrail(Gladiator::JAW_BREAKER, Gladiator::JAW_BREAKER_TRAIL_START, Gladiator::JAW_BREAKER_TRAIL_STOP);
+			SetUp_AttackTrail(Gladiator::CUT_HEAD, Gladiator::CUT_HEAD_TRAIL_START, Gladiator::CUT_HEAD_TRAIL_STOP);
+			SetUp_AttackTrail(Gladiator::WIND_CUTTER1, Gladiator::WIND_CUTTER1_TRAIL_START, Gladiator::WIND_CUTTER1_TRAIL_STOP);
+			SetUp_AttackTrail(Gladiator::WIND_CUTTER2, Gladiator::WIND_CUTTER2_TRAIL_START, Gladiator::WIND_CUTTER2_TRAIL_STOP);
+			SetUp_AttackTrail(Gladiator::WIND_CUTTER3, Gladiator::WIND_CUTTER3_TRAIL_START, Gladiator::WIND_CUTTER3_TRAIL_STOP);
+			SetUp_AttackTrail(Gladiator::GAIA_CRUSH1, Gladiator::GAIA_CRUSH1_TRAIL_START, Gladiator::GAIA_CRUSH1_TRAIL_STOP);
+			SetUp_AttackTrail(Gladiator::GAIA_CRUSH2, Gladiator::GAIA_CRUSH2_TRAIL_START, Gladiator::GAIA_CRUSH2_TRAIL_STOP);
+			SetUp_AttackTrail(Gladiator::DRAW_SWORD, Gladiator::DRAW_SWORD_TRAIL_START, Gladiator::DRAW_SWORD_TRAIL_STOP);
+			SetUp_AttackTrail(Gladiator::DRAW_SWORD_END, Gladiator::DRAW_SWORD_END_TRAIL_START, Gladiator::DRAW_SWORD_END_TRAIL_STOP);
+
+			// SkillAttack AfterImage
+			SetUp_AttackAfterImage(Gladiator::WIND_CUTTER1, 0, 18, 0.05f, 1.75f);
+			SetUp_AttackAfterImage(Gladiator::WIND_CUTTER2, 0, 10, 0.05f, 1.75f);
+			SetUp_AttackAfterImage(Gladiator::WIND_CUTTER3, 0, 20, 0.05f, 1.75f);
+			SetUp_AttackAfterImage(Gladiator::GAIA_CRUSH1, 5, 99, 0.15f, 1.25f);
+			SetUp_AttackAfterImage(Gladiator::GAIA_CRUSH2, 0, 30, 0.15f, 1.25f);
+			SetUp_AttackAfterImage(Gladiator::DRAW_SWORD, 0, 20, 0.05f, 1.05f);
+
+			AttackMove_OnNaviMesh(fTimeDelta);
+		}
 	}
 
 }
@@ -459,7 +603,7 @@ void CPCGladiator::KeyInput_StanceChange(const _float& fTimeDelta)
 
 	// ATTACK -> NONE_ATTACK
 	if (Engine::KEY_DOWN(DIK_LSHIFT) && Gladiator::STANCE_ATTACK == m_eStance &&
-		!m_bIsKeyDown && m_pInfoCom->m_fSpeed == GladiatorConst::MIN_SPEED &&
+		!m_bIsKeyDown && m_pInfoCom->m_fSpeed == Gladiator::MIN_SPEED &&
 		m_bIsCompleteStanceChange &&
 		m_uiAnimIdx != Gladiator::NONE_ATTACK_WALK && m_uiAnimIdx != Gladiator::ATTACK_RUN &&
 		m_uiAnimIdx != Gladiator::IN_WEAPON && m_uiAnimIdx != Gladiator::OUT_WEAPON)
@@ -472,7 +616,15 @@ void CPCGladiator::KeyInput_StanceChange(const _float& fTimeDelta)
 	}
 
 	// NONE_ATTACK -> ATTACK
-	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) && Gladiator::STANCE_NONEATTACK == m_eStance &&
+	if ((Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) || 
+		Engine::KEY_DOWN(m_mapSkillKeyInput[L"STINGER_BLADE"]) ||
+		Engine::KEY_DOWN(m_mapSkillKeyInput[L"CUTTING_SLASH"]) ||
+		Engine::KEY_DOWN(m_mapSkillKeyInput[L"JAW_BREAKER"]) || 
+		Engine::KEY_DOWN(m_mapSkillKeyInput[L"CUT_HEAD"]) || 
+		Engine::KEY_DOWN(m_mapSkillKeyInput[L"WIND_CUTTER"]) || 
+		Engine::KEY_DOWN(m_mapSkillKeyInput[L"GAIA_CRUSH"]) || 
+		Engine::KEY_DOWN(m_mapSkillKeyInput[L"DRAW_SWORD"])) &&
+		Gladiator::STANCE_NONEATTACK == m_eStance &&
 		m_bIsCompleteStanceChange &&
 		m_uiAnimIdx != Gladiator::IN_WEAPON && m_uiAnimIdx != Gladiator::OUT_WEAPON)
 	{
@@ -494,121 +646,296 @@ void CPCGladiator::KeyInput_ComboAttack(const _float& fTimeDelta)
 
 	// Return to AttackWait
 	SetUp_FromComboAttackToAttackWait(fTimeDelta);
+}
 
-	if (m_bIsAttack)
+void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
+{
+	// SkillAttack
+	if (!m_bIsSkillLoop)
 	{
-		m_bIsSameDir = true;
-
-		//if (Is_Change_CamDirection())
-		//	m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+		if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"STINGER_BLADE"]))
+		{
+			SetUp_WeaponLHand();
+			SetUp_AttackSetting();
+			m_bIsSkill = true;
+			m_uiAnimIdx = Gladiator::STINGER_BLADE;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"CUTTING_SLASH"]))
+		{
+			SetUp_WeaponRHand();
+			SetUp_AttackSetting();
+			m_bIsSkill = true;
+			m_uiAnimIdx = Gladiator::CUTTING_SLASH;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"JAW_BREAKER"]))
+		{
+			SetUp_WeaponRHand();
+			SetUp_AttackSetting();
+			m_bIsSkill = true;
+			m_uiAnimIdx = Gladiator::JAW_BREAKER;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"CUT_HEAD"]))
+		{
+			SetUp_WeaponRHand();
+			SetUp_AttackSetting();
+			m_bIsSkill = true;
+			m_uiAnimIdx = Gladiator::CUT_HEAD;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"WIND_CUTTER"]))
+		{
+			SetUp_WeaponRHand();
+			SetUp_AttackSetting();
+			m_bIsSkill     = true;
+			m_bIsSkillLoop = true;
+			m_uiAnimIdx = Gladiator::WIND_CUTTER1;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"GAIA_CRUSH"]))
+		{
+			SetUp_WeaponLHand();
+			SetUp_AttackSetting();
+			m_bIsSkill     = true;
+			m_bIsSkillLoop = true;
+			m_uiAnimIdx = Gladiator::GAIA_CRUSH1;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"DRAW_SWORD"]))
+		{
+			SetUp_WeaponRHand();
+			SetUp_AttackSetting();
+			m_bIsSkill     = true;
+			m_bIsSkillLoop = true;
+			m_uiAnimIdx = Gladiator::DRAW_SWORD_CHARGE;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
 	}
+	else
+	{
+		// WIND_CUTTER
+		if (m_uiAnimIdx == Gladiator::WIND_CUTTER1 && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+		{
+			Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+			m_uiAnimIdx = Gladiator::WIND_CUTTER2;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
+		else if (m_uiAnimIdx == Gladiator::WIND_CUTTER2 && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+		{
+			Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+			m_uiAnimIdx = Gladiator::WIND_CUTTER3;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
+
+		// GAIA_CRUSH
+		if (m_uiAnimIdx == Gladiator::GAIA_CRUSH1 && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+		{
+			m_uiAnimIdx = Gladiator::GAIA_CRUSH2;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+		}
+		else if (m_uiAnimIdx == Gladiator::GAIA_CRUSH2 && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+		{
+			m_uiAnimIdx = Gladiator::GAIA_CRUSH3;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+		}
+
+		// DRAW_SWORD
+		if (m_uiAnimIdx == Gladiator::DRAW_SWORD_CHARGE && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+		{
+			m_uiAnimIdx = Gladiator::DRAW_SWORD_LOOP;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+		}
+		else if (m_uiAnimIdx == Gladiator::DRAW_SWORD_LOOP && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+		{
+			m_uiAnimIdx = Gladiator::DRAW_SWORD;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+		}
+		else if (m_uiAnimIdx == Gladiator::DRAW_SWORD && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+		{
+			m_uiAnimIdx = Gladiator::DRAW_SWORD_END;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+		}
+	}
+
+
+	// Skill Attack ==> ATTACK_WAIT
+	if ((Gladiator::STINGER_BLADE == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)) ||
+		(Gladiator::CUTTING_SLASH == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)) ||
+		(Gladiator::JAW_BREAKER == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)) ||
+		(Gladiator::CUT_HEAD == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)) ||
+		(Gladiator::WIND_CUTTER3 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)) ||
+		(Gladiator::GAIA_CRUSH3 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)) ||
+		(Gladiator::DRAW_SWORD_END == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)))
+	{
+		m_bIsAttack    = false;
+		m_bIsSkill     = false;
+		m_bIsSkillLoop = false;
+		m_pWeapon->Set_IsRenderTrail(false);
+		m_uiComoboCnt = Gladiator::COMBOCNT_0;
+		m_uiAnimIdx   = Gladiator::ATTACK_WAIT;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+	}
+}
+
+void CPCGladiator::SetUp_AttackSetting()
+{
+	m_bIsAttack  = true;
+	m_bIsKeyDown = false;
+	m_pWeapon->Set_IsRenderTrail(false);
+	m_tAttackMoveSpeedInterpolationDesc.linear_ratio = 0.0f;
+	Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 }
 
 void CPCGladiator::SetUp_ComboAttackAnimation()
 {
-	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
-		GladiatorConst::COMBOCNT_0 == m_uiComoboCnt && m_pMeshCom->Is_BlendingComplete())
+	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) && m_pMeshCom->Is_BlendingComplete())
 	{
-		Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		// ATTACK_WAIT ==> COMBO1
+		if (Gladiator::COMBOCNT_0 == m_uiComoboCnt)
+		{
+			SetUp_WeaponLHand();
+			SetUp_AttackSetting();
+			m_uiComoboCnt = Gladiator::COMBOCNT_1;
+			m_uiAnimIdx   = Gladiator::COMBO1;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
 
-		m_bIsKeyDown  = false;
-		m_bIsAttack   = true;
-		m_uiComoboCnt = GladiatorConst::COMBOCNT_1;
-		m_uiAnimIdx   = Gladiator::COMBO1;
-		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		// COMBO1 ==> COMBO2
+		else if (Gladiator::COMBOCNT_1 == m_uiComoboCnt &&
+				 Gladiator::COMBO1 == m_uiAnimIdx && 
+				 m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.75f)
+		{
+			SetUp_WeaponLHand();
+			SetUp_AttackSetting();
+			m_uiComoboCnt = Gladiator::COMBOCNT_2;
+			m_uiAnimIdx   = Gladiator::COMBO2;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
 
-		m_fPreAngle = m_pTransCom->m_vAngle.y;
-	}
-	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
-			GladiatorConst::COMBOCNT_1 == m_uiComoboCnt &&
-			(Gladiator::COMBO1 == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete() &&
-			(m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.75f)))
-	{
-		Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		// COMBO1R ==> COMBO2 
+		else if (Gladiator::COMBOCNT_1 == m_uiComoboCnt &&
+				 Gladiator::COMBO1R == m_uiAnimIdx && 
+				 m_ui3DMax_CurFrame <= 10)
+		{
+			SetUp_WeaponLHand();
+			SetUp_AttackSetting();
+			m_uiComoboCnt = Gladiator::COMBOCNT_2;
+			m_uiAnimIdx   = Gladiator::COMBO2;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
 
-		m_bIsKeyDown  = false;
-		m_bIsAttack   = true;
-		m_uiComoboCnt = GladiatorConst::COMBOCNT_2;
-		m_uiAnimIdx   = Gladiator::COMBO2;
-		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		// COMBO2 ==> COMBO3
+		else if (Gladiator::COMBOCNT_2 == m_uiComoboCnt &&
+				 Gladiator::COMBO2 == m_uiAnimIdx &&
+				 m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.75f)
+		{
+			SetUp_WeaponLHand();
+			SetUp_AttackSetting();
+			m_uiComoboCnt = Gladiator::COMBOCNT_3;
+			m_uiAnimIdx   = Gladiator::COMBO3;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
 
-		m_fPreAngle = m_pTransCom->m_vAngle.y;
-	}
-	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
-			GladiatorConst::COMBOCNT_2 == m_uiComoboCnt &&
-			(Gladiator::COMBO2 == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete() &&
-			(m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.75f)))
-	{
-		Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		// COMBO2R ==> COMBO3
+		else if (Gladiator::COMBOCNT_2 == m_uiComoboCnt &&
+				 Gladiator::COMBO2R == m_uiAnimIdx && 
+				 m_ui3DMax_CurFrame <= m_ui3DMax_NumFrame * 0.5f)
+		{
+			SetUp_WeaponLHand();
+			SetUp_AttackSetting();
+			m_uiComoboCnt = Gladiator::COMBOCNT_3;
+			m_uiAnimIdx   = Gladiator::COMBO3;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
 
-		m_bIsKeyDown  = false;
-		m_bIsAttack   = true;
-		m_uiComoboCnt = GladiatorConst::COMBOCNT_3;
-		m_uiAnimIdx   = Gladiator::COMBO3;
-		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
-
-		m_fPreAngle = m_pTransCom->m_vAngle.y;
-	}
-	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) &&
-			GladiatorConst::COMBOCNT_3 == m_uiComoboCnt &&
-			(Gladiator::COMBO3 == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete() &&
-			(m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.75f)))
-	{
-		Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
-
-		m_bIsKeyDown  = false;
-		m_bIsAttack   = true;
-		m_uiComoboCnt = GladiatorConst::COMBO_END;
-		m_uiAnimIdx   = Gladiator::COMBO4;
-		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
-
-		m_fPreAngle = m_pTransCom->m_vAngle.y;
+		// COMBO3 ==> COMBO4
+		else if (Gladiator::COMBOCNT_3 == m_uiComoboCnt &&
+				 Gladiator::COMBO3 == m_uiAnimIdx && 
+				 m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.85f)
+		{
+			SetUp_WeaponLHand();
+			SetUp_AttackSetting();
+			m_uiComoboCnt = Gladiator::COMBOCNT_4;
+			m_uiAnimIdx   = Gladiator::COMBO4;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
+		// COMBO3R ==> COMBO4
+		else if (Gladiator::COMBOCNT_3 == m_uiComoboCnt &&
+				 Gladiator::COMBO3R == m_uiAnimIdx && 
+				 m_ui3DMax_CurFrame <= m_ui3DMax_NumFrame * 0.55f)
+		{
+			SetUp_WeaponLHand();
+			SetUp_AttackSetting();
+			m_uiComoboCnt = Gladiator::COMBOCNT_4;
+			m_uiAnimIdx   = Gladiator::COMBO4;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
 	}
 }
 
 void CPCGladiator::SetUp_FromComboAttackToAttackWait(const _float& fTimeDelta)
 {
-	if (Gladiator::COMBO1 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+	if (Gladiator::COMBO1 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
 	{
+		SetUp_WeaponLHand();
 		m_bIsKeyDown = false;
+		m_pWeapon->Set_IsRenderTrail(false);
 		m_uiAnimIdx  = Gladiator::COMBO1R;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
-	else if (Gladiator::COMBO2 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+	else if (Gladiator::COMBO2 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
 	{
+		SetUp_WeaponLHand();
 		m_bIsKeyDown = false;
+		m_pWeapon->Set_IsRenderTrail(false);
 		m_uiAnimIdx  = Gladiator::COMBO2R;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
-	else if (Gladiator::COMBO3 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+	else if (Gladiator::COMBO3 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
 	{
+		SetUp_WeaponLHand();
 		m_bIsKeyDown = false;
+		m_pWeapon->Set_IsRenderTrail(false);
 		m_uiAnimIdx  = Gladiator::COMBO3R;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
 	}
-	else if (Gladiator::COMBO4 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-	{
-		m_bIsKeyDown  = false;
-		m_bIsAttack   = false;
-		m_uiComoboCnt = GladiatorConst::COMBOCNT_0;
-		m_uiAnimIdx   = Gladiator::ATTACK_WAIT;
-		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
-	}
 
-	else if ((Gladiator::COMBO1R == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) ||
-			 (Gladiator::COMBO2R == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) ||
-			 (Gladiator::COMBO3R == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)))
+	else if ((Gladiator::COMBO1R == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)) ||
+			 (Gladiator::COMBO2R == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)) ||
+			 (Gladiator::COMBO3R == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)) ||
+			 (Gladiator::COMBO4 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)))
 	{
+		SetUp_WeaponLHand();
 		m_bIsAttack   = false;
-		m_uiComoboCnt = GladiatorConst::COMBOCNT_0;
+		m_pWeapon->Set_IsRenderTrail(false);
+		m_uiComoboCnt = Gladiator::COMBOCNT_0;
 		m_uiAnimIdx   = Gladiator::ATTACK_WAIT;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
@@ -617,8 +944,7 @@ void CPCGladiator::SetUp_FromComboAttackToAttackWait(const _float& fTimeDelta)
 
 void CPCGladiator::Move_OnNaviMesh(const _float& fTimeDelta)
 {
-	if (m_bIsKeyDown || 
-		GladiatorConst::MIN_SPEED != m_pInfoCom->m_fSpeed)
+	if (m_bIsKeyDown || Gladiator::MIN_SPEED != m_pInfoCom->m_fSpeed)
 	{
 		if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
 		{
@@ -626,6 +952,22 @@ void CPCGladiator::Move_OnNaviMesh(const _float& fTimeDelta)
 																  &m_pTransCom->m_vDir,
 																  m_pInfoCom->m_fSpeed * fTimeDelta);
 		}
+	}
+}
+
+void CPCGladiator::AttackMove_OnNaviMesh(const _float& fTimeDelta)
+{
+	// Set Speed
+	m_tAttackMoveSpeedInterpolationDesc.linear_ratio += m_tAttackMoveSpeedInterpolationDesc.interpolation_speed * fTimeDelta;
+	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(m_tAttackMoveSpeedInterpolationDesc.v1, m_tAttackMoveSpeedInterpolationDesc.v2, m_tAttackMoveSpeedInterpolationDesc.linear_ratio);
+	// NaviMesh 이동.
+	if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
+	{
+		m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+		m_pTransCom->m_vDir.Normalize();
+		m_pTransCom->m_vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+															  &m_pTransCom->m_vDir,
+															  m_pInfoCom->m_fSpeed * fTimeDelta);
 	}
 }
 
@@ -680,12 +1022,16 @@ void CPCGladiator::SetUp_RunMoveSpeed(const _float& fTimeDelta)
 {
 	// Move On
 	if (m_bIsKeyDown)
-		m_fLinearRatio += fTimeDelta;
+		m_tMoveSpeedInterpolationDesc.interpolation_speed = 1.0f;
+
 	// Move Off
 	else if (!m_bIsKeyDown)
-		m_fLinearRatio -= GladiatorConst::MOVE_STOP_SPEED * fTimeDelta;
+		m_tMoveSpeedInterpolationDesc.interpolation_speed = -Gladiator::MOVE_STOP_SPEED;
 
-	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(GladiatorConst::MIN_SPEED, GladiatorConst::MAX_SPEED, m_fLinearRatio);
+	m_tMoveSpeedInterpolationDesc.linear_ratio += m_tMoveSpeedInterpolationDesc.interpolation_speed * fTimeDelta;
+	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(m_tMoveSpeedInterpolationDesc.v1, 
+													   m_tMoveSpeedInterpolationDesc.v2, 
+													   m_tMoveSpeedInterpolationDesc.linear_ratio);
 }
 
 void CPCGladiator::SetUp_RunAnimation()
@@ -745,7 +1091,7 @@ void CPCGladiator::SetUp_PlayerStance_FromNoneAttackToAttack()
 		{
 			m_pWeapon->Set_DissolveInterpolation(-1.0f);
 			m_pWeapon->Set_IsRenderShadow(true);
-			m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("L_Sword"));
+			SetUp_WeaponLHand();
 		}
 
 		m_eStance   = Gladiator::STANCE_ATTACK;
@@ -761,7 +1107,7 @@ void CPCGladiator::Change_PlayerStance(const _float& fTimeDelta)
 		// NONE_ATTACK -> ATACK
 		if (Gladiator::STANCE_ATTACK == m_eStance &&
 			Gladiator::OUT_WEAPON == m_uiAnimIdx &&
-			m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
 		{
 			m_uiAnimIdx = Gladiator::ATTACK_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -772,7 +1118,7 @@ void CPCGladiator::Change_PlayerStance(const _float& fTimeDelta)
 		// ATTACK -> NONE_ATTACK
 		else if (Gladiator::STANCE_NONEATTACK == m_eStance  &&
 				 Gladiator::IN_WEAPON == m_uiAnimIdx &&
-				 m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+				 m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
 		{
 			m_uiAnimIdx = Gladiator::NONE_ATTACK_IDLE;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -780,7 +1126,7 @@ void CPCGladiator::Change_PlayerStance(const _float& fTimeDelta)
 		}
 
 		if (Gladiator::IN_WEAPON == m_uiAnimIdx && m_ui3DMax_CurFrame > 20)
-			m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("Weapon_Back"));
+			SetUp_WeaponBack();
 
 		// Check Is Complete Stance Change
 		if (Gladiator::NONE_ATTACK_IDLE == m_uiAnimIdx ||
@@ -817,6 +1163,165 @@ void CPCGladiator::SetUp_AngleInterpolation(const _float& fTimeDelta)
 	}
 }
 
+void CPCGladiator::SetUp_AttackMove(const _uint& uiComboCnt,
+									const _uint& uiAniIdx, 
+									const _uint& uiStartTick,
+									const _uint& uiStopTick,
+									const _float& fMoveSpeed,
+									const _float& fStopSpeed)
+{
+	if (uiComboCnt == m_uiComoboCnt && uiAniIdx == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
+	{
+		// Move On
+		if (m_ui3DMax_CurFrame >= uiStartTick && m_ui3DMax_CurFrame < uiStopTick)
+			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = fMoveSpeed;
+
+		// Move Off
+		else
+			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = fStopSpeed;
+	}
+}
+
+void CPCGladiator::SetUp_AttackMove(const _uint& uiAniIdx, 
+									const _uint& uiStartTick, 
+									const _uint& uiStopTick, 
+									const _float& fMoveSpeed, 
+									const _float& fStopSpeed)
+{
+	if (uiAniIdx == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
+	{
+		// Move On
+		if (m_ui3DMax_CurFrame >= uiStartTick && m_ui3DMax_CurFrame < uiStopTick)
+			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = fMoveSpeed;
+
+		// Move Off
+		else
+			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = fStopSpeed;
+	}
+}
+
+void CPCGladiator::SetUp_AttackTrail(const _uint& uiComboCnt,
+									 const _uint& uiAniIdx,
+									 const _uint& uiStartTick,
+									 const _uint& uiStopTick)
+{
+	if (uiComboCnt == m_uiComoboCnt && uiAniIdx == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
+	{
+		// Trail On
+		if (m_ui3DMax_CurFrame >= uiStartTick && m_ui3DMax_CurFrame < uiStopTick)
+			m_pWeapon->Set_IsRenderTrail(true);
+
+		// Trail Off
+		else if (m_ui3DMax_CurFrame >= uiStopTick)
+			m_pWeapon->Set_IsRenderTrail(false);
+
+		else
+			m_pWeapon->Set_IsRenderTrail(false);
+	}
+}
+
+void CPCGladiator::SetUp_AttackTrail(const _uint& uiAniIdx, const _uint& uiStartTick, const _uint& uiStopTick)
+{
+	if (uiAniIdx == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
+	{
+		// Trail On
+		if (m_ui3DMax_CurFrame >= uiStartTick && m_ui3DMax_CurFrame < uiStopTick)
+			m_pWeapon->Set_IsRenderTrail(true);
+
+		// Trail Off
+		else if (m_ui3DMax_CurFrame >= uiStopTick)
+			m_pWeapon->Set_IsRenderTrail(false);
+
+		else
+			m_pWeapon->Set_IsRenderTrail(false);
+	}
+}
+
+void CPCGladiator::SetUp_WeaponRHand()
+{
+	m_pWeapon->Get_Transform()->m_vAngle.y = 180.0f;
+	m_pWeapon->Get_Transform()->m_vAngle.z = 0.0f;
+	m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("R_Sword"));
+}
+
+void CPCGladiator::SetUp_WeaponLHand()
+{
+	m_pWeapon->Get_Transform()->m_vAngle.y = 0.0f;
+	m_pWeapon->Get_Transform()->m_vAngle.z = 180.0f;
+	m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("L_Sword"));
+}
+
+void CPCGladiator::SetUp_WeaponBack()
+{
+	m_pWeapon->Get_Transform()->m_vAngle.y = 0.0f;
+	m_pWeapon->Get_Transform()->m_vAngle.z = 180.0f;
+	m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("Weapon_Back"));
+}
+
+void CPCGladiator::SetUp_AttackAfterImage(const _uint& uiAnimIdx,
+										  const _uint& uiStartTick,
+										  const _uint& uiStopTick,
+										  const _float& fMakeTime,
+										  const _float& fAlphaSpeed)
+{
+	if (uiAnimIdx == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
+	{
+		if (m_ui3DMax_CurFrame >= uiStartTick && m_ui3DMax_CurFrame < uiStopTick)
+		{
+			if (!m_bIsMakeAfterImage)
+				m_fAfterImgTime = fMakeTime;
+
+			m_bIsMakeAfterImage = true;
+			m_fAfterImgMakeTime = fMakeTime;
+			m_fAfterSubAlpha    = fAlphaSpeed;
+			m_pMeshCom->Set_AfterImgMakeTime(m_fAfterImgMakeTime);
+			m_pMeshCom->Set_AfterImgSubAlpha(m_fAfterSubAlpha);
+		}
+		else if (m_ui3DMax_CurFrame >= uiStopTick)
+		{
+			m_bIsMakeAfterImage = false;
+		}
+	}
+}
+
+void CPCGladiator::Make_AfterImage(const _float& fTimeDelta)
+{
+	if (m_bIsMakeAfterImage)
+	{
+		m_fAfterImgTime += fTimeDelta;
+		if (m_fAfterImgTime > m_fAfterImgMakeTime)
+		{
+			if (m_lstAFWorldMatrix.size() < m_uiAfterImgSize)
+			{
+				m_lstAFWorldMatrix.emplace_back(m_pTransCom->m_matWorld);
+				m_lstAFAlpha.emplace_back(_rgba(0.0f, 0.0f, 0.0f, 1.f));
+				m_pMeshCom->Set_AfterImgTime(m_fAfterImgTime);
+			}
+
+			m_fAfterImgTime = 0.f;
+		}
+	}
+
+	if (m_lstAFWorldMatrix.size())
+	{
+		for (list<_rgba>::iterator& iterFade = m_lstAFAlpha.begin(); iterFade != m_lstAFAlpha.end();)
+		{
+			(*iterFade).w -= m_fAfterSubAlpha * fTimeDelta;
+			//(*iterFade).x -= fTimeDelta;
+			//(*iterFade).y -= fTimeDelta;
+
+			if (0 > (*iterFade).w)
+			{
+				m_lstAFWorldMatrix.pop_front();
+				iterFade = m_lstAFAlpha.erase(iterFade);
+				continue;
+			}
+			else
+				++iterFade;
+		}
+	}
+}
+
 Engine::CGameObject* CPCGladiator::Create(ID3D12Device* pGraphicDevice, 
 										  ID3D12GraphicsCommandList* pCommandList,
 										  wstring wstrMeshTag, 
@@ -836,14 +1341,13 @@ Engine::CGameObject* CPCGladiator::Create(ID3D12Device* pGraphicDevice,
 
 void CPCGladiator::Free()
 {
-	Engine::CGameObject::Free();
+	m_pWeapon->Set_DeadGameObject();
 
+	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pDynamicCamera);
 	Engine::Safe_Release(m_pMeshCom);
 	Engine::Safe_Release(m_pShaderCom);
 	Engine::Safe_Release(m_pShadowCom);
-	Engine::Safe_Release(m_pColliderSphereCom);
-	Engine::Safe_Release(m_pColliderBoxCom);
 	Engine::Safe_Release(m_pNaviMeshCom);
 	Engine::Safe_Release(m_pFont);
 }

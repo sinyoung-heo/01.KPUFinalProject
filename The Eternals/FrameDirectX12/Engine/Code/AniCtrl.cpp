@@ -163,6 +163,7 @@ void CAniCtrl::Set_AnimationKey(const _uint & uiAniKey)
 	{
 		m_uiNewAniIdx         = uiAniKey;
 		m_fBlendingTime	      = 1.0f;
+		m_bIsBlendingComplete = false;
 		m_fBlendAnimationTime = m_fAnimationTime;
 	}
 }
@@ -175,24 +176,23 @@ void CAniCtrl::Play_Animation(_float fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션이 계속 반복되도록 fmod 수행 ]
 	____________________________________________________________________________________________________________*/
+	m_fAnimationTime += fTimeDelta;
+
 	if (m_uiNewAniIdx != m_uiCurAniIndex)
 	{
 		m_fAnimationTime = m_fBlendAnimationTime;
-		m_fBlendingTime	 -= 0.001f * fTimeDelta;
+		// m_fBlendingTime	 -= 0.005f * fTimeDelta;
+		m_fBlendingTime	 -= m_fBlendingSpeed * fTimeDelta;
+
 
 		if (m_fBlendingTime <= 0.0f)
 			m_fBlendingTime = 0.0f;
 	}
-	else
-	{
-		m_fAnimationTime += fTimeDelta;
-	}
-
-	m_fAnimationTime = (_float)(fmod(m_fAnimationTime, (m_pScene->mAnimations[m_uiCurAniIndex]->mDuration)));
 
 	/*__________________________________________________________________________________________________________
 	[ 3DMax 상에서의 Frame 계산 ]
 	____________________________________________________________________________________________________________*/
+	m_fAnimationTime   = (_float)(fmod(m_fAnimationTime, (m_pScene->mAnimations[m_uiCurAniIndex]->mDuration)));
 	m_ui3DMax_NumFrame = (_uint)(_3DMAX_FPS * (m_pScene->mAnimations[m_uiCurAniIndex]->mDuration / m_pScene->mAnimations[m_uiCurAniIndex]->mTicksPerSecond));
 	m_ui3DMax_CurFrame = (_uint)(_3DMAX_FPS * (m_fAnimationTime / m_pScene->mAnimations[m_uiCurAniIndex]->mTicksPerSecond));
 
@@ -204,10 +204,10 @@ void CAniCtrl::Play_Animation(_float fTimeDelta)
 
 	if (m_fBlendingTime <= 0.0f)
 	{
-		m_uiCurAniIndex	 = m_uiNewAniIdx;
-		m_fAnimationTime = 0.0f;
-		//m_fAnimationTime += fTimeDelta;
-		m_fBlendingTime  = 1.f;
+		m_uiCurAniIndex	      = m_uiNewAniIdx;
+		m_fBlendingTime       = 1.f;
+		m_bIsBlendingComplete = true;
+		m_fAnimationTime      = 0.0f;
 	}
 
 }
@@ -257,23 +257,13 @@ HIERARCHY_DESC* CAniCtrl::Find_HierarchyDesc(string strBoneName)
 	return iter_find->second;
 }
 
-_bool CAniCtrl::Is_AnimationSetEnd(const _float& fTimeDelta)
+_bool CAniCtrl::Is_AnimationSetEnd(const _float& fTimeDelta, const _float& fAnimationSpeed)
 {
-	if ((m_fAnimationTime >= m_pScene->mAnimations[m_uiCurAniIndex]->mDuration - 
-							m_pScene->mAnimations[m_uiCurAniIndex]->mTicksPerSecond * ANIMA_INTERPOLATION * fTimeDelta) &&
+	if ((m_fAnimationTime >= m_pScene->mAnimations[m_uiCurAniIndex]->mDuration - fAnimationSpeed * ANIMA_INTERPOLATION * fTimeDelta) &&
 		(m_uiCurAniIndex == m_uiNewAniIdx))
 	{
 		return true;
 	}
-
-	return false;
-}
-
-_bool CAniCtrl::Is_BlendingComplete()
-{
-	if (m_fBlendingTime == 1.0f &&
-		m_uiCurAniIndex == m_uiNewAniIdx)
-		return true;
 
 	return false;
 }

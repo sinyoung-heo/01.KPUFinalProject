@@ -47,7 +47,7 @@ public:
 	void				Set_OType(const char& chType)							{ m_chO_Type = chType; }
 	void				Set_DeadReckoning(const _vec3& vPos);
 	void				Set_Info(int lev, int hp, int maxHp, int mp, int maxMp, int exp, int maxExp, int att, float spd);
-	void				Set_State(int cur) { m_iCurAnim = cur; }
+	void				Set_State(int cur) { m_iMonsterStatus = cur; }
 	void				Set_Other_direction(_vec3& vDir);
 	float				Set_Other_Angle(_vec3& vDir);
 	
@@ -56,6 +56,7 @@ public:
 	void				Set_IsStartAngleInterpolation(const _bool& bIsStart)	{ m_tAngleInterpolationDesc.is_start_interpolation = bIsStart; }
 	void				Set_LinearAngle(const _float& v1, const _float& v2)		{ m_tAngleInterpolationDesc.v1 = v1; m_tAngleInterpolationDesc.v2 = v2; }
 
+	void				Ready_AngleInterpolationValue(const _float& fEndAngle);
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT Ready_GameObjectPrototype();
@@ -87,10 +88,6 @@ protected:
 	void			SetUp_BoundingSphere(_matrix* pParent, const _vec3& vParentScale, const _vec3& vScale, const _vec3& vPos);
 	void			Compute_ViewZ(_vec4& vPosInWorld);
 	CComponent*		Find_Component(wstring wstrComponentTag, const COMPONENTID& eID);
-private:
-	void			SetUp_PosInterpolation(const _float& fTimeDelta);
-	void			SetUp_AngleInterpolation(const _float& fTimeDelta);
-
 protected:
 	/*__________________________________________________________________________________________________________
 	[ GraphicDevice & Mgr ]
@@ -135,7 +132,7 @@ protected:
 	SERVER
 	__________________________________________________________________________________________________________*/
 	int		m_iSNum				= 0;
-	int		m_iCurAnim			= 0;
+	int		m_iMonsterStatus	= 0;
 	bool	m_bIsMoveStop		= true;
 	bool	m_bIsAttack			= false;
 	char	m_chO_Type			= 0;

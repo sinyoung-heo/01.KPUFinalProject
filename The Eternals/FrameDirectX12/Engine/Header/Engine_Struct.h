@@ -367,6 +367,15 @@ typedef struct tagVector3 : public XMFLOAT3
 		return vScreen;
 	}
 
+	void Vector3CatmullRom(tagVector3& v0, tagVector3& v1, tagVector3& v2, tagVector3& v3, float t)
+	{
+		XMVECTOR temp = XMVectorCatmullRom(v0.Get_XMVECTOR(), v1.Get_XMVECTOR(), v2.Get_XMVECTOR(), v3.Get_XMVECTOR(), t);
+
+		this->x = XMVectorGetX(temp);
+		this->y = XMVectorGetY(temp);
+		this->z = XMVectorGetZ(temp);
+	}
+
 	void Print() { cout << "x : " << this->x << "\t y : " << this->y << "\t z : " << this->z << endl; }
 
 } _vec3, _rgb;
@@ -801,7 +810,7 @@ namespace Engine
 		_float		fCurScene;	// 현재 그려지는 이미지의 Y축 Index.
 
 		_float		fGauge;
-		_float		fOffset1;
+		_float		fAlpha;
 		_float		fOffset2;
 		_float		fOffset3;
 

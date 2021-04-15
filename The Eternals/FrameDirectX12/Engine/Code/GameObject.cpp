@@ -30,7 +30,7 @@ CGameObject::CGameObject(const CGameObject& rhs)
 	, m_UIDepth(rhs.m_UIDepth)
 	, m_bIsAttack(rhs.m_bIsAttack)
 	, m_bIsMoveStop(rhs.m_bIsMoveStop)
-	, m_iCurAnim(0)
+	, m_iMonsterStatus(0)
 {
 }
 
@@ -70,6 +70,15 @@ void CGameObject::Set_Other_direction(_vec3& vDir)
 float CGameObject::Set_Other_Angle(_vec3& vDir)
 {
 	return vDir.Get_Angle(g_vLook);
+}
+
+void CGameObject::Ready_AngleInterpolationValue(const _float& fEndAngle)
+{
+	m_tAngleInterpolationDesc.is_start_interpolation = true;
+	m_tAngleInterpolationDesc.v1 = m_pTransCom->m_vAngle.y;
+	m_tAngleInterpolationDesc.v2 = fEndAngle;
+	m_tAngleInterpolationDesc.linear_ratio = Engine::MIN_LINEAR_RATIO;
+	m_tAngleInterpolationDesc.interpolation_speed = 3.0f;
 }
 
 HRESULT CGameObject::Ready_GameObjectPrototype()
@@ -130,9 +139,6 @@ HRESULT CGameObject::LateInit_GameObject()
 
 _int CGameObject::Update_GameObject(const _float & fTimeDelta)
 {
-	SetUp_PosInterpolation(fTimeDelta);
-	SetUp_AngleInterpolation(fTimeDelta);
-
 	if (nullptr != m_pTransCom)
 		m_pTransCom->Update_Component(fTimeDelta);
 
@@ -292,47 +298,6 @@ CComponent * CGameObject::Find_Component(wstring wstrComponentTag, const COMPONE
 
 	return iter_find->second;
 }
-
-void CGameObject::SetUp_PosInterpolation(const _float& fTimeDelta)
-{
-	if (m_tPosInterpolationDesc.is_start_interpolation)
-	{
-		m_tPosInterpolationDesc.linear_ratio += m_tPosInterpolationDesc.interpolation_speed * fTimeDelta;
-
-		if (m_tPosInterpolationDesc.linear_ratio >= MAX_LINEAR_RATIO)
-		{
-			m_tPosInterpolationDesc.linear_ratio = MAX_LINEAR_RATIO;
-			m_tPosInterpolationDesc.is_start_interpolation = false;
-		}
-
-		m_pTransCom->m_vPos = LinearInterpolation(m_tPosInterpolationDesc.v1, m_tPosInterpolationDesc.v2, m_tPosInterpolationDesc.linear_ratio);
-	}
-	else
-	{
-		m_tPosInterpolationDesc.linear_ratio = 0.0f;
-	}
-}
-
-void CGameObject::SetUp_AngleInterpolation(const _float& fTimeDelta)
-{
-	if (m_tAngleInterpolationDesc.is_start_interpolation)
-	{
-		m_tAngleInterpolationDesc.linear_ratio += m_tAngleInterpolationDesc.interpolation_speed * fTimeDelta;
-
-		if (m_tAngleInterpolationDesc.linear_ratio >= MAX_LINEAR_RATIO)
-		{
-			m_tAngleInterpolationDesc.linear_ratio = MAX_LINEAR_RATIO;
-			m_tAngleInterpolationDesc.is_start_interpolation = false;
-		}
-
-		m_pTransCom->m_vAngle.y = LinearInterpolation(m_tAngleInterpolationDesc.v1, m_tAngleInterpolationDesc.v2, m_tAngleInterpolationDesc.linear_ratio);
-	}
-	else
-	{
-		m_tAngleInterpolationDesc.linear_ratio = 0.0f;
-	}
-}
-
 
 CGameObject * CGameObject::Clone_GameObject()
 {

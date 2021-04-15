@@ -265,6 +265,12 @@ HRESULT CMainApp::SetUp_ComponentPrototype()
 	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ColliderBox", Engine::ID_DYNAMIC, pComponent), E_FAIL);
 
+	// TrailTex
+	pComponent = Engine::CTrailTex::Create(m_pGraphicDevice, m_pCommandList);
+	Engine::NULL_CHECK_RETURN(pComponent, E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"TrailTex", Engine::ID_STATIC, pComponent), E_FAIL);
+
+
 	return S_OK;
 }
 

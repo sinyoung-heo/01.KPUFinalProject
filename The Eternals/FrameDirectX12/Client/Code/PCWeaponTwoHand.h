@@ -1,5 +1,6 @@
 #pragma once
 #include "PCWeapon.h"
+#include "EffectTrail.h"
 
 class CPCWeaponTwoHand : public CPCWeapon
 {
@@ -8,6 +9,10 @@ private:
 	virtual ~CPCWeaponTwoHand() = default;
 
 public:
+	const _bool& Get_IsRenderTrail() { return m_pTrail->Get_IsRenderTrail(); }
+
+	void Set_IsRenderTrail(const _bool& bIsRenderTrail) { m_pTrail->Set_IsRenderTrail(bIsRenderTrail); }
+
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
 									 const _vec3& vScale,
@@ -22,6 +27,9 @@ public:
 	// MultiThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
+
+private:
+	CEffectTrail* m_pTrail = nullptr;
 
 public:
 	static CPCWeaponTwoHand* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,

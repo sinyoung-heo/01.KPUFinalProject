@@ -32,9 +32,9 @@ public:
 	void							Set_AfterImgTime(const _float& fTime)		{ m_pVIMesh->Set_AfterImgTime(fTime); }
 	void							Set_AfterImgMakeTime(const _float& fTime)	{ m_pVIMesh->Set_AfterImgMakeTime(fTime); }
 	void							Set_AfterImgSubAlpha(const _float& fSub)	{ m_pVIMesh->Set_AfterImgSubAlpha(fSub); }
-
-	_bool							Is_AnimationSetEnd(const _float& fTimeDelta)	{ return m_pAniCtrl->Is_AnimationSetEnd(fTimeDelta); };
-	_bool							Is_BlendingComplete()							{ return m_pAniCtrl->Is_BlendingComplete(); }
+	void							Set_BlendingSpeed(const _float& fSpeed)		{ m_pAniCtrl->Set_BlendingSpeed(fSpeed); }
+	_bool							Is_AnimationSetEnd(const _float& fTimeDelta, const _float& fAnimationSpeed = 4'800.0f)	{ return m_pAniCtrl->Is_AnimationSetEnd(fTimeDelta, fAnimationSpeed); };
+	_bool							Is_BlendingComplete()						{ return m_pAniCtrl->Is_BlendingComplete(); }
 
 	// Method
 	HRESULT Ready_Mesh(wstring wstrFilePath, wstring wstrFileName);
@@ -57,7 +57,7 @@ public:
 						  CShader* pShader,
 						  ID3D12DescriptorHeap* pTexnormalDescriptorHeap, _uint uiNormalTextureIdx, _uint uiPatternMapIdx);
 	void Set_AnimationKey(const _uint& uiAniKey);
-	void Play_Animation(_float fAnimationTime);
+	void Play_Animation(_float fTimeDelta);
 	SKINNING_MATRIX* Find_SkinningMatrix(string strBoneName);
 	HIERARCHY_DESC* Find_HierarchyDesc(string strBoneName);
 

@@ -45,6 +45,7 @@ private:
 	void			Set_ConstantTableShadowDepth();
 	void			Set_ConstantTable(const _int& iContextIdx, const _int& iInstanceIdx);
 	void			Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int& iInstanceIdx);
+protected:
 	void			SetUp_Dissolve(const _float& fTimeDelta);
 protected:
 	/*__________________________________________________________________________________________________________
@@ -74,6 +75,7 @@ protected:
 	_rgba	m_vEmissiveColor		= _rgba(1.0f);
 
 	Engine::HIERARCHY_DESC*	m_pHierarchyDesc = nullptr;
+	_matrix					m_matBoneFinalTransform;
 	_matrix*				m_pParentMatrix  = nullptr;
 
 	char m_chWeaponType = -1;

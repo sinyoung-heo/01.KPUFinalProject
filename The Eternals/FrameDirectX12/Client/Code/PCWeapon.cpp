@@ -28,14 +28,6 @@ HRESULT CPCWeapon::Ready_GameObject(wstring wstrMeshTag,
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
 	SetUp_WeaponType();
 
-	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
-										   m_pTransCom->m_vScale,
-										   m_pMeshCom->Get_CenterPos(),
-										   m_pMeshCom->Get_MinVector(),
-										   m_pMeshCom->Get_MaxVector(),
-										   1.0f,
-										   _vec3(0.0f, 10.0f, 0.0f));
-
 	m_wstrMeshTag		  = wstrMeshTag;
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
@@ -70,7 +62,6 @@ _int CPCWeapon::Update_GameObject(const _float& fTimeDelta)
 	if (fTimeDelta > TIME_OFFSET)
 		return NO_EVENT;
 
-	// SetUp_TargetAngle(fTimeDelta);
 	SetUp_Dissolve(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
@@ -83,12 +74,10 @@ _int CPCWeapon::Update_GameObject(const _float& fTimeDelta)
 	______________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
-	_matrix matBoneFinalTransform = (m_pHierarchyDesc->matScale
-									 * m_pHierarchyDesc->matRotate
-									 * m_pHierarchyDesc->matTrans)
-									 * m_pHierarchyDesc->matGlobalTransform;
+	m_matBoneFinalTransform = (m_pHierarchyDesc->matScale * m_pHierarchyDesc->matRotate * m_pHierarchyDesc->matTrans)
+						 	 * m_pHierarchyDesc->matGlobalTransform;
 
-	m_pTransCom->m_matWorld *= matBoneFinalTransform * (*m_pParentMatrix);
+	m_pTransCom->m_matWorld *= m_matBoneFinalTransform * (*m_pParentMatrix);
 	m_pBoundingBoxCom->Update_Component(fTimeDelta);
 
 	return NO_EVENT;

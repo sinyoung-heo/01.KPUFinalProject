@@ -1,5 +1,4 @@
 #pragma once
-
 namespace Gladiator
 {
 	const int NONE_ATTACK_IDLE  = 0;
@@ -32,5 +31,69 @@ namespace Gladiator
 	const int DRAW_SWORD        = 27;
 	const int DRAW_SWORD_END    = 28;
 
-	enum STANCE { STANCE_NONEATTACK, STANCE_ATTACK, STANCE_END };
+	enum STANCE		{ STANCE_NONEATTACK, STANCE_ATTACK, STANCE_END };
+	enum COMBOCNT	{ COMBOCNT_0, COMBOCNT_1, COMBOCNT_2, COMBOCNT_3, COMBOCNT_4 };
+
+	const _float OTHERS_OFFSET	= 0.85f;
+
+	const _float MIN_SPEED       = 0.0f;
+	const _float MAX_SPEED       = 5.0f;
+	const _float MOVE_STOP_SPEED = 3.0f;
+
+	const _uint COMBO1_MOVE_STOP = 16;
+	const _uint COMBO2_MOVE_STOP = 20;
+	const _uint COMBO3_MOVE_STOP = 15;
+	const _uint COMBO4_MOVE_STOP = 30;
+	const _uint COMBO1_TRAIL_START = 12;
+	const _uint COMBO1_TRAIL_STOP  = 28;
+	const _uint COMBO2_TRAIL_START = 13;
+	const _uint COMBO2_TRAIL_STOP  = 28;
+	const _uint COMBO3_TRAIL_START = 10;
+	const _uint COMBO3_TRAIL_STOP  = 26;
+	const _uint COMBO4_TRAIL_START = 20;
+	const _uint COMBO4_TRAIL_STOP  = 56;
+
+	const _uint STINGER_BLADE_MOVE_START = 20;
+	const _uint STINGER_BLADE_MOVE_STOP  = 30;
+	const _uint CUTTING_SLASH_MOVE_START = 0;
+	const _uint CUTTING_SLASH_MOVE_STOP  = 18;
+	const _uint JAW_BREAKER_MOVE_START   = 0;
+	const _uint JAW_BREAKER_MOVE_STOP    = 10;
+	const _uint CUT_HEAD_MOVE_START      = 34;
+	const _uint CUT_HEAD_MOVE_END        = 50;
+	const _uint WIND_CUTTER1_MOVE_START  = 0;
+	const _uint WIND_CUTTER1_MOVE_STOP   = 10;
+	const _uint WIND_CUTTER2_MOVE_START  = 0;
+	const _uint WIND_CUTTER2_MOVE_STOP   = 8;
+	const _uint WIND_CUTTER3_MOVE_START  = 0;
+	const _uint WIND_CUTTER3_MOVE_STOP   = 15;
+	const _uint GAIA_CRUSH1_MOVE_START   = 4;
+	const _uint GAIA_CRUSH1_MOVE_STOP    = 19;
+	const _uint GAIA_CRUSH2_MOVE_START   = 0;
+	const _uint GAIA_CRUSH2_MOVE_STOP    = 12;
+	const _uint DRAW_SWORD_MOVE_START    = 4;
+	const _uint DRAW_SWORD_MOVE_STOP     = 18;
+
+	const _uint STINGER_BLADE_TRAIL_START  = 15;
+	const _uint STINGER_BLADE_TRAIL_STOP   = 70;
+	const _uint CUTTING_SLASH_TRAIL_START  = 30;
+	const _uint CUTTING_SLASH_TRAIL_STOP   = 42;
+	const _uint JAW_BREAKER_TRAIL_START    = 8;
+	const _uint JAW_BREAKER_TRAIL_STOP     = 27;
+	const _uint CUT_HEAD_TRAIL_START       = 25;
+	const _uint CUT_HEAD_TRAIL_STOP        = 70;
+	const _uint WIND_CUTTER1_TRAIL_START   = 6;
+	const _uint WIND_CUTTER1_TRAIL_STOP    = 16;
+	const _uint WIND_CUTTER2_TRAIL_START   = 4;
+	const _uint WIND_CUTTER2_TRAIL_STOP    = 16;
+	const _uint WIND_CUTTER3_TRAIL_START   = 10;
+	const _uint WIND_CUTTER3_TRAIL_STOP    = 36;
+	const _uint GAIA_CRUSH1_TRAIL_START    = 16;
+	const _uint GAIA_CRUSH1_TRAIL_STOP     = 999;
+	const _uint GAIA_CRUSH2_TRAIL_START    = 0;
+	const _uint GAIA_CRUSH2_TRAIL_STOP     = 40;
+	const _uint DRAW_SWORD_TRAIL_START     = 8;
+	const _uint DRAW_SWORD_TRAIL_STOP      = 999;
+	const _uint DRAW_SWORD_END_TRAIL_START = 0;
+	const _uint DRAW_SWORD_END_TRAIL_STOP  = 50;
 }

@@ -38,6 +38,7 @@ private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag);
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
+	void			SetUp_AngleInterpolation(const _float& fTimeDelta);
 
 	void			Active_Monster(const _float& fTimeDelta);
 	void			Attack_Moving(const _float& fTimeDelta, const float& fSpd, const bool& bStraight);

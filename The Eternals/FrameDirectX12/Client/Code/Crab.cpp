@@ -39,7 +39,7 @@ HRESULT CCrab::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, co
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
-	m_iCurAnim = Crab::A_WAIT;
+	m_iMonsterStatus = Crab::A_WAIT;
 
 	return S_OK;
 }
@@ -60,17 +60,24 @@ _int CCrab::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 	
-	/* Move */
-	Active_Monster(fTimeDelta);
+	// Angle Linear Interpolation
+	SetUp_AngleInterpolation(fTimeDelta);
 	
 	/* Animation AI */
 	Change_Animation(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
+	[ Play Animation ]
+	____________________________________________________________________________________________________________*/
+	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
+	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
+
+	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
-
 
 	return NO_EVENT;
 }
@@ -83,14 +90,6 @@ _int CCrab::LateUpdate_GameObject(const _float& fTimeDelta)
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
-
-	/*__________________________________________________________________________________________________________
-	[ Play Animation ]
-	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
-	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
-	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
 	return NO_EVENT;
 }
@@ -134,18 +133,6 @@ HRESULT CCrab::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 	m_pShadowCom->AddRef();
 	Engine::FAILED_CHECK_RETURN(m_pShadowCom->Set_PipelineStatePass(0), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shadow", m_pShadowCom);
-
-	// Collider - Sphere
-	m_pColliderSphereCom = static_cast<Engine::CColliderSphere*>(m_pComponentMgr->Clone_Component(L"ColliderSphere", Engine::COMPONENTID::ID_DYNAMIC));
-	Engine::NULL_CHECK_RETURN(m_pColliderSphereCom, E_FAIL);
-	m_pColliderSphereCom->AddRef();
-	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderSphere", m_pColliderSphereCom);
-
-	// Collider - Box
-	m_pColliderBoxCom = static_cast<Engine::CColliderBox*>(m_pComponentMgr->Clone_Component(L"ColliderBox", Engine::COMPONENTID::ID_DYNAMIC));
-	Engine::NULL_CHECK_RETURN(m_pColliderBoxCom, E_FAIL);
-	m_pColliderBoxCom->AddRef();
-	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderBox", m_pColliderBoxCom);
 
 	// NaviMesh
 	m_pNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(wstrNaviMeshTag.c_str(), Engine::ID_DYNAMIC));
@@ -197,6 +184,23 @@ void CCrab::Set_ConstantTableShadowDepth()
 
 }
 
+void CCrab::SetUp_AngleInterpolation(const _float& fTimeDelta)
+{
+	if (m_tAngleInterpolationDesc.is_start_interpolation)
+	{
+		m_tAngleInterpolationDesc.linear_ratio += m_tAngleInterpolationDesc.interpolation_speed * fTimeDelta;
+
+		m_pTransCom->m_vAngle.y = Engine::LinearInterpolation(m_tAngleInterpolationDesc.v1,
+			m_tAngleInterpolationDesc.v2,
+			m_tAngleInterpolationDesc.linear_ratio);
+
+		if (m_tAngleInterpolationDesc.linear_ratio == Engine::MAX_LINEAR_RATIO)
+		{
+			m_tAngleInterpolationDesc.is_start_interpolation = false;
+		}
+	}
+}
+
 void CCrab::Active_Monster(const _float& fTimeDelta)
 {
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
@@ -214,7 +218,7 @@ void CCrab::Active_Monster(const _float& fTimeDelta)
 
 void CCrab::Attack_Moving(const _float& fTimeDelta, const float& fSpd, const bool& bStraight)
 {
-	if (m_iCurAnim != Crab::A_ATTACK) return;
+	if (m_iMonsterStatus != Crab::A_ATTACK) return;
 
 	_vec3 vtempDir = m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 	
@@ -236,60 +240,62 @@ void CCrab::Attack_Moving(const _float& fTimeDelta, const float& fSpd, const boo
 
 void CCrab::Change_Animation(const _float& fTimeDelta)
 {
-	switch (m_iCurAnim)
+	if (m_pMeshCom->Is_BlendingComplete())
 	{
-
-	case Crab::A_WAIT:
-	{
-		m_uiAnimIdx = 0;
-		m_bIsMoveStop = true;
-	}
-	break;
-
-	case Crab::A_WALK:
-	{
-		m_uiAnimIdx = 1;		
-		m_bIsMoveStop = false;
-	}
-	break;
-
-	case Crab::A_RUN:
-	{
-		m_uiAnimIdx = 2;
-		m_bIsMoveStop = false;
-	}
-	break;
-
-	case Crab::A_ATTACK:
-	{
-		m_uiAnimIdx = 3;
-		m_bIsMoveStop = true;
-
-		/* Back Step (0~27 tick)*/
-		if (m_ui3DMax_CurFrame < 28)
-			Attack_Moving(fTimeDelta, (m_pInfoCom->m_fSpeed * 0.4f), false);
-		/* Front Step (28~65 tick) */
-		else if (28 <= m_ui3DMax_CurFrame)
-			Attack_Moving(fTimeDelta, (m_pInfoCom->m_fSpeed * 0.4f), true);
-
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+		switch (m_iMonsterStatus)
 		{
-			/* 공격 애니메이션 중 움직인 위치를 공격 전 위치로 되돌림. */
-			// m_vArrivePos : 공격 시작 위치 (패킷 수신 시 설정)
-			m_pTransCom->m_vPos = m_pInfoCom->m_vArrivePos;
-			m_iCurAnim = Crab::A_WAIT;
+
+		case Crab::A_WAIT:
+		{
+			m_uiAnimIdx = Crab::A_WAIT;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
-	}
-	break;
+		break;
 
-	case Crab::A_DEATH:
-	{
-		m_uiAnimIdx = 4;
-		m_bIsMoveStop = true;
-		if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) {}		
-	}
-	break;
+		case Crab::A_WALK:
+		{
+			m_uiAnimIdx = Crab::A_WALK;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		}
+		break;
 
+		case Crab::A_RUN:
+		{
+			m_uiAnimIdx = Crab::A_RUN;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		}
+		break;
+
+		case Crab::A_ATTACK:
+		{
+			m_uiAnimIdx = Crab::A_ATTACK;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			/* Back Step (0~27 tick)*/
+			if (m_ui3DMax_CurFrame < 28)
+				Attack_Moving(fTimeDelta, (m_pInfoCom->m_fSpeed * 1.f), false);
+			/* Front Step (28~65 tick) */
+			else if (28 <= m_ui3DMax_CurFrame)
+				Attack_Moving(fTimeDelta, (m_pInfoCom->m_fSpeed * 1.f), true);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				m_iMonsterStatus	= Crab::A_WAIT;
+				m_uiAnimIdx			= Crab::A_WAIT;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			}
+		}
+		break;
+
+		case Crab::A_DEATH:
+		{
+			m_uiAnimIdx = Crab::A_DEATH;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) {}
+		}
+		break;
+		}
 	}
 }
 

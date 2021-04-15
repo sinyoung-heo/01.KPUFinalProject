@@ -187,7 +187,6 @@ Engine::CGameObject* CTextureEffect::Create(ID3D12Device * pGraphicDevice,
 void CTextureEffect::Free()
 {
 	Engine::CGameObject::Free();
-
 	Engine::Safe_Release(m_pBufferCom);
 	Engine::Safe_Release(m_pShaderCom);
 	Engine::Safe_Release(m_pTextureCom);

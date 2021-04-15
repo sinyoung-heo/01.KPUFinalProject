@@ -46,16 +46,24 @@ HRESULT CStaticMeshObject::Ready_GameObject(wstring wstrMeshTag,
 											  vBoundingSpherePos);
 
 	// PipelineState.
-	m_bIsRenderShadow = bIsRenderShadow; 
-	if (!m_bIsRenderShadow)
-		m_iMeshPipelineStatePass = 0;
-	else
+	//m_bIsRenderShadow = bIsRenderShadow; 
+	//if (!m_bIsRenderShadow)
+	//	m_iMeshPipelineStatePass = 0;
+	//else
+	//	m_iMeshPipelineStatePass = 1;
+
+	if (m_wstrMeshTag == L"VK_CON_Floor_04_SM" ||
+		m_wstrMeshTag == L"VK_CON_Floor_03_SM")
+	{
 		m_iMeshPipelineStatePass = 1;
+	}
+	else
+		m_iMeshPipelineStatePass   = 0;
 
 	m_iShadowPipelineStatePass = 0;
 
-
 	m_iRandomnumber = rand() % 10;
+
 	return S_OK;
 }
 
@@ -78,14 +86,19 @@ _int CStaticMeshObject::Update_GameObject(const _float & fTimeDelta)
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
 	// Frustum Culling
-	if (m_pRenderer->Get_Frustum().Contains(m_pBoundingBoxCom->Get_BoundingInfo()) != DirectX::DISJOINT)
-	{
+	if (m_wstrMeshTag == L"VK_CON_Wall_B_SM")
 		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
-		
-		if (m_iRandomnumber == 1)
+	else
+	{
+		if (m_pRenderer->Get_Frustum().Contains(m_pBoundingBoxCom->Get_BoundingInfo()) != DirectX::DISJOINT)
 		{
-			Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_CROSSFILTER, this), -1);
-			//Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_EDGE, this), -1);
+			Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+
+			if (m_iRandomnumber == 1)
+			{
+				Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_CROSSFILTER, this), -1);
+				//Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_EDGE, this), -1);
+			}
 		}
 	}
 
@@ -142,10 +155,15 @@ void CStaticMeshObject::Render_ShadowDepth(const _float& fTimeDelta,
 	/*__________________________________________________________________________________________________________
 	[ Add Instance ]
 	____________________________________________________________________________________________________________*/
-	m_pShaderShadowInstancing->Add_Instance(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass);
-	_uint iInstanceIdx = m_pShaderShadowInstancing->Get_InstanceCount(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass) - 1;
+	if (m_wstrMeshTag != L"VK_CON_Floor_04_SM" &&
+		m_wstrMeshTag != L"VK_CON_Floor_03_SM" &&
+		m_wstrMeshTag != L"VK_CON_Wall_B_SM")
+	{
+		m_pShaderShadowInstancing->Add_Instance(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass);
+		_uint iInstanceIdx = m_pShaderShadowInstancing->Get_InstanceCount(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass) - 1;
 
-	Set_ConstantTableShadowDepth(iContextIdx, iInstanceIdx);
+		Set_ConstantTableShadowDepth(iContextIdx, iInstanceIdx);
+	}
 }
 
 HRESULT CStaticMeshObject::Add_Component(wstring wstrMeshTag)

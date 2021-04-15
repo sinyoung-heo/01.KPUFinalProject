@@ -15,10 +15,12 @@ private:
 
 public:
 	// Get
-	CTransform*			Get_Transform()		{ return m_pTransCom; }
-	BoundingBox&		Get_BoundingInfo() 	{ return m_BoundingInfo; }
-	const _vec3&		Get_Length() const	{ return m_vLength; }
-	const _float&		Get_MaxConerPosY()	{ return m_fMaxConerPosY; }
+	CTransform*			Get_Transform()			{ return m_pTransCom; }
+	BoundingBox&		Get_BoundingInfo() 		{ return m_BoundingInfo; }
+	const _vec3&		Get_Length() const		{ return m_vLength; }
+	const _float&		Get_MaxConerPosY()		{ return m_fMaxConerPosY; }
+	const _vec3&		Get_TopPlaneCenter()	{ return m_vTopPlaneCenter; }
+	const _vec3&		Get_BottomPlaneCenter()	{ return m_vBottomPlaneCenter; }
 
 	// Set
 	void				Set_Pos(const _vec3& vPos)						{ m_pTransCom->m_vPos	= vPos; }
@@ -58,14 +60,17 @@ private:
 	____________________________________________________________________________________________________________*/
 	BoundingBox								m_BoundingInfo;
 	array<_vec3, BoundingBox::CORNER_COUNT> m_arrCorners;
+	array<_vec3, BoundingBox::CORNER_COUNT> m_arrOriginCorners;
 	_vec3									m_vLength			       = INIT_VEC3(0.f);
 	_rgba									m_vColor			       = _rgba(0.0f, 1.0f, 0.0f, 1.0f);
 	SKINNING_MATRIX*						m_pSkinningMatrix	       = nullptr;
 	_matrix*								m_pParentMatrix		       = nullptr;
 	_uint									m_uiColorPipelineStatePass = 0;
 
-	_bool									m_bIsSetUpCameraAt = false;
-	_float									m_fMaxConerPosY    = 0.0f;
+	_bool									m_bIsSetUpCameraAt    = false;
+	_float									m_fMaxConerPosY       = 0.0f;
+	_vec3									m_vTopPlaneCenter     = _vec3(0.0f);
+	_vec3									m_vBottomPlaneCenter  = _vec3(0.0f);
 public:
 	virtual CComponent*		Clone();
 	static	CColliderBox*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
