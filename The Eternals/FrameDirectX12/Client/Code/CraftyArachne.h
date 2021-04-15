@@ -29,6 +29,7 @@ public:
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
+	virtual void	Process_Collision();
 	virtual void	Send_PacketToServer();
 	// MultiThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
@@ -39,11 +40,10 @@ private:
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
 	void			SetUp_AngleInterpolation(const _float& fTimeDelta);
-
 	void			Active_Monster(const _float& fTimeDelta);
 	void			Change_Animation(const _float& fTimeDelta);
-		
-
+	// Collision Event
+	void Collision_ThisPlayer(list<Engine::CColliderSphere*>& lstPlayerCollider);
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]

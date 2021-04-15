@@ -18,18 +18,25 @@ CCraftyArachne::CCraftyArachne(ID3D12Device* pGraphicDevice, ID3D12GraphicsComma
 
 HRESULT CCraftyArachne::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
 {
-	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, false, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag, wstrNaviMeshTag), E_FAIL);
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
-	m_pTransCom->m_vPos = vPos;
+	m_pTransCom->m_vPos   = vPos;
+	m_wstrCollisionTag    = L"Monster";
 	m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(vPos));
-	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
-		m_pTransCom->m_vScale,
-		m_pMeshCom->Get_CenterPos(),
-		m_pMeshCom->Get_MinVector(),
-		m_pMeshCom->Get_MaxVector());
 
+	//Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
+	//									   m_pTransCom->m_vScale,
+	//									   m_pMeshCom->Get_CenterPos(),
+	//									   m_pMeshCom->Get_MinVector(),
+	//									   m_pMeshCom->Get_MaxVector());
+
+	Engine::CGameObject::SetUp_BoundingSphere(&(m_pTransCom->m_matWorld),
+											  m_pTransCom->m_vScale,
+											  _vec3(250.0f),
+											  _vec3(0.0f, 50.f, 0.0f));
+	m_lstCollider.push_back(m_pBoundingSphereCom);
 
 	m_pInfoCom->m_fSpeed = 1.f;
 	m_bIsMoveStop = true;
@@ -74,6 +81,16 @@ _int CCraftyArachne::Update_GameObject(const _float& fTimeDelta)
 	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
 	/*__________________________________________________________________________________________________________
+	[ Renderer - Add Render Group ]
+	____________________________________________________________________________________________________________*/
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+
+	/*__________________________________________________________________________________________________________
+	[ Collision - Add Collision List ]
+	____________________________________________________________________________________________________________*/
+	m_pCollisonMgr->Add_CollisionCheckList(this);
+
+	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
@@ -84,13 +101,20 @@ _int CCraftyArachne::Update_GameObject(const _float& fTimeDelta)
 _int CCraftyArachne::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
-
-	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+	Process_Collision();
 
 	return NO_EVENT;
+}
+
+void CCraftyArachne::Process_Collision()
+{
+	for (auto& pDst : m_lstCollisionDst)
+	{
+		if (L"ThisPlayer" == pDst->Get_CollisionTag())
+			Collision_ThisPlayer(pDst->Get_ColliderList());
+
+
+	}
 }
 
 void CCraftyArachne::Send_PacketToServer()
@@ -307,6 +331,23 @@ void CCraftyArachne::Change_Animation(const _float& fTimeDelta)
 		}
 	}
 
+}
+
+void CCraftyArachne::Collision_ThisPlayer(list<Engine::CColliderSphere*>& lstPlayerCollider)
+{
+	for (auto& pSrcCollider : m_lstCollider)
+	{
+		for (auto& pDstCollider : lstPlayerCollider)
+		{
+			if (Engine::CCollisionMgr::Check_Sphere(pSrcCollider->Get_BoundingInfo(), pDstCollider->Get_BoundingInfo()))
+			{
+				// Process Collision Event
+				pSrcCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+				pDstCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+
+			}
+		}
+	}
 }
 
 Engine::CGameObject* CCraftyArachne::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)

@@ -3,8 +3,9 @@
 
 namespace Engine
 {
-	const _int	DEAD_OBJ			= 0;
-	const _int	NO_EVENT			= 1;
+	const _int	DEAD_OBJ   = 0;
+	const _int	NO_EVENT   = 1;
+	const _int	RETURN_OBJ = 2;
 
 	const _int	WINCX				= 1'600;
 	const _int	WINCY				= 900;

@@ -253,6 +253,9 @@
     <Filter Include="02.GameObject\05.Monster\06.CraftyArachne">
       <UniqueIdentifier>{53d529ed-bf47-47fa-bbe1-0542401ebe4e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\06.CollisionTick">
+      <UniqueIdentifier>{46392a5c-e300-4239-b145-a33d4fb5620f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -498,6 +501,9 @@
     <ClInclude Include="..\Code\CraftyArachne.h">
       <Filter>02.GameObject\05.Monster\06.CraftyArachne</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\CollisionTick.h">
+      <Filter>02.GameObject\06.CollisionTick</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -697,6 +703,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CraftyArachne.cpp">
       <Filter>02.GameObject\05.Monster\06.CraftyArachne</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CollisionTick.cpp">
+      <Filter>02.GameObject\06.CollisionTick</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

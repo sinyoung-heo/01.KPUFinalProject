@@ -175,6 +175,7 @@
     <ClInclude Include="..\Code\CharacterHpGauge.h" />
     <ClInclude Include="..\Code\CharacterMpGauge.h" />
     <ClInclude Include="..\Code\CloderA.h" />
+    <ClInclude Include="..\Code\CollisionTick.h" />
     <ClInclude Include="..\Code\Crab.h" />
     <ClInclude Include="..\Code\CraftyArachne.h" />
     <ClInclude Include="..\Code\DrownedSailor.h" />
@@ -251,6 +252,7 @@
     <ClCompile Include="..\Code\CharacterHpGauge.cpp" />
     <ClCompile Include="..\Code\CharacterMpGauge.cpp" />
     <ClCompile Include="..\Code\CloderA.cpp" />
+    <ClCompile Include="..\Code\CollisionTick.cpp" />
     <ClCompile Include="..\Code\Crab.cpp" />
     <ClCompile Include="..\Code\CraftyArachne.cpp" />
     <ClCompile Include="..\Code\DrownedSailor.cpp" />

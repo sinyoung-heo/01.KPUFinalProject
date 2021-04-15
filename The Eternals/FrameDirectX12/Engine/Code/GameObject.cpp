@@ -139,6 +139,8 @@ HRESULT CGameObject::LateInit_GameObject()
 
 _int CGameObject::Update_GameObject(const _float & fTimeDelta)
 {
+	Reset_Collider();
+
 	if (nullptr != m_pTransCom)
 		m_pTransCom->Update_Component(fTimeDelta);
 
@@ -273,6 +275,12 @@ void CGameObject::SetUp_BoundingSphere(_matrix* pParent,
 		m_pBoundingSphereCom->Set_Radius(vParentScale);
 
 	}
+}
+
+void CGameObject::Reset_Collider()
+{
+	for (auto& pCollider : m_lstCollider)
+		pCollider->Set_Color(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
 }
 
 void CGameObject::Compute_ViewZ(_vec4& vPosInWorld)

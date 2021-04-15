@@ -95,7 +95,7 @@ void CEffectTrail::Render_GameObject(const _float& fTimeDelta)
 
 void CEffectTrail::SetUp_TrailByCatmullRom(_vec3* vMin, _vec3* vMax)
 {
-	m_pTransCom->m_vPos = *vMax;
+	// m_pTransCom->m_vPos = *vMax;
 
 	for (_int i = Engine::TRAIL_SIZE - 2; i > 0; --i)
 		m_arrMax[i] = m_arrMax[i - 1];

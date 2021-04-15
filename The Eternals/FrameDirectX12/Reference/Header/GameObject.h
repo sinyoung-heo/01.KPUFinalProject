@@ -32,31 +32,31 @@ public:
 	const high_resolution_clock::time_point& Get_LastMoveTime() { return m_last_move_time; }
 	const bool&			Get_MoveStop()			{ return m_bIsMoveStop; }
 	const char&			Get_OType()				{ return m_chO_Type; }
-
+	list<CColliderSphere*>& Get_ColliderList()	{ return m_lstCollider; }
 	// Set
-	void				Set_UIDepth(const _long& iUIDepth)						{ m_UIDepth = iUIDepth; }
-	void				Set_DeadGameObject()									{ m_bIsDead = true; }
-	void				Set_BoundingBoxColor(const _rgba& vColor)				{ m_pBoundingBoxCom->Set_Color(vColor); }
-	void				Set_BoundingSphereColor(const _rgba& vColor)			{ m_pBoundingSphereCom->Set_Color(vColor); }
-	void				Set_IsCollision(const _bool& bIsCollision)				{ m_bIsCollision = bIsCollision; }
-	void				Set_IsRenderShadow(const _bool& bIsRenderShadow)		{ m_bIsRenderShadow = bIsRenderShadow; }
-	void				Set_ServerNumber(const int& num)						{ m_iSNum = num; }
-	void				Set_LastMoveTime(const steady_clock::time_point& last)	{ m_last_move_time = last; }
-	void				Set_MoveStop(const bool& b)								{ m_bIsMoveStop = b; }
-	void				Set_Attack(const bool& b)								{ m_bIsAttack = b; }
-	void				Set_OType(const char& chType)							{ m_chO_Type = chType; }
-	void				Set_DeadReckoning(const _vec3& vPos);
-	void				Set_Info(int lev, int hp, int maxHp, int mp, int maxMp, int exp, int maxExp, int att, float spd);
-	void				Set_State(int cur) { m_iMonsterStatus = cur; }
-	void				Set_Other_direction(_vec3& vDir);
-	float				Set_Other_Angle(_vec3& vDir);
-	
-	void				Set_IsStartPosInterpolation(const _bool& bIsStart)		{ m_tPosInterpolationDesc.is_start_interpolation = bIsStart; }
-	void				Set_LinearPos(const _vec3& v1, const _vec3& v2)			{ m_tPosInterpolationDesc.v1 = v1; m_tPosInterpolationDesc.v2 = v2; }
-	void				Set_IsStartAngleInterpolation(const _bool& bIsStart)	{ m_tAngleInterpolationDesc.is_start_interpolation = bIsStart; }
-	void				Set_LinearAngle(const _float& v1, const _float& v2)		{ m_tAngleInterpolationDesc.v1 = v1; m_tAngleInterpolationDesc.v2 = v2; }
+	void	Set_UIDepth(const _long& iUIDepth)						{ m_UIDepth = iUIDepth; }
+	void	Set_DeadGameObject()									{ m_bIsDead = true; }
+	void	Set_IsReturnObject(const _bool& bIsReturn)				{ m_bIsReturn = bIsReturn; }
+	void	Set_BoundingBoxColor(const _rgba& vColor)				{ m_pBoundingBoxCom->Set_Color(vColor); }
+	void	Set_BoundingSphereColor(const _rgba& vColor)			{ m_pBoundingSphereCom->Set_Color(vColor); }
+	void	Set_IsCollision(const _bool& bIsCollision)				{ m_bIsCollision = bIsCollision; }
+	void	Set_IsRenderShadow(const _bool& bIsRenderShadow)		{ m_bIsRenderShadow = bIsRenderShadow; }
+	void	Set_ServerNumber(const int& num)						{ m_iSNum = num; }
+	void	Set_LastMoveTime(const steady_clock::time_point& last)	{ m_last_move_time = last; }
+	void	Set_MoveStop(const bool& b)								{ m_bIsMoveStop = b; }
+	void	Set_Attack(const bool& b)								{ m_bIsAttack = b; }
+	void	Set_OType(const char& chType)							{ m_chO_Type = chType; }
+	void	Set_DeadReckoning(const _vec3& vPos);
+	void	Set_Info(int lev, int hp, int maxHp, int mp, int maxMp, int exp, int maxExp, int att, float spd);
+	void	Set_State(int cur) { m_iMonsterStatus = cur; }
+	void	Set_Other_direction(_vec3& vDir);
+	float	Set_Other_Angle(_vec3& vDir);
+	void	Set_IsStartPosInterpolation(const _bool& bIsStart)		{ m_tPosInterpolationDesc.is_start_interpolation = bIsStart; }
+	void	Set_LinearPos(const _vec3& v1, const _vec3& v2)			{ m_tPosInterpolationDesc.v1 = v1; m_tPosInterpolationDesc.v2 = v2; }
+	void	Set_IsStartAngleInterpolation(const _bool& bIsStart)	{ m_tAngleInterpolationDesc.is_start_interpolation = bIsStart; }
+	void	Set_LinearAngle(const _float& v1, const _float& v2)		{ m_tAngleInterpolationDesc.v1 = v1; m_tAngleInterpolationDesc.v2 = v2; }
 
-	void				Ready_AngleInterpolationValue(const _float& fEndAngle);
+	void	Ready_AngleInterpolationValue(const _float& fEndAngle);
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT Ready_GameObjectPrototype();
@@ -86,6 +86,7 @@ protected:
 	void			SetUp_BillboardMatrix();
 	void			SetUp_BoundingBox(_matrix* pParent, const _vec3& vParentScale, const _vec3& vCenter, const _vec3& vMin, const _vec3& vMax, const _float& fScaleOffset = 1.0f, const _vec3& vPosOffset = _vec3(0.0f));
 	void			SetUp_BoundingSphere(_matrix* pParent, const _vec3& vParentScale, const _vec3& vScale, const _vec3& vPos);
+	void			Reset_Collider();
 	void			Compute_ViewZ(_vec4& vPosInWorld);
 	CComponent*		Find_Component(wstring wstrComponentTag, const COMPONENTID& eID);
 protected:
@@ -113,6 +114,7 @@ protected:
 	____________________________________________________________________________________________________________*/
 	_float	m_fDeltaTime		= 0.f;
 	_bool	m_bIsDead			= false;
+	_bool	m_bIsReturn			= false;
 	_bool	m_bIsLateInit		= false;
 	_float	m_fViewZ			= 0.0f;
 	_long	m_UIDepth			= 0;
@@ -125,8 +127,9 @@ protected:
 	/*__________________________________________________________________________________________________________
 	[ Collision ]
 	____________________________________________________________________________________________________________*/
-	wstring				m_wstrCollisionTag;
-	list<CGameObject*>	m_lstCollisionDst;
+	wstring					m_wstrCollisionTag;
+	list<CGameObject*>		m_lstCollisionDst;
+	list<CColliderSphere*>	m_lstCollider;
 
 	/*__________________________________________________________________________________________________________
 	SERVER
