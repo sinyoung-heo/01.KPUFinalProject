@@ -29,6 +29,7 @@
 #include "SampleNPC.h"
 #include "PCGladiator.h"
 #include "TerrainMeshObject.h"
+#include "InstancePoolMgr.h"
 
 CStageHSY::CStageHSY(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -60,8 +61,9 @@ HRESULT CStageHSY::Ready_Scene()
 	// Engine::CShaderTextureInstancing::Get_Instance()->SetUp_ConstantBuffer(Engine::INSTANCE::INSTANCE_DISTORTION ,m_pGraphicDevice);
 	// Engine::CShaderTextureInstancing::Get_Instance()->SetUp_ConstantBuffer(Engine::INSTANCE::INSTANCE_ALPHA, m_pGraphicDevice);
 
-	// Ready MouseCursorMgr
 	CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(false);
+	CInstancePoolMgr::Get_Instance()->Ready_InstancePool(m_pGraphicDevice, m_pCommandList);
+
 
 #ifdef SERVER
 	Engine::FAILED_CHECK_RETURN(CPacketMgr::Get_Instance()->Ready_Server(m_pGraphicDevice, m_pCommandList), E_FAIL);

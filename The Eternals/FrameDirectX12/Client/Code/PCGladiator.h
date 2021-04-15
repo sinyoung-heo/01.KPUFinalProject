@@ -16,6 +16,7 @@ namespace Engine
 }
 
 class CDynamicCamera;
+class CInstancePoolMgr;
 
 class CPCGladiator : public Engine::CGameObject
 {
@@ -94,8 +95,9 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Manager ]
 	____________________________________________________________________________________________________________*/
-	CPacketMgr*		m_pPacketMgr  = nullptr;
-	CServerMath*	m_pServerMath = nullptr;
+	CPacketMgr*			m_pPacketMgr       = nullptr;
+	CServerMath*		m_pServerMath      = nullptr;
+	CInstancePoolMgr*	m_pInstancePoolMgr = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]

@@ -16,6 +16,7 @@
 #include "LightMgr.h"
 #include "DescriptorHeapMgr.h"
 #include "CollisionMgr.h"
+#include "InstancePoolMgr.h"
 #include <chrono>
 
 #define MAX_LOADSTRING 100
@@ -423,6 +424,12 @@ _ulong Release_Singleton()
 	if (dwRefCnt = Engine::CObjectMgr::Get_Instance()->Destroy_Instance())
 	{
 		MSG_BOX(L"CObjectMgr Release Failed");
+		return dwRefCnt;
+	}
+
+	if (dwRefCnt = CInstancePoolMgr::Get_Instance()->Destroy_Instance())
+	{
+		MSG_BOX(L"CInstancePoolMgr Release Failed");
 		return dwRefCnt;
 	}
 

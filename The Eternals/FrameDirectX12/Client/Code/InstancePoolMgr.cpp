@@ -33,7 +33,7 @@ CCollisionTick* CInstancePoolMgr::Pop_CollisionTickInstance()
 		{
 			if (!m_pCollisionTickPool->ppInstances[i]->Get_IsUsingInstance())
 			{
-				++m_pCollisionTickPool->uiCurrentIdx;
+				m_pCollisionTickPool->uiCurrentIdx = i + 1;
 				m_pCollisionTickPool->ppInstances[i]->AddRef();
 
 				return m_pCollisionTickPool->ppInstances[i];
@@ -84,6 +84,7 @@ void CInstancePoolMgr::Return_CollisionTickInstance(const _uint& uiInstanceIdx)
 {
 	Engine::Safe_Release(m_pCollisionTickPool->ppInstances[uiInstanceIdx]);
 	m_pCollisionTickPool->ppInstances[uiInstanceIdx]->Set_IsUsingInstance(false);
+	m_pCollisionTickPool->ppInstances[uiInstanceIdx]->Set_IsReturnObject(false);
 }
 
 void CInstancePoolMgr::Free()
@@ -91,5 +92,6 @@ void CInstancePoolMgr::Free()
 	for (_uint i = 0; i < m_pCollisionTickPool->uiInstanceSize; ++i)
 		Engine::Safe_Release(m_pCollisionTickPool->ppInstances[i]);
 
+	Engine::Safe_Delete_Array(m_pCollisionTickPool->ppInstances);
 	Engine::Safe_Delete(m_pCollisionTickPool);
 }

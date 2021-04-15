@@ -8,11 +8,13 @@
 #include "DynamicCamera.h"
 #include "CollisionMgr.h"
 #include "CollisionTick.h"
+#include "InstancePoolMgr.h"
 
 CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pPacketMgr(CPacketMgr::Get_Instance())
 	, m_pServerMath(CServerMath::Get_Instance())
+	, m_pInstancePoolMgr(CInstancePoolMgr::Get_Instance())
 {
 }
 
@@ -458,13 +460,26 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 		_vec3 vPos = m_pTransCom->m_vPos + m_pTransCom->m_vDir * 2.0f;
 		vPos.y = 1.f;
 
-		Engine::CGameObject* pGameObj = CCollisionTick::Create(m_pGraphicDevice, m_pCommandList,
-															   L"CollisionTick_Player",
-															   _vec3(2.0f), 
-															   vPos, 
-															   m_pInfoCom->m_iAttack, 
-															   1.0f);
-		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_Player", pGameObj);
+		//Engine::CGameObject* pGameObj = CCollisionTick::Create(m_pGraphicDevice, m_pCommandList,
+		//													   L"CollisionTick_Player",
+		//													   _vec3(2.0f), 
+		//													   vPos, 
+		//													   m_pInfoCom->m_iAttack, 
+		//													   1.0f);
+
+		CCollisionTick* pCollisionTick = m_pInstancePoolMgr->Pop_CollisionTickInstance();
+		if (nullptr != pCollisionTick)
+		{
+			pCollisionTick->Set_CollisionTag(L"CollisionTick_Player");
+			pCollisionTick->Set_Damage(m_pInfoCom->m_iAttack);
+			pCollisionTick->Set_LifeTime(1.0f);
+			pCollisionTick->Get_Transform()->m_vScale = _vec3(2.0f);
+			pCollisionTick->Get_Transform()->m_vPos = vPos;
+
+			m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_Player", pCollisionTick);
+		}
+
+
 	}
 }
 
