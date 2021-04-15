@@ -471,6 +471,9 @@
     <ClInclude Include="..\Code\WaterFall.h">
       <Filter>02.GameObject\01.Environment\03.WaterFall</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\MagicCircle.h">
+      <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -658,6 +661,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\WaterFall.cpp">
       <Filter>02.GameObject\01.Environment\03.WaterFall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MagicCircle.cpp">
+      <Filter>02.GameObject\01.Environment\02.TerrainMeshObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

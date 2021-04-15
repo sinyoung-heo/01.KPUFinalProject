@@ -10,7 +10,7 @@ private:
 
 public:
 	virtual HRESULT Ready_Scene();
-	virtual _int	Update_Scene(const _float& fTimeDelta);
+	virtual _int	Update_Scene(const _float& fTimeDelta); 
 	virtual _int	LateUpdate_Scene(const _float& fTimeDelta);
 	virtual HRESULT	Render_Scene(const _float& fTimeDelta, const Engine::RENDERID& eID = Engine::RENDERID::MULTI_THREAD);
 

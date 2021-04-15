@@ -77,9 +77,10 @@ struct VS_OUT
     float4 WorldPos		: TEXCOORD7;
     float2 AniUV		: TEXCOORD8;
     
-    float4 fDissolve : TEXCOORD9;
-    float4 fOffset1 : TEXCOORD10;
-    float4 fOffset2 : TEXCOORD11;
+    float fDissolve : TEXCOORD9;
+    float fOffset1 : TEXCOORD10;
+    float fOffset2 : TEXCOORD11;
+    float fOffset3 : TEXCOORD12;
 };
 
 // PS_MAIN
@@ -103,6 +104,8 @@ VS_OUT VS_TERRAIN_MAIN(VS_IN vs_input)
     float4x4 matWV, matWVP;
     matWV = mul(g_matWorld, g_matView);
     matWVP = mul(matWV, g_matProj);	
+    
+    vs_output.WorldPos = mul(float4(vs_input.Pos, 1.f), g_matWorld);
     vs_output.Pos = mul(float4(vs_input.Pos, 1.0f), matWVP);
     vs_output.TexUV = vs_input.TexUV;
     vs_output.Normal = vs_input.Normal;
@@ -134,6 +137,7 @@ VS_OUT VS_TERRAIN_MAIN(VS_IN vs_input)
     vs_output.fOffset1 =g_fOffset1;
     vs_output.fOffset2 =g_fOffset2;
     
+    vs_output.fOffset3 = g_fOffset3;//Radius
     return (vs_output);
 }
 
@@ -156,14 +160,26 @@ PS_OUT PS_TERRAIN_MAIN(VS_OUT ps_input) : SV_TARGET
     float3 Normal = (TexNormal.x * ps_input.T) + (TexNormal.y * ps_input.B) + (TexNormal.z * ps_input.N);
     ps_output.Normal = float4(Normal.xyz * 0.5f + 0.5f, 1.f); // 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
 	
-	// Specular
-    ps_output.Specular = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV * fDetails);
+	
 	
 	// Depth
     ps_output.Depth = float4(ps_input.ProjPos.z / ps_input.ProjPos.w, // (posWVP.z / posWVP.w) : Proj 영역의 Z.
 								 ps_input.ProjPos.w / g_fProjFar, // posWVP.w / Far : 0~1로 만든 View영역의 Z.
 								 1.0f, 1.0f);
 	
+   // float Radius = ps_input.fOffset3;
+   // if  (g_vTexPos.x - Radius < ps_input.WorldPos.x &&
+		 //g_vTexPos.x + Radius > ps_input.WorldPos.x &&
+		 //g_vTexPos.z - Radius < ps_input.WorldPos.z &&
+		 //g_vTexPos.z + Radius > ps_input.WorldPos.z)
+   // {
+   //     float2 vTexUV;
+   //     vTexUV.x = (ps_input.WorldPos.x - (g_vTexPos.x - Radius)) / (Radius * 2.f);
+   //     vTexUV.y = ((g_vTexPos.z + Radius) - ps_input.WorldPos.z) / (Radius * 2.f);
+   //     ps_output.Diffuse += g_TexSpecular.Sample(g_samLinearClamp, vTexUV);
+   //     ps_output.Normal = g_TexSpecular.Sample(g_samLinearClamp, vTexUV);
+   //     ps_output.Specular = g_TexSpecular.Sample(g_samLinearClamp, vTexUV);
+   // }
 	/*__________________________________________________________________________________________________________
 	[ 현재의 깊이와 그림자 깊이 비교 ]
 	____________________________________________________________________________________________________________*/
@@ -176,5 +192,20 @@ PS_OUT PS_TERRAIN_MAIN(VS_OUT ps_input) : SV_TARGET
     if (CurrentDepth > ShadowDepth + 0.0000125f)
         ps_output.Diffuse.rgb *= 0.5;
 	
+    return (ps_output);
+}
+
+PS_OUT PS_MAGICCIRCLE(VS_OUT ps_input) : SV_TARGET
+{
+   // Diffuse
+    PS_OUT ps_output = (PS_OUT) 0;
+
+    ps_output.Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV );
+    
+    // Depth
+    ps_output.Depth = float4(ps_input.ProjPos.z / ps_input.ProjPos.w, // (posWVP.z / posWVP.w) : Proj 영역의 Z.
+								 ps_input.ProjPos.w / g_fProjFar, // posWVP.w / Far : 0~1로 만든 View영역의 Z.
+								 1.0f, 1.0f);
+   // ps_output.Diffuse = mul(ps_output.Diffuse.rgb, ps_output.Diffuse.a);
     return (ps_output);
 }

@@ -36,6 +36,8 @@ HRESULT CTerrainMeshObject::Ready_GameObject(wstring wstrMeshTag,
 
 HRESULT CTerrainMeshObject::LateInit_GameObject()
 {
+	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
+
 	return S_OK;
 }
 
