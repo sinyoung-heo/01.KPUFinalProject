@@ -8,7 +8,7 @@
 #include "RenderTarget.h"
 #include "TimeMgr.h"
 #include "DescriptorHeapMgr.h"
-CWaterMeshObject::CWaterMeshObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CWaterMeshObject::CWaterMeshObject(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pShaderShadowInstancing(Engine::CShaderShadowInstancing::Get_Instance())
 	, m_pShaderMeshInstancing(Engine::CShaderMeshInstancing::Get_Instance())
@@ -17,18 +17,21 @@ CWaterMeshObject::CWaterMeshObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsC
 
 
 HRESULT CWaterMeshObject::Ready_GameObject(wstring wstrMeshTag,
-	const _vec3& vScale,
-	const _vec3& vAngle,
-	const _vec3& vPos)
+											 const _vec3 & vScale,
+											 const _vec3 & vAngle, 
+											 const _vec3 & vPos)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
 
 	m_wstrMeshTag = wstrMeshTag;
-	m_pTransCom->m_vScale = vScale;
-	m_pTransCom->m_vAngle = vAngle;
-	m_pTransCom->m_vPos = vPos;
+	m_pTransCom->m_vScale	= vScale;
+	m_pTransCom->m_vAngle	= vAngle;
+	m_pTransCom->m_vPos		= vPos;
 
+	// PipelineState.
+	m_iMeshPipelineStatePass	= 2;
+	m_iShadowPipelineStatePass	= 0;
 
 	return S_OK;
 }
@@ -43,7 +46,7 @@ HRESULT CWaterMeshObject::LateInit_GameObject()
 	return S_OK;
 }
 
-_int CWaterMeshObject::Update_GameObject(const _float& fTimeDelta)
+_int CWaterMeshObject::Update_GameObject(const _float & fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
@@ -63,7 +66,7 @@ _int CWaterMeshObject::Update_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CWaterMeshObject::LateUpdate_GameObject(const _float& fTimeDelta)
+_int CWaterMeshObject::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
@@ -72,8 +75,8 @@ _int CWaterMeshObject::LateUpdate_GameObject(const _float& fTimeDelta)
 }
 
 void CWaterMeshObject::Render_GameObject(const _float& fTimeDelta,
-	ID3D12GraphicsCommandList* pCommandList,
-	const _int& iContextIdx)
+										   ID3D12GraphicsCommandList * pCommandList,
+										   const _int& iContextIdx)
 {
 	///*__________________________________________________________________________________________________________
 	//[ Add Instance ]
@@ -86,18 +89,18 @@ void CWaterMeshObject::Render_GameObject(const _float& fTimeDelta,
 	// ID3D12DescriptorHeap* pDescriptorHeap= Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(L"WaterNormal");
 
 	Set_ConstantTable();
-	m_fPatternMapDeltatime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 10.f;
+	m_fPatternMapDeltatime+=(Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 10.f;
 	if (m_fPatternMapDeltatime > 133.f)
 		m_fPatternMapDeltatime = 123.f;
 	m_fNormalMapDeltatime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 15.f;
-	if (m_fNormalMapDeltatime > 123.f)
-		m_fNormalMapDeltatime = 3.f;
+	if (m_fNormalMapDeltatime > 120.f)
+		m_fNormalMapDeltatime = 0.f;
 	m_pMeshCom->Render_WaterMesh(pCommandList, iContextIdx, m_pShaderCom, m_pDescriptorHeaps, (_int)m_fNormalMapDeltatime, (_int)m_fPatternMapDeltatime);
 }
 
-void CWaterMeshObject::Render_ShadowDepth(const _float& fTimeDelta,
-	ID3D12GraphicsCommandList* pCommandList,
-	const _int& iContextIdx)
+void CWaterMeshObject::Render_ShadowDepth(const _float& fTimeDelta, 
+											ID3D12GraphicsCommandList * pCommandList, 
+											const _int& iContextIdx)
 {
 	///*__________________________________________________________________________________________________________
 	//[ Add Instance ]
@@ -156,22 +159,76 @@ void CWaterMeshObject::Set_ConstantTable()
 
 	if (m_fDeltaTime > 1.f)
 		m_fDeltaTime = 0.f;
-
+	
 }
 
+void CWaterMeshObject::Set_ConstantTableShadowDepth()
+{
+	/*__________________________________________________________________________________________________________
+	[ Set ConstantBuffer Data ]
+	____________________________________________________________________________________________________________*/
+	//Engine::SHADOW_DESC tShadowDesc = CShadowLightMgr::Get_Instance()->Get_ShadowDesc();
+
+	//Engine::CB_SHADER_SHADOW tCB_ShaderShadow;
+	//ZeroMemory(&tCB_ShaderShadow, sizeof(Engine::CB_SHADER_SHADOW));
+	//tCB_ShaderShadow.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	//tCB_ShaderShadow.matView	= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
+	//tCB_ShaderShadow.matProj	= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
+	//tCB_ShaderShadow.fProjFar	= tShadowDesc.fLightPorjFar;
+
+	//m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
+}
+
+void CWaterMeshObject::Set_ConstantTable(const _int& iContextIdx, const _int& iInstanceIdx)
+{
+	/*__________________________________________________________________________________________________________
+	[ Set ShaderResource Data ]
+	____________________________________________________________________________________________________________*/
+	Engine::SHADOW_DESC tShadowDesc = CShadowLightMgr::Get_Instance()->Get_ShadowDesc();
+
+	m_fDeltatime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.1f;
+	Engine::CB_SHADER_MESH tCB_ShaderMesh;
+	ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
+	tCB_ShaderMesh.matWorld      = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderMesh.matLightView  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
+	tCB_ShaderMesh.matLightProj  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
+	tCB_ShaderMesh.vLightPos     = tShadowDesc.vLightPosition;
+	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
+	tCB_ShaderMesh.fOffset1 = m_fDeltatime;
+	m_pShaderMeshInstancing->Get_UploadBuffer_ShaderMesh(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderMesh);
+}
+
+void CWaterMeshObject::Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int& iInstanceIdx)
+{
+	/*__________________________________________________________________________________________________________
+	[ Set ConstantBuffer Data ]
+	____________________________________________________________________________________________________________*/
+	Engine::SHADOW_DESC tShadowDesc = CShadowLightMgr::Get_Instance()->Get_ShadowDesc();
+
+	
+	Engine::CB_SHADER_SHADOW tCB_ShaderShadow;
+	ZeroMemory(&tCB_ShaderShadow, sizeof(Engine::CB_SHADER_SHADOW));
+	tCB_ShaderShadow.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderShadow.matView	= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
+	tCB_ShaderShadow.matProj	= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
+	tCB_ShaderShadow.fProjFar	= tShadowDesc.fLightPorjFar;
+
+	
+	m_pShaderShadowInstancing->Get_UploadBuffer_ShaderShadow(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderShadow);
+}
 
 HRESULT CWaterMeshObject::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth)
 {
 	_uint m_uiTexSize = vecTexture.size() + vecShadowDepth.size();
 
 	D3D12_DESCRIPTOR_HEAP_DESC SRV_HeapDesc = {};
-	SRV_HeapDesc.NumDescriptors = m_uiTexSize;	// 텍스처의 개수 만큼 설정.
-	SRV_HeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	SRV_HeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	SRV_HeapDesc.NumDescriptors             = m_uiTexSize;	// 텍스처의 개수 만큼 설정.
+	SRV_HeapDesc.Type                       = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	SRV_HeapDesc.Flags                      = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
 	Engine::FAILED_CHECK_RETURN(m_pGraphicDevice->CreateDescriptorHeap(&SRV_HeapDesc,
-		IID_PPV_ARGS(&m_pDescriptorHeaps)),
-		E_FAIL);
+																	   IID_PPV_ARGS(&m_pDescriptorHeaps)),
+																	   E_FAIL);
 
 	// 힙의 시작을 가리키는 포인터를 얻는다.
 	CD3DX12_CPU_DESCRIPTOR_HANDLE SRV_DescriptorHandle(m_pDescriptorHeaps->GetCPUDescriptorHandleForHeapStart());
@@ -179,11 +236,11 @@ HRESULT CWaterMeshObject::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> ve
 	for (_uint i = 0; i < m_uiTexSize - vecShadowDepth.size(); ++i)
 	{
 		D3D12_SHADER_RESOURCE_VIEW_DESC SRV_Desc = {};
-		SRV_Desc.Format = vecTexture[i]->GetDesc().Format;
-		SRV_Desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-		SRV_Desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		SRV_Desc.Texture2D.MostDetailedMip = 0;
-		SRV_Desc.Texture2D.MipLevels = vecTexture[i]->GetDesc().MipLevels;
+		SRV_Desc.Format                        = vecTexture[i]->GetDesc().Format;
+		SRV_Desc.ViewDimension                 = D3D12_SRV_DIMENSION_TEXTURE2D;
+		SRV_Desc.Shader4ComponentMapping       = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		SRV_Desc.Texture2D.MostDetailedMip     = 0;
+		SRV_Desc.Texture2D.MipLevels           = vecTexture[i]->GetDesc().MipLevels;
 		SRV_Desc.Texture2D.ResourceMinLODClamp = 0.0f;
 
 		m_pGraphicDevice->CreateShaderResourceView(vecTexture[i].Get(), &SRV_Desc, SRV_DescriptorHandle);
@@ -193,23 +250,23 @@ HRESULT CWaterMeshObject::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> ve
 	}
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC SRV_Desc = {};
-	SRV_Desc.Format = vecShadowDepth[0]->GetDesc().Format;
-	SRV_Desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	SRV_Desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	SRV_Desc.Texture2D.MostDetailedMip = 0;
-	SRV_Desc.Texture2D.MipLevels = vecShadowDepth[0]->GetDesc().MipLevels;
-	SRV_Desc.Texture2D.ResourceMinLODClamp = 0.0f;
+	SRV_Desc.Format							= vecShadowDepth[0]->GetDesc().Format;
+	SRV_Desc.ViewDimension					= D3D12_SRV_DIMENSION_TEXTURE2D;
+	SRV_Desc.Shader4ComponentMapping		= D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	SRV_Desc.Texture2D.MostDetailedMip		= 0;
+	SRV_Desc.Texture2D.MipLevels			= vecShadowDepth[0]->GetDesc().MipLevels;
+	SRV_Desc.Texture2D.ResourceMinLODClamp	= 0.0f;
 	m_pGraphicDevice->CreateShaderResourceView(vecShadowDepth[0].Get(), &SRV_Desc, SRV_DescriptorHandle);
 
 	return S_OK;
 }
 
 
-Engine::CGameObject* CWaterMeshObject::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
-	wstring wstrMeshTag,
-	const _vec3& vScale,
-	const _vec3& vAngle,
-	const _vec3& vPos)
+Engine::CGameObject* CWaterMeshObject::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
+												wstring wstrMeshTag, 
+												const _vec3 & vScale,
+												const _vec3 & vAngle,
+												const _vec3 & vPos)
 {
 	CWaterMeshObject* pInstance = new CWaterMeshObject(pGraphicDevice, pCommandList);
 

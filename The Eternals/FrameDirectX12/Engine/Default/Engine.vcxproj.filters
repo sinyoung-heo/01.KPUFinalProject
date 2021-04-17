@@ -190,9 +190,6 @@
     <Filter Include="01.Utility\04.SuperClass\04.Component\99.Resource\04.Collider\Box">
       <UniqueIdentifier>{5ae764c1-69d1-47b7-a46b-e90c7cd97b93}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\03.ShaderMesh\ShaderTerrainMesh">
-      <UniqueIdentifier>{b6c1f158-a386-49a7-9507-1fbed42ad2b4}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\Engine_Functor.h">
@@ -414,9 +411,6 @@
     <ClInclude Include="..\Code\TrailTex.h">
       <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\00.Buffer\07.TrailTex</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\ShaderMeshTerrain.h">
-      <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\03.ShaderMesh\ShaderTerrainMesh</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\DirectInput.cpp">
@@ -611,9 +605,6 @@
     <ClCompile Include="..\Code\TrailTex.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\00.Buffer\07.TrailTex</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\ShaderMeshTerrain.cpp">
-      <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\03.ShaderMesh\ShaderTerrainMesh</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Bin\Shader\ShaderMesh.hlsl">
@@ -669,9 +660,6 @@
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderLightingInstancing.hlsl">
       <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\05.ShaderLight</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Bin\Shader\ShaderMeshTerrain.hlsl">
-      <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\03.ShaderMesh\ShaderTerrainMesh</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

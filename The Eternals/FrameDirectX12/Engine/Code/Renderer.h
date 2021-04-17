@@ -43,7 +43,7 @@ class ENGINE_DLL CRenderer final : public CBase
 	DECLARE_SINGLETON(CRenderer)
 
 public:
-	enum RENDERGROUP
+	enum RENDERGROUP 
 	{
 		RENDER_PRIORITY,
 		RENDER_NONALPHA,
@@ -56,44 +56,44 @@ public:
 		RENDER_FONT,
 		RENDER_END
 	};
-	enum BUFFERID { LUMINANCE,BUFFER_END };
+	enum BUFFERID { LUMINANCE,BUFFER_END};
 private:
 	explicit CRenderer();
 	virtual ~CRenderer() = default;
 
 public:
 	// Get
-	_uint				Get_RenderLstSize(const RENDERGROUP & eRenderGroup);
+	_uint				Get_RenderLstSize(const RENDERGROUP& eRenderGroup);
 	_uint				Get_ColliderLstSize();
-	const _uint& Get_CntShaderFile() { return m_uiCnt_ShaderFile; }
-	const _uint& Get_CntPipelineState() { return m_uiCnt_PipelineState; }
-	const _uint& Get_CntSetPipelineState() { return m_uiCnt_SetPipelineState; }
+	const _uint&		Get_CntShaderFile()					{ return m_uiCnt_ShaderFile; }
+	const _uint&		Get_CntPipelineState()				{ return m_uiCnt_PipelineState; }
+	const _uint&		Get_CntSetPipelineState()			{ return m_uiCnt_SetPipelineState; }
 	_bool				Get_RenderOnOff(wstring wstrTag);
-	CRenderTarget* Get_TargetShadowDepth() { return m_pTargetShadowDepth; }
-	BoundingFrustum& Get_Frustum() { return m_tFrustum; }
+	CRenderTarget*		Get_TargetShadowDepth()				{ return m_pTargetShadowDepth; }
+	BoundingFrustum&	Get_Frustum()						{ return m_tFrustum; } 
 
 	// Set
-	HRESULT	Set_CurPipelineState(ID3D12PipelineState * pPipelineState);
-	HRESULT	Set_CurPipelineState(ID3D12GraphicsCommandList * pCommandList,
-								 ID3D12PipelineState * pPipelineState,
-								 const _int & iContextIdx);
+	HRESULT	Set_CurPipelineState(ID3D12PipelineState* pPipelineState);
+	HRESULT	Set_CurPipelineState(ID3D12GraphicsCommandList* pCommandList, 
+								 ID3D12PipelineState* pPipelineState,
+								 const _int& iContextIdx);
 	HRESULT	Set_RenderOnOff(wstring wstrTag);
-	void	Add_PipelineStateCnt() { ++m_uiCnt_PipelineState; };
-	void	Reset_SetPipelineStateCnt() { m_uiCnt_SetPipelineState = 0; }
-	void	Set_bIsLoadingFinish() { m_bIsLoadingFinish = true; }
-	void	Set_Frustum(const BoundingFrustum & tFrustum) { m_tFrustum = tFrustum; }
+	void	Add_PipelineStateCnt()							{ ++m_uiCnt_PipelineState; };
+	void	Reset_SetPipelineStateCnt()						{ m_uiCnt_SetPipelineState = 0; }
+	void	Set_bIsLoadingFinish()							{ m_bIsLoadingFinish = true; }
+	void	Set_Frustum(const BoundingFrustum& tFrustum)	{ m_tFrustum = tFrustum; }
 
 	// Method
-	HRESULT	Ready_Renderer(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList);
-	HRESULT	Add_Renderer(const RENDERGROUP & eRenderID, CGameObject * pGameObject);
-	HRESULT Add_Renderer(CComponent * pComponent);
-	HRESULT	Render_Renderer(const _float & fTimeDelta, const RENDERID & eID = RENDERID::MULTI_THREAD);
+	HRESULT	Ready_Renderer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	HRESULT	Add_Renderer(const RENDERGROUP& eRenderID, CGameObject* pGameObject);
+	HRESULT Add_Renderer(CComponent* pComponent);
+	HRESULT	Render_Renderer(const _float& fTimeDelta, const RENDERID& eID = RENDERID::MULTI_THREAD);
 	void	Clear_RenderGroup();
 
 private:
-	void	Render_Priority(const _float & fTimeDelta);
-	void	Render_ShadowDepth(const _float & fTimeDelta);
-	void	Render_NonAlpha(const _float & fTimeDelta);
+	void	Render_Priority(const _float& fTimeDelta);
+	void	Render_ShadowDepth(const _float& fTimeDelta);
+	void	Render_NonAlpha(const _float& fTimeDelta);
 	void	Render_Light();
 	void	Render_Luminance();
 	void	Render_NPathDir();
@@ -101,15 +101,15 @@ private:
 	void	Render_Blur();
 	void	Render_SSAO();
 	void	Render_Blend();
-	void	Render_EdgeObject(const _float & fTimeDelta);
+	void	Render_EdgeObject(const _float& fTimeDelta);
 	void	Render_Edge();
-	void	Render_Distortion(const _float & fTimeDelta);
-	void	Render_CrossFilter(const _float & fTimeDelta);
-	void	Render_Alpha(const _float & fTimeDelta);
-	void	Render_UI(const _float & fTimeDelta);
-	void	Render_Collider(const _float & fTimeDelta);
+	void	Render_Distortion(const _float& fTimeDelta);
+	void	Render_CrossFilter(const _float& fTimeDelta);
+	void	Render_Alpha(const _float& fTimeDelta);
+	void	Render_UI(const _float& fTimeDelta);
+	void	Render_Collider(const _float& fTimeDelta);
 	void	Render_RenderTarget();
-	void	Render_Font(const _float & fTimeDelta);
+	void	Render_Font(const _float& fTimeDelta);
 
 	// Ready Resource
 	HRESULT	Ready_ShaderPrototype();
@@ -119,30 +119,30 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ GraphicDevice / Mgr ]
 	____________________________________________________________________________________________________________*/
-	ID3D12Device* m_pGraphicDevice = nullptr;
-	ID3D12GraphicsCommandList* m_pCommandList = nullptr;
-	CComponentMgr* m_pComponentMgr = nullptr;
+	ID3D12Device*				m_pGraphicDevice	= nullptr;
+	ID3D12GraphicsCommandList*	m_pCommandList		= nullptr;
+	CComponentMgr*				m_pComponentMgr		= nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Render Group ]
 	____________________________________________________________________________________________________________*/
 	vector<CGameObject*>	m_RenderList[RENDER_END];		// GameObject RenderGroup
 	list<CComponent*>		m_ColliderList;					// Collier RenderList
-	_uint					m_uiRenderListSize = 0;	// Render GameObject Cnt
-	_uint					m_uiColliderListSize = 0;	// Render Collider Cnt
+	_uint					m_uiRenderListSize		= 0;	// Render GameObject Cnt
+	_uint					m_uiColliderListSize	= 0;	// Render Collider Cnt
 	BoundingFrustum			m_tFrustum;
 
 	/*__________________________________________________________________________________________________________
 	[ Multi RenderTarget ]
 	____________________________________________________________________________________________________________*/
 	// Render Target - 타겟추가후 꼭 릴리즈
-	CRenderTarget* m_pTargetDeferred = nullptr; // 디퍼드		-> Target5
-	CRenderTarget* m_pTargetLight = nullptr; // 라이트		-> Target2
-	CRenderTarget* m_pTargetShadowDepth = nullptr; // 셰도우		-> Target1
-	CRenderTarget* m_pTargetDownSampling = nullptr; // 다운샘플		-> Target2
-	CRenderTarget* m_pTargetBlur = nullptr; // 블러			-> Target3
-	CRenderTarget* m_pTargetSSAO = nullptr; // SSAO		-> Target1
-	CRenderTarget* m_pTargetDistortion = nullptr; // Distortion
+	CRenderTarget*	m_pTargetDeferred	  = nullptr; // 디퍼드		-> Target5
+	CRenderTarget*	m_pTargetLight		  = nullptr; // 라이트		-> Target2
+	CRenderTarget*	m_pTargetShadowDepth  = nullptr; // 셰도우		-> Target1
+	CRenderTarget*	m_pTargetDownSampling = nullptr; // 다운샘플		-> Target2
+	CRenderTarget*	m_pTargetBlur         = nullptr; // 블러			-> Target3
+	CRenderTarget*	m_pTargetSSAO         = nullptr; // SSAO		-> Target1
+	CRenderTarget* m_pTargetDistortion    = nullptr; // Distortion
 	CRenderTarget* m_pTargetBlend = nullptr; // Distortion
 	CRenderTarget* m_pTargetCrossFilter = nullptr; // CrossFilter
 
@@ -154,7 +154,7 @@ private:
 	CScreenTex* m_pEdgeBuffer = nullptr;
 	_bool m_bIsSetEdgeTexture{ false };
 	// N_PathBlurTarget
-	CRenderTarget* m_pTargetNPathDir = nullptr; // n방향 타겟
+	CRenderTarget * m_pTargetNPathDir = nullptr; // n방향 타겟
 	CShaderNPathDir* m_pNPathDirShader = nullptr;
 	CScreenTex* m_pNPathDirBuffer = nullptr;
 	//SUNSHINE
@@ -164,21 +164,21 @@ private:
 
 	_bool m_bisSetNPathDirTexture		{false};
 	// Blend
-	CScreenTex* m_pBlendBuffer = nullptr;
-	CShaderBlend* m_pBlendShader = nullptr;
+	CScreenTex*		m_pBlendBuffer					= nullptr;
+	CShaderBlend*	m_pBlendShader					= nullptr;
 	_bool			m_bIsSetBlendTexture			{ false };
 
 	CShaderBlend* m_pHDRShader = nullptr;
 	//Luminance
 
 	CRenderTarget* m_pTargetLuminance[6]; // 루미넌스		-> Target6
-	CScreenTex* m_pLuminanceBuffer = nullptr;
-	CShaderLuminance* m_pLuminanceShader[6];
+	CScreenTex*			m_pLuminanceBuffer			= nullptr;
+	CShaderLuminance*   m_pLuminanceShader[6]			;
 	_bool				m_bIsSetLuminanceTexture	{ false };
 
 	//DownSampleTarget
-	CScreenTex* m_pDownSamplingBuffer = nullptr;
-	CShaderDownSampling* m_pDownSamplingShader = nullptr;
+	CScreenTex*			 m_pDownSamplingBuffer		= nullptr;
+	CShaderDownSampling* m_pDownSamplingShader		= nullptr;
 	_bool				 m_bIsSetDownSamplingTexture{ false };
 
 	//Luminance
@@ -192,15 +192,15 @@ private:
 	_bool				m_bIsSetSSAOTexture{ false };
 
 
-
+	
 	/*__________________________________________________________________________________________________________
 	[ Pipeline StateGroup ]
 	____________________________________________________________________________________________________________*/
 	ID3D12PipelineState* m_pPrePipelineState = nullptr;	// 이전의 PipelineState.
 	ID3D12PipelineState* m_pCurPipelineState = nullptr;	// 현재의 PipelineState.
-	_uint	m_uiCnt_ShaderFile = 0;
-	_uint	m_uiCnt_PipelineState = 0;
-	_uint	m_uiCnt_SetPipelineState = 0;
+	_uint	m_uiCnt_ShaderFile			     = 0;
+	_uint	m_uiCnt_PipelineState		     = 0;
+	_uint	m_uiCnt_SetPipelineState	     = 0;
 
 	/*__________________________________________________________________________________________________________
 	[ Rener On/Off ]
@@ -218,31 +218,31 @@ private:
 
 	array<ID3D12CommandAllocator*, CONTEXT::CONTEXT_END>	m_arrShadowCommandAllocator		{ nullptr };
 	array<ID3D12GraphicsCommandList*, CONTEXT::CONTEXT_END>	m_arrShadowCommandList			{ nullptr };
-	ID3D12CommandAllocator* m_pPreShadowCommandAllocator = nullptr;
-	ID3D12GraphicsCommandList* m_pPreShadowCommandList = nullptr;
-	ID3D12CommandAllocator* m_pEndShadowCommandAllocator = nullptr;
-	ID3D12GraphicsCommandList* m_pEndShadowCommandList = nullptr;
+	ID3D12CommandAllocator*									m_pPreShadowCommandAllocator	= nullptr;
+	ID3D12GraphicsCommandList*								m_pPreShadowCommandList			= nullptr;
+	ID3D12CommandAllocator*									m_pEndShadowCommandAllocator	= nullptr;
+	ID3D12GraphicsCommandList*								m_pEndShadowCommandList			= nullptr;
 
 	array<ID3D12CommandAllocator*, CONTEXT::CONTEXT_END>	m_arrSceneCommandAllocator		{ nullptr };
 	array<ID3D12GraphicsCommandList*, CONTEXT::CONTEXT_END>	m_arrSceneCommandList			{ nullptr };
-	ID3D12CommandAllocator* m_pPreSceneCommandAllocator = nullptr;
-	ID3D12GraphicsCommandList* m_pPreSceneCommandList = nullptr;
-	ID3D12CommandAllocator* m_pEndSceneCommandAllocator = nullptr;
-	ID3D12GraphicsCommandList* m_pEndSceneCommandList = nullptr;
+	ID3D12CommandAllocator*									m_pPreSceneCommandAllocator		= nullptr;
+	ID3D12GraphicsCommandList*								m_pPreSceneCommandList			= nullptr;
+	ID3D12CommandAllocator*									m_pEndSceneCommandAllocator		= nullptr;
+	ID3D12GraphicsCommandList*								m_pEndSceneCommandList			= nullptr;
 
 	array<ID3D12PipelineState*, CONTEXT::CONTEXT_END>		m_arrContextPrePipelineState	{ nullptr };
 	array<ID3D12PipelineState*, CONTEXT::CONTEXT_END>		m_arrContextCurPipelineState	{ nullptr };
 
 	ThreadParameter											m_tThreadParameter[CONTEXT::CONTEXT_END];
 
-	_bool m_bIsLoadingFinish = false;
-	_bool m_bIsCreateThread = false;
+	_bool m_bIsLoadingFinish	= false;
+	_bool m_bIsCreateThread		= false;
 
 public:
 	void	Create_ThreadContext();
 	HRESULT	Create_ThreadCommandList();
 	HRESULT	Reset_ThreadCommandList();
-	HRESULT Render_MultiThread(const _float & fTimeDelta);
+	HRESULT Render_MultiThread(const _float& fTimeDelta);
 	void	Worker_Thread(_int threadIndex);
 
 

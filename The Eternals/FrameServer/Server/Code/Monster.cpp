@@ -5,7 +5,7 @@
 CMonster::CMonster()
 	:m_iHp(0), m_iMaxHp(0), m_iExp(0), m_iAtt(0), m_fSpd(0.f),
 	m_iTargetNum(-1), m_bIsAttack(false), m_bIsShortAttack(true),
-	m_bIsRushAttack(false), m_bIsFighting(false), m_monNum(0), m_uiAnimIdx(0),
+	m_bIsRushAttack(false), m_monNum(0), m_uiAnimIdx(0),
 	m_eAttackDist(ATTACK_DIST::DIST_END)
 {
 }
@@ -1883,11 +1883,7 @@ void CMonster::Chase_CraftyArachne(const float& fTimeDelta)
 		if (!CCollisionMgr::GetInstance()->Is_Arrive(m_vPos, m_vOriPos))
 			m_vPos += m_vDir * fTimeDelta;
 		else
-		{
 			nonActive_monster(m_sNum);
-			cout << "몬스터 전투 종료 " << endl;
-			Set_Stop_Fight();
-		}
 	}
 
 	/* NaviMesh를 벗어날 경우 움직임 X */
@@ -2934,12 +2930,7 @@ void CMonster::Hurt_Monster(const int& p_id,const int& damage)
 	m_iTargetNum = p_id;
 
 	/* 추적 상태로 변경 */
-	if (m_bIsFighting == false)
-	{
-		cout << "몬스터 전투 시작" << endl;
-		Set_Start_Fight();
-		Change_ChaseMode();
-	}
+	Change_ChaseMode();
 }
 
 void CMonster::Change_AttackMode()
@@ -3051,24 +3042,6 @@ void CMonster::Set_Start_Attack()
 	{
 		bool prev_state = m_bIsAttack;
 		atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsAttack), &prev_state, true);		
-	}
-}
-
-void CMonster::Set_Start_Fight()
-{
-	if (!m_bIsFighting)
-	{
-		bool prev_state = m_bIsFighting;
-		atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsFighting), &prev_state, true);
-	}
-}
-
-void CMonster::Set_Stop_Fight()
-{
-	if (m_bIsFighting)
-	{
-		bool prev_state = m_bIsFighting;
-		atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsFighting), &prev_state, false);
 	}
 }
 

@@ -7,43 +7,43 @@
 #include "TimeMgr.h"
 #include "DynamicCamera.h"
 #include "RenderTarget.h"
-#include "ShaderMgr.h"
 
-CStaticMeshObject::CStaticMeshObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+
+CStaticMeshObject::CStaticMeshObject(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pShaderShadowInstancing(Engine::CShaderShadowInstancing::Get_Instance())
 	, m_pShaderMeshInstancing(Engine::CShaderMeshInstancing::Get_Instance())
 {
 }
 
-HRESULT CStaticMeshObject::Ready_GameObject(wstring wstrMeshTag,
-	const _vec3& vScale,
-	const _vec3& vAngle,
-	const _vec3& vPos,
-	const _bool& bIsRenderShadow,
-	const _bool& bIsCollision,
-	const _vec3& vBoundingSphereScale,
-	const _vec3& vBoundingSpherePos)
+HRESULT CStaticMeshObject::Ready_GameObject(wstring wstrMeshTag, 
+											const _vec3 & vScale, 
+											const _vec3 & vAngle, 
+											const _vec3 & vPos,
+											const _bool& bIsRenderShadow,
+											const _bool& bIsCollision,
+											const _vec3& vBoundingSphereScale,
+											const _vec3& vBoundingSpherePos)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, false, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
-	m_wstrMeshTag = wstrMeshTag;
-	m_pTransCom->m_vScale = vScale;
-	m_pTransCom->m_vAngle = vAngle;
-	m_pTransCom->m_vPos = vPos;
-	m_bIsCollision = bIsCollision;
+	m_wstrMeshTag			= wstrMeshTag;
+	m_pTransCom->m_vScale	= vScale;
+	m_pTransCom->m_vAngle	= vAngle;
+	m_pTransCom->m_vPos		= vPos;
+	m_bIsCollision			= bIsCollision;
 	m_eRenderGroup = Engine::CRenderer::RENDERGROUP::RENDER_NONALPHA;
 	// BoundingBox.
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
-		m_pTransCom->m_vScale,
-		m_pMeshCom->Get_CenterPos(),
-		m_pMeshCom->Get_MinVector(),
-		m_pMeshCom->Get_MaxVector());
+										   m_pTransCom->m_vScale,
+										   m_pMeshCom->Get_CenterPos(),
+										   m_pMeshCom->Get_MinVector(),
+										   m_pMeshCom->Get_MaxVector());
 	// BoundingSphere.
 	Engine::CGameObject::SetUp_BoundingSphere(&(m_pTransCom->m_matWorld),
-		m_pTransCom->m_vScale,
-		vBoundingSphereScale,
-		vBoundingSpherePos);
+											  m_pTransCom->m_vScale,
+											  vBoundingSphereScale,
+											  vBoundingSpherePos);
 
 	// PipelineState.
 	//m_bIsRenderShadow = bIsRenderShadow; 
@@ -58,7 +58,7 @@ HRESULT CStaticMeshObject::Ready_GameObject(wstring wstrMeshTag,
 		m_iMeshPipelineStatePass = 1;
 	}
 	else
-		m_iMeshPipelineStatePass = 0;
+		m_iMeshPipelineStatePass   = 0;
 
 	m_iShadowPipelineStatePass = 0;
 
@@ -75,7 +75,7 @@ HRESULT CStaticMeshObject::LateInit_GameObject()
 	return S_OK;
 }
 
-_int CStaticMeshObject::Update_GameObject(const _float& fTimeDelta)
+_int CStaticMeshObject::Update_GameObject(const _float & fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
@@ -110,7 +110,7 @@ _int CStaticMeshObject::Update_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CStaticMeshObject::LateUpdate_GameObject(const _float& fTimeDelta)
+_int CStaticMeshObject::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
@@ -135,9 +135,9 @@ void CStaticMeshObject::Render_CrossFilterGameObject(const _float& fTimeDelta)
 }
 
 
-void CStaticMeshObject::Render_GameObject(const _float& fTimeDelta,
-	ID3D12GraphicsCommandList* pCommandList,
-	const _int& iContextIdx)
+void CStaticMeshObject::Render_GameObject(const _float& fTimeDelta, 
+										  ID3D12GraphicsCommandList * pCommandList,
+										  const _int& iContextIdx)
 {
 	/*__________________________________________________________________________________________________________
 	[ Add Instance ]
@@ -148,9 +148,9 @@ void CStaticMeshObject::Render_GameObject(const _float& fTimeDelta,
 	Set_ConstantTable(iContextIdx, iInstanceIdx);
 }
 
-void CStaticMeshObject::Render_ShadowDepth(const _float& fTimeDelta,
-	ID3D12GraphicsCommandList* pCommandList,
-	const _int& iContextIdx)
+void CStaticMeshObject::Render_ShadowDepth(const _float& fTimeDelta, 
+										   ID3D12GraphicsCommandList * pCommandList,
+										   const _int& iContextIdx)
 {
 	/*__________________________________________________________________________________________________________
 	[ Add Instance ]
@@ -206,10 +206,10 @@ void CStaticMeshObject::Set_ConstantTable(const _int& iContextIdx, const _int& i
 
 	Engine::CB_SHADER_MESH tCB_ShaderMesh;
 	ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
-	tCB_ShaderMesh.matWorld = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderMesh.matLightView = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
-	tCB_ShaderMesh.matLightProj = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
-	tCB_ShaderMesh.vLightPos = tShadowDesc.vLightPosition;
+	tCB_ShaderMesh.matWorld      = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderMesh.matLightView  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
+	tCB_ShaderMesh.matLightProj  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
+	tCB_ShaderMesh.vLightPos     = tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 
 	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.05f;
@@ -232,12 +232,12 @@ void CStaticMeshObject::Set_ConstantTable()
 	ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
 	tCB_ShaderMesh.matWorld = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
 
-	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
+	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0,tCB_ShaderMesh);
 
 	int randR = rand() % 70 + 30, randG = rand() % 70 + 30, randB = rand() % 70 + 30;
-	tCB_ShaderMesh.vLightPos.x = 1.f;//randR *0.01f;
-	tCB_ShaderMesh.vLightPos.y = 1.f;//randG * 0.01f;
-	tCB_ShaderMesh.vLightPos.z = 1.f;//randB * 0.01f;
+	tCB_ShaderMesh.vLightPos.x =1.f;//randR *0.01f;
+	tCB_ShaderMesh.vLightPos.y =1.f;//randG * 0.01f;
+	tCB_ShaderMesh.vLightPos.z =1.f;//randB * 0.01f;
 	m_pCrossFilterShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 	m_pEdgeObjectShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 }
@@ -251,36 +251,34 @@ void CStaticMeshObject::Set_ConstantTableShadowDepth(const _int& iContextIdx, co
 
 	Engine::CB_SHADER_SHADOW tCB_ShaderShadow;
 	ZeroMemory(&tCB_ShaderShadow, sizeof(Engine::CB_SHADER_SHADOW));
-	tCB_ShaderShadow.matWorld = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderShadow.matView = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
-	tCB_ShaderShadow.matProj = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
-	tCB_ShaderShadow.fProjFar = tShadowDesc.fLightPorjFar;
+	tCB_ShaderShadow.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderShadow.matView	= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
+	tCB_ShaderShadow.matProj	= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
+	tCB_ShaderShadow.fProjFar	= tShadowDesc.fLightPorjFar;
 
-
-	tCB_ShaderShadow.fOffset1 = Engine::CShaderMgr::Get_Instance()->Get_ShaderInfo().TreeAlphaTest;
 	m_pShaderShadowInstancing->Get_UploadBuffer_ShaderShadow(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderShadow);
 }
 
-Engine::CGameObject* CStaticMeshObject::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
-	wstring wstrMeshTag,
-	const _vec3& vScale,
-	const _vec3& vAngle,
-	const _vec3& vPos,
-	const _bool& bIsRenderShadow,
-	const _bool& bIsCollision,
-	const _vec3& vBoundingSphereScale,
-	const _vec3& vBoundingSpherePos)
+Engine::CGameObject* CStaticMeshObject::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
+											   wstring wstrMeshTag, 
+											   const _vec3 & vScale, 
+											   const _vec3 & vAngle, 
+											   const _vec3 & vPos,
+											   const _bool& bIsRenderShadow,
+											   const _bool& bIsCollision,
+											   const _vec3& vBoundingSphereScale,
+											   const _vec3& vBoundingSpherePos)
 {
 	CStaticMeshObject* pInstance = new CStaticMeshObject(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag,
-		vScale,
-		vAngle,
-		vPos,
-		bIsRenderShadow,
-		bIsCollision,
-		vBoundingSphereScale,
-		vBoundingSpherePos)))
+	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, 
+										   vScale, 
+										   vAngle,
+										   vPos, 
+										   bIsRenderShadow,
+										   bIsCollision, 
+										   vBoundingSphereScale,
+										   vBoundingSpherePos)))
 		Engine::Safe_Release(pInstance);
 
 	// SetUp InstanceShader and Add Instance Count.
