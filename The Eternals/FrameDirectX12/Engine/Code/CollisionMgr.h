@@ -9,8 +9,6 @@ enum IS_OVERLAP		{ OVERLAP_UNDER, OVERLAP_TRUE, OVERLAP_OVER, OVERLAP_END };
 
 class CGameObject;
 
-
-
 class ENGINE_DLL CCollisionMgr final :  public CBase
 {
 	DECLARE_SINGLETON(CCollisionMgr)
@@ -23,8 +21,11 @@ public:
 	void	Add_CollisionCheckList(CGameObject * pGameObj);
 	void	Progress_SweapAndPrune();
 	void	Clear_CollisionContainer();
+public:
+	static _bool Check_Sphere(BoundingSphere& src, BoundingSphere& dst);
 private:
 	_bool	Check_OverlapSphere(const OVERLAP_AXIS& eOverlap, CGameObject* pSrc, CGameObject* pDst, IS_OVERLAP& eIsOverlap);
+	_bool	Check_OverlapBox(const OVERLAP_AXIS& eOverlap, CGameObject* pSrc, CGameObject* pDst, IS_OVERLAP& eIsOverlap);
 
 private:
 	list<CGameObject*>						m_lstCollisionCheckList;

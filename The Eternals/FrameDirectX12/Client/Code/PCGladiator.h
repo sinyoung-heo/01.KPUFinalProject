@@ -16,6 +16,7 @@ namespace Engine
 }
 
 class CDynamicCamera;
+class CInstancePoolMgr;
 
 class CPCGladiator : public Engine::CGameObject
 {
@@ -29,6 +30,7 @@ public:
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
+	virtual void	Process_Collision();
 	virtual void	Send_PacketToServer();
 	// SingleThread Rendering.
 	virtual void	Render_GameObject(const _float& fTimeDelta);
@@ -76,8 +78,10 @@ private:
 	void SetUp_WeaponLHand();
 	void SetUp_WeaponBack();
 	void SetUp_AttackAfterImage(const _uint& uiAnimIdx, const _uint& uiStartTick, const _uint& uiStopTick, const _float& fMakeTime, const _float& fAlphaSpeed);
-
 	void Make_AfterImage(const _float& fTimeDelta);
+
+	// Collision Event
+	void Collision_Monster(list<Engine::CColliderSphere*>& lstMonsterCollider);
 
 private:
 	/*__________________________________________________________________________________________________________
@@ -91,8 +95,9 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Manager ]
 	____________________________________________________________________________________________________________*/
-	CPacketMgr*		m_pPacketMgr  = nullptr;
-	CServerMath*	m_pServerMath = nullptr;
+	CPacketMgr*			m_pPacketMgr       = nullptr;
+	CServerMath*		m_pServerMath      = nullptr;
+	CInstancePoolMgr*	m_pInstancePoolMgr = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]

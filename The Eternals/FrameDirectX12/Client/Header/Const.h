@@ -7,8 +7,9 @@ const _int WINPOS_X	= 0;
 const _int WINPOS_Y	= 0;
 
 
-const _int DEAD_OBJ = 0;
-const _int NO_EVENT = 1;
+const _int DEAD_OBJ   = 0;
+const _int NO_EVENT   = 1;
+const _int RETURN_OBJ = 2;
 
 
 const _int MIN_STR	= 64;

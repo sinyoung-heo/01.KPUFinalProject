@@ -15,12 +15,12 @@ private:
 
 public:
 	// Get
-	CTransform*			Get_Transform()			{ return m_pTransCom; }
-	BoundingBox&		Get_BoundingInfo() 		{ return m_BoundingInfo; }
-	const _vec3&		Get_Length() const		{ return m_vLength; }
-	const _float&		Get_MaxConerPosY()		{ return m_fMaxConerPosY; }
-	const _vec3&		Get_TopPlaneCenter()	{ return m_vTopPlaneCenter; }
-	const _vec3&		Get_BottomPlaneCenter()	{ return m_vBottomPlaneCenter; }
+	CTransform*		Get_Transform()			{ return m_pTransCom; }
+	BoundingBox&	Get_BoundingInfo() 		{ return m_BoundingInfo; }
+	const _vec3&	Get_Length() const		{ return m_vLength; }
+	const _float&	Get_MaxConerPosY()		{ return m_fMaxConerPosY; }
+	const _vec3&	Get_TopPlaneCenter()	{ return m_vTopPlaneCenter; }
+	const _vec3&	Get_BottomPlaneCenter()	{ return m_vBottomPlaneCenter; }
 
 	// Set
 	void				Set_Pos(const _vec3& vPos)						{ m_pTransCom->m_vPos	= vPos; }

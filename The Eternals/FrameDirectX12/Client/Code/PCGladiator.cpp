@@ -5,14 +5,16 @@
 #include "ObjectMgr.h"
 #include "LightMgr.h"
 #include "Font.h"
-#include "RenderTarget.h"
 #include "DynamicCamera.h"
-#include "TimeMgr.h"
+#include "CollisionMgr.h"
+#include "CollisionTick.h"
+#include "InstancePoolMgr.h"
 
 CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pPacketMgr(CPacketMgr::Get_Instance())
 	, m_pServerMath(CServerMath::Get_Instance())
+	, m_pInstancePoolMgr(CInstancePoolMgr::Get_Instance())
 {
 }
 
@@ -23,12 +25,13 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 									   const _vec3& vPos,
 									   const char& chWeaponType)
 {
-	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag, wstrNaviMeshTag), E_FAIL);
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos   = vPos;
 	m_chWeaponType        = chWeaponType;
+	m_wstrCollisionTag    = L"ThisPlayer";
 
 	m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(vPos));
 
@@ -39,6 +42,12 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 										   m_pMeshCom->Get_MaxVector(),
 										   1.0f,
 										   _vec3(0.0f, 5.0f, 0.0f));
+
+	Engine::CGameObject::SetUp_BoundingSphere(&(m_pTransCom->m_matWorld),
+											  m_pTransCom->m_vScale,
+											  _vec3(30.0f),
+											  _vec3(0.0f, 20.0f, 0.0f));
+	m_lstCollider.push_back(m_pBoundingSphereCom);
 
 	m_pInfoCom->m_fSpeed     = Gladiator::MIN_SPEED;
 	m_pInfoCom->m_vArrivePos = m_pTransCom->m_vPos;
@@ -159,6 +168,11 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);
 
 	/*__________________________________________________________________________________________________________
+	[ Collision - Add Collision List ]
+	____________________________________________________________________________________________________________*/
+	m_pCollisonMgr->Add_CollisionCheckList(this);
+
+	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
@@ -172,6 +186,7 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 _int CPCGladiator::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
+	Process_Collision();
 
 	/*__________________________________________________________________________________________________________
 	[ Font Update ]
@@ -197,6 +212,16 @@ _int CPCGladiator::LateUpdate_GameObject(const _float& fTimeDelta)
 	}
 
 	return NO_EVENT;
+}
+
+void CPCGladiator::Process_Collision()
+{
+	for (auto& pDst : m_lstCollisionDst)
+	{
+		if (L"Monster" == pDst->Get_CollisionTag())
+			Collision_Monster(pDst->Get_ColliderList());
+
+	}
 }
 
 void CPCGladiator::Send_PacketToServer()
@@ -340,7 +365,6 @@ HRESULT CPCGladiator::SetUp_PCWeapon()
 										 _rgba(0.64f, 0.96f, 0.97f, 1.0f));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"ThisPlayerWeaponTwoHand", m_pWeapon), E_FAIL);
 
-
 	return S_OK;
 }
 
@@ -428,6 +452,28 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 		m_pPacketMgr->send_attackToMonster(5002);
 		m_pPacketMgr->send_attackToMonster(5003);
 	}
+
+	if (Engine::KEY_DOWN(DIK_P))
+	{
+		m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+		m_pTransCom->m_vDir.Normalize();
+		_vec3 vPos = m_pTransCom->m_vPos + m_pTransCom->m_vDir * 2.0f;
+		vPos.y = 1.f;
+
+		// CollisionTick
+		CCollisionTick* pCollisionTick = m_pInstancePoolMgr->Pop_CollisionTickInstance();
+		if (nullptr != pCollisionTick)
+		{
+			pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
+			pCollisionTick->Set_Damage(m_pInfoCom->m_iAttack);
+			pCollisionTick->Set_LifeTime(60.0f);
+			pCollisionTick->Get_Transform()->m_vScale = _vec3(2.0f);
+			pCollisionTick->Get_Transform()->m_vPos   = vPos;
+			pCollisionTick->Get_BoundingSphere()->Set_Radius(pCollisionTick->Get_Transform()->m_vScale);
+
+			m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_ThisPlayer", pCollisionTick);
+		}
+	}
 }
 
 void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
@@ -461,7 +507,11 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 
 		m_last_move_time = high_resolution_clock::now();
 		m_bIsKeyDown     = true;
-		SetUp_WeaponRHand();
+
+		if (Gladiator::STANCE_ATTACK == m_eStance)
+			SetUp_WeaponRHand();
+		else if (Gladiator::STANCE_NONEATTACK == m_eStance)
+			SetUp_WeaponBack();
 	}
 
 	else if (Engine::KEY_PRESSING(DIK_S))
@@ -489,7 +539,11 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 
 		m_last_move_time = high_resolution_clock::now();
 		m_bIsKeyDown     = true;
-		SetUp_WeaponRHand();
+
+		if (Gladiator::STANCE_ATTACK == m_eStance)
+			SetUp_WeaponRHand();
+		else if (Gladiator::STANCE_NONEATTACK == m_eStance)
+			SetUp_WeaponBack();
 	}
 	// 좌로 이동.
 	else if (Engine::KEY_PRESSING(DIK_A))
@@ -498,7 +552,11 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 		m_last_move_time        = high_resolution_clock::now();
 		m_eKeyState             = MVKEY::K_LEFT;
 		m_bIsKeyDown            = true;
-		SetUp_WeaponRHand();
+
+		if (Gladiator::STANCE_ATTACK == m_eStance)
+			SetUp_WeaponRHand();
+		else if (Gladiator::STANCE_NONEATTACK == m_eStance)
+			SetUp_WeaponBack();
 	}
 	// 우로 이동.	
 	else if (Engine::KEY_PRESSING(DIK_D))
@@ -507,7 +565,11 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 		m_last_move_time        = high_resolution_clock::now();
 		m_eKeyState             = MVKEY::K_RIGHT;
 		m_bIsKeyDown            = true;
-		SetUp_WeaponRHand();
+
+		if (Gladiator::STANCE_ATTACK == m_eStance)
+			SetUp_WeaponRHand();
+		else if (Gladiator::STANCE_NONEATTACK == m_eStance)
+			SetUp_WeaponBack();
 	}
 	// 움직임 Stop
 	else
@@ -1318,6 +1380,23 @@ void CPCGladiator::Make_AfterImage(const _float& fTimeDelta)
 			}
 			else
 				++iterFade;
+		}
+	}
+}
+
+void CPCGladiator::Collision_Monster(list<Engine::CColliderSphere*>& lstMonsterCollider)
+{
+	for (auto& pSrcCollider : m_lstCollider)
+	{
+		for (auto& pDstCollider : lstMonsterCollider)
+		{
+			if (Engine::CCollisionMgr::Check_Sphere(pSrcCollider->Get_BoundingInfo(), pDstCollider->Get_BoundingInfo()))
+			{
+				// Process Collision Event
+				pSrcCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+				pDstCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+
+			}
 		}
 	}
 }

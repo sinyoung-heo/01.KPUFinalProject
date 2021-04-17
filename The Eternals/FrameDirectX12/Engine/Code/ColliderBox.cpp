@@ -163,6 +163,13 @@ void CColliderBox::Update_Component(const _float & fTimeDelta)
 	for (_uint i = 0; i < m_arrOriginCorners.size(); ++i)
 		m_arrCorners[i].TransformCoord(m_arrOriginCorners[i], m_pTransCom->m_matWorld);
 
+	//BoundingOrientedBox temp;
+	//temp.Center    = _vec3(0.0f, 0.0f, 0.0f);
+	//temp.Extents.x = 0.5f;	// +,- offset
+	//temp.Extents.y = 0.5f;	// +,- offset
+	//temp.Extents.z = 0.5f;	// +,- offset
+	//m_BoundingInfo.Transform(temp, m_pTransCom->m_matWorld);
+
 	m_vTopPlaneCenter    = (m_arrCorners[2] + m_arrCorners[3] + m_arrCorners[6] + m_arrCorners[7]) / 4.0f;
 	m_vBottomPlaneCenter = (m_arrCorners[0] + m_arrCorners[1] + m_arrCorners[4] + m_arrCorners[5]) / 4.0f;
 
@@ -178,19 +185,19 @@ void CColliderBox::Update_Component(const _float & fTimeDelta)
 
 void CColliderBox::Render_Component(const _float & fTimeDelta)
 {
-	Set_ConstantTable();
+	//Set_ConstantTable();
 
-	m_pShaderCom->Begin_Shader();
-	Begin_Buffer();
-	Render_Buffer();
+	//m_pShaderCom->Begin_Shader();
+	//Begin_Buffer();
+	//Render_Buffer();
 
-	///*__________________________________________________________________________________________________________
-	//[ Add Instance ]
-	//____________________________________________________________________________________________________________*/
-	//m_pShaderColorInstancing->Add_Instance(COLOR_BUFFER::BUFFER_BOX, m_uiColorPipelineStatePass);
-	//_uint iInstanceIdx = m_pShaderColorInstancing->Get_InstanceCount(COLOR_BUFFER::BUFFER_BOX, m_uiColorPipelineStatePass) - 1;
+	/*__________________________________________________________________________________________________________
+	[ Add Instance ]
+	____________________________________________________________________________________________________________*/
+	m_pShaderColorInstancing->Add_Instance(COLOR_BUFFER::BUFFER_BOX, m_uiColorPipelineStatePass);
+	_uint iInstanceIdx = m_pShaderColorInstancing->Get_InstanceCount(COLOR_BUFFER::BUFFER_BOX, m_uiColorPipelineStatePass) - 1;
 
-	//Set_ConstantTable(COLOR_BUFFER::BUFFER_BOX, iInstanceIdx);
+	Set_ConstantTable(COLOR_BUFFER::BUFFER_BOX, iInstanceIdx);
 }
 
 void CColliderBox::Begin_Buffer()

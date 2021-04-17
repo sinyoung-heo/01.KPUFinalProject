@@ -23,7 +23,7 @@ void CCollisionMgr::Progress_SweapAndPrune()
 	// Sort by PosX.
 	m_lstCollisionCheckList.sort([](CGameObject* pSrc, CGameObject* pDst)
 								 {
-									return (pSrc->Get_Transform()->m_vPos.x < pDst->Get_Transform()->m_vPos.x);
+									return (pSrc->Get_BoundingSphere()->Get_BoundingInfo().Center.x < pDst->Get_BoundingSphere()->Get_BoundingInfo().Center.x);
 								 });
 	// X Overlap Check.
 	auto iter_src_begin = m_lstCollisionCheckList.begin();
@@ -45,7 +45,7 @@ void CCollisionMgr::Progress_SweapAndPrune()
 				break;
 		} 
 
-		iter_dst_begin = iter_src_begin;
+		iter_dst_begin = m_lstCollisionCheckList.begin();
 		++iter_src_begin;
 	}
 
@@ -55,7 +55,7 @@ void CCollisionMgr::Progress_SweapAndPrune()
 	{
 		pair.second.sort([](CGameObject* pSrc, CGameObject* pDst)
 						 {
-							return (pSrc->Get_Transform()->m_vPos.y < pDst->Get_Transform()->m_vPos.y);
+							return (pSrc->Get_BoundingSphere()->Get_BoundingInfo().Center.y < pDst->Get_BoundingSphere()->Get_BoundingInfo().Center.y);
 						 });
 
 		for (auto& pDst : pair.second)
@@ -73,7 +73,7 @@ void CCollisionMgr::Progress_SweapAndPrune()
 	{
 		pair.second.sort([](CGameObject* pSrc, CGameObject* pDst)
 						 {
-							return (pSrc->Get_Transform()->m_vPos.z < pDst->Get_Transform()->m_vPos.z);
+							return (pSrc->Get_BoundingSphere()->Get_BoundingInfo().Center.z < pDst->Get_BoundingSphere()->Get_BoundingInfo().Center.z);
 						 });
 
 		for (auto& pDst : pair.second)
@@ -108,17 +108,27 @@ void CCollisionMgr::Clear_CollisionContainer()
 
 }
 
+_bool CCollisionMgr::Check_Sphere(BoundingSphere& src, BoundingSphere& dst)
+{
+	_float fSum		= src.Radius + dst.Radius;
+	_float fDist	= _vec3(src.Center).Get_Distance(_vec3(dst.Center));
+
+	if (fDist <= fSum)
+		return true;
+
+	return false;
+}
+
 _bool CCollisionMgr::Check_OverlapSphere(const OVERLAP_AXIS& eOverlap,
 										 CGameObject* pSrc,
 										 CGameObject* pDst,
 										 IS_OVERLAP& eIsOverlap)
 {
-	_float fSum	 = pSrc->Get_BoundingSphere()->Get_BoundingInfo().Radius + 
-				   pDst->Get_BoundingSphere()->Get_BoundingInfo().Radius;
+	_float fSum	 = pSrc->Get_BoundingSphere()->Get_BoundingInfo().Radius + pDst->Get_BoundingSphere()->Get_BoundingInfo().Radius;
 	_float fDist = 0.0f;
 
-	_vec3 vSrc = pSrc->Get_Transform()->m_vPos;
-	_vec3 vDst = pDst->Get_Transform()->m_vPos;
+	_vec3 vSrc = _vec3(pSrc->Get_BoundingSphere()->Get_BoundingInfo().Center);
+	_vec3 vDst = _vec3(pDst->Get_BoundingSphere()->Get_BoundingInfo().Center);
 
 	if (AXIS_X == eOverlap)
 	{
@@ -159,6 +169,55 @@ _bool CCollisionMgr::Check_OverlapSphere(const OVERLAP_AXIS& eOverlap,
 	}
 
 	if (fDist <= fSum)
+	{
+		eIsOverlap = IS_OVERLAP::OVERLAP_TRUE;
+		return true;
+	}
+
+	return false;
+}
+
+_bool CCollisionMgr::Check_OverlapBox(const OVERLAP_AXIS& eOverlap, 
+									  CGameObject* pSrc,
+									  CGameObject* pDst, 
+									  IS_OVERLAP& eIsOverlap)
+{
+	_vec3 vSrc = pSrc->Get_Transform()->m_vPos;
+	_vec3 vDst = pDst->Get_Transform()->m_vPos;
+
+	if (AXIS_X == eOverlap)
+	{
+		if (vSrc.x < vDst.x)
+			eIsOverlap = IS_OVERLAP::OVERLAP_OVER;
+		else
+			eIsOverlap = IS_OVERLAP::OVERLAP_UNDER;
+
+	}
+
+	else if (AXIS_Y == eOverlap)
+	{
+		if (vSrc.y < vDst.y)
+			eIsOverlap = IS_OVERLAP::OVERLAP_OVER;
+		else
+			eIsOverlap = IS_OVERLAP::OVERLAP_UNDER;
+	}
+
+	else if (AXIS_Z == eOverlap)
+	{
+		if (vSrc.z < vDst.z)
+			eIsOverlap = IS_OVERLAP::OVERLAP_OVER;
+		else
+			eIsOverlap = IS_OVERLAP::OVERLAP_UNDER;
+
+		if (pSrc->Get_BoundingBox()->Get_BoundingInfo().Intersects(pDst->Get_BoundingBox()->Get_BoundingInfo()))
+		{
+			eIsOverlap = IS_OVERLAP::OVERLAP_TRUE;
+			pSrc->Add_CollisionList(pDst);
+			return true;
+		}
+	}
+
+	if (pSrc->Get_BoundingBox()->Get_BoundingInfo().Intersects(pDst->Get_BoundingBox()->Get_BoundingInfo()))
 	{
 		eIsOverlap = IS_OVERLAP::OVERLAP_TRUE;
 		return true;

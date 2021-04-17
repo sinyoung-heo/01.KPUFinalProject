@@ -42,6 +42,11 @@ _int CManagement::Update_Management(const _float & fTimeDelta)
 
 _int CManagement::LateUpdate_Management(const _float & fTimeDelta)
 {
+	// Resize Shader Instance ConstantBuffer ElementSize.
+	CShaderColorInstancing::Get_Instance()->Resize_ConstantBuffer(CGraphicDevice::Get_Instance()->Get_GraphicDevice());
+	CShaderLightingInstancing::Get_Instance()->Resize_ConstantBuffer(CGraphicDevice::Get_Instance()->Get_GraphicDevice());
+
+
 	// CollisionMgr.
 	CCollisionMgr::Get_Instance()->Progress_SweapAndPrune();
 
@@ -60,10 +65,6 @@ void CManagement::Send_PacketToServer()
 
 HRESULT CManagement::Render_Management(const _float & fTimeDelta, const RENDERID& eID)
 {
-	// Resize Shader Instance ConstantBuffer ElementSize.
-	CShaderColorInstancing::Get_Instance()->Resize_ConstantBuffer(CGraphicDevice::Get_Instance()->Get_GraphicDevice());
-	CShaderLightingInstancing::Get_Instance()->Resize_ConstantBuffer(CGraphicDevice::Get_Instance()->Get_GraphicDevice());
-
 	if (nullptr != m_pCurrentScene)
 		FAILED_CHECK_RETURN(m_pCurrentScene->Render_Scene(fTimeDelta, eID), E_FAIL);
 

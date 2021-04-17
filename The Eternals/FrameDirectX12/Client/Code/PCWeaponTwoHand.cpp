@@ -2,6 +2,7 @@
 #include "PCWeaponTwoHand.h"
 #include "ObjectMgr.h"
 #include "ColliderBox.h"
+#include "CollisionMgr.h"
 
 CPCWeaponTwoHand::CPCWeaponTwoHand(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CPCWeapon(pGraphicDevice, pCommandList)
@@ -32,6 +33,8 @@ HRESULT CPCWeaponTwoHand::Ready_GameObject(wstring wstrMeshTag,
 										   1.0f,
 										   _vec3(0.0f, 25.0f, 0.0f));
 
+	//m_wstrCollisionTag = L"PCWeapon";
+
 	return S_OK;
 }
 
@@ -56,12 +59,25 @@ _int CPCWeaponTwoHand::Update_GameObject(const _float& fTimeDelta)
 	if (fTimeDelta > TIME_OFFSET)
 		return NO_EVENT;
 
+	//if (nullptr != m_pBoundingSphereCom)
+	//	m_pBoundingSphereCom->Set_Color(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
+	//if (nullptr != m_pBoundingBoxCom)
+	//	m_pBoundingBoxCom->Set_Color(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
+
 	SetUp_Dissolve(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+
+	//if (m_bIsCollision)
+	//{
+	//	/*__________________________________________________________________________________________________________
+	//	[ Collision - Add Collision List ]
+	//	____________________________________________________________________________________________________________*/
+	//	m_pCollisonMgr->Add_CollisionCheckList(this);
+	//}
 
 	/*____________________________________________________________________
 	TransCom - Update WorldMatrix.
@@ -74,16 +90,16 @@ _int CPCWeaponTwoHand::Update_GameObject(const _float& fTimeDelta)
 							   m_pHierarchyDesc->matTrans) * 
 							   m_pHierarchyDesc->matGlobalTransform;
 	_matrix matSkinngingTransform = m_matBoneFinalTransform * (*m_pParentMatrix);
-
 	m_pTransCom->m_matWorld *= matSkinngingTransform;
 
 	// Update Trail
 	if (nullptr != m_pTrail)
 	{
 		m_pBoundingBoxCom->Update_Component(fTimeDelta);
-		//_vec3 vMin = _vec3(matSkinngingTransform._41, matSkinngingTransform._42, matSkinngingTransform._43);
+
 		_vec3 vMin = _vec3(m_pBoundingBoxCom->Get_BottomPlaneCenter());
 		_vec3 vMax = _vec3(m_pBoundingBoxCom->Get_TopPlaneCenter());
+
 		m_pTrail->SetUp_TrailByCatmullRom(&vMin, &vMax);
 		m_pTrail->Get_Transform()->m_vPos = _vec3(0.f, 0.f, 0.0f);
 	}
@@ -93,7 +109,26 @@ _int CPCWeaponTwoHand::Update_GameObject(const _float& fTimeDelta)
 
 _int CPCWeaponTwoHand::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	Process_Collision();
+
 	return CPCWeapon::LateUpdate_GameObject(fTimeDelta);;
+}
+
+void CPCWeaponTwoHand::Process_Collision()
+{
+	//if (!m_bIsCollision)
+	//	return;
+
+	//for (auto& pDst : m_lstCollisionDst)
+	//{
+	//	if (L"Monster" == pDst->Get_CollisionTag())
+	//	{
+	//		if (nullptr != m_pBoundingSphereCom)
+	//			m_pBoundingSphereCom->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+	//		if (nullptr != m_pBoundingBoxCom)
+	//			m_pBoundingBoxCom->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+	//	}
+	//}
 }
 
 void CPCWeaponTwoHand::Render_GameObject(const _float& fTimeDelta, 

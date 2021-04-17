@@ -256,6 +256,12 @@
     <Filter Include="02.GameObject\01.Environment\03.WatarFall">
       <UniqueIdentifier>{329d9f35-9674-466a-809c-f95413a01752}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.Mgr\05.InstancePoolMgr">
+      <UniqueIdentifier>{1d357adb-5237-4abb-8319-9bd7d42efc42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\97.CollisionTick">
+      <UniqueIdentifier>{b314dc0f-fee1-41a4-b90f-64d118d567f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -504,6 +510,12 @@
     <ClInclude Include="..\Code\WaterFall.h">
       <Filter>02.GameObject\01.Environment\03.WatarFall</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\InstancePoolMgr.h">
+      <Filter>97.Mgr\05.InstancePoolMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\CollisionTick.h">
+      <Filter>02.GameObject\97.CollisionTick</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -706,6 +718,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\WaterFall.cpp">
       <Filter>02.GameObject\01.Environment\03.WatarFall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\InstancePoolMgr.cpp">
+      <Filter>97.Mgr\05.InstancePoolMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CollisionTick.cpp">
+      <Filter>02.GameObject\97.CollisionTick</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
