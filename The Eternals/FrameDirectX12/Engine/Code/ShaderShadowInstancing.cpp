@@ -70,7 +70,7 @@ void CShaderShadowInstancing::SetUp_ConstantBuffer(ID3D12Device* pGraphicDevice)
 		{
 			for (_uint j = 0; j < m_uiPipelineStateCnt; ++j)
 			{
-				iInstanceCnt = (_uint)(CObjectMgr::Get_Instance()->Get_OBJLIST(L"Layer_GameObject", pair.first)->size());
+				iInstanceCnt = (_uint)(CObjectMgr::Get_Instance()->Get_StaticOBJLIST(pair.first)->size());
 				pair.second[j] = CUploadBuffer<CB_SHADER_SHADOW>::Create(pGraphicDevice, iInstanceCnt / 4 + 1, false);
 			}
 
@@ -173,7 +173,7 @@ void CShaderShadowInstancing::Render_Instance(ID3D12GraphicsCommandList* pComman
 			/*__________________________________________________________________________________________________________
 			[ Render Buffer ]
 			____________________________________________________________________________________________________________*/
-			CMesh*		pMesh				= static_cast<CMesh*>(CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", wstrMeshTag)->Get_Component(L"Com_Mesh", ID_STATIC));
+			CMesh*		pMesh				= static_cast<CMesh*>(CObjectMgr::Get_Instance()->Get_StaticObject(wstrMeshTag)->Get_Component(L"Com_Mesh", ID_STATIC));
 			CVIMesh*	pVIMesh				= pMesh->Get_VIMesh();
 			_uint		uiSubsetMeshSize	= (_uint)(pVIMesh->Get_SubMeshGeometry().size());
 

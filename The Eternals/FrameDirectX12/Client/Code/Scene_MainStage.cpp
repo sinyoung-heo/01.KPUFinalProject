@@ -177,6 +177,111 @@ HRESULT CScene_MainStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 							   1);								// Tex Index
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SkyBox", pGameObj), E_FAIL);
 
+	/*__________________________________________________________________________________________________________
+	[ StaticMeshObject ]
+	____________________________________________________________________________________________________________*/
+	wstring	wstrMeshTag				= L"";
+	_vec3	vScale					= _vec3(0.0f);
+	_vec3	vAngle					= _vec3(0.0f);
+	_vec3	vPos					= _vec3(0.0f);
+	_bool	bIsRenderShadow			= false;
+	_bool	bIsCollision			= false;
+	_vec3	vBoundingSphereScale	= _vec3(0.0f);
+	_vec3	vBoundingSpherePos      = _vec3(0.0f);
+	_bool	bIsMousePicking			= false;
+
+	wifstream fin_velika { L"../../Bin/ToolData/StageVelika_StaticMesh.staticmesh" };
+	if (fin_velika.fail())
+		return E_FAIL;
+
+	while (true)
+	{
+		fin_velika	>> wstrMeshTag 				// MeshTag
+					>> vScale.x
+					>> vScale.y
+					>> vScale.z					// Scale
+					>> vAngle.x
+					>> vAngle.y
+					>> vAngle.z					// Angle
+					>> vPos.x
+					>> vPos.y
+					>> vPos.z					// Pos
+					>> bIsRenderShadow			// Is Render Shadow
+					>> bIsCollision 			// Is Collision
+					>> vBoundingSphereScale.x	// BoundingSphere Scale
+					>> vBoundingSphereScale.y
+					>> vBoundingSphereScale.z
+					>> vBoundingSpherePos.x		// BoundingSphere Pos
+					>> vBoundingSpherePos.y
+					>> vBoundingSpherePos.z
+					>> bIsMousePicking;
+
+		if (fin_velika.eof())
+			break;
+
+		pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+											 wstrMeshTag,			// MeshTag
+											 vScale,				// Scale
+											 vAngle,				// Angle
+											 vPos,					// Pos
+											 bIsRenderShadow,		// Render Shadow
+											 bIsCollision,			// Bounding Sphere
+											 vBoundingSphereScale,	// Bounding Sphere Scale
+											 vBoundingSpherePos);	// Bounding Sphere Pos
+
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_VELIKA, wstrMeshTag, pGameObj), E_FAIL);
+	}
+
+	pGameObj = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+										  L"BumpTerrainMesh01",
+										  _vec3(0.075f),
+										  _vec3(90.0f, 0.0f ,0.0f),
+										  _vec3(128.0f, -0.01f, 128.0f));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_VELIKA, L"BumpTerrainMesh01", pGameObj), E_FAIL);
+
+
+	wifstream fin_beach { L"../../Bin/ToolData/StageBeach_StaticMesh.staticmesh" };
+	if (fin_beach.fail())
+		return E_FAIL;
+
+	while (true)
+	{
+		fin_beach	>> wstrMeshTag 				// MeshTag
+					>> vScale.x
+					>> vScale.y
+					>> vScale.z					// Scale
+					>> vAngle.x
+					>> vAngle.y
+					>> vAngle.z					// Angle
+					>> vPos.x
+					>> vPos.y
+					>> vPos.z					// Pos
+					>> bIsRenderShadow			// Is Render Shadow
+					>> bIsCollision 			// Is Collision
+					>> vBoundingSphereScale.x	// BoundingSphere Scale
+					>> vBoundingSphereScale.y
+					>> vBoundingSphereScale.z
+					>> vBoundingSpherePos.x		// BoundingSphere Pos
+					>> vBoundingSpherePos.y
+					>> vBoundingSpherePos.z
+					>> bIsMousePicking;
+
+		if (fin_beach.eof())
+			break;
+
+		pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+											 wstrMeshTag,			// MeshTag
+											 vScale,				// Scale
+											 vAngle,				// Angle
+											 vPos,					// Pos
+											 bIsRenderShadow,		// Render Shadow
+											 bIsCollision,			// Bounding Sphere
+											 vBoundingSphereScale,	// Bounding Sphere Scale
+											 vBoundingSpherePos);	// Bounding Sphere Pos
+
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_BEACH, wstrMeshTag, pGameObj), E_FAIL);
+	}
+
 	return S_OK;
 }
 
@@ -194,69 +299,6 @@ HRESULT CScene_MainStage::Ready_LayerGameObject(wstring wstrLayerTag)
 
 	Engine::CGameObject* pGameObj = nullptr;
 
-	/*__________________________________________________________________________________________________________
-	[ BumpTerrainMesh ]
-	____________________________________________________________________________________________________________*/
-	pGameObj = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-										  L"BumpTerrainMesh01",
-										  _vec3(0.075f),
-										  _vec3(90.0f, 0.0f ,0.0f),
-										  _vec3(128.0f, -0.01f, 128.0f));
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpTerrainMesh01", pGameObj), E_FAIL);
-
-	/*__________________________________________________________________________________________________________
-	[ StaticMeshObject ]
-	____________________________________________________________________________________________________________*/
-	wifstream fin { L"../../Bin/ToolData/StageVelika_StaticMesh.staticmesh" };
-	if (fin.fail())
-		return E_FAIL;
-
-	wstring	wstrMeshTag				= L"";
-	_vec3	vScale					= _vec3(0.0f);
-	_vec3	vAngle					= _vec3(0.0f);
-	_vec3	vPos					= _vec3(0.0f);
-	_bool	bIsRenderShadow			= false;
-	_bool	bIsCollision			= false;
-	_vec3	vBoundingSphereScale	= _vec3(0.0f);
-	_vec3	vBoundingSpherePos      = _vec3(0.0f);
-	_bool	bIsMousePicking			= false;
-
-	while (true)
-	{
-		fin >> wstrMeshTag 				// MeshTag
-			>> vScale.x
-			>> vScale.y
-			>> vScale.z					// Scale
-			>> vAngle.x
-			>> vAngle.y
-			>> vAngle.z					// Angle
-			>> vPos.x
-			>> vPos.y
-			>> vPos.z					// Pos
-			>> bIsRenderShadow			// Is Render Shadow
-			>> bIsCollision 			// Is Collision
-			>> vBoundingSphereScale.x	// BoundingSphere Scale
-			>> vBoundingSphereScale.y
-			>> vBoundingSphereScale.z
-			>> vBoundingSpherePos.x		// BoundingSphere Pos
-			>> vBoundingSpherePos.y
-			>> vBoundingSpherePos.z
-			>> bIsMousePicking;
-
-		if (fin.eof())
-			break;
-
-		pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-											 wstrMeshTag,			// MeshTag
-											 vScale,				// Scale
-											 vAngle,				// Angle
-											 vPos,					// Pos
-											 bIsRenderShadow,		// Render Shadow
-											 bIsCollision,			// Bounding Sphere
-											 vBoundingSphereScale,	// Bounding Sphere Scale
-											 vBoundingSpherePos);	// Bounding Sphere Pos
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, wstrMeshTag, pGameObj), E_FAIL);
-	}
 
 	return S_OK;
 }

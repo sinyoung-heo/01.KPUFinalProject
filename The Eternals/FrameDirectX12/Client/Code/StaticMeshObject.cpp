@@ -45,13 +45,6 @@ HRESULT CStaticMeshObject::Ready_GameObject(wstring wstrMeshTag,
 											  vBoundingSphereScale,
 											  vBoundingSpherePos);
 
-	// PipelineState.
-	//m_bIsRenderShadow = bIsRenderShadow; 
-	//if (!m_bIsRenderShadow)
-	//	m_iMeshPipelineStatePass = 0;
-	//else
-	//	m_iMeshPipelineStatePass = 1;
-
 	if (m_wstrMeshTag == L"VK_CON_Floor_04_SM" ||
 		m_wstrMeshTag == L"VK_CON_Floor_03_SM")
 	{
@@ -94,11 +87,11 @@ _int CStaticMeshObject::Update_GameObject(const _float & fTimeDelta)
 		{
 			Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 
-			if (m_iRandomnumber == 1)
-			{
-				Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_CROSSFILTER, this), -1);
-				//Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_EDGE, this), -1);
-			}
+			//if (m_iRandomnumber == 1)
+			//{
+			//	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_CROSSFILTER, this), -1);
+			//	//Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_EDGE, this), -1);
+			//}
 		}
 	}
 
@@ -131,7 +124,6 @@ void CStaticMeshObject::Render_CrossFilterGameObject(const _float& fTimeDelta)
 {
 	Set_ConstantTable();
 	m_pMeshCom->Render_StaticMesh(m_pCrossFilterShaderCom);
-
 }
 
 
@@ -222,7 +214,6 @@ void CStaticMeshObject::Set_ConstantTable(const _int& iContextIdx, const _int& i
 
 void CStaticMeshObject::Set_ConstantTable()
 {
-
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/

@@ -39,12 +39,17 @@ namespace Engine
 
 	enum SCENEID		
 	{ 
-		SCENE_STATIC,
 		SCENE_LOGO, 
 		SCENE_MENU,
 		SCENE_STAGE, 
-		SCENE_BOSS, 
 		SCENE_END 
+	};
+
+	enum STAGEID
+	{
+		STAGE_VELIKA,
+		STAGE_BEACH,
+		STAGE_END
 	};
 
 	/*__________________________________________________________________________________________________________

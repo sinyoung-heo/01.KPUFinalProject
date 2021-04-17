@@ -43,6 +43,16 @@ OBJLIST * CObjectMgr::Get_OBJLIST(wstring wstrLayerTag, wstring wstrObjTag)
 	return pInstance->Get_OBJLIST(wstrObjTag);
 }
 
+OBJLIST* CObjectMgr::Get_StaticOBJLIST(wstring wstrObjTag)
+{
+	auto iter_find = m_mapStaticObject[STAGEID::STAGE_END].find(wstrObjTag);
+
+	if (m_mapStaticObject[STAGEID::STAGE_END].end() == iter_find)
+		return nullptr;
+
+	return &(iter_find->second);
+}
+
 CGameObject * CObjectMgr::Get_GameObject(wstring wstrLayerTag, wstring wstrObjTag, _int iIdx)
 {
 	/*__________________________________________________________________________________________________________
@@ -57,6 +67,32 @@ CGameObject * CObjectMgr::Get_GameObject(wstring wstrLayerTag, wstring wstrObjTa
 
 
 	return pInstance->Get_GameObject(wstrObjTag, iIdx);
+}
+
+CGameObject* CObjectMgr::Get_StaticObject(wstring wstrObjTag, _int iIdx)
+{
+	/*__________________________________________________________________________________________________________
+	- 1. map에서 찾고자 하는 OBJLIST의 Key값을 탐색한다.
+	____________________________________________________________________________________________________________*/
+	OBJLIST* pObjLst = Get_StaticOBJLIST(wstrObjTag);
+
+	/*__________________________________________________________________________________________________________
+	- 2. 찾고자 하는 OBJLIST가 없다면 nullptr을 반환.
+	____________________________________________________________________________________________________________*/
+	NULL_CHECK_RETURN(pObjLst, nullptr);
+
+	/*__________________________________________________________________________________________________________
+	- 3. 찾고자하는 GameObject를 OBJLIST에서 탐색.
+	____________________________________________________________________________________________________________*/
+	if (pObjLst->size() <= (_ulong)iIdx)
+		return nullptr;
+
+	OBJITER iter_begin = pObjLst->begin();
+
+	for (_int i = 0; i < iIdx; ++i)
+		++iter_begin;
+
+	return (*iter_begin);
 }
 
 CGameObject* CObjectMgr::Get_ServerObject(wstring wstrLayerTag, wstring wstrObjTag, int num)
@@ -125,9 +161,30 @@ HRESULT CObjectMgr::Add_GameObject(wstring wstrLayerTag, wstring wstrObjTag, CGa
 	return S_OK;
 }
 
+HRESULT CObjectMgr::Add_GameObject(const STAGEID& eID, wstring wstrObjTag, CGameObject* pGameObject)
+{
+	if (nullptr != pGameObject)
+	{
+		m_mapStaticObject[eID][wstrObjTag].emplace_back(pGameObject);
+		m_mapStaticObject[STAGEID::STAGE_END][wstrObjTag].emplace_back(pGameObject);
+
+		return S_OK;
+	}
+
+	return E_FAIL;
+}
+
 _int CObjectMgr::Update_ObjectMgr(const _float & fTimeDelta)
 {
 	_int	iEnd = 0;
+
+	for (auto& pair : m_mapStaticObject[m_eCurrentStage])
+	{
+		for (auto& pStaticObject : pair.second)
+		{
+			pStaticObject->Update_GameObject(fTimeDelta);
+		}
+	}
 
 	for (auto& iter : m_mapLayer)
 	{
@@ -143,6 +200,14 @@ _int CObjectMgr::Update_ObjectMgr(const _float & fTimeDelta)
 _int CObjectMgr::LateUpdate_ObjectMgr(const _float & fTimeDelta)
 {
 	_int	iEnd = 0;
+
+	for (auto& pair : m_mapStaticObject[m_eCurrentStage])
+	{
+		for (auto& pStaticObject : pair.second)
+		{
+			pStaticObject->LateUpdate_GameObject(fTimeDelta);
+		}
+	}
 
 	for (auto& iter : m_mapLayer)
 	{
@@ -232,10 +297,23 @@ void CObjectMgr::Free()
 #ifdef ENGINE_LOG
 	COUT_STR("Destroy ObjectMgr");
 #endif
+	for (_uint i = 0; i < STAGEID::STAGE_END; ++i)
+	{
+		for (auto& pair : m_mapStaticObject[i])
+		{
+			for (auto& object : pair.second)
+				Safe_Release(object);
+
+			pair.second.clear();
+		}
+
+		m_mapStaticObject[i].clear();
+	}
 
 	for_each(m_mapLayer.begin(), m_mapLayer.end(), CDeleteMap());
 	m_mapLayer.clear();
 
 	for_each(m_mapObjectPrototype.begin(), m_mapObjectPrototype.end(), CDeleteMap());
 	m_mapObjectPrototype.clear();
+
 }

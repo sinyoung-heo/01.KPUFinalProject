@@ -53,6 +53,10 @@ constexpr float	ANGLE_LEFT_UP		= 315.f;
 constexpr float	ANGLE_LEFT_DOWN		= 225.f;
 constexpr float	ANGLE_BACK			= 180.f;
 
+// Player StartPos
+constexpr float STAGE_VELIKA_X = 130.0f;
+constexpr float STAGE_VELIKA_Z = 70.0f;
+
 /* TYPEDEF */
 typedef	unsigned long		_ulong;
 typedef	unsigned int		_uint;
