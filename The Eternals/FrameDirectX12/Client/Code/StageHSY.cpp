@@ -184,6 +184,33 @@ HRESULT CStageHSY::Ready_LayerEnvironment(wstring wstrLayerTag)
 							   1);									// Texture Idx
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SkyBox", pGameObj), E_FAIL);
 
+	return S_OK;
+}
+
+HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
+{
+	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
+
+	/*__________________________________________________________________________________________________________
+	[ GameLogic Layer 持失 ]
+	____________________________________________________________________________________________________________*/
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
+	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
+	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
+
+
+	Engine::CGameObject* pGameObj = nullptr;
+
+	/*__________________________________________________________________________________________________________
+	[ BumpTerrainMesh ]
+	____________________________________________________________________________________________________________*/
+	pGameObj = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+										  L"BumpTerrainMesh01",
+										  _vec3(0.075f),
+										  _vec3(90.0f, 0.0f ,0.0f),
+										  _vec3(128.0f, -0.01f, 128.0f));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpTerrainMesh01", pGameObj), E_FAIL);
+
 	/*__________________________________________________________________________________________________________
 	[ StaticMeshObject ]
 	____________________________________________________________________________________________________________*/
@@ -237,33 +264,6 @@ HRESULT CStageHSY::Ready_LayerEnvironment(wstring wstrLayerTag)
 											 vBoundingSpherePos);	// Bounding Sphere Pos
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, wstrMeshTag, pGameObj), E_FAIL);
 	}
-
-	return S_OK;
-}
-
-HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
-{
-	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
-
-	/*__________________________________________________________________________________________________________
-	[ GameLogic Layer 持失 ]
-	____________________________________________________________________________________________________________*/
-	Engine::CLayer* pLayer = Engine::CLayer::Create();
-	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
-	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
-
-
-	Engine::CGameObject* pGameObj = nullptr;
-
-	/*__________________________________________________________________________________________________________
-	[ BumpTerrainMesh ]
-	____________________________________________________________________________________________________________*/
-	pGameObj = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-										  L"BumpTerrainMesh01",
-										  _vec3(0.075f),
-										  _vec3(90.0f, 0.0f ,0.0f),
-										  _vec3(128.0f, -0.01f, 128.0f));
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpTerrainMesh01", pGameObj), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
 	[ TestCollisionObject ]
