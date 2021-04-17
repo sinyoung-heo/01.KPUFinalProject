@@ -184,6 +184,33 @@ HRESULT CStageHSY::Ready_LayerEnvironment(wstring wstrLayerTag)
 							   1);									// Texture Idx
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SkyBox", pGameObj), E_FAIL);
 
+	return S_OK;
+}
+
+HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
+{
+	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
+
+	/*__________________________________________________________________________________________________________
+	[ GameLogic Layer 생성 ]
+	____________________________________________________________________________________________________________*/
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
+	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
+	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
+
+
+	Engine::CGameObject* pGameObj = nullptr;
+
+	/*__________________________________________________________________________________________________________
+	[ BumpTerrainMesh ]
+	____________________________________________________________________________________________________________*/
+	pGameObj = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+										  L"BumpTerrainMesh01",
+										  _vec3(0.075f),
+										  _vec3(90.0f, 0.0f ,0.0f),
+										  _vec3(128.0f, -0.01f, 128.0f));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpTerrainMesh01", pGameObj), E_FAIL);
+
 	/*__________________________________________________________________________________________________________
 	[ StaticMeshObject ]
 	____________________________________________________________________________________________________________*/
@@ -237,33 +264,6 @@ HRESULT CStageHSY::Ready_LayerEnvironment(wstring wstrLayerTag)
 											 vBoundingSpherePos);	// Bounding Sphere Pos
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, wstrMeshTag, pGameObj), E_FAIL);
 	}
-
-	return S_OK;
-}
-
-HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
-{
-	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
-
-	/*__________________________________________________________________________________________________________
-	[ GameLogic Layer 생성 ]
-	____________________________________________________________________________________________________________*/
-	Engine::CLayer* pLayer = Engine::CLayer::Create();
-	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
-	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
-
-
-	Engine::CGameObject* pGameObj = nullptr;
-
-	/*__________________________________________________________________________________________________________
-	[ BumpTerrainMesh ]
-	____________________________________________________________________________________________________________*/
-	pGameObj = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-										  L"BumpTerrainMesh01",
-										  _vec3(0.075f),
-										  _vec3(90.0f, 0.0f ,0.0f),
-										  _vec3(128.0f, -0.01f, 128.0f));
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpTerrainMesh01", pGameObj), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
 	[ TestCollisionObject ]
@@ -866,42 +866,42 @@ HRESULT CStageHSY::Ready_LightInfo()
 	}
 
 
-	wifstream fin2 { "../../Bin/ToolData/StageVelika_PointLight.lightinginfo" };
-	if (fin2.fail())
-		return E_FAIL;
+	//wifstream fin2 { "../../Bin/ToolData/StageVelika_PointLight.lightinginfo" };
+	//if (fin2.fail())
+	//	return E_FAIL;
 
-	while (true)
-	{
-		// PointLight 정보 저장.
-		Engine::D3DLIGHT tLightInfo { };
-		tLightInfo.Type = Engine::D3DLIGHT_POINT;
+	//while (true)
+	//{
+	//	// PointLight 정보 저장.
+	//	Engine::D3DLIGHT tLightInfo { };
+	//	tLightInfo.Type = Engine::D3DLIGHT_POINT;
 
-				// PointLight Data 불러오기.
-		fin2	>> tLightInfo.Diffuse.x		// Diffuse
-				>> tLightInfo.Diffuse.y
-				>> tLightInfo.Diffuse.z
-				>> tLightInfo.Diffuse.w
-				>> tLightInfo.Specular.x	// Specular
-				>> tLightInfo.Specular.y
-				>> tLightInfo.Specular.z
-				>> tLightInfo.Specular.w
-				>> tLightInfo.Ambient.x		// Ambient
-				>> tLightInfo.Ambient.y
-				>> tLightInfo.Ambient.z
-				>> tLightInfo.Ambient.w
-				>> tLightInfo.Position.x	// Position
-				>> tLightInfo.Position.y
-				>> tLightInfo.Position.z
-				>> tLightInfo.Position.w
-				>> tLightInfo.Range;		// Range
+	//			// PointLight Data 불러오기.
+	//	fin2	>> tLightInfo.Diffuse.x		// Diffuse
+	//			>> tLightInfo.Diffuse.y
+	//			>> tLightInfo.Diffuse.z
+	//			>> tLightInfo.Diffuse.w
+	//			>> tLightInfo.Specular.x	// Specular
+	//			>> tLightInfo.Specular.y
+	//			>> tLightInfo.Specular.z
+	//			>> tLightInfo.Specular.w
+	//			>> tLightInfo.Ambient.x		// Ambient
+	//			>> tLightInfo.Ambient.y
+	//			>> tLightInfo.Ambient.z
+	//			>> tLightInfo.Ambient.w
+	//			>> tLightInfo.Position.x	// Position
+	//			>> tLightInfo.Position.y
+	//			>> tLightInfo.Position.z
+	//			>> tLightInfo.Position.w
+	//			>> tLightInfo.Range;		// Range
 
-		if (fin2.eof())
-			break;
+	//	if (fin2.eof())
+	//		break;
 
-		Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, m_pCommandList,
-																				 Engine::LIGHTTYPE::D3DLIGHT_POINT,
-																				 tLightInfo), E_FAIL);
-	}
+	//	Engine::FAILED_CHECK_RETURN(Engine::CLightMgr::Get_Instance()->Add_Light(m_pGraphicDevice, m_pCommandList,
+	//																			 Engine::LIGHTTYPE::D3DLIGHT_POINT,
+	//																			 tLightInfo), E_FAIL);
+	//}
 
 	return S_OK;
 }
