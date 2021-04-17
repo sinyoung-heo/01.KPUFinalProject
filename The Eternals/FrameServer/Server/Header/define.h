@@ -56,8 +56,10 @@ constexpr float	ANGLE_BACK			= 180.f;
 // Player StartPos
 constexpr float STAGE_VELIKA_X = 130.0f;
 constexpr float STAGE_VELIKA_Z = 70.0f;
-constexpr float STAGE_BEACH_X  = 80.0f;
-constexpr float STAGE_BEACH_Z  = 80.0f;
+constexpr float STAGE_BEACH_X  = 80.0f + 256.0f;
+constexpr float STAGE_BEACH_Z  = 80.0f + 0.0f;
+constexpr float STAGE_TEMP_X   = 0.0f + 256.0f;
+constexpr float STAGE_TEMP_Z   = 0.0f + 256.0f;
 
 /* TYPEDEF */
 typedef	unsigned long		_ulong;

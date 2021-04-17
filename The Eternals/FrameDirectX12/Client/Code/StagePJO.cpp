@@ -4,6 +4,7 @@
 #include "ComponentMgr.h"
 #include "GraphicDevice.h"
 #include "LightMgr.h"
+#include "InstancePoolMgr.h"
 #include "Font.h"
 #include "DebugCamera.h"
 #include "DynamicCamera.h"
@@ -44,6 +45,9 @@ HRESULT CStagePJO::Ready_Scene()
 	Engine::CShaderMeshInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderTextureInstancing::Get_Instance()->SetUp_ConstantBuffer(Engine::INSTANCE::INSTANCE_DISTORTION, m_pGraphicDevice);
 	Engine::CShaderTextureInstancing::Get_Instance()->SetUp_ConstantBuffer(Engine::INSTANCE::INSTANCE_ALPHA, m_pGraphicDevice);
+
+	CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(false);
+	CInstancePoolMgr::Get_Instance()->Ready_InstancePool(m_pGraphicDevice, m_pCommandList);
 
 	return S_OK;
 }
@@ -159,62 +163,6 @@ HRESULT CStagePJO::Ready_LayerGameObject(wstring wstrLayerTag)
 
 	Engine::CGameObject* pGameObj = nullptr;
 
-	/*__________________________________________________________________________________________________________
-	[ StaticMeshObject ]
-	____________________________________________________________________________________________________________*/
-	wifstream fin { L"../../Bin/ToolData/TestStaticMesh.staticmesh" };
-	if (fin.fail())
-		return E_FAIL;
-
-	wstring	wstrMeshTag				= L"";
-	_vec3	vScale					= _vec3(0.0f);
-	_vec3	vAngle					= _vec3(0.0f);
-	_vec3	vPos					= _vec3(0.0f);
-	_bool	bIsRenderShadow			= false;
-	_bool	bIsCollision			= false;
-	_vec3	vBoundingSphereScale	= _vec3(0.0f);
-	_vec3	vBoundingSpherePos      = _vec3(0.0f);
-	_bool	bIsMousePicking			= false;
-
-	while (true)
-	{
-		fin >> wstrMeshTag 				// MeshTag
-			>> vScale.x
-			>> vScale.y
-			>> vScale.z					// Scale
-			>> vAngle.x
-			>> vAngle.y
-			>> vAngle.z					// Angle
-			>> vPos.x
-			>> vPos.y
-			>> vPos.z					// Pos
-			>> bIsRenderShadow			// Is Render Shadow
-			>> bIsCollision 			// Is Collision
-			>> vBoundingSphereScale.x	// BoundingSphere Scale
-			>> vBoundingSphereScale.y
-			>> vBoundingSphereScale.z
-			>> vBoundingSpherePos.x		// BoundingSphere Pos
-			>> vBoundingSpherePos.y
-			>> vBoundingSpherePos.z
-			>> bIsMousePicking;
-
-		if (fin.eof())
-			break;
-
-		pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-											 wstrMeshTag,			// MeshTag
-											 vScale,				// Scale
-											 vAngle,				// Angle
-											 vPos,					// Pos
-											 bIsRenderShadow,		// Render Shadow
-											 bIsCollision,			// Bounding Sphere
-											 vBoundingSphereScale,	// Bounding Sphere Scale
-											 vBoundingSpherePos);	// Bounding Sphere Pos
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, wstrMeshTag, pGameObj), E_FAIL);
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"StaticMesh", pGameObj), E_FAIL);
-
-	}
-
 
 	/*__________________________________________________________________________________________________________
 	[ Popori_F ]
@@ -225,17 +173,7 @@ HRESULT CStagePJO::Ready_LayerGameObject(wstring wstrLayerTag)
 								  _vec3(0.05f, 0.05f, 0.05f),	// Scale
 								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
 								  _vec3(25.0f, 0.f, 20.0f));	// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pGameObj), E_FAIL);
-
-
-	pGameObj = CPopori_F::Create(m_pGraphicDevice, m_pCommandList,
-								  L"PoporiH25",					// MeshTag
-								  L"TestNaviMesh",				// NaviMeshTag
-								  _vec3(0.05f, 0.05f, 0.05f),	// Scale
-								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-								  _vec3(26.5f, 0.f, 20.0f));	// Pos
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Popori_F", pGameObj), E_FAIL);
-
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"ThisPlayer", pGameObj), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
 	[ TexEffect ]
@@ -266,6 +204,7 @@ HRESULT CStagePJO::Ready_LayerGameObject(wstring wstrLayerTag)
 	//	false,false, _vec3(0), _vec3(0));
 
 	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"StaticMesh", pGameObj), E_FAIL);
+
 	return S_OK;
 }
 

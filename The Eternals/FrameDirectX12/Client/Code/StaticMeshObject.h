@@ -23,7 +23,8 @@ public:
 									 const _bool& bIsRenderShadow,
 									 const _bool& bIsCollision,
 									 const _vec3& vBoundingSphereScale,
-									 const _vec3& vBoundingSpherePos);
+									 const _vec3& vBoundingSpherePos,
+									 const _vec3& vPosOffset);
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
@@ -75,7 +76,8 @@ public:
 									   const _bool& bIsRenderShadow,
 									   const _bool& bIsCollision,
 									   const _vec3& vBoundingSphereScale,
-									   const _vec3& vBoundingSpherePos);
+									   const _vec3& vBoundingSpherePos,
+									   const _vec3& vPosOffset = _vec3(0.0f));
 private:
 	virtual void Free();
 };

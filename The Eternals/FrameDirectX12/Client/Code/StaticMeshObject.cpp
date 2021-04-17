@@ -23,14 +23,15 @@ HRESULT CStaticMeshObject::Ready_GameObject(wstring wstrMeshTag,
 											const _bool& bIsRenderShadow,
 											const _bool& bIsCollision,
 											const _vec3& vBoundingSphereScale,
-											const _vec3& vBoundingSpherePos)
+											const _vec3& vBoundingSpherePos,
+											const _vec3& vPosOffset)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, false, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
 	m_wstrMeshTag			= wstrMeshTag;
 	m_pTransCom->m_vScale	= vScale;
 	m_pTransCom->m_vAngle	= vAngle;
-	m_pTransCom->m_vPos		= vPos;
+	m_pTransCom->m_vPos		= vPos + vPosOffset;
 	m_bIsCollision			= bIsCollision;
 	m_eRenderGroup = Engine::CRenderer::RENDERGROUP::RENDER_NONALPHA;
 	// BoundingBox.
@@ -258,7 +259,8 @@ Engine::CGameObject* CStaticMeshObject::Create(ID3D12Device * pGraphicDevice, ID
 											   const _bool& bIsRenderShadow,
 											   const _bool& bIsCollision,
 											   const _vec3& vBoundingSphereScale,
-											   const _vec3& vBoundingSpherePos)
+											   const _vec3& vBoundingSpherePos,
+											   const _vec3& vPosOffset)
 {
 	CStaticMeshObject* pInstance = new CStaticMeshObject(pGraphicDevice, pCommandList);
 
@@ -269,7 +271,8 @@ Engine::CGameObject* CStaticMeshObject::Create(ID3D12Device * pGraphicDevice, ID
 										   bIsRenderShadow,
 										   bIsCollision, 
 										   vBoundingSphereScale,
-										   vBoundingSpherePos)))
+										   vBoundingSpherePos,
+										   vPosOffset)))
 		Engine::Safe_Release(pInstance);
 
 	// SetUp InstanceShader and Add Instance Count.

@@ -178,7 +178,7 @@ _vec3 CNaviMesh::Move_OnNaviMesh(const _vec3* pTargetPos,
 	return vEndPos;
 }
 
-HRESULT CNaviMesh::Ready_NaviMesh(wstring wstrFilePath)
+HRESULT CNaviMesh::Ready_NaviMesh(wstring wstrFilePath, const _vec3& vPosOffset)
 {
 	wifstream fin{ wstrFilePath };
 	if (fin.fail())
@@ -211,54 +211,13 @@ HRESULT CNaviMesh::Ready_NaviMesh(wstring wstrFilePath)
 
 		pCell = CCell::Create(m_pGraphicDevice, m_pCommandList,
 							  m_vecCell.size(),
-							  vPointA,
-							  vPointB,
-							  vPointC, 
+							  vPointA + vPosOffset,
+							  vPointB + vPosOffset,
+							  vPointC + vPosOffset, 
 							  iOption);
 		NULL_CHECK_RETURN(pCell, E_FAIL);
 		m_vecCell.emplace_back(pCell);
 	}
-
-
-
-
-	/*HANDLE hFile = CreateFile(wstrFilePath.c_str(),
-							  GENERIC_READ,
-							  0,
-							  0,
-							  OPEN_EXISTING,
-							  FILE_ATTRIBUTE_NORMAL,
-							  nullptr);
-
-	if (INVALID_HANDLE_VALUE == hFile)
-		return E_FAIL;
-
-	_vec3	vPointA;
-	_vec3	vPointB;
-	_vec3	vPointC;
-	CCell*	pCell = nullptr;
-
-	_ulong dwByte = 0;
-	while (true)
-	{
-		ReadFile(hFile, &vPointA, sizeof(_vec3), &dwByte, nullptr);
-		ReadFile(hFile, &vPointB, sizeof(_vec3), &dwByte, nullptr);
-		ReadFile(hFile, &vPointC, sizeof(_vec3), &dwByte, nullptr);
-
-		if (dwByte == 0)
-			break;
-
-		pCell = CCell::Create(m_pGraphicDevice,
-							  m_pCommandList,
-							  m_vecCell.size(),
-							  vPointA,
-							  vPointB,
-							  vPointC);
-		NULL_CHECK_RETURN(pCell, E_FAIL);
-		m_vecCell.push_back(pCell);
-	}
-
-	CloseHandle(hFile);*/
 
 	Link_Cell();
 
@@ -312,11 +271,12 @@ CComponent* CNaviMesh::Clone()
 
 CNaviMesh* CNaviMesh::Create(ID3D12Device* pGraphicDevice,
 							 ID3D12GraphicsCommandList* pCommandList,
-							 wstring& wstrFilePath)
+							 wstring& wstrFilePath,
+							 const _vec3& vPosOffset)
 {
 	CNaviMesh* pInstance = new CNaviMesh(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_NaviMesh(wstrFilePath)))
+	if (FAILED(pInstance->Ready_NaviMesh(wstrFilePath, vPosOffset)))
 		Safe_Release(pInstance);
 
 	return pInstance;

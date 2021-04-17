@@ -20,7 +20,8 @@ public:
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
 									 const _vec3& vScale,
 									 const _vec3& vAngle,
-									 const _vec3& vPos);
+									 const _vec3& vPos,
+									 const _vec3& vPosOffset);
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
@@ -58,7 +59,8 @@ public:
 									   wstring wstrMeshTag,
 									   const _vec3& vScale,
 									   const _vec3& vAngle,
-									   const _vec3& vPos);
+									   const _vec3& vPos,
+									   const _vec3& vPosOffset = _vec3(0.0f));
 private:
 	virtual void Free();
 };

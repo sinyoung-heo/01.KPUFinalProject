@@ -19,7 +19,8 @@ CTerrainMeshObject::CTerrainMeshObject(ID3D12Device * pGraphicDevice, ID3D12Grap
 HRESULT CTerrainMeshObject::Ready_GameObject(wstring wstrMeshTag,
 											 const _vec3 & vScale,
 											 const _vec3 & vAngle, 
-											 const _vec3 & vPos)
+											 const _vec3 & vPos,
+											 const _vec3& vPosOffset)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
@@ -27,7 +28,7 @@ HRESULT CTerrainMeshObject::Ready_GameObject(wstring wstrMeshTag,
 	m_wstrMeshTag = wstrMeshTag;
 	m_pTransCom->m_vScale	= vScale;
 	m_pTransCom->m_vAngle	= vAngle;
-	m_pTransCom->m_vPos		= vPos;
+	m_pTransCom->m_vPos		= vPos + vPosOffset;
 
 	// PipelineState.
 	m_iMeshPipelineStatePass	= 2;
@@ -183,11 +184,12 @@ Engine::CGameObject* CTerrainMeshObject::Create(ID3D12Device * pGraphicDevice, I
 												wstring wstrMeshTag, 
 												const _vec3 & vScale,
 												const _vec3 & vAngle,
-												const _vec3 & vPos)
+												const _vec3 & vPos,
+												const _vec3& vPosOffset)
 {
 	CTerrainMeshObject* pInstance = new CTerrainMeshObject(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos)))
+	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos, vPosOffset)))
 		Engine::Safe_Release(pInstance);
 
 	// SetUp InstanceShader and Add Instance Count.

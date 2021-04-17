@@ -238,7 +238,8 @@ HRESULT CScene_MainStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 											 bIsRenderShadow,		// Render Shadow
 											 bIsCollision,			// Bounding Sphere
 											 vBoundingSphereScale,	// Bounding Sphere Scale
-											 vBoundingSpherePos);	// Bounding Sphere Pos
+											 vBoundingSpherePos,	// Bounding Sphere Pos
+											 _vec3(STAGE_VELIKA_OFFSET_X, 0.0f, STAGE_VELIKA_OFFSET_Z));
 
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_VELIKA, wstrMeshTag, pGameObj), E_FAIL);
 	}
@@ -247,7 +248,8 @@ HRESULT CScene_MainStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 										  L"BumpTerrainMesh01",
 										  _vec3(0.075f),
 										  _vec3(90.0f, 0.0f ,0.0f),
-										  _vec3(128.0f, -0.01f, 128.0f));
+										  _vec3(128.0f, -0.01f, 128.0f),
+										  _vec3(STAGE_VELIKA_OFFSET_X, 0.0f, STAGE_VELIKA_OFFSET_Z));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_VELIKA, L"BumpTerrainMesh01", pGameObj), E_FAIL);
 
 	// Beach
@@ -284,11 +286,12 @@ HRESULT CScene_MainStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 											 wstrMeshTag,			// MeshTag
 											 vScale,				// Scale
 											 vAngle,				// Angle
-											 vPos,					// Pos
+											 vPos,
 											 bIsRenderShadow,		// Render Shadow
 											 bIsCollision,			// Bounding Sphere
 											 vBoundingSphereScale,	// Bounding Sphere Scale
-											 vBoundingSpherePos);	// Bounding Sphere Pos
+											 vBoundingSpherePos,	// Bounding Sphere Pos
+											 _vec3(STAGE_BEACH_OFFSET_X, 0.0f, STAGE_BEACH_OFFSET_Z));
 
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_BEACH, wstrMeshTag, pGameObj), E_FAIL);
 	}
@@ -297,7 +300,8 @@ HRESULT CScene_MainStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 										  L"BumpDesertMesh00",
 										  _vec3(0.145f),
 										  _vec3(90.0f, 40.0f, 0.0f),
-										  _vec3(128.0f, 0.01f, 128.0f));
+										  _vec3(128.0f, 0.01f, 128.0f),
+										  _vec3(STAGE_BEACH_OFFSET_X, 0.0f, STAGE_BEACH_OFFSET_Z));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_BEACH, L"BumpDesertMesh00", pGameObj), E_FAIL);
 
 
@@ -817,7 +821,12 @@ HRESULT CScene_MainStage::Ready_LightInfo()
 
 HRESULT CScene_MainStage::Ready_NaviMesh()
 {
-	Engine::CNaviMesh* pNaviMesh = Engine::CNaviMesh::Create(m_pGraphicDevice,  m_pCommandList, wstring(L"../../Bin/ToolData/StageVelika_NaviMesh.navimeshcellinfo"));
+	Engine::CNaviMesh* pNaviMesh = nullptr;
+
+	pNaviMesh = Engine::CNaviMesh::Create(m_pGraphicDevice,  
+										  m_pCommandList, 
+										  wstring(L"../../Bin/ToolData/StageVelika_NaviMesh.navimeshcellinfo"),
+										  _vec3(STAGE_VELIKA_OFFSET_X, 0.0f, STAGE_VELIKA_OFFSET_Z));
 	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"StageVelika_NaviMesh", Engine::ID_DYNAMIC, pNaviMesh), E_FAIL);
 
 	return S_OK;

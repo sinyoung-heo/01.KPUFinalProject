@@ -23,7 +23,7 @@ public:
 									const _float& fSpeed = 0.0f,
 									const _bool& bIsJump = false);
 private:
-	HRESULT	Ready_NaviMesh(wstring wstrFilePath);
+	HRESULT	Ready_NaviMesh(wstring wstrFilePath, const _vec3& vPosOffset);
 	void	Link_Cell();
 
 private:
@@ -34,7 +34,8 @@ public:
 	virtual CComponent* Clone();
 	static CNaviMesh*	Create(ID3D12Device* pGraphicDevice, 
 							   ID3D12GraphicsCommandList* pCommandList,
-							   wstring& wstrFilePath);
+							   wstring& wstrFilePath, 
+							   const _vec3& vPosOffset = _vec3(0.0f));
 private:
 	virtual void		Free();
 };
