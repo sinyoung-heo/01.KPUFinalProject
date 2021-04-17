@@ -157,9 +157,6 @@
     <Filter Include="99.Etc\SampleObject\18.TestColMonster">
       <UniqueIdentifier>{af8cf5a3-7573-4bee-ae7f-005905d751aa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99.Etc\SampleObject\05.StaticMeshObject">
-      <UniqueIdentifier>{2351c006-4ada-445d-8e86-d03ee28c66bc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\99.GameUI">
       <UniqueIdentifier>{b30b9034-b059-4f37-b27b-eaef8067d730}</UniqueIdentifier>
     </Filter>
@@ -308,9 +305,6 @@
     </ClInclude>
     <ClInclude Include="..\Code\TerrainObject.h">
       <Filter>99.Etc\SampleObject\03.TerrainObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\StaticMeshObject.h">
-      <Filter>99.Etc\SampleObject\05.StaticMeshObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\Popori_F.h">
       <Filter>99.Etc\SampleObject\06.Popori_F</Filter>
@@ -510,6 +504,9 @@
     <ClInclude Include="..\Code\InstancePoolMgr.h">
       <Filter>97.Mgr\05.InstancePoolMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\StaticMeshObject.h">
+      <Filter>02.GameObject\01.Environment\01.StaticMeshObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -538,9 +535,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\TerrainObject.cpp">
       <Filter>99.Etc\SampleObject\03.TerrainObject</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\StaticMeshObject.cpp">
-      <Filter>99.Etc\SampleObject\05.StaticMeshObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Popori_F.cpp">
       <Filter>99.Etc\SampleObject\06.Popori_F</Filter>
@@ -715,6 +709,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\InstancePoolMgr.cpp">
       <Filter>97.Mgr\05.InstancePoolMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\StaticMeshObject.cpp">
+      <Filter>02.GameObject\01.Environment\01.StaticMeshObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

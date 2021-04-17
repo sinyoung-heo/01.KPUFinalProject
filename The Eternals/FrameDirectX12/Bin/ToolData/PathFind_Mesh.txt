@@ -1,5 +1,3 @@
-PoporiH25|PoporiH25.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\PoporiH25\
-PoporiR19|PoporiR19.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\PoporiR19\
 PoporiR27Gladiator|PoporiR27Gladiator.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\PoporiR27Gladiator\
 CloderA|CloderA.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\CloderA\
 Crab|Crab.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\Crab\
