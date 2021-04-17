@@ -5,6 +5,7 @@ TwoHand29_SM|TwoHand29_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\PCWeapon
 TwoHand31_SM|TwoHand31_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\PCWeapon\TwoHand\TwoHand31_SM\
 TwoHand33_B_SM|TwoHand33_B_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\PCWeapon\TwoHand\TwoHand33_B_SM\
 TwoHand33_SM|TwoHand33_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\PCWeapon\TwoHand\TwoHand33_SM\
+BumpDesertMesh00|BumpDesertMesh00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpDesertMesh00\
 BumpTerrainMesh00|BumpTerrainMesh00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpTerrainMesh00\
 BumpTerrainMesh01|BumpTerrainMesh01.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpTerrainMesh01\
 BumpWaterMesh00|BumpWaterMesh00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpWaterMesh00\

@@ -3,6 +3,7 @@
 #include "Scene_MainStage.h"
 #include "ComponentMgr.h"
 #include "GraphicDevice.h"
+#include "DirectInput.h"
 #include "LightMgr.h"
 #include "InstancePoolMgr.h"
 #include "Font.h"
@@ -74,6 +75,15 @@ void CScene_MainStage::Process_PacketFromServer()
 
 _int CScene_MainStage::Update_Scene(const _float & fTimeDelta)
 {
+	if (Engine::KEY_DOWN(DIK_9))
+	{
+		m_pObjectMgr->Set_CurrentStage(Engine::STAGEID::STAGE_VELIKA);
+	}
+	else if (Engine::KEY_DOWN(DIK_0))
+	{
+		m_pObjectMgr->Set_CurrentStage(Engine::STAGEID::STAGE_BEACH);
+	}
+
 	// MouseCursorMgr
 	if (!m_bIsReadyMouseCursorMgr)
 	{
@@ -190,6 +200,7 @@ HRESULT CScene_MainStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 	_vec3	vBoundingSpherePos      = _vec3(0.0f);
 	_bool	bIsMousePicking			= false;
 
+	// Velika
 	wifstream fin_velika { L"../../Bin/ToolData/StageVelika_StaticMesh.staticmesh" };
 	if (fin_velika.fail())
 		return E_FAIL;
@@ -239,7 +250,7 @@ HRESULT CScene_MainStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 										  _vec3(128.0f, -0.01f, 128.0f));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_VELIKA, L"BumpTerrainMesh01", pGameObj), E_FAIL);
 
-
+	// Beach
 	wifstream fin_beach { L"../../Bin/ToolData/StageBeach_StaticMesh.staticmesh" };
 	if (fin_beach.fail())
 		return E_FAIL;
@@ -281,6 +292,14 @@ HRESULT CScene_MainStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_BEACH, wstrMeshTag, pGameObj), E_FAIL);
 	}
+
+	pGameObj = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+										  L"BumpDesertMesh00",
+										  _vec3(0.145f),
+										  _vec3(90.0f, 40.0f, 0.0f),
+										  _vec3(128.0f, 0.01f, 128.0f));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_BEACH, L"BumpDesertMesh00", pGameObj), E_FAIL);
+
 
 	return S_OK;
 }
