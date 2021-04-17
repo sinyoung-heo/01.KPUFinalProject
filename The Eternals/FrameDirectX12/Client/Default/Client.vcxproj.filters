@@ -73,9 +73,6 @@
     <Filter Include="01.Scene\01.Logo\02.LoadingProgress">
       <UniqueIdentifier>{018c85ab-d8f8-4c79-8bba-f142768a3d1c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Scene\03.StageVelika">
-      <UniqueIdentifier>{af574c80-212e-42e6-9a44-0bbdcdee06c7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.Mgr\03.ServerMath">
       <UniqueIdentifier>{608982b7-5130-4247-b0b0-0a6009ba9f5b}</UniqueIdentifier>
     </Filter>
@@ -259,6 +256,9 @@
     <Filter Include="97.Mgr\05.InstancePoolMgr">
       <UniqueIdentifier>{782ae5d2-11c5-4a86-a19c-e951b3e41635}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Scene\03.MainStage">
+      <UniqueIdentifier>{af574c80-212e-42e6-9a44-0bbdcdee06c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -351,8 +351,8 @@
     <ClInclude Include="..\Code\LoadingProgress.h">
       <Filter>01.Scene\01.Logo\02.LoadingProgress</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\Scene_StageVelika.h">
-      <Filter>01.Scene\03.StageVelika</Filter>
+    <ClInclude Include="..\Code\Scene_MainStage.h">
+      <Filter>01.Scene\03.MainStage</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\DistortionDisk.h" />
     <ClInclude Include="..\Code\TextureDistortion.h">
@@ -578,8 +578,8 @@
     <ClCompile Include="..\Code\LoadingProgress.cpp">
       <Filter>01.Scene\01.Logo\02.LoadingProgress</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\Scene_StageVelika.cpp">
-      <Filter>01.Scene\03.StageVelika</Filter>
+    <ClCompile Include="..\Code\Scene_MainStage.cpp">
+      <Filter>01.Scene\03.MainStage</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\DistortionDisk.cpp" />
     <ClCompile Include="..\Code\TextureDistortion.cpp">

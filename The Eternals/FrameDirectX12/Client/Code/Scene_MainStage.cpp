@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include <fstream>
-#include "Scene_StageVelika.h"
+#include "Scene_MainStage.h"
 #include "ComponentMgr.h"
 #include "GraphicDevice.h"
 #include "LightMgr.h"
@@ -28,14 +28,14 @@
 #include "SampleNPC.h"
 
 
-CScene_StageVelika::CScene_StageVelika(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CScene_MainStage::CScene_MainStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
 {
 }
 
 
 
-HRESULT CScene_StageVelika::Ready_Scene()
+HRESULT CScene_MainStage::Ready_Scene()
 {
 #ifdef CLIENT_LOG
 	COUT_STR("<< Ready Scene_Stage >>");
@@ -62,7 +62,7 @@ HRESULT CScene_StageVelika::Ready_Scene()
 	return S_OK;
 }
 
-_int CScene_StageVelika::Update_Scene(const _float & fTimeDelta)
+_int CScene_MainStage::Update_Scene(const _float & fTimeDelta)
 {
 	// MouseCursorMgr
 	if (!m_bIsReadyMouseCursorMgr)
@@ -74,19 +74,19 @@ _int CScene_StageVelika::Update_Scene(const _float & fTimeDelta)
 	return Engine::CScene::Update_Scene(fTimeDelta);
 }
 
-_int CScene_StageVelika::LateUpdate_Scene(const _float & fTimeDelta)
+_int CScene_MainStage::LateUpdate_Scene(const _float & fTimeDelta)
 {
 	return Engine::CScene::LateUpdate_Scene(fTimeDelta);
 }
 
-HRESULT CScene_StageVelika::Render_Scene(const _float & fTimeDelta, const Engine::RENDERID& eID)
+HRESULT CScene_MainStage::Render_Scene(const _float & fTimeDelta, const Engine::RENDERID& eID)
 {
 	Engine::FAILED_CHECK_RETURN(CScene::Render_Scene(fTimeDelta, eID), E_FAIL);
 
 	return S_OK;
 }
 
-HRESULT CScene_StageVelika::Ready_LayerCamera(wstring wstrLayerTag)
+HRESULT CScene_MainStage::Ready_LayerCamera(wstring wstrLayerTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
 	
@@ -140,7 +140,7 @@ HRESULT CScene_StageVelika::Ready_LayerCamera(wstring wstrLayerTag)
 }
 
 
-HRESULT CScene_StageVelika::Ready_LayerEnvironment(wstring wstrLayerTag)
+HRESULT CScene_MainStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
 
@@ -167,7 +167,7 @@ HRESULT CScene_StageVelika::Ready_LayerEnvironment(wstring wstrLayerTag)
 	return S_OK;
 }
 
-HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
+HRESULT CScene_MainStage::Ready_LayerGameObject(wstring wstrLayerTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
 
@@ -377,7 +377,7 @@ HRESULT CScene_StageVelika::Ready_LayerGameObject(wstring wstrLayerTag)
 	return S_OK;
 }
 
-HRESULT CScene_StageVelika::Ready_LayerUI(wstring wstrLayerTag)
+HRESULT CScene_MainStage::Ready_LayerUI(wstring wstrLayerTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
 
@@ -761,7 +761,7 @@ HRESULT CScene_StageVelika::Ready_LayerUI(wstring wstrLayerTag)
 	return S_OK;
 }
 
-HRESULT CScene_StageVelika::Ready_LayerFont(wstring wstrLayerTag)
+HRESULT CScene_MainStage::Ready_LayerFont(wstring wstrLayerTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
 
@@ -776,7 +776,7 @@ HRESULT CScene_StageVelika::Ready_LayerFont(wstring wstrLayerTag)
 	return S_OK;
 }
 
-HRESULT CScene_StageVelika::Ready_LightInfo()
+HRESULT CScene_MainStage::Ready_LightInfo()
 {
 	wifstream fin{ L"../../Bin/ToolData/StageVelika_DirectionAndShadow.lightinginfo" };
 	if (fin.fail())
@@ -870,7 +870,7 @@ HRESULT CScene_StageVelika::Ready_LightInfo()
 	return S_OK;
 }
 
-HRESULT CScene_StageVelika::Ready_NaviMesh()
+HRESULT CScene_MainStage::Ready_NaviMesh()
 {
 	Engine::CNaviMesh* pNaviMesh = Engine::CNaviMesh::Create(m_pGraphicDevice,  m_pCommandList,
 															 wstring(L"../../Bin/ToolData/StageVelika_NaviMesh.navimeshcellinfo"));
@@ -879,9 +879,9 @@ HRESULT CScene_StageVelika::Ready_NaviMesh()
 	return S_OK;
 }
 
-CScene_StageVelika * CScene_StageVelika::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CScene_MainStage * CScene_MainStage::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 {
-	CScene_StageVelika* pInstance = new CScene_StageVelika(pGraphicDevice, pCommandList);
+	CScene_MainStage* pInstance = new CScene_MainStage(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_Scene()))
 		Engine::Safe_Release(pInstance);
@@ -889,7 +889,7 @@ CScene_StageVelika * CScene_StageVelika::Create(ID3D12Device* pGraphicDevice, ID
 	return pInstance;
 }
 
-void CScene_StageVelika::Free()
+void CScene_MainStage::Free()
 {
 	Engine::CScene::Free();
 

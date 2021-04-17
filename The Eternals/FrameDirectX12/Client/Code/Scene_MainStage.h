@@ -2,11 +2,11 @@
 #include "Include.h"
 #include "Scene.h"
 
-class CScene_StageVelika final : public Engine::CScene
+class CScene_MainStage final : public Engine::CScene
 {
 private:
-	explicit CScene_StageVelika(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CScene_StageVelika() = default;
+	explicit CScene_MainStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CScene_MainStage() = default;
 
 public:
 	virtual HRESULT Ready_Scene();
@@ -27,7 +27,7 @@ private:
 	_bool m_bIsReadyMouseCursorMgr = false;
 
 public:
-	static CScene_StageVelika*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	static CScene_MainStage*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 private:
 	virtual void			Free();
 };

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Scene_Menu.h"
 #include "DirectInput.h"
-#include "Scene_StageVelika.h"
+#include "Scene_MainStage.h"
 #include "Management.h"
 
 
@@ -43,7 +43,7 @@ HRESULT CScene_Menu::Render_Scene(const _float & fTimeDelta, const Engine::RENDE
 	{
 		m_pObjectMgr->Clear_Layer();
 
-		Engine::CScene* pNewScene = CScene_StageVelika::Create(m_pGraphicDevice, m_pCommandList);
+		Engine::CScene* pNewScene = CScene_MainStage::Create(m_pGraphicDevice, m_pCommandList);
 		Engine::CManagement::Get_Instance()->SetUp_CurrentScene(pNewScene);
 	}
 

@@ -4,7 +4,7 @@
 #include "DirectInput.h"
 #include "Management.h"
 #include "Scene_Menu.h"
-#include "Scene_StageVelika.h"
+#include "Scene_MainStage.h"
 #include "StageLDH.h"
 #include "StagePJO.h"
 #include "StageHSY.h"
@@ -106,7 +106,7 @@ HRESULT CScene_Logo::Render_Scene(const _float & fTimeDelta, const Engine::RENDE
 			CMouseCursorMgr::Get_Instance()->Reset_MouseCursor();
 
 			Engine::CScene* pNewScene = nullptr;
-			pNewScene = CScene_StageVelika::Create(m_pGraphicDevice, m_pCommandList);
+			pNewScene = CScene_MainStage::Create(m_pGraphicDevice, m_pCommandList);
 			Engine::CManagement::Get_Instance()->SetUp_CurrentScene(pNewScene);
 		}
 		else if (Engine::KEY_DOWN(DIK_1))

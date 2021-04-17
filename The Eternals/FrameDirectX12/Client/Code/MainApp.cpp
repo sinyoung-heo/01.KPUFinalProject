@@ -10,7 +10,7 @@
 
 #include "Scene_Logo.h"
 #include "Scene_Menu.h"
-#include "Scene_StageVelika.h"
+#include "Scene_MainStage.h"
 #include "Font.h"
 
 
@@ -328,7 +328,7 @@ HRESULT CMainApp::SetUp_StartScene(Engine::SCENEID eScebeID)
 		pScene = CScene_Menu::Create(m_pGraphicDevice, m_pCommandList);
 		break;
 	case Engine::SCENE_STAGE:
-		pScene = CScene_StageVelika::Create(m_pGraphicDevice, m_pCommandList);
+		pScene = CScene_MainStage::Create(m_pGraphicDevice, m_pCommandList);
 	default:
 		break;
 	}
