@@ -6,9 +6,7 @@
 IMPLEMENT_SINGLETON(CInstancePoolMgr)
 
 CInstancePoolMgr::CInstancePoolMgr()
-	: m_pObjectMgr(Engine::CObjectMgr::Get_Instance())
 {
-
 }
 
 void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -82,13 +80,14 @@ CCollisionTick* CInstancePoolMgr::Pop_CollisionTickInstance()
 
 void CInstancePoolMgr::Return_CollisionTickInstance(const _uint& uiInstanceIdx)
 {
-	Engine::Safe_Release(m_pCollisionTickPool->ppInstances[uiInstanceIdx]);
 	m_pCollisionTickPool->ppInstances[uiInstanceIdx]->Set_IsUsingInstance(false);
 	m_pCollisionTickPool->ppInstances[uiInstanceIdx]->Set_IsReturnObject(false);
+	Engine::Safe_Release(m_pCollisionTickPool->ppInstances[uiInstanceIdx]);
 }
 
 void CInstancePoolMgr::Free()
 {
+	// CollisionTick
 	for (_uint i = 0; i < m_pCollisionTickPool->uiInstanceSize; ++i)
 		Engine::Safe_Release(m_pCollisionTickPool->ppInstances[i]);
 

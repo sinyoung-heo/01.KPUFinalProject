@@ -44,6 +44,7 @@ private:
 	void			Change_Animation(const _float& fTimeDelta);
 	// Collision Event
 	void Collision_ThisPlayer(list<Engine::CColliderSphere*>& lstPlayerCollider);
+	void Collision_CollisionTickThisPlayer(list<Engine::CColliderSphere*>& lstPlayerCollider);
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]

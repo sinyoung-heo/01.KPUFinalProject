@@ -2,10 +2,6 @@
 #include "Include.h"
 #include "Base.h"
 
-namespace Engine
-{
-	class CObjectMgr;
-}
 class CCollisionTick;
 
 template<class T1>
@@ -32,7 +28,6 @@ public:
 	CCollisionTick*	Pop_CollisionTickInstance();
 	void			Return_CollisionTickInstance(const _uint& uiInstanceIdx);
 private:
-	Engine::CObjectMgr*					m_pObjectMgr;
 	INSTANCE_POOL_DESC<CCollisionTick>*	m_pCollisionTickPool;
 
 private:

@@ -95,6 +95,7 @@ _int CCraftyArachne::Update_GameObject(const _float& fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
+
 	return NO_EVENT;
 }
 
@@ -113,7 +114,11 @@ void CCraftyArachne::Process_Collision()
 		if (L"ThisPlayer" == pDst->Get_CollisionTag())
 			Collision_ThisPlayer(pDst->Get_ColliderList());
 
-
+		if (L"CollisionTick_ThisPlayer" == pDst->Get_CollisionTag())
+		{
+			pDst->Set_IsReturnObject(true);
+			Collision_CollisionTickThisPlayer(pDst->Get_ColliderList());
+		}
 	}
 }
 
@@ -345,6 +350,22 @@ void CCraftyArachne::Collision_ThisPlayer(list<Engine::CColliderSphere*>& lstPla
 				pSrcCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 				pDstCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 
+			}
+		}
+	}
+}
+
+void CCraftyArachne::Collision_CollisionTickThisPlayer(list<Engine::CColliderSphere*>& lstPlayerCollider)
+{
+	for (auto& pSrcCollider : m_lstCollider)
+	{
+		for (auto& pDstCollider : lstPlayerCollider)
+		{
+			if (Engine::CCollisionMgr::Check_Sphere(pSrcCollider->Get_BoundingInfo(), pDstCollider->Get_BoundingInfo()))
+			{
+				// Process Collision Event
+				pSrcCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+				pDstCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 			}
 		}
 	}

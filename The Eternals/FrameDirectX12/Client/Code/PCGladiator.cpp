@@ -460,26 +460,19 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 		_vec3 vPos = m_pTransCom->m_vPos + m_pTransCom->m_vDir * 2.0f;
 		vPos.y = 1.f;
 
-		//Engine::CGameObject* pGameObj = CCollisionTick::Create(m_pGraphicDevice, m_pCommandList,
-		//													   L"CollisionTick_Player",
-		//													   _vec3(2.0f), 
-		//													   vPos, 
-		//													   m_pInfoCom->m_iAttack, 
-		//													   1.0f);
-
+		// CollisionTick
 		CCollisionTick* pCollisionTick = m_pInstancePoolMgr->Pop_CollisionTickInstance();
 		if (nullptr != pCollisionTick)
 		{
-			pCollisionTick->Set_CollisionTag(L"CollisionTick_Player");
+			pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
 			pCollisionTick->Set_Damage(m_pInfoCom->m_iAttack);
-			pCollisionTick->Set_LifeTime(1.0f);
+			pCollisionTick->Set_LifeTime(60.0f);
 			pCollisionTick->Get_Transform()->m_vScale = _vec3(2.0f);
-			pCollisionTick->Get_Transform()->m_vPos = vPos;
+			pCollisionTick->Get_Transform()->m_vPos   = vPos;
+			pCollisionTick->Get_BoundingSphere()->Set_Radius(pCollisionTick->Get_Transform()->m_vScale);
 
-			m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_Player", pCollisionTick);
+			m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_ThisPlayer", pCollisionTick);
 		}
-
-
 	}
 }
 

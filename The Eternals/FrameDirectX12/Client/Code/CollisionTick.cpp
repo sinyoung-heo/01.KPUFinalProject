@@ -31,6 +31,7 @@ HRESULT CCollisionTick::Ready_GameObject(wstring wstrCollisionTag,
 
 	// BoundingSphere
 	Engine::CGameObject::SetUp_BoundingSphere(&(m_pTransCom->m_matWorld), m_pTransCom->m_vScale, _vec3(1.0f), _vec3(0.0f));
+	m_lstCollider.push_back(m_pBoundingSphereCom);
 
 	return S_OK;
 }
@@ -59,8 +60,6 @@ _int CCollisionTick::Update_GameObject(const _float& fTimeDelta)
 		m_pInstancePoolMgr->Return_CollisionTickInstance(m_uiInstanceIdx);
 		return RETURN_OBJ;
 	}
-
-	m_pBoundingSphereCom->Set_Color(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
 
 	/*__________________________________________________________________________________________________________
 	[ Collision - Add Collision List ]
@@ -91,6 +90,7 @@ void CCollisionTick::Process_Collision()
 
 }
 
+
 Engine::CGameObject* CCollisionTick::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, 
 											wstring wstrCollisionTag, 
 											const _vec3& vScale, 
@@ -107,18 +107,16 @@ Engine::CGameObject* CCollisionTick::Create(ID3D12Device* pGraphicDevice, ID3D12
 }
 
 CCollisionTick** CCollisionTick::Create_Instance(ID3D12Device* pGraphicDevice,
-													  ID3D12GraphicsCommandList* pCommandList, 
-													  const _uint& uiInstanceCnt)
+												 ID3D12GraphicsCommandList* pCommandList, 
+												 const _uint& uiInstanceCnt)
 {
 	CCollisionTick** ppInstance = new (CCollisionTick*[uiInstanceCnt]);
 
 	for (_uint i = 0; i < uiInstanceCnt; ++i)
 	{
 		ppInstance[i] = new CCollisionTick(pGraphicDevice, pCommandList);
-		ppInstance[i]->m_uiInstanceIdx  = i;
-		//ppInstance[i]->m_pGraphicDevice = pGraphicDevice;
-		//ppInstance[i]->m_pCommandList   = pCommandList;
-		ppInstance[i]->Ready_GameObject(L"", _vec3(0.0f), _vec3(0.0f), 0, 0.0f);
+		ppInstance[i]->m_uiInstanceIdx = i;
+		ppInstance[i]->Ready_GameObject(L"", _vec3(1.0f), _vec3(0.0f), 0, 0.0f);
 	}
 
 	return ppInstance;

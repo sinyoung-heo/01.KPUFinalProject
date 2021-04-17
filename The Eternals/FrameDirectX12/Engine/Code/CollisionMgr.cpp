@@ -23,7 +23,7 @@ void CCollisionMgr::Progress_SweapAndPrune()
 	// Sort by PosX.
 	m_lstCollisionCheckList.sort([](CGameObject* pSrc, CGameObject* pDst)
 								 {
-									return (pSrc->Get_Transform()->m_vPos.x < pDst->Get_Transform()->m_vPos.x);
+									return (pSrc->Get_BoundingSphere()->Get_BoundingInfo().Center.x < pDst->Get_BoundingSphere()->Get_BoundingInfo().Center.x);
 								 });
 	// X Overlap Check.
 	auto iter_src_begin = m_lstCollisionCheckList.begin();
@@ -45,7 +45,7 @@ void CCollisionMgr::Progress_SweapAndPrune()
 				break;
 		} 
 
-		iter_dst_begin = iter_src_begin;
+		iter_dst_begin = m_lstCollisionCheckList.begin();
 		++iter_src_begin;
 	}
 
@@ -55,7 +55,7 @@ void CCollisionMgr::Progress_SweapAndPrune()
 	{
 		pair.second.sort([](CGameObject* pSrc, CGameObject* pDst)
 						 {
-							return (pSrc->Get_Transform()->m_vPos.y < pDst->Get_Transform()->m_vPos.y);
+							return (pSrc->Get_BoundingSphere()->Get_BoundingInfo().Center.y < pDst->Get_BoundingSphere()->Get_BoundingInfo().Center.y);
 						 });
 
 		for (auto& pDst : pair.second)
@@ -73,7 +73,7 @@ void CCollisionMgr::Progress_SweapAndPrune()
 	{
 		pair.second.sort([](CGameObject* pSrc, CGameObject* pDst)
 						 {
-							return (pSrc->Get_Transform()->m_vPos.z < pDst->Get_Transform()->m_vPos.z);
+							return (pSrc->Get_BoundingSphere()->Get_BoundingInfo().Center.z < pDst->Get_BoundingSphere()->Get_BoundingInfo().Center.z);
 						 });
 
 		for (auto& pDst : pair.second)
