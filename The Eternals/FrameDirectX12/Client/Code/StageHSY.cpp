@@ -184,54 +184,6 @@ HRESULT CStageHSY::Ready_LayerEnvironment(wstring wstrLayerTag)
 							   1);									// Texture Idx
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"SkyBox", pGameObj), E_FAIL);
 
-
-	return S_OK;
-}
-
-HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
-{
-	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
-
-	/*__________________________________________________________________________________________________________
-	[ GameLogic Layer 持失 ]
-	____________________________________________________________________________________________________________*/
-	Engine::CLayer* pLayer = Engine::CLayer::Create();
-	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
-	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
-
-
-	Engine::CGameObject* pGameObj = nullptr;
-
-	/*__________________________________________________________________________________________________________
-	[ BumpTerrainMesh ]
-	____________________________________________________________________________________________________________*/
-	pGameObj = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-										  L"BumpTerrainMesh01",
-										  _vec3(0.075f),
-										  _vec3(90.0f, 0.0f ,0.0f),
-										  _vec3(128.0f, -0.01f, 128.0f));
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpTerrainMesh01", pGameObj), E_FAIL);
-
-	/*__________________________________________________________________________________________________________
-	[ TestCollisionObject ]
-	____________________________________________________________________________________________________________*/
-	//uniform_int_distribution<_int>	uid_x	{ 0, 256 };
-	//uniform_int_distribution<_int>	uid_y	{ 0, 256 };
-	//uniform_int_distribution<_int>	uid_z	{ 0, 256 };
-	//random_device			rn;
-	//default_random_engine	dre{ rn()};
-
-	//for (_uint i = 0; i < 100; ++i)
-	//{
-	//	pGameObj = CTestCollisonObject::Create(m_pGraphicDevice, m_pCommandList,
-	//										   _vec3(10.0f),
-	//										   _vec3(0.0f),
-	//										   _vec3((_float)uid_x(dre), (_float)uid_y(dre), (_float)uid_z(dre)));
-
-	//	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"CollisionObject", pGameObj), E_FAIL);
-	//}
-
-#pragma region STATIC_MESH
 	/*__________________________________________________________________________________________________________
 	[ StaticMeshObject ]
 	____________________________________________________________________________________________________________*/
@@ -283,11 +235,54 @@ HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
 											 bIsCollision,			// Bounding Sphere
 											 vBoundingSphereScale,	// Bounding Sphere Scale
 											 vBoundingSpherePos);	// Bounding Sphere Pos
-
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, wstrMeshTag, pGameObj), E_FAIL);
 	}
-#pragma endregion
 
+	return S_OK;
+}
+
+HRESULT CStageHSY::Ready_LayerGameObject(wstring wstrLayerTag)
+{
+	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
+
+	/*__________________________________________________________________________________________________________
+	[ GameLogic Layer 持失 ]
+	____________________________________________________________________________________________________________*/
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
+	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
+	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
+
+
+	Engine::CGameObject* pGameObj = nullptr;
+
+	/*__________________________________________________________________________________________________________
+	[ BumpTerrainMesh ]
+	____________________________________________________________________________________________________________*/
+	pGameObj = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+										  L"BumpTerrainMesh01",
+										  _vec3(0.075f),
+										  _vec3(90.0f, 0.0f ,0.0f),
+										  _vec3(128.0f, -0.01f, 128.0f));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpTerrainMesh01", pGameObj), E_FAIL);
+
+	/*__________________________________________________________________________________________________________
+	[ TestCollisionObject ]
+	____________________________________________________________________________________________________________*/
+	//uniform_int_distribution<_int>	uid_x	{ 0, 256 };
+	//uniform_int_distribution<_int>	uid_y	{ 0, 256 };
+	//uniform_int_distribution<_int>	uid_z	{ 0, 256 };
+	//random_device			rn;
+	//default_random_engine	dre{ rn()};
+
+	//for (_uint i = 0; i < 100; ++i)
+	//{
+	//	pGameObj = CTestCollisonObject::Create(m_pGraphicDevice, m_pCommandList,
+	//										   _vec3(10.0f),
+	//										   _vec3(0.0f),
+	//										   _vec3((_float)uid_x(dre), (_float)uid_y(dre), (_float)uid_z(dre)));
+
+	//	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"CollisionObject", pGameObj), E_FAIL);
+	//}
 
 #pragma region SAMPLE_NPC
 	//pGameObj =	CSampleNPC::Create(m_pGraphicDevice, m_pCommandList,
