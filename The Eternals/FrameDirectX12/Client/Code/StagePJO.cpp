@@ -252,13 +252,14 @@ HRESULT CStagePJO::Ready_LayerEnvironment(wstring wstrLayerTag)
 		_vec3(STAGE_VELIKA_OFFSET_X, 0.0f, STAGE_VELIKA_OFFSET_Z));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_VELIKA, L"BumpDesertMesh00", pGameObj), E_FAIL);
 
+
+
 	pGameObj = CWaterMeshObject::Create(m_pGraphicDevice, m_pCommandList,
 		L"BumpWaterMesh00",
 		_vec3(0.145f),
-		_vec3(90.0f, 40.0f, 0.0f),
-		_vec3(128.0f, 0.01f, 128.0f),
-		_vec3(STAGE_VELIKA_OFFSET_X, 0.0f, STAGE_VELIKA_OFFSET_Z));
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_VELIKA, L"BumpWaterMesh00", pGameObj), E_FAIL);
+		_vec3(90.f, 40.0f, 0.0f),
+		_vec3(256.0f, 0.7f, 276.0f), _vec3(STAGE_VELIKA_OFFSET_X, 0.0f, STAGE_VELIKA_OFFSET_Z));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpWaterMesh00", pGameObj), E_FAIL);
 
 	return S_OK;
 }

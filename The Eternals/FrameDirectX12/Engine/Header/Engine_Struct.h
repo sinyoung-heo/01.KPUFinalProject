@@ -837,10 +837,10 @@ namespace Engine
 		_float		fDissolve;
 		_float		fOffset1;
 		_float		fOffset2;
-		_float fOffset3;
-		_float fOffset4;
-		_float fOffset5;
-		_float fOffset6;
+		_float		fOffset3;
+		_float		fOffset4;
+		_float		fOffset5;
+		_float		fOffset6;
 		_rgba		vAfterImgColor;
 		_rgba		vEmissiveColor;
 

@@ -6,7 +6,7 @@
 #include "LightMgr.h"
 #include "DynamicCamera.h"
 #include "RenderTarget.h"
-
+#include "TimeMgr.h"
 
 CTerrainMeshObject::CTerrainMeshObject(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -158,6 +158,14 @@ void CTerrainMeshObject::Set_ConstantTable(const _int& iContextIdx, const _int& 
 	tCB_ShaderMesh.matLightProj  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
 	tCB_ShaderMesh.vLightPos     = tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
+
+
+	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.005f;
+	m_fDeltatime2 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
+	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
+	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
+	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
+	tCB_ShaderMesh.fDissolve = sin(m_fDeltatime3);
 
 	m_pShaderMeshInstancing->Get_UploadBuffer_ShaderMesh(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderMesh);
 }
