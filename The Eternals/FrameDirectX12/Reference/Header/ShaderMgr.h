@@ -15,13 +15,13 @@ private:
 public:
 	void Input_ShaderKey();
 public:
-	CB_SHADER_INFORMATION & Get_ShaderInfo() { return m_pCB_ShaderInformation; }
+	CB_SHADER_INFORMATION& Get_ShaderInfo() { return m_pCB_ShaderInformation; }
 public:
 	void Set_DOF(int Mode) { m_pCB_ShaderInformation.DepthOfField = Mode; }
 
 private:
 	CB_SHADER_INFORMATION m_pCB_ShaderInformation;
-	
+
 private:
 	virtual void Free();
 };

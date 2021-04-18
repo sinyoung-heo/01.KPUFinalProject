@@ -256,6 +256,9 @@
     <Filter Include="01.Scene\03.MainStage">
       <UniqueIdentifier>{af574c80-212e-42e6-9a44-0bbdcdee06c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\01.Environment\03.WaterFall">
+      <UniqueIdentifier>{566cb44d-f39c-43dd-ad3e-2f1b3094e9f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -510,6 +513,9 @@
     <ClInclude Include="..\..\..\FrameServer\Server\Header\NPCAnimation.h">
       <Filter>98.Header\00.protocol</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\WaterFall.h">
+      <Filter>02.GameObject\01.Environment\03.WaterFall</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -715,6 +721,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\StaticMeshObject.cpp">
       <Filter>02.GameObject\01.Environment\01.StaticMeshObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\WaterFall.cpp">
+      <Filter>02.GameObject\01.Environment\03.WaterFall</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
