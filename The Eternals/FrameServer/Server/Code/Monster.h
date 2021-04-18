@@ -19,6 +19,8 @@ public:
 
 	void	Set_Stop_Attack(chrono::seconds t = 3s);
 	void	Set_Start_Attack();
+	void	Set_Start_Fight();
+	void	Set_Stop_Fight();
 
 public:
 	int		Update_Monster(const float& fTimeDelta);
@@ -90,6 +92,7 @@ public:
 	float			m_fSpd					= 0;
 	
 	volatile bool	m_bIsAttack				= false;
+	volatile bool	m_bIsFighting			= false;
 	bool			m_bIsShortAttack		= true;		// 근거리 공격
 	bool			m_bIsRushAttack			= false;
 

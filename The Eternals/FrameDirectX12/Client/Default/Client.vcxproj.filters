@@ -507,6 +507,9 @@
     <ClInclude Include="..\Code\StaticMeshObject.h">
       <Filter>02.GameObject\01.Environment\01.StaticMeshObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\FrameServer\Server\Header\NPCAnimation.h">
+      <Filter>98.Header\00.protocol</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
