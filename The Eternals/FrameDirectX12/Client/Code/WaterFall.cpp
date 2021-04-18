@@ -41,7 +41,6 @@ HRESULT CWaterFall::LateInit_GameObject()
 	m_pShaderCom->SetUp_ShaderConstantBuffer();
 	Engine::CTexture* pTexture = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(L"TexWaterFall", Engine::COMPONENTID::ID_STATIC));
 	SetUp_DescriptorHeap(pTexture->Get_Texture(), m_pRenderer->Get_TargetShadowDepth()->Get_TargetTexture());
-
 	m_fNormalMapDeltatime  = 4;
 	m_fPatternMapDeltatime = 6;
 	return S_OK;

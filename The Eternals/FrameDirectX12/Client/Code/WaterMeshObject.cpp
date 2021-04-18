@@ -94,8 +94,8 @@ void CWaterMeshObject::Render_GameObject(const _float& fTimeDelta,
 	if (m_fPatternMapDeltatime > 133.f)
 		m_fPatternMapDeltatime = 123.f;
 	m_fNormalMapDeltatime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 15.f;
-	if (m_fNormalMapDeltatime > 120.f)
-		m_fNormalMapDeltatime = 0.f;
+	if (m_fNormalMapDeltatime > 122.f)
+		m_fNormalMapDeltatime = 2.f;
 	m_pMeshCom->Render_WaterMesh(pCommandList, iContextIdx, m_pShaderCom, m_pDescriptorHeaps, (_int)m_fNormalMapDeltatime, (_int)m_fPatternMapDeltatime);
 }
 
