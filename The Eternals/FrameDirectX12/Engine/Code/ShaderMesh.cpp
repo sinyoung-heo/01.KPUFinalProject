@@ -197,12 +197,12 @@ void CShaderMesh::Begin_Shader(ID3D12GraphicsCommandList* pCommandList,
 		SRV_TexNormalDescriptorHandle);
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexSpecularDescriptorHandle(pTexNormalDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexSpecularDescriptorHandle.Offset(2, m_uiCBV_SRV_UAV_DescriptorSize);
+	SRV_TexSpecularDescriptorHandle.Offset(1, m_uiCBV_SRV_UAV_DescriptorSize);
 	pCommandList->SetGraphicsRootDescriptorTable(3,		// RootParameter Index - TexShadowDepth
 		SRV_TexSpecularDescriptorHandle);
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexDissolveHandle(pTexNormalDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexDissolveHandle.Offset(1, m_uiCBV_SRV_UAV_DescriptorSize);
+	SRV_TexDissolveHandle.Offset(2, m_uiCBV_SRV_UAV_DescriptorSize);
 	pCommandList->SetGraphicsRootDescriptorTable(4,		// RootParameter Index - TexShadowDepth
 		SRV_TexDissolveHandle);
 
