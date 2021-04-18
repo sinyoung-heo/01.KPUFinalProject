@@ -27,7 +27,7 @@
 #include "MainMenuSetting.h"
 #include "PCGladiator.h"
 #include "SampleNPC.h"
-
+#include "WaterFall.h"
 
 CStagePJO::CStagePJO(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -229,18 +229,29 @@ HRESULT CStagePJO::Ready_LayerEnvironment(wstring wstrLayerTag)
 
 		if (fin_beach.eof())
 			break;
+		if (wstrMeshTag.find(L"WaterFall") != wstring::npos)
+		{
+			pGameObj = CWaterFall::Create(m_pGraphicDevice, m_pCommandList,
+				wstrMeshTag,			// MeshTag
+				vScale,				// Scale
+				vAngle,				// Angle
+				vPos,
+				_vec3(STAGE_VELIKA_OFFSET_X, 0.0f, STAGE_VELIKA_OFFSET_Z));
 
-		pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-			wstrMeshTag,			// MeshTag
-			vScale,				// Scale
-			vAngle,				// Angle
-			vPos,
-			bIsRenderShadow,		// Render Shadow
-			bIsCollision,			// Bounding Sphere
-			vBoundingSphereScale,	// Bounding Sphere Scale
-			vBoundingSpherePos,	// Bounding Sphere Pos
-			_vec3(STAGE_VELIKA_OFFSET_X, 0.0f, STAGE_VELIKA_OFFSET_Z));
-
+		}
+		else
+		{
+			pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+				wstrMeshTag,			// MeshTag
+				vScale,				// Scale
+				vAngle,				// Angle
+				vPos,
+				bIsRenderShadow,		// Render Shadow
+				bIsCollision,			// Bounding Sphere
+				vBoundingSphereScale,	// Bounding Sphere Scale
+				vBoundingSpherePos,	// Bounding Sphere Pos
+				_vec3(STAGE_VELIKA_OFFSET_X, 0.0f, STAGE_VELIKA_OFFSET_Z));
+		}
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_VELIKA, wstrMeshTag, pGameObj), E_FAIL);
 	}
 

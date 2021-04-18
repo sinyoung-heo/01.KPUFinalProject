@@ -19,7 +19,7 @@ CWaterFall::CWaterFall(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList 
 HRESULT CWaterFall::Ready_GameObject(wstring wstrMeshTag,
 											 const _vec3 & vScale,
 											 const _vec3 & vAngle, 
-											 const _vec3 & vPos)
+											 const _vec3 & vPos, const _vec3& vPosOffset)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
@@ -27,7 +27,7 @@ HRESULT CWaterFall::Ready_GameObject(wstring wstrMeshTag,
 	m_wstrMeshTag = wstrMeshTag;
 	m_pTransCom->m_vScale	= vScale;
 	m_pTransCom->m_vAngle	= vAngle;
-	m_pTransCom->m_vPos		= vPos;
+	m_pTransCom->m_vPos = vPos + vPosOffset;
 
 	// PipelineState.
 	m_iMeshPipelineStatePass	= 2;
@@ -237,11 +237,11 @@ Engine::CGameObject* CWaterFall::Create(ID3D12Device * pGraphicDevice, ID3D12Gra
 												wstring wstrMeshTag, 
 												const _vec3 & vScale,
 												const _vec3 & vAngle,
-												const _vec3 & vPos)
+												const _vec3 & vPos, const _vec3& vPosOffset)
 {
 	CWaterFall* pInstance = new CWaterFall(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos)))
+	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos, vPosOffset)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
