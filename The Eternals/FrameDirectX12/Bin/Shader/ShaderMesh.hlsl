@@ -530,18 +530,18 @@ VS_OUT VS_TERRAIN_MAIN(VS_IN vs_input)
     vector vHorizontal;
     vector vVertical;
 
-	//세로축의 웨이브 펙터 Wave, Lava
-    vVertical.xyz = vs_input.Pos.xyz + (sin(g_fOffset2 * 1.f + vs_input.Pos.z * 1.f)) * 10.205f;
-	//가로축의 웨이브 펙터 Wave, Lava
-    vHorizontal.xyz = vs_input.Pos.xyz + (sin(g_fOffset2 * 1.f + vs_input.Pos.x * 1.f)) * 10.205f;
-    vector vLocalPos = vector(vVertical.xyz + vHorizontal.xyz, 1.f);
+	////세로축의 웨이브 펙터 Wave, Lava
+ //   vVertical.xyz = vs_input.Pos.xyz + (sin(g_fOffset2 * 1.f + vs_input.Pos.z * 1.f)) * 10.205f;
+	////가로축의 웨이브 펙터 Wave, Lava
+ //   vHorizontal.xyz = vs_input.Pos.xyz + (sin(g_fOffset2 * 1.f + vs_input.Pos.x * 1.f)) * 10.205f;
+ //   vector vLocalPos = vector(vVertical.xyz + vHorizontal.xyz, 1.f);
 
 	
     matWV = mul(g_matWorld, g_matView);
     matWVP = mul(matWV, g_matProj);
 	
-  //  vs_output.Pos = mul(float4(vs_input.Pos, 1.0f), matWVP);
-    vs_output.Pos = mul(vLocalPos, matWVP);
+   vs_output.Pos = mul(float4(vs_input.Pos, 1.0f), matWVP);
+    //vs_output.Pos = mul(vLocalPos, matWVP);
    
     vs_output.TexUV = vs_input.TexUV;
 	
