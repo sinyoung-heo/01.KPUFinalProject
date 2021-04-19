@@ -264,7 +264,6 @@ HRESULT CStagePJO::Ready_LayerEnvironment(wstring wstrLayerTag)
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_VELIKA, L"BumpDesertMesh00", pGameObj), E_FAIL);
 
 
-
 	pGameObj = CWaterMeshObject::Create(m_pGraphicDevice, m_pCommandList,
 		L"BumpWaterMesh00",
 		_vec3(0.145f),

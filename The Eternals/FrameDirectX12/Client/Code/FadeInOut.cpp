@@ -166,6 +166,28 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 			Set_DeadGameObject();
 		}
 	}
+	else if (EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN == m_eEventType)
+	{
+		// Send StageChange Packet
+		if (m_bIsSendPacket && !m_bIsReceivePacket)
+		{
+			m_fAlpha += fTimeDelta * 0.5f;
+			if (m_fAlpha > 1.0f)
+				m_fAlpha = 1.0f;
+		}
+
+		// Receive StageChange Packet
+		else if (m_bIsSendPacket && m_bIsReceivePacket)
+		{
+			m_fAlpha -= fTimeDelta * 0.5f;
+			if (m_fAlpha < 0.0f)
+			{
+				m_fAlpha = 0.0f;
+				g_bIsStageChange = false;
+				Set_DeadGameObject();
+			}
+		}
+	}
 }
 
 Engine::CGameObject* CFadeInOut::Create(ID3D12Device* pGraphicDevice, 

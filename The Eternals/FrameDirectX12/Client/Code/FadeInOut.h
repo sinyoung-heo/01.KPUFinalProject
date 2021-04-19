@@ -16,6 +16,9 @@ private:
 	virtual ~CFadeInOut() = default;
 
 public:
+	void Set_IsSendPacket(const _bool& bIsSendPacket)		{ m_bIsSendPacket = bIsSendPacket; }
+	void Set_IsReceivePacket(const _bool& bIsReceivePacket) { m_bIsReceivePacket = bIsReceivePacket; }
+
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(const EVENT_TYPE& eEventType);
 	virtual HRESULT	LateInit_GameObject();
@@ -37,9 +40,11 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	_uint		m_uiTexIdx		 = 0;
-	EVENT_TYPE	m_eEventType     = EVENT_TYPE::EVENT_END;
-	_float		m_fAlpha         = 1.0f;
+	_uint		m_uiTexIdx		   = 0;
+	EVENT_TYPE	m_eEventType       = EVENT_TYPE::EVENT_END;
+	_float		m_fAlpha           = 1.0f;
+	_bool		m_bIsSendPacket    = false;
+	_bool		m_bIsReceivePacket = false;
 
 	_vec3	m_vConvert	= _vec3(0.0f, 0.0f, 0.0f);
 	_matrix	m_matView	= INIT_MATRIX;
