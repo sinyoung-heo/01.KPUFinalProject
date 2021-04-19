@@ -584,21 +584,18 @@ static float WAVE = 0.01f; //0.004f;
 PS_OUT PS_TERRAIN_MAIN(VS_OUT ps_input) : SV_TARGET
 {
     PS_OUT ps_output = (PS_OUT) 0;
-    float clipSpace = (1 - ps_input.TexUV.y) - 0.2f + cos(g_fOffset2 * 0.5f) * 0.1f - sin(ps_input.TexUV.x * 50.f) * (g_fDissolve * WAVE);
- 
+    float clipSpace = (1 - ps_input.TexUV.y) - 0.2f + cos(g_fOffset2 * 0.5f) * 0.1f - sin((1 - ps_input.TexUV.x) * 50.f) * (g_fDissolve * 0.01f);
     float2 vTexUV = ps_input.AniUV * 30.f;
     vTexUV += g_fOffset2 * 0.05f;
-  
     float2 TempUV = ps_input.TexUV;
     TempUV.y *= (10.f * (ps_input.TexUV.y));
-	
-    TempUV.y -= (g_fOffset2*0.5f);
+    TempUV.y -= (g_fOffset2 * 0.5f);
     ps_output.Specular = g_TexSpecular.Sample(g_samLinearWrap, TempUV) * ps_input.TexUV.y;
   
 	
 	// Diffuse
     float4 AlphaSea = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV * 30.f);
-    float4 Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, vTexUV) ;
+    float4 Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, vTexUV);
    // float Temp = (1 - ps_input.TexUV.y)+ cos(g_fOffset2 * 0.5f);
     ps_output.Diffuse = Diffuse + float4(0.2, 0.2, 1.f, 1.f) + AlphaSea;
   

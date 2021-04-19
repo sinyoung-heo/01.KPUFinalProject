@@ -262,6 +262,9 @@
     <Filter Include="02.GameObject\01.Environment\03.WaterFall">
       <UniqueIdentifier>{82236fe0-48c1-4b5c-b540-a9426f9e4b58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.GameEffect\02.MagicCircle">
+      <UniqueIdentifier>{735ebfcc-e783-4052-bb41-02b3f93be322}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
