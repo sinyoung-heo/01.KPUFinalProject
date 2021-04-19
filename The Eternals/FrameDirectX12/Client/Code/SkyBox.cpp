@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "SkyBox.h"
-
 #include "ObjectMgr.h"
 #include "GraphicDevice.h"
 
@@ -43,6 +42,13 @@ _int CSkyBox::Update_GameObject(const _float & fTimeDelta)
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
+
+	if (nullptr != m_pTarget)
+	{
+		m_pTransCom->m_vPos = m_pTarget->Get_Transform()->m_vPos;
+	}
+	else
+		m_pTarget = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]

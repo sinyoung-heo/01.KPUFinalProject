@@ -7,6 +7,7 @@ namespace Engine
 	class CCubeTex;
 	class CTexture;
 	class CShaderSkyBox;
+	class CGameObject;
 }
 
 class CSkyBox : public Engine::CGameObject
@@ -45,8 +46,9 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	wstring	m_wstrTextureTag				= L"";
-	_uint	m_uiTexIdx						= 0;
+	Engine::CGameObject*	m_pTarget		 = nullptr;
+	wstring					m_wstrTextureTag = L"";
+	_uint					m_uiTexIdx		 = 0;
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,

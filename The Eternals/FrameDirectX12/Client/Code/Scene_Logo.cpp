@@ -12,8 +12,7 @@
 #include "LoadingProgressBack.h"
 #include "LoadingProgress.h"
 #include "Font.h"
-
-
+#include "FadeInOut.h"
 
 CScene_Logo::CScene_Logo(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -216,6 +215,10 @@ HRESULT CScene_Logo::Ready_LayerUI(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ GameObject »ý¼º ]Logo   LoadingProgress
 	____________________________________________________________________________________________________________*/
+	pGameObj = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::FADE_IN);
+	Engine::NULL_CHECK_RETURN(pGameObj, E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"FadeInOut", pGameObj), E_FAIL);
+	
 	pGameObj = CLogoBack::Create(m_pGraphicDevice, m_pCommandList, L"Logo");
 	Engine::NULL_CHECK_RETURN(pGameObj, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"LogoBack", pGameObj), E_FAIL);

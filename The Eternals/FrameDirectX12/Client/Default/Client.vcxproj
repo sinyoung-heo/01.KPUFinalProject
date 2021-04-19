@@ -181,6 +181,7 @@
     <ClInclude Include="..\Code\CraftyArachne.h" />
     <ClInclude Include="..\Code\DrownedSailor.h" />
     <ClInclude Include="..\Code\EffectTrail.h" />
+    <ClInclude Include="..\Code\FadeInOut.h" />
     <ClInclude Include="..\Code\GiantBeetle.h" />
     <ClInclude Include="..\Code\GiantMonkey.h" />
     <ClInclude Include="..\Code\InstancePoolMgr.h" />
@@ -259,6 +260,7 @@
     <ClCompile Include="..\Code\CraftyArachne.cpp" />
     <ClCompile Include="..\Code\DrownedSailor.cpp" />
     <ClCompile Include="..\Code\EffectTrail.cpp" />
+    <ClCompile Include="..\Code\FadeInOut.cpp" />
     <ClCompile Include="..\Code\GameUIChild.cpp" />
     <ClCompile Include="..\Code\GameUIRoot.cpp" />
     <ClCompile Include="..\Code\GiantBeetle.cpp" />

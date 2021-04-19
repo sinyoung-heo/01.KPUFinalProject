@@ -9,9 +9,7 @@
 #include "Font.h"
 #include "DebugCamera.h"
 #include "DynamicCamera.h"
-#include "RectObject.h"
 #include "CubeObject.h"
-#include "TerrainObject.h"
 #include "StaticMeshObject.h"
 #include "TerrainMeshObject.h"
 #include "WaterMeshObject.h"
@@ -27,6 +25,7 @@
 #include "MainMenuSetting.h"
 #include "PCGladiator.h"
 #include "SampleNPC.h"
+#include "FadeInOut.h"
 
 
 CScene_MainStage::CScene_MainStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
