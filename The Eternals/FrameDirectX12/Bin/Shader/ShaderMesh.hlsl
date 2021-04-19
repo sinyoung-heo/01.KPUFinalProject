@@ -42,8 +42,12 @@ cbuffer cbShaderMesh : register(b1)
     float		g_fDissolve			: packoffset(c13.y);
 	float		g_fOffset1			: packoffset(c13.z);
 	float		g_fOffset2			: packoffset(c13.w);
-	float4		g_vAfterImgColor	: packoffset(c14);
-	float4		g_vEmissiveColor	: packoffset(c15);
+    float		g_fOffset3			: packoffset(c14.x);
+    float		g_fOffset4			: packoffset(c14.y);
+    float		g_fOffset5			: packoffset(c14.z);
+    float		g_fOffset6			: packoffset(c14.w);
+	float4		g_vAfterImgColor	: packoffset(c15);
+	float4		g_vEmissiveColor	: packoffset(c16);
 };
 
 #define MAX_PALETTE 128
@@ -530,18 +534,18 @@ VS_OUT VS_TERRAIN_MAIN(VS_IN vs_input)
     vector vHorizontal;
     vector vVertical;
 
-	//세로축의 웨이브 펙터 Wave, Lava
-    vVertical.xyz = vs_input.Pos.xyz + (sin(g_fOffset2 * 1.f + vs_input.Pos.z * 1.f)) * 10.205f;
-	//가로축의 웨이브 펙터 Wave, Lava
-    vHorizontal.xyz = vs_input.Pos.xyz + (sin(g_fOffset2 * 1.f + vs_input.Pos.x * 1.f)) * 10.205f;
-    vector vLocalPos = vector(vVertical.xyz + vHorizontal.xyz, 1.f);
+	////세로축의 웨이브 펙터 Wave, Lava
+ //   vVertical.xyz = vs_input.Pos.xyz + (sin(g_fOffset2 * 1.f + vs_input.Pos.z * 1.f)) * 10.205f;
+	////가로축의 웨이브 펙터 Wave, Lava
+ //   vHorizontal.xyz = vs_input.Pos.xyz + (sin(g_fOffset2 * 1.f + vs_input.Pos.x * 1.f)) * 10.205f;
+ //   vector vLocalPos = vector(vVertical.xyz + vHorizontal.xyz, 1.f);
 
 	
     matWV = mul(g_matWorld, g_matView);
     matWVP = mul(matWV, g_matProj);
 	
-  //  vs_output.Pos = mul(float4(vs_input.Pos, 1.0f), matWVP);
-    vs_output.Pos = mul(vLocalPos, matWVP);
+   vs_output.Pos = mul(float4(vs_input.Pos, 1.0f), matWVP);
+    //vs_output.Pos = mul(vLocalPos, matWVP);
    
     vs_output.TexUV = vs_input.TexUV;
 	
@@ -631,5 +635,64 @@ PS_OUT PS_TERRAIN_MAIN(VS_OUT ps_input) : SV_TARGET
     if (CurrentDepth > ShadowDepth + 0.0000125f)
         ps_output.Diffuse.rgb *= 0.5;
 	
+    return (ps_output);
+}
+
+VS_OUT VS_WATERFALL(VS_IN vs_input)
+{
+    VS_OUT vs_output = (VS_OUT) 0;
+    float4x4 matWV, matWVP;
+    matWV = mul(g_matWorld, g_matView);
+    matWVP = mul(matWV, g_matProj);
+    vs_output.Pos = mul(float4(vs_input.Pos, 1.0f), matWVP);
+    vs_output.TexUV = vs_input.TexUV;
+	
+    vs_output.AniUV = vs_input.TexUV + float2(0, -g_fOffset1);
+	
+    vs_output.Normal = vs_input.Normal;
+	// N
+    float3 WorldNormal = mul(vs_input.Normal, (float3x3) g_matWorld);
+    vs_output.N = normalize(WorldNormal);
+	// T
+    float3 Tangent = cross(float3(0.f, 1.f, 0.f), (float3) vs_input.Normal);
+    float3 WorldTangent = mul(Tangent, (float3x3) g_matWorld);
+    vs_output.T = normalize(WorldTangent);
+	// B
+    float3 Binormal = cross((float3) vs_input.Normal, Tangent);
+    float3 WorldBinormal = mul(Binormal, (float3x3) g_matWorld);
+    vs_output.B = normalize(WorldBinormal);
+	// ProjPos
+    vs_output.ProjPos = vs_output.Pos;
+	// 광원 위치에서의 투영 좌표
+    float4 matLightPosW = mul(float4(vs_input.Pos.xyz, 1.0f), g_matWorld);
+    float4 matLightPosWV = mul(float4(matLightPosW.xyz, 1.0f), g_matLightView);
+    vs_output.LightPos = mul(float4(matLightPosWV.xyz, 1.0f), g_matLightProj);
+    vs_output.LightPos.z = vs_output.LightPos.z * vs_output.LightPos.w / g_fLightPorjFar;
+   
+    return (vs_output);
+}
+PS_OUT PS_WATERFALL(VS_OUT ps_input) : SV_TARGET
+{
+   
+    PS_OUT ps_output = (PS_OUT) 0;
+	
+	// Diffuse
+    float Spec = g_TexSpecular.Sample(g_samLinearWrap, ps_input.AniUV);
+    ps_output.Diffuse = (g_TexDiffuse.Sample(g_samLinearWrap, ps_input.AniUV));
+  
+	
+	// Normal
+    float4 TexNormal = g_TexNormal.Sample(g_samLinearWrap, ps_input.AniUV) * g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV);
+    TexNormal = (TexNormal * 2.0f) - 1.0f; // 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.
+    float3 Normal = (TexNormal.x * ps_input.T) + (TexNormal.y * ps_input.B) + (TexNormal.z * ps_input.N);
+    ps_output.Normal = float4(Normal.xyz * 0.5f + 0.5f, 1.f); // 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
+	// Specular
+    ps_output.Specular = Spec;
+	
+	// Depth
+    ps_output.Depth = float4(ps_input.ProjPos.z / ps_input.ProjPos.w, // (posWVP.z / posWVP.w) : Proj 영역의 Z.
+								 ps_input.ProjPos.w / g_fProjFar, // posWVP.w / Far : 0~1로 만든 View영역의 Z.
+								 1.0f, 1.0f);
+
     return (ps_output);
 }
