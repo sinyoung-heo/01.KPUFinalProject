@@ -70,8 +70,6 @@ constexpr float STAGE_TEMP_Z			= 0.0f + 256.0f;
 
 /* CHARACTER TYPE */   // 추후 삭제 예정
 constexpr char TYPE_PLAYER				= 0;
-constexpr char TYPE_NPC					= 1;
-constexpr char TYPE_MONSTER				= 2;
 
 /* PLAYER CHARACTER TYPE */
 constexpr char PC_GLADIATOR				= 0;
@@ -92,11 +90,29 @@ constexpr char MON_SAILOR				= 5;
 constexpr char MON_GBEETLE				= 6;
 constexpr char MON_GMONKEY				= 7;
 
-/* NPC NUMBER */   // 추후 NPC NUMBER 삭제 후 NPC TYPE으로 사용 할 예정
-constexpr char NPC_NORMAL				= 0;
-constexpr char NPC_MERCHANT				= 1;
-constexpr char NPC_QUEST				= 2;
-constexpr char NPC_BG					= 3;
+/* NPC TYPE */   
+constexpr char NPC_MOVE					= 0;
+constexpr char NPC_NONMOVE				= 1;
+constexpr char NPC_MERCHANT				= 2;
+constexpr char NPC_QUEST				= 3;
+
+/* NPC NUMBER */
+constexpr char NPC_CAT					= 0;
+constexpr char NPC_CHICKEN				= 1;
+constexpr char NPC_HUMAN_BOY			= 2;
+constexpr char NPC_HUMAN_GIRL			= 3;
+constexpr char NPC_HIGHELF_GIRL			= 4;
+constexpr char NPC_AMAN_BOY				= 5;
+
+constexpr char NPC_VILLAGERS			= 6;
+constexpr char NPC_POPORI_BOY			= 7;
+constexpr char NPC_BARAKA_EXTRACTOR		= 8;
+
+constexpr char NPC_POPORI_MERCHANT		= 9;
+constexpr char NPC_BARAKA_MERCHANT		= 10;
+constexpr char NPC_BARAKA_MYSTELLIUM	= 11;
+
+constexpr char NPC_CASTANIC_LSMITH		= 12;
 
 /* ___________________________________________________________________________________________________________________*/
 /*													SERVER -> CLIENT												  */

@@ -96,7 +96,7 @@ void Ready_Server()
 	//Initialize_NPC();
 
 	/* Create Monster */
-	Initialize_Monster();
+	//Initialize_Monster();
 
 	std::wcout.imbue(std::locale("korean"));
 
@@ -184,8 +184,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_NORMAL;
+		pNew->m_type = NPC_MOVE;
+		pNew->m_npcNum = NPC_CHICKEN;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -211,8 +211,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_NORMAL;
+		pNew->m_type = NPC_MOVE;
+		pNew->m_npcNum = NPC_CAT;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -239,8 +239,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_NORMAL;
+		pNew->m_type = NPC_MOVE;
+		pNew->m_npcNum = NPC_CAT;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -266,8 +266,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, -90.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_BG;
+		pNew->m_type = NPC_MOVE;
+		pNew->m_npcNum = NPC_AMAN_BOY;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -293,8 +293,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 90.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_BG;
+		pNew->m_type = NPC_MOVE;
+		pNew->m_npcNum = NPC_HUMAN_BOY;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -320,8 +320,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_NORMAL;
+		pNew->m_type = NPC_MOVE;
+		pNew->m_npcNum = NPC_HUMAN_BOY;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -347,8 +347,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_NORMAL;
+		pNew->m_type = NPC_MOVE;
+		pNew->m_npcNum = NPC_HUMAN_BOY;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -374,8 +374,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_NORMAL;
+		pNew->m_type = NPC_MOVE;
+		pNew->m_npcNum = NPC_CAT;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -401,8 +401,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, -90.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_BG;
+		pNew->m_type = NPC_MOVE;
+		pNew->m_npcNum = NPC_AMAN_BOY;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -428,8 +428,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 90.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_BG;
+		pNew->m_type = NPC_MOVE;
+		pNew->m_npcNum = NPC_HUMAN_BOY;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -455,8 +455,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_BG;
+		pNew->m_type = NPC_NONMOVE;
+		pNew->m_npcNum = NPC_VILLAGERS;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -482,8 +482,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_BG;
+		pNew->m_type = NPC_NONMOVE;
+		pNew->m_npcNum = NPC_VILLAGERS;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -509,8 +509,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_NORMAL;
+		pNew->m_type = NPC_MOVE;
+		pNew->m_npcNum = NPC_CAT;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -536,8 +536,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_NORMAL;
+		pNew->m_type = NPC_MOVE;
+		pNew->m_npcNum = NPC_CAT;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -563,8 +563,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_NORMAL;
+		pNew->m_type = NPC_MOVE;
+		pNew->m_npcNum = NPC_CAT;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -590,8 +590,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_NORMAL;
+		pNew->m_type = NPC_MOVE;
+		pNew->m_npcNum = NPC_CAT;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -617,8 +617,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_NORMAL;
+		pNew->m_type = NPC_MOVE;
+		pNew->m_npcNum = NPC_CHICKEN;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -644,8 +644,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_NORMAL;
+		pNew->m_type = NPC_NONMOVE;
+		pNew->m_npcNum = NPC_POPORI_BOY;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -671,8 +671,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_NORMAL;
+		pNew->m_type = NPC_MOVE;
+		pNew->m_npcNum = NPC_HUMAN_BOY;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -698,8 +698,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_NORMAL;
+		pNew->m_type = NPC_NONMOVE;
+		pNew->m_npcNum = NPC_POPORI_BOY;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -725,8 +725,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_NORMAL;
+		pNew->m_type = NPC_NONMOVE;
+		pNew->m_npcNum = NPC_POPORI_BOY;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -752,8 +752,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_MERCHANT;
+		pNew->m_type = NPC_NONMOVE;
+		pNew->m_npcNum = NPC_VILLAGERS;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -779,8 +779,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_MERCHANT;
+		pNew->m_type = NPC_NONMOVE;
+		pNew->m_npcNum = NPC_VILLAGERS;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -806,8 +806,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_MERCHANT;
+		pNew->m_type = NPC_NONMOVE;
+		pNew->m_npcNum = NPC_VILLAGERS;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
@@ -833,8 +833,8 @@ void Initialize_NPC()
 		pNew->m_vTempPos = pNew->m_vPos;
 		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-		pNew->m_type = TYPE_NPC;
-		pNew->m_npcNum = NPC_QUEST;
+		pNew->m_type = NPC_NONMOVE;
+		pNew->m_npcNum = NPC_VILLAGERS;
 		pNew->m_status = STATUS::ST_NONACTIVE;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));

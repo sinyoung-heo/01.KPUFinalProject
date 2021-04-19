@@ -1645,14 +1645,14 @@ void active_npc(int id)
 		{
 			switch (pNPC->m_npcNum)
 			{
-			case NPC_NORMAL:
+			case NPC_MOVE:
 				add_timer(id, OP_RANDOM_MOVE_NPC, system_clock::now() + 1s);
+				break;
+			case NPC_NONMOVE:
 				break;
 			case NPC_MERCHANT:
 				break;
 			case NPC_QUEST:
-				break;
-			case NPC_BG:
 				break;
 			}
 		
