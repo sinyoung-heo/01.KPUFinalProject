@@ -1388,7 +1388,10 @@ void worker_thread()
 
 		case OPMODE::OP_RANDOM_MOVE_NPC:
 		{
-			//random_move_npc(key);
+			CNpc* pNpc = static_cast<CNpc*>(CObjMgr::GetInstance()->Get_GameObject(L"NPC", key));
+			if (nullptr == pNpc) return;
+
+			pNpc->active_npc();
 			delete over_ex;
 		}
 		break;
@@ -1437,7 +1440,7 @@ void gameLogic_worker()
 			if (g_pTimerTimeDelta != nullptr)
 				g_pTimerTimeDelta->Update_Timer();
 
-			/* MONSTER */
+			/* MONSTER UPDATE */
 			if (g_bIsGameEnd) return;
 
 			auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"MONSTER")->begin();
@@ -1459,7 +1462,26 @@ void gameLogic_worker()
 					++iter_begin;
 			}
 
-			/* COLLISION */
+			/* NPC UPDATE */
+			auto iter_begin_npc = CObjMgr::GetInstance()->Get_OBJLIST(L"NPC")->begin();
+			auto iter_end_npc = CObjMgr::GetInstance()->Get_OBJLIST(L"NPC")->end();
+
+			for (; iter_begin_npc != iter_end_npc;)
+			{
+				int iEvent = static_cast<CNpc*>(iter_begin_npc->second)->Update_NPC(g_pTimerTimeDelta->Get_TimeDelta());
+
+				if (DEAD_OBJ == iEvent)
+				{
+					CObjPoolMgr::GetInstance()->return_Object(L"NPC", iter_begin_npc->second);
+					CObjMgr::GetInstance()->Delete_GameObject(L"NPC", iter_begin_npc->second);
+
+					iter_begin_npc = CObjMgr::GetInstance()->Get_OBJLIST(L"NPC")->begin();
+					iter_end_npc = CObjMgr::GetInstance()->Get_OBJLIST(L"NPC")->end();
+				}
+				else
+					++iter_begin_npc;
+			}
+
 		}
 	}
 

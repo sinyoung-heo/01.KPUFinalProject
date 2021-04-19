@@ -18,19 +18,30 @@ public:
 	int		Update_NPC(const float& fTimeDelta);
 
 public:
-	void	active_npc();								// 해당 NPC의 STATUS = ST_ACTIVE
+	void	active_npc();									// 해당 NPC의 STATUS = ST_ACTIVE
+	void	nonActive_npc();
+
+private:
+	void	Change_Animation(const float& fTimeDelta);
+
+	/* MOVE NPC - Walker */
+	void	Change_Walker_Animation(const float& fTimeDelta);
+	void	Move_Walker_NPC(const float& fTimeDelta);
 
 private:
 	void	Play_Animation(float fTimeDelta);
 	bool	Is_AnimationSetEnd(const float& fTimeDelta);
 
 public:
-	void	send_NPC_enter_packet(int to_client);		// NPC 등장 패킷
+	void	send_NPC_enter_packet(int to_client);			// NPC 등장 패킷
+	void	send_NPC_move_packet(int to_client, int ani);	// NPC 움직임 패킷
 
 	virtual DWORD Release();
 
 public:
-	char m_npcNum;
+	char			m_npcNum;
+	float			m_fSpd = 0.f;
+	bool			m_bIsMove = false;
 
 	/* Animation */
 	_uint			m_uiNewAniIndex = 0;

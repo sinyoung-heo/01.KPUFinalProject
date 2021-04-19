@@ -1413,31 +1413,31 @@ void process_stance_change(int id, const bool& stance)
 //	send_packet(to_client, &p);
 //}
 
-void send_NPC_move_packet(int to_client, int id)
-{
-	sc_packet_move p;
-
-	CNpc* pNPC = static_cast<CNpc*>(CObjMgr::GetInstance()->Get_GameObject(L"NPC", id));
-
-	if (pNPC == nullptr) return;
-
-	p.size = sizeof(p);
-	p.type = SC_PACKET_NPC_MOVE;
-	p.id = id;
-
-	p.animIdx = 0;
-	p.spd = 0;
-
-	p.posX = pNPC->m_vTempPos.x;
-	p.posY = pNPC->m_vTempPos.y;
-	p.posZ = pNPC->m_vTempPos.z;
-
-	p.dirX = pNPC->m_vDir.x;
-	p.dirY = pNPC->m_vDir.y;
-	p.dirZ = pNPC->m_vDir.z;
-	
-	send_packet(to_client, &p);
-}
+//void send_NPC_move_packet(int to_client, int id)
+//{
+//	sc_packet_move p;
+//
+//	CNpc* pNPC = static_cast<CNpc*>(CObjMgr::GetInstance()->Get_GameObject(L"NPC", id));
+//
+//	if (pNPC == nullptr) return;
+//
+//	p.size = sizeof(p);
+//	p.type = SC_PACKET_NPC_MOVE;
+//	p.id = id;
+//
+//	p.animIdx = 0;
+//	p.spd = 0;
+//
+//	p.posX = pNPC->m_vTempPos.x;
+//	p.posY = pNPC->m_vTempPos.y;
+//	p.posZ = pNPC->m_vTempPos.z;
+//
+//	p.dirX = pNPC->m_vDir.x;
+//	p.dirY = pNPC->m_vDir.y;
+//	p.dirZ = pNPC->m_vDir.z;
+//	
+//	send_packet(to_client, &p);
+//}
 
 //void random_move_npc(int id)
 //{

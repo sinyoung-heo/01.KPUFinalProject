@@ -259,7 +259,7 @@
     <Filter Include="02.GameObject\01.Environment\03.WaterFall">
       <UniqueIdentifier>{82236fe0-48c1-4b5c-b540-a9426f9e4b58}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\04.NPC\00.NPC_Animal">
+    <Filter Include="02.GameObject\04.NPC\00.NPC_Walker">
       <UniqueIdentifier>{d02c0eb4-d229-4c01-bcd6-c466296abc78}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -520,7 +520,7 @@
       <Filter>02.GameObject\01.Environment\03.WaterFall</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\NPC_Walker.h">
-      <Filter>02.GameObject\04.NPC\00.NPC_Animal</Filter>
+      <Filter>02.GameObject\04.NPC\00.NPC_Walker</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -732,7 +732,7 @@
       <Filter>02.GameObject\01.Environment\03.WaterFall</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\NPC_Walker.cpp">
-      <Filter>02.GameObject\04.NPC\00.NPC_Animal</Filter>
+      <Filter>02.GameObject\04.NPC\00.NPC_Walker</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

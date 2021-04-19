@@ -26,7 +26,7 @@ void process_recv(int id, DWORD iosize);										// 패킷 재조립 함수 (Ring Buff
 
 /* ==========================NPC========================== */
 //void send_NPC_enter_packet(int to_client, int new_id);							// NPC 등장 패킷
-void send_NPC_move_packet(int to_client, int id);								// NPC 움직임 패킷
+//void send_NPC_move_packet(int to_client, int id);								// NPC 움직임 패킷
 
 //void active_npc(int id);														// 해당 NPC의 STATUS = ST_ACTIVE
 //void random_move_npc(int id);													// NPC 랜덤 움직임

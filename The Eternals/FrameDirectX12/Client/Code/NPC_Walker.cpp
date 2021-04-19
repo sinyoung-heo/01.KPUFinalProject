@@ -65,6 +65,8 @@ _int CNPC_Walker::Update_GameObject(const _float& fTimeDelta)
 	/* Animation AI */
 	Change_Animation(fTimeDelta);
 
+	Active_NPC(fTimeDelta);
+
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
@@ -205,13 +207,24 @@ void CNPC_Walker::Active_NPC(const _float& fTimeDelta)
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 	m_pTransCom->m_vDir.Normalize();
 
-	/* Monster MOVE */
+	/* NPC MOVE */
 	if (!m_bIsMoveStop)
 	{
-		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
-			&m_pTransCom->m_vDir,
-			m_pInfoCom->m_fSpeed * fTimeDelta);
-		m_pTransCom->m_vPos = vPos;
+		// NaviMesh ÀÌµ¿.		
+		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
+		{
+			m_iMonsterStatus = Cat::A_WALK;
+
+			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+														 &m_pTransCom->m_vDir,
+														 m_pInfoCom->m_fSpeed * fTimeDelta);
+			m_pTransCom->m_vPos = vPos;
+		}
+		else
+		{
+			m_iMonsterStatus = Cat::A_WAIT;
+			m_bIsMoveStop = true;
+		}
 	}
 }
 
