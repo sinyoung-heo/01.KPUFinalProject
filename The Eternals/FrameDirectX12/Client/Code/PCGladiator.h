@@ -41,6 +41,7 @@ public:
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag);
 	HRESULT			SetUp_PCWeapon();
+	void			SetUp_StageID();
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
 	void			Set_AnimationSpeed();
@@ -82,15 +83,18 @@ private:
 
 	// Collision Event
 	void Collision_Monster(list<Engine::CColliderSphere*>& lstMonsterCollider);
-
+	void Collision_PortalVelikaToBeach(list<Engine::CColliderSphere*>& lstPortalCollider);
+	void Collision_PortalBeachToVelika(list<Engine::CColliderSphere*>& lstPortalCollider);
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
 	____________________________________________________________________________________________________________*/
-	Engine::CMesh*				m_pMeshCom           = nullptr;
-	Engine::CShaderMesh*		m_pShaderCom         = nullptr;
-	Engine::CShaderShadow*		m_pShadowCom         = nullptr;
-	Engine::CNaviMesh*			m_pNaviMeshCom       = nullptr;
+	Engine::CMesh*			m_pMeshCom           = nullptr;
+	Engine::CShaderMesh*	m_pShaderCom         = nullptr;
+	Engine::CShaderShadow*	m_pShadowCom         = nullptr;
+	Engine::CNaviMesh*		m_pNaviMeshCom       = nullptr;
+	Engine::CNaviMesh*		m_pVelikaNaviMeshCom = nullptr;
+	Engine::CNaviMesh*		m_pBeachNaviMeshCom  = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Manager ]
@@ -126,7 +130,6 @@ private:
 	_float			m_fBazierSpeed = 0.f;
 	MVKEY			m_eKeyState    = MVKEY::K_END;
 	_float			m_fPreAngle    = 0.f;
-	char			m_chWeaponType = -1;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation ]

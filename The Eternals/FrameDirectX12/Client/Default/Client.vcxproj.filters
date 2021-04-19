@@ -262,6 +262,9 @@
     <Filter Include="02.GameObject\01.Environment\03.WaterFall">
       <UniqueIdentifier>{82236fe0-48c1-4b5c-b540-a9426f9e4b58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\07.Portal">
+      <UniqueIdentifier>{982850ed-e7b9-4366-90cb-9a04060eef1d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -522,6 +525,9 @@
     <ClInclude Include="..\Code\WaterFall.h">
       <Filter>02.GameObject\01.Environment\03.WaterFall</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\Portal.h">
+      <Filter>02.GameObject\07.Portal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -733,6 +739,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\WaterFall.cpp">
       <Filter>02.GameObject\01.Environment\03.WaterFall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Portal.cpp">
+      <Filter>02.GameObject\07.Portal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

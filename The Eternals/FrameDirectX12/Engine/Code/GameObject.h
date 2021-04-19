@@ -37,6 +37,7 @@ public:
 	const _bool&			Get_IsUsingInstance()	{ return m_bIsUsingInstance; }
 	const high_resolution_clock::time_point& Get_LastMoveTime() { return m_last_move_time; }
 	// Set
+	void	Set_CurrentStageID(const char& chStageID)				{ m_chCurStageID = chStageID; }
 	void	Set_UIDepth(const _long& iUIDepth)						{ m_UIDepth = iUIDepth; }
 	void	Set_DeadGameObject()									{ m_bIsDead = true; }
 	void	Set_IsReturnObject(const _bool& bIsReturn)				{ m_bIsReturn = bIsReturn; }
@@ -146,6 +147,10 @@ protected:
 	bool	m_bIsMoveStop		= true;
 	bool	m_bIsAttack			= false;
 	char	m_chO_Type			= 0;
+
+	char	m_chWeaponType = -1;
+	char	m_chPreStageID = -1;
+	char	m_chCurStageID = -1;
 
 	// Linear Interpolation Desc
 	LINEAR_INTERPOLATION_DESC<_vec3>	m_tPosInterpolationDesc;
