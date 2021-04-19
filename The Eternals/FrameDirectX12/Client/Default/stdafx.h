@@ -29,6 +29,7 @@ OFF: SERVER DISCONNECT MODE
 // Server Protocol Header
 #include "..\..\..\FrameServer\Server\Header\protocol.h"
 #include "..\..\..\FrameServer\Server\Header\MonsterAnimation.h"
+#include "..\..\..\FrameServer\Server\Header\NPCAnimation.h"
 #include "..\..\..\FrameServer\Server\Header\PCWeaponType.h"
 
 

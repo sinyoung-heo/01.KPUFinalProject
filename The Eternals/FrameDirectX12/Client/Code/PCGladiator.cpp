@@ -340,9 +340,9 @@ HRESULT CPCGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag
 	m_pVelikaNaviMeshCom->AddRef();
 	// m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pVelikaNaviMeshCom);
 
-	m_pBeachNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"StageBeach_NaviMesh", Engine::ID_DYNAMIC));
-	Engine::NULL_CHECK_RETURN(m_pBeachNaviMeshCom, E_FAIL);
-	m_pBeachNaviMeshCom->AddRef();
+	//m_pBeachNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"StageBeach_NaviMesh", Engine::ID_DYNAMIC));
+	//Engine::NULL_CHECK_RETURN(m_pBeachNaviMeshCom, E_FAIL);
+	//m_pBeachNaviMeshCom->AddRef();
 	// m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
 
 	return S_OK;

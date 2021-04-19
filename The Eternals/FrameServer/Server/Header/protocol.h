@@ -43,7 +43,6 @@ constexpr char SC_PACKET_MONSTER_ATTACK = 15;
 constexpr char SC_PACKET_MONSTER_RUSH	= 16;
 constexpr char SC_PACKET_MONSTER_STAT	= 17;
 
-
 constexpr char CS_LOGIN					= 0;
 constexpr char CS_MOVE					= 1;
 constexpr char CS_MOVE_STOP				= 2;
@@ -67,6 +66,10 @@ constexpr float STAGE_BEACH_X			= 80.0f + 256.0f;
 constexpr float STAGE_BEACH_Z			= 80.0f + 0.0f;
 constexpr float STAGE_TEMP_X			= 0.0f + 256.0f;
 constexpr float STAGE_TEMP_Z			= 0.0f + 256.0f;
+
+/* NAVI MESH TYPE */
+constexpr char NAVI_VELIKA				= 0;
+constexpr char NAVI_BEACH				= 1;
 
 /* CHARACTER TYPE */   // 추후 삭제 예정
 constexpr char TYPE_PLAYER				= 0;
@@ -228,10 +231,9 @@ struct sc_packet_npc_enter
 	char			type;
 	int				id;
 
-	char			name[MAX_ID_LEN];
-	char			naviType[MIDDLE_STR_LEN];
+	char			naviType;
 	char			o_type;
-	char			npc_num;
+	char			npcNum;
 	float			posX, posY, posZ;
 	float			angleX, angleY, angleZ;
 };

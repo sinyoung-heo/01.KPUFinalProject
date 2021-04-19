@@ -852,11 +852,11 @@ HRESULT CScene_MainStage::Ready_NaviMesh()
 										  _vec3(STAGE_VELIKA_OFFSET_X, 0.0f, STAGE_VELIKA_OFFSET_Z));
 	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"StageVelika_NaviMesh", Engine::ID_DYNAMIC, pNaviMesh), E_FAIL);
 
-	pNaviMesh = Engine::CNaviMesh::Create(m_pGraphicDevice,  
-										  m_pCommandList, 
-										  wstring(L"../../Bin/ToolData/StageBeach_NaviMesh3.navimeshcellinfo"),
-										  _vec3(STAGE_BEACH_OFFSET_X, 0.0f, STAGE_BEACH_OFFSET_Z));
-	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"StageBeach_NaviMesh", Engine::ID_DYNAMIC, pNaviMesh), E_FAIL);
+	//pNaviMesh = Engine::CNaviMesh::Create(m_pGraphicDevice,  
+	//									  m_pCommandList, 
+	//									  wstring(L"../../Bin/ToolData/StageBeach_NaviMesh3.navimeshcellinfo"),
+	//									  _vec3(STAGE_BEACH_OFFSET_X, 0.0f, STAGE_BEACH_OFFSET_Z));
+	//Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"StageBeach_NaviMesh", Engine::ID_DYNAMIC, pNaviMesh), E_FAIL);
 
 
 	return S_OK;

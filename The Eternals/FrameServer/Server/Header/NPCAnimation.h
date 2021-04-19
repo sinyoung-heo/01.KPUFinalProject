@@ -1,6 +1,6 @@
 #pragma once
 /* NPC */
-namespace NPC
+namespace NPC_TYPE
 {
 	// cat, chicken, Aman_boy, Baraka_M_Extractor, NPC_Villagers, Popori_boy
 	constexpr int WAIT		= 0;
@@ -10,21 +10,21 @@ namespace NPC
 	constexpr double TPS	= 4800.0;
 }
 
-namespace NPC_NORMAL
+namespace NPC_NORMAL_TYPE
 {
 	// Highelf_girl, Human_boy, Human_girl
 	constexpr int TALK		= 3;
 	constexpr int LAUGH		= 4;
 }
 
-namespace NPC_MERCHANT
+namespace NPC_MERCHANT_TYPE
 {
 	// Baraka_M_Merchant, Baraka_M_Mystellium, Popori_M_Merchant
 	constexpr int GREET		= 1;
 	constexpr int TALK		= 2;
 }
 
-namespace NPC_QUEST
+namespace NPC_QUEST_TYPE
 {
 	// Castanic_M_Lsmith
 	constexpr int GREET		= 1;
