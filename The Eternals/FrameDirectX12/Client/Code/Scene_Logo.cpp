@@ -59,21 +59,24 @@ _int CScene_Logo::Update_Scene(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Loading Text ]
 	____________________________________________________________________________________________________________*/
-	m_pFont_LoadingStr->Update_GameObject(fTimeDelta);
+	if (nullptr != m_pFont_LoadingStr && !m_bIsCreateFadeInOut)
+	{
+		m_pFont_LoadingStr->Update_GameObject(fTimeDelta);
 
-	_int	iCurLoadingCnt = m_pLoading->Get_CurLoadingCnt();
-	_float	fRatio = (_float)iCurLoadingCnt / (_float)m_iMaxFileCount;
-	_int	iPercent = (_int)(fRatio * 100.0f);
+		_int	iCurLoadingCnt = m_pLoading->Get_CurLoadingCnt();
+		_float	fRatio = (_float)iCurLoadingCnt / (_float)m_iMaxFileCount;
+		_int	iPercent = (_int)(fRatio * 100.0f);
 
-	lstrcpy(m_szLoadingStr, (m_pLoading->Get_LoadingString()));
-	_tchar szPercent[MIN_STR] = L"";
-	wsprintf(szPercent, L"Now Loading %d %% ", iPercent);
-	wstring wstrResult = szPercent;
-	wstring wstrLoading = m_szLoadingStr;
-	wstrResult += wstrLoading;
+		lstrcpy(m_szLoadingStr, (m_pLoading->Get_LoadingString()));
+		_tchar szPercent[MIN_STR] = L"";
+		wsprintf(szPercent, L"Now Loading %d %% ", iPercent);
+		wstring wstrResult = szPercent;
+		wstring wstrLoading = m_szLoadingStr;
+		wstrResult += wstrLoading;
 
-	m_pFont_LoadingStr->Set_Text(wstrResult);
-	static_cast<CLoadingProgress*>(m_pLoadingProgress)->Set_LoadingPercent(fRatio);
+		m_pFont_LoadingStr->Set_Text(wstrResult);
+		static_cast<CLoadingProgress*>(m_pLoadingProgress)->Set_LoadingPercent(fRatio);
+	}
 
 	/*__________________________________________________________________________________________________________
 	[ MouseCursorMgr ]
@@ -101,14 +104,29 @@ HRESULT CScene_Logo::Render_Scene(const _float & fTimeDelta, const Engine::RENDE
 	{
 		if (Engine::KEY_DOWN(DIK_RETURN))
 		{
+			if (!m_bIsCreateFadeInOut)
+			{
+				m_bIsCreateFadeInOut = true;
+				m_pFont_LoadingStr->Set_DeadGameObject();
+				Engine::CGameObject* pGameObj = nullptr;
+				pGameObj = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CAHNGE_LOGO_STAGE);
+				Engine::NULL_CHECK_RETURN(pGameObj, E_FAIL);
+				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_UI", L"FadeInOut", pGameObj), E_FAIL);
+			}
+		}
+
+		if (m_bIsSceneChange)
+		{
 			m_pObjectMgr->Clear_Layer();
 			CMouseCursorMgr::Get_Instance()->Reset_MouseCursor();
-
 			Engine::CScene* pNewScene = nullptr;
 			pNewScene = CScene_MainStage::Create(m_pGraphicDevice, m_pCommandList);
 			Engine::CManagement::Get_Instance()->SetUp_CurrentScene(pNewScene);
 		}
-		else if (Engine::KEY_DOWN(DIK_1))
+
+
+
+		if (Engine::KEY_DOWN(DIK_1))
 		{
 			m_pObjectMgr->Clear_Layer();
 			CMouseCursorMgr::Get_Instance()->Reset_MouseCursor();
@@ -117,7 +135,7 @@ HRESULT CScene_Logo::Render_Scene(const _float & fTimeDelta, const Engine::RENDE
 			pNewScene = CStageLDH::Create(m_pGraphicDevice, m_pCommandList);
 			Engine::CManagement::Get_Instance()->SetUp_CurrentScene(pNewScene);
 		}
-		else if (Engine::KEY_DOWN(DIK_2))
+		if (Engine::KEY_DOWN(DIK_2))
 		{
 			m_pObjectMgr->Clear_Layer();
 			CMouseCursorMgr::Get_Instance()->Reset_MouseCursor();
@@ -126,7 +144,7 @@ HRESULT CScene_Logo::Render_Scene(const _float & fTimeDelta, const Engine::RENDE
 			pNewScene = CStagePJO::Create(m_pGraphicDevice, m_pCommandList);
 			Engine::CManagement::Get_Instance()->SetUp_CurrentScene(pNewScene);
 		}
-		else if (Engine::KEY_DOWN(DIK_3))
+		if (Engine::KEY_DOWN(DIK_3))
 		{
 			m_pObjectMgr->Clear_Layer();
 			CMouseCursorMgr::Get_Instance()->Reset_MouseCursor();

@@ -15,6 +15,8 @@ private:
 	virtual ~CScene_Logo() = default;
 
 public:
+	void Set_IsSceneChage(const _bool& bIsSceneChange) { m_bIsSceneChange = bIsSceneChange; }
+
 	virtual HRESULT Ready_Scene();
 	virtual _int	Update_Scene(const _float& fTimeDelta);
 	virtual _int	LateUpdate_Scene(const _float& fTimeDelta);
@@ -33,6 +35,8 @@ private:
 	Engine::CGameObject*	m_pLoadingProgress		= nullptr;
 
 	_bool m_bIsReadyMouseCursorMgr = false;
+	_bool m_bIsSceneChange         = false;
+	_bool m_bIsCreateFadeInOut	   = false;
 
 	/*__________________________________________________________________________________________________________
 	[ Loading Text ]

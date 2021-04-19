@@ -339,6 +339,13 @@ HRESULT CScene_MainStage::Ready_LayerUI(wstring wstrLayerTag)
 	Engine::CGameObject* pGameObj = nullptr;
 
 	/*__________________________________________________________________________________________________________
+	[ FadeInOut ]
+	____________________________________________________________________________________________________________*/
+	pGameObj = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::FADE_IN);
+	Engine::NULL_CHECK_RETURN(pGameObj, E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"FadeInOut", pGameObj), E_FAIL);
+
+	/*__________________________________________________________________________________________________________
 	[ CharacterClassFrame ]
 	____________________________________________________________________________________________________________*/
 	{

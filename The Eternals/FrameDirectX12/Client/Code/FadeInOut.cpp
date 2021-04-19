@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "FadeInOut.h"
+#include "Management.h"
+#include "Scene_Logo.h"
 
 CFadeInOut::CFadeInOut(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -28,7 +30,8 @@ HRESULT CFadeInOut::Ready_GameObject(const EVENT_TYPE& eEventType)
 		m_fAlpha = 1.0f;
 	}
 	else if (EVENT_TYPE::FADE_OUT == eEventType ||
-			 EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN == eEventType)
+			 EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN == eEventType ||
+			 EVENT_TYPE::SCENE_CAHNGE_LOGO_STAGE == eEventType)
 	{
 		m_fAlpha = 0.0f;
 	}
@@ -51,8 +54,6 @@ _int CFadeInOut::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
-	SetUp_FadeInOutEvent(fTimeDelta);
-
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
@@ -66,6 +67,11 @@ _int CFadeInOut::Update_GameObject(const _float& fTimeDelta)
 	_matrix matScale = XMMatrixScaling(m_pTransCom->m_vScale.x, m_pTransCom->m_vScale.y, m_pTransCom->m_vScale.z);
 	_matrix matTrans = XMMatrixTranslation(m_vConvert.x, m_vConvert.y, m_vConvert.z);
 	m_pTransCom->m_matWorld = matScale * matTrans;
+
+	if (fTimeDelta > TIME_OFFSET)
+		return NO_EVENT;
+
+	SetUp_FadeInOutEvent(fTimeDelta);
 
 	return NO_EVENT;
 }
@@ -147,6 +153,16 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 		if (m_fAlpha > 1.0f)
 		{
 			m_fAlpha = 1.0f;
+			Set_DeadGameObject();
+		}
+	}
+	else if (EVENT_TYPE::SCENE_CAHNGE_LOGO_STAGE == m_eEventType)
+	{
+		m_fAlpha += fTimeDelta * 0.5f;
+		if (m_fAlpha > 1.0f)
+		{
+			m_fAlpha = 1.0f;
+			static_cast<CScene_Logo*>(Engine::CManagement::Get_Instance()->Get_CurrentScene())->Set_IsSceneChage(true);
 			Set_DeadGameObject();
 		}
 	}
