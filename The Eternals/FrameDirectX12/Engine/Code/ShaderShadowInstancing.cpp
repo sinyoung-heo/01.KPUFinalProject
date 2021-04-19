@@ -2,6 +2,7 @@
 #include "GraphicDevice.h"
 #include "Renderer.h"
 #include "ObjectMgr.h"
+#include "DescriptorHeapMgr.h"
 
 USING(Engine)
 IMPLEMENT_SINGLETON(CShaderShadowInstancing)
@@ -165,10 +166,18 @@ void CShaderShadowInstancing::Render_Instance(ID3D12GraphicsCommandList* pComman
 			CRenderer::Get_Instance()->Set_CurPipelineState(pCommandList, m_pPipelineState, iContextIdx);
 
 			/*__________________________________________________________________________________________________________
+			[ SRV를 루트 서술자에 묶는다 ]
+			____________________________________________________________________________________________________________*/
+			ID3D12DescriptorHeap* pTexDescriptorHeap = CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(wstring(wstrMeshTag) + L".X");
+			ID3D12DescriptorHeap* pDescriptorHeaps[] = { pTexDescriptorHeap };
+			pCommandList->SetDescriptorHeaps(_countof(pDescriptorHeaps), pDescriptorHeaps);
+
+			/*__________________________________________________________________________________________________________
 			[ SRV, CBV를 루트 서술자에 묶는다 ]
 			____________________________________________________________________________________________________________*/
 			pCommandList->SetGraphicsRootShaderResourceView(0,	// RootParameter Index
 				m_mapCB_ShaderShadow[iContextIdx][wstrMeshTag][iPipelineStatePass]->Resource()->GetGPUVirtualAddress());
+			
 
 			/*__________________________________________________________________________________________________________
 			[ Render Buffer ]
@@ -179,6 +188,14 @@ void CShaderShadowInstancing::Render_Instance(ID3D12GraphicsCommandList* pComman
 
 			for (_uint iSubMeshIdx = 0; iSubMeshIdx < uiSubsetMeshSize; ++iSubMeshIdx)
 			{
+				/*__________________________________________________________________________________________________________
+				[ SRV를 루트 서술자에 묶는다 ]
+				____________________________________________________________________________________________________________*/
+				CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexDiffuseDescriptorHandle(pTexDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+				SRV_TexDiffuseDescriptorHandle.Offset(iSubMeshIdx + (uiSubsetMeshSize * TEX_DIFFUSE), m_uiCBV_SRV_UAV_DescriptorSize);
+				pCommandList->SetGraphicsRootDescriptorTable(1,		// RootParameter Index - TexDiffuse
+					SRV_TexDiffuseDescriptorHandle);
+
 				pCommandList->IASetVertexBuffers(0, 1, &pVIMesh->Get_VertexBufferView(iSubMeshIdx));
 				pCommandList->IASetIndexBuffer(&pVIMesh->Get_IndexBufferView(iSubMeshIdx));
 				pCommandList->IASetPrimitiveTopology(pVIMesh->Get_PrimitiveTopology());
@@ -195,28 +212,47 @@ void CShaderShadowInstancing::Render_Instance(ID3D12GraphicsCommandList* pComman
 
 HRESULT CShaderShadowInstancing::Create_RootSignature()
 {
+
+	/*__________________________________________________________________________________________________________
+	[ SRV를 담는 서술자 테이블을 생성 ]
+	____________________________________________________________________________________________________________*/
+	CD3DX12_DESCRIPTOR_RANGE SRV_Table[1];
+
+	// TexDiffuse
+	SRV_Table[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,	// 서술자의 종류 - Shader Resource View.
+		1,								// 서술자의 개수 - Texture2D의 개수.
+		1,								// 셰이더 인수들의 기준 레지스터 번호. (register t0)
+		0);								// 레지스터 공간.
+
 	/*__________________________________________________________________________________________________________
 	- 루트 매개변수는 테이블이거나, 루트 서술자 또는 루트 상수이다.
 	____________________________________________________________________________________________________________*/
-	CD3DX12_ROOT_PARAMETER RootParameter[1];
+	CD3DX12_ROOT_PARAMETER RootParameter[2];
 	RootParameter[0].InitAsShaderResourceView(0, 1);	// register t0, space1..
+	RootParameter[1].InitAsDescriptorTable(1, &SRV_Table[0], D3D12_SHADER_VISIBILITY_PIXEL);
+
+
+	auto StaticSamplers = Get_StaticSamplers();
 
 	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(_countof(RootParameter),	// 루트 파라미터 개수. (CBV 2)
-												  RootParameter,
-												  0,	
-												  nullptr,
-												  D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+		RootParameter,
+		(UINT)StaticSamplers.size(),
+		StaticSamplers.data(),
+		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+
+
 
 	/*__________________________________________________________________________________________________________
 	[ RootSignature를 생성 ]
 	____________________________________________________________________________________________________________*/
-	ID3DBlob* pSignatureBlob	= nullptr;
-	ID3DBlob* pErrorBlob		= nullptr;
+	ID3DBlob* pSignatureBlob = nullptr;
+	ID3DBlob* pErrorBlob = nullptr;
 
 	FAILED_CHECK_RETURN(D3D12SerializeRootSignature(&RootSignatureDesc,
-													D3D_ROOT_SIGNATURE_VERSION_1,
-													&pSignatureBlob,
-													&pErrorBlob), E_FAIL);
+		D3D_ROOT_SIGNATURE_VERSION_1,
+		&pSignatureBlob,
+		&pErrorBlob), E_FAIL);
 
 	if (nullptr != pErrorBlob)
 	{
@@ -225,10 +261,10 @@ HRESULT CShaderShadowInstancing::Create_RootSignature()
 	}
 
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateRootSignature(0,
-															  pSignatureBlob->GetBufferPointer(),
-															  pSignatureBlob->GetBufferSize(),
-															  IID_PPV_ARGS(&m_pRootSignature)),
-															  E_FAIL);
+		pSignatureBlob->GetBufferPointer(),
+		pSignatureBlob->GetBufferSize(),
+		IID_PPV_ARGS(&m_pRootSignature)),
+		E_FAIL);
 	Safe_Release(pSignatureBlob);
 	Safe_Release(pErrorBlob);
 

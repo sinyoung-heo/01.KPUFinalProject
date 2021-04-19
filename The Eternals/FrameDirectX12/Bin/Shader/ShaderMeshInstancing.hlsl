@@ -301,7 +301,7 @@ PS_OUT PS_TERRAIN_MAIN(VS_OUT ps_input) : SV_TARGET
     PS_OUT ps_output = (PS_OUT) 0;
 	
     clip(ps_input.TexUV.y + 0.1f);
-    float clipSpace = (ps_input.TexUV.y) - 0.1f + cos(ps_input.fOffset2 * 0.5f) * 0.1f - sin(ps_input.TexUV.x * 50.f) * (ps_input.Dissolve * 0.01f);
+    float clipSpace = (ps_input.TexUV.y) - 0.1f + cos(ps_input.fOffset2 * 0.5f) * 0.1f - cos(ps_input.TexUV.x * 50.f) * (ps_input.Dissolve * 0.01f);
 
 	// Diffuse
     ps_output.Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV * fDetails);
