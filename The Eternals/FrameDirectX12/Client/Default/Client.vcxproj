@@ -190,6 +190,7 @@
     <ClInclude Include="..\Code\PCOthersGladiator.h" />
     <ClInclude Include="..\Code\PCWeapon.h" />
     <ClInclude Include="..\Code\PCWeaponTwoHand.h" />
+    <ClInclude Include="..\Code\Portal.h" />
     <ClInclude Include="..\Code\SampleNPC.h" />
     <ClInclude Include="..\Code\GameUIChild.h" />
     <ClInclude Include="..\Code\GameUIRoot.h" />
@@ -292,6 +293,7 @@
     <ClCompile Include="..\Code\PCWeapon.cpp" />
     <ClCompile Include="..\Code\PCWeaponTwoHand.cpp" />
     <ClCompile Include="..\Code\Popori_F.cpp" />
+    <ClCompile Include="..\Code\Portal.cpp" />
     <ClCompile Include="..\Code\RectObject.cpp" />
     <ClCompile Include="..\Code\SampleNPC.cpp" />
     <ClCompile Include="..\Code\Scene_Logo.cpp" />

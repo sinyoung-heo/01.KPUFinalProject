@@ -38,3 +38,10 @@ const _float STAGE_BEACH_OFFSET_X  = 256.0f;
 const _float STAGE_BEACH_OFFSET_Z  = 0.0f;
 const _float STAGE_TEMP_OFFSET_X   = 256.0f;
 const _float STAGE_TEMP_OFFSET_Z   = 256.0f;
+
+// Portal Pos
+const _float PORTAL_FROM_VELIKA_TO_BEACH_X = 130.0f;
+const _float PORTAL_FROM_VELIKA_TO_BEACH_Z = 10.0f;
+
+const _float PORTAL_FROM_BEACH_TO_VELIKA_X = 325.0f;
+const _float PORTAL_FROM_BEACH_TO_VELIKA_Z = 65.0f;

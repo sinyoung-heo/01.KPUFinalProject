@@ -21,7 +21,6 @@ HRESULT CCollisionTick::Ready_GameObject(wstring wstrCollisionTag,
 										 const _float& fLifeTime)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, false, false, true), E_FAIL);
-	Engine::FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = _vec3(0.0f);
 	m_pTransCom->m_vPos	  = vPos;
