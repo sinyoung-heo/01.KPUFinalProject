@@ -24,6 +24,7 @@ public:
 	char m_ID[MAX_ID_LEN]; 
 	char m_type; 
 	char m_naviType[MIDDLE_STR_LEN];
+	char m_naviMeshType					= 0;
 	int  m_sNum							= -1;
 
 	int move_time						= 0;

@@ -5,7 +5,7 @@
 #include "Renderer.h"
 #include "TestPlayer.h"
 #include "TestOthers.h"
-#include "NPC_Animal.h"
+#include "NPC_Walker.h"
 #include "NPC_Boy.h"
 #include "NPC_Villagers.h"
 #include "NPC_Merchant.h"
@@ -348,33 +348,18 @@ void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject* pGameObj = nullptr;
 
-	if (!strcmp(packet->name, "Chicken") || !strcmp(packet->name, "Cat"))
+	wstring wstrNaviMeshTag;
+	if (packet->naviType == NAVI_VELIKA)
+		wstrNaviMeshTag = L"StageVelika_NaviMesh";
+
+	if (packet->npcNum == NPC_CHICKEN)
 	{
-		pGameObj = CNPC_Animal::Create(m_pGraphicDevice, m_pCommandList,
-			wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
-			wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
-			_vec3(0.05f, 0.05f, 0.05f),										// Scale
-			_vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
-			_vec3(packet->posX, packet->posY, packet->posZ));				// Pos
-	}
-	else if (!strcmp(packet->name, "Aman_boy") || !strcmp(packet->name, "Human_boy")
-		|| !strcmp(packet->name, "Popori_boy"))
-	{
-		pGameObj = CNPC_Boy::Create(m_pGraphicDevice, m_pCommandList,
-			wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
-			wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
-			_vec3(0.05f, 0.05f, 0.05f),										// Scale
-			_vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
-			_vec3(packet->posX, packet->posY, packet->posZ));				// Pos
-	}
-	else if (!strcmp(packet->name, "NPC_Villagers"))
-	{
-		pGameObj = CNPC_Villagers::Create(m_pGraphicDevice, m_pCommandList,
-			wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
-			wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
-			_vec3(0.05f, 0.05f, 0.05f),										// Scale
-			_vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
-			_vec3(packet->posX, packet->posY, packet->posZ));				// Pos
+		pGameObj = CNPC_Walker::Create(m_pGraphicDevice, m_pCommandList,
+									   L"Chicken",												// MeshTag
+									   wstrNaviMeshTag,											// NaviMeshTag
+									   _vec3(0.05f, 0.05f, 0.05f),								// Scale
+									   _vec3(packet->angleX, packet->angleY, packet->angleZ),	// Angle
+									   _vec3(packet->posX, packet->posY, packet->posZ));
 	}
 
 	pGameObj->Set_ServerNumber(packet->id);
@@ -451,7 +436,7 @@ void CPacketMgr::AttackStop_User(sc_packet_attack* packet)
 
 		pObj->Set_IsStartPosInterpolation(true);
 		pObj->Set_LinearPos(pObj->Get_Transform()->m_vPos, _vec3(packet->posX, packet->posY, packet->posZ));
-		//pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+	
 		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 		pObj->Set_Attack(false);
 		pObj->Set_MoveStop(true);

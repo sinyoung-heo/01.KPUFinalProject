@@ -37,6 +37,7 @@ using namespace chrono;
 #include "dataType.h"
 #include "protocol.h"
 #include "MonsterAnimation.h"
+#include "NPCAnimation.h"
 
 #include "enum.h"
 #include "struct.h"

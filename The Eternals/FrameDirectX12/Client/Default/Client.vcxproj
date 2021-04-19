@@ -199,7 +199,7 @@
     <ClInclude Include="..\Code\MainMenuSetting.h" />
     <ClInclude Include="..\Code\Monster_Normal.h" />
     <ClInclude Include="..\Code\MouseCursorMgr.h" />
-    <ClInclude Include="..\Code\NPC_Animal.h" />
+    <ClInclude Include="..\Code\NPC_Walker.h" />
     <ClInclude Include="..\Code\DebugCamera.h" />
     <ClInclude Include="..\Code\DistortionDisk.h" />
     <ClInclude Include="..\Code\NPC_Boy.h" />
@@ -274,7 +274,7 @@
     <ClCompile Include="..\Code\Monkey.cpp" />
     <ClCompile Include="..\Code\Monster_Normal.cpp" />
     <ClCompile Include="..\Code\MouseCursorMgr.cpp" />
-    <ClCompile Include="..\Code\NPC_Animal.cpp" />
+    <ClCompile Include="..\Code\NPC_Walker.cpp" />
     <ClCompile Include="..\Code\DebugCamera.cpp" />
     <ClCompile Include="..\Code\DistortionDisk.cpp" />
     <ClCompile Include="..\Code\NPC_Boy.cpp" />

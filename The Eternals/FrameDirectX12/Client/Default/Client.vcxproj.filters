@@ -106,9 +106,6 @@
     <Filter Include="99.Etc\SampleObject\11.NPC">
       <UniqueIdentifier>{8d3d6604-efa6-4103-bbbe-f6afc93b32f0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99.Etc\SampleObject\11.NPC\00.NPC_Animal">
-      <UniqueIdentifier>{d02c0eb4-d229-4c01-bcd6-c466296abc78}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99.Etc\SampleObject\11.NPC\01.NPC_Boy">
       <UniqueIdentifier>{80c37e2d-3841-42a8-85b1-9f2dfc506d06}</UniqueIdentifier>
     </Filter>
@@ -262,6 +259,9 @@
     <Filter Include="02.GameObject\01.Environment\03.WaterFall">
       <UniqueIdentifier>{82236fe0-48c1-4b5c-b540-a9426f9e4b58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\04.NPC\00.NPC_Animal">
+      <UniqueIdentifier>{d02c0eb4-d229-4c01-bcd6-c466296abc78}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -378,9 +378,6 @@
     </ClInclude>
     <ClInclude Include="..\Code\TestCollisonObject.h">
       <Filter>99.Etc\SampleObject\13.TestCollisionObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\NPC_Animal.h">
-      <Filter>99.Etc\SampleObject\11.NPC\00.NPC_Animal</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\NPC_Boy.h">
       <Filter>99.Etc\SampleObject\11.NPC\01.NPC_Boy</Filter>
@@ -522,6 +519,9 @@
     <ClInclude Include="..\Code\WaterFall.h">
       <Filter>02.GameObject\01.Environment\03.WaterFall</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\NPC_Walker.h">
+      <Filter>02.GameObject\04.NPC\00.NPC_Animal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -611,9 +611,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\TestCollisonObject.cpp">
       <Filter>99.Etc\SampleObject\13.TestCollisionObject</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\NPC_Animal.cpp">
-      <Filter>99.Etc\SampleObject\11.NPC\00.NPC_Animal</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\NPC_Boy.cpp">
       <Filter>99.Etc\SampleObject\11.NPC\01.NPC_Boy</Filter>
@@ -733,6 +730,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\WaterFall.cpp">
       <Filter>02.GameObject\01.Environment\03.WaterFall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\NPC_Walker.cpp">
+      <Filter>02.GameObject\04.NPC\00.NPC_Animal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
