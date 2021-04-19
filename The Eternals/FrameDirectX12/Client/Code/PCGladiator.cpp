@@ -1008,12 +1008,9 @@ void CPCGladiator::Move_OnNaviMesh(const _float& fTimeDelta)
 {
 	if (m_bIsKeyDown || Gladiator::MIN_SPEED != m_pInfoCom->m_fSpeed)
 	{
-		if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
-		{
-			m_pTransCom->m_vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
-																  &m_pTransCom->m_vDir,
-																  m_pInfoCom->m_fSpeed * fTimeDelta);
-		}
+		m_pTransCom->m_vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+															  &m_pTransCom->m_vDir,
+															  m_pInfoCom->m_fSpeed * fTimeDelta);
 	}
 }
 
