@@ -213,8 +213,6 @@ void CNPC_Walker::Active_NPC(const _float& fTimeDelta)
 		// NaviMesh ÀÌµ¿.		
 		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
 		{
-			m_iMonsterStatus = Cat::A_WALK;
-
 			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
 														 &m_pTransCom->m_vDir,
 														 m_pInfoCom->m_fSpeed * fTimeDelta);
@@ -239,6 +237,14 @@ void CNPC_Walker::Change_Animation(const _float& fTimeDelta)
 		{
 			m_uiAnimIdx = Cat::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				m_iMonsterStatus = Cat::A_IDLE;
+
+				m_uiAnimIdx = Cat::A_IDLE;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			}
 		}
 		break;
 
@@ -246,6 +252,14 @@ void CNPC_Walker::Change_Animation(const _float& fTimeDelta)
 		{
 			m_uiAnimIdx = Cat::A_IDLE;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				m_iMonsterStatus = Cat::A_WAIT;
+
+				m_uiAnimIdx = Cat::A_WAIT;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			}
 		}
 		break;
 

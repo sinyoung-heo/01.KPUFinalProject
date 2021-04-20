@@ -1388,7 +1388,7 @@ void worker_thread()
 			delete over_ex;
 			break;
 
-		case OPMODE::OP_RANDOM_MOVE_NPC:
+		case OPMODE::OP_ACTIVE_NPC:
 		{
 			CNpc* pNpc = static_cast<CNpc*>(CObjMgr::GetInstance()->Get_GameObject(L"NPC", key));
 			if (nullptr == pNpc) return;

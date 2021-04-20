@@ -595,7 +595,7 @@ void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pNPC))
 					{
 						new_viewlist.insert(obj_num);
-						pNPC->active_npc();
+						pNPC->wakeUp_npc();
 					}
 				}
 				/* MONSTER老 版快 贸府*/
@@ -794,7 +794,7 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pNPC))
 					{
 						new_viewlist.insert(obj_num);
-						pNPC->active_npc();
+						pNPC->wakeUp_npc();
 					}
 				}
 				/* MONSTER老 版快 贸府*/
@@ -1047,7 +1047,7 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx, 
 					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pNPC))
 					{
 						new_viewlist.insert(obj_num);
-						pNPC->active_npc();
+						pNPC->wakeUp_npc();
 					}
 				}
 				/* MONSTER老 版快 贸府*/
@@ -1246,7 +1246,7 @@ void process_attack_stop(int id, const _vec3& _vDir, const _vec3& _vPos, int ani
 					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pNPC))
 					{
 						new_viewlist.insert(obj_num);
-						pNPC->active_npc();
+						pNPC->wakeUp_npc();
 					}
 				}
 				/* MONSTER老 版快 贸府*/

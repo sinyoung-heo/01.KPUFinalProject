@@ -261,7 +261,6 @@ void CPacketMgr::Process_packet()
 	case SC_PACKET_NPC_MOVE:
 	{
 		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(m_packet_start);
-
 		Move_NPC(packet);
 	}
 	break;
@@ -343,10 +342,12 @@ void CPacketMgr::Move_NPC(sc_packet_move* packet)
 	int s_num = packet->id;
 
 	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"NPC", s_num);
-	pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
-
-	pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
+	
 	pObj->Set_MoveStop(false);
+	pObj->Set_State(packet->animIdx);
+	pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
+	pObj->Ready_AngleInterpolationValue(pObj->Set_Other_Angle(_vec3(packet->dirX, packet->dirY, packet->dirZ)));
+	//pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 }
 
 void CPacketMgr::Stage_Change(sc_packet_stage_change* packet)

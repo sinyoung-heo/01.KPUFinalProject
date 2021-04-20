@@ -3,7 +3,7 @@
 #include "Player.h"
 
 CNpc::CNpc()
-	:m_npcNum(0), m_fSpd(1.f), m_bIsMove(false)
+	:m_npcNum(0), m_fSpd(1.f), m_bIsMove(false), m_bIsDirSelect(false)
 {
 }
 
@@ -30,6 +30,28 @@ void CNpc::Set_AnimationKey(const _uint& uiAniKey)
 	}
 }
 
+void CNpc::Set_Start_Move()
+{
+	if (!m_bIsMove)
+	{
+		bool prev_state = m_bIsMove;
+		if (true == atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsMove), &prev_state, true))
+			add_timer(m_sNum, OP_ACTIVE_NPC, system_clock::now() + 7s);
+	}
+}
+
+void CNpc::Set_Stop_Move()
+{
+	if (m_bIsMove)
+	{
+		bool prev_state = m_bIsMove;
+		if (true == atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsMove), &prev_state, false))
+		{
+			nonActive_npc();
+		}
+	}
+}
+
 void CNpc::Ready_NPC(const _vec3& pos, const _vec3& angle, const char& type, const char& num, const char& naviType)
 {
 	/* NPC의 정보 초기화 */
@@ -47,7 +69,7 @@ void CNpc::Ready_NPC(const _vec3& pos, const _vec3& angle, const char& type, con
 	m_vAngle = angle;
 	m_type = type;
 	m_npcNum = num;
-	m_status = STATUS::ST_NONACTIVE;
+	m_status = STATUS::ST_END;
 
 	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(m_vPos.z / SECTOR_SIZE), (int)(m_vPos.x / SECTOR_SIZE));
 	CObjMgr::GetInstance()->Add_GameObject(L"NPC", this, s_num);
@@ -72,7 +94,7 @@ int CNpc::Update_NPC(const float& fTimeDelta)
 
 void CNpc::Change_Animation(const float& fTimeDelta)
 {
-	/* MOVE NPC - 3 Animation*/
+	/* MOVE NPC - Walker */
 	if (m_npcNum == NPC_CHICKEN || m_npcNum == NPC_CAT || m_npcNum == NPC_AMAN_BOY)
 	{
 		Change_Walker_Animation(fTimeDelta);
@@ -95,8 +117,17 @@ void CNpc::nonActive_npc()
 	if (m_status != ST_NONACTIVE)
 	{
 		STATUS prev_state = m_status;
-		if (true == atomic_compare_exchange_strong(&m_status, &prev_state, ST_NONACTIVE))
-			add_timer(m_sNum, OPMODE::OP_RANDOM_MOVE_NPC, system_clock::now() + 10s);
+		atomic_compare_exchange_strong(&m_status, &prev_state, ST_NONACTIVE);		
+	}
+}
+
+void CNpc::wakeUp_npc()
+{
+	/* NPC가 활성화되어 있지 않을 경우 활성화 */
+	if (m_status == ST_END)
+	{
+		STATUS prev_state = m_status;
+		atomic_compare_exchange_strong(&m_status, &prev_state, ST_NONACTIVE);
 	}
 }
 
@@ -108,17 +139,15 @@ void CNpc::Change_Walker_Animation(const float& fTimeDelta)
 	case STATUS::ST_ACTIVE:
 	{
 		m_uiAnimIdx = NPC_TYPE::WALK;
-		cout << "move: " << m_bIsMove << endl;
 
-		if (m_bIsMove)
+		if (m_bIsDirSelect)
 		{
 			if (false == CCollisionMgr::GetInstance()->Is_Arrive(m_vPos, m_vTempPos))
 				m_vPos += m_vDir * m_fSpd * fTimeDelta;
 			else
 			{
 				m_vPos = m_vTempPos;
-				m_bIsMove = false;
-				nonActive_npc();
+				Set_Stop_Move();
 			}
 		}
 		else
@@ -129,7 +158,9 @@ void CNpc::Change_Walker_Animation(const float& fTimeDelta)
 	case STATUS::ST_NONACTIVE:
 	{
 		m_uiAnimIdx = NPC_TYPE::WAIT;
-		cout << "non" << endl;
+
+		m_bIsDirSelect = false;
+		Set_Start_Move();	
 	}
 	break;
 
@@ -138,7 +169,7 @@ void CNpc::Change_Walker_Animation(const float& fTimeDelta)
 
 void CNpc::Move_Walker_NPC(const float& fTimeDelta)
 {
-	if (m_bIsMove == true) return;
+	if (m_bIsDirSelect) return;
 
 	m_fSpd = 1.f;
 
@@ -180,29 +211,30 @@ void CNpc::Move_Walker_NPC(const float& fTimeDelta)
 		}
 	}
 
-	/* NPC 움직임 처리 */
-	switch (rand() % 8)
+	if (!m_bIsDirSelect)
 	{
-	case 0: m_vDir = _vec3(0.f, 0.f, 1.f); break;
-	case 1: m_vDir = _vec3(0.f, 0.f, -1.f); break;
-	case 2: m_vDir = _vec3(1.f, 0.f, 0.f); break;
-	case 3: m_vDir = _vec3(1.f, 0.f, 1.f); break;
-	case 4: m_vDir = _vec3(1.f, 0.f, -1.f); break;
-	case 5: m_vDir = _vec3(-1.f, 0.f, 0.f); break;
-	case 6: m_vDir = _vec3(-1.f, 0.f, 1.f); break;
-	case 7: m_vDir = _vec3(-1.f, 0.f, -1.f); break;
-	}
+		/* NPC 움직임 처리 */
+		switch (rand() % 8)
+		{
+		case 0: m_vDir = _vec3(0.f, 0.f, 1.f); break;
+		case 1: m_vDir = _vec3(0.f, 0.f, -1.f); break;
+		case 2: m_vDir = _vec3(1.f, 0.f, 0.f); break;
+		case 3: m_vDir = _vec3(1.f, 0.f, 1.f); break;
+		case 4: m_vDir = _vec3(1.f, 0.f, -1.f); break;
+		case 5: m_vDir = _vec3(-1.f, 0.f, 0.f); break;
+		case 6: m_vDir = _vec3(-1.f, 0.f, 1.f); break;
+		case 7: m_vDir = _vec3(-1.f, 0.f, -1.f); break;
+		}
 
-	/* 해당 NPC의 미래 위치 좌표 산출 -> 미래 위치좌표는 임시 변수에 저장 */
-	m_vTempPos += m_vDir * 3.f;
-	m_bIsMove = true;
+		/* 해당 NPC의 미래 위치 좌표 산출 -> 미래 위치좌표는 임시 변수에 저장 */
+		m_vTempPos = m_vPos + m_vDir * 3.f;
+		m_bIsDirSelect = true;
+	}
 
 	/* NaviMesh를 벗어날 경우 움직임 X */
 	if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(m_vTempPos) == -1)
 	{
 		m_vTempPos = m_vPos;
-		m_bIsMove = false;
-		//add_timer(m_s, OPMODE::OP_RANDOM_MOVE_NPC, system_clock::now() + 15s);
 		return;
 	}
 
