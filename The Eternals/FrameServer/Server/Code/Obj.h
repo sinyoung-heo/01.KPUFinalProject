@@ -22,12 +22,12 @@ public:
 	bool m_bIsConnect					= false;
 	bool m_bIsDead						= false;
 	char m_ID[MAX_ID_LEN]; 
-	char m_type; 
-	char m_naviType[MIDDLE_STR_LEN];
-	char m_naviMeshType					= 0;
+	char m_type;										// 직업
+	char m_naviType[MIDDLE_STR_LEN];					// 삭제 예정
+	char m_chStageId					= 0;
 	int  m_sNum							= -1;
 
-	int move_time						= 0;
+	int	 move_time						= 0;
 	
 	_vec3 m_vAngle						= _vec3(0.f);
 	_vec3 m_vPos						= _vec3(0.f);

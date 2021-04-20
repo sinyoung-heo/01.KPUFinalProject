@@ -12,7 +12,7 @@ void send_attack_packet(int to_client, int id, int animIdx, float end_angleY);
 void send_attack_stop_packet(int to_client, int id, int animIdx);
 void send_player_stat(int to_client, int id);
 void send_player_stance_change(int to_client, int id, const bool& st);
-void send_player_stage_change(int id);
+void send_player_stage_change(int to_client, int id);
 
 void process_move(int id, const _vec3& _vDir, const _vec3& _vPos);					// 움직임 처리 함수
 void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir);
@@ -25,13 +25,6 @@ void process_stage_change(int id, const char& stage_id);
 /* 패킷 관리 및 처리 함수 */
 void process_packet(int id);													// 패킷 처리 함수 (모든 컨텐츠 처리)
 void process_recv(int id, DWORD iosize);										// 패킷 재조립 함수 (Ring Buffer 사용)
-
-/* ==========================NPC========================== */
-//void send_NPC_enter_packet(int to_client, int new_id);							// NPC 등장 패킷
-//void send_NPC_move_packet(int to_client, int id);								// NPC 움직임 패킷
-
-//void active_npc(int id);														// 해당 NPC의 STATUS = ST_ACTIVE
-//void random_move_npc(int id);													// NPC 랜덤 움직임
 
 /* ==========================MONSTER========================== */
 void active_monster(int id);													// 해당 Monster의 STATUS = ST_ACTIVE

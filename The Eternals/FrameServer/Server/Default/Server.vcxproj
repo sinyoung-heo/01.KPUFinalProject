@@ -26,6 +26,7 @@
     <ClCompile Include="..\Code\MainServer.cpp" />
     <ClCompile Include="..\Code\Monster.cpp" />
     <ClCompile Include="..\Code\NaviMesh.cpp" />
+    <ClCompile Include="..\Code\NaviMesh_Beach.cpp" />
     <ClCompile Include="..\Code\Npc.cpp" />
     <ClCompile Include="..\Code\Obj.cpp" />
     <ClCompile Include="..\Code\ObjectPool.cpp" />
@@ -44,6 +45,7 @@
     <ClInclude Include="..\Code\Line.h" />
     <ClInclude Include="..\Code\Monster.h" />
     <ClInclude Include="..\Code\NaviMesh.h" />
+    <ClInclude Include="..\Code\NaviMesh_Beach.h" />
     <ClInclude Include="..\Code\Npc.h" />
     <ClInclude Include="..\Code\Obj.h" />
     <ClInclude Include="..\Code\ObjectPool.h" />

@@ -51,4 +51,5 @@ using namespace chrono;
 #include "DBMgr.h"
 #include "SectorMgr.h"
 #include "NaviMesh.h"
+#include "NaviMesh_Beach.h"
 #include "CollisionMgr.h"

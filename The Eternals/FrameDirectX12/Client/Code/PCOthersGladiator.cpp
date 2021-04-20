@@ -59,6 +59,9 @@ HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag,
 	m_pInfoCom->m_fSpeed     = Gladiator::MIN_SPEED;
 	m_pInfoCom->m_vArrivePos = m_pTransCom->m_vPos;
 
+	m_chCurStageID = STAGE_VELIKA;
+	m_chPreStageID = STAGE_VELIKA;
+
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
@@ -105,6 +108,7 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 	if (fTimeDelta > TIME_OFFSET)
 		return NO_EVENT;
 
+	SetUp_StageID();
 	Set_WeaponHierarchy();
 
 	/*__________________________________________________________________________________________________________
@@ -194,6 +198,15 @@ HRESULT CPCOthersGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviM
 	m_pNaviMeshCom->Set_CurrentCellIndex(0);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
 
+	m_pVelikaNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"StageVelika_NaviMesh", Engine::ID_DYNAMIC));
+	Engine::NULL_CHECK_RETURN(m_pVelikaNaviMeshCom, E_FAIL);
+	//m_pVelikaNaviMeshCom->AddRef();
+	// m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pVelikaNaviMeshCom);
+
+	m_pBeachNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"StageBeach_NaviMesh", Engine::ID_DYNAMIC));
+	Engine::NULL_CHECK_RETURN(m_pBeachNaviMeshCom, E_FAIL);
+	//m_pBeachNaviMeshCom->AddRef();
+	 //m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
 	return S_OK;
 }
 
@@ -233,6 +246,29 @@ HRESULT CPCOthersGladiator::SetUp_PCWeapon()
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"OthersWeaponTwoHand", m_pWeapon), E_FAIL);
 
 	return S_OK;
+}
+
+void CPCOthersGladiator::SetUp_StageID()
+{
+	if (m_chCurStageID != m_chPreStageID)
+	{
+		if (STAGE_VELIKA == m_chCurStageID)
+		{
+			m_pNaviMeshCom = m_pVelikaNaviMeshCom;
+			m_mapComponent[Engine::ID_DYNAMIC][L"Com_NaviMesh"] = m_pNaviMeshCom;
+			m_pTransCom->m_vPos = _vec3(STAGE_VELIKA_X, 0.0f, STAGE_VELIKA_Z);
+			m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
+		}
+		else if (STAGE_BEACH == m_chCurStageID)
+		{
+			m_pNaviMeshCom = m_pBeachNaviMeshCom;
+			m_mapComponent[Engine::ID_DYNAMIC][L"Com_NaviMesh"] = m_pNaviMeshCom;
+			m_pTransCom->m_vPos = _vec3(STAGE_BEACH_X, 0.0f, STAGE_BEACH_Z);
+			m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
+		}
+
+		m_chPreStageID = m_chCurStageID;
+	}
 }
 
 void CPCOthersGladiator::Set_WeaponHierarchy()
@@ -530,5 +566,7 @@ void CPCOthersGladiator::Free()
 	Engine::Safe_Release(m_pShaderCom);
 	Engine::Safe_Release(m_pShadowCom);
 	Engine::Safe_Release(m_pNaviMeshCom);
+	Engine::Safe_Release(m_pVelikaNaviMeshCom);
+	Engine::Safe_Release(m_pBeachNaviMeshCom);
 	m_pWeapon->Set_DeadGameObject();
 }

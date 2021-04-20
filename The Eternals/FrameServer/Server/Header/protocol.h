@@ -69,10 +69,6 @@ constexpr float STAGE_BEACH_Z			= 80.0f + 0.0f;
 constexpr float STAGE_WINTER_X			= 0.0f + 256.0f;
 constexpr float STAGE_WINTER_Z			= 0.0f + 256.0f;
 
-/* NAVI MESH TYPE */
-constexpr char NAVI_VELIKA				= 0;
-constexpr char NAVI_BEACH				= 1;
-
 /* CHARACTER TYPE */   // 추후 삭제 예정
 constexpr char TYPE_PLAYER				= 0;
 
@@ -174,6 +170,7 @@ struct sc_packet_enter
 	int				id;
 
 	char			name[MAX_ID_LEN];
+	char			stageID;
 	char			o_type;
 	float			posX, posY, posZ;
 	float			dirX, dirY, dirZ;
@@ -280,6 +277,8 @@ struct sc_packet_stage_change
 {
 	unsigned char	size;
 	char			type;
+	int				id;
+
 	char			stage_id;
 	float			posX, posY, posZ;
 };

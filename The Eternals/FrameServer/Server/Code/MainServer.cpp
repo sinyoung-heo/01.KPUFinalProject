@@ -80,8 +80,9 @@ void Ready_ServerManager()
 	CObjMgr::GetInstance()->Init_ObjMgr();
 	CDBMgr::GetInstance()->Ready_DB();
 	CNaviMesh::GetInstance()->Ready_NaviMesh(L"../../../FrameDirectX12/Bin/ToolData/StageVelika_NaviMesh.navimeshcellinfo");
-	
+	CNaviMesh_Beach::GetInstance()->Ready_NaviMesh(L"../../../FrameDirectX12/Bin/ToolData/StageBeach_NaviMesh3.navimeshcellinfo");	
 	CCollisionMgr::GetInstance();
+
 #ifdef TEST
 	cout << "Finish Server Managers" << endl;
 #endif // TEST
@@ -150,6 +151,7 @@ void Release_Server()
 	CObjPoolMgr::GetInstance()->DestroyInstance();
 	CDBMgr::GetInstance()->DestroyInstance();
 	CNaviMesh::GetInstance()->DestroyInstance();
+	CNaviMesh_Beach::GetInstance()->DestroyInstance();
 	CCollisionMgr::GetInstance()->DestroyInstance();
 
 	closesocket(g_hListenSock);
@@ -172,7 +174,7 @@ void Initialize_NPC()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_NPC(_vec3(122.0f, 0.f, 76.0f), _vec3(0.f, 0.f, 0.f), NPC_MOVE, NPC_CHICKEN, NAVI_VELIKA);
+		pNew->Ready_NPC(_vec3(122.0f, 0.f, 76.0f), _vec3(0.f, 0.f, 0.f), NPC_MOVE, NPC_CHICKEN, STAGE_VELIKA);
 		pNew->Set_NumAnimation(Chicken::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Chicken::duration);
 	}

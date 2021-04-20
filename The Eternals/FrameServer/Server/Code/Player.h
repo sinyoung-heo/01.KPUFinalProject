@@ -29,7 +29,6 @@ public:
 	int		m_iMaxExp	= 0;
 	int		m_iAtt		= 0;
 	float	m_fSpd		= 0;
-	char	m_chStageId = 0;
 	
 	unordered_set<int> view_list; 
 	mutex v_lock; 

@@ -40,6 +40,7 @@ private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag);
 private:
 	HRESULT	SetUp_PCWeapon();
+	void	SetUp_StageID();
 	void	Set_WeaponHierarchy();
 	void	Set_AnimationSpeed();
 	void	Set_BlendingSpeed();
@@ -62,6 +63,8 @@ private:
 	Engine::CShaderMesh*	m_pShaderCom   = nullptr;
 	Engine::CShaderShadow*	m_pShadowCom   = nullptr;
 	Engine::CNaviMesh*		m_pNaviMeshCom = nullptr;
+	Engine::CNaviMesh*		m_pVelikaNaviMeshCom = nullptr;
+	Engine::CNaviMesh*		m_pBeachNaviMeshCom = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]

@@ -58,7 +58,7 @@ void CNpc::Ready_NPC(const _vec3& pos, const _vec3& angle, const char& type, con
 	m_sNum += NPC_NUM_START;
 	int s_num = m_sNum;
 
-	m_naviMeshType = naviType;
+	m_chStageId = naviType;
 
 	m_bIsConnect = true;
 	m_bIsDead = false;
@@ -408,7 +408,8 @@ void CNpc::send_NPC_enter_packet(int to_client)
 
 	p.o_type = m_type;
 	p.npcNum = m_npcNum;
-	p.naviType = m_naviMeshType;
+
+	p.naviType = m_chStageId;
 
 	p.posX = m_vPos.x;
 	p.posY = m_vPos.y;

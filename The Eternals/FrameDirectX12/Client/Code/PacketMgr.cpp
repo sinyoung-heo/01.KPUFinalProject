@@ -352,28 +352,40 @@ void CPacketMgr::Move_NPC(sc_packet_move* packet)
 
 void CPacketMgr::Stage_Change(sc_packet_stage_change* packet)
 {
-	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+	int s_num = packet->id;
 
-	// Set Player
-	if (nullptr != pThisPlayer)
+	/* 현재 클라이언트가 공격한 경우 */
+	if (s_num == g_iSNum)
 	{
-		pThisPlayer->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
-		pThisPlayer->Set_CurrentStageID(packet->stage_id);
+		Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+
+		// Set Player
+		if (nullptr != pThisPlayer)
+		{
+			pThisPlayer->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+			pThisPlayer->Set_CurrentStageID(packet->stage_id);
+		}
+
+		// Static Object
+		if (STAGE_VELIKA == packet->stage_id)
+			Engine::CObjectMgr::Get_Instance()->Set_CurrentStage(Engine::STAGEID::STAGE_VELIKA);
+		else if (STAGE_BEACH == packet->stage_id)
+			Engine::CObjectMgr::Get_Instance()->Set_CurrentStage(Engine::STAGEID::STAGE_BEACH);
+		else if (STAGE_WINTER == packet->stage_id)
+			Engine::CObjectMgr::Get_Instance()->Set_CurrentStage(Engine::STAGEID::STAGE_WINTER);
+
+		// Set FadeInOut
+		Engine::CGameObject* pFadeInOut = *(--(m_pObjectMgr->Get_OBJLIST(L"Layer_UI", L"StageChange_FadeInOut")->end()));
+
+		if (nullptr != pFadeInOut)
+			static_cast<CFadeInOut*>(pFadeInOut)->Set_IsReceivePacket(true);
+	}
+	else
+	{
+		m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"Others", s_num);
 	}
 
-	// Static Object
-	if (STAGE_VELIKA == packet->stage_id)
-		Engine::CObjectMgr::Get_Instance()->Set_CurrentStage(Engine::STAGEID::STAGE_VELIKA);
-	else if (STAGE_BEACH == packet->stage_id)
-		Engine::CObjectMgr::Get_Instance()->Set_CurrentStage(Engine::STAGEID::STAGE_BEACH);
-	else if (STAGE_WINTER == packet->stage_id)
-		Engine::CObjectMgr::Get_Instance()->Set_CurrentStage(Engine::STAGEID::STAGE_WINTER);
-
-	// Set FadeInOut
-	Engine::CGameObject* pFadeInOut  = *(--(m_pObjectMgr->Get_OBJLIST(L"Layer_UI", L"StageChange_FadeInOut")->end()));
-
-	if (nullptr != pFadeInOut)
-		static_cast<CFadeInOut*>(pFadeInOut)->Set_IsReceivePacket(true);
+	
 }
 
 void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
@@ -384,7 +396,7 @@ void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
 	Engine::CGameObject* pGameObj = nullptr;
 
 	wstring wstrNaviMeshTag;
-	if (packet->naviType == NAVI_VELIKA)
+	if (packet->naviType == STAGE_VELIKA)
 		wstrNaviMeshTag = L"StageVelika_NaviMesh";
 
 	if (packet->npcNum == NPC_CHICKEN)
@@ -636,6 +648,7 @@ void CPacketMgr::Enter_Others(sc_packet_enter* packet, int& retflag)
 			Twohand19_A_SM);									// WeaponType
 	}
 
+	pGameObj->Set_CurrentStageID(packet->stageID);
 	pGameObj->Set_OType(packet->o_type);
 	pGameObj->Set_ServerNumber(packet->id);
 
