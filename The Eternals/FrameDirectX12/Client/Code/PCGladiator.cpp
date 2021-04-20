@@ -349,9 +349,9 @@ HRESULT CPCGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag
 	m_pVelikaNaviMeshCom->AddRef();
 	// m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pVelikaNaviMeshCom);
 
-	//m_pBeachNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"StageBeach_NaviMesh", Engine::ID_DYNAMIC));
-	//Engine::NULL_CHECK_RETURN(m_pBeachNaviMeshCom, E_FAIL);
-	//m_pBeachNaviMeshCom->AddRef();
+	m_pBeachNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"StageBeach_NaviMesh", Engine::ID_DYNAMIC));
+	Engine::NULL_CHECK_RETURN(m_pBeachNaviMeshCom, E_FAIL);
+	m_pBeachNaviMeshCom->AddRef();
 	// m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
 
 	return S_OK;
@@ -1461,14 +1461,19 @@ void CPCGladiator::Collision_PortalVelikaToBeach(list<Engine::CColliderSphere*>&
 				pDstCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 
 				g_bIsStageChange = true;
+				m_bIsKeyDown = false;
+
+				if (Gladiator::STANCE_ATTACK == m_eStance)
+					m_uiAnimIdx = Gladiator::ATTACK_WAIT;
+				else
+					m_uiAnimIdx = Gladiator::NONE_ATTACK_IDLE;
+
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 				// FadeInOut
 				Engine::CGameObject* pGameObject = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
-				// static_cast<CFadeInOut*>(pGameObject)->Set_IsSendPacket(true);
 				static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_BEACH);
 				m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
-				// SendPacket
-				// m_pPacketMgr->send_stage_change(STAGE_BEACH);
 			}
 		}
 	}
@@ -1487,15 +1492,19 @@ void CPCGladiator::Collision_PortalBeachToVelika(list<Engine::CColliderSphere*>&
 				pDstCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 				
 				g_bIsStageChange = true;
+				m_bIsKeyDown = false;
+
+				if (Gladiator::STANCE_ATTACK == m_eStance)
+					m_uiAnimIdx = Gladiator::ATTACK_WAIT;
+				else
+					m_uiAnimIdx = Gladiator::NONE_ATTACK_IDLE;
+
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 				// FadeInOut
 				Engine::CGameObject* pGameObject = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
-				// static_cast<CFadeInOut*>(pGameObject)->Set_IsSendPacket(true);
 				static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_VELIKA);
 				m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
-
-				// SendPacket
-				// m_pPacketMgr->send_stage_change(STAGE_VELIKA);
 			}
 		}
 	}
