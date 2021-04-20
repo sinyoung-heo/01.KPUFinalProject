@@ -75,17 +75,17 @@ void CScene_MainStage::Process_PacketFromServer()
 
 _int CScene_MainStage::Update_Scene(const _float & fTimeDelta)
 {
-	if (Engine::KEY_DOWN(DIK_9))
-	{
-		m_pObjectMgr->Set_CurrentStage(Engine::STAGEID::STAGE_VELIKA);
-		m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Set_CurrentStageID(STAGE_VELIKA);
+	//if (Engine::KEY_DOWN(DIK_9))
+	//{
+	//	m_pObjectMgr->Set_CurrentStage(Engine::STAGEID::STAGE_VELIKA);
+	//	m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Set_CurrentStageID(STAGE_VELIKA);
 
-	}
-	else if (Engine::KEY_DOWN(DIK_0))
-	{
-		m_pObjectMgr->Set_CurrentStage(Engine::STAGEID::STAGE_BEACH);
-		m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Set_CurrentStageID(STAGE_BEACH);
-	}
+	//}
+	//else if (Engine::KEY_DOWN(DIK_0))
+	//{
+	//	m_pObjectMgr->Set_CurrentStage(Engine::STAGEID::STAGE_BEACH);
+	//	m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Set_CurrentStageID(STAGE_BEACH);
+	//}
 
 	// MouseCursorMgr
 	if (!m_bIsReadyMouseCursorMgr)
@@ -327,6 +327,40 @@ HRESULT CScene_MainStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 										_vec3(256.0f, 0.7f, 276.0f),
 										_vec3(STAGE_BEACH_OFFSET_X, 0.0f, STAGE_BEACH_OFFSET_Z));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_BEACH, L"BumpWaterMesh00", pGameObj), E_FAIL);
+
+	/*__________________________________________________________________________________________________________
+	[ Sector Grid ]
+	____________________________________________________________________________________________________________*/
+	_int world_width	= WORLD_WIDTH;
+	_int world_height	= WORLD_HEIGHT;
+	_int sector_size	= SECTOR_SIZE;
+
+	_vec3 vOffset(_float(sector_size), 0.0f, _float(sector_size));
+	_vec3 vCount((_float)(world_width / sector_size), 0.0f, _float(world_height / sector_size));
+
+	vPos = _vec3(0.0f, 0.2f, (_float)world_height / 2);
+	for (_int i = 0; i < vCount.x + 1; ++i)
+	{
+		pGameObj = CCubeObject::Create(m_pGraphicDevice, m_pCommandList,
+									   _vec3(0.1f, 0.1f, (_float)world_height), // Scale
+									   _vec3(0.0f),								 // Angle
+									   vPos);									 // Pos
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Grid_Width", pGameObj), E_FAIL);
+
+		vPos.x += vOffset.x;
+	}
+
+	vPos = _vec3((_float)world_width / 2, 0.2f, 0.0f);
+	for (_int i = 0; i < vCount.z + 1; ++i)
+	{
+		pGameObj = CCubeObject::Create(m_pGraphicDevice, m_pCommandList,
+									   _vec3((_float)world_width, 0.1f, 0.1f),	// Scale
+									   _vec3(0.0f),								// Angle
+									   vPos);									// Pos
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Grid_Height", pGameObj), E_FAIL);
+
+		vPos.z += vOffset.z;
+	}
 
 	return S_OK;
 }
