@@ -21,6 +21,7 @@
 #include "TestColMonster.h"
 #include "PCGladiator.h"
 #include "PCOthersGladiator.h"
+#include "FadeInOut.h"
 
 IMPLEMENT_SINGLETON(CPacketMgr)
 
@@ -301,6 +302,13 @@ void CPacketMgr::Process_packet()
 	}
 	break;
 
+	case SC_PACKET_STAGE_CHANGE:
+	{
+		sc_packet_stage_change* packet = reinterpret_cast<sc_packet_stage_change*>(m_packet_start);
+		Stage_Change(packet);
+	}
+	break;
+
 	default:
 #ifdef ERR_CHECK
 		printf("Unknown PACKET type [%d]\n", m_packet_start[1]);
@@ -339,6 +347,32 @@ void CPacketMgr::Move_NPC(sc_packet_move* packet)
 
 	pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 	pObj->Set_MoveStop(false);
+}
+
+void CPacketMgr::Stage_Change(sc_packet_stage_change* packet)
+{
+	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+
+	// Set Player
+	if (nullptr != pThisPlayer)
+	{
+		pThisPlayer->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+		pThisPlayer->Set_CurrentStageID(packet->stage_id);
+	}
+
+	// Static Object
+	if (STAGE_VELIKA == packet->stage_id)
+		Engine::CObjectMgr::Get_Instance()->Set_CurrentStage(Engine::STAGEID::STAGE_VELIKA);
+	else if (STAGE_BEACH == packet->stage_id)
+		Engine::CObjectMgr::Get_Instance()->Set_CurrentStage(Engine::STAGEID::STAGE_BEACH);
+	else if (STAGE_WINTER == packet->stage_id)
+		Engine::CObjectMgr::Get_Instance()->Set_CurrentStage(Engine::STAGEID::STAGE_WINTER);
+
+	// Set FadeInOut
+	Engine::CGameObject* pFadeInOut  = *(--(m_pObjectMgr->Get_OBJLIST(L"Layer_UI", L"StageChange_FadeInOut")->end()));
+
+	if (nullptr != pFadeInOut)
+		static_cast<CFadeInOut*>(pFadeInOut)->Set_IsReceivePacket(true);
 }
 
 void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
@@ -888,6 +922,17 @@ void CPacketMgr::send_attackToMonster(int objID)
 	p.size = sizeof(p);
 	p.type = CS_COLLIDE_MONSTER;
 	p.col_id = objID;
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_stage_change(const char& chStageId)
+{
+	cs_packet_stage_change p;
+
+	p.size     = sizeof(p);
+	p.type     = CS_STAGE_CHANGE;
+	p.stage_id = chStageId;
 
 	send_packet(&p);
 }

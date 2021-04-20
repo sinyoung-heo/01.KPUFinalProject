@@ -9,6 +9,7 @@
 #include "CollisionMgr.h"
 #include "CollisionTick.h"
 #include "InstancePoolMgr.h"
+#include "FadeInOut.h"
 
 CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -153,10 +154,14 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Key Input ]
 	____________________________________________________________________________________________________________*/
-	if (!g_bIsOnDebugCaemra)
+	if (!g_bIsOnDebugCaemra && 
+		!g_bIsStageChange)
 	{
 		Key_Input(fTimeDelta);
 	}
+
+	if (g_bIsStageChange)
+		m_bIsKeyDown = false;
 
 	// NaviMesh ÀÌµ¿.
 	SetUp_RunMoveSpeed(fTimeDelta);
@@ -225,10 +230,14 @@ void CPCGladiator::Process_Collision()
 		if (L"Monster" == pDst->Get_CollisionTag())
 			Collision_Monster(pDst->Get_ColliderList());
 
-		if (L"Portal_VelikaToBeach" == pDst->Get_CollisionTag())
-			Collision_PortalVelikaToBeach(pDst->Get_ColliderList());
-		if (L"Portal_BeachToVelika" == pDst->Get_CollisionTag())
-			Collision_PortalBeachToVelika(pDst->Get_ColliderList());
+		if (!g_bIsStageChange)
+		{
+			if (L"Portal_VelikaToBeach" == pDst->Get_CollisionTag())
+				Collision_PortalVelikaToBeach(pDst->Get_ColliderList());
+
+			if (L"Portal_BeachToVelika" == pDst->Get_CollisionTag())
+				Collision_PortalBeachToVelika(pDst->Get_ColliderList());
+		}
 	}
 }
 
@@ -1451,6 +1460,15 @@ void CPCGladiator::Collision_PortalVelikaToBeach(list<Engine::CColliderSphere*>&
 				pSrcCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 				pDstCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 
+				g_bIsStageChange = true;
+
+				// FadeInOut
+				Engine::CGameObject* pGameObject = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
+				// static_cast<CFadeInOut*>(pGameObject)->Set_IsSendPacket(true);
+				static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_BEACH);
+				m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
+				// SendPacket
+				// m_pPacketMgr->send_stage_change(STAGE_BEACH);
 			}
 		}
 	}
@@ -1467,7 +1485,17 @@ void CPCGladiator::Collision_PortalBeachToVelika(list<Engine::CColliderSphere*>&
 				// Process Collision Event
 				pSrcCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 				pDstCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+				
+				g_bIsStageChange = true;
 
+				// FadeInOut
+				Engine::CGameObject* pGameObject = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
+				// static_cast<CFadeInOut*>(pGameObject)->Set_IsSendPacket(true);
+				static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_VELIKA);
+				m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
+
+				// SendPacket
+				// m_pPacketMgr->send_stage_change(STAGE_VELIKA);
 			}
 		}
 	}

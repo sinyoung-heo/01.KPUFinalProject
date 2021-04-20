@@ -39,7 +39,7 @@ public:
 	void    send_attack_stop(const _int& iAniIdx, const _vec3& vDir, const _vec3& vPos);
 	void    send_attackByMonster(int objID);
 	void    send_attackToMonster(int objID);
-
+	void	send_stage_change(const char& chStageId);
 public:
 	bool	change_MoveKey(MVKEY eKey);
 
@@ -58,9 +58,10 @@ public:
 	void	Attack_Monster(sc_packet_monster_attack* packet);
 	void	Rush_Monster(sc_packet_monster_rushAttack* packet);
 	void	Change_Monster_Stat(sc_packet_stat_change* packet);
-
 	void	Enter_NPC(sc_packet_npc_enter* packet);
 	void	Move_NPC(sc_packet_move* packet);
+
+	void	Stage_Change(sc_packet_stage_change* packet);
 
 private:
 	void	send_packet(void* packet);

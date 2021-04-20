@@ -42,6 +42,7 @@ constexpr char SC_PACKET_MONSTER_MOVE	= 14;
 constexpr char SC_PACKET_MONSTER_ATTACK = 15;
 constexpr char SC_PACKET_MONSTER_RUSH	= 16;
 constexpr char SC_PACKET_MONSTER_STAT	= 17;
+constexpr char SC_PACKET_STAGE_CHANGE   = 18;
 
 constexpr char CS_LOGIN					= 0;
 constexpr char CS_MOVE					= 1;
@@ -53,19 +54,20 @@ constexpr char CS_LOGOUT				= 6;
 constexpr char CS_COLLIDE				= 7;   // Player가 다른 Object에게 충돌당했을 경우
 constexpr char CS_COLLIDE_MONSTER		= 8;   // Player가 Monster 공격
 constexpr char CS_STANCE_CHANGE         = 9;
+constexpr char CS_STAGE_CHANGE          = 10;
 
 // Stage ID
 constexpr char STAGE_VELIKA				= 0;
 constexpr char STAGE_BEACH				= 1;
-constexpr char STAGE_TEMP				= 2;
+constexpr char STAGE_WINTER				= 2;
 
 // Stage StartPos
 constexpr float STAGE_VELIKA_X			= 130.0f;
 constexpr float STAGE_VELIKA_Z			= 70.0f;
 constexpr float STAGE_BEACH_X			= 80.0f + 256.0f;
 constexpr float STAGE_BEACH_Z			= 80.0f + 0.0f;
-constexpr float STAGE_TEMP_X			= 0.0f + 256.0f;
-constexpr float STAGE_TEMP_Z			= 0.0f + 256.0f;
+constexpr float STAGE_WINTER_X			= 0.0f + 256.0f;
+constexpr float STAGE_WINTER_Z			= 0.0f + 256.0f;
 
 /* NAVI MESH TYPE */
 constexpr char NAVI_VELIKA				= 0;
@@ -274,6 +276,14 @@ struct sc_packet_monster_rushAttack
 	float			dirX, dirY, dirZ;
 };
 
+struct sc_packet_stage_change
+{
+	unsigned char	size;
+	char			type;
+	char			stage_id;
+	float			posX, posY, posZ;
+};
+
 /* ___________________________________________________________________________________________________________________*/
 /*													CLIENT -> SERVER												  */
 /* ___________________________________________________________________________________________________________________*/
@@ -356,6 +366,13 @@ struct cs_packet_teleport
 	char			type;
 
 	float			posX, posY, posZ;
+};
+
+struct cs_packet_stage_change
+{
+	unsigned char	size;
+	char			type;
+	char			stage_id;
 };
 
 #pragma pack (pop)
