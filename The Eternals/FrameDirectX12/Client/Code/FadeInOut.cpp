@@ -5,6 +5,7 @@
 
 CFadeInOut::CFadeInOut(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
+	, m_pPacketMgr(CPacketMgr::Get_Instance())
 {
 }
 
@@ -168,12 +169,21 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 	}
 	else if (EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN == m_eEventType)
 	{
+		cout << m_fAlpha << endl;
 		// Send StageChange Packet
-		if (m_bIsSendPacket && !m_bIsReceivePacket)
+		if (!m_bIsReceivePacket)
 		{
 			m_fAlpha += fTimeDelta * 0.5f;
 			if (m_fAlpha > 1.0f)
+			{
 				m_fAlpha = 1.0f;
+				
+				if (!m_bIsSendPacket)
+				{
+					m_bIsSendPacket = true;
+					m_pPacketMgr->send_stage_change(m_chCurStageID);
+				}
+			}
 		}
 
 		// Receive StageChange Packet

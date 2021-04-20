@@ -201,6 +201,13 @@ void process_packet(int id)
 		pMonster->Hurt_Monster(id, pPlayer->m_iAtt);
 	}
 	break;
+
+	case CS_STAGE_CHANGE:
+	{
+		cs_packet_stage_change* p = reinterpret_cast<cs_packet_stage_change*>(pPlayer->m_packet_start);
+		process_stage_change(id, p->stage_id);
+	}
+	break;
 	}
 }
 /* ========================패킷 재조립========================*/
@@ -494,6 +501,23 @@ void send_player_stance_change(int to_client, int id, const bool& st)
 	p.is_stance_attack = st;
 
 	send_packet(to_client, &p);
+}
+
+void send_player_stage_change(int id)
+{
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pPlayer == nullptr) return;
+
+	sc_packet_stage_change p;
+
+	p.size     = sizeof(p);
+	p.type     = SC_PACKET_STAGE_CHANGE;
+	p.stage_id = pPlayer->m_chStageId;
+	p.posX     = pPlayer->m_vPos.x;
+	p.posY     = pPlayer->m_vPos.y;
+	p.posZ     = pPlayer->m_vPos.z;
+
+	send_packet(id, &p);
 }
 
 void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
@@ -1374,6 +1398,31 @@ void process_stance_change(int id, const bool& stance)
 			send_player_stance_change(server_num, id, stance);
 		}
 	}
+}
+
+void process_stage_change(int id, const char& stage_id)
+{
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pPlayer == nullptr) return;
+
+	// Set StageID
+	pPlayer->m_chStageId = stage_id;
+
+	// Set Position
+	if (STAGE_VELIKA == stage_id)
+		pPlayer->m_vPos = _vec3(STAGE_VELIKA_X, 0.0f, STAGE_VELIKA_Z);
+
+	else if (STAGE_BEACH == stage_id)
+		pPlayer->m_vPos = _vec3(STAGE_BEACH_X, 0.0f, STAGE_BEACH_Z);
+
+	else if (STAGE_WINTER == stage_id)
+		pPlayer->m_vPos = _vec3(STAGE_WINTER_X, 0.0f, STAGE_WINTER_Z);
+
+	// Set NaviMesh
+
+
+	// Send Packet
+	send_player_stage_change(id);
 }
 
 /*============================================NPC======================================================*/

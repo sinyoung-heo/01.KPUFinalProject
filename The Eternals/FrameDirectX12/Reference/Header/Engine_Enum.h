@@ -49,6 +49,7 @@ namespace Engine
 	{
 		STAGE_VELIKA,
 		STAGE_BEACH,
+		STAGE_WINTER,
 		STAGE_END
 	};
 

@@ -160,6 +160,9 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 		Key_Input(fTimeDelta);
 	}
 
+	if (g_bIsStageChange)
+		m_bIsKeyDown = false;
+
 	// NaviMesh ¿Ãµø.
 	SetUp_RunMoveSpeed(fTimeDelta);
 	Move_OnNaviMesh(fTimeDelta);
@@ -1461,10 +1464,11 @@ void CPCGladiator::Collision_PortalVelikaToBeach(list<Engine::CColliderSphere*>&
 
 				// FadeInOut
 				Engine::CGameObject* pGameObject = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
-				static_cast<CFadeInOut*>(pGameObject)->Set_IsSendPacket(true);
+				// static_cast<CFadeInOut*>(pGameObject)->Set_IsSendPacket(true);
+				static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_BEACH);
 				m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
-
 				// SendPacket
+				// m_pPacketMgr->send_stage_change(STAGE_BEACH);
 			}
 		}
 	}
@@ -1486,10 +1490,12 @@ void CPCGladiator::Collision_PortalBeachToVelika(list<Engine::CColliderSphere*>&
 
 				// FadeInOut
 				Engine::CGameObject* pGameObject = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
-				static_cast<CFadeInOut*>(pGameObject)->Set_IsSendPacket(true);
+				// static_cast<CFadeInOut*>(pGameObject)->Set_IsSendPacket(true);
+				static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_VELIKA);
 				m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
 
 				// SendPacket
+				// m_pPacketMgr->send_stage_change(STAGE_VELIKA);
 			}
 		}
 	}

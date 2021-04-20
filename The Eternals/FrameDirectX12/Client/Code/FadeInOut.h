@@ -37,6 +37,8 @@ private:
 	Engine::CTexture*		m_pTextureCom	= nullptr;
 	Engine::CShaderTexture*	m_pShaderCom	= nullptr;
 
+	CPacketMgr* m_pPacketMgr = nullptr;
+
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
