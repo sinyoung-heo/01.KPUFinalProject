@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "NPC_Merchant.h"
+#include "NPC_Assistant.h"
 
 #include "GraphicDevice.h"
 #include "DirectInput.h"
@@ -9,22 +9,20 @@
 #include "RenderTarget.h"
 #include "TimeMgr.h"
 
-CNPC_Merchant::CNPC_Merchant(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CNPC_Assistant::CNPC_Assistant(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pPacketMgr(CPacketMgr::Get_Instance())
 	, m_pServerMath(CServerMath::Get_Instance())
 {
 }
 
-HRESULT CNPC_Merchant::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
+HRESULT CNPC_Assistant::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
 {
-	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true, true), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag, wstrNaviMeshTag), E_FAIL);
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos = vPos;
-	m_wstrCollisionTag = L"NPC_Merchant";
-
 	m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(vPos));
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
 		m_pTransCom->m_vScale,
@@ -32,27 +30,20 @@ HRESULT CNPC_Merchant::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMes
 		m_pMeshCom->Get_MinVector(),
 		m_pMeshCom->Get_MaxVector());
 
-	Engine::CGameObject::SetUp_BoundingSphere(&(m_pTransCom->m_matWorld),
-											 m_pTransCom->m_vScale,
-											 _vec3(200.0f),
-											 _vec3(0.0f, 20.0f, 0.0f));
-	m_lstCollider.push_back(m_pBoundingSphereCom);
-
 
 	m_pInfoCom->m_fSpeed = 1.f;
 	m_bIsMoveStop = true;
-	m_fAniTime = 0.f;
 
 	/*__________________________________________________________________________________________________________
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
-	m_iMonsterStatus = Baraka_M_Merchant::A_WAIT;
+	m_iMonsterStatus = Popori_boy::A_WAIT;
 
 	return S_OK;
 }
 
-HRESULT CNPC_Merchant::LateInit_GameObject()
+HRESULT CNPC_Assistant::LateInit_GameObject()
 {
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
@@ -61,7 +52,7 @@ HRESULT CNPC_Merchant::LateInit_GameObject()
 	return S_OK;
 }
 
-_int CNPC_Merchant::Update_GameObject(const _float& fTimeDelta)
+_int CNPC_Assistant::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
@@ -73,11 +64,6 @@ _int CNPC_Merchant::Update_GameObject(const _float& fTimeDelta)
 
 	/* Animation AI */
 	Change_Animation(fTimeDelta);
-
-	/*__________________________________________________________________________________________________________
-	[ Collision - Add Collision List ]
-	____________________________________________________________________________________________________________*/
-	m_pCollisonMgr->Add_CollisionCheckList(this);
 
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
@@ -95,7 +81,7 @@ _int CNPC_Merchant::Update_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CNPC_Merchant::LateUpdate_GameObject(const _float& fTimeDelta)
+_int CNPC_Assistant::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
@@ -107,23 +93,23 @@ _int CNPC_Merchant::LateUpdate_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-void CNPC_Merchant::Send_PacketToServer()
+void CNPC_Assistant::Send_PacketToServer()
 {
 }
 
-void CNPC_Merchant::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
+void CNPC_Assistant::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
 	Set_ConstantTable();
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
-void CNPC_Merchant::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
+void CNPC_Assistant::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
 	Set_ConstantTableShadowDepth();
 	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 }
 
-HRESULT CNPC_Merchant::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
+HRESULT CNPC_Assistant::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -156,7 +142,7 @@ HRESULT CNPC_Merchant::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTa
 	return S_OK;
 }
 
-void CNPC_Merchant::Set_ConstantTable()
+void CNPC_Assistant::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -179,7 +165,7 @@ void CNPC_Merchant::Set_ConstantTable()
 		m_fDeltaTime = 0.f;
 }
 
-void CNPC_Merchant::Set_ConstantTableShadowDepth()
+void CNPC_Assistant::Set_ConstantTableShadowDepth()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -197,7 +183,7 @@ void CNPC_Merchant::Set_ConstantTableShadowDepth()
 
 }
 
-void CNPC_Merchant::SetUp_AngleInterpolation(const _float& fTimeDelta)
+void CNPC_Assistant::SetUp_AngleInterpolation(const _float& fTimeDelta)
 {
 	if (m_tAngleInterpolationDesc.is_start_interpolation)
 	{
@@ -214,60 +200,41 @@ void CNPC_Merchant::SetUp_AngleInterpolation(const _float& fTimeDelta)
 	}
 }
 
-void CNPC_Merchant::Change_Animation(const _float& fTimeDelta)
+void CNPC_Assistant::Change_Animation(const _float& fTimeDelta)
 {
-	
-
 	if (m_pMeshCom->Is_BlendingComplete())
 	{
 		switch (m_iMonsterStatus)
 		{
 
-		case Baraka_M_Merchant::A_WAIT:
+		case Popori_boy::A_WAIT:
 		{
-			m_fAniTime = 0.f;
-
-			m_uiAnimIdx = Baraka_M_Merchant::A_WAIT;
+			m_uiAnimIdx = Popori_boy::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
 		break;
 
-		case Baraka_M_Merchant::A_GREET:
+		case Popori_boy::A_IDLE:
 		{
-			m_fAniTime += fTimeDelta;
-			m_uiAnimIdx = Baraka_M_Merchant::A_GREET;
+			m_uiAnimIdx = Popori_boy::A_IDLE;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
-			if (m_fAniTime > 10.f)
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-				{
-					m_iMonsterStatus = Baraka_M_Merchant::A_WAIT;
+				m_iMonsterStatus = Popori_boy::A_WAIT;
 
-					m_uiAnimIdx = Baraka_M_Merchant::A_WAIT;
-					m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-
-					m_fAniTime = 0.f;
-				}
+				m_uiAnimIdx = Popori_boy::A_WAIT;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
-		}
-		break;
-
-		case Baraka_M_Merchant::A_TALK:
-		{
-			m_fAniTime = 0.f;
-
-			m_uiAnimIdx = Baraka_M_Merchant::A_TALK;
-			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
 		break;
 		}
 	}
 }
 
-Engine::CGameObject* CNPC_Merchant::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
+Engine::CGameObject* CNPC_Assistant::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
 {
-	CNPC_Merchant* pInstance = new CNPC_Merchant(pGraphicDevice, pCommandList);
+	CNPC_Assistant* pInstance = new CNPC_Assistant(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, wstrNaviMeshTag, vScale, vAngle, vPos)))
 		Engine::Safe_Release(pInstance);
@@ -275,7 +242,7 @@ Engine::CGameObject* CNPC_Merchant::Create(ID3D12Device* pGraphicDevice, ID3D12G
 	return pInstance;
 }
 
-void CNPC_Merchant::Free()
+void CNPC_Assistant::Free()
 {
 	Engine::CGameObject::Free();
 

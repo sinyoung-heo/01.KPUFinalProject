@@ -30,13 +30,15 @@ void CNpc::Set_AnimationKey(const _uint& uiAniKey)
 	}
 }
 
-void CNpc::Set_Start_Move()
+void CNpc::Set_Start_Move(chrono::seconds t)
 {
 	if (!m_bIsMove)
 	{
 		bool prev_state = m_bIsMove;
 		if (true == atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsMove), &prev_state, true))
-			add_timer(m_sNum, OP_ACTIVE_NPC, system_clock::now() + 7s);
+		{
+			add_timer(m_sNum, OP_ACTIVE_NPC, system_clock::now() + t);
+		}
 	}
 }
 
@@ -49,6 +51,36 @@ void CNpc::Set_Stop_Move()
 		{
 			nonActive_npc();
 		}
+	}
+}
+
+void CNpc::active_npc()
+{
+	/* NPC가 활성화되어 있지 않을 경우 활성화 */
+	if (m_status != ST_ACTIVE)
+	{
+		STATUS prev_state = m_status;
+		atomic_compare_exchange_strong(&m_status, &prev_state, ST_ACTIVE);
+	}
+}
+
+void CNpc::nonActive_npc()
+{
+	/* NPC가 활성화되어 있지 않을 경우 활성화 */
+	if (m_status != ST_NONACTIVE)
+	{
+		STATUS prev_state = m_status;
+		atomic_compare_exchange_strong(&m_status, &prev_state, ST_NONACTIVE);
+	}
+}
+
+void CNpc::wakeUp_npc()
+{
+	/* NPC가 활성화되어 있지 않을 경우 활성화 */
+	if (m_status == ST_END)
+	{
+		STATUS prev_state = m_status;
+		atomic_compare_exchange_strong(&m_status, &prev_state, ST_NONACTIVE);
 	}
 }
 
@@ -99,35 +131,15 @@ void CNpc::Change_Animation(const float& fTimeDelta)
 	{
 		Change_Walker_Animation(fTimeDelta);
 	}
-}
-
-void CNpc::active_npc()
-{
-	/* NPC가 활성화되어 있지 않을 경우 활성화 */
-	if (m_status != ST_ACTIVE)
+	/* NPC - Assistant */
+	else if (m_npcNum == NPC_POPORI_BOY)
 	{
-		STATUS prev_state = m_status;
-		atomic_compare_exchange_strong(&m_status, &prev_state, ST_ACTIVE);	
+		Change_Assistant_Animation(fTimeDelta);
 	}
-}
-
-void CNpc::nonActive_npc()
-{
-	/* NPC가 활성화되어 있지 않을 경우 활성화 */
-	if (m_status != ST_NONACTIVE)
+	/* NPC - Merchant */
+	else if (m_npcNum == NPC_POPORI_MERCHANT || m_npcNum == NPC_BARAKA_MERCHANT || m_npcNum == NPC_BARAKA_MYSTELLIUM)
 	{
-		STATUS prev_state = m_status;
-		atomic_compare_exchange_strong(&m_status, &prev_state, ST_NONACTIVE);		
-	}
-}
-
-void CNpc::wakeUp_npc()
-{
-	/* NPC가 활성화되어 있지 않을 경우 활성화 */
-	if (m_status == ST_END)
-	{
-		STATUS prev_state = m_status;
-		atomic_compare_exchange_strong(&m_status, &prev_state, ST_NONACTIVE);
+		Change_Merchant_Animation(fTimeDelta);
 	}
 }
 
@@ -160,7 +172,57 @@ void CNpc::Change_Walker_Animation(const float& fTimeDelta)
 		m_uiAnimIdx = NPC_TYPE::WAIT;
 
 		m_bIsDirSelect = false;
-		Set_Start_Move();	
+		Set_Start_Move();
+	}
+	break;
+
+	}
+}
+
+void CNpc::Change_Assistant_Animation(const float& fTimeDelta)
+{
+	switch (m_status)
+	{
+
+	case STATUS::ST_ACTIVE:
+	{
+		m_uiAnimIdx = NPC_TYPE::IDLE;
+		Idle_Assistant_NPC(fTimeDelta, NPC_TYPE::IDLE);
+	}
+	break;
+
+	case STATUS::ST_NONACTIVE:
+	{
+		m_uiAnimIdx = NPC_TYPE::WAIT;
+		Set_Start_Move(10s);
+	}
+	break;
+
+	}
+}
+
+void CNpc::Change_Merchant_Animation(const float& fTimeDelta)
+{
+	switch (m_status)
+	{
+
+	case STATUS::ST_ACTIVE:
+	{
+		m_uiAnimIdx = NPC_MERCHANT_TYPE::GREET;
+		Greet_Merchant_Animation(fTimeDelta);
+	}
+	break;
+
+	case STATUS::ST_NONACTIVE:
+	{
+		m_uiAnimIdx = NPC_TYPE::WAIT;
+		Set_Start_Move(10s);
+	}
+	break;
+
+	case STATUS::ST_CHASE:
+	{
+		m_uiAnimIdx = NPC_MERCHANT_TYPE::TALK;
 	}
 	break;
 
@@ -350,6 +412,116 @@ void CNpc::Move_Walker_NPC(const float& fTimeDelta)
 	}
 }
 
+void CNpc::Idle_Assistant_NPC(const float& fTimeDelta, int animIdx)
+{
+	/* 해당 NPC의 원래 위치값 */
+	float ori_x, ori_y, ori_z;
+	ori_x = m_vPos.x;
+	ori_y = m_vPos.y;
+	ori_z = m_vPos.z;
+
+	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
+	unordered_set<pair<int, int>> oldnearSector;
+	oldnearSector.reserve(5);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
+
+	unordered_set <int> old_viewlist;
+
+	// 이동 전: 인접 섹터 순회
+	for (auto& s : oldnearSector)
+	{
+		// 인접 섹터 내의 타 유저들이 있는지 검사
+		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+		{
+			// 타 유저의 서버 번호 추출
+			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			{
+				/* 타유저일 경우 처리 */
+				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+
+					// 접속한 유저만 시야 목록에 등록한다.
+					if (!pPlayer->Get_IsConnected()) continue;
+
+					// 시야 내에 있다면 시야 목록에 등록한다.
+					if (CObjMgr::GetInstance()->Is_Near(this, pPlayer))
+						old_viewlist.insert(obj_num);
+				}
+			}
+		}
+	}
+
+	for (int server_num : old_viewlist)
+	{
+		if (true == CObjMgr::GetInstance()->Is_Player(server_num))
+		{
+			CPlayer* pUser = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", server_num));
+			if (pUser == nullptr) continue;
+			if (!pUser->m_bIsConnect) continue;
+
+			send_NPC_animation_packet(server_num, animIdx);
+		}
+	}
+
+	Set_Stop_Move();
+}
+
+void CNpc::Greet_Merchant_Animation(const float& fTimeDelta)
+{
+	/* 해당 NPC의 원래 위치값 */
+	float ori_x, ori_y, ori_z;
+	ori_x = m_vPos.x;
+	ori_y = m_vPos.y;
+	ori_z = m_vPos.z;
+
+	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
+	unordered_set<pair<int, int>> oldnearSector;
+	oldnearSector.reserve(5);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
+
+	unordered_set <int> old_viewlist;
+
+	// 이동 전: 인접 섹터 순회
+	for (auto& s : oldnearSector)
+	{
+		// 인접 섹터 내의 타 유저들이 있는지 검사
+		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+		{
+			// 타 유저의 서버 번호 추출
+			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			{
+				/* 타유저일 경우 처리 */
+				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+
+					// 접속한 유저만 시야 목록에 등록한다.
+					if (!pPlayer->Get_IsConnected()) continue;
+
+					// 시야 내에 있다면 시야 목록에 등록한다.
+					if (CObjMgr::GetInstance()->Is_Near(this, pPlayer))
+						old_viewlist.insert(obj_num);
+				}
+			}
+		}
+	}
+
+	for (int server_num : old_viewlist)
+	{
+		if (true == CObjMgr::GetInstance()->Is_Player(server_num))
+		{
+			CPlayer* pUser = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", server_num));
+			if (pUser == nullptr) continue;
+			if (!pUser->m_bIsConnect) continue;
+
+			send_NPC_animation_packet(server_num, NPC_MERCHANT_TYPE::GREET);
+		}
+	}
+
+	Set_Stop_Move();
+}
+
 void CNpc::Play_Animation(float fTimeDelta)
 {
 	if (m_uiCurAniIndex >= m_uiNumAniIndex) return;
@@ -440,6 +612,19 @@ void CNpc::send_NPC_move_packet(int to_client, int ani)
 	p.dirX = m_vDir.x;
 	p.dirY = m_vDir.y;
 	p.dirZ = m_vDir.z;
+
+	send_packet(to_client, &p);
+}
+
+void CNpc::send_NPC_animation_packet(int to_client, int ani)
+{
+	sc_packet_animationIndex p;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_ANIM_INDEX;
+	p.id = m_sNum;
+
+	p.aniIdx = ani;
 
 	send_packet(to_client, &p);
 }

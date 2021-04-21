@@ -12,7 +12,7 @@ public:
 	void	Set_NumAnimation(const _uint& num) { m_uiNumAniIndex = num; }
 	void	Set_AnimationKey(const _uint& uiAniKey);
 
-	void	Set_Start_Move();
+	void	Set_Start_Move(chrono::seconds t = 7s);
 	void	Set_Stop_Move();
 
 public:
@@ -26,9 +26,20 @@ public:
 private:
 	void	Change_Animation(const float& fTimeDelta);
 
-	/* MOVE NPC - Walker */
+	/* MOVE NPC - Walker (Aman_Boy, Cat, Chicken)  */
 	void	Change_Walker_Animation(const float& fTimeDelta);
 	void	Move_Walker_NPC(const float& fTimeDelta);
+
+	/* NON MOVE NPC - Assistant (Popori_boy) */
+	void	Change_Assistant_Animation(const float& fTimeDelta);
+	void	Idle_Assistant_NPC(const float& fTimeDelta, int animIdx);
+
+	/* MERCHANT NPC - Merchant (Villagers, Baraka_M_Extractor) */
+	void	Change_Merchant_Animation(const float& fTimeDelta);
+	void	Greet_Merchant_Animation(const float& fTimeDelta);
+
+	/* NON MOVE NPC - Stander (Villagers, Baraka_M_Extractor) */
+	//void	Change_Stander_Animation(const float& fTimeDelta);
 
 private:
 	void	Play_Animation(float fTimeDelta);
@@ -37,6 +48,7 @@ private:
 public:
 	void	send_NPC_enter_packet(int to_client);			// NPC 등장 패킷
 	void	send_NPC_move_packet(int to_client, int ani);	// NPC 움직임 패킷
+	void	send_NPC_animation_packet(int to_client, int ani);
 
 	virtual DWORD Release();
 

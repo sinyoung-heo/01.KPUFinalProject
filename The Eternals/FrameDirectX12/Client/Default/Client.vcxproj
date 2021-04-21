@@ -187,6 +187,7 @@
     <ClInclude Include="..\Code\InstancePoolMgr.h" />
     <ClInclude Include="..\Code\MagicCircle.h" />
     <ClInclude Include="..\Code\Monkey.h" />
+    <ClInclude Include="..\Code\NPC_Assistant.h" />
     <ClInclude Include="..\Code\PCGladiator.h" />
     <ClInclude Include="..\Code\PCOthersGladiator.h" />
     <ClInclude Include="..\Code\PCWeapon.h" />
@@ -213,7 +214,7 @@
     <ClInclude Include="..\Code\LogoBack.h" />
     <ClInclude Include="..\Code\MainApp.h" />
     <ClInclude Include="..\Code\NPC_Merchant.h" />
-    <ClInclude Include="..\Code\NPC_Villagers.h" />
+    <ClInclude Include="..\Code\NPC_Stander.h" />
     <ClInclude Include="..\Code\PacketMgr.h" />
     <ClInclude Include="..\Code\Popori_F.h" />
     <ClInclude Include="..\Code\RectObject.h" />
@@ -277,6 +278,7 @@
     <ClCompile Include="..\Code\Monkey.cpp" />
     <ClCompile Include="..\Code\Monster_Normal.cpp" />
     <ClCompile Include="..\Code\MouseCursorMgr.cpp" />
+    <ClCompile Include="..\Code\NPC_Assistant.cpp" />
     <ClCompile Include="..\Code\NPC_Walker.cpp" />
     <ClCompile Include="..\Code\DebugCamera.cpp" />
     <ClCompile Include="..\Code\DistortionDisk.cpp" />
@@ -289,7 +291,7 @@
     <ClCompile Include="..\Code\LogoBack.cpp" />
     <ClCompile Include="..\Code\MainApp.cpp" />
     <ClCompile Include="..\Code\NPC_Merchant.cpp" />
-    <ClCompile Include="..\Code\NPC_Villagers.cpp" />
+    <ClCompile Include="..\Code\NPC_Stander.cpp" />
     <ClCompile Include="..\Code\PacketMgr.cpp" />
     <ClCompile Include="..\Code\PCGladiator.cpp" />
     <ClCompile Include="..\Code\PCOthersGladiator.cpp" />

@@ -13,16 +13,12 @@ namespace Engine
 	class CNaviMesh;
 }
 
-class CNPC_Merchant : public Engine::CGameObject
+class CNPC_Stander : public Engine::CGameObject
 {
 private:
-	explicit CNPC_Merchant(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CNPC_Merchant() = default;
+	explicit CNPC_Stander(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CNPC_Stander() = default;
 
-public:
-	const char& Get_NPCNumber() { return m_npcNum; }
-
-	void Set_NPCNumber(char num) { m_npcNum = num; }
 public:
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
@@ -67,9 +63,8 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	wstring	m_wstrMeshTag	= L"";
-	float	m_fAniTime		= 0.f;
-	char	m_npcNum		= 0;
+	wstring	m_wstrMeshTag = L"";
+
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]
 	____________________________________________________________________________________________________________*/
