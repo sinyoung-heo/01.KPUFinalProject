@@ -38,18 +38,19 @@ namespace Aman_boy
 {
 	constexpr int NUM_ANIMATION = 3;
 
-	enum ANIM_CLODER { A_WAIT, A_IDLE, A_WALK, A_END };
+	enum ANIM_AMAN_BOY { A_WAIT, A_IDLE, A_WALK, A_END };
 
 	static double duration[NUM_ANIMATION] =
 	{
 		8000, 16000, 4800
 	};
 }
+
 namespace Cat
 {
 	constexpr int NUM_ANIMATION = 3;
 
-	enum ANIM_CLODER { A_WAIT, A_IDLE, A_WALK, A_END };
+	enum ANIM_CAT { A_WAIT, A_IDLE, A_WALK, A_END };
 
 	static double duration[NUM_ANIMATION] =
 	{
@@ -61,7 +62,7 @@ namespace Chicken
 {
 	constexpr int NUM_ANIMATION = 3;
 
-	enum ANIM_CLODER { A_WAIT, A_IDLE, A_WALK, A_END };
+	enum ANIM_CHICKEN { A_WAIT, A_IDLE, A_WALK, A_END };
 
 	static double duration[NUM_ANIMATION] =
 	{
@@ -73,7 +74,7 @@ namespace Highelf_girl
 {
 	constexpr int NUM_ANIMATION = 5;
 
-	enum ANIM_CLODER { A_WAIT, A_IDLE, A_WALK, A_TALK, A_LAUGH, A_END };
+	enum ANIM_HIGHELF_GIRL { A_WAIT, A_IDLE, A_WALK, A_TALK, A_LAUGH, A_END };
 
 	static double duration[NUM_ANIMATION] =
 	{
@@ -85,7 +86,7 @@ namespace Human_boy
 {
 	constexpr int NUM_ANIMATION = 5;
 
-	enum ANIM_CLODER { A_WAIT, A_IDLE, A_WALK, A_TALK, A_LAUGH, A_END };
+	enum ANIM_HUMAN_BOY { A_WAIT, A_IDLE, A_WALK, A_TALK, A_LAUGH, A_END };
 
 	static double duration[NUM_ANIMATION] =
 	{
@@ -97,7 +98,7 @@ namespace Human_girl
 {
 	constexpr int NUM_ANIMATION = 5;
 
-	enum ANIM_CLODER { A_WAIT, A_IDLE, A_WALK, A_TALK, A_LAUGH, A_END };
+	enum ANIM_HUMAN_GIRL { A_WAIT, A_IDLE, A_WALK, A_TALK, A_LAUGH, A_END };
 
 	static double duration[NUM_ANIMATION] =
 	{
@@ -110,7 +111,7 @@ namespace Popori_boy
 {
 	constexpr int NUM_ANIMATION = 2;
 
-	enum ANIM_CLODER { A_WAIT, A_IDLE, A_END };
+	enum ANIM_POPORI_BOY { A_WAIT, A_IDLE, A_END };
 
 	static double duration[NUM_ANIMATION] =
 	{
@@ -122,7 +123,7 @@ namespace NPC_Villagers
 {
 	constexpr int NUM_ANIMATION = 1;
 
-	enum ANIM_CLODER { A_WAIT, A_END };
+	enum ANIM_VILLAGERS { A_WAIT, A_END };
 
 	static double duration[NUM_ANIMATION] =
 	{
@@ -134,7 +135,7 @@ namespace Baraka_M_Extractor
 {
 	constexpr int NUM_ANIMATION = 1;
 
-	enum ANIM_CLODER { A_WAIT, A_END };
+	enum ANIM_BARAKA_EXTRACTOR { A_WAIT, A_END };
 
 	static double duration[NUM_ANIMATION] =
 	{
@@ -147,7 +148,7 @@ namespace Baraka_M_Merchant
 {
 	constexpr int NUM_ANIMATION = 3;
 
-	enum ANIM_CLODER { A_WAIT, A_GREET, A_TALK, A_END };
+	enum ANIM_BARAKA_MERCHANT { A_WAIT, A_GREET, A_TALK, A_END };
 
 	static double duration[NUM_ANIMATION] =
 	{
@@ -159,7 +160,7 @@ namespace Baraka_M_Mystellium
 {
 	constexpr int NUM_ANIMATION = 3;
 
-	enum ANIM_CLODER { A_WAIT, A_GREET, A_TALK, A_END };
+	enum ANIM_BARAKA_MYSTELLIUM { A_WAIT, A_GREET, A_TALK, A_END };
 
 	static double duration[NUM_ANIMATION] =
 	{
@@ -171,7 +172,7 @@ namespace Popori_M_Merchant
 {
 	constexpr int NUM_ANIMATION = 3;
 
-	enum ANIM_CLODER { A_WAIT, A_GREET, A_TALK, A_END };
+	enum ANIM_POPORI_MERCHANT { A_WAIT, A_GREET, A_TALK, A_END };
 
 	static double duration[NUM_ANIMATION] =
 	{
@@ -184,7 +185,7 @@ namespace Castanic_M_Lsmith
 {
 	constexpr int NUM_ANIMATION = 3;
 
-	enum ANIM_CLODER { A_WAIT, A_GREET, A_TALK, A_END };
+	enum ANIM_CASTANIC_LSMITH { A_WAIT, A_GREET, A_TALK, A_END };
 
 	static double duration[NUM_ANIMATION] =
 	{

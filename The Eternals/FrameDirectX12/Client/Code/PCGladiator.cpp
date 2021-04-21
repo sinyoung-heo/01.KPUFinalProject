@@ -10,6 +10,7 @@
 #include "CollisionTick.h"
 #include "InstancePoolMgr.h"
 #include "FadeInOut.h"
+#include "NPC_Merchant.h"
 
 CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -237,6 +238,10 @@ void CPCGladiator::Process_Collision()
 
 			if (L"Portal_BeachToVelika" == pDst->Get_CollisionTag())
 				Collision_PortalBeachToVelika(pDst->Get_ColliderList());
+
+			if (L"NPC_Merchant" == pDst->Get_CollisionTag())
+				Collision_Merchant(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
+		
 		}
 	}
 }
@@ -906,6 +911,24 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 	}
 }
 
+void CPCGladiator::KeyInput_OpenShop(const char& npcNumber)
+{
+	g_bIsOpenShop = !g_bIsOpenShop;
+
+	if (g_bIsOpenShop)
+	{
+		if (npcNumber == NPC_POPORI_MERCHANT || npcNumber == NPC_BARAKA_MERCHANT || npcNumber == NPC_BARAKA_MYSTELLIUM)
+		{
+			// NPC에 맞는 상점 리소스 생성
+			cout << "상점 오픈" << endl;
+		}		
+	}
+	else
+	{
+		cout << "상점 종료" << endl;
+	}
+}
+
 void CPCGladiator::SetUp_AttackSetting()
 {
 	m_bIsAttack  = true;
@@ -1496,6 +1519,31 @@ void CPCGladiator::Collision_PortalBeachToVelika(list<Engine::CColliderSphere*>&
 
 				// SendPacket
 				// m_pPacketMgr->send_stage_change(STAGE_VELIKA);
+			}
+		}
+	}
+}
+
+void CPCGladiator::Collision_Merchant(list<Engine::CColliderSphere*>& lstMerchantCollider, int npcServerNumber)
+{
+	for (auto& pSrcCollider : m_lstCollider)
+	{
+		for (auto& pDstCollider : lstMerchantCollider)
+		{
+			if (Engine::CCollisionMgr::Check_Sphere(pSrcCollider->Get_BoundingInfo(), pDstCollider->Get_BoundingInfo()))
+			{
+				// Process Collision Event
+				pSrcCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+				pDstCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+					
+				CNPC_Merchant* pObj = static_cast<CNPC_Merchant*>(m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"NPC", npcServerNumber));
+				pObj->Set_State(Baraka_M_Merchant::A_TALK);
+		
+				/* Shop Open */
+				if (Engine::KEY_DOWN(DIK_F))
+				{				
+					KeyInput_OpenShop(pObj->Get_NPCNumber());
+				}
 			}
 		}
 	}

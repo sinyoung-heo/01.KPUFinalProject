@@ -34,6 +34,10 @@ private:
 	void	Change_Assistant_Animation(const float& fTimeDelta);
 	void	Idle_Assistant_NPC(const float& fTimeDelta, int animIdx);
 
+	/* MERCHANT NPC - Merchant (Villagers, Baraka_M_Extractor) */
+	void	Change_Merchant_Animation(const float& fTimeDelta);
+	void	Greet_Merchant_Animation(const float& fTimeDelta);
+
 	/* NON MOVE NPC - Stander (Villagers, Baraka_M_Extractor) */
 	//void	Change_Stander_Animation(const float& fTimeDelta);
 

@@ -33,6 +33,7 @@ HWND		g_hWnd;
 
 _bool g_bIsOnDebugCaemra = false;
 _bool g_bIsStageChange   = false;
+_bool g_bIsOpenShop		 = false;
 
 _ulong Release_Singleton();
 

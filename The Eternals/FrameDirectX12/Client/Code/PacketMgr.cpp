@@ -443,6 +443,27 @@ void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
 										  _vec3(packet->angleX, packet->angleY, packet->angleZ),	// Angle
 										  _vec3(packet->posX, packet->posY, packet->posZ));
 	}
+	/* NPC - Merchant */
+	else if (packet->npcNum == NPC_POPORI_MERCHANT || packet->npcNum == NPC_BARAKA_MERCHANT || packet->npcNum == NPC_BARAKA_MYSTELLIUM)
+	{
+		wstring wstrMeshTag;
+		if (packet->npcNum == NPC_POPORI_MERCHANT)
+			wstrMeshTag = L"Popori_M_Merchant";
+		else if (packet->npcNum == NPC_BARAKA_MERCHANT)
+			wstrMeshTag = L"Baraka_M_Merchant";
+		else if (packet->npcNum == NPC_BARAKA_MYSTELLIUM)
+			wstrMeshTag = L"Baraka_M_Mystellium";
+
+		pGameObj = CNPC_Merchant::Create(m_pGraphicDevice, m_pCommandList,
+										 wstrMeshTag,												// MeshTag
+										 wstrNaviMeshTag,											// NaviMeshTag
+										 _vec3(0.05f, 0.05f, 0.05f),								// Scale
+										 _vec3(packet->angleX, packet->angleY, packet->angleZ),		// Angle
+										 _vec3(packet->posX, packet->posY, packet->posZ));
+
+		static_cast<CNPC_Merchant*>(pGameObj)->Set_NPCNumber(packet->npcNum);
+	}
+
 
 	pGameObj->Set_ServerNumber(packet->id);
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"NPC", pGameObj), E_FAIL);

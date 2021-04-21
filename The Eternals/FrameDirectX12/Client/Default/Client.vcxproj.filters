@@ -109,9 +109,6 @@
     <Filter Include="99.Etc\SampleObject\11.NPC\01.NPC_Boy">
       <UniqueIdentifier>{80c37e2d-3841-42a8-85b1-9f2dfc506d06}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99.Etc\SampleObject\11.NPC\03.NPC_Merchant">
-      <UniqueIdentifier>{797a3833-9c0a-4991-ae76-60371ebf7e9e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99.Etc\SampleObject\12.TexEffectInstance">
       <UniqueIdentifier>{8127f386-d54a-487e-be8b-709a071ca813}</UniqueIdentifier>
     </Filter>
@@ -268,6 +265,9 @@
     <Filter Include="02.GameObject\04.NPC\02.NPC_Stander">
       <UniqueIdentifier>{2e7a57e9-20d2-4c6d-aa3a-f85f017468b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\04.NPC\03.NPC_Merchant">
+      <UniqueIdentifier>{797a3833-9c0a-4991-ae76-60371ebf7e9e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -386,7 +386,7 @@
       <Filter>99.Etc\SampleObject\11.NPC\01.NPC_Boy</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\NPC_Merchant.h">
-      <Filter>99.Etc\SampleObject\11.NPC\03.NPC_Merchant</Filter>
+      <Filter>02.GameObject\04.NPC\03.NPC_Merchant</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\DistortionDisk.h">
       <Filter>99.Etc\SampleObject\14.DistortionDisk</Filter>
@@ -626,7 +626,7 @@
       <Filter>99.Etc\SampleObject\11.NPC\01.NPC_Boy</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\NPC_Merchant.cpp">
-      <Filter>99.Etc\SampleObject\11.NPC\03.NPC_Merchant</Filter>
+      <Filter>02.GameObject\04.NPC\03.NPC_Merchant</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\DistortionDisk.cpp">
       <Filter>99.Etc\SampleObject\14.DistortionDisk</Filter>

@@ -42,6 +42,7 @@ public:
 	void    send_attackByMonster(int objID);
 	void    send_attackToMonster(int objID);
 	void	send_stage_change(const char& chStageId);
+
 public:
 	bool	change_MoveKey(MVKEY eKey);
 
