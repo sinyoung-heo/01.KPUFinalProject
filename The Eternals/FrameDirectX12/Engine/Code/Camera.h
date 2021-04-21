@@ -10,6 +10,7 @@ class CShaderTextureInstancing;
 class CShaderBumpTerrain;
 class CShaderSkyBox;
 class CShaderMesh;
+class CShaderMeshEffect;
 class CShaderMeshInstancing;
 class CShaderSSAO;
 class CShaderNPathDir;
@@ -63,6 +64,8 @@ protected:
 	CShaderTextureInstancing*	m_pShaderTextureInstancing = nullptr;
 	CShaderSkyBox*				m_pShaderSkyBox		       = nullptr;
 	CShaderMesh*				m_pShaderMesh		       = nullptr;
+
+	CShaderMeshEffect* m_pShaderMeshEffect = nullptr;
 	CShaderMeshInstancing*		m_pShaderMeshInstancing    = nullptr;
 	CShaderSSAO*				m_pShaderSSAO              = nullptr;
 

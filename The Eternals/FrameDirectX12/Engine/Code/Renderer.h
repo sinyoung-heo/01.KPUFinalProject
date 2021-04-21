@@ -192,8 +192,9 @@ private:
 	CShaderSSAO* m_pSSAOShader = nullptr;
 	_bool				m_bIsSetSSAOTexture{ false };
 
-
-	
+	//Effect (Alpha)
+	CRenderTarget* m_pTargetpEffect = nullptr;
+	CScreenTex* m_pEffectBuffer = nullptr;
 	/*__________________________________________________________________________________________________________
 	[ Pipeline StateGroup ]
 	____________________________________________________________________________________________________________*/

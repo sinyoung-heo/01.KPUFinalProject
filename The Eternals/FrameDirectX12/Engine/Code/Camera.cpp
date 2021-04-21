@@ -81,6 +81,9 @@ HRESULT CCamera::Ready_GameObject(const CAMERA_DESC& tCameraInfo,
 	m_pShaderMesh = static_cast<CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pShaderMesh, E_FAIL);
 
+	m_pShaderMeshEffect = static_cast<CShaderMeshEffect*>(m_pComponentMgr->Clone_Component(L"ShaderMeshEffect", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pShaderMeshEffect, E_FAIL);
+
 	m_pShaderSSAO = static_cast<CShaderSSAO*>(m_pComponentMgr->Clone_Component(L"ShaderSSAO", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pShaderSSAO, E_FAIL);
 
@@ -166,6 +169,9 @@ void CCamera::Set_ConstantTable()
 
 	// ShaderMesh
 	m_pShaderMesh->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
+
+	m_pShaderMeshEffect->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
+
 
 	// ShaderMeshInstancing
 	m_pShaderMeshInstancing->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
