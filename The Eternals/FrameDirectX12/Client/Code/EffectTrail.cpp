@@ -9,13 +9,16 @@ CEffectTrail::CEffectTrail(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandLi
 {
 }
 
-HRESULT CEffectTrail::Ready_GameObject(wstring wstrTextureTag, const _uint& uiTexIdx)
+HRESULT CEffectTrail::Ready_GameObject(wstring wstrTextureTag, 
+									   const _uint& uiTexIdx, 
+									   const Engine::CRenderer::RENDERGROUP& eRenderGroup)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrTextureTag), E_FAIL);
 
 	m_wstrTextureTag      = wstrTextureTag;
 	m_uiTexIdx            = uiTexIdx;
+	m_eRenderGroup        = eRenderGroup;
 	m_pTransCom->m_vScale = _vec3(1.0f);
 	m_pTransCom->m_vAngle = _vec3(0.0f);
 	m_pTransCom->m_vPos	  = _vec3(0.0f);
@@ -46,6 +49,7 @@ _int CEffectTrail::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bIsRender)
 	{
+		
 		if (m_fAlpha < 1.0f)
 		{
 			m_fAlpha += 10.0f * fTimeDelta;
@@ -54,10 +58,19 @@ _int CEffectTrail::Update_GameObject(const _float& fTimeDelta)
 				m_fAlpha = 1.0f;
 		}
 
+		if (Engine::CRenderer::RENDER_DISTORTION == m_eRenderGroup)
+		{
+			m_fAlpha = 1.0f;
+		}
+
 		/*__________________________________________________________________________________________________________
 		[ Renderer - Add Render Group ]
 		____________________________________________________________________________________________________________*/
-		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);
+		if (Engine::CRenderer::RENDER_ALPHA == m_eRenderGroup)
+			Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);
+
+		else if (Engine::CRenderer::RENDER_DISTORTION == m_eRenderGroup)
+			Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_DISTORTION, this), -1);
 
 	}
 	else
@@ -69,12 +82,17 @@ _int CEffectTrail::Update_GameObject(const _float& fTimeDelta)
 			if (m_fAlpha <= 0.0f)
 				m_fAlpha = 0.0f;
 		}
+
+
 	}
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
+
+	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
+	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
 
 	return NO_EVENT;
 }
@@ -179,11 +197,12 @@ void CEffectTrail::SetUp_TrailAlpha(const _float& fTimeDelta)
 
 CEffectTrail* CEffectTrail::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 								   wstring wstrTextureTag,
-								   const _uint& uiTexIdx)
+								   const _uint& uiTexIdx,
+								   const Engine::CRenderer::RENDERGROUP& eRenderGroup)
 {
 	CEffectTrail* pInstance = new CEffectTrail(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(wstrTextureTag, uiTexIdx)))
+	if (FAILED(pInstance->Ready_GameObject(wstrTextureTag, uiTexIdx, eRenderGroup)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
