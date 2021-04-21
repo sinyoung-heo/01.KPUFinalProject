@@ -227,9 +227,17 @@ void CPCGladiator::Process_Collision()
 {
 	for (auto& pDst : m_lstCollisionDst)
 	{
-		if (L"Monster" == pDst->Get_CollisionTag())
-			Collision_Monster(pDst->Get_ColliderList());
+		// Collision Monster
+		if (L"Monster_SingleCollider" == pDst->Get_CollisionTag())
+		{
+			m_pBoundingSphereCom->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+			pDst->Get_BoundingSphere()->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 
+		}
+		if (L"Monster_MultiCollider" == pDst->Get_CollisionTag())
+			Collision_MonsterMultiCollider(pDst->Get_ColliderList());
+
+		// Collision Stage Change
 		if (!g_bIsStageChange)
 		{
 			if (L"Portal_VelikaToBeach" == pDst->Get_CollisionTag())
@@ -1427,7 +1435,7 @@ void CPCGladiator::Make_AfterImage(const _float& fTimeDelta)
 	}
 }
 
-void CPCGladiator::Collision_Monster(list<Engine::CColliderSphere*>& lstMonsterCollider)
+void CPCGladiator::Collision_MonsterMultiCollider(list<Engine::CColliderSphere*>& lstMonsterCollider)
 {
 	for (auto& pSrcCollider : m_lstCollider)
 	{

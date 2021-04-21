@@ -82,7 +82,7 @@ private:
 	void Make_AfterImage(const _float& fTimeDelta);
 
 	// Collision Event
-	void Collision_Monster(list<Engine::CColliderSphere*>& lstMonsterCollider);
+	void Collision_MonsterMultiCollider(list<Engine::CColliderSphere*>& lstMonsterCollider);
 	void Collision_PortalVelikaToBeach(list<Engine::CColliderSphere*>& lstPortalCollider);
 	void Collision_PortalBeachToVelika(list<Engine::CColliderSphere*>& lstPortalCollider);
 private:

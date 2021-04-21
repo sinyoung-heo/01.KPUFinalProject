@@ -1036,77 +1036,77 @@ void Initialize_Monster()
 	}
 	else return;
 
-	//// TEST MONSTER - Giant Monkey
-	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
-	//
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += MON_NUM_START;
-	//	s_num = pNew->m_sNum;
+	// TEST MONSTER - Giant Monkey
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+	
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->m_sNum += MON_NUM_START;
+		s_num = pNew->m_sNum;
 
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "GiantMonkey", strlen("GiantMonkey"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
+		pNew->Set_IsConnected(true);
+		pNew->Set_IsDead(false);
+		strncpy_s(pNew->m_ID, "GiantMonkey", strlen("GiantMonkey"));
+		strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
 
-	//	pNew->m_vPos = _vec3(127.0f, 0.f, 55.0f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vOriPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 0.0f, 0.f);
-	//	pNew->m_iHp = 1000;
-	//	pNew->m_iMaxHp = 1000;
-	//	pNew->m_iAtt = 1;
-	//	pNew->m_iExp = 0;
-	//	pNew->m_fSpd = 0.5f;
-	//	pNew->m_type = MON_NORMAL;
-	//	pNew->m_monNum = MON_GMONKEY;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
+		pNew->m_vPos = _vec3(127.0f, 0.f, 55.0f);
+		pNew->m_vTempPos = pNew->m_vPos;
+		pNew->m_vOriPos = pNew->m_vPos;
+		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
+		pNew->m_vAngle = _vec3(0.f, 0.0f, 0.f);
+		pNew->m_iHp = 1000;
+		pNew->m_iMaxHp = 1000;
+		pNew->m_iAtt = 1;
+		pNew->m_iExp = 0;
+		pNew->m_fSpd = 0.5f;
+		pNew->m_type = MON_NORMAL;
+		pNew->m_monNum = MON_GMONKEY;
+		pNew->m_status = STATUS::ST_NONACTIVE;
 
-	//	pNew->Set_NumAnimation(GiantMonkey::NUM_ANIMATION);
-	//	pNew->Set_AnimDuration(GiantMonkey::duration);
+		pNew->Set_NumAnimation(GiantMonkey::NUM_ANIMATION);
+		pNew->Set_AnimDuration(GiantMonkey::duration);
 
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"MONSTER", pNew, s_num);
-	//}
-	//else return;
+		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
+		CObjMgr::GetInstance()->Add_GameObject(L"MONSTER", pNew, s_num);
+	}
+	else return;
 
-	//// TEST MONSTER - Crafty Arachne
-	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
-	//
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += MON_NUM_START;
-	//	s_num = pNew->m_sNum;
-	//
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "CraftyArachne", strlen("CraftyArachne"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-	//
-	//	pNew->m_vPos = _vec3(122.0f, 0.f, 55.0f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vOriPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	//	pNew->m_iHp = 1000;
-	//	pNew->m_iMaxHp = 1000;
-	//	pNew->m_iAtt = 1;
-	//	pNew->m_iExp = 0;
-	//	pNew->m_fSpd = 0.5f;
-	//	pNew->m_type = MON_NORMAL;
-	//	pNew->m_monNum = MON_ARACHNE;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-	//
-	//	pNew->Set_NumAnimation(CraftyArachne::NUM_ANIMATION);
-	//	pNew->Set_AnimDuration(CraftyArachne::duration);
-	//
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"MONSTER", pNew, s_num);
-	//}
-	//else return;
+	// TEST MONSTER - Crafty Arachne
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+	
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->m_sNum += MON_NUM_START;
+		s_num = pNew->m_sNum;
+	
+		pNew->Set_IsConnected(true);
+		pNew->Set_IsDead(false);
+		strncpy_s(pNew->m_ID, "CraftyArachne", strlen("CraftyArachne"));
+		strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
+	
+		pNew->m_vPos = _vec3(122.0f, 0.f, 55.0f);
+		pNew->m_vTempPos = pNew->m_vPos;
+		pNew->m_vOriPos = pNew->m_vPos;
+		pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
+		pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
+		pNew->m_iHp = 1000;
+		pNew->m_iMaxHp = 1000;
+		pNew->m_iAtt = 1;
+		pNew->m_iExp = 0;
+		pNew->m_fSpd = 0.5f;
+		pNew->m_type = MON_NORMAL;
+		pNew->m_monNum = MON_ARACHNE;
+		pNew->m_status = STATUS::ST_NONACTIVE;
+	
+		pNew->Set_NumAnimation(CraftyArachne::NUM_ANIMATION);
+		pNew->Set_AnimDuration(CraftyArachne::duration);
+	
+		CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
+		CObjMgr::GetInstance()->Add_GameObject(L"MONSTER", pNew, s_num);
+	}
+	else return;
 }
 
 void Delete_Monster()
