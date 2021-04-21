@@ -275,14 +275,14 @@ void CPacketMgr::Process_packet()
 	case SC_PACKET_MONSTER_MOVE:
 	{
 		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(m_packet_start);
-		Move_Monster(packet);
+		//Move_Monster(packet);
 	}
 	break;
 
 	case SC_PACKET_MONSTER_ATTACK:
 	{
 		sc_packet_monster_attack* packet = reinterpret_cast<sc_packet_monster_attack*>(m_packet_start);
-		Attack_Monster(packet);
+		//Attack_Monster(packet);
 	}
 	break;
 

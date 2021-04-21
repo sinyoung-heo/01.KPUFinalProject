@@ -18,18 +18,24 @@ CGiantMonkey::CGiantMonkey(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandLi
 
 HRESULT CGiantMonkey::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
 {
-	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag, wstrNaviMeshTag), E_FAIL);
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos = vPos;
 	m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(vPos));
-	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
-		m_pTransCom->m_vScale,
-		m_pMeshCom->Get_CenterPos(),
-		m_pMeshCom->Get_MinVector(),
-		m_pMeshCom->Get_MaxVector());
 
+	//Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
+	//									   m_pTransCom->m_vScale,
+	//									   m_pMeshCom->Get_CenterPos(),
+	//									   m_pMeshCom->Get_MinVector(),
+	//									   m_pMeshCom->Get_MaxVector());
+	Engine::CGameObject::SetUp_BoundingSphere(&(m_pTransCom->m_matWorld),
+											  m_pTransCom->m_vScale,
+											  _vec3(128.0f),
+											  _vec3(2.0f, 37.f, 0.0f));
+	m_wstrCollisionTag = L"Monster_SingleCollider";
+	m_lstCollider.push_back(m_pBoundingSphereCom);
 
 	m_pInfoCom->m_fSpeed = 1.f;
 	m_bIsMoveStop = true;
@@ -74,6 +80,16 @@ _int CGiantMonkey::Update_GameObject(const _float& fTimeDelta)
 	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
 	/*__________________________________________________________________________________________________________
+	[ Renderer - Add Render Group ]
+	____________________________________________________________________________________________________________*/
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+
+	/*__________________________________________________________________________________________________________
+	[ Collision - Add Collision List ]
+	____________________________________________________________________________________________________________*/
+	m_pCollisonMgr->Add_CollisionCheckList(this);
+
+	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
@@ -84,11 +100,6 @@ _int CGiantMonkey::Update_GameObject(const _float& fTimeDelta)
 _int CGiantMonkey::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
-
-	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 
 	return NO_EVENT;
 }

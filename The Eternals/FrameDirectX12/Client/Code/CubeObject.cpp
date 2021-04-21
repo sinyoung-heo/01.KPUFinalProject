@@ -94,7 +94,7 @@ void CCubeObject::Set_ConstantTable(const Engine::COLOR_BUFFER& eBuffer, const _
 	Engine::CB_SHADER_COLOR tCB_ShaderColor;
 	ZeroMemory(&tCB_ShaderColor, sizeof(Engine::CB_SHADER_COLOR));
 	tCB_ShaderColor.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderColor.vColor		= _rgba(1.0f, 0.0f, 0.0f, 1.0f);
+	tCB_ShaderColor.vColor		= _rgba(0.0f, 0.0f, 1.0f, 1.0f);
 
 	m_pShaderColorInstancing->Get_UploadBuffer_ShaderColor(eBuffer, m_uiColorPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderColor);
 

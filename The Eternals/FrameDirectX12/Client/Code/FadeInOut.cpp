@@ -169,7 +169,6 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 	}
 	else if (EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN == m_eEventType)
 	{
-		cout << m_fAlpha << endl;
 		// Send StageChange Packet
 		if (!m_bIsReceivePacket)
 		{
