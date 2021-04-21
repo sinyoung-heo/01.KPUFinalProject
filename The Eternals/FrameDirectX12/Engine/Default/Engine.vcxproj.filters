@@ -411,6 +411,9 @@
     <ClInclude Include="..\Code\TrailTex.h">
       <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\00.Buffer\07.TrailTex</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ShaderMeshEffect.h">
+      <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\03.ShaderMesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\DirectInput.cpp">
@@ -605,6 +608,9 @@
     <ClCompile Include="..\Code\TrailTex.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\00.Buffer\07.TrailTex</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\ShaderMeshEffect.cpp">
+      <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\03.ShaderMesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Bin\Shader\ShaderMesh.hlsl">
@@ -660,6 +666,9 @@
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderLightingInstancing.hlsl">
       <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\05.ShaderLight</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Bin\Shader\ShaderMeshEffect.hlsl">
+      <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\03.ShaderMesh</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

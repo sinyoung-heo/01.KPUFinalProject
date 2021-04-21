@@ -265,6 +265,9 @@
     <Filter Include="02.GameObject\04.NPC\00.NPC_Walker">
       <UniqueIdentifier>{ceb6f96a-aa02-4edc-bdcb-d213059de653}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.GameEffect\02.MagicCircle">
+      <UniqueIdentifier>{06feade8-b31d-48da-9c1b-00ae2089b752}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -528,6 +531,9 @@
     <ClInclude Include="..\Code\NPC_Walker.h">
       <Filter>02.GameObject\04.NPC\00.NPC_Walker</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\MagicCircle.h">
+      <Filter>02.GameObject\98.GameEffect\02.MagicCircle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -742,6 +748,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\NPC_Walker.cpp">
       <Filter>02.GameObject\04.NPC\00.NPC_Walker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MagicCircle.cpp">
+      <Filter>02.GameObject\98.GameEffect\02.MagicCircle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

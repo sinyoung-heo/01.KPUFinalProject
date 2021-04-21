@@ -325,9 +325,6 @@ void CRenderer::Render_CrossFilter(const _float& fTimeDelta)
 		pGameObject->Render_CrossFilterGameObject(fTimeDelta);
 
 
-	for (auto& pGameObject : m_RenderList[RENDER_MAGICCIRCLE])
-		pGameObject->Render_GameObject(0.f);
-
 	m_pTargetCrossFilter->Release_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
 }
 
@@ -479,6 +476,7 @@ void CRenderer::Render_Blur()
 	m_pBlurBuffer->Begin_Buffer();
 	m_pBlurBuffer->Render_Buffer();
 
+
 	m_pTargetBlur->Release_OnGraphicDevice();
 }
 
@@ -502,6 +500,20 @@ void CRenderer::Render_SSAO()
 
 void CRenderer::Render_Alpha(const _float& fTimeDelta)
 {
+	sort(m_RenderList[RENDER_MAGICCIRCLE].begin(), m_RenderList[RENDER_MAGICCIRCLE].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
+		{
+			return pSour->Get_DepthOfView() > pDest->Get_DepthOfView();
+		});
+
+
+	m_pTargetpEffect->SetUp_OnGraphicDevice();
+	
+	for (auto& pGameObject : m_RenderList[RENDER_MAGICCIRCLE])
+		pGameObject->Render_GameObject(fTimeDelta);
+
+	m_pTargetpEffect->Release_OnGraphicDevice();
+
+
 	sort(m_RenderList[RENDER_ALPHA].begin(), m_RenderList[RENDER_ALPHA].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool 
 		{ 
 			return pSour->Get_DepthOfView() > pDest->Get_DepthOfView(); 
@@ -576,6 +588,8 @@ void CRenderer::Render_RenderTarget()
 			m_pTargetNPathDir->Render_RenderTarget();
 		if (nullptr != m_pTargetSunShine)
 			m_pTargetSunShine->Render_RenderTarget();
+		if (nullptr != m_pTargetpEffect)
+			m_pTargetpEffect->Render_RenderTarget();
 	}
 
 }
@@ -621,6 +635,13 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderMesh", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
+
+	// ShaderMesh
+	pShader = CShaderMeshEffect::Create(m_pGraphicDevice, m_pCommandList);
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderMeshEffect", ID_STATIC, pShader), E_FAIL);
+	++m_uiCnt_ShaderFile;
+
 
 	// ShaderShadow
 	pShader = CShaderShadow::Create(m_pGraphicDevice, m_pCommandList);
@@ -715,6 +736,8 @@ HRESULT CRenderer::Ready_RenderTarget()
 	m_pTargetDeferred->Set_TargetClearColor(5, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);		// Emissive
 
 	FAILED_CHECK_RETURN(m_pTargetDeferred->SetUp_DefaultSetting(TARGETID::TYPE_DEFAULT), E_FAIL);
+
+
 
 	/*__________________________________________________________________________________________________________
 	[ Light RnderTarget ]
@@ -888,6 +911,17 @@ HRESULT CRenderer::Ready_RenderTarget()
 	m_pSunShineShader = static_cast<CShaderNPathDir*>(m_pComponentMgr->Clone_Component(L"ShaderNPathDir", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pSunShineShader, E_FAIL);
 	FAILED_CHECK_RETURN(m_pSunShineShader->Set_PipelineStatePass(1), E_FAIL);
+
+
+
+	m_pTargetpEffect = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
+	NULL_CHECK_RETURN(m_pTargetpEffect, E_FAIL);
+	m_pTargetpEffect->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	FAILED_CHECK_RETURN(m_pTargetpEffect->SetUp_DefaultSetting(TARGETID::TYPE_DEFAULT), E_FAIL);
+	m_pTargetpEffect->Set_TargetRenderPos(_vec3(WIDTH_THIRD, HEIGHT_SIXTH, 1.0f));
+
+	m_pEffectBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pEffectBuffer, E_FAIL);
 	/*__________________________________________________________________________________________________________
 	[ Blend Resource ]
 	____________________________________________________________________________________________________________*/

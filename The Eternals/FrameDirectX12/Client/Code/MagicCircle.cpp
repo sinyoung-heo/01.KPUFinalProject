@@ -10,8 +10,6 @@
 #include "DescriptorHeapMgr.h"
 CMagicCircle::CMagicCircle(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
-	, m_pShaderShadowInstancing(Engine::CShaderShadowInstancing::Get_Instance())
-	, m_pShaderMeshInstancing(Engine::CShaderMeshInstancing::Get_Instance())
 {
 }
 
@@ -29,22 +27,17 @@ HRESULT CMagicCircle::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos		= vPos;
 
-	// PipelineState.
-	m_iMeshPipelineStatePass	= 2;
-	m_iShadowPipelineStatePass	= 0;
-
+	
 	return S_OK;
 }
 
 HRESULT CMagicCircle::LateInit_GameObject()
 {
-	m_pShaderCom->SetUp_ShaderConstantBuffer();
+
+	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	Engine::CTexture* pTexture = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(L"PublicMagic", Engine::COMPONENTID::ID_STATIC));
 	SetUp_DescriptorHeap(pTexture->Get_Texture(), m_pRenderer->Get_TargetShadowDepth()->Get_TargetTexture());
 
-	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
-	m_pCrossFilterShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
-	m_pEdgeObjectShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
 	m_fNormalMapDeltatime  = 2;//NormIdx
 	m_fPatternMapDeltatime = 1;//SpecIdx
@@ -84,42 +77,11 @@ _int CMagicCircle::LateUpdate_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-void CMagicCircle::Render_GameObject(const _float& fTimeDelta,
-										   ID3D12GraphicsCommandList * pCommandList,
-										   const _int& iContextIdx)
-{
 
-	/*Set_ConstantTable();
-	m_pMeshCom->Render_StaticMesh(m_pShaderCom);*/
-}
 void CMagicCircle::Render_GameObject(const _float& fTimeDelta)
 {
 	Set_ConstantTable();
 	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_fNormalMapDeltatime, m_fPatternMapDeltatime);
-}
-void CMagicCircle::Render_EdgeGameObject(const _float& fTimeDelta)
-{
-	Set_ConstantTable();
-	m_pMeshCom->Render_StaticMesh(m_pEdgeObjectShaderCom);
-}
-void CMagicCircle::Render_CrossFilterGameObject(const _float& fTimeDelta)
-{
-	Set_ConstantTable();
-	m_pMeshCom->Render_StaticMesh(m_pCrossFilterShaderCom);
-
-}
-
-void CMagicCircle::Render_ShadowDepth(const _float& fTimeDelta, 
-											ID3D12GraphicsCommandList * pCommandList, 
-											const _int& iContextIdx)
-{
-	///*__________________________________________________________________________________________________________
-	//[ Add Instance ]
-	//____________________________________________________________________________________________________________*/
-	//m_pShaderShadowInstancing->Add_Instance(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass);
-	//_uint iInstanceIdx = m_pShaderShadowInstancing->Get_InstanceCount(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass) - 1;
-
-	//Set_ConstantTableShadowDepth(iContextIdx, iInstanceIdx);
 }
 
 HRESULT CMagicCircle::Add_Component(wstring wstrMeshTag)
@@ -134,23 +96,11 @@ HRESULT CMagicCircle::Add_Component(wstring wstrMeshTag)
 
 
 	// Shader
-	m_pShaderCom = static_cast<Engine::CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", Engine::COMPONENTID::ID_STATIC));
+	m_pShaderCom = static_cast<Engine::CShaderMeshEffect*>(m_pComponentMgr->Clone_Component(L"ShaderMeshEffect", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(9), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(0), E_FAIL);
 	m_pShaderCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
-
-	m_pCrossFilterShaderCom = static_cast<Engine::CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", Engine::COMPONENTID::ID_STATIC));
-	Engine::NULL_CHECK_RETURN(m_pCrossFilterShaderCom, E_FAIL);
-	m_pCrossFilterShaderCom->AddRef();
-	Engine::FAILED_CHECK_RETURN(m_pCrossFilterShaderCom->Set_PipelineStatePass(3), E_FAIL);
-	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader2", m_pCrossFilterShaderCom);
-
-	m_pEdgeObjectShaderCom = static_cast<Engine::CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", Engine::COMPONENTID::ID_STATIC));
-	Engine::NULL_CHECK_RETURN(m_pEdgeObjectShaderCom, E_FAIL);
-	m_pEdgeObjectShaderCom->AddRef();
-	Engine::FAILED_CHECK_RETURN(m_pEdgeObjectShaderCom->Set_PipelineStatePass(4), E_FAIL);
-	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader3", m_pEdgeObjectShaderCom);
 
 	return S_OK;
 }
@@ -172,53 +122,15 @@ void CMagicCircle::Set_ConstantTable()
 
 	
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
-	m_pCrossFilterShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
-	m_pEdgeObjectShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 
 	
 }
 
 void CMagicCircle::Set_ConstantTableShadowDepth()
 {
+
 }
 
-void CMagicCircle::Set_ConstantTable(const _int& iContextIdx, const _int& iInstanceIdx)
-{
-	/*__________________________________________________________________________________________________________
-	[ Set ShaderResource Data ]
-	____________________________________________________________________________________________________________*/
-	Engine::SHADOW_DESC tShadowDesc = CShadowLightMgr::Get_Instance()->Get_ShadowDesc();
-
-	m_fDeltatime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.1f;
-	Engine::CB_SHADER_MESH tCB_ShaderMesh;
-	ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
-	tCB_ShaderMesh.matWorld      = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderMesh.matLightView  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
-	tCB_ShaderMesh.matLightProj  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
-	tCB_ShaderMesh.vLightPos     = tShadowDesc.vLightPosition;
-	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
-	tCB_ShaderMesh.fOffset1 = m_fDeltatime;
-	m_pShaderMeshInstancing->Get_UploadBuffer_ShaderMesh(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderMesh);
-}
-
-void CMagicCircle::Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int& iInstanceIdx)
-{
-	/*__________________________________________________________________________________________________________
-	[ Set ConstantBuffer Data ]
-	____________________________________________________________________________________________________________*/
-	Engine::SHADOW_DESC tShadowDesc = CShadowLightMgr::Get_Instance()->Get_ShadowDesc();
-
-	
-	Engine::CB_SHADER_SHADOW tCB_ShaderShadow;
-	ZeroMemory(&tCB_ShaderShadow, sizeof(Engine::CB_SHADER_SHADOW));
-	tCB_ShaderShadow.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderShadow.matView	= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
-	tCB_ShaderShadow.matProj	= Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
-	tCB_ShaderShadow.fProjFar	= tShadowDesc.fLightPorjFar;
-
-	
-	m_pShaderShadowInstancing->Get_UploadBuffer_ShaderShadow(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderShadow);
-}
 
 HRESULT CMagicCircle::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth)
 {
@@ -285,7 +197,4 @@ void CMagicCircle::Free()
 	Engine::Safe_Release(m_pMeshCom);
 	Engine::Safe_Release(m_pDescriptorHeaps);
 	Engine::Safe_Release(m_pShaderCom);
-
-	Engine::Safe_Release(m_pEdgeObjectShaderCom);
-	Engine::Safe_Release(m_pCrossFilterShaderCom);
 }

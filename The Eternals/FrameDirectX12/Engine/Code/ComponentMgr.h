@@ -36,6 +36,7 @@
 #include "ShaderSSAO.h"
 #include "ShaderNPathDir.h"
 #include "ShaderEdge.h"
+#include "ShaderMeshEffect.h"
 BEGIN(Engine)
 
 class ENGINE_DLL CComponentMgr final : public CBase
