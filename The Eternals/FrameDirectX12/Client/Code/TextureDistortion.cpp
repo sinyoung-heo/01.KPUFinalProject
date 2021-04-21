@@ -46,7 +46,7 @@ HRESULT CTextureDistortion::LateInit_GameObject()
 	m_pShaderCom->SetUp_ShaderConstantBuffer();
 
 	//DynamicCamera
-	m_pDynamicCamara = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DebugCamera"));
+	m_pDynamicCamara = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
 	
 
 	return S_OK;

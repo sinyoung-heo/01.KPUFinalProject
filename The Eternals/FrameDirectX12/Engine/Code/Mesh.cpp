@@ -99,6 +99,12 @@ void CMesh::Render_StaticMeshShadowDepth(CShader * pShader)
 		m_pVIMesh->Render_StaticMeshShadowDepth(pShader);
 }
 
+void CMesh::Render_MagicCircleMesh(CShader* pShader, ID3D12DescriptorHeap* pTexnormalDescriptorHeap, _uint uiNormalTextureIdx, _uint uiPatternMapIdx)
+{
+	if (nullptr != m_pVIMesh)
+		m_pVIMesh->Render_MagicCircleMesh(pShader,pTexnormalDescriptorHeap,uiNormalTextureIdx,uiPatternMapIdx);
+}
+
 void CMesh::Render_DynamicMesh(ID3D12GraphicsCommandList * pCommandList, 
 							   const _int& iContextIdx,
 							   CShader * pShader)

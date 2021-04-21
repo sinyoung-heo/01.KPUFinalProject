@@ -28,6 +28,7 @@
 #include "PCGladiator.h"
 #include "SampleNPC.h"
 #include "WaterFall.h"
+#include "MagicCircle.h"
 
 CStagePJO::CStagePJO(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -272,6 +273,21 @@ HRESULT CStagePJO::Ready_LayerEnvironment(wstring wstrLayerTag)
 		_vec3(256.0f, 0.7f, 276.0f), _vec3(STAGE_VELIKA_OFFSET_X, 0.0f, STAGE_VELIKA_OFFSET_Z));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpWaterMesh00", pGameObj), E_FAIL);
 
+	pGameObj =CMagicCircle::Create(m_pGraphicDevice, m_pCommandList,
+		L"PublicPlane00",
+		_vec3(0.01f),
+		_vec3(0.f,0.0f, 0.0f),
+		_vec3(0, 0, 0));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PublicPlane00", pGameObj), E_FAIL);
+
+	//// Torch
+	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+									  L"Lightning00",						// TextureTag
+									  _vec3(5.f, 10.0f, 1.0f),		// Scale
+									  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+									  _vec3(28.0f, 20.0f, 27.0f),	// Pos
+									  FRAME(8, 2, 16.0f));			// Sprite Image Frame
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Torch", pGameObj), E_FAIL);
 	return S_OK;
 }
 

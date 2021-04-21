@@ -31,6 +31,7 @@ BumpDesertMesh00|BumpDesertMesh00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\
 BumpTerrainMesh00|BumpTerrainMesh00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpTerrainMesh00\
 BumpTerrainMesh01|BumpTerrainMesh01.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpTerrainMesh01\
 BumpWaterMesh00|BumpWaterMesh00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpWaterMesh00\
+PublicPlane00|PublicPlane00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicPlane00\
 DistortDisk|DistortDisk.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\DistortDisk\
 LandMark|LandMark.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\LandMark\
 LandMarkBoundary|LandMarkBoundary.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\LandMarkBoundary\

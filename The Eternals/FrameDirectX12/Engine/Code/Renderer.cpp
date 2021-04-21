@@ -167,14 +167,12 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	}
 	Render_CrossFilter(fTimeDelta);
 	Render_EdgeObject(fTimeDelta);
-
 	Render_Light();						// Shade, Specular
 	Render_Edge();
 	Render_NPathDir();
 	Render_SSAO();
 	Render_DownSampling();
 	Render_Blur();
-	
 	Render_Distortion(fTimeDelta);
 	Render_Blend();						// Target Blend
 	Render_Luminance();					// Luminance(°íÈÖµµÃßÃâ)
@@ -302,6 +300,8 @@ void CRenderer::Render_Blend()
 	m_pHDRShader->Begin_Shader();
 	m_pBlendBuffer->Begin_Buffer();
 
+
+
 	m_pBlendBuffer->Render_Buffer();
 }
 
@@ -323,6 +323,10 @@ void CRenderer::Render_CrossFilter(const _float& fTimeDelta)
 
 	for (auto& pGameObject : m_RenderList[RENDER_CROSSFILTER])
 		pGameObject->Render_CrossFilterGameObject(fTimeDelta);
+
+
+	for (auto& pGameObject : m_RenderList[RENDER_MAGICCIRCLE])
+		pGameObject->Render_GameObject(0.f);
 
 	m_pTargetCrossFilter->Release_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
 }
@@ -415,6 +419,7 @@ void CRenderer::Render_NPathDir()
 	m_pNPathDirShader->Begin_Shader();
 	m_pNPathDirBuffer->Begin_Buffer();
 	m_pNPathDirBuffer->Render_Buffer();
+
 	m_pTargetNPathDir->Release_OnGraphicDevice();
 
 
@@ -473,6 +478,7 @@ void CRenderer::Render_Blur()
 	m_pBlurShader->Begin_Shader();
 	m_pBlurBuffer->Begin_Buffer();
 	m_pBlurBuffer->Render_Buffer();
+
 	m_pTargetBlur->Release_OnGraphicDevice();
 }
 

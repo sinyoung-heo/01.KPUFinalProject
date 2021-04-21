@@ -103,6 +103,60 @@ void CShaderMesh::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, const _
 		m_pCB_SkinningMatrix->GetElementByteSize() * iSubMeshIdx);
 }
 
+void CShaderMesh::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, ID3D12DescriptorHeap* pTexNormalDescriptorHeap, 
+	_uint uiTexnormalIdx, _uint uiPatternMapIdx, const _uint& iSubMeshIdx)
+{
+	CRenderer::Get_Instance()->Set_CurPipelineState(m_pPipelineState);
+	m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
+
+
+	/*__________________________________________________________________________________________________________
+	[ SRV를 루트 서술자에 묶는다 ]
+	____________________________________________________________________________________________________________*/
+	ID3D12DescriptorHeap* pDescriptorHeaps[] = { pTexNormalDescriptorHeap };
+	m_pCommandList->SetDescriptorHeaps(_countof(pDescriptorHeaps), pDescriptorHeaps);
+
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexDiffuseDescriptorHandle(pTexNormalDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	SRV_TexDiffuseDescriptorHandle.Offset(0, m_uiCBV_SRV_UAV_DescriptorSize);
+	m_pCommandList->SetGraphicsRootDescriptorTable(0,		// RootParameter Index - TexDiffuse
+		SRV_TexDiffuseDescriptorHandle);
+
+
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexShadowDepthDescriptorHandle(pTexNormalDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	SRV_TexShadowDepthDescriptorHandle.Offset(uiTexnormalIdx, m_uiCBV_SRV_UAV_DescriptorSize);
+	m_pCommandList->SetGraphicsRootDescriptorTable(1,		// RootParameter Index - TexNormal
+		SRV_TexShadowDepthDescriptorHandle);
+
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexNormalDescriptorHandle(pTexNormalDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	SRV_TexNormalDescriptorHandle.Offset(uiPatternMapIdx, m_uiCBV_SRV_UAV_DescriptorSize);
+	m_pCommandList->SetGraphicsRootDescriptorTable(2,		// RootParameter Index - TexSpecular
+		SRV_TexNormalDescriptorHandle);
+
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexSpecularDescriptorHandle(pTexNormalDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	SRV_TexSpecularDescriptorHandle.Offset(2, m_uiCBV_SRV_UAV_DescriptorSize);
+	m_pCommandList->SetGraphicsRootDescriptorTable(3,		// RootParameter Index - TexShadowDepth
+		SRV_TexSpecularDescriptorHandle);
+
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexDissolveHandle(pTexNormalDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	SRV_TexDissolveHandle.Offset(1, m_uiCBV_SRV_UAV_DescriptorSize);
+	m_pCommandList->SetGraphicsRootDescriptorTable(4,		// RootParameter Index - TexShadowDepth
+		SRV_TexDissolveHandle);
+
+	/*__________________________________________________________________________________________________________
+	[ CBV를 루트 서술자에 묶는다 ]
+	____________________________________________________________________________________________________________*/
+	m_pCommandList->SetGraphicsRootConstantBufferView(5,	// RootParameter Index
+		m_pCB_CameraProjMatrix->Resource()->GetGPUVirtualAddress());
+
+	m_pCommandList->SetGraphicsRootConstantBufferView(6,	// RootParameter Index
+		m_pCB_ShaderMesh->Resource()->GetGPUVirtualAddress());
+
+	m_pCommandList->SetGraphicsRootConstantBufferView(7,	// RootParameter Index
+		m_pCB_SkinningMatrix->Resource()->GetGPUVirtualAddress() +
+		m_pCB_SkinningMatrix->GetElementByteSize() * iSubMeshIdx);
+
+}
+
 void CShaderMesh::Begin_Shader(ID3D12GraphicsCommandList* pCommandList,
 	const _int& iContextIdx,
 	ID3D12DescriptorHeap* pTexDescriptorHeap,
@@ -197,12 +251,12 @@ void CShaderMesh::Begin_Shader(ID3D12GraphicsCommandList* pCommandList,
 		SRV_TexNormalDescriptorHandle);
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexSpecularDescriptorHandle(pTexNormalDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexSpecularDescriptorHandle.Offset(1, m_uiCBV_SRV_UAV_DescriptorSize);
+	SRV_TexSpecularDescriptorHandle.Offset(2, m_uiCBV_SRV_UAV_DescriptorSize);
 	pCommandList->SetGraphicsRootDescriptorTable(3,		// RootParameter Index - TexShadowDepth
 		SRV_TexSpecularDescriptorHandle);
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexDissolveHandle(pTexNormalDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexDissolveHandle.Offset(2, m_uiCBV_SRV_UAV_DescriptorSize);
+	SRV_TexDissolveHandle.Offset(1, m_uiCBV_SRV_UAV_DescriptorSize);
 	pCommandList->SetGraphicsRootDescriptorTable(4,		// RootParameter Index - TexShadowDepth
 		SRV_TexDissolveHandle);
 
@@ -713,6 +767,46 @@ HRESULT CShaderMesh::Create_PipelineState()
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
 	CRenderer::Get_Instance()->Add_PipelineStateCnt();
+
+	/*__________________________________________________________________________________________________________
+	[ 9번 PipelineState Pass ]
+	- "VS_AFTERIMAGE"
+	- "PS_AFTERIMAGE"
+	- FILL_MODE_SOLID
+	- CULL_MODE_BACK
+	- Blend		(O)
+	- Z Write	(O)
+	____________________________________________________________________________________________________________*/
+	ZeroMemory(&PipelineStateDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
+
+	PipelineStateDesc.pRootSignature = m_pRootSignature;
+	PipelineStateDesc.SampleMask = UINT_MAX;
+	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	PipelineStateDesc.NumRenderTargets = 1;								// PS에서 사용할 RenderTarget 개수.
+	PipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
+
+
+	PipelineStateDesc.SampleDesc.Count = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	vecInputLayout = Create_InputLayout("VS_MAIN", "PS_MAGIC_CIRCLE");
+	PipelineStateDesc.InputLayout = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState = Create_BlendState(true,
+		D3D12_BLEND_SRC_ALPHA,
+		D3D12_BLEND_INV_SRC_ALPHA,
+		D3D12_BLEND_OP_ADD,
+		D3D12_BLEND_ONE,
+		D3D12_BLEND_ZERO,
+		D3D12_BLEND_OP_ADD);
+	PipelineStateDesc.RasterizerState = CShader::Create_RasterizerState();
+	PipelineStateDesc.DepthStencilState = CShader::Create_DepthStencilState();
+
+	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
+	m_vecPipelineState.emplace_back(pPipelineState);
+	CRenderer::Get_Instance()->Add_PipelineStateCnt();
+
 	return S_OK;
 }
 
