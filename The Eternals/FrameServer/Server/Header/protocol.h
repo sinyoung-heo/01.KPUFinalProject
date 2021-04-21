@@ -43,6 +43,7 @@ constexpr char SC_PACKET_MONSTER_ATTACK = 15;
 constexpr char SC_PACKET_MONSTER_RUSH	= 16;
 constexpr char SC_PACKET_MONSTER_STAT	= 17;
 constexpr char SC_PACKET_STAGE_CHANGE   = 18;
+constexpr char SC_PACKET_ANIM_INDEX		= 19;
 
 constexpr char CS_LOGIN					= 0;
 constexpr char CS_MOVE					= 1;
@@ -223,7 +224,6 @@ struct sc_packet_stance_change
 	bool			is_stance_attack;
 };
 
-
 struct sc_packet_npc_enter
 {
 	unsigned char	size;
@@ -281,6 +281,15 @@ struct sc_packet_stage_change
 
 	char			stage_id;
 	float			posX, posY, posZ;
+};
+
+struct sc_packet_animationIndex
+{
+	unsigned char	size;
+	char			type;
+	int				id;
+
+	char			aniIdx;
 };
 
 /* ___________________________________________________________________________________________________________________*/

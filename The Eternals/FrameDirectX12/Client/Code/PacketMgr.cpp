@@ -6,6 +6,7 @@
 #include "TestPlayer.h"
 #include "TestOthers.h"
 #include "NPC_Walker.h"
+#include "NPC_Assistant.h"
 #include "NPC_Boy.h"
 #include "NPC_Villagers.h"
 #include "NPC_Merchant.h"
@@ -308,6 +309,32 @@ void CPacketMgr::Process_packet()
 	}
 	break;
 
+	case SC_PACKET_ANIM_INDEX:
+	{
+		sc_packet_animationIndex* packet = reinterpret_cast<sc_packet_animationIndex*>(m_packet_start);
+
+		if (packet->id == g_iSNum) 
+			return;
+
+		/* NPC */
+		if (packet->id >= NPC_NUM_START && packet->id < MON_NUM_START)
+		{
+			Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"NPC", packet->id);
+			pObj->Set_State(packet->aniIdx);
+		}
+
+		/* MONSTER */
+		else if (packet->id >= MON_NUM_START)
+		{
+		}
+
+		/* OTHERS */
+		else
+		{	
+		}
+	}
+	break;
+
 	default:
 #ifdef ERR_CHECK
 		printf("Unknown PACKET type [%d]\n", m_packet_start[1]);
@@ -347,7 +374,6 @@ void CPacketMgr::Move_NPC(sc_packet_move* packet)
 	pObj->Set_State(packet->animIdx);
 	pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
 	pObj->Ready_AngleInterpolationValue(pObj->Set_Other_Angle(_vec3(packet->dirX, packet->dirY, packet->dirZ)));
-	//pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 }
 
 void CPacketMgr::Stage_Change(sc_packet_stage_change* packet)
@@ -384,8 +410,6 @@ void CPacketMgr::Stage_Change(sc_packet_stage_change* packet)
 	{
 		m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"Others", s_num);
 	}
-
-	
 }
 
 void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
@@ -403,6 +427,16 @@ void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
 	{
 		pGameObj = CNPC_Walker::Create(m_pGraphicDevice, m_pCommandList,
 									   L"Chicken",												// MeshTag
+									   wstrNaviMeshTag,											// NaviMeshTag
+									   _vec3(0.05f, 0.05f, 0.05f),								// Scale
+									   _vec3(packet->angleX, packet->angleY, packet->angleZ),	// Angle
+									   _vec3(packet->posX, packet->posY, packet->posZ));
+	}
+
+	else if (packet->npcNum == NPC_POPORI_BOY)
+	{
+		pGameObj = CNPC_Assistant::Create(m_pGraphicDevice, m_pCommandList,
+									   L"Popori_boy",											// MeshTag
 									   wstrNaviMeshTag,											// NaviMeshTag
 									   _vec3(0.05f, 0.05f, 0.05f),								// Scale
 									   _vec3(packet->angleX, packet->angleY, packet->angleZ),	// Angle

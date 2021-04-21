@@ -265,6 +265,9 @@
     <Filter Include="02.GameObject\04.NPC\00.NPC_Walker">
       <UniqueIdentifier>{ceb6f96a-aa02-4edc-bdcb-d213059de653}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\04.NPC\01.NPC_Assistant">
+      <UniqueIdentifier>{7af75f2e-f40c-4ca8-8789-23c8e5a18ebe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -528,6 +531,10 @@
     <ClInclude Include="..\Code\NPC_Walker.h">
       <Filter>02.GameObject\04.NPC\00.NPC_Walker</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\MagicCircle.h" />
+    <ClInclude Include="..\Code\NPC_Assistant.h">
+      <Filter>02.GameObject\04.NPC\01.NPC_Assistant</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -742,6 +749,10 @@
     </ClCompile>
     <ClCompile Include="..\Code\NPC_Walker.cpp">
       <Filter>02.GameObject\04.NPC\00.NPC_Walker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MagicCircle.cpp" />
+    <ClCompile Include="..\Code\NPC_Assistant.cpp">
+      <Filter>02.GameObject\04.NPC\01.NPC_Assistant</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
