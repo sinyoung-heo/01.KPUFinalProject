@@ -8,7 +8,7 @@
 #include "NPC_Walker.h"
 #include "NPC_Assistant.h"
 #include "NPC_Boy.h"
-#include "NPC_Villagers.h"
+#include "NPC_Stander.h"
 #include "NPC_Merchant.h"
 #include "Crab.h"
 #include "Monkey.h"
@@ -313,25 +313,9 @@ void CPacketMgr::Process_packet()
 	{
 		sc_packet_animationIndex* packet = reinterpret_cast<sc_packet_animationIndex*>(m_packet_start);
 
-		if (packet->id == g_iSNum) 
-			return;
-
-		/* NPC */
-		if (packet->id >= NPC_NUM_START && packet->id < MON_NUM_START)
-		{
-			Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"NPC", packet->id);
-			pObj->Set_State(packet->aniIdx);
-		}
-
-		/* MONSTER */
-		else if (packet->id >= MON_NUM_START)
-		{
-		}
-
-		/* OTHERS */
-		else
-		{	
-		}
+		bool retflag;
+		Change_Animation(packet, retflag);
+		if (retflag) return;
 	}
 	break;
 
@@ -422,8 +406,9 @@ void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
 	wstring wstrNaviMeshTag;
 	if (packet->naviType == STAGE_VELIKA)
 		wstrNaviMeshTag = L"StageVelika_NaviMesh";
-
-	if (packet->npcNum == NPC_CHICKEN)
+	
+	/* NPC - Walker */
+	if (packet->npcNum == NPC_CHICKEN || packet->npcNum == NPC_CAT || packet->npcNum == NPC_AMAN_BOY)
 	{
 		pGameObj = CNPC_Walker::Create(m_pGraphicDevice, m_pCommandList,
 									   L"Chicken",												// MeshTag
@@ -432,7 +417,7 @@ void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
 									   _vec3(packet->angleX, packet->angleY, packet->angleZ),	// Angle
 									   _vec3(packet->posX, packet->posY, packet->posZ));
 	}
-
+	/* NPC - Assistant */
 	else if (packet->npcNum == NPC_POPORI_BOY)
 	{
 		pGameObj = CNPC_Assistant::Create(m_pGraphicDevice, m_pCommandList,
@@ -441,6 +426,22 @@ void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
 									   _vec3(0.05f, 0.05f, 0.05f),								// Scale
 									   _vec3(packet->angleX, packet->angleY, packet->angleZ),	// Angle
 									   _vec3(packet->posX, packet->posY, packet->posZ));
+	}
+	/* NPC - Stander */
+	else if (packet->npcNum == NPC_VILLAGERS || packet->npcNum == NPC_BARAKA_EXTRACTOR)
+	{
+		wstring wstrMeshTag;
+		if (packet->npcNum == NPC_VILLAGERS)
+			wstrMeshTag = L"NPC_Villagers";
+		else if (packet->npcNum == NPC_BARAKA_EXTRACTOR)
+			wstrMeshTag = L"Baraka_M_Extractor";
+
+		pGameObj = CNPC_Stander::Create(m_pGraphicDevice, m_pCommandList,
+										  wstrMeshTag,												// MeshTag
+										  wstrNaviMeshTag,											// NaviMeshTag
+										  _vec3(0.05f, 0.05f, 0.05f),								// Scale
+										  _vec3(packet->angleX, packet->angleY, packet->angleZ),	// Angle
+										  _vec3(packet->posX, packet->posY, packet->posZ));
 	}
 
 	pGameObj->Set_ServerNumber(packet->id);
@@ -734,6 +735,31 @@ void CPacketMgr::Login_Player(sc_packet_login_ok* packet)
 #ifdef ERR_CHECK
 	cout << "Login OK! 접속완료!" << endl;
 #endif
+}
+
+void CPacketMgr::Change_Animation(sc_packet_animationIndex* packet, bool& retflag)
+{
+	retflag = true;
+	if (packet->id == g_iSNum)
+		return;
+
+	/* NPC */
+	if (packet->id >= NPC_NUM_START && packet->id < MON_NUM_START)
+	{
+		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"NPC", packet->id);
+		pObj->Set_State(packet->aniIdx);
+	}
+
+	/* MONSTER */
+	else if (packet->id >= MON_NUM_START)
+	{
+	}
+
+	/* OTHERS */
+	else
+	{
+	}
+	retflag = false;
 }
 
 void CPacketMgr::Attack_Monster(sc_packet_monster_attack* packet)

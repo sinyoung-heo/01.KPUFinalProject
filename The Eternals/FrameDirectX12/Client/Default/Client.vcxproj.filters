@@ -109,9 +109,6 @@
     <Filter Include="99.Etc\SampleObject\11.NPC\01.NPC_Boy">
       <UniqueIdentifier>{80c37e2d-3841-42a8-85b1-9f2dfc506d06}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99.Etc\SampleObject\11.NPC\02.NPC_Villagers">
-      <UniqueIdentifier>{3973e66e-60c9-4e24-9477-8c6558e6ce19}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99.Etc\SampleObject\11.NPC\03.NPC_Merchant">
       <UniqueIdentifier>{797a3833-9c0a-4991-ae76-60371ebf7e9e}</UniqueIdentifier>
     </Filter>
@@ -268,6 +265,9 @@
     <Filter Include="02.GameObject\04.NPC\01.NPC_Assistant">
       <UniqueIdentifier>{7af75f2e-f40c-4ca8-8789-23c8e5a18ebe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\04.NPC\02.NPC_Stander">
+      <UniqueIdentifier>{2e7a57e9-20d2-4c6d-aa3a-f85f017468b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -372,9 +372,6 @@
     </ClInclude>
     <ClInclude Include="..\Code\ServerMath.h">
       <Filter>97.Mgr\03.ServerMath</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\NPC_Villagers.h">
-      <Filter>99.Etc\SampleObject\11.NPC\02.NPC_Villagers</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\TexEffectInstance.h">
       <Filter>99.Etc\SampleObject\12.TexEffectInstance</Filter>
@@ -535,6 +532,9 @@
     <ClInclude Include="..\Code\NPC_Assistant.h">
       <Filter>02.GameObject\04.NPC\01.NPC_Assistant</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\NPC_Stander.h">
+      <Filter>02.GameObject\04.NPC\02.NPC_Stander</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -612,9 +612,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\ServerMath.cpp">
       <Filter>97.Mgr\03.ServerMath</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\NPC_Villagers.cpp">
-      <Filter>99.Etc\SampleObject\11.NPC\02.NPC_Villagers</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\TexEffectInstance.cpp">
       <Filter>99.Etc\SampleObject\12.TexEffectInstance</Filter>
@@ -753,6 +750,9 @@
     <ClCompile Include="..\Code\MagicCircle.cpp" />
     <ClCompile Include="..\Code\NPC_Assistant.cpp">
       <Filter>02.GameObject\04.NPC\01.NPC_Assistant</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\NPC_Stander.cpp">
+      <Filter>02.GameObject\04.NPC\02.NPC_Stander</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

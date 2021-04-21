@@ -168,7 +168,7 @@ void Initialize_NPC()
 	/*											SCENE - VELIKA TOWN											 */
 	/* ______________________________________________________________________________________________________*/
 
-	// NPC Walker
+	// NPC Walker 
 	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
 
 	//if (pNew)
@@ -180,17 +180,51 @@ void Initialize_NPC()
 	//}
 	//else return;
 
-	// NPC Assistant
-	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+	// NPC Assistant - Popori Boy
+	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
 
-	if (pNew)
-	{
-		/* NPC의 정보 초기화 */
-		pNew->Ready_NPC(_vec3(122.0f, 0.f, 76.0f), _vec3(0.f, 0.f, 0.f), NPC_NONMOVE, NPC_POPORI_BOY, STAGE_VELIKA);
-		pNew->Set_NumAnimation(Popori_boy::NUM_ANIMATION);
-		pNew->Set_AnimDuration(Popori_boy::duration);
-	}
-	else return;
+	//if (pNew)
+	//{
+	//	/* NPC의 정보 초기화 */
+	//	pNew->Ready_NPC(_vec3(122.0f, 0.f, 76.0f), _vec3(0.f, 0.f, 0.f), NPC_NONMOVE, NPC_POPORI_BOY, STAGE_VELIKA);
+	//	pNew->Set_NumAnimation(Popori_boy::NUM_ANIMATION);
+	//	pNew->Set_AnimDuration(Popori_boy::duration);
+	//}
+	//else return;
+
+	// NPC Villigers
+	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	//if (pNew)
+	//{
+	//	/* NPC의 정보 초기화 */
+	//	pNew->Ready_NPC(_vec3(122.0f, 0.f, 76.0f), _vec3(0.f, 0.f, 0.f), NPC_NONMOVE, NPC_VILLAGERS, STAGE_VELIKA);
+	//	pNew->Set_NumAnimation(NPC_Villagers::NUM_ANIMATION);
+	//	pNew->Set_AnimDuration(NPC_Villagers::duration);
+	//}
+	//else return;
+
+	//// NPC Baraka_M_Extractor
+	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	//if (pNew)
+	//{
+	//	/* NPC의 정보 초기화 */
+	//	pNew->Ready_NPC(_vec3(127.0f, 0.f, 76.0f), _vec3(0.f, 0.f, 0.f), NPC_NONMOVE, NPC_BARAKA_EXTRACTOR, STAGE_VELIKA);
+	//	pNew->Set_NumAnimation(Baraka_M_Extractor::NUM_ANIMATION);
+	//	pNew->Set_AnimDuration(Baraka_M_Extractor::duration);
+	//}
+	//else return;
+
+
+
+
+
+
+
+
+
+
 
 	// NORMAL NPC 2
 	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));

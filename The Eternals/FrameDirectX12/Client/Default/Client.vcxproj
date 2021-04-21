@@ -214,7 +214,7 @@
     <ClInclude Include="..\Code\LogoBack.h" />
     <ClInclude Include="..\Code\MainApp.h" />
     <ClInclude Include="..\Code\NPC_Merchant.h" />
-    <ClInclude Include="..\Code\NPC_Villagers.h" />
+    <ClInclude Include="..\Code\NPC_Stander.h" />
     <ClInclude Include="..\Code\PacketMgr.h" />
     <ClInclude Include="..\Code\Popori_F.h" />
     <ClInclude Include="..\Code\RectObject.h" />
@@ -291,7 +291,7 @@
     <ClCompile Include="..\Code\LogoBack.cpp" />
     <ClCompile Include="..\Code\MainApp.cpp" />
     <ClCompile Include="..\Code\NPC_Merchant.cpp" />
-    <ClCompile Include="..\Code\NPC_Villagers.cpp" />
+    <ClCompile Include="..\Code\NPC_Stander.cpp" />
     <ClCompile Include="..\Code\PacketMgr.cpp" />
     <ClCompile Include="..\Code\PCGladiator.cpp" />
     <ClCompile Include="..\Code\PCOthersGladiator.cpp" />

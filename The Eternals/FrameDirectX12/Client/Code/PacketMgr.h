@@ -30,6 +30,8 @@ public:
 	void	Process_recv_reassembly(size_t iosize);
 	void	Process_packet();
 
+	void Change_Animation(sc_packet_animationIndex* packet, bool& retflag);
+
 public:
 	void	send_login();
 	void	send_move(const _vec3& vDir, const _vec3& vPos, const _int& iAniIdx);
