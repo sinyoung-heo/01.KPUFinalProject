@@ -9,9 +9,6 @@ namespace Engine
 	class CShaderTexture;
 }
 
-// const _uint TRAIL_SIZE = 25;
-
-
 class CEffectTrail : public Engine::CGameObject
 {
 private:
@@ -25,7 +22,8 @@ public:
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrTextureTag,
-									 const _uint& uiTexIdx);
+									 const _uint& uiTexIdx,
+									 const Engine::CRenderer::RENDERGROUP& eRenderGroup);
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
@@ -56,11 +54,13 @@ private:
 	_float	m_fAlpha		 = 0.0f;
 	_bool	m_bIsRender      = false;
 
+	Engine::CRenderer::RENDERGROUP m_eRenderGroup = Engine::CRenderer::RENDERGROUP::RENDER_ALPHA;
 
 public:
 	static CEffectTrail* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 								wstring wstrTextureTag,
-								const _uint& uiTexIdx);
+								const _uint& uiTexIdx,
+								const Engine::CRenderer::RENDERGROUP& eRenderGroup = Engine::CRenderer::RENDERGROUP::RENDER_ALPHA);
 private:
 	virtual void Free();
 };

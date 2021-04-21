@@ -33,8 +33,6 @@ HRESULT CPCWeaponTwoHand::Ready_GameObject(wstring wstrMeshTag,
 										   1.0f,
 										   _vec3(0.0f, 25.0f, 0.0f));
 
-	//m_wstrCollisionTag = L"PCWeapon";
-
 	return S_OK;
 }
 
@@ -43,8 +41,11 @@ HRESULT CPCWeaponTwoHand::LateInit_GameObject()
 	Engine::FAILED_CHECK_RETURN(CPCWeapon::LateInit_GameObject(), E_FAIL);
 
 	// Create Trail
-	m_pTrail = CEffectTrail::Create(m_pGraphicDevice, m_pCommandList, L"EffectTrailTexture", 0);		
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"TestTrail", m_pTrail), E_FAIL);
+	m_pTrail = CEffectTrail::Create(m_pGraphicDevice, m_pCommandList, L"EffectTrailTexture", 11);		
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Trail", m_pTrail), E_FAIL);
+
+	m_pDistortionTrail = CEffectTrail::Create(m_pGraphicDevice, m_pCommandList, L"EffectTrailTexture", 10, Engine::CRenderer::RENDER_DISTORTION);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Trail", m_pDistortionTrail), E_FAIL);
 
 	return S_OK;
 }
@@ -59,11 +60,6 @@ _int CPCWeaponTwoHand::Update_GameObject(const _float& fTimeDelta)
 	if (fTimeDelta > TIME_OFFSET)
 		return NO_EVENT;
 
-	//if (nullptr != m_pBoundingSphereCom)
-	//	m_pBoundingSphereCom->Set_Color(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
-	//if (nullptr != m_pBoundingBoxCom)
-	//	m_pBoundingBoxCom->Set_Color(_rgba(0.0f, 1.0f, 0.0f, 1.0f));
-
 	SetUp_Dissolve(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
@@ -71,13 +67,6 @@ _int CPCWeaponTwoHand::Update_GameObject(const _float& fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 
-	//if (m_bIsCollision)
-	//{
-	//	/*__________________________________________________________________________________________________________
-	//	[ Collision - Add Collision List ]
-	//	____________________________________________________________________________________________________________*/
-	//	m_pCollisonMgr->Add_CollisionCheckList(this);
-	//}
 
 	/*____________________________________________________________________
 	TransCom - Update WorldMatrix.
@@ -96,12 +85,20 @@ _int CPCWeaponTwoHand::Update_GameObject(const _float& fTimeDelta)
 	if (nullptr != m_pTrail)
 	{
 		m_pBoundingBoxCom->Update_Component(fTimeDelta);
+		
+		_vec3 vLook = _vec3((*m_pParentMatrix)._31, 0.0f, (*m_pParentMatrix)._33);
+		vLook.Normalize();
 
-		_vec3 vMin = _vec3(m_pBoundingBoxCom->Get_BottomPlaneCenter());
-		_vec3 vMax = _vec3(m_pBoundingBoxCom->Get_TopPlaneCenter());
+		_vec3 vMin = _vec3(m_pBoundingBoxCom->Get_BottomPlaneCenter()) + vLook * 0.75f;
+		_vec3 vMax = _vec3(m_pBoundingBoxCom->Get_TopPlaneCenter()) + vLook * 0.75f;
 
 		m_pTrail->SetUp_TrailByCatmullRom(&vMin, &vMax);
 		m_pTrail->Get_Transform()->m_vPos = _vec3(0.f, 0.f, 0.0f);
+
+		vMin.y -= 0.1f;
+		vMax.y -= 0.1f;
+		m_pDistortionTrail->SetUp_TrailByCatmullRom(&vMin, &vMax);
+		m_pDistortionTrail->Get_Transform()->m_vPos = _vec3(0.f, 0.f, 1.0f);
 	}
 
 	return NO_EVENT;
@@ -109,26 +106,9 @@ _int CPCWeaponTwoHand::Update_GameObject(const _float& fTimeDelta)
 
 _int CPCWeaponTwoHand::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	Process_Collision();
+	return CPCWeapon::LateUpdate_GameObject(fTimeDelta);
 
-	return CPCWeapon::LateUpdate_GameObject(fTimeDelta);;
-}
-
-void CPCWeaponTwoHand::Process_Collision()
-{
-	//if (!m_bIsCollision)
-	//	return;
-
-	//for (auto& pDst : m_lstCollisionDst)
-	//{
-	//	if (L"Monster" == pDst->Get_CollisionTag())
-	//	{
-	//		if (nullptr != m_pBoundingSphereCom)
-	//			m_pBoundingSphereCom->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
-	//		if (nullptr != m_pBoundingBoxCom)
-	//			m_pBoundingBoxCom->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
-	//	}
-	//}
+	return NO_EVENT;
 }
 
 void CPCWeaponTwoHand::Render_GameObject(const _float& fTimeDelta, 
@@ -171,6 +151,8 @@ CPCWeaponTwoHand* CPCWeaponTwoHand::Create(ID3D12Device* pGraphicDevice, ID3D12G
 
 void CPCWeaponTwoHand::Free()
 {
-	m_pTrail->Set_DeadGameObject();
 	CPCWeapon::Free();
+
+	m_pTrail->Set_DeadGameObject();
+	m_pDistortionTrail->Set_DeadGameObject();
 }
