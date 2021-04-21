@@ -49,7 +49,6 @@ VS_OUT VS_MAIN(VS_IN vs_input)
 	return vs_output;
 }
 
-
 //global Constant 
 static float rA = 7; //4.5f; //X
 static float rB = 9; //6.5f; //Y
@@ -78,7 +77,7 @@ float4 PS_HIGHLIGHT(VS_OUT ps_input) : SV_TARGET
 
 float4 PS_MAIN(VS_OUT ps_input) : SV_TARGET
 {
-    float4 Out = 0,Out2=0;
+    float4 Out = 0,Out2=0,Out3=0;
     float2 UV = float2(0, 0);
     for (int j = 0; j < PATH; ++j)
     {
@@ -125,7 +124,9 @@ float4 PS_MAIN(VS_OUT ps_input) : SV_TARGET
 
     Out /= PATH, Out.w = 1;
     Out2 /= (Cnt *0.5),Out2.w = 1;
-    return Out + Out2;
+    
+    Out3 = g_TexCrossFilterObject.Sample(g_samLinearClamp,ps_input.TexUV);
+    return Out + Out2 + Out3;
 }
 
   //for (j = 0; j < 8; ++j) {

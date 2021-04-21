@@ -584,33 +584,31 @@ static float WAVE = 0.01f; //0.004f;
 PS_OUT PS_TERRAIN_MAIN(VS_OUT ps_input) : SV_TARGET
 {
     PS_OUT ps_output = (PS_OUT) 0;
-    float clipSpace = (1 - ps_input.TexUV.y) - 0.2f + cos(g_fOffset2 * 0.5f) * 0.1f - sin(ps_input.TexUV.x * 50.f) * (g_fDissolve * WAVE);
- 
+    float clipSpace = (1 - ps_input.TexUV.y) - 0.2f + cos(g_fOffset2 * 0.5f) * 0.1f - sin((1 - ps_input.TexUV.x) * 50.f) * (g_fDissolve * 0.01f);
     float2 vTexUV = ps_input.AniUV * 30.f;
     vTexUV += g_fOffset2 * 0.05f;
-  
     float2 TempUV = ps_input.TexUV;
     TempUV.y *= (10.f * (ps_input.TexUV.y));
-	
-    TempUV.y -= (g_fOffset2*0.5f);
+    TempUV.y -= (g_fOffset2 * 0.5f);
     ps_output.Specular = g_TexSpecular.Sample(g_samLinearWrap, TempUV) * ps_input.TexUV.y;
   
 	
 	// Diffuse
     float4 AlphaSea = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV * 30.f);
-    float4 Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, vTexUV) ;
+    float4 Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, vTexUV);
    // float Temp = (1 - ps_input.TexUV.y)+ cos(g_fOffset2 * 0.5f);
     ps_output.Diffuse = Diffuse + float4(0.2, 0.2, 1.f, 1.f) + AlphaSea;
   
     float fCos = (cos(g_fOffset2 * 0.5f) * 0.5f + 0.5f) * ps_input.TexUV.y;
 	
     ps_output.Diffuse += ((1 - ps_output.Specular) + g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV * 5.f)) * fCos;
-  
+   
     if (0.13f > clipSpace && clipSpace > 0.03f)
-        ps_output.Diffuse += (float4(0.2f, 0.2f, 0.2f, 1.f)) * fCos;
+        ps_output.Diffuse += (float4(0.1f, 0.1f, 0.1f, 1.f)) * (fCos * 0.2);
     if (0.03f > clipSpace && clipSpace > 0.f)
-        ps_output.Diffuse += (float4(0.6f, 0.6f, 0.6f, 1.f)) * fCos;
- 
+        ps_output.Diffuse += (float4(0.2f, 0.2f, 0.2f, 1.f)) * (fCos * 0.2);
+  
+	ps_output.Diffuse.xyz *= 0.6f;
     clip(clipSpace);
 
 	// Normal
@@ -626,14 +624,14 @@ PS_OUT PS_TERRAIN_MAIN(VS_OUT ps_input) : SV_TARGET
 	/*__________________________________________________________________________________________________________
 	[ 현재의 깊이와 그림자 깊이 비교 ]
 	____________________________________________________________________________________________________________*/
-    float2 uv = ps_input.LightPos.xy / ps_input.LightPos.w;
-    uv.y = uv.y * -0.5f + 0.5f;
-    uv.x = uv.x * 0.5f + 0.5f;
+    //float2 uv = ps_input.LightPos.xy / ps_input.LightPos.w;
+    //uv.y = uv.y * -0.5f + 0.5f;
+    //uv.x = uv.x * 0.5f + 0.5f;
 	
-    float CurrentDepth = ps_input.LightPos.z / ps_input.LightPos.w;
-    float ShadowDepth = g_TexShadowDepth.Sample(g_samLinearWrap, uv).x;
-    if (CurrentDepth > ShadowDepth + 0.0000125f)
-        ps_output.Diffuse.rgb *= 0.5;
+    //float CurrentDepth = ps_input.LightPos.z / ps_input.LightPos.w;
+    //float ShadowDepth = g_TexShadowDepth.Sample(g_samLinearWrap, uv).x;
+    //if (CurrentDepth > ShadowDepth + 0.0000125f)
+    //    ps_output.Diffuse.rgb *= 0.5;
 	
     return (ps_output);
 }
@@ -677,7 +675,7 @@ PS_OUT PS_WATERFALL(VS_OUT ps_input) : SV_TARGET
     PS_OUT ps_output = (PS_OUT) 0;
 	
 	// Diffuse
-    float Spec = g_TexSpecular.Sample(g_samLinearWrap, ps_input.AniUV);
+    float4 Spec = g_TexSpecular.Sample(g_samLinearWrap, ps_input.AniUV);
     ps_output.Diffuse = (g_TexDiffuse.Sample(g_samLinearWrap, ps_input.AniUV));
   
 	
@@ -693,6 +691,18 @@ PS_OUT PS_WATERFALL(VS_OUT ps_input) : SV_TARGET
     ps_output.Depth = float4(ps_input.ProjPos.z / ps_input.ProjPos.w, // (posWVP.z / posWVP.w) : Proj 영역의 Z.
 								 ps_input.ProjPos.w / g_fProjFar, // posWVP.w / Far : 0~1로 만든 View영역의 Z.
 								 1.0f, 1.0f);
-
     return (ps_output);
+}
+
+float4 PS_MAGIC_CIRCLE(VS_OUT ps_input):SV_Target
+{
+  
+	// Diffuse
+    float4 Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 TexNormal = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 Spec = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
+
+    float4 color = Diffuse + TexNormal;
+    color.xyz += Spec.xyz;
+    return color;
 }

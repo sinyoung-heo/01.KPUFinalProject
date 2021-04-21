@@ -706,6 +706,17 @@ void CVIMesh::Render_StaticMesh(CShader * pShader)
 	}
 }
 
+void CVIMesh::Render_MagicCircleMesh(CShader* pShader, ID3D12DescriptorHeap* pTexnormalDescriptorHeap, _uint uiNormalTextureIdx, _uint uiPatternMapIdx)
+{
+	for (_int i = 0; i < m_vecMeshEntry.size(); ++i)
+	{
+		static_cast<CShaderMesh*>(pShader)->Begin_Shader(m_pTexDescriptorHeap
+			, pTexnormalDescriptorHeap, uiNormalTextureIdx, uiPatternMapIdx, i);
+		Begin_Buffer(m_pCommandList, i);
+		Render_Buffer(m_pCommandList, i);
+	}
+}
+
 void CVIMesh::Render_DynamicMeshShadowDepth(CShader * pShader)
 {
 	vector<VECTOR_SKINNING_MATRIX>*	pvecSkinningMatrix = pvecSkinningMatrix = m_pAniCtrl->Get_VecSkinningMatrix();;

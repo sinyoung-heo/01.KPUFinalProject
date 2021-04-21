@@ -85,7 +85,10 @@ _int CTextureEffect::Update_GameObject(const _float & fTimeDelta)
 
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
 	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
-	
+	//_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
+	//m_pTransCom->m_vPos = Pos;
+	//m_pTransCom->m_vPos.y += 3.5f;
+	//m_pTransCom->m_vPos.z += 0.1f;
 	return NO_EVENT;
 }
 

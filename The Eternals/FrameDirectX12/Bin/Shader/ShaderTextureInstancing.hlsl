@@ -115,6 +115,6 @@ float4 PS_TEXTURE_SPRITE(VS_OUT ps_input) : SV_TARGET
 	float v = (ps_input.TexUV.y / ps_input.fSceneCnt) + ps_input.fCurScene * (1.0f / ps_input.fSceneCnt);
 	
 	float4 Color = g_TexDiffuse.Sample(g_samLinearWrap, float2(u, v));
-	
+   
 	return (Color);
 }
