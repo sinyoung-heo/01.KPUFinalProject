@@ -103,12 +103,6 @@
     <Filter Include="99.Etc\SampleObject\10.TestOthers">
       <UniqueIdentifier>{6ad99d1c-9bb2-4d7f-806e-99ac48309498}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99.Etc\SampleObject\11.NPC">
-      <UniqueIdentifier>{8d3d6604-efa6-4103-bbbe-f6afc93b32f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99.Etc\SampleObject\11.NPC\01.NPC_Boy">
-      <UniqueIdentifier>{80c37e2d-3841-42a8-85b1-9f2dfc506d06}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99.Etc\SampleObject\12.TexEffectInstance">
       <UniqueIdentifier>{8127f386-d54a-487e-be8b-709a071ca813}</UniqueIdentifier>
     </Filter>
@@ -271,6 +265,12 @@
     <Filter Include="02.GameObject\04.NPC\01.NPC_Assistant">
       <UniqueIdentifier>{284d1bef-ae2b-4e28-ad8d-0f76db3a4b48}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\04.NPC\04.NPC_Quest">
+      <UniqueIdentifier>{9ca7aa88-76e5-412d-93de-6cd80b2089c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\04.NPC\05_NPC_Children">
+      <UniqueIdentifier>{6365142f-a91c-48b9-bfb7-6217669dc73f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -384,9 +384,6 @@
     </ClInclude>
     <ClInclude Include="..\Code\TestCollisonObject.h">
       <Filter>99.Etc\SampleObject\13.TestCollisionObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\NPC_Boy.h">
-      <Filter>99.Etc\SampleObject\11.NPC\01.NPC_Boy</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\NPC_Merchant.h">
       <Filter>02.GameObject\04.NPC\03.NPC_Merchant</Filter>
@@ -540,6 +537,12 @@
     <ClInclude Include="..\Code\NPC_Assistant.h">
       <Filter>02.GameObject\04.NPC\01.NPC_Assistant</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\NPC_Quest.h">
+      <Filter>02.GameObject\04.NPC\04.NPC_Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\NPC_Boy.h">
+      <Filter>02.GameObject\04.NPC\05_NPC_Children</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -626,9 +629,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\TestCollisonObject.cpp">
       <Filter>99.Etc\SampleObject\13.TestCollisionObject</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\NPC_Boy.cpp">
-      <Filter>99.Etc\SampleObject\11.NPC\01.NPC_Boy</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\NPC_Merchant.cpp">
       <Filter>02.GameObject\04.NPC\03.NPC_Merchant</Filter>
@@ -760,6 +760,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\NPC_Assistant.cpp">
       <Filter>02.GameObject\04.NPC\01.NPC_Assistant</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\NPC_Quest.cpp">
+      <Filter>02.GameObject\04.NPC\04.NPC_Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\NPC_Boy.cpp">
+      <Filter>02.GameObject\04.NPC\05_NPC_Children</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

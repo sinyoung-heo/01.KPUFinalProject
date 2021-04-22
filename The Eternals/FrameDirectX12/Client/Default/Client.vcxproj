@@ -188,6 +188,7 @@
     <ClInclude Include="..\Code\MagicCircle.h" />
     <ClInclude Include="..\Code\Monkey.h" />
     <ClInclude Include="..\Code\NPC_Assistant.h" />
+    <ClInclude Include="..\Code\NPC_Quest.h" />
     <ClInclude Include="..\Code\PCGladiator.h" />
     <ClInclude Include="..\Code\PCOthersGladiator.h" />
     <ClInclude Include="..\Code\PCWeapon.h" />
@@ -279,6 +280,7 @@
     <ClCompile Include="..\Code\Monster_Normal.cpp" />
     <ClCompile Include="..\Code\MouseCursorMgr.cpp" />
     <ClCompile Include="..\Code\NPC_Assistant.cpp" />
+    <ClCompile Include="..\Code\NPC_Quest.cpp" />
     <ClCompile Include="..\Code\NPC_Walker.cpp" />
     <ClCompile Include="..\Code\DebugCamera.cpp" />
     <ClCompile Include="..\Code\DistortionDisk.cpp" />
