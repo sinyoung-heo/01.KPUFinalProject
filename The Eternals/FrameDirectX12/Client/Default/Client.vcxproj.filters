@@ -540,7 +540,7 @@
     <ClInclude Include="..\Code\NPC_Quest.h">
       <Filter>02.GameObject\04.NPC\04.NPC_Quest</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\NPC_Boy.h">
+    <ClInclude Include="..\Code\NPC_Children.h">
       <Filter>02.GameObject\04.NPC\05_NPC_Children</Filter>
     </ClInclude>
   </ItemGroup>
@@ -764,7 +764,7 @@
     <ClCompile Include="..\Code\NPC_Quest.cpp">
       <Filter>02.GameObject\04.NPC\04.NPC_Quest</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\NPC_Boy.cpp">
+    <ClCompile Include="..\Code\NPC_Children.cpp">
       <Filter>02.GameObject\04.NPC\05_NPC_Children</Filter>
     </ClCompile>
   </ItemGroup>

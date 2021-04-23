@@ -26,9 +26,12 @@ public:
 private:
 	void	Change_Animation(const float& fTimeDelta);
 
-	/* MOVE NPC - Walker (Aman_Boy, Cat, Chicken)  */
+	/* MOVE NPC - Walker (Aman_Boy, Cat, Chicken) */
 	void	Change_Walker_Animation(const float& fTimeDelta);
 	void	Move_Walker_NPC(const float& fTimeDelta);
+
+	/* MOVE NPC - Children (Highelf_girl, Human_boy, Human_girl) */
+	void	Change_Children_Animation(const float& fTimeDelta);
 
 	/* NON MOVE NPC - Assistant (Popori_boy) */
 	void	Change_Assistant_Animation(const float& fTimeDelta);

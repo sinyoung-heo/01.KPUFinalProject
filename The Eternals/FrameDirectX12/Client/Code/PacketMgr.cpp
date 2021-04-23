@@ -10,7 +10,7 @@
 #include "NPC_Stander.h"
 #include "NPC_Merchant.h"
 #include "NPC_Quest.h"
-#include "NPC_Boy.h"
+#include "NPC_Children.h"
 #include "Crab.h"
 #include "Monkey.h"
 #include "CloderA.h"
@@ -357,8 +357,7 @@ void CPacketMgr::Move_NPC(sc_packet_move* packet)
 	
 	pObj->Set_MoveStop(false);
 	pObj->Set_State(packet->animIdx);
-	//pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
-	pObj->Ready_PositionInterpolationValue(_vec3(packet->posX, packet->posY, packet->posZ), 0.125f);
+	pObj->Ready_PositionInterpolationValue(_vec3(packet->posX, packet->posY, packet->posZ), packet->spd);
 	pObj->Ready_AngleInterpolationValue(pObj->Set_Other_Angle(_vec3(packet->dirX, packet->dirY, packet->dirZ)));
 }
 
@@ -412,8 +411,16 @@ void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
 	/* NPC - Walker */
 	if (packet->npcNum == NPC_CHICKEN || packet->npcNum == NPC_CAT || packet->npcNum == NPC_AMAN_BOY)
 	{
+		wstring wstrMeshTag;
+		if (packet->npcNum == NPC_CHICKEN)
+			wstrMeshTag = L"Chicken";
+		else if (packet->npcNum == NPC_CAT)
+			wstrMeshTag = L"Cat";
+		else if (packet->npcNum == NPC_AMAN_BOY)
+			wstrMeshTag = L"Aman_boy";
+
 		pGameObj = CNPC_Walker::Create(m_pGraphicDevice, m_pCommandList,
-									   L"Chicken",												// MeshTag
+									   wstrMeshTag,												// MeshTag
 									   wstrNaviMeshTag,											// NaviMeshTag
 									   _vec3(0.05f, 0.05f, 0.05f),								// Scale
 									   _vec3(packet->angleX, packet->angleY, packet->angleZ),	// Angle
@@ -477,9 +484,28 @@ void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
 
 		static_cast<CNPC_Merchant*>(pGameObj)->Set_NPCNumber(packet->npcNum);
 	}
+	/* NPC - Children */
+	else if (packet->npcNum == NPC_HUMAN_BOY || packet->npcNum == NPC_HUMAN_GIRL || packet->npcNum == NPC_HIGHELF_GIRL)
+	{
+		wstring wstrMeshTag;
+		if (packet->npcNum == NPC_HUMAN_BOY)
+			wstrMeshTag = L"Human_boy";
+		else if (packet->npcNum == NPC_HUMAN_GIRL)
+			wstrMeshTag = L"Human_girl";
+		else if (packet->npcNum == NPC_HIGHELF_GIRL)
+			wstrMeshTag = L"Highelf_girl";
+
+		pGameObj = CNPC_Children::Create(m_pGraphicDevice, m_pCommandList,
+										 wstrMeshTag,												// MeshTag
+										 wstrNaviMeshTag,											// NaviMeshTag
+										 _vec3(0.05f, 0.05f, 0.05f),								// Scale
+										 _vec3(packet->angleX, packet->angleY, packet->angleZ),		// Angle
+										 _vec3(packet->posX, packet->posY, packet->posZ));
+	}
 
 
 	pGameObj->Set_ServerNumber(packet->id);
+	pGameObj->Set_OType(packet->o_type);
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"NPC", pGameObj), E_FAIL);
 }
 

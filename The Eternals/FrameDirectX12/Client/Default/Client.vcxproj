@@ -206,7 +206,7 @@
     <ClInclude Include="..\Code\NPC_Walker.h" />
     <ClInclude Include="..\Code\DebugCamera.h" />
     <ClInclude Include="..\Code\DistortionDisk.h" />
-    <ClInclude Include="..\Code\NPC_Boy.h" />
+    <ClInclude Include="..\Code\NPC_Children.h" />
     <ClInclude Include="..\Code\Loading.h" />
     <ClInclude Include="..\Code\CubeObject.h" />
     <ClInclude Include="..\Code\DynamicCamera.h" />
@@ -284,7 +284,7 @@
     <ClCompile Include="..\Code\NPC_Walker.cpp" />
     <ClCompile Include="..\Code\DebugCamera.cpp" />
     <ClCompile Include="..\Code\DistortionDisk.cpp" />
-    <ClCompile Include="..\Code\NPC_Boy.cpp" />
+    <ClCompile Include="..\Code\NPC_Children.cpp" />
     <ClCompile Include="..\Code\Loading.cpp" />
     <ClCompile Include="..\Code\CubeObject.cpp" />
     <ClCompile Include="..\Code\DynamicCamera.cpp" />

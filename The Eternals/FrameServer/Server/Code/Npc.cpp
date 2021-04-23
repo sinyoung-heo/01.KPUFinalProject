@@ -146,6 +146,12 @@ void CNpc::Change_Animation(const float& fTimeDelta)
 	{
 		Change_QuestNPC_Animation(fTimeDelta);
 	}
+	/* NPC - Children */
+	else if (m_npcNum == NPC_HUMAN_BOY || m_npcNum == NPC_HUMAN_GIRL || m_npcNum == NPC_HIGHELF_GIRL)
+	{
+		Change_Children_Animation(fTimeDelta);
+	}
+
 }
 
 void CNpc::Change_Walker_Animation(const float& fTimeDelta)
@@ -178,6 +184,44 @@ void CNpc::Change_Walker_Animation(const float& fTimeDelta)
 
 		m_bIsDirSelect = false;
 		Set_Start_Move(15s);
+	}
+	break;
+
+	}
+}
+
+void CNpc::Change_Children_Animation(const float& fTimeDelta)
+{
+	switch (m_status)
+	{
+
+	case STATUS::ST_ACTIVE:
+	{
+		m_uiAnimIdx = NPC_TYPE::WALK;
+
+		if (m_bIsDirSelect)
+		{
+			if (false == CCollisionMgr::GetInstance()->Is_Arrive(m_vPos, m_vTempPos))
+				m_vPos += m_vDir * m_fSpd * fTimeDelta;
+			else
+			{
+				m_vPos = m_vTempPos;
+				Set_Stop_Move();
+			}
+		}
+		else
+			Move_Walker_NPC(fTimeDelta);
+	}
+	break;
+
+	case STATUS::ST_NONACTIVE:
+	{
+		m_uiAnimIdx = NPC_TYPE::WAIT;
+
+		m_bIsDirSelect = false;
+
+		if (m_type == NPC_MOVE)
+			Set_Start_Move(15s);
 	}
 	break;
 
@@ -266,7 +310,15 @@ void CNpc::Move_Walker_NPC(const float& fTimeDelta)
 {
 	if (m_bIsDirSelect) return;
 
-	m_fSpd = 1.f;
+	if (m_npcNum == NPC_CHICKEN || m_npcNum == NPC_CAT)
+	{
+		m_fSpd = 0.125f;
+	}
+	else if (m_npcNum == NPC_HUMAN_BOY || m_npcNum == NPC_HUMAN_GIRL 
+			 || m_npcNum == NPC_HIGHELF_GIRL || m_npcNum == NPC_AMAN_BOY)
+	{
+		m_fSpd = 0.25f;
+	}
 
 	/* 해당 NPC의 원래 위치값 */
 	float ori_x, ori_y, ori_z;
