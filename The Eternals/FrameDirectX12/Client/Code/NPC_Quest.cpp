@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "NPC_Merchant.h"
+#include "NPC_Quest.h"
 
 #include "GraphicDevice.h"
 #include "DirectInput.h"
@@ -9,21 +9,21 @@
 #include "RenderTarget.h"
 #include "TimeMgr.h"
 
-CNPC_Merchant::CNPC_Merchant(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CNPC_Quest::CNPC_Quest(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pPacketMgr(CPacketMgr::Get_Instance())
 	, m_pServerMath(CServerMath::Get_Instance())
 {
 }
 
-HRESULT CNPC_Merchant::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
+HRESULT CNPC_Quest::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag, wstrNaviMeshTag), E_FAIL);
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos = vPos;
-	m_wstrCollisionTag = L"NPC_Merchant";
+	m_wstrCollisionTag = L"NPC_Quest";
 
 	m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(vPos));
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
@@ -34,7 +34,7 @@ HRESULT CNPC_Merchant::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMes
 
 	Engine::CGameObject::SetUp_BoundingSphere(&(m_pTransCom->m_matWorld),
 											 m_pTransCom->m_vScale,
-											 _vec3(200.0f),
+											 _vec3(100.0f),
 											 _vec3(0.0f, 20.0f, 0.0f));
 	m_lstCollider.push_back(m_pBoundingSphereCom);
 
@@ -47,12 +47,12 @@ HRESULT CNPC_Merchant::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMes
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
-	m_iMonsterStatus = Baraka_M_Merchant::A_WAIT;
+	m_iMonsterStatus = Castanic_M_Lsmith::A_WAIT;
 
 	return S_OK;
 }
 
-HRESULT CNPC_Merchant::LateInit_GameObject()
+HRESULT CNPC_Quest::LateInit_GameObject()
 {
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
@@ -61,7 +61,7 @@ HRESULT CNPC_Merchant::LateInit_GameObject()
 	return S_OK;
 }
 
-_int CNPC_Merchant::Update_GameObject(const _float& fTimeDelta)
+_int CNPC_Quest::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
@@ -95,7 +95,7 @@ _int CNPC_Merchant::Update_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CNPC_Merchant::LateUpdate_GameObject(const _float& fTimeDelta)
+_int CNPC_Quest::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
@@ -107,23 +107,23 @@ _int CNPC_Merchant::LateUpdate_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-void CNPC_Merchant::Send_PacketToServer()
+void CNPC_Quest::Send_PacketToServer()
 {
 }
 
-void CNPC_Merchant::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
+void CNPC_Quest::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
 	Set_ConstantTable();
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
-void CNPC_Merchant::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
+void CNPC_Quest::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
 	Set_ConstantTableShadowDepth();
 	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 }
 
-HRESULT CNPC_Merchant::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
+HRESULT CNPC_Quest::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -156,7 +156,7 @@ HRESULT CNPC_Merchant::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTa
 	return S_OK;
 }
 
-void CNPC_Merchant::Set_ConstantTable()
+void CNPC_Quest::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -179,7 +179,7 @@ void CNPC_Merchant::Set_ConstantTable()
 		m_fDeltaTime = 0.f;
 }
 
-void CNPC_Merchant::Set_ConstantTableShadowDepth()
+void CNPC_Quest::Set_ConstantTableShadowDepth()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -197,7 +197,7 @@ void CNPC_Merchant::Set_ConstantTableShadowDepth()
 
 }
 
-void CNPC_Merchant::SetUp_AngleInterpolation(const _float& fTimeDelta)
+void CNPC_Quest::SetUp_AngleInterpolation(const _float& fTimeDelta)
 {
 	if (m_tAngleInterpolationDesc.is_start_interpolation)
 	{
@@ -214,7 +214,7 @@ void CNPC_Merchant::SetUp_AngleInterpolation(const _float& fTimeDelta)
 	}
 }
 
-void CNPC_Merchant::Change_Animation(const _float& fTimeDelta)
+void CNPC_Quest::Change_Animation(const _float& fTimeDelta)
 {
 	
 
@@ -223,28 +223,28 @@ void CNPC_Merchant::Change_Animation(const _float& fTimeDelta)
 		switch (m_iMonsterStatus)
 		{
 
-		case Baraka_M_Merchant::A_WAIT:
+		case Castanic_M_Lsmith::A_WAIT:
 		{
 			m_fAniTime = 0.f;
 
-			m_uiAnimIdx = Baraka_M_Merchant::A_WAIT;
+			m_uiAnimIdx = Castanic_M_Lsmith::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
 		break;
 
-		case Baraka_M_Merchant::A_GREET:
+		case Castanic_M_Lsmith::A_GREET:
 		{
 			m_fAniTime += fTimeDelta;
-			m_uiAnimIdx = Baraka_M_Merchant::A_GREET;
+			m_uiAnimIdx = Castanic_M_Lsmith::A_GREET;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_fAniTime > 10.f)
 			{
 				if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 				{
-					m_iMonsterStatus = Baraka_M_Merchant::A_WAIT;
+					m_iMonsterStatus = Castanic_M_Lsmith::A_WAIT;
 
-					m_uiAnimIdx = Baraka_M_Merchant::A_WAIT;
+					m_uiAnimIdx = Castanic_M_Lsmith::A_WAIT;
 					m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 					m_fAniTime = 0.f;
@@ -253,11 +253,11 @@ void CNPC_Merchant::Change_Animation(const _float& fTimeDelta)
 		}
 		break;
 
-		case Baraka_M_Merchant::A_TALK:
+		case Castanic_M_Lsmith::A_TALK:
 		{
 			m_fAniTime = 0.f;
 
-			m_uiAnimIdx = Baraka_M_Merchant::A_TALK;
+			m_uiAnimIdx = Castanic_M_Lsmith::A_TALK;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
 		break;
@@ -265,9 +265,9 @@ void CNPC_Merchant::Change_Animation(const _float& fTimeDelta)
 	}
 }
 
-Engine::CGameObject* CNPC_Merchant::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
+Engine::CGameObject* CNPC_Quest::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
 {
-	CNPC_Merchant* pInstance = new CNPC_Merchant(pGraphicDevice, pCommandList);
+	CNPC_Quest* pInstance = new CNPC_Quest(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, wstrNaviMeshTag, vScale, vAngle, vPos)))
 		Engine::Safe_Release(pInstance);
@@ -275,7 +275,7 @@ Engine::CGameObject* CNPC_Merchant::Create(ID3D12Device* pGraphicDevice, ID3D12G
 	return pInstance;
 }
 
-void CNPC_Merchant::Free()
+void CNPC_Quest::Free()
 {
 	Engine::CGameObject::Free();
 

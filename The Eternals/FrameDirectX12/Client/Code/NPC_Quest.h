@@ -13,11 +13,11 @@ namespace Engine
 	class CNaviMesh;
 }
 
-class CNPC_Merchant : public Engine::CGameObject
+class CNPC_Quest : public Engine::CGameObject
 {
 private:
-	explicit CNPC_Merchant(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CNPC_Merchant() = default;
+	explicit CNPC_Quest(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CNPC_Quest() = default;
 
 public:
 	const char& Get_NPCNumber() { return m_npcNum; }

@@ -55,6 +55,8 @@ private:
 	void KeyInput_ComboAttack(const _float& fTimeDelta);
 	void KeyInput_SkillAttack(const _float& fTimeDelta);
 	void KeyInput_OpenShop(const char& npcNumber);
+	void KeyInput_OpenQuest(const char& npcNumber);
+
 	void SetUp_AttackSetting();
 	void SetUp_ComboAttackAnimation();
 	void SetUp_FromComboAttackToAttackWait(const _float& fTimeDelta);
@@ -87,6 +89,7 @@ private:
 	void Collision_PortalVelikaToBeach(list<Engine::CColliderSphere*>& lstPortalCollider);
 	void Collision_PortalBeachToVelika(list<Engine::CColliderSphere*>& lstPortalCollider);
 	void Collision_Merchant(list<Engine::CColliderSphere*>& lstMerchantCollider, int npcServerNumber);
+	void Collision_Quest(list<Engine::CColliderSphere*>& lstMerchantCollider, int npcServerNumber);
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]

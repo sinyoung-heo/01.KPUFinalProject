@@ -252,6 +252,18 @@ void Initialize_NPC()
 	}
 	else return;
 
+	// NPC - Quest 1
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(122.0f, 0.f, 80.0f), _vec3(0.f, 0.f, 0.f), NPC_QUEST, NPC_CASTANIC_LSMITH, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Castanic_M_Lsmith::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Castanic_M_Lsmith::duration);
+	}
+	else return;
+
 
 
 

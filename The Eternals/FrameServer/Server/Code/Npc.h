@@ -38,6 +38,10 @@ private:
 	void	Change_Merchant_Animation(const float& fTimeDelta);
 	void	Greet_Merchant_Animation(const float& fTimeDelta);
 
+	/* QUEST NPC - QuestNPC (Castanic_M_Lsmith) */
+	void	Change_QuestNPC_Animation(const float& fTimeDelta);
+	void	Greet_QuestNPC_Animation(const float& fTimeDelta);
+
 	/* NON MOVE NPC - Stander (Villagers, Baraka_M_Extractor) */
 	//void	Change_Stander_Animation(const float& fTimeDelta);
 

@@ -7,9 +7,10 @@
 #include "TestOthers.h"
 #include "NPC_Walker.h"
 #include "NPC_Assistant.h"
-#include "NPC_Boy.h"
 #include "NPC_Stander.h"
 #include "NPC_Merchant.h"
+#include "NPC_Quest.h"
+#include "NPC_Boy.h"
 #include "Crab.h"
 #include "Monkey.h"
 #include "CloderA.h"
@@ -460,6 +461,18 @@ void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
 										 _vec3(0.05f, 0.05f, 0.05f),								// Scale
 										 _vec3(packet->angleX, packet->angleY, packet->angleZ),		// Angle
 										 _vec3(packet->posX, packet->posY, packet->posZ));
+
+		static_cast<CNPC_Merchant*>(pGameObj)->Set_NPCNumber(packet->npcNum);
+	}
+	/* NPC - Quest */
+	else if (packet->npcNum == NPC_CASTANIC_LSMITH)
+	{
+		pGameObj = CNPC_Quest::Create(m_pGraphicDevice, m_pCommandList,
+									  L"Castanic_M_Lsmith",									    // MeshTag
+									  wstrNaviMeshTag,											// NaviMeshTag
+									  _vec3(0.05f, 0.05f, 0.05f),								// Scale
+									  _vec3(packet->angleX, packet->angleY, packet->angleZ),	// Angle
+									  _vec3(packet->posX, packet->posY, packet->posZ));
 
 		static_cast<CNPC_Merchant*>(pGameObj)->Set_NPCNumber(packet->npcNum);
 	}

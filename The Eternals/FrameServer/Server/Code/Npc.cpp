@@ -141,6 +141,11 @@ void CNpc::Change_Animation(const float& fTimeDelta)
 	{
 		Change_Merchant_Animation(fTimeDelta);
 	}
+	/* NPC - Quest NPC */
+	else if (m_npcNum == NPC_CASTANIC_LSMITH)
+	{
+		Change_QuestNPC_Animation(fTimeDelta);
+	}
 }
 
 void CNpc::Change_Walker_Animation(const float& fTimeDelta)
@@ -223,6 +228,34 @@ void CNpc::Change_Merchant_Animation(const float& fTimeDelta)
 	case STATUS::ST_CHASE:
 	{
 		m_uiAnimIdx = NPC_MERCHANT_TYPE::TALK;
+	}
+	break;
+
+	}
+}
+
+void CNpc::Change_QuestNPC_Animation(const float& fTimeDelta)
+{
+	switch (m_status)
+	{
+
+	case STATUS::ST_ACTIVE:
+	{
+		m_uiAnimIdx = NPC_QUEST_TYPE::GREET;
+		Greet_QuestNPC_Animation(fTimeDelta);
+	}
+	break;
+
+	case STATUS::ST_NONACTIVE:
+	{
+		m_uiAnimIdx = NPC_TYPE::WAIT;
+		Set_Start_Move(10s);
+	}
+	break;
+
+	case STATUS::ST_CHASE:
+	{
+		m_uiAnimIdx = NPC_QUEST_TYPE::TALK;
 	}
 	break;
 
@@ -516,6 +549,61 @@ void CNpc::Greet_Merchant_Animation(const float& fTimeDelta)
 			if (!pUser->m_bIsConnect) continue;
 
 			send_NPC_animation_packet(server_num, NPC_MERCHANT_TYPE::GREET);
+		}
+	}
+
+	Set_Stop_Move();
+}
+
+void CNpc::Greet_QuestNPC_Animation(const float& fTimeDelta)
+{
+	/* 해당 NPC의 원래 위치값 */
+	float ori_x, ori_y, ori_z;
+	ori_x = m_vPos.x;
+	ori_y = m_vPos.y;
+	ori_z = m_vPos.z;
+
+	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
+	unordered_set<pair<int, int>> oldnearSector;
+	oldnearSector.reserve(5);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
+
+	unordered_set <int> old_viewlist;
+
+	// 이동 전: 인접 섹터 순회
+	for (auto& s : oldnearSector)
+	{
+		// 인접 섹터 내의 타 유저들이 있는지 검사
+		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+		{
+			// 타 유저의 서버 번호 추출
+			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			{
+				/* 타유저일 경우 처리 */
+				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+
+					// 접속한 유저만 시야 목록에 등록한다.
+					if (!pPlayer->Get_IsConnected()) continue;
+
+					// 시야 내에 있다면 시야 목록에 등록한다.
+					if (CObjMgr::GetInstance()->Is_Near(this, pPlayer))
+						old_viewlist.insert(obj_num);
+				}
+			}
+		}
+	}
+
+	for (int server_num : old_viewlist)
+	{
+		if (true == CObjMgr::GetInstance()->Is_Player(server_num))
+		{
+			CPlayer* pUser = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", server_num));
+			if (pUser == nullptr) continue;
+			if (!pUser->m_bIsConnect) continue;
+
+			send_NPC_animation_packet(server_num, NPC_QUEST_TYPE::GREET);
 		}
 	}
 
