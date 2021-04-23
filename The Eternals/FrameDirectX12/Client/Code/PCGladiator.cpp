@@ -506,15 +506,6 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 	KeyInput_Move(fTimeDelta);
 	KeyInput_Attack(fTimeDelta);
 
-	/* Player Attack to Monster --- TEST */
-	if (Engine::KEY_PRESSING(DIK_M))
-	{
-		m_pPacketMgr->send_attackToMonster(5000);
-		m_pPacketMgr->send_attackToMonster(5001);
-		m_pPacketMgr->send_attackToMonster(5002);
-		m_pPacketMgr->send_attackToMonster(5003);
-	}
-
 	if (Engine::KEY_DOWN(DIK_P))
 	{
 		m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();

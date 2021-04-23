@@ -357,7 +357,8 @@ void CPacketMgr::Move_NPC(sc_packet_move* packet)
 	
 	pObj->Set_MoveStop(false);
 	pObj->Set_State(packet->animIdx);
-	pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
+	//pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
+	pObj->Ready_PositionInterpolationValue(_vec3(packet->posX, packet->posY, packet->posZ), 0.125f);
 	pObj->Ready_AngleInterpolationValue(pObj->Set_Other_Angle(_vec3(packet->dirX, packet->dirY, packet->dirZ)));
 }
 

@@ -88,6 +88,15 @@ void CGameObject::Ready_AngleInterpolationValue(const _float& fEndAngle)
 	m_tAngleInterpolationDesc.interpolation_speed = 3.0f;
 }
 
+void CGameObject::Ready_PositionInterpolationValue(const _vec3& vEndPosition, float fSpd)
+{
+	m_tPosInterpolationDesc.is_start_interpolation = true;
+	m_tPosInterpolationDesc.v1 = m_pTransCom->m_vPos;
+	m_tPosInterpolationDesc.v2 = vEndPosition;
+	m_tPosInterpolationDesc.linear_ratio = Engine::MIN_LINEAR_RATIO;
+	m_tPosInterpolationDesc.interpolation_speed = fSpd;
+}
+
 HRESULT CGameObject::Ready_GameObjectPrototype()
 {
 	return S_OK;

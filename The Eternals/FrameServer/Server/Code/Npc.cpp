@@ -177,7 +177,7 @@ void CNpc::Change_Walker_Animation(const float& fTimeDelta)
 		m_uiAnimIdx = NPC_TYPE::WAIT;
 
 		m_bIsDirSelect = false;
-		Set_Start_Move();
+		Set_Start_Move(15s);
 	}
 	break;
 

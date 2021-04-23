@@ -66,6 +66,7 @@ _int CNPC_Walker::Update_GameObject(const _float& fTimeDelta)
 	Change_Animation(fTimeDelta);
 
 	Active_NPC(fTimeDelta);
+	SetUp_PositionInterpolation(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
@@ -202,27 +203,39 @@ void CNPC_Walker::SetUp_AngleInterpolation(const _float& fTimeDelta)
 	}
 }
 
+void CNPC_Walker::SetUp_PositionInterpolation(const _float& fTimeDelta)
+{
+	if (m_tPosInterpolationDesc.is_start_interpolation)
+	{
+		m_tPosInterpolationDesc.linear_ratio += m_tPosInterpolationDesc.interpolation_speed * fTimeDelta;
+
+		m_pTransCom->m_vPos = Engine::LinearInterpolation(m_tPosInterpolationDesc.v1,
+															  m_tPosInterpolationDesc.v2,
+															  m_tPosInterpolationDesc.linear_ratio);
+
+		if (m_tPosInterpolationDesc.linear_ratio == Engine::MAX_LINEAR_RATIO)
+		{
+			m_tPosInterpolationDesc.is_start_interpolation = false;
+			m_bIsMoveStop = true;
+			m_iMonsterStatus = Cat::A_WAIT;
+		}
+	}
+}
+
 void CNPC_Walker::Active_NPC(const _float& fTimeDelta)
 {
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 	m_pTransCom->m_vDir.Normalize();
 
 	/* NPC MOVE */
-	if (!m_bIsMoveStop)
+	if (!m_bIsMoveStop && m_tPosInterpolationDesc.is_start_interpolation)
 	{
 		// NaviMesh ÀÌµ¿.		
-		if (!CServerMath::Get_Instance()->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
-		{
-			_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
-														 &m_pTransCom->m_vDir,
-														 m_pInfoCom->m_fSpeed * fTimeDelta);
-			m_pTransCom->m_vPos = vPos;
-		}
-		else
-		{
-			m_iMonsterStatus = Cat::A_WAIT;
-			m_bIsMoveStop = true;
-		}
+		
+		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+													 &m_pTransCom->m_vDir,
+													 m_pInfoCom->m_fSpeed * fTimeDelta);
+		m_pTransCom->m_vPos = vPos;		
 	}
 }
 

@@ -40,6 +40,7 @@ private:
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
 	void			SetUp_AngleInterpolation(const _float& fTimeDelta);
+	void			SetUp_PositionInterpolation(const _float& fTimeDelta);
 
 	void			Active_NPC(const _float& fTimeDelta);
 	void			Change_Animation(const _float& fTimeDelta);
