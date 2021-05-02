@@ -30,8 +30,8 @@ HRESULT CPCWeaponTwoHand::Ready_GameObject(wstring wstrMeshTag,
 										   m_pMeshCom->Get_CenterPos(),
 										   m_pMeshCom->Get_MinVector(),
 										   m_pMeshCom->Get_MaxVector(),
-										   1.0f,
-										   _vec3(0.0f, 25.0f, 0.0f));
+										   1.5f,
+										   _vec3(0.0f, 35.0f, 0.0f));
 
 	return S_OK;
 }
