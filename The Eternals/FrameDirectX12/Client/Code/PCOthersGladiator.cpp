@@ -300,11 +300,14 @@ void CPCOthersGladiator::Set_AnimationSpeed()
 	{
 		m_fAnimationSpeed = TPS * 0.75f;
 	}
-
 	else if (m_uiAnimIdx == Gladiator::DRAW_SWORD_CHARGE ||
 			 m_uiAnimIdx == Gladiator::DRAW_SWORD_LOOP)
 	{
 		m_fAnimationSpeed = TPS * 2.f;
+	}
+	else if (m_uiAnimIdx == Gladiator::TUMBLING)
+	{
+		m_fAnimationSpeed = TPS * 1.35f;
 	}
 	else
 		m_fAnimationSpeed = TPS;
@@ -321,6 +324,10 @@ void CPCOthersGladiator::Set_BlendingSpeed()
 		m_uiAnimIdx == Gladiator::GAIA_CRUSH3)
 	{
 		m_fBlendingSpeed = 0.001f;
+	}
+	else if (m_uiAnimIdx == Gladiator::TUMBLING)
+	{
+		m_fBlendingSpeed = 0.0075f;
 	}
 	else
 		m_fBlendingSpeed = 0.005f;

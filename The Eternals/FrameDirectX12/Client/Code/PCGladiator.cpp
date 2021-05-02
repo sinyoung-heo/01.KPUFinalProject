@@ -481,7 +481,7 @@ void CPCGladiator::Set_AnimationSpeed()
 	}
 	else if (m_uiAnimIdx == Gladiator::TUMBLING)
 	{
-		m_fAnimationSpeed = TPS * 1.25f;
+		m_fAnimationSpeed = TPS * 1.35f;
 	}
 	else
 		m_fAnimationSpeed = TPS;
@@ -498,6 +498,10 @@ void CPCGladiator::Set_BlendingSpeed()
 		m_uiAnimIdx == Gladiator::GAIA_CRUSH3)
 	{
 		m_fBlendingSpeed = 0.001f;
+	}
+	else if (m_uiAnimIdx == Gladiator::TUMBLING)
+	{
+		m_fBlendingSpeed = 0.0075f;
 	}
 	else
 		m_fBlendingSpeed = 0.005f;
