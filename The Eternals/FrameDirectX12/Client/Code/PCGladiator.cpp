@@ -191,6 +191,7 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	// AfterImage
 	Make_AfterImage(fTimeDelta);
 
+	cout << m_pTransCom->m_vPos.x << ", " << m_pTransCom->m_vPos.z << endl;
 	return NO_EVENT;
 }
 

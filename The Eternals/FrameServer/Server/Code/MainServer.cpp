@@ -168,85 +168,13 @@ void Initialize_NPC()
 	/*											SCENE - VELIKA TOWN											 */
 	/* ______________________________________________________________________________________________________*/
 
-	// NPC - Walker (Chicken)
-	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	if (pNew)
-	{
-		/* NPC의 정보 초기화 */
-		pNew->Ready_NPC(_vec3(134.0f, 0.f, 70.0f), _vec3(0.f, 0.f, 0.f), NPC_MOVE, NPC_CHICKEN, STAGE_VELIKA);
-		pNew->Set_NumAnimation(Chicken::NUM_ANIMATION);
-		pNew->Set_AnimDuration(Chicken::duration);
-	}
-	else return;
-
-	// NPC - Walker (Cat)
-	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	if (pNew)
-	{
-		/* NPC의 정보 초기화 */
-		pNew->Ready_NPC(_vec3(128.0f, 0.f, 70.0f), _vec3(0.f, 0.f, 0.f), NPC_MOVE, NPC_CAT, STAGE_VELIKA);
-		pNew->Set_NumAnimation(Cat::NUM_ANIMATION);
-		pNew->Set_AnimDuration(Cat::duration);
-	}
-	else return;
-
-	// NPC - Walker (Aman_boy)
-	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	if (pNew)
-	{
-		/* NPC의 정보 초기화 */
-		pNew->Ready_NPC(_vec3(134.0f, 0.f, 60.0f), _vec3(0.f, 0.f, 0.f), NPC_MOVE, NPC_AMAN_BOY, STAGE_VELIKA);
-		pNew->Set_NumAnimation(Aman_boy::NUM_ANIMATION);
-		pNew->Set_AnimDuration(Aman_boy::duration);
-	}
-	else return;
-
-	// NPC Assistant - Popori Boy
-	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	if (pNew)
-	{
-		/* NPC의 정보 초기화 */
-		pNew->Ready_NPC(_vec3(130.0f, 0.f, 70.0f), _vec3(0.f, 0.f, 0.f), NPC_NONMOVE, NPC_POPORI_BOY, STAGE_VELIKA);
-		pNew->Set_NumAnimation(Popori_boy::NUM_ANIMATION);
-		pNew->Set_AnimDuration(Popori_boy::duration);
-	}
-	else return;
-
-	// NPC - Villigers
-	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	if (pNew)
-	{
-		/* NPC의 정보 초기화 */
-		pNew->Ready_NPC(_vec3(122.0f, 0.f, 70.0f), _vec3(0.f, 0.f, 0.f), NPC_NONMOVE, NPC_VILLAGERS, STAGE_VELIKA);
-		pNew->Set_NumAnimation(NPC_Villagers::NUM_ANIMATION);
-		pNew->Set_AnimDuration(NPC_Villagers::duration);
-	}
-	else return;
-
-	// NPC - Baraka_M_Extractor
-	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	if (pNew)
-	{
-		/* NPC의 정보 초기화 */
-		pNew->Ready_NPC(_vec3(127.0f, 0.f, 70.0f), _vec3(0.f, 0.f, 0.f), NPC_NONMOVE, NPC_BARAKA_EXTRACTOR, STAGE_VELIKA);
-		pNew->Set_NumAnimation(Baraka_M_Extractor::NUM_ANIMATION);
-		pNew->Set_AnimDuration(Baraka_M_Extractor::duration);
-	}
-	else return;
-
 	// NPC - Merchant 1
 	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
 
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_NPC(_vec3(127.0f, 0.f, 76.0f), _vec3(0.f, 0.f, 0.f), NPC_MERCHANT, NPC_BARAKA_MERCHANT, STAGE_VELIKA);
+		pNew->Ready_NPC(_vec3(143.0f, 0.f, 79.0f), _vec3(0.f, -45.f, 0.f), NPC_MERCHANT, NPC_BARAKA_MERCHANT, STAGE_VELIKA);
 		pNew->Set_NumAnimation(Baraka_M_Merchant::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Baraka_M_Merchant::duration);
 	}
@@ -258,7 +186,7 @@ void Initialize_NPC()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_NPC(_vec3(132.0f, 0.f, 76.0f), _vec3(0.f, 0.f, 0.f), NPC_MERCHANT, NPC_POPORI_MERCHANT, STAGE_VELIKA);
+		pNew->Ready_NPC(_vec3(151.0f, 0.f, 90.0f), _vec3(0.f, -45.f, 0.f), NPC_MERCHANT, NPC_POPORI_MERCHANT, STAGE_VELIKA);
 		pNew->Set_NumAnimation(Popori_M_Merchant::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Popori_M_Merchant::duration);
 	}
@@ -270,9 +198,33 @@ void Initialize_NPC()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_NPC(_vec3(122.0f, 0.f, 76.0f), _vec3(0.f, 0.f, 0.f), NPC_MERCHANT, NPC_BARAKA_MYSTELLIUM, STAGE_VELIKA);
+		pNew->Ready_NPC(_vec3(154.0f, 0.f, 103.0f), _vec3(0.f, -90.f, 0.f), NPC_MERCHANT, NPC_BARAKA_MYSTELLIUM, STAGE_VELIKA);
 		pNew->Set_NumAnimation(Baraka_M_Mystellium::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Baraka_M_Mystellium::duration);
+	}
+	else return;
+
+	// NPC Assistant - Popori Boy
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(148.5f, 1.f, 88.5f), _vec3(0.f, -90.f, 0.f), NPC_NONMOVE, NPC_POPORI_BOY, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Popori_boy::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Popori_boy::duration);
+	}
+	else return;
+
+	// NPC Assistant - Popori Boy
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(148.8f, 1.f, 89.0f), _vec3(0.f, -90.f, 0.f), NPC_NONMOVE, NPC_POPORI_BOY, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Popori_boy::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Popori_boy::duration);
 	}
 	else return;
 
@@ -282,19 +234,271 @@ void Initialize_NPC()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_NPC(_vec3(122.0f, 0.f, 80.0f), _vec3(0.f, 0.f, 0.f), NPC_QUEST, NPC_CASTANIC_LSMITH, STAGE_VELIKA);
+		pNew->Ready_NPC(_vec3(104.1f, 0.f, 95.0f), _vec3(0.f, -180.f, 0.f), NPC_QUEST, NPC_CASTANIC_LSMITH, STAGE_VELIKA);
 		pNew->Set_NumAnimation(Castanic_M_Lsmith::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Castanic_M_Lsmith::duration);
 	}
 	else return;
+
+	// NPC - Baraka_M_Extractor (문지기)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(122.6f, 0.f, 25.0f), _vec3(0.f, 0.f, 0.f), NPC_NONMOVE, NPC_BARAKA_EXTRACTOR, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Baraka_M_Extractor::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Baraka_M_Extractor::duration);
+	}
+	else return;
+
+	// NPC - Baraka_M_Extractor (문지기)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(138.2f, 0.f, 25.0f), _vec3(0.f, 0.f, 0.f), NPC_NONMOVE, NPC_BARAKA_EXTRACTOR, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Baraka_M_Extractor::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Baraka_M_Extractor::duration);
+	}
+	else return;
+
+	// NPC - Baraka_M_Extractor (문지기)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(110.158f, 0.f, 206.25f), _vec3(0.f, -180.f, 0.f), NPC_NONMOVE, NPC_BARAKA_EXTRACTOR, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Baraka_M_Extractor::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Baraka_M_Extractor::duration);
+	}
+	else return;
+
+	// NPC - Baraka_M_Extractor (문지기)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(120.58f, 0.f, 206.25f), _vec3(0.f, 180.f, 0.f), NPC_NONMOVE, NPC_BARAKA_EXTRACTOR, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Baraka_M_Extractor::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Baraka_M_Extractor::duration);
+	}
+	else return;
+
+	// NPC - Walker (Chicken)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(114.773f, 0.f, 67.6f), _vec3(0.f, 0.f, 0.f), NPC_MOVE, NPC_CHICKEN, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Chicken::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Chicken::duration);
+	}
+	else return;
+
+	// NPC - Walker (Cat)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(87.91f, 0.f, 84.52f), _vec3(0.f, 0.f, 0.f), NPC_MOVE, NPC_CAT, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Cat::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Cat::duration);
+	}
+	else return;
+
+	// NPC - Walker (Aman_boy)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(103.84f, 0.f, 125.85f), _vec3(0.f, 0.f, 0.f), NPC_MOVE, NPC_AMAN_BOY, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Aman_boy::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Aman_boy::duration);
+	}
+	else return;
+
+	// NPC - Walker (Chicken)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(118.9f, 0.f, 159.6f), _vec3(0.f, 0.f, 0.f), NPC_MOVE, NPC_CHICKEN, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Chicken::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Chicken::duration);
+	}
+	else return;
+
+	// NPC - Walker (Cat)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(89.02f, 0.f, 165.f), _vec3(0.f, 0.f, 0.f), NPC_MOVE, NPC_CAT, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Cat::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Cat::duration);
+	}
+	else return;
+
+	// NPC - Walker (Chicken)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(108.9f, 0.f, 155.6f), _vec3(0.f, 0.f, 0.f), NPC_MOVE, NPC_CHICKEN, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Chicken::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Chicken::duration);
+	}
+	else return;
+
+	// NPC - Walker (Cat)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(129.02f, 0.f, 143.f), _vec3(0.f, 0.f, 0.f), NPC_MOVE, NPC_CAT, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Cat::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Cat::duration);
+	}
+	else return;
+
+	// NPC - Walker (Aman_boy)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(63.5f, 0.f, 146.3f), _vec3(0.f, 0.f, 0.f), NPC_MOVE, NPC_AMAN_BOY, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Aman_boy::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Aman_boy::duration);
+	}
+	else return;
+
+	// NPC - Walker (Aman_boy)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(175.4f, 0.f, 53.3f), _vec3(0.f, 0.f, 0.f), NPC_MOVE, NPC_AMAN_BOY, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Aman_boy::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Aman_boy::duration);
+	}
+	else return;
+
+	// NPC - Walker (Aman_boy)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(147.02f, 0.f, 59.3f), _vec3(0.f, 0.f, 0.f), NPC_MOVE, NPC_AMAN_BOY, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Aman_boy::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Aman_boy::duration);
+	}
+	else return;
+
+	// NPC - Walker (Aman_boy)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(131.25f, 0.f, 57.98f), _vec3(0.f, 0.f, 0.f), NPC_MOVE, NPC_AMAN_BOY, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Aman_boy::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Aman_boy::duration);
+	}
+	else return;
+
+	// NPC - Walker (Human Boy)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(88.16f, 0.f, 143.19f), _vec3(0.f, -180.f, 0.f), NPC_MOVE, NPC_HUMAN_BOY, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Human_boy::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Human_boy::duration);
+	}
+	else return;
+
+	// NPC - Walker (Human girl)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(100.13f, 0.f, 138.62f), _vec3(0.f, -180.f, 0.f), NPC_MOVE, NPC_HUMAN_GIRL, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Human_girl::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Human_girl::duration);
+	}
+	else return;
+
+	// NPC - Walker (Highelf girl)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(142.43f, 0.f, 125.3f), _vec3(0.f, 0.f, 0.f), NPC_MOVE, NPC_HIGHELF_GIRL, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Highelf_girl::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Highelf_girl::duration);
+	}
+	else return;
+
+	// NPC - Villigers
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(56.30f, 0.f, 83.18f), _vec3(0.f, 15.f, 0.f), NPC_NONMOVE, NPC_VILLAGERS, STAGE_VELIKA);
+		pNew->Set_NumAnimation(NPC_Villagers::NUM_ANIMATION);
+		pNew->Set_AnimDuration(NPC_Villagers::duration);
+	}
+	else return;
 	
+	// NPC - Villigers
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(79.52f, 0.f, 57.38f), _vec3(0.f, 0.f, 0.f), NPC_NONMOVE, NPC_VILLAGERS, STAGE_VELIKA);
+		pNew->Set_NumAnimation(NPC_Villagers::NUM_ANIMATION);
+		pNew->Set_AnimDuration(NPC_Villagers::duration);
+	}
+	else return;
+
+	// NPC - Villigers
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(189.77f, 0.f, 94.47f), _vec3(0.f, -75.f, 0.f), NPC_NONMOVE, NPC_VILLAGERS, STAGE_VELIKA);
+		pNew->Set_NumAnimation(NPC_Villagers::NUM_ANIMATION);
+		pNew->Set_AnimDuration(NPC_Villagers::duration);
+	}
+	else return;
+
 	// NPC - Children (Human Boy)
 	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
 	
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_NPC(_vec3(134.0f, 0.f, 70.0f), _vec3(0.f, 0.f, 0.f), NPC_NONMOVE, NPC_HUMAN_BOY, STAGE_VELIKA);
+		pNew->Ready_NPC(_vec3(109.4f, 0.f, 83.9f), _vec3(0.f, -180.f, 0.f), NPC_NONMOVE, NPC_HUMAN_BOY, STAGE_VELIKA);
 		pNew->Set_NumAnimation(Human_boy::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Human_boy::duration);
 	}
@@ -306,7 +510,19 @@ void Initialize_NPC()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_NPC(_vec3(127.0f, 0.f, 70.0f), _vec3(0.f, 0.f, 0.f), NPC_NONMOVE, NPC_HUMAN_GIRL, STAGE_VELIKA);
+		pNew->Ready_NPC(_vec3(109.6f, 0.f, 81.87f), _vec3(0.f, 0.f, 0.f), NPC_NONMOVE, NPC_HUMAN_GIRL, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Human_girl::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Human_girl::duration);
+	}
+	else return;
+
+	// NPC - Children (Human girl)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(91.13f, 0.f, 104.78f), _vec3(0.f, -180.f, 0.f), NPC_NONMOVE, NPC_HUMAN_GIRL, STAGE_VELIKA);
 		pNew->Set_NumAnimation(Human_girl::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Human_girl::duration);
 	}
@@ -318,667 +534,119 @@ void Initialize_NPC()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_NPC(_vec3(132.0f, 0.f, 65.0f), _vec3(0.f, 0.f, 0.f), NPC_MOVE, NPC_HIGHELF_GIRL, STAGE_VELIKA);
+		pNew->Ready_NPC(_vec3(91.33f, 0.f, 103.3f), _vec3(0.f, 0.f, 0.f), NPC_NONMOVE, NPC_HIGHELF_GIRL, STAGE_VELIKA);
 		pNew->Set_NumAnimation(Highelf_girl::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Highelf_girl::duration);
 	}
 	else return;
 
-
-
-
-
-
-
-
-	// NORMAL NPC 2
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "Cat", strlen("Cat"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(98.0f, 0.f, 80.0f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	//	pNew->m_type = NPC_MOVE;
-	//	pNew->m_npcNum = NPC_CAT;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// NORMAL NPC 3
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "Cat", strlen("Cat"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-
-	//	pNew->m_vPos = _vec3(140.0f, 0.f, 125.0f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	//	pNew->m_type = NPC_MOVE;
-	//	pNew->m_npcNum = NPC_CAT;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// NORMAL NPC 4
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "Aman_boy", strlen("Aman_boy"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(91.2f, 0.f, 60.0f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, -90.f, 0.f);
-	//	pNew->m_type = NPC_MOVE;
-	//	pNew->m_npcNum = NPC_AMAN_BOY;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// NORMAL NPC 5
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "Human_boy", strlen("Human_boy"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(90.0f, 0.f, 60.0f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 90.f, 0.f);
-	//	pNew->m_type = NPC_MOVE;
-	//	pNew->m_npcNum = NPC_HUMAN_BOY;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// NORMAL NPC 6
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "Human_boy", strlen("Human_boy"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(90.0f, 0.f, 110.0f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	//	pNew->m_type = NPC_MOVE;
-	//	pNew->m_npcNum = NPC_HUMAN_BOY;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// NORMAL NPC 7
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "Human_boy", strlen("Human_boy"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(140.0f, 0.f, 110.0f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	//	pNew->m_type = NPC_MOVE;
-	//	pNew->m_npcNum = NPC_HUMAN_BOY;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// NORMAL NPC 8
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "Cat", strlen("Cat"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(125.0f, 0.f, 80.0f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	//	pNew->m_type = NPC_MOVE;
-	//	pNew->m_npcNum = NPC_CAT;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// NORMAL NPC 9
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "Aman_boy", strlen("Aman_boy"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(138.0f, 0.f, 85.0f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, -90.f, 0.f);
-	//	pNew->m_type = NPC_MOVE;
-	//	pNew->m_npcNum = NPC_AMAN_BOY;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// NORMAL NPC 10
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "Human_boy", strlen("Human_boy"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(137.0f, 0.f, 85.f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 90.f, 0.f);
-	//	pNew->m_type = NPC_MOVE;
-	//	pNew->m_npcNum = NPC_HUMAN_BOY;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// NORMAL NPC 11
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "NPC_Villagers", strlen("NPC_Villagers"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(175.0f, 0.f, 119.f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	//	pNew->m_type = NPC_NONMOVE;
-	//	pNew->m_npcNum = NPC_VILLAGERS;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// NORMAL NPC 12
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "NPC_Villagers", strlen("NPC_Villagers"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(82.0f, 0.f, 63.f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	//	pNew->m_type = NPC_NONMOVE;
-	//	pNew->m_npcNum = NPC_VILLAGERS;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// NORMAL NPC 13
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "Cat", strlen("Cat"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(168.0f, 0.f, 46.f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	//	pNew->m_type = NPC_MOVE;
-	//	pNew->m_npcNum = NPC_CAT;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// NORMAL NPC 14
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "Cat", strlen("Cat"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(177.0f, 0.f, 55.f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	//	pNew->m_type = NPC_MOVE;
-	//	pNew->m_npcNum = NPC_CAT;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// NORMAL NPC 15
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "Cat", strlen("Cat"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(170.0f, 0.f, 120.f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	//	pNew->m_type = NPC_MOVE;
-	//	pNew->m_npcNum = NPC_CAT;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// NORMAL NPC 16
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "Chicken", strlen("Chicken"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(168.0f, 0.f, 78.f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	//	pNew->m_type = NPC_MOVE;
-	//	pNew->m_npcNum = NPC_CAT;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// NORMAL NPC 18
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "Chicken", strlen("Chicken"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(147.0f, 0.f, 125.f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	//	pNew->m_type = NPC_MOVE;
-	//	pNew->m_npcNum = NPC_CHICKEN;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// NORMAL NPC 19
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "Popori_boy", strlen("Popori_boy"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(90.0f, 0.f, 155.f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	//	pNew->m_type = NPC_NONMOVE;
-	//	pNew->m_npcNum = NPC_POPORI_BOY;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// NORMAL NPC 20
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "Human_boy", strlen("Human_boy"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(84.0f, 0.f, 146.f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	//	pNew->m_type = NPC_MOVE;
-	//	pNew->m_npcNum = NPC_HUMAN_BOY;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// NORMAL NPC 21
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "Popori_boy", strlen("Popori_boy"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(94.0f, 0.f, 78.f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	//	pNew->m_type = NPC_NONMOVE;
-	//	pNew->m_npcNum = NPC_POPORI_BOY;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// NORMAL NPC 22
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "Popori_boy", strlen("Popori_boy"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(139.0f, 0.f, 138.f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	//	pNew->m_type = NPC_NONMOVE;
-	//	pNew->m_npcNum = NPC_POPORI_BOY;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// MERCHANT NPC 1
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "NPC_Villagers", strlen("NPC_Villagers"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(143.0f, 0.f, 79.0f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	//	pNew->m_type = NPC_NONMOVE;
-	//	pNew->m_npcNum = NPC_VILLAGERS;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// MERCHANT NPC 2
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "NPC_Villagers", strlen("NPC_Villagers"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(150.0f, 0.f, 90.0f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	//	pNew->m_type = NPC_NONMOVE;
-	//	pNew->m_npcNum = NPC_VILLAGERS;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// MERCHANT NPC 3
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "NPC_Villagers", strlen("NPC_Villagers"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(153.0f, 0.f, 103.0f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	//	pNew->m_type = NPC_NONMOVE;
-	//	pNew->m_npcNum = NPC_VILLAGERS;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
-
-	//// QUEST NPC
-	//pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->m_sNum += NPC_NUM_START;
-	//	s_num = pNew->m_sNum;
-
-	//	pNew->Set_IsConnected(true);
-	//	pNew->Set_IsDead(false);
-	//	strncpy_s(pNew->m_ID, "NPC_Villagers", strlen("NPC_Villagers"));
-	//	strncpy_s(pNew->m_naviType, "StageVelika_NaviMesh", strlen("StageVelika_NaviMesh"));
-
-	//	pNew->m_vPos = _vec3(120.0f, 0.f, 25.0f);
-	//	pNew->m_vTempPos = pNew->m_vPos;
-	//	pNew->m_vDir = _vec3(0.f, 0.f, 1.f);
-	//	pNew->m_vAngle = _vec3(0.f, 0.f, 0.f);
-	//	pNew->m_type = NPC_NONMOVE;
-	//	pNew->m_npcNum = NPC_VILLAGERS;
-	//	pNew->m_status = STATUS::ST_NONACTIVE;
-
-	//	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
-	//	CObjMgr::GetInstance()->Add_GameObject(L"NPC", pNew, s_num);
-	//}
-	//else return;
+	// NPC - Children (Highelf girl)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(176.3f, 0.f, 118.5f), _vec3(0.f, -180.f, 0.f), NPC_NONMOVE, NPC_HIGHELF_GIRL, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Highelf_girl::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Highelf_girl::duration);
+	}
+	else return;
+
+	// NPC - Children (Human Boy)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(177.821f, 0.f, 118.03f), _vec3(0.f, -90.f, 0.f), NPC_NONMOVE, NPC_HUMAN_BOY, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Human_boy::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Human_boy::duration);
+	}
+	else return;
+
+	// NPC - Children (Human Boy)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(177.3f, 0.f, 116.5f), _vec3(0.f, 0.f, 0.f), NPC_NONMOVE, NPC_HUMAN_BOY, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Human_boy::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Human_boy::duration);
+	}
+	else return;
+
+	// NPC - Children (Human Boy)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(193.17f, 0.f, 68.65f), _vec3(0.f, -180.f, 0.f), NPC_NONMOVE, NPC_HUMAN_BOY, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Human_boy::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Human_boy::duration);
+	}
+	else return;
+
+	// NPC - Children (Highelf girl)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(192.98f, 0.f, 66.44f), _vec3(0.f, 0.f, 0.f), NPC_NONMOVE, NPC_HIGHELF_GIRL, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Highelf_girl::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Highelf_girl::duration);
+	}
+	else return;
+
+	// NPC - Children (Human girl)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(192.08f, 0.f, 67.51f), _vec3(0.f, 90.f, 0.f), NPC_NONMOVE, NPC_HUMAN_GIRL, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Human_girl::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Human_girl::duration);
+	}
+	else return;
+
+	// NPC - Children (Human Boy)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(123.95f, 0.f, 81.344f), _vec3(0.f, -180.f, 0.f), NPC_NONMOVE, NPC_HUMAN_BOY, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Human_boy::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Human_boy::duration);
+	}
+	else return;
+
+	// NPC - Children (Highelf girl)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(123.73f, 0.f, 79.61f), _vec3(0.f, 0.f, 0.f), NPC_NONMOVE, NPC_HIGHELF_GIRL, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Highelf_girl::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Highelf_girl::duration);
+	}
+	else return;
+
+	// NPC - Children (Human girl)
+	pNew = static_cast<CNpc*>(CObjPoolMgr::GetInstance()->use_Object(L"NPC"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_NPC(_vec3(122.52f, 0.f, 80.5f), _vec3(0.f, 90.f, 0.f), NPC_NONMOVE, NPC_HUMAN_GIRL, STAGE_VELIKA);
+		pNew->Set_NumAnimation(Human_girl::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Human_girl::duration);
+	}
+	else return;
 
 #ifdef TEST
 	cout << "NPC Initialize Finish.\n";

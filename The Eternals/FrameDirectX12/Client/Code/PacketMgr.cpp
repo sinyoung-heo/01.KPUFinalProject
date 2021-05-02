@@ -478,7 +478,7 @@ void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
 		pGameObj = CNPC_Quest::Create(m_pGraphicDevice, m_pCommandList,
 									  L"Castanic_M_Lsmith",									    // MeshTag
 									  wstrNaviMeshTag,											// NaviMeshTag
-									  _vec3(0.05f, 0.05f, 0.05f),								// Scale
+									  _vec3(0.07f, 0.07f, 0.07f),								// Scale
 									  _vec3(packet->angleX, packet->angleY, packet->angleZ),	// Angle
 									  _vec3(packet->posX, packet->posY, packet->posZ));
 
@@ -498,7 +498,7 @@ void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
 		pGameObj = CNPC_Children::Create(m_pGraphicDevice, m_pCommandList,
 										 wstrMeshTag,												// MeshTag
 										 wstrNaviMeshTag,											// NaviMeshTag
-										 _vec3(0.05f, 0.05f, 0.05f),								// Scale
+										 _vec3(0.07f, 0.07f, 0.07f),								// Scale
 										 _vec3(packet->angleX, packet->angleY, packet->angleZ),		// Angle
 										 _vec3(packet->posX, packet->posY, packet->posZ));
 	}
