@@ -54,6 +54,7 @@ private:
 	void KeyInput_StanceChange(const _float& fTimeDelta);
 	void KeyInput_ComboAttack(const _float& fTimeDelta);
 	void KeyInput_SkillAttack(const _float& fTimeDelta);
+	void KeyInput_Tumbling(const _float& fTimeDelta);
 	void KeyInput_OpenShop(const char& npcNumber);
 	void KeyInput_OpenQuest(const char& npcNumber);
 
