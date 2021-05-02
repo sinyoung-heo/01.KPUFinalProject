@@ -23,6 +23,35 @@ void CMonster::Set_AnimDuration(double arr[])
 	}
 }
 
+void CMonster::Ready_Monster(const _vec3& pos, const _vec3& angle, const char& type, const char& num, const char& naviType, const int& hp, const int& att, const int& exp, const float& spd)
+{
+	/* NPC의 정보 초기화 */
+	m_sNum += MON_NUM_START;
+	int s_num = m_sNum;
+
+	m_chStageId = naviType;
+
+	m_bIsConnect = true;
+	m_bIsDead = false;
+
+	m_vPos = pos;
+	m_vTempPos = m_vPos;
+	m_vOriPos = m_vPos;
+	m_vDir = _vec3(0.f, 0.f, 1.f);
+	m_vAngle = angle;
+	m_iHp = hp;
+	m_iMaxHp = hp;
+	m_iAtt = att;
+	m_iExp = exp;
+	m_fSpd = spd;
+	m_type = type;
+	m_monNum = num;
+	m_status = STATUS::ST_NONACTIVE;
+
+	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(m_vPos.z / SECTOR_SIZE), (int)(m_vPos.x / SECTOR_SIZE));
+	CObjMgr::GetInstance()->Add_GameObject(L"MONSTER", this, s_num);
+}
+
 int CMonster::Update_Monster(const float& fTimeDelta)
 {
 	if (m_bIsDead)
@@ -3104,11 +3133,8 @@ void CMonster::send_Monster_enter_packet(int to_client)
 	p.type = SC_PACKET_MONSTER_ENTER;
 	p.id = m_sNum;
 
-	c_lock.lock();
-	strncpy_s(p.name, m_ID, strlen(m_ID));
-	strncpy_s(p.naviType, m_naviType, strlen(m_naviType));
-	c_lock.unlock();
-
+	p.naviType = m_chStageId;
+	p.o_type = m_type;
 	p.mon_num = m_monNum;
 
 	p.posX = m_vPos.x;
@@ -3122,6 +3148,7 @@ void CMonster::send_Monster_enter_packet(int to_client)
 	p.Hp = m_iHp;
 	p.maxHp = m_iMaxHp;
 	p.spd = m_fSpd;
+	p.att = m_iAtt;
 
 	send_packet(to_client, &p);
 }

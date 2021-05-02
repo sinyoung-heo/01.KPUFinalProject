@@ -277,14 +277,14 @@ void CPacketMgr::Process_packet()
 	case SC_PACKET_MONSTER_MOVE:
 	{
 		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(m_packet_start);
-		//Move_Monster(packet);
+		Move_Monster(packet);
 	}
 	break;
 
 	case SC_PACKET_MONSTER_ATTACK:
 	{
 		sc_packet_monster_attack* packet = reinterpret_cast<sc_packet_monster_attack*>(m_packet_start);
-		//Attack_Monster(packet);
+		Attack_Monster(packet);
 	}
 	break;
 
@@ -849,11 +849,15 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 {
 	Engine::CGameObject* pGameObj = nullptr;
 
+	wstring wstrNaviMeshTag;
+	if (packet->naviType == STAGE_VELIKA)
+		wstrNaviMeshTag = L"StageVelika_NaviMesh";
+
 	if (packet->mon_num == MON_CRAB)
 	{
 		pGameObj = CCrab::Create(m_pGraphicDevice, m_pCommandList,
-								 wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
-								 wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
+								 L"Crab",														// MeshTag
+								 wstrNaviMeshTag,												// NaviMeshTag
 								 _vec3(0.05f, 0.05f, 0.05f),									// Scale
 								 _vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
 								 _vec3(packet->posX, packet->posY, packet->posZ));
@@ -861,8 +865,8 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 	else if (packet->mon_num == MON_MONKEY)
 	{
 		pGameObj = CMonkey::Create(m_pGraphicDevice, m_pCommandList,
-								   wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
-								   wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
+								   L"Monkey",														// MeshTag
+								   wstrNaviMeshTag,													// NaviMeshTag
 								   _vec3(0.05f, 0.05f, 0.05f),										// Scale
 								   _vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
 								   _vec3(packet->posX, packet->posY, packet->posZ));
@@ -870,8 +874,8 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 	else if (packet->mon_num == MON_CLODER)
 	{
 		pGameObj = CCloderA::Create(m_pGraphicDevice, m_pCommandList,
-								   wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
-								   wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
+								    L"CloderA",														// MeshTag
+									wstrNaviMeshTag,												// NaviMeshTag
 								   _vec3(0.05f, 0.05f, 0.05f),										// Scale
 								   _vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
 								   _vec3(packet->posX, packet->posY, packet->posZ));
@@ -879,8 +883,8 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 	else if (packet->mon_num == MON_SAILOR)
 	{
 		pGameObj = CDrownedSailor::Create(m_pGraphicDevice, m_pCommandList,
-										  wstring(packet->name, &packet->name[MAX_ID_LEN]),					// MeshTag
-										  wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),		// NaviMeshTag
+										  L"DrownedSailor",													// MeshTag
+										  wstrNaviMeshTag,													// NaviMeshTag
 										  _vec3(0.05f, 0.05f, 0.05f),										// Scale
 										  _vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
 										  _vec3(packet->posX, packet->posY, packet->posZ));
@@ -888,8 +892,8 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 	else if (packet->mon_num == MON_GBEETLE)
 	{
 		pGameObj = CGiantBeetle::Create(m_pGraphicDevice, m_pCommandList,
-										wstring(packet->name, &packet->name[MAX_ID_LEN]),					// MeshTag
-										wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),		// NaviMeshTag
+										L"GiantBeetle",														// MeshTag
+										wstrNaviMeshTag,													// NaviMeshTag
 										_vec3(0.05f, 0.05f, 0.05f),											// Scale
 										_vec3(packet->angleX, packet->angleY, packet->angleZ),				// Angle
 										_vec3(packet->posX, packet->posY, packet->posZ));
@@ -897,8 +901,8 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 	else if (packet->mon_num == MON_GMONKEY)
 	{
 		pGameObj = CGiantMonkey::Create(m_pGraphicDevice, m_pCommandList,
-										wstring(packet->name, &packet->name[MAX_ID_LEN]),					// MeshTag
-										wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),		// NaviMeshTag
+										L"GiantMonkey",														// MeshTag
+										wstrNaviMeshTag,													// NaviMeshTag
 										_vec3(0.05f, 0.05f, 0.05f),											// Scale
 										_vec3(packet->angleX, packet->angleY, packet->angleZ),				// Angle
 										_vec3(packet->posX, packet->posY, packet->posZ));
@@ -906,8 +910,8 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 	else if (packet->mon_num == MON_ARACHNE)
 	{
 		pGameObj = CCraftyArachne::Create(m_pGraphicDevice, m_pCommandList,
-										  wstring(packet->name, &packet->name[MAX_ID_LEN]),					// MeshTag
-										  wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),		// NaviMeshTag
+										  L"CraftyArachne",													// MeshTag
+										  wstrNaviMeshTag,													// NaviMeshTag
 										  _vec3(0.05f, 0.05f, 0.05f),										// Scale
 										  _vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
 										  _vec3(packet->posX, packet->posY, packet->posZ));
@@ -915,7 +919,7 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 
 
 	pGameObj->Set_ServerNumber(packet->id);
-	pGameObj->Set_Info(1, packet->Hp, packet->maxHp, 0, 0, 0, 0, 0, packet->spd);
+	pGameObj->Set_Info(1, packet->Hp, packet->maxHp, 0, 0, 0, 0, packet->att, packet->spd);
 
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);
 }

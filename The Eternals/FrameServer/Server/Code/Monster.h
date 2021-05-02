@@ -23,6 +23,7 @@ public:
 	void	Set_Stop_Fight();
 
 public:
+	void	Ready_Monster(const _vec3& pos, const _vec3& angle, const char& type, const char& num, const char& naviType, const int& hp, const int& att, const int& exp, const float& spd);
 	int		Update_Monster(const float& fTimeDelta);
 	void	Hurt_Monster(const int& p_id, const int& damage);	// ATTACKED BY PLAYER
 	

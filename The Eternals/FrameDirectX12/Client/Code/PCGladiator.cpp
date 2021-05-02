@@ -191,7 +191,6 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	// AfterImage
 	Make_AfterImage(fTimeDelta);
 
-	cout << m_pTransCom->m_vPos.x << ", " << m_pTransCom->m_vPos.z << endl;
 	return NO_EVENT;
 }
 
@@ -252,7 +251,7 @@ void CPCGladiator::Process_Collision()
 			if (L"NPC_Merchant" == pDst->Get_CollisionTag())
 				Collision_Merchant(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
 
-			if (L"NPC_QUest" == pDst->Get_CollisionTag());
+			if (L"NPC_Quest" == pDst->Get_CollisionTag())
 				Collision_Quest(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
 		}
 	}
@@ -506,6 +505,9 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 
 	KeyInput_Move(fTimeDelta);
 	KeyInput_Attack(fTimeDelta);
+
+	if (Engine::KEY_DOWN(DIK_M))
+		CPacketMgr::Get_Instance()->send_attackToMonster(5000);
 
 	if (Engine::KEY_DOWN(DIK_P))
 	{
@@ -1588,6 +1590,8 @@ void CPCGladiator::Collision_Quest(list<Engine::CColliderSphere*>& lstMerchantCo
 				pDstCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 
 				CNPC_Quest* pObj = static_cast<CNPC_Quest*>(m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"NPC", npcServerNumber));
+				if (pObj == nullptr) return;
+
 				pObj->Set_State(Castanic_M_Lsmith::A_TALK);
 
 				/* Shop Open */

@@ -243,10 +243,10 @@ struct sc_packet_monster_enter
 	char			type;
 	int				id;
 
-	char			name[MAX_ID_LEN];
-	char			naviType[MIDDLE_STR_LEN];
+	char			naviType;
+	char			o_type;
 	char			mon_num;
-	int				Hp, maxHp;
+	int				Hp, maxHp, att;
 	float			spd;
 	float			posX, posY, posZ;
 	float			angleX, angleY, angleZ;
