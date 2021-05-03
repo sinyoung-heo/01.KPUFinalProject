@@ -300,11 +300,14 @@ void CPCOthersGladiator::Set_AnimationSpeed()
 	{
 		m_fAnimationSpeed = TPS * 0.75f;
 	}
-
 	else if (m_uiAnimIdx == Gladiator::DRAW_SWORD_CHARGE ||
 			 m_uiAnimIdx == Gladiator::DRAW_SWORD_LOOP)
 	{
 		m_fAnimationSpeed = TPS * 2.f;
+	}
+	else if (m_uiAnimIdx == Gladiator::TUMBLING)
+	{
+		m_fAnimationSpeed = TPS * 1.35f;
 	}
 	else
 		m_fAnimationSpeed = TPS;
@@ -321,6 +324,10 @@ void CPCOthersGladiator::Set_BlendingSpeed()
 		m_uiAnimIdx == Gladiator::GAIA_CRUSH3)
 	{
 		m_fBlendingSpeed = 0.001f;
+	}
+	else if (m_uiAnimIdx == Gladiator::TUMBLING)
+	{
+		m_fBlendingSpeed = 0.0075f;
 	}
 	else
 		m_fBlendingSpeed = 0.005f;
@@ -493,6 +500,8 @@ void CPCOthersGladiator::AttackMove_OnNaviMesh(const _float& fTimeDelta)
 	SetUp_OthersAttackMove(Gladiator::GAIA_CRUSH1, Gladiator::GAIA_CRUSH1_MOVE_START, Gladiator::GAIA_CRUSH1_MOVE_STOP, 0.75f, 0.0f);
 	SetUp_OthersAttackMove(Gladiator::GAIA_CRUSH2, Gladiator::GAIA_CRUSH2_MOVE_START, Gladiator::GAIA_CRUSH2_MOVE_STOP, 0.75f, -2.0f);
 	SetUp_OthersAttackMove(Gladiator::DRAW_SWORD, Gladiator::DRAW_SWORD_MOVE_START, Gladiator::DRAW_SWORD_MOVE_STOP, 2.5f, -3.0f);
+	SetUp_OthersAttackMove(Gladiator::TUMBLING, Gladiator::TUMBLING_MOVE_START, Gladiator::TUMBLING_MOVE_STOP, 5.0f, -5.0f);
+
 	//// SkillAttck Trail
 	//SetUp_AttackTrail(Gladiator::STINGER_BLADE, Gladiator::STINGER_BLADE_TRAIL_START, Gladiator::STINGER_BLADE_TRAIL_STOP);
 	//SetUp_AttackTrail(Gladiator::CUTTING_SLASH, Gladiator::CUTTING_SLASH_TRAIL_START, Gladiator::CUTTING_SLASH_TRAIL_STOP);

@@ -9,7 +9,7 @@ Lightning01|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Light
 Smoke0|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Smoke0\%d.dds
 Smoke1|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Smoke1\%d.dds
 Torch|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Torch\%d.dds
-EffectTrailTexture|11|..\..\Bin\Resource\ResourceStage\Texture\EffectTrailTexture\%d.dds
+EffectTrailTexture|13|..\..\Bin\Resource\ResourceStage\Texture\EffectTrailTexture\%d.dds
 SkyBox|7|..\..\Bin\Resource\ResourceStage\Texture\Environment\SkyBox\%d.dds
 Terrain|8|..\..\Bin\Resource\ResourceStage\Texture\Environment\Terrain\%d.dds
 TexWaterFall|11|..\..\Bin\Resource\ResourceStage\Texture\Environment\TexWaterFall\%d.dds

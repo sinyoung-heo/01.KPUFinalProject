@@ -62,6 +62,7 @@ public:
 	void	Set_LinearAngle(const _float& v1, const _float& v2)		{ m_tAngleInterpolationDesc.v1 = v1; m_tAngleInterpolationDesc.v2 = v2; }
 	void	Set_IsUsingInstance(const _bool& bIsUsing)				{ m_bIsUsingInstance = bIsUsing; }
 	void	Ready_AngleInterpolationValue(const _float& fEndAngle);
+	void	Ready_PositionInterpolationValue(const _vec3& vEndPosition, float fSpd = 3.f);
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT Ready_GameObjectPrototype();

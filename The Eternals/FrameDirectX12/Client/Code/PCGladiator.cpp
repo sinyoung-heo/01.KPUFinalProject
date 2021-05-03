@@ -10,6 +10,8 @@
 #include "CollisionTick.h"
 #include "InstancePoolMgr.h"
 #include "FadeInOut.h"
+#include "NPC_Merchant.h"
+#include "NPC_Quest.h"
 
 CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -66,10 +68,10 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 	m_mapSkillKeyInput[L"STINGER_BLADE"] = DIK_1;
 	m_mapSkillKeyInput[L"CUTTING_SLASH"] = DIK_2;
 	m_mapSkillKeyInput[L"JAW_BREAKER"]   = DIK_3;
-	m_mapSkillKeyInput[L"CUT_HEAD"]      = DIK_4;
-	m_mapSkillKeyInput[L"WIND_CUTTER"]   = DIK_5;
-	m_mapSkillKeyInput[L"GAIA_CRUSH"]    = DIK_6;
-	m_mapSkillKeyInput[L"DRAW_SWORD"]    = DIK_7;
+	m_mapSkillKeyInput[L"WIND_CUTTER"]   = DIK_4;
+	m_mapSkillKeyInput[L"GAIA_CRUSH"]    = DIK_5;
+	m_mapSkillKeyInput[L"DRAW_SWORD"]    = DIK_6;
+	//m_mapSkillKeyInput[L"CUT_HEAD"]      = DIK_4;
 
 	/*__________________________________________________________________________________________________________
 	[ 선형보간 설정 ]
@@ -245,6 +247,12 @@ void CPCGladiator::Process_Collision()
 
 			if (L"Portal_BeachToVelika" == pDst->Get_CollisionTag())
 				Collision_PortalBeachToVelika(pDst->Get_ColliderList());
+
+			if (L"NPC_Merchant" == pDst->Get_CollisionTag())
+				Collision_Merchant(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
+
+			if (L"NPC_QUest" == pDst->Get_CollisionTag())
+				Collision_Quest(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
 		}
 	}
 }
@@ -471,6 +479,10 @@ void CPCGladiator::Set_AnimationSpeed()
 	{
 		m_fAnimationSpeed = TPS * 2.f;
 	}
+	else if (m_uiAnimIdx == Gladiator::TUMBLING)
+	{
+		m_fAnimationSpeed = TPS * 1.35f;
+	}
 	else
 		m_fAnimationSpeed = TPS;
 }
@@ -487,6 +499,10 @@ void CPCGladiator::Set_BlendingSpeed()
 	{
 		m_fBlendingSpeed = 0.001f;
 	}
+	else if (m_uiAnimIdx == Gladiator::TUMBLING)
+	{
+		m_fBlendingSpeed = 0.0075f;
+	}
 	else
 		m_fBlendingSpeed = 0.005f;
 }
@@ -498,14 +514,8 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 	KeyInput_Move(fTimeDelta);
 	KeyInput_Attack(fTimeDelta);
 
-	/* Player Attack to Monster --- TEST */
-	if (Engine::KEY_PRESSING(DIK_M))
-	{
-		m_pPacketMgr->send_attackToMonster(5000);
-		m_pPacketMgr->send_attackToMonster(5001);
-		m_pPacketMgr->send_attackToMonster(5002);
-		m_pPacketMgr->send_attackToMonster(5003);
-	}
+	if (Engine::KEY_DOWN(DIK_M))
+		CPacketMgr::Get_Instance()->send_attackToMonster(5000);
 
 	if (Engine::KEY_DOWN(DIK_P))
 	{
@@ -659,6 +669,9 @@ void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 		if (m_pMeshCom->Is_BlendingComplete())
 			KeyInput_SkillAttack(fTimeDelta);
 
+		if (m_pMeshCom->Is_BlendingComplete())
+			KeyInput_Tumbling(fTimeDelta);
+
 		if (m_bIsAttack)
 		{
 			m_bIsSameDir = true;
@@ -668,6 +681,7 @@ void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 			SetUp_AttackMove(Gladiator::COMBOCNT_2, Gladiator::COMBO2, 0, Gladiator::COMBO2_MOVE_STOP, 1.0f, -3.5f);
 			SetUp_AttackMove(Gladiator::COMBOCNT_3, Gladiator::COMBO3, 0, Gladiator::COMBO3_MOVE_STOP, 1.0f, -3.5f);
 			SetUp_AttackMove(Gladiator::COMBOCNT_4, Gladiator::COMBO4, 0, Gladiator::COMBO4_MOVE_STOP, 0.75f, -1.0f);
+
 			// ComoboAttack Trail
 			SetUp_AttackTrail(Gladiator::COMBOCNT_1, Gladiator::COMBO1, Gladiator::COMBO1_TRAIL_START, Gladiator::COMBO1_TRAIL_STOP);
 			SetUp_AttackTrail(Gladiator::COMBOCNT_2, Gladiator::COMBO2, Gladiator::COMBO2_TRAIL_START, Gladiator::COMBO2_TRAIL_STOP);
@@ -685,6 +699,8 @@ void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 			SetUp_AttackMove(Gladiator::GAIA_CRUSH1, Gladiator::GAIA_CRUSH1_MOVE_START, Gladiator::GAIA_CRUSH1_MOVE_STOP, 0.75f, 0.0f);
 			SetUp_AttackMove(Gladiator::GAIA_CRUSH2, Gladiator::GAIA_CRUSH2_MOVE_START, Gladiator::GAIA_CRUSH2_MOVE_STOP, 0.75f, -2.0f);
 			SetUp_AttackMove(Gladiator::DRAW_SWORD, Gladiator::DRAW_SWORD_MOVE_START, Gladiator::DRAW_SWORD_MOVE_STOP, 2.5f, -3.0f);
+			SetUp_AttackMove(Gladiator::TUMBLING, Gladiator::TUMBLING_MOVE_START, Gladiator::TUMBLING_MOVE_STOP, 5.0f, -5.0f);
+
 			// SkillAttck Trail
 			SetUp_AttackTrail(Gladiator::STINGER_BLADE, Gladiator::STINGER_BLADE_TRAIL_START, Gladiator::STINGER_BLADE_TRAIL_STOP);
 			SetUp_AttackTrail(Gladiator::CUTTING_SLASH, Gladiator::CUTTING_SLASH_TRAIL_START, Gladiator::CUTTING_SLASH_TRAIL_STOP);
@@ -709,7 +725,6 @@ void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 			AttackMove_OnNaviMesh(fTimeDelta);
 		}
 	}
-
 }
 
 void CPCGladiator::KeyInput_StanceChange(const _float& fTimeDelta)
@@ -736,7 +751,7 @@ void CPCGladiator::KeyInput_StanceChange(const _float& fTimeDelta)
 		Engine::KEY_DOWN(m_mapSkillKeyInput[L"STINGER_BLADE"]) ||
 		Engine::KEY_DOWN(m_mapSkillKeyInput[L"CUTTING_SLASH"]) ||
 		Engine::KEY_DOWN(m_mapSkillKeyInput[L"JAW_BREAKER"]) || 
-		Engine::KEY_DOWN(m_mapSkillKeyInput[L"CUT_HEAD"]) || 
+		// Engine::KEY_DOWN(m_mapSkillKeyInput[L"CUT_HEAD"]) || 
 		Engine::KEY_DOWN(m_mapSkillKeyInput[L"WIND_CUTTER"]) || 
 		Engine::KEY_DOWN(m_mapSkillKeyInput[L"GAIA_CRUSH"]) || 
 		Engine::KEY_DOWN(m_mapSkillKeyInput[L"DRAW_SWORD"])) &&
@@ -910,6 +925,163 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 	}
 }
 
+void CPCGladiator::KeyInput_Tumbling(const _float& fTimeDelta)
+{
+	_float fAngle = 0.0f;
+
+	if (Engine::KEY_PRESSING(DIK_W) && Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkillLoop)
+	{
+		// 대각선 - 우 상단.
+		if (Engine::KEY_PRESSING(DIK_D))
+		{
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_UP;
+		}
+		// 대각선 - 좌 상단.
+		else if (Engine::KEY_PRESSING(DIK_A))
+		{
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_UP;
+		}
+		// 직진.
+		else
+		{
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + FRONT;
+		}
+
+		SetUp_WeaponLHand();
+
+		m_bIsAttack  = true;
+		m_bIsKeyDown = false;
+		m_pWeapon->Set_IsRenderTrail(false);
+
+		m_bIsSkill     = true;
+		m_bIsSkillLoop = true;
+		m_uiAnimIdx    = Gladiator::TUMBLING;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pTransCom->m_vAngle.y);
+	}
+	else if (Engine::KEY_PRESSING(DIK_S) && Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkillLoop)
+	{
+		// 대각선 - 우 하단.
+		if (Engine::KEY_PRESSING(DIK_D))
+		{
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_DOWN;
+		}
+		// 대각선 - 좌 하단.
+		else if (Engine::KEY_PRESSING(DIK_A))
+		{
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_DOWN;
+		}
+		// 후진.
+		else
+		{
+			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + BACK;
+		}
+
+		SetUp_WeaponLHand();
+
+		m_bIsAttack  = true;
+		m_bIsKeyDown = false;
+		m_pWeapon->Set_IsRenderTrail(false);
+
+		m_bIsSkill     = true;
+		m_bIsSkillLoop = true;
+		m_uiAnimIdx    = Gladiator::TUMBLING;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pTransCom->m_vAngle.y);
+	}
+	else if (Engine::KEY_PRESSING(DIK_A) && Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkillLoop)
+	{
+		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT;
+
+		SetUp_WeaponLHand();
+
+		m_bIsAttack  = true;
+		m_bIsKeyDown = false;
+		m_pWeapon->Set_IsRenderTrail(false);
+
+		m_bIsSkill     = true;
+		m_bIsSkillLoop = true;
+		m_uiAnimIdx    = Gladiator::TUMBLING;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pTransCom->m_vAngle.y);
+	}
+	else if (Engine::KEY_PRESSING(DIK_D) && Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkillLoop)
+	{
+		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT;
+
+		SetUp_WeaponLHand();
+
+		m_bIsAttack  = true;
+		m_bIsKeyDown = false;
+		m_pWeapon->Set_IsRenderTrail(false);
+
+		m_bIsSkill     = true;
+		m_bIsSkillLoop = true;
+		m_uiAnimIdx    = Gladiator::TUMBLING;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pTransCom->m_vAngle.y);
+	}
+	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkillLoop)
+	{
+		SetUp_WeaponLHand();
+		SetUp_AttackSetting();
+
+		m_bIsSkill     = true;
+		m_bIsSkillLoop = true;
+		m_uiAnimIdx    = Gladiator::TUMBLING;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+	}
+
+	if ((Gladiator::TUMBLING == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)))
+	{
+		m_bIsAttack    = false;
+		m_bIsSkill     = false;
+		m_bIsSkillLoop = false;
+		m_pWeapon->Set_IsRenderTrail(false);
+		m_uiComoboCnt = Gladiator::COMBOCNT_0;
+		m_uiAnimIdx   = Gladiator::ATTACK_WAIT;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+	}
+}
+
+void CPCGladiator::KeyInput_OpenShop(const char& npcNumber)
+{
+	g_bIsOpenShop = !g_bIsOpenShop;
+
+	if (g_bIsOpenShop)
+	{
+		if (npcNumber == NPC_POPORI_MERCHANT || npcNumber == NPC_BARAKA_MERCHANT || npcNumber == NPC_BARAKA_MYSTELLIUM)
+		{
+			// NPC에 맞는 상점 리소스 생성
+			cout << "상점 오픈" << endl;
+		}		
+	}
+	else
+	{
+		cout << "상점 종료" << endl;
+	}
+}
+
+void CPCGladiator::KeyInput_OpenQuest(const char& npcNumber)
+{
+	g_bIsOpenShop = !g_bIsOpenShop;
+
+	if (g_bIsOpenShop)
+	{
+		if (npcNumber == NPC_CASTANIC_LSMITH)
+		{
+			// NPC에 맞는 상점 리소스 생성
+			cout << "퀘스트창 오픈" << endl;
+		}
+	}
+	else
+	{
+		cout << "퀘스트창 종료" << endl;
+	}
+}
+
 void CPCGladiator::SetUp_AttackSetting()
 {
 	m_bIsAttack  = true;
@@ -921,7 +1093,7 @@ void CPCGladiator::SetUp_AttackSetting()
 
 void CPCGladiator::SetUp_ComboAttackAnimation()
 {
-	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) && m_pMeshCom->Is_BlendingComplete())
+	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB))
 	{
 		// ATTACK_WAIT ==> COMBO1
 		if (Gladiator::COMBOCNT_0 == m_uiComoboCnt)
@@ -1509,6 +1681,58 @@ void CPCGladiator::Collision_PortalBeachToVelika(list<Engine::CColliderSphere*>&
 				Engine::CGameObject* pGameObject = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
 				static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_VELIKA);
 				m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
+			}
+		}
+	}
+}
+
+void CPCGladiator::Collision_Merchant(list<Engine::CColliderSphere*>& lstMerchantCollider, int npcServerNumber)
+{
+	for (auto& pSrcCollider : m_lstCollider)
+	{
+		for (auto& pDstCollider : lstMerchantCollider)
+		{
+			if (Engine::CCollisionMgr::Check_Sphere(pSrcCollider->Get_BoundingInfo(), pDstCollider->Get_BoundingInfo()))
+			{
+				// Process Collision Event
+				pSrcCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+				pDstCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+					
+				CNPC_Merchant* pObj = static_cast<CNPC_Merchant*>(m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"NPC", npcServerNumber));
+				pObj->Set_State(Baraka_M_Merchant::A_TALK);
+		
+				/* Shop Open */
+				if (Engine::KEY_DOWN(DIK_F))
+				{				
+					KeyInput_OpenShop(pObj->Get_NPCNumber());
+				}
+			}
+		}
+	}
+}
+
+void CPCGladiator::Collision_Quest(list<Engine::CColliderSphere*>& lstMerchantCollider, int npcServerNumber)
+{
+	for (auto& pSrcCollider : m_lstCollider)
+	{
+		for (auto& pDstCollider : lstMerchantCollider)
+		{
+			if (Engine::CCollisionMgr::Check_Sphere(pSrcCollider->Get_BoundingInfo(), pDstCollider->Get_BoundingInfo()))
+			{
+				// Process Collision Event
+				pSrcCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+				pDstCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+
+				CNPC_Quest* pObj = static_cast<CNPC_Quest*>(m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"NPC", npcServerNumber));
+				if (pObj == nullptr) return;
+
+				pObj->Set_State(Castanic_M_Lsmith::A_TALK);
+
+				/* Shop Open */
+				if (Engine::KEY_DOWN(DIK_F))
+				{
+					KeyInput_OpenQuest(pObj->Get_NPCNumber());
+				}
 			}
 		}
 	}

@@ -6,9 +6,11 @@
 #include "TestPlayer.h"
 #include "TestOthers.h"
 #include "NPC_Walker.h"
-#include "NPC_Boy.h"
-#include "NPC_Villagers.h"
+#include "NPC_Assistant.h"
+#include "NPC_Stander.h"
 #include "NPC_Merchant.h"
+#include "NPC_Quest.h"
+#include "NPC_Children.h"
 #include "Crab.h"
 #include "Monkey.h"
 #include "CloderA.h"
@@ -275,14 +277,14 @@ void CPacketMgr::Process_packet()
 	case SC_PACKET_MONSTER_MOVE:
 	{
 		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(m_packet_start);
-		//Move_Monster(packet);
+		Move_Monster(packet);
 	}
 	break;
 
 	case SC_PACKET_MONSTER_ATTACK:
 	{
 		sc_packet_monster_attack* packet = reinterpret_cast<sc_packet_monster_attack*>(m_packet_start);
-		//Attack_Monster(packet);
+		Attack_Monster(packet);
 	}
 	break;
 
@@ -305,6 +307,16 @@ void CPacketMgr::Process_packet()
 	{
 		sc_packet_stage_change* packet = reinterpret_cast<sc_packet_stage_change*>(m_packet_start);
 		Stage_Change(packet);
+	}
+	break;
+
+	case SC_PACKET_ANIM_INDEX:
+	{
+		sc_packet_animationIndex* packet = reinterpret_cast<sc_packet_animationIndex*>(m_packet_start);
+
+		bool retflag;
+		Change_Animation(packet, retflag);
+		if (retflag) return;
 	}
 	break;
 
@@ -345,9 +357,8 @@ void CPacketMgr::Move_NPC(sc_packet_move* packet)
 	
 	pObj->Set_MoveStop(false);
 	pObj->Set_State(packet->animIdx);
-	pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
+	pObj->Ready_PositionInterpolationValue(_vec3(packet->posX, packet->posY, packet->posZ), packet->spd);
 	pObj->Ready_AngleInterpolationValue(pObj->Set_Other_Angle(_vec3(packet->dirX, packet->dirY, packet->dirZ)));
-	//pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 }
 
 void CPacketMgr::Stage_Change(sc_packet_stage_change* packet)
@@ -384,8 +395,6 @@ void CPacketMgr::Stage_Change(sc_packet_stage_change* packet)
 	{
 		m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"Others", s_num);
 	}
-
-	
 }
 
 void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
@@ -398,18 +407,105 @@ void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
 	wstring wstrNaviMeshTag;
 	if (packet->naviType == STAGE_VELIKA)
 		wstrNaviMeshTag = L"StageVelika_NaviMesh";
-
-	if (packet->npcNum == NPC_CHICKEN)
+	
+	/* NPC - Walker */
+	if (packet->npcNum == NPC_CHICKEN || packet->npcNum == NPC_CAT || packet->npcNum == NPC_AMAN_BOY)
 	{
+		wstring wstrMeshTag;
+		if (packet->npcNum == NPC_CHICKEN)
+			wstrMeshTag = L"Chicken";
+		else if (packet->npcNum == NPC_CAT)
+			wstrMeshTag = L"Cat";
+		else if (packet->npcNum == NPC_AMAN_BOY)
+			wstrMeshTag = L"Aman_boy";
+
 		pGameObj = CNPC_Walker::Create(m_pGraphicDevice, m_pCommandList,
-									   L"Chicken",												// MeshTag
+									   wstrMeshTag,												// MeshTag
 									   wstrNaviMeshTag,											// NaviMeshTag
 									   _vec3(0.05f, 0.05f, 0.05f),								// Scale
 									   _vec3(packet->angleX, packet->angleY, packet->angleZ),	// Angle
 									   _vec3(packet->posX, packet->posY, packet->posZ));
 	}
+	/* NPC - Assistant */
+	else if (packet->npcNum == NPC_POPORI_BOY)
+	{
+		pGameObj = CNPC_Assistant::Create(m_pGraphicDevice, m_pCommandList,
+									   L"Popori_boy",											// MeshTag
+									   wstrNaviMeshTag,											// NaviMeshTag
+									   _vec3(0.05f, 0.05f, 0.05f),								// Scale
+									   _vec3(packet->angleX, packet->angleY, packet->angleZ),	// Angle
+									   _vec3(packet->posX, packet->posY, packet->posZ));
+	}
+	/* NPC - Stander */
+	else if (packet->npcNum == NPC_VILLAGERS || packet->npcNum == NPC_BARAKA_EXTRACTOR)
+	{
+		wstring wstrMeshTag;
+		if (packet->npcNum == NPC_VILLAGERS)
+			wstrMeshTag = L"NPC_Villagers";
+		else if (packet->npcNum == NPC_BARAKA_EXTRACTOR)
+			wstrMeshTag = L"Baraka_M_Extractor";
+
+		pGameObj = CNPC_Stander::Create(m_pGraphicDevice, m_pCommandList,
+										  wstrMeshTag,												// MeshTag
+										  wstrNaviMeshTag,											// NaviMeshTag
+										  _vec3(0.05f, 0.05f, 0.05f),								// Scale
+										  _vec3(packet->angleX, packet->angleY, packet->angleZ),	// Angle
+										  _vec3(packet->posX, packet->posY, packet->posZ));
+	}
+	/* NPC - Merchant */
+	else if (packet->npcNum == NPC_POPORI_MERCHANT || packet->npcNum == NPC_BARAKA_MERCHANT || packet->npcNum == NPC_BARAKA_MYSTELLIUM)
+	{
+		wstring wstrMeshTag;
+		if (packet->npcNum == NPC_POPORI_MERCHANT)
+			wstrMeshTag = L"Popori_M_Merchant";
+		else if (packet->npcNum == NPC_BARAKA_MERCHANT)
+			wstrMeshTag = L"Baraka_M_Merchant";
+		else if (packet->npcNum == NPC_BARAKA_MYSTELLIUM)
+			wstrMeshTag = L"Baraka_M_Mystellium";
+
+		pGameObj = CNPC_Merchant::Create(m_pGraphicDevice, m_pCommandList,
+										 wstrMeshTag,												// MeshTag
+										 wstrNaviMeshTag,											// NaviMeshTag
+										 _vec3(0.05f, 0.05f, 0.05f),								// Scale
+										 _vec3(packet->angleX, packet->angleY, packet->angleZ),		// Angle
+										 _vec3(packet->posX, packet->posY, packet->posZ));
+
+		static_cast<CNPC_Merchant*>(pGameObj)->Set_NPCNumber(packet->npcNum);
+	}
+	/* NPC - Quest */
+	else if (packet->npcNum == NPC_CASTANIC_LSMITH)
+	{
+		pGameObj = CNPC_Quest::Create(m_pGraphicDevice, m_pCommandList,
+									  L"Castanic_M_Lsmith",									    // MeshTag
+									  wstrNaviMeshTag,											// NaviMeshTag
+									  _vec3(0.07f, 0.07f, 0.07f),								// Scale
+									  _vec3(packet->angleX, packet->angleY, packet->angleZ),	// Angle
+									  _vec3(packet->posX, packet->posY, packet->posZ));
+
+		static_cast<CNPC_Merchant*>(pGameObj)->Set_NPCNumber(packet->npcNum);
+	}
+	/* NPC - Children */
+	else if (packet->npcNum == NPC_HUMAN_BOY || packet->npcNum == NPC_HUMAN_GIRL || packet->npcNum == NPC_HIGHELF_GIRL)
+	{
+		wstring wstrMeshTag;
+		if (packet->npcNum == NPC_HUMAN_BOY)
+			wstrMeshTag = L"Human_boy";
+		else if (packet->npcNum == NPC_HUMAN_GIRL)
+			wstrMeshTag = L"Human_girl";
+		else if (packet->npcNum == NPC_HIGHELF_GIRL)
+			wstrMeshTag = L"Highelf_girl";
+
+		pGameObj = CNPC_Children::Create(m_pGraphicDevice, m_pCommandList,
+										 wstrMeshTag,												// MeshTag
+										 wstrNaviMeshTag,											// NaviMeshTag
+										 _vec3(0.07f, 0.07f, 0.07f),								// Scale
+										 _vec3(packet->angleX, packet->angleY, packet->angleZ),		// Angle
+										 _vec3(packet->posX, packet->posY, packet->posZ));
+	}
+
 
 	pGameObj->Set_ServerNumber(packet->id);
+	pGameObj->Set_OType(packet->o_type);
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"NPC", pGameObj), E_FAIL);
 }
 
@@ -702,6 +798,31 @@ void CPacketMgr::Login_Player(sc_packet_login_ok* packet)
 #endif
 }
 
+void CPacketMgr::Change_Animation(sc_packet_animationIndex* packet, bool& retflag)
+{
+	retflag = true;
+	if (packet->id == g_iSNum)
+		return;
+
+	/* NPC */
+	if (packet->id >= NPC_NUM_START && packet->id < MON_NUM_START)
+	{
+		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"NPC", packet->id);
+		pObj->Set_State(packet->aniIdx);
+	}
+
+	/* MONSTER */
+	else if (packet->id >= MON_NUM_START)
+	{
+	}
+
+	/* OTHERS */
+	else
+	{
+	}
+	retflag = false;
+}
+
 void CPacketMgr::Attack_Monster(sc_packet_monster_attack* packet)
 {
 	int s_num = packet->id;
@@ -728,11 +849,15 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 {
 	Engine::CGameObject* pGameObj = nullptr;
 
+	wstring wstrNaviMeshTag;
+	if (packet->naviType == STAGE_VELIKA)
+		wstrNaviMeshTag = L"StageVelika_NaviMesh";
+
 	if (packet->mon_num == MON_CRAB)
 	{
 		pGameObj = CCrab::Create(m_pGraphicDevice, m_pCommandList,
-								 wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
-								 wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
+								 L"Crab",														// MeshTag
+								 wstrNaviMeshTag,												// NaviMeshTag
 								 _vec3(0.05f, 0.05f, 0.05f),									// Scale
 								 _vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
 								 _vec3(packet->posX, packet->posY, packet->posZ));
@@ -740,8 +865,8 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 	else if (packet->mon_num == MON_MONKEY)
 	{
 		pGameObj = CMonkey::Create(m_pGraphicDevice, m_pCommandList,
-								   wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
-								   wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
+								   L"Monkey",														// MeshTag
+								   wstrNaviMeshTag,													// NaviMeshTag
 								   _vec3(0.05f, 0.05f, 0.05f),										// Scale
 								   _vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
 								   _vec3(packet->posX, packet->posY, packet->posZ));
@@ -749,8 +874,8 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 	else if (packet->mon_num == MON_CLODER)
 	{
 		pGameObj = CCloderA::Create(m_pGraphicDevice, m_pCommandList,
-								   wstring(packet->name, &packet->name[MAX_ID_LEN]),				// MeshTag
-								   wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),	// NaviMeshTag
+								    L"CloderA",														// MeshTag
+									wstrNaviMeshTag,												// NaviMeshTag
 								   _vec3(0.05f, 0.05f, 0.05f),										// Scale
 								   _vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
 								   _vec3(packet->posX, packet->posY, packet->posZ));
@@ -758,8 +883,8 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 	else if (packet->mon_num == MON_SAILOR)
 	{
 		pGameObj = CDrownedSailor::Create(m_pGraphicDevice, m_pCommandList,
-										  wstring(packet->name, &packet->name[MAX_ID_LEN]),					// MeshTag
-										  wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),		// NaviMeshTag
+										  L"DrownedSailor",													// MeshTag
+										  wstrNaviMeshTag,													// NaviMeshTag
 										  _vec3(0.05f, 0.05f, 0.05f),										// Scale
 										  _vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
 										  _vec3(packet->posX, packet->posY, packet->posZ));
@@ -767,8 +892,8 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 	else if (packet->mon_num == MON_GBEETLE)
 	{
 		pGameObj = CGiantBeetle::Create(m_pGraphicDevice, m_pCommandList,
-										wstring(packet->name, &packet->name[MAX_ID_LEN]),					// MeshTag
-										wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),		// NaviMeshTag
+										L"GiantBeetle",														// MeshTag
+										wstrNaviMeshTag,													// NaviMeshTag
 										_vec3(0.05f, 0.05f, 0.05f),											// Scale
 										_vec3(packet->angleX, packet->angleY, packet->angleZ),				// Angle
 										_vec3(packet->posX, packet->posY, packet->posZ));
@@ -776,8 +901,8 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 	else if (packet->mon_num == MON_GMONKEY)
 	{
 		pGameObj = CGiantMonkey::Create(m_pGraphicDevice, m_pCommandList,
-										wstring(packet->name, &packet->name[MAX_ID_LEN]),					// MeshTag
-										wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),		// NaviMeshTag
+										L"GiantMonkey",														// MeshTag
+										wstrNaviMeshTag,													// NaviMeshTag
 										_vec3(0.05f, 0.05f, 0.05f),											// Scale
 										_vec3(packet->angleX, packet->angleY, packet->angleZ),				// Angle
 										_vec3(packet->posX, packet->posY, packet->posZ));
@@ -785,8 +910,8 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 	else if (packet->mon_num == MON_ARACHNE)
 	{
 		pGameObj = CCraftyArachne::Create(m_pGraphicDevice, m_pCommandList,
-										  wstring(packet->name, &packet->name[MAX_ID_LEN]),					// MeshTag
-										  wstring(packet->naviType, &packet->naviType[MIDDLE_STR_LEN]),		// NaviMeshTag
+										  L"CraftyArachne",													// MeshTag
+										  wstrNaviMeshTag,													// NaviMeshTag
 										  _vec3(0.05f, 0.05f, 0.05f),										// Scale
 										  _vec3(packet->angleX, packet->angleY, packet->angleZ),			// Angle
 										  _vec3(packet->posX, packet->posY, packet->posZ));
@@ -794,7 +919,7 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 
 
 	pGameObj->Set_ServerNumber(packet->id);
-	pGameObj->Set_Info(1, packet->Hp, packet->maxHp, 0, 0, 0, 0, 0, packet->spd);
+	pGameObj->Set_Info(1, packet->Hp, packet->maxHp, 0, 0, 0, 0, packet->att, packet->spd);
 
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);
 }

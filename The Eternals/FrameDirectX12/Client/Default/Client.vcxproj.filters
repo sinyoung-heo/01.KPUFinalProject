@@ -103,18 +103,6 @@
     <Filter Include="99.Etc\SampleObject\10.TestOthers">
       <UniqueIdentifier>{6ad99d1c-9bb2-4d7f-806e-99ac48309498}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99.Etc\SampleObject\11.NPC">
-      <UniqueIdentifier>{8d3d6604-efa6-4103-bbbe-f6afc93b32f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99.Etc\SampleObject\11.NPC\01.NPC_Boy">
-      <UniqueIdentifier>{80c37e2d-3841-42a8-85b1-9f2dfc506d06}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99.Etc\SampleObject\11.NPC\02.NPC_Villagers">
-      <UniqueIdentifier>{3973e66e-60c9-4e24-9477-8c6558e6ce19}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99.Etc\SampleObject\11.NPC\03.NPC_Merchant">
-      <UniqueIdentifier>{797a3833-9c0a-4991-ae76-60371ebf7e9e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99.Etc\SampleObject\12.TexEffectInstance">
       <UniqueIdentifier>{8127f386-d54a-487e-be8b-709a071ca813}</UniqueIdentifier>
     </Filter>
@@ -268,6 +256,21 @@
     <Filter Include="02.GameObject\98.GameEffect\02.MagicCircle">
       <UniqueIdentifier>{06feade8-b31d-48da-9c1b-00ae2089b752}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\04.NPC\03.NPC_Merchant">
+      <UniqueIdentifier>{797a3833-9c0a-4991-ae76-60371ebf7e9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\04.NPC\02.NPC_Stander">
+      <UniqueIdentifier>{3973e66e-60c9-4e24-9477-8c6558e6ce19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\04.NPC\01.NPC_Assistant">
+      <UniqueIdentifier>{284d1bef-ae2b-4e28-ad8d-0f76db3a4b48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\04.NPC\04.NPC_Quest">
+      <UniqueIdentifier>{9ca7aa88-76e5-412d-93de-6cd80b2089c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\04.NPC\05_NPC_Children">
+      <UniqueIdentifier>{6365142f-a91c-48b9-bfb7-6217669dc73f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -373,9 +376,6 @@
     <ClInclude Include="..\Code\ServerMath.h">
       <Filter>97.Mgr\03.ServerMath</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\NPC_Villagers.h">
-      <Filter>99.Etc\SampleObject\11.NPC\02.NPC_Villagers</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\TexEffectInstance.h">
       <Filter>99.Etc\SampleObject\12.TexEffectInstance</Filter>
     </ClInclude>
@@ -385,11 +385,8 @@
     <ClInclude Include="..\Code\TestCollisonObject.h">
       <Filter>99.Etc\SampleObject\13.TestCollisionObject</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\NPC_Boy.h">
-      <Filter>99.Etc\SampleObject\11.NPC\01.NPC_Boy</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\NPC_Merchant.h">
-      <Filter>99.Etc\SampleObject\11.NPC\03.NPC_Merchant</Filter>
+      <Filter>02.GameObject\04.NPC\03.NPC_Merchant</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\DistortionDisk.h">
       <Filter>99.Etc\SampleObject\14.DistortionDisk</Filter>
@@ -534,6 +531,18 @@
     <ClInclude Include="..\Code\MagicCircle.h">
       <Filter>02.GameObject\98.GameEffect\02.MagicCircle</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\NPC_Stander.h">
+      <Filter>02.GameObject\04.NPC\02.NPC_Stander</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\NPC_Assistant.h">
+      <Filter>02.GameObject\04.NPC\01.NPC_Assistant</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\NPC_Quest.h">
+      <Filter>02.GameObject\04.NPC\04.NPC_Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\NPC_Children.h">
+      <Filter>02.GameObject\04.NPC\05_NPC_Children</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -612,9 +621,6 @@
     <ClCompile Include="..\Code\ServerMath.cpp">
       <Filter>97.Mgr\03.ServerMath</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\NPC_Villagers.cpp">
-      <Filter>99.Etc\SampleObject\11.NPC\02.NPC_Villagers</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\TexEffectInstance.cpp">
       <Filter>99.Etc\SampleObject\12.TexEffectInstance</Filter>
     </ClCompile>
@@ -624,11 +630,8 @@
     <ClCompile Include="..\Code\TestCollisonObject.cpp">
       <Filter>99.Etc\SampleObject\13.TestCollisionObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\NPC_Boy.cpp">
-      <Filter>99.Etc\SampleObject\11.NPC\01.NPC_Boy</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\NPC_Merchant.cpp">
-      <Filter>99.Etc\SampleObject\11.NPC\03.NPC_Merchant</Filter>
+      <Filter>02.GameObject\04.NPC\03.NPC_Merchant</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\DistortionDisk.cpp">
       <Filter>99.Etc\SampleObject\14.DistortionDisk</Filter>
@@ -751,6 +754,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\MagicCircle.cpp">
       <Filter>02.GameObject\98.GameEffect\02.MagicCircle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\NPC_Stander.cpp">
+      <Filter>02.GameObject\04.NPC\02.NPC_Stander</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\NPC_Assistant.cpp">
+      <Filter>02.GameObject\04.NPC\01.NPC_Assistant</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\NPC_Quest.cpp">
+      <Filter>02.GameObject\04.NPC\04.NPC_Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\NPC_Children.cpp">
+      <Filter>02.GameObject\04.NPC\05_NPC_Children</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

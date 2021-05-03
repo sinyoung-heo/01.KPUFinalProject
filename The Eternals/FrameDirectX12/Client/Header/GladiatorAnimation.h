@@ -30,6 +30,7 @@ namespace Gladiator
 	const int DRAW_SWORD_LOOP   = 26;
 	const int DRAW_SWORD        = 27;
 	const int DRAW_SWORD_END    = 28;
+	const int TUMBLING          = 29;
 
 	enum STANCE		{ STANCE_NONEATTACK, STANCE_ATTACK, STANCE_END };
 	enum COMBOCNT	{ COMBOCNT_0, COMBOCNT_1, COMBOCNT_2, COMBOCNT_3, COMBOCNT_4 };
@@ -73,6 +74,8 @@ namespace Gladiator
 	const _uint GAIA_CRUSH2_MOVE_STOP    = 12;
 	const _uint DRAW_SWORD_MOVE_START    = 4;
 	const _uint DRAW_SWORD_MOVE_STOP     = 18;
+	const _uint TUMBLING_MOVE_START      = 0;
+	const _uint TUMBLING_MOVE_STOP       = 25;
 
 	const _uint STINGER_BLADE_TRAIL_START  = 15;
 	const _uint STINGER_BLADE_TRAIL_STOP   = 70;
@@ -86,7 +89,7 @@ namespace Gladiator
 	const _uint WIND_CUTTER1_TRAIL_STOP    = 16;
 	const _uint WIND_CUTTER2_TRAIL_START   = 4;
 	const _uint WIND_CUTTER2_TRAIL_STOP    = 16;
-	const _uint WIND_CUTTER3_TRAIL_START   = 10;
+	const _uint WIND_CUTTER3_TRAIL_START   = 6;
 	const _uint WIND_CUTTER3_TRAIL_STOP    = 36;
 	const _uint GAIA_CRUSH1_TRAIL_START    = 16;
 	const _uint GAIA_CRUSH1_TRAIL_STOP     = 999;
