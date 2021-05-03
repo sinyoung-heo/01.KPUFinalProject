@@ -24,6 +24,7 @@ Texture2D g_TexDepth : register(t9); //Depth
 Texture2D g_TexEdgeBlur : register(t10); //Edge-Blur
 Texture2D g_TexSkyBox : register(t11); //SB
 
+Texture2D g_TexEffect : register(t12); //EFF
 cbuffer IS_Rendering : register(b0)
 {
     float fSsao            : packoffset(c0.x);
@@ -157,6 +158,7 @@ float4 PS_FINAL(VS_OUT ps_input) : SV_TARGET
 
     Color += (EdgeBlur + SkyBox);
     
+    Color += g_TexEffect.Sample(g_samLinearWrap, ps_input.TexUV);
     return float4(Color, BlendTarget.a);
     
     

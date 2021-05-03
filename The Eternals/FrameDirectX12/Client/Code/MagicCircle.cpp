@@ -61,6 +61,8 @@ _int CMagicCircle::Update_GameObject(const _float & fTimeDelta)
 	_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
 	m_pTransCom->m_vPos = Pos;
 	m_pTransCom->m_vPos.y += 0.5f;
+
+	m_pTransCom->m_vAngle.y += 0.1f;
 	/*____________________________________________________________________
 	TransCom - Update WorldMatrix.
 	______________________________________________________________________*/

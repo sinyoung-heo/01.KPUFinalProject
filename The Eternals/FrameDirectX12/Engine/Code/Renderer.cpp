@@ -276,6 +276,7 @@ void CRenderer::Render_Blend()
 		vecBlendTarget.emplace_back(vecDeferredTarget[3]);	// RenderTarget - Depth
 		vecBlendTarget.emplace_back(vecBlurTarget[3]);	// RenderTarget - EdgeBlur
 		vecBlendTarget.emplace_back(vecDeferredTarget[5]);	// RenderTarget - Sky
+		vecBlendTarget.emplace_back(m_pTargetpEffect->Get_TargetTexture()[0]);	// RenderTarget - Effect
 		m_pBlendShader->SetUp_ShaderTexture(vecBlendTarget);
 		m_pHDRShader->SetUp_ShaderTexture(vecBlendTarget);
 	}
@@ -409,6 +410,7 @@ void CRenderer::Render_NPathDir()
 		vecNPathDirTarget.emplace_back(vecCrossFilterObjectTarget[1]);	// RenderTarget - Depth
 		vecNPathDirTarget.emplace_back(vecDeferredTarget[5]);	// RenderTarget - Emissive
 		vecNPathDirTarget.emplace_back(m_pTargetSunShine->Get_TargetTexture()[0]);	// RenderTarget - Emissive
+		vecNPathDirTarget.emplace_back(m_pTargetpEffect->Get_TargetTexture()[0]);	// RenderTarget - Effect
 		m_pNPathDirShader->SetUp_ShaderTexture(vecNPathDirTarget);
 		m_pSunShineShader->SetUp_ShaderTexture(vecNPathDirTarget);
 	}
@@ -507,17 +509,15 @@ void CRenderer::Render_Alpha(const _float& fTimeDelta)
 
 
 	m_pTargetpEffect->SetUp_OnGraphicDevice();
-	
+
+	for (auto& pGameObject : m_RenderList[RENDER_ALPHA])
+		pGameObject->Render_GameObject(0);
 	for (auto& pGameObject : m_RenderList[RENDER_MAGICCIRCLE])
 		pGameObject->Render_GameObject(fTimeDelta);
 
 	m_pTargetpEffect->Release_OnGraphicDevice();
 
 
-	sort(m_RenderList[RENDER_ALPHA].begin(), m_RenderList[RENDER_ALPHA].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool 
-		{ 
-			return pSour->Get_DepthOfView() > pDest->Get_DepthOfView(); 
-		});
 
 	for (auto& pGameObject : m_RenderList[RENDER_ALPHA])
 		pGameObject->Render_GameObject(fTimeDelta);

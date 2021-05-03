@@ -116,8 +116,8 @@ PS_OUT PS_MAGIC_CIRCLE(VS_OUT ps_input) : SV_Target
     float4 TexNormal = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 Spec = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
 
-    float4 color = Diffuse + TexNormal;
-    color.xyz += Spec.xyz;
+    float4 color = lerp(lerp(Diffuse, Spec, 0.5), TexNormal, 0.5);
+   // color.xyz += Spec.xyz;
 	
     ps_out.Effect = color;
     return ps_out;
