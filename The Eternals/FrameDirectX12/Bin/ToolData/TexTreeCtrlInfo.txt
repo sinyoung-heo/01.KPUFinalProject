@@ -1,3 +1,4 @@
+ResourceStage|Texture|EffectPublic
 Texture|EffectSpriteTexture|Bomb00
 Texture|EffectSpriteTexture|Bomb01
 Texture|EffectSpriteTexture|Bomb02

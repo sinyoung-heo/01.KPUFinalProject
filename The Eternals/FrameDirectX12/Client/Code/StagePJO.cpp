@@ -29,7 +29,8 @@
 #include "SampleNPC.h"
 #include "WaterFall.h"
 #include "MagicCircle.h"
-
+#include "RainDrop.h"
+#include "PublicSphere.h"
 CStagePJO::CStagePJO(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
 {
@@ -278,6 +279,23 @@ HRESULT CStagePJO::Ready_LayerEnvironment(wstring wstrLayerTag)
 		_vec3(0.f,0.0f, 0.0f),
 		_vec3(0, 0, 0));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PublicPlane00", pGameObj), E_FAIL);
+
+
+	pGameObj = CRainDrop::Create(m_pGraphicDevice, m_pCommandList,
+		L"RainDrop",
+		_vec3(0.03f),
+		_vec3(0.f, 0.0f, 0.0f),
+		_vec3(0, 0, 0));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"RainDrop", pGameObj), E_FAIL);
+
+
+	pGameObj = CPublicSphere::Create(m_pGraphicDevice, m_pCommandList,
+		L"publicSphere",
+		_vec3(0.03f),
+		_vec3(0.f, 0.0f, 0.0f),
+		_vec3(0, 0, 0),_vec3(0,0,0));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"publicSphere", pGameObj), E_FAIL);
+
 
 	//// Torch
 	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,

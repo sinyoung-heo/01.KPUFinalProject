@@ -39,8 +39,8 @@ HRESULT CMagicCircle::LateInit_GameObject()
 	SetUp_DescriptorHeap(pTexture->Get_Texture(), m_pRenderer->Get_TargetShadowDepth()->Get_TargetTexture());
 
 
-	m_fNormalMapDeltatime  = 2;//NormIdx
-	m_fPatternMapDeltatime = 1;//SpecIdx
+	m_fNormalMapDeltatime  = 0;//NormIdx
+	m_fPatternMapDeltatime = 0;//SpecIdx
 	return S_OK;	
 }
 
@@ -63,6 +63,9 @@ _int CMagicCircle::Update_GameObject(const _float & fTimeDelta)
 	m_pTransCom->m_vPos.y += 0.5f;
 
 	m_pTransCom->m_vAngle.y += 0.1f;
+
+	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
+	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
 	/*____________________________________________________________________
 	TransCom - Update WorldMatrix.
 	______________________________________________________________________*/

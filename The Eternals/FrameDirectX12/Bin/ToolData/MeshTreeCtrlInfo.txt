@@ -32,6 +32,7 @@ StaticMesh|Plane|BumpTerrainMesh00
 StaticMesh|Plane|BumpTerrainMesh01
 StaticMesh|Plane|BumpWaterMesh00
 StaticMesh|Plane|PublicPlane00
+StaticMesh|publicEffect|publicSphere
 StaticMesh|Sample|DistortDisk
 StaticMesh|Sample|LandMark
 StaticMesh|Sample|LandMarkBoundary
@@ -169,3 +170,4 @@ StaticMesh|StageVelika|VK_OBJ_Statu_01_02_SM
 StaticMesh|StageVelika|VK_OBJ_Statu_02_SM
 StaticMesh|StageVelika|VK_OBJ_Statu_03_Body_SM
 StaticMesh|StageVelika|VK_OBJ_Statu_03_Wing_SM
+StaticMesh|Stage_Env|RainDrop

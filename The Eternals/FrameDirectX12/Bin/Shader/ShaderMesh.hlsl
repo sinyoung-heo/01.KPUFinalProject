@@ -694,6 +694,23 @@ PS_OUT PS_WATERFALL(VS_OUT ps_input) : SV_TARGET
     return (ps_output);
 }
 
+PS_OUT PS_RAINDROP(VS_OUT ps_input) : SV_TARGET
+{
+   
+    PS_OUT ps_output = (PS_OUT) 0;
+	
+	// Diffuse
+    ps_output.Diffuse = (g_TexDiffuse.Sample(g_samLinearWrap, ps_input.AniUV * 10.f));
+ //   float4 TexNormal = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
+ //   TexNormal = (TexNormal * 2.0f) - 1.0f; // 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.
+ //   float3 Normal = (TexNormal.x * ps_input.T) + (TexNormal.y * ps_input.B) + (TexNormal.z * ps_input.N);
+ //   ps_output.Normal = float4(Normal.xyz * 0.5f + 0.5f, 1.f); // 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
+	//// Specular
+ //   ps_output.Specular = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
+	
+	
+    return (ps_output);
+}
 float4 PS_MAGIC_CIRCLE(VS_OUT ps_input):SV_Target
 {
   
@@ -705,4 +722,13 @@ float4 PS_MAGIC_CIRCLE(VS_OUT ps_input):SV_Target
     float4 color = Diffuse + TexNormal;
     color.xyz += Spec.xyz;
     return color;
+}
+float4 PS_EFFECT_SHPERE(VS_OUT ps_input) : SV_Target
+{
+	// Diffuse
+    float4 noise = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
+   
+    float2 TexUV = float2((ps_input.TexUV.x + g_fOffset1) * noise.b,( ps_input.TexUV.y + g_fOffset1) * noise.b);
+    float4 Color = g_TexDiffuse.Sample(g_samLinearWrap, TexUV);
+    return (Color);
 }

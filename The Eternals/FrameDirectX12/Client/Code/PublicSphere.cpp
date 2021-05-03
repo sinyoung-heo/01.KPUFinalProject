@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "WaterMeshObject.h"
+#include "PublicSphere.h"
 #include "GraphicDevice.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
@@ -8,13 +8,13 @@
 #include "RenderTarget.h"
 #include "TimeMgr.h"
 #include "DescriptorHeapMgr.h"
-CWaterMeshObject::CWaterMeshObject(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CPublicSphere::CPublicSphere(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
 }
 
 
-HRESULT CWaterMeshObject::Ready_GameObject(wstring wstrMeshTag,
+HRESULT CPublicSphere::Ready_GameObject(wstring wstrMeshTag,
 											 const _vec3 & vScale,
 											 const _vec3 & vAngle, 
 											 const _vec3 & vPos,
@@ -31,17 +31,16 @@ HRESULT CWaterMeshObject::Ready_GameObject(wstring wstrMeshTag,
 	return S_OK;
 }
 
-HRESULT CWaterMeshObject::LateInit_GameObject()
+HRESULT CPublicSphere::LateInit_GameObject()
 {
 	m_pShaderCom->SetUp_ShaderConstantBuffer();
-	Engine::CTexture* pTexture = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(L"WaterNormal", Engine::COMPONENTID::ID_STATIC));
+	Engine::CTexture* pTexture = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(L"EffectPublic", Engine::COMPONENTID::ID_STATIC));
 	SetUp_DescriptorHeap(pTexture->Get_Texture(), m_pRenderer->Get_TargetShadowDepth()->Get_TargetTexture());
 
-	m_fPatternMapDeltatime = 123.f;
 	return S_OK;
 }
 
-_int CWaterMeshObject::Update_GameObject(const _float & fTimeDelta)
+_int CPublicSphere::Update_GameObject(const _float & fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
@@ -51,17 +50,27 @@ _int CWaterMeshObject::Update_GameObject(const _float & fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MAGICCIRCLE, this), -1);
 
 	/*____________________________________________________________________
 	TransCom - Update WorldMatrix.
 	______________________________________________________________________*/
+
+
+	_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
+	m_pTransCom->m_vPos = Pos;
+	m_pTransCom->m_vPos.y += 5.f;
+	m_pTransCom->m_vPos.z += 0.3f;
+
+	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
+	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
+
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 	return NO_EVENT;
 }
 
-_int CWaterMeshObject::LateUpdate_GameObject(const _float & fTimeDelta)
+_int CPublicSphere::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
@@ -69,22 +78,14 @@ _int CWaterMeshObject::LateUpdate_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-void CWaterMeshObject::Render_GameObject(const _float& fTimeDelta,
-										   ID3D12GraphicsCommandList * pCommandList,
-										   const _int& iContextIdx)
+
+void CPublicSphere::Render_GameObject(const _float& fTimeDelta)
 {
 	Set_ConstantTable();
-	m_fPatternMapDeltatime+=(Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 10.f;
-	if (m_fPatternMapDeltatime > 133.f)
-		m_fPatternMapDeltatime = 123.f;
-	m_fNormalMapDeltatime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 15.f;
-	if (m_fNormalMapDeltatime > 123.f)
-		m_fNormalMapDeltatime = 3.f;
-	m_pMeshCom->Render_WaterMesh(pCommandList, iContextIdx, m_pShaderCom, m_pDescriptorHeaps, (_int)m_fNormalMapDeltatime, (_int)m_fPatternMapDeltatime);
+	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps,0, 3);
 }
 
-
-HRESULT CWaterMeshObject::Add_Component(wstring wstrMeshTag)
+HRESULT CPublicSphere::Add_Component(wstring wstrMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -98,7 +99,7 @@ HRESULT CWaterMeshObject::Add_Component(wstring wstrMeshTag)
 	// Shader
 	m_pShaderCom = static_cast<Engine::CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(6), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(11), E_FAIL);
 	m_pShaderCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
@@ -106,7 +107,7 @@ HRESULT CWaterMeshObject::Add_Component(wstring wstrMeshTag)
 	return S_OK;
 }
 
-void CWaterMeshObject::Set_ConstantTable()
+void CPublicSphere::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -134,7 +135,7 @@ void CWaterMeshObject::Set_ConstantTable()
 		m_fDeltaTime = 0.f;
 	
 }
-HRESULT CWaterMeshObject::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth)
+HRESULT CPublicSphere::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth)
 {
 	_uint m_uiTexSize = vecTexture.size() + vecShadowDepth.size();
 
@@ -179,27 +180,21 @@ HRESULT CWaterMeshObject::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> ve
 }
 
 
-Engine::CGameObject* CWaterMeshObject::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
+Engine::CGameObject* CPublicSphere::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
 												wstring wstrMeshTag, 
 												const _vec3 & vScale,
 												const _vec3 & vAngle,
 												const _vec3 & vPos, const _vec3& vPosOffset)
 {
-	CWaterMeshObject* pInstance = new CWaterMeshObject(pGraphicDevice, pCommandList);
+	CPublicSphere* pInstance = new CPublicSphere(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos, vPosOffset)))
 		Engine::Safe_Release(pInstance);
 
-	//// SetUp InstanceShader and Add Instance Count.
-	//Engine::CShaderShadowInstancing::Get_Instance()->SetUp_Instancing(wstrMeshTag);
-	//Engine::CShaderShadowInstancing::Get_Instance()->Add_TotalInstanceCount(wstrMeshTag);
-	//Engine::CShaderMeshInstancing::Get_Instance()->SetUp_Instancing(wstrMeshTag);
-	//Engine::CShaderMeshInstancing::Get_Instance()->Add_TotalInstanceCount(wstrMeshTag);
-
 	return pInstance;
 }
 
-void CWaterMeshObject::Free()
+void CPublicSphere::Free()
 {
 	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pMeshCom);

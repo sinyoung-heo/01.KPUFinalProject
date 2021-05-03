@@ -10,11 +10,11 @@ namespace Engine
 
 class CDynamicCamera;
 
-class CWaterMeshObject : public Engine::CGameObject
+class CPublicSphere : public Engine::CGameObject
 {
 private:
-	explicit CWaterMeshObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CWaterMeshObject() = default; 
+	explicit CPublicSphere(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CPublicSphere() = default; 
 
 public:
 	// CGameObject을(를) 통해 상속됨
@@ -26,10 +26,8 @@ public:
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 
-
-	// MultiThread Rendering
-	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
-
+	virtual void Render_GameObject(const _float& fTimeDelta);
+	
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
 	void			Set_ConstantTable();

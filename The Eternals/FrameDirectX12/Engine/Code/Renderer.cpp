@@ -518,7 +518,10 @@ void CRenderer::Render_Alpha(const _float& fTimeDelta)
 	m_pTargetpEffect->Release_OnGraphicDevice();
 
 
-
+	sort(m_RenderList[RENDER_ALPHA].begin(), m_RenderList[RENDER_ALPHA].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
+		{
+			return pSour->Get_DepthOfView() > pDest->Get_DepthOfView();
+		});
 	for (auto& pGameObject : m_RenderList[RENDER_ALPHA])
 		pGameObject->Render_GameObject(fTimeDelta);
 

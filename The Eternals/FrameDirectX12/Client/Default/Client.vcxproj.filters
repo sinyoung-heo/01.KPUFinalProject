@@ -271,6 +271,12 @@
     <Filter Include="02.GameObject\04.NPC\05_NPC_Children">
       <UniqueIdentifier>{6365142f-a91c-48b9-bfb7-6217669dc73f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\01.Environment\04.RainDrop">
+      <UniqueIdentifier>{abac0934-9cc3-46cc-aee9-037e1e6d239c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.GameEffect\03.PublicSphere">
+      <UniqueIdentifier>{b1e723e8-c92f-41c3-986f-dfcda777da27}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -543,6 +549,12 @@
     <ClInclude Include="..\Code\NPC_Children.h">
       <Filter>02.GameObject\04.NPC\05_NPC_Children</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\RainDrop.h">
+      <Filter>02.GameObject\01.Environment\04.RainDrop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PublicSphere.h">
+      <Filter>02.GameObject\98.GameEffect\03.PublicSphere</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -766,6 +778,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\NPC_Children.cpp">
       <Filter>02.GameObject\04.NPC\05_NPC_Children</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\RainDrop.cpp">
+      <Filter>02.GameObject\01.Environment\04.RainDrop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PublicSphere.cpp">
+      <Filter>02.GameObject\98.GameEffect\03.PublicSphere</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
