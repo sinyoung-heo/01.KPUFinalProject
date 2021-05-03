@@ -39,6 +39,7 @@ typedef struct tagCollisionTickDesc
 	_float	fCollisionTickTime      = 0.0f;
 	_float	fColisionTickUpdateTime = 0.0f;
 	_float	fPosOffset              = 1.0f;
+	_float	fScaleOffset            = 1.0f;
 	_int	iCurCollisionTick       = 0;
 	_int	iMaxCollisionTick       = 0;
 
