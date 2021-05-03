@@ -25,9 +25,6 @@
     <Filter Include="01.Scene\02.Menu">
       <UniqueIdentifier>{51fd0ff7-39a3-4557-b9b9-cc8eb69fb283}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Scene\01.Logo">
-      <UniqueIdentifier>{fd93da88-aeef-4df4-a63a-e362f97fa376}</UniqueIdentifier>
-    </Filter>
     <Filter Include="96.Camera">
       <UniqueIdentifier>{fd951fef-76fb-4e49-bf03-6a0843ab4a01}</UniqueIdentifier>
     </Filter>
@@ -63,15 +60,6 @@
     </Filter>
     <Filter Include="01.Scene\99.DebugStage\03.StageHSY">
       <UniqueIdentifier>{cce7a519-dab0-4b1d-a458-3dc62e3a06ef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Scene\01.Logo\00.LogoBack">
-      <UniqueIdentifier>{e1830c16-2d13-49f7-8572-3acdd2330b3c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Scene\01.Logo\01.LoadingProgressBack">
-      <UniqueIdentifier>{3c565417-9667-43d1-b28b-ac56d6c8d6f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Scene\01.Logo\02.LoadingProgress">
-      <UniqueIdentifier>{018c85ab-d8f8-4c79-8bba-f142768a3d1c}</UniqueIdentifier>
     </Filter>
     <Filter Include="97.Mgr\03.ServerMath">
       <UniqueIdentifier>{608982b7-5130-4247-b0b0-0a6009ba9f5b}</UniqueIdentifier>
@@ -270,6 +258,18 @@
     </Filter>
     <Filter Include="02.GameObject\04.NPC\05_NPC_Children">
       <UniqueIdentifier>{6365142f-a91c-48b9-bfb7-6217669dc73f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\01.Logo">
+      <UniqueIdentifier>{fd93da88-aeef-4df4-a63a-e362f97fa376}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\01.Logo\00.LogoBack">
+      <UniqueIdentifier>{e1830c16-2d13-49f7-8572-3acdd2330b3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\01.Logo\01.LoadingProgressBack">
+      <UniqueIdentifier>{3c565417-9667-43d1-b28b-ac56d6c8d6f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Scene\01.Logo\02.LoadingProgress">
+      <UniqueIdentifier>{018c85ab-d8f8-4c79-8bba-f142768a3d1c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

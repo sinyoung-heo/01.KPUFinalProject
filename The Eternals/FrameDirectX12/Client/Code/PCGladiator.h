@@ -41,6 +41,7 @@ public:
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag);
 	HRESULT			SetUp_PCWeapon();
+	HRESULT			SetUp_ClassFrame();
 	void			SetUp_StageID();
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
@@ -84,6 +85,7 @@ private:
 	void SetUp_WeaponBack();
 	void SetUp_AttackAfterImage(const _uint& uiAnimIdx, const _uint& uiStartTick, const _uint& uiStopTick, const _float& fMakeTime, const _float& fAlphaSpeed);
 	void Make_AfterImage(const _float& fTimeDelta);
+	void SetUp_CollisionTick(const _float& fTimeDelta);
 
 	// Collision Event
 	void Collision_MonsterMultiCollider(list<Engine::CColliderSphere*>& lstMonsterCollider);
@@ -128,6 +130,10 @@ private:
 	_float			m_fAfterImgMakeTime = 0.f;
 	_float			m_fAfterSubAlpha    = 0.f;
 	_bool			m_bIsMakeAfterImage = false;
+
+	// CollisionTick
+	_bool				m_bIsSetCollisionTick = false;
+	COLLISION_TICK_DESC m_tCollisionTickDesc;
 
 	// Server
 	_bool			m_bIsKeyDown   = false;

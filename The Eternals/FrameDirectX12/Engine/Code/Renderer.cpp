@@ -114,8 +114,8 @@ HRESULT CRenderer::Ready_Renderer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCo
 
 	m_mapRenderOnOff[L"RenderTarget"]	= false;
 	m_mapRenderOnOff[L"DebugFont"]		= false;
-	m_mapRenderOnOff[L"Collider"]		= true;
-	m_mapRenderOnOff[L"SectorGrid"]		= true;
+	m_mapRenderOnOff[L"Collider"]		= false;
+	m_mapRenderOnOff[L"SectorGrid"]		= false;
 
 	/*__________________________________________________________________________________________________________
 	2020.06.07 MultiThreadRendering

@@ -41,10 +41,12 @@ namespace Gladiator
 	const _float MAX_SPEED       = 5.0f;
 	const _float MOVE_STOP_SPEED = 3.0f;
 
+	// COMOBO ATTACK
 	const _uint COMBO1_MOVE_STOP = 16;
 	const _uint COMBO2_MOVE_STOP = 20;
 	const _uint COMBO3_MOVE_STOP = 15;
 	const _uint COMBO4_MOVE_STOP = 30;
+
 	const _uint COMBO1_TRAIL_START = 12;
 	const _uint COMBO1_TRAIL_STOP  = 28;
 	const _uint COMBO2_TRAIL_START = 13;
@@ -54,6 +56,12 @@ namespace Gladiator
 	const _uint COMBO4_TRAIL_START = 20;
 	const _uint COMBO4_TRAIL_STOP  = 56;
 
+	const _uint COMBO1_COLLISIONTICK_START = 18;
+	const _uint COMBO2_COLLISIONTICK_START = 18;
+	const _uint COMBO3_COLLISIONTICK_START = 16;
+	const _uint COMBO4_COLLISIONTICK_START = 25;
+
+	// SKILL ATTACK
 	const _uint STINGER_BLADE_MOVE_START = 20;
 	const _uint STINGER_BLADE_MOVE_STOP  = 30;
 	const _uint CUTTING_SLASH_MOVE_START = 0;

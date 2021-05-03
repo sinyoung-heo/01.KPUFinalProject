@@ -208,6 +208,10 @@ void CAniCtrl::Play_Animation(_float fTimeDelta)
 		m_fBlendingTime       = 1.f;
 		m_bIsBlendingComplete = true;
 		m_fAnimationTime      = 0.0f;
+
+		m_fAnimationTime   = (_float)(fmod(m_fAnimationTime, (m_pScene->mAnimations[m_uiCurAniIndex]->mDuration)));
+		m_ui3DMax_NumFrame = (_uint)(_3DMAX_FPS * (m_pScene->mAnimations[m_uiCurAniIndex]->mDuration / m_pScene->mAnimations[m_uiCurAniIndex]->mTicksPerSecond));
+		m_ui3DMax_CurFrame = (_uint)(_3DMAX_FPS * (m_fAnimationTime / m_pScene->mAnimations[m_uiCurAniIndex]->mTicksPerSecond));
 	}
 
 }

@@ -27,6 +27,7 @@ public:
 	// CollisionTick
 	CCollisionTick*	Pop_CollisionTickInstance();
 	void			Return_CollisionTickInstance(const _uint& uiInstanceIdx);
+
 private:
 	INSTANCE_POOL_DESC<CCollisionTick>*	m_pCollisionTickPool;
 

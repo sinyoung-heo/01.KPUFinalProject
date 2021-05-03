@@ -12,6 +12,10 @@
 #include "FadeInOut.h"
 #include "NPC_Merchant.h"
 #include "NPC_Quest.h"
+#include "GameUIRoot.h"
+#include "GameUIChild.h"
+#include "CharacterHpGauge.h"
+#include "CharacterMpGauge.h"
 
 CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -127,6 +131,9 @@ HRESULT CPCGladiator::LateInit_GameObject()
 	// Create Weapon
 	Engine::FAILED_CHECK_RETURN(SetUp_PCWeapon(), E_FAIL);
 
+	// UI ClassFrame
+	Engine::FAILED_CHECK_RETURN(SetUp_ClassFrame(), E_FAIL);
+
 	return S_OK;
 }
 
@@ -164,6 +171,10 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 
 	if (g_bIsStageChange)
 		m_bIsKeyDown = false;
+
+	// Create CollisionTick
+	if (m_pMeshCom->Is_BlendingComplete())
+		SetUp_CollisionTick(fTimeDelta);
 
 	// NaviMesh 捞悼.
 	SetUp_RunMoveSpeed(fTimeDelta);
@@ -403,6 +414,155 @@ HRESULT CPCGladiator::SetUp_PCWeapon()
 										 &m_pTransCom->m_matWorld,
 										 _rgba(0.64f, 0.96f, 0.97f, 1.0f));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"ThisPlayerWeaponTwoHand", m_pWeapon), E_FAIL);
+
+	return S_OK;
+}
+
+HRESULT CPCGladiator::SetUp_ClassFrame()
+{
+	/*__________________________________________________________________________________________________________
+	[ CharacterClassFrame ]
+	____________________________________________________________________________________________________________*/
+	{
+		wifstream fin { L"../../Bin/ToolData/2DUICharacterClassFrameWarrior.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		// ChildUI Data
+		vector<wstring> vecDataFilePath;
+		vector<wstring> vecObjectTag;
+		vector<_vec3>	vecPos;
+		vector<_vec3>	vecScale;
+		vector<_long>	vecUIDepth;
+		vector<_int>	vecIsSpriteAnimation;
+		vector<_float>	vecFrameSpeed;
+		vector<_vec3>	vecRectPosOffset;
+		vector<_vec3>	vecRectScale;
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			vecDataFilePath.resize(iChildUISize);
+			vecObjectTag.resize(iChildUISize);
+			vecPos.resize(iChildUISize);
+			vecScale.resize(iChildUISize);
+			vecUIDepth.resize(iChildUISize);
+			vecIsSpriteAnimation.resize(iChildUISize);
+			vecFrameSpeed.resize(iChildUISize);
+			vecRectPosOffset.resize(iChildUISize);
+			vecRectScale.resize(iChildUISize);
+
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+			fin >> vecDataFilePath[i]			// DataFilePath
+				>> vecObjectTag[i]				// Object Tag
+				>> vecPos[i].x					// Pos X
+				>> vecPos[i].y					// Pos Y
+				>> vecScale[i].x				// Scale X
+				>> vecScale[i].y				// Scale Y
+				>> vecUIDepth[i]				// UI Depth
+				>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
+				>> vecFrameSpeed[i]				// Frame Speed
+				>> vecRectPosOffset[i].x		// RectPosOffset X
+				>> vecRectPosOffset[i].y		// RectPosOffset Y
+				>> vecRectScale[i].x			// RectScale X
+				>> vecRectScale[i].y;			// RectScale Y
+			}
+
+			if (fin.eof())
+				break;
+
+			// UIRoot 积己.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CGameUIRoot::Create(m_pGraphicDevice, m_pCommandList,
+										  wstrRootObjectTag,
+										  wstrDataFilePath,
+										  vPos,
+										  vScale,
+										  bIsSpriteAnimation,
+										  fFrameSpeed,
+										  vRectPosOffset,
+										  vRectScale,
+										  UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+
+			// UIChild 积己.
+			Engine::CGameObject* pChildUI = nullptr;
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				if (L"ClassFrameHpFront" == vecObjectTag[i])
+				{
+					pChildUI = CCharacterHpGauge::Create(m_pGraphicDevice, m_pCommandList,
+														 wstrRootObjectTag,				// RootObjectTag
+														 vecObjectTag[i],				// ObjectTag
+														 vecDataFilePath[i],			// DataFilePath
+														 vecPos[i],						// Pos
+														 vecScale[i],					// Scane
+														 (_bool)vecIsSpriteAnimation[i],// Is Animation
+														 vecFrameSpeed[i],				// FrameSpeed
+														 vecRectPosOffset[i],			// RectPosOffset
+														 vecRectScale[i],				// RectScaleOffset
+														 vecUIDepth[i]);				// UI Depth
+				}
+				else if (L"ClassFrameMpFront" == vecObjectTag[i])
+				{
+					pChildUI = CCharacterMpGauge::Create(m_pGraphicDevice, m_pCommandList,
+														 wstrRootObjectTag,				// RootObjectTag
+														 vecObjectTag[i],				// ObjectTag
+														 vecDataFilePath[i],			// DataFilePath
+														 vecPos[i],						// Pos
+														 vecScale[i],					// Scane
+														 (_bool)vecIsSpriteAnimation[i],// Is Animation
+														 vecFrameSpeed[i],				// FrameSpeed
+														 vecRectPosOffset[i],			// RectPosOffset
+														 vecRectScale[i],				// RectScaleOffset
+														 vecUIDepth[i]);				// UI Depth
+				}
+				else
+				{
+					pChildUI = CGameUIChild::Create(m_pGraphicDevice, m_pCommandList,
+													wstrRootObjectTag,				// RootObjectTag
+													vecObjectTag[i],				// ObjectTag
+													vecDataFilePath[i],				// DataFilePath
+													vecPos[i],						// Pos
+													vecScale[i],					// Scane
+													(_bool)vecIsSpriteAnimation[i],	// Is Animation
+													vecFrameSpeed[i],				// FrameSpeed
+													vecRectPosOffset[i],			// RectPosOffset
+													vecRectScale[i],				// RectScaleOffset
+													vecUIDepth[i]);					// UI Depth
+				}
+				m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
+				static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
+			}
+		}
+	}
 
 	return S_OK;
 }
@@ -1084,6 +1244,11 @@ void CPCGladiator::KeyInput_OpenQuest(const char& npcNumber)
 
 void CPCGladiator::SetUp_AttackSetting()
 {
+	m_bIsSetCollisionTick                        = false;
+	m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
+	m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
+	m_tCollisionTickDesc.fCollisionTickTime      = 0.0f;
+
 	m_bIsAttack  = true;
 	m_bIsKeyDown = false;
 	m_pWeapon->Set_IsRenderTrail(false);
@@ -1428,7 +1593,7 @@ void CPCGladiator::Ready_AngleInterpolationValue(const _float& fEndAngle)
 	m_tAngleInterpolationDesc.v1                     = m_pTransCom->m_vAngle.y;
 	m_tAngleInterpolationDesc.v2                     = fEndAngle;
 	m_tAngleInterpolationDesc.linear_ratio           = Engine::MIN_LINEAR_RATIO;
-	m_tAngleInterpolationDesc.interpolation_speed    = 3.0f;
+	m_tAngleInterpolationDesc.interpolation_speed    = 5.0f;
 }
 
 void CPCGladiator::SetUp_AngleInterpolation(const _float& fTimeDelta)
@@ -1603,6 +1768,102 @@ void CPCGladiator::Make_AfterImage(const _float& fTimeDelta)
 			}
 			else
 				++iterFade;
+		}
+	}
+}
+
+void CPCGladiator::SetUp_CollisionTick(const _float& fTimeDelta)
+{
+	// COMBO ATTACK
+	if (Gladiator::COMBO1 == m_uiAnimIdx && m_ui3DMax_CurFrame >= Gladiator::COMBO1_COLLISIONTICK_START)
+	{
+		if (!m_bIsSetCollisionTick)
+		{
+			m_bIsSetCollisionTick = true;
+			m_tCollisionTickDesc.fPosOffset              = 1.75f;
+			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
+			m_tCollisionTickDesc.fColisionTickUpdateTime = 1.0f / 4.0f;
+			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
+			m_tCollisionTickDesc.iCurCollisionTick       = 0;
+			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+		}
+	}
+	else if (Gladiator::COMBO2 == m_uiAnimIdx && m_ui3DMax_CurFrame >= Gladiator::COMBO2_COLLISIONTICK_START)
+	{
+		if (!m_bIsSetCollisionTick)
+		{
+			m_bIsSetCollisionTick = true;
+			m_tCollisionTickDesc.fPosOffset              = 1.75f;
+			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
+			m_tCollisionTickDesc.fColisionTickUpdateTime = 1.0f / 4.0f;
+			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
+			m_tCollisionTickDesc.iCurCollisionTick       = 0;
+			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+		}
+	}
+	else if (Gladiator::COMBO3 == m_uiAnimIdx && m_ui3DMax_CurFrame >= Gladiator::COMBO3_COLLISIONTICK_START)
+	{
+		if (!m_bIsSetCollisionTick)
+		{
+			m_bIsSetCollisionTick = true;
+			m_tCollisionTickDesc.fPosOffset              = 1.5f;
+			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
+			m_tCollisionTickDesc.fColisionTickUpdateTime = 1.0f / 4.0f;
+			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
+			m_tCollisionTickDesc.iCurCollisionTick       = 0;
+			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+		}
+	}
+	else if (Gladiator::COMBO4 == m_uiAnimIdx && m_ui3DMax_CurFrame >= Gladiator::COMBO4_COLLISIONTICK_START)
+	{
+		if (!m_bIsSetCollisionTick)
+		{
+			m_bIsSetCollisionTick = true;
+			m_tCollisionTickDesc.fPosOffset              = 2.0f;
+			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
+			m_tCollisionTickDesc.fColisionTickUpdateTime = 1.0f / 4.0f;
+			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
+			m_tCollisionTickDesc.iCurCollisionTick       = 0;
+			m_tCollisionTickDesc.iMaxCollisionTick       = 2;
+		}
+	}
+
+
+	if (m_bIsSetCollisionTick && 
+		m_tCollisionTickDesc.bIsCreateCollisionTick &&
+		m_tCollisionTickDesc.iCurCollisionTick < m_tCollisionTickDesc.iMaxCollisionTick)
+	{
+		m_tCollisionTickDesc.fCollisionTickTime += fTimeDelta;
+
+		if (m_tCollisionTickDesc.fCollisionTickTime >= m_tCollisionTickDesc.fColisionTickUpdateTime)
+		{
+			m_tCollisionTickDesc.fCollisionTickTime = 0.0f;
+			++m_tCollisionTickDesc.iCurCollisionTick;
+
+			if (m_tCollisionTickDesc.iCurCollisionTick >= m_tCollisionTickDesc.iMaxCollisionTick)
+			{
+				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
+				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
+				m_tCollisionTickDesc.fCollisionTickTime      = 0.0f;
+			}
+
+			// CollisionTick
+			m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+			m_pTransCom->m_vDir.Normalize();
+			_vec3 vPos = m_pTransCom->m_vPos + m_pTransCom->m_vDir * m_tCollisionTickDesc.fPosOffset;
+			vPos.y = 1.f;
+
+			CCollisionTick* pCollisionTick = m_pInstancePoolMgr->Pop_CollisionTickInstance();
+			if (nullptr != pCollisionTick)
+			{
+				pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
+				pCollisionTick->Set_Damage(m_pInfoCom->m_iAttack);
+				pCollisionTick->Set_LifeTime(0.5f);
+				pCollisionTick->Get_Transform()->m_vScale = _vec3(4.0f);
+				pCollisionTick->Get_Transform()->m_vPos   = vPos;
+				pCollisionTick->Get_BoundingSphere()->Set_Radius(pCollisionTick->Get_Transform()->m_vScale);
+				m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_ThisPlayer", pCollisionTick);
+			}
 		}
 	}
 }

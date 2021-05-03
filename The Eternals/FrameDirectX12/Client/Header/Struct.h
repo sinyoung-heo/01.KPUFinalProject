@@ -1,5 +1,4 @@
 #pragma once
-
 typedef struct tagFrame
 {
 	tagFrame()
@@ -30,7 +29,17 @@ typedef struct tagFrame
 	_float	fCurFrame	= 0.0f;
 	_float	fSceneCnt	= 1.0f;	// 스프라이트 이미지의 Y축 개수.
 	_float	fCurScene	= 0.0f;
-
 	_float	fFrameSpeed	= 0.0f;	// 스프라이트 이미지 재생속도.
 
 } FRAME;
+
+typedef struct tagCollisionTickDesc
+{
+	_bool	bIsCreateCollisionTick  = false;
+	_float	fCollisionTickTime      = 0.0f;
+	_float	fColisionTickUpdateTime = 0.0f;
+	_float	fPosOffset              = 1.0f;
+	_int	iCurCollisionTick       = 0;
+	_int	iMaxCollisionTick       = 0;
+
+} COLLISION_TICK_DESC;

@@ -73,7 +73,7 @@ HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag,
 	[ 선형보간 설정 ]
 	____________________________________________________________________________________________________________*/
 	// Angle
-	m_tAngleInterpolationDesc.interpolation_speed = 3.0f;
+	m_tAngleInterpolationDesc.interpolation_speed = 5.0f;
 
 	// Move Speed
 	m_tMoveSpeedInterpolationDesc.linear_ratio = 0.0f;
