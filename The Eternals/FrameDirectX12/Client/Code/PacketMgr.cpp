@@ -790,7 +790,7 @@ void CPacketMgr::Login_Player(sc_packet_login_ok* packet)
 
 	pGameObj->Set_OType(packet->o_type);
 	pGameObj->Set_ServerNumber(g_iSNum);
-	pGameObj->Set_Info(packet->level, packet->hp, packet->maxHp, packet->mp, packet->maxMp, packet->exp, packet->maxExp, packet->att, packet->spd);
+	pGameObj->Set_Info(packet->level, packet->hp, packet->maxHp, packet->mp, packet->maxMp, packet->exp, packet->maxExp, packet->min_att, packet->max_att, packet->spd);
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"ThisPlayer", pGameObj), E_FAIL);
 
 #ifdef ERR_CHECK
@@ -919,7 +919,7 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 
 
 	pGameObj->Set_ServerNumber(packet->id);
-	pGameObj->Set_Info(1, packet->Hp, packet->maxHp, 0, 0, 0, 0, packet->att, packet->spd);
+	pGameObj->Set_Info(1, packet->Hp, packet->maxHp, 0, 0, 0, 0, packet->min_att, packet->max_att, packet->spd);
 
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);
 }

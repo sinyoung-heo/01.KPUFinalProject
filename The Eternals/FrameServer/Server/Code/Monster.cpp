@@ -3,7 +3,7 @@
 #include "Player.h"
 
 CMonster::CMonster()
-	:m_iHp(0), m_iMaxHp(0), m_iExp(0), m_iAtt(0), m_fSpd(0.f),
+	:m_iHp(0), m_iMaxHp(0), m_iExp(0), m_iMinAtt(0), m_iMaxAtt(0), m_fSpd(0.f),
 	m_iTargetNum(-1), m_bIsAttack(false), m_bIsShortAttack(true),
 	m_bIsRushAttack(false), m_bIsFighting(false), m_monNum(0), m_uiAnimIdx(0),
 	m_eAttackDist(ATTACK_DIST::DIST_END)
@@ -41,7 +41,8 @@ void CMonster::Ready_Monster(const _vec3& pos, const _vec3& angle, const char& t
 	m_vAngle = angle;
 	m_iHp = hp;
 	m_iMaxHp = hp;
-	m_iAtt = att;
+	m_iMinAtt = att / 2;
+	m_iMaxAtt = att;
 	m_iExp = exp;
 	m_fSpd = spd;
 	m_type = type;
@@ -3148,7 +3149,8 @@ void CMonster::send_Monster_enter_packet(int to_client)
 	p.Hp = m_iHp;
 	p.maxHp = m_iMaxHp;
 	p.spd = m_fSpd;
-	p.att = m_iAtt;
+	p.min_att = m_iMinAtt;
+	p.max_att = m_iMaxAtt;
 
 	send_packet(to_client, &p);
 }

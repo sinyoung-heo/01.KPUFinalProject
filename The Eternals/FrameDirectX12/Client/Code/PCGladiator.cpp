@@ -689,7 +689,7 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 		if (nullptr != pCollisionTick)
 		{
 			pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
-			pCollisionTick->Set_Damage(m_pInfoCom->m_iAttack);
+			pCollisionTick->Set_Damage(m_pInfoCom->m_iMaxAttack);
 			pCollisionTick->Set_LifeTime(60.0f);
 			pCollisionTick->Get_Transform()->m_vScale = _vec3(2.0f);
 			pCollisionTick->Get_Transform()->m_vPos   = vPos;
@@ -1973,7 +1973,7 @@ void CPCGladiator::SetUp_CollisionTick(const _float& fTimeDelta)
 			if (nullptr != pCollisionTick)
 			{
 				pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
-				pCollisionTick->Set_Damage(m_pInfoCom->m_iAttack);
+				pCollisionTick->Set_Damage(m_pInfoCom->m_iMaxAttack);
 				pCollisionTick->Set_LifeTime(0.25f);
 				pCollisionTick->Get_Transform()->m_vScale = _vec3(4.0f) * m_tCollisionTickDesc.fScaleOffset;
 				pCollisionTick->Get_Transform()->m_vPos   = vPos;

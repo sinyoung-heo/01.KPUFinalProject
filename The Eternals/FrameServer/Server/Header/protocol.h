@@ -133,7 +133,8 @@ struct sc_packet_login_ok
 	int				exp;
 	int				maxExp;
 	int				level;
-	int				att;
+	int				min_att;
+	int				max_att;
 	float			spd;
 	float			posX, posY, posZ;
 };
@@ -246,7 +247,7 @@ struct sc_packet_monster_enter
 	char			naviType;
 	char			o_type;
 	char			mon_num;
-	int				Hp, maxHp, att;
+	int				Hp, maxHp, min_att, max_att;
 	float			spd;
 	float			posX, posY, posZ;
 	float			angleX, angleY, angleZ;
