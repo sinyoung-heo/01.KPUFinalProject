@@ -22,6 +22,9 @@ public:
 	void	Set_Start_Fight();
 	void	Set_Stop_Fight();
 
+	void	active_monster();									// 해당 Monster의 STATUS = ST_ACTIVE
+	void	nonActive_monster();								// 해당 Monster의 STATUS = ST_NONACTIVE
+
 public:
 	void	Ready_Monster(const _vec3& pos, const _vec3& angle, const char& type, const char& num, const char& naviType, const int& hp, const int& att, const int& exp, const float& spd);
 	int		Update_Monster(const float& fTimeDelta);
