@@ -28,6 +28,7 @@ HRESULT CPublicSphere::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos = vPos + vPosOffset;
 
+	m_fDeltaTime = -1.f;
 	return S_OK;
 }
 
@@ -59,8 +60,8 @@ _int CPublicSphere::Update_GameObject(const _float & fTimeDelta)
 
 	_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
 	m_pTransCom->m_vPos = Pos;
-	m_pTransCom->m_vPos.y += 5.f;
-	m_pTransCom->m_vPos.z += 0.3f;
+	m_pTransCom->m_vPos.y += 20.f;
+	//m_pTransCom->m_vPos.z += 0.3f;
 
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
 	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
@@ -97,9 +98,9 @@ HRESULT CPublicSphere::Add_Component(wstring wstrMeshTag)
 
 
 	// Shader
-	m_pShaderCom = static_cast<Engine::CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", Engine::COMPONENTID::ID_STATIC));
+	m_pShaderCom = static_cast<Engine::CShaderMeshEffect*>(m_pComponentMgr->Clone_Component(L"ShaderMeshEffect", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(11), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(2), E_FAIL);
 	m_pShaderCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
@@ -109,6 +110,19 @@ HRESULT CPublicSphere::Add_Component(wstring wstrMeshTag)
 
 void CPublicSphere::Set_ConstantTable()
 {
+	fCurFrame += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) *16.f;
+	// Sprite XÃà
+	if (fCurFrame >8)
+	{
+		fCurFrame = 0.0f;
+		fCurScene += 1.0f;
+	}
+
+	// Sprite YÃà
+	if (fCurScene >=2)
+	{
+		fCurScene = 0.0f;
+	}
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
@@ -122,17 +136,22 @@ void CPublicSphere::Set_ConstantTable()
 	tCB_ShaderMesh.vLightPos = tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 
-	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.005f;
+	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.5f;
 	m_fDeltatime2 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
 	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
 	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
 	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
 	tCB_ShaderMesh.fDissolve = sin(m_fDeltatime3);
+
+	tCB_ShaderMesh.vEmissiveColor.x = 8.f;
+	tCB_ShaderMesh.vEmissiveColor.y = 2.f;
+	tCB_ShaderMesh.vEmissiveColor.z = fCurFrame;
+	tCB_ShaderMesh.vEmissiveColor.w = fCurScene;
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 
 
 	if (m_fDeltaTime > 1.f)
-		m_fDeltaTime = 0.f;
+		m_fDeltaTime = -1.f;
 	
 }
 HRESULT CPublicSphere::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth)

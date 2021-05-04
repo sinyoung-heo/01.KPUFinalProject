@@ -3,7 +3,7 @@
 
 namespace Engine
 {
-	class CShaderMesh;
+	class CShaderMeshEffect;
 	class CMesh;
 	class CTexture;
 }
@@ -39,7 +39,7 @@ private:
 	[ Component ]
 	____________________________________________________________________________________________________________*/
 	Engine::CMesh*						m_pMeshCom                = nullptr;
-	Engine::CShaderMesh* m_pShaderCom = nullptr;
+	Engine::CShaderMeshEffect* m_pShaderCom = nullptr;
 	ID3D12DescriptorHeap* m_pDescriptorHeaps = nullptr;
 	/*__________________________________________________________________________________________________________
 	[ Value ]
@@ -51,6 +51,12 @@ private:
 	float m_fDeltatime2 = 0.f;
 	float m_fDeltatime3 = 0.f;
 	float m_fPatternMapDeltatime = 0.f;
+
+	//Temp
+	float   fFrameCnt = 8.f;
+	float	fCurFrame = 0.f;
+	float	fSceneCnt = 2.f;
+	float	fCurScene = 0.f;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

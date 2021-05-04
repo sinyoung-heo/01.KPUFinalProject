@@ -290,21 +290,21 @@ HRESULT CStagePJO::Ready_LayerEnvironment(wstring wstrLayerTag)
 
 
 	pGameObj = CPublicSphere::Create(m_pGraphicDevice, m_pCommandList,
-		L"publicSphere",
-		_vec3(0.03f),
+		L"IceStorm1",
+		_vec3(0.1f),
 		_vec3(0.f, 0.0f, 0.0f),
 		_vec3(0, 0, 0),_vec3(0,0,0));
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"publicSphere", pGameObj), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"IceStorm1", pGameObj), E_FAIL);
 
 
-	//// Torch
-	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-									  L"Lightning00",						// TextureTag
-									  _vec3(5.f, 10.0f, 1.0f),		// Scale
-									  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-									  _vec3(28.0f, 20.0f, 27.0f),	// Pos
-									  FRAME(8, 2, 16.0f));			// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Torch", pGameObj), E_FAIL);
+	////// Torch
+	//pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+	//								  L"Lightning00",						// TextureTag
+	//								  _vec3(5.f, 10.0f, 1.0f),		// Scale
+	//								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+	//								  _vec3(28.0f, 20.0f, 27.0f),	// Pos
+	//								  FRAME(8, 2, 16.0f));			// Sprite Image Frame
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Torch", pGameObj), E_FAIL);
 	return S_OK;
 }
 

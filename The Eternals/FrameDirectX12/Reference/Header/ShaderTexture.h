@@ -20,7 +20,7 @@ public:
 	virtual void	Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap = nullptr,
 								 const _uint& iSubsetIdx = 0,
 								 const _uint& iTexIdx = 0,
-								 const MATRIXID& eID = MATRIXID::PROJECTION, _uint pTexIdx2 =0);
+								 const MATRIXID& eID = MATRIXID::PROJECTION);
 
 private:
 	virtual HRESULT								Create_RootSignature();

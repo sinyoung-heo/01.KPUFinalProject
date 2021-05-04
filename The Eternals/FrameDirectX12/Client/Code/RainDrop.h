@@ -4,7 +4,7 @@
 
 namespace Engine
 {
-	class CShaderMesh;
+	class CShaderMeshEffect;
 	class CMesh;
 }
 
@@ -37,10 +37,7 @@ private:
 	[ Component ]
 	____________________________________________________________________________________________________________*/
 	Engine::CMesh*						m_pMeshCom                = nullptr;
-	Engine::CShaderShadowInstancing*	m_pShaderShadowInstancing = nullptr;
-	Engine::CShaderMeshInstancing*		m_pShaderMeshInstancing   = nullptr;
-
-	Engine::CShaderMesh*				m_pShaderCom            = nullptr;
+	Engine::CShaderMeshEffect*				m_pShaderCom            = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]

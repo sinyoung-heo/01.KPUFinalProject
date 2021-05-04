@@ -104,7 +104,7 @@ void CTextureEffect::Render_GameObject(const _float & fTimeDelta)
 {
 	Set_ConstantTable();
 	int a=m_pTextureCom->Get_TexDescriptorHeap()->GetDesc().NumDescriptors;
-	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), 0, m_uiTexIdx, Engine::MATRIXID::PROJECTION,1);
+	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), 0, m_uiTexIdx, Engine::MATRIXID::PROJECTION);
 	m_pBufferCom->Begin_Buffer();
 
 	m_pBufferCom->Render_Buffer();
