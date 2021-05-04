@@ -1,4 +1,5 @@
 #include "Info.h"
+#include <random>
 
 USING(Engine)
 
@@ -14,6 +15,15 @@ CInfo::CInfo(const CInfo& rhs)
 {
 }
 
+
+_int CInfo::Get_RandomDamage()
+{
+	random_device					rd;
+	default_random_engine			dre { rd() };
+	uniform_int_distribution<_int>	uid { m_iMinAttack, m_iMaxAttack };
+
+	return uid(dre);
+}
 
 HRESULT CInfo::Ready_Component()
 {

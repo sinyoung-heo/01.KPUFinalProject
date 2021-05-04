@@ -11,6 +11,8 @@ private:
 	virtual ~CInfo() = default;
 
 public:
+	_int Get_RandomDamage();
+
 	HRESULT			Ready_Component();
 	virtual void	Update_Component(const _float& fTimeDelta);
 

@@ -677,27 +677,27 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 	if (Engine::KEY_DOWN(DIK_M))
 		CPacketMgr::Get_Instance()->send_attackToMonster(5000);
 
-	if (Engine::KEY_DOWN(DIK_P))
-	{
-		m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
-		m_pTransCom->m_vDir.Normalize();
-		_vec3 vPos = m_pTransCom->m_vPos + m_pTransCom->m_vDir * 2.0f;
-		vPos.y = 1.f;
+	//if (Engine::KEY_DOWN(DIK_P))
+	//{
+	//	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+	//	m_pTransCom->m_vDir.Normalize();
+	//	_vec3 vPos = m_pTransCom->m_vPos + m_pTransCom->m_vDir * 2.0f;
+	//	vPos.y = 1.f;
 
-		// CollisionTick
-		CCollisionTick* pCollisionTick = m_pInstancePoolMgr->Pop_CollisionTickInstance();
-		if (nullptr != pCollisionTick)
-		{
-			pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
-			pCollisionTick->Set_Damage(m_pInfoCom->m_iMaxAttack);
-			pCollisionTick->Set_LifeTime(60.0f);
-			pCollisionTick->Get_Transform()->m_vScale = _vec3(2.0f);
-			pCollisionTick->Get_Transform()->m_vPos   = vPos;
-			pCollisionTick->Get_BoundingSphere()->Set_Radius(pCollisionTick->Get_Transform()->m_vScale);
+	//	// CollisionTick
+	//	CCollisionTick* pCollisionTick = m_pInstancePoolMgr->Pop_CollisionTickInstance();
+	//	if (nullptr != pCollisionTick)
+	//	{
+	//		pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
+	//		pCollisionTick->Set_Damage(m_pInfoCom->m_iMaxAttack);
+	//		pCollisionTick->Set_LifeTime(60.0f);
+	//		pCollisionTick->Get_Transform()->m_vScale = _vec3(2.0f);
+	//		pCollisionTick->Get_Transform()->m_vPos   = vPos;
+	//		pCollisionTick->Get_BoundingSphere()->Set_Radius(pCollisionTick->Get_Transform()->m_vScale);
 
-			m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_ThisPlayer", pCollisionTick);
-		}
-	}
+	//		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_ThisPlayer", pCollisionTick);
+	//	}
+	//}
 }
 
 void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
