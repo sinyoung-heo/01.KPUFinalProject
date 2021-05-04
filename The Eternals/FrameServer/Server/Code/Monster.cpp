@@ -576,7 +576,7 @@ void CMonster::Move_NormalMonster(const float& fTimeDelta)
 
 	// Monster 시야 내에 아무도 없다면 NON ACTIVE로 상태 변경
 	if (new_viewlist.empty() == true)
-		nonActive_monster(m_sNum);
+		nonActive_monster();
 }
 
 void CMonster::Chase_Crab(const float& fTimeDelta)
@@ -659,7 +659,7 @@ void CMonster::Chase_Crab(const float& fTimeDelta)
 			m_vPos += m_vDir * fTimeDelta;
 		else
 		{
-			nonActive_monster(m_sNum);
+			nonActive_monster();
 			cout << "몬스터 전투 종료 " << endl;
 			Set_Stop_Fight();
 		}
@@ -874,7 +874,7 @@ void CMonster::Chase_Monkey(const float& fTimeDelta)
 			m_vPos += m_vDir * fTimeDelta;
 		else
 		{
-			nonActive_monster(m_sNum);
+			nonActive_monster();
 			cout << "몬스터 전투 종료 " << endl;
 			Set_Stop_Fight();
 		}
@@ -1080,7 +1080,7 @@ void CMonster::Chase_Cloder(const float& fTimeDelta)
 			m_vPos += m_vDir * fTimeDelta;
 		else
 		{
-			nonActive_monster(m_sNum);
+			nonActive_monster();
 			cout << "몬스터 전투 종료 " << endl;
 			Set_Stop_Fight();
 		}
@@ -1294,7 +1294,7 @@ void CMonster::Chase_DrownedSailor(const float& fTimeDelta)
 			m_vPos += m_vDir * fTimeDelta;
 		else
 		{
-			nonActive_monster(m_sNum);
+			nonActive_monster();
 			cout << "몬스터 전투 종료 " << endl;
 			Set_Stop_Fight();
 		}
@@ -1507,7 +1507,7 @@ void CMonster::Chase_GiantBeetle(const float& fTimeDelta)
 			m_vPos += m_vDir * fTimeDelta;
 		else
 		{
-			nonActive_monster(m_sNum);
+			nonActive_monster();
 			cout << "몬스터 전투 종료 " << endl;
 			Set_Stop_Fight();
 		}
@@ -1731,7 +1731,7 @@ void CMonster::Chase_GiantMonkey(const float& fTimeDelta)
 			m_vPos += m_vDir * fTimeDelta;
 		else
 		{
-			nonActive_monster(m_sNum);
+			nonActive_monster();
 			cout << "몬스터 전투 종료 " << endl;
 			Set_Stop_Fight();
 		}
@@ -1937,7 +1937,7 @@ void CMonster::Chase_CraftyArachne(const float& fTimeDelta)
 			m_vPos += m_vDir * fTimeDelta;
 		else
 		{
-			nonActive_monster(m_sNum);
+			nonActive_monster();
 			cout << "몬스터 전투 종료 " << endl;
 			Set_Stop_Fight();
 		}
@@ -3122,6 +3122,26 @@ void CMonster::Set_Stop_Fight()
 	{
 		bool prev_state = m_bIsFighting;
 		atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsFighting), &prev_state, false);
+	}
+}
+
+void CMonster::active_monster()
+{
+	/* Monster가 활성화되어 있지 않을 경우 활성화 */
+	if (m_status == ST_NONACTIVE)
+	{
+		STATUS prev_state = m_status;
+		atomic_compare_exchange_strong(&m_status, &prev_state, ST_ACTIVE);
+	}
+}
+
+void CMonster::nonActive_monster()
+{
+	if (m_status != ST_NONACTIVE)
+	{
+		STATUS prev_state = m_status;
+		if (true == atomic_compare_exchange_strong(&m_status, &prev_state, ST_NONACTIVE))
+			m_vTempPos = m_vPos;
 	}
 }
 
