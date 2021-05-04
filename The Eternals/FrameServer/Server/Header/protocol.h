@@ -353,6 +353,7 @@ struct cs_packet_player_collision
 	char			type;
 
 	int				col_id;
+	int				damage;
 };
 
 struct cs_packet_chat 

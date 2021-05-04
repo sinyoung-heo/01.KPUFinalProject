@@ -5,6 +5,7 @@
 CCollisionTick::CCollisionTick()
 	: Engine::CGameObject()
 	, m_pInstancePoolMgr(CInstancePoolMgr::Get_Instance())
+	, m_pPacketMgr(CPacketMgr::Get_Instance())
 {
 }
 
@@ -86,7 +87,31 @@ _int CCollisionTick::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CCollisionTick::Process_Collision()
 {
+	for (auto& pDst : m_lstCollisionDst)
+	{
+		// Player Attack <---> Monster
+		if (L"CollisionTick_ThisPlayer" == m_wstrCollisionTag &&
+			L"Monster_SingleCollider" == pDst->Get_CollisionTag())
+		{
+			Set_IsReturnObject(true);
+			pDst->Get_BoundingSphere()->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 
+			// Player Attack to Monster
+			m_pPacketMgr->send_attackToMonster(pDst->Get_ServerNumber(), m_uiDamage);
+			cout << m_uiDamage << endl;
+		}
+		else if (L"CollisionTick_ThisPlayer" == m_wstrCollisionTag &&
+				 L"Monster_MultiCollider" == pDst->Get_CollisionTag())
+		{
+
+		}
+
+		// Monster Attack <---> ThisPlayer
+		else if (L"" == m_wstrCollisionTag)
+		{
+
+		}
+	}
 }
 
 

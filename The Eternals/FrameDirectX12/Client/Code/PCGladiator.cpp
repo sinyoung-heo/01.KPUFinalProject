@@ -238,6 +238,9 @@ _int CPCGladiator::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CPCGladiator::Process_Collision()
 {
+	if (g_bIsStageChange)
+		return;
+
 	for (auto& pDst : m_lstCollisionDst)
 	{
 		// Collision Monster
@@ -251,20 +254,17 @@ void CPCGladiator::Process_Collision()
 			Collision_MonsterMultiCollider(pDst->Get_ColliderList());
 
 		// Collision Stage Change
-		if (!g_bIsStageChange)
-		{
-			if (L"Portal_VelikaToBeach" == pDst->Get_CollisionTag())
-				Collision_PortalVelikaToBeach(pDst->Get_ColliderList());
+		if (L"Portal_VelikaToBeach" == pDst->Get_CollisionTag())
+			Collision_PortalVelikaToBeach(pDst->Get_ColliderList());
 
-			if (L"Portal_BeachToVelika" == pDst->Get_CollisionTag())
-				Collision_PortalBeachToVelika(pDst->Get_ColliderList());
+		if (L"Portal_BeachToVelika" == pDst->Get_CollisionTag())
+			Collision_PortalBeachToVelika(pDst->Get_ColliderList());
 
-			if (L"NPC_Merchant" == pDst->Get_CollisionTag())
-				Collision_Merchant(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
+		if (L"NPC_Merchant" == pDst->Get_CollisionTag())
+			Collision_Merchant(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
 
-			if (L"NPC_QUest" == pDst->Get_CollisionTag())
-				Collision_Quest(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
-		}
+		if (L"NPC_QUest" == pDst->Get_CollisionTag())
+			Collision_Quest(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
 	}
 }
 
@@ -674,8 +674,8 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 	KeyInput_Move(fTimeDelta);
 	KeyInput_Attack(fTimeDelta);
 
-	if (Engine::KEY_DOWN(DIK_M))
-		CPacketMgr::Get_Instance()->send_attackToMonster(5000);
+	//if (Engine::KEY_DOWN(DIK_M))
+	//	CPacketMgr::Get_Instance()->send_attackToMonster(5000);
 
 	//if (Engine::KEY_DOWN(DIK_P))
 	//{
@@ -1973,7 +1973,7 @@ void CPCGladiator::SetUp_CollisionTick(const _float& fTimeDelta)
 			if (nullptr != pCollisionTick)
 			{
 				pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
-				pCollisionTick->Set_Damage(m_pInfoCom->m_iMaxAttack);
+				pCollisionTick->Set_Damage(m_pInfoCom->Get_RandomDamage());
 				pCollisionTick->Set_LifeTime(0.25f);
 				pCollisionTick->Get_Transform()->m_vScale = _vec3(4.0f) * m_tCollisionTickDesc.fScaleOffset;
 				pCollisionTick->Get_Transform()->m_vPos   = vPos;
