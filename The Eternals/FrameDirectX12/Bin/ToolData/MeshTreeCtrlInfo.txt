@@ -33,6 +33,7 @@ StaticMesh|Plane|BumpTerrainMesh01
 StaticMesh|Plane|BumpWaterMesh00
 StaticMesh|Plane|PublicPlane00
 StaticMesh|publicEffect|IceStorm0
+StaticMesh|publicEffect|IceStorm1
 StaticMesh|publicEffect|publicSphere
 StaticMesh|publicEffect|publicSpline
 StaticMesh|Sample|DistortDisk

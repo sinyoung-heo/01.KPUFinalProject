@@ -1,11 +1,11 @@
-EffectPublic|5|..\..\Bin\Resource\ResourceStage\Texture\EffectPublic\%d.dds
+EffectPublic|7|..\..\Bin\Resource\ResourceStage\Texture\EffectPublic\%d.dds
 Bomb00|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb00\%d.dds
 Bomb01|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb01\%d.dds
 Bomb02|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb02\%d.dds
 Bomb03|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb03\%d.dds
 Bomb04|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb04\%d.dds
 Fire|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Fire\%d.dds
-Lightning00|2|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Lightning00\%d.dds
+Lightning00|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Lightning00\%d.dds
 Lightning01|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Lightning01\%d.dds
 Smoke0|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Smoke0\%d.dds
 Smoke1|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Smoke1\%d.dds
