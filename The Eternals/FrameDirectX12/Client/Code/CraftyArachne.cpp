@@ -25,11 +25,11 @@ HRESULT CCraftyArachne::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMe
 	m_pTransCom->m_vPos   = vPos;
 	m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(vPos));
 
-	//Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
-	//									   m_pTransCom->m_vScale,
-	//									   m_pMeshCom->Get_CenterPos(),
-	//									   m_pMeshCom->Get_MinVector(),
-	//									   m_pMeshCom->Get_MaxVector());
+	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
+										   m_pTransCom->m_vScale,
+										   m_pMeshCom->Get_CenterPos(),
+										   m_pMeshCom->Get_MinVector(),
+										   m_pMeshCom->Get_MaxVector());
 	Engine::CGameObject::SetUp_BoundingSphere(&(m_pTransCom->m_matWorld),
 											  m_pTransCom->m_vScale,
 											  _vec3(250.0f),
@@ -378,6 +378,26 @@ Engine::CGameObject* CCraftyArachne::Create(ID3D12Device* pGraphicDevice, ID3D12
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
+}
+
+CCraftyArachne** CCraftyArachne::Create_InstancePool(ID3D12Device* pGraphicDevice, 
+													 ID3D12GraphicsCommandList* pCommandList, 
+													 const _uint& uiInstanceCnt)
+{
+	CCraftyArachne** ppInstance = new (CCraftyArachne * [uiInstanceCnt]);
+
+	for (_uint i = 0; i < uiInstanceCnt; ++i)
+	{
+		ppInstance[i] = new CCraftyArachne(pGraphicDevice, pCommandList);
+		ppInstance[i]->m_uiInstanceIdx = i;
+		ppInstance[i]->Ready_GameObject(L"CraftyArachne",			// MeshTag
+										L"StageVelika_NaviMesh",	// NaviMeshTag
+										_vec3(0.05f, 0.05f, 0.05f),	// Scale
+										_vec3(0.0f),				// Angle
+										_vec3(AWAY_FROM_STAGE));	// Pos
+	}
+
+	return ppInstance;
 }
 
 void CCraftyArachne::Free()

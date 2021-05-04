@@ -1969,7 +1969,7 @@ void CPCGladiator::SetUp_CollisionTick(const _float& fTimeDelta)
 			_vec3 vPos = m_pTransCom->m_vPos + m_pTransCom->m_vDir * m_tCollisionTickDesc.fPosOffset;
 			vPos.y = 1.f;
 
-			CCollisionTick* pCollisionTick = m_pInstancePoolMgr->Pop_CollisionTickInstance();
+			CCollisionTick* pCollisionTick = static_cast<CCollisionTick*>(m_pInstancePoolMgr->Pop_CollisionTickInstance());
 			if (nullptr != pCollisionTick)
 			{
 				pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
@@ -2134,7 +2134,8 @@ Engine::CGameObject* CPCGladiator::Create(ID3D12Device* pGraphicDevice,
 
 void CPCGladiator::Free()
 {
-	m_pWeapon->Set_DeadGameObject();
+	if (nullptr != m_pWeapon)
+		m_pWeapon->Set_DeadGameObject();
 
 	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pDynamicCamera);

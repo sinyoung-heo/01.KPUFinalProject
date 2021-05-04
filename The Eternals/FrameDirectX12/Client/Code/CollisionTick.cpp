@@ -130,9 +130,9 @@ Engine::CGameObject* CCollisionTick::Create(ID3D12Device* pGraphicDevice, ID3D12
 	return pInstance;
 }
 
-CCollisionTick** CCollisionTick::Create_Instance(ID3D12Device* pGraphicDevice,
-												 ID3D12GraphicsCommandList* pCommandList, 
-												 const _uint& uiInstanceCnt)
+CCollisionTick** CCollisionTick::Create_InstancePool(ID3D12Device* pGraphicDevice,
+													 ID3D12GraphicsCommandList* pCommandList, 
+													 const _uint& uiInstanceCnt)
 {
 	CCollisionTick** ppInstance = new (CCollisionTick*[uiInstanceCnt]);
 

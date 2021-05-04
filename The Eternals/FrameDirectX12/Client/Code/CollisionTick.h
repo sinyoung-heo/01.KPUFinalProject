@@ -48,9 +48,9 @@ public:
 									   const _vec3& vPos,
 									   const _uint& uiDamage,
 									   const _float& fLifeTime);
-	static CCollisionTick** Create_Instance(ID3D12Device* pGraphicDevice,
-											ID3D12GraphicsCommandList* pCommandList,
-											const _uint& uiInstanceCnt);
+	static CCollisionTick** Create_InstancePool(ID3D12Device* pGraphicDevice,
+												ID3D12GraphicsCommandList* pCommandList,
+												const _uint& uiInstanceCnt);
 private:
 	virtual void Free();
 };

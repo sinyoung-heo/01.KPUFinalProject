@@ -199,6 +199,7 @@ void CCamera::Free()
 	Safe_Release(m_pShaderTexture);
 	Safe_Release(m_pShaderSkyBox);
 	Safe_Release(m_pShaderMesh);
+	Safe_Release(m_pShaderMeshEffect);
 	Safe_Release(m_pShaderSSAO);
 	Safe_Release(m_pShaderNPathDir);
 }
