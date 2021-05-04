@@ -17,6 +17,7 @@ Texture2D g_TexDepth : register(t2); // g_TexDepth
 Texture2D g_TexCrossFilterDepth : register(t3); //
 Texture2D g_TexSkyBox : register(t4); //
 Texture2D g_TexSkyBoxBright : register(t5); //
+Texture2D g_TexEffect : register(t6); //
 cbuffer cbShaderVariable : register(b0)
 {
     float4 g_float4 : packoffset(c0);
@@ -122,11 +123,12 @@ float4 PS_MAIN(VS_OUT ps_input) : SV_TARGET
             }
         }
 
+ 
     Out /= PATH, Out.w = 1;
     Out2 /= (Cnt *0.5),Out2.w = 1;
+  
     
-    Out3 = g_TexCrossFilterObject.Sample(g_samLinearClamp,ps_input.TexUV);
-    return Out + Out2 + Out3;
+    return Out + Out2;
 }
 
   //for (j = 0; j < 8; ++j) {

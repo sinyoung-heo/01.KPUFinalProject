@@ -3,18 +3,18 @@
 
 namespace Engine
 {
-	class CShaderMesh;
+	class CShaderMeshEffect;
 	class CMesh;
 	class CTexture;
 }
 
 class CDynamicCamera;
 
-class CWaterMeshObject : public Engine::CGameObject
+class CPublicSphere : public Engine::CGameObject
 {
 private:
-	explicit CWaterMeshObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CWaterMeshObject() = default; 
+	explicit CPublicSphere(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CPublicSphere() = default; 
 
 public:
 	// CGameObject을(를) 통해 상속됨
@@ -26,10 +26,8 @@ public:
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 
-
-	// MultiThread Rendering
-	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
-
+	virtual void Render_GameObject(const _float& fTimeDelta);
+	
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
 	void			Set_ConstantTable();
@@ -41,7 +39,7 @@ private:
 	[ Component ]
 	____________________________________________________________________________________________________________*/
 	Engine::CMesh*						m_pMeshCom                = nullptr;
-	Engine::CShaderMesh* m_pShaderCom = nullptr;
+	Engine::CShaderMeshEffect* m_pShaderCom = nullptr;
 	ID3D12DescriptorHeap* m_pDescriptorHeaps = nullptr;
 	/*__________________________________________________________________________________________________________
 	[ Value ]
@@ -53,6 +51,12 @@ private:
 	float m_fDeltatime2 = 0.f;
 	float m_fDeltatime3 = 0.f;
 	float m_fPatternMapDeltatime = 0.f;
+
+	//Temp
+	float   fFrameCnt = 8.f;
+	float	fCurFrame = 0.f;
+	float	fSceneCnt = 2.f;
+	float	fCurScene = 0.f;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

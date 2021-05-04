@@ -32,6 +32,10 @@ BumpTerrainMesh00|BumpTerrainMesh00.X|..\..\Bin\Resource\ResourceStage\StaticMes
 BumpTerrainMesh01|BumpTerrainMesh01.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpTerrainMesh01\
 BumpWaterMesh00|BumpWaterMesh00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpWaterMesh00\
 PublicPlane00|PublicPlane00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicPlane00\
+IceStorm0|IceStorm0.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\IceStorm0\
+IceStorm1|IceStorm1.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\IceStorm1\
+publicSphere|publicSphere.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSphere\
+publicSpline|publicSpline.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSpline\
 DistortDisk|DistortDisk.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\DistortDisk\
 LandMark|LandMark.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\LandMark\
 LandMarkBoundary|LandMarkBoundary.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\LandMarkBoundary\
@@ -169,3 +173,4 @@ VK_OBJ_Statu_01_02_SM|VK_OBJ_Statu_01_02_SM.X|..\..\Bin\Resource\ResourceStage\S
 VK_OBJ_Statu_02_SM|VK_OBJ_Statu_02_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_OBJ_Statu_02_SM\
 VK_OBJ_Statu_03_Body_SM|VK_OBJ_Statu_03_Body_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_OBJ_Statu_03_Body_SM\
 VK_OBJ_Statu_03_Wing_SM|VK_OBJ_Statu_03_Wing_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageVelika\VK_OBJ_Statu_03_Wing_SM\
+RainDrop|RainDrop.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Stage_Env\RainDrop\

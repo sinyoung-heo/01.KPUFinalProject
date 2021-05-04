@@ -29,7 +29,8 @@
 #include "SampleNPC.h"
 #include "WaterFall.h"
 #include "MagicCircle.h"
-
+#include "RainDrop.h"
+#include "PublicSphere.h"
 CStagePJO::CStagePJO(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
 {
@@ -279,14 +280,31 @@ HRESULT CStagePJO::Ready_LayerEnvironment(wstring wstrLayerTag)
 		_vec3(0, 0, 0));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PublicPlane00", pGameObj), E_FAIL);
 
-	//// Torch
-	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-									  L"Lightning00",						// TextureTag
-									  _vec3(5.f, 10.0f, 1.0f),		// Scale
-									  _vec3(0.0f, 0.0f, 0.0f),		// Angle
-									  _vec3(28.0f, 20.0f, 27.0f),	// Pos
-									  FRAME(8, 2, 16.0f));			// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Torch", pGameObj), E_FAIL);
+
+	pGameObj = CRainDrop::Create(m_pGraphicDevice, m_pCommandList,
+		L"RainDrop",
+		_vec3(0.03f),
+		_vec3(0.f, 0.0f, 0.0f),
+		_vec3(0, 0, 0));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"RainDrop", pGameObj), E_FAIL);
+
+
+	pGameObj = CPublicSphere::Create(m_pGraphicDevice, m_pCommandList,
+		L"IceStorm1",
+		_vec3(0.1f),
+		_vec3(0.f, 0.0f, 0.0f),
+		_vec3(0, 0, 0),_vec3(0,0,0));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"IceStorm1", pGameObj), E_FAIL);
+
+
+	////// Torch
+	//pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+	//								  L"Lightning00",						// TextureTag
+	//								  _vec3(5.f, 10.0f, 1.0f),		// Scale
+	//								  _vec3(0.0f, 0.0f, 0.0f),		// Angle
+	//								  _vec3(28.0f, 20.0f, 27.0f),	// Pos
+	//								  FRAME(8, 2, 16.0f));			// Sprite Image Frame
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Torch", pGameObj), E_FAIL);
 	return S_OK;
 }
 

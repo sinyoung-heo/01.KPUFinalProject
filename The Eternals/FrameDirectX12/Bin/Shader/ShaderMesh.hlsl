@@ -693,16 +693,3 @@ PS_OUT PS_WATERFALL(VS_OUT ps_input) : SV_TARGET
 								 1.0f, 1.0f);
     return (ps_output);
 }
-
-float4 PS_MAGIC_CIRCLE(VS_OUT ps_input):SV_Target
-{
-  
-	// Diffuse
-    float4 Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
-    float4 TexNormal = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
-    float4 Spec = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
-
-    float4 color = Diffuse + TexNormal;
-    color.xyz += Spec.xyz;
-    return color;
-}

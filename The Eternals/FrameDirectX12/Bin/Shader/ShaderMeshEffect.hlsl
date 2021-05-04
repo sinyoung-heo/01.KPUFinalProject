@@ -103,7 +103,6 @@ VS_OUT VS_MAIN(VS_IN vs_input)
 	
     return (vs_output);
 }
-
 struct PS_OUT
 {
     float4 Effect : SV_TARGET0;
@@ -111,14 +110,38 @@ struct PS_OUT
 PS_OUT PS_MAGIC_CIRCLE(VS_OUT ps_input) : SV_Target
 {
     PS_OUT ps_out = (PS_OUT) 0;
-	// Diffuse
     float4 Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 TexNormal = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 Spec = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
-
-    float4 color = Diffuse + TexNormal;
-    color.xyz += Spec.xyz;
-	
+    float4 color = lerp(lerp(Diffuse, Spec, 0.5), TexNormal, 0.5);
     ps_out.Effect = color;
     return ps_out;
+}
+
+PS_OUT PS_RAINDROP(VS_OUT ps_input) : SV_TARGET
+{
+   
+    PS_OUT ps_output = (PS_OUT) 0;
+	
+	// Diffuse
+    ps_output.Effect = (g_TexDiffuse.Sample(g_samLinearWrap, ps_input.AniUV * 10.f));
+	
+    return (ps_output);
+}
+
+float4 PS_EFFECT_SHPERE(VS_OUT ps_input) : SV_Target
+{
+    //float u = (ps_input.TexUV.x / g_vEmissiveColor.x) + g_vEmissiveColor.z * (1.0f / g_vEmissiveColor.x);
+    //float v = (ps_input.TexUV.y / g_vEmissiveColor.y) + g_vEmissiveColor.w * (1.0f / g_vEmissiveColor.y);
+	
+   
+   // float2 TexUV = float2((u + g_fOffset1*0.002f),( v + g_fOffset1*0.0005f));
+   // TexUV.x *= 2.f;
+    float2 TexUV = float2(ps_input.TexUV.x, ps_input.TexUV.y);
+    clip(ps_input.TexUV.y + g_fOffset1);
+    float4 Color = g_TexDiffuse.Sample(g_samLinearWrap, TexUV);
+   
+ 
+    float4 Color2 = float4(1, 1, 1, 1);
+    return (Color);
 }

@@ -184,8 +184,7 @@ void CCamera::Set_ConstantTable()
 	//ShaderNPathDir
 
 	tCB_ShaderVariable.vFloat4.x += CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta");
-	if (tCB_ShaderVariable.vFloat4.x >= 1)
-		tCB_ShaderVariable.vFloat4.x = 0.f;
+	
 
 	tCB_ShaderVariable.vFloat4.y = m_tProjInfo.fFarZ;
 	m_pShaderNPathDir->Get_UploadBuffer_ShaderVariable()->CopyData(0, tCB_ShaderVariable);
