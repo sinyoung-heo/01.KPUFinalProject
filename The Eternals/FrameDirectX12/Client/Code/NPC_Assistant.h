@@ -80,6 +80,11 @@ public:
 									   const _vec3& vScale,
 									   const _vec3& vAngle,
 									   const _vec3& vPos);
+
+	static CNPC_Assistant** Create_InstancePool(ID3D12Device* pGraphicDevice,
+												ID3D12GraphicsCommandList* pCommandList, 
+												wstring wstrMeshTag,
+												const _uint& uiInstanceCnt);
 private:
 	virtual void Free();
 };

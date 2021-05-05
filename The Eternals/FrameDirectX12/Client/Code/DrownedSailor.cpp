@@ -68,8 +68,15 @@ _int CDrownedSailor::Update_GameObject(const _float& fTimeDelta)
 	
 	if (m_bIsReturn)
 	{
+		m_bIsResetNaviMesh = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterDrownedSailorPool(), m_uiInstanceIdx);
 		return RETURN_OBJ;
+	}
+
+	if (!m_bIsResetNaviMesh)
+	{
+		m_bIsResetNaviMesh = true;
+		m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
 	}
 
 	// Angle Linear Interpolation

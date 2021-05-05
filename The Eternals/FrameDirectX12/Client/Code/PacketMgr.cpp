@@ -404,7 +404,8 @@ void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
 	/*__________________________________________________________________________________________________________
 	[ GameLogic Object(NPC) »ý¼º ]
 	____________________________________________________________________________________________________________*/
-	Engine::CGameObject* pGameObj = nullptr;
+	// Engine::CGameObject* pGameObj = nullptr;
+	Engine::CGameObject* pInstance = nullptr;
 
 	wstring wstrNaviMeshTag;
 	if (packet->naviType == STAGE_VELIKA)
@@ -414,101 +415,150 @@ void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
 	if (packet->npcNum == NPC_CHICKEN || packet->npcNum == NPC_CAT || packet->npcNum == NPC_AMAN_BOY)
 	{
 		wstring wstrMeshTag;
-		if (packet->npcNum == NPC_CHICKEN)
-			wstrMeshTag = L"Chicken";
-		else if (packet->npcNum == NPC_CAT)
-			wstrMeshTag = L"Cat";
-		else if (packet->npcNum == NPC_AMAN_BOY)
-			wstrMeshTag = L"Aman_boy";
 
-		pGameObj = CNPC_Walker::Create(m_pGraphicDevice, m_pCommandList,
-									   wstrMeshTag,												// MeshTag
-									   wstrNaviMeshTag,											// NaviMeshTag
-									   _vec3(0.05f, 0.05f, 0.05f),								// Scale
-									   _vec3(packet->angleX, packet->angleY, packet->angleZ),	// Angle
-									   _vec3(packet->posX, packet->posY, packet->posZ));
+		if (packet->npcNum == NPC_CHICKEN)
+		{
+			wstrMeshTag = L"Chicken";
+			pInstance = Pop_Instance(m_pInstancePoolMgr->Get_NPCChickenPool());
+		}
+		else if (packet->npcNum == NPC_CAT)
+		{
+			wstrMeshTag = L"Cat";
+			pInstance = Pop_Instance(m_pInstancePoolMgr->Get_NPCCatPool());
+		}
+		else if (packet->npcNum == NPC_AMAN_BOY)
+		{
+			wstrMeshTag = L"Aman_boy";
+			pInstance = Pop_Instance(m_pInstancePoolMgr->Get_NPCAmanBoyPool());
+		}
+
+		//pGameObj = CNPC_Walker::Create(m_pGraphicDevice, m_pCommandList,
+		//							   wstrMeshTag,												// MeshTag
+		//							   wstrNaviMeshTag,											// NaviMeshTag
+		//							   _vec3(0.05f, 0.05f, 0.05f),								// Scale
+		//							   _vec3(packet->angleX, packet->angleY, packet->angleZ),	// Angle
+		//							   _vec3(packet->posX, packet->posY, packet->posZ));
 	}
 	/* NPC - Assistant */
 	else if (packet->npcNum == NPC_POPORI_BOY)
 	{
-		pGameObj = CNPC_Assistant::Create(m_pGraphicDevice, m_pCommandList,
-									   L"Popori_boy",											// MeshTag
-									   wstrNaviMeshTag,											// NaviMeshTag
-									   _vec3(0.05f, 0.05f, 0.05f),								// Scale
-									   _vec3(packet->angleX, packet->angleY, packet->angleZ),	// Angle
-									   _vec3(packet->posX, packet->posY, packet->posZ));
+		pInstance = Pop_Instance(m_pInstancePoolMgr->Get_NPCAssistantPool());
+		//pGameObj = CNPC_Assistant::Create(m_pGraphicDevice, m_pCommandList,
+		//							   L"Popori_boy",											// MeshTag
+		//							   wstrNaviMeshTag,											// NaviMeshTag
+		//							   _vec3(0.05f, 0.05f, 0.05f),								// Scale
+		//							   _vec3(packet->angleX, packet->angleY, packet->angleZ),	// Angle
+		//							   _vec3(packet->posX, packet->posY, packet->posZ));
 	}
 	/* NPC - Stander */
 	else if (packet->npcNum == NPC_VILLAGERS || packet->npcNum == NPC_BARAKA_EXTRACTOR)
 	{
 		wstring wstrMeshTag;
 		if (packet->npcNum == NPC_VILLAGERS)
+		{
 			wstrMeshTag = L"NPC_Villagers";
+			pInstance = Pop_Instance(m_pInstancePoolMgr->Get_NPCStanderVillagersPool());
+		}
 		else if (packet->npcNum == NPC_BARAKA_EXTRACTOR)
+		{
 			wstrMeshTag = L"Baraka_M_Extractor";
+			pInstance = Pop_Instance(m_pInstancePoolMgr->Get_NPCStanderBarakaPool());
+		}
 
-		pGameObj = CNPC_Stander::Create(m_pGraphicDevice, m_pCommandList,
-										  wstrMeshTag,												// MeshTag
-										  wstrNaviMeshTag,											// NaviMeshTag
-										  _vec3(0.05f, 0.05f, 0.05f),								// Scale
-										  _vec3(packet->angleX, packet->angleY, packet->angleZ),	// Angle
-										  _vec3(packet->posX, packet->posY, packet->posZ));
+		//pGameObj = CNPC_Stander::Create(m_pGraphicDevice, m_pCommandList,
+		//								  wstrMeshTag,												// MeshTag
+		//								  wstrNaviMeshTag,											// NaviMeshTag
+		//								  _vec3(0.05f, 0.05f, 0.05f),								// Scale
+		//								  _vec3(packet->angleX, packet->angleY, packet->angleZ),	// Angle
+		//								  _vec3(packet->posX, packet->posY, packet->posZ));
 	}
 	/* NPC - Merchant */
 	else if (packet->npcNum == NPC_POPORI_MERCHANT || packet->npcNum == NPC_BARAKA_MERCHANT || packet->npcNum == NPC_BARAKA_MYSTELLIUM)
 	{
 		wstring wstrMeshTag;
 		if (packet->npcNum == NPC_POPORI_MERCHANT)
+		{
 			wstrMeshTag = L"Popori_M_Merchant";
+			pInstance = Pop_Instance(m_pInstancePoolMgr->Get_NPCMerchant_Popori_M_MerchantPool());
+		}
 		else if (packet->npcNum == NPC_BARAKA_MERCHANT)
+		{
 			wstrMeshTag = L"Baraka_M_Merchant";
+			pInstance = Pop_Instance(m_pInstancePoolMgr->Get_NPCMerchant_Baraka_M_MerchantPool());
+		}
 		else if (packet->npcNum == NPC_BARAKA_MYSTELLIUM)
+		{
 			wstrMeshTag = L"Baraka_M_Mystellium";
+			pInstance = Pop_Instance(m_pInstancePoolMgr->Get_NPCMerchant_Baraka_M_MystelliumPool());
+		}
 
-		pGameObj = CNPC_Merchant::Create(m_pGraphicDevice, m_pCommandList,
-										 wstrMeshTag,												// MeshTag
-										 wstrNaviMeshTag,											// NaviMeshTag
-										 _vec3(0.05f, 0.05f, 0.05f),								// Scale
-										 _vec3(packet->angleX, packet->angleY, packet->angleZ),		// Angle
-										 _vec3(packet->posX, packet->posY, packet->posZ));
+		static_cast<CNPC_Merchant*>(pInstance)->Set_NPCNumber(packet->npcNum);
 
-		static_cast<CNPC_Merchant*>(pGameObj)->Set_NPCNumber(packet->npcNum);
+		//pGameObj = CNPC_Merchant::Create(m_pGraphicDevice, m_pCommandList,
+		//								 wstrMeshTag,												// MeshTag
+		//								 wstrNaviMeshTag,											// NaviMeshTag
+		//								 _vec3(0.05f, 0.05f, 0.05f),								// Scale
+		//								 _vec3(packet->angleX, packet->angleY, packet->angleZ),		// Angle
+		//								 _vec3(packet->posX, packet->posY, packet->posZ));
+
+		//static_cast<CNPC_Merchant*>(pGameObj)->Set_NPCNumber(packet->npcNum);
 	}
 	/* NPC - Quest */
 	else if (packet->npcNum == NPC_CASTANIC_LSMITH)
 	{
-		pGameObj = CNPC_Quest::Create(m_pGraphicDevice, m_pCommandList,
-									  L"Castanic_M_Lsmith",									    // MeshTag
-									  wstrNaviMeshTag,											// NaviMeshTag
-									  _vec3(0.07f, 0.07f, 0.07f),								// Scale
-									  _vec3(packet->angleX, packet->angleY, packet->angleZ),	// Angle
-									  _vec3(packet->posX, packet->posY, packet->posZ));
+		pInstance = Pop_Instance(m_pInstancePoolMgr->Get_NPCQuestPool());
+		static_cast<CNPC_Quest*>(pInstance)->Set_NPCNumber(packet->npcNum);
 
-		static_cast<CNPC_Merchant*>(pGameObj)->Set_NPCNumber(packet->npcNum);
+		//pGameObj = CNPC_Quest::Create(m_pGraphicDevice, m_pCommandList,
+		//							  L"Castanic_M_Lsmith",									    // MeshTag
+		//							  wstrNaviMeshTag,											// NaviMeshTag
+		//							  _vec3(0.07f, 0.07f, 0.07f),								// Scale
+		//							  _vec3(packet->angleX, packet->angleY, packet->angleZ),	// Angle
+		//							  _vec3(packet->posX, packet->posY, packet->posZ));
+
+		//static_cast<CNPC_Quest*>(pGameObj)->Set_NPCNumber(packet->npcNum);
 	}
 	/* NPC - Children */
 	else if (packet->npcNum == NPC_HUMAN_BOY || packet->npcNum == NPC_HUMAN_GIRL || packet->npcNum == NPC_HIGHELF_GIRL)
 	{
 		wstring wstrMeshTag;
 		if (packet->npcNum == NPC_HUMAN_BOY)
+		{
 			wstrMeshTag = L"Human_boy";
+			pInstance = Pop_Instance(m_pInstancePoolMgr->Get_NPCChildren_HumanBoyPool());
+		}
 		else if (packet->npcNum == NPC_HUMAN_GIRL)
+		{
 			wstrMeshTag = L"Human_girl";
+			pInstance = Pop_Instance(m_pInstancePoolMgr->Get_NPCChildren_HumanGirlPool());
+		}
 		else if (packet->npcNum == NPC_HIGHELF_GIRL)
+		{
 			wstrMeshTag = L"Highelf_girl";
+			pInstance = Pop_Instance(m_pInstancePoolMgr->Get_NPCChildren_HighelfGirlPool());
+		}
 
-		pGameObj = CNPC_Children::Create(m_pGraphicDevice, m_pCommandList,
-										 wstrMeshTag,												// MeshTag
-										 wstrNaviMeshTag,											// NaviMeshTag
-										 _vec3(0.07f, 0.07f, 0.07f),								// Scale
-										 _vec3(packet->angleX, packet->angleY, packet->angleZ),		// Angle
-										 _vec3(packet->posX, packet->posY, packet->posZ));
+		//pGameObj = CNPC_Children::Create(m_pGraphicDevice, m_pCommandList,
+		//								 wstrMeshTag,												// MeshTag
+		//								 wstrNaviMeshTag,											// NaviMeshTag
+		//								 _vec3(0.07f, 0.07f, 0.07f),								// Scale
+		//								 _vec3(packet->angleX, packet->angleY, packet->angleZ),		// Angle
+		//								 _vec3(packet->posX, packet->posY, packet->posZ));
 	}
 
+	//pGameObj->Set_ServerNumber(packet->id);
+	//pGameObj->Set_OType(packet->o_type);
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"NPC", pGameObj), E_FAIL);
 
-	pGameObj->Set_ServerNumber(packet->id);
-	pGameObj->Set_OType(packet->o_type);
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"NPC", pGameObj), E_FAIL);
+	if (nullptr != pInstance)
+	{
+		pInstance->Get_Transform()->m_vAngle = _vec3(packet->angleX, packet->angleY, packet->angleZ);
+		pInstance->Get_Transform()->m_vPos   = _vec3(packet->posX, packet->posY, packet->posZ);
+		pInstance->Set_ServerNumber(packet->id);
+		pInstance->Set_OType(packet->o_type);
+
+		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"NPC", pInstance);
+	}
 }
 
 void CPacketMgr::Change_Stance_Others(sc_packet_stance_change* packet, int& retflag)
