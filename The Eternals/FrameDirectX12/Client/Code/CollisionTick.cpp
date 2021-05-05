@@ -57,7 +57,7 @@ _int CCollisionTick::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bIsReturn)
 	{
-		m_pInstancePoolMgr->Return_CollisionTickInstance(m_uiInstanceIdx);
+		Return_Instance(m_pInstancePoolMgr->Get_CollisionTickPool(), m_uiInstanceIdx);
 		return RETURN_OBJ;
 	}
 
@@ -98,7 +98,6 @@ void CCollisionTick::Process_Collision()
 
 			// Player Attack to Monster
 			m_pPacketMgr->send_attackToMonster(pDst->Get_ServerNumber(), m_uiDamage);
-			cout << m_uiDamage << endl;
 		}
 		else if (L"CollisionTick_ThisPlayer" == m_wstrCollisionTag &&
 				 L"Monster_MultiCollider" == pDst->Get_CollisionTag())

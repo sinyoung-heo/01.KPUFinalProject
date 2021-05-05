@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Crab.h"
-
 #include "GraphicDevice.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
@@ -8,6 +7,7 @@
 #include "Font.h"
 #include "RenderTarget.h"
 #include "TimeMgr.h"
+#include "InstancePoolMgr.h"
 
 CCrab::CCrab(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -67,6 +67,12 @@ _int CCrab::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 	
+	if (m_bIsReturn)
+	{
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterCrabPool(), m_uiInstanceIdx);
+		return RETURN_OBJ;
+	}
+
 	// Angle Linear Interpolation
 	SetUp_AngleInterpolation(fTimeDelta);
 	

@@ -1969,7 +1969,7 @@ void CPCGladiator::SetUp_CollisionTick(const _float& fTimeDelta)
 			_vec3 vPos = m_pTransCom->m_vPos + m_pTransCom->m_vDir * m_tCollisionTickDesc.fPosOffset;
 			vPos.y = 1.f;
 
-			CCollisionTick* pCollisionTick = static_cast<CCollisionTick*>(m_pInstancePoolMgr->Pop_CollisionTickInstance());
+			CCollisionTick* pCollisionTick = static_cast<CCollisionTick*>(Pop_Instance(m_pInstancePoolMgr->Get_CollisionTickPool()));
 			if (nullptr != pCollisionTick)
 			{
 				pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");

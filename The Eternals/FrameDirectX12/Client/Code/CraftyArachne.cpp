@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CraftyArachne.h"
-
+#include "InstancePoolMgr.h"
 #include "GraphicDevice.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
@@ -65,6 +65,12 @@ _int CCraftyArachne::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 	
+	if (m_bIsReturn)
+	{
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterCraftyArachnePool(), m_uiInstanceIdx);
+		return RETURN_OBJ;
+	}
+
 	// Angle Linear Interpolation
 	SetUp_AngleInterpolation(fTimeDelta);
 	

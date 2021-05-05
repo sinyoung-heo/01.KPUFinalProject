@@ -12,15 +12,6 @@ class CGiantBeetle;
 class CGiantMonkey;
 class CCraftyArachne;
 
-template<class T1>
-struct INSTANCE_POOL_DESC
-{
-	T1**	ppInstances       = nullptr;
-	_uint	uiInstanceSize    = 0;
-	_uint	uiCurrentIdx      = 0;
-
-};
-
 class CInstancePoolMgr : public Engine::CBase
 {
 	DECLARE_SINGLETON(CInstancePoolMgr)
@@ -30,11 +21,16 @@ private:
 	virtual ~CInstancePoolMgr() = default;
 
 public:
-	void Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	INSTANCE_POOL_DESC<CCollisionTick>* Get_CollisionTickPool()			{ return m_pCollisionTickPool; }
+	INSTANCE_POOL_DESC<CCrab>*			Get_MonsterCrabPool()			{ return m_pMonsterCrabPool; }
+	INSTANCE_POOL_DESC<CCloderA>*		Get_MonsterCloderAPool()		{ return m_pMonsterCloderAPool; }
+	INSTANCE_POOL_DESC<CMonkey>*		Get_MonsterMonkeyPool()			{ return m_pMonsterMonkeyPool; }
+	INSTANCE_POOL_DESC<CDrownedSailor>* Get_MonsterDrownedSailorPool()	{ return m_pMonsterDrownedSailorPool; }
+	INSTANCE_POOL_DESC<CGiantBeetle>*	Get_MonsterGiantBeetlePool()	{ return m_pMonsterGiantBeetlePool; }
+	INSTANCE_POOL_DESC<CGiantMonkey>*	Get_MonsterGiantMonkeyPool()	{ return m_pMonsterGiantMonkeyPool; }
+	INSTANCE_POOL_DESC<CCraftyArachne>* Get_MonsterCraftyArachnePool()	{ return m_pMonsterCraftyArachnePool; }
 
-	// CollisionTick
-	Engine::CGameObject*	Pop_CollisionTickInstance();
-	void			Return_CollisionTickInstance(const _uint& uiInstanceIdx);
+	void Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 
 private:
 	// CollisionTick
@@ -52,4 +48,3 @@ private:
 private:
 	virtual void Free();
 };
-

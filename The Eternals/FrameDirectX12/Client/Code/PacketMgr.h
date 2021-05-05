@@ -11,6 +11,8 @@ namespace Engine
 	class CRenderer;
 }
 
+class CInstancePoolMgr;
+
 class CPacketMgr : public Engine::CBase
 {
 	DECLARE_SINGLETON(CPacketMgr)
@@ -81,6 +83,8 @@ private:
 	Engine::CRenderer*			m_pRenderer		 = nullptr;
 	ID3D12Device*				m_pGraphicDevice = nullptr;
 	ID3D12GraphicsCommandList*	m_pCommandList   = nullptr;
+
+	CInstancePoolMgr*			m_pInstancePoolMgr = nullptr;
 
 	MVKEY m_eCurKey = MVKEY::K_END;
 	MVKEY m_ePreKey = MVKEY::K_END;
