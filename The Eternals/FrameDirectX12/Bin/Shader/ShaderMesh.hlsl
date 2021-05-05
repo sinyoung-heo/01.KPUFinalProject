@@ -423,7 +423,10 @@ struct PS_OUT2
 PS_OUT2 PS_CROSSFILTER(VS_OUT ps_input) : SV_TARGET
 {
     PS_OUT2 ps_out2 ;
-    ps_out2.Color = float4(g_vLightPos.x, g_vLightPos.y, g_vLightPos.z, 1.f);
+	
+    float4 Color = float4(g_vEmissiveColor.x, g_vEmissiveColor.y, g_vEmissiveColor.z, 1.f);
+    Color.xyz = mul(Color.xyz, (1 - g_fDissolve)*0.5f);
+    ps_out2.Color = float4(Color.xyz, 1.f);
     ps_out2.Depth = float4(ps_input.ProjPos.z / ps_input.ProjPos.w, // (posWVP.z / posWVP.w) : Proj 영역의 Z.
 								 ps_input.ProjPos.w / g_fProjFar,	// posWVP.w / Far : 0~1로 만든 View영역의 Z.
 								 1.0f, 1.0f);

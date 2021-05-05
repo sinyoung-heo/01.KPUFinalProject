@@ -124,25 +124,27 @@ float4 PS_MAIN(VS_OUT ps_input) : SV_TARGET
         }
 
  
+    for (j = 0; j < 8; ++j)
+    {
+        float fTheta = (fc + 2.f * j * 3.14) / 8;
+        float x = rA * cos(fTheta) / 800;
+        float y = rB * sin(fTheta) / 450;
+        float4 m_StarVal[5];
+        for (int i = 0; i < 5; ++i)
+        {
+            m_StarVal[i].x = x *i;
+            m_StarVal[i].y = y *i;
+            m_StarVal[i].z = exp(-i * i / 10);
+            UV.x = ps_input.TexUV.x + m_StarVal[i].x * 1.25f;
+            UV.y = ps_input.TexUV.y + m_StarVal[i].y * 1.25f;
+            UV = saturate(UV);
+            Out3 += g_TexCrossFilterObject.Sample(g_samLinearClamp, UV);
+        }
+    }
     Out /= PATH, Out.w = 1;
     Out2 /= (Cnt *0.5),Out2.w = 1;
-  
+    Out3 /= 64, Out3.w = 1;
     
-    return Out + Out2;
+    return Out + Out2 + Out3;
 }
 
-  //for (j = 0; j < 8; ++j) {
-    //    float fTheta = (fc + 2.f * j * 3.14) / 8;
-    //    float x = rA * cos(fTheta) / 800;
-    //    float y = rB * sin(fTheta) / 450;
-    //    float4 m_StarVal[5];
-    //    for (int i = 0; i < 5; ++i)  {
-    //        m_StarVal[i].x = x * i;
-    //        m_StarVal[i].y = y * i;
-    //        m_StarVal[i].z = exp(-i * i / 10);
-    //        UV.x = ps_input.TexUV.x + m_StarVal[i].x * 1.25f;
-    //        UV.y = ps_input.TexUV.y + m_StarVal[i].y * 1.25f;
-    //        UV = saturate(UV);
-    //        Out2 += g_TexCrossFilterObject.Sample(g_samLinearClamp, UV);
-    //    }
-    //}

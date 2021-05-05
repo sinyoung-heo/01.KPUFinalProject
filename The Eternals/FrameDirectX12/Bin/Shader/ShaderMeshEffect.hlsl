@@ -75,9 +75,13 @@ ________________________________________________________________________________
 VS_OUT VS_MAIN(VS_IN vs_input)
 {
     VS_OUT vs_output = (VS_OUT) 0;
-	
+  
+    float4x4 matworld = g_matWorld;
+    //matworld._11 *= g_fOffset1;
+    //matworld._22 *= g_fOffset1;
+    //matworld._33 *= g_fOffset1;
     float4x4 matWV, matWVP;
-    matWV = mul(g_matWorld, g_matView);
+    matWV = mul(matworld, g_matView);
     matWVP = mul(matWV, g_matProj);
 	
     vs_output.Pos = mul(float4(vs_input.Pos, 1.0f), matWVP);
@@ -85,17 +89,18 @@ VS_OUT VS_MAIN(VS_IN vs_input)
     vs_output.Normal = vs_input.Normal;
 	
 	// N
-    float3 WorldNormal = mul(vs_input.Normal, (float3x3) g_matWorld);
+    float3 WorldNormal = mul(vs_input.Normal, (float3x3) matworld);
+   
     vs_output.N = normalize(WorldNormal);
 	
 	// T
     float3 Tangent = cross(float3(0.f, 1.f, 0.f), (float3) vs_input.Normal);
-    float3 WorldTangent = mul(Tangent, (float3x3) g_matWorld);
+    float3 WorldTangent = mul(Tangent, (float3x3) matworld);
     vs_output.T = normalize(WorldTangent);
 	
 	// B
     float3 Binormal = cross((float3) vs_input.Normal, Tangent);
-    float3 WorldBinormal = mul(Binormal, (float3x3) g_matWorld);
+    float3 WorldBinormal = mul(Binormal, (float3x3) matworld);
     vs_output.B = normalize(WorldBinormal);
 	
 	// ProjPos
@@ -133,8 +138,6 @@ float4 PS_EFFECT_SHPERE(VS_OUT ps_input) : SV_Target
 {
     //float u = (ps_input.TexUV.x / g_vEmissiveColor.x) + g_vEmissiveColor.z * (1.0f / g_vEmissiveColor.x);
     //float v = (ps_input.TexUV.y / g_vEmissiveColor.y) + g_vEmissiveColor.w * (1.0f / g_vEmissiveColor.y);
-	
-   
    // float2 TexUV = float2((u + g_fOffset1*0.002f),( v + g_fOffset1*0.0005f));
    // TexUV.x *= 2.f;
     float2 TexUV = float2(ps_input.TexUV.x, ps_input.TexUV.y);
@@ -144,4 +147,25 @@ float4 PS_EFFECT_SHPERE(VS_OUT ps_input) : SV_Target
  
     float4 Color2 = float4(1, 1, 1, 1);
     return (Color);
+}
+float4 PS_ICESTORM(VS_OUT ps_input) : SV_Target
+{
+    float4 D = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 N = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
+    
+    float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 E = float4(0, 0, 0, 1);
+    float Normal_fDissolve = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV).r;
+
+    if ((0.05f > (1.f - g_fDissolve) - Normal_fDissolve) && ((1.f - g_fDissolve) - Normal_fDissolve) > 0.f)
+    {
+        E = N;
+    }
+    if ((0.05f > (1.f - g_fOffset1) - Normal_fDissolve) && ((1.f - g_fOffset1) - Normal_fDissolve) > 0.f)
+    {
+        E += N;
+    }
+    clip((1.f - g_fDissolve) - Normal_fDissolve);
+    
+    return lerp((D + N), E,0.5f);
 }
