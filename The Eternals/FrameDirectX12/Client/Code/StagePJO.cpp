@@ -31,6 +31,7 @@
 #include "MagicCircle.h"
 #include "RainDrop.h"
 #include "PublicSphere.h"
+#include "IceStorm.h"
 CStagePJO::CStagePJO(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
 {
@@ -83,7 +84,18 @@ _int CStagePJO::Update_Scene(const _float& fTimeDelta)
 	}
 	else if (Engine::KEY_DOWN(DIK_0))
 	{
-		m_pObjectMgr->Set_CurrentStage(Engine::STAGEID::STAGE_BEACH);
+		Engine::CGameObject* pGameObj = nullptr;
+
+		for (int i = 0; i < 36; i++)
+		{
+			pGameObj = CIceStorm::Create(m_pGraphicDevice, m_pCommandList,
+				L"IceStorm1",
+				_vec3(0.f),
+				_vec3(0.f, 0.0f, 0.0f),
+				_vec3(0, 0, 0), 5.f, XMConvertToRadians(i * 10.f));
+			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"IceStorm1", pGameObj), E_FAIL);
+		}
+		//m_pObjectMgr->Set_CurrentStage(Engine::STAGEID::STAGE_BEACH);
 	}
 
 	// MouseCursorMgr
@@ -296,7 +308,15 @@ HRESULT CStagePJO::Ready_LayerEnvironment(wstring wstrLayerTag)
 		_vec3(0, 0, 0),_vec3(0,0,0));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"IceStorm1", pGameObj), E_FAIL);
 
-
+	for (int i = 0; i < 36; i++)
+	{
+		pGameObj = CIceStorm::Create(m_pGraphicDevice, m_pCommandList,
+			L"IceStorm1",
+			_vec3(0.f),
+			_vec3(0.f, 0.0f, 0.0f),
+			_vec3(0, 0, 0), 5.f, XMConvertToRadians(i * 10.f));
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"IceStorm1", pGameObj), E_FAIL);
+	}
 	////// Torch
 	//pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
 	//								  L"Lightning00",						// TextureTag

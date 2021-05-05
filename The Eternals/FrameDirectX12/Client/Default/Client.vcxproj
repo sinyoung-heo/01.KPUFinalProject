@@ -184,6 +184,7 @@
     <ClInclude Include="..\Code\FadeInOut.h" />
     <ClInclude Include="..\Code\GiantBeetle.h" />
     <ClInclude Include="..\Code\GiantMonkey.h" />
+    <ClInclude Include="..\Code\IceStorm.h" />
     <ClInclude Include="..\Code\InstancePoolMgr.h" />
     <ClInclude Include="..\Code\MagicCircle.h" />
     <ClInclude Include="..\Code\Monkey.h" />
@@ -272,6 +273,7 @@
     <ClCompile Include="..\Code\GameUIRoot.cpp" />
     <ClCompile Include="..\Code\GiantBeetle.cpp" />
     <ClCompile Include="..\Code\GiantMonkey.cpp" />
+    <ClCompile Include="..\Code\IceStorm.cpp" />
     <ClCompile Include="..\Code\InstancePoolMgr.cpp" />
     <ClCompile Include="..\Code\MagicCircle.cpp" />
     <ClCompile Include="..\Code\MainMenuEquipment.cpp" />
