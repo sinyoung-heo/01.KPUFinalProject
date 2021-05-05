@@ -605,6 +605,7 @@ void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 				else if (true == CObjMgr::GetInstance()->Is_Monster(obj_num))
 				{
 					CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", obj_num));
+					if (pMonster->Get_Dead() == true) continue;
 
 					// 시야 내에 없다면 시야 목록에 등록X.
 					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pMonster))
@@ -804,6 +805,7 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 				else if (true == CObjMgr::GetInstance()->Is_Monster(obj_num))
 				{
 					CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", obj_num));
+					if (pMonster->Get_Dead() == true) continue;
 
 					// 시야 내에 없다면 시야 목록에 등록X.
 					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pMonster))
@@ -1057,6 +1059,7 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx, 
 				else if (true == CObjMgr::GetInstance()->Is_Monster(obj_num))
 				{
 					CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", obj_num));
+					if (pMonster->Get_Dead() == true) continue;
 
 					// 시야 내에 없다면 시야 목록에 등록X.
 					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pMonster))
@@ -1256,6 +1259,7 @@ void process_attack_stop(int id, const _vec3& _vDir, const _vec3& _vPos, int ani
 				else if (true == CObjMgr::GetInstance()->Is_Monster(obj_num))
 				{
 					CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", obj_num));
+					if (pMonster->Get_Dead() == true) continue;
 
 					// 시야 내에 없다면 시야 목록에 등록X.
 					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pMonster))

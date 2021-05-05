@@ -677,9 +677,6 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 	if (Engine::KEY_DOWN(DIK_M))
 	{
 		CPacketMgr::Get_Instance()->send_attackToMonster(5000);
-		CPacketMgr::Get_Instance()->send_attackToMonster(5001);
-		CPacketMgr::Get_Instance()->send_attackToMonster(5002);
-		CPacketMgr::Get_Instance()->send_attackToMonster(5003);
 	}
 
 	if (Engine::KEY_DOWN(DIK_P))
