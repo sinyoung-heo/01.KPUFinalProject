@@ -43,7 +43,7 @@ namespace Cloder
 {
 	constexpr int ATTACK_POKE	= 4;
 	constexpr int ATTACK_SWING	= 5;
-	constexpr int ATTACK_DEATH	= 6;
+	constexpr int DEATH			= 6;
 
 	constexpr int NUM_ANIMATION = 7;
 

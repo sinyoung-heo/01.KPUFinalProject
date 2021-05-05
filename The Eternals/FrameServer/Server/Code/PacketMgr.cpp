@@ -1447,35 +1447,6 @@ void process_stage_change(int id, const char& stage_id)
 	}
 }
 
-/*============================================MONSTER======================================================*/
-//void active_monster(int id)
-//{
-//	CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", id));
-//
-//	if (nullptr == pMonster) return;
-//
-//	/* Monster가 활성화되어 있지 않을 경우 활성화 */
-//	if (pMonster->m_status == ST_NONACTIVE)
-//	{
-//		STATUS prev_state = pMonster->m_status;
-//		atomic_compare_exchange_strong(&pMonster->m_status, &prev_state, ST_ACTIVE);	
-//	}
-//}
-//
-//void nonActive_monster(int id)
-//{
-//	CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", id));
-//
-//	if (nullptr == pMonster) return;
-//
-//	if (pMonster->m_status != ST_NONACTIVE)
-//	{
-//		STATUS prev_state = pMonster->m_status;
-//		if (true == atomic_compare_exchange_strong(&pMonster->m_status, &prev_state, ST_NONACTIVE))
-//			pMonster->m_vTempPos = pMonster->m_vPos;
-//	}
-//}
-
 /*===========================================FUNC====================================================*/
 void add_timer(int obj_id, OPMODE ev_type, system_clock::time_point t)
 {

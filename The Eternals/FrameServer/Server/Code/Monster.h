@@ -13,14 +13,19 @@ public:
 	virtual ~CMonster();
 
 public:
+	const bool& Get_Dead() { return m_bIsDead; }
+
 	void	Set_AnimDuration(double arr[]);
 	void	Set_NumAnimation(const _uint& num) { m_uiNumAniIndex = num; }
 	void	Set_AnimationKey(const _uint& uiAniKey);
 
+	void	Init_AllStatus();
 	void	Set_Stop_Attack(chrono::seconds t = 3s);
 	void	Set_Start_Attack();
 	void	Set_Start_Fight();
 	void	Set_Stop_Fight();
+	void	Set_Start_Regen(chrono::seconds t = 3s);
+	void	Set_Finish_Regen();
 
 	void	active_monster();									// 해당 Monster의 STATUS = ST_ACTIVE
 	void	nonActive_monster();								// 해당 Monster의 STATUS = ST_NONACTIVE
@@ -33,43 +38,51 @@ public:
 	/* MONSTER STATUS CHANGE */
 	void	Change_AttackMode();								// STATUS == ATTACK
 	void	Change_ChaseMode();									// STATUS == CHASE
+	void    Change_DeadMode();									// STATUS == DEATH
 
 private:
 	/* MONSTER ALL FUNC */
 	void	Change_Animation(const float& fTimeDelta);
 	void	Move_NormalMonster(const float& fTimeDelta);		// MOVE PROCESS
-
+	
 	/* MONSTER INDIVIDUAL FUNC */
 	void	Change_Crab_Animation(const float& fTimeDelta);
 	void	Chase_Crab(const float& fTimeDelta);				
-	void	Attack_Crab(const float& fTimeDelta);	
+	void	Attack_Crab(const float& fTimeDelta);
+	void	Dead_Crab(const float& fTimeDelta);
 
 	void	Change_Monkey_Animation(const float& fTimeDelta);
 	void	Chase_Monkey(const float& fTimeDelta);
 	void	Attack_Monkey(const float& fTimeDelta);
+	void	Dead_Monkey(const float& fTimeDelta);
 
 	void	Change_Cloder_Animation(const float& fTimeDelta);
 	void	Chase_Cloder(const float& fTimeDelta);
 	void	Attack_Cloder(const float& fTimeDelta);
+	void	Dead_Cloder(const float& fTimeDelta);
 
 	void	Change_DrownedSailor_Animation(const float& fTimeDelta);
 	void	Chase_DrownedSailor(const float& fTimeDelta);
 	void	Attack_DrownedSailor(const float& fTimeDelta);
 	void	Rush_DrownedSailor(const float& fTimeDelta);
+	void	Dead_DrownedSailor(const float& fTimeDelta);
 
 	void	Change_GiantBeetle_Animation(const float& fTimeDelta);
 	void	Chase_GiantBeetle(const float& fTimeDelta);
 	void	Attack_GiantBeetle(const float& fTimeDelta);
 	void	Rush_GiantBeetle(const float& fTimeDelta);
+	void	Dead_GiantBeetle(const float& fTimeDelta);
 
 	void	Change_GiantMonkey_Animation(const float& fTimeDelta);
 	void	Chase_GiantMonkey(const float& fTimeDelta);
 	void	Attack_GiantMonkey(const float& fTimeDelta);
 	void	Rush_GiantMonkey(const float& fTimeDelta);
+	void	Dead_GiantMonkey(const float& fTimeDelta);
 
 	void	Change_CraftyArachne_Animation(const float& fTimeDelta);
 	void	Chase_CraftyArachne(const float& fTimeDelta);
 	void	Attack_CraftyArachne(const float& fTimeDelta);
+	void	Dead_CraftyArachne(const float& fTimeDelta);
 
 private:
 	void	Play_Animation(float fTimeDelta);	
@@ -86,6 +99,7 @@ public:
 	void	send_Monster_NormalAttack(int to_client, int ani);
 	void	send_Monster_RushAttack(int to_client, int ani);
 	void	send_Monster_Stat(int to_client);
+	void	send_Monster_Dead(int to_client, int ani);
 
 public:
 	char			m_monNum				= 0;
@@ -95,6 +109,7 @@ public:
 	int				m_iAtt					= 0;
 	float			m_fSpd					= 0;
 	
+	volatile bool	m_bIsRegen				= false;
 	volatile bool	m_bIsAttack				= false;
 	volatile bool	m_bIsFighting			= false;
 	bool			m_bIsShortAttack		= true;		// 근거리 공격

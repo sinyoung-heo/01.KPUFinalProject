@@ -26,10 +26,6 @@ void process_stage_change(int id, const char& stage_id);
 void process_packet(int id);													// 패킷 처리 함수 (모든 컨텐츠 처리)
 void process_recv(int id, DWORD iosize);										// 패킷 재조립 함수 (Ring Buffer 사용)
 
-/* ==========================MONSTER========================== */
-//void active_monster(int id);													// 해당 Monster의 STATUS = ST_ACTIVE
-//void nonActive_monster(int id);													// 해당 Monster의 STATUS = ST_NONACTIVE
-
 /* =========================FUNC========================== */
 void add_timer(int obj_id, OPMODE ev_type, system_clock::time_point t);
 bool CAS(atomic<STATUS>* addr, STATUS* old_v, STATUS new_v);

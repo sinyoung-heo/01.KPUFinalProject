@@ -42,8 +42,9 @@ constexpr char SC_PACKET_MONSTER_MOVE	= 14;
 constexpr char SC_PACKET_MONSTER_ATTACK = 15;
 constexpr char SC_PACKET_MONSTER_RUSH	= 16;
 constexpr char SC_PACKET_MONSTER_STAT	= 17;
-constexpr char SC_PACKET_STAGE_CHANGE   = 18;
-constexpr char SC_PACKET_ANIM_INDEX		= 19;
+constexpr char SC_PACKET_MONSTER_DEAD	= 18;
+constexpr char SC_PACKET_STAGE_CHANGE   = 19;
+constexpr char SC_PACKET_ANIM_INDEX		= 20;
 
 constexpr char CS_LOGIN					= 0;
 constexpr char CS_MOVE					= 1;

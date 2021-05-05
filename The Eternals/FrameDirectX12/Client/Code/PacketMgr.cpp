@@ -298,8 +298,14 @@ void CPacketMgr::Process_packet()
 	case SC_PACKET_MONSTER_STAT:
 	{
 		sc_packet_stat_change* packet = reinterpret_cast<sc_packet_stat_change*>(m_packet_start);
-
 		Change_Monster_Stat(packet);
+	}
+	break;
+
+	case SC_PACKET_MONSTER_DEAD:
+	{
+		sc_packet_animationIndex* packet = reinterpret_cast<sc_packet_animationIndex*>(m_packet_start);
+		Dead_Monster(packet);
 	}
 	break;
 
@@ -326,6 +332,14 @@ void CPacketMgr::Process_packet()
 #endif 
 		break;
 	}
+}
+
+void CPacketMgr::Dead_Monster(sc_packet_animationIndex* packet)
+{
+	int s_num = packet->id;
+	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
+
+	pObj->Set_State(packet->aniIdx);
 }
 
 void CPacketMgr::Rush_Monster(sc_packet_monster_rushAttack* packet)
@@ -828,7 +842,8 @@ void CPacketMgr::Attack_Monster(sc_packet_monster_attack* packet)
 	int s_num = packet->id;
 
 	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
-	
+	if (pObj == nullptr) return;
+
 	pObj->Set_State(packet->animIdx);
 	pObj->Set_MoveStop(true);
 	pObj->Ready_AngleInterpolationValue(pObj->Set_Other_Angle(_vec3(packet->dirX, packet->dirY, packet->dirZ)));
@@ -839,6 +854,7 @@ void CPacketMgr::Move_Monster(sc_packet_move* packet)
 	int s_num = packet->id;
 
 	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
+	if (pObj == nullptr) return;
 
 	pObj->Set_State(packet->animIdx);
 	pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);

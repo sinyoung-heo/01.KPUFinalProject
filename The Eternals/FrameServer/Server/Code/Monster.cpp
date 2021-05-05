@@ -4,7 +4,7 @@
 
 CMonster::CMonster()
 	:m_iHp(0), m_iMaxHp(0), m_iExp(0), m_iAtt(0), m_fSpd(0.f),
-	m_iTargetNum(-1), m_bIsAttack(false), m_bIsShortAttack(true),
+	m_iTargetNum(-1), m_bIsAttack(false), m_bIsShortAttack(true), m_bIsRegen(false),
 	m_bIsRushAttack(false), m_bIsFighting(false), m_monNum(0), m_uiAnimIdx(0),
 	m_eAttackDist(ATTACK_DIST::DIST_END)
 {
@@ -54,8 +54,8 @@ void CMonster::Ready_Monster(const _vec3& pos, const _vec3& angle, const char& t
 
 int CMonster::Update_Monster(const float& fTimeDelta)
 {
-	if (m_bIsDead)
-		return DEAD_OBJ;
+	if (m_bIsRegen)
+		return NO_EVENT;
 
 	if (fTimeDelta > 1.f)
 		return NO_EVENT;
@@ -120,7 +120,10 @@ void CMonster::Change_Crab_Animation(const float& fTimeDelta)
 	break;
 
 	case STATUS::ST_DEAD:
-		break;
+	{
+		Dead_Crab(fTimeDelta);
+	}
+	break;
 	}
 }
 
@@ -157,7 +160,10 @@ void CMonster::Change_Monkey_Animation(const float& fTimeDelta)
 	break;
 
 	case STATUS::ST_DEAD:
-		break;
+	{
+		Dead_Monkey(fTimeDelta);
+	}
+	break;
 	}
 }
 
@@ -194,7 +200,10 @@ void CMonster::Change_Cloder_Animation(const float& fTimeDelta)
 	break;
 
 	case STATUS::ST_DEAD:
-		break;
+	{
+		Dead_Cloder(fTimeDelta);
+	}
+	break;
 	}
 }
 
@@ -240,7 +249,10 @@ void CMonster::Change_DrownedSailor_Animation(const float& fTimeDelta)
 	break;
 
 	case STATUS::ST_DEAD:
-		break;
+	{
+		Dead_DrownedSailor(fTimeDelta);
+	}
+	break;
 	}
 }
 
@@ -286,7 +298,10 @@ void CMonster::Change_GiantBeetle_Animation(const float& fTimeDelta)
 	break;
 
 	case STATUS::ST_DEAD:
-		break;
+	{
+		Dead_GiantBeetle(fTimeDelta);
+	}
+	break;
 	}
 }
 
@@ -343,7 +358,10 @@ void CMonster::Change_GiantMonkey_Animation(const float& fTimeDelta)
 	break;
 
 	case STATUS::ST_DEAD:
-		break;
+	{
+		Dead_GiantMonkey(fTimeDelta);
+	}
+	break;
 	}
 }
 
@@ -380,12 +398,17 @@ void CMonster::Change_CraftyArachne_Animation(const float& fTimeDelta)
 	break;
 
 	case STATUS::ST_DEAD:
-		break;
+	{
+		Dead_CraftyArachne(fTimeDelta);
+	}
+	break;
 	}
 }
 
 void CMonster::Move_NormalMonster(const float& fTimeDelta)
 {
+	if (m_bIsDead || m_bIsRegen) return;
+
 	/* 해당 Monster의 원래 위치값 */
 	float ori_x, ori_y, ori_z;
 	ori_x = m_vPos.x;
@@ -2924,8 +2947,479 @@ void CMonster::Rush_GiantMonkey(const float& fTimeDelta)
 	}
 }
 
+void CMonster::Dead_Crab(const float& fTimeDelta)
+{
+	if (m_bIsRegen) return;
+
+	// 애니메이션이 아직 종료되지 않았을 경우 -> 몬스터 공격 패킷 전송 X
+	if (Crab::DEATH == m_uiAnimIdx)
+	{
+		if (!Is_AnimationSetEnd(fTimeDelta))
+			return;
+		else
+		{
+			m_bIsAttack = false;
+			Set_Start_Regen(10s);
+			Init_AllStatus();
+			return;
+		}
+	}
+
+	/* 해당 Monster의 원래 위치값 */
+	float ori_x, ori_y, ori_z;
+	ori_x = m_vPos.x;
+	ori_y = m_vPos.y;
+	ori_z = m_vPos.z;
+
+	// 죽는 위치에서의 viewlist (시야 내에 플레이어 저장)
+	unordered_set<pair<int, int>> oldnearSector;
+	oldnearSector.reserve(5);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
+
+	unordered_set <int> old_viewlist;
+
+	// 공격 전: 인접 섹터 순회 (몬스터 시야 파악)
+	for (auto& s : oldnearSector)
+	{
+		// 인접 섹터 내의 타 유저들이 있는지 검사
+		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+		{
+			// 유저의 서버 번호 추출
+			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			{
+				/* 유저일 경우 처리 */
+				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+
+					// 접속한 유저만 시야 목록에 등록한다.
+					if (!pPlayer->Get_IsConnected()) continue;
+
+					// 시야 내에 있다면 시야 목록에 등록한다.
+					if (CObjMgr::GetInstance()->Is_Near(this, pPlayer))
+						old_viewlist.insert(obj_num);
+				}
+			}
+		}
+	}
+
+	// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
+	for (auto pl : old_viewlist)
+	{
+		send_Monster_Dead(pl, Crab::DEATH);
+	}
+
+	/* 애니메이션 설정 */
+	m_uiAnimIdx = Crab::DEATH;
+	Set_AnimationKey(m_uiAnimIdx);
+}
+
+void CMonster::Dead_Monkey(const float& fTimeDelta)
+{
+	if (m_bIsRegen) return;
+
+	// 애니메이션이 아직 종료되지 않았을 경우 -> 몬스터 공격 패킷 전송 X
+	if (Monkey::DEATH == m_uiAnimIdx)
+	{
+		if (!Is_AnimationSetEnd(fTimeDelta))
+			return;
+		else
+		{
+			m_bIsAttack = false;
+			Set_Start_Regen(10s);
+			Init_AllStatus();
+			return;
+		}
+	}
+
+	/* 해당 Monster의 원래 위치값 */
+	float ori_x, ori_y, ori_z;
+	ori_x = m_vPos.x;
+	ori_y = m_vPos.y;
+	ori_z = m_vPos.z;
+
+	// 죽는 위치에서의 viewlist (시야 내에 플레이어 저장)
+	unordered_set<pair<int, int>> oldnearSector;
+	oldnearSector.reserve(5);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
+
+	unordered_set <int> old_viewlist;
+
+	// 공격 전: 인접 섹터 순회 (몬스터 시야 파악)
+	for (auto& s : oldnearSector)
+	{
+		// 인접 섹터 내의 타 유저들이 있는지 검사
+		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+		{
+			// 유저의 서버 번호 추출
+			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			{
+				/* 유저일 경우 처리 */
+				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+
+					// 접속한 유저만 시야 목록에 등록한다.
+					if (!pPlayer->Get_IsConnected()) continue;
+
+					// 시야 내에 있다면 시야 목록에 등록한다.
+					if (CObjMgr::GetInstance()->Is_Near(this, pPlayer))
+						old_viewlist.insert(obj_num);
+				}
+			}
+		}
+	}
+
+	// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
+	for (auto pl : old_viewlist)
+	{
+		send_Monster_Dead(pl, Monkey::DEATH);
+	}
+
+	/* 애니메이션 설정 */
+	m_uiAnimIdx = Monkey::DEATH;
+	Set_AnimationKey(m_uiAnimIdx);
+}
+
+void CMonster::Dead_Cloder(const float& fTimeDelta)
+{
+	if (m_bIsRegen) return;
+
+	// 애니메이션이 아직 종료되지 않았을 경우 -> 몬스터 공격 패킷 전송 X
+	if (Cloder::DEATH == m_uiAnimIdx)
+	{
+		if (!Is_AnimationSetEnd(fTimeDelta))
+			return;
+		else
+		{
+			m_bIsAttack = false;
+			Set_Start_Regen(10s);
+			Init_AllStatus();
+			return;
+		}
+	}
+
+	/* 해당 Monster의 원래 위치값 */
+	float ori_x, ori_y, ori_z;
+	ori_x = m_vPos.x;
+	ori_y = m_vPos.y;
+	ori_z = m_vPos.z;
+
+	// 죽는 위치에서의 viewlist (시야 내에 플레이어 저장)
+	unordered_set<pair<int, int>> oldnearSector;
+	oldnearSector.reserve(5);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
+
+	unordered_set <int> old_viewlist;
+
+	// 공격 전: 인접 섹터 순회 (몬스터 시야 파악)
+	for (auto& s : oldnearSector)
+	{
+		// 인접 섹터 내의 타 유저들이 있는지 검사
+		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+		{
+			// 유저의 서버 번호 추출
+			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			{
+				/* 유저일 경우 처리 */
+				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+
+					// 접속한 유저만 시야 목록에 등록한다.
+					if (!pPlayer->Get_IsConnected()) continue;
+
+					// 시야 내에 있다면 시야 목록에 등록한다.
+					if (CObjMgr::GetInstance()->Is_Near(this, pPlayer))
+						old_viewlist.insert(obj_num);
+				}
+			}
+		}
+	}
+
+	// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
+	for (auto pl : old_viewlist)
+	{
+		send_Monster_Dead(pl, Cloder::DEATH);
+	}
+
+	/* 애니메이션 설정 */
+	m_uiAnimIdx = Cloder::DEATH;
+	Set_AnimationKey(m_uiAnimIdx);
+}
+
+void CMonster::Dead_DrownedSailor(const float& fTimeDelta)
+{
+	if (m_bIsRegen) return;
+
+	// 애니메이션이 아직 종료되지 않았을 경우 -> 몬스터 공격 패킷 전송 X
+	if (DrownedSailor::DEATH == m_uiAnimIdx)
+	{
+		if (!Is_AnimationSetEnd(fTimeDelta))
+			return;
+		else
+		{
+			m_bIsAttack = false;
+			Set_Start_Regen(10s);
+			Init_AllStatus();
+			return;
+		}
+	}
+
+	/* 해당 Monster의 원래 위치값 */
+	float ori_x, ori_y, ori_z;
+	ori_x = m_vPos.x;
+	ori_y = m_vPos.y;
+	ori_z = m_vPos.z;
+
+	// 죽는 위치에서의 viewlist (시야 내에 플레이어 저장)
+	unordered_set<pair<int, int>> oldnearSector;
+	oldnearSector.reserve(5);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
+
+	unordered_set <int> old_viewlist;
+
+	// 공격 전: 인접 섹터 순회 (몬스터 시야 파악)
+	for (auto& s : oldnearSector)
+	{
+		// 인접 섹터 내의 타 유저들이 있는지 검사
+		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+		{
+			// 유저의 서버 번호 추출
+			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			{
+				/* 유저일 경우 처리 */
+				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+
+					// 접속한 유저만 시야 목록에 등록한다.
+					if (!pPlayer->Get_IsConnected()) continue;
+
+					// 시야 내에 있다면 시야 목록에 등록한다.
+					if (CObjMgr::GetInstance()->Is_Near(this, pPlayer))
+						old_viewlist.insert(obj_num);
+				}
+			}
+		}
+	}
+
+	// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
+	for (auto pl : old_viewlist)
+	{
+		send_Monster_Dead(pl, DrownedSailor::DEATH);
+	}
+
+	/* 애니메이션 설정 */
+	m_uiAnimIdx = DrownedSailor::DEATH;
+	Set_AnimationKey(m_uiAnimIdx);
+}
+
+void CMonster::Dead_GiantBeetle(const float& fTimeDelta)
+{
+	if (m_bIsRegen) return;
+
+	// 애니메이션이 아직 종료되지 않았을 경우 -> 몬스터 공격 패킷 전송 X
+	if (GiantBeetle::DEATH == m_uiAnimIdx)
+	{
+		if (!Is_AnimationSetEnd(fTimeDelta))
+			return;
+		else
+		{
+			m_bIsAttack = false;
+			Set_Start_Regen(10s);
+			Init_AllStatus();
+			return;
+		}
+	}
+
+	/* 해당 Monster의 원래 위치값 */
+	float ori_x, ori_y, ori_z;
+	ori_x = m_vPos.x;
+	ori_y = m_vPos.y;
+	ori_z = m_vPos.z;
+
+	// 죽는 위치에서의 viewlist (시야 내에 플레이어 저장)
+	unordered_set<pair<int, int>> oldnearSector;
+	oldnearSector.reserve(5);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
+
+	unordered_set <int> old_viewlist;
+
+	// 공격 전: 인접 섹터 순회 (몬스터 시야 파악)
+	for (auto& s : oldnearSector)
+	{
+		// 인접 섹터 내의 타 유저들이 있는지 검사
+		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+		{
+			// 유저의 서버 번호 추출
+			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			{
+				/* 유저일 경우 처리 */
+				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+
+					// 접속한 유저만 시야 목록에 등록한다.
+					if (!pPlayer->Get_IsConnected()) continue;
+
+					// 시야 내에 있다면 시야 목록에 등록한다.
+					if (CObjMgr::GetInstance()->Is_Near(this, pPlayer))
+						old_viewlist.insert(obj_num);
+				}
+			}
+		}
+	}
+
+	// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
+	for (auto pl : old_viewlist)
+	{
+		send_Monster_Dead(pl, GiantBeetle::DEATH);
+	}
+
+	/* 애니메이션 설정 */
+	m_uiAnimIdx = GiantBeetle::DEATH;
+	Set_AnimationKey(m_uiAnimIdx);
+}
+
+void CMonster::Dead_GiantMonkey(const float& fTimeDelta)
+{
+	if (m_bIsRegen) return;
+
+	// 애니메이션이 아직 종료되지 않았을 경우 -> 몬스터 공격 패킷 전송 X
+	if (GiantMonkey::DEATH == m_uiAnimIdx)
+	{
+		if (!Is_AnimationSetEnd(fTimeDelta))
+			return;
+		else
+		{
+			m_bIsAttack = false;
+			Set_Start_Regen(10s);
+			Init_AllStatus();
+			return;
+		}
+	}
+
+	/* 해당 Monster의 원래 위치값 */
+	float ori_x, ori_y, ori_z;
+	ori_x = m_vPos.x;
+	ori_y = m_vPos.y;
+	ori_z = m_vPos.z;
+
+	// 죽는 위치에서의 viewlist (시야 내에 플레이어 저장)
+	unordered_set<pair<int, int>> oldnearSector;
+	oldnearSector.reserve(5);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
+
+	unordered_set <int> old_viewlist;
+
+	// 공격 전: 인접 섹터 순회 (몬스터 시야 파악)
+	for (auto& s : oldnearSector)
+	{
+		// 인접 섹터 내의 타 유저들이 있는지 검사
+		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+		{
+			// 유저의 서버 번호 추출
+			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			{
+				/* 유저일 경우 처리 */
+				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+
+					// 접속한 유저만 시야 목록에 등록한다.
+					if (!pPlayer->Get_IsConnected()) continue;
+
+					// 시야 내에 있다면 시야 목록에 등록한다.
+					if (CObjMgr::GetInstance()->Is_Near(this, pPlayer))
+						old_viewlist.insert(obj_num);
+				}
+			}
+		}
+	}
+
+	// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
+	for (auto pl : old_viewlist)
+	{
+		send_Monster_Dead(pl, GiantMonkey::DEATH);
+	}
+
+	/* 애니메이션 설정 */
+	m_uiAnimIdx = GiantMonkey::DEATH;
+	Set_AnimationKey(m_uiAnimIdx);
+}
+
+void CMonster::Dead_CraftyArachne(const float& fTimeDelta)
+{
+	if (m_bIsRegen) return;
+
+	// 애니메이션이 아직 종료되지 않았을 경우 -> 몬스터 공격 패킷 전송 X
+	if (CraftyArachne::DEATH == m_uiAnimIdx)
+	{
+		if (!Is_AnimationSetEnd(fTimeDelta))
+			return;
+		else
+		{
+			m_bIsAttack = false;
+			Set_Start_Regen(10s);
+			Init_AllStatus();
+			return;
+		}
+	}
+
+	/* 해당 Monster의 원래 위치값 */
+	float ori_x, ori_y, ori_z;
+	ori_x = m_vPos.x;
+	ori_y = m_vPos.y;
+	ori_z = m_vPos.z;
+
+	// 죽는 위치에서의 viewlist (시야 내에 플레이어 저장)
+	unordered_set<pair<int, int>> oldnearSector;
+	oldnearSector.reserve(5);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
+
+	unordered_set <int> old_viewlist;
+
+	// 공격 전: 인접 섹터 순회 (몬스터 시야 파악)
+	for (auto& s : oldnearSector)
+	{
+		// 인접 섹터 내의 타 유저들이 있는지 검사
+		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+		{
+			// 유저의 서버 번호 추출
+			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			{
+				/* 유저일 경우 처리 */
+				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+
+					// 접속한 유저만 시야 목록에 등록한다.
+					if (!pPlayer->Get_IsConnected()) continue;
+
+					// 시야 내에 있다면 시야 목록에 등록한다.
+					if (CObjMgr::GetInstance()->Is_Near(this, pPlayer))
+						old_viewlist.insert(obj_num);
+				}
+			}
+		}
+	}
+
+	// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
+	for (auto pl : old_viewlist)
+	{
+		send_Monster_Dead(pl, CraftyArachne::DEATH);
+	}
+
+	/* 애니메이션 설정 */
+	m_uiAnimIdx = CraftyArachne::DEATH;
+	Set_AnimationKey(m_uiAnimIdx);
+}
+
 void CMonster::Hurt_Monster(const int& p_id,const int& damage)
 {
+	if (m_bIsRegen || m_bIsDead) return;
+
 	/* 해당 Monster의 원래 위치값 */
 	float ori_x, ori_y, ori_z;
 	ori_x = m_vPos.x;
@@ -2965,11 +3459,19 @@ void CMonster::Hurt_Monster(const int& p_id,const int& damage)
 	}
 
 	/* 피격 당함 */
-	if (m_iHp >= 0)
+	if (m_iHp > 0)
 	{
-		m_iHp -= damage;
-		if (m_iHp < 0)
-			m_iHp = 0;
+		m_iHp -= damage;		
+	}
+
+	/* Monster Dead */
+	else if (m_iHp <= 0)
+	{
+		m_iHp = 0;
+		m_bIsDead = true;
+
+		Change_DeadMode();
+		return;
 	}
 
 	// Monster View List 내의 유저들에게 해당 Monster의 변경된 stat을 알림.
@@ -2998,6 +3500,7 @@ void CMonster::Hurt_Monster(const int& p_id,const int& damage)
 void CMonster::Change_AttackMode()
 {
 	/* Monster가 활성화되어 있지 않을 경우 활성화 */
+	if (m_bIsDead || m_bIsRegen) return;
 	if (m_status != ST_ATTACK)
 	{
 		STATUS prev_state = m_status;
@@ -3009,10 +3512,20 @@ void CMonster::Change_AttackMode()
 void CMonster::Change_ChaseMode()
 {
 	/* Monster가 활성화되어 있지 않을 경우 활성화 */
+	if (m_bIsDead || m_bIsRegen) return;
 	if (m_status != ST_CHASE)
 	{
 		STATUS prev_state = m_status;
 		atomic_compare_exchange_strong(&m_status, &prev_state, ST_CHASE);
+	}
+}
+
+void CMonster::Change_DeadMode()
+{
+	if (m_status != ST_DEAD)
+	{
+		STATUS prev_state = m_status;
+		atomic_compare_exchange_strong(&m_status, &prev_state, ST_DEAD);
 	}
 }
 
@@ -3123,6 +3636,48 @@ void CMonster::Set_Stop_Fight()
 		bool prev_state = m_bIsFighting;
 		atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsFighting), &prev_state, false);
 	}
+}
+
+void CMonster::Set_Start_Regen(chrono::seconds t)
+{
+	if (!m_bIsRegen)
+	{
+		bool prev_state = m_bIsRegen;
+		if (true == atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsRegen), &prev_state, true))
+		{
+			add_timer(m_sNum, OP_MODE_REGEN_MONSTER, system_clock::now() + t);
+		}
+	}
+}
+
+void CMonster::Set_Finish_Regen()
+{
+	if (m_bIsRegen)
+	{
+		bool prev_state = m_bIsRegen;
+		if (true == atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsRegen), &prev_state, false))
+		{
+			m_bIsDead = false;
+			m_iHp = m_iMaxHp;
+			m_iTargetNum = -1;
+			m_vPos = m_vOriPos;
+		}
+	}
+}
+
+void CMonster::Init_AllStatus()
+{
+	bool prev_state = m_bIsAttack;
+	atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsAttack), &prev_state, false);
+
+	prev_state = m_bIsFighting;
+	atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsFighting), &prev_state, false);
+
+	prev_state = m_bIsShortAttack;
+	atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsShortAttack), &prev_state, false);
+
+	prev_state = m_bIsRushAttack;
+	atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsRushAttack), &prev_state, false);
 }
 
 void CMonster::active_monster()
@@ -3244,6 +3799,19 @@ void CMonster::send_Monster_Stat(int to_client)
 	p.hp = m_iHp;
 	p.mp = 0;
 	p.exp = m_iExp;
+
+	send_packet(to_client, &p);
+}
+
+void CMonster::send_Monster_Dead(int to_client, int ani)
+{
+	sc_packet_animationIndex p;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_MONSTER_DEAD;
+	p.id = m_sNum;
+
+	p.aniIdx = ani;
 
 	send_packet(to_client, &p);
 }

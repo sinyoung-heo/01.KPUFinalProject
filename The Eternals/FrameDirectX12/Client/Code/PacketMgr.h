@@ -30,7 +30,7 @@ public:
 	void	Process_recv_reassembly(size_t iosize);
 	void	Process_packet();
 
-	void Change_Animation(sc_packet_animationIndex* packet, bool& retflag);
+	void	Change_Animation(sc_packet_animationIndex* packet, bool& retflag);
 
 public:
 	void	send_login();
@@ -61,6 +61,8 @@ public:
 	void	Attack_Monster(sc_packet_monster_attack* packet);
 	void	Rush_Monster(sc_packet_monster_rushAttack* packet);
 	void	Change_Monster_Stat(sc_packet_stat_change* packet);
+	void	Dead_Monster(sc_packet_animationIndex* packet);
+
 	void	Enter_NPC(sc_packet_npc_enter* packet);
 	void	Move_NPC(sc_packet_move* packet);
 

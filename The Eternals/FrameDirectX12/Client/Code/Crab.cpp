@@ -25,11 +25,7 @@ HRESULT CCrab::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, co
 	m_pTransCom->m_vPos = vPos;
 	m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(vPos));
 
-	//Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
-	//									   m_pTransCom->m_vScale,
-	//									   m_pMeshCom->Get_CenterPos(),
-	//									   m_pMeshCom->Get_MinVector(),
-	//									   m_pMeshCom->Get_MaxVector());
+	
 	Engine::CGameObject::SetUp_BoundingSphere(&(m_pTransCom->m_matWorld),
 											  m_pTransCom->m_vScale,
 											  _vec3(40.0f),
@@ -304,7 +300,10 @@ void CCrab::Change_Animation(const _float& fTimeDelta)
 			m_uiAnimIdx = Crab::A_DEATH;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
-			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) {}
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) 
+			{
+				// 몬스터 소멸
+			}
 		}
 		break;
 		}
