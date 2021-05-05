@@ -370,9 +370,6 @@
     <ClInclude Include="..\Header\enum.h">
       <Filter>98.Header</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\ServerMath.h">
-      <Filter>97.Mgr\02.ServerMath</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\TexEffectInstance.h">
       <Filter>99.Etc\SampleObject\12.TexEffectInstance</Filter>
     </ClInclude>
@@ -540,6 +537,11 @@
     <ClInclude Include="..\Code\NPC_Children.h">
       <Filter>02.GameObject\04.NPC\05_NPC_Children</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\PublicSphere.h" />
+    <ClInclude Include="..\Code\RainDrop.h" />
+    <ClInclude Include="..\Code\ServerMath.h">
+      <Filter>97.Mgr\02.ServerMath</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -614,9 +616,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\PacketMgr.cpp">
       <Filter>97.Mgr\00.PacketMgr</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\ServerMath.cpp">
-      <Filter>97.Mgr\02.ServerMath</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\TexEffectInstance.cpp">
       <Filter>99.Etc\SampleObject\12.TexEffectInstance</Filter>
@@ -763,6 +762,11 @@
     </ClCompile>
     <ClCompile Include="..\Code\NPC_Children.cpp">
       <Filter>02.GameObject\04.NPC\05_NPC_Children</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PublicSphere.cpp" />
+    <ClCompile Include="..\Code\RainDrop.cpp" />
+    <ClCompile Include="..\Code\ServerMath.cpp">
+      <Filter>97.Mgr\02.ServerMath</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

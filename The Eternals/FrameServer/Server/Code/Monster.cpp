@@ -2959,7 +2959,6 @@ void CMonster::Dead_Crab(const float& fTimeDelta)
 			return;
 		else
 		{
-			m_bIsAttack = false;
 			Set_Start_Regen(10s);
 			Init_AllStatus();
 			return;
@@ -3008,6 +3007,12 @@ void CMonster::Dead_Crab(const float& fTimeDelta)
 	for (auto pl : old_viewlist)
 	{
 		send_Monster_Dead(pl, Crab::DEATH);
+
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
+
+		pPlayer->v_lock.lock();
+		pPlayer->view_list.erase(m_sNum);
+		pPlayer->v_lock.unlock();
 	}
 
 	/* 애니메이션 설정 */
@@ -3026,7 +3031,6 @@ void CMonster::Dead_Monkey(const float& fTimeDelta)
 			return;
 		else
 		{
-			m_bIsAttack = false;
 			Set_Start_Regen(10s);
 			Init_AllStatus();
 			return;
@@ -3075,6 +3079,12 @@ void CMonster::Dead_Monkey(const float& fTimeDelta)
 	for (auto pl : old_viewlist)
 	{
 		send_Monster_Dead(pl, Monkey::DEATH);
+
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
+
+		pPlayer->v_lock.lock();
+		pPlayer->view_list.erase(m_sNum);
+		pPlayer->v_lock.unlock();
 	}
 
 	/* 애니메이션 설정 */
@@ -3093,7 +3103,6 @@ void CMonster::Dead_Cloder(const float& fTimeDelta)
 			return;
 		else
 		{
-			m_bIsAttack = false;
 			Set_Start_Regen(10s);
 			Init_AllStatus();
 			return;
@@ -3142,6 +3151,12 @@ void CMonster::Dead_Cloder(const float& fTimeDelta)
 	for (auto pl : old_viewlist)
 	{
 		send_Monster_Dead(pl, Cloder::DEATH);
+
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
+
+		pPlayer->v_lock.lock();
+		pPlayer->view_list.erase(m_sNum);
+		pPlayer->v_lock.unlock();
 	}
 
 	/* 애니메이션 설정 */
@@ -3160,7 +3175,6 @@ void CMonster::Dead_DrownedSailor(const float& fTimeDelta)
 			return;
 		else
 		{
-			m_bIsAttack = false;
 			Set_Start_Regen(10s);
 			Init_AllStatus();
 			return;
@@ -3209,6 +3223,12 @@ void CMonster::Dead_DrownedSailor(const float& fTimeDelta)
 	for (auto pl : old_viewlist)
 	{
 		send_Monster_Dead(pl, DrownedSailor::DEATH);
+
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
+
+		pPlayer->v_lock.lock();
+		pPlayer->view_list.erase(m_sNum);
+		pPlayer->v_lock.unlock();
 	}
 
 	/* 애니메이션 설정 */
@@ -3227,7 +3247,6 @@ void CMonster::Dead_GiantBeetle(const float& fTimeDelta)
 			return;
 		else
 		{
-			m_bIsAttack = false;
 			Set_Start_Regen(10s);
 			Init_AllStatus();
 			return;
@@ -3276,6 +3295,12 @@ void CMonster::Dead_GiantBeetle(const float& fTimeDelta)
 	for (auto pl : old_viewlist)
 	{
 		send_Monster_Dead(pl, GiantBeetle::DEATH);
+
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
+
+		pPlayer->v_lock.lock();
+		pPlayer->view_list.erase(m_sNum);
+		pPlayer->v_lock.unlock();
 	}
 
 	/* 애니메이션 설정 */
@@ -3294,7 +3319,6 @@ void CMonster::Dead_GiantMonkey(const float& fTimeDelta)
 			return;
 		else
 		{
-			m_bIsAttack = false;
 			Set_Start_Regen(10s);
 			Init_AllStatus();
 			return;
@@ -3343,6 +3367,12 @@ void CMonster::Dead_GiantMonkey(const float& fTimeDelta)
 	for (auto pl : old_viewlist)
 	{
 		send_Monster_Dead(pl, GiantMonkey::DEATH);
+
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
+
+		pPlayer->v_lock.lock();
+		pPlayer->view_list.erase(m_sNum);
+		pPlayer->v_lock.unlock();
 	}
 
 	/* 애니메이션 설정 */
@@ -3361,7 +3391,6 @@ void CMonster::Dead_CraftyArachne(const float& fTimeDelta)
 			return;
 		else
 		{
-			m_bIsAttack = false;
 			Set_Start_Regen(10s);
 			Init_AllStatus();
 			return;
@@ -3410,6 +3439,12 @@ void CMonster::Dead_CraftyArachne(const float& fTimeDelta)
 	for (auto pl : old_viewlist)
 	{
 		send_Monster_Dead(pl, CraftyArachne::DEATH);
+
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
+
+		pPlayer->v_lock.lock();
+		pPlayer->view_list.erase(m_sNum);
+		pPlayer->v_lock.unlock();
 	}
 
 	/* 애니메이션 설정 */

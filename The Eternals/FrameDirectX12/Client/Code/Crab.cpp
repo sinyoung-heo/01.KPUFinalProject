@@ -320,7 +320,7 @@ void CCrab::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) 
 			{
-				// ¸ó½ºÅÍ ¼Ò¸ê
+				m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"MONSTER", m_iSNum);
 			}
 		}
 		break;

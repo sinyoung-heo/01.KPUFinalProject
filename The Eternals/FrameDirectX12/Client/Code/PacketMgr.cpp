@@ -340,6 +340,7 @@ void CPacketMgr::Dead_Monster(sc_packet_animationIndex* packet)
 {
 	int s_num = packet->id;
 	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
+	if (pObj == nullptr) return;
 
 	pObj->Set_State(packet->aniIdx);
 }
@@ -349,6 +350,7 @@ void CPacketMgr::Rush_Monster(sc_packet_monster_rushAttack* packet)
 	int s_num = packet->id;
 
 	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
+	if (pObj == nullptr) return;
 
 	pObj->Set_State(packet->animIdx);
 	pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
@@ -359,6 +361,7 @@ void CPacketMgr::Change_Monster_Stat(sc_packet_stat_change* packet)
 {
 	int s_num = packet->id;
 	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
+	if (pObj == nullptr) return;
 
 	pObj->Get_Info()->m_iHp = packet->hp;
 	pObj->Get_Info()->m_iMp = packet->mp;
@@ -370,7 +373,8 @@ void CPacketMgr::Move_NPC(sc_packet_move* packet)
 	int s_num = packet->id;
 
 	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"NPC", s_num);
-	
+	if (pObj == nullptr) return;
+
 	pObj->Set_MoveStop(false);
 	pObj->Set_State(packet->animIdx);
 	pObj->Ready_PositionInterpolationValue(_vec3(packet->posX, packet->posY, packet->posZ), packet->spd);

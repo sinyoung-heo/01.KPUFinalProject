@@ -371,7 +371,10 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 			m_uiAnimIdx = GiantMonkey::A_DEATH;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
-			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) {}
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) 
+			{
+				m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"MONSTER", m_iSNum);
+			}
 		}
 		break;
 
