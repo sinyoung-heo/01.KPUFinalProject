@@ -129,7 +129,7 @@ void CTestColPlayer::Process_Collision()
 			m_pPacketMgr->send_attackByMonster(pDst->Get_ServerNumber());
 
 			/* Player Attack to Monster */
-			m_pPacketMgr->send_attackToMonster(pDst->Get_ServerNumber());
+			m_pPacketMgr->send_attackToMonster(pDst->Get_ServerNumber(), m_pInfoCom->Get_RandomDamage());
 		}
 	}
 }

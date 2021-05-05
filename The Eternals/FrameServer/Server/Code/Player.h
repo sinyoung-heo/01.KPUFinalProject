@@ -27,7 +27,8 @@ public:
 	int		m_iMaxMp	= 0;
 	int		m_iExp		= 0;
 	int		m_iMaxExp	= 0;
-	int		m_iAtt		= 0;
+	int		m_iMinAtt	= 0;
+	int		m_iMaxAtt	= 0;
 	float	m_fSpd		= 0;
 	
 	unordered_set<int> view_list; 

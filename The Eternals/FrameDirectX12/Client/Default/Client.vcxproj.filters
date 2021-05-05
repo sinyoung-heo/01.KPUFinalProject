@@ -49,9 +49,6 @@
     <Filter Include="97.Mgr\01.ShadowLightMgr">
       <UniqueIdentifier>{2ea7e636-a640-459b-8952-a54d6bc53653}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97.Mgr\02.CollisionMgr">
-      <UniqueIdentifier>{e6d909b7-4f42-40ea-8b61-bad7b56f65e2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Scene\99.DebugStage\01.StageLDH">
       <UniqueIdentifier>{962761de-71a1-4a1a-9d46-0a8a8149a0ea}</UniqueIdentifier>
     </Filter>
@@ -60,9 +57,6 @@
     </Filter>
     <Filter Include="01.Scene\99.DebugStage\03.StageHSY">
       <UniqueIdentifier>{cce7a519-dab0-4b1d-a458-3dc62e3a06ef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="97.Mgr\03.ServerMath">
-      <UniqueIdentifier>{608982b7-5130-4247-b0b0-0a6009ba9f5b}</UniqueIdentifier>
     </Filter>
     <Filter Include="99.Etc\SampleObject">
       <UniqueIdentifier>{123f4ddb-5d76-4b1a-b120-3eb2d0c5b1d3}</UniqueIdentifier>
@@ -102,9 +96,6 @@
     </Filter>
     <Filter Include="02.GameObject\02.PlayerCharacter">
       <UniqueIdentifier>{30ac5964-93ee-4c7c-bbb1-173e35ff9b0d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="97.Mgr\04.MouseCursorMgr">
-      <UniqueIdentifier>{9f593d0a-4f7e-4583-a859-a2cb29f4762e}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\01.Environment\01.StaticMeshObject">
       <UniqueIdentifier>{31a1d126-62e7-4145-a491-71e8b6a01acd}</UniqueIdentifier>
@@ -223,9 +214,6 @@
     <Filter Include="02.GameObject\06.CollisionTick">
       <UniqueIdentifier>{46392a5c-e300-4239-b145-a33d4fb5620f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97.Mgr\05.InstancePoolMgr">
-      <UniqueIdentifier>{782ae5d2-11c5-4a86-a19c-e951b3e41635}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Scene\03.MainStage">
       <UniqueIdentifier>{af574c80-212e-42e6-9a44-0bbdcdee06c7}</UniqueIdentifier>
     </Filter>
@@ -270,6 +258,15 @@
     </Filter>
     <Filter Include="01.Scene\01.Logo\02.LoadingProgress">
       <UniqueIdentifier>{018c85ab-d8f8-4c79-8bba-f142768a3d1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Mgr\02.ServerMath">
+      <UniqueIdentifier>{608982b7-5130-4247-b0b0-0a6009ba9f5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Mgr\03.MouseCursorMgr">
+      <UniqueIdentifier>{9f593d0a-4f7e-4583-a859-a2cb29f4762e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Mgr\04.InstancePoolMgr">
+      <UniqueIdentifier>{782ae5d2-11c5-4a86-a19c-e951b3e41635}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -374,7 +371,7 @@
       <Filter>98.Header</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\ServerMath.h">
-      <Filter>97.Mgr\03.ServerMath</Filter>
+      <Filter>97.Mgr\02.ServerMath</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\TexEffectInstance.h">
       <Filter>99.Etc\SampleObject\12.TexEffectInstance</Filter>
@@ -425,7 +422,7 @@
       <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuEquipment</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\MouseCursorMgr.h">
-      <Filter>97.Mgr\04.MouseCursorMgr</Filter>
+      <Filter>97.Mgr\03.MouseCursorMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\TestOthers.h" />
     <ClInclude Include="..\Code\TestPlayer.h" />
@@ -508,7 +505,7 @@
       <Filter>02.GameObject\06.CollisionTick</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\InstancePoolMgr.h">
-      <Filter>97.Mgr\05.InstancePoolMgr</Filter>
+      <Filter>97.Mgr\04.InstancePoolMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\StaticMeshObject.h">
       <Filter>02.GameObject\01.Environment\01.StaticMeshObject</Filter>
@@ -619,7 +616,7 @@
       <Filter>97.Mgr\00.PacketMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\ServerMath.cpp">
-      <Filter>97.Mgr\03.ServerMath</Filter>
+      <Filter>97.Mgr\02.ServerMath</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\TexEffectInstance.cpp">
       <Filter>99.Etc\SampleObject\12.TexEffectInstance</Filter>
@@ -667,7 +664,7 @@
       <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuEquipment</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\MouseCursorMgr.cpp">
-      <Filter>97.Mgr\04.MouseCursorMgr</Filter>
+      <Filter>97.Mgr\03.MouseCursorMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\TestOthers.cpp" />
     <ClCompile Include="..\Code\TestPlayer.cpp" />
@@ -735,7 +732,7 @@
       <Filter>02.GameObject\06.CollisionTick</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\InstancePoolMgr.cpp">
-      <Filter>97.Mgr\05.InstancePoolMgr</Filter>
+      <Filter>97.Mgr\04.InstancePoolMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\StaticMeshObject.cpp">
       <Filter>02.GameObject\01.Environment\01.StaticMeshObject</Filter>

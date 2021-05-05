@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "NPC_Merchant.h"
-
+#include "InstancePoolMgr.h"
 #include "GraphicDevice.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
@@ -20,22 +20,23 @@ HRESULT CNPC_Merchant::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMes
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag, wstrNaviMeshTag), E_FAIL);
+	m_wstrMeshTag         = wstrMeshTag;
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
-	m_pTransCom->m_vPos = vPos;
-	m_wstrCollisionTag = L"NPC_Merchant";
+	m_pTransCom->m_vPos   = vPos;
+	m_wstrCollisionTag    = L"NPC_Merchant";
 
 	m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(vPos));
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
-		m_pTransCom->m_vScale,
-		m_pMeshCom->Get_CenterPos(),
-		m_pMeshCom->Get_MinVector(),
-		m_pMeshCom->Get_MaxVector());
+										   m_pTransCom->m_vScale,
+										   m_pMeshCom->Get_CenterPos(),
+										   m_pMeshCom->Get_MinVector(),
+										   m_pMeshCom->Get_MaxVector());
 
 	Engine::CGameObject::SetUp_BoundingSphere(&(m_pTransCom->m_matWorld),
-											 m_pTransCom->m_vScale,
-											 _vec3(200.0f),
-											 _vec3(0.0f, 20.0f, 0.0f));
+											  m_pTransCom->m_vScale,
+											  _vec3(200.0f),
+											  _vec3(0.0f, 20.0f, 0.0f));
 	m_lstCollider.push_back(m_pBoundingSphereCom);
 
 
@@ -68,6 +69,20 @@ _int CNPC_Merchant::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	if (m_bIsReturn)
+	{
+		if (m_wstrMeshTag == L"Popori_M_Merchant")
+			Return_Instance(CInstancePoolMgr::Get_Instance()->Get_NPCMerchant_Popori_M_MerchantPool(), m_uiInstanceIdx);
+
+		else if (m_wstrMeshTag == L"Baraka_M_Merchant")
+			Return_Instance(CInstancePoolMgr::Get_Instance()->Get_NPCMerchant_Baraka_M_MerchantPool(), m_uiInstanceIdx);
+
+		else if (m_wstrMeshTag == L"Baraka_M_Mystellium")
+			Return_Instance(CInstancePoolMgr::Get_Instance()->Get_NPCMerchant_Baraka_M_MystelliumPool(), m_uiInstanceIdx);
+
+		return RETURN_OBJ;
+	}
+
 	// Angle Linear Interpolation
 	SetUp_AngleInterpolation(fTimeDelta);
 
@@ -88,6 +103,11 @@ _int CNPC_Merchant::Update_GameObject(const _float& fTimeDelta)
 	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
 	/*__________________________________________________________________________________________________________
+	[ Renderer - Add Render Group ]
+	____________________________________________________________________________________________________________*/
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+
+	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
@@ -98,11 +118,6 @@ _int CNPC_Merchant::Update_GameObject(const _float& fTimeDelta)
 _int CNPC_Merchant::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
-
-	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 
 	return NO_EVENT;
 }
@@ -273,6 +288,27 @@ Engine::CGameObject* CNPC_Merchant::Create(ID3D12Device* pGraphicDevice, ID3D12G
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
+}
+
+CNPC_Merchant** CNPC_Merchant::Create_InstancePool(ID3D12Device* pGraphicDevice,
+												   ID3D12GraphicsCommandList* pCommandList, 
+												   wstring wstrMeshTag, 
+												   const _uint& uiInstanceCnt)
+{
+	CNPC_Merchant** ppInstance = new (CNPC_Merchant * [uiInstanceCnt]);
+
+	for (_uint i = 0; i < uiInstanceCnt; ++i)
+	{
+		ppInstance[i] = new CNPC_Merchant(pGraphicDevice, pCommandList);
+		ppInstance[i]->m_uiInstanceIdx = i;
+		ppInstance[i]->Ready_GameObject(wstrMeshTag,				// MeshTag
+										L"StageVelika_NaviMesh",	// NaviMeshTag
+										_vec3(0.05f, 0.05f, 0.05f),	// Scale
+										_vec3(0.0f),				// Angle
+										_vec3(AWAY_FROM_STAGE));	// Pos
+	}
+
+	return ppInstance;
 }
 
 void CNPC_Merchant::Free()

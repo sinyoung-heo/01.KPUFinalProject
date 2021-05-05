@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Crab.h"
-
 #include "GraphicDevice.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
@@ -8,6 +7,7 @@
 #include "Font.h"
 #include "RenderTarget.h"
 #include "TimeMgr.h"
+#include "InstancePoolMgr.h"
 
 CCrab::CCrab(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -25,7 +25,11 @@ HRESULT CCrab::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, co
 	m_pTransCom->m_vPos = vPos;
 	m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(vPos));
 
-	
+	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
+										   m_pTransCom->m_vScale,
+										   m_pMeshCom->Get_CenterPos(),
+										   m_pMeshCom->Get_MinVector(),
+										   m_pMeshCom->Get_MaxVector());
 	Engine::CGameObject::SetUp_BoundingSphere(&(m_pTransCom->m_matWorld),
 											  m_pTransCom->m_vScale,
 											  _vec3(40.0f),
@@ -63,6 +67,20 @@ _int CCrab::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 	
+	if (m_bIsReturn)
+	{
+		m_bIsResetNaviMesh = false;
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterCrabPool(), m_uiInstanceIdx);
+
+		return RETURN_OBJ;
+	}
+
+	if (!m_bIsResetNaviMesh)
+	{
+		m_bIsResetNaviMesh = true;
+		m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
+	}
+
 	// Angle Linear Interpolation
 	SetUp_AngleInterpolation(fTimeDelta);
 	
@@ -318,6 +336,26 @@ Engine::CGameObject* CCrab::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsC
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
+}
+
+CCrab** CCrab::Create_InstancePool(ID3D12Device* pGraphicDevice, 
+								   ID3D12GraphicsCommandList* pCommandList, 
+								   const _uint& uiInstanceCnt)
+{
+	CCrab** ppInstance = new (CCrab* [uiInstanceCnt]);
+
+	for (_uint i = 0; i < uiInstanceCnt; ++i)
+	{
+		ppInstance[i] = new CCrab(pGraphicDevice, pCommandList);
+		ppInstance[i]->m_uiInstanceIdx = i;
+		ppInstance[i]->Ready_GameObject(L"Crab",					// MeshTag
+										L"StageVelika_NaviMesh",	// NaviMeshTag
+										_vec3(0.05f, 0.05f, 0.05f),	// Scale
+										_vec3(0.0f),				// Angle
+										_vec3(AWAY_FROM_STAGE));	// Pos
+	}
+
+	return ppInstance;
 }
 
 void CCrab::Free()

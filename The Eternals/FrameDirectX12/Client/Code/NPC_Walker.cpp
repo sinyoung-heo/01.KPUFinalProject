@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "NPC_Walker.h"
-
+#include "InstancePoolMgr.h"
 #include "GraphicDevice.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
@@ -20,15 +20,16 @@ HRESULT CNPC_Walker::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshT
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag, wstrNaviMeshTag), E_FAIL);
+	m_wstrMeshTag         = wstrMeshTag;
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
-	m_pTransCom->m_vPos = vPos;
-	m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(vPos));
+	m_pTransCom->m_vPos   = vPos;
+	m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
-		m_pTransCom->m_vScale,
-		m_pMeshCom->Get_CenterPos(),
-		m_pMeshCom->Get_MinVector(),
-		m_pMeshCom->Get_MaxVector());
+										   m_pTransCom->m_vScale,
+										   m_pMeshCom->Get_CenterPos(),
+										   m_pMeshCom->Get_MinVector(),
+										   m_pMeshCom->Get_MaxVector());
 
 
 	m_pInfoCom->m_fSpeed = 1.f;
@@ -59,6 +60,28 @@ _int CNPC_Walker::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	if (m_bIsReturn)
+	{
+		m_bIsResetNaviMesh = false;
+
+		if (m_wstrMeshTag == L"Chicken")
+			Return_Instance(CInstancePoolMgr::Get_Instance()->Get_NPCChickenPool(), m_uiInstanceIdx);
+
+		else if (m_wstrMeshTag == L"Cat")
+			Return_Instance(CInstancePoolMgr::Get_Instance()->Get_NPCCatPool(), m_uiInstanceIdx);
+
+		else if (m_wstrMeshTag == L"Aman_boy")
+			Return_Instance(CInstancePoolMgr::Get_Instance()->Get_NPCAmanBoyPool(), m_uiInstanceIdx);
+
+		return RETURN_OBJ;
+	}
+
+	if (!m_bIsResetNaviMesh)
+	{
+		m_bIsResetNaviMesh = true;
+		m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
+	}
+
 	// Angle Linear Interpolation
 	SetUp_AngleInterpolation(fTimeDelta);
 
@@ -77,6 +100,11 @@ _int CNPC_Walker::Update_GameObject(const _float& fTimeDelta)
 	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
 	/*__________________________________________________________________________________________________________
+	[ Renderer - Add Render Group ]
+	____________________________________________________________________________________________________________*/
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+
+	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
@@ -87,11 +115,6 @@ _int CNPC_Walker::Update_GameObject(const _float& fTimeDelta)
 _int CNPC_Walker::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
-
-	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 
 	return NO_EVENT;
 }
@@ -294,6 +317,27 @@ Engine::CGameObject* CNPC_Walker::Create(ID3D12Device* pGraphicDevice, ID3D12Gra
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
+}
+
+CNPC_Walker** CNPC_Walker::Create_InstancePool(ID3D12Device* pGraphicDevice, 
+											   ID3D12GraphicsCommandList* pCommandList, 
+											   wstring wstrMeshTag, 
+											   const _uint& uiInstanceCnt)
+{
+	CNPC_Walker** ppInstance = new (CNPC_Walker * [uiInstanceCnt]);
+
+	for (_uint i = 0; i < uiInstanceCnt; ++i)
+	{
+		ppInstance[i] = new CNPC_Walker(pGraphicDevice, pCommandList);
+		ppInstance[i]->m_uiInstanceIdx = i;
+		ppInstance[i]->Ready_GameObject(wstrMeshTag,				// MeshTag
+										L"StageVelika_NaviMesh",	// NaviMeshTag
+										_vec3(0.05f, 0.05f, 0.05f),	// Scale
+										_vec3(0.0f),				// Angle
+										_vec3(AWAY_FROM_STAGE));	// Pos
+	}
+
+	return ppInstance;
 }
 
 void CNPC_Walker::Free()

@@ -11,12 +11,15 @@ private:
 	virtual ~CInfo() = default;
 
 public:
+	_int Get_RandomDamage();
+
 	HRESULT			Ready_Component();
 	virtual void	Update_Component(const _float& fTimeDelta);
 
 public:
 	_int	m_iLev			= 1;
-	_int	m_iAttack		= 1;
+	_int	m_iMinAttack	= 0;
+	_int	m_iMaxAttack	= 1;
 	_int	m_iHp			= 0;
 	_int	m_iMaxHp		= 0;
 	_int	m_iMp			= 0;

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Include.h"
 #include "GameObject.h"
 
@@ -22,10 +21,10 @@ private:
 public:
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
-		wstring wstrNaviMeshTag,
-		const _vec3& vScale,
-		const _vec3& vAngle,
-		const _vec3& vPos);
+									 wstring wstrNaviMeshTag,
+									 const _vec3& vScale,
+									 const _vec3& vAngle,
+									 const _vec3& vPos);
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
@@ -66,7 +65,8 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	wstring	m_wstrMeshTag = L"";
+	wstring	m_wstrMeshTag      = L"";
+	_bool	m_bIsResetNaviMesh = false;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]
@@ -77,12 +77,17 @@ private:
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
-		ID3D12GraphicsCommandList* pCommandList,
-		wstring wstrMeshTag,
-		wstring wstrNaviMeshTag,
-		const _vec3& vScale,
-		const _vec3& vAngle,
-		const _vec3& vPos);
+									   ID3D12GraphicsCommandList* pCommandList,
+									   wstring wstrMeshTag,
+									   wstring wstrNaviMeshTag,
+									   const _vec3& vScale,
+									   const _vec3& vAngle,
+									   const _vec3& vPos);
+
+	static CNPC_Children** Create_InstancePool(ID3D12Device* pGraphicDevice,
+											   ID3D12GraphicsCommandList* pCommandList, 
+											   wstring wstrMeshTag,
+											   const _uint& uiInstanceCnt);
 private:
 	virtual void Free();
 };

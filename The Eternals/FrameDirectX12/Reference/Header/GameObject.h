@@ -52,7 +52,7 @@ public:
 	void	Set_Attack(const bool& b)								{ m_bIsAttack = b; }
 	void	Set_OType(const char& chType)							{ m_chO_Type = chType; }
 	void	Set_DeadReckoning(const _vec3& vPos);
-	void	Set_Info(int lev, int hp, int maxHp, int mp, int maxMp, int exp, int maxExp, int att, float spd);
+	void	Set_Info(int lev, int hp, int maxHp, int mp, int maxMp, int exp, int maxExp, int minatt, int maxatt, float spd);
 	void	Set_State(int cur) { m_iMonsterStatus = cur; }
 	void	Set_Other_direction(_vec3& vDir);
 	float	Set_Other_Angle(_vec3& vDir);

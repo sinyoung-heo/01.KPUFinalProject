@@ -147,7 +147,8 @@ HRESULT CLayer::Delete_ServerObject(wstring wstrObjTag, int num)
 	CGameObject* pGameObject = Get_ServerObject(wstrObjTag, num);
 	if (nullptr != pGameObject)
 	{
-		pGameObject->Set_DeadGameObject();
+		//pGameObject->Set_DeadGameObject();
+		pGameObject->Set_IsReturnObject(true);
 
 		return S_OK;
 	}

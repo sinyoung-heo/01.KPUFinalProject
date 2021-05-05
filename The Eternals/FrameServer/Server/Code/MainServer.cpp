@@ -828,7 +828,8 @@ void add_new_client(SOCKET ns)
 		pNew->m_iMaxMp	= 100;
 		pNew->m_iExp	= 0;
 		pNew->m_iMaxExp = 100;
-		pNew->m_iAtt	= 10;
+		pNew->m_iMinAtt = 100;
+		pNew->m_iMaxAtt	= 200;
 		pNew->m_fSpd	= 5.f;
 
 		pNew->m_vPos	= _vec3(STAGE_VELIKA_X, 0.f, STAGE_VELIKA_Z);

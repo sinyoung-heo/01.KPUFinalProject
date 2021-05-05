@@ -64,7 +64,8 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	wstring	m_wstrMeshTag = L"";
+	wstring	m_wstrMeshTag      = L"";
+	_bool	m_bIsResetNaviMesh = false;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]
@@ -81,6 +82,10 @@ public:
 									   const _vec3& vScale,
 									   const _vec3& vAngle,
 									   const _vec3& vPos);
+
+	static CGiantMonkey** Create_InstancePool(ID3D12Device* pGraphicDevice,
+											  ID3D12GraphicsCommandList* pCommandList, 
+											  const _uint& uiInstanceCnt);
 private:
 	virtual void Free();
 };

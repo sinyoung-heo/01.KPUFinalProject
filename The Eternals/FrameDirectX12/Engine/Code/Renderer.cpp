@@ -1326,6 +1326,10 @@ void CRenderer::Free()
 	Safe_Release(m_pTargetSunShine);
 	Safe_Release(m_pSunShineShader);
 	Safe_Release(m_pSunShineBuffer);
+
+	Safe_Release(m_pTargetpEffect);
+	Safe_Release(m_pEffectBuffer);
+
 	/*__________________________________________________________________________________________________________
 	2020.06.07 MultiThreadRendering
 	- CommandAllocators & CommandList Á¦°Å.

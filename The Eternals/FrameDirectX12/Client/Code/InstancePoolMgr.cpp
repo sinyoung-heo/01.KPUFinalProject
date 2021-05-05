@@ -2,6 +2,19 @@
 #include "InstancePoolMgr.h"
 #include "ObjectMgr.h"
 #include "CollisionTick.h"
+#include "Crab.h"
+#include "Monkey.h"
+#include "CloderA.h"
+#include "DrownedSailor.h"
+#include "GiantBeetle.h"
+#include "GiantMonkey.h"
+#include "CraftyArachne.h"
+#include "NPC_Walker.h"
+#include "NPC_Assistant.h"
+#include "NPC_Stander.h"
+#include "NPC_Merchant.h"
+#include "NPC_Quest.h"
+#include "NPC_Children.h"
 
 IMPLEMENT_SINGLETON(CInstancePoolMgr)
 
@@ -11,86 +24,57 @@ CInstancePoolMgr::CInstancePoolMgr()
 
 void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 {
-	_uint uiInstanceSize = 0;
-
 	// CollisionTick
-	uiInstanceSize                       = 32;
-	m_pCollisionTickPool                 = new INSTANCE_POOL_DESC<CCollisionTick>;
-	m_pCollisionTickPool->ppInstances    = CCollisionTick::Create_Instance(pGraphicDevice, pCommandList, uiInstanceSize);
-	m_pCollisionTickPool->uiInstanceSize = uiInstanceSize;
-}
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pCollisionTickPool, 32);
+	
+	// Monster
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterCrabPool, 4);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterCloderAPool, 4);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterMonkeyPool, 4);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterDrownedSailorPool, 4);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterGiantBeetlePool, 4);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterGiantMonkeyPool, 4);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterCraftyArachnePool, 4);
 
-CCollisionTick* CInstancePoolMgr::Pop_CollisionTickInstance()
-{
-	_uint uiIdx   = m_pCollisionTickPool->uiCurrentIdx;
-	_uint uiSize  = m_pCollisionTickPool->uiInstanceSize;
-
-	if (uiIdx == uiSize)
-	{
-		for (_uint i = 0; i < uiSize; ++i)
-		{
-			if (!m_pCollisionTickPool->ppInstances[i]->Get_IsUsingInstance())
-			{
-				m_pCollisionTickPool->uiCurrentIdx = i + 1;
-				m_pCollisionTickPool->ppInstances[i]->AddRef();
-
-				return m_pCollisionTickPool->ppInstances[i];
-			}
-		}
-	}
-	else
-	{
-		// CurrentIdx 사용중인지 검사.
-		if (!m_pCollisionTickPool->ppInstances[uiIdx]->Get_IsUsingInstance())
-		{
-			++m_pCollisionTickPool->uiCurrentIdx;
-			m_pCollisionTickPool->ppInstances[uiIdx]->AddRef();
-
-			return m_pCollisionTickPool->ppInstances[uiIdx];
-		}
-		// 시용중이라면 사용중이지 않은 Indstnace 탐색.
-		else
-		{
-			for (_uint i = uiIdx + 1; i < uiSize; ++i)
-			{
-				if (!m_pCollisionTickPool->ppInstances[i]->Get_IsUsingInstance())
-				{
-					m_pCollisionTickPool->uiCurrentIdx = i + 1;
-					m_pCollisionTickPool->ppInstances[i]->AddRef();
-
-					return m_pCollisionTickPool->ppInstances[i];
-				}
-			}
-
-			for (_uint i = 0; i < uiIdx; ++i)
-			{
-				if (!m_pCollisionTickPool->ppInstances[i]->Get_IsUsingInstance())
-				{
-					m_pCollisionTickPool->uiCurrentIdx = i + 1;
-					m_pCollisionTickPool->ppInstances[i]->AddRef();
-
-					return m_pCollisionTickPool->ppInstances[i];
-				}
-			}
-		}
-	}
-
-	return nullptr;
-}
-
-void CInstancePoolMgr::Return_CollisionTickInstance(const _uint& uiInstanceIdx)
-{
-	m_pCollisionTickPool->ppInstances[uiInstanceIdx]->Set_IsUsingInstance(false);
-	m_pCollisionTickPool->ppInstances[uiInstanceIdx]->Set_IsReturnObject(false);
-	Engine::Safe_Release(m_pCollisionTickPool->ppInstances[uiInstanceIdx]);
+	// NPC
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Walker_ChickenPool, L"Chicken", 10);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Walker_CatPool, L"Cat", 10);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Walker_AmanBoyPool, L"Aman_boy", 10);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_AssistantPool, L"Popori_boy", 2);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Stander_VillagersPool, L"NPC_Villagers", 10);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Stander_Baraka_M_ExtractorPool, L"Baraka_M_Extractor", 10);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Merchant_Popori_M_MerchantPool, L"Popori_M_Merchant", 1);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Merchant_Baraka_M_MerchantPool, L"Baraka_M_Merchant", 1);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Merchant_Baraka_M_MystelliumPool, L"Baraka_M_Mystellium", 1);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_QuestPool, L"Castanic_M_Lsmith", 1);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Children_HumanBoyPool, L"Human_boy", 10);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Children_HumanGirlPool, L"Human_girl", 10);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Children_HighelfGirlPool, L"Highelf_girl", 10);
 }
 
 void CInstancePoolMgr::Free()
 {
-	// CollisionTick
-	for (_uint i = 0; i < m_pCollisionTickPool->uiInstanceSize; ++i)
-		Engine::Safe_Release(m_pCollisionTickPool->ppInstances[i]);
+	Safe_Release_InstacePool(m_pCollisionTickPool);
 
-	Engine::Safe_Delete_Array(m_pCollisionTickPool->ppInstances);
-	Engine::Safe_Delete(m_pCollisionTickPool);
+	Safe_Release_InstacePool(m_pMonsterCrabPool);
+	Safe_Release_InstacePool(m_pMonsterCloderAPool);
+	Safe_Release_InstacePool(m_pMonsterMonkeyPool);
+	Safe_Release_InstacePool(m_pMonsterDrownedSailorPool);
+	Safe_Release_InstacePool(m_pMonsterGiantBeetlePool);
+	Safe_Release_InstacePool(m_pMonsterGiantMonkeyPool);
+	Safe_Release_InstacePool(m_pMonsterCraftyArachnePool);
+
+	Safe_Release_InstacePool(m_pNPC_Walker_ChickenPool);
+	Safe_Release_InstacePool(m_pNPC_Walker_CatPool);
+	Safe_Release_InstacePool(m_pNPC_Walker_AmanBoyPool);
+	Safe_Release_InstacePool(m_pNPC_AssistantPool);
+	Safe_Release_InstacePool(m_pNPC_Stander_VillagersPool);
+	Safe_Release_InstacePool(m_pNPC_Stander_Baraka_M_ExtractorPool);
+	Safe_Release_InstacePool(m_pNPC_Merchant_Popori_M_MerchantPool);
+	Safe_Release_InstacePool(m_pNPC_Merchant_Baraka_M_MerchantPool);
+	Safe_Release_InstacePool(m_pNPC_Merchant_Baraka_M_MystelliumPool);
+	Safe_Release_InstacePool(m_pNPC_QuestPool);
+	Safe_Release_InstacePool(m_pNPC_Children_HumanBoyPool);
+	Safe_Release_InstacePool(m_pNPC_Children_HumanGirlPool);
+	Safe_Release_InstacePool(m_pNPC_Children_HighelfGirlPool);
 }

@@ -56,7 +56,7 @@ void CGameObject::Set_DeadReckoning(const _vec3& vPos)
 	m_pInfoCom->m_vArrivePos = vPos;	
 }
 
-void CGameObject::Set_Info(int lev, int hp, int maxHp, int mp, int maxMp, int exp, int maxExp, int att, float spd)
+void CGameObject::Set_Info(int lev, int hp, int maxHp, int mp, int maxMp, int exp, int maxExp, int minatt, int maxatt, float spd)
 {
 	m_pInfoCom->m_iLev = lev;
 	m_pInfoCom->m_iHp = hp;
@@ -65,7 +65,8 @@ void CGameObject::Set_Info(int lev, int hp, int maxHp, int mp, int maxMp, int ex
 	m_pInfoCom->m_iMaxMp = maxMp;
 	m_pInfoCom->m_iExp = exp;
 	m_pInfoCom->m_iMaxExp = maxExp;
-	m_pInfoCom->m_iAttack = att;
+	m_pInfoCom->m_iMinAttack = minatt;
+	m_pInfoCom->m_iMaxAttack = maxatt;
 	m_pInfoCom->m_fSpeed = spd;
 }
 

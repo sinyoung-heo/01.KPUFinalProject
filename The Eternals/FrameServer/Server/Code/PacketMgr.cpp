@@ -198,7 +198,7 @@ void process_packet(int id)
 		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", p->col_id));
 		if (nullptr == pMonster) return;
 
-		pMonster->Hurt_Monster(id, pPlayer->m_iAtt);
+		pMonster->Hurt_Monster(id, p->damage);
 	}
 	break;
 
@@ -311,7 +311,8 @@ void send_login_ok(int id)
 	p.maxMp		= pPlayer->m_iMaxMp;
 	p.exp		= pPlayer->m_iExp;
 	p.maxExp	= pPlayer->m_iMaxExp;
-	p.att		= pPlayer->m_iAtt;
+	p.min_att	= pPlayer->m_iMinAtt;
+	p.max_att	= pPlayer->m_iMaxAtt;
 	p.spd		= pPlayer->m_fSpd;
 
 	p.posX		= pPlayer->m_vPos.x;
@@ -946,7 +947,7 @@ void process_collide(int id, int colID)
 
 		/* Decrease Player HP */
 		if (pPlayer->m_iHp > 0)
-			pPlayer->m_iHp -= pMonster->m_iAtt;
+			pPlayer->m_iHp -= pMonster->m_iMaxAtt;
 		else
 		{
 			/* Player Dead */

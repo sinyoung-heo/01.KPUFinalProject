@@ -106,7 +106,8 @@ public:
 	int				m_iHp					= 0;
 	int				m_iMaxHp				= 0;
 	int				m_iExp					= 0;
-	int				m_iAtt					= 0;
+	int				m_iMinAtt				= 0;
+	int				m_iMaxAtt				= 0;
 	float			m_fSpd					= 0;
 	
 	volatile bool	m_bIsRegen				= false;

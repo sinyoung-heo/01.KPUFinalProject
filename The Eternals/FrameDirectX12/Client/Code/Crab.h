@@ -64,8 +64,10 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	wstring	m_wstrMeshTag = L"";
-	_vec3 m_vPreMovePos = _vec3(0.f);
+	wstring	m_wstrMeshTag      = L"";
+	_vec3	m_vPreMovePos      = _vec3(0.f);
+	_bool	m_bIsResetNaviMesh = false;
+
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]
 	____________________________________________________________________________________________________________*/
@@ -81,6 +83,10 @@ public:
 									   const _vec3& vScale,
 									   const _vec3& vAngle,
 									   const _vec3& vPos);
+
+	static CCrab** Create_InstancePool(ID3D12Device* pGraphicDevice, 
+									   ID3D12GraphicsCommandList* pCommandList, 
+									   const _uint& uiInstanceCnt);
 private:
 	virtual void Free();
 };

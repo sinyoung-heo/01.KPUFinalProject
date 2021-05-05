@@ -238,6 +238,9 @@ _int CPCGladiator::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CPCGladiator::Process_Collision()
 {
+	if (g_bIsStageChange)
+		return;
+
 	for (auto& pDst : m_lstCollisionDst)
 	{
 		// Collision Monster
@@ -251,20 +254,17 @@ void CPCGladiator::Process_Collision()
 			Collision_MonsterMultiCollider(pDst->Get_ColliderList());
 
 		// Collision Stage Change
-		if (!g_bIsStageChange)
-		{
-			if (L"Portal_VelikaToBeach" == pDst->Get_CollisionTag())
-				Collision_PortalVelikaToBeach(pDst->Get_ColliderList());
+		if (L"Portal_VelikaToBeach" == pDst->Get_CollisionTag())
+			Collision_PortalVelikaToBeach(pDst->Get_ColliderList());
 
-			if (L"Portal_BeachToVelika" == pDst->Get_CollisionTag())
-				Collision_PortalBeachToVelika(pDst->Get_ColliderList());
+		if (L"Portal_BeachToVelika" == pDst->Get_CollisionTag())
+			Collision_PortalBeachToVelika(pDst->Get_ColliderList());
 
-			if (L"NPC_Merchant" == pDst->Get_CollisionTag())
-				Collision_Merchant(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
+		if (L"NPC_Merchant" == pDst->Get_CollisionTag())
+			Collision_Merchant(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
 
-			if (L"NPC_QUest" == pDst->Get_CollisionTag())
-				Collision_Quest(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
-		}
+		if (L"NPC_QUest" == pDst->Get_CollisionTag())
+			Collision_Quest(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
 	}
 }
 
@@ -676,32 +676,7 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 
 	if (Engine::KEY_DOWN(DIK_M))
 	{
-		CPacketMgr::Get_Instance()->send_attackToMonster(5000);
-		CPacketMgr::Get_Instance()->send_attackToMonster(5001);
-		CPacketMgr::Get_Instance()->send_attackToMonster(5002);
-		CPacketMgr::Get_Instance()->send_attackToMonster(5003);
-	}
-
-	if (Engine::KEY_DOWN(DIK_P))
-	{
-		m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
-		m_pTransCom->m_vDir.Normalize();
-		_vec3 vPos = m_pTransCom->m_vPos + m_pTransCom->m_vDir * 2.0f;
-		vPos.y = 1.f;
-
-		// CollisionTick
-		CCollisionTick* pCollisionTick = m_pInstancePoolMgr->Pop_CollisionTickInstance();
-		if (nullptr != pCollisionTick)
-		{
-			pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
-			pCollisionTick->Set_Damage(m_pInfoCom->m_iAttack);
-			pCollisionTick->Set_LifeTime(60.0f);
-			pCollisionTick->Get_Transform()->m_vScale = _vec3(2.0f);
-			pCollisionTick->Get_Transform()->m_vPos   = vPos;
-			pCollisionTick->Get_BoundingSphere()->Set_Radius(pCollisionTick->Get_Transform()->m_vScale);
-
-			m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_ThisPlayer", pCollisionTick);
-		}
+		CPacketMgr::Get_Instance()->send_attackToMonster(5000, 100);
 	}
 }
 
@@ -1974,11 +1949,11 @@ void CPCGladiator::SetUp_CollisionTick(const _float& fTimeDelta)
 			_vec3 vPos = m_pTransCom->m_vPos + m_pTransCom->m_vDir * m_tCollisionTickDesc.fPosOffset;
 			vPos.y = 1.f;
 
-			CCollisionTick* pCollisionTick = m_pInstancePoolMgr->Pop_CollisionTickInstance();
+			CCollisionTick* pCollisionTick = static_cast<CCollisionTick*>(Pop_Instance(m_pInstancePoolMgr->Get_CollisionTickPool()));
 			if (nullptr != pCollisionTick)
 			{
 				pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
-				pCollisionTick->Set_Damage(m_pInfoCom->m_iAttack);
+				pCollisionTick->Set_Damage(m_pInfoCom->Get_RandomDamage());
 				pCollisionTick->Set_LifeTime(0.25f);
 				pCollisionTick->Get_Transform()->m_vScale = _vec3(4.0f) * m_tCollisionTickDesc.fScaleOffset;
 				pCollisionTick->Get_Transform()->m_vPos   = vPos;
@@ -2139,7 +2114,8 @@ Engine::CGameObject* CPCGladiator::Create(ID3D12Device* pGraphicDevice,
 
 void CPCGladiator::Free()
 {
-	m_pWeapon->Set_DeadGameObject();
+	if (nullptr != m_pWeapon)
+		m_pWeapon->Set_DeadGameObject();
 
 	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pDynamicCamera);

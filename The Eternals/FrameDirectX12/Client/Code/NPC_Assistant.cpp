@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "NPC_Assistant.h"
-
+#include "InstancePoolMgr.h"
 #include "GraphicDevice.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
@@ -20,15 +20,16 @@ HRESULT CNPC_Assistant::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMe
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag, wstrNaviMeshTag), E_FAIL);
+	m_wstrMeshTag         = wstrMeshTag;
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
-	m_pTransCom->m_vPos = vPos;
+	m_pTransCom->m_vPos   = vPos;
 	m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(vPos));
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
-		m_pTransCom->m_vScale,
-		m_pMeshCom->Get_CenterPos(),
-		m_pMeshCom->Get_MinVector(),
-		m_pMeshCom->Get_MaxVector());
+										   m_pTransCom->m_vScale,
+										   m_pMeshCom->Get_CenterPos(),
+										   m_pMeshCom->Get_MinVector(),
+										   m_pMeshCom->Get_MaxVector());
 
 
 	m_pInfoCom->m_fSpeed = 1.f;
@@ -58,6 +59,13 @@ _int CNPC_Assistant::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
+
+	if (m_bIsReturn)
+	{
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_NPCAssistantPool(), m_uiInstanceIdx);
+
+		return RETURN_OBJ;
+	}
 
 	// Angle Linear Interpolation
 	SetUp_AngleInterpolation(fTimeDelta);
@@ -240,6 +248,27 @@ Engine::CGameObject* CNPC_Assistant::Create(ID3D12Device* pGraphicDevice, ID3D12
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
+}
+
+CNPC_Assistant** CNPC_Assistant::Create_InstancePool(ID3D12Device* pGraphicDevice, 
+													 ID3D12GraphicsCommandList* pCommandList, 
+													 wstring wstrMeshTag, 
+													 const _uint& uiInstanceCnt)
+{
+	CNPC_Assistant** ppInstance = new (CNPC_Assistant * [uiInstanceCnt]);
+
+	for (_uint i = 0; i < uiInstanceCnt; ++i)
+	{
+		ppInstance[i] = new CNPC_Assistant(pGraphicDevice, pCommandList);
+		ppInstance[i]->m_uiInstanceIdx = i;
+		ppInstance[i]->Ready_GameObject(wstrMeshTag,				// MeshTag
+										L"StageVelika_NaviMesh",	// NaviMeshTag
+										_vec3(0.05f, 0.05f, 0.05f),	// Scale
+										_vec3(0.0f),				// Angle
+										_vec3(AWAY_FROM_STAGE));	// Pos
+	}
+
+	return ppInstance;
 }
 
 void CNPC_Assistant::Free()

@@ -31,6 +31,9 @@ const _float TIME_OFFSET = 1.0f;
 constexpr int MAX_BUF_SIZE = 4096;
 constexpr int MIN_BUF_SIZE = 1024;
 
+// Away Position
+const _float AWAY_FROM_STAGE = -10'000.0f;
+
 // Stage Offset
 const _float STAGE_VELIKA_OFFSET_X = 0.0f;
 const _float STAGE_VELIKA_OFFSET_Z = 0.0f;

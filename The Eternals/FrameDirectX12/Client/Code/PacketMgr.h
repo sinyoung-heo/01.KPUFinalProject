@@ -11,6 +11,8 @@ namespace Engine
 	class CRenderer;
 }
 
+class CInstancePoolMgr;
+
 class CPacketMgr : public Engine::CBase
 {
 	DECLARE_SINGLETON(CPacketMgr)
@@ -40,7 +42,7 @@ public:
 	void	send_attack(const _int& iAniIdx, const _vec3& vDir, const _vec3& vPos, const _float& fEndAngleY);
 	void    send_attack_stop(const _int& iAniIdx, const _vec3& vDir, const _vec3& vPos);
 	void    send_attackByMonster(int objID);
-	void    send_attackToMonster(int objID);
+	void    send_attackToMonster(int objID, const _int& iDamage);
 	void	send_stage_change(const char& chStageId);
 
 public:
@@ -83,6 +85,8 @@ private:
 	Engine::CRenderer*			m_pRenderer		 = nullptr;
 	ID3D12Device*				m_pGraphicDevice = nullptr;
 	ID3D12GraphicsCommandList*	m_pCommandList   = nullptr;
+
+	CInstancePoolMgr*			m_pInstancePoolMgr = nullptr;
 
 	MVKEY m_eCurKey = MVKEY::K_END;
 	MVKEY m_ePreKey = MVKEY::K_END;

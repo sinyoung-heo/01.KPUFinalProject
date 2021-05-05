@@ -116,7 +116,7 @@ bool CDBMgr::Check_ID(int id, char* pw)
 				pPlayer->m_iMaxHp	= u_maxHp;
 				pPlayer->m_iExp		= u_Exp;
 				pPlayer->m_iMaxExp	= u_maxExp;
-				pPlayer->m_iAtt		= u_att;
+				pPlayer->m_iMaxAtt		= u_att;
 				pPlayer->m_fSpd		= (float)u_speed;
 
 				SQLCloseCursor(m_hstmt);
@@ -158,7 +158,7 @@ void CDBMgr::Insert_NewPlayer_DB(int id, char* pw)
 		+ to_string(pPlayer->m_iMaxHp) + ", "
 		+ to_string(pPlayer->m_iExp) + ", "
 		+ to_string(pPlayer->m_iMaxExp) + ", "
-		+ to_string(pPlayer->m_iAtt) + ", "
+		+ to_string(pPlayer->m_iMaxAtt) + ", "
 		+ to_string(pPlayer->m_fSpd);
 
 	std::wstring wstr_order = L"";
@@ -199,7 +199,7 @@ void CDBMgr::Update_stat_DB(int id)
 		+ to_string(pPlayer->m_iMaxHp) + ", "
 		+ to_string(pPlayer->m_iExp) + ", "
 		+ to_string(pPlayer->m_iMaxExp) + ", "
-		+ to_string(pPlayer->m_iAtt) + ", "
+		+ to_string(pPlayer->m_iMaxAtt) + ", "
 		+ to_string(pPlayer->m_fSpd) + ", "
 		+ name;
 		

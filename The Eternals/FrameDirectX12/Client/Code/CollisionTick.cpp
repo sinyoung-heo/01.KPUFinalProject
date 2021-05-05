@@ -5,6 +5,7 @@
 CCollisionTick::CCollisionTick()
 	: Engine::CGameObject()
 	, m_pInstancePoolMgr(CInstancePoolMgr::Get_Instance())
+	, m_pPacketMgr(CPacketMgr::Get_Instance())
 {
 }
 
@@ -56,7 +57,7 @@ _int CCollisionTick::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bIsReturn)
 	{
-		m_pInstancePoolMgr->Return_CollisionTickInstance(m_uiInstanceIdx);
+		Return_Instance(m_pInstancePoolMgr->Get_CollisionTickPool(), m_uiInstanceIdx);
 		return RETURN_OBJ;
 	}
 
@@ -86,7 +87,30 @@ _int CCollisionTick::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CCollisionTick::Process_Collision()
 {
+	for (auto& pDst : m_lstCollisionDst)
+	{
+		// Player Attack <---> Monster
+		if (L"CollisionTick_ThisPlayer" == m_wstrCollisionTag &&
+			L"Monster_SingleCollider" == pDst->Get_CollisionTag())
+		{
+			Set_IsReturnObject(true);
+			pDst->Get_BoundingSphere()->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 
+			// Player Attack to Monster
+			m_pPacketMgr->send_attackToMonster(pDst->Get_ServerNumber(), m_uiDamage);
+		}
+		else if (L"CollisionTick_ThisPlayer" == m_wstrCollisionTag &&
+				 L"Monster_MultiCollider" == pDst->Get_CollisionTag())
+		{
+
+		}
+
+		// Monster Attack <---> ThisPlayer
+		else if (L"" == m_wstrCollisionTag)
+		{
+
+		}
+	}
 }
 
 
@@ -105,9 +129,9 @@ Engine::CGameObject* CCollisionTick::Create(ID3D12Device* pGraphicDevice, ID3D12
 	return pInstance;
 }
 
-CCollisionTick** CCollisionTick::Create_Instance(ID3D12Device* pGraphicDevice,
-												 ID3D12GraphicsCommandList* pCommandList, 
-												 const _uint& uiInstanceCnt)
+CCollisionTick** CCollisionTick::Create_InstancePool(ID3D12Device* pGraphicDevice,
+													 ID3D12GraphicsCommandList* pCommandList, 
+													 const _uint& uiInstanceCnt)
 {
 	CCollisionTick** ppInstance = new (CCollisionTick*[uiInstanceCnt]);
 

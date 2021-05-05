@@ -65,7 +65,8 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	wstring	m_wstrMeshTag = L"";
+	wstring	m_wstrMeshTag      = L"";
+	_bool	m_bIsResetNaviMesh = false;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]
@@ -73,6 +74,7 @@ private:
 	_uint	m_uiAnimIdx = 0;	// 현재 애니메이션 Index
 	_uint	m_ui3DMax_NumFrame = 0;	// 3DMax에서 애니메이션의 총 Frame 개수
 	_uint	m_ui3DMax_CurFrame = 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
+
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
@@ -82,6 +84,11 @@ public:
 									   const _vec3& vScale,
 									   const _vec3& vAngle,
 									   const _vec3& vPos);
+
+	static CNPC_Walker** Create_InstancePool(ID3D12Device* pGraphicDevice,
+											 ID3D12GraphicsCommandList* pCommandList, 
+											 wstring wstrMeshTag,
+											 const _uint& uiInstanceCnt);
 private:
 	virtual void Free();
 };
