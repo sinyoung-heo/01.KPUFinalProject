@@ -76,6 +76,12 @@ namespace DrownedSailor
 	{
 		10080, 6400, 5440, 9600, 9600, 12800, 12800, 7200, 18880
 	};
+
+	constexpr int ATTACK_SPIN_START_TICK   = 31;
+	constexpr int ATTACK_NORMAL_START_TICK = 36;
+	constexpr int ATTACK_STRONG_START_TICK = 49;
+	constexpr int ATTACK_RUSH_START_TICK   = 49;
+	constexpr int ATTACK_HOOK_START_TICK   = 23;
 }
 
 namespace GiantBeetle

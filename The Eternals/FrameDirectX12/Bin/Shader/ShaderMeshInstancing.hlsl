@@ -150,14 +150,6 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
     ps_output.Depth = float4(ps_input.ProjPos.z / ps_input.ProjPos.w, // (posWVP.z / posWVP.w) : Proj 영역의 Z.
 								 ps_input.ProjPos.w / g_fProjFar, // posWVP.w / Far : 0~1로 만든 View영역의 Z.
 								 1.0f, 1.0f);
-
- //   float Normal_fDissolve = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV).r;
-	//if ((0.05f > (1.f - ps_input.Dissolve) - Normal_fDissolve) && ((1.f - ps_input.Dissolve) - Normal_fDissolve) > 0.f)
- //   {
- //       ps_output.Emissive = float4(1, Normal_fDissolve, 0, 1);
- //   }
-	//clip((1.f - ps_input.Dissolve) - Normal_fDissolve);
-
 	
     return (ps_output);
 }

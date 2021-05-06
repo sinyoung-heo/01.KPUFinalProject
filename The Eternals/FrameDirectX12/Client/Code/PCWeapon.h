@@ -68,7 +68,7 @@ protected:
 
 	_bool	m_bIsStartInterpolation = false;
 	_float	m_fLinearRatio	        = 1.0f;
-	_float	m_fMinDissolve          = 0.0f;
+	_float	m_fMinDissolve          = -0.05f;
 	_float	m_fMaxDissolve          = 1.0f;
 	_float	m_fDissolve             = 1.0f;
 	_float	m_fDissolveSpeed        = 1.0f;

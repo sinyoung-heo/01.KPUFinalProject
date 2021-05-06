@@ -481,28 +481,33 @@ HRESULT CShaderMesh::Create_PipelineState()
 	- Blend		(X)
 	- Z Write	(O)
 	____________________________________________________________________________________________________________*/
-	PipelineStateDesc.pRootSignature = m_pRootSignature;
-	PipelineStateDesc.SampleMask = UINT_MAX;
+	PipelineStateDesc.pRootSignature        = m_pRootSignature;
+	PipelineStateDesc.SampleMask            = UINT_MAX;
 	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	PipelineStateDesc.NumRenderTargets = 6;								// PS에서 사용할 RenderTarget 개수.
-	PipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
-	PipelineStateDesc.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Normal Target
-	PipelineStateDesc.RTVFormats[2] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Specular Target
-	PipelineStateDesc.RTVFormats[3] = DXGI_FORMAT_R32G32B32A32_FLOAT;	// Depth Target
-	PipelineStateDesc.RTVFormats[4] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
-	PipelineStateDesc.RTVFormats[5] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
-
-	PipelineStateDesc.SampleDesc.Count = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
-	PipelineStateDesc.SampleDesc.Quality = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
-	PipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	vecInputLayout = Create_InputLayout("VS_MAIN", "PS_MAIN");
-	PipelineStateDesc.InputLayout = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
-	PipelineStateDesc.VS = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.PS = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.BlendState = Create_BlendState(false, D3D12_BLEND_ONE, D3D12_BLEND_ZERO, D3D12_BLEND_OP_ADD, D3D12_BLEND_ONE,
-		D3D12_BLEND_ZERO, D3D12_BLEND_OP_ADD, TRUE);
-	PipelineStateDesc.RasterizerState = CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
-	PipelineStateDesc.DepthStencilState = CShader::Create_DepthStencilState();
+	PipelineStateDesc.NumRenderTargets      = 6;								// PS에서 사용할 RenderTarget 개수.
+	PipelineStateDesc.RTVFormats[0]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
+	PipelineStateDesc.RTVFormats[1]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Normal Target
+	PipelineStateDesc.RTVFormats[2]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Specular Target
+	PipelineStateDesc.RTVFormats[3]         = DXGI_FORMAT_R32G32B32A32_FLOAT;	// Depth Target
+	PipelineStateDesc.RTVFormats[4]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
+	PipelineStateDesc.RTVFormats[5]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
+	PipelineStateDesc.SampleDesc.Count      = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality    = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat             = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	vecInputLayout                          = Create_InputLayout("VS_MAIN", "PS_MAIN");
+	PipelineStateDesc.InputLayout           = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS                    = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS                    = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState            = Create_BlendState(false, 
+																D3D12_BLEND_ONE,
+																D3D12_BLEND_ZERO, 
+																D3D12_BLEND_OP_ADD,
+																D3D12_BLEND_ONE,
+																D3D12_BLEND_ZERO,
+																D3D12_BLEND_OP_ADD, 
+																TRUE);
+	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
+	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState();
 
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
@@ -517,28 +522,33 @@ HRESULT CShaderMesh::Create_PipelineState()
 	- Blend		(X)
 	- Z Write	(O)
 	____________________________________________________________________________________________________________*/
-	PipelineStateDesc.pRootSignature = m_pRootSignature;
-	PipelineStateDesc.SampleMask = UINT_MAX;
+	PipelineStateDesc.pRootSignature        = m_pRootSignature;
+	PipelineStateDesc.SampleMask            = UINT_MAX;
 	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	PipelineStateDesc.NumRenderTargets = 6;								// PS에서 사용할 RenderTarget 개수.
-	PipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
-	PipelineStateDesc.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Normal Target
-	PipelineStateDesc.RTVFormats[2] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Specular Target
-	PipelineStateDesc.RTVFormats[3] = DXGI_FORMAT_R32G32B32A32_FLOAT;	// Depth Target
-	PipelineStateDesc.RTVFormats[4] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
-	PipelineStateDesc.RTVFormats[5] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
-
-	PipelineStateDesc.SampleDesc.Count = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
-	PipelineStateDesc.SampleDesc.Quality = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
-	PipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	vecInputLayout = Create_InputLayout("VS_SHADOW_MAIN", "PS_SHADOW_MAIN");
-	PipelineStateDesc.InputLayout = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
-	PipelineStateDesc.VS = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.PS = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.BlendState = Create_BlendState(false, D3D12_BLEND_ONE, D3D12_BLEND_ZERO, D3D12_BLEND_OP_ADD, D3D12_BLEND_ONE,
-		D3D12_BLEND_ZERO, D3D12_BLEND_OP_ADD, TRUE);
-	PipelineStateDesc.RasterizerState = CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
-	PipelineStateDesc.DepthStencilState = CShader::Create_DepthStencilState();
+	PipelineStateDesc.NumRenderTargets      = 6;								// PS에서 사용할 RenderTarget 개수.
+	PipelineStateDesc.RTVFormats[0]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
+	PipelineStateDesc.RTVFormats[1]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Normal Target
+	PipelineStateDesc.RTVFormats[2]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Specular Target
+	PipelineStateDesc.RTVFormats[3]         = DXGI_FORMAT_R32G32B32A32_FLOAT;	// Depth Target
+	PipelineStateDesc.RTVFormats[4]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
+	PipelineStateDesc.RTVFormats[5]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
+	PipelineStateDesc.SampleDesc.Count      = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality    = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat             = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	vecInputLayout                          = Create_InputLayout("VS_SHADOW_MAIN", "PS_SHADOW_MAIN");
+	PipelineStateDesc.InputLayout           = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS                    = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS                    = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState            = Create_BlendState(false, 
+																D3D12_BLEND_ONE,
+																D3D12_BLEND_ZERO, 
+																D3D12_BLEND_OP_ADD, 
+																D3D12_BLEND_ONE,
+																D3D12_BLEND_ZERO, 
+																D3D12_BLEND_OP_ADD, 
+																TRUE);
+	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
+	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState();
 
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
@@ -552,22 +562,21 @@ HRESULT CShaderMesh::Create_PipelineState()
 
 	ZeroMemory(&PipelineStateDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
 
-	PipelineStateDesc.pRootSignature = m_pRootSignature;
-	PipelineStateDesc.SampleMask = UINT_MAX;
+	PipelineStateDesc.pRootSignature        = m_pRootSignature;
+	PipelineStateDesc.SampleMask            = UINT_MAX;
 	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	PipelineStateDesc.NumRenderTargets = 1;								// PS에서 사용할 RenderTarget 개수.
-	PipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
-
-	PipelineStateDesc.SampleDesc.Count = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
-	PipelineStateDesc.SampleDesc.Quality = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
-	PipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	vecInputLayout = Create_InputLayout("VS_MAIN", "PS_DISTORTION");
-	PipelineStateDesc.InputLayout = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
-	PipelineStateDesc.VS = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.PS = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.BlendState = Create_BlendState();
-	PipelineStateDesc.RasterizerState = CShader::Create_RasterizerState();
-	PipelineStateDesc.DepthStencilState = CShader::Create_DepthStencilState();
+	PipelineStateDesc.NumRenderTargets      = 1;								// PS에서 사용할 RenderTarget 개수.
+	PipelineStateDesc.RTVFormats[0]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
+	PipelineStateDesc.SampleDesc.Count      = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality    = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat             = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	vecInputLayout                          = Create_InputLayout("VS_MAIN", "PS_DISTORTION");
+	PipelineStateDesc.InputLayout           = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS                    = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS                    = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState            = Create_BlendState();
+	PipelineStateDesc.RasterizerState       = CShader::Create_RasterizerState();
+	PipelineStateDesc.DepthStencilState     = CShader::Create_DepthStencilState();
 
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
@@ -581,46 +590,45 @@ HRESULT CShaderMesh::Create_PipelineState()
 
 	ZeroMemory(&PipelineStateDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
 
-	PipelineStateDesc.pRootSignature = m_pRootSignature;
-	PipelineStateDesc.SampleMask = UINT_MAX;
+	PipelineStateDesc.pRootSignature        = m_pRootSignature;
+	PipelineStateDesc.SampleMask            = UINT_MAX;
 	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	PipelineStateDesc.NumRenderTargets = 2;								// PS에서 사용할 RenderTarget 개수.
-	PipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R16G16B16A16_UNORM;		// Crossfilter Target
-	PipelineStateDesc.RTVFormats[1] = DXGI_FORMAT_R16G16B16A16_UNORM;		// Crossfilter Target
-
-	PipelineStateDesc.SampleDesc.Count = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
-	PipelineStateDesc.SampleDesc.Quality = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
-	PipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	vecInputLayout = Create_InputLayout("VS_MAIN", "PS_CROSSFILTER");
-	PipelineStateDesc.InputLayout = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
-	PipelineStateDesc.VS = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.PS = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.BlendState = Create_BlendState();
-	PipelineStateDesc.RasterizerState = CShader::Create_RasterizerState();
-	PipelineStateDesc.DepthStencilState = CShader::Create_DepthStencilState();
+	PipelineStateDesc.NumRenderTargets      = 2;								// PS에서 사용할 RenderTarget 개수.
+	PipelineStateDesc.RTVFormats[0]         = DXGI_FORMAT_R16G16B16A16_UNORM;		// Crossfilter Target
+	PipelineStateDesc.RTVFormats[1]         = DXGI_FORMAT_R16G16B16A16_UNORM;		// Crossfilter Target
+	PipelineStateDesc.SampleDesc.Count      = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality    = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat             = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	vecInputLayout                          = Create_InputLayout("VS_MAIN", "PS_CROSSFILTER");
+	PipelineStateDesc.InputLayout           = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS                    = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS                    = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState            = Create_BlendState();
+	PipelineStateDesc.RasterizerState       = CShader::Create_RasterizerState();
+	PipelineStateDesc.DepthStencilState     = CShader::Create_DepthStencilState();
 
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
 	CRenderer::Get_Instance()->Add_PipelineStateCnt();
+
 	//4번
 	ZeroMemory(&PipelineStateDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
 
-	PipelineStateDesc.pRootSignature = m_pRootSignature;
-	PipelineStateDesc.SampleMask = UINT_MAX;
+	PipelineStateDesc.pRootSignature        = m_pRootSignature;
+	PipelineStateDesc.SampleMask            = UINT_MAX;
 	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	PipelineStateDesc.NumRenderTargets = 1;								// PS에서 사용할 RenderTarget 개수.
-	PipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Edge Target
-
-	PipelineStateDesc.SampleDesc.Count = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
-	PipelineStateDesc.SampleDesc.Quality = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
-	PipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	vecInputLayout = Create_InputLayout("VS_MAIN", "PS_EDGE");
-	PipelineStateDesc.InputLayout = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
-	PipelineStateDesc.VS = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.PS = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.BlendState = Create_BlendState();
-	PipelineStateDesc.RasterizerState = CShader::Create_RasterizerState();
-	PipelineStateDesc.DepthStencilState = CShader::Create_DepthStencilState();
+	PipelineStateDesc.NumRenderTargets      = 1;								// PS에서 사용할 RenderTarget 개수.
+	PipelineStateDesc.RTVFormats[0]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Edge Target
+	PipelineStateDesc.SampleDesc.Count      = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality    = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat             = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	vecInputLayout                          = Create_InputLayout("VS_MAIN", "PS_EDGE");
+	PipelineStateDesc.InputLayout           = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS                    = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS                    = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState            = Create_BlendState();
+	PipelineStateDesc.RasterizerState       = CShader::Create_RasterizerState();
+	PipelineStateDesc.DepthStencilState     = CShader::Create_DepthStencilState();
 
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
@@ -638,29 +646,27 @@ HRESULT CShaderMesh::Create_PipelineState()
 	____________________________________________________________________________________________________________*/
 	ZeroMemory(&PipelineStateDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
 
-	PipelineStateDesc.pRootSignature = m_pRootSignature;
-	PipelineStateDesc.SampleMask = UINT_MAX;
+	PipelineStateDesc.pRootSignature        = m_pRootSignature;
+	PipelineStateDesc.SampleMask            = UINT_MAX;
 	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	PipelineStateDesc.NumRenderTargets = 1;								// PS에서 사용할 RenderTarget 개수.
-	PipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
-
-
-	PipelineStateDesc.SampleDesc.Count = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
-	PipelineStateDesc.SampleDesc.Quality = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
-	PipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	vecInputLayout = Create_InputLayout("VS_AFTERIMAGE", "PS_AFTERIMAGE");
-	PipelineStateDesc.InputLayout = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
-	PipelineStateDesc.VS = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.PS = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.BlendState = Create_BlendState(true,
-		D3D12_BLEND_SRC_ALPHA,
-		D3D12_BLEND_INV_SRC_ALPHA,
-		D3D12_BLEND_OP_ADD,
-		D3D12_BLEND_ONE,
-		D3D12_BLEND_ZERO,
-		D3D12_BLEND_OP_ADD);
-	PipelineStateDesc.RasterizerState = CShader::Create_RasterizerState();
-	PipelineStateDesc.DepthStencilState = CShader::Create_DepthStencilState();
+	PipelineStateDesc.NumRenderTargets      = 1;								// PS에서 사용할 RenderTarget 개수.
+	PipelineStateDesc.RTVFormats[0]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
+	PipelineStateDesc.SampleDesc.Count      = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality    = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat             = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	vecInputLayout                          = Create_InputLayout("VS_AFTERIMAGE", "PS_AFTERIMAGE");
+	PipelineStateDesc.InputLayout           = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS                    = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS                    = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState			= Create_BlendState(true,
+																D3D12_BLEND_SRC_ALPHA,
+																D3D12_BLEND_INV_SRC_ALPHA,
+																D3D12_BLEND_OP_ADD,
+																D3D12_BLEND_ONE,
+																D3D12_BLEND_ZERO,
+																D3D12_BLEND_OP_ADD);
+	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState();
+	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState();
 
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
@@ -671,27 +677,26 @@ HRESULT CShaderMesh::Create_PipelineState()
 	//6번
 	ZeroMemory(&PipelineStateDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
 
-	PipelineStateDesc.pRootSignature = m_pRootSignature;
-	PipelineStateDesc.SampleMask = UINT_MAX;
+	PipelineStateDesc.pRootSignature        = m_pRootSignature;
+	PipelineStateDesc.SampleMask            = UINT_MAX;
 	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	PipelineStateDesc.NumRenderTargets = 6;								// PS에서 사용할 RenderTarget 개수.
-	PipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
-	PipelineStateDesc.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Normal Target
-	PipelineStateDesc.RTVFormats[2] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Specular Target
-	PipelineStateDesc.RTVFormats[3] = DXGI_FORMAT_R32G32B32A32_FLOAT;	// Depth Target
-	PipelineStateDesc.RTVFormats[4] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
-	PipelineStateDesc.RTVFormats[5] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
-
-	PipelineStateDesc.SampleDesc.Count = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
-	PipelineStateDesc.SampleDesc.Quality = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
-	PipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	vecInputLayout = Create_InputLayout("VS_TERRAIN_MAIN", "PS_TERRAIN_MAIN");
-	PipelineStateDesc.InputLayout = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
-	PipelineStateDesc.VS = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.PS = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.BlendState = Create_BlendState();
-	PipelineStateDesc.RasterizerState = CShader::Create_RasterizerState();
-	PipelineStateDesc.DepthStencilState = CShader::Create_DepthStencilState();
+	PipelineStateDesc.NumRenderTargets      = 6;								// PS에서 사용할 RenderTarget 개수.
+	PipelineStateDesc.RTVFormats[0]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
+	PipelineStateDesc.RTVFormats[1]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Normal Target
+	PipelineStateDesc.RTVFormats[2]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Specular Target
+	PipelineStateDesc.RTVFormats[3]         = DXGI_FORMAT_R32G32B32A32_FLOAT;	// Depth Target
+	PipelineStateDesc.RTVFormats[4]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
+	PipelineStateDesc.RTVFormats[5]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
+	PipelineStateDesc.SampleDesc.Count      = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality    = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat             = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	vecInputLayout                          = Create_InputLayout("VS_TERRAIN_MAIN", "PS_TERRAIN_MAIN");
+	PipelineStateDesc.InputLayout           = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS                    = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS                    = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState            = Create_BlendState();
+	PipelineStateDesc.RasterizerState       = CShader::Create_RasterizerState();
+	PipelineStateDesc.DepthStencilState     = CShader::Create_DepthStencilState();
 
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
@@ -707,26 +712,26 @@ HRESULT CShaderMesh::Create_PipelineState()
 	- Z Write	(O)
 	____________________________________________________________________________________________________________*/
 	ZeroMemory(&PipelineStateDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
-	PipelineStateDesc.pRootSignature = m_pRootSignature;
-	PipelineStateDesc.SampleMask = UINT_MAX;
+	PipelineStateDesc.pRootSignature        = m_pRootSignature;
+	PipelineStateDesc.SampleMask            = UINT_MAX;
 	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	PipelineStateDesc.NumRenderTargets = 6;								// PS에서 사용할 RenderTarget 개수.
-	PipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
-	PipelineStateDesc.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Normal Target
-	PipelineStateDesc.RTVFormats[2] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Specular Target
-	PipelineStateDesc.RTVFormats[3] = DXGI_FORMAT_R32G32B32A32_FLOAT;	// Depth Target
-	PipelineStateDesc.RTVFormats[4] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
-	PipelineStateDesc.RTVFormats[5] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
-	PipelineStateDesc.SampleDesc.Count = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
-	PipelineStateDesc.SampleDesc.Quality = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
-	PipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	vecInputLayout = Create_InputLayout("VS_SHADOW_MAIN", "PS_SHADOW_DISSOLVE");
-	PipelineStateDesc.InputLayout = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
-	PipelineStateDesc.VS = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.PS = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.BlendState = Create_BlendState();
-	PipelineStateDesc.RasterizerState = CShader::Create_RasterizerState();
-	PipelineStateDesc.DepthStencilState = CShader::Create_DepthStencilState();
+	PipelineStateDesc.NumRenderTargets      = 6;								// PS에서 사용할 RenderTarget 개수.
+	PipelineStateDesc.RTVFormats[0]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
+	PipelineStateDesc.RTVFormats[1]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Normal Target
+	PipelineStateDesc.RTVFormats[2]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Specular Target
+	PipelineStateDesc.RTVFormats[3]         = DXGI_FORMAT_R32G32B32A32_FLOAT;	// Depth Target
+	PipelineStateDesc.RTVFormats[4]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
+	PipelineStateDesc.RTVFormats[5]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
+	PipelineStateDesc.SampleDesc.Count      = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality    = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat             = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	vecInputLayout                          = Create_InputLayout("VS_MAIN", "PS_DISSOLVE");
+	PipelineStateDesc.InputLayout           = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS                    = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS                    = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState            = Create_BlendState();
+	PipelineStateDesc.RasterizerState       = CShader::Create_RasterizerState();
+	PipelineStateDesc.DepthStencilState     = CShader::Create_DepthStencilState();
 
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
@@ -743,26 +748,26 @@ HRESULT CShaderMesh::Create_PipelineState()
 	- Z Write	(O)
 	____________________________________________________________________________________________________________*/
 	ZeroMemory(&PipelineStateDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
-	PipelineStateDesc.pRootSignature = m_pRootSignature;
-	PipelineStateDesc.SampleMask = UINT_MAX;
+	PipelineStateDesc.pRootSignature        = m_pRootSignature;
+	PipelineStateDesc.SampleMask            = UINT_MAX;
 	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	PipelineStateDesc.NumRenderTargets = 6;								// PS에서 사용할 RenderTarget 개수.
-	PipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
-	PipelineStateDesc.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Normal Target
-	PipelineStateDesc.RTVFormats[2] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Specular Target
-	PipelineStateDesc.RTVFormats[3] = DXGI_FORMAT_R32G32B32A32_FLOAT;	// Depth Target
-	PipelineStateDesc.RTVFormats[4] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
-	PipelineStateDesc.RTVFormats[5] = DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
-	PipelineStateDesc.SampleDesc.Count = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
-	PipelineStateDesc.SampleDesc.Quality = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
-	PipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	vecInputLayout = Create_InputLayout("VS_WATERFALL", "PS_WATERFALL");
-	PipelineStateDesc.InputLayout = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
-	PipelineStateDesc.VS = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.PS = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
-	PipelineStateDesc.BlendState = Create_BlendState();
-	PipelineStateDesc.RasterizerState = CShader::Create_RasterizerState();
-	PipelineStateDesc.DepthStencilState = CShader::Create_DepthStencilState();
+	PipelineStateDesc.NumRenderTargets      = 6;								// PS에서 사용할 RenderTarget 개수.
+	PipelineStateDesc.RTVFormats[0]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
+	PipelineStateDesc.RTVFormats[1]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Normal Target
+	PipelineStateDesc.RTVFormats[2]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Specular Target
+	PipelineStateDesc.RTVFormats[3]         = DXGI_FORMAT_R32G32B32A32_FLOAT;	// Depth Target
+	PipelineStateDesc.RTVFormats[4]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
+	PipelineStateDesc.RTVFormats[5]         = DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
+	PipelineStateDesc.SampleDesc.Count      = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality    = CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat             = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	vecInputLayout                          = Create_InputLayout("VS_WATERFALL", "PS_WATERFALL");
+	PipelineStateDesc.InputLayout           = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS                    = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS                    = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState            = Create_BlendState();
+	PipelineStateDesc.RasterizerState       = CShader::Create_RasterizerState();
+	PipelineStateDesc.DepthStencilState     = CShader::Create_DepthStencilState();
 
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
