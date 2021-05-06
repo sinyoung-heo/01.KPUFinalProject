@@ -31,9 +31,9 @@ HRESULT CIceStorm::Ready_GameObject(wstring wstrMeshTag,
 	m_fRadius = fRadius;
 	m_fTheta = theta;
 
-	random[0]= rand() % 360;
-	random[1] = rand() % 180;
-	random[2] = rand() % 180;
+	random[0] = rand()  % 90 - 45;
+	random[1] = rand() % 360;
+	random[2] = rand() % 90 - 45;
 	m_fLimitScale = 0.15f;
 
 	return S_OK;
@@ -59,7 +59,9 @@ _int CIceStorm::Update_GameObject(const _float & fTimeDelta)
 	}
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
-	if (m_fDeltatime3 > 10.f)
+	m_fLifeTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
+	
+	if (m_fLifeTime > 6.f)
 		m_bIsDead = true;
 	if (m_bIsDead)
 		return DEAD_OBJ;
@@ -81,8 +83,8 @@ _int CIceStorm::Update_GameObject(const _float & fTimeDelta)
 	m_pTransCom->m_vPos.x += m_fRadius * cos(m_fTheta);
 	m_pTransCom->m_vPos.z += m_fRadius * sin(m_fTheta);
 
-	m_pTransCom->m_vAngle.y = random[0];
-	m_pTransCom->m_vAngle.x = random[1];
+	m_pTransCom->m_vAngle.x = random[0];
+	m_pTransCom->m_vAngle.y = random[1];
 	m_pTransCom->m_vAngle.z = random[2];
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
 	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
@@ -153,11 +155,22 @@ void CIceStorm::Set_ConstantTable()
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 
 	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.5f * m_fDeltatimeVelocity;
-	m_fDeltatime2 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
-	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
-	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
+	
+	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.5f * m_fDeltatimeVelocity2;
+	tCB_ShaderMesh.fOffset1 = sin(m_fDeltaTime);//번짐효과
 	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
-	tCB_ShaderMesh.fDissolve = sin(m_fDeltatime3);
+	tCB_ShaderMesh.fOffset3 = m_fDeltatime3;
+
+	if (m_fLifeTime > 4.f)
+	{
+		m_fDeltatime2 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.5f;
+		tCB_ShaderMesh.fDissolve = m_fDeltatime2;
+		if (!m_bisLifeInit)
+		{
+			m_bisLifeInit = true;
+			m_fDeltatimeVelocity2 = 3;
+		}
+	}
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 
 
@@ -171,11 +184,17 @@ void CIceStorm::Set_ConstantTable()
 	else if (m_fDeltaTime < 0.f)
 		m_fDeltatimeVelocity = 1.f;
 	
+	if (m_fDeltatime3 > 1.f)
+		m_fDeltatimeVelocity2 = -1.f;
+	else if (m_fDeltatime3 < 0.f)
+	{
+		m_fDeltatime3 = 0.0f;
+		m_fDeltatimeVelocity2 = 0.f;
+	}
 }
 HRESULT CIceStorm::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth)
 {
 	_uint m_uiTexSize = vecTexture.size() + vecShadowDepth.size();
-
 	D3D12_DESCRIPTOR_HEAP_DESC SRV_HeapDesc = {};
 	SRV_HeapDesc.NumDescriptors             = m_uiTexSize;	// 텍스처의 개수 만큼 설정.
 	SRV_HeapDesc.Type                       = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
@@ -184,10 +203,8 @@ HRESULT CIceStorm::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTextur
 	Engine::FAILED_CHECK_RETURN(m_pGraphicDevice->CreateDescriptorHeap(&SRV_HeapDesc,
 																	   IID_PPV_ARGS(&m_pDescriptorHeaps)),
 																	   E_FAIL);
-
 	// 힙의 시작을 가리키는 포인터를 얻는다.
 	CD3DX12_CPU_DESCRIPTOR_HANDLE SRV_DescriptorHandle(m_pDescriptorHeaps->GetCPUDescriptorHandleForHeapStart());
-
 	for (_uint i = 0; i < m_uiTexSize - vecShadowDepth.size(); ++i)
 	{
 		D3D12_SHADER_RESOURCE_VIEW_DESC SRV_Desc = {};

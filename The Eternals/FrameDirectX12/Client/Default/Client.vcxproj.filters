@@ -388,9 +388,6 @@
     <ClInclude Include="..\Code\PacketMgr.h">
       <Filter>97.Mgr\00.PacketMgr</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\ServerMath.h">
-      <Filter>97.Mgr\03.ServerMath</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\GameUIChild.h">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild</Filter>
     </ClInclude>
@@ -542,6 +539,9 @@
     <ClInclude Include="..\Code\ServerMath.h">
       <Filter>97.Mgr\02.ServerMath</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\IceStorm.h" />
+    <ClInclude Include="..\Code\ServerMath.h" />
+    <ClInclude Include="..\Code\SnowParticle.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -634,9 +634,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\PacketMgr.cpp">
       <Filter>97.Mgr\00.PacketMgr</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\ServerMath.cpp">
-      <Filter>97.Mgr\03.ServerMath</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\GameUIChild.cpp">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild</Filter>
@@ -768,6 +765,9 @@
     <ClCompile Include="..\Code\ServerMath.cpp">
       <Filter>97.Mgr\02.ServerMath</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\IceStorm.cpp" />
+    <ClCompile Include="..\Code\ServerMath.cpp" />
+    <ClCompile Include="..\Code\SnowParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
