@@ -126,7 +126,7 @@ void CTestColPlayer::Process_Collision()
 			pDst->Get_BoundingBox()->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 
 			/* Player HP Decrease */
-			m_pPacketMgr->send_attackByMonster(pDst->Get_ServerNumber());
+			m_pPacketMgr->send_attackByMonster(pDst->Get_ServerNumber(), m_pInfoCom->Get_RandomDamage());
 
 			/* Player Attack to Monster */
 			m_pPacketMgr->send_attackToMonster(pDst->Get_ServerNumber(), m_pInfoCom->Get_RandomDamage());

@@ -1036,13 +1036,14 @@ void CPacketMgr::send_attack_stop(const _int& iAniIdx, const _vec3& vDir, const 
 	send_packet(&p);
 }
 
-void CPacketMgr::send_attackByMonster(int objID)
+void CPacketMgr::send_attackByMonster(int objID, const _int& iDamage)
 {
 	cs_packet_player_collision p;
 
-	p.size = sizeof(p);
-	p.type = CS_COLLIDE;
+	p.size   = sizeof(p);
+	p.type   = CS_COLLIDE;
 	p.col_id = objID;
+	p.damage = iDamage;
 
 	send_packet(&p);
 }

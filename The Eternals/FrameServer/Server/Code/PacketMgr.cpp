@@ -187,7 +187,7 @@ void process_packet(int id)
 	case CS_COLLIDE: 
 	{
 		cs_packet_player_collision* p = reinterpret_cast<cs_packet_player_collision*>(pPlayer->m_packet_start);
-		process_collide(id, p->col_id);
+		process_collide(id, p->col_id, p->damage);
 	}
 	break;
 
@@ -933,7 +933,7 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 #endif
 }
 
-void process_collide(int id, int colID)
+void process_collide(int id, int colID, int damage)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 	if (pPlayer == nullptr) return;
@@ -949,7 +949,7 @@ void process_collide(int id, int colID)
 
 		/* Decrease Player HP */
 		if (pPlayer->m_iHp > 0)
-			pPlayer->m_iHp -= pMonster->m_iMaxAtt;
+			pPlayer->m_iHp -= damage;
 		else
 		{
 			/* Player Dead */

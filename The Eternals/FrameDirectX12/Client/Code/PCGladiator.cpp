@@ -202,6 +202,7 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	// AfterImage
 	Make_AfterImage(fTimeDelta);
 
+	cout << m_pInfoCom->m_iHp << " " << m_pInfoCom->m_iMaxHp << endl;
 	return NO_EVENT;
 }
 
