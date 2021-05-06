@@ -68,6 +68,7 @@ _int CCloderA::Update_GameObject(const _float& fTimeDelta)
 	
 	if (m_bIsReturn)
 	{
+		m_bIsStartDissolve = false;
 		m_bIsResetNaviMesh = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterCloderAPool(), m_uiInstanceIdx);
 
@@ -80,6 +81,8 @@ _int CCloderA::Update_GameObject(const _float& fTimeDelta)
 		m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
 	}
 
+	SetUp_Dissolve(fTimeDelta);
+
 	// Angle Linear Interpolation
 	SetUp_AngleInterpolation(fTimeDelta);
 	
@@ -89,10 +92,13 @@ _int CCloderA::Update_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
-	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
-	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
+	if (!m_bIsStartDissolve)
+	{
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+		m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
+		m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
+	}
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
@@ -102,7 +108,8 @@ _int CCloderA::Update_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Collision - Add Collision List ]
 	____________________________________________________________________________________________________________*/
-	m_pCollisonMgr->Add_CollisionCheckList(this);
+	if (!m_bIsStartDissolve)
+		m_pCollisonMgr->Add_CollisionCheckList(this);
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
@@ -131,8 +138,11 @@ void CCloderA::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommand
 
 void CCloderA::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
-	Set_ConstantTableShadowDepth();
-	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
+	if (!m_bIsStartDissolve)
+	{
+		Set_ConstantTableShadowDepth();
+		m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
+	}
 }
 
 HRESULT CCloderA::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
@@ -149,7 +159,7 @@ HRESULT CCloderA::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 	m_pShaderCom = static_cast<Engine::CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->AddRef();
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(0), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(7), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
 	// Shadow
@@ -177,18 +187,15 @@ void CCloderA::Set_ConstantTable()
 
 	Engine::CB_SHADER_MESH tCB_ShaderMesh;
 	ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
-	tCB_ShaderMesh.matWorld = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderMesh.matLightView = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
-	tCB_ShaderMesh.matLightProj = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
-	tCB_ShaderMesh.vLightPos = tShadowDesc.vLightPosition;
-	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
+	tCB_ShaderMesh.matWorld       = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderMesh.matLightView   = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
+	tCB_ShaderMesh.matLightProj   = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
+	tCB_ShaderMesh.vLightPos      = tShadowDesc.vLightPosition;
+	tCB_ShaderMesh.fLightPorjFar  = tShadowDesc.fLightPorjFar;
+	tCB_ShaderMesh.fDissolve      = m_fDissolve;
+	tCB_ShaderMesh.vEmissiveColor = m_vEmissiveColor;
 
-	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.15f;
-	tCB_ShaderMesh.fDissolve = m_fDeltaTime;
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
-
-	if (m_fDeltaTime > 1.f)
-		m_fDeltaTime = 0.f;
 }
 
 void CCloderA::Set_ConstantTableShadowDepth()
@@ -201,12 +208,11 @@ void CCloderA::Set_ConstantTableShadowDepth()
 	Engine::CB_SHADER_SHADOW tCB_ShaderShadow;
 	ZeroMemory(&tCB_ShaderShadow, sizeof(Engine::CB_SHADER_SHADOW));
 	tCB_ShaderShadow.matWorld = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderShadow.matView = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
-	tCB_ShaderShadow.matProj = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
+	tCB_ShaderShadow.matView  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
+	tCB_ShaderShadow.matProj  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
 	tCB_ShaderShadow.fProjFar = tShadowDesc.fLightPorjFar;
 
 	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
-
 }
 
 void CCloderA::SetUp_AngleInterpolation(const _float& fTimeDelta)
@@ -222,6 +228,20 @@ void CCloderA::SetUp_AngleInterpolation(const _float& fTimeDelta)
 		if (m_tAngleInterpolationDesc.linear_ratio == Engine::MAX_LINEAR_RATIO)
 		{
 			m_tAngleInterpolationDesc.is_start_interpolation = false;
+		}
+	}
+}
+
+void CCloderA::SetUp_Dissolve(const _float& fTimeDelta)
+{
+	if (m_bIsStartDissolve)
+	{
+		m_fDissolve += fTimeDelta * 0.33f;
+
+		if (m_fDissolve >= 1.0f)
+		{
+			m_fDissolve = 1.0f;
+			m_bIsReturn = true;
 		}
 	}
 }
@@ -321,7 +341,7 @@ void CCloderA::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) 
 			{
-				m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"MONSTER", m_iSNum);
+				m_bIsStartDissolve = true;
 			}
 		}
 		break;

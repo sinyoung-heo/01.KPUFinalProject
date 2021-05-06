@@ -66,7 +66,6 @@ private:
 	wstring	m_wstrMeshTag            = L"";
 	_bool	m_bIsResetNaviMesh       = false;
 	_bool	m_bIsCreateCollisionTick = false;
-
 	_bool	m_bIsStartDissolve       = false;
 	_float	m_fDissolve              = -0.05f;
 	_rgba	m_vEmissiveColor         = _rgba(1.0f, 0.0f, 0.0f, 1.0f);

@@ -68,6 +68,7 @@ _int CDrownedSailor::Update_GameObject(const _float& fTimeDelta)
 	
 	if (m_bIsReturn)
 	{
+		m_bIsStartDissolve = false;
 		m_bIsResetNaviMesh = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterDrownedSailorPool(), m_uiInstanceIdx);
 		return RETURN_OBJ;
@@ -369,7 +370,6 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) 
 			{
 				m_bIsStartDissolve = true;
-				//m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"MONSTER", m_iSNum);
 			}
 		}
 		break;
