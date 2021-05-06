@@ -510,8 +510,6 @@ void CRenderer::Render_Alpha(const _float& fTimeDelta)
 
 	m_pTargetpEffect->SetUp_OnGraphicDevice();
 
-	for (auto& pGameObject : m_RenderList[RENDER_ALPHA])
-		pGameObject->Render_GameObject(0);
 	for (auto& pGameObject : m_RenderList[RENDER_MAGICCIRCLE])
 		pGameObject->Render_GameObject(fTimeDelta);
 
@@ -917,11 +915,15 @@ HRESULT CRenderer::Ready_RenderTarget()
 
 
 
-	m_pTargetpEffect = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
+	m_pTargetpEffect = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 5);
 	NULL_CHECK_RETURN(m_pTargetpEffect, E_FAIL);
 	m_pTargetpEffect->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	m_pTargetpEffect->Set_TargetClearColor(1, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	m_pTargetpEffect->Set_TargetClearColor(2, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	m_pTargetpEffect->Set_TargetClearColor(3, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	m_pTargetpEffect->Set_TargetClearColor(4, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
 	FAILED_CHECK_RETURN(m_pTargetpEffect->SetUp_DefaultSetting(TARGETID::TYPE_DEFAULT), E_FAIL);
-	m_pTargetpEffect->Set_TargetRenderPos(_vec3(WIDTH_THIRD, HEIGHT_SIXTH, 1.0f));
+	m_pTargetpEffect->Set_TargetRenderPos(_vec3(WIDTH_SIXTH, HEIGHT_FIRST, 1.0f));
 
 	m_pEffectBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pEffectBuffer, E_FAIL);

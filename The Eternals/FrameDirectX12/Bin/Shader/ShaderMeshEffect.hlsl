@@ -69,6 +69,16 @@ struct VS_OUT
     float2 AniUV		: TEXCOORD8;
 };
 
+// PS_MAIN
+struct PS_OUT
+{
+    float4 Effect1 : SV_TARGET0; // 
+    float4 Effect2 : SV_TARGET1; // 
+    float4 Effect3 : SV_TARGET2; // 
+    float4 Effect4 : SV_TARGET3; // 
+    float4 Effect5 : SV_TARGET4; // 
+};
+
 /*__________________________________________________________________________________________________________
 [ ±×¸²ÀÚ (X) ]
 ____________________________________________________________________________________________________________*/
@@ -88,39 +98,22 @@ VS_OUT VS_MAIN(VS_IN vs_input)
     vs_output.TexUV = vs_input.TexUV;
     vs_output.Normal = vs_input.Normal;
 	
-	// N
-    float3 WorldNormal = mul(vs_input.Normal, (float3x3) matworld);
-   
-    vs_output.N = normalize(WorldNormal);
-	
-	// T
-    float3 Tangent = cross(float3(0.f, 1.f, 0.f), (float3) vs_input.Normal);
-    float3 WorldTangent = mul(Tangent, (float3x3) matworld);
-    vs_output.T = normalize(WorldTangent);
-	
-	// B
-    float3 Binormal = cross((float3) vs_input.Normal, Tangent);
-    float3 WorldBinormal = mul(Binormal, (float3x3) matworld);
-    vs_output.B = normalize(WorldBinormal);
-	
-	// ProjPos
-    vs_output.ProjPos = vs_output.Pos;
+
 	
     return (vs_output);
 }
-struct PS_OUT
+
+PS_OUT PS_MAGIC_CIRCLE(VS_OUT ps_input) : SV_TARGET
 {
-    float4 Effect : SV_TARGET0;
-};
-PS_OUT PS_MAGIC_CIRCLE(VS_OUT ps_input) : SV_Target
-{
-    PS_OUT ps_out = (PS_OUT) 0;
+    PS_OUT ps_output = (PS_OUT) 0;
+	
     float4 Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 TexNormal = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 Spec = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 color = lerp(lerp(Diffuse, Spec, 0.5), TexNormal, 0.5);
-    ps_out.Effect = color;
-    return ps_out;
+    ps_output.Effect1 = color;
+  
+    return ps_output;
 }
 
 PS_OUT PS_RAINDROP(VS_OUT ps_input) : SV_TARGET
@@ -129,27 +122,31 @@ PS_OUT PS_RAINDROP(VS_OUT ps_input) : SV_TARGET
     PS_OUT ps_output = (PS_OUT) 0;
 	
 	// Diffuse
-    ps_output.Effect = (g_TexDiffuse.Sample(g_samLinearWrap, ps_input.AniUV * 10.f));
+    ps_output.Effect2 = (g_TexDiffuse.Sample(g_samLinearWrap, ps_input.AniUV * 10.f));
 	
     return (ps_output);
 }
 
-float4 PS_EFFECT_SHPERE(VS_OUT ps_input) : SV_Target
+PS_OUT PS_EFFECT_SHPERE(VS_OUT ps_input) : SV_TARGET
 {
+    PS_OUT ps_output = (PS_OUT) 0;
+	
     //float u = (ps_input.TexUV.x / g_vEmissiveColor.x) + g_vEmissiveColor.z * (1.0f / g_vEmissiveColor.x);
     //float v = (ps_input.TexUV.y / g_vEmissiveColor.y) + g_vEmissiveColor.w * (1.0f / g_vEmissiveColor.y);
    // float2 TexUV = float2((u + g_fOffset1*0.002f),( v + g_fOffset1*0.0005f));
    // TexUV.x *= 2.f;
     float2 TexUV = float2(ps_input.TexUV.x, ps_input.TexUV.y);
     clip(ps_input.TexUV.y + g_fOffset1);
-    float4 Color = g_TexDiffuse.Sample(g_samLinearWrap, TexUV);
+    ps_output.Effect1 = g_TexDiffuse.Sample(g_samLinearWrap, TexUV);
    
+
  
-    float4 Color2 = float4(1, 1, 1, 1);
-    return (Color);
+    return (ps_output);
 }
-float4 PS_ICESTORM(VS_OUT ps_input) : SV_Target
+PS_OUT PS_ICESTORM(VS_OUT ps_input) : SV_TARGET
 {
+    PS_OUT ps_output = (PS_OUT) 0;
+	
     float4 D = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 N = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
     
@@ -167,5 +164,7 @@ float4 PS_ICESTORM(VS_OUT ps_input) : SV_Target
     }
     clip((1.f - g_fDissolve) - Normal_fDissolve);
     
-    return lerp((D + N), E,0.5f);
+    ps_output.Effect2 = lerp((D + N), E, 0.5f);
+    ps_output.Effect2.a = 0.5f;
+    return (ps_output);
 }

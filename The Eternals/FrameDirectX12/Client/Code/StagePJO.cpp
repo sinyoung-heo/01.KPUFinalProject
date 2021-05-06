@@ -32,6 +32,7 @@
 #include "RainDrop.h"
 #include "PublicSphere.h"
 #include "IceStorm.h"
+#include "SnowParticle.h"
 CStagePJO::CStagePJO(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
 {
@@ -301,13 +302,7 @@ HRESULT CStagePJO::Ready_LayerEnvironment(wstring wstrLayerTag)
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"RainDrop", pGameObj), E_FAIL);
 
 
-	pGameObj = CPublicSphere::Create(m_pGraphicDevice, m_pCommandList,
-		L"IceStorm1",
-		_vec3(0.1f),
-		_vec3(0.f, 0.0f, 0.0f),
-		_vec3(0, 0, 0),_vec3(0,0,0));
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"IceStorm1", pGameObj), E_FAIL);
-
+	
 	for (int i = 0; i < 36; i++)
 	{
 		pGameObj = CIceStorm::Create(m_pGraphicDevice, m_pCommandList,
@@ -317,6 +312,13 @@ HRESULT CStagePJO::Ready_LayerEnvironment(wstring wstrLayerTag)
 			_vec3(0, 0, 0), 5.f, XMConvertToRadians(i * 10.f));
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"IceStorm1", pGameObj), E_FAIL);
 	}
+	pGameObj = CSnowParticle::Create(m_pGraphicDevice, m_pCommandList,
+		L"Snow",						// TextureTag
+		_vec3(2.f),		// Scale
+		_vec3(0.0f, 0.0f, 0.0f),		// Angle
+		_vec3(28.0f, 20.0f, 27.0f),	// Pos
+		FRAME(1, 1, 1.0f));			// Sprite Image Frame
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Snow", pGameObj), E_FAIL);
 	////// Torch
 	//pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
 	//								  L"Lightning00",						// TextureTag

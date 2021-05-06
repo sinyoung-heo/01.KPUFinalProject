@@ -228,6 +228,7 @@
     <ClInclude Include="..\Code\ServerMath.h" />
     <ClInclude Include="..\Code\ShadowLightMgr.h" />
     <ClInclude Include="..\Code\SkyBox.h" />
+    <ClInclude Include="..\Code\SnowParticle.h" />
     <ClInclude Include="..\Code\StageHSY.h" />
     <ClInclude Include="..\Code\StageLDH.h" />
     <ClInclude Include="..\Code\StagePJO.h" />
@@ -315,6 +316,7 @@
     <ClCompile Include="..\Code\ServerMath.cpp" />
     <ClCompile Include="..\Code\ShadowLightMgr.cpp" />
     <ClCompile Include="..\Code\SkyBox.cpp" />
+    <ClCompile Include="..\Code\SnowParticle.cpp" />
     <ClCompile Include="..\Code\StageHSY.cpp" />
     <ClCompile Include="..\Code\StageLDH.cpp" />
     <ClCompile Include="..\Code\StagePJO.cpp" />
