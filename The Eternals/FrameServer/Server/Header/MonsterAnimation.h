@@ -21,6 +21,8 @@ namespace Crab
 	{
 		8000, 4800, 2240, 10400, 10720
 	};
+
+	constexpr int ATTACK_START_TICK = 43;
 }
 
 namespace Monkey
