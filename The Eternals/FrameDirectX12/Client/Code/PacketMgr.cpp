@@ -1070,6 +1070,10 @@ void CPacketMgr::send_stage_change(const char& chStageId)
 	send_packet(&p);
 }
 
+void CPacketMgr::send_logout()
+{
+}
+
 void CPacketMgr::send_packet(void* packet)
 {
 	char* p = reinterpret_cast<char*>(packet);
