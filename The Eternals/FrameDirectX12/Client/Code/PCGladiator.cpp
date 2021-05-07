@@ -61,10 +61,11 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 	m_pInfoCom->m_fSpeed     = Gladiator::MIN_SPEED;
 	m_pInfoCom->m_vArrivePos = m_pTransCom->m_vPos;
 
-	m_eKeyState   = MVKEY::K_END;
-	m_bIsKeyDown  = false;
-	m_bIsSameDir  = false;
-	m_fPreAngle   = m_pTransCom->m_vAngle.y;
+	m_eKeyState				= MVKEY::K_END;
+	m_bIsKeyDown			= false;
+	m_bIsSameDir			= false;
+	m_bIsSendMoveStopPacket = true;
+	m_fPreAngle				= m_pTransCom->m_vAngle.y;
 
 	/*__________________________________________________________________________________________________________
 	[ Skill KeyInput ]
@@ -711,6 +712,7 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 
 		m_last_move_time = high_resolution_clock::now();
 		m_bIsKeyDown     = true;
+		m_bIsSendMoveStopPacket = false;
 
 		if (Gladiator::STANCE_ATTACK == m_eStance)
 			SetUp_WeaponRHand();
@@ -743,6 +745,7 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 
 		m_last_move_time = high_resolution_clock::now();
 		m_bIsKeyDown     = true;
+		m_bIsSendMoveStopPacket = false;
 
 		if (Gladiator::STANCE_ATTACK == m_eStance)
 			SetUp_WeaponRHand();
@@ -756,6 +759,7 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 		m_last_move_time        = high_resolution_clock::now();
 		m_eKeyState             = MVKEY::K_LEFT;
 		m_bIsKeyDown            = true;
+		m_bIsSendMoveStopPacket = false;
 
 		if (Gladiator::STANCE_ATTACK == m_eStance)
 			SetUp_WeaponRHand();
@@ -769,6 +773,7 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 		m_last_move_time        = high_resolution_clock::now();
 		m_eKeyState             = MVKEY::K_RIGHT;
 		m_bIsKeyDown            = true;
+		m_bIsSendMoveStopPacket = false;
 
 		if (Gladiator::STANCE_ATTACK == m_eStance)
 			SetUp_WeaponRHand();
@@ -786,8 +791,11 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 		else if (!m_bIsKeyDown &&
 				 Gladiator::MIN_SPEED == m_pInfoCom->m_fSpeed)
 		{
-			m_pPacketMgr->send_move_stop(m_pTransCom->m_vPos, m_pTransCom->m_vDir, m_uiAnimIdx);
-			//SetUp_WeaponLHand();
+			if (!m_bIsSendMoveStopPacket)
+			{
+				m_pPacketMgr->send_move_stop(m_pTransCom->m_vPos, m_pTransCom->m_vDir, m_uiAnimIdx);
+				m_bIsSendMoveStopPacket = true;
+			}
 		}
 	}
 

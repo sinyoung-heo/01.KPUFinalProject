@@ -57,7 +57,7 @@ constexpr char CS_LOGOUT				= 6;
 constexpr char CS_COLLIDE				= 7;   // Player가 다른 Object에게 충돌당했을 경우
 constexpr char CS_COLLIDE_MONSTER		= 8;   // Player가 Monster 공격
 constexpr char CS_STANCE_CHANGE         = 9;
-constexpr char CS_STAGE_CHANGE          = 10;
+constexpr char CS_STAGE_CHANGE			= 10;
 
 // Stage ID
 constexpr char STAGE_VELIKA				= 0;

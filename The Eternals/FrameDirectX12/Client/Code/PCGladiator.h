@@ -138,6 +138,7 @@ private:
 	// Server
 	_bool			m_bIsKeyDown   = false;
 	_bool			m_bIsSameDir   = false;
+	_bool			m_bIsSendMoveStopPacket = false;
 	_bool			m_bIsAttack    = false;
 	_float			m_fBazierSpeed = 0.f;
 	MVKEY			m_eKeyState    = MVKEY::K_END;
