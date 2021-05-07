@@ -146,6 +146,15 @@ namespace GiantMonkey
 	{
 		19200, 6400, 12800, 9600, 17600, 17600, 16000, 22400, 30560, 22400
 	};
+
+	constexpr int A_ATTACK_RIGHT_START_TICK     = 40;
+	constexpr int A_ATTACK_LEFT_START_TICK      = 30;
+	constexpr int A_ATTACK_STAMP_START_TICK     = 61;
+	constexpr int A_ATTACK_HOOK_START_TICK      = 53;
+	constexpr int A_ATTACK_JUMPING_START_TICK   = 65;
+	constexpr int A_ATTACK_FLYSTAMP_START_TICK  = 57;
+	constexpr int A_ATTACK_COMBO_START_TICK     = 15 + 61;
+	constexpr int A_ATTACK_COMBO_END_START_TICK = 82 + 61;
 }
 
 namespace CraftyArachne

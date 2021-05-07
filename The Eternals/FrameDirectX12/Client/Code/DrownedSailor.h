@@ -58,9 +58,9 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Manager ]
 	____________________________________________________________________________________________________________*/
-	CPacketMgr*			m_pPacketMgr     = nullptr;
-	CServerMath*		m_pServerMath    = nullptr;
-	CInstancePoolMgr* m_pInstancePoolMgr = nullptr;
+	CPacketMgr*			m_pPacketMgr       = nullptr;
+	CServerMath*		m_pServerMath      = nullptr;
+	CInstancePoolMgr*	m_pInstancePoolMgr = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]
