@@ -115,6 +115,11 @@ namespace GiantBeetle
 	{
 		11200, 9600, 16000, 16160, 27360, 28480, 9600, 9600, 17600
 	};
+
+	constexpr int A_ATTACK_UP_START_TICK       = 44;
+	constexpr int A_ATTACK_DOWN_START_TICK     = 39;
+	constexpr int A_ATTACK_RUSH_START_TICK     = 50;
+	constexpr int A_ATTACK_FLYSTAMP_START_TICK = 121;
 }
 
 namespace GiantMonkey
