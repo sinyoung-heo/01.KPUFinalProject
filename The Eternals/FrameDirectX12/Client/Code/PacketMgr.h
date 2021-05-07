@@ -44,6 +44,7 @@ public:
 	void    send_attackByMonster(int objID);
 	void    send_attackToMonster(int objID, const _int& iDamage);
 	void	send_stage_change(const char& chStageId);
+	void	send_logout();
 
 public:
 	bool	change_MoveKey(MVKEY eKey);

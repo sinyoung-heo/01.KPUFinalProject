@@ -911,6 +911,9 @@ void disconnect_client(int id)
 						pOther->v_lock.unlock();
 
 						/* 타 유저에게 접속 종료 패킷 전송 */
+#ifdef TEST
+						cout << obj_num << "님에게" << id << "님 퇴장을 전송" << endl;
+#endif					
 						send_leave_packet(obj_num, id);
 					}
 					else pOther->v_lock.unlock();					

@@ -1072,6 +1072,27 @@ void CPacketMgr::send_stage_change(const char& chStageId)
 
 void CPacketMgr::send_logout()
 {
+	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+
+	cs_packet_logout p;
+
+	p.size		= sizeof(p);
+	p.type		= CS_LOGOUT;
+
+	p.posX		= pThisPlayer->Get_Transform()->m_vPos.x;
+	p.posY		= pThisPlayer->Get_Transform()->m_vPos.y;
+	p.posZ		= pThisPlayer->Get_Transform()->m_vPos.z;
+	p.level		= pThisPlayer->Get_Info()->m_iLev;
+	p.hp		= pThisPlayer->Get_Info()->m_iHp;
+	p.maxHp		= pThisPlayer->Get_Info()->m_iMaxHp;
+	p.mp		= pThisPlayer->Get_Info()->m_iMp;
+	p.maxMp		= pThisPlayer->Get_Info()->m_iMaxMp;
+	p.exp		= pThisPlayer->Get_Info()->m_iExp;
+	p.maxExp	= pThisPlayer->Get_Info()->m_iMaxExp;
+	p.minAtt	= pThisPlayer->Get_Info()->m_iMinAttack;
+	p.maxAtt	= pThisPlayer->Get_Info()->m_iMaxAttack;
+	
+	send_packet(&p);
 }
 
 void CPacketMgr::send_packet(void* packet)

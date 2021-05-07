@@ -358,7 +358,7 @@ void send_leave_packet(int to_client, int leave_id)
 	p.size = sizeof(p);
 	p.type = SC_PACKET_LEAVE;
 	p.id = leave_id;
-
+	
 	send_packet(to_client, &p);
 }
 

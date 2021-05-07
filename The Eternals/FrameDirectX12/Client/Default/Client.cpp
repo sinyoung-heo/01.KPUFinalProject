@@ -327,6 +327,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_DESTROY:
+		//CPacketMgr::Get_Instance()->send_logout();
 		PostQuitMessage(0);
 		break;
 	default:

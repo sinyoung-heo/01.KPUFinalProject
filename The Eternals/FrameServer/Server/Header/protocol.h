@@ -370,6 +370,13 @@ struct cs_packet_logout
 {
 	unsigned char	size;
 	char			type;
+
+	int				level;
+	int				hp, maxHp;
+	int				mp, maxMp;
+	int				exp, maxExp;
+	int				minAtt, maxAtt;
+	float			posX, posY, posZ;
 };
 
 struct cs_packet_teleport 
