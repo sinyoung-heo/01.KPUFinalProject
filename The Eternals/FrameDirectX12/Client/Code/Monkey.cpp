@@ -8,11 +8,14 @@
 #include "Font.h"
 #include "RenderTarget.h"
 #include "TimeMgr.h"
+#include "CollisionTick.h"
+#include "InstancePoolMgr.h"
 
 CMonkey::CMonkey(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pPacketMgr(CPacketMgr::Get_Instance())
 	, m_pServerMath(CServerMath::Get_Instance())
+	, m_pInstancePoolMgr(CInstancePoolMgr::Get_Instance())
 {
 }
 
@@ -80,6 +83,10 @@ _int CMonkey::Update_GameObject(const _float& fTimeDelta)
 		m_bIsResetNaviMesh = true;
 		m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
 	}
+
+	// Create CollisionTick
+	if (m_pMeshCom->Is_BlendingComplete())
+		SetUp_CollisionTick(fTimeDelta);
 
 	SetUp_Dissolve(fTimeDelta);
 
@@ -270,6 +277,7 @@ void CMonkey::Change_Animation(const _float& fTimeDelta)
 
 		case Monkey::A_WAIT:
 		{
+			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = Monkey::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
@@ -277,6 +285,7 @@ void CMonkey::Change_Animation(const _float& fTimeDelta)
 
 		case Monkey::A_WALK:
 		{
+			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = Monkey::A_WALK;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
@@ -284,6 +293,7 @@ void CMonkey::Change_Animation(const _float& fTimeDelta)
 
 		case Monkey::A_RUN:
 		{
+			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = Monkey::A_RUN;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
@@ -330,6 +340,78 @@ void CMonkey::Change_Animation(const _float& fTimeDelta)
 			}
 		}
 		break;
+		}
+	}
+}
+
+void CMonkey::SetUp_CollisionTick(const _float& fTimeDelta)
+{
+	if (Monkey::A_ATTACK == m_uiAnimIdx && m_ui3DMax_CurFrame >= Monkey::ATTACK_START_TICK)
+	{
+		if (!m_bIsCreateCollisionTick)
+		{
+			m_bIsCreateCollisionTick                     = true;
+			m_tCollisionTickDesc.fPosOffset              = 3.5f;
+			m_tCollisionTickDesc.fScaleOffset			 = 2.0f;
+			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
+			m_tCollisionTickDesc.fColisionTickUpdateTime = 0.0f;
+			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
+			m_tCollisionTickDesc.iCurCollisionTick       = 0;
+			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+		}
+	}
+	else if (Monkey::A_ATTACK_THROW == m_uiAnimIdx && m_ui3DMax_CurFrame >= Monkey::ATTACK_THROW_START_TICK)
+	{
+		if (!m_bIsCreateCollisionTick)
+		{
+			m_bIsCreateCollisionTick                     = true;
+			m_tCollisionTickDesc.fPosOffset              = 12.0f;
+			m_tCollisionTickDesc.fScaleOffset			 = 3.0f;
+			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
+			m_tCollisionTickDesc.fColisionTickUpdateTime = 5.0f;
+			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
+			m_tCollisionTickDesc.iCurCollisionTick       = 0;
+			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+		}
+	}
+
+	// Create CollisionTick
+	if (m_bIsCreateCollisionTick &&
+		m_tCollisionTickDesc.bIsCreateCollisionTick &&
+		m_tCollisionTickDesc.iCurCollisionTick < m_tCollisionTickDesc.iMaxCollisionTick)
+	{
+		m_tCollisionTickDesc.fCollisionTickTime += fTimeDelta;
+
+		if (m_tCollisionTickDesc.fCollisionTickTime >= m_tCollisionTickDesc.fColisionTickUpdateTime)
+		{
+			m_tCollisionTickDesc.fCollisionTickTime = 0.0f;
+			++m_tCollisionTickDesc.iCurCollisionTick;
+
+			if (m_tCollisionTickDesc.iCurCollisionTick >= m_tCollisionTickDesc.iMaxCollisionTick)
+			{
+				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
+				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
+				m_tCollisionTickDesc.fCollisionTickTime      = 0.0f;
+			}
+
+			// CollisionTick
+			m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+			m_pTransCom->m_vDir.Normalize();
+			_vec3 vPos = m_pTransCom->m_vPos + m_pTransCom->m_vDir * m_tCollisionTickDesc.fPosOffset;
+			vPos.y = 1.f;
+
+			CCollisionTick* pCollisionTick = static_cast<CCollisionTick*>(Pop_Instance(m_pInstancePoolMgr->Get_CollisionTickPool()));
+			if (nullptr != pCollisionTick)
+			{
+				pCollisionTick->Set_CollisionTag(L"CollisionTick_Monster");
+				pCollisionTick->Set_Damage(m_pInfoCom->Get_RandomDamage());
+				pCollisionTick->Set_LifeTime(0.25f);
+				pCollisionTick->Get_Transform()->m_vScale = _vec3(1.0f) * m_tCollisionTickDesc.fScaleOffset;
+				pCollisionTick->Get_Transform()->m_vPos   = vPos;
+				pCollisionTick->Get_BoundingSphere()->Set_Radius(pCollisionTick->Get_Transform()->m_vScale);
+				pCollisionTick->Set_ServerNumber(m_iSNum);
+				m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_Monster", pCollisionTick);
+			}
 		}
 	}
 }

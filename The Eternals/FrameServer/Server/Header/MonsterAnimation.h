@@ -38,6 +38,9 @@ namespace Monkey
 	{
 		4800, 6400, 4480, 9600, 12800, 17600
 	};
+
+	constexpr int ATTACK_START_TICK       = 25;
+	constexpr int ATTACK_THROW_START_TICK = 45;
 }
 
 /* EPIC MONSTER */
