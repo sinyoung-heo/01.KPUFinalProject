@@ -58,6 +58,10 @@ namespace Cloder
 	{
 		4800, 6400, 2240, 9600, 14400, 14400, 10720
 	};
+
+	constexpr int ATTACK_START_TICK       = 24;
+	constexpr int ATTACK_POKE_START_TICK  = 58;
+	constexpr int ATTACK_SWING_START_TICK = 7;
 }
 
 namespace DrownedSailor

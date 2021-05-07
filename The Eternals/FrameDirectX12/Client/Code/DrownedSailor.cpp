@@ -394,7 +394,7 @@ void CDrownedSailor::SetUp_CollisionTick(const _float& fTimeDelta)
 		{
 			m_bIsCreateCollisionTick                     = true;
 			m_tCollisionTickDesc.fPosOffset              = 1.25f;
-			m_tCollisionTickDesc.fScaleOffset			 = 2.5f;
+			m_tCollisionTickDesc.fScaleOffset			 = 6.0f;
 			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
 			m_tCollisionTickDesc.fColisionTickUpdateTime = 1.0f / 8.0f;
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
@@ -408,7 +408,7 @@ void CDrownedSailor::SetUp_CollisionTick(const _float& fTimeDelta)
 		{
 			m_bIsCreateCollisionTick = true;
 			m_tCollisionTickDesc.fPosOffset              = 2.00f;
-			m_tCollisionTickDesc.fScaleOffset            = 1.0f;
+			m_tCollisionTickDesc.fScaleOffset            = 3.0f;
 			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
 			m_tCollisionTickDesc.fColisionTickUpdateTime = 0.0f;
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
@@ -422,7 +422,7 @@ void CDrownedSailor::SetUp_CollisionTick(const _float& fTimeDelta)
 		{
 			m_bIsCreateCollisionTick = true;
 			m_tCollisionTickDesc.fPosOffset              = 2.00f;
-			m_tCollisionTickDesc.fScaleOffset            = 1.0f;
+			m_tCollisionTickDesc.fScaleOffset            = 3.0f;
 			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
 			m_tCollisionTickDesc.fColisionTickUpdateTime = 0.0f;
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
@@ -436,7 +436,7 @@ void CDrownedSailor::SetUp_CollisionTick(const _float& fTimeDelta)
 		{
 			m_bIsCreateCollisionTick = true;
 			m_tCollisionTickDesc.fPosOffset              = 2.25f;
-			m_tCollisionTickDesc.fScaleOffset            = 1.0f;
+			m_tCollisionTickDesc.fScaleOffset            = 3.0f;
 			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
 			m_tCollisionTickDesc.fColisionTickUpdateTime = 0.0f;
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
@@ -450,7 +450,7 @@ void CDrownedSailor::SetUp_CollisionTick(const _float& fTimeDelta)
 		{
 			m_bIsCreateCollisionTick = true;
 			m_tCollisionTickDesc.fPosOffset              = 2.00f;
-			m_tCollisionTickDesc.fScaleOffset            = 1.0f;
+			m_tCollisionTickDesc.fScaleOffset            = 3.0f;
 			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
 			m_tCollisionTickDesc.fColisionTickUpdateTime = 0.0f;
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
@@ -490,7 +490,7 @@ void CDrownedSailor::SetUp_CollisionTick(const _float& fTimeDelta)
 				pCollisionTick->Set_CollisionTag(L"CollisionTick_Monster");
 				pCollisionTick->Set_Damage(m_pInfoCom->Get_RandomDamage());
 				pCollisionTick->Set_LifeTime(0.25f);
-				pCollisionTick->Get_Transform()->m_vScale = _vec3(3.0f) * m_tCollisionTickDesc.fScaleOffset;
+				pCollisionTick->Get_Transform()->m_vScale = _vec3(1.0f) * m_tCollisionTickDesc.fScaleOffset;
 				pCollisionTick->Get_Transform()->m_vPos   = vPos;
 				pCollisionTick->Get_BoundingSphere()->Set_Radius(pCollisionTick->Get_Transform()->m_vScale);
 				pCollisionTick->Set_ServerNumber(m_iSNum);
