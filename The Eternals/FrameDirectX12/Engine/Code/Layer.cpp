@@ -128,7 +128,7 @@ HRESULT CLayer::Delete_GameObject(wstring wstrObjTag, _int iIdx)
 	return E_FAIL;
 }
 
-HRESULT CLayer::Delete_ServerObject(wstring wstrObjTag, int num)
+HRESULT CLayer::Delete_ServerObject(wstring wstrObjTag, int num, _bool isPooling)
 {
 	/*__________________________________________________________________________________________________________
 	- 삭제할 OBJLIST의 Key값을 탐색한다.
@@ -147,8 +147,10 @@ HRESULT CLayer::Delete_ServerObject(wstring wstrObjTag, int num)
 	CGameObject* pGameObject = Get_ServerObject(wstrObjTag, num);
 	if (nullptr != pGameObject)
 	{
-		//pGameObject->Set_DeadGameObject();
-		pGameObject->Set_IsReturnObject(true);
+		if (isPooling == false)
+			pGameObject->Set_DeadGameObject();	
+		else
+			pGameObject->Set_IsReturnObject(true);
 
 		return S_OK;
 	}

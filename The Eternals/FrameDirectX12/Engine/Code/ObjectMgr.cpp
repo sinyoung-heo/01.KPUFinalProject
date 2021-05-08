@@ -248,7 +248,7 @@ HRESULT CObjectMgr::Delete_GameObject(wstring wstrLayerTag, wstring wstrObjTag, 
 	return iter_find->second->Delete_GameObject(wstrObjTag, iIdx);
 }
 
-HRESULT CObjectMgr::Delete_ServerObject(wstring wstrLayerTag, wstring wstrObjTag, int num)
+HRESULT CObjectMgr::Delete_ServerObject(wstring wstrLayerTag, wstring wstrObjTag, int num, _bool isPooling)
 {
 	/*__________________________________________________________________________________________________________
 	- Layer Tag값을 탐색한다.
@@ -261,7 +261,7 @@ HRESULT CObjectMgr::Delete_ServerObject(wstring wstrLayerTag, wstring wstrObjTag
 	/*__________________________________________________________________________________________________________
 	- 탐색에 성공할 경우 해당 Key값의 OBJLIST에서 해당 index삭제.
 	____________________________________________________________________________________________________________*/
-	return iter_find->second->Delete_ServerObject(wstrObjTag, num);
+	return iter_find->second->Delete_ServerObject(wstrObjTag, num, isPooling);
 }
 
 HRESULT CObjectMgr::Clear_OBJLIST(wstring wstrLayerTag, wstring wstrObjTag)

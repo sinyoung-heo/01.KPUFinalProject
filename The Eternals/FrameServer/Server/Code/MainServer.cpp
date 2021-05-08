@@ -805,6 +805,8 @@ void add_new_client(SOCKET ns)
 #ifdef TEST
 		cout << "New Client [" << s_num << "] Accepted" << endl;
 #endif
+		cout << "New Client [" << s_num << "] Accepted" << endl;
+
 		/* 새로 접속한 유저의 정보 초기화 */
 		pNew->Get_ClientLock().lock();
 		pNew->Set_IsConnected(true);
@@ -938,6 +940,8 @@ void disconnect_client(int id)
 	pPlayer->m_vDir		= _vec3(0.f, 0.f, 0.f);
 	pPlayer->m_ID[0]	= 0;
 	pPlayer->m_type		= 0;
+	pPlayer->m_chStageId = STAGE_VELIKA;
+	pPlayer->view_list.clear();
 	pPlayer->Get_ClientLock().unlock();
 
 	if (CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER")->size() <= 0)

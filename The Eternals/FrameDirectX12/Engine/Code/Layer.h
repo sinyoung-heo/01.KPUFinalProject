@@ -25,7 +25,7 @@ public:
 	// Add & Delete
 	HRESULT			Add_GameObject(wstring wstrObjTag, CGameObject* pGameObject);
 	HRESULT			Delete_GameObject(wstring wstrObjTag, _int iIdx = 0);
-	HRESULT			Delete_ServerObject(wstring wstrObjTag, int num);
+	HRESULT			Delete_ServerObject(wstring wstrObjTag, int num, _bool isPooling = true);
 	HRESULT			Clear_OBJLIST(wstring wstrObjTag);
 
 	// Method

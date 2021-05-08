@@ -413,7 +413,7 @@ void CPacketMgr::Stage_Change(sc_packet_stage_change* packet)
 	}
 	else
 	{
-		m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"Others", s_num);
+		m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"Others", s_num, false);
 	}
 }
 
@@ -564,11 +564,11 @@ void CPacketMgr::Leave_Object(sc_packet_leave* packet, int& retflag)
 	if (packet->id == g_iSNum) { retflag = 2; return; };
 
 	if (packet->id >= NPC_NUM_START && packet->id < MON_NUM_START)
-		m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"NPC", packet->id);
+		m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"NPC", packet->id, true);
 	else if (packet->id >= MON_NUM_START)
-		m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"MONSTER", packet->id);
+		m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"MONSTER", packet->id, true);
 	else
-		m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"Others", packet->id);
+		m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"Others", packet->id, false);
 }
 
 void CPacketMgr::AttackStop_User(sc_packet_attack* packet)
