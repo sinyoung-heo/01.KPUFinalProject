@@ -20,6 +20,7 @@ public:
 	CObj*		Get_GameObject(wstring wstrObjTag, int server_num = 0);
 	OBJLIST*	Get_OBJLIST(wstring wstrObjTag);
 
+	void		Create_StageBeachMonster();
 public:
 	bool		Is_Player(int server_num = 0);
 	bool		Is_NPC(int server_num = NPC_NUM_START);

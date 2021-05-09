@@ -483,8 +483,18 @@ void CMonster::Move_NormalMonster(const float& fTimeDelta)
 	m_vPos += m_vDir * m_fSpd * fTimeDelta;
 
 	/* NaviMesh를 벗어날 경우 움직임 X */
-	if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
-		return;
+	if (m_chStageId == STAGE_VELIKA)
+	{
+		if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+	}
+	else if (m_chStageId == STAGE_BEACH)
+	{
+		if (CNaviMesh_Beach::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+		
+	}
+		
 
 	/* 변경된 좌표로 섹터 갱신 */
 	CSectorMgr::GetInstance()->Compare_exchange_Sector(m_sNum, (int)ori_z, (int)ori_x, (int)(m_vPos.z), (int)(m_vPos.x));
@@ -684,14 +694,21 @@ void CMonster::Chase_Crab(const float& fTimeDelta)
 		else
 		{
 			nonActive_monster();
-			cout << "몬스터 전투 종료 " << endl;
 			Set_Stop_Fight();
 		}
 	}
 
 	/* NaviMesh를 벗어날 경우 움직임 X */
-	if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
-		return;
+	if (m_chStageId == STAGE_VELIKA)
+	{
+		if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+	}
+	else if (m_chStageId == STAGE_BEACH)
+	{
+		if (CNaviMesh_Beach::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+	}
 	
 	/* 변경된 좌표로 섹터 갱신 */
 	CSectorMgr::GetInstance()->Compare_exchange_Sector(m_sNum, (int)ori_z, (int)ori_x, (int)(m_vPos.z), (int)(m_vPos.x));
@@ -899,14 +916,21 @@ void CMonster::Chase_Monkey(const float& fTimeDelta)
 		else
 		{
 			nonActive_monster();
-			cout << "몬스터 전투 종료 " << endl;
 			Set_Stop_Fight();
 		}
 	}
 
 	/* NaviMesh를 벗어날 경우 움직임 X */
-	if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
-		return;
+	if (m_chStageId == STAGE_VELIKA)
+	{
+		if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+	}
+	else if (m_chStageId == STAGE_BEACH)
+	{
+		if (CNaviMesh_Beach::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+	}
 
 	/* 변경된 좌표로 섹터 갱신 */
 	CSectorMgr::GetInstance()->Compare_exchange_Sector(m_sNum, (int)ori_z, (int)ori_x, (int)(m_vPos.z), (int)(m_vPos.x));
@@ -1105,14 +1129,21 @@ void CMonster::Chase_Cloder(const float& fTimeDelta)
 		else
 		{
 			nonActive_monster();
-			cout << "몬스터 전투 종료 " << endl;
 			Set_Stop_Fight();
 		}
 	}
 
 	/* NaviMesh를 벗어날 경우 움직임 X */
-	if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
-		return;
+	if (m_chStageId == STAGE_VELIKA)
+	{
+		if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+	}
+	else if (m_chStageId == STAGE_BEACH)
+	{
+		if (CNaviMesh_Beach::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+	}
 
 	/* 변경된 좌표로 섹터 갱신 */
 	CSectorMgr::GetInstance()->Compare_exchange_Sector(m_sNum, (int)ori_z, (int)ori_x, (int)(m_vPos.z), (int)(m_vPos.x));
@@ -1319,14 +1350,21 @@ void CMonster::Chase_DrownedSailor(const float& fTimeDelta)
 		else
 		{
 			nonActive_monster();
-			cout << "몬스터 전투 종료 " << endl;
 			Set_Stop_Fight();
 		}
 	}
 
 	/* NaviMesh를 벗어날 경우 움직임 X */
-	if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
-		return;
+	if (m_chStageId == STAGE_VELIKA)
+	{
+		if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+	}
+	else if (m_chStageId == STAGE_BEACH)
+	{
+		if (CNaviMesh_Beach::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+	}
 
 	/* 변경된 좌표로 섹터 갱신 */
 	CSectorMgr::GetInstance()->Compare_exchange_Sector(m_sNum, (int)ori_z, (int)ori_x, (int)(m_vPos.z), (int)(m_vPos.x));
@@ -1532,14 +1570,21 @@ void CMonster::Chase_GiantBeetle(const float& fTimeDelta)
 		else
 		{
 			nonActive_monster();
-			cout << "몬스터 전투 종료 " << endl;
 			Set_Stop_Fight();
 		}
 	}
 
 	/* NaviMesh를 벗어날 경우 움직임 X */
-	if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
-		return;
+	if (m_chStageId == STAGE_VELIKA)
+	{
+		if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+	}
+	else if (m_chStageId == STAGE_BEACH)
+	{
+		if (CNaviMesh_Beach::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+	}
 
 	/* 변경된 좌표로 섹터 갱신 */
 	CSectorMgr::GetInstance()->Compare_exchange_Sector(m_sNum, (int)ori_z, (int)ori_x, (int)(m_vPos.z), (int)(m_vPos.x));
@@ -1756,14 +1801,21 @@ void CMonster::Chase_GiantMonkey(const float& fTimeDelta)
 		else
 		{
 			nonActive_monster();
-			cout << "몬스터 전투 종료 " << endl;
 			Set_Stop_Fight();
 		}
 	}
 
 	/* NaviMesh를 벗어날 경우 움직임 X */
-	if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
-		return;
+	if (m_chStageId == STAGE_VELIKA)
+	{
+		if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+	}
+	else if (m_chStageId == STAGE_BEACH)
+	{
+		if (CNaviMesh_Beach::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+	}
 
 	/* 변경된 좌표로 섹터 갱신 */
 	CSectorMgr::GetInstance()->Compare_exchange_Sector(m_sNum, (int)ori_z, (int)ori_x, (int)(m_vPos.z), (int)(m_vPos.x));
@@ -1962,14 +2014,21 @@ void CMonster::Chase_CraftyArachne(const float& fTimeDelta)
 		else
 		{
 			nonActive_monster();
-			cout << "몬스터 전투 종료 " << endl;
 			Set_Stop_Fight();
 		}
 	}
 
 	/* NaviMesh를 벗어날 경우 움직임 X */
-	if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
-		return;
+	if (m_chStageId == STAGE_VELIKA)
+	{
+		if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+	}
+	else if (m_chStageId == STAGE_BEACH)
+	{
+		if (CNaviMesh_Beach::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+	}
 
 	/* 변경된 좌표로 섹터 갱신 */
 	CSectorMgr::GetInstance()->Compare_exchange_Sector(m_sNum, (int)ori_z, (int)ori_x, (int)(m_vPos.z), (int)(m_vPos.x));
@@ -3527,7 +3586,6 @@ void CMonster::Hurt_Monster(const int& p_id,const int& damage)
 	/* 추적 상태로 변경 */
 	if (m_bIsFighting == false)
 	{
-		cout << "몬스터 전투 시작" << endl;
 		Set_Start_Fight();
 		Change_ChaseMode();
 	}

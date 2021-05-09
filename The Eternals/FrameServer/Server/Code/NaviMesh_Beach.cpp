@@ -143,6 +143,8 @@ HRESULT CNaviMesh_Beach::Ready_NaviMesh(wstring wstrFilePath)
 	if (fin.fail())
 		return E_FAIL;
 
+	_vec3 vOffSet = _vec3(STAGE_BEACH_OFFSET_X, 0.0f, STAGE_BEACH_OFFSET_Z);
+
 	while (true)
 	{
 		CCell*	pCell = nullptr;
@@ -169,9 +171,9 @@ HRESULT CNaviMesh_Beach::Ready_NaviMesh(wstring wstrFilePath)
 			break;
 
 		pCell = CCell::Create(m_vecCell.size(),
-							  vPointA,
-							  vPointB,
-							  vPointC,
+							  vPointA + vOffSet,
+							  vPointB + vOffSet,
+							  vPointC + vOffSet,
 							  iOption);
 
 		if (!pCell) E_FAIL;

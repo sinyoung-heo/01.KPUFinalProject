@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ObjMgr.h"
+#include "Monster.h"
 
 IMPLEMENT_SINGLETON(CObjMgr)
 
@@ -54,6 +55,237 @@ OBJLIST* CObjMgr::Get_OBJLIST(wstring wstrObjTag)
 		return nullptr;
 
 	return &(iter_find->second);
+}
+
+void CObjMgr::Create_StageBeachMonster()
+{
+	CMonster* pNew = nullptr;
+	int s_num = -1;
+
+	/*	________________________________________________________________________________
+										CRAB MONSTER
+		________________________________________________________________________________*/
+	// MONSTER - crab 1
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_Monster(_vec3(388.235f, 0.f, 142.977f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Crab::duration);
+	}
+	else return;
+
+	// MONSTER - crab 2
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_Monster(_vec3(406.363f, 0.f, 135.247f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Crab::duration);
+	}
+	else return;
+
+	// MONSTER - crab 3
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_Monster(_vec3(410.387f, 0.f, 136.93f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Crab::duration);
+	}
+	else return;
+
+	// MONSTER - crab 4
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_Monster(_vec3(393.557f, 0.f, 134.746f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Crab::duration);
+	}
+	else return;
+
+	// MONSTER - crab 5
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_Monster(_vec3(387.697f, 0.f, 126.109f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Crab::duration);
+	}
+	else return;
+
+	// MONSTER - crab 6
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_Monster(_vec3(391.849f, 0.f, 135.497f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Crab::duration);
+	}
+	else return;
+
+	// MONSTER - crab 7
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_Monster(_vec3(380.019f, 0.f, 153.189f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Crab::duration);
+	}
+	else return;
+
+	// MONSTER - crab 8
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_Monster(_vec3(385.967f, 0.f, 154.236f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Crab::duration);
+	}
+	else return;
+
+	// MONSTER - crab 9
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_Monster(_vec3(394.258f, 0.f, 165.382f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Crab::duration);
+	}
+	else return;
+
+	/*	________________________________________________________________________________
+										DRAWN SAILOR MONSTER
+		________________________________________________________________________________*/
+
+	// MONSTER - drowned sailor 1
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_Monster(_vec3(381.223f, 0.f, 181.083f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
+		pNew->Set_AnimDuration(DrownedSailor::duration);
+	}
+	else return;
+
+	// MONSTER - drowned sailor 2
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_Monster(_vec3(358.218f, 0.f, 154.457f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
+		pNew->Set_AnimDuration(DrownedSailor::duration);
+	}
+	else return;
+
+	// MONSTER - drowned sailor 3
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_Monster(_vec3(355.212f, 0.f, 165.113f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
+		pNew->Set_AnimDuration(DrownedSailor::duration);
+	}
+	else return;
+
+	// MONSTER - drowned sailor 4
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_Monster(_vec3(361.711f, 0.f, 158.886f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
+		pNew->Set_AnimDuration(DrownedSailor::duration);
+	}
+	else return;
+
+	// MONSTER - drowned sailor 5
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_Monster(_vec3(354.653f, 0.f, 142.572f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
+		pNew->Set_AnimDuration(DrownedSailor::duration);
+	}
+	else return;
+
+	// MONSTER - drowned sailor 6
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_Monster(_vec3(359.64f, 0.f, 167.906f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
+		pNew->Set_AnimDuration(DrownedSailor::duration);
+	}
+	else return;
+
+	// MONSTER - drowned sailor 7
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_Monster(_vec3(353.29f, 0.f, 177.823f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
+		pNew->Set_AnimDuration(DrownedSailor::duration);
+	}
+	else return;
+
+	// MONSTER - drowned sailor 8
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_Monster(_vec3(378.303f, 0.f, 171.636f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
+		pNew->Set_AnimDuration(DrownedSailor::duration);
+	}
+	else return;
+
+	/*	________________________________________________________________________________
+									CRAFTY ARCHNE MONSTER
+	________________________________________________________________________________*/
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+	
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_Monster(_vec3(403.297f, 0.f, 185.56f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_ARACHNE, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Set_NumAnimation(CraftyArachne::NUM_ANIMATION);
+		pNew->Set_AnimDuration(CraftyArachne::duration);
+	}
+	else return;
 }
 
 bool CObjMgr::Is_Player(int server_num)

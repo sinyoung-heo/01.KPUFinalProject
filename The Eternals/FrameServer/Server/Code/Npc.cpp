@@ -379,10 +379,21 @@ void CNpc::Move_Walker_NPC(const float& fTimeDelta)
 	}
 
 	/* NaviMesh를 벗어날 경우 움직임 X */
-	if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(m_vTempPos) == -1)
+	if (m_chStageId == STAGE_VELIKA)
 	{
-		m_vTempPos = m_vPos;
-		return;
+		if (CNaviMesh::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+		{
+			m_vTempPos = m_vPos;
+			return;
+		}
+	}
+	else if (m_chStageId == STAGE_BEACH)
+	{
+		if (CNaviMesh_Beach::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+		{
+			m_vTempPos = m_vPos;
+			return;
+		}
 	}
 
 	/* 변경된 좌표로 섹터 갱신 */

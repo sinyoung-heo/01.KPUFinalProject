@@ -400,7 +400,7 @@ CDrownedSailor** CDrownedSailor::Create_InstancePool(ID3D12Device* pGraphicDevic
 		ppInstance[i] = new CDrownedSailor(pGraphicDevice, pCommandList);
 		ppInstance[i]->m_uiInstanceIdx = i;
 		ppInstance[i]->Ready_GameObject(L"DrownedSailor",			// MeshTag
-										L"StageVelika_NaviMesh",	// NaviMeshTag
+										L"StageBeach_NaviMesh",	// NaviMeshTag
 										_vec3(0.05f, 0.05f, 0.05f),	// Scale
 										_vec3(0.0f),				// Angle
 										_vec3(AWAY_FROM_STAGE));	// Pos

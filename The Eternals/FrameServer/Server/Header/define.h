@@ -53,6 +53,14 @@ constexpr float	ANGLE_LEFT_UP		= 315.f;
 constexpr float	ANGLE_LEFT_DOWN		= 225.f;
 constexpr float	ANGLE_BACK			= 180.f;
 
+/*____________________________________________________________________
+Stage Offset
+______________________________________________________________________*/
+const float STAGE_VELIKA_OFFSET_X = 0.0f;
+const float STAGE_VELIKA_OFFSET_Z = 0.0f;
+const float STAGE_BEACH_OFFSET_X = 256.0f;
+const float STAGE_BEACH_OFFSET_Z = 0.0f;
+
 /* TYPEDEF */
 typedef	unsigned long		_ulong;
 typedef	unsigned int		_uint;

@@ -4,14 +4,19 @@
 #include "Management.h"
 #include "Renderer.h"
 #include "InstancePoolMgr.h"
-#include "TestPlayer.h"
-#include "TestOthers.h"
+#include "DynamicCamera.h"
+#include "FadeInOut.h"
+/* USER */
+#include "PCGladiator.h"
+#include "PCOthersGladiator.h"
+/* NPC */
 #include "NPC_Walker.h"
 #include "NPC_Assistant.h"
 #include "NPC_Stander.h"
 #include "NPC_Merchant.h"
 #include "NPC_Quest.h"
 #include "NPC_Children.h"
+/* MONSTER */
 #include "Crab.h"
 #include "Monkey.h"
 #include "CloderA.h"
@@ -19,12 +24,6 @@
 #include "GiantBeetle.h"
 #include "GiantMonkey.h"
 #include "CraftyArachne.h"
-#include "DynamicCamera.h"
-#include "TestColPlayer.h"
-#include "TestColMonster.h"
-#include "PCGladiator.h"
-#include "PCOthersGladiator.h"
-#include "FadeInOut.h"
 
 IMPLEMENT_SINGLETON(CPacketMgr)
 
@@ -428,6 +427,8 @@ void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
 	wstring wstrNaviMeshTag;
 	if (packet->naviType == STAGE_VELIKA)
 		wstrNaviMeshTag = L"StageVelika_NaviMesh";
+	else if (packet->naviType == STAGE_BEACH)
+		wstrNaviMeshTag = L"StageBeach_NaviMesh";
 	
 	/* NPC - Walker */
 	if (packet->npcNum == NPC_CHICKEN || packet->npcNum == NPC_CAT || packet->npcNum == NPC_AMAN_BOY)
@@ -876,6 +877,8 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 	wstring wstrNaviMeshTag;
 	if (packet->naviType == STAGE_VELIKA)
 		wstrNaviMeshTag = L"StageVelika_NaviMesh";
+	else if (packet->naviType == STAGE_BEACH)
+		wstrNaviMeshTag = L"StageBeach_NaviMesh";
 
 	if (packet->mon_num == MON_CRAB)
 	{
