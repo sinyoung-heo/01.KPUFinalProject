@@ -23,7 +23,6 @@ Texture2D g_TexBlend : register(t8); // Blend
 Texture2D g_TexDepth : register(t9); //Depth
 Texture2D g_TexEdgeBlur : register(t10); //Edge-Blur
 Texture2D g_TexSkyBox : register(t11); //SB
-
 Texture2D g_TexEffect : register(t12); //EFF
 cbuffer IS_Rendering : register(b0)
 {

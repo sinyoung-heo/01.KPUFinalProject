@@ -18,6 +18,7 @@ class CShaderSSAO;
 class CShaderNPathDir;
 class CShaderMesh;
 class CShaderEdge;
+class CShaderAddEffect;
 #define WIDTH_FIRST		112
 #define WIDTH_SECOND	224+112
 #define WIDTH_THIRD		448+112
@@ -107,6 +108,7 @@ private:
 	void	Render_Distortion(const _float& fTimeDelta);
 	void	Render_CrossFilter(const _float& fTimeDelta);
 	void	Render_Alpha(const _float& fTimeDelta);
+	void	Render_AddEffect();
 	void	Render_UI(const _float& fTimeDelta);
 	void	Render_Collider(const _float& fTimeDelta);
 	void	Render_RenderTarget();
@@ -195,6 +197,11 @@ private:
 	//Effect (Alpha)
 	CRenderTarget* m_pTargetpEffect = nullptr;
 	CScreenTex* m_pEffectBuffer = nullptr;
+	//Effect (Add)
+	_bool m_bisSetAddEffectTexture{ false };
+	CRenderTarget* m_pTargetAddEffect = nullptr;
+	CScreenTex* m_pAddEffectBuffer = nullptr;
+	CShaderAddEffect* m_pAddEffectShader = nullptr;
 	/*__________________________________________________________________________________________________________
 	[ Pipeline StateGroup ]
 	____________________________________________________________________________________________________________*/

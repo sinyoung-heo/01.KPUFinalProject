@@ -71,7 +71,7 @@ _int CTextureEffect::Update_GameObject(const _float & fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	// Frustum Culling
 	if (m_pRenderer->Get_Frustum().Contains(m_pBoundingBoxCom->Get_BoundingInfo()) != DirectX::DISJOINT)
-		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);
+		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MAGICCIRCLE, this), -1);
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]

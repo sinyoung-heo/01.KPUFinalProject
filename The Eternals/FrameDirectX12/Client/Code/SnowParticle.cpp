@@ -3,7 +3,7 @@
 #include "ObjectMgr.h"
 #include "GraphicDevice.h"
 #include "TextureDistortion.h"
-
+#include "TimeMgr.h"
 CSnowParticle::CSnowParticle(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
@@ -23,6 +23,7 @@ HRESULT CSnowParticle::Ready_GameObject(wstring wstrTextureTag,
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos = vPos;
 
+	m_pTransCom->m_vPos.y += 1.5f;
 	// BoundingBox.
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
 		m_pTransCom->m_vScale,
@@ -41,8 +42,13 @@ HRESULT CSnowParticle::LateInit_GameObject()
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer();
 
-	CGameObject* pGameObj;
-	
+	m_vecRandomvector.x = (rand() % 200 - 100);
+	m_vecRandomvector.y = (rand() % 100);
+	m_vecRandomvector.z = (rand() % 200 - 100);
+	m_vecRandomvector.Normalize();
+
+	m_pTransCom->m_vPos += (m_vecRandomvector * (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 50.f);
+
 	return S_OK;
 }
 
@@ -50,7 +56,7 @@ _int CSnowParticle::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
-	if (m_bIsDead)
+	if (m_fAlpha<0.f)
 		return DEAD_OBJ;
 
 	/*__________________________________________________________________________________________________________
@@ -63,11 +69,12 @@ _int CSnowParticle::Update_GameObject(const _float& fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	// Frustum Culling
 	if (m_pRenderer->Get_Frustum().Contains(m_pBoundingBoxCom->Get_BoundingInfo()) != DirectX::DISJOINT)
-		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);
+		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MAGICCIRCLE, this), -1);
 
 	/*__________________________________________________________________________________________________________
-	[ TransCom - Update WorldMatrix ]
+	[ TransCom - Update WorldMatrix ]	
 	____________________________________________________________________________________________________________*/
+
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
@@ -77,10 +84,10 @@ _int CSnowParticle::Update_GameObject(const _float& fTimeDelta)
 
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
 	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
-	_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
-	m_pTransCom->m_vPos = Pos;
-	//m_pTransCom->m_vPos.y += 3.5f;
-	//m_pTransCom->m_vPos.z += 0.1f;
+	
+
+	m_pTransCom->m_vPos +=( m_vecRandomvector* (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"))*0.8f);
+	
 	return NO_EVENT;
 }
 
@@ -122,7 +129,7 @@ HRESULT CSnowParticle::Add_Component(wstring wstrTextureTag)
 	m_pShaderCom = static_cast<Engine::CShaderTexture*>(m_pComponentMgr->Clone_Component(L"ShaderTexture", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->AddRef();
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(2), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(9), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
 	return S_OK;
@@ -140,7 +147,8 @@ void CSnowParticle::Set_ConstantTable()
 	tCB_ShaderTexture.fCurFrame = (_float)(_int)m_tFrame.fCurFrame;
 	tCB_ShaderTexture.fSceneCnt = m_tFrame.fSceneCnt;
 	tCB_ShaderTexture.fCurScene = (_int)m_tFrame.fCurScene;
-
+	m_fAlpha -= Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.5f;
+	tCB_ShaderTexture.fAlpha = m_fAlpha;
 	m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 }
 

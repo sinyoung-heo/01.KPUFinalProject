@@ -48,7 +48,8 @@ private:
 	_uint	m_uiTexIdx = 0;
 
 	FRAME	m_tFrame{ };
-
+	_vec3 m_vecRandomvector;
+	float m_fAlpha = 1.f;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 		ID3D12GraphicsCommandList* pCommandList,

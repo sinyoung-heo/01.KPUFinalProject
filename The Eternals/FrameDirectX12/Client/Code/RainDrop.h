@@ -37,7 +37,7 @@ private:
 	[ Component ]
 	____________________________________________________________________________________________________________*/
 	Engine::CMesh*						m_pMeshCom                = nullptr;
-	Engine::CShaderMeshEffect*				m_pShaderCom            = nullptr;
+	Engine::CShaderMesh*				m_pShaderCom            = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]
