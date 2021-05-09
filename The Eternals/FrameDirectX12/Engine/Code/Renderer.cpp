@@ -179,7 +179,7 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 
 	Render_Collider(fTimeDelta);		// Collider Render
 	Render_Alpha(fTimeDelta);			// Effect Texture, Mesh
-
+	Render_AddEffect();
 	Render_UI(fTimeDelta);				// UI Render
 	Render_RenderTarget();				// Debug RenderTarget
 
@@ -276,7 +276,7 @@ void CRenderer::Render_Blend()
 		vecBlendTarget.emplace_back(vecDeferredTarget[3]);	// RenderTarget - Depth
 		vecBlendTarget.emplace_back(vecBlurTarget[3]);	// RenderTarget - EdgeBlur
 		vecBlendTarget.emplace_back(vecDeferredTarget[5]);	// RenderTarget - Sky
-		vecBlendTarget.emplace_back(m_pTargetpEffect->Get_TargetTexture()[0]);	// RenderTarget - Effect
+		vecBlendTarget.emplace_back(m_pTargetAddEffect->Get_TargetTexture()[0]);	// RenderTarget - Effect
 		m_pBlendShader->SetUp_ShaderTexture(vecBlendTarget);
 		m_pHDRShader->SetUp_ShaderTexture(vecBlendTarget);
 	}
@@ -527,6 +527,27 @@ void CRenderer::Render_Alpha(const _float& fTimeDelta)
 	CShaderTextureInstancing::Get_Instance()->Render_Instance(INSTANCE::INSTANCE_ALPHA);
 }
 
+void CRenderer::Render_AddEffect()
+{
+	if (!m_bisSetAddEffectTexture)
+	{
+		m_bisSetAddEffectTexture = true;
+		vector<ComPtr<ID3D12Resource>> vecEffectTarget = m_pTargetpEffect->Get_TargetTexture();
+		vector<ComPtr<ID3D12Resource>> vecAddEffectTarget;
+		vecAddEffectTarget.emplace_back(vecEffectTarget[0]);	// RenderTarget - Normal
+		vecAddEffectTarget.emplace_back(vecEffectTarget[1]);	// RenderTarget - Depth
+		vecAddEffectTarget.emplace_back(vecEffectTarget[2]);	// RenderTarget - Normal
+		vecAddEffectTarget.emplace_back(vecEffectTarget[3]);	// RenderTarget - Depth
+		vecAddEffectTarget.emplace_back(vecEffectTarget[4]);	// RenderTarget - Normal
+		m_pAddEffectShader->SetUp_ShaderTexture(vecAddEffectTarget);
+	}
+	m_pTargetAddEffect->SetUp_OnGraphicDevice();
+	m_pAddEffectShader->Begin_Shader();
+	m_pAddEffectBuffer->Begin_Buffer();
+	m_pAddEffectBuffer->Render_Buffer();
+	m_pTargetAddEffect->Release_OnGraphicDevice();
+}
+
 void CRenderer::Render_UI(const _float& fTimeDelta)
 {
 	sort(m_RenderList[RENDER_UI].begin(), m_RenderList[RENDER_UI].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
@@ -591,6 +612,8 @@ void CRenderer::Render_RenderTarget()
 			m_pTargetSunShine->Render_RenderTarget();
 		if (nullptr != m_pTargetpEffect)
 			m_pTargetpEffect->Render_RenderTarget();
+		if (nullptr != m_pTargetAddEffect)
+			m_pTargetAddEffect->Render_RenderTarget();
 	}
 
 }
@@ -696,6 +719,12 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	pShader = CShaderEdge::Create(m_pGraphicDevice, m_pCommandList);
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderEdge", ID_STATIC, pShader), E_FAIL);
+	++m_uiCnt_ShaderFile;
+
+	//ShaderEdge
+	pShader = CShaderAddEffect::Create(m_pGraphicDevice, m_pCommandList);
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderAddEffect", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
 	// ShaderShadowInstancing
@@ -927,6 +956,19 @@ HRESULT CRenderer::Ready_RenderTarget()
 
 	m_pEffectBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pEffectBuffer, E_FAIL);
+	
+	//AddEffect
+	m_pTargetAddEffect = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
+	NULL_CHECK_RETURN(m_pTargetAddEffect, E_FAIL);
+	m_pTargetAddEffect->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 1.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	FAILED_CHECK_RETURN(m_pTargetAddEffect->SetUp_DefaultSetting(TARGETID::TYPE_DEFAULT), E_FAIL);
+	m_pTargetAddEffect->Set_TargetRenderPos(_vec3(WIDTH_SEVENTH, HEIGHT_FIRST, 1.0f));
+	m_pAddEffectBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pAddEffectBuffer, E_FAIL);
+	m_pAddEffectShader = static_cast<CShaderAddEffect*>(m_pComponentMgr->Clone_Component(L"ShaderAddEffect", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pAddEffectShader, E_FAIL);
+	FAILED_CHECK_RETURN(m_pAddEffectShader->Set_PipelineStatePass(0), E_FAIL);
+	
 	/*__________________________________________________________________________________________________________
 	[ Blend Resource ]
 	____________________________________________________________________________________________________________*/
@@ -1332,6 +1374,11 @@ void CRenderer::Free()
 	Safe_Release(m_pTargetpEffect);
 	Safe_Release(m_pEffectBuffer);
 
+	//add Effect
+	Safe_Release(m_pAddEffectShader);
+	Safe_Release(m_pTargetAddEffect);
+	Safe_Release(m_pAddEffectBuffer);
+	
 	/*__________________________________________________________________________________________________________
 	2020.06.07 MultiThreadRendering
 	- CommandAllocators & CommandList Á¦°Å.

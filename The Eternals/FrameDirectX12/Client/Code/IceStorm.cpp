@@ -8,6 +8,7 @@
 #include "RenderTarget.h"
 #include "TimeMgr.h"
 #include "DescriptorHeapMgr.h"
+#include "SnowParticle.h"
 CIceStorm::CIceStorm(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
@@ -36,6 +37,7 @@ HRESULT CIceStorm::Ready_GameObject(wstring wstrMeshTag,
 	random[2] = rand() % 90 - 45;
 	m_fLimitScale = 0.15f;
 
+
 	return S_OK;
 }
 
@@ -46,6 +48,29 @@ HRESULT CIceStorm::LateInit_GameObject()
 	SetUp_DescriptorHeap(pTexture->Get_Texture(), m_pRenderer->Get_TargetShadowDepth()->Get_TargetTexture());
 
 	m_pCrossFilterShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
+
+
+	_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
+	m_pTransCom->m_vPos = Pos;
+
+	m_pTransCom->m_vPos.x += m_fRadius * cos(m_fTheta);
+	m_pTransCom->m_vPos.z += m_fRadius * sin(m_fTheta);
+
+	m_pTransCom->m_vAngle.x = random[0];
+	m_pTransCom->m_vAngle.y = random[1];
+	m_pTransCom->m_vAngle.z = random[2];
+
+	CGameObject* pGameObj = nullptr;
+	for (int i = 0; i < 5; i++)
+	{
+		pGameObj = CSnowParticle::Create(m_pGraphicDevice, m_pCommandList,
+			L"Snow",						// TextureTag
+			_vec3(0.1f),		// Scale
+			_vec3(0.0f, 0.0f, 0.0f),		// Angle
+			m_pTransCom->m_vPos,	// Pos
+			FRAME(1, 1, 1.0f));			// Sprite Image Frame
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Snow", pGameObj), E_FAIL);
+	}
 	return S_OK;
 }
 
@@ -77,15 +102,6 @@ _int CIceStorm::Update_GameObject(const _float & fTimeDelta)
 	______________________________________________________________________*/
 
 
-	_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
-	m_pTransCom->m_vPos = Pos;
-	
-	m_pTransCom->m_vPos.x += m_fRadius * cos(m_fTheta);
-	m_pTransCom->m_vPos.z += m_fRadius * sin(m_fTheta);
-
-	m_pTransCom->m_vAngle.x = random[0];
-	m_pTransCom->m_vAngle.y = random[1];
-	m_pTransCom->m_vAngle.z = random[2];
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
 	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
 
@@ -169,6 +185,16 @@ void CIceStorm::Set_ConstantTable()
 		{
 			m_bisLifeInit = true;
 			m_fDeltatimeVelocity2 = 3;
+			for (int i = 0; i < 5; i++)
+			{
+				CGameObject *pGameObj = CSnowParticle::Create(m_pGraphicDevice, m_pCommandList,
+					L"Snow",						// TextureTag
+					_vec3(0.1f),		// Scale
+					_vec3(0.0f, 0.0f, 0.0f),		// Angle
+					m_pTransCom->m_vPos,	// Pos
+					FRAME(1, 1, 1.0f));			// Sprite Image Frame
+				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Snow", pGameObj), E_FAIL);
+			}
 		}
 	}
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);

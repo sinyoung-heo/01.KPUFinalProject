@@ -190,6 +190,9 @@
     <Filter Include="01.Utility\04.SuperClass\04.Component\99.Resource\04.Collider\Box">
       <UniqueIdentifier>{5ae764c1-69d1-47b7-a46b-e90c7cd97b93}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\14.ShaderAddEffect">
+      <UniqueIdentifier>{0dc4e5a0-43cc-4cdf-ab02-366e94116fef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\Engine_Functor.h">
@@ -414,6 +417,9 @@
     <ClInclude Include="..\Code\ShaderMeshEffect.h">
       <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\03.ShaderMesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ShaderAddEffect.h">
+      <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\14.ShaderAddEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\DirectInput.cpp">
@@ -611,6 +617,9 @@
     <ClCompile Include="..\Code\ShaderMeshEffect.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\03.ShaderMesh</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\ShaderAddEffect.cpp">
+      <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\14.ShaderAddEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Bin\Shader\ShaderMesh.hlsl">
@@ -669,6 +678,9 @@
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderMeshEffect.hlsl">
       <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\03.ShaderMesh</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Bin\Shader\ShaderAddEffect.hlsl">
+      <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\14.ShaderAddEffect</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

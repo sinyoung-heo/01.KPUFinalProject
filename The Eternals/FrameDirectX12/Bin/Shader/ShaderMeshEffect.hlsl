@@ -72,11 +72,11 @@ struct VS_OUT
 // PS_MAIN
 struct PS_OUT
 {
-    float4 Effect1 : SV_TARGET0; // 
-    float4 Effect2 : SV_TARGET1; // 
-    float4 Effect3 : SV_TARGET2; // 
-    float4 Effect4 : SV_TARGET3; // 
-    float4 Effect5 : SV_TARGET4; // 
+    float4 Effect0 : SV_TARGET0; // 
+    float4 Effect1 : SV_TARGET1; // 
+    float4 Effect2 : SV_TARGET2; // 
+    float4 Effect3 : SV_TARGET3; // 
+    float4 Effect4 : SV_TARGET4; // 
 };
 
 /*__________________________________________________________________________________________________________
@@ -111,7 +111,7 @@ PS_OUT PS_MAGIC_CIRCLE(VS_OUT ps_input) : SV_TARGET
     float4 TexNormal = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 Spec = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 color = lerp(lerp(Diffuse, Spec, 0.5), TexNormal, 0.5);
-    ps_output.Effect1 = color;
+    ps_output.Effect2 = color;
   
     return ps_output;
 }
@@ -122,8 +122,8 @@ PS_OUT PS_RAINDROP(VS_OUT ps_input) : SV_TARGET
     PS_OUT ps_output = (PS_OUT) 0;
 	
 	// Diffuse
-    ps_output.Effect2 = (g_TexDiffuse.Sample(g_samLinearWrap, ps_input.AniUV * 10.f));
-	
+    ps_output.Effect4 = (g_TexDiffuse.Sample(g_samLinearWrap, ps_input.AniUV * 10.f));
+    ps_output.Effect4.a = 0.5f;
     return (ps_output);
 }
 
@@ -164,7 +164,8 @@ PS_OUT PS_ICESTORM(VS_OUT ps_input) : SV_TARGET
     }
     clip((1.f - g_fDissolve) - Normal_fDissolve);
     
-    ps_output.Effect2 = lerp((D + N), E, 0.5f);
-    ps_output.Effect2.a = 0.5f;
+    ps_output.Effect1 = lerp((D + N), E, 0.5f);
+    ps_output.Effect1.a = 0.5f;
     return (ps_output);
 }
+

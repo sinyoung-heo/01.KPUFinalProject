@@ -696,3 +696,13 @@ PS_OUT PS_WATERFALL(VS_OUT ps_input) : SV_TARGET
 								 1.0f, 1.0f);
     return (ps_output);
 }
+
+float4 PS_RAINDROP(VS_OUT ps_input) : SV_TARGET
+{
+    float4 color;
+	// Diffuse
+    float2 UV = ps_input.TexUV;
+    UV.y -= g_fOffset1;
+    color = (g_TexDiffuse.Sample(g_samLinearWrap, UV *10.f));
+    return (color);
+}

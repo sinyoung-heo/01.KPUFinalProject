@@ -312,13 +312,13 @@ HRESULT CStagePJO::Ready_LayerEnvironment(wstring wstrLayerTag)
 			_vec3(0, 0, 0), 5.f, XMConvertToRadians(i * 10.f));
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"IceStorm1", pGameObj), E_FAIL);
 	}
-	pGameObj = CSnowParticle::Create(m_pGraphicDevice, m_pCommandList,
-		L"Snow",						// TextureTag
-		_vec3(2.f),		// Scale
-		_vec3(0.0f, 0.0f, 0.0f),		// Angle
-		_vec3(28.0f, 20.0f, 27.0f),	// Pos
-		FRAME(1, 1, 1.0f));			// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Snow", pGameObj), E_FAIL);
+	//pGameObj = CSnowParticle::Create(m_pGraphicDevice, m_pCommandList,
+	//	L"Snow",						// TextureTag
+	//	_vec3(2.f),		// Scale
+	//	_vec3(0.0f, 0.0f, 0.0f),		// Angle
+	//	_vec3(28.0f, 20.0f, 27.0f),	// Pos
+	//	FRAME(1, 1, 1.0f));			// Sprite Image Frame
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Snow", pGameObj), E_FAIL);
 	////// Torch
 	//pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
 	//								  L"Lightning00",						// TextureTag
