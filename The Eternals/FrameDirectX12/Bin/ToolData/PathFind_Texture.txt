@@ -5,11 +5,10 @@ Bomb02|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb02\%d.
 Bomb03|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb03\%d.dds
 Bomb04|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb04\%d.dds
 Fire|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Fire\%d.dds
-Lightning00|2|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Lightning00\%d.dds
+Lightning00|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Lightning00\%d.dds
 Lightning01|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Lightning01\%d.dds
 Smoke0|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Smoke0\%d.dds
 Smoke1|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Smoke1\%d.dds
-Snow|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Snow\%d.dds
 Torch|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Torch\%d.dds
 EffectTrailTexture|13|..\..\Bin\Resource\ResourceStage\Texture\EffectTrailTexture\%d.dds
 SkyBox|7|..\..\Bin\Resource\ResourceStage\Texture\Environment\SkyBox\%d.dds
