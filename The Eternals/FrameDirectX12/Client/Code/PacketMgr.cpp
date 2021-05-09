@@ -654,6 +654,7 @@ void CPacketMgr::ChangeStat_User(sc_packet_stat_change* packet)
 	int s_num = packet->id;
 
 	Engine::CGameObject* pObj = nullptr;
+
 	/* 현재 클라이언트의 스탯이 갱신된 경우 */
 	if (s_num == g_iSNum)
 		pObj = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
@@ -661,9 +662,15 @@ void CPacketMgr::ChangeStat_User(sc_packet_stat_change* packet)
 	else
 		pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
 
-	pObj->Get_Info()->m_iHp = packet->hp;
-	pObj->Get_Info()->m_iMp = packet->mp;
-	pObj->Get_Info()->m_iExp = packet->exp;
+	if (pObj == nullptr) return;
+
+	pObj->Get_Info()->m_iHp		= packet->hp;
+	pObj->Get_Info()->m_iMaxHp	= packet->maxHp;
+	pObj->Get_Info()->m_iMp		= packet->mp;
+	pObj->Get_Info()->m_iMaxMp	= packet->maxMp;
+	pObj->Get_Info()->m_iExp	= packet->exp;
+	pObj->Get_Info()->m_iMaxExp = packet->maxExp;
+	pObj->Get_Info()->m_iLev	= packet->lev;
 }
 
 void CPacketMgr::MoveStop_User(sc_packet_move* packet)
@@ -674,6 +681,7 @@ void CPacketMgr::MoveStop_User(sc_packet_move* packet)
 	if (s_num == g_iSNum)
 	{
 		Engine::CGameObject* pObj = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
+		if (pObj == nullptr) return;
 
 		auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
@@ -684,12 +692,13 @@ void CPacketMgr::MoveStop_User(sc_packet_move* packet)
 	else
 	{
 		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+		if (pObj == nullptr) return;
+
 		auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
 		static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
 		pObj->Set_IsStartPosInterpolation(true);
 		pObj->Set_LinearPos(pObj->Get_Transform()->m_vPos, _vec3(packet->posX, packet->posY, packet->posZ));
-		//pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
 		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 		pObj->Set_MoveStop(true);
 	}
@@ -703,6 +712,7 @@ void CPacketMgr::Move_User(sc_packet_move* packet)
 	if (s_num == g_iSNum)
 	{
 		Engine::CGameObject* pObj = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
+		if (pObj == nullptr) return;
 
 		auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
@@ -713,6 +723,7 @@ void CPacketMgr::Move_User(sc_packet_move* packet)
 	else
 	{
 		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+		if (pObj == nullptr) return;
 
 		auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 

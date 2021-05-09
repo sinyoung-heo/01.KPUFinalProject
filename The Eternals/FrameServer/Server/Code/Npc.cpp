@@ -90,18 +90,17 @@ void CNpc::Ready_NPC(const _vec3& pos, const _vec3& angle, const char& type, con
 	m_sNum += NPC_NUM_START;
 	int s_num = m_sNum;
 
-	m_chStageId = naviType;
+	m_bIsConnect	= true;
+	m_bIsDead		= false;
 
-	m_bIsConnect = true;
-	m_bIsDead = false;
-
-	m_vPos = pos;
-	m_vTempPos = m_vPos;
-	m_vDir = _vec3(0.f, 0.f, 1.f);
-	m_vAngle = angle;
-	m_type = type;
-	m_npcNum = num;
-	m_status = STATUS::ST_END;
+	m_vPos			= pos;
+	m_vTempPos		= m_vPos;
+	m_vDir			= _vec3(0.f, 0.f, 1.f);
+	m_vAngle		= angle;
+	m_type			= type;
+	m_chStageId		= naviType;
+	m_npcNum		= num;
+	m_status		= STATUS::ST_END;
 
 	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(m_vPos.z / SECTOR_SIZE), (int)(m_vPos.x / SECTOR_SIZE));
 	CObjMgr::GetInstance()->Add_GameObject(L"NPC", this, s_num);
@@ -183,7 +182,7 @@ void CNpc::Change_Walker_Animation(const float& fTimeDelta)
 		m_uiAnimIdx = NPC_TYPE::WAIT;
 
 		m_bIsDirSelect = false;
-		Set_Start_Move(15s);
+		Set_Start_Move(7s);
 	}
 	break;
 
@@ -221,7 +220,7 @@ void CNpc::Change_Children_Animation(const float& fTimeDelta)
 		m_bIsDirSelect = false;
 
 		if (m_type == NPC_MOVE)
-			Set_Start_Move(15s);
+			Set_Start_Move(7s);
 	}
 	break;
 
@@ -243,7 +242,7 @@ void CNpc::Change_Assistant_Animation(const float& fTimeDelta)
 	case STATUS::ST_NONACTIVE:
 	{
 		m_uiAnimIdx = NPC_TYPE::WAIT;
-		Set_Start_Move(10s);
+		Set_Start_Move(8s);
 	}
 	break;
 

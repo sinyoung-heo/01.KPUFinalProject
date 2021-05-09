@@ -34,20 +34,20 @@ void CMonster::Ready_Monster(const _vec3& pos, const _vec3& angle, const char& t
 	m_bIsConnect = true;
 	m_bIsDead = false;
 
-	m_vPos = pos;
-	m_vTempPos = m_vPos;
-	m_vOriPos = m_vPos;
-	m_vDir = _vec3(0.f, 0.f, 1.f);
-	m_vAngle = angle;
-	m_iHp = hp;
-	m_iMaxHp = hp;
-	m_iMinAtt = att / 2;
-	m_iMaxAtt = att;
-	m_iExp = exp;
-	m_fSpd = spd;
-	m_type = type;
-	m_monNum = num;
-	m_status = STATUS::ST_NONACTIVE;
+	m_vPos		= pos;
+	m_vTempPos	= m_vPos;
+	m_vOriPos	= m_vPos;
+	m_vDir		= _vec3(0.f, 0.f, 1.f);
+	m_vAngle	= angle;
+	m_iHp		= hp;
+	m_iMaxHp	= hp;
+	m_iMinAtt	= att / 2;
+	m_iMaxAtt	= att;
+	m_iExp		= exp;
+	m_fSpd		= spd;
+	m_type		= type;
+	m_monNum	= num;
+	m_status	= STATUS::ST_NONACTIVE;
 
 	CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(m_vPos.z / SECTOR_SIZE), (int)(m_vPos.x / SECTOR_SIZE));
 	CObjMgr::GetInstance()->Add_GameObject(L"MONSTER", this, s_num);
@@ -240,7 +240,7 @@ void CMonster::Change_DrownedSailor_Animation(const float& fTimeDelta)
 
 		if (m_bIsRushAttack)
 		{
-			if (30 <= m_ui3DMax_CurFrame && m_ui3DMax_CurFrame <= 55)
+			if (SAILOR_RUSH_TICK_START <= m_ui3DMax_CurFrame && m_ui3DMax_CurFrame <= SAILOR_RUSH_TICK_END)
 			{
 				m_vPos += m_vDir * 2.f * fTimeDelta;
 			}
@@ -417,7 +417,7 @@ void CMonster::Move_NormalMonster(const float& fTimeDelta)
 	ori_z = m_vPos.z;
 
 	if (m_monNum == MON_CRAB)
-		m_fSpd = 0.5f;
+		m_fSpd = CRAB_SPD;
 	else
 		m_fSpd = 1.f;
 
@@ -621,7 +621,7 @@ void CMonster::Chase_Crab(const float& fTimeDelta)
 	ori_y = m_vPos.y;
 	ori_z = m_vPos.z;
 
-	m_fSpd = 2.0f;
+	m_fSpd = CRAB_CHASE_SPD;
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
@@ -1265,7 +1265,7 @@ void CMonster::Chase_DrownedSailor(const float& fTimeDelta)
 	ori_y = m_vPos.y;
 	ori_z = m_vPos.z;
 
-	m_fSpd = 4.0f;
+	m_fSpd = SAILOR_CHASE_SPD;
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
@@ -1937,7 +1937,7 @@ void CMonster::Chase_CraftyArachne(const float& fTimeDelta)
 	ori_y = m_vPos.y;
 	ori_z = m_vPos.z;
 
-	m_fSpd = 4.0f;
+	m_fSpd = ARCHNE_CHASE_SPD;
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
@@ -3554,16 +3554,35 @@ void CMonster::Hurt_Monster(const int& p_id,const int& damage)
 	}
 
 	/* 피격 당함 */
-	if (m_iHp > 0)
+	if (m_iHp > ZERO_HP)
 	{
 		m_iHp -= damage;		
 	}
 
 	/* Monster Dead */
-	else if (m_iHp <= 0)
+	else if (m_iHp <= ZERO_HP)
 	{
-		m_iHp = 0;
-		m_bIsDead = true;
+		m_iHp		= ZERO_HP;
+		m_bIsDead	= true;
+
+		/* Increase Player Exp */
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", p_id));
+		if (pPlayer == nullptr) return;
+
+		pPlayer->m_iExp += m_iExp;
+
+		/* Player Level Up */
+		if (pPlayer->m_iExp >= pPlayer->m_iMaxExp)
+		{
+			pPlayer->m_iLevel	+= INIT_LEV;
+			pPlayer->m_iExp		= INIT_EXP;
+			pPlayer->m_iMaxExp	+= pPlayer->m_iLevel * INCREASE_EXP;
+			pPlayer->m_iMaxHp	+= pPlayer->m_iLevel * INCREASE_HP;
+			pPlayer->m_iHp		= pPlayer->m_iMaxHp;
+			pPlayer->m_iMaxMp	+= pPlayer->m_iLevel * INCREASE_MP;
+			pPlayer->m_iMp		= pPlayer->m_iMaxMp;
+		}
+		send_player_stat(p_id, p_id);
 
 		Change_DeadMode();
 		return;

@@ -23,7 +23,6 @@ public:
 	bool m_bIsDead						= false;
 	char m_ID[MAX_ID_LEN]; 
 	char m_type;										// 직업
-	char m_naviType[MIDDLE_STR_LEN];					// 삭제 예정
 	char m_chStageId					= 0;
 	int  m_sNum							= -1;
 

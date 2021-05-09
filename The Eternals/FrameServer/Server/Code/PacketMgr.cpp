@@ -477,13 +477,17 @@ void send_player_stat(int to_client, int id)
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 	if (pPlayer == nullptr) return;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_STAT_CHANGE;
+	p.size		= sizeof(p);
+	p.type		= SC_PACKET_STAT_CHANGE;
 
-	p.id = id;
-	p.hp = pPlayer->m_iHp;
-	p.mp = pPlayer->m_iMp;
-	p.exp = pPlayer->m_iExp;
+	p.id		= id;
+	p.hp		= pPlayer->m_iHp;
+	p.maxHp		= pPlayer->m_iMaxHp;
+	p.mp		= pPlayer->m_iMp;
+	p.maxMp		= pPlayer->m_iMaxMp;
+	p.exp		= pPlayer->m_iExp;
+	p.maxExp	= pPlayer->m_iMaxExp;
+	p.lev		= pPlayer->m_iLevel;
 
 	send_packet(to_client, &p);
 }
@@ -948,12 +952,12 @@ void process_collide(int id, int colID)
 		if (nullptr == pMonster) return;
 
 		/* Decrease Player HP */
-		if (pPlayer->m_iHp > 0)
+		if (pPlayer->m_iHp > ZERO_HP)
 			pPlayer->m_iHp -= pMonster->m_iMaxAtt;
 		else
 		{
 			/* Player Dead */
-			pPlayer->m_iHp = 0;
+			pPlayer->m_iHp = ZERO_HP;
 			pPlayer->Set_IsDead(true);
 		}
 
