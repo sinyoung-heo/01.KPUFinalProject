@@ -824,16 +824,16 @@ void add_new_client(SOCKET ns)
 		pNew->m_recv_start = pNew->m_recv_over.iocp_buf;
 
 		pNew->m_type	= PC_GLADIATOR;
-		pNew->m_iLevel	= 1;
-		pNew->m_iHp		= 100;
-		pNew->m_iMaxHp	= 100;
-		pNew->m_iMp		= 100;
-		pNew->m_iMaxMp	= 100;
-		pNew->m_iExp	= 0;
-		pNew->m_iMaxExp = 100;
-		pNew->m_iMinAtt = 100;
-		pNew->m_iMaxAtt	= 200;
-		pNew->m_fSpd	= 5.f;
+		pNew->m_iLevel	= INIT_LEV;
+		pNew->m_iHp		= INIT_HP;
+		pNew->m_iMaxHp	= INIT_HP;
+		pNew->m_iMp		= INIT_MP;
+		pNew->m_iMaxMp	= INIT_MP;
+		pNew->m_iExp	= INIT_EXP;
+		pNew->m_iMaxExp = INIT_MAXEXP;
+		pNew->m_iMinAtt = INIT_MINATT;
+		pNew->m_iMaxAtt	= INIT_MAXATT;
+		pNew->m_fSpd	= INIT_SPEED;
 
 		pNew->m_vPos	= _vec3(STAGE_VELIKA_X, 0.f, STAGE_VELIKA_Z);
 		pNew->m_vDir	= _vec3(0.f, 0.f, 1.f);

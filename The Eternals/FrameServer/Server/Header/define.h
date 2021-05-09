@@ -16,15 +16,24 @@ constexpr int KEY_SERVER		= 1000000;
 #define MAX_ANI				10
 
 /* GAME CONTENTS */
-//constexpr int ZERO_HP			= 0;
-//constexpr int INIT_HP			= 100;			// 플레이어 초기 HP
-//constexpr int INIT_EXP		= 0;			// 플레이어 초기 EXP
-//constexpr int INIT_MAXEXP		= 100;			// 플레이어 초기 EXP
-//constexpr int INIT_LEV		= 1;			// 플레이어 초기 LEVEL
-//constexpr int INIT_ATT		= 5;			// 플레이어 초기 ATTACK
-//constexpr int INIT_SPEED		= 5;			// 플레이어 초기 SPEED
 constexpr int	SERVER_CORE					= 4;
 
+constexpr int	ZERO_HP						= 0;
+constexpr int	INIT_HP						= 100;			// 초기 HP
+constexpr int	INIT_MP						= 100;			// 초기 MP
+constexpr int	INIT_EXP					= 0;			// 초기 EXP
+constexpr int	INIT_MAXEXP					= 100;			// 초기 MAXEXP
+constexpr int	INIT_LEV					= 1;			// 초기 LEVEL
+constexpr int	INIT_MINATT					= 100;			// 초기 ATTACK
+constexpr int	INIT_MAXATT					= 200;			// 초기 ATTACK
+constexpr float	INIT_SPEED					= 5.f;			// 초기 SPEED
+constexpr int	INCREASE_EXP				= 50;
+constexpr int	INCREASE_HP					= 50;
+constexpr int	INCREASE_MP					= 20;
+
+/*____________________________________________________________________
+Monster Attack & Chase Dist
+______________________________________________________________________*/
 constexpr int	MOVE_LIMIT					= 7;			// MONSTER MOVE OFFSET
 constexpr int	CHASE_RANGE					= 8;			// MONSTER 추적 범위
 
@@ -41,6 +50,27 @@ constexpr int	RUSH_RANGE_GBEETEL_END		= 10;			// MONSTER GIANT BEETLE 돌진 범위
 constexpr int	RUSH_RANGE_GMONKEY_START	= 7;			// MONSTER GIANT MONKEY 돌진 범위
 constexpr int	RUSH_RANGE_GMONKEY_END		= 8;			// MONSTER GIANT MONKEY 돌진 범위
 
+constexpr int	CRAB_HP						= 700;
+constexpr int	CRAB_ATT					= 20;
+constexpr int	CRAB_EXP					= 20;
+constexpr float	CRAB_SPD					= 0.5f;
+constexpr float	CRAB_CHASE_SPD				= 2.f;
+
+constexpr int	SAILOR_HP					= 2000;
+constexpr int	SAILOR_ATT					= 80;
+constexpr int	SAILOR_EXP					= 50;
+constexpr float	SAILOR_SPD					= 1.f;
+constexpr float	SAILOR_CHASE_SPD			= 4.f;
+constexpr int	SAILOR_RUSH_TICK_START		= 30;
+constexpr int	SAILOR_RUSH_TICK_END		= 55;
+
+constexpr int	ARCHNE_HP					= 5000;
+constexpr int	ARCHNE_ATT					= 150;
+constexpr int	ARCHNE_EXP					= 100;
+constexpr float	ARCHNE_SPD					= 1.f;
+constexpr float	ARCHNE_CHASE_SPD			= 6.f;
+
+
 /*____________________________________________________________________
 Player Direction
 ______________________________________________________________________*/
@@ -56,10 +86,10 @@ constexpr float	ANGLE_BACK			= 180.f;
 /*____________________________________________________________________
 Stage Offset
 ______________________________________________________________________*/
-const float STAGE_VELIKA_OFFSET_X = 0.0f;
-const float STAGE_VELIKA_OFFSET_Z = 0.0f;
-const float STAGE_BEACH_OFFSET_X = 256.0f;
-const float STAGE_BEACH_OFFSET_Z = 0.0f;
+const float STAGE_VELIKA_OFFSET_X	= 0.0f;
+const float STAGE_VELIKA_OFFSET_Z	= 0.0f;
+const float STAGE_BEACH_OFFSET_X	= 256.0f;
+const float STAGE_BEACH_OFFSET_Z	= 0.0f;
 
 /* TYPEDEF */
 typedef	unsigned long		_ulong;

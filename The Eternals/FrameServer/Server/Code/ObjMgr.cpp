@@ -71,7 +71,7 @@ void CObjMgr::Create_StageBeachMonster()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(388.235f, 0.f, 142.977f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Ready_Monster(_vec3(388.235f, 0.f, 142.977f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, CRAB_HP, CRAB_ATT, CRAB_EXP, CRAB_SPD);
 		pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Crab::duration);
 	}
@@ -83,7 +83,7 @@ void CObjMgr::Create_StageBeachMonster()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(406.363f, 0.f, 135.247f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Ready_Monster(_vec3(406.363f, 0.f, 135.247f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, CRAB_HP, CRAB_ATT, CRAB_EXP, CRAB_SPD);
 		pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Crab::duration);
 	}
@@ -95,7 +95,7 @@ void CObjMgr::Create_StageBeachMonster()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(410.387f, 0.f, 136.93f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Ready_Monster(_vec3(410.387f, 0.f, 136.93f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, CRAB_HP, CRAB_ATT, CRAB_EXP, CRAB_SPD);
 		pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Crab::duration);
 	}
@@ -107,7 +107,7 @@ void CObjMgr::Create_StageBeachMonster()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(393.557f, 0.f, 134.746f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Ready_Monster(_vec3(393.557f, 0.f, 134.746f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, CRAB_HP, CRAB_ATT, CRAB_EXP, CRAB_SPD);
 		pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Crab::duration);
 	}
@@ -119,7 +119,7 @@ void CObjMgr::Create_StageBeachMonster()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(387.697f, 0.f, 126.109f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Ready_Monster(_vec3(387.697f, 0.f, 126.109f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, CRAB_HP, CRAB_ATT, CRAB_EXP, CRAB_SPD);
 		pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Crab::duration);
 	}
@@ -131,7 +131,7 @@ void CObjMgr::Create_StageBeachMonster()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(391.849f, 0.f, 135.497f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Ready_Monster(_vec3(391.849f, 0.f, 135.497f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, CRAB_HP, CRAB_ATT, CRAB_EXP, CRAB_SPD);
 		pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Crab::duration);
 	}
@@ -143,7 +143,7 @@ void CObjMgr::Create_StageBeachMonster()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(380.019f, 0.f, 153.189f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Ready_Monster(_vec3(380.019f, 0.f, 153.189f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, CRAB_HP, CRAB_ATT, CRAB_EXP, CRAB_SPD);
 		pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Crab::duration);
 	}
@@ -155,7 +155,7 @@ void CObjMgr::Create_StageBeachMonster()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(385.967f, 0.f, 154.236f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Ready_Monster(_vec3(385.967f, 0.f, 154.236f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, CRAB_HP, CRAB_ATT, CRAB_EXP, CRAB_SPD);
 		pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Crab::duration);
 	}
@@ -167,7 +167,7 @@ void CObjMgr::Create_StageBeachMonster()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(394.258f, 0.f, 165.382f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Ready_Monster(_vec3(394.258f, 0.f, 165.382f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, CRAB_HP, CRAB_ATT, CRAB_EXP, CRAB_SPD);
 		pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Crab::duration);
 	}
@@ -183,7 +183,7 @@ void CObjMgr::Create_StageBeachMonster()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(381.223f, 0.f, 181.083f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Ready_Monster(_vec3(381.223f, 0.f, 181.083f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, SAILOR_HP, SAILOR_ATT, SAILOR_EXP, SAILOR_SPD);
 		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
 		pNew->Set_AnimDuration(DrownedSailor::duration);
 	}
@@ -195,7 +195,7 @@ void CObjMgr::Create_StageBeachMonster()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(358.218f, 0.f, 154.457f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Ready_Monster(_vec3(358.218f, 0.f, 154.457f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, SAILOR_HP, SAILOR_ATT, SAILOR_EXP, SAILOR_SPD);
 		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
 		pNew->Set_AnimDuration(DrownedSailor::duration);
 	}
@@ -207,7 +207,7 @@ void CObjMgr::Create_StageBeachMonster()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(355.212f, 0.f, 165.113f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Ready_Monster(_vec3(355.212f, 0.f, 165.113f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, SAILOR_HP, SAILOR_ATT, SAILOR_EXP, SAILOR_SPD);
 		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
 		pNew->Set_AnimDuration(DrownedSailor::duration);
 	}
@@ -219,7 +219,7 @@ void CObjMgr::Create_StageBeachMonster()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(361.711f, 0.f, 158.886f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Ready_Monster(_vec3(361.711f, 0.f, 158.886f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, SAILOR_HP, SAILOR_ATT, SAILOR_EXP, SAILOR_SPD);
 		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
 		pNew->Set_AnimDuration(DrownedSailor::duration);
 	}
@@ -231,7 +231,7 @@ void CObjMgr::Create_StageBeachMonster()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(354.653f, 0.f, 142.572f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Ready_Monster(_vec3(354.653f, 0.f, 142.572f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, SAILOR_HP, SAILOR_ATT, SAILOR_EXP, SAILOR_SPD);
 		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
 		pNew->Set_AnimDuration(DrownedSailor::duration);
 	}
@@ -243,7 +243,7 @@ void CObjMgr::Create_StageBeachMonster()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(359.64f, 0.f, 167.906f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Ready_Monster(_vec3(359.64f, 0.f, 167.906f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, SAILOR_HP, SAILOR_ATT, SAILOR_EXP, SAILOR_SPD);
 		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
 		pNew->Set_AnimDuration(DrownedSailor::duration);
 	}
@@ -255,7 +255,7 @@ void CObjMgr::Create_StageBeachMonster()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(353.29f, 0.f, 177.823f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Ready_Monster(_vec3(353.29f, 0.f, 177.823f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, SAILOR_HP, SAILOR_ATT, SAILOR_EXP, SAILOR_SPD);
 		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
 		pNew->Set_AnimDuration(DrownedSailor::duration);
 	}
@@ -267,7 +267,7 @@ void CObjMgr::Create_StageBeachMonster()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(378.303f, 0.f, 171.636f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Ready_Monster(_vec3(378.303f, 0.f, 171.636f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, SAILOR_HP, SAILOR_ATT, SAILOR_EXP, SAILOR_SPD);
 		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
 		pNew->Set_AnimDuration(DrownedSailor::duration);
 	}
@@ -281,7 +281,7 @@ void CObjMgr::Create_StageBeachMonster()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(403.297f, 0.f, 185.56f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_ARACHNE, STAGE_BEACH, 100, 1, 0, 0.5f);
+		pNew->Ready_Monster(_vec3(403.297f, 0.f, 185.56f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_ARACHNE, STAGE_BEACH, ARCHNE_HP, ARCHNE_ATT, ARCHNE_EXP, ARCHNE_SPD);
 		pNew->Set_NumAnimation(CraftyArachne::NUM_ANIMATION);
 		pNew->Set_AnimDuration(CraftyArachne::duration);
 	}

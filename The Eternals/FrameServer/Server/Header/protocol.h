@@ -194,8 +194,12 @@ struct sc_packet_stat_change
 	int				id;
 
 	int				hp;
+	int				maxHp;
 	int				mp;
+	int				maxMp;
 	int				exp;
+	int				maxExp;
+	int				lev;
 };
 
 struct sc_packet_chat 
