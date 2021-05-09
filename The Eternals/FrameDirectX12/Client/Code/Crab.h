@@ -43,6 +43,7 @@ private:
 	void			Active_Monster(const _float& fTimeDelta);
 	void			Attack_Moving(const _float& fTimeDelta, const float& fSpd, const bool& bStraight);
 	void			Change_Animation(const _float& fTimeDelta);
+	void			SetUp_CollisionTick(const _float& fTimeDelta);
 
 private:
 	/*__________________________________________________________________________________________________________
@@ -58,8 +59,9 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Manager ]
 	____________________________________________________________________________________________________________*/
-	CPacketMgr*		m_pPacketMgr  = nullptr;
-	CServerMath*	m_pServerMath = nullptr;
+	CPacketMgr*			m_pPacketMgr       = nullptr;
+	CServerMath*		m_pServerMath      = nullptr;
+	CInstancePoolMgr*	m_pInstancePoolMgr = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]
@@ -67,7 +69,10 @@ private:
 	wstring	m_wstrMeshTag            = L"";
 	_vec3	m_vPreMovePos            = _vec3(0.f);
 	_bool	m_bIsResetNaviMesh       = false;
+
 	_bool	m_bIsCreateCollisionTick = false;
+	COLLISION_TICK_DESC m_tCollisionTickDesc;
+
 	_bool	m_bIsStartDissolve       = false;
 	_float	m_fDissolve              = -0.05f;
 	_rgba	m_vEmissiveColor         = _rgba(1.0f, 0.0f, 0.0f, 1.0f);

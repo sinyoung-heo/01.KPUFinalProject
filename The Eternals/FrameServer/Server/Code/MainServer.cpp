@@ -715,7 +715,7 @@ void Initialize_Monster()
 	//}
 	//else return;
 
-	// TEST MONSTER - drowned sailor
+	//// TEST MONSTER - drowned sailor
 	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
 	//
 	//if (pNew)

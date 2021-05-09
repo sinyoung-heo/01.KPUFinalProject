@@ -21,6 +21,8 @@ namespace Crab
 	{
 		8000, 4800, 2240, 10400, 10720
 	};
+
+	constexpr int ATTACK_START_TICK = 43;
 }
 
 namespace Monkey
@@ -36,6 +38,9 @@ namespace Monkey
 	{
 		4800, 6400, 4480, 9600, 12800, 17600
 	};
+
+	constexpr int ATTACK_START_TICK       = 25;
+	constexpr int ATTACK_THROW_START_TICK = 45;
 }
 
 /* EPIC MONSTER */
@@ -53,6 +58,10 @@ namespace Cloder
 	{
 		4800, 6400, 2240, 9600, 14400, 14400, 10720
 	};
+
+	constexpr int ATTACK_START_TICK       = 24;
+	constexpr int ATTACK_POKE_START_TICK  = 58;
+	constexpr int ATTACK_SWING_START_TICK = 7;
 }
 
 namespace DrownedSailor
@@ -77,7 +86,7 @@ namespace DrownedSailor
 		10080, 6400, 5440, 9600, 9600, 12800, 12800, 7200, 18880
 	};
 
-	constexpr int ATTACK_SPIN_START_TICK   = 31;
+	constexpr int ATTACK_SPIN_START_TICK   = 16;
 	constexpr int ATTACK_NORMAL_START_TICK = 36;
 	constexpr int ATTACK_STRONG_START_TICK = 49;
 	constexpr int ATTACK_RUSH_START_TICK   = 49;
@@ -106,6 +115,11 @@ namespace GiantBeetle
 	{
 		11200, 9600, 16000, 16160, 27360, 28480, 9600, 9600, 17600
 	};
+
+	constexpr int A_ATTACK_UP_START_TICK       = 44;
+	constexpr int A_ATTACK_DOWN_START_TICK     = 39;
+	constexpr int A_ATTACK_RUSH_START_TICK     = 50;
+	constexpr int A_ATTACK_FLYSTAMP_START_TICK = 121;
 }
 
 namespace GiantMonkey
@@ -132,6 +146,15 @@ namespace GiantMonkey
 	{
 		19200, 6400, 12800, 9600, 17600, 17600, 16000, 22400, 30560, 22400
 	};
+
+	constexpr int A_ATTACK_RIGHT_START_TICK     = 40;
+	constexpr int A_ATTACK_LEFT_START_TICK      = 30;
+	constexpr int A_ATTACK_STAMP_START_TICK     = 61;
+	constexpr int A_ATTACK_HOOK_START_TICK      = 53;
+	constexpr int A_ATTACK_JUMPING_START_TICK   = 65;
+	constexpr int A_ATTACK_FLYSTAMP_START_TICK  = 57;
+	constexpr int A_ATTACK_COMBO_START_TICK     = 15 + 61;
+	constexpr int A_ATTACK_COMBO_END_START_TICK = 82 + 61;
 }
 
 namespace CraftyArachne
@@ -155,4 +178,9 @@ namespace CraftyArachne
 	{
 		27200, 4800, 12000, 12000, 22400, 32000, 14400
 	};
+
+	constexpr int ATTACK_POUND_START_TICK    = 36;
+	constexpr int ATTACK_NORMAL_START_TICK   = 52;
+	constexpr int ATTACK_SPIN_START_TICK     = 66;
+	constexpr int ATTACK_FLYSTAMP_START_TICK = 134;
 }

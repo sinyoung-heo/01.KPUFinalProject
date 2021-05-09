@@ -41,7 +41,7 @@ public:
 	void	send_stance_change(const _int& iAniIdx, const _bool& bIsStanceAttack);
 	void	send_attack(const _int& iAniIdx, const _vec3& vDir, const _vec3& vPos, const _float& fEndAngleY);
 	void    send_attack_stop(const _int& iAniIdx, const _vec3& vDir, const _vec3& vPos);
-	void    send_attackByMonster(int objID);
+	void    send_attackByMonster(int objID, const _int& iDamage);
 	void    send_attackToMonster(int objID, const _int& iDamage);
 	void	send_stage_change(const char& chStageId);
 	void	send_logout();
