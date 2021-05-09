@@ -738,16 +738,16 @@ void Initialize_Monster()
 	//else return;
 
 	//// TEST MONSTER - Giant Monkey
-	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
 
-	if (pNew)
-	{
-		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(127.0f, 0.f, 55.0f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_GMONKEY, STAGE_VELIKA, 100, 1, 0, 0.5f);
-		pNew->Set_NumAnimation(GiantMonkey::NUM_ANIMATION);
-		pNew->Set_AnimDuration(GiantMonkey::duration);
-	}
-	else return;
+	//if (pNew)
+	//{
+	//	/* NPC의 정보 초기화 */
+	//	pNew->Ready_Monster(_vec3(127.0f, 0.f, 55.0f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_GMONKEY, STAGE_VELIKA, 100, 1, 0, 0.5f);
+	//	pNew->Set_NumAnimation(GiantMonkey::NUM_ANIMATION);
+	//	pNew->Set_AnimDuration(GiantMonkey::duration);
+	//}
+	//else return;
 
 	// TEST MONSTER - Crafty Arachne
 	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));

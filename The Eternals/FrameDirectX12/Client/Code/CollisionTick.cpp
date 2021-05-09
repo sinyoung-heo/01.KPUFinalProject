@@ -109,11 +109,11 @@ void CCollisionTick::Process_Collision()
 		else if (L"CollisionTick_Monster" == m_wstrCollisionTag &&
 				 L"ThisPlayer" == pDst->Get_CollisionTag())
 		{
-			//Set_IsReturnObject(true);
+			Set_IsReturnObject(true);
 			pDst->Get_BoundingSphere()->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 
-			//// Monster Attack to ThisPlayer
-			//m_pPacketMgr->send_attackByMonster(m_iSNum, m_uiDamage);
+			// Monster Attack to ThisPlayer
+			m_pPacketMgr->send_attackByMonster(m_iSNum, m_uiDamage);
 		}
 	}
 }

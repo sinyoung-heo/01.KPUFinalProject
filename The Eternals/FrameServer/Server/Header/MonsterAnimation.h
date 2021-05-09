@@ -178,4 +178,9 @@ namespace CraftyArachne
 	{
 		27200, 4800, 12000, 12000, 22400, 32000, 14400
 	};
+
+	constexpr int ATTACK_POUND_START_TICK    = 36;
+	constexpr int ATTACK_NORMAL_START_TICK   = 52;
+	constexpr int ATTACK_SPIN_START_TICK     = 66;
+	constexpr int ATTACK_FLYSTAMP_START_TICK = 134;
 }

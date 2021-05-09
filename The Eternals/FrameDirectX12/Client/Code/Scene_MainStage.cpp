@@ -75,18 +75,6 @@ void CScene_MainStage::Process_PacketFromServer()
 
 _int CScene_MainStage::Update_Scene(const _float & fTimeDelta)
 {
-	if (Engine::KEY_DOWN(DIK_9))
-	{
-		m_pObjectMgr->Set_CurrentStage(Engine::STAGEID::STAGE_VELIKA);
-		m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Set_CurrentStageID(STAGE_VELIKA);
-
-	}
-	else if (Engine::KEY_DOWN(DIK_0))
-	{
-		m_pObjectMgr->Set_CurrentStage(Engine::STAGEID::STAGE_BEACH);
-		m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Set_CurrentStageID(STAGE_BEACH);
-	}
-
 	// MouseCursorMgr
 	if (!m_bIsReadyMouseCursorMgr)
 	{
