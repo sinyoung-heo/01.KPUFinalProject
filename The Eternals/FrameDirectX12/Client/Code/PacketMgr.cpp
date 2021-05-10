@@ -69,7 +69,7 @@ HRESULT CPacketMgr::Connect_Server()
 
 	sockAddr.sin_family = AF_INET;
 	sockAddr.sin_port = htons(SERVER_PORT);
-	sockAddr.sin_addr.s_addr = inet_addr(SERVER_IP);
+	sockAddr.sin_addr.s_addr = inet_addr(SERVER_DHIP);
 
 	if (connect(g_hSocket, (SOCKADDR*)&sockAddr, sizeof(sockAddr)) == SOCKET_ERROR)
 	{
@@ -86,7 +86,8 @@ HRESULT CPacketMgr::Connect_Server()
 	cout << "서버에 접속을 요청하였습니다. 잠시만 기다려주세요." << endl;
 #endif 
 
-	CPacketMgr::Get_Instance()->send_login();
+	Sleep(1000);
+	send_login();
 
 #ifdef ERR_CHECK
 	cout << "Login packet 전송완료" << endl;

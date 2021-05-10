@@ -49,7 +49,7 @@ private:
 	STAGEID					m_eCurrentStage = STAGEID::STAGE_VELIKA;
 	map<wstring, OBJLIST>	m_mapStaticObject[STAGEID::STAGE_END + 1];
 
-	map<wstring, CLayer*>		m_mapLayer;
+	unordered_map<wstring, CLayer*>	m_mapLayer;
 	map<wstring, CGameObject*>	m_mapObjectPrototype;
 
 private:

@@ -36,7 +36,7 @@ public:
 	void			Render_Layer(const _float& fTimeDelta);
 
 private:
-	map<wstring, OBJLIST> m_mapObjLst;
+	unordered_map<wstring, OBJLIST> m_mapObjLst;
 
 public:
 	static CLayer*	Create();
