@@ -384,6 +384,7 @@ void CPacketMgr::Stage_Change(sc_packet_stage_change* packet)
 {
 	int s_num = packet->id;
 
+	Sleep(1000);
 	/* 현재 클라이언트가 공격한 경우 */
 	if (s_num == g_iSNum)
 	{

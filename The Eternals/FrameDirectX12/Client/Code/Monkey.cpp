@@ -72,6 +72,7 @@ _int CMonkey::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsReturn)
 	{
 		m_bIsStartDissolve = false;
+		m_fDissolve = -0.05f;
 		m_bIsResetNaviMesh = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterMonkeyPool(), m_uiInstanceIdx);
 
