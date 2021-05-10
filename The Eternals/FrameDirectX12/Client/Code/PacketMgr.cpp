@@ -384,7 +384,6 @@ void CPacketMgr::Stage_Change(sc_packet_stage_change* packet)
 {
 	int s_num = packet->id;
 
-	Sleep(1000);
 	/* 현재 클라이언트가 공격한 경우 */
 	if (s_num == g_iSNum)
 	{
@@ -750,12 +749,12 @@ void CPacketMgr::Enter_Others(sc_packet_enter* packet, int& retflag)
 	{
 		wstrMeshTag = L"PoporiR27Gladiator";
 		pGameObj = CPCOthersGladiator::Create(m_pGraphicDevice, m_pCommandList,
-			L"PoporiR27Gladiator",							// MeshTag
-			L"StageVelika_NaviMesh",							// NaviMeshTag
-			_vec3(0.05f, 0.05f, 0.05f),						// Scale
-			_vec3(0.0f, 0.0f, 0.0f),							// Angle
-			_vec3(packet->posX, packet->posY, packet->posZ),	// Pos
-			Twohand19_A_SM);									// WeaponType
+											  L"PoporiR27Gladiator",							// MeshTag
+											  L"StageVelika_NaviMesh",							// NaviMeshTag
+											  _vec3(0.05f, 0.05f, 0.05f),						// Scale
+											  _vec3(0.0f, 0.0f, 0.0f),							// Angle
+											  _vec3(packet->posX, packet->posY, packet->posZ),	// Pos
+											  Twohand19_A_SM);									// WeaponType
 
 	}
 	else if (PC_ARCHER == packet->o_type)
@@ -771,12 +770,12 @@ void CPacketMgr::Enter_Others(sc_packet_enter* packet, int& retflag)
 		wstrMeshTag = L"PoporiR27Gladiator";
 
 		pGameObj = CPCOthersGladiator::Create(m_pGraphicDevice, m_pCommandList,
-			wstrMeshTag,							// MeshTag
-			L"StageVelika_NaviMesh",							// NaviMeshTag
-			_vec3(0.05f, 0.05f, 0.05f),						// Scale
-			_vec3(0.0f, 0.0f, 0.0f),							// Angle
-			_vec3(packet->posX, packet->posY, packet->posZ),	// Pos
-			Twohand19_A_SM);									// WeaponType
+											  wstrMeshTag,										// MeshTag
+											  L"StageVelika_NaviMesh",							// NaviMeshTag
+											  _vec3(0.05f, 0.05f, 0.05f),						// Scale
+											  _vec3(0.0f, 0.0f, 0.0f),							// Angle
+											  _vec3(packet->posX, packet->posY, packet->posZ),	// Pos
+											  Twohand19_A_SM);									// WeaponType
 	}
 
 	pGameObj->Set_CurrentStageID(packet->stageID);
@@ -877,6 +876,7 @@ void CPacketMgr::Move_Monster(sc_packet_move* packet)
 	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
 	if (pObj == nullptr) return;
 
+	pObj->Set_ServerNumber(packet->id);
 	pObj->Set_State(packet->animIdx);
 	pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
 	pObj->Ready_AngleInterpolationValue(pObj->Set_Other_Angle(_vec3(packet->dirX, packet->dirY, packet->dirZ)));
