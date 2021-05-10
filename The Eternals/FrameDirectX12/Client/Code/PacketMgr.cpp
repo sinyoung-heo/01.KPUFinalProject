@@ -85,7 +85,7 @@ HRESULT CPacketMgr::Connect_Server()
 #ifdef ERR_CHECK
 	cout << "서버에 접속을 요청하였습니다. 잠시만 기다려주세요." << endl;
 #endif 
-
+	Sleep(1000);
 	CPacketMgr::Get_Instance()->send_login();
 
 #ifdef ERR_CHECK

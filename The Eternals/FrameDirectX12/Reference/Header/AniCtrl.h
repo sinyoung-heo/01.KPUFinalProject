@@ -13,6 +13,7 @@ typedef vector<SKINNING_MATRIX>	VECTOR_SKINNING_MATRIX;
 
 typedef struct tagHierarchyDesc 
 {
+	tagHierarchyDesc() {}
 	tagHierarchyDesc(const aiNode* pNode) : pAiNode(pNode) {}
 	~tagHierarchyDesc() = default;
 
@@ -52,7 +53,7 @@ public:
 	// Method
 	void				Play_Animation(_float fTimeDelta);
 	SKINNING_MATRIX*	Find_SkinningMatrix(string strBoneName);
-	HIERARCHY_DESC*		Find_HierarchyDesc(string strBoneName);
+	HIERARCHY_DESC&		Find_HierarchyDesc(string strBoneName);
 	_bool				Is_AnimationSetEnd(const _float& fTimeDelta, const _float& fAnimationSpeed = 4'800.0f);
 	_bool				Is_BlendingComplete() { return m_bIsBlendingComplete; };
 
@@ -95,7 +96,7 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Mesh Hierarchy Info ]
 	____________________________________________________________________________________________________________*/
-	map<string, HIERARCHY_DESC*>	m_mapNodeHierarchy;		// Node Hierarchy 정보.
+	map<string, HIERARCHY_DESC>*	m_mapNodeHierarchy;		// Node Hierarchy 정보.
 
 	/*__________________________________________________________________________________________________________
 	[ Animation ]

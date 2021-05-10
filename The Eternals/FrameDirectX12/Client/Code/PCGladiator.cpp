@@ -411,7 +411,7 @@ HRESULT CPCGladiator::SetUp_PCWeapon()
 										 _vec3(0.65f),
 										 _vec3(0.0f, 0.0f, 180.0f),
 										 _vec3(0.0f, 0.0f, 0.0f),
-										 m_pMeshCom->Find_HierarchyDesc("Weapon_Back"),
+										 &(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")),
 										 &m_pTransCom->m_matWorld,
 										 _rgba(0.64f, 0.96f, 0.97f, 1.0f));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"ThisPlayerWeaponTwoHand", m_pWeapon), E_FAIL);
@@ -1688,21 +1688,21 @@ void CPCGladiator::SetUp_WeaponRHand()
 {
 	m_pWeapon->Get_Transform()->m_vAngle.y = 180.0f;
 	m_pWeapon->Get_Transform()->m_vAngle.z = 0.0f;
-	m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("R_Sword"));
+	m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("R_Sword")));
 }
 
 void CPCGladiator::SetUp_WeaponLHand()
 {
 	m_pWeapon->Get_Transform()->m_vAngle.y = 0.0f;
 	m_pWeapon->Get_Transform()->m_vAngle.z = 180.0f;
-	m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("L_Sword"));
+	m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("L_Sword")));
 }
 
 void CPCGladiator::SetUp_WeaponBack()
 {
 	m_pWeapon->Get_Transform()->m_vAngle.y = 0.0f;
 	m_pWeapon->Get_Transform()->m_vAngle.z = 180.0f;
-	m_pWeapon->Set_HierarchyDesc(m_pMeshCom->Find_HierarchyDesc("Weapon_Back"));
+	m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")));
 }
 
 void CPCGladiator::SetUp_AttackAfterImage(const _uint& uiAnimIdx,

@@ -59,7 +59,7 @@ public:
 	void Set_AnimationKey(const _uint& uiAniKey);
 	void Play_Animation(_float fTimeDelta);
 	SKINNING_MATRIX* Find_SkinningMatrix(string strBoneName);
-	HIERARCHY_DESC* Find_HierarchyDesc(string strBoneName);
+	HIERARCHY_DESC& Find_HierarchyDesc(string strBoneName);
 
 private:
 	/*__________________________________________________________________________________________________________
