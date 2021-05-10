@@ -173,12 +173,12 @@ SKINNING_MATRIX * CMesh::Find_SkinningMatrix(string strBoneName)
 	return nullptr;
 }
 
-HIERARCHY_DESC* CMesh::Find_HierarchyDesc(string strBoneName)
+HIERARCHY_DESC& CMesh::Find_HierarchyDesc(string strBoneName)
 {
 	if (nullptr != m_pAniCtrl)
 		return m_pAniCtrl->Find_HierarchyDesc(strBoneName);
 
-	return nullptr;
+	return HIERARCHY_DESC();
 }
 
 CComponent * CMesh::Clone()

@@ -17,7 +17,10 @@ CAniCtrl::CAniCtrl(const CAniCtrl & rhs)
 	m_vecBoneNameMap.reserve(rhs.m_vecBoneNameMap.size());
 	m_vecBoneNameMap = rhs.m_vecBoneNameMap;
 
-	m_mapNodeHierarchy = rhs.m_mapNodeHierarchy;
+
+	m_mapNodeHierarchy = new map<string, HIERARCHY_DESC>;
+	(*m_mapNodeHierarchy) = *(rhs.m_mapNodeHierarchy);
+
 
 	// 깊은 복사 수행.
 	m_vecBoneDesc = new vector<VECTOR_BONE_DESC>;
@@ -147,6 +150,7 @@ HRESULT CAniCtrl::Ready_AniCtrl()
 	- BoneNameMap안에 각 Node의 Name이 어디에 들어있는지 판단.
 	- Animation Index별로 갹 Node에 aiNodeAnim가 들어있는지 탐색.
 	____________________________________________________________________________________________________________*/
+	m_mapNodeHierarchy = new map<string, HIERARCHY_DESC>;
 	Ready_NodeHierarchy(m_pScene->mRootNode);
 
 #ifdef ENGINE_LOG
@@ -250,13 +254,13 @@ SKINNING_MATRIX * CAniCtrl::Find_SkinningMatrix(string strBoneName)
 	return nullptr;
 }
 
-HIERARCHY_DESC* CAniCtrl::Find_HierarchyDesc(string strBoneName)
+HIERARCHY_DESC& CAniCtrl::Find_HierarchyDesc(string strBoneName)
 {
 	// iter_find = i번째 SubMesh의 Index번호.
-	auto iter_find = m_mapNodeHierarchy.find(strBoneName);
+	auto iter_find = m_mapNodeHierarchy->find(strBoneName);
 
-	if (iter_find == m_mapNodeHierarchy.end())
-		nullptr;
+	if (iter_find == m_mapNodeHierarchy->end())
+		HIERARCHY_DESC();
 
 	return iter_find->second;
 }
@@ -276,12 +280,13 @@ void CAniCtrl::Ready_NodeHierarchy(const aiNode * pNode)
 {
 	string strNodeName(pNode->mName.data);
 
-	HIERARCHY_DESC* pNodeHierarchy = new HIERARCHY_DESC(pNode);
-	pNodeHierarchy->pAiNode				= pNode;
-	pNodeHierarchy->matScale			= INIT_MATRIX;
-	pNodeHierarchy->matRotate			= INIT_MATRIX;
-	pNodeHierarchy->matTrans			= INIT_MATRIX;
-	pNodeHierarchy->matBoneTransform	= Convert_AiToMat4(pNode->mTransformation);
+	//HIERARCHY_DESC* pNodeHierarchy = new HIERARCHY_DESC(pNode);
+	HIERARCHY_DESC pNodeHierarchy;
+	pNodeHierarchy.pAiNode			= pNode;
+	pNodeHierarchy.matScale			= INIT_MATRIX;
+	pNodeHierarchy.matRotate		= INIT_MATRIX;
+	pNodeHierarchy.matTrans			= INIT_MATRIX;
+	pNodeHierarchy.matBoneTransform	= Convert_AiToMat4(pNode->mTransformation);
 
 	// 1. BoneNameMap안에 각 Node의 Name이 어디에 들어있는지 판단.
 	for (_uint i = 0; i < m_vecBoneNameMap.size(); ++i)
@@ -289,7 +294,7 @@ void CAniCtrl::Ready_NodeHierarchy(const aiNode * pNode)
 		if (m_vecBoneNameMap[i].find(strNodeName) != m_vecBoneNameMap[i].end())
 		{
 			// 속해이는 BoneNameMap의 Index 정보.
-			pNodeHierarchy->vecBoneMapIdx.emplace_back(i);
+			pNodeHierarchy.vecBoneMapIdx.emplace_back(i);
 		}
 	}
 
@@ -299,11 +304,11 @@ void CAniCtrl::Ready_NodeHierarchy(const aiNode * pNode)
 		const aiAnimation*	pAnimation		= m_pScene->mAnimations[i];
 		const aiNodeAnim*	pNodeAnimation	= Find_NodeAnimation(pAnimation, strNodeName);
 
-		pNodeHierarchy->mapNodeAnim.emplace(i, pNodeAnimation);
+		pNodeHierarchy.mapNodeAnim.emplace(i, pNodeAnimation);
 	}
 	
 
-	m_mapNodeHierarchy.emplace(strNodeName, pNodeHierarchy);
+	m_mapNodeHierarchy->emplace(strNodeName, pNodeHierarchy);
 
 #ifdef ENGINE_LOG
 	COUT_STR("Hierarchy Node Name : " << strNodeName);
@@ -328,7 +333,7 @@ void CAniCtrl::Update_NodeHierarchy(_float fAnimationTime,
 	- 재귀호출을 통해 자식 노드로 내려가면서, 각각 매칭된 boneTransformation을 저장.
 	____________________________________________________________________________________________________________*/
 	string strNodeName(pNode->mName.data);
-	HIERARCHY_DESC*		pHierarchyInfo		= m_mapNodeHierarchy[strNodeName];
+	HIERARCHY_DESC*		pHierarchyInfo		= &(*m_mapNodeHierarchy)[strNodeName];
 
 	const aiNodeAnim*	pNodeAnimation		= pHierarchyInfo->mapNodeAnim[m_uiCurAniIndex];
 	const aiNodeAnim*	pNewNodeAnimation	= pHierarchyInfo->mapNodeAnim[m_uiNewAniIdx];
@@ -646,13 +651,20 @@ void CAniCtrl::Free()
 	m_vecSkinningMatrix->shrink_to_fit();
 	Safe_Delete(m_vecSkinningMatrix);
 
+	//for (auto& MyPair : *m_mapNodeHierarchy)
+	//{
+	//	Safe_Delete(MyPair.second);
+	//}
+	m_mapNodeHierarchy->clear();
+	Safe_Delete(m_mapNodeHierarchy);
+
 	if (!m_bIsClone)
 	{
-		for (auto& MyPair : m_mapNodeHierarchy)
-		{
-			Safe_Delete(MyPair.second);
-		}
-		m_mapNodeHierarchy.clear();
+		//for (auto& MyPair : *m_mapNodeHierarchy)
+		//{
+		//	Safe_Delete(MyPair.second);
+		//}
+		//m_mapNodeHierarchy->clear();
 
 		m_pScene = nullptr;
 	}
