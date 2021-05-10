@@ -68,9 +68,10 @@ _int CDrownedSailor::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
-	
+
 	if (m_bIsReturn)
 	{
+		m_iSNum = -1;
 		m_bIsStartDissolve = false;
 		m_fDissolve = -0.05f;
 		m_bIsResetNaviMesh = false;
@@ -488,6 +489,7 @@ void CDrownedSailor::SetUp_CollisionTick(const _float& fTimeDelta)
 			CCollisionTick* pCollisionTick = static_cast<CCollisionTick*>(Pop_Instance(m_pInstancePoolMgr->Get_CollisionTickPool()));
 			if (nullptr != pCollisionTick)
 			{
+				pCollisionTick->Get_BoundingSphere()->Get_BoundingInfo().Radius = 0.5f;
 				pCollisionTick->Set_CollisionTag(L"CollisionTick_Monster");
 				pCollisionTick->Set_Damage(m_pInfoCom->Get_RandomDamage());
 				pCollisionTick->Set_LifeTime(0.25f);
