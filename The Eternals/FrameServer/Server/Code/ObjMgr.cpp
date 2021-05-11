@@ -66,16 +66,16 @@ void CObjMgr::Create_StageBeachMonster()
 										CRAB MONSTER
 		________________________________________________________________________________*/
 	// MONSTER - crab 1
-	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
 
-	if (pNew)
-	{
-		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(388.235f, 0.f, 142.977f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, CRAB_HP, CRAB_ATT, CRAB_EXP, CRAB_SPD);
-		pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
-		pNew->Set_AnimDuration(Crab::duration);
-	}
-	else return;
+	//if (pNew)
+	//{
+	//	/* NPC의 정보 초기화 */
+	//	pNew->Ready_Monster(_vec3(388.235f, 0.f, 142.977f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, CRAB_HP, CRAB_ATT, CRAB_EXP, CRAB_SPD);
+	//	pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
+	//	pNew->Set_AnimDuration(Crab::duration);
+	//}
+	//else return;
 
 	// MONSTER - crab 2
 	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
@@ -90,16 +90,16 @@ void CObjMgr::Create_StageBeachMonster()
 	else return;
 
 	// MONSTER - crab 3
-	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
 
-	if (pNew)
-	{
-		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(410.387f, 0.f, 136.93f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, CRAB_HP, CRAB_ATT, CRAB_EXP, CRAB_SPD);
-		pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
-		pNew->Set_AnimDuration(Crab::duration);
-	}
-	else return;
+	//if (pNew)
+	//{
+	//	/* NPC의 정보 초기화 */
+	//	pNew->Ready_Monster(_vec3(410.387f, 0.f, 136.93f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, CRAB_HP, CRAB_ATT, CRAB_EXP, CRAB_SPD);
+	//	pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
+	//	pNew->Set_AnimDuration(Crab::duration);
+	//}
+	//else return;
 
 	// MONSTER - crab 4
 	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
@@ -114,16 +114,16 @@ void CObjMgr::Create_StageBeachMonster()
 	else return;
 
 	// MONSTER - crab 5
-	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
 
-	if (pNew)
-	{
-		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(387.697f, 0.f, 126.109f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, CRAB_HP, CRAB_ATT, CRAB_EXP, CRAB_SPD);
-		pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
-		pNew->Set_AnimDuration(Crab::duration);
-	}
-	else return;
+	//if (pNew)
+	//{
+	//	/* NPC의 정보 초기화 */
+	//	pNew->Ready_Monster(_vec3(387.697f, 0.f, 126.109f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, CRAB_HP, CRAB_ATT, CRAB_EXP, CRAB_SPD);
+	//	pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
+	//	pNew->Set_AnimDuration(Crab::duration);
+	//}
+	//else return;
 
 	// MONSTER - crab 6
 	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
@@ -150,16 +150,16 @@ void CObjMgr::Create_StageBeachMonster()
 	else return;
 
 	// MONSTER - crab 8
-	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
 
-	if (pNew)
-	{
-		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(385.967f, 0.f, 154.236f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, CRAB_HP, CRAB_ATT, CRAB_EXP, CRAB_SPD);
-		pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
-		pNew->Set_AnimDuration(Crab::duration);
-	}
-	else return;
+	//if (pNew)
+	//{
+	//	/* NPC의 정보 초기화 */
+	//	pNew->Ready_Monster(_vec3(385.967f, 0.f, 154.236f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_BEACH, CRAB_HP, CRAB_ATT, CRAB_EXP, CRAB_SPD);
+	//	pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
+	//	pNew->Set_AnimDuration(Crab::duration);
+	//}
+	//else return;
 
 	// MONSTER - crab 9
 	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
@@ -178,16 +178,16 @@ void CObjMgr::Create_StageBeachMonster()
 		________________________________________________________________________________*/
 
 	// MONSTER - drowned sailor 1
-	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
 
-	if (pNew)
-	{
-		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(381.223f, 0.f, 181.083f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, SAILOR_HP, SAILOR_ATT, SAILOR_EXP, SAILOR_SPD);
-		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
-		pNew->Set_AnimDuration(DrownedSailor::duration);
-	}
-	else return;
+	//if (pNew)
+	//{
+	//	/* NPC의 정보 초기화 */
+	//	pNew->Ready_Monster(_vec3(381.223f, 0.f, 181.083f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, SAILOR_HP, SAILOR_ATT, SAILOR_EXP, SAILOR_SPD);
+	//	pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
+	//	pNew->Set_AnimDuration(DrownedSailor::duration);
+	//}
+	//else return;
 
 	// MONSTER - drowned sailor 2
 	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
@@ -214,16 +214,16 @@ void CObjMgr::Create_StageBeachMonster()
 	else return;
 
 	// MONSTER - drowned sailor 4
-	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
 
-	if (pNew)
-	{
-		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(361.711f, 0.f, 158.886f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, SAILOR_HP, SAILOR_ATT, SAILOR_EXP, SAILOR_SPD);
-		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
-		pNew->Set_AnimDuration(DrownedSailor::duration);
-	}
-	else return;
+	//if (pNew)
+	//{
+	//	/* NPC의 정보 초기화 */
+	//	pNew->Ready_Monster(_vec3(361.711f, 0.f, 158.886f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, SAILOR_HP, SAILOR_ATT, SAILOR_EXP, SAILOR_SPD);
+	//	pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
+	//	pNew->Set_AnimDuration(DrownedSailor::duration);
+	//}
+	//else return;
 
 	// MONSTER - drowned sailor 5
 	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
@@ -250,16 +250,16 @@ void CObjMgr::Create_StageBeachMonster()
 	else return;
 
 	// MONSTER - drowned sailor 7
-	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
 
-	if (pNew)
-	{
-		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(353.29f, 0.f, 177.823f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, SAILOR_HP, SAILOR_ATT, SAILOR_EXP, SAILOR_SPD);
-		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
-		pNew->Set_AnimDuration(DrownedSailor::duration);
-	}
-	else return;
+	//if (pNew)
+	//{
+	//	/* NPC의 정보 초기화 */
+	//	pNew->Ready_Monster(_vec3(353.29f, 0.f, 177.823f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_BEACH, SAILOR_HP, SAILOR_ATT, SAILOR_EXP, SAILOR_SPD);
+	//	pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
+	//	pNew->Set_AnimDuration(DrownedSailor::duration);
+	//}
+	//else return;
 
 	// MONSTER - drowned sailor 8
 	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
