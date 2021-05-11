@@ -178,20 +178,20 @@ _int CObjectMgr::Update_ObjectMgr(const _float & fTimeDelta)
 {
 	_int	iEnd = 0;
 
-	for (auto& pair : m_mapStaticObject[m_eCurrentStage])
-	{
-		for (auto& pStaticObject : pair.second)
-		{
-			pStaticObject->Update_GameObject(fTimeDelta);
-		}
-	}
-
 	for (auto& iter : m_mapLayer)
 	{
 		iEnd = iter.second->Update_Layer(fTimeDelta);
 
 		if (iEnd & 0x80000000)
 			return -1;
+	}
+
+	for (auto& pair : m_mapStaticObject[m_eCurrentStage])
+	{
+		for (auto& pStaticObject : pair.second)
+		{
+			pStaticObject->Update_GameObject(fTimeDelta);
+		}
 	}
 
 	return NO_EVENT;
@@ -201,20 +201,20 @@ _int CObjectMgr::LateUpdate_ObjectMgr(const _float & fTimeDelta)
 {
 	_int	iEnd = 0;
 
-	for (auto& pair : m_mapStaticObject[m_eCurrentStage])
-	{
-		for (auto& pStaticObject : pair.second)
-		{
-			pStaticObject->LateUpdate_GameObject(fTimeDelta);
-		}
-	}
-
 	for (auto& iter : m_mapLayer)
 	{
 		iEnd = iter.second->LateUpdate_Layer(fTimeDelta);
 
 		if (iEnd & 0x80000000)
 			return -1;
+	}
+
+	for (auto& pair : m_mapStaticObject[m_eCurrentStage])
+	{
+		for (auto& pStaticObject : pair.second)
+		{
+			pStaticObject->LateUpdate_GameObject(fTimeDelta);
+		}
 	}
 
 	return NO_EVENT;
