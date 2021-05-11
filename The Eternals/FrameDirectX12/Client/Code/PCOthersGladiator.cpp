@@ -574,8 +574,8 @@ void CPCOthersGladiator::Free()
 	Engine::Safe_Release(m_pMeshCom);
 	Engine::Safe_Release(m_pShaderCom);
 	Engine::Safe_Release(m_pShadowCom);
-	Engine::Safe_Release(m_pNaviMeshCom);
-	Engine::Safe_Release(m_pVelikaNaviMeshCom);
-	Engine::Safe_Release(m_pBeachNaviMeshCom);
+	//Engine::Safe_Release(m_pNaviMeshCom);
+	//Engine::Safe_Release(m_pVelikaNaviMeshCom);
+	//Engine::Safe_Release(m_pBeachNaviMeshCom);
 	m_pWeapon->Set_DeadGameObject();
 }

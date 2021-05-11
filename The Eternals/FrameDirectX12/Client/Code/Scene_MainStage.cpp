@@ -27,6 +27,7 @@
 #include "SampleNPC.h"
 #include "FadeInOut.h"
 #include "Portal.h"
+#include "WaterFall.h"
 
 
 CScene_MainStage::CScene_MainStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -287,16 +288,29 @@ HRESULT CScene_MainStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 		if (fin_beach.eof())
 			break;
 
-		pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
-											 wstrMeshTag,			// MeshTag
-											 vScale,				// Scale
-											 vAngle,				// Angle
-											 vPos,
-											 bIsRenderShadow,		// Render Shadow
-											 bIsCollision,			// Bounding Sphere
-											 vBoundingSphereScale,	// Bounding Sphere Scale
-											 vBoundingSpherePos,	// Bounding Sphere Pos
-											 _vec3(STAGE_BEACH_OFFSET_X, 0.0f, STAGE_BEACH_OFFSET_Z));
+		if (wstrMeshTag.find(L"WaterFall") != wstring::npos)
+		 {
+		    pGameObj = CWaterFall::Create(m_pGraphicDevice, m_pCommandList,
+										  wstrMeshTag,         // MeshTag
+										  vScale,				// Scale
+										  vAngle,				// Angle
+										  vPos,
+										  _vec3(STAGE_BEACH_OFFSET_X, 0.0f, STAGE_BEACH_OFFSET_Z));
+
+		 }
+		 else
+		 {
+		    pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+												 wstrMeshTag,				// MeshTag
+												 vScale,					// Scale
+												 vAngle,					// Angle
+												 vPos,
+												 bIsRenderShadow,			// Render Shadow
+												 bIsCollision,				// Bounding Sphere
+												 vBoundingSphereScale,		// Bounding Sphere Scale
+												 vBoundingSpherePos,		// Bounding Sphere Pos
+												 _vec3(STAGE_BEACH_OFFSET_X, 0.0f, STAGE_BEACH_OFFSET_Z));
+		 }
 
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_BEACH, wstrMeshTag, pGameObj), E_FAIL);
 	}
