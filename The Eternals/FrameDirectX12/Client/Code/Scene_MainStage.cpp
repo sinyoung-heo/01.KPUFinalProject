@@ -125,7 +125,7 @@ HRESULT CScene_MainStage::Ready_LayerCamera(wstring wstrLayerTag)
 														_vec3(0.0f, 1.0f, 0.f)),		// Up
 									Engine::PROJ_DESC(45.0f,							// FovY
 													  _float(WINCX) / _float(WINCY),	// Aspect
-													  1.0f,								// Near
+													  0.1f,								// Near
 													  1000.0f),							// Far
 									Engine::ORTHO_DESC(WINCX,							// Viewport Width
 													   WINCY,							// Viewport Height
@@ -142,7 +142,7 @@ HRESULT CScene_MainStage::Ready_LayerCamera(wstring wstrLayerTag)
 									  					  _vec3(0.0f, 1.0f, 0.0f)),		// Up
 									  Engine::PROJ_DESC(45.0f,							// FovY
 									  					_float(WINCX) / _float(WINCY),	// Aspect
-									  					1.0f,							// Near
+									  					0.1f,							// Near
 									  					1000.0f),						// Far
 									  Engine::ORTHO_DESC(WINCX,							// Viewport Width
 									  					 WINCY,							// Viewport Height
@@ -254,7 +254,7 @@ HRESULT CScene_MainStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 										  L"BumpTerrainMesh01",
 										  _vec3(0.075f),
 										  _vec3(90.0f, 0.0f ,0.0f),
-										  _vec3(128.0f, -0.01f, 128.0f),
+										  _vec3(128.0f, -0.0f, 128.0f),
 										  _vec3(STAGE_VELIKA_OFFSET_X, 0.0f, STAGE_VELIKA_OFFSET_Z));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_VELIKA, L"BumpTerrainMesh01", pGameObj), E_FAIL);
 
