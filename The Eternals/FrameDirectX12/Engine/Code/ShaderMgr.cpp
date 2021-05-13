@@ -43,6 +43,16 @@ void CShaderMgr::Input_ShaderKey()
 	}
 }
 
+void CShaderMgr::SetUp_ShaderInfo()
+{
+	m_pCB_ShaderInformation.DepthOfField  = 0.f;
+	m_pCB_ShaderInformation.Ssao          = 0.f;
+	m_pCB_ShaderInformation.Shade         = 0.f;
+	m_pCB_ShaderInformation.ToneMapping   = 0.f;
+	m_pCB_ShaderInformation.Specular      = 1.f;
+	m_pCB_ShaderInformation.TreeAlphaTest = 1.f;
+}
+
 void CShaderMgr::Free()
 {
 }

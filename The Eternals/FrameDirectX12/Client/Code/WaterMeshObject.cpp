@@ -65,6 +65,7 @@ _int CWaterMeshObject::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
+	Set_ConstantTable();
 
 	return NO_EVENT;
 }
@@ -73,13 +74,13 @@ void CWaterMeshObject::Render_GameObject(const _float& fTimeDelta,
 										   ID3D12GraphicsCommandList * pCommandList,
 										   const _int& iContextIdx)
 {
-	Set_ConstantTable();
 	m_fPatternMapDeltatime+=(Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 10.f;
 	if (m_fPatternMapDeltatime > 133.f)
 		m_fPatternMapDeltatime = 123.f;
 	m_fNormalMapDeltatime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 15.f;
 	if (m_fNormalMapDeltatime > 123.f)
 		m_fNormalMapDeltatime = 3.f;
+
 	m_pMeshCom->Render_WaterMesh(pCommandList, iContextIdx, m_pShaderCom, m_pDescriptorHeaps, (_int)m_fNormalMapDeltatime, (_int)m_fPatternMapDeltatime);
 }
 

@@ -111,6 +111,7 @@ HRESULT CRenderer::Ready_Renderer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCo
 
 	FAILED_CHECK_RETURN(Ready_ShaderPrototype(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_RenderTarget(), E_FAIL);
+	CShaderMgr::Get_Instance()->SetUp_ShaderInfo();
 
 	m_mapRenderOnOff[L"RenderTarget"]	= false;
 	m_mapRenderOnOff[L"DebugFont"]		= false;

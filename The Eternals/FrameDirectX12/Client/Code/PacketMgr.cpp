@@ -69,7 +69,7 @@ HRESULT CPacketMgr::Connect_Server()
 
 	sockAddr.sin_family = AF_INET;
 	sockAddr.sin_port = htons(SERVER_PORT);
-	sockAddr.sin_addr.s_addr = inet_addr(SERVER_DHIP);
+	sockAddr.sin_addr.s_addr = inet_addr(SERVER_IP);
 
 	if (connect(g_hSocket, (SOCKADDR*)&sockAddr, sizeof(sockAddr)) == SOCKET_ERROR)
 	{

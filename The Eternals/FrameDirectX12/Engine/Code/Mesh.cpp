@@ -46,7 +46,7 @@ HRESULT CMesh::Ready_Mesh(wstring wstrFilePath, wstring wstrFileName)
 	Safe_Delete_Array(pStringPath);
 
 
-	m_pScene = m_Importer.ReadFile(strFullPath.c_str(), aiProcess_ConvertToLeftHanded | aiProcess_OptimizeMeshes);
+	m_pScene = m_Importer.ReadFile(strFullPath.c_str(), aiProcess_ConvertToLeftHanded /*| aiProcess_OptimizeMeshes*/);
 
 	m_wstrVIMeshTag		= wstrFileName + L"VIMesh";
 	m_wstrAniCtrlTag	= wstrFileName + L"AniCtrl";

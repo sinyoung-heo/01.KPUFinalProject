@@ -853,14 +853,14 @@ namespace Engine
 
 	typedef struct tagShaderInformation
 	{
-		_float Ssao;
-		_float DepthOfField;
-		_float Shade;
-		_float ToneMapping;
-		_float Distortion;
-		_float Specular;
-		_float TreeAlphaTest;
-		_float Offset3;
+		_float Ssao          = 1.0f;
+		_float DepthOfField  = 1.0f;
+		_float Shade         = 1.0f;
+		_float ToneMapping   = 1.0f;
+		_float Distortion    = 1.0f;
+		_float Specular      = 1.0f;
+		_float TreeAlphaTest = 1.0f;
+		_float Offset3       = 1.0f;
 	}CB_SHADER_INFORMATION;
 	// Shader Shadow
 	typedef struct tagConstantBufferShaderShadow

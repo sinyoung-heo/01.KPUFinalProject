@@ -16,6 +16,7 @@
 #include "GameUIChild.h"
 #include "CharacterHpGauge.h"
 #include "CharacterMpGauge.h"
+#include "ShaderMgr.h"
 
 CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -575,6 +576,8 @@ void CPCGladiator::SetUp_StageID()
 	{
 		if (STAGE_VELIKA == m_chCurStageID)
 		{
+			Engine::CShaderMgr::Get_Instance()->Set_TreeAlphaTest(1.0f);
+
 			m_pNaviMeshCom = m_pVelikaNaviMeshCom;
 			m_mapComponent[Engine::ID_DYNAMIC][L"Com_NaviMesh"] = m_pNaviMeshCom;
 			m_pTransCom->m_vPos = _vec3(STAGE_VELIKA_X, 0.0f, STAGE_VELIKA_Z);
@@ -582,6 +585,8 @@ void CPCGladiator::SetUp_StageID()
 		}
 		else if (STAGE_BEACH == m_chCurStageID)
 		{
+			Engine::CShaderMgr::Get_Instance()->Set_TreeAlphaTest(0.0f);
+
 			m_pNaviMeshCom = m_pBeachNaviMeshCom;
 			m_mapComponent[Engine::ID_DYNAMIC][L"Com_NaviMesh"] = m_pNaviMeshCom;
 			m_pTransCom->m_vPos = _vec3(STAGE_BEACH_X, 0.0f, STAGE_BEACH_Z);
