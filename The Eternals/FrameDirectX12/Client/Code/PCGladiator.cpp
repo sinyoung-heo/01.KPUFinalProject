@@ -585,7 +585,7 @@ void CPCGladiator::SetUp_StageID()
 		}
 		else if (STAGE_BEACH == m_chCurStageID)
 		{
-			Engine::CShaderMgr::Get_Instance()->Set_TreeAlphaTest(0.0f);
+			Engine::CShaderMgr::Get_Instance()->Set_TreeAlphaTest(1.0f);
 
 			m_pNaviMeshCom = m_pBeachNaviMeshCom;
 			m_mapComponent[Engine::ID_DYNAMIC][L"Com_NaviMesh"] = m_pNaviMeshCom;

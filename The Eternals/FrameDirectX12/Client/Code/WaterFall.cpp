@@ -21,13 +21,20 @@ HRESULT CWaterFall::Ready_GameObject(wstring wstrMeshTag,
 											 const _vec3 & vAngle, 
 											 const _vec3 & vPos, const _vec3& vPosOffset)
 {
-	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, false, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
 
-	m_wstrMeshTag = wstrMeshTag;
+	m_wstrMeshTag           = wstrMeshTag;
 	m_pTransCom->m_vScale	= vScale;
 	m_pTransCom->m_vAngle	= vAngle;
-	m_pTransCom->m_vPos = vPos + vPosOffset;
+	m_pTransCom->m_vPos     = vPos + vPosOffset;
+
+	// BoundingBox.
+	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
+										   m_pTransCom->m_vScale,
+										   m_pMeshCom->Get_CenterPos(),
+										   m_pMeshCom->Get_MinVector(),
+										   m_pMeshCom->Get_MaxVector());
 
 	// PipelineState.
 	m_iMeshPipelineStatePass	= 2;
@@ -56,7 +63,8 @@ _int CWaterFall::Update_GameObject(const _float & fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+	if (m_pRenderer->Get_Frustum().Contains(m_pBoundingBoxCom->Get_BoundingInfo()) != DirectX::DISJOINT)
+		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 
 	/*____________________________________________________________________
 	TransCom - Update WorldMatrix.

@@ -80,8 +80,13 @@ _int CStaticMeshObject::Update_GameObject(const _float & fTimeDelta)
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
 	// Frustum Culling
-	if (m_wstrMeshTag == L"VK_CON_Wall_B_SM")
+	if (m_wstrMeshTag == L"VK_CON_Wall_B_SM" ||
+		m_wstrMeshTag == L"Cliff_Rock2" ||
+		m_wstrMeshTag == L"Cliff_Rock4" ||
+		m_wstrMeshTag == L"Cliff_Rock7")
+	{
 		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+	}
 	else
 	{
 		if (m_pRenderer->Get_Frustum().Contains(m_pBoundingBoxCom->Get_BoundingInfo()) != DirectX::DISJOINT)
@@ -108,22 +113,21 @@ _int CStaticMeshObject::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
+	Set_ConstantTable();
+
 	return NO_EVENT;
 }
 
 void CStaticMeshObject::Render_GameObject(const _float& fTimeDelta)
 {
-	Set_ConstantTable();
 	//m_pMeshCom->Render_StaticMesh(m_pShaderCom);	
 }
 void CStaticMeshObject::Render_EdgeGameObject(const _float& fTimeDelta)
 {
-	Set_ConstantTable();
 	m_pMeshCom->Render_StaticMesh(m_pEdgeObjectShaderCom);
 }
 void CStaticMeshObject::Render_CrossFilterGameObject(const _float& fTimeDelta)
 {
-	Set_ConstantTable();
 	m_pMeshCom->Render_StaticMesh(m_pCrossFilterShaderCom);
 }
 
@@ -149,7 +153,16 @@ void CStaticMeshObject::Render_ShadowDepth(const _float& fTimeDelta,
 	____________________________________________________________________________________________________________*/
 	if (m_wstrMeshTag != L"VK_CON_Floor_04_SM" &&
 		m_wstrMeshTag != L"VK_CON_Floor_03_SM" &&
-		m_wstrMeshTag != L"VK_CON_Wall_B_SM")
+		m_wstrMeshTag != L"VK_CON_Wall_B_SM" &&
+		m_wstrMeshTag != L"Cliff_Rock1" &&
+		m_wstrMeshTag != L"Cliff_Rock2" &&
+		m_wstrMeshTag != L"Cliff_Rock3" &&
+		m_wstrMeshTag != L"Cliff_Rock4" &&
+		m_wstrMeshTag != L"Cliff_Rock5" &&
+		m_wstrMeshTag != L"Cliff_Rock6" &&
+		m_wstrMeshTag != L"Cliff_Rock7" &&
+		m_wstrMeshTag != L"Cliff_Rock8" &&
+		m_wstrMeshTag != L"Cliff_Rock9")
 	{
 		m_pShaderShadowInstancing->Add_Instance(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass);
 		_uint iInstanceIdx = m_pShaderShadowInstancing->Get_InstanceCount(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass) - 1;
