@@ -99,13 +99,13 @@ _int CEffectTrail::Update_GameObject(const _float& fTimeDelta)
 
 _int CEffectTrail::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	Set_ConstantTable();
+
 	return NO_EVENT;
 }
 
 void CEffectTrail::Render_GameObject(const _float& fTimeDelta)
 {
-	Set_ConstantTable();
-
 	m_pBufferCom->Begin_Buffer();
 	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), 0, m_uiTexIdx, Engine::MATRIXID::PROJECTION);
 	m_pBufferCom->Render_Buffer();

@@ -80,7 +80,6 @@ void CTerrainMeshObject::Render_GameObject(const _float& fTimeDelta,
 	____________________________________________________________________________________________________________*/
 	m_pShaderMeshInstancing->Add_Instance(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass);
 	_uint iInstanceIdx = m_pShaderMeshInstancing->Get_InstanceCount(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass) - 1;
-
 	Set_ConstantTable(iContextIdx, iInstanceIdx);
 }
 

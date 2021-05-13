@@ -234,6 +234,9 @@ _int CPCGladiator::LateUpdate_GameObject(const _float& fTimeDelta)
 		m_pFont->Set_Text(wstring(m_szText));
 	}
 
+	Set_ConstantTableShadowDepth();
+	Set_ConstantTable();
+
 	return NO_EVENT;
 }
 
@@ -329,7 +332,6 @@ void CPCGladiator::Render_GameObject(const _float& fTimeDelta,
 									 ID3D12GraphicsCommandList* pCommandList, 
 									 const _int& iContextIdx)
 {
-	Set_ConstantTable();
 	m_pShaderCom->Set_PipelineStatePass(0);
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
@@ -338,7 +340,6 @@ void CPCGladiator::Render_ShadowDepth(const _float& fTimeDelta,
 									  ID3D12GraphicsCommandList* pCommandList, 
 									  const _int& iContextIdx)
 {
-	Set_ConstantTableShadowDepth();
 	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 }
 

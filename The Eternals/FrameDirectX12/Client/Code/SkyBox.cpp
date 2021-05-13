@@ -67,16 +67,15 @@ _int CSkyBox::LateUpdate_GameObject(const _float & fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_PRIORITY, this), -1);
 
+	Set_ConstantTable();
+
 	return NO_EVENT;
 }
 
 void CSkyBox::Render_GameObject(const _float & fTimeDelta)
 {
-	Set_ConstantTable();
-
 	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), 0, m_uiTexIdx, Engine::MATRIXID::PROJECTION);
 	m_pBufferCom->Begin_Buffer();
-
 	m_pBufferCom->Render_Buffer();
 }
 
@@ -84,8 +83,6 @@ void CSkyBox::Render_GameObject(const _float& fTimeDelta,
 								ID3D12GraphicsCommandList* pCommandList, 
 								const _int& iContextIdx)
 {
-	Set_ConstantTable();
-
 	m_pBufferCom->Render_Buffer(pCommandList, 
 								iContextIdx,
 								m_pShaderCom, 

@@ -107,8 +107,6 @@ _int CPCWeaponTwoHand::Update_GameObject(const _float& fTimeDelta)
 _int CPCWeaponTwoHand::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	return CPCWeapon::LateUpdate_GameObject(fTimeDelta);
-
-	return NO_EVENT;
 }
 
 void CPCWeaponTwoHand::Render_GameObject(const _float& fTimeDelta, 

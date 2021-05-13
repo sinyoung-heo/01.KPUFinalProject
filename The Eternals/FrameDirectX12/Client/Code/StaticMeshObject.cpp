@@ -137,7 +137,6 @@ void CStaticMeshObject::Render_GameObject(const _float& fTimeDelta,
 	____________________________________________________________________________________________________________*/
 	m_pShaderMeshInstancing->Add_Instance(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass);
 	_uint iInstanceIdx = m_pShaderMeshInstancing->Get_InstanceCount(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass) - 1;
-
 	Set_ConstantTable(iContextIdx, iInstanceIdx);
 }
 
@@ -154,7 +153,6 @@ void CStaticMeshObject::Render_ShadowDepth(const _float& fTimeDelta,
 	{
 		m_pShaderShadowInstancing->Add_Instance(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass);
 		_uint iInstanceIdx = m_pShaderShadowInstancing->Get_InstanceCount(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass) - 1;
-
 		Set_ConstantTableShadowDepth(iContextIdx, iInstanceIdx);
 	}
 }

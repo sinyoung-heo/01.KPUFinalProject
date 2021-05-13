@@ -81,13 +81,13 @@ _int CFadeInOut::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
+	Set_ConstantTable();
+
 	return NO_EVENT;
 }
 
 void CFadeInOut::Render_GameObject(const _float& fTimeDelta)
 {
-	Set_ConstantTable();
-
 	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), 0, m_uiTexIdx, Engine::MATRIXID::ORTHO);
 	m_pBufferCom->Begin_Buffer();
 	m_pBufferCom->Render_Buffer();

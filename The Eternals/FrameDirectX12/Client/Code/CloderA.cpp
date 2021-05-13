@@ -131,6 +131,9 @@ _int CCloderA::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
+	Set_ConstantTableShadowDepth();
+	Set_ConstantTable();
+
 	return NO_EVENT;
 }
 
@@ -140,7 +143,6 @@ void CCloderA::Send_PacketToServer()
 
 void CCloderA::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
-	Set_ConstantTable();
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
@@ -148,7 +150,6 @@ void CCloderA::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsComman
 {
 	if (!m_bIsStartDissolve)
 	{
-		Set_ConstantTableShadowDepth();
 		m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 	}
 }

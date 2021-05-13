@@ -78,6 +78,7 @@ _int CMagicCircle::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
+	Set_ConstantTable();
 
 	return NO_EVENT;
 }
@@ -85,7 +86,6 @@ _int CMagicCircle::LateUpdate_GameObject(const _float & fTimeDelta)
 
 void CMagicCircle::Render_GameObject(const _float& fTimeDelta)
 {
-	Set_ConstantTable();
 	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_fNormalMapDeltatime, m_fPatternMapDeltatime);
 }
 

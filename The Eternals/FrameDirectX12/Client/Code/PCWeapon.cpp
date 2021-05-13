@@ -85,6 +85,8 @@ _int CPCWeapon::Update_GameObject(const _float& fTimeDelta)
 
 _int CPCWeapon::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	Set_ConstantTable();
+
 	return NO_EVENT;
 }
 
