@@ -30,6 +30,8 @@ public:
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 
+	//Etv
+	void Set_Wave(float fWave) { m_fWave = fWave; }
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
 	void			Set_ConstantTable();
@@ -55,6 +57,7 @@ private:
 	float m_fDeltatime = 0.f;
 	float m_fDeltatime2 = 0.f;
 	float m_fDeltatime3 = 0.f;
+	float m_fWave = 0.f;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,
