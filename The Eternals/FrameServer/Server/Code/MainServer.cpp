@@ -840,6 +840,7 @@ void add_new_client(SOCKET ns)
 		pNew->m_vAngle	= _vec3(0.f, 0.f, 0.f);
 
 		pNew->m_chStageId = STAGE_VELIKA;
+		pNew->m_bIsAttackStance = false;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector((int)s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
 		CObjMgr::GetInstance()->Add_GameObject(L"PLAYER", pNew, (int)s_num);

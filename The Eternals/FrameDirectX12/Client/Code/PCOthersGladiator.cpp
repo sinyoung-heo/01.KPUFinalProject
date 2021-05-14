@@ -108,6 +108,7 @@ HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag,
 	m_tAttackMoveSpeedInterpolationDesc.v1           = Gladiator::MIN_SPEED;
 	m_tAttackMoveSpeedInterpolationDesc.v2           = Gladiator::MAX_SPEED * Gladiator::OTHERS_OFFSET;
 
+	Engine::FAILED_CHECK_RETURN(SetUp_PCWeapon(), E_FAIL);
 	return S_OK;
 }
 
@@ -118,7 +119,7 @@ HRESULT CPCOthersGladiator::LateInit_GameObject()
 	m_pShadowCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
 	// Create Weapon
-	Engine::FAILED_CHECK_RETURN(SetUp_PCWeapon(), E_FAIL);
+	//Engine::FAILED_CHECK_RETURN(SetUp_PCWeapon(), E_FAIL);
 
 	return S_OK;
 }
