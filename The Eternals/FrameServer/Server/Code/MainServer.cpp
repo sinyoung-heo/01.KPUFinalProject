@@ -807,8 +807,7 @@ void add_new_client(SOCKET ns)
 #ifdef TEST
 		cout << "New Client [" << s_num << "] Accepted" << endl;
 #endif
-		cout << "New Client [" << s_num << "] Accepted" << endl;
-
+	
 		/* 새로 접속한 유저의 정보 초기화 */
 		pNew->Get_ClientLock().lock();
 		pNew->Set_IsConnected(true);

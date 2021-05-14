@@ -2,7 +2,7 @@
 #include "Include.h"
 #include "Base.h"
 
-#define ERR_CHECK
+//#define ERR_CHECK
 
 namespace Engine
 {
