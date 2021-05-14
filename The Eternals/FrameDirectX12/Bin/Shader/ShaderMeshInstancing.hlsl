@@ -80,6 +80,7 @@ struct VS_OUT
 
     float fOffset1 : TEXCOORD9;
     float fOffset2 : TEXCOORD10;
+    float fOffset3 : TEXCOORD11;
 };
 
 /*__________________________________________________________________________________________________________
@@ -283,7 +284,7 @@ VS_OUT VS_TERRAIN_MAIN(VS_IN vs_input, uint iInstanceID : SV_InstanceID)
     vs_output.Dissolve = g_ShaderMesh[iInstanceID].fDissolve;
     vs_output.fOffset1 = g_ShaderMesh[iInstanceID].fOffset1;
     vs_output.fOffset2 = g_ShaderMesh[iInstanceID].fOffset2;
-	
+    vs_output.fOffset3 = g_ShaderMesh[iInstanceID].fOffset3;
    
     return (vs_output);
 }
@@ -299,7 +300,7 @@ PS_OUT PS_TERRAIN_MAIN(VS_OUT ps_input) : SV_TARGET
     ps_output.Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV * fDetails);
 	
     if (clipSpace < 0.f)
-        ps_output.Diffuse.rgb *= 0.8f;
+        ps_output.Diffuse.rgb *= ps_input.fOffset3;
 	// Normal
     float4 TexNormal = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV * fDetails);
     TexNormal = (TexNormal * 2.0f) - 1.0f; // 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.

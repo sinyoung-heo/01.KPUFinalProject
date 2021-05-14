@@ -17,7 +17,7 @@
 #include "CharacterHpGauge.h"
 #include "CharacterMpGauge.h"
 #include "ShaderMgr.h"
-
+#include "IceStorm.h"
 CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pPacketMgr(CPacketMgr::Get_Instance())
@@ -681,9 +681,19 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 	KeyInput_Move(fTimeDelta);
 	KeyInput_Attack(fTimeDelta);
 
-	if (Engine::KEY_DOWN(DIK_M))
+	
+	if (Engine::KEY_DOWN(DIK_0))
 	{
-		CPacketMgr::Get_Instance()->send_attackToMonster(5000, 100);
+		Engine::CGameObject* pGameObj = nullptr;
+		for (int i = 0; i < 36; i++)
+		{
+			pGameObj = CIceStorm::Create(m_pGraphicDevice, m_pCommandList,
+				L"IceStorm1",
+				_vec3(0.f),
+				_vec3(0.f, 0.0f, 0.0f),
+				_vec3(0, 0, 0), 5.f, XMConvertToRadians(i * 10.f));
+			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"IceStorm1", pGameObj), E_FAIL);
+		}
 	}
 }
 
