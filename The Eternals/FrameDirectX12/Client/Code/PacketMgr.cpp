@@ -101,7 +101,6 @@ void CPacketMgr::recv_packet()
 	int iLen = MAX_BUF_SIZE - static_cast<int>(m_next_recv_ptr - m_recv_buf);
 	int retval = recv(g_hSocket, reinterpret_cast<CHAR*>(m_recv_start), iLen, 0);
 
-#ifdef ERR_CHECK
 	if (retval == SOCKET_ERROR)
 	{
 		int state = WSAGetLastError();
@@ -111,7 +110,6 @@ void CPacketMgr::recv_packet()
 			closesocket(g_hSocket);
 		}
 	}
-#endif 
 
 	// 데이터 수신 성공
 	if (retval > 0)
@@ -539,6 +537,7 @@ void CPacketMgr::Change_Stance_Others(sc_packet_stance_change* packet, int& retf
 	if (s_num == g_iSNum) { retflag = 2; return; };
 
 	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+	if (pObj == nullptr) return;
 
 	if (PC_GLADIATOR == packet->o_type)
 	{
@@ -580,12 +579,15 @@ void CPacketMgr::AttackStop_User(sc_packet_attack* packet)
 	if (s_num == g_iSNum)
 	{
 		Engine::CGameObject* pObj = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
+		if (pObj == nullptr) return;
+
 		pObj->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
 	}
 	/* 다른 클라이언트가 공격을 멈춘 경우 */
 	else
 	{
 		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+		if (pObj == nullptr) return;
 
 		if (PC_GLADIATOR == packet->o_type)
 		{
@@ -617,12 +619,15 @@ void CPacketMgr::Attack_User(sc_packet_attack* packet)
 	if (s_num == g_iSNum)
 	{
 		Engine::CGameObject* pObj = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
+		if (pObj == nullptr) return;
+
 		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
 	}
 	/* 다른 클라이언트가 공격한 경우 */
 	else
 	{
 		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
+		if (pObj == nullptr) return;
 
 		if (PC_GLADIATOR == packet->o_type)
 		{
@@ -744,13 +749,19 @@ void CPacketMgr::Enter_Others(sc_packet_enter* packet, int& retflag)
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject* pGameObj = nullptr;
 	wstring wstrMeshTag = L"";
+	wstring wstrNaviMeshTag = L"";
+
+	if (packet->stageID == STAGE_VELIKA)
+		wstrNaviMeshTag = L"StageVelika_NaviMesh";
+	else if (packet->stageID == STAGE_BEACH)
+		wstrNaviMeshTag = L"StageBeach_NaviMesh";
 
 	if (PC_GLADIATOR == packet->o_type)
 	{
 		wstrMeshTag = L"PoporiR27Gladiator";
 		pGameObj = CPCOthersGladiator::Create(m_pGraphicDevice, m_pCommandList,
 											  L"PoporiR27Gladiator",							// MeshTag
-											  L"StageVelika_NaviMesh",							// NaviMeshTag
+											  wstrNaviMeshTag,									// NaviMeshTag
 											  _vec3(0.05f, 0.05f, 0.05f),						// Scale
 											  _vec3(0.0f, 0.0f, 0.0f),							// Angle
 											  _vec3(packet->posX, packet->posY, packet->posZ),	// Pos
@@ -771,7 +782,7 @@ void CPacketMgr::Enter_Others(sc_packet_enter* packet, int& retflag)
 
 		pGameObj = CPCOthersGladiator::Create(m_pGraphicDevice, m_pCommandList,
 											  wstrMeshTag,										// MeshTag
-											  L"StageVelika_NaviMesh",							// NaviMeshTag
+											  wstrNaviMeshTag,									// NaviMeshTag
 											  _vec3(0.05f, 0.05f, 0.05f),						// Scale
 											  _vec3(0.0f, 0.0f, 0.0f),							// Angle
 											  _vec3(packet->posX, packet->posY, packet->posZ),	// Pos
@@ -842,6 +853,8 @@ void CPacketMgr::Change_Animation(sc_packet_animationIndex* packet, bool& retfla
 	if (packet->id >= NPC_NUM_START && packet->id < MON_NUM_START)
 	{
 		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"NPC", packet->id);
+		if (pObj == nullptr) return;
+
 		pObj->Set_State(packet->aniIdx);
 	}
 
@@ -1117,14 +1130,11 @@ void CPacketMgr::send_packet(void* packet)
 
 	int iSendBytes = send(g_hSocket, p, p[0], 0);
 
-#ifdef ERR_CHECK
 	if (iSendBytes == SOCKET_ERROR)
 	{
 		error_display("send Error : ", WSAGetLastError());
 		closesocket(g_hSocket);
 	}
-#endif 
-	
 }
 
 void CPacketMgr::Free()
