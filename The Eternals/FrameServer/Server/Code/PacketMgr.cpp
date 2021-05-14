@@ -151,6 +151,7 @@ void process_packet(int id)
 		cs_packet_stance_change* p = reinterpret_cast<cs_packet_stance_change*>(pPlayer->m_packet_start);
 
 		pPlayer->m_iAniIdx = p->animIdx;
+		pPlayer->m_bIsAttackStance = p->is_stance_attack;
 		process_stance_change(id, p->is_stance_attack);
 	}
 	break;
@@ -339,6 +340,7 @@ void send_enter_packet(int to_client, int new_id)
 	//p.o_type = pNewPlayer->m_type;
 	p.o_type = PC_GLADIATOR;
 	p.stageID = pNewPlayer->m_chStageId;
+	p.is_stance_attack = pNewPlayer->m_bIsAttackStance;
 
 	p.posX = pNewPlayer->m_vPos.x;
 	p.posY = pNewPlayer->m_vPos.y;

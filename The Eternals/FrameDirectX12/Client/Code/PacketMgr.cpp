@@ -766,6 +766,7 @@ void CPacketMgr::Enter_Others(sc_packet_enter* packet, int& retflag)
 											  _vec3(0.0f, 0.0f, 0.0f),							// Angle
 											  _vec3(packet->posX, packet->posY, packet->posZ),	// Pos
 											  Twohand19_A_SM);									// WeaponType
+		static_cast<CPCOthersGladiator*>(pGameObj)->Set_OthersStance(packet->is_stance_attack);
 
 	}
 	else if (PC_ARCHER == packet->o_type)

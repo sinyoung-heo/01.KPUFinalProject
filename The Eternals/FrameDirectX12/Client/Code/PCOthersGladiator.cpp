@@ -34,6 +34,30 @@ void CPCOthersGladiator::Set_StanceChange(const _uint& uiAniIdx, const _bool& bI
 	m_bIsCompleteStanceChange = false;
 }
 
+void CPCOthersGladiator::Set_OthersStance(const _bool& bIsStanceAttack)
+{
+	if (bIsStanceAttack)
+	{
+		m_uiAnimIdx = Gladiator::ATTACK_WAIT;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+		m_eCurStance = Gladiator::STANCE_ATTACK;
+		m_pWeapon->Set_DissolveInterpolation(-1.0f);
+		m_pWeapon->Set_IsRenderShadow(true);
+		SetUp_WeaponLHand();
+	}
+	else
+	{
+		m_uiAnimIdx = Gladiator::NONE_ATTACK_IDLE;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+		m_eCurStance = Gladiator::STANCE_NONEATTACK;
+		m_pWeapon->Set_DissolveInterpolation(1.0f);
+		m_pWeapon->Set_IsRenderShadow(false);
+		SetUp_WeaponBack();
+	}
+}
+
 HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag,
 											 wstring wstrNaviMeshTag,
 											 const _vec3& vScale, 

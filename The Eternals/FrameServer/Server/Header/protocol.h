@@ -176,6 +176,7 @@ struct sc_packet_enter
 	char			name[MAX_ID_LEN];
 	char			stageID;
 	char			o_type;
+	bool			is_stance_attack;
 	float			posX, posY, posZ;
 	float			dirX, dirY, dirZ;
 };

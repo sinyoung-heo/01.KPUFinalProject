@@ -19,17 +19,18 @@ public:
 
 public:
 	/*=============∞‘¿” ƒ¡≈Ÿ√˜===============*/
-	int		m_iAniIdx	= 0;
-	int		m_iLevel	= 0;
-	int		m_iHp		= 0; 
-	int		m_iMaxHp	= 0;
-	int		m_iMp		= 0;
-	int		m_iMaxMp	= 0;
-	int		m_iExp		= 0;
-	int		m_iMaxExp	= 0;
-	int		m_iMinAtt	= 0;
-	int		m_iMaxAtt	= 0;
-	float	m_fSpd		= 0;
+	bool	m_bIsAttackStance	= false;
+	int		m_iAniIdx			= 0;
+	int		m_iLevel			= 0;
+	int		m_iHp				= 0; 
+	int		m_iMaxHp			= 0;
+	int		m_iMp				= 0;
+	int		m_iMaxMp			= 0;
+	int		m_iExp				= 0;
+	int		m_iMaxExp			= 0;
+	int		m_iMinAtt			= 0;
+	int		m_iMaxAtt			= 0;
+	float	m_fSpd				= 0;
 	
 	unordered_set<int> view_list; 
 	mutex v_lock; 
