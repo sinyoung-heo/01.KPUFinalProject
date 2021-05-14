@@ -3450,7 +3450,7 @@ void CMonster::Dead_CraftyArachne(const float& fTimeDelta)
 			return;
 		else
 		{
-			Set_Start_Regen(10s);
+			Set_Start_Regen(60s);
 			Init_AllStatus();
 			return;
 		}
