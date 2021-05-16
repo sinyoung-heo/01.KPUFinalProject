@@ -31,6 +31,7 @@ public:
 	int		m_iMinAtt			= 0;
 	int		m_iMaxAtt			= 0;
 	float	m_fSpd				= 0;
+	char	m_chWeaponType      = 0;
 	
 	unordered_set<int> view_list; 
 	mutex v_lock; 

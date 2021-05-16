@@ -19,6 +19,9 @@ class CNPC_Merchant;
 class CNPC_Quest;
 class CNPC_Children;
 
+class CPCOthersGladiator;
+class CPCWeaponTwoHand;
+
 
 class CInstancePoolMgr : public Engine::CBase
 {
@@ -53,6 +56,8 @@ public:
 	INSTANCE_POOL_DESC<CNPC_Children>*	Get_NPCChildren_HumanBoyPool()				{ return m_pNPC_Children_HumanBoyPool; }
 	INSTANCE_POOL_DESC<CNPC_Children>*	Get_NPCChildren_HumanGirlPool()				{ return m_pNPC_Children_HumanGirlPool; }
 	INSTANCE_POOL_DESC<CNPC_Children>*	Get_NPCChildren_HighelfGirlPool()			{ return m_pNPC_Children_HighelfGirlPool; }
+	// PCOthers
+	INSTANCE_POOL_DESC<CPCOthersGladiator>* Get_PCOthersGladiatorPool() { return m_pPCOthersGladiatorPool; }
 
 	void Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 
@@ -84,6 +89,8 @@ private:
 	INSTANCE_POOL_DESC<CNPC_Children>*	m_pNPC_Children_HumanGirlPool;
 	INSTANCE_POOL_DESC<CNPC_Children>*	m_pNPC_Children_HighelfGirlPool;
 
+	// PCOthers
+	INSTANCE_POOL_DESC<CPCOthersGladiator>* m_pPCOthersGladiatorPool;
 
 private:
 	virtual void Free();

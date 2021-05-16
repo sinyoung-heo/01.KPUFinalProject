@@ -38,6 +38,7 @@ using namespace chrono;
 #include "protocol.h"
 #include "MonsterAnimation.h"
 #include "NPCAnimation.h"
+#include "PCWeaponType.h"
 
 #include "enum.h"
 #include "struct.h"

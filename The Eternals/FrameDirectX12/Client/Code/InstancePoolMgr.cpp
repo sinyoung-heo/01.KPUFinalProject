@@ -15,6 +15,7 @@
 #include "NPC_Merchant.h"
 #include "NPC_Quest.h"
 #include "NPC_Children.h"
+#include "PCOthersGladiator.h"
 
 IMPLEMENT_SINGLETON(CInstancePoolMgr)
 
@@ -50,6 +51,10 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Children_HumanBoyPool, L"Human_boy", 10);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Children_HumanGirlPool, L"Human_girl", 10);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Children_HighelfGirlPool, L"Highelf_girl", 10);
+
+	// PCOthers
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCOthersGladiatorPool, 10);
+
 }
 
 void CInstancePoolMgr::Free()
@@ -77,4 +82,6 @@ void CInstancePoolMgr::Free()
 	Safe_Release_InstacePool(m_pNPC_Children_HumanBoyPool);
 	Safe_Release_InstacePool(m_pNPC_Children_HumanGirlPool);
 	Safe_Release_InstacePool(m_pNPC_Children_HighelfGirlPool);
+
+	Safe_Release_InstacePool(m_pPCOthersGladiatorPool);
 }
