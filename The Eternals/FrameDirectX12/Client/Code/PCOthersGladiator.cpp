@@ -108,6 +108,8 @@ HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag,
 	m_tAttackMoveSpeedInterpolationDesc.v1           = Gladiator::MIN_SPEED;
 	m_tAttackMoveSpeedInterpolationDesc.v2           = Gladiator::MAX_SPEED * Gladiator::OTHERS_OFFSET;
 
+
+
 	Engine::FAILED_CHECK_RETURN(SetUp_PCWeapon(), E_FAIL);
 	return S_OK;
 }
@@ -117,7 +119,7 @@ HRESULT CPCOthersGladiator::LateInit_GameObject()
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	m_pShadowCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
-
+	m_pEdgeObjectShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	// Create Weapon
 	//Engine::FAILED_CHECK_RETURN(SetUp_PCWeapon(), E_FAIL);
 
@@ -163,7 +165,7 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
-
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_EDGE, this), -1);
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 	return NO_EVENT;
@@ -191,7 +193,11 @@ void CPCOthersGladiator::Render_ShadowDepth(const _float& fTimeDelta,
 {
 	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 }
-
+void CPCOthersGladiator::Render_EdgeGameObject(const _float& fTimeDelta)
+{
+	Set_ConstantTable();
+	m_pMeshCom->Render_DynamicMesh(m_pEdgeObjectShaderCom);
+}
 HRESULT CPCOthersGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
@@ -208,6 +214,14 @@ HRESULT CPCOthersGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviM
 	m_pShaderCom->AddRef();
 	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(0), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
+
+
+	// Shader
+	m_pEdgeObjectShaderCom = static_cast<Engine::CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", Engine::COMPONENTID::ID_STATIC));
+	Engine::NULL_CHECK_RETURN(m_pEdgeObjectShaderCom, E_FAIL);
+	m_pEdgeObjectShaderCom->AddRef();
+	Engine::FAILED_CHECK_RETURN(m_pEdgeObjectShaderCom->Set_PipelineStatePass(4), E_FAIL);
+	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader2", m_pEdgeObjectShaderCom);
 
 	// Shadow
 	m_pShadowCom = static_cast<Engine::CShaderShadow*>(m_pComponentMgr->Clone_Component(L"ShaderShadow", Engine::COMPONENTID::ID_STATIC));
@@ -373,6 +387,9 @@ void CPCOthersGladiator::Set_ConstantTable()
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
+	m_pEdgeObjectShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
+
+
 }
 
 void CPCOthersGladiator::Set_ConstantTableShadowDepth()
@@ -597,6 +614,7 @@ void CPCOthersGladiator::Free()
 	Engine::Safe_Release(m_pMeshCom);
 	Engine::Safe_Release(m_pShaderCom);
 	Engine::Safe_Release(m_pShadowCom);
+	Engine::Safe_Release(m_pEdgeObjectShaderCom);
 	//Engine::Safe_Release(m_pNaviMeshCom);
 	//Engine::Safe_Release(m_pVelikaNaviMeshCom);
 	//Engine::Safe_Release(m_pBeachNaviMeshCom);

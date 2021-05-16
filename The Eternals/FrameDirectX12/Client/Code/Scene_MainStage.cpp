@@ -331,6 +331,19 @@ HRESULT CScene_MainStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 										_vec3(STAGE_BEACH_OFFSET_X, 0.0f, STAGE_BEACH_OFFSET_Z));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_BEACH, L"BumpWaterMesh00", pGameObj), E_FAIL);
 
+	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+		L"Torch",
+		_vec3(3.f),
+		_vec3(0.f),
+		_vec3(80.6f +256.f, 2.f, 157.75f)
+	,FRAME(8.f,8.f,64.f));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_BEACH, L"Torch", pGameObj), E_FAIL);
+	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+		L"Torch",
+		_vec3(2.f),
+		_vec3(0.f),
+		_vec3(82.9f + 256.f, 0.7f, 149.72f ), FRAME(8.f, 8.f, 64.f));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_BEACH, L"Torch", pGameObj), E_FAIL);
 	/*__________________________________________________________________________________________________________
 	[ Sector Grid ]
 	____________________________________________________________________________________________________________*/
