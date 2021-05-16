@@ -707,18 +707,21 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 		for (int i = 0; i < 36; i++)
 		{
 			pGameObj = CIceStorm::Create(m_pGraphicDevice, m_pCommandList,
-				L"IceStorm1",
-				_vec3(0.f),
-				_vec3(0.f, 0.0f, 0.0f),
-				_vec3(0, 0, 0), 5.f, XMConvertToRadians(i * 10.f));
+										 L"IceStorm1",
+										 _vec3(0.f),
+										 _vec3(0.f, 0.0f, 0.0f),
+										 _vec3(0, 0, 0), 5.f, XMConvertToRadians(i * 10.f));
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"IceStorm1", pGameObj), E_FAIL);
 		}
 	}
 
-	if (Engine::KEY_DOWN(DIK_9))
-	{
-		m_chCurWeaponType = (char)(rand() % 6);
-	}
+	//if (Engine::KEY_DOWN(DIK_9))
+	//{
+	//	_int temp = (_int)m_chCurWeaponType;
+	//	++temp;
+	//	temp = temp % 7;
+	//	m_chCurWeaponType = (char)temp;
+	//}
 }
 
 void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
