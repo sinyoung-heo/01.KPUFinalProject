@@ -74,10 +74,12 @@ _int CPCWeapon::Update_GameObject(const _float& fTimeDelta)
 	______________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
-	m_matBoneFinalTransform = (m_pHierarchyDesc->matScale * m_pHierarchyDesc->matRotate * m_pHierarchyDesc->matTrans)
-						 	 * m_pHierarchyDesc->matGlobalTransform;
+	if (nullptr != m_pHierarchyDesc && nullptr != m_pParentMatrix)
+	{
+		m_matBoneFinalTransform = (m_pHierarchyDesc->matScale * m_pHierarchyDesc->matRotate * m_pHierarchyDesc->matTrans) * m_pHierarchyDesc->matGlobalTransform;
+		m_pTransCom->m_matWorld *= m_matBoneFinalTransform * (*m_pParentMatrix);
+	}
 
-	m_pTransCom->m_matWorld *= m_matBoneFinalTransform * (*m_pParentMatrix);
 	m_pBoundingBoxCom->Update_Component(fTimeDelta);
 
 	return NO_EVENT;

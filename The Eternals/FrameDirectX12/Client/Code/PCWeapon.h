@@ -21,8 +21,10 @@ public:
 	const _float& Get_DissolveSpeed() { return m_fDissolveSpeed; }
 
 	void Set_HierarchyDesc(Engine::HIERARCHY_DESC* pHierarchyDesc) { m_pHierarchyDesc = pHierarchyDesc; };
+	void Set_ParentMatrix(_matrix* pParentMatrix) { m_pParentMatrix = pParentMatrix; };
 	void Set_DissolveInterpolation(const _float& fDissolveSpeed);
 	void Set_IsRenderShadow(const _bool& bIsRenderShadow) { m_bIsRenderShadow = bIsRenderShadow; }
+
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,

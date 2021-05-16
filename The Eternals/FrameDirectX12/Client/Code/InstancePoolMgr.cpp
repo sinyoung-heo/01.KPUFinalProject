@@ -16,11 +16,38 @@
 #include "NPC_Quest.h"
 #include "NPC_Children.h"
 #include "PCOthersGladiator.h"
+#include "PCWeaponTwoHand.h"
 
 IMPLEMENT_SINGLETON(CInstancePoolMgr)
 
 CInstancePoolMgr::CInstancePoolMgr()
 {
+}
+
+INSTANCE_POOL_DESC<CPCWeaponTwoHand>* CInstancePoolMgr::Get_PCWeaponTwoHand(const char& chWeaponType)
+{
+	if (chWeaponType == Twohand19_A_SM)
+		return m_pPCWeaponTwohand19_A_SM_Pool;
+
+	else if (chWeaponType == TwoHand19_SM)
+		return m_pPCWeaponTwoHand19_SM_Pool;
+
+	else if (chWeaponType == TwoHand27_SM)
+		return m_pPCWeaponTwoHand27_SM_Pool;
+
+	else if (chWeaponType == TwoHand29_SM)
+		return m_pPCWeaponTwoHand29_SM_Pool;
+
+	else if (chWeaponType == TwoHand31_SM)
+		return m_pPCWeaponTwoHand31_SM_Pool;
+
+	else if (chWeaponType == TwoHand33_B_SM)
+		return m_pPCWeaponTwoHand33_B_SM_Pool;
+
+	else if (chWeaponType == TwoHand33_SM)
+		return m_pPCWeaponTwoHand33_SM_Pool;
+	else
+		return nullptr;
 }
 
 void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -52,9 +79,17 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Children_HumanGirlPool, L"Human_girl", 10);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Children_HighelfGirlPool, L"Highelf_girl", 10);
 
+	// PCWeapon
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponTwohand19_A_SM_Pool, L"Twohand19_A_SM", 16);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponTwoHand19_SM_Pool, L"TwoHand19_SM", 16);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponTwoHand27_SM_Pool, L"TwoHand27_SM", 16);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponTwoHand29_SM_Pool, L"TwoHand29_SM", 16);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponTwoHand31_SM_Pool, L"TwoHand31_SM", 16);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponTwoHand33_B_SM_Pool, L"TwoHand33_B_SM", 16);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponTwoHand33_SM_Pool, L"TwoHand33_SM", 16);
+
 	// PCOthers
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCOthersGladiatorPool, 10);
-
 }
 
 void CInstancePoolMgr::Free()
@@ -84,4 +119,13 @@ void CInstancePoolMgr::Free()
 	Safe_Release_InstacePool(m_pNPC_Children_HighelfGirlPool);
 
 	Safe_Release_InstacePool(m_pPCOthersGladiatorPool);
+
+	Safe_Release_InstacePool(m_pPCWeaponTwohand19_A_SM_Pool);
+	Safe_Release_InstacePool(m_pPCWeaponTwoHand19_SM_Pool);
+	Safe_Release_InstacePool(m_pPCWeaponTwoHand27_SM_Pool);
+	Safe_Release_InstacePool(m_pPCWeaponTwoHand29_SM_Pool);
+	Safe_Release_InstacePool(m_pPCWeaponTwoHand31_SM_Pool);
+	Safe_Release_InstacePool(m_pPCWeaponTwoHand33_B_SM_Pool);
+	Safe_Release_InstacePool(m_pPCWeaponTwoHand33_SM_Pool);
+
 }

@@ -755,7 +755,6 @@ void CPacketMgr::Enter_Others(sc_packet_enter* packet, int& retflag)
 		if (nullptr != pInstance)
 		{
 			static_cast<CPCOthersGladiator*>(pInstance)->Set_OthersStance(packet->is_stance_attack);
-			static_cast<CPCOthersGladiator*>(pInstance)->Set_WeaponType(packet->weaponType);
 		}
 	}
 	else if (PC_ARCHER == packet->o_type)
@@ -772,13 +771,13 @@ void CPacketMgr::Enter_Others(sc_packet_enter* packet, int& retflag)
 		if (nullptr != pInstance)
 		{
 			static_cast<CPCOthersGladiator*>(pInstance)->Set_OthersStance(packet->is_stance_attack);
-			static_cast<CPCOthersGladiator*>(pInstance)->Set_WeaponType(packet->weaponType);
 		}
 	}
 
 	if (nullptr != pInstance)
 	{
 		pInstance->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+		pInstance->Set_WeaponType(packet->weaponType);
 		pInstance->Set_CurrentStageID(packet->stageID);
 		pInstance->Set_OType(packet->o_type);
 		pInstance->Set_ServerNumber(packet->id);

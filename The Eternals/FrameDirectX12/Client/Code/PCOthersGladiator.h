@@ -22,7 +22,6 @@ public:
 	void Set_AnimationIdx(const _uint& iIdx) { m_uiAnimIdx = iIdx; m_pMeshCom->Set_AnimationKey(m_uiAnimIdx); }
 	void Set_StanceChange(const _uint& uiAniIdx, const _bool& bIsStanceAttack);
 	void Set_OthersStance(const _bool& bIsStanceAttack);
-	void Set_WeaponType(const char& chWeaponType) { m_chCurWeaponType = chWeaponType; }
 	void Reset_AttackMoveInterpolationRatio() { m_tAttackMoveSpeedInterpolationDesc.linear_ratio = 0.0f; }
 
 	// CGameObject을(를) 통해 상속됨
@@ -43,6 +42,7 @@ private:
 private:
 	HRESULT	SetUp_PCWeapon();
 	void	SetUp_StageID();
+	void	Is_ChangeWeapon();
 	void	Set_WeaponHierarchy();
 	void	Set_AnimationSpeed();
 	void	Set_BlendingSpeed();
@@ -79,8 +79,6 @@ private:
 	_bool				m_bIsCompleteStanceChange = true;
 	_bool				m_bIsResetNaviMesh        = false;
 	_bool				m_bIsCreateWeapon		  = false;
-	char				m_chCurWeaponType         = -1;
-	char				m_chPreWeaponType         = -1;
 
 	// Speed Linear Interpolation
 	Engine::LINEAR_INTERPOLATION_DESC<_float> m_tMoveSpeedInterpolationDesc;

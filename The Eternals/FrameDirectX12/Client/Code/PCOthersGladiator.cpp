@@ -15,6 +15,9 @@ CPCOthersGladiator::CPCOthersGladiator(ID3D12Device* pGraphicDevice, ID3D12Graph
 
 void CPCOthersGladiator::Set_StanceChange(const _uint& uiAniIdx, const _bool& bIsStanceAttack)
 {
+	if (nullptr == m_pWeapon)
+		return;
+
 	m_uiAnimIdx = uiAniIdx;
 	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
@@ -37,6 +40,9 @@ void CPCOthersGladiator::Set_StanceChange(const _uint& uiAniIdx, const _bool& bI
 
 void CPCOthersGladiator::Set_OthersStance(const _bool& bIsStanceAttack)
 {
+	if (nullptr == m_pWeapon)
+		return;
+
 	if (bIsStanceAttack)
 	{
 		m_uiAnimIdx = Gladiator::ATTACK_WAIT;
@@ -132,6 +138,9 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bIsReturn)
 	{
+		m_pWeapon->Set_IsReturnObject(true);
+		m_pWeapon->Update_GameObject(fTimeDelta);
+
 		m_bIsResetNaviMesh = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_PCOthersGladiatorPool(), m_uiInstanceIdx);
 
@@ -142,6 +151,7 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 		return NO_EVENT;
 
 	SetUp_StageID();
+	Is_ChangeWeapon();
 	Set_WeaponHierarchy();
 
 	/*__________________________________________________________________________________________________________
@@ -254,38 +264,47 @@ HRESULT CPCOthersGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviM
 
 HRESULT CPCOthersGladiator::SetUp_PCWeapon()
 {
-	wstring wstrWeaponMeshTag = L"";
+	//wstring wstrWeaponMeshTag = L"";
 
-	if (m_chCurWeaponType == Twohand19_A_SM)
-		wstrWeaponMeshTag = L"Twohand19_A_SM";
+	//if (m_chCurWeaponType == Twohand19_A_SM)
+	//	wstrWeaponMeshTag = L"Twohand19_A_SM";
 
-	else if (m_chCurWeaponType == TwoHand19_SM)
-		wstrWeaponMeshTag = L"TwoHand19_SM";
+	//else if (m_chCurWeaponType == TwoHand19_SM)
+	//	wstrWeaponMeshTag = L"TwoHand19_SM";
 
-	else if (m_chCurWeaponType == TwoHand27_SM)
-		wstrWeaponMeshTag = L"TwoHand27_SM";
+	//else if (m_chCurWeaponType == TwoHand27_SM)
+	//	wstrWeaponMeshTag = L"TwoHand27_SM";
 
-	else if (m_chCurWeaponType == TwoHand29_SM)
-		wstrWeaponMeshTag = L"TwoHand29_SM";
+	//else if (m_chCurWeaponType == TwoHand29_SM)
+	//	wstrWeaponMeshTag = L"TwoHand29_SM";
 
-	else if (m_chCurWeaponType == TwoHand31_SM)
-		wstrWeaponMeshTag = L"TwoHand31_SM";
+	//else if (m_chCurWeaponType == TwoHand31_SM)
+	//	wstrWeaponMeshTag = L"TwoHand31_SM";
 
-	else if (m_chCurWeaponType == TwoHand33_B_SM)
-		wstrWeaponMeshTag = L"TwoHand33_B_SM";
+	//else if (m_chCurWeaponType == TwoHand33_B_SM)
+	//	wstrWeaponMeshTag = L"TwoHand33_B_SM";
 
-	else if (m_chCurWeaponType == TwoHand33_SM)
-		wstrWeaponMeshTag = L"TwoHand33_SM";
+	//else if (m_chCurWeaponType == TwoHand33_SM)
+	//	wstrWeaponMeshTag = L"TwoHand33_SM";
 
-	m_pWeapon = CPCWeaponTwoHand::Create(m_pGraphicDevice, m_pCommandList,
-										 wstrWeaponMeshTag,
-										 _vec3(0.75f),
-										 _vec3(0.0f, 0.0f, 180.0f),
-										 _vec3(0.0f, 0.0f, 0.0f),
-										 &(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")),
-										 &m_pTransCom->m_matWorld,
-										 _rgba(0.64f, 0.96f, 0.97f, 1.0f));
-	m_pWeapon->Update_GameObject(0.016f);
+	//m_pWeapon = CPCWeaponTwoHand::Create(m_pGraphicDevice, m_pCommandList,
+	//									 wstrWeaponMeshTag,
+	//									 _vec3(0.75f),
+	//									 _vec3(0.0f, 0.0f, 180.0f),
+	//									 _vec3(0.0f, 0.0f, 0.0f),
+	//									 &(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")),
+	//									 &m_pTransCom->m_matWorld,
+	//									 _rgba(0.64f, 0.96f, 0.97f, 1.0f));
+
+	if (m_chCurWeaponType != m_chPreWeaponType)
+	{
+		m_pWeapon = static_cast<CPCWeaponTwoHand*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponTwoHand(m_chCurWeaponType)));
+		m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")));
+		m_pWeapon->Set_ParentMatrix(&m_pTransCom->m_matWorld);
+		m_pWeapon->Update_GameObject(0.016f);
+
+		m_chPreWeaponType = m_chCurWeaponType;
+	}
 
 	return S_OK;
 }
@@ -314,6 +333,25 @@ void CPCOthersGladiator::SetUp_StageID()
 	{
 		m_bIsResetNaviMesh = true;
 		m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
+	}
+}
+
+void CPCOthersGladiator::Is_ChangeWeapon()
+{
+	if (m_chCurWeaponType != m_chPreWeaponType)
+	{
+		if (nullptr != m_pWeapon)
+		{
+			m_pWeapon->Set_IsReturnObject(true);
+			m_pWeapon->Update_GameObject(0.016f);
+		}
+
+		m_pWeapon = static_cast<CPCWeaponTwoHand*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponTwoHand(m_chCurWeaponType)));
+		m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")));
+		m_pWeapon->Set_ParentMatrix(&m_pTransCom->m_matWorld);
+		m_pWeapon->Update_GameObject(0.016f);
+
+		m_chPreWeaponType = m_chCurWeaponType;
 	}
 }
 
@@ -507,6 +545,9 @@ void CPCOthersGladiator::SetUp_OthersAttackMove(const _uint& uiAniIdx,
 
 void CPCOthersGladiator::SetUp_AttackTrail(const _uint& uiAniIdx, const _uint& uiStartTick, const _uint& uiStopTick)
 {
+	if (nullptr == m_pWeapon)
+		return;
+
 	if (uiAniIdx == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
 	{
 		// Trail On
@@ -579,6 +620,9 @@ void CPCOthersGladiator::AttackMove_OnNaviMesh(const _float& fTimeDelta)
 
 void CPCOthersGladiator::SetUp_WeaponRHand()
 {
+	if (nullptr == m_pWeapon)
+		return;
+
 	m_pWeapon->Get_Transform()->m_vAngle.y = 180.0f;
 	m_pWeapon->Get_Transform()->m_vAngle.z = 0.0f;
 	m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("R_Sword")));
@@ -586,6 +630,9 @@ void CPCOthersGladiator::SetUp_WeaponRHand()
 
 void CPCOthersGladiator::SetUp_WeaponLHand()
 {
+	if (nullptr == m_pWeapon)
+		return;
+
 	m_pWeapon->Get_Transform()->m_vAngle.y = 0.0f;
 	m_pWeapon->Get_Transform()->m_vAngle.z = 180.0f;
 	m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("L_Sword")));
@@ -593,6 +640,9 @@ void CPCOthersGladiator::SetUp_WeaponLHand()
 
 void CPCOthersGladiator::SetUp_WeaponBack()
 {
+	if (nullptr == m_pWeapon)
+		return;
+
 	m_pWeapon->Get_Transform()->m_vAngle.y = 0.0f;
 	m_pWeapon->Get_Transform()->m_vAngle.z = 180.0f;
 	m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")));
@@ -638,11 +688,13 @@ CPCOthersGladiator** CPCOthersGladiator::Create_InstancePool(ID3D12Device* pGrap
 void CPCOthersGladiator::Free()
 {
 	Engine::CGameObject::Free();
+
 	Engine::Safe_Release(m_pMeshCom);
 	Engine::Safe_Release(m_pShaderCom);
 	Engine::Safe_Release(m_pShadowCom);
 	Engine::Safe_Release(m_pNaviMeshCom);
 	Engine::Safe_Release(m_pVelikaNaviMeshCom);
 	Engine::Safe_Release(m_pBeachNaviMeshCom);
-	m_pWeapon->Set_DeadGameObject();
+
+	Engine::Safe_Release(m_pWeapon);
 }
