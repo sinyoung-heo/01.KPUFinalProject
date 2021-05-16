@@ -254,6 +254,7 @@ struct sc_packet_monster_enter
 	char			naviType;
 	char			o_type;
 	char			mon_num;
+	int				animIdx;
 	int				Hp, maxHp, min_att, max_att;
 	float			spd;
 	float			posX, posY, posZ;

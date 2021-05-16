@@ -941,6 +941,7 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 		pInstance->Get_Transform()->m_vAngle = _vec3(packet->angleX, packet->angleY, packet->angleZ);
 		pInstance->Get_Transform()->m_vPos   = _vec3(packet->posX, packet->posY, packet->posZ);
 		pInstance->Set_ServerNumber(packet->id);
+		pInstance->Set_State(packet->animIdx);
 		pInstance->Set_Info(1, packet->Hp, packet->maxHp, 0, 0, 0, 0, packet->min_att, packet->max_att, packet->spd);
 		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"MONSTER", pInstance);
 	}

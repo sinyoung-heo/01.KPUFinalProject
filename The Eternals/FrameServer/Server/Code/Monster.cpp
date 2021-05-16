@@ -3825,6 +3825,8 @@ void CMonster::send_Monster_enter_packet(int to_client)
 	p.o_type = m_type;
 	p.mon_num = m_monNum;
 
+	p.animIdx = Monster_Normal::WAIT;
+
 	p.posX = m_vPos.x;
 	p.posY = m_vPos.y;
 	p.posZ = m_vPos.z;
