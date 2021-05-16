@@ -706,12 +706,13 @@ void CVIMesh::Render_StaticMesh(CShader * pShader)
 	}
 }
 
-void CVIMesh::Render_MagicCircleMesh(CShader* pShader, ID3D12DescriptorHeap* pTexnormalDescriptorHeap, _uint uiNormalTextureIdx, _uint uiPatternMapIdx)
+void CVIMesh::Render_MagicCircleMesh(CShader* pShader, ID3D12DescriptorHeap* pTexnormalDescriptorHeap, 
+	_uint uiDiffuseIdx, _uint uiNormalTextureIdx, _uint uiPatternMapIdx)
 {
 	for (_int i = 0; i < m_vecMeshEntry.size(); ++i)
 	{
 		static_cast<CShaderMeshEffect*>(pShader)->Begin_Shader(m_pTexDescriptorHeap
-			, pTexnormalDescriptorHeap, uiNormalTextureIdx, uiPatternMapIdx, i);
+			, pTexnormalDescriptorHeap, uiDiffuseIdx, uiNormalTextureIdx, uiPatternMapIdx, i);
 		Begin_Buffer(m_pCommandList, i);
 		Render_Buffer(m_pCommandList, i);
 	}

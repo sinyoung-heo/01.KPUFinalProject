@@ -83,7 +83,7 @@ void CShaderMeshEffect::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, c
 }
 
 void CShaderMeshEffect::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, ID3D12DescriptorHeap* pTexNormalDescriptorHeap, 
-	_uint uiTexnormalIdx, _uint uiPatternMapIdx, const _uint& iSubMeshIdx)
+	_uint uiDiffuseIdx, _uint uiTexnormalIdx, _uint uiPatternMapIdx, const _uint& iSubMeshIdx)
 {
 	CRenderer::Get_Instance()->Set_CurPipelineState(m_pPipelineState);
 	m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
@@ -96,7 +96,7 @@ void CShaderMeshEffect::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, I
 	m_pCommandList->SetDescriptorHeaps(_countof(pDescriptorHeaps), pDescriptorHeaps);
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexDiffuseDescriptorHandle(pTexNormalDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexDiffuseDescriptorHandle.Offset(0, m_uiCBV_SRV_UAV_DescriptorSize);
+	SRV_TexDiffuseDescriptorHandle.Offset(uiDiffuseIdx, m_uiCBV_SRV_UAV_DescriptorSize);
 	m_pCommandList->SetGraphicsRootDescriptorTable(0,		// RootParameter Index - TexDiffuse
 		SRV_TexDiffuseDescriptorHandle);
 
@@ -499,7 +499,14 @@ HRESULT CShaderMeshEffect::Create_PipelineState()
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
 	CRenderer::Get_Instance()->Add_PipelineStateCnt();
-
+	//4
+	vecInputLayout = Create_InputLayout("VS_MAIN", "PS_DECAL");
+	PipelineStateDesc.InputLayout = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
+	m_vecPipelineState.emplace_back(pPipelineState);
+	CRenderer::Get_Instance()->Add_PipelineStateCnt();
 	return S_OK;
 }
 

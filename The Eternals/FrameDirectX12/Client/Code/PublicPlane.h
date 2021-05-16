@@ -10,11 +10,11 @@ namespace Engine
 
 class CDynamicCamera;
 
-class CMagicCircle : public Engine::CGameObject
+class CPublicPlane : public Engine::CGameObject
 {
 private:
-	explicit CMagicCircle(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CMagicCircle() = default; 
+	explicit CPublicPlane(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CPublicPlane() = default; 
 
 public:
 	// CGameObject을(를) 통해 상속됨
@@ -59,6 +59,7 @@ private:
 	float m_fDeltatime2 = 0.f;
 	float m_fDeltatime3 = 0.f;
 	float m_fPatternMapDeltatime = 0.f;
+	float m_fAlpha = 1.f;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

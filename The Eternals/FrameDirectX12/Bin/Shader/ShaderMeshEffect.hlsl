@@ -138,9 +138,6 @@ PS_OUT PS_EFFECT_SHPERE(VS_OUT ps_input) : SV_TARGET
     float2 TexUV = float2(ps_input.TexUV.x, ps_input.TexUV.y);
     clip(ps_input.TexUV.y + g_fOffset1);
     ps_output.Effect1 = g_TexDiffuse.Sample(g_samLinearWrap, TexUV);
-   
-
- 
     return (ps_output);
 }
 PS_OUT PS_ICESTORM(VS_OUT ps_input) : SV_TARGET
@@ -168,4 +165,17 @@ PS_OUT PS_ICESTORM(VS_OUT ps_input) : SV_TARGET
     ps_output.Effect1.a = 0.5f;
     return (ps_output);
 }
-
+PS_OUT PS_DECAL(VS_OUT ps_input) : SV_TARGET
+{
+    PS_OUT ps_output = (PS_OUT) 0;
+	
+    float4 Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 TexNormal = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 Spec = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 color = mul(Diffuse, Spec);
+    color = mul(Diffuse, TexNormal.r);
+   
+    ps_output.Effect2 = Diffuse;
+   
+    return (ps_output);
+}

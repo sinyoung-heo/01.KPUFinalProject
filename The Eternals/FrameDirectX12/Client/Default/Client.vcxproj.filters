@@ -542,6 +542,7 @@
     <ClInclude Include="..\Code\IceStorm.h" />
     <ClInclude Include="..\Code\ServerMath.h" />
     <ClInclude Include="..\Code\SnowParticle.h" />
+    <ClInclude Include="..\Code\PublicPlane.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -768,6 +769,7 @@
     <ClCompile Include="..\Code\IceStorm.cpp" />
     <ClCompile Include="..\Code\ServerMath.cpp" />
     <ClCompile Include="..\Code\SnowParticle.cpp" />
+    <ClCompile Include="..\Code\PublicPlane.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
