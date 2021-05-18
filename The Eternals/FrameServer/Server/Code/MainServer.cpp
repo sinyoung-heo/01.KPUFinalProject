@@ -823,17 +823,18 @@ void add_new_client(SOCKET ns)
 		ZeroMemory(&pNew->m_recv_over.wsa_over, sizeof(pNew->m_recv_over.wsa_over));
 		pNew->m_recv_start = pNew->m_recv_over.iocp_buf;
 
-		pNew->m_type	= PC_GLADIATOR;
-		pNew->m_iLevel	= INIT_LEV;
-		pNew->m_iHp		= INIT_HP;
-		pNew->m_iMaxHp	= INIT_HP;
-		pNew->m_iMp		= INIT_MP;
-		pNew->m_iMaxMp	= INIT_MP;
-		pNew->m_iExp	= INIT_EXP;
-		pNew->m_iMaxExp = INIT_MAXEXP;
-		pNew->m_iMinAtt = INIT_MINATT;
-		pNew->m_iMaxAtt	= INIT_MAXATT;
-		pNew->m_fSpd	= INIT_SPEED;
+		pNew->m_type	     = PC_GLADIATOR;
+		pNew->m_chWeaponType = Twohand19_A_SM;
+		pNew->m_iLevel	     = INIT_LEV;
+		pNew->m_iHp		     = INIT_HP;
+		pNew->m_iMaxHp	     = INIT_HP;
+		pNew->m_iMp		     = INIT_MP;
+		pNew->m_iMaxMp	     = INIT_MP;
+		pNew->m_iExp	     = INIT_EXP;
+		pNew->m_iMaxExp      = INIT_MAXEXP;
+		pNew->m_iMinAtt      = INIT_MINATT;
+		pNew->m_iMaxAtt	     = INIT_MAXATT;
+		pNew->m_fSpd	     = INIT_SPEED;
 
 		pNew->m_vPos	= _vec3(STAGE_VELIKA_X, 0.f, STAGE_VELIKA_Z);
 		pNew->m_vDir	= _vec3(0.f, 0.f, 1.f);

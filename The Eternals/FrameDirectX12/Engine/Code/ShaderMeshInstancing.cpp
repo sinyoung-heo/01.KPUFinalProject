@@ -7,9 +7,9 @@
 USING(Engine)
 IMPLEMENT_SINGLETON(CShaderMeshInstancing)
 
-CUploadBuffer<CB_SHADER_MESH>* CShaderMeshInstancing::Get_UploadBuffer_ShaderMesh(const _uint& iContextIdx, 
-																				  wstring wstrMeshTag, 
-																				  const _uint& uiPipelineStatepass)
+CUploadBuffer<CB_SHADER_MESH_INSTANCEING>* CShaderMeshInstancing::Get_UploadBuffer_ShaderMesh(const _uint& iContextIdx,
+																							  wstring wstrMeshTag, 
+																							  const _uint& uiPipelineStatepass)
 {
 	auto& iter_find = m_mapCB_ShaderMesh[iContextIdx].find(wstrMeshTag);
 
@@ -55,7 +55,7 @@ void CShaderMeshInstancing::SetUp_Instancing(wstring wstrMeshTag)
 
 		if (iter_find == m_mapCB_ShaderMesh[i].end())
 		{
-			m_mapCB_ShaderMesh[i][wstrMeshTag] = vector<CUploadBuffer<CB_SHADER_MESH>*>();
+			m_mapCB_ShaderMesh[i][wstrMeshTag] = vector<CUploadBuffer<CB_SHADER_MESH_INSTANCEING>*>();
 			m_mapCB_ShaderMesh[i][wstrMeshTag].resize(m_uiPipelineStateCnt);
 		}
 	}
@@ -72,7 +72,7 @@ void CShaderMeshInstancing::SetUp_ConstantBuffer(ID3D12Device* pGraphicDevice)
 			for (_uint j = 0; j < m_uiPipelineStateCnt; ++j)
 			{
 				iInstanceCnt = (_uint)(CObjectMgr::Get_Instance()->Get_StaticOBJLIST(pair.first)->size());
-				pair.second[j] = CUploadBuffer<CB_SHADER_MESH>::Create(pGraphicDevice, iInstanceCnt / 4 + 1, false);
+				pair.second[j] = CUploadBuffer<CB_SHADER_MESH_INSTANCEING>::Create(pGraphicDevice, iInstanceCnt / 4 + 1, false);
 			}
 
 		}

@@ -38,7 +38,7 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos   = vPos;
-	m_chWeaponType        = chWeaponType;
+	m_chCurWeaponType     = chWeaponType;
 	m_chCurStageID        = STAGE_VELIKA;
 	m_chPreStageID        = m_chCurStageID;
 	m_wstrCollisionTag    = L"ThisPlayer";
@@ -149,6 +149,7 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	if (fTimeDelta > TIME_OFFSET)
 		return NO_EVENT;
 
+	Is_ChangeWeapon();
 	SetUp_StageID();
 
 	/*__________________________________________________________________________________________________________
@@ -204,6 +205,10 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	// AfterImage
 	Make_AfterImage(fTimeDelta);
 
+	// Weapon Update
+	if (m_pWeapon != nullptr)
+		m_pWeapon->Update_GameObject(fTimeDelta);
+
 	return NO_EVENT;
 }
 
@@ -237,6 +242,10 @@ _int CPCGladiator::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	Set_ConstantTableShadowDepth();
 	Set_ConstantTable();
+
+	// Weapon Update
+	if (m_pWeapon != nullptr)
+		m_pWeapon->LateUpdate_GameObject(fTimeDelta);
 
 	return NO_EVENT;
 }
@@ -385,38 +394,15 @@ HRESULT CPCGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag
 
 HRESULT CPCGladiator::SetUp_PCWeapon()
 {
-	wstring wstrWeaponMeshTag = L"";
+	if (m_chCurWeaponType != m_chPreWeaponType)
+	{
+		m_pWeapon = static_cast<CPCWeaponTwoHand*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponTwoHand(m_chCurWeaponType)));
+		m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")));
+		m_pWeapon->Set_ParentMatrix(&m_pTransCom->m_matWorld);
+		m_pWeapon->Update_GameObject(0.016f);
 
-	if (m_chWeaponType == Twohand19_A_SM)
-		wstrWeaponMeshTag = L"Twohand19_A_SM";
-
-	else if (m_chWeaponType == TwoHand19_SM)
-		wstrWeaponMeshTag = L"TwoHand19_SM";
-
-	else if (m_chWeaponType == TwoHand27_SM)
-		wstrWeaponMeshTag = L"TwoHand27_SM";
-
-	else if (m_chWeaponType == TwoHand29_SM)
-		wstrWeaponMeshTag = L"TwoHand29_SM";
-
-	else if (m_chWeaponType == TwoHand31_SM)
-		wstrWeaponMeshTag = L"TwoHand31_SM";
-
-	else if (m_chWeaponType == TwoHand33_B_SM)
-		wstrWeaponMeshTag = L"TwoHand33_B_SM";
-
-	else if (m_chWeaponType == TwoHand33_SM)
-		wstrWeaponMeshTag = L"TwoHand33_SM";
-
-	m_pWeapon = CPCWeaponTwoHand::Create(m_pGraphicDevice, m_pCommandList,
-										 wstrWeaponMeshTag,
-										 _vec3(0.65f),
-										 _vec3(0.0f, 0.0f, 180.0f),
-										 _vec3(0.0f, 0.0f, 0.0f),
-										 &(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")),
-										 &m_pTransCom->m_matWorld,
-										 _rgba(0.64f, 0.96f, 0.97f, 1.0f));
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"ThisPlayerWeaponTwoHand", m_pWeapon), E_FAIL);
+		m_chPreWeaponType = m_chCurWeaponType;
+	}
 
 	return S_OK;
 }
@@ -688,13 +674,21 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 		for (int i = 0; i < 36; i++)
 		{
 			pGameObj = CIceStorm::Create(m_pGraphicDevice, m_pCommandList,
-				L"IceStorm1",
-				_vec3(0.f),
-				_vec3(0.f, 0.0f, 0.0f),
-				_vec3(0, 0, 0), 5.f, XMConvertToRadians(i * 10.f));
+										 L"IceStorm1",
+										 _vec3(0.f),
+										 _vec3(0.f, 0.0f, 0.0f),
+										 _vec3(0, 0, 0), 5.f, XMConvertToRadians(i * 10.f));
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"IceStorm1", pGameObj), E_FAIL);
 		}
 	}
+
+	//if (Engine::KEY_DOWN(DIK_9))
+	//{
+	//	_int temp = (_int)m_chCurWeaponType;
+	//	++temp;
+	//	temp = temp % 7;
+	//	m_chCurWeaponType = (char)temp;
+	//}
 }
 
 void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
@@ -822,6 +816,9 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 
 void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 {
+	if (nullptr == m_pWeapon)
+		return;
+
 	KeyInput_StanceChange(fTimeDelta);
 
 	if (Gladiator::STANCE_ATTACK == m_eStance && m_bIsCompleteStanceChange)
@@ -1481,6 +1478,37 @@ bool CPCGladiator::Is_Change_CamDirection()
 	return false;
 }
 
+void CPCGladiator::Is_ChangeWeapon()
+{
+	if (m_chCurWeaponType != m_chPreWeaponType)
+	{
+		if (nullptr != m_pWeapon)
+		{
+			m_pWeapon->Set_IsReturnObject(true);
+			m_pWeapon->Update_GameObject(0.016f);
+		}
+
+		m_pWeapon = static_cast<CPCWeaponTwoHand*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponTwoHand(m_chCurWeaponType)));
+		m_pWeapon->Set_ParentMatrix(&m_pTransCom->m_matWorld);
+		m_pWeapon->Update_GameObject(0.016f);
+
+		if (Gladiator::STANCE_ATTACK == m_eStance)
+		{
+			SetUp_WeaponLHand();
+			m_pWeapon->Set_DissolveInterpolation(-1.0f);
+			m_pWeapon->Set_IsRenderShadow(true);
+		}
+		else if (Gladiator::STANCE_NONEATTACK == m_eStance)
+		{
+			SetUp_WeaponBack();
+			m_pWeapon->Set_DissolveInterpolation(1.0f);
+			m_pWeapon->Set_IsRenderShadow(false);
+		}
+
+		m_chPreWeaponType = m_chCurWeaponType;
+	}
+}
+
 void CPCGladiator::SetUp_RunMoveSpeed(const _float& fTimeDelta)
 {
 	// Move On
@@ -1532,7 +1560,6 @@ void CPCGladiator::SetUp_RunToIdleAnimation(const _float& fTimeDelta)
 
 void CPCGladiator::SetUp_PlayerStance_FromAttackToNoneAttack()
 {
-	// NONE_ATTACK -> ATTACK
 	if (Gladiator::STANCE_ATTACK == m_eStance)
 	{
 		m_pWeapon->Set_DissolveInterpolation(1.0f);
@@ -1546,7 +1573,6 @@ void CPCGladiator::SetUp_PlayerStance_FromAttackToNoneAttack()
 
 void CPCGladiator::SetUp_PlayerStance_FromNoneAttackToAttack()
 {
-	// NONE_ATTACK -> ATTACK
 	if (Gladiator::STANCE_NONEATTACK == m_eStance)
 	{
 		if (Gladiator::NONE_ATTACK_IDLE == m_uiAnimIdx ||
@@ -2140,8 +2166,7 @@ Engine::CGameObject* CPCGladiator::Create(ID3D12Device* pGraphicDevice,
 
 void CPCGladiator::Free()
 {
-	if (nullptr != m_pWeapon)
-		m_pWeapon->Set_DeadGameObject();
+	Engine::Safe_Release(m_pWeapon);
 
 	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pDynamicCamera);

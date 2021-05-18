@@ -747,27 +747,15 @@ void CPacketMgr::Enter_Others(sc_packet_enter* packet, int& retflag)
 	/*__________________________________________________________________________________________________________
 	[ GameLogic Object(Ohters) 생성 ]
 	____________________________________________________________________________________________________________*/
-	Engine::CGameObject* pGameObj = nullptr;
-	wstring wstrMeshTag = L"";
-	wstring wstrNaviMeshTag = L"";
-
-	if (packet->stageID == STAGE_VELIKA)
-		wstrNaviMeshTag = L"StageVelika_NaviMesh";
-	else if (packet->stageID == STAGE_BEACH)
-		wstrNaviMeshTag = L"StageBeach_NaviMesh";
+	Engine::CGameObject* pInstance = nullptr;
 
 	if (PC_GLADIATOR == packet->o_type)
 	{
-		wstrMeshTag = L"PoporiR27Gladiator";
-		pGameObj = CPCOthersGladiator::Create(m_pGraphicDevice, m_pCommandList,
-											  L"PoporiR27Gladiator",							// MeshTag
-											  wstrNaviMeshTag,									// NaviMeshTag
-											  _vec3(0.05f, 0.05f, 0.05f),						// Scale
-											  _vec3(0.0f, 0.0f, 0.0f),							// Angle
-											  _vec3(packet->posX, packet->posY, packet->posZ),	// Pos
-											  Twohand19_A_SM);									// WeaponType
-		static_cast<CPCOthersGladiator*>(pGameObj)->Set_OthersStance(packet->is_stance_attack);
-
+		pInstance = Pop_Instance(m_pInstancePoolMgr->Get_PCOthersGladiatorPool());
+		if (nullptr != pInstance)
+		{
+			static_cast<CPCOthersGladiator*>(pInstance)->Set_OthersStance(packet->is_stance_attack);
+		}
 	}
 	else if (PC_ARCHER == packet->o_type)
 	{
@@ -779,22 +767,23 @@ void CPacketMgr::Enter_Others(sc_packet_enter* packet, int& retflag)
 	}
 	else
 	{
-		wstrMeshTag = L"PoporiR27Gladiator";
-
-		pGameObj = CPCOthersGladiator::Create(m_pGraphicDevice, m_pCommandList,
-											  wstrMeshTag,										// MeshTag
-											  wstrNaviMeshTag,									// NaviMeshTag
-											  _vec3(0.05f, 0.05f, 0.05f),						// Scale
-											  _vec3(0.0f, 0.0f, 0.0f),							// Angle
-											  _vec3(packet->posX, packet->posY, packet->posZ),	// Pos
-											  Twohand19_A_SM);									// WeaponType
+		pInstance = Pop_Instance(m_pInstancePoolMgr->Get_PCOthersGladiatorPool());
+		if (nullptr != pInstance)
+		{
+			static_cast<CPCOthersGladiator*>(pInstance)->Set_OthersStance(packet->is_stance_attack);
+		}
 	}
 
-	pGameObj->Set_CurrentStageID(packet->stageID);
-	pGameObj->Set_OType(packet->o_type);
-	pGameObj->Set_ServerNumber(packet->id);
+	if (nullptr != pInstance)
+	{
+		pInstance->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
+		pInstance->Set_WeaponType(packet->weaponType);
+		pInstance->Set_CurrentStageID(packet->stageID);
+		pInstance->Set_OType(packet->o_type);
+		pInstance->Set_ServerNumber(packet->id);
 
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Others", pGameObj), E_FAIL);
+		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Others", pInstance);
+	}
 
 #ifdef ERR_CHECK
 	cout << "Others 등장!" << endl;
@@ -899,12 +888,6 @@ void CPacketMgr::Move_Monster(sc_packet_move* packet)
 void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 {
 	Engine::CGameObject* pInstance = nullptr;
-
-	wstring wstrNaviMeshTag;
-	if (packet->naviType == STAGE_VELIKA)
-		wstrNaviMeshTag = L"StageVelika_NaviMesh";
-	else if (packet->naviType == STAGE_BEACH)
-		wstrNaviMeshTag = L"StageBeach_NaviMesh";
 
 	if (packet->mon_num == MON_CRAB)
 	{

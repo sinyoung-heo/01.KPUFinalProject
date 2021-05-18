@@ -21,10 +21,11 @@ Texture2D g_TexDissolve : register(t4); // Dissolve
 /*__________________________________________________________________________________________________________
 [ Shader Resource ]
 ____________________________________________________________________________________________________________*/
-typedef
-struct tagShaderMesh
+typedef struct tagShaderMesh
 {
     float4x4 matWorld;
+	float4x4 matView;
+	float4x4 matProj;
     float4x4 matLightView;
     float4x4 matLightProj;
     float4 vLightPos;
@@ -91,8 +92,8 @@ VS_OUT VS_MAIN(VS_IN vs_input, uint iInstanceID : SV_InstanceID)
     VS_OUT vs_output = (VS_OUT) 0;
 	
     float4x4 matWV, matWVP;
-    matWV = mul(g_ShaderMesh[iInstanceID].matWorld, g_matView);
-    matWVP = mul(matWV, g_matProj);
+	matWV = mul(g_ShaderMesh[iInstanceID].matWorld, g_ShaderMesh[iInstanceID].matView);
+	matWVP = mul(matWV, g_ShaderMesh[iInstanceID].matProj);
 	
     vs_output.Pos = mul(float4(vs_input.Pos, 1.0f), matWVP);
     vs_output.TexUV = vs_input.TexUV;
@@ -163,8 +164,8 @@ VS_OUT VS_SHADOW_MAIN(VS_IN vs_input, uint iInstanceID : SV_InstanceID)
     VS_OUT vs_output = (VS_OUT) 0;
 	
     float4x4 matWV, matWVP;
-    matWV = mul(g_ShaderMesh[iInstanceID].matWorld, g_matView);
-    matWVP = mul(matWV, g_matProj);
+	matWV = mul(g_ShaderMesh[iInstanceID].matWorld, g_ShaderMesh[iInstanceID].matView);
+	matWVP = mul(matWV, g_ShaderMesh[iInstanceID].matProj);
 	
     vs_output.Pos = mul(float4(vs_input.Pos, 1.0f), matWVP);
     vs_output.TexUV = vs_input.TexUV;
@@ -247,8 +248,8 @@ VS_OUT VS_TERRAIN_MAIN(VS_IN vs_input, uint iInstanceID : SV_InstanceID)
     VS_OUT vs_output = (VS_OUT) 0;
 	
     float4x4 matWV, matWVP;
-    matWV = mul(g_ShaderMesh[iInstanceID].matWorld, g_matView);
-    matWVP = mul(matWV, g_matProj);
+	matWV = mul(g_ShaderMesh[iInstanceID].matWorld, g_ShaderMesh[iInstanceID].matView);
+	matWVP = mul(matWV, g_ShaderMesh[iInstanceID].matProj);
 	
     vs_output.Pos = mul(float4(vs_input.Pos, 1.0f), matWVP);
 	

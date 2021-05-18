@@ -41,6 +41,11 @@ public:
 									Engine::HIERARCHY_DESC* pHierarchyDesc,
 									_matrix* pParentMatrix,
 									const _rgba& vEmissiveColor);
+
+	static CPCWeaponTwoHand** Create_InstancePool(ID3D12Device* pGraphicDevice,
+												  ID3D12GraphicsCommandList* pCommandList, 
+												  wstring wstrMeshTag,
+												  const _uint& uiInstanceCnt);
 private:
 	virtual void Free();
 

@@ -61,6 +61,7 @@ public:
 	void	Set_IsStartAngleInterpolation(const _bool& bIsStart)	{ m_tAngleInterpolationDesc.is_start_interpolation = bIsStart; }
 	void	Set_LinearAngle(const _float& v1, const _float& v2)		{ m_tAngleInterpolationDesc.v1 = v1; m_tAngleInterpolationDesc.v2 = v2; }
 	void	Set_IsUsingInstance(const _bool& bIsUsing)				{ m_bIsUsingInstance = bIsUsing; }
+	void	Set_WeaponType(const char& chWeaponType)				{ m_chCurWeaponType = chWeaponType; }
 	void	Ready_AngleInterpolationValue(const _float& fEndAngle);
 	void	Ready_PositionInterpolationValue(const _vec3& vEndPosition, float fSpd = 3.f);
 
@@ -149,7 +150,9 @@ protected:
 	bool	m_bIsAttack			= false;
 	char	m_chO_Type			= 0;
 
-	char	m_chWeaponType = -1;
+	char	m_chCurWeaponType = -1;
+	char	m_chPreWeaponType = -1;
+
 	char	m_chPreStageID = -1;
 	char	m_chCurStageID = -1;
 

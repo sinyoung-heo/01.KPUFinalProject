@@ -13,8 +13,8 @@ private:
 
 public:
 	// Get
-	_uint							Get_InstanceCount(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& iPipelineStatePass)		{ return m_mapInstancing[iContextIdx][wstrMeshTag][iPipelineStatePass].iInstanceCount; };
-	CUploadBuffer<CB_SHADER_MESH>*	Get_UploadBuffer_ShaderMesh(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& uiPipelineStatepass);
+	_uint										Get_InstanceCount(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& iPipelineStatePass)		{ return m_mapInstancing[iContextIdx][wstrMeshTag][iPipelineStatePass].iInstanceCount; };
+	CUploadBuffer<CB_SHADER_MESH_INSTANCEING>*	Get_UploadBuffer_ShaderMesh(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& uiPipelineStatepass);
 
 	HRESULT Ready_Shader(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 	void	SetUp_Instancing(wstring wstrMeshTag);
@@ -45,10 +45,10 @@ private:
 	Key값은 ResourceTag
 	vector의 Index는 PipelineStateIndex, Size는 Instance개수.
 	____________________________________________________________________________________________________________*/
-	map<wstring, vector<INSTANCING_DESC>>					m_mapInstancing[CONTEXT::CONTEXT_END];
-	map<wstring, vector<CUploadBuffer<CB_SHADER_MESH>*>>	m_mapCB_ShaderMesh[CONTEXT::CONTEXT_END];
-	map<wstring, _uint>										m_mapTotalInstanceCnt;
-	_uint													m_uiPipelineStateCnt = 0;
+	map<wstring, vector<INSTANCING_DESC>>								m_mapInstancing[CONTEXT::CONTEXT_END];
+	map<wstring, vector<CUploadBuffer<CB_SHADER_MESH_INSTANCEING>*>>	m_mapCB_ShaderMesh[CONTEXT::CONTEXT_END];
+	map<wstring, _uint>													m_mapTotalInstanceCnt;
+	_uint																m_uiPipelineStateCnt = 0;
 
 
 private:

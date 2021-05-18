@@ -179,6 +179,7 @@ struct sc_packet_enter
 	bool			is_stance_attack;
 	float			posX, posY, posZ;
 	float			dirX, dirY, dirZ;
+	char			weaponType;
 };
 
 struct sc_packet_leave 

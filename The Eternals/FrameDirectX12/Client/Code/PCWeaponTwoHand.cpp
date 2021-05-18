@@ -3,6 +3,7 @@
 #include "ObjectMgr.h"
 #include "ColliderBox.h"
 #include "CollisionMgr.h"
+#include "InstancePoolMgr.h"
 
 CPCWeaponTwoHand::CPCWeaponTwoHand(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CPCWeapon(pGraphicDevice, pCommandList)
@@ -33,6 +34,27 @@ HRESULT CPCWeaponTwoHand::Ready_GameObject(wstring wstrMeshTag,
 										   1.5f,
 										   _vec3(0.0f, 35.0f, 0.0f));
 
+	if (m_wstrMeshTag == L"Twohand19_A_SM")
+		m_chCurWeaponType = Twohand19_A_SM;
+
+	else if (m_wstrMeshTag == L"TwoHand19_SM")
+		m_chCurWeaponType = TwoHand19_SM;
+
+	else if (m_wstrMeshTag == L"TwoHand27_SM")
+		m_chCurWeaponType = TwoHand27_SM;
+
+	else if (m_wstrMeshTag == L"TwoHand29_SM")
+		m_chCurWeaponType = TwoHand29_SM;
+
+	else if (m_wstrMeshTag == L"TwoHand31_SM")
+		m_chCurWeaponType = TwoHand31_SM;
+
+	else if (m_wstrMeshTag == L"TwoHand33_B_SM")
+		m_chCurWeaponType = TwoHand33_B_SM;
+
+	else if (m_wstrMeshTag == L"TwoHand33_SM")
+		m_chCurWeaponType = TwoHand33_SM;
+
 	return S_OK;
 }
 
@@ -57,6 +79,19 @@ _int CPCWeaponTwoHand::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	if (m_bIsReturn)
+	{
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponTwoHand(m_chCurWeaponType), m_uiInstanceIdx);
+
+		m_bIsStartInterpolation = false;
+		m_fLinearRatio          = 1.0f;
+		m_fMinDissolve          = -0.05f;
+		m_fMaxDissolve          = 1.0f;
+		m_fDissolve             = 1.0f;
+
+		return RETURN_OBJ;
+	}
+
 	if (fTimeDelta > TIME_OFFSET)
 		return NO_EVENT;
 
@@ -74,15 +109,18 @@ _int CPCWeaponTwoHand::Update_GameObject(const _float& fTimeDelta)
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 	// Upate BoneMatrix
-	m_matBoneFinalTransform = (m_pHierarchyDesc->matScale * 
-							   m_pHierarchyDesc->matRotate * 
-							   m_pHierarchyDesc->matTrans) * 
-							   m_pHierarchyDesc->matGlobalTransform;
-	_matrix matSkinngingTransform = m_matBoneFinalTransform * (*m_pParentMatrix);
-	m_pTransCom->m_matWorld *= matSkinngingTransform;
+	if (nullptr != m_pHierarchyDesc && nullptr != m_pParentMatrix)
+	{
+		m_matBoneFinalTransform = (m_pHierarchyDesc->matScale * 
+								   m_pHierarchyDesc->matRotate * 
+								   m_pHierarchyDesc->matTrans) * 
+								   m_pHierarchyDesc->matGlobalTransform;
+		_matrix matSkinngingTransform = m_matBoneFinalTransform * (*m_pParentMatrix);
+		m_pTransCom->m_matWorld *= matSkinngingTransform;
+	}
 
 	// Update Trail
-	if (nullptr != m_pTrail)
+	if (nullptr != m_pTrail && nullptr != m_pDistortionTrail)
 	{
 		m_pBoundingBoxCom->Update_Component(fTimeDelta);
 		
@@ -147,10 +185,37 @@ CPCWeaponTwoHand* CPCWeaponTwoHand::Create(ID3D12Device* pGraphicDevice, ID3D12G
 	return pInstance;
 }
 
+CPCWeaponTwoHand** CPCWeaponTwoHand::Create_InstancePool(ID3D12Device* pGraphicDevice, 
+														 ID3D12GraphicsCommandList* pCommandList, 
+														 wstring wstrMeshTag, 
+														 const _uint& uiInstanceCnt)
+{
+	CPCWeaponTwoHand** ppInstance = new (CPCWeaponTwoHand* [uiInstanceCnt]);
+
+
+	for (_uint i = 0; i < uiInstanceCnt; ++i)
+	{
+		ppInstance[i] = new CPCWeaponTwoHand(pGraphicDevice, pCommandList);
+		ppInstance[i]->m_uiInstanceIdx = i;
+		ppInstance[i]->Ready_GameObject(wstrMeshTag,				// MeshTag
+										_vec3(0.75f),				// Scale
+										 _vec3(0.0f, 0.0f, 180.0f),	// Angle
+										_vec3(0.0f, 0.0f, 0.0f),	// Pos
+										nullptr,					// HierarchyDesc
+										nullptr,					// ParentMatrix
+										_rgba(0.64f, 0.96f, 0.97f, 1.0f));
+	}
+
+	return ppInstance;
+}
+
 void CPCWeaponTwoHand::Free()
 {
 	CPCWeapon::Free();
 
-	m_pTrail->Set_DeadGameObject();
-	m_pDistortionTrail->Set_DeadGameObject();
+	if (nullptr != m_pTrail)
+		m_pTrail->Set_DeadGameObject();
+
+	if (nullptr != m_pDistortionTrail)
+		m_pDistortionTrail->Set_DeadGameObject();
 }

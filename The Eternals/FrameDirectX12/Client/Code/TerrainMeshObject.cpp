@@ -151,9 +151,14 @@ void CTerrainMeshObject::Set_ConstantTable(const _int& iContextIdx, const _int& 
 	____________________________________________________________________________________________________________*/
 	Engine::SHADOW_DESC tShadowDesc = CShadowLightMgr::Get_Instance()->Get_ShadowDesc();
 
-	Engine::CB_SHADER_MESH tCB_ShaderMesh;
-	ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
+	_matrix matView = *(Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::MATRIXID::VIEW));
+	_matrix matProj = *(Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::MATRIXID::PROJECTION));
+
+	Engine::CB_SHADER_MESH_INSTANCEING tCB_ShaderMesh;
+	ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH_INSTANCEING));
 	tCB_ShaderMesh.matWorld      = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderMesh.matView       = Engine::CShader::Compute_MatrixTranspose(matView);
+	tCB_ShaderMesh.matProj       = Engine::CShader::Compute_MatrixTranspose(matProj);
 	tCB_ShaderMesh.matLightView  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
 	tCB_ShaderMesh.matLightProj  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
 	tCB_ShaderMesh.vLightPos     = tShadowDesc.vLightPosition;
@@ -161,7 +166,6 @@ void CTerrainMeshObject::Set_ConstantTable(const _int& iContextIdx, const _int& 
 
 
 	// PipelineState.
-	
 	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.005f;
 	m_fDeltatime2 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
 	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));

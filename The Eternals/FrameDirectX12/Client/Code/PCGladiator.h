@@ -66,6 +66,7 @@ private:
 	void AttackMove_OnNaviMesh(const _float& fTimeDelta);
 	void Send_Player_Move();
 	bool Is_Change_CamDirection();
+	void Is_ChangeWeapon();
 
 	void SetUp_RunMoveSpeed(const _float& fTimeDelta);
 	void SetUp_RunAnimation();
@@ -136,13 +137,13 @@ private:
 	COLLISION_TICK_DESC m_tCollisionTickDesc;
 
 	// Server
-	_bool			m_bIsKeyDown   = false;
-	_bool			m_bIsSameDir   = false;
-	_bool			m_bIsAttack    = false;
+	_bool			m_bIsKeyDown      = false;
+	_bool			m_bIsSameDir      = false;
+	_bool			m_bIsAttack       = false;
 	_bool			m_bIsSendMoveStop = false;
-	_float			m_fBazierSpeed = 0.f;
-	MVKEY			m_eKeyState    = MVKEY::K_END;
-	_float			m_fPreAngle    = 0.f;
+	_float			m_fBazierSpeed    = 0.f;
+	MVKEY			m_eKeyState       = MVKEY::K_END;
+	_float			m_fPreAngle       = 0.f;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation ]

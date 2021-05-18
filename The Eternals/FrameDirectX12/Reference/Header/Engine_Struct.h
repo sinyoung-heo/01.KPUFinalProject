@@ -846,6 +846,27 @@ namespace Engine
 
 	} CB_SHADER_MESH;
 
+	typedef struct tagConstantBufferShaderMeshInstancing
+	{
+		XMFLOAT4X4	matWorld;
+		XMFLOAT4X4	matView;
+		XMFLOAT4X4	matProj;
+		XMFLOAT4X4	matLightView;
+		XMFLOAT4X4	matLightProj;
+		_vec4		vLightPos;
+		_float		fLightPorjFar;
+		_float		fDissolve;
+		_float		fOffset1;
+		_float		fOffset2;
+		_float		fOffset3;
+		_float		fOffset4;
+		_float		fOffset5;
+		_float		fOffset6;
+		_rgba		vAfterImgColor;
+		_rgba		vEmissiveColor;
+
+	} CB_SHADER_MESH_INSTANCEING;
+
 	typedef struct tagCBuffer
 	{
 		_vec4 vFloat4;
