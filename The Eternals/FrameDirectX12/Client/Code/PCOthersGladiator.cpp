@@ -5,6 +5,7 @@
 #include "LightMgr.h"
 #include "RenderTarget.h"
 #include "InstancePoolMgr.h"
+#include "DirectInput.h"
 
 CPCOthersGladiator::CPCOthersGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -149,6 +150,17 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 
 	if (fTimeDelta > TIME_OFFSET)
 		return NO_EVENT;
+
+	if (g_bIsActive)
+	{
+		if (Engine::KEY_DOWN(DIK_8))
+		{
+			_int temp = (_int)m_chCurWeaponType;
+			++temp;
+			temp = temp % 7;
+			m_chCurWeaponType = (char)temp;
+		}
+	}
 
 	SetUp_StageID();
 	Is_ChangeWeapon();
@@ -347,9 +359,21 @@ void CPCOthersGladiator::Is_ChangeWeapon()
 		}
 
 		m_pWeapon = static_cast<CPCWeaponTwoHand*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponTwoHand(m_chCurWeaponType)));
-		m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")));
 		m_pWeapon->Set_ParentMatrix(&m_pTransCom->m_matWorld);
 		m_pWeapon->Update_GameObject(0.016f);
+
+		if (Gladiator::STANCE_ATTACK == m_eCurStance)
+		{
+			SetUp_WeaponLHand();
+			m_pWeapon->Set_DissolveInterpolation(-1.0f);
+			m_pWeapon->Set_IsRenderShadow(true);
+		}
+		else if (Gladiator::STANCE_NONEATTACK == m_eCurStance)
+		{
+			SetUp_WeaponBack();
+			m_pWeapon->Set_DissolveInterpolation(1.0f);
+			m_pWeapon->Set_IsRenderShadow(false);
+		}
 
 		m_chPreWeaponType = m_chCurWeaponType;
 	}
