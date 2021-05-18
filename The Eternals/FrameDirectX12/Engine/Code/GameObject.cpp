@@ -12,6 +12,7 @@ CGameObject::CGameObject()
 	, m_pRenderer(CRenderer::Get_Instance())
 	, m_pComponentMgr(CComponentMgr::Get_Instance())
 	, m_pCollisonMgr(CCollisionMgr::Get_Instance())
+	, m_pFontServer(nullptr)
 {
 }
 
@@ -22,6 +23,7 @@ CGameObject::CGameObject(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList
 	, m_pRenderer(CRenderer::Get_Instance())
 	, m_pComponentMgr(CComponentMgr::Get_Instance())
 	, m_pCollisonMgr(CCollisionMgr::Get_Instance())
+	, m_pFontServer(nullptr)
 {
 }
 
@@ -38,6 +40,7 @@ CGameObject::CGameObject(const CGameObject& rhs)
 	, m_bIsAttack(rhs.m_bIsAttack)
 	, m_bIsMoveStop(rhs.m_bIsMoveStop)
 	, m_iMonsterStatus(0)
+	, m_pFontServer(rhs.m_pFontServer)
 {
 }
 
