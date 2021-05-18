@@ -27,7 +27,7 @@ HRESULT CPublicPlane::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos		= vPos;
 
-	
+	m_fAlpha = 1.f;
 	return S_OK;
 }
 
@@ -41,7 +41,7 @@ HRESULT CPublicPlane::LateInit_GameObject()
 
 	m_uiDiffuse = 6;
 	m_fNormalMapDeltatime = 7;//NormIdx
-	m_fPatternMapDeltatime = 1;//SpecIdx
+	m_fPatternMapDeltatime = 2;//SpecIdx
 	return S_OK;	
 }
 
@@ -49,7 +49,7 @@ _int CPublicPlane::Update_GameObject(const _float & fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
-	if (m_bIsDead || m_fAlpha<0.f)
+	if (m_bIsDead ||m_fAlpha<0.f)
 		return DEAD_OBJ;
 
 	/*__________________________________________________________________________________________________________
@@ -61,10 +61,7 @@ _int CPublicPlane::Update_GameObject(const _float & fTimeDelta)
 
 	_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
 	m_pTransCom->m_vPos = Pos;
-	m_pTransCom->m_vPos.y =2.f;
-
-	m_pTransCom->m_vAngle.y += 0.1f;
-
+	m_pTransCom->m_vPos.y+=0.1f;
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
 	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
 	/*____________________________________________________________________
@@ -126,7 +123,7 @@ void CPublicPlane::Set_ConstantTable()
 	tCB_ShaderMesh.vLightPos = tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 
-	m_fAlpha -= Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.5f;
+	m_fAlpha -= Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.3f;
 	tCB_ShaderMesh.fOffset6 = m_fAlpha;
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 

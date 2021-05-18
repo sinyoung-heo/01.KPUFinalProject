@@ -49,7 +49,7 @@ HRESULT CCrab::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, co
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
 	m_iMonsterStatus = Crab::A_WAIT;
-
+	CreateServerNumberFont();
 	return S_OK;
 }
 
@@ -65,7 +65,7 @@ HRESULT CCrab::LateInit_GameObject()
 _int CCrab::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
-
+	Update_ServerNumberFont(fTimeDelta);
 	if (m_bIsDead)
 		return DEAD_OBJ;
 

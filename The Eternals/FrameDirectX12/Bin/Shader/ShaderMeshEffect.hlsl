@@ -170,12 +170,12 @@ PS_OUT PS_DECAL(VS_OUT ps_input) : SV_TARGET
     PS_OUT ps_output = (PS_OUT) 0;
 	
     float4 Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
-    float4 TexNormal = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 Normal = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 Spec = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
-    float4 color = mul(Diffuse, Spec);
-    color = mul(Diffuse, TexNormal.r);
+    float4 color = mul(Diffuse, Normal.r);
+    color = mul(color, Spec);
    
-    ps_output.Effect2 = Diffuse;
-   
+    ps_output.Effect4 = color;
+    ps_output.Effect4.a = g_fOffset6;
     return (ps_output);
 }
