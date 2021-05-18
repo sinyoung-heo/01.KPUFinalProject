@@ -276,38 +276,6 @@ HRESULT CPCOthersGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviM
 
 HRESULT CPCOthersGladiator::SetUp_PCWeapon()
 {
-	//wstring wstrWeaponMeshTag = L"";
-
-	//if (m_chCurWeaponType == Twohand19_A_SM)
-	//	wstrWeaponMeshTag = L"Twohand19_A_SM";
-
-	//else if (m_chCurWeaponType == TwoHand19_SM)
-	//	wstrWeaponMeshTag = L"TwoHand19_SM";
-
-	//else if (m_chCurWeaponType == TwoHand27_SM)
-	//	wstrWeaponMeshTag = L"TwoHand27_SM";
-
-	//else if (m_chCurWeaponType == TwoHand29_SM)
-	//	wstrWeaponMeshTag = L"TwoHand29_SM";
-
-	//else if (m_chCurWeaponType == TwoHand31_SM)
-	//	wstrWeaponMeshTag = L"TwoHand31_SM";
-
-	//else if (m_chCurWeaponType == TwoHand33_B_SM)
-	//	wstrWeaponMeshTag = L"TwoHand33_B_SM";
-
-	//else if (m_chCurWeaponType == TwoHand33_SM)
-	//	wstrWeaponMeshTag = L"TwoHand33_SM";
-
-	//m_pWeapon = CPCWeaponTwoHand::Create(m_pGraphicDevice, m_pCommandList,
-	//									 wstrWeaponMeshTag,
-	//									 _vec3(0.75f),
-	//									 _vec3(0.0f, 0.0f, 180.0f),
-	//									 _vec3(0.0f, 0.0f, 0.0f),
-	//									 &(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")),
-	//									 &m_pTransCom->m_matWorld,
-	//									 _rgba(0.64f, 0.96f, 0.97f, 1.0f));
-
 	if (m_chCurWeaponType != m_chPreWeaponType)
 	{
 		m_pWeapon = static_cast<CPCWeaponTwoHand*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponTwoHand(m_chCurWeaponType)));

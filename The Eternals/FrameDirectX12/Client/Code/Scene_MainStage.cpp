@@ -123,7 +123,7 @@ HRESULT CScene_MainStage::Ready_LayerCamera(wstring wstrLayerTag)
 									Engine::CAMERA_DESC(_vec3(41.0f, 79.0f, -124.0f),	// Eye
 														_vec3(43.0f, 79.0f, -115.0f),	// At
 														_vec3(0.0f, 1.0f, 0.f)),		// Up
-									Engine::PROJ_DESC(45.0f,							// FovY
+									Engine::PROJ_DESC(60.0f,							// FovY
 													  _float(WINCX) / _float(WINCY),	// Aspect
 													  0.1f,								// Near
 													  1000.0f),							// Far
@@ -140,7 +140,7 @@ HRESULT CScene_MainStage::Ready_LayerCamera(wstring wstrLayerTag)
 									  Engine::CAMERA_DESC(_vec3(41.0f, 79.0f, -124.0f),	// Eye
 									  					  _vec3(43.0f, 79.0f, -115.0f),	// At
 									  					  _vec3(0.0f, 1.0f, 0.0f)),		// Up
-									  Engine::PROJ_DESC(45.0f,							// FovY
+									  Engine::PROJ_DESC(60.0f,							// FovY
 									  					_float(WINCX) / _float(WINCY),	// Aspect
 									  					0.1f,							// Near
 									  					1000.0f),						// Far

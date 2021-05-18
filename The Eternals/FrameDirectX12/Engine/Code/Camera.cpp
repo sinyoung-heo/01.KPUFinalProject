@@ -161,31 +161,26 @@ void CCamera::Set_ConstantTable()
 	m_pShaderTexture->Get_UploadBuffer_CameraOrthoMatrix()->CopyData(0, tCB_CamerOrthoMatrix);
 
 	// ShaderTeuxtreInstancing
-	m_pShaderTextureInstancing->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);;
-	m_pShaderTextureInstancing->Get_UploadBuffer_CameraOrthoMatrix()->CopyData(0, tCB_CamerOrthoMatrix);;
+	m_pShaderTextureInstancing->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
+	m_pShaderTextureInstancing->Get_UploadBuffer_CameraOrthoMatrix()->CopyData(0, tCB_CamerOrthoMatrix);
 
 	// ShaderSkyBox
 	m_pShaderSkyBox->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 
 	// ShaderMesh
 	m_pShaderMesh->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
-
 	m_pShaderMeshEffect->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
-
 
 	// ShaderMeshInstancing
 	m_pShaderMeshInstancing->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 
 	// ShaderSSAO
-	tCB_CameraProjMatrix.matView = CShader::Compute_MatrixTranspose(m_tCameraInfo.matView);
-	tCB_CameraProjMatrix.matProj = CShader::Compute_MatrixTranspose(m_tProjInfo.matProj);
+	//tCB_CameraProjMatrix.matView = CShader::Compute_MatrixTranspose(m_tCameraInfo.matView);
+	//tCB_CameraProjMatrix.matProj = CShader::Compute_MatrixTranspose(m_tProjInfo.matProj);
 	m_pShaderSSAO->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 
 	//ShaderNPathDir
-
 	tCB_ShaderVariable.vFloat4.x += CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta");
-	
-
 	tCB_ShaderVariable.vFloat4.y = m_tProjInfo.fFarZ;
 	m_pShaderNPathDir->Get_UploadBuffer_ShaderVariable()->CopyData(0, tCB_ShaderVariable);
 }

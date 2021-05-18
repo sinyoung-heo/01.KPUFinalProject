@@ -215,8 +215,8 @@ void CPCWeapon::Set_ConstantTable(const _int& iContextIdx, const _int& iInstance
 	____________________________________________________________________________________________________________*/
 	Engine::SHADOW_DESC tShadowDesc = CShadowLightMgr::Get_Instance()->Get_ShadowDesc();
 
-	Engine::CB_SHADER_MESH tCB_ShaderMesh;
-	ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
+	Engine::CB_SHADER_MESH_INSTANCEING tCB_ShaderMesh;
+	ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH_INSTANCEING));
 	tCB_ShaderMesh.matWorld      = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
 	tCB_ShaderMesh.matLightView  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
 	tCB_ShaderMesh.matLightProj  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);

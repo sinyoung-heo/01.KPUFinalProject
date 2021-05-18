@@ -394,39 +394,6 @@ HRESULT CPCGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag
 
 HRESULT CPCGladiator::SetUp_PCWeapon()
 {
-	//wstring wstrWeaponMeshTag = L"";
-
-	//if (m_chWeaponType == Twohand19_A_SM)
-	//	wstrWeaponMeshTag = L"Twohand19_A_SM";
-
-	//else if (m_chWeaponType == TwoHand19_SM)
-	//	wstrWeaponMeshTag = L"TwoHand19_SM";
-
-	//else if (m_chWeaponType == TwoHand27_SM)
-	//	wstrWeaponMeshTag = L"TwoHand27_SM";
-
-	//else if (m_chWeaponType == TwoHand29_SM)
-	//	wstrWeaponMeshTag = L"TwoHand29_SM";
-
-	//else if (m_chWeaponType == TwoHand31_SM)
-	//	wstrWeaponMeshTag = L"TwoHand31_SM";
-
-	//else if (m_chWeaponType == TwoHand33_B_SM)
-	//	wstrWeaponMeshTag = L"TwoHand33_B_SM";
-
-	//else if (m_chWeaponType == TwoHand33_SM)
-	//	wstrWeaponMeshTag = L"TwoHand33_SM";
-
-	//m_pWeapon = CPCWeaponTwoHand::Create(m_pGraphicDevice, m_pCommandList,
-	//									 wstrWeaponMeshTag,
-	//									 _vec3(0.65f),
-	//									 _vec3(0.0f, 0.0f, 180.0f),
-	//									 _vec3(0.0f, 0.0f, 0.0f),
-	//									 &(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")),
-	//									 &m_pTransCom->m_matWorld,
-	//									 _rgba(0.64f, 0.96f, 0.97f, 1.0f));
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"ThisPlayerWeaponTwoHand", m_pWeapon), E_FAIL);
-
 	if (m_chCurWeaponType != m_chPreWeaponType)
 	{
 		m_pWeapon = static_cast<CPCWeaponTwoHand*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponTwoHand(m_chCurWeaponType)));
