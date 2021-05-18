@@ -4,7 +4,7 @@
 #include "Renderer.h"
 #include "ComponentMgr.h"
 #include "Renderer.h"
-
+#include "Font.h"
 USING(Engine)
 
 CGameObject::CGameObject()
@@ -180,6 +180,33 @@ void CGameObject::Send_PacketToServer()
 {
 }
 
+void CGameObject::CreateServerNumberFont()
+{
+
+	m_pFontServer = static_cast<Engine::CFont*>(Engine::CObjectMgr::Get_Instance()->Clone_GameObjectPrototype(L"Font_NetmarbleLight"));
+	Engine::NULL_CHECK_RETURN(m_pFontServer, E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pFontServer->Ready_GameObject(L"", _vec2(500.f, 0.f), D2D1::ColorF::Yellow), E_FAIL);
+}
+
+void CGameObject::Update_ServerNumberFont(const _float& fTimeDelta)
+{	
+	m_wstrText = wstring(L"[ Server Number  ] - \n") +
+		to_wstring(Get_ServerNumber());
+
+	wsprintf(m_szText, m_wstrText.c_str());
+
+	m_pFontServer->Update_GameObject(fTimeDelta);
+	m_pFontServer->Set_Text(wstring(m_szText));
+
+	_vec3 ScreenPos = m_pTransCom->m_vPos.Convert_ProjectionToScreen(
+		*Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::MATRIXID::VIEW),
+			*Engine::CGraphicDevice::Get_Instance()->Get_Transform(Engine::MATRIXID::PROJECTION),
+			Engine::CGraphicDevice::Get_Instance()->Get_Viewport());
+		m_pFontServer->Set_Pos(_vec2(ScreenPos.x, ScreenPos.y));
+		m_pFontServer->Update_GameObject(fTimeDelta);
+		m_pFontServer->Set_Text(wstring(m_szText));
+}
+
 void CGameObject::Render_GameObject(const _float & fTimeDelta)
 {
 }
@@ -342,4 +369,6 @@ void CGameObject::Free()
 		for_each(m_mapComponent[i].begin(), m_mapComponent[i].end(), CDeleteMap());
 		m_mapComponent[i].clear();
 	}
+	if(m_pFontServer)
+		Engine::Safe_Release(m_pFontServer);
 }

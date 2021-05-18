@@ -33,6 +33,7 @@
 #include "PublicSphere.h"
 #include "IceStorm.h"
 #include "SnowParticle.h"
+#include "PublicPlane.h"
 CStagePJO::CStagePJO(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
 {
@@ -95,7 +96,15 @@ _int CStagePJO::Update_Scene(const _float& fTimeDelta)
 				_vec3(0.f, 0.0f, 0.0f),
 				_vec3(0, 0, 0), 5.f, XMConvertToRadians(i * 10.f));
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"IceStorm1", pGameObj), E_FAIL);
+
+			
 		}
+		pGameObj = CPublicPlane::Create(m_pGraphicDevice, m_pCommandList,
+			L"PublicPlane00",
+			_vec3(0.01f),
+			_vec3(0.f, 0.0f, 0.0f),
+			_vec3(0, 0, 0));
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicPlane00", pGameObj), E_FAIL);
 		//m_pObjectMgr->Set_CurrentStage(Engine::STAGEID::STAGE_BEACH);
 	}
 
@@ -292,6 +301,8 @@ HRESULT CStagePJO::Ready_LayerEnvironment(wstring wstrLayerTag)
 		_vec3(0.f,0.0f, 0.0f),
 		_vec3(0, 0, 0));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PublicPlane00", pGameObj), E_FAIL);
+
+	
 
 
 	pGameObj = CRainDrop::Create(m_pGraphicDevice, m_pCommandList,

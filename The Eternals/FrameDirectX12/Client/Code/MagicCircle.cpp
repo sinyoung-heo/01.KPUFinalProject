@@ -86,7 +86,7 @@ _int CMagicCircle::LateUpdate_GameObject(const _float & fTimeDelta)
 
 void CMagicCircle::Render_GameObject(const _float& fTimeDelta)
 {
-	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_fNormalMapDeltatime, m_fPatternMapDeltatime);
+	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_fNormalMapDeltatime, m_fPatternMapDeltatime);
 }
 
 HRESULT CMagicCircle::Add_Component(wstring wstrMeshTag)

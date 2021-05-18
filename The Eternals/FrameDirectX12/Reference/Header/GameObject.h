@@ -7,7 +7,7 @@ BEGIN(Engine)
 
 class CObjectMgr;
 
-
+class CFont;
 class ENGINE_DLL CGameObject : public CBase
 {
 protected:
@@ -77,6 +77,9 @@ public:
 	virtual void	Process_Collision();
 	virtual void	Send_PacketToServer();
 
+	//ServerNumber
+	virtual void CreateServerNumberFont();
+	virtual void Update_ServerNumberFont(const _float& fTimeDelta);
 	// SingleThread Rendering.
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 	virtual void	Render_ShadowDepth(const _float & fTimeDelta);
@@ -155,6 +158,10 @@ protected:
 
 	char	m_chPreStageID = -1;
 	char	m_chCurStageID = -1;
+	
+	CFont* m_pFontServer;
+	wstring			m_wstrText = L"";
+	_tchar			m_szText[MAX_STR] = L"";
 
 	// Linear Interpolation Desc
 	LINEAR_INTERPOLATION_DESC<_vec3>	m_tPosInterpolationDesc;
