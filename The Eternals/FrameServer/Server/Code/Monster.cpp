@@ -423,7 +423,7 @@ void CMonster::Move_NormalMonster(const float& fTimeDelta)
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -625,7 +625,7 @@ void CMonster::Chase_Crab(const float& fTimeDelta)
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -834,7 +834,7 @@ void CMonster::Chase_Monkey(const float& fTimeDelta)
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -1056,7 +1056,7 @@ void CMonster::Chase_Cloder(const float& fTimeDelta)
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -1269,7 +1269,7 @@ void CMonster::Chase_DrownedSailor(const float& fTimeDelta)
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -1490,7 +1490,7 @@ void CMonster::Chase_GiantBeetle(const float& fTimeDelta)
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -1710,7 +1710,7 @@ void CMonster::Chase_GiantMonkey(const float& fTimeDelta)
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -1941,7 +1941,7 @@ void CMonster::Chase_CraftyArachne(const float& fTimeDelta)
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -2164,7 +2164,7 @@ void CMonster::Attack_Crab(const float& fTimeDelta)
 	 
 	// 공격 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -2247,7 +2247,7 @@ void CMonster::Attack_Monkey(const float& fTimeDelta)
 
 	// 공격 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -2343,7 +2343,7 @@ void CMonster::Attack_Cloder(const float& fTimeDelta)
 
 	// 공격 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -2429,7 +2429,7 @@ void CMonster::Attack_DrownedSailor(const float& fTimeDelta)
 
 	// 공격 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -2540,7 +2540,7 @@ void CMonster::Attack_GiantBeetle(const float& fTimeDelta)
 
 	// 공격 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -2650,7 +2650,7 @@ void CMonster::Attack_GiantMonkey(const float& fTimeDelta)
 
 	// 공격 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -2774,7 +2774,7 @@ void CMonster::Attack_CraftyArachne(const float& fTimeDelta)
 
 	// 공격 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -2849,7 +2849,7 @@ void CMonster::Rush_DrownedSailor(const float& fTimeDelta)
 
 	// 공격 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -2906,7 +2906,7 @@ void CMonster::Rush_GiantBeetle(const float& fTimeDelta)
 
 	// 공격 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -2963,7 +2963,7 @@ void CMonster::Rush_GiantMonkey(const float& fTimeDelta)
 
 	// 공격 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -3032,7 +3032,7 @@ void CMonster::Dead_Crab(const float& fTimeDelta)
 
 	// 죽는 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -3104,7 +3104,7 @@ void CMonster::Dead_Monkey(const float& fTimeDelta)
 
 	// 죽는 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -3176,7 +3176,7 @@ void CMonster::Dead_Cloder(const float& fTimeDelta)
 
 	// 죽는 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -3248,7 +3248,7 @@ void CMonster::Dead_DrownedSailor(const float& fTimeDelta)
 
 	// 죽는 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -3320,7 +3320,7 @@ void CMonster::Dead_GiantBeetle(const float& fTimeDelta)
 
 	// 죽는 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -3392,7 +3392,7 @@ void CMonster::Dead_GiantMonkey(const float& fTimeDelta)
 
 	// 죽는 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -3464,7 +3464,7 @@ void CMonster::Dead_CraftyArachne(const float& fTimeDelta)
 
 	// 죽는 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -3523,7 +3523,7 @@ void CMonster::Hurt_Monster(const int& p_id,const int& damage)
 
 	// 피격당하기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;

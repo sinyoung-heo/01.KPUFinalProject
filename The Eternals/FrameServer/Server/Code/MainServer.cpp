@@ -886,7 +886,7 @@ void disconnect_client(int id)
 
 	/* 해당 플레이어가 등록되어 있는 섹터 내의 유저들에게 접속 종료를 알림 */
 	unordered_set<pair<int, int>> nearSector;
-	nearSector.reserve(5);
+	nearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSector, (int)pPlayer->m_vPos.x, (int)pPlayer->m_vPos.z);
 
 	// 인접 섹터 순회

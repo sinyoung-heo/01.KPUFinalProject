@@ -76,6 +76,17 @@ _int CDrownedSailor::Update_GameObject(const _float& fTimeDelta)
 		m_fDissolve = -0.05f;
 		m_bIsResetNaviMesh = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterDrownedSailorPool(), m_uiInstanceIdx);
+
+		return RETURN_OBJ;
+	}
+
+	if (m_iSNum == -1)
+	{
+		m_bIsStartDissolve = false;
+		m_bIsResetNaviMesh = false;
+		m_fDissolve = -0.05f;
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterDrownedSailorPool(), m_uiInstanceIdx);
+
 		return RETURN_OBJ;
 	}
 
