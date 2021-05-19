@@ -1223,14 +1223,18 @@ void CPCGladiator::KeyInput_Tumbling(const _float& fTimeDelta)
 	}
 	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkillLoop)
 	{
+		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + BACK;
+
 		SetUp_WeaponLHand();
-		SetUp_AttackSetting();
+		m_bIsAttack  = true;
+		m_bIsKeyDown = false;
+		m_pWeapon->Set_IsRenderTrail(false);
 
 		m_bIsSkill     = true;
 		m_bIsSkillLoop = true;
 		m_uiAnimIdx    = Gladiator::TUMBLING;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pTransCom->m_vAngle.y);
 	}
 
 	if ((Gladiator::TUMBLING == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)))
