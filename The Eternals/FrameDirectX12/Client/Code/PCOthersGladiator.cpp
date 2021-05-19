@@ -383,20 +383,48 @@ void CPCOthersGladiator::Set_WeaponHierarchy()
 
 void CPCOthersGladiator::Set_AnimationSpeed()
 {
-	if (m_uiAnimIdx == Gladiator::WIND_CUTTER1 ||
-		m_uiAnimIdx == Gladiator::WIND_CUTTER2 ||
-		m_uiAnimIdx == Gladiator::WIND_CUTTER3)
+	if (m_uiAnimIdx == Gladiator::TUMBLING)
 	{
-		m_fAnimationSpeed = TPS * 0.75f;
+		m_fAnimationSpeed = TPS * 1.60f;
 	}
-	else if (m_uiAnimIdx == Gladiator::DRAW_SWORD_CHARGE ||
-			 m_uiAnimIdx == Gladiator::DRAW_SWORD_LOOP)
+	else if (m_uiAnimIdx == Gladiator::COMBO1 || 
+			 m_uiAnimIdx == Gladiator::COMBO1R || 
+			 m_uiAnimIdx == Gladiator::COMBO2 || 
+			 m_uiAnimIdx == Gladiator::COMBO2R || 
+			 m_uiAnimIdx == Gladiator::COMBO3 || 
+			 m_uiAnimIdx == Gladiator::COMBO3R || 
+			 m_uiAnimIdx == Gladiator::COMBO4)
 	{
-		m_fAnimationSpeed = TPS * 2.f;
+		m_fAnimationSpeed = TPS * 1.25f;
 	}
-	else if (m_uiAnimIdx == Gladiator::TUMBLING)
+	else if (m_uiAnimIdx == Gladiator::STINGER_BLADE)
+	{
+		m_fAnimationSpeed = TPS * 1.45f;
+	}
+	else if (m_uiAnimIdx == Gladiator::CUTTING_SLASH)
 	{
 		m_fAnimationSpeed = TPS * 1.35f;
+	}
+	else if (m_uiAnimIdx == Gladiator::JAW_BREAKER)
+	{
+		m_fAnimationSpeed = TPS * 1.45f;
+	}
+	else if (m_uiAnimIdx == Gladiator::WIND_CUTTER1 ||
+			 m_uiAnimIdx == Gladiator::WIND_CUTTER2 ||
+			 m_uiAnimIdx == Gladiator::WIND_CUTTER3)
+	{
+		m_fAnimationSpeed = TPS * 0.85f;
+	}
+	else if (m_uiAnimIdx == Gladiator::GAIA_CRUSH1 ||
+			 m_uiAnimIdx == Gladiator::GAIA_CRUSH3)
+	{
+		m_fAnimationSpeed = TPS * 1.4f;
+	}
+	else if (m_uiAnimIdx == Gladiator::DRAW_SWORD_CHARGE ||
+			 m_uiAnimIdx == Gladiator::DRAW_SWORD_LOOP ||
+			 m_uiAnimIdx == Gladiator::DRAW_SWORD_END)
+	{
+		m_fAnimationSpeed = TPS * 2.f;
 	}
 	else
 		m_fAnimationSpeed = TPS;
@@ -407,16 +435,19 @@ void CPCOthersGladiator::Set_BlendingSpeed()
 	if (m_uiAnimIdx == Gladiator::NONE_ATTACK_IDLE ||
 		m_uiAnimIdx == Gladiator::NONE_ATTACK_WALK ||
 		m_uiAnimIdx == Gladiator::ATTACK_WAIT ||
-		m_uiAnimIdx == Gladiator::ATTACK_RUN ||
-		m_uiAnimIdx == Gladiator::GAIA_CRUSH1 ||
-		m_uiAnimIdx == Gladiator::GAIA_CRUSH2 ||
-		m_uiAnimIdx == Gladiator::GAIA_CRUSH3)
+		m_uiAnimIdx == Gladiator::ATTACK_RUN)
 	{
 		m_fBlendingSpeed = 0.001f;
 	}
+	else if (m_uiAnimIdx == Gladiator::WIND_CUTTER1 ||
+			 m_uiAnimIdx == Gladiator::WIND_CUTTER2 ||
+			 m_uiAnimIdx == Gladiator::WIND_CUTTER3)
+	{
+		m_fBlendingSpeed = 0.05f;
+	}
 	else if (m_uiAnimIdx == Gladiator::TUMBLING)
 	{
-		m_fBlendingSpeed = 0.0075f;
+		m_fBlendingSpeed = 1.5f;
 	}
 	else
 		m_fBlendingSpeed = 0.005f;

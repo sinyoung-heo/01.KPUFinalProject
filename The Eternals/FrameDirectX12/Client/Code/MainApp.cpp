@@ -64,7 +64,7 @@ HRESULT CMainApp::Ready_MainApp()
 	// System
 	m_pFont_System = static_cast<Engine::CFont*>(Engine::CObjectMgr::Get_Instance()->Clone_GameObjectPrototype(L"Font_NetmarbleLight"));
 	Engine::NULL_CHECK_RETURN(m_pFont_System, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pFont_System->Ready_GameObject(L"", _vec2(10.0f, 750.0f), D2D1::ColorF::Lime), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pFont_System->Ready_GameObject(L"", _vec2(25.0f, 150.0f), D2D1::ColorF::Lime), E_FAIL);
 
 
 	return S_OK;
@@ -529,14 +529,14 @@ void CMainApp::Show_FontLog(const _float& fTimeDelta)
 	[ Text :: System ]
 	____________________________________________________________________________________________________________*/
 	m_wstrSystem = wstring(L"[ System Infomation ] \n") +
-				   wstring(L"GPU Name::") + Engine::CGraphicDevice::Get_Instance()->Get_GraphicDeviceName() + wstring(L"\n") +
-				   wstring(L"CPU Name::") + m_wstrCPUName + wstring(L"\n") +
-				   wstring(L"CPU's Thread\t%d \n") +
-				   wstring(L"CPU's Core\t%d");
+				   wstring(L"GPU Name\t") + Engine::CGraphicDevice::Get_Instance()->Get_GraphicDeviceName() + wstring(L"\n") +
+				   wstring(L"CPU Name\t") + m_wstrCPUName + wstring(L"\n") +
+				   wstring(L"CPU's Core\t%d \n") +
+				   wstring(L"CPU's Thread\t%d");
 
 	wsprintf(m_szSystem, m_wstrSystem.c_str(),
-			 m_iCPUThreads,
-			 m_iCPUCores);
+			 m_iCPUCores,
+			 m_iCPUThreads);
 
 	if (nullptr != m_pFont_System)
 	{

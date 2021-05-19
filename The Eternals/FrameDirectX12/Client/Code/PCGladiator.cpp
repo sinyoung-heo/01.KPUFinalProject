@@ -223,11 +223,11 @@ _int CPCGladiator::LateUpdate_GameObject(const _float& fTimeDelta)
 	if (Engine::CRenderer::Get_Instance()->Get_RenderOnOff(L"DebugFont"))
 	{
 		m_wstrText = wstring(L"[ Character Info ] \n") +
-					 wstring(L"Pos\t %d, %d, %d\n") +
-					 wstring(L"AngleY\t %d\n") +
-					 wstring(L"AniIndex \t %d\n") +
-					 wstring(L"MaxFrame \t %d\n") +
-					 wstring(L"CurrentFrame \t%d");
+					 wstring(L"Pos::(%d, %d, %d)\n") +
+					 wstring(L"AngleY::%d\n") +
+					 wstring(L"AniIndex::%d\n") +
+					 wstring(L"MaxFrame::%d\n") +
+					 wstring(L"CurrentFrame::%d");
 
 		wsprintf(m_szText, m_wstrText.c_str(),
 				 (_int)m_pTransCom->m_vPos.x, (_int)m_pTransCom->m_vPos.y, (_int)m_pTransCom->m_vPos.z,
@@ -620,21 +620,48 @@ void CPCGladiator::Set_ConstantTableShadowDepth()
 
 void CPCGladiator::Set_AnimationSpeed()
 {
-	if (m_uiAnimIdx == Gladiator::WIND_CUTTER1 ||
-		m_uiAnimIdx == Gladiator::WIND_CUTTER2 ||
-		m_uiAnimIdx == Gladiator::WIND_CUTTER3)
+	if (m_uiAnimIdx == Gladiator::TUMBLING)
 	{
-		m_fAnimationSpeed = TPS * 0.75f;
+		m_fAnimationSpeed = TPS * 1.60f;
 	}
-
-	else if (m_uiAnimIdx == Gladiator::DRAW_SWORD_CHARGE ||
-			 m_uiAnimIdx == Gladiator::DRAW_SWORD_LOOP)
+	else if (m_uiAnimIdx == Gladiator::COMBO1 || 
+			 m_uiAnimIdx == Gladiator::COMBO1R || 
+			 m_uiAnimIdx == Gladiator::COMBO2 || 
+			 m_uiAnimIdx == Gladiator::COMBO2R || 
+			 m_uiAnimIdx == Gladiator::COMBO3 || 
+			 m_uiAnimIdx == Gladiator::COMBO3R || 
+			 m_uiAnimIdx == Gladiator::COMBO4)
 	{
-		m_fAnimationSpeed = TPS * 2.f;
+		m_fAnimationSpeed = TPS * 1.25f;
 	}
-	else if (m_uiAnimIdx == Gladiator::TUMBLING)
+	else if (m_uiAnimIdx == Gladiator::STINGER_BLADE)
+	{
+		m_fAnimationSpeed = TPS * 1.45f;
+	}
+	else if (m_uiAnimIdx == Gladiator::CUTTING_SLASH)
 	{
 		m_fAnimationSpeed = TPS * 1.35f;
+	}
+	else if (m_uiAnimIdx == Gladiator::JAW_BREAKER)
+	{
+		m_fAnimationSpeed = TPS * 1.45f;
+	}
+	else if (m_uiAnimIdx == Gladiator::WIND_CUTTER1 ||
+			 m_uiAnimIdx == Gladiator::WIND_CUTTER2 ||
+			 m_uiAnimIdx == Gladiator::WIND_CUTTER3)
+	{
+		m_fAnimationSpeed = TPS * 0.85f;
+	}
+	else if (m_uiAnimIdx == Gladiator::GAIA_CRUSH1 ||
+			 m_uiAnimIdx == Gladiator::GAIA_CRUSH3)
+	{
+		m_fAnimationSpeed = TPS * 1.4f;
+	}
+	else if (m_uiAnimIdx == Gladiator::DRAW_SWORD_CHARGE ||
+			 m_uiAnimIdx == Gladiator::DRAW_SWORD_LOOP ||
+			 m_uiAnimIdx == Gladiator::DRAW_SWORD_END)
+	{
+		m_fAnimationSpeed = TPS * 2.f;
 	}
 	else
 		m_fAnimationSpeed = TPS;
@@ -645,16 +672,19 @@ void CPCGladiator::Set_BlendingSpeed()
 	if (m_uiAnimIdx == Gladiator::NONE_ATTACK_IDLE ||
 		m_uiAnimIdx == Gladiator::NONE_ATTACK_WALK ||
 		m_uiAnimIdx == Gladiator::ATTACK_WAIT ||
-		m_uiAnimIdx == Gladiator::ATTACK_RUN ||
-		m_uiAnimIdx == Gladiator::GAIA_CRUSH1 ||
-		m_uiAnimIdx == Gladiator::GAIA_CRUSH2 ||
-		m_uiAnimIdx == Gladiator::GAIA_CRUSH3)
+		m_uiAnimIdx == Gladiator::ATTACK_RUN)
 	{
 		m_fBlendingSpeed = 0.001f;
 	}
+	else if (m_uiAnimIdx == Gladiator::WIND_CUTTER1 ||
+			 m_uiAnimIdx == Gladiator::WIND_CUTTER2 ||
+			 m_uiAnimIdx == Gladiator::WIND_CUTTER3)
+	{
+		m_fBlendingSpeed = 0.05f;
+	}
 	else if (m_uiAnimIdx == Gladiator::TUMBLING)
 	{
-		m_fBlendingSpeed = 0.0075f;
+		m_fBlendingSpeed = 1.5f;
 	}
 	else
 		m_fBlendingSpeed = 0.005f;
@@ -1284,7 +1314,7 @@ void CPCGladiator::SetUp_ComboAttackAnimation()
 		// COMBO1 ==> COMBO2
 		else if (Gladiator::COMBOCNT_1 == m_uiComoboCnt &&
 				 Gladiator::COMBO1 == m_uiAnimIdx && 
-				 m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.75f)
+				 m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.85f)
 		{
 			SetUp_WeaponLHand();
 			SetUp_AttackSetting();
@@ -1310,7 +1340,7 @@ void CPCGladiator::SetUp_ComboAttackAnimation()
 		// COMBO2 ==> COMBO3
 		else if (Gladiator::COMBOCNT_2 == m_uiComoboCnt &&
 				 Gladiator::COMBO2 == m_uiAnimIdx &&
-				 m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.75f)
+				 m_ui3DMax_CurFrame >= m_ui3DMax_NumFrame * 0.85f)
 		{
 			SetUp_WeaponLHand();
 			SetUp_AttackSetting();
@@ -1348,7 +1378,7 @@ void CPCGladiator::SetUp_ComboAttackAnimation()
 		// COMBO3R ==> COMBO4
 		else if (Gladiator::COMBOCNT_3 == m_uiComoboCnt &&
 				 Gladiator::COMBO3R == m_uiAnimIdx && 
-				 m_ui3DMax_CurFrame <= m_ui3DMax_NumFrame * 0.55f)
+				 m_ui3DMax_CurFrame <= m_ui3DMax_NumFrame * 0.65f)
 		{
 			SetUp_WeaponLHand();
 			SetUp_AttackSetting();
