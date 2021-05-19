@@ -327,7 +327,7 @@ void CNpc::Move_Walker_NPC(const float& fTimeDelta)
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -517,7 +517,7 @@ void CNpc::Idle_Assistant_NPC(const float& fTimeDelta, int animIdx)
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -572,7 +572,7 @@ void CNpc::Greet_Merchant_Animation(const float& fTimeDelta)
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;
@@ -627,7 +627,7 @@ void CNpc::Greet_QuestNPC_Animation(const float& fTimeDelta)
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
-	oldnearSector.reserve(5);
+	oldnearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
 
 	unordered_set <int> old_viewlist;

@@ -43,7 +43,7 @@ void process_packet(int id)
 
 		/* 해당 플레이어가 등록되어 있는 섹터 내의 유저들에게 접속을 알림 */
 		unordered_set<pair<int, int>> nearSector;
-		nearSector.reserve(5);
+		nearSector.reserve(NEAR_SECTOR);
 		CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSector, (int)pPlayer->m_vPos.x, (int)pPlayer->m_vPos.z);
 
 		// 인접 섹터 순회
@@ -569,7 +569,7 @@ void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 
 	/* 플레이어 주변의 섹터를 검색 -> 인접한 섹터 내의 객체에게 좌표 전송 */
 	unordered_set<pair<int, int>> nearSector;
-	nearSector.reserve(5);
+	nearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSector, (int)pPlayer->m_vPos.x, (int)pPlayer->m_vPos.z);
 
 	// 해당 플레이어의 갱신된 시야 목록
@@ -769,7 +769,7 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 
 	/* 플레이어 주변의 섹터를 검색 -> 인접한 섹터 내의 객체에게 좌표 전송 */
 	unordered_set<pair<int, int>> nearSector;
-	nearSector.reserve(5);
+	nearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSector, (int)pPlayer->m_vPos.x, (int)pPlayer->m_vPos.z);
 
 	// 해당 플레이어의 갱신된 시야 목록
@@ -1023,7 +1023,7 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx, 
 
 	/* 플레이어 주변의 섹터를 검색 -> 인접한 섹터 내의 객체에게 좌표 전송 */
 	unordered_set<pair<int, int>> nearSector;
-	nearSector.reserve(5);
+	nearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSector, (int)pPlayer->m_vPos.x, (int)pPlayer->m_vPos.z);
 
 	// 해당 플레이어의 갱신된 시야 목록
@@ -1223,7 +1223,7 @@ void process_attack_stop(int id, const _vec3& _vDir, const _vec3& _vPos, int ani
 
 	/* 플레이어 주변의 섹터를 검색 -> 인접한 섹터 내의 객체에게 좌표 전송 */
 	unordered_set<pair<int, int>> nearSector;
-	nearSector.reserve(5);
+	nearSector.reserve(NEAR_SECTOR);
 	CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSector, (int)pPlayer->m_vPos.x, (int)pPlayer->m_vPos.z);
 
 	// 해당 플레이어의 갱신된 시야 목록

@@ -17,6 +17,7 @@ constexpr int KEY_SERVER		= 1000000;
 
 /* GAME CONTENTS */
 constexpr int	SERVER_CORE					= 4;
+constexpr int	NEAR_SECTOR					= 5;
 
 constexpr int	ZERO_HP						= 0;
 constexpr int	INIT_HP						= 100;			// √ ±‚ HP

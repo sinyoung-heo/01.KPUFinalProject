@@ -63,6 +63,19 @@ void CSectorMgr::Get_NearSectorIndex(unordered_set<pair<int, int>>* pSet, int po
 	if (Check_NearSector(posZ, posX, posZ, posX - VIEW_LIMIT))
 		pSet->emplace(posZ / SECTOR_SIZE, (posX - VIEW_LIMIT) / SECTOR_SIZE);
 
+	// Front Right
+	if (Check_NearSector(posZ, posX, posZ + VIEW_LIMIT, posX + VIEW_LIMIT))
+		pSet->emplace((posZ + VIEW_LIMIT) / SECTOR_SIZE, (posX + VIEW_LIMIT) / SECTOR_SIZE);
+	// Front Left
+	if (Check_NearSector(posZ, posX, posZ + VIEW_LIMIT, posX - VIEW_LIMIT))
+		pSet->emplace((posZ + VIEW_LIMIT) / SECTOR_SIZE, (posX - VIEW_LIMIT) / SECTOR_SIZE);
+	// Back Right
+	if (Check_NearSector(posZ, posX, posZ - VIEW_LIMIT, posX + VIEW_LIMIT))
+		pSet->emplace((posZ - VIEW_LIMIT) / SECTOR_SIZE, (posX + VIEW_LIMIT) / SECTOR_SIZE);
+	// Back Left
+	if (Check_NearSector(posZ, posX, posZ - VIEW_LIMIT, posX - VIEW_LIMIT))
+		pSet->emplace((posZ - VIEW_LIMIT) / SECTOR_SIZE, (posX - VIEW_LIMIT) / SECTOR_SIZE);
+
 	// 원래 위치
 	pSet->emplace(posZ / SECTOR_SIZE, posX / SECTOR_SIZE);
 }

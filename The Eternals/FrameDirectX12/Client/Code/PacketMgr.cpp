@@ -106,6 +106,7 @@ void CPacketMgr::recv_packet()
 		int state = WSAGetLastError();
 		if (state != WSAEWOULDBLOCK)
 		{
+			cout << "recv error" << endl;
 			error_display("recv Error : ", state);
 			closesocket(g_hSocket);
 		}
