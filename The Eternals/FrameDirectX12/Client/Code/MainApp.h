@@ -33,6 +33,7 @@ private:
 	HRESULT	SetUp_LoadingResource();
 	HRESULT	SetUp_StartScene(Engine::SCENEID eScebeID);
 	void	SetUp_WindowMouseSetting();
+	void	SetUp_SystemInfo();
 
 	void	Key_Input();
 	void	Show_FontLog(const _float& fTimeDelta);
@@ -66,7 +67,6 @@ private:
 	_tchar			m_szPipeline[MAX_STR]			= L"";
 	_uint			m_uiCnt_ShaderFile				= 0;
 	_uint			m_uiCnt_PipelineState			= 0;
-	_uint			m_uiCnt_SetPipelineState		= 0;
 
 	// RenderList
 	Engine::CFont*	m_pFont_RenderList				= nullptr;
@@ -74,10 +74,22 @@ private:
 	_tchar			m_szRenderList[MAX_STR]			= L"";
 	_uint			m_iPrioritySize					= 0;
 	_uint			m_iNoneAlphaSize				= 0;
+	_uint			m_iDistortionSize               = 0;
+	_uint			m_iEdgeSize                     = 0;
+	_uint			m_iCrossFilterSize              = 0;
+	_uint			m_iMagicCircleSize              = 0;
 	_uint			m_iAlphaSize					= 0;
 	_uint			m_iUISize						= 0;
 	_uint			m_iColliderSize					= 0;
 	_uint			m_iFontSize						= 0;
+
+	// System
+	Engine::CFont*	m_pFont_System      = nullptr;
+	wstring			m_wstrSystem        = L"";
+	_tchar			m_szSystem[MAX_STR] = L"";
+	wstring			m_wstrCPUName       = L"";
+	_int			m_iCPUThreads       = 0;
+	_int			m_iCPUCores         = 0;
 
 public:
 	static CMainApp*	Create();

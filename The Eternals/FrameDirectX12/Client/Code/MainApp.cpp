@@ -1,13 +1,11 @@
 #include "stdafx.h"
 #include "MainApp.h"
-
 #include "DirectInput.h"
 #include "DirectSound.h"
 #include "ComponentMgr.h"
 #include "ObjectMgr.h"
 #include "Management.h"
 #include "Renderer.h"
-
 #include "Scene_Logo.h"
 #include "Scene_Menu.h"
 #include "Scene_MainStage.h"
@@ -28,6 +26,7 @@ HRESULT CMainApp::Ready_MainApp()
 {
 	srand(unsigned int(time(nullptr)));
 
+	SetUp_SystemInfo();
 	SetUp_WindowMouseSetting();
 	Engine::FAILED_CHECK_RETURN(SetUp_DefaultSetting(Engine::WINMODE::MODE_WIN, WINCX, WINCY), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(SetUp_Font(), E_FAIL);
@@ -55,12 +54,18 @@ HRESULT CMainApp::Ready_MainApp()
 	// PipelineState
 	m_pFont_PipelineState = static_cast<Engine::CFont*>(Engine::CObjectMgr::Get_Instance()->Clone_GameObjectPrototype(L"Font_NetmarbleLight"));
 	Engine::NULL_CHECK_RETURN(m_pFont_PipelineState, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pFont_PipelineState->Ready_GameObject(L"", _vec2(1370.f, 32.f), D2D1::ColorF::Cornsilk), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pFont_PipelineState->Ready_GameObject(L"", _vec2(1370.f, 32.f), D2D1::ColorF::Lime), E_FAIL);
 
 	// RenderList
 	m_pFont_RenderList = static_cast<Engine::CFont*>(Engine::CObjectMgr::Get_Instance()->Clone_GameObjectPrototype(L"Font_NetmarbleLight"));
 	Engine::NULL_CHECK_RETURN(m_pFont_RenderList, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pFont_RenderList->Ready_GameObject(L"", _vec2(1370.f, 160.f), D2D1::ColorF::Cornsilk), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pFont_RenderList->Ready_GameObject(L"", _vec2(1370.f, 160.0f), D2D1::ColorF::Lime), E_FAIL);
+
+	// System
+	m_pFont_System = static_cast<Engine::CFont*>(Engine::CObjectMgr::Get_Instance()->Clone_GameObjectPrototype(L"Font_NetmarbleLight"));
+	Engine::NULL_CHECK_RETURN(m_pFont_System, E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pFont_System->Ready_GameObject(L"", _vec2(10.0f, 750.0f), D2D1::ColorF::Lime), E_FAIL);
+
 
 	return S_OK;
 }
@@ -169,7 +174,6 @@ HRESULT CMainApp::SetUp_DefaultSetting(Engine::WINMODE eMode, const _uint& uiWid
 	//}
 	//Engine::CDirectSound::Get_Instance()->LoadDirectSoundFile(L"Logo_BGM");
 
-	
 
 	return S_OK;
 }
@@ -365,6 +369,51 @@ void CMainApp::SetUp_WindowMouseSetting()
 	ClipCursor(&rc2);
 }
 
+void CMainApp::SetUp_SystemInfo()
+{
+
+
+	//레지스트리를 조사하여 프로세서의 모델명을 얻어냅니다.
+	wchar_t Cpu_info[100];
+	HKEY hKey;
+	int i = 0;
+	long result = 0;
+	DWORD c_size = sizeof(Cpu_info);
+
+	RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"Hardware\\Description\\System\\CentralProcessor\\0", 0, KEY_QUERY_VALUE, &hKey);
+	RegQueryValueEx(hKey, L"ProcessorNameString", NULL, NULL, (LPBYTE)Cpu_info, &c_size);
+	RegCloseKey(hKey);
+	m_wstrCPUName = Cpu_info;
+
+	// CPU's Thread
+	SYSTEM_INFO tSystemInfo;
+	ZeroMemory(&tSystemInfo, sizeof(SYSTEM_INFO));
+	GetNativeSystemInfo(&tSystemInfo);
+	m_iCPUThreads = tSystemInfo.dwNumberOfProcessors;
+
+	// CPU's Core
+	PSYSTEM_LOGICAL_PROCESSOR_INFORMATION pPI = NULL;
+	DWORD length = 0;
+
+	BOOL _result = GetLogicalProcessorInformation(pPI, &length);
+	if (!_result)
+	{
+		if (GetLastError() == ERROR_INSUFFICIENT_BUFFER)
+			pPI = (PSYSTEM_LOGICAL_PROCESSOR_INFORMATION) new BYTE[length];
+	}
+
+	_result = GetLogicalProcessorInformation(pPI, &length);
+
+	for (int i = 0; i < length / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION); ++i)
+	{
+		if (pPI[i].Relationship == RelationProcessorCore)
+			++m_iCPUCores;
+	}
+
+	delete[] pPI;
+	pPI = nullptr;
+}
+
 void CMainApp::Key_Input()
 {
 #ifdef SERVER
@@ -403,25 +452,22 @@ void CMainApp::Key_Input()
 void CMainApp::Show_FontLog(const _float& fTimeDelta)
 {
 	/*__________________________________________________________________________________________________________
-	[ Text - PipelineState ]
+	[ Text :: PipelineState ]
 	____________________________________________________________________________________________________________*/
 	if (nullptr != m_pRenderer)
 	{
 		m_uiCnt_ShaderFile			= m_pRenderer->Get_CntShaderFile();
 		m_uiCnt_PipelineState		= m_pRenderer->Get_CntPipelineState();
-		m_uiCnt_SetPipelineState	= m_pRenderer->Get_CntSetPipelineState();
 		m_pRenderer->Reset_SetPipelineStateCnt();
 	}
 
 	m_wstrPipeline = wstring(L"[ Shader Info ]\n") +
 					 wstring(L"Num ShaderFile : %d\n") +
-					 wstring(L"Num PipelineState : %d\n") +
-					 wstring(L"Num SetPipelineState : %d");
+					 wstring(L"Num PipelineState : %d\n");
 
 	wsprintf(m_szPipeline, m_wstrPipeline.c_str(),
 			 m_uiCnt_ShaderFile,
-			 m_uiCnt_PipelineState,
-			 m_uiCnt_SetPipelineState);
+			 m_uiCnt_PipelineState);
 
 	if (nullptr != m_pFont_PipelineState)
 	{
@@ -430,12 +476,16 @@ void CMainApp::Show_FontLog(const _float& fTimeDelta)
 	}
 
 	/*__________________________________________________________________________________________________________
-	[ Text RenderList Object Cnt ]
+	[ Text :: RenderList Object ]
 	____________________________________________________________________________________________________________*/
 	if (nullptr != m_pRenderer)
 	{
 		m_iPrioritySize		= m_pRenderer->Get_RenderLstSize(m_pRenderer->RENDER_PRIORITY);
 		m_iNoneAlphaSize	= m_pRenderer->Get_RenderLstSize(m_pRenderer->RENDER_NONALPHA);
+		m_iDistortionSize   = m_pRenderer->Get_RenderLstSize(m_pRenderer->RENDER_DISTORTION);
+		m_iEdgeSize         = m_pRenderer->Get_RenderLstSize(m_pRenderer->RENDER_EDGE);
+		m_iCrossFilterSize  = m_pRenderer->Get_RenderLstSize(m_pRenderer->RENDER_CROSSFILTER);
+		m_iMagicCircleSize  = m_pRenderer->Get_RenderLstSize(m_pRenderer->RENDER_MAGICCIRCLE);
 		m_iAlphaSize		= m_pRenderer->Get_RenderLstSize(m_pRenderer->RENDER_ALPHA);
 		m_iUISize			= m_pRenderer->Get_RenderLstSize(m_pRenderer->RENDER_UI);
 		m_iColliderSize		= m_pRenderer->Get_ColliderLstSize();
@@ -444,25 +494,54 @@ void CMainApp::Show_FontLog(const _float& fTimeDelta)
 	m_wstrRenderList = wstring(L"[ Render Group ]\n") +
 					   wstring(L"PRIORITY\t%d\n") +
 					   wstring(L"NONEALPHA\t%d\n") +
+					   wstring(L"DISTORTION\t%d\n") +
+					   wstring(L"EDGE\t\t%d\n") +
+					   wstring(L"CROSS FILTER\t%d\n") +
+					   wstring(L"MAGIC CIRCLE\t%d\n") +
 					   wstring(L"ALPHA\t\t%d\n") +
 					   wstring(L"UI\t\t%d\n") +
 					   wstring(L"COLLIDER\t%d\n") +
 					   wstring(L"FONT\t\t%d\n") +
 					   wstring(L"------------------   %d");
 
+	_int iSum = m_iPrioritySize + m_iNoneAlphaSize + m_iDistortionSize + m_iEdgeSize + m_iCrossFilterSize + m_iMagicCircleSize + m_iAlphaSize + m_iUISize + m_iColliderSize + m_iFontSize;
+
 	wsprintf(m_szRenderList, m_wstrRenderList.c_str(),
 			 m_iPrioritySize,
 			 m_iNoneAlphaSize,
+			 m_iDistortionSize,
+			 m_iEdgeSize,
+			 m_iCrossFilterSize,
+			 m_iMagicCircleSize,
 			 m_iAlphaSize,
 			 m_iUISize,
 			 m_iColliderSize,
 			 m_iFontSize,
-			 m_iPrioritySize + m_iNoneAlphaSize + m_iAlphaSize + m_iUISize + m_iColliderSize + m_iFontSize);
+			 iSum);
 
 	if (nullptr != m_pFont_RenderList)
 	{
 		m_pFont_RenderList->Update_GameObject(fTimeDelta);
 		m_pFont_RenderList->Set_Text(wstring(m_szRenderList));
+	}
+
+	/*__________________________________________________________________________________________________________
+	[ Text :: System ]
+	____________________________________________________________________________________________________________*/
+	m_wstrSystem = wstring(L"[ System Infomation ] \n") +
+				   wstring(L"GPU Name::") + Engine::CGraphicDevice::Get_Instance()->Get_GraphicDeviceName() + wstring(L"\n") +
+				   wstring(L"CPU Name::") + m_wstrCPUName + wstring(L"\n") +
+				   wstring(L"CPU's Thread\t%d \n") +
+				   wstring(L"CPU's Core\t%d");
+
+	wsprintf(m_szSystem, m_wstrSystem.c_str(),
+			 m_iCPUThreads,
+			 m_iCPUCores);
+
+	if (nullptr != m_pFont_System)
+	{
+		m_pFont_System->Update_GameObject(fTimeDelta);
+		m_pFont_System->Set_Text(wstring(m_szSystem));
 	}
 }
 
@@ -514,4 +593,5 @@ void CMainApp::Free()
 	Engine::Safe_Release(m_pFont_FPS);
 	Engine::Safe_Release(m_pFont_PipelineState);
 	Engine::Safe_Release(m_pFont_RenderList);
+	Engine::Safe_Release(m_pFont_System);
 }

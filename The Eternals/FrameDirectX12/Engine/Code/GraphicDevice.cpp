@@ -780,6 +780,7 @@ void CGraphicDevice::Get_HardwareAdapter(IDXGIFactory2* pFactory, IDXGIAdapter1*
 		if (uiMaxVideoMemory <= AdapterDesc.DedicatedVideoMemory)
 		{
 			uiMaxVideoMemory = AdapterDesc.DedicatedVideoMemory;
+			m_wstrGraphicDeviceName = AdapterDesc.Description;
 			iIdx = i;
 		}
 

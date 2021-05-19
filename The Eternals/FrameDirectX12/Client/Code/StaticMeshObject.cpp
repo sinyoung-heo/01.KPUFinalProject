@@ -154,6 +154,7 @@ void CStaticMeshObject::Render_ShadowDepth(const _float& fTimeDelta,
 	if (m_wstrMeshTag != L"VK_CON_Floor_04_SM" &&
 		m_wstrMeshTag != L"VK_CON_Floor_03_SM" &&
 		m_wstrMeshTag != L"VK_CON_Wall_B_SM" &&
+		m_wstrMeshTag != L"VK_CON3_OBJ_01_SM" &&
 		m_wstrMeshTag != L"Cliff_Rock1" &&
 		m_wstrMeshTag != L"Cliff_Rock2" &&
 		m_wstrMeshTag != L"Cliff_Rock3" &&

@@ -28,6 +28,7 @@ public:
 	ID3D12DescriptorHeap*		Get_DSV_Heap()								const { return m_pDSV_Heap; }
 	const _int&					Get_CurrBackBufferIdx()						const { return m_iCurrBackBuffer; }
 	_matrix*					Get_Transform(const MATRIXID& eID)			const { return m_arrTransform[eID]; }
+	wstring						Get_GraphicDeviceName()							  { return m_wstrGraphicDeviceName; }
 
 	// Get - DirectX 11 
 	ID2D1DeviceContext2*		Get_D2DContext()							const { return m_pD2D_Context; }
@@ -70,9 +71,6 @@ private:
 
 	/*__________________________________________________________________________________________________________
 	[ DirectX 12 GraphicDevice ]
-	IDXGIFactory	: IDXGISwapChain 인터페이스 생성과 디스플레이 어댑터(그래픽 카드) 열거에 쓰임.
-	ID3D12Device	: 주로 리소스를 생성하기 위해 필요.
-	IDXGISwapChain	: 주로 디스플레이를 제어하기 위해 필요.
 	____________________________________________________________________________________________________________*/
 	IDXGIFactory4*		m_pFactory				= nullptr;
 	ID3D12Device*		m_pGraphicDevice		= nullptr;
@@ -81,7 +79,6 @@ private:
 
 	/*__________________________________________________________________________________________________________
 	[ DirectX 11 GraphicDevice ]
-	- D2D / TextFont Render.
 	____________________________________________________________________________________________________________*/
 	ID3D11Device*									m_p11Device				= nullptr;
 	ID3D11DeviceContext*							m_p11Context			= nullptr;
@@ -97,15 +94,8 @@ private:
 
 
 	/*__________________________________________________________________________________________________________
-	[ 명령 대기열과 명령 목록 ]
-	ID3D12CommandQueue			: 명령 대기열을 대표하는 인터페이스.
-	ID3D12CommandAllocator		: 명령 할당자. 명령 목록에 추가된 명령들은 이 할당자의 메모리에 저장된다.
-								  ExecuteCommandLists로 명령 목록을 실행하면, 명령 대기열은 그 할당자에 담긴 명령들을 참조한다.
-	ID3D12GraphicsCommandList	: 실제 그래픽 작업을 위한 명령 목록을 대표하는 인터페이스.
-
-	- 여러 쓰레드에서 같은 CommandList를 동시에 사용 불가. (1 쓰레드  : 1 CommandList)
+	[ CommandList / CommandAllocator / CommandQueue ]
 	____________________________________________________________________________________________________________*/
-	// 그래픽스 파이프라인 상태 객체에 대한 인터페이스 포인터.
 	ID3D12PipelineState*								m_pPipelineState		= nullptr;
 
 	ID3D12CommandQueue*									m_pCommandQueue			= nullptr;
@@ -114,19 +104,6 @@ private:
 
 	/*__________________________________________________________________________________________________________
 	[ 서술자 힙 (Descriptor Heap) ]
-	- 그리기 명령을 제출하기 전에, 먼저 해당 그리기 호출이 참조할 자원들을 렌더링 파이프라인에 묶어야 한다.
-	- 실제로 파이프라인에 묶이는 것은 해당 자원을 참조하는 서술자(Descriptor) 객체이다.
-	- 서술자는 자원을 GPU에게 서술해주는 경량의 자료구조라고 할 수 있다.
-	- GPU는 자원 서술자를 통해서 자원의 실제 자료에 접근하며, 그 자료를 사용하는 데 필요한 정보 역시 서술자로부터 얻는다.
-	- 서술자는 자원 자료를 지정하는 수단일 뿐만 아니라, 자원을 GPU에 서술하는 수단. 
-	  (자원을 파이프라인의 어느 단계에 묶어야 하는지를 말해줌.)
-	
-	1. CBV(상수 버퍼), SRV(셰이더 자원), UAV(순서 없는 접근)을 서술.
-	2. 표본 추출기 서술자는 텍스처 적용에 쓰이는 표본 추출기(smapler) 자원을 서술.
-	3. RTV 서술자는 렌더 대상(Render Target)자원을 서술.
-	4. DSV 서술자는 깊이, 스텐실(Depth/Stencil)자원을 서술.
-
-	- 서술자들은 응용 프로그램의 초기화 시점에서 생성해야 한다.
 	____________________________________________________________________________________________________________*/
 	ID3D12DescriptorHeap*							m_pRTV_Heap                     = nullptr;
 	ID3D12DescriptorHeap*							m_pDSV_Heap                     = nullptr;
@@ -145,9 +122,7 @@ private:
 
 
 	/*__________________________________________________________________________________________________________
-	[ CPU/GPU 동기화 ]
-	ID3D12Fence	: GPU와 CPU의 동기화를 위한 수단으로 쓰이는 대표 인터페이스.
-	FenceValue	: Fence의 값. 시간상의 특정 Fence지점을 식별하는 정수.
+	[ FENCE ]
 	____________________________________________________________________________________________________________*/
 	ID3D12Fence*	m_pFence            = nullptr;
 	UINT64			m_uiCurrentFence	= 0;
@@ -156,6 +131,8 @@ private:
 	[ View/Projection/Ortho Matrix ]
 	____________________________________________________________________________________________________________*/
 	array<_matrix*, MATRIXID::MATRIX_END> m_arrTransform{ nullptr };
+
+	wstring m_wstrGraphicDeviceName = L"";
 
 private:
 	virtual void Free();
