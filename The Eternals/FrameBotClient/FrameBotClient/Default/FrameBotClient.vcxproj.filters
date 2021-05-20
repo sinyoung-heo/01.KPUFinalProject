@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="99.Header">
+      <UniqueIdentifier>{f1311f4b-3aad-4d63-98c7-8e1c0df407b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.Main">
+      <UniqueIdentifier>{8eb7a689-767b-4d2b-9de6-1a5ccbbbbe0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Header\00.System">
+      <UniqueIdentifier>{1d335cdd-d98f-4c0c-9959-5848d0b9a73b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Default">
+      <UniqueIdentifier>{b8f56b55-e5ea-43f8-bff7-68881b4f8792}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Header\01.User">
+      <UniqueIdentifier>{d73f8539-6443-4ac5-ac1f-7e5cc1545b6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Header\00.System\00.vector">
+      <UniqueIdentifier>{713c6498-8626-487e-a378-de0f7587981c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>99.Header\00.System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\define.h">
+      <Filter>99.Header\01.User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\enum.h">
+      <Filter>99.Header\01.User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\extern.h">
+      <Filter>99.Header\01.User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\function.h">
+      <Filter>99.Header\01.User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\struct.h">
+      <Filter>99.Header\01.User</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>98.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>98.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameBotClient.h">
+      <Filter>98.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\FrameServer\Server\Header\protocol.h">
+      <Filter>99.Header\01.User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\NetworkModule.h">
+      <Filter>00.Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\FrameServer\Server\Header\dataType.h">
+      <Filter>99.Header\00.System\00.vector</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="FrameBotClient.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="FrameBotClient.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FrameBotClient.cpp">
+      <Filter>98.Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\NetworkModule.cpp">
+      <Filter>00.Main</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
