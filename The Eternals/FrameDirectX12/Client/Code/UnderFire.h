@@ -9,25 +9,23 @@ namespace Engine
 	class CShaderTexture;
 }
 
-class CTextureEffect : public Engine::CGameObject
+class CSnowParticle : public Engine::CGameObject
 {
 private:
-	explicit CTextureEffect(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CTextureEffect() = default;
+	explicit CSnowParticle(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CSnowParticle() = default;
 
 public:
 	// CGameObject을(를) 통해 상속됨
-	virtual HRESULT	Ready_GameObject(wstring wstrTextureTag, 
-									 const _vec3 & vScale,
-									 const _vec3 & vAngle,
-									 const _vec3 & vPos,
-									 const FRAME& tFrame = FRAME(1, 1, 0.0f));
+	virtual HRESULT	Ready_GameObject(wstring wstrTextureTag,
+		const _vec3& vScale,
+		const _vec3& vAngle,
+		const _vec3& vPos,
+		const FRAME& tFrame = FRAME(1, 1, 0.0f));
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Render_GameObject(const _float& fTimeDelta);
-
-	void Set_EffectInfo(int PipelineState=2, bool PlayerFollow=false);
 
 private:
 	virtual HRESULT Add_Component(wstring wstrTextureTag);
@@ -38,27 +36,28 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
 	____________________________________________________________________________________________________________*/
-	Engine::CRcTex*			m_pBufferCom	= nullptr;
-	Engine::CTexture*		m_pTextureCom	= nullptr;
-	Engine::CShaderTexture*	m_pShaderCom	= nullptr;
+	Engine::CRcTex* m_pBufferCom = nullptr;
+	Engine::CTexture* m_pTextureCom = nullptr;
+	Engine::CShaderTexture* m_pShaderCom = nullptr;
 
-	wstring m_strTextag= L"";
+	wstring m_strTextag = L"";
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	wstring	m_wstrTextureTag	= L"";
-	_uint	m_uiTexIdx			= 0;
+	wstring	m_wstrTextureTag = L"";
+	_uint	m_uiTexIdx = 0;
 
-	FRAME	m_tFrame			{ };
-	_float m_fAlpha = 1.f;
+	FRAME	m_tFrame{ };
+	_vec3 m_vecRandomvector;
+	float m_fAlpha = 1.f;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
-									   ID3D12GraphicsCommandList* pCommandList,
-									   wstring wstrTextureTag,
-									   const _vec3 & vScale,
-									   const _vec3 & vAngle,
-									   const _vec3 & vPos,
-									   const FRAME& tFrame = FRAME(1, 1, 0.0f));
+		ID3D12GraphicsCommandList* pCommandList,
+		wstring wstrTextureTag,
+		const _vec3& vScale,
+		const _vec3& vAngle,
+		const _vec3& vPos,
+		const FRAME& tFrame = FRAME(1, 1, 0.0f));
 private:
 	virtual void Free();
 };

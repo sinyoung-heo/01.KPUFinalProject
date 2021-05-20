@@ -9,7 +9,9 @@ Texture|EffectSpriteTexture|Lightning00
 Texture|EffectSpriteTexture|Lightning01
 Texture|EffectSpriteTexture|Smoke0
 Texture|EffectSpriteTexture|Smoke1
+Texture|EffectSpriteTexture|Snow
 Texture|EffectSpriteTexture|Torch
+Texture|EffectSpriteTexture|UnderFire
 ResourceStage|Texture|EffectTrailTexture
 Texture|Environment|SkyBox
 Texture|Environment|Terrain

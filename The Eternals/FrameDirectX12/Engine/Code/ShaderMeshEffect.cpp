@@ -83,7 +83,7 @@ void CShaderMeshEffect::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, c
 }
 
 void CShaderMeshEffect::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, ID3D12DescriptorHeap* pTexNormalDescriptorHeap, 
-	_uint uiDiffuseIdx, _uint uiTexnormalIdx, _uint uiPatternMapIdx, const _uint& iSubMeshIdx)
+	_uint uiDiffuseIdx, _uint uiTexnormalIdx, _uint uiPatternMapIdx, _uint uiShadowDepthIdx, _uint uiDissolveIdx, const _uint& iSubMeshIdx)
 {
 	CRenderer::Get_Instance()->Set_CurPipelineState(m_pPipelineState);
 	m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
@@ -101,23 +101,23 @@ void CShaderMeshEffect::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, I
 		SRV_TexDiffuseDescriptorHandle);
 
 
-	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexShadowDepthDescriptorHandle(pTexNormalDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexShadowDepthDescriptorHandle.Offset(uiTexnormalIdx, m_uiCBV_SRV_UAV_DescriptorSize);
-	m_pCommandList->SetGraphicsRootDescriptorTable(1,		// RootParameter Index - TexNormal
-		SRV_TexShadowDepthDescriptorHandle);
-
 	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexNormalDescriptorHandle(pTexNormalDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexNormalDescriptorHandle.Offset(uiPatternMapIdx, m_uiCBV_SRV_UAV_DescriptorSize);
-	m_pCommandList->SetGraphicsRootDescriptorTable(2,		// RootParameter Index - TexSpecular
+	SRV_TexNormalDescriptorHandle.Offset(uiTexnormalIdx, m_uiCBV_SRV_UAV_DescriptorSize);
+	m_pCommandList->SetGraphicsRootDescriptorTable(1,		// RootParameter Index - TexNormal
 		SRV_TexNormalDescriptorHandle);
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexSpecularDescriptorHandle(pTexNormalDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexSpecularDescriptorHandle.Offset(2, m_uiCBV_SRV_UAV_DescriptorSize);
-	m_pCommandList->SetGraphicsRootDescriptorTable(3,		// RootParameter Index - TexShadowDepth
+	SRV_TexSpecularDescriptorHandle.Offset(uiPatternMapIdx, m_uiCBV_SRV_UAV_DescriptorSize);
+	m_pCommandList->SetGraphicsRootDescriptorTable(2,		// RootParameter Index - TexSpecular
 		SRV_TexSpecularDescriptorHandle);
 
+	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexShadowDepthHandle(pTexNormalDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	SRV_TexShadowDepthHandle.Offset(uiShadowDepthIdx, m_uiCBV_SRV_UAV_DescriptorSize);
+	m_pCommandList->SetGraphicsRootDescriptorTable(3,		// RootParameter Index - TexShadowDepth
+		SRV_TexShadowDepthHandle);
+
 	CD3DX12_GPU_DESCRIPTOR_HANDLE SRV_TexDissolveHandle(pTexNormalDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	SRV_TexDissolveHandle.Offset(1, m_uiCBV_SRV_UAV_DescriptorSize);
+	SRV_TexDissolveHandle.Offset(uiDissolveIdx, m_uiCBV_SRV_UAV_DescriptorSize);
 	m_pCommandList->SetGraphicsRootDescriptorTable(4,		// RootParameter Index - TexShadowDepth
 		SRV_TexDissolveHandle);
 
@@ -500,7 +500,15 @@ HRESULT CShaderMeshEffect::Create_PipelineState()
 	m_vecPipelineState.emplace_back(pPipelineState);
 	CRenderer::Get_Instance()->Add_PipelineStateCnt();
 	//4
-	vecInputLayout = Create_InputLayout("VS_MAIN", "PS_DECAL");
+	vecInputLayout = Create_InputLayout("VS_ANIUV", "PS_DECAL");
+	PipelineStateDesc.InputLayout = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
+	m_vecPipelineState.emplace_back(pPipelineState);
+	CRenderer::Get_Instance()->Add_PipelineStateCnt();
+	//5
+	vecInputLayout = Create_InputLayout("VS_MAIN", "PS_SWORDTRAIL");
 	PipelineStateDesc.InputLayout = { vecInputLayout.data(), (_uint)vecInputLayout.size() };
 	PipelineStateDesc.VS = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.PS = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };

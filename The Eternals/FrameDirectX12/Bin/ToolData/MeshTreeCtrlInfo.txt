@@ -36,6 +36,7 @@ StaticMesh|publicEffect|IceStorm0
 StaticMesh|publicEffect|IceStorm1
 StaticMesh|publicEffect|publicSphere
 StaticMesh|publicEffect|publicSpline
+StaticMesh|publicEffect|Trail_360
 StaticMesh|Sample|DistortDisk
 StaticMesh|Sample|LandMark
 StaticMesh|Sample|LandMarkBoundary
