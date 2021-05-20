@@ -25,7 +25,7 @@ public:
 								 const _uint & iSubMeshIdx = 0);
 	virtual void	Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap,
 		ID3D12DescriptorHeap* pTexNormalDescriptorHeap, _uint uiDiffuseIdx,
-		_uint uiTexnormalIdx, _uint uiPatternMapIdx,
+		_uint uiTexnormalIdx, _uint uiPatternMapIdx, _uint uiShadowDepthIdx, _uint uiDissolveIdx,
 		const _uint& iSubMeshIdx);
 	// MultiThread Rendering
 	virtual void	Begin_Shader(ID3D12GraphicsCommandList * pCommandList,

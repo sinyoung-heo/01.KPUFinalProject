@@ -445,6 +445,7 @@ void CRenderer::Render_DownSampling()
 		vecDownSamplingTarget.emplace_back(vecNPathDirTarget[0]);	// RenderTarget - NPathDir
 		vecDownSamplingTarget.emplace_back(vecSSAOTarget[0]);	// RenderTarget - SSAO
 		vecDownSamplingTarget.emplace_back(vecEdgeTarget[0]);	// RenderTarget - Edge
+		vecDownSamplingTarget.emplace_back(m_pTargetEffectTex->Get_TargetTexture()[0]);	// RenderTarget - Edge
 		m_pDownSamplingShader->SetUp_ShaderTexture(vecDownSamplingTarget);
 	
 	}
@@ -503,26 +504,37 @@ void CRenderer::Render_SSAO()
 
 void CRenderer::Render_Alpha(const _float& fTimeDelta)
 {
+	sort(m_RenderList[RENDER_ALPHA].begin(), m_RenderList[RENDER_ALPHA].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
+		{
+			return pSour->Get_DepthOfView() > pDest->Get_DepthOfView();
+		});
 	sort(m_RenderList[RENDER_MAGICCIRCLE].begin(), m_RenderList[RENDER_MAGICCIRCLE].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
 		{
 			return pSour->Get_DepthOfView() > pDest->Get_DepthOfView();
 		});
 
+	
+
+	for (auto& pGameObject : m_RenderList[RENDER_ALPHA])
+		pGameObject->Render_GameObject(fTimeDelta);
+
 
 	m_pTargetpEffect->SetUp_OnGraphicDevice();
 
 	for (auto& pGameObject : m_RenderList[RENDER_MAGICCIRCLE])
-		pGameObject->Render_GameObject(fTimeDelta);
-
+	{
+		if (pGameObject->Get_IsAlphaObject()==false)
+			pGameObject->Render_GameObject(fTimeDelta);
+	}
 	m_pTargetpEffect->Release_OnGraphicDevice();
 
-
-	sort(m_RenderList[RENDER_ALPHA].begin(), m_RenderList[RENDER_ALPHA].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
-		{
-			return pSour->Get_DepthOfView() > pDest->Get_DepthOfView();
-		});
-	for (auto& pGameObject : m_RenderList[RENDER_ALPHA])
-		pGameObject->Render_GameObject(fTimeDelta);
+	m_pTargetEffectTex->SetUp_OnGraphicDevice();
+	for (auto& pGameObject : m_RenderList[RENDER_MAGICCIRCLE])
+	{
+		if (pGameObject->Get_IsAlphaObject())
+			pGameObject->Render_GameObject(fTimeDelta);
+	}
+	m_pTargetEffectTex->Release_OnGraphicDevice();
 
 	// Render Texture Instancing
 	CShaderTextureInstancing::Get_Instance()->Render_Instance(INSTANCE::INSTANCE_ALPHA);
@@ -540,6 +552,7 @@ void CRenderer::Render_AddEffect()
 		vecAddEffectTarget.emplace_back(vecEffectTarget[2]);	// RenderTarget - Normal
 		vecAddEffectTarget.emplace_back(vecEffectTarget[3]);	// RenderTarget - Depth
 		vecAddEffectTarget.emplace_back(vecEffectTarget[4]);	// RenderTarget - Normal
+		vecAddEffectTarget.emplace_back(m_pTargetEffectTex->Get_TargetTexture()[0]);	// RenderTarget - Normal
 		m_pAddEffectShader->SetUp_ShaderTexture(vecAddEffectTarget);
 	}
 	m_pTargetAddEffect->SetUp_OnGraphicDevice();
@@ -613,6 +626,8 @@ void CRenderer::Render_RenderTarget()
 			m_pTargetSunShine->Render_RenderTarget();
 		if (nullptr != m_pTargetpEffect)
 			m_pTargetpEffect->Render_RenderTarget();
+		if (nullptr != m_pTargetEffectTex)
+			m_pTargetEffectTex->Render_RenderTarget();
 		if (nullptr != m_pTargetAddEffect)
 			m_pTargetAddEffect->Render_RenderTarget();
 	}
@@ -958,6 +973,15 @@ HRESULT CRenderer::Ready_RenderTarget()
 	m_pEffectBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pEffectBuffer, E_FAIL);
 	
+	m_pTargetEffectTex = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
+	NULL_CHECK_RETURN(m_pTargetEffectTex, E_FAIL);
+	m_pTargetEffectTex->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+
+	FAILED_CHECK_RETURN(m_pTargetEffectTex->SetUp_DefaultSetting(TARGETID::TYPE_DEFAULT), E_FAIL);
+	m_pTargetEffectTex->Set_TargetRenderPos(_vec3(WIDTH_SIXTH, HEIGHT_SIXTH, 1.0f));
+
+	m_pEffectTexBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pEffectTexBuffer, E_FAIL);
 	//AddEffect
 	m_pTargetAddEffect = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
 	NULL_CHECK_RETURN(m_pTargetAddEffect, E_FAIL);
@@ -1375,6 +1399,8 @@ void CRenderer::Free()
 	Safe_Release(m_pTargetpEffect);
 	Safe_Release(m_pEffectBuffer);
 
+	Safe_Release(m_pTargetEffectTex);
+	Safe_Release(m_pEffectTexBuffer);
 	//add Effect
 	Safe_Release(m_pAddEffectShader);
 	Safe_Release(m_pTargetAddEffect);

@@ -34,6 +34,7 @@
 #include "IceStorm.h"
 #include "SnowParticle.h"
 #include "PublicPlane.h"
+#include "SwordTrail.h"
 CStagePJO::CStagePJO(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
 {
@@ -303,7 +304,13 @@ HRESULT CStagePJO::Ready_LayerEnvironment(wstring wstrLayerTag)
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PublicPlane00", pGameObj), E_FAIL);
 
 	
-
+	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+		L"UnderFire",						// TextureTag
+		_vec3(2.f, 2.0f, 1.0f),		// Scale
+		_vec3(0.0f, 0.0f, 0.0f),		// Angle
+		_vec3(28.0f, 20.0f, 27.0f),	// Pos
+		FRAME(4, 8, 32.0f));			// Sprite Image Frame
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"UnderFire", pGameObj), E_FAIL);
 
 	pGameObj = CRainDrop::Create(m_pGraphicDevice, m_pCommandList,
 		L"RainDrop",
@@ -312,17 +319,22 @@ HRESULT CStagePJO::Ready_LayerEnvironment(wstring wstrLayerTag)
 		_vec3(0, 0, 0));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"RainDrop", pGameObj), E_FAIL);
 
-
+	//pGameObj = CSwordTrail::Create(m_pGraphicDevice, m_pCommandList,
+	//	L"Trail_360",
+	//	_vec3(0.15f),
+	//	_vec3(0.f, 0.0f, 0.0f),
+	//	_vec3(0, 0, 0));
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"Trail_360", pGameObj), E_FAIL);
 	
-	for (int i = 0; i < 36; i++)
-	{
-		pGameObj = CIceStorm::Create(m_pGraphicDevice, m_pCommandList,
-			L"IceStorm1",
-			_vec3(0.f),
-			_vec3(0.f, 0.0f, 0.0f),
-			_vec3(0, 0, 0), 5.f, XMConvertToRadians(i * 10.f));
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"IceStorm1", pGameObj), E_FAIL);
-	}
+	//for (int i = 0; i < 36; i++)
+	//{
+	//	pGameObj = CIceStorm::Create(m_pGraphicDevice, m_pCommandList,
+	//		L"IceStorm1",
+	//		_vec3(0.f),
+	//		_vec3(0.f, 0.0f, 0.0f),
+	//		_vec3(0, 0, 0), 5.f, XMConvertToRadians(i * 10.f));
+	//	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"IceStorm1", pGameObj), E_FAIL);
+	//}
 	//pGameObj = CSnowParticle::Create(m_pGraphicDevice, m_pCommandList,
 	//	L"Snow",						// TextureTag
 	//	_vec3(2.f),		// Scale

@@ -36,7 +36,7 @@ HRESULT CEffectTrail::LateInit_GameObject()
 {
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer();
-
+	m_bisAlphaObject = true;
 	return S_OK;
 }
 

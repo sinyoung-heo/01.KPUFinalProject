@@ -197,6 +197,8 @@ private:
 	//Effect (Alpha)
 	CRenderTarget* m_pTargetpEffect = nullptr;
 	CScreenTex* m_pEffectBuffer = nullptr;
+	CRenderTarget* m_pTargetEffectTex = nullptr;
+	CScreenTex* m_pEffectTexBuffer = nullptr;
 	//Effect (Add)
 	_bool m_bisSetAddEffectTexture{ false };
 	CRenderTarget* m_pTargetAddEffect = nullptr;

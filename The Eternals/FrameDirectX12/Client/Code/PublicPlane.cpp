@@ -39,8 +39,8 @@ HRESULT CPublicPlane::LateInit_GameObject()
 	SetUp_DescriptorHeap(pTexture->Get_Texture(), m_pRenderer->Get_TargetShadowDepth()->Get_TargetTexture());
 
 
-	m_uiDiffuse = 6;
-	m_fNormalMapDeltatime = 7;//NormIdx
+	m_uiDiffuse = 9;
+	m_fNormalMapDeltatime = 10;//NormIdx
 	m_fPatternMapDeltatime = 2;//SpecIdx
 	return S_OK;	
 }
@@ -49,7 +49,7 @@ _int CPublicPlane::Update_GameObject(const _float & fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
-	if (m_bIsDead ||m_fAlpha<0.f)
+	if (m_bIsDead /*||m_fAlpha<0.f*/)
 		return DEAD_OBJ;
 
 	/*__________________________________________________________________________________________________________
@@ -84,7 +84,8 @@ _int CPublicPlane::LateUpdate_GameObject(const _float & fTimeDelta)
 
 void CPublicPlane::Render_GameObject(const _float& fTimeDelta)
 {
-	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_fNormalMapDeltatime, m_fPatternMapDeltatime);
+	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_fNormalMapDeltatime, m_fPatternMapDeltatime
+		,0,4);
 }
 
 HRESULT CPublicPlane::Add_Component(wstring wstrMeshTag)
@@ -123,6 +124,8 @@ void CPublicPlane::Set_ConstantTable()
 	tCB_ShaderMesh.vLightPos = tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 
+	m_fDeltaTime += Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.5f;
+	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
 	m_fAlpha -= Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.3f;
 	tCB_ShaderMesh.fOffset6 = m_fAlpha;
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);

@@ -85,11 +85,7 @@ ________________________________________________________________________________
 VS_OUT VS_MAIN(VS_IN vs_input)
 {
     VS_OUT vs_output = (VS_OUT) 0;
-  
     float4x4 matworld = g_matWorld;
-    //matworld._11 *= g_fOffset1;
-    //matworld._22 *= g_fOffset1;
-    //matworld._33 *= g_fOffset1;
     float4x4 matWV, matWVP;
     matWV = mul(matworld, g_matView);
     matWVP = mul(matWV, g_matProj);
@@ -97,9 +93,23 @@ VS_OUT VS_MAIN(VS_IN vs_input)
     vs_output.Pos = mul(float4(vs_input.Pos, 1.0f), matWVP);
     vs_output.TexUV = vs_input.TexUV;
     vs_output.Normal = vs_input.Normal;
-	
 
+    return (vs_output);
+}
+VS_OUT VS_ANIUV(VS_IN vs_input)
+{
+    VS_OUT vs_output = (VS_OUT) 0;
+    float4x4 matworld = g_matWorld;
+    float4x4 matWV, matWVP;
+    matWV = mul(matworld, g_matView);
+    matWVP = mul(matWV, g_matProj);
 	
+    vs_output.Pos = mul(float4(vs_input.Pos, 1.0f), matWVP);
+    vs_output.TexUV = vs_input.TexUV;
+    vs_output.Normal = vs_input.Normal;
+
+    
+    vs_output.AniUV = vs_input.TexUV + float2(g_fOffset1, -g_fOffset1);
     return (vs_output);
 }
 
@@ -169,13 +179,36 @@ PS_OUT PS_DECAL(VS_OUT ps_input) : SV_TARGET
 {
     PS_OUT ps_output = (PS_OUT) 0;
 	
-    float4 Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
-    float4 Normal = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
-    float4 Spec = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
-    float4 color = mul(Diffuse, Normal.r);
-    color = mul(color, Spec);
+    vector vDistortionInfo = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV);
+    float2 vDistortion = (vDistortionInfo.xy * 2.f) - 1.f;
+    vDistortion *= g_fOffset1; //°­µµ
+    float2 NewUV = float2(ps_input.TexUV.x + vDistortion.x * vDistortionInfo.b, ps_input.TexUV.y + vDistortion.y * vDistortionInfo.b);
    
+    float2 AniUV = ps_input.AniUV;
+   
+    
+    float4 D = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 N = g_TexNormal.Sample(g_samLinearWrap, NewUV *2);
+  
+    float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
+    
+    float4 color = mul(D.r, N) + mul(D.g, float4(0.6, 0, 0, 1)) + mul(D.b, float4(0.5, 0.5, 0.5,1));
+ 
+	
     ps_output.Effect4 = color;
-    ps_output.Effect4.a = g_fOffset6;
+    ps_output.Effect4.a = 1;
+    return (ps_output);
+}
+PS_OUT PS_SWORDTRAIL(VS_OUT ps_input) : SV_TARGET
+{
+    PS_OUT ps_output = (PS_OUT) 0;
+	
+    float4 D = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 N = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 color = D + N + S;
+   
+    ps_output.Effect3 = color;
+    ps_output.Effect3.a = 1.f;
     return (ps_output);
 }

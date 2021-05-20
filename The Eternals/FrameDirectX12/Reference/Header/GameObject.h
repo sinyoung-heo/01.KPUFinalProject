@@ -35,6 +35,7 @@ public:
 	list<CColliderSphere*>& Get_ColliderList()		{ return m_lstCollider; }
 	const _uint&			Get_InstanceIdx()		{ return m_uiInstanceIdx; }
 	const _bool&			Get_IsUsingInstance()	{ return m_bIsUsingInstance; }
+	const _bool&			Get_IsAlphaObject() { return m_bisAlphaObject; }
 	const high_resolution_clock::time_point& Get_LastMoveTime() { return m_last_move_time; }
 	// Set
 	void	Set_CurrentStageID(const char& chStageID)				{ m_chCurStageID = chStageID; }
@@ -136,7 +137,7 @@ protected:
 
 	_uint	m_uiInstanceIdx		= 0;
 	_bool	m_bIsUsingInstance  = false;
-
+	_bool   m_bisAlphaObject = false;
 	/*__________________________________________________________________________________________________________
 	[ Collision ]
 	____________________________________________________________________________________________________________*/

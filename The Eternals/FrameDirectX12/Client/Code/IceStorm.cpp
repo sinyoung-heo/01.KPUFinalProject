@@ -122,7 +122,7 @@ _int CIceStorm::LateUpdate_GameObject(const _float & fTimeDelta)
 void CIceStorm::Render_GameObject(const _float& fTimeDelta)
 {
 	Set_ConstantTable();
-	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps,0,2, 3);
+	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps,0,2, 3,0,0);
 }
 void CIceStorm::Render_CrossFilterGameObject(const _float& fTimeDelta)
 {

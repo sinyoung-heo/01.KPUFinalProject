@@ -17,6 +17,7 @@ Texture2D Effect1 : register(t1);
 Texture2D Effect2 : register(t2);
 Texture2D Effect3 : register(t3);
 Texture2D Effect4 : register(t4);
+Texture2D EffectTex : register(t5);
 /*____________________________________________________________________
 [ Vertex Shader ]
 ______________________________________________________________________*/
@@ -50,8 +51,9 @@ float4 PS_MAIN(VS_OUT ps_input) : SV_TARGET
     float4 output2 = Effect2.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 output3 = Effect3.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 output4 = Effect4.Sample(g_samLinearWrap, ps_input.TexUV);
-
-    float4 FinalOut = output0 + output1 + output2 + output3 + output4;
+    float4 output5 = EffectTex.Sample(g_samLinearWrap, ps_input.TexUV);
+    
+    float4 FinalOut = output0 + output1 + output2 + output3 + output4 + output5;
     FinalOut.a = 1;
     return FinalOut;
 }

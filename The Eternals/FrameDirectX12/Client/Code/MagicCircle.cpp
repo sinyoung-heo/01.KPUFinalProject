@@ -57,20 +57,20 @@ _int CMagicCircle::Update_GameObject(const _float & fTimeDelta)
 
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MAGICCIRCLE, this), -1);
 	/*Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);*/
-
-	_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
-	m_pTransCom->m_vPos = Pos;
-	m_pTransCom->m_vPos.y += 0.5f;
-
-	m_pTransCom->m_vAngle.y += 0.1f;
-
-	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
-	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
 	/*____________________________________________________________________
 	TransCom - Update WorldMatrix.
 	______________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
+	_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
+	m_pTransCom->m_vPos = Pos;
+	m_pTransCom->m_vPos.y += 0.2f;
+
+	m_pTransCom->m_vAngle.y += 0.2f;
+
+	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
+	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
+	
 	return NO_EVENT;
 }
 
@@ -86,7 +86,7 @@ _int CMagicCircle::LateUpdate_GameObject(const _float & fTimeDelta)
 
 void CMagicCircle::Render_GameObject(const _float& fTimeDelta)
 {
-	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_fNormalMapDeltatime, m_fPatternMapDeltatime);
+	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_fNormalMapDeltatime, m_fPatternMapDeltatime,0,0);
 }
 
 HRESULT CMagicCircle::Add_Component(wstring wstrMeshTag)

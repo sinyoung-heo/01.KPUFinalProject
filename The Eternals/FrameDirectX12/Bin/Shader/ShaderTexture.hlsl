@@ -159,8 +159,7 @@ float4 PS_SNOW(VS_OUT ps_input) : SV_TARGET
     float v = (ps_input.TexUV.y / g_fSceneCnt) + g_fCurScene * (1.0f / g_fSceneCnt);
 	
     float4 Color = g_TexDiffuse.Sample(g_samLinearWrap, float2(u, v));
-	
-    Color = mul(Color, float4(0.f, 1.f, 0.0f,0.f));
+
     Color.a = g_fAlpha;
     return (Color);
 }

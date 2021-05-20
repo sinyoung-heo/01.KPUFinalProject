@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "PublicSphere.h"
+#include "SwordTrail.h"
 #include "GraphicDevice.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
@@ -8,17 +8,16 @@
 #include "RenderTarget.h"
 #include "TimeMgr.h"
 #include "DescriptorHeapMgr.h"
-CPublicSphere::CPublicSphere(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CSwordTrail::CSwordTrail(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
 }
 
 
-HRESULT CPublicSphere::Ready_GameObject(wstring wstrMeshTag,
+HRESULT CSwordTrail::Ready_GameObject(wstring wstrMeshTag,
 											 const _vec3 & vScale,
 											 const _vec3 & vAngle, 
-											 const _vec3 & vPos,
-											 const _vec3& vPosOffset)
+											 const _vec3 & vPos)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
@@ -26,67 +25,68 @@ HRESULT CPublicSphere::Ready_GameObject(wstring wstrMeshTag,
 	m_wstrMeshTag = wstrMeshTag;
 	m_pTransCom->m_vScale	= vScale;
 	m_pTransCom->m_vAngle	= vAngle;
-	m_pTransCom->m_vPos = vPos + vPosOffset;
+	m_pTransCom->m_vPos		= vPos;
 
-	m_fDeltaTime = -1.f;
 	return S_OK;
 }
 
-HRESULT CPublicSphere::LateInit_GameObject()
+HRESULT CSwordTrail::LateInit_GameObject()
 {
-	m_pShaderCom->SetUp_ShaderConstantBuffer();
-	Engine::CTexture* pTexture = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(L"EffectPublic", Engine::COMPONENTID::ID_STATIC));
+
+	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
+	Engine::CTexture* pTexture = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(L"PublicMagic", Engine::COMPONENTID::ID_STATIC));
 	SetUp_DescriptorHeap(pTexture->Get_Texture(), m_pRenderer->Get_TargetShadowDepth()->Get_TargetTexture());
 
-	return S_OK;
+
+	m_uiDiffuse = 8;
+	m_fNormalMapDeltatime = 5;//NormIdx
+	m_fPatternMapDeltatime = 8;//SpecIdx
+	return S_OK;	
 }
 
-_int CPublicSphere::Update_GameObject(const _float & fTimeDelta)
+_int CSwordTrail::Update_GameObject(const _float & fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
-	if (m_bIsDead)
+	if (m_bIsDead )
 		return DEAD_OBJ;
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
+
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MAGICCIRCLE, this), -1);
-
-	/*____________________________________________________________________
-	TransCom - Update WorldMatrix.
-	______________________________________________________________________*/
-
+	/*Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);*/
 
 	_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
 	m_pTransCom->m_vPos = Pos;
-	m_pTransCom->m_vPos.y += 20.f;
-	//m_pTransCom->m_vPos.z += 0.3f;
-
+	m_pTransCom->m_vPos.y+=0.2f;
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
 	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
-
+	/*____________________________________________________________________
+	TransCom - Update WorldMatrix.
+	______________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 	return NO_EVENT;
 }
 
-_int CPublicSphere::LateUpdate_GameObject(const _float & fTimeDelta)
+_int CSwordTrail::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
+	Set_ConstantTable();
 
 	return NO_EVENT;
 }
 
 
-void CPublicSphere::Render_GameObject(const _float& fTimeDelta)
+void CSwordTrail::Render_GameObject(const _float& fTimeDelta)
 {
-	Set_ConstantTable();
-	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps,0,0, 3,0,0);
+	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_fNormalMapDeltatime, m_fPatternMapDeltatime,0,0);
 }
 
-HRESULT CPublicSphere::Add_Component(wstring wstrMeshTag)
+HRESULT CSwordTrail::Add_Component(wstring wstrMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -100,29 +100,15 @@ HRESULT CPublicSphere::Add_Component(wstring wstrMeshTag)
 	// Shader
 	m_pShaderCom = static_cast<Engine::CShaderMeshEffect*>(m_pComponentMgr->Clone_Component(L"ShaderMeshEffect", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(2), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(5), E_FAIL);
 	m_pShaderCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
-
 
 	return S_OK;
 }
 
-void CPublicSphere::Set_ConstantTable()
+void CSwordTrail::Set_ConstantTable()
 {
-	fCurFrame += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) *16.f;
-	// Sprite XÃà
-	if (fCurFrame >8)
-	{
-		fCurFrame = 0.0f;
-		fCurScene += 1.0f;
-	}
-
-	// Sprite YÃà
-	if (fCurScene >=2)
-	{
-		fCurScene = 0.0f;
-	}
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
@@ -136,25 +122,18 @@ void CPublicSphere::Set_ConstantTable()
 	tCB_ShaderMesh.vLightPos = tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 
-	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.5f;
-	m_fDeltatime2 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
-	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
-	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
-	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
-	tCB_ShaderMesh.fDissolve = sin(m_fDeltatime3);
-
-	tCB_ShaderMesh.vEmissiveColor.x = 8.f;
-	tCB_ShaderMesh.vEmissiveColor.y = 2.f;
-	tCB_ShaderMesh.vEmissiveColor.z = fCurFrame;
-	tCB_ShaderMesh.vEmissiveColor.w = fCurScene;
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 
-
-	if (m_fDeltaTime > 1.f)
-		m_fDeltaTime = -1.f;
 	
 }
-HRESULT CPublicSphere::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth)
+
+void CSwordTrail::Set_ConstantTableShadowDepth()
+{
+
+}
+
+
+HRESULT CSwordTrail::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth)
 {
 	_uint m_uiTexSize = vecTexture.size() + vecShadowDepth.size();
 
@@ -199,24 +178,24 @@ HRESULT CPublicSphere::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTe
 }
 
 
-Engine::CGameObject* CPublicSphere::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
+Engine::CGameObject* CSwordTrail::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
 												wstring wstrMeshTag, 
 												const _vec3 & vScale,
 												const _vec3 & vAngle,
-												const _vec3 & vPos, const _vec3& vPosOffset)
+												const _vec3 & vPos)
 {
-	CPublicSphere* pInstance = new CPublicSphere(pGraphicDevice, pCommandList);
+	CSwordTrail* pInstance = new CSwordTrail(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos, vPosOffset)))
+	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
 }
 
-void CPublicSphere::Free()
+void CSwordTrail::Free()
 {
 	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pMeshCom);
-	Engine::Safe_Release(m_pDescriptorHeaps);
+//	Engine::Safe_Release(m_pDescriptorHeaps);
 	Engine::Safe_Release(m_pShaderCom);
 }
