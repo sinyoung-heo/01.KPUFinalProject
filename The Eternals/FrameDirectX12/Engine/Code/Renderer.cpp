@@ -504,21 +504,20 @@ void CRenderer::Render_SSAO()
 
 void CRenderer::Render_Alpha(const _float& fTimeDelta)
 {
-	//sort(m_RenderList[RENDER_ALPHA].begin(), m_RenderList[RENDER_ALPHA].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
-	//	{
-	//		return pSour->Get_DepthOfView() > pDest->Get_DepthOfView();
-	//	});
+	sort(m_RenderList[RENDER_ALPHA].begin(), m_RenderList[RENDER_ALPHA].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
+		{
+			return pSour->Get_DepthOfView() > pDest->Get_DepthOfView();
+		});
 	sort(m_RenderList[RENDER_MAGICCIRCLE].begin(), m_RenderList[RENDER_MAGICCIRCLE].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
 		{
 			return pSour->Get_DepthOfView() > pDest->Get_DepthOfView();
 		});
 
-	//m_pTargetEffectTex->SetUp_OnGraphicDevice();
+	
 
-	//for (auto& pGameObject : m_RenderList[RENDER_ALPHA])
-	//	pGameObject->Render_GameObject(fTimeDelta);
+	for (auto& pGameObject : m_RenderList[RENDER_ALPHA])
+		pGameObject->Render_GameObject(fTimeDelta);
 
-	//m_pTargetEffectTex->Release_OnGraphicDevice();
 
 	m_pTargetpEffect->SetUp_OnGraphicDevice();
 
