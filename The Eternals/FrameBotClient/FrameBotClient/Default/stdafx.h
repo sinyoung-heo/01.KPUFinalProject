@@ -44,9 +44,8 @@ using namespace chrono;
 /* USER HEADER */
 #include "define.h"
 #include "enum.h"
+#include "..\..\..\FrameServer\Server\Header\dataType.h"
+#include "..\..\..\FrameServer\Server\Header\protocol.h"
 #include "struct.h"
 #include "extern.h"
 #include "function.h"
-
-#include "..\..\..\FrameServer\Server\Header\protocol.h"
-#include "..\..\..\FrameServer\Server\Header\dataType.h"

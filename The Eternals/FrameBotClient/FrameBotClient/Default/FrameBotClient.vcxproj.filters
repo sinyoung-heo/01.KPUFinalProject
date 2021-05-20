@@ -23,6 +23,9 @@
     <Filter Include="99.Header\00.System\00.vector">
       <UniqueIdentifier>{713c6498-8626-487e-a378-de0f7587981c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Object">
+      <UniqueIdentifier>{1effe555-c536-4362-a56f-a5ae1a84dc7e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
