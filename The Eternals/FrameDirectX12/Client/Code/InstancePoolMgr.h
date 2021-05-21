@@ -97,12 +97,10 @@ private:
 
 	// PCWeapon
 	INSTANCE_POOL_DESC<CPCWeaponTwoHand>* m_pPCWeaponTwohand19_A_SM_Pool;
-	INSTANCE_POOL_DESC<CPCWeaponTwoHand>* m_pPCWeaponTwoHand19_SM_Pool;
 	INSTANCE_POOL_DESC<CPCWeaponTwoHand>* m_pPCWeaponTwoHand27_SM_Pool;
 	INSTANCE_POOL_DESC<CPCWeaponTwoHand>* m_pPCWeaponTwoHand29_SM_Pool;
 	INSTANCE_POOL_DESC<CPCWeaponTwoHand>* m_pPCWeaponTwoHand31_SM_Pool;
 	INSTANCE_POOL_DESC<CPCWeaponTwoHand>* m_pPCWeaponTwoHand33_B_SM_Pool;
-	INSTANCE_POOL_DESC<CPCWeaponTwoHand>* m_pPCWeaponTwoHand33_SM_Pool;
 
 private:
 	virtual void Free();

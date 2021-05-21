@@ -152,17 +152,6 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 	if (fTimeDelta > TIME_OFFSET)
 		return NO_EVENT;
 
-	//if (g_bIsActive)
-	//{
-	//	if (Engine::KEY_DOWN(DIK_8))
-	//	{
-	//		_int temp = (_int)m_chCurWeaponType;
-	//		++temp;
-	//		temp = temp % 7;
-	//		m_chCurWeaponType = (char)temp;
-	//	}
-	//}
-
 	SetUp_StageID();
 	Is_ChangeWeapon();
 	Set_WeaponHierarchy();

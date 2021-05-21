@@ -712,13 +712,6 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 		}
 	}
 
-	//if (Engine::KEY_DOWN(DIK_9))
-	//{
-	//	_int temp = (_int)m_chCurWeaponType;
-	//	++temp;
-	//	temp = temp % 7;
-	//	m_chCurWeaponType = (char)temp;
-	//}
 }
 
 void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)

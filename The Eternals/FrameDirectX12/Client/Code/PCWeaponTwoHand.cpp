@@ -37,9 +37,6 @@ HRESULT CPCWeaponTwoHand::Ready_GameObject(wstring wstrMeshTag,
 	if (m_wstrMeshTag == L"Twohand19_A_SM")
 		m_chCurWeaponType = Twohand19_A_SM;
 
-	else if (m_wstrMeshTag == L"TwoHand19_SM")
-		m_chCurWeaponType = TwoHand19_SM;
-
 	else if (m_wstrMeshTag == L"TwoHand27_SM")
 		m_chCurWeaponType = TwoHand27_SM;
 
@@ -51,9 +48,6 @@ HRESULT CPCWeaponTwoHand::Ready_GameObject(wstring wstrMeshTag,
 
 	else if (m_wstrMeshTag == L"TwoHand33_B_SM")
 		m_chCurWeaponType = TwoHand33_B_SM;
-
-	else if (m_wstrMeshTag == L"TwoHand33_SM")
-		m_chCurWeaponType = TwoHand33_SM;
 
 	return S_OK;
 }

@@ -157,8 +157,6 @@ void CPCWeapon::SetUp_WeaponType()
 	// WeaponTwoHand
 	if (L"Twohand19_A_SM" == m_wstrMeshTag)
 		m_chWeaponType = Twohand19_A_SM;
-	else if (L"TwoHand19_SM" == m_wstrMeshTag)
-		m_chWeaponType = TwoHand19_SM;
 	else if (L"TwoHand27_SM" == m_wstrMeshTag)
 		m_chWeaponType = TwoHand27_SM;
 	else if (L"TwoHand29_SM" == m_wstrMeshTag)
@@ -167,8 +165,6 @@ void CPCWeapon::SetUp_WeaponType()
 		m_chWeaponType = TwoHand31_SM;
 	else if (L"TwoHand33_B_SM" == m_wstrMeshTag)
 		m_chWeaponType = TwoHand33_B_SM;
-	else if (L"TwoHand33_SM" == m_wstrMeshTag)
-		m_chWeaponType = TwoHand33_SM;
 }
 
 void CPCWeapon::Set_ConstantTable()
