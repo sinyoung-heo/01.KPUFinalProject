@@ -49,7 +49,7 @@ _int CEffectTrail::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bIsRender)
 	{
-		
+
 		if (m_fAlpha < 1.0f)
 		{
 			m_fAlpha += 10.0f * fTimeDelta;
@@ -62,7 +62,20 @@ _int CEffectTrail::Update_GameObject(const _float& fTimeDelta)
 		{
 			m_fAlpha = 1.0f;
 		}
+	}
+	else
+	{
+		if (m_fAlpha > 0.0f)
+		{
+			m_fAlpha -= 7.5f * fTimeDelta;
 
+			if (m_fAlpha <= 0.0f)
+				m_fAlpha = 0.0f;
+		}
+	}
+
+	if (m_fAlpha > 0.0f)
+	{
 		/*__________________________________________________________________________________________________________
 		[ Renderer - Add Render Group ]
 		____________________________________________________________________________________________________________*/
@@ -71,20 +84,8 @@ _int CEffectTrail::Update_GameObject(const _float& fTimeDelta)
 
 		else if (Engine::CRenderer::RENDER_DISTORTION == m_eRenderGroup)
 			Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_DISTORTION, this), -1);
-
 	}
-	else
-	{
-		if (m_fAlpha > 0.0f)
-		{
-			m_fAlpha -= 10.0f * fTimeDelta;
 
-			if (m_fAlpha <= 0.0f)
-				m_fAlpha = 0.0f;
-		}
-
-
-	}
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
