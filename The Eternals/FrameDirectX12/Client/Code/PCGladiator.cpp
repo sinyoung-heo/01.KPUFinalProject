@@ -74,9 +74,9 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 	m_mapSkillKeyInput[L"STINGER_BLADE"] = DIK_1;
 	m_mapSkillKeyInput[L"CUTTING_SLASH"] = DIK_2;
 	m_mapSkillKeyInput[L"JAW_BREAKER"]   = DIK_3;
-	m_mapSkillKeyInput[L"WIND_CUTTER"]   = DIK_4;
-	m_mapSkillKeyInput[L"GAIA_CRUSH"]    = DIK_5;
-	m_mapSkillKeyInput[L"DRAW_SWORD"]    = DIK_6;
+	// m_mapSkillKeyInput[L"WIND_CUTTER"]   = DIK_4;
+	m_mapSkillKeyInput[L"GAIA_CRUSH"]    = DIK_4;
+	m_mapSkillKeyInput[L"DRAW_SWORD"]    = DIK_5;
 	//m_mapSkillKeyInput[L"CUT_HEAD"]      = DIK_4;
 
 	/*__________________________________________________________________________________________________________

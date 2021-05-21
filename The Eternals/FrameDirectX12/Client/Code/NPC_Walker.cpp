@@ -91,18 +91,21 @@ _int CNPC_Walker::Update_GameObject(const _float& fTimeDelta)
 	Active_NPC(fTimeDelta);
 	SetUp_PositionInterpolation(fTimeDelta);
 
-	/*__________________________________________________________________________________________________________
-	[ Play Animation ]
-	____________________________________________________________________________________________________________*/
-	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
-	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
-	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
+	if (m_pRenderer->Get_Frustum().Contains(m_pBoundingBoxCom->Get_BoundingInfo()) != DirectX::DISJOINT)
+	{
+		/*__________________________________________________________________________________________________________
+		[ Play Animation ]
+		____________________________________________________________________________________________________________*/
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+		m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
+		m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
-	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+		/*__________________________________________________________________________________________________________
+		[ Renderer - Add Render Group ]
+		____________________________________________________________________________________________________________*/
+		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+	}
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
@@ -116,8 +119,11 @@ _int CNPC_Walker::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
-	Set_ConstantTableShadowDepth();
-	Set_ConstantTable();
+	if (m_pRenderer->Get_Frustum().Contains(m_pBoundingBoxCom->Get_BoundingInfo()) != DirectX::DISJOINT)
+	{
+		Set_ConstantTableShadowDepth();
+		Set_ConstantTable();
+	}
 
 	return NO_EVENT;
 }
