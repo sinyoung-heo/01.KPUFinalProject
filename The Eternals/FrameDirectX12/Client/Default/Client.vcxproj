@@ -190,8 +190,10 @@
     <ClInclude Include="..\Code\Monkey.h" />
     <ClInclude Include="..\Code\NPC_Assistant.h" />
     <ClInclude Include="..\Code\NPC_Quest.h" />
+    <ClInclude Include="..\Code\PCArcher.h" />
     <ClInclude Include="..\Code\PCGladiator.h" />
     <ClInclude Include="..\Code\PCOthersGladiator.h" />
+    <ClInclude Include="..\Code\PCPriest.h" />
     <ClInclude Include="..\Code\PCWeapon.h" />
     <ClInclude Include="..\Code\PCWeaponTwoHand.h" />
     <ClInclude Include="..\Code\Portal.h" />
@@ -248,12 +250,14 @@
     <ClInclude Include="..\Code\TexEffectInstance.h" />
     <ClInclude Include="..\Code\TextureDistortion.h" />
     <ClInclude Include="..\Code\TextureEffect.h" />
+    <ClInclude Include="..\Header\ArcherAnimation.h" />
     <ClInclude Include="..\Header\Const.h" />
     <ClInclude Include="..\Header\enum.h" />
     <ClInclude Include="..\Header\Extern.h" />
     <ClInclude Include="..\Header\GladiatorAnimation.h" />
     <ClInclude Include="..\Header\Include.h" />
     <ClInclude Include="..\Header\Macro.h" />
+    <ClInclude Include="..\Header\PriestAnimation.h" />
     <ClInclude Include="..\Header\Struct.h" />
     <ClInclude Include="..\Header\Template.h" />
     <ClInclude Include="..\Header\Typedef.h" />
@@ -302,8 +306,10 @@
     <ClCompile Include="..\Code\NPC_Merchant.cpp" />
     <ClCompile Include="..\Code\NPC_Stander.cpp" />
     <ClCompile Include="..\Code\PacketMgr.cpp" />
+    <ClCompile Include="..\Code\PCArcher.cpp" />
     <ClCompile Include="..\Code\PCGladiator.cpp" />
     <ClCompile Include="..\Code\PCOthersGladiator.cpp" />
+    <ClCompile Include="..\Code\PCPriest.cpp" />
     <ClCompile Include="..\Code\PCWeapon.cpp" />
     <ClCompile Include="..\Code\PCWeaponTwoHand.cpp" />
     <ClCompile Include="..\Code\Popori_F.cpp" />

@@ -1,3 +1,5 @@
+DynamicMesh|Character|HumanPCEvent27Archer
+DynamicMesh|Character|PoporiMR25Priest
 DynamicMesh|Character|PoporiR27Gladiator
 DynamicMesh|Monster|CloderA
 DynamicMesh|Monster|Crab
@@ -20,6 +22,11 @@ DynamicMesh|NPC|Human_girl
 DynamicMesh|NPC|NPC_Villagers
 DynamicMesh|NPC|Popori_boy
 DynamicMesh|NPC|Popori_M_Merchant
+PCWeapon|Bow|Bow18_A_SM
+PCWeapon|Bow|Bow23_SM
+PCWeapon|Bow|Bow27_SM
+PCWeapon|Bow|Bow31_SM
+PCWeapon|Bow|Event_Season_Bow_01_SM
 PCWeapon|TwoHand|Twohand19_A_SM
 PCWeapon|TwoHand|TwoHand19_SM
 PCWeapon|TwoHand|TwoHand27_SM

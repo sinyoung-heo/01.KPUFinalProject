@@ -565,6 +565,18 @@
     <ClInclude Include="..\Code\SwordTrail.h">
       <Filter>02.GameObject\98.GameEffect\99.PublicEffect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\ArcherAnimation.h">
+      <Filter>02.GameObject\02.PlayerCharacter\01.PCArcher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\PriestAnimation.h">
+      <Filter>02.GameObject\02.PlayerCharacter\03.PCPriest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PCArcher.h">
+      <Filter>02.GameObject\02.PlayerCharacter\01.PCArcher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PCPriest.h">
+      <Filter>02.GameObject\02.PlayerCharacter\03.PCPriest</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -804,6 +816,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\SwordTrail.cpp">
       <Filter>02.GameObject\98.GameEffect\99.PublicEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PCArcher.cpp">
+      <Filter>02.GameObject\02.PlayerCharacter\01.PCArcher</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PCPriest.cpp">
+      <Filter>02.GameObject\02.PlayerCharacter\03.PCPriest</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

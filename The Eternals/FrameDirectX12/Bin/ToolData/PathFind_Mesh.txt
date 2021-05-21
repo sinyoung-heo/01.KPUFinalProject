@@ -1,3 +1,5 @@
+HumanPCEvent27Archer|HumanPCEvent27Archer.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\HumanPCEvent27Archer\
+PoporiMR25Priest|PoporiMR25Priest.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\PoporiMR25Priest\
 PoporiR27Gladiator|PoporiR27Gladiator.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\PoporiR27Gladiator\
 CloderA|CloderA.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\CloderA\
 Crab|Crab.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\Crab\
@@ -20,6 +22,11 @@ Human_girl|Human_girl.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Human_g
 NPC_Villagers|NPC_Villagers.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\NPC_Villagers\
 Popori_boy|Popori_boy.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Popori_boy\
 Popori_M_Merchant|Popori_M_Merchant.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Popori_M_Merchant\
+Bow18_A_SM|Bow18_A_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\PCWeapon\Bow\Bow18_A_SM\
+Bow23_SM|Bow23_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\PCWeapon\Bow\Bow23_SM\
+Bow27_SM|Bow27_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\PCWeapon\Bow\Bow27_SM\
+Bow31_SM|Bow31_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\PCWeapon\Bow\Bow31_SM\
+Event_Season_Bow_01_SM|Event_Season_Bow_01_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\PCWeapon\Bow\Event_Season_Bow_01_SM\
 Twohand19_A_SM|Twohand19_A_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\PCWeapon\TwoHand\Twohand19_A_SM\
 TwoHand19_SM|TwoHand19_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\PCWeapon\TwoHand\TwoHand19_SM\
 TwoHand27_SM|TwoHand27_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\PCWeapon\TwoHand\TwoHand27_SM\
