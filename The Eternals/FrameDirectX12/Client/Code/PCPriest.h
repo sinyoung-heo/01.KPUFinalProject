@@ -1,7 +1,7 @@
 #pragma once
 #include "Include.h"
 #include "GameObject.h"
-#include "ArcherAnimation.h"
+#include "PriestAnimation.h"
 
 namespace Engine
 {
