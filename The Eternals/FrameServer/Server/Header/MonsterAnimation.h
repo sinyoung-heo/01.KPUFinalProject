@@ -132,19 +132,22 @@ namespace GiantMonkey
 	constexpr int ATTACK_FLYSTAMP	= 7;
 	constexpr int ATTACK_COMBO		= 8;
 	constexpr int DEATH				= 9;
+	constexpr int FINCH				= 10;
+	constexpr int GROGGY			= 11;
+	constexpr int DOWN				= 12;
 
-	constexpr int NUM_ANIMATION		= 10;
+	constexpr int NUM_ANIMATION		= 13;
 
 	enum ANIM_GIANTMONKEY {
 		A_WAIT, A_WALK,
 		A_ATTACK_RIGHT, A_ATTACK_LEFT, A_ATTACK_STAMP, A_ATTACK_HOOK,
 		A_ATTACK_JUMPING, A_ATTACK_FLYSTAMP, A_ATTACK_COMBO,
-		A_DEATH, A_END
+		A_DEATH, A_FINCH, A_GROGGY, A_DOWN, A_END
 	};
 
 	static double duration[NUM_ANIMATION] =
 	{
-		19200, 6400, 12800, 9600, 17600, 17600, 16000, 22400, 30560, 22400
+		19200, 6400, 12800, 9600, 17600, 17600, 16000, 22400, 30560, 22400, 4800, 12800, 33120
 	};
 
 	constexpr int A_ATTACK_RIGHT_START_TICK     = 40;

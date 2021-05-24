@@ -107,6 +107,9 @@ _int CGiantMonkey::Update_GameObject(const _float& fTimeDelta)
 	/* Animation AI */
 	Change_Animation(fTimeDelta);
 
+	if (Engine::KEY_DOWN(DIK_N)) m_iMonsterStatus = 12;
+	if (Engine::KEY_DOWN(DIK_B)) m_iMonsterStatus = 11;
+	if (Engine::KEY_DOWN(DIK_V)) m_iMonsterStatus = 10;
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
@@ -416,6 +419,51 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) 
 			{
 				m_bIsStartDissolve = true;
+			}
+		}
+		break;
+
+		case GiantMonkey::A_FINCH:
+		{
+			m_uiAnimIdx = GiantMonkey::A_FINCH;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				m_iMonsterStatus = GiantMonkey::A_WAIT;
+
+				m_uiAnimIdx = GiantMonkey::A_WAIT;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			}
+		}
+		break;
+
+		case GiantMonkey::A_GROGGY:
+		{
+			m_uiAnimIdx = GiantMonkey::A_GROGGY;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				m_iMonsterStatus = GiantMonkey::A_WAIT;
+
+				m_uiAnimIdx = GiantMonkey::A_WAIT;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			}
+		}
+		break;
+
+		case GiantMonkey::A_DOWN:
+		{
+			m_uiAnimIdx = GiantMonkey::A_DOWN;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				m_iMonsterStatus = GiantMonkey::A_WAIT;
+
+				m_uiAnimIdx = GiantMonkey::A_WAIT;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
 		break;

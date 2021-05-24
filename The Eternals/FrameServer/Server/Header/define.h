@@ -13,7 +13,7 @@ constexpr int KEY_SERVER		= 1000000;
 #define PI					3.141592
 #define _3DMAX_FPS			30.0f
 #define ANIMA_INTERPOLATION	1.f
-#define MAX_ANI				10
+#define MAX_ANI				15
 
 /* GAME CONTENTS */
 constexpr int	SERVER_CORE					= 4;
