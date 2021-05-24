@@ -57,6 +57,7 @@ private:
 	void KeyInput_Move(const _float& fTimeDelta);
 	void KeyInput_Attack(const _float& fTimeDelta);
 	void KeyInput_StanceChange(const _float& fTimeDelta);
+	void KeyInput_AttackArrow(const _float& fTimeDelta);
 
 	void Move_OnNaviMesh(const _float& fTimeDelta);
 	void SetUp_RunMoveSpeed(const _float& fTimeDelta);
@@ -69,9 +70,11 @@ private:
 	void Send_Player_Move();
 	bool Is_Change_CamDirection();
 	void Is_ChangeWeapon();
-	void SetUp_WeaponRHand();
+	void SetUp_AttackSetting();
 	void SetUp_WeaponLHand();
 	void SetUp_WeaponBack();
+	void Ready_AngleInterpolationValue(const _float& fEndAngle);
+	void SetUp_AngleInterpolation(const _float& fTimeDelta);
 
 private:
 	/*__________________________________________________________________________________________________________
@@ -134,7 +137,6 @@ private:
 
 	Archer::STANCE		m_eStance                 = Archer::STANCE_END;
 	_bool				m_bIsCompleteStanceChange = true;
-	_uint				m_uiComoboCnt             = 0;
 	_bool				m_bIsSkill				  = false;
 	_bool				m_bIsSkillLoop			  = false;
 	map<wstring, _int>	m_mapSkillKeyInput;

@@ -28,5 +28,6 @@ namespace Archer
 
 	const _float MIN_SPEED       = 0.0f;
 	const _float MAX_SPEED       = 5.0f;
+	const _float MAX_ATTACK_SPEED = MAX_SPEED * 1.35f;
 	const _float MOVE_STOP_SPEED = 3.0f;
 }
