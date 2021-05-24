@@ -8,6 +8,7 @@ extern HINSTANCE	g_hInst;
 extern SOCKET	g_hSocket;
 extern int		g_iSNum;
 extern bool		g_bIsActive;
+extern char		g_cJob;
 #endif // SERVER
 
 

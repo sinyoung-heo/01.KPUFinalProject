@@ -304,21 +304,24 @@ void send_login_ok(int id)
 	p.type = SC_PACKET_LOGIN_OK;
 	p.id = id;
 
-	p.o_type	= pPlayer->m_type;
-	p.level		= pPlayer->m_iLevel;
-	p.hp		= pPlayer->m_iHp;
-	p.maxHp		= pPlayer->m_iMaxHp;
-	p.mp		= pPlayer->m_iMp;
-	p.maxMp		= pPlayer->m_iMaxMp;
-	p.exp		= pPlayer->m_iExp;
-	p.maxExp	= pPlayer->m_iMaxExp;
-	p.min_att	= pPlayer->m_iMinAtt;
-	p.max_att	= pPlayer->m_iMaxAtt;
-	p.spd		= pPlayer->m_fSpd;
+	p.o_type		= pPlayer->m_type;
+	p.weaponType	= pPlayer->m_chWeaponType;
+	p.naviType		= pPlayer->m_chStageId;
 
-	p.posX		= pPlayer->m_vPos.x;
-	p.posY		= pPlayer->m_vPos.y;
-	p.posZ		= pPlayer->m_vPos.z;
+	p.level			= pPlayer->m_iLevel;
+	p.hp			= pPlayer->m_iHp;
+	p.maxHp			= pPlayer->m_iMaxHp;
+	p.mp			= pPlayer->m_iMp;
+	p.maxMp			= pPlayer->m_iMaxMp;
+	p.exp			= pPlayer->m_iExp;
+	p.maxExp		= pPlayer->m_iMaxExp;
+	p.min_att		= pPlayer->m_iMinAtt;
+	p.max_att		= pPlayer->m_iMaxAtt;
+	p.spd			= pPlayer->m_fSpd;
+
+	p.posX			= pPlayer->m_vPos.x;
+	p.posY			= pPlayer->m_vPos.y;
+	p.posZ			= pPlayer->m_vPos.z;
 
 	send_packet(id, &p);
 }
@@ -337,19 +340,18 @@ void send_enter_packet(int to_client, int new_id)
 	strncpy_s(p.name, pNewPlayer->m_ID, strlen(pNewPlayer->m_ID));
 
 	pNewPlayer->Get_ClientLock().unlock();
-	p.o_type = pNewPlayer->m_type;
-	//p.o_type           = PC_GLADIATOR;
-	p.weaponType       = Twohand19_A_SM;
-	p.stageID          = pNewPlayer->m_chStageId;
-	p.is_stance_attack = pNewPlayer->m_bIsAttackStance;
+	p.o_type			= pNewPlayer->m_type;
+	p.weaponType		= pNewPlayer->m_chWeaponType;
+	p.stageID			= pNewPlayer->m_chStageId;
+	p.is_stance_attack	= pNewPlayer->m_bIsAttackStance;
 
-	p.posX = pNewPlayer->m_vPos.x;
-	p.posY = pNewPlayer->m_vPos.y;
-	p.posZ = pNewPlayer->m_vPos.z;
+	p.posX				= pNewPlayer->m_vPos.x;
+	p.posY				= pNewPlayer->m_vPos.y;
+	p.posZ				= pNewPlayer->m_vPos.z;
 
-	p.dirX = pNewPlayer->m_vDir.x;
-	p.dirY = pNewPlayer->m_vDir.y;
-	p.dirZ = pNewPlayer->m_vDir.z;
+	p.dirX				= pNewPlayer->m_vDir.x;
+	p.dirY				= pNewPlayer->m_vDir.y;
+	p.dirZ				= pNewPlayer->m_vDir.z;
 
 	send_packet(to_client, &p);
 }

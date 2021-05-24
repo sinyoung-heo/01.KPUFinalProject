@@ -14,6 +14,8 @@
 #include "Font.h"
 #include "FadeInOut.h"
 
+char g_cJob = -1;
+
 CScene_Logo::CScene_Logo(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
 {
@@ -26,6 +28,16 @@ HRESULT CScene_Logo::Ready_Scene()
 	COUT_STR("");
 	COUT_STR("<< Ready Scene_Logo >>");
 	COUT_STR("");
+
+	while (g_cJob == -1)
+	{
+		int choice = -1;
+		cout << "Choice Your Job! (1.Gladiator 2.Archer 3.Priest): ";
+		cin >> choice;
+		if (choice == 1) g_cJob = PC_GLADIATOR;
+		else if (choice == 2) g_cJob = PC_ARCHER;
+		else if (choice == 3) g_cJob = PC_PRIEST;
+	}
 #endif
 
 	Engine::FAILED_CHECK_RETURN(Ready_LayerEnvironment(L"Layer_Environment"), E_FAIL);

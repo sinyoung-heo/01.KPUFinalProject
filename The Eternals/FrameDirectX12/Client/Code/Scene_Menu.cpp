@@ -4,12 +4,10 @@
 #include "Scene_MainStage.h"
 #include "Management.h"
 
-
 CScene_Menu::CScene_Menu(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
 {
 }
-
 
 HRESULT CScene_Menu::Ready_Scene()
 {

@@ -128,6 +128,9 @@ struct sc_packet_login_ok
 	int				id;
 
 	char			o_type;
+	char			weaponType;
+	char			naviType;
+
 	int				hp;
 	int				maxHp;
 	int				mp;
@@ -159,8 +162,8 @@ struct sc_packet_attack
 	unsigned char	size;
 	char			type;
 	int				id;
-	char			o_type;
 
+	char			o_type;
 	int				animIdx;
 	float			posX, posY, posZ;
 	float			dirX, dirY, dirZ;
@@ -176,10 +179,10 @@ struct sc_packet_enter
 	char			name[MAX_ID_LEN];
 	char			stageID;
 	char			o_type;
+	char			weaponType;
 	bool			is_stance_attack;
 	float			posX, posY, posZ;
 	float			dirX, dirY, dirZ;
-	char			weaponType;
 };
 
 struct sc_packet_leave 

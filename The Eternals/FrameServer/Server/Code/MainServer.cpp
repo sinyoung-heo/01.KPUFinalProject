@@ -825,9 +825,11 @@ void add_new_client(SOCKET ns)
 
 		//pNew->m_type	     = PC_GLADIATOR;
 		//pNew->m_chWeaponType = Twohand19_A_SM;
-		pNew->m_type	     = PC_ARCHER;
-		pNew->m_chWeaponType = Event_Season_Bow_01_SM;
-		
+		pNew->m_type			= PC_ARCHER;
+		pNew->m_chWeaponType	= Event_Season_Bow_01_SM;
+		pNew->m_chStageId		= STAGE_VELIKA;
+		pNew->m_bIsAttackStance = false;
+
 		pNew->m_iLevel	     = INIT_LEV;
 		pNew->m_iHp		     = INIT_HP;
 		pNew->m_iMaxHp	     = INIT_HP;
@@ -842,9 +844,6 @@ void add_new_client(SOCKET ns)
 		pNew->m_vPos	= _vec3(STAGE_VELIKA_X, 0.f, STAGE_VELIKA_Z);
 		pNew->m_vDir	= _vec3(0.f, 0.f, 1.f);
 		pNew->m_vAngle	= _vec3(0.f, 0.f, 0.f);
-
-		pNew->m_chStageId = STAGE_VELIKA;
-		pNew->m_bIsAttackStance = false;
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector((int)s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
 		CObjMgr::GetInstance()->Add_GameObject(L"PLAYER", pNew, (int)s_num);

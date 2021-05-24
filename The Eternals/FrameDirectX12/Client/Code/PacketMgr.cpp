@@ -87,7 +87,7 @@ HRESULT CPacketMgr::Connect_Server()
 	cout << "서버에 접속을 요청하였습니다. 잠시만 기다려주세요." << endl;
 #endif 
 	Sleep(1000);
-	CPacketMgr::Get_Instance()->send_login();
+	send_login();
 
 #ifdef ERR_CHECK
 	cout << "Login packet 전송완료" << endl;
@@ -107,7 +107,6 @@ void CPacketMgr::recv_packet()
 		int state = WSAGetLastError();
 		if (state != WSAEWOULDBLOCK)
 		{
-			cout << "recv error" << endl;
 			error_display("recv Error : ", state);
 			closesocket(g_hSocket);
 		}
@@ -801,14 +800,38 @@ void CPacketMgr::Login_Player(sc_packet_login_ok* packet)
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject* pGameObj = nullptr;
 	wstring wstrMeshTag = L"";
+	wstring wstrNaviMeshTag = L"";
 
+	/* NaviMesh Type */
+	if (packet->naviType == STAGE_VELIKA)
+		wstrNaviMeshTag = L"StageVelika_NaviMesh";
+	else if (packet->naviType == STAGE_BEACH)
+		wstrNaviMeshTag = L"StageBeach_NaviMesh";
+
+	/* Character Type */
 	if (PC_GLADIATOR == packet->o_type)
 	{
 		wstrMeshTag = L"PoporiR27Gladiator";
+
+		pGameObj = CPCGladiator::Create(m_pGraphicDevice, m_pCommandList,
+										wstrMeshTag,										// MeshTag
+										wstrNaviMeshTag,							// NaviMeshTag
+										_vec3(0.05f, 0.05f, 0.05f),							// Scale
+										_vec3(0.0f, 0.0f, 0.0f),							// Angle
+										_vec3(packet->posX, packet->posY, packet->posZ),	// Pos
+										/*TwoHand33_B_SM*/packet->weaponType);
 	}
 	else if (PC_ARCHER == packet->o_type)
 	{
 		wstrMeshTag = L"HumanPCEvent27Archer";
+
+		pGameObj = CPCArcher::Create(m_pGraphicDevice, m_pCommandList,
+									 wstrMeshTag,							// MeshTag
+									 wstrNaviMeshTag,							// NaviMeshTag
+									 _vec3(0.05f, 0.05f, 0.05f),						// Scale
+									 _vec3(0.0f, 0.0f, 0.0f),							// Angle
+									 _vec3(packet->posX, packet->posY, packet->posZ),	// Pos
+									 /*Event_Season_Bow_01_SM*/packet->weaponType);
 	}
 	else if (PC_PRIEST == packet->o_type)
 	{
@@ -824,13 +847,14 @@ void CPacketMgr::Login_Player(sc_packet_login_ok* packet)
 	//								_vec3(0.0f, 0.0f, 0.0f),							// Angle
 	//								_vec3(packet->posX, packet->posY, packet->posZ),	// Pos
 	//								TwoHand33_B_SM);									// WeaponType
-	pGameObj = CPCArcher::Create(m_pGraphicDevice, m_pCommandList,
-								 L"HumanPCEvent27Archer",							// MeshTag
-								 L"StageVelika_NaviMesh",							// NaviMeshTag
-								 _vec3(0.05f, 0.05f, 0.05f),						// Scale
-								 _vec3(0.0f, 0.0f, 0.0f),							// Angle
-								 _vec3(packet->posX, packet->posY, packet->posZ),	// Pos
-								 Event_Season_Bow_01_SM);							// WeaponType
+	// 
+	//pGameObj = CPCArcher::Create(m_pGraphicDevice, m_pCommandList,
+	//							 L"HumanPCEvent27Archer",							// MeshTag
+	//							 L"StageVelika_NaviMesh",							// NaviMeshTag
+	//							 _vec3(0.05f, 0.05f, 0.05f),						// Scale
+	//							 _vec3(0.0f, 0.0f, 0.0f),							// Angle
+	//							 _vec3(packet->posX, packet->posY, packet->posZ),	// Pos
+	//							 Event_Season_Bow_01_SM);							// WeaponType
 
 
 	pGameObj->Set_OType(packet->o_type);
@@ -946,7 +970,7 @@ void CPacketMgr::send_login()
 
 	p.size   = sizeof(p);
 	p.type   = CS_LOGIN;
-	// p.o_type = PC_GLADIATOR;
+	p.o_type = g_cJob;
 
 	int t_id = GetCurrentProcessId();
 	sprintf_s(p.name, "P%03d", t_id % 1000);
@@ -995,6 +1019,7 @@ void CPacketMgr::send_move_stop(const _vec3& vPos, const _vec3& vDir, const _int
 
 	p.size = sizeof(p);
 	p.type = CS_MOVE_STOP;
+
 	p.animIdx = iAniIdx;
 	p.posX = vPos.x;
 	p.posY = vPos.y;
