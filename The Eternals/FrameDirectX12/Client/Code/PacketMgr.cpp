@@ -830,7 +830,7 @@ void CPacketMgr::Login_Player(sc_packet_login_ok* packet)
 								 _vec3(0.05f, 0.05f, 0.05f),						// Scale
 								 _vec3(0.0f, 0.0f, 0.0f),							// Angle
 								 _vec3(packet->posX, packet->posY, packet->posZ),	// Pos
-								 Event_Season_Bow_01_SM);							// WeaponType
+								 Bow23_SM);											// WeaponType
 
 
 	pGameObj->Set_OType(packet->o_type);

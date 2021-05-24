@@ -17,6 +17,7 @@
 #include "NPC_Children.h"
 #include "PCOthersGladiator.h"
 #include "PCWeaponTwoHand.h"
+#include "PCWeaponBow.h"
 
 IMPLEMENT_SINGLETON(CInstancePoolMgr)
 
@@ -40,6 +41,27 @@ INSTANCE_POOL_DESC<CPCWeaponTwoHand>* CInstancePoolMgr::Get_PCWeaponTwoHand(cons
 
 	else if (chWeaponType == TwoHand33_B_SM)
 		return m_pPCWeaponTwoHand33_B_SM_Pool;
+
+	else
+		return nullptr;
+}
+
+INSTANCE_POOL_DESC<CPCWeaponBow>* CInstancePoolMgr::Get_PCWeaponBow(const char& chWeaponType)
+{
+	if (chWeaponType == Bow18_A_SM)
+		return m_pPCWeaponBow18_A_SM_Pool;
+
+	else if (chWeaponType == Bow23_SM)
+		return m_pPCWeaponBow23_SM_Pool;
+
+	else if (chWeaponType == Bow27_SM)
+		return m_pPCWeaponBow27_SM_Pool;
+
+	else if (chWeaponType == Bow31_SM)
+		return m_pPCWeaponBow31_SM_Pool;
+
+	else if (chWeaponType == Event_Season_Bow_01_SM)
+		return m_pPCWeaponEvent_Season_Bow_01_SM_Pool;
 
 	else
 		return nullptr;
@@ -80,6 +102,11 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponTwoHand29_SM_Pool, L"TwoHand29_SM", 16);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponTwoHand31_SM_Pool, L"TwoHand31_SM", 16);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponTwoHand33_B_SM_Pool, L"TwoHand33_B_SM", 16);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponBow18_A_SM_Pool, L"Bow18_A_SM", 16);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponBow23_SM_Pool, L"Bow23_SM", 16);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponBow27_SM_Pool, L"Bow27_SM", 16);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponBow31_SM_Pool, L"Bow31_SM", 16);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponEvent_Season_Bow_01_SM_Pool, L"Event_Season_Bow_01_SM", 16);
 
 	// PCOthers
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCOthersGladiatorPool, 10);
@@ -118,4 +145,9 @@ void CInstancePoolMgr::Free()
 	Safe_Release_InstacePool(m_pPCWeaponTwoHand29_SM_Pool);
 	Safe_Release_InstacePool(m_pPCWeaponTwoHand31_SM_Pool);
 	Safe_Release_InstacePool(m_pPCWeaponTwoHand33_B_SM_Pool);
+	Safe_Release_InstacePool(m_pPCWeaponBow18_A_SM_Pool);
+	Safe_Release_InstacePool(m_pPCWeaponBow23_SM_Pool);
+	Safe_Release_InstacePool(m_pPCWeaponBow27_SM_Pool);
+	Safe_Release_InstacePool(m_pPCWeaponBow31_SM_Pool);
+	Safe_Release_InstacePool(m_pPCWeaponEvent_Season_Bow_01_SM_Pool);
 }
