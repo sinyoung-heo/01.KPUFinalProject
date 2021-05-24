@@ -174,7 +174,7 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 	PS_OUT ps_output = (PS_OUT) 0;
 	
 	// Diffuse
-	ps_output.Diffuse	= g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
+	ps_output.Diffuse	= g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV) + float4(g_vEmissiveColor.xyz, 0.f);
 	
 	// Normal
 	float4 TexNormal	= g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);

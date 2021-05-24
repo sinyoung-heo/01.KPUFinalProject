@@ -823,8 +823,11 @@ void add_new_client(SOCKET ns)
 		ZeroMemory(&pNew->m_recv_over.wsa_over, sizeof(pNew->m_recv_over.wsa_over));
 		pNew->m_recv_start = pNew->m_recv_over.iocp_buf;
 
-		pNew->m_type	     = PC_GLADIATOR;
-		pNew->m_chWeaponType = Twohand19_A_SM;
+		//pNew->m_type	     = PC_GLADIATOR;
+		//pNew->m_chWeaponType = Twohand19_A_SM;
+		pNew->m_type	     = PC_ARCHER;
+		pNew->m_chWeaponType = Event_Season_Bow_01_SM;
+		
 		pNew->m_iLevel	     = INIT_LEV;
 		pNew->m_iHp		     = INIT_HP;
 		pNew->m_iMaxHp	     = INIT_HP;

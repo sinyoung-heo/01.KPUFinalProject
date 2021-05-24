@@ -337,8 +337,8 @@ void send_enter_packet(int to_client, int new_id)
 	strncpy_s(p.name, pNewPlayer->m_ID, strlen(pNewPlayer->m_ID));
 
 	pNewPlayer->Get_ClientLock().unlock();
-	//p.o_type = pNewPlayer->m_type;
-	p.o_type           = PC_GLADIATOR;
+	p.o_type = pNewPlayer->m_type;
+	//p.o_type           = PC_GLADIATOR;
 	p.weaponType       = Twohand19_A_SM;
 	p.stageID          = pNewPlayer->m_chStageId;
 	p.is_stance_attack = pNewPlayer->m_bIsAttackStance;

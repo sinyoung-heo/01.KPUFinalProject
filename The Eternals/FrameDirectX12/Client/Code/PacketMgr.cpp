@@ -9,6 +9,7 @@
 /* USER */
 #include "PCGladiator.h"
 #include "PCOthersGladiator.h"
+#include "PCArcher.h"
 /* NPC */
 #include "NPC_Walker.h"
 #include "NPC_Assistant.h"
@@ -807,22 +808,30 @@ void CPacketMgr::Login_Player(sc_packet_login_ok* packet)
 	}
 	else if (PC_ARCHER == packet->o_type)
 	{
-
+		wstrMeshTag = L"HumanPCEvent27Archer";
 	}
 	else if (PC_PRIEST == packet->o_type)
 	{
-
+		wstrMeshTag = L"PoporiMR25Priest";
 	}
 	else
 		wstrMeshTag = L"PoporiR27Gladiator";
 
-	pGameObj = CPCGladiator::Create(m_pGraphicDevice, m_pCommandList,
-									wstrMeshTag,										// MeshTag
-									L"StageVelika_NaviMesh",							// NaviMeshTag
-									_vec3(0.05f, 0.05f, 0.05f),							// Scale
-									_vec3(0.0f, 0.0f, 0.0f),							// Angle
-									_vec3(packet->posX, packet->posY, packet->posZ),	// Pos
-									TwoHand33_B_SM);									// WeaponType
+	//pGameObj = CPCGladiator::Create(m_pGraphicDevice, m_pCommandList,
+	//								wstrMeshTag,										// MeshTag
+	//								L"StageVelika_NaviMesh",							// NaviMeshTag
+	//								_vec3(0.05f, 0.05f, 0.05f),							// Scale
+	//								_vec3(0.0f, 0.0f, 0.0f),							// Angle
+	//								_vec3(packet->posX, packet->posY, packet->posZ),	// Pos
+	//								TwoHand33_B_SM);									// WeaponType
+	pGameObj = CPCArcher::Create(m_pGraphicDevice, m_pCommandList,
+								 L"HumanPCEvent27Archer",							// MeshTag
+								 L"StageVelika_NaviMesh",							// NaviMeshTag
+								 _vec3(0.05f, 0.05f, 0.05f),						// Scale
+								 _vec3(0.0f, 0.0f, 0.0f),							// Angle
+								 _vec3(packet->posX, packet->posY, packet->posZ),	// Pos
+								 Event_Season_Bow_01_SM);							// WeaponType
+
 
 	pGameObj->Set_OType(packet->o_type);
 	pGameObj->Set_ServerNumber(g_iSNum);
