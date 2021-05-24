@@ -268,6 +268,15 @@
     <Filter Include="97.Mgr\04.InstancePoolMgr">
       <UniqueIdentifier>{782ae5d2-11c5-4a86-a19c-e951b3e41635}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.GameEffect\03.IceStorm">
+      <UniqueIdentifier>{4cb4476f-b756-48eb-8227-1c7d07a5bc6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.GameEffect\04.SnowParticle">
+      <UniqueIdentifier>{691bb138-03bb-450c-995b-db0741417389}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.GameEffect\99.PublicEffect">
+      <UniqueIdentifier>{fb5fb213-d064-4e7c-a9de-a75415cf0ac5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -534,16 +543,29 @@
     <ClInclude Include="..\Code\NPC_Children.h">
       <Filter>02.GameObject\04.NPC\05_NPC_Children</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\PublicSphere.h" />
-    <ClInclude Include="..\Code\RainDrop.h" />
     <ClInclude Include="..\Code\ServerMath.h">
       <Filter>97.Mgr\02.ServerMath</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\IceStorm.h" />
     <ClInclude Include="..\Code\ServerMath.h" />
-    <ClInclude Include="..\Code\SnowParticle.h" />
-    <ClInclude Include="..\Code\PublicPlane.h" />
-    <ClInclude Include="..\Code\SwordTrail.h" />
+    <ClInclude Include="..\Code\IceStorm.h">
+      <Filter>02.GameObject\98.GameEffect\03.IceStorm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\SnowParticle.h">
+      <Filter>02.GameObject\98.GameEffect\04.SnowParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PublicPlane.h">
+      <Filter>02.GameObject\98.GameEffect\99.PublicEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PublicSphere.h">
+      <Filter>02.GameObject\98.GameEffect\99.PublicEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\RainDrop.h">
+      <Filter>02.GameObject\98.GameEffect\99.PublicEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\SwordTrail.h">
+      <Filter>02.GameObject\98.GameEffect\99.PublicEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\FireDecal.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -762,16 +784,29 @@
     <ClCompile Include="..\Code\NPC_Children.cpp">
       <Filter>02.GameObject\04.NPC\05_NPC_Children</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\PublicSphere.cpp" />
-    <ClCompile Include="..\Code\RainDrop.cpp" />
     <ClCompile Include="..\Code\ServerMath.cpp">
       <Filter>97.Mgr\02.ServerMath</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\IceStorm.cpp" />
     <ClCompile Include="..\Code\ServerMath.cpp" />
-    <ClCompile Include="..\Code\SnowParticle.cpp" />
-    <ClCompile Include="..\Code\PublicPlane.cpp" />
-    <ClCompile Include="..\Code\SwordTrail.cpp" />
+    <ClCompile Include="..\Code\IceStorm.cpp">
+      <Filter>02.GameObject\98.GameEffect\03.IceStorm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\SnowParticle.cpp">
+      <Filter>02.GameObject\98.GameEffect\04.SnowParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PublicPlane.cpp">
+      <Filter>02.GameObject\98.GameEffect\99.PublicEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PublicSphere.cpp">
+      <Filter>02.GameObject\98.GameEffect\99.PublicEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\RainDrop.cpp">
+      <Filter>02.GameObject\98.GameEffect\99.PublicEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\SwordTrail.cpp">
+      <Filter>02.GameObject\98.GameEffect\99.PublicEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\FireDecal.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

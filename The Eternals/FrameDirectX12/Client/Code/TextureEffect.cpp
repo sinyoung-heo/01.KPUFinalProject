@@ -85,14 +85,14 @@ ________________________________________________________________________________
 	Engine::CGameObject::SetUp_BillboardMatrix();
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
 	
-	if (m_strTextag == L"UnderFire")
+	/*if (m_strTextag == L"UnderFire")
 	{
 		_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
 		m_pTransCom->m_vPos = Pos;
 		m_pTransCom->m_vPos.y += 1.2f;
 
 		m_pTransCom->m_vPos.z += 0.3f;
-	}
+	}*/
 	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
 	return NO_EVENT;
 }

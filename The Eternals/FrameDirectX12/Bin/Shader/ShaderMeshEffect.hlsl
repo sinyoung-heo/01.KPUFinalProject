@@ -192,7 +192,7 @@ PS_OUT PS_DECAL(VS_OUT ps_input) : SV_TARGET
   
     float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
     
-    float4 color = mul(D.r, N) + mul(D.g, float4(0.6, 0, 0, 1)) + mul(D.b, float4(0.5, 0.5, 0.5,1));
+    float4 color = mul(D.r, N) + mul(D.g, float4(0.6 + g_fOffset2, g_fOffset2, 0, 1)) + mul(D.b, float4(1.f, 0.5, 0.5, 1));
  
 	
     ps_output.Effect4 = color;
