@@ -949,9 +949,10 @@ void CPacketMgr::send_login()
 {
 	cs_packet_login p;
 
-	p.size   = sizeof(p);
-	p.type   = CS_LOGIN;
-	p.o_type = g_cJob;
+	p.size        = sizeof(p);
+	p.type        = CS_LOGIN;
+	p.o_type      = g_cJob;
+	p.weapon_type = Bow23_SM;
 
 	int t_id = GetCurrentProcessId();
 	sprintf_s(p.name, "P%03d", t_id % 1000);

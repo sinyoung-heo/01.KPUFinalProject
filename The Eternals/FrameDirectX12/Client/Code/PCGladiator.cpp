@@ -1121,8 +1121,6 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 
 void CPCGladiator::KeyInput_Tumbling(const _float& fTimeDelta)
 {
-	_float fAngle = 0.0f;
-
 	if (Engine::KEY_PRESSING(DIK_W) && Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkillLoop)
 	{
 		// 대각선 - 우 상단.

@@ -24,6 +24,7 @@ void process_packet(int id)
 		pPlayer->Get_ClientLock().lock();
 		strncpy_s(pPlayer->m_ID, p->name, strlen(p->name));
 		pPlayer->m_type = p->o_type;
+		pPlayer->m_chWeaponType = p->weapon_type;
 		pPlayer->Get_ClientLock().unlock();
 
 #ifndef DUMMY

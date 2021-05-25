@@ -58,14 +58,18 @@ private:
 	void KeyInput_Attack(const _float& fTimeDelta);
 	void KeyInput_StanceChange(const _float& fTimeDelta);
 	void KeyInput_AttackArrow(const _float& fTimeDelta);
+	void KeyInput_SkillAttack(const _float& fTimeDelta);
+	void KeyInput_BackDash(const _float& fTimeDelta);
 
 	void Move_OnNaviMesh(const _float& fTimeDelta);
+	void AttackMove_OnNaviMesh(const _float& fTimeDelta);
 	void SetUp_RunMoveSpeed(const _float& fTimeDelta);
 	void SetUp_RunAnimation();
 	void SetUp_RunToIdleAnimation(const _float& fTimeDelta);
 	void SetUp_PlayerStance_FromAttackToNoneAttack();
 	void SetUp_PlayerStance_FromNoneAttackToAttack();
 	void Change_PlayerStance(const _float& fTimeDelta);
+	void SetUp_AttackMove(const _uint& uiAniIdx, const _uint& uiStartTick, const _uint& uiStopTick, const _float& fMoveSpeed, const _float& fStopSpeed);
 
 	void Send_Player_Move();
 	bool Is_Change_CamDirection();

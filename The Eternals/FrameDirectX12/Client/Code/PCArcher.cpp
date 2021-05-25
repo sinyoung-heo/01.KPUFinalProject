@@ -87,7 +87,7 @@ HRESULT CPCArcher::Ready_GameObject(wstring wstrMeshTag,
 
 	m_tAttackMoveSpeedInterpolationDesc.linear_ratio        = 0.0f;
 	m_tAttackMoveSpeedInterpolationDesc.v1                  = Archer::MIN_SPEED;
-	m_tAttackMoveSpeedInterpolationDesc.v2                  = Archer::MAX_SPEED;
+	m_tAttackMoveSpeedInterpolationDesc.v2                  = Archer::MAX_ATTACK_SPEED;
 	m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = 0.0f;
 
 	/*__________________________________________________________________________________________________________
@@ -597,6 +597,10 @@ void CPCArcher::Set_AnimationSpeed()
 	{
 		m_fAnimationSpeed = TPS * 1.35f;
 	}
+	else if (m_uiAnimIdx == Archer::BACK_DASH)
+	{
+		m_fAnimationSpeed = TPS * 1.25f;
+	}
 	else
 		m_fAnimationSpeed = TPS;
 }
@@ -733,11 +737,22 @@ void CPCArcher::KeyInput_Attack(const _float& fTimeDelta)
 
 	KeyInput_StanceChange(fTimeDelta);
 
-	if (Archer::STANCE_ATTACK == m_eStance && 
-		!m_bIsSkill && !m_bIsSkillLoop && m_bIsCompleteStanceChange &&
-		m_pMeshCom->Is_BlendingComplete())
+	if (Archer::STANCE_ATTACK == m_eStance && m_bIsCompleteStanceChange)
 	{
-		KeyInput_AttackArrow(fTimeDelta);
+		if (m_pMeshCom->Is_BlendingComplete())
+		{
+			KeyInput_AttackArrow(fTimeDelta);
+			KeyInput_SkillAttack(fTimeDelta);
+			KeyInput_BackDash(fTimeDelta);
+		}
+
+		if (m_bIsAttack)
+		{
+			// SkillAttack Move
+			SetUp_AttackMove(Archer::BACK_DASH, Archer::BACK_DASH_MOVE_START, Archer::BACK_DASH_MOVE_STOP, 8.0f, -5.0f);
+
+			AttackMove_OnNaviMesh(fTimeDelta);
+		}
 	}
 }
 
@@ -784,7 +799,7 @@ void CPCArcher::KeyInput_StanceChange(const _float& fTimeDelta)
 
 void CPCArcher::KeyInput_AttackArrow(const _float& fTimeDelta)
 {
-	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB))
+	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) && !m_bIsSkill && !m_bIsSkillLoop)
 	{
 		SetUp_WeaponLHand();
 		SetUp_AttackSetting();
@@ -803,12 +818,60 @@ void CPCArcher::KeyInput_AttackArrow(const _float& fTimeDelta)
 	}
 }
 
+void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
+{
+
+}
+
+void CPCArcher::KeyInput_BackDash(const _float& fTimeDelta)
+{
+	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkill && !m_bIsSkillLoop)
+	{
+		SetUp_WeaponLHand();
+		SetUp_AttackSetting();
+		m_uiAnimIdx    = Archer::BACK_DASH;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+	}
+
+	if ((Archer::BACK_DASH == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)))
+	{
+		m_bIsAttack    = false;
+		m_bIsSkill     = false;
+		m_bIsSkillLoop = false;
+		m_uiAnimIdx    = Archer::ATTACK_WAIT;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+	}
+}
+
 void CPCArcher::Move_OnNaviMesh(const _float& fTimeDelta)
 {
 	if (m_bIsKeyDown || Archer::MIN_SPEED != m_pInfoCom->m_fSpeed)
 	{
 		m_pTransCom->m_vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
 															  &m_pTransCom->m_vDir,
+															  m_pInfoCom->m_fSpeed * fTimeDelta);
+	}
+}
+
+void CPCArcher::AttackMove_OnNaviMesh(const _float& fTimeDelta)
+{
+	// Set Speed
+	m_tAttackMoveSpeedInterpolationDesc.linear_ratio += m_tAttackMoveSpeedInterpolationDesc.interpolation_speed * fTimeDelta;
+	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(m_tAttackMoveSpeedInterpolationDesc.v1, m_tAttackMoveSpeedInterpolationDesc.v2, m_tAttackMoveSpeedInterpolationDesc.linear_ratio);
+	
+	// NaviMesh ÀÌµ¿.
+	if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
+	{
+		_float fDir = 1.0f;
+		if (m_uiAnimIdx == Archer::BACK_DASH)
+			fDir = -1.0f;
+
+		m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+		m_pTransCom->m_vDir.Normalize();
+		m_pTransCom->m_vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+															  &(m_pTransCom->m_vDir * fDir),
 															  m_pInfoCom->m_fSpeed * fTimeDelta);
 	}
 }
@@ -946,6 +1009,24 @@ void CPCArcher::Change_PlayerStance(const _float& fTimeDelta)
 		{
 			m_bIsCompleteStanceChange = true;
 		}
+	}
+}
+
+void CPCArcher::SetUp_AttackMove(const _uint& uiAniIdx, 
+								 const _uint& uiStartTick,
+								 const _uint& uiStopTick,
+								 const _float& fMoveSpeed, 
+								 const _float& fStopSpeed)
+{
+	if (uiAniIdx == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
+	{
+		// Move On
+		if (m_ui3DMax_CurFrame >= uiStartTick && m_ui3DMax_CurFrame < uiStopTick)
+			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = fMoveSpeed;
+
+		// Move Off
+		else
+			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = fStopSpeed;
 	}
 }
 

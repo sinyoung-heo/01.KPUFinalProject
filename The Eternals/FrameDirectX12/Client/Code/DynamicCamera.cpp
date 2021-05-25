@@ -210,11 +210,11 @@ void CDynamicCamera::SetUp_TargetFromDist(const _float& fTimeDelta)
 
 void CDynamicCamera::SetUp_CameraAngle()
 {
-	if (m_pTransCom->m_vAngle.y < 0.f)
-		m_pTransCom->m_vAngle.y = 359.9f;
+	//if (m_pTransCom->m_vAngle.y < 0.f)
+	//	m_pTransCom->m_vAngle.y = 359.9f;
 
-	if (m_pTransCom->m_vAngle.y >= 360.f)
-		m_pTransCom->m_vAngle.y = (_float)(static_cast<_int>(m_pTransCom->m_vAngle.y) % 360);
+	//if (m_pTransCom->m_vAngle.y >= 360.f)
+	//	m_pTransCom->m_vAngle.y = (_float)(static_cast<_int>(m_pTransCom->m_vAngle.y) % 360);
 
 	if (m_pTransCom->m_vAngle.x > CAM_ANGLE_OFFSETMAX_X)
 		m_pTransCom->m_vAngle.x = CAM_ANGLE_OFFSETMAX_X;
