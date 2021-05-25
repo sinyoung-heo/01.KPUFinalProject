@@ -20,7 +20,9 @@ class CNPC_Quest;
 class CNPC_Children;
 
 class CPCOthersGladiator;
+
 class CPCWeaponTwoHand;
+class CPCWeaponBow;
 
 
 class CInstancePoolMgr : public Engine::CBase
@@ -59,7 +61,8 @@ public:
 	// PCOthers
 	INSTANCE_POOL_DESC<CPCOthersGladiator>* Get_PCOthersGladiatorPool() { return m_pPCOthersGladiatorPool; }
 	// PCWeapon
-	INSTANCE_POOL_DESC<CPCWeaponTwoHand>* Get_PCWeaponTwoHand(const char& chWeaponType);
+	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	Get_PCWeaponTwoHand(const char& chWeaponType);
+	INSTANCE_POOL_DESC<CPCWeaponBow>*		Get_PCWeaponBow(const char& chWeaponType);
 
 
 	void Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
@@ -96,11 +99,16 @@ private:
 	INSTANCE_POOL_DESC<CPCOthersGladiator>* m_pPCOthersGladiatorPool;
 
 	// PCWeapon
-	INSTANCE_POOL_DESC<CPCWeaponTwoHand>* m_pPCWeaponTwohand19_A_SM_Pool;
-	INSTANCE_POOL_DESC<CPCWeaponTwoHand>* m_pPCWeaponTwoHand27_SM_Pool;
-	INSTANCE_POOL_DESC<CPCWeaponTwoHand>* m_pPCWeaponTwoHand29_SM_Pool;
-	INSTANCE_POOL_DESC<CPCWeaponTwoHand>* m_pPCWeaponTwoHand31_SM_Pool;
-	INSTANCE_POOL_DESC<CPCWeaponTwoHand>* m_pPCWeaponTwoHand33_B_SM_Pool;
+	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	m_pPCWeaponTwohand19_A_SM_Pool;
+	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	m_pPCWeaponTwoHand27_SM_Pool;
+	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	m_pPCWeaponTwoHand29_SM_Pool;
+	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	m_pPCWeaponTwoHand31_SM_Pool;
+	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	m_pPCWeaponTwoHand33_B_SM_Pool;
+	INSTANCE_POOL_DESC<CPCWeaponBow>*		m_pPCWeaponBow18_A_SM_Pool;
+	INSTANCE_POOL_DESC<CPCWeaponBow>*		m_pPCWeaponBow23_SM_Pool;
+	INSTANCE_POOL_DESC<CPCWeaponBow>*		m_pPCWeaponBow27_SM_Pool;
+	INSTANCE_POOL_DESC<CPCWeaponBow>*		m_pPCWeaponBow31_SM_Pool;
+	INSTANCE_POOL_DESC<CPCWeaponBow>*		m_pPCWeaponEvent_Season_Bow_01_SM_Pool;
 
 private:
 	virtual void Free();

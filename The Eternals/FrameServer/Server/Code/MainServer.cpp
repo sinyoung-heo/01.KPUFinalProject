@@ -824,7 +824,7 @@ void add_new_client(SOCKET ns)
 		pNew->m_recv_start = pNew->m_recv_over.iocp_buf;
 
 		pNew->m_type			= PC_ARCHER;
-		pNew->m_chWeaponType	= Event_Season_Bow_01_SM;
+		pNew->m_chWeaponType	= Bow23_SM;
 		pNew->m_chStageId		= STAGE_VELIKA;
 		pNew->m_bIsAttackStance = false;
 

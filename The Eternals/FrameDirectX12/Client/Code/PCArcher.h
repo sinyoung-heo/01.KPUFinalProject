@@ -15,6 +15,7 @@ namespace Engine
 }
 
 class CDynamicCamera;
+class CPCWeaponBow;
 class CInstancePoolMgr;
 
 class CPCArcher : public Engine::CGameObject
@@ -54,14 +55,26 @@ private:
 
 	void Key_Input(const _float& fTimeDelta);
 	void KeyInput_Move(const _float& fTimeDelta);
+	void KeyInput_Attack(const _float& fTimeDelta);
+	void KeyInput_StanceChange(const _float& fTimeDelta);
+	void KeyInput_AttackArrow(const _float& fTimeDelta);
 
 	void Move_OnNaviMesh(const _float& fTimeDelta);
 	void SetUp_RunMoveSpeed(const _float& fTimeDelta);
 	void SetUp_RunAnimation();
 	void SetUp_RunToIdleAnimation(const _float& fTimeDelta);
+	void SetUp_PlayerStance_FromAttackToNoneAttack();
+	void SetUp_PlayerStance_FromNoneAttackToAttack();
+	void Change_PlayerStance(const _float& fTimeDelta);
 
 	void Send_Player_Move();
 	bool Is_Change_CamDirection();
+	void Is_ChangeWeapon();
+	void SetUp_AttackSetting();
+	void SetUp_WeaponLHand();
+	void SetUp_WeaponBack();
+	void Ready_AngleInterpolationValue(const _float& fEndAngle);
+	void SetUp_AngleInterpolation(const _float& fTimeDelta);
 
 private:
 	/*__________________________________________________________________________________________________________
@@ -84,9 +97,9 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	CDynamicCamera*		m_pDynamicCamera = nullptr;
-	//CPCWeaponTwoHand*	m_pWeapon        = nullptr;
-	wstring				m_wstrMeshTag    = L"";
+	CDynamicCamera*	m_pDynamicCamera = nullptr;
+	CPCWeaponBow*	m_pWeapon        = nullptr;
+	wstring			m_wstrMeshTag    = L"";
 
 	// Speed Linear Interpolation
 	Engine::LINEAR_INTERPOLATION_DESC<_float> m_tMoveSpeedInterpolationDesc;
@@ -124,7 +137,6 @@ private:
 
 	Archer::STANCE		m_eStance                 = Archer::STANCE_END;
 	_bool				m_bIsCompleteStanceChange = true;
-	_uint				m_uiComoboCnt             = 0;
 	_bool				m_bIsSkill				  = false;
 	_bool				m_bIsSkillLoop			  = false;
 	map<wstring, _int>	m_mapSkillKeyInput;

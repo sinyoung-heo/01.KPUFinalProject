@@ -6,8 +6,8 @@ constexpr char TwoHand31_SM   = 3;
 constexpr char TwoHand33_B_SM = 4;
 
 constexpr char Bow18_A_SM             = 0;
-constexpr char Bow23_SM               = 1;
-constexpr char Bow27_SM               = 2;
+constexpr char Bow27_SM               = 1;
+constexpr char Bow23_SM               = 2;
 constexpr char Bow31_SM               = 3;
 constexpr char Event_Season_Bow_01_SM = 4;
 

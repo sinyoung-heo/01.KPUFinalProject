@@ -153,7 +153,6 @@ void CPCWeaponTwoHand::Render_ShadowDepth(const _float& fTimeDelta,
 										  const _int& iContextIdx)
 {
 	CPCWeapon::Render_ShadowDepth(fTimeDelta, pCommandList, iContextIdx);
-
 }
 
 CPCWeaponTwoHand* CPCWeaponTwoHand::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
