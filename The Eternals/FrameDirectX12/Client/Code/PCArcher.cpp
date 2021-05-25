@@ -17,6 +17,7 @@
 #include "CharacterHpGauge.h"
 #include "CharacterMpGauge.h"
 #include "ShaderMgr.h"
+#include "PCWeaponBow.h"
 
 CPCArcher::CPCArcher(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -146,7 +147,7 @@ _int CPCArcher::Update_GameObject(const _float& fTimeDelta)
 	if (fTimeDelta > TIME_OFFSET)
 		return NO_EVENT;
 
-	// Is_ChangeWeapon();
+	Is_ChangeWeapon();
 	SetUp_StageID();
 
 	/*__________________________________________________________________________________________________________
@@ -181,7 +182,7 @@ _int CPCArcher::Update_GameObject(const _float& fTimeDelta)
 	Move_OnNaviMesh(fTimeDelta);
 
 	// Angle Linear Interpolation
-	// SetUp_AngleInterpolation(fTimeDelta);
+	SetUp_AngleInterpolation(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
@@ -202,9 +203,9 @@ _int CPCArcher::Update_GameObject(const _float& fTimeDelta)
 	//// AfterImage
 	//Make_AfterImage(fTimeDelta);
 
-	//// Weapon Update
-	//if (m_pWeapon != nullptr)
-	//	m_pWeapon->Update_GameObject(fTimeDelta);
+	// Weapon Update
+	if (m_pWeapon != nullptr)
+		m_pWeapon->Update_GameObject(fTimeDelta);
 
 	return NO_EVENT;
 }
@@ -240,9 +241,9 @@ _int CPCArcher::LateUpdate_GameObject(const _float& fTimeDelta)
 	Set_ConstantTableShadowDepth();
 	Set_ConstantTable();
 
-	//// Weapon Update
-	//if (m_pWeapon != nullptr)
-	//	m_pWeapon->LateUpdate_GameObject(fTimeDelta);
+	// Weapon Update
+	if (m_pWeapon != nullptr)
+		m_pWeapon->LateUpdate_GameObject(fTimeDelta);
 
 	return NO_EVENT;
 }
@@ -297,6 +298,7 @@ void CPCArcher::Render_AfterImage(const _float& fTimeDelta)
 		ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
 		tCB_ShaderMesh.matWorld       = Engine::CShader::Compute_MatrixTranspose(*iter_begin);
 		tCB_ShaderMesh.vAfterImgColor = *Alpha_begin;
+		tCB_ShaderMesh.vEmissiveColor = _rgba(1.0f, 1.0f, 1.0f, 1.0f);
 		if (Alpha_begin != Alpha_end)
 			Alpha_begin++;
 
@@ -304,7 +306,6 @@ void CPCArcher::Render_AfterImage(const _float& fTimeDelta)
 
 		// Render Buffer
 		m_pMeshCom->Render_DynamicMeshAfterImage(m_pShaderCom, i);
-
 	}
 }
 
@@ -360,6 +361,16 @@ HRESULT CPCArcher::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 
 HRESULT CPCArcher::SetUp_PCWeapon()
 {
+	if (m_chCurWeaponType != m_chPreWeaponType)
+	{
+		m_pWeapon = static_cast<CPCWeaponBow*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponBow(m_chCurWeaponType)));
+		m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")));
+		m_pWeapon->Set_ParentMatrix(&m_pTransCom->m_matWorld);
+		m_pWeapon->Update_GameObject(0.016f);
+
+		m_chPreWeaponType = m_chCurWeaponType;
+	}
+
 	return S_OK;
 }
 
@@ -548,12 +559,12 @@ void CPCArcher::Set_ConstantTable()
 
 	Engine::CB_SHADER_MESH tCB_ShaderMesh;
 	ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH));
-	tCB_ShaderMesh.matWorld      = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderMesh.matLightView  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
-	tCB_ShaderMesh.matLightProj  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
-	tCB_ShaderMesh.vLightPos     = tShadowDesc.vLightPosition;
-	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
-	tCB_ShaderMesh.vEmissiveColor = _rgba(0.1f, 0.1f, 0.1f, 0.0f);
+	tCB_ShaderMesh.matWorld       = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderMesh.matLightView   = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
+	tCB_ShaderMesh.matLightProj   = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
+	tCB_ShaderMesh.vLightPos      = tShadowDesc.vLightPosition;
+	tCB_ShaderMesh.fLightPorjFar  = tShadowDesc.fLightPorjFar;
+	tCB_ShaderMesh.vEmissiveColor = _rgba(1.25f, 1.25f, 1.25f, 0.0f);
 
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 }
@@ -577,10 +588,14 @@ void CPCArcher::Set_ConstantTableShadowDepth()
 
 void CPCArcher::Set_AnimationSpeed()
 {
-	if (m_uiAnimIdx == Archer::NONE_ATTACK_IDLE ||
-		m_uiAnimIdx == Archer::NONE_ATTACK_WALK)
+
+	if (m_uiAnimIdx == Archer::ATTACK_ARROW)
 	{
-		m_fAnimationSpeed = TPS;
+		m_fAnimationSpeed = TPS * 1.5f;
+	}
+	else if (m_uiAnimIdx == Archer::ATTACK_RUN)
+	{
+		m_fAnimationSpeed = TPS * 1.35f;
 	}
 	else
 		m_fAnimationSpeed = TPS;
@@ -589,9 +604,11 @@ void CPCArcher::Set_AnimationSpeed()
 void CPCArcher::Set_BlendingSpeed()
 {
 	if (m_uiAnimIdx == Archer::NONE_ATTACK_IDLE ||
-		m_uiAnimIdx == Archer::NONE_ATTACK_WALK)
+		m_uiAnimIdx == Archer::NONE_ATTACK_WALK ||
+		m_uiAnimIdx == Archer::ATTACK_WAIT ||
+		m_uiAnimIdx == Archer::ATTACK_RUN)
 	{
-		m_fBlendingSpeed = 0.005f;
+		m_fBlendingSpeed = 0.001f;
 	}
 	else
 		m_fBlendingSpeed = 0.005f;
@@ -602,6 +619,8 @@ void CPCArcher::Key_Input(const _float& fTimeDelta)
 	if (!g_bIsActive) return;
 
 	KeyInput_Move(fTimeDelta);
+	KeyInput_Attack(fTimeDelta);
+	
 }
 
 void CPCArcher::KeyInput_Move(const _float& fTimeDelta)
@@ -636,11 +655,6 @@ void CPCArcher::KeyInput_Move(const _float& fTimeDelta)
 		m_last_move_time	= high_resolution_clock::now();
 		m_bIsKeyDown		= true;
 		m_bIsSendMoveStop	= false;
-
-		//if (Archer::STANCE_ATTACK == m_eStance)
-		//	SetUp_WeaponRHand();
-		//else if (Archer::STANCE_NONEATTACK == m_eStance)
-		//	SetUp_WeaponBack();
 	}
 
 	else if (Engine::KEY_PRESSING(DIK_S))
@@ -669,11 +683,6 @@ void CPCArcher::KeyInput_Move(const _float& fTimeDelta)
 		m_last_move_time	= high_resolution_clock::now();
 		m_bIsKeyDown		= true;
 		m_bIsSendMoveStop	= false;
-
-		//if (Archer::STANCE_ATTACK == m_eStance)
-		//	SetUp_WeaponRHand();
-		//else if (Archer::STANCE_NONEATTACK == m_eStance)
-		//	SetUp_WeaponBack();
 	}
 	// 좌로 이동.
 	else if (Engine::KEY_PRESSING(DIK_A))
@@ -683,11 +692,6 @@ void CPCArcher::KeyInput_Move(const _float& fTimeDelta)
 		m_eKeyState             = MVKEY::K_LEFT;
 		m_bIsKeyDown            = true;
 		m_bIsSendMoveStop		= false;
-
-		//if (Archer::STANCE_ATTACK == m_eStance)
-		//	SetUp_WeaponRHand();
-		//else if (Archer::STANCE_NONEATTACK == m_eStance)
-		//	SetUp_WeaponBack();
 	}
 	// 우로 이동.	
 	else if (Engine::KEY_PRESSING(DIK_D))
@@ -697,11 +701,6 @@ void CPCArcher::KeyInput_Move(const _float& fTimeDelta)
 		m_eKeyState             = MVKEY::K_RIGHT;
 		m_bIsKeyDown            = true;
 		m_bIsSendMoveStop		= false;
-
-		//if (Archer::STANCE_ATTACK == m_eStance)
-		//	SetUp_WeaponRHand();
-		//else if (Archer::STANCE_NONEATTACK == m_eStance)
-		//	SetUp_WeaponBack();
 	}
 	// 움직임 Stop
 	else
@@ -727,6 +726,83 @@ void CPCArcher::KeyInput_Move(const _float& fTimeDelta)
 	SetUp_RunToIdleAnimation(fTimeDelta);
 }
 
+void CPCArcher::KeyInput_Attack(const _float& fTimeDelta)
+{
+	if (nullptr == m_pWeapon)
+		return;
+
+	KeyInput_StanceChange(fTimeDelta);
+
+	if (Archer::STANCE_ATTACK == m_eStance && 
+		!m_bIsSkill && !m_bIsSkillLoop && m_bIsCompleteStanceChange &&
+		m_pMeshCom->Is_BlendingComplete())
+	{
+		KeyInput_AttackArrow(fTimeDelta);
+	}
+}
+
+void CPCArcher::KeyInput_StanceChange(const _float& fTimeDelta)
+{
+	if (m_bIsAttack)
+		return;
+
+	// ATTACK -> NONE_ATTACK
+	if (Engine::KEY_DOWN(DIK_LSHIFT) && Archer::STANCE_ATTACK == m_eStance &&
+		!m_bIsKeyDown && m_pInfoCom->m_fSpeed == Archer::MIN_SPEED &&
+		m_bIsCompleteStanceChange &&
+		m_uiAnimIdx != Archer::NONE_ATTACK_WALK && m_uiAnimIdx != Archer::ATTACK_RUN &&
+		m_uiAnimIdx != Archer::IN_WEAPON && m_uiAnimIdx != Archer::OUT_WEAPON)
+	{
+		m_bIsCompleteStanceChange = false;
+		SetUp_PlayerStance_FromAttackToNoneAttack();
+
+		// Send Packet.
+		m_pPacketMgr->send_stance_change(m_uiAnimIdx, false);
+	}
+
+	// NONE_ATTACK -> ATTACK
+	if ((Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) || 
+		Engine::KEY_DOWN(m_mapSkillKeyInput[L"RAPID_SHOT"]) ||
+		Engine::KEY_DOWN(m_mapSkillKeyInput[L"ESCAPING_BOMB"]) ||
+		Engine::KEY_DOWN(m_mapSkillKeyInput[L"ARROW_SHOWER"]) || 
+		Engine::KEY_DOWN(m_mapSkillKeyInput[L"ARROW_FALL"]) || 
+		Engine::KEY_DOWN(m_mapSkillKeyInput[L"CHARGE_ARROW"])) &&
+		Archer::STANCE_NONEATTACK == m_eStance &&
+		m_bIsCompleteStanceChange &&
+		m_uiAnimIdx != Archer::IN_WEAPON && m_uiAnimIdx != Archer::OUT_WEAPON)
+	{
+		m_bIsKeyDown = false;
+		m_bIsCompleteStanceChange = false;
+		SetUp_PlayerStance_FromNoneAttackToAttack();
+
+		// Send Packet.
+		m_pPacketMgr->send_stance_change(m_uiAnimIdx, true);
+	}
+
+	Change_PlayerStance(fTimeDelta);
+}
+
+void CPCArcher::KeyInput_AttackArrow(const _float& fTimeDelta)
+{
+	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB))
+	{
+		SetUp_WeaponLHand();
+		SetUp_AttackSetting();
+		m_uiAnimIdx = Archer::ATTACK_ARROW;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+	}
+
+	if (Archer::ATTACK_ARROW == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+	{
+		SetUp_WeaponLHand();
+		m_bIsAttack   = false;
+		m_uiAnimIdx   = Archer::ATTACK_WAIT;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+	}
+}
+
 void CPCArcher::Move_OnNaviMesh(const _float& fTimeDelta)
 {
 	if (m_bIsKeyDown || Archer::MIN_SPEED != m_pInfoCom->m_fSpeed)
@@ -739,9 +815,28 @@ void CPCArcher::Move_OnNaviMesh(const _float& fTimeDelta)
 
 void CPCArcher::SetUp_RunMoveSpeed(const _float& fTimeDelta)
 {
+
+	if (Archer::STANCE_ATTACK == m_eStance)
+	{
+		m_tMoveSpeedInterpolationDesc.v2 = Archer::MAX_ATTACK_SPEED;
+	}
+	else
+	{
+		m_tMoveSpeedInterpolationDesc.v2 = Archer::MAX_SPEED;
+	}
+
 	// Move On
 	if (m_bIsKeyDown)
-		m_tMoveSpeedInterpolationDesc.interpolation_speed = 1.0f;
+	{
+		if (Archer::STANCE_ATTACK == m_eStance)
+		{
+			m_tMoveSpeedInterpolationDesc.interpolation_speed = 1.5f;
+		}
+		else
+		{
+			m_tMoveSpeedInterpolationDesc.interpolation_speed = 1.0f;
+		}
+	}
 
 	// Move Off
 	else if (!m_bIsKeyDown)
@@ -783,6 +878,74 @@ void CPCArcher::SetUp_RunToIdleAnimation(const _float& fTimeDelta)
 	{
 		m_uiAnimIdx = Archer::ATTACK_WAIT;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	}
+}
+
+void CPCArcher::SetUp_PlayerStance_FromAttackToNoneAttack()
+{
+	if (Archer::STANCE_ATTACK == m_eStance)
+	{
+		m_pWeapon->Set_DissolveInterpolation(1.0f);
+		m_pWeapon->Set_IsRenderShadow(false);
+
+		m_eStance   = Archer::STANCE_NONEATTACK;
+		m_uiAnimIdx = Archer::IN_WEAPON;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	}
+}
+
+void CPCArcher::SetUp_PlayerStance_FromNoneAttackToAttack()
+{
+	if (Archer::STANCE_NONEATTACK == m_eStance)
+	{
+		if (Archer::NONE_ATTACK_IDLE == m_uiAnimIdx ||
+			Archer::NONE_ATTACK_WALK == m_uiAnimIdx)
+		{
+			m_pWeapon->Set_DissolveInterpolation(-1.0f);
+			m_pWeapon->Set_IsRenderShadow(true);
+			SetUp_WeaponLHand();
+		}
+
+		m_eStance   = Archer::STANCE_ATTACK;
+		m_uiAnimIdx = Archer::OUT_WEAPON;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	}
+}
+
+void CPCArcher::Change_PlayerStance(const _float& fTimeDelta)
+{
+	if (!m_bIsCompleteStanceChange)
+	{
+		// NONE_ATTACK -> ATACK
+		if (Archer::STANCE_ATTACK == m_eStance &&
+			Archer::OUT_WEAPON == m_uiAnimIdx &&
+			m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+		{
+			m_uiAnimIdx = Archer::ATTACK_WAIT;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_bIsCompleteStanceChange = true;
+
+		}
+
+		// ATTACK -> NONE_ATTACK
+		else if (Archer::STANCE_NONEATTACK == m_eStance  &&
+				 Archer::IN_WEAPON == m_uiAnimIdx &&
+				 m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+		{
+			m_uiAnimIdx = Archer::NONE_ATTACK_IDLE;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_bIsCompleteStanceChange = true;
+		}
+
+		if (Archer::IN_WEAPON == m_uiAnimIdx && m_ui3DMax_CurFrame > 20)
+			SetUp_WeaponBack();
+
+		// Check Is Complete Stance Change
+		if (Archer::NONE_ATTACK_IDLE == m_uiAnimIdx ||
+			Archer::ATTACK_WAIT == m_uiAnimIdx)
+		{
+			m_bIsCompleteStanceChange = true;
+		}
 	}
 }
 
@@ -833,6 +996,91 @@ bool CPCArcher::Is_Change_CamDirection()
 	return false;
 }
 
+void CPCArcher::Is_ChangeWeapon()
+{
+	if (m_chCurWeaponType != m_chPreWeaponType)
+	{
+		if (nullptr != m_pWeapon)
+		{
+			m_pWeapon->Set_IsReturnObject(true);
+			m_pWeapon->Update_GameObject(0.016f);
+		}
+
+		m_pWeapon = static_cast<CPCWeaponBow*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponBow(m_chCurWeaponType)));
+		m_pWeapon->Set_ParentMatrix(&m_pTransCom->m_matWorld);
+		m_pWeapon->Update_GameObject(0.016f);
+
+		if (Archer::STANCE_ATTACK == m_eStance)
+		{
+			SetUp_WeaponLHand();
+			m_pWeapon->Set_DissolveInterpolation(-1.0f);
+			m_pWeapon->Set_IsRenderShadow(true);
+		}
+		else if (Archer::STANCE_NONEATTACK == m_eStance)
+		{
+			SetUp_WeaponBack();
+			m_pWeapon->Set_DissolveInterpolation(1.0f);
+			m_pWeapon->Set_IsRenderShadow(false);
+		}
+
+		m_chPreWeaponType = m_chCurWeaponType;
+	}
+}
+
+void CPCArcher::SetUp_AttackSetting()
+{
+	m_bIsSetCollisionTick                        = false;
+	m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
+	m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
+	m_tCollisionTickDesc.fCollisionTickTime      = 0.0f;
+
+	m_bIsAttack  = true;
+	m_bIsKeyDown = false;
+	m_tAttackMoveSpeedInterpolationDesc.linear_ratio = 0.0f;
+	Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+}
+
+void CPCArcher::SetUp_WeaponLHand()
+{
+	m_pWeapon->Get_Transform()->m_vAngle.x = 0.0f;
+	m_pWeapon->Get_Transform()->m_vAngle.y = -160.0f;
+	m_pWeapon->Get_Transform()->m_vAngle.z = 210.0f;
+	m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("L_Sword")));
+}
+
+void CPCArcher::SetUp_WeaponBack()
+{
+	m_pWeapon->Get_Transform()->m_vAngle.y = 0.0f;
+	m_pWeapon->Get_Transform()->m_vAngle.z = 180.0f;
+	m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")));
+}
+
+void CPCArcher::Ready_AngleInterpolationValue(const _float& fEndAngle)
+{
+	m_tAngleInterpolationDesc.is_start_interpolation = true;
+	m_tAngleInterpolationDesc.v1                     = m_pTransCom->m_vAngle.y;
+	m_tAngleInterpolationDesc.v2                     = fEndAngle;
+	m_tAngleInterpolationDesc.linear_ratio           = Engine::MIN_LINEAR_RATIO;
+	m_tAngleInterpolationDesc.interpolation_speed    = 5.0f;
+}
+
+void CPCArcher::SetUp_AngleInterpolation(const _float& fTimeDelta)
+{
+	if (m_tAngleInterpolationDesc.is_start_interpolation)
+	{
+		m_tAngleInterpolationDesc.linear_ratio += m_tAngleInterpolationDesc.interpolation_speed * fTimeDelta;
+
+		m_pTransCom->m_vAngle.y = Engine::LinearInterpolation(m_tAngleInterpolationDesc.v1, 
+															  m_tAngleInterpolationDesc.v2, 
+															  m_tAngleInterpolationDesc.linear_ratio);
+
+		if (m_tAngleInterpolationDesc.linear_ratio == Engine::MAX_LINEAR_RATIO)
+		{
+			m_tAngleInterpolationDesc.is_start_interpolation = false;
+		}
+	}
+}
+
 Engine::CGameObject* CPCArcher::Create(ID3D12Device* pGraphicDevice, 
 									   ID3D12GraphicsCommandList* pCommandList,
 									   wstring wstrMeshTag, 
@@ -853,8 +1101,9 @@ Engine::CGameObject* CPCArcher::Create(ID3D12Device* pGraphicDevice,
 
 void CPCArcher::Free()
 {
-	Engine::CGameObject::Free();
+	Engine::Safe_Release(m_pWeapon);
 
+	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pDynamicCamera);
 	Engine::Safe_Release(m_pMeshCom);
 	Engine::Safe_Release(m_pShaderCom);

@@ -543,9 +543,6 @@
     <ClInclude Include="..\Code\NPC_Children.h">
       <Filter>02.GameObject\04.NPC\05_NPC_Children</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\ServerMath.h">
-      <Filter>97.Mgr\02.ServerMath</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\ServerMath.h" />
     <ClInclude Include="..\Code\IceStorm.h">
       <Filter>02.GameObject\98.GameEffect\03.IceStorm</Filter>
@@ -576,6 +573,12 @@
     </ClInclude>
     <ClInclude Include="..\Code\PCPriest.h">
       <Filter>02.GameObject\02.PlayerCharacter\03.PCPriest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PCWeaponBow.h">
+      <Filter>02.GameObject\03.PCWeapon\01.PCWeaponBow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ServerMath.h">
+      <Filter>97.Mgr\02.ServerMath</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -795,9 +798,6 @@
     <ClCompile Include="..\Code\NPC_Children.cpp">
       <Filter>02.GameObject\04.NPC\05_NPC_Children</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\ServerMath.cpp">
-      <Filter>97.Mgr\02.ServerMath</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\ServerMath.cpp" />
     <ClCompile Include="..\Code\IceStorm.cpp">
       <Filter>02.GameObject\98.GameEffect\03.IceStorm</Filter>
@@ -822,6 +822,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\PCPriest.cpp">
       <Filter>02.GameObject\02.PlayerCharacter\03.PCPriest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PCWeaponBow.cpp">
+      <Filter>02.GameObject\03.PCWeapon\01.PCWeaponBow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ServerMath.cpp">
+      <Filter>97.Mgr\02.ServerMath</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
