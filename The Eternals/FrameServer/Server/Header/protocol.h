@@ -118,6 +118,11 @@ constexpr char NPC_BARAKA_MYSTELLIUM	= 11;
 
 constexpr char NPC_CASTANIC_LSMITH		= 12;
 
+/* PLAYER SKILL AFFECT */
+constexpr char AFFECT_FINCH				= 0;
+constexpr char AFFECT_GROGGY			= 1;
+constexpr char AFFECT_NUCKBACK			= 2;
+
 /* ___________________________________________________________________________________________________________________*/
 /*													SERVER -> CLIENT												  */
 /* ___________________________________________________________________________________________________________________*/
@@ -364,6 +369,7 @@ struct cs_packet_player_collision
 	unsigned char	size;
 	char			type;
 
+	char			affect;
 	int				col_id;
 	int				damage;
 };

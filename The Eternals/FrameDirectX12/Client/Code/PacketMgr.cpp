@@ -1075,20 +1075,23 @@ void CPacketMgr::send_attackByMonster(int objID, const _int& iDamage)
 
 	p.size   = sizeof(p);
 	p.type   = CS_COLLIDE;
+
 	p.col_id = objID;
 	p.damage = iDamage;
 
 	send_packet(&p);
 }
 
-void CPacketMgr::send_attackToMonster(int objID, const _int& iDamage)
+void CPacketMgr::send_attackToMonster(int objID, const _int& iDamage, const char& affect)
 {
 	cs_packet_player_collision p;
 
 	p.size   = sizeof(p);
 	p.type   = CS_COLLIDE_MONSTER;
+
 	p.col_id = objID;
 	p.damage = iDamage;
+	p.affect = affect;
 
 	send_packet(&p);
 }

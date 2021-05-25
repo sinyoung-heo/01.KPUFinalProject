@@ -3511,7 +3511,7 @@ void CMonster::Dead_CraftyArachne(const float& fTimeDelta)
 	Set_AnimationKey(m_uiAnimIdx);
 }
 
-void CMonster::Hurt_Monster(const int& p_id,const int& damage)
+void CMonster::Hurt_Monster(const int& p_id, const int& damage, const char& affect)
 {
 	if (m_bIsRegen || m_bIsDead) return;
 
@@ -3597,9 +3597,15 @@ void CMonster::Hurt_Monster(const int& p_id,const int& damage)
 			if (m_bIsDead) return;
 			send_Monster_Stat(pl);
 
+			/* Finch */
 			if (m_monNum == MON_GMONKEY && !m_bIsAttack)
 			{
-				send_Monster_animation_packet(pl, GiantMonkey::FINCH);
+				if (affect == AFFECT_FINCH)
+					send_Monster_animation_packet(pl, GiantMonkey::FINCH);
+				else if (affect == AFFECT_GROGGY)
+					send_Monster_animation_packet(pl, GiantMonkey::GROGGY);
+				else if (affect == AFFECT_NUCKBACK)
+					send_Monster_animation_packet(pl, GiantMonkey::DOWN);
 			}
 		}
 	}

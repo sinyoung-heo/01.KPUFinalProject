@@ -97,7 +97,7 @@ void CCollisionTick::Process_Collision()
 			pDst->Get_BoundingSphere()->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 
 			// Player Attack to Monster
-			m_pPacketMgr->send_attackToMonster(pDst->Get_ServerNumber(), m_uiDamage);
+			m_pPacketMgr->send_attackToMonster(pDst->Get_ServerNumber(), m_uiDamage, m_chAffect);
 		}
 		else if (L"CollisionTick_ThisPlayer" == m_wstrCollisionTag &&
 				 L"Monster_MultiCollider" == pDst->Get_CollisionTag())

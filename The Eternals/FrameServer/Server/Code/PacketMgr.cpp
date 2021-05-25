@@ -199,7 +199,7 @@ void process_packet(int id)
 		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", p->col_id));
 		if (nullptr == pMonster) return;
 
-		pMonster->Hurt_Monster(id, p->damage);
+		pMonster->Hurt_Monster(id, p->damage, p->affect);
 	}
 	break;
 

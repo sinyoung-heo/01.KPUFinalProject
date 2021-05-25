@@ -2031,6 +2031,12 @@ void CPCGladiator::SetUp_CollisionTick(const _float& fTimeDelta)
 			CCollisionTick* pCollisionTick = static_cast<CCollisionTick*>(Pop_Instance(m_pInstancePoolMgr->Get_CollisionTickPool()));
 			if (nullptr != pCollisionTick)
 			{
+				// Groggy
+				if (Gladiator::STINGER_BLADE == m_uiAnimIdx)
+					pCollisionTick->Set_SkillAffect(AFFECT_GROGGY);
+				else
+					pCollisionTick->Set_SkillAffect(AFFECT_FINCH);
+
 				pCollisionTick->Get_BoundingSphere()->Get_BoundingInfo().Radius = 0.5f;
 				pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
 				pCollisionTick->Set_Damage(m_pInfoCom->Get_RandomDamage());

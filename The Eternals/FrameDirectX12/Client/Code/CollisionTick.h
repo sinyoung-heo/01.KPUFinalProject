@@ -14,6 +14,7 @@ private:
 public:
 	void Set_Damage(const _uint& uiDamage)		{ m_uiDamage = uiDamage; }
 	void Set_LifeTime(const _float& fLifeTime)	{ m_fLifeTime = fLifeTime; }
+	void Set_SkillAffect(const char& chAffect)	{ m_chAffect = chAffect; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrCollisionTag,
@@ -36,9 +37,10 @@ private:
 	____________________________________________________________________________________________________________*/
 	CInstancePoolMgr* m_pInstancePoolMgr = nullptr;
 	
-	_uint	m_uiDamage   = 0;
-	_float	m_fTimeDelta = 0.0f;
-	_float	m_fLifeTime  = 1.0f;
+	char	m_chAffect		= AFFECT_FINCH;
+	_uint	m_uiDamage		= 0;
+	_float	m_fTimeDelta	= 0.0f;
+	_float	m_fLifeTime		= 1.0f;
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, 
