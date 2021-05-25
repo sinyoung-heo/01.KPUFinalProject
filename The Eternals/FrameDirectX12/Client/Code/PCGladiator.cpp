@@ -853,10 +853,10 @@ void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 
 		// 스킬공격
 		if (m_pMeshCom->Is_BlendingComplete())
+		{
 			KeyInput_SkillAttack(fTimeDelta);
-
-		if (m_pMeshCom->Is_BlendingComplete())
 			KeyInput_Tumbling(fTimeDelta);
+		}
 
 		if (m_bIsAttack)
 		{

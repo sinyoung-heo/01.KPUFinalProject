@@ -73,8 +73,8 @@ HRESULT CPCArcher::Ready_GameObject(wstring wstrMeshTag,
 	[ Skill KeyInput ]
 	____________________________________________________________________________________________________________*/
 	m_mapSkillKeyInput[L"RAPID_SHOT"]    = DIK_1;
-	m_mapSkillKeyInput[L"ESCAPING_BOMB"] = DIK_2;
-	m_mapSkillKeyInput[L"ARROW_SHOWER"]  = DIK_3;
+	m_mapSkillKeyInput[L"ARROW_SHOWER"]  = DIK_2;
+	m_mapSkillKeyInput[L"ESCAPING_BOMB"] = DIK_3;
 	m_mapSkillKeyInput[L"ARROW_FALL"]    = DIK_4;
 	m_mapSkillKeyInput[L"CHARGE_ARROW"]  = DIK_5;
 
@@ -591,7 +591,7 @@ void CPCArcher::Set_AnimationSpeed()
 
 	if (m_uiAnimIdx == Archer::ATTACK_ARROW)
 	{
-		m_fAnimationSpeed = TPS * 1.5f;
+		m_fAnimationSpeed = TPS * 1.6f;
 	}
 	else if (m_uiAnimIdx == Archer::ATTACK_RUN)
 	{
@@ -600,6 +600,27 @@ void CPCArcher::Set_AnimationSpeed()
 	else if (m_uiAnimIdx == Archer::BACK_DASH)
 	{
 		m_fAnimationSpeed = TPS * 1.25f;
+	}
+	else if (m_uiAnimIdx == Archer::RAPID_SHOT1 ||
+			 m_uiAnimIdx == Archer::RAPID_SHOT2)
+	{
+		m_fAnimationSpeed = TPS * 1.5f;
+	}
+	else if (m_uiAnimIdx == Archer::ESCAPING_BOMB)
+	{
+		m_fAnimationSpeed = TPS * 1.25f;
+	}
+	else if (m_uiAnimIdx == Archer::ARROW_SHOWER_START ||
+			 m_uiAnimIdx == Archer::ARROW_SHOWER_LOOP ||
+			 m_uiAnimIdx == Archer::ARROW_SHOWER_SHOT)
+	{
+		m_fAnimationSpeed = TPS * 1.75f;
+	}
+	else if (m_uiAnimIdx == Archer::ARROW_FALL_START ||
+			 m_uiAnimIdx == Archer::ARROW_FALL_LOOP ||
+			 m_uiAnimIdx == Archer::ARROW_FALL_SHOT)
+	{
+		m_fAnimationSpeed = TPS * 1.75f;
 	}
 	else
 		m_fAnimationSpeed = TPS;
@@ -750,6 +771,8 @@ void CPCArcher::KeyInput_Attack(const _float& fTimeDelta)
 		{
 			// SkillAttack Move
 			SetUp_AttackMove(Archer::BACK_DASH, Archer::BACK_DASH_MOVE_START, Archer::BACK_DASH_MOVE_STOP, 8.0f, -5.0f);
+			SetUp_AttackMove(Archer::ESCAPING_BOMB, Archer::ESCAPING_BOMB_MOVE_START, Archer::ESCAPING_BOMB_MOVE_STOP, 10.0f, -5.0f);
+			SetUp_AttackMove(Archer::CHARGE_ARROW_SHOT, Archer::CHARGE_ARROW_MOVE_START, Archer::CHARGE_ARROW_MOVE_STOP, 4.0f, -5.0f);
 
 			AttackMove_OnNaviMesh(fTimeDelta);
 		}
@@ -820,15 +843,128 @@ void CPCArcher::KeyInput_AttackArrow(const _float& fTimeDelta)
 
 void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 {
+	if (!m_bIsSkillLoop)
+	{
+		if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"RAPID_SHOT"]))
+		{
+			SetUp_AttackSetting();
+			m_bIsSkill  = true;
+			m_uiAnimIdx = Archer::RAPID_SHOT1;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"ESCAPING_BOMB"]))
+		{
+			SetUp_AttackSetting();
+			m_bIsSkill     = true;
+			m_bIsSkillLoop = true;
+			m_uiAnimIdx = Archer::ESCAPING_BOMB;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"ARROW_SHOWER"]))
+		{
+			SetUp_AttackSetting();
+			m_bIsSkill     = true;
+			m_bIsSkillLoop = true;
+			m_uiAnimIdx = Archer::ARROW_SHOWER_START;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"ARROW_FALL"]))
+		{
+			SetUp_AttackSetting();
+			m_bIsSkill     = true;
+			m_bIsSkillLoop = true;
+			m_uiAnimIdx = Archer::ARROW_FALL_START;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"CHARGE_ARROW"]))
+		{
+			SetUp_AttackSetting();
+			m_bIsSkill     = true;
+			m_bIsSkillLoop = true;
+			m_uiAnimIdx = Archer::CHARGE_ARROW_START;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
+	}
+	else
+	{
+		// RAPID_SHOT
+		if (m_uiAnimIdx == Archer::RAPID_SHOT1 && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+		{
+			Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+			m_uiAnimIdx = Archer::RAPID_SHOT2;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
+		// ARROW_SHOWER
+		else if (m_uiAnimIdx == Archer::ARROW_SHOWER_START && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+		{
+			m_uiAnimIdx = Archer::ARROW_SHOWER_LOOP;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+		}
+		else if (m_uiAnimIdx == Archer::ARROW_SHOWER_LOOP && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+		{
+			m_uiAnimIdx = Archer::ARROW_SHOWER_SHOT;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+		}
+		// ARROW_FALL
+		else if (m_uiAnimIdx == Archer::ARROW_FALL_START && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+		{
+			m_uiAnimIdx = Archer::ARROW_FALL_LOOP;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+		}
+		else if (m_uiAnimIdx == Archer::ARROW_FALL_LOOP && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+		{
+			m_uiAnimIdx = Archer::ARROW_FALL_SHOT;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+		} 
+		// CHARGE_ARROW
+		else if (m_uiAnimIdx == Archer::CHARGE_ARROW_START && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+		{
+			m_uiAnimIdx = Archer::CHARGE_ARROW_LOOP;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+		}
+		else if (m_uiAnimIdx == Archer::CHARGE_ARROW_LOOP && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+		{
+			m_uiAnimIdx = Archer::CHARGE_ARROW_SHOT;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+		} 
+	}
 
+
+	// Skill Attack ==> ATTACK_WAIT
+	if ((Archer::RAPID_SHOT2 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)) ||
+		(Archer::ESCAPING_BOMB == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)) ||
+		(Archer::ARROW_SHOWER_SHOT == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)) ||
+		(Archer::ARROW_FALL_SHOT == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)) ||
+		(Archer::CHARGE_ARROW_SHOT == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)))
+	{
+		m_bIsAttack    = false;
+		m_bIsSkill     = false;
+		m_bIsSkillLoop = false;
+		m_uiAnimIdx    = Archer::ATTACK_WAIT;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+	}
 }
 
 void CPCArcher::KeyInput_BackDash(const _float& fTimeDelta)
 {
-	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkill && !m_bIsSkillLoop)
+	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkillLoop)
 	{
 		SetUp_WeaponLHand();
 		SetUp_AttackSetting();
+		m_bIsSkillLoop = true;
 		m_uiAnimIdx    = Archer::BACK_DASH;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
@@ -865,8 +1001,12 @@ void CPCArcher::AttackMove_OnNaviMesh(const _float& fTimeDelta)
 	if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
 	{
 		_float fDir = 1.0f;
-		if (m_uiAnimIdx == Archer::BACK_DASH)
+		if (m_uiAnimIdx == Archer::BACK_DASH ||
+			m_uiAnimIdx == Archer::ESCAPING_BOMB ||
+			m_uiAnimIdx == Archer::CHARGE_ARROW_SHOT)
+		{
 			fDir = -1.0f;
+		}
 
 		m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 		m_pTransCom->m_vDir.Normalize();
