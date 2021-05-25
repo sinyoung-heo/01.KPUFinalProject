@@ -3596,6 +3596,11 @@ void CMonster::Hurt_Monster(const int& p_id,const int& damage)
 		{
 			if (m_bIsDead) return;
 			send_Monster_Stat(pl);
+
+			if (m_monNum == MON_GMONKEY && !m_bIsAttack)
+			{
+				send_Monster_animation_packet(pl, GiantMonkey::FINCH);
+			}
 		}
 	}
 
@@ -3925,6 +3930,19 @@ void CMonster::send_Monster_Dead(int to_client, int ani)
 
 	p.size = sizeof(p);
 	p.type = SC_PACKET_MONSTER_DEAD;
+	p.id = m_sNum;
+
+	p.aniIdx = ani;
+
+	send_packet(to_client, &p);
+}
+
+void CMonster::send_Monster_animation_packet(int to_client, int ani)
+{
+	sc_packet_animationIndex p;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_ANIM_INDEX;
 	p.id = m_sNum;
 
 	p.aniIdx = ani;

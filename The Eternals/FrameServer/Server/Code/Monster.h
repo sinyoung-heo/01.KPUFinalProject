@@ -100,6 +100,7 @@ public:
 	void	send_Monster_RushAttack(int to_client, int ani);
 	void	send_Monster_Stat(int to_client);
 	void	send_Monster_Dead(int to_client, int ani);
+	void	send_Monster_animation_packet(int to_client, int ani);
 
 public:
 	char			m_monNum				= 0;

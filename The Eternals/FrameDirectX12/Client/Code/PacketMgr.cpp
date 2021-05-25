@@ -866,6 +866,10 @@ void CPacketMgr::Change_Animation(sc_packet_animationIndex* packet, bool& retfla
 	/* MONSTER */
 	else if (packet->id >= MON_NUM_START)
 	{
+		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", packet->id);
+		if (pObj == nullptr) return;
+
+		pObj->Set_State(packet->aniIdx);
 	}
 
 	/* OTHERS */
