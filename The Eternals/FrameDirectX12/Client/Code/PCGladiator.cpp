@@ -155,11 +155,12 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
+	Set_IsRepeatAnimation();
 	Set_AnimationSpeed();
 	Set_BlendingSpeed();
 	m_pMeshCom->Set_BlendingSpeed(m_fBlendingSpeed);
 	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * m_fAnimationSpeed);
+	m_pMeshCom->Play_Animation(fTimeDelta * m_fAnimationSpeed, m_bIsRepeatAnimation);
 	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
 	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
@@ -619,6 +620,19 @@ void CPCGladiator::Set_ConstantTableShadowDepth()
 	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
 }
 
+void CPCGladiator::Set_IsRepeatAnimation()
+{
+	if (m_uiAnimIdx == Gladiator::NONE_ATTACK_IDLE ||
+		m_uiAnimIdx == Gladiator::NONE_ATTACK_WALK ||
+		m_uiAnimIdx == Gladiator::ATTACK_WAIT ||
+		m_uiAnimIdx == Gladiator::ATTACK_RUN)
+	{
+		m_bIsRepeatAnimation = true;
+	}
+	else
+		m_bIsRepeatAnimation = false;
+}
+
 void CPCGladiator::Set_AnimationSpeed()
 {
 	if (m_uiAnimIdx == Gladiator::TUMBLING)
@@ -853,10 +867,10 @@ void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 
 		// 스킬공격
 		if (m_pMeshCom->Is_BlendingComplete())
+		{
 			KeyInput_SkillAttack(fTimeDelta);
-
-		if (m_pMeshCom->Is_BlendingComplete())
 			KeyInput_Tumbling(fTimeDelta);
+		}
 
 		if (m_bIsAttack)
 		{
@@ -1121,8 +1135,6 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 
 void CPCGladiator::KeyInput_Tumbling(const _float& fTimeDelta)
 {
-	_float fAngle = 0.0f;
-
 	if (Engine::KEY_PRESSING(DIK_W) && Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkillLoop)
 	{
 		// 대각선 - 우 상단.

@@ -191,7 +191,7 @@ void CNPC_Walker::Set_ConstantTable()
 	tCB_ShaderMesh.fLightPorjFar  = tShadowDesc.fLightPorjFar;
 	tCB_ShaderMesh.vEmissiveColor = _rgba(1.0f, 1.0f, 1.0f, 1.0f);
 
-	tCB_ShaderMesh.fDissolve = m_fDeltaTime;
+	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 }
 
 void CNPC_Walker::Set_ConstantTableShadowDepth()

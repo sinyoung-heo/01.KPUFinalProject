@@ -45,6 +45,7 @@ private:
 	void			SetUp_StageID();
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
+	void			Set_IsRepeatAnimation();
 	void			Set_AnimationSpeed();
 	void			Set_BlendingSpeed();
 
@@ -148,10 +149,11 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Animation ]
 	____________________________________________________________________________________________________________*/
-	_uint m_uiAnimIdx        = 0;	// 현재 애니메이션 Index
-	_uint m_ui3DMax_NumFrame = 0;	// 3DMax에서 애니메이션의 총 Frame 개수
-	_uint m_ui3DMax_CurFrame = 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
-	_float m_fAnimationSpeed = TPS;
+	_uint	m_uiAnimIdx          = 0;	// 현재 애니메이션 Index
+	_uint	m_ui3DMax_NumFrame   = 0;	// 3DMax에서 애니메이션의 총 Frame 개수
+	_uint	m_ui3DMax_CurFrame   = 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
+	_float	m_fAnimationSpeed    = TPS;
+	_bool	m_bIsRepeatAnimation = true;
 
 	Gladiator::STANCE	m_eStance                 = Gladiator::STANCE_END;
 	_bool				m_bIsCompleteStanceChange = true;

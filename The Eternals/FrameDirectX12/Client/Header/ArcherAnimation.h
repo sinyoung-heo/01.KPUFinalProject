@@ -24,10 +24,18 @@ namespace Archer
 
 	enum STANCE	{ STANCE_NONEATTACK, STANCE_ATTACK, STANCE_END };
 
-	const _float OTHERS_OFFSET	= 0.85f;
+	const _float OTHERS_OFFSET	= 0.9f;
 
-	const _float MIN_SPEED       = 0.0f;
-	const _float MAX_SPEED       = 5.0f;
+	const _float MIN_SPEED        = 0.0f;
+	const _float MAX_SPEED        = 5.0f;
 	const _float MAX_ATTACK_SPEED = MAX_SPEED * 1.35f;
-	const _float MOVE_STOP_SPEED = 3.0f;
+	const _float MOVE_STOP_SPEED  = 3.0f;
+
+
+	const _uint BACK_DASH_MOVE_START     = 2;
+	const _uint BACK_DASH_MOVE_STOP      = 19;
+	const _uint ESCAPING_BOMB_MOVE_START = 4;
+	const _uint ESCAPING_BOMB_MOVE_STOP  = 28;
+	const _uint CHARGE_ARROW_MOVE_START  = 2;
+	const _uint CHARGE_ARROW_MOVE_STOP   = 10;
 }

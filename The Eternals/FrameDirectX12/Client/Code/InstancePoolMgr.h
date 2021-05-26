@@ -20,6 +20,7 @@ class CNPC_Quest;
 class CNPC_Children;
 
 class CPCOthersGladiator;
+class CPCOthersArcher;
 
 class CPCWeaponTwoHand;
 class CPCWeaponBow;
@@ -60,6 +61,7 @@ public:
 	INSTANCE_POOL_DESC<CNPC_Children>*	Get_NPCChildren_HighelfGirlPool()			{ return m_pNPC_Children_HighelfGirlPool; }
 	// PCOthers
 	INSTANCE_POOL_DESC<CPCOthersGladiator>* Get_PCOthersGladiatorPool() { return m_pPCOthersGladiatorPool; }
+	INSTANCE_POOL_DESC<CPCOthersArcher>*	Get_PCOthersArcherPool()	{ return m_pPCOthersArcherPool; }
 	// PCWeapon
 	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	Get_PCWeaponTwoHand(const char& chWeaponType);
 	INSTANCE_POOL_DESC<CPCWeaponBow>*		Get_PCWeaponBow(const char& chWeaponType);
@@ -97,6 +99,7 @@ private:
 
 	// PCOthers
 	INSTANCE_POOL_DESC<CPCOthersGladiator>* m_pPCOthersGladiatorPool;
+	INSTANCE_POOL_DESC<CPCOthersArcher>*	m_pPCOthersArcherPool;
 
 	// PCWeapon
 	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	m_pPCWeaponTwohand19_A_SM_Pool;

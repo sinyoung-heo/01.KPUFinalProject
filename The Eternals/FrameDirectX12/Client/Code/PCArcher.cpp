@@ -73,8 +73,8 @@ HRESULT CPCArcher::Ready_GameObject(wstring wstrMeshTag,
 	[ Skill KeyInput ]
 	____________________________________________________________________________________________________________*/
 	m_mapSkillKeyInput[L"RAPID_SHOT"]    = DIK_1;
-	m_mapSkillKeyInput[L"ESCAPING_BOMB"] = DIK_2;
-	m_mapSkillKeyInput[L"ARROW_SHOWER"]  = DIK_3;
+	m_mapSkillKeyInput[L"ARROW_SHOWER"]  = DIK_2;
+	m_mapSkillKeyInput[L"ESCAPING_BOMB"] = DIK_3;
 	m_mapSkillKeyInput[L"ARROW_FALL"]    = DIK_4;
 	m_mapSkillKeyInput[L"CHARGE_ARROW"]  = DIK_5;
 
@@ -87,7 +87,7 @@ HRESULT CPCArcher::Ready_GameObject(wstring wstrMeshTag,
 
 	m_tAttackMoveSpeedInterpolationDesc.linear_ratio        = 0.0f;
 	m_tAttackMoveSpeedInterpolationDesc.v1                  = Archer::MIN_SPEED;
-	m_tAttackMoveSpeedInterpolationDesc.v2                  = Archer::MAX_SPEED;
+	m_tAttackMoveSpeedInterpolationDesc.v2                  = Archer::MAX_ATTACK_SPEED;
 	m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = 0.0f;
 
 	/*__________________________________________________________________________________________________________
@@ -153,11 +153,12 @@ _int CPCArcher::Update_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
+	Set_IsRepeatAnimation();
 	Set_AnimationSpeed();
 	Set_BlendingSpeed();
 	m_pMeshCom->Set_BlendingSpeed(m_fBlendingSpeed);
 	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * m_fAnimationSpeed);
+	m_pMeshCom->Play_Animation(fTimeDelta * m_fAnimationSpeed, m_bIsRepeatAnimation);
 	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
 	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
@@ -586,16 +587,53 @@ void CPCArcher::Set_ConstantTableShadowDepth()
 	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
 }
 
+void CPCArcher::Set_IsRepeatAnimation()
+{
+	if (m_uiAnimIdx == Archer::NONE_ATTACK_IDLE ||
+		m_uiAnimIdx == Archer::NONE_ATTACK_WALK ||
+		m_uiAnimIdx == Archer::ATTACK_WAIT ||
+		m_uiAnimIdx == Archer::ATTACK_RUN)
+	{
+		m_bIsRepeatAnimation = true;
+	}
+	else
+		m_bIsRepeatAnimation = false;
+}
+
 void CPCArcher::Set_AnimationSpeed()
 {
-
 	if (m_uiAnimIdx == Archer::ATTACK_ARROW)
 	{
-		m_fAnimationSpeed = TPS * 1.5f;
+		m_fAnimationSpeed = TPS * 1.6f;
 	}
 	else if (m_uiAnimIdx == Archer::ATTACK_RUN)
 	{
 		m_fAnimationSpeed = TPS * 1.35f;
+	}
+	else if (m_uiAnimIdx == Archer::BACK_DASH)
+	{
+		m_fAnimationSpeed = TPS * 1.25f;
+	}
+	else if (m_uiAnimIdx == Archer::RAPID_SHOT1 ||
+			 m_uiAnimIdx == Archer::RAPID_SHOT2)
+	{
+		m_fAnimationSpeed = TPS * 1.5f;
+	}
+	else if (m_uiAnimIdx == Archer::ESCAPING_BOMB)
+	{
+		m_fAnimationSpeed = TPS * 1.25f;
+	}
+	else if (m_uiAnimIdx == Archer::ARROW_SHOWER_START ||
+			 m_uiAnimIdx == Archer::ARROW_SHOWER_LOOP ||
+			 m_uiAnimIdx == Archer::ARROW_SHOWER_SHOT)
+	{
+		m_fAnimationSpeed = TPS * 1.75f;
+	}
+	else if (m_uiAnimIdx == Archer::ARROW_FALL_START ||
+			 m_uiAnimIdx == Archer::ARROW_FALL_LOOP ||
+			 m_uiAnimIdx == Archer::ARROW_FALL_SHOT)
+	{
+		m_fAnimationSpeed = TPS * 1.75f;
 	}
 	else
 		m_fAnimationSpeed = TPS;
@@ -733,11 +771,24 @@ void CPCArcher::KeyInput_Attack(const _float& fTimeDelta)
 
 	KeyInput_StanceChange(fTimeDelta);
 
-	if (Archer::STANCE_ATTACK == m_eStance && 
-		!m_bIsSkill && !m_bIsSkillLoop && m_bIsCompleteStanceChange &&
-		m_pMeshCom->Is_BlendingComplete())
+	if (Archer::STANCE_ATTACK == m_eStance && m_bIsCompleteStanceChange)
 	{
-		KeyInput_AttackArrow(fTimeDelta);
+		if (m_pMeshCom->Is_BlendingComplete())
+		{
+			KeyInput_AttackArrow(fTimeDelta);
+			KeyInput_SkillAttack(fTimeDelta);
+			KeyInput_BackDash(fTimeDelta);
+		}
+
+		if (m_bIsAttack)
+		{
+			// SkillAttack Move
+			SetUp_AttackMove(Archer::BACK_DASH, Archer::BACK_DASH_MOVE_START, Archer::BACK_DASH_MOVE_STOP, 8.0f, -5.0f);
+			SetUp_AttackMove(Archer::ESCAPING_BOMB, Archer::ESCAPING_BOMB_MOVE_START, Archer::ESCAPING_BOMB_MOVE_STOP, 10.0f, -5.0f);
+			SetUp_AttackMove(Archer::CHARGE_ARROW_SHOT, Archer::CHARGE_ARROW_MOVE_START, Archer::CHARGE_ARROW_MOVE_STOP, 4.0f, -5.0f);
+
+			AttackMove_OnNaviMesh(fTimeDelta);
+		}
 	}
 }
 
@@ -784,7 +835,7 @@ void CPCArcher::KeyInput_StanceChange(const _float& fTimeDelta)
 
 void CPCArcher::KeyInput_AttackArrow(const _float& fTimeDelta)
 {
-	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB))
+	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) && !m_bIsSkill && !m_bIsSkillLoop)
 	{
 		SetUp_WeaponLHand();
 		SetUp_AttackSetting();
@@ -803,12 +854,178 @@ void CPCArcher::KeyInput_AttackArrow(const _float& fTimeDelta)
 	}
 }
 
+void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
+{
+	if (!m_bIsSkillLoop)
+	{
+		if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"RAPID_SHOT"]))
+		{
+			SetUp_AttackSetting();
+			m_bIsSkill  = true;
+			//m_bIsSkillLoop = true;
+			m_uiAnimIdx = Archer::RAPID_SHOT1;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"ESCAPING_BOMB"]))
+		{
+			SetUp_AttackSetting();
+			m_bIsSkill     = true;
+			m_bIsSkillLoop = true;
+			m_uiAnimIdx = Archer::ESCAPING_BOMB;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"ARROW_SHOWER"]))
+		{
+			SetUp_AttackSetting();
+			m_bIsSkill     = true;
+			m_bIsSkillLoop = true;
+			m_uiAnimIdx = Archer::ARROW_SHOWER_START;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"ARROW_FALL"]))
+		{
+			SetUp_AttackSetting();
+			m_bIsSkill     = true;
+			m_bIsSkillLoop = true;
+			m_uiAnimIdx = Archer::ARROW_FALL_START;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"CHARGE_ARROW"]))
+		{
+			SetUp_AttackSetting();
+			m_bIsSkill     = true;
+			m_bIsSkillLoop = true;
+			m_uiAnimIdx = Archer::CHARGE_ARROW_START;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		}
+	}
+	else
+	{
+		// ARROW_SHOWER
+		if (m_uiAnimIdx == Archer::ARROW_SHOWER_START && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+		{
+			m_uiAnimIdx = Archer::ARROW_SHOWER_LOOP;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+		}
+		else if (m_uiAnimIdx == Archer::ARROW_SHOWER_LOOP && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+		{
+			m_uiAnimIdx = Archer::ARROW_SHOWER_SHOT;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+		}
+		// ARROW_FALL
+		else if (m_uiAnimIdx == Archer::ARROW_FALL_START && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+		{
+			m_uiAnimIdx = Archer::ARROW_FALL_LOOP;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+		}
+		else if (m_uiAnimIdx == Archer::ARROW_FALL_LOOP && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+		{
+			m_uiAnimIdx = Archer::ARROW_FALL_SHOT;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+		} 
+		// CHARGE_ARROW
+		else if (m_uiAnimIdx == Archer::CHARGE_ARROW_START && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+		{
+			m_uiAnimIdx = Archer::CHARGE_ARROW_LOOP;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+		}
+		else if (m_uiAnimIdx == Archer::CHARGE_ARROW_LOOP && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+		{
+			m_uiAnimIdx = Archer::CHARGE_ARROW_SHOT;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+		} 
+	}
+
+	// RAPID_SHOT
+	if (m_uiAnimIdx == Archer::RAPID_SHOT1 && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
+	{
+		Ready_AngleInterpolationValue(m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+		m_uiAnimIdx = Archer::RAPID_SHOT2;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+	}
+
+	// Skill Attack ==> ATTACK_WAIT
+	if ((Archer::RAPID_SHOT2 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)) ||
+		(Archer::ESCAPING_BOMB == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)) ||
+		(Archer::ARROW_SHOWER_SHOT == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)) ||
+		(Archer::ARROW_FALL_SHOT == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)) ||
+		(Archer::CHARGE_ARROW_SHOT == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)))
+	{
+		m_bIsAttack    = false;
+		m_bIsSkill     = false;
+		m_bIsSkillLoop = false;
+		m_uiAnimIdx    = Archer::ATTACK_WAIT;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+	}
+}
+
+void CPCArcher::KeyInput_BackDash(const _float& fTimeDelta)
+{
+	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkillLoop)
+	{
+		SetUp_WeaponLHand();
+		SetUp_AttackSetting();
+		m_bIsSkillLoop = true;
+		m_uiAnimIdx    = Archer::BACK_DASH;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+	}
+
+	if ((Archer::BACK_DASH == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)))
+	{
+		m_bIsAttack    = false;
+		m_bIsSkill     = false;
+		m_bIsSkillLoop = false;
+		m_uiAnimIdx    = Archer::ATTACK_WAIT;
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+	}
+}
+
 void CPCArcher::Move_OnNaviMesh(const _float& fTimeDelta)
 {
 	if (m_bIsKeyDown || Archer::MIN_SPEED != m_pInfoCom->m_fSpeed)
 	{
 		m_pTransCom->m_vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
 															  &m_pTransCom->m_vDir,
+															  m_pInfoCom->m_fSpeed * fTimeDelta);
+	}
+}
+
+void CPCArcher::AttackMove_OnNaviMesh(const _float& fTimeDelta)
+{
+	// Set Speed
+	m_tAttackMoveSpeedInterpolationDesc.linear_ratio += m_tAttackMoveSpeedInterpolationDesc.interpolation_speed * fTimeDelta;
+	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(m_tAttackMoveSpeedInterpolationDesc.v1, m_tAttackMoveSpeedInterpolationDesc.v2, m_tAttackMoveSpeedInterpolationDesc.linear_ratio);
+	
+	// NaviMesh ÀÌµ¿.
+	if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
+	{
+		_float fDir = 1.0f;
+		if (m_uiAnimIdx == Archer::BACK_DASH ||
+			m_uiAnimIdx == Archer::ESCAPING_BOMB ||
+			m_uiAnimIdx == Archer::CHARGE_ARROW_SHOT)
+		{
+			fDir = -1.0f;
+		}
+
+		m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+		m_pTransCom->m_vDir.Normalize();
+		m_pTransCom->m_vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
+															  &(m_pTransCom->m_vDir * fDir),
 															  m_pInfoCom->m_fSpeed * fTimeDelta);
 	}
 }
@@ -946,6 +1163,24 @@ void CPCArcher::Change_PlayerStance(const _float& fTimeDelta)
 		{
 			m_bIsCompleteStanceChange = true;
 		}
+	}
+}
+
+void CPCArcher::SetUp_AttackMove(const _uint& uiAniIdx, 
+								 const _uint& uiStartTick,
+								 const _uint& uiStopTick,
+								 const _float& fMoveSpeed, 
+								 const _float& fStopSpeed)
+{
+	if (uiAniIdx == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
+	{
+		// Move On
+		if (m_ui3DMax_CurFrame >= uiStartTick && m_ui3DMax_CurFrame < uiStopTick)
+			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = fMoveSpeed;
+
+		// Move Off
+		else
+			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = fStopSpeed;
 	}
 }
 

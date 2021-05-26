@@ -10,6 +10,7 @@
 #include "PCGladiator.h"
 #include "PCOthersGladiator.h"
 #include "PCArcher.h"
+#include "PCOthersArcher.h"
 /* NPC */
 #include "NPC_Walker.h"
 #include "NPC_Assistant.h"
@@ -540,22 +541,7 @@ void CPacketMgr::Change_Stance_Others(sc_packet_stance_change* packet, int& retf
 	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
 	if (pObj == nullptr) return;
 
-	if (PC_GLADIATOR == packet->o_type)
-	{
-		static_cast<CPCOthersGladiator*>(pObj)->Set_StanceChange(packet->animIdx, packet->is_stance_attack);
-	}
-	else if (PC_ARCHER == packet->o_type)
-	{
-
-	}
-	else if (PC_PRIEST == packet->o_type)
-	{
-
-	}
-	else
-	{
-		static_cast<CPCOthersGladiator*>(pObj)->Set_StanceChange(packet->animIdx, packet->is_stance_attack);
-	}
+	pObj->Set_StanceChange(packet->animIdx, packet->is_stance_attack);
 }
 
 void CPacketMgr::Leave_Object(sc_packet_leave* packet, int& retflag)
@@ -590,23 +576,9 @@ void CPacketMgr::AttackStop_User(sc_packet_attack* packet)
 		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
 		if (pObj == nullptr) return;
 
-		if (PC_GLADIATOR == packet->o_type)
-		{
-			static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
-		}
-		else if (PC_ARCHER == packet->o_type)
-		{
-		}
-		else if (PC_PRIEST == packet->o_type)
-		{
-		}
-		else
-			static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
-
+		pObj->Set_AnimationIdx(packet->animIdx);
 		pObj->Set_IsStartPosInterpolation(true);
 		pObj->Set_LinearPos(pObj->Get_Transform()->m_vPos, _vec3(packet->posX, packet->posY, packet->posZ));
-	
-		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 		pObj->Set_Attack(false);
 		pObj->Set_MoveStop(true);
 	}
@@ -630,24 +602,14 @@ void CPacketMgr::Attack_User(sc_packet_attack* packet)
 		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
 		if (pObj == nullptr) return;
 
-		if (PC_GLADIATOR == packet->o_type)
-		{
-			static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
-			static_cast<CPCOthersGladiator*>(pObj)->Reset_AttackMoveInterpolationRatio();
-		}
-		else if (PC_ARCHER == packet->o_type)
-		{
-		}
-		else if (PC_PRIEST == packet->o_type)
-		{
-		}
-		else
-			static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
 
+		pObj->Set_AnimationIdx(packet->animIdx);
+		pObj->Reset_AttackMoveInterpolationRatio();
 		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
-		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
+
 		if (-1 != packet->end_angleY)
 		{
+			cout << pObj->Get_Transform()->m_vAngle.y << ", " << packet->end_angleY << endl;
 			pObj->Set_IsStartAngleInterpolation(true);
 			pObj->Set_LinearAngle(pObj->Get_Transform()->m_vAngle.y, packet->end_angleY);
 		}
@@ -702,7 +664,7 @@ void CPacketMgr::MoveStop_User(sc_packet_move* packet)
 
 		auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
-		static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
+		pObj->Set_AnimationIdx(packet->animIdx);
 		pObj->Set_IsStartPosInterpolation(true);
 		pObj->Set_LinearPos(pObj->Get_Transform()->m_vPos, _vec3(packet->posX, packet->posY, packet->posZ));
 		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
@@ -733,7 +695,7 @@ void CPacketMgr::Move_User(sc_packet_move* packet)
 
 		auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
-		static_cast<CPCOthersGladiator*>(pObj)->Set_AnimationIdx(packet->animIdx);
+		pObj->Set_AnimationIdx(packet->animIdx);
 		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
 		pObj->Set_Other_direction(_vec3(packet->dirX, packet->dirY, packet->dirZ));
 		pObj->Set_MoveStop(false);
@@ -751,32 +713,19 @@ void CPacketMgr::Enter_Others(sc_packet_enter* packet, int& retflag)
 	Engine::CGameObject* pInstance = nullptr;
 
 	if (PC_GLADIATOR == packet->o_type)
-	{
 		pInstance = Pop_Instance(m_pInstancePoolMgr->Get_PCOthersGladiatorPool());
-		if (nullptr != pInstance)
-		{
-			static_cast<CPCOthersGladiator*>(pInstance)->Set_OthersStance(packet->is_stance_attack);
-		}
-	}
-	else if (PC_ARCHER == packet->o_type)
-	{
 
-	}
+	else if (PC_ARCHER == packet->o_type)
+		pInstance = Pop_Instance(m_pInstancePoolMgr->Get_PCOthersArcherPool());
+
 	else if (PC_PRIEST == packet->o_type)
 	{
 
 	}
-	else
-	{
-		pInstance = Pop_Instance(m_pInstancePoolMgr->Get_PCOthersGladiatorPool());
-		if (nullptr != pInstance)
-		{
-			static_cast<CPCOthersGladiator*>(pInstance)->Set_OthersStance(packet->is_stance_attack);
-		}
-	}
 
 	if (nullptr != pInstance)
 	{
+		pInstance->Set_OthersStance(packet->is_stance_attack);
 		pInstance->Get_Transform()->m_vPos = _vec3(packet->posX, packet->posY, packet->posZ);
 		pInstance->Set_WeaponType(packet->weaponType);
 		pInstance->Set_CurrentStageID(packet->stageID);
@@ -953,9 +902,10 @@ void CPacketMgr::send_login()
 {
 	cs_packet_login p;
 
-	p.size   = sizeof(p);
-	p.type   = CS_LOGIN;
-	p.o_type = g_cJob;
+	p.size        = sizeof(p);
+	p.type        = CS_LOGIN;
+	p.o_type      = g_cJob;
+	p.weapon_type = Bow23_SM;
 
 	int t_id = GetCurrentProcessId();
 	sprintf_s(p.name, "P%03d", t_id % 1000);

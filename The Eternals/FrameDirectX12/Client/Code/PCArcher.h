@@ -50,6 +50,7 @@ private:
 	void			SetUp_StageID();
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
+	void			Set_IsRepeatAnimation();
 	void			Set_AnimationSpeed();
 	void			Set_BlendingSpeed();
 
@@ -58,14 +59,18 @@ private:
 	void KeyInput_Attack(const _float& fTimeDelta);
 	void KeyInput_StanceChange(const _float& fTimeDelta);
 	void KeyInput_AttackArrow(const _float& fTimeDelta);
+	void KeyInput_SkillAttack(const _float& fTimeDelta);
+	void KeyInput_BackDash(const _float& fTimeDelta);
 
 	void Move_OnNaviMesh(const _float& fTimeDelta);
+	void AttackMove_OnNaviMesh(const _float& fTimeDelta);
 	void SetUp_RunMoveSpeed(const _float& fTimeDelta);
 	void SetUp_RunAnimation();
 	void SetUp_RunToIdleAnimation(const _float& fTimeDelta);
 	void SetUp_PlayerStance_FromAttackToNoneAttack();
 	void SetUp_PlayerStance_FromNoneAttackToAttack();
 	void Change_PlayerStance(const _float& fTimeDelta);
+	void SetUp_AttackMove(const _uint& uiAniIdx, const _uint& uiStartTick, const _uint& uiStopTick, const _float& fMoveSpeed, const _float& fStopSpeed);
 
 	void Send_Player_Move();
 	bool Is_Change_CamDirection();
@@ -130,10 +135,11 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Animation ]
 	____________________________________________________________________________________________________________*/
-	_uint m_uiAnimIdx        = 0;	// 현재 애니메이션 Index
-	_uint m_ui3DMax_NumFrame = 0;	// 3DMax에서 애니메이션의 총 Frame 개수
-	_uint m_ui3DMax_CurFrame = 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
-	_float m_fAnimationSpeed = TPS;
+	_uint	m_uiAnimIdx          = 0;	// 현재 애니메이션 Index
+	_uint	m_ui3DMax_NumFrame   = 0;	// 3DMax에서 애니메이션의 총 Frame 개수
+	_uint	m_ui3DMax_CurFrame   = 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
+	_float	m_fAnimationSpeed    = TPS;
+	_bool	m_bIsRepeatAnimation = true;
 
 	Archer::STANCE		m_eStance                 = Archer::STANCE_END;
 	_bool				m_bIsCompleteStanceChange = true;

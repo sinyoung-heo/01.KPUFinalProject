@@ -161,10 +161,10 @@ void CMesh::Set_AnimationKey(const _uint & uiAniKey)
 		m_pAniCtrl->Set_AnimationKey(uiAniKey);
 }
 
-void CMesh::Play_Animation(_float fTimeDelta)
+void CMesh::Play_Animation(_float fTimeDelta, const _bool& bIsRepeat)
 {
 	if (nullptr != m_pAniCtrl)
-		m_pAniCtrl->Play_Animation(fTimeDelta);
+		m_pAniCtrl->Play_Animation(fTimeDelta, bIsRepeat);
 }
 
 SKINNING_MATRIX * CMesh::Find_SkinningMatrix(string strBoneName)

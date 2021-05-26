@@ -318,6 +318,7 @@ struct cs_packet_login
 	unsigned char	size;
 	char			type;
 
+	char			weapon_type;
 	char			o_type;
 	char			name[MAX_ID_LEN];
 	char			password[MAX_PW_LEN];

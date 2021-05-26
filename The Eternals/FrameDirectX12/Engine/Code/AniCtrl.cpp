@@ -172,7 +172,7 @@ void CAniCtrl::Set_AnimationKey(const _uint & uiAniKey)
 	}
 }
 
-void CAniCtrl::Play_Animation(_float fTimeDelta)
+void CAniCtrl::Play_Animation(_float fTimeDelta, const _bool& bIsRepeat)
 {
 	if (m_uiCurAniIndex >= m_uiNumAnimation)
 		return;
@@ -196,7 +196,14 @@ void CAniCtrl::Play_Animation(_float fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ 3DMax 상에서의 Frame 계산 ]
 	____________________________________________________________________________________________________________*/
-	m_fAnimationTime   = (_float)(fmod(m_fAnimationTime, (m_pScene->mAnimations[m_uiCurAniIndex]->mDuration)));
+	if (bIsRepeat)
+		m_fAnimationTime = (_float)(fmod(m_fAnimationTime, (m_pScene->mAnimations[m_uiCurAniIndex]->mDuration)));
+	else
+	{
+		if (m_fAnimationTime > m_pScene->mAnimations[m_uiCurAniIndex]->mDuration)
+			m_fAnimationTime = m_pScene->mAnimations[m_uiCurAniIndex]->mDuration - 1.0;
+	}
+
 	m_ui3DMax_NumFrame = (_uint)(_3DMAX_FPS * (m_pScene->mAnimations[m_uiCurAniIndex]->mDuration / m_pScene->mAnimations[m_uiCurAniIndex]->mTicksPerSecond));
 	m_ui3DMax_CurFrame = (_uint)(_3DMAX_FPS * (m_fAnimationTime / m_pScene->mAnimations[m_uiCurAniIndex]->mTicksPerSecond));
 
