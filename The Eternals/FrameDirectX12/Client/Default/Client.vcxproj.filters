@@ -580,6 +580,9 @@
     <ClInclude Include="..\Code\ServerMath.h">
       <Filter>97.Mgr\02.ServerMath</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\PCOthersArcher.h">
+      <Filter>02.GameObject\02.PlayerCharacter\01.PCArcher</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -828,6 +831,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\ServerMath.cpp">
       <Filter>97.Mgr\02.ServerMath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PCOthersArcher.cpp">
+      <Filter>02.GameObject\02.PlayerCharacter\01.PCArcher</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

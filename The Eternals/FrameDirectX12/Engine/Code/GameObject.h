@@ -65,6 +65,11 @@ public:
 	void	Set_WeaponType(const char& chWeaponType)				{ m_chCurWeaponType = chWeaponType; }
 	void	Ready_AngleInterpolationValue(const _float& fEndAngle);
 	void	Ready_PositionInterpolationValue(const _vec3& vEndPosition, float fSpd = 3.f);
+	
+	virtual void Set_AnimationIdx(const _uint& iIdx) { }
+	virtual void Set_StanceChange(const _uint& uiAniIdx, const _bool& bIsStanceAttack) { }
+	virtual void Set_OthersStance(const _bool& bIsStanceAttack) { }
+	virtual void Reset_AttackMoveInterpolationRatio() { }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT Ready_GameObjectPrototype();

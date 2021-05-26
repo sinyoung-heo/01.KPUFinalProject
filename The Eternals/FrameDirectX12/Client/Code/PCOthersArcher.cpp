@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "PCOthersGladiator.h"
+#include "PCOthersArcher.h"
 #include "GraphicDevice.h"
 #include "ObjectMgr.h"
 #include "LightMgr.h"
@@ -7,14 +7,13 @@
 #include "InstancePoolMgr.h"
 #include "DirectInput.h"
 
-CPCOthersGladiator::CPCOthersGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CPCOthersArcher::CPCOthersArcher(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pServerMath(CServerMath::Get_Instance())
 {
-
 }
 
-void CPCOthersGladiator::Set_StanceChange(const _uint& uiAniIdx, const _bool& bIsStanceAttack)
+void CPCOthersArcher::Set_StanceChange(const _uint& uiAniIdx, const _bool& bIsStanceAttack)
 {
 	if (nullptr == m_pWeapon)
 		return;
@@ -24,14 +23,14 @@ void CPCOthersGladiator::Set_StanceChange(const _uint& uiAniIdx, const _bool& bI
 
 	if (bIsStanceAttack)
 	{
-		m_eCurStance = Gladiator::STANCE_ATTACK;
+		m_eCurStance = Archer::STANCE_ATTACK;
 		m_pWeapon->Set_DissolveInterpolation(-1.0f);
 		m_pWeapon->Set_IsRenderShadow(true);
 		SetUp_WeaponLHand();
 	}
 	else
 	{
-		m_eCurStance = Gladiator::STANCE_NONEATTACK;
+		m_eCurStance = Archer::STANCE_NONEATTACK;
 		m_pWeapon->Set_DissolveInterpolation(1.0f);
 		m_pWeapon->Set_IsRenderShadow(false);
 	}
@@ -39,39 +38,39 @@ void CPCOthersGladiator::Set_StanceChange(const _uint& uiAniIdx, const _bool& bI
 	m_bIsCompleteStanceChange = false;
 }
 
-void CPCOthersGladiator::Set_OthersStance(const _bool& bIsStanceAttack)
+void CPCOthersArcher::Set_OthersStance(const _bool& bIsStanceAttack)
 {
 	if (nullptr == m_pWeapon)
 		return;
 
 	if (bIsStanceAttack)
 	{
-		m_uiAnimIdx = Gladiator::ATTACK_WAIT;
+		m_uiAnimIdx = Archer::ATTACK_WAIT;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
-		m_eCurStance = Gladiator::STANCE_ATTACK;
+		m_eCurStance = Archer::STANCE_ATTACK;
 		m_pWeapon->Set_DissolveInterpolation(-1.0f);
 		m_pWeapon->Set_IsRenderShadow(true);
 		SetUp_WeaponLHand();
 	}
 	else
 	{
-		m_uiAnimIdx = Gladiator::NONE_ATTACK_IDLE;
+		m_uiAnimIdx = Archer::NONE_ATTACK_IDLE;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
-		m_eCurStance = Gladiator::STANCE_NONEATTACK;
+		m_eCurStance = Archer::STANCE_NONEATTACK;
 		m_pWeapon->Set_DissolveInterpolation(1.0f);
 		m_pWeapon->Set_IsRenderShadow(false);
 		SetUp_WeaponBack();
 	}
 }
 
-HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag,
-											 wstring wstrNaviMeshTag,
-											 const _vec3& vScale, 
-											 const _vec3& vAngle,
-											 const _vec3& vPos,
-											 const char& chWeaponType)
+HRESULT CPCOthersArcher::Ready_GameObject(wstring wstrMeshTag, 
+										  wstring wstrNaviMeshTag, 
+										  const _vec3& vScale, 
+										  const _vec3& vAngle, 
+										  const _vec3& vPos, 
+										  const char& chWeaponType)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag, wstrNaviMeshTag), E_FAIL);
@@ -88,7 +87,7 @@ HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag,
 										   m_pMeshCom->Get_MinVector(),
 										   m_pMeshCom->Get_MaxVector());
 
-	m_pInfoCom->m_fSpeed     = Gladiator::MIN_SPEED;
+	m_pInfoCom->m_fSpeed     = Archer::MIN_SPEED;
 	m_pInfoCom->m_vArrivePos = m_pTransCom->m_vPos;
 
 	m_chCurStageID = STAGE_VELIKA;
@@ -98,8 +97,8 @@ HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag,
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
-	m_ePreStance = Gladiator::STANCE_NONEATTACK;
-	m_eCurStance = Gladiator::STANCE_NONEATTACK;
+	m_ePreStance = Archer::STANCE_NONEATTACK;
+	m_eCurStance = Archer::STANCE_NONEATTACK;
 
 	/*__________________________________________________________________________________________________________
 	[ 선형보간 설정 ]
@@ -109,12 +108,12 @@ HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag,
 
 	// Move Speed
 	m_tMoveSpeedInterpolationDesc.linear_ratio = 0.0f;
-	m_tMoveSpeedInterpolationDesc.v1           = Gladiator::MIN_SPEED;
-	m_tMoveSpeedInterpolationDesc.v2           = Gladiator::MAX_SPEED * Gladiator::OTHERS_OFFSET;
+	m_tMoveSpeedInterpolationDesc.v1           = Archer::MIN_SPEED;
+	m_tMoveSpeedInterpolationDesc.v2           = Archer::MAX_SPEED * Archer::OTHERS_OFFSET;
 
 	m_tAttackMoveSpeedInterpolationDesc.linear_ratio = 0.0f;
-	m_tAttackMoveSpeedInterpolationDesc.v1           = Gladiator::MIN_SPEED;
-	m_tAttackMoveSpeedInterpolationDesc.v2           = Gladiator::MAX_SPEED * Gladiator::OTHERS_OFFSET;
+	m_tAttackMoveSpeedInterpolationDesc.v1           = Archer::MIN_SPEED;
+	m_tAttackMoveSpeedInterpolationDesc.v2           = Archer::MAX_ATTACK_SPEED * Archer::OTHERS_OFFSET;
 	
 	// Create Weapon
 	Engine::FAILED_CHECK_RETURN(SetUp_PCWeapon(), E_FAIL);
@@ -122,7 +121,7 @@ HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag,
 	return S_OK;
 }
 
-HRESULT CPCOthersGladiator::LateInit_GameObject()
+HRESULT CPCOthersArcher::LateInit_GameObject()
 {
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
@@ -132,7 +131,7 @@ HRESULT CPCOthersGladiator::LateInit_GameObject()
 	return S_OK;
 }
 
-_int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
+_int CPCOthersArcher::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 	if (m_bIsDead)
@@ -144,7 +143,7 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 		m_pWeapon->Update_GameObject(fTimeDelta);
 
 		m_bIsResetNaviMesh = false;
-		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_PCOthersGladiatorPool(), m_uiInstanceIdx);
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_PCOthersArcherPool(), m_uiInstanceIdx);
 
 		return RETURN_OBJ;
 	}
@@ -194,7 +193,7 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CPCOthersGladiator::LateUpdate_GameObject(const _float& fTimeDelta)
+_int CPCOthersArcher::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
@@ -208,26 +207,26 @@ _int CPCOthersGladiator::LateUpdate_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-void CPCOthersGladiator::Render_EdgeGameObject(const _float& fTimeDelta)
+void CPCOthersArcher::Render_EdgeGameObject(const _float& fTimeDelta)
 {
 	m_pMeshCom->Render_DynamicMesh(m_pEdgeObjectShaderCom);
 }
 
-void CPCOthersGladiator::Render_GameObject(const _float& fTimeDelta, 
-										   ID3D12GraphicsCommandList* pCommandList, 
-										   const _int& iContextIdx)
+void CPCOthersArcher::Render_GameObject(const _float& fTimeDelta, 
+										ID3D12GraphicsCommandList* pCommandList, 
+										const _int& iContextIdx)
 {
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
-void CPCOthersGladiator::Render_ShadowDepth(const _float& fTimeDelta, 
-								   ID3D12GraphicsCommandList* pCommandList, 
-								   const _int& iContextIdx)
+void CPCOthersArcher::Render_ShadowDepth(const _float& fTimeDelta, 
+										 ID3D12GraphicsCommandList* pCommandList, 
+										 const _int& iContextIdx)
 {
 	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 }
 
-HRESULT CPCOthersGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
+HRESULT CPCOthersArcher::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -279,11 +278,11 @@ HRESULT CPCOthersGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviM
 	return S_OK;
 }
 
-HRESULT CPCOthersGladiator::SetUp_PCWeapon()
+HRESULT CPCOthersArcher::SetUp_PCWeapon()
 {
 	if (m_chCurWeaponType != m_chPreWeaponType)
 	{
-		m_pWeapon = static_cast<CPCWeaponTwoHand*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponTwoHand(m_chCurWeaponType)));
+		m_pWeapon = static_cast<CPCWeaponBow*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponBow(m_chCurWeaponType)));
 		m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")));
 		m_pWeapon->Set_ParentMatrix(&m_pTransCom->m_matWorld);
 		m_pWeapon->Update_GameObject(0.016f);
@@ -294,7 +293,7 @@ HRESULT CPCOthersGladiator::SetUp_PCWeapon()
 	return S_OK;
 }
 
-void CPCOthersGladiator::SetUp_StageID()
+void CPCOthersArcher::SetUp_StageID()
 {
 	if (m_chCurStageID != m_chPreStageID)
 	{
@@ -321,7 +320,7 @@ void CPCOthersGladiator::SetUp_StageID()
 	}
 }
 
-void CPCOthersGladiator::Is_ChangeWeapon()
+void CPCOthersArcher::Is_ChangeWeapon()
 {
 	if (m_chCurWeaponType != m_chPreWeaponType)
 	{
@@ -331,17 +330,17 @@ void CPCOthersGladiator::Is_ChangeWeapon()
 			m_pWeapon->Update_GameObject(0.016f);
 		}
 
-		m_pWeapon = static_cast<CPCWeaponTwoHand*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponTwoHand(m_chCurWeaponType)));
+		m_pWeapon = static_cast<CPCWeaponBow*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponBow(m_chCurWeaponType)));
 		m_pWeapon->Set_ParentMatrix(&m_pTransCom->m_matWorld);
 		m_pWeapon->Update_GameObject(0.016f);
 
-		if (Gladiator::STANCE_ATTACK == m_eCurStance)
+		if (Archer::STANCE_ATTACK == m_eCurStance)
 		{
 			SetUp_WeaponLHand();
 			m_pWeapon->Set_DissolveInterpolation(-1.0f);
 			m_pWeapon->Set_IsRenderShadow(true);
 		}
-		else if (Gladiator::STANCE_NONEATTACK == m_eCurStance)
+		else if (Archer::STANCE_NONEATTACK == m_eCurStance)
 		{
 			SetUp_WeaponBack();
 			m_pWeapon->Set_DissolveInterpolation(1.0f);
@@ -352,33 +351,24 @@ void CPCOthersGladiator::Is_ChangeWeapon()
 	}
 }
 
-void CPCOthersGladiator::Set_WeaponHierarchy()
+void CPCOthersArcher::Set_WeaponHierarchy()
 {
-	if (m_uiAnimIdx == Gladiator::CUTTING_SLASH ||
-		m_uiAnimIdx == Gladiator::JAW_BREAKER ||
-		m_uiAnimIdx == Gladiator::CUT_HEAD ||
-		m_uiAnimIdx == Gladiator::WIND_CUTTER1 || 
-		m_uiAnimIdx == Gladiator::WIND_CUTTER2 || 
-		m_uiAnimIdx == Gladiator::WIND_CUTTER3 ||
-		m_uiAnimIdx == Gladiator::DRAW_SWORD_CHARGE ||
-		m_uiAnimIdx == Gladiator::DRAW_SWORD_LOOP ||
-		m_uiAnimIdx == Gladiator::DRAW_SWORD ||
-		m_uiAnimIdx == Gladiator::DRAW_SWORD_END ||
-		m_uiAnimIdx == Gladiator::ATTACK_RUN)
+	if (m_uiAnimIdx == Archer::NONE_ATTACK_IDLE ||
+		m_uiAnimIdx == Archer::NONE_ATTACK_WALK ||
+		m_uiAnimIdx == Archer::IN_WEAPON)
 	{
-		SetUp_WeaponRHand();
+		SetUp_WeaponBack();
 	}
 	else
 		SetUp_WeaponLHand();
-
 }
 
-void CPCOthersGladiator::Set_IsRepeatAnimation()
+void CPCOthersArcher::Set_IsRepeatAnimation()
 {
-	if (m_uiAnimIdx == Gladiator::NONE_ATTACK_IDLE ||
-		m_uiAnimIdx == Gladiator::NONE_ATTACK_WALK ||
-		m_uiAnimIdx == Gladiator::ATTACK_WAIT ||
-		m_uiAnimIdx == Gladiator::ATTACK_RUN)
+	if (m_uiAnimIdx == Archer::NONE_ATTACK_IDLE ||
+		m_uiAnimIdx == Archer::NONE_ATTACK_WALK ||
+		m_uiAnimIdx == Archer::ATTACK_WAIT ||
+		m_uiAnimIdx == Archer::ATTACK_RUN)
 	{
 		m_bIsRepeatAnimation = true;
 	}
@@ -386,80 +376,59 @@ void CPCOthersGladiator::Set_IsRepeatAnimation()
 		m_bIsRepeatAnimation = false;
 }
 
-void CPCOthersGladiator::Set_AnimationSpeed()
+void CPCOthersArcher::Set_AnimationSpeed()
 {
-	if (m_uiAnimIdx == Gladiator::TUMBLING)
+	if (m_uiAnimIdx == Archer::ATTACK_ARROW)
 	{
-		m_fAnimationSpeed = TPS * 1.60f;
+		m_fAnimationSpeed = TPS * 1.6f;
 	}
-	else if (m_uiAnimIdx == Gladiator::COMBO1 || 
-			 m_uiAnimIdx == Gladiator::COMBO1R || 
-			 m_uiAnimIdx == Gladiator::COMBO2 || 
-			 m_uiAnimIdx == Gladiator::COMBO2R || 
-			 m_uiAnimIdx == Gladiator::COMBO3 || 
-			 m_uiAnimIdx == Gladiator::COMBO3R || 
-			 m_uiAnimIdx == Gladiator::COMBO4)
-	{
-		m_fAnimationSpeed = TPS * 1.25f;
-	}
-	else if (m_uiAnimIdx == Gladiator::STINGER_BLADE)
-	{
-		m_fAnimationSpeed = TPS * 1.45f;
-	}
-	else if (m_uiAnimIdx == Gladiator::CUTTING_SLASH)
+	else if (m_uiAnimIdx == Archer::ATTACK_RUN)
 	{
 		m_fAnimationSpeed = TPS * 1.35f;
 	}
-	else if (m_uiAnimIdx == Gladiator::JAW_BREAKER)
+	else if (m_uiAnimIdx == Archer::BACK_DASH)
 	{
-		m_fAnimationSpeed = TPS * 1.45f;
+		m_fAnimationSpeed = TPS * 1.25f;
 	}
-	else if (m_uiAnimIdx == Gladiator::WIND_CUTTER1 ||
-			 m_uiAnimIdx == Gladiator::WIND_CUTTER2 ||
-			 m_uiAnimIdx == Gladiator::WIND_CUTTER3)
+	else if (m_uiAnimIdx == Archer::RAPID_SHOT1 ||
+			 m_uiAnimIdx == Archer::RAPID_SHOT2)
 	{
-		m_fAnimationSpeed = TPS * 0.85f;
+		m_fAnimationSpeed = TPS * 1.5f;
 	}
-	else if (m_uiAnimIdx == Gladiator::GAIA_CRUSH1 ||
-			 m_uiAnimIdx == Gladiator::GAIA_CRUSH3)
+	else if (m_uiAnimIdx == Archer::ESCAPING_BOMB)
 	{
-		m_fAnimationSpeed = TPS * 1.4f;
+		m_fAnimationSpeed = TPS * 1.25f;
 	}
-	else if (m_uiAnimIdx == Gladiator::DRAW_SWORD_CHARGE ||
-			 m_uiAnimIdx == Gladiator::DRAW_SWORD_LOOP ||
-			 m_uiAnimIdx == Gladiator::DRAW_SWORD_END)
+	else if (m_uiAnimIdx == Archer::ARROW_SHOWER_START ||
+			 m_uiAnimIdx == Archer::ARROW_SHOWER_LOOP ||
+			 m_uiAnimIdx == Archer::ARROW_SHOWER_SHOT)
 	{
-		m_fAnimationSpeed = TPS * 2.f;
+		m_fAnimationSpeed = TPS * 1.75f;
+	}
+	else if (m_uiAnimIdx == Archer::ARROW_FALL_START ||
+			 m_uiAnimIdx == Archer::ARROW_FALL_LOOP ||
+			 m_uiAnimIdx == Archer::ARROW_FALL_SHOT)
+	{
+		m_fAnimationSpeed = TPS * 1.75f;
 	}
 	else
 		m_fAnimationSpeed = TPS;
 }
 
-void CPCOthersGladiator::Set_BlendingSpeed()
+void CPCOthersArcher::Set_BlendingSpeed()
 {
-	if (m_uiAnimIdx == Gladiator::NONE_ATTACK_IDLE ||
-		m_uiAnimIdx == Gladiator::NONE_ATTACK_WALK ||
-		m_uiAnimIdx == Gladiator::ATTACK_WAIT ||
-		m_uiAnimIdx == Gladiator::ATTACK_RUN)
+	if (m_uiAnimIdx == Archer::NONE_ATTACK_IDLE ||
+		m_uiAnimIdx == Archer::NONE_ATTACK_WALK ||
+		m_uiAnimIdx == Archer::ATTACK_WAIT ||
+		m_uiAnimIdx == Archer::ATTACK_RUN)
 	{
 		m_fBlendingSpeed = 0.001f;
-	}
-	else if (m_uiAnimIdx == Gladiator::WIND_CUTTER1 ||
-			 m_uiAnimIdx == Gladiator::WIND_CUTTER2 ||
-			 m_uiAnimIdx == Gladiator::WIND_CUTTER3)
-	{
-		m_fBlendingSpeed = 0.05f;
-	}
-	else if (m_uiAnimIdx == Gladiator::TUMBLING)
-	{
-		m_fBlendingSpeed = 1.5f;
 	}
 	else
 		m_fBlendingSpeed = 0.005f;
 }
 
-
-void CPCOthersGladiator::Set_ConstantTable()
+void CPCOthersArcher::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -475,11 +444,14 @@ void CPCOthersGladiator::Set_ConstantTable()
 	tCB_ShaderMesh.fLightPorjFar  = tShadowDesc.fLightPorjFar;
 	tCB_ShaderMesh.vEmissiveColor = _rgba(1.0f, 1.0f, 1.0f, 1.0f);
 
-	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
-	m_pEdgeObjectShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
+	if (nullptr != m_pShaderCom->Get_UploadBuffer_ShaderMesh())
+	{
+		m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
+		m_pEdgeObjectShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
+	}
 }
 
-void CPCOthersGladiator::Set_ConstantTableShadowDepth()
+void CPCOthersArcher::Set_ConstantTableShadowDepth()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -493,10 +465,11 @@ void CPCOthersGladiator::Set_ConstantTableShadowDepth()
 	tCB_ShaderShadow.matProj  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
 	tCB_ShaderShadow.fProjFar = tShadowDesc.fLightPorjFar;
 
-	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
+	if (nullptr != m_pShadowCom->Get_UploadBuffer_ShaderShadow())
+		m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
 }
 
-void CPCOthersGladiator::Move_OnNaviMesh(const _float& fTimeDelta)
+void CPCOthersArcher::Move_OnNaviMesh(const _float& fTimeDelta)
 {
 	if (m_bIsAttack)
 		return;
@@ -506,7 +479,7 @@ void CPCOthersGladiator::Move_OnNaviMesh(const _float& fTimeDelta)
 
 	SetUp_MoveSpeed(fTimeDelta);
 
-	if (!m_bIsMoveStop || Gladiator::MIN_SPEED != m_pInfoCom->m_fSpeed)
+	if (!m_bIsMoveStop || Archer::MIN_SPEED != m_pInfoCom->m_fSpeed)
 	{
 		// NaviMesh 이동.		
 		if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
@@ -519,32 +492,32 @@ void CPCOthersGladiator::Move_OnNaviMesh(const _float& fTimeDelta)
 	}
 }
 
-void CPCOthersGladiator::SetUp_MoveSpeed(const _float& fTimeDelta)
+void CPCOthersArcher::SetUp_MoveSpeed(const _float& fTimeDelta)
 {
 	// Move On
 	if (!m_bIsMoveStop)
-		m_tMoveSpeedInterpolationDesc.interpolation_speed = 1.0f * Gladiator::OTHERS_OFFSET;
+		m_tMoveSpeedInterpolationDesc.interpolation_speed = 1.0f * Archer::OTHERS_OFFSET;
 
 	// Move Off
 	else
-		m_tMoveSpeedInterpolationDesc.interpolation_speed = -Gladiator::MOVE_STOP_SPEED * Gladiator::OTHERS_OFFSET;
+		m_tMoveSpeedInterpolationDesc.interpolation_speed = -Archer::MOVE_STOP_SPEED * Archer::OTHERS_OFFSET;
 
 	m_tMoveSpeedInterpolationDesc.linear_ratio += m_tMoveSpeedInterpolationDesc.interpolation_speed * fTimeDelta;
 	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(m_tMoveSpeedInterpolationDesc.v1, m_tMoveSpeedInterpolationDesc.v2, m_tMoveSpeedInterpolationDesc.linear_ratio);
 }
 
-void CPCOthersGladiator::SetUp_StanceChange(const _float& fTimeDelta)
+void CPCOthersArcher::SetUp_StanceChange(const _float& fTimeDelta)
 {
 	if ((m_ePreStance != m_eCurStance) && !m_bIsCompleteStanceChange)
 	{
 		// NONE_ATTACK -> ATTACK
-		if (Gladiator::STANCE_ATTACK == m_eCurStance)
+		if (Archer::STANCE_ATTACK == m_eCurStance)
 		{
 			// NONE_ATTACK -> ATACK
-			if (Gladiator::OUT_WEAPON == m_uiAnimIdx &&
+			if (Archer::OUT_WEAPON == m_uiAnimIdx &&
 				m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_uiAnimIdx = Gladiator::ATTACK_WAIT;
+				m_uiAnimIdx = Archer::ATTACK_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 				m_bIsCompleteStanceChange = true;
@@ -553,99 +526,47 @@ void CPCOthersGladiator::SetUp_StanceChange(const _float& fTimeDelta)
 		}
 
 		// ATTACK -> NONE_ATTACK
-		else if (Gladiator::STANCE_NONEATTACK == m_eCurStance)
+		else if (Archer::STANCE_NONEATTACK == m_eCurStance)
 		{
-			if (Gladiator::IN_WEAPON == m_uiAnimIdx &&
+			if (Archer::IN_WEAPON == m_uiAnimIdx &&
 				 m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_uiAnimIdx = Gladiator::NONE_ATTACK_IDLE;
+				m_uiAnimIdx = Archer::NONE_ATTACK_IDLE;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 				m_bIsCompleteStanceChange = true;
 				m_ePreStance              = m_eCurStance;
 			}
 
-			if (Gladiator::IN_WEAPON == m_uiAnimIdx && m_ui3DMax_CurFrame > 20)
+			if (Archer::IN_WEAPON == m_uiAnimIdx && m_ui3DMax_CurFrame > 20)
 				SetUp_WeaponBack();
 		}
 	}
 }
 
-void CPCOthersGladiator::SetUp_OthersAttackMove(const _uint& uiAniIdx, 
-												const _uint& uiStartTick,
-												const _uint& uiStopTick, 
-												const _float& fMoveSpeed,
-												const _float& fStopSpeed)
+void CPCOthersArcher::SetUp_OthersAttackMove(const _uint& uiAniIdx,
+											 const _uint& uiStartTick, 
+											 const _uint& uiStopTick, 
+											 const _float& fMoveSpeed,
+											 const _float& fStopSpeed)
 {
 	if (uiAniIdx == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
 	{
 		// Move On
 		if (m_ui3DMax_CurFrame >= uiStartTick && m_ui3DMax_CurFrame < uiStopTick)
-			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = fMoveSpeed;
+			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = fMoveSpeed * Archer::OTHERS_OFFSET;
 
 		// Move Off
 		else
-			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = fStopSpeed;
+			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = fStopSpeed * Archer::OTHERS_OFFSET;
 	}
 }
 
-void CPCOthersGladiator::SetUp_AttackTrail(const _uint& uiAniIdx, const _uint& uiStartTick, const _uint& uiStopTick)
+void CPCOthersArcher::AttackMove_OnNaviMesh(const _float& fTimeDelta)
 {
-	if (nullptr == m_pWeapon)
-		return;
-
-	if (uiAniIdx == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
-	{
-		// Trail On
-		if (m_ui3DMax_CurFrame >= uiStartTick && m_ui3DMax_CurFrame < uiStopTick)
-			m_pWeapon->Set_IsRenderTrail(true);
-
-		// Trail Off
-		else if (m_ui3DMax_CurFrame >= uiStopTick)
-			m_pWeapon->Set_IsRenderTrail(false);
-
-		else
-			m_pWeapon->Set_IsRenderTrail(false);
-	}
-}
-
-void CPCOthersGladiator::AttackMove_OnNaviMesh(const _float& fTimeDelta)
-{
-	// ComboAttack Move
-	SetUp_OthersAttackMove(Gladiator::COMBO1, 0, Gladiator::COMBO1_MOVE_STOP, 1.0f, -3.0f);
-	SetUp_OthersAttackMove(Gladiator::COMBO2, 0, Gladiator::COMBO2_MOVE_STOP, 1.0f, -3.5f);
-	SetUp_OthersAttackMove(Gladiator::COMBO3, 0, Gladiator::COMBO3_MOVE_STOP, 1.0f, -3.5f);
-	SetUp_OthersAttackMove(Gladiator::COMBO4, 0, Gladiator::COMBO4_MOVE_STOP, 0.9f, -0.95f);
-	//// ComoboAttack Trail
-	//SetUp_AttackTrail(Gladiator::COMBO1, Gladiator::COMBO1_TRAIL_START, Gladiator::COMBO1_TRAIL_STOP);
-	//SetUp_AttackTrail(Gladiator::COMBO2, Gladiator::COMBO2_TRAIL_START, Gladiator::COMBO2_TRAIL_STOP);
-	//SetUp_AttackTrail(Gladiator::COMBO3, Gladiator::COMBO3_TRAIL_START, Gladiator::COMBO3_TRAIL_STOP);
-	//SetUp_AttackTrail(Gladiator::COMBO4, Gladiator::COMBO4_TRAIL_START, Gladiator::COMBO4_TRAIL_STOP);
-
-	// SkillAttack Move
-	SetUp_OthersAttackMove(Gladiator::STINGER_BLADE, Gladiator::STINGER_BLADE_MOVE_START, Gladiator::STINGER_BLADE_MOVE_STOP, 3.0f, -3.0f);
-	SetUp_OthersAttackMove(Gladiator::CUTTING_SLASH, Gladiator::CUTTING_SLASH_MOVE_START, Gladiator::CUTTING_SLASH_MOVE_STOP, 1.25f, -1.75f);
-	SetUp_OthersAttackMove(Gladiator::JAW_BREAKER, Gladiator::JAW_BREAKER_MOVE_START, Gladiator::JAW_BREAKER_MOVE_STOP, 4.0f, -4.0f);
-	SetUp_OthersAttackMove(Gladiator::CUT_HEAD, Gladiator::CUT_HEAD_MOVE_START, Gladiator::CUT_HEAD_MOVE_END, 1.5f, -8.0f);
-	SetUp_OthersAttackMove(Gladiator::WIND_CUTTER1, Gladiator::WIND_CUTTER1_MOVE_START, Gladiator::WIND_CUTTER1_MOVE_STOP, 3.0f, -4.0f);
-	SetUp_OthersAttackMove(Gladiator::WIND_CUTTER2, Gladiator::WIND_CUTTER2_MOVE_START, Gladiator::WIND_CUTTER2_MOVE_STOP, 3.0f, -4.0f);
-	SetUp_OthersAttackMove(Gladiator::WIND_CUTTER3, Gladiator::WIND_CUTTER3_MOVE_START, Gladiator::WIND_CUTTER3_MOVE_STOP, 2.0f, -4.0f);
-	SetUp_OthersAttackMove(Gladiator::GAIA_CRUSH1, Gladiator::GAIA_CRUSH1_MOVE_START, Gladiator::GAIA_CRUSH1_MOVE_STOP, 0.75f, 0.0f);
-	SetUp_OthersAttackMove(Gladiator::GAIA_CRUSH2, Gladiator::GAIA_CRUSH2_MOVE_START, Gladiator::GAIA_CRUSH2_MOVE_STOP, 0.75f, -2.0f);
-	SetUp_OthersAttackMove(Gladiator::DRAW_SWORD, Gladiator::DRAW_SWORD_MOVE_START, Gladiator::DRAW_SWORD_MOVE_STOP, 2.5f, -3.0f);
-	SetUp_OthersAttackMove(Gladiator::TUMBLING, Gladiator::TUMBLING_MOVE_START, Gladiator::TUMBLING_MOVE_STOP, 5.0f, -5.0f);
-
-	//// SkillAttck Trail
-	//SetUp_AttackTrail(Gladiator::STINGER_BLADE, Gladiator::STINGER_BLADE_TRAIL_START, Gladiator::STINGER_BLADE_TRAIL_STOP);
-	//SetUp_AttackTrail(Gladiator::CUTTING_SLASH, Gladiator::CUTTING_SLASH_TRAIL_START, Gladiator::CUTTING_SLASH_TRAIL_STOP);
-	//SetUp_AttackTrail(Gladiator::JAW_BREAKER, Gladiator::JAW_BREAKER_TRAIL_START, Gladiator::JAW_BREAKER_TRAIL_STOP);
-	//SetUp_AttackTrail(Gladiator::CUT_HEAD, Gladiator::CUT_HEAD_TRAIL_START, Gladiator::CUT_HEAD_TRAIL_STOP);
-	//SetUp_AttackTrail(Gladiator::WIND_CUTTER1, Gladiator::WIND_CUTTER1_TRAIL_START, Gladiator::WIND_CUTTER1_TRAIL_STOP);
-	//SetUp_AttackTrail(Gladiator::WIND_CUTTER2, Gladiator::WIND_CUTTER2_TRAIL_START, Gladiator::WIND_CUTTER2_TRAIL_STOP);
-	//SetUp_AttackTrail(Gladiator::WIND_CUTTER3, Gladiator::WIND_CUTTER3_TRAIL_START, Gladiator::WIND_CUTTER3_TRAIL_STOP);
-	//SetUp_AttackTrail(Gladiator::GAIA_CRUSH1, Gladiator::GAIA_CRUSH1_TRAIL_START, Gladiator::GAIA_CRUSH1_TRAIL_STOP);
-	//SetUp_AttackTrail(Gladiator::GAIA_CRUSH2, Gladiator::GAIA_CRUSH2_TRAIL_START, Gladiator::GAIA_CRUSH2_TRAIL_STOP);
-	//SetUp_AttackTrail(Gladiator::DRAW_SWORD, Gladiator::DRAW_SWORD_TRAIL_START, Gladiator::DRAW_SWORD_TRAIL_STOP);
-	//SetUp_AttackTrail(Gladiator::DRAW_SWORD_END, Gladiator::DRAW_SWORD_END_TRAIL_START, Gladiator::DRAW_SWORD_END_TRAIL_STOP);
+	SetUp_OthersAttackMove(Archer::ATTACK_ARROW, 0, 0, 0.0f, 0.0f);
+	SetUp_OthersAttackMove(Archer::BACK_DASH, Archer::BACK_DASH_MOVE_START, Archer::BACK_DASH_MOVE_STOP, 8.0f, -5.0f);
+	SetUp_OthersAttackMove(Archer::ESCAPING_BOMB, Archer::ESCAPING_BOMB_MOVE_START, Archer::ESCAPING_BOMB_MOVE_STOP, 10.0f, -5.0f);
+	SetUp_OthersAttackMove(Archer::CHARGE_ARROW_SHOT, Archer::CHARGE_ARROW_MOVE_START, Archer::CHARGE_ARROW_MOVE_STOP, 4.0f, -5.0f);
 
 	if (!m_bIsAttack)
 		return;
@@ -657,53 +578,47 @@ void CPCOthersGladiator::AttackMove_OnNaviMesh(const _float& fTimeDelta)
 	// NaviMesh 이동.
 	if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
 	{
+		_float fDir = 1.0f;
+		if (m_uiAnimIdx == Archer::BACK_DASH ||
+			m_uiAnimIdx == Archer::ESCAPING_BOMB ||
+			m_uiAnimIdx == Archer::CHARGE_ARROW_SHOT)
+		{
+			fDir = -1.0f;
+		}
+
 		m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 		m_pTransCom->m_vDir.Normalize();
 		m_pTransCom->m_vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos, 
-															  &m_pTransCom->m_vDir, 
+															  &(m_pTransCom->m_vDir * fDir), 
 															  m_pInfoCom->m_fSpeed * fTimeDelta);
 	}
 }
 
-void CPCOthersGladiator::SetUp_WeaponRHand()
+void CPCOthersArcher::SetUp_WeaponLHand()
 {
-	if (nullptr == m_pWeapon)
-		return;
-
-	m_pWeapon->Get_Transform()->m_vAngle.y = 180.0f;
-	m_pWeapon->Get_Transform()->m_vAngle.z = 0.0f;
-	m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("R_Sword")));
-}
-
-void CPCOthersGladiator::SetUp_WeaponLHand()
-{
-	if (nullptr == m_pWeapon)
-		return;
-
-	m_pWeapon->Get_Transform()->m_vAngle.y = 0.0f;
-	m_pWeapon->Get_Transform()->m_vAngle.z = 180.0f;
+	m_pWeapon->Get_Transform()->m_vAngle.x = 0.0f;
+	m_pWeapon->Get_Transform()->m_vAngle.y = -160.0f;
+	m_pWeapon->Get_Transform()->m_vAngle.z = 210.0f;
 	m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("L_Sword")));
 }
 
-void CPCOthersGladiator::SetUp_WeaponBack()
+void CPCOthersArcher::SetUp_WeaponBack()
 {
-	if (nullptr == m_pWeapon)
-		return;
-
 	m_pWeapon->Get_Transform()->m_vAngle.y = 0.0f;
 	m_pWeapon->Get_Transform()->m_vAngle.z = 180.0f;
 	m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")));
 }
 
-Engine::CGameObject* CPCOthersGladiator::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, 
-												wstring wstrMeshTag, 
-												wstring wstrNaviMeshTag, 
-												const _vec3& vScale,
-												const _vec3& vAngle,
-												const _vec3& vPos,
-												const char& chWeaponType)
+Engine::CGameObject* CPCOthersArcher::Create(ID3D12Device* pGraphicDevice, 
+											 ID3D12GraphicsCommandList* pCommandList, 
+											 wstring wstrMeshTag,
+											 wstring wstrNaviMeshTag,
+											 const _vec3& vScale, 
+											 const _vec3& vAngle, 
+											 const _vec3& vPos, 
+											 const char& chWeaponType)
 {
-	CPCOthersGladiator* pInstance = new CPCOthersGladiator(pGraphicDevice, pCommandList);
+	CPCOthersArcher* pInstance = new CPCOthersArcher(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, wstrNaviMeshTag, vScale, vAngle, vPos, chWeaponType)))
 		Engine::Safe_Release(pInstance);
@@ -711,28 +626,28 @@ Engine::CGameObject* CPCOthersGladiator::Create(ID3D12Device* pGraphicDevice, ID
 	return pInstance;
 }
 
-CPCOthersGladiator** CPCOthersGladiator::Create_InstancePool(ID3D12Device* pGraphicDevice, 
-															 ID3D12GraphicsCommandList* pCommandList, 
-															 const _uint& uiInstanceCnt)
+CPCOthersArcher** CPCOthersArcher::Create_InstancePool(ID3D12Device* pGraphicDevice, 
+													   ID3D12GraphicsCommandList* pCommandList, 
+													   const _uint& uiInstanceCnt)
 {
-	CPCOthersGladiator** ppInstance = new (CPCOthersGladiator*[uiInstanceCnt]);
+	CPCOthersArcher** ppInstance = new (CPCOthersArcher *[uiInstanceCnt]);
 
 	for (_uint i = 0; i < uiInstanceCnt; ++i)
 	{
-		ppInstance[i] = new CPCOthersGladiator(pGraphicDevice, pCommandList);
+		ppInstance[i] = new CPCOthersArcher(pGraphicDevice, pCommandList);
 		ppInstance[i]->m_uiInstanceIdx = i;
-		ppInstance[i]->Ready_GameObject(L"PoporiR27Gladiator",		// MeshTag
+		ppInstance[i]->Ready_GameObject(L"HumanPCEvent27Archer",	// MeshTag
 										L"StageVelika_NaviMesh",	// NaviMeshTag
 										_vec3(0.05f, 0.05f, 0.05f),	// Scale
 										_vec3(0.0f, 0.0f, 0.0f),	// Angle
 										_vec3(AWAY_FROM_STAGE),		// Pos
-										Twohand19_A_SM);			// Pos
+										Bow23_SM);					// Pos
 	}
 
 	return ppInstance;
 }
 
-void CPCOthersGladiator::Free()
+void CPCOthersArcher::Free()
 {
 	Engine::CGameObject::Free();
 
