@@ -61,6 +61,8 @@ private:
 	void KeyInput_AttackArrow(const _float& fTimeDelta);
 	void KeyInput_SkillAttack(const _float& fTimeDelta);
 	void KeyInput_BackDash(const _float& fTimeDelta);
+	void KeyInput_OpenShop(const char& npcNumber);
+	void KeyInput_OpenQuest(const char& npcNumber);
 
 	void Move_OnNaviMesh(const _float& fTimeDelta);
 	void AttackMove_OnNaviMesh(const _float& fTimeDelta);
@@ -80,6 +82,13 @@ private:
 	void SetUp_WeaponBack();
 	void Ready_AngleInterpolationValue(const _float& fEndAngle);
 	void SetUp_AngleInterpolation(const _float& fTimeDelta);
+
+	// Collision Event
+	void Collision_MonsterMultiCollider(list<Engine::CColliderSphere*>& lstMonsterCollider);
+	void Collision_PortalVelikaToBeach(list<Engine::CColliderSphere*>& lstPortalCollider);
+	void Collision_PortalBeachToVelika(list<Engine::CColliderSphere*>& lstPortalCollider);
+	void Collision_Merchant(list<Engine::CColliderSphere*>& lstMerchantCollider, int npcServerNumber);
+	void Collision_Quest(list<Engine::CColliderSphere*>& lstMerchantCollider, int npcServerNumber);
 
 private:
 	/*__________________________________________________________________________________________________________

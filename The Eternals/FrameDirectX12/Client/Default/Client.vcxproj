@@ -197,6 +197,7 @@
     <ClInclude Include="..\Code\PCPriest.h" />
     <ClInclude Include="..\Code\PCWeapon.h" />
     <ClInclude Include="..\Code\PCWeaponBow.h" />
+    <ClInclude Include="..\Code\PCWeaponRod.h" />
     <ClInclude Include="..\Code\PCWeaponTwoHand.h" />
     <ClInclude Include="..\Code\Portal.h" />
     <ClInclude Include="..\Code\PublicPlane.h" />
@@ -315,6 +316,7 @@
     <ClCompile Include="..\Code\PCPriest.cpp" />
     <ClCompile Include="..\Code\PCWeapon.cpp" />
     <ClCompile Include="..\Code\PCWeaponBow.cpp" />
+    <ClCompile Include="..\Code\PCWeaponRod.cpp" />
     <ClCompile Include="..\Code\PCWeaponTwoHand.cpp" />
     <ClCompile Include="..\Code\Popori_F.cpp" />
     <ClCompile Include="..\Code\Portal.cpp" />

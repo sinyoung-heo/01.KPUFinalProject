@@ -251,7 +251,34 @@ _int CPCArcher::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CPCArcher::Process_Collision()
 {
-	
+	if (g_bIsStageChange)
+		return;
+
+	for (auto& pDst : m_lstCollisionDst)
+	{
+		// Collision Monster
+		if (L"Monster_SingleCollider" == pDst->Get_CollisionTag())
+		{
+			m_pBoundingSphereCom->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+			pDst->Get_BoundingSphere()->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+
+		}
+		if (L"Monster_MultiCollider" == pDst->Get_CollisionTag())
+			Collision_MonsterMultiCollider(pDst->Get_ColliderList());
+
+		// Collision Stage Change
+		if (L"Portal_VelikaToBeach" == pDst->Get_CollisionTag())
+			Collision_PortalVelikaToBeach(pDst->Get_ColliderList());
+
+		if (L"Portal_BeachToVelika" == pDst->Get_CollisionTag())
+			Collision_PortalBeachToVelika(pDst->Get_ColliderList());
+
+		if (L"NPC_Merchant" == pDst->Get_CollisionTag())
+			Collision_Merchant(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
+
+		if (L"NPC_QUest" == pDst->Get_CollisionTag())
+			Collision_Quest(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
+	}
 }
 
 void CPCArcher::Send_PacketToServer()
@@ -377,7 +404,7 @@ HRESULT CPCArcher::SetUp_PCWeapon()
 
 HRESULT CPCArcher::SetUp_ClassFrame()
 {
-/*__________________________________________________________________________________________________________
+	/*__________________________________________________________________________________________________________
 	[ CharacterClassFrame ]
 	____________________________________________________________________________________________________________*/
 	{
@@ -658,7 +685,6 @@ void CPCArcher::Key_Input(const _float& fTimeDelta)
 
 	KeyInput_Move(fTimeDelta);
 	KeyInput_Attack(fTimeDelta);
-	
 }
 
 void CPCArcher::KeyInput_Move(const _float& fTimeDelta)
@@ -995,6 +1021,42 @@ void CPCArcher::KeyInput_BackDash(const _float& fTimeDelta)
 	}
 }
 
+void CPCArcher::KeyInput_OpenShop(const char& npcNumber)
+{
+	g_bIsOpenShop = !g_bIsOpenShop;
+
+	if (g_bIsOpenShop)
+	{
+		if (npcNumber == NPC_POPORI_MERCHANT || npcNumber == NPC_BARAKA_MERCHANT || npcNumber == NPC_BARAKA_MYSTELLIUM)
+		{
+			// NPC에 맞는 상점 리소스 생성
+			cout << "상점 오픈" << endl;
+		}		
+	}
+	else
+	{
+		cout << "상점 종료" << endl;
+	}
+}
+
+void CPCArcher::KeyInput_OpenQuest(const char& npcNumber)
+{
+	g_bIsOpenShop = !g_bIsOpenShop;
+
+	if (g_bIsOpenShop)
+	{
+		if (npcNumber == NPC_CASTANIC_LSMITH)
+		{
+			// NPC에 맞는 상점 리소스 생성
+			cout << "퀘스트창 오픈" << endl;
+		}
+	}
+	else
+	{
+		cout << "퀘스트창 종료" << endl;
+	}
+}
+
 void CPCArcher::Move_OnNaviMesh(const _float& fTimeDelta)
 {
 	if (m_bIsKeyDown || Archer::MIN_SPEED != m_pInfoCom->m_fSpeed)
@@ -1032,7 +1094,6 @@ void CPCArcher::AttackMove_OnNaviMesh(const _float& fTimeDelta)
 
 void CPCArcher::SetUp_RunMoveSpeed(const _float& fTimeDelta)
 {
-
 	if (Archer::STANCE_ATTACK == m_eStance)
 	{
 		m_tMoveSpeedInterpolationDesc.v2 = Archer::MAX_ATTACK_SPEED;
@@ -1312,6 +1373,137 @@ void CPCArcher::SetUp_AngleInterpolation(const _float& fTimeDelta)
 		if (m_tAngleInterpolationDesc.linear_ratio == Engine::MAX_LINEAR_RATIO)
 		{
 			m_tAngleInterpolationDesc.is_start_interpolation = false;
+		}
+	}
+}
+
+void CPCArcher::Collision_MonsterMultiCollider(list<Engine::CColliderSphere*>& lstMonsterCollider)
+{
+	for (auto& pSrcCollider : m_lstCollider)
+	{
+		for (auto& pDstCollider : lstMonsterCollider)
+		{
+			if (Engine::CCollisionMgr::Check_Sphere(pSrcCollider->Get_BoundingInfo(), pDstCollider->Get_BoundingInfo()))
+			{
+				// Process Collision Event
+				pSrcCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+				pDstCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+
+			}
+		}
+	}
+}
+
+void CPCArcher::Collision_PortalVelikaToBeach(list<Engine::CColliderSphere*>& lstPortalCollider)
+{
+	for (auto& pSrcCollider : m_lstCollider)
+	{
+		for (auto& pDstCollider : lstPortalCollider)
+		{
+			if (Engine::CCollisionMgr::Check_Sphere(pSrcCollider->Get_BoundingInfo(), pDstCollider->Get_BoundingInfo()))
+			{
+				// Process Collision Event
+				pSrcCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+				pDstCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+
+				g_bIsStageChange = true;
+				m_bIsKeyDown = false;
+
+				if (Archer::STANCE_ATTACK == m_eStance)
+					m_uiAnimIdx = Archer::ATTACK_WAIT;
+				else
+					m_uiAnimIdx = Archer::NONE_ATTACK_IDLE;
+
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+				// FadeInOut
+				Engine::CGameObject* pGameObject = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
+				static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_BEACH);
+				m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
+			}
+		}
+	}
+}
+
+void CPCArcher::Collision_PortalBeachToVelika(list<Engine::CColliderSphere*>& lstPortalCollider)
+{
+	for (auto& pSrcCollider : m_lstCollider)
+	{
+		for (auto& pDstCollider : lstPortalCollider)
+		{
+			if (Engine::CCollisionMgr::Check_Sphere(pSrcCollider->Get_BoundingInfo(), pDstCollider->Get_BoundingInfo()))
+			{
+				// Process Collision Event
+				pSrcCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+				pDstCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+				
+				g_bIsStageChange = true;
+				m_bIsKeyDown = false;
+
+				if (Archer::STANCE_ATTACK == m_eStance)
+					m_uiAnimIdx = Archer::ATTACK_WAIT;
+				else
+					m_uiAnimIdx = Archer::NONE_ATTACK_IDLE;
+
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+				// FadeInOut
+				Engine::CGameObject* pGameObject = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
+				static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_VELIKA);
+				m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
+			}
+		}
+	}
+}
+
+void CPCArcher::Collision_Merchant(list<Engine::CColliderSphere*>& lstMerchantCollider, int npcServerNumber)
+{
+	for (auto& pSrcCollider : m_lstCollider)
+	{
+		for (auto& pDstCollider : lstMerchantCollider)
+		{
+			if (Engine::CCollisionMgr::Check_Sphere(pSrcCollider->Get_BoundingInfo(), pDstCollider->Get_BoundingInfo()))
+			{
+				// Process Collision Event
+				pSrcCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+				pDstCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+					
+				CNPC_Merchant* pObj = static_cast<CNPC_Merchant*>(m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"NPC", npcServerNumber));
+				pObj->Set_State(Baraka_M_Merchant::A_TALK);
+		
+				/* Shop Open */
+				if (Engine::KEY_DOWN(DIK_F))
+				{				
+					KeyInput_OpenShop(pObj->Get_NPCNumber());
+				}
+			}
+		}
+	}
+}
+
+void CPCArcher::Collision_Quest(list<Engine::CColliderSphere*>& lstMerchantCollider, int npcServerNumber)
+{
+	for (auto& pSrcCollider : m_lstCollider)
+	{
+		for (auto& pDstCollider : lstMerchantCollider)
+		{
+			if (Engine::CCollisionMgr::Check_Sphere(pSrcCollider->Get_BoundingInfo(), pDstCollider->Get_BoundingInfo()))
+			{
+				// Process Collision Event
+				pSrcCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+				pDstCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+
+				CNPC_Quest* pObj = static_cast<CNPC_Quest*>(m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"NPC", npcServerNumber));
+				if (pObj == nullptr) return;
+
+				pObj->Set_State(Castanic_M_Lsmith::A_TALK);
+
+				/* Shop Open */
+				if (Engine::KEY_DOWN(DIK_F))
+				{
+					KeyInput_OpenQuest(pObj->Get_NPCNumber());
+				}
+			}
 		}
 	}
 }

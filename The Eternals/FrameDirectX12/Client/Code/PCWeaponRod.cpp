@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include "PCWeaponBow.h"
+#include "PCWeaponRod.h"
 #include "ObjectMgr.h"
 #include "ColliderBox.h"
 #include "CollisionMgr.h"
 #include "InstancePoolMgr.h"
 
-CPCWeaponBow::CPCWeaponBow(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CPCWeaponRod::CPCWeaponRod(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CPCWeapon(pGraphicDevice, pCommandList)
 {
 }
 
-HRESULT CPCWeaponBow::Ready_GameObject(wstring wstrMeshTag, 
+HRESULT CPCWeaponRod::Ready_GameObject(wstring wstrMeshTag, 
 									   const _vec3& vScale, 
 									   const _vec3& vAngle, 
 									   const _vec3& vPos, 
-									   Engine::HIERARCHY_DESC* pHierarchyDesc, 
+									   Engine::HIERARCHY_DESC* pHierarchyDesc,
 									   _matrix* pParentMatrix, 
 									   const _rgba& vEmissiveColor)
 {
@@ -34,32 +34,32 @@ HRESULT CPCWeaponBow::Ready_GameObject(wstring wstrMeshTag,
 										   1.0f,
 										   _vec3(0.0f, 0.0f, 0.0f));
 
-	if (m_wstrMeshTag == L"Bow18_A_SM")
-		m_chCurWeaponType = Bow18_A_SM;
+	if (m_wstrMeshTag == L"Event_Wit_Rod_01")
+		m_chCurWeaponType = Event_Wit_Rod_01;
 
-	else if (m_wstrMeshTag == L"Bow23_SM")
-		m_chCurWeaponType = Bow23_SM;
+	else if (m_wstrMeshTag == L"Rod19_A")
+		m_chCurWeaponType = Rod19_A;
 
-	else if (m_wstrMeshTag == L"Bow27_SM")
-		m_chCurWeaponType = Bow27_SM;
+	else if (m_wstrMeshTag == L"Rod28_B")
+		m_chCurWeaponType = Rod28_B;
 
-	else if (m_wstrMeshTag == L"Bow31_SM")
-		m_chCurWeaponType = Bow31_SM;
+	else if (m_wstrMeshTag == L"Rod31")
+		m_chCurWeaponType = Rod31;
 
-	else if (m_wstrMeshTag == L"Event_Season_Bow_01_SM")
-		m_chCurWeaponType = Event_Season_Bow_01_SM;
+	else if (m_wstrMeshTag == L"Rod33_B")
+		m_chCurWeaponType = Rod33_B;
 
 	return S_OK;
 }
 
-HRESULT CPCWeaponBow::LateInit_GameObject()
+HRESULT CPCWeaponRod::LateInit_GameObject()
 {
 	Engine::FAILED_CHECK_RETURN(CPCWeapon::LateInit_GameObject(), E_FAIL);
 
 	return S_OK;
 }
 
-_int CPCWeaponBow::Update_GameObject(const _float& fTimeDelta)
+_int CPCWeaponRod::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
@@ -68,7 +68,7 @@ _int CPCWeaponBow::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bIsReturn)
 	{
-		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponBow(m_chCurWeaponType), m_uiInstanceIdx);
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponRod(m_chCurWeaponType), m_uiInstanceIdx);
 
 		m_bIsStartInterpolation = false;
 		m_fLinearRatio          = 1.0f;
@@ -110,32 +110,36 @@ _int CPCWeaponBow::Update_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CPCWeaponBow::LateUpdate_GameObject(const _float& fTimeDelta)
+_int CPCWeaponRod::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	return CPCWeapon::LateUpdate_GameObject(fTimeDelta);
 }
 
-void CPCWeaponBow::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
+void CPCWeaponRod::Render_GameObject(const _float& fTimeDelta, 
+									 ID3D12GraphicsCommandList* pCommandList, 
+									 const _int& iContextIdx)
 {
 	CPCWeapon::Render_GameObject(fTimeDelta, pCommandList, iContextIdx);
 }
 
-void CPCWeaponBow::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
+void CPCWeaponRod::Render_ShadowDepth(const _float& fTimeDelta, 
+									  ID3D12GraphicsCommandList* pCommandList, 
+									  const _int& iContextIdx)
 {
 	CPCWeapon::Render_ShadowDepth(fTimeDelta, pCommandList, iContextIdx);
 }
 
-CPCWeaponBow* CPCWeaponBow::Create(ID3D12Device* pGraphicDevice, 
+CPCWeaponRod* CPCWeaponRod::Create(ID3D12Device* pGraphicDevice, 
 								   ID3D12GraphicsCommandList* pCommandList, 
-								   wstring wstrMeshTag, 
-								   const _vec3& vScale,
-								   const _vec3& vAngle,
+								   wstring wstrMeshTag,
+								   const _vec3& vScale, 
+								   const _vec3& vAngle, 
 								   const _vec3& vPos,
 								   Engine::HIERARCHY_DESC* pHierarchyDesc,
 								   _matrix* pParentMatrix, 
 								   const _rgba& vEmissiveColor)
 {
-	CPCWeaponBow* pInstance = new CPCWeaponBow(pGraphicDevice, pCommandList);
+	CPCWeaponRod* pInstance = new CPCWeaponRod(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag,
 										   vScale,
@@ -149,20 +153,20 @@ CPCWeaponBow* CPCWeaponBow::Create(ID3D12Device* pGraphicDevice,
 	return pInstance;
 }
 
-CPCWeaponBow** CPCWeaponBow::Create_InstancePool(ID3D12Device* pGraphicDevice, 
-												 ID3D12GraphicsCommandList* pCommandList,
+CPCWeaponRod** CPCWeaponRod::Create_InstancePool(ID3D12Device* pGraphicDevice,
+												 ID3D12GraphicsCommandList* pCommandList, 
 												 wstring wstrMeshTag, 
 												 const _uint& uiInstanceCnt)
 {
-	CPCWeaponBow** ppInstance = new (CPCWeaponBow * [uiInstanceCnt]);
+	CPCWeaponRod** ppInstance = new (CPCWeaponRod * [uiInstanceCnt]);
 
 
 	for (_uint i = 0; i < uiInstanceCnt; ++i)
 	{
-		ppInstance[i] = new CPCWeaponBow(pGraphicDevice, pCommandList);
+		ppInstance[i] = new CPCWeaponRod(pGraphicDevice, pCommandList);
 		ppInstance[i]->m_uiInstanceIdx = i;
 		ppInstance[i]->Ready_GameObject(wstrMeshTag,				// MeshTag
-										_vec3(1.10f),				// Scale
+										_vec3(1.35f),				// Scale
 										 _vec3(0.0f, 0.0f, 180.0f),	// Angle
 										_vec3(0.0f, 0.0f, 0.0f),	// Pos
 										nullptr,					// HierarchyDesc
@@ -173,7 +177,7 @@ CPCWeaponBow** CPCWeaponBow::Create_InstancePool(ID3D12Device* pGraphicDevice,
 	return ppInstance;
 }
 
-void CPCWeaponBow::Free()
+void CPCWeaponRod::Free()
 {
 	CPCWeapon::Free();
 }

@@ -252,7 +252,8 @@ HRESULT CVIMesh::Ready_Mesh(const aiMesh * pAiMesh,
 			if (!strcmp("Popori_F_Face10_Skel", pAiMesh->mName.C_Str()) ||
 				!strcmp("Popori_F_Hair12B_Skel", pAiMesh->mName.C_Str()) ||
 				!strcmp("Human_F_Face11_Skel", pAiMesh->mName.C_Str()) ||
-				!strcmp("Human_F_Hair14B_Skel", pAiMesh->mName.C_Str()))
+				!strcmp("Human_F_Hair14B_Skel", pAiMesh->mName.C_Str()) ||
+				!strcmp("Popori_M_Face02_Skel", pAiMesh->mName.C_Str()))
 			{
 				// vtxMesh.vNormal = _vec3(pAiMesh->mNormals[i].x, pAiMesh->mNormals[i].y, pAiMesh->mNormals[i].z) * -1.0f;
 				vtxMesh.vNormal = _vec3(pAiMesh->mNormals[i].x, pAiMesh->mNormals[i].y, pAiMesh->mNormals[i].z);

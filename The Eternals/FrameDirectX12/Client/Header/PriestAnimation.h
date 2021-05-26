@@ -25,4 +25,6 @@ namespace Priest
 	const _float MAX_SPEED       = 5.0f;
 	const _float MOVE_STOP_SPEED = 3.0f;
 
+	const _uint HASTE_COLLISIONTICK_START = 32;
+
 }

@@ -11,6 +11,7 @@
 #include "PCOthersGladiator.h"
 #include "PCArcher.h"
 #include "PCOthersArcher.h"
+#include "PCPriest.h"
 /* NPC */
 #include "NPC_Walker.h"
 #include "NPC_Assistant.h"
@@ -779,11 +780,13 @@ void CPacketMgr::Login_Player(sc_packet_login_ok* packet)
 	}
 	else if (PC_PRIEST == packet->o_type)
 	{
-		// wstrMeshTag = L"PoporiMR25Priest";
-	}
-	else
-	{
-		// wstrMeshTag = L"PoporiR27Gladiator";
+		pGameObj = CPCPriest::Create(m_pGraphicDevice, m_pCommandList,
+									 L"PoporiMR25Priest",								// MeshTag
+									 wstrNaviMeshTag,									// NaviMeshTag
+									 _vec3(0.05f, 0.05f, 0.05f),						// Scale
+									 _vec3(0.0f, 0.0f, 0.0f),							// Angle
+									 _vec3(packet->posX, packet->posY, packet->posZ),	// Pos
+									 packet->weaponType);
 	}
 
 

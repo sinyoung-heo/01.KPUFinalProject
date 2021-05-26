@@ -24,7 +24,7 @@ class CPCOthersArcher;
 
 class CPCWeaponTwoHand;
 class CPCWeaponBow;
-
+class CPCWeaponRod;
 
 class CInstancePoolMgr : public Engine::CBase
 {
@@ -65,6 +65,7 @@ public:
 	// PCWeapon
 	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	Get_PCWeaponTwoHand(const char& chWeaponType);
 	INSTANCE_POOL_DESC<CPCWeaponBow>*		Get_PCWeaponBow(const char& chWeaponType);
+	INSTANCE_POOL_DESC<CPCWeaponRod>*		Get_PCWeaponRod(const char& chWeaponType);
 
 
 	void Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
@@ -107,11 +108,18 @@ private:
 	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	m_pPCWeaponTwoHand29_SM_Pool;
 	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	m_pPCWeaponTwoHand31_SM_Pool;
 	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	m_pPCWeaponTwoHand33_B_SM_Pool;
+
 	INSTANCE_POOL_DESC<CPCWeaponBow>*		m_pPCWeaponBow18_A_SM_Pool;
 	INSTANCE_POOL_DESC<CPCWeaponBow>*		m_pPCWeaponBow23_SM_Pool;
 	INSTANCE_POOL_DESC<CPCWeaponBow>*		m_pPCWeaponBow27_SM_Pool;
 	INSTANCE_POOL_DESC<CPCWeaponBow>*		m_pPCWeaponBow31_SM_Pool;
 	INSTANCE_POOL_DESC<CPCWeaponBow>*		m_pPCWeaponEvent_Season_Bow_01_SM_Pool;
+
+	INSTANCE_POOL_DESC<CPCWeaponRod>*		m_pPCWeaponEvent_Wit_Rod_01_Pool;
+	INSTANCE_POOL_DESC<CPCWeaponRod>*		m_pPCWeaponRod18_A_Pool;
+	INSTANCE_POOL_DESC<CPCWeaponRod>*		m_pPCWeaponRod28_B_Pool;
+	INSTANCE_POOL_DESC<CPCWeaponRod>*		m_pPCWeaponRod31_Pool;
+	INSTANCE_POOL_DESC<CPCWeaponRod>*		m_pPCWeaponRod33_B_Pool;
 
 private:
 	virtual void Free();

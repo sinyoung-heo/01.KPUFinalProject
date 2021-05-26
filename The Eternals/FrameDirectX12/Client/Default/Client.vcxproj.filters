@@ -583,6 +583,9 @@
     <ClInclude Include="..\Code\PCOthersArcher.h">
       <Filter>02.GameObject\02.PlayerCharacter\01.PCArcher</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\PCWeaponRod.h">
+      <Filter>02.GameObject\03.PCWeapon\03.PCWeaponRod</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -834,6 +837,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\PCOthersArcher.cpp">
       <Filter>02.GameObject\02.PlayerCharacter\01.PCArcher</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PCWeaponRod.cpp">
+      <Filter>02.GameObject\03.PCWeapon\03.PCWeaponRod</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
