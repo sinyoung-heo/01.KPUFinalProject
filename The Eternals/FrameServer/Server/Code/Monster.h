@@ -26,6 +26,8 @@ public:
 	void	Set_Stop_Fight();
 	void	Set_Start_Regen(chrono::seconds t = 3s);
 	void	Set_Finish_Regen();
+	void	Set_Start_Reaction();
+	void	Set_Stop_Reaction(chrono::seconds t = 3s);
 
 	void	active_monster();									// 해당 Monster의 STATUS = ST_ACTIVE
 	void	nonActive_monster();								// 해당 Monster의 STATUS = ST_NONACTIVE
@@ -38,6 +40,7 @@ public:
 	/* MONSTER STATUS CHANGE */
 	void	Change_AttackMode();								// STATUS == ATTACK
 	void	Change_ChaseMode();									// STATUS == CHASE
+	void	Change_ReactionMode();
 	void    Change_DeadMode();									// STATUS == DEATH
 
 private:
@@ -77,6 +80,7 @@ private:
 	void	Chase_GiantMonkey(const float& fTimeDelta);
 	void	Attack_GiantMonkey(const float& fTimeDelta);
 	void	Rush_GiantMonkey(const float& fTimeDelta);
+	void	NuckBack_GiantMonkey(const float& fTimeDelta);
 	void	Dead_GiantMonkey(const float& fTimeDelta);
 
 	void	Change_CraftyArachne_Animation(const float& fTimeDelta);
@@ -101,6 +105,7 @@ public:
 	void	send_Monster_Stat(int to_client);
 	void	send_Monster_Dead(int to_client, int ani);
 	void	send_Monster_animation_packet(int to_client, int ani);
+	void	send_Monster_NuckBack(int to_client, int ani);
 
 public:
 	char			m_monNum				= 0;
@@ -114,11 +119,13 @@ public:
 	volatile bool	m_bIsRegen				= false;
 	volatile bool	m_bIsAttack				= false;
 	volatile bool	m_bIsFighting			= false;
+	volatile bool	m_bIsReaction			= false;
 	bool			m_bIsShortAttack		= true;		// 근거리 공격
 	bool			m_bIsRushAttack			= false;
 
 	int				m_iTargetNum			= -1;
 	_vec3			m_vOriPos				= _vec3(0.f);
+	_vec3			m_vNuckBackPos			= _vec3(0.f);
 	ATTACK_DIST		m_eAttackDist			= ATTACK_DIST::DIST_END;
 
 	/* Animation */

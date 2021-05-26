@@ -2046,6 +2046,9 @@ void CPCGladiator::SetUp_CollisionTick(const _float& fTimeDelta)
 				// Groggy
 				if (Gladiator::STINGER_BLADE == m_uiAnimIdx)
 					pCollisionTick->Set_SkillAffect(AFFECT_GROGGY);
+				// NuckBack
+				else if (Gladiator::DRAW_SWORD == m_uiAnimIdx)
+					pCollisionTick->Set_SkillAffect(AFFECT_NUCKBACK);
 				else
 					pCollisionTick->Set_SkillAffect(AFFECT_FINCH);
 

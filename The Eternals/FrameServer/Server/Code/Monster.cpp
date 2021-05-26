@@ -5,8 +5,8 @@
 CMonster::CMonster()
 	:m_iHp(0), m_iMaxHp(0), m_iExp(0), m_iMinAtt(0), m_iMaxAtt(0), m_fSpd(0.f),
 	m_iTargetNum(-1), m_bIsAttack(false), m_bIsShortAttack(true), m_bIsRegen(false),
-	m_bIsRushAttack(false), m_bIsFighting(false), m_monNum(0), m_uiAnimIdx(0),
-	m_eAttackDist(ATTACK_DIST::DIST_END)
+	m_bIsRushAttack(false), m_bIsFighting(false), m_monNum(0), m_uiAnimIdx(0), m_bIsReaction(false),
+	m_vNuckBackPos(_vec3(0.f)), m_eAttackDist(ATTACK_DIST::DIST_END)
 {
 }
 
@@ -355,6 +355,12 @@ void CMonster::Change_GiantMonkey_Animation(const float& fTimeDelta)
 		
 			Rush_GiantMonkey(fTimeDelta);
 		}
+	}
+	break;
+
+	case STATUS::ST_REACTION:
+	{
+		NuckBack_GiantMonkey(fTimeDelta);
 	}
 	break;
 
@@ -1700,6 +1706,8 @@ void CMonster::Chase_GiantBeetle(const float& fTimeDelta)
 
 void CMonster::Chase_GiantMonkey(const float& fTimeDelta)
 {
+	if (m_bIsReaction) return;
+
 	/* 해당 Monster의 원래 위치값 */
 	float ori_x, ori_y, ori_z;
 	ori_x = m_vPos.x;
@@ -2629,6 +2637,7 @@ void CMonster::Attack_GiantBeetle(const float& fTimeDelta)
 
 void CMonster::Attack_GiantMonkey(const float& fTimeDelta)
 {
+	if (m_bIsReaction) return;
 	// 이전 공격 애니메이션이 아직 종료되지 않았을 경우 -> 몬스터 공격 패킷 전송 X
 	if (GiantMonkey::ATTACK_RIGHT <= m_uiAnimIdx && m_uiAnimIdx <= GiantMonkey::ATTACK_COMBO)
 	{
@@ -2637,7 +2646,7 @@ void CMonster::Attack_GiantMonkey(const float& fTimeDelta)
 		else
 		{
 			m_bIsRushAttack = false;
-			Set_Stop_Attack(5s);
+			Set_Stop_Attack(7s);
 			return;
 		}
 	}
@@ -3005,6 +3014,76 @@ void CMonster::Rush_GiantMonkey(const float& fTimeDelta)
 			}
 		}
 	}
+}
+
+void CMonster::NuckBack_GiantMonkey(const float& fTimeDelta)
+{
+	if (m_bIsReaction == false) return;
+	if (GiantMonkey::DOWN == m_uiAnimIdx)
+	{
+		if (!Is_AnimationSetEnd(fTimeDelta))
+			return;
+		
+		else
+		{
+			Set_Stop_Reaction(3s);
+			return;
+		}
+	}
+
+	/* 해당 Monster의 원래 위치값 */
+	float ori_x, ori_y, ori_z;
+	ori_x = m_vPos.x;
+	ori_y = m_vPos.y;
+	ori_z = m_vPos.z;
+
+	// 넉백 전 위치에서의 viewlist (시야 내에 플레이어 저장)
+	unordered_set<pair<int, int>> oldnearSector;
+	oldnearSector.reserve(NEAR_SECTOR);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
+
+	unordered_set <int> old_viewlist;
+	unordered_set <int> old_targetList;
+
+	// 넉백 전: 인접 섹터 순회 (몬스터 시야 파악)
+	for (auto& s : oldnearSector)
+	{
+		// 인접 섹터 내의 타 유저들이 있는지 검사
+		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+		{
+			// 유저의 서버 번호 추출
+			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			{
+				/* 유저일 경우 처리 */
+				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+
+					// 접속한 유저만 시야 목록에 등록한다.
+					if (!pPlayer->Get_IsConnected()) continue;
+
+					// 시야 내에 있다면 시야 목록에 등록한다.
+					if (CObjMgr::GetInstance()->Is_Near(this, pPlayer))
+						old_viewlist.insert(obj_num);
+				}
+			}
+		}
+	}
+
+	// 넉백 후의 위치 갱신
+	m_vNuckBackPos = m_vPos + (-1.f * m_vDir) * NUCKBACK_DIST;
+
+	for (auto pl : old_viewlist)
+	{
+		/* 유저일 경우 처리 */
+		if (true == CObjMgr::GetInstance()->Is_Player(pl))
+		{	
+			send_Monster_NuckBack(pl, GiantMonkey::DOWN);	
+		}
+	}
+
+	m_uiAnimIdx = GiantMonkey::DOWN;
+	Set_AnimationKey(GiantMonkey::DOWN);
 }
 
 void CMonster::Dead_Crab(const float& fTimeDelta)
@@ -3597,15 +3676,18 @@ void CMonster::Hurt_Monster(const int& p_id, const int& damage, const char& affe
 			if (m_bIsDead) return;
 			send_Monster_Stat(pl);
 
-			/* Finch */
+			/* Affect */
 			if (m_monNum == MON_GMONKEY && !m_bIsAttack)
 			{
-				if (affect == AFFECT_FINCH)
+				if (affect == AFFECT_FINCH && !m_bIsReaction)
 					send_Monster_animation_packet(pl, GiantMonkey::FINCH);
-				else if (affect == AFFECT_GROGGY)
+				else if (affect == AFFECT_GROGGY && !m_bIsReaction)
 					send_Monster_animation_packet(pl, GiantMonkey::GROGGY);
 				else if (affect == AFFECT_NUCKBACK)
-					send_Monster_animation_packet(pl, GiantMonkey::DOWN);
+				{
+					Change_ReactionMode();
+					return;
+				}
 			}
 		}
 	}
@@ -3624,7 +3706,7 @@ void CMonster::Hurt_Monster(const int& p_id, const int& damage, const char& affe
 void CMonster::Change_AttackMode()
 {
 	/* Monster가 활성화되어 있지 않을 경우 활성화 */
-	if (m_bIsDead || m_bIsRegen) return;
+	if (m_bIsDead || m_bIsRegen || m_bIsReaction) return;
 	if (m_status != ST_ATTACK)
 	{
 		STATUS prev_state = m_status;
@@ -3636,11 +3718,22 @@ void CMonster::Change_AttackMode()
 void CMonster::Change_ChaseMode()
 {
 	/* Monster가 활성화되어 있지 않을 경우 활성화 */
-	if (m_bIsDead || m_bIsRegen) return;
+	if (m_bIsDead || m_bIsRegen || m_bIsReaction) return;
 	if (m_status != ST_CHASE)
 	{
 		STATUS prev_state = m_status;
 		atomic_compare_exchange_strong(&m_status, &prev_state, ST_CHASE);
+	}
+}
+
+void CMonster::Change_ReactionMode()
+{
+	if (m_bIsDead || m_bIsRegen) return;
+	if (m_status != ST_REACTION)
+	{
+		STATUS prev_state = m_status;
+		if (true == atomic_compare_exchange_strong(&m_status, &prev_state, ST_REACTION))
+			Set_Start_Reaction();
 	}
 }
 
@@ -3785,6 +3878,28 @@ void CMonster::Set_Finish_Regen()
 			m_iHp = m_iMaxHp;
 			m_iTargetNum = -1;
 			m_vPos = m_vOriPos;
+		}
+	}
+}
+
+void CMonster::Set_Start_Reaction()
+{
+	if (!m_bIsReaction)
+	{
+		bool prev_state = m_bIsReaction;
+		atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsReaction), &prev_state, true);
+	}
+}
+
+void CMonster::Set_Stop_Reaction(chrono::seconds t)
+{
+	if (m_bIsReaction)
+	{
+		bool prev_state = m_bIsReaction;
+		if (true == atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsReaction), &prev_state, false))
+		{
+			m_vPos = m_vNuckBackPos;
+			add_timer(m_sNum, OP_MODE_CHASE_MONSTER, system_clock::now() + t);
 		}
 	}
 }
@@ -3952,6 +4067,23 @@ void CMonster::send_Monster_animation_packet(int to_client, int ani)
 	p.id = m_sNum;
 
 	p.aniIdx = ani;
+
+	send_packet(to_client, &p);
+}
+
+void CMonster::send_Monster_NuckBack(int to_client, int ani)
+{
+	sc_packet_monster_nuckback p;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_MONSTER_NUCKBACK;
+	p.id = m_sNum;
+
+	p.animIdx = ani;
+
+	p.posX = m_vNuckBackPos.x;
+	p.posY = m_vNuckBackPos.y;
+	p.posZ = m_vNuckBackPos.z;
 
 	send_packet(to_client, &p);
 }

@@ -25,27 +25,28 @@ constexpr int VIEW_LIMIT				= 20;
 
 #pragma pack (push, 1)
 
-constexpr char SC_PACKET_LOGIN_OK		= 0;
-constexpr char SC_PACKET_MOVE			= 1;
-constexpr char SC_PACKET_MOVE_STOP		= 2;
-constexpr char SC_PACKET_ENTER			= 3;
-constexpr char SC_PACKET_LEAVE			= 4;
-constexpr char SC_PACKET_CHAT			= 5;
-constexpr char SC_PACKET_LOGIN_FAIL		= 6;
-constexpr char SC_PACKET_STAT_CHANGE	= 7;
-constexpr char SC_PACKET_ATTACK			= 8;
-constexpr char SC_PACKET_ATTACK_STOP	= 9;
-constexpr char SC_PACKET_STANCE_CHANGE  = 10;
-constexpr char SC_PACKET_NPC_MOVE		= 11;
-constexpr char SC_PACKET_NPC_ENTER		= 12;
-constexpr char SC_PACKET_MONSTER_ENTER	= 13;
-constexpr char SC_PACKET_MONSTER_MOVE	= 14;
-constexpr char SC_PACKET_MONSTER_ATTACK = 15;
-constexpr char SC_PACKET_MONSTER_RUSH	= 16;
-constexpr char SC_PACKET_MONSTER_STAT	= 17;
-constexpr char SC_PACKET_MONSTER_DEAD	= 18;
-constexpr char SC_PACKET_STAGE_CHANGE   = 19;
-constexpr char SC_PACKET_ANIM_INDEX		= 20;
+constexpr char SC_PACKET_LOGIN_OK			= 0;
+constexpr char SC_PACKET_MOVE				= 1;
+constexpr char SC_PACKET_MOVE_STOP			= 2;
+constexpr char SC_PACKET_ENTER				= 3;
+constexpr char SC_PACKET_LEAVE				= 4;
+constexpr char SC_PACKET_CHAT				= 5;
+constexpr char SC_PACKET_LOGIN_FAIL			= 6;
+constexpr char SC_PACKET_STAT_CHANGE		= 7;
+constexpr char SC_PACKET_ATTACK				= 8;
+constexpr char SC_PACKET_ATTACK_STOP		= 9;
+constexpr char SC_PACKET_STANCE_CHANGE		= 10;
+constexpr char SC_PACKET_NPC_MOVE			= 11;
+constexpr char SC_PACKET_NPC_ENTER			= 12;
+constexpr char SC_PACKET_MONSTER_ENTER		= 13;
+constexpr char SC_PACKET_MONSTER_MOVE		= 14;
+constexpr char SC_PACKET_MONSTER_ATTACK		= 15;
+constexpr char SC_PACKET_MONSTER_RUSH		= 16;
+constexpr char SC_PACKET_MONSTER_STAT		= 17;
+constexpr char SC_PACKET_MONSTER_DEAD		= 18;
+constexpr char SC_PACKET_STAGE_CHANGE		= 19;
+constexpr char SC_PACKET_ANIM_INDEX			= 20;
+constexpr char SC_PACKET_MONSTER_NUCKBACK	= 21;
 
 constexpr char CS_LOGIN					= 0;
 constexpr char CS_MOVE					= 1;
@@ -289,6 +290,16 @@ struct sc_packet_monster_rushAttack
 	int				animIdx;
 	float			posX, posY, posZ;
 	float			dirX, dirY, dirZ;
+};
+
+struct sc_packet_monster_nuckback
+{
+	unsigned char	size;
+	char			type;
+	int				id;
+
+	int				animIdx;
+	float			posX, posY, posZ;
 };
 
 struct sc_packet_stage_change

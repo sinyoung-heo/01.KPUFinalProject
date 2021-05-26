@@ -158,6 +158,7 @@ namespace GiantMonkey
 	constexpr int A_ATTACK_FLYSTAMP_START_TICK  = 57;
 	constexpr int A_ATTACK_COMBO_START_TICK     = 15 + 61;
 	constexpr int A_ATTACK_COMBO_END_START_TICK = 82 + 61;
+	constexpr int A_DOWN_START_TICK				= 5;
 }
 
 namespace CraftyArachne
