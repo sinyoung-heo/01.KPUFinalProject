@@ -107,9 +107,9 @@ _int CGiantMonkey::Update_GameObject(const _float& fTimeDelta)
 	/* Animation AI */
 	Change_Animation(fTimeDelta);
 
-	if (Engine::KEY_DOWN(DIK_N)) m_iMonsterStatus = 12;
-	if (Engine::KEY_DOWN(DIK_B)) m_iMonsterStatus = 11;
-	if (Engine::KEY_DOWN(DIK_V)) m_iMonsterStatus = 10;
+	if (m_uiAnimIdx == GiantMonkey::DOWN && m_ui3DMax_CurFrame >= GiantMonkey::A_DOWN_START_TICK)
+		SetUp_PositionInterpolation(fTimeDelta);
+
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
@@ -254,6 +254,25 @@ void CGiantMonkey::SetUp_AngleInterpolation(const _float& fTimeDelta)
 	}
 }
 
+void CGiantMonkey::SetUp_PositionInterpolation(const _float& fTimeDelta)
+{
+	if (m_tPosInterpolationDesc.is_start_interpolation)
+	{
+		m_tPosInterpolationDesc.linear_ratio += m_tPosInterpolationDesc.interpolation_speed * fTimeDelta;
+
+		m_pTransCom->m_vPos = Engine::LinearInterpolation(m_tPosInterpolationDesc.v1,
+														  m_tPosInterpolationDesc.v2,
+														  m_tPosInterpolationDesc.linear_ratio);
+
+		if (m_tPosInterpolationDesc.linear_ratio == Engine::MAX_LINEAR_RATIO)
+		{
+			m_tPosInterpolationDesc.is_start_interpolation = false;
+			m_bIsMoveStop = true;
+			//m_iMonsterStatus = GiantMonkey::A_WAIT;
+		}
+	}
+}
+
 void CGiantMonkey::SetUp_Dissolve(const _float& fTimeDelta)
 {
 	if (m_bIsStartDissolve)
@@ -274,7 +293,7 @@ void CGiantMonkey::Active_Monster(const _float& fTimeDelta)
 	m_pTransCom->m_vDir.Normalize();
 
 	/* Monster MOVE */
-	if (!m_bIsMoveStop)
+	if (!m_bIsMoveStop && m_tPosInterpolationDesc.is_start_interpolation)
 	{
 		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
 													 &m_pTransCom->m_vDir,
@@ -425,6 +444,8 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 
 		case GiantMonkey::A_FINCH:
 		{
+			m_bIsCreateCollisionTick = false;
+
 			m_uiAnimIdx = GiantMonkey::A_FINCH;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
@@ -440,6 +461,8 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 
 		case GiantMonkey::A_GROGGY:
 		{
+			m_bIsCreateCollisionTick = false;
+
 			m_uiAnimIdx = GiantMonkey::A_GROGGY;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
@@ -455,6 +478,8 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 
 		case GiantMonkey::A_DOWN:
 		{
+			m_bIsCreateCollisionTick = false;
+
 			m_uiAnimIdx = GiantMonkey::A_DOWN;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 

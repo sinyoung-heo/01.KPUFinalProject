@@ -31,12 +31,12 @@ constexpr float	INIT_SPEED					= 5.f;			// 초기 SPEED
 constexpr int	INCREASE_EXP				= 50;
 constexpr int	INCREASE_HP					= 50;
 constexpr int	INCREASE_MP					= 20;
-
+constexpr float	NUCKBACK_DIST				= 6.f;
 /*____________________________________________________________________
 Monster Attack & Chase Dist
 ______________________________________________________________________*/
 constexpr int	MOVE_LIMIT					= 7;			// MONSTER MOVE OFFSET
-constexpr int	CHASE_RANGE					= 8;			// MONSTER 추적 범위
+constexpr int	CHASE_RANGE					= 9;			// MONSTER 추적 범위
 
 constexpr int	ATTACK_RANGE_CRAB			= 2;			// MONSTER CRAB 공격 범위
 constexpr int	ATTACK_RANGE_MONKEY			= 3;			// MONSTER MONKEY 근거리 공격 범위

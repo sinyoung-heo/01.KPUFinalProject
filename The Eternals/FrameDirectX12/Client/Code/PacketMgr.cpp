@@ -326,12 +326,36 @@ void CPacketMgr::Process_packet()
 	}
 	break;
 
+	case SC_PACKET_MONSTER_NUCKBACK:
+	{
+		sc_packet_monster_nuckback* packet = reinterpret_cast<sc_packet_monster_nuckback*>(m_packet_start);
+
+		bool retflag;
+		NuckBack_Monster(packet, retflag);
+		if (retflag) return;
+	}
+	break;
+
 	default:
 #ifdef ERR_CHECK
 		printf("Unknown PACKET type [%d]\n", m_packet_start[1]);
 #endif 
 		break;
 	}
+}
+
+void CPacketMgr::NuckBack_Monster(sc_packet_monster_nuckback* packet, bool& retflag)
+{
+	retflag = true;
+	int s_num = packet->id;
+
+	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
+	if (pObj == nullptr) return;
+
+	pObj->Set_State(packet->animIdx);
+	pObj->Set_MoveStop(false);
+	pObj->Ready_PositionInterpolationValue(_vec3(packet->posX, packet->posY, packet->posZ), 1.3f);
+	retflag = false;
 }
 
 void CPacketMgr::Dead_Monster(sc_packet_animationIndex* packet)

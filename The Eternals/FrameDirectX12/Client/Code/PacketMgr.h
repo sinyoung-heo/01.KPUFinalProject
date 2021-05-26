@@ -32,6 +32,8 @@ public:
 	void	Process_recv_reassembly(size_t iosize);
 	void	Process_packet();
 
+	void NuckBack_Monster(sc_packet_monster_nuckback* packet, bool& retflag);
+
 	void	Change_Animation(sc_packet_animationIndex* packet, bool& retflag);
 
 public:
