@@ -59,7 +59,7 @@ public:
 						  CShader* pShader,
 						  ID3D12DescriptorHeap* pTexnormalDescriptorHeap, _uint uiNormalTextureIdx, _uint uiPatternMapIdx);
 	void Set_AnimationKey(const _uint& uiAniKey);
-	void Play_Animation(_float fTimeDelta);
+	void Play_Animation(_float fTimeDelta, const _bool& bIsRepeat = true);
 	SKINNING_MATRIX* Find_SkinningMatrix(string strBoneName);
 	HIERARCHY_DESC& Find_HierarchyDesc(string strBoneName);
 

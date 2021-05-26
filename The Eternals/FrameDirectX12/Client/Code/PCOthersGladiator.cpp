@@ -159,11 +159,12 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
+	Set_IsRepeatAnimation();
 	Set_AnimationSpeed();
 	Set_BlendingSpeed();
 	m_pMeshCom->Set_BlendingSpeed(m_fBlendingSpeed);
 	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * m_fAnimationSpeed);
+	m_pMeshCom->Play_Animation(fTimeDelta * m_fAnimationSpeed, m_bIsRepeatAnimation);
 	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
 	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
@@ -368,6 +369,19 @@ void CPCOthersGladiator::Set_WeaponHierarchy()
 	else
 		SetUp_WeaponLHand();
 
+}
+
+void CPCOthersGladiator::Set_IsRepeatAnimation()
+{
+	if (m_uiAnimIdx == Gladiator::NONE_ATTACK_IDLE ||
+		m_uiAnimIdx == Gladiator::NONE_ATTACK_WALK ||
+		m_uiAnimIdx == Gladiator::ATTACK_WAIT ||
+		m_uiAnimIdx == Gladiator::ATTACK_RUN)
+	{
+		m_bIsRepeatAnimation = true;
+	}
+	else
+		m_bIsRepeatAnimation = false;
 }
 
 void CPCOthersGladiator::Set_AnimationSpeed()

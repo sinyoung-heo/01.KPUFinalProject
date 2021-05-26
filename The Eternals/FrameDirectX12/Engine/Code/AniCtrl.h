@@ -51,7 +51,7 @@ public:
 	void Set_BlendingSpeed(const _float& fBlendingSpeed) { m_fBlendingSpeed = fBlendingSpeed; }
 
 	// Method
-	void				Play_Animation(_float fTimeDelta);
+	void				Play_Animation(_float fTimeDelta, const _bool& bIsRepeat = true);
 	SKINNING_MATRIX*	Find_SkinningMatrix(string strBoneName);
 	HIERARCHY_DESC&		Find_HierarchyDesc(string strBoneName);
 	_bool				Is_AnimationSetEnd(const _float& fTimeDelta, const _float& fAnimationSpeed = 4'800.0f);

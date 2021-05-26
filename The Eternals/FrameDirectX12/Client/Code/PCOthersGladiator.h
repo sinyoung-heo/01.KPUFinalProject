@@ -46,6 +46,7 @@ private:
 	void	SetUp_StageID();
 	void	Is_ChangeWeapon();
 	void	Set_WeaponHierarchy();
+	void	Set_IsRepeatAnimation();
 	void	Set_AnimationSpeed();
 	void	Set_BlendingSpeed();
 	void	Set_ConstantTable();
@@ -90,12 +91,12 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]
 	____________________________________________________________________________________________________________*/
-	_uint m_uiAnimIdx        = 0;	// 현재 애니메이션 Index
-	_uint m_ui3DMax_NumFrame = 0;	// 3DMax에서 애니메이션의 총 Frame 개수
-	_uint m_ui3DMax_CurFrame = 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
-
-	_float m_fBlendingSpeed  = 0.001f;
-	_float m_fAnimationSpeed = TPS;
+	_uint	m_uiAnimIdx          = 0;	// 현재 애니메이션 Index
+	_uint	m_ui3DMax_NumFrame   = 0;	// 3DMax에서 애니메이션의 총 Frame 개수
+	_uint	m_ui3DMax_CurFrame   = 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
+	_float	m_fBlendingSpeed     = 0.001f;
+	_float	m_fAnimationSpeed    = TPS;
+	_bool	m_bIsRepeatAnimation = true;
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
