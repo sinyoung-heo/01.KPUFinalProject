@@ -277,6 +277,9 @@
     <Filter Include="02.GameObject\98.GameEffect\99.PublicEffect">
       <UniqueIdentifier>{fb5fb213-d064-4e7c-a9de-a75415cf0ac5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\06.CollisionTick\CollisionArrow">
+      <UniqueIdentifier>{8bd63b4d-5072-480e-9815-16e73e952294}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -589,6 +592,9 @@
     <ClInclude Include="..\Code\PCOthersPriest.h">
       <Filter>02.GameObject\02.PlayerCharacter\03.PCPriest</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\CollisionArrow.h">
+      <Filter>02.GameObject\06.CollisionTick\CollisionArrow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -846,6 +852,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\PCOthersPriest.cpp">
       <Filter>02.GameObject\02.PlayerCharacter\03.PCPriest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CollisionArrow.cpp">
+      <Filter>02.GameObject\06.CollisionTick\CollisionArrow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

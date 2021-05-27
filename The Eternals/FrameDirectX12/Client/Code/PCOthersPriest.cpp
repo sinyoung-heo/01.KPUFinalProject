@@ -78,6 +78,7 @@ HRESULT CPCOthersPriest::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos   = vPos;
 	m_chCurWeaponType     = chWeaponType;
+	m_wstrMeshTag         = wstrMeshTag;
 
 	m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(vPos));
 

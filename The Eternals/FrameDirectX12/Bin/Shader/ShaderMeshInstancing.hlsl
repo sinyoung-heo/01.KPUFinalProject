@@ -189,7 +189,7 @@ PS_OUT PS_MAIN_EMISSIVE_DIFFSUE(VS_OUT ps_input) : SV_TARGET
     PS_OUT ps_output = (PS_OUT) 0;
 	
 	// Diffuse
-	ps_output.Diffuse = float4(0.0f, 0.0f, 0.0f, 1.0f);
+	ps_output.Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
 	
 	// Normal
     float4 TexNormal = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);

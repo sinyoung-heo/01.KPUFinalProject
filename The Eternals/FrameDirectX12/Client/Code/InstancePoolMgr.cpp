@@ -2,6 +2,7 @@
 #include "InstancePoolMgr.h"
 #include "ObjectMgr.h"
 #include "CollisionTick.h"
+#include "CollisionArrow.h"
 #include "Crab.h"
 #include "Monkey.h"
 #include "CloderA.h"
@@ -95,6 +96,7 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 {
 	// CollisionTick
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pCollisionTickPool, 32);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pCollisionArrowPool, L"ArrowFire", 32);
 	
 	// Monster
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterCrabPool, 10);
@@ -148,6 +150,7 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 void CInstancePoolMgr::Free()
 {
 	Safe_Release_InstacePool(m_pCollisionTickPool);
+	Safe_Release_InstacePool(m_pCollisionArrowPool);
 
 	Safe_Release_InstacePool(m_pMonsterCrabPool);
 	Safe_Release_InstacePool(m_pMonsterCloderAPool);

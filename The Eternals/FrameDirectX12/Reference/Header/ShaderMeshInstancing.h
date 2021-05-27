@@ -19,6 +19,7 @@ public:
 	HRESULT Ready_Shader(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 	void	SetUp_Instancing(wstring wstrMeshTag);
 	void	SetUp_ConstantBuffer(ID3D12Device* pGraphicDevice);
+	void	SetUp_ConstantBuffer(ID3D12Device* pGraphicDevice, wstring wstrMeshTag, const _uint& uiSize);
 	void	Resize_ConstantBuffer(ID3D12Device* pGraphicDevice);
 	void	Add_TotalInstanceCount(wstring wstrMeshTag);
 	void	Add_Instance(const _uint& iContextIdx, wstring wstrMeshTag, const _uint& iPipelineStateIdx);

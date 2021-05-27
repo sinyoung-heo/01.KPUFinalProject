@@ -3,6 +3,7 @@
 #include "Base.h"
 
 class CCollisionTick;
+class CCollisionArrow;
 
 class CCrab;
 class CCloderA;
@@ -37,7 +38,8 @@ private:
 
 public:
 	// CollisionTick
-	INSTANCE_POOL_DESC<CCollisionTick>* Get_CollisionTickPool()			{ return m_pCollisionTickPool; }
+	INSTANCE_POOL_DESC<CCollisionTick>*		Get_CollisionTickPool()		{ return m_pCollisionTickPool; }
+	INSTANCE_POOL_DESC<CCollisionArrow>*	Get_CollisionArrowPool()	{ return m_pCollisionArrowPool; }
 	// Monster
 	INSTANCE_POOL_DESC<CCrab>*			Get_MonsterCrabPool()			{ return m_pMonsterCrabPool; }
 	INSTANCE_POOL_DESC<CCloderA>*		Get_MonsterCloderAPool()		{ return m_pMonsterCloderAPool; }
@@ -74,7 +76,8 @@ public:
 
 private:
 	// CollisionTick
-	INSTANCE_POOL_DESC<CCollisionTick>*	m_pCollisionTickPool;
+	INSTANCE_POOL_DESC<CCollisionTick>*		m_pCollisionTickPool;
+	INSTANCE_POOL_DESC<CCollisionArrow>*	m_pCollisionArrowPool;
 
 	// Monster
 	INSTANCE_POOL_DESC<CCrab>*			m_pMonsterCrabPool;

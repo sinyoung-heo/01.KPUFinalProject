@@ -79,6 +79,23 @@ void CShaderMeshInstancing::SetUp_ConstantBuffer(ID3D12Device* pGraphicDevice)
 	}
 }
 
+void CShaderMeshInstancing::SetUp_ConstantBuffer(ID3D12Device* pGraphicDevice, wstring wstrMeshTag, const _uint& uiSize)
+{
+
+	for (_uint i = 0; i < CONTEXT::CONTEXT_END; ++i)
+	{
+		auto iter_find = m_mapCB_ShaderMesh[i].find(wstrMeshTag);
+		if (iter_find == m_mapCB_ShaderMesh[i].end())
+			continue;
+
+		for (_uint j = 0; j < m_uiPipelineStateCnt; ++j)
+		{
+			if (nullptr == m_mapCB_ShaderMesh[i][wstrMeshTag][j])
+				m_mapCB_ShaderMesh[i][wstrMeshTag][j] = CUploadBuffer<CB_SHADER_MESH_INSTANCEING>::Create(pGraphicDevice, uiSize / 4 + 1, false);
+		}
+	}
+}
+
 void CShaderMeshInstancing::Add_TotalInstanceCount(wstring wstrMeshTag)
 {
 	auto iter_find = m_mapTotalInstanceCnt.find(wstrMeshTag);
@@ -185,9 +202,24 @@ void CShaderMeshInstancing::Render_Instance(ID3D12GraphicsCommandList* pCommandL
 			/*__________________________________________________________________________________________________________
 			[ Render Buffer ]
 			____________________________________________________________________________________________________________*/
-			CMesh*		pMesh				= static_cast<CMesh*>(CObjectMgr::Get_Instance()->Get_StaticObject(wstrMeshTag)->Get_Component(L"Com_Mesh", ID_STATIC));
-			CVIMesh*	pVIMesh				= pMesh->Get_VIMesh();
-			_uint		uiSubsetMeshSize	= (_uint)(pVIMesh->Get_SubMeshGeometry().size());
+			CGameObject*	pGameObject = CObjectMgr::Get_Instance()->Get_StaticObject(wstrMeshTag);
+			CMesh*			pMesh = nullptr;
+			CVIMesh*		pVIMesh = nullptr;
+
+			if (nullptr != pGameObject)
+			{
+				pMesh   = static_cast<CMesh*>(pGameObject->Get_Component(L"Com_Mesh", ID_STATIC));
+				pVIMesh = pMesh->Get_VIMesh();
+			}
+			else if (nullptr == pGameObject)
+			{
+				pGameObject = CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject" ,wstrMeshTag);
+				pMesh		= static_cast<CMesh*>(pGameObject->Get_Component(L"Com_Mesh", ID_STATIC));
+				pVIMesh		= pMesh->Get_VIMesh();
+			}
+
+
+			_uint uiSubsetMeshSize = (_uint)(pVIMesh->Get_SubMeshGeometry().size());
 
 			for (_uint iSubMeshIdx = 0; iSubMeshIdx < uiSubsetMeshSize; ++iSubMeshIdx)
 			{

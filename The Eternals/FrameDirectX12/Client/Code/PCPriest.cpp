@@ -43,6 +43,7 @@ HRESULT CPCPriest::Ready_GameObject(wstring wstrMeshTag,
 	m_chCurStageID        = STAGE_VELIKA;
 	m_chPreStageID        = m_chCurStageID;
 	m_wstrCollisionTag    = L"ThisPlayer";
+	m_wstrMeshTag         = wstrMeshTag;
 
 	m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(vPos));
 
