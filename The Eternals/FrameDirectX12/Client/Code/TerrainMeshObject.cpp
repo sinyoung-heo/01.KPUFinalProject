@@ -156,21 +156,24 @@ void CTerrainMeshObject::Set_ConstantTable(const _int& iContextIdx, const _int& 
 
 	Engine::CB_SHADER_MESH_INSTANCEING tCB_ShaderMesh;
 	ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH_INSTANCEING));
-	tCB_ShaderMesh.matWorld      = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderMesh.matView       = Engine::CShader::Compute_MatrixTranspose(matView);
-	tCB_ShaderMesh.matProj       = Engine::CShader::Compute_MatrixTranspose(matProj);
-	tCB_ShaderMesh.matLightView  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
-	tCB_ShaderMesh.matLightProj  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
-	tCB_ShaderMesh.vLightPos     = tShadowDesc.vLightPosition;
-	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
-
+	tCB_ShaderMesh.matWorld       = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderMesh.matView        = Engine::CShader::Compute_MatrixTranspose(matView);
+	tCB_ShaderMesh.matProj        = Engine::CShader::Compute_MatrixTranspose(matProj);
+	tCB_ShaderMesh.matLightView   = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
+	tCB_ShaderMesh.matLightProj   = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
+	tCB_ShaderMesh.vLightPos      = tShadowDesc.vLightPosition;
+	tCB_ShaderMesh.fLightPorjFar  = tShadowDesc.fLightPorjFar;
+	if (m_wstrMeshTag == L"BumpTerrainMesh01")
+		tCB_ShaderMesh.vEmissiveColor = _rgba(1.1f, 1.1f, 1.1f, 1.1f);
+	else
+		tCB_ShaderMesh.vEmissiveColor = _rgba(1.0f, 1.0f, 1.0f, 1.0f);
 
 	// PipelineState.
 	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.005f;
 	m_fDeltatime2 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
 	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
 	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
-	tCB_ShaderMesh.fOffset2 = 0.5 + m_fDeltatime2;
+	tCB_ShaderMesh.fOffset2 = 0.5f + m_fDeltatime2;
 	tCB_ShaderMesh.fOffset3 = m_fWave;
 	tCB_ShaderMesh.fDissolve = sin(m_fDeltatime3);
 

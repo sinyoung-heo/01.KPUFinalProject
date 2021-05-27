@@ -561,7 +561,7 @@ void CPCOthersArcher::AttackMove_OnNaviMesh(const _float& fTimeDelta)
 {
 	SetUp_OthersAttackMove(Archer::ATTACK_ARROW, 0, 0, 0.0f, 0.0f);
 	SetUp_OthersAttackMove(Archer::BACK_DASH, Archer::BACK_DASH_MOVE_START, Archer::BACK_DASH_MOVE_STOP, 8.0f, -5.0f);
-	SetUp_OthersAttackMove(Archer::ESCAPING_BOMB, Archer::ESCAPING_BOMB_MOVE_START, Archer::ESCAPING_BOMB_MOVE_STOP, 10.0f, -5.0f);
+	SetUp_OthersAttackMove(Archer::ESCAPING_BOMB, Archer::ESCAPING_BOMB_MOVE_START, Archer::ESCAPING_BOMB_MOVE_STOP, 7.5f, -5.0f);
 	SetUp_OthersAttackMove(Archer::CHARGE_ARROW_SHOT, Archer::CHARGE_ARROW_MOVE_START, Archer::CHARGE_ARROW_MOVE_STOP, 4.0f, -5.0f);
 
 	if (!m_bIsAttack)
