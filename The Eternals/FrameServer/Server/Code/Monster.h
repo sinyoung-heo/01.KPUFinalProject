@@ -105,7 +105,7 @@ public:
 	void	send_Monster_Stat(int to_client);
 	void	send_Monster_Dead(int to_client, int ani);
 	void	send_Monster_animation_packet(int to_client, int ani);
-	void	send_Monster_NuckBack(int to_client, int ani);
+	void	send_Monster_Knockback(int to_client, int ani);
 
 public:
 	char			m_monNum				= 0;
@@ -125,7 +125,7 @@ public:
 
 	int				m_iTargetNum			= -1;
 	_vec3			m_vOriPos				= _vec3(0.f);
-	_vec3			m_vNuckBackPos			= _vec3(0.f);
+	_vec3			m_vKnockbackPos			= _vec3(0.f);
 	ATTACK_DIST		m_eAttackDist			= ATTACK_DIST::DIST_END;
 
 	/* Animation */

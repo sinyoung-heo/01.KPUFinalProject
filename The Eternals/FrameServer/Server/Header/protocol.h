@@ -292,7 +292,7 @@ struct sc_packet_monster_rushAttack
 	float			dirX, dirY, dirZ;
 };
 
-struct sc_packet_monster_nuckback
+struct sc_packet_monster_knockback
 {
 	unsigned char	size;
 	char			type;

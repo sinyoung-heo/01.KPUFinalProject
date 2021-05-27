@@ -6,7 +6,7 @@ CMonster::CMonster()
 	:m_iHp(0), m_iMaxHp(0), m_iExp(0), m_iMinAtt(0), m_iMaxAtt(0), m_fSpd(0.f),
 	m_iTargetNum(-1), m_bIsAttack(false), m_bIsShortAttack(true), m_bIsRegen(false),
 	m_bIsRushAttack(false), m_bIsFighting(false), m_monNum(0), m_uiAnimIdx(0), m_bIsReaction(false),
-	m_vNuckBackPos(_vec3(0.f)), m_eAttackDist(ATTACK_DIST::DIST_END)
+	m_vKnockbackPos(_vec3(0.f)), m_eAttackDist(ATTACK_DIST::DIST_END)
 {
 }
 
@@ -3071,14 +3071,14 @@ void CMonster::NuckBack_GiantMonkey(const float& fTimeDelta)
 	}
 
 	// 넉백 후의 위치 갱신
-	m_vNuckBackPos = m_vPos + (-1.f * m_vDir) * NUCKBACK_DIST;
+	m_vKnockbackPos = m_vPos + (-1.f * m_vDir) * NUCKBACK_DIST;
 
 	for (auto pl : old_viewlist)
 	{
 		/* 유저일 경우 처리 */
 		if (true == CObjMgr::GetInstance()->Is_Player(pl))
 		{	
-			send_Monster_NuckBack(pl, GiantMonkey::DOWN);	
+			send_Monster_Knockback(pl, GiantMonkey::DOWN);	
 		}
 	}
 
@@ -3898,7 +3898,7 @@ void CMonster::Set_Stop_Reaction(chrono::seconds t)
 		bool prev_state = m_bIsReaction;
 		if (true == atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsReaction), &prev_state, false))
 		{
-			m_vPos = m_vNuckBackPos;
+			m_vPos = m_vKnockbackPos;
 			add_timer(m_sNum, OP_MODE_CHASE_MONSTER, system_clock::now() + t);
 		}
 	}
@@ -4071,9 +4071,9 @@ void CMonster::send_Monster_animation_packet(int to_client, int ani)
 	send_packet(to_client, &p);
 }
 
-void CMonster::send_Monster_NuckBack(int to_client, int ani)
+void CMonster::send_Monster_Knockback(int to_client, int ani)
 {
-	sc_packet_monster_nuckback p;
+	sc_packet_monster_knockback p;
 
 	p.size = sizeof(p);
 	p.type = SC_PACKET_MONSTER_NUCKBACK;
@@ -4081,9 +4081,9 @@ void CMonster::send_Monster_NuckBack(int to_client, int ani)
 
 	p.animIdx = ani;
 
-	p.posX = m_vNuckBackPos.x;
-	p.posY = m_vNuckBackPos.y;
-	p.posZ = m_vNuckBackPos.z;
+	p.posX = m_vKnockbackPos.x;
+	p.posY = m_vKnockbackPos.y;
+	p.posZ = m_vKnockbackPos.z;
 
 	send_packet(to_client, &p);
 }

@@ -108,6 +108,9 @@ _int CDrownedSailor::Update_GameObject(const _float& fTimeDelta)
 	/* Animation AI */
 	Change_Animation(fTimeDelta);
 
+	if (m_uiAnimIdx == DrownedSailor::DOWN && m_ui3DMax_CurFrame >= DrownedSailor::A_DOWN_START_TICK)
+		SetUp_PositionInterpolation(fTimeDelta);
+
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
@@ -253,6 +256,24 @@ void CDrownedSailor::SetUp_AngleInterpolation(const _float& fTimeDelta)
 	}
 }
 
+void CDrownedSailor::SetUp_PositionInterpolation(const _float& fTimeDelta)
+{
+	if (m_tPosInterpolationDesc.is_start_interpolation)
+	{
+		m_tPosInterpolationDesc.linear_ratio += m_tPosInterpolationDesc.interpolation_speed * fTimeDelta;
+
+		m_pTransCom->m_vPos = Engine::LinearInterpolation(m_tPosInterpolationDesc.v1,
+			m_tPosInterpolationDesc.v2,
+			m_tPosInterpolationDesc.linear_ratio);
+
+		if (m_tPosInterpolationDesc.linear_ratio == Engine::MAX_LINEAR_RATIO)
+		{
+			m_tPosInterpolationDesc.is_start_interpolation = false;
+			m_bIsMoveStop = true;
+		}
+	}
+}
+
 void CDrownedSailor::SetUp_Dissolve(const _float& fTimeDelta)
 {
 	if (m_bIsStartDissolve)
@@ -391,6 +412,57 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) 
 			{
 				m_bIsStartDissolve = true;
+			}
+		}
+		break;
+
+		case DrownedSailor::A_FINCH:
+		{
+			m_bIsCreateCollisionTick = false;
+
+			m_uiAnimIdx = DrownedSailor::A_FINCH;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				m_iMonsterStatus = DrownedSailor::A_WAIT;
+
+				m_uiAnimIdx = DrownedSailor::A_WAIT;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			}
+		}
+		break;
+
+		case DrownedSailor::A_GROGGY:
+		{
+			m_bIsCreateCollisionTick = false;
+
+			m_uiAnimIdx = DrownedSailor::A_GROGGY;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				m_iMonsterStatus = DrownedSailor::A_WAIT;
+
+				m_uiAnimIdx = DrownedSailor::A_WAIT;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			}
+		}
+		break;
+
+		case DrownedSailor::A_DOWN:
+		{
+			m_bIsCreateCollisionTick = false;
+
+			m_uiAnimIdx = DrownedSailor::A_DOWN;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				m_iMonsterStatus = DrownedSailor::A_WAIT;
+
+				m_uiAnimIdx = DrownedSailor::A_WAIT;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
 		break;

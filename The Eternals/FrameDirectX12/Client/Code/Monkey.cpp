@@ -108,6 +108,9 @@ _int CMonkey::Update_GameObject(const _float& fTimeDelta)
 	/* Animation AI */
 	Change_Animation(fTimeDelta);
 
+	if (m_uiAnimIdx == Monkey::DOWN && m_ui3DMax_CurFrame >= Monkey::A_DOWN_START_TICK)
+		SetUp_PositionInterpolation(fTimeDelta);
+
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
@@ -252,6 +255,24 @@ void CMonkey::SetUp_AngleInterpolation(const _float& fTimeDelta)
 	}
 }
 
+void CMonkey::SetUp_PositionInterpolation(const _float& fTimeDelta)
+{
+	if (m_tPosInterpolationDesc.is_start_interpolation)
+	{
+		m_tPosInterpolationDesc.linear_ratio += m_tPosInterpolationDesc.interpolation_speed * fTimeDelta;
+
+		m_pTransCom->m_vPos = Engine::LinearInterpolation(m_tPosInterpolationDesc.v1,
+			m_tPosInterpolationDesc.v2,
+			m_tPosInterpolationDesc.linear_ratio);
+
+		if (m_tPosInterpolationDesc.linear_ratio == Engine::MAX_LINEAR_RATIO)
+		{
+			m_tPosInterpolationDesc.is_start_interpolation = false;
+			m_bIsMoveStop = true;
+		}
+	}
+}
+
 void CMonkey::SetUp_Dissolve(const _float& fTimeDelta)
 {
 	if (m_bIsStartDissolve)
@@ -272,7 +293,7 @@ void CMonkey::Active_Monster(const _float& fTimeDelta)
 	m_pTransCom->m_vDir.Normalize();
 
 	/* Monster MOVE */
-	if (!m_bIsMoveStop)
+	if (!m_bIsMoveStop && m_tPosInterpolationDesc.is_start_interpolation)
 	{
 		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
 													 &m_pTransCom->m_vDir,
@@ -353,6 +374,58 @@ void CMonkey::Change_Animation(const _float& fTimeDelta)
 			}
 		}
 		break;
+
+		case Monkey::A_FINCH:
+		{
+			m_bIsCreateCollisionTick = false;
+
+			m_uiAnimIdx = Monkey::A_FINCH;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				m_iMonsterStatus = Monkey::A_WAIT;
+
+				m_uiAnimIdx = Monkey::A_WAIT;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			}
+		}
+		break;
+
+		case Monkey::A_GROGGY:
+		{
+			m_bIsCreateCollisionTick = false;
+
+			m_uiAnimIdx = Monkey::A_GROGGY;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				m_iMonsterStatus = Monkey::A_WAIT;
+
+				m_uiAnimIdx = Monkey::A_WAIT;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			}
+		}
+		break;
+
+		case Monkey::A_DOWN:
+		{
+			m_bIsCreateCollisionTick = false;
+
+			m_uiAnimIdx = Monkey::A_DOWN;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				m_iMonsterStatus = Monkey::A_WAIT;
+
+				m_uiAnimIdx = Monkey::A_WAIT;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			}
+		}
+		break;
+
 		}
 	}
 }

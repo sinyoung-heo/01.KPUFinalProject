@@ -29,18 +29,26 @@ namespace Monkey
 {
 	constexpr int ATTACK_THROW	= 4;
 	constexpr int DEATH			= 5;
+	constexpr int FINCH			= 6;
+	constexpr int GROGGY		= 7;
+	constexpr int DOWN			= 8;
 
-	constexpr int NUM_ANIMATION = 6;
+	constexpr int NUM_ANIMATION = 9;
 
-	enum ANIM_CRAB { A_WAIT, A_WALK, A_RUN, A_ATTACK, A_ATTACK_THROW, A_DEATH, A_END };
+	enum ANIM_MONKEY { 
+		A_WAIT, A_WALK, A_RUN,
+		A_ATTACK, A_ATTACK_THROW, A_DEATH,
+		A_FINCH, A_GROGGY, A_DOWN, A_END
+	};
 
 	static double duration[NUM_ANIMATION] =
 	{
-		4800, 6400, 4480, 9600, 12800, 17600
+		4800, 6400, 4480, 9600, 12800, 17600, 4800, 8480, 13440
 	};
 
 	constexpr int ATTACK_START_TICK       = 25;
 	constexpr int ATTACK_THROW_START_TICK = 45;
+	constexpr int A_DOWN_START_TICK		  = 1;
 }
 
 /* EPIC MONSTER */
@@ -72,18 +80,22 @@ namespace DrownedSailor
 	constexpr int ATTACK_RUSH	= 6; // 343~423 (383~404)
 	constexpr int ATTACK_HOOK	= 7;
 	constexpr int DEATH			= 8;
+	constexpr int FINCH			= 9;
+	constexpr int GROGGY		= 10;
+	constexpr int DOWN			= 11;
 
-	constexpr int NUM_ANIMATION = 9;
+	constexpr int NUM_ANIMATION = 12;
 	
 	enum ANIM_SAILOR {
 		A_WAIT, A_WALK, A_RUN,
 		A_ATTACK_SPIN, A_ATTACK, A_ATTACK_STRONG,
-		A_ATTACK_RUSH, A_ATTACK_HOOK, A_DEATH, A_END
+		A_ATTACK_RUSH, A_ATTACK_HOOK, A_DEATH, 
+		A_FINCH, A_GROGGY, A_DOWN, A_END
 	};
 
 	static double duration[NUM_ANIMATION] =
 	{
-		10080, 6400, 5440, 9600, 9600, 12800, 12800, 7200, 18880
+		10080, 6400, 5440, 9600, 9600, 12800, 12800, 7200, 18880, 4800, 7680, 22080
 	};
 
 	constexpr int ATTACK_SPIN_START_TICK   = 16;
@@ -91,6 +103,7 @@ namespace DrownedSailor
 	constexpr int ATTACK_STRONG_START_TICK = 49;
 	constexpr int ATTACK_RUSH_START_TICK   = 49;
 	constexpr int ATTACK_HOOK_START_TICK   = 23;
+	constexpr int A_DOWN_START_TICK		   = 1;
 }
 
 namespace GiantBeetle
@@ -138,7 +151,8 @@ namespace GiantMonkey
 
 	constexpr int NUM_ANIMATION		= 13;
 
-	enum ANIM_GIANTMONKEY {
+	enum ANIM_GIANTMONKEY 
+	{
 		A_WAIT, A_WALK,
 		A_ATTACK_RIGHT, A_ATTACK_LEFT, A_ATTACK_STAMP, A_ATTACK_HOOK,
 		A_ATTACK_JUMPING, A_ATTACK_FLYSTAMP, A_ATTACK_COMBO,

@@ -268,7 +268,6 @@ void CGiantMonkey::SetUp_PositionInterpolation(const _float& fTimeDelta)
 		{
 			m_tPosInterpolationDesc.is_start_interpolation = false;
 			m_bIsMoveStop = true;
-			//m_iMonsterStatus = GiantMonkey::A_WAIT;
 		}
 	}
 }

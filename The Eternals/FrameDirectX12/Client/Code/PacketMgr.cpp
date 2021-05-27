@@ -330,10 +330,10 @@ void CPacketMgr::Process_packet()
 
 	case SC_PACKET_MONSTER_NUCKBACK:
 	{
-		sc_packet_monster_nuckback* packet = reinterpret_cast<sc_packet_monster_nuckback*>(m_packet_start);
+		sc_packet_monster_knockback* packet = reinterpret_cast<sc_packet_monster_knockback*>(m_packet_start);
 
 		bool retflag;
-		NuckBack_Monster(packet, retflag);
+		Knockback_Monster(packet, retflag);
 		if (retflag) return;
 	}
 	break;
@@ -346,7 +346,7 @@ void CPacketMgr::Process_packet()
 	}
 }
 
-void CPacketMgr::NuckBack_Monster(sc_packet_monster_nuckback* packet, bool& retflag)
+void CPacketMgr::Knockback_Monster(sc_packet_monster_knockback* packet, bool& retflag)
 {
 	retflag = true;
 	int s_num = packet->id;
