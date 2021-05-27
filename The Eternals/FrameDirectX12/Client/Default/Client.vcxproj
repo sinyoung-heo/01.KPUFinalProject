@@ -194,6 +194,7 @@
     <ClInclude Include="..\Code\PCGladiator.h" />
     <ClInclude Include="..\Code\PCOthersArcher.h" />
     <ClInclude Include="..\Code\PCOthersGladiator.h" />
+    <ClInclude Include="..\Code\PCOthersPriest.h" />
     <ClInclude Include="..\Code\PCPriest.h" />
     <ClInclude Include="..\Code\PCWeapon.h" />
     <ClInclude Include="..\Code\PCWeaponBow.h" />
@@ -313,6 +314,7 @@
     <ClCompile Include="..\Code\PCGladiator.cpp" />
     <ClCompile Include="..\Code\PCOthersArcher.cpp" />
     <ClCompile Include="..\Code\PCOthersGladiator.cpp" />
+    <ClCompile Include="..\Code\PCOthersPriest.cpp" />
     <ClCompile Include="..\Code\PCPriest.cpp" />
     <ClCompile Include="..\Code\PCWeapon.cpp" />
     <ClCompile Include="..\Code\PCWeaponBow.cpp" />

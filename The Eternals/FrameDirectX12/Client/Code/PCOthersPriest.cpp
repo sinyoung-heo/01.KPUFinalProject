@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "PCOthersArcher.h"
+#include "PCOthersPriest.h"
 #include "GraphicDevice.h"
 #include "ObjectMgr.h"
 #include "LightMgr.h"
@@ -7,13 +7,13 @@
 #include "InstancePoolMgr.h"
 #include "DirectInput.h"
 
-CPCOthersArcher::CPCOthersArcher(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CPCOthersPriest::CPCOthersPriest(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pServerMath(CServerMath::Get_Instance())
 {
 }
 
-void CPCOthersArcher::Set_StanceChange(const _uint& uiAniIdx, const _bool& bIsStanceAttack)
+void CPCOthersPriest::Set_StanceChange(const _uint& uiAniIdx, const _bool& bIsStanceAttack)
 {
 	if (nullptr == m_pWeapon)
 		return;
@@ -23,14 +23,14 @@ void CPCOthersArcher::Set_StanceChange(const _uint& uiAniIdx, const _bool& bIsSt
 
 	if (bIsStanceAttack)
 	{
-		m_eCurStance = Archer::STANCE_ATTACK;
+		m_eCurStance = Priest::STANCE_ATTACK;
 		m_pWeapon->Set_DissolveInterpolation(-1.0f);
 		m_pWeapon->Set_IsRenderShadow(true);
-		SetUp_WeaponLHand();
+		SetUp_WeaponRHand();
 	}
 	else
 	{
-		m_eCurStance = Archer::STANCE_NONEATTACK;
+		m_eCurStance = Priest::STANCE_NONEATTACK;
 		m_pWeapon->Set_DissolveInterpolation(1.0f);
 		m_pWeapon->Set_IsRenderShadow(false);
 	}
@@ -38,34 +38,34 @@ void CPCOthersArcher::Set_StanceChange(const _uint& uiAniIdx, const _bool& bIsSt
 	m_bIsCompleteStanceChange = false;
 }
 
-void CPCOthersArcher::Set_OthersStance(const _bool& bIsStanceAttack)
+void CPCOthersPriest::Set_OthersStance(const _bool& bIsStanceAttack)
 {
 	if (nullptr == m_pWeapon)
 		return;
 
 	if (bIsStanceAttack)
 	{
-		m_uiAnimIdx = Archer::ATTACK_WAIT;
+		m_uiAnimIdx = Priest::ATTACK_WAIT;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
-		m_eCurStance = Archer::STANCE_ATTACK;
+		m_eCurStance = Priest::STANCE_ATTACK;
 		m_pWeapon->Set_DissolveInterpolation(-1.0f);
 		m_pWeapon->Set_IsRenderShadow(true);
-		SetUp_WeaponLHand();
+		SetUp_WeaponRHand();
 	}
 	else
 	{
-		m_uiAnimIdx = Archer::NONE_ATTACK_IDLE;
+		m_uiAnimIdx = Priest::NONE_ATTACK_IDLE;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
-		m_eCurStance = Archer::STANCE_NONEATTACK;
+		m_eCurStance = Priest::STANCE_NONEATTACK;
 		m_pWeapon->Set_DissolveInterpolation(1.0f);
 		m_pWeapon->Set_IsRenderShadow(false);
 		SetUp_WeaponBack();
 	}
 }
 
-HRESULT CPCOthersArcher::Ready_GameObject(wstring wstrMeshTag, 
+HRESULT CPCOthersPriest::Ready_GameObject(wstring wstrMeshTag, 
 										  wstring wstrNaviMeshTag, 
 										  const _vec3& vScale, 
 										  const _vec3& vAngle, 
@@ -87,7 +87,7 @@ HRESULT CPCOthersArcher::Ready_GameObject(wstring wstrMeshTag,
 										   m_pMeshCom->Get_MinVector(),
 										   m_pMeshCom->Get_MaxVector());
 
-	m_pInfoCom->m_fSpeed     = Archer::MIN_SPEED;
+	m_pInfoCom->m_fSpeed     = Priest::MIN_SPEED;
 	m_pInfoCom->m_vArrivePos = m_pTransCom->m_vPos;
 
 	m_chCurStageID = STAGE_VELIKA;
@@ -97,8 +97,8 @@ HRESULT CPCOthersArcher::Ready_GameObject(wstring wstrMeshTag,
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
-	m_ePreStance = Archer::STANCE_NONEATTACK;
-	m_eCurStance = Archer::STANCE_NONEATTACK;
+	m_ePreStance = Priest::STANCE_NONEATTACK;
+	m_eCurStance = Priest::STANCE_NONEATTACK;
 
 	/*__________________________________________________________________________________________________________
 	[ 선형보간 설정 ]
@@ -108,30 +108,27 @@ HRESULT CPCOthersArcher::Ready_GameObject(wstring wstrMeshTag,
 
 	// Move Speed
 	m_tMoveSpeedInterpolationDesc.linear_ratio = 0.0f;
-	m_tMoveSpeedInterpolationDesc.v1           = Archer::MIN_SPEED;
-	m_tMoveSpeedInterpolationDesc.v2           = Archer::MAX_SPEED * Archer::OTHERS_OFFSET;
+	m_tMoveSpeedInterpolationDesc.v1           = Priest::MIN_SPEED;
+	m_tMoveSpeedInterpolationDesc.v2           = Priest::MAX_SPEED * Priest::OTHERS_OFFSET;
 
-	m_tAttackMoveSpeedInterpolationDesc.linear_ratio = 0.0f;
-	m_tAttackMoveSpeedInterpolationDesc.v1           = Archer::MIN_SPEED;
-	m_tAttackMoveSpeedInterpolationDesc.v2           = Archer::MAX_ATTACK_SPEED * Archer::OTHERS_OFFSET;
-	
 	// Create Weapon
 	Engine::FAILED_CHECK_RETURN(SetUp_PCWeapon(), E_FAIL);
 
 	return S_OK;
 }
 
-HRESULT CPCOthersArcher::LateInit_GameObject()
+HRESULT CPCOthersPriest::LateInit_GameObject()
 {
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	m_pShadowCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	m_pEdgeObjectShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
+
 	return S_OK;
 }
 
-_int CPCOthersArcher::Update_GameObject(const _float& fTimeDelta)
+_int CPCOthersPriest::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 	if (m_bIsDead)
@@ -143,7 +140,7 @@ _int CPCOthersArcher::Update_GameObject(const _float& fTimeDelta)
 		m_pWeapon->Update_GameObject(fTimeDelta);
 
 		m_bIsResetNaviMesh = false;
-		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_PCOthersArcherPool(), m_uiInstanceIdx);
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_PCOthersPriestPool(), m_uiInstanceIdx);
 
 		return RETURN_OBJ;
 	}
@@ -173,7 +170,6 @@ _int CPCOthersArcher::Update_GameObject(const _float& fTimeDelta)
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Move_OnNaviMesh(fTimeDelta);
-	AttackMove_OnNaviMesh(fTimeDelta);
 
 	// Linear Interpolation
 	Engine::SetUp_LinearInterpolation(fTimeDelta, m_pTransCom->m_vPos, m_tPosInterpolationDesc);
@@ -193,7 +189,7 @@ _int CPCOthersArcher::Update_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CPCOthersArcher::LateUpdate_GameObject(const _float& fTimeDelta)
+_int CPCOthersPriest::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
@@ -207,26 +203,26 @@ _int CPCOthersArcher::LateUpdate_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-void CPCOthersArcher::Render_EdgeGameObject(const _float& fTimeDelta)
+void CPCOthersPriest::Render_EdgeGameObject(const _float& fTimeDelta)
 {
 	m_pMeshCom->Render_DynamicMesh(m_pEdgeObjectShaderCom);
 }
 
-void CPCOthersArcher::Render_GameObject(const _float& fTimeDelta, 
+void CPCOthersPriest::Render_GameObject(const _float& fTimeDelta, 
 										ID3D12GraphicsCommandList* pCommandList, 
 										const _int& iContextIdx)
 {
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
-void CPCOthersArcher::Render_ShadowDepth(const _float& fTimeDelta, 
+void CPCOthersPriest::Render_ShadowDepth(const _float& fTimeDelta, 
 										 ID3D12GraphicsCommandList* pCommandList, 
 										 const _int& iContextIdx)
 {
 	m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
 }
 
-HRESULT CPCOthersArcher::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
+HRESULT CPCOthersPriest::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -242,7 +238,6 @@ HRESULT CPCOthersArcher::Add_Component(wstring wstrMeshTag, wstring wstrNaviMesh
 	m_pShaderCom->AddRef();
 	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(0), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
-
 
 	// Shader
 	m_pEdgeObjectShaderCom = static_cast<Engine::CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", Engine::COMPONENTID::ID_STATIC));
@@ -274,11 +269,11 @@ HRESULT CPCOthersArcher::Add_Component(wstring wstrMeshTag, wstring wstrNaviMesh
 	return S_OK;
 }
 
-HRESULT CPCOthersArcher::SetUp_PCWeapon()
+HRESULT CPCOthersPriest::SetUp_PCWeapon()
 {
 	if (m_chCurWeaponType != m_chPreWeaponType)
 	{
-		m_pWeapon = static_cast<CPCWeaponBow*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponBow(m_chCurWeaponType)));
+		m_pWeapon = static_cast<CPCWeaponRod*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponRod(m_chCurWeaponType)));
 		m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")));
 		m_pWeapon->Set_ParentMatrix(&m_pTransCom->m_matWorld);
 		m_pWeapon->Update_GameObject(0.016f);
@@ -289,7 +284,7 @@ HRESULT CPCOthersArcher::SetUp_PCWeapon()
 	return S_OK;
 }
 
-void CPCOthersArcher::SetUp_StageID()
+void CPCOthersPriest::SetUp_StageID()
 {
 	if (m_chCurStageID != m_chPreStageID)
 	{
@@ -316,7 +311,7 @@ void CPCOthersArcher::SetUp_StageID()
 	}
 }
 
-void CPCOthersArcher::Is_ChangeWeapon()
+void CPCOthersPriest::Is_ChangeWeapon()
 {
 	if (m_chCurWeaponType != m_chPreWeaponType)
 	{
@@ -326,17 +321,17 @@ void CPCOthersArcher::Is_ChangeWeapon()
 			m_pWeapon->Update_GameObject(0.016f);
 		}
 
-		m_pWeapon = static_cast<CPCWeaponBow*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponBow(m_chCurWeaponType)));
+		m_pWeapon = static_cast<CPCWeaponRod*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponRod(m_chCurWeaponType)));
 		m_pWeapon->Set_ParentMatrix(&m_pTransCom->m_matWorld);
 		m_pWeapon->Update_GameObject(0.016f);
 
-		if (Archer::STANCE_ATTACK == m_eCurStance)
+		if (Priest::STANCE_ATTACK == m_eCurStance)
 		{
-			SetUp_WeaponLHand();
+			SetUp_WeaponRHand();
 			m_pWeapon->Set_DissolveInterpolation(-1.0f);
 			m_pWeapon->Set_IsRenderShadow(true);
 		}
-		else if (Archer::STANCE_NONEATTACK == m_eCurStance)
+		else if (Priest::STANCE_NONEATTACK == m_eCurStance)
 		{
 			SetUp_WeaponBack();
 			m_pWeapon->Set_DissolveInterpolation(1.0f);
@@ -347,24 +342,24 @@ void CPCOthersArcher::Is_ChangeWeapon()
 	}
 }
 
-void CPCOthersArcher::Set_WeaponHierarchy()
+void CPCOthersPriest::Set_WeaponHierarchy()
 {
-	if (m_uiAnimIdx == Archer::NONE_ATTACK_IDLE ||
-		m_uiAnimIdx == Archer::NONE_ATTACK_WALK ||
-		m_uiAnimIdx == Archer::IN_WEAPON)
+	if (m_uiAnimIdx == Priest::NONE_ATTACK_IDLE ||
+		m_uiAnimIdx == Priest::NONE_ATTACK_WALK ||
+		m_uiAnimIdx == Priest::IN_WEAPON)
 	{
 		SetUp_WeaponBack();
 	}
 	else
-		SetUp_WeaponLHand();
+		SetUp_WeaponRHand();
 }
 
-void CPCOthersArcher::Set_IsRepeatAnimation()
+void CPCOthersPriest::Set_IsRepeatAnimation()
 {
-	if (m_uiAnimIdx == Archer::NONE_ATTACK_IDLE ||
-		m_uiAnimIdx == Archer::NONE_ATTACK_WALK ||
-		m_uiAnimIdx == Archer::ATTACK_WAIT ||
-		m_uiAnimIdx == Archer::ATTACK_RUN)
+	if (m_uiAnimIdx == Priest::NONE_ATTACK_IDLE ||
+		m_uiAnimIdx == Priest::NONE_ATTACK_WALK ||
+		m_uiAnimIdx == Priest::ATTACK_WAIT ||
+		m_uiAnimIdx == Priest::ATTACK_RUN)
 	{
 		m_bIsRepeatAnimation = true;
 	}
@@ -372,59 +367,50 @@ void CPCOthersArcher::Set_IsRepeatAnimation()
 		m_bIsRepeatAnimation = false;
 }
 
-void CPCOthersArcher::Set_AnimationSpeed()
+void CPCOthersPriest::Set_AnimationSpeed()
 {
-	if (m_uiAnimIdx == Archer::ATTACK_ARROW)
+	if (m_uiAnimIdx == Priest::NONE_ATTACK_WALK)
 	{
-		m_fAnimationSpeed = TPS * 1.6f;
+		m_fAnimationSpeed = TPS * 1.45f;
 	}
-	else if (m_uiAnimIdx == Archer::ATTACK_RUN)
+	else if (m_uiAnimIdx == Priest::NONE_ATTACK_IDLE)
+	{
+		m_fAnimationSpeed = TPS * 0.6f;
+	}
+	else if (m_uiAnimIdx == Priest::ATTACK_WAIT)
+	{
+		m_fAnimationSpeed = TPS * 0.8f;
+	}
+	else if (m_uiAnimIdx == Priest::HASTE)
 	{
 		m_fAnimationSpeed = TPS * 1.35f;
-	}
-	else if (m_uiAnimIdx == Archer::BACK_DASH)
-	{
-		m_fAnimationSpeed = TPS * 1.25f;
-	}
-	else if (m_uiAnimIdx == Archer::RAPID_SHOT1 ||
-			 m_uiAnimIdx == Archer::RAPID_SHOT2)
-	{
-		m_fAnimationSpeed = TPS * 1.5f;
-	}
-	else if (m_uiAnimIdx == Archer::ESCAPING_BOMB)
-	{
-		m_fAnimationSpeed = TPS * 1.25f;
-	}
-	else if (m_uiAnimIdx == Archer::ARROW_SHOWER_START ||
-			 m_uiAnimIdx == Archer::ARROW_SHOWER_LOOP ||
-			 m_uiAnimIdx == Archer::ARROW_SHOWER_SHOT)
-	{
-		m_fAnimationSpeed = TPS * 1.75f;
-	}
-	else if (m_uiAnimIdx == Archer::ARROW_FALL_START ||
-			 m_uiAnimIdx == Archer::ARROW_FALL_LOOP ||
-			 m_uiAnimIdx == Archer::ARROW_FALL_SHOT)
-	{
-		m_fAnimationSpeed = TPS * 1.75f;
 	}
 	else
 		m_fAnimationSpeed = TPS;
 }
 
-void CPCOthersArcher::Set_BlendingSpeed()
+void CPCOthersPriest::Set_BlendingSpeed()
 {
-	if (m_uiAnimIdx == Archer::NONE_ATTACK_IDLE ||
-		m_uiAnimIdx == Archer::NONE_ATTACK_WALK ||
-		m_uiAnimIdx == Archer::ATTACK_WAIT ||
-		m_uiAnimIdx == Archer::ATTACK_RUN)
+	if (m_uiAnimIdx == Priest::NONE_ATTACK_IDLE ||
+		m_uiAnimIdx == Priest::NONE_ATTACK_WALK ||
+		m_uiAnimIdx == Priest::ATTACK_WAIT ||
+		m_uiAnimIdx == Priest::ATTACK_RUN)
 	{
 		m_fBlendingSpeed = 0.001f;
+	}
+	else if (m_uiAnimIdx == Priest::HASTE ||
+			 m_uiAnimIdx == Priest::AURA_ON ||
+			 m_uiAnimIdx == Priest::PURIFY ||
+			 m_uiAnimIdx == Priest::HEAL_SHOT ||
+			 m_uiAnimIdx == Priest::MP_CHARGE_END)
+	{
+		m_fBlendingSpeed = 100.0f;
 	}
 	else
 		m_fBlendingSpeed = 0.005f;
 }
 
-void CPCOthersArcher::Set_ConstantTable()
+void CPCOthersPriest::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -447,7 +433,7 @@ void CPCOthersArcher::Set_ConstantTable()
 	}
 }
 
-void CPCOthersArcher::Set_ConstantTableShadowDepth()
+void CPCOthersPriest::Set_ConstantTableShadowDepth()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -465,7 +451,7 @@ void CPCOthersArcher::Set_ConstantTableShadowDepth()
 		m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
 }
 
-void CPCOthersArcher::Move_OnNaviMesh(const _float& fTimeDelta)
+void CPCOthersPriest::Move_OnNaviMesh(const _float& fTimeDelta)
 {
 	if (m_bIsAttack)
 		return;
@@ -475,7 +461,7 @@ void CPCOthersArcher::Move_OnNaviMesh(const _float& fTimeDelta)
 
 	SetUp_MoveSpeed(fTimeDelta);
 
-	if (!m_bIsMoveStop || Archer::MIN_SPEED != m_pInfoCom->m_fSpeed)
+	if (!m_bIsMoveStop || Priest::MIN_SPEED != m_pInfoCom->m_fSpeed)
 	{
 		// NaviMesh 이동.		
 		if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
@@ -488,32 +474,32 @@ void CPCOthersArcher::Move_OnNaviMesh(const _float& fTimeDelta)
 	}
 }
 
-void CPCOthersArcher::SetUp_MoveSpeed(const _float& fTimeDelta)
+void CPCOthersPriest::SetUp_MoveSpeed(const _float& fTimeDelta)
 {
 	// Move On
 	if (!m_bIsMoveStop)
-		m_tMoveSpeedInterpolationDesc.interpolation_speed = 1.0f * Archer::OTHERS_OFFSET;
+		m_tMoveSpeedInterpolationDesc.interpolation_speed = 1.0f * Priest::OTHERS_OFFSET;
 
 	// Move Off
 	else
-		m_tMoveSpeedInterpolationDesc.interpolation_speed = -Archer::MOVE_STOP_SPEED * Archer::OTHERS_OFFSET;
+		m_tMoveSpeedInterpolationDesc.interpolation_speed = -Priest::MOVE_STOP_SPEED * Priest::OTHERS_OFFSET;
 
 	m_tMoveSpeedInterpolationDesc.linear_ratio += m_tMoveSpeedInterpolationDesc.interpolation_speed * fTimeDelta;
 	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(m_tMoveSpeedInterpolationDesc.v1, m_tMoveSpeedInterpolationDesc.v2, m_tMoveSpeedInterpolationDesc.linear_ratio);
 }
 
-void CPCOthersArcher::SetUp_StanceChange(const _float& fTimeDelta)
+void CPCOthersPriest::SetUp_StanceChange(const _float& fTimeDelta)
 {
 	if ((m_ePreStance != m_eCurStance) && !m_bIsCompleteStanceChange)
 	{
 		// NONE_ATTACK -> ATTACK
-		if (Archer::STANCE_ATTACK == m_eCurStance)
+		if (Priest::STANCE_ATTACK == m_eCurStance)
 		{
 			// NONE_ATTACK -> ATACK
-			if (Archer::OUT_WEAPON == m_uiAnimIdx &&
+			if (Priest::OUT_WEAPON == m_uiAnimIdx &&
 				m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_uiAnimIdx = Archer::ATTACK_WAIT;
+				m_uiAnimIdx = Priest::ATTACK_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 				m_bIsCompleteStanceChange = true;
@@ -522,99 +508,53 @@ void CPCOthersArcher::SetUp_StanceChange(const _float& fTimeDelta)
 		}
 
 		// ATTACK -> NONE_ATTACK
-		else if (Archer::STANCE_NONEATTACK == m_eCurStance)
+		else if (Priest::STANCE_NONEATTACK == m_eCurStance)
 		{
-			if (Archer::IN_WEAPON == m_uiAnimIdx &&
+			if (Priest::IN_WEAPON == m_uiAnimIdx &&
 				 m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_uiAnimIdx = Archer::NONE_ATTACK_IDLE;
+				m_uiAnimIdx = Priest::NONE_ATTACK_IDLE;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 				m_bIsCompleteStanceChange = true;
 				m_ePreStance              = m_eCurStance;
 			}
 
-			if (Archer::IN_WEAPON == m_uiAnimIdx && m_ui3DMax_CurFrame > 20)
+			if (Priest::IN_WEAPON == m_uiAnimIdx && m_ui3DMax_CurFrame > 20)
 				SetUp_WeaponBack();
 		}
 	}
 }
 
-void CPCOthersArcher::SetUp_OthersAttackMove(const _uint& uiAniIdx,
-											 const _uint& uiStartTick, 
-											 const _uint& uiStopTick, 
-											 const _float& fMoveSpeed,
-											 const _float& fStopSpeed)
+void CPCOthersPriest::SetUp_WeaponRHand()
 {
-	if (uiAniIdx == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
-	{
-		// Move On
-		if (m_ui3DMax_CurFrame >= uiStartTick && m_ui3DMax_CurFrame < uiStopTick)
-			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = fMoveSpeed * Archer::OTHERS_OFFSET;
+	m_pWeapon->Get_Transform()->m_vPos.x = -2.0f;
+	m_pWeapon->Get_Transform()->m_vPos.y = 5.0f;
+	m_pWeapon->Get_Transform()->m_vPos.z = 1.0f;
 
-		// Move Off
-		else
-			m_tAttackMoveSpeedInterpolationDesc.interpolation_speed = fStopSpeed * Archer::OTHERS_OFFSET;
-	}
-}
-
-void CPCOthersArcher::AttackMove_OnNaviMesh(const _float& fTimeDelta)
-{
-	SetUp_OthersAttackMove(Archer::ATTACK_ARROW, 0, 0, 0.0f, 0.0f);
-	SetUp_OthersAttackMove(Archer::BACK_DASH, Archer::BACK_DASH_MOVE_START, Archer::BACK_DASH_MOVE_STOP, 8.0f, -5.0f);
-	SetUp_OthersAttackMove(Archer::ESCAPING_BOMB, Archer::ESCAPING_BOMB_MOVE_START, Archer::ESCAPING_BOMB_MOVE_STOP, 10.0f, -5.0f);
-	SetUp_OthersAttackMove(Archer::CHARGE_ARROW_SHOT, Archer::CHARGE_ARROW_MOVE_START, Archer::CHARGE_ARROW_MOVE_STOP, 4.0f, -5.0f);
-
-	if (!m_bIsAttack)
-		return;
-
-	// Set Speed
-	m_tAttackMoveSpeedInterpolationDesc.linear_ratio += m_tAttackMoveSpeedInterpolationDesc.interpolation_speed * fTimeDelta;
-	m_pInfoCom->m_fSpeed = Engine::LinearInterpolation(m_tAttackMoveSpeedInterpolationDesc.v1, m_tAttackMoveSpeedInterpolationDesc.v2, m_tAttackMoveSpeedInterpolationDesc.linear_ratio);
-
-	// NaviMesh 이동.
-	if (!m_pServerMath->Is_Arrive_Point(m_pTransCom->m_vPos, m_pInfoCom->m_vArrivePos))
-	{
-		_float fDir = 1.0f;
-		if (m_uiAnimIdx == Archer::BACK_DASH ||
-			m_uiAnimIdx == Archer::ESCAPING_BOMB ||
-			m_uiAnimIdx == Archer::CHARGE_ARROW_SHOT)
-		{
-			fDir = -1.0f;
-		}
-
-		m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
-		m_pTransCom->m_vDir.Normalize();
-		m_pTransCom->m_vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos, 
-															  &(m_pTransCom->m_vDir * fDir), 
-															  m_pInfoCom->m_fSpeed * fTimeDelta);
-	}
-}
-
-void CPCOthersArcher::SetUp_WeaponLHand()
-{
 	m_pWeapon->Get_Transform()->m_vAngle.x = 0.0f;
-	m_pWeapon->Get_Transform()->m_vAngle.y = -160.0f;
-	m_pWeapon->Get_Transform()->m_vAngle.z = 210.0f;
-	m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("L_Sword")));
+	m_pWeapon->Get_Transform()->m_vAngle.y = 0.0f;
+	m_pWeapon->Get_Transform()->m_vAngle.z = 0.0f;
+
+	m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("R_Sword")));
 }
 
-void CPCOthersArcher::SetUp_WeaponBack()
+void CPCOthersPriest::SetUp_WeaponBack()
 {
 	m_pWeapon->Get_Transform()->m_vAngle.y = 0.0f;
 	m_pWeapon->Get_Transform()->m_vAngle.z = 180.0f;
 	m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")));
 }
 
-Engine::CGameObject* CPCOthersArcher::Create(ID3D12Device* pGraphicDevice, 
-											 ID3D12GraphicsCommandList* pCommandList, 
-											 wstring wstrMeshTag,
-											 wstring wstrNaviMeshTag,
+Engine::CGameObject* CPCOthersPriest::Create(ID3D12Device* pGraphicDevice, 
+											 ID3D12GraphicsCommandList* pCommandList,
+											 wstring wstrMeshTag, 
+											 wstring wstrNaviMeshTag, 
 											 const _vec3& vScale, 
-											 const _vec3& vAngle, 
+											 const _vec3& vAngle,
 											 const _vec3& vPos, 
 											 const char& chWeaponType)
 {
-	CPCOthersArcher* pInstance = new CPCOthersArcher(pGraphicDevice, pCommandList);
+	CPCOthersPriest* pInstance = new CPCOthersPriest(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, wstrNaviMeshTag, vScale, vAngle, vPos, chWeaponType)))
 		Engine::Safe_Release(pInstance);
@@ -622,28 +562,28 @@ Engine::CGameObject* CPCOthersArcher::Create(ID3D12Device* pGraphicDevice,
 	return pInstance;
 }
 
-CPCOthersArcher** CPCOthersArcher::Create_InstancePool(ID3D12Device* pGraphicDevice, 
-													   ID3D12GraphicsCommandList* pCommandList, 
+CPCOthersPriest** CPCOthersPriest::Create_InstancePool(ID3D12Device* pGraphicDevice, 
+													   ID3D12GraphicsCommandList* pCommandList,
 													   const _uint& uiInstanceCnt)
 {
-	CPCOthersArcher** ppInstance = new (CPCOthersArcher *[uiInstanceCnt]);
+	CPCOthersPriest** ppInstance = new (CPCOthersPriest* [uiInstanceCnt]);
 
 	for (_uint i = 0; i < uiInstanceCnt; ++i)
 	{
-		ppInstance[i] = new CPCOthersArcher(pGraphicDevice, pCommandList);
+		ppInstance[i] = new CPCOthersPriest(pGraphicDevice, pCommandList);
 		ppInstance[i]->m_uiInstanceIdx = i;
-		ppInstance[i]->Ready_GameObject(L"HumanPCEvent27Archer",	// MeshTag
+		ppInstance[i]->Ready_GameObject(L"PoporiMR25Priest",		// MeshTag
 										L"StageVelika_NaviMesh",	// NaviMeshTag
 										_vec3(0.05f, 0.05f, 0.05f),	// Scale
 										_vec3(0.0f, 0.0f, 0.0f),	// Angle
 										_vec3(AWAY_FROM_STAGE),		// Pos
-										Bow23_SM);					// Pos
+										Event_Season_Bow_01_SM);	// Pos
 	}
 
 	return ppInstance;
 }
 
-void CPCOthersArcher::Free()
+void CPCOthersPriest::Free()
 {
 	Engine::CGameObject::Free();
 

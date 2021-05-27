@@ -633,7 +633,7 @@ void CPCPriest::Set_AnimationSpeed()
 	}
 	else if (m_uiAnimIdx == Priest::NONE_ATTACK_IDLE)
 	{
-		m_fAnimationSpeed = TPS * 0.8f;
+		m_fAnimationSpeed = TPS * 0.6f;
 	}
 	else if (m_uiAnimIdx == Priest::ATTACK_WAIT)
 	{

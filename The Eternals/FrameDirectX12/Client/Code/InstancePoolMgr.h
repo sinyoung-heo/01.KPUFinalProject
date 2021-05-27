@@ -21,6 +21,7 @@ class CNPC_Children;
 
 class CPCOthersGladiator;
 class CPCOthersArcher;
+class CPCOthersPriest;
 
 class CPCWeaponTwoHand;
 class CPCWeaponBow;
@@ -62,6 +63,7 @@ public:
 	// PCOthers
 	INSTANCE_POOL_DESC<CPCOthersGladiator>* Get_PCOthersGladiatorPool() { return m_pPCOthersGladiatorPool; }
 	INSTANCE_POOL_DESC<CPCOthersArcher>*	Get_PCOthersArcherPool()	{ return m_pPCOthersArcherPool; }
+	INSTANCE_POOL_DESC<CPCOthersPriest>*	Get_PCOthersPriestPool()	{ return m_pPCOthersPriestPool; }
 	// PCWeapon
 	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	Get_PCWeaponTwoHand(const char& chWeaponType);
 	INSTANCE_POOL_DESC<CPCWeaponBow>*		Get_PCWeaponBow(const char& chWeaponType);
@@ -101,6 +103,7 @@ private:
 	// PCOthers
 	INSTANCE_POOL_DESC<CPCOthersGladiator>* m_pPCOthersGladiatorPool;
 	INSTANCE_POOL_DESC<CPCOthersArcher>*	m_pPCOthersArcherPool;
+	INSTANCE_POOL_DESC<CPCOthersPriest>*	m_pPCOthersPriestPool;
 
 	// PCWeapon
 	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	m_pPCWeaponTwohand19_A_SM_Pool;

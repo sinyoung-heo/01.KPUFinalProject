@@ -17,6 +17,7 @@
 #include "NPC_Children.h"
 #include "PCOthersGladiator.h"
 #include "PCOthersArcher.h"
+#include "PCOthersPriest.h"
 #include "PCWeaponTwoHand.h"
 #include "PCWeaponBow.h"
 #include "PCWeaponRod.h"
@@ -141,6 +142,7 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 	// PCOthers
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCOthersGladiatorPool, 10);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCOthersArcherPool, 10);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCOthersPriestPool, 10);
 }
 
 void CInstancePoolMgr::Free()
@@ -171,6 +173,7 @@ void CInstancePoolMgr::Free()
 
 	Safe_Release_InstacePool(m_pPCOthersGladiatorPool);
 	Safe_Release_InstacePool(m_pPCOthersArcherPool);
+	Safe_Release_InstacePool(m_pPCOthersPriestPool);
 
 	Safe_Release_InstacePool(m_pPCWeaponTwohand19_A_SM_Pool);
 	Safe_Release_InstacePool(m_pPCWeaponTwoHand27_SM_Pool);
