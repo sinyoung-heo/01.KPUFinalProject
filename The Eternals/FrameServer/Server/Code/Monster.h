@@ -36,6 +36,7 @@ public:
 	void	Ready_Monster(const _vec3& pos, const _vec3& angle, const char& type, const char& num, const char& naviType, const int& hp, const int& att, const int& exp, const float& spd);
 	int		Update_Monster(const float& fTimeDelta);
 	void	Hurt_Monster(const int& p_id, const int& damage, const char& affect);	// ATTACKED BY PLAYER
+	bool	Affect_Monster(const int& to_client, const char& affect);
 	
 	/* MONSTER STATUS CHANGE */
 	void	Change_AttackMode();								// STATUS == ATTACK
@@ -57,6 +58,7 @@ private:
 	void	Change_Monkey_Animation(const float& fTimeDelta);
 	void	Chase_Monkey(const float& fTimeDelta);
 	void	Attack_Monkey(const float& fTimeDelta);
+	void	Knockback_Monkey(const float& fTimeDelta);
 	void	Dead_Monkey(const float& fTimeDelta);
 
 	void	Change_Cloder_Animation(const float& fTimeDelta);
@@ -68,6 +70,7 @@ private:
 	void	Chase_DrownedSailor(const float& fTimeDelta);
 	void	Attack_DrownedSailor(const float& fTimeDelta);
 	void	Rush_DrownedSailor(const float& fTimeDelta);
+	void	Knockback_DrownedSailor(const float& fTimeDelta);
 	void	Dead_DrownedSailor(const float& fTimeDelta);
 
 	void	Change_GiantBeetle_Animation(const float& fTimeDelta);
@@ -80,7 +83,7 @@ private:
 	void	Chase_GiantMonkey(const float& fTimeDelta);
 	void	Attack_GiantMonkey(const float& fTimeDelta);
 	void	Rush_GiantMonkey(const float& fTimeDelta);
-	void	NuckBack_GiantMonkey(const float& fTimeDelta);
+	void	Knockback_GiantMonkey(const float& fTimeDelta);
 	void	Dead_GiantMonkey(const float& fTimeDelta);
 
 	void	Change_CraftyArachne_Animation(const float& fTimeDelta);

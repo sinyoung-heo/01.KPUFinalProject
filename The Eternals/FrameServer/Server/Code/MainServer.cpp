@@ -687,6 +687,30 @@ void Initialize_Monster()
 	}
 	else return;
 
+	// TEST MONSTER - monkey
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+	
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_Monster(_vec3(135.0f, 0.f, 55.0f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_MONKEY, STAGE_VELIKA, 10000, 1, 0, 0.5f);
+		pNew->Set_NumAnimation(Monkey::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Monkey::duration);
+	}
+	else return;
+
+	// TEST MONSTER - drowned sailor
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+	
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_Monster(_vec3(145.0f, 0.f, 55.0f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_VELIKA, 10000, 1, 0, 0.5f);
+		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
+		pNew->Set_AnimDuration(DrownedSailor::duration);
+	}
+	else return;
+
 	/* ______________________________________________________________________________________________________*/
 	/*											SCENE - TEST												 */
 	/* ______________________________________________________________________________________________________*/

@@ -103,7 +103,7 @@ namespace DrownedSailor
 	constexpr int ATTACK_STRONG_START_TICK = 49;
 	constexpr int ATTACK_RUSH_START_TICK   = 49;
 	constexpr int ATTACK_HOOK_START_TICK   = 23;
-	constexpr int A_DOWN_START_TICK		   = 1;
+	constexpr int A_DOWN_START_TICK		   = 0;
 }
 
 namespace GiantBeetle

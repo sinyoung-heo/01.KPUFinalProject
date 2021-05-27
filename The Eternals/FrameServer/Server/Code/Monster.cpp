@@ -160,6 +160,12 @@ void CMonster::Change_Monkey_Animation(const float& fTimeDelta)
 	}
 	break;
 
+	case STATUS::ST_REACTION:
+	{
+		Knockback_Monkey(fTimeDelta);
+	}
+	break;
+
 	case STATUS::ST_DEAD:
 	{
 		Dead_Monkey(fTimeDelta);
@@ -246,6 +252,12 @@ void CMonster::Change_DrownedSailor_Animation(const float& fTimeDelta)
 			}
 			Rush_DrownedSailor(fTimeDelta);
 		}
+	}
+	break;
+
+	case STATUS::ST_REACTION:
+	{
+		Knockback_DrownedSailor(fTimeDelta);
 	}
 	break;
 
@@ -360,7 +372,7 @@ void CMonster::Change_GiantMonkey_Animation(const float& fTimeDelta)
 
 	case STATUS::ST_REACTION:
 	{
-		NuckBack_GiantMonkey(fTimeDelta);
+		Knockback_GiantMonkey(fTimeDelta);
 	}
 	break;
 
@@ -830,6 +842,8 @@ void CMonster::Chase_Crab(const float& fTimeDelta)
 
 void CMonster::Chase_Monkey(const float& fTimeDelta)
 {
+	if (m_bIsReaction) return;
+
 	/* 해당 Monster의 원래 위치값 */
 	float ori_x, ori_y, ori_z;
 	ori_x = m_vPos.x;
@@ -1265,6 +1279,8 @@ void CMonster::Chase_Cloder(const float& fTimeDelta)
 
 void CMonster::Chase_DrownedSailor(const float& fTimeDelta)
 {
+	if (m_bIsReaction) return;
+
 	/* 해당 Monster의 원래 위치값 */
 	float ori_x, ori_y, ori_z;
 	ori_x = m_vPos.x;
@@ -2235,6 +2251,8 @@ void CMonster::Attack_Crab(const float& fTimeDelta)
 
 void CMonster::Attack_Monkey(const float& fTimeDelta)
 {
+	if (m_bIsReaction) return;
+
 	// 이전 공격 애니메이션이 아직 종료되지 않았을 경우 -> 몬스터 공격 패킷 전송 X
 	if (Monster_Normal::ATTACK <= m_uiAnimIdx && m_uiAnimIdx <= Monkey::ATTACK_THROW)
 	{
@@ -2416,6 +2434,8 @@ void CMonster::Attack_Cloder(const float& fTimeDelta)
 
 void CMonster::Attack_DrownedSailor(const float& fTimeDelta)
 {
+	if (m_bIsReaction) return;
+
 	// 이전 공격 애니메이션이 아직 종료되지 않았을 경우 -> 몬스터 공격 패킷 전송 X
 	if (DrownedSailor::ATTACK_SPIN <= m_uiAnimIdx && m_uiAnimIdx <= DrownedSailor::ATTACK_HOOK)
 	{
@@ -2638,6 +2658,7 @@ void CMonster::Attack_GiantBeetle(const float& fTimeDelta)
 void CMonster::Attack_GiantMonkey(const float& fTimeDelta)
 {
 	if (m_bIsReaction) return;
+
 	// 이전 공격 애니메이션이 아직 종료되지 않았을 경우 -> 몬스터 공격 패킷 전송 X
 	if (GiantMonkey::ATTACK_RIGHT <= m_uiAnimIdx && m_uiAnimIdx <= GiantMonkey::ATTACK_COMBO)
 	{
@@ -3016,7 +3037,147 @@ void CMonster::Rush_GiantMonkey(const float& fTimeDelta)
 	}
 }
 
-void CMonster::NuckBack_GiantMonkey(const float& fTimeDelta)
+void CMonster::Knockback_Monkey(const float& fTimeDelta)
+{
+	if (m_bIsReaction == false) return;
+	if (Monkey::DOWN == m_uiAnimIdx)
+	{
+		if (!Is_AnimationSetEnd(fTimeDelta))
+			return;
+
+		else
+		{
+			Set_Stop_Reaction(3s);
+			return;
+		}
+	}
+
+	/* 해당 Monster의 원래 위치값 */
+	float ori_x, ori_y, ori_z;
+	ori_x = m_vPos.x;
+	ori_y = m_vPos.y;
+	ori_z = m_vPos.z;
+
+	// 넉백 전 위치에서의 viewlist (시야 내에 플레이어 저장)
+	unordered_set<pair<int, int>> oldnearSector;
+	oldnearSector.reserve(NEAR_SECTOR);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
+
+	unordered_set <int> old_viewlist;
+	unordered_set <int> old_targetList;
+
+	// 넉백 전: 인접 섹터 순회 (몬스터 시야 파악)
+	for (auto& s : oldnearSector)
+	{
+		// 인접 섹터 내의 타 유저들이 있는지 검사
+		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+		{
+			// 유저의 서버 번호 추출
+			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			{
+				/* 유저일 경우 처리 */
+				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+
+					// 접속한 유저만 시야 목록에 등록한다.
+					if (!pPlayer->Get_IsConnected()) continue;
+
+					// 시야 내에 있다면 시야 목록에 등록한다.
+					if (CObjMgr::GetInstance()->Is_Near(this, pPlayer))
+						old_viewlist.insert(obj_num);
+				}
+			}
+		}
+	}
+
+	// 넉백 후의 위치 갱신
+	m_vKnockbackPos = m_vPos + (-1.f * m_vDir) * NUCKBACK_DIST;
+
+	for (auto pl : old_viewlist)
+	{
+		/* 유저일 경우 처리 */
+		if (true == CObjMgr::GetInstance()->Is_Player(pl))
+		{
+			send_Monster_Knockback(pl, Monkey::DOWN);
+		}
+	}
+
+	m_uiAnimIdx = Monkey::DOWN;
+	Set_AnimationKey(Monkey::DOWN);
+}
+
+void CMonster::Knockback_DrownedSailor(const float& fTimeDelta)
+{
+	if (m_bIsReaction == false) return;
+	if (DrownedSailor::DOWN == m_uiAnimIdx)
+	{
+		if (!Is_AnimationSetEnd(fTimeDelta))
+			return;
+
+		else
+		{
+			Set_Stop_Reaction(3s);
+			return;
+		}
+	}
+
+	/* 해당 Monster의 원래 위치값 */
+	float ori_x, ori_y, ori_z;
+	ori_x = m_vPos.x;
+	ori_y = m_vPos.y;
+	ori_z = m_vPos.z;
+
+	// 넉백 전 위치에서의 viewlist (시야 내에 플레이어 저장)
+	unordered_set<pair<int, int>> oldnearSector;
+	oldnearSector.reserve(NEAR_SECTOR);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
+
+	unordered_set <int> old_viewlist;
+	unordered_set <int> old_targetList;
+
+	// 넉백 전: 인접 섹터 순회 (몬스터 시야 파악)
+	for (auto& s : oldnearSector)
+	{
+		// 인접 섹터 내의 타 유저들이 있는지 검사
+		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+		{
+			// 유저의 서버 번호 추출
+			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			{
+				/* 유저일 경우 처리 */
+				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+
+					// 접속한 유저만 시야 목록에 등록한다.
+					if (!pPlayer->Get_IsConnected()) continue;
+
+					// 시야 내에 있다면 시야 목록에 등록한다.
+					if (CObjMgr::GetInstance()->Is_Near(this, pPlayer))
+						old_viewlist.insert(obj_num);
+				}
+			}
+		}
+	}
+
+	// 넉백 후의 위치 갱신
+	m_vKnockbackPos = m_vPos + (-1.f * m_vDir) * NUCKBACK_DIST;
+
+	for (auto pl : old_viewlist)
+	{
+		/* 유저일 경우 처리 */
+		if (true == CObjMgr::GetInstance()->Is_Player(pl))
+		{
+			send_Monster_Knockback(pl, DrownedSailor::DOWN);
+		}
+	}
+
+	m_uiAnimIdx = DrownedSailor::DOWN;
+	Set_AnimationKey(DrownedSailor::DOWN);
+}
+
+void CMonster::Knockback_GiantMonkey(const float& fTimeDelta)
 {
 	if (m_bIsReaction == false) return;
 	if (GiantMonkey::DOWN == m_uiAnimIdx)
@@ -3677,18 +3838,20 @@ void CMonster::Hurt_Monster(const int& p_id, const int& damage, const char& affe
 			send_Monster_Stat(pl);
 
 			/* Affect */
-			if (m_monNum == MON_GMONKEY && !m_bIsAttack)
+			if (Affect_Monster(pl, affect) == true)
+				return;
+			/*if (m_monNum == MON_GMONKEY && !m_bIsAttack && !m_bIsReaction)
 			{
-				if (affect == AFFECT_FINCH && !m_bIsReaction)
+				if (affect == AFFECT_FINCH)
 					send_Monster_animation_packet(pl, GiantMonkey::FINCH);
-				else if (affect == AFFECT_GROGGY && !m_bIsReaction)
+				else if (affect == AFFECT_GROGGY)
 					send_Monster_animation_packet(pl, GiantMonkey::GROGGY);
-				else if (affect == AFFECT_NUCKBACK)
+				else if (affect == AFFECT_KNOCKBACK)
 				{
 					Change_ReactionMode();
 					return;
 				}
-			}
+			}*/
 		}
 	}
 
@@ -3701,6 +3864,62 @@ void CMonster::Hurt_Monster(const int& p_id, const int& damage, const char& affe
 		Set_Start_Fight();
 		Change_ChaseMode();
 	}
+}
+
+bool CMonster::Affect_Monster(const int& to_client, const char& affect)
+{
+	if (m_monNum != MON_GMONKEY && m_monNum != MON_MONKEY && m_monNum != MON_SAILOR)
+		return false;
+
+	if (m_bIsAttack == true || m_bIsReaction == true)
+		return false;
+
+	if (m_monNum == MON_GMONKEY)
+	{
+		if (affect == AFFECT_FINCH)
+			send_Monster_animation_packet(to_client, GiantMonkey::FINCH);
+		else if (affect == AFFECT_GROGGY)
+			send_Monster_animation_packet(to_client, GiantMonkey::GROGGY);
+		else if (affect == AFFECT_KNOCKBACK)
+		{
+			Change_ReactionMode();
+			return true;
+		}
+			
+		return false;
+	}
+
+	else if (m_monNum == MON_MONKEY)
+	{
+		if (affect == AFFECT_FINCH)
+			send_Monster_animation_packet(to_client, Monkey::FINCH);
+		else if (affect == AFFECT_GROGGY)
+			send_Monster_animation_packet(to_client, Monkey::GROGGY);
+		else if (affect == AFFECT_KNOCKBACK)
+		{
+			Change_ReactionMode();
+			return true;
+		}
+
+		return false;
+	}
+
+	else if (m_monNum == MON_SAILOR)
+	{
+		if (affect == AFFECT_FINCH)
+			send_Monster_animation_packet(to_client, DrownedSailor::FINCH);
+		else if (affect == AFFECT_GROGGY)
+			send_Monster_animation_packet(to_client, DrownedSailor::GROGGY);
+		else if (affect == AFFECT_KNOCKBACK)
+		{
+			Change_ReactionMode();
+			return true;
+		}
+
+		return false;
+	}
+
+	return false;
 }
 
 void CMonster::Change_AttackMode()

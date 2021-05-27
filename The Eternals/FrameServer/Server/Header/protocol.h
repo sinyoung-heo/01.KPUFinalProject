@@ -122,7 +122,7 @@ constexpr char NPC_CASTANIC_LSMITH		= 12;
 /* PLAYER SKILL AFFECT */
 constexpr char AFFECT_FINCH				= 0;
 constexpr char AFFECT_GROGGY			= 1;
-constexpr char AFFECT_NUCKBACK			= 2;
+constexpr char AFFECT_KNOCKBACK			= 2;
 
 /* ___________________________________________________________________________________________________________________*/
 /*													SERVER -> CLIENT												  */
