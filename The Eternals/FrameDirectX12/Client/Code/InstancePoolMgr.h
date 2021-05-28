@@ -3,6 +3,7 @@
 #include "Base.h"
 
 class CCollisionTick;
+class CCollisionArrow;
 
 class CCrab;
 class CCloderA;
@@ -21,6 +22,7 @@ class CNPC_Children;
 
 class CPCOthersGladiator;
 class CPCOthersArcher;
+class CPCOthersPriest;
 
 class CPCWeaponTwoHand;
 class CPCWeaponBow;
@@ -36,7 +38,8 @@ private:
 
 public:
 	// CollisionTick
-	INSTANCE_POOL_DESC<CCollisionTick>* Get_CollisionTickPool()			{ return m_pCollisionTickPool; }
+	INSTANCE_POOL_DESC<CCollisionTick>*		Get_CollisionTickPool()		{ return m_pCollisionTickPool; }
+	INSTANCE_POOL_DESC<CCollisionArrow>*	Get_CollisionArrowPool()	{ return m_pCollisionArrowPool; }
 	// Monster
 	INSTANCE_POOL_DESC<CCrab>*			Get_MonsterCrabPool()			{ return m_pMonsterCrabPool; }
 	INSTANCE_POOL_DESC<CCloderA>*		Get_MonsterCloderAPool()		{ return m_pMonsterCloderAPool; }
@@ -62,6 +65,7 @@ public:
 	// PCOthers
 	INSTANCE_POOL_DESC<CPCOthersGladiator>* Get_PCOthersGladiatorPool() { return m_pPCOthersGladiatorPool; }
 	INSTANCE_POOL_DESC<CPCOthersArcher>*	Get_PCOthersArcherPool()	{ return m_pPCOthersArcherPool; }
+	INSTANCE_POOL_DESC<CPCOthersPriest>*	Get_PCOthersPriestPool()	{ return m_pPCOthersPriestPool; }
 	// PCWeapon
 	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	Get_PCWeaponTwoHand(const char& chWeaponType);
 	INSTANCE_POOL_DESC<CPCWeaponBow>*		Get_PCWeaponBow(const char& chWeaponType);
@@ -72,7 +76,8 @@ public:
 
 private:
 	// CollisionTick
-	INSTANCE_POOL_DESC<CCollisionTick>*	m_pCollisionTickPool;
+	INSTANCE_POOL_DESC<CCollisionTick>*		m_pCollisionTickPool;
+	INSTANCE_POOL_DESC<CCollisionArrow>*	m_pCollisionArrowPool;
 
 	// Monster
 	INSTANCE_POOL_DESC<CCrab>*			m_pMonsterCrabPool;
@@ -101,6 +106,7 @@ private:
 	// PCOthers
 	INSTANCE_POOL_DESC<CPCOthersGladiator>* m_pPCOthersGladiatorPool;
 	INSTANCE_POOL_DESC<CPCOthersArcher>*	m_pPCOthersArcherPool;
+	INSTANCE_POOL_DESC<CPCOthersPriest>*	m_pPCOthersPriestPool;
 
 	// PCWeapon
 	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	m_pPCWeaponTwohand19_A_SM_Pool;

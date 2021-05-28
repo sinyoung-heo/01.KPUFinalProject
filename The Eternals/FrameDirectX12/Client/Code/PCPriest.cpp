@@ -43,6 +43,7 @@ HRESULT CPCPriest::Ready_GameObject(wstring wstrMeshTag,
 	m_chCurStageID        = STAGE_VELIKA;
 	m_chPreStageID        = m_chCurStageID;
 	m_wstrCollisionTag    = L"ThisPlayer";
+	m_wstrMeshTag         = wstrMeshTag;
 
 	m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(vPos));
 
@@ -633,7 +634,7 @@ void CPCPriest::Set_AnimationSpeed()
 	}
 	else if (m_uiAnimIdx == Priest::NONE_ATTACK_IDLE)
 	{
-		m_fAnimationSpeed = TPS * 0.8f;
+		m_fAnimationSpeed = TPS * 0.6f;
 	}
 	else if (m_uiAnimIdx == Priest::ATTACK_WAIT)
 	{

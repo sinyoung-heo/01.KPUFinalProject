@@ -6,8 +6,7 @@ class CInstancePoolMgr;
 
 class CCollisionTick : public Engine::CGameObject
 {
-private:
-	explicit CCollisionTick();
+protected:
 	explicit CCollisionTick(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 	virtual ~CCollisionTick() = default;
 
@@ -26,7 +25,7 @@ public:
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Process_Collision();
-private:
+protected:
 	/*__________________________________________________________________________________________________________
 	[ Manager ]
 	____________________________________________________________________________________________________________*/
@@ -53,7 +52,7 @@ public:
 	static CCollisionTick** Create_InstancePool(ID3D12Device* pGraphicDevice,
 												ID3D12GraphicsCommandList* pCommandList,
 												const _uint& uiInstanceCnt);
-private:
+protected:
 	virtual void Free();
 };
 

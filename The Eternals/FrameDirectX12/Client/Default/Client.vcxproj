@@ -176,6 +176,7 @@
     <ClInclude Include="..\Code\CharacterHpGauge.h" />
     <ClInclude Include="..\Code\CharacterMpGauge.h" />
     <ClInclude Include="..\Code\CloderA.h" />
+    <ClInclude Include="..\Code\CollisionArrow.h" />
     <ClInclude Include="..\Code\CollisionTick.h" />
     <ClInclude Include="..\Code\Crab.h" />
     <ClInclude Include="..\Code\CraftyArachne.h" />
@@ -194,6 +195,7 @@
     <ClInclude Include="..\Code\PCGladiator.h" />
     <ClInclude Include="..\Code\PCOthersArcher.h" />
     <ClInclude Include="..\Code\PCOthersGladiator.h" />
+    <ClInclude Include="..\Code\PCOthersPriest.h" />
     <ClInclude Include="..\Code\PCPriest.h" />
     <ClInclude Include="..\Code\PCWeapon.h" />
     <ClInclude Include="..\Code\PCWeaponBow.h" />
@@ -273,6 +275,7 @@
     <ClCompile Include="..\Code\CharacterHpGauge.cpp" />
     <ClCompile Include="..\Code\CharacterMpGauge.cpp" />
     <ClCompile Include="..\Code\CloderA.cpp" />
+    <ClCompile Include="..\Code\CollisionArrow.cpp" />
     <ClCompile Include="..\Code\CollisionTick.cpp" />
     <ClCompile Include="..\Code\Crab.cpp" />
     <ClCompile Include="..\Code\CraftyArachne.cpp" />
@@ -313,6 +316,7 @@
     <ClCompile Include="..\Code\PCGladiator.cpp" />
     <ClCompile Include="..\Code\PCOthersArcher.cpp" />
     <ClCompile Include="..\Code\PCOthersGladiator.cpp" />
+    <ClCompile Include="..\Code\PCOthersPriest.cpp" />
     <ClCompile Include="..\Code\PCPriest.cpp" />
     <ClCompile Include="..\Code\PCWeapon.cpp" />
     <ClCompile Include="..\Code\PCWeaponBow.cpp" />

@@ -78,6 +78,7 @@ HRESULT CPCOthersArcher::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos   = vPos;
 	m_chCurWeaponType     = chWeaponType;
+	m_wstrMeshTag         = wstrMeshTag;
 
 	m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(vPos));
 
@@ -267,13 +268,9 @@ HRESULT CPCOthersArcher::Add_Component(wstring wstrMeshTag, wstring wstrNaviMesh
 
 	m_pVelikaNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"StageVelika_NaviMesh", Engine::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pVelikaNaviMeshCom, E_FAIL);
-	//m_pVelikaNaviMeshCom->AddRef();
-	// m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pVelikaNaviMeshCom);
 
 	m_pBeachNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"StageBeach_NaviMesh", Engine::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pBeachNaviMeshCom, E_FAIL);
-	//m_pBeachNaviMeshCom->AddRef();
-	 //m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
 
 	return S_OK;
 }
@@ -565,7 +562,7 @@ void CPCOthersArcher::AttackMove_OnNaviMesh(const _float& fTimeDelta)
 {
 	SetUp_OthersAttackMove(Archer::ATTACK_ARROW, 0, 0, 0.0f, 0.0f);
 	SetUp_OthersAttackMove(Archer::BACK_DASH, Archer::BACK_DASH_MOVE_START, Archer::BACK_DASH_MOVE_STOP, 8.0f, -5.0f);
-	SetUp_OthersAttackMove(Archer::ESCAPING_BOMB, Archer::ESCAPING_BOMB_MOVE_START, Archer::ESCAPING_BOMB_MOVE_STOP, 10.0f, -5.0f);
+	SetUp_OthersAttackMove(Archer::ESCAPING_BOMB, Archer::ESCAPING_BOMB_MOVE_START, Archer::ESCAPING_BOMB_MOVE_STOP, 7.5f, -5.0f);
 	SetUp_OthersAttackMove(Archer::CHARGE_ARROW_SHOT, Archer::CHARGE_ARROW_MOVE_START, Archer::CHARGE_ARROW_MOVE_STOP, 4.0f, -5.0f);
 
 	if (!m_bIsAttack)

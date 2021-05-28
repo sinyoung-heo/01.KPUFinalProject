@@ -79,6 +79,23 @@ void CShaderMeshInstancing::SetUp_ConstantBuffer(ID3D12Device* pGraphicDevice)
 	}
 }
 
+void CShaderMeshInstancing::SetUp_ConstantBuffer(ID3D12Device* pGraphicDevice, wstring wstrMeshTag, const _uint& uiSize)
+{
+
+	for (_uint i = 0; i < CONTEXT::CONTEXT_END; ++i)
+	{
+		auto iter_find = m_mapCB_ShaderMesh[i].find(wstrMeshTag);
+		if (iter_find == m_mapCB_ShaderMesh[i].end())
+			continue;
+
+		for (_uint j = 0; j < m_uiPipelineStateCnt; ++j)
+		{
+			if (nullptr == m_mapCB_ShaderMesh[i][wstrMeshTag][j])
+				m_mapCB_ShaderMesh[i][wstrMeshTag][j] = CUploadBuffer<CB_SHADER_MESH_INSTANCEING>::Create(pGraphicDevice, uiSize / 4 + 1, false);
+		}
+	}
+}
+
 void CShaderMeshInstancing::Add_TotalInstanceCount(wstring wstrMeshTag)
 {
 	auto iter_find = m_mapTotalInstanceCnt.find(wstrMeshTag);
@@ -185,9 +202,24 @@ void CShaderMeshInstancing::Render_Instance(ID3D12GraphicsCommandList* pCommandL
 			/*__________________________________________________________________________________________________________
 			[ Render Buffer ]
 			____________________________________________________________________________________________________________*/
-			CMesh*		pMesh				= static_cast<CMesh*>(CObjectMgr::Get_Instance()->Get_StaticObject(wstrMeshTag)->Get_Component(L"Com_Mesh", ID_STATIC));
-			CVIMesh*	pVIMesh				= pMesh->Get_VIMesh();
-			_uint		uiSubsetMeshSize	= (_uint)(pVIMesh->Get_SubMeshGeometry().size());
+			CGameObject*	pGameObject = CObjectMgr::Get_Instance()->Get_StaticObject(wstrMeshTag);
+			CMesh*			pMesh = nullptr;
+			CVIMesh*		pVIMesh = nullptr;
+
+			if (nullptr != pGameObject)
+			{
+				pMesh   = static_cast<CMesh*>(pGameObject->Get_Component(L"Com_Mesh", ID_STATIC));
+				pVIMesh = pMesh->Get_VIMesh();
+			}
+			else if (nullptr == pGameObject)
+			{
+				pGameObject = CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject" ,wstrMeshTag);
+				pMesh		= static_cast<CMesh*>(pGameObject->Get_Component(L"Com_Mesh", ID_STATIC));
+				pVIMesh		= pMesh->Get_VIMesh();
+			}
+
+
+			_uint uiSubsetMeshSize = (_uint)(pVIMesh->Get_SubMeshGeometry().size());
 
 			for (_uint iSubMeshIdx = 0; iSubMeshIdx < uiSubsetMeshSize; ++iSubMeshIdx)
 			{
@@ -355,7 +387,7 @@ HRESULT CShaderMeshInstancing::Create_PipelineState()
 	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.BlendState = Create_BlendState(false, D3D12_BLEND_ONE, D3D12_BLEND_ZERO, D3D12_BLEND_OP_ADD, D3D12_BLEND_ONE,
 		D3D12_BLEND_ZERO, D3D12_BLEND_OP_ADD, TRUE);
-	PipelineStateDesc.RasterizerState = CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
+	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
 	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState();
 
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
@@ -426,6 +458,78 @@ HRESULT CShaderMeshInstancing::Create_PipelineState()
 	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.BlendState = Create_BlendState();
+	PipelineStateDesc.RasterizerState = CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
+	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState();
+
+	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
+	m_vecPipelineState.emplace_back(pPipelineState);
+	CRenderer::Get_Instance()->Add_PipelineStateCnt();
+
+	/*__________________________________________________________________________________________________________
+	[ 3번 PipelineState Pass ]
+	- "PS_MAIN_MORE_DIFFUSE"
+	- "PS_MAIN"
+	- FILL_MODE_SOLID
+	- CULL_MODE_BACK
+	- Blend		(X)
+	- Z Write	(O)
+	____________________________________________________________________________________________________________*/
+	PipelineStateDesc.pRootSignature		= m_pRootSignature;
+	PipelineStateDesc.SampleMask			= UINT_MAX;
+	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	PipelineStateDesc.NumRenderTargets		= 6;								// PS에서 사용할 RenderTarget 개수.
+	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
+	PipelineStateDesc.RTVFormats[1]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Normal Target
+	PipelineStateDesc.RTVFormats[2]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Specular Target
+	PipelineStateDesc.RTVFormats[3]			= DXGI_FORMAT_R32G32B32A32_FLOAT;	// Depth Target
+	PipelineStateDesc.RTVFormats[4]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
+	PipelineStateDesc.RTVFormats[5]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
+
+	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;
+	vecInputLayout							= Create_InputLayout("VS_MAIN", "PS_MAIN_MORE_DIFFUSE");
+	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState = Create_BlendState(false, D3D12_BLEND_ONE, D3D12_BLEND_ZERO, D3D12_BLEND_OP_ADD, D3D12_BLEND_ONE,
+		D3D12_BLEND_ZERO, D3D12_BLEND_OP_ADD, TRUE);
+	PipelineStateDesc.RasterizerState		= CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
+	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState();
+
+	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
+	m_vecPipelineState.emplace_back(pPipelineState);
+	CRenderer::Get_Instance()->Add_PipelineStateCnt();
+
+	/*__________________________________________________________________________________________________________
+	[ 4번 PipelineState Pass ]
+	- "VS_MAIN"
+	- "PS_MAIN_EMISSIVE_DIFFSUE"
+	- FILL_MODE_SOLID
+	- CULL_MODE_BACK
+	- Blend		(X)
+	- Z Write	(O)
+	____________________________________________________________________________________________________________*/
+	PipelineStateDesc.pRootSignature		= m_pRootSignature;
+	PipelineStateDesc.SampleMask			= UINT_MAX;
+	PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	PipelineStateDesc.NumRenderTargets		= 6;								// PS에서 사용할 RenderTarget 개수.
+	PipelineStateDesc.RTVFormats[0]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Diffuse Target
+	PipelineStateDesc.RTVFormats[1]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Normal Target
+	PipelineStateDesc.RTVFormats[2]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Specular Target
+	PipelineStateDesc.RTVFormats[3]			= DXGI_FORMAT_R32G32B32A32_FLOAT;	// Depth Target
+	PipelineStateDesc.RTVFormats[4]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
+	PipelineStateDesc.RTVFormats[5]			= DXGI_FORMAT_R8G8B8A8_UNORM;		// Emissive Target
+
+	PipelineStateDesc.SampleDesc.Count		= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? 4 : 1;
+	PipelineStateDesc.SampleDesc.Quality	= CGraphicDevice::Get_Instance()->Get_MSAA4X_Enable() ? (CGraphicDevice::Get_Instance()->Get_MSAA4X_QualityLevels() - 1) : 0;
+	PipelineStateDesc.DSVFormat				= DXGI_FORMAT_D24_UNORM_S8_UINT;
+	vecInputLayout							= Create_InputLayout("VS_MAIN", "PS_MAIN_EMISSIVE_DIFFSUE");
+	PipelineStateDesc.InputLayout			= { vecInputLayout.data(), (_uint)vecInputLayout.size() };
+	PipelineStateDesc.VS					= { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.PS					= { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
+	PipelineStateDesc.BlendState = Create_BlendState(false, D3D12_BLEND_ONE, D3D12_BLEND_ZERO, D3D12_BLEND_OP_ADD, D3D12_BLEND_ONE,
+		D3D12_BLEND_ZERO, D3D12_BLEND_OP_ADD, TRUE);
 	PipelineStateDesc.RasterizerState = CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
 	PipelineStateDesc.DepthStencilState		= CShader::Create_DepthStencilState();
 

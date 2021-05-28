@@ -2,16 +2,10 @@
 #include "CollisionTick.h"
 #include "InstancePoolMgr.h"
 
-CCollisionTick::CCollisionTick()
-	: Engine::CGameObject()
-	, m_pInstancePoolMgr(CInstancePoolMgr::Get_Instance())
-	, m_pPacketMgr(CPacketMgr::Get_Instance())
-{
-}
-
 CCollisionTick::CCollisionTick(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pInstancePoolMgr(CInstancePoolMgr::Get_Instance())
+	, m_pPacketMgr(CPacketMgr::Get_Instance())
 {
 }
 

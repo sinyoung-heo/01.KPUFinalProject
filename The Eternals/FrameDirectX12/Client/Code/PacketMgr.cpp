@@ -12,6 +12,7 @@
 #include "PCArcher.h"
 #include "PCOthersArcher.h"
 #include "PCPriest.h"
+#include "PCOthersPriest.h"
 /* NPC */
 #include "NPC_Walker.h"
 #include "NPC_Assistant.h"
@@ -580,7 +581,7 @@ void CPacketMgr::Leave_Object(sc_packet_leave* packet, int& retflag)
 	else if (packet->id >= MON_NUM_START)
 		m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"MONSTER", packet->id, true);
 	else
-		m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"Others", packet->id, false);
+		m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"Others", packet->id, true);
 }
 
 void CPacketMgr::AttackStop_User(sc_packet_attack* packet)
@@ -744,9 +745,7 @@ void CPacketMgr::Enter_Others(sc_packet_enter* packet, int& retflag)
 		pInstance = Pop_Instance(m_pInstancePoolMgr->Get_PCOthersArcherPool());
 
 	else if (PC_PRIEST == packet->o_type)
-	{
-
-	}
+		pInstance = Pop_Instance(m_pInstancePoolMgr->Get_PCOthersPriestPool());
 
 	if (nullptr != pInstance)
 	{

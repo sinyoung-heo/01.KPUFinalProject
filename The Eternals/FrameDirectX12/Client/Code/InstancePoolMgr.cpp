@@ -2,6 +2,7 @@
 #include "InstancePoolMgr.h"
 #include "ObjectMgr.h"
 #include "CollisionTick.h"
+#include "CollisionArrow.h"
 #include "Crab.h"
 #include "Monkey.h"
 #include "CloderA.h"
@@ -17,6 +18,7 @@
 #include "NPC_Children.h"
 #include "PCOthersGladiator.h"
 #include "PCOthersArcher.h"
+#include "PCOthersPriest.h"
 #include "PCWeaponTwoHand.h"
 #include "PCWeaponBow.h"
 #include "PCWeaponRod.h"
@@ -94,6 +96,7 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 {
 	// CollisionTick
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pCollisionTickPool, 32);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pCollisionArrowPool, L"ArrowIce", 32);
 	
 	// Monster
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterCrabPool, 10);
@@ -141,11 +144,13 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 	// PCOthers
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCOthersGladiatorPool, 10);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCOthersArcherPool, 10);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCOthersPriestPool, 10);
 }
 
 void CInstancePoolMgr::Free()
 {
 	Safe_Release_InstacePool(m_pCollisionTickPool);
+	Safe_Release_InstacePool(m_pCollisionArrowPool);
 
 	Safe_Release_InstacePool(m_pMonsterCrabPool);
 	Safe_Release_InstacePool(m_pMonsterCloderAPool);
@@ -171,6 +176,7 @@ void CInstancePoolMgr::Free()
 
 	Safe_Release_InstacePool(m_pPCOthersGladiatorPool);
 	Safe_Release_InstacePool(m_pPCOthersArcherPool);
+	Safe_Release_InstacePool(m_pPCOthersPriestPool);
 
 	Safe_Release_InstacePool(m_pPCWeaponTwohand19_A_SM_Pool);
 	Safe_Release_InstacePool(m_pPCWeaponTwoHand27_SM_Pool);

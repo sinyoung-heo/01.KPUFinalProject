@@ -28,17 +28,17 @@ typedef struct tagShaderMesh
 	float4x4 matProj;
     float4x4 matLightView;
     float4x4 matLightProj;
-    float4 vLightPos;
-    float fLightPorjFar;
-    float fDissolve;
-    float fOffset1;
-    float fOffset2;
-    float fOffset3;
-    float fOffset4;
-    float fOffset5;
-    float fOffset6;
-    float4 vAfterImgColor;
-    float4 vEmissiveColor;
+    float4   vLightPos;
+    float    fLightPorjFar;
+    float    fDissolve;
+    float    fOffset1;
+    float    fOffset2;
+    float    fOffset3;
+    float    fOffset4;
+    float    fOffset5;
+    float    fOffset6;
+    float4   vAfterImgColor;
+    float4   vEmissiveColor;
 } SHADER_MESH;
 StructuredBuffer<SHADER_MESH> g_ShaderMesh : register(t0, space1);
 
@@ -56,32 +56,33 @@ cbuffer cbCamreaMatrix : register(b0)
 // VS_MAIN
 struct VS_IN
 {
-    float3 Pos : POSITION;
-    float3 Normal : NORMAL;
-    float2 TexUV : TEXCOORD;
-    float4 BoneId[2] : TEXCOORD1;
-    float4 BoneWeights[2] : TEXCOORD3;
+    float3 Pos              : POSITION;
+    float3 Normal           : NORMAL;
+    float2 TexUV            : TEXCOORD;
+    float4 BoneId[2]        : TEXCOORD1;
+    float4 BoneWeights[2]   : TEXCOORD3;
 };
 
 struct VS_OUT
 {
-    float4 Pos : SV_POSITION;
-    float2 TexUV : TEXCOORD0;
-    float3 Normal : TEXCOORD1;
+    float4  Pos         : SV_POSITION;
+    float2  TexUV       : TEXCOORD0;
+    float3  Normal      : TEXCOORD1;
 	
-    float3 T : TEXCOORD2;
-    float3 B : TEXCOORD3;
-    float3 N : TEXCOORD4;
+    float3  T           : TEXCOORD2;
+    float3  B           : TEXCOORD3;
+    float3  N           : TEXCOORD4;
 	
-    float4 ProjPos : TEXCOORD5;
-    float4 LightPos : TEXCOORD6;
+    float4  ProjPos     : TEXCOORD5;
+    float4  LightPos    : TEXCOORD6;
 	
-    float Dissolve : TEXCOORD7;
-    float2 AniUV : TEXCOORD8;
+    float   Dissolve    : TEXCOORD7;
+    float2  AniUV       : TEXCOORD8;
 
-    float fOffset1 : TEXCOORD9;
-    float fOffset2 : TEXCOORD10;
-    float fOffset3 : TEXCOORD11;
+    float   fOffset1    : TEXCOORD9;
+    float   fOffset2    : TEXCOORD10;
+    float   fOffset3    : TEXCOORD11;
+	float4  Emissive    : TEXCOORD12;
 };
 
 /*__________________________________________________________________________________________________________
@@ -119,6 +120,9 @@ VS_OUT VS_MAIN(VS_IN vs_input, uint iInstanceID : SV_InstanceID)
 	// Dissolve
     vs_output.Dissolve = g_ShaderMesh[iInstanceID].fDissolve;
   
+    // Emissive
+	vs_output.Emissive = g_ShaderMesh[iInstanceID].vEmissiveColor;
+    
     return (vs_output);
 }
 
@@ -153,6 +157,57 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 								 ps_input.ProjPos.w / g_fProjFar, // posWVP.w / Far : 0~1로 만든 View영역의 Z.
 								 1.0f, 1.0f);
 	
+    return (ps_output);
+}
+
+PS_OUT PS_MAIN_MORE_DIFFUSE(VS_OUT ps_input) : SV_TARGET
+{
+    PS_OUT ps_output = (PS_OUT) 0;
+	
+	// Diffuse
+	ps_output.Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV) * float4(ps_input.Emissive.xyz, 1.f);
+	
+	// Normal
+    float4 TexNormal = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
+    TexNormal = (TexNormal * 2.0f) - 1.0f; // 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.
+    float3 Normal = (TexNormal.x * ps_input.T) + (TexNormal.y * ps_input.B) + (TexNormal.z * ps_input.N);
+    ps_output.Normal = float4(Normal.xyz * 0.5f + 0.5f, 1.f); // 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
+	
+	// Specular
+    ps_output.Specular = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
+	
+	// Depth
+    ps_output.Depth = float4(ps_input.ProjPos.z / ps_input.ProjPos.w, // (posWVP.z / posWVP.w) : Proj 영역의 Z.
+								 ps_input.ProjPos.w / g_fProjFar, // posWVP.w / Far : 0~1로 만든 View영역의 Z.
+								 1.0f, 1.0f);
+	
+    return (ps_output);
+}
+
+PS_OUT PS_MAIN_EMISSIVE_DIFFSUE(VS_OUT ps_input) : SV_TARGET
+{
+    PS_OUT ps_output = (PS_OUT) 0;
+	
+	// Diffuse
+	ps_output.Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
+	
+	// Normal
+    float4 TexNormal = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
+    TexNormal = (TexNormal * 2.0f) - 1.0f; // 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.
+    float3 Normal = (TexNormal.x * ps_input.T) + (TexNormal.y * ps_input.B) + (TexNormal.z * ps_input.N);
+    ps_output.Normal = float4(Normal.xyz * 0.5f + 0.5f, 1.f); // 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
+	
+	// Specular
+    ps_output.Specular = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
+	
+	// Depth
+    ps_output.Depth = float4(ps_input.ProjPos.z / ps_input.ProjPos.w, // (posWVP.z / posWVP.w) : Proj 영역의 Z.
+								 ps_input.ProjPos.w / g_fProjFar, // posWVP.w / Far : 0~1로 만든 View영역의 Z.
+								 1.0f, 1.0f);
+	
+    // Emissive
+	ps_output.Emissive = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
+    
     return (ps_output);
 }
 
@@ -197,6 +252,9 @@ VS_OUT VS_SHADOW_MAIN(VS_IN vs_input, uint iInstanceID : SV_InstanceID)
     // Dissolve
     vs_output.Dissolve = g_ShaderMesh[iInstanceID].fDissolve;
 	
+    // Emissive
+	vs_output.Emissive = g_ShaderMesh[iInstanceID].vEmissiveColor;
+    
     return (vs_output);
 }
 
@@ -287,6 +345,9 @@ VS_OUT VS_TERRAIN_MAIN(VS_IN vs_input, uint iInstanceID : SV_InstanceID)
     vs_output.fOffset2 = g_ShaderMesh[iInstanceID].fOffset2;
     vs_output.fOffset3 = g_ShaderMesh[iInstanceID].fOffset3;
    
+    // Emissive
+	vs_output.Emissive = g_ShaderMesh[iInstanceID].vEmissiveColor;
+    
     return (vs_output);
 }
 
@@ -298,7 +359,7 @@ PS_OUT PS_TERRAIN_MAIN(VS_OUT ps_input) : SV_TARGET
     float clipSpace = (ps_input.TexUV.y) - 0.1f + cos(ps_input.fOffset2 * 0.5f) * 0.1f - sin(ps_input.TexUV.x * 50.f) * (ps_input.Dissolve * 0.01f);
 
 	// Diffuse
-    ps_output.Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV * fDetails);
+	ps_output.Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV * fDetails) * float4(ps_input.Emissive.xyz, 1.f);
 	
     if (clipSpace < 0.f)
         ps_output.Diffuse.rgb *= ps_input.fOffset3;

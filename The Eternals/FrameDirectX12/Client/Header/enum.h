@@ -38,3 +38,10 @@ enum NPC
 {
 	NPC_END
 };
+
+enum ARROW_TYPE
+{
+	ARROW_DEFAULT,
+	ARROW_FALL,
+	ARROW_TYPE_END
+};

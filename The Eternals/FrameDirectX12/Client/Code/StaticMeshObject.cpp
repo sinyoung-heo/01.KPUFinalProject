@@ -52,7 +52,7 @@ HRESULT CStaticMeshObject::Ready_GameObject(wstring wstrMeshTag,
 		m_iMeshPipelineStatePass = 1;
 	}
 	else
-		m_iMeshPipelineStatePass   = 0;
+		m_iMeshPipelineStatePass = 3;
 
 	m_iShadowPipelineStatePass = 0;
 
@@ -66,6 +66,7 @@ HRESULT CStaticMeshObject::LateInit_GameObject()
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	m_pCrossFilterShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	m_pEdgeObjectShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
+
 	return S_OK;
 }
 
@@ -213,13 +214,14 @@ void CStaticMeshObject::Set_ConstantTable(const _int& iContextIdx, const _int& i
 
 	Engine::CB_SHADER_MESH_INSTANCEING tCB_ShaderMesh;
 	ZeroMemory(&tCB_ShaderMesh, sizeof(Engine::CB_SHADER_MESH_INSTANCEING));
-	tCB_ShaderMesh.matWorld      = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
-	tCB_ShaderMesh.matView       = Engine::CShader::Compute_MatrixTranspose(matView);
-	tCB_ShaderMesh.matProj       = Engine::CShader::Compute_MatrixTranspose(matProj);
-	tCB_ShaderMesh.matLightView  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
-	tCB_ShaderMesh.matLightProj  = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
-	tCB_ShaderMesh.vLightPos     = tShadowDesc.vLightPosition;
-	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
+	tCB_ShaderMesh.matWorld       = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderMesh.matView        = Engine::CShader::Compute_MatrixTranspose(matView);
+	tCB_ShaderMesh.matProj        = Engine::CShader::Compute_MatrixTranspose(matProj);
+	tCB_ShaderMesh.matLightView   = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
+	tCB_ShaderMesh.matLightProj   = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
+	tCB_ShaderMesh.vLightPos      = tShadowDesc.vLightPosition;
+	tCB_ShaderMesh.fLightPorjFar  = tShadowDesc.fLightPorjFar;
+	tCB_ShaderMesh.vEmissiveColor = _rgba(1.1f, 1.1f, 1.1f, 1.0f);
 
 	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.05f;
 	tCB_ShaderMesh.fDissolve = m_fDeltaTime;
