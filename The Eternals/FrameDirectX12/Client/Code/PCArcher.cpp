@@ -176,10 +176,6 @@ _int CPCArcher::Update_GameObject(const _float& fTimeDelta)
 	if (g_bIsStageChange)
 		m_bIsKeyDown = false;
 
-	//// Create CollisionTick
-	//if (m_pMeshCom->Is_BlendingComplete())
-	//	SetUp_CollisionTick(fTimeDelta);
-
 	// NaviMesh ÀÌµ¿.
 	SetUp_RunMoveSpeed(fTimeDelta);
 	Move_OnNaviMesh(fTimeDelta);
@@ -209,6 +205,10 @@ _int CPCArcher::Update_GameObject(const _float& fTimeDelta)
 	// Weapon Update
 	if (m_pWeapon != nullptr)
 		m_pWeapon->Update_GameObject(fTimeDelta);
+
+	// Create CollisionTick
+	if (m_pMeshCom->Is_BlendingComplete())
+		SetUp_CollisionArrow(fTimeDelta);
 
 	return NO_EVENT;
 }
@@ -687,32 +687,6 @@ void CPCArcher::Key_Input(const _float& fTimeDelta)
 
 	KeyInput_Move(fTimeDelta);
 	KeyInput_Attack(fTimeDelta);
-
-	if (Engine::KEY_DOWN(DIK_0))
-	{
-		CCollisionArrow* pCollisionArrow = static_cast<CCollisionArrow*>(Pop_Instance(m_pInstancePoolMgr->Get_CollisionArrowPool()));
-		if (nullptr != pCollisionArrow)
-		{
-			//// Groggy
-			//if (Gladiator::STINGER_BLADE == m_uiAnimIdx)
-			//	pCollisionTick->Set_SkillAffect(AFFECT_GROGGY);
-			//// NuckBack
-			//else if (Gladiator::DRAW_SWORD == m_uiAnimIdx)
-			//	pCollisionTick->Set_SkillAffect(AFFECT_NUCKBACK);
-			//else
-			//	pCollisionTick->Set_SkillAffect(AFFECT_FINCH);
-
-			pCollisionArrow->Get_BoundingSphere()->Get_BoundingInfo().Radius = 0.5f;
-			pCollisionArrow->Set_CollisionTag(L"CollisionTick_ThisPlayer");
-			pCollisionArrow->Set_Damage(m_pInfoCom->Get_RandomDamage());
-			pCollisionArrow->Set_LifeTime(10.0f);
-			// pCollisionTick->Get_Transform()->m_vScale = _vec3(4.0f) * m_tCollisionTickDesc.fScaleOffset;
-			pCollisionArrow->Get_Transform()->m_vPos   = _vec3(m_pTransCom->m_vPos.x, m_pTransCom->m_vPos.y + 1.0f, m_pTransCom->m_vPos.z);
-			pCollisionArrow->Get_BoundingSphere()->Set_Radius(pCollisionArrow->Get_Transform()->m_vScale);
-
-			m_pObjectMgr->Add_GameObject(L"Layer_GameObject", pCollisionArrow->Get_MeshTag(), pCollisionArrow);
-		}
-	}
 }
 
 void CPCArcher::KeyInput_Move(const _float& fTimeDelta)
@@ -1401,6 +1375,74 @@ void CPCArcher::SetUp_AngleInterpolation(const _float& fTimeDelta)
 		if (m_tAngleInterpolationDesc.linear_ratio == Engine::MAX_LINEAR_RATIO)
 		{
 			m_tAngleInterpolationDesc.is_start_interpolation = false;
+		}
+	}
+}
+
+void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
+{
+	ARROW_TYPE eType = ARROW_TYPE::ARROW_DEFAULT;
+
+	// ATTACK_ARROW
+	if (Archer::ATTACK_ARROW == m_uiAnimIdx && m_ui3DMax_CurFrame >= Archer::ATTACK_ARROW_COLLISIONARROW_START)
+	{
+		if (!m_bIsSetCollisionTick)
+		{
+			m_bIsSetCollisionTick = true;
+			m_tCollisionTickDesc.fPosOffset              = 0.0f;
+			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
+			m_tCollisionTickDesc.fColisionTickUpdateTime = 1.0f;
+			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
+			m_tCollisionTickDesc.iCurCollisionTick       = 0;
+			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+
+			eType = ARROW_TYPE::ARROW_DEFAULT;
+		}
+	}
+
+
+
+	// Create CollisionArrow
+	if (m_bIsSetCollisionTick && 
+		m_tCollisionTickDesc.bIsCreateCollisionTick &&
+		m_tCollisionTickDesc.iCurCollisionTick < m_tCollisionTickDesc.iMaxCollisionTick)
+	{
+		m_tCollisionTickDesc.fCollisionTickTime += fTimeDelta;
+
+		if (m_tCollisionTickDesc.fCollisionTickTime >= m_tCollisionTickDesc.fColisionTickUpdateTime)
+		{
+			m_tCollisionTickDesc.fCollisionTickTime = 0.0f;
+			++m_tCollisionTickDesc.iCurCollisionTick;
+
+			if (m_tCollisionTickDesc.iCurCollisionTick >= m_tCollisionTickDesc.iMaxCollisionTick)
+			{
+				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
+				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
+				m_tCollisionTickDesc.fCollisionTickTime      = 0.0f;
+			}
+
+			// CollisionTick
+			m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+			m_pTransCom->m_vDir.Normalize();
+			_vec3 vPos = m_pWeapon->Get_Transform()->Get_PositionVector();
+			vPos.y += 0.3f;
+
+			CCollisionArrow* pCollisionArrow = static_cast<CCollisionArrow*>(Pop_Instance(m_pInstancePoolMgr->Get_CollisionArrowPool()));
+			if (nullptr != pCollisionArrow)
+			{
+				pCollisionArrow->Set_ArrowType(eType);
+				pCollisionArrow->Set_CollisionTag(L"CollisionTick_ThisPlayer");
+				pCollisionArrow->Set_Damage(m_pInfoCom->Get_RandomDamage());
+				pCollisionArrow->Set_LifeTime(5.0f);
+				pCollisionArrow->Set_OriginPos(vPos);
+				pCollisionArrow->Get_Transform()->m_vPos     = vPos;
+				pCollisionArrow->Get_Transform()->m_vAngle.y = m_pTransCom->m_vAngle.y;
+				pCollisionArrow->Get_Transform()->m_vDir     = m_pTransCom->m_vDir;
+				pCollisionArrow->Get_BoundingSphere()->Get_BoundingInfo().Radius = 0.5f;
+				pCollisionArrow->Get_BoundingSphere()->Set_Radius(pCollisionArrow->Get_Transform()->m_vScale);
+
+				m_pObjectMgr->Add_GameObject(L"Layer_GameObject", pCollisionArrow->Get_MeshTag(), pCollisionArrow);
+			}
 		}
 	}
 }

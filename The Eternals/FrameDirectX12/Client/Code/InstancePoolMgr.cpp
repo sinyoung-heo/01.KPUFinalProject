@@ -96,7 +96,7 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 {
 	// CollisionTick
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pCollisionTickPool, 32);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pCollisionArrowPool, L"ArrowFire", 32);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pCollisionArrowPool, L"ArrowIce", 32);
 	
 	// Monster
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterCrabPool, 10);

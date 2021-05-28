@@ -6,6 +6,8 @@ namespace Engine
 	class CMesh;
 }
 
+const _float ARROW_MAX_DISTANCE = 15.0f;
+
 class CCollisionArrow : public CCollisionTick
 {
 private:
@@ -14,7 +16,9 @@ private:
 
 public:
 	wstring Get_MeshTag() { return m_wstrMeshTag; }
+
 	void Set_ArrowType(const ARROW_TYPE& eType) { m_eType = eType; }
+	void Set_OriginPos(const _vec3& vPos)		{ m_vOriginPos = vPos; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
@@ -48,8 +52,9 @@ private:
 	_uint		m_iMeshPipelineStatePass   = 0;
 	_uint		m_iShadowPipelineStatePass = 0;
 
-	ARROW_TYPE	m_eType = ARROW_TYPE::ARROW_TYPE_END;
-
+	ARROW_TYPE	m_eType      = ARROW_TYPE::ARROW_TYPE_END;
+	_float		m_fSpeed     = 40.0f;
+	_vec3		m_vOriginPos = _vec3(0.0f);
 
 
 public:

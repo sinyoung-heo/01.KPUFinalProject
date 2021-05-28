@@ -32,8 +32,8 @@ HRESULT CCollisionArrow::Ready_GameObject(wstring wstrMeshTag,
 	// BoundingSphere
 	Engine::CGameObject::SetUp_BoundingSphere(&(m_pTransCom->m_matWorld), 
 											  m_pTransCom->m_vScale,
-											  _vec3(3.0f),
-											  _vec3(0.0f));
+											  _vec3(33.0f),
+											  _vec3(0.0f, 0.0f, -3.3f));
 	m_lstCollider.push_back(m_pBoundingSphereCom);
 
 	m_iMeshPipelineStatePass = 4;
@@ -61,11 +61,18 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 		m_bIsReturn  = true;
 	}
 
+	_float fDist = m_vOriginPos.Get_Distance(m_pTransCom->m_vPos);
+	if (fDist >= ARROW_MAX_DISTANCE)
+		m_bIsReturn = true;
+
 	if (m_bIsReturn)
 	{
 		Return_Instance(m_pInstancePoolMgr->Get_CollisionArrowPool(), m_uiInstanceIdx);
 		return RETURN_OBJ;
 	}
+
+	if (ARROW_TYPE::ARROW_DEFAULT == m_eType)
+		m_pTransCom->m_vPos += m_pTransCom->m_vDir * m_fSpeed * fTimeDelta;
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
@@ -206,7 +213,7 @@ CCollisionArrow** CCollisionArrow::Create_InstancePool(ID3D12Device* pGraphicDev
 		ppInstance[i] = new CCollisionArrow(pGraphicDevice, pCommandList);
 		ppInstance[i]->m_uiInstanceIdx = i;
 		ppInstance[i]->Ready_GameObject(wstrMeshTag, 
-										_vec3(0.1f),
+										_vec3(0.05f),
 										_vec3(0.0f),
 										_vec3(AWAY_FROM_STAGE),
 										ARROW_TYPE::ARROW_TYPE_END,

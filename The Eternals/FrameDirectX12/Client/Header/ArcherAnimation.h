@@ -38,4 +38,6 @@ namespace Archer
 	const _uint ESCAPING_BOMB_MOVE_STOP  = 28;
 	const _uint CHARGE_ARROW_MOVE_START  = 2;
 	const _uint CHARGE_ARROW_MOVE_STOP   = 10;
+
+	const _uint ATTACK_ARROW_COLLISIONARROW_START = 7;
 }
