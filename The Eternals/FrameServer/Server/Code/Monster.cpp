@@ -4136,6 +4136,9 @@ void CMonster::Init_AllStatus()
 
 	prev_state = m_bIsRushAttack;
 	atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsRushAttack), &prev_state, false);
+
+	prev_state = m_bIsReaction;
+	atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsReaction), &prev_state, false);
 }
 
 void CMonster::active_monster()
