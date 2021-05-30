@@ -173,6 +173,7 @@
     <ClInclude Include="..\..\..\FrameServer\Server\Header\NPCAnimation.h" />
     <ClInclude Include="..\..\..\FrameServer\Server\Header\PCWeaponType.h" />
     <ClInclude Include="..\..\..\FrameServer\Server\Header\protocol.h" />
+    <ClInclude Include="..\Code\ArrowDecal.h" />
     <ClInclude Include="..\Code\CharacterHpGauge.h" />
     <ClInclude Include="..\Code\CharacterMpGauge.h" />
     <ClInclude Include="..\Code\CloderA.h" />
@@ -264,6 +265,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Code\ArrowDecal.cpp" />
     <ClCompile Include="..\Code\CharacterHpGauge.cpp" />
     <ClCompile Include="..\Code\CharacterMpGauge.cpp" />
     <ClCompile Include="..\Code\CloderA.cpp" />

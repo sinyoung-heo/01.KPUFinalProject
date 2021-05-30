@@ -566,6 +566,7 @@
       <Filter>02.GameObject\98.GameEffect\99.PublicEffect</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\FireDecal.h" />
+    <ClInclude Include="..\Code\ArrowDecal.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -807,6 +808,7 @@
       <Filter>02.GameObject\98.GameEffect\99.PublicEffect</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\FireDecal.cpp" />
+    <ClCompile Include="..\Code\ArrowDecal.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

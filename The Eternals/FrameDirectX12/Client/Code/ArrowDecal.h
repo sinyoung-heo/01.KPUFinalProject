@@ -10,11 +10,11 @@ namespace Engine
 
 class CDynamicCamera;
 
-class CFireDecal : public Engine::CGameObject
+class CArrowDecal : public Engine::CGameObject
 {
 private:
-	explicit CFireDecal(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CFireDecal() = default; 
+	explicit CArrowDecal(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CArrowDecal() = default; 
 
 public:
 	// CGameObject을(를) 통해 상속됨
@@ -63,7 +63,7 @@ private:
 	float m_fAlpha = 1.f;
 
 	float m_fResponeatime = 0.f;
-	int m_fEffectCnt = 5;
+	int m_fEffectCnt = 10;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

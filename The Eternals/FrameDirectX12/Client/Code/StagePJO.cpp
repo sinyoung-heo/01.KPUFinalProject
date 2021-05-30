@@ -36,6 +36,7 @@
 #include "PublicPlane.h"
 #include "FireDecal.h"
 #include "SwordTrail.h"
+#include "ArrowDecal.h"
 CStagePJO::CStagePJO(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
 {
@@ -102,13 +103,20 @@ _int CStagePJO::Update_Scene(const _float& fTimeDelta)
 			
 		}
 		_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
-		Pos.y += 0.15f;
+		Pos.y += 0.5f;
 		pGameObj = CFireDecal::Create(m_pGraphicDevice, m_pCommandList,
 			L"PublicPlane00",
 			_vec3(0.01f),
 			_vec3(0.f, 0.0f, 0.0f),
 			Pos);
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"FireDecal", pGameObj), E_FAIL);
+
+		//pGameObj = CArrowDecal::Create(m_pGraphicDevice, m_pCommandList,
+		//	L"PublicTesselPlane00",
+		//	_vec3(0.01f),
+		//	_vec3(0.f, 0.0f, 0.0f),
+		//	Pos);
+		//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"FireDecal", pGameObj), E_FAIL);
 		//m_pObjectMgr->Set_CurrentStage(Engine::STAGEID::STAGE_BEACH);
 	}
 

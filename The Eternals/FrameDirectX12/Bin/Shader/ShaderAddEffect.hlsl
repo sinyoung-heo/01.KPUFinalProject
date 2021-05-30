@@ -53,7 +53,10 @@ float4 PS_MAIN(VS_OUT ps_input) : SV_TARGET
     float4 output4 = Effect4.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 output5 = EffectTex.Sample(g_samLinearWrap, ps_input.TexUV);
     
-    float4 FinalOut = output0 + output1 + output2 + output3 + output4 + output5;
+    float4 MeshEffectOut = output0 + output1 + output2 + output3 + output4;
+    MeshEffectOut = mul(MeshEffectOut, 2);
+    float4 TexEffectOut = output5;
+    float4 FinalOut = lerp(MeshEffectOut, TexEffectOut, 0.5);
     FinalOut.a = 1;
     return FinalOut;
 }
