@@ -85,14 +85,14 @@ ________________________________________________________________________________
 	Engine::CGameObject::SetUp_BillboardMatrix();
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
 	
-	if (m_strTextag == L"UnderFire")
+	/*if (m_strTextag == L"UnderFire")
 	{
 		_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
 		m_pTransCom->m_vPos = Pos;
 		m_pTransCom->m_vPos.y += 1.2f;
 
 		m_pTransCom->m_vPos.z += 0.3f;
-	}
+	}*/
 	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
 	return NO_EVENT;
 }
@@ -139,7 +139,7 @@ HRESULT CTextureEffect::Add_Component(wstring wstrTextureTag)
 	m_pShaderCom = static_cast<Engine::CShaderTexture*>(m_pComponentMgr->Clone_Component(L"ShaderTexture", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->AddRef();
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(9), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(2), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
 	return S_OK;

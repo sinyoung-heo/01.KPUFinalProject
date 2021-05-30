@@ -34,7 +34,9 @@
 #include "IceStorm.h"
 #include "SnowParticle.h"
 #include "PublicPlane.h"
+#include "FireDecal.h"
 #include "SwordTrail.h"
+#include "ArrowDecal.h"
 CStagePJO::CStagePJO(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
 {
@@ -100,12 +102,21 @@ _int CStagePJO::Update_Scene(const _float& fTimeDelta)
 
 			
 		}
-		pGameObj = CPublicPlane::Create(m_pGraphicDevice, m_pCommandList,
+		_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
+		Pos.y += 0.5f;
+		pGameObj = CFireDecal::Create(m_pGraphicDevice, m_pCommandList,
 			L"PublicPlane00",
 			_vec3(0.01f),
 			_vec3(0.f, 0.0f, 0.0f),
-			_vec3(0, 0, 0));
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicPlane00", pGameObj), E_FAIL);
+			Pos);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"FireDecal", pGameObj), E_FAIL);
+
+		//pGameObj = CArrowDecal::Create(m_pGraphicDevice, m_pCommandList,
+		//	L"PublicTesselPlane00",
+		//	_vec3(0.01f),
+		//	_vec3(0.f, 0.0f, 0.0f),
+		//	Pos);
+		//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"FireDecal", pGameObj), E_FAIL);
 		//m_pObjectMgr->Set_CurrentStage(Engine::STAGEID::STAGE_BEACH);
 	}
 
@@ -303,21 +314,15 @@ HRESULT CStagePJO::Ready_LayerEnvironment(wstring wstrLayerTag)
 		_vec3(0, 0, 0));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PublicPlane00", pGameObj), E_FAIL);
 
+	/*
 	
-	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-		L"UnderFire",						// TextureTag
-		_vec3(2.f, 2.0f, 1.0f),		// Scale
-		_vec3(0.0f, 0.0f, 0.0f),		// Angle
-		_vec3(28.0f, 20.0f, 27.0f),	// Pos
-		FRAME(4, 8, 32.0f));			// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"UnderFire", pGameObj), E_FAIL);
 
 	pGameObj = CRainDrop::Create(m_pGraphicDevice, m_pCommandList,
 		L"RainDrop",
 		_vec3(0.03f),
 		_vec3(0.f, 0.0f, 0.0f),
 		_vec3(0, 0, 0));
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"RainDrop", pGameObj), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"RainDrop", pGameObj), E_FAIL);*/
 
 	//pGameObj = CSwordTrail::Create(m_pGraphicDevice, m_pCommandList,
 	//	L"Trail_360",

@@ -12,7 +12,7 @@ SamplerState g_samAnisotropicClamp	: register(s5);
 /*__________________________________________________________________________________________________________
 [ Texture ]
 ____________________________________________________________________________________________________________*/
-Texture2D g_TexDiffuse		: register(t0);	// Diffuse 색상.
+Texture2D g_TexDiffuse : register(t0); // Diffuse 색상.
 Texture2D g_TexNormal		: register(t1);	// 탄젠트 공간 Normal Map.
 Texture2D g_TexSpecular		: register(t2);	// Specular 강도.
 Texture2D g_TexShadowDepth	: register(t3);	// ShadowDepth
@@ -88,12 +88,10 @@ VS_OUT VS_MAIN(VS_IN vs_input)
     float4x4 matworld = g_matWorld;
     float4x4 matWV, matWVP;
     matWV = mul(matworld, g_matView);
-    matWVP = mul(matWV, g_matProj);
-	
+    matWVP = mul(matWV, g_matProj);	
     vs_output.Pos = mul(float4(vs_input.Pos, 1.0f), matWVP);
     vs_output.TexUV = vs_input.TexUV;
     vs_output.Normal = vs_input.Normal;
-
     return (vs_output);
 }
 VS_OUT VS_ANIUV(VS_IN vs_input)
@@ -132,8 +130,9 @@ PS_OUT PS_RAINDROP(VS_OUT ps_input) : SV_TARGET
     PS_OUT ps_output = (PS_OUT) 0;
 	
 	// Diffuse
-    ps_output.Effect4 = (g_TexDiffuse.Sample(g_samLinearWrap, ps_input.AniUV * 10.f));
-    ps_output.Effect4.a = 0.5f;
+    ps_output.Effect4 = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
+    //ps_output.Effect4 = (g_TexDiffuse.Sample(g_samLinearWrap, ps_input.AniUV * 10.f));
+    ps_output.Effect4.a = 1.f;
     return (ps_output);
 }
 
@@ -192,7 +191,7 @@ PS_OUT PS_DECAL(VS_OUT ps_input) : SV_TARGET
   
     float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
     
-    float4 color = mul(D.r, N) + mul(D.g, float4(0.6, 0, 0, 1)) + mul(D.b, float4(0.5, 0.5, 0.5,1));
+    float4 color = mul(D.r, N) + mul(D.g, float4(0.6 + g_fOffset2, g_fOffset2, 0, 1)) + mul(D.b, float4(1.f, 0.5, 0.5, 1));
  
 	
     ps_output.Effect4 = color;

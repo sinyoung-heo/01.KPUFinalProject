@@ -450,7 +450,7 @@ HRESULT CShaderTexture::Create_PipelineState()
 	CRenderer::Get_Instance()->Add_PipelineStateCnt();
 
 	/*__________________________________________________________________________________________________________
-[ 2¹ø PipelineState Pass ]
+[ 9¹ø PipelineState Pass ]
 - "VS_TEXTURE_SPRITE"
 - "PS_TEXTURE_SPRITE"
 - FILL_MODE_SOLID
