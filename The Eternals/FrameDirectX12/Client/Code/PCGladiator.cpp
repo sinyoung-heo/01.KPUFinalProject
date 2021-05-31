@@ -985,7 +985,8 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 	// SkillAttack
 	if (!m_bIsSkillLoop)
 	{
-		if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"STINGER_BLADE"]))
+		if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"STINGER_BLADE"]) &&
+			m_uiAnimIdx != Gladiator::STINGER_BLADE)
 		{
 			SetUp_WeaponLHand();
 			SetUp_AttackSetting();
@@ -994,7 +995,8 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
-		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"CUTTING_SLASH"]))
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"CUTTING_SLASH"]) &&
+				 m_uiAnimIdx != Gladiator::CUTTING_SLASH)
 		{
 			SetUp_WeaponRHand();
 			SetUp_AttackSetting();
@@ -1003,7 +1005,8 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
-		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"JAW_BREAKER"]))
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"JAW_BREAKER"]) &&
+				 m_uiAnimIdx != Gladiator::JAW_BREAKER)
 		{
 			SetUp_WeaponRHand();
 			SetUp_AttackSetting();
@@ -1012,7 +1015,8 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
-		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"CUT_HEAD"]))
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"CUT_HEAD"]) &&
+				 m_uiAnimIdx != Gladiator::CUT_HEAD)
 		{
 			SetUp_WeaponRHand();
 			SetUp_AttackSetting();
@@ -1021,7 +1025,8 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
-		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"WIND_CUTTER"]))
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"WIND_CUTTER"]) && 
+				 m_uiAnimIdx != Gladiator::WIND_CUTTER1)
 		{
 			SetUp_WeaponRHand();
 			SetUp_AttackSetting();
@@ -1031,7 +1036,8 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
-		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"GAIA_CRUSH"]))
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"GAIA_CRUSH"]) &&
+				 m_uiAnimIdx != Gladiator::GAIA_CRUSH1)
 		{
 			SetUp_WeaponLHand();
 			SetUp_AttackSetting();
@@ -1041,7 +1047,8 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
-		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"DRAW_SWORD"]))
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"DRAW_SWORD"]) &&
+				 m_uiAnimIdx != Gladiator::DRAW_SWORD_CHARGE)
 		{
 			SetUp_WeaponRHand();
 			SetUp_AttackSetting();
