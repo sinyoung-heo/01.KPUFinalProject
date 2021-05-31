@@ -19,6 +19,7 @@ public:
 
 	void Set_ArrowType(const ARROW_TYPE& eType) { m_eType = eType; }
 	void Set_OriginPos(const _vec3& vPos)		{ m_vOriginPos = vPos; }
+	void Set_IsReadyArrowFall(const _bool& bIsReady) { m_bIsReadyArrowFall = bIsReady; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
@@ -37,7 +38,7 @@ public:
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
 	void			Set_ConstantTable(const _int& iContextIdx, const _int& iInstanceIdx);
-
+	void			SetUp_Dissolve(const _float& fTimeDelta);
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -52,11 +53,16 @@ private:
 	_uint		m_iMeshPipelineStatePass   = 0;
 	_uint		m_iShadowPipelineStatePass = 0;
 
-	ARROW_TYPE	m_eType      = ARROW_TYPE::ARROW_TYPE_END;
-	_float		m_fSpeed     = 40.0f;
-	_vec3		m_vOriginPos = _vec3(0.0f);
+	ARROW_TYPE		m_eType             = ARROW_TYPE::ARROW_TYPE_END;
+	ARROW_POOL_TYPE m_ePoolType         = ARROW_POOL_TYPE::ARROW_POOL_END;
+	_float			m_fSpeed            = 40.0f;
+	_vec3			m_vOriginPos        = _vec3(0.0f);
+	_bool			m_bIsReadyArrowFall = false;
 
 
+	_bool	m_bIsCreateCollisionTick = false;
+	_bool	m_bIsStartDissolve = false;
+	_float	m_fDissolve = -0.05f;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, 
 									   ID3D12GraphicsCommandList* pCommandList,
