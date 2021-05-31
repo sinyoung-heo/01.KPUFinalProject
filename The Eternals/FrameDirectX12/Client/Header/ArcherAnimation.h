@@ -31,7 +31,6 @@ namespace Archer
 	const _float MAX_ATTACK_SPEED = MAX_SPEED * 1.35f;
 	const _float MOVE_STOP_SPEED  = 3.0f;
 
-
 	const _uint BACK_DASH_MOVE_START     = 2;
 	const _uint BACK_DASH_MOVE_STOP      = 19;
 	const _uint ESCAPING_BOMB_MOVE_START = 4;
@@ -40,4 +39,10 @@ namespace Archer
 	const _uint CHARGE_ARROW_MOVE_STOP   = 10;
 
 	const _uint ATTACK_ARROW_COLLISIONARROW_START = 7;
+	const _uint RAPID_SHOT_COLLISIONARROW_START   = 4;
+	const _uint ARROW_SHOWER_COLLISIONARROW_START = 21;
+	const _uint ARROW_FALL_COLLISIONARROW_START   = 0;
+
+	const _uint		ARROW_SHOWER_CNT = 8;
+	const _float	ARROW_FALL_DIST  = 6.0f;
 }

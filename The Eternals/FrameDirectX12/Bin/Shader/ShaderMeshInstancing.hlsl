@@ -208,6 +208,17 @@ PS_OUT PS_MAIN_EMISSIVE_DIFFSUE(VS_OUT ps_input) : SV_TARGET
     // Emissive
 	ps_output.Emissive = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
     
+    /*__________________________________________________________________________________________________________
+	[ Dissolve ]
+	____________________________________________________________________________________________________________*/
+	float Normal_fDissolve = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV).r;
+
+	if ((0.05f > (1.f - ps_input.Dissolve) - Normal_fDissolve) && ((1.f - ps_input.Dissolve) - Normal_fDissolve) > 0.0f)
+	{
+		ps_output.Emissive = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);;
+	}
+	clip((1.f - ps_input.Dissolve) - Normal_fDissolve);
+    
     return (ps_output);
 }
 

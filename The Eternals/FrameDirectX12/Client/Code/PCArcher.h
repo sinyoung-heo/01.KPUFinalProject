@@ -53,6 +53,7 @@ private:
 	void			Set_IsRepeatAnimation();
 	void			Set_AnimationSpeed();
 	void			Set_BlendingSpeed();
+	void			Set_Target();
 
 	void Key_Input(const _float& fTimeDelta);
 	void KeyInput_Move(const _float& fTimeDelta);
@@ -132,6 +133,7 @@ private:
 	// CollisionTick
 	_bool				m_bIsSetCollisionTick = false;
 	COLLISION_TICK_DESC m_tCollisionTickDesc;
+	_vec3				m_vArrowFallPos = _vec3(0.0f);
 
 	// Server
 	_bool			m_bIsKeyDown      = false;
@@ -141,6 +143,9 @@ private:
 	_float			m_fBazierSpeed    = 0.f;
 	MVKEY			m_eKeyState       = MVKEY::K_END;
 	_float			m_fPreAngle       = 0.f;
+
+	Engine::CGameObject*	m_pTarget	  = nullptr;
+	_float					m_fTargetDist = 1024.0f;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation ]

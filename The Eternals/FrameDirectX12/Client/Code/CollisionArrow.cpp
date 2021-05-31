@@ -6,6 +6,9 @@
 #include "ObjectMgr.h"
 #include "Glowring.h"
 #include "SnowParticle.h"
+#include "ObjectMgr.h"
+#include <random>
+
 CCollisionArrow::CCollisionArrow(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CCollisionTick(pGraphicDevice, pCommandList)
 	, m_pShaderMeshInstancing(Engine::CShaderMeshInstancing::Get_Instance())
@@ -51,10 +54,12 @@ HRESULT CCollisionArrow::Ready_GameObject(wstring wstrMeshTag,
 
 	// Create Trail
 	m_pTrail = CEffectTrail::Create(m_pGraphicDevice, m_pCommandList, L"EffectTrailTexture", 12);
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Trail", m_pTrail), E_FAIL);
+	
+	if (m_wstrMeshTag == L"ArrowIce")
+		m_ePoolType = ARROW_POOL_TYPE::ARROW_POOL_ICE;
+	else if (m_wstrMeshTag == L"ArrowFire")
+		m_ePoolType = ARROW_POOL_TYPE::ARROW_POOL_FIRE;
 
-	//m_pDistortionTrail = CEffectTrail::Create(m_pGraphicDevice, m_pCommandList, L"EffectTrailTexture", 10, Engine::CRenderer::RENDER_DISTORTION);
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Trail", m_pDistortionTrail), E_FAIL);
 	return S_OK;
 }
 
@@ -70,51 +75,114 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
-	m_fEffectDeltatime += fTimeDelta;
-	if (m_iEffectCnt && m_fEffectDeltatime > 0.15f)
-	{
-		CGameObject* pGameObj = nullptr;
-		for (int i = 0; i < 10; i++)
-		{
-			pGameObj = CSnowParticle::Create(m_pGraphicDevice, m_pCommandList,
-				L"Snow",						// TextureTag
-				_vec3(0.1f),		// Scale
-				_vec3(0.0f, 0.0f, 0.0f),		// Angle
-				m_pTransCom->m_vPos,	// Pos
-				FRAME(1, 1, 1.0f));			// Sprite Image Frame
-			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Snow", pGameObj), E_FAIL);
-			static_cast<CSnowParticle*>(pGameObj)->Set_Pivot(false);
-			static_cast<CSnowParticle*>(pGameObj)->Set_Speed(2.5f);
-		}
-		pGameObj = CGlowring::Create(m_pGraphicDevice, m_pCommandList,
-			L"Glowring",						// TextureTag
-			_vec3(0.00f),		// Scale
-			_vec3(0.0f, 0.0f, 0.0f),		// Angle
-			m_pTransCom->m_vPos,	// Pos
-			FRAME(1, 1, 1.0f));			// Sprite Image Frame
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Glowring", pGameObj), E_FAIL);
-		m_iEffectCnt--;
-		m_fEffectDeltatime = 0.f;
-	}
-	m_fTimeDelta += fTimeDelta;
-	if (m_fTimeDelta >= m_fLifeTime)
-	{
-		m_fTimeDelta = 0.0f;
-		m_bIsReturn  = true;
-	}
-
-	_float fDist = m_vOriginPos.Get_Distance(m_pTransCom->m_vPos);
-	if (fDist >= ARROW_MAX_DISTANCE)
-		m_bIsReturn = true;
-
 	if (m_bIsReturn)
 	{
-		Return_Instance(m_pInstancePoolMgr->Get_CollisionArrowPool(), m_uiInstanceIdx);
+		m_pTransCom->m_vScale = _vec3(_vec3(0.05f));
+		m_pTransCom->m_vAngle = _vec3(0.0f);
+		m_pTransCom->m_vPos   = _vec3(AWAY_FROM_STAGE);
+		Return_Instance(m_pInstancePoolMgr->Get_CollisionArrowPool(m_ePoolType), m_uiInstanceIdx);
+
+		if (ARROW_TYPE::ARROW_FALL == m_eType)
+		{
+			m_bIsReadyArrowFall = false;
+			m_bIsCreateCollisionTick = false;
+			m_bIsStartDissolve       = false;
+			m_fDissolve              = -0.05f;
+		}
+
 		return RETURN_OBJ;
 	}
 
 	if (ARROW_TYPE::ARROW_DEFAULT == m_eType)
+	{
+		m_fEffectDeltatime += fTimeDelta;
+		if (m_iEffectCnt && m_fEffectDeltatime > 0.15f)
+		{
+			CGameObject* pGameObj = nullptr;
+			for (int i = 0; i < 10; i++)
+			{
+				pGameObj = CSnowParticle::Create(m_pGraphicDevice, m_pCommandList,
+												 L"Snow",						// TextureTag
+												 _vec3(0.1f),					// Scale
+												 _vec3(0.0f, 0.0f, 0.0f),		// Angle
+												 m_pTransCom->m_vPos,			// Pos
+												 FRAME(1, 1, 1.0f));			// Sprite Image Frame
+				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Snow", pGameObj), E_FAIL);
+				static_cast<CSnowParticle*>(pGameObj)->Set_Pivot(false);
+				static_cast<CSnowParticle*>(pGameObj)->Set_Speed(2.5f);
+			}
+			pGameObj = CGlowring::Create(m_pGraphicDevice, m_pCommandList,
+										 L"Glowring",				// TextureTag
+										 _vec3(0.00f),				// Scale
+										 _vec3(0.0f, 0.0f, 0.0f),	// Angle
+										 m_pTransCom->m_vPos,		// Pos
+										 FRAME(1, 1, 1.0f));		// Sprite Image Frame
+			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Glowring", pGameObj), E_FAIL);
+			m_iEffectCnt--;
+			m_fEffectDeltatime = 0.f;
+		}
+
+		m_fTimeDelta += fTimeDelta;
+		if (m_fTimeDelta >= m_fLifeTime)
+		{
+			m_fTimeDelta = 0.0f;
+			m_bIsReturn = true;
+		}
+
 		m_pTransCom->m_vPos += m_pTransCom->m_vDir * m_fSpeed * fTimeDelta;
+
+		_float fDist = m_vOriginPos.Get_Distance(m_pTransCom->m_vPos);
+		if (fDist >= ARROW_MAX_DISTANCE)
+			m_bIsReturn = true;
+	}
+	else if (ARROW_TYPE::ARROW_FALL == m_eType)
+	{
+		if (!m_bIsReadyArrowFall)
+		{
+			m_bIsReadyArrowFall = true;
+
+			random_device					rd;
+			default_random_engine			dre{ rd() };
+			uniform_int_distribution<_int>	uid_angle{ -10, 10 };
+
+			m_pTransCom->m_vAngle.x += (_float)uid_angle(dre);
+			m_pTransCom->m_vAngle.z += (_float)uid_angle(dre);
+		}
+
+		if (m_pTransCom->m_vPos.y > 0.0f)
+		{
+			m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+			m_pTransCom->m_vDir.Normalize();
+			m_pTransCom->m_vPos += m_pTransCom->m_vDir * m_fSpeed * fTimeDelta;
+		}
+
+		if (m_pTransCom->m_vPos.y < 0.0f)
+		{
+			m_bIsStartDissolve = true;
+
+			if (!m_bIsCreateCollisionTick)
+			{
+				m_bIsCreateCollisionTick = true;
+
+				CCollisionTick* pCollisionTick = static_cast<CCollisionTick*>(Pop_Instance(m_pInstancePoolMgr->Get_CollisionTickPool()));
+				if (nullptr != pCollisionTick)
+				{
+					pCollisionTick->Get_BoundingSphere()->Get_BoundingInfo().Radius = 0.5f;
+					pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
+					pCollisionTick->Set_Damage(m_uiDamage);
+					pCollisionTick->Set_LifeTime(0.25f);
+					pCollisionTick->Get_Transform()->m_vScale = _vec3(3.0f);
+					pCollisionTick->Get_Transform()->m_vPos = m_pTransCom->m_vPos;
+					pCollisionTick->Get_Transform()->m_vPos.y = 1.5f;
+					pCollisionTick->Get_BoundingSphere()->Set_Radius(pCollisionTick->Get_Transform()->m_vScale);
+
+					m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_ThisPlayer", pCollisionTick);
+				}
+			}
+		}
+
+		SetUp_Dissolve(fTimeDelta);
+	}
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
@@ -125,28 +193,27 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Collision - Add Collision List ]
 	____________________________________________________________________________________________________________*/
-	m_pCollisonMgr->Add_CollisionCheckList(this);
+	if (ARROW_TYPE::ARROW_FALL != m_eType)
+		m_pCollisonMgr->Add_CollisionCheckList(this);
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
-	// Update Trail
-	if (nullptr != m_pTrail)
-	{
-		m_pTrail->Update_GameObject(fTimeDelta);
-		m_pBoundingBoxCom->Update_Component(fTimeDelta);
-		_vec3 vMin = _vec3(m_pBoundingBoxCom->Get_BottomPlaneCenter());
-		_vec3 vMax = _vec3(m_pBoundingBoxCom->Get_BoundingInfo().Center);
-		m_pTrail->Set_IsRenderTrail(true);
-		m_pTrail->SetUp_TrailByCatmullRom(&vMin, &vMax);
-		m_pTrail->Get_Transform()->m_vPos = _vec3(0.f, 0.f, 0.0f);
-	/*	m_pDistortionTrail->SetUp_TrailByCatmullRom(&vMin, &vMax);
-		m_pDistortionTrail->Get_Transform()->m_vPos = _vec3(0.f, 0.f, 0.0f);*/
+	//// Update Trail
+	//if (nullptr != m_pTrail)
+	//{
 
-	}
+	//	m_pBoundingBoxCom->Update_Component(fTimeDelta);
+	//	_vec3 vMin = _vec3(m_pBoundingBoxCom->Get_BottomPlaneCenter());
+	//	_vec3 vMax = _vec3(m_pBoundingBoxCom->Get_BoundingInfo().Center);
+	//	m_pTrail->Set_IsRenderTrail(true);
+	//	m_pTrail->SetUp_TrailByCatmullRom(&vMin, &vMax);
+	//	m_pTrail->Get_Transform()->m_vPos = _vec3(0.f, 0.f, 0.0f);
 
+	//	m_pTrail->Update_GameObject(fTimeDelta);
+	//}
 
 	return NO_EVENT;
 }
@@ -159,8 +226,8 @@ _int CCollisionArrow::LateUpdate_GameObject(const _float& fTimeDelta)
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 	Process_Collision();
 
-	if(m_pTrail!=nullptr)
-		m_pTrail->LateUpdate_GameObject(fTimeDelta);
+	//if(m_pTrail!=nullptr)
+	//	m_pTrail->LateUpdate_GameObject(fTimeDelta);
 
 	return NO_EVENT;
 }
@@ -230,14 +297,24 @@ void CCollisionArrow::Set_ConstantTable(const _int& iContextIdx, const _int& iIn
 	tCB_ShaderMesh.matLightProj   = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
 	tCB_ShaderMesh.vLightPos      = tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar  = tShadowDesc.fLightPorjFar;
+	tCB_ShaderMesh.fDissolve      = m_fDissolve;
 	tCB_ShaderMesh.vEmissiveColor = _rgba(1.1f, 1.1f, 1.1f, 1.0f);
 
-	//m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.05f;
-	//tCB_ShaderMesh.fDissolve = m_fDeltaTime;
-	//if (m_fDeltaTime > 1.f)
-	//	m_fDeltaTime = 0.f;
-
 	m_pShaderMeshInstancing->Get_UploadBuffer_ShaderMesh(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass)->CopyData(iInstanceIdx, tCB_ShaderMesh);
+}
+
+void CCollisionArrow::SetUp_Dissolve(const _float& fTimeDelta)
+{
+	if (m_bIsStartDissolve)
+	{
+		m_fDissolve += fTimeDelta * 1.0f;
+
+		if (m_fDissolve >= 1.0f)
+		{
+			m_fDissolve = 1.0f;
+			m_bIsReturn = true;
+		}
+	}
 }
 
 Engine::CGameObject* CCollisionArrow::Create(ID3D12Device* pGraphicDevice, 
