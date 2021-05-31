@@ -180,6 +180,8 @@ void CCamera::Set_ConstantTable()
 	m_pShaderSSAO->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 
 	//ShaderNPathDir
+
+
 	tCB_ShaderVariable.vFloat4.x += CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta");
 	tCB_ShaderVariable.vFloat4.y = m_tProjInfo.fFarZ;
 	m_pShaderNPathDir->Get_UploadBuffer_ShaderVariable()->CopyData(0, tCB_ShaderVariable);

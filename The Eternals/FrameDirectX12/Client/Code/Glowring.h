@@ -9,11 +9,11 @@ namespace Engine
 	class CShaderTexture;
 }
 
-class CSnowParticle : public Engine::CGameObject
+class CGlowring : public Engine::CGameObject
 {
 private:
-	explicit CSnowParticle(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CSnowParticle() = default;
+	explicit CGlowring(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CGlowring() = default;
 
 public:
 	// CGameObject을(를) 통해 상속됨
@@ -26,8 +26,7 @@ public:
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Render_GameObject(const _float& fTimeDelta);
-	void Set_Pivot(bool bisPivot) { m_bisPivot = bisPivot; }
-	void Set_Speed(float fSpeed) { m_fSpeed = fSpeed; }
+
 private:
 	virtual HRESULT Add_Component(wstring wstrTextureTag);
 	void			Set_ConstantTable();
@@ -51,8 +50,7 @@ private:
 	FRAME	m_tFrame{ };
 	_vec3 m_vecRandomvector;
 	float m_fAlpha = 1.f;
-	float m_fSpeed = 0.8f;
-	bool m_bisPivot;
+	float m_fSize = 1.f;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 		ID3D12GraphicsCommandList* pCommandList,

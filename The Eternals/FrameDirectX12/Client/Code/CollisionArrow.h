@@ -8,6 +8,7 @@ namespace Engine
 
 const _float ARROW_MAX_DISTANCE = 15.0f;
 
+class CEffectTrail;
 class CCollisionArrow : public CCollisionTick
 {
 private:
@@ -56,7 +57,15 @@ private:
 	_float		m_fSpeed     = 40.0f;
 	_vec3		m_vOriginPos = _vec3(0.0f);
 
+	/*__________________________________________________________________________________________________________
+	[ Trail ]
+	____________________________________________________________________________________________________________*/
+	CEffectTrail* m_pTrail = nullptr;
+	CEffectTrail* m_pDistortionTrail = nullptr;
 
+	//Effect
+	int m_iEffectCnt = 5;
+	float m_fEffectDeltatime = 1.f;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, 
 									   ID3D12GraphicsCommandList* pCommandList,

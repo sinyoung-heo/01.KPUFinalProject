@@ -1,15 +1,15 @@
 #include "stdafx.h"
-#include "SnowParticle.h"
+#include "Glowring.h"
 #include "ObjectMgr.h"
 #include "GraphicDevice.h"
 #include "TextureDistortion.h"
 #include "TimeMgr.h"
-CSnowParticle::CSnowParticle(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
-	: Engine::CGameObject(pGraphicDevice, pCommandList), m_bisPivot(true)
+CGlowring::CGlowring(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
 }
 
-HRESULT CSnowParticle::Ready_GameObject(wstring wstrTextureTag,
+HRESULT CGlowring::Ready_GameObject(wstring wstrTextureTag,
 	const _vec3& vScale,
 	const _vec3& vAngle,
 	const _vec3& vPos,
@@ -30,27 +30,23 @@ HRESULT CSnowParticle::Ready_GameObject(wstring wstrTextureTag,
 	return S_OK;
 }
 
-HRESULT CSnowParticle::LateInit_GameObject()
+HRESULT CGlowring::LateInit_GameObject()
 {
 	// SetUp Shader ConstantBuffer
+	m_bisAlphaObject = true;
 	m_pShaderCom->SetUp_ShaderConstantBuffer();
 
-	m_vecRandomvector.x = (rand() % 200 - 100);
-	m_vecRandomvector.y = (rand() % 100);
-	m_vecRandomvector.z = (rand() % 200 - 100);
-	m_vecRandomvector.Normalize();
 
-	if (m_bisPivot)
-	{
-		m_pTransCom->m_vPos.y += 1.5f;
-		m_pTransCom->m_vPos += (m_vecRandomvector * (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 50.f);
-	}
 	return S_OK;
 }
 
-_int CSnowParticle::Update_GameObject(const _float& fTimeDelta)
+_int CGlowring::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
+
+	m_fSize += fTimeDelta;
+	m_pTransCom->m_vScale.x += m_fSize*0.25f;
+	m_pTransCom->m_vScale.y += m_fSize*0.25f;
 
 	if (m_fAlpha<0.f)
 		return DEAD_OBJ;
@@ -78,13 +74,12 @@ _int CSnowParticle::Update_GameObject(const _float& fTimeDelta)
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
 	
 
-	m_pTransCom->m_vPos +=( m_vecRandomvector* (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"))* m_fSpeed);
 	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
 
 	return NO_EVENT;
 }
 
-_int CSnowParticle::LateUpdate_GameObject(const _float& fTimeDelta)
+_int CGlowring::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
@@ -92,7 +87,7 @@ _int CSnowParticle::LateUpdate_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-void CSnowParticle::Render_GameObject(const _float& fTimeDelta)
+void CGlowring::Render_GameObject(const _float& fTimeDelta)
 {
 	Set_ConstantTable();
 	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), 0, m_uiTexIdx, Engine::MATRIXID::PROJECTION);
@@ -101,7 +96,7 @@ void CSnowParticle::Render_GameObject(const _float& fTimeDelta)
 	m_pBufferCom->Render_Buffer();
 }
 
-HRESULT CSnowParticle::Add_Component(wstring wstrTextureTag)
+HRESULT CGlowring::Add_Component(wstring wstrTextureTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -119,13 +114,13 @@ HRESULT CSnowParticle::Add_Component(wstring wstrTextureTag)
 	m_pShaderCom = static_cast<Engine::CShaderTexture*>(m_pComponentMgr->Clone_Component(L"ShaderTexture", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->AddRef();
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(9), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(2), E_FAIL);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
 	return S_OK;
 }
 
-void CSnowParticle::Set_ConstantTable()
+void CGlowring::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -137,12 +132,12 @@ void CSnowParticle::Set_ConstantTable()
 	tCB_ShaderTexture.fCurFrame = (_float)(_int)m_tFrame.fCurFrame;
 	tCB_ShaderTexture.fSceneCnt = m_tFrame.fSceneCnt;
 	tCB_ShaderTexture.fCurScene = (_int)m_tFrame.fCurScene;
-	m_fAlpha -= Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.5f;
+	m_fAlpha -= Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 1.5f;
 	tCB_ShaderTexture.fAlpha = m_fAlpha;
 	m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 }
 
-void CSnowParticle::Update_SpriteFrame(const _float& fTimeDelta)
+void CGlowring::Update_SpriteFrame(const _float& fTimeDelta)
 {
 	m_tFrame.fCurFrame += fTimeDelta * m_tFrame.fFrameSpeed;
 
@@ -161,7 +156,7 @@ void CSnowParticle::Update_SpriteFrame(const _float& fTimeDelta)
 
 }
 
-Engine::CGameObject* CSnowParticle::Create(ID3D12Device* pGraphicDevice,
+Engine::CGameObject* CGlowring::Create(ID3D12Device* pGraphicDevice,
 	ID3D12GraphicsCommandList* pCommandList,
 	wstring wstrTextureTag,
 	const _vec3& vScale,
@@ -169,7 +164,7 @@ Engine::CGameObject* CSnowParticle::Create(ID3D12Device* pGraphicDevice,
 	const _vec3& vPos,
 	const FRAME& tFrame)
 {
-	CSnowParticle* pInstance = new CSnowParticle(pGraphicDevice, pCommandList);
+	CGlowring* pInstance = new CGlowring(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrTextureTag, vScale, vAngle, vPos, tFrame)))
 		Engine::Safe_Release(pInstance);
@@ -177,7 +172,7 @@ Engine::CGameObject* CSnowParticle::Create(ID3D12Device* pGraphicDevice,
 	return pInstance;
 }
 
-void CSnowParticle::Free()
+void CGlowring::Free()
 {
 	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pBufferCom);

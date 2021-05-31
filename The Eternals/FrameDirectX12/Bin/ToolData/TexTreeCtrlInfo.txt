@@ -6,6 +6,7 @@ Texture|EffectSpriteTexture|Bomb03
 Texture|EffectSpriteTexture|Bomb04
 Texture|EffectSpriteTexture|Fire
 Texture|EffectSpriteTexture|Fire1
+Texture|EffectSpriteTexture|Glowring
 Texture|EffectSpriteTexture|Lightning00
 Texture|EffectSpriteTexture|Lightning01
 Texture|EffectSpriteTexture|Smoke0
