@@ -595,6 +595,9 @@
     <ClInclude Include="..\Code\CollisionArrow.h">
       <Filter>02.GameObject\06.CollisionTick\CollisionArrow</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ArrowDecal.h" />
+    <ClInclude Include="..\Code\FireDecal.h" />
+    <ClInclude Include="..\Code\Glowring.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -856,6 +859,9 @@
     <ClCompile Include="..\Code\CollisionArrow.cpp">
       <Filter>02.GameObject\06.CollisionTick\CollisionArrow</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\ArrowDecal.cpp" />
+    <ClCompile Include="..\Code\FireDecal.cpp" />
+    <ClCompile Include="..\Code\Glowring.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

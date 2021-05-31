@@ -58,7 +58,7 @@ static float fc = 0.2f;
 [ Pixel Shader ]
 ______________________________________________________________________*/
 // PS_MAIN
-#define PATH 8
+#define PATH 6
 #define MAX_SAMP 6
 
 float4 PS_HIGHLIGHT(VS_OUT ps_input) : SV_TARGET
@@ -80,48 +80,49 @@ float4 PS_MAIN(VS_OUT ps_input) : SV_TARGET
 {
     float4 Out = 0,Out2=0,Out3=0;
     float2 UV = float2(0, 0);
-    for (int j = 0; j < PATH; ++j)
-    {
-        float fTheta = (g_float4.x + 2.f * j * 3.14) / PATH;
-        float x = rA * cos(fTheta) / 800;
-        float y = rB * sin(fTheta) / 450;
-        float4 m_StarVal[MAX_SAMP];
-        for (int i = 0; i < MAX_SAMP; ++i)
-        {
-            m_StarVal[i].x = x * i;
-            m_StarVal[i].y = y * i;
-            m_StarVal[i].z = exp(-i * i / 10);
-            UV.x = ps_input.TexUV.x + m_StarVal[i].x * 1.25f;
-            UV.y = ps_input.TexUV.y + m_StarVal[i].y * 1.25f;
-            UV = saturate(UV);
-            Out += g_TexEmissive.Sample(g_samLinearClamp, UV); // * m_StarVal[i].z;
+    int j = 0;
+    //for (int j = 0; j < PATH; ++j)
+    //{
+    //    float fTheta = (g_float4.x *24.f* j * 3.14) / PATH;
+    //    float x = rA * cos(fTheta) / 400;
+    //    float y = rB * sin(fTheta) / 225;
+    //    float4 m_StarVal[MAX_SAMP];
+    //    for (int i = 0; i < MAX_SAMP; ++i)
+    //    {
+    //        m_StarVal[i].x = x * i;
+    //        m_StarVal[i].y = y * i;
+    //        m_StarVal[i].z = exp(-i * i / 8);
+    //        UV.x = ps_input.TexUV.x + m_StarVal[i].x * 0.25f;
+    //        UV.y = ps_input.TexUV.y + m_StarVal[i].y * 0.25f;
+    //        UV = saturate(UV);
+    //        Out += g_TexEmissive.Sample(g_samLinearClamp, UV)/** m_StarVal[i].z*/;
 
-        }
-    }
+    //    }
+    //}
     
     float4 Depth = g_TexDepth.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 CrossFilterDepth = g_TexCrossFilterDepth.Sample(g_samLinearWrap, ps_input.TexUV);
     int Cnt = 1;
     
    
-        for (j = 10; j < 20; ++j)
+    for (j = 10; j < 20; ++j)
+    {
+        float fTheta = ( /*g_float4.x*/2.f * j * 3.14) / 20;
+        float x = rA * cos(fTheta) / 800;
+        float y = rB * sin(fTheta) / 450;
+        float4 m_StarVal[40];
+        for (int i = 0; i < 40; ++i)
         {
-            float fTheta = ( /*g_float4.x*/2.f * j * 3.14) / 20;
-            float x = rA * cos(fTheta) / 800;
-            float y = rB * sin(fTheta) / 450;
-            float4 m_StarVal[40];
-            for (int i = 0; i < 40; ++i)
-            {
-                Cnt++;
-                m_StarVal[i].x = x * i;
-                m_StarVal[i].y = y * i;
-                m_StarVal[i].z = exp(-i * i / 10);
-                UV.x = ps_input.TexUV.x + m_StarVal[i].x * 1.25f;
-                UV.y = ps_input.TexUV.y + m_StarVal[i].y * 1.25f;
-                UV = saturate(UV);
-                Out2 += g_TexSkyBoxBright.Sample(g_samLinearClamp, UV);
-            }
+            Cnt++;
+            m_StarVal[i].x = x * i;
+            m_StarVal[i].y = y * i;
+            m_StarVal[i].z = exp(-i * i / 10);
+            UV.x = ps_input.TexUV.x + m_StarVal[i].x * 1.25f;
+            UV.y = ps_input.TexUV.y + m_StarVal[i].y * 1.25f;
+            UV = saturate(UV);
+            Out2 += g_TexSkyBoxBright.Sample(g_samLinearClamp, UV);
         }
+    }
 
  
     for (j = 0; j < 8; ++j)
@@ -141,10 +142,10 @@ float4 PS_MAIN(VS_OUT ps_input) : SV_TARGET
             Out3 += g_TexCrossFilterObject.Sample(g_samLinearClamp, UV);
         }
     }
-    Out /= PATH, Out.w = 1;
+    //Out /= PATH, Out.w = 1;
     Out2 /= (Cnt *0.5),Out2.w = 1;
     Out3 /= 64, Out3.w = 1;
     
-    return Out + Out2 + Out3;
+    return /*Out + */Out2 + Out3;
 }
 
