@@ -35,12 +35,11 @@ HRESULT CCollisionArrow::Ready_GameObject(wstring wstrMeshTag,
 	m_wstrMeshTag         = wstrMeshTag;
 	m_eType               = eType;
 
-	// BoundingSphere
 	Engine::CGameObject::SetUp_BoundingSphere(&(m_pTransCom->m_matWorld), 
 											  m_pTransCom->m_vScale,
 											  _vec3(33.0f),
 											  _vec3(0.0f, 0.0f, -3.3f));
-	//BB
+
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
 											m_pTransCom->m_vScale ,
 											m_pMeshCom->Get_CenterPos(),
@@ -52,9 +51,11 @@ HRESULT CCollisionArrow::Ready_GameObject(wstring wstrMeshTag,
 
 	m_iMeshPipelineStatePass = 4;
 
-	// Create Trail
-	m_pTrail = CEffectTrail::Create(m_pGraphicDevice, m_pCommandList, L"EffectTrailTexture", 12);
-	
+	//// Create Trail
+	//m_pTrail = CEffectTrail::Create(m_pGraphicDevice, m_pCommandList, L"EffectTrailTexture", 12);
+	//m_pTrail->Set_IsRenderTrail(true);
+	//m_pTrail->Set_CatmullRom(0.5f);
+
 	if (m_wstrMeshTag == L"ArrowIce")
 		m_ePoolType = ARROW_POOL_TYPE::ARROW_POOL_ICE;
 	else if (m_wstrMeshTag == L"ArrowFire")
@@ -172,16 +173,16 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 			m_pTransCom->m_vAngle.z += (_float)uid_angle(dre);
 		}
 
-		if (m_pTransCom->m_vPos.y > 0.0f)
+		if (m_pTransCom->m_vPos.y > 1.0f)
 		{
 			m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 			m_pTransCom->m_vDir.Normalize();
 			m_pTransCom->m_vPos += m_pTransCom->m_vDir * m_fSpeed * fTimeDelta;
 		}
 
-		if (m_pTransCom->m_vPos.y < 0.0f)
+		if (m_pTransCom->m_vPos.y < 1.0f)
 		{
-			m_pTransCom->m_vPos.y = 0.0f;
+			m_pTransCom->m_vPos.y = 1.0f;
 
 			m_bIsStartDissolve = true;
 
@@ -243,20 +244,6 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
-	//// Update Trail
-	//if (nullptr != m_pTrail)
-	//{
-
-	//	m_pBoundingBoxCom->Update_Component(fTimeDelta);
-	//	_vec3 vMin = _vec3(m_pBoundingBoxCom->Get_BottomPlaneCenter());
-	//	_vec3 vMax = _vec3(m_pBoundingBoxCom->Get_BoundingInfo().Center);
-	//	m_pTrail->Set_IsRenderTrail(true);
-	//	m_pTrail->SetUp_TrailByCatmullRom(&vMin, &vMax);
-	//	m_pTrail->Get_Transform()->m_vPos = _vec3(0.f, 0.f, 0.0f);
-
-	//	m_pTrail->Update_GameObject(fTimeDelta);
-	//}
-
 	return NO_EVENT;
 }
 
@@ -267,6 +254,20 @@ _int CCollisionArrow::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 	Process_Collision();
+
+	//// Update Trail
+	//if (nullptr != m_pTrail)
+	//{
+	//	_vec3 vDir = m_pTransCom->Get_LookVector();
+	//	vDir.Normalize();
+
+	//	_vec3 vMin = m_pTransCom->m_vPos;
+	//	_vec3 vMax = m_pTransCom->m_vPos - vDir * 2.5f;
+	//	m_pTrail->SetUp_TrailByCatmullRom(&vMin, &vMax);
+	//	//m_pTrail->Get_Transform()->m_vPos = _vec3(0.f, 0.f, 0.0f);
+
+	//	m_pTrail->Update_GameObject(fTimeDelta);
+	//}
 
 	//if(m_pTrail!=nullptr)
 	//	m_pTrail->LateUpdate_GameObject(fTimeDelta);
@@ -414,5 +415,5 @@ void CCollisionArrow::Free()
 	CCollisionTick::Free();
 
 	Engine::Safe_Release(m_pMeshCom);
-	Engine::Safe_Release(m_pTrail);
+	//Engine::Safe_Release(m_pTrail);
 }
