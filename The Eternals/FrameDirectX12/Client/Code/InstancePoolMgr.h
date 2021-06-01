@@ -79,6 +79,7 @@ private:
 	INSTANCE_POOL_DESC<CCollisionTick>*		m_pCollisionTickPool;
 	INSTANCE_POOL_DESC<CCollisionArrow>*	m_pCollisionArrowIcePool;
 	INSTANCE_POOL_DESC<CCollisionArrow>*	m_pCollisionArrowFirePool;
+	INSTANCE_POOL_DESC<CCollisionArrow>*	m_pCollisionArrowLightningPool;
 
 	// Monster
 	INSTANCE_POOL_DESC<CCrab>*			m_pMonsterCrabPool;

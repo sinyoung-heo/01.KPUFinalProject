@@ -24,6 +24,7 @@ DynamicMesh|NPC|Popori_boy
 DynamicMesh|NPC|Popori_M_Merchant
 StaticMesh|PCWeapon|ArrowFire
 StaticMesh|PCWeapon|ArrowIce
+StaticMesh|PCWeapon|ArrowLightning
 PCWeapon|Bow|Bow18_A_SM
 PCWeapon|Bow|Bow23_SM
 PCWeapon|Bow|Bow27_SM

@@ -18,9 +18,10 @@ private:
 public:
 	wstring Get_MeshTag() { return m_wstrMeshTag; }
 
-	void Set_ArrowType(const ARROW_TYPE& eType) { m_eType = eType; }
-	void Set_OriginPos(const _vec3& vPos)		{ m_vOriginPos = vPos; }
-	void Set_IsReadyArrowFall(const _bool& bIsReady) { m_bIsReadyArrowFall = bIsReady; }
+	void Set_Speed(const _float& fSpeed)				{ m_fSpeed = fSpeed; }
+	void Set_ArrowType(const ARROW_TYPE& eType)			{ m_eType = eType; }
+	void Set_OriginPos(const _vec3& vPos)				{ m_vOriginPos = vPos; }
+	void Set_IsReadyArrowFall(const _bool& bIsReady)	{ m_bIsReadyArrowFall = bIsReady; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,

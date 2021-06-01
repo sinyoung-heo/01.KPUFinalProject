@@ -42,7 +42,8 @@ namespace Archer
 	const _uint RAPID_SHOT_COLLISIONARROW_START   = 4;
 	const _uint ARROW_SHOWER_COLLISIONARROW_START = 21;
 	const _uint ARROW_FALL_COLLISIONARROW_START   = 0;
+	const _uint CHARGE_ARROW_COLLISIONARROW_START = 3;
 
 	const _uint		ARROW_SHOWER_CNT = 8;
-	const _float	ARROW_FALL_DIST  = 6.0f;
+	const _float	ARROW_FALL_DIST  = 8.0f;
 }
