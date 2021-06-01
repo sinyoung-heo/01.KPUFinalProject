@@ -813,6 +813,7 @@ namespace Engine
 		_float		fAlpha;
 		_float		fOffset2;
 		_float		fOffset3;
+		_vec4		v_Color;
 
 	} CB_SHADER_TEXTURE;
 	

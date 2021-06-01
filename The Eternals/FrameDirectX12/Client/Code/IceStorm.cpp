@@ -32,9 +32,10 @@ HRESULT CIceStorm::Ready_GameObject(wstring wstrMeshTag,
 	m_fRadius = fRadius;
 	m_fTheta = theta;
 
-	random[0] = rand()  % 90 - 45;
-	random[1] = rand() % 360;
-	random[2] = rand() % 90 - 45;
+	random[0] = static_cast<float>(rand() % 90 - 45);
+	random[1] = static_cast<float>(rand() % 360);
+	random[2] = static_cast<float>(rand() % 90 - 45);
+
 	m_fLimitScale = 0.15f;
 
 

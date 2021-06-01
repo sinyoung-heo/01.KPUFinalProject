@@ -10,11 +10,11 @@ namespace Engine
 
 class CDynamicCamera;
 
-class CIceStorm : public Engine::CGameObject
+class CIceStorm_s : public Engine::CGameObject
 {
 private:
-	explicit CIceStorm(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CIceStorm() = default; 
+	explicit CIceStorm_s(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CIceStorm_s() = default; 
 
 public:
 	// CGameObject을(를) 통해 상속됨
@@ -48,18 +48,15 @@ private:
 	____________________________________________________________________________________________________________*/
 	wstring			m_wstrMeshTag		       = L"";
 	float m_fDeltatime = 0.f;
-	float m_fDeltatimeVelocity = 0.f;
-	float m_fDeltatimeVelocity2 = 1.f;
 	float m_fDeltatime2 = 0.f;
 	float m_fDeltatime3 = 0.f;
-	float m_fLimitScale = 0.f;
-	float fLimitLifeTime = 0.f;
+	float m_fDeltatimeVelocity = 0.f;
+	float m_fDeltatimeVelocity2 = 1.f;
+	
 	float m_fLifeTime = 0.f;
-	float m_fScaleVelocity = 0.f;
 	float m_fRadius = 0.f;
 	float m_fTheta = 0.f;
 	float random[3];
-
 	bool m_bisLifeInit = false;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,

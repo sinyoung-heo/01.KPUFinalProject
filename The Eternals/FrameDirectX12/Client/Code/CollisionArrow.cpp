@@ -8,7 +8,8 @@
 #include "SnowParticle.h"
 #include "ObjectMgr.h"
 #include <random>
-
+#include "IceStorm_s.h"
+#include "TextureEffect.h"
 CCollisionArrow::CCollisionArrow(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CCollisionTick(pGraphicDevice, pCommandList)
 	, m_pShaderMeshInstancing(Engine::CShaderMeshInstancing::Get_Instance())
@@ -162,8 +163,39 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 
 			if (!m_bIsCreateCollisionTick)
 			{
+				//Eff
+				CGameObject* pGameObj = nullptr;
+				pGameObj = CIceStorm_s::Create(m_pGraphicDevice, m_pCommandList,
+					L"IceStorm1",
+					_vec3(0.f),
+					_vec3(0.f, 0.0f, 0.0f),
+					m_pTransCom->m_vPos,0.2f, XMConvertToRadians(rand()%36 * 10.f));
+				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"IceStorm_s", pGameObj), E_FAIL);
+
+				_vec3 newPos = m_pTransCom->m_vPos;
+				newPos.y = 0.5f;
+				pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+					L"Bomb00",						// TextureTag
+					_vec3(2.f, 2.0f, 1.0f),		// Scale
+					_vec3(0.0f, 0.0f, 0.0f),		// Angle
+					newPos,	// Pos
+					FRAME(10, 9, 30.0f));			// Sprite Image Frame
+				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Bomb00", pGameObj), E_FAIL);
+				static_cast<CTextureEffect*>(pGameObj)->Set_IsLoop(false);
+				static_cast<CTextureEffect*>(pGameObj)->Set_BillBoard(true);
+				static_cast<CTextureEffect*>(pGameObj)->Set_ColorOffset(_vec4(0.f,0.3f,0.6f,1.f));
 				m_bIsCreateCollisionTick = true;
 
+				//pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+				//	L"Crack",						// TextureTag
+				//	_vec3(0.5f),		// Scale
+				//	_vec3(90.0f, 0.0f, 0.0f),		// Angle
+				//	newPos,	// Pos
+				//	FRAME(1, 1, 1));			// Sprite Image Frame
+				//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Crack", pGameObj), E_FAIL);
+				//static_cast<CTextureEffect*>(pGameObj)->Set_IsLoop(true);
+				//static_cast<CTextureEffect*>(pGameObj)->Set_BillBoard(false);
+				//
 				CCollisionTick* pCollisionTick = static_cast<CCollisionTick*>(Pop_Instance(m_pInstancePoolMgr->Get_CollisionTickPool()));
 				if (nullptr != pCollisionTick)
 				{

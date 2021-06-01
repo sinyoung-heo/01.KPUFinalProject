@@ -198,16 +198,14 @@ PS_OUT PS_DECAL(VS_OUT ps_input) : SV_TARGET
     ps_output.Effect4.a = 1;
     return (ps_output);
 }
-PS_OUT PS_SWORDTRAIL(VS_OUT ps_input) : SV_TARGET
+PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 {
     PS_OUT ps_output = (PS_OUT) 0;
 	
     float4 D = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 N = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
-    float4 color = D + N + S;
    
-    ps_output.Effect3 = color;
-    ps_output.Effect3.a = 1.f;
+    ps_output.Effect3 = D;
     return (ps_output);
 }

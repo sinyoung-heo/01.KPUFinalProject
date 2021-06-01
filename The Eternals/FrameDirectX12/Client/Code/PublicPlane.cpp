@@ -26,7 +26,7 @@ HRESULT CPublicPlane::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vScale	= vScale;
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos		= vPos;
-
+	m_pTransCom->m_vPos.y += 0.1f;
 	m_fAlpha = 1.f;
 	return S_OK;
 }
@@ -35,13 +35,13 @@ HRESULT CPublicPlane::LateInit_GameObject()
 {
 
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
-	Engine::CTexture* pTexture = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(L"PublicMagic", Engine::COMPONENTID::ID_STATIC));
+	Engine::CTexture* pTexture = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(L"EffectPublic", Engine::COMPONENTID::ID_STATIC));
 	SetUp_DescriptorHeap(pTexture->Get_Texture(), m_pRenderer->Get_TargetShadowDepth()->Get_TargetTexture());
 
 
-	m_uiDiffuse = 9;
-	m_fNormalMapDeltatime = 10;//NormIdx
-	m_fPatternMapDeltatime = 2;//SpecIdx
+	m_uiDiffuse = 5;
+	m_fNormalMapDeltatime = 5;//NormIdx
+	m_fPatternMapDeltatime = 5;//SpecIdx
 	return S_OK;	
 }
 
@@ -49,7 +49,7 @@ _int CPublicPlane::Update_GameObject(const _float & fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
-	if (m_bIsDead /*||m_fAlpha<0.f*/)
+	if (m_bIsDead)
 		return DEAD_OBJ;
 
 	/*__________________________________________________________________________________________________________
@@ -59,9 +59,7 @@ _int CPublicPlane::Update_GameObject(const _float & fTimeDelta)
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MAGICCIRCLE, this), -1);
 	/*Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);*/
 
-	_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
-	m_pTransCom->m_vPos = Pos;
-	m_pTransCom->m_vPos.y+=0.1f;
+
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
 	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
 	/*____________________________________________________________________
@@ -102,7 +100,7 @@ HRESULT CPublicPlane::Add_Component(wstring wstrMeshTag)
 	// Shader
 	m_pShaderCom = static_cast<Engine::CShaderMeshEffect*>(m_pComponentMgr->Clone_Component(L"ShaderMeshEffect", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(4), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(5), E_FAIL);
 	m_pShaderCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
@@ -128,7 +126,8 @@ void CPublicPlane::Set_ConstantTable()
 	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
 	m_fAlpha -= Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.3f;
 	tCB_ShaderMesh.fOffset6 = m_fAlpha;
-	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
+	if(m_pShaderCom->Get_UploadBuffer_ShaderMesh()!=nullptr)
+		m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 
 	
 }

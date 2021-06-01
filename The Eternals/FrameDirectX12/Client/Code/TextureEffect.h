@@ -28,7 +28,9 @@ public:
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 
 	void Set_EffectInfo(int PipelineState=2, bool PlayerFollow=false);
-
+	void Set_BillBoard(bool isBillBoard) { m_bisBillBoard = isBillBoard; }
+	void Set_ColorOffset(_vec4 Color) { m_vColorOffset = Color; }
+	void Set_IsLoop(bool isLoop) { m_bisLoop = isLoop; }
 private:
 	virtual HRESULT Add_Component(wstring wstrTextureTag);
 	void			Set_ConstantTable();
@@ -51,6 +53,9 @@ private:
 
 	FRAME	m_tFrame			{ };
 	_float m_fAlpha = 1.f;
+	bool m_bisBillBoard = true;
+	_vec4 m_vColorOffset;
+	bool m_bisLoop = true;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

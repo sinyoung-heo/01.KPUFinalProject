@@ -1497,6 +1497,8 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 			m_pTransCom->m_vDir.Normalize();
 			m_vArrowFallPos   = m_pTransCom->m_vPos + m_pTransCom->m_vDir * Archer::ARROW_FALL_DIST;
 			m_vArrowFallPos.y = 20.0f;
+
+			//Eff
 		}
 	}
 

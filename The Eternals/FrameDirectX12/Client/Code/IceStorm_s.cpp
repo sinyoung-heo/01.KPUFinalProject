@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "IceStorm.h"
+#include "IceStorm_s.h"
 #include "GraphicDevice.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
@@ -9,14 +9,13 @@
 #include "TimeMgr.h"
 #include "DescriptorHeapMgr.h"
 #include "SnowParticle.h"
-CIceStorm::CIceStorm(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CIceStorm_s::CIceStorm_s(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
-	Set_IceStormInfo();
 }
 
 
-HRESULT CIceStorm::Ready_GameObject(wstring wstrMeshTag,
+HRESULT CIceStorm_s::Ready_GameObject(wstring wstrMeshTag,
 											 const _vec3 & vScale,
 											 const _vec3 & vAngle, 
 											 const _vec3 & vPos ,const float& fRadius,const float & theta)
@@ -28,31 +27,26 @@ HRESULT CIceStorm::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vScale	= vScale;
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos = vPos;
-
+	m_pTransCom->m_vPos.y = 0.f;
 	m_fDeltaTime = -1.f;
 	m_fRadius = fRadius;
 	m_fTheta = theta;
 
-	random[0] = rand()  % 90 - 45;
-	random[1] = rand() % 360;
-	random[2] = rand() % 90 - 45;
-	m_fLimitScale = 0.15f;
-
+	random[0] = static_cast<float>(rand()  % 90 - 45);
+	random[1] = static_cast<float>(rand() % 360);
+	random[2] = static_cast<float>(rand() % 90 - 45);
+	
 
 	return S_OK;
 }
 
-HRESULT CIceStorm::LateInit_GameObject()
+HRESULT CIceStorm_s::LateInit_GameObject()
 {
 	m_pShaderCom->SetUp_ShaderConstantBuffer();
 	Engine::CTexture* pTexture = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(L"EffectPublic", Engine::COMPONENTID::ID_STATIC));
 	SetUp_DescriptorHeap(pTexture->Get_Texture(), m_pRenderer->Get_TargetShadowDepth()->Get_TargetTexture());
 
 	m_pCrossFilterShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
-
-
-	_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
-	m_pTransCom->m_vPos = Pos;
 
 	m_pTransCom->m_vPos.x += m_fRadius * cos(m_fTheta);
 	m_pTransCom->m_vPos.z += m_fRadius * sin(m_fTheta);
@@ -62,7 +56,7 @@ HRESULT CIceStorm::LateInit_GameObject()
 	m_pTransCom->m_vAngle.z = random[2];
 
 	CGameObject* pGameObj = nullptr;
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 1; i++)
 	{
 		pGameObj = CSnowParticle::Create(m_pGraphicDevice, m_pCommandList,
 			L"Snow",						// TextureTag
@@ -71,23 +65,24 @@ HRESULT CIceStorm::LateInit_GameObject()
 			m_pTransCom->m_vPos,	// Pos
 			FRAME(1, 1, 1.0f));			// Sprite Image Frame
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Snow", pGameObj), E_FAIL);
+		static_cast<CSnowParticle*>(pGameObj)->Set_Pivot(false);
 	}
 	return S_OK;
 }
 
-_int CIceStorm::Update_GameObject(const _float & fTimeDelta)
+_int CIceStorm_s::Update_GameObject(const _float & fTimeDelta)
 {
-	if (m_pTransCom->m_vScale.x < m_fLimitScale)
+	if (m_pTransCom->m_vScale.x < 0.05f)
 	{
-		m_pTransCom->m_vScale.x += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * m_fScaleVelocity;
-		m_pTransCom->m_vScale.y += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * m_fScaleVelocity;
-		m_pTransCom->m_vScale.z += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * m_fScaleVelocity;
+		m_pTransCom->m_vScale.x += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) *0.2f;
+		m_pTransCom->m_vScale.y += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) *0.2f;
+		m_pTransCom->m_vScale.z += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) *0.2f;
 	}
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
 	m_fLifeTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
 	
-	if (m_fLifeTime > 6.f)
+	if (m_fLifeTime >2.f)
 		m_bIsDead = true;
 	if (m_bIsDead)
 		return DEAD_OBJ;
@@ -111,7 +106,7 @@ _int CIceStorm::Update_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CIceStorm::LateUpdate_GameObject(const _float & fTimeDelta)
+_int CIceStorm_s::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
@@ -120,23 +115,17 @@ _int CIceStorm::LateUpdate_GameObject(const _float & fTimeDelta)
 }
 
 
-void CIceStorm::Render_GameObject(const _float& fTimeDelta)
+void CIceStorm_s::Render_GameObject(const _float& fTimeDelta)
 {
 	Set_ConstantTable();
 	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps,0,2, 3,0,0);
 }
-void CIceStorm::Render_CrossFilterGameObject(const _float& fTimeDelta)
+void CIceStorm_s::Render_CrossFilterGameObject(const _float& fTimeDelta)
 {
 	Set_ConstantTable();
 	m_pMeshCom->Render_StaticMesh(m_pCrossFilterShaderCom);
 }
-void CIceStorm::Set_IceStormInfo(float fLifeTime, float fLimitScale, float fScaleVelocity)
-{
-	fLimitLifeTime = fLifeTime;
-	m_fLimitScale = fLimitScale;
-	m_fScaleVelocity = fScaleVelocity;
-}
-HRESULT CIceStorm::Add_Component(wstring wstrMeshTag)
+HRESULT CIceStorm_s::Add_Component(wstring wstrMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -162,7 +151,7 @@ HRESULT CIceStorm::Add_Component(wstring wstrMeshTag)
 	return S_OK;
 }
 
-void CIceStorm::Set_ConstantTable()
+void CIceStorm_s::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -177,39 +166,44 @@ void CIceStorm::Set_ConstantTable()
 	tCB_ShaderMesh.vLightPos = tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 
-	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.5f * m_fDeltatimeVelocity;
+	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 1.5f * m_fDeltatimeVelocity;
 	
-	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.5f * m_fDeltatimeVelocity2;
+	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 1.5f * m_fDeltatimeVelocity2;
 	tCB_ShaderMesh.fOffset1 = sin(m_fDeltaTime);//¹øÁüÈ¿°ú
 	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
 	tCB_ShaderMesh.fOffset3 = m_fDeltatime3;
 
-	if (m_fLifeTime > 4.f)
+	if (m_fLifeTime >1.f)
 	{
-		m_fDeltatime2 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.5f;
+		m_fDeltatime2 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 1.5f;
 		tCB_ShaderMesh.fDissolve = m_fDeltatime2;
 		if (!m_bisLifeInit)
 		{
 			m_bisLifeInit = true;
-			m_fDeltatimeVelocity2 = 3;
-			for (int i = 0; i < 5; i++)
+			m_fDeltatimeVelocity2 = 9;
+			CGameObject* pGameObj=nullptr;
+			for (int i = 0; i < 1; i++)
 			{
-				CGameObject *pGameObj = CSnowParticle::Create(m_pGraphicDevice, m_pCommandList,
+				pGameObj = CSnowParticle::Create(m_pGraphicDevice, m_pCommandList,
 					L"Snow",						// TextureTag
 					_vec3(0.1f),		// Scale
 					_vec3(0.0f, 0.0f, 0.0f),		// Angle
 					m_pTransCom->m_vPos,	// Pos
 					FRAME(1, 1, 1.0f));			// Sprite Image Frame
 				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Snow", pGameObj), E_FAIL);
+				static_cast<CSnowParticle*>(pGameObj)->Set_Pivot(false);
 			}
 		}
 	}
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 
 
-	tCB_ShaderMesh.vEmissiveColor.x = 135.f / 255.f;
+	/*tCB_ShaderMesh.vEmissiveColor.x = 135.f / 255.f;
 	tCB_ShaderMesh.vEmissiveColor.y = 150.f / 255.f;
-	tCB_ShaderMesh.vEmissiveColor.z = 220.f / 255.f;
+	tCB_ShaderMesh.vEmissiveColor.z = 220.f / 255.f;*/
+	tCB_ShaderMesh.vEmissiveColor.x = 135.f / 255.f;
+	tCB_ShaderMesh.vEmissiveColor.y =  150.f / 255.f;
+	tCB_ShaderMesh.vEmissiveColor.z = (rand() % 100 + 155.f )/ 255.f;
 	tCB_ShaderMesh.vEmissiveColor.w = 1.f;
 	m_pCrossFilterShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 	if (m_fDeltaTime > 1.f)
@@ -225,7 +219,7 @@ void CIceStorm::Set_ConstantTable()
 		m_fDeltatimeVelocity2 = 0.f;
 	}
 }
-HRESULT CIceStorm::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth)
+HRESULT CIceStorm_s::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth)
 {
 	_uint m_uiTexSize = vecTexture.size() + vecShadowDepth.size();
 	D3D12_DESCRIPTOR_HEAP_DESC SRV_HeapDesc = {};
@@ -267,13 +261,13 @@ HRESULT CIceStorm::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTextur
 }
 
 
-Engine::CGameObject* CIceStorm::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
+Engine::CGameObject* CIceStorm_s::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
 												wstring wstrMeshTag, 
 												const _vec3 & vScale,
 												const _vec3 & vAngle,
 												const _vec3 & vPos,const float&Radius,const float & fTheta)
 {
-	CIceStorm* pInstance = new CIceStorm(pGraphicDevice, pCommandList);
+	CIceStorm_s* pInstance = new CIceStorm_s(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos, Radius, fTheta)))
 		Engine::Safe_Release(pInstance);
@@ -281,7 +275,7 @@ Engine::CGameObject* CIceStorm::Create(ID3D12Device * pGraphicDevice, ID3D12Grap
 	return pInstance;
 }
 
-void CIceStorm::Free()
+void CIceStorm_s::Free()
 {
 	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pMeshCom);

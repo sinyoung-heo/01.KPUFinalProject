@@ -598,6 +598,7 @@
     <ClInclude Include="..\Code\ArrowDecal.h" />
     <ClInclude Include="..\Code\FireDecal.h" />
     <ClInclude Include="..\Code\Glowring.h" />
+    <ClInclude Include="..\Code\IceStorm_s.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -862,6 +863,7 @@
     <ClCompile Include="..\Code\ArrowDecal.cpp" />
     <ClCompile Include="..\Code\FireDecal.cpp" />
     <ClCompile Include="..\Code\Glowring.cpp" />
+    <ClCompile Include="..\Code\IceStorm_s.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

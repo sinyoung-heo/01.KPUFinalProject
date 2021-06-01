@@ -53,11 +53,11 @@ private:
 	float m_fDeltatime2 = 0.f;
 	float m_fDeltatime3 = 0.f;
 	float m_fLimitScale = 0.f;
+	float m_fLifeTime = 0.f;
 	float m_fRadius = 0.f;
 	float m_fTheta = 0.f;
 	float random[3];
 
-	float m_fLifeTime = 0.f;
 	bool m_bisLifeInit = false;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,

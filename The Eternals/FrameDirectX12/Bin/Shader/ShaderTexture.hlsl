@@ -39,7 +39,8 @@ cbuffer cbShaderTexture : register(b1)
 	float		g_fAlpha	: packoffset(c5.y);
 	float		fOffset2	: packoffset(c5.z);
 	float		fOffset3	: packoffset(c5.w);
-	
+	//Color
+    float4		g_vColor : packoffset(c6);
 }
 
 
@@ -109,10 +110,11 @@ float4 PS_TEXTURE_SPRITE(VS_OUT ps_input) : SV_TARGET
 	float v = (ps_input.TexUV.y / g_fSceneCnt) + g_fCurScene * (1.0f / g_fSceneCnt);
 	
 	float4 Color = g_TexDiffuse.Sample(g_samLinearWrap, float2(u, v));
+    Color.r += g_vColor.r;
+    Color.g += g_vColor.g;
+    Color.b += g_vColor.b;
 	return (Color);
 }
-
-
 /*__________________________________________________________________________________________________________
 [ Texture Guage ]
 ____________________________________________________________________________________________________________*/

@@ -22,7 +22,7 @@ HRESULT CTextureEffect::Ready_GameObject(wstring wstrTextureTag,
 	m_pTransCom->m_vScale	= vScale;
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos		= vPos;
-
+	m_vColorOffset = _vec4(0, 0, 0, 1);
 	// BoundingBox.
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
 										   m_pTransCom->m_vScale,
@@ -82,9 +82,11 @@ ________________________________________________________________________________
 	/*__________________________________________________________________________________________________________
 	[ Update Billboard Matrix ]
 	____________________________________________________________________________________________________________*/
-	Engine::CGameObject::SetUp_BillboardMatrix();
+	if (m_bisBillBoard)
+	{
+		Engine::CGameObject::SetUp_BillboardMatrix();
+	}
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
-	
 	/*if (m_strTextag == L"UnderFire")
 	{
 		_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
@@ -108,7 +110,7 @@ _int CTextureEffect::LateUpdate_GameObject(const _float & fTimeDelta)
 void CTextureEffect::Render_GameObject(const _float & fTimeDelta)
 {
 	Set_ConstantTable();
-	int a=m_pTextureCom->Get_TexDescriptorHeap()->GetDesc().NumDescriptors;
+	m_pTextureCom->Get_TexDescriptorHeap()->GetDesc().NumDescriptors;
 	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), 0, m_uiTexIdx, Engine::MATRIXID::PROJECTION);
 	m_pBufferCom->Begin_Buffer();
 
@@ -157,8 +159,8 @@ void CTextureEffect::Set_ConstantTable()
 	tCB_ShaderTexture.fCurFrame	= (_float)(_int)m_tFrame.fCurFrame;
 	tCB_ShaderTexture.fSceneCnt	= m_tFrame.fSceneCnt;
 	tCB_ShaderTexture.fCurScene	= (_int)m_tFrame.fCurScene;
-	//m_fAlpha -= Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.01f;
-	tCB_ShaderTexture.fAlpha = 0.9f;
+	tCB_ShaderTexture.fAlpha = 0.7f;
+	tCB_ShaderTexture.v_Color = m_vColorOffset;
 	m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 }
 
@@ -177,6 +179,8 @@ void CTextureEffect::Update_SpriteFrame(const _float & fTimeDelta)
 	if (m_tFrame.fCurScene >= m_tFrame.fSceneCnt)
 	{
 		m_tFrame.fCurScene = 0.0f;
+		if (!m_bisLoop)
+			m_bIsDead = true;
 	}
 
 }
