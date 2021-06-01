@@ -19,6 +19,7 @@ public:
 	const _bool& Get_IsRenderTrail() { return m_bIsRender; }
 
 	void Set_IsRenderTrail(const _bool& bIsRenderTrail) { m_bIsRender = bIsRenderTrail;  }
+	void Set_CatmullRom(const _float& fCatmullRom) { m_fCatmullRom = fCatmullRom; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrTextureTag,
@@ -53,6 +54,7 @@ private:
 	_uint	m_uiTexIdx		 = 0;
 	_float	m_fAlpha		 = 0.0f;
 	_bool	m_bIsRender      = false;
+	_float	m_fCatmullRom    = 0.5f;
 
 	Engine::CRenderer::RENDERGROUP m_eRenderGroup = Engine::CRenderer::RENDERGROUP::RENDER_ALPHA;
 

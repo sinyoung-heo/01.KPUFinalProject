@@ -35,6 +35,8 @@ INSTANCE_POOL_DESC<CCollisionArrow>* CInstancePoolMgr::Get_CollisionArrowPool(co
 		return m_pCollisionArrowIcePool;
 	else if (ARROW_POOL_TYPE::ARROW_POOL_FIRE == eType)
 		return m_pCollisionArrowFirePool;
+	else if (ARROW_POOL_TYPE::ARROW_POOL_LIGHTNING)
+		return m_pCollisionArrowLightningPool;
 
 	return nullptr;
 }
@@ -105,9 +107,10 @@ INSTANCE_POOL_DESC<CPCWeaponRod>* CInstancePoolMgr::Get_PCWeaponRod(const char& 
 void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 {
 	// CollisionTick
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pCollisionTickPool, 32);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pCollisionTickPool, 64);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pCollisionArrowIcePool, L"ArrowIce", 128);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pCollisionArrowFirePool, L"ArrowFire", 128);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pCollisionArrowLightningPool, L"ArrowLightning", 128);
 	
 	// Monster
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterCrabPool, 10);
@@ -163,6 +166,7 @@ void CInstancePoolMgr::Free()
 	Safe_Release_InstacePool(m_pCollisionTickPool);
 	Safe_Release_InstacePool(m_pCollisionArrowIcePool);
 	Safe_Release_InstacePool(m_pCollisionArrowFirePool);
+	Safe_Release_InstacePool(m_pCollisionArrowLightningPool);
 
 	Safe_Release_InstacePool(m_pMonsterCrabPool);
 	Safe_Release_InstacePool(m_pMonsterCloderAPool);

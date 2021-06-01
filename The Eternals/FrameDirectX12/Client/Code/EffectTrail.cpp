@@ -125,11 +125,11 @@ void CEffectTrail::SetUp_TrailByCatmullRom(_vec3* vMin, _vec3* vMax)
 	for (_int i = 2; i < Engine::TRAIL_SIZE - 2; ++i)
 	{
 		_vec3 catmullrom;
-		catmullrom.Vector3CatmullRom(m_arrMax[i - 2], m_arrMax[i - 1], m_arrMax[i], m_arrMax[i + 1], 0.5f);
+		catmullrom.Vector3CatmullRom(m_arrMax[i - 2], m_arrMax[i - 1], m_arrMax[i], m_arrMax[i + 1], m_fCatmullRom);
 
-		m_arrMax[i + 1] = (m_arrMax[i] + m_arrMax[i + 1]) * 0.5f;
-		m_arrMax[i]     = (catmullrom + m_arrMax[i]) * 0.5f;
-		m_arrMax[i - 1] = (catmullrom + m_arrMax[i - 1]) * 0.5f;
+		m_arrMax[i + 1] = (m_arrMax[i] + m_arrMax[i + 1]) * m_fCatmullRom;
+		m_arrMax[i]     = (catmullrom + m_arrMax[i]) * m_fCatmullRom;
+		m_arrMax[i - 1] = (catmullrom + m_arrMax[i - 1]) * m_fCatmullRom;
 	}
 
 	// SetUp Vertex
