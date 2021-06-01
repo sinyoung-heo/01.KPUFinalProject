@@ -24,6 +24,7 @@ Popori_boy|Popori_boy.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Popori_
 Popori_M_Merchant|Popori_M_Merchant.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Popori_M_Merchant\
 ArrowFire|ArrowFire.X|..\..\Bin\Resource\ResourceStage\StaticMesh\PCWeapon\ArrowFire\
 ArrowIce|ArrowIce.X|..\..\Bin\Resource\ResourceStage\StaticMesh\PCWeapon\ArrowIce\
+ArrowLightning|ArrowLightning.X|..\..\Bin\Resource\ResourceStage\StaticMesh\PCWeapon\ArrowLightning\
 Bow18_A_SM|Bow18_A_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\PCWeapon\Bow\Bow18_A_SM\
 Bow23_SM|Bow23_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\PCWeapon\Bow\Bow23_SM\
 Bow27_SM|Bow27_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\PCWeapon\Bow\Bow27_SM\

@@ -133,7 +133,13 @@ private:
 	// CollisionTick
 	_bool				m_bIsSetCollisionTick = false;
 	COLLISION_TICK_DESC m_tCollisionTickDesc;
-	_vec3				m_vArrowFallPos = _vec3(0.0f);
+	_vec3				m_vArrowFallPos     = _vec3(0.0f);
+
+	_bool	m_bIsStartArrowFall    = false;
+	_float	m_fArrowFallTime       = 0.0f;
+	_float	m_fArrowFallUpdateTime = 1.0f / 60.0f;
+	_int	m_iCurArrowFallCnt     = 0;
+	_int	m_iMaxArrowFallCnt     = 96;
 
 	// Server
 	_bool			m_bIsKeyDown      = false;
