@@ -338,7 +338,12 @@ typedef struct tagVector3 : public XMFLOAT3
 		tagVector3 vWindow;
 
 		vWindow.x = this->x + float(WINCX) / 2.f;
-		vWindow.y = float(WINCY) - (-1.0f * this->y + float(WINCY) / 2.f);
+
+		if (this->y >= 0)
+			vWindow.y = (-1.0f * this->y + float(WINCY) / 2.f);
+		else
+			vWindow.y = float(WINCY) - (-1.0f * this->y + float(WINCY) / 2.f);
+
 		vWindow.z = this->z;
 
 		return vWindow;

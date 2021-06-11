@@ -45,7 +45,7 @@ _int CPCSelectFrame::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 	
-	if (g_bIsLoadingFinish)
+	if (g_bIsLoadingFinish && m_bIsUpdate)
 		CGameUIChild::Update_GameObject(fTimeDelta);
 
 	return NO_EVENT;
@@ -53,7 +53,7 @@ _int CPCSelectFrame::Update_GameObject(const _float& fTimeDelta)
 
 _int CPCSelectFrame::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	if (g_bIsLoadingFinish)
+	if (g_bIsLoadingFinish && m_bIsUpdate)
 		CGameUIChild::LateUpdate_GameObject(fTimeDelta);
 
 	return NO_EVENT;

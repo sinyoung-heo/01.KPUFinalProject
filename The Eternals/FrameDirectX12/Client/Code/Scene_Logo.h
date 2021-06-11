@@ -8,6 +8,10 @@ namespace Engine
 	class CFont;
 }
 
+class CPCSelectJob;
+class CPCSelectFrame;
+class CPCSelectButton;
+
 class CScene_Logo final : public Engine::CScene
 {
 private:
@@ -21,15 +25,14 @@ public:
 	virtual _int	Update_Scene(const _float& fTimeDelta);
 	virtual _int	LateUpdate_Scene(const _float& fTimeDelta);
 	virtual HRESULT	Render_Scene(const _float& fTimeDelta, const Engine::RENDERID& eID = Engine::RENDERID::MULTI_THREAD);
-
 private:
+	void			KeyInput_PCSelect(const _float& fTimeDelta);
 	HRESULT			Ready_LayerEnvironment(wstring wstrLayerTag);
 	HRESULT			Ready_LayerCamera(wstring wstrLayerTag);
 	HRESULT			Ready_LayerGameObject(wstring wstrLayerTag);
 	HRESULT			Ready_LayerUI(wstring wstrLayerTag);
 	HRESULT			Ready_LayerFont(wstring wstrLayerTag);
 	HRESULT			SetUp_MaxLoadingCount();
-
 private:
 	CLoading*				m_pLoading				= nullptr;
 	Engine::CGameObject*	m_pLoadingProgress		= nullptr;
@@ -48,7 +51,16 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ PCSelect ]
 	____________________________________________________________________________________________________________*/
+	CPCSelectJob* m_pPCSelectJobWarrior = nullptr;
+	CPCSelectJob* m_pPCSelectJobArcher  = nullptr;
+	CPCSelectJob* m_pPCSelectJobPriest  = nullptr;
 
+	CPCSelectFrame* m_pPCSelectFrameWarrior = nullptr;
+	CPCSelectFrame* m_pPCSelectFrameArcher  = nullptr;
+	CPCSelectFrame* m_pPCSelectFramePriest  = nullptr;
+
+	CPCSelectButton* m_pPCSelectButtonNormal  = nullptr;
+	CPCSelectButton* m_pPCSelectButtonClicked = nullptr;
 
 public:
 	static CScene_Logo*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);

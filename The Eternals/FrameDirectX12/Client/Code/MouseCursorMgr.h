@@ -18,6 +18,7 @@ private:
 	virtual ~CMouseCursorMgr() = default;
 
 public:
+	Engine::CGameObject* Get_MouseCursorClass() { return m_pMouseCursor; }
 	static POINT	Get_CursorPoint();
 	const _bool&	Get_IsActiveMouse()							{ return m_bIsActiveMouse; }
 	void			Set_IsActiveMouse(const _bool& bIsActive)	{ m_bIsActiveMouse = bIsActive; }

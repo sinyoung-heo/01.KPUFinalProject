@@ -31,6 +31,11 @@ HRESULT CPCSelectButton::Ready_GameObject(wstring wstrRootObjectTag,
 	m_matView = INIT_MATRIX;
 	m_matProj = XMMatrixOrthographicLH(WINCX, WINCY, 0.0f, 1.0f);
 
+	if (L"PCSelectButtonNormal" == m_wstrObjectTag)
+		m_bIsUpdate = true;
+	else if (L"PCSelectButtonCliecked" == m_wstrObjectTag)
+		m_bIsUpdate = false;
+
 	return S_OK;
 }
 

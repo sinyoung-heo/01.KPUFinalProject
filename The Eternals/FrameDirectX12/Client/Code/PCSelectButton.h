@@ -8,6 +8,8 @@ private:
 	virtual ~CPCSelectButton() = default;
 
 public:
+	void Set_IsUpdate(const _bool& bIsUpdate) { m_bIsUpdate = bIsUpdate; }
+
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrRootObjectTag,
 									 wstring wstrObjectTag,							   
@@ -31,6 +33,8 @@ private:
 	____________________________________________________________________________________________________________*/
 	_matrix	m_matView = INIT_MATRIX;
 	_matrix	m_matProj = INIT_MATRIX;
+
+	_bool m_bIsUpdate = false;
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,

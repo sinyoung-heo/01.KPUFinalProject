@@ -9,6 +9,8 @@ protected:
 	virtual ~CGameUIChild() = default;
 
 public:
+	RECT& Get_Rect() { return m_tRect; }
+
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrRootObjectTag,
 									 wstring wstrObjectTag,							   

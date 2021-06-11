@@ -33,15 +33,15 @@ HRESULT CScene_Logo::Ready_Scene()
 	COUT_STR("<< Ready Scene_Logo >>");
 	COUT_STR("");
 
-	while (g_cJob == -1)
-	{
-		int choice = -1;
-		cout << "Choice Your Job! (1.Gladiator 2.Archer 3.Priest): ";
-		cin >> choice;
-		if (choice == 1) g_cJob = PC_GLADIATOR;
-		else if (choice == 2) g_cJob = PC_ARCHER;
-		else if (choice == 3) g_cJob = PC_PRIEST;
-	}
+	//while (g_cJob == -1)
+	//{
+	//	int choice = -1;
+	//	cout << "Choice Your Job! (1.Gladiator 2.Archer 3.Priest): ";
+	//	cin >> choice;
+	//	if (choice == 1)		g_cJob = PC_GLADIATOR;
+	//	else if (choice == 2)	g_cJob = PC_ARCHER;
+	//	else if (choice == 3)	g_cJob = PC_PRIEST;
+	//}
 #endif
 
 	Engine::FAILED_CHECK_RETURN(Ready_LayerEnvironment(L"Layer_Environment"), E_FAIL);
@@ -113,7 +113,15 @@ _int CScene_Logo::Update_Scene(const _float& fTimeDelta)
 
 _int CScene_Logo::LateUpdate_Scene(const _float & fTimeDelta)
 {
-	return Engine::CScene::LateUpdate_Scene(fTimeDelta);
+	Engine::CScene::LateUpdate_Scene(fTimeDelta);
+
+	/*__________________________________________________________________________________________________________
+	[ PCSelect KeyInput ]
+	____________________________________________________________________________________________________________*/
+	if (g_bIsLoadingFinish)
+		KeyInput_PCSelect(fTimeDelta);
+
+	return NO_EVENT;
 }
 
 HRESULT CScene_Logo::Render_Scene(const _float & fTimeDelta, const Engine::RENDERID& eID)
@@ -183,6 +191,55 @@ HRESULT CScene_Logo::Render_Scene(const _float & fTimeDelta, const Engine::RENDE
 	return S_OK;
 }
 
+
+void CScene_Logo::KeyInput_PCSelect(const _float& fTimeDelta)
+{
+	// PCSelectJobWarrior
+	if (CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse() &&
+		CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectJobWarrior->Get_Rect()))
+	{
+		if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_LB))
+		{
+			m_pPCSelectFrameWarrior->Set_IsUpdate(true);
+			m_pPCSelectFrameArcher->Set_IsUpdate(false);
+			m_pPCSelectFramePriest->Set_IsUpdate(false);
+
+			g_cJob = PC_PRIEST;
+			cout << (_int)g_cJob << endl;
+		}
+	}
+
+	// PCSelectJobArcher
+	if (CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse() &&
+		CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectJobArcher->Get_Rect()))
+	{
+		if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_LB))
+		{
+			m_pPCSelectFrameWarrior->Set_IsUpdate(false);
+			m_pPCSelectFrameArcher->Set_IsUpdate(true);
+			m_pPCSelectFramePriest->Set_IsUpdate(false);
+
+			g_cJob = PC_ARCHER;
+			cout << (_int)g_cJob << endl;
+		}
+	}
+
+	// PCSelectJobPriest
+	if (CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse() &&
+		CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectJobPriest->Get_Rect()))
+	{
+		if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_LB))
+		{
+			m_pPCSelectFrameWarrior->Set_IsUpdate(false);
+			m_pPCSelectFrameArcher->Set_IsUpdate(false);
+			m_pPCSelectFramePriest->Set_IsUpdate(true);
+
+			g_cJob = PC_PRIEST;
+			cout << (_int)g_cJob << endl;
+		}
+	}
+
+}
 
 HRESULT CScene_Logo::Ready_LayerEnvironment(wstring wstrLayerTag)
 {
@@ -385,6 +442,13 @@ HRESULT CScene_Logo::Ready_LayerUI(wstring wstrLayerTag)
 													vecRectPosOffset[i],			// RectPosOffset
 													vecRectScale[i],				// RectScaleOffset
 													vecUIDepth[i]);					// UI Depth
+
+					if (L"PCSelectWarrior" == vecObjectTag[i])
+						m_pPCSelectJobWarrior = static_cast<CPCSelectJob*>(pChildUI);
+					else if (L"PCSelectArcher" == vecObjectTag[i])
+						m_pPCSelectJobArcher = static_cast<CPCSelectJob*>(pChildUI);
+					else if (L"PCSelectPriest" == vecObjectTag[i])
+						m_pPCSelectJobPriest = static_cast<CPCSelectJob*>(pChildUI);
 				}
 				else if (L"PCSelectWarriorFrame" == vecObjectTag[i] ||
 						 L"PCSelectArcherFrame" == vecObjectTag[i] || 
@@ -401,6 +465,13 @@ HRESULT CScene_Logo::Ready_LayerUI(wstring wstrLayerTag)
 													  vecRectPosOffset[i],				// RectPosOffset
 													  vecRectScale[i],					// RectScaleOffset
 													  vecUIDepth[i]);					// UI Depth
+
+					if (L"PCSelectWarriorFrame" == vecObjectTag[i])
+						m_pPCSelectFrameWarrior = static_cast<CPCSelectFrame*>(pChildUI);
+					else if (L"PCSelectArcherFrame" == vecObjectTag[i])
+						m_pPCSelectFrameArcher = static_cast<CPCSelectFrame*>(pChildUI);
+					else if (L"PCSelectPriestFrame" == vecObjectTag[i])
+						m_pPCSelectFramePriest = static_cast<CPCSelectFrame*>(pChildUI);
 				}
 				else if (L"PCSelectButtonNormal" == vecObjectTag[i] ||
 						 L"PCSelectButtonCliecked" == vecObjectTag[i])
@@ -416,6 +487,11 @@ HRESULT CScene_Logo::Ready_LayerUI(wstring wstrLayerTag)
 													   vecRectPosOffset[i],				// RectPosOffset
 													   vecRectScale[i],					// RectScaleOffset
 													   vecUIDepth[i]);					// UI Depth
+
+					if (L"PCSelectButtonNormal" == vecObjectTag[i])
+						m_pPCSelectButtonNormal = static_cast<CPCSelectButton*>(pChildUI);
+					else if (L"PCSelectButtonCliecked" == vecObjectTag[i])
+						m_pPCSelectButtonClicked = static_cast<CPCSelectButton*>(pChildUI);
 				}
 				m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
 				static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
