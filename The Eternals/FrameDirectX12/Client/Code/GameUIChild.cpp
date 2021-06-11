@@ -62,6 +62,9 @@ _int CGameUIChild::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	if (nullptr == m_pTexDescriptorHeap)
+		m_pTexDescriptorHeap = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(m_wstrTextureTag);
+
 	if (m_bIsSpriteAnimation)
 		Update_SpriteFrame(fTimeDelta);
 
@@ -207,8 +210,6 @@ HRESULT CGameUIChild::Read_DataFromFilePath(wstring wstrDataFilePath)
 		m_tFrame.fSceneCnt   = fSceneCnt;
 		m_tFrame.fCurScene   = fCurScene;
 	}
-
-	return S_OK;
 
 	return S_OK;
 }

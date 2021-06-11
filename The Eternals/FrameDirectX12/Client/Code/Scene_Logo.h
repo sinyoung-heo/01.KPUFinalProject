@@ -45,6 +45,11 @@ private:
 	_tchar			m_szLoadingStr[MIN_STR]	= L"";
 	_int			m_iMaxFileCount			= 0;
 
+	/*__________________________________________________________________________________________________________
+	[ PCSelect ]
+	____________________________________________________________________________________________________________*/
+
+
 public:
 	static CScene_Logo*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 

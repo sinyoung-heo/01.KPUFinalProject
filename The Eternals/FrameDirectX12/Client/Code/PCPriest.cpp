@@ -463,19 +463,19 @@ HRESULT CPCPriest::SetUp_ClassFrame()
 
 			for (_int i = 0; i < iChildUISize; ++i)
 			{
-			fin >> vecDataFilePath[i]			// DataFilePath
-				>> vecObjectTag[i]				// Object Tag
-				>> vecPos[i].x					// Pos X
-				>> vecPos[i].y					// Pos Y
-				>> vecScale[i].x				// Scale X
-				>> vecScale[i].y				// Scale Y
-				>> vecUIDepth[i]				// UI Depth
-				>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
-				>> vecFrameSpeed[i]				// Frame Speed
-				>> vecRectPosOffset[i].x		// RectPosOffset X
-				>> vecRectPosOffset[i].y		// RectPosOffset Y
-				>> vecRectScale[i].x			// RectScale X
-				>> vecRectScale[i].y;			// RectScale Y
+				fin >> vecDataFilePath[i]			// DataFilePath
+					>> vecObjectTag[i]				// Object Tag
+					>> vecPos[i].x					// Pos X
+					>> vecPos[i].y					// Pos Y
+					>> vecScale[i].x				// Scale X
+					>> vecScale[i].y				// Scale Y
+					>> vecUIDepth[i]				// UI Depth
+					>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
+					>> vecFrameSpeed[i]				// Frame Speed
+					>> vecRectPosOffset[i].x		// RectPosOffset X
+					>> vecRectPosOffset[i].y		// RectPosOffset Y
+					>> vecRectScale[i].x			// RectScale X
+					>> vecRectScale[i].y;			// RectScale Y
 			}
 
 			if (fin.eof())

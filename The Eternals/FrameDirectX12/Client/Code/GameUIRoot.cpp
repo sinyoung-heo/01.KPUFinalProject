@@ -59,6 +59,9 @@ _int CGameUIRoot::Update_GameObject(const _float& fTimeDelta)
 	if (!m_bIsRender)
 		return NO_EVENT;
 
+	if (nullptr == m_pTexDescriptorHeap)
+		m_pTexDescriptorHeap = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(m_wstrTextureTag);
+
 	if (m_bIsSpriteAnimation)
 		Update_SpriteFrame(fTimeDelta);
 

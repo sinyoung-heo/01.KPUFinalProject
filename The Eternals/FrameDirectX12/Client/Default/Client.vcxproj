@@ -201,6 +201,10 @@
     <ClInclude Include="..\Code\PCOthersGladiator.h" />
     <ClInclude Include="..\Code\PCOthersPriest.h" />
     <ClInclude Include="..\Code\PCPriest.h" />
+    <ClInclude Include="..\Code\PCSelectBackground.h" />
+    <ClInclude Include="..\Code\PCSelectButton.h" />
+    <ClInclude Include="..\Code\PCSelectFrame.h" />
+    <ClInclude Include="..\Code\PCSelectJob.h" />
     <ClInclude Include="..\Code\PCWeapon.h" />
     <ClInclude Include="..\Code\PCWeaponBow.h" />
     <ClInclude Include="..\Code\PCWeaponRod.h" />
@@ -326,6 +330,10 @@
     <ClCompile Include="..\Code\PCOthersGladiator.cpp" />
     <ClCompile Include="..\Code\PCOthersPriest.cpp" />
     <ClCompile Include="..\Code\PCPriest.cpp" />
+    <ClCompile Include="..\Code\PCSelectBackground.cpp" />
+    <ClCompile Include="..\Code\PCSelectButton.cpp" />
+    <ClCompile Include="..\Code\PCSelectFrame.cpp" />
+    <ClCompile Include="..\Code\PCSelectJob.cpp" />
     <ClCompile Include="..\Code\PCWeapon.cpp" />
     <ClCompile Include="..\Code\PCWeaponBow.cpp" />
     <ClCompile Include="..\Code\PCWeaponRod.cpp" />

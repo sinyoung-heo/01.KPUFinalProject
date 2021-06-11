@@ -13,6 +13,10 @@
 #include "LoadingProgress.h"
 #include "Font.h"
 #include "FadeInOut.h"
+#include "PCSelectBackground.h"
+#include "PCSelectJob.h"
+#include "PCSelectFrame.h"
+#include "PCSelectButton.h"
 
 char g_cJob = -1;
 
@@ -71,7 +75,10 @@ _int CScene_Logo::Update_Scene(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Loading Text ]
 	____________________________________________________________________________________________________________*/
-	if (nullptr != m_pFont_LoadingStr && !m_bIsCreateFadeInOut)
+	if (g_bIsLoadingFinish && nullptr != m_pFont_LoadingStr)
+		m_pFont_LoadingStr->Set_DeadGameObject();
+	
+	if (nullptr != m_pFont_LoadingStr && !m_bIsCreateFadeInOut && !g_bIsLoadingFinish)
 	{
 		m_pFont_LoadingStr->Update_GameObject(fTimeDelta);
 
@@ -89,6 +96,8 @@ _int CScene_Logo::Update_Scene(const _float& fTimeDelta)
 		m_pFont_LoadingStr->Set_Text(wstrResult);
 		static_cast<CLoadingProgress*>(m_pLoadingProgress)->Set_LoadingPercent(fRatio);
 	}
+
+
 
 	/*__________________________________________________________________________________________________________
 	[ MouseCursorMgr ]
@@ -119,7 +128,10 @@ HRESULT CScene_Logo::Render_Scene(const _float & fTimeDelta, const Engine::RENDE
 			if (!m_bIsCreateFadeInOut)
 			{
 				m_bIsCreateFadeInOut = true;
-				m_pFont_LoadingStr->Set_DeadGameObject();
+
+				if (nullptr != m_pFont_LoadingStr)
+					m_pFont_LoadingStr->Set_DeadGameObject();
+
 				Engine::CGameObject* pGameObj = nullptr;
 				pGameObj = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CAHNGE_LOGO_STAGE);
 				Engine::NULL_CHECK_RETURN(pGameObj, E_FAIL);
@@ -243,8 +255,9 @@ HRESULT CScene_Logo::Ready_LayerUI(wstring wstrLayerTag)
 	Engine::CGameObject* pGameObj = nullptr;
 
 	/*__________________________________________________________________________________________________________
-	[ GameObject 持失 ]Logo   LoadingProgress
+	[ GameObject 持失 ]
 	____________________________________________________________________________________________________________*/
+	// LoadingProgress
 	pGameObj = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::FADE_IN);
 	Engine::NULL_CHECK_RETURN(pGameObj, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"FadeInOut", pGameObj), E_FAIL);
@@ -260,6 +273,155 @@ HRESULT CScene_Logo::Ready_LayerUI(wstring wstrLayerTag)
 	m_pLoadingProgress = CLoadingProgress::Create(m_pGraphicDevice, m_pCommandList, L"LoadingProgress");
 	Engine::NULL_CHECK_RETURN(m_pLoadingProgress, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"LoadingProgressBack", m_pLoadingProgress), E_FAIL);
+
+	/*__________________________________________________________________________________________________________
+	[ PCSelect ]
+	____________________________________________________________________________________________________________*/
+	{
+		wifstream fin { L"../../Bin/ToolData/2DUIPCSelect.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		// ChildUI Data
+		vector<wstring> vecDataFilePath;
+		vector<wstring> vecObjectTag;
+		vector<_vec3>	vecPos;
+		vector<_vec3>	vecScale;
+		vector<_long>	vecUIDepth;
+		vector<_int>	vecIsSpriteAnimation;
+		vector<_float>	vecFrameSpeed;
+		vector<_vec3>	vecRectPosOffset;
+		vector<_vec3>	vecRectScale;
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			vecDataFilePath.resize(iChildUISize);
+			vecObjectTag.resize(iChildUISize);
+			vecPos.resize(iChildUISize);
+			vecScale.resize(iChildUISize);
+			vecUIDepth.resize(iChildUISize);
+			vecIsSpriteAnimation.resize(iChildUISize);
+			vecFrameSpeed.resize(iChildUISize);
+			vecRectPosOffset.resize(iChildUISize);
+			vecRectScale.resize(iChildUISize);
+
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				fin >> vecDataFilePath[i]			// DataFilePath
+					>> vecObjectTag[i]				// Object Tag
+					>> vecPos[i].x					// Pos X
+					>> vecPos[i].y					// Pos Y
+					>> vecScale[i].x				// Scale X
+					>> vecScale[i].y				// Scale Y
+					>> vecUIDepth[i]				// UI Depth
+					>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
+					>> vecFrameSpeed[i]				// Frame Speed
+					>> vecRectPosOffset[i].x		// RectPosOffset X
+					>> vecRectPosOffset[i].y		// RectPosOffset Y
+					>> vecRectScale[i].x			// RectScale X
+					>> vecRectScale[i].y;			// RectScale Y
+			}
+
+			if (fin.eof())
+				break;
+
+			// UIRoot 持失.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CPCSelectBackground::Create(m_pGraphicDevice, m_pCommandList,
+												  wstrRootObjectTag,
+												  wstrDataFilePath,
+												  vPos,
+												  vScale,
+												  bIsSpriteAnimation,
+												  fFrameSpeed,
+												  vRectPosOffset,
+												  vRectScale,
+												  UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+
+			// UIChild 持失.
+			Engine::CGameObject* pChildUI = nullptr;
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				if (L"PCSelectWarrior" == vecObjectTag[i] || 
+					L"PCSelectArcher" == vecObjectTag[i] || 
+					L"PCSelectPriest" == vecObjectTag[i])
+				{
+					pChildUI = CPCSelectJob::Create(m_pGraphicDevice, m_pCommandList,
+													wstrRootObjectTag,				// RootObjectTag
+													vecObjectTag[i],				// ObjectTag
+													vecDataFilePath[i],				// DataFilePath
+													vecPos[i],						// Pos
+													vecScale[i],					// Scane
+													(_bool)vecIsSpriteAnimation[i],// Is Animation
+													vecFrameSpeed[i],				// FrameSpeed
+													vecRectPosOffset[i],			// RectPosOffset
+													vecRectScale[i],				// RectScaleOffset
+													vecUIDepth[i]);					// UI Depth
+				}
+				else if (L"PCSelectWarriorFrame" == vecObjectTag[i] ||
+						 L"PCSelectArcherFrame" == vecObjectTag[i] || 
+						 L"PCSelectPriestFrame" == vecObjectTag[i])
+				{
+					pChildUI = CPCSelectFrame::Create(m_pGraphicDevice, m_pCommandList,
+													  wstrRootObjectTag,				// RootObjectTag
+													  vecObjectTag[i],					// ObjectTag
+													  vecDataFilePath[i],				// DataFilePath
+													  vecPos[i],						// Pos
+													  vecScale[i],						// Scane
+													  (_bool)vecIsSpriteAnimation[i],	// Is Animation
+													  vecFrameSpeed[i],					// FrameSpeed
+													  vecRectPosOffset[i],				// RectPosOffset
+													  vecRectScale[i],					// RectScaleOffset
+													  vecUIDepth[i]);					// UI Depth
+				}
+				else if (L"PCSelectButtonNormal" == vecObjectTag[i] ||
+						 L"PCSelectButtonCliecked" == vecObjectTag[i])
+				{
+					pChildUI = CPCSelectButton::Create(m_pGraphicDevice, m_pCommandList,
+													   wstrRootObjectTag,				// RootObjectTag
+													   vecObjectTag[i],					// ObjectTag
+													   vecDataFilePath[i],				// DataFilePath
+													   vecPos[i],						// Pos
+													   vecScale[i],						// Scane
+													   (_bool)vecIsSpriteAnimation[i],	// Is Animation
+													   vecFrameSpeed[i],				// FrameSpeed
+													   vecRectPosOffset[i],				// RectPosOffset
+													   vecRectScale[i],					// RectScaleOffset
+													   vecUIDepth[i]);					// UI Depth
+				}
+				m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
+				static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
+			}
+		}
+	}
 
 	return S_OK;
 }

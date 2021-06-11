@@ -280,6 +280,21 @@
     <Filter Include="02.GameObject\06.CollisionTick\CollisionArrow">
       <UniqueIdentifier>{8bd63b4d-5072-480e-9815-16e73e952294}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\01.PCSelectBackground">
+      <UniqueIdentifier>{a3ce7da6-fbd3-409e-bcd3-7fe4abca5737}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\01.PCSelectBackgroundChild">
+      <UniqueIdentifier>{af567c97-2557-4335-88c6-ba8a7a5efe1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\01.PCSelectBackgroundChild\PCSelectJop">
+      <UniqueIdentifier>{0b0f9c41-3e53-4345-93a0-d424c7dfb267}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\01.PCSelectBackgroundChild\PCSelectButton">
+      <UniqueIdentifier>{a0dceaaf-c718-4e10-a0b7-cee34d770657}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\01.PCSelectBackgroundChild\PCSelectFrame">
+      <UniqueIdentifier>{be28307c-c7f2-48f7-801d-f7f4fa5f8bdd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -599,6 +614,18 @@
     <ClInclude Include="..\Code\FireDecal.h" />
     <ClInclude Include="..\Code\Glowring.h" />
     <ClInclude Include="..\Code\IceStorm_s.h" />
+    <ClInclude Include="..\Code\PCSelectBackground.h">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\01.PCSelectBackground</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PCSelectFrame.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\01.PCSelectBackgroundChild\PCSelectFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PCSelectButton.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\01.PCSelectBackgroundChild\PCSelectButton</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PCSelectJob.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\01.PCSelectBackgroundChild\PCSelectJop</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -864,6 +891,18 @@
     <ClCompile Include="..\Code\FireDecal.cpp" />
     <ClCompile Include="..\Code\Glowring.cpp" />
     <ClCompile Include="..\Code\IceStorm_s.cpp" />
+    <ClCompile Include="..\Code\PCSelectBackground.cpp">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\01.PCSelectBackground</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PCSelectFrame.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\01.PCSelectBackgroundChild\PCSelectFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PCSelectButton.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\01.PCSelectBackgroundChild\PCSelectButton</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PCSelectJob.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\01.PCSelectBackgroundChild\PCSelectJop</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

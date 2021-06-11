@@ -39,6 +39,9 @@ _int CLogoBack::Update_GameObject(const _float & fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	if (g_bIsLoadingFinish)
+		m_bIsDead = true;
+
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/

@@ -30,6 +30,7 @@ _uint CLoading::Loading_For_Stage()
 	Loading_TextureFromFilePath();
 
 	m_bIsFinish = true;
+	g_bIsLoadingFinish = true;
 
 	lstrcpy(m_szLoadingStr, L"COMPLETE");
 
