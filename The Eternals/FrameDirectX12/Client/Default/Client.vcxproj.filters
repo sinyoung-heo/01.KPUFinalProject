@@ -298,6 +298,9 @@
     <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\02.LoginSelectButton">
       <UniqueIdentifier>{0432068e-cade-4d10-9e8d-e146572eca3f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.GameUI\02.NormalMonsterHpGauge">
+      <UniqueIdentifier>{2c6d9858-532b-4d18-ab51-2bf0aed42f5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -632,6 +635,9 @@
     <ClInclude Include="..\Code\LoginSelectButton.h">
       <Filter>02.GameObject\99.GameUI\00.GameUIRoot\02.LoginSelectButton</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\NormalMonsterHpGauge.h">
+      <Filter>02.GameObject\99.GameUI\02.NormalMonsterHpGauge</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -911,6 +917,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\LoginSelectButton.cpp">
       <Filter>02.GameObject\99.GameUI\00.GameUIRoot\02.LoginSelectButton</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\NormalMonsterHpGauge.cpp">
+      <Filter>02.GameObject\99.GameUI\02.NormalMonsterHpGauge</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

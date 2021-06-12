@@ -10,6 +10,7 @@
 #include "TimeMgr.h"
 #include "CollisionTick.h"
 #include "InstancePoolMgr.h"
+#include "NormalMonsterHpGauge.h"
 
 CGiantBeetle::CGiantBeetle(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -48,6 +49,13 @@ HRESULT CGiantBeetle::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMesh
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
 	m_iMonsterStatus = GiantBeetle::A_WAIT;
+
+	// Create HpGauge
+	m_pHpGauge = static_cast<CNormalMonsterHpGauge*>(CNormalMonsterHpGauge::Create(m_pGraphicDevice, 
+																				   m_pCommandList,
+																				   _vec3(0.0f),
+																				   _vec3(4.0f, 0.35f, 1.0f)));
+	Engine::NULL_CHECK_RETURN(m_pHpGauge, E_FAIL);
 
 	return S_OK;
 }
@@ -94,6 +102,9 @@ _int CGiantBeetle::Update_GameObject(const _float& fTimeDelta)
 		m_bIsResetNaviMesh = true;
 		m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
 	}
+
+	// SetUp HpGauge
+	SetUp_HpGauge(fTimeDelta);
 
 	// Create CollisionTick
 	if (m_pMeshCom->Is_BlendingComplete())
@@ -497,6 +508,20 @@ void CGiantBeetle::SetUp_CollisionTick(const _float& fTimeDelta)
 	}
 }
 
+void CGiantBeetle::SetUp_HpGauge(const _float& fTimeDelta)
+{
+	if (nullptr != m_pHpGauge)
+	{
+		_vec3 vPos = m_pTransCom->m_vPos;
+		vPos.y += 6.15f;
+		m_pHpGauge->Get_Transform()->m_vPos = vPos;
+		m_pHpGauge->Set_Percent((_float)m_pInfoCom->m_iHp / (_float)m_pInfoCom->m_iMaxHp);
+
+		m_pHpGauge->Update_GameObject(fTimeDelta);
+		m_pHpGauge->LateUpdate_GameObject(fTimeDelta);
+	}
+}
+
 Engine::CGameObject* CGiantBeetle::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
 {
 	CGiantBeetle* pInstance = new CGiantBeetle(pGraphicDevice, pCommandList);
@@ -537,4 +562,6 @@ void CGiantBeetle::Free()
 	Engine::Safe_Release(m_pColliderSphereCom);
 	Engine::Safe_Release(m_pColliderBoxCom);
 	Engine::Safe_Release(m_pNaviMeshCom);
+
+	Engine::Safe_Release(m_pHpGauge);
 }

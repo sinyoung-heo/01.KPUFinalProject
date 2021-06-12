@@ -10,6 +10,7 @@
 #include "TimeMgr.h"
 #include "CollisionTick.h"
 #include "InstancePoolMgr.h"
+#include "NormalMonsterHpGauge.h"
 
 CGiantMonkey::CGiantMonkey(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -49,6 +50,13 @@ HRESULT CGiantMonkey::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMesh
 	m_uiAnimIdx = 0;
 	m_iMonsterStatus = GiantMonkey::A_WAIT;
 
+	// Create HpGauge
+	m_pHpGauge = static_cast<CNormalMonsterHpGauge*>(CNormalMonsterHpGauge::Create(m_pGraphicDevice, 
+																				   m_pCommandList,
+																				   _vec3(0.0f),
+																				   _vec3(4.0f, 0.35f, 1.0f)));
+	Engine::NULL_CHECK_RETURN(m_pHpGauge, E_FAIL);
+
 	return S_OK;
 }
 
@@ -67,7 +75,7 @@ _int CGiantMonkey::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
-	
+
 	if (m_bIsReturn)
 	{
 		m_iSNum = -1;
@@ -143,6 +151,9 @@ _int CGiantMonkey::Update_GameObject(const _float& fTimeDelta)
 _int CGiantMonkey::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
+
+	// SetUp HpGauge
+	SetUp_HpGauge(fTimeDelta);
 
 	Set_ConstantTableShadowDepth();
 	Set_ConstantTable();
@@ -640,6 +651,20 @@ void CGiantMonkey::SetUp_CollisionTick(const _float& fTimeDelta)
 	}
 }
 
+void CGiantMonkey::SetUp_HpGauge(const _float& fTimeDelta)
+{
+	if (nullptr != m_pHpGauge)
+	{
+		_vec3 vPos = m_pTransCom->m_vPos;
+		vPos.y += 5.3f;
+		m_pHpGauge->Get_Transform()->m_vPos = vPos;
+		m_pHpGauge->Set_Percent((_float)m_pInfoCom->m_iHp / (_float)m_pInfoCom->m_iMaxHp);
+
+		m_pHpGauge->Update_GameObject(fTimeDelta);
+		m_pHpGauge->LateUpdate_GameObject(fTimeDelta);
+	}
+}
+
 Engine::CGameObject* CGiantMonkey::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
 {
 	CGiantMonkey* pInstance = new CGiantMonkey(pGraphicDevice, pCommandList);
@@ -680,4 +705,6 @@ void CGiantMonkey::Free()
 	Engine::Safe_Release(m_pColliderSphereCom);
 	Engine::Safe_Release(m_pColliderBoxCom);
 	Engine::Safe_Release(m_pNaviMeshCom);
+
+	Engine::Safe_Release(m_pHpGauge);
 }

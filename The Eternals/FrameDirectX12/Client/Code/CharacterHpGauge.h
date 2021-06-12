@@ -10,7 +10,6 @@ private:
 public:
 	void Set_Percent(const _float& fPercent, const _int& iCurHp, const _int& iMaxHp) { m_fPercent = fPercent; m_iCurHp = iCurHp; m_iMaxHp = iMaxHp; }
 
-
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrRootObjectTag,
 									 wstring wstrObjectTag,							   

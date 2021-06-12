@@ -9,6 +9,7 @@
 #include "TimeMgr.h"
 #include "InstancePoolMgr.h"
 #include "CollisionTick.h"
+#include "NormalMonsterHpGauge.h"
 
 CCrab::CCrab(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -50,6 +51,14 @@ HRESULT CCrab::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, co
 	m_uiAnimIdx = 0;
 	m_iMonsterStatus = Crab::A_WAIT;
 	CreateServerNumberFont();
+
+	// Create HpGauge
+	m_pHpGauge = static_cast<CNormalMonsterHpGauge*>(CNormalMonsterHpGauge::Create(m_pGraphicDevice, 
+																				   m_pCommandList,
+																				   _vec3(0.0f),
+																				   _vec3(1.5f, 0.175f, 1.0f)));
+	Engine::NULL_CHECK_RETURN(m_pHpGauge, E_FAIL);
+
 	return S_OK;
 }
 
@@ -95,6 +104,9 @@ _int CCrab::Update_GameObject(const _float& fTimeDelta)
 		m_bIsResetNaviMesh = true;
 		m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
 	}
+
+	// SetUp HpGauge
+	SetUp_HpGauge(fTimeDelta);
 
 	// Create CollisionTick
 	if (m_pMeshCom->Is_BlendingComplete())
@@ -430,6 +442,20 @@ void CCrab::SetUp_CollisionTick(const _float& fTimeDelta)
 	}
 }
 
+void CCrab::SetUp_HpGauge(const _float& fTimeDelta)
+{
+	if (nullptr != m_pHpGauge)
+	{
+		_vec3 vPos = m_pTransCom->m_vPos;
+		vPos.y += 1.0f;
+		m_pHpGauge->Get_Transform()->m_vPos = vPos;
+		m_pHpGauge->Set_Percent((_float)m_pInfoCom->m_iHp / (_float)m_pInfoCom->m_iMaxHp);
+
+		m_pHpGauge->Update_GameObject(fTimeDelta);
+		m_pHpGauge->LateUpdate_GameObject(fTimeDelta);
+	}
+}
+
 Engine::CGameObject* CCrab::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
 {
 	CCrab* pInstance = new CCrab(pGraphicDevice, pCommandList);
@@ -470,4 +496,6 @@ void CCrab::Free()
 	Engine::Safe_Release(m_pColliderSphereCom);
 	Engine::Safe_Release(m_pColliderBoxCom);
 	Engine::Safe_Release(m_pNaviMeshCom);
+
+	Engine::Safe_Release(m_pHpGauge);
 }
