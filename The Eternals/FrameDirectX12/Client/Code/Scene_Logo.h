@@ -59,8 +59,11 @@ private:
 	CPCSelectFrame* m_pPCSelectFrameArcher  = nullptr;
 	CPCSelectFrame* m_pPCSelectFramePriest  = nullptr;
 
-	CPCSelectButton* m_pPCSelectButton  = nullptr;
+	CPCSelectButton* m_pPCSelectButton        = nullptr;
 	CPCSelectButton* m_pPCSelectButtonClicked = nullptr;
+
+	_bool m_bIsKeyPressing = true;
+	_bool m_bIsGameStart   = false;
 
 public:
 	static CScene_Logo*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);

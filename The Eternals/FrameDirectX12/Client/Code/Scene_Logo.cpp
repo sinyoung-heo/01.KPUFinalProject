@@ -32,16 +32,6 @@ HRESULT CScene_Logo::Ready_Scene()
 	COUT_STR("");
 	COUT_STR("<< Ready Scene_Logo >>");
 	COUT_STR("");
-
-	//while (g_cJob == -1)
-	//{
-	//	int choice = -1;
-	//	cout << "Choice Your Job! (1.Gladiator 2.Archer 3.Priest): ";
-	//	cin >> choice;
-	//	if (choice == 1)		g_cJob = PC_GLADIATOR;
-	//	else if (choice == 2)	g_cJob = PC_ARCHER;
-	//	else if (choice == 3)	g_cJob = PC_PRIEST;
-	//}
 #endif
 
 	Engine::FAILED_CHECK_RETURN(Ready_LayerEnvironment(L"Layer_Environment"), E_FAIL);
@@ -140,7 +130,7 @@ HRESULT CScene_Logo::Render_Scene(const _float & fTimeDelta, const Engine::RENDE
 	// Scene ÀüÈ¯.
 	if (m_pLoading->Get_Finish())
 	{
-		if (Engine::KEY_DOWN(DIK_RETURN))
+		if (m_bIsGameStart)
 		{
 			if (!m_bIsCreateFadeInOut)
 			{
@@ -205,6 +195,8 @@ void CScene_Logo::KeyInput_PCSelect(const _float& fTimeDelta)
 {
 	if (!CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse())
 		return;
+	if (m_bIsGameStart)
+		return;
 
 	// PCSelectJobWarrior
 	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectJobWarrior->Get_Rect()))
@@ -248,24 +240,26 @@ void CScene_Logo::KeyInput_PCSelect(const _float& fTimeDelta)
 	// PCSelectButton
 	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectButton->Get_Rect()))
 	{
-		if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_LB))
+		if (Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && m_bIsKeyPressing)
 		{
-			m_pPCSelectButton->Set_IsRenderUI(false);
-			m_pPCSelectButtonClicked->Set_IsRenderUI(true);
-		}
-
-		if (Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB))
-		{
-			cout << "Button KeyUp" << endl;
-
+			m_bIsGameStart = true;
 			m_pPCSelectButton->Set_IsRenderUI(true);
 			m_pPCSelectButtonClicked->Set_IsRenderUI(false);
 		}
 	}
-	else
+
+	m_bIsKeyPressing = false;
+	m_pPCSelectButton->Set_IsRenderUI(true);
+	m_pPCSelectButtonClicked->Set_IsRenderUI(false);
+
+	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectButton->Get_Rect()))
 	{
-		m_pPCSelectButton->Set_IsRenderUI(true);
-		m_pPCSelectButtonClicked->Set_IsRenderUI(false);
+		if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_LB))
+		{
+			m_bIsKeyPressing = true;
+			m_pPCSelectButton->Set_IsRenderUI(false);
+			m_pPCSelectButtonClicked->Set_IsRenderUI(true);
+		}
 	}
 }
 

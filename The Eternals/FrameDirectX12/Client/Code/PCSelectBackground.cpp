@@ -26,7 +26,7 @@ HRESULT CPCSelectBackground::Ready_GameObject(wstring wstrObjectTag,
 															  vRectOffset,
 															  vRectScale,
 															  iUIDepth,
-															  true, L"Font_NetmarbleBold60"), E_FAIL);
+															  true, L"Font_NexonBold72"), E_FAIL);
 
 	m_matView = INIT_MATRIX;
 	m_matProj = XMMatrixOrthographicLH(WINCX, WINCY, 0.0f, 1.0f);
@@ -67,7 +67,7 @@ _int CPCSelectBackground::LateUpdate_GameObject(const _float& fTimeDelta)
 		if (nullptr != m_pFont)
 		{
 			_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
-			vPos.x -= 185.0f;
+			vPos.x -= 200.0f;
 			vPos.y -= 350.0f;
 			m_pFont->Set_Pos(_vec2(vPos.x, vPos.y));
 			m_pFont->Update_GameObject(fTimeDelta);
