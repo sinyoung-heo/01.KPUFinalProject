@@ -9,7 +9,8 @@ private:
 	virtual ~CNormalMonsterHpGauge() = default;
 
 public:
-	void Set_Percent(const _float& fPercent) { m_fPercent = fPercent; }
+	void Set_Percent(const _float& fPercent)	{ m_fPercent = fPercent; }
+	void Set_IsActive(const _bool& bIsActive)	{ m_bIsActive = bIsActive; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(const _vec3& vPos, const _vec3& vScale);
@@ -30,8 +31,8 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	_float	m_fPercent = 1.0f;
-	_vec3	m_vConvert = _vec3(0.0f);
+	_float	m_fPercent  = 1.0f;
+	_bool	m_bIsActive = true;
 
 	wstring					m_wstrTextureTag     = L"";
 	ID3D12DescriptorHeap*	m_pTexDescriptorHeap = nullptr;

@@ -44,6 +44,9 @@ _int CNormalMonsterHpGauge::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	if (!m_bIsActive)
+		return NO_EVENT;
+
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
@@ -62,6 +65,9 @@ _int CNormalMonsterHpGauge::Update_GameObject(const _float& fTimeDelta)
 _int CNormalMonsterHpGauge::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
+
+	if (!m_bIsActive)
+		return NO_EVENT;
 
 	return NO_EVENT;
 }
