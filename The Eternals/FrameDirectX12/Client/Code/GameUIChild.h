@@ -14,8 +14,12 @@ protected:
 	virtual ~CGameUIChild() = default;
 
 public:
-	RECT&	Get_Rect() { return m_tRect; }
-	void	Set_IsRenderUI(const _bool& bIsRender) { m_bIsRender = bIsRender; }
+	RECT&			Get_Rect() { return m_tRect; }
+	Engine::CFont*	Get_Font() { return m_pFont; }
+
+	void Set_IsRenderUI(const _bool& bIsRender) { m_bIsRender = bIsRender; }
+	void Set_IsActive(const _bool& bIsActive) { m_bIsActive = bIsActive; }
+
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrRootObjectTag,
@@ -73,6 +77,8 @@ protected:
 	_vec3		m_vConvertRect = _vec3(0.0f);
 
 	_bool		m_bIsRender	= true;
+	_bool		m_bIsActive = true;
+
 
 	/*__________________________________________________________________________________________________________
 	[ Font ]

@@ -13,7 +13,7 @@ HRESULT CLoadingProgress::Ready_GameObject(wstring wstrTextureTag)
 
 	m_matView				= INIT_MATRIX;
 	m_matProj				= XMMatrixOrthographicLH(WINCX, WINCY, 0.0f, 1.0f);
-	m_pTransCom->m_vPos		= _vec3((_float)WINCX / 2.0f + 12.0f, (_float)WINCY - 56.0f, 0.2f);
+	m_pTransCom->m_vPos		= _vec3((_float)WINCX / 2.0f + 12.0f, (_float)WINCY - 46.0f, 0.2f);
 	m_pTransCom->m_vScale	= _vec3(680.0f, 16.0f, 1.0f);
 
 	m_uiTexIdx	= 3;

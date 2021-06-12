@@ -238,6 +238,23 @@ HRESULT CMainApp::SetUp_Font()
 	Engine::NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	m_pObjectMgr->Add_GameObjectPrototype(L"Font_NetmarbleBold60", pGameObject);
 
+
+	// ³Ø½¼Lv1°íµñ Bold - 24
+	pGameObject = Engine::CFont::Create_Prototype(m_pGraphicDevice, m_pCommandList,
+												  L"³Ø½¼Lv1°íµñ Bold",	// Font Type
+												  24.f,					// Font Size
+												  D2D1::ColorF::White);	// Font Color
+	Engine::NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	m_pObjectMgr->Add_GameObjectPrototype(L"Font_NexonBold24", pGameObject);
+
+	// ³Ø½¼Lv1°íµñ Bold - 32
+	pGameObject = Engine::CFont::Create_Prototype(m_pGraphicDevice, m_pCommandList,
+												  L"³Ø½¼Lv1°íµñ Bold",	// Font Type
+												  32.f,					// Font Size
+												  D2D1::ColorF::White);	// Font Color
+	Engine::NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	m_pObjectMgr->Add_GameObjectPrototype(L"Font_NexonBold32", pGameObject);
+
 	// ³Ø½¼Lv1°íµñ Bold - 72
 	pGameObject = Engine::CFont::Create_Prototype(m_pGraphicDevice, m_pCommandList,
 												  L"³Ø½¼Lv1°íµñ Bold",	// Font Type
@@ -247,7 +264,7 @@ HRESULT CMainApp::SetUp_Font()
 	m_pObjectMgr->Add_GameObjectPrototype(L"Font_NexonBold72", pGameObject);
 
 
-	// BinggraeMelona 12
+	// BinggraeMelona 24
 	pGameObject = Engine::CFont::Create_Prototype(m_pGraphicDevice, m_pCommandList,
 												  L"ºù±×·¹ ¸Þ·Î³ªÃ¼",		// Font Type
 												  24.0f,				// Font Size

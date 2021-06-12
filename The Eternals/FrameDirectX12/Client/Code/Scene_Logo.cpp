@@ -17,6 +17,7 @@
 #include "PCSelectJob.h"
 #include "PCSelectFrame.h"
 #include "PCSelectButton.h"
+#include "LoginSelectButton.h"
 
 char g_cJob = -1;
 
@@ -54,11 +55,27 @@ HRESULT CScene_Logo::Ready_Scene()
 	m_pFont_LoadingStr = static_cast<Engine::CFont*>(m_pObjectMgr->Clone_GameObjectPrototype(L"Font_Loading"));
 	Engine::NULL_CHECK_RETURN(m_pFont_LoadingStr, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pFont_LoadingStr->Ready_GameObject(L"", 
-																	 _vec2(WINCX / 2.0f - 275.0f, WINCY - 100.0f),
+																	 _vec2(WINCX / 2.0f - 275.0f, WINCY - 90.0f),
 																	 D2D1::ColorF::RosyBrown), E_FAIL);
 
 	g_cJob = PC_GLADIATOR;
 	m_pPCSelectFrameWarrior->Set_IsUpdate(true);
+
+	m_pLoginSelectPCButtonClicked->Set_IsActive(true);
+	m_pLoginSelectPCButtonClicked->Set_IsRender(true);
+	m_pLoginSelectPCButtonClicked->Get_Font()->Set_Text(L"Login Character");
+
+	m_pLoginSelectPCButton->Set_IsActive(false);
+	m_pLoginSelectPCButton->Set_IsRender(false);
+	m_pLoginSelectPCButton->Get_Font()->Set_Text(L"Login Character");
+
+	m_pLoginSelectIDButtonClicked->Set_IsActive(false);
+	m_pLoginSelectIDButtonClicked->Set_IsRender(false);
+	m_pLoginSelectIDButtonClicked->Get_Font()->Set_Text(L"Login ID");
+
+	m_pLoginSelectIDButton->Set_IsActive(true);
+	m_pLoginSelectIDButton->Set_IsRender(true);
+	m_pLoginSelectIDButton->Get_Font()->Set_Text(L"Login ID");
 
 	return S_OK;
 }
@@ -118,7 +135,10 @@ _int CScene_Logo::LateUpdate_Scene(const _float & fTimeDelta)
 	[ PCSelect KeyInput ]
 	____________________________________________________________________________________________________________*/
 	if (g_bIsLoadingFinish)
+	{
+		KeyInput_LoginSelect(fTimeDelta);
 		KeyInput_PCSelect(fTimeDelta);
+	}
 
 	return NO_EVENT;
 }
@@ -191,6 +211,71 @@ HRESULT CScene_Logo::Render_Scene(const _float & fTimeDelta, const Engine::RENDE
 }
 
 
+void CScene_Logo::KeyInput_LoginSelect(const _float& fTimeDelta)
+{
+	if (!CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse())
+		return;
+	if (m_bIsGameStart)
+		return;
+
+	// LoginSelect PC
+	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pLoginSelectPCButton->Get_Rect()) &&
+		Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB))
+	{
+		m_pLoginSelectPCButtonClicked->Set_IsActive(true);
+		m_pLoginSelectPCButtonClicked->Set_IsRender(true);
+		m_pLoginSelectPCButton->Set_IsActive(false);
+		m_pLoginSelectPCButton->Set_IsRender(false);
+
+		m_pLoginSelectIDButtonClicked->Set_IsActive(false);
+		m_pLoginSelectIDButtonClicked->Set_IsRender(false);
+		m_pLoginSelectIDButton->Set_IsActive(true);
+		m_pLoginSelectIDButton->Set_IsRender(true);
+
+		m_bIsLoginPC = true;
+		m_bIsLoginID = false;
+
+		// PCSelect Active On
+		m_pPCSelectBackground->Set_IsActive(true);
+		m_pPCSelectJobWarrior->Set_IsActive(true);
+		m_pPCSelectJobArcher->Set_IsActive(true);
+		m_pPCSelectJobPriest->Set_IsActive(true);
+		m_pPCSelectFrameWarrior->Set_IsActive(true);
+		m_pPCSelectFrameArcher->Set_IsActive(true);
+		m_pPCSelectFramePriest->Set_IsActive(true);
+		m_pPCSelectButton->Set_IsActive(true);
+		m_pPCSelectButtonClicked->Set_IsActive(true);
+	}
+
+	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pLoginSelectIDButton->Get_Rect()) &&
+		Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB))
+	{
+		m_pLoginSelectPCButtonClicked->Set_IsActive(false);
+		m_pLoginSelectPCButtonClicked->Set_IsRender(false);
+		m_pLoginSelectPCButton->Set_IsActive(true);
+		m_pLoginSelectPCButton->Set_IsRender(true);
+
+		m_pLoginSelectIDButtonClicked->Set_IsActive(true);
+		m_pLoginSelectIDButtonClicked->Set_IsRender(true);
+		m_pLoginSelectIDButton->Set_IsActive(false);
+		m_pLoginSelectIDButton->Set_IsRender(false);
+
+		m_bIsLoginPC = false;
+		m_bIsLoginID = true;
+
+		// PCSelect Active Off
+		m_pPCSelectBackground->Set_IsActive(false);
+		m_pPCSelectJobWarrior->Set_IsActive(false);
+		m_pPCSelectJobArcher->Set_IsActive(false);
+		m_pPCSelectJobPriest->Set_IsActive(false);
+		m_pPCSelectFrameWarrior->Set_IsActive(false);
+		m_pPCSelectFrameArcher->Set_IsActive(false);
+		m_pPCSelectFramePriest->Set_IsActive(false);
+		m_pPCSelectButton->Set_IsActive(false);
+		m_pPCSelectButtonClicked->Set_IsActive(false);
+	}
+}
+
 void CScene_Logo::KeyInput_PCSelect(const _float& fTimeDelta)
 {
 	if (!CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse())
@@ -198,68 +283,62 @@ void CScene_Logo::KeyInput_PCSelect(const _float& fTimeDelta)
 	if (m_bIsGameStart)
 		return;
 
-	// PCSelectJobWarrior
-	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectJobWarrior->Get_Rect()))
-	{
-		if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB))
-		{
-			m_pPCSelectFrameWarrior->Set_IsUpdate(true);
-			m_pPCSelectFrameArcher->Set_IsUpdate(false);
-			m_pPCSelectFramePriest->Set_IsUpdate(false);
+	if (m_bIsLoginID)
+		return;
 
-			g_cJob = PC_GLADIATOR;
-		}
+	// PCSelectJobWarrior
+	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectJobWarrior->Get_Rect()) &&
+		Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB))
+	{
+		m_pPCSelectFrameWarrior->Set_IsUpdate(true);
+		m_pPCSelectFrameArcher->Set_IsUpdate(false);
+		m_pPCSelectFramePriest->Set_IsUpdate(false);
+
+		g_cJob = PC_GLADIATOR;
 	}
 
 	// PCSelectJobArcher
-	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectJobArcher->Get_Rect()))
+	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectJobArcher->Get_Rect()) &&
+		Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB))
 	{
-		if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB))
-		{
-			m_pPCSelectFrameWarrior->Set_IsUpdate(false);
-			m_pPCSelectFrameArcher->Set_IsUpdate(true);
-			m_pPCSelectFramePriest->Set_IsUpdate(false);
+		m_pPCSelectFrameWarrior->Set_IsUpdate(false);
+		m_pPCSelectFrameArcher->Set_IsUpdate(true);
+		m_pPCSelectFramePriest->Set_IsUpdate(false);
 
-			g_cJob = PC_ARCHER;
-		}
+		g_cJob = PC_ARCHER;
 	}
 
 	// PCSelectJobPriest
-	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectJobPriest->Get_Rect()))
+	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectJobPriest->Get_Rect()) &&
+		Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB))
 	{
-		if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB))
-		{
-			m_pPCSelectFrameWarrior->Set_IsUpdate(false);
-			m_pPCSelectFrameArcher->Set_IsUpdate(false);
-			m_pPCSelectFramePriest->Set_IsUpdate(true);
+		m_pPCSelectFrameWarrior->Set_IsUpdate(false);
+		m_pPCSelectFrameArcher->Set_IsUpdate(false);
+		m_pPCSelectFramePriest->Set_IsUpdate(true);
 
-			g_cJob = PC_PRIEST;
-		}
+		g_cJob = PC_PRIEST;
 	}
 
 	// PCSelectButton
-	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectButton->Get_Rect()))
+	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectButton->Get_Rect()) &&
+		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
+		m_bIsKeyPressing)
 	{
-		if (Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && m_bIsKeyPressing)
-		{
-			m_bIsGameStart = true;
-			m_pPCSelectButton->Set_IsRenderUI(true);
-			m_pPCSelectButtonClicked->Set_IsRenderUI(false);
-		}
+		m_bIsGameStart = true;
+		m_pPCSelectButton->Set_IsRenderUI(true);
+		m_pPCSelectButtonClicked->Set_IsRenderUI(false);
 	}
 
 	m_bIsKeyPressing = false;
 	m_pPCSelectButton->Set_IsRenderUI(true);
 	m_pPCSelectButtonClicked->Set_IsRenderUI(false);
 
-	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectButton->Get_Rect()))
+	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectButton->Get_Rect()) &&
+		Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_LB))
 	{
-		if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_LB))
-		{
-			m_bIsKeyPressing = true;
-			m_pPCSelectButton->Set_IsRenderUI(false);
-			m_pPCSelectButtonClicked->Set_IsRenderUI(true);
-		}
+		m_bIsKeyPressing = true;
+		m_pPCSelectButton->Set_IsRenderUI(false);
+		m_pPCSelectButtonClicked->Set_IsRenderUI(true);
 	}
 }
 
@@ -354,7 +433,378 @@ HRESULT CScene_Logo::Ready_LayerUI(wstring wstrLayerTag)
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"LoadingProgressBack", m_pLoadingProgress), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
-	[ PCSelect ]
+	[ UI - Login Select ]
+	____________________________________________________________________________________________________________*/
+	{
+		wifstream fin { L"../../Bin/ToolData/2DUIPCLogingCharacterClicked.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		// ChildUI Data
+		vector<wstring> vecDataFilePath;
+		vector<wstring> vecObjectTag;
+		vector<_vec3>	vecPos;
+		vector<_vec3>	vecScale;
+		vector<_long>	vecUIDepth;
+		vector<_int>	vecIsSpriteAnimation;
+		vector<_float>	vecFrameSpeed;
+		vector<_vec3>	vecRectPosOffset;
+		vector<_vec3>	vecRectScale;
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			vecDataFilePath.resize(iChildUISize);
+			vecObjectTag.resize(iChildUISize);
+			vecPos.resize(iChildUISize);
+			vecScale.resize(iChildUISize);
+			vecUIDepth.resize(iChildUISize);
+			vecIsSpriteAnimation.resize(iChildUISize);
+			vecFrameSpeed.resize(iChildUISize);
+			vecRectPosOffset.resize(iChildUISize);
+			vecRectScale.resize(iChildUISize);
+
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				fin >> vecDataFilePath[i]			// DataFilePath
+					>> vecObjectTag[i]				// Object Tag
+					>> vecPos[i].x					// Pos X
+					>> vecPos[i].y					// Pos Y
+					>> vecScale[i].x				// Scale X
+					>> vecScale[i].y				// Scale Y
+					>> vecUIDepth[i]				// UI Depth
+					>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
+					>> vecFrameSpeed[i]				// Frame Speed
+					>> vecRectPosOffset[i].x		// RectPosOffset X
+					>> vecRectPosOffset[i].y		// RectPosOffset Y
+					>> vecRectScale[i].x			// RectScale X
+					>> vecRectScale[i].y;			// RectScale Y
+			}
+
+			if (fin.eof())
+				break;
+
+			// UIRoot 持失.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CLoginSelectButton::Create(m_pGraphicDevice, m_pCommandList,
+												 wstrRootObjectTag,
+												 wstrDataFilePath,
+												 vPos,
+												 vScale,
+												 bIsSpriteAnimation,
+												 fFrameSpeed,
+												 vRectPosOffset,
+												 vRectScale,
+												 UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+			m_pLoginSelectPCButtonClicked = static_cast<CLoginSelectButton*>(pRootUI);
+		}
+	}
+
+	{
+		wifstream fin { L"../../Bin/ToolData/2DUIPCLogingCharacterNormal.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		// ChildUI Data
+		vector<wstring> vecDataFilePath;
+		vector<wstring> vecObjectTag;
+		vector<_vec3>	vecPos;
+		vector<_vec3>	vecScale;
+		vector<_long>	vecUIDepth;
+		vector<_int>	vecIsSpriteAnimation;
+		vector<_float>	vecFrameSpeed;
+		vector<_vec3>	vecRectPosOffset;
+		vector<_vec3>	vecRectScale;
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			vecDataFilePath.resize(iChildUISize);
+			vecObjectTag.resize(iChildUISize);
+			vecPos.resize(iChildUISize);
+			vecScale.resize(iChildUISize);
+			vecUIDepth.resize(iChildUISize);
+			vecIsSpriteAnimation.resize(iChildUISize);
+			vecFrameSpeed.resize(iChildUISize);
+			vecRectPosOffset.resize(iChildUISize);
+			vecRectScale.resize(iChildUISize);
+
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				fin >> vecDataFilePath[i]			// DataFilePath
+					>> vecObjectTag[i]				// Object Tag
+					>> vecPos[i].x					// Pos X
+					>> vecPos[i].y					// Pos Y
+					>> vecScale[i].x				// Scale X
+					>> vecScale[i].y				// Scale Y
+					>> vecUIDepth[i]				// UI Depth
+					>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
+					>> vecFrameSpeed[i]				// Frame Speed
+					>> vecRectPosOffset[i].x		// RectPosOffset X
+					>> vecRectPosOffset[i].y		// RectPosOffset Y
+					>> vecRectScale[i].x			// RectScale X
+					>> vecRectScale[i].y;			// RectScale Y
+			}
+
+			if (fin.eof())
+				break;
+
+			// UIRoot 持失.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CLoginSelectButton::Create(m_pGraphicDevice, m_pCommandList,
+												 wstrRootObjectTag,
+												 wstrDataFilePath,
+												 vPos,
+												 vScale,
+												 bIsSpriteAnimation,
+												 fFrameSpeed,
+												 vRectPosOffset,
+												 vRectScale,
+												 UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+			m_pLoginSelectPCButton = static_cast<CLoginSelectButton*>(pRootUI);
+		}
+	}
+
+	{
+		wifstream fin { L"../../Bin/ToolData/2DUIPCLogingIDClicked.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		// ChildUI Data
+		vector<wstring> vecDataFilePath;
+		vector<wstring> vecObjectTag;
+		vector<_vec3>	vecPos;
+		vector<_vec3>	vecScale;
+		vector<_long>	vecUIDepth;
+		vector<_int>	vecIsSpriteAnimation;
+		vector<_float>	vecFrameSpeed;
+		vector<_vec3>	vecRectPosOffset;
+		vector<_vec3>	vecRectScale;
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			vecDataFilePath.resize(iChildUISize);
+			vecObjectTag.resize(iChildUISize);
+			vecPos.resize(iChildUISize);
+			vecScale.resize(iChildUISize);
+			vecUIDepth.resize(iChildUISize);
+			vecIsSpriteAnimation.resize(iChildUISize);
+			vecFrameSpeed.resize(iChildUISize);
+			vecRectPosOffset.resize(iChildUISize);
+			vecRectScale.resize(iChildUISize);
+
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				fin >> vecDataFilePath[i]			// DataFilePath
+					>> vecObjectTag[i]				// Object Tag
+					>> vecPos[i].x					// Pos X
+					>> vecPos[i].y					// Pos Y
+					>> vecScale[i].x				// Scale X
+					>> vecScale[i].y				// Scale Y
+					>> vecUIDepth[i]				// UI Depth
+					>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
+					>> vecFrameSpeed[i]				// Frame Speed
+					>> vecRectPosOffset[i].x		// RectPosOffset X
+					>> vecRectPosOffset[i].y		// RectPosOffset Y
+					>> vecRectScale[i].x			// RectScale X
+					>> vecRectScale[i].y;			// RectScale Y
+			}
+
+			if (fin.eof())
+				break;
+
+			// UIRoot 持失.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CLoginSelectButton::Create(m_pGraphicDevice, m_pCommandList,
+												 wstrRootObjectTag,
+												 wstrDataFilePath,
+												 vPos,
+												 vScale,
+												 bIsSpriteAnimation,
+												 fFrameSpeed,
+												 vRectPosOffset,
+												 vRectScale,
+												 UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+			m_pLoginSelectIDButtonClicked = static_cast<CLoginSelectButton*>(pRootUI);
+		}
+	}
+
+	{
+		wifstream fin { L"../../Bin/ToolData/2DUIPCLogingIDNormal.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		// ChildUI Data
+		vector<wstring> vecDataFilePath;
+		vector<wstring> vecObjectTag;
+		vector<_vec3>	vecPos;
+		vector<_vec3>	vecScale;
+		vector<_long>	vecUIDepth;
+		vector<_int>	vecIsSpriteAnimation;
+		vector<_float>	vecFrameSpeed;
+		vector<_vec3>	vecRectPosOffset;
+		vector<_vec3>	vecRectScale;
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			vecDataFilePath.resize(iChildUISize);
+			vecObjectTag.resize(iChildUISize);
+			vecPos.resize(iChildUISize);
+			vecScale.resize(iChildUISize);
+			vecUIDepth.resize(iChildUISize);
+			vecIsSpriteAnimation.resize(iChildUISize);
+			vecFrameSpeed.resize(iChildUISize);
+			vecRectPosOffset.resize(iChildUISize);
+			vecRectScale.resize(iChildUISize);
+
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				fin >> vecDataFilePath[i]			// DataFilePath
+					>> vecObjectTag[i]				// Object Tag
+					>> vecPos[i].x					// Pos X
+					>> vecPos[i].y					// Pos Y
+					>> vecScale[i].x				// Scale X
+					>> vecScale[i].y				// Scale Y
+					>> vecUIDepth[i]				// UI Depth
+					>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
+					>> vecFrameSpeed[i]				// Frame Speed
+					>> vecRectPosOffset[i].x		// RectPosOffset X
+					>> vecRectPosOffset[i].y		// RectPosOffset Y
+					>> vecRectScale[i].x			// RectScale X
+					>> vecRectScale[i].y;			// RectScale Y
+			}
+
+			if (fin.eof())
+				break;
+
+			// UIRoot 持失.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CLoginSelectButton::Create(m_pGraphicDevice, m_pCommandList,
+												 wstrRootObjectTag,
+												 wstrDataFilePath,
+												 vPos,
+												 vScale,
+												 bIsSpriteAnimation,
+												 fFrameSpeed,
+												 vRectPosOffset,
+												 vRectScale,
+												 UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+			m_pLoginSelectIDButton = static_cast<CLoginSelectButton*>(pRootUI);
+		}
+	}
+
+	/*__________________________________________________________________________________________________________
+	[ UI - PCSelect ]
 	____________________________________________________________________________________________________________*/
 	{
 		wifstream fin { L"../../Bin/ToolData/2DUIPCSelect.2DUI" };
@@ -444,6 +894,7 @@ HRESULT CScene_Logo::Ready_LayerUI(wstring wstrLayerTag)
 												  vRectScale,
 												  UIDepth);
 			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+			m_pPCSelectBackground = static_cast<CPCSelectBackground*>(pRootUI);
 
 			// UIChild 持失.
 			Engine::CGameObject* pChildUI = nullptr;

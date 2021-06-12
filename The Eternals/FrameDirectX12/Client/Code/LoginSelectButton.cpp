@@ -1,21 +1,22 @@
 #include "stdafx.h"
-#include "PCSelectBackground.h"
+#include "LoginSelectButton.h"
+#include "ObjectMgr.h"
 #include "Font.h"
 
-CPCSelectBackground::CPCSelectBackground(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CLoginSelectButton::CLoginSelectButton(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIRoot(pGraphicDevice, pCommandList)
 {
 }
 
-HRESULT CPCSelectBackground::Ready_GameObject(wstring wstrObjectTag, 
-											  wstring wstrDataFilePath,
-											  const _vec3& vPos,
-											  const _vec3& vScale, 
-											  const _bool& bIsSpriteAnimation, 
-											  const _float& fFrameSpeed,
-											  const _vec3& vRectOffset,
-											  const _vec3& vRectScale,
-											  const _long& iUIDepth)
+HRESULT CLoginSelectButton::Ready_GameObject(wstring wstrObjectTag, 
+											 wstring wstrDataFilePath, 
+											 const _vec3& vPos, 
+											 const _vec3& vScale,
+											 const _bool& bIsSpriteAnimation, 
+											 const _float& fFrameSpeed,
+											 const _vec3& vRectOffset,
+											 const _vec3& vRectScale, 
+											 const _long& iUIDepth)
 {
 	Engine::FAILED_CHECK_RETURN(CGameUIRoot::Ready_GameObject(wstrObjectTag,
 															  wstrDataFilePath,
@@ -26,29 +27,27 @@ HRESULT CPCSelectBackground::Ready_GameObject(wstring wstrObjectTag,
 															  vRectOffset,
 															  vRectScale,
 															  iUIDepth,
-															  true, L"Font_NexonBold72"), E_FAIL);
+															  true, L"Font_NexonBold24"), E_FAIL);
 
 	m_matView = INIT_MATRIX;
 	m_matProj = XMMatrixOrthographicLH(WINCX, WINCY, 0.0f, 1.0f);
 
 	// Font Text
 	m_pFont->Set_Color(D2D1::ColorF::Black);
-	m_pFont->Set_Text(L"SELECT CLASS");
+	m_pFont->Set_Pos(_vec2(0.f, -10000.0f));
 
 	return S_OK;
 }
 
-HRESULT CPCSelectBackground::LateInit_GameObject()
+HRESULT CLoginSelectButton::LateInit_GameObject()
 {
 	Engine::FAILED_CHECK_RETURN(CGameUIRoot::LateInit_GameObject(), E_FAIL);
 
 	return S_OK;
 }
 
-_int CPCSelectBackground::Update_GameObject(const _float& fTimeDelta)
+_int CLoginSelectButton::Update_GameObject(const _float& fTimeDelta)
 {
-	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
-
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
@@ -58,17 +57,17 @@ _int CPCSelectBackground::Update_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CPCSelectBackground::LateUpdate_GameObject(const _float& fTimeDelta)
+_int CLoginSelectButton::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	if (g_bIsLoadingFinish)
 	{
 		CGameUIRoot::LateUpdate_GameObject(fTimeDelta);
 
-		if (nullptr != m_pFont && m_bIsActive)
+		if (nullptr != m_pFont && m_bIsRender)
 		{
 			_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
-			vPos.x -= 200.0f;
-			vPos.y -= 350.0f;
+			vPos.x -= 85.0f;
+			vPos.y -= 15.0f;
 			m_pFont->Set_Pos(_vec2(vPos.x, vPos.y));
 			m_pFont->Update_GameObject(fTimeDelta);
 		}
@@ -77,7 +76,7 @@ _int CPCSelectBackground::LateUpdate_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-void CPCSelectBackground::Render_GameObject(const _float& fTimeDelta)
+void CLoginSelectButton::Render_GameObject(const _float& fTimeDelta)
 {
 	if (nullptr != m_pTexDescriptorHeap)
 	{
@@ -101,7 +100,7 @@ void CPCSelectBackground::Render_GameObject(const _float& fTimeDelta)
 	}
 }
 
-void CPCSelectBackground::Set_ConstantTable()
+void CLoginSelectButton::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -139,19 +138,19 @@ void CPCSelectBackground::Set_ConstantTable()
 	m_pShaderColor->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ShaderColor);
 }
 
-Engine::CGameObject* CPCSelectBackground::Create(ID3D12Device* pGraphicDevice, 
-												 ID3D12GraphicsCommandList* pCommandList,
-												 wstring wstrObjectTag, 
-												 wstring wstrDataFilePath,
-												 const _vec3& vPos, 
-												 const _vec3& vScale,
-												 const _bool& bIsSpriteAnimation,
-												 const _float& fFrameSpeed,
-												 const _vec3& vRectOffset,
-												 const _vec3& vRectScale, 
-												 const _long& iUIDepth)
+Engine::CGameObject* CLoginSelectButton::Create(ID3D12Device* pGraphicDevice,
+												ID3D12GraphicsCommandList* pCommandList, 
+												wstring wstrObjectTag, 
+												wstring wstrDataFilePath, 
+												const _vec3& vPos,
+												const _vec3& vScale,
+												const _bool& bIsSpriteAnimation,
+												const _float& fFrameSpeed, 
+												const _vec3& vRectOffset,
+												const _vec3& vRectScale,
+												const _long& iUIDepth)
 {
-	CPCSelectBackground* pInstance = new CPCSelectBackground(pGraphicDevice, pCommandList);
+	CLoginSelectButton* pInstance = new CLoginSelectButton(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrObjectTag,
 										   wstrDataFilePath,
@@ -167,7 +166,7 @@ Engine::CGameObject* CPCSelectBackground::Create(ID3D12Device* pGraphicDevice,
 	return pInstance;
 }
 
-void CPCSelectBackground::Free()
+void CLoginSelectButton::Free()
 {
 	CGameUIRoot::Free();
 }

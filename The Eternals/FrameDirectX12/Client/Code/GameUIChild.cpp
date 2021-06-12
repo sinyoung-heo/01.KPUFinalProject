@@ -75,6 +75,9 @@ _int CGameUIChild::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	if (!m_bIsActive)
+		return NO_EVENT;
+
 	if (nullptr == m_pTexDescriptorHeap)
 		m_pTexDescriptorHeap = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(m_wstrTextureTag);
 
@@ -94,6 +97,9 @@ _int CGameUIChild::Update_GameObject(const _float& fTimeDelta)
 _int CGameUIChild::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
+
+	if (!m_bIsActive)
+		return NO_EVENT;
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]

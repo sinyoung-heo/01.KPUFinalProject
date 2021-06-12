@@ -191,6 +191,7 @@
     <ClInclude Include="..\Code\IceStorm.h" />
     <ClInclude Include="..\Code\IceStorm_s.h" />
     <ClInclude Include="..\Code\InstancePoolMgr.h" />
+    <ClInclude Include="..\Code\LoginSelectButton.h" />
     <ClInclude Include="..\Code\MagicCircle.h" />
     <ClInclude Include="..\Code\Monkey.h" />
     <ClInclude Include="..\Code\NPC_Assistant.h" />
@@ -300,6 +301,7 @@
     <ClCompile Include="..\Code\IceStorm.cpp" />
     <ClCompile Include="..\Code\IceStorm_s.cpp" />
     <ClCompile Include="..\Code\InstancePoolMgr.cpp" />
+    <ClCompile Include="..\Code\LoginSelectButton.cpp" />
     <ClCompile Include="..\Code\MagicCircle.cpp" />
     <ClCompile Include="..\Code\MainMenuEquipment.cpp" />
     <ClCompile Include="..\Code\MainMenuInventory.cpp" />

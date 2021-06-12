@@ -1,11 +1,11 @@
 #pragma once
 #include "GameUIRoot.h"
 
-class CPCSelectBackground : public CGameUIRoot
+class CLoginSelectButton : public CGameUIRoot
 {
 private:
-	explicit CPCSelectBackground(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CPCSelectBackground() = default;
+	explicit CLoginSelectButton(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CLoginSelectButton() = default;
 
 public:
 	// CGameObject을(를) 통해 상속됨

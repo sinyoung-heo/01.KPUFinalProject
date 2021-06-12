@@ -8,6 +8,8 @@ namespace Engine
 	class CFont;
 }
 
+class CLoginSelectButton;
+class CPCSelectBackground;
 class CPCSelectJob;
 class CPCSelectFrame;
 class CPCSelectButton;
@@ -26,7 +28,9 @@ public:
 	virtual _int	LateUpdate_Scene(const _float& fTimeDelta);
 	virtual HRESULT	Render_Scene(const _float& fTimeDelta, const Engine::RENDERID& eID = Engine::RENDERID::MULTI_THREAD);
 private:
+	void			KeyInput_LoginSelect(const _float& fTimeDelta);
 	void			KeyInput_PCSelect(const _float& fTimeDelta);
+
 	HRESULT			Ready_LayerEnvironment(wstring wstrLayerTag);
 	HRESULT			Ready_LayerCamera(wstring wstrLayerTag);
 	HRESULT			Ready_LayerGameObject(wstring wstrLayerTag);
@@ -48,19 +52,29 @@ private:
 	_tchar			m_szLoadingStr[MIN_STR]	= L"";
 	_int			m_iMaxFileCount			= 0;
 
+
 	/*__________________________________________________________________________________________________________
-	[ PCSelect ]
+	[ UI - Login Select ]
 	____________________________________________________________________________________________________________*/
-	CPCSelectJob* m_pPCSelectJobWarrior = nullptr;
-	CPCSelectJob* m_pPCSelectJobArcher  = nullptr;
-	CPCSelectJob* m_pPCSelectJobPriest  = nullptr;
+	_bool m_bIsLoginPC = true;
+	_bool m_bIsLoginID = false;
+	CLoginSelectButton* m_pLoginSelectPCButtonClicked = nullptr;
+	CLoginSelectButton* m_pLoginSelectPCButton        = nullptr;
+	CLoginSelectButton* m_pLoginSelectIDButtonClicked = nullptr;
+	CLoginSelectButton* m_pLoginSelectIDButton        = nullptr;
 
-	CPCSelectFrame* m_pPCSelectFrameWarrior = nullptr;
-	CPCSelectFrame* m_pPCSelectFrameArcher  = nullptr;
-	CPCSelectFrame* m_pPCSelectFramePriest  = nullptr;
-
-	CPCSelectButton* m_pPCSelectButton        = nullptr;
-	CPCSelectButton* m_pPCSelectButtonClicked = nullptr;
+	/*__________________________________________________________________________________________________________
+	[ UI - PCSelect ]
+	____________________________________________________________________________________________________________*/
+	CPCSelectBackground*	m_pPCSelectBackground     = nullptr;
+	CPCSelectJob*			m_pPCSelectJobWarrior     = nullptr;
+	CPCSelectJob*			m_pPCSelectJobArcher      = nullptr;
+	CPCSelectJob*			m_pPCSelectJobPriest      = nullptr;
+	CPCSelectFrame*			m_pPCSelectFrameWarrior   = nullptr;
+	CPCSelectFrame*			m_pPCSelectFrameArcher    = nullptr;
+	CPCSelectFrame*			m_pPCSelectFramePriest    = nullptr;
+	CPCSelectButton*		m_pPCSelectButton         = nullptr;
+	CPCSelectButton*		m_pPCSelectButtonClicked  = nullptr;
 
 	_bool m_bIsKeyPressing = true;
 	_bool m_bIsGameStart   = false;
