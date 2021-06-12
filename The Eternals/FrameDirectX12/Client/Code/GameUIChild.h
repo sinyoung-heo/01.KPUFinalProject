@@ -2,6 +2,11 @@
 #include "Include.h"
 #include "GameObject.h"
 
+namespace Engine
+{
+	class CFont;
+}
+
 class CGameUIChild : public Engine::CGameObject
 {
 protected:
@@ -22,7 +27,9 @@ public:
 									 const _float& fFrameSpeed,
 									 const _vec3& vRectOffset,
 									 const _vec3& vRectScale,
-									 const _long& iUIDepth = 1000);
+									 const _long& iUIDepth = 1000,
+									 const _bool& bIsCreateFont = false,
+									 wstring wstrFontTag = L"Font_NetmarbleLight");
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
@@ -66,6 +73,13 @@ protected:
 	_vec3		m_vConvertRect = _vec3(0.0f);
 
 	_bool		m_bIsRender	= true;
+
+	/*__________________________________________________________________________________________________________
+	[ Font ]
+	____________________________________________________________________________________________________________*/
+	Engine::CFont*	m_pFont           = nullptr;
+	wstring			m_wstrText        = L"";
+	_tchar			m_szText[MAX_STR] = L"";
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 									   wstring wstrRootObjectTag,
@@ -77,7 +91,9 @@ public:
 									   const _float& fFrameSpeed,
 									   const _vec3& vRectOffset,
 									   const _vec3& vRectScale,
-									   const _long& iUIDepth = 1000);
+									   const _long& iUIDepth = 1000,
+									   const _bool& bIsCreateFont = false,
+									   wstring wstrFontTag = L"Font_NetmarbleLight");
 protected:
 	virtual void Free();
 };

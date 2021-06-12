@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PCSelectBackground.h"
+#include "Font.h"
 
 CPCSelectBackground::CPCSelectBackground(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIRoot(pGraphicDevice, pCommandList)
@@ -24,10 +25,15 @@ HRESULT CPCSelectBackground::Ready_GameObject(wstring wstrObjectTag,
 															  fFrameSpeed,
 															  vRectOffset,
 															  vRectScale,
-															  iUIDepth), E_FAIL);
+															  iUIDepth,
+															  true, L"Font_NetmarbleBold60"), E_FAIL);
 
 	m_matView = INIT_MATRIX;
 	m_matProj = XMMatrixOrthographicLH(WINCX, WINCY, 0.0f, 1.0f);
+
+	// Font Text
+	m_pFont->Set_Color(D2D1::ColorF::Black);
+	m_pFont->Set_Text(L"SELECT CLASS");
 
 	return S_OK;
 }
@@ -55,7 +61,18 @@ _int CPCSelectBackground::Update_GameObject(const _float& fTimeDelta)
 _int CPCSelectBackground::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	if (g_bIsLoadingFinish)
+	{
 		CGameUIRoot::LateUpdate_GameObject(fTimeDelta);
+
+		if (nullptr != m_pFont)
+		{
+			_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
+			vPos.x -= 185.0f;
+			vPos.y -= 350.0f;
+			m_pFont->Set_Pos(_vec2(vPos.x, vPos.y));
+			m_pFont->Update_GameObject(fTimeDelta);
+		}
+	}
 
 	return NO_EVENT;
 }

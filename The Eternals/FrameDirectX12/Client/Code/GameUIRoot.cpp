@@ -4,6 +4,8 @@
 #include "GraphicDevice.h"
 #include "Renderer.h"
 #include "DescriptorHeapMgr.h"
+#include "ObjectMgr.h"
+#include "Font.h"
 
 CGameUIRoot::CGameUIRoot(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -21,7 +23,9 @@ HRESULT CGameUIRoot::Ready_GameObject(wstring wstrObjectTag,
 									  const _float& fFrameSpeed,
 									  const _vec3& vRectOffset, 
 									  const _vec3& vRectScale, 
-									  const _long& iUIDepth)
+									  const _long& iUIDepth,
+									  const _bool& bIsCreateFont,
+									  wstring wstrFontTag)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, false), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
@@ -37,6 +41,16 @@ HRESULT CGameUIRoot::Ready_GameObject(wstring wstrObjectTag,
 	m_pTransColor->m_vPos	= vPos;
 	m_pTransColor->m_vScale = vRectScale;
 	m_vRectOffset		    = vRectOffset;
+
+	/*__________________________________________________________________________________________________________
+	[ Font »ý¼º ]
+	____________________________________________________________________________________________________________*/
+	if (bIsCreateFont)
+	{
+		m_pFont = static_cast<Engine::CFont*>(m_pObjectMgr->Clone_GameObjectPrototype(wstrFontTag));
+		Engine::NULL_CHECK_RETURN(m_pFont, E_FAIL);
+		Engine::FAILED_CHECK_RETURN(m_pFont->Ready_GameObject(L"", _vec2(0.0f, 0.f), D2D1::ColorF::White), E_FAIL);
+	}
 
 	return S_OK;
 }
@@ -267,7 +281,9 @@ Engine::CGameObject* CGameUIRoot::Create(ID3D12Device* pGraphicDevice, ID3D12Gra
 										 const _float& fFrameSpeed,
 										 const _vec3& vRectOffset,
 										 const _vec3& vRectScale,
-										 const _long& iUIDepth)
+										 const _long& iUIDepth,
+										 const _bool& bIsCreateFont,
+										 wstring wstrFontTag)
 {
 	CGameUIRoot* pInstance = new CGameUIRoot(pGraphicDevice, pCommandList);
 
@@ -279,7 +295,9 @@ Engine::CGameObject* CGameUIRoot::Create(ID3D12Device* pGraphicDevice, ID3D12Gra
 										   fFrameSpeed,
 										   vRectOffset,
 										   vRectScale, 
-										   iUIDepth)))
+										   iUIDepth,
+										   bIsCreateFont,
+										   wstrFontTag)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
@@ -296,4 +314,7 @@ void CGameUIRoot::Free()
 	Engine::Safe_Release(m_pShaderCom);
 	Engine::Safe_Release(m_pBufferColor);
 	Engine::Safe_Release(m_pShaderColor);
+
+	if (nullptr != m_pFont)
+		Engine::Safe_Release(m_pFont);
 }

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "PCSelectButton.h"
 #include "DescriptorHeapMgr.h"
+#include "Font.h"
 
 CPCSelectButton::CPCSelectButton(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
@@ -32,7 +33,8 @@ HRESULT CPCSelectButton::Ready_GameObject(wstring wstrRootObjectTag,
 															   fFrameSpeed,
 															   vRectOffset,
 															   vRectScale,
-															   iUIDepth), E_FAIL);
+															   iUIDepth,
+															   true, L"Font_NetmarbleBold48"), E_FAIL);
 
 	m_matView = INIT_MATRIX;
 	m_matProj = XMMatrixOrthographicLH(WINCX, WINCY, 0.0f, 1.0f);
@@ -41,6 +43,10 @@ HRESULT CPCSelectButton::Ready_GameObject(wstring wstrRootObjectTag,
 		m_bIsUpdate = true;
 	else if (L"PCSelectButtonCliecked" == m_wstrObjectTag)
 		m_bIsUpdate = false;
+
+	// Font Text
+	m_pFont->Set_Color(D2D1::ColorF::Black);
+	m_pFont->Set_Text(L"GAME START");
 
 	return S_OK;
 }
@@ -65,7 +71,18 @@ _int CPCSelectButton::Update_GameObject(const _float& fTimeDelta)
 _int CPCSelectButton::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	if (g_bIsLoadingFinish)
+	{
 		CGameUIChild::LateUpdate_GameObject(fTimeDelta);
+
+		if (nullptr != m_pFont)
+		{
+			_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
+			vPos.x -= 120.0f;
+			vPos.y -= 35.0f;
+			m_pFont->Set_Pos(_vec2(vPos.x, vPos.y));
+			m_pFont->Update_GameObject(fTimeDelta);
+		}
+	}
 
 	return NO_EVENT;
 }
