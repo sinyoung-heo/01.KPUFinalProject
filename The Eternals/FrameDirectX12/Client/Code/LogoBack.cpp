@@ -17,7 +17,7 @@ HRESULT CLogoBack::Ready_GameObject(wstring wstrTextureTag)
 	m_pTransCom->m_vPos		= _vec3((_float)WINCX / 2.0f, (_float)WINCY / 2.0f, 0.1f);
 	m_pTransCom->m_vScale	= _vec3((_float)WINCX, (_float)WINCY, 1.0f);
 
-	m_uiTexIdx	= 5;
+	m_uiTexIdx	= 4;
 	m_UIDepth	= 1000;
 	
 
@@ -40,7 +40,10 @@ _int CLogoBack::Update_GameObject(const _float & fTimeDelta)
 		return DEAD_OBJ;
 
 	if (g_bIsLoadingFinish)
-		m_bIsDead = true;
+	{
+		// m_bIsDead = true;
+		m_uiTexIdx = 2;
+	}
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]

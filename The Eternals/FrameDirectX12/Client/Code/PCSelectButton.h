@@ -8,6 +8,7 @@ private:
 	virtual ~CPCSelectButton() = default;
 
 public:
+	void Set_TexDescriptorHeap(wstring wstrTag);
 	void Set_IsUpdate(const _bool& bIsUpdate) { m_bIsUpdate = bIsUpdate; }
 
 	// CGameObject을(를) 통해 상속됨

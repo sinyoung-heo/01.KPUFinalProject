@@ -67,6 +67,9 @@ HRESULT CScene_Logo::Ready_Scene()
 																	 _vec2(WINCX / 2.0f - 275.0f, WINCY - 100.0f),
 																	 D2D1::ColorF::RosyBrown), E_FAIL);
 
+	g_cJob = PC_GLADIATOR;
+	m_pPCSelectFrameWarrior->Set_IsUpdate(true);
+
 	return S_OK;
 }
 
@@ -106,6 +109,12 @@ _int CScene_Logo::Update_Scene(const _float& fTimeDelta)
 	{
 		m_bIsReadyMouseCursorMgr = true;
 		CMouseCursorMgr::Get_Instance()->Ready_MouseCursorMgr();
+
+		// Create FadeIn 
+		Engine::CGameObject* pGameObj = nullptr;
+		pGameObj = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::FADE_IN);
+		Engine::NULL_CHECK_RETURN(pGameObj, E_FAIL);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_UI", L"FadeInOut", pGameObj), E_FAIL);
 	}
 
 	return Engine::CScene::Update_Scene(fTimeDelta);
@@ -194,51 +203,70 @@ HRESULT CScene_Logo::Render_Scene(const _float & fTimeDelta, const Engine::RENDE
 
 void CScene_Logo::KeyInput_PCSelect(const _float& fTimeDelta)
 {
+	if (!CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse())
+		return;
+
 	// PCSelectJobWarrior
-	if (CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse() &&
-		CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectJobWarrior->Get_Rect()))
+	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectJobWarrior->Get_Rect()))
 	{
-		if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_LB))
+		if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB))
 		{
 			m_pPCSelectFrameWarrior->Set_IsUpdate(true);
 			m_pPCSelectFrameArcher->Set_IsUpdate(false);
 			m_pPCSelectFramePriest->Set_IsUpdate(false);
 
-			g_cJob = PC_PRIEST;
-			cout << (_int)g_cJob << endl;
+			g_cJob = PC_GLADIATOR;
 		}
 	}
 
 	// PCSelectJobArcher
-	if (CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse() &&
-		CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectJobArcher->Get_Rect()))
+	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectJobArcher->Get_Rect()))
 	{
-		if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_LB))
+		if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB))
 		{
 			m_pPCSelectFrameWarrior->Set_IsUpdate(false);
 			m_pPCSelectFrameArcher->Set_IsUpdate(true);
 			m_pPCSelectFramePriest->Set_IsUpdate(false);
 
 			g_cJob = PC_ARCHER;
-			cout << (_int)g_cJob << endl;
 		}
 	}
 
 	// PCSelectJobPriest
-	if (CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse() &&
-		CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectJobPriest->Get_Rect()))
+	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectJobPriest->Get_Rect()))
 	{
-		if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_LB))
+		if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB))
 		{
 			m_pPCSelectFrameWarrior->Set_IsUpdate(false);
 			m_pPCSelectFrameArcher->Set_IsUpdate(false);
 			m_pPCSelectFramePriest->Set_IsUpdate(true);
 
 			g_cJob = PC_PRIEST;
-			cout << (_int)g_cJob << endl;
 		}
 	}
 
+	// PCSelectButton
+	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pPCSelectButton->Get_Rect()))
+	{
+		if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_LB))
+		{
+			m_pPCSelectButton->Set_IsRenderUI(false);
+			m_pPCSelectButtonClicked->Set_IsRenderUI(true);
+		}
+
+		if (Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB))
+		{
+			cout << "Button KeyUp" << endl;
+
+			m_pPCSelectButton->Set_IsRenderUI(true);
+			m_pPCSelectButtonClicked->Set_IsRenderUI(false);
+		}
+	}
+	else
+	{
+		m_pPCSelectButton->Set_IsRenderUI(true);
+		m_pPCSelectButtonClicked->Set_IsRenderUI(false);
+	}
 }
 
 HRESULT CScene_Logo::Ready_LayerEnvironment(wstring wstrLayerTag)
@@ -489,7 +517,7 @@ HRESULT CScene_Logo::Ready_LayerUI(wstring wstrLayerTag)
 													   vecUIDepth[i]);					// UI Depth
 
 					if (L"PCSelectButtonNormal" == vecObjectTag[i])
-						m_pPCSelectButtonNormal = static_cast<CPCSelectButton*>(pChildUI);
+						m_pPCSelectButton = static_cast<CPCSelectButton*>(pChildUI);
 					else if (L"PCSelectButtonCliecked" == vecObjectTag[i])
 						m_pPCSelectButtonClicked = static_cast<CPCSelectButton*>(pChildUI);
 				}

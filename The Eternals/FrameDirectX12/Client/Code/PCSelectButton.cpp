@@ -1,9 +1,15 @@
 #include "stdafx.h"
 #include "PCSelectButton.h"
+#include "DescriptorHeapMgr.h"
 
 CPCSelectButton::CPCSelectButton(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
 {
+}
+
+void CPCSelectButton::Set_TexDescriptorHeap(wstring wstrTag)
+{
+	m_pTexDescriptorHeap = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(m_wstrTextureTag);
 }
 
 HRESULT CPCSelectButton::Ready_GameObject(wstring wstrRootObjectTag, 

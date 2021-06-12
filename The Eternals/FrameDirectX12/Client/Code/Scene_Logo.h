@@ -59,7 +59,7 @@ private:
 	CPCSelectFrame* m_pPCSelectFrameArcher  = nullptr;
 	CPCSelectFrame* m_pPCSelectFramePriest  = nullptr;
 
-	CPCSelectButton* m_pPCSelectButtonNormal  = nullptr;
+	CPCSelectButton* m_pPCSelectButton  = nullptr;
 	CPCSelectButton* m_pPCSelectButtonClicked = nullptr;
 
 public:
