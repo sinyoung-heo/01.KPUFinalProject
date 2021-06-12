@@ -17,6 +17,8 @@ namespace Engine
 class CDynamicCamera;
 class CPCWeaponRod;
 class CInstancePoolMgr;
+class CCharacterHpGauge;
+class CCharacterMpGauge;
 
 class CPCPriest : public Engine::CGameObject
 {
@@ -53,6 +55,7 @@ private:
 	void			Set_IsRepeatAnimation();
 	void			Set_AnimationSpeed();
 	void			Set_BlendingSpeed();
+	void			Set_HpMPGauge();
 
 	void Key_Input(const _float& fTimeDelta);
 	void KeyInput_Move(const _float& fTimeDelta);
@@ -112,6 +115,10 @@ private:
 	CDynamicCamera*	m_pDynamicCamera = nullptr;
 	CPCWeaponRod*	m_pWeapon        = nullptr;
 	wstring			m_wstrMeshTag    = L"";
+
+	// HP MP Gauge
+	CCharacterHpGauge* m_pHpGauge = nullptr;
+	CCharacterMpGauge* m_pMpGauge = nullptr;
 
 	// Speed Linear Interpolation
 	Engine::LINEAR_INTERPOLATION_DESC<_float> m_tMoveSpeedInterpolationDesc;

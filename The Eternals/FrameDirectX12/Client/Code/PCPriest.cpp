@@ -142,6 +142,7 @@ _int CPCPriest::Update_GameObject(const _float& fTimeDelta)
 	if (fTimeDelta > TIME_OFFSET)
 		return NO_EVENT;
 
+	Set_HpMPGauge();
 	Is_ChangeWeapon();
 	SetUp_StageID();
 
@@ -512,6 +513,7 @@ HRESULT CPCPriest::SetUp_ClassFrame()
 														 vecRectPosOffset[i],			// RectPosOffset
 														 vecRectScale[i],				// RectScaleOffset
 														 vecUIDepth[i]);				// UI Depth
+					m_pHpGauge = static_cast<CCharacterHpGauge*>(pChildUI);
 				}
 				else if (L"ClassFrameMpFront" == vecObjectTag[i])
 				{
@@ -526,6 +528,7 @@ HRESULT CPCPriest::SetUp_ClassFrame()
 														 vecRectPosOffset[i],			// RectPosOffset
 														 vecRectScale[i],				// RectScaleOffset
 														 vecUIDepth[i]);				// UI Depth
+					m_pMpGauge = static_cast<CCharacterMpGauge*>(pChildUI);
 				}
 				else
 				{
@@ -667,6 +670,20 @@ void CPCPriest::Set_BlendingSpeed()
 	}
 	else
 		m_fBlendingSpeed = 0.005f;
+}
+
+void CPCPriest::Set_HpMPGauge()
+{
+	if (m_pInfoCom->m_iHp <= 0)
+		m_pInfoCom->m_iHp = m_pInfoCom->m_iMaxHp;
+	if (m_pInfoCom->m_iMp <= 0)
+		m_pInfoCom->m_iMp = m_pInfoCom->m_iMaxMp;
+
+	if (nullptr != m_pHpGauge && nullptr != m_pMpGauge)
+	{
+		m_pHpGauge->Set_Percent((_float)m_pInfoCom->m_iHp / (_float)m_pInfoCom->m_iMaxHp, m_pInfoCom->m_iHp, m_pInfoCom->m_iMaxHp);
+		m_pMpGauge->Set_Percent((_float)m_pInfoCom->m_iMp / (_float)m_pInfoCom->m_iMaxMp, m_pInfoCom->m_iMp, m_pInfoCom->m_iMaxMp);
+	}
 }
 
 void CPCPriest::Key_Input(const _float& fTimeDelta)

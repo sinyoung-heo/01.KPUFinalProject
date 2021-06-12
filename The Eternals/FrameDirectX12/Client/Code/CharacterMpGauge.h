@@ -8,6 +8,8 @@ private:
 	virtual ~CCharacterMpGauge() = default;
 
 public:
+	void Set_Percent(const _float& fPercent, const _int& iCurMp, const _int& iMaxMp) { m_fPercent = fPercent; m_iCurMp = iCurMp; m_iMaxMp = iMaxMp; }
+
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrRootObjectTag,
 									 wstring wstrObjectTag,							   
@@ -31,7 +33,8 @@ private:
 	[ Value ]
 	____________________________________________________________________________________________________________*/
 	_float m_fPercent = 1.0f;
-
+	_int	m_iCurMp  = 0;
+	_int	m_iMaxMp  = 0;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 									   wstring wstrRootObjectTag,

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CharacterMpGauge.h"
+#include "Font.h"
 
 CCharacterMpGauge::CCharacterMpGauge(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
@@ -26,10 +27,14 @@ HRESULT CCharacterMpGauge::Ready_GameObject(wstring wstrRootObjectTag,
 															   fFrameSpeed,
 															   vRectOffset,
 															   vRectScale,
-															   iUIDepth), E_FAIL);
+															   iUIDepth,
+															   true, L"Font_BinggraeMelona16"), E_FAIL);
 
 	// Set Shader PipelineState
 	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(6), E_FAIL);
+
+	// Font Text
+	m_pFont->Set_Color(D2D1::ColorF::Cornsilk);
 
 	return S_OK;
 }
@@ -52,6 +57,20 @@ _int CCharacterMpGauge::Update_GameObject(const _float& fTimeDelta)
 _int CCharacterMpGauge::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CGameUIChild::LateUpdate_GameObject(fTimeDelta);
+
+	if (nullptr != m_pFont)
+	{
+		m_wstrText = wstring(L"%d    /    %d");
+		wsprintf(m_szText, m_wstrText.c_str(), m_iCurMp, m_iMaxMp);
+
+		_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
+		vPos.x -= 75.0f;
+		vPos.y -= 10.0f;
+
+		m_pFont->Set_Pos(_vec2(vPos.x, vPos.y));
+		m_pFont->Update_GameObject(fTimeDelta);
+		m_pFont->Set_Text(wstring(m_szText));
+	}
 
 	return NO_EVENT;
 }
