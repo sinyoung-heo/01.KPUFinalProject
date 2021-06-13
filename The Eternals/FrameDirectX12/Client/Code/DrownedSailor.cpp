@@ -104,9 +104,6 @@ _int CDrownedSailor::Update_GameObject(const _float& fTimeDelta)
 		m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
 	}
 
-	// SetUp HpGauge
-	SetUp_HpGauge(fTimeDelta);
-
 	// Create CollisionTick
 	if (m_pMeshCom->Is_BlendingComplete())
 		SetUp_CollisionTick(fTimeDelta);
@@ -155,6 +152,8 @@ _int CDrownedSailor::Update_GameObject(const _float& fTimeDelta)
 _int CDrownedSailor::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
+
+	SetUp_HpGauge(fTimeDelta);
 
 	Set_ConstantTableShadowDepth();
 	Set_ConstantTable();

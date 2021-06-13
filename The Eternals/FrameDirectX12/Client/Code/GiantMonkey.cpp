@@ -152,7 +152,6 @@ _int CGiantMonkey::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
-	// SetUp HpGauge
 	SetUp_HpGauge(fTimeDelta);
 
 	Set_ConstantTableShadowDepth();
