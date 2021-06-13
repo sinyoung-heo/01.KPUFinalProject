@@ -20,6 +20,10 @@
 #include "PCWeaponBow.h"
 #include "CollisionArrow.h"
 
+#include "LightingParticle.h"
+#include "MagicCircle.h"
+#include "SnowParticle.h"
+#include "DistTrail.h"
 CPCArcher::CPCArcher(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pPacketMgr(CPacketMgr::Get_Instance())
@@ -965,6 +969,8 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_uiAnimIdx = Archer::ARROW_FALL_START;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+			
+
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"CHARGE_ARROW"]) &&
 				 m_uiAnimIdx != Archer::CHARGE_ARROW_START)
@@ -1481,7 +1487,20 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 			m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 			m_pTransCom->m_vDir.Normalize();
 			m_vArrowFallPos = m_pTransCom->m_vPos + m_pTransCom->m_vDir * Archer::ARROW_FALL_DIST;
+
+
+			m_vArrowFallPos.y = 0.2f;
+			CGameObject* pGameObj = CMagicCircle::Create(m_pGraphicDevice, m_pCommandList,
+				L"PublicPlane00",
+				_vec3(0.000f),
+				_vec3(0.f, 0.0f, 0.0f), m_vArrowFallPos);
+			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicPlane00", pGameObj), E_FAIL);
+			static_cast<CMagicCircle*>(pGameObj)->Set_TexIDX(0, 0, 2);
+			static_cast<CMagicCircle*>(pGameObj)->Set_isScaleAnim(true);
+			static_cast<CMagicCircle*>(pGameObj)->Set_isRotate(true);
 			m_vArrowFallPos.y = 20.0f;
+
+
 		}
 	}
 	else if (Archer::CHARGE_ARROW_SHOT == m_uiAnimIdx && m_ui3DMax_CurFrame >= Archer::CHARGE_ARROW_COLLISIONARROW_START)
@@ -1537,6 +1556,9 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 				{
 					matRotation = XMMatrixRotationY(XMConvertToRadians(fAngle));
 					vDir.TransformNormal(_vec3(0.0f, 0.0f, 1.0f), matRotation);
+
+
+				
 
 					CCollisionArrow* pCollisionArrow = static_cast<CCollisionArrow*>(Pop_Instance(m_pInstancePoolMgr->Get_CollisionArrowPool(ARROW_POOL_TYPE::ARROW_POOL_ICE)));
 					if (nullptr != pCollisionArrow)
@@ -1648,6 +1670,35 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 		{
 			m_iCurArrowFallCnt  = 0;
 			m_bIsStartArrowFall = false;
+		}
+	}
+
+	if (m_uiAnimIdx == Archer::ARROW_FALL_DIST || m_uiAnimIdx == Archer::ARROW_FALL_LOOP || m_uiAnimIdx == Archer::ARROW_FALL_SHOT)
+	{
+		static float Time = 0.f;
+		Time += fTimeDelta;
+		static int Temp = 10;
+		
+		CGameObject* pGameObj = nullptr;
+		_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
+		if (Temp > 0 && Time>0.03f)
+		{
+			Time = 0.f;
+			Temp--;
+			if (Temp == 0)
+				Temp = 10;		
+			Pos.y += 3.5f;
+		
+			
+			pGameObj = CLightingParticle::Create(m_pGraphicDevice, m_pCommandList,
+				L"Lighting0",						// TextureTag
+				_vec3(4.5f,15.5f,4.5f),					// Scale
+				_vec3((rand() % 90 - 45), 0.0f,0.f),		// Angle
+				Pos,			// Pos
+				FRAME(1, 1, 1.0f));			// Sprite Image Frame
+			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Lighting", pGameObj), E_FAIL);
+
+			
 		}
 	}
 }

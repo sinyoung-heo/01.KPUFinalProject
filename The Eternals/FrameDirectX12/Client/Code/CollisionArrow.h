@@ -69,7 +69,7 @@ private:
 	//Effect
 	int m_iEffectCnt = 5;
 	float m_fEffectDeltatime = 1.f;
-
+	float m_fEffectDelta = 0.f;
 	_bool	m_bIsCreateCollisionTick = false;
 	_bool	m_bIsStartDissolve       = false;
 	_float	m_fDissolve              = -0.05f;

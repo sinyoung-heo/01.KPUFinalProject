@@ -19,7 +19,7 @@ public:
 	void Set_TreeAlphaTest(const _float& fOnOff) { m_pCB_ShaderInformation.TreeAlphaTest = fOnOff; }
 	void SetUp_ShaderInfo();
 public:
-	void Set_DOF(int Mode) { m_pCB_ShaderInformation.DepthOfField = Mode; }
+	void Set_DOF(int Mode) { m_pCB_ShaderInformation.DepthOfField =	Mode; }
 
 private:
 	CB_SHADER_INFORMATION m_pCB_ShaderInformation;
