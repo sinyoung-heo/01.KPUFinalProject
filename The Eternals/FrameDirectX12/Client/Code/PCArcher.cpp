@@ -169,11 +169,7 @@ _int CPCArcher::Update_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Key Input ]
 	____________________________________________________________________________________________________________*/
-	if (!g_bIsOnDebugCaemra && 
-		!g_bIsStageChange)
-	{
-		Key_Input(fTimeDelta);
-	}
+	Key_Input(fTimeDelta);
 
 	if (g_bIsStageChange)
 		m_bIsKeyDown = false;
@@ -753,16 +749,16 @@ void CPCArcher::KeyInput_Move(const _float& fTimeDelta)
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 	m_pTransCom->m_vDir.Normalize();
 
-	if (Engine::KEY_PRESSING(DIK_W))
+	if (Engine::KEY_PRESSING(DIK_W) && NO_EVENT_STATE)
 	{
 		// 대각선 - 우 상단.
-		if (Engine::KEY_PRESSING(DIK_D))
+		if (Engine::KEY_PRESSING(DIK_D) && NO_EVENT_STATE)
 		{
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_UP;
 			m_eKeyState             = MVKEY::K_RIGHT_UP;			
 		}
 		// 대각선 - 좌 상단.
-		else if (Engine::KEY_PRESSING(DIK_A))
+		else if (Engine::KEY_PRESSING(DIK_A) && NO_EVENT_STATE)
 		{
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_UP;
 			m_eKeyState             = MVKEY::K_LEFT_UP;
@@ -779,17 +775,17 @@ void CPCArcher::KeyInput_Move(const _float& fTimeDelta)
 		m_bIsSendMoveStop	= false;
 	}
 
-	else if (Engine::KEY_PRESSING(DIK_S))
+	else if (Engine::KEY_PRESSING(DIK_S) && NO_EVENT_STATE)
 	{
 		// 대각선 - 우 하단.
-		if (Engine::KEY_PRESSING(DIK_D))
+		if (Engine::KEY_PRESSING(DIK_D) && NO_EVENT_STATE)
 		{
 
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_DOWN;
 			m_eKeyState             = MVKEY::K_RIGHT_DOWN;
 		}
 		// 대각선 - 좌 하단.
-		else if (Engine::KEY_PRESSING(DIK_A))
+		else if (Engine::KEY_PRESSING(DIK_A) && NO_EVENT_STATE)
 		{
 
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_DOWN;
@@ -807,7 +803,7 @@ void CPCArcher::KeyInput_Move(const _float& fTimeDelta)
 		m_bIsSendMoveStop	= false;
 	}
 	// 좌로 이동.
-	else if (Engine::KEY_PRESSING(DIK_A))
+	else if (Engine::KEY_PRESSING(DIK_A) && NO_EVENT_STATE)
 	{
 		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT;
 		m_last_move_time        = high_resolution_clock::now();
@@ -816,7 +812,7 @@ void CPCArcher::KeyInput_Move(const _float& fTimeDelta)
 		m_bIsSendMoveStop		= false;
 	}
 	// 우로 이동.	
-	else if (Engine::KEY_PRESSING(DIK_D))
+	else if (Engine::KEY_PRESSING(DIK_D) && NO_EVENT_STATE)
 	{
 		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT;
 		m_last_move_time        = high_resolution_clock::now();
@@ -886,7 +882,8 @@ void CPCArcher::KeyInput_StanceChange(const _float& fTimeDelta)
 		!m_bIsKeyDown && m_pInfoCom->m_fSpeed == Archer::MIN_SPEED &&
 		m_bIsCompleteStanceChange &&
 		m_uiAnimIdx != Archer::NONE_ATTACK_WALK && m_uiAnimIdx != Archer::ATTACK_RUN &&
-		m_uiAnimIdx != Archer::IN_WEAPON && m_uiAnimIdx != Archer::OUT_WEAPON)
+		m_uiAnimIdx != Archer::IN_WEAPON && m_uiAnimIdx != Archer::OUT_WEAPON && 
+		NO_EVENT_STATE)
 	{
 		m_bIsCompleteStanceChange = false;
 		SetUp_PlayerStance_FromAttackToNoneAttack();
@@ -904,7 +901,8 @@ void CPCArcher::KeyInput_StanceChange(const _float& fTimeDelta)
 		Engine::KEY_DOWN(m_mapSkillKeyInput[L"CHARGE_ARROW"])) &&
 		Archer::STANCE_NONEATTACK == m_eStance &&
 		m_bIsCompleteStanceChange &&
-		m_uiAnimIdx != Archer::IN_WEAPON && m_uiAnimIdx != Archer::OUT_WEAPON)
+		m_uiAnimIdx != Archer::IN_WEAPON && m_uiAnimIdx != Archer::OUT_WEAPON && 
+		NO_EVENT_STATE)
 	{
 		m_bIsKeyDown = false;
 		m_bIsCompleteStanceChange = false;
@@ -920,7 +918,8 @@ void CPCArcher::KeyInput_StanceChange(const _float& fTimeDelta)
 void CPCArcher::KeyInput_AttackArrow(const _float& fTimeDelta)
 {
 	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) && !m_bIsSkill && !m_bIsSkillLoop &&
-		m_uiAnimIdx != Archer::ATTACK_ARROW)
+		m_uiAnimIdx != Archer::ATTACK_ARROW && 
+		NO_EVENT_STATE)
 	{
 		SetUp_WeaponLHand();
 		SetUp_AttackSetting();
@@ -943,8 +942,9 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 {
 	if (!m_bIsSkillLoop)
 	{
-		if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"RAPID_SHOT"]) &&
-			m_uiAnimIdx != Archer::RAPID_SHOT1)
+		if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"RAPID_SHOT"]) && 
+			m_uiAnimIdx != Archer::RAPID_SHOT1 && 
+			NO_EVENT_STATE)
 		{
 			SetUp_AttackSetting();
 			m_bIsSkill  = true;
@@ -954,7 +954,8 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"ESCAPING_BOMB"]) &&
-				 m_uiAnimIdx != Archer::ESCAPING_BOMB)
+				 m_uiAnimIdx != Archer::ESCAPING_BOMB && 
+				 NO_EVENT_STATE)
 		{
 			SetUp_AttackSetting();
 			m_bIsSkill     = true;
@@ -964,7 +965,8 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"ARROW_SHOWER"]) &&
-				 m_uiAnimIdx != Archer::ARROW_SHOWER_START)
+				 m_uiAnimIdx != Archer::ARROW_SHOWER_START && 
+				 NO_EVENT_STATE)
 		{
 			SetUp_AttackSetting();
 			m_bIsSkill     = true;
@@ -974,7 +976,8 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"ARROW_FALL"]) &&
-				 m_uiAnimIdx != Archer::ARROW_FALL_START)
+				 m_uiAnimIdx != Archer::ARROW_FALL_START && 
+				 NO_EVENT_STATE)
 		{
 			SetUp_AttackSetting();
 			m_bIsSkill     = true;
@@ -984,7 +987,8 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"CHARGE_ARROW"]) &&
-				 m_uiAnimIdx != Archer::CHARGE_ARROW_START)
+				 m_uiAnimIdx != Archer::CHARGE_ARROW_START && 
+				 NO_EVENT_STATE)
 		{
 			SetUp_AttackSetting();
 			m_bIsSkill     = true;
@@ -1064,7 +1068,7 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 
 void CPCArcher::KeyInput_BackDash(const _float& fTimeDelta)
 {
-	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkillLoop)
+	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkillLoop && NO_EVENT_STATE)
 	{
 		SetUp_WeaponLHand();
 		SetUp_AttackSetting();

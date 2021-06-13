@@ -161,11 +161,7 @@ _int CPCPriest::Update_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Key Input ]
 	____________________________________________________________________________________________________________*/
-	if (!g_bIsOnDebugCaemra && 
-		!g_bIsStageChange)
-	{
-		Key_Input(fTimeDelta);
-	}
+	Key_Input(fTimeDelta);
 
 	if (g_bIsStageChange)
 		m_bIsKeyDown = false;
@@ -702,16 +698,16 @@ void CPCPriest::KeyInput_Move(const _float& fTimeDelta)
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 	m_pTransCom->m_vDir.Normalize();
 
-	if (Engine::KEY_PRESSING(DIK_W))
+	if (Engine::KEY_PRESSING(DIK_W) && NO_EVENT_STATE)
 	{
 		// 대각선 - 우 상단.
-		if (Engine::KEY_PRESSING(DIK_D))
+		if (Engine::KEY_PRESSING(DIK_D) && NO_EVENT_STATE)
 		{
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_UP;
 			m_eKeyState             = MVKEY::K_RIGHT_UP;			
 		}
 		// 대각선 - 좌 상단.
-		else if (Engine::KEY_PRESSING(DIK_A))
+		else if (Engine::KEY_PRESSING(DIK_A) && NO_EVENT_STATE)
 		{
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_UP;
 			m_eKeyState             = MVKEY::K_LEFT_UP;
@@ -728,17 +724,17 @@ void CPCPriest::KeyInput_Move(const _float& fTimeDelta)
 		m_bIsSendMoveStop	= false;
 	}
 
-	else if (Engine::KEY_PRESSING(DIK_S))
+	else if (Engine::KEY_PRESSING(DIK_S) && NO_EVENT_STATE)
 	{
 		// 대각선 - 우 하단.
-		if (Engine::KEY_PRESSING(DIK_D))
+		if (Engine::KEY_PRESSING(DIK_D) && NO_EVENT_STATE)
 		{
 
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_DOWN;
 			m_eKeyState             = MVKEY::K_RIGHT_DOWN;
 		}
 		// 대각선 - 좌 하단.
-		else if (Engine::KEY_PRESSING(DIK_A))
+		else if (Engine::KEY_PRESSING(DIK_A) && NO_EVENT_STATE)
 		{
 
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_DOWN;
@@ -756,7 +752,7 @@ void CPCPriest::KeyInput_Move(const _float& fTimeDelta)
 		m_bIsSendMoveStop	= false;
 	}
 	// 좌로 이동.
-	else if (Engine::KEY_PRESSING(DIK_A))
+	else if (Engine::KEY_PRESSING(DIK_A) && NO_EVENT_STATE)
 	{
 		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT;
 		m_last_move_time        = high_resolution_clock::now();
@@ -765,7 +761,7 @@ void CPCPriest::KeyInput_Move(const _float& fTimeDelta)
 		m_bIsSendMoveStop		= false;
 	}
 	// 우로 이동.	
-	else if (Engine::KEY_PRESSING(DIK_D))
+	else if (Engine::KEY_PRESSING(DIK_D) && NO_EVENT_STATE)
 	{
 		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT;
 		m_last_move_time        = high_resolution_clock::now();
@@ -824,7 +820,8 @@ void CPCPriest::KeyInput_StanceChange(const _float& fTimeDelta)
 		!m_bIsKeyDown && m_pInfoCom->m_fSpeed == Priest::MIN_SPEED &&
 		m_bIsCompleteStanceChange &&
 		m_uiAnimIdx != Priest::NONE_ATTACK_WALK && m_uiAnimIdx != Priest::ATTACK_RUN &&
-		m_uiAnimIdx != Priest::IN_WEAPON && m_uiAnimIdx != Priest::OUT_WEAPON)
+		m_uiAnimIdx != Priest::IN_WEAPON && m_uiAnimIdx != Priest::OUT_WEAPON && 
+		NO_EVENT_STATE)
 	{
 		m_bIsCompleteStanceChange = false;
 		SetUp_PlayerStance_FromAttackToNoneAttack();
@@ -841,7 +838,8 @@ void CPCPriest::KeyInput_StanceChange(const _float& fTimeDelta)
 		Engine::KEY_DOWN(m_mapSkillKeyInput[L"MP_CHARGE"])) &&
 		Priest::STANCE_NONEATTACK == m_eStance &&
 		m_bIsCompleteStanceChange &&
-		m_uiAnimIdx != Priest::IN_WEAPON && m_uiAnimIdx != Priest::OUT_WEAPON)
+		m_uiAnimIdx != Priest::IN_WEAPON && m_uiAnimIdx != Priest::OUT_WEAPON && 
+		NO_EVENT_STATE)
 	{
 		m_bIsKeyDown = false;
 		m_bIsCompleteStanceChange = false;
@@ -856,7 +854,7 @@ void CPCPriest::KeyInput_StanceChange(const _float& fTimeDelta)
 
 void CPCPriest::KeyInput_AttackRod(const _float& fTimeDelta)
 {
-	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) && !m_bIsSkill && !m_bIsSkillLoop)
+	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) && !m_bIsSkill && !m_bIsSkillLoop && NO_EVENT_STATE)
 	{
 		SetUp_WeaponRHand();
 		SetUp_AttackSetting();
@@ -879,7 +877,8 @@ void CPCPriest::KeyInput_SkillAttack(const _float& fTimeDelta)
 {
 	if (!m_bIsSkillLoop)
 	{
-		if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"AURA_ON"]))
+		if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"AURA_ON"]) && 
+			NO_EVENT_STATE)
 		{
 			SetUp_AttackSetting();
 			m_bIsSkill  = true;
@@ -887,7 +886,8 @@ void CPCPriest::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
-		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"PURIFY"]))
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"PURIFY"]) && 
+				 NO_EVENT_STATE)
 		{
 			SetUp_AttackSetting();
 			m_bIsSkill  = true;
@@ -895,7 +895,8 @@ void CPCPriest::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
-		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"HEAL"]))
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"HEAL"]) && 
+				 NO_EVENT_STATE)
 		{
 			SetUp_AttackSetting();
 			m_bIsSkill     = true;
@@ -904,7 +905,8 @@ void CPCPriest::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
-		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"MP_CHARGE"]))
+		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"MP_CHARGE"]) && 
+				 NO_EVENT_STATE)
 		{
 			SetUp_AttackSetting();
 			m_bIsSkill     = true;

@@ -155,6 +155,18 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	SetUp_StageID();
 
 	/*__________________________________________________________________________________________________________
+	[ Key Input ]
+	____________________________________________________________________________________________________________*/
+	Key_Input(fTimeDelta);
+
+	if (g_bIsStageChange)
+		m_bIsKeyDown = false;
+
+	// Create CollisionTick
+	if (m_pMeshCom->Is_BlendingComplete())
+		SetUp_CollisionTick(fTimeDelta);
+
+	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
 	Set_IsRepeatAnimation();
@@ -165,22 +177,6 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	m_pMeshCom->Play_Animation(fTimeDelta * m_fAnimationSpeed, m_bIsRepeatAnimation);
 	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
 	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
-
-	/*__________________________________________________________________________________________________________
-	[ Key Input ]
-	____________________________________________________________________________________________________________*/
-	if (!g_bIsOnDebugCaemra && 
-		!g_bIsStageChange)
-	{
-		Key_Input(fTimeDelta);
-	}
-
-	if (g_bIsStageChange)
-		m_bIsKeyDown = false;
-
-	// Create CollisionTick
-	if (m_pMeshCom->Is_BlendingComplete())
-		SetUp_CollisionTick(fTimeDelta);
 
 	// NaviMesh 이동.
 	SetUp_RunMoveSpeed(fTimeDelta);
@@ -731,7 +727,7 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 	KeyInput_Attack(fTimeDelta);
 
 	
-	if (Engine::KEY_DOWN(DIK_0))
+	if (Engine::KEY_DOWN(DIK_0) && NO_EVENT_STATE)
 	{
 		Engine::CGameObject* pGameObj = nullptr;
 		for (int i = 0; i < 36; i++)
@@ -755,16 +751,16 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 	m_pTransCom->m_vDir.Normalize();
 
-	if (Engine::KEY_PRESSING(DIK_W))
+	if (Engine::KEY_PRESSING(DIK_W) && NO_EVENT_STATE)
 	{
 		// 대각선 - 우 상단.
-		if (Engine::KEY_PRESSING(DIK_D))
+		if (Engine::KEY_PRESSING(DIK_D) && NO_EVENT_STATE)
 		{
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_UP;
 			m_eKeyState             = MVKEY::K_RIGHT_UP;			
 		}
 		// 대각선 - 좌 상단.
-		else if (Engine::KEY_PRESSING(DIK_A))
+		else if (Engine::KEY_PRESSING(DIK_A) && NO_EVENT_STATE)
 		{
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_UP;
 			m_eKeyState             = MVKEY::K_LEFT_UP;
@@ -786,17 +782,17 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 			SetUp_WeaponBack();
 	}
 
-	else if (Engine::KEY_PRESSING(DIK_S))
+	else if (Engine::KEY_PRESSING(DIK_S) && NO_EVENT_STATE)
 	{
 		// 대각선 - 우 하단.
-		if (Engine::KEY_PRESSING(DIK_D))
+		if (Engine::KEY_PRESSING(DIK_D) && NO_EVENT_STATE)
 		{
 
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_DOWN;
 			m_eKeyState             = MVKEY::K_RIGHT_DOWN;
 		}
 		// 대각선 - 좌 하단.
-		else if (Engine::KEY_PRESSING(DIK_A))
+		else if (Engine::KEY_PRESSING(DIK_A) && NO_EVENT_STATE)
 		{
 
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_DOWN;
@@ -819,7 +815,7 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 			SetUp_WeaponBack();
 	}
 	// 좌로 이동.
-	else if (Engine::KEY_PRESSING(DIK_A))
+	else if (Engine::KEY_PRESSING(DIK_A) && NO_EVENT_STATE)
 	{
 		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT;
 		m_last_move_time        = high_resolution_clock::now();
@@ -833,7 +829,7 @@ void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
 			SetUp_WeaponBack();
 	}
 	// 우로 이동.	
-	else if (Engine::KEY_PRESSING(DIK_D))
+	else if (Engine::KEY_PRESSING(DIK_D) && NO_EVENT_STATE)
 	{
 		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT;
 		m_last_move_time        = high_resolution_clock::now();
@@ -951,7 +947,7 @@ void CPCGladiator::KeyInput_StanceChange(const _float& fTimeDelta)
 		return;
 
 	// ATTACK -> NONE_ATTACK
-	if (Engine::KEY_DOWN(DIK_LSHIFT) && Gladiator::STANCE_ATTACK == m_eStance &&
+	if (Engine::KEY_DOWN(DIK_LSHIFT) && NO_EVENT_STATE && Gladiator::STANCE_ATTACK == m_eStance &&
 		!m_bIsKeyDown && m_pInfoCom->m_fSpeed == Gladiator::MIN_SPEED &&
 		m_bIsCompleteStanceChange &&
 		m_uiAnimIdx != Gladiator::NONE_ATTACK_WALK && m_uiAnimIdx != Gladiator::ATTACK_RUN &&
@@ -975,7 +971,8 @@ void CPCGladiator::KeyInput_StanceChange(const _float& fTimeDelta)
 		Engine::KEY_DOWN(m_mapSkillKeyInput[L"DRAW_SWORD"])) &&
 		Gladiator::STANCE_NONEATTACK == m_eStance &&
 		m_bIsCompleteStanceChange &&
-		m_uiAnimIdx != Gladiator::IN_WEAPON && m_uiAnimIdx != Gladiator::OUT_WEAPON)
+		m_uiAnimIdx != Gladiator::IN_WEAPON && m_uiAnimIdx != Gladiator::OUT_WEAPON && 
+		NO_EVENT_STATE)
 	{
 		m_bIsKeyDown = false;
 		m_bIsCompleteStanceChange = false;
@@ -1003,7 +1000,8 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 	if (!m_bIsSkillLoop)
 	{
 		if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"STINGER_BLADE"]) &&
-			m_uiAnimIdx != Gladiator::STINGER_BLADE)
+			m_uiAnimIdx != Gladiator::STINGER_BLADE && 
+			NO_EVENT_STATE)
 		{
 			SetUp_WeaponLHand();
 			SetUp_AttackSetting();
@@ -1013,7 +1011,8 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"CUTTING_SLASH"]) &&
-				 m_uiAnimIdx != Gladiator::CUTTING_SLASH)
+				 m_uiAnimIdx != Gladiator::CUTTING_SLASH && 
+				 NO_EVENT_STATE)
 		{
 			SetUp_WeaponRHand();
 			SetUp_AttackSetting();
@@ -1023,7 +1022,8 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"JAW_BREAKER"]) &&
-				 m_uiAnimIdx != Gladiator::JAW_BREAKER)
+				 m_uiAnimIdx != Gladiator::JAW_BREAKER && 
+				 NO_EVENT_STATE)
 		{
 			SetUp_WeaponRHand();
 			SetUp_AttackSetting();
@@ -1033,7 +1033,8 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"CUT_HEAD"]) &&
-				 m_uiAnimIdx != Gladiator::CUT_HEAD)
+				 m_uiAnimIdx != Gladiator::CUT_HEAD && 
+				 NO_EVENT_STATE)
 		{
 			SetUp_WeaponRHand();
 			SetUp_AttackSetting();
@@ -1043,7 +1044,8 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"WIND_CUTTER"]) && 
-				 m_uiAnimIdx != Gladiator::WIND_CUTTER1)
+				 m_uiAnimIdx != Gladiator::WIND_CUTTER1 && 
+				 NO_EVENT_STATE)
 		{
 			SetUp_WeaponRHand();
 			SetUp_AttackSetting();
@@ -1054,7 +1056,8 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"GAIA_CRUSH"]) &&
-				 m_uiAnimIdx != Gladiator::GAIA_CRUSH1)
+				 m_uiAnimIdx != Gladiator::GAIA_CRUSH1 && 
+				 NO_EVENT_STATE)
 		{
 			SetUp_WeaponLHand();
 			SetUp_AttackSetting();
@@ -1065,7 +1068,8 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"DRAW_SWORD"]) &&
-				 m_uiAnimIdx != Gladiator::DRAW_SWORD_CHARGE)
+				 m_uiAnimIdx != Gladiator::DRAW_SWORD_CHARGE && 
+				 NO_EVENT_STATE)
 		{
 			SetUp_WeaponRHand();
 			SetUp_AttackSetting();
@@ -1160,15 +1164,15 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 
 void CPCGladiator::KeyInput_Tumbling(const _float& fTimeDelta)
 {
-	if (Engine::KEY_PRESSING(DIK_W) && Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkillLoop)
+	if (Engine::KEY_PRESSING(DIK_W) && NO_EVENT_STATE && Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkillLoop)
 	{
 		// 대각선 - 우 상단.
-		if (Engine::KEY_PRESSING(DIK_D))
+		if (Engine::KEY_PRESSING(DIK_D) && NO_EVENT_STATE)
 		{
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_UP;
 		}
 		// 대각선 - 좌 상단.
-		else if (Engine::KEY_PRESSING(DIK_A))
+		else if (Engine::KEY_PRESSING(DIK_A) && NO_EVENT_STATE)
 		{
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_UP;
 		}
@@ -1190,15 +1194,15 @@ void CPCGladiator::KeyInput_Tumbling(const _float& fTimeDelta)
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pTransCom->m_vAngle.y);
 	}
-	else if (Engine::KEY_PRESSING(DIK_S) && Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkillLoop)
+	else if (Engine::KEY_PRESSING(DIK_S) && NO_EVENT_STATE && Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkillLoop)
 	{
 		// 대각선 - 우 하단.
-		if (Engine::KEY_PRESSING(DIK_D))
+		if (Engine::KEY_PRESSING(DIK_D) && NO_EVENT_STATE)
 		{
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT_DOWN;
 		}
 		// 대각선 - 좌 하단.
-		else if (Engine::KEY_PRESSING(DIK_A))
+		else if (Engine::KEY_PRESSING(DIK_A) && NO_EVENT_STATE)
 		{
 			m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT_DOWN;
 		}
@@ -1220,7 +1224,7 @@ void CPCGladiator::KeyInput_Tumbling(const _float& fTimeDelta)
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pTransCom->m_vAngle.y);
 	}
-	else if (Engine::KEY_PRESSING(DIK_A) && Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkillLoop)
+	else if (Engine::KEY_PRESSING(DIK_A) && Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkillLoop && NO_EVENT_STATE)
 	{
 		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + LEFT;
 
@@ -1236,7 +1240,7 @@ void CPCGladiator::KeyInput_Tumbling(const _float& fTimeDelta)
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pTransCom->m_vAngle.y);
 	}
-	else if (Engine::KEY_PRESSING(DIK_D) && Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkillLoop)
+	else if (Engine::KEY_PRESSING(DIK_D) && Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkillLoop && NO_EVENT_STATE)
 	{
 		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + RIGHT;
 
@@ -1252,7 +1256,7 @@ void CPCGladiator::KeyInput_Tumbling(const _float& fTimeDelta)
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pTransCom->m_vAngle.y);
 	}
-	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkillLoop)
+	else if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_RB) && !m_bIsSkillLoop && NO_EVENT_STATE)
 	{
 		m_pTransCom->m_vAngle.y = m_pDynamicCamera->Get_Transform()->m_vAngle.y + BACK;
 
@@ -1333,7 +1337,7 @@ void CPCGladiator::SetUp_AttackSetting()
 
 void CPCGladiator::SetUp_ComboAttackAnimation()
 {
-	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB))
+	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) && NO_EVENT_STATE)
 	{
 		// ATTACK_WAIT ==> COMBO1
 		if (Gladiator::COMBOCNT_0 == m_uiComoboCnt)

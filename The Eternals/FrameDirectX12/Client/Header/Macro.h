@@ -1,5 +1,4 @@
 #pragma once
-
 #define	MSG_BOX(_message)			MessageBoxW(NULL, _message, L"System Message", MB_OK)
 #define	TAGMSG_BOX(_tag,_message)	MessageBoxW(NULL, TEXT(_message), _tag, MB_OK)
 
@@ -24,6 +23,8 @@ ______________________________________________________________________*/
 #define	LEFT_UP		315.f
 #define	LEFT_DOWN	225.f
 #define	BACK		180.f
+
+#define NO_EVENT_STATE (!g_bIsOnDebugCaemra && !g_bIsStageChange && !g_bIsOpenShop)
 
 /* 서버 오류 체크 함수 */
 inline void error_display(const char* msg, int err_no)

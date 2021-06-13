@@ -11,11 +11,7 @@ extern bool		g_bIsActive;
 extern char		g_cJob;
 #endif // SERVER
 
-
-// Camera
 extern _bool g_bIsOnDebugCaemra;
-
-// Scene Change
 extern _bool g_bIsStageChange;
 extern _bool g_bIsOpenShop;
 
