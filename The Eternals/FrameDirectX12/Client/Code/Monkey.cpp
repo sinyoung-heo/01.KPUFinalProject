@@ -55,7 +55,7 @@ HRESULT CMonkey::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, 
 	m_pHpGauge = static_cast<CNormalMonsterHpGauge*>(CNormalMonsterHpGauge::Create(m_pGraphicDevice, 
 																				   m_pCommandList,
 																				   _vec3(0.0f),
-																				   _vec3(2.0f, 0.175f, 1.0f)));
+																				   _vec3(1.5f, 0.05f, 1.0f)));
 	Engine::NULL_CHECK_RETURN(m_pHpGauge, E_FAIL);
 
 	return S_OK;
@@ -103,8 +103,6 @@ _int CMonkey::Update_GameObject(const _float& fTimeDelta)
 		m_bIsResetNaviMesh = true;
 		m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
 	}
-
-	SetUp_HpGauge(fTimeDelta);
 
 	// Create CollisionTick
 	if (m_pMeshCom->Is_BlendingComplete())
@@ -154,6 +152,8 @@ _int CMonkey::Update_GameObject(const _float& fTimeDelta)
 _int CMonkey::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
+	
+	SetUp_HpGauge(fTimeDelta);
 
 	Set_ConstantTableShadowDepth();
 	Set_ConstantTable();
@@ -518,7 +518,7 @@ void CMonkey::SetUp_HpGauge(const _float& fTimeDelta)
 	if (nullptr != m_pHpGauge)
 	{
 		_vec3 vPos = m_pTransCom->m_vPos;
-		vPos.y += 2.5f;
+		vPos.y += 2.25f;
 		m_pHpGauge->Get_Transform()->m_vPos = vPos;
 		m_pHpGauge->Set_Percent((_float)m_pInfoCom->m_iHp / (_float)m_pInfoCom->m_iMaxHp);
 

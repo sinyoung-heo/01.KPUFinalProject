@@ -13,6 +13,8 @@ namespace Engine
 	class CNaviMesh;
 }
 
+class CNormalMonsterHpGauge;
+
 class CCraftyArachne : public Engine::CGameObject
 {
 private:
@@ -44,6 +46,7 @@ private:
 	void			Active_Monster(const _float& fTimeDelta);
 	void			Change_Animation(const _float& fTimeDelta);
 	void			SetUp_CollisionTick(const _float& fTimeDelta);
+	void			SetUp_HpGauge(const _float& fTimeDelta);
 
 	// Collision Event
 	void Collision_ThisPlayer(list<Engine::CColliderSphere*>& lstPlayerCollider);
@@ -78,6 +81,8 @@ private:
 	_bool	m_bIsStartDissolve       = false;
 	_float	m_fDissolve              = -0.05f;
 	_rgba	m_vEmissiveColor         = _rgba(1.0f, 0.0f, 0.0f, 1.0f);
+
+	CNormalMonsterHpGauge* m_pHpGauge = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]

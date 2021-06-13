@@ -54,7 +54,7 @@ HRESULT CGiantBeetle::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMesh
 	m_pHpGauge = static_cast<CNormalMonsterHpGauge*>(CNormalMonsterHpGauge::Create(m_pGraphicDevice, 
 																				   m_pCommandList,
 																				   _vec3(0.0f),
-																				   _vec3(4.0f, 0.35f, 1.0f)));
+																				   _vec3(2.0f, 0.075f, 1.0f)));
 	Engine::NULL_CHECK_RETURN(m_pHpGauge, E_FAIL);
 
 	return S_OK;
@@ -103,9 +103,6 @@ _int CGiantBeetle::Update_GameObject(const _float& fTimeDelta)
 		m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
 	}
 
-	// SetUp HpGauge
-	SetUp_HpGauge(fTimeDelta);
-
 	// Create CollisionTick
 	if (m_pMeshCom->Is_BlendingComplete())
 		SetUp_CollisionTick(fTimeDelta);
@@ -151,6 +148,8 @@ _int CGiantBeetle::Update_GameObject(const _float& fTimeDelta)
 _int CGiantBeetle::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
+
+	SetUp_HpGauge(fTimeDelta);
 
 	Set_ConstantTableShadowDepth();
 	Set_ConstantTable();
