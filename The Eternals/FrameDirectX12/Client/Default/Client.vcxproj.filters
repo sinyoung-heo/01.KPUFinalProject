@@ -301,6 +301,21 @@
     <Filter Include="02.GameObject\99.GameUI\02.NormalMonsterHpGauge">
       <UniqueIdentifier>{2c6d9858-532b-4d18-ab51-2bf0aed42f5c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild">
+      <UniqueIdentifier>{0544f22c-d6b3-4860-b0b5-dc40fc4992ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuSettingCanvas">
+      <UniqueIdentifier>{098fda94-63be-4ff2-a830-a7ff62571db8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonClose">
+      <UniqueIdentifier>{3e1e1857-6771-41cf-8a0d-551bff17b6f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonGameExit">
+      <UniqueIdentifier>{8262b5f6-524a-4995-9eb7-0c41f9487a76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonShaderCheckBox">
+      <UniqueIdentifier>{29cbdbbf-f8a3-45fa-a452-cf3a610fdbbf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -638,6 +653,18 @@
     <ClInclude Include="..\Code\NormalMonsterHpGauge.h">
       <Filter>02.GameObject\99.GameUI\02.NormalMonsterHpGauge</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\MainMenuSettingCanvas.h">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuSettingCanvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\SettingButtonClose.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonClose</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\SettingButtonGameExit.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonGameExit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\SettingButtonShaderCheckBox.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonShaderCheckBox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -920,6 +947,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\NormalMonsterHpGauge.cpp">
       <Filter>02.GameObject\99.GameUI\02.NormalMonsterHpGauge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MainMenuSettingCanvas.cpp">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuSettingCanvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\SettingButtonClose.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonClose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\SettingButtonGameExit.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonGameExit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\SettingButtonShaderCheckBox.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonShaderCheckBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
