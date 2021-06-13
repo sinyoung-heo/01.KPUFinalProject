@@ -54,7 +54,7 @@ HRESULT CGiantMonkey::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMesh
 	m_pHpGauge = static_cast<CNormalMonsterHpGauge*>(CNormalMonsterHpGauge::Create(m_pGraphicDevice, 
 																				   m_pCommandList,
 																				   _vec3(0.0f),
-																				   _vec3(4.0f, 0.35f, 1.0f)));
+																				   _vec3(2.0f, 0.075f, 1.0f)));
 	Engine::NULL_CHECK_RETURN(m_pHpGauge, E_FAIL);
 
 	return S_OK;
@@ -655,7 +655,7 @@ void CGiantMonkey::SetUp_HpGauge(const _float& fTimeDelta)
 	if (nullptr != m_pHpGauge)
 	{
 		_vec3 vPos = m_pTransCom->m_vPos;
-		vPos.y += 5.3f;
+		vPos.y += 4.75f;
 		m_pHpGauge->Get_Transform()->m_vPos = vPos;
 		m_pHpGauge->Set_Percent((_float)m_pInfoCom->m_iHp / (_float)m_pInfoCom->m_iMaxHp);
 

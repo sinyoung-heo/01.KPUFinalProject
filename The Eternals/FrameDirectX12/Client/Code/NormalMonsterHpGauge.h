@@ -25,8 +25,10 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
 	____________________________________________________________________________________________________________*/
-	Engine::CRcTex*			m_pBufferCom	= nullptr;
-	Engine::CShaderTexture*	m_pShaderCom	= nullptr;
+	Engine::CRcTex*			m_pBufferCom	 = nullptr;
+	Engine::CShaderTexture*	m_pShaderCom	 = nullptr;
+	Engine::CRcTex*			m_pBackBufferCom = nullptr;
+	Engine::CShaderTexture*	m_pBackShaderCom = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]

@@ -33,6 +33,7 @@ HRESULT CNormalMonsterHpGauge::LateInit_GameObject()
 {
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer();
+	m_pBackShaderCom->SetUp_ShaderConstantBuffer();
 
 	return S_OK;
 }
@@ -78,6 +79,12 @@ void CNormalMonsterHpGauge::Render_GameObject(const _float& fTimeDelta)
 	{
 		Set_ConstantTable();
 
+		// Back
+		m_pBackShaderCom->Begin_Shader(m_pTexDescriptorHeap, 0, 3, Engine::MATRIXID::PROJECTION);
+		m_pBackBufferCom->Begin_Buffer();
+		m_pBackBufferCom->Render_Buffer();
+
+		// Gauge
 		m_pShaderCom->Begin_Shader(m_pTexDescriptorHeap, 0, m_uiTexIdx, Engine::MATRIXID::PROJECTION);
 		m_pBufferCom->Begin_Buffer();
 		m_pBufferCom->Render_Buffer();
@@ -101,6 +108,19 @@ HRESULT CNormalMonsterHpGauge::Add_Component()
 	m_pShaderCom->Set_PipelineStatePass(6);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
+	// Buffer
+	m_pBackBufferCom = static_cast<Engine::CRcTex*>(m_pComponentMgr->Clone_Component(L"RcTex", Engine::COMPONENTID::ID_STATIC));
+	Engine::NULL_CHECK_RETURN(m_pBackBufferCom, E_FAIL);
+	m_pBackBufferCom->AddRef();
+	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_BackBuffer", m_pBackBufferCom);
+
+	// Shader
+	m_pBackShaderCom = static_cast<Engine::CShaderTexture*>(m_pComponentMgr->Clone_Component(L"ShaderTexture", Engine::COMPONENTID::ID_STATIC));
+	Engine::NULL_CHECK_RETURN(m_pBackShaderCom, E_FAIL);
+	m_pBackShaderCom->AddRef();
+	m_pBackShaderCom->Set_PipelineStatePass(6);
+	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_BackShader", m_pBackShaderCom);
+
 	return S_OK;
 }
 
@@ -120,6 +140,14 @@ void CNormalMonsterHpGauge::Set_ConstantTable()
 
 	if (nullptr != m_pShaderCom->Get_UploadBuffer_ShaderTexture())
 		m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
+
+
+	m_pTransCom->m_matWorld._22 *= 1.75f;
+	tCB_ShaderTexture.matWorld = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	tCB_ShaderTexture.fGauge   = 1.0f;
+
+	if (nullptr != m_pBackShaderCom->Get_UploadBuffer_ShaderTexture())
+		m_pBackShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 }
 
 Engine::CGameObject* CNormalMonsterHpGauge::Create(ID3D12Device* pGraphicDevice, 
@@ -141,4 +169,6 @@ void CNormalMonsterHpGauge::Free()
 
 	Engine::Safe_Release(m_pBufferCom);
 	Engine::Safe_Release(m_pShaderCom);
+	Engine::Safe_Release(m_pBackBufferCom);
+	Engine::Safe_Release(m_pBackShaderCom);
 }

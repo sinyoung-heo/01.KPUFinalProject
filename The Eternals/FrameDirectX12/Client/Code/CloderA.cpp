@@ -55,7 +55,7 @@ HRESULT CCloderA::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag,
 	m_pHpGauge = static_cast<CNormalMonsterHpGauge*>(CNormalMonsterHpGauge::Create(m_pGraphicDevice, 
 																				   m_pCommandList,
 																				   _vec3(0.0f),
-																				   _vec3(2.0f, 0.175f, 1.0f)));
+																				   _vec3(2.0f, 0.075f, 1.0f)));
 	Engine::NULL_CHECK_RETURN(m_pHpGauge, E_FAIL);
 
 	return S_OK;
