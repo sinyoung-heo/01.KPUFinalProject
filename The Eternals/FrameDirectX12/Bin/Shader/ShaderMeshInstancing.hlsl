@@ -400,3 +400,29 @@ PS_OUT PS_TERRAIN_MAIN(VS_OUT ps_input) : SV_TARGET
 	
     return (ps_output);
 }
+
+PS_OUT PS_TERRAIN_MAIN_NO_SHADOW(VS_OUT ps_input) : SV_TARGET
+{
+    PS_OUT ps_output = (PS_OUT) 0;
+	
+    clip(ps_input.TexUV.y + 0.1f);
+    float clipSpace = (ps_input.TexUV.y) - 0.1f + cos(ps_input.fOffset2 * 0.5f) * 0.1f - sin(ps_input.TexUV.x * 50.f) * (ps_input.Dissolve * 0.01f);
+
+	// Diffuse
+	ps_output.Diffuse = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV * fDetails) * float4(ps_input.Emissive.xyz, 1.f);
+	
+    if (clipSpace < 0.f)
+        ps_output.Diffuse.rgb *= ps_input.fOffset3;
+	// Normal
+    float4 TexNormal = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV * fDetails);
+    TexNormal = (TexNormal * 2.0f) - 1.0f; // 값의 범위를 (0, 1)UV 좌표에서 (-1 ~ 1)투영 좌표로 확장.
+    float3 Normal = (TexNormal.x * ps_input.T) + (TexNormal.y * ps_input.B) + (TexNormal.z * ps_input.N);
+    ps_output.Normal = float4(Normal.xyz * 0.5f + 0.5f, 1.f); // 값의 범위를 (0 ~ 1)UV 좌표로 다시 축소.
+	
+	// Depth
+    ps_output.Depth = float4(ps_input.ProjPos.z / ps_input.ProjPos.w, // (posWVP.z / posWVP.w) : Proj 영역의 Z.
+								 ps_input.ProjPos.w / g_fProjFar, // posWVP.w / Far : 0~1로 만든 View영역의 Z.
+								 1.0f, 1.0f);
+
+    return (ps_output);
+}

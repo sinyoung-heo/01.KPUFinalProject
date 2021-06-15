@@ -372,6 +372,7 @@ void CGameObject::Free()
 		for_each(m_mapComponent[i].begin(), m_mapComponent[i].end(), CDeleteMap());
 		m_mapComponent[i].clear();
 	}
-	if(m_pFontServer)
+
+	if(nullptr != m_pFontServer)
 		Engine::Safe_Release(m_pFontServer);
 }

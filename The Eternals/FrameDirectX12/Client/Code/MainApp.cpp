@@ -236,7 +236,7 @@ HRESULT CMainApp::SetUp_Font()
 												  72.f,					// Font Size
 												  D2D1::ColorF::White);	// Font Color
 	Engine::NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	m_pObjectMgr->Add_GameObjectPrototype(L"Font_NetmarbleBold60", pGameObject);
+	m_pObjectMgr->Add_GameObjectPrototype(L"Font_NetmarbleBold72", pGameObject);
 
 
 	// ³Ø½¼Lv1°íµñ Bold - 24

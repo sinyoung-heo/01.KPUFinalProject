@@ -535,6 +535,10 @@ HRESULT CScene_MainStage::Ready_LayerUI(wstring wstrLayerTag)
 	}
 
 	// MainMenuSettingCanvas
+	CSettingButtonClose* pSettingButtonXMouseNormal  = nullptr;
+	CSettingButtonClose* pSettingButtonXMouseOn      = nullptr;
+	CSettingButtonClose* pSettingButtonXMouseClicked = nullptr;
+
 	{
 		wifstream fin { L"../../Bin/ToolData/2DUIMainMenuSettingCanvas.2DUI" };
 		if (fin.fail())
@@ -643,9 +647,11 @@ HRESULT CScene_MainStage::Ready_LayerUI(wstring wstrLayerTag)
 															  vecRectScale[i],					// RectScaleOffset
 															  vecUIDepth[i]);					// UI Depth
 				}
-				else if (L"SystemSettingButtonX_Normal" == vecObjectTag[i])
+				else if (L"SystemSettingButtonX_Normal" == vecObjectTag[i] ||
+						 L"SystemSettingButtonX_MouseOn" == vecObjectTag[i] ||
+						 L"SystemSettingButtonX_MouseClicked" == vecObjectTag[i])
 				{
-					pChildUI = CSettingButtonGameExit::Create(m_pGraphicDevice, m_pCommandList,
+					pChildUI = CSettingButtonClose::Create(m_pGraphicDevice, m_pCommandList,
 															  wstrRootObjectTag,				// RootObjectTag
 															  vecObjectTag[i],					// ObjectTag
 															  vecDataFilePath[i],				// DataFilePath
@@ -656,6 +662,14 @@ HRESULT CScene_MainStage::Ready_LayerUI(wstring wstrLayerTag)
 															  vecRectPosOffset[i],				// RectPosOffset
 															  vecRectScale[i],					// RectScaleOffset
 															  vecUIDepth[i]);					// UI Depth
+
+					if (L"SystemSettingButtonX_MouseOn" == vecObjectTag[i])
+						pSettingButtonXMouseOn = static_cast<CSettingButtonClose*>(pChildUI);
+					else if (L"SystemSettingButtonX_MouseClicked" == vecObjectTag[i])
+						pSettingButtonXMouseClicked = static_cast<CSettingButtonClose*>(pChildUI);
+					else
+						pSettingButtonXMouseNormal = static_cast<CSettingButtonClose*>(pChildUI);
+
 				}
 				else if (L"SystemSettingCheckBox_Shade" == vecObjectTag[i] ||
 						 L"SystemSettingCheckBox_Specular" == vecObjectTag[i] || 
@@ -677,13 +691,35 @@ HRESULT CScene_MainStage::Ready_LayerUI(wstring wstrLayerTag)
 																	vecUIDepth[i]);					// UI Depth
 				}
 
-				if (nullptr != pChildUI)
+				if (nullptr != pChildUI &&
+					(L"SystemSettingButtonX_MouseOn" != vecObjectTag[i] && 
+					 L"SystemSettingButtonX_MouseClicked" != vecObjectTag[i]))
 				{
 					m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
 					static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
 				}
 			}
 		}
+
+		UI_CHILD_STATE tState;
+
+		tState.tFrame         = pSettingButtonXMouseOn->Get_Frame();
+		tState.vPos           = pSettingButtonXMouseOn->Get_Transform()->m_vPos;
+		tState.vScale         = pSettingButtonXMouseOn->Get_Transform()->m_vScale;
+		tState.vRectPosOffset = pSettingButtonXMouseOn->Get_RectOffset();
+		tState.vRectScale     = pSettingButtonXMouseOn->Get_TransformColor()->m_vScale;
+		pSettingButtonXMouseNormal->SetUp_MainMenuState(L"MouseOn", tState);
+
+		tState.tFrame         = pSettingButtonXMouseClicked->Get_Frame();
+		tState.vPos           = pSettingButtonXMouseClicked->Get_Transform()->m_vPos;
+		tState.vScale         = pSettingButtonXMouseClicked->Get_Transform()->m_vScale;
+		tState.vRectPosOffset = pSettingButtonXMouseClicked->Get_RectOffset();
+		tState.vRectScale     = pSettingButtonXMouseClicked->Get_TransformColor()->m_vScale;
+		pSettingButtonXMouseNormal->SetUp_MainMenuState(L"MouseClicked", tState);
+
+		pSettingButtonXMouseNormal	= nullptr;
+		Engine::Safe_Release(pSettingButtonXMouseOn);
+		Engine::Safe_Release(pSettingButtonXMouseClicked);
 	}
 
 	/*__________________________________________________________________________________________________________

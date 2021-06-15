@@ -76,58 +76,58 @@ public:
 
 private:
 	// CollisionTick
-	INSTANCE_POOL_DESC<CCollisionTick>*		m_pCollisionTickPool;
-	INSTANCE_POOL_DESC<CCollisionArrow>*	m_pCollisionArrowIcePool;
-	INSTANCE_POOL_DESC<CCollisionArrow>*	m_pCollisionArrowFirePool;
-	INSTANCE_POOL_DESC<CCollisionArrow>*	m_pCollisionArrowLightningPool;
+	INSTANCE_POOL_DESC<CCollisionTick>*		m_pCollisionTickPool           = nullptr;
+	INSTANCE_POOL_DESC<CCollisionArrow>*	m_pCollisionArrowIcePool       = nullptr;
+	INSTANCE_POOL_DESC<CCollisionArrow>*	m_pCollisionArrowFirePool      = nullptr;
+	INSTANCE_POOL_DESC<CCollisionArrow>*	m_pCollisionArrowLightningPool = nullptr;
 
 	// Monster
-	INSTANCE_POOL_DESC<CCrab>*			m_pMonsterCrabPool;
-	INSTANCE_POOL_DESC<CCloderA>*		m_pMonsterCloderAPool;
-	INSTANCE_POOL_DESC<CMonkey>*		m_pMonsterMonkeyPool;
-	INSTANCE_POOL_DESC<CDrownedSailor>*	m_pMonsterDrownedSailorPool;
-	INSTANCE_POOL_DESC<CGiantBeetle>*	m_pMonsterGiantBeetlePool;
-	INSTANCE_POOL_DESC<CGiantMonkey>*	m_pMonsterGiantMonkeyPool;
-	INSTANCE_POOL_DESC<CCraftyArachne>* m_pMonsterCraftyArachnePool;
+	INSTANCE_POOL_DESC<CCrab>*			m_pMonsterCrabPool          = nullptr;
+	INSTANCE_POOL_DESC<CCloderA>*		m_pMonsterCloderAPool       = nullptr;
+	INSTANCE_POOL_DESC<CMonkey>*		m_pMonsterMonkeyPool        = nullptr;
+	INSTANCE_POOL_DESC<CDrownedSailor>*	m_pMonsterDrownedSailorPool = nullptr;
+	INSTANCE_POOL_DESC<CGiantBeetle>*	m_pMonsterGiantBeetlePool   = nullptr;
+	INSTANCE_POOL_DESC<CGiantMonkey>*	m_pMonsterGiantMonkeyPool   = nullptr;
+	INSTANCE_POOL_DESC<CCraftyArachne>* m_pMonsterCraftyArachnePool = nullptr;
 
 	// NPC
-	INSTANCE_POOL_DESC<CNPC_Walker>*	m_pNPC_Walker_ChickenPool;
-	INSTANCE_POOL_DESC<CNPC_Walker>*	m_pNPC_Walker_CatPool;
-	INSTANCE_POOL_DESC<CNPC_Walker>*	m_pNPC_Walker_AmanBoyPool;
-	INSTANCE_POOL_DESC<CNPC_Assistant>* m_pNPC_AssistantPool;
-	INSTANCE_POOL_DESC<CNPC_Stander>*	m_pNPC_Stander_VillagersPool;
-	INSTANCE_POOL_DESC<CNPC_Stander>*	m_pNPC_Stander_Baraka_M_ExtractorPool;
-	INSTANCE_POOL_DESC<CNPC_Merchant>*	m_pNPC_Merchant_Popori_M_MerchantPool;
-	INSTANCE_POOL_DESC<CNPC_Merchant>*	m_pNPC_Merchant_Baraka_M_MerchantPool;
-	INSTANCE_POOL_DESC<CNPC_Merchant>*	m_pNPC_Merchant_Baraka_M_MystelliumPool;
-	INSTANCE_POOL_DESC<CNPC_Quest>*		m_pNPC_QuestPool;
-	INSTANCE_POOL_DESC<CNPC_Children>*	m_pNPC_Children_HumanBoyPool;
-	INSTANCE_POOL_DESC<CNPC_Children>*	m_pNPC_Children_HumanGirlPool;
-	INSTANCE_POOL_DESC<CNPC_Children>*	m_pNPC_Children_HighelfGirlPool;
+	INSTANCE_POOL_DESC<CNPC_Walker>*	m_pNPC_Walker_ChickenPool               = nullptr;
+	INSTANCE_POOL_DESC<CNPC_Walker>*	m_pNPC_Walker_CatPool                   = nullptr;
+	INSTANCE_POOL_DESC<CNPC_Walker>*	m_pNPC_Walker_AmanBoyPool               = nullptr;
+	INSTANCE_POOL_DESC<CNPC_Assistant>* m_pNPC_AssistantPool                    = nullptr;
+	INSTANCE_POOL_DESC<CNPC_Stander>*	m_pNPC_Stander_VillagersPool            = nullptr;
+	INSTANCE_POOL_DESC<CNPC_Stander>*	m_pNPC_Stander_Baraka_M_ExtractorPool   = nullptr;
+	INSTANCE_POOL_DESC<CNPC_Merchant>*	m_pNPC_Merchant_Popori_M_MerchantPool   = nullptr;
+	INSTANCE_POOL_DESC<CNPC_Merchant>*	m_pNPC_Merchant_Baraka_M_MerchantPool   = nullptr;
+	INSTANCE_POOL_DESC<CNPC_Merchant>*	m_pNPC_Merchant_Baraka_M_MystelliumPool = nullptr;
+	INSTANCE_POOL_DESC<CNPC_Quest>*		m_pNPC_QuestPool                        = nullptr;
+	INSTANCE_POOL_DESC<CNPC_Children>*	m_pNPC_Children_HumanBoyPool            = nullptr;
+	INSTANCE_POOL_DESC<CNPC_Children>*	m_pNPC_Children_HumanGirlPool           = nullptr;
+	INSTANCE_POOL_DESC<CNPC_Children>*	m_pNPC_Children_HighelfGirlPool         = nullptr;
 
 	// PCOthers
-	INSTANCE_POOL_DESC<CPCOthersGladiator>* m_pPCOthersGladiatorPool;
-	INSTANCE_POOL_DESC<CPCOthersArcher>*	m_pPCOthersArcherPool;
-	INSTANCE_POOL_DESC<CPCOthersPriest>*	m_pPCOthersPriestPool;
+	INSTANCE_POOL_DESC<CPCOthersGladiator>* m_pPCOthersGladiatorPool = nullptr;
+	INSTANCE_POOL_DESC<CPCOthersArcher>*	m_pPCOthersArcherPool    = nullptr;
+	INSTANCE_POOL_DESC<CPCOthersPriest>*	m_pPCOthersPriestPool    = nullptr;
 
 	// PCWeapon
-	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	m_pPCWeaponTwohand19_A_SM_Pool;
-	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	m_pPCWeaponTwoHand27_SM_Pool;
-	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	m_pPCWeaponTwoHand29_SM_Pool;
-	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	m_pPCWeaponTwoHand31_SM_Pool;
-	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	m_pPCWeaponTwoHand33_B_SM_Pool;
+	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	m_pPCWeaponTwohand19_A_SM_Pool = nullptr;
+	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	m_pPCWeaponTwoHand27_SM_Pool   = nullptr;
+	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	m_pPCWeaponTwoHand29_SM_Pool   = nullptr;
+	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	m_pPCWeaponTwoHand31_SM_Pool   = nullptr;
+	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	m_pPCWeaponTwoHand33_B_SM_Pool = nullptr;
 
-	INSTANCE_POOL_DESC<CPCWeaponBow>*		m_pPCWeaponBow18_A_SM_Pool;
-	INSTANCE_POOL_DESC<CPCWeaponBow>*		m_pPCWeaponBow23_SM_Pool;
-	INSTANCE_POOL_DESC<CPCWeaponBow>*		m_pPCWeaponBow27_SM_Pool;
-	INSTANCE_POOL_DESC<CPCWeaponBow>*		m_pPCWeaponBow31_SM_Pool;
-	INSTANCE_POOL_DESC<CPCWeaponBow>*		m_pPCWeaponEvent_Season_Bow_01_SM_Pool;
+	INSTANCE_POOL_DESC<CPCWeaponBow>*		m_pPCWeaponBow18_A_SM_Pool             = nullptr;
+	INSTANCE_POOL_DESC<CPCWeaponBow>*		m_pPCWeaponBow23_SM_Pool               = nullptr;
+	INSTANCE_POOL_DESC<CPCWeaponBow>*		m_pPCWeaponBow27_SM_Pool               = nullptr;
+	INSTANCE_POOL_DESC<CPCWeaponBow>*		m_pPCWeaponBow31_SM_Pool               = nullptr;
+	INSTANCE_POOL_DESC<CPCWeaponBow>*		m_pPCWeaponEvent_Season_Bow_01_SM_Pool = nullptr;
 
-	INSTANCE_POOL_DESC<CPCWeaponRod>*		m_pPCWeaponEvent_Wit_Rod_01_Pool;
-	INSTANCE_POOL_DESC<CPCWeaponRod>*		m_pPCWeaponRod18_A_Pool;
-	INSTANCE_POOL_DESC<CPCWeaponRod>*		m_pPCWeaponRod28_B_Pool;
-	INSTANCE_POOL_DESC<CPCWeaponRod>*		m_pPCWeaponRod31_Pool;
-	INSTANCE_POOL_DESC<CPCWeaponRod>*		m_pPCWeaponRod33_B_Pool;
+	INSTANCE_POOL_DESC<CPCWeaponRod>*		m_pPCWeaponEvent_Wit_Rod_01_Pool = nullptr;
+	INSTANCE_POOL_DESC<CPCWeaponRod>*		m_pPCWeaponRod18_A_Pool          = nullptr;
+	INSTANCE_POOL_DESC<CPCWeaponRod>*		m_pPCWeaponRod28_B_Pool          = nullptr;
+	INSTANCE_POOL_DESC<CPCWeaponRod>*		m_pPCWeaponRod31_Pool            = nullptr;
+	INSTANCE_POOL_DESC<CPCWeaponRod>*		m_pPCWeaponRod33_B_Pool          = nullptr;
 
 private:
 	virtual void Free();
@@ -231,6 +231,9 @@ void Return_Instance(INSTANCE_POOL_DESC<T1>* pInstacePoolDesc, const _uint& uiIn
 template<class T1>
 void Safe_Release_InstacePool(INSTANCE_POOL_DESC<T1>* pInstacePoolDesc)
 {
+	if (nullptr == pInstacePoolDesc)
+		return;
+
 	for (_uint i = 0; i < pInstacePoolDesc->uiInstanceSize; ++i)
 		Engine::Safe_Release(pInstacePoolDesc->ppInstances[i]);
 

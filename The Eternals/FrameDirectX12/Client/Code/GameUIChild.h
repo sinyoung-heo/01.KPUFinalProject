@@ -7,6 +7,16 @@ namespace Engine
 	class CFont;
 }
 
+typedef struct tagUIChildState
+{
+	FRAME	tFrame;
+	_vec3	vPos           = _vec3(0.0f);
+	_vec3	vScale         = _vec3(1.0f);
+	_vec3	vRectPosOffset = _vec3(0.0f);
+	_vec3	vRectScale     = _vec3(1.0f);
+
+} UI_CHILD_STATE;
+
 class CGameUIChild : public Engine::CGameObject
 {
 protected:
@@ -14,8 +24,11 @@ protected:
 	virtual ~CGameUIChild() = default;
 
 public:
-	RECT&			Get_Rect() { return m_tRect; }
-	Engine::CFont*	Get_Font() { return m_pFont; }
+	const FRAME&		Get_Frame()				{ return m_tFrame; }
+	RECT&				Get_Rect()				{ return m_tRect; }
+	Engine::CFont*		Get_Font()				{ return m_pFont; }
+	Engine::CTransform* Get_TransformColor()	{ return m_pTransColor; }
+	const _vec3&		Get_RectOffset()		{ return m_vRectOffset; }
 
 	void Set_IsRenderUI(const _bool& bIsRender) { m_bIsRender = bIsRender; }
 	void Set_IsActive(const _bool& bIsActive) { m_bIsActive = bIsActive; }

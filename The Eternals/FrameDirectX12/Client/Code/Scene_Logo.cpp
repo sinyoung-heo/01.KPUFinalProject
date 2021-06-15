@@ -986,8 +986,6 @@ HRESULT CScene_Logo::Ready_LayerFont(wstring wstrLayerTag)
 	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
 	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
 
-
-
 	return S_OK;
 }
 
@@ -1058,4 +1056,19 @@ void CScene_Logo::Free()
 
 	// Release UploadBuffer
 	Engine::CComponentMgr::Get_Instance()->Release_UploadBuffer();
+
+	m_pLoginSelectPCButtonClicked = nullptr;
+	m_pLoginSelectPCButton        = nullptr;
+	m_pLoginSelectIDButtonClicked = nullptr;
+	m_pLoginSelectIDButton        = nullptr;
+
+	m_pPCSelectBackground     = nullptr;
+	m_pPCSelectJobWarrior     = nullptr;
+	m_pPCSelectJobArcher      = nullptr;
+	m_pPCSelectJobPriest      = nullptr;
+	m_pPCSelectFrameWarrior   = nullptr;
+	m_pPCSelectFrameArcher    = nullptr;
+	m_pPCSelectFramePriest    = nullptr;
+	m_pPCSelectButton         = nullptr;
+	m_pPCSelectButtonClicked  = nullptr;
 }

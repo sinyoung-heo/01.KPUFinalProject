@@ -3,6 +3,7 @@
 #include "DirectInput.h"
 #include "ShaderMgr.h"
 #include "Font.h"
+#include "Renderer.h"
 
 
 CSettingButtonShaderCheckBox::CSettingButtonShaderCheckBox(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -77,6 +78,9 @@ _int CSettingButtonShaderCheckBox::LateUpdate_GameObject(const _float& fTimeDelt
 		_bool bIsOnShader = m_pShaderMgr->Find_IsOnShader(m_wstrShaderTag);
 		bIsOnShader = !bIsOnShader;
 		m_pShaderMgr->Set_IsOnShader(m_wstrShaderTag, bIsOnShader);
+
+		if (L"Shadow" == m_wstrShaderTag)
+			m_pRenderer->Set_IsRenderShadow(bIsOnShader);
 	}
 
 	SetUp_CheckBox();

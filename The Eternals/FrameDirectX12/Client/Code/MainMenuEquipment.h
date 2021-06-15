@@ -31,7 +31,7 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	map<wstring, MAIN_MENU_STATE> m_mapMainMenuState;
+	map<wstring, UI_ROOT_STATE> m_mapMainMenuState;
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,

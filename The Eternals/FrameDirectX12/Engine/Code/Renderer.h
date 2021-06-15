@@ -73,6 +73,7 @@ public:
 	_bool				Get_RenderOnOff(wstring wstrTag);
 	CRenderTarget*		Get_TargetShadowDepth()				{ return m_pTargetShadowDepth; }
 	BoundingFrustum&	Get_Frustum()						{ return m_tFrustum; } 
+	const _bool&		Get_IsRenderShadow()				{ return m_bIsRenderShadow; }
 
 	// Set
 	HRESULT	Set_CurPipelineState(ID3D12PipelineState* pPipelineState);
@@ -80,10 +81,11 @@ public:
 								 ID3D12PipelineState* pPipelineState,
 								 const _int& iContextIdx);
 	HRESULT	Set_RenderOnOff(wstring wstrTag);
-	void	Add_PipelineStateCnt()							{ ++m_uiCnt_PipelineState; };
-	void	Reset_SetPipelineStateCnt()						{ m_uiCnt_SetPipelineState = 0; }
-	void	Set_bIsLoadingFinish()							{ m_bIsLoadingFinish = true; }
-	void	Set_Frustum(const BoundingFrustum& tFrustum)	{ m_tFrustum = tFrustum; }
+	void	Add_PipelineStateCnt()								{ ++m_uiCnt_PipelineState; };
+	void	Reset_SetPipelineStateCnt()							{ m_uiCnt_SetPipelineState = 0; }
+	void	Set_bIsLoadingFinish()								{ m_bIsLoadingFinish = true; }
+	void	Set_Frustum(const BoundingFrustum& tFrustum)		{ m_tFrustum = tFrustum; }
+	void	Set_IsRenderShadow(const _bool& bIsRenderShadow)	{ m_bIsRenderShadow = bIsRenderShadow; }
 
 	// Method
 	HRESULT	Ready_Renderer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
@@ -248,6 +250,7 @@ private:
 
 	_bool m_bIsLoadingFinish	= false;
 	_bool m_bIsCreateThread		= false;
+	_bool m_bIsRenderShadow		= true;
 
 public:
 	void	Create_ThreadContext();

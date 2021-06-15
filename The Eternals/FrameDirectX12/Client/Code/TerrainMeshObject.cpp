@@ -68,6 +68,11 @@ _int CTerrainMeshObject::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
+	if (m_pRenderer->Get_IsRenderShadow())
+		m_iMeshPipelineStatePass = 2;
+	else
+		m_iMeshPipelineStatePass = 5;
+
 	return NO_EVENT;
 }
 

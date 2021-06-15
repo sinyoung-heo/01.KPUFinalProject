@@ -165,7 +165,7 @@ protected:
 	char	m_chPreStageID = -1;
 	char	m_chCurStageID = -1;
 	
-	CFont* m_pFontServer;
+	CFont*			m_pFontServer = nullptr;
 	wstring			m_wstrText = L"";
 	_tchar			m_szText[MAX_STR] = L"";
 

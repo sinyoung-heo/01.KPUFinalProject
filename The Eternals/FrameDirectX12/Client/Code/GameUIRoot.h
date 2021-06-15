@@ -7,7 +7,7 @@ namespace Engine
 	class CFont;
 }
 
-typedef struct tagMainMenuState
+typedef struct tagUIRootState
 {
 	FRAME	tFrame;
 	_vec3	vPos           = _vec3(0.0f);
@@ -15,7 +15,7 @@ typedef struct tagMainMenuState
 	_vec3	vRectPosOffset = _vec3(0.0f);
 	_vec3	vRectScale     = _vec3(1.0f);
 
-} MAIN_MENU_STATE;
+} UI_ROOT_STATE;
 
 class CGameUIRoot : public Engine::CGameObject
 {

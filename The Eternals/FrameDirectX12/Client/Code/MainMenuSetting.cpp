@@ -27,7 +27,7 @@ HRESULT CMainMenuSetting::Ready_GameObject(wstring wstrObjectTag,
 															  vRectScale,
 															  iUIDepth), E_FAIL);
 
-	m_mapMainMenuState[L"Normal"] = MAIN_MENU_STATE();
+	m_mapMainMenuState[L"Normal"] = UI_ROOT_STATE();
 	m_mapMainMenuState[L"Normal"].tFrame         = m_tFrame;
 	m_mapMainMenuState[L"Normal"].vPos           = m_pTransCom->m_vPos;
 	m_mapMainMenuState[L"Normal"].vScale         = m_pTransCom->m_vScale;
@@ -104,7 +104,7 @@ void CMainMenuSetting::Render_GameObject(const _float& fTimeDelta)
 HRESULT CMainMenuSetting::SetUp_MainMenuState()
 {
 	// IMG RED 
-	m_mapMainMenuState[L"Red"] = MAIN_MENU_STATE();
+	m_mapMainMenuState[L"Red"] = UI_ROOT_STATE();
 
 	{
 		wifstream fin { L"../../Bin/ToolData/2DUIMainMenuSetting_Red.2DUI" };
@@ -188,7 +188,7 @@ HRESULT CMainMenuSetting::SetUp_MainMenuState()
 	}
 
 	// IMG BLUE
-	m_mapMainMenuState[L"Blue"] = MAIN_MENU_STATE();
+	m_mapMainMenuState[L"Blue"] = UI_ROOT_STATE();
 	{
 		wifstream fin { L"../../Bin/ToolData/2DUIMainMenuSetting_Blue.2DUI" };
 		if (fin.fail())

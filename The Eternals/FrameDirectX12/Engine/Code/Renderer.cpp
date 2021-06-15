@@ -1280,11 +1280,14 @@ void CRenderer::Worker_Thread(_int threadIndex)
 		m_pTargetShadowDepth->Bind_RenderTargetOnContext(m_arrShadowCommandList[threadIndex], THREADID::SHADOW);
 
 		// Start Render ShadowDepth.
-		for (_int i = threadIndex; i < m_RenderList[RENDER_NONALPHA].size(); i += CONTEXT::CONTEXT_END)
+		if (m_bIsRenderShadow)
 		{
-			m_RenderList[RENDER_NONALPHA][i]->Render_ShadowDepth(CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"),
-																 m_arrShadowCommandList[threadIndex], 
-																 threadIndex);
+			for (_int i = threadIndex; i < m_RenderList[RENDER_NONALPHA].size(); i += CONTEXT::CONTEXT_END)
+			{
+				m_RenderList[RENDER_NONALPHA][i]->Render_ShadowDepth(CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"),
+																	 m_arrShadowCommandList[threadIndex], 
+																	 threadIndex);
+			}
 		}
 
 		// Render Shadow Instance
