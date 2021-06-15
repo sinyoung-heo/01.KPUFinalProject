@@ -1,6 +1,11 @@
 #pragma once
 #include "GameUIChild.h"
 
+namespace Engine
+{
+	class CShaderMgr;
+}
+
 class CSettingButtonShaderCheckBox : public CGameUIChild
 {
 private:
@@ -24,9 +29,16 @@ public:
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 private:
+	void SetUp_CheckBox();
+	void SetUp_ShaderTag();
+	void SetUp_FontPosition(const _float& fTimeDelta);
+private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
+	Engine::CShaderMgr* m_pShaderMgr = nullptr;
+	wstring				m_wstrShaderTag = L"";
+
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,

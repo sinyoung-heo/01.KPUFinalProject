@@ -37,7 +37,7 @@ void CShaderMgr::Input_ShaderKey()
 		m_pCB_ShaderInformation.ToneMapping == 0.f ? m_pCB_ShaderInformation.ToneMapping = 1.f
 			: m_pCB_ShaderInformation.ToneMapping = 0.f;
 
-		m_mapIsOnShader[L"HDRTone"] = !m_mapIsOnShader[L"HDRTone"];
+		m_mapIsOnShader[L"HDR Tone"] = !m_mapIsOnShader[L"HDR Tone"];
 	}
 	if (KEY_DOWN(DIK_NUMPAD4))
 	{
@@ -61,6 +61,32 @@ void CShaderMgr::Set_IsOnShader(wstring wstrTag, const _bool& bIsOn)
 		return;
 
 	iter_find->second = bIsOn;
+
+	if (L"DOF" == wstrTag)
+	{
+		m_pCB_ShaderInformation.DepthOfField == 0.f ? m_pCB_ShaderInformation.DepthOfField = 1.f : 
+													  m_pCB_ShaderInformation.DepthOfField = 0.f;
+	}
+	else if (L"SSAO" == wstrTag)
+	{
+		m_pCB_ShaderInformation.Ssao == 0.f ? m_pCB_ShaderInformation.Ssao = 1.f : 
+											  m_pCB_ShaderInformation.Ssao = 0.f;
+	}
+	else if (L"Shade" == wstrTag)
+	{
+		m_pCB_ShaderInformation.Shade == 0.f ? m_pCB_ShaderInformation.Shade = 1.f : 
+											   m_pCB_ShaderInformation.Shade = 0.f;
+	}
+	else if (L"HDR Tone" == wstrTag)
+	{
+		m_pCB_ShaderInformation.ToneMapping == 0.f ? m_pCB_ShaderInformation.ToneMapping = 1.f : 
+													 m_pCB_ShaderInformation.ToneMapping = 0.f;
+	}
+	else if (L"Specular" == wstrTag)
+	{
+		m_pCB_ShaderInformation.Specular == 0.f ? m_pCB_ShaderInformation.Specular = 1.f : 
+												  m_pCB_ShaderInformation.Specular = 0.f;
+	}
 }
 
 void CShaderMgr::SetUp_ShaderInfo()
@@ -68,7 +94,7 @@ void CShaderMgr::SetUp_ShaderInfo()
 	m_mapIsOnShader[L"DOF"]      = false;
 	m_mapIsOnShader[L"SSAO"]     = true;
 	m_mapIsOnShader[L"Shade"]    = true;
-	m_mapIsOnShader[L"HDRTone"]  = true;
+	m_mapIsOnShader[L"HDR Tone"] = true;
 	m_mapIsOnShader[L"Specular"] = true;
 	m_mapIsOnShader[L"Shadow"]   = true;
 

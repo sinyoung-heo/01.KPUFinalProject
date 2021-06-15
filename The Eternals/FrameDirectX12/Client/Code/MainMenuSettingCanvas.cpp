@@ -26,7 +26,7 @@ HRESULT CMainMenuSettingCanvas::Ready_GameObject(wstring wstrObjectTag,
 															  vRectScale,
 															  iUIDepth), E_FAIL);
 
-	m_bIsActive = false;
+	m_bIsActive = true;
 
 	return S_OK;
 }

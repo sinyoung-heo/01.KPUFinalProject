@@ -15,9 +15,8 @@ private:
 public:
 	void Input_ShaderKey();
 public:
-	CB_SHADER_INFORMATION& Get_ShaderInfo() { return m_pCB_ShaderInformation; }
+	CB_SHADER_INFORMATION&	Get_ShaderInfo() { return m_pCB_ShaderInformation; }
 	void Set_IsOnShader(wstring wstrTag, const _bool& bIsOn);
-
 	void Set_TreeAlphaTest(const _float& fOnOff) { m_pCB_ShaderInformation.TreeAlphaTest = fOnOff; }
 	void SetUp_ShaderInfo();
 	const _bool& Find_IsOnShader(wstring wstrTag);

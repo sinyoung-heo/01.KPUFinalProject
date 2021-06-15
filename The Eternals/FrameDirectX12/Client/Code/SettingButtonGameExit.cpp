@@ -28,7 +28,7 @@ HRESULT CSettingButtonGameExit::Ready_GameObject(wstring wstrRootObjectTag,
 															   vRectScale,
 															   iUIDepth), E_FAIL);
 
-	m_bIsActive = false;
+	m_bIsActive = true;
 
 	return S_OK;
 }
@@ -43,6 +43,10 @@ HRESULT CSettingButtonGameExit::LateInit_GameObject()
 _int CSettingButtonGameExit::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
+	
+	if (m_bIsDead)
+		return DEAD_OBJ;
+	
 	CGameUIChild::Update_GameObject(fTimeDelta);
 
 	return NO_EVENT;

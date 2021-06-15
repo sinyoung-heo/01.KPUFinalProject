@@ -664,17 +664,17 @@ HRESULT CScene_MainStage::Ready_LayerUI(wstring wstrLayerTag)
 						 L"SystemSettingCheckBox_DOF" == vecObjectTag[i] || 
 						 L"SystemSettingCheckBox_Shadow" == vecObjectTag[i])
 				{
-					pChildUI = CGameUIChild::Create(m_pGraphicDevice, m_pCommandList,
-													wstrRootObjectTag,				// RootObjectTag
-													vecObjectTag[i],				// ObjectTag
-													vecDataFilePath[i],				// DataFilePath
-													vecPos[i],						// Pos
-													vecScale[i],					// Scane
-													(_bool)vecIsSpriteAnimation[i],	// Is Animation
-													vecFrameSpeed[i],				// FrameSpeed
-													vecRectPosOffset[i],			// RectPosOffset
-													vecRectScale[i],				// RectScaleOffset
-													vecUIDepth[i]);					// UI Depth
+					pChildUI = CSettingButtonShaderCheckBox::Create(m_pGraphicDevice, m_pCommandList,
+																	wstrRootObjectTag,				// RootObjectTag
+																	vecObjectTag[i],				// ObjectTag
+																	vecDataFilePath[i],				// DataFilePath
+																	vecPos[i],						// Pos
+																	vecScale[i],					// Scane
+																	(_bool)vecIsSpriteAnimation[i],	// Is Animation
+																	vecFrameSpeed[i],				// FrameSpeed
+																	vecRectPosOffset[i],			// RectPosOffset
+																	vecRectScale[i],				// RectScaleOffset
+																	vecUIDepth[i]);					// UI Depth
 				}
 
 				if (nullptr != pChildUI)

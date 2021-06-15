@@ -52,7 +52,7 @@ HRESULT CScene_Logo::Ready_Scene()
 	/*__________________________________________________________________________________________________________
 	[ Loading Font ]
 	____________________________________________________________________________________________________________*/
-	m_pFont_LoadingStr = static_cast<Engine::CFont*>(m_pObjectMgr->Clone_GameObjectPrototype(L"Font_Loading"));
+	m_pFont_LoadingStr = static_cast<Engine::CFont*>(m_pObjectMgr->Clone_GameObjectPrototype(L"Font_BinggraeMelona24"));
 	Engine::NULL_CHECK_RETURN(m_pFont_LoadingStr, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pFont_LoadingStr->Ready_GameObject(L"", 
 																	 _vec2(WINCX / 2.0f - 275.0f, WINCY - 90.0f),

@@ -49,6 +49,10 @@ HRESULT CCharacterMpGauge::LateInit_GameObject()
 _int CCharacterMpGauge::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
+	
+	if (m_bIsDead)
+		return DEAD_OBJ;
+
 	CGameUIChild::Update_GameObject(fTimeDelta);
 
 	return NO_EVENT;

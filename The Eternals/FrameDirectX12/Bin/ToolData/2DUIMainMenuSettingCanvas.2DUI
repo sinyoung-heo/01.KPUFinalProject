@@ -1,6 +1,6 @@
 ..\..\Bin\ToolData\TexUVChatBackground.texuv
 SystemSettingBackground
-800
+825
 450
 600
 800
@@ -79,7 +79,7 @@ SystemSettingButtonX_MouseClicked
 0.035
 ..\..\Bin\ToolData\TexUVCheckBoxOff.texuv
 SystemSettingCheckBox_Shade
-0
+-0.2
 0.3
 0.09
 0.07
@@ -92,7 +92,7 @@ SystemSettingCheckBox_Shade
 0.04
 ..\..\Bin\ToolData\TexUVCheckBoxOff.texuv
 SystemSettingCheckBox_Specular
-0
+-0.2
 0.24
 0.09
 0.07
@@ -105,7 +105,7 @@ SystemSettingCheckBox_Specular
 0.04
 ..\..\Bin\ToolData\TexUVCheckBoxOff.texuv
 SystemSettingCheckBox_SSAO
-0
+-0.2
 0.18
 0.09
 0.07
@@ -118,7 +118,7 @@ SystemSettingCheckBox_SSAO
 0.04
 ..\..\Bin\ToolData\TexUVCheckBoxOff.texuv
 SystemSettingCheckBox_HDRTone
-0
+-0.2
 0.12
 0.09
 0.07
@@ -131,7 +131,7 @@ SystemSettingCheckBox_HDRTone
 0.04
 ..\..\Bin\ToolData\TexUVCheckBoxOff.texuv
 SystemSettingCheckBox_DOF
-0
+-0.2
 0.06
 0.09
 0.07
@@ -144,7 +144,7 @@ SystemSettingCheckBox_DOF
 0.04
 ..\..\Bin\ToolData\TexUVCheckBoxOff.texuv
 SystemSettingCheckBox_Shadow
-0
+-0.2
 0
 0.09
 0.07
