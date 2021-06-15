@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "MainMenuSettingCanvas.h"
+#include "DirectInput.h"
 
 CMainMenuSettingCanvas::CMainMenuSettingCanvas(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIRoot(pGraphicDevice, pCommandList)
@@ -26,7 +27,7 @@ HRESULT CMainMenuSettingCanvas::Ready_GameObject(wstring wstrObjectTag,
 															  vRectScale,
 															  iUIDepth), E_FAIL);
 
-	m_bIsActive = true;
+	m_bIsActive = false;
 
 	return S_OK;
 }
@@ -44,6 +45,10 @@ _int CMainMenuSettingCanvas::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
+	if (!m_bIsActive)
+		return NO_EVENT;
+
+	KeyInput_MouseMove(fTimeDelta);
 
 	CGameUIRoot::Update_GameObject(fTimeDelta);
 
@@ -52,6 +57,9 @@ _int CMainMenuSettingCanvas::Update_GameObject(const _float& fTimeDelta)
 
 _int CMainMenuSettingCanvas::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bIsActive)
+		return NO_EVENT;
+
 	CGameUIRoot::LateUpdate_GameObject(fTimeDelta);
 
 	return NO_EVENT;
@@ -60,6 +68,33 @@ _int CMainMenuSettingCanvas::LateUpdate_GameObject(const _float& fTimeDelta)
 void CMainMenuSettingCanvas::Render_GameObject(const _float& fTimeDelta)
 {
 	CGameUIRoot::Render_GameObject(fTimeDelta);
+}
+
+void CMainMenuSettingCanvas::KeyInput_MouseMove(const _float& fTimeDelta)
+{
+	// Check Mouse Collision.
+	if (CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse() &&
+		CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect) &&
+		Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_LB))
+	{
+		/*__________________________________________________________________________________________________________
+		[ 마우스 좌, 우 이동 ]
+		____________________________________________________________________________________________________________*/
+		_long dwMouseMoveX = 0;
+		if (dwMouseMoveX = Engine::GetDIMouseMove(Engine::MOUSEMOVESTATE::DIMS_X))
+		{
+			m_pTransCom->m_vPos.x += static_cast<_float>(dwMouseMoveX);
+		}
+
+		/*__________________________________________________________________________________________________________
+		[ 마우스 상, 하 이동 ]
+		___________________________________________________________________________________________________________*/
+		_long dwMouseMoveY = 0;
+		if (dwMouseMoveY = Engine::GetDIMouseMove(Engine::MOUSEMOVESTATE::DIMS_Y))
+		{
+			m_pTransCom->m_vPos.y += static_cast<_float>(dwMouseMoveY);
+		}
+	}
 }
 
 Engine::CGameObject* CMainMenuSettingCanvas::Create(ID3D12Device* pGraphicDevice, 

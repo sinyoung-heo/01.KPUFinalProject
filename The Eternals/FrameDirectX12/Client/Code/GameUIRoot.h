@@ -49,6 +49,7 @@ public:
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 
 	void			Add_ChildUI(Engine::CGameObject* pChildUI) { if (nullptr != pChildUI) m_vecUIChild.emplace_back(pChildUI); }
+	void			SetUp_ActiveChildUI(const _bool& bIsActive);
 protected:
 	void			Set_ConstantTable();
 	void			Update_SpriteFrame(const _float& fTimeDelta);

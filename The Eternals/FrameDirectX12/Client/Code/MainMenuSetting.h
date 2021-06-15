@@ -1,6 +1,8 @@
 #pragma once
 #include "GameUIRoot.h"
 
+class CMainMenuSettingCanvas;
+
 class CMainMenuSetting : public CGameUIRoot
 {
 private:
@@ -9,6 +11,8 @@ private:
 
 public:
 	vector<Engine::CGameObject*>& Get_ChildUIList() { return m_vecUIChild; };
+	void Set_IsActive(const _bool& bIsActive)				{ m_bIsActive = bIsActive; }
+	void Set_SettingCanvas(CMainMenuSettingCanvas* pCanvas) { m_pSettingCanvas = pCanvas; };
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrObjectTag,
@@ -26,13 +30,14 @@ public:
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 private:
 	HRESULT			SetUp_MainMenuState();
-
 private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
 	map<wstring, UI_ROOT_STATE> m_mapMainMenuState;
-
+	CMainMenuSettingCanvas*		m_pSettingCanvas = nullptr;
+	_bool						m_bIsActive      = false;
+	_bool						m_bIsKeyPressing = false;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 									   wstring wstrObjectTag,							   

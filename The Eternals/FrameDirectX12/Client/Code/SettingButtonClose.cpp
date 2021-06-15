@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "SettingButtonClose.h"
 #include "DirectInput.h"
+#include "ObjectMgr.h"
+#include "MainMenuSetting.h"
 
 CSettingButtonClose::CSettingButtonClose(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
@@ -38,7 +40,7 @@ HRESULT CSettingButtonClose::Ready_GameObject(wstring wstrRootObjectTag,
 	m_mapMainMenuState[L"MouseOn"]      = UI_CHILD_STATE();
 	m_mapMainMenuState[L"MouseClicked"] = UI_CHILD_STATE();
 
-	m_bIsActive = true;
+	m_bIsActive = false;
 
 	return S_OK;
 }
@@ -56,7 +58,9 @@ _int CSettingButtonClose::Update_GameObject(const _float& fTimeDelta)
 	
 	if (m_bIsDead)
 		return DEAD_OBJ;
-	
+	if (!m_bIsActive)
+		return NO_EVENT;
+
 	CGameUIChild::Update_GameObject(fTimeDelta);
 
 	return NO_EVENT;
@@ -64,7 +68,19 @@ _int CSettingButtonClose::Update_GameObject(const _float& fTimeDelta)
 
 _int CSettingButtonClose::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bIsActive)
+		return NO_EVENT;
+
 	CGameUIChild::LateUpdate_GameObject(fTimeDelta);
+
+	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect) &&
+		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
+		m_bIsKeyPressing)
+	{
+		static_cast<CMainMenuSetting*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"OptionSettingNormal"))->Set_IsActive(false);
+	}
+
+	m_bIsKeyPressing = false;
 
 	// Check Mouse Collision.
 	if (CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse() &&
@@ -77,6 +93,7 @@ _int CSettingButtonClose::LateUpdate_GameObject(const _float& fTimeDelta)
 			m_pTransCom->m_vScale   = m_mapMainMenuState[L"MouseClicked"].vScale;
 			m_vRectOffset           = m_mapMainMenuState[L"MouseClicked"].vRectPosOffset;
 			m_pTransColor->m_vScale = m_mapMainMenuState[L"MouseClicked"].vRectScale;
+			m_bIsKeyPressing = true;
 		}
 		else
 		{
@@ -85,6 +102,7 @@ _int CSettingButtonClose::LateUpdate_GameObject(const _float& fTimeDelta)
 			m_pTransCom->m_vScale   = m_mapMainMenuState[L"MouseOn"].vScale;
 			m_vRectOffset           = m_mapMainMenuState[L"MouseOn"].vRectPosOffset;
 			m_pTransColor->m_vScale = m_mapMainMenuState[L"MouseOn"].vRectScale;
+			m_bIsKeyPressing = false;
 		}
 	}
 	else

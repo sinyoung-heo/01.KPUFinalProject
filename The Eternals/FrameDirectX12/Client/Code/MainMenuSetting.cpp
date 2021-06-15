@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "MainMenuSetting.h"
 #include "DirectInput.h"
+#include "MainMenuSettingCanvas.h"
 
 CMainMenuSetting::CMainMenuSetting(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIRoot(pGraphicDevice, pCommandList)
@@ -62,6 +63,15 @@ _int CMainMenuSetting::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CGameUIRoot::LateUpdate_GameObject(fTimeDelta);
 
+	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect) &&
+		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
+		m_bIsKeyPressing)
+	{
+		m_bIsActive = !m_bIsActive;
+	}
+
+	m_bIsKeyPressing = false;
+
 	// Check Mouse Collision.
 	if (CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse() &&
 		CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect))
@@ -73,6 +83,7 @@ _int CMainMenuSetting::LateUpdate_GameObject(const _float& fTimeDelta)
 			m_pTransCom->m_vScale   = m_mapMainMenuState[L"Blue"].vScale;
 			m_vRectOffset           = m_mapMainMenuState[L"Blue"].vRectPosOffset;
 			m_pTransColor->m_vScale = m_mapMainMenuState[L"Blue"].vRectScale;
+			m_bIsKeyPressing = true;
 		}
 		else
 		{
@@ -81,6 +92,7 @@ _int CMainMenuSetting::LateUpdate_GameObject(const _float& fTimeDelta)
 			m_pTransCom->m_vScale   = m_mapMainMenuState[L"Red"].vScale;
 			m_vRectOffset           = m_mapMainMenuState[L"Red"].vRectPosOffset;
 			m_pTransColor->m_vScale = m_mapMainMenuState[L"Red"].vRectScale;
+			m_bIsKeyPressing = false;
 		}
 	}
 	else
@@ -91,6 +103,13 @@ _int CMainMenuSetting::LateUpdate_GameObject(const _float& fTimeDelta)
 		m_vRectOffset           = m_mapMainMenuState[L"Normal"].vRectPosOffset;
 		m_pTransColor->m_vScale = m_mapMainMenuState[L"Normal"].vRectScale;
 		
+	}
+
+	// Active Canvas UI
+	if (nullptr != m_pSettingCanvas)
+	{
+		m_pSettingCanvas->Set_IsActive(m_bIsActive);
+		m_pSettingCanvas->SetUp_ActiveChildUI(m_bIsActive);
 	}
 
 	return NO_EVENT;
@@ -305,5 +324,5 @@ void CMainMenuSetting::Free()
 	CGameUIRoot::Free();
 
 	m_mapMainMenuState.clear();
-
+	m_pSettingCanvas = nullptr;
 }

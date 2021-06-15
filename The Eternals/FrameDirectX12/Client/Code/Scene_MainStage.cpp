@@ -481,6 +481,7 @@ HRESULT CScene_MainStage::Ready_LayerUI(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ MainMenuSetting ]
 	____________________________________________________________________________________________________________*/
+	CMainMenuSetting* pMainMenuSetting = nullptr;
 	{
 		wifstream fin { L"../../Bin/ToolData/2DUIMainMenuSetting_Normal.2DUI" };
 		if (fin.fail())
@@ -531,6 +532,8 @@ HRESULT CScene_MainStage::Ready_LayerUI(wstring wstrLayerTag)
 											   vRectScale,
 											   UIDepth);
 			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+
+			pMainMenuSetting = static_cast<CMainMenuSetting*>(pRootUI);
 		}
 	}
 
@@ -627,6 +630,7 @@ HRESULT CScene_MainStage::Ready_LayerUI(wstring wstrLayerTag)
 													 vRectScale,
 													 UIDepth);
 			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+			pMainMenuSetting->Set_SettingCanvas(static_cast<CMainMenuSettingCanvas*>(pRootUI));
 
 			// UIChild »ý¼º.
 			for (_int i = 0; i < iChildUISize; ++i)
@@ -721,6 +725,8 @@ HRESULT CScene_MainStage::Ready_LayerUI(wstring wstrLayerTag)
 		Engine::Safe_Release(pSettingButtonXMouseOn);
 		Engine::Safe_Release(pSettingButtonXMouseClicked);
 	}
+
+	pMainMenuSetting = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ MainMenuInventory ]

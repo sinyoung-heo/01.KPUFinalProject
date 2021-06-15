@@ -6,6 +6,7 @@
 #include "DescriptorHeapMgr.h"
 #include "ObjectMgr.h"
 #include "Font.h"
+#include "GameUIChild.h"
 
 CGameUIRoot::CGameUIRoot(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -220,6 +221,12 @@ HRESULT CGameUIRoot::Read_DataFromFilePath(wstring wstrDataFilePath)
 	}
 
 	return S_OK;
+}
+
+void CGameUIRoot::SetUp_ActiveChildUI(const _bool& bIsActive)
+{
+	for (auto& pChildUI : m_vecUIChild)
+		static_cast<CGameUIChild*>(pChildUI)->Set_IsActive(bIsActive);
 }
 
 void CGameUIRoot::Set_ConstantTable()

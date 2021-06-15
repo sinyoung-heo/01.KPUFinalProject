@@ -30,6 +30,7 @@ private:
 	[ Value ]
 	____________________________________________________________________________________________________________*/
 	map<wstring, UI_CHILD_STATE> m_mapMainMenuState;
+	_bool m_bIsKeyPressing = false;
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,

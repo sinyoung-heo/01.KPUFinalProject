@@ -28,7 +28,7 @@ HRESULT CSettingButtonGameExit::Ready_GameObject(wstring wstrRootObjectTag,
 															   vRectScale,
 															   iUIDepth), E_FAIL);
 
-	m_bIsActive = true;
+	m_bIsActive = false;
 
 	return S_OK;
 }

@@ -37,7 +37,7 @@ HRESULT CSettingButtonShaderCheckBox::Ready_GameObject(wstring wstrRootObjectTag
 
 	SetUp_ShaderTag();
 
-	m_bIsActive = true;
+	m_bIsActive = false;
 
 	return S_OK;
 }
