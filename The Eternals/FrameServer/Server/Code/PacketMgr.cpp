@@ -210,6 +210,21 @@ void process_packet(int id)
 		process_stage_change(id, p->stage_id);
 	}
 	break;
+
+	case CS_SUGGEST_PARTY:
+	{
+		cs_packet_suggest_party* p = reinterpret_cast<cs_packet_suggest_party*>(pPlayer->m_packet_start);
+		process_suggest_party(id, p->member_id);
+	}
+	break;
+
+	case CS_RESPOND_PARTY:
+	{
+		cs_packet_respond_party* p = reinterpret_cast<cs_packet_respond_party*>(pPlayer->m_packet_start);
+		process_respond_party(p->result, p->suggester_id, id);
+	}
+	break;
+
 	}
 }
 /* ========================패킷 재조립========================*/
@@ -530,6 +545,17 @@ void send_player_stage_change(int to_client, int id)
 	p.posX     = pPlayer->m_vPos.x;
 	p.posY     = pPlayer->m_vPos.y;
 	p.posZ     = pPlayer->m_vPos.z;
+
+	send_packet(to_client, &p);
+}
+
+void send_suggest_party(int to_client, int id)
+{
+	sc_packet_suggest_party p;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_SUGGEST_PARTY;
+	p.id = id;
 
 	send_packet(to_client, &p);
 }
@@ -1459,6 +1485,33 @@ void process_stage_change(int id, const char& stage_id)
 
 			send_player_stage_change(server_num, id);
 		}
+	}
+}
+
+void process_suggest_party(const int& suggester_id, const int& others_id)
+{
+	if (true == CObjMgr::GetInstance()->Is_Player(others_id))
+	{
+		CPlayer* pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", others_id));
+		if (pOther == nullptr) return;
+		if (!pOther->m_bIsConnect) return;
+
+		send_suggest_party(others_id, suggester_id);
+	}
+}
+
+void process_respond_party(const bool& result, const int& suggester_id, const int& responder_id)
+{
+	// 제안 거절
+	if (result == false)
+	{
+		// 거절 메시지 전송
+		int a;
+	}
+	// 제안 수락
+	else
+	{
+
 	}
 }
 

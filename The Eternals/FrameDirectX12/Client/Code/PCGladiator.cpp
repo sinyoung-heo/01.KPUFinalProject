@@ -154,6 +154,24 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	Is_ChangeWeapon();
 	SetUp_StageID();
 
+	/* 파티 제안 요청을 받았을 경우 */
+	if (m_bIsPartyRequest)
+	{
+		// 수락
+		if (Engine::KEY_DOWN(DIK_Y))
+		{
+			m_bIsPartyRequest = false;
+			CPacketMgr::Get_Instance()->send_respond_party(true, m_iSuggesterNumber);
+		}
+		// 거절
+		else if (Engine::KEY_DOWN(DIK_N))
+		{
+			m_bIsPartyRequest = false;
+			CPacketMgr::Get_Instance()->send_respond_party(false, m_iSuggesterNumber);
+		}
+		
+	}
+
 	/*__________________________________________________________________________________________________________
 	[ Key Input ]
 	____________________________________________________________________________________________________________*/
@@ -278,6 +296,9 @@ void CPCGladiator::Process_Collision()
 
 		if (L"NPC_QUest" == pDst->Get_CollisionTag())
 			Collision_Quest(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
+
+		if (L"Others_SingleCollider" == pDst->Get_CollisionTag())
+			Collision_Others(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
 	}
 }
 
@@ -2219,6 +2240,29 @@ void CPCGladiator::Collision_Quest(list<Engine::CColliderSphere*>& lstMerchantCo
 				if (Engine::KEY_DOWN(DIK_F))
 				{
 					KeyInput_OpenQuest(pObj->Get_NPCNumber());
+				}
+			}
+		}
+	}
+}
+
+void CPCGladiator::Collision_Others(list<Engine::CColliderSphere*>& lstOtherstCollider, int ServerNumber)
+{
+	for (auto& pSrcCollider : m_lstCollider)
+	{
+		for (auto& pDstCollider : lstOtherstCollider)
+		{
+			if (Engine::CCollisionMgr::Check_Sphere(pSrcCollider->Get_BoundingInfo(), pDstCollider->Get_BoundingInfo()))
+			{
+				// Process Collision Event
+				pSrcCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+				pDstCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+
+				/* Suggest Party */
+				if (Engine::KEY_DOWN(DIK_B))
+				{
+					cout << ServerNumber << "님에게 파티 신청 제안" << endl;
+					CPacketMgr::Get_Instance()->send_suggest_party(ServerNumber);
 				}
 			}
 		}

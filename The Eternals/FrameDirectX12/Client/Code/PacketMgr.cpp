@@ -339,6 +339,14 @@ void CPacketMgr::Process_packet()
 	}
 	break;
 
+	case SC_PACKET_SUGGEST_PARTY:
+	{
+		sc_packet_suggest_party* packet = reinterpret_cast<sc_packet_suggest_party*>(m_packet_start);
+
+		Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+		pThisPlayer->Request_Party(packet->id);
+	}
+
 	default:
 #ifdef ERR_CHECK
 		printf("Unknown PACKET type [%d]\n", m_packet_start[1]);
@@ -1079,6 +1087,30 @@ void CPacketMgr::send_stage_change(const char& chStageId)
 	p.size     = sizeof(p);
 	p.type     = CS_STAGE_CHANGE;
 	p.stage_id = chStageId;
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_suggest_party(const int& others_id)
+{
+	cs_packet_suggest_party p;
+
+	p.size		= sizeof(p);
+	p.type		= CS_SUGGEST_PARTY;
+	p.member_id = others_id;
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_respond_party(const bool& result, const int& suggester_id)
+{
+	cs_packet_respond_party p;
+
+	p.size			= sizeof(p);
+	p.type			= CS_RESPOND_PARTY;
+
+	p.result		= result;
+	p.suggester_id	= suggester_id;
 
 	send_packet(&p);
 }

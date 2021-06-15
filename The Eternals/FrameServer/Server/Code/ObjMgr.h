@@ -41,6 +41,7 @@ public:
 
 private:
 	map<wstring, OBJLIST>	m_mapObjList;
+	map<int, unordered_set<int>> m_mapPartyList; // 파티번호 + 구성원 서버넘버
 	recursive_mutex			m_mutex;
 };
 

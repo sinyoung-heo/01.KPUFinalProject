@@ -44,6 +44,8 @@ public:
 	void    send_attackByMonster(int objID, const _int& iDamage);
 	void    send_attackToMonster(int objID, const _int& iDamage, const char& affect = AFFECT_FINCH);
 	void	send_stage_change(const char& chStageId);
+	void	send_suggest_party(const int& others_id);
+	void	send_respond_party(const bool& result, const int& suggester_id);
 	void	send_logout();
 
 public:
