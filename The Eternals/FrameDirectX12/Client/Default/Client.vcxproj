@@ -192,7 +192,10 @@
     <ClInclude Include="..\Code\IceStorm_s.h" />
     <ClInclude Include="..\Code\InstancePoolMgr.h" />
     <ClInclude Include="..\Code\LoginSelectButton.h" />
+    <ClInclude Include="..\Code\LogoutButtonChoice.h" />
+    <ClInclude Include="..\Code\LogoutButtonClose.h" />
     <ClInclude Include="..\Code\MagicCircle.h" />
+    <ClInclude Include="..\Code\MainMenuLogoutCanvas.h" />
     <ClInclude Include="..\Code\MainMenuSettingCanvas.h" />
     <ClInclude Include="..\Code\Monkey.h" />
     <ClInclude Include="..\Code\NormalMonsterHpGauge.h" />
@@ -307,10 +310,13 @@
     <ClCompile Include="..\Code\IceStorm_s.cpp" />
     <ClCompile Include="..\Code\InstancePoolMgr.cpp" />
     <ClCompile Include="..\Code\LoginSelectButton.cpp" />
+    <ClCompile Include="..\Code\LogoutButtonChoice.cpp" />
+    <ClCompile Include="..\Code\LogoutButtonClose.cpp" />
     <ClCompile Include="..\Code\MagicCircle.cpp" />
     <ClCompile Include="..\Code\MainMenuEquipment.cpp" />
     <ClCompile Include="..\Code\MainMenuInventory.cpp" />
     <ClCompile Include="..\Code\MainMenuLogout.cpp" />
+    <ClCompile Include="..\Code\MainMenuLogoutCanvas.cpp" />
     <ClCompile Include="..\Code\MainMenuSetting.cpp" />
     <ClCompile Include="..\Code\MainMenuSettingCanvas.cpp" />
     <ClCompile Include="..\Code\Monkey.cpp" />

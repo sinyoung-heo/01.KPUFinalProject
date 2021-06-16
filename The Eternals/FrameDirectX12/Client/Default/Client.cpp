@@ -35,6 +35,7 @@ _bool g_bIsOnDebugCaemra = false;
 _bool g_bIsStageChange   = false;
 _bool g_bIsOpenShop		 = false;
 _bool g_bIsLoadingFinish = false;
+_bool g_bIsExitGame      = false;
 
 _ulong Release_Singleton();
 
@@ -130,6 +131,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		____________________________________________________________________________________________________________*/
 		if (WM_QUIT == msg.message)
 			break;
+
+		if (g_bIsExitGame)
+		{
+			DestroyWindow(g_hWnd);
+			break;
+		}
 
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{

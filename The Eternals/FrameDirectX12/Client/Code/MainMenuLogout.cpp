@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "MainMenuLogout.h"
 #include "DirectInput.h"
+#include "MainMenuLogoutCanvas.h"
 
 CMainMenuLogout::CMainMenuLogout(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIRoot(pGraphicDevice, pCommandList)
@@ -62,6 +63,15 @@ _int CMainMenuLogout::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CGameUIRoot::LateUpdate_GameObject(fTimeDelta);
 
+	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect) &&
+		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
+		m_bIsKeyPressing)
+	{
+		m_bIsActiveCanvas = !m_bIsActiveCanvas;
+	}
+
+	m_bIsKeyPressing = false;
+
 	// Check Mouse Collision.
 	if (CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse() &&
 		CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect))
@@ -73,6 +83,7 @@ _int CMainMenuLogout::LateUpdate_GameObject(const _float& fTimeDelta)
 			m_pTransCom->m_vScale   = m_mapMainMenuState[L"Blue"].vScale;
 			m_vRectOffset           = m_mapMainMenuState[L"Blue"].vRectPosOffset;
 			m_pTransColor->m_vScale = m_mapMainMenuState[L"Blue"].vRectScale;
+			m_bIsKeyPressing = true;
 		}
 		else
 		{
@@ -81,6 +92,7 @@ _int CMainMenuLogout::LateUpdate_GameObject(const _float& fTimeDelta)
 			m_pTransCom->m_vScale   = m_mapMainMenuState[L"Red"].vScale;
 			m_vRectOffset           = m_mapMainMenuState[L"Red"].vRectPosOffset;
 			m_pTransColor->m_vScale = m_mapMainMenuState[L"Red"].vRectScale;
+			m_bIsKeyPressing = false;
 		}
 	}
 	else
@@ -90,7 +102,13 @@ _int CMainMenuLogout::LateUpdate_GameObject(const _float& fTimeDelta)
 		m_pTransCom->m_vScale   = m_mapMainMenuState[L"Normal"].vScale;
 		m_vRectOffset           = m_mapMainMenuState[L"Normal"].vRectPosOffset;
 		m_pTransColor->m_vScale = m_mapMainMenuState[L"Normal"].vRectScale;
-		
+	}
+
+	// Active Canvas UI
+	if (nullptr != m_pLogoutCanvas)
+	{
+		m_pLogoutCanvas->Set_IsActive(m_bIsActiveCanvas);
+		m_pLogoutCanvas->SetUp_ActiveChildUI(m_bIsActiveCanvas);
 	}
 
 	return NO_EVENT;

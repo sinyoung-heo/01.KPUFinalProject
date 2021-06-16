@@ -1,6 +1,8 @@
 #pragma once
 #include "GameUIRoot.h"
 
+class CMainMenuLogoutCanvas;
+
 class CMainMenuLogout : public CGameUIRoot
 {
 private:
@@ -9,6 +11,8 @@ private:
 
 public:
 	vector<Engine::CGameObject*>& Get_ChildUIList() { return m_vecUIChild; };
+	void Set_LogoutCanvas(CMainMenuLogoutCanvas* pCanvas) { m_pLogoutCanvas = pCanvas; };
+	void Set_IsActiveCanvas(const _bool& bIsActive) { m_bIsActiveCanvas = bIsActive; };
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrObjectTag,
@@ -32,7 +36,9 @@ private:
 	[ Value ]
 	____________________________________________________________________________________________________________*/
 	map<wstring, UI_ROOT_STATE> m_mapMainMenuState;
-
+	CMainMenuLogoutCanvas*		m_pLogoutCanvas   = nullptr;
+	_bool						m_bIsActiveCanvas = false;
+	_bool						m_bIsKeyPressing  = false;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 									   wstring wstrObjectTag,							   

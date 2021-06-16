@@ -17,3 +17,6 @@ extern _bool g_bIsOpenShop;
 
 // Loading
 extern _bool g_bIsLoadingFinish;
+
+// GameExit
+extern _bool g_bIsExitGame;

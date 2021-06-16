@@ -316,6 +316,18 @@
     <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonShaderCheckBox">
       <UniqueIdentifier>{29cbdbbf-f8a3-45fa-a452-cf3a610fdbbf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuLogoutCanvas">
+      <UniqueIdentifier>{89eb0b1a-153c-4e46-b188-535786f2724b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild">
+      <UniqueIdentifier>{c4b0806e-7d15-4d54-9daa-c7a3b7c2852b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild\LogoutButtonClose">
+      <UniqueIdentifier>{5df590e2-046d-4e30-a065-0bdb6f3c1425}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild\LogoutButtonChoice">
+      <UniqueIdentifier>{40c02d88-e610-447c-9193-f94d87f88e64}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -665,6 +677,15 @@
     <ClInclude Include="..\Code\SettingButtonShaderCheckBox.h">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonShaderCheckBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\MainMenuLogoutCanvas.h">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuLogoutCanvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\LogoutButtonClose.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild\LogoutButtonClose</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\LogoutButtonChoice.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild\LogoutButtonChoice</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -959,6 +980,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\SettingButtonShaderCheckBox.cpp">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonShaderCheckBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MainMenuLogoutCanvas.cpp">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuLogoutCanvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\LogoutButtonClose.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild\LogoutButtonClose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\LogoutButtonChoice.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild\LogoutButtonChoice</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

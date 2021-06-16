@@ -1,19 +1,13 @@
 #pragma once
 #include "GameUIRoot.h"
 
-class CMainMenuSettingCanvas;
-
-class CMainMenuSetting : public CGameUIRoot
+class CMainMenuLogoutCanvas : public CGameUIRoot
 {
 private:
-	explicit CMainMenuSetting(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CMainMenuSetting() = default;
+	explicit CMainMenuLogoutCanvas(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CMainMenuLogoutCanvas() = default;
 
 public:
-	vector<Engine::CGameObject*>& Get_ChildUIList() { return m_vecUIChild; };
-	void Set_SettingCanvas(CMainMenuSettingCanvas* pCanvas) { m_pSettingCanvas = pCanvas; };
-	void Set_IsActiveCanvas(const _bool& bIsActive) { m_bIsActiveCanvas = bIsActive; };
-
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrObjectTag,
 									 wstring wstrDataFilePath,
@@ -29,15 +23,8 @@ public:
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 private:
-	HRESULT			SetUp_MainMenuState();
-private:
-	/*__________________________________________________________________________________________________________
-	[ Value ]
-	____________________________________________________________________________________________________________*/
-	map<wstring, UI_ROOT_STATE> m_mapMainMenuState;
-	CMainMenuSettingCanvas*		m_pSettingCanvas  = nullptr;
-	_bool						m_bIsActiveCanvas = false;
-	_bool						m_bIsKeyPressing  = false;
+	void KeyInput_MouseMove(const _float& fTimeDelta);
+	void SetUp_FontPosition(const _float& fTimeDelta);
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 									   wstring wstrObjectTag,							   

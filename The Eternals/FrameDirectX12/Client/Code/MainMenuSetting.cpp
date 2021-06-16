@@ -67,7 +67,7 @@ _int CMainMenuSetting::LateUpdate_GameObject(const _float& fTimeDelta)
 		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
 		m_bIsKeyPressing)
 	{
-		m_bIsActive = !m_bIsActive;
+		m_bIsActiveCanvas = !m_bIsActiveCanvas;
 	}
 
 	m_bIsKeyPressing = false;
@@ -108,8 +108,8 @@ _int CMainMenuSetting::LateUpdate_GameObject(const _float& fTimeDelta)
 	// Active Canvas UI
 	if (nullptr != m_pSettingCanvas)
 	{
-		m_pSettingCanvas->Set_IsActive(m_bIsActive);
-		m_pSettingCanvas->SetUp_ActiveChildUI(m_bIsActive);
+		m_pSettingCanvas->Set_IsActive(m_bIsActiveCanvas);
+		m_pSettingCanvas->SetUp_ActiveChildUI(m_bIsActiveCanvas);
 	}
 
 	return NO_EVENT;
