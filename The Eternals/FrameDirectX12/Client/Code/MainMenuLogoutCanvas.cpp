@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "MainMenuLogoutCanvas.h"
 #include "DirectInput.h"
+#include "Font.h"
 
 CMainMenuLogoutCanvas::CMainMenuLogoutCanvas(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIRoot(pGraphicDevice, pCommandList)
@@ -25,9 +26,13 @@ HRESULT CMainMenuLogoutCanvas::Ready_GameObject(wstring wstrObjectTag,
 															  fFrameSpeed,
 															  vRectOffset,
 															  vRectScale,
-															  iUIDepth), E_FAIL);
+															  iUIDepth,
+															  true, L"Font_BinggraeMelona24"), E_FAIL);
 
 	m_bIsActive = false;
+
+	m_pFont->Set_Color(D2D1::ColorF::Cornsilk);
+	m_pFont->Set_Text(L"게임을 종료하시겠습니까?");
 
 	return S_OK;
 }
@@ -62,6 +67,8 @@ _int CMainMenuLogoutCanvas::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	CGameUIRoot::LateUpdate_GameObject(fTimeDelta);
 
+	SetUp_FontPosition(fTimeDelta);
+
 	return NO_EVENT;
 }
 
@@ -94,6 +101,19 @@ void CMainMenuLogoutCanvas::KeyInput_MouseMove(const _float& fTimeDelta)
 		{
 			m_pTransCom->m_vPos.y += static_cast<_float>(dwMouseMoveY);
 		}
+	}
+}
+
+void CMainMenuLogoutCanvas::SetUp_FontPosition(const _float& fTimeDelta)
+{
+	if (nullptr != m_pFont)
+	{
+		_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
+		vPos.x -= 90.0f;
+		vPos.y += 64.0f;
+
+		m_pFont->Set_Pos(_vec2(vPos.x, vPos.y));
+		m_pFont->Update_GameObject(fTimeDelta);
 	}
 }
 
