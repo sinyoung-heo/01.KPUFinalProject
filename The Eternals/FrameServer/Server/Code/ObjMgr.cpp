@@ -58,6 +58,20 @@ OBJLIST* CObjMgr::Get_OBJLIST(wstring wstrObjTag)
 	return &(iter_find->second);
 }
 
+PARTYLIST* CObjMgr::Get_PARTYLIST(const int& party_num)
+{
+	objmgr_lock ol(m_mutex);
+
+	/* map에서 찾고자 하는 OBJLIST를 key 값을 통해 찾기 */
+	auto& iter_find = m_mapPartyList.find(party_num);
+
+	/* 해당 OBJLIST를 찾지 못하였다면 NULL 반환 */
+	if (iter_find == m_mapPartyList.end())
+		return nullptr;
+
+	return &(iter_find->second);
+}
+
 void CObjMgr::Create_StageBeachMonster()
 {
 	CMonster* pNew = nullptr;

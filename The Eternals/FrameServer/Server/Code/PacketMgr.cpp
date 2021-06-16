@@ -560,6 +560,10 @@ void send_suggest_party(int to_client, int id)
 	send_packet(to_client, &p);
 }
 
+void send_partyMemberInfo(int to_client, int id, const int& hp, const int& maxHp, const int& mp, const int& maxMp, const char* ID, const char job)
+{
+}
+
 void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
@@ -1533,6 +1537,22 @@ void process_respond_party(const bool& result, const int& suggester_id, const in
 		{
 			// 2-1. 새로운 파티 생성 후 멤버 초대
 			CObjMgr::GetInstance()->Add_PartyMember(pSuggester->m_iPartyNumber, &pResponder->m_iPartyNumber, responder_id);
+		}
+
+		// 3. 파티구성원들에게 새로운 파티멤버 정보 전송
+		for (auto& p : *CObjMgr::GetInstance()->Get_PARTYLIST(pSuggester->m_iPartyNumber))
+		{
+			if (p != responder_id)
+			{
+				CPlayer* pMember = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", p));
+				if (pMember == nullptr) return;
+				if (!pMember->m_bIsConnect) return;
+
+				// 새로운 멤버 정보 -> 기존 구성원
+				send_partyMemberInfo(p, responder_id, pResponder->m_iHp, pResponder->m_iMaxHp, pResponder->m_iMp, pResponder->m_iMaxMp, pResponder->m_ID, pResponder->m_type);
+				// 기존 구성원 정보 -> 새로운 멤버
+				send_partyMemberInfo(responder_id, p, pMember->m_iHp, pMember->m_iMaxHp, pMember->m_iMp, pMember->m_iMaxMp, pMember->m_ID, pMember->m_type);
+			}
 		}
 	}
 }

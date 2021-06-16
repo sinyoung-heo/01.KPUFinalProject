@@ -21,6 +21,7 @@ public:
 public:
 	CObj*		Get_GameObject(wstring wstrObjTag, int server_num = 0);
 	OBJLIST*	Get_OBJLIST(wstring wstrObjTag);
+	PARTYLIST*	Get_PARTYLIST(const int& party_num);
 
 	void		Create_StageVelikaNPC();
 	void		Create_StageBeachMonster();
