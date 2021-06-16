@@ -20,7 +20,9 @@ public:
 public:
 	/*=============°ÔÀÓ ÄÁÅÙÃ÷===============*/
 	bool	m_bIsAttackStance	= false;
+	bool	m_bIsPartyState		= false;
 	char	m_chWeaponType      = 0;
+	int		m_iPartyNumber		= -1;
 	int		m_iAniIdx			= 0;
 	int		m_iLevel			= 0;
 	int		m_iHp				= 0; 

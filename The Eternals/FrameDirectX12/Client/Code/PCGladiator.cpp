@@ -747,7 +747,6 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 	KeyInput_Move(fTimeDelta);
 	KeyInput_Attack(fTimeDelta);
 
-	
 	if (Engine::KEY_DOWN(DIK_0) && NO_EVENT_STATE)
 	{
 		Engine::CGameObject* pGameObj = nullptr;

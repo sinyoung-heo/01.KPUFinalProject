@@ -1511,7 +1511,29 @@ void process_respond_party(const bool& result, const int& suggester_id, const in
 	// 제안 수락
 	else
 	{
+		// 1. 파티초대자가 참여된 파티가 없을 경우
+		CPlayer* pSuggester = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", suggester_id));
+		if (pSuggester == nullptr) return;
+		if (!pSuggester->m_bIsConnect) return;
 
+		CPlayer* pResponder = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", responder_id));
+		if (pResponder == nullptr) return;
+		if (!pResponder->m_bIsConnect) return;
+
+		if (pSuggester->m_bIsPartyState == false)
+		{
+			// 1-1. 새로운 파티 생성
+			CObjMgr::GetInstance()->Create_Party(&pSuggester->m_iPartyNumber, suggester_id);
+
+			// 1-2. 새로운 파티 생성 후 멤버 초대
+			CObjMgr::GetInstance()->Add_PartyMember(pSuggester->m_iPartyNumber, &pResponder->m_iPartyNumber, responder_id);
+		}
+		// 2. 파티초대자가 참여된 파티가 있을 경우
+		else
+		{
+			// 2-1. 새로운 파티 생성 후 멤버 초대
+			CObjMgr::GetInstance()->Add_PartyMember(pSuggester->m_iPartyNumber, &pResponder->m_iPartyNumber, responder_id);
+		}
 	}
 }
 

@@ -1,9 +1,11 @@
 #pragma once
 #include "Obj.h"
 
-typedef map <int,CObj*>	OBJLIST;
+typedef map <int,CObj*>					OBJLIST;
 typedef OBJLIST::iterator				OBJITER;
 typedef lock_guard<recursive_mutex>		objmgr_lock;
+
+typedef unordered_set<int>				PARTYLIST;
 
 class CObjMgr
 {
@@ -22,6 +24,7 @@ public:
 
 	void		Create_StageVelikaNPC();
 	void		Create_StageBeachMonster();
+
 public:
 	bool		Is_Player(int server_num = 0);
 	bool		Is_NPC(int server_num = NPC_NUM_START);
@@ -36,12 +39,15 @@ public:
 	HRESULT		Delete_GameObject(wstring wstrObjTag, CObj* pObj);
 	HRESULT		Delete_OBJLIST(wstring wstrObjTag);
 
+	HRESULT		Create_Party(int* iPartyNumber, const int& server_num);
+	HRESULT		Add_PartyMember(const int& iPartyNumber, int* responderPartyNum, const int& server_num);
+
 public:
 	void		Release();
 
 private:
-	map<wstring, OBJLIST>	m_mapObjList;
-	map<int, unordered_set<int>> m_mapPartyList; // 파티번호 + 구성원 서버넘버
-	recursive_mutex			m_mutex;
+	map<wstring, OBJLIST>			m_mapObjList;
+	map<int, unordered_set<int>>	m_mapPartyList; // 파티번호 + 구성원 서버넘버
+	recursive_mutex					m_mutex;
 };
 
