@@ -171,8 +171,27 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 			CPacketMgr::Get_Instance()->send_respond_party(false, m_iSuggesterNumber);
 			m_bIsPartyRequest = false;
 			m_iSuggesterNumber = -1;
+		}		
+	}
+
+	/* 파티 가입 신청을 받았을 경우 */
+	if (m_bIsPartyJoinRequest)
+	{
+		cout << "파티 가입 신청을 받았습니다. 수락(Y) or 거절(N)을 눌러주세요." << endl;
+		// 수락
+		if (Engine::KEY_DOWN(DIK_Y))
+		{
+			CPacketMgr::Get_Instance()->send_decide_party(true, m_iSuggesterNumber);
+			m_bIsPartyJoinRequest = false;
+			m_iSuggesterNumber = -1;
 		}
-		
+		// 거절
+		else if (Engine::KEY_DOWN(DIK_N))
+		{
+			CPacketMgr::Get_Instance()->send_decide_party(false, m_iSuggesterNumber);
+			m_bIsPartyJoinRequest = false;
+			m_iSuggesterNumber = -1;
+		}
 	}
 
 	/*__________________________________________________________________________________________________________
@@ -2271,7 +2290,24 @@ void CPCGladiator::Collision_Others(list<Engine::CColliderSphere*>& lstOtherstCo
 						cout << ServerNumber << "님에게 파티 신청 제안" << endl;
 						CPacketMgr::Get_Instance()->send_suggest_party(ServerNumber);
 					}
-					
+					else
+						cout << "현재 유저는 다른 파티에 가입되어 있습니다." << endl;	
+				}
+
+				/* Join Party */
+				else if (Engine::KEY_DOWN(DIK_V) && g_bIsActive)
+				{
+					Engine::CGameObject* pOthers = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", ServerNumber);
+					if (pOthers == nullptr) return;
+
+					// 현재 파티에 소속되어 있지 않아야 되며, 상대방은 파티에 소속되어 있을 경우만 가능
+					if (pOthers->Get_PartyState() == true && m_bIsPartyState == false)
+					{
+						cout << ServerNumber << "님의 파티에 가입 신청" << endl;
+						CPacketMgr::Get_Instance()->send_join_party(ServerNumber);
+					}
+					else
+						cout << "파티 참여 신청을 할 수 없습니다." << endl;
 				}
 			}
 		}

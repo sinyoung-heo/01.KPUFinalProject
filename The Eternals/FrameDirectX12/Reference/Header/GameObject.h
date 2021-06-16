@@ -66,6 +66,7 @@ public:
 	void	Set_IsUsingInstance(const _bool& bIsUsing)				{ m_bIsUsingInstance = bIsUsing; }
 	void	Set_WeaponType(const char& chWeaponType)				{ m_chCurWeaponType = chWeaponType; }
 	void	Request_Party(const int& suggester_num)					{ m_bIsPartyRequest = true; m_iSuggesterNumber = suggester_num; }
+	void	JoinRequest_Party(const int& joinner_num)				{ m_bIsPartyJoinRequest = true; m_iSuggesterNumber = joinner_num;}
 	void	Set_PartyState(const _bool& st)							{ m_bIsPartyState = st; }
 	void	Ready_AngleInterpolationValue(const _float& fEndAngle);
 	void	Ready_PositionInterpolationValue(const _vec3& vEndPosition, float fSpd = 3.f);
@@ -181,10 +182,10 @@ protected:
 
 	// Party System
 	unordered_set<int> m_usPartyList;
-	_bool	m_bIsPartyRequest	= false;
-	_bool	m_bIsPartyState		= false;
-	_int	m_iSuggesterNumber	= -1;
-	_int    m_iPartyNumber		= -1;
+	_bool	m_bIsPartyRequest		= false; // --> 파티 초대 (유/무)
+	_bool	m_bIsPartyJoinRequest	= false; // --> 파티 참여 신청 요청 (유/무)
+	_bool	m_bIsPartyState			= false; // --> 파티 참여 (유/무)
+	_int	m_iSuggesterNumber		= -1;	 // --> 파티 초대자 or 참여 신청자 
 
 	// Linear Interpolation Desc
 	LINEAR_INTERPOLATION_DESC<_vec3>	m_tPosInterpolationDesc;

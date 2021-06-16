@@ -363,6 +363,15 @@ void CPacketMgr::Process_packet()
 	}
 	break;
 
+	case SC_PACKET_JOIN_PARTY:
+	{
+		sc_packet_suggest_party* packet = reinterpret_cast<sc_packet_suggest_party*>(m_packet_start);
+
+		Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+		pThisPlayer->JoinRequest_Party(packet->id);
+	}
+	break;
+
 	default:
 #ifdef ERR_CHECK
 		printf("Unknown PACKET type [%d]\n", m_packet_start[1]);
@@ -801,6 +810,7 @@ void CPacketMgr::Enter_Others(sc_packet_enter* packet, int& retflag)
 		pInstance->Set_CurrentStageID(packet->stageID);
 		pInstance->Set_OType(packet->o_type);
 		pInstance->Set_ServerNumber(packet->id);
+		pInstance->Set_PartyState(packet->is_party_state);
 
 		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Others", pInstance);
 	}
@@ -1149,6 +1159,30 @@ void CPacketMgr::send_respond_party(const bool& result, const int& suggester_id)
 
 	p.result		= result;
 	p.suggester_id	= suggester_id;
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_join_party(const int& others_id)
+{
+	cs_packet_suggest_party p;
+
+	p.size		= sizeof(p);
+	p.type		= CS_JOIN_PARTY;
+	p.member_id = others_id;
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_decide_party(const bool& result, const int& joinner_id)
+{
+	cs_packet_respond_party p;
+
+	p.size			= sizeof(p);
+	p.type			= CS_DECIDE_PARTY;
+
+	p.result		= result;
+	p.suggester_id	= joinner_id;
 
 	send_packet(&p);
 }

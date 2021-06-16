@@ -376,7 +376,9 @@ void add_new_client(SOCKET ns)
 		pNew->m_type			= PC_ARCHER;
 		pNew->m_chWeaponType	= Bow27_SM;
 		pNew->m_chStageId		= STAGE_VELIKA;
-		pNew->m_bIsAttackStance = false;
+		pNew->m_bIsAttackStance	= false;
+		pNew->m_bIsPartyState	= false;
+		pNew->m_iPartyNumber	= -1;
 
 		pNew->m_iLevel	     = INIT_LEV;
 		pNew->m_iHp		     = INIT_HP;

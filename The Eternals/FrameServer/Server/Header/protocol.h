@@ -50,6 +50,7 @@ constexpr char SC_PACKET_MONSTER_NUCKBACK	= 21;
 constexpr char SC_PACKET_SUGGEST_PARTY		= 22;
 constexpr char SC_PACKET_ENTER_PARTY_MEMBER = 23;
 constexpr char SC_PACKET_REJECT_PARTY		= 24;
+constexpr char SC_PACKET_JOIN_PARTY			= 25;
 
 constexpr char CS_LOGIN					= 0;
 constexpr char CS_MOVE					= 1;
@@ -64,6 +65,8 @@ constexpr char CS_STANCE_CHANGE         = 9;
 constexpr char CS_STAGE_CHANGE			= 10;
 constexpr char CS_SUGGEST_PARTY         = 11;
 constexpr char CS_RESPOND_PARTY			= 12;
+constexpr char CS_JOIN_PARTY			= 13;
+constexpr char CS_DECIDE_PARTY			= 14;
 
 // Stage ID
 constexpr char STAGE_VELIKA				= 0;
@@ -192,6 +195,7 @@ struct sc_packet_enter
 	char			o_type;
 	char			weaponType;
 	bool			is_stance_attack;
+	bool			is_party_state;
 	float			posX, posY, posZ;
 	float			dirX, dirY, dirZ;
 };
@@ -224,7 +228,8 @@ struct sc_packet_chat
 	char			type;
 	int				id;						// teller
 
-	char			message[MAX_STR_LEN];
+	//char			message[MAX_STR_LEN];
+	wstring			message;
 };
 
 struct sc_packet_login_fail 
