@@ -4,6 +4,7 @@ Texture|EffectSpriteTexture|Bomb01
 Texture|EffectSpriteTexture|Bomb02
 Texture|EffectSpriteTexture|Bomb03
 Texture|EffectSpriteTexture|Bomb04
+Texture|EffectSpriteTexture|Crack
 Texture|EffectSpriteTexture|Fire
 Texture|EffectSpriteTexture|Fire1
 Texture|EffectSpriteTexture|Glowring
@@ -20,6 +21,7 @@ Texture|Environment|Terrain
 Texture|Environment|TexWaterFall
 Texture|Environment|WaterNormal
 ResourceStage|Texture|PublicMagic
+Texture|UI|S1UI_BFParty
 Texture|UI|S1UI_CharacterWindow
 Texture|UI|S1UI_Chat
 Texture|UI|S1UI_ComboCounter
