@@ -48,8 +48,10 @@ public:
 	void    send_attackByMonster(int objID, const _int& iDamage);
 	void    send_attackToMonster(int objID, const _int& iDamage, const char& affect = AFFECT_FINCH);
 	void	send_stage_change(const char& chStageId);
-	void	send_suggest_party(const int& others_id);
-	void	send_respond_party(const bool& result, const int& suggester_id);
+	void	send_suggest_party(const int& others_id);							// 파티 초대
+	void	send_respond_party(const bool& result, const int& suggester_id);	// 파티 초대에 대한 응답
+	void	send_join_party(const int& others_id);								// 파티 참여 신청
+	void	send_decide_party(const bool& result, const int& joinner_id);		// 파티 참여 신청에 대한 응답
 	void	send_logout();
 
 public:
