@@ -58,6 +58,20 @@ OBJLIST* CObjMgr::Get_OBJLIST(wstring wstrObjTag)
 	return &(iter_find->second);
 }
 
+PARTYLIST* CObjMgr::Get_PARTYLIST(const int& party_num)
+{
+	objmgr_lock ol(m_mutex);
+
+	/* map에서 찾고자 하는 OBJLIST를 key 값을 통해 찾기 */
+	auto& iter_find = m_mapPartyList.find(party_num);
+
+	/* 해당 OBJLIST를 찾지 못하였다면 NULL 반환 */
+	if (iter_find == m_mapPartyList.end())
+		return nullptr;
+
+	return &(iter_find->second);
+}
+
 void CObjMgr::Create_StageBeachMonster()
 {
 	CMonster* pNew = nullptr;
@@ -904,10 +918,52 @@ HRESULT CObjMgr::Delete_OBJLIST(wstring wstrObjTag)
 	return S_OK;
 }
 
+HRESULT CObjMgr::Create_Party(int* iPartyNumber, const int& server_num)
+{
+	if (*iPartyNumber == -1)
+	{
+		int party_num = m_mapPartyList.size();
+
+		/* map에서 찾고자 하는 PARTYLIST를 key 값을 통해 찾기 */
+		auto& iter_find = m_mapPartyList.find(party_num);
+
+		/* 해당 PARTYLIST가 없다면, 임시 PARTYLIST 생성한 후 오브젝트 삽입 */
+		if (iter_find == m_mapPartyList.end())
+			m_mapPartyList[party_num] = PARTYLIST();
+
+		m_mapPartyList[party_num].insert(server_num);
+		*iPartyNumber = party_num;
+
+		return S_OK;
+	}
+	
+	return E_FAIL;
+}
+
+HRESULT CObjMgr::Add_PartyMember(const int& iPartyNumber, int* responderPartyNum, const int& server_num)
+{
+	/* map에서 찾고자 하는 PARTYLIST를 key 값을 통해 찾기 */
+	auto& iter_find = m_mapPartyList.find(iPartyNumber);
+
+	/* 해당 OBJLIST가 없다면, FAIL */
+	if (iter_find == m_mapPartyList.end())
+		return E_FAIL;
+
+	m_mapPartyList[iPartyNumber].insert(server_num);
+	*responderPartyNum = iPartyNumber;
+
+	return S_OK;
+}
+
 void CObjMgr::Release()
 {
 	for (auto& o_list : m_mapObjList)
 	{	
 		o_list.second.clear();
+	}
+
+	for (auto& p_list : m_mapPartyList)
+	{
+		p_list.second.clear();
 	}
 }

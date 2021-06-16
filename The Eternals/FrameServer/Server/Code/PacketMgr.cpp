@@ -210,6 +210,21 @@ void process_packet(int id)
 		process_stage_change(id, p->stage_id);
 	}
 	break;
+
+	case CS_SUGGEST_PARTY:
+	{
+		cs_packet_suggest_party* p = reinterpret_cast<cs_packet_suggest_party*>(pPlayer->m_packet_start);
+		process_suggest_party(id, p->member_id);
+	}
+	break;
+
+	case CS_RESPOND_PARTY:
+	{
+		cs_packet_respond_party* p = reinterpret_cast<cs_packet_respond_party*>(pPlayer->m_packet_start);
+		process_respond_party(p->result, p->suggester_id, id);
+	}
+	break;
+
 	}
 }
 /* ========================패킷 재조립========================*/
@@ -532,6 +547,46 @@ void send_player_stage_change(int to_client, int id)
 	p.posZ     = pPlayer->m_vPos.z;
 
 	send_packet(to_client, &p);
+}
+
+void send_suggest_party(int to_client, int id)
+{
+	sc_packet_suggest_party p;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_SUGGEST_PARTY;
+	p.id = id;
+
+	send_packet(to_client, &p);
+}
+
+void send_partyMemberInfo(int to_client, int id, const int& hp, const int& maxHp, const int& mp, const int& maxMp, const char* ID, const char& job)
+{
+	sc_packet_update_party_new_member p;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_ENTER_PARTY_MEMBER;
+	p.id = id;
+
+	strncpy_s(p.name, ID, strlen(ID));
+	p.o_type = job;
+	p.hp = hp;
+	p.maxHp = maxHp;
+	p.mp = mp;
+	p.maxMp = maxMp;
+
+	send_packet(to_client, &p);
+}
+
+void send_reject_party(int to_client, int id)
+{
+	sc_packet_chat p;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_REJECT_PARTY;
+	p.id = id;
+
+	strncpy_s(p.message, "파티제안을 거절하였습니다.", strlen("파티제안을 거절하였습니다."));
 }
 
 void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
@@ -1459,6 +1514,84 @@ void process_stage_change(int id, const char& stage_id)
 
 			send_player_stage_change(server_num, id);
 		}
+	}
+}
+
+void process_suggest_party(const int& suggester_id, const int& others_id)
+{
+	if (true == CObjMgr::GetInstance()->Is_Player(others_id))
+	{
+		CPlayer* pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", others_id));
+		if (pOther == nullptr) return;
+		if (!pOther->m_bIsConnect) return;
+
+		send_suggest_party(others_id, suggester_id);
+	}
+}
+
+void process_respond_party(const bool& result, const int& suggester_id, const int& responder_id)
+{
+	// 제안 거절
+	if (result == false)
+	{
+		// 거절 메시지 전송
+		send_reject_party(suggester_id, responder_id);
+		cout << "파티 거절 메시지 전송" << endl;
+	}
+	// 제안 수락
+	else
+	{
+		// 1. 파티초대자가 참여된 파티가 없을 경우
+		CPlayer* pSuggester = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", suggester_id));
+		if (pSuggester == nullptr) return;
+		if (!pSuggester->m_bIsConnect) return;
+
+		CPlayer* pResponder = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", responder_id));
+		if (pResponder == nullptr) return;
+		if (!pResponder->m_bIsConnect) return;
+
+		if (pSuggester->m_bIsPartyState == false)
+		{
+			// 1-1. 새로운 파티 생성
+			CObjMgr::GetInstance()->Create_Party(&pSuggester->m_iPartyNumber, suggester_id);
+
+			// 1-2. 새로운 파티 생성 후 멤버 초대
+			CObjMgr::GetInstance()->Add_PartyMember(pSuggester->m_iPartyNumber, &pResponder->m_iPartyNumber, responder_id);
+
+			// 1-3. 초대자 파티 참여 상태로 변경
+			pSuggester->m_bIsPartyState = true;
+
+			cout << "파티 새로 생성" << endl;
+		}
+		// 2. 파티초대자가 참여된 파티가 있을 경우
+		else
+		{
+			// 2-1. 새로운 멤버 초대
+			CObjMgr::GetInstance()->Add_PartyMember(pSuggester->m_iPartyNumber, &pResponder->m_iPartyNumber, responder_id);
+			
+			// 2-2. 새로운 멤버 파티 참여 상태로 변경
+			pResponder->m_bIsPartyState = true;
+
+			cout << "새로운 파티멤버 등록" << endl;
+		}
+
+		// 3. 파티구성원들에게 새로운 파티멤버 정보 전송
+		for (auto& p : *CObjMgr::GetInstance()->Get_PARTYLIST(pSuggester->m_iPartyNumber))
+		{
+			if (p != responder_id)
+			{
+				CPlayer* pMember = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", p));
+				if (pMember == nullptr) return;
+				if (!pMember->m_bIsConnect) return;
+
+				// 새로운 멤버 정보 -> 기존 구성원
+				send_partyMemberInfo(p, responder_id, pResponder->m_iHp, pResponder->m_iMaxHp, pResponder->m_iMp, pResponder->m_iMaxMp, pResponder->m_ID, pResponder->m_type);
+				// 기존 구성원 정보 -> 새로운 멤버
+				send_partyMemberInfo(responder_id, p, pMember->m_iHp, pMember->m_iMaxHp, pMember->m_iMp, pMember->m_iMaxMp, pMember->m_ID, pMember->m_type);
+			}
+		}
+
+		cout << "파티원 업데이트 및 완료" << endl;
 	}
 }
 

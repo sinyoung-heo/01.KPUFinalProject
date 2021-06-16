@@ -32,6 +32,10 @@ public:
 	void	Process_recv_reassembly(size_t iosize);
 	void	Process_packet();
 
+	void Enter_PartyMember(sc_packet_update_party_new_member* packet, bool& retflag);
+
+	void Suggest_Party(sc_packet_suggest_party* packet);
+
 	void	Change_Animation(sc_packet_animationIndex* packet, bool& retflag);
 
 public:
@@ -44,6 +48,8 @@ public:
 	void    send_attackByMonster(int objID, const _int& iDamage);
 	void    send_attackToMonster(int objID, const _int& iDamage, const char& affect = AFFECT_FINCH);
 	void	send_stage_change(const char& chStageId);
+	void	send_suggest_party(const int& others_id);
+	void	send_respond_party(const bool& result, const int& suggester_id);
 	void	send_logout();
 
 public:

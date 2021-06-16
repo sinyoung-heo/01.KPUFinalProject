@@ -339,12 +339,58 @@ void CPacketMgr::Process_packet()
 	}
 	break;
 
+	case SC_PACKET_SUGGEST_PARTY:
+	{
+		sc_packet_suggest_party* packet = reinterpret_cast<sc_packet_suggest_party*>(m_packet_start);
+		Suggest_Party(packet);
+	}
+
+	case SC_PACKET_ENTER_PARTY_MEMBER:
+	{
+		sc_packet_update_party_new_member* packet = reinterpret_cast<sc_packet_update_party_new_member*>(m_packet_start);
+
+		bool retflag;
+		Enter_PartyMember(packet, retflag);
+		if (retflag) return;
+	}
+	break;
+
+	case SC_PACKET_REJECT_PARTY:
+	{
+		sc_packet_chat* packet = reinterpret_cast<sc_packet_chat*>(m_packet_start);
+
+		cout << packet->message << endl;
+	}
+	break;
+
 	default:
 #ifdef ERR_CHECK
 		printf("Unknown PACKET type [%d]\n", m_packet_start[1]);
 #endif 
 		break;
 	}
+}
+
+void CPacketMgr::Enter_PartyMember(sc_packet_update_party_new_member* packet, bool& retflag)
+{
+	retflag = true;
+	Engine::CGameObject* pOthers = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", packet->id);
+	if (pOthers == nullptr) return;
+	pOthers->Set_PartyState(true);
+
+	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+	pThisPlayer->Set_PartyState(true);
+	pThisPlayer->Get_PartyList().insert(packet->id);
+
+	// 파티원 정보 (hp,maxhp,mp,maxmp,ID,Job)
+	cout << "새로운 파티원이 입장하였습니다. ID: " << packet->name << " Job: " << (int)packet->o_type << endl;
+	retflag = false;
+}
+
+void CPacketMgr::Suggest_Party(sc_packet_suggest_party* packet)
+{
+	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+	pThisPlayer->Request_Party(packet->id);
 }
 
 void CPacketMgr::Knockback_Monster(sc_packet_monster_knockback* packet, bool& retflag)
@@ -1079,6 +1125,30 @@ void CPacketMgr::send_stage_change(const char& chStageId)
 	p.size     = sizeof(p);
 	p.type     = CS_STAGE_CHANGE;
 	p.stage_id = chStageId;
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_suggest_party(const int& others_id)
+{
+	cs_packet_suggest_party p;
+
+	p.size		= sizeof(p);
+	p.type		= CS_SUGGEST_PARTY;
+	p.member_id = others_id;
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_respond_party(const bool& result, const int& suggester_id)
+{
+	cs_packet_respond_party p;
+
+	p.size			= sizeof(p);
+	p.type			= CS_RESPOND_PARTY;
+
+	p.result		= result;
+	p.suggester_id	= suggester_id;
 
 	send_packet(&p);
 }

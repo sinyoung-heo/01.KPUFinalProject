@@ -35,7 +35,9 @@ public:
 	list<CColliderSphere*>& Get_ColliderList()		{ return m_lstCollider; }
 	const _uint&			Get_InstanceIdx()		{ return m_uiInstanceIdx; }
 	const _bool&			Get_IsUsingInstance()	{ return m_bIsUsingInstance; }
-	const _bool&			Get_IsAlphaObject() { return m_bisAlphaObject; }
+	const _bool&			Get_IsAlphaObject()		{ return m_bisAlphaObject; }
+	unordered_set<int>&		Get_PartyList()			{ return m_usPartyList; }
+	const _bool&			Get_PartyState()		{ return m_bIsPartyState; }
 	const high_resolution_clock::time_point& Get_LastMoveTime() { return m_last_move_time; }
 	// Set
 	void	Set_CurrentStageID(const char& chStageID)				{ m_chCurStageID = chStageID; }
@@ -63,6 +65,8 @@ public:
 	void	Set_LinearAngle(const _float& v1, const _float& v2)		{ m_tAngleInterpolationDesc.v1 = v1; m_tAngleInterpolationDesc.v2 = v2; }
 	void	Set_IsUsingInstance(const _bool& bIsUsing)				{ m_bIsUsingInstance = bIsUsing; }
 	void	Set_WeaponType(const char& chWeaponType)				{ m_chCurWeaponType = chWeaponType; }
+	void	Request_Party(const int& suggester_num)					{ m_bIsPartyRequest = true; m_iSuggesterNumber = suggester_num; }
+	void	Set_PartyState(const _bool& st)							{ m_bIsPartyState = st; }
 	void	Ready_AngleInterpolationValue(const _float& fEndAngle);
 	void	Ready_PositionInterpolationValue(const _vec3& vEndPosition, float fSpd = 3.f);
 	
@@ -83,9 +87,9 @@ public:
 	virtual void	Process_Collision();
 	virtual void	Send_PacketToServer();
 
-	//ServerNumber
-	virtual void CreateServerNumberFont();
-	virtual void Update_ServerNumberFont(const _float& fTimeDelta);
+	// ServerNumber
+	virtual void	CreateServerNumberFont();
+	virtual void	Update_ServerNumberFont(const _float& fTimeDelta);
 	// SingleThread Rendering.
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 	virtual void	Render_ShadowDepth(const _float & fTimeDelta);
@@ -97,6 +101,12 @@ public:
 
 	void			Add_CollisionList(CGameObject* pDst);
 	void			Clear_CollisionList();
+
+	// Setting Party List
+	void			Enter_PartyMember(int iSNum)	{ m_usPartyList.insert(iSNum); }
+	void			Leave_PartyMember(int iSNum)	{ m_usPartyList.erase(iSNum); }
+	void			Clear_PartyMember()				{ m_usPartyList.clear(); }
+
 protected:
 	HRESULT			Add_Component();
 	void			SetUp_BillboardMatrix();
@@ -159,21 +169,28 @@ protected:
 	bool	m_bIsAttack			= false;
 	char	m_chO_Type			= 0;
 
-	char	m_chCurWeaponType = -1;
-	char	m_chPreWeaponType = -1;
+	char	m_chCurWeaponType	= -1;
+	char	m_chPreWeaponType	= -1;
 
-	char	m_chPreStageID = -1;
-	char	m_chCurStageID = -1;
+	char	m_chPreStageID		= -1;
+	char	m_chCurStageID		= -1;
 	
-	CFont*			m_pFontServer = nullptr;
-	wstring			m_wstrText = L"";
-	_tchar			m_szText[MAX_STR] = L"";
+	CFont*	m_pFontServer		= nullptr;
+	wstring	m_wstrText			= L"";
+	_tchar	m_szText[MAX_STR]	= L"";
+
+	// Party System
+	unordered_set<int> m_usPartyList;
+	_bool	m_bIsPartyRequest	= false;
+	_bool	m_bIsPartyState		= false;
+	_int	m_iSuggesterNumber	= -1;
+	_int    m_iPartyNumber		= -1;
 
 	// Linear Interpolation Desc
 	LINEAR_INTERPOLATION_DESC<_vec3>	m_tPosInterpolationDesc;
 	LINEAR_INTERPOLATION_DESC<_float>	m_tAngleInterpolationDesc;
 
-	high_resolution_clock::time_point m_last_move_time;
+	high_resolution_clock::time_point	m_last_move_time;
 
 public:
 	virtual CGameObject* Clone_GameObject();
