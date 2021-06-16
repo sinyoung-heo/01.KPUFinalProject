@@ -32,6 +32,10 @@ public:
 	void	Process_recv_reassembly(size_t iosize);
 	void	Process_packet();
 
+	void Enter_PartyMember(sc_packet_update_party_new_member* packet, bool& retflag);
+
+	void Suggest_Party(sc_packet_suggest_party* packet);
+
 	void	Change_Animation(sc_packet_animationIndex* packet, bool& retflag);
 
 public:

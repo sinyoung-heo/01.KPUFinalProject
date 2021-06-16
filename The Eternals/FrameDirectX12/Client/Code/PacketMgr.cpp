@@ -342,10 +342,26 @@ void CPacketMgr::Process_packet()
 	case SC_PACKET_SUGGEST_PARTY:
 	{
 		sc_packet_suggest_party* packet = reinterpret_cast<sc_packet_suggest_party*>(m_packet_start);
-
-		Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
-		pThisPlayer->Request_Party(packet->id);
+		Suggest_Party(packet);
 	}
+
+	case SC_PACKET_ENTER_PARTY_MEMBER:
+	{
+		sc_packet_update_party_new_member* packet = reinterpret_cast<sc_packet_update_party_new_member*>(m_packet_start);
+
+		bool retflag;
+		Enter_PartyMember(packet, retflag);
+		if (retflag) return;
+	}
+	break;
+
+	case SC_PACKET_REJECT_PARTY:
+	{
+		sc_packet_chat* packet = reinterpret_cast<sc_packet_chat*>(m_packet_start);
+
+		cout << packet->message << endl;
+	}
+	break;
 
 	default:
 #ifdef ERR_CHECK
@@ -353,6 +369,28 @@ void CPacketMgr::Process_packet()
 #endif 
 		break;
 	}
+}
+
+void CPacketMgr::Enter_PartyMember(sc_packet_update_party_new_member* packet, bool& retflag)
+{
+	retflag = true;
+	Engine::CGameObject* pOthers = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", packet->id);
+	if (pOthers == nullptr) return;
+	pOthers->Set_PartyState(true);
+
+	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+	pThisPlayer->Set_PartyState(true);
+	pThisPlayer->Get_PartyList().insert(packet->id);
+
+	// 파티원 정보 (hp,maxhp,mp,maxmp,ID,Job)
+	cout << "새로운 파티원이 입장하였습니다. ID: " << packet->name << " Job: " << (int)packet->o_type << endl;
+	retflag = false;
+}
+
+void CPacketMgr::Suggest_Party(sc_packet_suggest_party* packet)
+{
+	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+	pThisPlayer->Request_Party(packet->id);
 }
 
 void CPacketMgr::Knockback_Monster(sc_packet_monster_knockback* packet, bool& retflag)

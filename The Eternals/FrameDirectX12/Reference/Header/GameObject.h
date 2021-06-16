@@ -37,6 +37,7 @@ public:
 	const _bool&			Get_IsUsingInstance()	{ return m_bIsUsingInstance; }
 	const _bool&			Get_IsAlphaObject()		{ return m_bisAlphaObject; }
 	unordered_set<int>&		Get_PartyList()			{ return m_usPartyList; }
+	const _bool&			Get_PartyState()		{ return m_bIsPartyState; }
 	const high_resolution_clock::time_point& Get_LastMoveTime() { return m_last_move_time; }
 	// Set
 	void	Set_CurrentStageID(const char& chStageID)				{ m_chCurStageID = chStageID; }
@@ -64,9 +65,10 @@ public:
 	void	Set_LinearAngle(const _float& v1, const _float& v2)		{ m_tAngleInterpolationDesc.v1 = v1; m_tAngleInterpolationDesc.v2 = v2; }
 	void	Set_IsUsingInstance(const _bool& bIsUsing)				{ m_bIsUsingInstance = bIsUsing; }
 	void	Set_WeaponType(const char& chWeaponType)				{ m_chCurWeaponType = chWeaponType; }
+	void	Request_Party(const int& suggester_num)					{ m_bIsPartyRequest = true; m_iSuggesterNumber = suggester_num; }
+	void	Set_PartyState(const _bool& st)							{ m_bIsPartyState = st; }
 	void	Ready_AngleInterpolationValue(const _float& fEndAngle);
 	void	Ready_PositionInterpolationValue(const _vec3& vEndPosition, float fSpd = 3.f);
-	void	Request_Party(const int& suggester_num) { m_bIsPartyRequest = true; m_iSuggesterNumber = suggester_num; }
 	
 	virtual void Set_AnimationIdx(const _uint& iIdx) { }
 	virtual void Set_StanceChange(const _uint& uiAniIdx, const _bool& bIsStanceAttack) { }
@@ -182,6 +184,7 @@ protected:
 	_bool	m_bIsPartyRequest	= false;
 	_bool	m_bIsPartyState		= false;
 	_int	m_iSuggesterNumber	= -1;
+	_int    m_iPartyNumber		= -1;
 
 	// Linear Interpolation Desc
 	LINEAR_INTERPOLATION_DESC<_vec3>	m_tPosInterpolationDesc;

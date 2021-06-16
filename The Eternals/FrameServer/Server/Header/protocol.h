@@ -48,6 +48,8 @@ constexpr char SC_PACKET_STAGE_CHANGE		= 19;
 constexpr char SC_PACKET_ANIM_INDEX			= 20;
 constexpr char SC_PACKET_MONSTER_NUCKBACK	= 21;
 constexpr char SC_PACKET_SUGGEST_PARTY		= 22;
+constexpr char SC_PACKET_ENTER_PARTY_MEMBER = 23;
+constexpr char SC_PACKET_REJECT_PARTY		= 24;
 
 constexpr char CS_LOGIN					= 0;
 constexpr char CS_MOVE					= 1;
@@ -329,6 +331,18 @@ struct sc_packet_suggest_party
 	unsigned char	size;
 	char			type;
 	int				id;
+};
+
+struct sc_packet_update_party_new_member
+{
+	unsigned char	size;
+	char			type;
+	int				id;
+
+	char			name[MAX_ID_LEN];
+	char			o_type;
+	int				hp, maxHp;
+	int				mp, maxMp;
 };
 
 /* ___________________________________________________________________________________________________________________*/

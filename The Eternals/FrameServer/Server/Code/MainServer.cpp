@@ -488,12 +488,14 @@ void disconnect_client(int id)
 	CObjMgr::GetInstance()->Delete_GameObject(L"PLAYER", pPlayer);
 	pPlayer->Set_IsConnected(false);
 	closesocket(pPlayer->m_sock);
-	pPlayer->m_sock		= 0;
-	pPlayer->m_vPos		= _vec3(0.f, 0.f, 0.f);
-	pPlayer->m_vDir		= _vec3(0.f, 0.f, 0.f);
-	pPlayer->m_ID[0]	= 0;
-	pPlayer->m_type		= 0;
-	pPlayer->m_chStageId = STAGE_VELIKA;
+	pPlayer->m_sock				= 0;
+	pPlayer->m_vPos				= _vec3(0.f, 0.f, 0.f);
+	pPlayer->m_vDir				= _vec3(0.f, 0.f, 0.f);
+	pPlayer->m_ID[0]			= 0;
+	pPlayer->m_type				= 0;
+	pPlayer->m_chStageId		= STAGE_VELIKA;
+	pPlayer->m_bIsPartyState	= false;
+	pPlayer->m_iPartyNumber		= -1;
 	pPlayer->view_list.clear();
 	pPlayer->Get_ClientLock().unlock();
 
