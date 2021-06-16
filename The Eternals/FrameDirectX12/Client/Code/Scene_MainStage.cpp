@@ -538,10 +538,9 @@ HRESULT CScene_MainStage::Ready_LayerUI(wstring wstrLayerTag)
 	}
 
 	// MainMenuSettingCanvas
-	CSettingButtonClose* pSettingButtonXMouseNormal  = nullptr;
-	CSettingButtonClose* pSettingButtonXMouseOn      = nullptr;
-	CSettingButtonClose* pSettingButtonXMouseClicked = nullptr;
-
+	CSettingButtonClose*	pSettingButtonXMouseNormal    = nullptr;
+	CSettingButtonClose*	pSettingButtonXMouseOn        = nullptr;
+	CSettingButtonClose*	pSettingButtonXMouseClicked   = nullptr;
 	{
 		wifstream fin { L"../../Bin/ToolData/2DUIMainMenuSettingCanvas.2DUI" };
 		if (fin.fail())
@@ -697,7 +696,8 @@ HRESULT CScene_MainStage::Ready_LayerUI(wstring wstrLayerTag)
 
 				if (nullptr != pChildUI &&
 					(L"SystemSettingButtonX_MouseOn" != vecObjectTag[i] && 
-					 L"SystemSettingButtonX_MouseClicked" != vecObjectTag[i]))
+					 L"SystemSettingButtonX_MouseClicked" != vecObjectTag[i] &&
+					 L"ButtonExitGameClicked" != vecObjectTag[i]))
 				{
 					m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
 					static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);

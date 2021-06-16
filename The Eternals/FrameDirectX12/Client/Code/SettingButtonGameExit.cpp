@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "SettingButtonGameExit.h"
+#include "DirectInput.h"
+#include "Font.h"
 
 CSettingButtonGameExit::CSettingButtonGameExit(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
@@ -26,9 +28,13 @@ HRESULT CSettingButtonGameExit::Ready_GameObject(wstring wstrRootObjectTag,
 															   fFrameSpeed,
 															   vRectOffset,
 															   vRectScale,
-															   iUIDepth), E_FAIL);
+															   iUIDepth,
+															   true, L"Font_BinggraeMelona24"), E_FAIL);
 
 	m_bIsActive = false;
+
+	m_pFont->Set_Color(D2D1::ColorF::Cornsilk);
+	m_pFont->Set_Text(L"EXIT GAME");
 
 	return S_OK;
 }
@@ -46,6 +52,8 @@ _int CSettingButtonGameExit::Update_GameObject(const _float& fTimeDelta)
 	
 	if (m_bIsDead)
 		return DEAD_OBJ;
+	if (!m_bIsActive)
+		return NO_EVENT;
 	
 	CGameUIChild::Update_GameObject(fTimeDelta);
 
@@ -54,7 +62,42 @@ _int CSettingButtonGameExit::Update_GameObject(const _float& fTimeDelta)
 
 _int CSettingButtonGameExit::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bIsActive)
+		return NO_EVENT;
+
 	CGameUIChild::LateUpdate_GameObject(fTimeDelta);
+
+	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect) &&
+		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
+		m_bIsKeyPressing)
+	{
+		// Exit Game
+		g_bIsExitGame = true;
+	}
+
+	m_bIsKeyPressing = false;
+
+	// Check Mouse Collision.
+	if (CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse() &&
+		CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect))
+	{
+		if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_LB))
+		{
+			m_uiTexIdx       = 1;
+			m_bIsKeyPressing = true;
+		}
+		else
+		{
+			m_uiTexIdx       = 0;
+			m_bIsKeyPressing = false;
+		}
+	}
+	else
+	{
+		m_uiTexIdx = 0;
+	}
+
+	SetUp_FontPosition(fTimeDelta);
 
 	return NO_EVENT;
 }
@@ -62,6 +105,19 @@ _int CSettingButtonGameExit::LateUpdate_GameObject(const _float& fTimeDelta)
 void CSettingButtonGameExit::Render_GameObject(const _float& fTimeDelta)
 {
 	CGameUIChild::Render_GameObject(fTimeDelta);
+}
+
+void CSettingButtonGameExit::SetUp_FontPosition(const _float& fTimeDelta)
+{
+	if (nullptr != m_pFont)
+	{
+		_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
+		vPos.x -= 50.0f;
+		vPos.y -= 15.0f;
+
+		m_pFont->Set_Pos(_vec2(vPos.x, vPos.y));
+		m_pFont->Update_GameObject(fTimeDelta);
+	}
 }
 
 Engine::CGameObject* CSettingButtonGameExit::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
