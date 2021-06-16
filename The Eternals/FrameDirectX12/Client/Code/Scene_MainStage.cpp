@@ -32,6 +32,9 @@
 #include "SettingButtonClose.h"
 #include "SettingButtonGameExit.h"
 #include "SettingButtonShaderCheckBox.h"
+#include "MainMenuLogoutCanvas.h"
+#include "LogoutButtonClose.h"
+#include "LogoutButtonChoice.h"
 
 CScene_MainStage::CScene_MainStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -425,6 +428,8 @@ HRESULT CScene_MainStage::Ready_LayerUI(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ MainMenuLogout ]
 	____________________________________________________________________________________________________________*/
+	CMainMenuLogout* pMainMenuLogout = nullptr;
+
 	{
 		wifstream fin { L"../../Bin/ToolData/2DUIMainMenuLogout_Normal.2DUI" };
 		if (fin.fail())
@@ -475,7 +480,180 @@ HRESULT CScene_MainStage::Ready_LayerUI(wstring wstrLayerTag)
 											  vRectScale,
 											  UIDepth);
 			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+			pMainMenuLogout = static_cast<CMainMenuLogout*>(pRootUI);
 		}
+	}
+
+	// MainMenuSettingCanvas
+	CLogoutButtonClose*	pLogoutButtonXMouseNormal    = nullptr;
+	CLogoutButtonClose*	pLogoutButtonXMouseOn        = nullptr;
+	CLogoutButtonClose*	pLogoutButtonXMouseClicked   = nullptr;
+	{
+		wifstream fin { L"../../Bin/ToolData/2DUIBasicSystemMessage.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		// ChildUI Data
+		vector<wstring> vecDataFilePath;
+		vector<wstring> vecObjectTag;
+		vector<_vec3>	vecPos;
+		vector<_vec3>	vecScale;
+		vector<_long>	vecUIDepth;
+		vector<_int>	vecIsSpriteAnimation;
+		vector<_float>	vecFrameSpeed;
+		vector<_vec3>	vecRectPosOffset;
+		vector<_vec3>	vecRectScale;
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			vecDataFilePath.resize(iChildUISize);
+			vecObjectTag.resize(iChildUISize);
+			vecPos.resize(iChildUISize);
+			vecScale.resize(iChildUISize);
+			vecUIDepth.resize(iChildUISize);
+			vecIsSpriteAnimation.resize(iChildUISize);
+			vecFrameSpeed.resize(iChildUISize);
+			vecRectPosOffset.resize(iChildUISize);
+			vecRectScale.resize(iChildUISize);
+
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				fin >> vecDataFilePath[i]			// DataFilePath
+					>> vecObjectTag[i]				// Object Tag
+					>> vecPos[i].x					// Pos X
+					>> vecPos[i].y					// Pos Y
+					>> vecScale[i].x				// Scale X
+					>> vecScale[i].y				// Scale Y
+					>> vecUIDepth[i]				// UI Depth
+					>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
+					>> vecFrameSpeed[i]				// Frame Speed
+					>> vecRectPosOffset[i].x		// RectPosOffset X
+					>> vecRectPosOffset[i].y		// RectPosOffset Y
+					>> vecRectScale[i].x			// RectScale X
+					>> vecRectScale[i].y;			// RectScale Y
+			}
+
+			if (fin.eof())
+				break;
+
+			// UIRoot 持失.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CMainMenuLogoutCanvas::Create(m_pGraphicDevice, m_pCommandList,
+													 wstrRootObjectTag,
+													 wstrDataFilePath,
+													 vPos,
+													 vScale,
+													 bIsSpriteAnimation,
+													 fFrameSpeed,
+													 vRectPosOffset,
+													 vRectScale,
+													 UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+			pMainMenuLogout->Set_LogoutCanvas(static_cast<CMainMenuLogoutCanvas*>(pRootUI));
+
+			// UIChild 持失.
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				Engine::CGameObject* pChildUI = nullptr;
+
+				if (L"SystemButtonYes" == vecObjectTag[i] || 
+					L"SystemButtonNo" == vecObjectTag[i])
+				{
+					pChildUI = CLogoutButtonChoice::Create(m_pGraphicDevice, m_pCommandList,
+														  wstrRootObjectTag,				// RootObjectTag
+														  vecObjectTag[i],					// ObjectTag
+														  vecDataFilePath[i],				// DataFilePath
+														  vecPos[i],						// Pos
+														  vecScale[i],						// Scane
+														  (_bool)vecIsSpriteAnimation[i],	// Is Animation
+														  vecFrameSpeed[i],					// FrameSpeed
+														  vecRectPosOffset[i],				// RectPosOffset
+														  vecRectScale[i],					// RectScaleOffset
+														  vecUIDepth[i]);					// UI Depth
+				}
+				else if (L"SystemButtonX_Normal" == vecObjectTag[i] ||
+						 L"SystemButtonX_MouseOn" == vecObjectTag[i] ||
+						 L"SystemButtonX_MouseClicked" == vecObjectTag[i])
+				{
+					pChildUI = CLogoutButtonClose::Create(m_pGraphicDevice, m_pCommandList,
+														  wstrRootObjectTag,				// RootObjectTag
+														  vecObjectTag[i],					// ObjectTag
+														  vecDataFilePath[i],				// DataFilePath
+														  vecPos[i],						// Pos
+														  vecScale[i],						// Scane
+														  (_bool)vecIsSpriteAnimation[i],	// Is Animation
+														  vecFrameSpeed[i],					// FrameSpeed
+														  vecRectPosOffset[i],				// RectPosOffset
+														  vecRectScale[i],					// RectScaleOffset
+														  vecUIDepth[i]);					// UI Depth
+
+					if (L"SystemButtonX_MouseOn" == vecObjectTag[i])
+						pLogoutButtonXMouseOn = static_cast<CLogoutButtonClose*>(pChildUI);
+					else if (L"SystemButtonX_MouseClicked" == vecObjectTag[i])
+						pLogoutButtonXMouseClicked = static_cast<CLogoutButtonClose*>(pChildUI);
+					else
+						pLogoutButtonXMouseNormal = static_cast<CLogoutButtonClose*>(pChildUI);
+
+				}
+
+				if (nullptr != pChildUI &&
+					(L"SystemButtonX_MouseOn" != vecObjectTag[i] && 
+					 L"SystemButtonX_MouseClicked" != vecObjectTag[i]))
+				{
+					m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
+					static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
+				}
+			}
+		}
+
+		UI_CHILD_STATE tState;
+
+		tState.tFrame         = pLogoutButtonXMouseOn->Get_Frame();
+		tState.vPos           = pLogoutButtonXMouseOn->Get_Transform()->m_vPos;
+		tState.vScale         = pLogoutButtonXMouseOn->Get_Transform()->m_vScale;
+		tState.vRectPosOffset = pLogoutButtonXMouseOn->Get_RectOffset();
+		tState.vRectScale     = pLogoutButtonXMouseOn->Get_TransformColor()->m_vScale;
+		pLogoutButtonXMouseNormal->SetUp_MainMenuState(L"MouseOn", tState);
+
+		tState.tFrame         = pLogoutButtonXMouseClicked->Get_Frame();
+		tState.vPos           = pLogoutButtonXMouseClicked->Get_Transform()->m_vPos;
+		tState.vScale         = pLogoutButtonXMouseClicked->Get_Transform()->m_vScale;
+		tState.vRectPosOffset = pLogoutButtonXMouseClicked->Get_RectOffset();
+		tState.vRectScale     = pLogoutButtonXMouseClicked->Get_TransformColor()->m_vScale;
+		pLogoutButtonXMouseNormal->SetUp_MainMenuState(L"MouseClicked", tState);
+
+		pLogoutButtonXMouseNormal = nullptr;
+		Engine::Safe_Release(pLogoutButtonXMouseOn);
+		Engine::Safe_Release(pLogoutButtonXMouseClicked);
+
+		pMainMenuLogout = nullptr;
 	}
 
 	/*__________________________________________________________________________________________________________

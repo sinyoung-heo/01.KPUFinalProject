@@ -1,24 +1,25 @@
 #include "stdafx.h"
-#include "SettingButtonClose.h"
+#include "LogoutButtonClose.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
-#include "MainMenuSetting.h"
+#include "MainMenuLogout.h"
 
-CSettingButtonClose::CSettingButtonClose(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+
+CLogoutButtonClose::CLogoutButtonClose(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
 {
 }
 
-HRESULT CSettingButtonClose::Ready_GameObject(wstring wstrRootObjectTag, 
-											  wstring wstrObjectTag, 
-											  wstring wstrDataFilePath,
-											  const _vec3& vPos, 
-											  const _vec3& vScale,
-											  const _bool& bIsSpriteAnimation, 
-											  const _float& fFrameSpeed,
-											  const _vec3& vRectOffset,
-											  const _vec3& vRectScale, 
-											  const _long& iUIDepth)
+HRESULT CLogoutButtonClose::Ready_GameObject(wstring wstrRootObjectTag, 
+											 wstring wstrObjectTag, 
+											 wstring wstrDataFilePath,
+											 const _vec3& vPos, 
+											 const _vec3& vScale,
+											 const _bool& bIsSpriteAnimation, 
+											 const _float& fFrameSpeed,
+											 const _vec3& vRectOffset,
+											 const _vec3& vRectScale, 
+											 const _long& iUIDepth)
 {
 	Engine::FAILED_CHECK_RETURN(CGameUIChild::Ready_GameObject(wstrRootObjectTag, 
 															   wstrObjectTag,
@@ -45,14 +46,14 @@ HRESULT CSettingButtonClose::Ready_GameObject(wstring wstrRootObjectTag,
 	return S_OK;
 }
 
-HRESULT CSettingButtonClose::LateInit_GameObject()
+HRESULT CLogoutButtonClose::LateInit_GameObject()
 {
 	Engine::FAILED_CHECK_RETURN(CGameUIChild::LateInit_GameObject(), E_FAIL);
 
 	return S_OK;
 }
 
-_int CSettingButtonClose::Update_GameObject(const _float& fTimeDelta)
+_int CLogoutButtonClose::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 	
@@ -66,7 +67,7 @@ _int CSettingButtonClose::Update_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CSettingButtonClose::LateUpdate_GameObject(const _float& fTimeDelta)
+_int CLogoutButtonClose::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	if (!m_bIsActive)
 		return NO_EVENT;
@@ -77,7 +78,7 @@ _int CSettingButtonClose::LateUpdate_GameObject(const _float& fTimeDelta)
 		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
 		m_bIsKeyPressing)
 	{
-		static_cast<CMainMenuSetting*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"OptionSettingNormal"))->Set_IsActiveCanvas(false);
+		static_cast<CMainMenuLogout*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"OptionLogoutNormal"))->Set_IsActiveCanvas(false);
 	}
 
 	m_bIsKeyPressing = false;
@@ -118,12 +119,12 @@ _int CSettingButtonClose::LateUpdate_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-void CSettingButtonClose::Render_GameObject(const _float& fTimeDelta)
+void CLogoutButtonClose::Render_GameObject(const _float& fTimeDelta)
 {
 	CGameUIChild::Render_GameObject(fTimeDelta);
 }
 
-HRESULT CSettingButtonClose::SetUp_MainMenuState(wstring wstrTag, const UI_CHILD_STATE& tState)
+HRESULT CLogoutButtonClose::SetUp_MainMenuState(wstring wstrTag, const UI_CHILD_STATE& tState)
 {
 	auto iter_find = m_mapMainMenuState.find(wstrTag);
 	if (iter_find == m_mapMainMenuState.end())
@@ -134,19 +135,19 @@ HRESULT CSettingButtonClose::SetUp_MainMenuState(wstring wstrTag, const UI_CHILD
 	return S_OK;
 }
 
-Engine::CGameObject* CSettingButtonClose::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
-												 wstring wstrRootObjectTag,
-												 wstring wstrObjectTag, 
-												 wstring wstrDataFilePath,
-												 const _vec3& vPos, 
-												 const _vec3& vScale, 
-												 const _bool& bIsSpriteAnimation, 
-												 const _float& fFrameSpeed, 
-												 const _vec3& vRectOffset, 
-												 const _vec3& vRectScale, 
-												 const _long& iUIDepth)
+Engine::CGameObject* CLogoutButtonClose::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
+												wstring wstrRootObjectTag,
+												wstring wstrObjectTag, 
+												wstring wstrDataFilePath,
+												const _vec3& vPos, 
+												const _vec3& vScale, 
+												const _bool& bIsSpriteAnimation, 
+												const _float& fFrameSpeed, 
+												const _vec3& vRectOffset, 
+												const _vec3& vRectScale, 
+												const _long& iUIDepth)
 {
-	CSettingButtonClose* pInstance = new CSettingButtonClose(pGraphicDevice, pCommandList);
+	CLogoutButtonClose* pInstance = new CLogoutButtonClose(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrRootObjectTag,
 										   wstrObjectTag,
@@ -163,7 +164,7 @@ Engine::CGameObject* CSettingButtonClose::Create(ID3D12Device* pGraphicDevice, I
 	return pInstance;
 }
 
-void CSettingButtonClose::Free()
+void CLogoutButtonClose::Free()
 {
 	CGameUIChild::Free();
 	m_mapMainMenuState.clear();
