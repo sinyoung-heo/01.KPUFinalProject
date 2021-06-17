@@ -378,7 +378,7 @@ void add_new_client(SOCKET ns)
 		pNew->m_chStageId		= STAGE_VELIKA;
 		pNew->m_bIsAttackStance	= false;
 		pNew->m_bIsPartyState	= false;
-		pNew->m_iPartyNumber	= -1;
+		pNew->m_iPartyNumber	= INIT_PARTY_NUMBER;
 
 		pNew->m_iLevel	     = INIT_LEV;
 		pNew->m_iHp		     = INIT_HP;
@@ -497,7 +497,7 @@ void disconnect_client(int id)
 	pPlayer->m_type				= 0;
 	pPlayer->m_chStageId		= STAGE_VELIKA;
 	pPlayer->m_bIsPartyState	= false;
-	pPlayer->m_iPartyNumber		= -1;
+	pPlayer->m_iPartyNumber		= INIT_PARTY_NUMBER;
 	pPlayer->view_list.clear();
 	pPlayer->Get_ClientLock().unlock();
 
