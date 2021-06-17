@@ -202,6 +202,7 @@
     <ClInclude Include="..\Code\NormalMonsterHpGauge.h" />
     <ClInclude Include="..\Code\NPC_Assistant.h" />
     <ClInclude Include="..\Code\NPC_Quest.h" />
+    <ClInclude Include="..\Code\PartyLeaveButton.h" />
     <ClInclude Include="..\Code\PartySuggestButton.h" />
     <ClInclude Include="..\Code\PartySuggestCanvas.h" />
     <ClInclude Include="..\Code\PartySuggestResponseCanvas.h" />
@@ -347,6 +348,7 @@
     <ClCompile Include="..\Code\NPC_Merchant.cpp" />
     <ClCompile Include="..\Code\NPC_Stander.cpp" />
     <ClCompile Include="..\Code\PacketMgr.cpp" />
+    <ClCompile Include="..\Code\PartyLeaveButton.cpp" />
     <ClCompile Include="..\Code\PartySuggestButton.cpp" />
     <ClCompile Include="..\Code\PartySuggestCanvas.cpp" />
     <ClCompile Include="..\Code\PartySuggestResponseCanvas.cpp" />

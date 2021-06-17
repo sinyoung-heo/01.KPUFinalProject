@@ -14,15 +14,15 @@ CPartySuggestButton::CPartySuggestButton(ID3D12Device* pGraphicDevice, ID3D12Gra
 }
 
 HRESULT CPartySuggestButton::Ready_GameObject(wstring wstrRootObjectTag, 
-													wstring wstrObjectTag, 
-													wstring wstrDataFilePath,
-													const _vec3& vPos, 
-													const _vec3& vScale,
-													const _bool& bIsSpriteAnimation, 
-													const _float& fFrameSpeed,
-													const _vec3& vRectOffset,
-													const _vec3& vRectScale, 
-													const _long& iUIDepth)
+											  wstring wstrObjectTag, 
+											  wstring wstrDataFilePath,
+											  const _vec3& vPos, 
+											  const _vec3& vScale,
+											  const _bool& bIsSpriteAnimation, 
+											  const _float& fFrameSpeed,
+											  const _vec3& vRectOffset,
+											  const _vec3& vRectScale, 
+											  const _long& iUIDepth)
 {
 	Engine::FAILED_CHECK_RETURN(CGameUIChild::Ready_GameObject(wstrRootObjectTag, 
 															   wstrObjectTag,
@@ -161,16 +161,16 @@ void CPartySuggestButton::SetUp_FontPosition(const _float& fTimeDelta)
 }
 
 Engine::CGameObject* CPartySuggestButton::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
-													   wstring wstrRootObjectTag,
-													   wstring wstrObjectTag, 
-													   wstring wstrDataFilePath,
-													   const _vec3& vPos, 
-													   const _vec3& vScale, 
-													   const _bool& bIsSpriteAnimation, 
-													   const _float& fFrameSpeed, 
-													   const _vec3& vRectOffset, 
-													   const _vec3& vRectScale, 
-													   const _long& iUIDepth)
+												 wstring wstrRootObjectTag,
+												 wstring wstrObjectTag, 
+												 wstring wstrDataFilePath,
+												 const _vec3& vPos, 
+												 const _vec3& vScale, 
+												 const _bool& bIsSpriteAnimation, 
+												 const _float& fFrameSpeed, 
+												 const _vec3& vRectOffset, 
+												 const _vec3& vRectScale, 
+												 const _long& iUIDepth)
 {
 	CPartySuggestButton* pInstance = new CPartySuggestButton(pGraphicDevice, pCommandList);
 

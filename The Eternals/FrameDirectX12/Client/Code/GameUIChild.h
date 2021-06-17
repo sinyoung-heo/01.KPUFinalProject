@@ -31,8 +31,8 @@ public:
 	const _vec3&		Get_RectOffset()		{ return m_vRectOffset; }
 
 	void Set_IsRenderUI(const _bool& bIsRender) { m_bIsRender = bIsRender; }
-	void Set_IsActive(const _bool& bIsActive) { m_bIsActive = bIsActive; }
-
+	void Set_IsActive(const _bool& bIsActive)	{ m_bIsActive = bIsActive; }
+	void Reverse_IsActive()						{ m_bIsActive = !m_bIsActive; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrRootObjectTag,

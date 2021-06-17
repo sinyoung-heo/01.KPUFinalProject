@@ -30,6 +30,7 @@ private:
 	HRESULT			SetUp_UIMainMenuLogout();
 	HRESULT			SetUp_UIPartySuggestCanvas();
 	HRESULT			SetUp_UIPartySuggestResponseCanvas();
+	HRESULT			SetUp_UIPartyLeaveCanvas();
 private:
 	_bool m_bIsReadyMouseCursorMgr = false;
 

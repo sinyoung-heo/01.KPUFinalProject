@@ -22,6 +22,12 @@ void CGameUIRoot::Set_IsChildActive(const _bool& bIsActive)
 		static_cast<CGameUIChild*>(pChildUI)->Set_IsActive(bIsActive);
 }
 
+void CGameUIRoot::Reverse_IsActiveChild()
+{
+	for (auto& pChildUI : m_vecUIChild)
+		static_cast<CGameUIChild*>(pChildUI)->Reverse_IsActive();
+}
+
 HRESULT CGameUIRoot::Ready_GameObject(wstring wstrObjectTag,
 									  wstring wstrDataFilePath,
 									  const _vec3& vPos, 

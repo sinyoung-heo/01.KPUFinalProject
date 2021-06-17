@@ -329,6 +329,7 @@ void CPCGladiator::Process_Collision()
 	}
 
 	Suggest_PartyToOthers();
+	Leave_PartyThisPlayer();
 }
 
 void CPCGladiator::Send_PacketToServer()
@@ -2333,14 +2334,7 @@ void CPCGladiator::Collision_Others(list<Engine::CColliderSphere*>& lstOtherstCo
 
 void CPCGladiator::Suggest_PartyToOthers()
 {
-	//if (m_pMouserMgr->Get_IsActiveMouse() && 
-	//	Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON(Engine::DIM_LB)) &&
-	//	m_pPartySystemMgr->Get_PartySuggestCanvas()->Get_IsActive())
-	//{
-	//	m_pPartySystemMgr->Get_PartySuggestCanvas()->Set_IsActive(false);
-	//	m_pPartySystemMgr->Get_PartySuggestCanvas()->Set_IsChildActive(false);
-	//}
-
+	// Picking Others
 	if (m_pMouserMgr->Get_IsActiveMouse() && Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON(Engine::DIM_RB)))
 	{
 		Engine::OBJLIST*		pOthersList    = m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"Others");
@@ -2361,6 +2355,15 @@ void CPCGladiator::Suggest_PartyToOthers()
 			m_pPartySystemMgr->Get_PartySuggestCanvas()->Set_IsChildActive(true);
 			m_pPartySystemMgr->Get_PartySuggestCanvas()->Get_Transform()->m_vPos = _vec3((_float)pt.x + 32.0f, (_float)pt.y, 1.0f);
 		}
+	}
+}
+
+void CPCGladiator::Leave_PartyThisPlayer()
+{
+	if (Engine::KEY_DOWN(DIK_P))
+	{
+		m_pPartySystemMgr->Get_PartyLeaveCanvas()->Reverse_IsActive();
+		m_pPartySystemMgr->Get_PartyLeaveCanvas()->Reverse_IsActiveChild();
 	}
 }
 

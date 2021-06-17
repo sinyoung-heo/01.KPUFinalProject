@@ -32,6 +32,8 @@ public:
 	void Set_IsRender(const _bool& IsRender)	{ m_bIsRender = IsRender; }
 	void Set_IsActive(const _bool& bIsActive)	{ m_bIsActive = bIsActive; }
 	void Set_IsChildActive(const _bool& bIsActive);
+	void Reverse_IsActive()						{ m_bIsActive = !m_bIsActive; }
+	void Reverse_IsActiveChild();
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrObjectTag,

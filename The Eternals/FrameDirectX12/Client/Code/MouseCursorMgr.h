@@ -31,6 +31,7 @@ public:
 	void	Is_ActiveMouse() { m_bIsActiveMouse = !m_bIsActiveMouse; }
 	_bool	Check_CursorInRect(RECT& rcSrc);
 	_bool	Check_PickingBoundingBox(Engine::CGameObject** ppPickingObject, Engine::OBJLIST* pOBJLIST);
+	_bool	Check_PickingBoundingBox(Engine::CGameObject* ppPickingObject);
 private:
 	_bool	Check_IntersectRect(RECT& rcSrc, RECT& rcDst);
 private:

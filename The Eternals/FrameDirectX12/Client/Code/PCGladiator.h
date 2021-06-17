@@ -101,6 +101,7 @@ private:
 	void Collision_Quest(list<Engine::CColliderSphere*>& lstMerchantCollider, int npcServerNumber);
 	void Collision_Others(list<Engine::CColliderSphere*>& lstOtherstCollider, int ServerNumber);
 	void Suggest_PartyToOthers();
+	void Leave_PartyThisPlayer();
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
