@@ -182,6 +182,7 @@
     <ClInclude Include="..\Code\Crab.h" />
     <ClInclude Include="..\Code\CraftyArachne.h" />
     <ClInclude Include="..\Code\DrownedSailor.h" />
+    <ClInclude Include="..\Code\EffectMgr.h" />
     <ClInclude Include="..\Code\EffectTrail.h" />
     <ClInclude Include="..\Code\FadeInOut.h" />
     <ClInclude Include="..\Code\FireDecal.h" />
@@ -298,6 +299,7 @@
     <ClCompile Include="..\Code\Crab.cpp" />
     <ClCompile Include="..\Code\CraftyArachne.cpp" />
     <ClCompile Include="..\Code\DrownedSailor.cpp" />
+    <ClCompile Include="..\Code\EffectMgr.cpp" />
     <ClCompile Include="..\Code\EffectTrail.cpp" />
     <ClCompile Include="..\Code\FadeInOut.cpp" />
     <ClCompile Include="..\Code\FireDecal.cpp" />

@@ -328,6 +328,18 @@
     <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild\LogoutButtonChoice">
       <UniqueIdentifier>{40c02d88-e610-447c-9193-f94d87f88e64}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.GameEffect\05.IceStorm_s">
+      <UniqueIdentifier>{7bf487f3-73d6-4e5e-9fca-c48fff7becc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.GameEffect\06.FireDecal">
+      <UniqueIdentifier>{071f194a-872a-4199-a9be-3cd9a1c45073}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.GameEffect\07.Glowring">
+      <UniqueIdentifier>{464b1cff-7763-48a2-b665-80a68091b608}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Mgr\05.EffectMgr">
+      <UniqueIdentifier>{d1e755a3-e0b4-49c4-86c9-fa11fd591ea8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -643,10 +655,6 @@
     <ClInclude Include="..\Code\CollisionArrow.h">
       <Filter>02.GameObject\06.CollisionTick\CollisionArrow</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\ArrowDecal.h" />
-    <ClInclude Include="..\Code\FireDecal.h" />
-    <ClInclude Include="..\Code\Glowring.h" />
-    <ClInclude Include="..\Code\IceStorm_s.h" />
     <ClInclude Include="..\Code\PCSelectBackground.h">
       <Filter>02.GameObject\99.GameUI\00.GameUIRoot\01.PCSelectBackground</Filter>
     </ClInclude>
@@ -685,6 +693,21 @@
     </ClInclude>
     <ClInclude Include="..\Code\LogoutButtonChoice.h">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild\LogoutButtonChoice</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ArrowDecal.h">
+      <Filter>02.GameObject\98.GameEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\IceStorm_s.h">
+      <Filter>02.GameObject\98.GameEffect\05.IceStorm_s</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\FireDecal.h">
+      <Filter>02.GameObject\98.GameEffect\06.FireDecal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Glowring.h">
+      <Filter>02.GameObject\98.GameEffect\07.Glowring</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\EffectMgr.h">
+      <Filter>97.Mgr\05.EffectMgr</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -947,10 +970,6 @@
     <ClCompile Include="..\Code\CollisionArrow.cpp">
       <Filter>02.GameObject\06.CollisionTick\CollisionArrow</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\ArrowDecal.cpp" />
-    <ClCompile Include="..\Code\FireDecal.cpp" />
-    <ClCompile Include="..\Code\Glowring.cpp" />
-    <ClCompile Include="..\Code\IceStorm_s.cpp" />
     <ClCompile Include="..\Code\PCSelectBackground.cpp">
       <Filter>02.GameObject\99.GameUI\00.GameUIRoot\01.PCSelectBackground</Filter>
     </ClCompile>
@@ -989,6 +1008,21 @@
     </ClCompile>
     <ClCompile Include="..\Code\LogoutButtonChoice.cpp">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild\LogoutButtonChoice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ArrowDecal.cpp">
+      <Filter>02.GameObject\98.GameEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\IceStorm_s.cpp">
+      <Filter>02.GameObject\98.GameEffect\05.IceStorm_s</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\FireDecal.cpp">
+      <Filter>02.GameObject\98.GameEffect\06.FireDecal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Glowring.cpp">
+      <Filter>02.GameObject\98.GameEffect\07.Glowring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\EffectMgr.cpp">
+      <Filter>97.Mgr\05.EffectMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
