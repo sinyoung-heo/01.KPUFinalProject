@@ -9,11 +9,11 @@ namespace Engine
 	class CShaderTexture;
 }
 
-class CSnowParticle : public Engine::CGameObject
+class CLightingParticle : public Engine::CGameObject
 {
 private:
-	explicit CSnowParticle(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CSnowParticle() = default;
+	explicit CLightingParticle(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CLightingParticle() = default;
 
 public:
 	// CGameObject을(를) 통해 상속됨
@@ -21,7 +21,7 @@ public:
 		const _vec3& vScale,
 		const _vec3& vAngle,
 		const _vec3& vPos,
-		const FRAME& tFrame = FRAME(1, 1, 0.0f), const int PipeLine=9);
+		const FRAME& tFrame = FRAME(1, 1, 0.0f));
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
@@ -53,7 +53,7 @@ private:
 	float m_fAlpha = 1.f;
 	float m_fSpeed = 0.8f;
 	bool m_bisPivot;
-	_int m_Pipeline = 0;
+	bool m_bisAddPos = false;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 		ID3D12GraphicsCommandList* pCommandList,
@@ -61,7 +61,7 @@ public:
 		const _vec3& vScale,
 		const _vec3& vAngle,
 		const _vec3& vPos,
-		const FRAME& tFrame = FRAME(1, 1, 0.0f), const int PipeLine=9);
+		const FRAME& tFrame = FRAME(1, 1, 0.0f));
 private:
 	virtual void Free();
 };

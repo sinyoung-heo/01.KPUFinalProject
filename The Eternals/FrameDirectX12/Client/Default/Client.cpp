@@ -353,6 +353,12 @@ _ulong Release_Singleton()
 #endif
 	_ulong dwRefCnt = 0;
 
+	if (dwRefCnt = CEffectMgr::Get_Instance()->Destroy_Instance())
+	{
+		MSG_BOX(L"CEffectMgr Release Failed");
+		return dwRefCnt;
+	}
+
 	if (dwRefCnt = CPacketMgr::Get_Instance()->Destroy_Instance())
 	{
 		MSG_BOX(L"CPacketMgr Release Failed");

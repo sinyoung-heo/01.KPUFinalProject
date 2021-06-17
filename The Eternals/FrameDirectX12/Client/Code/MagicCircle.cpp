@@ -39,13 +39,22 @@ HRESULT CMagicCircle::LateInit_GameObject()
 	SetUp_DescriptorHeap(pTexture->Get_Texture(), m_pRenderer->Get_TargetShadowDepth()->Get_TargetTexture());
 
 
-	m_fNormalMapDeltatime  = 0;//NormIdx
-	m_fPatternMapDeltatime = 0;//SpecIdx
 	return S_OK;	
 }
 
 _int CMagicCircle::Update_GameObject(const _float & fTimeDelta)
 {
+	if (m_fLifeTime<5.5f &&m_bisScaleAnim && m_pTransCom->m_vScale.x<0.01f)
+		m_pTransCom->m_vScale += _vec3(fTimeDelta*0.02);
+	if(m_bisRotate)
+		m_pTransCom->m_vAngle.y += 0.4f;
+	m_fLifeTime += fTimeDelta;
+	if (m_fLifeTime > 5.5f)
+	{
+		m_pTransCom->m_vScale-= _vec3(fTimeDelta * 0.02);
+		if (m_pTransCom->m_vScale.x < 0.00)
+			m_bIsDead = true;
+	}
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
 	if (m_bIsDead)
@@ -62,12 +71,11 @@ _int CMagicCircle::Update_GameObject(const _float & fTimeDelta)
 	______________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
-	_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
-	m_pTransCom->m_vPos = Pos;
-	m_pTransCom->m_vPos.y += 0.2f;
+	//_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
+	//m_pTransCom->m_vPos = Pos;
+	//m_pTransCom->m_vPos.y += 0.2f;
 
-	m_pTransCom->m_vAngle.y += 0.2f;
-
+	
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
 	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
 	
@@ -86,7 +94,7 @@ _int CMagicCircle::LateUpdate_GameObject(const _float & fTimeDelta)
 
 void CMagicCircle::Render_GameObject(const _float& fTimeDelta)
 {
-	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_fNormalMapDeltatime, m_fPatternMapDeltatime,0,0);
+	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_uiNormal, m_uiSpec,0,0);
 }
 
 HRESULT CMagicCircle::Add_Component(wstring wstrMeshTag)
@@ -126,7 +134,8 @@ void CMagicCircle::Set_ConstantTable()
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 
 	
-	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
+	if(m_pShaderCom->Get_UploadBuffer_ShaderMesh()!=nullptr)
+		m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 
 	
 }
@@ -200,6 +209,6 @@ void CMagicCircle::Free()
 {
 	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pMeshCom);
-	Engine::Safe_Release(m_pDescriptorHeaps);
+	//Engine::Safe_Release(m_pDescriptorHeaps);
 	Engine::Safe_Release(m_pShaderCom);
 }

@@ -10,6 +10,7 @@
 #include <random>
 #include "IceStorm_s.h"
 #include "TextureEffect.h"
+#include "DistTrail.h"
 CCollisionArrow::CCollisionArrow(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CCollisionTick(pGraphicDevice, pCommandList)
 	, m_pShaderMeshInstancing(Engine::CShaderMeshInstancing::Get_Instance())
@@ -244,7 +245,7 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 	else if (ARROW_TYPE::ARROW_CHARGE == m_eType)
 	{
 		m_fTimeDelta += fTimeDelta;
-
+		m_fEffectDelta += fTimeDelta;
 		if (m_fTimeDelta >= m_fLifeTime)
 		{
 			m_fTimeDelta = 0.0f;
@@ -254,9 +255,23 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 		_float fDist = m_vOriginPos.Get_Distance(m_pTransCom->m_vPos);
 
 		if (fDist >= ARROW_MAX_DISTANCE * 1.5f)
+		{
 			m_bIsReturn = true;
-
+		}
 		m_pTransCom->m_vPos += m_pTransCom->m_vDir * m_fSpeed * fTimeDelta;
+
+		CGameObject* pGameObj;
+		if (m_fEffectDelta > 0.005f)
+		{
+			m_fEffectDelta = 0.f;
+			pGameObj = CDistTrail::Create(m_pGraphicDevice, m_pCommandList,
+				L"DistTrail",						// TextureTag
+				_vec3(0.00f),					// Scale
+				_vec3(0.0f,0.f, 90.f),		// Angle
+				m_pTransCom->m_vPos);		// Pos;			// Sprite Image Frame
+			static_cast<CDistTrail*>(pGameObj)->Set_SizeOffset(fDist);
+			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"DistTrail", pGameObj), E_FAIL);
+		}
 	}
 
 	/*__________________________________________________________________________________________________________

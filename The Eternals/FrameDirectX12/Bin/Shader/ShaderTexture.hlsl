@@ -115,6 +115,19 @@ float4 PS_TEXTURE_SPRITE(VS_OUT ps_input) : SV_TARGET
     Color.b += g_vColor.b;
 	return (Color);
 }
+
+float4 PS_TEXTURE_LIGHTING(VS_OUT ps_input) : SV_TARGET
+{
+    float u = (ps_input.TexUV.x / g_fFrameCnt) + g_fCurFrame * (1.0f / g_fFrameCnt);
+    float v = (ps_input.TexUV.y / g_fSceneCnt) + g_fCurScene * (1.0f / g_fSceneCnt);
+	
+    float4 Color = g_TexDiffuse.Sample(g_samLinearWrap, float2(u, v));
+    //Color.r += g_TexDiffuse.Sample(g_samLinearWrap, float2(u, v)).r;
+    //Color.g += g_TexDiffuse.Sample(g_samLinearWrap, float2(u, v)).g;
+    //Color.b += g_TexDiffuse.Sample(g_samLinearWrap, float2(u, v)).b;
+	
+    return (Color);
+}
 /*__________________________________________________________________________________________________________
 [ Texture Guage ]
 ____________________________________________________________________________________________________________*/

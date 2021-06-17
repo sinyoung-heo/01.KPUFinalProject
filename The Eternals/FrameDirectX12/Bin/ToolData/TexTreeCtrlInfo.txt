@@ -1,4 +1,5 @@
 ResourceStage|Texture|EffectPublic
+Texture|EffectSpriteTexture|ArrowShot0
 Texture|EffectSpriteTexture|Bomb00
 Texture|EffectSpriteTexture|Bomb01
 Texture|EffectSpriteTexture|Bomb02
@@ -8,6 +9,7 @@ Texture|EffectSpriteTexture|Crack
 Texture|EffectSpriteTexture|Fire
 Texture|EffectSpriteTexture|Fire1
 Texture|EffectSpriteTexture|Glowring
+Texture|EffectSpriteTexture|Lighting0
 Texture|EffectSpriteTexture|Lightning00
 Texture|EffectSpriteTexture|Lightning01
 Texture|EffectSpriteTexture|Smoke0
