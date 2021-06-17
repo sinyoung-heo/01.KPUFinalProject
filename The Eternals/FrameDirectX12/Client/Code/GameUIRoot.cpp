@@ -16,7 +16,13 @@ CGameUIRoot::CGameUIRoot(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList
 
 
 
-HRESULT CGameUIRoot::Ready_GameObject(wstring wstrObjectTag, 
+void CGameUIRoot::Set_IsChildActive(const _bool& bIsActive)
+{
+	for (auto& pChildUI : m_vecUIChild)
+		static_cast<CGameUIChild*>(pChildUI)->Set_IsActive(bIsActive);
+}
+
+HRESULT CGameUIRoot::Ready_GameObject(wstring wstrObjectTag,
 									  wstring wstrDataFilePath,
 									  const _vec3& vPos, 
 									  const _vec3& vScale,

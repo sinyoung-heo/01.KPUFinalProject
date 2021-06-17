@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "GladiatorAnimation.h"
 #include "PCWeaponTwoHand.h"
+#include "PartySystemMgr.h"
 
 namespace Engine
 {
@@ -99,6 +100,7 @@ private:
 	void Collision_Merchant(list<Engine::CColliderSphere*>& lstMerchantCollider, int npcServerNumber);
 	void Collision_Quest(list<Engine::CColliderSphere*>& lstMerchantCollider, int npcServerNumber);
 	void Collision_Others(list<Engine::CColliderSphere*>& lstOtherstCollider, int ServerNumber);
+	void Suggest_PartyToOthers();
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -116,6 +118,8 @@ private:
 	CPacketMgr*			m_pPacketMgr       = nullptr;
 	CServerMath*		m_pServerMath      = nullptr;
 	CInstancePoolMgr*	m_pInstancePoolMgr = nullptr;
+	CMouseCursorMgr*	m_pMouserMgr       = nullptr;
+	CPartySystemMgr*	m_pPartySystemMgr  = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]

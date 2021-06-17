@@ -1,6 +1,7 @@
 #pragma once
 #include "Include.h"
 #include "Base.h"
+#include "ObjectMgr.h"
 
 namespace Engine
 {
@@ -29,9 +30,9 @@ public:
 
 	void	Is_ActiveMouse() { m_bIsActiveMouse = !m_bIsActiveMouse; }
 	_bool	Check_CursorInRect(RECT& rcSrc);
+	_bool	Check_PickingBoundingBox(Engine::CGameObject** ppPickingObject, Engine::OBJLIST* pOBJLIST);
 private:
 	_bool	Check_IntersectRect(RECT& rcSrc, RECT& rcDst);
-
 private:
 	Engine::CGameObject*	m_pMouseCursor   = nullptr;
 	_bool					m_bIsActiveMouse = true;

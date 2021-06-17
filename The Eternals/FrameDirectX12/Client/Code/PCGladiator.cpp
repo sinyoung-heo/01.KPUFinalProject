@@ -18,12 +18,15 @@
 #include "CharacterMpGauge.h"
 #include "ShaderMgr.h"
 #include "IceStorm.h"
+#include "PartySuggestCanvas.h"
 
 CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pPacketMgr(CPacketMgr::Get_Instance())
 	, m_pServerMath(CServerMath::Get_Instance())
 	, m_pInstancePoolMgr(CInstancePoolMgr::Get_Instance())
+	, m_pMouserMgr(CMouseCursorMgr::Get_Instance())
+	, m_pPartySystemMgr(CPartySystemMgr::Get_Instance())
 {
 }
 
@@ -322,6 +325,8 @@ void CPCGladiator::Process_Collision()
 		if (L"Others_SingleCollider" == pDst->Get_CollisionTag())
 			Collision_Others(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
 	}
+
+	Suggest_PartyToOthers();
 }
 
 void CPCGladiator::Send_PacketToServer()
@@ -2279,7 +2284,7 @@ void CPCGladiator::Collision_Others(list<Engine::CColliderSphere*>& lstOtherstCo
 				pSrcCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 				pDstCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 
-				/* Suggest Party */
+				// 파티초대
 				if (Engine::KEY_DOWN(DIK_B) && g_bIsActive)
 				{
 					Engine::CGameObject* pOthers = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", ServerNumber);
@@ -2294,7 +2299,7 @@ void CPCGladiator::Collision_Others(list<Engine::CColliderSphere*>& lstOtherstCo
 						cout << "현재 유저는 다른 파티에 가입되어 있습니다." << endl;	
 				}
 
-				/* Join Party */
+				// 파티가입
 				else if (Engine::KEY_DOWN(DIK_V) && g_bIsActive)
 				{
 					Engine::CGameObject* pOthers = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", ServerNumber);
@@ -2310,6 +2315,39 @@ void CPCGladiator::Collision_Others(list<Engine::CColliderSphere*>& lstOtherstCo
 						cout << "파티 참여 신청을 할 수 없습니다." << endl;
 				}
 			}
+		}
+	}
+}
+
+void CPCGladiator::Suggest_PartyToOthers()
+{
+	//if (m_pMouserMgr->Get_IsActiveMouse() && 
+	//	Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON(Engine::DIM_LB)) &&
+	//	m_pPartySystemMgr->Get_PartySuggestCanvas()->Get_IsActive())
+	//{
+	//	m_pPartySystemMgr->Get_PartySuggestCanvas()->Set_IsActive(false);
+	//	m_pPartySystemMgr->Get_PartySuggestCanvas()->Set_IsChildActive(false);
+	//}
+
+	if (m_pMouserMgr->Get_IsActiveMouse() && Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON(Engine::DIM_RB)))
+	{
+		Engine::OBJLIST*		pOthersList    = m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"Others");
+		Engine::CGameObject*	pPickingOthers = nullptr;
+		if (nullptr == pOthersList || pOthersList->empty())
+			return;
+
+		m_pPartySystemMgr->Set_SelectPlayer(nullptr);
+		m_pPartySystemMgr->Get_PartySuggestCanvas()->Set_IsActive(false);
+		m_pPartySystemMgr->Get_PartySuggestCanvas()->Set_IsChildActive(false);
+
+		if (m_pMouserMgr->Check_PickingBoundingBox(&pPickingOthers, pOthersList))
+		{
+			POINT pt = m_pMouserMgr->Get_CursorPoint();
+
+			m_pPartySystemMgr->Set_SelectPlayer(pPickingOthers);
+			m_pPartySystemMgr->Get_PartySuggestCanvas()->Set_IsActive(true);
+			m_pPartySystemMgr->Get_PartySuggestCanvas()->Set_IsChildActive(true);
+			m_pPartySystemMgr->Get_PartySuggestCanvas()->Get_Transform()->m_vPos = _vec3((_float)pt.x + 32.0f, (_float)pt.y, 1.0f);
 		}
 	}
 }

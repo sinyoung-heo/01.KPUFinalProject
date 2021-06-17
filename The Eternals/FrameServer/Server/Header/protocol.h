@@ -229,7 +229,8 @@ struct sc_packet_chat
 	int				id;						// teller
 
 	//char			message[MAX_STR_LEN];
-	wstring			message;
+	wchar_t			message[MAX_STR_LEN];
+	//wstring			message;
 };
 
 struct sc_packet_login_fail 

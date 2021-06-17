@@ -328,6 +328,33 @@
     <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild\LogoutButtonChoice">
       <UniqueIdentifier>{40c02d88-e610-447c-9193-f94d87f88e64}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\03.PartySystem">
+      <UniqueIdentifier>{5c4630d5-3f3a-4737-8f34-40e1e42f0469}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\03.PartySystem\PartySuggestCanvas">
+      <UniqueIdentifier>{d66a7b04-804c-4a57-9194-d214ea8aa889}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\03.PartySystem\PartyInfoCanvas">
+      <UniqueIdentifier>{0cc81284-0da3-4705-8ae9-9a95c9add4be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\04.PartySystemChild">
+      <UniqueIdentifier>{7cb54c7c-352b-4fb7-979b-5982af4fe627}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\04.PartySystemChild\PartyInfoCanvasChild">
+      <UniqueIdentifier>{ef823d99-0aa6-49ed-99d0-491bda6a1299}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\04.PartySystemChild\PartySuggestCanvasChild">
+      <UniqueIdentifier>{2d57f409-8da1-4e1f-a5d3-2c6442d2b7ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Mgr\05.PartySystemMgr">
+      <UniqueIdentifier>{0d17b019-834f-48bf-856b-e11e8bbd496b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\04.PartySystemChild\PartySuggestResponseCanvasChild">
+      <UniqueIdentifier>{db7eafb9-6401-4da5-8b43-5198f65e88eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\03.PartySystem\PartySuggestResponseCanvas">
+      <UniqueIdentifier>{bbfe03e9-1005-4e30-ba9e-cfbdff199a8b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -686,6 +713,24 @@
     <ClInclude Include="..\Code\LogoutButtonChoice.h">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild\LogoutButtonChoice</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\PartySuggestCanvas.h">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\03.PartySystem\PartySuggestCanvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PartySuggestButton.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\04.PartySystemChild\PartySuggestCanvasChild</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PartySystemMgr.h">
+      <Filter>97.Mgr\05.PartySystemMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PartySuggestResponseCanvas.h">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\03.PartySystem\PartySuggestResponseCanvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PartySuggestResponseChoice.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\04.PartySystemChild\PartySuggestResponseCanvasChild</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PartySuggestResponseClose.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\04.PartySystemChild\PartySuggestResponseCanvasChild</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -989,6 +1034,24 @@
     </ClCompile>
     <ClCompile Include="..\Code\LogoutButtonChoice.cpp">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild\LogoutButtonChoice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PartySuggestCanvas.cpp">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\03.PartySystem\PartySuggestCanvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PartySuggestButton.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\04.PartySystemChild\PartySuggestCanvasChild</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PartySystemMgr.cpp">
+      <Filter>97.Mgr\05.PartySystemMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PartySuggestResponseCanvas.cpp">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\03.PartySystem\PartySuggestResponseCanvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PartySuggestResponseChoice.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\04.PartySystemChild\PartySuggestResponseCanvasChild</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PartySuggestResponseClose.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\04.PartySystemChild\PartySuggestResponseCanvasChild</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

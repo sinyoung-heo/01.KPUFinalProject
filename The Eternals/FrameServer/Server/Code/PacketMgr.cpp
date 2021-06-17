@@ -601,7 +601,8 @@ void send_reject_party(int to_client, int id)
 	p.type = SC_PACKET_REJECT_PARTY;
 	p.id = id;
 
-	p.message = L"파티 참여를 거절하였습니다.";
+	// p.message = L"파티 참여를 거절하였습니다.";
+	lstrcpyn(p.message, L"파티 참여를 거절하였습니다.", lstrlen(L"파티 참여를 거절하였습니다."));
 	//strncpy_s(p.message, "파티제안을 거절하였습니다.", strlen("파티제안을 거절하였습니다."));
 }
 
