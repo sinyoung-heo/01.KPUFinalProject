@@ -35,13 +35,17 @@
 #include "MainMenuLogoutCanvas.h"
 #include "LogoutButtonClose.h"
 #include "LogoutButtonChoice.h"
+#include "PartySystemMgr.h"
+#include "PartySuggestCanvas.h"
+#include "PartySuggestButton.h"
+#include "PartySuggestResponseCanvas.h"
+#include "PartySuggestResponseChoice.h"
+#include "PartySuggestResponseClose.h"
 
 CScene_MainStage::CScene_MainStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
 {
 }
-
-
 
 HRESULT CScene_MainStage::Ready_Scene()
 {
@@ -426,597 +430,18 @@ HRESULT CScene_MainStage::Ready_LayerUI(wstring wstrLayerTag)
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"FadeInOut", pGameObj), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
-	[ MainMenuLogout ]
+	[ UI - MainMenu ]
 	____________________________________________________________________________________________________________*/
-	CMainMenuLogout* pMainMenuLogout = nullptr;
-
-	{
-		wifstream fin { L"../../Bin/ToolData/2DUIMainMenuLogout_Normal.2DUI" };
-		if (fin.fail())
-			return E_FAIL;
-
-		// RootUI Data
-		wstring wstrDataFilePath   = L"";			// DataFilePath
-		wstring wstrRootObjectTag  = L"";			// ObjectTag
-		_vec3	vPos               = _vec3(0.0f);	// Pos
-		_vec3	vScale             = _vec3(1.0f);	// Scale
-		_long	UIDepth            = 0;				// UIDepth
-		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
-		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
-		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
-		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
-		_int	iChildUISize       = 0;				// ChildUI Size
-
-		while (true)
-		{
-			fin >> wstrDataFilePath
-				>> wstrRootObjectTag
-				>> vPos.x
-				>> vPos.y
-				>> vScale.x
-				>> vScale.y
-				>> UIDepth
-				>> bIsSpriteAnimation
-				>> fFrameSpeed
-				>> vRectPosOffset.x
-				>> vRectPosOffset.y
-				>> vRectScale.x
-				>> vRectScale.y
-				>> iChildUISize;
-
-			if (fin.eof())
-				break;
-
-			// UIRoot 持失.
-			Engine::CGameObject* pRootUI = nullptr;
-			pRootUI = CMainMenuLogout::Create(m_pGraphicDevice, m_pCommandList,
-											  wstrRootObjectTag,
-											  wstrDataFilePath,
-											  vPos,
-											  vScale,
-											  bIsSpriteAnimation,
-											  fFrameSpeed,
-											  vRectPosOffset,
-											  vRectScale,
-											  UIDepth);
-			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
-			pMainMenuLogout = static_cast<CMainMenuLogout*>(pRootUI);
-		}
-	}
-
-	// MainMenuSettingCanvas
-	CLogoutButtonClose*	pLogoutButtonXMouseNormal    = nullptr;
-	CLogoutButtonClose*	pLogoutButtonXMouseOn        = nullptr;
-	CLogoutButtonClose*	pLogoutButtonXMouseClicked   = nullptr;
-	{
-		wifstream fin { L"../../Bin/ToolData/2DUIBasicSystemMessage.2DUI" };
-		if (fin.fail())
-			return E_FAIL;
-
-		// RootUI Data
-		wstring wstrDataFilePath   = L"";			// DataFilePath
-		wstring wstrRootObjectTag  = L"";			// ObjectTag
-		_vec3	vPos               = _vec3(0.0f);	// Pos
-		_vec3	vScale             = _vec3(1.0f);	// Scale
-		_long	UIDepth            = 0;				// UIDepth
-		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
-		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
-		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
-		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
-		_int	iChildUISize       = 0;				// ChildUI Size
-
-		// ChildUI Data
-		vector<wstring> vecDataFilePath;
-		vector<wstring> vecObjectTag;
-		vector<_vec3>	vecPos;
-		vector<_vec3>	vecScale;
-		vector<_long>	vecUIDepth;
-		vector<_int>	vecIsSpriteAnimation;
-		vector<_float>	vecFrameSpeed;
-		vector<_vec3>	vecRectPosOffset;
-		vector<_vec3>	vecRectScale;
-
-		while (true)
-		{
-			fin >> wstrDataFilePath
-				>> wstrRootObjectTag
-				>> vPos.x
-				>> vPos.y
-				>> vScale.x
-				>> vScale.y
-				>> UIDepth
-				>> bIsSpriteAnimation
-				>> fFrameSpeed
-				>> vRectPosOffset.x
-				>> vRectPosOffset.y
-				>> vRectScale.x
-				>> vRectScale.y
-				>> iChildUISize;
-
-			vecDataFilePath.resize(iChildUISize);
-			vecObjectTag.resize(iChildUISize);
-			vecPos.resize(iChildUISize);
-			vecScale.resize(iChildUISize);
-			vecUIDepth.resize(iChildUISize);
-			vecIsSpriteAnimation.resize(iChildUISize);
-			vecFrameSpeed.resize(iChildUISize);
-			vecRectPosOffset.resize(iChildUISize);
-			vecRectScale.resize(iChildUISize);
-
-			for (_int i = 0; i < iChildUISize; ++i)
-			{
-				fin >> vecDataFilePath[i]			// DataFilePath
-					>> vecObjectTag[i]				// Object Tag
-					>> vecPos[i].x					// Pos X
-					>> vecPos[i].y					// Pos Y
-					>> vecScale[i].x				// Scale X
-					>> vecScale[i].y				// Scale Y
-					>> vecUIDepth[i]				// UI Depth
-					>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
-					>> vecFrameSpeed[i]				// Frame Speed
-					>> vecRectPosOffset[i].x		// RectPosOffset X
-					>> vecRectPosOffset[i].y		// RectPosOffset Y
-					>> vecRectScale[i].x			// RectScale X
-					>> vecRectScale[i].y;			// RectScale Y
-			}
-
-			if (fin.eof())
-				break;
-
-			// UIRoot 持失.
-			Engine::CGameObject* pRootUI = nullptr;
-			pRootUI = CMainMenuLogoutCanvas::Create(m_pGraphicDevice, m_pCommandList,
-													 wstrRootObjectTag,
-													 wstrDataFilePath,
-													 vPos,
-													 vScale,
-													 bIsSpriteAnimation,
-													 fFrameSpeed,
-													 vRectPosOffset,
-													 vRectScale,
-													 UIDepth);
-			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
-			pMainMenuLogout->Set_LogoutCanvas(static_cast<CMainMenuLogoutCanvas*>(pRootUI));
-
-			// UIChild 持失.
-			for (_int i = 0; i < iChildUISize; ++i)
-			{
-				Engine::CGameObject* pChildUI = nullptr;
-
-				if (L"SystemButtonYes" == vecObjectTag[i] || 
-					L"SystemButtonNo" == vecObjectTag[i])
-				{
-					pChildUI = CLogoutButtonChoice::Create(m_pGraphicDevice, m_pCommandList,
-														  wstrRootObjectTag,				// RootObjectTag
-														  vecObjectTag[i],					// ObjectTag
-														  vecDataFilePath[i],				// DataFilePath
-														  vecPos[i],						// Pos
-														  vecScale[i],						// Scane
-														  (_bool)vecIsSpriteAnimation[i],	// Is Animation
-														  vecFrameSpeed[i],					// FrameSpeed
-														  vecRectPosOffset[i],				// RectPosOffset
-														  vecRectScale[i],					// RectScaleOffset
-														  vecUIDepth[i]);					// UI Depth
-				}
-				else if (L"SystemButtonX_Normal" == vecObjectTag[i] ||
-						 L"SystemButtonX_MouseOn" == vecObjectTag[i] ||
-						 L"SystemButtonX_MouseClicked" == vecObjectTag[i])
-				{
-					pChildUI = CLogoutButtonClose::Create(m_pGraphicDevice, m_pCommandList,
-														  wstrRootObjectTag,				// RootObjectTag
-														  vecObjectTag[i],					// ObjectTag
-														  vecDataFilePath[i],				// DataFilePath
-														  vecPos[i],						// Pos
-														  vecScale[i],						// Scane
-														  (_bool)vecIsSpriteAnimation[i],	// Is Animation
-														  vecFrameSpeed[i],					// FrameSpeed
-														  vecRectPosOffset[i],				// RectPosOffset
-														  vecRectScale[i],					// RectScaleOffset
-														  vecUIDepth[i]);					// UI Depth
-
-					if (L"SystemButtonX_MouseOn" == vecObjectTag[i])
-						pLogoutButtonXMouseOn = static_cast<CLogoutButtonClose*>(pChildUI);
-					else if (L"SystemButtonX_MouseClicked" == vecObjectTag[i])
-						pLogoutButtonXMouseClicked = static_cast<CLogoutButtonClose*>(pChildUI);
-					else
-						pLogoutButtonXMouseNormal = static_cast<CLogoutButtonClose*>(pChildUI);
-
-				}
-
-				if (nullptr != pChildUI &&
-					(L"SystemButtonX_MouseOn" != vecObjectTag[i] && 
-					 L"SystemButtonX_MouseClicked" != vecObjectTag[i]))
-				{
-					m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
-					static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
-				}
-			}
-		}
-
-		UI_CHILD_STATE tState;
-
-		tState.tFrame         = pLogoutButtonXMouseOn->Get_Frame();
-		tState.vPos           = pLogoutButtonXMouseOn->Get_Transform()->m_vPos;
-		tState.vScale         = pLogoutButtonXMouseOn->Get_Transform()->m_vScale;
-		tState.vRectPosOffset = pLogoutButtonXMouseOn->Get_RectOffset();
-		tState.vRectScale     = pLogoutButtonXMouseOn->Get_TransformColor()->m_vScale;
-		pLogoutButtonXMouseNormal->SetUp_MainMenuState(L"MouseOn", tState);
-
-		tState.tFrame         = pLogoutButtonXMouseClicked->Get_Frame();
-		tState.vPos           = pLogoutButtonXMouseClicked->Get_Transform()->m_vPos;
-		tState.vScale         = pLogoutButtonXMouseClicked->Get_Transform()->m_vScale;
-		tState.vRectPosOffset = pLogoutButtonXMouseClicked->Get_RectOffset();
-		tState.vRectScale     = pLogoutButtonXMouseClicked->Get_TransformColor()->m_vScale;
-		pLogoutButtonXMouseNormal->SetUp_MainMenuState(L"MouseClicked", tState);
-
-		pLogoutButtonXMouseNormal = nullptr;
-		Engine::Safe_Release(pLogoutButtonXMouseOn);
-		Engine::Safe_Release(pLogoutButtonXMouseClicked);
-
-		pMainMenuLogout = nullptr;
-	}
+	Engine::FAILED_CHECK_RETURN(SetUp_UIMainMenuLogout(), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(SetUp_UIMainMenuSetting(), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(SetUp_UIMainMenuInventory(), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(SetUp_UIMainMenuEquipment(), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
-	[ MainMenuSetting ]
+	[ UI - PartySystem ]
 	____________________________________________________________________________________________________________*/
-	CMainMenuSetting* pMainMenuSetting = nullptr;
-	{
-		wifstream fin { L"../../Bin/ToolData/2DUIMainMenuSetting_Normal.2DUI" };
-		if (fin.fail())
-			return E_FAIL;
-
-		// RootUI Data
-		wstring wstrDataFilePath   = L"";			// DataFilePath
-		wstring wstrRootObjectTag  = L"";			// ObjectTag
-		_vec3	vPos               = _vec3(0.0f);	// Pos
-		_vec3	vScale             = _vec3(1.0f);	// Scale
-		_long	UIDepth            = 0;				// UIDepth
-		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
-		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
-		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
-		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
-		_int	iChildUISize       = 0;				// ChildUI Size
-
-		while (true)
-		{
-			fin >> wstrDataFilePath
-				>> wstrRootObjectTag
-				>> vPos.x
-				>> vPos.y
-				>> vScale.x
-				>> vScale.y
-				>> UIDepth
-				>> bIsSpriteAnimation
-				>> fFrameSpeed
-				>> vRectPosOffset.x
-				>> vRectPosOffset.y
-				>> vRectScale.x
-				>> vRectScale.y
-				>> iChildUISize;
-
-			if (fin.eof())
-				break;
-
-			// UIRoot 持失.
-			Engine::CGameObject* pRootUI = nullptr;
-			pRootUI = CMainMenuSetting::Create(m_pGraphicDevice, m_pCommandList,
-											   wstrRootObjectTag,
-											   wstrDataFilePath,
-											   vPos,
-											   vScale,
-											   bIsSpriteAnimation,
-											   fFrameSpeed,
-											   vRectPosOffset,
-											   vRectScale,
-											   UIDepth);
-			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
-
-			pMainMenuSetting = static_cast<CMainMenuSetting*>(pRootUI);
-		}
-	}
-
-	// MainMenuSettingCanvas
-	CSettingButtonClose*	pSettingButtonXMouseNormal    = nullptr;
-	CSettingButtonClose*	pSettingButtonXMouseOn        = nullptr;
-	CSettingButtonClose*	pSettingButtonXMouseClicked   = nullptr;
-	{
-		wifstream fin { L"../../Bin/ToolData/2DUIMainMenuSettingCanvas.2DUI" };
-		if (fin.fail())
-			return E_FAIL;
-
-		// RootUI Data
-		wstring wstrDataFilePath   = L"";			// DataFilePath
-		wstring wstrRootObjectTag  = L"";			// ObjectTag
-		_vec3	vPos               = _vec3(0.0f);	// Pos
-		_vec3	vScale             = _vec3(1.0f);	// Scale
-		_long	UIDepth            = 0;				// UIDepth
-		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
-		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
-		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
-		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
-		_int	iChildUISize       = 0;				// ChildUI Size
-
-		// ChildUI Data
-		vector<wstring> vecDataFilePath;
-		vector<wstring> vecObjectTag;
-		vector<_vec3>	vecPos;
-		vector<_vec3>	vecScale;
-		vector<_long>	vecUIDepth;
-		vector<_int>	vecIsSpriteAnimation;
-		vector<_float>	vecFrameSpeed;
-		vector<_vec3>	vecRectPosOffset;
-		vector<_vec3>	vecRectScale;
-
-		while (true)
-		{
-			fin >> wstrDataFilePath
-				>> wstrRootObjectTag
-				>> vPos.x
-				>> vPos.y
-				>> vScale.x
-				>> vScale.y
-				>> UIDepth
-				>> bIsSpriteAnimation
-				>> fFrameSpeed
-				>> vRectPosOffset.x
-				>> vRectPosOffset.y
-				>> vRectScale.x
-				>> vRectScale.y
-				>> iChildUISize;
-
-			vecDataFilePath.resize(iChildUISize);
-			vecObjectTag.resize(iChildUISize);
-			vecPos.resize(iChildUISize);
-			vecScale.resize(iChildUISize);
-			vecUIDepth.resize(iChildUISize);
-			vecIsSpriteAnimation.resize(iChildUISize);
-			vecFrameSpeed.resize(iChildUISize);
-			vecRectPosOffset.resize(iChildUISize);
-			vecRectScale.resize(iChildUISize);
-
-			for (_int i = 0; i < iChildUISize; ++i)
-			{
-				fin >> vecDataFilePath[i]			// DataFilePath
-					>> vecObjectTag[i]				// Object Tag
-					>> vecPos[i].x					// Pos X
-					>> vecPos[i].y					// Pos Y
-					>> vecScale[i].x				// Scale X
-					>> vecScale[i].y				// Scale Y
-					>> vecUIDepth[i]				// UI Depth
-					>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
-					>> vecFrameSpeed[i]				// Frame Speed
-					>> vecRectPosOffset[i].x		// RectPosOffset X
-					>> vecRectPosOffset[i].y		// RectPosOffset Y
-					>> vecRectScale[i].x			// RectScale X
-					>> vecRectScale[i].y;			// RectScale Y
-			}
-
-			if (fin.eof())
-				break;
-
-			// UIRoot 持失.
-			Engine::CGameObject* pRootUI = nullptr;
-			pRootUI = CMainMenuSettingCanvas::Create(m_pGraphicDevice, m_pCommandList,
-													 wstrRootObjectTag,
-													 wstrDataFilePath,
-													 vPos,
-													 vScale,
-													 bIsSpriteAnimation,
-													 fFrameSpeed,
-													 vRectPosOffset,
-													 vRectScale,
-													 UIDepth);
-			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
-			pMainMenuSetting->Set_SettingCanvas(static_cast<CMainMenuSettingCanvas*>(pRootUI));
-
-			// UIChild 持失.
-			for (_int i = 0; i < iChildUISize; ++i)
-			{
-				Engine::CGameObject* pChildUI = nullptr;
-
-				if (L"ButtonExitGame" == vecObjectTag[i])
-				{
-					pChildUI = CSettingButtonGameExit::Create(m_pGraphicDevice, m_pCommandList,
-															  wstrRootObjectTag,				// RootObjectTag
-															  vecObjectTag[i],					// ObjectTag
-															  vecDataFilePath[i],				// DataFilePath
-															  vecPos[i],						// Pos
-															  vecScale[i],						// Scane
-															  (_bool)vecIsSpriteAnimation[i],	// Is Animation
-															  vecFrameSpeed[i],					// FrameSpeed
-															  vecRectPosOffset[i],				// RectPosOffset
-															  vecRectScale[i],					// RectScaleOffset
-															  vecUIDepth[i]);					// UI Depth
-				}
-				else if (L"SystemSettingButtonX_Normal" == vecObjectTag[i] ||
-						 L"SystemSettingButtonX_MouseOn" == vecObjectTag[i] ||
-						 L"SystemSettingButtonX_MouseClicked" == vecObjectTag[i])
-				{
-					pChildUI = CSettingButtonClose::Create(m_pGraphicDevice, m_pCommandList,
-															  wstrRootObjectTag,				// RootObjectTag
-															  vecObjectTag[i],					// ObjectTag
-															  vecDataFilePath[i],				// DataFilePath
-															  vecPos[i],						// Pos
-															  vecScale[i],						// Scane
-															  (_bool)vecIsSpriteAnimation[i],	// Is Animation
-															  vecFrameSpeed[i],					// FrameSpeed
-															  vecRectPosOffset[i],				// RectPosOffset
-															  vecRectScale[i],					// RectScaleOffset
-															  vecUIDepth[i]);					// UI Depth
-
-					if (L"SystemSettingButtonX_MouseOn" == vecObjectTag[i])
-						pSettingButtonXMouseOn = static_cast<CSettingButtonClose*>(pChildUI);
-					else if (L"SystemSettingButtonX_MouseClicked" == vecObjectTag[i])
-						pSettingButtonXMouseClicked = static_cast<CSettingButtonClose*>(pChildUI);
-					else
-						pSettingButtonXMouseNormal = static_cast<CSettingButtonClose*>(pChildUI);
-
-				}
-				else if (L"SystemSettingCheckBox_Shade" == vecObjectTag[i] ||
-						 L"SystemSettingCheckBox_Specular" == vecObjectTag[i] || 
-						 L"SystemSettingCheckBox_SSAO" == vecObjectTag[i] || 
-						 L"SystemSettingCheckBox_HDRTone" == vecObjectTag[i] || 
-						 L"SystemSettingCheckBox_DOF" == vecObjectTag[i] || 
-						 L"SystemSettingCheckBox_Shadow" == vecObjectTag[i])
-				{
-					pChildUI = CSettingButtonShaderCheckBox::Create(m_pGraphicDevice, m_pCommandList,
-																	wstrRootObjectTag,				// RootObjectTag
-																	vecObjectTag[i],				// ObjectTag
-																	vecDataFilePath[i],				// DataFilePath
-																	vecPos[i],						// Pos
-																	vecScale[i],					// Scane
-																	(_bool)vecIsSpriteAnimation[i],	// Is Animation
-																	vecFrameSpeed[i],				// FrameSpeed
-																	vecRectPosOffset[i],			// RectPosOffset
-																	vecRectScale[i],				// RectScaleOffset
-																	vecUIDepth[i]);					// UI Depth
-				}
-
-				if (nullptr != pChildUI &&
-					(L"SystemSettingButtonX_MouseOn" != vecObjectTag[i] && 
-					 L"SystemSettingButtonX_MouseClicked" != vecObjectTag[i] &&
-					 L"ButtonExitGameClicked" != vecObjectTag[i]))
-				{
-					m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
-					static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
-				}
-			}
-		}
-
-		UI_CHILD_STATE tState;
-
-		tState.tFrame         = pSettingButtonXMouseOn->Get_Frame();
-		tState.vPos           = pSettingButtonXMouseOn->Get_Transform()->m_vPos;
-		tState.vScale         = pSettingButtonXMouseOn->Get_Transform()->m_vScale;
-		tState.vRectPosOffset = pSettingButtonXMouseOn->Get_RectOffset();
-		tState.vRectScale     = pSettingButtonXMouseOn->Get_TransformColor()->m_vScale;
-		pSettingButtonXMouseNormal->SetUp_MainMenuState(L"MouseOn", tState);
-
-		tState.tFrame         = pSettingButtonXMouseClicked->Get_Frame();
-		tState.vPos           = pSettingButtonXMouseClicked->Get_Transform()->m_vPos;
-		tState.vScale         = pSettingButtonXMouseClicked->Get_Transform()->m_vScale;
-		tState.vRectPosOffset = pSettingButtonXMouseClicked->Get_RectOffset();
-		tState.vRectScale     = pSettingButtonXMouseClicked->Get_TransformColor()->m_vScale;
-		pSettingButtonXMouseNormal->SetUp_MainMenuState(L"MouseClicked", tState);
-
-		pSettingButtonXMouseNormal	= nullptr;
-		Engine::Safe_Release(pSettingButtonXMouseOn);
-		Engine::Safe_Release(pSettingButtonXMouseClicked);
-	}
-
-	pMainMenuSetting = nullptr;
-
-	/*__________________________________________________________________________________________________________
-	[ MainMenuInventory ]
-	____________________________________________________________________________________________________________*/
-	{
-		wifstream fin { L"../../Bin/ToolData/2DUIMainMenuInventory_Normal.2DUI" };
-		if (fin.fail())
-			return E_FAIL;
-
-		// RootUI Data
-		wstring wstrDataFilePath   = L"";			// DataFilePath
-		wstring wstrRootObjectTag  = L"";			// ObjectTag
-		_vec3	vPos               = _vec3(0.0f);	// Pos
-		_vec3	vScale             = _vec3(1.0f);	// Scale
-		_long	UIDepth            = 0;				// UIDepth
-		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
-		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
-		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
-		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
-		_int	iChildUISize       = 0;				// ChildUI Size
-
-		while (true)
-		{
-			fin >> wstrDataFilePath
-				>> wstrRootObjectTag
-				>> vPos.x
-				>> vPos.y
-				>> vScale.x
-				>> vScale.y
-				>> UIDepth
-				>> bIsSpriteAnimation
-				>> fFrameSpeed
-				>> vRectPosOffset.x
-				>> vRectPosOffset.y
-				>> vRectScale.x
-				>> vRectScale.y
-				>> iChildUISize;
-
-			if (fin.eof())
-				break;
-
-			// UIRoot 持失.
-			Engine::CGameObject* pRootUI = nullptr;
-			pRootUI = CMainMenuInventory::Create(m_pGraphicDevice, m_pCommandList,
-												 wstrRootObjectTag,
-												 wstrDataFilePath,
-												 vPos,
-												 vScale,
-												 bIsSpriteAnimation,
-												 fFrameSpeed,
-												 vRectPosOffset,
-												 vRectScale,
-												 UIDepth);
-			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
-		}
-	}
-
-	/*__________________________________________________________________________________________________________
-	[ MainMenuEquipment ]
-	____________________________________________________________________________________________________________*/
-	{
-		wifstream fin { L"../../Bin/ToolData/2DUIMainMenuEquipment_Normal.2DUI" };
-		if (fin.fail())
-			return E_FAIL;
-
-		// RootUI Data
-		wstring wstrDataFilePath   = L"";			// DataFilePath
-		wstring wstrRootObjectTag  = L"";			// ObjectTag
-		_vec3	vPos               = _vec3(0.0f);	// Pos
-		_vec3	vScale             = _vec3(1.0f);	// Scale
-		_long	UIDepth            = 0;				// UIDepth
-		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
-		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
-		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
-		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
-		_int	iChildUISize       = 0;				// ChildUI Size
-
-		while (true)
-		{
-			fin >> wstrDataFilePath
-				>> wstrRootObjectTag
-				>> vPos.x
-				>> vPos.y
-				>> vScale.x
-				>> vScale.y
-				>> UIDepth
-				>> bIsSpriteAnimation
-				>> fFrameSpeed
-				>> vRectPosOffset.x
-				>> vRectPosOffset.y
-				>> vRectScale.x
-				>> vRectScale.y
-				>> iChildUISize;
-
-			if (fin.eof())
-				break;
-
-			// UIRoot 持失.
-			Engine::CGameObject* pRootUI = nullptr;
-			pRootUI = CMainMenuEquipment::Create(m_pGraphicDevice, m_pCommandList,
-												 wstrRootObjectTag,
-												 wstrDataFilePath,
-												 vPos,
-												 vScale,
-												 bIsSpriteAnimation,
-												 fFrameSpeed,
-												 vRectPosOffset,
-												 vRectScale,
-												 UIDepth);
-			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
-		}
-	}
+	Engine::FAILED_CHECK_RETURN(SetUp_UIPartySuggestCanvas(), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(SetUp_UIPartySuggestResponseCanvas(), E_FAIL);
 
 	return S_OK;
 }
@@ -1146,6 +571,926 @@ HRESULT CScene_MainStage::Ready_NaviMesh()
 										  _vec3(STAGE_BEACH_OFFSET_X, 0.0f, STAGE_BEACH_OFFSET_Z));
 	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"StageBeach_NaviMesh", Engine::ID_DYNAMIC, pNaviMesh), E_FAIL);
 
+
+	return S_OK;
+}
+
+
+HRESULT CScene_MainStage::SetUp_UIMainMenuEquipment()
+{
+	/*__________________________________________________________________________________________________________
+	[ MainMenuEquipment ]
+	____________________________________________________________________________________________________________*/
+	{
+		wifstream fin{ L"../../Bin/ToolData/2DUIMainMenuEquipment_Normal.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			if (fin.eof())
+				break;
+
+			// UIRoot 持失.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CMainMenuEquipment::Create(m_pGraphicDevice, m_pCommandList,
+												 wstrRootObjectTag,
+												 wstrDataFilePath,
+												 vPos,
+												 vScale,
+												 bIsSpriteAnimation,
+												 fFrameSpeed,
+												 vRectPosOffset,
+												 vRectScale,
+												 UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CScene_MainStage::SetUp_UIMainMenuInventory()
+{
+	{
+		wifstream fin{ L"../../Bin/ToolData/2DUIMainMenuInventory_Normal.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			if (fin.eof())
+				break;
+
+			// UIRoot 持失.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CMainMenuInventory::Create(m_pGraphicDevice, m_pCommandList,
+												 wstrRootObjectTag,
+												 wstrDataFilePath,
+												 vPos,
+												 vScale,
+												 bIsSpriteAnimation,
+												 fFrameSpeed,
+												 vRectPosOffset,
+												 vRectScale,
+												 UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CScene_MainStage::SetUp_UIMainMenuSetting()
+{
+	CMainMenuSetting* pMainMenuSetting = nullptr;
+	{
+		wifstream fin{ L"../../Bin/ToolData/2DUIMainMenuSetting_Normal.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			if (fin.eof())
+				break;
+
+			// UIRoot 持失.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CMainMenuSetting::Create(m_pGraphicDevice, m_pCommandList,
+											   wstrRootObjectTag,
+											   wstrDataFilePath,
+											   vPos,
+											   vScale,
+											   bIsSpriteAnimation,
+											   fFrameSpeed,
+											   vRectPosOffset,
+											   vRectScale,
+											   UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+
+			pMainMenuSetting = static_cast<CMainMenuSetting*>(pRootUI);
+		}
+	}
+
+	// MainMenuSettingCanvas
+	CSettingButtonClose* pSettingButtonXMouseNormal  = nullptr;
+	CSettingButtonClose* pSettingButtonXMouseOn      = nullptr;
+	CSettingButtonClose* pSettingButtonXMouseClicked = nullptr;
+	{
+		wifstream fin{ L"../../Bin/ToolData/2DUIMainMenuSettingCanvas.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		// ChildUI Data
+		vector<wstring> vecDataFilePath;
+		vector<wstring> vecObjectTag;
+		vector<_vec3>	vecPos;
+		vector<_vec3>	vecScale;
+		vector<_long>	vecUIDepth;
+		vector<_int>	vecIsSpriteAnimation;
+		vector<_float>	vecFrameSpeed;
+		vector<_vec3>	vecRectPosOffset;
+		vector<_vec3>	vecRectScale;
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			vecDataFilePath.resize(iChildUISize);
+			vecObjectTag.resize(iChildUISize);
+			vecPos.resize(iChildUISize);
+			vecScale.resize(iChildUISize);
+			vecUIDepth.resize(iChildUISize);
+			vecIsSpriteAnimation.resize(iChildUISize);
+			vecFrameSpeed.resize(iChildUISize);
+			vecRectPosOffset.resize(iChildUISize);
+			vecRectScale.resize(iChildUISize);
+
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				fin >> vecDataFilePath[i]			// DataFilePath
+					>> vecObjectTag[i]				// Object Tag
+					>> vecPos[i].x					// Pos X
+					>> vecPos[i].y					// Pos Y
+					>> vecScale[i].x				// Scale X
+					>> vecScale[i].y				// Scale Y
+					>> vecUIDepth[i]				// UI Depth
+					>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
+					>> vecFrameSpeed[i]				// Frame Speed
+					>> vecRectPosOffset[i].x		// RectPosOffset X
+					>> vecRectPosOffset[i].y		// RectPosOffset Y
+					>> vecRectScale[i].x			// RectScale X
+					>> vecRectScale[i].y;			// RectScale Y
+			}
+
+			if (fin.eof())
+				break;
+
+			// UIRoot 持失.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CMainMenuSettingCanvas::Create(m_pGraphicDevice, m_pCommandList,
+													 wstrRootObjectTag,
+													 wstrDataFilePath,
+													 vPos,
+													 vScale,
+													 bIsSpriteAnimation,
+													 fFrameSpeed,
+													 vRectPosOffset,
+													 vRectScale,
+													 UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+			pMainMenuSetting->Set_SettingCanvas(static_cast<CMainMenuSettingCanvas*>(pRootUI));
+
+			// UIChild 持失.
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				Engine::CGameObject* pChildUI = nullptr;
+
+				if (L"ButtonExitGame" == vecObjectTag[i])
+				{
+					pChildUI = CSettingButtonGameExit::Create(m_pGraphicDevice, m_pCommandList,
+															  wstrRootObjectTag,				// RootObjectTag
+															  vecObjectTag[i],					// ObjectTag
+															  vecDataFilePath[i],				// DataFilePath
+															  vecPos[i],						// Pos
+															  vecScale[i],						// Scane
+															  (_bool)vecIsSpriteAnimation[i],	// Is Animation
+															  vecFrameSpeed[i],					// FrameSpeed
+															  vecRectPosOffset[i],				// RectPosOffset
+															  vecRectScale[i],					// RectScaleOffset
+															  vecUIDepth[i]);					// UI Depth
+				}
+				else if (L"SystemSettingButtonX_Normal" == vecObjectTag[i] ||
+					L"SystemSettingButtonX_MouseOn" == vecObjectTag[i] ||
+					L"SystemSettingButtonX_MouseClicked" == vecObjectTag[i])
+				{
+					pChildUI = CSettingButtonClose::Create(m_pGraphicDevice, m_pCommandList,
+														   wstrRootObjectTag,				// RootObjectTag
+														   vecObjectTag[i],					// ObjectTag
+														   vecDataFilePath[i],				// DataFilePath
+														   vecPos[i],						// Pos
+														   vecScale[i],						// Scane
+														   (_bool)vecIsSpriteAnimation[i],	// Is Animation
+														   vecFrameSpeed[i],				// FrameSpeed
+														   vecRectPosOffset[i],				// RectPosOffset
+														   vecRectScale[i],					// RectScaleOffset
+														   vecUIDepth[i]);					// UI Depth
+
+					if (L"SystemSettingButtonX_MouseOn" == vecObjectTag[i])
+						pSettingButtonXMouseOn = static_cast<CSettingButtonClose*>(pChildUI);
+					else if (L"SystemSettingButtonX_MouseClicked" == vecObjectTag[i])
+						pSettingButtonXMouseClicked = static_cast<CSettingButtonClose*>(pChildUI);
+					else
+						pSettingButtonXMouseNormal = static_cast<CSettingButtonClose*>(pChildUI);
+
+				}
+				else if (L"SystemSettingCheckBox_Shade" == vecObjectTag[i] ||
+					L"SystemSettingCheckBox_Specular" == vecObjectTag[i] ||
+					L"SystemSettingCheckBox_SSAO" == vecObjectTag[i] ||
+					L"SystemSettingCheckBox_HDRTone" == vecObjectTag[i] ||
+					L"SystemSettingCheckBox_DOF" == vecObjectTag[i] ||
+					L"SystemSettingCheckBox_Shadow" == vecObjectTag[i])
+				{
+					pChildUI = CSettingButtonShaderCheckBox::Create(m_pGraphicDevice, m_pCommandList,
+																	wstrRootObjectTag,				// RootObjectTag
+																	vecObjectTag[i],				// ObjectTag
+																	vecDataFilePath[i],				// DataFilePath
+																	vecPos[i],						// Pos
+																	vecScale[i],					// Scane
+																	(_bool)vecIsSpriteAnimation[i],	// Is Animation
+																	vecFrameSpeed[i],				// FrameSpeed
+																	vecRectPosOffset[i],			// RectPosOffset
+																	vecRectScale[i],				// RectScaleOffset
+																	vecUIDepth[i]);					// UI Depth
+				}
+
+				if (nullptr != pChildUI &&
+					(L"SystemSettingButtonX_MouseOn" != vecObjectTag[i] &&
+						L"SystemSettingButtonX_MouseClicked" != vecObjectTag[i] &&
+						L"ButtonExitGameClicked" != vecObjectTag[i]))
+				{
+					m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
+					static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
+				}
+			}
+		}
+
+		UI_CHILD_STATE tState;
+
+		tState.tFrame         = pSettingButtonXMouseOn->Get_Frame();
+		tState.vPos           = pSettingButtonXMouseOn->Get_Transform()->m_vPos;
+		tState.vScale         = pSettingButtonXMouseOn->Get_Transform()->m_vScale;
+		tState.vRectPosOffset = pSettingButtonXMouseOn->Get_RectOffset();
+		tState.vRectScale     = pSettingButtonXMouseOn->Get_TransformColor()->m_vScale;
+		pSettingButtonXMouseNormal->SetUp_MainMenuState(L"MouseOn", tState);
+
+		tState.tFrame         = pSettingButtonXMouseClicked->Get_Frame();
+		tState.vPos           = pSettingButtonXMouseClicked->Get_Transform()->m_vPos;
+		tState.vScale         = pSettingButtonXMouseClicked->Get_Transform()->m_vScale;
+		tState.vRectPosOffset = pSettingButtonXMouseClicked->Get_RectOffset();
+		tState.vRectScale     = pSettingButtonXMouseClicked->Get_TransformColor()->m_vScale;
+		pSettingButtonXMouseNormal->SetUp_MainMenuState(L"MouseClicked", tState);
+
+		pSettingButtonXMouseNormal = nullptr;
+		Engine::Safe_Release(pSettingButtonXMouseOn);
+		Engine::Safe_Release(pSettingButtonXMouseClicked);
+	}
+
+	pMainMenuSetting = nullptr;
+
+	return S_OK;
+}
+
+HRESULT CScene_MainStage::SetUp_UIMainMenuLogout()
+{
+	CMainMenuLogout* pMainMenuLogout = nullptr;
+
+	{
+		wifstream fin{ L"../../Bin/ToolData/2DUIMainMenuLogout_Normal.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			if (fin.eof())
+				break;
+
+			// UIRoot 持失.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CMainMenuLogout::Create(m_pGraphicDevice, m_pCommandList,
+											  wstrRootObjectTag,
+											  wstrDataFilePath,
+											  vPos,
+											  vScale,
+											  bIsSpriteAnimation,
+											  fFrameSpeed,
+											  vRectPosOffset,
+											  vRectScale,
+											  UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+			pMainMenuLogout = static_cast<CMainMenuLogout*>(pRootUI);
+		}
+	}
+
+	// MainMenuSettingCanvas
+	CLogoutButtonClose* pLogoutButtonXMouseNormal  = nullptr;
+	CLogoutButtonClose* pLogoutButtonXMouseOn      = nullptr;
+	CLogoutButtonClose* pLogoutButtonXMouseClicked = nullptr;
+	{
+		wifstream fin{ L"../../Bin/ToolData/2DUIBasicSystemMessage.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		// ChildUI Data
+		vector<wstring> vecDataFilePath;
+		vector<wstring> vecObjectTag;
+		vector<_vec3>	vecPos;
+		vector<_vec3>	vecScale;
+		vector<_long>	vecUIDepth;
+		vector<_int>	vecIsSpriteAnimation;
+		vector<_float>	vecFrameSpeed;
+		vector<_vec3>	vecRectPosOffset;
+		vector<_vec3>	vecRectScale;
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			vecDataFilePath.resize(iChildUISize);
+			vecObjectTag.resize(iChildUISize);
+			vecPos.resize(iChildUISize);
+			vecScale.resize(iChildUISize);
+			vecUIDepth.resize(iChildUISize);
+			vecIsSpriteAnimation.resize(iChildUISize);
+			vecFrameSpeed.resize(iChildUISize);
+			vecRectPosOffset.resize(iChildUISize);
+			vecRectScale.resize(iChildUISize);
+
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				fin >> vecDataFilePath[i]			// DataFilePath
+					>> vecObjectTag[i]				// Object Tag
+					>> vecPos[i].x					// Pos X
+					>> vecPos[i].y					// Pos Y
+					>> vecScale[i].x				// Scale X
+					>> vecScale[i].y				// Scale Y
+					>> vecUIDepth[i]				// UI Depth
+					>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
+					>> vecFrameSpeed[i]				// Frame Speed
+					>> vecRectPosOffset[i].x		// RectPosOffset X
+					>> vecRectPosOffset[i].y		// RectPosOffset Y
+					>> vecRectScale[i].x			// RectScale X
+					>> vecRectScale[i].y;			// RectScale Y
+			}
+
+			if (fin.eof())
+				break;
+
+			// UIRoot 持失.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CMainMenuLogoutCanvas::Create(m_pGraphicDevice, m_pCommandList,
+													wstrRootObjectTag,
+													wstrDataFilePath,
+													vPos,
+													vScale,
+													bIsSpriteAnimation,
+													fFrameSpeed,
+													vRectPosOffset,
+													vRectScale,
+													UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+			pMainMenuLogout->Set_LogoutCanvas(static_cast<CMainMenuLogoutCanvas*>(pRootUI));
+
+			// UIChild 持失.
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				Engine::CGameObject* pChildUI = nullptr;
+
+				if (L"SystemButtonYes" == vecObjectTag[i] ||
+					L"SystemButtonNo" == vecObjectTag[i])
+				{
+					pChildUI = CLogoutButtonChoice::Create(m_pGraphicDevice, m_pCommandList,
+														   wstrRootObjectTag,				// RootObjectTag
+														   vecObjectTag[i],					// ObjectTag
+														   vecDataFilePath[i],				// DataFilePath
+														   vecPos[i],						// Pos
+														   vecScale[i],						// Scane
+														   (_bool)vecIsSpriteAnimation[i],	// Is Animation
+														   vecFrameSpeed[i],				// FrameSpeed
+														   vecRectPosOffset[i],				// RectPosOffset
+														   vecRectScale[i],					// RectScaleOffset
+														   vecUIDepth[i]);					// UI Depth
+				}
+				else if (L"SystemButtonX_Normal" == vecObjectTag[i] ||
+					L"SystemButtonX_MouseOn" == vecObjectTag[i] ||
+					L"SystemButtonX_MouseClicked" == vecObjectTag[i])
+				{
+					pChildUI = CLogoutButtonClose::Create(m_pGraphicDevice, m_pCommandList,
+														  wstrRootObjectTag,				// RootObjectTag
+														  vecObjectTag[i],					// ObjectTag
+														  vecDataFilePath[i],				// DataFilePath
+														  vecPos[i],						// Pos
+														  vecScale[i],						// Scane
+														  (_bool)vecIsSpriteAnimation[i],	// Is Animation
+														  vecFrameSpeed[i],					// FrameSpeed
+														  vecRectPosOffset[i],				// RectPosOffset
+														  vecRectScale[i],					// RectScaleOffset
+														  vecUIDepth[i]);					// UI Depth
+
+					if (L"SystemButtonX_MouseOn" == vecObjectTag[i])
+						pLogoutButtonXMouseOn = static_cast<CLogoutButtonClose*>(pChildUI);
+					else if (L"SystemButtonX_MouseClicked" == vecObjectTag[i])
+						pLogoutButtonXMouseClicked = static_cast<CLogoutButtonClose*>(pChildUI);
+					else
+						pLogoutButtonXMouseNormal = static_cast<CLogoutButtonClose*>(pChildUI);
+
+				}
+
+				if (nullptr != pChildUI &&
+					(L"SystemButtonX_MouseOn" != vecObjectTag[i] &&
+						L"SystemButtonX_MouseClicked" != vecObjectTag[i]))
+				{
+					m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
+					static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
+				}
+			}
+		}
+
+		UI_CHILD_STATE tState;
+
+		tState.tFrame         = pLogoutButtonXMouseOn->Get_Frame();
+		tState.vPos           = pLogoutButtonXMouseOn->Get_Transform()->m_vPos;
+		tState.vScale         = pLogoutButtonXMouseOn->Get_Transform()->m_vScale;
+		tState.vRectPosOffset = pLogoutButtonXMouseOn->Get_RectOffset();
+		tState.vRectScale     = pLogoutButtonXMouseOn->Get_TransformColor()->m_vScale;
+		pLogoutButtonXMouseNormal->SetUp_MainMenuState(L"MouseOn", tState);
+
+		tState.tFrame         = pLogoutButtonXMouseClicked->Get_Frame();
+		tState.vPos           = pLogoutButtonXMouseClicked->Get_Transform()->m_vPos;
+		tState.vScale         = pLogoutButtonXMouseClicked->Get_Transform()->m_vScale;
+		tState.vRectPosOffset = pLogoutButtonXMouseClicked->Get_RectOffset();
+		tState.vRectScale     = pLogoutButtonXMouseClicked->Get_TransformColor()->m_vScale;
+		pLogoutButtonXMouseNormal->SetUp_MainMenuState(L"MouseClicked", tState);
+
+		pLogoutButtonXMouseNormal = nullptr;
+		Engine::Safe_Release(pLogoutButtonXMouseOn);
+		Engine::Safe_Release(pLogoutButtonXMouseClicked);
+
+		pMainMenuLogout = nullptr;
+	}
+
+	return S_OK;
+}
+
+HRESULT CScene_MainStage::SetUp_UIPartySuggestCanvas()
+{
+	CPartySuggestCanvas* pPartySuggestCanvas = nullptr;
+
+	{
+		wifstream fin{ L"../../Bin/ToolData/2DUIPartySuggestCanvas.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		// ChildUI Data
+		vector<wstring> vecDataFilePath;
+		vector<wstring> vecObjectTag;
+		vector<_vec3>	vecPos;
+		vector<_vec3>	vecScale;
+		vector<_long>	vecUIDepth;
+		vector<_int>	vecIsSpriteAnimation;
+		vector<_float>	vecFrameSpeed;
+		vector<_vec3>	vecRectPosOffset;
+		vector<_vec3>	vecRectScale;
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			vecDataFilePath.resize(iChildUISize);
+			vecObjectTag.resize(iChildUISize);
+			vecPos.resize(iChildUISize);
+			vecScale.resize(iChildUISize);
+			vecUIDepth.resize(iChildUISize);
+			vecIsSpriteAnimation.resize(iChildUISize);
+			vecFrameSpeed.resize(iChildUISize);
+			vecRectPosOffset.resize(iChildUISize);
+			vecRectScale.resize(iChildUISize);
+
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				fin >> vecDataFilePath[i]			// DataFilePath
+					>> vecObjectTag[i]				// Object Tag
+					>> vecPos[i].x					// Pos X
+					>> vecPos[i].y					// Pos Y
+					>> vecScale[i].x				// Scale X
+					>> vecScale[i].y				// Scale Y
+					>> vecUIDepth[i]				// UI Depth
+					>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
+					>> vecFrameSpeed[i]				// Frame Speed
+					>> vecRectPosOffset[i].x		// RectPosOffset X
+					>> vecRectPosOffset[i].y		// RectPosOffset Y
+					>> vecRectScale[i].x			// RectScale X
+					>> vecRectScale[i].y;			// RectScale Y
+			}
+
+			if (fin.eof())
+				break;
+
+			// UIRoot 持失.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CPartySuggestCanvas::Create(m_pGraphicDevice, m_pCommandList,
+												  wstrRootObjectTag,
+												  wstrDataFilePath,
+												  vPos,
+												  vScale,
+												  bIsSpriteAnimation,
+												  fFrameSpeed,
+												  vRectPosOffset,
+												  vRectScale,
+												  UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+			pPartySuggestCanvas = static_cast<CPartySuggestCanvas*>(pRootUI);
+			CPartySystemMgr::Get_Instance()->Set_PartySuggestCanvas(pPartySuggestCanvas);
+
+			// UIChild 持失.
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				Engine::CGameObject* pChildUI = nullptr;
+
+				pChildUI = CPartySuggestButton::Create(m_pGraphicDevice, m_pCommandList,
+													   wstrRootObjectTag,				// RootObjectTag
+													   vecObjectTag[i],					// ObjectTag
+													   vecDataFilePath[i],				// DataFilePath
+													   vecPos[i],						// Pos
+													   vecScale[i],						// Scane
+													   (_bool)vecIsSpriteAnimation[i],	// Is Animation
+													   vecFrameSpeed[i],				// FrameSpeed
+													   vecRectPosOffset[i],				// RectPosOffset
+													   vecRectScale[i],					// RectScaleOffset
+													   vecUIDepth[i]);					// UI Depth
+
+				if (nullptr != pChildUI)
+				{
+					static_cast<CPartySuggestButton*>(pChildUI)->Set_CanvasClass(pPartySuggestCanvas);
+
+					m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
+					static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
+				}
+			}
+		}
+
+
+		pPartySuggestCanvas = nullptr;
+	}
+
+
+	return S_OK;
+}
+
+HRESULT CScene_MainStage::SetUp_UIPartySuggestResponseCanvas()
+{
+	// MainMenuSettingCanvas
+	CPartySuggestResponseCanvas*	pCanvas = nullptr;
+	CPartySuggestResponseClose*		pButtonXMouseNormal  = nullptr;
+	CPartySuggestResponseClose*		pButtonXMouseOn      = nullptr;
+	CPartySuggestResponseClose*		pButtonXMouseClicked = nullptr;
+
+	{
+		wifstream fin{ L"../../Bin/ToolData/2DUIBasicSystemMessage.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		// ChildUI Data
+		vector<wstring> vecDataFilePath;
+		vector<wstring> vecObjectTag;
+		vector<_vec3>	vecPos;
+		vector<_vec3>	vecScale;
+		vector<_long>	vecUIDepth;
+		vector<_int>	vecIsSpriteAnimation;
+		vector<_float>	vecFrameSpeed;
+		vector<_vec3>	vecRectPosOffset;
+		vector<_vec3>	vecRectScale;
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			vecDataFilePath.resize(iChildUISize);
+			vecObjectTag.resize(iChildUISize);
+			vecPos.resize(iChildUISize);
+			vecScale.resize(iChildUISize);
+			vecUIDepth.resize(iChildUISize);
+			vecIsSpriteAnimation.resize(iChildUISize);
+			vecFrameSpeed.resize(iChildUISize);
+			vecRectPosOffset.resize(iChildUISize);
+			vecRectScale.resize(iChildUISize);
+
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				fin >> vecDataFilePath[i]			// DataFilePath
+					>> vecObjectTag[i]				// Object Tag
+					>> vecPos[i].x					// Pos X
+					>> vecPos[i].y					// Pos Y
+					>> vecScale[i].x				// Scale X
+					>> vecScale[i].y				// Scale Y
+					>> vecUIDepth[i]				// UI Depth
+					>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
+					>> vecFrameSpeed[i]				// Frame Speed
+					>> vecRectPosOffset[i].x		// RectPosOffset X
+					>> vecRectPosOffset[i].y		// RectPosOffset Y
+					>> vecRectScale[i].x			// RectScale X
+					>> vecRectScale[i].y;			// RectScale Y
+			}
+
+			if (fin.eof())
+				break;
+
+			// UIRoot 持失.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CPartySuggestResponseCanvas::Create(m_pGraphicDevice, m_pCommandList,
+														  wstrRootObjectTag + wstring(L"PartySuggestResponse"),
+														  wstrDataFilePath,
+														  vPos,
+														  vScale,
+														  bIsSpriteAnimation,
+														  fFrameSpeed,
+														  vRectPosOffset,
+														  vRectScale,
+														  UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag + wstring(L"PartySuggestResponse"), pRootUI);
+
+			pCanvas = static_cast<CPartySuggestResponseCanvas*>(pRootUI);
+			CPartySystemMgr::Get_Instance()->Set_PartySuggestResponseCanvas(pCanvas);
+
+			// UIChild 持失.
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				Engine::CGameObject* pChildUI = nullptr;
+
+				if (L"SystemButtonYes" == vecObjectTag[i] ||
+					L"SystemButtonNo" == vecObjectTag[i])
+				{
+					pChildUI = CPartySuggestResponseChoice::Create(m_pGraphicDevice, m_pCommandList,
+																   wstrRootObjectTag + wstring(L"PartySuggestResponse"),				// RootObjectTag
+																   vecObjectTag[i] + wstring(L"PartySuggestResponse"), // ObjectTag
+																   vecDataFilePath[i],				// DataFilePath
+																   vecPos[i],						// Pos
+																   vecScale[i],						// Scane
+																   (_bool)vecIsSpriteAnimation[i],	// Is Animation
+																   vecFrameSpeed[i],				// FrameSpeed
+																   vecRectPosOffset[i],				// RectPosOffset
+																   vecRectScale[i],					// RectScaleOffset
+																   vecUIDepth[i]);					// UI Depth
+
+					static_cast<CPartySuggestResponseChoice*>(pChildUI)->Set_CanvasClass(pCanvas);
+				}
+				else if (L"SystemButtonX_Normal" == vecObjectTag[i] ||
+						 L"SystemButtonX_MouseOn" == vecObjectTag[i] ||
+						 L"SystemButtonX_MouseClicked" == vecObjectTag[i])
+				{
+					pChildUI = CPartySuggestResponseClose::Create(m_pGraphicDevice, m_pCommandList,
+																  wstrRootObjectTag + wstring(L"PartySuggestResponse"),				// RootObjectTag
+																  vecObjectTag[i] + wstring(L"PartySuggestResponse"), // ObjectTag
+																  vecDataFilePath[i],				// DataFilePath
+																  vecPos[i],						// Pos
+																  vecScale[i],						// Scane
+																  (_bool)vecIsSpriteAnimation[i],	// Is Animation
+																  vecFrameSpeed[i],					// FrameSpeed
+																  vecRectPosOffset[i],				// RectPosOffset
+																  vecRectScale[i],					// RectScaleOffset
+																  vecUIDepth[i]);					// UI Depth
+
+					if (L"SystemButtonX_MouseOn" == vecObjectTag[i])
+						pButtonXMouseOn = static_cast<CPartySuggestResponseClose*>(pChildUI);
+					else if (L"SystemButtonX_MouseClicked" == vecObjectTag[i])
+						pButtonXMouseClicked = static_cast<CPartySuggestResponseClose*>(pChildUI);
+					else
+						pButtonXMouseNormal = static_cast<CPartySuggestResponseClose*>(pChildUI);
+				}
+
+				if (nullptr != pChildUI &&
+					(L"SystemButtonX_MouseOn" != vecObjectTag[i] &&
+					 L"SystemButtonX_MouseClicked" != vecObjectTag[i]))
+				{
+					m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i] + wstring(L"PartySuggestResponse"), pChildUI);
+					static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
+				}
+			}
+		}
+
+		UI_CHILD_STATE tState;
+
+		tState.tFrame         = pButtonXMouseOn->Get_Frame();
+		tState.vPos           = pButtonXMouseOn->Get_Transform()->m_vPos;
+		tState.vScale         = pButtonXMouseOn->Get_Transform()->m_vScale;
+		tState.vRectPosOffset = pButtonXMouseOn->Get_RectOffset();
+		tState.vRectScale     = pButtonXMouseOn->Get_TransformColor()->m_vScale;
+		pButtonXMouseNormal->SetUp_MainMenuState(L"MouseOn", tState);
+
+		tState.tFrame         = pButtonXMouseClicked->Get_Frame();
+		tState.vPos           = pButtonXMouseClicked->Get_Transform()->m_vPos;
+		tState.vScale         = pButtonXMouseClicked->Get_Transform()->m_vScale;
+		tState.vRectPosOffset = pButtonXMouseClicked->Get_RectOffset();
+		tState.vRectScale     = pButtonXMouseClicked->Get_TransformColor()->m_vScale;
+		pButtonXMouseNormal->SetUp_MainMenuState(L"MouseClicked", tState);
+
+		pButtonXMouseNormal->Set_CanvasClass(pCanvas);
+
+
+		pButtonXMouseNormal = nullptr;
+		Engine::Safe_Release(pButtonXMouseOn);
+		Engine::Safe_Release(pButtonXMouseClicked);
+
+		pCanvas = nullptr;
+	}
 
 	return S_OK;
 }

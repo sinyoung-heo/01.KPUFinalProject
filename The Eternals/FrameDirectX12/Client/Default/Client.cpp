@@ -17,6 +17,7 @@
 #include "DescriptorHeapMgr.h"
 #include "CollisionMgr.h"
 #include "InstancePoolMgr.h"
+#include "PartySystemMgr.h"
 #include <chrono>
 
 #define MAX_LOADSTRING 100
@@ -374,6 +375,12 @@ _ulong Release_Singleton()
 	if (dwRefCnt = CShadowLightMgr::Get_Instance()->Destroy_Instance())
 	{
 		MSG_BOX(L"CShadowLightMgr Release Failed");
+		return dwRefCnt;
+	}
+
+	if (dwRefCnt = CPartySystemMgr::Get_Instance()->Destroy_Instance())
+	{
+		MSG_BOX(L"CPartySystemMgr Release Failed");
 		return dwRefCnt;
 	}
 

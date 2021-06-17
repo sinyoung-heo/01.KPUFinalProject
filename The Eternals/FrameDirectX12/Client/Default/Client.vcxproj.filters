@@ -340,6 +340,21 @@
     <Filter Include="97.Mgr\05.EffectMgr">
       <UniqueIdentifier>{d1e755a3-e0b4-49c4-86c9-fa11fd591ea8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\04.PartySuggestResponseCanvas">
+      <UniqueIdentifier>{64cedfb3-8c17-4f6d-9060-3639a62fb706}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\03.PartySuggestCanvas">
+      <UniqueIdentifier>{2c765787-bdab-45de-8300-e5c904062120}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\04..PartySuggestCanvasChild">
+      <UniqueIdentifier>{437ef053-aafd-430c-baac-6cf04e6b6fd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestResponseCanvasChild">
+      <UniqueIdentifier>{03411472-9846-447f-8c78-94f52c64877e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Mgr\06.PartySystemMgr">
+      <UniqueIdentifier>{cc282e5d-d07a-4c55-a4ba-edde963a14e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -709,6 +724,24 @@
     <ClInclude Include="..\Code\EffectMgr.h">
       <Filter>97.Mgr\05.EffectMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\PartySuggestCanvas.h">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\03.PartySuggestCanvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PartySuggestResponseCanvas.h">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\04.PartySuggestResponseCanvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PartySuggestButton.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\04..PartySuggestCanvasChild</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PartySuggestResponseChoice.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestResponseCanvasChild</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PartySuggestResponseClose.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestResponseCanvasChild</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PartySystemMgr.h">
+      <Filter>97.Mgr\06.PartySystemMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1023,6 +1056,24 @@
     </ClCompile>
     <ClCompile Include="..\Code\EffectMgr.cpp">
       <Filter>97.Mgr\05.EffectMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PartySuggestCanvas.cpp">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\03.PartySuggestCanvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PartySuggestResponseCanvas.cpp">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\04.PartySuggestResponseCanvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PartySuggestButton.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\04..PartySuggestCanvasChild</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PartySuggestResponseChoice.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestResponseCanvasChild</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PartySuggestResponseClose.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestResponseCanvasChild</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PartySystemMgr.cpp">
+      <Filter>97.Mgr\06.PartySystemMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

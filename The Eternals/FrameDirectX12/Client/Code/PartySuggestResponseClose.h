@@ -1,13 +1,21 @@
 #pragma once
 #include "GameUIChild.h"
 
-class CLogoutButtonClose : public CGameUIChild
+class CPartySuggestResponseCanvas;
+
+class CPartySuggestResponseClose : public CGameUIChild
 {
 private:
-	explicit CLogoutButtonClose(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CLogoutButtonClose() = default;
+	explicit CPartySuggestResponseClose(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CPartySuggestResponseClose() = default;
 
 public:
+	const PARTY_REQUEST_STATE& Get_PartyRequestState() { return m_ePartyRequestState; }
+	
+	void Set_CanvasClass(CPartySuggestResponseCanvas* pCanvas)		{ m_pCanvas = pCanvas; }
+	void Set_PartyRequestState(const PARTY_REQUEST_STATE& eState)	{ m_ePartyRequestState = eState; }
+	
+
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrRootObjectTag,
 									 wstring wstrObjectTag,							   
@@ -29,8 +37,11 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
+	CPartySuggestResponseCanvas* m_pCanvas = nullptr;
+	
 	map<wstring, UI_CHILD_STATE> m_mapMainMenuState;
 	_bool m_bIsKeyPressing = false;
+	PARTY_REQUEST_STATE m_ePartyRequestState = PARTY_REQUEST_STATE::PARTY_STATE_END;
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,

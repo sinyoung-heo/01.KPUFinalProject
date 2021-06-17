@@ -15,7 +15,6 @@ public:
 	virtual _int	LateUpdate_Scene(const _float& fTimeDelta);
 	virtual void	Send_PacketToServer();
 	virtual HRESULT	Render_Scene(const _float& fTimeDelta, const Engine::RENDERID& eID = Engine::RENDERID::MULTI_THREAD);
-
 private:
 	HRESULT			Ready_LayerCamera(wstring wstrLayerTag);
 	HRESULT			Ready_LayerEnvironment(wstring wstrLayerTag);
@@ -25,6 +24,12 @@ private:
 	HRESULT			Ready_LightInfo();
 	HRESULT			Ready_NaviMesh();
 
+	HRESULT			SetUp_UIMainMenuEquipment();
+	HRESULT			SetUp_UIMainMenuInventory();
+	HRESULT			SetUp_UIMainMenuSetting();
+	HRESULT			SetUp_UIMainMenuLogout();
+	HRESULT			SetUp_UIPartySuggestCanvas();
+	HRESULT			SetUp_UIPartySuggestResponseCanvas();
 private:
 	_bool m_bIsReadyMouseCursorMgr = false;
 

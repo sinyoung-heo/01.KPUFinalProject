@@ -12,6 +12,7 @@ namespace Engine
 }
 
 class CInstancePoolMgr;
+class CPartySystemMgr;
 
 class CPacketMgr : public Engine::CBase
 {
@@ -98,6 +99,7 @@ private:
 	ID3D12GraphicsCommandList*	m_pCommandList   = nullptr;
 
 	CInstancePoolMgr*			m_pInstancePoolMgr = nullptr;
+	CPartySystemMgr*			m_pPartySystemMgr = nullptr;
 
 	MVKEY m_eCurKey = MVKEY::K_END;
 	MVKEY m_ePreKey = MVKEY::K_END;

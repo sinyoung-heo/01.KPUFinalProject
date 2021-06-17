@@ -1,24 +1,24 @@
 #include "stdafx.h"
-#include "LogoutButtonClose.h"
+#include "PartySuggestResponseClose.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
-#include "MainMenuLogout.h"
+#include "PartySuggestResponseCanvas.h"
 
-CLogoutButtonClose::CLogoutButtonClose(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CPartySuggestResponseClose::CPartySuggestResponseClose(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
 {
 }
 
-HRESULT CLogoutButtonClose::Ready_GameObject(wstring wstrRootObjectTag, 
-											 wstring wstrObjectTag, 
-											 wstring wstrDataFilePath,
-											 const _vec3& vPos, 
-											 const _vec3& vScale,
-											 const _bool& bIsSpriteAnimation, 
-											 const _float& fFrameSpeed,
-											 const _vec3& vRectOffset,
-											 const _vec3& vRectScale, 
-											 const _long& iUIDepth)
+HRESULT CPartySuggestResponseClose::Ready_GameObject(wstring wstrRootObjectTag, 
+													 wstring wstrObjectTag, 
+													 wstring wstrDataFilePath,
+													 const _vec3& vPos, 
+													 const _vec3& vScale,
+													 const _bool& bIsSpriteAnimation, 
+													 const _float& fFrameSpeed,
+													 const _vec3& vRectOffset,
+													 const _vec3& vRectScale, 
+													 const _long& iUIDepth)
 {
 	Engine::FAILED_CHECK_RETURN(CGameUIChild::Ready_GameObject(wstrRootObjectTag, 
 															   wstrObjectTag,
@@ -45,14 +45,14 @@ HRESULT CLogoutButtonClose::Ready_GameObject(wstring wstrRootObjectTag,
 	return S_OK;
 }
 
-HRESULT CLogoutButtonClose::LateInit_GameObject()
+HRESULT CPartySuggestResponseClose::LateInit_GameObject()
 {
 	Engine::FAILED_CHECK_RETURN(CGameUIChild::LateInit_GameObject(), E_FAIL);
 
 	return S_OK;
 }
 
-_int CLogoutButtonClose::Update_GameObject(const _float& fTimeDelta)
+_int CPartySuggestResponseClose::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 	
@@ -66,18 +66,36 @@ _int CLogoutButtonClose::Update_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CLogoutButtonClose::LateUpdate_GameObject(const _float& fTimeDelta)
+_int CPartySuggestResponseClose::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	if (!m_bIsActive)
 		return NO_EVENT;
 
 	CGameUIChild::LateUpdate_GameObject(fTimeDelta);
 
+	if (nullptr != m_pCanvas)
+		m_ePartyRequestState = m_pCanvas->Get_PartyRequestState();
+
 	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect) &&
 		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
 		m_bIsKeyPressing)
 	{
-		static_cast<CMainMenuLogout*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"OptionLogoutNormal"))->Set_IsActiveCanvas(false);
+		// 파티초대 - 거절
+		if (PARTY_REQUEST_STATE::REQUEST_PARTY_INVITE == m_ePartyRequestState)
+		{
+
+		}
+		// 파티가입 - 거절
+		else if (PARTY_REQUEST_STATE::REQUEST_PARTY_JOIN == m_ePartyRequestState)
+		{
+
+		}
+
+		if (nullptr != m_pCanvas)
+		{
+			m_pCanvas->Set_IsActive(false);
+			m_pCanvas->Set_IsChildActive(false);
+		}
 	}
 
 	m_bIsKeyPressing = false;
@@ -118,12 +136,12 @@ _int CLogoutButtonClose::LateUpdate_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-void CLogoutButtonClose::Render_GameObject(const _float& fTimeDelta)
+void CPartySuggestResponseClose::Render_GameObject(const _float& fTimeDelta)
 {
 	CGameUIChild::Render_GameObject(fTimeDelta);
 }
 
-HRESULT CLogoutButtonClose::SetUp_MainMenuState(wstring wstrTag, const UI_CHILD_STATE& tState)
+HRESULT CPartySuggestResponseClose::SetUp_MainMenuState(wstring wstrTag, const UI_CHILD_STATE& tState)
 {
 	auto iter_find = m_mapMainMenuState.find(wstrTag);
 	if (iter_find == m_mapMainMenuState.end())
@@ -134,19 +152,19 @@ HRESULT CLogoutButtonClose::SetUp_MainMenuState(wstring wstrTag, const UI_CHILD_
 	return S_OK;
 }
 
-Engine::CGameObject* CLogoutButtonClose::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
-												wstring wstrRootObjectTag,
-												wstring wstrObjectTag, 
-												wstring wstrDataFilePath,
-												const _vec3& vPos, 
-												const _vec3& vScale, 
-												const _bool& bIsSpriteAnimation, 
-												const _float& fFrameSpeed, 
-												const _vec3& vRectOffset, 
-												const _vec3& vRectScale, 
-												const _long& iUIDepth)
+Engine::CGameObject* CPartySuggestResponseClose::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
+														wstring wstrRootObjectTag,
+														wstring wstrObjectTag, 
+														wstring wstrDataFilePath,
+														const _vec3& vPos, 
+														const _vec3& vScale, 
+														const _bool& bIsSpriteAnimation, 
+														const _float& fFrameSpeed, 
+														const _vec3& vRectOffset, 
+														const _vec3& vRectScale, 
+														const _long& iUIDepth)
 {
-	CLogoutButtonClose* pInstance = new CLogoutButtonClose(pGraphicDevice, pCommandList);
+	CPartySuggestResponseClose* pInstance = new CPartySuggestResponseClose(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrRootObjectTag,
 										   wstrObjectTag,
@@ -163,7 +181,7 @@ Engine::CGameObject* CLogoutButtonClose::Create(ID3D12Device* pGraphicDevice, ID
 	return pInstance;
 }
 
-void CLogoutButtonClose::Free()
+void CPartySuggestResponseClose::Free()
 {
 	CGameUIChild::Free();
 	m_mapMainMenuState.clear();

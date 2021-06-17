@@ -4,6 +4,7 @@
 #include "Management.h"
 #include "Renderer.h"
 #include "InstancePoolMgr.h"
+#include "PartySystemMgr.h"
 #include "DynamicCamera.h"
 #include "FadeInOut.h"
 /* USER */
@@ -36,6 +37,7 @@ CPacketMgr::CPacketMgr()
 	, m_pManagement(Engine::CManagement::Get_Instance())
 	, m_pRenderer(Engine::CRenderer::Get_Instance())
 	, m_pInstancePoolMgr(CInstancePoolMgr::Get_Instance())
+	, m_pPartySystemMgr(CPartySystemMgr::Get_Instance())
 	, m_eCurKey(MVKEY::K_END), m_ePreKey(MVKEY::K_END)
 {
 	memset(m_recv_buf, 0, sizeof(m_recv_buf));
@@ -341,12 +343,14 @@ void CPacketMgr::Process_packet()
 
 	case SC_PACKET_SUGGEST_PARTY:
 	{
+		// 파티초대 제안을 받음.
 		sc_packet_suggest_party* packet = reinterpret_cast<sc_packet_suggest_party*>(m_packet_start);
 		Suggest_Party(packet);
 	}
 
 	case SC_PACKET_ENTER_PARTY_MEMBER:
 	{
+		// 파티초대 제안을 수락.
 		sc_packet_update_party_new_member* packet = reinterpret_cast<sc_packet_update_party_new_member*>(m_packet_start);
 
 		bool retflag;
@@ -357,6 +361,7 @@ void CPacketMgr::Process_packet()
 
 	case SC_PACKET_REJECT_PARTY:
 	{
+		// 파티초대 or 파티가입요청 거절.
 		sc_packet_chat* packet = reinterpret_cast<sc_packet_chat*>(m_packet_start);
 
 		cout << packet->message << endl;
@@ -365,8 +370,8 @@ void CPacketMgr::Process_packet()
 
 	case SC_PACKET_JOIN_PARTY:
 	{
+		// 파티가입요청 받음.
 		sc_packet_suggest_party* packet = reinterpret_cast<sc_packet_suggest_party*>(m_packet_start);
-
 		Join_Party(packet);
 	}
 	break;
@@ -393,6 +398,10 @@ void CPacketMgr::Join_Party(sc_packet_suggest_party* packet)
 {
 	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
 	pThisPlayer->JoinRequest_Party(packet->id);
+
+	m_pPartySystemMgr->Get_PartySuggestResponseCanvas()->Set_PartyRequestState(PARTY_REQUEST_STATE::REQUEST_PARTY_JOIN);
+	m_pPartySystemMgr->Get_PartySuggestResponseCanvas()->Set_IsActive(true);
+	m_pPartySystemMgr->Get_PartySuggestResponseCanvas()->Set_IsChildActive(true);
 }
 
 void CPacketMgr::Leave_Party(sc_packet_suggest_party* packet, bool& retflag)
@@ -414,6 +423,9 @@ void CPacketMgr::Enter_PartyMember(sc_packet_update_party_new_member* packet, bo
 {
 	retflag = true;
 	Engine::CGameObject* pOthers = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", packet->id);
+
+	cout << pOthers << endl;
+
 	if (pOthers == nullptr) return;
 	pOthers->Set_PartyState(true);
 
@@ -430,6 +442,10 @@ void CPacketMgr::Suggest_Party(sc_packet_suggest_party* packet)
 {
 	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
 	pThisPlayer->Request_Party(packet->id);
+
+	m_pPartySystemMgr->Get_PartySuggestResponseCanvas()->Set_PartyRequestState(PARTY_REQUEST_STATE::REQUEST_PARTY_INVITE);
+	m_pPartySystemMgr->Get_PartySuggestResponseCanvas()->Set_IsActive(true);
+	m_pPartySystemMgr->Get_PartySuggestResponseCanvas()->Set_IsChildActive(true);
 }
 
 void CPacketMgr::Knockback_Monster(sc_packet_monster_knockback* packet, bool& retflag)
