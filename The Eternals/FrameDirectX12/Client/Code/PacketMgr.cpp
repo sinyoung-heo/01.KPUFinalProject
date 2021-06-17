@@ -75,7 +75,7 @@ HRESULT CPacketMgr::Connect_Server()
 
 	sockAddr.sin_family = AF_INET;
 	sockAddr.sin_port = htons(SERVER_PORT);
-	sockAddr.sin_addr.s_addr = inet_addr(SERVER_IP);
+	sockAddr.sin_addr.s_addr = inet_addr(SERVER_DHIP);
 
 	if (connect(g_hSocket, (SOCKADDR*)&sockAddr, sizeof(sockAddr)) == SOCKET_ERROR)
 	{
@@ -347,6 +347,7 @@ void CPacketMgr::Process_packet()
 		sc_packet_suggest_party* packet = reinterpret_cast<sc_packet_suggest_party*>(m_packet_start);
 		Suggest_Party(packet);
 	}
+	break;
 
 	case SC_PACKET_ENTER_PARTY_MEMBER:
 	{
