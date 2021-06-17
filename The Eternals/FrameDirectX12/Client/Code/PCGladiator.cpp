@@ -324,8 +324,8 @@ void CPCGladiator::Process_Collision()
 		if (L"NPC_QUest" == pDst->Get_CollisionTag())
 			Collision_Quest(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
 
-		if (L"Others_SingleCollider" == pDst->Get_CollisionTag())
-			Collision_Others(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
+		//if (L"Others_SingleCollider" == pDst->Get_CollisionTag())
+		//	Collision_Others(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
 	}
 
 	Suggest_PartyToOthers();
