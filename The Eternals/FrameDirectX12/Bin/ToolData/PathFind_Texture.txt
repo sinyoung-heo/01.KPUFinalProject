@@ -11,6 +11,7 @@ Fire1|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Fire1\%d.dd
 Glowring|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Glowring\%d.dds
 Lighting0|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Lighting0\%d.dds
 Lighting1|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Lighting1\%d.dds
+Lighting2|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Lighting2\%d.dds
 Lightning00|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Lightning00\%d.dds
 Lightning01|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Lightning01\%d.dds
 Smoke0|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Smoke0\%d.dds

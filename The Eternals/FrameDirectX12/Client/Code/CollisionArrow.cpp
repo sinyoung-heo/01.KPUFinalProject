@@ -261,7 +261,7 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 		m_pTransCom->m_vPos += m_pTransCom->m_vDir * m_fSpeed * fTimeDelta;
 
 		CGameObject* pGameObj;
-		if (m_fEffectDelta > 0.01f)
+		if (m_fEffectDelta > 0.005f)
 		{
 			m_fEffectDelta = 0.f;
 			pGameObj = CDistTrail::Create(m_pGraphicDevice, m_pCommandList,
@@ -269,6 +269,7 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 				_vec3(0.00f),					// Scale
 				_vec3(0.0f,0.f, 90.f),		// Angle
 				m_pTransCom->m_vPos);		// Pos;			// Sprite Image Frame
+			static_cast<CDistTrail*>(pGameObj)->Set_SizeOffset(fDist);
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"DistTrail", pGameObj), E_FAIL);
 		}
 	}

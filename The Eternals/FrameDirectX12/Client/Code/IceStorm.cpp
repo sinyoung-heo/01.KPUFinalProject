@@ -51,8 +51,8 @@ HRESULT CIceStorm::LateInit_GameObject()
 	m_pCrossFilterShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
 
-	_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
-	m_pTransCom->m_vPos = Pos;
+	//_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
+	//m_pTransCom->m_vPos = Pos;
 
 	m_pTransCom->m_vPos.x += m_fRadius * cos(m_fTheta);
 	m_pTransCom->m_vPos.z += m_fRadius * sin(m_fTheta);

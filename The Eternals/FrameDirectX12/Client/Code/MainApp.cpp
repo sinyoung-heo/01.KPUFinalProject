@@ -11,7 +11,6 @@
 #include "Scene_MainStage.h"
 #include "Font.h"
 
-
 CMainApp::CMainApp()
 	: m_pDeviceClass(Engine::CGraphicDevice::Get_Instance())
 	, m_pComponentMgr(Engine::CComponentMgr::Get_Instance())
@@ -174,6 +173,9 @@ HRESULT CMainApp::SetUp_DefaultSetting(Engine::WINMODE eMode, const _uint& uiWid
 	//}
 	//Engine::CDirectSound::Get_Instance()->LoadDirectSoundFile(L"Logo_BGM");
 
+
+	//EffectMgr »ý¼º
+	CEffectMgr::Get_Instance();
 
 	return S_OK;
 }

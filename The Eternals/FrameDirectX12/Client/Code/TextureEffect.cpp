@@ -61,6 +61,7 @@ _int CTextureEffect::Update_GameObject(const _float & fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	Follow_PlayerHand();
 	/*__________________________________________________________________________________________________________
 	[ Update Sprite Frame ]
 	____________________________________________________________________________________________________________*/
@@ -87,14 +88,8 @@ ________________________________________________________________________________
 		Engine::CGameObject::SetUp_BillboardMatrix();
 	}
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
-	/*if (m_strTextag == L"UnderFire")
-	{
-		_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
-		m_pTransCom->m_vPos = Pos;
-		m_pTransCom->m_vPos.y += 1.2f;
 
-		m_pTransCom->m_vPos.z += 0.3f;
-	}*/
+
 	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
 	return NO_EVENT;
 }
@@ -119,6 +114,24 @@ void CTextureEffect::Render_GameObject(const _float & fTimeDelta)
 
 void CTextureEffect::Set_EffectInfo(int PipelineState, bool PlayerFollow)
 {
+}
+
+void CTextureEffect::Follow_PlayerHand(Engine::HIERARCHY_DESC* pHierarchyDesc,Engine::CTransform * PlayerTransform)
+{
+	if (m_bisFollowHand == false)
+		return;
+	if (m_bisFollowHandInit == false)
+	{
+		m_bisFollowHandInit = true;
+		m_pPlayerTransform = PlayerTransform;
+		m_pHierarchyDesc = pHierarchyDesc;
+	}
+	_matrix matBoneFinalTransform = INIT_MATRIX;
+	_matrix matWorld = INIT_MATRIX;
+	matBoneFinalTransform = (m_pHierarchyDesc->matScale * m_pHierarchyDesc->matRotate * m_pHierarchyDesc->matTrans) * m_pHierarchyDesc->matGlobalTransform;
+	matWorld = matBoneFinalTransform * m_pPlayerTransform->m_matWorld;
+	
+	m_pTransCom->m_vPos = _vec3(matWorld._41, matWorld._42, matWorld._43);
 }
 
 HRESULT CTextureEffect::Add_Component(wstring wstrTextureTag)
@@ -159,7 +172,6 @@ void CTextureEffect::Set_ConstantTable()
 	tCB_ShaderTexture.fCurFrame	= (_float)(_int)m_tFrame.fCurFrame;
 	tCB_ShaderTexture.fSceneCnt	= m_tFrame.fSceneCnt;
 	tCB_ShaderTexture.fCurScene	= (_int)m_tFrame.fCurScene;
-	tCB_ShaderTexture.fAlpha = 0.7f;
 	tCB_ShaderTexture.v_Color = m_vColorOffset;
 	m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 }

@@ -70,13 +70,6 @@ _int CFireDecal::Update_GameObject(const _float & fTimeDelta)
 		vPos.x += (rand() % 80 - 40)*0.1f;
 		vPos.z += (rand() % 80 - 40) * 0.1f;
 		CGameObject* pGameObj = nullptr;
-		//pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-		//	L"Fire1",						// TextureTag
-		//	_vec3(0.4f, 0.8f, 1.0f),		// Scale
-		//	_vec3(0.0f, 0.0f, 0.0f),		// Angle
-		//	vPos,	// Pos
-		//	FRAME(8, 8, 16.0f));			// Sprite Image Frame
-		//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"UnderFire", pGameObj), E_FAIL);
 		vPos.y += 1.f;
 		pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
 			L"Bomb00",						// TextureTag
@@ -86,11 +79,8 @@ _int CFireDecal::Update_GameObject(const _float & fTimeDelta)
 			FRAME(10, 9, 33.0f));			// Sprite Image Frame
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Bomb00", pGameObj), E_FAIL);
 	}
-	//static_cast<CTextureEffect*>(pGameObj)->Set
-
+	
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MAGICCIRCLE, this), -1);
-	/*Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);*/
-
 	
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
 	Engine::CGameObject::Compute_ViewZ(vPosInWorld);

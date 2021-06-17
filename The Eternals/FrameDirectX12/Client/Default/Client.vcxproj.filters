@@ -283,6 +283,9 @@
     <Filter Include="02.GameObject\98.GameEffect\05.Lighting">
       <UniqueIdentifier>{ea37fa43-c69a-4efb-8fad-fdab1f293ae2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.Mgr\05.EffectMgr">
+      <UniqueIdentifier>{104916ed-3ae9-40bf-a7f1-3b04b65fd7c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -608,6 +611,9 @@
     <ClInclude Include="..\Code\DistTrail.h">
       <Filter>02.GameObject\98.GameEffect\99.PublicEffect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\EffectMgr.h">
+      <Filter>97.Mgr\05.EffectMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -879,6 +885,9 @@
     <ClCompile Include="..\Code\DistTrail.cpp">
       <Filter>02.GameObject\98.GameEffect\99.PublicEffect</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\EffectMgr.cpp">
+      <Filter>97.Mgr\05.EffectMgr</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -892,5 +901,8 @@
     <ResourceCompile Include="Client.rc">
       <Filter>99.Etc</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

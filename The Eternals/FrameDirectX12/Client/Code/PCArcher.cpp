@@ -24,6 +24,7 @@
 #include "MagicCircle.h"
 #include "SnowParticle.h"
 #include "DistTrail.h"
+#include "TextureEffect.h"
 CPCArcher::CPCArcher(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pPacketMgr(CPacketMgr::Get_Instance())
@@ -1522,6 +1523,10 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 			m_vArrowFallPos.y = 20.0f;
 
 			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+
+			m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("L_Sword")));
+
+		
 		}
 	}
 
@@ -1673,27 +1678,42 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 		}
 	}
 
-	if (m_uiAnimIdx == Archer::ARROW_FALL_DIST || m_uiAnimIdx == Archer::ARROW_FALL_LOOP || m_uiAnimIdx == Archer::ARROW_FALL_SHOT)
+	//JunO
+	if (m_uiAnimIdx == Archer::CHARGE_ARROW_START)
+	{
+		Engine::HIERARCHY_DESC* pHierarchyDesc = &(m_pMeshCom->Find_HierarchyDesc("L_Sword"));
+		_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
+		Pos.y += 2.f;
+		CGameObject* pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+			L"Lighting2",						// TextureTag
+			_vec3(5.f, 5.0f, 1.0f),		// Scale
+			_vec3(0.0f, 0.0f, 0.0f),		// Angle
+			Pos,	// Pos
+			FRAME(5, 16, 20.0f));			// Sprite Image Frame
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Lighting2", pGameObj), E_FAIL);
+		static_cast<CTextureEffect*>(pGameObj)->Set_FollowHand(true);
+		static_cast<CTextureEffect*>(pGameObj)->Follow_PlayerHand(pHierarchyDesc, m_pTransCom);
+	}
+	if ( m_uiAnimIdx == Archer::ARROW_FALL_LOOP )
 	{
 		static float Time = 0.f;
 		Time += fTimeDelta;
 		static int Temp = 10;
-		
 		CGameObject* pGameObj = nullptr;
 		_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
-		if (Temp > 0 && Time>0.03f)
+		if (Temp > 0 && Time > 0.03f)
 		{
 			Time = 0.f;
 			Temp--;
 			if (Temp == 0)
-				Temp = 10;		
-			Pos.y += 3.5f;
-		
-			
+				Temp = 10;
+			Pos.y += 2.f;
+
+
 			pGameObj = CLightingParticle::Create(m_pGraphicDevice, m_pCommandList,
 				L"Lighting0",						// TextureTag
-				_vec3(4.5f,15.5f,4.5f),					// Scale
-				_vec3((rand() % 90 - 45), 0.0f,0.f),		// Angle
+				_vec3(3.5f, 25.5f, 3.5f),					// Scale
+				_vec3((rand() % 120 - 60), 0.0f, 0.f),		// Angle
 				Pos,			// Pos
 				FRAME(1, 1, 1.0f));			// Sprite Image Frame
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Lighting", pGameObj), E_FAIL);

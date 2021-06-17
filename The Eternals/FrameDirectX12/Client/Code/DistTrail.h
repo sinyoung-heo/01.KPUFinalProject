@@ -26,7 +26,7 @@ public:
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 
-
+	void			Set_SizeOffset(float Size) { m_fOffSet = Size; }
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
@@ -60,6 +60,8 @@ private:
 	float m_fDeltatime3 = 0.f;
 	float m_fPatternMapDeltatime = 0.f;
 	float m_fAlpha = 1.f;
+
+	float m_fOffSet = 0.f;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

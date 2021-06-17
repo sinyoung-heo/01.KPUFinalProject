@@ -53,10 +53,11 @@ _int CDistTrail::Update_GameObject(const _float & fTimeDelta)
 		return DEAD_OBJ;
 
 	m_fDeltatime += fTimeDelta;
-	if (m_fDeltatime > 0.2f)
+	m_fDeltatime2 += fTimeDelta * 0.15f;
+	if (m_fDeltatime > 0.15f)
 	{
-		m_pTransCom->m_vScale += _vec3(0.15f) * fTimeDelta;
-		if (m_fDeltatime > 3.f)
+		m_pTransCom->m_vScale += (_vec3(0.3f-m_fOffSet*0.001f)- _vec3(m_fDeltatime2)) * fTimeDelta;
+		if (m_fDeltatime > 2.f)
 			m_bIsDead = true;
 	}
 	
