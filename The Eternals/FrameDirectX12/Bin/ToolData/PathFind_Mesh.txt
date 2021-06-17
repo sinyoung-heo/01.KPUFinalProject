@@ -46,7 +46,6 @@ BumpTerrainMesh01|BumpTerrainMesh01.X|..\..\Bin\Resource\ResourceStage\StaticMes
 BumpWaterMesh00|BumpWaterMesh00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpWaterMesh00\
 DistTrail|DistTrail.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\DistTrail\
 PublicPlane00|PublicPlane00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicPlane00\
-PublicTesselPlane00|PublicTesselPlane00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicTesselPlane00\
 IceStorm0|IceStorm0.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\IceStorm0\
 IceStorm1|IceStorm1.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\IceStorm1\
 publicSphere|publicSphere.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSphere\

@@ -1714,10 +1714,8 @@ void process_leave_party(const int& id)
 	{
 		if (p != id)
 		{
-			// 새로운 멤버 정보 -> 기존 구성원
+			// 탈퇴 멤버 정보 -> 기존 구성원
 			send_leave_party(p, id);
-			// 기존 구성원 정보 -> 새로운 멤버
-			send_leave_party(id, p);
 		}	
 	}
 
