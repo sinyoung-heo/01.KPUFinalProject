@@ -1731,13 +1731,13 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 			Pos.y += 2.f;
 
 
-			pGameObj = CLightingParticle::Create(m_pGraphicDevice, m_pCommandList,
-				L"Lighting0",						// TextureTag
-				_vec3(3.5f, 25.5f, 3.5f),					// Scale
-				_vec3((rand() % 120 - 60), 0.0f, 0.f),		// Angle
-				Pos,			// Pos
-				FRAME(1, 1, 1.0f));			// Sprite Image Frame
-			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Lighting", pGameObj), E_FAIL);
+			//pGameObj = CLightingParticle::Create(m_pGraphicDevice, m_pCommandList,
+			//	L"Lighting0",						// TextureTag
+			//	_vec3(3.5f, 25.5f, 3.5f),					// Scale
+			//	_vec3((rand() % 120 - 60), 0.0f, 0.f),		// Angle
+			//	Pos,			// Pos
+			//	FRAME(1, 1, 1.0f));			// Sprite Image Frame
+			//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Lighting", pGameObj), E_FAIL);
 
 			
 		}

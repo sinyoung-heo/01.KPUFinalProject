@@ -32,10 +32,6 @@ public:
 	void	Process_recv_reassembly(size_t iosize);
 	void	Process_packet();
 
-	void Enter_PartyMember(sc_packet_update_party_new_member* packet, bool& retflag);
-
-	void Suggest_Party(sc_packet_suggest_party* packet);
-
 	void	Change_Animation(sc_packet_animationIndex* packet, bool& retflag);
 
 public:
@@ -52,6 +48,7 @@ public:
 	void	send_respond_party(const bool& result, const int& suggester_id);	// 파티 초대에 대한 응답
 	void	send_join_party(const int& others_id);								// 파티 참여 신청
 	void	send_decide_party(const bool& result, const int& joinner_id);		// 파티 참여 신청에 대한 응답
+	void	send_leave_party(const int& myId);
 	void	send_logout();
 
 public:
@@ -66,6 +63,10 @@ public:
 	void	ChangeStat_User(sc_packet_stat_change* packet);
 	void	Change_Stance_Others(sc_packet_stance_change* packet, int& retflag);
 	void	Leave_Object(sc_packet_leave* packet, int& retflag);
+	void	Join_Party(sc_packet_suggest_party* packet);
+	void	Leave_Party(sc_packet_suggest_party* packet, bool& retflag);
+	void	Enter_PartyMember(sc_packet_update_party_new_member* packet, bool& retflag);
+	void	Suggest_Party(sc_packet_suggest_party* packet);
 
 	void	Enter_Monster(sc_packet_monster_enter* packet);
 	void	Move_Monster(sc_packet_move* packet);

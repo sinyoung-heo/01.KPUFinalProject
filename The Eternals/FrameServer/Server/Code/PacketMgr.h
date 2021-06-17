@@ -17,6 +17,7 @@ void send_suggest_party(int to_client, int id);
 void send_partyMemberInfo(int to_client, int id, const int& hp, const int& maxHp, const int& mp, const int& maxMp, const char* ID, const char& job);
 void send_reject_party(int to_client, int id);
 void send_join_party(int to_client, int id);
+void send_leave_party(int to_client, int id);
 
 void process_move(int id, const _vec3& _vDir, const _vec3& _vPos);					// 움직임 처리 함수
 void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir);
@@ -29,6 +30,7 @@ void process_suggest_party(const int& suggester_id, const int& others_id);
 void process_respond_party(const bool& result, const int& suggester_id, const int& responder_id);
 void process_join_party(const int& joinner_id, const int& others_id);
 void process_decide_party(const bool& result, const int& joinner_id, const int& responder_id);
+void process_leave_party(const int& id);
 
 /* 패킷 관리 및 처리 함수 */
 void process_packet(int id);													// 패킷 처리 함수 (모든 컨텐츠 처리)

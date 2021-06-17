@@ -783,6 +783,16 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 		}
 	}
 
+	/* ÆÄÆ¼ Å»Åð */
+	if (Engine::KEY_DOWN(DIK_L) && m_bIsPartyState)
+	{
+		CPacketMgr::Get_Instance()->send_leave_party(m_iSNum);
+		m_bIsPartyState = false;
+		m_usPartyList.clear();
+		m_bIsPartyRequest = false;
+		m_bIsPartyJoinRequest = false;
+		m_iSuggesterNumber = -1;
+	}
 }
 
 void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
