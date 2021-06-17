@@ -372,6 +372,22 @@ void CPacketMgr::Process_packet()
 	}
 	break;
 
+	case SC_PACKET_LEAVE_PARTY:
+	{
+		sc_packet_suggest_party* packet = reinterpret_cast<sc_packet_suggest_party*>(m_packet_start);
+
+		Engine::CGameObject* pOthers = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", packet->id);
+		if (pOthers == nullptr) return;
+		pOthers->Set_PartyState(false);
+
+		Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+		pThisPlayer->Get_PartyList().erase(packet->id);
+
+		// 파티원 정보 (hp,maxhp,mp,maxmp,ID,Job)
+		cout << "파티원이 퇴장하였습니다. Server Num: " << packet->id << endl;
+	}
+	break;
+
 	default:
 #ifdef ERR_CHECK
 		printf("Unknown PACKET type [%d]\n", m_packet_start[1]);
@@ -1183,6 +1199,17 @@ void CPacketMgr::send_decide_party(const bool& result, const int& joinner_id)
 
 	p.result		= result;
 	p.suggester_id	= joinner_id;
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_leave_party(const int& myId)
+{
+	cs_packet_suggest_party p;
+
+	p.size = sizeof(p);
+	p.type = CS_LEAVE_PARTY;
+	p.member_id = myId;
 
 	send_packet(&p);
 }

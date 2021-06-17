@@ -239,6 +239,13 @@ void process_packet(int id)
 	}
 	break;
 
+	case CS_LEAVE_PARTY:
+	{
+		cs_packet_suggest_party* p = reinterpret_cast<cs_packet_suggest_party*>(pPlayer->m_packet_start);
+		process_leave_party(id);
+	}
+	break;
+
 	}
 }
 /* ========================패킷 재조립========================*/
@@ -601,8 +608,7 @@ void send_reject_party(int to_client, int id)
 	p.type = SC_PACKET_REJECT_PARTY;
 	p.id = id;
 
-	p.message = L"파티 참여를 거절하였습니다.";
-	//strncpy_s(p.message, "파티제안을 거절하였습니다.", strlen("파티제안을 거절하였습니다."));
+	lstrcpyn(p.message, L"파티 참여를 거절하였습니다.", lstrlen(L"파티 참여를 거절하였습니다."));
 }
 
 void send_join_party(int to_client, int id)
@@ -611,6 +617,17 @@ void send_join_party(int to_client, int id)
 
 	p.size = sizeof(p);
 	p.type = SC_PACKET_JOIN_PARTY;
+	p.id = id;
+
+	send_packet(to_client, &p);
+}
+
+void send_leave_party(int to_client, int id)
+{
+	sc_packet_suggest_party p;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_LEAVE_PARTY;
 	p.id = id;
 
 	send_packet(to_client, &p);
@@ -1683,6 +1700,30 @@ void process_decide_party(const bool& result, const int& joinner_id, const int& 
 
 		cout << "파티원 업데이트 및 완료" << endl;
 	}
+}
+
+void process_leave_party(const int& id)
+{
+	CPlayer* pUser = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pUser == nullptr) return;
+	if (!pUser->m_bIsConnect) return;
+	if (!pUser->m_bIsPartyState) return;
+	
+	// 파티 구성원들에게 파티 탈퇴를 알림
+	for (auto& p : *CObjMgr::GetInstance()->Get_PARTYLIST(pUser->m_iPartyNumber))
+	{
+		if (p != id)
+		{
+			// 새로운 멤버 정보 -> 기존 구성원
+			send_leave_party(p, id);
+			// 기존 구성원 정보 -> 새로운 멤버
+			send_leave_party(id, p);
+		}	
+	}
+
+	// 해당 유저의 파티 정보 초기화
+	CObjMgr::GetInstance()->Leave_Party(&pUser->m_iPartyNumber, id);
+	pUser->m_bIsPartyState = false;
 }
 
 /*===========================================FUNC====================================================*/

@@ -51,6 +51,7 @@ constexpr char SC_PACKET_SUGGEST_PARTY		= 22;
 constexpr char SC_PACKET_ENTER_PARTY_MEMBER = 23;
 constexpr char SC_PACKET_REJECT_PARTY		= 24;
 constexpr char SC_PACKET_JOIN_PARTY			= 25;
+constexpr char SC_PACKET_LEAVE_PARTY		= 26;
 
 constexpr char CS_LOGIN					= 0;
 constexpr char CS_MOVE					= 1;
@@ -63,10 +64,11 @@ constexpr char CS_COLLIDE				= 7;   // Player가 다른 Object에게 충돌당했을 경우
 constexpr char CS_COLLIDE_MONSTER		= 8;   // Player가 Monster 공격
 constexpr char CS_STANCE_CHANGE         = 9;
 constexpr char CS_STAGE_CHANGE			= 10;
-constexpr char CS_SUGGEST_PARTY         = 11;
-constexpr char CS_RESPOND_PARTY			= 12;
-constexpr char CS_JOIN_PARTY			= 13;
-constexpr char CS_DECIDE_PARTY			= 14;
+constexpr char CS_SUGGEST_PARTY         = 11;	// 파티 초대
+constexpr char CS_RESPOND_PARTY			= 12;	// 파티 초대에 대한 응답
+constexpr char CS_JOIN_PARTY			= 13;	// 파티 가입 신청
+constexpr char CS_DECIDE_PARTY			= 14;	// 파티 가입 신청에 대한 응답
+constexpr char CS_LEAVE_PARTY			= 15;	// 파티 탈퇴
 
 // Stage ID
 constexpr char STAGE_VELIKA				= 0;
@@ -224,12 +226,11 @@ struct sc_packet_stat_change
 
 struct sc_packet_chat 
 {
-	unsigned char	size;
+	unsigned char   size;
 	char			type;
-	int				id;						// teller
+	int				id;                  // teller
 
-	//char			message[MAX_STR_LEN];
-	wstring			message;
+	wchar_t         message[MAX_STR_LEN];
 };
 
 struct sc_packet_login_fail 

@@ -920,7 +920,7 @@ HRESULT CObjMgr::Delete_OBJLIST(wstring wstrObjTag)
 
 HRESULT CObjMgr::Create_Party(int* iPartyNumber, const int& server_num)
 {
-	if (*iPartyNumber == -1)
+	if (*iPartyNumber == INIT_PARTY_NUMBER)
 	{
 		int party_num = m_mapPartyList.size();
 
@@ -945,7 +945,7 @@ HRESULT CObjMgr::Add_PartyMember(const int& iPartyNumber, int* responderPartyNum
 	/* map에서 찾고자 하는 PARTYLIST를 key 값을 통해 찾기 */
 	auto& iter_find = m_mapPartyList.find(iPartyNumber);
 
-	/* 해당 OBJLIST가 없다면, FAIL */
+	/* 해당 PARTYLIST가 없다면, FAIL */
 	if (iter_find == m_mapPartyList.end())
 		return E_FAIL;
 
@@ -953,6 +953,49 @@ HRESULT CObjMgr::Add_PartyMember(const int& iPartyNumber, int* responderPartyNum
 	*responderPartyNum = iPartyNumber;
 
 	return S_OK;
+}
+
+HRESULT CObjMgr::Leave_Party(int* iPartyNumber, const int& server_num)
+{
+	/* map에서 찾고자 하는 PARTYLIST를 key 값을 통해 찾기 */
+	auto& iter_find = m_mapPartyList.find(*iPartyNumber);
+
+	/* 해당 PARTYLIST가 없다면, FAIL */
+	if (iter_find == m_mapPartyList.end())
+		return E_FAIL;
+
+	/* 해당 파티에서 해당 유저 삭제 */
+	m_mapPartyList[*iPartyNumber].erase(server_num);
+
+	/* 해당 파티 잔여 인원이 0명이라면 파티 소멸 */
+	if (m_mapPartyList[*iPartyNumber].size() < 1)
+	{
+		m_mapPartyList.erase(*iPartyNumber);
+	}
+
+	Print_PartyInfo(*iPartyNumber);
+
+	*iPartyNumber = INIT_PARTY_NUMBER;
+
+	return S_OK;
+}
+
+void CObjMgr::Print_PartyInfo(const int& iPartyNumber)
+{
+	/* map에서 찾고자 하는 PARTYLIST를 key 값을 통해 찾기 */
+	auto& iter_find = m_mapPartyList.find(iPartyNumber);
+
+	/* 해당 OBJLIST가 없다면, FAIL */
+	if (iter_find == m_mapPartyList.end())
+		return;
+
+	cout << iPartyNumber << "번 파티 멤버 수: " << m_mapPartyList[iPartyNumber].size();
+	cout << "파티 멤버 서버 넘버: ";
+	for (auto& p : m_mapPartyList[iPartyNumber])
+	{
+		cout << p << ", ";
+	}
+	cout << endl;
 }
 
 void CObjMgr::Release()

@@ -32,6 +32,7 @@ constexpr int	INCREASE_EXP				= 50;
 constexpr int	INCREASE_HP					= 50;
 constexpr int	INCREASE_MP					= 20;
 constexpr float	NUCKBACK_DIST				= 6.f;
+constexpr int	INIT_PARTY_NUMBER			= -1;
 /*____________________________________________________________________
 Monster Attack & Chase Dist
 ______________________________________________________________________*/

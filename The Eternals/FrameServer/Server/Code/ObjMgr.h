@@ -42,6 +42,8 @@ public:
 
 	HRESULT		Create_Party(int* iPartyNumber, const int& server_num);
 	HRESULT		Add_PartyMember(const int& iPartyNumber, int* responderPartyNum, const int& server_num);
+	HRESULT		Leave_Party(int* iPartyNumber, const int& server_num);
+	void		Print_PartyInfo(const int& iPartyNumber);
 
 public:
 	void		Release();
