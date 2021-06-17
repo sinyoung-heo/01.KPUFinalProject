@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "PartySystemMgr.h"
-#include "PartySuggestCanvas.h"
 
 IMPLEMENT_SINGLETON(CPartySystemMgr)
 

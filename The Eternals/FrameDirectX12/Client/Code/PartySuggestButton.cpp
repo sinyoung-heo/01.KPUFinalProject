@@ -84,6 +84,7 @@ _int CPartySuggestButton::LateUpdate_GameObject(const _float& fTimeDelta)
 		m_pCanvas->Set_IsActive(false);
 		m_pCanvas->Set_IsChildActive(false);
 
+		Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
 		Engine::CGameObject* pSelectPlayer = m_pPartySystemMgr->Get_SelectPlayer();
 		if (nullptr != pSelectPlayer)
 		{
@@ -103,7 +104,7 @@ _int CPartySuggestButton::LateUpdate_GameObject(const _float& fTimeDelta)
 			else
 			{
 				// 현재 파티에 소속되어 있지 않아야 되며, 상대방은 파티에 소속되어 있을 경우만 가능
-				if (pSelectPlayer->Get_PartyState() == true && m_bIsPartyState == false)
+				if (pSelectPlayer->Get_PartyState() == true && pThisPlayer->Get_PartyState() == false)
 				{
 					cout << pSelectPlayer->Get_ServerNumber() << "님의 파티에 가입 신청" << endl;
 					CPacketMgr::Get_Instance()->send_join_party(pSelectPlayer->Get_ServerNumber());

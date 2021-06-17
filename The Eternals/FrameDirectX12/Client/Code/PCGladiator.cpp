@@ -157,45 +157,47 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	Is_ChangeWeapon();
 	SetUp_StageID();
 
-	/* 파티 제안 요청을 받았을 경우 */
-	if (m_bIsPartyRequest)
-	{
-		cout << "파티를 제안 받았습니다. 수락(Y) or 거절(N)을 눌러주세요." << endl;
-		// 수락
-		if (Engine::KEY_DOWN(DIK_Y))
-		{
-			CPacketMgr::Get_Instance()->send_respond_party(true, m_iSuggesterNumber);
-			m_bIsPartyRequest = false;
-			m_iSuggesterNumber = -1;
-		}
-		// 거절
-		else if (Engine::KEY_DOWN(DIK_N))
-		{
-			CPacketMgr::Get_Instance()->send_respond_party(false, m_iSuggesterNumber);
-			m_bIsPartyRequest = false;
-			m_iSuggesterNumber = -1;
-		}		
-	}
+	///* 파티 제안 요청을 받았을 경우 */
+	//// 파티초대
+	//if (m_bIsPartyRequest)
+	//{
+	//	cout << "파티를 제안 받았습니다. 수락(Y) or 거절(N)을 눌러주세요." << endl;
+	//	// 수락
+	//	if (Engine::KEY_DOWN(DIK_Y))
+	//	{
+	//		CPacketMgr::Get_Instance()->send_respond_party(true, m_iSuggesterNumber);
+	//		m_bIsPartyRequest = false;
+	//		m_iSuggesterNumber = -1;
+	//	}
+	//	// 거절
+	//	else if (Engine::KEY_DOWN(DIK_N))
+	//	{
+	//		CPacketMgr::Get_Instance()->send_respond_party(false, m_iSuggesterNumber);
+	//		m_bIsPartyRequest = false;
+	//		m_iSuggesterNumber = -1;
+	//	}		
+	//}
 
-	/* 파티 가입 신청을 받았을 경우 */
-	if (m_bIsPartyJoinRequest)
-	{
-		cout << "파티 가입 신청을 받았습니다. 수락(Y) or 거절(N)을 눌러주세요." << endl;
-		// 수락
-		if (Engine::KEY_DOWN(DIK_Y))
-		{
-			CPacketMgr::Get_Instance()->send_decide_party(true, m_iSuggesterNumber);
-			m_bIsPartyJoinRequest = false;
-			m_iSuggesterNumber = -1;
-		}
-		// 거절
-		else if (Engine::KEY_DOWN(DIK_N))
-		{
-			CPacketMgr::Get_Instance()->send_decide_party(false, m_iSuggesterNumber);
-			m_bIsPartyJoinRequest = false;
-			m_iSuggesterNumber = -1;
-		}
-	}
+	///* 파티 가입 신청을 받았을 경우 */
+	//// 파티신청
+	//if (m_bIsPartyJoinRequest)
+	//{
+	//	cout << "파티 가입 신청을 받았습니다. 수락(Y) or 거절(N)을 눌러주세요." << endl;
+	//	// 수락
+	//	if (Engine::KEY_DOWN(DIK_Y))
+	//	{
+	//		CPacketMgr::Get_Instance()->send_decide_party(true, m_iSuggesterNumber);
+	//		m_bIsPartyJoinRequest = false;
+	//		m_iSuggesterNumber = -1;
+	//	}
+	//	// 거절
+	//	else if (Engine::KEY_DOWN(DIK_N))
+	//	{
+	//		CPacketMgr::Get_Instance()->send_decide_party(false, m_iSuggesterNumber);
+	//		m_bIsPartyJoinRequest = false;
+	//		m_iSuggesterNumber = -1;
+	//	}
+	//}
 
 	/*__________________________________________________________________________________________________________
 	[ Key Input ]

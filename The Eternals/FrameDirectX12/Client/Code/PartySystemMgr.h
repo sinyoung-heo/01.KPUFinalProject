@@ -1,14 +1,13 @@
 #pragma once
 #include "Include.h"
 #include "Base.h"
+#include "PartySuggestCanvas.h"
+#include "PartySuggestResponseCanvas.h"
 
 namespace Engine
 {
 	class CGameObject;
 }
-
-class CPartySuggestCanvas;
-class CPartySuggestResponseCanvas;
 
 class CPartySystemMgr : public Engine::CBase
 {

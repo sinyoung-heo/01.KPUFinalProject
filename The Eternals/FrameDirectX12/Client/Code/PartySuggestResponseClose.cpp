@@ -40,7 +40,7 @@ HRESULT CPartySuggestResponseClose::Ready_GameObject(wstring wstrRootObjectTag,
 	m_mapMainMenuState[L"MouseOn"]      = UI_CHILD_STATE();
 	m_mapMainMenuState[L"MouseClicked"] = UI_CHILD_STATE();
 
-	m_bIsActive = true;
+	m_bIsActive = false;
 
 	return S_OK;
 }
@@ -73,6 +73,9 @@ _int CPartySuggestResponseClose::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	CGameUIChild::LateUpdate_GameObject(fTimeDelta);
 
+	if (nullptr != m_pCanvas)
+		m_ePartyRequestState = m_pCanvas->Get_PartyRequestState();
+
 	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect) &&
 		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
 		m_bIsKeyPressing)
@@ -93,7 +96,6 @@ _int CPartySuggestResponseClose::LateUpdate_GameObject(const _float& fTimeDelta)
 			m_pCanvas->Set_IsActive(false);
 			m_pCanvas->Set_IsChildActive(false);
 		}
-		// static_cast<CMainMenuLogout*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"OptionLogoutNormal"))->Set_IsActiveCanvas(false);
 	}
 
 	m_bIsKeyPressing = false;

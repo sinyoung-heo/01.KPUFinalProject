@@ -38,6 +38,9 @@ public:
 	const _bool&			Get_IsAlphaObject()		{ return m_bisAlphaObject; }
 	unordered_set<int>&		Get_PartyList()			{ return m_usPartyList; }
 	const _bool&			Get_PartyState()		{ return m_bIsPartyState; }
+	const _int&				Get_PartySuggestSNum()	{ return m_iSuggesterNumber;}
+	const _bool&			Get_RequestParty()		{ return m_bIsPartyRequest; }
+	const _bool&			Get_PartyJoinRequest()	{ return m_bIsPartyJoinRequest; }
 	const high_resolution_clock::time_point& Get_LastMoveTime() { return m_last_move_time; }
 	// Set
 	void	Set_CurrentStageID(const char& chStageID)				{ m_chCurStageID = chStageID; }
@@ -66,11 +69,14 @@ public:
 	void	Set_IsUsingInstance(const _bool& bIsUsing)				{ m_bIsUsingInstance = bIsUsing; }
 	void	Set_WeaponType(const char& chWeaponType)				{ m_chCurWeaponType = chWeaponType; }
 	void	Request_Party(const int& suggester_num)					{ m_bIsPartyRequest = true; m_iSuggesterNumber = suggester_num; }
+	void	Set_RequestParty(const _bool& bIsRequest)				{ m_bIsPartyRequest = bIsRequest; }
 	void	JoinRequest_Party(const int& joinner_num)				{ m_bIsPartyJoinRequest = true; m_iSuggesterNumber = joinner_num;}
+	void	Set_JoinRequest(const _bool& bIsRequest)				{ m_bIsPartyJoinRequest = bIsRequest; }
 	void	Set_PartyState(const _bool& st)							{ m_bIsPartyState = st; }
+	void	Set_PartySuggestSNum(const _int& iNum)					{ m_iSuggesterNumber = iNum; }
 	void	Ready_AngleInterpolationValue(const _float& fEndAngle);
 	void	Ready_PositionInterpolationValue(const _vec3& vEndPosition, float fSpd = 3.f);
-	
+
 	virtual void Set_AnimationIdx(const _uint& iIdx) { }
 	virtual void Set_StanceChange(const _uint& uiAniIdx, const _bool& bIsStanceAttack) { }
 	virtual void Set_OthersStance(const _bool& bIsStanceAttack) { }

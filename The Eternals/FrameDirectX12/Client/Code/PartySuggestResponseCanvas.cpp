@@ -29,7 +29,7 @@ HRESULT CPartySuggestResponseCanvas::Ready_GameObject(wstring wstrObjectTag,
 															  iUIDepth,
 															  true, L"Font_BinggraeMelona24"), E_FAIL);
 
-	m_bIsActive = true;
+	m_bIsActive = false;
 
 	m_pFont->Set_Color(D2D1::ColorF::Cornsilk);
 	m_pFont->Set_Text(L"파티가입을 수락하시겠습니까?");

@@ -34,11 +34,11 @@ HRESULT CPartySuggestResponseChoice::Ready_GameObject(wstring wstrRootObjectTag,
 															   iUIDepth,
 															   true, L"Font_BinggraeMelona24"), E_FAIL);
 
-	m_bIsActive = true;
+	m_bIsActive = false;
 
 	m_pFont->Set_Color(D2D1::ColorF::Cornsilk);
 
-	if (L"SystemButtonYes" == wstrObjectTag)
+	if (L"SystemButtonYesPartySuggestResponse" == wstrObjectTag)
 		m_pFont->Set_Text(L"YES");
 	else
 		m_pFont->Set_Text(L"NO");
@@ -75,44 +75,69 @@ _int CPartySuggestResponseChoice::LateUpdate_GameObject(const _float& fTimeDelta
 
 	CGameUIChild::LateUpdate_GameObject(fTimeDelta);
 
+	if (nullptr != m_pCanvas)
+		m_ePartyRequestState = m_pCanvas->Get_PartyRequestState();
+
 	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect) &&
-		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
+		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && g_bIsActive &&
 		m_bIsKeyPressing)
 	{
-		if (L"SystemButtonYes" == m_wstrObjectTag)
+		Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+		_int iSuggesterNumber = pThisPlayer->Get_PartySuggestSNum();
+		cout << iSuggesterNumber << endl;
+
+		if (-1 != iSuggesterNumber)
 		{
-			// 파티초대 - 수락
-			if (PARTY_REQUEST_STATE::REQUEST_PARTY_INVITE == m_ePartyRequestState)
+			if (L"SystemButtonYesPartySuggestResponse" == m_wstrObjectTag)
 			{
-
+				// 파티초대 - 수락
+				if (PARTY_REQUEST_STATE::REQUEST_PARTY_INVITE == m_ePartyRequestState &&
+					pThisPlayer->Get_RequestParty())
+				{
+					CPacketMgr::Get_Instance()->send_respond_party(true, iSuggesterNumber);
+					pThisPlayer->Set_RequestParty(false);
+					pThisPlayer->Set_PartySuggestSNum(-1);
+					cout << "파티초대 - 수락" << endl;
+				}
+				// 파티가입 - 수락
+				else if (PARTY_REQUEST_STATE::REQUEST_PARTY_JOIN == m_ePartyRequestState &&
+						 pThisPlayer->Get_PartyJoinRequest())
+				{
+					CPacketMgr::Get_Instance()->send_decide_party(true, iSuggesterNumber);
+					pThisPlayer->Set_JoinRequest(false);
+					pThisPlayer->Set_PartySuggestSNum(-1);
+					cout << "파티가입 - 수락" << endl;
+				}
 			}
-			// 파티가입 - 수락
-			else if (PARTY_REQUEST_STATE::REQUEST_PARTY_JOIN == m_ePartyRequestState)
+			else
 			{
-
+				// 파티초대 - 거절
+				if (PARTY_REQUEST_STATE::REQUEST_PARTY_INVITE == m_ePartyRequestState &&
+					pThisPlayer->Get_RequestParty())
+				{
+					CPacketMgr::Get_Instance()->send_respond_party(false, iSuggesterNumber);
+					pThisPlayer->Set_RequestParty(false);
+					pThisPlayer->Set_PartySuggestSNum(-1);
+					cout << "파티초대 - 거절" << endl;
+				}
+				// 파티가입 - 거절
+				else if (PARTY_REQUEST_STATE::REQUEST_PARTY_JOIN == m_ePartyRequestState &&
+						 pThisPlayer->Get_PartyJoinRequest())
+				{
+					CPacketMgr::Get_Instance()->send_decide_party(false, iSuggesterNumber);
+					pThisPlayer->Set_JoinRequest(false);
+					pThisPlayer->Set_PartySuggestSNum(-1);
+					cout << "파티가입 - 거절" << endl;
+				}
 			}
 		}
-		else
-		{
-			// 파티초대 - 거절
-			if (PARTY_REQUEST_STATE::REQUEST_PARTY_INVITE == m_ePartyRequestState)
-			{
 
-			}
-			// 파티가입 - 거절
-			else if (PARTY_REQUEST_STATE::REQUEST_PARTY_JOIN == m_ePartyRequestState)
-			{
-
-			}
-
-		}
 
 		if (nullptr != m_pCanvas)
 		{
 			m_pCanvas->Set_IsActive(false);
 			m_pCanvas->Set_IsChildActive(false);
 		}
-		// static_cast<CMainMenuLogout*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"OptionLogoutNormal"))->Set_IsActiveCanvas(false);
 	}
 
 	m_bIsKeyPressing = false;
@@ -152,7 +177,7 @@ void CPartySuggestResponseChoice::SetUp_FontPosition(const _float& fTimeDelta)
 	if (nullptr != m_pFont)
 	{
 		_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
-		if (L"SystemButtonYes" == m_wstrObjectTag)
+		if (L"SystemButtonYesPartySuggestResponse" == m_wstrObjectTag)
 			vPos.x -= 22.0f;
 		else
 			vPos.x -= 15.0f;
