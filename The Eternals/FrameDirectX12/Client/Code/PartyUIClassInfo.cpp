@@ -7,8 +7,17 @@ CPartyUIClassInfo::CPartyUIClassInfo(ID3D12Device* pGraphicDevice, ID3D12Graphic
 {
 }
 
-void CPartyUIClassInfo::Set_CurrentClassTag(wstring wstrTag)
+void CPartyUIClassInfo::Set_CurrentClassTag(const char& cJob)
 {
+	wstring wstrTag = L"";
+
+	if (cJob == PC_GLADIATOR)
+		wstrTag = L"Gladiator";
+	else if (cJob == PC_ARCHER)
+		wstrTag = L"Archer";
+	else
+		wstrTag = L"Priest";
+
 	auto iter_find = m_mapClassState.find(wstrTag);
 
 	if (iter_find != m_mapClassState.end())
@@ -53,7 +62,7 @@ HRESULT CPartyUIClassInfo::Ready_GameObject(wstring wstrRootObjectTag,
 	m_mapClassState[L"Archer"] = UI_CHILD_STATE();
 	m_mapClassState[L"Priest"] = UI_CHILD_STATE();
 
-	m_bIsActive = true;
+	m_bIsActive = false;
 
 	return S_OK;
 }
