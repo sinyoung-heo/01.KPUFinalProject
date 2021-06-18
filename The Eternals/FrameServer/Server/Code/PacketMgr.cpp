@@ -184,7 +184,10 @@ void process_packet(int id)
 	case CS_CHAT:
 		break;
 	case CS_LOGOUT:
-		break;
+	{
+		//disconnect_client(id)
+	}
+	break;
 
 	case CS_COLLIDE: 
 	{
@@ -1719,25 +1722,6 @@ void process_leave_party(const int& id)
 			// 탈퇴 멤버 정보 -> 기존 구성원
 			send_leave_party(p, id);
 		}	
-	}
-
-	/* 해당 플레이어의 시야 목록 내 유저들에게 탈퇴 메시지 전송 */
-	pUser->v_lock.lock();
-	unordered_set<int> old_viewlist = pUser->view_list;
-	pUser->v_lock.unlock();
-
-	for (int server_num : old_viewlist)
-	{
-		if (id == server_num) continue;
-		if (true == CObjMgr::GetInstance()->Is_Player(server_num))
-		{
-			CPlayer* pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", server_num));
-			if (pOther == nullptr) continue;
-			if (!pOther->m_bIsConnect) continue;
-
-			// 탈퇴 소식 -> 시야 내 유저들에게 전송
-			send_leave_party(server_num, id);
-		}
 	}
 
 	// 해당 유저의 파티 정보 초기화
