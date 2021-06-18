@@ -429,6 +429,8 @@ struct cs_packet_logout
 	unsigned char	size;
 	char			type;
 
+	char			stageID;
+	char			weaponType;
 	int				level;
 	int				hp, maxHp;
 	int				mp, maxMp;

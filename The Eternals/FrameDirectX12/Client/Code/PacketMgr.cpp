@@ -408,13 +408,8 @@ void CPacketMgr::Join_Party(sc_packet_suggest_party* packet)
 void CPacketMgr::Leave_Party(sc_packet_suggest_party* packet, bool& retflag)
 {
 	retflag = true;
-	//Engine::CGameObject* pOthers = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", packet->id);
-	//if (pOthers == nullptr) return;
-	//pOthers->Set_PartyState(false);
-
 	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
 	pThisPlayer->Leave_PartyMember(packet->id);
-	//pThisPlayer->Get_PartyList().erase(packet->id);
 
 	// 파티원 정보 
 	cout << "파티원이 퇴장하였습니다. 파티원 목록 출력 " << endl;
@@ -439,15 +434,9 @@ void CPacketMgr::Leave_Party(sc_packet_suggest_party* packet, bool& retflag)
 void CPacketMgr::Enter_PartyMember(sc_packet_update_party_new_member* packet, bool& retflag)
 {
 	retflag = true;
-	/*Engine::CGameObject* pOthers = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", packet->id);
-
-	if (pOthers == nullptr) return;
-	pOthers->Set_PartyState(true);*/
-
 	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
 	pThisPlayer->Set_PartyState(true);	
 	pThisPlayer->Enter_PartyMember(packet->id, Engine::PARTYMEMBER(packet->name, packet->o_type, packet->hp, packet->maxHp, packet->mp, packet->maxMp));
-	//pThisPlayer->Get_PartyList().insert(packet->id);
 
 	// 파티원 정보 (hp,maxhp,mp,maxmp,ID,Job)
 	cout << "파티원이 입장하였습니다. 파티원 목록 출력 "<< endl;
@@ -1281,21 +1270,24 @@ void CPacketMgr::send_logout()
 
 	cs_packet_logout p;
 
-	p.size		= sizeof(p);
-	p.type		= CS_LOGOUT;
+	p.size			= sizeof(p);
+	p.type			= CS_LOGOUT;
 
-	p.posX		= pThisPlayer->Get_Transform()->m_vPos.x;
-	p.posY		= pThisPlayer->Get_Transform()->m_vPos.y;
-	p.posZ		= pThisPlayer->Get_Transform()->m_vPos.z;
-	p.level		= pThisPlayer->Get_Info()->m_iLev;
-	p.hp		= pThisPlayer->Get_Info()->m_iHp;
-	p.maxHp		= pThisPlayer->Get_Info()->m_iMaxHp;
-	p.mp		= pThisPlayer->Get_Info()->m_iMp;
-	p.maxMp		= pThisPlayer->Get_Info()->m_iMaxMp;
-	p.exp		= pThisPlayer->Get_Info()->m_iExp;
-	p.maxExp	= pThisPlayer->Get_Info()->m_iMaxExp;
-	p.minAtt	= pThisPlayer->Get_Info()->m_iMinAttack;
-	p.maxAtt	= pThisPlayer->Get_Info()->m_iMaxAttack;
+	p.posX			= pThisPlayer->Get_Transform()->m_vPos.x;
+	p.posY			= pThisPlayer->Get_Transform()->m_vPos.y;
+	p.posZ			= pThisPlayer->Get_Transform()->m_vPos.z;
+	p.level			= pThisPlayer->Get_Info()->m_iLev;
+	p.hp			= pThisPlayer->Get_Info()->m_iHp;
+	p.maxHp			= pThisPlayer->Get_Info()->m_iMaxHp;
+	p.mp			= pThisPlayer->Get_Info()->m_iMp;
+	p.maxMp			= pThisPlayer->Get_Info()->m_iMaxMp;
+	p.exp			= pThisPlayer->Get_Info()->m_iExp;
+	p.maxExp		= pThisPlayer->Get_Info()->m_iMaxExp;
+	p.minAtt		= pThisPlayer->Get_Info()->m_iMinAttack;
+	p.maxAtt		= pThisPlayer->Get_Info()->m_iMaxAttack;
+	p.stageID		= pThisPlayer->Get_CurrentStageID();
+	p.weaponType	= pThisPlayer->Get_WeaponType();
+
 	
 	send_packet(&p);
 }

@@ -36,12 +36,13 @@ public:
 	const _uint&			Get_InstanceIdx()		{ return m_uiInstanceIdx; }
 	const _bool&			Get_IsUsingInstance()	{ return m_bIsUsingInstance; }
 	const _bool&			Get_IsAlphaObject()		{ return m_bisAlphaObject; }
-	//unordered_set<int>&		Get_PartyList()			{ return m_usPartyList; }
 	const map<int, PARTYMEMBER>& Get_PartyList()	{ return m_mapPartyList; }
 	const _bool&			Get_PartyState()		{ return m_bIsPartyState; }
 	const _int&				Get_PartySuggestSNum()	{ return m_iSuggesterNumber;}
 	const _bool&			Get_RequestParty()		{ return m_bIsPartyRequest; }
 	const _bool&			Get_PartyJoinRequest()	{ return m_bIsPartyJoinRequest; }
+	const char&				Get_CurrentStageID()	{ return m_chCurStageID; }
+	const char&				Get_WeaponType()		{ return m_chCurWeaponType; }
 	const high_resolution_clock::time_point& Get_LastMoveTime() { return m_last_move_time; }
 	// Set
 	void	Set_CurrentStageID(const char& chStageID)				{ m_chCurStageID = chStageID; }
@@ -111,12 +112,9 @@ public:
 	void			Clear_CollisionList();
 
 	// Setting Party List
-	/*void			Enter_PartyMember(int iSNum)	{ m_usPartyList.insert(iSNum); }
-	void			Leave_PartyMember(int iSNum)	{ m_usPartyList.erase(iSNum); }
-	void			Clear_PartyMember()				{ m_usPartyList.clear(); }*/
-	void			Enter_PartyMember(const int& iSNum, const PARTYMEMBER memberInfo) { m_mapPartyList[iSNum] = memberInfo; }
-	void			Leave_PartyMember(const int& iSNum) { m_mapPartyList.erase(iSNum); }
-	void			Clear_PartyMember() { m_mapPartyList.clear(); }
+	void			Enter_PartyMember(const int& iSNum, const PARTYMEMBER memberInfo)	{ m_mapPartyList[iSNum] = memberInfo; }
+	void			Leave_PartyMember(const int& iSNum)									{ m_mapPartyList.erase(iSNum); }
+	void			Clear_PartyMember()													{ m_mapPartyList.clear(); }
 
 protected:
 	HRESULT			Add_Component();
@@ -191,7 +189,6 @@ protected:
 	_tchar	m_szText[MAX_STR]	= L"";
 
 	// Party System
-	//unordered_set<int> m_usPartyList;
 	map<int, PARTYMEMBER> m_mapPartyList;
 	_bool	m_bIsPartyRequest		= false; // --> 파티 초대 (유/무)
 	_bool	m_bIsPartyJoinRequest	= false; // --> 파티 참여 신청 요청 (유/무)

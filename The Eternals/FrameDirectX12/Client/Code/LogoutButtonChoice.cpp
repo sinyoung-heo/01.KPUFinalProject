@@ -80,7 +80,10 @@ _int CLogoutButtonChoice::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		// Exit Game
 		if (L"SystemButtonYes" == m_wstrObjectTag)
+		{
 			g_bIsExitGame = true;
+			CPacketMgr::Get_Instance()->send_logout();
+		}
 		else
 			static_cast<CMainMenuLogout*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"OptionLogoutNormal"))->Set_IsActiveCanvas(false);
 	}
