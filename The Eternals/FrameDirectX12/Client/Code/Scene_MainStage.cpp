@@ -43,6 +43,7 @@
 #include "PartySuggestResponseClose.h"
 #include "PartyLeaveButton.h"
 #include "PartySystemMessageCanvas.h"
+#include "PartyInfoListCanvas.h"
 
 CScene_MainStage::CScene_MainStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -446,6 +447,7 @@ HRESULT CScene_MainStage::Ready_LayerUI(wstring wstrLayerTag)
 	Engine::FAILED_CHECK_RETURN(SetUp_UIPartySuggestResponseCanvas(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(SetUp_UIPartyLeaveCanvas(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(SetUp_UIPartySystemMessageCanvas(), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(SetUp_UIPartyListInfoCanvas(), E_FAIL);
 
 	return S_OK;
 }
@@ -1722,6 +1724,219 @@ HRESULT CScene_MainStage::SetUp_UIPartySystemMessageCanvas()
 		}
 	}
 
+	return S_OK;
+}
+
+HRESULT CScene_MainStage::SetUp_UIPartyListInfoCanvas()
+{
+	// MainMenuSettingCanvas
+	CPartyInfoListCanvas*	pCanvas         = nullptr;
+	CPartyUIClassInfo*		pClassGladiator = nullptr;
+	CPartyUIClassInfo*		pClassArcher    = nullptr;
+	CPartyUIClassInfo*		pClassPriest    = nullptr;
+
+	{
+		wifstream fin{ L"../../Bin/ToolData/2DUIPartyInfo.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		// ChildUI Data
+		vector<wstring> vecDataFilePath;
+		vector<wstring> vecObjectTag;
+		vector<_vec3>	vecPos;
+		vector<_vec3>	vecScale;
+		vector<_long>	vecUIDepth;
+		vector<_int>	vecIsSpriteAnimation;
+		vector<_float>	vecFrameSpeed;
+		vector<_vec3>	vecRectPosOffset;
+		vector<_vec3>	vecRectScale;
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			vecDataFilePath.resize(iChildUISize);
+			vecObjectTag.resize(iChildUISize);
+			vecPos.resize(iChildUISize);
+			vecScale.resize(iChildUISize);
+			vecUIDepth.resize(iChildUISize);
+			vecIsSpriteAnimation.resize(iChildUISize);
+			vecFrameSpeed.resize(iChildUISize);
+			vecRectPosOffset.resize(iChildUISize);
+			vecRectScale.resize(iChildUISize);
+
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				fin >> vecDataFilePath[i]			// DataFilePath
+					>> vecObjectTag[i]				// Object Tag
+					>> vecPos[i].x					// Pos X
+					>> vecPos[i].y					// Pos Y
+					>> vecScale[i].x				// Scale X
+					>> vecScale[i].y				// Scale Y
+					>> vecUIDepth[i]				// UI Depth
+					>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
+					>> vecFrameSpeed[i]				// Frame Speed
+					>> vecRectPosOffset[i].x		// RectPosOffset X
+					>> vecRectPosOffset[i].y		// RectPosOffset Y
+					>> vecRectScale[i].x			// RectScale X
+					>> vecRectScale[i].y;			// RectScale Y
+			}
+
+			if (fin.eof())
+				break;
+
+			// UIRoot 持失.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CPartyInfoListCanvas::Create(m_pGraphicDevice, m_pCommandList,
+												   wstrRootObjectTag,
+												   wstrDataFilePath,
+												   vPos,
+												   vScale,
+												   bIsSpriteAnimation,
+												   fFrameSpeed,
+												   vRectPosOffset,
+												   vRectScale,
+												   UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+
+			pCanvas = static_cast<CPartyInfoListCanvas*>(pRootUI);
+			CPartySystemMgr::Get_Instance()->Set_PartyListInfoCanvas(pCanvas);
+
+			// UIChild 持失.
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				Engine::CGameObject* pChildUI = nullptr;
+
+				if (L"PartyUIClassGladiator" == vecObjectTag[i] ||
+					L"PartyUIClassArcher" == vecObjectTag[i] ||
+					L"PartyUIClassPriest" == vecObjectTag[i])
+				{
+					pChildUI = CPartyUIClassInfo::Create(m_pGraphicDevice, m_pCommandList,
+														 wstrRootObjectTag,					// RootObjectTag
+														 vecObjectTag[i],					// ObjectTag
+														 vecDataFilePath[i],				// DataFilePath
+														 vecPos[i],							// Pos
+														 vecScale[i],						// Scane
+														 (_bool)vecIsSpriteAnimation[i],	// Is Animation
+														 vecFrameSpeed[i],					// FrameSpeed
+														 vecRectPosOffset[i],				// RectPosOffset
+														 vecRectScale[i],					// RectScaleOffset
+														 vecUIDepth[i]);					// UI Depth
+
+					if (L"PartyUIClassGladiator" == vecObjectTag[i])
+					{
+						pClassGladiator = static_cast<CPartyUIClassInfo*>(pChildUI);
+						pCanvas->Set_PartyUIClassInfoClass(pClassGladiator);
+					}
+					else if (L"PartyUIClassArcher" == vecObjectTag[i])
+						pClassArcher = static_cast<CPartyUIClassInfo*>(pChildUI);
+
+					else if (L"PartyUIClassPriest" == vecObjectTag[i])
+						pClassPriest = static_cast<CPartyUIClassInfo*>(pChildUI);
+
+				}
+				else if (L"PartyUIHpGauge" == vecObjectTag[i])
+				{
+					pChildUI = CPartyUIHpGauge::Create(m_pGraphicDevice, m_pCommandList,
+													   wstrRootObjectTag,				// RootObjectTag
+													   vecObjectTag[i],					// ObjectTag
+													   vecDataFilePath[i],				// DataFilePath
+													   vecPos[i],						// Pos
+													   vecScale[i],						// Scane
+													   (_bool)vecIsSpriteAnimation[i],	// Is Animation
+													   vecFrameSpeed[i],				// FrameSpeed
+													   vecRectPosOffset[i],				// RectPosOffset
+													   vecRectScale[i],					// RectScaleOffset
+													   vecUIDepth[i]);					// UI Depth
+					pCanvas->Set_PartyUIHpGaugeClass(static_cast<CPartyUIHpGauge*>(pChildUI));
+				}
+				else if (L"PartyUIMpGauge" == vecObjectTag[i])
+				{
+					pChildUI = CPartyUIMpGauge::Create(m_pGraphicDevice, m_pCommandList,
+													   wstrRootObjectTag,				// RootObjectTag
+													   vecObjectTag[i],					// ObjectTag
+													   vecDataFilePath[i],				// DataFilePath
+													   vecPos[i],						// Pos
+													   vecScale[i],						// Scane
+													   (_bool)vecIsSpriteAnimation[i],	// Is Animation
+													   vecFrameSpeed[i],				// FrameSpeed
+													   vecRectPosOffset[i],				// RectPosOffset
+													   vecRectScale[i],					// RectScaleOffset
+													   vecUIDepth[i]);					// UI Depth
+					pCanvas->Set_PartyUIMpGaugeClass(static_cast<CPartyUIMpGauge*>(pChildUI));
+				}
+				else
+				{
+					pChildUI = CGameUIChild::Create(m_pGraphicDevice, m_pCommandList,
+													wstrRootObjectTag,				// RootObjectTag
+													vecObjectTag[i],				// ObjectTag
+													vecDataFilePath[i],				// DataFilePath
+													vecPos[i],						// Pos
+													vecScale[i],					// Scane
+													(_bool)vecIsSpriteAnimation[i],	// Is Animation
+													vecFrameSpeed[i],				// FrameSpeed
+													vecRectPosOffset[i],			// RectPosOffset
+													vecRectScale[i],				// RectScaleOffset
+													vecUIDepth[i]);					// UI Depth
+				}
+
+				if (nullptr != pChildUI &&
+					(L"PartyUIClassArcher" != vecObjectTag[i] &&
+					 L"PartyUIClassPriest" != vecObjectTag[i]))
+				{
+					m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
+					static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
+				}
+			}
+		}
+
+		UI_CHILD_STATE tState;
+
+		tState.tFrame         = pClassArcher->Get_Frame();
+		tState.vPos           = pClassArcher->Get_Transform()->m_vPos;
+		tState.vScale         = pClassArcher->Get_Transform()->m_vScale;
+		tState.vRectPosOffset = pClassArcher->Get_RectOffset();
+		tState.vRectScale     = pClassArcher->Get_TransformColor()->m_vScale;
+		pClassGladiator->SetUp_ClassState(L"Archer", tState);
+
+		tState.tFrame         = pClassPriest->Get_Frame();
+		tState.vPos           = pClassPriest->Get_Transform()->m_vPos;
+		tState.vScale         = pClassPriest->Get_Transform()->m_vScale;
+		tState.vRectPosOffset = pClassPriest->Get_RectOffset();
+		tState.vRectScale     = pClassPriest->Get_TransformColor()->m_vScale;
+		pClassGladiator->SetUp_ClassState(L"Priest", tState);
+
+		pClassGladiator = nullptr;
+		Engine::Safe_Release(pClassArcher);
+		Engine::Safe_Release(pClassPriest);
+
+		pCanvas = nullptr;
+	}
 
 	return S_OK;
 }

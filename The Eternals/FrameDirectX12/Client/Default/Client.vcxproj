@@ -202,6 +202,7 @@
     <ClInclude Include="..\Code\NormalMonsterHpGauge.h" />
     <ClInclude Include="..\Code\NPC_Assistant.h" />
     <ClInclude Include="..\Code\NPC_Quest.h" />
+    <ClInclude Include="..\Code\PartyInfoListCanvas.h" />
     <ClInclude Include="..\Code\PartyLeaveButton.h" />
     <ClInclude Include="..\Code\PartySuggestButton.h" />
     <ClInclude Include="..\Code\PartySuggestCanvas.h" />
@@ -210,6 +211,9 @@
     <ClInclude Include="..\Code\PartySuggestResponseClose.h" />
     <ClInclude Include="..\Code\PartySystemMessageCanvas.h" />
     <ClInclude Include="..\Code\PartySystemMgr.h" />
+    <ClInclude Include="..\Code\PartyUIClassInfo.h" />
+    <ClInclude Include="..\Code\PartyUIHpGauge.h" />
+    <ClInclude Include="..\Code\PartyUIMpGauge.h" />
     <ClInclude Include="..\Code\PCArcher.h" />
     <ClInclude Include="..\Code\PCGladiator.h" />
     <ClInclude Include="..\Code\PCOthersArcher.h" />
@@ -349,6 +353,7 @@
     <ClCompile Include="..\Code\NPC_Merchant.cpp" />
     <ClCompile Include="..\Code\NPC_Stander.cpp" />
     <ClCompile Include="..\Code\PacketMgr.cpp" />
+    <ClCompile Include="..\Code\PartyInfoListCanvas.cpp" />
     <ClCompile Include="..\Code\PartyLeaveButton.cpp" />
     <ClCompile Include="..\Code\PartySuggestButton.cpp" />
     <ClCompile Include="..\Code\PartySuggestCanvas.cpp" />
@@ -357,6 +362,9 @@
     <ClCompile Include="..\Code\PartySuggestResponseClose.cpp" />
     <ClCompile Include="..\Code\PartySystemMessageCanvas.cpp" />
     <ClCompile Include="..\Code\PartySystemMgr.cpp" />
+    <ClCompile Include="..\Code\PartyUIClassInfo.cpp" />
+    <ClCompile Include="..\Code\PartyUIHpGauge.cpp" />
+    <ClCompile Include="..\Code\PartyUIMpGauge.cpp" />
     <ClCompile Include="..\Code\PCArcher.cpp" />
     <ClCompile Include="..\Code\PCGladiator.cpp" />
     <ClCompile Include="..\Code\PCOthersArcher.cpp" />

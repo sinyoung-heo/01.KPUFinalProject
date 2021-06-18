@@ -361,6 +361,27 @@
     <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\05.PartySystemMessageCanvas">
       <UniqueIdentifier>{d725e887-f3b2-4608-abed-603bbbccaaa2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild">
+      <UniqueIdentifier>{86a67724-adcc-4493-a669-1c2090d6dffc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\06.PartyInfoListCanvas">
+      <UniqueIdentifier>{58edd721-57c6-4687-92f6-9b0e872bebe4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIHpGauge">
+      <UniqueIdentifier>{54cfad39-f045-4c4d-a288-3eacdcaa35a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIMpGauge">
+      <UniqueIdentifier>{acd22b62-2b4f-4d13-9f18-ad33a8f0257b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestResponseCanvasChild\PartySuggestResponseChoice">
+      <UniqueIdentifier>{381742e4-9df8-44e0-993f-705070c7ccb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestResponseCanvasChild\PartySuggestResponseClose">
+      <UniqueIdentifier>{8afa8e4a-f28c-46e8-a875-828e87d93072}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIClassInfo">
+      <UniqueIdentifier>{46e56771-b2ac-4242-813f-3acb2e26622d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -739,12 +760,6 @@
     <ClInclude Include="..\Code\PartySuggestButton.h">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\04.PartySuggestCanvasChild</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\PartySuggestResponseChoice.h">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestResponseCanvasChild</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\PartySuggestResponseClose.h">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestResponseCanvasChild</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\PartySystemMgr.h">
       <Filter>97.Mgr\06.PartySystemMgr</Filter>
     </ClInclude>
@@ -753,6 +768,24 @@
     </ClInclude>
     <ClInclude Include="..\Code\PartySystemMessageCanvas.h">
       <Filter>02.GameObject\99.GameUI\00.GameUIRoot\05.PartySystemMessageCanvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PartyInfoListCanvas.h">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\06.PartyInfoListCanvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PartySuggestResponseChoice.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestResponseCanvasChild\PartySuggestResponseChoice</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PartySuggestResponseClose.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestResponseCanvasChild\PartySuggestResponseClose</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PartyUIClassInfo.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIClassInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PartyUIHpGauge.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIHpGauge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PartyUIMpGauge.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIMpGauge</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1078,12 +1111,6 @@
     <ClCompile Include="..\Code\PartySuggestButton.cpp">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\04.PartySuggestCanvasChild</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\PartySuggestResponseChoice.cpp">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestResponseCanvasChild</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\PartySuggestResponseClose.cpp">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestResponseCanvasChild</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\PartySystemMgr.cpp">
       <Filter>97.Mgr\06.PartySystemMgr</Filter>
     </ClCompile>
@@ -1092,6 +1119,24 @@
     </ClCompile>
     <ClCompile Include="..\Code\PartySystemMessageCanvas.cpp">
       <Filter>02.GameObject\99.GameUI\00.GameUIRoot\05.PartySystemMessageCanvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PartyInfoListCanvas.cpp">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\06.PartyInfoListCanvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PartySuggestResponseChoice.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestResponseCanvasChild\PartySuggestResponseChoice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PartySuggestResponseClose.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestResponseCanvasChild\PartySuggestResponseClose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PartyUIClassInfo.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIClassInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PartyUIHpGauge.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIHpGauge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PartyUIMpGauge.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIMpGauge</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

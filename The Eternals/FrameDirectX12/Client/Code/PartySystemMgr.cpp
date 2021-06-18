@@ -14,4 +14,6 @@ void CPartySystemMgr::Free()
 	m_pPartySuggestResponseCanvas = nullptr;
 	m_pPartyLeaveCanvas           = nullptr;
 	m_pPartySystemMessageCanvas   = nullptr;
+
+	m_pPartyInfoListCanvas = nullptr;
 }

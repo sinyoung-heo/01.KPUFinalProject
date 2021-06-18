@@ -32,6 +32,7 @@ private:
 	HRESULT			SetUp_UIPartySuggestResponseCanvas();
 	HRESULT			SetUp_UIPartyLeaveCanvas();
 	HRESULT			SetUp_UIPartySystemMessageCanvas();
+	HRESULT			SetUp_UIPartyListInfoCanvas();
 private:
 	_bool m_bIsReadyMouseCursorMgr = false;
 
