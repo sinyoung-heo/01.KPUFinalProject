@@ -1568,6 +1568,7 @@ void process_suggest_party(const int& suggester_id, const int& others_id)
 		CPlayer* pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", others_id));
 		if (pOther == nullptr) return;
 		if (!pOther->m_bIsConnect) return;
+		if (pOther->m_bIsPartyState == true) return;
 
 		send_suggest_party(others_id, suggester_id);
 	}
@@ -1649,6 +1650,7 @@ void process_join_party(const int& joinner_id, const int& others_id)
 		CPlayer* pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", others_id));
 		if (pOther == nullptr) return;
 		if (!pOther->m_bIsConnect) return;
+		if (!pOther->m_bIsPartyState) return;
 
 		send_join_party(others_id, joinner_id);
 	}

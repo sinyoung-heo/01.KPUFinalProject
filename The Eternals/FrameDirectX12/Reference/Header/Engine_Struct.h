@@ -929,6 +929,40 @@ namespace Engine
 		_vec4		vLightRange;
 
 	} CB_SHADER_LIGHTING;
+
+	/*__________________________________________________________________________________________________________
+	[ Party System ]
+	____________________________________________________________________________________________________________*/
+	typedef struct tagPartyMember
+	{
+		tagPartyMember() 
+		{
+			cName[0]	= 0;
+			cJob		= -1;
+			iHp			= 0;
+			iMaxHp		= 0;
+			iMp			= 0;
+			iMaxMp		= 0;
+		}
+
+		tagPartyMember(const char* name, const char& job, const _int& hp, const _int& maxHp, const _int& mp, const _int& maxMp)
+			:cJob(job)
+			,iHp(hp)
+			,iMaxHp(maxHp)
+			,iMp(mp)
+			,iMaxMp(maxMp)
+		{
+			strncpy(cName, name, sizeof(name));
+		}
+
+		char cName[32];
+		char cJob			= -1;
+		_int iHp			= 0;
+		_int iMaxHp			= 0;
+		_int iMp			= 0;
+		_int iMaxMp			= 0;
+
+	} PARTYMEMBER;
 }
 
 

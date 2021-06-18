@@ -83,7 +83,7 @@ _int CPartyLeaveButton::LateUpdate_GameObject(const _float& fTimeDelta)
 			cout << pThisPlayer->Get_ServerNumber() << "ÆÄÆ¼Å»Åð" << endl;
 			CPacketMgr::Get_Instance()->send_leave_party(pThisPlayer->Get_ServerNumber());
 			pThisPlayer->Set_PartyState(false);
-			pThisPlayer->Get_PartyList().clear();
+			pThisPlayer->Clear_PartyMember();
 			pThisPlayer->Set_RequestParty(false);
 			pThisPlayer->JoinRequest_Party(false);
 			pThisPlayer->Set_PartySuggestSNum(-1);

@@ -408,14 +408,15 @@ void CPacketMgr::Join_Party(sc_packet_suggest_party* packet)
 void CPacketMgr::Leave_Party(sc_packet_suggest_party* packet, bool& retflag)
 {
 	retflag = true;
-	Engine::CGameObject* pOthers = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", packet->id);
-	if (pOthers == nullptr) return;
-	pOthers->Set_PartyState(false);
+	//Engine::CGameObject* pOthers = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", packet->id);
+	//if (pOthers == nullptr) return;
+	//pOthers->Set_PartyState(false);
 
 	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
-	pThisPlayer->Get_PartyList().erase(packet->id);
+	pThisPlayer->Leave_PartyMember(packet->id);
+	//pThisPlayer->Get_PartyList().erase(packet->id);
 
-	// 파티원 정보 (hp,maxhp,mp,maxmp,ID,Job)
+	// 파티원 정보 
 	cout << "파티원이 퇴장하였습니다. Server Num: " << packet->id << endl;
 	retflag = false;
 }
@@ -423,16 +424,15 @@ void CPacketMgr::Leave_Party(sc_packet_suggest_party* packet, bool& retflag)
 void CPacketMgr::Enter_PartyMember(sc_packet_update_party_new_member* packet, bool& retflag)
 {
 	retflag = true;
-	Engine::CGameObject* pOthers = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", packet->id);
-
-	cout << pOthers << endl;
+	/*Engine::CGameObject* pOthers = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", packet->id);
 
 	if (pOthers == nullptr) return;
-	pOthers->Set_PartyState(true);
+	pOthers->Set_PartyState(true);*/
 
 	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
-	pThisPlayer->Set_PartyState(true);
-	pThisPlayer->Get_PartyList().insert(packet->id);
+	pThisPlayer->Set_PartyState(true);	
+	pThisPlayer->Enter_PartyMember(packet->id, Engine::PARTYMEMBER(packet->name, packet->o_type, packet->hp, packet->maxHp, packet->mp, packet->maxMp));
+	//pThisPlayer->Get_PartyList().insert(packet->id);
 
 	// 파티원 정보 (hp,maxhp,mp,maxmp,ID,Job)
 	cout << "새로운 파티원이 입장하였습니다. ID: " << packet->name << " Job: " << (int)packet->o_type << endl;

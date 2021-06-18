@@ -796,7 +796,8 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 	{
 		CPacketMgr::Get_Instance()->send_leave_party(m_iSNum);
 		m_bIsPartyState = false;
-		m_usPartyList.clear();
+		//m_usPartyList.clear();
+		Clear_PartyMember();
 		m_bIsPartyRequest = false;
 		m_bIsPartyJoinRequest = false;
 		m_iSuggesterNumber = -1;

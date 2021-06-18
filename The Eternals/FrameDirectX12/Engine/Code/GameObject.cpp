@@ -375,4 +375,7 @@ void CGameObject::Free()
 
 	if(nullptr != m_pFontServer)
 		Engine::Safe_Release(m_pFontServer);
+
+	m_mapPartyList.clear();
+		
 }
