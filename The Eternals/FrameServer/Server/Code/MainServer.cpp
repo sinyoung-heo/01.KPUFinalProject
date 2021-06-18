@@ -33,7 +33,7 @@ void Initialize_Monster();			// Create Monster(test)
 void Delete_Monster();				// Delete All MONSTER
 
 void add_new_client(SOCKET ns);		// 새로운 유저 접속 함수
-void disconnect_client(int id);		// 유저 접속 정료 함수
+void disconnect_client(int id);		// 유저 접속 종료 함수
 
 void time_worker();					// Timer Thread Enter Function
 void worker_thread();				// Worker Thread Enter Function
@@ -435,6 +435,10 @@ void disconnect_client(int id)
 
 	/* sector에서 해당 플레이어 지우기 */
 	CSectorMgr::GetInstance()->Leave_ClientInSector(id, (int)(pPlayer->m_vPos.z / SECTOR_SIZE), (int)(pPlayer->m_vPos.x / SECTOR_SIZE));
+
+	/* 파티에 가입되어 있다면 파티 탈퇴 */
+	if (pPlayer->m_bIsPartyState == true)
+		process_leave_party(id);
 
 	/* 해당 플레이어가 등록되어 있는 섹터 내의 유저들에게 접속 종료를 알림 */
 	unordered_set<pair<int, int>> nearSector;

@@ -1,6 +1,5 @@
 #pragma once
 
-/* =========================PLAYER======================== */
 /* [게임 컨텐츠용 패킷] */
 void send_packet(int id, void* p);												// Packet 전송 함수
 void send_login_ok(int id);														// 로그인 수락 패킷
