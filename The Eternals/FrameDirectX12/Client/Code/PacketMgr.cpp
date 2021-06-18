@@ -417,12 +417,23 @@ void CPacketMgr::Leave_Party(sc_packet_suggest_party* packet, bool& retflag)
 	//pThisPlayer->Get_PartyList().erase(packet->id);
 
 	// 파티원 정보 
-	cout << "파티원이 퇴장하였습니다. Server Num: " << packet->id << endl;
-	retflag = false;
+	cout << "파티원이 퇴장하였습니다. 파티원 목록 출력 " << endl;
+
+	for (auto& p : pThisPlayer->Get_PartyList())
+	{
+		cout << p.first << "번 "
+			<< "name: " << p.second.cName
+			<< " job: " << (int)p.second.cJob
+			<< " hp/maxHp: " << p.second.iHp << "/" << p.second.iMaxHp
+			<< " mp/maxMp: " << p.second.iMp << "/" << p.second.iMaxMp
+			<< endl;
+	}
 
 	m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_IsActive(true);
 	m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_PartyMessageState(PARTY_SYSTEM_MESSAGE::LEAVE_PARTY_MEMBER);
 	// m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_PartyMemberInfo(name, otype, server_number);
+
+	retflag = false;
 }
 
 void CPacketMgr::Enter_PartyMember(sc_packet_update_party_new_member* packet, bool& retflag)
@@ -439,12 +450,23 @@ void CPacketMgr::Enter_PartyMember(sc_packet_update_party_new_member* packet, bo
 	//pThisPlayer->Get_PartyList().insert(packet->id);
 
 	// 파티원 정보 (hp,maxhp,mp,maxmp,ID,Job)
-	cout << "새로운 파티원이 입장하였습니다. ID: " << packet->name << " Job: " << (int)packet->o_type << endl;
-	retflag = false;
+	cout << "파티원이 입장하였습니다. 파티원 목록 출력 "<< endl;
 
+	for (auto& p : pThisPlayer->Get_PartyList())
+	{
+		cout << p.first << "번 "
+			<< "name: " << p.second.cName
+			<< " job: " << (int)p.second.cJob
+			<< " hp/maxHp: " << p.second.iHp << "/" << p.second.iMaxHp
+			<< " mp/maxMp: " << p.second.iMp << "/" << p.second.iMaxMp
+			<< endl;
+	}
+	
 	m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_IsActive(true);
 	m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_PartyMessageState(PARTY_SYSTEM_MESSAGE::ENTER_PARTY_MEMBER);
 	// m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_PartyMemberInfo(name, otype, server_number);
+
+	retflag = false;
 }
 
 void CPacketMgr::Suggest_Party(sc_packet_suggest_party* packet)
