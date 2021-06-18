@@ -7,7 +7,7 @@ private:
 	explicit CPartyUIClassInfo(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 	virtual ~CPartyUIClassInfo() = default;
 public:
-	void Set_CurrentClassTag(wstring wstrTag);
+	void Set_CurrentClassTag(const char& cJob);
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrRootObjectTag,

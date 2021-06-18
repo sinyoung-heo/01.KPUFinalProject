@@ -16,6 +16,7 @@ public:
 	void Set_PartyUIClassInfoClass(CPartyUIClassInfo* pClass)	{ m_pUIClassInfo = pClass; }
 	void Set_PartyUIHpGaugeClass(CPartyUIHpGauge* pClass)		{ m_pUIHpGauge = pClass; }
 	void Set_PartyUIMpGaugeClass(CPartyUIMpGauge* pClass)		{ m_pUIMpGauge = pClass; }
+	void Set_UserName(char* pUserName);
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrObjectTag,
@@ -32,10 +33,11 @@ public:
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 private:
+	void SetUp_FontPosition(const _float& fTimeDelta);
+private:
 	CPartyUIClassInfo*	m_pUIClassInfo = nullptr;
 	CPartyUIHpGauge*	m_pUIHpGauge   = nullptr;
 	CPartyUIMpGauge*	m_pUIMpGauge   = nullptr;
-
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 									   wstring wstrObjectTag,							   

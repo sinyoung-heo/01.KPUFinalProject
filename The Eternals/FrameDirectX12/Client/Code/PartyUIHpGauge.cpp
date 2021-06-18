@@ -32,7 +32,7 @@ HRESULT CPartyUIHpGauge::Ready_GameObject(wstring wstrRootObjectTag,
 	// Set Shader PipelineState
 	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(6), E_FAIL);
 
-	m_bIsActive = true;
+	m_bIsActive = false;
 
 	return S_OK;
 }
