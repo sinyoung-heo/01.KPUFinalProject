@@ -165,6 +165,7 @@ void CCrab::Send_PacketToServer()
 
 void CCrab::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
 {
+	Render_HitEffect(fTimeDelta);
 	m_pMeshCom->Render_DynamicMesh(pCommandList, iContextIdx, m_pShaderCom);
 }
 
@@ -225,7 +226,7 @@ void CCrab::Set_ConstantTable()
 	tCB_ShaderMesh.fLightPorjFar  = tShadowDesc.fLightPorjFar;
 	tCB_ShaderMesh.fDissolve      = m_fDissolve;
 	tCB_ShaderMesh.vEmissiveColor = m_vEmissiveColor;
-
+	tCB_ShaderMesh.fOffset6 = m_fRedColor;
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 }
 

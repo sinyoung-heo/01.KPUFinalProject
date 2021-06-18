@@ -61,7 +61,13 @@ _int CTextureEffect::Update_GameObject(const _float & fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
-	Follow_PlayerHand();
+	m_fDeltatime += fTimeDelta;
+	if (m_bisFollowHand)
+	{
+		Follow_PlayerHand();
+		m_pTransCom->m_vScale.x += 1.75f * fTimeDelta;
+		m_pTransCom->m_vScale.y += 1.75f * fTimeDelta;
+	}
 	/*__________________________________________________________________________________________________________
 	[ Update Sprite Frame ]
 	____________________________________________________________________________________________________________*/
@@ -118,14 +124,13 @@ void CTextureEffect::Set_EffectInfo(int PipelineState, bool PlayerFollow)
 
 void CTextureEffect::Follow_PlayerHand(Engine::HIERARCHY_DESC* pHierarchyDesc,Engine::CTransform * PlayerTransform)
 {
-	if (m_bisFollowHand == false)
-		return;
 	if (m_bisFollowHandInit == false)
 	{
 		m_bisFollowHandInit = true;
 		m_pPlayerTransform = PlayerTransform;
 		m_pHierarchyDesc = pHierarchyDesc;
 	}
+	
 	_matrix matBoneFinalTransform = INIT_MATRIX;
 	_matrix matWorld = INIT_MATRIX;
 	matBoneFinalTransform = (m_pHierarchyDesc->matScale * m_pHierarchyDesc->matRotate * m_pHierarchyDesc->matTrans) * m_pHierarchyDesc->matGlobalTransform;
@@ -173,6 +178,9 @@ void CTextureEffect::Set_ConstantTable()
 	tCB_ShaderTexture.fSceneCnt	= m_tFrame.fSceneCnt;
 	tCB_ShaderTexture.fCurScene	= (_int)m_tFrame.fCurScene;
 	tCB_ShaderTexture.v_Color = m_vColorOffset;
+
+	if(m_bisFollowHand)
+		tCB_ShaderTexture.fOffset2 = m_fDeltatime*0.5f;
 	m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 }
 

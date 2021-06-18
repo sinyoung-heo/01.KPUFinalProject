@@ -200,6 +200,7 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 	return (ps_output);
 }
 
+//Dynamic
 PS_OUT PS_DISSOLVE(VS_OUT ps_input) : SV_TARGET
 {
 	PS_OUT ps_output = (PS_OUT) 0;
@@ -226,6 +227,7 @@ PS_OUT PS_DISSOLVE(VS_OUT ps_input) : SV_TARGET
 	____________________________________________________________________________________________________________*/
 	float Normal_fDissolve = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV).r;
 
+    ps_output.Emissive = float4(g_fOffset6, 0, 0, 1);
 	if ((0.05f > (1.f - g_fDissolve) - Normal_fDissolve) && ((1.f - g_fDissolve) - Normal_fDissolve) > 0.0f)
 	{
 		ps_output.Emissive = g_vEmissiveColor;

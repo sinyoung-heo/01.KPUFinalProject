@@ -208,5 +208,6 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
     float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
    
     ps_output.Effect3 = D;
+    ps_output.Effect3.a = g_fOffset1;
     return (ps_output);
 }

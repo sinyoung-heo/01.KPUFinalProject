@@ -39,6 +39,7 @@ void CEffectMgr::Effect_FireDecal(_vec3 vecPos)
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"FireDecal", pGameObj), E_FAIL);
 }
 
+
 void CEffectMgr::Free(void)
 {
 }

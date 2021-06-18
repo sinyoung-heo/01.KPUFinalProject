@@ -709,6 +709,12 @@
     <ClInclude Include="..\Code\EffectMgr.h">
       <Filter>97.Mgr\05.EffectMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\DistTrail.h">
+      <Filter>99.Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\LightingParticle.h">
+      <Filter>99.Etc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1023,6 +1029,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\EffectMgr.cpp">
       <Filter>97.Mgr\05.EffectMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\DistTrail.cpp">
+      <Filter>99.Etc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\LightingParticle.cpp">
+      <Filter>99.Etc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

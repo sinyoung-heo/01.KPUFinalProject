@@ -167,7 +167,6 @@ void CIceStorm_s::Set_ConstantTable()
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 
 	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 1.5f * m_fDeltatimeVelocity;
-	
 	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 1.5f * m_fDeltatimeVelocity2;
 	tCB_ShaderMesh.fOffset1 = sin(m_fDeltaTime);//¹øÁüÈ¿°ú
 	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
