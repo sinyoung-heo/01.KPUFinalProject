@@ -419,6 +419,10 @@ void CPacketMgr::Leave_Party(sc_packet_suggest_party* packet, bool& retflag)
 	// 파티원 정보 
 	cout << "파티원이 퇴장하였습니다. Server Num: " << packet->id << endl;
 	retflag = false;
+
+	m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_IsActive(true);
+	m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_PartyMessageState(PARTY_SYSTEM_MESSAGE::LEAVE_PARTY_MEMBER);
+	// m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_PartyMemberInfo(name, otype, server_number);
 }
 
 void CPacketMgr::Enter_PartyMember(sc_packet_update_party_new_member* packet, bool& retflag)
@@ -437,6 +441,10 @@ void CPacketMgr::Enter_PartyMember(sc_packet_update_party_new_member* packet, bo
 	// 파티원 정보 (hp,maxhp,mp,maxmp,ID,Job)
 	cout << "새로운 파티원이 입장하였습니다. ID: " << packet->name << " Job: " << (int)packet->o_type << endl;
 	retflag = false;
+
+	m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_IsActive(true);
+	m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_PartyMessageState(PARTY_SYSTEM_MESSAGE::ENTER_PARTY_MEMBER);
+	// m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_PartyMemberInfo(name, otype, server_number);
 }
 
 void CPacketMgr::Suggest_Party(sc_packet_suggest_party* packet)
