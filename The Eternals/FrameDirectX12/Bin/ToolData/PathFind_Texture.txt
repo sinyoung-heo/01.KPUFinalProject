@@ -9,6 +9,7 @@ Crack|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Crack\%d.dd
 Fire|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Fire\%d.dds
 Fire1|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Fire1\%d.dds
 Firework0|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Firework0\%d.dds
+Firework1|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Firework1\%d.dds
 Glowring|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Glowring\%d.dds
 Lighting0|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Lighting0\%d.dds
 Lighting1|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Lighting1\%d.dds
