@@ -72,6 +72,7 @@ private:
 	float m_fEffectDelta = 0.f;
 	_bool	m_bIsCreateCollisionTick = false;
 	_bool	m_bIsStartDissolve       = false;
+	_bool m_bisFireworkEffect = false;
 	_float	m_fDissolve              = -0.05f;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, 

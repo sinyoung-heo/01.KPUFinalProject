@@ -14,6 +14,7 @@ private:
 public:
 	void Effect_IceStorm(_vec3 vecPos);
 	void Effect_FireDecal(_vec3 vecPos);
+
 public:
 	
 	ID3D12Device* m_pGraphicDevice = nullptr;

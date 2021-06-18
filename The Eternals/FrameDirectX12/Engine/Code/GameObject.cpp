@@ -234,6 +234,21 @@ void CGameObject::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCom
 {
 }
 
+void CGameObject::Render_HitEffect(const _float& fTimeDelta)
+{
+	if (m_bisHitted)
+	{
+		m_fHitVelocity += fTimeDelta;
+		m_fRedColor =sin(XMConvertToRadians(m_fHitVelocity * 180.f * 7.f) ) *0.5f;
+		if (m_fRedColor < 0.f)
+		{
+			m_fRedColor = 0.f;
+			m_bisHitted = false;
+			m_fHitVelocity = 0.f;
+		}
+	}
+}
+
 HRESULT CGameObject::Add_Component()
 {
 	return S_OK;

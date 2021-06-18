@@ -183,6 +183,8 @@ private:
 	wstring			m_wstrText        = L"";
 	_tchar			m_szText[MAX_STR] = L"";
 
+	//Effect
+	bool m_bisHandEffect = false;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

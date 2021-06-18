@@ -116,6 +116,9 @@ public:
 	void			Leave_PartyMember(const int& iSNum)									{ m_mapPartyList.erase(iSNum); }
 	void			Clear_PartyMember()													{ m_mapPartyList.clear(); }
 
+	//Red value
+	void			Render_HitEffect(const _float& fTimeDelta);
+	void			Set_bisHitted(bool isHitted) { m_bisHitted = isHitted; }
 protected:
 	HRESULT			Add_Component();
 	void			SetUp_BillboardMatrix();
@@ -162,6 +165,11 @@ protected:
 	_uint	m_uiInstanceIdx		= 0;
 	_bool	m_bIsUsingInstance  = false;
 	_bool   m_bisAlphaObject = false;
+
+	_float m_fRedColor = 0.f; // 몬스터전용 변수
+	_bool m_bisHitted = false;
+	_float m_fHitVelocity = 1.f;
+	
 	/*__________________________________________________________________________________________________________
 	[ Collision ]
 	____________________________________________________________________________________________________________*/

@@ -97,6 +97,8 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 				pCollisionTick->Get_BoundingSphere()->Set_Radius(pCollisionTick->Get_Transform()->m_vScale);
 
 				m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_ThisPlayer", pCollisionTick);
+
+				m_bisFireworkEffect = false;
 			}
 		}
 
@@ -264,13 +266,41 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 		if (m_fEffectDelta > 0.005f)
 		{
 			m_fEffectDelta = 0.f;
-			//pGameObj = CDistTrail::Create(m_pGraphicDevice, m_pCommandList,
-			//	L"DistTrail",						// TextureTag
-			//	_vec3(0.00f),					// Scale
-			//	_vec3(0.0f,0.f, 90.f),		// Angle
-			//	m_pTransCom->m_vPos);		// Pos;			// Sprite Image Frame
-			//static_cast<CDistTrail*>(pGameObj)->Set_SizeOffset(fDist);
-			//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"DistTrail", pGameObj), E_FAIL);
+			pGameObj = CDistTrail::Create(m_pGraphicDevice, m_pCommandList,
+				L"DistTrail",						// TextureTag
+				_vec3(0.00f),					// Scale
+				_vec3(0.0f, m_pTransCom->m_vAngle.y, 0.f),		// Angle
+				m_pTransCom->m_vPos);		// Pos;			// Sprite Image Frame
+			static_cast<CDistTrail*>(pGameObj)->Set_SizeOffset(fDist);
+			if (fDist < 5.f)
+			{
+				//Firework0
+				static_cast<CDistTrail*>(pGameObj)->Set_IsCrossFilter(true);
+			}
+
+			if (m_bisFireworkEffect == false)
+			{
+				m_bisFireworkEffect = true;
+				/*_vec3 CrossVec = m_vOriginPos.Cross_InputV1(_vec3(0, 1, 0));
+				CrossVec.Normalize();
+				_vec3 newPos = m_vOriginPos;*/
+				/*newPos.y += (rand() % 50 - 25) * 0.1f;
+				newPos.z += (rand() % 10 - 5) * 0.1f;
+				newPos += CrossVec * ((rand() % 50 - 25) * 0.1f);*/
+				CGameObject* TexObj;
+				_vec3 newPos = m_vOriginPos;
+				newPos.y += 1.f;
+				TexObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+					L"Firework0",						// TextureTag
+					_vec3(8.f, 8.0f, 1.0f),		// Scale
+					_vec3(0.0f, 0.0f, 0.0f),		// Angle
+					newPos,	// Pos
+					FRAME(5, 8, 30.0f));			// Sprite Image Frame
+				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Firework0", TexObj), E_FAIL);
+				static_cast<CTextureEffect*>(TexObj)->Set_IsLoop(false);
+				static_cast<CTextureEffect*>(TexObj)->Set_BillBoard(true);
+			}
+			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"DistTrail", pGameObj), E_FAIL);
 		}
 	}
 
@@ -332,7 +362,7 @@ void CCollisionArrow::Process_Collision()
 		{
 			Set_IsReturnObject(true);
 			pDst->Get_BoundingSphere()->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
-
+			pDst->Set_bisHitted(true);
 			// Player Attack to Monster
 			m_pPacketMgr->send_attackToMonster(pDst->Get_ServerNumber(), m_uiDamage, m_chAffect);
 		}

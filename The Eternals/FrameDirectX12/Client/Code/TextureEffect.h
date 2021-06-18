@@ -55,6 +55,8 @@ private:
 	_uint	m_uiTexIdx			= 0;
 
 	FRAME	m_tFrame			{ };
+
+	_float m_fDeltatime = 0.f;
 	_float m_fAlpha = 1.f;
 	bool m_bisBillBoard = true;
 	_vec4 m_vColorOffset;

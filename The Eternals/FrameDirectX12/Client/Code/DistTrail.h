@@ -27,7 +27,9 @@ public:
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 
 	void			Set_SizeOffset(float Size) { m_fOffSet = Size; }
+	void			Set_IsCrossFilter(bool bisCrossFilter) { m_bisCrossFilter = bisCrossFilter; }
 	virtual void	Render_GameObject(const _float& fTimeDelta);
+	virtual void Render_CrossFilterGameObject(const _float& fTimeDelta);
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
 	void			Set_ConstantTable();
@@ -62,6 +64,14 @@ private:
 	float m_fAlpha = 1.f;
 
 	float m_fOffSet = 0.f;
+
+	float m_fDeltatimeVelocity = 0.f;
+	float m_fDeltatimeVelocity2 = 1.f;
+
+	float m_fLifeTime = 0.f;
+	float m_fOffsetTime = 0.f;
+	bool m_bisLifeInit = false;
+	bool m_bisCrossFilter = false;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,
