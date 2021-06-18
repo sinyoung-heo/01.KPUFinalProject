@@ -208,6 +208,7 @@
     <ClInclude Include="..\Code\PartySuggestResponseCanvas.h" />
     <ClInclude Include="..\Code\PartySuggestResponseChoice.h" />
     <ClInclude Include="..\Code\PartySuggestResponseClose.h" />
+    <ClInclude Include="..\Code\PartySystemMessageCanvas.h" />
     <ClInclude Include="..\Code\PartySystemMgr.h" />
     <ClInclude Include="..\Code\PCArcher.h" />
     <ClInclude Include="..\Code\PCGladiator.h" />
@@ -354,6 +355,7 @@
     <ClCompile Include="..\Code\PartySuggestResponseCanvas.cpp" />
     <ClCompile Include="..\Code\PartySuggestResponseChoice.cpp" />
     <ClCompile Include="..\Code\PartySuggestResponseClose.cpp" />
+    <ClCompile Include="..\Code\PartySystemMessageCanvas.cpp" />
     <ClCompile Include="..\Code\PartySystemMgr.cpp" />
     <ClCompile Include="..\Code\PCArcher.cpp" />
     <ClCompile Include="..\Code\PCGladiator.cpp" />

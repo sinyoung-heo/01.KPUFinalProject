@@ -358,6 +358,9 @@
     <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\06.PartyLeaveButton">
       <UniqueIdentifier>{b33b4008-320c-4816-89ed-a2871b2e4f50}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\05.PartySystemMessageCanvas">
+      <UniqueIdentifier>{d725e887-f3b2-4608-abed-603bbbccaaa2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -748,6 +751,9 @@
     <ClInclude Include="..\Code\PartyLeaveButton.h">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\06.PartyLeaveButton</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\PartySystemMessageCanvas.h">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\05.PartySystemMessageCanvas</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1083,6 +1089,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\PartyLeaveButton.cpp">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\06.PartyLeaveButton</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PartySystemMessageCanvas.cpp">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\05.PartySystemMessageCanvas</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
