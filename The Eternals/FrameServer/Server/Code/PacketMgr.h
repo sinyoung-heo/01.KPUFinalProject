@@ -30,6 +30,7 @@ void process_respond_party(const bool& result, const int& suggester_id, const in
 void process_join_party(const int& joinner_id, const int& others_id);
 void process_decide_party(const bool& result, const int& joinner_id, const int& responder_id);
 void process_leave_party(const int& id);
+void process_disconnect(const int& id);
 
 /* 패킷 관리 및 처리 함수 */
 void process_packet(int id);													// 패킷 처리 함수 (모든 컨텐츠 처리)

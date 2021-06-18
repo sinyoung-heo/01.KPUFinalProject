@@ -185,7 +185,7 @@ void process_packet(int id)
 		break;
 	case CS_LOGOUT:
 	{
-		//disconnect_client(id)
+		process_disconnect(id);
 	}
 	break;
 
@@ -1727,6 +1727,86 @@ void process_leave_party(const int& id)
 	// 해당 유저의 파티 정보 초기화
 	CObjMgr::GetInstance()->Leave_Party(&pUser->m_iPartyNumber, id);
 	pUser->m_bIsPartyState = false;
+}
+
+void process_disconnect(const int& id)
+{
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+
+	if (pPlayer == nullptr || pPlayer->m_bIsConnect == false) return;
+
+	/* sector에서 해당 플레이어 지우기 */
+	CSectorMgr::GetInstance()->Leave_ClientInSector(id, (int)(pPlayer->m_vPos.z / SECTOR_SIZE), (int)(pPlayer->m_vPos.x / SECTOR_SIZE));
+
+	/* 파티에 가입되어 있다면 파티 탈퇴 */
+	if (pPlayer->m_bIsPartyState == true)
+		process_leave_party(id);
+
+	/* 해당 플레이어가 등록되어 있는 섹터 내의 유저들에게 접속 종료를 알림 */
+	unordered_set<pair<int, int>> nearSector;
+	nearSector.reserve(NEAR_SECTOR);
+	CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSector, (int)pPlayer->m_vPos.x, (int)pPlayer->m_vPos.z);
+
+	// 인접 섹터 순회
+	for (auto& s : nearSector)
+	{
+		// 인접 섹터 내의 타 유저들이 있는지 검사
+		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+		{
+			// 타 유저의 서버 번호 추출
+			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			{
+				/* 오직 유저들에게만 패킷을 전송 (NPC 제외) */
+				if (false == CObjMgr::GetInstance()->Is_Player(obj_num)) continue;
+				// '나'에게 패킷 전송 X
+				if (obj_num == id) continue;
+
+				CPlayer* pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+
+				// 접속한 유저들에게만 접속 종료를 알림
+				if (pOther->Get_IsConnected())
+				{
+					/* 타 유저의 시야 목록 내에 '나'가 있다면 지운다 */
+					pOther->v_lock.lock();
+					if (0 != pOther->view_list.count(id))
+					{
+						pOther->view_list.erase(id);
+						pOther->v_lock.unlock();
+
+						/* 타 유저에게 접속 종료 패킷 전송 */
+#ifdef TEST
+						cout << obj_num << "님에게" << id << "님 퇴장을 전송" << endl;
+#endif					
+						send_leave_packet(obj_num, id);
+					}
+					else pOther->v_lock.unlock();
+				}
+			}
+		}
+	}
+
+	pPlayer->Get_ClientLock().lock();
+
+#ifndef DUMMY
+	// DB 정보 저장 후 종료
+	CDBMgr::GetInstance()->Update_stat_DB(id);
+#endif // !DUMMY
+
+	pPlayer->Set_IsConnected(false);
+	closesocket(pPlayer->m_sock);
+	pPlayer->m_sock				= 0;
+	pPlayer->m_vPos				= _vec3(0.f, 0.f, 0.f);
+	pPlayer->m_vDir				= _vec3(0.f, 0.f, 0.f);
+	pPlayer->m_ID[0]			= 0;
+	pPlayer->m_type				= 0;
+	pPlayer->m_chStageId		= STAGE_VELIKA;
+	pPlayer->m_bIsPartyState	= false;
+	pPlayer->m_iPartyNumber		= INIT_PARTY_NUMBER;
+	pPlayer->view_list.clear();
+	pPlayer->Get_ClientLock().unlock();
+
+	CObjPoolMgr::GetInstance()->return_Object(L"PLAYER", pPlayer);
+	CObjMgr::GetInstance()->Delete_GameObject(L"PLAYER", pPlayer);
 }
 
 /*===========================================FUNC====================================================*/
