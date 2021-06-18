@@ -103,8 +103,9 @@ _int CPartySuggestButton::LateUpdate_GameObject(const _float& fTimeDelta)
 			// 파티가입
 			else
 			{
+				cout << pSelectPlayer->Get_PartyState() << ", 내 상태: " << pThisPlayer->Get_PartyState() << endl;
 				// 현재 파티에 소속되어 있지 않아야 되며, 상대방은 파티에 소속되어 있을 경우만 가능
-				if (pSelectPlayer->Get_PartyState() == true && pThisPlayer->Get_PartyState() == false)
+				if (pThisPlayer->Get_PartyState() == false)
 				{
 					cout << pSelectPlayer->Get_ServerNumber() << "님의 파티에 가입 신청" << endl;
 					CPacketMgr::Get_Instance()->send_join_party(pSelectPlayer->Get_ServerNumber());
