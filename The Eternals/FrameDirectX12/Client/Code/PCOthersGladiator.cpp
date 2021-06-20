@@ -73,7 +73,7 @@ HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag,
 											 const _vec3& vPos,
 											 const char& chWeaponType)
 {
-	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true,true), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag, wstrNaviMeshTag), E_FAIL);
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
@@ -88,14 +88,6 @@ HRESULT CPCOthersGladiator::Ready_GameObject(wstring wstrMeshTag,
 										   m_pMeshCom->Get_CenterPos(),
 										   m_pMeshCom->Get_MinVector(),
 										   m_pMeshCom->Get_MaxVector());
-
-	Engine::CGameObject::SetUp_BoundingSphere(&(m_pTransCom->m_matWorld),
-											  m_pTransCom->m_vScale,
-											  _vec3(40.0f),
-											  _vec3(4.0f, 4.f, 0.0f));
-
-	m_wstrCollisionTag = L"Others_SingleCollider";
-	m_lstCollider.push_back(m_pBoundingSphereCom);
 
 	m_pInfoCom->m_fSpeed     = Gladiator::MIN_SPEED;
 	m_pInfoCom->m_vArrivePos = m_pTransCom->m_vPos;
@@ -195,11 +187,6 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_EDGE, this), -1);
 	
-	/*__________________________________________________________________________________________________________
-	[ Collision - Add Collision List ]
-	____________________________________________________________________________________________________________*/
-	m_pCollisonMgr->Add_CollisionCheckList(this);
-
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 	// Weapon Update
@@ -283,13 +270,9 @@ HRESULT CPCOthersGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviM
 
 	m_pVelikaNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"StageVelika_NaviMesh", Engine::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pVelikaNaviMeshCom, E_FAIL);
-	//m_pVelikaNaviMeshCom->AddRef();
-	// m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pVelikaNaviMeshCom);
-
+	
 	m_pBeachNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"StageBeach_NaviMesh", Engine::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pBeachNaviMeshCom, E_FAIL);
-	//m_pBeachNaviMeshCom->AddRef();
-	 //m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
 
 	return S_OK;
 }

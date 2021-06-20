@@ -365,7 +365,6 @@ void CPacketMgr::Process_packet()
 		// 파티초대 or 파티가입요청 거절.
 		sc_packet_chat* packet = reinterpret_cast<sc_packet_chat*>(m_packet_start);
 
-		cout << packet->message << endl;
 	}
 	break;
 
@@ -390,25 +389,7 @@ void CPacketMgr::Process_packet()
 	case SC_PACKET_UPDATE_PARTY:
 	{
 		sc_packet_update_party* packet = reinterpret_cast<sc_packet_update_party*>(m_packet_start);
-
-		Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
-		pThisPlayer->Update_PartyMember(packet->id, packet->hp, packet->maxHp, packet->mp, packet->maxMp);
-
-		m_pPartySystemMgr->Update_ThisPlayerPartyList();
-
-		// 파티원 정보 
-		cout << "파티 정보 업데이트. 파티원 목록 출력 " << endl;
-
-		for (auto& p : pThisPlayer->Get_PartyList())
-		{
-			cout << p.first << "번 "
-				<< "name: " << p.second.cName
-				<< " job: " << (int)p.second.cJob
-				<< " hp/maxHp: " << p.second.iHp << "/" << p.second.iMaxHp
-				<< " mp/maxMp: " << p.second.iMp << "/" << p.second.iMaxMp
-				<< endl;
-		}
-		
+		Update_Party(packet);
 	}
 	break;
 
@@ -418,6 +399,14 @@ void CPacketMgr::Process_packet()
 #endif 
 		break;
 	}
+}
+
+void CPacketMgr::Update_Party(sc_packet_update_party* packet)
+{
+	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+	pThisPlayer->Update_PartyMember(packet->id, packet->hp, packet->maxHp, packet->mp, packet->maxMp);
+
+	m_pPartySystemMgr->Update_ThisPlayerPartyList();
 }
 
 void CPacketMgr::Join_Party(sc_packet_suggest_party* packet)
@@ -436,19 +425,6 @@ void CPacketMgr::Leave_Party(sc_packet_suggest_party* packet, bool& retflag)
 	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
 	pThisPlayer->Leave_PartyMember(packet->id);
 
-	// 파티원 정보 
-	cout << "파티원이 퇴장하였습니다. 파티원 목록 출력 " << endl;
-
-	for (auto& p : pThisPlayer->Get_PartyList())
-	{
-		cout << p.first << "번 "
-			<< "name: " << p.second.cName
-			<< " job: " << (int)p.second.cJob
-			<< " hp/maxHp: " << p.second.iHp << "/" << p.second.iMaxHp
-			<< " mp/maxMp: " << p.second.iMp << "/" << p.second.iMaxMp
-			<< endl;
-	}
-
 	m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_IsActive(true);
 	m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_PartyMessageState(PARTY_SYSTEM_MESSAGE::LEAVE_PARTY_MEMBER);
 	m_pPartySystemMgr->SetUp_ThisPlayerPartyList();
@@ -464,19 +440,6 @@ void CPacketMgr::Enter_PartyMember(sc_packet_update_party_new_member* packet, bo
 	pThisPlayer->Set_PartyState(true);	
 	pThisPlayer->Enter_PartyMember(packet->id, Engine::PARTYMEMBER(packet->name, packet->o_type, packet->hp, packet->maxHp, packet->mp, packet->maxMp));
 
-	// 파티원 정보 (hp,maxhp,mp,maxmp,ID,Job)
-	cout << "파티원이 입장하였습니다. 파티원 목록 출력 "<< endl;
-
-	for (auto& p : pThisPlayer->Get_PartyList())
-	{
-		cout << p.first << "번 "
-			<< "name: " << p.second.cName
-			<< " job: " << (int)p.second.cJob
-			<< " hp/maxHp: " << p.second.iHp << "/" << p.second.iMaxHp
-			<< " mp/maxMp: " << p.second.iMp << "/" << p.second.iMaxMp
-			<< endl;
-	}
-	
 	m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_IsActive(true);
 	m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_PartyMessageState(PARTY_SYSTEM_MESSAGE::ENTER_PARTY_MEMBER,
 																			 packet->name, 

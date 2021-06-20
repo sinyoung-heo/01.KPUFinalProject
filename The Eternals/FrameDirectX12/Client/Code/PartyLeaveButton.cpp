@@ -81,7 +81,6 @@ _int CPartyLeaveButton::LateUpdate_GameObject(const _float& fTimeDelta)
 
 		if (pThisPlayer->Get_PartyState())
 		{
-			cout << pThisPlayer->Get_ServerNumber() << "ÆÄÆ¼Å»Åğ" << endl;
 			CPacketMgr::Get_Instance()->send_leave_party(pThisPlayer->Get_ServerNumber());
 			pThisPlayer->Set_PartyState(false);
 			pThisPlayer->Clear_PartyMember();

@@ -157,48 +157,6 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	Is_ChangeWeapon();
 	SetUp_StageID();
 
-	///* 파티 제안 요청을 받았을 경우 */
-	//// 파티초대
-	//if (m_bIsPartyRequest)
-	//{
-	//	cout << "파티를 제안 받았습니다. 수락(Y) or 거절(N)을 눌러주세요." << endl;
-	//	// 수락
-	//	if (Engine::KEY_DOWN(DIK_Y))
-	//	{
-	//		CPacketMgr::Get_Instance()->send_respond_party(true, m_iSuggesterNumber);
-	//		m_bIsPartyRequest = false;
-	//		m_iSuggesterNumber = -1;
-	//	}
-	//	// 거절
-	//	else if (Engine::KEY_DOWN(DIK_N))
-	//	{
-	//		CPacketMgr::Get_Instance()->send_respond_party(false, m_iSuggesterNumber);
-	//		m_bIsPartyRequest = false;
-	//		m_iSuggesterNumber = -1;
-	//	}		
-	//}
-
-	///* 파티 가입 신청을 받았을 경우 */
-	//// 파티신청
-	//if (m_bIsPartyJoinRequest)
-	//{
-	//	cout << "파티 가입 신청을 받았습니다. 수락(Y) or 거절(N)을 눌러주세요." << endl;
-	//	// 수락
-	//	if (Engine::KEY_DOWN(DIK_Y))
-	//	{
-	//		CPacketMgr::Get_Instance()->send_decide_party(true, m_iSuggesterNumber);
-	//		m_bIsPartyJoinRequest = false;
-	//		m_iSuggesterNumber = -1;
-	//	}
-	//	// 거절
-	//	else if (Engine::KEY_DOWN(DIK_N))
-	//	{
-	//		CPacketMgr::Get_Instance()->send_decide_party(false, m_iSuggesterNumber);
-	//		m_bIsPartyJoinRequest = false;
-	//		m_iSuggesterNumber = -1;
-	//	}
-	//}
-
 	/*__________________________________________________________________________________________________________
 	[ Key Input ]
 	____________________________________________________________________________________________________________*/
@@ -323,9 +281,6 @@ void CPCGladiator::Process_Collision()
 
 		if (L"NPC_QUest" == pDst->Get_CollisionTag())
 			Collision_Quest(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
-
-		//if (L"Others_SingleCollider" == pDst->Get_CollisionTag())
-		//	Collision_Others(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
 	}
 
 	Suggest_PartyToOthers();
@@ -789,18 +744,6 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 										 _vec3(0, 0, 0), 5.f, XMConvertToRadians(i * 10.f));
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"IceStorm1", pGameObj), E_FAIL);
 		}
-	}
-
-	/* 파티 탈퇴 */
-	if (Engine::KEY_DOWN(DIK_L) && m_bIsPartyState)
-	{
-		CPacketMgr::Get_Instance()->send_leave_party(m_iSNum);
-		m_bIsPartyState = false;
-		//m_usPartyList.clear();
-		Clear_PartyMember();
-		m_bIsPartyRequest = false;
-		m_bIsPartyJoinRequest = false;
-		m_iSuggesterNumber = -1;
 	}
 }
 
@@ -2280,53 +2223,6 @@ void CPCGladiator::Collision_Quest(list<Engine::CColliderSphere*>& lstMerchantCo
 				if (Engine::KEY_DOWN(DIK_F))
 				{
 					KeyInput_OpenQuest(pObj->Get_NPCNumber());
-				}
-			}
-		}
-	}
-}
-
-void CPCGladiator::Collision_Others(list<Engine::CColliderSphere*>& lstOtherstCollider, int ServerNumber)
-{
-	for (auto& pSrcCollider : m_lstCollider)
-	{
-		for (auto& pDstCollider : lstOtherstCollider)
-		{
-			if (Engine::CCollisionMgr::Check_Sphere(pSrcCollider->Get_BoundingInfo(), pDstCollider->Get_BoundingInfo()))
-			{
-				// Process Collision Event
-				pSrcCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
-				pDstCollider->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
-
-				// 파티초대
-				if (Engine::KEY_DOWN(DIK_B) && g_bIsActive)
-				{
-					Engine::CGameObject* pOthers = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", ServerNumber);
-					if (pOthers == nullptr) return;
-
-					if (pOthers->Get_PartyState() == false)
-					{
-						cout << ServerNumber << "님에게 파티 신청 제안" << endl;
-						CPacketMgr::Get_Instance()->send_suggest_party(ServerNumber);
-					}
-					else
-						cout << "현재 유저는 다른 파티에 가입되어 있습니다." << endl;	
-				}
-
-				// 파티가입
-				else if (Engine::KEY_DOWN(DIK_V) && g_bIsActive)
-				{
-					Engine::CGameObject* pOthers = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", ServerNumber);
-					if (pOthers == nullptr) return;
-
-					// 현재 파티에 소속되어 있지 않아야 되며, 상대방은 파티에 소속되어 있을 경우만 가능
-					if (pOthers->Get_PartyState() == true && m_bIsPartyState == false)
-					{
-						cout << ServerNumber << "님의 파티에 가입 신청" << endl;
-						CPacketMgr::Get_Instance()->send_join_party(ServerNumber);
-					}
-					else
-						cout << "파티 참여 신청을 할 수 없습니다." << endl;
 				}
 			}
 		}
