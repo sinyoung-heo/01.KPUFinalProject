@@ -205,7 +205,7 @@ void CPacketMgr::Process_packet()
 							szOut,					// 변환 값 저장 버퍼.
 							MAX_STR);
 
-		szOut[strlen(packet->message) + 1] = '\0';
+		szOut[strlen(packet->message)] = '\0';
 		CChattingMgr::Get_Instance()->Push_ChattingMessage(packet->name, szOut);
 	}
 	break;
@@ -1319,10 +1319,7 @@ void CPacketMgr::send_chat(const wchar_t* message)
 						NULL,
 						NULL);
 
-	p.message[lstrlen(message) + 1] = '\0';
-
-	//strncpy(p.message, "RRRR", strlen("RRRR"));
-	//lstrcpyn(p.message, message, lstrlen(message) + 1);
+	p.message[lstrlen(message)] = '\0';
 
 	send_packet(&p);
 }

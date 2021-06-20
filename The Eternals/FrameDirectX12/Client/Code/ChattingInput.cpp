@@ -116,9 +116,6 @@ void CChattingInput::KeyInput_Chatting(const _float& fTimeDelta)
 		// Send Chatting Packet.
 		if (!g_bIsChattingInput)
 		{
-			// Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
-
-			CChattingMgr::Get_Instance()->Push_ChattingMessage("ThisPlayer", g_Text);
 			CPacketMgr::Get_Instance()->send_chat(g_Text);
 		}
 

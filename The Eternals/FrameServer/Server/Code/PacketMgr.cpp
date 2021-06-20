@@ -1845,7 +1845,6 @@ void process_chat(const int& id, const char* buffer)
 
 	for (iter_begin; iter_begin != iter_end; ++iter_begin)
 	{
-		if (iter_begin->second->m_sNum == id) continue;
 		send_chat(iter_begin->second->m_sNum, id, pPlayer->m_ID, buffer);	
 	}
 }

@@ -34,7 +34,7 @@ HRESULT CChattingCanvas::Ready_GameObject(wstring wstrObjectTag,
 	m_wstrChattingList.resize(MAX_CHATTING_SIZE);
 	for (auto& chatting : m_wstrChattingList)
 	{
-		chatting = L"test";
+		chatting = L"";
 		m_wstrChattingCombined += chatting + wstring(L"\n");
 	}
 
