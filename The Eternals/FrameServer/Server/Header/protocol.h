@@ -231,6 +231,7 @@ struct sc_packet_chat
 	char			type;
 	int				id;                  // teller
 
+	char			name[MAX_ID_LEN];
 	wchar_t         message[MAX_STR_LEN];
 };
 
@@ -432,7 +433,7 @@ struct cs_packet_chat
 	unsigned char	size;
 	char			type;
 
-	char			message[MAX_STR_LEN];
+	wchar_t			message[MAX_STR_LEN];
 };
 
 struct cs_packet_logout 

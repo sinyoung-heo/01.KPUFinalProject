@@ -182,7 +182,13 @@ void process_packet(int id)
 	break;
 
 	case CS_CHAT:
-		break;
+	{
+		cs_packet_chat* p = reinterpret_cast<cs_packet_chat*>(pPlayer->m_packet_start);
+		
+		process_chat(id, p->message);
+	}
+	break;
+
 	case CS_LOGOUT:
 	{
 		process_disconnect(id);
@@ -611,7 +617,10 @@ void send_reject_party(int to_client, int id)
 	p.type = SC_PACKET_REJECT_PARTY;
 	p.id = id;
 
+	strncpy_s(p.name, "0", strlen("0"));
 	lstrcpyn(p.message, L"파티 참여를 거절하였습니다.", lstrlen(L"파티 참여를 거절하였습니다."));
+	
+	send_packet(to_client, &p);
 }
 
 void send_join_party(int to_client, int id)
@@ -649,6 +658,20 @@ void send_update_party(const int& to_client, const int& id, const int& hp, const
 	p.mp	= mp;
 	p.maxMp = maxMp;
 
+	send_packet(to_client, &p);
+}
+
+void send_chat(const int& to_client, const int& id, const char* name, const wchar_t* buffer)
+{
+	sc_packet_chat p;
+
+	p.size	= sizeof(p);
+	p.type	= SC_PACKET_CHAT;
+	p.id	= id;
+
+	strncpy_s(p.name, name, strlen(name));
+	lstrcpyn(p.message, buffer, lstrlen(buffer));
+	
 	send_packet(to_client, &p);
 }
 
@@ -1599,7 +1622,6 @@ void process_respond_party(const bool& result, const int& suggester_id, const in
 	{
 		// 거절 메시지 전송
 		send_reject_party(suggester_id, responder_id);
-		cout << "파티 거절 메시지 전송" << endl;
 	}
 	// 제안 수락
 	else
@@ -1626,8 +1648,6 @@ void process_respond_party(const bool& result, const int& suggester_id, const in
 
 			// 1-4. 새로운 멤버 파티 참여 상태로 변경
 			pResponder->m_bIsPartyState = true;
-
-			cout << "파티 새로 생성 후 새로운 파티멤버 등록" << endl;
 		}
 		// 2. 파티초대자가 참여된 파티가 있을 경우
 		else
@@ -1637,8 +1657,6 @@ void process_respond_party(const bool& result, const int& suggester_id, const in
 			
 			// 2-2. 새로운 멤버 파티 참여 상태로 변경
 			pResponder->m_bIsPartyState = true;
-
-			cout << "새로운 파티멤버 등록" << endl;
 		}
 
 		// 3. 파티구성원들에게 새로운 파티멤버 정보 전송
@@ -1656,8 +1674,6 @@ void process_respond_party(const bool& result, const int& suggester_id, const in
 				send_partyMemberInfo(responder_id, p, pMember->m_iHp, pMember->m_iMaxHp, pMember->m_iMp, pMember->m_iMaxMp, pMember->m_ID, pMember->m_type);
 			}
 		}
-
-		cout << "파티원 업데이트 및 완료" << endl;
 	}
 }
 
@@ -1681,7 +1697,6 @@ void process_decide_party(const bool& result, const int& joinner_id, const int& 
 	{
 		// 거절 메시지 전송
 		send_reject_party(joinner_id, responder_id);
-		cout << "파티 참여 신청 거절 메시지 전송" << endl;
 	}
 	// 참여 신청 수락
 	else
@@ -1700,8 +1715,6 @@ void process_decide_party(const bool& result, const int& joinner_id, const int& 
 		// 1-2. 새로운 멤버 파티 참여 상태로 변경
 		pJoinner->m_bIsPartyState = true;
 
-		cout << "파티참여 신청멤버 파티에 등록 완료" << endl;
-
 		// 2. 파티구성원들에게 새로운 파티멤버 정보 전송
 		for (auto& p : *CObjMgr::GetInstance()->Get_PARTYLIST(pResponder->m_iPartyNumber))
 		{
@@ -1717,8 +1730,6 @@ void process_decide_party(const bool& result, const int& joinner_id, const int& 
 				send_partyMemberInfo(joinner_id, p, pMember->m_iHp, pMember->m_iMaxHp, pMember->m_iMp, pMember->m_iMaxMp, pMember->m_ID, pMember->m_type);
 			}
 		}
-
-		cout << "파티원 업데이트 및 완료" << endl;
 	}
 }
 
@@ -1822,6 +1833,20 @@ void process_disconnect(const int& id)
 
 	CObjPoolMgr::GetInstance()->return_Object(L"PLAYER", pPlayer);
 	CObjMgr::GetInstance()->Delete_GameObject(L"PLAYER", pPlayer);
+}
+
+void process_chat(const int& id, const wchar_t* buffer)
+{
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pPlayer == nullptr) return;
+
+	auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER")->begin();
+	auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER")->end();
+
+	for (iter_begin; iter_begin != iter_end; ++iter_begin)
+	{
+		send_chat(iter_begin->second->m_sNum, id, pPlayer->m_ID, buffer);	
+	}
 }
 
 /*===========================================FUNC====================================================*/

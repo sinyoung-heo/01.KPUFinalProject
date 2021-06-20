@@ -18,12 +18,13 @@ void send_reject_party(int to_client, int id);
 void send_join_party(int to_client, int id);
 void send_leave_party(int to_client, int id);
 void send_update_party(const int& to_client, const int& id, const int& hp, const int& maxHp, const int& mp, const int& maxMp);
+void send_chat(const int& to_client, const int& id, const char* name, const wchar_t* buffer);
 
-void process_move(int id, const _vec3& _vDir, const _vec3& _vPos);					// 움직임 처리 함수
+void process_move(int id, const _vec3& _vDir, const _vec3& _vPos);										// 움직임 처리 함수
 void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir);
-void process_collide(int id, int colID, int damage);											// 다른 OBJECT와 충돌했을 경우
-void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx, float end_angleY);	// 공격 처리
-void process_attack_stop(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx);	// 공격 중단 처리
+void process_collide(int id, int colID, int damage);													// 다른 OBJECT와 충돌했을 경우
+void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx, float end_angleY);		// 공격 처리
+void process_attack_stop(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx);					// 공격 중단 처리
 void process_stance_change(int id, const bool& stance);
 void process_stage_change(int id, const char& stage_id);
 void process_suggest_party(const int& suggester_id, const int& others_id);
@@ -32,6 +33,7 @@ void process_join_party(const int& joinner_id, const int& others_id);
 void process_decide_party(const bool& result, const int& joinner_id, const int& responder_id);
 void process_leave_party(const int& id);
 void process_disconnect(const int& id);
+void process_chat(const int& id, const wchar_t* buffer);
 
 /* 패킷 관리 및 처리 함수 */
 void process_packet(int id);													// 패킷 처리 함수 (모든 컨텐츠 처리)

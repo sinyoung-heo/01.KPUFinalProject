@@ -189,6 +189,15 @@ void CPacketMgr::Process_packet()
 	case SC_PACKET_LOGIN_FAIL:
 		break;
 
+	case SC_PACKET_CHAT:
+	{
+		sc_packet_chat* packet = reinterpret_cast<sc_packet_chat*>(m_packet_start);
+
+		// 유저 닉네임 : char
+		// 유저 메시지 : wchar_t
+	}
+	break;
+
 	case SC_PACKET_ENTER:
 	{
 		sc_packet_enter* packet = reinterpret_cast<sc_packet_enter*>(m_packet_start);
@@ -364,7 +373,6 @@ void CPacketMgr::Process_packet()
 	{
 		// 파티초대 or 파티가입요청 거절.
 		sc_packet_chat* packet = reinterpret_cast<sc_packet_chat*>(m_packet_start);
-
 	}
 	break;
 
