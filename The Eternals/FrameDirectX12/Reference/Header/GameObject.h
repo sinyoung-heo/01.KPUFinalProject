@@ -114,6 +114,7 @@ public:
 	// Setting Party List
 	void			Enter_PartyMember(const int& iSNum, const PARTYMEMBER memberInfo)	{ m_mapPartyList[iSNum] = memberInfo; }
 	void			Leave_PartyMember(const int& iSNum)									{ m_mapPartyList.erase(iSNum); }
+	void			Update_PartyMember(const int& iSNum, const int& hp, const int& maxHp, const int& mp, const int& maxMp);
 	void			Clear_PartyMember()													{ m_mapPartyList.clear(); }
 
 	//Red value

@@ -234,6 +234,11 @@ void CGameObject::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCom
 {
 }
 
+void CGameObject::Update_PartyMember(const int& iSNum, const int& hp, const int& maxHp, const int& mp, const int& maxMp)
+{
+	m_mapPartyList[iSNum].Update_Info(hp, maxHp, mp, maxMp);
+}
+
 void CGameObject::Render_HitEffect(const _float& fTimeDelta)
 {
 	if (m_bisHitted)

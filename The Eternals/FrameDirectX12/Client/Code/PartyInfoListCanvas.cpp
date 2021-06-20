@@ -11,7 +11,7 @@ CPartyInfoListCanvas::CPartyInfoListCanvas(ID3D12Device* pGraphicDevice, ID3D12G
 
 void CPartyInfoListCanvas::Set_UserName(char* pUserName)
 {
-	_tchar* pOut = L"";
+	_tchar szOut[MAX_STR] = L"";
 	/*____________________________________________________________________
 	멀티바이트 형식을 유니코드 형식으로 바꿔주는 함수.
 	______________________________________________________________________*/
@@ -19,10 +19,10 @@ void CPartyInfoListCanvas::Set_UserName(char* pUserName)
 						0,
 						pUserName,		// 변환 할 문자열.
 						(_int)strlen(pUserName),
-						pOut,			// 변환 값 저장 버퍼.
+						szOut,			// 변환 값 저장 버퍼.
 						MAX_STR);
 
-	m_pFont->Set_Text(pOut);
+	m_pFont->Set_Text(szOut);
 }
 
 HRESULT CPartyInfoListCanvas::Ready_GameObject(wstring wstrObjectTag,

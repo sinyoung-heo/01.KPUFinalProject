@@ -955,6 +955,15 @@ namespace Engine
 			strncpy(cName, name, sizeof(name));
 		}
 
+		/* FUNC */
+		void Update_Info(const _int& hp, const _int& maxHp, const _int& mp, const _int& maxMp)
+		{
+			iHp		= hp;
+			iMaxHp	= maxHp;
+			iMp		= mp;
+			iMaxMp	= maxMp;
+		}
+
 		char cName[32];
 		char cJob			= -1;
 		_int iHp			= 0;

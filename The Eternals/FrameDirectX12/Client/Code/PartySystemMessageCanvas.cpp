@@ -17,7 +17,7 @@ void CPartySystemMessageCanvas::Set_PartyMessageState(const PARTY_SYSTEM_MESSAGE
 
 	if (PARTY_SYSTEM_MESSAGE::ENTER_PARTY_MEMBER == eState)
 	{
-		_tchar* pOut = L"";
+		_tchar szOut[MAX_STR] = L"";
 		/*____________________________________________________________________
 		멀티바이트 형식을 유니코드 형식으로 바꿔주는 함수.
 		______________________________________________________________________*/
@@ -25,10 +25,10 @@ void CPartySystemMessageCanvas::Set_PartyMessageState(const PARTY_SYSTEM_MESSAGE
 							0,
 							pName,			// 변환 할 문자열.
 							(_int)strlen(pName),
-							pOut,			// 변환 값 저장 버퍼.
+							szOut,			// 변환 값 저장 버퍼.
 							MAX_STR);
 
-		wstring wstrUserName = pOut;
+		wstring wstrUserName = szOut;
 		wstring wstrUserJob = L"";
 
 		if (chJob == PC_GLADIATOR)

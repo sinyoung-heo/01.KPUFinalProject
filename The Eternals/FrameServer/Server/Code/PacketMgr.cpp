@@ -636,6 +636,22 @@ void send_leave_party(int to_client, int id)
 	send_packet(to_client, &p);
 }
 
+void send_update_party(const int& to_client, const int& id, const int& hp, const int& maxHp, const int& mp, const int& maxMp)
+{
+	sc_packet_update_party p;
+
+	p.size	= sizeof(p);
+	p.type	= SC_PACKET_UPDATE_PARTY;
+	p.id	= id;
+
+	p.hp	= hp;
+	p.maxHp = maxHp;
+	p.mp	= mp;
+	p.maxMp = maxMp;
+
+	send_packet(to_client, &p);
+}
+
 void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
@@ -1077,14 +1093,13 @@ void process_collide(int id, int colID, int damage)
 		/* 해당 유저에게 바뀐 stat 전송 */
 		send_player_stat(id, id);
 
-		/* 시야 목록 내의 객체 처리 */
-		for (int server_num : viewlist)
+		/* 해당 유저가 파티에 가입되어 있는 상태일 경우 파티원에게 전송 */
+		if (pPlayer->m_bIsPartyState)
 		{
-			if (server_num == id) continue;
-			// 시야 내의 다른 유저들에게 바뀐 스탯 전송
-			if (true == CObjMgr::GetInstance()->Is_Player(server_num))
+			for (auto& p : *CObjMgr::GetInstance()->Get_PARTYLIST(pPlayer->m_iPartyNumber))
 			{
-				send_player_stat(server_num, id);
+				if (p == id) continue;
+				send_update_party(p, id, pPlayer->m_iHp, pPlayer->m_iMaxHp, pPlayer->m_iMp, pPlayer->m_iMaxMp);
 			}
 		}
 	}

@@ -3,6 +3,7 @@
 #include "DirectInput.h"
 #include "Font.h"
 #include "GameUIRoot.h"
+#include "PartySystemMgr.h"
 
 CPartyLeaveButton::CPartyLeaveButton(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
@@ -87,6 +88,7 @@ _int CPartyLeaveButton::LateUpdate_GameObject(const _float& fTimeDelta)
 			pThisPlayer->Set_RequestParty(false);
 			pThisPlayer->JoinRequest_Party(false);
 			pThisPlayer->Set_PartySuggestSNum(-1);
+			CPartySystemMgr::Get_Instance()->SetUp_ThisPlayerPartyList();
 		}
 	}
 

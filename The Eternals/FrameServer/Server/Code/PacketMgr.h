@@ -17,6 +17,7 @@ void send_partyMemberInfo(int to_client, int id, const int& hp, const int& maxHp
 void send_reject_party(int to_client, int id);
 void send_join_party(int to_client, int id);
 void send_leave_party(int to_client, int id);
+void send_update_party(const int& to_client, const int& id, const int& hp, const int& maxHp, const int& mp, const int& maxMp);
 
 void process_move(int id, const _vec3& _vDir, const _vec3& _vPos);					// 움직임 처리 함수
 void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir);

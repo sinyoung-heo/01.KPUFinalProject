@@ -52,6 +52,7 @@ constexpr char SC_PACKET_ENTER_PARTY_MEMBER = 23;
 constexpr char SC_PACKET_REJECT_PARTY		= 24;
 constexpr char SC_PACKET_JOIN_PARTY			= 25;
 constexpr char SC_PACKET_LEAVE_PARTY		= 26;
+constexpr char SC_PACKET_UPDATE_PARTY		= 27;
 
 constexpr char CS_LOGIN					= 0;
 constexpr char CS_MOVE					= 1;
@@ -347,6 +348,16 @@ struct sc_packet_update_party_new_member
 
 	char			name[MAX_ID_LEN];
 	char			o_type;
+	int				hp, maxHp;
+	int				mp, maxMp;
+};
+
+struct sc_packet_update_party
+{
+	unsigned char	size;
+	char			type;
+	int				id;
+
 	int				hp, maxHp;
 	int				mp, maxMp;
 };
