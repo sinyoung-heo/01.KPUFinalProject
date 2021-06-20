@@ -194,8 +194,6 @@ void CPacketMgr::Process_packet()
 	{
 		sc_packet_chat* packet = reinterpret_cast<sc_packet_chat*>(m_packet_start);
 
-		// 유저 닉네임 : char
-		// 유저 메시지 : wchar_t
 		_tchar szOut[MAX_STR] = L"";
 		/*____________________________________________________________________
 		멀티바이트 형식을 유니코드 형식으로 바꿔주는 함수.
@@ -204,9 +202,10 @@ void CPacketMgr::Process_packet()
 							0,
 							packet->message,		// 변환 할 문자열.
 							(_int)strlen(packet->message),
-							szOut,			// 변환 값 저장 버퍼.
+							szOut,					// 변환 값 저장 버퍼.
 							MAX_STR);
-		
+
+		szOut[strlen(packet->message) + 1] = '\0';
 		CChattingMgr::Get_Instance()->Push_ChattingMessage(packet->name, szOut);
 	}
 	break;
@@ -1311,7 +1310,6 @@ void CPacketMgr::send_chat(const wchar_t* message)
 	p.size = sizeof(p);
 	p.type = CS_CHAT;
 
-	
 	WideCharToMultiByte(CP_ACP,
 						0,
 						message,         // 변환 할 문자열.
@@ -1320,6 +1318,8 @@ void CPacketMgr::send_chat(const wchar_t* message)
 						MAX_STR,
 						NULL,
 						NULL);
+
+	p.message[lstrlen(message) + 1] = '\0';
 
 	//strncpy(p.message, "RRRR", strlen("RRRR"));
 	//lstrcpyn(p.message, message, lstrlen(message) + 1);
