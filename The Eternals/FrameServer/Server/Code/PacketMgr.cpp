@@ -618,7 +618,7 @@ void send_reject_party(int to_client, int id)
 	p.id = id;
 
 	strncpy_s(p.name, "0", strlen("0"));
-	lstrcpyn(p.message, L"파티 참여를 거절하였습니다.", lstrlen(L"파티 참여를 거절하였습니다."));
+	strncpy_s(p.message, "파티 참여를 거절하였습니다.", strlen("파티 참여를 거절하였습니다."));
 	
 	send_packet(to_client, &p);
 }
@@ -661,7 +661,7 @@ void send_update_party(const int& to_client, const int& id, const int& hp, const
 	send_packet(to_client, &p);
 }
 
-void send_chat(const int& to_client, const int& id, const char* name, const wchar_t* buffer)
+void send_chat(const int& to_client, const int& id, const char* name, const char* buffer)
 {
 	sc_packet_chat p;
 
@@ -670,7 +670,7 @@ void send_chat(const int& to_client, const int& id, const char* name, const wcha
 	p.id	= id;
 
 	strncpy_s(p.name, name, strlen(name));
-	lstrcpyn(p.message, buffer, lstrlen(buffer));
+	strncpy_s(p.message, buffer, strlen(buffer));
 	
 	send_packet(to_client, &p);
 }
@@ -1835,7 +1835,7 @@ void process_disconnect(const int& id)
 	CObjMgr::GetInstance()->Delete_GameObject(L"PLAYER", pPlayer);
 }
 
-void process_chat(const int& id, const wchar_t* buffer)
+void process_chat(const int& id, const char* buffer)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 	if (pPlayer == nullptr) return;
