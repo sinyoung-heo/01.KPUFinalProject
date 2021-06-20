@@ -44,7 +44,7 @@
 #include "PartyLeaveButton.h"
 #include "PartySystemMessageCanvas.h"
 #include "PartyInfoListCanvas.h"
-#include "ChattingCanvas.h"
+#include "ChattingMgr.h"
 
 CScene_MainStage::CScene_MainStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -2182,6 +2182,7 @@ HRESULT CScene_MainStage::SetUP_UIChattingCanvas()
 											  vRectScale,
 											  UIDepth);
 			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+			CChattingMgr::Get_Instance()->Set_ChattingCanvasClass(static_cast<CChattingCanvas*>(pRootUI));
 
 			// UIChild »ý¼º.
 			for (_int i = 0; i < iChildUISize; ++i)
@@ -2190,17 +2191,19 @@ HRESULT CScene_MainStage::SetUP_UIChattingCanvas()
 
 				if (L"UIChattingInput" == vecObjectTag[i])
 				{
-					pChildUI = CChattingInputString::Create(m_pGraphicDevice, m_pCommandList,
-															wstrRootObjectTag,					// RootObjectTag
-															vecObjectTag[i],					// ObjectTag
-															vecDataFilePath[i],					// DataFilePath
-															vecPos[i],							// Pos
-															vecScale[i],						// Scane
-															(_bool)vecIsSpriteAnimation[i],		// Is Animation
-															vecFrameSpeed[i],					// FrameSpeed
-															vecRectPosOffset[i],				// RectPosOffset
-															vecRectScale[i],					// RectScaleOffset
-															vecUIDepth[i]);						// UI Depth
+					pChildUI = CChattingInput::Create(m_pGraphicDevice, m_pCommandList,
+													  wstrRootObjectTag,				// RootObjectTag
+													  vecObjectTag[i],					// ObjectTag
+													  vecDataFilePath[i],				// DataFilePath
+													  vecPos[i],						// Pos
+													  vecScale[i],						// Scane
+													  (_bool)vecIsSpriteAnimation[i],	// Is Animation
+													  vecFrameSpeed[i],					// FrameSpeed
+													  vecRectPosOffset[i],				// RectPosOffset
+													  vecRectScale[i],					// RectScaleOffset
+													  vecUIDepth[i]);					// UI Depth
+
+					CChattingMgr::Get_Instance()->Set_ChattingInputClass(static_cast<CChattingInput*>(pChildUI));
 				}
 				else if (L"UIChattingCursor" == vecObjectTag[i])
 				{
@@ -2216,6 +2219,7 @@ HRESULT CScene_MainStage::SetUP_UIChattingCanvas()
 													   vecRectScale[i],						// RectScaleOffset
 													   vecUIDepth[i]);						// UI Depth
 
+					CChattingMgr::Get_Instance()->Set_ChattingCursorClass(static_cast<CChattingCursor*>(pChildUI));
 				}
 
 				if (nullptr != pChildUI)

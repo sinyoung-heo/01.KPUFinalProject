@@ -2250,7 +2250,7 @@ void CPCGladiator::Collision_Merchant(list<Engine::CColliderSphere*>& lstMerchan
 				pObj->Set_State(Baraka_M_Merchant::A_TALK);
 		
 				/* Shop Open */
-				if (Engine::KEY_DOWN(DIK_F))
+				if (Engine::KEY_DOWN(DIK_F) && NO_EVENT_STATE)
 				{				
 					KeyInput_OpenShop(pObj->Get_NPCNumber());
 				}
@@ -2277,7 +2277,7 @@ void CPCGladiator::Collision_Quest(list<Engine::CColliderSphere*>& lstMerchantCo
 				pObj->Set_State(Castanic_M_Lsmith::A_TALK);
 
 				/* Shop Open */
-				if (Engine::KEY_DOWN(DIK_F))
+				if (Engine::KEY_DOWN(DIK_F) && NO_EVENT_STATE)
 				{
 					KeyInput_OpenQuest(pObj->Get_NPCNumber());
 				}
@@ -2361,7 +2361,9 @@ void CPCGladiator::Suggest_PartyToOthers()
 
 void CPCGladiator::Leave_PartyThisPlayer()
 {
-	if (Engine::KEY_DOWN(DIK_P))
+	if (!g_bIsActive) return;
+
+	if (Engine::KEY_DOWN(DIK_P) && NO_EVENT_STATE)
 	{
 		m_pPartySystemMgr->Get_PartyLeaveCanvas()->Reverse_IsActive();
 		m_pPartySystemMgr->Get_PartyLeaveCanvas()->Reverse_IsActiveChild();

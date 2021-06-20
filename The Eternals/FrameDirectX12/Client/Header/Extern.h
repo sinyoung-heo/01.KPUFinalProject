@@ -14,6 +14,7 @@ extern char		g_cJob;
 extern _bool g_bIsOnDebugCaemra;
 extern _bool g_bIsStageChange;
 extern _bool g_bIsOpenShop;
+extern _bool g_bIsChattingInput;
 
 // Loading
 extern _bool g_bIsLoadingFinish;

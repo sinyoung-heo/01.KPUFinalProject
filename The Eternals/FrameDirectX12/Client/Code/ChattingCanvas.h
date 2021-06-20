@@ -1,7 +1,5 @@
 #pragma once
 #include "GameUIRoot.h"
-#include "ChattingCursor.h"
-#include "ChattingInputString.h"
 
 class CChattingCanvas : public CGameUIRoot
 {

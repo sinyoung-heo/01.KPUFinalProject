@@ -50,7 +50,33 @@ _int CChattingCursor::Update_GameObject(const _float& fTimeDelta)
 	if (!m_bIsActive)
 		return NO_EVENT;
 
-	CGameUIChild::Update_GameObject(fTimeDelta);
+	if (g_bIsChattingInput)
+	{
+
+		if (m_bIsRenderOn)
+		{
+			m_fRenderTime += fTimeDelta;
+
+			if (m_fRenderTime >= m_fUpdateRenderTime)
+			{
+				m_fRenderTime = 0.0f;
+				m_bIsRenderOn = false;
+			}
+		}
+
+		if (!m_bIsRenderOn)
+		{
+			m_fTime += fTimeDelta;
+			if (m_fTime >= m_fUpdateTime)
+			{
+				m_fTime       = 0.0f;
+				m_bIsRenderOn = true;
+			}
+		}
+
+		if (m_bIsRenderOn)
+			CGameUIChild::Update_GameObject(fTimeDelta);
+	}
 
 	return NO_EVENT;
 }
@@ -60,7 +86,8 @@ _int CChattingCursor::LateUpdate_GameObject(const _float& fTimeDelta)
 	if (!m_bIsActive)
 		return NO_EVENT;
 
-	CGameUIChild::LateUpdate_GameObject(fTimeDelta);
+	if (g_bIsChattingInput)
+		CGameUIChild::LateUpdate_GameObject(fTimeDelta);
 
 	return NO_EVENT;
 }

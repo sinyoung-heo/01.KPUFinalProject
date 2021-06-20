@@ -1,11 +1,11 @@
 #pragma once
 #include "GameUIChild.h"
 
-class CChattingInputString : public CGameUIChild
+class CChattingInput : public CGameUIChild
 {
 private:
-	explicit CChattingInputString(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CChattingInputString() = default;
+	explicit CChattingInput(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CChattingInput() = default;
 
 public:
 	// CGameObject을(를) 통해 상속됨

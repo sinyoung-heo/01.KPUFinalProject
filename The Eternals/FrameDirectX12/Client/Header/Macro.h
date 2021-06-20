@@ -24,7 +24,7 @@ ______________________________________________________________________*/
 #define	LEFT_DOWN	225.f
 #define	BACK		180.f
 
-#define NO_EVENT_STATE (!g_bIsOnDebugCaemra && !g_bIsStageChange && !g_bIsOpenShop && !CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse())
+#define NO_EVENT_STATE (!g_bIsOnDebugCaemra && !g_bIsStageChange && !g_bIsOpenShop && !g_bIsChattingInput && !CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse())
 
 /* 서버 오류 체크 함수 */
 inline void error_display(const char* msg, int err_no)

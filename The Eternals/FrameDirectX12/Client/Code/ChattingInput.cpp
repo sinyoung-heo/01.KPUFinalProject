@@ -1,12 +1,12 @@
 #include "stdafx.h"
-#include "ChattingInputString.h"
+#include "ChattingInput.h"
 
-CChattingInputString::CChattingInputString(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CChattingInput::CChattingInput(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
 {
 }
 
-HRESULT CChattingInputString::Ready_GameObject(wstring wstrRootObjectTag, 
+HRESULT CChattingInput::Ready_GameObject(wstring wstrRootObjectTag, 
 											   wstring wstrObjectTag, 
 											   wstring wstrDataFilePath,
 											   const _vec3& vPos, 
@@ -33,14 +33,14 @@ HRESULT CChattingInputString::Ready_GameObject(wstring wstrRootObjectTag,
 	return S_OK;
 }
 
-HRESULT CChattingInputString::LateInit_GameObject()
+HRESULT CChattingInput::LateInit_GameObject()
 {
 	Engine::FAILED_CHECK_RETURN(CGameUIChild::LateInit_GameObject(), E_FAIL);
 
 	return S_OK;
 }
 
-_int CChattingInputString::Update_GameObject(const _float& fTimeDelta)
+_int CChattingInput::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 	
@@ -54,7 +54,7 @@ _int CChattingInputString::Update_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CChattingInputString::LateUpdate_GameObject(const _float& fTimeDelta)
+_int CChattingInput::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	if (!m_bIsActive)
 		return NO_EVENT;
@@ -64,12 +64,12 @@ _int CChattingInputString::LateUpdate_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-void CChattingInputString::Render_GameObject(const _float& fTimeDelta)
+void CChattingInput::Render_GameObject(const _float& fTimeDelta)
 {
 	CGameUIChild::Render_GameObject(fTimeDelta);
 }
 
-Engine::CGameObject* CChattingInputString::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
+Engine::CGameObject* CChattingInput::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 												  wstring wstrRootObjectTag,
 												  wstring wstrObjectTag, 
 												  wstring wstrDataFilePath,
@@ -81,7 +81,7 @@ Engine::CGameObject* CChattingInputString::Create(ID3D12Device* pGraphicDevice, 
 												  const _vec3& vRectScale, 
 												  const _long& iUIDepth)
 {
-	CChattingInputString* pInstance = new CChattingInputString(pGraphicDevice, pCommandList);
+	CChattingInput* pInstance = new CChattingInput(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrRootObjectTag,
 										   wstrObjectTag,
@@ -98,7 +98,7 @@ Engine::CGameObject* CChattingInputString::Create(ID3D12Device* pGraphicDevice, 
 	return pInstance;
 }
 
-void CChattingInputString::Free()
+void CChattingInput::Free()
 {
 	CGameUIChild::Free();
 }

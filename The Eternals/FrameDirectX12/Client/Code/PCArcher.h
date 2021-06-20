@@ -2,6 +2,7 @@
 #include "Include.h"
 #include "GameObject.h"
 #include "ArcherAnimation.h"
+#include "PartySystemMgr.h"
 
 namespace Engine
 {
@@ -94,7 +95,8 @@ private:
 	void Collision_PortalBeachToVelika(list<Engine::CColliderSphere*>& lstPortalCollider);
 	void Collision_Merchant(list<Engine::CColliderSphere*>& lstMerchantCollider, int npcServerNumber);
 	void Collision_Quest(list<Engine::CColliderSphere*>& lstMerchantCollider, int npcServerNumber);
-
+	void Suggest_PartyToOthers();
+	void Leave_PartyThisPlayer();
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -112,6 +114,8 @@ private:
 	CPacketMgr*			m_pPacketMgr       = nullptr;
 	CServerMath*		m_pServerMath      = nullptr;
 	CInstancePoolMgr*	m_pInstancePoolMgr = nullptr;
+	CMouseCursorMgr*	m_pMouserMgr       = nullptr;
+	CPartySystemMgr*	m_pPartySystemMgr  = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]

@@ -18,6 +18,7 @@
 #include "CollisionMgr.h"
 #include "InstancePoolMgr.h"
 #include "PartySystemMgr.h"
+#include "ChattingMgr.h"
 #include <chrono>
 
 #define MAX_LOADSTRING 100
@@ -37,6 +38,7 @@ _bool g_bIsStageChange   = false;
 _bool g_bIsOpenShop		 = false;
 _bool g_bIsLoadingFinish = false;
 _bool g_bIsExitGame      = false;
+_bool g_bIsChattingInput = false;
 
 _ulong Release_Singleton();
 
@@ -320,7 +322,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		switch (wParam)
 		{
 		case VK_ESCAPE:
-			DestroyWindow(g_hWnd);
+			// DestroyWindow(g_hWnd);
 			break;
 
 		default:
@@ -353,6 +355,12 @@ _ulong Release_Singleton()
 	COUT_STR("-------------------------");
 #endif
 	_ulong dwRefCnt = 0;
+
+	if (dwRefCnt = CChattingMgr::Get_Instance()->Destroy_Instance())
+	{
+		MSG_BOX(L"CChattingMgr Release Failed");
+		return dwRefCnt;
+	}
 
 	if (dwRefCnt = CEffectMgr::Get_Instance()->Destroy_Instance())
 	{

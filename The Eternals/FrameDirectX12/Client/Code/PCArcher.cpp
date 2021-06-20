@@ -19,17 +19,20 @@
 #include "ShaderMgr.h"
 #include "PCWeaponBow.h"
 #include "CollisionArrow.h"
-
 #include "LightingParticle.h"
 #include "MagicCircle.h"
 #include "SnowParticle.h"
 #include "DistTrail.h"
 #include "TextureEffect.h"
+#include "PartySuggestCanvas.h"
+
 CPCArcher::CPCArcher(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pPacketMgr(CPacketMgr::Get_Instance())
 	, m_pServerMath(CServerMath::Get_Instance())
 	, m_pInstancePoolMgr(CInstancePoolMgr::Get_Instance())
+	, m_pMouserMgr(CMouseCursorMgr::Get_Instance())
+	, m_pPartySystemMgr(CPartySystemMgr::Get_Instance())
 {
 }
 
@@ -284,6 +287,9 @@ void CPCArcher::Process_Collision()
 		if (L"NPC_QUest" == pDst->Get_CollisionTag())
 			Collision_Quest(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
 	}
+
+	Suggest_PartyToOthers();
+	Leave_PartyThisPlayer();
 }
 
 void CPCArcher::Send_PacketToServer()
@@ -1831,6 +1837,8 @@ void CPCArcher::Collision_PortalBeachToVelika(list<Engine::CColliderSphere*>& ls
 
 void CPCArcher::Collision_Merchant(list<Engine::CColliderSphere*>& lstMerchantCollider, int npcServerNumber)
 {
+	if (!g_bIsActive) return;
+
 	for (auto& pSrcCollider : m_lstCollider)
 	{
 		for (auto& pDstCollider : lstMerchantCollider)
@@ -1845,7 +1853,7 @@ void CPCArcher::Collision_Merchant(list<Engine::CColliderSphere*>& lstMerchantCo
 				pObj->Set_State(Baraka_M_Merchant::A_TALK);
 		
 				/* Shop Open */
-				if (Engine::KEY_DOWN(DIK_F))
+				if (Engine::KEY_DOWN(DIK_F) && NO_EVENT_STATE)
 				{				
 					KeyInput_OpenShop(pObj->Get_NPCNumber());
 				}
@@ -1856,6 +1864,8 @@ void CPCArcher::Collision_Merchant(list<Engine::CColliderSphere*>& lstMerchantCo
 
 void CPCArcher::Collision_Quest(list<Engine::CColliderSphere*>& lstMerchantCollider, int npcServerNumber)
 {
+	if (!g_bIsActive) return;
+
 	for (auto& pSrcCollider : m_lstCollider)
 	{
 		for (auto& pDstCollider : lstMerchantCollider)
@@ -1872,12 +1882,49 @@ void CPCArcher::Collision_Quest(list<Engine::CColliderSphere*>& lstMerchantColli
 				pObj->Set_State(Castanic_M_Lsmith::A_TALK);
 
 				/* Shop Open */
-				if (Engine::KEY_DOWN(DIK_F))
+				if (Engine::KEY_DOWN(DIK_F) && NO_EVENT_STATE)
 				{
 					KeyInput_OpenQuest(pObj->Get_NPCNumber());
 				}
 			}
 		}
+	}
+}
+
+void CPCArcher::Suggest_PartyToOthers()
+{
+	// Picking Others
+	if (m_pMouserMgr->Get_IsActiveMouse() && Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON(Engine::DIM_RB)))
+	{
+		Engine::OBJLIST*		pOthersList    = m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"Others");
+		Engine::CGameObject*	pPickingOthers = nullptr;
+		if (nullptr == pOthersList || pOthersList->empty())
+			return;
+
+		m_pPartySystemMgr->Set_SelectPlayer(nullptr);
+		m_pPartySystemMgr->Get_PartySuggestCanvas()->Set_IsActive(false);
+		m_pPartySystemMgr->Get_PartySuggestCanvas()->Set_IsChildActive(false);
+
+		if (m_pMouserMgr->Check_PickingBoundingBox(&pPickingOthers, pOthersList))
+		{
+			POINT pt = m_pMouserMgr->Get_CursorPoint();
+
+			m_pPartySystemMgr->Set_SelectPlayer(pPickingOthers);
+			m_pPartySystemMgr->Get_PartySuggestCanvas()->Set_IsActive(true);
+			m_pPartySystemMgr->Get_PartySuggestCanvas()->Set_IsChildActive(true);
+			m_pPartySystemMgr->Get_PartySuggestCanvas()->Get_Transform()->m_vPos = _vec3((_float)pt.x + 32.0f, (_float)pt.y, 1.0f);
+		}
+	}
+}
+
+void CPCArcher::Leave_PartyThisPlayer()
+{
+	if (!g_bIsActive) return;
+
+	if (Engine::KEY_DOWN(DIK_P) && NO_EVENT_STATE)
+	{
+		m_pPartySystemMgr->Get_PartyLeaveCanvas()->Reverse_IsActive();
+		m_pPartySystemMgr->Get_PartyLeaveCanvas()->Reverse_IsActiveChild();
 	}
 }
 
