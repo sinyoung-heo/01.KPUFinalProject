@@ -452,7 +452,9 @@ void CPacketMgr::Enter_PartyMember(sc_packet_update_party_new_member* packet, bo
 	}
 	
 	m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_IsActive(true);
-	m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_PartyMessageState(PARTY_SYSTEM_MESSAGE::ENTER_PARTY_MEMBER);
+	m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_PartyMessageState(PARTY_SYSTEM_MESSAGE::ENTER_PARTY_MEMBER,
+																			 packet->name, 
+																			 packet->o_type);
 	m_pPartySystemMgr->SetUp_ThisPlayerPartyList();
 
 	retflag = false;

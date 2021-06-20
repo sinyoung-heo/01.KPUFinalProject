@@ -8,14 +8,37 @@ CPartySystemMessageCanvas::CPartySystemMessageCanvas(ID3D12Device* pGraphicDevic
 {
 }
 
-void CPartySystemMessageCanvas::Set_PartyMessageState(const PARTY_SYSTEM_MESSAGE& eState)
+void CPartySystemMessageCanvas::Set_PartyMessageState(const PARTY_SYSTEM_MESSAGE& eState, 
+													  char* pName, 
+													  const char& chJob)
 {
 	if (nullptr == m_pFont)
 		return;
 
 	if (PARTY_SYSTEM_MESSAGE::ENTER_PARTY_MEMBER == eState)
 	{
-		m_pFont->Set_Text(L"새로운 파티원이 입장하였습니다.");
+		_tchar* pOut = L"";
+		/*____________________________________________________________________
+		멀티바이트 형식을 유니코드 형식으로 바꿔주는 함수.
+		______________________________________________________________________*/
+		MultiByteToWideChar(CP_ACP,
+							0,
+							pName,			// 변환 할 문자열.
+							(_int)strlen(pName),
+							pOut,			// 변환 값 저장 버퍼.
+							MAX_STR);
+
+		wstring wstrUserName = pOut;
+		wstring wstrUserJob = L"";
+
+		if (chJob == PC_GLADIATOR)
+			wstrUserJob = L"GLADIATOR";
+		else if (chJob == PC_ARCHER)
+			wstrUserJob = L"ARCHER";
+		else
+			wstrUserJob = L"PRIEST";
+
+		m_pFont->Set_Text(wstring(L"새로운 파티원이 입장하였습니다.\n") + wstring(L"Name : ") + wstrUserName + wstring(L" ") + wstrUserJob);
 	}
 	else if (PARTY_SYSTEM_MESSAGE::LEAVE_PARTY_MEMBER == eState)
 	{

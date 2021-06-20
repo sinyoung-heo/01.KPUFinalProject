@@ -9,7 +9,7 @@ private:
 
 public:
 	const PARTY_SYSTEM_MESSAGE& Get_PartyMessagetState() { return m_ePartyMessageState; }
-	void Set_PartyMessageState(const PARTY_SYSTEM_MESSAGE& eState);
+	void Set_PartyMessageState(const PARTY_SYSTEM_MESSAGE& eState, char* pName = "", const char& chJob = NULL);
 	void Set_PartyMemberInfo(wstring wstrName, const char& chOtype, const _int& iServerNum);
 
 	// CGameObject을(를) 통해 상속됨
