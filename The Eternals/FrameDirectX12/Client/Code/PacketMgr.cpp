@@ -358,10 +358,10 @@ void CPacketMgr::Process_packet()
 	}
 	break;
 
-	case SC_PACKET_ENTER_PARTY_MEMBER:
+	case SC_PACKET_ENTER_PARTY:
 	{
 		// 파티초대 제안을 수락.
-		sc_packet_update_party_new_member* packet = reinterpret_cast<sc_packet_update_party_new_member*>(m_packet_start);
+		sc_packet_enter_party* packet = reinterpret_cast<sc_packet_enter_party*>(m_packet_start);
 
 		bool retflag;
 		Enter_PartyMember(packet, retflag);
@@ -441,7 +441,7 @@ void CPacketMgr::Leave_Party(sc_packet_suggest_party* packet, bool& retflag)
 	retflag = false;
 }
 
-void CPacketMgr::Enter_PartyMember(sc_packet_update_party_new_member* packet, bool& retflag)
+void CPacketMgr::Enter_PartyMember(sc_packet_enter_party* packet, bool& retflag)
 {
 	retflag = true;
 	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");

@@ -66,7 +66,7 @@ public:
 	void	Leave_Object(sc_packet_leave* packet, int& retflag);
 	void	Join_Party(sc_packet_suggest_party* packet);
 	void	Leave_Party(sc_packet_suggest_party* packet, bool& retflag);
-	void	Enter_PartyMember(sc_packet_update_party_new_member* packet, bool& retflag);
+	void	Enter_PartyMember(sc_packet_enter_party* packet, bool& retflag);
 	void	Suggest_Party(sc_packet_suggest_party* packet);
 	void	Update_Party(sc_packet_update_party* packet);
 

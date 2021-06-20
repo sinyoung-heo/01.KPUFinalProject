@@ -13,7 +13,7 @@ void send_player_stat(int to_client, int id);
 void send_player_stance_change(int to_client, int id, const bool& st);
 void send_player_stage_change(int to_client, int id);
 void send_suggest_party(int to_client, int id);
-void send_partyMemberInfo(int to_client, int id, const int& hp, const int& maxHp, const int& mp, const int& maxMp, const char* ID, const char& job);
+void send_enter_party(int to_client, int id, const int& hp, const int& maxHp, const int& mp, const int& maxMp, const char* ID, const char& job);
 void send_reject_party(int to_client, int id);
 void send_join_party(int to_client, int id);
 void send_leave_party(int to_client, int id);

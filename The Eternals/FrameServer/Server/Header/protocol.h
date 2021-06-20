@@ -48,7 +48,7 @@ constexpr char SC_PACKET_STAGE_CHANGE		= 19;
 constexpr char SC_PACKET_ANIM_INDEX			= 20;
 constexpr char SC_PACKET_MONSTER_NUCKBACK	= 21;
 constexpr char SC_PACKET_SUGGEST_PARTY		= 22;
-constexpr char SC_PACKET_ENTER_PARTY_MEMBER = 23;
+constexpr char SC_PACKET_ENTER_PARTY		= 23;
 constexpr char SC_PACKET_REJECT_PARTY		= 24;
 constexpr char SC_PACKET_JOIN_PARTY			= 25;
 constexpr char SC_PACKET_LEAVE_PARTY		= 26;
@@ -341,7 +341,7 @@ struct sc_packet_suggest_party
 	int				id;
 };
 
-struct sc_packet_update_party_new_member
+struct sc_packet_enter_party
 {
 	unsigned char	size;
 	char			type;

@@ -591,12 +591,12 @@ void send_suggest_party(int to_client, int id)
 	send_packet(to_client, &p);
 }
 
-void send_partyMemberInfo(int to_client, int id, const int& hp, const int& maxHp, const int& mp, const int& maxMp, const char* ID, const char& job)
+void send_enter_party(int to_client, int id, const int& hp, const int& maxHp, const int& mp, const int& maxMp, const char* ID, const char& job)
 {
-	sc_packet_update_party_new_member p;
+	sc_packet_enter_party p;
 
 	p.size = sizeof(p);
-	p.type = SC_PACKET_ENTER_PARTY_MEMBER;
+	p.type = SC_PACKET_ENTER_PARTY;
 	p.id = id;
 
 	strncpy_s(p.name, ID, strlen(ID));
@@ -1669,9 +1669,9 @@ void process_respond_party(const bool& result, const int& suggester_id, const in
 				if (!pMember->m_bIsConnect) return;
 
 				// 새로운 멤버 정보 -> 기존 구성원
-				send_partyMemberInfo(p, responder_id, pResponder->m_iHp, pResponder->m_iMaxHp, pResponder->m_iMp, pResponder->m_iMaxMp, pResponder->m_ID, pResponder->m_type);
+				send_enter_party(p, responder_id, pResponder->m_iHp, pResponder->m_iMaxHp, pResponder->m_iMp, pResponder->m_iMaxMp, pResponder->m_ID, pResponder->m_type);
 				// 기존 구성원 정보 -> 새로운 멤버
-				send_partyMemberInfo(responder_id, p, pMember->m_iHp, pMember->m_iMaxHp, pMember->m_iMp, pMember->m_iMaxMp, pMember->m_ID, pMember->m_type);
+				send_enter_party(responder_id, p, pMember->m_iHp, pMember->m_iMaxHp, pMember->m_iMp, pMember->m_iMaxMp, pMember->m_ID, pMember->m_type);
 			}
 		}
 	}
@@ -1725,9 +1725,9 @@ void process_decide_party(const bool& result, const int& joinner_id, const int& 
 				if (!pMember->m_bIsConnect) return;
 
 				// 새로운 멤버 정보 -> 기존 구성원
-				send_partyMemberInfo(p, joinner_id, pJoinner->m_iHp, pJoinner->m_iMaxHp, pJoinner->m_iMp, pJoinner->m_iMaxMp, pJoinner->m_ID, pJoinner->m_type);
+				send_enter_party(p, joinner_id, pJoinner->m_iHp, pJoinner->m_iMaxHp, pJoinner->m_iMp, pJoinner->m_iMaxMp, pJoinner->m_ID, pJoinner->m_type);
 				// 기존 구성원 정보 -> 새로운 멤버
-				send_partyMemberInfo(joinner_id, p, pMember->m_iHp, pMember->m_iMaxHp, pMember->m_iMp, pMember->m_iMaxMp, pMember->m_ID, pMember->m_type);
+				send_enter_party(joinner_id, p, pMember->m_iHp, pMember->m_iMaxHp, pMember->m_iMp, pMember->m_iMaxMp, pMember->m_ID, pMember->m_type);
 			}
 		}
 	}
