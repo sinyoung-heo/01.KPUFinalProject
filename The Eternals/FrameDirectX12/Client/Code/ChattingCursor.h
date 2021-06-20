@@ -30,9 +30,9 @@ private:
 	_bool	m_bIsRenderOn	    = false;
 
 	_float	m_fTime             = 0.0f;
-	_float	m_fUpdateTime       = 0.5f;
+	_float	m_fUpdateTime       = 0.25f;
 	_float	m_fRenderTime       = 0.0f;
-	_float	m_fUpdateRenderTime = 0.5f;
+	_float	m_fUpdateRenderTime = 0.25f;
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,

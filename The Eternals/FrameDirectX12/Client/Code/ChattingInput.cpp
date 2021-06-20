@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ChattingInput.h"
+#include "DirectInput.h"
 
 CChattingInput::CChattingInput(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
@@ -49,6 +50,7 @@ _int CChattingInput::Update_GameObject(const _float& fTimeDelta)
 	if (!m_bIsActive)
 		return NO_EVENT;
 
+	KeyInput_Chatting(fTimeDelta);
 	CGameUIChild::Update_GameObject(fTimeDelta);
 
 	return NO_EVENT;
@@ -67,6 +69,17 @@ _int CChattingInput::LateUpdate_GameObject(const _float& fTimeDelta)
 void CChattingInput::Render_GameObject(const _float& fTimeDelta)
 {
 	CGameUIChild::Render_GameObject(fTimeDelta);
+}
+
+void CChattingInput::KeyInput_Chatting(const _float& fTimeDelta)
+{
+	if (!g_bIsActive) return;
+
+	if (Engine::KEY_DOWN(DIK_ESCAPE))
+		g_bIsChattingInput = false;
+
+	if (Engine::KEY_DOWN(DIK_RETURN) && INPUT_CHATTING)
+		g_bIsChattingInput = !g_bIsChattingInput;
 }
 
 Engine::CGameObject* CChattingInput::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
