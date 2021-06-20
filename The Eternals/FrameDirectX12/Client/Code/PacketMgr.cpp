@@ -29,6 +29,7 @@
 #include "GiantBeetle.h"
 #include "GiantMonkey.h"
 #include "CraftyArachne.h"
+#include "ChattingMgr.h"
 
 IMPLEMENT_SINGLETON(CPacketMgr)
 
@@ -195,6 +196,7 @@ void CPacketMgr::Process_packet()
 
 		// 유저 닉네임 : char
 		// 유저 메시지 : wchar_t
+		CChattingMgr::Get_Instance()->Push_ChattingMessage(packet->name, packet->message);
 	}
 	break;
 
@@ -1290,6 +1292,17 @@ void CPacketMgr::send_logout()
 
 	
 	send_packet(&p);
+}
+
+void CPacketMgr::send_chat(const wchar_t* message)
+{
+	cs_packet_chat p;
+
+	p.size = sizeof(p);
+	p.type = CS_CHAT;
+
+
+	lstrcpyn(p.message, message, lstrlen(message));
 }
 
 void CPacketMgr::send_packet(void* packet)

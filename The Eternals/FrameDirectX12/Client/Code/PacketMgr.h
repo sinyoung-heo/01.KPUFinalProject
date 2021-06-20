@@ -51,6 +51,7 @@ public:
 	void	send_decide_party(const bool& result, const int& joinner_id);		// 파티 참여 신청에 대한 응답
 	void	send_leave_party(const int& myId);
 	void	send_logout();
+	void	send_chat(const wchar_t* message);
 
 public:
 	bool	change_MoveKey(MVKEY eKey);
