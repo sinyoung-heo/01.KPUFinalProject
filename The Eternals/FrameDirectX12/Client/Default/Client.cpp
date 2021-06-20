@@ -543,7 +543,7 @@ int Get_Text(HWND hWnd,UINT msg,WPARAM wparam, LPARAM lparam)
 
 					CChattingMgr::Get_Instance()->Set_ChattingInputString(g_Text);
 					CChattingMgr::Get_Instance()->Move_CursorPos(CHATTING_CURSOR_MOVE::MOVE_RIGHT);
-					wcout << szTemp << L", " << lstrlen(szTemp) << endl;
+					// wcout << szTemp << L", " << lstrlen(szTemp) << endl;
 				}
 			}
 			
@@ -589,7 +589,7 @@ int Get_Text(HWND hWnd,UINT msg,WPARAM wparam, LPARAM lparam)
 				wstrTemp.pop_back();
 				lstrcpy(g_Text, wstrTemp.c_str());
 				CChattingMgr::Get_Instance()->Set_ChattingInputString(g_Text);
-				wcout << g_Text << L", " << lstrlen(g_Text) << endl;
+				// wcout << g_Text << L", " << lstrlen(g_Text) << endl;
 			}
 		}
 			break;
@@ -626,7 +626,7 @@ int Get_Text(HWND hWnd,UINT msg,WPARAM wparam, LPARAM lparam)
 
 				CChattingMgr::Get_Instance()->Set_ChattingInputString(g_Text);
 				CChattingMgr::Get_Instance()->Move_CursorPos(CHATTING_CURSOR_MOVE::MOVE_RIGHT);
-				wcout << g_Text << L", " << lstrlen(g_Text) << endl;
+				// wcout << g_Text << L", " << lstrlen(g_Text) << endl;
 			}
 			break;
 		}
