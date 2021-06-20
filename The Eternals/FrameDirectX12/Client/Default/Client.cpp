@@ -18,6 +18,7 @@
 #include "CollisionMgr.h"
 #include "InstancePoolMgr.h"
 #include "PartySystemMgr.h"
+#include "ChattingMgr.h"
 #include <chrono>
 
 #define MAX_LOADSTRING 100
@@ -37,8 +38,19 @@ _bool g_bIsStageChange   = false;
 _bool g_bIsOpenShop		 = false;
 _bool g_bIsLoadingFinish = false;
 _bool g_bIsExitGame      = false;
+_bool g_bIsChattingInput = false;
 
 _ulong Release_Singleton();
+
+#if defined(IME_KOREAN_SAMPLE)
+/*__________________________________________________________________________________________________________
+[ Chatting ]
+____________________________________________________________________________________________________________*/
+_tchar g_Text[256];     // 텍스트를 저장하기위한 변수
+_tchar Cstr[10];      // 조합중인 문자!!
+
+int Get_Text(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam);
+#endif
 
 #ifdef SERVER
 // 해당 클라이언트 전역 소켓
@@ -83,6 +95,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	MSG msg;
 	msg.message = WM_NULL;
+
+	//locale("korean");
+	_wsetlocale(LC_ALL, L"korean");
 
 	/*__________________________________________________________________________________________________________
 	[ MainApp 생성 ]
@@ -299,6 +314,16 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+#if defined(IME_KOREAN_SAMPLE)
+	/*__________________________________________________________________________________________________________
+	[ Chatting ]
+	____________________________________________________________________________________________________________*/
+	if (Get_Text(hWnd, message, wParam, lParam) == 0)		//IME 처리는 따로 함수로 분리시킴.
+	{
+		return 0;
+	}
+#endif
+
 	switch (message)
 	{
 	case WM_COMMAND:
@@ -320,7 +345,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		switch (wParam)
 		{
 		case VK_ESCAPE:
-			DestroyWindow(g_hWnd);
+			// DestroyWindow(g_hWnd);
 			break;
 
 		default:
@@ -353,6 +378,12 @@ _ulong Release_Singleton()
 	COUT_STR("-------------------------");
 #endif
 	_ulong dwRefCnt = 0;
+
+	if (dwRefCnt = CChattingMgr::Get_Instance()->Destroy_Instance())
+	{
+		MSG_BOX(L"CChattingMgr Release Failed");
+		return dwRefCnt;
+	}
 
 	if (dwRefCnt = CEffectMgr::Get_Instance()->Destroy_Instance())
 	{
@@ -470,3 +501,140 @@ _ulong Release_Singleton()
 
 	return dwRefCnt;
 }
+
+
+#if defined(IME_KOREAN_SAMPLE)
+/*__________________________________________________________________________________________________________
+[ Chatting ]
+____________________________________________________________________________________________________________*/
+int Get_Text(HWND hWnd,UINT msg,WPARAM wparam, LPARAM lparam)
+{
+	if (!g_bIsChattingInput)
+		return 1;
+
+	int len = 0;     		
+	HIMC hIMC = NULL;   // IME 핸들
+
+	switch (msg)
+	{
+	case WM_IME_COMPOSITION:
+		hIMC = ImmGetContext(hWnd);	// ime핸들을 얻는것
+		
+		if (lstrlen(g_Text) > CChattingMgr::Get_Instance()->Get_MaxChattingLength())
+		{
+			return 0;
+			break;
+		}
+
+		if (lparam & GCS_RESULTSTR)
+		{
+			if ((len = ImmGetCompositionString(hIMC, GCS_RESULTSTR, NULL, 0)) > 0)
+			{
+				// 완성된 글자가 있다.
+				ImmGetCompositionString(hIMC, GCS_RESULTSTR, Cstr, len);
+				Cstr[len] = 0;
+				lstrcpy(g_Text + lstrlen(g_Text), Cstr);
+
+				memset(Cstr,0,10);
+				
+				{
+					_tchar szTemp[256] = L"";
+					wsprintf(szTemp, L"완성된 글자 : %s\r\n", g_Text);
+
+					CChattingMgr::Get_Instance()->Set_ChattingInputString(g_Text);
+					CChattingMgr::Get_Instance()->Move_CursorPos(CHATTING_CURSOR_MOVE::MOVE_RIGHT);
+					// wcout << szTemp << L", " << lstrlen(szTemp) << endl;
+				}
+			}
+			
+		}
+		else if (lparam & GCS_COMPSTR)	
+		{  
+			// 현재 글자를 조합 중이다.
+
+			// 조합중인 길이를 얻는다. 
+			// str에  조합중인 문자를 얻는다.
+			len = ImmGetCompositionString(hIMC, GCS_COMPSTR, NULL, 0);
+			ImmGetCompositionString(hIMC, GCS_COMPSTR, Cstr, len);
+			Cstr[len] = 0;
+
+			//{
+			//	_tchar szTemp[256] = L"";
+			//	wsprintf(szTemp, L"조합중인 글자 : %s\r\n", Cstr);
+			//}
+		}
+		
+		ImmReleaseContext(hWnd, hIMC);					// IME 핸들 반환!!
+
+		return 0;
+		break;
+	case WM_CHAR:				// 1byte 문자 (ex : 영어)
+
+		return 0;
+		break;
+	case WM_IME_NOTIFY:			// 한자입력...
+
+		return 0;
+		break;
+	case WM_KEYDOWN:			// 키다운..
+		switch (wparam)
+		{
+		case VK_BACK:
+		{
+			if (lstrlen(g_Text) > 0)
+			{
+				CChattingMgr::Get_Instance()->Move_CursorPos(CHATTING_CURSOR_MOVE::MOVE_LEFT);
+
+				wstring wstrTemp = g_Text;
+				wstrTemp.pop_back();
+				lstrcpy(g_Text, wstrTemp.c_str());
+				CChattingMgr::Get_Instance()->Set_ChattingInputString(g_Text);
+				// wcout << g_Text << L", " << lstrlen(g_Text) << endl;
+			}
+		}
+			break;
+		case VK_PROCESSKEY:
+			break;
+		case VK_RETURN:
+			/*lstrcpy(g_Text, L"");*/
+			break;
+
+		default:
+			if (lstrlen(g_Text) > CChattingMgr::Get_Instance()->Get_MaxChattingLength())
+			{
+				return 0;
+				break;
+			}
+
+			// 0~9 && A~Z
+			if ((wparam >= 0x30 && wparam <= 0x39) ||
+				(wparam >= 0x41 && wparam <= 0x5A) /*||
+				wparam == VK_SPACE*/)
+			{
+				//if (wparam >= 0x41 && wparam <= 0x5A)
+				//{
+				//	if (!GetKeyState(VK_CAPITAL))
+				//		wparam = towlower(wparam);
+
+				//	if (GetKeyState(VK_LSHIFT))
+				//		wparam = towupper(wparam);
+				//}
+
+				wstring wstr = L"";
+				wstr = wparam;
+				lstrcat(g_Text, wstr.c_str());
+
+				CChattingMgr::Get_Instance()->Set_ChattingInputString(g_Text);
+				CChattingMgr::Get_Instance()->Move_CursorPos(CHATTING_CURSOR_MOVE::MOVE_RIGHT);
+				// wcout << g_Text << L", " << lstrlen(g_Text) << endl;
+			}
+			break;
+		}
+
+		return 0;
+		break;
+	}
+
+	return 1;
+}
+#endif
