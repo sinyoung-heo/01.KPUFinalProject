@@ -46,7 +46,7 @@ HRESULT CPartyInfoListCanvas::Ready_GameObject(wstring wstrObjectTag,
 															  iUIDepth, 
 															  true, L"Font_BinggraeMelona11"), E_FAIL);
 
-	m_bIsActive = false;
+	m_bIsActive = true;
 
 	m_pFont->Set_Color(D2D1::ColorF::Cornsilk);
 	m_pFont->Set_Text(L"UserName");

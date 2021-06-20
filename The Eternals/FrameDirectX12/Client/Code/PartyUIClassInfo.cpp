@@ -62,7 +62,7 @@ HRESULT CPartyUIClassInfo::Ready_GameObject(wstring wstrRootObjectTag,
 	m_mapClassState[L"Archer"] = UI_CHILD_STATE();
 	m_mapClassState[L"Priest"] = UI_CHILD_STATE();
 
-	m_bIsActive = false;
+	m_bIsActive = true;
 
 	return S_OK;
 }

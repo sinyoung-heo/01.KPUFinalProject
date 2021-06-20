@@ -382,6 +382,18 @@
     <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIClassInfo">
       <UniqueIdentifier>{46e56771-b2ac-4242-813f-3acb2e26622d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\07.ChattingCanvas">
+      <UniqueIdentifier>{94dcbd59-685a-4f2f-b5cc-5fded982fee4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\08.ChattingCanvasChild">
+      <UniqueIdentifier>{bf1a5b45-6891-4e7a-b4ba-aa88267d2ad4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\08.ChattingCanvasChild\ChattingInputString">
+      <UniqueIdentifier>{8e23dd74-d62b-42eb-aa50-28008bad1900}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\08.ChattingCanvasChild\ChattingCursor">
+      <UniqueIdentifier>{f8f35668-2617-435f-84a2-e2d0e40ad98e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -787,6 +799,17 @@
     <ClInclude Include="..\Code\PartyUIMpGauge.h">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIMpGauge</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\DistTrail.h" />
+    <ClInclude Include="..\Code\LightingParticle.h" />
+    <ClInclude Include="..\Code\ChattingCanvas.h">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\07.ChattingCanvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ChattingInputString.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\08.ChattingCanvasChild\ChattingInputString</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ChattingCursor.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\08.ChattingCanvasChild\ChattingCursor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1137,6 +1160,17 @@
     </ClCompile>
     <ClCompile Include="..\Code\PartyUIMpGauge.cpp">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIMpGauge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\DistTrail.cpp" />
+    <ClCompile Include="..\Code\LightingParticle.cpp" />
+    <ClCompile Include="..\Code\ChattingCanvas.cpp">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\07.ChattingCanvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ChattingInputString.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\08.ChattingCanvasChild\ChattingInputString</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ChattingCursor.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\08.ChattingCanvasChild\ChattingCursor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
