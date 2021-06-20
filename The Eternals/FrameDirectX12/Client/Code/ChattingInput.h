@@ -8,6 +8,10 @@ private:
 	virtual ~CChattingInput() = default;
 
 public:
+	const _int& Get_MaxStringLen() { return m_iMaxString; }
+	void Set_FontText(wstring wstrChatting);
+	const _tchar& Get_ChattingTextBack();
+
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrRootObjectTag,
 									 wstring wstrObjectTag,							   
@@ -26,6 +30,10 @@ public:
 private:
 	void KeyInput_Chatting(const _float& fTimeDelta);
 private:
+	/*__________________________________________________________________________________________________________
+	[ Value ]
+	____________________________________________________________________________________________________________*/
+	_int m_iMaxString = 21;
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,

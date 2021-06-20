@@ -1,13 +1,30 @@
 #include "stdafx.h"
 #include "ChattingInput.h"
 #include "DirectInput.h"
+#include "Font.h"
+#include "ChattingMgr.h"
 
 CChattingInput::CChattingInput(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
 {
 }
 
-HRESULT CChattingInput::Ready_GameObject(wstring wstrRootObjectTag, 
+void CChattingInput::Set_FontText(wstring wstrChatting)
+{
+	m_pFont->Set_Text(wstrChatting);
+}
+
+const _tchar& CChattingInput::Get_ChattingTextBack()
+{
+	wstring wstrText = m_pFont->Get_FontText();
+
+	if (!wstrText.empty())
+		return wstrText.back();
+	else
+		return 0;
+}
+
+HRESULT CChattingInput::Ready_GameObject(wstring wstrRootObjectTag,
 											   wstring wstrObjectTag, 
 											   wstring wstrDataFilePath,
 											   const _vec3& vPos, 
@@ -27,9 +44,13 @@ HRESULT CChattingInput::Ready_GameObject(wstring wstrRootObjectTag,
 															   fFrameSpeed,
 															   vRectOffset,
 															   vRectScale,
-															   iUIDepth), E_FAIL);
+															   iUIDepth,
+															   true, L"Font_BinggraeMelona11"), E_FAIL);
 
 	m_bIsActive = true;
+
+	m_pFont->Set_Color(D2D1::ColorF::Cornsilk);
+	m_pFont->Set_Text(L"");
 
 	return S_OK;
 }
@@ -63,6 +84,16 @@ _int CChattingInput::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	CGameUIChild::LateUpdate_GameObject(fTimeDelta);
 
+	if (nullptr != m_pFont)
+	{
+		_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
+		vPos.x += -180.0f;
+		vPos.y += -12.0f;
+
+		m_pFont->Set_Pos(_vec2(vPos.x, vPos.y));
+		m_pFont->Update_GameObject(fTimeDelta);
+	}
+
 	return NO_EVENT;
 }
 
@@ -79,7 +110,20 @@ void CChattingInput::KeyInput_Chatting(const _float& fTimeDelta)
 		g_bIsChattingInput = false;
 
 	if (Engine::KEY_DOWN(DIK_RETURN) && INPUT_CHATTING)
+	{
 		g_bIsChattingInput = !g_bIsChattingInput;
+
+		// Send Chatting Packet.
+		if (!g_bIsChattingInput)
+		{
+			CChattingMgr::Get_Instance()->Push_ChattingMessage("UserName", g_Text);
+
+		}
+
+		lstrcpy(g_Text, L"");
+		m_pFont->Set_Text(L"");
+		CChattingMgr::Get_Instance()->Move_CursorPos(CHATTING_CURSOR_MOVE::MOVE_ORIGIN);
+	}
 }
 
 Engine::CGameObject* CChattingInput::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,

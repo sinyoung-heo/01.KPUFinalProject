@@ -16,6 +16,8 @@ private:
 	virtual ~CFont() = default;
 
 public:
+	wstring Get_FontText() { return m_wstrText; }
+
 	// Set
 	void			Set_Text(wstring wstrText)				{ m_wstrText = wstrText; }
 	void			Set_Pos(const _vec2& vPos)				{ m_vPos = vPos; }

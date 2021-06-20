@@ -46,7 +46,7 @@ _ulong Release_Singleton();
 /*__________________________________________________________________________________________________________
 [ Chatting ]
 ____________________________________________________________________________________________________________*/
-_tchar Text[255];     // 텍스트를 저장하기위한 변수
+_tchar g_Text[256];     // 텍스트를 저장하기위한 변수
 _tchar Cstr[10];      // 조합중인 문자!!
 
 int Get_Text(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam);
@@ -520,6 +520,12 @@ int Get_Text(HWND hWnd,UINT msg,WPARAM wparam, LPARAM lparam)
 	case WM_IME_COMPOSITION:
 		hIMC = ImmGetContext(hWnd);	// ime핸들을 얻는것
 		
+		if (lstrlen(g_Text) > CChattingMgr::Get_Instance()->Get_MaxChattingLength())
+		{
+			return 0;
+			break;
+		}
+
 		if (lparam & GCS_RESULTSTR)
 		{
 			if ((len = ImmGetCompositionString(hIMC, GCS_RESULTSTR, NULL, 0)) > 0)
@@ -527,15 +533,17 @@ int Get_Text(HWND hWnd,UINT msg,WPARAM wparam, LPARAM lparam)
 				// 완성된 글자가 있다.
 				ImmGetCompositionString(hIMC, GCS_RESULTSTR, Cstr, len);
 				Cstr[len] = 0;
-				lstrcpy(Text + lstrlen(Text), Cstr);
+				lstrcpy(g_Text + lstrlen(g_Text), Cstr);
 
 				memset(Cstr,0,10);
 				
 				{
 					_tchar szTemp[256] = L"";
-					wsprintf(szTemp, L"완성된 글자 : %s\r\n", Text);
+					wsprintf(szTemp, L"완성된 글자 : %s\r\n", g_Text);
 
-					wcout << szTemp << endl;
+					CChattingMgr::Get_Instance()->Set_ChattingInputString(g_Text);
+					CChattingMgr::Get_Instance()->Move_CursorPos(CHATTING_CURSOR_MOVE::MOVE_RIGHT);
+					wcout << szTemp << L", " << lstrlen(szTemp) << endl;
 				}
 			}
 			
@@ -544,17 +552,16 @@ int Get_Text(HWND hWnd,UINT msg,WPARAM wparam, LPARAM lparam)
 		{  
 			// 현재 글자를 조합 중이다.
 
-			// 조합중인 길이를 얻는다.
+			// 조합중인 길이를 얻는다. 
 			// str에  조합중인 문자를 얻는다.
 			len = ImmGetCompositionString(hIMC, GCS_COMPSTR, NULL, 0);
 			ImmGetCompositionString(hIMC, GCS_COMPSTR, Cstr, len);
 			Cstr[len] = 0;
 
-			{
-				_tchar szTemp[256] = L"";
-				wsprintf(szTemp, L"조합중인 글자 : %s\r\n", Cstr);
-				wcout << szTemp << endl;
-			}
+			//{
+			//	_tchar szTemp[256] = L"";
+			//	wsprintf(szTemp, L"조합중인 글자 : %s\r\n", Cstr);
+			//}
 		}
 		
 		ImmReleaseContext(hWnd, hIMC);					// IME 핸들 반환!!
@@ -573,29 +580,53 @@ int Get_Text(HWND hWnd,UINT msg,WPARAM wparam, LPARAM lparam)
 		switch (wparam)
 		{
 		case VK_BACK:
+		{
+			if (lstrlen(g_Text) > 0)
+			{
+				CChattingMgr::Get_Instance()->Move_CursorPos(CHATTING_CURSOR_MOVE::MOVE_LEFT);
+
+				wstring wstrTemp = g_Text;
+				wstrTemp.pop_back();
+				lstrcpy(g_Text, wstrTemp.c_str());
+				CChattingMgr::Get_Instance()->Set_ChattingInputString(g_Text);
+				wcout << g_Text << L", " << lstrlen(g_Text) << endl;
+			}
+		}
 			break;
 		case VK_PROCESSKEY:
 			break;
 		case VK_RETURN:
-			lstrcpy(Text, L"");
-
+			/*lstrcpy(g_Text, L"");*/
 			break;
+
 		default:
+			if (lstrlen(g_Text) > CChattingMgr::Get_Instance()->Get_MaxChattingLength())
+			{
+				return 0;
+				break;
+			}
 
 			// 0~9 && A~Z
 			if ((wparam >= 0x30 && wparam <= 0x39) ||
-				(wparam >= 0x41 && wparam <= 0x5A))
+				(wparam >= 0x41 && wparam <= 0x5A) /*||
+				wparam == VK_SPACE*/)
 			{
-				if (wparam >= 0x41 && wparam <= 0x5A)
-				{
-					if (!GetKeyState(VK_CAPITAL))
-						wparam = towlower(wparam);
-				}
+				//if (wparam >= 0x41 && wparam <= 0x5A)
+				//{
+				//	if (!GetKeyState(VK_CAPITAL))
+				//		wparam = towlower(wparam);
+
+				//	if (GetKeyState(VK_LSHIFT))
+				//		wparam = towupper(wparam);
+				//}
 
 				wstring wstr = L"";
 				wstr = wparam;
-				lstrcat(Text, wstr.c_str());
-				wcout << Text << endl;
+				lstrcat(g_Text, wstr.c_str());
+
+				CChattingMgr::Get_Instance()->Set_ChattingInputString(g_Text);
+				CChattingMgr::Get_Instance()->Move_CursorPos(CHATTING_CURSOR_MOVE::MOVE_RIGHT);
+				wcout << g_Text << L", " << lstrlen(g_Text) << endl;
 			}
 			break;
 		}

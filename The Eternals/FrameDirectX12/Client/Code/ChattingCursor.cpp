@@ -30,6 +30,7 @@ HRESULT CChattingCursor::Ready_GameObject(wstring wstrRootObjectTag,
 															   iUIDepth), E_FAIL);
 
 	m_bIsActive = true;
+	m_fOriginPosX = vPos.x;
 
 	return S_OK;
 }
@@ -95,6 +96,18 @@ _int CChattingCursor::LateUpdate_GameObject(const _float& fTimeDelta)
 void CChattingCursor::Render_GameObject(const _float& fTimeDelta)
 {
 	CGameUIChild::Render_GameObject(fTimeDelta);
+}
+
+void CChattingCursor::Move_CursorPos(const CHATTING_CURSOR_MOVE& eMove, const _float& fOffset)
+{
+	if (CHATTING_CURSOR_MOVE::MOVE_RIGHT == eMove)
+		m_pTransCom->m_vPos.x += fOffset;
+
+	else if (CHATTING_CURSOR_MOVE::MOVE_LEFT == eMove)
+		m_pTransCom->m_vPos.x -= fOffset;
+
+	else if (CHATTING_CURSOR_MOVE::MOVE_ORIGIN == eMove)
+		m_pTransCom->m_vPos.x = m_fOriginPosX;
 }
 
 Engine::CGameObject* CChattingCursor::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
