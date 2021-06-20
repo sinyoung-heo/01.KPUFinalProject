@@ -1290,7 +1290,6 @@ void CPacketMgr::send_logout()
 	p.stageID		= pThisPlayer->Get_CurrentStageID();
 	p.weaponType	= pThisPlayer->Get_WeaponType();
 
-	
 	send_packet(&p);
 }
 
@@ -1301,8 +1300,9 @@ void CPacketMgr::send_chat(const wchar_t* message)
 	p.size = sizeof(p);
 	p.type = CS_CHAT;
 
-
 	lstrcpyn(p.message, message, lstrlen(message));
+
+	send_packet(&p);
 }
 
 void CPacketMgr::send_packet(void* packet)

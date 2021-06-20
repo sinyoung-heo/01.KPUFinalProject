@@ -91,7 +91,6 @@ _int CPartySuggestResponseClose::LateUpdate_GameObject(const _float& fTimeDelta)
 			CPacketMgr::Get_Instance()->send_respond_party(false, iSuggesterNumber);
 			pThisPlayer->Set_RequestParty(false);
 			pThisPlayer->Set_PartySuggestSNum(-1);
-			cout << "파티초대 - 거절" << endl;
 		}
 		// 파티가입 - 거절
 		else if (PARTY_REQUEST_STATE::REQUEST_PARTY_JOIN == m_ePartyRequestState &&
@@ -100,7 +99,6 @@ _int CPartySuggestResponseClose::LateUpdate_GameObject(const _float& fTimeDelta)
 			CPacketMgr::Get_Instance()->send_decide_party(false, iSuggesterNumber);
 			pThisPlayer->Set_JoinRequest(false);
 			pThisPlayer->Set_PartySuggestSNum(-1);
-			cout << "파티가입 - 거절" << endl;
 		}
 
 		if (nullptr != m_pCanvas)
