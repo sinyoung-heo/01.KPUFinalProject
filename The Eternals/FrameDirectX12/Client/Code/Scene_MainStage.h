@@ -33,7 +33,7 @@ private:
 	HRESULT			SetUp_UIPartyLeaveCanvas();
 	HRESULT			SetUp_UIPartySystemMessageCanvas();
 	HRESULT			SetUp_UIPartyListInfoCanvas();
-	HRESULT			SetUP_UIChattingCanvas();
+	HRESULT			SetUp_UIChattingCanvas();
 private:
 	_bool m_bIsReadyMouseCursorMgr = false;
 

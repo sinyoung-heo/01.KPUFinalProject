@@ -159,6 +159,7 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	if(RENDERID::MULTI_THREAD == eID)
 		Render_MultiThread(fTimeDelta);
 
+	Render_MiniMap(fTimeDelta);
 	Render_Priority(fTimeDelta);
 
 	if (RENDERID::SINGLE_THREAD == eID)
@@ -177,7 +178,6 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	Render_Distortion(fTimeDelta);
 	Render_Blend();						// Target Blend
 	Render_Luminance();					// Luminance(°íÈÖµµÃßÃâ)
-
 	Render_Collider(fTimeDelta);		// Collider Render
 	Render_Alpha(fTimeDelta);			// Effect Texture, Mesh
 	Render_AddEffect();
@@ -235,6 +235,21 @@ void CRenderer::Render_NonAlpha(const _float& fTimeDelta)
 		pGameObject->Render_GameObject(fTimeDelta);
 
 	m_pTargetDeferred->Release_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
+}
+
+void CRenderer::Render_MiniMap(const _float& fTimeDelta)
+{
+	sort(m_RenderList[RENDER_MINIMAP].begin(), m_RenderList[RENDER_MINIMAP].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
+		{
+			return pSour->Get_DepthOfView() > pDest->Get_DepthOfView();
+		});
+
+	m_pTargetMiniMap->SetUp_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
+
+	for (auto& pGameObject : m_RenderList[RENDER_MINIMAP])
+		pGameObject->Render_MiniMap(fTimeDelta);
+
+	m_pTargetMiniMap->Release_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
 }
 
 void CRenderer::Render_Light()
@@ -632,6 +647,8 @@ void CRenderer::Render_RenderTarget()
 			m_pTargetAddEffect->Render_RenderTarget();
 	}
 
+	if (nullptr != m_pTargetMiniMap)
+		m_pTargetMiniMap->Render_RenderTarget();
 }
 
 void CRenderer::Render_Font(const _float & fTimeDelta)
@@ -1018,6 +1035,19 @@ HRESULT CRenderer::Ready_RenderTarget()
 	NULL_CHECK_RETURN(m_pHDRShader, E_FAIL);
 	FAILED_CHECK_RETURN(m_pHDRShader->Set_PipelineStatePass(1), E_FAIL);
 
+
+	/*__________________________________________________________________________________________________________
+	[ MiniMap RnderTarget ]
+	____________________________________________________________________________________________________________*/
+	m_pTargetMiniMap = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
+	NULL_CHECK_RETURN(m_pTargetMiniMap, E_FAIL);
+	m_pTargetMiniMap->Set_TargetClearColor(0, _rgba(1.0f, 1.0f, 1.0f, 1.0f), DXGI_FORMAT_R8G8B8A8_UNORM); // Shade
+	m_pTargetMiniMap->Set_TargetTextureSize(0, 1024, 1024);
+	FAILED_CHECK_RETURN(m_pTargetMiniMap->SetUp_DefaultSetting(TARGETID::TYPE_SHADOWDEPTH), E_FAIL);
+
+	m_pTargetMiniMap->Set_TargetRenderScale(_vec3(128.0f, 128.0f, 128.0f));
+	m_pTargetMiniMap->Set_TargetRenderPos(_vec3(WINCX - 128.0f - 32.0f, 128.0f + 32.0f, 1.0f));
+
 	return S_OK;
 }
 
@@ -1355,6 +1385,7 @@ void CRenderer::Free()
 	Safe_Release(m_pTargetDeferred);
 	Safe_Release(m_pTargetLight);
 	Safe_Release(m_pTargetShadowDepth);
+	Safe_Release(m_pTargetMiniMap);
 	
 
 	Safe_Release(m_pBlendBuffer);

@@ -638,17 +638,17 @@ void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
 		wstring wstrMeshTag;
 		if (packet->npcNum == NPC_POPORI_MERCHANT)
 		{
-			wstrMeshTag = L"Popori_M_Merchant";
+			wstrMeshTag = L"Popori_M_Merchant";		// 무기상인
 			pInstance = Pop_Instance(m_pInstancePoolMgr->Get_NPCMerchant_Popori_M_MerchantPool());
 		}
 		else if (packet->npcNum == NPC_BARAKA_MERCHANT)
 		{
-			wstrMeshTag = L"Baraka_M_Merchant";
+			wstrMeshTag = L"Baraka_M_Merchant";		// 물약상인
 			pInstance = Pop_Instance(m_pInstancePoolMgr->Get_NPCMerchant_Baraka_M_MerchantPool());
 		}
 		else if (packet->npcNum == NPC_BARAKA_MYSTELLIUM)
 		{
-			wstrMeshTag = L"Baraka_M_Mystellium";
+			wstrMeshTag = L"Baraka_M_Mystellium";	// 방어구상인
 			pInstance = Pop_Instance(m_pInstancePoolMgr->Get_NPCMerchant_Baraka_M_MystelliumPool());
 		}
 

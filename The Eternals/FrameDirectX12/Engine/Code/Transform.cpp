@@ -25,21 +25,6 @@ HRESULT CTransform::Ready_Component()
 
 void CTransform::Update_Component(const _float & fTimeDelta)
 {
-	//if (m_vAngle.x > 360.f)
-	//	m_vAngle.x -= 360.f;
-	//else if (m_vAngle.x < -360.f)
-	//	m_vAngle.x += 360.f;
-
-	//if (m_vAngle.y > 360.f)
-	//	m_vAngle.y -= 360.f;
-	//else if (m_vAngle.y < -360.f)
-	//	m_vAngle.y += 360.f;
-
-	//if (m_vAngle.z > 360.f)
-	//	m_vAngle.z -= 360.f;
-	//else if (m_vAngle.z < -360.f)
-	//	m_vAngle.z += 360.f;
-
 	_matrix matScale	= XMMatrixScaling(m_vScale.x, m_vScale.y, m_vScale.z);
 	_matrix matRotX		= XMMatrixRotationX(XMConvertToRadians(m_vAngle.x));
 	_matrix matRotY		= XMMatrixRotationY(XMConvertToRadians(m_vAngle.y));

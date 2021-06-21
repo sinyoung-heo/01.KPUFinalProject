@@ -16,7 +16,9 @@ private:
 	virtual ~CShadowLightMgr() = default;
 
 public:
-	Engine::SHADOW_DESC&	Get_ShadowDesc() { return m_tShadowDesc; }
+	_matrix&			Get_MiniMapView() { return m_matMiniMapView; }
+	_matrix&			Get_MiniMapProj() { return m_matMiniMapProj; }
+	Engine::SHADOW_DESC&	Get_ShadowDesc()	{ return m_tShadowDesc; }
 	void					Set_ShadowType(const SHADOW_TYPE& eType) { m_eShadowType = SHADOW_TYPE_PLAYER; }
 
 	void Set_LightAt(const _vec3& vAt)			{ m_vAllSceneLightAt = vAt; }
@@ -43,6 +45,10 @@ private:
 	_float	m_fHeight	= 300.0f;
 	_float	m_fFovY		= 15.0f;
 	_float	m_fFar		= 1000.0f;
+
+	_float	m_fMiniMapHeight = 12.5f;
+	_matrix	m_matMiniMapView = INIT_MATRIX;
+	_matrix	m_matMiniMapProj = INIT_MATRIX;
 
 private:
 	virtual void Free();

@@ -55,6 +55,7 @@ public:
 		RENDER_MAGICCIRCLE,
 		RENDER_ALPHA,
 		RENDER_UI,
+		RENDER_MINIMAP,
 		RENDER_FONT,
 		RENDER_END
 	};
@@ -98,6 +99,7 @@ private:
 	void	Render_Priority(const _float& fTimeDelta);
 	void	Render_ShadowDepth(const _float& fTimeDelta);
 	void	Render_NonAlpha(const _float& fTimeDelta);
+	void	Render_MiniMap(const _float& fTimeDelta);
 	void	Render_Light();
 	void	Render_Luminance();
 	void	Render_NPathDir();
@@ -141,31 +143,31 @@ private:
 	[ Multi RenderTarget ]
 	____________________________________________________________________________________________________________*/
 	// Render Target - 타겟추가후 꼭 릴리즈
-	CRenderTarget*	m_pTargetDeferred	  = nullptr; // 디퍼드		-> Target5
-	CRenderTarget*	m_pTargetLight		  = nullptr; // 라이트		-> Target2
-	CRenderTarget*	m_pTargetShadowDepth  = nullptr; // 셰도우		-> Target1
-	CRenderTarget*	m_pTargetDownSampling = nullptr; // 다운샘플		-> Target2
-	CRenderTarget*	m_pTargetBlur         = nullptr; // 블러			-> Target3
-	CRenderTarget*	m_pTargetSSAO         = nullptr; // SSAO		-> Target1
-	CRenderTarget* m_pTargetDistortion    = nullptr; // Distortion
-	CRenderTarget* m_pTargetBlend = nullptr; // Distortion
-	CRenderTarget* m_pTargetCrossFilter = nullptr; // CrossFilter
-
-	CRenderTarget* m_pTargetEdgeObject = nullptr; // EdgeObject
+	CRenderTarget*	m_pTargetDeferred	   = nullptr; // 디퍼드		-> Target5
+	CRenderTarget*	m_pTargetLight		   = nullptr; // 라이트		-> Target2
+	CRenderTarget*	m_pTargetShadowDepth   = nullptr; // 셰도우		-> Target1
+	CRenderTarget*	m_pTargetDownSampling  = nullptr; // 다운샘플	-> Target2
+	CRenderTarget*	m_pTargetBlur          = nullptr; // 블러		-> Target3
+	CRenderTarget*	m_pTargetSSAO          = nullptr; // SSAO		-> Target1
+	CRenderTarget*	m_pTargetDistortion    = nullptr; // Distortion
+	CRenderTarget*	m_pTargetBlend         = nullptr; // Distortion
+	CRenderTarget*	m_pTargetCrossFilter   = nullptr; // CrossFilter
+	CRenderTarget*	m_pTargetEdgeObject    = nullptr; // EdgeObject
+	CRenderTarget*	m_pTargetMiniMap       = nullptr;
 
 	// Edge
-	CRenderTarget* m_pTargetEdge = nullptr;
-	CShaderEdge* m_pEdgeShader = nullptr;
-	CScreenTex* m_pEdgeBuffer = nullptr;
-	_bool m_bIsSetEdgeTexture{ false };
+	CRenderTarget*	m_pTargetEdge = nullptr;
+	CShaderEdge*	m_pEdgeShader = nullptr;
+	CScreenTex*		m_pEdgeBuffer = nullptr;
+	_bool			m_bIsSetEdgeTexture{ false };
 	// N_PathBlurTarget
-	CRenderTarget * m_pTargetNPathDir = nullptr; // n방향 타겟
-	CShaderNPathDir* m_pNPathDirShader = nullptr;
-	CScreenTex* m_pNPathDirBuffer = nullptr;
+	CRenderTarget *		m_pTargetNPathDir = nullptr; // n방향 타겟
+	CShaderNPathDir*	m_pNPathDirShader = nullptr;
+	CScreenTex*			m_pNPathDirBuffer = nullptr;
 	//SUNSHINE
-	CScreenTex* m_pSunShineBuffer = nullptr;
-	CShaderNPathDir* m_pSunShineShader = nullptr;
-	CRenderTarget* m_pTargetSunShine = nullptr; // n방향 타겟
+	CScreenTex*			m_pSunShineBuffer = nullptr;
+	CShaderNPathDir*	m_pSunShineShader = nullptr;
+	CRenderTarget*		m_pTargetSunShine = nullptr; // n방향 타겟
 
 	_bool m_bisSetNPathDirTexture		{false};
 	// Blend
@@ -173,10 +175,10 @@ private:
 	CShaderBlend*	m_pBlendShader					= nullptr;
 	_bool			m_bIsSetBlendTexture			{ false };
 
-	CShaderBlend* m_pHDRShader = nullptr;
+	CShaderBlend*	m_pHDRShader = nullptr;
 	//Luminance
 
-	CRenderTarget* m_pTargetLuminance[6]; // 루미넌스		-> Target6
+	CRenderTarget*		m_pTargetLuminance[6]; // 루미넌스		-> Target6
 	CScreenTex*			m_pLuminanceBuffer			= nullptr;
 	CShaderLuminance*   m_pLuminanceShader[6]			;
 	_bool				m_bIsSetLuminanceTexture	{ false };
@@ -187,25 +189,25 @@ private:
 	_bool				 m_bIsSetDownSamplingTexture{ false };
 
 	//Luminance
-	CScreenTex* m_pBlurBuffer = nullptr;
-	CShaderBlur* m_pBlurShader = nullptr;
-	_bool				m_bIsSetBlurTexture{ false };
+	CScreenTex*		m_pBlurBuffer = nullptr;
+	CShaderBlur*	m_pBlurShader = nullptr;
+	_bool			m_bIsSetBlurTexture{ false };
 
 	//SSAO
-	CScreenTex* m_pSSAOBuffer = nullptr;
-	CShaderSSAO* m_pSSAOShader = nullptr;
-	_bool				m_bIsSetSSAOTexture{ false };
+	CScreenTex*		m_pSSAOBuffer = nullptr;
+	CShaderSSAO*	m_pSSAOShader = nullptr;
+	_bool			m_bIsSetSSAOTexture{ false };
 
 	//Effect (Alpha)
-	CRenderTarget* m_pTargetpEffect = nullptr;
-	CScreenTex* m_pEffectBuffer = nullptr;
-	CRenderTarget* m_pTargetEffectTex = nullptr;
-	CScreenTex* m_pEffectTexBuffer = nullptr;
+	CRenderTarget*	m_pTargetpEffect   = nullptr;
+	CScreenTex*		m_pEffectBuffer    = nullptr;
+	CRenderTarget*	m_pTargetEffectTex = nullptr;
+	CScreenTex*		m_pEffectTexBuffer = nullptr;
 	//Effect (Add)
-	_bool m_bisSetAddEffectTexture{ false };
-	CRenderTarget* m_pTargetAddEffect = nullptr;
-	CScreenTex* m_pAddEffectBuffer = nullptr;
-	CShaderAddEffect* m_pAddEffectShader = nullptr;
+	_bool				m_bisSetAddEffectTexture{ false };
+	CRenderTarget*		m_pTargetAddEffect = nullptr;
+	CScreenTex*			m_pAddEffectBuffer = nullptr;
+	CShaderAddEffect*	m_pAddEffectShader = nullptr;
 	/*__________________________________________________________________________________________________________
 	[ Pipeline StateGroup ]
 	____________________________________________________________________________________________________________*/

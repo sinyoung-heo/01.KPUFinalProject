@@ -206,6 +206,7 @@
     <ClInclude Include="..\Code\MainMenuSettingCanvas.h" />
     <ClInclude Include="..\Code\Monkey.h" />
     <ClInclude Include="..\Code\NormalMonsterHpGauge.h" />
+    <ClInclude Include="..\Code\NPCMiniMap.h" />
     <ClInclude Include="..\Code\NPC_Assistant.h" />
     <ClInclude Include="..\Code\NPC_Quest.h" />
     <ClInclude Include="..\Code\PartyInfoListCanvas.h" />
@@ -349,6 +350,7 @@
     <ClCompile Include="..\Code\Monster_Normal.cpp" />
     <ClCompile Include="..\Code\MouseCursorMgr.cpp" />
     <ClCompile Include="..\Code\NormalMonsterHpGauge.cpp" />
+    <ClCompile Include="..\Code\NPCMiniMap.cpp" />
     <ClCompile Include="..\Code\NPC_Assistant.cpp" />
     <ClCompile Include="..\Code\NPC_Quest.cpp" />
     <ClCompile Include="..\Code\NPC_Walker.cpp" />
