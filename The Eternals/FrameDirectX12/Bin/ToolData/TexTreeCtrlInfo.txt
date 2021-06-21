@@ -8,6 +8,7 @@ Texture|EffectSpriteTexture|Bomb04
 Texture|EffectSpriteTexture|Crack
 Texture|EffectSpriteTexture|Fire
 Texture|EffectSpriteTexture|Fire1
+Texture|EffectSpriteTexture|FireTrail
 Texture|EffectSpriteTexture|Firework0
 Texture|EffectSpriteTexture|Firework1
 Texture|EffectSpriteTexture|Glowring

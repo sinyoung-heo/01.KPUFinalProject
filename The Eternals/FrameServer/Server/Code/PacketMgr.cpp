@@ -661,7 +661,7 @@ void send_update_party(const int& to_client, const int& id, const int& hp, const
 	send_packet(to_client, &p);
 }
 
-void send_chat(const int& to_client, const int& id, const char* name, const char* buffer)
+void send_chat(const int& to_client, const int& id, const char* name, const char* buffer, const int len)
 {
 	sc_packet_chat p;
 
@@ -670,8 +670,9 @@ void send_chat(const int& to_client, const int& id, const char* name, const char
 	p.id	= id;
 
 	strncpy_s(p.name, name, strlen(name));
-	strncpy_s(p.message, buffer, strlen(buffer));
-	
+	strncpy_s(p.message, buffer, len);
+	p.messageLen = len;
+
 	send_packet(to_client, &p);
 }
 
@@ -1843,9 +1844,12 @@ void process_chat(const int& id, const char* buffer)
 	auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER")->begin();
 	auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER")->end();
 
+	int tempSize = 0;
+	Check_Korean(buffer, &tempSize);
+
 	for (iter_begin; iter_begin != iter_end; ++iter_begin)
 	{
-		send_chat(iter_begin->second->m_sNum, id, pPlayer->m_ID, buffer);	
+		send_chat(iter_begin->second->m_sNum, id, pPlayer->m_ID, buffer, tempSize);
 	}
 }
 
@@ -1860,4 +1864,20 @@ void add_timer(int obj_id, OPMODE ev_type, system_clock::time_point t)
 bool CAS(atomic<STATUS>* addr, STATUS* old_v, STATUS new_v)
 {
 	return atomic_compare_exchange_strong(addr, old_v, new_v);
+}
+
+void Check_Korean(const char* text, int* len)
+{
+	// 한글은 한 글자당 2Byte -> 각 Byte의 최상위 bit가 1이다.
+	for (int i = 0; i < MAX_STR_LEN; ++i)
+	{
+		if (text[i] == '\0') return;
+
+		// 한글이 아닐 경우
+		if ((text[i] & 0x80) != 0x80)
+			*len += 1;
+		// 한글일 경우
+		else if ((text[i] & 0x80) == 0x80)
+			*len += 2;
+	}
 }

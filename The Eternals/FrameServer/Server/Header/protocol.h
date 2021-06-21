@@ -233,6 +233,7 @@ struct sc_packet_chat
 
 	char			name[MAX_ID_LEN];
 	char			message[MAX_STR_LEN];
+	int				messageLen;
 };
 
 struct sc_packet_login_fail 

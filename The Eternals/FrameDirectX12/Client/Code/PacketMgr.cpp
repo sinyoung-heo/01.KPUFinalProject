@@ -7,6 +7,7 @@
 #include "PartySystemMgr.h"
 #include "DynamicCamera.h"
 #include "FadeInOut.h"
+#include "ChattingMgr.h"
 /* USER */
 #include "PCGladiator.h"
 #include "PCOthersGladiator.h"
@@ -29,7 +30,6 @@
 #include "GiantBeetle.h"
 #include "GiantMonkey.h"
 #include "CraftyArachne.h"
-#include "ChattingMgr.h"
 
 IMPLEMENT_SINGLETON(CPacketMgr)
 
@@ -194,19 +194,7 @@ void CPacketMgr::Process_packet()
 	{
 		sc_packet_chat* packet = reinterpret_cast<sc_packet_chat*>(m_packet_start);
 
-		_tchar szOut[MAX_STR] = L"";
-		/*____________________________________________________________________
-		멀티바이트 형식을 유니코드 형식으로 바꿔주는 함수.
-		______________________________________________________________________*/
-		MultiByteToWideChar(CP_ACP,
-							0,
-							packet->message,		// 변환 할 문자열.
-							(_int)strlen(packet->message),
-							szOut,					// 변환 값 저장 버퍼.
-							MAX_STR);
-
-		szOut[strlen(packet->message)] = '\0';
-		CChattingMgr::Get_Instance()->Push_ChattingMessage(packet->name, szOut);
+		Recv_Chat(packet);
 	}
 	break;
 
@@ -421,6 +409,23 @@ void CPacketMgr::Process_packet()
 #endif 
 		break;
 	}
+}
+
+void CPacketMgr::Recv_Chat(sc_packet_chat* packet)
+{
+	_tchar szOut[MAX_STR] = L"";
+	/*____________________________________________________________________
+	멀티바이트 형식을 유니코드 형식으로 바꿔주는 함수.
+	______________________________________________________________________*/
+	MultiByteToWideChar(CP_ACP,
+		0,
+		packet->message,		// 변환 할 문자열.
+		packet->messageLen,
+		szOut,					// 변환 값 저장 버퍼.
+		MAX_STR);
+
+	szOut[packet->messageLen] = '\0';
+	CChattingMgr::Get_Instance()->Push_ChattingMessage(packet->name, szOut);
 }
 
 void CPacketMgr::Update_Party(sc_packet_update_party* packet)
@@ -1314,14 +1319,14 @@ void CPacketMgr::send_chat(const wchar_t* message)
 
 	WideCharToMultiByte(CP_ACP,
 						0,
-						message,         // 변환 할 문자열.
-						lstrlen(message),
+						message,			// 변환 할 문자열.
+						lstrlen(message) * 2, 
 						p.message,         // 변환 값 저장 버퍼.
 						MAX_STR,
 						NULL,
 						NULL);
 
-	p.message[lstrlen(message)] = '\0';
+	p.message[lstrlen(message) * 2] = '\0';
 
 	send_packet(&p);
 }

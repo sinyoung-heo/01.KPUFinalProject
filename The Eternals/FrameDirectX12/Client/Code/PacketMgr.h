@@ -68,6 +68,7 @@ public:
 	void	Enter_PartyMember(sc_packet_enter_party* packet, bool& retflag);
 	void	Suggest_Party(sc_packet_suggest_party* packet);
 	void	Update_Party(sc_packet_update_party* packet);
+	void	Recv_Chat(sc_packet_chat* packet);
 
 	void	Enter_Monster(sc_packet_monster_enter* packet);
 	void	Move_Monster(sc_packet_move* packet);
