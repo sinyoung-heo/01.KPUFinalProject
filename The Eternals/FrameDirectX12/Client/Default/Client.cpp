@@ -509,6 +509,8 @@ _ulong Release_Singleton()
 ____________________________________________________________________________________________________________*/
 int Get_Text(HWND hWnd,UINT msg,WPARAM wparam, LPARAM lparam)
 {
+	if (!INPUT_CHATTING)
+		return 1;
 	if (!g_bIsChattingInput)
 		return 1;
 

@@ -64,8 +64,11 @@ enum PARTY_REQUEST_STATE
 
 enum PARTY_SYSTEM_MESSAGE
 {
-	ENTER_PARTY_MEMBER,	// 파티원 입장
-	LEAVE_PARTY_MEMBER,	// 파티원 탈퇴
+	ENTER_PARTY_MEMBER,		// 파티원 입장
+	LEAVE_PARTY_MEMBER,		// 파티원 탈퇴
+	ALREADY_JOIN_IN_PARTY,	// 내가 파티에 가입중.
+	SELECT_JOIN_IN_PARYY,	// 상대방이 파티에 가입 중.
+	REJECT_PARTY_REQUEST,	// 파티 가입 or 참여 거절.
 	PARTY_MESSAGE_END
 };
 

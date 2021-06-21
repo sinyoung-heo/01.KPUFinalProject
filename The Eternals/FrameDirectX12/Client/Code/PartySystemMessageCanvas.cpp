@@ -44,6 +44,18 @@ void CPartySystemMessageCanvas::Set_PartyMessageState(const PARTY_SYSTEM_MESSAGE
 	{
 		m_pFont->Set_Text(L"파티원이 파티를 탈퇴하였습니다.");
 	}
+	else if (PARTY_SYSTEM_MESSAGE::ALREADY_JOIN_IN_PARTY == eState)
+	{
+		m_pFont->Set_Text(L"당신은 이미 파티에 가입중입니다.");
+	}
+	else if (PARTY_SYSTEM_MESSAGE::SELECT_JOIN_IN_PARYY == eState)
+	{
+		m_pFont->Set_Text(L"상대방은 이미 파티가 있습니다.");
+	}
+	else if (PARTY_SYSTEM_MESSAGE::REJECT_PARTY_REQUEST == eState)
+	{
+		m_pFont->Set_Text(L"상대방이 요청을 거절하였습니다.");
+	}
 }
 
 void CPartySystemMessageCanvas::Set_PartyMemberInfo(wstring wstrName,

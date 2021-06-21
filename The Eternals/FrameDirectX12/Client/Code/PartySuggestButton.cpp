@@ -96,19 +96,26 @@ _int CPartySuggestButton::LateUpdate_GameObject(const _float& fTimeDelta)
 					CPacketMgr::Get_Instance()->send_suggest_party(pSelectPlayer->Get_ServerNumber());
 				}
 				else
+				{
 					cout << "현재 유저는 다른 파티에 가입되어 있습니다." << endl;
+					m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_IsActive(true);
+					m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_PartyMessageState(PARTY_SYSTEM_MESSAGE::SELECT_JOIN_IN_PARYY);
+				}
 			}
 
 			// 파티가입
 			else
 			{
-				// 현재 파티에 소속되어 있지 않아야 되며, 상대방은 파티에 소속되어 있을 경우만 가능
 				if (pThisPlayer->Get_PartyState() == false)
 				{
 					CPacketMgr::Get_Instance()->send_join_party(pSelectPlayer->Get_ServerNumber());
 				}
 				else
+				{
 					cout << "파티 참여 신청을 할 수 없습니다." << endl;
+					m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_IsActive(true);
+					m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_PartyMessageState(PARTY_SYSTEM_MESSAGE::ALREADY_JOIN_IN_PARTY);
+				}
 			}
 		}
 	}

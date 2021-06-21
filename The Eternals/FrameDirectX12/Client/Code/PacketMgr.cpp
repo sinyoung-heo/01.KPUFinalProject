@@ -385,6 +385,8 @@ void CPacketMgr::Process_packet()
 	{
 		// 파티초대 or 파티가입요청 거절.
 		sc_packet_chat* packet = reinterpret_cast<sc_packet_chat*>(m_packet_start);
+		m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_IsActive(true);
+		m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_PartyMessageState(PARTY_SYSTEM_MESSAGE::REJECT_PARTY_REQUEST);
 	}
 	break;
 

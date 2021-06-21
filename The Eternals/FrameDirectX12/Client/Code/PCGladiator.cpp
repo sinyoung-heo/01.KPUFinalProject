@@ -2259,7 +2259,7 @@ void CPCGladiator::Leave_PartyThisPlayer()
 {
 	if (!g_bIsActive) return;
 
-	if (Engine::KEY_DOWN(DIK_P) && NO_EVENT_STATE)
+	if (Engine::KEY_DOWN(DIK_P) && !g_bIsOnDebugCaemra && !g_bIsStageChange && !g_bIsOpenShop && !g_bIsChattingInput)
 	{
 		m_pPartySystemMgr->Get_PartyLeaveCanvas()->Reverse_IsActive();
 		m_pPartySystemMgr->Get_PartyLeaveCanvas()->Reverse_IsActiveChild();
