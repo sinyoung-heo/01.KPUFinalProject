@@ -779,7 +779,7 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 
 	if (Engine::KEY_DOWN(DIK_0) && NO_EVENT_STATE)
 	{
-		Engine::CGameObject* pGameObj = nullptr;
+	/*	Engine::CGameObject* pGameObj = nullptr;
 		for (int i = 0; i < 36; i++)
 		{
 			pGameObj = CIceStorm::Create(m_pGraphicDevice, m_pCommandList,
@@ -788,7 +788,7 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 										 _vec3(0.f, 0.0f, 0.0f),
 										 _vec3(0, 0, 0), 5.f, XMConvertToRadians(i * 10.f));
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"IceStorm1", pGameObj), E_FAIL);
-		}
+		}*/
 	}
 
 	/* ΖΔΖΌ Ε»Επ */

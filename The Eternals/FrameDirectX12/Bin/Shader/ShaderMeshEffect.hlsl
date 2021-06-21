@@ -47,6 +47,12 @@ cbuffer cbShaderMesh : register(b1)
     float		g_fOffset6			: packoffset(c14.w);
 	float4		g_vAfterImgColor	: packoffset(c15);
 	float4		g_vEmissiveColor	: packoffset(c16);
+    
+    // Texture Sprite.
+    //float g_fFrameCnt : packoffset(c4.x); // 스프라이트 이미지 X축 개수.
+    //float g_fCurFrame : packoffset(c4.y); // 현재 그려지는 이미지의 X축 Index.
+    //float g_fSceneCnt : packoffset(c4.z); // 스프라이트 이미지 Y축 개수.
+    //float g_fCurScene : packoffset(c4.w); // 현재 그려지는 이미지의 Y축 Index.
 };
 struct VS_IN
 {
@@ -178,25 +184,33 @@ PS_OUT PS_ICESTORM(VS_OUT ps_input) : SV_TARGET
 PS_OUT PS_DECAL(VS_OUT ps_input) : SV_TARGET
 {
     PS_OUT ps_output = (PS_OUT) 0;
-	
     vector vDistortionInfo = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV);
     float2 vDistortion = (vDistortionInfo.xy * 2.f) - 1.f;
     vDistortion *= g_fOffset1; //강도
     float2 NewUV = float2(ps_input.TexUV.x + vDistortion.x * vDistortionInfo.b, ps_input.TexUV.y + vDistortion.y * vDistortionInfo.b);
-   
-    float2 AniUV = ps_input.AniUV;
-   
-    
+    float2 AniUV = ps_input.AniUV; 
     float4 D = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 N = g_TexNormal.Sample(g_samLinearWrap, NewUV *2);
-  
     float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
-    
     float4 color = mul(D.r, N) + mul(D.g, float4(0.6 + g_fOffset2, g_fOffset2, 0, 1)) + mul(D.b, float4(1.f, 0.5, 0.5, 1));
- 
-	
     ps_output.Effect4 = color;
     ps_output.Effect4.a = 1;
+    return (ps_output);
+}
+PS_OUT PS_ICEDECAL(VS_OUT ps_input) : SV_TARGET
+{
+    PS_OUT ps_output = (PS_OUT) 0;
+    vector vDistortionInfo = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV);
+    float2 vDistortion = (vDistortionInfo.xy * 2.f) - 1.f;
+    vDistortion *= g_fOffset1; //강도
+    float2 NewUV = float2(ps_input.TexUV.x + vDistortion.x * vDistortionInfo.b, ps_input.TexUV.y + vDistortion.y * vDistortionInfo.b);
+    float2 AniUV = ps_input.AniUV;
+    float4 D = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 N = g_TexNormal.Sample(g_samLinearWrap, NewUV * 2);
+    float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 color = mul(D.r, N) + mul(D.g, float4(0, g_fOffset2, 0.6 + g_fOffset2, 1)) + mul(D.b, float4(0.5, 0.5, 1, 1));
+    ps_output.Effect4 = color;
+    ps_output.Effect4.a = g_fOffset6;
     return (ps_output);
 }
 PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
@@ -209,5 +223,20 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
    
     ps_output.Effect3 = D;
     ps_output.Effect3.a = g_fOffset1;
+    return (ps_output);
+}
+
+PS_OUT PS_MAIN_SPRITE(VS_OUT ps_input) : SV_TARGET
+{
+    PS_OUT ps_output = (PS_OUT) 0;
+	
+    float u = (ps_input.TexUV.x / g_vAfterImgColor.x) + g_vAfterImgColor.y * (1.0f / g_vAfterImgColor.x);
+    float v = (ps_input.TexUV.y / g_vAfterImgColor.z) + g_vAfterImgColor.w * (1.0f / g_vAfterImgColor.z);
+	
+    float4 D = g_TexDiffuse.Sample(g_samLinearWrap, float2(u,v));
+    float4 N = g_TexNormal.Sample(g_samLinearWrap, float2(u, v));
+    float4 S = g_TexSpecular.Sample(g_samLinearWrap, float2(u, v));
+    ps_output.Effect4 = D;
+    ps_output.Effect4.a = 0.5f;
     return (ps_output);
 }

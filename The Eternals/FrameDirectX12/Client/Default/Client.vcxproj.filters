@@ -787,6 +787,11 @@
     <ClInclude Include="..\Code\PartyUIMpGauge.h">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIMpGauge</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\DistTrail.h" />
+    <ClInclude Include="..\Code\LightingParticle.h" />
+    <ClInclude Include="..\Code\SwordEffect.h" />
+    <ClInclude Include="..\Code\IceDecal.h" />
+    <ClInclude Include="..\Code\FrameMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1138,6 +1143,11 @@
     <ClCompile Include="..\Code\PartyUIMpGauge.cpp">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIMpGauge</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\DistTrail.cpp" />
+    <ClCompile Include="..\Code\LightingParticle.cpp" />
+    <ClCompile Include="..\Code\SwordEffect.cpp" />
+    <ClCompile Include="..\Code\IceDecal.cpp" />
+    <ClCompile Include="..\Code\FrameMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

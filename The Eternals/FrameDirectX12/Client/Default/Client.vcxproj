@@ -187,9 +187,11 @@
     <ClInclude Include="..\Code\EffectTrail.h" />
     <ClInclude Include="..\Code\FadeInOut.h" />
     <ClInclude Include="..\Code\FireDecal.h" />
+    <ClInclude Include="..\Code\FrameMesh.h" />
     <ClInclude Include="..\Code\GiantBeetle.h" />
     <ClInclude Include="..\Code\GiantMonkey.h" />
     <ClInclude Include="..\Code\Glowring.h" />
+    <ClInclude Include="..\Code\IceDecal.h" />
     <ClInclude Include="..\Code\IceStorm.h" />
     <ClInclude Include="..\Code\IceStorm_s.h" />
     <ClInclude Include="..\Code\InstancePoolMgr.h" />
@@ -273,6 +275,7 @@
     <ClInclude Include="..\Code\StageLDH.h" />
     <ClInclude Include="..\Code\StagePJO.h" />
     <ClInclude Include="..\Code\StaticMeshObject.h" />
+    <ClInclude Include="..\Code\SwordEffect.h" />
     <ClInclude Include="..\Code\SwordTrail.h" />
     <ClInclude Include="..\Code\TerrainMeshObject.h" />
     <ClInclude Include="..\Code\WaterFall.h" />
@@ -318,11 +321,13 @@
     <ClCompile Include="..\Code\EffectTrail.cpp" />
     <ClCompile Include="..\Code\FadeInOut.cpp" />
     <ClCompile Include="..\Code\FireDecal.cpp" />
+    <ClCompile Include="..\Code\FrameMesh.cpp" />
     <ClCompile Include="..\Code\GameUIChild.cpp" />
     <ClCompile Include="..\Code\GameUIRoot.cpp" />
     <ClCompile Include="..\Code\GiantBeetle.cpp" />
     <ClCompile Include="..\Code\GiantMonkey.cpp" />
     <ClCompile Include="..\Code\Glowring.cpp" />
+    <ClCompile Include="..\Code\IceDecal.cpp" />
     <ClCompile Include="..\Code\IceStorm.cpp" />
     <ClCompile Include="..\Code\IceStorm_s.cpp" />
     <ClCompile Include="..\Code\InstancePoolMgr.cpp" />
@@ -404,6 +409,7 @@
     <ClCompile Include="..\Code\StageLDH.cpp" />
     <ClCompile Include="..\Code\StagePJO.cpp" />
     <ClCompile Include="..\Code\StaticMeshObject.cpp" />
+    <ClCompile Include="..\Code\SwordEffect.cpp" />
     <ClCompile Include="..\Code\SwordTrail.cpp" />
     <ClCompile Include="..\Code\TerrainMeshObject.cpp" />
     <ClCompile Include="..\Code\WaterFall.cpp" />
