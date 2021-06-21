@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "FireDecal.h"
+#include "FrameMesh.h"
 #include "GraphicDevice.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
@@ -8,17 +8,17 @@
 #include "RenderTarget.h"
 #include "TimeMgr.h"
 #include "DescriptorHeapMgr.h"
-#include "TextureEffect.h"
-CFireDecal::CFireDecal(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CFrameMesh::CFrameMesh(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
 }
 
 
-HRESULT CFireDecal::Ready_GameObject(wstring wstrMeshTag,
+HRESULT CFrameMesh::Ready_GameObject(wstring wstrMeshTag,
 											 const _vec3 & vScale,
 											 const _vec3 & vAngle, 
-											 const _vec3 & vPos)
+											 const _vec3 & vPos, 
+											const FRAME& tFrame)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
@@ -27,61 +27,55 @@ HRESULT CFireDecal::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vScale	= vScale;
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos		= vPos;
-
-	m_fAlpha = 1.f;
+	m_tFrame = tFrame;
 	return S_OK;
 }
 
-HRESULT CFireDecal::LateInit_GameObject()
+HRESULT CFrameMesh::LateInit_GameObject()
 {
 
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
-	Engine::CTexture* pTexture = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(L"PublicMagic", Engine::COMPONENTID::ID_STATIC));
+	m_pCrossFilterShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
+
+	Engine::CTexture* pTexture = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(L"EffectPublic", Engine::COMPONENTID::ID_STATIC));
 	SetUp_DescriptorHeap(pTexture->Get_Texture(), m_pRenderer->Get_TargetShadowDepth()->Get_TargetTexture());
 
 
-	m_uiDiffuse = 9;
-	m_fNormalMapDeltatime = 10;//NormIdx
-	m_fPatternMapDeltatime = 2;//SpecIdx
-
-	_vec3 vPos = m_pTransCom->m_vPos;
-	vPos.y += 1.f;
-	
+	m_uiDiffuse =2;
+	m_uiNormal = 8;//NormIdx
+	m_uiSpec = 8;//SpecIdx
 	return S_OK;	
 }
 
-_int CFireDecal::Update_GameObject(const _float & fTimeDelta)
+_int CFrameMesh::Update_GameObject(const _float & fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
-	if (m_bIsDead /*||m_fAlpha<0.f*/)
+	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	
+	m_tFrame.fCurFrame += fTimeDelta * m_tFrame.fFrameSpeed;
+
+	// Sprite XÃà
+	if (m_tFrame.fCurFrame > m_tFrame.fFrameCnt)
+	{
+		m_tFrame.fCurFrame = 0.0f;
+		m_tFrame.fCurScene += 1.0f;
+	}
+
+	// Sprite YÃà
+	if (m_tFrame.fCurScene >= m_tFrame.fSceneCnt)
+	{
+		m_tFrame.fCurScene = 0.0f;
+	}
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
 
-	m_fResponeatime += Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta");
-	if (m_fEffectCnt && m_fResponeatime > 0.2f)
-	{
-		m_fEffectCnt--;
-		m_fResponeatime = 0.f;
-		_vec3 vPos = m_pTransCom->m_vPos;
-		vPos.x += (rand() % 80 - 40)*0.1f;
-		vPos.z += (rand() % 80 - 40) * 0.1f;
-		CGameObject* pGameObj = nullptr;
-		vPos.y += 1.f;
-		pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-			L"Bomb00",						// TextureTag
-			_vec3(4.f, 4.f, 1.0f),		// Scale
-			_vec3(0.0f, 0.0f, 0.0f),		// Angle
-			vPos,	// Pos
-			FRAME(10, 9, 33.0f));			// Sprite Image Frame
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Bomb00", pGameObj), E_FAIL);
-	}
-	
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MAGICCIRCLE, this), -1);
 	
+
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
 	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
 	/*____________________________________________________________________
@@ -92,23 +86,26 @@ _int CFireDecal::Update_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CFireDecal::LateUpdate_GameObject(const _float & fTimeDelta)
+_int CFrameMesh::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
-
-	Set_ConstantTable();
 
 	return NO_EVENT;
 }
 
 
-void CFireDecal::Render_GameObject(const _float& fTimeDelta)
+void CFrameMesh::Render_GameObject(const _float& fTimeDelta)
 {
-	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_fNormalMapDeltatime, m_fPatternMapDeltatime
+	Set_ConstantTable();
+	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse,m_uiSpec, m_uiNormal
 		,0,4);
 }
-
-HRESULT CFireDecal::Add_Component(wstring wstrMeshTag)
+void CFrameMesh::Render_CrossFilterGameObject(const _float& fTimeDelta)
+{
+	Set_ConstantTable();
+	m_pMeshCom->Render_StaticMesh(m_pCrossFilterShaderCom);
+}
+HRESULT CFrameMesh::Add_Component(wstring wstrMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -122,14 +119,20 @@ HRESULT CFireDecal::Add_Component(wstring wstrMeshTag)
 	// Shader
 	m_pShaderCom = static_cast<Engine::CShaderMeshEffect*>(m_pComponentMgr->Clone_Component(L"ShaderMeshEffect", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(4), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(8), E_FAIL);
 	m_pShaderCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
+
+	m_pCrossFilterShaderCom = static_cast<Engine::CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", Engine::COMPONENTID::ID_STATIC));
+	Engine::NULL_CHECK_RETURN(m_pCrossFilterShaderCom, E_FAIL);
+	m_pCrossFilterShaderCom->AddRef();
+	Engine::FAILED_CHECK_RETURN(m_pCrossFilterShaderCom->Set_PipelineStatePass(3), E_FAIL);
+	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader2", m_pCrossFilterShaderCom);
 
 	return S_OK;
 }
 
-void CFireDecal::Set_ConstantTable()
+void CFrameMesh::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -141,32 +144,33 @@ void CFireDecal::Set_ConstantTable()
 	tCB_ShaderMesh.matWorld = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
 	tCB_ShaderMesh.matLightView = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
 	tCB_ShaderMesh.matLightProj = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
+	
 	tCB_ShaderMesh.vLightPos = tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
-	m_fDeltaTime  += Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.5f;
-	m_fDeltatime2 += Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.3f* m_fDelta2Velocity;
-	if (fabsf(m_fDeltatime2) > 0.3f)
-	{
-		m_fDelta2Velocity *= -1.f;
-	}
-	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
-	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
-	m_fAlpha -= Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.3f;
-	tCB_ShaderMesh.fOffset6 = m_fAlpha;
 
+	//tCB_ShaderTexture.fFrameCnt = m_tFrame.fFrameCnt;
+	//tCB_ShaderTexture.fCurFrame = (_float)(_int)m_tFrame.fCurFrame;
+	//tCB_ShaderTexture.fSceneCnt = m_tFrame.fSceneCnt;
+	//tCB_ShaderTexture.fCurScene = (_int)m_tFrame.fCurScene;
+
+	tCB_ShaderMesh.vAfterImgColor.x = m_tFrame.fFrameCnt;
+	tCB_ShaderMesh.vAfterImgColor.y = (_float)(_int)m_tFrame.fCurFrame;
+	tCB_ShaderMesh.vAfterImgColor.z = m_tFrame.fSceneCnt;
+	tCB_ShaderMesh.vAfterImgColor.w = (_int)m_tFrame.fCurScene;
 	if(m_pShaderCom->Get_UploadBuffer_ShaderMesh()!=nullptr)
 		m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
+
 
 	
 }
 
-void CFireDecal::Set_ConstantTableShadowDepth()
+void CFrameMesh::Set_ConstantTableShadowDepth()
 {
 
 }
 
 
-HRESULT CFireDecal::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth)
+HRESULT CFrameMesh::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth)
 {
 	_uint m_uiTexSize = vecTexture.size() + vecShadowDepth.size();
 
@@ -211,24 +215,25 @@ HRESULT CFireDecal::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTextu
 }
 
 
-Engine::CGameObject* CFireDecal::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
+Engine::CGameObject* CFrameMesh::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
 												wstring wstrMeshTag, 
 												const _vec3 & vScale,
 												const _vec3 & vAngle,
-												const _vec3 & vPos)
+												const _vec3 & vPos, const FRAME& tFrame)
 {
-	CFireDecal* pInstance = new CFireDecal(pGraphicDevice, pCommandList);
+	CFrameMesh* pInstance = new CFrameMesh(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos)))
+	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos, tFrame)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
 }
 
-void CFireDecal::Free()
+void CFrameMesh::Free()
 {
 	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pMeshCom);
 //	Engine::Safe_Release(m_pDescriptorHeaps);
 	Engine::Safe_Release(m_pShaderCom);
+	Engine::Safe_Release(m_pCrossFilterShaderCom);
 }

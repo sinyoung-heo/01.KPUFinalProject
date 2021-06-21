@@ -91,9 +91,12 @@ _int CStagePJO::Update_Scene(const _float& fTimeDelta)
 	{
 		
 		_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
+		
 		Pos.y += 0.5f;
-		CEffectMgr::Get_Instance()->Effect_IceStorm(Pos);
-		CEffectMgr::Get_Instance()->Effect_FireDecal(Pos);
+		/*CEffectMgr::Get_Instance()->Effect_IceStorm(Pos);
+		CEffectMgr::Get_Instance()->Effect_FireDecal(Pos);*/
+		Pos.y += 100.f;
+		CEffectMgr::Get_Instance()->Effect_SwordEffect(Pos, m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->m_vDir);
 
 	}
 

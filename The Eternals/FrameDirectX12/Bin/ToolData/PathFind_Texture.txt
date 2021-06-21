@@ -1,4 +1,4 @@
-EffectPublic|9|..\..\Bin\Resource\ResourceStage\Texture\EffectPublic\%d.dds
+EffectPublic|11|..\..\Bin\Resource\ResourceStage\Texture\EffectPublic\%d.dds
 ArrowShot0|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\ArrowShot0\%d.dds
 Bomb00|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb00\%d.dds
 Bomb01|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb01\%d.dds
@@ -8,6 +8,7 @@ Bomb04|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb04\%d.
 Crack|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Crack\%d.dds
 Fire|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Fire\%d.dds
 Fire1|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Fire1\%d.dds
+FireTrail|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\FireTrail\%d.dds
 Firework0|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Firework0\%d.dds
 Firework1|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Firework1\%d.dds
 Glowring|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Glowring\%d.dds
@@ -26,7 +27,7 @@ SkyBox|7|..\..\Bin\Resource\ResourceStage\Texture\Environment\SkyBox\%d.dds
 Terrain|8|..\..\Bin\Resource\ResourceStage\Texture\Environment\Terrain\%d.dds
 TexWaterFall|11|..\..\Bin\Resource\ResourceStage\Texture\Environment\TexWaterFall\%d.dds
 WaterNormal|134|..\..\Bin\Resource\ResourceStage\Texture\Environment\WaterNormal\%d.dds
-PublicMagic|14|..\..\Bin\Resource\ResourceStage\Texture\PublicMagic\%d.dds
+PublicMagic|15|..\..\Bin\Resource\ResourceStage\Texture\PublicMagic\%d.dds
 S1UI_BFParty|2|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_BFParty\%d.dds
 S1UI_CharacterWindow|3|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_CharacterWindow\%d.dds
 S1UI_Chat|6|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_Chat\%d.dds
