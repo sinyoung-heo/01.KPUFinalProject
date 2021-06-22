@@ -663,7 +663,7 @@ void CPCGladiator::Set_ConstantTableMiniMap()
 	ZeroMemory(&tCB_ShaderTexture, sizeof(Engine::CB_SHADER_TEXTURE));
 	tCB_ShaderTexture.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransMiniMap->m_matWorld);
 	tCB_ShaderTexture.fAlpha    = 1.0f;
-
+	tCB_ShaderTexture.v_Color = _vec4(0, 0, 0.5, 1);
 	m_pShaderMiniMap->Get_UploadBuffer_CameraTopViewMatrix()->CopyData(0, tCB_CameraMatrix);
 	m_pShaderMiniMap->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 }

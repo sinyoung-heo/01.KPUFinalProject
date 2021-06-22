@@ -187,8 +187,14 @@ _int CPCOthersArcher::Update_GameObject(const _float& fTimeDelta)
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_EDGE, this), -1);
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MINIMAP, this), -1);
+	if (m_bIsThisPlayerPartyMember)
+	{
+		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_EDGE, this), -1);
+		m_uiMiniMapTexIdx = 2;
+	}
+	else
+		m_uiMiniMapTexIdx = 1;
 
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 	Engine::CGameObject::SetUp_MiniMapRandomY();

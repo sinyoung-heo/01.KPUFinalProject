@@ -87,6 +87,7 @@ _int CPartyLeaveButton::LateUpdate_GameObject(const _float& fTimeDelta)
 			pThisPlayer->Set_RequestParty(false);
 			pThisPlayer->JoinRequest_Party(false);
 			pThisPlayer->Set_PartySuggestSNum(-1);
+			pThisPlayer->SetUp_OthersIsInMyParty();
 			CPartySystemMgr::Get_Instance()->SetUp_ThisPlayerPartyList();
 		}
 	}

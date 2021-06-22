@@ -1043,7 +1043,7 @@ HRESULT CRenderer::Ready_RenderTarget()
 	FAILED_CHECK_RETURN(m_pTargetMiniMap->SetUp_DefaultSetting(TARGETID::TYPE_SHADOWDEPTH), E_FAIL);
 
 	m_pTargetMiniMap->Set_TargetRenderScale(_vec3(100.0f, 100.0f, 128.0f));
-	m_pTargetMiniMap->Set_TargetRenderPos(_vec3(WINCX - 100.0f - 42.0f, 100.0f + 68.0f, 1.0f));
+	m_pTargetMiniMap->Set_TargetRenderPos(_vec3(WINCX - 100.0f - 52.0f, 100.0f + 68.0f, 1.0f));
 	m_pTargetMiniMap->Set_TargetTexturePipelineState(11);
 
 	return S_OK;
