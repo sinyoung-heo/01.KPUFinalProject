@@ -255,6 +255,20 @@ void process_packet(int id)
 	}
 	break;
 
+	case CS_ADD_ITEM:
+	{
+		cs_packet_manage_inventory* p = reinterpret_cast<cs_packet_manage_inventory*>(pPlayer->m_packet_start);
+		process_add_item(id, p->itemType, p->itemName);
+	}
+	break;
+
+	case CS_DELETE_ITEM:
+	{
+		cs_packet_manage_inventory* p = reinterpret_cast<cs_packet_manage_inventory*>(pPlayer->m_packet_start);
+		process_delete_item(id, p->itemType, p->itemName);
+	}
+	break;
+
 	}
 }
 /* ========================패킷 재조립========================*/
@@ -674,6 +688,20 @@ void send_chat(const int& to_client, const int& id, const char* name, const char
 	p.messageLen = len;
 
 	send_packet(to_client, &p);
+}
+
+void send_update_inventory(const int& id, const char& chItemType, const char& chName, const int& count)
+{
+	sc_packet_update_inventory p;
+
+	p.size		= sizeof(p);
+	p.type		= SC_PACKET_UPDATE_INVENTORY;
+
+	p.itemType	= chItemType;
+	p.itemName	= chName;
+	p.count		= count;
+
+	send_packet(id, &p);
 }
 
 void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
@@ -1830,6 +1858,7 @@ void process_disconnect(const int& id)
 	pPlayer->m_bIsPartyState	= false;
 	pPlayer->m_iPartyNumber		= INIT_PARTY_NUMBER;
 	pPlayer->view_list.clear();
+	pPlayer->Release_Inventory();
 	pPlayer->Get_ClientLock().unlock();
 
 	CObjPoolMgr::GetInstance()->return_Object(L"PLAYER", pPlayer);
@@ -1850,6 +1879,30 @@ void process_chat(const int& id, const char* buffer)
 	for (iter_begin; iter_begin != iter_end; ++iter_begin)
 	{
 		send_chat(iter_begin->second->m_sNum, id, pPlayer->m_ID, buffer, tempSize);
+	}
+}
+
+void process_add_item(const int& id, const char& chItemType, const char& chName)
+{
+	CPlayer* pUser = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pUser == nullptr) return;
+	if (!pUser->m_bIsConnect) return;
+
+	if (pUser->Add_Item(chName, static_cast<ITEM>(chItemType)))
+	{
+		send_update_inventory(id, chItemType, chName, pUser->Get_ItemCount(chName, static_cast<ITEM>(chItemType)));
+	}
+}
+
+void process_delete_item(const int& id, const char& chItemType, const char& chName)
+{
+	CPlayer* pUser = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pUser == nullptr) return;
+	if (!pUser->m_bIsConnect) return;
+
+	if (pUser->Delete_Item(chName, static_cast<ITEM>(chItemType)))
+	{
+		send_update_inventory(id, chItemType, chName, pUser->Get_ItemCount(chName, static_cast<ITEM>(chItemType)));
 	}
 }
 

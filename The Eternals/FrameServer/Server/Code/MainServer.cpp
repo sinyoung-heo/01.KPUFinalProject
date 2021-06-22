@@ -489,7 +489,7 @@ void disconnect_client(int id)
 	// DB 정보 저장 후 종료
 	CDBMgr::GetInstance()->Update_stat_DB(id);
 #endif // !DUMMY
-
+	
 	CObjPoolMgr::GetInstance()->return_Object(L"PLAYER", pPlayer);
 	CObjMgr::GetInstance()->Delete_GameObject(L"PLAYER", pPlayer);
 	pPlayer->Set_IsConnected(false);
@@ -503,6 +503,7 @@ void disconnect_client(int id)
 	pPlayer->m_bIsPartyState	= false;
 	pPlayer->m_iPartyNumber		= INIT_PARTY_NUMBER;
 	pPlayer->view_list.clear();
+	pPlayer->Release_Inventory();
 	pPlayer->Get_ClientLock().unlock();
 
 	if (CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER")->size() <= 0)

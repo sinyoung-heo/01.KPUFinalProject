@@ -50,6 +50,8 @@ public:
 	void	send_leave_party(const int& myId);
 	void	send_logout();
 	void	send_chat(const wchar_t* message);
+	void	send_add_item(const char& chItemType, const char& chName);
+	void	send_delete_item(const char& chItemType, const char& chName);
 
 public:
 	bool	change_MoveKey(MVKEY eKey);

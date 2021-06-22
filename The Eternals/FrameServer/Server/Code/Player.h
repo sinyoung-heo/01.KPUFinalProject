@@ -8,14 +8,24 @@ public:
 	virtual ~CPlayer();
 
 public:
-	virtual DWORD Release();
+	/* Inventory */
+	bool		Is_Full_Inventory();
+	bool		Add_Item(const char itemName, ITEM eItemType);
+	bool		Delete_Item(const char itemName, ITEM eItemType);
+	const int&	Get_ItemCount(const char itemName, ITEM eItemType);
+	void		Release_Inventory();
+
+	/* Equipment */
+	const EQUIPMENT&	Get_Equipment() { return m_tEquipment; }
+
+	virtual DWORD		Release();
 
 public:
 	/*=============Ω√Ω∫≈€ ƒ¡≈Ÿ√˜==============*/
-	SOCKET	m_sock; 
-	OVER_EX	m_recv_over;   
-	unsigned char* m_packet_start; 
-	unsigned char* m_recv_start; 
+	SOCKET			m_sock; 
+	OVER_EX			m_recv_over;   
+	unsigned char*	m_packet_start; 
+	unsigned char*	m_recv_start; 
 
 public:
 	/*=============∞‘¿” ƒ¡≈Ÿ√˜===============*/
@@ -35,7 +45,9 @@ public:
 	int		m_iMaxAtt			= 0;
 	float	m_fSpd				= 0;
 	
-	unordered_set<int> view_list; 
-	mutex v_lock; 
+	map<char, int>		m_mapInventory[ITEM::ITEM_END];
+	EQUIPMENT			m_tEquipment;
+	unordered_set<int>	view_list; 
+	mutex				v_lock; 
 };
 
