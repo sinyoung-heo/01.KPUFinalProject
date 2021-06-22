@@ -470,7 +470,9 @@ void CPCOthersPriest::Set_ConstantTableShadowDepth()
 
 void CPCOthersPriest::Set_ConstantTableMiniMap()
 {
-	m_pTransMiniMap->m_vPos   = m_pTransCom->m_vPos;
+	m_pTransMiniMap->m_vPos.x = m_pTransCom->m_vPos.x;
+	m_pTransMiniMap->m_vPos.y = 1.1f;
+	m_pTransMiniMap->m_vPos.z = m_pTransCom->m_vPos.z;
 	m_pTransMiniMap->m_vAngle = _vec3(90.0f, 0.0f, 0.0f);
 	m_pTransMiniMap->m_vScale = _vec3(6.0f, 6.0f, 6.0f);
 	m_pTransMiniMap->Update_Component(0.16f);

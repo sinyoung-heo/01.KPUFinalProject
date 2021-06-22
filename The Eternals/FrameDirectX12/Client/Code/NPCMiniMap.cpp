@@ -40,7 +40,7 @@ _int CNPCMiniMap::Update_GameObject(const _float& fTimeDelta)
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
-	Engine::CGameObject::Compute_ViewZ(_vec4(m_pTransCom->m_vPos, 1.0f));
+	Engine::CGameObject::SetUp_MiniMapRandomY();
 
 	return NO_EVENT;
 }
@@ -68,7 +68,8 @@ void CNPCMiniMap::Render_MiniMap(const _float& fTimeDelta)
 
 void CNPCMiniMap::Set_ConstantTable()
 {
-	m_pTransMiniMap->m_vPos   = m_pTransCom->m_vPos;
+	m_pTransMiniMap->m_vPos.x = m_pTransCom->m_vPos.x;
+	m_pTransMiniMap->m_vPos.z = m_pTransCom->m_vPos.z;
 	m_pTransMiniMap->m_vAngle = _vec3(90.0f, 0.0f, 0.0f);
 	m_pTransMiniMap->m_vScale = _vec3(7.0f, 7.0f, 7.0f);
 	m_pTransMiniMap->Update_Component(0.16f);

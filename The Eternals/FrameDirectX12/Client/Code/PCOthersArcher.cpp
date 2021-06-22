@@ -191,6 +191,7 @@ _int CPCOthersArcher::Update_GameObject(const _float& fTimeDelta)
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MINIMAP, this), -1);
 
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
+	Engine::CGameObject::SetUp_MiniMapRandomY();
 
 	// Weapon Update
 	if (m_pWeapon != nullptr)
@@ -485,7 +486,8 @@ void CPCOthersArcher::Set_ConstantTableShadowDepth()
 
 void CPCOthersArcher::Set_ConstantTableMiniMap()
 {
-	m_pTransMiniMap->m_vPos   = m_pTransCom->m_vPos;
+	m_pTransMiniMap->m_vPos.x = m_pTransCom->m_vPos.x;
+	m_pTransMiniMap->m_vPos.z = m_pTransCom->m_vPos.z;
 	m_pTransMiniMap->m_vAngle = _vec3(90.0f, 0.0f, 0.0f);
 	m_pTransMiniMap->m_vScale = _vec3(6.0f, 6.0f, 6.0f);
 	m_pTransMiniMap->Update_Component(0.16f);

@@ -198,6 +198,7 @@ _int CPCPriest::Update_GameObject(const _float& fTimeDelta)
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
+	Engine::CGameObject::SetUp_MiniMapRandomY();
 
 	//// AfterImage
 	//Make_AfterImage(fTimeDelta);
@@ -635,7 +636,8 @@ void CPCPriest::Set_ConstantTableShadowDepth()
 
 void CPCPriest::Set_ConstantTableMiniMap()
 {
-	m_pTransMiniMap->m_vPos   = m_pTransCom->m_vPos;
+	m_pTransMiniMap->m_vPos.x = m_pTransCom->m_vPos.x;
+	m_pTransMiniMap->m_vPos.z = m_pTransCom->m_vPos.z;
 	m_pTransMiniMap->m_vPos.y = 0.5f;
 	m_pTransMiniMap->m_vAngle = _vec3(90.0f, m_pDynamicCamera->Get_Transform()->m_vAngle.y, 0.0f);
 	m_pTransMiniMap->m_vScale = _vec3(6.0f, 6.0f, 6.0f);

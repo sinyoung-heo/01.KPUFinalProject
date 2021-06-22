@@ -131,6 +131,7 @@ protected:
 	void			Reset_Collider();
 	void			Compute_ViewZ(_vec4& vPosInWorld);
 	CComponent*		Find_Component(wstring wstrComponentTag, const COMPONENTID& eID);
+	void			SetUp_MiniMapRandomY();
 protected:
 	/*__________________________________________________________________________________________________________
 	[ GraphicDevice & Mgr ]
@@ -167,6 +168,7 @@ protected:
 	_bool	m_bIsLateInit		= false;
 	_float	m_fViewZ			= 0.0f;
 	_long	m_UIDepth			= 0;
+	_bool	m_bIsInitMiniMapDepth = false;
 
 	_bool	m_bIsCollision		= false;
 	_bool	m_bIsBoundingBox	= false;

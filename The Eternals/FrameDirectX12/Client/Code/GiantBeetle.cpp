@@ -145,6 +145,7 @@ _int CGiantBeetle::Update_GameObject(const _float& fTimeDelta)
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
+	Engine::CGameObject::SetUp_MiniMapRandomY();
 
 	return NO_EVENT;
 }
@@ -263,7 +264,8 @@ void CGiantBeetle::Set_ConstantTableShadowDepth()
 
 void CGiantBeetle::Set_ConstantTableMiniMap()
 {
-	m_pTransMiniMap->m_vPos   = m_pTransCom->m_vPos;
+	m_pTransMiniMap->m_vPos.x = m_pTransCom->m_vPos.x;
+	m_pTransMiniMap->m_vPos.z = m_pTransCom->m_vPos.z;
 	m_pTransMiniMap->m_vAngle = _vec3(90.0f, 0.0f, 0.0f);
 	m_pTransMiniMap->m_vScale = _vec3(6.0f, 6.0f, 6.0f);
 	m_pTransMiniMap->Update_Component(0.16f);

@@ -5,6 +5,8 @@
 #include "ComponentMgr.h"
 #include "Renderer.h"
 #include "Font.h"
+#include <random>
+
 USING(Engine)
 
 CGameObject::CGameObject()
@@ -401,6 +403,21 @@ CComponent * CGameObject::Find_Component(wstring wstrComponentTag, const COMPONE
 		return nullptr;
 
 	return iter_find->second;
+}
+
+void CGameObject::SetUp_MiniMapRandomY()
+{
+	if (nullptr != m_pTransMiniMap && !m_bIsInitMiniMapDepth)
+	{
+		m_bIsInitMiniMapDepth = true;
+
+		random_device					rd;
+		default_random_engine			dre{ rd() };
+		uniform_int_distribution<_int>	uid{ 0, 10'000 };
+
+		_float random_value = (_float)(uid(dre));
+		m_pTransMiniMap->m_vPos.y = random_value * 0.0001f;
+	}
 }
 
 CGameObject * CGameObject::Clone_GameObject()
