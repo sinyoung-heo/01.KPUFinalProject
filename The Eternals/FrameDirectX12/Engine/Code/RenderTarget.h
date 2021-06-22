@@ -25,6 +25,7 @@ public:
 	void	Set_TargetRenderPos(const _vec3& vPos)		{ m_vPos = vPos; };
 	void	Set_TargetRenderScale(const _vec3& vScale)	{ m_vScale = vScale; };
 	void	Set_TargetTextureSize(const _uint& iIdx, const _float& fWidth, const _float& fHeight,bool bisShadowTexture=true);
+	void	Set_TargetTexturePipelineState(const _uint& iPipelineState);
 
 	// Method
 	HRESULT	Ready_RenderTarget(const _uint& uiTargetCnt);

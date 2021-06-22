@@ -131,6 +131,9 @@ HRESULT CPCPriest::LateInit_GameObject()
 	// UI ClassFrame
 	Engine::FAILED_CHECK_RETURN(SetUp_ClassFrame(), E_FAIL);
 
+	// MiniMap
+	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::SetUp_MiniMapComponent(0), E_FAIL);
+
 	return S_OK;
 }
 
@@ -184,6 +187,7 @@ _int CPCPriest::Update_GameObject(const _float& fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MINIMAP, this), -1);
 
 	/*__________________________________________________________________________________________________________
 	[ Collision - Add Collision List ]
@@ -194,6 +198,7 @@ _int CPCPriest::Update_GameObject(const _float& fTimeDelta)
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
+	Engine::CGameObject::SetUp_MiniMapRandomY();
 
 	//// AfterImage
 	//Make_AfterImage(fTimeDelta);
@@ -304,6 +309,18 @@ void CPCPriest::Render_GameObject(const _float& fTimeDelta)
 		m_pShaderCom->Set_PipelineStatePass(5);
 		Render_AfterImage(fTimeDelta);
 	}
+}
+
+void CPCPriest::Render_MiniMap(const _float& fTimeDelta)
+{
+	Set_ConstantTableMiniMap();
+
+	m_pShaderMiniMap->Begin_Shader(m_pTextureMiniMap->Get_TexDescriptorHeap(), 
+								   0, 
+								   m_uiMiniMapTexIdx, 
+								   Engine::MATRIXID::TOP_VIEW);
+	m_pBufferMiniMap->Begin_Buffer();
+	m_pBufferMiniMap->Render_Buffer();
 }
 
 void CPCPriest::Render_AfterImage(const _float& fTimeDelta)
@@ -615,6 +632,32 @@ void CPCPriest::Set_ConstantTableShadowDepth()
 	tCB_ShaderShadow.fProjFar = tShadowDesc.fLightPorjFar;
 
 	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
+}
+
+void CPCPriest::Set_ConstantTableMiniMap()
+{
+	m_pTransMiniMap->m_vPos.x = m_pTransCom->m_vPos.x;
+	m_pTransMiniMap->m_vPos.z = m_pTransCom->m_vPos.z;
+	m_pTransMiniMap->m_vPos.y = 0.5f;
+	m_pTransMiniMap->m_vAngle = _vec3(90.0f, m_pDynamicCamera->Get_Transform()->m_vAngle.y, 0.0f);
+	m_pTransMiniMap->m_vScale = _vec3(6.0f, 6.0f, 6.0f);
+	m_pTransMiniMap->Update_Component(0.16f);
+
+	/*__________________________________________________________________________________________________________
+	[ Set ConstantBuffer Data ]
+	____________________________________________________________________________________________________________*/
+	Engine::CB_CAMERA_MATRIX tCB_CameraMatrix;
+	ZeroMemory(&tCB_CameraMatrix, sizeof(Engine::CB_CAMERA_MATRIX));
+	tCB_CameraMatrix.matView = Engine::CShader::Compute_MatrixTranspose(CShadowLightMgr::Get_Instance()->Get_MiniMapView());
+	tCB_CameraMatrix.matProj = Engine::CShader::Compute_MatrixTranspose(CShadowLightMgr::Get_Instance()->Get_MiniMapProj());
+
+	Engine::CB_SHADER_TEXTURE tCB_ShaderTexture;
+	ZeroMemory(&tCB_ShaderTexture, sizeof(Engine::CB_SHADER_TEXTURE));
+	tCB_ShaderTexture.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransMiniMap->m_matWorld);
+	tCB_ShaderTexture.fAlpha    = 1.0f;
+
+	m_pShaderMiniMap->Get_UploadBuffer_CameraTopViewMatrix()->CopyData(0, tCB_CameraMatrix);
+	m_pShaderMiniMap->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 }
 
 void CPCPriest::Set_IsRepeatAnimation()

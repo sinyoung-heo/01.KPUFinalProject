@@ -90,12 +90,11 @@ _int CMainApp::Update_MainApp(const _float & fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Update Management ]
 	____________________________________________________________________________________________________________*/
-	CShadowLightMgr::Get_Instance()->Update_ShadowLight();
-
 	// UpdateMouseCursor
 	CMouseCursorMgr::Get_Instance()->Update_MouseCursorMgr(fTimeDelta);
 
 	m_pManagement->Update_Management(fTimeDelta);
+	CShadowLightMgr::Get_Instance()->Update_ShadowLight();
 
 	return 0;
 }

@@ -84,8 +84,8 @@ _int CTextureEffect::Update_GameObject(const _float & fTimeDelta)
 
 
 	/*__________________________________________________________________________________________________________
-[ TransCom - Update WorldMatrix ]
-____________________________________________________________________________________________________________*/
+	[ TransCom - Update WorldMatrix ]
+	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
@@ -179,7 +179,7 @@ void CTextureEffect::Set_ConstantTable()
 	tCB_ShaderTexture.fCurFrame	= (_float)(_int)m_tFrame.fCurFrame;
 	tCB_ShaderTexture.fSceneCnt	= m_tFrame.fSceneCnt;
 	tCB_ShaderTexture.fCurScene	= (_int)m_tFrame.fCurScene;
-	tCB_ShaderTexture.v_Color = m_vColorOffset;
+	tCB_ShaderTexture.v_Color   = m_vColorOffset;
 
 	if(m_bisFollowHand)
 		tCB_ShaderTexture.fOffset2 = m_fDeltatime*0.5f;

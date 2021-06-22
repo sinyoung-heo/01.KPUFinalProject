@@ -20,6 +20,7 @@ public:
 	// Get
 	CComponent*				Get_Component(wstring wstrComponentTag, COMPONENTID eID);
 	CTransform*				Get_Transform()			{ return m_pTransCom; }
+	CTransform*				Get_MiniMapTransform()	{ return m_pTransMiniMap; }
 	CInfo*					Get_Info()				{ return m_pInfoCom; }
 	CColliderBox*			Get_BoundingBox()		{ return m_pBoundingBoxCom;}
 	CColliderSphere*		Get_BoundingSphere()	{ return m_pBoundingSphereCom; }
@@ -104,6 +105,7 @@ public:
 	virtual void	Render_ShadowDepth(const _float & fTimeDelta);
 	virtual void	Render_EdgeGameObject(const _float& fTimeDelta);
 	virtual void	Render_CrossFilterGameObject(const _float& fTimeDelta);
+	virtual void	Render_MiniMap(const _float& fTimeDelta);
 	// MultiThread Rendering.
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
@@ -122,12 +124,14 @@ public:
 	void			Set_bisHitted(bool isHitted) { m_bisHitted = isHitted; }
 protected:
 	HRESULT			Add_Component();
+	HRESULT			SetUp_MiniMapComponent(const _uint& uiMiniMapTexIdx);
 	void			SetUp_BillboardMatrix();
 	void			SetUp_BoundingBox(_matrix* pParent, const _vec3& vParentScale, const _vec3& vCenter, const _vec3& vMin, const _vec3& vMax, const _float& fScaleOffset = 1.0f, const _vec3& vPosOffset = _vec3(0.0f));
 	void			SetUp_BoundingSphere(_matrix* pParent, const _vec3& vParentScale, const _vec3& vScale, const _vec3& vPos);
 	void			Reset_Collider();
 	void			Compute_ViewZ(_vec4& vPosInWorld);
 	CComponent*		Find_Component(wstring wstrComponentTag, const COMPONENTID& eID);
+	void			SetUp_MiniMapRandomY();
 protected:
 	/*__________________________________________________________________________________________________________
 	[ GraphicDevice & Mgr ]
@@ -148,6 +152,13 @@ protected:
 	CColliderBox*				m_pBoundingBoxCom		= nullptr;
 	CColliderSphere*			m_pBoundingSphereCom	= nullptr;
 
+	// MiniMap
+	CTransform*		m_pTransMiniMap		= nullptr;
+	CRcTex*			m_pBufferMiniMap	= nullptr;
+	CTexture*		m_pTextureMiniMap	= nullptr;
+	CShaderTexture*	m_pShaderMiniMap	= nullptr;
+	_uint			m_uiMiniMapTexIdx   = 0;
+
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
@@ -157,6 +168,7 @@ protected:
 	_bool	m_bIsLateInit		= false;
 	_float	m_fViewZ			= 0.0f;
 	_long	m_UIDepth			= 0;
+	_bool	m_bIsInitMiniMapDepth = false;
 
 	_bool	m_bIsCollision		= false;
 	_bool	m_bIsBoundingBox	= false;

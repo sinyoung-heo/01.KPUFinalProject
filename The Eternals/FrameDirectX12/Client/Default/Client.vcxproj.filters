@@ -397,6 +397,9 @@
     <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\08.ChattingCanvasChild\ChattingInput">
       <UniqueIdentifier>{8e23dd74-d62b-42eb-aa50-28008bad1900}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.GameUI\03.NPCMiniMap">
+      <UniqueIdentifier>{fb87df6f-a6be-4b2b-89a6-c03aef3109a5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -816,6 +819,9 @@
     <ClInclude Include="..\Code\ChattingMgr.h">
       <Filter>97.Mgr\07.ChattingMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\NPCMiniMap.h">
+      <Filter>02.GameObject\99.GameUI\03.NPCMiniMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1180,6 +1186,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\ChattingMgr.cpp">
       <Filter>97.Mgr\07.ChattingMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\NPCMiniMap.cpp">
+      <Filter>02.GameObject\99.GameUI\03.NPCMiniMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

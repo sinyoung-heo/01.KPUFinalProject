@@ -3,6 +3,7 @@
 #include "ObjectMgr.h"
 #include "LightMgr.h"
 #include "GameObject.h"
+#include "DynamicCamera.h"
 
 IMPLEMENT_SINGLETON(CShadowLightMgr)
 
@@ -62,6 +63,31 @@ _int CShadowLightMgr::Update_ShadowLight()
 		{
 			m_pThisPlayer = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
 		}
+	}
+
+	// MiniMap View
+	if (nullptr != m_pThisPlayer)
+	{
+		_vec3 vEye = m_pThisPlayer->Get_Transform()->m_vPos;
+		_vec3 vAt  = m_pThisPlayer->Get_Transform()->m_vPos;
+
+		vEye.z -= 0.5f;
+		vEye.y = m_fMiniMapHeight;
+
+		// LightView
+		m_matMiniMapView = XMMatrixLookAtLH(vEye.Get_XMVECTOR(),
+											vAt.Get_XMVECTOR(), 
+											_vec3(0.0f, 1.0f, 0.0f).Get_XMVECTOR());
+
+		// LightProj
+		m_matMiniMapProj = XMMatrixPerspectiveFovLH(XMConvertToRadians(120.0f),
+																	   1.0f,
+																	   1.0f, 
+																	   100.0f);
+	}
+	else
+	{
+		m_pThisPlayer = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
 	}
 
 	return NO_EVENT;
