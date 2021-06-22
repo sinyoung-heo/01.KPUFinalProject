@@ -125,6 +125,8 @@ HRESULT CPCOthersPriest::LateInit_GameObject()
 	m_pShadowCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	m_pEdgeObjectShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
+	// MiniMap
+	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::SetUp_MiniMapComponent(1), E_FAIL);
 
 	return S_OK;
 }
@@ -181,6 +183,8 @@ _int CPCOthersPriest::Update_GameObject(const _float& fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_EDGE, this), -1);
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MINIMAP, this), -1);
+
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 	// Weapon Update
@@ -202,6 +206,18 @@ _int CPCOthersPriest::LateUpdate_GameObject(const _float& fTimeDelta)
 		m_pWeapon->LateUpdate_GameObject(fTimeDelta);
 
 	return NO_EVENT;
+}
+
+void CPCOthersPriest::Render_MiniMap(const _float& fTimeDelta)
+{
+	Set_ConstantTableMiniMap();
+
+	m_pShaderMiniMap->Begin_Shader(m_pTextureMiniMap->Get_TexDescriptorHeap(), 
+								   0, 
+								   m_uiMiniMapTexIdx, 
+								   Engine::MATRIXID::TOP_VIEW);
+	m_pBufferMiniMap->Begin_Buffer();
+	m_pBufferMiniMap->Render_Buffer();
 }
 
 void CPCOthersPriest::Render_EdgeGameObject(const _float& fTimeDelta)
@@ -450,6 +466,30 @@ void CPCOthersPriest::Set_ConstantTableShadowDepth()
 
 	if (nullptr != m_pShadowCom->Get_UploadBuffer_ShaderShadow())
 		m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
+}
+
+void CPCOthersPriest::Set_ConstantTableMiniMap()
+{
+	m_pTransMiniMap->m_vPos   = m_pTransCom->m_vPos;
+	m_pTransMiniMap->m_vAngle = _vec3(90.0f, 0.0f, 0.0f);
+	m_pTransMiniMap->m_vScale = _vec3(6.0f, 6.0f, 6.0f);
+	m_pTransMiniMap->Update_Component(0.16f);
+
+	/*__________________________________________________________________________________________________________
+	[ Set ConstantBuffer Data ]
+	____________________________________________________________________________________________________________*/
+	Engine::CB_CAMERA_MATRIX tCB_CameraMatrix;
+	ZeroMemory(&tCB_CameraMatrix, sizeof(Engine::CB_CAMERA_MATRIX));
+	tCB_CameraMatrix.matView = Engine::CShader::Compute_MatrixTranspose(CShadowLightMgr::Get_Instance()->Get_MiniMapView());
+	tCB_CameraMatrix.matProj = Engine::CShader::Compute_MatrixTranspose(CShadowLightMgr::Get_Instance()->Get_MiniMapProj());
+
+	Engine::CB_SHADER_TEXTURE tCB_ShaderTexture;
+	ZeroMemory(&tCB_ShaderTexture, sizeof(Engine::CB_SHADER_TEXTURE));
+	tCB_ShaderTexture.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransMiniMap->m_matWorld);
+	tCB_ShaderTexture.fAlpha    = 1.0f;
+
+	m_pShaderMiniMap->Get_UploadBuffer_CameraTopViewMatrix()->CopyData(0, tCB_CameraMatrix);
+	m_pShaderMiniMap->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 }
 
 void CPCOthersPriest::Move_OnNaviMesh(const _float& fTimeDelta)
