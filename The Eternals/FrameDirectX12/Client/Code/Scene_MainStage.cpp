@@ -359,6 +359,7 @@ HRESULT CScene_MainStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 		_vec3(0.f),
 		_vec3(82.9f + 256.f, 0.7f, 149.72f ), FRAME(8.f, 8.f, 64.f));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_BEACH, L"Torch", pGameObj), E_FAIL);
+
 	/*__________________________________________________________________________________________________________
 	[ Sector Grid ]
 	____________________________________________________________________________________________________________*/
@@ -413,13 +414,13 @@ HRESULT CScene_MainStage::Ready_LayerGameObject(wstring wstrLayerTag)
 	// MiniMap - Protal
 	pGameObj = CNPCMiniMap::Create(m_pGraphicDevice, 
 								   m_pCommandList,
-								   _vec3(PORTAL_FROM_VELIKA_TO_BEACH_X, 0.0f, PORTAL_FROM_VELIKA_TO_BEACH_Z + 3.0f), 8);
+								   _vec3(PORTAL_FROM_VELIKA_TO_BEACH_X, 0.0f, PORTAL_FROM_VELIKA_TO_BEACH_Z + 10.0f), 8);
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"NPCMiniMap", pGameObj), E_FAIL);
 
 	// MiniMap - Protal
 	pGameObj = CNPCMiniMap::Create(m_pGraphicDevice, 
 								   m_pCommandList,
-								   _vec3(PORTAL_FROM_BEACH_TO_VELIKA_X, 0.0f, PORTAL_FROM_BEACH_TO_VELIKA_Z), 9);
+								   _vec3(PORTAL_FROM_BEACH_TO_VELIKA_X + 6.0f, 0.0f, PORTAL_FROM_BEACH_TO_VELIKA_Z + 5.0f), 9);
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"NPCMiniMap", pGameObj), E_FAIL);
 
 	// NPCMiniMap - Popori_M_Merchant
@@ -486,6 +487,7 @@ HRESULT CScene_MainStage::Ready_LayerUI(wstring wstrLayerTag)
 	Engine::FAILED_CHECK_RETURN(SetUp_UIPartySystemMessageCanvas(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(SetUp_UIPartyListInfoCanvas(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(SetUp_UIChattingCanvas(), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(SetUp_UIMiniMapCanvas(), E_FAIL);
 
 	return S_OK;
 }
@@ -2264,6 +2266,102 @@ HRESULT CScene_MainStage::SetUp_UIChattingCanvas()
 					static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
 				}
 			}
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CScene_MainStage::SetUp_UIMiniMapCanvas()
+{
+	{
+		wifstream fin{ L"../../Bin/ToolData/2DUIMiniMapCanvas.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		// ChildUI Data
+		vector<wstring> vecDataFilePath;
+		vector<wstring> vecObjectTag;
+		vector<_vec3>	vecPos;
+		vector<_vec3>	vecScale;
+		vector<_long>	vecUIDepth;
+		vector<_int>	vecIsSpriteAnimation;
+		vector<_float>	vecFrameSpeed;
+		vector<_vec3>	vecRectPosOffset;
+		vector<_vec3>	vecRectScale;
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			vecDataFilePath.resize(iChildUISize);
+			vecObjectTag.resize(iChildUISize);
+			vecPos.resize(iChildUISize);
+			vecScale.resize(iChildUISize);
+			vecUIDepth.resize(iChildUISize);
+			vecIsSpriteAnimation.resize(iChildUISize);
+			vecFrameSpeed.resize(iChildUISize);
+			vecRectPosOffset.resize(iChildUISize);
+			vecRectScale.resize(iChildUISize);
+
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				fin >> vecDataFilePath[i]			// DataFilePath
+					>> vecObjectTag[i]				// Object Tag
+					>> vecPos[i].x					// Pos X
+					>> vecPos[i].y					// Pos Y
+					>> vecScale[i].x				// Scale X
+					>> vecScale[i].y				// Scale Y
+					>> vecUIDepth[i]				// UI Depth
+					>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
+					>> vecFrameSpeed[i]				// Frame Speed
+					>> vecRectPosOffset[i].x		// RectPosOffset X
+					>> vecRectPosOffset[i].y		// RectPosOffset Y
+					>> vecRectScale[i].x			// RectScale X
+					>> vecRectScale[i].y;			// RectScale Y
+			}
+
+			if (fin.eof())
+				break;
+
+			// UIRoot »ý¼º.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CGameUIRoot::Create(m_pGraphicDevice, m_pCommandList,
+										  wstrRootObjectTag,
+										  wstrDataFilePath,
+										  vPos,
+										  vScale,
+										  bIsSpriteAnimation,
+										  fFrameSpeed,
+										  vRectPosOffset,
+										  vRectScale,
+										  UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
 		}
 	}
 

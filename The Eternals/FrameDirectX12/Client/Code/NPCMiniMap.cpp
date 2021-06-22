@@ -61,7 +61,7 @@ void CNPCMiniMap::Render_MiniMap(const _float& fTimeDelta)
 	m_pShaderMiniMap->Begin_Shader(m_pTextureMiniMap->Get_TexDescriptorHeap(), 
 								   0, 
 								   m_uiTexidx, 
-								   Engine::MATRIXID::PROJECTION);
+								   Engine::MATRIXID::TOP_VIEW);
 	m_pBufferMiniMap->Begin_Buffer();
 	m_pBufferMiniMap->Render_Buffer();
 }
@@ -70,7 +70,7 @@ void CNPCMiniMap::Set_ConstantTable()
 {
 	m_pTransMiniMap->m_vPos   = m_pTransCom->m_vPos;
 	m_pTransMiniMap->m_vAngle = _vec3(90.0f, 0.0f, 0.0f);
-	m_pTransMiniMap->m_vScale = _vec3(6.0f, 6.0f, 6.0f);
+	m_pTransMiniMap->m_vScale = _vec3(7.0f, 7.0f, 7.0f);
 	m_pTransMiniMap->Update_Component(0.16f);
 
 	/*__________________________________________________________________________________________________________
@@ -86,7 +86,7 @@ void CNPCMiniMap::Set_ConstantTable()
 	tCB_ShaderTexture.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransMiniMap->m_matWorld);
 	tCB_ShaderTexture.fAlpha    = 1.0f;
 
-	m_pShaderMiniMap->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraMatrix);
+	m_pShaderMiniMap->Get_UploadBuffer_CameraTopViewMatrix()->CopyData(0, tCB_CameraMatrix);
 	m_pShaderMiniMap->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 }
 

@@ -239,6 +239,9 @@ void CRenderer::Render_NonAlpha(const _float& fTimeDelta)
 
 void CRenderer::Render_MiniMap(const _float& fTimeDelta)
 {
+	if (!m_bIsRenderMiniMap)
+		return;
+
 	sort(m_RenderList[RENDER_MINIMAP].begin(), m_RenderList[RENDER_MINIMAP].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
 		{
 			return pSour->Get_DepthOfView() > pDest->Get_DepthOfView();
@@ -307,18 +310,12 @@ void CRenderer::Render_Blend()
 
 	m_pBlendShader->Begin_Shader();
 	m_pBlendBuffer->Begin_Buffer();
-
 	m_pBlendBuffer->Render_Buffer();
+
 	m_pTargetBlend->Release_OnGraphicDevice();
 
-	/// <summary>
-	/// 출력오류
-	/// </summary>
 	m_pHDRShader->Begin_Shader();
 	m_pBlendBuffer->Begin_Buffer();
-
-
-
 	m_pBlendBuffer->Render_Buffer();
 }
 
@@ -602,6 +599,9 @@ void CRenderer::Render_Collider(const _float & fTimeDelta)
 
 void CRenderer::Render_RenderTarget()
 {
+	if (nullptr != m_pTargetMiniMap && m_bIsRenderMiniMap)
+		m_pTargetMiniMap->Render_RenderTarget();
+
 	if (m_mapRenderOnOff[L"RenderTarget"])
 	{
 		if (nullptr != m_pTargetDeferred)
@@ -646,9 +646,6 @@ void CRenderer::Render_RenderTarget()
 		if (nullptr != m_pTargetAddEffect)
 			m_pTargetAddEffect->Render_RenderTarget();
 	}
-
-	if (nullptr != m_pTargetMiniMap)
-		m_pTargetMiniMap->Render_RenderTarget();
 }
 
 void CRenderer::Render_Font(const _float & fTimeDelta)
@@ -1041,12 +1038,13 @@ HRESULT CRenderer::Ready_RenderTarget()
 	____________________________________________________________________________________________________________*/
 	m_pTargetMiniMap = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
 	NULL_CHECK_RETURN(m_pTargetMiniMap, E_FAIL);
-	m_pTargetMiniMap->Set_TargetClearColor(0, _rgba(1.0f, 1.0f, 1.0f, 1.0f), DXGI_FORMAT_R8G8B8A8_UNORM); // Shade
+	m_pTargetMiniMap->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM); // Shade
 	m_pTargetMiniMap->Set_TargetTextureSize(0, 1024, 1024);
 	FAILED_CHECK_RETURN(m_pTargetMiniMap->SetUp_DefaultSetting(TARGETID::TYPE_SHADOWDEPTH), E_FAIL);
 
-	m_pTargetMiniMap->Set_TargetRenderScale(_vec3(128.0f, 128.0f, 128.0f));
-	m_pTargetMiniMap->Set_TargetRenderPos(_vec3(WINCX - 128.0f - 32.0f, 128.0f + 32.0f, 1.0f));
+	m_pTargetMiniMap->Set_TargetRenderScale(_vec3(100.0f, 100.0f, 128.0f));
+	m_pTargetMiniMap->Set_TargetRenderPos(_vec3(WINCX - 100.0f - 42.0f, 100.0f + 68.0f, 1.0f));
+	m_pTargetMiniMap->Set_TargetTexturePipelineState(11);
 
 	return S_OK;
 }

@@ -20,6 +20,7 @@ public:
 	ID3D12PipelineState*						Get_PipelineStatePass()					{ return m_pPipelineState; }
 	CUploadBuffer<CB_CAMERA_MATRIX>*			Get_UploadBuffer_CameraProjMatrix()		{ return m_pCB_CameraProjMatrix; }
 	CUploadBuffer<CB_CAMERA_MATRIX>*			Get_UploadBuffer_CameraOrthoMatrix()	{ return m_pCB_CameraOrthoMatrix; }
+	CUploadBuffer<CB_CAMERA_MATRIX>*			Get_UploadBuffer_CameraTopViewMatrix()	{ return m_pCB_CameraTopViewMatrix; }
 	const _uint&								Get_CBV_SRV_UAV_DescriptorSize()		{ return m_uiCBV_SRV_UAV_DescriptorSize; }
 
 	// Set
@@ -89,8 +90,9 @@ protected:
 	ID3DBlob*	m_pPS_ByteCode									= nullptr;
 
 	// Camera ConstantBuffer
-	CUploadBuffer<CB_CAMERA_MATRIX>* m_pCB_CameraProjMatrix		= nullptr;
-	CUploadBuffer<CB_CAMERA_MATRIX>* m_pCB_CameraOrthoMatrix	= nullptr;
+	CUploadBuffer<CB_CAMERA_MATRIX>* m_pCB_CameraProjMatrix	   = nullptr;
+	CUploadBuffer<CB_CAMERA_MATRIX>* m_pCB_CameraOrthoMatrix   = nullptr;
+	CUploadBuffer<CB_CAMERA_MATRIX>* m_pCB_CameraTopViewMatrix = nullptr;
 
 
 public:

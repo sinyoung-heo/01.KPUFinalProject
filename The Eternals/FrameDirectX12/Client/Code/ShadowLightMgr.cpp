@@ -82,8 +82,8 @@ _int CShadowLightMgr::Update_ShadowLight()
 		// LightProj
 		m_matMiniMapProj = XMMatrixPerspectiveFovLH(XMConvertToRadians(120.0f),
 																	   1.0f,
-																	   0.1f, 
-																	   1000.0f);
+																	   1.0f, 
+																	   100.0f);
 	}
 	else
 	{
