@@ -245,6 +245,28 @@ void CGameObject::Update_PartyMember(const int& iSNum, const int& hp, const int&
 	m_mapPartyList[iSNum].Update_Info(hp, maxHp, mp, maxMp);
 }
 
+void CGameObject::SetUp_OthersIsInMyParty()
+{
+	// ¹Ì´Ï¸Ê && ¿Ü°û¼± Àç¼³Á¤.
+	OBJLIST* pOthersList = m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"Others");
+	if (nullptr != pOthersList && !pOthersList->empty())
+	{
+		for (auto& pOthers : *pOthersList)
+			pOthers->Set_IsThisPlayerPartyMember(false);
+
+		if (!m_mapPartyList.empty())
+		{
+			for (auto& pOthers : *pOthersList)
+			{
+				auto iter_find = m_mapPartyList.find(pOthers->Get_ServerNumber());
+
+				if (iter_find != m_mapPartyList.end())
+					pOthers->Set_IsThisPlayerPartyMember(true);
+			}
+		}
+	}
+}
+
 void CGameObject::Render_HitEffect(const _float& fTimeDelta)
 {
 	if (m_bisHitted)

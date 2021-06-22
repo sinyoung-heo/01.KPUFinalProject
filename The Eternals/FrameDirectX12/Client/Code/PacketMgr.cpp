@@ -457,6 +457,9 @@ void CPacketMgr::Leave_Party(sc_packet_suggest_party* packet, bool& retflag)
 	m_pPartySystemMgr->SetUp_ThisPlayerPartyList();
 	m_pPartySystemMgr->Update_ThisPlayerPartyList();
 
+	// ¹Ì´Ï¸Ê && ¿Ü°û¼± Àç¼³Á¤.
+	pThisPlayer->SetUp_OthersIsInMyParty();
+
 	retflag = false;
 }
 
@@ -473,6 +476,9 @@ void CPacketMgr::Enter_PartyMember(sc_packet_enter_party* packet, bool& retflag)
 																			 packet->o_type);
 	m_pPartySystemMgr->SetUp_ThisPlayerPartyList();
 	m_pPartySystemMgr->Update_ThisPlayerPartyList();
+
+	// ¹Ì´Ï¸Ê && ¿Ü°û¼± Àç¼³Á¤.
+	pThisPlayer->SetUp_OthersIsInMyParty();
 
 	retflag = false;
 }
@@ -899,6 +905,10 @@ void CPacketMgr::Enter_Others(sc_packet_enter* packet, int& retflag)
 
 		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Others", pInstance);
 	}
+
+	// ¹Ì´Ï¸Ê && ¿Ü°û¼± Àç¼³Á¤.
+	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+	pThisPlayer->SetUp_OthersIsInMyParty();
 
 #ifdef ERR_CHECK
 	cout << "Others µîÀå!" << endl;

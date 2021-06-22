@@ -44,6 +44,7 @@ public:
 	const _bool&			Get_PartyJoinRequest()	{ return m_bIsPartyJoinRequest; }
 	const char&				Get_CurrentStageID()	{ return m_chCurStageID; }
 	const char&				Get_WeaponType()		{ return m_chCurWeaponType; }
+	const _bool&			Get_IsThisPlayerPartyMember() { return m_bIsThisPlayerPartyMember; }
 	const high_resolution_clock::time_point& Get_LastMoveTime() { return m_last_move_time; }
 	// Set
 	void	Set_CurrentStageID(const char& chStageID)				{ m_chCurStageID = chStageID; }
@@ -77,6 +78,7 @@ public:
 	void	Set_JoinRequest(const _bool& bIsRequest)				{ m_bIsPartyJoinRequest = bIsRequest; }
 	void	Set_PartyState(const _bool& st)							{ m_bIsPartyState = st; }
 	void	Set_PartySuggestSNum(const _int& iNum)					{ m_iSuggesterNumber = iNum; }
+	void	Set_IsThisPlayerPartyMember(const _bool& bIsPartyMember) { m_bIsThisPlayerPartyMember = bIsPartyMember; }
 	void	Ready_AngleInterpolationValue(const _float& fEndAngle);
 	void	Ready_PositionInterpolationValue(const _vec3& vEndPosition, float fSpd = 3.f);
 
@@ -118,7 +120,7 @@ public:
 	void			Leave_PartyMember(const int& iSNum)									{ m_mapPartyList.erase(iSNum); }
 	void			Update_PartyMember(const int& iSNum, const int& hp, const int& maxHp, const int& mp, const int& maxMp);
 	void			Clear_PartyMember()													{ m_mapPartyList.clear(); }
-
+	void			SetUp_OthersIsInMyParty();
 	//Red value
 	void			Render_HitEffect(const _float& fTimeDelta);
 	void			Set_bisHitted(bool isHitted) { m_bisHitted = isHitted; }
@@ -215,6 +217,7 @@ protected:
 	_bool	m_bIsPartyJoinRequest	= false; // --> 파티 참여 신청 요청 (유/무)
 	_bool	m_bIsPartyState			= false; // --> 파티 참여 (유/무)
 	_int	m_iSuggesterNumber		= -1;	 // --> 파티 초대자 or 참여 신청자 
+	_bool	m_bIsThisPlayerPartyMember = false;
 
 	// Linear Interpolation Desc
 	LINEAR_INTERPOLATION_DESC<_vec3>	m_tPosInterpolationDesc;
