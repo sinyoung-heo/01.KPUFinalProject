@@ -48,3 +48,11 @@ struct event_type
 		target_id = -1;
 	}
 };
+
+typedef struct tagEquipment
+{
+	char weapon = -1;
+	char armor	= -1;
+	char helmet = -1;
+	char shoes	= -1;
+}EQUIPMENT;

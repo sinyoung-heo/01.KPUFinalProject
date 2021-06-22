@@ -19,6 +19,7 @@ void send_join_party(int to_client, int id);
 void send_leave_party(int to_client, int id);
 void send_update_party(const int& to_client, const int& id, const int& hp, const int& maxHp, const int& mp, const int& maxMp);
 void send_chat(const int& to_client, const int& id, const char* name, const char* buffer, const int len);
+void send_update_inventory(const int& id, const char& chItemType, const char& chName, const int& count);
 
 void process_move(int id, const _vec3& _vDir, const _vec3& _vPos);										// 움직임 처리 함수
 void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir);
@@ -34,6 +35,8 @@ void process_decide_party(const bool& result, const int& joinner_id, const int& 
 void process_leave_party(const int& id);
 void process_disconnect(const int& id);
 void process_chat(const int& id, const char* buffer);
+void process_add_item(const int& id, const char& chItemType, const char& chName);
+void process_delete_item(const int& id, const char& chItemType, const char& chName);
 
 /* 패킷 관리 및 처리 함수 */
 void process_packet(int id);													// 패킷 처리 함수 (모든 컨텐츠 처리)

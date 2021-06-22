@@ -403,6 +403,13 @@ void CPacketMgr::Process_packet()
 	}
 	break;
 
+	case SC_PACKET_UPDATE_INVENTORY:
+	{
+		sc_packet_update_inventory* packet = reinterpret_cast<sc_packet_update_inventory*>(m_packet_start);
+		cout << "아이템 개수:" << packet->count << endl;
+	}
+	break;
+
 	default:
 #ifdef ERR_CHECK
 		printf("Unknown PACKET type [%d]\n", m_packet_start[1]);
@@ -1337,6 +1344,32 @@ void CPacketMgr::send_chat(const wchar_t* message)
 						NULL);
 
 	p.message[lstrlen(message) * 2] = '\0';
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_add_item(const char& chItemType, const char& chName)
+{
+	cs_packet_manage_inventory p;
+
+	p.size		= sizeof(p);
+	p.type		= CS_ADD_ITEM;
+
+	p.itemType	= chItemType;
+	p.itemName	= chName;
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_delete_item(const char& chItemType, const char& chName)
+{
+	cs_packet_manage_inventory p;
+
+	p.size		= sizeof(p);
+	p.type		= CS_DELETE_ITEM;
+
+	p.itemType	= chItemType;
+	p.itemName	= chName;
 
 	send_packet(&p);
 }
