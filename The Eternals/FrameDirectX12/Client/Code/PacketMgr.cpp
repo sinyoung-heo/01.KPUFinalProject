@@ -800,7 +800,6 @@ void CPacketMgr::Attack_User(sc_packet_attack* packet)
 
 		if (-1 != packet->end_angleY)
 		{
-			cout << pObj->Get_Transform()->m_vAngle.y << ", " << packet->end_angleY << endl;
 			pObj->Set_IsStartAngleInterpolation(true);
 			pObj->Set_LinearAngle(pObj->Get_Transform()->m_vAngle.y, packet->end_angleY);
 		}
@@ -823,13 +822,15 @@ void CPacketMgr::ChangeStat_User(sc_packet_stat_change* packet)
 
 	if (pObj == nullptr) return;
 
-	pObj->Get_Info()->m_iHp		= packet->hp;
-	pObj->Get_Info()->m_iMaxHp	= packet->maxHp;
-	pObj->Get_Info()->m_iMp		= packet->mp;
-	pObj->Get_Info()->m_iMaxMp	= packet->maxMp;
-	pObj->Get_Info()->m_iExp	= packet->exp;
-	pObj->Get_Info()->m_iMaxExp = packet->maxExp;
-	pObj->Get_Info()->m_iLev	= packet->lev;
+	pObj->Get_Info()->m_iHp			= packet->hp;
+	pObj->Get_Info()->m_iMaxHp		= packet->maxHp;
+	pObj->Get_Info()->m_iMp			= packet->mp;
+	pObj->Get_Info()->m_iMaxMp		= packet->maxMp;
+	pObj->Get_Info()->m_iExp		= packet->exp;
+	pObj->Get_Info()->m_iMaxExp		= packet->maxExp;
+	pObj->Get_Info()->m_iLev		= packet->lev;
+	pObj->Get_Info()->m_iMaxAttack	= packet->maxAtt;
+	pObj->Get_Info()->m_iMinAttack	= packet->minAtt;
 }
 
 void CPacketMgr::MoveStop_User(sc_packet_move* packet)
@@ -1098,14 +1099,31 @@ void CPacketMgr::send_login()
 {
 	cs_packet_login p;
 
-	p.size        = sizeof(p);
-	p.type        = CS_LOGIN;
-	p.o_type      = g_cJob;
-	p.weapon_type = Bow23_SM;
+	p.size			= sizeof(p);
+	p.type			= CS_LOGIN;
 
-	int t_id = GetCurrentProcessId();
-	sprintf_s(p.name, "P%03d", t_id % 1000);
-	sprintf_s(p.password, "%03d", t_id % 1000);
+	p.isMember		= false;
+	p.o_type		= g_cJob;
+	p.weapon_type	= Bow23_SM;
+
+	if (p.isMember == false)
+	{
+		int t_id = GetCurrentProcessId();
+		sprintf_s(p.name, "P%03d", t_id % 1000);
+		sprintf_s(p.password, "%03d", t_id % 1000);
+	}
+	else
+	{
+		char name[MAX_STR] = "";
+		char password[MAX_STR] = "";
+		cout << "ID: ";
+		cin >> name;
+		cout << "PW: ";
+		cin >> password;
+
+		strncpy_s(p.name, name, strlen(name));
+		strncpy_s(p.password, password, strlen(password));
+	}
 
 	send_packet(&p);
 }

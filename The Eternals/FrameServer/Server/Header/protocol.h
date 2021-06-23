@@ -241,6 +241,7 @@ struct sc_packet_stat_change
 	int				exp;
 	int				maxExp;
 	int				lev;
+	int				maxAtt, minAtt;
 };
 
 struct sc_packet_chat 
@@ -409,6 +410,7 @@ struct cs_packet_login
 	unsigned char	size;
 	char			type;
 
+	bool			isMember;
 	char			weapon_type;
 	char			o_type;
 	char			name[MAX_ID_LEN];

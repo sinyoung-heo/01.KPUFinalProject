@@ -27,14 +27,16 @@ void process_packet(int id)
 		pPlayer->m_chWeaponType = p->weapon_type;
 		pPlayer->Get_ClientLock().unlock();
 
-#ifndef DUMMY
-		/* CHECK ID in Database Server */
-		if (false == CDBMgr::GetInstance()->Check_ID(id, p->password))
+		// 회원일 경우 DB 검사
+		if (p->isMember)
 		{
-			/* 처음 게임에 접속한 유저라면 회원으로 등록 in Database Server */
-			CDBMgr::GetInstance()->Insert_NewPlayer_DB(id, p->password);
+			/* CHECK ID in Database Server */
+			if (false == CDBMgr::GetInstance()->Check_ID(id, p->password))
+			{
+				/* 처음 게임에 접속한 유저라면 회원으로 등록 in Database Server */
+				CDBMgr::GetInstance()->Insert_NewPlayer_DB(id, p->password);
+			}
 		}
-#endif // DUMMY
 
 		/* 로그인 수락 패킷 전송 */
 		send_login_ok(id);
@@ -568,6 +570,8 @@ void send_player_stat(int to_client, int id)
 	p.exp		= pPlayer->m_iExp;
 	p.maxExp	= pPlayer->m_iMaxExp;
 	p.lev		= pPlayer->m_iLevel;
+	p.maxAtt	= pPlayer->m_iMaxAtt;
+	p.minAtt	= pPlayer->m_iMinAtt;
 
 	send_packet(to_client, &p);
 }
@@ -1884,6 +1888,7 @@ void process_disconnect(const int& id)
 	pPlayer->m_chStageId		= STAGE_VELIKA;
 	pPlayer->m_bIsPartyState	= false;
 	pPlayer->m_iPartyNumber		= INIT_PARTY_NUMBER;
+	pPlayer->m_iMoney			= INIT_MONEY;
 	pPlayer->view_list.clear();
 	pPlayer->Release_Inventory();
 	pPlayer->Get_ClientLock().unlock();

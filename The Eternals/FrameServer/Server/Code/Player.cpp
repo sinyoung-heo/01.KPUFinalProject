@@ -4,7 +4,8 @@
 CPlayer::CPlayer()
     :m_iLevel(0), m_iHp(0), m_iMaxHp(0),
     m_iMp(0), m_iMaxMp(0), m_iExp(0), m_iMaxExp(0),
-    m_iMaxAtt(0), m_fSpd(0.f), m_bIsAttackStance(false)
+    m_iMaxAtt(0), m_fSpd(0.f), m_bIsAttackStance(false),
+    m_bIsPartyState(false), m_iPartyNumber(-1), m_iMoney(0)
 {
 }
 

@@ -27,6 +27,7 @@ constexpr int	INIT_MAXEXP					= 100;			// 초기 MAXEXP
 constexpr int	INIT_LEV					= 1;			// 초기 LEVEL
 constexpr int	INIT_MINATT					= 100;			// 초기 ATTACK
 constexpr int	INIT_MAXATT					= 200;			// 초기 ATTACK
+constexpr int	INIT_MONEY					= 0;
 constexpr float	INIT_SPEED					= 5.f;			// 초기 SPEED
 constexpr int	INCREASE_EXP				= 50;
 constexpr int	INCREASE_HP					= 50;

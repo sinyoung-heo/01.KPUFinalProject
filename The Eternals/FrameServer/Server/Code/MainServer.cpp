@@ -380,16 +380,17 @@ void add_new_client(SOCKET ns)
 		pNew->m_bIsPartyState	= false;
 		pNew->m_iPartyNumber	= INIT_PARTY_NUMBER;
 
-		pNew->m_iLevel	     = INIT_LEV;
-		pNew->m_iHp		     = INIT_HP;
-		pNew->m_iMaxHp	     = INIT_HP;
-		pNew->m_iMp		     = INIT_MP;
-		pNew->m_iMaxMp	     = INIT_MP;
-		pNew->m_iExp	     = INIT_EXP;
-		pNew->m_iMaxExp      = INIT_MAXEXP;
-		pNew->m_iMinAtt      = INIT_MINATT;
-		pNew->m_iMaxAtt	     = INIT_MAXATT;
-		pNew->m_fSpd	     = INIT_SPEED;
+		pNew->m_iLevel	    = INIT_LEV;
+		pNew->m_iHp		    = INIT_HP;
+		pNew->m_iMaxHp	    = INIT_HP;
+		pNew->m_iMp		    = INIT_MP;
+		pNew->m_iMaxMp	    = INIT_MP;
+		pNew->m_iExp	    = INIT_EXP;
+		pNew->m_iMaxExp     = INIT_MAXEXP;
+		pNew->m_iMinAtt     = INIT_MINATT;
+		pNew->m_iMaxAtt	    = INIT_MAXATT;
+		pNew->m_iMoney		= INIT_MONEY;
+		pNew->m_fSpd	    = INIT_SPEED;
 
 		pNew->m_vPos	= _vec3(STAGE_VELIKA_X, 0.f, STAGE_VELIKA_Z);
 		pNew->m_vDir	= _vec3(0.f, 0.f, 1.f);
@@ -502,6 +503,7 @@ void disconnect_client(int id)
 	pPlayer->m_chStageId		= STAGE_VELIKA;
 	pPlayer->m_bIsPartyState	= false;
 	pPlayer->m_iPartyNumber		= INIT_PARTY_NUMBER;
+	pPlayer->m_iMoney			= INIT_MONEY;
 	pPlayer->view_list.clear();
 	pPlayer->Release_Inventory();
 	pPlayer->Get_ClientLock().unlock();

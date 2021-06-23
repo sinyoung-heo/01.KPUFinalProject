@@ -46,6 +46,7 @@ public:
 	int		m_iMaxExp			= 0;
 	int		m_iMinAtt			= 0;
 	int		m_iMaxAtt			= 0;
+	int		m_iMoney			= 0;
 	float	m_fSpd				= 0;
 	
 	map<char, int>		m_mapInventory[ITEM::ITEM_END];
