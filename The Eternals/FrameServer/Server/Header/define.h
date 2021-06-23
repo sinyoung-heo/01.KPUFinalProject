@@ -38,7 +38,7 @@ constexpr int	MAX_ITEMSIZE				= 72;
 Monster Attack & Chase Dist
 ______________________________________________________________________*/
 constexpr int	MOVE_LIMIT					= 7;			// MONSTER MOVE OFFSET
-constexpr int	CHASE_RANGE					= 9;			// MONSTER 추적 범위
+constexpr int	CHASE_RANGE					= 15;			// MONSTER 추적 범위
 
 constexpr int	ATTACK_RANGE_CRAB			= 2;			// MONSTER CRAB 공격 범위
 constexpr int	ATTACK_RANGE_MONKEY			= 3;			// MONSTER MONKEY 근거리 공격 범위

@@ -3840,23 +3840,12 @@ void CMonster::Hurt_Monster(const int& p_id, const int& damage, const char& affe
 			/* Affect */
 			if (Affect_Monster(pl, affect) == true)
 				return;
-			/*if (m_monNum == MON_GMONKEY && !m_bIsAttack && !m_bIsReaction)
-			{
-				if (affect == AFFECT_FINCH)
-					send_Monster_animation_packet(pl, GiantMonkey::FINCH);
-				else if (affect == AFFECT_GROGGY)
-					send_Monster_animation_packet(pl, GiantMonkey::GROGGY);
-				else if (affect == AFFECT_KNOCKBACK)
-				{
-					Change_ReactionMode();
-					return;
-				}
-			}*/
 		}
 	}
 
 	/* Monster Attack Target 설정 */
-	m_iTargetNum = p_id;
+	if (m_iTargetNum == -1)
+		m_iTargetNum = p_id;
 
 	/* 추적 상태로 변경 */
 	if (m_bIsFighting == false)
