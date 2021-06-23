@@ -19,6 +19,7 @@
 #include "ShaderMgr.h"
 #include "IceStorm.h"
 #include "PartySuggestCanvas.h"
+#include "WarningFrame.h"
 
 CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -788,6 +789,9 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 
 	if (Engine::KEY_DOWN(DIK_0) && NO_EVENT_STATE)
 	{
+		Engine::CGameObject* pWarningFrame = m_pObjectMgr->Get_GameObject(L"Layer_UI", L"WarningFrame");
+		static_cast<CWarningFrame*>(pWarningFrame)->Set_IsRender(true);
+
 	/*	Engine::CGameObject* pGameObj = nullptr;
 		for (int i = 0; i < 36; i++)
 		{
