@@ -46,6 +46,7 @@
 #include "PartyInfoListCanvas.h"
 #include "ChattingMgr.h"
 #include "NPCMiniMap.h"
+#include "WarningFrame.h"
 
 CScene_MainStage::CScene_MainStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -469,6 +470,13 @@ HRESULT CScene_MainStage::Ready_LayerUI(wstring wstrLayerTag)
 	pGameObj = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::FADE_IN);
 	Engine::NULL_CHECK_RETURN(pGameObj, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"FadeInOut", pGameObj), E_FAIL);
+
+	/*__________________________________________________________________________________________________________
+	[ WarningFrame ]
+	____________________________________________________________________________________________________________*/
+	pGameObj = CWarningFrame::Create(m_pGraphicDevice, m_pCommandList);
+	Engine::NULL_CHECK_RETURN(pGameObj, E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"WarningFrame", pGameObj), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
 	[ UI - MainMenu ]

@@ -39,3 +39,4 @@ Texture|UI|S1UI_MainMenu
 Texture|UI|S1UI_MIniMap
 Texture|UI|S1UI_ServerWaiting
 Texture|UI|S1UI_WareHouse
+Texture|UI|WarningFrame

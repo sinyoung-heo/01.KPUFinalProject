@@ -400,6 +400,9 @@
     <Filter Include="02.GameObject\99.GameUI\03.NPCMiniMap">
       <UniqueIdentifier>{fb87df6f-a6be-4b2b-89a6-c03aef3109a5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.GameUI\04.WarningFrame">
+      <UniqueIdentifier>{cff0a3a9-8d5f-4a14-9a57-23eb93b0dd7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -822,6 +825,12 @@
     <ClInclude Include="..\Code\NPCMiniMap.h">
       <Filter>02.GameObject\99.GameUI\03.NPCMiniMap</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\FrameMesh.h" />
+    <ClInclude Include="..\Code\IceDecal.h" />
+    <ClInclude Include="..\Code\SwordEffect.h" />
+    <ClInclude Include="..\Code\WarningFrame.h">
+      <Filter>02.GameObject\99.GameUI\04.WarningFrame</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1189,6 +1198,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\NPCMiniMap.cpp">
       <Filter>02.GameObject\99.GameUI\03.NPCMiniMap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\FrameMesh.cpp" />
+    <ClCompile Include="..\Code\IceDecal.cpp" />
+    <ClCompile Include="..\Code\SwordEffect.cpp" />
+    <ClCompile Include="..\Code\WarningFrame.cpp">
+      <Filter>02.GameObject\99.GameUI\04.WarningFrame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

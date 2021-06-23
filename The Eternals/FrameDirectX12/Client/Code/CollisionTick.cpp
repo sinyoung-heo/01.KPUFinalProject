@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CollisionTick.h"
 #include "InstancePoolMgr.h"
+#include "WarningFrame.h"
 
 CCollisionTick::CCollisionTick(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -106,6 +107,10 @@ void CCollisionTick::Process_Collision()
 		{
 			Set_IsReturnObject(true);
 			pDst->Get_BoundingSphere()->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+
+			// On WarningFrame
+			Engine::CGameObject* pWarningFrame = m_pObjectMgr->Get_GameObject(L"Layer_UI", L"WarningFrame");
+			static_cast<CWarningFrame*>(pWarningFrame)->Set_IsRender(true);
 
 			// Monster Attack to ThisPlayer
 			m_pPacketMgr->send_attackByMonster(m_iSNum, m_uiDamage);

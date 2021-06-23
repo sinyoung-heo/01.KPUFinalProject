@@ -26,7 +26,7 @@ EffectTrailTexture|13|..\..\Bin\Resource\ResourceStage\Texture\EffectTrailTextur
 SkyBox|7|..\..\Bin\Resource\ResourceStage\Texture\Environment\SkyBox\%d.dds
 Terrain|8|..\..\Bin\Resource\ResourceStage\Texture\Environment\Terrain\%d.dds
 TexWaterFall|11|..\..\Bin\Resource\ResourceStage\Texture\Environment\TexWaterFall\%d.dds
-WaterNormal|134|..\..\Bin\Resource\ResourceStage\Texture\Environment\WaterNormal\%d.dds
+WaterNormal|139|..\..\Bin\Resource\ResourceStage\Texture\Environment\WaterNormal\%d.dds
 PublicMagic|15|..\..\Bin\Resource\ResourceStage\Texture\PublicMagic\%d.dds
 S1UI_BFParty|2|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_BFParty\%d.dds
 S1UI_CharacterWindow|3|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_CharacterWindow\%d.dds
@@ -39,3 +39,4 @@ S1UI_MainMenu|3|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_MainMenu\%d.dds
 S1UI_MIniMap|12|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_MIniMap\%d.dds
 S1UI_ServerWaiting|4|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_ServerWaiting\%d.dds
 S1UI_WareHouse|1|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_WareHouse\%d.dds
+WarningFrame|2|..\..\Bin\Resource\ResourceStage\Texture\UI\WarningFrame\%d.dds
