@@ -269,6 +269,20 @@ void process_packet(int id)
 	}
 	break;
 
+	case CS_EQUIP_ITEM:
+	{
+		cs_packet_manage_inventory* p = reinterpret_cast<cs_packet_manage_inventory*>(pPlayer->m_packet_start);
+		process_equip_item(id, p->itemType, p->itemName);
+	}
+	break;
+
+	case CS_UNEQUIP_ITEM:
+	{
+		cs_packet_manage_inventory* p = reinterpret_cast<cs_packet_manage_inventory*>(pPlayer->m_packet_start);
+		process_unequip_item(id, p->itemType, p->itemName);
+	}
+	break;
+
 	}
 }
 /* ========================패킷 재조립========================*/
@@ -702,6 +716,19 @@ void send_update_inventory(const int& id, const char& chItemType, const char& ch
 	p.count		= count;
 
 	send_packet(id, &p);
+}
+
+void send_update_equipment(const int& to_client, const char& chItemType, const char& chName)
+{
+	sc_packet_update_equipment p;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_UPDATE_EQUIPMENT;
+
+	p.equipType = chItemType;
+	p.itemName = chName;
+
+	send_packet(to_client, &p);
 }
 
 void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
@@ -1904,6 +1931,28 @@ void process_delete_item(const int& id, const char& chItemType, const char& chNa
 	{
 		send_update_inventory(id, chItemType, chName, pUser->Get_ItemCount(chName, static_cast<ITEM>(chItemType)));
 	}
+}
+
+void process_equip_item(const int& id, const char& chItemType, const char& chName)
+{
+	CPlayer* pUser = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pUser == nullptr) return;
+	if (!pUser->m_bIsConnect) return;
+
+	pUser->Equip_Item(chName, chItemType);
+
+	send_update_equipment(id, chItemType, pUser->Get_Equipment(chItemType));
+}
+
+void process_unequip_item(const int& id, const char& chItemType, const char& chName)
+{
+	CPlayer* pUser = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pUser == nullptr) return;
+	if (!pUser->m_bIsConnect) return;
+
+	pUser->Unequip_Item(chName, chItemType);
+
+	send_update_equipment(id, chItemType, pUser->Get_Equipment(chItemType));
 }
 
 /*===========================================FUNC====================================================*/

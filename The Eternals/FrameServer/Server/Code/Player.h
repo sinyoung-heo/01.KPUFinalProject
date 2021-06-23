@@ -10,15 +10,18 @@ public:
 public:
 	/* Inventory */
 	bool		Is_Full_Inventory();
-	bool		Add_Item(const char itemName, ITEM eItemType);
-	bool		Delete_Item(const char itemName, ITEM eItemType);
-	const int&	Get_ItemCount(const char itemName, ITEM eItemType);
+	bool		Is_inInventory(const char& itemName, ITEM eItemType);
+	bool		Add_Item(const char& itemName, ITEM eItemType);
+	bool		Delete_Item(const char& itemName, ITEM eItemType);
+	const int&	Get_ItemCount(const char& itemName, ITEM eItemType);
 	void		Release_Inventory();
 
 	/* Equipment */
-	const EQUIPMENT&	Get_Equipment() { return m_tEquipment; }
+	const char&		Get_Equipment(const char& itemType);
+	void			Equip_Item(const char& itemName, const char& eItemType);
+	void			Unequip_Item(const char& itemName, const char& eItemType);
 
-	virtual DWORD		Release();
+	virtual DWORD	Release();
 
 public:
 	/*=============Ω√Ω∫≈€ ƒ¡≈Ÿ√˜==============*/

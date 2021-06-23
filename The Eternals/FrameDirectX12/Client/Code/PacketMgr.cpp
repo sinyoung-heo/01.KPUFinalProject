@@ -373,8 +373,7 @@ void CPacketMgr::Process_packet()
 	{
 		// 파티초대 or 파티가입요청 거절.
 		sc_packet_chat* packet = reinterpret_cast<sc_packet_chat*>(m_packet_start);
-		m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_IsActive(true);
-		m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_PartyMessageState(PARTY_SYSTEM_MESSAGE::REJECT_PARTY_REQUEST);
+		Reject_Party();
 	}
 	break;
 
@@ -410,12 +409,25 @@ void CPacketMgr::Process_packet()
 	}
 	break;
 
+	case SC_PACKET_UPDATE_EQUIPMENT:
+	{
+		sc_packet_update_equipment* packet = reinterpret_cast<sc_packet_update_equipment*>(m_packet_start);
+		cout << "장착한 아이템:" << (int)packet->itemName << endl;
+	}
+	break;
+
 	default:
 #ifdef ERR_CHECK
 		printf("Unknown PACKET type [%d]\n", m_packet_start[1]);
 #endif 
 		break;
 	}
+}
+
+void CPacketMgr::Reject_Party()
+{
+	m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_IsActive(true);
+	m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_PartyMessageState(PARTY_SYSTEM_MESSAGE::REJECT_PARTY_REQUEST);
 }
 
 void CPacketMgr::Recv_Chat(sc_packet_chat* packet)
@@ -1370,6 +1382,32 @@ void CPacketMgr::send_delete_item(const char& chItemType, const char& chName)
 
 	p.itemType	= chItemType;
 	p.itemName	= chName;
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_equip_item(const char& chItemType, const char& chName)
+{
+	cs_packet_manage_inventory p;
+
+	p.size = sizeof(p);
+	p.type = CS_EQUIP_ITEM;
+
+	p.itemType = chItemType;
+	p.itemName = chName;
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_unequip_item(const char& chItemType, const char& chName)
+{
+	cs_packet_manage_inventory p;
+
+	p.size = sizeof(p);
+	p.type = CS_UNEQUIP_ITEM;
+
+	p.itemType = chItemType;
+	p.itemName = chName;
 
 	send_packet(&p);
 }

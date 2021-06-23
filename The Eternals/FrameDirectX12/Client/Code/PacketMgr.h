@@ -33,6 +33,8 @@ public:
 	void	Process_recv_reassembly(size_t iosize);
 	void	Process_packet();
 
+	void Reject_Party();
+
 public:
 	void	send_login();
 	void	send_move(const _vec3& vDir, const _vec3& vPos, const _int& iAniIdx);
@@ -50,9 +52,10 @@ public:
 	void	send_leave_party(const int& myId);
 	void	send_logout();
 	void	send_chat(const wchar_t* message);
-	void	send_add_item(const char& chItemType, const char& chName);
-	void	send_delete_item(const char& chItemType, const char& chName);
-
+	void	send_add_item(const char& chItemType, const char& chName);			// 인벤토리 아이템 추가
+	void	send_delete_item(const char& chItemType, const char& chName);		// 인벤토리 아이템 제거
+	void	send_equip_item(const char& chItemType, const char& chName);		// 장비 장착 
+	void	send_unequip_item(const char& chItemType, const char& chName);		// 장비 해체 
 public:
 	bool	change_MoveKey(MVKEY eKey);
 

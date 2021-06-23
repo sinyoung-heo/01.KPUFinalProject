@@ -54,6 +54,7 @@ constexpr char SC_PACKET_JOIN_PARTY			= 25;
 constexpr char SC_PACKET_LEAVE_PARTY		= 26;
 constexpr char SC_PACKET_UPDATE_PARTY		= 27;
 constexpr char SC_PACKET_UPDATE_INVENTORY	= 28;
+constexpr char SC_PACKET_UPDATE_EQUIPMENT	= 29;
 
 constexpr char CS_LOGIN					= 0;
 constexpr char CS_MOVE					= 1;
@@ -73,6 +74,8 @@ constexpr char CS_DECIDE_PARTY			= 14;	// 파티 가입 신청에 대한 응답
 constexpr char CS_LEAVE_PARTY			= 15;	// 파티 탈퇴
 constexpr char CS_ADD_ITEM				= 16;	// 아이템 획득
 constexpr char CS_DELETE_ITEM			= 17;	// 아이템 제거
+constexpr char CS_EQUIP_ITEM			= 18;	// 장비 장착
+constexpr char CS_UNEQUIP_ITEM			= 19;	// 장비 해체
 
 // Stage ID
 constexpr char STAGE_VELIKA				= 0;
@@ -142,6 +145,13 @@ constexpr char AFFECT_KNOCKBACK			= 2;
 constexpr char PLAYER_WEAPON			= 0;
 constexpr char PLAYER_ARMOR				= 1;
 constexpr char PLAYER_ETC				= 2;
+
+/* EQUIPMENT TYPE */
+constexpr char EQUIP_WEAPON				= 0;
+constexpr char EQUIP_ARMOR				= 1;
+constexpr char EQUIP_HELMET				= 2;
+constexpr char EQUIP_SHOES				= 3;
+
 
 /* ___________________________________________________________________________________________________________________*/
 /*													SERVER -> CLIENT												  */
@@ -380,6 +390,15 @@ struct sc_packet_update_inventory
 	char			itemType;
 	char			itemName;
 	int				count;
+};
+
+struct sc_packet_update_equipment
+{
+	unsigned char	size;
+	char			type;
+
+	char			equipType;
+	char			itemName;
 };
 
 /* ___________________________________________________________________________________________________________________*/

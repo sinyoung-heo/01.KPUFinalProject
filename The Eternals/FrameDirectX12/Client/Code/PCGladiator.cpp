@@ -782,6 +782,18 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 		CPacketMgr::Get_Instance()->send_delete_item(PLAYER_WEAPON, Twohand19_A_SM);
 	}
 
+	if (Engine::KEY_DOWN(DIK_K))
+	{
+		// 장비 장착 (장비창에 템 추가)
+		CPacketMgr::Get_Instance()->send_equip_item(EQUIP_WEAPON, Twohand19_A_SM);
+	}
+	else if (Engine::KEY_DOWN(DIK_L))
+	{
+		// 장비 해체 (장비창에서 템 제거)
+		CPacketMgr::Get_Instance()->send_unequip_item(EQUIP_WEAPON, Twohand19_A_SM);
+	}
+
+
 
 	KeyInput_Move(fTimeDelta);
 	KeyInput_Attack(fTimeDelta);
