@@ -304,9 +304,6 @@
     <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild">
       <UniqueIdentifier>{0544f22c-d6b3-4860-b0b5-dc40fc4992ec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuSettingCanvas">
-      <UniqueIdentifier>{098fda94-63be-4ff2-a830-a7ff62571db8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonClose">
       <UniqueIdentifier>{3e1e1857-6771-41cf-8a0d-551bff17b6f5}</UniqueIdentifier>
     </Filter>
@@ -315,9 +312,6 @@
     </Filter>
     <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonShaderCheckBox">
       <UniqueIdentifier>{29cbdbbf-f8a3-45fa-a452-cf3a610fdbbf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuLogoutCanvas">
-      <UniqueIdentifier>{89eb0b1a-153c-4e46-b188-535786f2724b}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild">
       <UniqueIdentifier>{c4b0806e-7d15-4d54-9daa-c7a3b7c2852b}</UniqueIdentifier>
@@ -402,6 +396,27 @@
     </Filter>
     <Filter Include="02.GameObject\99.GameUI\04.WarningFrame">
       <UniqueIdentifier>{cff0a3a9-8d5f-4a14-9a57-23eb93b0dd7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Mgr\08.InventoryEquimentMgr">
+      <UniqueIdentifier>{f98edfe9-53c5-4831-8d41-ab37db7e4434}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\09.InventoryCanvasChild">
+      <UniqueIdentifier>{1f3d3779-df59-4a9b-9651-b52aaf3fbb5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\10.EquipmentCanvasChild">
+      <UniqueIdentifier>{8ede34eb-c7f8-4aaa-90d4-41bdd7638181}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\09.InventoryCanvasChild\InventoryButtonClose">
+      <UniqueIdentifier>{d2814587-1abe-4b15-888c-87a01b9b8d36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\09.InventoryCanvasChild\InventoryItemSlot">
+      <UniqueIdentifier>{43af17d8-be3d-4aad-a4d8-74e819007fb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\10.EquipmentCanvasChild\EquipmentButtonClose">
+      <UniqueIdentifier>{58c69121-8c5c-4fe7-99ae-fc4de2d597b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\10.EquipmentCanvasChild\EquipmentItemSlot">
+      <UniqueIdentifier>{01dad32f-fc77-47fe-83c9-9f33825951e7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -736,9 +751,6 @@
     <ClInclude Include="..\Code\NormalMonsterHpGauge.h">
       <Filter>02.GameObject\99.GameUI\02.NormalMonsterHpGauge</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\MainMenuSettingCanvas.h">
-      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuSettingCanvas</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\SettingButtonClose.h">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonClose</Filter>
     </ClInclude>
@@ -747,9 +759,6 @@
     </ClInclude>
     <ClInclude Include="..\Code\SettingButtonShaderCheckBox.h">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonShaderCheckBox</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\MainMenuLogoutCanvas.h">
-      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuLogoutCanvas</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\LogoutButtonClose.h">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild\LogoutButtonClose</Filter>
@@ -830,6 +839,33 @@
     <ClInclude Include="..\Code\SwordEffect.h" />
     <ClInclude Include="..\Code\WarningFrame.h">
       <Filter>02.GameObject\99.GameUI\04.WarningFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\InventoryCanvas.h">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuInventory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\InventoryButtonClose.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\09.InventoryCanvasChild\InventoryButtonClose</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\InventoryItemSlot.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\09.InventoryCanvasChild\InventoryItemSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\MainMenuLogoutCanvas.h">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuLogout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\MainMenuSettingCanvas.h">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuSetting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\InventoryEquipmentMgr.h">
+      <Filter>97.Mgr\08.InventoryEquimentMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\EquipmentCanvas.h">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuEquipment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\EquipmentButtonClose.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\10.EquipmentCanvasChild\EquipmentButtonClose</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\EquipmentItemSlot.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\10.EquipmentCanvasChild\EquipmentItemSlot</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1110,9 +1146,6 @@
     <ClCompile Include="..\Code\NormalMonsterHpGauge.cpp">
       <Filter>02.GameObject\99.GameUI\02.NormalMonsterHpGauge</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\MainMenuSettingCanvas.cpp">
-      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuSettingCanvas</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\SettingButtonClose.cpp">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonClose</Filter>
     </ClCompile>
@@ -1121,9 +1154,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\SettingButtonShaderCheckBox.cpp">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonShaderCheckBox</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\MainMenuLogoutCanvas.cpp">
-      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuLogoutCanvas</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\LogoutButtonClose.cpp">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild\LogoutButtonClose</Filter>
@@ -1204,6 +1234,33 @@
     <ClCompile Include="..\Code\SwordEffect.cpp" />
     <ClCompile Include="..\Code\WarningFrame.cpp">
       <Filter>02.GameObject\99.GameUI\04.WarningFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\InventoryCanvas.cpp">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuInventory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\InventoryButtonClose.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\09.InventoryCanvasChild\InventoryButtonClose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\InventoryItemSlot.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\09.InventoryCanvasChild\InventoryItemSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MainMenuLogoutCanvas.cpp">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuLogout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MainMenuSettingCanvas.cpp">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuSetting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\InventoryEquipmentMgr.cpp">
+      <Filter>97.Mgr\08.InventoryEquimentMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\EquipmentCanvas.cpp">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuEquipment</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\EquipmentButtonClose.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\10.EquipmentCanvasChild\EquipmentButtonClose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\EquipmentItemSlot.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\10.EquipmentCanvasChild\EquipmentItemSlot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
