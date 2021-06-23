@@ -31,6 +31,7 @@ constexpr float	INIT_SPEED					= 5.f;			// √ ±‚ SPEED
 constexpr int	INCREASE_EXP				= 50;
 constexpr int	INCREASE_HP					= 50;
 constexpr int	INCREASE_MP					= 20;
+constexpr int	INCREASE_ATT				= 5;
 constexpr float	NUCKBACK_DIST				= 6.f;
 constexpr int	INIT_PARTY_NUMBER			= -1;
 constexpr int	MAX_ITEMSIZE				= 72;

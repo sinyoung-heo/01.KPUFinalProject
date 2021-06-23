@@ -3821,6 +3821,8 @@ void CMonster::Hurt_Monster(const int& p_id, const int& damage, const char& affe
 			pPlayer->m_iHp		= pPlayer->m_iMaxHp;
 			pPlayer->m_iMaxMp	+= pPlayer->m_iLevel * INCREASE_MP;
 			pPlayer->m_iMp		= pPlayer->m_iMaxMp;
+			pPlayer->m_iMinAtt	+= pPlayer->m_iLevel * INCREASE_ATT;
+			pPlayer->m_iMaxAtt	+= pPlayer->m_iLevel * INCREASE_ATT;
 		}
 		send_player_stat(p_id, p_id);
 
