@@ -34,7 +34,9 @@ Texture|UI|S1UI_Chat
 Texture|UI|S1UI_ComboCounter
 Texture|UI|S1UI_Crosshair
 Texture|UI|S1UI_Cursor
+Texture|UI|S1UI_Equipment
 Texture|UI|S1UI_GageBoss
+Texture|UI|S1UI_InGameStore
 Texture|UI|S1UI_MainMenu
 Texture|UI|S1UI_MIniMap
 Texture|UI|S1UI_ServerWaiting

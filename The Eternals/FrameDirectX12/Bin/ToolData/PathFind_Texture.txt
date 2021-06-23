@@ -34,7 +34,9 @@ S1UI_Chat|6|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_Chat\%d.dds
 S1UI_ComboCounter|1|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_ComboCounter\%d.dds
 S1UI_Crosshair|2|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_Crosshair\%d.dds
 S1UI_Cursor|1|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_Cursor\%d.dds
+S1UI_Equipment|3|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_Equipment\%d.dds
 S1UI_GageBoss|6|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_GageBoss\%d.dds
+S1UI_InGameStore|6|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_InGameStore\%d.dds
 S1UI_MainMenu|3|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_MainMenu\%d.dds
 S1UI_MIniMap|12|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_MIniMap\%d.dds
 S1UI_ServerWaiting|4|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_ServerWaiting\%d.dds
