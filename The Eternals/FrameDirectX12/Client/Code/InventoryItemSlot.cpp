@@ -71,12 +71,7 @@ _int CInventoryItemSlot::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 	
-	m_pSlotFrame->Set_IsActive(m_bIsActive);
-
 	CGameUIChild::Update_GameObject(fTimeDelta);
-
-	if (m_bIsOnMouse)
-		m_pSlotFrame->Update_GameObject(fTimeDelta);
 
 	return NO_EVENT;
 }
@@ -85,6 +80,25 @@ _int CInventoryItemSlot::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CGameUIChild::LateUpdate_GameObject(fTimeDelta);
 
+	KeyInput_MouseButton(fTimeDelta);
+	
+	if (m_bIsOnMouse)
+	{
+		m_pSlotFrame->Set_IsActive(m_bIsActive);
+		m_pSlotFrame->Update_GameObject(fTimeDelta);
+		m_pSlotFrame->LateUpdate_GameObject(fTimeDelta);
+	}
+
+	return NO_EVENT;
+}
+
+void CInventoryItemSlot::Render_GameObject(const _float& fTimeDelta)
+{
+	CGameUIChild::Render_GameObject(fTimeDelta);
+}
+
+void CInventoryItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
+{
 	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect) &&
 		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
 		m_bIsKeyPressingLB)
@@ -124,17 +138,6 @@ _int CInventoryItemSlot::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		m_bIsOnMouse = false;
 	}
-	
-	
-	if (m_bIsOnMouse)
-		m_pSlotFrame->LateUpdate_GameObject(fTimeDelta);
-
-	return NO_EVENT;
-}
-
-void CInventoryItemSlot::Render_GameObject(const _float& fTimeDelta)
-{
-	CGameUIChild::Render_GameObject(fTimeDelta);
 }
 
 Engine::CGameObject* CInventoryItemSlot::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
