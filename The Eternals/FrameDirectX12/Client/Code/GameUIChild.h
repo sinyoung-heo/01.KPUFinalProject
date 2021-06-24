@@ -32,6 +32,7 @@ public:
 
 	void Set_IsRenderUI(const _bool& bIsRender) { m_bIsRender = bIsRender; }
 	void Set_IsActive(const _bool& bIsActive)	{ m_bIsActive = bIsActive; }
+	void Set_TextureIdx(const _uint& uiIdx)		{ m_uiTexIdx = uiIdx; }
 	void Reverse_IsActive()						{ m_bIsActive = !m_bIsActive; }
 
 	// CGameObject을(를) 통해 상속됨
@@ -51,6 +52,8 @@ public:
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Render_GameObject(const _float& fTimeDelta);
+
+	HRESULT			SetUp_TexDescriptorHeap(wstring wstrTextureTag, const FRAME& tFrame, const _uint& uiTexIdx);
 protected:
 	HRESULT			Read_DataFromFilePath(wstring wstrDataFilePath);
 	void			Update_SpriteFrame(const _float& fTimeDelta);

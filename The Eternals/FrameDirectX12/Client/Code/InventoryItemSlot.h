@@ -27,6 +27,13 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
+	_bool m_bIsKeyPressingLB = false;
+	_bool m_bIsKeyPressingRB = false;
+
+	CGameUIChild*	m_pSlotFrame     = nullptr;	// 마우스 이벤트 - 붉은색 테두리.
+	_uint			m_uiSlotFrameIdx = 2;
+	_uint			m_bIsOnMouse     = false;
+	_bool			m_bIsOnEquipment = false;	// 아이템 장착	- 노란색 테두리.
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,

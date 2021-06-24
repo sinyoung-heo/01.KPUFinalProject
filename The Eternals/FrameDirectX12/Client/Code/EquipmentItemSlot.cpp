@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "EquipmentItemSlot.h"
+#include "GameUIChild.h"
+#include "DirectInput.h"
 
 
 CEquipmentItemSlot::CEquipmentItemSlot(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -31,6 +33,28 @@ HRESULT CEquipmentItemSlot::Ready_GameObject(wstring wstrRootObjectTag,
 
 	m_bIsActive = false;
 
+	// Slot Frame
+	Engine::CGameObject* pSlotFrame = CGameUIChild::Create(m_pGraphicDevice, m_pCommandList,
+														   wstrRootObjectTag, 
+														   wstrObjectTag,
+														   L"",
+														   vPos,
+														   _vec3(0.1f, 0.07f, 1.0f),
+														   bIsSpriteAnimation,
+														   fFrameSpeed,
+														   _vec3(0.0f),
+														   _vec3(0.0f),
+														   iUIDepth - 1);
+	m_pSlotFrame = static_cast<CGameUIChild*>(pSlotFrame);
+
+	FRAME tFrame;
+	tFrame.fFrameCnt = 1.0f;
+	tFrame.fCurFrame = 0.0f;
+	tFrame.fSceneCnt = 1.0f;
+	tFrame.fCurScene = 0.0f;
+	Engine::FAILED_CHECK_RETURN(m_pSlotFrame->SetUp_TexDescriptorHeap(L"S1UI_WareHouse", tFrame, m_uiSlotFrameIdx), E_FAIL);
+	m_pSlotFrame->Set_IsActive(m_bIsActive);
+
 	return S_OK;
 }
 
@@ -48,7 +72,12 @@ _int CEquipmentItemSlot::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 	
+	m_pSlotFrame->Set_IsActive(m_bIsActive);
+
 	CGameUIChild::Update_GameObject(fTimeDelta);
+	
+	if (m_bIsOnMouse)
+		m_pSlotFrame->Update_GameObject(fTimeDelta);
 
 	return NO_EVENT;
 }
@@ -56,6 +85,50 @@ _int CEquipmentItemSlot::Update_GameObject(const _float& fTimeDelta)
 _int CEquipmentItemSlot::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CGameUIChild::LateUpdate_GameObject(fTimeDelta);
+	
+	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect) &&
+		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
+		m_bIsKeyPressingLB)
+	{
+	}
+
+	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect) &&
+		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_RB) && 
+		m_bIsKeyPressingRB)
+	{
+	}
+
+	m_bIsKeyPressingLB = false;
+	m_bIsKeyPressingRB = false;
+
+	// Check Mouse Collision.
+	if (CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse() &&
+		CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect))
+	{
+		m_bIsOnMouse = true;
+
+		if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_LB))
+		{
+			m_bIsKeyPressingLB = true;
+		}
+		if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_RB))
+		{
+			m_bIsKeyPressingRB = true;
+		}
+		else
+		{
+			m_bIsKeyPressingLB = false;
+			m_bIsKeyPressingRB = false;
+		}
+	}
+	else
+	{
+		m_bIsOnMouse = false;
+	}
+	
+	
+	if (m_bIsOnMouse)
+		m_pSlotFrame->LateUpdate_GameObject(fTimeDelta);
 
 	return NO_EVENT;
 }
@@ -97,4 +170,6 @@ Engine::CGameObject* CEquipmentItemSlot::Create(ID3D12Device* pGraphicDevice, ID
 void CEquipmentItemSlot::Free()
 {
 	CGameUIChild::Free();
+
+	Engine::Safe_Release(m_pSlotFrame);
 }
