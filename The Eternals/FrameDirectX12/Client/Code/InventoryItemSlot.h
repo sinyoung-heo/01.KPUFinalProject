@@ -1,6 +1,19 @@
 #pragma once
 #include "GameUIChild.h"
 
+const char NO_ITEM = -1;
+
+typedef struct tagItemInfo
+{
+	char	chItemType      = NO_ITEM;
+	char	chItemName      = NO_ITEM;
+	
+	_vec3	vScale          = _vec3(0.0f);
+	_uint	uiItemIdx       = 0;
+	FRAME	tItemIconFrame;
+
+} ITEM_INFO;
+
 class CInventoryItemSlot : public CGameUIChild
 {
 private:
@@ -25,6 +38,7 @@ public:
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 private:
 	void KeyInput_MouseButton(const _float& fTimeDelta);
+	void SetUp_ItemIcon();
 private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
@@ -32,11 +46,14 @@ private:
 	_bool m_bIsKeyPressingLB = false;
 	_bool m_bIsKeyPressingRB = false;
 
+	_bool			m_bIsOnEquipment = false;	// 아이템 장착	- 노란색 테두리.
 	CGameUIChild*	m_pSlotFrame     = nullptr;	// 마우스 이벤트 - 붉은색 테두리.
 	_uint			m_uiSlotFrameIdx = 2;
 	_uint			m_bIsOnMouse     = false;
-	_bool			m_bIsOnEquipment = false;	// 아이템 장착	- 노란색 테두리.
 
+	ITEM_INFO	m_tNoItemInfo;
+	ITEM_INFO	m_tCurItemInfo;
+	char		m_chPreItemType = NO_ITEM;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 									   wstring wstrRootObjectTag,
