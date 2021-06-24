@@ -1809,7 +1809,15 @@ void CMonster::Chase_GiantMonkey(const float& fTimeDelta)
 		}
 		// CHASE
 		else if ((ATTACK_RANGE_MONKEY * ATTACK_RANGE_MONKEY) < fDist)
+		{
+			if (false == CCollisionMgr::GetInstance()->Is_InMoveLimit(m_vPos, m_vOriPos, CHASE_RANGE))
+			{
+				m_vDir = m_vOriPos - m_vPos;
+				m_vDir.Normalize();
+			}
+
 			m_vPos += m_vDir * m_fSpd * fTimeDelta;
+		}
 	}
 	/* 타겟(공격 대상)이 존재하지 않을 경우 -> 생성된 위치로 돌아감 */
 	else

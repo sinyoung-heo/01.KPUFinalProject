@@ -15,7 +15,7 @@ private:
 public:
 	bool Is_DeadReckoning(_vec3& vPos, _vec3& vDir, _vec2* vResult, char naviType);
 	bool Is_Arrive(const _vec3& _vStart, const _vec3& _vEnd);
-	bool Is_InMoveLimit(const _vec3& _vStart, const _vec3& _vEnd);
+	bool Is_InMoveLimit(const _vec3& _vStart, const _vec3& _vEnd, const int& limit = MOVE_LIMIT);
 public:
 	void Release();
 
