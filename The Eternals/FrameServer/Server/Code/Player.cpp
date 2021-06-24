@@ -15,7 +15,7 @@ CPlayer::~CPlayer()
 
 bool CPlayer::Is_Full_Inventory()
 {
-    int size = 0;
+    size_t size = 0;
 
     for (int i = 0; i < ITEM::ITEM_ETC; ++i)
         size += m_mapInventory[i].size();

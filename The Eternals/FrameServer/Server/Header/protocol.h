@@ -141,17 +141,11 @@ constexpr char AFFECT_FINCH				= 0;
 constexpr char AFFECT_GROGGY			= 1;
 constexpr char AFFECT_KNOCKBACK			= 2;
 
-/* ITEM TYPE */
-constexpr char PLAYER_WEAPON			= 0;
-constexpr char PLAYER_ARMOR				= 1;
-constexpr char PLAYER_ETC				= 2;
-
 /* EQUIPMENT TYPE */
 constexpr char EQUIP_WEAPON				= 0;
 constexpr char EQUIP_ARMOR				= 1;
 constexpr char EQUIP_HELMET				= 2;
 constexpr char EQUIP_SHOES				= 3;
-
 
 /* ___________________________________________________________________________________________________________________*/
 /*													SERVER -> CLIENT												  */

@@ -954,12 +954,12 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 	if (Engine::KEY_DOWN(DIK_X))
 	{
 		// ¾ÆÀÌÅÛ È¹µæ
-		CPacketMgr::Get_Instance()->send_add_item(PLAYER_WEAPON, Twohand19_A_SM);
+		CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, Twohand19_A_SM);
 	}
 	else if (Engine::KEY_DOWN(DIK_C))
 	{
 		// ¾ÆÀÌÅÛ Á¦°Å
-		CPacketMgr::Get_Instance()->send_delete_item(PLAYER_WEAPON, Twohand19_A_SM);
+		CPacketMgr::Get_Instance()->send_delete_item(ItemType_WeaponTwoHand, Twohand19_A_SM);
 	}
 
 	if (Engine::KEY_DOWN(DIK_K))
