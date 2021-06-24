@@ -850,7 +850,7 @@ void CMonster::Chase_Monkey(const float& fTimeDelta)
 	ori_y = m_vPos.y;
 	ori_z = m_vPos.z;
 
-	m_fSpd = 3.0f;
+	m_fSpd = MONKEY_CHASE_SPD;
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
@@ -886,7 +886,7 @@ void CMonster::Chase_Monkey(const float& fTimeDelta)
 					{
 						m_iTargetNum = -1;
 						m_iChaseDist = 1;
-						m_fSpd = 6.0f;
+						m_fSpd = GOBACK_SPD;
 					}
 					else
 					{
@@ -946,7 +946,7 @@ void CMonster::Chase_Monkey(const float& fTimeDelta)
 		else
 		{
 			m_iChaseDist = CHASE_RANGE;
-			m_fSpd = 3.0f;
+			m_fSpd = MONKEY_CHASE_SPD;
 			nonActive_monster();
 			Set_Stop_Fight();
 		}
@@ -1084,7 +1084,7 @@ void CMonster::Chase_Cloder(const float& fTimeDelta)
 	ori_y = m_vPos.y;
 	ori_z = m_vPos.z;
 
-	m_fSpd = 4.0f;
+	m_fSpd = CLODER_CHASE_SPD;
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
@@ -1115,9 +1115,19 @@ void CMonster::Chase_Cloder(const float& fTimeDelta)
 					if (CObjMgr::GetInstance()->Is_Near(this, pPlayer))
 						old_viewlist.insert(obj_num);
 
-					// 몬스터 추적 범위 내에 있는 유저 탐색한다.
-					if (CObjMgr::GetInstance()->Is_Monster_Target(this, pPlayer))
-						old_targetList.insert(obj_num);
+					// 몬스터 영역을 벗어났다면 추적 중지
+					if (false == CCollisionMgr::GetInstance()->Is_InMoveLimit(m_vPos, m_vOriPos, CHASE_RANGE))
+					{
+						m_iTargetNum = -1;
+						m_iChaseDist = 1;
+						m_fSpd = GOBACK_SPD;
+					}
+					else
+					{
+						// 몬스터 추적 범위 내에 있는 유저 탐색한다.
+						if (CObjMgr::GetInstance()->Is_Monster_AttackTarget(this, pPlayer, m_iChaseDist))
+							old_targetList.insert(obj_num);
+					}
 				}
 			}
 		}
@@ -1157,9 +1167,11 @@ void CMonster::Chase_Cloder(const float& fTimeDelta)
 
 		/* monster return home position */
 		if (!CCollisionMgr::GetInstance()->Is_Arrive(m_vPos, m_vOriPos))
-			m_vPos += m_vDir * fTimeDelta;
+			m_vPos += m_vDir * m_fSpd * fTimeDelta;
 		else
 		{
+			m_iChaseDist = CHASE_RANGE;
+			m_fSpd = CLODER_CHASE_SPD;
 			nonActive_monster();
 			Set_Stop_Fight();
 		}
@@ -1335,7 +1347,7 @@ void CMonster::Chase_DrownedSailor(const float& fTimeDelta)
 					{
 						m_iTargetNum = -1;
 						m_iChaseDist = 1;
-						m_fSpd = 6.0f;
+						m_fSpd = GOBACK_SPD;
 					}
 					else
 					{
@@ -1532,7 +1544,7 @@ void CMonster::Chase_GiantBeetle(const float& fTimeDelta)
 	ori_y = m_vPos.y;
 	ori_z = m_vPos.z;
 
-	m_fSpd = 4.0f;
+	m_fSpd = GIANTBETTLE_CHASE_SPD;
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
@@ -1563,9 +1575,19 @@ void CMonster::Chase_GiantBeetle(const float& fTimeDelta)
 					if (CObjMgr::GetInstance()->Is_Near(this, pPlayer))
 						old_viewlist.insert(obj_num);
 
-					// 몬스터 추적 범위 내에 있는 유저 탐색한다.
-					if (CObjMgr::GetInstance()->Is_Monster_AttackTarget(this, pPlayer, THROW_RANGE_MONKEY_END))
-						old_targetList.insert(obj_num);
+					// 몬스터 영역을 벗어났다면 추적 중지
+					if (false == CCollisionMgr::GetInstance()->Is_InMoveLimit(m_vPos, m_vOriPos, CHASE_RANGE))
+					{
+						m_iTargetNum = -1;
+						m_iChaseDist = 1;
+						m_fSpd = GOBACK_SPD;
+					}
+					else
+					{
+						// 몬스터 추적 범위 내에 있는 유저 탐색한다.
+						if (CObjMgr::GetInstance()->Is_Monster_AttackTarget(this, pPlayer, m_iChaseDist))
+							old_targetList.insert(obj_num);
+					}
 				}
 			}
 		}
@@ -1612,9 +1634,11 @@ void CMonster::Chase_GiantBeetle(const float& fTimeDelta)
 
 		/* monster return home position */
 		if (!CCollisionMgr::GetInstance()->Is_Arrive(m_vPos, m_vOriPos))
-			m_vPos += m_vDir * fTimeDelta;
+			m_vPos += m_vDir * m_fSpd * fTimeDelta;
 		else
 		{
+			m_iChaseDist = CHASE_RANGE;
+			m_fSpd = GIANTBETTLE_CHASE_SPD;
 			nonActive_monster();
 			Set_Stop_Fight();
 		}
@@ -1754,7 +1778,7 @@ void CMonster::Chase_GiantMonkey(const float& fTimeDelta)
 	ori_y = m_vPos.y;
 	ori_z = m_vPos.z;
 
-	m_fSpd = 4.0f;
+	m_fSpd = GIANTMONKEY_CHASE_SPD;
 
 	// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
 	unordered_set<pair<int, int>> oldnearSector;
@@ -1790,7 +1814,7 @@ void CMonster::Chase_GiantMonkey(const float& fTimeDelta)
 					{
 						m_iTargetNum = -1;
 						m_iChaseDist = 1;
-						m_fSpd = 6.0f;
+						m_fSpd = GOBACK_SPD;
 					}
 					else
 					{
@@ -1860,7 +1884,7 @@ void CMonster::Chase_GiantMonkey(const float& fTimeDelta)
 		else
 		{
 			m_iChaseDist = CHASE_RANGE;
-			m_fSpd = 4.0f;
+			m_fSpd = GIANTMONKEY_CHASE_SPD;
 			nonActive_monster();
 			Set_Stop_Fight();
 		}
@@ -2034,7 +2058,7 @@ void CMonster::Chase_CraftyArachne(const float& fTimeDelta)
 					{
 						m_iTargetNum = -1;
 						m_iChaseDist = 1;
-						m_fSpd = 8.0f;
+						m_fSpd = 8.f;
 					}
 					else
 					{
