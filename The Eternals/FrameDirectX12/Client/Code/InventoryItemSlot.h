@@ -21,8 +21,11 @@ private:
 	virtual ~CInventoryItemSlot() = default;
 
 public:
-	const ITEM_INFO& Get_CurItemInfo() { return m_tCurItemInfo; }
-	void Set_CurItemInfo(const char& chItemType, const char& chItemName, const _uint& uiCnt = 1);
+	const ITEM_INFO&	Get_CurItemInfo()	{ return m_tCurItemInfo; }
+	const _uint&		Get_CurItemCnt()	{ return m_uiCnt; }
+	void Set_CurItemInfo(const char& chItemType, const char& chItemName, const _int& iCnt = 0);
+	void Set_CurItemCnt(const _int& iCnt)	{ m_uiCnt = iCnt; }
+	void Add_PotionCnt(const _int& iValue)	{ m_uiCnt += iValue; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrRootObjectTag,
@@ -42,6 +45,7 @@ public:
 private:
 	void KeyInput_MouseButton(const _float& fTimeDelta);
 	void SetUp_ItemIcon();
+	void SetUp_FontPotionCnt(const _float& fTimeDelta);
 private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]

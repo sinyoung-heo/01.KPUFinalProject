@@ -111,8 +111,12 @@ HRESULT CFont::Ready_GameObject(wstring wstrText,
 
 		// 특수 문자 - TextRect의 Width 증가.
 		else if ((ch >= 33 && ch <= 64) || (ch >= 91 && ch <= 96) || (ch >= 123 && ch <= 126))
-			vecPosOffset[iCurIdx].x += (m_fFontSize * 0.55f);
-
+		{
+			if (ch >= 48 && ch <= 57)
+				vecPosOffset[iCurIdx].x += (m_fFontSize * 1.0f);
+			else
+				vecPosOffset[iCurIdx].x += (m_fFontSize * 0.6f);
+		}
 		// 한글 문자 - TextRect의 Width 증가.
 		else
 			vecPosOffset[iCurIdx].x += m_fFontSize;
@@ -236,8 +240,12 @@ HRESULT CFont::Calc_RectOffset()
 
 			// 특수 문자 - TextRect의 Width 증가.
 			else if ((ch >= 33 && ch <= 64) || (ch >= 91 && ch <= 96) || (ch >= 123 && ch <= 126))
-				vecPosOffset[iCurIdx].x += (m_fFontSize * 0.55f);
-
+			{
+				if (ch >= 48 && ch <= 57)
+					vecPosOffset[iCurIdx].x += (m_fFontSize * 1.0f);
+				else
+					vecPosOffset[iCurIdx].x += (m_fFontSize * 0.6f);
+			}
 			// 한글 문자 - TextRect의 Width 증가.
 			else
 				vecPosOffset[iCurIdx].x += m_fFontSize;

@@ -3,17 +3,18 @@
 #include "GameUIChild.h"
 #include "DirectInput.h"
 #include "DescriptorHeapMgr.h"
+#include "Font.h"
 
 CInventoryItemSlot::CInventoryItemSlot(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
 {
 }
 
-void CInventoryItemSlot::Set_CurItemInfo(const char& chItemType, const char& chItemName, const _uint& uiCnt)
+void CInventoryItemSlot::Set_CurItemInfo(const char& chItemType, const char& chItemName, const _int& iCnt)
 {
 	m_tCurItemInfo.chItemType = chItemType;
 	m_tCurItemInfo.chItemName = chItemName;
-	m_uiCnt = uiCnt;
+	m_uiCnt += iCnt;
 }
 
 HRESULT CInventoryItemSlot::Ready_GameObject(wstring wstrRootObjectTag,
@@ -36,9 +37,10 @@ HRESULT CInventoryItemSlot::Ready_GameObject(wstring wstrRootObjectTag,
 															   fFrameSpeed,
 															   vRectOffset,
 															   vRectScale,
-															   iUIDepth), E_FAIL);
+															   iUIDepth,
+															   true, L"Font_BinggraeMelona5"), E_FAIL);
 
-	m_bIsActive    = false;
+	m_bIsActive = false;
 	
 
 	// NoItemInfo
@@ -81,6 +83,10 @@ HRESULT CInventoryItemSlot::Ready_GameObject(wstring wstrRootObjectTag,
 	Engine::FAILED_CHECK_RETURN(m_pSlotFrame->SetUp_TexDescriptorHeap(L"S1UI_WareHouse", tFrame, m_uiSlotFrameIdx), E_FAIL);
 	m_pSlotFrame->Set_IsActive(m_bIsActive);
 
+	// PotionCnt Font
+	m_pFont->Set_Color(D2D1::ColorF::Cornsilk);
+	m_pFont->Set_Text(L"");
+
 	return S_OK;
 }
 
@@ -97,6 +103,8 @@ _int CInventoryItemSlot::Update_GameObject(const _float& fTimeDelta)
 	
 	if (m_bIsDead)
 		return DEAD_OBJ;
+	if (!m_bIsActive)
+		return NO_EVENT;
 
 	SetUp_ItemIcon();
 	CGameUIChild::Update_GameObject(fTimeDelta);
@@ -106,6 +114,9 @@ _int CInventoryItemSlot::Update_GameObject(const _float& fTimeDelta)
 
 _int CInventoryItemSlot::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bIsActive)
+		return NO_EVENT;
+
 	CGameUIChild::LateUpdate_GameObject(fTimeDelta);
 
 	KeyInput_MouseButton(fTimeDelta);
@@ -116,6 +127,9 @@ _int CInventoryItemSlot::LateUpdate_GameObject(const _float& fTimeDelta)
 		m_pSlotFrame->Update_GameObject(fTimeDelta);
 		m_pSlotFrame->LateUpdate_GameObject(fTimeDelta);
 	}
+
+	if (m_tCurItemInfo.chItemType == ItemType_Potion)
+		SetUp_FontPotionCnt(fTimeDelta);
 
 	return NO_EVENT;
 }
@@ -170,6 +184,15 @@ void CInventoryItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 
 void CInventoryItemSlot::SetUp_ItemIcon()
 {
+	//if (0 <= m_uiCnt)
+	//{
+	//	m_pTexDescriptorHeap  = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(m_wstrTextureTag);
+	//	m_uiTexIdx            = m_tNoItemInfo.uiItemIdx;
+	//	m_tFrame              = m_tNoItemInfo.tItemIconFrame;
+	//	m_pTransCom->m_vScale = m_tNoItemInfo.vScale;
+	//	m_uiCnt               = 0;
+	//}
+
 	if (m_tCurItemInfo.chItemType == m_chPreItemType)
 		return;
 
@@ -375,6 +398,24 @@ void CInventoryItemSlot::SetUp_ItemIcon()
 	}
 
 	m_chPreItemType = m_tCurItemInfo.chItemType;
+}
+
+void CInventoryItemSlot::SetUp_FontPotionCnt(const _float& fTimeDelta)
+{
+	if (nullptr != m_pFont)
+	{
+		_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
+		vPos.x += -19.0f;
+		vPos.y += -2.0f;
+
+		_tchar	szText[MIN_STR] = L"";
+		wstring wstrText        = L"%d";
+		wsprintf(szText, wstrText.c_str(), m_uiCnt);
+
+		m_pFont->Set_Text(szText);
+		m_pFont->Set_Pos(_vec2(vPos.x, vPos.y));
+		m_pFont->Update_GameObject(fTimeDelta);
+	}
 }
 
 Engine::CGameObject* CInventoryItemSlot::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,

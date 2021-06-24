@@ -757,6 +757,9 @@ HRESULT CPCGladiator::SetUp_Equipment()
 		Engine::Safe_Release(pButtonXMouseClicked);
 	}
 
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Potion, Prtion_HP);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Potion, Prtion_MP);
+
 	return S_OK;
 }
 
@@ -952,23 +955,38 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 {
 	if (!g_bIsActive) return;
 
+	if (Engine::KEY_DOWN(DIK_Z))
+	{
+		CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Potion, Prtion_HP);
+		// 아이템 획득
+		// CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, Twohand19_A_SM);
+	}
 	if (Engine::KEY_DOWN(DIK_X))
 	{
-		// 아이템 획득
-		CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, Twohand19_A_SM);
+		// 아이템 제거
+		// CPacketMgr::Get_Instance()->send_delete_item(ItemType_WeaponTwoHand, Twohand19_A_SM);
+		CInventoryEquipmentMgr::Get_Instance()->Pop_ItemInventory(ItemType_Potion, Prtion_HP);
 	}
-	else if (Engine::KEY_DOWN(DIK_C))
+	if (Engine::KEY_DOWN(DIK_C))
+	{
+		CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Potion, Prtion_MP);
+		// 아이템 획득
+		// CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, Twohand19_A_SM);
+	}
+	if (Engine::KEY_DOWN(DIK_V))
 	{
 		// 아이템 제거
-		CPacketMgr::Get_Instance()->send_delete_item(ItemType_WeaponTwoHand, Twohand19_A_SM);
+		// CPacketMgr::Get_Instance()->send_delete_item(ItemType_WeaponTwoHand, Twohand19_A_SM);
+		CInventoryEquipmentMgr::Get_Instance()->Pop_ItemInventory(ItemType_Potion, Prtion_MP);
 	}
+
 
 	if (Engine::KEY_DOWN(DIK_K))
 	{
 		// 장비 장착 (장비창에 템 추가)
 		CPacketMgr::Get_Instance()->send_equip_item(EQUIP_WEAPON, Twohand19_A_SM);
 	}
-	else if (Engine::KEY_DOWN(DIK_L))
+	if (Engine::KEY_DOWN(DIK_L))
 	{
 		// 장비 해체 (장비창에서 템 제거)
 		CPacketMgr::Get_Instance()->send_unequip_item(EQUIP_WEAPON, Twohand19_A_SM);
