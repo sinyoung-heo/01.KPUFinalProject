@@ -708,7 +708,7 @@ void send_chat(const int& to_client, const int& id, const char* name, const char
 	send_packet(to_client, &p);
 }
 
-void send_update_inventory(const int& id, const char& chItemType, const char& chName, const int& count)
+void send_update_inventory(const int& id, const char& chItemType, const char& chName, const int& count, const bool& isPushItem)
 {
 	sc_packet_update_inventory p;
 
@@ -718,6 +718,8 @@ void send_update_inventory(const int& id, const char& chItemType, const char& ch
 	p.itemType	= chItemType;
 	p.itemName	= chName;
 	p.count		= count;
+
+	p.is_pushItem = isPushItem;
 
 	send_packet(id, &p);
 }
@@ -1922,7 +1924,7 @@ void process_add_item(const int& id, const char& chItemType, const char& chName)
 
 	if (pUser->Add_Item(chName, static_cast<ITEM>(chItemType)))
 	{
-		send_update_inventory(id, chItemType, chName, pUser->Get_ItemCount(chName, static_cast<ITEM>(chItemType)));
+		send_update_inventory(id, chItemType, chName, pUser->Get_ItemCount(chName, static_cast<ITEM>(chItemType)), true);
 	}
 }
 
@@ -1934,7 +1936,7 @@ void process_delete_item(const int& id, const char& chItemType, const char& chNa
 
 	if (pUser->Delete_Item(chName, static_cast<ITEM>(chItemType)))
 	{
-		send_update_inventory(id, chItemType, chName, pUser->Get_ItemCount(chName, static_cast<ITEM>(chItemType)));
+		send_update_inventory(id, chItemType, chName, pUser->Get_ItemCount(chName, static_cast<ITEM>(chItemType)), false);
 	}
 }
 

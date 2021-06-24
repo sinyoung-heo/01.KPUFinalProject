@@ -30,6 +30,7 @@
 #include "GiantBeetle.h"
 #include "GiantMonkey.h"
 #include "CraftyArachne.h"
+#include "InventoryEquipmentMgr.h"
 
 IMPLEMENT_SINGLETON(CPacketMgr)
 
@@ -405,6 +406,12 @@ void CPacketMgr::Process_packet()
 	case SC_PACKET_UPDATE_INVENTORY:
 	{
 		sc_packet_update_inventory* packet = reinterpret_cast<sc_packet_update_inventory*>(m_packet_start);
+
+		if (packet->is_pushItem)
+			CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(packet->itemType, packet->itemName);
+		else
+			CInventoryEquipmentMgr::Get_Instance()->Pop_ItemInventory(packet->itemType, packet->itemName);
+
 		cout << "아이템 개수:" << packet->count << endl;
 	}
 	break;

@@ -35,7 +35,7 @@ constexpr int	INCREASE_MP					= 20;
 constexpr int	INCREASE_ATT				= 5;
 constexpr float	NUCKBACK_DIST				= 6.f;
 constexpr int	INIT_PARTY_NUMBER			= -1;
-constexpr int	MAX_ITEMSIZE				= 72;
+constexpr int	MAX_ITEMSIZE				= 80;
 /*____________________________________________________________________
 Monster Attack & Chase Dist
 ______________________________________________________________________*/

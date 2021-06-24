@@ -21,6 +21,9 @@ private:
 	virtual ~CInventoryItemSlot() = default;
 
 public:
+	const ITEM_INFO& Get_CurItemInfo() { return m_tCurItemInfo; }
+	void Set_CurItemInfo(const char& chItemType, const char& chItemName, const _uint& uiCnt = 1);
+
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrRootObjectTag,
 									 wstring wstrObjectTag,							   
@@ -54,6 +57,9 @@ private:
 	ITEM_INFO	m_tNoItemInfo;
 	ITEM_INFO	m_tCurItemInfo;
 	char		m_chPreItemType = NO_ITEM;
+
+	// 포션 개수.
+	_uint m_uiCnt = 0;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 									   wstring wstrRootObjectTag,

@@ -20,6 +20,7 @@
 #include "IceStorm.h"
 #include "PartySuggestCanvas.h"
 #include "WarningFrame.h"
+#include "InventoryEquipmentMgr.h"
 
 CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
