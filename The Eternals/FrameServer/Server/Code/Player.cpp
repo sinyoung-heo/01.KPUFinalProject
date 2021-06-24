@@ -18,10 +18,14 @@ bool CPlayer::Is_Full_Inventory()
     size_t size = 0;
 
     for (int i = 0; i < ITEM::ITEM_ETC; ++i)
-        size += m_mapInventory[i].size();
+    {
+        for (auto& pair : m_mapInventory[i])
+            size += pair.second;
+    }
+
 
     // 잡화 아이템 개수는 제외
-    if (size + 2 <= MAX_ITEMSIZE)
+    if (size + 2 < MAX_ITEMSIZE)
         return false;
     else
         return true;

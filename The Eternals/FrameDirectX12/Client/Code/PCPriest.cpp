@@ -580,7 +580,7 @@ HRESULT CPCPriest::SetUp_Equipment()
 	CEquipmentButtonClose* pButtonXMouseOn      = nullptr;
 	CEquipmentButtonClose* pButtonXMouseClicked = nullptr;
 	{
-		wifstream fin{ L"../../Bin/ToolData/2DUIEquipmentArcher.2DUI" };
+		wifstream fin{ L"../../Bin/ToolData/2DUIEquipmentPriest.2DUI" };
 		if (fin.fail())
 			return E_FAIL;
 

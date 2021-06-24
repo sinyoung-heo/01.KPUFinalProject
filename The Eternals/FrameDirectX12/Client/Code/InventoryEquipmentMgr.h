@@ -16,15 +16,29 @@ private:
 	explicit CInventoryEquipmentMgr();
 	virtual ~CInventoryEquipmentMgr() = default;
 public:
-	CInventoryCanvas* Get_InventoryCanvasClass() { return m_pInventoryCanvas; }
-	CEquipmentCanvas* Get_EquipmentCanvasClass() { return m_pEquipmentCanvas; }
 
+	CInventoryCanvas*	Get_InventoryCanvasClass()	{ return m_pInventoryCanvas; }
+	CEquipmentCanvas*	Get_EquipmentCanvasClass()	{ return m_pEquipmentCanvas; }
+	const _uint&		Get_MaxInventorySize()		{ return m_uiMaxSlotSize; }
+	const _uint&		Get_CurInventorySize()		{ return m_uiCurSlotSize; }
 	void Set_InventoryCanvasClass(CInventoryCanvas* pUI) { m_pInventoryCanvas = pUI; };
 	void Set_EquipmentCanvasClass(CEquipmentCanvas* pUI) { m_pEquipmentCanvas = pUI; };
+	void Set_CurInventorySize(const _uint& uiValue) { m_uiCurSlotSize = uiValue; }
+
+	void Add_InventorySlot(CInventoryItemSlot* pSlot);
+	void Push_ItemInventory(const char& chItemType, const char& chItemName, const _uint& uiCnt = 1);
+	void Pop_ItemInventory(const char& chItemType, const char& chItemName, const _uint& uiCnt = 1);
+	void Pop_ItemInventory(const _uint& uiIdx);
+	void Pop_ItemInventory();
 
 private:
-	CInventoryCanvas* m_pInventoryCanvas = nullptr;
+	CInventoryCanvas*			m_pInventoryCanvas = nullptr;
+	vector<CInventoryItemSlot*> m_vecInventorySlot;
+	_uint						m_uiMaxSlotSize = 80;
+	_uint						m_uiCurSlotSize = 0;
+
 	CEquipmentCanvas* m_pEquipmentCanvas = nullptr;
+
 
 private:
 	virtual void Free();

@@ -9,7 +9,14 @@ CInventoryItemSlot::CInventoryItemSlot(ID3D12Device* pGraphicDevice, ID3D12Graph
 {
 }
 
-HRESULT CInventoryItemSlot::Ready_GameObject(wstring wstrRootObjectTag, 
+void CInventoryItemSlot::Set_CurItemInfo(const char& chItemType, const char& chItemName, const _uint& uiCnt)
+{
+	m_tCurItemInfo.chItemType = chItemType;
+	m_tCurItemInfo.chItemName = chItemName;
+	m_uiCnt = uiCnt;
+}
+
+HRESULT CInventoryItemSlot::Ready_GameObject(wstring wstrRootObjectTag,
 											 wstring wstrObjectTag, 
 											 wstring wstrDataFilePath,
 											 const _vec3& vPos, 
@@ -158,16 +165,6 @@ void CInventoryItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 	else
 	{
 		m_bIsOnMouse = false;
-	}
-
-	if (Engine::KEY_DOWN(DIK_Z))
-	{
-		m_tCurItemInfo.chItemType = NO_ITEM;
-	}
-	if (Engine::KEY_DOWN(DIK_X))
-	{
-		m_tCurItemInfo.chItemType = ItemType_WeaponTwoHand;
-		m_tCurItemInfo.chItemName = TwoHand33_B_SM;
 	}
 }
 

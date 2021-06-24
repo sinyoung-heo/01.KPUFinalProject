@@ -859,6 +859,7 @@ HRESULT CScene_MainStage::SetUp_UIMainMenuInventory()
 														  vecRectPosOffset[i],				// RectPosOffset
 														  vecRectScale[i],					// RectScaleOffset
 														  vecUIDepth[i]);					// UI Depth
+					CInventoryEquipmentMgr::Get_Instance()->Add_InventorySlot(static_cast<CInventoryItemSlot*>(pChildUI));
 				}
 				else if (L"InventoryButtonCloseNormal" == vecObjectTag[i] ||
 						 L"InventoryButtonCloseMouseOn" == vecObjectTag[i] ||

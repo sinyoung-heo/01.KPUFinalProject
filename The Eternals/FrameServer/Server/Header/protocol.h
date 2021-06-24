@@ -384,6 +384,7 @@ struct sc_packet_update_inventory
 
 	char			itemType;
 	char			itemName;
+	bool			is_pushItem;
 	int				count;
 };
 
