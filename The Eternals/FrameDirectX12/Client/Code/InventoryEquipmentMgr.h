@@ -26,11 +26,10 @@ public:
 	void Set_CurInventorySize(const _uint& uiValue) { m_uiCurSlotSize = uiValue; }
 
 	void Add_InventorySlot(CInventoryItemSlot* pSlot);
-	void Push_ItemInventory(const char& chItemType, const char& chItemName, const _uint& uiCnt = 1);
-	void Pop_ItemInventory(const char& chItemType, const char& chItemName, const _uint& uiCnt = 1);
+	void Push_ItemInventory(const char& chItemType, const char& chItemName, const _int& iCnt = 1);
+	void Pop_ItemInventory(const char& chItemType, const char& chItemName, const _int& uiCnt = -1);
 	void Pop_ItemInventory(const _uint& uiIdx);
 	void Pop_ItemInventory();
-
 private:
 	CInventoryCanvas*			m_pInventoryCanvas = nullptr;
 	vector<CInventoryItemSlot*> m_vecInventorySlot;

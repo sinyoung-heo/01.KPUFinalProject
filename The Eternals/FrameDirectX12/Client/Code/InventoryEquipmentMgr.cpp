@@ -14,7 +14,7 @@ void CInventoryEquipmentMgr::Add_InventorySlot(CInventoryItemSlot* pSlot)
 		m_vecInventorySlot.emplace_back(pSlot);
 }
 
-void CInventoryEquipmentMgr::Push_ItemInventory(const char& chItemType, const char& chItemName, const _uint& uiCnt)
+void CInventoryEquipmentMgr::Push_ItemInventory(const char& chItemType, const char& chItemName, const _int& iCnt)
 {
 	if (m_uiCurSlotSize >= m_uiMaxSlotSize)
 	{
@@ -22,19 +22,46 @@ void CInventoryEquipmentMgr::Push_ItemInventory(const char& chItemType, const ch
 		return;
 	}
 
-	for (auto& pSlot : m_vecInventorySlot)
+	if (ItemType_Potion == chItemType)
 	{
-		if (NO_ITEM == pSlot->Get_CurItemInfo().chItemType)
+		// 현재 인벤토리에 포션이 있는지 탐색.
+		for (auto& pSlot : m_vecInventorySlot)
 		{
-			pSlot->Set_CurItemInfo(chItemType, chItemName, uiCnt);
-			++m_uiCurSlotSize;
+			if (chItemName == pSlot->Get_CurItemInfo().chItemName)
+			{
+				pSlot->Add_PotionCnt(iCnt);
+				return;
+			}
+		}
 
-			break;
+		// 현재 인벤토리에 포션이 없다면 빈칸에 포션을 새로 생성.
+		for (auto& pSlot : m_vecInventorySlot)
+		{
+			if (NO_ITEM == pSlot->Get_CurItemInfo().chItemType)
+			{
+				pSlot->Set_CurItemInfo(chItemType, chItemName, iCnt);
+				++m_uiCurSlotSize;
+				break;
+			}
 		}
 	}
+	else
+	{
+		for (auto& pSlot : m_vecInventorySlot)
+		{
+			if (NO_ITEM == pSlot->Get_CurItemInfo().chItemType)
+			{
+				pSlot->Set_CurItemInfo(chItemType, chItemName, iCnt);
+				++m_uiCurSlotSize;
+
+				break;
+			}
+		}
+	}
+
 }
 
-void CInventoryEquipmentMgr::Pop_ItemInventory(const char& chItemType, const char& chItemName, const _uint& uiCnt)
+void CInventoryEquipmentMgr::Pop_ItemInventory(const char& chItemType, const char& chItemName, const _int& iCnt)
 {
 	if (m_uiCurSlotSize <= 0)
 	{
@@ -42,19 +69,43 @@ void CInventoryEquipmentMgr::Pop_ItemInventory(const char& chItemType, const cha
 		return;
 	}
 
-	for (auto& pSlot : m_vecInventorySlot)
+	if (ItemType_Potion == chItemType)
 	{
-		if (chItemType == pSlot->Get_CurItemInfo().chItemType &&
-			chItemName == pSlot->Get_CurItemInfo().chItemName)
+		// 현재 인벤토리에 포션이 있는지 탐색.
+		for (auto& pSlot : m_vecInventorySlot)
 		{
-			ITEM_INFO tItemInfo = pSlot->Get_CurItemInfo();
+			if (chItemName == pSlot->Get_CurItemInfo().chItemName)
+			{
+				pSlot->Add_PotionCnt(iCnt);
 
-			pSlot->Set_CurItemInfo(NO_ITEM, NO_ITEM, 0);
-			--m_uiCurSlotSize;
+				if (pSlot->Get_CurItemCnt() <= 0)
+				{
+					pSlot->Set_CurItemCnt(0);
+					pSlot->Set_CurItemInfo(NO_ITEM, NO_ITEM);
+					--m_uiCurSlotSize;
+				}
 
-			break;
+				break;
+			}
 		}
 	}
+	else
+	{
+		for (auto& pSlot : m_vecInventorySlot)
+		{
+			if (chItemType == pSlot->Get_CurItemInfo().chItemType &&
+				chItemName == pSlot->Get_CurItemInfo().chItemName)
+			{
+				ITEM_INFO tItemInfo = pSlot->Get_CurItemInfo();
+
+				pSlot->Set_CurItemInfo(NO_ITEM, NO_ITEM, iCnt);
+				--m_uiCurSlotSize;
+
+				break;
+			}
+		}
+	}
+
 }
 
 void CInventoryEquipmentMgr::Pop_ItemInventory(const _uint& uiIdx)
