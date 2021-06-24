@@ -58,7 +58,6 @@ protected:
 	HRESULT			Read_DataFromFilePath(wstring wstrDataFilePath);
 	void			Update_SpriteFrame(const _float& fTimeDelta);
 	void			Update_Rect();
-private:
 	virtual HRESULT Add_Component();
 	void			Set_ConstantTable();
 

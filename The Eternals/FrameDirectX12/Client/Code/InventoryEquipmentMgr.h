@@ -1,7 +1,6 @@
 #pragma once
 #include "Include.h"
 #include "Base.h"
-
 #include "InventoryCanvas.h"
 #include "InventoryItemSlot.h"
 #include "InventoryButtonClose.h"
