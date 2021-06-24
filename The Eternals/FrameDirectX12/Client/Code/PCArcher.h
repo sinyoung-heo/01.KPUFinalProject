@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "ArcherAnimation.h"
 #include "PartySystemMgr.h"
+#include "InventoryEquipmentMgr.h"
 
 namespace Engine
 {
@@ -51,6 +52,7 @@ private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag);
 	HRESULT			SetUp_PCWeapon();
 	HRESULT			SetUp_ClassFrame();
+	HRESULT			SetUp_Equipment();
 	void			SetUp_StageID();
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
