@@ -33,7 +33,7 @@ void process_packet(int id)
 			/* CHECK ID in Database Server */
 			/* 비회원 -> 회원 가입 */
 			if (false == CDBMgr::GetInstance()->Check_ID(id, p->password))
-			{				
+			{
 				CDBMgr::GetInstance()->Insert_NewPlayer_DB(id, p->password);
 			}
 			/* 기존 회원일 경우 장비 및 인벤토리 Load */
@@ -78,7 +78,7 @@ void process_packet(int id)
 						{
 							// 시야 내에 없다면 시야 목록에 등록X.
 							if (false == CObjMgr::GetInstance()->Is_Near(pPlayer, pOther)) continue;
-							
+
 							/* 타 유저의 시야에 내가 없을 경우 '나'를 등록시킴 */
 							pOther->v_lock.lock();
 							if (0 == pOther->view_list.count(id))
@@ -122,7 +122,7 @@ void process_packet(int id)
 						pPlayer->v_lock.lock();
 						pPlayer->view_list.insert(obj_num);
 						pPlayer->v_lock.unlock();
-						
+
 						pMonster->send_Monster_enter_packet(id);
 					}
 				}
@@ -134,7 +134,7 @@ void process_packet(int id)
 	case CS_MOVE:
 	{
 		cs_packet_move* p = reinterpret_cast<cs_packet_move*>(pPlayer->m_packet_start);
-		
+
 		pPlayer->move_time = p->move_time;
 		pPlayer->m_iAniIdx = p->animIdx;
 		_vec3 vPos = _vec3(p->posX, p->posY, p->posZ);
@@ -170,9 +170,9 @@ void process_packet(int id)
 	{
 		cs_packet_attack* p = reinterpret_cast<cs_packet_attack*>(pPlayer->m_packet_start);
 
-		int		iAniIdx    = p->animIdx;
-		_vec3	vPos       = _vec3(p->posX, p->posY, p->posZ);
-		_vec3	vDir       = _vec3(p->dirX, p->dirY, p->dirZ);
+		int		iAniIdx = p->animIdx;
+		_vec3	vPos = _vec3(p->posX, p->posY, p->posZ);
+		_vec3	vDir = _vec3(p->dirX, p->dirY, p->dirZ);
 		float	fEndAngleY = p->end_angleY;
 
 		process_attack(id, vDir, vPos, iAniIdx, fEndAngleY); // 스킬 or 기본 공격 애니메이션 인덱스 부여 필요함
@@ -183,9 +183,9 @@ void process_packet(int id)
 	{
 		cs_packet_attack* p = reinterpret_cast<cs_packet_attack*>(pPlayer->m_packet_start);
 
-		_vec3 vPos  = _vec3(p->posX, p->posY, p->posZ);
-		_vec3 vDir  = _vec3(p->dirX, p->dirY, p->dirZ);
-	
+		_vec3 vPos = _vec3(p->posX, p->posY, p->posZ);
+		_vec3 vDir = _vec3(p->dirX, p->dirY, p->dirZ);
+
 		process_attack_stop(id, vDir, vPos, p->animIdx);
 	}
 	break;
@@ -193,7 +193,7 @@ void process_packet(int id)
 	case CS_CHAT:
 	{
 		cs_packet_chat* p = reinterpret_cast<cs_packet_chat*>(pPlayer->m_packet_start);
-		
+
 		process_chat(id, p->message);
 	}
 	break;
@@ -204,7 +204,7 @@ void process_packet(int id)
 	}
 	break;
 
-	case CS_COLLIDE: 
+	case CS_COLLIDE:
 	{
 		cs_packet_player_collision* p = reinterpret_cast<cs_packet_player_collision*>(pPlayer->m_packet_start);
 		process_collide(id, p->col_id, p->damage);
@@ -301,11 +301,11 @@ void process_recv(int id, DWORD iosize)
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 
 	if (pPlayer == nullptr) return;
-	
+
 	// m_packet_start		: 처리할 데이터 버퍼 및 위치 (= iocp_buffer)
 	// m_packet_start[0]	: 처리할 패킷의 크기
 	unsigned char p_size = pPlayer->m_packet_start[0];
-	
+
 	/* 다음 패킷을 받을 링버퍼 위치 설정 */
 	// m_recv_start			: 수신한 패킷의 시작 위치
 	unsigned char* next_recv_ptr = pPlayer->m_recv_start + iosize;
@@ -317,14 +317,14 @@ void process_recv(int id, DWORD iosize)
 		process_packet(id);
 		// 패킷 처리 후 유저의 데이터 처리 버퍼 시작 위치 변경
 		pPlayer->m_packet_start += p_size;
-		
+
 		// recv한 데이터를 처리를 했는데 아직 처리하지 못한 데이터를 가지고 있을 수도 있다.
 		// 처리해야 할 패킷 크기 갱신
 		if (pPlayer->m_packet_start < next_recv_ptr)
 			p_size = pPlayer->m_packet_start[0];
 		else
 			break;
-	} 
+	}
 
 	// 처리하지 못한(남아 있는) 데이터의 시작 위치 
 	long long left_data = next_recv_ptr - pPlayer->m_packet_start;
@@ -387,24 +387,24 @@ void send_login_ok(int id)
 	p.type = SC_PACKET_LOGIN_OK;
 	p.id = id;
 
-	p.o_type		= pPlayer->m_type;
-	p.weaponType	= pPlayer->m_chWeaponType;
-	p.naviType		= pPlayer->m_chStageId;
+	p.o_type = pPlayer->m_type;
+	p.weaponType = pPlayer->m_chWeaponType;
+	p.naviType = pPlayer->m_chStageId;
 
-	p.level			= pPlayer->m_iLevel;
-	p.hp			= pPlayer->m_iHp;
-	p.maxHp			= pPlayer->m_iMaxHp;
-	p.mp			= pPlayer->m_iMp;
-	p.maxMp			= pPlayer->m_iMaxMp;
-	p.exp			= pPlayer->m_iExp;
-	p.maxExp		= pPlayer->m_iMaxExp;
-	p.min_att		= pPlayer->m_iMinAtt;
-	p.max_att		= pPlayer->m_iMaxAtt;
-	p.spd			= pPlayer->m_fSpd;
+	p.level = pPlayer->m_iLevel;
+	p.hp = pPlayer->m_iHp;
+	p.maxHp = pPlayer->m_iMaxHp;
+	p.mp = pPlayer->m_iMp;
+	p.maxMp = pPlayer->m_iMaxMp;
+	p.exp = pPlayer->m_iExp;
+	p.maxExp = pPlayer->m_iMaxExp;
+	p.min_att = pPlayer->m_iMinAtt;
+	p.max_att = pPlayer->m_iMaxAtt;
+	p.spd = pPlayer->m_fSpd;
 
-	p.posX			= pPlayer->m_vPos.x;
-	p.posY			= pPlayer->m_vPos.y;
-	p.posZ			= pPlayer->m_vPos.z;
+	p.posX = pPlayer->m_vPos.x;
+	p.posY = pPlayer->m_vPos.y;
+	p.posZ = pPlayer->m_vPos.z;
 
 	send_packet(id, &p);
 }
@@ -415,27 +415,27 @@ void send_enter_packet(int to_client, int new_id)
 
 	CPlayer* pNewPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", new_id));
 
-	p.size	= sizeof(p);
-	p.type	= SC_PACKET_ENTER;
-	p.id	= new_id;
+	p.size = sizeof(p);
+	p.type = SC_PACKET_ENTER;
+	p.id = new_id;
 
 	pNewPlayer->Get_ClientLock().lock();
 	strncpy_s(p.name, pNewPlayer->m_ID, strlen(pNewPlayer->m_ID));
 
 	pNewPlayer->Get_ClientLock().unlock();
-	p.o_type			= pNewPlayer->m_type;
-	p.weaponType		= pNewPlayer->m_chWeaponType;
-	p.stageID			= pNewPlayer->m_chStageId;
-	p.is_stance_attack	= pNewPlayer->m_bIsAttackStance;
-	p.is_party_state	= pNewPlayer->m_bIsPartyState;
+	p.o_type = pNewPlayer->m_type;
+	p.weaponType = pNewPlayer->m_chWeaponType;
+	p.stageID = pNewPlayer->m_chStageId;
+	p.is_stance_attack = pNewPlayer->m_bIsAttackStance;
+	p.is_party_state = pNewPlayer->m_bIsPartyState;
 
-	p.posX				= pNewPlayer->m_vPos.x;
-	p.posY				= pNewPlayer->m_vPos.y;
-	p.posZ				= pNewPlayer->m_vPos.z;
+	p.posX = pNewPlayer->m_vPos.x;
+	p.posY = pNewPlayer->m_vPos.y;
+	p.posZ = pNewPlayer->m_vPos.z;
 
-	p.dirX				= pNewPlayer->m_vDir.x;
-	p.dirY				= pNewPlayer->m_vDir.y;
-	p.dirZ				= pNewPlayer->m_vDir.z;
+	p.dirX = pNewPlayer->m_vDir.x;
+	p.dirY = pNewPlayer->m_vDir.y;
+	p.dirZ = pNewPlayer->m_vDir.z;
 
 	send_packet(to_client, &p);
 }
@@ -447,7 +447,7 @@ void send_leave_packet(int to_client, int leave_id)
 	p.size = sizeof(p);
 	p.type = SC_PACKET_LEAVE;
 	p.id = leave_id;
-	
+
 	send_packet(to_client, &p);
 }
 
@@ -566,19 +566,19 @@ void send_player_stat(int to_client, int id)
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 	if (pPlayer == nullptr) return;
 
-	p.size		= sizeof(p);
-	p.type		= SC_PACKET_STAT_CHANGE;
+	p.size = sizeof(p);
+	p.type = SC_PACKET_STAT_CHANGE;
 
-	p.id		= id;
-	p.hp		= pPlayer->m_iHp;
-	p.maxHp		= pPlayer->m_iMaxHp;
-	p.mp		= pPlayer->m_iMp;
-	p.maxMp		= pPlayer->m_iMaxMp;
-	p.exp		= pPlayer->m_iExp;
-	p.maxExp	= pPlayer->m_iMaxExp;
-	p.lev		= pPlayer->m_iLevel;
-	p.maxAtt	= pPlayer->m_iMaxAtt;
-	p.minAtt	= pPlayer->m_iMinAtt;
+	p.id = id;
+	p.hp = pPlayer->m_iHp;
+	p.maxHp = pPlayer->m_iMaxHp;
+	p.mp = pPlayer->m_iMp;
+	p.maxMp = pPlayer->m_iMaxMp;
+	p.exp = pPlayer->m_iExp;
+	p.maxExp = pPlayer->m_iMaxExp;
+	p.lev = pPlayer->m_iLevel;
+	p.maxAtt = pPlayer->m_iMaxAtt;
+	p.minAtt = pPlayer->m_iMinAtt;
 
 	send_packet(to_client, &p);
 }
@@ -590,11 +590,11 @@ void send_player_stance_change(int to_client, int id, const bool& st)
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 	if (pPlayer == nullptr) return;
 
-	p.size             = sizeof(p);
-	p.type             = SC_PACKET_STANCE_CHANGE;
-	p.id               = id;
-	p.animIdx          = pPlayer->m_iAniIdx;
-	p.o_type           = pPlayer->m_type;
+	p.size = sizeof(p);
+	p.type = SC_PACKET_STANCE_CHANGE;
+	p.id = id;
+	p.animIdx = pPlayer->m_iAniIdx;
+	p.o_type = pPlayer->m_type;
 	p.is_stance_attack = st;
 
 	send_packet(to_client, &p);
@@ -607,14 +607,14 @@ void send_player_stage_change(int to_client, int id)
 
 	sc_packet_stage_change p;
 
-	p.size     = sizeof(p);
-	p.type     = SC_PACKET_STAGE_CHANGE;
-	p.id	   = id;
+	p.size = sizeof(p);
+	p.type = SC_PACKET_STAGE_CHANGE;
+	p.id = id;
 
 	p.stage_id = pPlayer->m_chStageId;
-	p.posX     = pPlayer->m_vPos.x;
-	p.posY     = pPlayer->m_vPos.y;
-	p.posZ     = pPlayer->m_vPos.z;
+	p.posX = pPlayer->m_vPos.x;
+	p.posY = pPlayer->m_vPos.y;
+	p.posZ = pPlayer->m_vPos.z;
 
 	send_packet(to_client, &p);
 }
@@ -658,7 +658,7 @@ void send_reject_party(int to_client, int id)
 
 	strncpy_s(p.name, "0", strlen("0"));
 	strncpy_s(p.message, "파티 참여를 거절하였습니다.", strlen("파티 참여를 거절하였습니다."));
-	
+
 	send_packet(to_client, &p);
 }
 
@@ -688,13 +688,13 @@ void send_update_party(const int& to_client, const int& id, const int& hp, const
 {
 	sc_packet_update_party p;
 
-	p.size	= sizeof(p);
-	p.type	= SC_PACKET_UPDATE_PARTY;
-	p.id	= id;
+	p.size = sizeof(p);
+	p.type = SC_PACKET_UPDATE_PARTY;
+	p.id = id;
 
-	p.hp	= hp;
+	p.hp = hp;
 	p.maxHp = maxHp;
-	p.mp	= mp;
+	p.mp = mp;
 	p.maxMp = maxMp;
 
 	send_packet(to_client, &p);
@@ -704,9 +704,9 @@ void send_chat(const int& to_client, const int& id, const char* name, const char
 {
 	sc_packet_chat p;
 
-	p.size	= sizeof(p);
-	p.type	= SC_PACKET_CHAT;
-	p.id	= id;
+	p.size = sizeof(p);
+	p.type = SC_PACKET_CHAT;
+	p.id = id;
 
 	strncpy_s(p.name, name, strlen(name));
 	strncpy_s(p.message, buffer, len);
@@ -719,13 +719,13 @@ void send_update_inventory(const int& id, const char& chItemType, const char& ch
 {
 	sc_packet_update_inventory p;
 
-	p.size			= sizeof(p);
-	p.type			= SC_PACKET_UPDATE_INVENTORY;
+	p.size = sizeof(p);
+	p.type = SC_PACKET_UPDATE_INVENTORY;
 
-	p.itemType		= chItemType;
-	p.itemName		= chName;
-	p.count			= count;
-	p.is_pushItem	= isPushItem;
+	p.itemType = chItemType;
+	p.itemName = chName;
+	p.count = count;
+	p.is_pushItem = isPushItem;
 
 	send_packet(id, &p);
 }
@@ -734,12 +734,12 @@ void send_update_equipment(const int& to_client, const char& chItemType, const c
 {
 	sc_packet_update_equipment p;
 
-	p.size			= sizeof(p);
-	p.type			= SC_PACKET_UPDATE_EQUIPMENT;
+	p.size = sizeof(p);
+	p.type = SC_PACKET_UPDATE_EQUIPMENT;
 
-	p.equipType		= chItemType;
-	p.itemName		= chName;
-	p.is_pushItem	= isPushItem;
+	p.equipType = chItemType;
+	p.itemName = chName;
+	p.is_pushItem = isPushItem;
 
 	send_packet(to_client, &p);
 }
@@ -751,7 +751,7 @@ void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 	if (pPlayer == nullptr) return;
 
 	/* 해당 플레이어의 원래 위치값 & 변경된 위치값 */
-	float ori_x, ori_y, ori_z;	
+	float ori_x, ori_y, ori_z;
 	ori_x = pPlayer->m_vPos.x;
 	ori_y = pPlayer->m_vPos.y;
 	ori_z = pPlayer->m_vPos.z;
@@ -759,7 +759,7 @@ void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 	/* 해당 플레이어의 방향벡터와 위치벡터 */
 	pPlayer->m_vDir = _vDir;
 	pPlayer->m_vPos = _vPos;
-	
+
 	/* 해당 플레이어의 원래 시야 목록 */
 	pPlayer->v_lock.lock();
 	unordered_set<int> old_viewlist = pPlayer->view_list;
@@ -802,13 +802,13 @@ void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
 				{
 					CPlayer* pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
-					
+
 					// 접속한 유저만 시야 목록에 등록한다.
 					if (!pOther->Get_IsConnected()) continue;
-					
+
 					// 시야 내에 있다면 시야 목록에 등록한다.
 					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pOther))
-						new_viewlist.insert(obj_num);			
+						new_viewlist.insert(obj_num);
 				}
 				/* NPC일 경우 처리 */
 				else if (true == CObjMgr::GetInstance()->Is_NPC(obj_num))
@@ -974,7 +974,7 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 	/* 해당 플레이어로부터 받은 최종 위치값 저장 */
 	pPlayer->m_vDir = _vDir;
 	pPlayer->m_vPos = _vPos;
-	
+
 	send_move_stop_packet(id, id);
 
 	/* 변경된 좌표로 섹터 갱신 */
@@ -1159,7 +1159,7 @@ void process_collide(int id, int colID, int damage)
 	if (pPlayer == nullptr) return;
 
 	/* COLLIDE PLAYER - NPC */
-	if (colID >= NPC_NUM_START && colID < MON_NUM_START){}
+	if (colID >= NPC_NUM_START && colID < MON_NUM_START) {}
 
 	/* COLLIDE PLAYER - MONSTER */
 	else if (colID >= MON_NUM_START)
@@ -1323,7 +1323,7 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx, 
 				else
 				{
 					pOther->v_lock.unlock();
-					send_attack_packet(server_num, id,aniIdx, end_angleY);
+					send_attack_packet(server_num, id, aniIdx, end_angleY);
 				}
 			}
 			// 새로 시야에 들어온 NPC일 경우 처리
@@ -1723,7 +1723,7 @@ void process_respond_party(const bool& result, const int& suggester_id, const in
 		{
 			// 2-1. 새로운 멤버 초대
 			CObjMgr::GetInstance()->Add_PartyMember(pSuggester->m_iPartyNumber, &pResponder->m_iPartyNumber, responder_id);
-			
+
 			// 2-2. 새로운 멤버 파티 참여 상태로 변경
 			pResponder->m_bIsPartyState = true;
 		}
@@ -1808,7 +1808,7 @@ void process_leave_party(const int& id)
 	if (pUser == nullptr) return;
 	if (!pUser->m_bIsConnect) return;
 	if (!pUser->m_bIsPartyState) return;
-	
+
 	// 파티 구성원들에게 파티 탈퇴를 알림
 	for (auto& p : *CObjMgr::GetInstance()->Get_PARTYLIST(pUser->m_iPartyNumber))
 	{
@@ -1816,7 +1816,7 @@ void process_leave_party(const int& id)
 		{
 			// 탈퇴 멤버 정보 -> 기존 구성원
 			send_leave_party(p, id);
-		}	
+		}
 	}
 
 	// 해당 유저의 파티 정보 초기화
@@ -1889,15 +1889,15 @@ void process_disconnect(const int& id)
 
 	pPlayer->Set_IsConnected(false);
 	closesocket(pPlayer->m_sock);
-	pPlayer->m_sock				= 0;
-	pPlayer->m_vPos				= _vec3(0.f, 0.f, 0.f);
-	pPlayer->m_vDir				= _vec3(0.f, 0.f, 0.f);
-	pPlayer->m_ID[0]			= 0;
-	pPlayer->m_type				= 0;
-	pPlayer->m_chStageId		= STAGE_VELIKA;
-	pPlayer->m_bIsPartyState	= false;
-	pPlayer->m_iPartyNumber		= INIT_PARTY_NUMBER;
-	pPlayer->m_iMoney			= INIT_MONEY;
+	pPlayer->m_sock = 0;
+	pPlayer->m_vPos = _vec3(0.f, 0.f, 0.f);
+	pPlayer->m_vDir = _vec3(0.f, 0.f, 0.f);
+	pPlayer->m_ID[0] = 0;
+	pPlayer->m_type = 0;
+	pPlayer->m_chStageId = STAGE_VELIKA;
+	pPlayer->m_bIsPartyState = false;
+	pPlayer->m_iPartyNumber = INIT_PARTY_NUMBER;
+	pPlayer->m_iMoney = INIT_MONEY;
 	pPlayer->view_list.clear();
 	pPlayer->Release_Inventory();
 	pPlayer->Release_Equipment();
@@ -1930,9 +1930,10 @@ void process_add_item(const int& id, const char& chItemType, const char& chName)
 	if (pUser == nullptr) return;
 	if (!pUser->m_bIsConnect) return;
 
-	if (pUser->Add_Item(chName, static_cast<ITEM>(chItemType)))
+	int itemNumber = CItemMgr::GetInstance()->Find_ItemNumber(chItemType, chName);
+	if (pUser->Add_Item(itemNumber, static_cast<ITEM>(chItemType)))
 	{
-		send_update_inventory(id, chItemType, chName, pUser->Get_ItemCount(chName, static_cast<ITEM>(chItemType)), true);
+		send_update_inventory(id, chItemType, chName, pUser->Get_ItemCount(itemNumber, static_cast<ITEM>(chItemType)), true);
 	}
 }
 
@@ -1942,9 +1943,10 @@ void process_delete_item(const int& id, const char& chItemType, const char& chNa
 	if (pUser == nullptr) return;
 	if (!pUser->m_bIsConnect) return;
 
-	if (pUser->Delete_Item(chName, static_cast<ITEM>(chItemType)))
+	int itemNumber = CItemMgr::GetInstance()->Find_ItemNumber(chItemType, chName);
+	if (pUser->Delete_Item(itemNumber, static_cast<ITEM>(chItemType)))
 	{
-		send_update_inventory(id, chItemType, chName, pUser->Get_ItemCount(chName, static_cast<ITEM>(chItemType)), false);
+		send_update_inventory(id, chItemType, chName, pUser->Get_ItemCount(itemNumber, static_cast<ITEM>(chItemType)), false);
 	}
 }
 

@@ -16,11 +16,11 @@ public:
 public:
 	/* 장비창 이벤트 */
 	bool Load_Equipment(const int& id);
-	void Change_Equipment(const int& id);
+	void update_Equipment(const int& id);
 
 	/* 인벤토리 이벤트 */
 	bool Load_Inventory(const int& id);
-	void Insert_Inventory(const int& id, const char& itemType, const char& itemName);
+	void update_Inventory(const int& id, const int& itemNumber, const int& itemCount);
 
 	/* 유저 이벤트 */
 	bool Check_ID(int id, char* pw);				// Check Id in Login Server

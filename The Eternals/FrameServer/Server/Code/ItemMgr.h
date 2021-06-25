@@ -8,7 +8,8 @@ private:
 	virtual ~CItemMgr(void);
 
 public:
-	HRESULT Ready_Item();
+	HRESULT		Ready_Item();
+	const int&	Find_ItemNumber(const char& type, const char& name);
 	
 public:
 	void Release();

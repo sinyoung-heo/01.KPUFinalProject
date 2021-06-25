@@ -957,27 +957,27 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 
 	if (Engine::KEY_DOWN(DIK_Z))
 	{
-		CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Potion, Prtion_HP);
+		//CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Potion, Prtion_HP);
 		// ¾ÆÀÌÅÛ È¹µæ
-		// CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, Twohand19_A_SM);
+		 CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, Twohand19_A_SM);
 	}
 	if (Engine::KEY_DOWN(DIK_X))
 	{
 		// ¾ÆÀÌÅÛ Á¦°Å
-		// CPacketMgr::Get_Instance()->send_delete_item(ItemType_WeaponTwoHand, Twohand19_A_SM);
-		CInventoryEquipmentMgr::Get_Instance()->Pop_ItemInventory(ItemType_Potion, Prtion_HP);
+		 CPacketMgr::Get_Instance()->send_delete_item(ItemType_WeaponTwoHand, Twohand19_A_SM);
+		//CInventoryEquipmentMgr::Get_Instance()->Pop_ItemInventory(ItemType_Potion, Prtion_HP);
 	}
 	if (Engine::KEY_DOWN(DIK_C))
 	{
-		CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Potion, Prtion_MP);
+		//CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Potion, Prtion_MP);
 		// ¾ÆÀÌÅÛ È¹µæ
-		// CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, Twohand19_A_SM);
+		 CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, Twohand19_A_SM);
 	}
 	if (Engine::KEY_DOWN(DIK_V))
 	{
 		// ¾ÆÀÌÅÛ Á¦°Å
-		// CPacketMgr::Get_Instance()->send_delete_item(ItemType_WeaponTwoHand, Twohand19_A_SM);
-		CInventoryEquipmentMgr::Get_Instance()->Pop_ItemInventory(ItemType_Potion, Prtion_MP);
+		 CPacketMgr::Get_Instance()->send_delete_item(ItemType_WeaponTwoHand, Twohand19_A_SM);
+		//CInventoryEquipmentMgr::Get_Instance()->Pop_ItemInventory(ItemType_Potion, Prtion_MP);
 	}
 
 

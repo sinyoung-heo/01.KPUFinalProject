@@ -7,6 +7,10 @@ CPlayer::CPlayer()
     m_iMaxAtt(0), m_fSpd(0.f), m_bIsAttackStance(false),
     m_bIsPartyState(false), m_iPartyNumber(-1), m_iMoney(0)
 {
+    m_tEquipment.weapon =   -1;
+    m_tEquipment.helmet =   -1;
+    m_tEquipment.armor  =   -1;
+    m_tEquipment.shoes  =   -1;
 }
 
 CPlayer::~CPlayer()
@@ -43,6 +47,7 @@ bool CPlayer::Add_Item(const int& itemNumber, ITEM eItemType)
     if (!Is_Full_Inventory())
     {
         m_mapInventory[eItemType][itemNumber].iCount++;
+        CDBMgr::GetInstance()->update_Inventory(m_sNum, itemNumber, m_mapInventory[eItemType][itemNumber].iCount);
         return true;
     }
     return false;
@@ -53,6 +58,7 @@ bool CPlayer::Delete_Item(const int& itemNumber, ITEM eItemType)
     if (m_mapInventory[eItemType][itemNumber].iCount > 0)
     {
         m_mapInventory[eItemType][itemNumber].iCount--;
+        CDBMgr::GetInstance()->update_Inventory(m_sNum, itemNumber, m_mapInventory[eItemType][itemNumber].iCount);
         return true;
     }
     return false;
@@ -122,6 +128,8 @@ void CPlayer::Equip_Item(const char& itemName, const char& eItemType)
     {
         m_tEquipment.shoes = itemName;
     }
+
+    CDBMgr::GetInstance()->update_Equipment(m_sNum);
 }
 
 void CPlayer::Unequip_Item(const char& itemName, const char& eItemType)
@@ -142,6 +150,8 @@ void CPlayer::Unequip_Item(const char& itemName, const char& eItemType)
     {
         m_tEquipment.shoes = -1;
     }
+
+    CDBMgr::GetInstance()->update_Equipment(m_sNum);
 }
 
 void CPlayer::Release_Equipment()

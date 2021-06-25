@@ -1,5 +1,5 @@
 #pragma once
-
+// 아이템 고유번호
 // Weapon TwoHand
 constexpr char Item_Twohand19_A_SM			= 0;
 constexpr char Item_TwoHand27_SM			= 1;
