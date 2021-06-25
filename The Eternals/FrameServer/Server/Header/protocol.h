@@ -395,6 +395,7 @@ struct sc_packet_update_equipment
 
 	char			equipType;
 	char			itemName;
+	bool			is_pushItem;
 };
 
 /* ___________________________________________________________________________________________________________________*/
