@@ -712,27 +712,27 @@ void send_update_inventory(const int& id, const char& chItemType, const char& ch
 {
 	sc_packet_update_inventory p;
 
-	p.size		= sizeof(p);
-	p.type		= SC_PACKET_UPDATE_INVENTORY;
+	p.size			= sizeof(p);
+	p.type			= SC_PACKET_UPDATE_INVENTORY;
 
-	p.itemType	= chItemType;
-	p.itemName	= chName;
-	p.count		= count;
-
-	p.is_pushItem = isPushItem;
+	p.itemType		= chItemType;
+	p.itemName		= chName;
+	p.count			= count;
+	p.is_pushItem	= isPushItem;
 
 	send_packet(id, &p);
 }
 
-void send_update_equipment(const int& to_client, const char& chItemType, const char& chName)
+void send_update_equipment(const int& to_client, const char& chItemType, const char& chName, const bool& isPushItem)
 {
 	sc_packet_update_equipment p;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_UPDATE_EQUIPMENT;
+	p.size			= sizeof(p);
+	p.type			= SC_PACKET_UPDATE_EQUIPMENT;
 
-	p.equipType = chItemType;
-	p.itemName = chName;
+	p.equipType		= chItemType;
+	p.itemName		= chName;
+	p.is_pushItem	= isPushItem;
 
 	send_packet(to_client, &p);
 }
@@ -1948,7 +1948,7 @@ void process_equip_item(const int& id, const char& chItemType, const char& chNam
 
 	pUser->Equip_Item(chName, chItemType);
 
-	send_update_equipment(id, chItemType, pUser->Get_Equipment(chItemType));
+	send_update_equipment(id, chItemType, pUser->Get_Equipment(chItemType), true);
 }
 
 void process_unequip_item(const int& id, const char& chItemType, const char& chName)
@@ -1959,7 +1959,7 @@ void process_unequip_item(const int& id, const char& chItemType, const char& chN
 
 	pUser->Unequip_Item(chName, chItemType);
 
-	send_update_equipment(id, chItemType, pUser->Get_Equipment(chItemType));
+	send_update_equipment(id, chItemType, pUser->Get_Equipment(chItemType), false);
 }
 
 /*===========================================FUNC====================================================*/
