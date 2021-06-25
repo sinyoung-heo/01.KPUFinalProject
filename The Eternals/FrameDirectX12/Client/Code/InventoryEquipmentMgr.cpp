@@ -8,10 +8,16 @@ CInventoryEquipmentMgr::CInventoryEquipmentMgr()
 	m_vecInventorySlot.reserve(80);
 }
 
+_uint uiInventorySlotIdx = 0;
 void CInventoryEquipmentMgr::Add_InventorySlot(CInventoryItemSlot* pSlot)
 {
 	if (nullptr != pSlot)
+	{
 		m_vecInventorySlot.emplace_back(pSlot);
+		pSlot->Set_ItemSlotIdx(uiInventorySlotIdx);
+
+		++uiInventorySlotIdx;
+	}
 }
 
 void CInventoryEquipmentMgr::Push_ItemInventory(const char& chItemType, const char& chItemName, const _int& iCnt)
@@ -149,6 +155,7 @@ void CInventoryEquipmentMgr::Pop_ItemInventory()
 
 void CInventoryEquipmentMgr::Free()
 {
-	m_pInventoryCanvas = nullptr;
-	m_pEquipmentCanvas = nullptr;
+	m_pInventoryCanvas   = nullptr;
+	m_pInventorySwapSlot = nullptr;
+	m_pEquipmentCanvas   = nullptr;
 }

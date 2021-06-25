@@ -3,10 +3,12 @@
 #include "GameUIChild.h"
 #include "DirectInput.h"
 #include "DescriptorHeapMgr.h"
+#include "InventoryEquipmentMgr.h"
 #include "Font.h"
 
 CInventoryItemSlot::CInventoryItemSlot(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
+	, m_pInvenEquipMgr(CInventoryEquipmentMgr::Get_Instance())
 {
 }
 
@@ -60,6 +62,7 @@ HRESULT CInventoryItemSlot::Ready_GameObject(wstring wstrRootObjectTag,
 	m_tCurItemInfo.tItemIconFrame.fCurScene = 0.0f;
 
 	m_chPreItemType = m_tCurItemInfo.chItemType;
+	m_chPreItemName = m_tCurItemInfo.chItemName;
 
 	// Slot Frame
 	Engine::CGameObject* pSlotFrame = CGameUIChild::Create(m_pGraphicDevice, m_pCommandList,
@@ -141,15 +144,62 @@ void CInventoryItemSlot::Render_GameObject(const _float& fTimeDelta)
 
 void CInventoryItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 {
+	// 아이템 스왑
 	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect) &&
 		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
 		m_bIsKeyPressingLB)
 	{
+		// Item 정보 교환.
+		if (m_pInvenEquipMgr->Get_IsInventoryItemSwapState())
+		{
+			vector<CInventoryItemSlot*> vecInvenSlot = m_pInvenEquipMgr->Get_InventorySlotList();
+			_uint uiSelectIdx = m_pInvenEquipMgr->Get_InventorySwapSlotClass()->Get_ItemSlotIdx();
+			if (uiSelectIdx == m_uiIdx)
+			{
+				m_pInvenEquipMgr->Get_InventorySwapSlotClass()->Set_CurItemInfo(NO_ITEM, NO_ITEM, 0);
+				m_pInvenEquipMgr->Set_IsInventoryItemSwapState(false);
+				m_bIsKeyPressingLB = false;
+				return;
+			}
+
+			CInventoryItemSlot* pSelectItemSlot = vecInvenSlot[uiSelectIdx];
+			ITEM_INFO tSelectItemInfo = pSelectItemSlot->Get_CurItemInfo();
+			_uint uiSelectItemCnt = pSelectItemSlot->Get_CurItemCnt();
+
+			// SelectSlot에 현재 슬롯의 정보를 저장.
+			pSelectItemSlot->Set_CurItemInfo(m_tCurItemInfo.chItemType, m_tCurItemInfo.chItemName);
+			pSelectItemSlot->Set_CurItemCnt(m_uiCnt);
+
+			// 현재 슬롯의 정보에 SelectSlot의 정보를 저장.
+			m_tCurItemInfo.chItemType = tSelectItemInfo.chItemType;
+			m_tCurItemInfo.chItemName = tSelectItemInfo.chItemName;
+			m_uiCnt = uiSelectItemCnt;
+
+			m_pInvenEquipMgr->Get_InventorySwapSlotClass()->Set_CurItemInfo(NO_ITEM, NO_ITEM, 0);
+			m_pInvenEquipMgr->Set_IsInventoryItemSwapState(false);
+			m_bIsKeyPressingLB = false;
+			return;
+		}
+
+		if (!m_pInvenEquipMgr->Get_IsInventoryItemSwapState())
+		{
+			if (NO_ITEM != m_tCurItemInfo.chItemType)
+				m_pInvenEquipMgr->Set_IsInventoryItemSwapState(true);
+			else
+				m_pInvenEquipMgr->Set_IsInventoryItemSwapState(false);
+
+			m_pInvenEquipMgr->Get_InventorySwapSlotClass()->Set_ItemSlotIdx(m_uiIdx);
+			m_pInvenEquipMgr->Get_InventorySwapSlotClass()->Set_CurItemInfo(m_tCurItemInfo.chItemType,
+																			m_tCurItemInfo.chItemName,
+																			m_uiCnt);
+		}
 	}
 
+	// 아이템 장착
 	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect) &&
 		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_RB) && 
-		m_bIsKeyPressingRB)
+		m_bIsKeyPressingRB &&
+		!m_pInvenEquipMgr->Get_IsInventoryItemSwapState())
 	{
 	}
 
@@ -166,14 +216,9 @@ void CInventoryItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 		{
 			m_bIsKeyPressingLB = true;
 		}
-		if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_RB))
+		else if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_RB))
 		{
 			m_bIsKeyPressingRB = true;
-		}
-		else
-		{
-			m_bIsKeyPressingLB = false;
-			m_bIsKeyPressingRB = false;
 		}
 	}
 	else
@@ -184,16 +229,8 @@ void CInventoryItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 
 void CInventoryItemSlot::SetUp_ItemIcon()
 {
-	//if (0 <= m_uiCnt)
-	//{
-	//	m_pTexDescriptorHeap  = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(m_wstrTextureTag);
-	//	m_uiTexIdx            = m_tNoItemInfo.uiItemIdx;
-	//	m_tFrame              = m_tNoItemInfo.tItemIconFrame;
-	//	m_pTransCom->m_vScale = m_tNoItemInfo.vScale;
-	//	m_uiCnt               = 0;
-	//}
-
-	if (m_tCurItemInfo.chItemType == m_chPreItemType)
+	if (m_tCurItemInfo.chItemType == m_chPreItemType &&
+		m_tCurItemInfo.chItemName == m_chPreItemName)
 		return;
 
 	switch (m_tCurItemInfo.chItemType)
@@ -398,6 +435,7 @@ void CInventoryItemSlot::SetUp_ItemIcon()
 	}
 
 	m_chPreItemType = m_tCurItemInfo.chItemType;
+	m_chPreItemName = m_tCurItemInfo.chItemName;
 }
 
 void CInventoryItemSlot::SetUp_FontPotionCnt(const _float& fTimeDelta)

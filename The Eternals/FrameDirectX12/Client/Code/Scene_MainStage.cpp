@@ -747,6 +747,62 @@ HRESULT CScene_MainStage::SetUp_UIMainMenuInventory()
 		}
 	}
 
+	// ItemSwapSlot
+	{
+		wifstream fin{ L"../../Bin/ToolData/2DUIInventoryItemSwapSlot.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			if (fin.eof())
+				break;
+
+			// UIRoot »ý¼º.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CInventorySwapSlot::Create(m_pGraphicDevice, m_pCommandList,
+												 wstrRootObjectTag,
+												 wstrDataFilePath,
+												 vPos,
+												 vScale,
+												 bIsSpriteAnimation,
+												 fFrameSpeed,
+												 vRectPosOffset,
+												 vRectScale,
+												 UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+			CInventoryEquipmentMgr::Get_Instance()->Set_InventorySwapSlotClass(static_cast<CInventorySwapSlot*>(pRootUI));
+		}
+	}
+
+
 	// MainMenuSettingCanvas
 	CInventoryButtonClose* pButtonXMouseNormal  = nullptr;
 	CInventoryButtonClose* pButtonXMouseOn      = nullptr;

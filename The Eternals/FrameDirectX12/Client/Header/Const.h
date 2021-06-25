@@ -48,3 +48,5 @@ const _float PORTAL_FROM_VELIKA_TO_BEACH_Z = 10.0f;
 
 const _float PORTAL_FROM_BEACH_TO_VELIKA_X = 325.0f;
 const _float PORTAL_FROM_BEACH_TO_VELIKA_Z = 65.0f;
+
+const char NO_ITEM = -1;

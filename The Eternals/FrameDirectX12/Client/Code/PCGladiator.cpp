@@ -758,7 +758,32 @@ HRESULT CPCGladiator::SetUp_Equipment()
 	}
 
 	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Potion, Prtion_HP);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Potion, Prtion_HP);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Potion, Prtion_HP);
+
 	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Potion, Prtion_MP);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Potion, Prtion_MP);
+
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_WeaponTwoHand, Twohand19_A_SM);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_WeaponTwoHand, TwoHand27_SM);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_WeaponTwoHand, TwoHand29_SM);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_WeaponTwoHand, TwoHand31_SM);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_WeaponTwoHand, TwoHand33_B_SM);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Helmet, Helmet_D);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Helmet, Helmet_C);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Helmet, Helmet_B);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Helmet, Helmet_A);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Helmet, Helmet_S);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Armor, Armor_D);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Armor, Armor_C);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Armor, Armor_B);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Armor, Armor_A);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Armor, Armor_S);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Shoes, Shoes_D);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Shoes, Shoes_C);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Shoes, Shoes_B);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Shoes, Shoes_A);
+	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Shoes, Shoes_S);
 
 	return S_OK;
 }

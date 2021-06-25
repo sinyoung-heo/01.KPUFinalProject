@@ -4,6 +4,7 @@
 #include "InventoryCanvas.h"
 #include "InventoryItemSlot.h"
 #include "InventoryButtonClose.h"
+#include "InventorySwapSlot.h"
 #include "EquipmentCanvas.h"
 #include "EquipmentItemSlot.h"
 #include "EquipmentButtonClose.h"
@@ -16,14 +17,18 @@ private:
 	explicit CInventoryEquipmentMgr();
 	virtual ~CInventoryEquipmentMgr() = default;
 public:
-
-	CInventoryCanvas*	Get_InventoryCanvasClass()	{ return m_pInventoryCanvas; }
-	CEquipmentCanvas*	Get_EquipmentCanvasClass()	{ return m_pEquipmentCanvas; }
-	const _uint&		Get_MaxInventorySize()		{ return m_uiMaxSlotSize; }
-	const _uint&		Get_CurInventorySize()		{ return m_uiCurSlotSize; }
-	void Set_InventoryCanvasClass(CInventoryCanvas* pUI) { m_pInventoryCanvas = pUI; };
-	void Set_EquipmentCanvasClass(CEquipmentCanvas* pUI) { m_pEquipmentCanvas = pUI; };
-	void Set_CurInventorySize(const _uint& uiValue) { m_uiCurSlotSize = uiValue; }
+	vector<CInventoryItemSlot*>&	Get_InventorySlotList()			{ return m_vecInventorySlot; }
+	CInventoryCanvas*				Get_InventoryCanvasClass()		{ return m_pInventoryCanvas; }
+	CInventorySwapSlot*				Get_InventorySwapSlotClass()	{ return m_pInventorySwapSlot; }
+	CEquipmentCanvas*				Get_EquipmentCanvasClass()		{ return m_pEquipmentCanvas; }
+	const _uint&					Get_MaxInventorySize()			{ return m_uiMaxSlotSize; }
+	const _uint&					Get_CurInventorySize()			{ return m_uiCurSlotSize; }
+	const _bool&					Get_IsInventoryItemSwapState()	{ return m_bIsInventoryItemSwapState; }
+	void Set_InventoryCanvasClass(CInventoryCanvas* pUI)		{ m_pInventoryCanvas = pUI; }
+	void Set_InventorySwapSlotClass(CInventorySwapSlot* pUI)	{ m_pInventorySwapSlot = pUI; }
+	void Set_IsInventoryItemSwapState(const _bool& bIsSwap)	{ m_bIsInventoryItemSwapState = bIsSwap; }
+	void Set_CurInventorySize(const _uint& uiValue)				{ m_uiCurSlotSize = uiValue; }
+	void Set_EquipmentCanvasClass(CEquipmentCanvas* pUI)		{ m_pEquipmentCanvas = pUI; }
 
 	void Add_InventorySlot(CInventoryItemSlot* pSlot);
 	void Push_ItemInventory(const char& chItemType, const char& chItemName, const _int& iCnt = 1);
@@ -31,14 +36,14 @@ public:
 	void Pop_ItemInventory(const _uint& uiIdx);
 	void Pop_ItemInventory();
 private:
-	CInventoryCanvas*			m_pInventoryCanvas = nullptr;
 	vector<CInventoryItemSlot*> m_vecInventorySlot;
-	_uint						m_uiMaxSlotSize = 80;
-	_uint						m_uiCurSlotSize = 0;
+	CInventoryCanvas*			m_pInventoryCanvas          = nullptr;
+	_uint						m_uiMaxSlotSize             = 80;
+	_uint						m_uiCurSlotSize             = 0;
+	CInventorySwapSlot*			m_pInventorySwapSlot        = nullptr;
+	_bool						m_bIsInventoryItemSwapState = false;
 
 	CEquipmentCanvas* m_pEquipmentCanvas = nullptr;
-
-
 private:
 	virtual void Free();
 };

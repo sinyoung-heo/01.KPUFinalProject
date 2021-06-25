@@ -206,6 +206,7 @@
     <ClInclude Include="..\Code\InventoryCanvas.h" />
     <ClInclude Include="..\Code\InventoryEquipmentMgr.h" />
     <ClInclude Include="..\Code\InventoryItemSlot.h" />
+    <ClInclude Include="..\Code\InventorySwapSlot.h" />
     <ClInclude Include="..\Code\LightingParticle.h" />
     <ClInclude Include="..\Code\LoginSelectButton.h" />
     <ClInclude Include="..\Code\LogoutButtonChoice.h" />
@@ -355,6 +356,7 @@
     <ClCompile Include="..\Code\InventoryCanvas.cpp" />
     <ClCompile Include="..\Code\InventoryEquipmentMgr.cpp" />
     <ClCompile Include="..\Code\InventoryItemSlot.cpp" />
+    <ClCompile Include="..\Code\InventorySwapSlot.cpp" />
     <ClCompile Include="..\Code\LightingParticle.cpp" />
     <ClCompile Include="..\Code\LoginSelectButton.cpp" />
     <ClCompile Include="..\Code\LogoutButtonChoice.cpp" />
