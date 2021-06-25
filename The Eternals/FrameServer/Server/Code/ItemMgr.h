@@ -9,7 +9,7 @@ private:
 
 public:
 	HRESULT Ready_Item();
-
+	
 public:
 	void Release();
 

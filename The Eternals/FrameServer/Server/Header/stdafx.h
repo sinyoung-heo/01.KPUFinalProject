@@ -51,6 +51,7 @@ using namespace chrono;
 #include "ObjMgr.h"
 #include "PacketMgr.h"
 #include "DBMgr.h"
+#include "ItemMgr.h"
 #include "SectorMgr.h"
 #include "NaviMesh.h"
 #include "NaviMesh_Beach.h"

@@ -79,6 +79,7 @@ void Ready_ServerManager()
 	CObjPoolMgr::GetInstance()->Init_ObjPoolMgr();	
 	CObjMgr::GetInstance()->Init_ObjMgr();
 	CDBMgr::GetInstance()->Ready_DB();
+	CItemMgr::GetInstance()->Ready_Item();
 	CNaviMesh::GetInstance()->Ready_NaviMesh(L"../../../FrameDirectX12/Bin/ToolData/StageVelika_NaviMesh.navimeshcellinfo");
 	CNaviMesh_Beach::GetInstance()->Ready_NaviMesh(L"../../../FrameDirectX12/Bin/ToolData/StageBeach_NaviMesh3.navimeshcellinfo");	
 	CCollisionMgr::GetInstance();
@@ -150,6 +151,7 @@ void Release_Server()
 	CObjMgr::GetInstance()->DestroyInstance();
 	CObjPoolMgr::GetInstance()->DestroyInstance();
 	CDBMgr::GetInstance()->DestroyInstance();
+	CItemMgr::GetInstance()->DestroyInstance();
 	CNaviMesh::GetInstance()->DestroyInstance();
 	CNaviMesh_Beach::GetInstance()->DestroyInstance();
 	CCollisionMgr::GetInstance()->DestroyInstance();

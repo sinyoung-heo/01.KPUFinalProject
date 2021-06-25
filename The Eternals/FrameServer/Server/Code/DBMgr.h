@@ -11,13 +11,18 @@ public:
 	HRESULT Ready_DB();								// Connect to Database Server 
 	void Disconnect_DB();							// Disconnect Database Server
 
+	HRESULT Ready_GameItem(map<int, GAMEITEM>& mapGameItems);
+
 public:
+	/* 장비창 이벤트 */
 	bool Load_Equipment(const int& id);
 	void Change_Equipment(const int& id);
 
+	/* 인벤토리 이벤트 */
 	bool Load_Inventory(const int& id);
 	void Insert_Inventory(const int& id, const char& itemType, const char& itemName);
 
+	/* 유저 이벤트 */
 	bool Check_ID(int id, char* pw);				// Check Id in Login Server
 	void Insert_NewPlayer_DB(int id, char* pw);		// Insert New Player in to Database Server
 	void Update_stat_DB(int id);					// Update User Stat in to Database Server
@@ -33,6 +38,5 @@ private:
 	SQLHSTMT m_hstmt;
 	SQLRETURN m_retcode;
 	SQLHENV m_henv;
-
 };
 

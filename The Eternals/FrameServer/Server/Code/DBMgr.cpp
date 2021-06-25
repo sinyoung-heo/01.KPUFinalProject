@@ -61,6 +61,57 @@ void CDBMgr::Disconnect_DB()
 	SQLFreeHandle(SQL_HANDLE_ENV, m_henv);
 }
 
+HRESULT CDBMgr::Ready_GameItem(map<int, GAMEITEM>& mapGameItems)
+{
+	SQLINTEGER u_itemType, u_itemName, u_itemNumber, u_itemAtt, u_itemHP, u_itemMP, u_itemCost;
+
+	SQLLEN cbLen = 0;
+
+	/* 유효한 ID인지 검사하는 쿼리문 */
+	std::string str_order
+		= "SELECT * FROM GAME_ITEM";
+
+	std::wstring wsr_order = L"";
+	wsr_order.assign(str_order.begin(), str_order.end());
+
+	m_retcode = SQLExecDirect(m_hstmt, (SQLWCHAR*)wsr_order.c_str(), SQL_NTS);
+
+	// 데이터 처리 시작 - 유효한 ID일 경우
+	if (m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO)
+	{
+		/* Load Data on player info */
+		m_retcode = SQLBindCol(m_hstmt, 1, SQL_C_LONG, &u_itemNumber, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 2, SQL_C_LONG, &u_itemType, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 3, SQL_C_LONG, &u_itemName, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 4, SQL_C_LONG, &u_itemAtt, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 5, SQL_C_LONG, &u_itemHP, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 6, SQL_C_LONG, &u_itemMP, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 7, SQL_C_LONG, &u_itemCost, 100, &cbLen);
+
+		for (int i = 0; ; i++)
+		{
+			m_retcode = SQLFetch(m_hstmt);
+			if (m_retcode == SQL_ERROR || m_retcode == SQL_SUCCESS_WITH_INFO)
+				db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
+
+			/* player info를 올바르게 로드했다면 정보 저장 */
+			if (m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO)
+			{		
+				mapGameItems[u_itemNumber] = GAMEITEM(static_cast<char>(u_itemType), static_cast<char>(u_itemName), u_itemNumber, u_itemAtt, u_itemHP, u_itemMP, u_itemCost, 1);;
+			}
+			else
+				break;
+		}
+		SQLCloseCursor(m_hstmt);
+		return S_OK;
+	}
+	else db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
+
+	SQLCloseCursor(m_hstmt);
+
+	return E_FAIL;
+}
+
 bool CDBMgr::Check_ID(int id, char* pw)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
