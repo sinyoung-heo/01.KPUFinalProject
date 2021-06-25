@@ -506,6 +506,7 @@ void disconnect_client(int id)
 	pPlayer->m_iMoney			= INIT_MONEY;
 	pPlayer->view_list.clear();
 	pPlayer->Release_Inventory();
+	pPlayer->Release_Equipment();
 	pPlayer->Get_ClientLock().unlock();
 
 	if (CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER")->size() <= 0)

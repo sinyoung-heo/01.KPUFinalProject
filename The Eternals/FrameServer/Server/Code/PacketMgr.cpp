@@ -31,10 +31,17 @@ void process_packet(int id)
 		if (p->isMember)
 		{
 			/* CHECK ID in Database Server */
+			/* 비회원 -> 회원 가입 */
 			if (false == CDBMgr::GetInstance()->Check_ID(id, p->password))
-			{
-				/* 처음 게임에 접속한 유저라면 회원으로 등록 in Database Server */
+			{				
 				CDBMgr::GetInstance()->Insert_NewPlayer_DB(id, p->password);
+			}
+			/* 기존 회원일 경우 장비 및 인벤토리 Load */
+			else
+			{
+				// Load Equipment
+				CDBMgr::GetInstance()->Load_Equipment(id);
+				CDBMgr::GetInstance()->Load_Inventory(id);
 			}
 		}
 
@@ -1893,6 +1900,7 @@ void process_disconnect(const int& id)
 	pPlayer->m_iMoney			= INIT_MONEY;
 	pPlayer->view_list.clear();
 	pPlayer->Release_Inventory();
+	pPlayer->Release_Equipment();
 	pPlayer->Get_ClientLock().unlock();
 
 	CObjPoolMgr::GetInstance()->return_Object(L"PLAYER", pPlayer);

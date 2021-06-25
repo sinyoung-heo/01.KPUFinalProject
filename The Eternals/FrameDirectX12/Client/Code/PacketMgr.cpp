@@ -1109,7 +1109,7 @@ void CPacketMgr::send_login()
 	p.size			= sizeof(p);
 	p.type			= CS_LOGIN;
 
-	p.isMember		= false;
+	p.isMember		= true;
 	p.o_type		= g_cJob;
 	p.weapon_type	= Bow23_SM;
 

@@ -20,9 +20,8 @@ bool CPlayer::Is_Full_Inventory()
     for (int i = 0; i < ITEM::ITEM_ETC; ++i)
     {
         for (auto& pair : m_mapInventory[i])
-            size += pair.second;
+            size += pair.second.iCount;
     }
-
 
     // 잡화 아이템 개수는 제외
     if (size + 2 < MAX_ITEMSIZE)
@@ -31,43 +30,56 @@ bool CPlayer::Is_Full_Inventory()
         return true;
 }
 
-bool CPlayer::Is_inInventory(const char& itemName, ITEM eItemType)
+bool CPlayer::Is_inInventory(const int& itemNumber, ITEM eItemType)
 {
-    if (m_mapInventory[eItemType][itemName] > 0)
+    if (m_mapInventory[eItemType][itemNumber].iCount > 0)
         return true;
 
     return false;
 }
 
-bool CPlayer::Add_Item(const char& itemName, ITEM eItemType)
+bool CPlayer::Add_Item(const int& itemNumber, ITEM eItemType)
 {
     if (!Is_Full_Inventory())
     {
-        m_mapInventory[eItemType][itemName]++;
+        m_mapInventory[eItemType][itemNumber].iCount++;
         return true;
     }
     return false;
 }
 
-bool CPlayer::Delete_Item(const char& itemName, ITEM eItemType)
+bool CPlayer::Delete_Item(const int& itemNumber, ITEM eItemType)
 {
-    if (m_mapInventory[eItemType][itemName] > 0)
+    if (m_mapInventory[eItemType][itemNumber].iCount > 0)
     {
-        m_mapInventory[eItemType][itemName]--;
+        m_mapInventory[eItemType][itemNumber].iCount--;
         return true;
     }
     return false;
 }
 
-const int& CPlayer::Get_ItemCount(const char& itemName, ITEM eItemType)
+void CPlayer::Load_InventoryFromDB(const GAMEITEM& item, const int& itemNumber, const int& count)
 {
-    return  m_mapInventory[eItemType][itemName];
+    m_mapInventory[static_cast<ITEM>(item.cItemType)][itemNumber] = item;
+}
+
+const int& CPlayer::Get_ItemCount(const int& itemNumber, ITEM eItemType)
+{
+    return  m_mapInventory[eItemType][itemNumber].iCount;
 }
 
 void CPlayer::Release_Inventory()
 {
     for (int i = 0; i < ITEM::ITEM_END; ++i)
         m_mapInventory[i].clear();
+}
+
+void CPlayer::Load_EquipmentFromDB(const int& weapon, const int& helmet, const int& armor, const int& shoes)
+{
+    m_tEquipment.weapon = static_cast<char>(weapon);
+    m_tEquipment.helmet = static_cast<char>(helmet);
+    m_tEquipment.armor = static_cast<char>(armor);
+    m_tEquipment.shoes = static_cast<char>(shoes);
 }
 
 const char& CPlayer::Get_Equipment(const char& itemType)
@@ -130,6 +142,14 @@ void CPlayer::Unequip_Item(const char& itemName, const char& eItemType)
     {
         m_tEquipment.shoes = -1;
     }
+}
+
+void CPlayer::Release_Equipment()
+{
+    m_tEquipment.weapon = -1;
+    m_tEquipment.armor  = -1;
+    m_tEquipment.helmet = -1;
+    m_tEquipment.shoes  = -1;
 }
 
 DWORD CPlayer::Release()

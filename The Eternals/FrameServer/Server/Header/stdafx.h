@@ -36,6 +36,7 @@ using namespace chrono;
 #include "define.h"
 #include "dataType.h"
 #include "protocol.h"
+#include "item_Protocol.h"
 #include "MonsterAnimation.h"
 #include "NPCAnimation.h"
 #include "PCWeaponType.h"
