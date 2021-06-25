@@ -219,6 +219,9 @@ void CInventoryItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 			m_pInvenEquipMgr->Get_InventorySwapSlotClass()->Set_CurItemInfo(m_tCurItemInfo.chItemType,
 																			m_tCurItemInfo.chItemName,
 																			m_uiCnt);
+
+			m_bIsKeyPressingLB = false;
+			return;
 		}
 	}
 
@@ -235,7 +238,14 @@ void CInventoryItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 			return;
 		}
 
+		if (ItemType_Potion == m_tCurItemInfo.chItemType ||
+			NO_ITEM == m_tCurItemInfo.chItemType)
+		{
+			return;
+		}
+
 		// 현재 ItemSlot이 장비 착용 상태 [X] => ITEM 장착.
+		wstring wsrEquipSlotTag = L"";
 		map<wstring, CEquipmentItemSlot*> mapEquipmentSlot = m_pInvenEquipMgr->Get_EquipmentSlotMap();
 		Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
 
@@ -252,46 +262,68 @@ void CInventoryItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 				else if (ItemType_WeaponRod == m_tCurItemInfo.chItemType && PC_PRIEST != m_pInvenEquipMgr->Get_ThisPlayerJob())
 					return;
 
+				wsrEquipSlotTag = L"EquipmentWeapon";
+
 				// 현재 장비창에 장비 착용 [X] :: 아이템 장착.
-				if (nullptr == mapEquipmentSlot[L"EquipmentWeapon"]->Get_InventoryItemSlot())
+				if (nullptr == mapEquipmentSlot[wsrEquipSlotTag]->Get_InventoryItemSlot())
 				{
-					mapEquipmentSlot[L"EquipmentWeapon"]->Set_InventorySlotClass(this);
+					mapEquipmentSlot[wsrEquipSlotTag]->Set_InventorySlotClass(this);
 					m_bIsOnEquipment = true;
 				}
 				// 현재 장비창에 장비 착용 [O] :: 장착중인 아이템슬롯 초기화 -> 아이템 장착.
 				else
 				{
-					mapEquipmentSlot[L"EquipmentWeapon"]->Get_InventoryItemSlot()->Set_IsOnEquipment(false);
-					mapEquipmentSlot[L"EquipmentWeapon"]->Set_InventorySlotClass(this);
+					mapEquipmentSlot[wsrEquipSlotTag]->Get_InventoryItemSlot()->Set_IsOnEquipment(false);
+					mapEquipmentSlot[wsrEquipSlotTag]->Set_InventorySlotClass(this);
 					m_bIsOnEquipment = true;
 				}
 
 				pThisPlayer->Set_WeaponType(m_tCurItemInfo.chItemName);
+				CPacketMgr::Get_Instance()->send_equip_item(EQUIP_WEAPON, m_tCurItemInfo.chItemName);
+
 				return;
 			}
 
 			// 헬멧 장착
 			else if (ItemType_Helmet == m_tCurItemInfo.chItemType)
 			{
-
+				wsrEquipSlotTag = L"EquipmentHelmet";
+				CPacketMgr::Get_Instance()->send_equip_item(EQUIP_HELMET, m_tCurItemInfo.chItemName);
 			}
 			// 갑옷 장착
 			else if (ItemType_Armor == m_tCurItemInfo.chItemType)
 			{
-
+				wsrEquipSlotTag = L"EquipmentArmor";
+				CPacketMgr::Get_Instance()->send_equip_item(EQUIP_ARMOR, m_tCurItemInfo.chItemName);
 			}
 			// 신발 장착
 			else if (ItemType_Shoes == m_tCurItemInfo.chItemType)
 			{
-
+				wsrEquipSlotTag = L"EquipmentShoes";
+				CPacketMgr::Get_Instance()->send_equip_item(EQUIP_SHOES, m_tCurItemInfo.chItemName);
 			}
+
+			// 현재 장비창에 장비 착용 [X] :: 아이템 장착.
+			if (nullptr == mapEquipmentSlot[wsrEquipSlotTag]->Get_InventoryItemSlot())
+			{
+				mapEquipmentSlot[wsrEquipSlotTag]->Set_InventorySlotClass(this);
+				m_bIsOnEquipment = true;
+			}
+			// 현재 장비창에 장비 착용 [O] :: 장착중인 아이템슬롯 초기화 -> 아이템 장착.
+			else
+			{
+				mapEquipmentSlot[wsrEquipSlotTag]->Get_InventoryItemSlot()->Set_IsOnEquipment(false);
+				mapEquipmentSlot[wsrEquipSlotTag]->Set_InventorySlotClass(this);
+				m_bIsOnEquipment = true;
+			}
+
+			return;
 		}
 
-		// 현재 ItemSlot이 장비 착용 상태 [O] => ITEM 탈착.
-		else
-		{
-
-		}
+		//// 현재 ItemSlot이 장비 착용 상태 [O] => ITEM 탈착.
+		//else
+		//{
+		//}
 	}
 
 	m_bIsKeyPressingLB = false;
