@@ -59,6 +59,7 @@ private:
 	_uint m_uiNormal = 0;
 	_uint m_uiSpec = 0;
 
+	float m_fDeltaDegree = 0.f;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

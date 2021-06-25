@@ -45,7 +45,16 @@ BumpTerrainMesh00|BumpTerrainMesh00.X|..\..\Bin\Resource\ResourceStage\StaticMes
 BumpTerrainMesh01|BumpTerrainMesh01.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpTerrainMesh01\
 BumpWaterMesh00|BumpWaterMesh00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpWaterMesh00\
 DistTrail|DistTrail.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\DistTrail\
+HalfMoon0|HalfMoon0.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\HalfMoon0\
+PublicCone00|PublicCone00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicCone00\
+PublicCylinder00|PublicCylinder00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicCylinder00\
+PublicCylinder01|PublicCylinder01.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicCylinder01\
+PublicCylinder02|PublicCylinder02.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicCylinder02\
+PublicLight00|PublicLight00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicLight00\
 PublicPlane00|PublicPlane00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicPlane00\
+PublicTesselPlane00|PublicTesselPlane00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicTesselPlane00\
+PublicTornado00|PublicTornado00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicTornado00\
+PublicTornado01|PublicTornado01.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicTornado01\
 IceStorm0|IceStorm0.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\IceStorm0\
 IceStorm1|IceStorm1.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\IceStorm1\
 publicSphere|publicSphere.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSphere\

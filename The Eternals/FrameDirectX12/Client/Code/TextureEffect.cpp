@@ -39,6 +39,7 @@ HRESULT CTextureEffect::Ready_GameObject(wstring wstrTextureTag,
 HRESULT CTextureEffect::LateInit_GameObject()
 {
 	// SetUp Shader ConstantBuffer
+	m_bisInit = true;
 	m_pShaderCom->SetUp_ShaderConstantBuffer();
 	m_bisAlphaObject = true;
 	//CGameObject* pGameObj;
@@ -56,7 +57,8 @@ HRESULT CTextureEffect::LateInit_GameObject()
 
 _int CTextureEffect::Update_GameObject(const _float & fTimeDelta)
 {
-	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
+	if(m_bisInit==false)
+		Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
 
 
@@ -70,6 +72,8 @@ _int CTextureEffect::Update_GameObject(const _float & fTimeDelta)
 		m_pTransCom->m_vScale.x += 1.75f * fTimeDelta;
 		m_pTransCom->m_vScale.y += 1.75f * fTimeDelta;
 	}
+	ScaleAnim(fTimeDelta);
+
 	/*__________________________________________________________________________________________________________
 	[ Update Sprite Frame ]
 	____________________________________________________________________________________________________________*/
@@ -139,6 +143,18 @@ void CTextureEffect::Follow_PlayerHand(Engine::HIERARCHY_DESC* pHierarchyDesc,En
 	matWorld = matBoneFinalTransform * m_pPlayerTransform->m_matWorld;
 	
 	m_pTransCom->m_vPos = _vec3(matWorld._41, matWorld._42, matWorld._43);
+}
+
+void CTextureEffect::ScaleAnim(const _float& fTimeDelta)
+{
+	if (!m_bisScaleAnimation)
+		return;
+
+	m_fScaleTimeDelta += (fTimeDelta*10);
+	m_pTransCom->m_vScale = _vec3(sin(m_fScaleTimeDelta));
+	if (sin(m_fScaleTimeDelta) > 0.9f)
+		m_bIsDead = true;
+
 }
 
 HRESULT CTextureEffect::Add_Component(wstring wstrTextureTag)

@@ -57,6 +57,8 @@ private:
 	void			Set_BlendingSpeed();
 	void			Set_HpMPGauge();
 
+	//
+	void			Effect_Loop(const _float& fTimeDelta);
 	// KeyInput
 	void Key_Input(const _float& fTimeDelta);
 	void KeyInput_Move(const _float& fTimeDelta);
@@ -186,6 +188,12 @@ private:
 	wstring			m_wstrText        = L"";
 	_tchar			m_szText[MAX_STR] = L"";
 
+	//Bool Effect
+	float m_bisSkillOffSet = 0.f;
+	bool m_bisIceEffect = false;
+	bool m_bisFireEffect = false;
+	bool m_bisSwordEffect = false;
+	bool m_bisDustEffect = false;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

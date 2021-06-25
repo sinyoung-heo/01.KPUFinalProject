@@ -34,6 +34,9 @@ public:
 
 	void Follow_PlayerHand(Engine::HIERARCHY_DESC* pHierarchyDesc= nullptr, Engine::CTransform* PlayerTransform= nullptr);
 	void Set_FollowHand(bool isFollow) { m_bisFollowHand = isFollow; }
+
+	void Set_ScaleAnim(bool isScaleAnim) { m_bisScaleAnimation = isScaleAnim; }
+	void ScaleAnim(const _float& fTimeDelta=0.f);
 private:
 	virtual HRESULT Add_Component(wstring wstrTextureTag);
 	void			Set_ConstantTable();
@@ -56,6 +59,7 @@ private:
 
 	FRAME	m_tFrame			{ };
 
+	bool m_bisInit = false;
 	_float m_fDeltatime = 0.f;
 	_float m_fAlpha = 1.f;
 	bool m_bisBillBoard = true;
@@ -66,6 +70,10 @@ private:
 	Engine::HIERARCHY_DESC* m_pHierarchyDesc = nullptr;
 	Engine::CTransform* m_pPlayerTransform = nullptr;
 	bool m_bisFollowHandInit = false;
+
+	//ScaleAnim
+	bool m_bisScaleAnimation = false;
+	float m_fScaleTimeDelta = 0.f;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,
