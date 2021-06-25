@@ -13,9 +13,13 @@ public:
 	const ITEM_INFO&	Get_CurItemInfo()	{ return m_tCurItemInfo; }
 	const _uint&		Get_CurItemCnt()	{ return m_uiCnt; }
 	const _uint&		Get_ItemSlotIdx()	{ return m_uiIdx; }
+	const _bool&		Get_IsOnEquipment() { return m_bIsOnEquipment; }
+	wstring				Get_EquipmentTag()	{ return m_wstrEquipSlotTag; }
 	void Set_CurItemInfo(const char& chItemType, const char& chItemName, const _int& iCnt = 0);
 	void Set_CurItemCnt(const _int& iCnt)		{ m_uiCnt = iCnt; }
 	void Set_ItemSlotIdx(const _uint& uiIdx)	{ m_uiIdx = uiIdx; }
+	void Set_IsOnEquipment(const _bool& bIsOn)	{ m_bIsOnEquipment = bIsOn; }
+	void Set_EquipSlotTag(wstring wstrTag)		{ m_wstrEquipSlotTag = wstrTag; }
 	void Add_PotionCnt(const _int& iValue)		{ m_uiCnt += iValue; }
 
 	// CGameObject을(를) 통해 상속됨
@@ -49,6 +53,7 @@ private:
 	_bool m_bIsKeyPressingLB = false;
 	_bool m_bIsKeyPressingRB = false;
 
+	wstring			m_wstrEquipSlotTag = L"";
 	_bool			m_bIsOnEquipment = false;	// 아이템 장착	- 노란색 테두리.
 	CGameUIChild*	m_pSlotFrame     = nullptr;	// 마우스 이벤트 - 붉은색 테두리.
 	_uint			m_uiSlotFrameIdx = 2;
@@ -58,6 +63,7 @@ private:
 	ITEM_INFO	m_tCurItemInfo;
 	char		m_chPreItemType = NO_ITEM;
 	char		m_chPreItemName = NO_ITEM;
+	char		m_chJob = -1;
 
 	// 포션 개수.
 	_uint m_uiCnt = 0;

@@ -97,6 +97,7 @@ constexpr char TYPE_PLAYER				= 0;
 constexpr char PC_GLADIATOR				= 0;
 constexpr char PC_ARCHER				= 1;
 constexpr char PC_PRIEST				= 2;
+constexpr char PC_ALL					= 3;
 
 /* MONSTER TYPE */
 constexpr char MON_NORMAL				= 0;

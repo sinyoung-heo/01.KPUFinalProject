@@ -24,17 +24,22 @@ public:
 	const _uint&					Get_MaxInventorySize()			{ return m_uiMaxSlotSize; }
 	const _uint&					Get_CurInventorySize()			{ return m_uiCurSlotSize; }
 	const _bool&					Get_IsInventoryItemSwapState()	{ return m_bIsInventoryItemSwapState; }
+	const char&						Get_ThisPlayerJob()				{ return m_chJob; }
+	map<wstring, CEquipmentItemSlot*>& Get_EquipmentSlotMap()		{ return m_mapEquipmentSlot; }
 	void Set_InventoryCanvasClass(CInventoryCanvas* pUI)		{ m_pInventoryCanvas = pUI; }
 	void Set_InventorySwapSlotClass(CInventorySwapSlot* pUI)	{ m_pInventorySwapSlot = pUI; }
-	void Set_IsInventoryItemSwapState(const _bool& bIsSwap)	{ m_bIsInventoryItemSwapState = bIsSwap; }
+	void Set_IsInventoryItemSwapState(const _bool& bIsSwap)		{ m_bIsInventoryItemSwapState = bIsSwap; }
 	void Set_CurInventorySize(const _uint& uiValue)				{ m_uiCurSlotSize = uiValue; }
 	void Set_EquipmentCanvasClass(CEquipmentCanvas* pUI)		{ m_pEquipmentCanvas = pUI; }
+	void Set_ThisPlayerJob(const char& chJob)					{ m_chJob = chJob; }
 
 	void Add_InventorySlot(CInventoryItemSlot* pSlot);
 	void Push_ItemInventory(const char& chItemType, const char& chItemName, const _int& iCnt = 1);
 	void Pop_ItemInventory(const char& chItemType, const char& chItemName, const _int& uiCnt = -1);
 	void Pop_ItemInventory(const _uint& uiIdx);
 	void Pop_ItemInventory();
+
+	void Add_EquipmentSlot(wstring wstrTag, CEquipmentItemSlot* pSlot);
 private:
 	vector<CInventoryItemSlot*> m_vecInventorySlot;
 	CInventoryCanvas*			m_pInventoryCanvas          = nullptr;
@@ -44,6 +49,8 @@ private:
 	_bool						m_bIsInventoryItemSwapState = false;
 
 	CEquipmentCanvas* m_pEquipmentCanvas = nullptr;
+	map<wstring, CEquipmentItemSlot*> m_mapEquipmentSlot;
+	char m_chJob = PC_GLADIATOR;
 private:
 	virtual void Free();
 };

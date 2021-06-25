@@ -153,6 +153,14 @@ void CInventoryEquipmentMgr::Pop_ItemInventory()
 	}
 }
 
+void CInventoryEquipmentMgr::Add_EquipmentSlot(wstring wstrTag, CEquipmentItemSlot* pSlot)
+{
+	auto iter_find = m_mapEquipmentSlot.find(wstrTag);
+
+	if (iter_find == m_mapEquipmentSlot.end())
+		m_mapEquipmentSlot.emplace(wstrTag, pSlot);
+}
+
 void CInventoryEquipmentMgr::Free()
 {
 	m_pInventoryCanvas   = nullptr;

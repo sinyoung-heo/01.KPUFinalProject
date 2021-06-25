@@ -44,7 +44,6 @@ HRESULT CInventoryItemSlot::Ready_GameObject(wstring wstrRootObjectTag,
 
 	m_bIsActive = false;
 	
-
 	// NoItemInfo
 	m_tNoItemInfo.vScale          = vScale;
 	m_tNoItemInfo.chItemType      = NO_ITEM;
@@ -109,6 +108,9 @@ _int CInventoryItemSlot::Update_GameObject(const _float& fTimeDelta)
 	if (!m_bIsActive)
 		return NO_EVENT;
 
+	if (!m_bIsOnEquipment)
+		m_wstrEquipSlotTag = L"";
+
 	SetUp_ItemIcon();
 	CGameUIChild::Update_GameObject(fTimeDelta);
 
@@ -124,7 +126,7 @@ _int CInventoryItemSlot::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	KeyInput_MouseButton(fTimeDelta);
 	
-	if (m_bIsOnMouse)
+	if (m_bIsOnMouse || m_bIsOnEquipment)
 	{
 		m_pSlotFrame->Set_IsActive(m_bIsActive);
 		m_pSlotFrame->Update_GameObject(fTimeDelta);
@@ -162,18 +164,43 @@ void CInventoryItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 				return;
 			}
 
-			CInventoryItemSlot* pSelectItemSlot = vecInvenSlot[uiSelectIdx];
-			ITEM_INFO tSelectItemInfo = pSelectItemSlot->Get_CurItemInfo();
-			_uint uiSelectItemCnt = pSelectItemSlot->Get_CurItemCnt();
+			map<wstring, CEquipmentItemSlot*> mapEquipmentSlot = m_pInvenEquipMgr->Get_EquipmentSlotMap();
+
+			CInventoryItemSlot* pSelectItemSlot  = vecInvenSlot[uiSelectIdx];
+			ITEM_INFO			tSelectItemInfo  = pSelectItemSlot->Get_CurItemInfo();
+			_uint				uiSelectItemCnt  = pSelectItemSlot->Get_CurItemCnt();
+			_bool				bIsOnEquipment   = pSelectItemSlot->Get_IsOnEquipment();
+			wstring				wstrEquipmentTag = pSelectItemSlot->Get_EquipmentTag();
+
+			// SelectItemSlot 장비 장착 O && this ItemSlot 장비 장착 O
+			if (pSelectItemSlot->Get_EquipmentTag() != L"" && m_wstrEquipSlotTag != L"")
+			{
+				mapEquipmentSlot[pSelectItemSlot->Get_EquipmentTag()]->Set_InventorySlotClass(this);
+				mapEquipmentSlot[m_wstrEquipSlotTag]->Set_InventorySlotClass(pSelectItemSlot);
+			}
+			// SelectItemSlot 장비 장착 O && this ItemSlot 장비 장착 X
+			else if (pSelectItemSlot->Get_EquipmentTag() != L"" && m_wstrEquipSlotTag == L"")
+			{
+				mapEquipmentSlot[pSelectItemSlot->Get_EquipmentTag()]->Set_InventorySlotClass(this);
+			}
+			// SelectItemSlot 장비 장착 X && this ItemSlot 장비 장착 O
+			else if (pSelectItemSlot->Get_EquipmentTag() == L"" && m_wstrEquipSlotTag != L"")
+			{
+				mapEquipmentSlot[m_wstrEquipSlotTag]->Set_InventorySlotClass(pSelectItemSlot);
+			}
 
 			// SelectSlot에 현재 슬롯의 정보를 저장.
 			pSelectItemSlot->Set_CurItemInfo(m_tCurItemInfo.chItemType, m_tCurItemInfo.chItemName);
 			pSelectItemSlot->Set_CurItemCnt(m_uiCnt);
+			pSelectItemSlot->Set_IsOnEquipment(m_bIsOnEquipment);
+			pSelectItemSlot->Set_EquipSlotTag(m_wstrEquipSlotTag);
 
 			// 현재 슬롯의 정보에 SelectSlot의 정보를 저장.
 			m_tCurItemInfo.chItemType = tSelectItemInfo.chItemType;
 			m_tCurItemInfo.chItemName = tSelectItemInfo.chItemName;
-			m_uiCnt = uiSelectItemCnt;
+			m_uiCnt                   = uiSelectItemCnt;
+			m_bIsOnEquipment          = bIsOnEquipment;
+			m_wstrEquipSlotTag        = wstrEquipmentTag;
 
 			m_pInvenEquipMgr->Get_InventorySwapSlotClass()->Set_CurItemInfo(NO_ITEM, NO_ITEM, 0);
 			m_pInvenEquipMgr->Set_IsInventoryItemSwapState(false);
@@ -207,9 +234,64 @@ void CInventoryItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 			m_bIsKeyPressingRB = false;
 			return;
 		}
-		
-		// 아이템 장착.
 
+		// 현재 ItemSlot이 장비 착용 상태 [X] => ITEM 장착.
+		map<wstring, CEquipmentItemSlot*> mapEquipmentSlot = m_pInvenEquipMgr->Get_EquipmentSlotMap();
+		Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+
+		if (!m_bIsOnEquipment)
+		{
+			if (ItemType_WeaponTwoHand == m_tCurItemInfo.chItemType ||
+				ItemType_WeaponBow == m_tCurItemInfo.chItemType ||
+				ItemType_WeaponRod == m_tCurItemInfo.chItemType)
+			{
+				if (ItemType_WeaponTwoHand == m_tCurItemInfo.chItemType && PC_GLADIATOR != m_pInvenEquipMgr->Get_ThisPlayerJob())
+					return;
+				else if (ItemType_WeaponBow == m_tCurItemInfo.chItemType && PC_ARCHER != m_pInvenEquipMgr->Get_ThisPlayerJob())
+					return;
+				else if (ItemType_WeaponRod == m_tCurItemInfo.chItemType && PC_PRIEST != m_pInvenEquipMgr->Get_ThisPlayerJob())
+					return;
+
+				// 현재 장비창에 장비 착용 [X] :: 아이템 장착.
+				if (nullptr == mapEquipmentSlot[L"EquipmentWeapon"]->Get_InventoryItemSlot())
+				{
+					mapEquipmentSlot[L"EquipmentWeapon"]->Set_InventorySlotClass(this);
+					m_bIsOnEquipment = true;
+				}
+				// 현재 장비창에 장비 착용 [O] :: 장착중인 아이템슬롯 초기화 -> 아이템 장착.
+				else
+				{
+					mapEquipmentSlot[L"EquipmentWeapon"]->Get_InventoryItemSlot()->Set_IsOnEquipment(false);
+					mapEquipmentSlot[L"EquipmentWeapon"]->Set_InventorySlotClass(this);
+					m_bIsOnEquipment = true;
+				}
+
+				pThisPlayer->Set_WeaponType(m_tCurItemInfo.chItemName);
+				return;
+			}
+
+			// 헬멧 장착
+			else if (ItemType_Helmet == m_tCurItemInfo.chItemType)
+			{
+
+			}
+			// 갑옷 장착
+			else if (ItemType_Armor == m_tCurItemInfo.chItemType)
+			{
+
+			}
+			// 신발 장착
+			else if (ItemType_Shoes == m_tCurItemInfo.chItemType)
+			{
+
+			}
+		}
+
+		// 현재 ItemSlot이 장비 착용 상태 [O] => ITEM 탈착.
+		else
+		{
+
+		}
 	}
 
 	m_bIsKeyPressingLB = false;
@@ -220,6 +302,7 @@ void CInventoryItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 		CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect))
 	{
 		m_bIsOnMouse = true;
+		m_pSlotFrame->Set_TextureIdx(2);
 
 		if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_LB))
 		{
@@ -233,6 +316,11 @@ void CInventoryItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 	else
 	{
 		m_bIsOnMouse = false;
+
+		if (m_bIsOnEquipment)
+			m_pSlotFrame->Set_TextureIdx(1);
+		else
+			m_pSlotFrame->Set_TextureIdx(2);
 	}
 }
 
@@ -250,6 +338,7 @@ void CInventoryItemSlot::SetUp_ItemIcon()
 		m_uiTexIdx            = m_tNoItemInfo.uiItemIdx;
 		m_tFrame              = m_tNoItemInfo.tItemIconFrame;
 		m_pTransCom->m_vScale = m_tNoItemInfo.vScale;
+		m_chJob = -1;
 	}
 		break;
 
@@ -258,6 +347,7 @@ void CInventoryItemSlot::SetUp_ItemIcon()
 		m_pTexDescriptorHeap  = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(L"ItemWeaponTwohand");
 		m_tFrame              = m_tCurItemInfo.tItemIconFrame;
 		m_pTransCom->m_vScale = m_tCurItemInfo.vScale;
+		m_chJob = PC_GLADIATOR;
 
 		switch (m_tCurItemInfo.chItemName)
 		{
@@ -285,6 +375,7 @@ void CInventoryItemSlot::SetUp_ItemIcon()
 		m_pTexDescriptorHeap  = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(L"ItemWeaponBow");
 		m_tFrame              = m_tCurItemInfo.tItemIconFrame;
 		m_pTransCom->m_vScale = m_tCurItemInfo.vScale;
+		m_chJob = PC_ARCHER;
 
 		switch (m_tCurItemInfo.chItemName)
 		{
@@ -312,6 +403,7 @@ void CInventoryItemSlot::SetUp_ItemIcon()
 		m_pTexDescriptorHeap  = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(L"ItemWeaponRod");
 		m_tFrame              = m_tCurItemInfo.tItemIconFrame;
 		m_pTransCom->m_vScale = m_tCurItemInfo.vScale;
+		m_chJob = PC_PRIEST;
 
 		switch (m_tCurItemInfo.chItemName)
 		{
@@ -339,6 +431,7 @@ void CInventoryItemSlot::SetUp_ItemIcon()
 		m_pTexDescriptorHeap  = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(L"ItemHelmet");
 		m_tFrame              = m_tCurItemInfo.tItemIconFrame;
 		m_pTransCom->m_vScale = m_tCurItemInfo.vScale;
+		m_chJob = PC_ALL;
 
 		switch (m_tCurItemInfo.chItemName)
 		{
@@ -366,6 +459,7 @@ void CInventoryItemSlot::SetUp_ItemIcon()
 		m_pTexDescriptorHeap  = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(L"ItemArmor");
 		m_tFrame              = m_tCurItemInfo.tItemIconFrame;
 		m_pTransCom->m_vScale = m_tCurItemInfo.vScale;
+		m_chJob = PC_ALL;
 
 		switch (m_tCurItemInfo.chItemName)
 		{
@@ -393,6 +487,7 @@ void CInventoryItemSlot::SetUp_ItemIcon()
 		m_pTexDescriptorHeap  = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(L"ItemShoes");
 		m_tFrame              = m_tCurItemInfo.tItemIconFrame;
 		m_pTransCom->m_vScale = m_tCurItemInfo.vScale;
+		m_chJob = PC_ALL;
 
 		switch (m_tCurItemInfo.chItemName)
 		{
@@ -420,6 +515,7 @@ void CInventoryItemSlot::SetUp_ItemIcon()
 		m_pTexDescriptorHeap  = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(L"ItemPotion");
 		m_tFrame              = m_tCurItemInfo.tItemIconFrame;
 		m_pTransCom->m_vScale = m_tCurItemInfo.vScale;
+		m_chJob = -1;
 
 		switch (m_tCurItemInfo.chItemName)
 		{
@@ -439,6 +535,7 @@ void CInventoryItemSlot::SetUp_ItemIcon()
 		m_uiTexIdx            = m_tNoItemInfo.uiItemIdx;
 		m_tFrame              = m_tNoItemInfo.tItemIconFrame;
 		m_pTransCom->m_vScale = m_tNoItemInfo.vScale;
+		m_chJob = -1;
 	}
 		break;
 	}

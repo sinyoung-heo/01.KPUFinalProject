@@ -20,7 +20,6 @@
 #include "IceStorm.h"
 #include "PartySuggestCanvas.h"
 #include "WarningFrame.h"
-#include "InventoryEquipmentMgr.h"
 
 CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -700,6 +699,8 @@ HRESULT CPCGladiator::SetUp_Equipment()
 														  vecRectPosOffset[i],				// RectPosOffset
 														  vecRectScale[i],					// RectScaleOffset
 														  vecUIDepth[i]);					// UI Depth
+
+					CInventoryEquipmentMgr::Get_Instance()->Add_EquipmentSlot(vecObjectTag[i], static_cast<CEquipmentItemSlot*>(pChildUI));
 				}
 				else if (L"EquipmentButtonCloseNormal" == vecObjectTag[i] ||
 						 L"EquipmentButtonCloseMouseOn" == vecObjectTag[i] ||
@@ -756,6 +757,8 @@ HRESULT CPCGladiator::SetUp_Equipment()
 		Engine::Safe_Release(pButtonXMouseOn);
 		Engine::Safe_Release(pButtonXMouseClicked);
 	}
+
+	CInventoryEquipmentMgr::Get_Instance()->Set_ThisPlayerJob(m_chO_Type);
 
 	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Potion, Prtion_HP);
 	CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Potion, Prtion_HP);

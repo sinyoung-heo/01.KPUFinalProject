@@ -699,6 +699,8 @@ HRESULT CPCArcher::SetUp_Equipment()
 														  vecRectPosOffset[i],				// RectPosOffset
 														  vecRectScale[i],					// RectScaleOffset
 														  vecUIDepth[i]);					// UI Depth
+
+					CInventoryEquipmentMgr::Get_Instance()->Add_EquipmentSlot(vecObjectTag[i], static_cast<CEquipmentItemSlot*>(pChildUI));
 				}
 				else if (L"EquipmentButtonCloseNormal" == vecObjectTag[i] ||
 						 L"EquipmentButtonCloseMouseOn" == vecObjectTag[i] ||
@@ -755,6 +757,8 @@ HRESULT CPCArcher::SetUp_Equipment()
 		Engine::Safe_Release(pButtonXMouseOn);
 		Engine::Safe_Release(pButtonXMouseClicked);
 	}
+
+	CInventoryEquipmentMgr::Get_Instance()->Set_ThisPlayerJob(m_chO_Type);
 
 	return S_OK;
 }
