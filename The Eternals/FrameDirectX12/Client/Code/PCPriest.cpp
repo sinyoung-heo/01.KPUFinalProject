@@ -131,6 +131,12 @@ HRESULT CPCPriest::LateInit_GameObject()
 	// UI ClassFrame
 	Engine::FAILED_CHECK_RETURN(SetUp_ClassFrame(), E_FAIL);
 
+	// UI Equipment
+	Engine::FAILED_CHECK_RETURN(SetUp_Equipment(), E_FAIL);
+
+	// MiniMap
+	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::SetUp_MiniMapComponent(0), E_FAIL);
+
 	return S_OK;
 }
 
@@ -184,6 +190,7 @@ _int CPCPriest::Update_GameObject(const _float& fTimeDelta)
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MINIMAP, this), -1);
 
 	/*__________________________________________________________________________________________________________
 	[ Collision - Add Collision List ]
@@ -194,6 +201,7 @@ _int CPCPriest::Update_GameObject(const _float& fTimeDelta)
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
+	Engine::CGameObject::SetUp_MiniMapRandomY();
 
 	//// AfterImage
 	//Make_AfterImage(fTimeDelta);
@@ -304,6 +312,18 @@ void CPCPriest::Render_GameObject(const _float& fTimeDelta)
 		m_pShaderCom->Set_PipelineStatePass(5);
 		Render_AfterImage(fTimeDelta);
 	}
+}
+
+void CPCPriest::Render_MiniMap(const _float& fTimeDelta)
+{
+	Set_ConstantTableMiniMap();
+
+	m_pShaderMiniMap->Begin_Shader(m_pTextureMiniMap->Get_TexDescriptorHeap(), 
+								   0, 
+								   m_uiMiniMapTexIdx, 
+								   Engine::MATRIXID::TOP_VIEW);
+	m_pBufferMiniMap->Begin_Buffer();
+	m_pBufferMiniMap->Render_Buffer();
 }
 
 void CPCPriest::Render_AfterImage(const _float& fTimeDelta)
@@ -554,6 +574,222 @@ HRESULT CPCPriest::SetUp_ClassFrame()
 	return S_OK;
 }
 
+HRESULT CPCPriest::SetUp_Equipment()
+{
+	CEquipmentButtonClose* pButtonXMouseNormal  = nullptr;
+	CEquipmentButtonClose* pButtonXMouseOn      = nullptr;
+	CEquipmentButtonClose* pButtonXMouseClicked = nullptr;
+	{
+		wifstream fin{ L"../../Bin/ToolData/2DUIEquipmentPriest.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		// ChildUI Data
+		vector<wstring> vecDataFilePath;
+		vector<wstring> vecObjectTag;
+		vector<_vec3>	vecPos;
+		vector<_vec3>	vecScale;
+		vector<_long>	vecUIDepth;
+		vector<_int>	vecIsSpriteAnimation;
+		vector<_float>	vecFrameSpeed;
+		vector<_vec3>	vecRectPosOffset;
+		vector<_vec3>	vecRectScale;
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			vecDataFilePath.resize(iChildUISize);
+			vecObjectTag.resize(iChildUISize);
+			vecPos.resize(iChildUISize);
+			vecScale.resize(iChildUISize);
+			vecUIDepth.resize(iChildUISize);
+			vecIsSpriteAnimation.resize(iChildUISize);
+			vecFrameSpeed.resize(iChildUISize);
+			vecRectPosOffset.resize(iChildUISize);
+			vecRectScale.resize(iChildUISize);
+
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				fin >> vecDataFilePath[i]			// DataFilePath
+					>> vecObjectTag[i]				// Object Tag
+					>> vecPos[i].x					// Pos X
+					>> vecPos[i].y					// Pos Y
+					>> vecScale[i].x				// Scale X
+					>> vecScale[i].y				// Scale Y
+					>> vecUIDepth[i]				// UI Depth
+					>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
+					>> vecFrameSpeed[i]				// Frame Speed
+					>> vecRectPosOffset[i].x		// RectPosOffset X
+					>> vecRectPosOffset[i].y		// RectPosOffset Y
+					>> vecRectScale[i].x			// RectScale X
+					>> vecRectScale[i].y;			// RectScale Y
+			}
+
+			if (fin.eof())
+				break;
+
+			// UIRoot 持失.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CEquipmentCanvas::Create(m_pGraphicDevice, m_pCommandList,
+											   wstrRootObjectTag,
+											   wstrDataFilePath,
+											   vPos,
+											   vScale,
+											   bIsSpriteAnimation,
+											   fFrameSpeed,
+											   vRectPosOffset,
+											   vRectScale,
+											   UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+			CInventoryEquipmentMgr::Get_Instance()->Set_EquipmentCanvasClass(static_cast<CEquipmentCanvas*>(pRootUI));
+
+			// UIChild 持失.
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				Engine::CGameObject* pChildUI = nullptr;
+
+				if (L"EquipmentHelmet" == vecObjectTag[i] ||
+					L"EquipmentArmor" == vecObjectTag[i] || 
+					L"EquipmentShoes" == vecObjectTag[i] || 
+					L"EquipmentWeapon" == vecObjectTag[i])
+				{
+					pChildUI = CEquipmentItemSlot::Create(m_pGraphicDevice, m_pCommandList,
+														  wstrRootObjectTag,				// RootObjectTag
+														  vecObjectTag[i],					// ObjectTag
+														  vecDataFilePath[i],				// DataFilePath
+														  vecPos[i],						// Pos
+														  vecScale[i],						// Scane
+														  (_bool)vecIsSpriteAnimation[i],	// Is Animation
+														  vecFrameSpeed[i],					// FrameSpeed
+														  vecRectPosOffset[i],				// RectPosOffset
+														  vecRectScale[i],					// RectScaleOffset
+														  vecUIDepth[i]);					// UI Depth
+
+					CInventoryEquipmentMgr::Get_Instance()->Add_EquipmentSlot(vecObjectTag[i], static_cast<CEquipmentItemSlot*>(pChildUI));
+				}
+				else if (L"EquipmentButtonCloseNormal" == vecObjectTag[i] ||
+						 L"EquipmentButtonCloseMouseOn" == vecObjectTag[i] ||
+						 L"EquipmentButtonCloseMouseClicked" == vecObjectTag[i])
+				{
+					pChildUI = CEquipmentButtonClose::Create(m_pGraphicDevice, m_pCommandList,
+															 wstrRootObjectTag,					// RootObjectTag
+															 vecObjectTag[i],					// ObjectTag
+															 vecDataFilePath[i],				// DataFilePath
+															 vecPos[i],							// Pos
+															 vecScale[i],						// Scane
+															 (_bool)vecIsSpriteAnimation[i],	// Is Animation
+															 vecFrameSpeed[i],					// FrameSpeed
+															 vecRectPosOffset[i],				// RectPosOffset
+															 vecRectScale[i],					// RectScaleOffset
+															 vecUIDepth[i]);					// UI Depth
+
+					if (L"EquipmentButtonCloseMouseOn" == vecObjectTag[i])
+						pButtonXMouseOn = static_cast<CEquipmentButtonClose*>(pChildUI);
+					else if (L"EquipmentButtonCloseMouseClicked" == vecObjectTag[i])
+						pButtonXMouseClicked = static_cast<CEquipmentButtonClose*>(pChildUI);
+					else
+						pButtonXMouseNormal = static_cast<CEquipmentButtonClose*>(pChildUI);
+
+				}
+
+				if (nullptr != pChildUI &&
+					(L"EquipmentButtonCloseMouseOn" != vecObjectTag[i] &&
+					 L"EquipmentButtonCloseMouseClicked" != vecObjectTag[i]))
+				{
+					m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
+					static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
+				}
+			}
+		}
+
+		UI_CHILD_STATE tState;
+
+		tState.tFrame         = pButtonXMouseOn->Get_Frame();
+		tState.vPos           = pButtonXMouseOn->Get_Transform()->m_vPos;
+		tState.vScale         = pButtonXMouseOn->Get_Transform()->m_vScale;
+		tState.vRectPosOffset = pButtonXMouseOn->Get_RectOffset();
+		tState.vRectScale     = pButtonXMouseOn->Get_TransformColor()->m_vScale;
+		pButtonXMouseNormal->SetUp_MainMenuState(L"MouseOn", tState);
+
+		tState.tFrame         = pButtonXMouseClicked->Get_Frame();
+		tState.vPos           = pButtonXMouseClicked->Get_Transform()->m_vPos;
+		tState.vScale         = pButtonXMouseClicked->Get_Transform()->m_vScale;
+		tState.vRectPosOffset = pButtonXMouseClicked->Get_RectOffset();
+		tState.vRectScale     = pButtonXMouseClicked->Get_TransformColor()->m_vScale;
+		pButtonXMouseNormal->SetUp_MainMenuState(L"MouseClicked", tState);
+
+		pButtonXMouseNormal = nullptr;
+		Engine::Safe_Release(pButtonXMouseOn);
+		Engine::Safe_Release(pButtonXMouseClicked);
+	}
+
+	CInventoryEquipmentMgr::Get_Instance()->Set_ThisPlayerJob(m_chO_Type);
+
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_Potion, Prtion_HP);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_Potion, Prtion_HP);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_Potion, Prtion_HP);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_Potion, Prtion_MP);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_Potion, Prtion_MP);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, Twohand19_A_SM);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, TwoHand27_SM);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, TwoHand29_SM);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, TwoHand31_SM);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, TwoHand33_B_SM);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponBow, Bow18_A_SM);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponBow, Bow27_SM);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponBow, Bow23_SM);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponBow, Bow31_SM);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponBow, Event_Season_Bow_01_SM);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponRod, Event_Wit_Rod_01);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponRod, Rod19_A);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponRod, Rod28_B);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponRod, Rod31);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponRod, Rod33_B);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_Helmet, Helmet_D);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_Helmet, Helmet_C);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_Helmet, Helmet_B);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_Helmet, Helmet_A);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_Helmet, Helmet_S);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_Armor, Armor_D);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_Armor, Armor_C);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_Armor, Armor_B);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_Armor, Armor_A);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_Armor, Armor_S);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_D);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_C);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_B);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_A);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_S);
+
+	return S_OK;
+}
+
 void CPCPriest::SetUp_StageID()
 {
 	if (m_chCurStageID != m_chPreStageID)
@@ -615,6 +851,32 @@ void CPCPriest::Set_ConstantTableShadowDepth()
 	tCB_ShaderShadow.fProjFar = tShadowDesc.fLightPorjFar;
 
 	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
+}
+
+void CPCPriest::Set_ConstantTableMiniMap()
+{
+	m_pTransMiniMap->m_vPos.x = m_pTransCom->m_vPos.x;
+	m_pTransMiniMap->m_vPos.z = m_pTransCom->m_vPos.z;
+	m_pTransMiniMap->m_vPos.y = 0.5f;
+	m_pTransMiniMap->m_vAngle = _vec3(90.0f, m_pDynamicCamera->Get_Transform()->m_vAngle.y, 0.0f);
+	m_pTransMiniMap->m_vScale = _vec3(6.0f, 6.0f, 6.0f);
+	m_pTransMiniMap->Update_Component(0.16f);
+
+	/*__________________________________________________________________________________________________________
+	[ Set ConstantBuffer Data ]
+	____________________________________________________________________________________________________________*/
+	Engine::CB_CAMERA_MATRIX tCB_CameraMatrix;
+	ZeroMemory(&tCB_CameraMatrix, sizeof(Engine::CB_CAMERA_MATRIX));
+	tCB_CameraMatrix.matView = Engine::CShader::Compute_MatrixTranspose(CShadowLightMgr::Get_Instance()->Get_MiniMapView());
+	tCB_CameraMatrix.matProj = Engine::CShader::Compute_MatrixTranspose(CShadowLightMgr::Get_Instance()->Get_MiniMapProj());
+
+	Engine::CB_SHADER_TEXTURE tCB_ShaderTexture;
+	ZeroMemory(&tCB_ShaderTexture, sizeof(Engine::CB_SHADER_TEXTURE));
+	tCB_ShaderTexture.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransMiniMap->m_matWorld);
+	tCB_ShaderTexture.fAlpha    = 1.0f;
+
+	m_pShaderMiniMap->Get_UploadBuffer_CameraTopViewMatrix()->CopyData(0, tCB_CameraMatrix);
+	m_pShaderMiniMap->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 }
 
 void CPCPriest::Set_IsRepeatAnimation()

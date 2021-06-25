@@ -5,6 +5,8 @@
 #include "ComponentMgr.h"
 #include "Renderer.h"
 #include "Font.h"
+#include <random>
+
 USING(Engine)
 
 CGameObject::CGameObject()
@@ -226,6 +228,10 @@ void CGameObject::Render_CrossFilterGameObject(const _float& fTimeDelta)
 {
 }
 
+void CGameObject::Render_MiniMap(const _float& fTimeDelta)
+{
+}
+
 void CGameObject::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList * pCommandList, const _int& iContextIdx)
 {
 }
@@ -237,6 +243,28 @@ void CGameObject::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCom
 void CGameObject::Update_PartyMember(const int& iSNum, const int& hp, const int& maxHp, const int& mp, const int& maxMp)
 {
 	m_mapPartyList[iSNum].Update_Info(hp, maxHp, mp, maxMp);
+}
+
+void CGameObject::SetUp_OthersIsInMyParty()
+{
+	// ¹Ì´Ï¸Ê && ¿Ü°û¼± Àç¼³Á¤.
+	OBJLIST* pOthersList = m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"Others");
+	if (nullptr != pOthersList && !pOthersList->empty())
+	{
+		for (auto& pOthers : *pOthersList)
+			pOthers->Set_IsThisPlayerPartyMember(false);
+
+		if (!m_mapPartyList.empty())
+		{
+			for (auto& pOthers : *pOthersList)
+			{
+				auto iter_find = m_mapPartyList.find(pOthers->Get_ServerNumber());
+
+				if (iter_find != m_mapPartyList.end())
+					pOthers->Set_IsThisPlayerPartyMember(true);
+			}
+		}
+	}
 }
 
 void CGameObject::Render_HitEffect(const _float& fTimeDelta)
@@ -256,6 +284,31 @@ void CGameObject::Render_HitEffect(const _float& fTimeDelta)
 
 HRESULT CGameObject::Add_Component()
 {
+	return S_OK;
+}
+
+HRESULT CGameObject::SetUp_MiniMapComponent(const _uint& uiMiniMapTexIdx)
+{
+	m_uiMiniMapTexIdx = uiMiniMapTexIdx;
+
+	m_pTransMiniMap = CTransform::Create();
+	NULL_CHECK_RETURN(m_pTransMiniMap, E_FAIL);
+
+	// Buffer
+	m_pBufferMiniMap = static_cast<Engine::CRcTex*>(m_pComponentMgr->Clone_Component(L"RcTex", Engine::COMPONENTID::ID_STATIC));
+	Engine::NULL_CHECK_RETURN(m_pBufferMiniMap, E_FAIL);
+
+	// Texture
+	m_pTextureMiniMap = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(L"S1UI_MIniMap", Engine::COMPONENTID::ID_STATIC));
+	Engine::NULL_CHECK_RETURN(m_pTextureMiniMap, E_FAIL);
+
+	// Shader
+	m_pShaderMiniMap = static_cast<Engine::CShaderTexture*>(m_pComponentMgr->Clone_Component(L"ShaderTexture", Engine::COMPONENTID::ID_STATIC));
+	Engine::NULL_CHECK_RETURN(m_pShaderMiniMap, E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pShaderMiniMap->Set_PipelineStatePass(7), E_FAIL);
+
+	m_pShaderMiniMap->SetUp_ShaderConstantBuffer();
+
 	return S_OK;
 }
 
@@ -374,6 +427,21 @@ CComponent * CGameObject::Find_Component(wstring wstrComponentTag, const COMPONE
 	return iter_find->second;
 }
 
+void CGameObject::SetUp_MiniMapRandomY()
+{
+	if (nullptr != m_pTransMiniMap && !m_bIsInitMiniMapDepth)
+	{
+		m_bIsInitMiniMapDepth = true;
+
+		random_device					rd;
+		default_random_engine			dre{ rd() };
+		uniform_int_distribution<_int>	uid{ 0, 10'000 };
+
+		_float random_value = (_float)(uid(dre));
+		m_pTransMiniMap->m_vPos.y = random_value * 0.0001f;
+	}
+}
+
 CGameObject * CGameObject::Clone_GameObject()
 {
 	return nullptr;
@@ -394,7 +462,19 @@ void CGameObject::Free()
 	}
 
 	if(nullptr != m_pFontServer)
-		Engine::Safe_Release(m_pFontServer);
+		Safe_Release(m_pFontServer);
+
+	if (nullptr != m_pTransMiniMap)
+		Safe_Release(m_pTransMiniMap);
+
+	if (nullptr != m_pBufferMiniMap)
+		Safe_Release(m_pBufferMiniMap);
+
+	if (nullptr != m_pTextureMiniMap)
+		Safe_Release(m_pTextureMiniMap);
+
+	if (nullptr != m_pShaderMiniMap)
+		Safe_Release(m_pShaderMiniMap);
 
 	m_mapPartyList.clear();
 		

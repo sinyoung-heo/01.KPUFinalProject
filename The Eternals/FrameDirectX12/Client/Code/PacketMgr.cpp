@@ -7,6 +7,7 @@
 #include "PartySystemMgr.h"
 #include "DynamicCamera.h"
 #include "FadeInOut.h"
+#include "ChattingMgr.h"
 /* USER */
 #include "PCGladiator.h"
 #include "PCOthersGladiator.h"
@@ -29,7 +30,7 @@
 #include "GiantBeetle.h"
 #include "GiantMonkey.h"
 #include "CraftyArachne.h"
-#include "ChattingMgr.h"
+#include "InventoryEquipmentMgr.h"
 
 IMPLEMENT_SINGLETON(CPacketMgr)
 
@@ -194,19 +195,7 @@ void CPacketMgr::Process_packet()
 	{
 		sc_packet_chat* packet = reinterpret_cast<sc_packet_chat*>(m_packet_start);
 
-		_tchar szOut[MAX_STR] = L"";
-		/*____________________________________________________________________
-		멀티바이트 형식을 유니코드 형식으로 바꿔주는 함수.
-		______________________________________________________________________*/
-		MultiByteToWideChar(CP_ACP,
-							0,
-							packet->message,		// 변환 할 문자열.
-							(_int)strlen(packet->message),
-							szOut,					// 변환 값 저장 버퍼.
-							MAX_STR);
-
-		szOut[strlen(packet->message)] = '\0';
-		CChattingMgr::Get_Instance()->Push_ChattingMessage(packet->name, szOut);
+		Recv_Chat(packet);
 	}
 	break;
 
@@ -385,8 +374,7 @@ void CPacketMgr::Process_packet()
 	{
 		// 파티초대 or 파티가입요청 거절.
 		sc_packet_chat* packet = reinterpret_cast<sc_packet_chat*>(m_packet_start);
-		m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_IsActive(true);
-		m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_PartyMessageState(PARTY_SYSTEM_MESSAGE::REJECT_PARTY_REQUEST);
+		Reject_Party();
 	}
 	break;
 
@@ -415,12 +403,55 @@ void CPacketMgr::Process_packet()
 	}
 	break;
 
+	case SC_PACKET_UPDATE_INVENTORY:
+	{
+		sc_packet_update_inventory* packet = reinterpret_cast<sc_packet_update_inventory*>(m_packet_start);
+
+		if (packet->is_pushItem)
+			CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(packet->itemType, packet->itemName);
+		else
+			CInventoryEquipmentMgr::Get_Instance()->Pop_ItemInventory(packet->itemType, packet->itemName);
+
+		cout << "아이템 개수:" << packet->count << endl;
+	}
+	break;
+
+	case SC_PACKET_UPDATE_EQUIPMENT:
+	{
+		sc_packet_update_equipment* packet = reinterpret_cast<sc_packet_update_equipment*>(m_packet_start);
+		cout << "장착한 아이템:" << (int)packet->itemName << endl;
+	}
+	break;
+
 	default:
 #ifdef ERR_CHECK
 		printf("Unknown PACKET type [%d]\n", m_packet_start[1]);
 #endif 
 		break;
 	}
+}
+
+void CPacketMgr::Reject_Party()
+{
+	m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_IsActive(true);
+	m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_PartyMessageState(PARTY_SYSTEM_MESSAGE::REJECT_PARTY_REQUEST);
+}
+
+void CPacketMgr::Recv_Chat(sc_packet_chat* packet)
+{
+	_tchar szOut[MAX_STR] = L"";
+	/*____________________________________________________________________
+	멀티바이트 형식을 유니코드 형식으로 바꿔주는 함수.
+	______________________________________________________________________*/
+	MultiByteToWideChar(CP_ACP,
+		0,
+		packet->message,		// 변환 할 문자열.
+		packet->messageLen,
+		szOut,					// 변환 값 저장 버퍼.
+		MAX_STR);
+
+	szOut[packet->messageLen] = '\0';
+	CChattingMgr::Get_Instance()->Push_ChattingMessage(packet->name, szOut);
 }
 
 void CPacketMgr::Update_Party(sc_packet_update_party* packet)
@@ -452,6 +483,9 @@ void CPacketMgr::Leave_Party(sc_packet_suggest_party* packet, bool& retflag)
 	m_pPartySystemMgr->SetUp_ThisPlayerPartyList();
 	m_pPartySystemMgr->Update_ThisPlayerPartyList();
 
+	// 미니맵 && 외곽선 재설정.
+	pThisPlayer->SetUp_OthersIsInMyParty();
+
 	retflag = false;
 }
 
@@ -468,6 +502,9 @@ void CPacketMgr::Enter_PartyMember(sc_packet_enter_party* packet, bool& retflag)
 																			 packet->o_type);
 	m_pPartySystemMgr->SetUp_ThisPlayerPartyList();
 	m_pPartySystemMgr->Update_ThisPlayerPartyList();
+
+	// 미니맵 && 외곽선 재설정.
+	pThisPlayer->SetUp_OthersIsInMyParty();
 
 	retflag = false;
 }
@@ -638,17 +675,17 @@ void CPacketMgr::Enter_NPC(sc_packet_npc_enter* packet)
 		wstring wstrMeshTag;
 		if (packet->npcNum == NPC_POPORI_MERCHANT)
 		{
-			wstrMeshTag = L"Popori_M_Merchant";
+			wstrMeshTag = L"Popori_M_Merchant";		// 무기상인
 			pInstance = Pop_Instance(m_pInstancePoolMgr->Get_NPCMerchant_Popori_M_MerchantPool());
 		}
 		else if (packet->npcNum == NPC_BARAKA_MERCHANT)
 		{
-			wstrMeshTag = L"Baraka_M_Merchant";
+			wstrMeshTag = L"Baraka_M_Merchant";		// 물약상인
 			pInstance = Pop_Instance(m_pInstancePoolMgr->Get_NPCMerchant_Baraka_M_MerchantPool());
 		}
 		else if (packet->npcNum == NPC_BARAKA_MYSTELLIUM)
 		{
-			wstrMeshTag = L"Baraka_M_Mystellium";
+			wstrMeshTag = L"Baraka_M_Mystellium";	// 방어구상인
 			pInstance = Pop_Instance(m_pInstancePoolMgr->Get_NPCMerchant_Baraka_M_MystelliumPool());
 		}
 
@@ -770,7 +807,6 @@ void CPacketMgr::Attack_User(sc_packet_attack* packet)
 
 		if (-1 != packet->end_angleY)
 		{
-			cout << pObj->Get_Transform()->m_vAngle.y << ", " << packet->end_angleY << endl;
 			pObj->Set_IsStartAngleInterpolation(true);
 			pObj->Set_LinearAngle(pObj->Get_Transform()->m_vAngle.y, packet->end_angleY);
 		}
@@ -793,13 +829,15 @@ void CPacketMgr::ChangeStat_User(sc_packet_stat_change* packet)
 
 	if (pObj == nullptr) return;
 
-	pObj->Get_Info()->m_iHp		= packet->hp;
-	pObj->Get_Info()->m_iMaxHp	= packet->maxHp;
-	pObj->Get_Info()->m_iMp		= packet->mp;
-	pObj->Get_Info()->m_iMaxMp	= packet->maxMp;
-	pObj->Get_Info()->m_iExp	= packet->exp;
-	pObj->Get_Info()->m_iMaxExp = packet->maxExp;
-	pObj->Get_Info()->m_iLev	= packet->lev;
+	pObj->Get_Info()->m_iHp			= packet->hp;
+	pObj->Get_Info()->m_iMaxHp		= packet->maxHp;
+	pObj->Get_Info()->m_iMp			= packet->mp;
+	pObj->Get_Info()->m_iMaxMp		= packet->maxMp;
+	pObj->Get_Info()->m_iExp		= packet->exp;
+	pObj->Get_Info()->m_iMaxExp		= packet->maxExp;
+	pObj->Get_Info()->m_iLev		= packet->lev;
+	pObj->Get_Info()->m_iMaxAttack	= packet->maxAtt;
+	pObj->Get_Info()->m_iMinAttack	= packet->minAtt;
 }
 
 void CPacketMgr::MoveStop_User(sc_packet_move* packet)
@@ -894,6 +932,10 @@ void CPacketMgr::Enter_Others(sc_packet_enter* packet, int& retflag)
 
 		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Others", pInstance);
 	}
+
+	// 미니맵 && 외곽선 재설정.
+	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+	pThisPlayer->SetUp_OthersIsInMyParty();
 
 #ifdef ERR_CHECK
 	cout << "Others 등장!" << endl;
@@ -1064,14 +1106,31 @@ void CPacketMgr::send_login()
 {
 	cs_packet_login p;
 
-	p.size        = sizeof(p);
-	p.type        = CS_LOGIN;
-	p.o_type      = g_cJob;
-	p.weapon_type = Bow23_SM;
+	p.size			= sizeof(p);
+	p.type			= CS_LOGIN;
 
-	int t_id = GetCurrentProcessId();
-	sprintf_s(p.name, "P%03d", t_id % 1000);
-	sprintf_s(p.password, "%03d", t_id % 1000);
+	p.isMember		= false;
+	p.o_type		= g_cJob;
+	p.weapon_type	= Bow23_SM;
+
+	if (p.isMember == false)
+	{
+		int t_id = GetCurrentProcessId();
+		sprintf_s(p.name, "P%03d", t_id % 1000);
+		sprintf_s(p.password, "%03d", t_id % 1000);
+	}
+	else
+	{
+		char name[MAX_STR] = "";
+		char password[MAX_STR] = "";
+		cout << "ID: ";
+		cin >> name;
+		cout << "PW: ";
+		cin >> password;
+
+		strncpy_s(p.name, name, strlen(name));
+		strncpy_s(p.password, password, strlen(password));
+	}
 
 	send_packet(&p);
 }
@@ -1314,14 +1373,66 @@ void CPacketMgr::send_chat(const wchar_t* message)
 
 	WideCharToMultiByte(CP_ACP,
 						0,
-						message,         // 변환 할 문자열.
-						lstrlen(message),
+						message,			// 변환 할 문자열.
+						lstrlen(message) * 2, 
 						p.message,         // 변환 값 저장 버퍼.
 						MAX_STR,
 						NULL,
 						NULL);
 
-	p.message[lstrlen(message)] = '\0';
+	p.message[lstrlen(message) * 2] = '\0';
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_add_item(const char& chItemType, const char& chName)
+{
+	cs_packet_manage_inventory p;
+
+	p.size		= sizeof(p);
+	p.type		= CS_ADD_ITEM;
+
+	p.itemType	= chItemType;
+	p.itemName	= chName;
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_delete_item(const char& chItemType, const char& chName)
+{
+	cs_packet_manage_inventory p;
+
+	p.size		= sizeof(p);
+	p.type		= CS_DELETE_ITEM;
+
+	p.itemType	= chItemType;
+	p.itemName	= chName;
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_equip_item(const char& chItemType, const char& chName)
+{
+	cs_packet_manage_inventory p;
+
+	p.size = sizeof(p);
+	p.type = CS_EQUIP_ITEM;
+
+	p.itemType = chItemType;
+	p.itemName = chName;
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_unequip_item(const char& chItemType, const char& chName)
+{
+	cs_packet_manage_inventory p;
+
+	p.size = sizeof(p);
+	p.type = CS_UNEQUIP_ITEM;
+
+	p.itemType = chItemType;
+	p.itemName = chName;
 
 	send_packet(&p);
 }

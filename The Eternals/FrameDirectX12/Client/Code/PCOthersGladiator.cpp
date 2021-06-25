@@ -130,6 +130,9 @@ HRESULT CPCOthersGladiator::LateInit_GameObject()
 	m_pShadowCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	m_pEdgeObjectShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
+	// MiniMap
+	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::SetUp_MiniMapComponent(1), E_FAIL);
+
 	return S_OK;
 }
 
@@ -185,9 +188,17 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_EDGE, this), -1);
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MINIMAP, this), -1);
+	if (m_bIsThisPlayerPartyMember)
+	{
+		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_EDGE, this), -1);
+		m_uiMiniMapTexIdx = 2;
+	}
+	else
+		m_uiMiniMapTexIdx = 1;
 	
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
+	Engine::CGameObject::SetUp_MiniMapRandomY();
 
 	// Weapon Update
 	if (m_pWeapon != nullptr)
@@ -208,6 +219,18 @@ _int CPCOthersGladiator::LateUpdate_GameObject(const _float& fTimeDelta)
 		m_pWeapon->LateUpdate_GameObject(fTimeDelta);
 
 	return NO_EVENT;
+}
+
+void CPCOthersGladiator::Render_MiniMap(const _float& fTimeDelta)
+{
+	Set_ConstantTableMiniMap();
+
+	m_pShaderMiniMap->Begin_Shader(m_pTextureMiniMap->Get_TexDescriptorHeap(), 
+								   0, 
+								   m_uiMiniMapTexIdx, 
+								   Engine::MATRIXID::TOP_VIEW);
+	m_pBufferMiniMap->Begin_Buffer();
+	m_pBufferMiniMap->Render_Buffer();
 }
 
 void CPCOthersGladiator::Render_EdgeGameObject(const _float& fTimeDelta)
@@ -492,6 +515,31 @@ void CPCOthersGladiator::Set_ConstantTableShadowDepth()
 	tCB_ShaderShadow.fProjFar = tShadowDesc.fLightPorjFar;
 
 	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
+}
+
+void CPCOthersGladiator::Set_ConstantTableMiniMap()
+{
+	m_pTransMiniMap->m_vPos.x = m_pTransCom->m_vPos.x;
+	m_pTransMiniMap->m_vPos.z = m_pTransCom->m_vPos.z;
+	m_pTransMiniMap->m_vAngle = _vec3(90.0f, 0.0f, 0.0f);
+	m_pTransMiniMap->m_vScale = _vec3(6.0f, 6.0f, 6.0f);
+	m_pTransMiniMap->Update_Component(0.16f);
+
+	/*__________________________________________________________________________________________________________
+	[ Set ConstantBuffer Data ]
+	____________________________________________________________________________________________________________*/
+	Engine::CB_CAMERA_MATRIX tCB_CameraMatrix;
+	ZeroMemory(&tCB_CameraMatrix, sizeof(Engine::CB_CAMERA_MATRIX));
+	tCB_CameraMatrix.matView = Engine::CShader::Compute_MatrixTranspose(CShadowLightMgr::Get_Instance()->Get_MiniMapView());
+	tCB_CameraMatrix.matProj = Engine::CShader::Compute_MatrixTranspose(CShadowLightMgr::Get_Instance()->Get_MiniMapProj());
+
+	Engine::CB_SHADER_TEXTURE tCB_ShaderTexture;
+	ZeroMemory(&tCB_ShaderTexture, sizeof(Engine::CB_SHADER_TEXTURE));
+	tCB_ShaderTexture.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransMiniMap->m_matWorld);
+	tCB_ShaderTexture.fAlpha    = 1.0f;
+
+	m_pShaderMiniMap->Get_UploadBuffer_CameraTopViewMatrix()->CopyData(0, tCB_CameraMatrix);
+	m_pShaderMiniMap->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 }
 
 void CPCOthersGladiator::Move_OnNaviMesh(const _float& fTimeDelta)

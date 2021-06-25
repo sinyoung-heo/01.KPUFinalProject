@@ -159,6 +159,7 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	if(RENDERID::MULTI_THREAD == eID)
 		Render_MultiThread(fTimeDelta);
 
+	Render_MiniMap(fTimeDelta);
 	Render_Priority(fTimeDelta);
 
 	if (RENDERID::SINGLE_THREAD == eID)
@@ -177,7 +178,6 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	Render_Distortion(fTimeDelta);
 	Render_Blend();						// Target Blend
 	Render_Luminance();					// Luminance(고휘도추출)
-
 	Render_Collider(fTimeDelta);		// Collider Render
 	Render_Alpha(fTimeDelta);			// Effect Texture, Mesh
 	Render_AddEffect();
@@ -237,6 +237,24 @@ void CRenderer::Render_NonAlpha(const _float& fTimeDelta)
 	m_pTargetDeferred->Release_OnGraphicDevice(TARGETID::TYPE_DEFAULT);
 }
 
+void CRenderer::Render_MiniMap(const _float& fTimeDelta)
+{
+	if (!m_bIsRenderMiniMap)
+		return;
+
+	sort(m_RenderList[RENDER_MINIMAP].begin(), m_RenderList[RENDER_MINIMAP].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
+		{
+			return pSour->Get_MiniMapTransform()->m_vPos.y > pDest->Get_MiniMapTransform()->m_vPos.y;
+		});
+
+	m_pTargetMiniMap->SetUp_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
+
+	for (auto& pGameObject : m_RenderList[RENDER_MINIMAP])
+		pGameObject->Render_MiniMap(fTimeDelta);
+
+	m_pTargetMiniMap->Release_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
+}
+
 void CRenderer::Render_Light()
 {
 	CShaderLightingInstancing::Get_Instance()->SetUp_DescriptorHeap(m_pTargetDeferred->Get_TargetTexture());
@@ -292,18 +310,12 @@ void CRenderer::Render_Blend()
 
 	m_pBlendShader->Begin_Shader();
 	m_pBlendBuffer->Begin_Buffer();
-
 	m_pBlendBuffer->Render_Buffer();
+
 	m_pTargetBlend->Release_OnGraphicDevice();
 
-	/// <summary>
-	/// 출력오류
-	/// </summary>
 	m_pHDRShader->Begin_Shader();
 	m_pBlendBuffer->Begin_Buffer();
-
-
-
 	m_pBlendBuffer->Render_Buffer();
 }
 
@@ -587,6 +599,9 @@ void CRenderer::Render_Collider(const _float & fTimeDelta)
 
 void CRenderer::Render_RenderTarget()
 {
+	if (nullptr != m_pTargetMiniMap && m_bIsRenderMiniMap)
+		m_pTargetMiniMap->Render_RenderTarget();
+
 	if (m_mapRenderOnOff[L"RenderTarget"])
 	{
 		if (nullptr != m_pTargetDeferred)
@@ -631,7 +646,6 @@ void CRenderer::Render_RenderTarget()
 		if (nullptr != m_pTargetAddEffect)
 			m_pTargetAddEffect->Render_RenderTarget();
 	}
-
 }
 
 void CRenderer::Render_Font(const _float & fTimeDelta)
@@ -1018,6 +1032,20 @@ HRESULT CRenderer::Ready_RenderTarget()
 	NULL_CHECK_RETURN(m_pHDRShader, E_FAIL);
 	FAILED_CHECK_RETURN(m_pHDRShader->Set_PipelineStatePass(1), E_FAIL);
 
+
+	/*__________________________________________________________________________________________________________
+	[ MiniMap RnderTarget ]
+	____________________________________________________________________________________________________________*/
+	m_pTargetMiniMap = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
+	NULL_CHECK_RETURN(m_pTargetMiniMap, E_FAIL);
+	m_pTargetMiniMap->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM); // Shade
+	m_pTargetMiniMap->Set_TargetTextureSize(0, 1024, 1024);
+	FAILED_CHECK_RETURN(m_pTargetMiniMap->SetUp_DefaultSetting(TARGETID::TYPE_SHADOWDEPTH), E_FAIL);
+
+	m_pTargetMiniMap->Set_TargetRenderScale(_vec3(100.0f, 100.0f, 128.0f));
+	m_pTargetMiniMap->Set_TargetRenderPos(_vec3(WINCX - 100.0f - 52.0f, 100.0f + 68.0f, 1.0f));
+	m_pTargetMiniMap->Set_TargetTexturePipelineState(11);
+
 	return S_OK;
 }
 
@@ -1355,6 +1383,7 @@ void CRenderer::Free()
 	Safe_Release(m_pTargetDeferred);
 	Safe_Release(m_pTargetLight);
 	Safe_Release(m_pTargetShadowDepth);
+	Safe_Release(m_pTargetMiniMap);
 	
 
 	Safe_Release(m_pBlendBuffer);

@@ -127,6 +127,7 @@ public:
 	bool			m_bIsRushAttack			= false;
 
 	int				m_iTargetNum			= -1;
+	int				m_iChaseDist			= CHASE_RANGE;
 	_vec3			m_vOriPos				= _vec3(0.f);
 	_vec3			m_vKnockbackPos			= _vec3(0.f);
 	ATTACK_DIST		m_eAttackDist			= ATTACK_DIST::DIST_END;

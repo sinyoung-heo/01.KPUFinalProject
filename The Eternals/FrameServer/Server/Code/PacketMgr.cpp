@@ -27,14 +27,16 @@ void process_packet(int id)
 		pPlayer->m_chWeaponType = p->weapon_type;
 		pPlayer->Get_ClientLock().unlock();
 
-#ifndef DUMMY
-		/* CHECK ID in Database Server */
-		if (false == CDBMgr::GetInstance()->Check_ID(id, p->password))
+		// 회원일 경우 DB 검사
+		if (p->isMember)
 		{
-			/* 처음 게임에 접속한 유저라면 회원으로 등록 in Database Server */
-			CDBMgr::GetInstance()->Insert_NewPlayer_DB(id, p->password);
+			/* CHECK ID in Database Server */
+			if (false == CDBMgr::GetInstance()->Check_ID(id, p->password))
+			{
+				/* 처음 게임에 접속한 유저라면 회원으로 등록 in Database Server */
+				CDBMgr::GetInstance()->Insert_NewPlayer_DB(id, p->password);
+			}
 		}
-#endif // DUMMY
 
 		/* 로그인 수락 패킷 전송 */
 		send_login_ok(id);
@@ -252,6 +254,34 @@ void process_packet(int id)
 	{
 		cs_packet_suggest_party* p = reinterpret_cast<cs_packet_suggest_party*>(pPlayer->m_packet_start);
 		process_leave_party(id);
+	}
+	break;
+
+	case CS_ADD_ITEM:
+	{
+		cs_packet_manage_inventory* p = reinterpret_cast<cs_packet_manage_inventory*>(pPlayer->m_packet_start);
+		process_add_item(id, p->itemType, p->itemName);
+	}
+	break;
+
+	case CS_DELETE_ITEM:
+	{
+		cs_packet_manage_inventory* p = reinterpret_cast<cs_packet_manage_inventory*>(pPlayer->m_packet_start);
+		process_delete_item(id, p->itemType, p->itemName);
+	}
+	break;
+
+	case CS_EQUIP_ITEM:
+	{
+		cs_packet_manage_inventory* p = reinterpret_cast<cs_packet_manage_inventory*>(pPlayer->m_packet_start);
+		process_equip_item(id, p->itemType, p->itemName);
+	}
+	break;
+
+	case CS_UNEQUIP_ITEM:
+	{
+		cs_packet_manage_inventory* p = reinterpret_cast<cs_packet_manage_inventory*>(pPlayer->m_packet_start);
+		process_unequip_item(id, p->itemType, p->itemName);
 	}
 	break;
 
@@ -540,6 +570,8 @@ void send_player_stat(int to_client, int id)
 	p.exp		= pPlayer->m_iExp;
 	p.maxExp	= pPlayer->m_iMaxExp;
 	p.lev		= pPlayer->m_iLevel;
+	p.maxAtt	= pPlayer->m_iMaxAtt;
+	p.minAtt	= pPlayer->m_iMinAtt;
 
 	send_packet(to_client, &p);
 }
@@ -661,7 +693,7 @@ void send_update_party(const int& to_client, const int& id, const int& hp, const
 	send_packet(to_client, &p);
 }
 
-void send_chat(const int& to_client, const int& id, const char* name, const char* buffer)
+void send_chat(const int& to_client, const int& id, const char* name, const char* buffer, const int len)
 {
 	sc_packet_chat p;
 
@@ -670,8 +702,38 @@ void send_chat(const int& to_client, const int& id, const char* name, const char
 	p.id	= id;
 
 	strncpy_s(p.name, name, strlen(name));
-	strncpy_s(p.message, buffer, strlen(buffer));
-	
+	strncpy_s(p.message, buffer, len);
+	p.messageLen = len;
+
+	send_packet(to_client, &p);
+}
+
+void send_update_inventory(const int& id, const char& chItemType, const char& chName, const int& count, const bool& isPushItem)
+{
+	sc_packet_update_inventory p;
+
+	p.size			= sizeof(p);
+	p.type			= SC_PACKET_UPDATE_INVENTORY;
+
+	p.itemType		= chItemType;
+	p.itemName		= chName;
+	p.count			= count;
+	p.is_pushItem	= isPushItem;
+
+	send_packet(id, &p);
+}
+
+void send_update_equipment(const int& to_client, const char& chItemType, const char& chName, const bool& isPushItem)
+{
+	sc_packet_update_equipment p;
+
+	p.size			= sizeof(p);
+	p.type			= SC_PACKET_UPDATE_EQUIPMENT;
+
+	p.equipType		= chItemType;
+	p.itemName		= chName;
+	p.is_pushItem	= isPushItem;
+
 	send_packet(to_client, &p);
 }
 
@@ -1828,7 +1890,9 @@ void process_disconnect(const int& id)
 	pPlayer->m_chStageId		= STAGE_VELIKA;
 	pPlayer->m_bIsPartyState	= false;
 	pPlayer->m_iPartyNumber		= INIT_PARTY_NUMBER;
+	pPlayer->m_iMoney			= INIT_MONEY;
 	pPlayer->view_list.clear();
+	pPlayer->Release_Inventory();
 	pPlayer->Get_ClientLock().unlock();
 
 	CObjPoolMgr::GetInstance()->return_Object(L"PLAYER", pPlayer);
@@ -1843,10 +1907,59 @@ void process_chat(const int& id, const char* buffer)
 	auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER")->begin();
 	auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER")->end();
 
+	int tempSize = 0;
+	Check_Korean(buffer, &tempSize);
+
 	for (iter_begin; iter_begin != iter_end; ++iter_begin)
 	{
-		send_chat(iter_begin->second->m_sNum, id, pPlayer->m_ID, buffer);	
+		send_chat(iter_begin->second->m_sNum, id, pPlayer->m_ID, buffer, tempSize);
 	}
+}
+
+void process_add_item(const int& id, const char& chItemType, const char& chName)
+{
+	CPlayer* pUser = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pUser == nullptr) return;
+	if (!pUser->m_bIsConnect) return;
+
+	if (pUser->Add_Item(chName, static_cast<ITEM>(chItemType)))
+	{
+		send_update_inventory(id, chItemType, chName, pUser->Get_ItemCount(chName, static_cast<ITEM>(chItemType)), true);
+	}
+}
+
+void process_delete_item(const int& id, const char& chItemType, const char& chName)
+{
+	CPlayer* pUser = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pUser == nullptr) return;
+	if (!pUser->m_bIsConnect) return;
+
+	if (pUser->Delete_Item(chName, static_cast<ITEM>(chItemType)))
+	{
+		send_update_inventory(id, chItemType, chName, pUser->Get_ItemCount(chName, static_cast<ITEM>(chItemType)), false);
+	}
+}
+
+void process_equip_item(const int& id, const char& chItemType, const char& chName)
+{
+	CPlayer* pUser = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pUser == nullptr) return;
+	if (!pUser->m_bIsConnect) return;
+
+	pUser->Equip_Item(chName, chItemType);
+
+	send_update_equipment(id, chItemType, pUser->Get_Equipment(chItemType), true);
+}
+
+void process_unequip_item(const int& id, const char& chItemType, const char& chName)
+{
+	CPlayer* pUser = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pUser == nullptr) return;
+	if (!pUser->m_bIsConnect) return;
+
+	pUser->Unequip_Item(chName, chItemType);
+
+	send_update_equipment(id, chItemType, pUser->Get_Equipment(chItemType), false);
 }
 
 /*===========================================FUNC====================================================*/
@@ -1860,4 +1973,20 @@ void add_timer(int obj_id, OPMODE ev_type, system_clock::time_point t)
 bool CAS(atomic<STATUS>* addr, STATUS* old_v, STATUS new_v)
 {
 	return atomic_compare_exchange_strong(addr, old_v, new_v);
+}
+
+void Check_Korean(const char* text, int* len)
+{
+	// 한글은 한 글자당 2Byte -> 각 Byte의 최상위 bit가 1이다.
+	for (int i = 0; i < MAX_STR_LEN; ++i)
+	{
+		if (text[i] == '\0') return;
+
+		// 한글이 아닐 경우
+		if ((text[i] & 0x80) != 0x80)
+			*len += 1;
+		// 한글일 경우
+		else if ((text[i] & 0x80) == 0x80)
+			*len += 2;
+	}
 }

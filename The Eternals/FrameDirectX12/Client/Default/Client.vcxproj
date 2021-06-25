@@ -189,6 +189,9 @@
     <ClInclude Include="..\Code\DrownedSailor.h" />
     <ClInclude Include="..\Code\EffectMgr.h" />
     <ClInclude Include="..\Code\EffectTrail.h" />
+    <ClInclude Include="..\Code\EquipmentButtonClose.h" />
+    <ClInclude Include="..\Code\EquipmentCanvas.h" />
+    <ClInclude Include="..\Code\EquipmentItemSlot.h" />
     <ClInclude Include="..\Code\FadeInOut.h" />
     <ClInclude Include="..\Code\FireDecal.h" />
     <ClInclude Include="..\Code\FireRing.h" />
@@ -200,6 +203,11 @@
     <ClInclude Include="..\Code\IceStorm.h" />
     <ClInclude Include="..\Code\IceStorm_s.h" />
     <ClInclude Include="..\Code\InstancePoolMgr.h" />
+    <ClInclude Include="..\Code\InventoryButtonClose.h" />
+    <ClInclude Include="..\Code\InventoryCanvas.h" />
+    <ClInclude Include="..\Code\InventoryEquipmentMgr.h" />
+    <ClInclude Include="..\Code\InventoryItemSlot.h" />
+    <ClInclude Include="..\Code\InventorySwapSlot.h" />
     <ClInclude Include="..\Code\LightingParticle.h" />
     <ClInclude Include="..\Code\LoginSelectButton.h" />
     <ClInclude Include="..\Code\LogoutButtonChoice.h" />
@@ -209,6 +217,7 @@
     <ClInclude Include="..\Code\MainMenuSettingCanvas.h" />
     <ClInclude Include="..\Code\Monkey.h" />
     <ClInclude Include="..\Code\NormalMonsterHpGauge.h" />
+    <ClInclude Include="..\Code\NPCMiniMap.h" />
     <ClInclude Include="..\Code\NPC_Assistant.h" />
     <ClInclude Include="..\Code\NPC_Quest.h" />
     <ClInclude Include="..\Code\PartyInfoListCanvas.h" />
@@ -283,6 +292,7 @@
     <ClInclude Include="..\Code\SwordEffect.h" />
     <ClInclude Include="..\Code\SwordTrail.h" />
     <ClInclude Include="..\Code\TerrainMeshObject.h" />
+    <ClInclude Include="..\Code\WarningFrame.h" />
     <ClInclude Include="..\Code\WaterFall.h" />
     <ClInclude Include="..\Code\WaterMeshObject.h" />
     <ClInclude Include="..\Code\TerrainObject.h" />
@@ -328,6 +338,9 @@
     <ClCompile Include="..\Code\DrownedSailor.cpp" />
     <ClCompile Include="..\Code\EffectMgr.cpp" />
     <ClCompile Include="..\Code\EffectTrail.cpp" />
+    <ClCompile Include="..\Code\EquipmentButtonClose.cpp" />
+    <ClCompile Include="..\Code\EquipmentCanvas.cpp" />
+    <ClCompile Include="..\Code\EquipmentItemSlot.cpp" />
     <ClCompile Include="..\Code\FadeInOut.cpp" />
     <ClCompile Include="..\Code\FireDecal.cpp" />
     <ClCompile Include="..\Code\FireRing.cpp" />
@@ -341,6 +354,11 @@
     <ClCompile Include="..\Code\IceStorm.cpp" />
     <ClCompile Include="..\Code\IceStorm_s.cpp" />
     <ClCompile Include="..\Code\InstancePoolMgr.cpp" />
+    <ClCompile Include="..\Code\InventoryButtonClose.cpp" />
+    <ClCompile Include="..\Code\InventoryCanvas.cpp" />
+    <ClCompile Include="..\Code\InventoryEquipmentMgr.cpp" />
+    <ClCompile Include="..\Code\InventoryItemSlot.cpp" />
+    <ClCompile Include="..\Code\InventorySwapSlot.cpp" />
     <ClCompile Include="..\Code\LightingParticle.cpp" />
     <ClCompile Include="..\Code\LoginSelectButton.cpp" />
     <ClCompile Include="..\Code\LogoutButtonChoice.cpp" />
@@ -356,6 +374,7 @@
     <ClCompile Include="..\Code\Monster_Normal.cpp" />
     <ClCompile Include="..\Code\MouseCursorMgr.cpp" />
     <ClCompile Include="..\Code\NormalMonsterHpGauge.cpp" />
+    <ClCompile Include="..\Code\NPCMiniMap.cpp" />
     <ClCompile Include="..\Code\NPC_Assistant.cpp" />
     <ClCompile Include="..\Code\NPC_Quest.cpp" />
     <ClCompile Include="..\Code\NPC_Walker.cpp" />
@@ -422,6 +441,7 @@
     <ClCompile Include="..\Code\SwordEffect.cpp" />
     <ClCompile Include="..\Code\SwordTrail.cpp" />
     <ClCompile Include="..\Code\TerrainMeshObject.cpp" />
+    <ClCompile Include="..\Code\WarningFrame.cpp" />
     <ClCompile Include="..\Code\WaterFall.cpp" />
     <ClCompile Include="..\Code\WaterMeshObject.cpp" />
     <ClCompile Include="..\Code\TerrainObject.cpp" />

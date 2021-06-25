@@ -18,6 +18,7 @@ CShader::CShader(const CShader & rhs)
 	, m_pPS_ByteCode(rhs.m_pPS_ByteCode)
 	, m_pCB_CameraProjMatrix(rhs.m_pCB_CameraProjMatrix)
 	, m_pCB_CameraOrthoMatrix(rhs.m_pCB_CameraOrthoMatrix)
+	, m_pCB_CameraTopViewMatrix(rhs.m_pCB_CameraTopViewMatrix)
 
 {
 	m_pRootSignature->AddRef();
@@ -107,6 +108,9 @@ HRESULT CShader::Ready_Shader()
 
 	m_pCB_CameraOrthoMatrix = CUploadBuffer<CB_CAMERA_MATRIX>::Create(m_pGraphicDevice);
 	NULL_CHECK_RETURN(m_pCB_CameraOrthoMatrix, E_FAIL);
+
+	m_pCB_CameraTopViewMatrix = CUploadBuffer<CB_CAMERA_MATRIX>::Create(m_pGraphicDevice);
+	NULL_CHECK_RETURN(m_pCB_CameraTopViewMatrix, E_FAIL);
 
 	return S_OK;
 }
@@ -282,6 +286,7 @@ void CShader::Free()
 	{
 		Safe_Delete(m_pCB_CameraProjMatrix);
 		Safe_Delete(m_pCB_CameraOrthoMatrix);
+		Safe_Delete(m_pCB_CameraTopViewMatrix);
 	}
 }
 

@@ -37,6 +37,11 @@ void CRenderTarget::Set_TargetTextureSize(const _uint & iIdx, const _float & fWi
 		m_vecViewPort[iIdx] = { 0.0f, 0.0f, fWidth, fHeight, 0.0f, 1.0f };
 }
 
+void CRenderTarget::Set_TargetTexturePipelineState(const _uint& iPipelineState)
+{
+	m_pShaderCom->Set_PipelineStatePass(iPipelineState);
+}
+
 HRESULT CRenderTarget::Ready_RenderTarget(const _uint& uiTargetCnt)
 {
 	// RenderTarget °³¼ö.

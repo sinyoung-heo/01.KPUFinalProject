@@ -10,6 +10,7 @@
 #include "TimeMgr.h"
 #include "CollisionTick.h"
 #include "InstancePoolMgr.h"
+#include "NormalMonsterHpGauge.h"
 
 CCraftyArachne::CCraftyArachne(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -49,6 +50,13 @@ HRESULT CCraftyArachne::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMe
 	m_uiAnimIdx = 0;
 	m_iMonsterStatus = CraftyArachne::A_WAIT;
 
+	// Create HpGauge
+	m_pHpGauge = static_cast<CNormalMonsterHpGauge*>(CNormalMonsterHpGauge::Create(m_pGraphicDevice, 
+																				   m_pCommandList,
+																				   _vec3(0.0f),
+																				   _vec3(2.0f, 0.075f, 1.0f)));
+	Engine::NULL_CHECK_RETURN(m_pHpGauge, E_FAIL);
+
 	return S_OK;
 }
 
@@ -57,6 +65,9 @@ HRESULT CCraftyArachne::LateInit_GameObject()
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	m_pShadowCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
+
+	// MiniMap
+	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::SetUp_MiniMapComponent(3), E_FAIL);
 
 	return S_OK;
 }
@@ -121,6 +132,7 @@ _int CCraftyArachne::Update_GameObject(const _float& fTimeDelta)
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MINIMAP, this), -1);
 
 	/*__________________________________________________________________________________________________________
 	[ Collision - Add Collision List ]
@@ -132,7 +144,7 @@ _int CCraftyArachne::Update_GameObject(const _float& fTimeDelta)
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
-
+	Engine::CGameObject::SetUp_MiniMapRandomY();
 
 	return NO_EVENT;
 }
@@ -141,6 +153,8 @@ _int CCraftyArachne::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 	Process_Collision();
+
+	SetUp_HpGauge(fTimeDelta);
 
 	Set_ConstantTableShadowDepth();
 	Set_ConstantTable();
@@ -165,6 +179,18 @@ void CCraftyArachne::Process_Collision()
 
 void CCraftyArachne::Send_PacketToServer()
 {
+}
+
+void CCraftyArachne::Render_MiniMap(const _float& fTimeDelta)
+{
+	Set_ConstantTableMiniMap();
+
+	m_pShaderMiniMap->Begin_Shader(m_pTextureMiniMap->Get_TexDescriptorHeap(), 
+								   0, 
+								   m_uiMiniMapTexIdx, 
+								   Engine::MATRIXID::TOP_VIEW);
+	m_pBufferMiniMap->Begin_Buffer();
+	m_pBufferMiniMap->Render_Buffer();
 }
 
 void CCraftyArachne::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
@@ -249,6 +275,31 @@ void CCraftyArachne::Set_ConstantTableShadowDepth()
 	tCB_ShaderShadow.fProjFar = tShadowDesc.fLightPorjFar;
 
 	m_pShadowCom->Get_UploadBuffer_ShaderShadow()->CopyData(0, tCB_ShaderShadow);
+}
+
+void CCraftyArachne::Set_ConstantTableMiniMap()
+{
+	m_pTransMiniMap->m_vPos.x = m_pTransCom->m_vPos.x;
+	m_pTransMiniMap->m_vPos.z = m_pTransCom->m_vPos.z;
+	m_pTransMiniMap->m_vAngle = _vec3(90.0f, 0.0f, 0.0f);
+	m_pTransMiniMap->m_vScale = _vec3(6.0f, 6.0f, 6.0f);
+	m_pTransMiniMap->Update_Component(0.16f);
+
+	/*__________________________________________________________________________________________________________
+	[ Set ConstantBuffer Data ]
+	____________________________________________________________________________________________________________*/
+	Engine::CB_CAMERA_MATRIX tCB_CameraMatrix;
+	ZeroMemory(&tCB_CameraMatrix, sizeof(Engine::CB_CAMERA_MATRIX));
+	tCB_CameraMatrix.matView = Engine::CShader::Compute_MatrixTranspose(CShadowLightMgr::Get_Instance()->Get_MiniMapView());
+	tCB_CameraMatrix.matProj = Engine::CShader::Compute_MatrixTranspose(CShadowLightMgr::Get_Instance()->Get_MiniMapProj());
+
+	Engine::CB_SHADER_TEXTURE tCB_ShaderTexture;
+	ZeroMemory(&tCB_ShaderTexture, sizeof(Engine::CB_SHADER_TEXTURE));
+	tCB_ShaderTexture.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransMiniMap->m_matWorld);
+	tCB_ShaderTexture.fAlpha    = 1.0f;
+
+	m_pShaderMiniMap->Get_UploadBuffer_CameraTopViewMatrix()->CopyData(0, tCB_CameraMatrix);
+	m_pShaderMiniMap->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 }
 
 void CCraftyArachne::SetUp_AngleInterpolation(const _float& fTimeDelta)
@@ -493,6 +544,20 @@ void CCraftyArachne::SetUp_CollisionTick(const _float& fTimeDelta)
 	}
 }
 
+void CCraftyArachne::SetUp_HpGauge(const _float& fTimeDelta)
+{
+	if (nullptr != m_pHpGauge)
+	{
+		_vec3 vPos = m_pTransCom->m_vPos;
+		vPos.y += 4.75f;
+		m_pHpGauge->Get_Transform()->m_vPos = vPos;
+		m_pHpGauge->Set_Percent((_float)m_pInfoCom->m_iHp / (_float)m_pInfoCom->m_iMaxHp);
+
+		m_pHpGauge->Update_GameObject(fTimeDelta);
+		m_pHpGauge->LateUpdate_GameObject(fTimeDelta);
+	}
+}
+
 void CCraftyArachne::Collision_ThisPlayer(list<Engine::CColliderSphere*>& lstPlayerCollider)
 {
 	for (auto& pSrcCollider : m_lstCollider)
@@ -566,4 +631,6 @@ void CCraftyArachne::Free()
 	Engine::Safe_Release(m_pColliderSphereCom);
 	Engine::Safe_Release(m_pColliderBoxCom);
 	Engine::Safe_Release(m_pNaviMeshCom);
+
+	Engine::Safe_Release(m_pHpGauge);
 }

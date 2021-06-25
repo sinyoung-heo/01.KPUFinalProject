@@ -90,12 +90,11 @@ _int CMainApp::Update_MainApp(const _float & fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Update Management ]
 	____________________________________________________________________________________________________________*/
-	CShadowLightMgr::Get_Instance()->Update_ShadowLight();
-
 	// UpdateMouseCursor
 	CMouseCursorMgr::Get_Instance()->Update_MouseCursorMgr(fTimeDelta);
 
 	m_pManagement->Update_Management(fTimeDelta);
+	CShadowLightMgr::Get_Instance()->Update_ShadowLight();
 
 	return 0;
 }
@@ -265,6 +264,13 @@ HRESULT CMainApp::SetUp_Font()
 	Engine::NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	m_pObjectMgr->Add_GameObjectPrototype(L"Font_NexonBold72", pGameObject);
 
+	// BinggraeMelona 5
+	pGameObject = Engine::CFont::Create_Prototype(m_pGraphicDevice, m_pCommandList,
+												  L"빙그레 메로나체",		// Font Type
+												  16.0f,				// Font Size
+												  D2D1::ColorF::White);	// Font Color
+	Engine::NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	m_pObjectMgr->Add_GameObjectPrototype(L"Font_BinggraeMelona5", pGameObject);
 
 	// BinggraeMelona 11
 	pGameObject = Engine::CFont::Create_Prototype(m_pGraphicDevice, m_pCommandList,

@@ -93,3 +93,14 @@ ______________________________________________________________________*/
 #endif
 
 #pragma warning(disable : 4251)
+
+typedef struct tagItemInfo
+{
+	char	chItemType = NO_ITEM;
+	char	chItemName = NO_ITEM;
+
+	_vec3	vScale = _vec3(0.0f);
+	_uint	uiItemIdx = 0;
+	FRAME	tItemIconFrame;
+
+} ITEM_INFO;

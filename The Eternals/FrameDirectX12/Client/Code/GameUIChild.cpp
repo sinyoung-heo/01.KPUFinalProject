@@ -150,6 +150,18 @@ void CGameUIChild::Render_GameObject(const _float& fTimeDelta)
 	}
 }
 
+HRESULT CGameUIChild::SetUp_TexDescriptorHeap(wstring wstrTextureTag, const FRAME& tFrame, const _uint& uiTexIdx)
+{
+	m_wstrTextureTag     = wstrTextureTag.c_str();
+	m_pTexDescriptorHeap = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(m_wstrTextureTag);
+	m_uiTexIdx		     = uiTexIdx;
+	m_tFrame             = tFrame;
+
+	Engine::NULL_CHECK_RETURN(m_pTexDescriptorHeap, E_FAIL);
+
+	return S_OK;
+}
+
 HRESULT CGameUIChild::Add_Component()
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
@@ -191,6 +203,9 @@ HRESULT CGameUIChild::Add_Component()
 
 HRESULT CGameUIChild::Read_DataFromFilePath(wstring wstrDataFilePath)
 {
+	if (L"" == wstrDataFilePath)
+		return S_OK;
+
 	wifstream fin { wstrDataFilePath };
 	if (fin.fail())
 		E_FAIL;

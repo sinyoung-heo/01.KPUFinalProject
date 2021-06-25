@@ -65,8 +65,8 @@ bool CDBMgr::Check_ID(int id, char* pw)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 	
-	SQLINTEGER u_type, u_level, u_Hp, u_maxHp, u_Exp, u_maxExp, u_att;
-	SQLFLOAT u_posX, u_posY, u_posZ, u_speed;
+	SQLINTEGER u_type, u_level, u_Hp, u_maxHp, u_Exp, u_maxExp, u_Mp, u_maxMp, u_maxAtt, u_minAtt, u_money, u_StageID;
+	SQLFLOAT u_posX, u_posY, u_posZ;
 
 	SQLLEN cbLen = 0;
 
@@ -88,17 +88,21 @@ bool CDBMgr::Check_ID(int id, char* pw)
 	if (m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO)
 	{
 		/* Load Data on player info */
-		m_retcode = SQLBindCol(m_hstmt, 3, SQL_C_DOUBLE, &u_posX, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 4, SQL_C_DOUBLE, &u_posY, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 5, SQL_C_DOUBLE, &u_posZ, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 6, SQL_C_LONG, &u_type, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 7, SQL_C_LONG, &u_level, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 8, SQL_C_LONG, &u_Hp, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 9, SQL_C_LONG, &u_maxHp, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 10, SQL_C_LONG, &u_Exp, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 11, SQL_C_LONG, &u_maxExp, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 12, SQL_C_LONG, &u_att, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 13, SQL_C_DOUBLE, &u_speed, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 3,	SQL_C_DOUBLE,	&u_posX,	100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 4,	SQL_C_DOUBLE,	&u_posY,	100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 5,	SQL_C_DOUBLE,	&u_posZ,	100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 6,	SQL_C_LONG,		&u_type,	100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 7,	SQL_C_LONG,		&u_level,	100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 8,	SQL_C_LONG,		&u_Hp,		100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 9,	SQL_C_LONG,		&u_maxHp,	100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 10, SQL_C_LONG,		&u_Exp,		100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 11, SQL_C_LONG,		&u_maxExp,	100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 12, SQL_C_LONG,		&u_Mp,		100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 13, SQL_C_LONG,		&u_maxMp,	100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 14, SQL_C_LONG,		&u_maxAtt,	100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 15, SQL_C_LONG,		&u_minAtt,	100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 16, SQL_C_LONG,		&u_money,	100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 17, SQL_C_LONG,		&u_StageID, 100, &cbLen);
 
 		for (int i = 0; ; i++)
 		{
@@ -109,15 +113,19 @@ bool CDBMgr::Check_ID(int id, char* pw)
 			/* player info를 올바르게 로드했다면 정보 저장 */
 			if (m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO)
 			{
-				pPlayer->m_vPos		= _vec3((float)u_posX, (float)u_posY, (float)u_posZ);
-				pPlayer->m_type		= (char)u_type;
-				pPlayer->m_iLevel	= u_level;
-				pPlayer->m_iHp		= u_Hp;
-				pPlayer->m_iMaxHp	= u_maxHp;
-				pPlayer->m_iExp		= u_Exp;
-				pPlayer->m_iMaxExp	= u_maxExp;
-				pPlayer->m_iMaxAtt		= u_att;
-				pPlayer->m_fSpd		= (float)u_speed;
+				pPlayer->m_vPos			= _vec3((float)u_posX, (float)u_posY, (float)u_posZ);
+				pPlayer->m_type			= (char)u_type;
+				pPlayer->m_iLevel		= u_level;
+				pPlayer->m_iHp			= u_Hp;
+				pPlayer->m_iMaxHp		= u_maxHp;
+				pPlayer->m_iExp			= u_Exp;
+				pPlayer->m_iMaxExp		= u_maxExp;
+				pPlayer->m_iMp			= u_Mp;
+				pPlayer->m_iMaxMp		= u_maxMp;
+				pPlayer->m_iMaxAtt		= u_maxAtt;
+				pPlayer->m_iMinAtt		= u_minAtt;
+				pPlayer->m_iMoney		= u_money;
+				pPlayer->m_chStageId	= (char)u_StageID;
 
 				SQLCloseCursor(m_hstmt);
 				return true;
@@ -148,7 +156,7 @@ void CDBMgr::Insert_NewPlayer_DB(int id, char* pw)
 
 	/* 회원 가입 */
 	std::string str_order
-		= "EXEC insert_user " + name + ", "+ password + ", "
+		= "EXEC insert_user " + name + ", " + password + ", "
 		+ to_string(pPlayer->m_vPos.x) + ", "
 		+ to_string(pPlayer->m_vPos.y) + ", "
 		+ to_string(pPlayer->m_vPos.z) + ", "
@@ -158,8 +166,12 @@ void CDBMgr::Insert_NewPlayer_DB(int id, char* pw)
 		+ to_string(pPlayer->m_iMaxHp) + ", "
 		+ to_string(pPlayer->m_iExp) + ", "
 		+ to_string(pPlayer->m_iMaxExp) + ", "
+		+ to_string(pPlayer->m_iMp) + ", "
+		+ to_string(pPlayer->m_iMaxMp) + ", "
 		+ to_string(pPlayer->m_iMaxAtt) + ", "
-		+ to_string(pPlayer->m_fSpd);
+		+ to_string(pPlayer->m_iMinAtt) + ", "
+		+ to_string(pPlayer->m_iMoney) + ", "
+		+ to_string((int)pPlayer->m_chStageId);
 
 	std::wstring wstr_order = L"";
 	wstr_order.assign(str_order.begin(), str_order.end());
@@ -199,8 +211,12 @@ void CDBMgr::Update_stat_DB(int id)
 		+ to_string(pPlayer->m_iMaxHp) + ", "
 		+ to_string(pPlayer->m_iExp) + ", "
 		+ to_string(pPlayer->m_iMaxExp) + ", "
+		+ to_string(pPlayer->m_iMp) + ", "
+		+ to_string(pPlayer->m_iMaxMp) + ", "
 		+ to_string(pPlayer->m_iMaxAtt) + ", "
-		+ to_string(pPlayer->m_fSpd) + ", "
+		+ to_string(pPlayer->m_iMinAtt) + ", "
+		+ to_string(pPlayer->m_iMoney) + ", "
+		+ to_string((int)pPlayer->m_chStageId) + ", "
 		+ name;
 		
 	std::wstring wstr_order = L"";

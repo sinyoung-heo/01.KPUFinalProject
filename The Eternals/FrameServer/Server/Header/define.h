@@ -27,17 +27,20 @@ constexpr int	INIT_MAXEXP					= 100;			// 초기 MAXEXP
 constexpr int	INIT_LEV					= 1;			// 초기 LEVEL
 constexpr int	INIT_MINATT					= 100;			// 초기 ATTACK
 constexpr int	INIT_MAXATT					= 200;			// 초기 ATTACK
+constexpr int	INIT_MONEY					= 0;
 constexpr float	INIT_SPEED					= 5.f;			// 초기 SPEED
 constexpr int	INCREASE_EXP				= 50;
 constexpr int	INCREASE_HP					= 50;
 constexpr int	INCREASE_MP					= 20;
+constexpr int	INCREASE_ATT				= 5;
 constexpr float	NUCKBACK_DIST				= 6.f;
 constexpr int	INIT_PARTY_NUMBER			= -1;
+constexpr int	MAX_ITEMSIZE				= 80;
 /*____________________________________________________________________
 Monster Attack & Chase Dist
 ______________________________________________________________________*/
 constexpr int	MOVE_LIMIT					= 7;			// MONSTER MOVE OFFSET
-constexpr int	CHASE_RANGE					= 9;			// MONSTER 추적 범위
+constexpr int	CHASE_RANGE					= 15;			// MONSTER 추적 범위
 
 constexpr int	ATTACK_RANGE_CRAB			= 2;			// MONSTER CRAB 공격 범위
 constexpr int	ATTACK_RANGE_MONKEY			= 3;			// MONSTER MONKEY 근거리 공격 범위
@@ -72,6 +75,31 @@ constexpr int	ARCHNE_EXP					= 100;
 constexpr float	ARCHNE_SPD					= 1.f;
 constexpr float	ARCHNE_CHASE_SPD			= 6.f;
 
+constexpr int	MONKEY_HP					= 1000;
+constexpr int	MONKEY_ATT					= 150;
+constexpr int	MONKEY_EXP					= 100;
+constexpr float	MONKEY_SPD					= 1.f;
+constexpr float	MONKEY_CHASE_SPD			= 3.f;
+
+constexpr int	CLODER_HP					= 1000;
+constexpr int	CLODER_ATT					= 150;
+constexpr int	CLODER_EXP					= 100;
+constexpr float	CLODER_SPD					= 1.f;
+constexpr float	CLODER_CHASE_SPD			= 4.f;
+
+constexpr int	GIANTMONKEY_HP				= 1000;
+constexpr int	GIANTMONKEY_ATT				= 150;
+constexpr int	GIANTMONKEY_EXP				= 100;
+constexpr float	GIANTMONKEY_SPD				= 1.f;
+constexpr float	GIANTMONKEY_CHASE_SPD		= 4.f;
+
+constexpr int	GIANTBETTLE_HP				= 1000;
+constexpr int	GIANTBETTLE_ATT				= 150;
+constexpr int	GIANTBETTLE_EXP				= 100;
+constexpr float	GIANTBETTLE_SPD				= 1.f;
+constexpr float	GIANTBETTLE_CHASE_SPD		= 4.f;
+
+constexpr float	GOBACK_SPD					= 6.f;
 
 /*____________________________________________________________________
 Player Direction

@@ -53,6 +53,8 @@ constexpr char SC_PACKET_REJECT_PARTY		= 24;
 constexpr char SC_PACKET_JOIN_PARTY			= 25;
 constexpr char SC_PACKET_LEAVE_PARTY		= 26;
 constexpr char SC_PACKET_UPDATE_PARTY		= 27;
+constexpr char SC_PACKET_UPDATE_INVENTORY	= 28;
+constexpr char SC_PACKET_UPDATE_EQUIPMENT	= 29;
 
 constexpr char CS_LOGIN					= 0;
 constexpr char CS_MOVE					= 1;
@@ -61,8 +63,8 @@ constexpr char CS_ATTACK				= 3;
 constexpr char CS_ATTACK_STOP			= 4;
 constexpr char CS_CHAT					= 5;
 constexpr char CS_LOGOUT				= 6;
-constexpr char CS_COLLIDE				= 7;   // Player가 다른 Object에게 충돌당했을 경우
-constexpr char CS_COLLIDE_MONSTER		= 8;   // Player가 Monster 공격
+constexpr char CS_COLLIDE				= 7;	// Player가 다른 Object에게 충돌당했을 경우
+constexpr char CS_COLLIDE_MONSTER		= 8;	// Player가 Monster 공격
 constexpr char CS_STANCE_CHANGE         = 9;
 constexpr char CS_STAGE_CHANGE			= 10;
 constexpr char CS_SUGGEST_PARTY         = 11;	// 파티 초대
@@ -70,6 +72,10 @@ constexpr char CS_RESPOND_PARTY			= 12;	// 파티 초대에 대한 응답
 constexpr char CS_JOIN_PARTY			= 13;	// 파티 가입 신청
 constexpr char CS_DECIDE_PARTY			= 14;	// 파티 가입 신청에 대한 응답
 constexpr char CS_LEAVE_PARTY			= 15;	// 파티 탈퇴
+constexpr char CS_ADD_ITEM				= 16;	// 아이템 획득
+constexpr char CS_DELETE_ITEM			= 17;	// 아이템 제거
+constexpr char CS_EQUIP_ITEM			= 18;	// 장비 장착
+constexpr char CS_UNEQUIP_ITEM			= 19;	// 장비 해체
 
 // Stage ID
 constexpr char STAGE_VELIKA				= 0;
@@ -91,6 +97,7 @@ constexpr char TYPE_PLAYER				= 0;
 constexpr char PC_GLADIATOR				= 0;
 constexpr char PC_ARCHER				= 1;
 constexpr char PC_PRIEST				= 2;
+constexpr char PC_ALL					= 3;
 
 /* MONSTER TYPE */
 constexpr char MON_NORMAL				= 0;
@@ -134,6 +141,12 @@ constexpr char NPC_CASTANIC_LSMITH		= 12;
 constexpr char AFFECT_FINCH				= 0;
 constexpr char AFFECT_GROGGY			= 1;
 constexpr char AFFECT_KNOCKBACK			= 2;
+
+/* EQUIPMENT TYPE */
+constexpr char EQUIP_WEAPON				= 0;
+constexpr char EQUIP_ARMOR				= 1;
+constexpr char EQUIP_HELMET				= 2;
+constexpr char EQUIP_SHOES				= 3;
 
 /* ___________________________________________________________________________________________________________________*/
 /*													SERVER -> CLIENT												  */
@@ -223,6 +236,7 @@ struct sc_packet_stat_change
 	int				exp;
 	int				maxExp;
 	int				lev;
+	int				maxAtt, minAtt;
 };
 
 struct sc_packet_chat 
@@ -233,6 +247,7 @@ struct sc_packet_chat
 
 	char			name[MAX_ID_LEN];
 	char			message[MAX_STR_LEN];
+	int				messageLen;
 };
 
 struct sc_packet_login_fail 
@@ -363,6 +378,27 @@ struct sc_packet_update_party
 	int				mp, maxMp;
 };
 
+struct sc_packet_update_inventory
+{
+	unsigned char	size;
+	char			type;
+
+	char			itemType;
+	char			itemName;
+	bool			is_pushItem;
+	int				count;
+};
+
+struct sc_packet_update_equipment
+{
+	unsigned char	size;
+	char			type;
+
+	char			equipType;
+	char			itemName;
+	bool			is_pushItem;
+};
+
 /* ___________________________________________________________________________________________________________________*/
 /*													CLIENT -> SERVER												  */
 /* ___________________________________________________________________________________________________________________*/
@@ -371,6 +407,7 @@ struct cs_packet_login
 	unsigned char	size;
 	char			type;
 
+	bool			isMember;
 	char			weapon_type;
 	char			o_type;
 	char			name[MAX_ID_LEN];
@@ -482,6 +519,15 @@ struct cs_packet_respond_party
 
 	bool			result;
 	int				suggester_id;
+};
+
+struct cs_packet_manage_inventory
+{
+	unsigned char	size;
+	char			type;
+
+	char			itemType;
+	char			itemName;
 };
 
 #pragma pack (pop)
