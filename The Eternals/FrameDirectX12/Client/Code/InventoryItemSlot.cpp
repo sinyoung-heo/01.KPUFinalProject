@@ -195,12 +195,21 @@ void CInventoryItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 		}
 	}
 
-	// 아이템 장착
+	// 아이템 스왑 해제 or 아이템 장착
 	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect) &&
 		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_RB) && 
-		m_bIsKeyPressingRB &&
-		!m_pInvenEquipMgr->Get_IsInventoryItemSwapState())
+		m_bIsKeyPressingRB)
 	{
+		if (m_pInvenEquipMgr->Get_IsInventoryItemSwapState())
+		{
+			m_pInvenEquipMgr->Get_InventorySwapSlotClass()->Set_CurItemInfo(NO_ITEM, NO_ITEM, 0);
+			m_pInvenEquipMgr->Set_IsInventoryItemSwapState(false);
+			m_bIsKeyPressingRB = false;
+			return;
+		}
+		
+		// 아이템 장착.
+
 	}
 
 	m_bIsKeyPressingLB = false;
