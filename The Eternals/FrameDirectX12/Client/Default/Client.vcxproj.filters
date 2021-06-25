@@ -295,32 +295,8 @@
     <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\01.PCSelectBackgroundChild\PCSelectFrame">
       <UniqueIdentifier>{be28307c-c7f2-48f7-801d-f7f4fa5f8bdd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\02.LoginSelectButton">
-      <UniqueIdentifier>{0432068e-cade-4d10-9e8d-e146572eca3f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\99.GameUI\02.NormalMonsterHpGauge">
       <UniqueIdentifier>{2c6d9858-532b-4d18-ab51-2bf0aed42f5c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild">
-      <UniqueIdentifier>{0544f22c-d6b3-4860-b0b5-dc40fc4992ec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonClose">
-      <UniqueIdentifier>{3e1e1857-6771-41cf-8a0d-551bff17b6f5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonGameExit">
-      <UniqueIdentifier>{8262b5f6-524a-4995-9eb7-0c41f9487a76}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonShaderCheckBox">
-      <UniqueIdentifier>{29cbdbbf-f8a3-45fa-a452-cf3a610fdbbf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild">
-      <UniqueIdentifier>{c4b0806e-7d15-4d54-9daa-c7a3b7c2852b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild\LogoutButtonClose">
-      <UniqueIdentifier>{5df590e2-046d-4e30-a065-0bdb6f3c1425}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild\LogoutButtonChoice">
-      <UniqueIdentifier>{40c02d88-e610-447c-9193-f94d87f88e64}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\98.GameEffect\05.IceStorm_s">
       <UniqueIdentifier>{7bf487f3-73d6-4e5e-9fca-c48fff7becc5}</UniqueIdentifier>
@@ -334,62 +310,11 @@
     <Filter Include="97.Mgr\05.EffectMgr">
       <UniqueIdentifier>{d1e755a3-e0b4-49c4-86c9-fa11fd591ea8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\04.PartySuggestResponseCanvas">
-      <UniqueIdentifier>{64cedfb3-8c17-4f6d-9060-3639a62fb706}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\03.PartySuggestCanvas">
-      <UniqueIdentifier>{2c765787-bdab-45de-8300-e5c904062120}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestResponseCanvasChild">
-      <UniqueIdentifier>{03411472-9846-447f-8c78-94f52c64877e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.Mgr\06.PartySystemMgr">
       <UniqueIdentifier>{cc282e5d-d07a-4c55-a4ba-edde963a14e1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\04.PartySuggestCanvasChild">
-      <UniqueIdentifier>{437ef053-aafd-430c-baac-6cf04e6b6fd8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\06.PartyLeaveButton">
-      <UniqueIdentifier>{b33b4008-320c-4816-89ed-a2871b2e4f50}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\05.PartySystemMessageCanvas">
-      <UniqueIdentifier>{d725e887-f3b2-4608-abed-603bbbccaaa2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild">
-      <UniqueIdentifier>{86a67724-adcc-4493-a669-1c2090d6dffc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\06.PartyInfoListCanvas">
-      <UniqueIdentifier>{58edd721-57c6-4687-92f6-9b0e872bebe4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIHpGauge">
-      <UniqueIdentifier>{54cfad39-f045-4c4d-a288-3eacdcaa35a4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIMpGauge">
-      <UniqueIdentifier>{acd22b62-2b4f-4d13-9f18-ad33a8f0257b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestResponseCanvasChild\PartySuggestResponseChoice">
-      <UniqueIdentifier>{381742e4-9df8-44e0-993f-705070c7ccb8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestResponseCanvasChild\PartySuggestResponseClose">
-      <UniqueIdentifier>{8afa8e4a-f28c-46e8-a875-828e87d93072}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIClassInfo">
-      <UniqueIdentifier>{46e56771-b2ac-4242-813f-3acb2e26622d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\07.ChattingCanvas">
-      <UniqueIdentifier>{94dcbd59-685a-4f2f-b5cc-5fded982fee4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\08.ChattingCanvasChild">
-      <UniqueIdentifier>{bf1a5b45-6891-4e7a-b4ba-aa88267d2ad4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\08.ChattingCanvasChild\ChattingCursor">
-      <UniqueIdentifier>{f8f35668-2617-435f-84a2-e2d0e40ad98e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.Mgr\07.ChattingMgr">
       <UniqueIdentifier>{2904b338-b7c5-4d45-a62a-077e1b63a009}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\08.ChattingCanvasChild\ChattingInput">
-      <UniqueIdentifier>{8e23dd74-d62b-42eb-aa50-28008bad1900}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\99.GameUI\03.NPCMiniMap">
       <UniqueIdentifier>{fb87df6f-a6be-4b2b-89a6-c03aef3109a5}</UniqueIdentifier>
@@ -400,23 +325,113 @@
     <Filter Include="97.Mgr\08.InventoryEquimentMgr">
       <UniqueIdentifier>{f98edfe9-53c5-4831-8d41-ab37db7e4434}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\09.InventoryCanvasChild">
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\03.LoginSelectButton">
+      <UniqueIdentifier>{0432068e-cade-4d10-9e8d-e146572eca3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\04.PartySuggestCanvas">
+      <UniqueIdentifier>{2c765787-bdab-45de-8300-e5c904062120}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\05.PartySuggestResponseCanvas">
+      <UniqueIdentifier>{64cedfb3-8c17-4f6d-9060-3639a62fb706}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\06.PartySystemMessageCanvas">
+      <UniqueIdentifier>{d725e887-f3b2-4608-abed-603bbbccaaa2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\07.PartyInfoListCanvas">
+      <UniqueIdentifier>{58edd721-57c6-4687-92f6-9b0e872bebe4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\08.ChattingCanvas">
+      <UniqueIdentifier>{94dcbd59-685a-4f2f-b5cc-5fded982fee4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\02.LoginIDBackground">
+      <UniqueIdentifier>{11644b37-85ba-4176-9cc9-dd1dc64a2eda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuSettingCanvasChild">
+      <UniqueIdentifier>{0544f22c-d6b3-4860-b0b5-dc40fc4992ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuSettingCanvasChild\SettingButtonClose">
+      <UniqueIdentifier>{3e1e1857-6771-41cf-8a0d-551bff17b6f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuSettingCanvasChild\SettingButtonGameExit">
+      <UniqueIdentifier>{8262b5f6-524a-4995-9eb7-0c41f9487a76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuSettingCanvasChild\SettingButtonShaderCheckBox">
+      <UniqueIdentifier>{29cbdbbf-f8a3-45fa-a452-cf3a610fdbbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\04.MainMenuLogoutCanvasChild">
+      <UniqueIdentifier>{c4b0806e-7d15-4d54-9daa-c7a3b7c2852b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\04.MainMenuLogoutCanvasChild\LogoutButtonClose">
+      <UniqueIdentifier>{5df590e2-046d-4e30-a065-0bdb6f3c1425}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\04.MainMenuLogoutCanvasChild\LogoutButtonChoice">
+      <UniqueIdentifier>{40c02d88-e610-447c-9193-f94d87f88e64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestCanvasChild">
+      <UniqueIdentifier>{437ef053-aafd-430c-baac-6cf04e6b6fd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\06.PartySuggestResponseCanvasChild">
+      <UniqueIdentifier>{03411472-9846-447f-8c78-94f52c64877e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\06.PartySuggestResponseCanvasChild\PartySuggestResponseChoice">
+      <UniqueIdentifier>{381742e4-9df8-44e0-993f-705070c7ccb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\06.PartySuggestResponseCanvasChild\PartySuggestResponseClose">
+      <UniqueIdentifier>{8afa8e4a-f28c-46e8-a875-828e87d93072}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\07.PartyLeaveButton">
+      <UniqueIdentifier>{b33b4008-320c-4816-89ed-a2871b2e4f50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\08.PartyInfoListCanvasChild">
+      <UniqueIdentifier>{86a67724-adcc-4493-a669-1c2090d6dffc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\08.PartyInfoListCanvasChild\PartyUIHpGauge">
+      <UniqueIdentifier>{54cfad39-f045-4c4d-a288-3eacdcaa35a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\08.PartyInfoListCanvasChild\PartyUIMpGauge">
+      <UniqueIdentifier>{acd22b62-2b4f-4d13-9f18-ad33a8f0257b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\08.PartyInfoListCanvasChild\PartyUIClassInfo">
+      <UniqueIdentifier>{46e56771-b2ac-4242-813f-3acb2e26622d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\09.ChattingCanvasChild">
+      <UniqueIdentifier>{bf1a5b45-6891-4e7a-b4ba-aa88267d2ad4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\09.ChattingCanvasChild\ChattingCursor">
+      <UniqueIdentifier>{f8f35668-2617-435f-84a2-e2d0e40ad98e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\09.ChattingCanvasChild\ChattingInput">
+      <UniqueIdentifier>{8e23dd74-d62b-42eb-aa50-28008bad1900}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\10.InventoryCanvasChild">
       <UniqueIdentifier>{1f3d3779-df59-4a9b-9651-b52aaf3fbb5a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\10.EquipmentCanvasChild">
-      <UniqueIdentifier>{8ede34eb-c7f8-4aaa-90d4-41bdd7638181}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\09.InventoryCanvasChild\InventoryButtonClose">
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\10.InventoryCanvasChild\InventoryButtonClose">
       <UniqueIdentifier>{d2814587-1abe-4b15-888c-87a01b9b8d36}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\09.InventoryCanvasChild\InventoryItemSlot">
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\10.InventoryCanvasChild\InventoryItemSlot">
       <UniqueIdentifier>{43af17d8-be3d-4aad-a4d8-74e819007fb1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\10.EquipmentCanvasChild\EquipmentButtonClose">
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\11.EquipmentCanvasChild">
+      <UniqueIdentifier>{8ede34eb-c7f8-4aaa-90d4-41bdd7638181}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\11.EquipmentCanvasChild\EquipmentButtonClose">
       <UniqueIdentifier>{58c69121-8c5c-4fe7-99ae-fc4de2d597b0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\10.EquipmentCanvasChild\EquipmentItemSlot">
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\11.EquipmentCanvasChild\EquipmentItemSlot">
       <UniqueIdentifier>{01dad32f-fc77-47fe-83c9-9f33825951e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\02.LoginIDBackgroundChild">
+      <UniqueIdentifier>{8c5cf0bd-f30a-4cc4-90cb-826dbefc1917}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\02.LoginIDBackgroundChild\LoginIDButton">
+      <UniqueIdentifier>{69800cdb-36b2-4bb9-995b-c1a039840c5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\02.LoginIDBackgroundChild\LoginIDFont">
+      <UniqueIdentifier>{b290ad04-2ae5-4d01-bc17-9f273a6f75bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\02.LoginIDBackgroundChild\LoginIDInputString">
+      <UniqueIdentifier>{c9e3ca99-536e-4be3-9d8a-83a0d1baea97}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -746,25 +761,25 @@
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\01.PCSelectBackgroundChild\PCSelectJop</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\LoginSelectButton.h">
-      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\02.LoginSelectButton</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\03.LoginSelectButton</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\NormalMonsterHpGauge.h">
       <Filter>02.GameObject\99.GameUI\02.NormalMonsterHpGauge</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\SettingButtonClose.h">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonClose</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuSettingCanvasChild\SettingButtonClose</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\SettingButtonGameExit.h">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonGameExit</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuSettingCanvasChild\SettingButtonGameExit</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\SettingButtonShaderCheckBox.h">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonShaderCheckBox</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuSettingCanvasChild\SettingButtonShaderCheckBox</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\LogoutButtonClose.h">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild\LogoutButtonClose</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\04.MainMenuLogoutCanvasChild\LogoutButtonClose</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\LogoutButtonChoice.h">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild\LogoutButtonChoice</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\04.MainMenuLogoutCanvasChild\LogoutButtonChoice</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\ArrowDecal.h">
       <Filter>02.GameObject\98.GameEffect</Filter>
@@ -782,51 +797,51 @@
       <Filter>97.Mgr\05.EffectMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\PartySuggestCanvas.h">
-      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\03.PartySuggestCanvas</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\04.PartySuggestCanvas</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\PartySuggestResponseCanvas.h">
-      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\04.PartySuggestResponseCanvas</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\05.PartySuggestResponseCanvas</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\PartySuggestButton.h">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\04.PartySuggestCanvasChild</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestCanvasChild</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\PartySystemMgr.h">
       <Filter>97.Mgr\06.PartySystemMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\PartyLeaveButton.h">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\06.PartyLeaveButton</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\07.PartyLeaveButton</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\PartySystemMessageCanvas.h">
-      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\05.PartySystemMessageCanvas</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\06.PartySystemMessageCanvas</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\PartyInfoListCanvas.h">
-      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\06.PartyInfoListCanvas</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\07.PartyInfoListCanvas</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\PartySuggestResponseChoice.h">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestResponseCanvasChild\PartySuggestResponseChoice</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\06.PartySuggestResponseCanvasChild\PartySuggestResponseChoice</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\PartySuggestResponseClose.h">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestResponseCanvasChild\PartySuggestResponseClose</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\06.PartySuggestResponseCanvasChild\PartySuggestResponseClose</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\PartyUIClassInfo.h">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIClassInfo</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\08.PartyInfoListCanvasChild\PartyUIClassInfo</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\PartyUIHpGauge.h">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIHpGauge</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\08.PartyInfoListCanvasChild\PartyUIHpGauge</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\PartyUIMpGauge.h">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIMpGauge</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\08.PartyInfoListCanvasChild\PartyUIMpGauge</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\DistTrail.h" />
     <ClInclude Include="..\Code\LightingParticle.h" />
     <ClInclude Include="..\Code\ChattingCanvas.h">
-      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\07.ChattingCanvas</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\08.ChattingCanvas</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\ChattingInput.h">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\08.ChattingCanvasChild\ChattingInput</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\09.ChattingCanvasChild\ChattingInput</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\ChattingCursor.h">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\08.ChattingCanvasChild\ChattingCursor</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\09.ChattingCanvasChild\ChattingCursor</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\ChattingMgr.h">
       <Filter>97.Mgr\07.ChattingMgr</Filter>
@@ -844,10 +859,10 @@
       <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuInventory</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\InventoryButtonClose.h">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\09.InventoryCanvasChild\InventoryButtonClose</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\10.InventoryCanvasChild\InventoryButtonClose</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\InventoryItemSlot.h">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\09.InventoryCanvasChild\InventoryItemSlot</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\10.InventoryCanvasChild\InventoryItemSlot</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\MainMenuLogoutCanvas.h">
       <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuLogout</Filter>
@@ -862,13 +877,25 @@
       <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuEquipment</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\EquipmentButtonClose.h">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\10.EquipmentCanvasChild\EquipmentButtonClose</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\11.EquipmentCanvasChild\EquipmentButtonClose</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\EquipmentItemSlot.h">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\10.EquipmentCanvasChild\EquipmentItemSlot</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\11.EquipmentCanvasChild\EquipmentItemSlot</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\InventorySwapSlot.h">
       <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuInventory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\LoginIDBackground.h">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\02.LoginIDBackground</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\LoginIDInputString.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.LoginIDBackgroundChild\LoginIDInputString</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\LoginIDFont.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.LoginIDBackgroundChild\LoginIDFont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\LoginIDButton.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.LoginIDBackgroundChild\LoginIDButton</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1144,25 +1171,25 @@
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\01.PCSelectBackgroundChild\PCSelectJop</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\LoginSelectButton.cpp">
-      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\02.LoginSelectButton</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\03.LoginSelectButton</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\NormalMonsterHpGauge.cpp">
       <Filter>02.GameObject\99.GameUI\02.NormalMonsterHpGauge</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\SettingButtonClose.cpp">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonClose</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuSettingCanvasChild\SettingButtonClose</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\SettingButtonGameExit.cpp">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonGameExit</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuSettingCanvasChild\SettingButtonGameExit</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\SettingButtonShaderCheckBox.cpp">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.MainMenuSettingCanvasChild\SettingButtonShaderCheckBox</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuSettingCanvasChild\SettingButtonShaderCheckBox</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\LogoutButtonClose.cpp">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild\LogoutButtonClose</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\04.MainMenuLogoutCanvasChild\LogoutButtonClose</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\LogoutButtonChoice.cpp">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\03.MainMenuLogoutCanvasChild\LogoutButtonChoice</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\04.MainMenuLogoutCanvasChild\LogoutButtonChoice</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\ArrowDecal.cpp">
       <Filter>02.GameObject\98.GameEffect</Filter>
@@ -1180,51 +1207,51 @@
       <Filter>97.Mgr\05.EffectMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\PartySuggestCanvas.cpp">
-      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\03.PartySuggestCanvas</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\04.PartySuggestCanvas</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\PartySuggestResponseCanvas.cpp">
-      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\04.PartySuggestResponseCanvas</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\05.PartySuggestResponseCanvas</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\PartySuggestButton.cpp">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\04.PartySuggestCanvasChild</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestCanvasChild</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\PartySystemMgr.cpp">
       <Filter>97.Mgr\06.PartySystemMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\PartyLeaveButton.cpp">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\06.PartyLeaveButton</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\07.PartyLeaveButton</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\PartySystemMessageCanvas.cpp">
-      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\05.PartySystemMessageCanvas</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\06.PartySystemMessageCanvas</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\PartyInfoListCanvas.cpp">
-      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\06.PartyInfoListCanvas</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\07.PartyInfoListCanvas</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\PartySuggestResponseChoice.cpp">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestResponseCanvasChild\PartySuggestResponseChoice</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\06.PartySuggestResponseCanvasChild\PartySuggestResponseChoice</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\PartySuggestResponseClose.cpp">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\05.PartySuggestResponseCanvasChild\PartySuggestResponseClose</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\06.PartySuggestResponseCanvasChild\PartySuggestResponseClose</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\PartyUIClassInfo.cpp">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIClassInfo</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\08.PartyInfoListCanvasChild\PartyUIClassInfo</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\PartyUIHpGauge.cpp">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIHpGauge</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\08.PartyInfoListCanvasChild\PartyUIHpGauge</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\PartyUIMpGauge.cpp">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\07.PartyInfoListCanvasChild\PartyUIMpGauge</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\08.PartyInfoListCanvasChild\PartyUIMpGauge</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\DistTrail.cpp" />
     <ClCompile Include="..\Code\LightingParticle.cpp" />
     <ClCompile Include="..\Code\ChattingCanvas.cpp">
-      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\07.ChattingCanvas</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\08.ChattingCanvas</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\ChattingInput.cpp">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\08.ChattingCanvasChild\ChattingInput</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\09.ChattingCanvasChild\ChattingInput</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\ChattingCursor.cpp">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\08.ChattingCanvasChild\ChattingCursor</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\09.ChattingCanvasChild\ChattingCursor</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\ChattingMgr.cpp">
       <Filter>97.Mgr\07.ChattingMgr</Filter>
@@ -1242,10 +1269,10 @@
       <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuInventory</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\InventoryButtonClose.cpp">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\09.InventoryCanvasChild\InventoryButtonClose</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\10.InventoryCanvasChild\InventoryButtonClose</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\InventoryItemSlot.cpp">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\09.InventoryCanvasChild\InventoryItemSlot</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\10.InventoryCanvasChild\InventoryItemSlot</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\MainMenuLogoutCanvas.cpp">
       <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuLogout</Filter>
@@ -1260,13 +1287,25 @@
       <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuEquipment</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\EquipmentButtonClose.cpp">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\10.EquipmentCanvasChild\EquipmentButtonClose</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\11.EquipmentCanvasChild\EquipmentButtonClose</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\EquipmentItemSlot.cpp">
-      <Filter>02.GameObject\99.GameUI\01.GameUIChild\10.EquipmentCanvasChild\EquipmentItemSlot</Filter>
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\11.EquipmentCanvasChild\EquipmentItemSlot</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\InventorySwapSlot.cpp">
       <Filter>02.GameObject\99.GameUI\00.GameUIRoot\00.MainMenu\MainMenuInventory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\LoginIDBackground.cpp">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\02.LoginIDBackground</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\LoginIDInputString.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.LoginIDBackgroundChild\LoginIDInputString</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\LoginIDFont.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.LoginIDBackgroundChild\LoginIDFont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\LoginIDButton.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.LoginIDBackgroundChild\LoginIDButton</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

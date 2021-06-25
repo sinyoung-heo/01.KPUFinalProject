@@ -18,6 +18,10 @@
 #include "PCSelectFrame.h"
 #include "PCSelectButton.h"
 #include "LoginSelectButton.h"
+#include "LoginIDBackground.h"
+#include "LoginIDInputString.h"
+#include "LoginIDFont.h"
+#include "LoginIDButton.h"
 
 char g_cJob = -1;
 
@@ -76,6 +80,15 @@ HRESULT CScene_Logo::Ready_Scene()
 	m_pLoginSelectIDButton->Set_IsActive(true);
 	m_pLoginSelectIDButton->Set_IsRender(true);
 	m_pLoginSelectIDButton->Get_Font()->Set_Text(L"Login ID");
+
+
+
+	m_pLoginIDBackground->Set_IsActive(false);
+	m_pLoginIDInputStringID->Set_IsActive(false);
+	m_pLoginIDInputStringPWD->Set_IsActive(false);
+	m_pLoginIDFont_ID->Set_IsActive(false);
+	m_pLoginIDFont_PWD->Set_IsActive(false);
+	m_pLoginIDButton->Set_IsActive(false);
 
 	return S_OK;
 }
@@ -226,7 +239,6 @@ void CScene_Logo::KeyInput_LoginSelect(const _float& fTimeDelta)
 		m_pLoginSelectPCButtonClicked->Set_IsRender(true);
 		m_pLoginSelectPCButton->Set_IsActive(false);
 		m_pLoginSelectPCButton->Set_IsRender(false);
-
 		m_pLoginSelectIDButtonClicked->Set_IsActive(false);
 		m_pLoginSelectIDButtonClicked->Set_IsRender(false);
 		m_pLoginSelectIDButton->Set_IsActive(true);
@@ -245,6 +257,14 @@ void CScene_Logo::KeyInput_LoginSelect(const _float& fTimeDelta)
 		m_pPCSelectFramePriest->Set_IsActive(true);
 		m_pPCSelectButton->Set_IsActive(true);
 		m_pPCSelectButtonClicked->Set_IsActive(true);
+
+		// LoginID Active Off
+		m_pLoginIDBackground->Set_IsActive(false);
+		m_pLoginIDInputStringID->Set_IsActive(false);
+		m_pLoginIDInputStringPWD->Set_IsActive(false);
+		m_pLoginIDFont_ID->Set_IsActive(false);
+		m_pLoginIDFont_PWD->Set_IsActive(false);
+		m_pLoginIDButton->Set_IsActive(false);
 	}
 
 	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pLoginSelectIDButton->Get_Rect()) &&
@@ -254,7 +274,6 @@ void CScene_Logo::KeyInput_LoginSelect(const _float& fTimeDelta)
 		m_pLoginSelectPCButtonClicked->Set_IsRender(false);
 		m_pLoginSelectPCButton->Set_IsActive(true);
 		m_pLoginSelectPCButton->Set_IsRender(true);
-
 		m_pLoginSelectIDButtonClicked->Set_IsActive(true);
 		m_pLoginSelectIDButtonClicked->Set_IsRender(true);
 		m_pLoginSelectIDButton->Set_IsActive(false);
@@ -273,6 +292,14 @@ void CScene_Logo::KeyInput_LoginSelect(const _float& fTimeDelta)
 		m_pPCSelectFramePriest->Set_IsActive(false);
 		m_pPCSelectButton->Set_IsActive(false);
 		m_pPCSelectButtonClicked->Set_IsActive(false);
+
+		// LoginID Active On
+		m_pLoginIDBackground->Set_IsActive(true);
+		m_pLoginIDInputStringID->Set_IsActive(true);
+		m_pLoginIDInputStringPWD->Set_IsActive(true);
+		m_pLoginIDFont_ID->Set_IsActive(true);
+		m_pLoginIDFont_PWD->Set_IsActive(true);
+		m_pLoginIDButton->Set_IsActive(true);
 	}
 }
 
@@ -282,7 +309,6 @@ void CScene_Logo::KeyInput_PCSelect(const _float& fTimeDelta)
 		return;
 	if (m_bIsGameStart)
 		return;
-
 	if (m_bIsLoginID)
 		return;
 
@@ -433,8 +459,30 @@ HRESULT CScene_Logo::Ready_LayerUI(wstring wstrLayerTag)
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"LoadingProgressBack", m_pLoadingProgress), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
-	[ UI - Login Select ]
+	[ UI - Login ]
 	____________________________________________________________________________________________________________*/
+	Engine::FAILED_CHECK_RETURN(SetUp_UIPCSelect(), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(SetUp_UILoginID(), E_FAIL);
+
+	return S_OK;
+}
+
+HRESULT CScene_Logo::Ready_LayerFont(wstring wstrLayerTag)
+{
+	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
+
+	/*__________________________________________________________________________________________________________
+	[ Font Layer 持失 ]
+	____________________________________________________________________________________________________________*/
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
+	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
+	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
+
+	return S_OK;
+}
+
+HRESULT CScene_Logo::SetUp_UIPCSelect()
+{
 	{
 		wifstream fin { L"../../Bin/ToolData/2DUIPCLogingCharacterClicked.2DUI" };
 		if (fin.fail())
@@ -975,16 +1023,164 @@ HRESULT CScene_Logo::Ready_LayerUI(wstring wstrLayerTag)
 	return S_OK;
 }
 
-HRESULT CScene_Logo::Ready_LayerFont(wstring wstrLayerTag)
+HRESULT CScene_Logo::SetUp_UILoginID()
 {
-	Engine::NULL_CHECK_RETURN(m_pObjectMgr, E_FAIL);
+	{
+		wifstream fin { L"../../Bin/ToolData/2DUIIDLogin.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
 
-	/*__________________________________________________________________________________________________________
-	[ Font Layer 持失 ]
-	____________________________________________________________________________________________________________*/
-	Engine::CLayer* pLayer = Engine::CLayer::Create();
-	Engine::NULL_CHECK_RETURN(pLayer, E_FAIL);
-	m_pObjectMgr->Add_Layer(wstrLayerTag, pLayer);
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		// ChildUI Data
+		vector<wstring> vecDataFilePath;
+		vector<wstring> vecObjectTag;
+		vector<_vec3>	vecPos;
+		vector<_vec3>	vecScale;
+		vector<_long>	vecUIDepth;
+		vector<_int>	vecIsSpriteAnimation;
+		vector<_float>	vecFrameSpeed;
+		vector<_vec3>	vecRectPosOffset;
+		vector<_vec3>	vecRectScale;
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			vecDataFilePath.resize(iChildUISize);
+			vecObjectTag.resize(iChildUISize);
+			vecPos.resize(iChildUISize);
+			vecScale.resize(iChildUISize);
+			vecUIDepth.resize(iChildUISize);
+			vecIsSpriteAnimation.resize(iChildUISize);
+			vecFrameSpeed.resize(iChildUISize);
+			vecRectPosOffset.resize(iChildUISize);
+			vecRectScale.resize(iChildUISize);
+
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				fin >> vecDataFilePath[i]			// DataFilePath
+					>> vecObjectTag[i]				// Object Tag
+					>> vecPos[i].x					// Pos X
+					>> vecPos[i].y					// Pos Y
+					>> vecScale[i].x				// Scale X
+					>> vecScale[i].y				// Scale Y
+					>> vecUIDepth[i]				// UI Depth
+					>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
+					>> vecFrameSpeed[i]				// Frame Speed
+					>> vecRectPosOffset[i].x		// RectPosOffset X
+					>> vecRectPosOffset[i].y		// RectPosOffset Y
+					>> vecRectScale[i].x			// RectScale X
+					>> vecRectScale[i].y;			// RectScale Y
+			}
+
+			if (fin.eof())
+				break;
+
+			// UIRoot 持失.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CLoginIDBackground::Create(m_pGraphicDevice, m_pCommandList,
+												 wstrRootObjectTag,
+												 wstrDataFilePath,
+												 vPos,
+												 vScale,
+												 bIsSpriteAnimation,
+												 fFrameSpeed,
+												 vRectPosOffset,
+												 vRectScale,
+												 UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+			m_pLoginIDBackground = static_cast<CLoginIDBackground*>(pRootUI);
+
+			// UIChild 持失.
+			Engine::CGameObject* pChildUI = nullptr;
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				if (L"InputStringID" == vecObjectTag[i] || L"InputStringPwd" == vecObjectTag[i])
+				{
+					pChildUI = CLoginIDInputString::Create(m_pGraphicDevice, m_pCommandList,
+														   wstrRootObjectTag,				// RootObjectTag
+														   vecObjectTag[i],					// ObjectTag
+														   vecDataFilePath[i],				// DataFilePath
+														   vecPos[i],						// Pos
+														   vecScale[i],						// Scane
+														   (_bool)vecIsSpriteAnimation[i],	// Is Animation
+														   vecFrameSpeed[i],				// FrameSpeed
+														   vecRectPosOffset[i],				// RectPosOffset
+														   vecRectScale[i],					// RectScaleOffset
+														   vecUIDepth[i]);					// UI Depth
+
+					if (L"InputStringID" == vecObjectTag[i])
+						m_pLoginIDInputStringID = static_cast<CLoginIDInputString*>(pChildUI);
+
+					else if (L"InputStringPwd" == vecObjectTag[i])
+						m_pLoginIDInputStringPWD = static_cast<CLoginIDInputString*>(pChildUI);
+				}
+				else if (L"FontID" == vecObjectTag[i] || L"FontPwd" == vecObjectTag[i])
+				{
+					pChildUI = CLoginIDFont::Create(m_pGraphicDevice, m_pCommandList,
+													wstrRootObjectTag,					// RootObjectTag
+													vecObjectTag[i],					// ObjectTag
+													vecDataFilePath[i],					// DataFilePath
+													vecPos[i],							// Pos
+													vecScale[i],						// Scane
+													(_bool)vecIsSpriteAnimation[i],		// Is Animation
+													vecFrameSpeed[i],					// FrameSpeed
+													vecRectPosOffset[i],				// RectPosOffset
+													vecRectScale[i],					// RectScaleOffset
+													vecUIDepth[i]);						// UI Depth
+
+					if (L"FontID" == vecObjectTag[i])
+						m_pLoginIDFont_ID = static_cast<CLoginIDFont*>(pChildUI);
+
+					else if (L"FontPwd" == vecObjectTag[i])
+						m_pLoginIDFont_PWD = static_cast<CLoginIDFont*>(pChildUI);
+				}
+				else if (L"LoginButton" == vecObjectTag[i])
+				{
+					pChildUI = CLoginIDButton::Create(m_pGraphicDevice, m_pCommandList,
+													  wstrRootObjectTag,				// RootObjectTag
+													  vecObjectTag[i],					// ObjectTag
+													  vecDataFilePath[i],				// DataFilePath
+													  vecPos[i],						// Pos
+													  vecScale[i],						// Scane
+													  (_bool)vecIsSpriteAnimation[i],	// Is Animation
+													  vecFrameSpeed[i],					// FrameSpeed
+													  vecRectPosOffset[i],				// RectPosOffset
+													  vecRectScale[i],					// RectScaleOffset
+													  vecUIDepth[i]);					// UI Depth
+
+					m_pLoginIDButton = static_cast<CLoginIDButton*>(pChildUI);
+				}
+
+				m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
+				static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
+			}
+		}
+	}
 
 	return S_OK;
 }
@@ -1071,4 +1267,11 @@ void CScene_Logo::Free()
 	m_pPCSelectFramePriest    = nullptr;
 	m_pPCSelectButton         = nullptr;
 	m_pPCSelectButtonClicked  = nullptr;
+
+	m_pLoginIDBackground     = nullptr;
+	m_pLoginIDInputStringID  = nullptr;
+	m_pLoginIDInputStringPWD = nullptr;
+	m_pLoginIDFont_ID        = nullptr;
+	m_pLoginIDFont_PWD       = nullptr;
+	m_pLoginIDButton         = nullptr;
 }

@@ -208,6 +208,10 @@
     <ClInclude Include="..\Code\InventoryItemSlot.h" />
     <ClInclude Include="..\Code\InventorySwapSlot.h" />
     <ClInclude Include="..\Code\LightingParticle.h" />
+    <ClInclude Include="..\Code\LoginIDBackground.h" />
+    <ClInclude Include="..\Code\LoginIDButton.h" />
+    <ClInclude Include="..\Code\LoginIDFont.h" />
+    <ClInclude Include="..\Code\LoginIDInputString.h" />
     <ClInclude Include="..\Code\LoginSelectButton.h" />
     <ClInclude Include="..\Code\LogoutButtonChoice.h" />
     <ClInclude Include="..\Code\LogoutButtonClose.h" />
@@ -358,6 +362,10 @@
     <ClCompile Include="..\Code\InventoryItemSlot.cpp" />
     <ClCompile Include="..\Code\InventorySwapSlot.cpp" />
     <ClCompile Include="..\Code\LightingParticle.cpp" />
+    <ClCompile Include="..\Code\LoginIDBackground.cpp" />
+    <ClCompile Include="..\Code\LoginIDButton.cpp" />
+    <ClCompile Include="..\Code\LoginIDFont.cpp" />
+    <ClCompile Include="..\Code\LoginIDInputString.cpp" />
     <ClCompile Include="..\Code\LoginSelectButton.cpp" />
     <ClCompile Include="..\Code\LogoutButtonChoice.cpp" />
     <ClCompile Include="..\Code\LogoutButtonClose.cpp" />

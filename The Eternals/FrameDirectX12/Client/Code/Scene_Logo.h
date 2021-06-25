@@ -9,10 +9,16 @@ namespace Engine
 }
 
 class CLoginSelectButton;
+
 class CPCSelectBackground;
 class CPCSelectJob;
 class CPCSelectFrame;
 class CPCSelectButton;
+
+class CLoginIDBackground;
+class CLoginIDInputString;
+class CLoginIDFont;
+class CLoginIDButton;
 
 class CScene_Logo final : public Engine::CScene
 {
@@ -36,6 +42,8 @@ private:
 	HRESULT			Ready_LayerGameObject(wstring wstrLayerTag);
 	HRESULT			Ready_LayerUI(wstring wstrLayerTag);
 	HRESULT			Ready_LayerFont(wstring wstrLayerTag);
+	HRESULT			SetUp_UIPCSelect();
+	HRESULT			SetUp_UILoginID();
 	HRESULT			SetUp_MaxLoadingCount();
 private:
 	CLoading*				m_pLoading				= nullptr;
@@ -76,9 +84,18 @@ private:
 	CPCSelectButton*		m_pPCSelectButton         = nullptr;
 	CPCSelectButton*		m_pPCSelectButtonClicked  = nullptr;
 
+	/*__________________________________________________________________________________________________________
+	[ UI - LoginID ]
+	____________________________________________________________________________________________________________*/
+	CLoginIDBackground*		m_pLoginIDBackground     = nullptr;
+	CLoginIDInputString*	m_pLoginIDInputStringID  = nullptr;
+	CLoginIDInputString*	m_pLoginIDInputStringPWD = nullptr;
+	CLoginIDFont*			m_pLoginIDFont_ID        = nullptr;
+	CLoginIDFont*			m_pLoginIDFont_PWD       = nullptr;
+	CLoginIDButton*			m_pLoginIDButton         = nullptr;
+
 	_bool m_bIsKeyPressing = true;
 	_bool m_bIsGameStart   = false;
-
 public:
 	static CScene_Logo*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 

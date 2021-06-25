@@ -33,7 +33,7 @@ HRESULT CLoginSelectButton::Ready_GameObject(wstring wstrObjectTag,
 	m_matProj = XMMatrixOrthographicLH(WINCX, WINCY, 0.0f, 1.0f);
 
 	// Font Text
-	m_pFont->Set_Color(D2D1::ColorF::Black);
+	m_pFont->Set_Color(D2D1::ColorF::Cornsilk);
 	m_pFont->Set_Pos(_vec2(0.f, -10000.0f));
 
 	return S_OK;

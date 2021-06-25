@@ -1,19 +1,20 @@
 #include "stdafx.h"
-#include "PCSelectButton.h"
+#include "LoginIDButton.h"
 #include "DescriptorHeapMgr.h"
 #include "Font.h"
+#include "DirectInput.h"
 
-CPCSelectButton::CPCSelectButton(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CLoginIDButton::CLoginIDButton(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
 {
 }
 
-void CPCSelectButton::Set_TexDescriptorHeap(wstring wstrTag)
+void CLoginIDButton::Set_TexDescriptorHeap(wstring wstrTag)
 {
 	m_pTexDescriptorHeap = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(m_wstrTextureTag);
 }
 
-HRESULT CPCSelectButton::Ready_GameObject(wstring wstrRootObjectTag, 
+HRESULT CLoginIDButton::Ready_GameObject(wstring wstrRootObjectTag, 
 									   wstring wstrObjectTag,
 									   wstring wstrDataFilePath, 
 									   const _vec3& vPos,
@@ -39,11 +40,6 @@ HRESULT CPCSelectButton::Ready_GameObject(wstring wstrRootObjectTag,
 	m_matView = INIT_MATRIX;
 	m_matProj = XMMatrixOrthographicLH(WINCX, WINCY, 0.0f, 1.0f);
 
-	if (L"PCSelectButtonNormal" == m_wstrObjectTag)
-		m_bIsUpdate = true;
-	else if (L"PCSelectButtonCliecked" == m_wstrObjectTag)
-		m_bIsUpdate = false;
-
 	// Font Text
 	m_pFont->Set_Color(D2D1::ColorF::Cornsilk);
 	m_pFont->Set_Text(L"GAME START");
@@ -51,14 +47,14 @@ HRESULT CPCSelectButton::Ready_GameObject(wstring wstrRootObjectTag,
 	return S_OK;
 }
 
-HRESULT CPCSelectButton::LateInit_GameObject()
+HRESULT CLoginIDButton::LateInit_GameObject()
 {
 	Engine::FAILED_CHECK_RETURN(CGameUIChild::LateInit_GameObject(), E_FAIL);
 
 	return S_OK;
 }
 
-_int CPCSelectButton::Update_GameObject(const _float& fTimeDelta)
+_int CLoginIDButton::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 	
@@ -71,11 +67,40 @@ _int CPCSelectButton::Update_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CPCSelectButton::LateUpdate_GameObject(const _float& fTimeDelta)
+_int CLoginIDButton::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	if (g_bIsLoadingFinish)
 	{
 		CGameUIChild::LateUpdate_GameObject(fTimeDelta);
+
+		if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect) &&
+			Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) &&
+			m_bIsKeyPressing)
+		{
+
+		}
+
+		m_bIsKeyPressing = false;
+
+		// Check Mouse Collision.
+		if (CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse() &&
+			CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect))
+		{
+			if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_LB))
+			{
+				m_uiTexIdx = 1;
+				m_bIsKeyPressing = true;
+			}
+			else
+			{
+				m_uiTexIdx = 0;
+				m_bIsKeyPressing = false;
+			}
+		}
+		else
+		{
+			m_uiTexIdx = 0;
+		}
 
 		if (nullptr != m_pFont && m_bIsActive)
 		{
@@ -90,7 +115,7 @@ _int CPCSelectButton::LateUpdate_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-void CPCSelectButton::Render_GameObject(const _float& fTimeDelta)
+void CLoginIDButton::Render_GameObject(const _float& fTimeDelta)
 {
 	if (nullptr != m_pTexDescriptorHeap)
 	{
@@ -114,7 +139,7 @@ void CPCSelectButton::Render_GameObject(const _float& fTimeDelta)
 	}
 }
 
-void CPCSelectButton::Set_ConstantTable()
+void CLoginIDButton::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -152,7 +177,7 @@ void CPCSelectButton::Set_ConstantTable()
 	m_pShaderColor->Get_UploadBuffer_ShaderColor()->CopyData(0, tCB_ShaderColor);
 }
 
-Engine::CGameObject* CPCSelectButton::Create(ID3D12Device* pGraphicDevice, 
+Engine::CGameObject* CLoginIDButton::Create(ID3D12Device* pGraphicDevice, 
 										  ID3D12GraphicsCommandList* pCommandList,
 										  wstring wstrRootObjectTag,
 										  wstring wstrObjectTag,
@@ -165,7 +190,7 @@ Engine::CGameObject* CPCSelectButton::Create(ID3D12Device* pGraphicDevice,
 										  const _vec3& vRectScale, 
 										  const _long& iUIDepth)
 {
-	CPCSelectButton* pInstance = new CPCSelectButton(pGraphicDevice, pCommandList);
+	CLoginIDButton* pInstance = new CLoginIDButton(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrRootObjectTag,
 										   wstrObjectTag,
@@ -182,7 +207,7 @@ Engine::CGameObject* CPCSelectButton::Create(ID3D12Device* pGraphicDevice,
 	return pInstance;
 }
 
-void CPCSelectButton::Free()
+void CLoginIDButton::Free()
 {
 	CGameUIChild::Free();
 }
