@@ -39,6 +39,7 @@ _bool g_bIsOpenShop		 = false;
 _bool g_bIsLoadingFinish = false;
 _bool g_bIsExitGame      = false;
 _bool g_bIsChattingInput = false;
+_bool g_bIsGameStart	 = false;
 
 _ulong Release_Singleton();
 

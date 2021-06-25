@@ -20,5 +20,8 @@ extern _bool g_bIsChattingInput;
 // Loading
 extern _bool g_bIsLoadingFinish;
 
+// GameStart
+extern _bool g_bIsGameStart;
+
 // GameExit
 extern _bool g_bIsExitGame;

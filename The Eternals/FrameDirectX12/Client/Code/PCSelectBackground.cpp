@@ -64,7 +64,7 @@ _int CPCSelectBackground::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		CGameUIRoot::LateUpdate_GameObject(fTimeDelta);
 
-		if (nullptr != m_pFont && m_bIsActive)
+		if (nullptr != m_pFont && m_bIsActive && !g_bIsGameStart)
 		{
 			_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
 			vPos.x -= 200.0f;

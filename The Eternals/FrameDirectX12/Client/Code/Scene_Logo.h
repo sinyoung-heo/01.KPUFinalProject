@@ -95,7 +95,6 @@ private:
 	CLoginIDButton*			m_pLoginIDButton         = nullptr;
 
 	_bool m_bIsKeyPressing = true;
-	_bool m_bIsGameStart   = false;
 public:
 	static CScene_Logo*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 

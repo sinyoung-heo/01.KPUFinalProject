@@ -163,7 +163,7 @@ HRESULT CScene_Logo::Render_Scene(const _float & fTimeDelta, const Engine::RENDE
 	// Scene ÀüÈ¯.
 	if (m_pLoading->Get_Finish())
 	{
-		if (m_bIsGameStart)
+		if (g_bIsGameStart)
 		{
 			if (!m_bIsCreateFadeInOut)
 			{
@@ -228,7 +228,7 @@ void CScene_Logo::KeyInput_LoginSelect(const _float& fTimeDelta)
 {
 	if (!CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse())
 		return;
-	if (m_bIsGameStart)
+	if (g_bIsGameStart)
 		return;
 
 	// LoginSelect PC
@@ -307,7 +307,7 @@ void CScene_Logo::KeyInput_PCSelect(const _float& fTimeDelta)
 {
 	if (!CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse())
 		return;
-	if (m_bIsGameStart)
+	if (g_bIsGameStart)
 		return;
 	if (m_bIsLoginID)
 		return;
@@ -350,7 +350,7 @@ void CScene_Logo::KeyInput_PCSelect(const _float& fTimeDelta)
 		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
 		m_bIsKeyPressing)
 	{
-		m_bIsGameStart = true;
+		g_bIsGameStart = true;
 		m_pPCSelectButton->Set_IsRenderUI(true);
 		m_pPCSelectButtonClicked->Set_IsRenderUI(false);
 	}
