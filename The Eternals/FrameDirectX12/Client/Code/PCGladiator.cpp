@@ -19,7 +19,7 @@
 #include "ShaderMgr.h"
 #include "IceStorm.h"
 #include "PartySuggestCanvas.h"
-
+#include "TextureEffect.h"
 CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pPacketMgr(CPacketMgr::Get_Instance())
@@ -147,6 +147,7 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
+	Effect_Loop(fTimeDelta);
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
@@ -725,6 +726,63 @@ void CPCGladiator::Set_HpMPGauge()
 	}
 }
 
+void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
+{
+	if (m_uiAnimIdx == Gladiator::DRAW_SWORD_CHARGE && m_bisDustEffect==false)
+	{
+		m_bisDustEffect = true;
+		CEffectMgr::Get_Instance()->Effect_Dust(m_pTransCom->m_vPos,3.f);
+
+		Engine::HIERARCHY_DESC* pHierarchyDesc = &(m_pMeshCom->Find_HierarchyDesc("L_Sword"));
+		_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
+		Pos.y += 2.f;
+		CGameObject* pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+			L"Lighting4",						// TextureTag
+			_vec3(0.8f),		// Scale
+			_vec3(0.0f, 0.0f, 0.0f),		// Angle
+			Pos,	// Pos
+			FRAME(8, 8, 40.0f));			// Sprite Image Frame
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Lighting4", pGameObj), E_FAIL);
+		static_cast<CTextureEffect*>(pGameObj)->Set_FollowHand(true);
+		static_cast<CTextureEffect*>(pGameObj)->Follow_PlayerHand(pHierarchyDesc, m_pTransCom);
+		static_cast<CTextureEffect*>(pGameObj)->Set_IsLoop(false);
+		static_cast<CTextureEffect*>(pGameObj)->Set_ColorOffset(_vec4(0.7f,0.1f,0,0));
+	}
+	else if (m_uiAnimIdx == Gladiator::DRAW_SWORD&& m_bisFireEffect == false)
+	{
+		m_bisSkillOffSet += fTimeDelta;
+		if (m_bisSkillOffSet > 0.2f)
+		{
+			m_bisFireEffect = true;
+			CEffectMgr::Get_Instance()->Effect_FireCone(m_pTransCom->m_vPos, m_pTransCom->m_vAngle.y);
+		}
+	}
+	else if (m_uiAnimIdx == Gladiator::DRAW_SWORD_END)
+	{
+		m_bisSkillOffSet = 0.f;
+		m_bisFireEffect = false;
+		m_bisDustEffect = false;
+	}
+	if (m_uiAnimIdx == Gladiator::GAIA_CRUSH2 && m_bisIceEffect == false)
+	{
+		m_bisSkillOffSet += fTimeDelta;
+		if (m_bisSkillOffSet > 0.45f)
+		{
+			m_bisIceEffect = true;
+			CEffectMgr::Get_Instance()->Effect_IceStorm(m_pTransCom->m_vPos, 36, 5.f);
+			_vec3 Temp = m_pTransCom->m_vPos;
+			Temp.y += 1.5f;
+			CEffectMgr::Get_Instance()->Effect_IceDecal(Temp);
+		}
+	}
+	else if (m_uiAnimIdx == Gladiator::GAIA_CRUSH3)
+	{
+		m_bisSkillOffSet = 0.f;
+		m_bisIceEffect = false;
+	}
+	
+}
+
 void CPCGladiator::Key_Input(const _float& fTimeDelta)
 {
 	if (!g_bIsActive) return;
@@ -1018,6 +1076,8 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 				 m_uiAnimIdx != Gladiator::CUTTING_SLASH && 
 				 NO_EVENT_STATE)
 		{
+			//Effect
+			CEffectMgr::Get_Instance()->Effect_SwordEffect(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
 			SetUp_WeaponRHand();
 			SetUp_AttackSetting();
 			m_bIsSkill = true;

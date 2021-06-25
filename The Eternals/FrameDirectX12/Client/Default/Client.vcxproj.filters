@@ -816,6 +816,10 @@
     <ClInclude Include="..\Code\ChattingMgr.h">
       <Filter>97.Mgr\07.ChattingMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\FrameMesh.h" />
+    <ClInclude Include="..\Code\IceDecal.h" />
+    <ClInclude Include="..\Code\SwordEffect.h" />
+    <ClInclude Include="..\Code\FireRing.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1181,6 +1185,10 @@
     <ClCompile Include="..\Code\ChattingMgr.cpp">
       <Filter>97.Mgr\07.ChattingMgr</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\FrameMesh.cpp" />
+    <ClCompile Include="..\Code\IceDecal.cpp" />
+    <ClCompile Include="..\Code\SwordEffect.cpp" />
+    <ClCompile Include="..\Code\FireRing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

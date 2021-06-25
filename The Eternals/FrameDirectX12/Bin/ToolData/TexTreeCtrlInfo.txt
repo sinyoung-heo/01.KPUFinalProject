@@ -8,12 +8,15 @@ Texture|EffectSpriteTexture|Bomb04
 Texture|EffectSpriteTexture|Crack
 Texture|EffectSpriteTexture|Fire
 Texture|EffectSpriteTexture|Fire1
+Texture|EffectSpriteTexture|Fire2
+Texture|EffectSpriteTexture|FireTrail
 Texture|EffectSpriteTexture|Firework0
 Texture|EffectSpriteTexture|Firework1
 Texture|EffectSpriteTexture|Glowring
 Texture|EffectSpriteTexture|Lighting0
 Texture|EffectSpriteTexture|Lighting1
 Texture|EffectSpriteTexture|Lighting2
+Texture|EffectSpriteTexture|Lighting3
 Texture|EffectSpriteTexture|Lightning00
 Texture|EffectSpriteTexture|Lightning01
 Texture|EffectSpriteTexture|Smoke0

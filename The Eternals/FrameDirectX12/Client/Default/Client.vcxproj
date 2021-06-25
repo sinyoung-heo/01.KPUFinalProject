@@ -191,6 +191,7 @@
     <ClInclude Include="..\Code\EffectTrail.h" />
     <ClInclude Include="..\Code\FadeInOut.h" />
     <ClInclude Include="..\Code\FireDecal.h" />
+    <ClInclude Include="..\Code\FireRing.h" />
     <ClInclude Include="..\Code\FrameMesh.h" />
     <ClInclude Include="..\Code\GiantBeetle.h" />
     <ClInclude Include="..\Code\GiantMonkey.h" />
@@ -329,6 +330,7 @@
     <ClCompile Include="..\Code\EffectTrail.cpp" />
     <ClCompile Include="..\Code\FadeInOut.cpp" />
     <ClCompile Include="..\Code\FireDecal.cpp" />
+    <ClCompile Include="..\Code\FireRing.cpp" />
     <ClCompile Include="..\Code\FrameMesh.cpp" />
     <ClCompile Include="..\Code\GameUIChild.cpp" />
     <ClCompile Include="..\Code\GameUIRoot.cpp" />

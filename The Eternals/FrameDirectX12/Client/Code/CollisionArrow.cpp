@@ -363,6 +363,7 @@ void CCollisionArrow::Process_Collision()
 			Set_IsReturnObject(true);
 			pDst->Get_BoundingSphere()->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 			pDst->Set_bisHitted(true);
+			CEffectMgr::Get_Instance()->Effect_ArrowHitted(m_pTransCom->m_vPos);
 			// Player Attack to Monster
 			m_pPacketMgr->send_attackToMonster(pDst->Get_ServerNumber(), m_uiDamage, m_chAffect);
 		}

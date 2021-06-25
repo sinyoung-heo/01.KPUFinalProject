@@ -226,17 +226,59 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
     return (ps_output);
 }
 
+
+VS_OUT VS_ANIUV_X(VS_IN vs_input)
+{
+    VS_OUT vs_output = (VS_OUT) 0;
+    float4x4 matworld = g_matWorld;
+    float4x4 matWV, matWVP;
+    matWV = mul(matworld, g_matView);
+    matWVP = mul(matWV, g_matProj);
+	
+    vs_output.Pos = mul(float4(vs_input.Pos, 1.0f), matWVP);
+    vs_output.TexUV = vs_input.TexUV;
+    vs_output.Normal = vs_input.Normal;
+
+    
+    vs_output.AniUV = vs_input.TexUV + float2(g_fOffset1, 0.f);
+    return (vs_output);
+}
+
 PS_OUT PS_MAIN_SPRITE(VS_OUT ps_input) : SV_TARGET
 {
     PS_OUT ps_output = (PS_OUT) 0;
+  
+    float u = (ps_input.AniUV.x / g_vAfterImgColor.x) + g_vAfterImgColor.y * (1.0f / g_vAfterImgColor.x);
+    float v = (ps_input.AniUV.y / g_vAfterImgColor.z) + g_vAfterImgColor.w * (1.0f / g_vAfterImgColor.z);
 	
+    float4 D = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV * g_fOffset5);
+    D += g_vEmissiveColor;
+    float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
+   
+    float Radian = atan2((0.5f - ps_input.TexUV.y), (ps_input.TexUV.x - 0.5f));
+    float Degree = degrees(Radian) +180.f; // 0~360°ª
+    //if (g_fOffset3 -90< Degree && Degree < g_fOffset3 + 90)
+    //{
+        vector vDistortionInfo = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV);
+        float2 vDistortion = (vDistortionInfo.xy * 2.f) - 1.f;
+        vDistortion *= g_fOffset1; //°­µµ
+       // float2 NewUV = float2(u + vDistortion.x * vDistortionInfo.b, v + vDistortion.y * vDistortionInfo.b);
+   
+    ps_output.Effect4 = mul(mul(S, D.r), 3.f);
+    ps_output.Effect4.a = 1.f - g_fOffset6;
+    //}
+    return (ps_output);
+}
+PS_OUT PS_MAIN_SPRITE2(VS_OUT ps_input) : SV_TARGET
+{
+    PS_OUT ps_output = (PS_OUT) 0;
     float u = (ps_input.TexUV.x / g_vAfterImgColor.x) + g_vAfterImgColor.y * (1.0f / g_vAfterImgColor.x);
     float v = (ps_input.TexUV.y / g_vAfterImgColor.z) + g_vAfterImgColor.w * (1.0f / g_vAfterImgColor.z);
-	
-    float4 D = g_TexDiffuse.Sample(g_samLinearWrap, float2(u,v));
-    float4 N = g_TexNormal.Sample(g_samLinearWrap, float2(u, v));
-    float4 S = g_TexSpecular.Sample(g_samLinearWrap, float2(u, v));
-    ps_output.Effect4 = D;
-    ps_output.Effect4.a = 0.5f;
+    float4 D = g_TexDiffuse.Sample(g_samLinearWrap, float2(u , v));
+ 
+    
+    ps_output.Effect3 = mul(D, 2.f);
+    ps_output.Effect3.a = 1.f - g_fOffset6;
+    //}
     return (ps_output);
 }

@@ -41,9 +41,9 @@ HRESULT CFrameMesh::LateInit_GameObject()
 	SetUp_DescriptorHeap(pTexture->Get_Texture(), m_pRenderer->Get_TargetShadowDepth()->Get_TargetTexture());
 
 
-	m_uiDiffuse =2;
-	m_uiNormal = 8;//NormIdx
-	m_uiSpec = 8;//SpecIdx
+	m_uiDiffuse =10;
+	m_uiNormal = 10;//NormIdx
+	m_uiSpec = 10;//SpecIdx
 	return S_OK;	
 }
 
@@ -54,9 +54,12 @@ _int CFrameMesh::Update_GameObject(const _float & fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
-	
+	m_pTransCom->m_vAngle.y += 540.f *fTimeDelta;
 	m_tFrame.fCurFrame += fTimeDelta * m_tFrame.fFrameSpeed;
 
+	m_pTransCom->m_vScale.x = sinf(XMConvertToRadians(m_fDeltaDegree * 0.25f) * 0.375f) *0.8f;
+	m_pTransCom->m_vScale.y = sinf(XMConvertToRadians(m_fDeltaDegree * 0.25f) * 0.375f*0.5f) * 0.8f;
+	m_pTransCom->m_vScale.z = sinf(XMConvertToRadians(m_fDeltaDegree * 0.25f) * 0.375f) * 0.8f;
 	// Sprite X축
 	if (m_tFrame.fCurFrame > m_tFrame.fFrameCnt)
 	{
@@ -97,8 +100,8 @@ _int CFrameMesh::LateUpdate_GameObject(const _float & fTimeDelta)
 void CFrameMesh::Render_GameObject(const _float& fTimeDelta)
 {
 	Set_ConstantTable();
-	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse,m_uiSpec, m_uiNormal
-		,0,4);
+	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_uiNormal,m_uiSpec
+		,0,1);
 }
 void CFrameMesh::Render_CrossFilterGameObject(const _float& fTimeDelta)
 {
@@ -119,7 +122,7 @@ HRESULT CFrameMesh::Add_Component(wstring wstrMeshTag)
 	// Shader
 	m_pShaderCom = static_cast<Engine::CShaderMeshEffect*>(m_pComponentMgr->Clone_Component(L"ShaderMeshEffect", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(8), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(9), E_FAIL);
 	m_pShaderCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
@@ -153,6 +156,20 @@ void CFrameMesh::Set_ConstantTable()
 	//tCB_ShaderTexture.fSceneCnt = m_tFrame.fSceneCnt;
 	//tCB_ShaderTexture.fCurScene = (_int)m_tFrame.fCurScene;
 
+	//g_fOffSet1 = AnimationUV X  // g_fOffSet3 = Degree Delta값
+	//g_fOffSet5 = Detail값
+	//g_fOffSet6 = Alpha값
+	m_fDeltaTime += Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.5f;
+	m_fDeltaDegree += Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") *180.f;
+	if (m_fDeltaDegree > 360.f)
+		m_bIsDead = true;
+	tCB_ShaderMesh.fOffset1 = -m_fDeltaTime;
+	//tCB_ShaderMesh.fOffset3 = m_fDeltaDegree;
+	/*
+	tCB_ShaderMesh.vEmissiveColor = _rgba(sinf(XMConvertToRadians(m_fDeltaDegree * 0.25)), sinf(XMConvertToRadians(m_fDeltaDegree* 0.25)*0.5f)
+		, 0, 0.f);*/
+	tCB_ShaderMesh.fOffset5 = 1.f;
+	tCB_ShaderMesh.fOffset6 = m_fDeltaDegree / 180.f;
 	tCB_ShaderMesh.vAfterImgColor.x = m_tFrame.fFrameCnt;
 	tCB_ShaderMesh.vAfterImgColor.y = (_float)(_int)m_tFrame.fCurFrame;
 	tCB_ShaderMesh.vAfterImgColor.z = m_tFrame.fSceneCnt;
