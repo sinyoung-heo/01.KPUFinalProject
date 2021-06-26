@@ -19,6 +19,8 @@
 #include "InstancePoolMgr.h"
 #include "PartySystemMgr.h"
 #include "ChattingMgr.h"
+#include "InventoryEquipmentMgr.h"
+#include "StoreMgr.h"
 #include <chrono>
 
 #define MAX_LOADSTRING 100
@@ -387,6 +389,24 @@ _ulong Release_Singleton()
 	COUT_STR("-------------------------");
 #endif
 	_ulong dwRefCnt = 0;
+
+	if (dwRefCnt = CStoreMgr::Get_Instance()->Destroy_Instance())
+	{
+		MSG_BOX(L"CStoreMgr Release Failed");
+		return dwRefCnt;
+	}
+
+	if (dwRefCnt = CInventoryEquipmentMgr::Get_Instance()->Destroy_Instance())
+	{
+		MSG_BOX(L"CInventoryEquipmentMgr Release Failed");
+		return dwRefCnt;
+	}
+
+	if (dwRefCnt = CInventoryEquipmentMgr::Get_Instance()->Destroy_Instance())
+	{
+		MSG_BOX(L"CInventoryEquipmentMgr Release Failed");
+		return dwRefCnt;
+	}
 
 	if (dwRefCnt = CChattingMgr::Get_Instance()->Destroy_Instance())
 	{

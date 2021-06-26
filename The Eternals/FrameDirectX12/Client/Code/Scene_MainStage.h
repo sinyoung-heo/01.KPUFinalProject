@@ -35,6 +35,7 @@ private:
 	HRESULT			SetUp_UIPartyListInfoCanvas();
 	HRESULT			SetUp_UIChattingCanvas();
 	HRESULT			SetUp_UIMiniMapCanvas();
+	HRESULT			SetUp_UIInGameStoreCanvas();
 private:
 	_bool m_bIsReadyMouseCursorMgr = false;
 

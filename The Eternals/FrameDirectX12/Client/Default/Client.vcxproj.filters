@@ -433,6 +433,42 @@
     <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\02.LoginIDBackgroundChild\LoginIDInputString">
       <UniqueIdentifier>{c9e3ca99-536e-4be3-9d8a-83a0d1baea97}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.Mgr\09.StoreMgr">
+      <UniqueIdentifier>{5dd75bb9-5925-4b84-8fb7-8e6aa6a1a5a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\09.InGameStoreCanvas">
+      <UniqueIdentifier>{068b76eb-968a-4520-8177-ef727471c3da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild">
+      <UniqueIdentifier>{05397634-0fb9-4c60-bf05-4b38a4580f73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreTab">
+      <UniqueIdentifier>{568289ec-87e7-4be5-b8a6-b44457d7abea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreButtonCalculate">
+      <UniqueIdentifier>{5e87d661-b1a7-478d-87ba-2f98af20976d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreButtonClose">
+      <UniqueIdentifier>{37cc0c77-6695-413d-af0c-a43dd031851d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreBuyListSlot">
+      <UniqueIdentifier>{138b951f-716b-40fe-8e58-644a62173443}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreBuySellList">
+      <UniqueIdentifier>{c5d09dfd-2159-4055-9490-016719fc03e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreItemSlot">
+      <UniqueIdentifier>{c49c2b79-999f-478e-8704-2cac635c133d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreItemSlotBack">
+      <UniqueIdentifier>{74ee81df-7581-40c3-830a-12f6a29f1e19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreSellListSlot">
+      <UniqueIdentifier>{3d2e4731-f15c-4ed8-a7e8-22762fc33e76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreBuySellListBack">
+      <UniqueIdentifier>{94801311-078c-43f3-92b6-cc37ad1ab028}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -897,6 +933,40 @@
     <ClInclude Include="..\Code\LoginIDButton.h">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.LoginIDBackgroundChild\LoginIDButton</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\FireRing.h" />
+    <ClInclude Include="..\Code\StoreMgr.h">
+      <Filter>97.Mgr\09.StoreMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\InGameStoreCanvas.h">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\09.InGameStoreCanvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\StoreButtonCalculate.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreButtonCalculate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\StoreButtonClose.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreButtonClose</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\StoreBuyListSlot.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreBuyListSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\StoreBuySellList.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreBuySellList</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\StoreBuySellListBack.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreBuySellListBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\StoreItemSlot.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreItemSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\StoreItemSlotBack.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreItemSlotBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\StoreSellListSlot.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreSellListSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\StoreTab.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreTab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1306,6 +1376,40 @@
     </ClCompile>
     <ClCompile Include="..\Code\LoginIDButton.cpp">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.LoginIDBackgroundChild\LoginIDButton</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\FireRing.cpp" />
+    <ClCompile Include="..\Code\StoreMgr.cpp">
+      <Filter>97.Mgr\09.StoreMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\InGameStoreCanvas.cpp">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\09.InGameStoreCanvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\StoreButtonCalculate.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreButtonCalculate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\StoreButtonClose.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreButtonClose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\StoreBuyListSlot.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreBuyListSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\StoreBuySellList.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreBuySellList</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\StoreBuySellListBack.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreBuySellListBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\StoreItemSlot.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreItemSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\StoreItemSlotBack.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreItemSlotBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\StoreSellListSlot.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreSellListSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\StoreTab.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreTab</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
