@@ -761,7 +761,7 @@ HRESULT CPCGladiator::SetUp_Equipment()
 
 	CInventoryEquipmentMgr::Get_Instance()->Set_ThisPlayerJob(m_chO_Type);
 
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Potion, Prtion_HP);
+	/*CPacketMgr::Get_Instance()->send_add_item(ItemType_Potion, Prtion_HP);
 	CPacketMgr::Get_Instance()->send_add_item(ItemType_Potion, Prtion_HP);
 	CPacketMgr::Get_Instance()->send_add_item(ItemType_Potion, Prtion_HP);
 	CPacketMgr::Get_Instance()->send_add_item(ItemType_Potion, Prtion_MP);
@@ -795,7 +795,7 @@ HRESULT CPCGladiator::SetUp_Equipment()
 	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_C);
 	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_B);
 	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_A);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_S);
+	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_S);*/
 
 	return S_OK;
 }

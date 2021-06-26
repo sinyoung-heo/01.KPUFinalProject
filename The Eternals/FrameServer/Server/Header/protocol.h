@@ -55,6 +55,7 @@ constexpr char SC_PACKET_LEAVE_PARTY		= 26;
 constexpr char SC_PACKET_UPDATE_PARTY		= 27;
 constexpr char SC_PACKET_UPDATE_INVENTORY	= 28;
 constexpr char SC_PACKET_UPDATE_EQUIPMENT	= 29;
+constexpr char SC_PACKET_LOAD_EQUIPMENT		= 30;
 
 constexpr char CS_LOGIN					= 0;
 constexpr char CS_MOVE					= 1;
@@ -147,6 +148,7 @@ constexpr char EQUIP_WEAPON				= 0;
 constexpr char EQUIP_ARMOR				= 1;
 constexpr char EQUIP_HELMET				= 2;
 constexpr char EQUIP_SHOES				= 3;
+constexpr char EQUIP_END				= 4;
 
 /* ___________________________________________________________________________________________________________________*/
 /*													SERVER -> CLIENT												  */
@@ -397,6 +399,15 @@ struct sc_packet_update_equipment
 	char			equipType;
 	char			itemName;
 	bool			is_pushItem;
+};
+
+struct sc_packet_load_equipment
+{
+	unsigned char	size;
+	char			type;
+
+	char			equipType[EQUIP_END];
+	char			itemName[EQUIP_END];
 };
 
 /* ___________________________________________________________________________________________________________________*/

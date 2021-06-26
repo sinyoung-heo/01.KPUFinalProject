@@ -175,6 +175,25 @@ void CPlayer::Release_Equipment()
     m_tEquipment.shoes  = -1;
 }
 
+void CPlayer::send_load_InventoryAndEquipment()
+{
+    for (int i = 0; i < ITEM::ITEM_END; ++i)
+    {
+        for (auto& item : m_mapInventory[i])
+        {
+            send_update_inventory(m_sNum,
+                                  item.second.cItemType,
+                                  item.second.cItemName,
+                                  item.second.iCount,
+                                  true);
+        }
+    }
+
+    char itemType[EQUIP_END] = { EQUIP_WEAPON, EQUIP_ARMOR, EQUIP_HELMET, EQUIP_SHOES };
+    char itemName[EQUIP_END] = { m_tEquipment.weapon, m_tEquipment.armor, m_tEquipment.helmet, m_tEquipment.shoes };
+    send_load_equipment(m_sNum, itemType, itemName);
+}
+
 DWORD CPlayer::Release()
 {
     return 0;

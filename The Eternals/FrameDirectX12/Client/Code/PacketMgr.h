@@ -33,7 +33,6 @@ public:
 	void	Process_recv_reassembly(size_t iosize);
 	void	Process_packet();
 
-	void Reject_Party();
 
 public:
 	void	send_login();
@@ -73,7 +72,9 @@ public:
 	void	Enter_PartyMember(sc_packet_enter_party* packet, bool& retflag);
 	void	Suggest_Party(sc_packet_suggest_party* packet);
 	void	Update_Party(sc_packet_update_party* packet);
+	void	Reject_Party();
 	void	Recv_Chat(sc_packet_chat* packet);
+	void	update_inventory(sc_packet_update_inventory* packet);
 
 	void	Enter_Monster(sc_packet_monster_enter* packet);
 	void	Move_Monster(sc_packet_move* packet);

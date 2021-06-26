@@ -25,6 +25,7 @@ void process_packet(int id)
 		strncpy_s(pPlayer->m_ID, p->name, strlen(p->name));
 		pPlayer->Get_ClientLock().unlock();
 
+		bool bIsLoadItem = false;
 		// 회원일 경우 DB 검사
 		if (p->isMember)
 		{
@@ -38,8 +39,10 @@ void process_packet(int id)
 			/* 기존 회원일 경우 장비 및 인벤토리 Load */
 			else
 			{
+				bIsLoadItem = true;
 				// Load Equipment
 				CDBMgr::GetInstance()->Load_Equipment(id);
+				// Load Inventory
 				CDBMgr::GetInstance()->Load_Inventory(id);
 			}
 		}
@@ -52,6 +55,11 @@ void process_packet(int id)
 
 		/* 로그인 수락 패킷 전송 */
 		send_login_ok(id);
+
+		/* 장비창 및 인벤토리 정보 전송 */
+		if (bIsLoadItem)
+			pPlayer->send_load_InventoryAndEquipment();
+		
 
 		/* Sector 다시 등록 (접속 시 미리 한 번 하고있음. 완전함을 위해 한 번 더 등록(sector의 Key는 Unique함) */
 		CSectorMgr::GetInstance()->Enter_ClientInSector(id, (int)(pPlayer->m_vPos.z / SECTOR_SIZE), (int)(pPlayer->m_vPos.x / SECTOR_SIZE));
@@ -747,6 +755,22 @@ void send_update_equipment(const int& to_client, const char& chItemType, const c
 	p.itemName		= chName;
 	p.is_pushItem	= isPushItem;
 
+	send_packet(to_client, &p);
+}
+
+void send_load_equipment(const int& to_client, const char* chItemType, const char* chName)
+{
+	sc_packet_load_equipment p;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_LOAD_EQUIPMENT;
+
+	for (int i = 0; i < EQUIP_END; ++i)
+	{
+		p.equipType[i] = chItemType[i];
+		p.itemName[i] = chName[i];
+	}
+	
 	send_packet(to_client, &p);
 }
 

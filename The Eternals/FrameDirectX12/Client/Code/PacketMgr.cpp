@@ -8,6 +8,7 @@
 #include "DynamicCamera.h"
 #include "FadeInOut.h"
 #include "ChattingMgr.h"
+#include "InventoryEquipmentMgr.h"
 /* USER */
 #include "PCGladiator.h"
 #include "PCOthersGladiator.h"
@@ -30,7 +31,6 @@
 #include "GiantBeetle.h"
 #include "GiantMonkey.h"
 #include "CraftyArachne.h"
-#include "InventoryEquipmentMgr.h"
 
 IMPLEMENT_SINGLETON(CPacketMgr)
 
@@ -194,7 +194,6 @@ void CPacketMgr::Process_packet()
 	case SC_PACKET_CHAT:
 	{
 		sc_packet_chat* packet = reinterpret_cast<sc_packet_chat*>(m_packet_start);
-
 		Recv_Chat(packet);
 	}
 	break;
@@ -228,7 +227,6 @@ void CPacketMgr::Process_packet()
 	case SC_PACKET_STAT_CHANGE:
 	{
 		sc_packet_stat_change* packet = reinterpret_cast<sc_packet_stat_change*>(m_packet_start);
-
 		ChangeStat_User(packet);
 	}
 	break;
@@ -236,7 +234,6 @@ void CPacketMgr::Process_packet()
 	case SC_PACKET_ATTACK:
 	{
 		sc_packet_attack* packet = reinterpret_cast<sc_packet_attack*>(m_packet_start);
-
 		Attack_User(packet);
 	}
 	break;
@@ -244,7 +241,6 @@ void CPacketMgr::Process_packet()
 	case SC_PACKET_ATTACK_STOP:
 	{
 		sc_packet_attack* packet = reinterpret_cast<sc_packet_attack*>(m_packet_start);
-
 		AttackStop_User(packet);
 	}
 	break;
@@ -406,20 +402,25 @@ void CPacketMgr::Process_packet()
 	case SC_PACKET_UPDATE_INVENTORY:
 	{
 		sc_packet_update_inventory* packet = reinterpret_cast<sc_packet_update_inventory*>(m_packet_start);
-
-		if (packet->is_pushItem)
-			CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(packet->itemType, packet->itemName);
-		else
-			CInventoryEquipmentMgr::Get_Instance()->Pop_ItemInventory(packet->itemType, packet->itemName);
-
-		cout << "아이템 개수:" << packet->count << endl;
+		update_inventory(packet);
 	}
 	break;
 
 	case SC_PACKET_UPDATE_EQUIPMENT:
 	{
 		sc_packet_update_equipment* packet = reinterpret_cast<sc_packet_update_equipment*>(m_packet_start);
-		cout << "장착한 아이템:" << (int)packet->itemName << endl;
+		cout << "장착/해제하고 난 후 아이템 슬롯:" << (int)packet->itemName << endl;
+	}
+	break;
+
+	case SC_PACKET_LOAD_EQUIPMENT:
+	{
+		sc_packet_load_equipment* packet = reinterpret_cast<sc_packet_load_equipment*>(m_packet_start);
+		cout << "[로그인 후 장착 중인 아이템] " << endl;
+		cout << (int)packet->itemName[0]
+			<< ", 갑옷: " << (int)packet->itemName[1] 
+			<< ", 투구: " << (int)packet->itemName[2]
+			<< ", 신발: " << (int)packet->itemName[3] << endl;
 	}
 	break;
 
@@ -429,6 +430,24 @@ void CPacketMgr::Process_packet()
 #endif 
 		break;
 	}
+}
+
+void CPacketMgr::update_inventory(sc_packet_update_inventory* packet)
+{
+	/* 인벤토리 아이템 추가 */
+	if (packet->is_pushItem)
+	{
+		/* 아이템 == 포션 */
+		if (packet->itemType == ItemType_Potion)
+			CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(packet->itemType, packet->itemName, packet->count);
+		/* 아이템 != 포션 */
+		else
+			for (int i = 0; i < packet->count; ++i)
+				CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(packet->itemType, packet->itemName);
+	}
+	/* 인벤토리 아이템 제거 */
+	else
+		CInventoryEquipmentMgr::Get_Instance()->Pop_ItemInventory(packet->itemType, packet->itemName);
 }
 
 void CPacketMgr::Reject_Party()

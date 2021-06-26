@@ -25,6 +25,9 @@ public:
 	void				Unequip_Item(const char& itemName, const char& eItemType);
 	void				Release_Equipment();
 
+	/* packet */
+	void				send_load_InventoryAndEquipment();
+
 	virtual DWORD		Release();
 
 public:

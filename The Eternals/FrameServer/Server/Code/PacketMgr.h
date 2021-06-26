@@ -21,6 +21,7 @@ void send_update_party(const int& to_client, const int& id, const int& hp, const
 void send_chat(const int& to_client, const int& id, const char* name, const char* buffer, const int len);
 void send_update_inventory(const int& id, const char& chItemType, const char& chName, const int& count, const bool& isPushItem);
 void send_update_equipment(const int& to_client, const char& chItemType, const char& chName, const bool& isPushItem);
+void send_load_equipment(const int& to_client, const char* chItemType, const char* chName);
 
 void process_move(int id, const _vec3& _vDir, const _vec3& _vPos);										// 움직임 처리 함수
 void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir);
