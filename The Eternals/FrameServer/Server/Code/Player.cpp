@@ -47,7 +47,12 @@ bool CPlayer::Add_Item(const int& itemNumber, ITEM eItemType)
     if (!Is_Full_Inventory())
     {
         m_mapInventory[eItemType][itemNumber].iCount++;
-        CDBMgr::GetInstance()->update_Inventory(m_sNum, itemNumber, m_mapInventory[eItemType][itemNumber].iCount);
+
+        if (m_mapInventory[eItemType][itemNumber].iCount <= 1)
+            CDBMgr::GetInstance()->insert_Inventory(m_sNum, itemNumber, m_mapInventory[eItemType][itemNumber].iCount);
+        else
+            CDBMgr::GetInstance()->update_Inventory(m_sNum, itemNumber, m_mapInventory[eItemType][itemNumber].iCount);
+
         return true;
     }
     return false;
@@ -58,7 +63,12 @@ bool CPlayer::Delete_Item(const int& itemNumber, ITEM eItemType)
     if (m_mapInventory[eItemType][itemNumber].iCount > 0)
     {
         m_mapInventory[eItemType][itemNumber].iCount--;
-        CDBMgr::GetInstance()->update_Inventory(m_sNum, itemNumber, m_mapInventory[eItemType][itemNumber].iCount);
+
+        if (m_mapInventory[eItemType][itemNumber].iCount <= 0)
+            CDBMgr::GetInstance()->delete_Inventory(m_sNum, itemNumber);
+        else
+            CDBMgr::GetInstance()->update_Inventory(m_sNum, itemNumber, m_mapInventory[eItemType][itemNumber].iCount);
+
         return true;
     }
     return false;

@@ -959,12 +959,12 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 	{
 		//CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(ItemType_Potion, Prtion_HP);
 		// ¾ÆÀÌÅÛ È¹µæ
-		 CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, Twohand19_A_SM);
+		 CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_D);
 	}
 	if (Engine::KEY_DOWN(DIK_X))
 	{
 		// ¾ÆÀÌÅÛ Á¦°Å
-		 CPacketMgr::Get_Instance()->send_delete_item(ItemType_WeaponTwoHand, Twohand19_A_SM);
+		 CPacketMgr::Get_Instance()->send_delete_item(ItemType_Shoes, Shoes_D);
 		//CInventoryEquipmentMgr::Get_Instance()->Pop_ItemInventory(ItemType_Potion, Prtion_HP);
 	}
 	if (Engine::KEY_DOWN(DIK_C))

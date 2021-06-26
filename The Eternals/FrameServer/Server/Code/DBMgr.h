@@ -20,7 +20,9 @@ public:
 
 	/* 인벤토리 이벤트 */
 	bool Load_Inventory(const int& id);
+	void insert_Inventory(const int& id, const int& itemNumber, const int& itemCount);
 	void update_Inventory(const int& id, const int& itemNumber, const int& itemCount);
+	void delete_Inventory(const int& id, const int& itemNumber);
 
 	/* 유저 이벤트 */
 	bool Check_ID(int id, char* pw);				// Check Id in Login Server
