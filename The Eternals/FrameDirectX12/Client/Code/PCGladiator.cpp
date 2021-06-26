@@ -1008,7 +1008,7 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 		static_cast<CTextureEffect*>(pGameObj)->Set_FollowHand(true);
 		static_cast<CTextureEffect*>(pGameObj)->Follow_PlayerHand(pHierarchyDesc, m_pTransCom);
 		static_cast<CTextureEffect*>(pGameObj)->Set_IsLoop(false);
-		static_cast<CTextureEffect*>(pGameObj)->Set_ColorOffset(_vec4(0.7f,0.1f,0,0));
+		static_cast<CTextureEffect*>(pGameObj)->Set_ColorOffset(_vec4(0.7f,0.1f,0,0));	
 	}
 	else if (m_uiAnimIdx == Gladiator::DRAW_SWORD&& m_bisFireEffect == false)
 	{
@@ -1021,9 +1021,10 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 	}
 	else if (m_uiAnimIdx == Gladiator::DRAW_SWORD_END)
 	{
+
 		m_bisSkillOffSet = 0.f;
 		m_bisFireEffect = false;
-		m_bisDustEffect = false;
+		m_bisDustEffect = false;	
 	}
 	if (m_uiAnimIdx == Gladiator::GAIA_CRUSH2 && m_bisIceEffect == false)
 	{

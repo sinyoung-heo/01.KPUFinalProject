@@ -76,6 +76,12 @@
     <Filter Include="99.Header\01.User\01.PCWeaponType">
       <UniqueIdentifier>{e1ac9924-d966-4ad0-a9cf-06720ca2e981}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99.Header\01.User\02.Item_Protocol">
+      <UniqueIdentifier>{cbc194a4-b6ff-4855-9533-490138701bdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Manager\07.ItemMgr">
+      <UniqueIdentifier>{b1b3e5af-7f5e-4664-bf57-9e60eb0373c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\MainServer.cpp">
@@ -131,6 +137,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\NaviMesh_Beach.cpp">
       <Filter>98.Manager\05.NaviMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ItemMgr.cpp">
+      <Filter>98.Manager\07.ItemMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -217,6 +226,12 @@
     </ClInclude>
     <ClInclude Include="..\Code\NaviMesh_Beach.h">
       <Filter>98.Manager\05.NaviMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\item_Protocol.h">
+      <Filter>99.Header\01.User\02.Item_Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ItemMgr.h">
+      <Filter>98.Manager\07.ItemMgr</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

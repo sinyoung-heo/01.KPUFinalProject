@@ -56,3 +56,38 @@ typedef struct tagEquipment
 	char helmet = -1;
 	char shoes	= -1;
 }EQUIPMENT;
+
+typedef struct tagGameItem
+{
+	tagGameItem()
+	{
+		cItemType	= -1;
+		cItemName	= -1;
+		iItemNumber = -1;
+		iAtt		= 0;
+		iHp			= 0;
+		iMp			= 0;
+		iCost		= 0;
+		iCount		= 0;
+	}
+
+	tagGameItem(const char& type, const char& name, const int& num, const int& att, const int& hp, const int& mp, const int& cost, const int& count)
+		:cItemType(type)
+		,cItemName(name)
+		,iItemNumber(num)
+		,iAtt(att)
+		,iHp(hp)
+		,iMp(mp)
+		,iCost(cost)
+		,iCount(count)
+	{}
+
+	char	cItemType	= -1;
+	char	cItemName	= -1;
+	int		iItemNumber = -1;
+	int		iAtt		= 0;
+	int		iHp			= 0;
+	int		iMp			= 0;
+	int		iCost		= 0;
+	int		iCount		= 0;
+}GAMEITEM;
