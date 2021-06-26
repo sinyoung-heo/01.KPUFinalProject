@@ -195,93 +195,6 @@ bool CDBMgr::Check_ID(int id, char* pw)
 	return false;
 }
 
-bool CDBMgr::Load_Equipment(const int& id)
-{
-	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
-
-	SQLCHAR name[MAX_STR_LEN];
-	SQLINTEGER u_weapon, u_armor, u_helmet, u_shoes;
-
-	SQLLEN cbLen = 0;
-
-	/* 유효한 ID인지 검사하는 쿼리문 */
-	std::string str_order
-		= "SELECT * FROM USER_EQUIPMENT WHERE user_ID = '";
-
-	str_order += pPlayer->m_ID;
-	str_order += "'";
-
-	std::wstring wsr_order = L"";
-	wsr_order.assign(str_order.begin(), str_order.end());
-
-	m_retcode = SQLExecDirect(m_hstmt, (SQLWCHAR*)wsr_order.c_str(), SQL_NTS);
-
-	// 데이터 처리 시작 - 유효한 ID일 경우
-	if (m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO)
-	{
-		/* Load Data on player info */
-		m_retcode = SQLBindCol(m_hstmt, 1, SQL_C_CHAR, &name, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 2, SQL_C_LONG, &u_weapon, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 3, SQL_C_LONG, &u_armor, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 4, SQL_C_LONG, &u_helmet, 100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 5, SQL_C_LONG, &u_shoes, 100, &cbLen);
-	
-		for (int i = 0; ; i++)
-		{
-			m_retcode = SQLFetch(m_hstmt);
-			if (m_retcode == SQL_ERROR || m_retcode == SQL_SUCCESS_WITH_INFO)
-				db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
-
-			/* player info를 올바르게 로드했다면 정보 저장 */
-			if (m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO)
-			{
-				pPlayer->Load_EquipmentFromDB(u_weapon, u_helmet, u_armor, u_shoes);
-				
-				SQLCloseCursor(m_hstmt);
-				return true;
-			}
-			else
-				break;
-		}
-	}
-	else db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
-
-	SQLCloseCursor(m_hstmt);
-
-	return false;
-}
-
-void CDBMgr::update_Equipment(const int& id)
-{
-	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
-
-	// ID
-	string name{ "'" };
-	name += pPlayer->m_ID;
-	name += "'";
-	
-	std::string str_order
-		= "EXEC update_equipment " + name + ", "
-		+ to_string(static_cast<int>(pPlayer->Get_All_Equipment().weapon)) + ", "
-		+ to_string(static_cast<int>(pPlayer->Get_All_Equipment().armor)) + ", "
-		+ to_string(static_cast<int>(pPlayer->Get_All_Equipment().helmet)) + ", "
-		+ to_string(static_cast<int>(pPlayer->Get_All_Equipment().shoes));
-
-	std::wstring wstr_order = L"";
-	wstr_order.assign(str_order.begin(), str_order.end());
-	m_retcode = SQLExecDirect(m_hstmt, (SQLWCHAR*)wstr_order.c_str(), SQL_NTS);
-
-	if (!(m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO))
-		db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
-
-#ifdef TEST
-	cout << "인벤토리 저장 완료" << endl;
-#endif // TEST
-
-	SQLCloseCursor(m_hstmt);
-	SQLCancel(m_hstmt);
-}
-
 void CDBMgr::Insert_NewPlayer_DB(int id, char* pw)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
@@ -518,6 +431,124 @@ void CDBMgr::delete_Inventory(const int& id, const int& itemNumber)
 
 #ifdef TEST
 	cout << "인벤토리 아이템 삭제 완료" << endl;
+#endif // TEST
+
+	SQLCloseCursor(m_hstmt);
+	SQLCancel(m_hstmt);
+}
+
+bool CDBMgr::Load_Equipment(const int& id)
+{
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+
+	SQLCHAR name[MAX_STR_LEN];
+	SQLINTEGER u_weapon, u_armor, u_helmet, u_shoes;
+
+	SQLLEN cbLen = 0;
+
+	/* 유효한 ID인지 검사하는 쿼리문 */
+	std::string str_order
+		= "SELECT * FROM USER_EQUIPMENT WHERE user_ID = '";
+
+	str_order += pPlayer->m_ID;
+	str_order += "'";
+
+	std::wstring wsr_order = L"";
+	wsr_order.assign(str_order.begin(), str_order.end());
+
+	m_retcode = SQLExecDirect(m_hstmt, (SQLWCHAR*)wsr_order.c_str(), SQL_NTS);
+
+	// 데이터 처리 시작 - 유효한 ID일 경우
+	if (m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO)
+	{
+		/* Load Data on player info */
+		m_retcode = SQLBindCol(m_hstmt, 1, SQL_C_CHAR, &name, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 2, SQL_C_LONG, &u_weapon, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 3, SQL_C_LONG, &u_armor, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 4, SQL_C_LONG, &u_helmet, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 5, SQL_C_LONG, &u_shoes, 100, &cbLen);
+
+		for (int i = 0; ; i++)
+		{
+			m_retcode = SQLFetch(m_hstmt);
+			if (m_retcode == SQL_ERROR || m_retcode == SQL_SUCCESS_WITH_INFO)
+				db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
+
+			/* player info를 올바르게 로드했다면 정보 저장 */
+			if (m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO)
+			{
+				pPlayer->Load_EquipmentFromDB(u_weapon, u_helmet, u_armor, u_shoes);
+
+				SQLCloseCursor(m_hstmt);
+				return true;
+			}
+			else
+				break;
+		}
+	}
+	else db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
+
+	SQLCloseCursor(m_hstmt);
+
+	return false;
+}
+
+void CDBMgr::ready_Equipment(const int& id)
+{
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+
+	// ID
+	string name{ "'" };
+	name += pPlayer->m_ID;
+	name += "'";
+
+	std::string str_order
+		= "EXEC ready_equipment " + name + ", "
+		+ to_string(-1) + ", "
+		+ to_string(-1) + ", "
+		+ to_string(-1) + ", "
+		+ to_string(-1);
+
+	std::wstring wstr_order = L"";
+	wstr_order.assign(str_order.begin(), str_order.end());
+	m_retcode = SQLExecDirect(m_hstmt, (SQLWCHAR*)wstr_order.c_str(), SQL_NTS);
+
+	if (!(m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO))
+		db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
+
+#ifdef TEST
+	cout << "인벤토리 저장 완료" << endl;
+#endif // TEST
+
+	SQLCloseCursor(m_hstmt);
+	SQLCancel(m_hstmt);
+}
+
+void CDBMgr::update_Equipment(const int& id)
+{
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+
+	// ID
+	string name{ "'" };
+	name += pPlayer->m_ID;
+	name += "'";
+
+	std::string str_order
+		= "EXEC update_equipment " + name + ", "
+		+ to_string(static_cast<int>(pPlayer->Get_All_Equipment().weapon)) + ", "
+		+ to_string(static_cast<int>(pPlayer->Get_All_Equipment().armor)) + ", "
+		+ to_string(static_cast<int>(pPlayer->Get_All_Equipment().helmet)) + ", "
+		+ to_string(static_cast<int>(pPlayer->Get_All_Equipment().shoes));
+
+	std::wstring wstr_order = L"";
+	wstr_order.assign(str_order.begin(), str_order.end());
+	m_retcode = SQLExecDirect(m_hstmt, (SQLWCHAR*)wstr_order.c_str(), SQL_NTS);
+
+	if (!(m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO))
+		db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
+
+#ifdef TEST
+	cout << "인벤토리 저장 완료" << endl;
 #endif // TEST
 
 	SQLCloseCursor(m_hstmt);

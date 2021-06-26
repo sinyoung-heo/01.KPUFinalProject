@@ -35,6 +35,7 @@ void process_packet(int id)
 			if (false == CDBMgr::GetInstance()->Check_ID(id, p->password))
 			{
 				CDBMgr::GetInstance()->Insert_NewPlayer_DB(id, p->password);
+				CDBMgr::GetInstance()->ready_Equipment(id);
 			}
 			/* 기존 회원일 경우 장비 및 인벤토리 Load */
 			else

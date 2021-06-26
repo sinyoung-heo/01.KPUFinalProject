@@ -16,6 +16,7 @@ public:
 public:
 	/* 장비창 이벤트 */
 	bool Load_Equipment(const int& id);
+	void ready_Equipment(const int& id);
 	void update_Equipment(const int& id);
 
 	/* 인벤토리 이벤트 */
