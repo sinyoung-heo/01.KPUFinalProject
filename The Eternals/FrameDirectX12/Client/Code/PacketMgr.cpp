@@ -1109,7 +1109,7 @@ void CPacketMgr::send_login()
 	p.size			= sizeof(p);
 	p.type			= CS_LOGIN;
 
-	p.isMember		= false;
+	p.isMember		= g_bIsLoginID;
 	p.o_type		= g_cJob;
 	p.weapon_type	= Bow23_SM;
 
@@ -1123,10 +1123,27 @@ void CPacketMgr::send_login()
 	{
 		char name[MAX_STR] = "";
 		char password[MAX_STR] = "";
-		cout << "ID: ";
-		cin >> name;
-		cout << "PW: ";
-		cin >> password;
+
+		WideCharToMultiByte(CP_ACP,
+							0,
+							g_szID,			// 변환 할 문자열.
+							lstrlen(g_szID),
+							name,			// 변환 값 저장 버퍼.
+							MAX_STR,
+							NULL,
+							NULL);
+
+		WideCharToMultiByte(CP_ACP,
+							0,
+							g_szPWD,			// 변환 할 문자열.
+							lstrlen(g_szPWD),
+							password,			// 변환 값 저장 버퍼.
+							MAX_STR,
+							NULL,
+							NULL);
+
+		cout << "ID: " << name << endl;
+		cout << "PW: " << password << endl;
 
 		strncpy_s(p.name, name, strlen(name));
 		strncpy_s(p.password, password, strlen(password));

@@ -64,11 +64,50 @@ _int CLoginIDInputString::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		CGameUIChild::LateUpdate_GameObject(fTimeDelta);
 
+		if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect) &&
+			Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) &&
+			m_bIsKeyPressing)
+		{
+			if (m_wstrObjectTag == L"InputStringID")
+			{
+				g_bIsInputID  = true;
+				g_bIsInputPWD = false;
+			}
+			else
+			{
+				g_bIsInputID  = false;
+				g_bIsInputPWD = true;
+			}
+
+		}
+
+		m_bIsKeyPressing = false;
+
+		// Check Mouse Collision.
+		if (CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse() &&
+			CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect))
+		{
+			if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_LB))
+			{
+				m_bIsKeyPressing = true;
+			}
+			else
+			{
+				m_bIsKeyPressing = false;
+			}
+		}
+
 		if (nullptr != m_pFont && m_bIsActive && !g_bIsGameStart)
 		{
 			_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
 			vPos.x += -240.0f;
 			vPos.y += -40.0f;
+
+			if (m_wstrObjectTag == L"InputStringID")
+				m_pFont->Set_Text(g_szID);
+			else
+				m_pFont->Set_Text(g_szPWD);
+
 			m_pFont->Set_Pos(_vec2(vPos.x, vPos.y));
 			m_pFont->Update_GameObject(fTimeDelta);
 		}

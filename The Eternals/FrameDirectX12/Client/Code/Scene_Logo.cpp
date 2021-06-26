@@ -190,16 +190,16 @@ HRESULT CScene_Logo::Render_Scene(const _float & fTimeDelta, const Engine::RENDE
 
 
 
-		if (Engine::KEY_DOWN(DIK_1))
-		{
-			m_pObjectMgr->Clear_Layer();
-			CMouseCursorMgr::Get_Instance()->Reset_MouseCursor();
+		//if (Engine::KEY_DOWN(DIK_1))
+		//{
+		//	m_pObjectMgr->Clear_Layer();
+		//	CMouseCursorMgr::Get_Instance()->Reset_MouseCursor();
 
-			Engine::CScene* pNewScene = nullptr;
-			pNewScene = CStageLDH::Create(m_pGraphicDevice, m_pCommandList);
-			Engine::CManagement::Get_Instance()->SetUp_CurrentScene(pNewScene);
-		}
-		if (Engine::KEY_DOWN(DIK_2))
+		//	Engine::CScene* pNewScene = nullptr;
+		//	pNewScene = CStageLDH::Create(m_pGraphicDevice, m_pCommandList);
+		//	Engine::CManagement::Get_Instance()->SetUp_CurrentScene(pNewScene);
+		//}
+		if (Engine::KEY_DOWN(DIK_2) && m_bIsLoginPC)
 		{
 			m_pObjectMgr->Clear_Layer();
 			CMouseCursorMgr::Get_Instance()->Reset_MouseCursor();
@@ -208,15 +208,15 @@ HRESULT CScene_Logo::Render_Scene(const _float & fTimeDelta, const Engine::RENDE
 			pNewScene = CStagePJO::Create(m_pGraphicDevice, m_pCommandList);
 			Engine::CManagement::Get_Instance()->SetUp_CurrentScene(pNewScene);
 		}
-		if (Engine::KEY_DOWN(DIK_3))
-		{
-			m_pObjectMgr->Clear_Layer();
-			CMouseCursorMgr::Get_Instance()->Reset_MouseCursor();
+		//if (Engine::KEY_DOWN(DIK_3))
+		//{
+		//	m_pObjectMgr->Clear_Layer();
+		//	CMouseCursorMgr::Get_Instance()->Reset_MouseCursor();
 
-			Engine::CScene* pNewScene = nullptr;
-			pNewScene = CStageHSY::Create(m_pGraphicDevice, m_pCommandList);
-			Engine::CManagement::Get_Instance()->SetUp_CurrentScene(pNewScene);
-		}
+		//	Engine::CScene* pNewScene = nullptr;
+		//	pNewScene = CStageHSY::Create(m_pGraphicDevice, m_pCommandList);
+		//	Engine::CManagement::Get_Instance()->SetUp_CurrentScene(pNewScene);
+		//}
 	}
 
 
@@ -246,6 +246,7 @@ void CScene_Logo::KeyInput_LoginSelect(const _float& fTimeDelta)
 
 		m_bIsLoginPC = true;
 		m_bIsLoginID = false;
+		g_bIsLoginID = m_bIsLoginID;
 
 		// PCSelect Active On
 		m_pPCSelectBackground->Set_IsActive(true);
@@ -265,6 +266,9 @@ void CScene_Logo::KeyInput_LoginSelect(const _float& fTimeDelta)
 		m_pLoginIDFont_ID->Set_IsActive(false);
 		m_pLoginIDFont_PWD->Set_IsActive(false);
 		m_pLoginIDButton->Set_IsActive(false);
+
+		g_bIsInputID  = false;
+		g_bIsInputPWD = false;
 	}
 
 	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_pLoginSelectIDButton->Get_Rect()) &&
@@ -281,6 +285,7 @@ void CScene_Logo::KeyInput_LoginSelect(const _float& fTimeDelta)
 
 		m_bIsLoginPC = false;
 		m_bIsLoginID = true;
+		g_bIsLoginID = m_bIsLoginID;
 
 		// PCSelect Active Off
 		m_pPCSelectBackground->Set_IsActive(false);
@@ -300,6 +305,9 @@ void CScene_Logo::KeyInput_LoginSelect(const _float& fTimeDelta)
 		m_pLoginIDFont_ID->Set_IsActive(true);
 		m_pLoginIDFont_PWD->Set_IsActive(true);
 		m_pLoginIDButton->Set_IsActive(true);
+
+		g_bIsInputID  = true;
+		g_bIsInputPWD = false;
 	}
 }
 
@@ -1274,4 +1282,7 @@ void CScene_Logo::Free()
 	m_pLoginIDFont_ID        = nullptr;
 	m_pLoginIDFont_PWD       = nullptr;
 	m_pLoginIDButton         = nullptr;
+
+	g_bIsInputID  = false;
+	g_bIsInputPWD = false;
 }

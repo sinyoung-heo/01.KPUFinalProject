@@ -32,6 +32,7 @@ private:
 	_matrix	m_matView = INIT_MATRIX;
 	_matrix	m_matProj = INIT_MATRIX;
 
+	_bool m_bIsKeyPressing = false;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 									   wstring wstrRootObjectTag,

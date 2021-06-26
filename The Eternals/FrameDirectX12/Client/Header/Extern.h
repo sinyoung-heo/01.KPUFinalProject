@@ -12,6 +12,12 @@ extern char		g_cJob;
 #endif // SERVER
 extern _tchar g_Text[256];
 
+extern _tchar	g_szID[32];
+extern _tchar	g_szPWD[32];
+extern _bool	g_bIsInputID;
+extern _bool	g_bIsInputPWD;
+extern _bool	g_bIsLoginID;
+
 extern _bool g_bIsOnDebugCaemra;
 extern _bool g_bIsStageChange;
 extern _bool g_bIsOpenShop;
