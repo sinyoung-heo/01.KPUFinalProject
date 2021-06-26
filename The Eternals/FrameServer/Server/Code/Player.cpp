@@ -96,6 +96,9 @@ void CPlayer::Load_EquipmentFromDB(const int& weapon, const int& helmet, const i
     m_tEquipment.helmet = static_cast<char>(helmet);
     m_tEquipment.armor = static_cast<char>(armor);
     m_tEquipment.shoes = static_cast<char>(shoes);
+
+    // ·»´õ¸µ ¹«±â
+    m_chWeaponType = static_cast<char>(weapon);
 }
 
 const char& CPlayer::Get_Equipment(const char& itemType)

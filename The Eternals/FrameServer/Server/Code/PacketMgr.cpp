@@ -23,8 +23,6 @@ void process_packet(int id)
 
 		pPlayer->Get_ClientLock().lock();
 		strncpy_s(pPlayer->m_ID, p->name, strlen(p->name));
-		pPlayer->m_type = p->o_type;
-		pPlayer->m_chWeaponType = p->weapon_type;
 		pPlayer->Get_ClientLock().unlock();
 
 		// 회원일 경우 DB 검사
@@ -44,6 +42,12 @@ void process_packet(int id)
 				CDBMgr::GetInstance()->Load_Equipment(id);
 				CDBMgr::GetInstance()->Load_Inventory(id);
 			}
+		}
+		// 비회원일 경우
+		else
+		{
+			pPlayer->m_type = p->o_type;
+			pPlayer->m_chWeaponType = p->weapon_type;
 		}
 
 		/* 로그인 수락 패킷 전송 */
@@ -384,28 +388,28 @@ void send_login_ok(int id)
 
 	if (pPlayer == nullptr) return;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_LOGIN_OK;
-	p.id = id;
+	p.size			= sizeof(p);
+	p.type			= SC_PACKET_LOGIN_OK;
+	p.id			= id;
 
-	p.o_type = pPlayer->m_type;
-	p.weaponType = pPlayer->m_chWeaponType;
-	p.naviType = pPlayer->m_chStageId;
+	p.o_type		= pPlayer->m_type;
+	p.weaponType	= pPlayer->m_chWeaponType;
+	p.naviType		= pPlayer->m_chStageId;
 
-	p.level = pPlayer->m_iLevel;
-	p.hp = pPlayer->m_iHp;
-	p.maxHp = pPlayer->m_iMaxHp;
-	p.mp = pPlayer->m_iMp;
-	p.maxMp = pPlayer->m_iMaxMp;
-	p.exp = pPlayer->m_iExp;
-	p.maxExp = pPlayer->m_iMaxExp;
-	p.min_att = pPlayer->m_iMinAtt;
-	p.max_att = pPlayer->m_iMaxAtt;
-	p.spd = pPlayer->m_fSpd;
+	p.level			= pPlayer->m_iLevel;
+	p.hp			= pPlayer->m_iHp;
+	p.maxHp			= pPlayer->m_iMaxHp;
+	p.mp			= pPlayer->m_iMp;
+	p.maxMp			= pPlayer->m_iMaxMp;
+	p.exp			= pPlayer->m_iExp;
+	p.maxExp		= pPlayer->m_iMaxExp;
+	p.min_att		= pPlayer->m_iMinAtt;
+	p.max_att		= pPlayer->m_iMaxAtt;
+	p.spd			= pPlayer->m_fSpd;
 
-	p.posX = pPlayer->m_vPos.x;
-	p.posY = pPlayer->m_vPos.y;
-	p.posZ = pPlayer->m_vPos.z;
+	p.posX			= pPlayer->m_vPos.x;
+	p.posY			= pPlayer->m_vPos.y;
+	p.posZ			= pPlayer->m_vPos.z;
 
 	send_packet(id, &p);
 }
@@ -416,27 +420,27 @@ void send_enter_packet(int to_client, int new_id)
 
 	CPlayer* pNewPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", new_id));
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_ENTER;
-	p.id = new_id;
+	p.size	= sizeof(p);
+	p.type	= SC_PACKET_ENTER;
+	p.id	= new_id;
 
 	pNewPlayer->Get_ClientLock().lock();
 	strncpy_s(p.name, pNewPlayer->m_ID, strlen(pNewPlayer->m_ID));
-
 	pNewPlayer->Get_ClientLock().unlock();
-	p.o_type = pNewPlayer->m_type;
-	p.weaponType = pNewPlayer->m_chWeaponType;
-	p.stageID = pNewPlayer->m_chStageId;
-	p.is_stance_attack = pNewPlayer->m_bIsAttackStance;
-	p.is_party_state = pNewPlayer->m_bIsPartyState;
 
-	p.posX = pNewPlayer->m_vPos.x;
-	p.posY = pNewPlayer->m_vPos.y;
-	p.posZ = pNewPlayer->m_vPos.z;
+	p.o_type			= pNewPlayer->m_type;
+	p.weaponType		= pNewPlayer->m_chWeaponType;
+	p.stageID			= pNewPlayer->m_chStageId;
+	p.is_stance_attack	= pNewPlayer->m_bIsAttackStance;
+	p.is_party_state	= pNewPlayer->m_bIsPartyState;
 
-	p.dirX = pNewPlayer->m_vDir.x;
-	p.dirY = pNewPlayer->m_vDir.y;
-	p.dirZ = pNewPlayer->m_vDir.z;
+	p.posX				= pNewPlayer->m_vPos.x;
+	p.posY				= pNewPlayer->m_vPos.y;
+	p.posZ				= pNewPlayer->m_vPos.z;
+
+	p.dirX				= pNewPlayer->m_vDir.x;
+	p.dirY				= pNewPlayer->m_vDir.y;
+	p.dirZ				= pNewPlayer->m_vDir.z;
 
 	send_packet(to_client, &p);
 }
@@ -445,9 +449,9 @@ void send_leave_packet(int to_client, int leave_id)
 {
 	sc_packet_leave p;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_LEAVE;
-	p.id = leave_id;
+	p.size	= sizeof(p);
+	p.type	= SC_PACKET_LEAVE;
+	p.id	= leave_id;
 
 	send_packet(to_client, &p);
 }
@@ -460,21 +464,21 @@ void send_move_packet(int to_client, int id)
 
 	if (pPlayer == nullptr) return;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_MOVE;
-	p.id = id;
+	p.size		= sizeof(p);
+	p.type		= SC_PACKET_MOVE;
+	p.id		= id;
 
-	p.spd = pPlayer->m_fSpd;
-	p.animIdx = pPlayer->m_iAniIdx;
+	p.spd		= pPlayer->m_fSpd;
+	p.animIdx	= pPlayer->m_iAniIdx;
 	p.move_time = pPlayer->move_time;
 
-	p.posX = pPlayer->m_vTempPos.x;
-	p.posY = pPlayer->m_vTempPos.y;
-	p.posZ = pPlayer->m_vTempPos.z;
+	p.posX		= pPlayer->m_vTempPos.x;
+	p.posY		= pPlayer->m_vTempPos.y;
+	p.posZ		= pPlayer->m_vTempPos.z;
 
-	p.dirX = pPlayer->m_vDir.x;
-	p.dirY = pPlayer->m_vDir.y;
-	p.dirZ = pPlayer->m_vDir.z;
+	p.dirX		= pPlayer->m_vDir.x;
+	p.dirY		= pPlayer->m_vDir.y;
+	p.dirZ		= pPlayer->m_vDir.z;
 
 	send_packet(to_client, &p);
 }
@@ -487,21 +491,21 @@ void send_move_stop_packet(int to_client, int id)
 
 	if (pPlayer == nullptr) return;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_MOVE_STOP;
-	p.id = id;
+	p.size		= sizeof(p);
+	p.type		= SC_PACKET_MOVE_STOP;
+	p.id		= id;
 
-	p.spd = pPlayer->m_fSpd;
-	p.animIdx = pPlayer->m_iAniIdx;
+	p.spd		= pPlayer->m_fSpd;
+	p.animIdx	= pPlayer->m_iAniIdx;
 	p.move_time = pPlayer->move_time;
 
-	p.posX = pPlayer->m_vPos.x;
-	p.posY = pPlayer->m_vPos.y;
-	p.posZ = pPlayer->m_vPos.z;
+	p.posX		= pPlayer->m_vPos.x;
+	p.posY		= pPlayer->m_vPos.y;
+	p.posZ		= pPlayer->m_vPos.z;
 
-	p.dirX = pPlayer->m_vDir.x;
-	p.dirY = pPlayer->m_vDir.y;
-	p.dirZ = pPlayer->m_vDir.z;
+	p.dirX		= pPlayer->m_vDir.x;
+	p.dirY		= pPlayer->m_vDir.y;
+	p.dirZ		= pPlayer->m_vDir.z;
 
 	send_packet(to_client, &p);
 }
@@ -514,22 +518,22 @@ void send_attack_packet(int to_client, int id, int animIdx, float end_angleY)
 
 	if (pPlayer == nullptr) return;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_ATTACK;
+	p.size			= sizeof(p);
+	p.type			= SC_PACKET_ATTACK;
+	p.id			= id;
 
-	p.id = id;
-	p.o_type = pPlayer->m_type;
+	p.o_type		= pPlayer->m_type;
 
-	p.posX = pPlayer->m_vTempPos.x;
-	p.posY = pPlayer->m_vTempPos.y;
-	p.posZ = pPlayer->m_vTempPos.z;
+	p.posX			= pPlayer->m_vTempPos.x;
+	p.posY			= pPlayer->m_vTempPos.y;
+	p.posZ			= pPlayer->m_vTempPos.z;
 
-	p.dirX = pPlayer->m_vDir.x;
-	p.dirY = pPlayer->m_vDir.y;
-	p.dirZ = pPlayer->m_vDir.z;
+	p.dirX			= pPlayer->m_vDir.x;
+	p.dirY			= pPlayer->m_vDir.y;
+	p.dirZ			= pPlayer->m_vDir.z;
 
-	p.animIdx = animIdx;
-	p.end_angleY = end_angleY;
+	p.animIdx		= animIdx;
+	p.end_angleY	= end_angleY;
 
 	send_packet(to_client, &p);
 }
@@ -542,20 +546,20 @@ void send_attack_stop_packet(int to_client, int id, int animIdx)
 
 	if (pPlayer == nullptr) return;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_ATTACK_STOP;
+	p.size		= sizeof(p);
+	p.type		= SC_PACKET_ATTACK_STOP;
+	p.id		= id;
 
-	p.id = id;
-	p.o_type = pPlayer->m_type;
-	p.animIdx = animIdx;
+	p.o_type	= pPlayer->m_type;
+	p.animIdx	= animIdx;
 
-	p.posX = pPlayer->m_vPos.x;
-	p.posY = pPlayer->m_vPos.y;
-	p.posZ = pPlayer->m_vPos.z;
+	p.posX		= pPlayer->m_vPos.x;
+	p.posY		= pPlayer->m_vPos.y;
+	p.posZ		= pPlayer->m_vPos.z;
 
-	p.dirX = pPlayer->m_vDir.x;
-	p.dirY = pPlayer->m_vDir.y;
-	p.dirZ = pPlayer->m_vDir.z;
+	p.dirX		= pPlayer->m_vDir.x;
+	p.dirY		= pPlayer->m_vDir.y;
+	p.dirZ		= pPlayer->m_vDir.z;
 
 	send_packet(to_client, &p);
 }
@@ -567,19 +571,19 @@ void send_player_stat(int to_client, int id)
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 	if (pPlayer == nullptr) return;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_STAT_CHANGE;
+	p.size		= sizeof(p);
+	p.type		= SC_PACKET_STAT_CHANGE;
+	p.id		= id;
 
-	p.id = id;
-	p.hp = pPlayer->m_iHp;
-	p.maxHp = pPlayer->m_iMaxHp;
-	p.mp = pPlayer->m_iMp;
-	p.maxMp = pPlayer->m_iMaxMp;
-	p.exp = pPlayer->m_iExp;
-	p.maxExp = pPlayer->m_iMaxExp;
-	p.lev = pPlayer->m_iLevel;
-	p.maxAtt = pPlayer->m_iMaxAtt;
-	p.minAtt = pPlayer->m_iMinAtt;
+	p.hp		= pPlayer->m_iHp;
+	p.maxHp		= pPlayer->m_iMaxHp;
+	p.mp		= pPlayer->m_iMp;
+	p.maxMp		= pPlayer->m_iMaxMp;
+	p.exp		= pPlayer->m_iExp;
+	p.maxExp	= pPlayer->m_iMaxExp;
+	p.lev		= pPlayer->m_iLevel;
+	p.maxAtt	= pPlayer->m_iMaxAtt;
+	p.minAtt	= pPlayer->m_iMinAtt;
 
 	send_packet(to_client, &p);
 }
@@ -591,12 +595,13 @@ void send_player_stance_change(int to_client, int id, const bool& st)
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 	if (pPlayer == nullptr) return;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_STANCE_CHANGE;
-	p.id = id;
-	p.animIdx = pPlayer->m_iAniIdx;
-	p.o_type = pPlayer->m_type;
-	p.is_stance_attack = st;
+	p.size				= sizeof(p);
+	p.type				= SC_PACKET_STANCE_CHANGE;
+	p.id				= id;
+
+	p.animIdx			= pPlayer->m_iAniIdx;
+	p.o_type			= pPlayer->m_type;
+	p.is_stance_attack	= st;
 
 	send_packet(to_client, &p);
 }
@@ -608,14 +613,14 @@ void send_player_stage_change(int to_client, int id)
 
 	sc_packet_stage_change p;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_STAGE_CHANGE;
-	p.id = id;
+	p.size		= sizeof(p);
+	p.type		= SC_PACKET_STAGE_CHANGE;
+	p.id		= id;
 
-	p.stage_id = pPlayer->m_chStageId;
-	p.posX = pPlayer->m_vPos.x;
-	p.posY = pPlayer->m_vPos.y;
-	p.posZ = pPlayer->m_vPos.z;
+	p.stage_id	= pPlayer->m_chStageId;
+	p.posX		= pPlayer->m_vPos.x;
+	p.posY		= pPlayer->m_vPos.y;
+	p.posZ		= pPlayer->m_vPos.z;
 
 	send_packet(to_client, &p);
 }
@@ -624,9 +629,9 @@ void send_suggest_party(int to_client, int id)
 {
 	sc_packet_suggest_party p;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_SUGGEST_PARTY;
-	p.id = id;
+	p.size	= sizeof(p);
+	p.type	= SC_PACKET_SUGGEST_PARTY;
+	p.id	= id;
 
 	send_packet(to_client, &p);
 }
@@ -635,16 +640,16 @@ void send_enter_party(int to_client, int id, const int& hp, const int& maxHp, co
 {
 	sc_packet_enter_party p;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_ENTER_PARTY;
-	p.id = id;
+	p.size	= sizeof(p);
+	p.type	= SC_PACKET_ENTER_PARTY;
+	p.id	= id;
 
 	strncpy_s(p.name, ID, strlen(ID));
-	p.o_type = job;
-	p.hp = hp;
-	p.maxHp = maxHp;
-	p.mp = mp;
-	p.maxMp = maxMp;
+	p.o_type	= job;
+	p.hp		= hp;
+	p.maxHp		= maxHp;
+	p.mp		= mp;
+	p.maxMp		= maxMp;
 
 	send_packet(to_client, &p);
 }
@@ -653,9 +658,9 @@ void send_reject_party(int to_client, int id)
 {
 	sc_packet_chat p;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_REJECT_PARTY;
-	p.id = id;
+	p.size	= sizeof(p);
+	p.type	= SC_PACKET_REJECT_PARTY;
+	p.id	= id;
 
 	strncpy_s(p.name, "0", strlen("0"));
 	strncpy_s(p.message, "파티 참여를 거절하였습니다.", strlen("파티 참여를 거절하였습니다."));
@@ -667,9 +672,9 @@ void send_join_party(int to_client, int id)
 {
 	sc_packet_suggest_party p;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_JOIN_PARTY;
-	p.id = id;
+	p.size	= sizeof(p);
+	p.type	= SC_PACKET_JOIN_PARTY;
+	p.id	= id;
 
 	send_packet(to_client, &p);
 }
@@ -678,9 +683,9 @@ void send_leave_party(int to_client, int id)
 {
 	sc_packet_suggest_party p;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_LEAVE_PARTY;
-	p.id = id;
+	p.size	= sizeof(p);
+	p.type	= SC_PACKET_LEAVE_PARTY;
+	p.id	= id;
 
 	send_packet(to_client, &p);
 }
@@ -689,13 +694,13 @@ void send_update_party(const int& to_client, const int& id, const int& hp, const
 {
 	sc_packet_update_party p;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_UPDATE_PARTY;
-	p.id = id;
+	p.size	= sizeof(p);
+	p.type	= SC_PACKET_UPDATE_PARTY;
+	p.id	= id;
 
-	p.hp = hp;
+	p.hp	= hp;
 	p.maxHp = maxHp;
-	p.mp = mp;
+	p.mp	= mp;
 	p.maxMp = maxMp;
 
 	send_packet(to_client, &p);
@@ -705,9 +710,9 @@ void send_chat(const int& to_client, const int& id, const char* name, const char
 {
 	sc_packet_chat p;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_CHAT;
-	p.id = id;
+	p.size	= sizeof(p);
+	p.type	= SC_PACKET_CHAT;
+	p.id	= id;
 
 	strncpy_s(p.name, name, strlen(name));
 	strncpy_s(p.message, buffer, len);
@@ -720,13 +725,13 @@ void send_update_inventory(const int& id, const char& chItemType, const char& ch
 {
 	sc_packet_update_inventory p;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_UPDATE_INVENTORY;
+	p.size			= sizeof(p);
+	p.type			= SC_PACKET_UPDATE_INVENTORY;
 
-	p.itemType = chItemType;
-	p.itemName = chName;
-	p.count = count;
-	p.is_pushItem = isPushItem;
+	p.itemType		= chItemType;
+	p.itemName		= chName;
+	p.count			= count;
+	p.is_pushItem	= isPushItem;
 
 	send_packet(id, &p);
 }
@@ -735,12 +740,12 @@ void send_update_equipment(const int& to_client, const char& chItemType, const c
 {
 	sc_packet_update_equipment p;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_UPDATE_EQUIPMENT;
+	p.size			= sizeof(p);
+	p.type			= SC_PACKET_UPDATE_EQUIPMENT;
 
-	p.equipType = chItemType;
-	p.itemName = chName;
-	p.is_pushItem = isPushItem;
+	p.equipType		= chItemType;
+	p.itemName		= chName;
+	p.is_pushItem	= isPushItem;
 
 	send_packet(to_client, &p);
 }
