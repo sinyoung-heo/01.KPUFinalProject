@@ -21,6 +21,8 @@
 #include "PartySuggestCanvas.h"
 #include "TextureEffect.h"
 #include "WarningFrame.h"
+#include "StoreMgr.h"
+
 CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pPacketMgr(CPacketMgr::Get_Instance())
@@ -797,6 +799,9 @@ HRESULT CPCGladiator::SetUp_Equipment()
 	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_A);
 	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_S);
 
+	CStoreMgr::Get_Instance()->Set_StoreState(STORE_STATE::STORE_WEAPON);
+	CStoreMgr::Get_Instance()->Set_StoreItemType(ItemType_WeaponTwoHand);
+
 	return S_OK;
 }
 
@@ -1054,8 +1059,8 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 
 	if (Engine::KEY_DOWN(DIK_0) && NO_EVENT_STATE)
 	{
-		Engine::CGameObject* pWarningFrame = m_pObjectMgr->Get_GameObject(L"Layer_UI", L"WarningFrame");
-		static_cast<CWarningFrame*>(pWarningFrame)->Set_IsRender(true);
+		//Engine::CGameObject* pWarningFrame = m_pObjectMgr->Get_GameObject(L"Layer_UI", L"WarningFrame");
+		//static_cast<CWarningFrame*>(pWarningFrame)->Set_IsRender(true);
 
 	/*	Engine::CGameObject* pGameObj = nullptr;
 		for (int i = 0; i < 36; i++)
@@ -1067,6 +1072,23 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 										 _vec3(0, 0, 0), 5.f, XMConvertToRadians(i * 10.f));
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"IceStorm1", pGameObj), E_FAIL);
 		}*/
+	}
+
+
+	if (Engine::KEY_DOWN(DIK_Z))
+	{
+		CStoreMgr::Get_Instance()->Set_StoreState(STORE_STATE::STORE_WEAPON);
+		CStoreMgr::Get_Instance()->Set_StoreItemType(ItemType_WeaponTwoHand);
+	}
+	if (Engine::KEY_DOWN(DIK_X))
+	{
+		CStoreMgr::Get_Instance()->Set_StoreState(STORE_STATE::STORE_ARMOR);
+		CStoreMgr::Get_Instance()->Set_StoreItemType(ItemType_Helmet);
+	}
+	if (Engine::KEY_DOWN(DIK_C))
+	{
+		CStoreMgr::Get_Instance()->Set_StoreState(STORE_STATE::STORE_POTION);
+		CStoreMgr::Get_Instance()->Set_StoreItemType(ItemType_Potion);
 	}
 }
 

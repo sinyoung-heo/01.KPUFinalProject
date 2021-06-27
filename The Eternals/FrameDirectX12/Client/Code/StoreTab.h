@@ -8,6 +8,10 @@ private:
 	virtual ~CStoreTab() = default;
 
 public:
+	const char& Get_ItemType() { return m_chItemType; }
+	void Set_IsSelected(const _bool& bIsSelected)		{ m_bIsSelected = bIsSelected; }
+	void Set_FontTextPosOffset(const _vec2& vOffset)	{ m_vFontOffset = vOffset; }
+	void Set_ItemType(const char& chItemType)			{ m_chItemType = chItemType; }
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrRootObjectTag,
 									 wstring wstrObjectTag,							   
@@ -30,9 +34,13 @@ private:
 	[ Value ]
 	____________________________________________________________________________________________________________*/
 	_bool m_bIsKeyPressing = false;
+	_bool m_bIsSelected    = false;
+	_vec2 m_vFontOffset    = _vec2(0.0f);
 
-	_float fOffsetX = 0.0f;
-	_float fOffsetY = 0.0f;
+	char m_chItemType = NO_ITEM;
+
+	_float m_fFontOffsetX = 0.0f;
+	_float m_fFontOffsetY = 0.0f;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 									   wstring wstrRootObjectTag,

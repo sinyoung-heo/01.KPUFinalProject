@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "StoreMgr.h"
+#include "Font.h"
 
 IMPLEMENT_SINGLETON(CStoreMgr)
 
@@ -7,6 +8,220 @@ CStoreMgr::CStoreMgr()
 {
 }
 
+void CStoreMgr::Set_StoreState(const STORE_STATE& eState)
+{
+	m_eCurStoreState = eState;
+
+	if (m_eCurStoreState != m_ePreStoreState)
+	{
+		m_ePreStoreState = m_eCurStoreState;
+
+		switch (m_eCurStoreState)
+		{
+		case STORE_WEAPON:
+		{
+			m_mapStoreTab[L"UIStoreItemTab1"]->Set_IsActive(true);
+			m_mapStoreTab[L"UIStoreItemTab2"]->Set_IsActive(true);
+			m_mapStoreTab[L"UIStoreItemTab3"]->Set_IsActive(true);
+			m_mapStoreTab[L"UIStoreItemTab1"]->Get_Font()->Set_Text(L"검");
+			m_mapStoreTab[L"UIStoreItemTab2"]->Get_Font()->Set_Text(L"활");
+			m_mapStoreTab[L"UIStoreItemTab3"]->Get_Font()->Set_Text(L"로드");
+			m_mapStoreTab[L"UIStoreItemTab1"]->Set_FontTextPosOffset(_vec2(-12.0f, -16.0f));
+			m_mapStoreTab[L"UIStoreItemTab2"]->Set_FontTextPosOffset(_vec2(-12.0f, -16.0f));
+			m_mapStoreTab[L"UIStoreItemTab3"]->Set_FontTextPosOffset(_vec2(-22.0f, -16.0f));
+			m_mapStoreTab[L"UIStoreItemTab1"]->Set_IsSelected(true);
+			m_mapStoreTab[L"UIStoreItemTab2"]->Set_IsSelected(false);
+			m_mapStoreTab[L"UIStoreItemTab3"]->Set_IsSelected(false);
+			m_mapStoreTab[L"UIStoreItemTab1"]->Set_ItemType(ItemType_WeaponTwoHand);
+			m_mapStoreTab[L"UIStoreItemTab2"]->Set_ItemType(ItemType_WeaponBow);
+			m_mapStoreTab[L"UIStoreItemTab3"]->Set_ItemType(ItemType_WeaponRod);
+		}
+			break;
+		case STORE_ARMOR:
+		{
+			m_mapStoreTab[L"UIStoreItemTab1"]->Set_IsActive(true);
+			m_mapStoreTab[L"UIStoreItemTab2"]->Set_IsActive(true);
+			m_mapStoreTab[L"UIStoreItemTab3"]->Set_IsActive(true);
+			m_mapStoreTab[L"UIStoreItemTab1"]->Get_Font()->Set_Text(L"투구");
+			m_mapStoreTab[L"UIStoreItemTab2"]->Get_Font()->Set_Text(L"갑옷");
+			m_mapStoreTab[L"UIStoreItemTab3"]->Get_Font()->Set_Text(L"신발");
+			m_mapStoreTab[L"UIStoreItemTab1"]->Set_FontTextPosOffset(_vec2(-22.0f, -16.0f));
+			m_mapStoreTab[L"UIStoreItemTab2"]->Set_FontTextPosOffset(_vec2(-22.0f, -16.0f));
+			m_mapStoreTab[L"UIStoreItemTab3"]->Set_FontTextPosOffset(_vec2(-22.0f, -16.0f));
+			m_mapStoreTab[L"UIStoreItemTab1"]->Set_IsSelected(true);
+			m_mapStoreTab[L"UIStoreItemTab2"]->Set_IsSelected(false);
+			m_mapStoreTab[L"UIStoreItemTab3"]->Set_IsSelected(false);
+			m_mapStoreTab[L"UIStoreItemTab1"]->Set_ItemType(ItemType_Helmet);
+			m_mapStoreTab[L"UIStoreItemTab2"]->Set_ItemType(ItemType_Armor);
+			m_mapStoreTab[L"UIStoreItemTab3"]->Set_ItemType(ItemType_Shoes);
+		}
+			break;
+		case STORE_POTION:
+		{
+			m_mapStoreTab[L"UIStoreItemTab1"]->Set_IsActive(true);
+			m_mapStoreTab[L"UIStoreItemTab2"]->Set_IsActive(false);
+			m_mapStoreTab[L"UIStoreItemTab3"]->Set_IsActive(false);
+			m_mapStoreTab[L"UIStoreItemTab1"]->Get_Font()->Set_Text(L"물약");
+			m_mapStoreTab[L"UIStoreItemTab1"]->Set_FontTextPosOffset(_vec2(-22.0f, -16.0f));
+			m_mapStoreTab[L"UIStoreItemTab1"]->Set_IsSelected(true);
+			m_mapStoreTab[L"UIStoreItemTab1"]->Set_ItemType(ItemType_Potion);
+		}
+			break;
+		case STORE_STATE_END:
+		{
+			m_mapStoreTab[L"UIStoreItemTab1"]->Set_IsActive(false);
+			m_mapStoreTab[L"UIStoreItemTab2"]->Set_IsActive(false);
+			m_mapStoreTab[L"UIStoreItemTab3"]->Set_IsActive(false);
+		}
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+void CStoreMgr::Set_StoreItemType(const char& chItemType)
+{
+	m_chCurItemType = chItemType;
+
+	if (m_chCurItemType != m_chPreItemType)
+	{
+		switch (m_chCurItemType)
+		{
+		case ItemType_WeaponTwoHand:
+		{
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_D]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_C]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_B]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_A]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_S]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_D]->Set_CurItemInfo(ItemType_WeaponTwoHand, Twohand19_A_SM);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_C]->Set_CurItemInfo(ItemType_WeaponTwoHand, TwoHand27_SM);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_B]->Set_CurItemInfo(ItemType_WeaponTwoHand, TwoHand29_SM);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_A]->Set_CurItemInfo(ItemType_WeaponTwoHand, TwoHand31_SM);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_S]->Set_CurItemInfo(ItemType_WeaponTwoHand, TwoHand33_B_SM);
+		}
+			break;
+		case ItemType_WeaponBow:
+		{
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_D]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_C]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_B]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_A]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_S]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_D]->Set_CurItemInfo(ItemType_WeaponBow, Bow18_A_SM);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_C]->Set_CurItemInfo(ItemType_WeaponBow, Bow27_SM);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_B]->Set_CurItemInfo(ItemType_WeaponBow, Bow23_SM);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_A]->Set_CurItemInfo(ItemType_WeaponBow, Bow31_SM);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_S]->Set_CurItemInfo(ItemType_WeaponBow, Event_Season_Bow_01_SM);
+		}
+			break;
+		case ItemType_WeaponRod:
+		{
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_D]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_C]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_B]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_A]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_S]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_D]->Set_CurItemInfo(ItemType_WeaponRod, Event_Wit_Rod_01);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_C]->Set_CurItemInfo(ItemType_WeaponRod, Rod19_A);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_B]->Set_CurItemInfo(ItemType_WeaponRod, Rod28_B);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_A]->Set_CurItemInfo(ItemType_WeaponRod, Rod31);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_S]->Set_CurItemInfo(ItemType_WeaponRod, Rod33_B);
+		}
+			break;
+		case ItemType_Helmet:
+		{
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_D]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_C]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_B]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_A]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_S]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_D]->Set_CurItemInfo(ItemType_Helmet, Helmet_D);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_C]->Set_CurItemInfo(ItemType_Helmet, Helmet_C);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_B]->Set_CurItemInfo(ItemType_Helmet, Helmet_B);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_A]->Set_CurItemInfo(ItemType_Helmet, Helmet_A);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_S]->Set_CurItemInfo(ItemType_Helmet, Helmet_S);
+		}
+			break;
+		case ItemType_Armor:
+		{
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_D]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_C]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_B]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_A]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_S]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_D]->Set_CurItemInfo(ItemType_Armor, Armor_D);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_C]->Set_CurItemInfo(ItemType_Armor, Armor_C);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_B]->Set_CurItemInfo(ItemType_Armor, Armor_B);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_A]->Set_CurItemInfo(ItemType_Armor, Armor_A);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_S]->Set_CurItemInfo(ItemType_Armor, Armor_S);
+		}
+			break;
+		case ItemType_Shoes:
+		{
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_D]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_C]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_B]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_A]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_S]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_D]->Set_CurItemInfo(ItemType_Shoes, Shoes_D);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_C]->Set_CurItemInfo(ItemType_Shoes, Shoes_C);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_B]->Set_CurItemInfo(ItemType_Shoes, Shoes_B);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_A]->Set_CurItemInfo(ItemType_Shoes, Shoes_A);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_S]->Set_CurItemInfo(ItemType_Shoes, Shoes_S);
+		}
+			break;
+		case ItemType_Potion:
+		{
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_D]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_C]->Set_IsActive(true);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_B]->Set_IsActive(false);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_A]->Set_IsActive(false);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_S]->Set_IsActive(false);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_D]->Set_CurItemInfo(ItemType_Potion, Prtion_HP);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_C]->Set_CurItemInfo(ItemType_Potion, Prtion_MP);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_B]->Set_CurItemInfo(NO_ITEM, NO_ITEM);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_A]->Set_CurItemInfo(NO_ITEM, NO_ITEM);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_S]->Set_CurItemInfo(NO_ITEM, NO_ITEM);
+		}
+			break;
+		default:
+			break;
+		}
+	}
+
+	m_chPreItemType = m_chCurItemType;
+}
+
+void CStoreMgr::Add_StoreTab(wstring wstrTag, CStoreTab* pTab)
+{
+	auto iter_find = m_mapStoreTab.find(wstrTag);
+	if (m_mapStoreTab.end() == iter_find && nullptr != pTab)
+	{
+		m_mapStoreTab.emplace(wstrTag, pTab);
+	}
+}
+
+void CStoreMgr::Add_StoreItemSlot(CStoreItemSlot* pSlot)
+{
+	if (nullptr != pSlot)
+		m_vecStoreItemSlot.emplace_back(pSlot);
+}
+
+CStoreTab* CStoreMgr::Find_StoreTab(wstring wstrTag)
+{
+	auto iter_find = m_mapStoreTab.find(wstrTag);
+
+	if (m_mapStoreTab.end() == iter_find)
+		return nullptr;
+
+	return iter_find->second;
+}
+
 void CStoreMgr::Free()
 {
+	m_mapStoreTab.clear();
+	m_vecStoreItemSlot.clear();
+	m_vecStoreItemSlot.shrink_to_fit();
 }

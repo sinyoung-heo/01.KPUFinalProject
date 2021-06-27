@@ -137,23 +137,23 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Children_HighelfGirlPool, L"Highelf_girl", 10);
 
 	// PCWeapon
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponTwohand19_A_SM_Pool, L"Twohand19_A_SM", 16);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponTwoHand27_SM_Pool, L"TwoHand27_SM", 16);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponTwoHand29_SM_Pool, L"TwoHand29_SM", 16);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponTwoHand31_SM_Pool, L"TwoHand31_SM", 16);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponTwoHand33_B_SM_Pool, L"TwoHand33_B_SM", 16);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponTwohand19_A_SM_Pool, L"Twohand19_A_SM", 64);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponTwoHand27_SM_Pool, L"TwoHand27_SM", 64);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponTwoHand29_SM_Pool, L"TwoHand29_SM", 64);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponTwoHand31_SM_Pool, L"TwoHand31_SM", 64);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponTwoHand33_B_SM_Pool, L"TwoHand33_B_SM", 64);
 
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponBow18_A_SM_Pool, L"Bow18_A_SM", 16);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponBow23_SM_Pool, L"Bow23_SM", 16);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponBow27_SM_Pool, L"Bow27_SM", 16);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponBow31_SM_Pool, L"Bow31_SM", 16);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponEvent_Season_Bow_01_SM_Pool, L"Event_Season_Bow_01_SM", 16);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponBow18_A_SM_Pool, L"Bow18_A_SM", 64);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponBow23_SM_Pool, L"Bow23_SM", 64);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponBow27_SM_Pool, L"Bow27_SM", 64);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponBow31_SM_Pool, L"Bow31_SM", 64);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponEvent_Season_Bow_01_SM_Pool, L"Event_Season_Bow_01_SM", 64);
 
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponEvent_Wit_Rod_01_Pool, L"Event_Wit_Rod_01", 16);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponRod18_A_Pool, L"Rod19_A", 16);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponRod28_B_Pool, L"Rod28_B", 16);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponRod31_Pool, L"Rod31", 16);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponRod33_B_Pool, L"Rod33_B", 16);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponEvent_Wit_Rod_01_Pool, L"Event_Wit_Rod_01", 64);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponRod18_A_Pool, L"Rod19_A", 64);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponRod28_B_Pool, L"Rod28_B", 64);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponRod31_Pool, L"Rod31", 64);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponRod33_B_Pool, L"Rod33_B", 64);
 
 	// PCOthers
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCOthersGladiatorPool, 10);

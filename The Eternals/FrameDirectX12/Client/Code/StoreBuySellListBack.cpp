@@ -85,27 +85,6 @@ void CStoreBuySellListBack::SetUp_FontPosition(const _float& fTimeDelta)
 {
 	if (nullptr != m_pFont)
 	{
-		if (Engine::KEY_PRESSING(DIK_Z))
-		{
-			++fOffsetX;
-			cout << fOffsetX << ", " << fOffsetY << endl;
-		}
-		if (Engine::KEY_PRESSING(DIK_X))
-		{
-			--fOffsetX;
-			cout << fOffsetX << ", " << fOffsetY << endl;
-		}
-		if (Engine::KEY_PRESSING(DIK_C))
-		{
-			++fOffsetY;
-			cout << fOffsetX << ", " << fOffsetY << endl;
-		}
-		if (Engine::KEY_PRESSING(DIK_V))
-		{
-			--fOffsetY;
-			cout << fOffsetX << ", " << fOffsetY << endl;
-		}
-
 		_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
 		vPos.x += -52.0f;
 		vPos.y += -115.0f;

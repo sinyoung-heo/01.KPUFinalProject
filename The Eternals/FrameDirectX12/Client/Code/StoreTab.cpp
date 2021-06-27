@@ -2,6 +2,7 @@
 #include "StoreTab.h"
 #include "DirectInput.h"
 #include "Font.h"
+#include "StoreMgr.h"
 
 CStoreTab::CStoreTab(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
@@ -36,6 +37,7 @@ HRESULT CStoreTab::Ready_GameObject(wstring wstrRootObjectTag,
 
 	m_pFont->Set_Color(D2D1::ColorF::Cornsilk);
 	m_pFont->Set_Text(L"·Îµå");
+	m_vFontOffset = _vec2(-22.0f, -16.0f);
 
 	return S_OK;
 }
@@ -70,8 +72,21 @@ _int CStoreTab::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect) &&
 		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
-		m_bIsKeyPressing)
+		m_bIsKeyPressing &&
+		!m_bIsSelected)
 	{
+		m_bIsSelected = true;
+		m_uiTexIdx = 1;
+
+		CStoreMgr::Get_Instance()->Set_StoreItemType(m_chItemType);
+		map<wstring, CStoreTab*> mapStoreTab = CStoreMgr::Get_Instance()->Get_StoreTabList();
+		for (auto& pair : mapStoreTab)
+		{
+			if (m_wstrObjectTag == pair.first)
+				pair.second->Set_IsSelected(true);
+			else
+				pair.second->Set_IsSelected(false);
+		}
 	}
 
 	m_bIsKeyPressing = false;
@@ -80,20 +95,22 @@ _int CStoreTab::LateUpdate_GameObject(const _float& fTimeDelta)
 	if (CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse() &&
 		CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect))
 	{
-		if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_LB))
+		if (Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_LB) && !m_bIsSelected)
 		{
 			m_uiTexIdx       = 1;
 			m_bIsKeyPressing = true;
 		}
 		else
 		{
-			m_uiTexIdx       = 0;
 			m_bIsKeyPressing = false;
 		}
 	}
 	else
 	{
-		m_uiTexIdx = 0;
+		if (!m_bIsSelected)
+			m_uiTexIdx = 0;
+		else
+			m_uiTexIdx = 1;
 	}
 
 	SetUp_FontPosition(fTimeDelta);
@@ -111,8 +128,8 @@ void CStoreTab::SetUp_FontPosition(const _float& fTimeDelta)
 	if (nullptr != m_pFont)
 	{
 		_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
-		vPos.x += -22.0f;
-		vPos.y += -16.0f;
+		vPos.x += m_vFontOffset.x;
+		vPos.y += m_vFontOffset.y;
 
 		m_pFont->Set_Pos(_vec2(vPos.x, vPos.y));
 		m_pFont->Update_GameObject(fTimeDelta);

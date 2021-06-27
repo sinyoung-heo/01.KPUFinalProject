@@ -2722,7 +2722,7 @@ HRESULT CScene_MainStage::SetUp_UIInGameStoreCanvas()
 												 vecRectPosOffset[i],				// RectPosOffset
 												 vecRectScale[i],					// RectScaleOffset
 												 vecUIDepth[i]);					// UI Depth
-					// CInventoryEquipmentMgr::Get_Instance()->Add_InventorySlot(static_cast<CInventoryItemSlot*>(pChildUI));
+					CStoreMgr::Get_Instance()->Add_StoreTab(vecObjectTag[i], static_cast<CStoreTab*>(pChildUI));
 				}
 				else if (L"UIStoreButtonCloseNormal" == vecObjectTag[i] ||
 						 L"UIStoreButtonCloseMouseOn" == vecObjectTag[i] ||
@@ -2806,6 +2806,8 @@ HRESULT CScene_MainStage::SetUp_UIInGameStoreCanvas()
 													  vecRectPosOffset[i],					// RectPosOffset
 													  vecRectScale[i],						// RectScaleOffset
 													  vecUIDepth[i]);						// UI Depth
+
+					CStoreMgr::Get_Instance()->Add_StoreItemSlot(static_cast<CStoreItemSlot*>(pChildUI));
 				}
 				else if (L"UIStoreBuyItemSlot" == vecObjectTag[i])
 				{
