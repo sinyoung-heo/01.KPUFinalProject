@@ -744,16 +744,26 @@ void send_update_inventory(const int& id, const char& chItemType, const char& ch
 	send_packet(id, &p);
 }
 
-void send_update_equipment(const int& to_client, const char& chItemType, const char& chName, const bool& isPushItem)
+void send_update_equipment(const int& to_client, const char& chItemType, const bool& isPushItem)
 {
 	sc_packet_update_equipment p;
+
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", to_client));
+	if (pPlayer == nullptr) return;
 
 	p.size			= sizeof(p);
 	p.type			= SC_PACKET_UPDATE_EQUIPMENT;
 
 	p.equipType		= chItemType;
-	p.itemName		= chName;
+	p.itemName		= pPlayer->Get_Equipment(chItemType);
 	p.is_pushItem	= isPushItem;
+
+	p.minAtt		= pPlayer->m_iMinAtt;
+	p.maxAtt		= pPlayer->m_iMaxAtt;
+	p.hp			= pPlayer->m_iHp;
+	p.maxHp			= pPlayer->m_iMaxHp;
+	p.mp			= pPlayer->m_iMp;
+	p.maxMp			= pPlayer->m_iMaxMp;
 
 	send_packet(to_client, &p);
 }
@@ -1988,7 +1998,16 @@ void process_equip_item(const int& id, const char& chItemType, const char& chNam
 
 	pUser->Equip_Item(chName, chItemType);
 
-	send_update_equipment(id, chItemType, pUser->Get_Equipment(chItemType), true);
+	// 능력치 적용
+	int itemNumber = CItemMgr::GetInstance()->Find_ItemNumber(chItemType, chName);
+	pUser->m_iMaxAtt	+= CItemMgr::GetInstance()->Get_Item(itemNumber).iAtt;
+	pUser->m_iMinAtt	+= CItemMgr::GetInstance()->Get_Item(itemNumber).iAtt;
+	pUser->m_iHp		+= CItemMgr::GetInstance()->Get_Item(itemNumber).iHp;
+	pUser->m_iMaxHp		+= CItemMgr::GetInstance()->Get_Item(itemNumber).iHp;
+	pUser->m_iMp		+= CItemMgr::GetInstance()->Get_Item(itemNumber).iMp;
+	pUser->m_iMaxMp		+= CItemMgr::GetInstance()->Get_Item(itemNumber).iMp;
+
+	send_update_equipment(id, chItemType, true);
 }
 
 void process_unequip_item(const int& id, const char& chItemType, const char& chName)
@@ -1999,7 +2018,16 @@ void process_unequip_item(const int& id, const char& chItemType, const char& chN
 
 	pUser->Unequip_Item(chName, chItemType);
 
-	send_update_equipment(id, chItemType, pUser->Get_Equipment(chItemType), false);
+	// 능력치 적용
+	int itemNumber = CItemMgr::GetInstance()->Find_ItemNumber(chItemType, chName);
+	pUser->m_iMaxAtt	-= CItemMgr::GetInstance()->Get_Item(itemNumber).iAtt;
+	pUser->m_iMinAtt	-= CItemMgr::GetInstance()->Get_Item(itemNumber).iAtt;
+	pUser->m_iHp		-= CItemMgr::GetInstance()->Get_Item(itemNumber).iHp;
+	pUser->m_iMaxHp		-= CItemMgr::GetInstance()->Get_Item(itemNumber).iHp;
+	pUser->m_iMp		-= CItemMgr::GetInstance()->Get_Item(itemNumber).iMp;
+	pUser->m_iMaxMp		-= CItemMgr::GetInstance()->Get_Item(itemNumber).iMp;
+
+	send_update_equipment(id, chItemType, false);
 }
 
 /*===========================================FUNC====================================================*/

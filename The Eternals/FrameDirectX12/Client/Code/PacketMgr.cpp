@@ -409,7 +409,7 @@ void CPacketMgr::Process_packet()
 	case SC_PACKET_UPDATE_EQUIPMENT:
 	{
 		sc_packet_update_equipment* packet = reinterpret_cast<sc_packet_update_equipment*>(m_packet_start);
-		cout << "장착/해제하고 난 후 아이템 슬롯:" << (int)packet->itemName << endl;
+		Update_Equipment(packet);
 	}
 	break;
 
@@ -430,6 +430,18 @@ void CPacketMgr::Process_packet()
 #endif 
 		break;
 	}
+}
+
+void CPacketMgr::Update_Equipment(sc_packet_update_equipment* packet)
+{
+	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+
+	pThisPlayer->Set_Info(pThisPlayer->Get_Info()->m_iLev,
+						  packet->hp, packet->maxHp,
+						  packet->mp, packet->maxMp,
+						  pThisPlayer->Get_Info()->m_iExp, pThisPlayer->Get_Info()->m_iMaxExp,
+						  packet->minAtt, packet->maxAtt,
+						  pThisPlayer->Get_Info()->m_fSpeed);
 }
 
 void CPacketMgr::update_inventory(sc_packet_update_inventory* packet)

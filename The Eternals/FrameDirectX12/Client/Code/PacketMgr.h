@@ -33,7 +33,6 @@ public:
 	void	Process_recv_reassembly(size_t iosize);
 	void	Process_packet();
 
-
 public:
 	void	send_login();
 	void	send_move(const _vec3& vDir, const _vec3& vPos, const _int& iAniIdx);
@@ -75,6 +74,7 @@ public:
 	void	Reject_Party();
 	void	Recv_Chat(sc_packet_chat* packet);
 	void	update_inventory(sc_packet_update_inventory* packet);
+	void	Update_Equipment(sc_packet_update_equipment* packet);
 
 	void	Enter_Monster(sc_packet_monster_enter* packet);
 	void	Move_Monster(sc_packet_move* packet);

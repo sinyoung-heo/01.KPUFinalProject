@@ -8,8 +8,10 @@ private:
 	virtual ~CItemMgr(void);
 
 public:
-	HRESULT		Ready_Item();
-	const int&	Find_ItemNumber(const char& type, const char& name);
+	const GAMEITEM& Get_Item(const int& number) { return m_mapGameItem[number]; }
+	
+	HRESULT			Ready_Item();
+	const int&		Find_ItemNumber(const char& type, const char& name);
 	
 public:
 	void Release();

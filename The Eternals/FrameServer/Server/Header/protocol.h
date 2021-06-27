@@ -399,6 +399,9 @@ struct sc_packet_update_equipment
 	char			equipType;
 	char			itemName;
 	bool			is_pushItem;
+	int				minAtt, maxAtt;
+	int				hp, maxHp;
+	int				mp, maxMp;
 };
 
 struct sc_packet_load_equipment

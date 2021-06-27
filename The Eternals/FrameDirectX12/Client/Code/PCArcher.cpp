@@ -760,42 +760,6 @@ HRESULT CPCArcher::SetUp_Equipment()
 
 	CInventoryEquipmentMgr::Get_Instance()->Set_ThisPlayerJob(m_chO_Type);
 
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Potion, Prtion_HP);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Potion, Prtion_HP);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Potion, Prtion_HP);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Potion, Prtion_MP);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Potion, Prtion_MP);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, Twohand19_A_SM);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, TwoHand27_SM);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, TwoHand29_SM);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, TwoHand31_SM);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, TwoHand33_B_SM);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponBow, Bow18_A_SM);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponBow, Bow27_SM);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponBow, Bow23_SM);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponBow, Bow31_SM);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponBow, Event_Season_Bow_01_SM);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponRod, Event_Wit_Rod_01);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponRod, Rod19_A);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponRod, Rod28_B);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponRod, Rod31);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponRod, Rod33_B);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Helmet, Helmet_D);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Helmet, Helmet_C);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Helmet, Helmet_B);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Helmet, Helmet_A);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Helmet, Helmet_S);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Armor, Armor_D);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Armor, Armor_C);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Armor, Armor_B);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Armor, Armor_A);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Armor, Armor_S);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_D);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_C);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_B);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_A);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_S);
-
 	return S_OK;
 }
 
