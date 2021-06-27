@@ -3,6 +3,7 @@
 #include "DescriptorHeapMgr.h"
 #include "DirectInput.h"
 #include "Font.h"
+#include "StoreMgr.h"
 
 CStoreItemSlot::CStoreItemSlot(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
@@ -181,7 +182,8 @@ void CStoreItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) &&
 		m_bIsKeyPressingLB)
 	{
-
+		CStoreMgr::Get_Instance()->Push_StoreItemBuySlot(m_tCurItemInfo.chItemType, m_tCurItemInfo.chItemName, 1);
+		return;
 	}
 
 	m_bIsKeyPressingLB = false;

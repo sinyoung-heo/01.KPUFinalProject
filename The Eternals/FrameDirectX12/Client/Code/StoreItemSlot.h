@@ -43,8 +43,8 @@ private:
 	ITEM_INFO	m_tCurItemInfo;
 	char		m_chPreItemType = NO_ITEM;
 	char		m_chPreItemName = NO_ITEM;
-	_uint		m_uiPrice = 0;
-	wstring		m_wstrFontText = L"";
+	_uint		m_uiPrice       = 0;
+	wstring		m_wstrFontText  = L"";
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 									   wstring wstrRootObjectTag,

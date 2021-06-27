@@ -6,6 +6,8 @@ IMPLEMENT_SINGLETON(CStoreMgr)
 
 CStoreMgr::CStoreMgr()
 {
+	m_vecBuySlotList.reserve(16);
+	m_vecBuySlotList.reserve(16);
 }
 
 void CStoreMgr::Set_StoreState(const STORE_STATE& eState)
@@ -209,6 +211,18 @@ void CStoreMgr::Add_StoreItemSlot(CStoreItemSlot* pSlot)
 		m_vecStoreItemSlot.emplace_back(pSlot);
 }
 
+void CStoreMgr::Add_StoreBuyItemSlot(CStoreBuyListSlot* pSlot)
+{
+	if (nullptr != pSlot)
+		m_vecBuySlotList.emplace_back(pSlot);
+}
+
+void CStoreMgr::Add_StoreSellItemSlot(CStoreSellListSlot* pSlot)
+{
+	if (nullptr != pSlot)
+		m_vecSellSlotList.emplace_back(pSlot);
+}
+
 CStoreTab* CStoreMgr::Find_StoreTab(wstring wstrTag)
 {
 	auto iter_find = m_mapStoreTab.find(wstrTag);
@@ -217,6 +231,61 @@ CStoreTab* CStoreMgr::Find_StoreTab(wstring wstrTag)
 		return nullptr;
 
 	return iter_find->second;
+}
+
+void CStoreMgr::Reset_StoreItemBuySlotList()
+{
+	for (auto& pBuyItemSlot : m_vecBuySlotList)
+	{
+		pBuyItemSlot->Set_CurItemInfo(NO_ITEM, NO_ITEM);
+		pBuyItemSlot->Set_CurItemCnt(0);
+	}
+
+	m_uiCurBuySlotSize = 0;
+}
+
+void CStoreMgr::Push_StoreItemBuySlot(const char& chItemType, const char& chItemName, const _uint& uiCnt)
+{
+	if (m_uiCurBuySlotSize >= m_uiMaxBuySlotSize)
+		return;
+
+	if (ItemType_Potion == chItemType)
+	{
+		// 현재 인벤토리에 포션이 있는지 탐색.
+		for (auto& pBuyItemSlot : m_vecBuySlotList)
+		{
+			if (chItemType == pBuyItemSlot->Get_CurItemInfo().chItemType &&
+				chItemName == pBuyItemSlot->Get_CurItemInfo().chItemName)
+			{
+				pBuyItemSlot->Add_PotionCnt(uiCnt);
+				return;
+			}
+		}
+
+		// 현재 인벤토리에 포션이 없다면 빈칸에 포션을 새로 생성.
+		for (auto& pBuyItemSlot : m_vecBuySlotList)
+		{
+			if (NO_ITEM == pBuyItemSlot->Get_CurItemInfo().chItemType)
+			{
+				pBuyItemSlot->Set_CurItemInfo(chItemType, chItemName, uiCnt);
+				++m_uiCurBuySlotSize;
+				break;
+			}
+		}
+	}
+	else
+	{
+		for (auto& pBuyItemSlot : m_vecBuySlotList)
+		{
+			if (NO_ITEM == pBuyItemSlot->Get_CurItemInfo().chItemType)
+			{
+				pBuyItemSlot->Set_CurItemInfo(chItemType, chItemName, uiCnt);
+				++m_uiCurBuySlotSize;
+				cout << "Push StoreItemBuySlot, " << m_uiCurBuySlotSize << endl;
+				break;
+			}
+		}
+	}
 }
 
 void CStoreMgr::Free()
