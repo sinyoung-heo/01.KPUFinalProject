@@ -897,6 +897,10 @@
     <ClInclude Include="..\Code\LoginIDButton.h">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.LoginIDBackgroundChild\LoginIDButton</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\FireRing.h" />
+    <ClInclude Include="..\..\..\FrameServer\Server\Header\item_Protocol.h">
+      <Filter>98.Header\00.protocol</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1307,6 +1311,7 @@
     <ClCompile Include="..\Code\LoginIDButton.cpp">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.LoginIDBackgroundChild\LoginIDButton</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\FireRing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
