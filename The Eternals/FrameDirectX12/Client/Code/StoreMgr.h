@@ -38,10 +38,16 @@ public:
 	void		Add_StoreBuyItemSlot(CStoreBuyListSlot* pSlot);
 	void		Add_StoreSellItemSlot(CStoreSellListSlot* pSlot);
 	CStoreTab*	Find_StoreTab(wstring wstrTag);
+
 	// ItemBuySlot
 	void Reset_StoreItemBuySlotList();
 	void Push_StoreItemBuySlot(const char& chItemType, const char& chItemName, const _uint& uiCnt);
 	void Min_StoreBuySlotSize() { if (m_uiCurBuySlotSize > 0) --m_uiCurBuySlotSize; }
+	// ItemSellSlot
+	void Reset_StoreItemSellSlotList();
+	void Push_StoreItemSellSlot(const char& chItemType, const char& chItemName, const _uint& uiInventoryIdx);
+	void Min_StoreSellSlotSize() { if (m_uiCurSellSlotSize > 0) --m_uiCurSellSlotSize; }
+
 private:
 	STORE_STATE m_eCurStoreState = STORE_STATE::STORE_STATE_END;
 	STORE_STATE m_ePreStoreState = STORE_STATE::STORE_STATE_END;

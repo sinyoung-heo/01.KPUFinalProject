@@ -269,6 +269,8 @@ void CStoreMgr::Push_StoreItemBuySlot(const char& chItemType, const char& chItem
 			{
 				pBuyItemSlot->Set_CurItemInfo(chItemType, chItemName, uiCnt);
 				++m_uiCurBuySlotSize;
+
+				cout << "Push StoreItemBuySlot, " << m_uiCurBuySlotSize << endl;
 				break;
 			}
 		}
@@ -281,7 +283,68 @@ void CStoreMgr::Push_StoreItemBuySlot(const char& chItemType, const char& chItem
 			{
 				pBuyItemSlot->Set_CurItemInfo(chItemType, chItemName, uiCnt);
 				++m_uiCurBuySlotSize;
+
 				cout << "Push StoreItemBuySlot, " << m_uiCurBuySlotSize << endl;
+				break;
+			}
+		}
+	}
+}
+
+void CStoreMgr::Reset_StoreItemSellSlotList()
+{
+	for (auto& pSellItemSlot : m_vecSellSlotList)
+	{
+		pSellItemSlot->Set_CurItemInfo(NO_ITEM, NO_ITEM);
+		pSellItemSlot->Set_CurItemCnt(0);
+	}
+
+	m_uiCurSellSlotSize = 0;
+}
+
+void CStoreMgr::Push_StoreItemSellSlot(const char& chItemType, const char& chItemName, const _uint& uiInventoryIdx)
+{
+	if (m_uiCurSellSlotSize >= m_uiMaxSellSlotSize)
+		return;
+
+	if (ItemType_Potion == chItemType)
+	{
+		// 현재 인벤토리에 포션이 있는지 탐색.
+		for (auto& pSellItemSlot : m_vecSellSlotList)
+		{
+			if (chItemType == pSellItemSlot->Get_CurItemInfo().chItemType &&
+				chItemName == pSellItemSlot->Get_CurItemInfo().chItemName)
+			{
+				pSellItemSlot->Add_PotionCnt(1);
+				return;
+			}
+		}
+
+		// 현재 인벤토리에 포션이 없다면 빈칸에 포션을 새로 생성.
+		for (auto& pSellItemSlot : m_vecSellSlotList)
+		{
+			if (NO_ITEM == pSellItemSlot->Get_CurItemInfo().chItemType)
+			{
+				pSellItemSlot->Set_CurItemInfo(chItemType, chItemName, 1);
+				pSellItemSlot->Set_InventoryIdx(uiInventoryIdx);
+				++m_uiCurSellSlotSize;
+
+				cout << "Push StoreItemSellSlot, " << m_uiCurSellSlotSize << endl;
+				break;
+			}
+		}
+	}
+	else
+	{
+		for (auto& pSellItemSlot : m_vecSellSlotList)
+		{
+			if (NO_ITEM == pSellItemSlot->Get_CurItemInfo().chItemType)
+			{
+				pSellItemSlot->Set_CurItemInfo(chItemType, chItemName, 1);
+				pSellItemSlot->Set_InventoryIdx(uiInventoryIdx);
+				++m_uiCurSellSlotSize;
+
+				cout << "Push StoreItemSellSlot, " << m_uiCurSellSlotSize << endl;
 				break;
 			}
 		}

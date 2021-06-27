@@ -801,6 +801,7 @@ HRESULT CPCGladiator::SetUp_Equipment()
 
 	CStoreMgr::Get_Instance()->Set_StoreState(STORE_STATE::STORE_WEAPON);
 	CStoreMgr::Get_Instance()->Set_StoreItemType(ItemType_WeaponTwoHand);
+	g_bIsOpenShop = true;
 
 	return S_OK;
 }
