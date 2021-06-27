@@ -84,7 +84,7 @@ HRESULT CStoreItemSlot::Ready_GameObject(wstring wstrRootObjectTag,
 	m_pSlotFrame->Set_TextureIdx(1);
 
 	m_pFont->Set_Color(D2D1::ColorF::Cornsilk);
-	m_pFont->Set_Text(L"Grade D TwoHand");
+	m_pFont->Set_Text(L"Grade D TwoHand  %d G");
 
 	return S_OK;
 }
@@ -161,6 +161,10 @@ void CStoreItemSlot::SetUp_FontPosition(const _float& fTimeDelta)
 		vPos.x += 36.0f;
 		vPos.y += -10.0f;
 
+		_tchar	szText[MIN_STR] = L"";
+		wsprintf(szText, m_wstrFontText.c_str(), m_uiPrice);
+
+		m_pFont->Set_Text(szText);
 		m_pFont->Set_Pos(_vec2(vPos.x, vPos.y));
 		m_pFont->Update_GameObject(fTimeDelta);
 	}
@@ -226,24 +230,29 @@ void CStoreItemSlot::SetUp_ItemIcon()
 		switch (m_tCurItemInfo.chItemName)
 		{
 		case Twohand19_A_SM:
+			m_uiPrice = Item_Twohand19_A_SM_COST;
 			m_uiTexIdx = 0;
-			m_pFont->Set_Text(L"Grade D TwoHand");
+			m_wstrFontText = L"Grade D TwoHand   %d G";
 			break;
 		case TwoHand27_SM:
+			m_uiPrice = Item_TwoHand27_SM_COST;
 			m_uiTexIdx = 1;
-			m_pFont->Set_Text(L"Grade C TwoHand");
+			m_wstrFontText = L"Grade C TwoHand   %d G";
 			break;
 		case TwoHand29_SM:
+			m_uiPrice = Item_TwoHand29_SM_COST;
 			m_uiTexIdx = 2;
-			m_pFont->Set_Text(L"Grade B TwoHand");
+			m_wstrFontText = L"Grade B TwoHand   %d G";
 			break;
 		case TwoHand31_SM:
+			m_uiPrice = Item_TwoHand31_SM_COST;
 			m_uiTexIdx = 3;
-			m_pFont->Set_Text(L"Grade A TwoHand");
+			m_wstrFontText = L"Grade A TwoHand   %d G";
 			break;
 		case TwoHand33_B_SM:
+			m_uiPrice = Item_TwoHand33_B_SM_COST;
 			m_uiTexIdx = 4;
-			m_pFont->Set_Text(L"Grade S TwoHand");
+			m_wstrFontText = L"Grade S TwoHand   %d G";
 			break;
 		}
 	}
@@ -258,24 +267,29 @@ void CStoreItemSlot::SetUp_ItemIcon()
 		switch (m_tCurItemInfo.chItemName)
 		{
 		case Bow18_A_SM:
+			m_uiPrice = Item_Bow18_A_SM_COST;
 			m_uiTexIdx = 0;
-			m_pFont->Set_Text(L"Grade D Bow");
+			m_wstrFontText = L"Grade D Bow  %d G";
 			break;
 		case Bow27_SM:
+			m_uiPrice = Item_Bow27_SM_COST;
 			m_uiTexIdx = 1;
-			m_pFont->Set_Text(L"Grade C Bow");
+			m_wstrFontText = L"Grade C Bow  %d G";
 			break;
 		case Bow23_SM:
+			m_uiPrice = Item_Bow23_SM_COST;
 			m_uiTexIdx = 2;
-			m_pFont->Set_Text(L"Grade B Bow");
+			m_wstrFontText =L"Grade B Bow  %d G";
 			break;
 		case Bow31_SM:
+			m_uiPrice = Item_Bow31_SM_COST;
 			m_uiTexIdx = 3;
-			m_pFont->Set_Text(L"Grade A Bow");
+			m_wstrFontText =L"Grade A Bow  %d G";
 			break;
 		case Event_Season_Bow_01_SM:
+			m_uiPrice = Item_Event_Season_Bow_01_SM_COST;
 			m_uiTexIdx = 4;
-			m_pFont->Set_Text(L"Grade S Bow");
+			m_wstrFontText =L"Grade S Bow  %d G";
 			break;
 		}
 	}
@@ -290,24 +304,29 @@ void CStoreItemSlot::SetUp_ItemIcon()
 		switch (m_tCurItemInfo.chItemName)
 		{
 		case Event_Wit_Rod_01:
+			m_uiPrice = Item_Event_Wit_Rod_01_COST;
 			m_uiTexIdx = 0;
-			m_pFont->Set_Text(L"Grade D Rod");
+			m_wstrFontText = L"Grade D Rod  %d G";
 			break;
 		case Rod19_A:
+			m_uiPrice = Item_Rod19_A_COST;
 			m_uiTexIdx = 1;
-			m_pFont->Set_Text(L"Grade C Rod");
+			m_wstrFontText = L"Grade C Rod  %d G";
 			break;
 		case Rod28_B:
+			m_uiPrice = Item_Rod28_B_COST;
 			m_uiTexIdx = 2;
-			m_pFont->Set_Text(L"Grade B Rod");
+			m_wstrFontText = L"Grade B Rod  %d G";
 			break;
 		case Rod31:
+			m_uiPrice = Item_Rod31_COST;
 			m_uiTexIdx = 3;
-			m_pFont->Set_Text(L"Grade A Rod");
+			m_wstrFontText = L"Grade A Rod  %d G";
 			break;
 		case Rod33_B:
+			m_uiPrice = Item_Rod33_B_COST;
 			m_uiTexIdx = 4;
-			m_pFont->Set_Text(L"Grade S Rod");
+			m_wstrFontText = L"Grade S Rod  %d G";
 			break;
 		}
 	}
@@ -322,24 +341,29 @@ void CStoreItemSlot::SetUp_ItemIcon()
 		switch (m_tCurItemInfo.chItemName)
 		{
 		case Helmet_D:
+			m_uiPrice = Item_Helmet_D_COST;
 			m_uiTexIdx = 0;
-			m_pFont->Set_Text(L"Grade D Helmet");
+			m_wstrFontText = L"Grade D Helmet  %d G";
 			break;
 		case Helmet_C:
+			m_uiPrice = Item_Helmet_C_COST;
 			m_uiTexIdx = 1;
-			m_pFont->Set_Text(L"Grade C Helmet");
+			m_wstrFontText = L"Grade C Helmet  %d G";
 			break;
 		case Helmet_B:
+			m_uiPrice = Item_Helmet_B_COST;
 			m_uiTexIdx = 2;
-			m_pFont->Set_Text(L"Grade B Helmet");
+			m_wstrFontText = L"Grade B Helmet  %d G";
 			break;
 		case Helmet_A:
+			m_uiPrice = Item_Helmet_A_COST;
 			m_uiTexIdx = 3;
-			m_pFont->Set_Text(L"Grade A Helmet");
+			m_wstrFontText = L"Grade A Helmet  %d G";
 			break;
 		case Helmet_S:
+			m_uiPrice = Item_Helmet_S_COST;
 			m_uiTexIdx = 4;
-			m_pFont->Set_Text(L"Grade S Helmet");
+			m_wstrFontText = L"Grade S Helmet  %d G";
 			break;
 		}
 	}
@@ -354,24 +378,29 @@ void CStoreItemSlot::SetUp_ItemIcon()
 		switch (m_tCurItemInfo.chItemName)
 		{
 		case Armor_D:
+			m_uiPrice = Item_Armor_D_COST;
 			m_uiTexIdx = 0;
-			m_pFont->Set_Text(L"Grade D Armor");
+			m_wstrFontText = L"Grade D Armor  %d G";
 			break;
 		case Armor_C:
+			m_uiPrice = Item_Armor_C_COST;
 			m_uiTexIdx = 1;
-			m_pFont->Set_Text(L"Grade C Armor");
+			m_wstrFontText = L"Grade C Armor  %d G";
 			break;
 		case Armor_B:
+			m_uiPrice = Item_Armor_B_COST;
 			m_uiTexIdx = 2;
-			m_pFont->Set_Text(L"Grade B Armor");
+			m_wstrFontText = L"Grade B Armor  %d G";
 			break;
 		case Armor_A:
+			m_uiPrice = Item_Armor_A_COST;
 			m_uiTexIdx = 3;
-			m_pFont->Set_Text(L"Grade A Armor");
+			m_wstrFontText = L"Grade A Armor  %d G";
 			break;
 		case Armor_S:
+			m_uiPrice = Item_Armor_S_COST;
 			m_uiTexIdx = 4;
-			m_pFont->Set_Text(L"Grade S Armor");
+			m_wstrFontText = L"Grade S Armor  %d G";
 			break;
 		}
 	}
@@ -386,24 +415,29 @@ void CStoreItemSlot::SetUp_ItemIcon()
 		switch (m_tCurItemInfo.chItemName)
 		{
 		case Shoes_D:
+			m_uiPrice = Item_Shoes_D_COST;
 			m_uiTexIdx = 0;
-			m_pFont->Set_Text(L"Grade D Shoes");
+			m_wstrFontText = L"Grade D Shoes  %d G";
 			break;
 		case Shoes_C:
+			m_uiPrice = Item_Shoes_C_COST;
 			m_uiTexIdx = 1;
-			m_pFont->Set_Text(L"Grade C Shoes");
+			m_wstrFontText = L"Grade C Shoes  %d G";
 			break;
 		case Shoes_B:
+			m_uiPrice = Item_Shoes_B_COST;
 			m_uiTexIdx = 2;
-			m_pFont->Set_Text(L"Grade B Shoes");
+			m_wstrFontText = L"Grade B Shoes  %d G";
 			break;
 		case Shoes_A:
+			m_uiPrice = Item_Shoes_A_COST;
 			m_uiTexIdx = 3;
-			m_pFont->Set_Text(L"Grade A Shoes");
+			m_wstrFontText = L"Grade A Shoes  %d G";
 			break;
 		case Shoes_S:
+			m_uiPrice = Item_Shoes_S_COST;
 			m_uiTexIdx = 4;
-			m_pFont->Set_Text(L"Grade S Shoes");
+			m_wstrFontText = L"Grade S Shoes  %d G";
 			break;
 		}
 	}
@@ -418,12 +452,14 @@ void CStoreItemSlot::SetUp_ItemIcon()
 		switch (m_tCurItemInfo.chItemName)
 		{
 		case Prtion_HP:
+			m_uiPrice = Item_Prtion_HP_COST;
 			m_uiTexIdx = 0;
-			m_pFont->Set_Text(L"HP Potion");
+			m_wstrFontText = L"HP Potion  %d G";
 			break;
 		case Prtion_MP:
+			m_uiPrice = Item_Prtion_MP_COST;
 			m_uiTexIdx = 1;
-			m_pFont->Set_Text(L"MP Potion");
+			m_wstrFontText = L"MP Potion  %d G";
 			break;
 		}
 	}

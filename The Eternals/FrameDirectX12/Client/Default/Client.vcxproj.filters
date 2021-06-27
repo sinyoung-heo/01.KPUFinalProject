@@ -967,6 +967,9 @@
     <ClInclude Include="..\Code\StoreTab.h">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreTab</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\FrameServer\Server\Header\item_Protocol.h">
+      <Filter>98.Header\00.protocol</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">

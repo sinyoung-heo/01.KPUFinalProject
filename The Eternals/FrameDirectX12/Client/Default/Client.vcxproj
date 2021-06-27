@@ -169,6 +169,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\FrameServer\Server\Header\item_Protocol.h" />
     <ClInclude Include="..\..\..\FrameServer\Server\Header\MonsterAnimation.h" />
     <ClInclude Include="..\..\..\FrameServer\Server\Header\NPCAnimation.h" />
     <ClInclude Include="..\..\..\FrameServer\Server\Header\PCWeaponType.h" />
