@@ -242,6 +242,7 @@ void CStoreMgr::Reset_StoreItemBuySlotList()
 	}
 
 	m_uiCurBuySlotSize = 0;
+	m_iBuyItemSumGold  = 0;
 }
 
 void CStoreMgr::Push_StoreItemBuySlot(const char& chItemType, const char& chItemName, const _uint& uiCnt)
@@ -300,6 +301,7 @@ void CStoreMgr::Reset_StoreItemSellSlotList()
 	}
 
 	m_uiCurSellSlotSize = 0;
+	m_iSellItemSumGold = 0;
 }
 
 void CStoreMgr::Push_StoreItemSellSlot(const char& chItemType, const char& chItemName, const _uint& uiInventoryIdx)

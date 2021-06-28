@@ -2,6 +2,8 @@
 #include "StoreButtonClose.h"
 #include "DirectInput.h"
 #include "InGameStoreCanvas.h"
+#include "StoreMgr.h"
+#include "InventoryEquipmentMgr.h"
 
 CStoreButtonClose::CStoreButtonClose(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
@@ -79,6 +81,28 @@ _int CStoreButtonClose::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		static_cast<CInGameStoreCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInGameStoreCanvas"))->Set_IsActive(false);
 		static_cast<CInGameStoreCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInGameStoreCanvas"))->Set_IsChildActive(false);
+
+		// SellSlotList --> Inventory
+		vector<CStoreSellListSlot*> vecStoreSellSlotList = CStoreMgr::Get_Instance()->Get_StoreSellSlotList();
+		for (auto& pSellSlotList : vecStoreSellSlotList)
+		{
+			if (NO_ITEM != pSellSlotList->Get_CurItemInfo().chItemType &&
+				NO_ITEM != pSellSlotList->Get_CurItemInfo().chItemName)
+			{
+				CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(pSellSlotList->Get_CurItemInfo().chItemType, 
+																		   pSellSlotList->Get_CurItemInfo().chItemName,
+																		   pSellSlotList->Get_CurItemCnt());
+
+				pSellSlotList->Set_CurItemInfo(NO_ITEM, NO_ITEM);
+				pSellSlotList->Set_CurItemCnt(0);
+				CStoreMgr::Get_Instance()->Min_StoreSellSlotSize();
+			}
+		}
+
+		// BuySlotList Clear
+		CStoreMgr::Get_Instance()->Reset_StoreItemBuySlotList();
+
+		g_bIsOpenShop = false;
 	}
 
 	m_bIsKeyPressing = false;

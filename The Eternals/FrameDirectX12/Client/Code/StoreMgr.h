@@ -62,10 +62,12 @@ private:
 	vector<CStoreBuyListSlot*>	m_vecBuySlotList;
 	_uint						m_uiMaxBuySlotSize = 12;
 	_uint						m_uiCurBuySlotSize = 0;
+	_int						m_iBuyItemSumGold  = 0;
 
 	vector<CStoreSellListSlot*> m_vecSellSlotList;
 	_uint						m_uiMaxSellSlotSize = 12;
 	_uint						m_uiCurSellSlotSize = 0;
+	_int						m_iSellItemSumGold  = 0;
 private:
 	virtual void Free();
 };
