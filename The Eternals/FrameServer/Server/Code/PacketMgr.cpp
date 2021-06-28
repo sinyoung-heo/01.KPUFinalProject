@@ -2121,7 +2121,7 @@ void process_shopping(const int& id, cs_packet_shop* p)
 			send_update_inventory(id,
 								  p->buyItemType[i],
 								  p->buyItemName[i],
-								  pUser->Get_ItemCount(itemNumber, static_cast<ITEM>(p->buyItemType[i])),
+								  1/*pUser->Get_ItemCount(itemNumber, static_cast<ITEM>(p->buyItemType[i]))*/,
 								  true);
 		}	
 	}
