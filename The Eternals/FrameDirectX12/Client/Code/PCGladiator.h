@@ -178,7 +178,6 @@ private:
 	_uint				m_uiComoboCnt             = 0;
 	_bool				m_bIsSkill				  = false;
 	_bool				m_bIsSkillLoop			  = false;
-	map<wstring, _int>	m_mapSkillKeyInput;
 	_float				m_fBlendingSpeed		  = 0.001f;
 
 	/*__________________________________________________________________________________________________________

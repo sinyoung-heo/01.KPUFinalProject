@@ -3,20 +3,20 @@
 
 namespace Engine
 {
-	const _int	DEAD_OBJ   = 0;
-	const _int	NO_EVENT   = 1;
-	const _int	RETURN_OBJ = 2;
+	constexpr _int	DEAD_OBJ   = 0;
+	constexpr _int	NO_EVENT   = 1;
+	constexpr _int	RETURN_OBJ = 2;
 
-	const _int	WINCX				= 1'600;
-	const _int	WINCY				= 900;
+	constexpr _int	WINCX				= 1'600;
+	constexpr _int	WINCY				= 900;
 
-	const _int	MIN_STR				= 64;
-	const _int	MAX_STR				= 256;
+	constexpr _int	MIN_STR				= 64;
+	constexpr _int	MAX_STR				= 256;
 
-	const _float SHADOWTEX_WIDTH	= 6000.0f;
-	const _float SHADOWTEX_HEIGHT	= 6000.0f;
+	constexpr _float SHADOWTEX_WIDTH	= 6000.0f;
+	constexpr _float SHADOWTEX_HEIGHT	= 6000.0f;
 
-	const _int	MAX_PALETTE			= 128;
+	constexpr _int	MAX_PALETTE			= 128;
 
-	const _uint TRAIL_SIZE = (3 * 7) + 1;
+	constexpr _uint TRAIL_SIZE = (3 * 7) + 1;
 }

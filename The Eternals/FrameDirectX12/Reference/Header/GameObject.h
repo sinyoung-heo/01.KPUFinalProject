@@ -44,7 +44,8 @@ public:
 	const _bool&			Get_PartyJoinRequest()	{ return m_bIsPartyJoinRequest; }
 	const char&				Get_CurrentStageID()	{ return m_chCurStageID; }
 	const char&				Get_WeaponType()		{ return m_chCurWeaponType; }
-	const _bool&			Get_IsThisPlayerPartyMember() { return m_bIsThisPlayerPartyMember; }
+	const _bool&			Get_IsThisPlayerPartyMember()	{ return m_bIsThisPlayerPartyMember; }
+	map<wstring, _int>&		Get_ThilsPlayerSkillKeyInput()	{ return m_mapSkillKeyInput; }
 	const high_resolution_clock::time_point& Get_LastMoveTime() { return m_last_move_time; }
 	// Set
 	void	Set_CurrentStageID(const char& chStageID)				{ m_chCurStageID = chStageID; }
@@ -179,12 +180,15 @@ protected:
 
 	_uint	m_uiInstanceIdx		= 0;
 	_bool	m_bIsUsingInstance  = false;
-	_bool   m_bisAlphaObject = false;
+	_bool   m_bisAlphaObject    = false;
 
-	_float m_fRedColor = 0.f; // 몬스터전용 변수
-	_bool m_bisHitted = false;
+	_float m_fRedColor    = 0.f; // 몬스터전용 변수
+	_bool m_bisHitted     = false;
 	_float m_fHitVelocity = 1.f;
 	
+	// Player Skill Key Input
+	map<wstring, _int>	m_mapSkillKeyInput;
+
 	/*__________________________________________________________________________________________________________
 	[ Collision ]
 	____________________________________________________________________________________________________________*/

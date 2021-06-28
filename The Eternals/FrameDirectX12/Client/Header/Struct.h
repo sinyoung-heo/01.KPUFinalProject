@@ -44,10 +44,3 @@ typedef struct tagCollisionTickDesc
 	_int	iMaxCollisionTick       = 0;
 
 } COLLISION_TICK_DESC;
-
-typedef struct tagEquipmentInfo
-{
-	char chCurItem         = -1;
-	_int iInventorySlotIdx = -1;
-
-} EQUIPMENT_INFO;

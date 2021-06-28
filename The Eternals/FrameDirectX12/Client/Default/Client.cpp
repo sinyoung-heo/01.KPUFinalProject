@@ -21,6 +21,7 @@
 #include "ChattingMgr.h"
 #include "InventoryEquipmentMgr.h"
 #include "StoreMgr.h"
+#include "QuickSlotMgr.h"
 #include <chrono>
 
 #define MAX_LOADSTRING 100
@@ -389,6 +390,12 @@ _ulong Release_Singleton()
 	COUT_STR("-------------------------");
 #endif
 	_ulong dwRefCnt = 0;
+
+	if (dwRefCnt = CQuickSlotMgr::Get_Instance()->Destroy_Instance())
+	{
+		MSG_BOX(L"CQuickSlotMgr Release Failed");
+		return dwRefCnt;
+	}
 
 	if (dwRefCnt = CStoreMgr::Get_Instance()->Destroy_Instance())
 	{

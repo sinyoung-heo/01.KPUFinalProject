@@ -255,6 +255,8 @@
     <ClInclude Include="..\Code\Portal.h" />
     <ClInclude Include="..\Code\PublicPlane.h" />
     <ClInclude Include="..\Code\PublicSphere.h" />
+    <ClInclude Include="..\Code\QuickSlot.h" />
+    <ClInclude Include="..\Code\QuickSlotMgr.h" />
     <ClInclude Include="..\Code\RainDrop.h" />
     <ClInclude Include="..\Code\SampleNPC.h" />
     <ClInclude Include="..\Code\GameUIChild.h" />
@@ -442,6 +444,8 @@
     <ClCompile Include="..\Code\Portal.cpp" />
     <ClCompile Include="..\Code\PublicPlane.cpp" />
     <ClCompile Include="..\Code\PublicSphere.cpp" />
+    <ClCompile Include="..\Code\QuickSlot.cpp" />
+    <ClCompile Include="..\Code\QuickSlotMgr.cpp" />
     <ClCompile Include="..\Code\RainDrop.cpp" />
     <ClCompile Include="..\Code\RectObject.cpp" />
     <ClCompile Include="..\Code\SampleNPC.cpp" />

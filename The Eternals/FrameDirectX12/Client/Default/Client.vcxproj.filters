@@ -469,6 +469,12 @@
     <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreBuySellListBack">
       <UniqueIdentifier>{94801311-078c-43f3-92b6-cc37ad1ab028}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.Mgr\10.QuickSlotMgr">
+      <UniqueIdentifier>{6243ea3c-3c8d-4a13-8a8e-95ab781c5df3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\13.QuickSlot">
+      <UniqueIdentifier>{78503bd8-e828-4f5a-af4d-11066d931710}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -970,6 +976,10 @@
     <ClInclude Include="..\..\..\FrameServer\Server\Header\item_Protocol.h">
       <Filter>98.Header\00.protocol</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\QuickSlot.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\13.QuickSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\QuickSlotMgr.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1414,6 +1424,10 @@
     <ClCompile Include="..\Code\StoreTab.cpp">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\12.InGameStoreCanvasChild\StoreTab</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\QuickSlot.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\13.QuickSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\QuickSlotMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
