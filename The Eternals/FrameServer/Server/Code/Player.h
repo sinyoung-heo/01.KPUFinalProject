@@ -9,26 +9,29 @@ public:
 
 public:
 	/* Inventory */
-	void				Load_InventoryFromDB(const GAMEITEM& item, const int& itemNumber, const int& count);
-	const int&			Get_ItemCount(const int& itemNumber, ITEM eItemType);
-	bool				Is_Full_Inventory();
-	bool				Is_inInventory(const int& itemNumber, ITEM eItemType);
-	bool				Add_Item(const int& itemNumber, ITEM eItemType);
-	bool				Delete_Item(const int& itemNumber, ITEM eItemType);
-	void				Release_Inventory();
+	void						Load_InventoryFromDB(const GAMEITEM& item, const int& itemNumber, const int& count);
+	const int&					Get_ItemCount(const int& itemNumber, ITEM eItemType);
+	const map<int, GAMEITEM>&	Get_Inventory(ITEM eType) { return m_mapInventory[eType]; }
+	bool						Is_Full_Inventory(const int& count = 0);
+	bool						Is_inInventory(const int& itemNumber, ITEM eItemType, const int& count = 0);
+	bool						Add_Item(const int& itemNumber, ITEM eItemType);
+	bool						Delete_Item(const int& itemNumber, ITEM eItemType);
+	bool						Buy_Item(const int& itemNumber, ITEM eItemType, const int& count = 0);
+	bool						Sell_Item(const int& itemNumber, ITEM eItemType, const int& count = 0);
+	void						Release_Inventory();
 
 	/* Equipment */
-	void				Load_EquipmentFromDB(const int& weapon, const int& helmet, const int& armor, const int& shoes);
-	const char&			Get_Equipment(const char& itemType);
-	const EQUIPMENT&	Get_All_Equipment() { return m_tEquipment; }
-	void				Equip_Item(const char& itemName, const char& eItemType);
-	void				Unequip_Item(const char& itemName, const char& eItemType);
-	void				Release_Equipment();
+	void						Load_EquipmentFromDB(const int& weapon, const int& helmet, const int& armor, const int& shoes);
+	const char&					Get_Equipment(const char& itemType);
+	const EQUIPMENT&			Get_All_Equipment() { return m_tEquipment; }
+	void						Equip_Item(const char& itemName, const char& eItemType);
+	void						Unequip_Item(const char& itemName, const char& eItemType);
+	void						Release_Equipment();
 
 	/* packet */
-	void				send_load_InventoryAndEquipment();
+	void						send_load_InventoryAndEquipment();
 
-	virtual DWORD		Release();
+	virtual DWORD				Release();
 
 public:
 	/*=============Ω√Ω∫≈€ ƒ¡≈Ÿ√˜==============*/

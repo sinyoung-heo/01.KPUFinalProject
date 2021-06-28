@@ -78,7 +78,7 @@ _int CStoreButtonCalculate::LateUpdate_GameObject(const _float& fTimeDelta)
 		CPacketMgr::Get_Instance()->send_deal_shop(vecBuySlotList, vecSellSlotList);
 
 		CStoreMgr::Get_Instance()->Reset_StoreItemBuySlotList();
-		CStoreMgr::Get_Instance()->Reset_StoreItemSellSlotList();
+		CStoreMgr::Get_Instance()->Reset_StoreItemSellSlotList(false);
 	}
 
 	m_bIsKeyPressing = false;

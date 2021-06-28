@@ -62,8 +62,9 @@ public:
 	void	Set_Attack(const bool& b)								{ m_bIsAttack = b; }
 	void	Set_OType(const char& chType)							{ m_chO_Type = chType; }
 	void	Set_DeadReckoning(const _vec3& vPos);
-	void	Set_Info(int lev, int hp, int maxHp, int mp, int maxMp, int exp, int maxExp, int minatt, int maxatt, float spd);
-	void	Set_State(int cur) { m_iMonsterStatus = cur; }
+	void	Set_Info(const int& lev, const int& hp, const int& maxHp, const int& mp, const int& maxMp, const int& exp, const int& maxExp, const int& minatt, const int& maxatt, const int& spd, const int& money);
+	void	Set_State(const int& cur) { m_iMonsterStatus = cur; }
+	void	Set_Money(const int& money) { m_pInfoCom->m_iMoney = money; }
 	void	Set_Other_direction(_vec3& vDir);
 	float	Set_Other_Angle(_vec3& vDir);
 	void	Set_IsStartPosInterpolation(const _bool& bIsStart)		{ m_tPosInterpolationDesc.is_start_interpolation = bIsStart; }

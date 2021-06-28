@@ -292,20 +292,23 @@ void CStoreMgr::Push_StoreItemBuySlot(const char& chItemType, const char& chItem
 	}
 }
 
-void CStoreMgr::Reset_StoreItemSellSlotList()
+void CStoreMgr::Reset_StoreItemSellSlotList(const _bool& bIsPushInventory)
 {
-	for (auto& pSellSlotList : m_vecSellSlotList)
+	if (bIsPushInventory)
 	{
-		if (NO_ITEM != pSellSlotList->Get_CurItemInfo().chItemType &&
-			NO_ITEM != pSellSlotList->Get_CurItemInfo().chItemName)
+		for (auto& pSellSlotList : m_vecSellSlotList)
 		{
-			CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(pSellSlotList->Get_CurItemInfo().chItemType,
-																	   pSellSlotList->Get_CurItemInfo().chItemName,
-																	   pSellSlotList->Get_CurItemCnt());
+			if (NO_ITEM != pSellSlotList->Get_CurItemInfo().chItemType &&
+				NO_ITEM != pSellSlotList->Get_CurItemInfo().chItemName)
+			{
+				CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(pSellSlotList->Get_CurItemInfo().chItemType,
+					pSellSlotList->Get_CurItemInfo().chItemName,
+					pSellSlotList->Get_CurItemCnt());
 
-			pSellSlotList->Set_CurItemInfo(NO_ITEM, NO_ITEM);
-			pSellSlotList->Set_CurItemCnt(0);
-			Min_StoreSellSlotSize();
+				pSellSlotList->Set_CurItemInfo(NO_ITEM, NO_ITEM);
+				pSellSlotList->Set_CurItemCnt(0);
+				Min_StoreSellSlotSize();
+			}
 		}
 	}
 

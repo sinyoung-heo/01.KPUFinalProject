@@ -56,6 +56,7 @@ constexpr char SC_PACKET_UPDATE_PARTY		= 27;
 constexpr char SC_PACKET_UPDATE_INVENTORY	= 28;
 constexpr char SC_PACKET_UPDATE_EQUIPMENT	= 29;
 constexpr char SC_PACKET_LOAD_EQUIPMENT		= 30;
+constexpr char SC_PACKET_UPDATE_MONEY		= 31;
 
 constexpr char CS_LOGIN					= 0;
 constexpr char CS_MOVE					= 1;
@@ -167,6 +168,7 @@ struct sc_packet_login_ok
 	char			weaponType;
 	char			naviType;
 
+	int				money;
 	int				hp;
 	int				maxHp;
 	int				mp;

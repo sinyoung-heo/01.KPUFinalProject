@@ -79,6 +79,7 @@ public:
 	void	Recv_Chat(sc_packet_chat* packet);
 	void	update_inventory(sc_packet_update_inventory* packet);
 	void	Update_Equipment(sc_packet_update_equipment* packet);
+	void	Update_UserMoney(sc_packet_leave* packet);
 
 	void	Enter_Monster(sc_packet_monster_enter* packet);
 	void	Move_Monster(sc_packet_move* packet);

@@ -307,22 +307,14 @@ void process_packet(int id)
 
 	case CS_SHOP:
 	{
-		cs_packet_shop* p = reinterpret_cast<cs_packet_shop*>(pPlayer->m_packet_start);
-		for (int i = 0; i < SHOP_SLOT; ++i)
-		{
-			cout << "구매" << endl;
-			cout << (int)p->buyItemType[i] << (int)p->buyItemName[i] << (int)p->buyItemCount[i] << endl;
-		}
-		for (int i = 0; i < SHOP_SLOT; ++i)
-		{
-			cout << "판매" << endl;
-			cout << (int)p->sellItemType[i] << (int)p->sellItemName[i] << (int)p->sellItemCount[i] << endl;
-		}
+		cs_packet_shop* p = reinterpret_cast<cs_packet_shop*>(pPlayer->m_packet_start);		
+		process_shopping(id, p);
 	}
 	break;
 
 	}
 }
+
 /* ========================패킷 재조립========================*/
 void process_recv(int id, DWORD iosize)
 {
@@ -420,6 +412,7 @@ void send_login_ok(int id)
 	p.weaponType	= pPlayer->m_chWeaponType;
 	p.naviType		= pPlayer->m_chStageId;
 
+	p.money			= pPlayer->m_iMoney;
 	p.level			= pPlayer->m_iLevel;
 	p.hp			= pPlayer->m_iHp;
 	p.maxHp			= pPlayer->m_iMaxHp;
@@ -797,6 +790,19 @@ void send_load_equipment(const int& to_client, const char* chItemType, const cha
 		p.itemName[i] = chName[i];
 	}
 	
+	send_packet(to_client, &p);
+}
+
+void send_user_money(const int& to_client, const int& money)
+{
+	sc_packet_leave p;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_UPDATE_MONEY;
+
+	// money
+	p.id = money;
+
 	send_packet(to_client, &p);
 }
 
@@ -2012,6 +2018,17 @@ void process_equip_item(const int& id, const char& chItemType, const char& chNam
 	if (pUser == nullptr) return;
 	if (!pUser->m_bIsConnect) return;
 
+	int originItemNumber = CItemMgr::GetInstance()->Find_ItemNumber(chItemType, pUser->Get_Equipment(chItemType));
+	if (originItemNumber != -1)
+	{
+		pUser->m_iMaxAtt -= CItemMgr::GetInstance()->Get_Item(originItemNumber).iAtt;
+		pUser->m_iMinAtt -= CItemMgr::GetInstance()->Get_Item(originItemNumber).iAtt;
+		pUser->m_iHp	 -= CItemMgr::GetInstance()->Get_Item(originItemNumber).iHp;
+		pUser->m_iMaxHp  -= CItemMgr::GetInstance()->Get_Item(originItemNumber).iHp;
+		pUser->m_iMp	 -= CItemMgr::GetInstance()->Get_Item(originItemNumber).iMp;
+		pUser->m_iMaxMp  -= CItemMgr::GetInstance()->Get_Item(originItemNumber).iMp;
+	}
+
 	pUser->Equip_Item(chName, chItemType);
 
 	// 능력치 적용
@@ -2044,6 +2061,91 @@ void process_unequip_item(const int& id, const char& chItemType, const char& chN
 	pUser->m_iMaxMp		-= CItemMgr::GetInstance()->Get_Item(itemNumber).iMp;
 
 	send_update_equipment(id, chItemType, false);
+}
+
+void process_shopping(const int& id, cs_packet_shop* p)
+{
+	CPlayer* pUser = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pUser == nullptr) return;
+	if (!pUser->m_bIsConnect) return;
+
+	/* 구매 */
+
+	// 1. 전체 구매 금액 계산 및 전체 구매 아이템 개수 계산
+	int allItemCost = 0;
+	int allItemCount = 0;
+
+	for (int i = 0; i < SHOP_SLOT; ++i)
+	{
+		if (p->buyItemType[i] == -1 || p->buyItemName[i] == -1) continue;
+
+		int itemNumber = CItemMgr::GetInstance()->Find_ItemNumber(p->buyItemType[i], p->buyItemType[i]);
+		GAMEITEM item = CItemMgr::GetInstance()->Get_Item(itemNumber);
+
+		/* 2. HP/MP 포션 개수는 따로 계산 */
+		if (p->buyItemType[i] == ItemType_Potion && p->buyItemName[i] == Prtion_HP)
+		{
+			if (pUser->Is_inInventory(30, ITEM::ITEM_ETC))	continue;
+			else allItemCount += 1;
+		}
+		else if (p->buyItemType[i] == ItemType_Potion && p->buyItemName[i] == Prtion_MP)
+		{
+			if (pUser->Is_inInventory(31, ITEM::ITEM_ETC))	continue;
+			else allItemCount += 1;
+		}
+		else
+			allItemCount += p->buyItemCount[i];
+
+		allItemCost += item.iCost * p->buyItemCount[i];
+	}
+
+	/* 구매 실패*/
+	if (allItemCost > pUser->m_iMoney || pUser->Is_Full_Inventory(allItemCount) == true)
+	{
+		cout << "소지금이 부족하거나 인벤토리가 가득 차 구매할 수 없습니다." << endl;
+		return;
+	}
+
+	// 3. 구매 완료
+	for (int i = 0; i < SHOP_SLOT; ++i)
+	{
+		if (p->buyItemType[i] == -1 || p->buyItemName[i] == -1) continue;
+
+		int itemNumber = CItemMgr::GetInstance()->Find_ItemNumber(p->buyItemType[i], p->buyItemName[i]);
+		GAMEITEM item = CItemMgr::GetInstance()->Get_Item(itemNumber);
+		
+		if (pUser->Buy_Item(itemNumber, static_cast<ITEM>(p->buyItemType[i]), p->buyItemCount[i]))
+		{
+			pUser->m_iMoney -= item.iCost * p->buyItemCount[i];
+
+			send_update_inventory(id,
+								  p->buyItemType[i],
+								  p->buyItemName[i],
+								  pUser->Get_ItemCount(itemNumber, static_cast<ITEM>(p->buyItemType[i])),
+								  true);
+		}	
+	}
+
+	/* 판매 */
+	for (int i = 0; i < SHOP_SLOT; ++i)
+	{
+		if (p->sellItemType[i] == -1 || p->sellItemName[i] == -1) continue;
+
+		int itemNumber	= CItemMgr::GetInstance()->Find_ItemNumber(p->sellItemType[i], p->sellItemName[i]);
+		GAMEITEM item	= CItemMgr::GetInstance()->Get_Item(itemNumber);
+
+		/* 해당 유저의 인벤토리에 해당 아이템이 충분히 있는지 확인 */
+		if (pUser->Is_inInventory(itemNumber, static_cast<ITEM>(p->sellItemType[i]), p->sellItemCount[i]))
+		{
+			if (pUser->Sell_Item(itemNumber, static_cast<ITEM>(p->sellItemType[i]), p->sellItemCount[i]))
+			{
+				pUser->m_iMoney += item.iCost * p->sellItemCount[i];	
+			}		
+		}
+	}
+
+	send_user_money(id, pUser->m_iMoney);
+
 }
 
 /*===========================================FUNC====================================================*/

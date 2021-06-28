@@ -1020,11 +1020,6 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 	KeyInput_Move(fTimeDelta);
 	KeyInput_Attack(fTimeDelta);
 
-	if (Engine::KEY_DOWN(DIK_Z))
-	{	
-		// CPacketMgr::Get_Instance()->send_deal_shop(buyList, sellList);`
-	}
-
 	if (Engine::KEY_DOWN(DIK_0) && NO_EVENT_STATE)
 	{
 		//Engine::CGameObject* pWarningFrame = m_pObjectMgr->Get_GameObject(L"Layer_UI", L"WarningFrame");
