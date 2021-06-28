@@ -52,6 +52,8 @@ _int CMainMenuEquipment::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
+	if (g_bIsOpenShop)
+		m_bIsActiveCanvas = false;
 
 	CGameUIRoot::Update_GameObject(fTimeDelta);
 

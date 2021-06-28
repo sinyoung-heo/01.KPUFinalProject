@@ -2156,7 +2156,7 @@ void CPCArcher::Collision_Quest(list<Engine::CColliderSphere*>& lstMerchantColli
 void CPCArcher::Suggest_PartyToOthers()
 {
 	// Picking Others
-	if (m_pMouserMgr->Get_IsActiveMouse() && Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON(Engine::DIM_RB)))
+	if (m_pMouserMgr->Get_IsActiveMouse() && Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON(Engine::DIM_RB)) && !g_bIsOpenShop)
 	{
 		Engine::OBJLIST*		pOthersList    = m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"Others");
 		Engine::CGameObject*	pPickingOthers = nullptr;
