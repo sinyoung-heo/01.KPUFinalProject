@@ -2,6 +2,7 @@
 #include "StoreBuySellListBack.h"
 #include "Font.h"
 #include "DirectInput.h"
+#include "StoreMgr.h"
 
 CStoreBuySellListBack::CStoreBuySellListBack(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
@@ -31,15 +32,30 @@ HRESULT CStoreBuySellListBack::Ready_GameObject(wstring wstrRootObjectTag,
 															   iUIDepth,
 															   true, L"Font_BinggraeMelona24"), E_FAIL);
 
-	// m_bIsActive = false;
-	m_bIsActive = true;
+	m_pFontPrice = static_cast<Engine::CFont*>(m_pObjectMgr->Clone_GameObjectPrototype(L"Font_BinggraeMelona24"));
+	Engine::NULL_CHECK_RETURN(m_pFontPrice, E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pFontPrice->Ready_GameObject(L"", _vec2(0.0f, 0.f), D2D1::ColorF::White), E_FAIL);
+
+	m_bIsActive = false;
 
 	m_pFont->Set_Color(D2D1::ColorF::Cornsilk);
 
 	if (L"UIStoreBuyListBack" == wstrObjectTag)
+	{
 		m_pFont->Set_Text(L"구매 목록");
+
+		m_pFontPrice->Set_Color(D2D1::ColorF::Crimson);
+		m_wstrFontText = L"- %d";
+	}
 	else
+	{
 		m_pFont->Set_Text(L"판매 목록");
+
+		m_pFontPrice->Set_Color(D2D1::ColorF::SteelBlue);
+		m_wstrFontText = L"+ %d";
+	}
+
+
 
 	return S_OK;
 }
@@ -86,11 +102,19 @@ void CStoreBuySellListBack::SetUp_FontPosition(const _float& fTimeDelta)
 	if (nullptr != m_pFont)
 	{
 		_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
-		vPos.x += -52.0f;
-		vPos.y += -115.0f;
 
-		m_pFont->Set_Pos(_vec2(vPos.x, vPos.y));
+		m_pFont->Set_Pos(_vec2(vPos.x - 52.0f, vPos.y - 115.0f));
 		m_pFont->Update_GameObject(fTimeDelta);
+
+		_tchar	szText[MIN_STR] = L"";
+		if (L"UIStoreBuyListBack" == m_wstrObjectTag)
+			wsprintf(szText, m_wstrFontText.c_str(), CStoreMgr::Get_Instance()->Get_BuyItemSumGold());
+		else
+			wsprintf(szText, m_wstrFontText.c_str(), CStoreMgr::Get_Instance()->Get_SellItemSumGold());
+
+		m_pFontPrice->Set_Text(szText);
+		m_pFontPrice->Set_Pos(_vec2(vPos.x + -100.0f, vPos.y + 77.0f));
+		m_pFontPrice->Update_GameObject(fTimeDelta);
 	}
 }
 
@@ -126,5 +150,6 @@ Engine::CGameObject* CStoreBuySellListBack::Create(ID3D12Device* pGraphicDevice,
 void CStoreBuySellListBack::Free()
 {
 	CGameUIChild::Free();
+	Engine::Safe_Release(m_pFontPrice);
 }
 

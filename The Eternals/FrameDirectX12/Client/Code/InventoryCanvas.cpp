@@ -75,7 +75,8 @@ void CInventoryCanvas::KeyInput_MouseMove(const _float& fTimeDelta)
 	// Check Mouse Collision.
 	if (CMouseCursorMgr::Get_Instance()->Get_IsActiveMouse() &&
 		CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect) &&
-		Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_LB))
+		Engine::MOUSE_PRESSING(Engine::MOUSEBUTTON::DIM_LB)/* &&
+		!g_bIsOpenShop*/)
 	{
 		/*__________________________________________________________________________________________________________
 		[ 마우스 좌, 우 이동 ]

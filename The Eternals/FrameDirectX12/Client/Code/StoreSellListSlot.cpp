@@ -41,8 +41,7 @@ HRESULT CStoreSellListSlot::Ready_GameObject(wstring wstrRootObjectTag,
 															   iUIDepth,
 															   true, L"Font_BinggraeMelona5"), E_FAIL);
 
-	// m_bIsActive = false;
-	m_bIsActive = true;
+	m_bIsActive = false;
 
 	// NoItemInfo
 	m_tNoItemInfo.vScale          = vScale;
@@ -151,11 +150,11 @@ void CStoreSellListSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 		if (NO_ITEM != m_tCurItemInfo.chItemType &&
 			NO_ITEM != m_tCurItemInfo.chItemName)
 		{
+			CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(m_tCurItemInfo.chItemType, m_tCurItemInfo.chItemName);
+
 			if (ItemType_Potion == m_tCurItemInfo.chItemType)
 			{
 				--m_uiCnt;
-				CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(m_tCurItemInfo.chItemType, m_tCurItemInfo.chItemName);
-
 				if (m_uiCnt <= 0)
 				{
 					m_tCurItemInfo.chItemType = NO_ITEM;
@@ -165,13 +164,13 @@ void CStoreSellListSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 			}
 			else
 			{
-				CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(m_tCurItemInfo.chItemType, m_tCurItemInfo.chItemName);
-
 				m_tCurItemInfo.chItemType = NO_ITEM;
 				m_tCurItemInfo.chItemName = NO_ITEM;
 				m_uiCnt = 0;
 				CStoreMgr::Get_Instance()->Min_StoreSellSlotSize();
 			}
+
+			CStoreMgr::Get_Instance()->Add_SellItemSumGold(-m_iPrice);
 		}
 
 		return;
@@ -211,6 +210,7 @@ void CStoreSellListSlot::SetUp_ItemIcon()
 		m_uiTexIdx            = m_tNoItemInfo.uiItemIdx;
 		m_tFrame              = m_tNoItemInfo.tItemIconFrame;
 		m_pTransCom->m_vScale = m_tNoItemInfo.vScale;
+		m_iPrice             = 0;
 	}
 		break;
 
@@ -223,18 +223,23 @@ void CStoreSellListSlot::SetUp_ItemIcon()
 		switch (m_tCurItemInfo.chItemName)
 		{
 		case Twohand19_A_SM:
+			m_iPrice = Item_Twohand19_A_SM_COST;
 			m_uiTexIdx = 0;
 			break;
 		case TwoHand27_SM:
+			m_iPrice = Item_TwoHand27_SM_COST;
 			m_uiTexIdx = 1;
 			break;
 		case TwoHand29_SM:
+			m_iPrice = Item_TwoHand29_SM_COST;
 			m_uiTexIdx = 2;
 			break;
 		case TwoHand31_SM:
+			m_iPrice = Item_TwoHand31_SM_COST;
 			m_uiTexIdx = 3;
 			break;
 		case TwoHand33_B_SM:
+			m_iPrice = Item_TwoHand33_B_SM_COST;
 			m_uiTexIdx = 4;
 			break;
 		}
@@ -250,18 +255,23 @@ void CStoreSellListSlot::SetUp_ItemIcon()
 		switch (m_tCurItemInfo.chItemName)
 		{
 		case Bow18_A_SM:
+			m_iPrice = Item_Bow18_A_SM_COST;
 			m_uiTexIdx = 0;
 			break;
 		case Bow27_SM:
+			m_iPrice = Item_Bow27_SM_COST;
 			m_uiTexIdx = 1;
 			break;
 		case Bow23_SM:
+			m_iPrice = Item_Bow23_SM_COST;
 			m_uiTexIdx = 2;
 			break;
 		case Bow31_SM:
+			m_iPrice = Item_Bow31_SM_COST;
 			m_uiTexIdx = 3;
 			break;
 		case Event_Season_Bow_01_SM:
+			m_iPrice = Item_Event_Season_Bow_01_SM_COST;
 			m_uiTexIdx = 4;
 			break;
 		}
@@ -277,18 +287,23 @@ void CStoreSellListSlot::SetUp_ItemIcon()
 		switch (m_tCurItemInfo.chItemName)
 		{
 		case Event_Wit_Rod_01:
+			m_iPrice = Item_Event_Wit_Rod_01_COST;
 			m_uiTexIdx = 0;
 			break;
 		case Rod19_A:
+			m_iPrice = Item_Rod19_A_COST;
 			m_uiTexIdx = 1;
 			break;
 		case Rod28_B:
+			m_iPrice = Item_Rod28_B_COST;
 			m_uiTexIdx = 2;
 			break;
 		case Rod31:
+			m_iPrice = Item_Rod31_COST;
 			m_uiTexIdx = 3;
 			break;
 		case Rod33_B:
+			m_iPrice = Item_Rod33_B_COST;
 			m_uiTexIdx = 4;
 			break;
 		}
@@ -304,18 +319,23 @@ void CStoreSellListSlot::SetUp_ItemIcon()
 		switch (m_tCurItemInfo.chItemName)
 		{
 		case Helmet_D:
+			m_iPrice = Item_Helmet_D_COST;
 			m_uiTexIdx = 0;
 			break;
 		case Helmet_C:
+			m_iPrice = Item_Helmet_C_COST;
 			m_uiTexIdx = 1;
 			break;
 		case Helmet_B:
+			m_iPrice = Item_Helmet_B_COST;
 			m_uiTexIdx = 2;
 			break;
 		case Helmet_A:
+			m_iPrice = Item_Helmet_A_COST;
 			m_uiTexIdx = 3;
 			break;
 		case Helmet_S:
+			m_iPrice = Item_Helmet_S_COST;
 			m_uiTexIdx = 4;
 			break;
 		}
@@ -331,18 +351,23 @@ void CStoreSellListSlot::SetUp_ItemIcon()
 		switch (m_tCurItemInfo.chItemName)
 		{
 		case Armor_D:
+			m_iPrice = Item_Armor_D_COST;
 			m_uiTexIdx = 0;
 			break;
 		case Armor_C:
+			m_iPrice = Item_Armor_C_COST;
 			m_uiTexIdx = 1;
 			break;
 		case Armor_B:
+			m_iPrice = Item_Armor_B_COST;
 			m_uiTexIdx = 2;
 			break;
 		case Armor_A:
+			m_iPrice = Item_Armor_A_COST;
 			m_uiTexIdx = 3;
 			break;
 		case Armor_S:
+			m_iPrice = Item_Armor_S_COST;
 			m_uiTexIdx = 4;
 			break;
 		}
@@ -358,18 +383,23 @@ void CStoreSellListSlot::SetUp_ItemIcon()
 		switch (m_tCurItemInfo.chItemName)
 		{
 		case Shoes_D:
+			m_iPrice = Item_Shoes_D_COST;
 			m_uiTexIdx = 0;
 			break;
 		case Shoes_C:
+			m_iPrice = Item_Shoes_C_COST;
 			m_uiTexIdx = 1;
 			break;
 		case Shoes_B:
+			m_iPrice = Item_Shoes_B_COST;
 			m_uiTexIdx = 2;
 			break;
 		case Shoes_A:
+			m_iPrice = Item_Shoes_A_COST;
 			m_uiTexIdx = 3;
 			break;
 		case Shoes_S:
+			m_iPrice = Item_Shoes_S_COST;
 			m_uiTexIdx = 4;
 			break;
 		}
@@ -385,9 +415,11 @@ void CStoreSellListSlot::SetUp_ItemIcon()
 		switch (m_tCurItemInfo.chItemName)
 		{
 		case Prtion_HP:
+			m_iPrice = Item_Prtion_HP_COST;
 			m_uiTexIdx = 0;
 			break;
 		case Prtion_MP:
+			m_iPrice = Item_Prtion_MP_COST;
 			m_uiTexIdx = 1;
 			break;
 		}

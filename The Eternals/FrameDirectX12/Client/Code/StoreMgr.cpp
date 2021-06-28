@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "StoreMgr.h"
 #include "Font.h"
+#include "InventoryEquipmentMgr.h"
 
 IMPLEMENT_SINGLETON(CStoreMgr)
 
@@ -245,7 +246,7 @@ void CStoreMgr::Reset_StoreItemBuySlotList()
 	m_iBuyItemSumGold  = 0;
 }
 
-void CStoreMgr::Push_StoreItemBuySlot(const char& chItemType, const char& chItemName, const _uint& uiCnt)
+void CStoreMgr::Push_StoreItemBuySlot(const char& chItemType, const char& chItemName, const _uint& uiCnt, const _uint& uiPrice)
 {
 	if (m_uiCurBuySlotSize >= m_uiMaxBuySlotSize)
 		return;
@@ -259,6 +260,7 @@ void CStoreMgr::Push_StoreItemBuySlot(const char& chItemType, const char& chItem
 				chItemName == pBuyItemSlot->Get_CurItemInfo().chItemName)
 			{
 				pBuyItemSlot->Add_PotionCnt(uiCnt);
+				m_iBuyItemSumGold += uiPrice;
 				return;
 			}
 		}
@@ -270,8 +272,7 @@ void CStoreMgr::Push_StoreItemBuySlot(const char& chItemType, const char& chItem
 			{
 				pBuyItemSlot->Set_CurItemInfo(chItemType, chItemName, uiCnt);
 				++m_uiCurBuySlotSize;
-
-				cout << "Push StoreItemBuySlot, " << m_uiCurBuySlotSize << endl;
+				m_iBuyItemSumGold += uiPrice;
 				break;
 			}
 		}
@@ -284,8 +285,7 @@ void CStoreMgr::Push_StoreItemBuySlot(const char& chItemType, const char& chItem
 			{
 				pBuyItemSlot->Set_CurItemInfo(chItemType, chItemName, uiCnt);
 				++m_uiCurBuySlotSize;
-
-				cout << "Push StoreItemBuySlot, " << m_uiCurBuySlotSize << endl;
+				m_iBuyItemSumGold += uiPrice;
 				break;
 			}
 		}
@@ -294,6 +294,21 @@ void CStoreMgr::Push_StoreItemBuySlot(const char& chItemType, const char& chItem
 
 void CStoreMgr::Reset_StoreItemSellSlotList()
 {
+	for (auto& pSellSlotList : m_vecSellSlotList)
+	{
+		if (NO_ITEM != pSellSlotList->Get_CurItemInfo().chItemType &&
+			NO_ITEM != pSellSlotList->Get_CurItemInfo().chItemName)
+		{
+			CInventoryEquipmentMgr::Get_Instance()->Push_ItemInventory(pSellSlotList->Get_CurItemInfo().chItemType,
+																	   pSellSlotList->Get_CurItemInfo().chItemName,
+																	   pSellSlotList->Get_CurItemCnt());
+
+			pSellSlotList->Set_CurItemInfo(NO_ITEM, NO_ITEM);
+			pSellSlotList->Set_CurItemCnt(0);
+			Min_StoreSellSlotSize();
+		}
+	}
+
 	for (auto& pSellItemSlot : m_vecSellSlotList)
 	{
 		pSellItemSlot->Set_CurItemInfo(NO_ITEM, NO_ITEM);
@@ -301,10 +316,10 @@ void CStoreMgr::Reset_StoreItemSellSlotList()
 	}
 
 	m_uiCurSellSlotSize = 0;
-	m_iSellItemSumGold = 0;
+	m_iSellItemSumGold  = 0;
 }
 
-void CStoreMgr::Push_StoreItemSellSlot(const char& chItemType, const char& chItemName, const _uint& uiInventoryIdx)
+void CStoreMgr::Push_StoreItemSellSlot(const char& chItemType, const char& chItemName, const _uint& uiInventoryIdx, const _uint& uiPrice)
 {
 	if (m_uiCurSellSlotSize >= m_uiMaxSellSlotSize)
 		return;
@@ -318,6 +333,7 @@ void CStoreMgr::Push_StoreItemSellSlot(const char& chItemType, const char& chIte
 				chItemName == pSellItemSlot->Get_CurItemInfo().chItemName)
 			{
 				pSellItemSlot->Add_PotionCnt(1);
+				m_iSellItemSumGold += uiPrice;
 				return;
 			}
 		}
@@ -330,8 +346,7 @@ void CStoreMgr::Push_StoreItemSellSlot(const char& chItemType, const char& chIte
 				pSellItemSlot->Set_CurItemInfo(chItemType, chItemName, 1);
 				pSellItemSlot->Set_InventoryIdx(uiInventoryIdx);
 				++m_uiCurSellSlotSize;
-
-				cout << "Push StoreItemSellSlot, " << m_uiCurSellSlotSize << endl;
+				m_iSellItemSumGold += uiPrice;
 				break;
 			}
 		}
@@ -345,8 +360,7 @@ void CStoreMgr::Push_StoreItemSellSlot(const char& chItemType, const char& chIte
 				pSellItemSlot->Set_CurItemInfo(chItemType, chItemName, 1);
 				pSellItemSlot->Set_InventoryIdx(uiInventoryIdx);
 				++m_uiCurSellSlotSize;
-
-				cout << "Push StoreItemSellSlot, " << m_uiCurSellSlotSize << endl;
+				m_iSellItemSumGold += uiPrice;
 				break;
 			}
 		}

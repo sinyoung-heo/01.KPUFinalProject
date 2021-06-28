@@ -28,6 +28,8 @@ public:
 	const _uint&					Get_MaxSellSlotSize()	{ return m_uiMaxSellSlotSize; }
 	const _uint&					Get_CurBuySlotSize()	{ return m_uiCurBuySlotSize; }
 	const _uint&					Get_CurSellSlotSize()	{ return m_uiCurSellSlotSize; }
+	const _int&						Get_BuyItemSumGold()	{ return m_iBuyItemSumGold; }
+	const _int&						Get_SellItemSumGold()	{ return m_iSellItemSumGold; }
 	void Set_StoreState(const STORE_STATE& eState);
 	void Set_StoreItemType(const char& chItemType);
 	void Set_CurBuySlotSize(const _uint& uiSize)	{ m_uiCurBuySlotSize = uiSize; }
@@ -41,13 +43,14 @@ public:
 
 	// ItemBuySlot
 	void Reset_StoreItemBuySlotList();
-	void Push_StoreItemBuySlot(const char& chItemType, const char& chItemName, const _uint& uiCnt);
+	void Push_StoreItemBuySlot(const char& chItemType, const char& chItemName, const _uint& uiCnt, const _uint& uiPrice);
 	void Min_StoreBuySlotSize() { if (m_uiCurBuySlotSize > 0) --m_uiCurBuySlotSize; }
+	void Add_BuyItemSumGold(const _int& uiGold) { m_iBuyItemSumGold += uiGold; }
 	// ItemSellSlot
 	void Reset_StoreItemSellSlotList();
-	void Push_StoreItemSellSlot(const char& chItemType, const char& chItemName, const _uint& uiInventoryIdx);
+	void Push_StoreItemSellSlot(const char& chItemType, const char& chItemName, const _uint& uiInventoryIdx, const _uint& uiPrice);
 	void Min_StoreSellSlotSize() { if (m_uiCurSellSlotSize > 0) --m_uiCurSellSlotSize; }
-
+	void Add_SellItemSumGold(const _int& uiGold) { m_iSellItemSumGold += uiGold; }
 private:
 	STORE_STATE m_eCurStoreState = STORE_STATE::STORE_STATE_END;
 	STORE_STATE m_ePreStoreState = STORE_STATE::STORE_STATE_END;

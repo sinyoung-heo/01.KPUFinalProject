@@ -63,7 +63,8 @@ private:
 	ITEM_INFO	m_tCurItemInfo;
 	char		m_chPreItemType = NO_ITEM;
 	char		m_chPreItemName = NO_ITEM;
-	char		m_chJob = -1;
+	char		m_chJob         = -1;
+	_uint		m_uiPrice       = 0;
 
 	// 포션 개수.
 	_uint m_uiCnt = 0;

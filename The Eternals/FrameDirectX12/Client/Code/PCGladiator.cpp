@@ -22,6 +22,7 @@
 #include "TextureEffect.h"
 #include "WarningFrame.h"
 #include "StoreMgr.h"
+#include "MainMenuInventory.h"
 
 CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -799,10 +800,6 @@ HRESULT CPCGladiator::SetUp_Equipment()
 	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_A);
 	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_S);
 
-	CStoreMgr::Get_Instance()->Set_StoreState(STORE_STATE::STORE_WEAPON);
-	CStoreMgr::Get_Instance()->Set_StoreItemType(ItemType_WeaponTwoHand);
-	g_bIsOpenShop = true;
-
 	return S_OK;
 }
 
@@ -1073,23 +1070,6 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 										 _vec3(0, 0, 0), 5.f, XMConvertToRadians(i * 10.f));
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"IceStorm1", pGameObj), E_FAIL);
 		}*/
-	}
-
-
-	if (Engine::KEY_DOWN(DIK_Z))
-	{
-		CStoreMgr::Get_Instance()->Set_StoreState(STORE_STATE::STORE_WEAPON);
-		CStoreMgr::Get_Instance()->Set_StoreItemType(ItemType_WeaponTwoHand);
-	}
-	if (Engine::KEY_DOWN(DIK_X))
-	{
-		CStoreMgr::Get_Instance()->Set_StoreState(STORE_STATE::STORE_ARMOR);
-		CStoreMgr::Get_Instance()->Set_StoreItemType(ItemType_Helmet);
-	}
-	if (Engine::KEY_DOWN(DIK_C))
-	{
-		CStoreMgr::Get_Instance()->Set_StoreState(STORE_STATE::STORE_POTION);
-		CStoreMgr::Get_Instance()->Set_StoreItemType(ItemType_Potion);
 	}
 }
 
@@ -1639,18 +1619,53 @@ void CPCGladiator::KeyInput_Tumbling(const _float& fTimeDelta)
 
 void CPCGladiator::KeyInput_OpenShop(const char& npcNumber)
 {
-	g_bIsOpenShop = !g_bIsOpenShop;
-
 	if (g_bIsOpenShop)
 	{
-		if (npcNumber == NPC_POPORI_MERCHANT || npcNumber == NPC_BARAKA_MERCHANT || npcNumber == NPC_BARAKA_MYSTELLIUM)
+		if (npcNumber == NPC_POPORI_MERCHANT || 
+			npcNumber == NPC_BARAKA_MERCHANT || 
+			npcNumber == NPC_BARAKA_MYSTELLIUM)
 		{
+			switch (npcNumber)
+			{
+			case NPC_POPORI_MERCHANT:		// 무기상인
+			{
+				CStoreMgr::Get_Instance()->Set_StoreState(STORE_STATE::STORE_WEAPON);
+				CStoreMgr::Get_Instance()->Set_StoreItemType(ItemType_WeaponTwoHand);
+			}
+				break;
+			case NPC_BARAKA_MERCHANT:		// 물약상인
+			{
+				CStoreMgr::Get_Instance()->Set_StoreState(STORE_STATE::STORE_POTION);
+				CStoreMgr::Get_Instance()->Set_StoreItemType(ItemType_Potion);
+			}
+				break;
+			case NPC_BARAKA_MYSTELLIUM:		// 방어구상인
+			{
+				CStoreMgr::Get_Instance()->Set_StoreState(STORE_STATE::STORE_ARMOR);
+				CStoreMgr::Get_Instance()->Set_StoreItemType(ItemType_Helmet);
+			}
+				break;
+			default:
+				break;
+			}
+
+			static_cast<CInGameStoreCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInGameStoreCanvas"))->Set_IsActive(true);
+			static_cast<CInGameStoreCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInGameStoreCanvas"))->Set_IsChildActive(true);
+			static_cast<CMainMenuInventory*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"OptionInventoryNormal"))->Set_IsActiveCanvas(true);
+			static_cast<CInventoryCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInventoryCanvas"))->Get_Transform()->m_vPos = _vec3(1100.0f, 450.0f, 1.0f);
+			CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(true);
 			// NPC에 맞는 상점 리소스 생성
 			cout << "상점 오픈" << endl;
 		}		
 	}
 	else
 	{
+		// BuySlotList Clear
+		CStoreMgr::Get_Instance()->Reset_StoreItemBuySlotList();
+		CStoreMgr::Get_Instance()->Reset_StoreItemSellSlotList();
+
+		static_cast<CInGameStoreCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInGameStoreCanvas"))->Set_IsActive(false);
+		static_cast<CInGameStoreCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInGameStoreCanvas"))->Set_IsChildActive(false);
 		cout << "상점 종료" << endl;
 	}
 }
@@ -2541,8 +2556,9 @@ void CPCGladiator::Collision_Merchant(list<Engine::CColliderSphere*>& lstMerchan
 				pObj->Set_State(Baraka_M_Merchant::A_TALK);
 		
 				/* Shop Open */
-				if (Engine::KEY_DOWN(DIK_F) && NO_EVENT_STATE)
+				if (Engine::KEY_DOWN(DIK_F))
 				{				
+					g_bIsOpenShop = !g_bIsOpenShop;
 					KeyInput_OpenShop(pObj->Get_NPCNumber());
 				}
 			}

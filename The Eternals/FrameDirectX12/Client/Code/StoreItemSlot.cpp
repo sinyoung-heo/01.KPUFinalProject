@@ -39,8 +39,7 @@ HRESULT CStoreItemSlot::Ready_GameObject(wstring wstrRootObjectTag,
 															   iUIDepth,
 															   true, L"Font_BinggraeMelona16"), E_FAIL);
 
-	// m_bIsActive = false;
-	m_bIsActive = true;
+	m_bIsActive = false;
 
 	// NoItemInfo
 	m_tNoItemInfo.vScale          = vScale;
@@ -182,7 +181,7 @@ void CStoreItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) &&
 		m_bIsKeyPressingLB)
 	{
-		CStoreMgr::Get_Instance()->Push_StoreItemBuySlot(m_tCurItemInfo.chItemType, m_tCurItemInfo.chItemName, 1);
+		CStoreMgr::Get_Instance()->Push_StoreItemBuySlot(m_tCurItemInfo.chItemType, m_tCurItemInfo.chItemName, 1, m_uiPrice);
 		return;
 	}
 
@@ -220,6 +219,7 @@ void CStoreItemSlot::SetUp_ItemIcon()
 		m_uiTexIdx            = m_tNoItemInfo.uiItemIdx;
 		m_tFrame              = m_tNoItemInfo.tItemIconFrame;
 		m_pTransCom->m_vScale = m_tNoItemInfo.vScale;
+		m_uiPrice             = 0;
 	}
 		break;
 

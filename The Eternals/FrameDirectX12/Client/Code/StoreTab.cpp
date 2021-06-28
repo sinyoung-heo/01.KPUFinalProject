@@ -32,8 +32,7 @@ HRESULT CStoreTab::Ready_GameObject(wstring wstrRootObjectTag,
 															   iUIDepth,
 															   true, L"Font_BinggraeMelona24"), E_FAIL);
 
-	// m_bIsActive = false;
-	m_bIsActive = true;
+	m_bIsActive = false;
 
 	m_pFont->Set_Color(D2D1::ColorF::Cornsilk);
 	m_pFont->Set_Text(L"·Îµå");

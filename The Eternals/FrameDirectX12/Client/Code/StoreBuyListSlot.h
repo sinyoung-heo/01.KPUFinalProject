@@ -10,6 +10,7 @@ private:
 public:
 	const ITEM_INFO&	Get_CurItemInfo()	{ return m_tCurItemInfo; }
 	const _uint&		Get_CurItemCnt()	{ return m_uiCnt; }
+	const _int&		Get_ItemPrice()			{ return m_iPrice; }
 	void Set_CurItemInfo(const char& chItemType, const char& chItemName, const _int& iCnt = 0);
 	void Set_CurItemCnt(const _int& iCnt)		{ m_uiCnt = iCnt; }
 	void Add_PotionCnt(const _int& iValue)		{ m_uiCnt += iValue; }
@@ -45,7 +46,7 @@ private:
 	ITEM_INFO		m_tCurItemInfo;
 	char			m_chPreItemType = NO_ITEM;
 	char			m_chPreItemName = NO_ITEM;
-	_uint			m_uiPrice       = 0;
+	_int			m_iPrice       = 0;
 
 	// 포션 개수.
 	_uint m_uiCnt = 0;

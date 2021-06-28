@@ -25,6 +25,8 @@
 #include "DistTrail.h"
 #include "TextureEffect.h"
 #include "PartySuggestCanvas.h"
+#include "StoreMgr.h"
+#include "MainMenuInventory.h"
 
 CPCArcher::CPCArcher(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -1366,18 +1368,51 @@ void CPCArcher::KeyInput_BackDash(const _float& fTimeDelta)
 
 void CPCArcher::KeyInput_OpenShop(const char& npcNumber)
 {
-	g_bIsOpenShop = !g_bIsOpenShop;
-
 	if (g_bIsOpenShop)
 	{
 		if (npcNumber == NPC_POPORI_MERCHANT || npcNumber == NPC_BARAKA_MERCHANT || npcNumber == NPC_BARAKA_MYSTELLIUM)
 		{
+			switch (npcNumber)
+			{
+			case NPC_POPORI_MERCHANT:		// 무기상인
+			{
+				CStoreMgr::Get_Instance()->Set_StoreState(STORE_STATE::STORE_WEAPON);
+				CStoreMgr::Get_Instance()->Set_StoreItemType(ItemType_WeaponTwoHand);
+			}
+			break;
+			case NPC_BARAKA_MERCHANT:		// 물약상인
+			{
+				CStoreMgr::Get_Instance()->Set_StoreState(STORE_STATE::STORE_POTION);
+				CStoreMgr::Get_Instance()->Set_StoreItemType(ItemType_Potion);
+			}
+			break;
+			case NPC_BARAKA_MYSTELLIUM:		// 방어구상인
+			{
+				CStoreMgr::Get_Instance()->Set_StoreState(STORE_STATE::STORE_ARMOR);
+				CStoreMgr::Get_Instance()->Set_StoreItemType(ItemType_Helmet);
+			}
+			break;
+			default:
+				break;
+			}
+
+			static_cast<CInGameStoreCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInGameStoreCanvas"))->Set_IsActive(true);
+			static_cast<CInGameStoreCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInGameStoreCanvas"))->Set_IsChildActive(true);
+			static_cast<CMainMenuInventory*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"OptionInventoryNormal"))->Set_IsActiveCanvas(true);
+			static_cast<CInventoryCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInventoryCanvas"))->Get_Transform()->m_vPos = _vec3(1100.0f, 450.0f, 1.0f);
+			CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(true);
 			// NPC에 맞는 상점 리소스 생성
 			cout << "상점 오픈" << endl;
 		}		
 	}
 	else
 	{
+		// BuySlotList Clear
+		CStoreMgr::Get_Instance()->Reset_StoreItemBuySlotList();
+		CStoreMgr::Get_Instance()->Reset_StoreItemSellSlotList();
+
+		static_cast<CInGameStoreCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInGameStoreCanvas"))->Set_IsActive(false);
+		static_cast<CInGameStoreCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInGameStoreCanvas"))->Set_IsChildActive(false);
 		cout << "상점 종료" << endl;
 	}
 }
@@ -2115,8 +2150,9 @@ void CPCArcher::Collision_Merchant(list<Engine::CColliderSphere*>& lstMerchantCo
 				pObj->Set_State(Baraka_M_Merchant::A_TALK);
 		
 				/* Shop Open */
-				if (Engine::KEY_DOWN(DIK_F) && NO_EVENT_STATE)
-				{				
+				if (Engine::KEY_DOWN(DIK_F))
+				{			
+					g_bIsOpenShop = !g_bIsOpenShop;
 					KeyInput_OpenShop(pObj->Get_NPCNumber());
 				}
 			}
