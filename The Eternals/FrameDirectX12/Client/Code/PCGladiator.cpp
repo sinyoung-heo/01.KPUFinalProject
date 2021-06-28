@@ -1017,22 +1017,9 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 	KeyInput_Move(fTimeDelta);
 	KeyInput_Attack(fTimeDelta);
 
-	if (Engine::KEY_DOWN(DIK_0))
-	{
-		cs_packet_shop p;
-
-		p.size = sizeof(p);
-		p.type = CS_SHOP;
-
-		p.buyItemType[0] = ItemType_WeaponTwoHand;
-		p.buyItemName[0] = TwoHand29_SM;
-		p.buyItemCount[0] = 1;
-
-		p.sellItemType[0] = ItemType_Shoes;
-		p.sellItemName[0] = Shoes_C;
-		p.sellItemCount[0] = 1;
-
-		CPacketMgr::Get_Instance()->send_packet(&p);
+	if (Engine::KEY_DOWN(DIK_Z))
+	{	
+		//CPacketMgr::Get_Instance()->send_deal_shop(/*buyList, sellList*/);
 	}
 
 	if (Engine::KEY_DOWN(DIK_0) && NO_EVENT_STATE)

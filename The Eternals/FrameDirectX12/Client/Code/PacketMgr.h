@@ -54,7 +54,8 @@ public:
 	void	send_delete_item(const char& chItemType, const char& chName);		// 인벤토리 아이템 제거
 	void	send_equip_item(const char& chItemType, const char& chName);		// 장비 장착 
 	void	send_unequip_item(const char& chItemType, const char& chName);		// 장비 해체 
-	
+	void	send_deal_shop(const int& buyList, const int& sellList);			// 상점 거래
+
 public:
 	bool	change_MoveKey(MVKEY eKey);
 
@@ -91,8 +92,7 @@ public:
 	void	Stage_Change(sc_packet_stage_change* packet);
 	void	Change_Animation(sc_packet_animationIndex* packet, bool& retflag);
 
-//private:
-public:
+private:
 	void	send_packet(void* packet);
 
 private:

@@ -1485,6 +1485,25 @@ void CPacketMgr::send_unequip_item(const char& chItemType, const char& chName)
 	send_packet(&p);
 }
 
+void CPacketMgr::send_deal_shop(const int& buyList, const int& sellList)
+{
+	cs_packet_shop p;
+
+	p.size = sizeof(p);
+	p.type = CS_SHOP;
+
+	// 리스트에서 대입 후 전송
+	p.buyItemType[0] = ItemType_WeaponTwoHand;
+	p.buyItemName[0] = TwoHand29_SM;
+	p.buyItemCount[0] = 1;
+
+	p.sellItemType[0] = ItemType_Shoes;
+	p.sellItemName[0] = Shoes_C;
+	p.sellItemCount[0] = 1;
+
+	send_packet(&p);
+}
+
 void CPacketMgr::send_packet(void* packet)
 {
 	char* p = reinterpret_cast<char*>(packet);
