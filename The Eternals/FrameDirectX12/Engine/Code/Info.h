@@ -17,6 +17,7 @@ public:
 	virtual void	Update_Component(const _float& fTimeDelta);
 
 public:
+	_int	m_iMoney		= 0;
 	_int	m_iLev			= 1;
 	_int	m_iMinAttack	= 0;
 	_int	m_iMaxAttack	= 1;

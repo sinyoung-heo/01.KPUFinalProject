@@ -17,7 +17,7 @@ CPlayer::~CPlayer()
 {
 }
 
-bool CPlayer::Is_Full_Inventory()
+bool CPlayer::Is_Full_Inventory(const int& count)
 {
     size_t size = 0;
 
@@ -28,15 +28,16 @@ bool CPlayer::Is_Full_Inventory()
     }
 
     // 잡화 아이템 개수는 제외
-    if (size + 2 < MAX_ITEMSIZE)
+    if (size + 2 + count < MAX_ITEMSIZE)
         return false;
     else
         return true;
 }
 
-bool CPlayer::Is_inInventory(const int& itemNumber, ITEM eItemType)
+bool CPlayer::Is_inInventory(const int& itemNumber, ITEM eItemType, const int& count)
 {
-    if (m_mapInventory[eItemType][itemNumber].iCount > 0)
+    if (m_mapInventory[eItemType][itemNumber].iCount > 0
+        && m_mapInventory[eItemType][itemNumber].iCount >= count)
         return true;
 
     return false;
@@ -63,6 +64,36 @@ bool CPlayer::Delete_Item(const int& itemNumber, ITEM eItemType)
     if (m_mapInventory[eItemType][itemNumber].iCount > 0)
     {
         m_mapInventory[eItemType][itemNumber].iCount--;
+
+        if (m_mapInventory[eItemType][itemNumber].iCount <= 0)
+            CDBMgr::GetInstance()->delete_Inventory(m_sNum, itemNumber);
+        else
+            CDBMgr::GetInstance()->update_Inventory(m_sNum, itemNumber, m_mapInventory[eItemType][itemNumber].iCount);
+
+        return true;
+    }
+    return false;
+}
+
+bool CPlayer::Buy_Item(const int& itemNumber, ITEM eItemType, const int& count)
+{
+    if (m_mapInventory[eItemType][itemNumber].iCount <= 0)
+        CDBMgr::GetInstance()->insert_Inventory(m_sNum, itemNumber, count);
+    else
+        CDBMgr::GetInstance()->update_Inventory(m_sNum, itemNumber, count);
+
+    m_mapInventory[eItemType][itemNumber].iCount += count;
+    
+    return true;
+}
+
+bool CPlayer::Sell_Item(const int& itemNumber, ITEM eItemType, const int& count)
+{
+    if (count == 0) return false;
+
+    if (m_mapInventory[eItemType][itemNumber].iCount >= count)
+    {
+        m_mapInventory[eItemType][itemNumber].iCount -= count;
 
         if (m_mapInventory[eItemType][itemNumber].iCount <= 0)
             CDBMgr::GetInstance()->delete_Inventory(m_sNum, itemNumber);

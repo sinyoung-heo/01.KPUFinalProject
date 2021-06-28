@@ -61,18 +61,19 @@ void CGameObject::Set_DeadReckoning(const _vec3& vPos)
 	m_pInfoCom->m_vArrivePos = vPos;	
 }
 
-void CGameObject::Set_Info(int lev, int hp, int maxHp, int mp, int maxMp, int exp, int maxExp, int minatt, int maxatt, float spd)
+void CGameObject::Set_Info(const int& lev, const int& hp, const int& maxHp, const int& mp, const int& maxMp, const int& exp, const int& maxExp, const int& minatt, const int& maxatt, const int& spd, const int& money)
 {
-	m_pInfoCom->m_iLev = lev;
-	m_pInfoCom->m_iHp = hp;
-	m_pInfoCom->m_iMaxHp = maxHp;
-	m_pInfoCom->m_iMp = mp;
-	m_pInfoCom->m_iMaxMp = maxMp;
-	m_pInfoCom->m_iExp = exp;
-	m_pInfoCom->m_iMaxExp = maxExp;
-	m_pInfoCom->m_iMinAttack = minatt;
-	m_pInfoCom->m_iMaxAttack = maxatt;
-	m_pInfoCom->m_fSpeed = spd;
+	m_pInfoCom->m_iLev			= lev;
+	m_pInfoCom->m_iHp			= hp;
+	m_pInfoCom->m_iMaxHp		= maxHp;
+	m_pInfoCom->m_iMp			= mp;
+	m_pInfoCom->m_iMaxMp		= maxMp;
+	m_pInfoCom->m_iExp			= exp;
+	m_pInfoCom->m_iMaxExp		= maxExp;
+	m_pInfoCom->m_iMinAttack	= minatt;
+	m_pInfoCom->m_iMaxAttack	= maxatt;
+	m_pInfoCom->m_fSpeed		= spd;
+	m_pInfoCom->m_iMoney		= money;
 }
 
 void CGameObject::Set_Other_direction(_vec3& vDir)

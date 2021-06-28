@@ -426,12 +426,26 @@ void CPacketMgr::Process_packet()
 	}
 	break;
 
+	case SC_PACKET_UPDATE_MONEY:
+	{
+		sc_packet_leave* packet = reinterpret_cast<sc_packet_leave*>(m_packet_start);
+
+		Update_UserMoney(packet);
+	}
+	break;
+
 	default:
 #ifdef ERR_CHECK
 		printf("Unknown PACKET type [%d]\n", m_packet_start[1]);
 #endif 
 		break;
 	}
+}
+
+void CPacketMgr::Update_UserMoney(sc_packet_leave* packet)
+{
+	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+	pThisPlayer->Set_Money(packet->id);
 }
 
 void CPacketMgr::Update_Equipment(sc_packet_update_equipment* packet)
@@ -443,7 +457,8 @@ void CPacketMgr::Update_Equipment(sc_packet_update_equipment* packet)
 						  packet->mp, packet->maxMp,
 						  pThisPlayer->Get_Info()->m_iExp, pThisPlayer->Get_Info()->m_iMaxExp,
 						  packet->minAtt, packet->maxAtt,
-						  pThisPlayer->Get_Info()->m_fSpeed);
+						  pThisPlayer->Get_Info()->m_fSpeed,
+						  pThisPlayer->Get_Info()->m_iMoney);
 }
 
 void CPacketMgr::update_inventory(sc_packet_update_inventory* packet)
@@ -1026,7 +1041,7 @@ void CPacketMgr::Login_Player(sc_packet_login_ok* packet)
 
 	pGameObj->Set_OType(packet->o_type);
 	pGameObj->Set_ServerNumber(g_iSNum);
-	pGameObj->Set_Info(packet->level, packet->hp, packet->maxHp, packet->mp, packet->maxMp, packet->exp, packet->maxExp, packet->min_att, packet->max_att, packet->spd);
+	pGameObj->Set_Info(packet->level, packet->hp, packet->maxHp, packet->mp, packet->maxMp, packet->exp, packet->maxExp, packet->min_att, packet->max_att, packet->spd, packet->money);
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"ThisPlayer", pGameObj), E_FAIL);
 
 #ifdef ERR_CHECK
@@ -1130,7 +1145,7 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 		pInstance->Get_Transform()->m_vPos   = _vec3(packet->posX, packet->posY, packet->posZ);
 		pInstance->Set_ServerNumber(packet->id);
 		pInstance->Set_State(packet->animIdx);
-		pInstance->Set_Info(1, packet->Hp, packet->maxHp, 0, 0, 0, 0, packet->min_att, packet->max_att, packet->spd);
+		pInstance->Set_Info(1, packet->Hp, packet->maxHp, 0, 0, 0, 0, packet->min_att, packet->max_att, packet->spd, 0);
 		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"MONSTER", pInstance);
 	}
 }
