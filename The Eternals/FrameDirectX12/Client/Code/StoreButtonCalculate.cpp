@@ -2,6 +2,7 @@
 #include "StoreButtonCalculate.h"
 #include "DirectInput.h"
 #include "Font.h"
+#include "StoreMgr.h"
 
 CStoreButtonCalculate::CStoreButtonCalculate(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
@@ -71,6 +72,13 @@ _int CStoreButtonCalculate::LateUpdate_GameObject(const _float& fTimeDelta)
 		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
 		m_bIsKeyPressing)
 	{
+		vector<CStoreBuyListSlot*>	vecBuySlotList = CStoreMgr::Get_Instance()->Get_StoreBuySlotList();
+		vector<CStoreSellListSlot*> vecSellSlotList = CStoreMgr::Get_Instance()->Get_StoreSellSlotList();
+
+		CPacketMgr::Get_Instance()->send_deal_shop(vecBuySlotList, vecSellSlotList);
+
+		CStoreMgr::Get_Instance()->Reset_StoreItemBuySlotList();
+		CStoreMgr::Get_Instance()->Reset_StoreItemSellSlotList();
 	}
 
 	m_bIsKeyPressing = false;

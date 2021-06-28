@@ -32,6 +32,8 @@
 #include "GiantMonkey.h"
 #include "CraftyArachne.h"
 
+#include "StoreMgr.h"
+
 IMPLEMENT_SINGLETON(CPacketMgr)
 
 CPacketMgr::CPacketMgr()
@@ -1485,7 +1487,7 @@ void CPacketMgr::send_unequip_item(const char& chItemType, const char& chName)
 	send_packet(&p);
 }
 
-void CPacketMgr::send_deal_shop(const int& buyList, const int& sellList)
+void CPacketMgr::send_deal_shop(vector<CStoreBuyListSlot*>& buyList, vector<CStoreSellListSlot*>& sellList)
 {
 	cs_packet_shop p;
 
@@ -1493,13 +1495,16 @@ void CPacketMgr::send_deal_shop(const int& buyList, const int& sellList)
 	p.type = CS_SHOP;
 
 	// 리스트에서 대입 후 전송
-	p.buyItemType[0] = ItemType_WeaponTwoHand;
-	p.buyItemName[0] = TwoHand29_SM;
-	p.buyItemCount[0] = 1;
+	for (_int i = 0; i < SHOP_SLOT; ++i)
+	{
+		p.buyItemType[i]  = buyList[i]->Get_CurItemInfo().chItemType;
+		p.buyItemName[i]  = buyList[i]->Get_CurItemInfo().chItemName;
+		p.buyItemCount[i] = buyList[i]->Get_CurItemCnt();
 
-	p.sellItemType[0] = ItemType_Shoes;
-	p.sellItemName[0] = Shoes_C;
-	p.sellItemCount[0] = 1;
+		p.sellItemType[i]  = sellList[i]->Get_CurItemInfo().chItemType;
+		p.sellItemName[i]  = sellList[i]->Get_CurItemInfo().chItemName;
+		p.sellItemCount[i] = sellList[i]->Get_CurItemCnt();
+	}
 
 	send_packet(&p);
 }

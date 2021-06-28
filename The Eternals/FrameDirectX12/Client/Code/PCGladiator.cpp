@@ -1022,7 +1022,7 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 
 	if (Engine::KEY_DOWN(DIK_Z))
 	{	
-		//CPacketMgr::Get_Instance()->send_deal_shop(/*buyList, sellList*/);
+		// CPacketMgr::Get_Instance()->send_deal_shop(buyList, sellList);`
 	}
 
 	if (Engine::KEY_DOWN(DIK_0) && NO_EVENT_STATE)
