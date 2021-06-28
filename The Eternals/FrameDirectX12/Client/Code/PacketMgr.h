@@ -33,8 +33,6 @@ public:
 	void	Process_recv_reassembly(size_t iosize);
 	void	Process_packet();
 
-	void Reject_Party();
-
 public:
 	void	send_login();
 	void	send_move(const _vec3& vDir, const _vec3& vPos, const _int& iAniIdx);
@@ -56,6 +54,8 @@ public:
 	void	send_delete_item(const char& chItemType, const char& chName);		// 인벤토리 아이템 제거
 	void	send_equip_item(const char& chItemType, const char& chName);		// 장비 장착 
 	void	send_unequip_item(const char& chItemType, const char& chName);		// 장비 해체 
+	void	send_deal_shop(const int& buyList, const int& sellList);			// 상점 거래
+
 public:
 	bool	change_MoveKey(MVKEY eKey);
 
@@ -73,7 +73,10 @@ public:
 	void	Enter_PartyMember(sc_packet_enter_party* packet, bool& retflag);
 	void	Suggest_Party(sc_packet_suggest_party* packet);
 	void	Update_Party(sc_packet_update_party* packet);
+	void	Reject_Party();
 	void	Recv_Chat(sc_packet_chat* packet);
+	void	update_inventory(sc_packet_update_inventory* packet);
+	void	Update_Equipment(sc_packet_update_equipment* packet);
 
 	void	Enter_Monster(sc_packet_monster_enter* packet);
 	void	Move_Monster(sc_packet_move* packet);

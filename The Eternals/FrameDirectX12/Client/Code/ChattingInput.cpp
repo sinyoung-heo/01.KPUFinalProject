@@ -105,6 +105,11 @@ void CChattingInput::Render_GameObject(const _float& fTimeDelta)
 void CChattingInput::KeyInput_Chatting(const _float& fTimeDelta)
 {
 	if (!g_bIsActive) return;
+	if (g_bIsOpenShop)
+	{
+		g_bIsChattingInput = false;
+		return;
+	}
 
 	if (Engine::KEY_DOWN(DIK_ESCAPE))
 		g_bIsChattingInput = false;

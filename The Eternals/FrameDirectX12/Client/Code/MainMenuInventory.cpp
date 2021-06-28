@@ -65,7 +65,7 @@ _int CMainMenuInventory::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect) &&
 		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
-		m_bIsKeyPressing)
+		m_bIsKeyPressing && !g_bIsOpenShop)
 	{
 		m_bIsActiveCanvas = !m_bIsActiveCanvas;
 	}

@@ -61,10 +61,62 @@ void CDBMgr::Disconnect_DB()
 	SQLFreeHandle(SQL_HANDLE_ENV, m_henv);
 }
 
+HRESULT CDBMgr::Ready_GameItem(map<int, GAMEITEM>& mapGameItems)
+{
+	SQLINTEGER u_itemType, u_itemName, u_itemNumber, u_itemAtt, u_itemHP, u_itemMP, u_itemCost;
+
+	SQLLEN cbLen = 0;
+
+	/* 유효한 ID인지 검사하는 쿼리문 */
+	std::string str_order
+		= "SELECT * FROM GAME_ITEM";
+
+	std::wstring wsr_order = L"";
+	wsr_order.assign(str_order.begin(), str_order.end());
+
+	m_retcode = SQLExecDirect(m_hstmt, (SQLWCHAR*)wsr_order.c_str(), SQL_NTS);
+
+	// 데이터 처리 시작 - 유효한 ID일 경우
+	if (m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO)
+	{
+		/* Load Data on player info */
+		m_retcode = SQLBindCol(m_hstmt, 1, SQL_C_LONG, &u_itemNumber, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 2, SQL_C_LONG, &u_itemType, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 3, SQL_C_LONG, &u_itemName, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 4, SQL_C_LONG, &u_itemAtt, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 5, SQL_C_LONG, &u_itemHP, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 6, SQL_C_LONG, &u_itemMP, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 7, SQL_C_LONG, &u_itemCost, 100, &cbLen);
+
+		for (int i = 0; ; i++)
+		{
+			m_retcode = SQLFetch(m_hstmt);
+			if (m_retcode == SQL_ERROR || m_retcode == SQL_SUCCESS_WITH_INFO)
+				db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
+
+			/* player info를 올바르게 로드했다면 정보 저장 */
+			if (m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO)
+			{		
+				mapGameItems[u_itemNumber] = GAMEITEM(static_cast<char>(u_itemType), static_cast<char>(u_itemName), u_itemNumber, u_itemAtt, u_itemHP, u_itemMP, u_itemCost, 1);
+			}
+			else
+				break;
+		}
+		SQLCloseCursor(m_hstmt);
+		return S_OK;
+	}
+	else db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
+
+	SQLCloseCursor(m_hstmt);
+
+	return E_FAIL;
+}
+
 bool CDBMgr::Check_ID(int id, char* pw)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 	
+	SQLCHAR name[MAX_STR_LEN], password[MAX_STR_LEN];
 	SQLINTEGER u_type, u_level, u_Hp, u_maxHp, u_Exp, u_maxExp, u_Mp, u_maxMp, u_maxAtt, u_minAtt, u_money, u_StageID;
 	SQLFLOAT u_posX, u_posY, u_posZ;
 
@@ -88,21 +140,23 @@ bool CDBMgr::Check_ID(int id, char* pw)
 	if (m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO)
 	{
 		/* Load Data on player info */
-		m_retcode = SQLBindCol(m_hstmt, 3,	SQL_C_DOUBLE,	&u_posX,	100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 4,	SQL_C_DOUBLE,	&u_posY,	100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 5,	SQL_C_DOUBLE,	&u_posZ,	100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 6,	SQL_C_LONG,		&u_type,	100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 7,	SQL_C_LONG,		&u_level,	100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 8,	SQL_C_LONG,		&u_Hp,		100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 9,	SQL_C_LONG,		&u_maxHp,	100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 10, SQL_C_LONG,		&u_Exp,		100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 11, SQL_C_LONG,		&u_maxExp,	100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 12, SQL_C_LONG,		&u_Mp,		100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 13, SQL_C_LONG,		&u_maxMp,	100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 14, SQL_C_LONG,		&u_maxAtt,	100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 15, SQL_C_LONG,		&u_minAtt,	100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 16, SQL_C_LONG,		&u_money,	100, &cbLen);
-		m_retcode = SQLBindCol(m_hstmt, 17, SQL_C_LONG,		&u_StageID, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 1, SQL_C_CHAR, &name, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 2, SQL_C_CHAR, &password, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 3, SQL_C_DOUBLE, &u_posX, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 4, SQL_C_DOUBLE, &u_posY, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 5, SQL_C_DOUBLE, &u_posZ, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 6, SQL_C_LONG, &u_type, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 7, SQL_C_LONG, &u_level, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 8, SQL_C_LONG, &u_Hp, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 9, SQL_C_LONG, &u_maxHp, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 10, SQL_C_LONG, &u_Exp, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 11, SQL_C_LONG, &u_maxExp, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 12, SQL_C_LONG, &u_Mp, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 13, SQL_C_LONG, &u_maxMp, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 14, SQL_C_LONG, &u_maxAtt, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 15, SQL_C_LONG, &u_minAtt, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 16, SQL_C_LONG, &u_money, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 17, SQL_C_LONG, &u_StageID, 100, &cbLen);
 
 		for (int i = 0; ; i++)
 		{
@@ -230,8 +284,275 @@ void CDBMgr::Update_stat_DB(int id)
 	SQLCancel(m_hstmt);	
 }
 
-void CDBMgr::Update_move_DB(int id)
+bool CDBMgr::Load_Inventory(const int& id)
 {
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+
+	SQLINTEGER u_itemType, u_itemName, u_itemNumber, u_itemAtt, u_itemHP, u_itemMP, u_itemCost, u_itemCount;
+
+	SQLLEN cbLen = 0;
+
+	/* 유저의 인벤토리를 탐색하는 쿼리문 */
+	std::string str_order
+		= "SELECT ITEM.item_type,ITEM.item_name,ITEM.item_number,ITEM.item_att,ITEM.item_hp,ITEM.item_mp,ITEM.item_cost,INVEN.item_count\
+			FROM USER_INVENTORY AS INVEN\
+			JOIN GAME_ITEM AS ITEM\
+			ON INVEN.item_number = ITEM.item_number\
+			WHERE user_ID = '";
+
+	str_order += pPlayer->m_ID;
+	str_order += "'";
+
+	std::wstring wsr_order = L"";
+	wsr_order.assign(str_order.begin(), str_order.end());
+
+	m_retcode = SQLExecDirect(m_hstmt, (SQLWCHAR*)wsr_order.c_str(), SQL_NTS);
+
+	// 데이터 처리 시작 - 유효한 ID일 경우
+	if (m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO)
+	{
+		/* Load Data on player info */
+		m_retcode = SQLBindCol(m_hstmt, 1, SQL_C_LONG, &u_itemType, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 2, SQL_C_LONG, &u_itemName, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 3, SQL_C_LONG, &u_itemNumber, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 4, SQL_C_LONG, &u_itemAtt, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 5, SQL_C_LONG, &u_itemHP, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 6, SQL_C_LONG, &u_itemMP, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 7, SQL_C_LONG, &u_itemCost, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 8, SQL_C_LONG, &u_itemCount, 100, &cbLen);
+
+		for (int i = 0; ; i++)
+		{
+			m_retcode = SQLFetch(m_hstmt);
+			if (m_retcode == SQL_ERROR || m_retcode == SQL_SUCCESS_WITH_INFO)
+				db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
+
+			/* player info를 올바르게 로드했다면 정보 저장 */
+			if (m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO)
+			{
+				pPlayer->Load_InventoryFromDB(GAMEITEM(static_cast<char>(u_itemType),
+					static_cast<char>(u_itemName),
+					u_itemNumber,
+					u_itemAtt, u_itemHP, u_itemMP, u_itemCost,
+					u_itemCount),
+					u_itemNumber, u_itemCount);
+			}
+			else
+				break;
+		}
+
+		SQLCloseCursor(m_hstmt);
+		return true;
+	}
+	else db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
+
+	SQLCloseCursor(m_hstmt);
+
+	return false;
+}
+
+void CDBMgr::insert_Inventory(const int& id, const int& itemNumber, const int& itemCount)
+{
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+
+	// ID
+	string name{ "'" };
+	name += pPlayer->m_ID;
+	name += "'";
+
+	std::string str_order
+		= "EXEC insert_inventory " + name + ", "
+		+ to_string(itemNumber) + ", "
+		+ to_string(itemCount);
+
+	std::wstring wstr_order = L"";
+	wstr_order.assign(str_order.begin(), str_order.end());
+	m_retcode = SQLExecDirect(m_hstmt, (SQLWCHAR*)wstr_order.c_str(), SQL_NTS);
+
+	if (!(m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO))
+		db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
+
+#ifdef TEST
+	cout << "인벤토리 아이템 추가 완료" << endl;
+#endif // TEST
+
+	SQLCloseCursor(m_hstmt);
+	SQLCancel(m_hstmt);
+}
+
+void CDBMgr::update_Inventory(const int& id, const int& itemNumber, const int& itemCount)
+{
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+
+	// ID
+	string name{ "'" };
+	name += pPlayer->m_ID;
+	name += "'";
+
+	std::string str_order
+		= "EXEC update_inventory " + name + ", "
+		+ to_string(itemNumber) + ", "
+		+ to_string(itemCount);
+
+	std::wstring wstr_order = L"";
+	wstr_order.assign(str_order.begin(), str_order.end());
+	m_retcode = SQLExecDirect(m_hstmt, (SQLWCHAR*)wstr_order.c_str(), SQL_NTS);
+
+	if (!(m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO))
+		db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
+
+#ifdef TEST
+	cout << "인벤토리 저장 완료" << endl;
+#endif // TEST
+
+	SQLCloseCursor(m_hstmt);
+	SQLCancel(m_hstmt);
+}
+
+void CDBMgr::delete_Inventory(const int& id, const int& itemNumber)
+{
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+
+	// ID
+	string name{ "'" };
+	name += pPlayer->m_ID;
+	name += "'";
+
+	std::string str_order
+		= "EXEC delete_inventory " + name + ", "
+		+ to_string(itemNumber);
+
+	std::wstring wstr_order = L"";
+	wstr_order.assign(str_order.begin(), str_order.end());
+	m_retcode = SQLExecDirect(m_hstmt, (SQLWCHAR*)wstr_order.c_str(), SQL_NTS);
+
+	if (!(m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO))
+		db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
+
+#ifdef TEST
+	cout << "인벤토리 아이템 삭제 완료" << endl;
+#endif // TEST
+
+	SQLCloseCursor(m_hstmt);
+	SQLCancel(m_hstmt);
+}
+
+bool CDBMgr::Load_Equipment(const int& id)
+{
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+
+	SQLCHAR name[MAX_STR_LEN];
+	SQLINTEGER u_weapon, u_armor, u_helmet, u_shoes;
+
+	SQLLEN cbLen = 0;
+
+	/* 유효한 ID인지 검사하는 쿼리문 */
+	std::string str_order
+		= "SELECT * FROM USER_EQUIPMENT WHERE user_ID = '";
+
+	str_order += pPlayer->m_ID;
+	str_order += "'";
+
+	std::wstring wsr_order = L"";
+	wsr_order.assign(str_order.begin(), str_order.end());
+
+	m_retcode = SQLExecDirect(m_hstmt, (SQLWCHAR*)wsr_order.c_str(), SQL_NTS);
+
+	// 데이터 처리 시작 - 유효한 ID일 경우
+	if (m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO)
+	{
+		/* Load Data on player info */
+		m_retcode = SQLBindCol(m_hstmt, 1, SQL_C_CHAR, &name, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 2, SQL_C_LONG, &u_weapon, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 3, SQL_C_LONG, &u_armor, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 4, SQL_C_LONG, &u_helmet, 100, &cbLen);
+		m_retcode = SQLBindCol(m_hstmt, 5, SQL_C_LONG, &u_shoes, 100, &cbLen);
+
+		for (int i = 0; ; i++)
+		{
+			m_retcode = SQLFetch(m_hstmt);
+			if (m_retcode == SQL_ERROR || m_retcode == SQL_SUCCESS_WITH_INFO)
+				db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
+
+			/* player info를 올바르게 로드했다면 정보 저장 */
+			if (m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO)
+			{
+				pPlayer->Load_EquipmentFromDB(u_weapon, u_helmet, u_armor, u_shoes);
+
+				SQLCloseCursor(m_hstmt);
+				return true;
+			}
+			else
+				break;
+		}
+	}
+	else db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
+
+	SQLCloseCursor(m_hstmt);
+
+	return false;
+}
+
+void CDBMgr::ready_Equipment(const int& id)
+{
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+
+	// ID
+	string name{ "'" };
+	name += pPlayer->m_ID;
+	name += "'";
+
+	std::string str_order
+		= "EXEC ready_equipment " + name + ", "
+		+ to_string(-1) + ", "
+		+ to_string(-1) + ", "
+		+ to_string(-1) + ", "
+		+ to_string(-1);
+
+	std::wstring wstr_order = L"";
+	wstr_order.assign(str_order.begin(), str_order.end());
+	m_retcode = SQLExecDirect(m_hstmt, (SQLWCHAR*)wstr_order.c_str(), SQL_NTS);
+
+	if (!(m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO))
+		db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
+
+#ifdef TEST
+	cout << "인벤토리 저장 완료" << endl;
+#endif // TEST
+
+	SQLCloseCursor(m_hstmt);
+	SQLCancel(m_hstmt);
+}
+
+void CDBMgr::update_Equipment(const int& id)
+{
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+
+	// ID
+	string name{ "'" };
+	name += pPlayer->m_ID;
+	name += "'";
+
+	std::string str_order
+		= "EXEC update_equipment " + name + ", "
+		+ to_string(static_cast<int>(pPlayer->Get_All_Equipment().weapon)) + ", "
+		+ to_string(static_cast<int>(pPlayer->Get_All_Equipment().armor)) + ", "
+		+ to_string(static_cast<int>(pPlayer->Get_All_Equipment().helmet)) + ", "
+		+ to_string(static_cast<int>(pPlayer->Get_All_Equipment().shoes));
+
+	std::wstring wstr_order = L"";
+	wstr_order.assign(str_order.begin(), str_order.end());
+	m_retcode = SQLExecDirect(m_hstmt, (SQLWCHAR*)wstr_order.c_str(), SQL_NTS);
+
+	if (!(m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO))
+		db_show_error(m_hstmt, SQL_HANDLE_STMT, m_retcode);
+
+#ifdef TEST
+	cout << "인벤토리 저장 완료" << endl;
+#endif // TEST
+
+	SQLCloseCursor(m_hstmt);
+	SQLCancel(m_hstmt);
 }
 
 void CDBMgr::db_show_error(SQLHANDLE hHandle, SQLSMALLINT hType, RETCODE RetCode)

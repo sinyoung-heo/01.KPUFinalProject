@@ -22,6 +22,7 @@
     <ClCompile Include="..\Code\Cell.cpp" />
     <ClCompile Include="..\Code\CollisionMgr.cpp" />
     <ClCompile Include="..\Code\DBMgr.cpp" />
+    <ClCompile Include="..\Code\ItemMgr.cpp" />
     <ClCompile Include="..\Code\Line.cpp" />
     <ClCompile Include="..\Code\MainServer.cpp" />
     <ClCompile Include="..\Code\Monster.cpp" />
@@ -42,6 +43,7 @@
     <ClInclude Include="..\Code\Cell.h" />
     <ClInclude Include="..\Code\CollisionMgr.h" />
     <ClInclude Include="..\Code\DBMgr.h" />
+    <ClInclude Include="..\Code\ItemMgr.h" />
     <ClInclude Include="..\Code\Line.h" />
     <ClInclude Include="..\Code\Monster.h" />
     <ClInclude Include="..\Code\NaviMesh.h" />
@@ -56,6 +58,7 @@
     <ClInclude Include="..\Code\Sector.h" />
     <ClInclude Include="..\Code\SectorMgr.h" />
     <ClInclude Include="..\Code\Timer.h" />
+    <ClInclude Include="..\Header\item_Protocol.h" />
     <ClInclude Include="..\Header\MonsterAnimation.h" />
     <ClInclude Include="..\Header\dataType.h" />
     <ClInclude Include="..\Header\define.h" />

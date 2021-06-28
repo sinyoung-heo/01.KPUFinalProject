@@ -764,42 +764,6 @@ HRESULT CPCGladiator::SetUp_Equipment()
 
 	CInventoryEquipmentMgr::Get_Instance()->Set_ThisPlayerJob(m_chO_Type);
 
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Potion, Prtion_HP);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Potion, Prtion_HP);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Potion, Prtion_HP);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Potion, Prtion_MP);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Potion, Prtion_MP);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, Twohand19_A_SM);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, TwoHand27_SM);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, TwoHand29_SM);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, TwoHand31_SM);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponTwoHand, TwoHand33_B_SM);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponBow, Bow18_A_SM);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponBow, Bow27_SM);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponBow, Bow23_SM);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponBow, Bow31_SM);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponBow, Event_Season_Bow_01_SM);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponRod, Event_Wit_Rod_01);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponRod, Rod19_A);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponRod, Rod28_B);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponRod, Rod31);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_WeaponRod, Rod33_B);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Helmet, Helmet_D);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Helmet, Helmet_C);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Helmet, Helmet_B);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Helmet, Helmet_A);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Helmet, Helmet_S);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Armor, Armor_D);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Armor, Armor_C);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Armor, Armor_B);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Armor, Armor_A);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Armor, Armor_S);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_D);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_C);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_B);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_A);
-	CPacketMgr::Get_Instance()->send_add_item(ItemType_Shoes, Shoes_S);
-
 	return S_OK;
 }
 
@@ -1011,7 +975,7 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 		static_cast<CTextureEffect*>(pGameObj)->Set_FollowHand(true);
 		static_cast<CTextureEffect*>(pGameObj)->Follow_PlayerHand(pHierarchyDesc, m_pTransCom);
 		static_cast<CTextureEffect*>(pGameObj)->Set_IsLoop(false);
-		static_cast<CTextureEffect*>(pGameObj)->Set_ColorOffset(_vec4(0.7f,0.1f,0,0));
+		static_cast<CTextureEffect*>(pGameObj)->Set_ColorOffset(_vec4(0.7f,0.1f,0,0));	
 	}
 	else if (m_uiAnimIdx == Gladiator::DRAW_SWORD&& m_bisFireEffect == false)
 	{
@@ -1024,9 +988,10 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 	}
 	else if (m_uiAnimIdx == Gladiator::DRAW_SWORD_END)
 	{
+
 		m_bisSkillOffSet = 0.f;
 		m_bisFireEffect = false;
-		m_bisDustEffect = false;
+		m_bisDustEffect = false;	
 	}
 	if (m_uiAnimIdx == Gladiator::GAIA_CRUSH2 && m_bisIceEffect == false)
 	{
@@ -1054,6 +1019,11 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 
 	KeyInput_Move(fTimeDelta);
 	KeyInput_Attack(fTimeDelta);
+
+	if (Engine::KEY_DOWN(DIK_Z))
+	{	
+		//CPacketMgr::Get_Instance()->send_deal_shop(/*buyList, sellList*/);
+	}
 
 	if (Engine::KEY_DOWN(DIK_0) && NO_EVENT_STATE)
 	{
