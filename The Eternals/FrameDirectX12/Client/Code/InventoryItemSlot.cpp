@@ -332,7 +332,7 @@ void CInventoryItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 					}
 
 					pThisPlayer->Set_WeaponType(m_tCurItemInfo.chItemName);
-					CPacketMgr::Get_Instance()->send_equip_item(EQUIP_WEAPON, m_tCurItemInfo.chItemName);
+					CPacketMgr::Get_Instance()->send_equip_item(EQUIP_WEAPON, m_tCurItemInfo.chItemType, m_tCurItemInfo.chItemName);
 
 					return;
 				}
@@ -341,19 +341,19 @@ void CInventoryItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 				else if (ItemType_Helmet == m_tCurItemInfo.chItemType)
 				{
 					wsrEquipSlotTag = L"EquipmentHelmet";
-					CPacketMgr::Get_Instance()->send_equip_item(EQUIP_HELMET, m_tCurItemInfo.chItemName);
+					CPacketMgr::Get_Instance()->send_equip_item(EQUIP_HELMET, m_tCurItemInfo.chItemType, m_tCurItemInfo.chItemName);
 				}
 				// 갑옷 장착
 				else if (ItemType_Armor == m_tCurItemInfo.chItemType)
 				{
 					wsrEquipSlotTag = L"EquipmentArmor";
-					CPacketMgr::Get_Instance()->send_equip_item(EQUIP_ARMOR, m_tCurItemInfo.chItemName);
+					CPacketMgr::Get_Instance()->send_equip_item(EQUIP_ARMOR, m_tCurItemInfo.chItemType, m_tCurItemInfo.chItemName);
 				}
 				// 신발 장착
 				else if (ItemType_Shoes == m_tCurItemInfo.chItemType)
 				{
 					wsrEquipSlotTag = L"EquipmentShoes";
-					CPacketMgr::Get_Instance()->send_equip_item(EQUIP_SHOES, m_tCurItemInfo.chItemName);
+					CPacketMgr::Get_Instance()->send_equip_item(EQUIP_SHOES, m_tCurItemInfo.chItemType, m_tCurItemInfo.chItemName);
 				}
 
 				// 현재 장비창에 장비 착용 [X] :: 아이템 장착.

@@ -136,20 +136,20 @@ void CEquipmentItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 		if (nullptr != m_pInventoryItemSlot)
 		{
 			ITEM_INFO tItemInfo = m_pInventoryItemSlot->Get_CurItemInfo();
-			char chItemType = 0;
+			char chItemSlotType = 0;
 			if (ItemType_WeaponTwoHand == tItemInfo.chItemType ||
 				ItemType_WeaponBow == tItemInfo.chItemType ||
 				ItemType_WeaponRod == tItemInfo.chItemType)
-				chItemType = EQUIP_WEAPON;
+				chItemSlotType = EQUIP_WEAPON;
 			else if (ItemType_Helmet == tItemInfo.chItemType)
-				chItemType = EQUIP_HELMET;
+				chItemSlotType = EQUIP_HELMET;
 			else if (ItemType_Armor == tItemInfo.chItemType)
-				chItemType = EQUIP_ARMOR;
+				chItemSlotType = EQUIP_ARMOR;
 			else if (ItemType_Shoes == tItemInfo.chItemType)
-				chItemType = EQUIP_SHOES;
+				chItemSlotType = EQUIP_SHOES;
 
 
-			CPacketMgr::Get_Instance()->send_unequip_item(chItemType, tItemInfo.chItemType);
+			CPacketMgr::Get_Instance()->send_unequip_item(chItemSlotType, tItemInfo.chItemType, tItemInfo.chItemName);
 
 			m_pInventoryItemSlot->Set_IsOnEquipment(false);
 			m_pInventoryItemSlot->Set_EquipSlotTag(L"");

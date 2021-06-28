@@ -546,6 +546,7 @@ struct cs_packet_manage_inventory
 	unsigned char	size;
 	char			type;
 
+	char			itemSlotType;
 	char			itemType;
 	char			itemName;
 };

@@ -40,8 +40,8 @@ void process_disconnect(const int& id);
 void process_chat(const int& id, const char* buffer);
 void process_add_item(const int& id, const char& chItemType, const char& chName);
 void process_delete_item(const int& id, const char& chItemType, const char& chName);
-void process_equip_item(const int& id, const char& chItemType, const char& chName);
-void process_unequip_item(const int& id, const char& chItemType, const char& chName);
+void process_equip_item(const int& id, const char& chItemSlotType, const char& chItemType, const char& chName);
+void process_unequip_item(const int& id, const char& chItemSlotType, const char& chItemType, const char& chName);
 void process_shopping(const int& id, cs_packet_shop* p);
 
 /* 패킷 관리 및 처리 함수 */

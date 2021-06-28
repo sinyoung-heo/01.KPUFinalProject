@@ -54,8 +54,8 @@ public:
 	void	send_chat(const wchar_t* message);
 	void	send_add_item(const char& chItemType, const char& chName);			// 인벤토리 아이템 추가
 	void	send_delete_item(const char& chItemType, const char& chName);		// 인벤토리 아이템 제거
-	void	send_equip_item(const char& chItemType, const char& chName);		// 장비 장착 
-	void	send_unequip_item(const char& chItemType, const char& chName);		// 장비 해체 
+	void	send_equip_item(const char& chSlotType, const char& chItemType, const char& chName);		// 장비 장착 
+	void	send_unequip_item(const char& chSlotType, const char& chItemType, const char& chName);		// 장비 해체 
 	void	send_deal_shop(vector<CStoreBuyListSlot*>& buyList, vector<CStoreSellListSlot*>& sellList);	// 상점 거래
 
 public:

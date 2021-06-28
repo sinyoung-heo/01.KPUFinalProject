@@ -53,8 +53,6 @@ _int CMainMenuInventory::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
-	if (g_bIsOpenShop)
-		m_bIsActiveCanvas = false;
 
 	CGameUIRoot::Update_GameObject(fTimeDelta);
 
@@ -67,7 +65,7 @@ _int CMainMenuInventory::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect) &&
 		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
-		m_bIsKeyPressing && !g_bIsOpenShop)
+		m_bIsKeyPressing)
 	{
 		m_bIsActiveCanvas = !m_bIsActiveCanvas;
 	}

@@ -294,14 +294,14 @@ void process_packet(int id)
 	case CS_EQUIP_ITEM:
 	{
 		cs_packet_manage_inventory* p = reinterpret_cast<cs_packet_manage_inventory*>(pPlayer->m_packet_start);
-		process_equip_item(id, p->itemType, p->itemName);
+		process_equip_item(id, p->itemSlotType, p->itemType, p->itemName);
 	}
 	break;
 
 	case CS_UNEQUIP_ITEM:
 	{
 		cs_packet_manage_inventory* p = reinterpret_cast<cs_packet_manage_inventory*>(pPlayer->m_packet_start);
-		process_unequip_item(id, p->itemType, p->itemName);
+		process_unequip_item(id, p->itemSlotType, p->itemType, p->itemName);
 	}
 	break;
 
@@ -2012,13 +2012,13 @@ void process_delete_item(const int& id, const char& chItemType, const char& chNa
 	}
 }
 
-void process_equip_item(const int& id, const char& chItemType, const char& chName)
+void process_equip_item(const int& id, const char& chItemSlotType, const char& chItemType, const char& chName)
 {
 	CPlayer* pUser = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 	if (pUser == nullptr) return;
 	if (!pUser->m_bIsConnect) return;
 
-	int originItemNumber = CItemMgr::GetInstance()->Find_ItemNumber(chItemType, pUser->Get_Equipment(chItemType));
+	int originItemNumber = CItemMgr::GetInstance()->Find_ItemNumber(chItemType, pUser->Get_Equipment(chItemSlotType));
 	if (originItemNumber != -1)
 	{
 		pUser->m_iMaxAtt -= CItemMgr::GetInstance()->Get_Item(originItemNumber).iAtt;
@@ -2029,7 +2029,7 @@ void process_equip_item(const int& id, const char& chItemType, const char& chNam
 		pUser->m_iMaxMp  -= CItemMgr::GetInstance()->Get_Item(originItemNumber).iMp;
 	}
 
-	pUser->Equip_Item(chName, chItemType);
+	pUser->Equip_Item(chName, chItemSlotType);
 
 	// 능력치 적용
 	int itemNumber = CItemMgr::GetInstance()->Find_ItemNumber(chItemType, chName);
@@ -2040,16 +2040,16 @@ void process_equip_item(const int& id, const char& chItemType, const char& chNam
 	pUser->m_iMp		+= CItemMgr::GetInstance()->Get_Item(itemNumber).iMp;
 	pUser->m_iMaxMp		+= CItemMgr::GetInstance()->Get_Item(itemNumber).iMp;
 
-	send_update_equipment(id, chItemType, true);
+	send_update_equipment(id, chItemSlotType, true);
 }
 
-void process_unequip_item(const int& id, const char& chItemType, const char& chName)
+void process_unequip_item(const int& id, const char& chItemSlotType, const char& chItemType, const char& chName)
 {
 	CPlayer* pUser = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 	if (pUser == nullptr) return;
 	if (!pUser->m_bIsConnect) return;
 
-	pUser->Unequip_Item(chName, chItemType);
+	pUser->Unequip_Item(chName, chItemSlotType);
 
 	// 능력치 적용
 	int itemNumber = CItemMgr::GetInstance()->Find_ItemNumber(chItemType, chName);
@@ -2060,7 +2060,7 @@ void process_unequip_item(const int& id, const char& chItemType, const char& chN
 	pUser->m_iMp		-= CItemMgr::GetInstance()->Get_Item(itemNumber).iMp;
 	pUser->m_iMaxMp		-= CItemMgr::GetInstance()->Get_Item(itemNumber).iMp;
 
-	send_update_equipment(id, chItemType, false);
+	send_update_equipment(id, chItemSlotType, false);
 }
 
 void process_shopping(const int& id, cs_packet_shop* p)
@@ -2118,11 +2118,28 @@ void process_shopping(const int& id, cs_packet_shop* p)
 		{
 			pUser->m_iMoney -= item.iCost * p->buyItemCount[i];
 
+			/*if (itemNumber == 30 || itemNumber == 31)
+			{
+				send_update_inventory(id,
+					p->buyItemType[i],
+					p->buyItemName[i],
+					pUser->Get_ItemCount(itemNumber, static_cast<ITEM>(p->buyItemType[i])),
+					true);
+			}
+			else if (itemNumber != 30 && itemNumber != 31)
+			{
+				send_update_inventory(id,
+					p->buyItemType[i],
+					p->buyItemName[i],
+					p->buyItemCount[i],
+					true);
+			}*/
+		
 			send_update_inventory(id,
-								  p->buyItemType[i],
-								  p->buyItemName[i],
-								  1/*pUser->Get_ItemCount(itemNumber, static_cast<ITEM>(p->buyItemType[i]))*/,
-								  true);
+				p->buyItemType[i],
+				p->buyItemName[i],
+				p->buyItemCount[i],
+				true);
 		}	
 	}
 

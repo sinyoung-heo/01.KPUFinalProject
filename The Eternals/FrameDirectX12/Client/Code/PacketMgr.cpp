@@ -1476,28 +1476,30 @@ void CPacketMgr::send_delete_item(const char& chItemType, const char& chName)
 	send_packet(&p);
 }
 
-void CPacketMgr::send_equip_item(const char& chItemType, const char& chName)
+void CPacketMgr::send_equip_item(const char& chSlotType, const char& chItemType, const char& chName)
 {
 	cs_packet_manage_inventory p;
 
-	p.size = sizeof(p);
-	p.type = CS_EQUIP_ITEM;
+	p.size			= sizeof(p);
+	p.type			= CS_EQUIP_ITEM;
 
-	p.itemType = chItemType;
-	p.itemName = chName;
+	p.itemSlotType	= chSlotType;
+	p.itemType		= chItemType;
+	p.itemName		= chName;
 
 	send_packet(&p);
 }
 
-void CPacketMgr::send_unequip_item(const char& chItemType, const char& chName)
+void CPacketMgr::send_unequip_item(const char& chSlotType, const char& chItemType, const char& chName)
 {
 	cs_packet_manage_inventory p;
 
-	p.size = sizeof(p);
-	p.type = CS_UNEQUIP_ITEM;
+	p.size			= sizeof(p);
+	p.type			= CS_UNEQUIP_ITEM;
 
-	p.itemType = chItemType;
-	p.itemName = chName;
+	p.itemSlotType	= chSlotType;
+	p.itemType		= chItemType;
+	p.itemName		= chName;
 
 	send_packet(&p);
 }
