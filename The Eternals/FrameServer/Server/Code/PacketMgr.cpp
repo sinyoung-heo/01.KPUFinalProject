@@ -305,6 +305,22 @@ void process_packet(int id)
 	}
 	break;
 
+	case CS_SHOP:
+	{
+		cs_packet_shop* p = reinterpret_cast<cs_packet_shop*>(pPlayer->m_packet_start);
+		for (int i = 0; i < SHOP_SLOT; ++i)
+		{
+			cout << "구매" << endl;
+			cout << (int)p->buyItemType[i] << (int)p->buyItemName[i] << (int)p->buyItemCount[i] << endl;
+		}
+		for (int i = 0; i < SHOP_SLOT; ++i)
+		{
+			cout << "판매" << endl;
+			cout << (int)p->sellItemType[i] << (int)p->sellItemName[i] << (int)p->sellItemCount[i] << endl;
+		}
+	}
+	break;
+
 	}
 }
 /* ========================패킷 재조립========================*/

@@ -77,6 +77,7 @@ constexpr char CS_ADD_ITEM				= 16;	// 아이템 획득
 constexpr char CS_DELETE_ITEM			= 17;	// 아이템 제거
 constexpr char CS_EQUIP_ITEM			= 18;	// 장비 장착
 constexpr char CS_UNEQUIP_ITEM			= 19;	// 장비 해체
+constexpr char CS_SHOP					= 20;	// 상점에서 아이템 거래
 
 // Stage ID
 constexpr char STAGE_VELIKA				= 0;
@@ -149,6 +150,9 @@ constexpr char EQUIP_ARMOR				= 1;
 constexpr char EQUIP_HELMET				= 2;
 constexpr char EQUIP_SHOES				= 3;
 constexpr char EQUIP_END				= 4;
+
+/* SHOP */
+constexpr int  SHOP_SLOT					= 12;
 
 /* ___________________________________________________________________________________________________________________*/
 /*													SERVER -> CLIENT												  */
@@ -542,6 +546,20 @@ struct cs_packet_manage_inventory
 
 	char			itemType;
 	char			itemName;
+};
+
+struct cs_packet_shop
+{
+	unsigned char	size;
+	char			type;
+
+	char			buyItemType[SHOP_SLOT];
+	char			buyItemName[SHOP_SLOT];
+	char			buyItemCount[SHOP_SLOT];
+
+	char			sellItemType[SHOP_SLOT];
+	char			sellItemName[SHOP_SLOT];
+	char			sellItemCount[SHOP_SLOT];
 };
 
 #pragma pack (pop)
