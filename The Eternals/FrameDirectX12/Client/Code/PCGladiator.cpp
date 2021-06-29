@@ -1028,7 +1028,6 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 		CEffectMgr::Get_Instance()->Effect_Test(m_pTransCom->m_vPos);
 		/*Engine::CGameObject* pWarningFrame = m_pObjectMgr->Get_GameObject(L"Layer_UI", L"WarningFrame");
 		static_cast<CWarningFrame*>(pWarningFrame)->Set_IsRender(true);*/
->
 
 	/*	Engine::CGameObject* pGameObj = nullptr;
 		for (int i = 0; i < 36; i++)
