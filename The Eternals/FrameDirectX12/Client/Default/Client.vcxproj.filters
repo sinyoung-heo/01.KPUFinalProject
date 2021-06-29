@@ -907,7 +907,6 @@
     <ClInclude Include="..\Code\NPCMiniMap.h">
       <Filter>02.GameObject\99.GameUI\03.NPCMiniMap</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\SwordEffect.h" />
     <ClInclude Include="..\Code\WarningFrame.h">
       <Filter>02.GameObject\99.GameUI\04.WarningFrame</Filter>
     </ClInclude>
@@ -1016,9 +1015,10 @@
     <ClInclude Include="..\Code\MagicCircleGlow.h">
       <Filter>02.GameObject\98.GameEffect\99.PublicEffect</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\QuickSlotMgr.h">
+    <ClInclude Include="..\Code\SwordEffect.h">
       <Filter>02.GameObject\98.GameEffect\13.SwordEffect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\QuickSlotMgr.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1379,7 +1379,6 @@
     <ClCompile Include="..\Code\NPCMiniMap.cpp">
       <Filter>02.GameObject\99.GameUI\03.NPCMiniMap</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\SwordEffect.cpp" />
     <ClCompile Include="..\Code\WarningFrame.cpp">
       <Filter>02.GameObject\99.GameUI\04.WarningFrame</Filter>
     </ClCompile>
@@ -1485,6 +1484,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\MagicCircleGlow.cpp">
       <Filter>02.GameObject\98.GameEffect\99.PublicEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\SwordEffect.cpp">
+      <Filter>02.GameObject\98.GameEffect\13.SwordEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
