@@ -72,7 +72,8 @@ struct VS_OUT
 	float4 ProjPos		: TEXCOORD5;
 	float4 LightPos		: TEXCOORD6;
     float4 WorldPos		: TEXCOORD7;
-    float2 AniUV		: TEXCOORD8;
+    float2 AniUV		: TEXCOORD8;  
+    float3 WorldNormal : TEXCOORD9;
 };
 
 // PS_MAIN
@@ -84,6 +85,19 @@ struct PS_OUT
     float4 Effect3 : SV_TARGET3; // 
     float4 Effect4 : SV_TARGET4; // 
 };
+
+float2 rotateUV(float2 uv, float degrees)
+{
+    const float Deg2Rad = (3.14 * 2.0) / 360.0; //1도의 라디안값을 구한다
+    float rotationRadians = degrees * Deg2Rad; //원하는 각도(디그리)의 라디안 값을 구한다
+    float s = sin(rotationRadians);
+    float c = cos(rotationRadians);
+    float2x2 rotationMatrix = float2x2(c, -s, s, c); //회전 2차원 행렬을 만든다
+    uv -= 0.5; //중심축을 이동시켜 가운데로 만들고
+    uv = mul(rotationMatrix, uv); //회전한 다음에
+    uv += 0.5; //다시 중심축 이동시켜 제자리로 만든다
+    return uv;
+}
 
 /*__________________________________________________________________________________________________________
 [ 그림자 (X) ]
@@ -98,6 +112,10 @@ VS_OUT VS_MAIN(VS_IN vs_input)
     vs_output.Pos = mul(float4(vs_input.Pos, 1.0f), matWVP);
     vs_output.TexUV = vs_input.TexUV;
     vs_output.Normal = vs_input.Normal;
+    
+    vs_output.AniUV = vs_input.TexUV + float2(0, -g_fOffset1 *0.3f);
+    vs_output.WorldPos = mul(float4(vs_input.Pos, 1.f), g_matWorld);
+    vs_output.WorldNormal = normalize(mul(vs_input.Normal, (float3x3) g_matWorld));
     return (vs_output);
 }
 VS_OUT VS_ANIUV(VS_IN vs_input)
@@ -113,10 +131,31 @@ VS_OUT VS_ANIUV(VS_IN vs_input)
     vs_output.Normal = vs_input.Normal;
 
     
-    vs_output.AniUV = vs_input.TexUV + float2(g_fOffset1, -g_fOffset1);
+    vs_output.AniUV = vs_input.TexUV + float2(g_fOffset1, -g_fOffset1 * 0.3f);
     return (vs_output);
 }
 
+
+PS_OUT PS_MAGIC_CIRCLE_RGB(VS_OUT ps_input) : SV_TARGET
+{
+    PS_OUT ps_output = (PS_OUT) 0;
+    clip(0.5f-distance(ps_input.TexUV, float2(0.5f, 0.5f)));
+    float4 DR = g_TexDiffuse.Sample(g_samLinearWrap, rotateUV(ps_input.TexUV,g_fOffset3*0.25)).r; 
+    float4 DG = g_TexDiffuse.Sample(g_samLinearWrap, rotateUV(ps_input.TexUV, g_fOffset3*0.5)).g;
+    float4 DB = g_TexDiffuse.Sample(g_samLinearWrap, rotateUV(ps_input.TexUV, g_fOffset3)).b;
+    float4 N = g_TexNormal.Sample(g_samLinearWrap, rotateUV(ps_input.TexUV, g_fOffset3));
+    float4 S = g_TexSpecular.Sample(g_samLinearWrap, rotateUV(ps_input.TexUV, g_fOffset3));
+    DR = mul(DR, N);
+    DG = mul(DG, N);
+    DB = mul(DB, N); 
+    DR.a =  g_fOffset1-0.3f;
+    DG.a =  g_fOffset1;
+    DB.a =  g_fOffset1 - 0.2f;
+    float4 color = DR+DG+DB;
+    ps_output.Effect2 = color;
+    ps_output.Effect2.a = 0.5f;
+    return ps_output;
+}
 PS_OUT PS_MAGIC_CIRCLE(VS_OUT ps_input) : SV_TARGET
 {
     PS_OUT ps_output = (PS_OUT) 0;
@@ -127,7 +166,7 @@ PS_OUT PS_MAGIC_CIRCLE(VS_OUT ps_input) : SV_TARGET
     float4 color = lerp(lerp(Diffuse, Spec, 0.5), TexNormal, 0.5);
     color += mul(Diffuse,0.5f);
     ps_output.Effect2 = color;
-  
+    ps_output.Effect2.a = 0.5f;
     return ps_output;
 }
 
@@ -143,17 +182,36 @@ PS_OUT PS_RAINDROP(VS_OUT ps_input) : SV_TARGET
     return (ps_output);
 }
 
+
 PS_OUT PS_EFFECT_SHPERE(VS_OUT ps_input) : SV_TARGET
 {
     PS_OUT ps_output = (PS_OUT) 0;
-	
-    //float u = (ps_input.TexUV.x / g_vEmissiveColor.x) + g_vEmissiveColor.z * (1.0f / g_vEmissiveColor.x);
-    //float v = (ps_input.TexUV.y / g_vEmissiveColor.y) + g_vEmissiveColor.w * (1.0f / g_vEmissiveColor.y);
-   // float2 TexUV = float2((u + g_fOffset1*0.002f),( v + g_fOffset1*0.0005f));
-   // TexUV.x *= 2.f;
-    float2 TexUV = float2(ps_input.TexUV.x, ps_input.TexUV.y);
-    clip(ps_input.TexUV.y + g_fOffset1);
-    ps_output.Effect1 = g_TexDiffuse.Sample(g_samLinearWrap, TexUV);
+    float4 ViewDir = normalize(g_vCameraPos - ps_input.WorldPos);
+    float Lim = saturate(dot(ViewDir, float4(ps_input.WorldNormal, 1)));
+    float4 N = g_TexNormal.Sample(g_samLinearWrap, ps_input.AniUV );
+    float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV * 3);
+    float4 Dis = g_TexDissolve.Sample(g_samLinearWrap, ps_input.AniUV);
+    float4 Sha = g_TexShadowDepth.Sample(g_samLinearWrap, ps_input.TexUV * 3); //꽉찬그리드
+    float4 GridColor = mul(float4(0.3, 0.3, 0.7f, 1), S.r)  + mul(float4(0.7, 0.3, 0.7f, 1), Sha.r)* 2;
+   // clip(ps_input.TexUV.y + g_fOffset1);
+    float4 color =N+ mul(GridColor, Dis.r)*2 + mul(mul(float4(0.0, 0.3, 1, 0.5), g_fDissolve), 1 - Lim);
+    ps_output.Effect2.rgba = color; //color.rgba; // +mul(float4(0.3, 0.4, 0.8, 1), Sha.r);
+    ps_output.Effect2.a = 0.5f;
+    return (ps_output);
+}
+PS_OUT PS_EFFECT_SHPERE_RED(VS_OUT ps_input) : SV_TARGET
+{
+    PS_OUT ps_output = (PS_OUT) 0;
+    float4 ViewDir = normalize(g_vCameraPos - ps_input.WorldPos);
+    float Lim = saturate(dot(ViewDir, float4(ps_input.WorldNormal, 1)));
+    float4 N = g_TexNormal.Sample(g_samLinearWrap, ps_input.AniUV);
+    float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV * 3);
+    float4 Dis = g_TexDissolve.Sample(g_samLinearWrap, ps_input.AniUV);
+    float4 Sha = g_TexShadowDepth.Sample(g_samLinearWrap, ps_input.TexUV * 3); //꽉찬그리드
+    float4 GridColor = mul(float4(0.0, 0.3, 0.3f, 1), S.r) + mul(float4(0.0, 0.0, 0.7f, 1), Sha.r) * 2;
+    float4 color = N + mul(GridColor, Dis.r) * 2 + mul(mul(float4(0.7, 0.3, 0, 0.5), g_fDissolve), 1 - Lim);
+    ps_output.Effect2.rgba = color; //color.rgba; // +mul(float4(0.3, 0.4, 0.8, 1), Sha.r);
+    ps_output.Effect2.a = 0.5f;
     return (ps_output);
 }
 PS_OUT PS_ICESTORM(VS_OUT ps_input) : SV_TARGET
@@ -193,8 +251,8 @@ PS_OUT PS_DECAL(VS_OUT ps_input) : SV_TARGET
     float4 N = g_TexNormal.Sample(g_samLinearWrap, NewUV *2);
     float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 color = mul(D.r, N) + mul(D.g, float4(0.6 + g_fOffset2, g_fOffset2, 0, 1)) + mul(D.b, float4(1.f, 0.5, 0.5, 1));
-    ps_output.Effect4 = color;
-    ps_output.Effect4.a = 1;
+    ps_output.Effect2 = color;
+    ps_output.Effect2.a = 1;
     return (ps_output);
 }
 PS_OUT PS_ICEDECAL(VS_OUT ps_input) : SV_TARGET
@@ -209,20 +267,18 @@ PS_OUT PS_ICEDECAL(VS_OUT ps_input) : SV_TARGET
     float4 N = g_TexNormal.Sample(g_samLinearWrap, NewUV * 2);
     float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 color = mul(D.r, N) + mul(D.g, float4(0, g_fOffset2, 0.6 + g_fOffset2, 1)) + mul(D.b, float4(0.5, 0.5, 1, 1));
-    ps_output.Effect4 = color;
-    ps_output.Effect4.a = g_fOffset6;
+    ps_output.Effect2 = color;
+    ps_output.Effect2.a = g_fOffset6;
     return (ps_output);
 }
 PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 {
     PS_OUT ps_output = (PS_OUT) 0;
-	
     float4 D = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 N = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
-   
     ps_output.Effect3 = D;
-    ps_output.Effect3.a = g_fOffset1;
+    ps_output.Effect3.a = 0.5f;
     return (ps_output);
 }
 
@@ -250,7 +306,7 @@ PS_OUT PS_MAIN_SPRITE(VS_OUT ps_input) : SV_TARGET
   
     float u = (ps_input.AniUV.x / g_vAfterImgColor.x) + g_vAfterImgColor.y * (1.0f / g_vAfterImgColor.x);
     float v = (ps_input.AniUV.y / g_vAfterImgColor.z) + g_vAfterImgColor.w * (1.0f / g_vAfterImgColor.z);
-	
+
     float4 D = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV * g_fOffset5);
     D += g_vEmissiveColor;
     float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
@@ -266,7 +322,6 @@ PS_OUT PS_MAIN_SPRITE(VS_OUT ps_input) : SV_TARGET
    
     ps_output.Effect4 = mul(mul(S, D.r), 3.f);
     ps_output.Effect4.a = 1.f - g_fOffset6;
-    //}
     return (ps_output);
 }
 PS_OUT PS_MAIN_SPRITE2(VS_OUT ps_input) : SV_TARGET
@@ -275,10 +330,7 @@ PS_OUT PS_MAIN_SPRITE2(VS_OUT ps_input) : SV_TARGET
     float u = (ps_input.TexUV.x / g_vAfterImgColor.x) + g_vAfterImgColor.y * (1.0f / g_vAfterImgColor.x);
     float v = (ps_input.TexUV.y / g_vAfterImgColor.z) + g_vAfterImgColor.w * (1.0f / g_vAfterImgColor.z);
     float4 D = g_TexDiffuse.Sample(g_samLinearWrap, float2(u , v));
- 
-    
     ps_output.Effect3 = mul(D, 2.f);
     ps_output.Effect3.a = 1.f - g_fOffset6;
-    //}
     return (ps_output);
 }

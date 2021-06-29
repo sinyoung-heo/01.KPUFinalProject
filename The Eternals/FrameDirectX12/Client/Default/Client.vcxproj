@@ -200,6 +200,7 @@
     <ClInclude Include="..\Code\GiantBeetle.h" />
     <ClInclude Include="..\Code\GiantMonkey.h" />
     <ClInclude Include="..\Code\Glowring.h" />
+    <ClInclude Include="..\Code\GridShieldEffect.h" />
     <ClInclude Include="..\Code\IceDecal.h" />
     <ClInclude Include="..\Code\IceStorm.h" />
     <ClInclude Include="..\Code\IceStorm_s.h" />
@@ -219,6 +220,7 @@
     <ClInclude Include="..\Code\LogoutButtonChoice.h" />
     <ClInclude Include="..\Code\LogoutButtonClose.h" />
     <ClInclude Include="..\Code\MagicCircle.h" />
+    <ClInclude Include="..\Code\MagicCircleGlow.h" />
     <ClInclude Include="..\Code\MainMenuLogoutCanvas.h" />
     <ClInclude Include="..\Code\MainMenuSettingCanvas.h" />
     <ClInclude Include="..\Code\Monkey.h" />
@@ -226,6 +228,7 @@
     <ClInclude Include="..\Code\NPCMiniMap.h" />
     <ClInclude Include="..\Code\NPC_Assistant.h" />
     <ClInclude Include="..\Code\NPC_Quest.h" />
+    <ClInclude Include="..\Code\ParticleEffect.h" />
     <ClInclude Include="..\Code\PartyInfoListCanvas.h" />
     <ClInclude Include="..\Code\PartyLeaveButton.h" />
     <ClInclude Include="..\Code\PartySuggestButton.h" />
@@ -368,6 +371,7 @@
     <ClCompile Include="..\Code\GiantBeetle.cpp" />
     <ClCompile Include="..\Code\GiantMonkey.cpp" />
     <ClCompile Include="..\Code\Glowring.cpp" />
+    <ClCompile Include="..\Code\GridShieldEffect.cpp" />
     <ClCompile Include="..\Code\IceDecal.cpp" />
     <ClCompile Include="..\Code\IceStorm.cpp" />
     <ClCompile Include="..\Code\IceStorm_s.cpp" />
@@ -387,6 +391,7 @@
     <ClCompile Include="..\Code\LogoutButtonChoice.cpp" />
     <ClCompile Include="..\Code\LogoutButtonClose.cpp" />
     <ClCompile Include="..\Code\MagicCircle.cpp" />
+    <ClCompile Include="..\Code\MagicCircleGlow.cpp" />
     <ClCompile Include="..\Code\MainMenuEquipment.cpp" />
     <ClCompile Include="..\Code\MainMenuInventory.cpp" />
     <ClCompile Include="..\Code\MainMenuLogout.cpp" />
@@ -414,6 +419,7 @@
     <ClCompile Include="..\Code\NPC_Merchant.cpp" />
     <ClCompile Include="..\Code\NPC_Stander.cpp" />
     <ClCompile Include="..\Code\PacketMgr.cpp" />
+    <ClCompile Include="..\Code\ParticleEffect.cpp" />
     <ClCompile Include="..\Code\PartyInfoListCanvas.cpp" />
     <ClCompile Include="..\Code\PartyLeaveButton.cpp" />
     <ClCompile Include="..\Code\PartySuggestButton.cpp" />

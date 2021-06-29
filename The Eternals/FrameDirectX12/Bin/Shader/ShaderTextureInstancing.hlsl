@@ -31,6 +31,11 @@ typedef struct tagShaderTexture
 	float		fOffset1;
 	float		fOffset2;
 	float		fOffset3;
+    float4		vecColor;
+    float4		vecOffSet1;
+    float4		vecOffSet2;
+    float4		vecOffSet3;
+    float4		vecOffSet4;
 	
 } SHADER_TEXTURE;
 StructuredBuffer<SHADER_TEXTURE> g_ShaderTexture : register(t0, space1);

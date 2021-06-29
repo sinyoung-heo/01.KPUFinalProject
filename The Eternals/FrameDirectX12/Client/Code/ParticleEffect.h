@@ -9,11 +9,12 @@ namespace Engine
 	class CShaderTexture;
 }
 
-class CSnowParticle : public Engine::CGameObject
+#define PARTICLECNT 20
+class CParticleEffect : public Engine::CGameObject
 {
 private:
-	explicit CSnowParticle(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CSnowParticle() = default;
+	explicit CParticleEffect(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CParticleEffect() = default;
 
 public:
 	// CGameObject을(를) 통해 상속됨
@@ -30,17 +31,17 @@ public:
 	void Set_Speed(float fSpeed) { m_fSpeed = fSpeed; }
 private:
 	virtual HRESULT Add_Component(wstring wstrTextureTag);
-	void			Set_ConstantTable();
+	void			Set_ConstantTable(int i);
 	void			Update_SpriteFrame(const _float& fTimeDelta);
 
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
 	____________________________________________________________________________________________________________*/
-	Engine::CRcTex* m_pBufferCom = nullptr;
+	Engine::CRcTex* m_pBufferCom[PARTICLECNT] ;
 	Engine::CTexture* m_pTextureCom = nullptr;
-	Engine::CShaderTexture* m_pShaderCom = nullptr;
-
+	Engine::CShaderTexture* m_pShaderCom[PARTICLECNT] ;
+	_vec3 TempPos[PARTICLECNT];
 	wstring m_strTextag = L"";
 	/*__________________________________________________________________________________________________________
 	[ Value ]
@@ -49,13 +50,11 @@ private:
 	_uint	m_uiTexIdx = 0;
 
 	FRAME	m_tFrame{ };
-	_vec3 m_vecRandomvector;
+	_vec3 m_vecRandomvector[20];
 	float m_fAlpha = 1.f;
 	float m_fSpeed = 0.8f;
 	bool m_bisPivot;
 	_int m_Pipeline = 0;
-
-	float m_fDegree = 0.f;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 		ID3D12GraphicsCommandList* pCommandList,

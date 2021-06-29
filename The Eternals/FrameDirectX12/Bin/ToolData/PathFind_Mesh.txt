@@ -50,8 +50,10 @@ PublicCone00|PublicCone00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\Pu
 PublicCylinder00|PublicCylinder00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicCylinder00\
 PublicCylinder01|PublicCylinder01.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicCylinder01\
 PublicCylinder02|PublicCylinder02.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicCylinder02\
+PublicCylinder03|PublicCylinder03.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicCylinder03\
 PublicLight00|PublicLight00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicLight00\
 PublicPlane00|PublicPlane00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicPlane00\
+PublicSphere00|PublicSphere00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicSphere00\
 PublicTesselPlane00|PublicTesselPlane00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicTesselPlane00\
 PublicTornado00|PublicTornado00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicTornado00\
 PublicTornado01|PublicTornado01.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicTornado01\

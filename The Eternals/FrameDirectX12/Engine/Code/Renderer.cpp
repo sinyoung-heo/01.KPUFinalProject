@@ -559,11 +559,11 @@ void CRenderer::Render_AddEffect()
 		m_bisSetAddEffectTexture = true;
 		vector<ComPtr<ID3D12Resource>> vecEffectTarget = m_pTargetpEffect->Get_TargetTexture();
 		vector<ComPtr<ID3D12Resource>> vecAddEffectTarget;
-		vecAddEffectTarget.emplace_back(vecEffectTarget[0]);	// RenderTarget - Normal
-		vecAddEffectTarget.emplace_back(vecEffectTarget[1]);	// RenderTarget - Depth
-		vecAddEffectTarget.emplace_back(vecEffectTarget[2]);	// RenderTarget - Normal
-		vecAddEffectTarget.emplace_back(vecEffectTarget[3]);	// RenderTarget - Depth
-		vecAddEffectTarget.emplace_back(vecEffectTarget[4]);	// RenderTarget - Normal
+		vecAddEffectTarget.emplace_back(vecEffectTarget[0]);
+		vecAddEffectTarget.emplace_back(vecEffectTarget[1]);
+		vecAddEffectTarget.emplace_back(vecEffectTarget[2]);
+		vecAddEffectTarget.emplace_back(vecEffectTarget[3]);
+		vecAddEffectTarget.emplace_back(vecEffectTarget[4]);
 		vecAddEffectTarget.emplace_back(m_pTargetEffectTex->Get_TargetTexture()[0]);	// RenderTarget - Normal
 		m_pAddEffectShader->SetUp_ShaderTexture(vecAddEffectTarget);
 	}

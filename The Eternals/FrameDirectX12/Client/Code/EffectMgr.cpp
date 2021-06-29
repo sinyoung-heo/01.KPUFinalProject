@@ -10,7 +10,11 @@
 #include "FireRing.h"
 #include "TextureEffect.h"
 #include "MagicCircle.h"
-
+#include "ParticleEffect.h"
+#include "PublicSphere.h"
+#include "PublicPlane.h"
+#include "MagicCircleGlow.h"
+#include "GridShieldEffect.h"
 IMPLEMENT_SINGLETON(CEffectMgr)
 
 CEffectMgr::CEffectMgr()
@@ -46,7 +50,6 @@ void CEffectMgr::Effect_IceStorm(_vec3 vecPos , int Cnt , float Radius )
 {
 	for (int i = 0; i < 36; i+=(36/Cnt))
 	{
-		
 			pGameObj = CIceStorm::Create(m_pGraphicDevice, m_pCommandList,
 				L"IceStorm1",
 				_vec3(0.f),
@@ -131,14 +134,20 @@ void CEffectMgr::Effect_FireCone(_vec3 vecPos, float RotY , _vec3 vecDir)
 	);
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicCone00", pGameObj), E_FAIL);
 
-	pGameObj = CFrameMesh::Create(m_pGraphicDevice, m_pCommandList,
-		L"PublicCylinder02",
-		_vec3(0.015f, 20.5, 0.015),
-		_vec3(-0.f, RotY, -0.f),
-		vecPos//Pos
-		, FRAME(8, 8, 128)
-	);
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicCylinder01", pGameObj), E_FAIL);
+	for (int i = 0; i < 5; i++)
+	{
+		_vec3 newPos = vecPos;
+		newPos.y = 0.75 * i;
+		pGameObj = CFrameMesh::Create(m_pGraphicDevice, m_pCommandList,
+			L"PublicCylinder02",
+			_vec3(0.015f, 20.5, 0.015),
+			_vec3(-0.f, RotY + 60 * i , -0.f),
+			newPos//Pos
+			, FRAME(8, 8, 128)
+		);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicCylinder01", pGameObj), E_FAIL);
+	}
+	
 
 	//pGameObj = CFrameMesh::Create(m_pGraphicDevice, m_pCommandList,
 	//	L"PublicCylinder01",
@@ -148,6 +157,109 @@ void CEffectMgr::Effect_FireCone(_vec3 vecPos, float RotY , _vec3 vecDir)
 	//	, FRAME(8, 8, 128)
 	//);
 	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicCylinder01", pGameObj), E_FAIL);
+}
+
+void CEffectMgr::Effect_Test(_vec3 vecPos)
+{
+	vecPos.y = 1.f;
+	pGameObj = CGridShieldEffect::Create(m_pGraphicDevice, m_pCommandList,
+		L"PublicSphere00",
+		_vec3(0.00f),
+		_vec3(0.f, 0.f, 0.f),
+		vecPos,10
+	);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicSphere00", pGameObj), E_FAIL);
+	static_cast<CPublicSphere*>(pGameObj)->Set_isScaleAnim(true);
+	/*pGameObj = CMagicCircleGlow::Create(m_pGraphicDevice, m_pCommandList,
+		L"PublicCylinder03",
+		_vec3(0.06f),
+		_vec3(0.f, 0.f, 0.f),
+		vecPos
+	);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicSphere00", pGameObj), E_FAIL);*/
+
+	vecPos.y = 0.5f;
+	vecPos.z += 0.2f;
+	//pGameObj = CMagicCircle::Create(m_pGraphicDevice, m_pCommandList,
+	//	L"PublicPlane00",
+	//	_vec3(0.00f),
+	//	_vec3(0.f, 0.0f, 0.0f), vecPos,10);
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicPlane00", pGameObj), E_FAIL);
+	//static_cast<CMagicCircle*>(pGameObj)->Set_TexIDX(15, 15, 2);
+	//static_cast<CMagicCircle*>(pGameObj)->Set_isScaleAnim(true);
+	//static_cast<CMagicCircle*>(pGameObj)->Set_isRotate(false);
+	pGameObj = CMagicCircle::Create(m_pGraphicDevice, m_pCommandList,
+		L"PublicPlane00",
+		_vec3(0.00f),
+		_vec3(0.f, 0.0f, 0.0f), vecPos,0);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicPlane00", pGameObj), E_FAIL);
+	static_cast<CMagicCircle*>(pGameObj)->Set_TexIDX(18, 18, 2);
+	static_cast<CMagicCircle*>(pGameObj)->Set_isScaleAnim(true);
+	static_cast<CMagicCircle*>(pGameObj)->Set_isRotate(true);
+	//vecPos.y = 2.5f;
+	//pGameObj = CMagicCircle::Create(m_pGraphicDevice, m_pCommandList,
+	//	L"PublicPlane00",
+	//	_vec3(0.02f),
+	//	_vec3(0.f, 0.0f, 0.0f), vecPos);
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicPlane00", pGameObj), E_FAIL);
+	//static_cast<CMagicCircle*>(pGameObj)->Set_TexIDX(15, 15, 2);
+	//static_cast<CMagicCircle*>(pGameObj)->Set_isScaleAnim(false);
+	//static_cast<CMagicCircle*>(pGameObj)->Set_isRotate(false);
+	
+	
+	//for (int i = 0; i < 5; i++)
+	//{
+	//	_vec3 newPos = vecPos;
+	//	newPos.y = 1.25 * i;
+	//	pGameObj = CFrameMesh::Create(m_pGraphicDevice, m_pCommandList,
+	//		L"PublicCylinder02",
+	//		_vec3(0.015f, 20.5, 0.015),
+	//		_vec3(-0.f,  60 * i, 80.f),
+	//		newPos//Pos
+	//		, FRAME(8, 8, 128)
+	//	);
+	//	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicCylinder01", pGameObj), E_FAIL);
+	//}
+	//pGameObj = CParticleEffect::Create(m_pGraphicDevice, m_pCommandList,
+	//	L"Fire2",						// TextureTag
+	//	_vec3(0.1f),		// Scale
+	//	_vec3(0.0f, 0.0f, 0.0f),		// Angle
+	//	vecPos,	// Pos
+	//	FRAME(10, 1, 10.0f));			// Sprite Image Frame
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Fire2", pGameObj), E_FAIL);
+}
+
+void CEffectMgr::Effect_GridShieldEffect(_vec3 vecPos,int type)
+{
+	int Pipeidx = 0;
+	vecPos.y = 1.f + rand()%10 * 0.01;
+	type == 0 ? Pipeidx = 2 : Pipeidx=10;
+	pGameObj = CGridShieldEffect::Create(m_pGraphicDevice, m_pCommandList,
+		L"PublicSphere00",
+		_vec3(0.00f),
+		_vec3(0.f, 0.f, 0.f),
+		vecPos, Pipeidx
+	);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicSphere00", pGameObj), E_FAIL);
+	static_cast<CGridShieldEffect*>(pGameObj)->Set_isScaleAnim(true);
+	if (type == 0)
+		static_cast<CGridShieldEffect*>(pGameObj)->Set_TexIDX(0, 2, 16);
+	else
+		static_cast<CGridShieldEffect*>(pGameObj)->Set_TexIDX(0, 25, 16);
+
+	
+	pGameObj = CMagicCircle::Create(m_pGraphicDevice, m_pCommandList,
+		L"PublicPlane00",
+		_vec3(0.00f),
+		_vec3(0.f, 0.0f, 0.0f), vecPos, 0);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicPlane00", pGameObj), E_FAIL);
+	if (type == 0)
+		static_cast<CMagicCircle*>(pGameObj)->Set_TexIDX(18, 18, 2);
+	else
+		static_cast<CMagicCircle*>(pGameObj)->Set_TexIDX(19, 19, 2);
+
+	static_cast<CMagicCircle*>(pGameObj)->Set_isScaleAnim(true);
+	static_cast<CMagicCircle*>(pGameObj)->Set_isRotate(true);
 }
 
 
