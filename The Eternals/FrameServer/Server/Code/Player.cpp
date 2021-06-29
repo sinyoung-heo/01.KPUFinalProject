@@ -214,6 +214,7 @@ void CPlayer::Release_Equipment()
 
 void CPlayer::send_load_InventoryAndEquipment()
 {
+    /* 인벤토리 불러오기 */
     for (int i = 0; i < ITEM::ITEM_END; ++i)
     {
         for (auto& item : m_mapInventory[i])
@@ -226,9 +227,37 @@ void CPlayer::send_load_InventoryAndEquipment()
         }
     }
 
-    char itemType[EQUIP_END] = { EQUIP_WEAPON, EQUIP_ARMOR, EQUIP_HELMET, EQUIP_SHOES };
-    char itemName[EQUIP_END] = { m_tEquipment.weapon, m_tEquipment.armor, m_tEquipment.helmet, m_tEquipment.shoes };
-    send_load_equipment(m_sNum, itemType, itemName);
+    /* 장비창 불러오기 */
+   char itemType[EQUIP_END] = { EQUIP_WEAPON, EQUIP_ARMOR, EQUIP_HELMET, EQUIP_SHOES };
+   char itemName[EQUIP_END] = { m_tEquipment.weapon, m_tEquipment.armor, m_tEquipment.helmet, m_tEquipment.shoes };
+   send_load_equipment(m_sNum, itemType, itemName);
+    
+    switch (this->m_type)
+    {
+    case PC_GLADIATOR:
+    {
+        process_load_equipment(m_sNum, EQUIP_WEAPON, ItemType_WeaponTwoHand, m_tEquipment.weapon);
+    }
+    break;
+
+    case PC_ARCHER:
+    {
+        process_load_equipment(m_sNum, EQUIP_WEAPON, ItemType_WeaponBow, m_tEquipment.weapon);
+    }
+    break;
+
+    case PC_PRIEST:
+    {
+        process_load_equipment(m_sNum, EQUIP_WEAPON, ItemType_WeaponRod, m_tEquipment.weapon);
+    }
+    break;
+    }  
+
+    process_load_equipment(m_sNum, EQUIP_ARMOR, ItemType_Armor, m_tEquipment.armor);
+    process_load_equipment(m_sNum, EQUIP_HELMET, ItemType_Helmet, m_tEquipment.helmet);
+    process_load_equipment(m_sNum, EQUIP_SHOES, ItemType_Shoes, m_tEquipment.shoes);
+
+    send_update_equipment(m_sNum, EQUIP_END, true);
 }
 
 DWORD CPlayer::Release()
