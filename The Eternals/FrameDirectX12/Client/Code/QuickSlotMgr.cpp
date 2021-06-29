@@ -22,6 +22,7 @@ void CQuickSlotMgr::Add_QuickSlot(CQuickSlot* pSlot)
 
 void CQuickSlotMgr::Free()
 {
+	m_pQuickSlotSwapSlot = nullptr;
 	m_vecQuickSlot.clear();
 	m_vecQuickSlot.shrink_to_fit();
 }

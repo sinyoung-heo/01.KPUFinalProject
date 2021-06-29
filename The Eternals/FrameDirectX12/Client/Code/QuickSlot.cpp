@@ -3,10 +3,11 @@
 #include "Font.h"
 #include "DirectInput.h"
 #include "InventoryEquipmentMgr.h"
-
+#include "QuickSlotMgr.h"
 
 CQuickSlot::CQuickSlot(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
+	, m_pQuickSlotMgr(CQuickSlotMgr::Get_Instance())
 {
 }
 
@@ -31,7 +32,7 @@ HRESULT CQuickSlot::Ready_GameObject(wstring wstrRootObjectTag,
 															   vRectOffset,
 															   vRectScale,
 															   iUIDepth,
-															   true, L"Font_BinggraeMelona5"), E_FAIL);
+															   true, L"Font_BinggraeMelona11"), E_FAIL);
 
 	m_bIsActive = true;
 
@@ -77,7 +78,14 @@ HRESULT CQuickSlot::Ready_GameObject(wstring wstrRootObjectTag,
 	m_pSlotIcon->Set_IsActive(m_bIsActive);
 
 	// PotionCnt Font
-	m_pFont->Set_Color(D2D1::ColorF::Cornsilk);
+	m_pFontPotionCnt = static_cast<Engine::CFont*>(m_pObjectMgr->Clone_GameObjectPrototype(L"Font_BinggraeMelona16"));
+	Engine::NULL_CHECK_RETURN(m_pFontPotionCnt, E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pFontPotionCnt->Ready_GameObject(L"", _vec2(0.0f, 0.f), D2D1::ColorF::White), E_FAIL);
+	m_pFontPotionCnt->Set_Color(D2D1::ColorF::Cornsilk);
+	m_pFontPotionCnt->Set_Text(L"");
+
+
+	m_pFont->Set_Color(D2D1::ColorF::White);
 	m_pFont->Set_Text(L"");
 
 	return S_OK;
@@ -127,6 +135,8 @@ _int CQuickSlot::LateUpdate_GameObject(const _float& fTimeDelta)
 	if (m_chCurSlotName == Potion_HP || m_chCurSlotName == Potion_MP)
 		SetUp_FontPotionCnt(fTimeDelta);
 
+	SetUp_FontDIKKey(fTimeDelta);
+
 	return NO_EVENT;
 }
 
@@ -142,7 +152,97 @@ void CQuickSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
 		m_bIsKeyPressingLB)
 	{
-		
+		if (!g_bIsOpenShop)
+		{
+			//// Item 정보 교환.
+			//if (m_pInvenEquipMgr->Get_IsInventoryItemSwapState())
+			//{
+			//	vector<CInventoryItemSlot*> vecInvenSlot = m_pInvenEquipMgr->Get_InventorySlotList();
+			//	_uint uiSelectIdx = m_pInvenEquipMgr->Get_InventorySwapSlotClass()->Get_ItemSlotIdx();
+			//	if (uiSelectIdx == m_uiIdx)
+			//	{
+			//		m_pInvenEquipMgr->Get_InventorySwapSlotClass()->Set_CurItemInfo(NO_ITEM, NO_ITEM, 0);
+			//		m_pInvenEquipMgr->Set_IsInventoryItemSwapState(false);
+			//		m_bIsKeyPressingLB = false;
+			//		return;
+			//	}
+
+			//	map<wstring, CEquipmentItemSlot*> mapEquipmentSlot = m_pInvenEquipMgr->Get_EquipmentSlotMap();
+
+			//	CInventoryItemSlot* pSelectItemSlot  = vecInvenSlot[uiSelectIdx];
+			//	ITEM_INFO			tSelectItemInfo  = pSelectItemSlot->Get_CurItemInfo();
+			//	_uint				uiSelectItemCnt  = pSelectItemSlot->Get_CurItemCnt();
+			//	_bool				bIsOnEquipment   = pSelectItemSlot->Get_IsOnEquipment();
+			//	wstring				wstrEquipmentTag = pSelectItemSlot->Get_EquipmentTag();
+
+			//	// SelectItemSlot 장비 장착 O && this ItemSlot 장비 장착 O
+			//	if (pSelectItemSlot->Get_EquipmentTag() != L"" && m_wstrEquipSlotTag != L"")
+			//	{
+			//		mapEquipmentSlot[pSelectItemSlot->Get_EquipmentTag()]->Set_InventorySlotClass(this);
+			//		mapEquipmentSlot[m_wstrEquipSlotTag]->Set_InventorySlotClass(pSelectItemSlot);
+			//	}
+			//	// SelectItemSlot 장비 장착 O && this ItemSlot 장비 장착 X
+			//	else if (pSelectItemSlot->Get_EquipmentTag() != L"" && m_wstrEquipSlotTag == L"")
+			//	{
+			//		mapEquipmentSlot[pSelectItemSlot->Get_EquipmentTag()]->Set_InventorySlotClass(this);
+			//	}
+			//	// SelectItemSlot 장비 장착 X && this ItemSlot 장비 장착 O
+			//	else if (pSelectItemSlot->Get_EquipmentTag() == L"" && m_wstrEquipSlotTag != L"")
+			//	{
+			//		mapEquipmentSlot[m_wstrEquipSlotTag]->Set_InventorySlotClass(pSelectItemSlot);
+			//	}
+
+			//	// SelectSlot에 현재 슬롯의 정보를 저장.
+			//	pSelectItemSlot->Set_CurItemInfo(m_tCurItemInfo.chItemType, m_tCurItemInfo.chItemName);
+			//	pSelectItemSlot->Set_CurItemCnt(m_uiCnt);
+			//	pSelectItemSlot->Set_IsOnEquipment(m_bIsOnEquipment);
+			//	pSelectItemSlot->Set_EquipSlotTag(m_wstrEquipSlotTag);
+
+			//	// 현재 슬롯의 정보에 SelectSlot의 정보를 저장.
+			//	m_tCurItemInfo.chItemType = tSelectItemInfo.chItemType;
+			//	m_tCurItemInfo.chItemName = tSelectItemInfo.chItemName;
+			//	m_uiCnt                   = uiSelectItemCnt;
+			//	m_bIsOnEquipment          = bIsOnEquipment;
+			//	m_wstrEquipSlotTag        = wstrEquipmentTag;
+
+			//	m_pInvenEquipMgr->Get_InventorySwapSlotClass()->Set_CurItemInfo(NO_ITEM, NO_ITEM, 0);
+			//	m_pInvenEquipMgr->Set_IsInventoryItemSwapState(false);
+			//	m_bIsKeyPressingLB = false;
+
+			//	// SelectSlot을 Potion ptr로 저장.
+			//	if (ItemType_Potion == m_tCurItemInfo.chItemType)
+			//	{
+			//		if (Potion_HP == m_tCurItemInfo.chItemName)
+			//			m_pInvenEquipMgr->Set_HpPotionSlot(this);
+			//		else
+			//			m_pInvenEquipMgr->Set_MpPotionSlot(this);
+			//	}
+
+			//	// this를 Potion ptr로 저장.
+			//	if (ItemType_Potion == pSelectItemSlot->Get_CurItemInfo().chItemType)
+			//	{
+			//		if (Potion_HP == pSelectItemSlot->Get_CurItemInfo().chItemName)
+			//			m_pInvenEquipMgr->Set_HpPotionSlot(pSelectItemSlot);
+			//		else
+			//			m_pInvenEquipMgr->Set_MpPotionSlot(pSelectItemSlot);
+			//	}
+			//	return;
+			//}
+
+			if (!m_pQuickSlotMgr->Get_IsQuickSlotSwapState() &&
+				!CInventoryEquipmentMgr::Get_Instance()->Get_IsInventoryItemSwapState())
+			{
+				if (EMPTY_SLOT != m_chCurSlotName)
+					m_pQuickSlotMgr->Set_IsQuickSlotSwapState(true);
+				else
+					m_pQuickSlotMgr->Set_IsQuickSlotSwapState(false);
+
+				m_pQuickSlotMgr->Get_QuickSlotSwapSlot()->Set_CurQuickSlotName(m_chCurSlotName);
+
+				m_bIsKeyPressingLB = false;
+				return;
+			}
+		}
 	}
 
 	// 슬롯 정보 스왑 해제
@@ -150,7 +250,16 @@ void CQuickSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_RB) && 
 		m_bIsKeyPressingRB)
 	{
-		
+		if (!g_bIsOpenShop)
+		{
+			if (m_pQuickSlotMgr->Get_IsQuickSlotSwapState())
+			{
+				m_pQuickSlotMgr->Set_IsQuickSlotSwapState(false);
+				m_pQuickSlotMgr->Get_QuickSlotSwapSlot()->Set_CurQuickSlotName(EMPTY_SLOT);
+				m_bIsKeyPressingRB = false;
+				return;
+			}
+		}
 	}
 
 	m_bIsKeyPressingLB = false;
@@ -349,7 +458,7 @@ void CQuickSlot::SetUp_FontPotionCnt(const _float& fTimeDelta)
 	else
 		m_uiCnt = pInventorySlot->Get_CurItemCnt();
 
-	if (nullptr != m_pFont)
+	if (nullptr != m_pFontPotionCnt)
 	{
 		_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
 		vPos.x += -19.0f;
@@ -358,6 +467,28 @@ void CQuickSlot::SetUp_FontPotionCnt(const _float& fTimeDelta)
 		_tchar	szText[MIN_STR] = L"";
 		wstring wstrText        = L"%d";
 		wsprintf(szText, wstrText.c_str(), m_uiCnt);
+
+		m_pFontPotionCnt->Set_Text(szText);
+		m_pFontPotionCnt->Set_Pos(_vec2(vPos.x, vPos.y));
+		m_pFontPotionCnt->Update_GameObject(fTimeDelta);
+	}
+}
+
+void CQuickSlot::SetUp_FontDIKKey(const _float& fTimeDelta)
+{
+	if (nullptr != m_pFont)
+	{
+		_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
+		vPos.x += -18.0f;
+		vPos.y += -22.0f;
+
+		_uint uiDIKKey = m_uiDIK_Key - 1;
+		if (uiDIKKey == 10)
+			uiDIKKey = 0;
+
+		_tchar	szText[MIN_STR] = L"";
+		wstring wstrText = L"%d";
+		wsprintf(szText, wstrText.c_str(), uiDIKKey);
 
 		m_pFont->Set_Text(szText);
 		m_pFont->Set_Pos(_vec2(vPos.x, vPos.y));
@@ -400,4 +531,5 @@ void CQuickSlot::Free()
 
 	Engine::Safe_Release(m_pSlotFrame);
 	Engine::Safe_Release(m_pSlotIcon);
+	Engine::Safe_Release(m_pFontPotionCnt);
 }

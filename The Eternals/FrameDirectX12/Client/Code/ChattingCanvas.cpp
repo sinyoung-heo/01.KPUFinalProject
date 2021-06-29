@@ -27,7 +27,7 @@ HRESULT CChattingCanvas::Ready_GameObject(wstring wstrObjectTag,
 															  vRectOffset,
 															  vRectScale,
 															  iUIDepth,
-															  true, L"Font_BinggraeMelona11"), E_FAIL);
+															  true, L"Font_BinggraeMelona16"), E_FAIL);
 
 	m_bIsActive = true;
 

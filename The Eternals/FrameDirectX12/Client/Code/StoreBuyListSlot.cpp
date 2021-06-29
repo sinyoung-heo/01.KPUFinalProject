@@ -38,7 +38,7 @@ HRESULT CStoreBuyListSlot::Ready_GameObject(wstring wstrRootObjectTag,
 															   vRectOffset,
 															   vRectScale,
 															   iUIDepth,
-															   true, L"Font_BinggraeMelona5"), E_FAIL);
+															   true, L"Font_BinggraeMelona16"), E_FAIL);
 
 	m_bIsActive = false;
 

@@ -475,6 +475,9 @@
     <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\13.QuickSlot">
       <UniqueIdentifier>{78503bd8-e828-4f5a-af4d-11066d931710}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\10.QuickSlotSwapSlot">
+      <UniqueIdentifier>{bd50983c-a166-4f0b-ba62-62e12fe69709}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -982,6 +985,9 @@
     <ClInclude Include="..\Code\QuickSlotMgr.h">
       <Filter>97.Mgr\10.QuickSlotMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\QuickSlotSwapSlot.h">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\10.QuickSlotSwapSlot</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1431,6 +1437,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\QuickSlotMgr.cpp">
       <Filter>97.Mgr\10.QuickSlotMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\QuickSlotSwapSlot.cpp">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\10.QuickSlotSwapSlot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

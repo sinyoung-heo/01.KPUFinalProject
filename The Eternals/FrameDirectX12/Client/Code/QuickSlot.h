@@ -1,6 +1,8 @@
 #pragma once
 #include "GameUIChild.h"
 
+class CQuickSlotMgr;
+
 class CQuickSlot : public CGameUIChild
 {
 private:
@@ -37,10 +39,13 @@ public:
 private:
 	void KeyInput_MouseButton(const _float& fTimeDelta);
 	void SetUp_FontPotionCnt(const _float& fTimeDelta);
+	void SetUp_FontDIKKey(const _float& fTimeDelta);
 private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
+	CQuickSlotMgr* m_pQuickSlotMgr = nullptr;
+
 	_bool m_bIsKeyPressingLB = false;
 	_bool m_bIsKeyPressingRB = false;
 
@@ -58,6 +63,8 @@ private:
 	// SlotIdx
 	_uint m_uiIdx     = 0;
 	_uint m_uiDIK_Key = 0;
+
+	Engine::CFont* m_pFontPotionCnt = nullptr;
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,

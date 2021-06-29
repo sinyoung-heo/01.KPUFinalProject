@@ -6,6 +6,7 @@
 #include "InventoryEquipmentMgr.h"
 #include "Font.h"
 #include "StoreMgr.h"
+#include "QuickSlotMgr.h"
 
 CInventoryItemSlot::CInventoryItemSlot(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
@@ -41,7 +42,7 @@ HRESULT CInventoryItemSlot::Ready_GameObject(wstring wstrRootObjectTag,
 															   vRectOffset,
 															   vRectScale,
 															   iUIDepth,
-															   true, L"Font_BinggraeMelona5"), E_FAIL);
+															   true, L"Font_BinggraeMelona16"), E_FAIL);
 
 	m_bIsActive = false;
 	
@@ -229,7 +230,8 @@ void CInventoryItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 				return;
 			}
 
-			if (!m_pInvenEquipMgr->Get_IsInventoryItemSwapState())
+			if (!m_pInvenEquipMgr->Get_IsInventoryItemSwapState() &&
+				!CQuickSlotMgr::Get_Instance()->Get_IsQuickSlotSwapState())
 			{
 				if (NO_ITEM != m_tCurItemInfo.chItemType)
 					m_pInvenEquipMgr->Set_IsInventoryItemSwapState(true);

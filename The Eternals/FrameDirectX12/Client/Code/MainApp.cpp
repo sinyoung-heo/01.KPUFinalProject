@@ -264,10 +264,12 @@ HRESULT CMainApp::SetUp_Font()
 	Engine::NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	m_pObjectMgr->Add_GameObjectPrototype(L"Font_NexonBold72", pGameObject);
 
+
+
 	// BinggraeMelona 5
 	pGameObject = Engine::CFont::Create_Prototype(m_pGraphicDevice, m_pCommandList,
 												  L"빙그레 메로나체",		// Font Type
-												  16.0f,				// Font Size
+												  5.0f,				// Font Size
 												  D2D1::ColorF::White);	// Font Color
 	Engine::NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	m_pObjectMgr->Add_GameObjectPrototype(L"Font_BinggraeMelona5", pGameObject);
@@ -275,7 +277,7 @@ HRESULT CMainApp::SetUp_Font()
 	// BinggraeMelona 11
 	pGameObject = Engine::CFont::Create_Prototype(m_pGraphicDevice, m_pCommandList,
 												  L"빙그레 메로나체",		// Font Type
-												  16.0f,				// Font Size
+												  11.0f,				// Font Size
 												  D2D1::ColorF::White);	// Font Color
 	Engine::NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	m_pObjectMgr->Add_GameObjectPrototype(L"Font_BinggraeMelona11", pGameObject);
