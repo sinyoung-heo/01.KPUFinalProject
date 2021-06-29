@@ -951,6 +951,11 @@ void CPCPriest::Set_HpMPGauge()
 
 void CPCPriest::Key_Input(const _float& fTimeDelta)
 {
+	if (Engine::KEY_DOWN(DIK_0) && NO_EVENT_STATE)
+	{
+		CEffectMgr::Get_Instance()->Effect_GridShieldEffect(m_pTransCom->m_vPos,1);
+	
+	}
 	if (!g_bIsActive) return;
 
 	KeyInput_Move(fTimeDelta);

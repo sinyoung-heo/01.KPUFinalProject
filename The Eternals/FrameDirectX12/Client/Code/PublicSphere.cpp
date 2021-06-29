@@ -29,6 +29,7 @@ HRESULT CPublicSphere::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vPos = vPos + vPosOffset;
 
 	m_fDeltaTime = -1.f;
+
 	return S_OK;
 }
 
@@ -48,6 +49,16 @@ _int CPublicSphere::Update_GameObject(const _float & fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+
+	if (m_fLifeTime < 5.5f && m_bisScaleAnim && m_pTransCom->m_vScale.x < 0.2f)
+		m_pTransCom->m_vScale += _vec3(fTimeDelta * 0.5);
+	m_fLifeTime += fTimeDelta;
+	if (m_fLifeTime > 5.5f)
+	{
+		m_pTransCom->m_vScale -= _vec3(fTimeDelta * 0.5);
+		if (m_pTransCom->m_vScale.x < 0.00)
+			m_bIsDead = true;
+	}
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
@@ -58,9 +69,7 @@ _int CPublicSphere::Update_GameObject(const _float & fTimeDelta)
 	______________________________________________________________________*/
 
 
-	_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
-	m_pTransCom->m_vPos = Pos;
-	m_pTransCom->m_vPos.y += 20.f;
+	
 	//m_pTransCom->m_vPos.z += 0.3f;
 
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
@@ -83,7 +92,8 @@ _int CPublicSphere::LateUpdate_GameObject(const _float & fTimeDelta)
 void CPublicSphere::Render_GameObject(const _float& fTimeDelta)
 {
 	Set_ConstantTable();
-	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps,0,0, 3,0,0);
+	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps,0,2, 16,17,18);
+	//D  N S Sha Dis
 }
 
 HRESULT CPublicSphere::Add_Component(wstring wstrMeshTag)
@@ -136,22 +146,21 @@ void CPublicSphere::Set_ConstantTable()
 	tCB_ShaderMesh.vLightPos = tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 
-	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.5f;
+	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"))* 1.5f;
 	m_fDeltatime2 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
-	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
+	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"))*2;
+	m_fDegree += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 60.f;
+	m_fDegree = int(m_fDegree) % 360;
 	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
 	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
-	tCB_ShaderMesh.fDissolve = sin(m_fDeltatime3);
+	tCB_ShaderMesh.fOffset4 = m_fDegree;
+	tCB_ShaderMesh.fDissolve = abs(sin(m_fDeltatime3));
 
 	tCB_ShaderMesh.vEmissiveColor.x = 8.f;
 	tCB_ShaderMesh.vEmissiveColor.y = 2.f;
 	tCB_ShaderMesh.vEmissiveColor.z = fCurFrame;
 	tCB_ShaderMesh.vEmissiveColor.w = fCurScene;
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
-
-
-	if (m_fDeltaTime > 1.f)
-		m_fDeltaTime = -1.f;
 	
 }
 HRESULT CPublicSphere::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth)
@@ -217,6 +226,6 @@ void CPublicSphere::Free()
 {
 	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pMeshCom);
-	Engine::Safe_Release(m_pDescriptorHeaps);
+	//Engine::Safe_Release(m_pDescriptorHeaps);
 	Engine::Safe_Release(m_pShaderCom);
 }

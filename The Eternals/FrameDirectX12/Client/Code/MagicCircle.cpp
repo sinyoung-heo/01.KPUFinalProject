@@ -17,8 +17,9 @@ CMagicCircle::CMagicCircle(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandL
 HRESULT CMagicCircle::Ready_GameObject(wstring wstrMeshTag,
 											 const _vec3 & vScale,
 											 const _vec3 & vAngle, 
-											 const _vec3 & vPos)
+											 const _vec3 & vPos, const int& iPipeLineIdx )
 {
+	m_uiPipeLineIdx = iPipeLineIdx;
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
 
@@ -44,14 +45,14 @@ HRESULT CMagicCircle::LateInit_GameObject()
 
 _int CMagicCircle::Update_GameObject(const _float & fTimeDelta)
 {
-	if (m_fLifeTime<5.5f &&m_bisScaleAnim && m_pTransCom->m_vScale.x<0.01f)
-		m_pTransCom->m_vScale += _vec3(fTimeDelta*0.02);
 	if(m_bisRotate)
-		m_pTransCom->m_vAngle.y += 0.4f;
+		m_pTransCom->m_vAngle.y += 60.f*fTimeDelta;
+	if (m_fLifeTime<5.5f &&m_bisScaleAnim && m_pTransCom->m_vScale.x<0.02f)
+		m_pTransCom->m_vScale += _vec3(fTimeDelta*0.04);
 	m_fLifeTime += fTimeDelta;
 	if (m_fLifeTime > 5.5f)
 	{
-		m_pTransCom->m_vScale-= _vec3(fTimeDelta * 0.02);
+		m_pTransCom->m_vScale-= _vec3(fTimeDelta * 0.04);
 		if (m_pTransCom->m_vScale.x < 0.00)
 			m_bIsDead = true;
 	}
@@ -79,6 +80,9 @@ _int CMagicCircle::Update_GameObject(const _float & fTimeDelta)
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
 	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
 	
+	//
+	m_fAlpha += fTimeDelta;
+	m_fDegree += 180.f * fTimeDelta;
 	return NO_EVENT;
 }
 
@@ -111,7 +115,7 @@ HRESULT CMagicCircle::Add_Component(wstring wstrMeshTag)
 	// Shader
 	m_pShaderCom = static_cast<Engine::CShaderMeshEffect*>(m_pComponentMgr->Clone_Component(L"ShaderMeshEffect", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(0), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(m_uiPipeLineIdx), E_FAIL);
 	m_pShaderCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
@@ -133,7 +137,11 @@ void CMagicCircle::Set_ConstantTable()
 	tCB_ShaderMesh.vLightPos = tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 
-	
+	//Offset3 = Degree;
+	//Offset1 = Alpha;
+
+	tCB_ShaderMesh.fOffset1 = m_fAlpha;
+	tCB_ShaderMesh.fOffset3 = m_fDegree;
 	if(m_pShaderCom->Get_UploadBuffer_ShaderMesh()!=nullptr)
 		m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 
@@ -195,11 +203,11 @@ Engine::CGameObject* CMagicCircle::Create(ID3D12Device * pGraphicDevice, ID3D12G
 												wstring wstrMeshTag, 
 												const _vec3 & vScale,
 												const _vec3 & vAngle,
-												const _vec3 & vPos)
+												const _vec3 & vPos, const int& iPipeLineIdx)
 {
 	CMagicCircle* pInstance = new CMagicCircle(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos)))
+	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos, iPipeLineIdx)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;

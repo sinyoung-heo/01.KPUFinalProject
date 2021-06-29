@@ -54,7 +54,7 @@ _int CIceDecal::Update_GameObject(const _float & fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
-	if (m_bIsDead /*||m_fAlpha<0.f*/)
+	if (m_bIsDead ||m_fAlpha<0.f)
 		return DEAD_OBJ;
 
 	/*__________________________________________________________________________________________________________

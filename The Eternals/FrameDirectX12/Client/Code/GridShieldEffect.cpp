@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "PublicPlane.h"
+#include "GridShieldEffect.h"
 #include "GraphicDevice.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
@@ -8,85 +8,98 @@
 #include "RenderTarget.h"
 #include "TimeMgr.h"
 #include "DescriptorHeapMgr.h"
-CPublicPlane::CPublicPlane(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CGridShieldEffect::CGridShieldEffect(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
 }
 
 
-HRESULT CPublicPlane::Ready_GameObject(wstring wstrMeshTag,
+HRESULT CGridShieldEffect::Ready_GameObject(wstring wstrMeshTag,
 											 const _vec3 & vScale,
 											 const _vec3 & vAngle, 
-											 const _vec3 & vPos)
+											 const _vec3 & vPos,
+											 const int& iPipeLineIdx)
 {
+	m_iPipeLineIdx = iPipeLineIdx;
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
 
 	m_wstrMeshTag = wstrMeshTag;
 	m_pTransCom->m_vScale	= vScale;
 	m_pTransCom->m_vAngle	= vAngle;
-	m_pTransCom->m_vPos		= vPos;
-	m_pTransCom->m_vPos.y += 0.1f;
-	m_fAlpha = 1.f;
+	m_pTransCom->m_vPos = vPos ;
+
+	m_fDeltaTime = -1.f;
+	m_uiDiffuse = 0;
+	m_uiNormal = 2;
+	m_uiSpec = 16;
 	return S_OK;
 }
 
-HRESULT CPublicPlane::LateInit_GameObject()
+HRESULT CGridShieldEffect::LateInit_GameObject()
 {
-
-	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
+	m_pShaderCom->SetUp_ShaderConstantBuffer();
 	Engine::CTexture* pTexture = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(L"EffectPublic", Engine::COMPONENTID::ID_STATIC));
 	SetUp_DescriptorHeap(pTexture->Get_Texture(), m_pRenderer->Get_TargetShadowDepth()->Get_TargetTexture());
 
-
-	m_uiDiffuse = 18;
-	m_fNormalMapDeltatime = 18;//NormIdx
-	m_fPatternMapDeltatime = 18;//SpecIdx
-	return S_OK;	
+	return S_OK;
 }
 
-_int CPublicPlane::Update_GameObject(const _float & fTimeDelta)
+_int CGridShieldEffect::Update_GameObject(const _float & fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+
+	if (m_fLifeTime < 5.5f && m_bisScaleAnim && m_pTransCom->m_vScale.x < 0.2f)
+		m_pTransCom->m_vScale += _vec3(fTimeDelta * 0.5);
+	m_fLifeTime += fTimeDelta;
+	if (m_fLifeTime > 5.5f)
+	{
+		m_pTransCom->m_vScale -= _vec3(fTimeDelta * 0.5);
+		if (m_pTransCom->m_vScale.x < 0.00)
+			m_bIsDead = true;
+	}
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
-
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MAGICCIRCLE, this), -1);
-	/*Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);*/
 
-
-	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
-	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
 	/*____________________________________________________________________
 	TransCom - Update WorldMatrix.
 	______________________________________________________________________*/
+
+
+	
+	//m_pTransCom->m_vPos.z += 0.3f;
+
+	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
+	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
+
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 	return NO_EVENT;
 }
 
-_int CPublicPlane::LateUpdate_GameObject(const _float & fTimeDelta)
+_int CGridShieldEffect::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
-	Set_ConstantTable();
 
 	return NO_EVENT;
 }
 
 
-void CPublicPlane::Render_GameObject(const _float& fTimeDelta)
+void CGridShieldEffect::Render_GameObject(const _float& fTimeDelta)
 {
-	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_fNormalMapDeltatime, m_fPatternMapDeltatime
-		,0,4);
+	Set_ConstantTable();
+	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_uiNormal, m_uiSpec,17,18);
+	//D  N S Sha Dis
 }
 
-HRESULT CPublicPlane::Add_Component(wstring wstrMeshTag)
+HRESULT CGridShieldEffect::Add_Component(wstring wstrMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -100,15 +113,29 @@ HRESULT CPublicPlane::Add_Component(wstring wstrMeshTag)
 	// Shader
 	m_pShaderCom = static_cast<Engine::CShaderMeshEffect*>(m_pComponentMgr->Clone_Component(L"ShaderMeshEffect", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(5), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(m_iPipeLineIdx), E_FAIL);
 	m_pShaderCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
+
 
 	return S_OK;
 }
 
-void CPublicPlane::Set_ConstantTable()
+void CGridShieldEffect::Set_ConstantTable()
 {
+	fCurFrame += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) *16.f;
+	// Sprite XÃà
+	if (fCurFrame >8)
+	{
+		fCurFrame = 0.0f;
+		fCurScene += 1.0f;
+	}
+
+	// Sprite YÃà
+	if (fCurScene >=2)
+	{
+		fCurScene = 0.0f;
+	}
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
 	____________________________________________________________________________________________________________*/
@@ -122,23 +149,20 @@ void CPublicPlane::Set_ConstantTable()
 	tCB_ShaderMesh.vLightPos = tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 
-	m_fDeltaTime += Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.5f;
+	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"))* 1.5f;
+	m_fDeltatime2 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
+	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"))*2;
+	m_fDegree += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 60.f;
+	m_fDegree = int(m_fDegree) % 360;
 	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
-	m_fAlpha -= Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.3f;
-	tCB_ShaderMesh.fOffset6 = m_fAlpha;
-	if(m_pShaderCom->Get_UploadBuffer_ShaderMesh()!=nullptr)
-		m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
+	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
+	tCB_ShaderMesh.fOffset4 = m_fDegree;
+	tCB_ShaderMesh.fDissolve = abs(sin(m_fDeltatime3));
 
+	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 	
 }
-
-void CPublicPlane::Set_ConstantTableShadowDepth()
-{
-
-}
-
-
-HRESULT CPublicPlane::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth)
+HRESULT CGridShieldEffect::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth)
 {
 	_uint m_uiTexSize = vecTexture.size() + vecShadowDepth.size();
 
@@ -183,24 +207,24 @@ HRESULT CPublicPlane::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTex
 }
 
 
-Engine::CGameObject* CPublicPlane::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
+Engine::CGameObject* CGridShieldEffect::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
 												wstring wstrMeshTag, 
 												const _vec3 & vScale,
 												const _vec3 & vAngle,
-												const _vec3 & vPos)
+												const _vec3 & vPos, const int& iPipeLineIdx)
 {
-	CPublicPlane* pInstance = new CPublicPlane(pGraphicDevice, pCommandList);
+	CGridShieldEffect* pInstance = new CGridShieldEffect(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos)))
+	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos, iPipeLineIdx)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
 }
 
-void CPublicPlane::Free()
+void CGridShieldEffect::Free()
 {
 	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pMeshCom);
-//	Engine::Safe_Release(m_pDescriptorHeaps);
+	//Engine::Safe_Release(m_pDescriptorHeaps);
 	Engine::Safe_Release(m_pShaderCom);
 }

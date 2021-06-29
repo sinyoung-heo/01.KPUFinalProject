@@ -1033,7 +1033,7 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 			m_bisIceEffect = true;
 			CEffectMgr::Get_Instance()->Effect_IceStorm(m_pTransCom->m_vPos, 36, 5.f);
 			_vec3 Temp = m_pTransCom->m_vPos;
-			Temp.y += 1.5f;
+			Temp.y += 0.5f;
 			CEffectMgr::Get_Instance()->Effect_IceDecal(Temp);
 		}
 	}
@@ -1054,8 +1054,9 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 
 	if (Engine::KEY_DOWN(DIK_0) && NO_EVENT_STATE)
 	{
-		Engine::CGameObject* pWarningFrame = m_pObjectMgr->Get_GameObject(L"Layer_UI", L"WarningFrame");
-		static_cast<CWarningFrame*>(pWarningFrame)->Set_IsRender(true);
+		CEffectMgr::Get_Instance()->Effect_Test(m_pTransCom->m_vPos);
+		/*Engine::CGameObject* pWarningFrame = m_pObjectMgr->Get_GameObject(L"Layer_UI", L"WarningFrame");
+		static_cast<CWarningFrame*>(pWarningFrame)->Set_IsRender(true);*/
 
 	/*	Engine::CGameObject* pGameObj = nullptr;
 		for (int i = 0; i < 36; i++)

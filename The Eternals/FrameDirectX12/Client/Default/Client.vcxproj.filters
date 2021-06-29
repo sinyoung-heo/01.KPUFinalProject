@@ -820,6 +820,19 @@
     <ClInclude Include="..\Code\IceDecal.h" />
     <ClInclude Include="..\Code\SwordEffect.h" />
     <ClInclude Include="..\Code\FireRing.h" />
+    <ClInclude Include="..\Code\EquipmentButtonClose.h" />
+    <ClInclude Include="..\Code\EquipmentCanvas.h" />
+    <ClInclude Include="..\Code\EquipmentItemSlot.h" />
+    <ClInclude Include="..\Code\InventoryButtonClose.h" />
+    <ClInclude Include="..\Code\InventoryCanvas.h" />
+    <ClInclude Include="..\Code\InventoryEquipmentMgr.h" />
+    <ClInclude Include="..\Code\InventoryItemSlot.h" />
+    <ClInclude Include="..\Code\InventorySwapSlot.h" />
+    <ClInclude Include="..\Code\NPCMiniMap.h" />
+    <ClInclude Include="..\Code\WarningFrame.h" />
+    <ClInclude Include="..\Code\ParticleEffect.h" />
+    <ClInclude Include="..\Code\MagicCircleGlow.h" />
+    <ClInclude Include="..\Code\GridShieldEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1189,6 +1202,19 @@
     <ClCompile Include="..\Code\IceDecal.cpp" />
     <ClCompile Include="..\Code\SwordEffect.cpp" />
     <ClCompile Include="..\Code\FireRing.cpp" />
+    <ClCompile Include="..\Code\EquipmentButtonClose.cpp" />
+    <ClCompile Include="..\Code\EquipmentCanvas.cpp" />
+    <ClCompile Include="..\Code\EquipmentItemSlot.cpp" />
+    <ClCompile Include="..\Code\InventoryButtonClose.cpp" />
+    <ClCompile Include="..\Code\InventoryCanvas.cpp" />
+    <ClCompile Include="..\Code\InventoryEquipmentMgr.cpp" />
+    <ClCompile Include="..\Code\InventoryItemSlot.cpp" />
+    <ClCompile Include="..\Code\InventorySwapSlot.cpp" />
+    <ClCompile Include="..\Code\NPCMiniMap.cpp" />
+    <ClCompile Include="..\Code\WarningFrame.cpp" />
+    <ClCompile Include="..\Code\ParticleEffect.cpp" />
+    <ClCompile Include="..\Code\MagicCircleGlow.cpp" />
+    <ClCompile Include="..\Code\GridShieldEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
