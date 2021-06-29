@@ -35,7 +35,7 @@ HRESULT CStoreTab::Ready_GameObject(wstring wstrRootObjectTag,
 	m_bIsActive = false;
 
 	m_pFont->Set_Color(D2D1::ColorF::Cornsilk);
-	m_pFont->Set_Text(L"·Îµå");
+	m_pFont->Set_Text(L"");
 	m_vFontOffset = _vec2(-22.0f, -16.0f);
 
 	return S_OK;

@@ -1604,6 +1604,12 @@ void CPCGladiator::KeyInput_OpenShop(const char& npcNumber)
 			npcNumber == NPC_BARAKA_MERCHANT || 
 			npcNumber == NPC_BARAKA_MYSTELLIUM)
 		{
+			static_cast<CInGameStoreCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInGameStoreCanvas"))->Set_IsActive(true);
+			static_cast<CInGameStoreCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInGameStoreCanvas"))->Set_IsChildActive(true);
+			static_cast<CMainMenuInventory*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"OptionInventoryNormal"))->Set_IsActiveCanvas(true);
+			static_cast<CInventoryCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInventoryCanvas"))->Get_Transform()->m_vPos = _vec3(1100.0f, 450.0f, 1.0f);
+			CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(true);
+
 			switch (npcNumber)
 			{
 			case NPC_POPORI_MERCHANT:		// 무기상인
@@ -1628,11 +1634,6 @@ void CPCGladiator::KeyInput_OpenShop(const char& npcNumber)
 				break;
 			}
 
-			static_cast<CInGameStoreCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInGameStoreCanvas"))->Set_IsActive(true);
-			static_cast<CInGameStoreCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInGameStoreCanvas"))->Set_IsChildActive(true);
-			static_cast<CMainMenuInventory*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"OptionInventoryNormal"))->Set_IsActiveCanvas(true);
-			static_cast<CInventoryCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInventoryCanvas"))->Get_Transform()->m_vPos = _vec3(1100.0f, 450.0f, 1.0f);
-			CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(true);
 			// NPC에 맞는 상점 리소스 생성
 			cout << "상점 오픈" << endl;
 		}		

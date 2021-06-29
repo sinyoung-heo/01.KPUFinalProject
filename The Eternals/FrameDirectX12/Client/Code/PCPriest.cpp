@@ -132,24 +132,6 @@ HRESULT CPCPriest::LateInit_GameObject()
 	// MiniMap
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::SetUp_MiniMapComponent(0), E_FAIL);
 
-	/*__________________________________________________________________________________________________________
-	[ Skill KeyInput ]
-	____________________________________________________________________________________________________________*/
-	vector<CQuickSlot*> vecQuickSlot = m_pQuickSlotMgr->Get_QuickSlotList();
-
-	m_mapSkillKeyInput[L"AURA_ON"]   = -1;
-	m_mapSkillKeyInput[L"PURIFY"]    = -1;
-	m_mapSkillKeyInput[L"HEAL"]      = -1;
-	m_mapSkillKeyInput[L"MP_CHARGE"] = -1;
-	m_mapSkillKeyInput[L"HP_POTION"] = -1;
-	m_mapSkillKeyInput[L"MP_POTION"] = -1;
-
-	vecQuickSlot[0]->Set_CurQuickSlotName(QUCKSLOT_SKILL_AURA_ON);
-	vecQuickSlot[1]->Set_CurQuickSlotName(QUCKSLOT_SKILL_PURIFY);
-	vecQuickSlot[2]->Set_CurQuickSlotName(QUCKSLOT_SKILL_HEAL);
-	vecQuickSlot[3]->Set_CurQuickSlotName(QUCKSLOT_SKILL_MP_CHARGE);
-	vecQuickSlot[8]->Set_CurQuickSlotName(QUCKSLOT_POTION_HP);
-	vecQuickSlot[9]->Set_CurQuickSlotName(QUCKSLOT_POTION_MP);
 
 	return S_OK;
 }
@@ -1212,6 +1194,12 @@ void CPCPriest::KeyInput_OpenShop(const char& npcNumber)
 	{
 		if (npcNumber == NPC_POPORI_MERCHANT || npcNumber == NPC_BARAKA_MERCHANT || npcNumber == NPC_BARAKA_MYSTELLIUM)
 		{
+			static_cast<CInGameStoreCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInGameStoreCanvas"))->Set_IsActive(true);
+			static_cast<CInGameStoreCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInGameStoreCanvas"))->Set_IsChildActive(true);
+			static_cast<CMainMenuInventory*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"OptionInventoryNormal"))->Set_IsActiveCanvas(true);
+			static_cast<CInventoryCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInventoryCanvas"))->Get_Transform()->m_vPos = _vec3(1100.0f, 450.0f, 1.0f);
+			CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(true);
+
 			switch (npcNumber)
 			{
 			case NPC_POPORI_MERCHANT:		// 무기상인
@@ -1236,11 +1224,6 @@ void CPCPriest::KeyInput_OpenShop(const char& npcNumber)
 				break;
 			}
 
-			static_cast<CInGameStoreCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInGameStoreCanvas"))->Set_IsActive(true);
-			static_cast<CInGameStoreCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInGameStoreCanvas"))->Set_IsChildActive(true);
-			static_cast<CMainMenuInventory*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"OptionInventoryNormal"))->Set_IsActiveCanvas(true);
-			static_cast<CInventoryCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInventoryCanvas"))->Get_Transform()->m_vPos = _vec3(1100.0f, 450.0f, 1.0f);
-			CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(true);
 			// NPC에 맞는 상점 리소스 생성
 			cout << "상점 오픈" << endl;
 		}
