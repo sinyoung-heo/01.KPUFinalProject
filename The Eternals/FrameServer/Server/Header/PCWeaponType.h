@@ -51,5 +51,5 @@ constexpr char Shoes_A					= 3;
 constexpr char Shoes_S					= 4;
 
 // Potion
-constexpr char Prtion_HP				= 0;
-constexpr char Prtion_MP				= 1;
+constexpr char Potion_HP				= 0;
+constexpr char Potion_MP				= 1;

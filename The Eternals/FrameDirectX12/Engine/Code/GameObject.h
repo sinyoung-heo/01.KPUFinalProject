@@ -81,6 +81,7 @@ public:
 	void	Set_PartyState(const _bool& st)							{ m_bIsPartyState = st; }
 	void	Set_PartySuggestSNum(const _int& iNum)					{ m_iSuggesterNumber = iNum; }
 	void	Set_IsThisPlayerPartyMember(const _bool& bIsPartyMember) { m_bIsThisPlayerPartyMember = bIsPartyMember; }
+	void	Set_ThilsPlayerSkillKeyInput(wstring wstrTag, const _uint& uiKey) { m_mapSkillKeyInput[wstrTag] = uiKey; }
 	void	Ready_AngleInterpolationValue(const _float& fEndAngle);
 	void	Ready_PositionInterpolationValue(const _vec3& vEndPosition, float fSpd = 3.f);
 

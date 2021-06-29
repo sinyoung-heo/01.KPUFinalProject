@@ -979,7 +979,9 @@
     <ClInclude Include="..\Code\QuickSlot.h">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\13.QuickSlot</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\QuickSlotMgr.h" />
+    <ClInclude Include="..\Code\QuickSlotMgr.h">
+      <Filter>97.Mgr\10.QuickSlotMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1427,7 +1429,9 @@
     <ClCompile Include="..\Code\QuickSlot.cpp">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\13.QuickSlot</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\QuickSlotMgr.cpp" />
+    <ClCompile Include="..\Code\QuickSlotMgr.cpp">
+      <Filter>97.Mgr\10.QuickSlotMgr</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

@@ -31,6 +31,7 @@ CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandLi
 	, m_pInstancePoolMgr(CInstancePoolMgr::Get_Instance())
 	, m_pMouserMgr(CMouseCursorMgr::Get_Instance())
 	, m_pPartySystemMgr(CPartySystemMgr::Get_Instance())
+	, m_pQuickSlotMgr(CQuickSlotMgr::Get_Instance())
 {
 }
 
@@ -76,17 +77,6 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 	m_bIsSameDir		= false;
 	m_bIsSendMoveStop	= true;
 	m_fPreAngle			= m_pTransCom->m_vAngle.y;
-
-	/*__________________________________________________________________________________________________________
-	[ Skill KeyInput ]
-	____________________________________________________________________________________________________________*/
-	m_mapSkillKeyInput[L"STINGER_BLADE"] = DIK_1;
-	m_mapSkillKeyInput[L"CUTTING_SLASH"] = DIK_2;
-	m_mapSkillKeyInput[L"JAW_BREAKER"]   = DIK_3;
-	// m_mapSkillKeyInput[L"WIND_CUTTER"]   = DIK_4;
-	m_mapSkillKeyInput[L"GAIA_CRUSH"]    = DIK_4;
-	m_mapSkillKeyInput[L"DRAW_SWORD"]    = DIK_5;
-	//m_mapSkillKeyInput[L"CUT_HEAD"]      = DIK_4;
 
 	/*__________________________________________________________________________________________________________
 	[ 선형보간 설정 ]
@@ -149,6 +139,30 @@ HRESULT CPCGladiator::LateInit_GameObject()
 
 	// MiniMap
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::SetUp_MiniMapComponent(0), E_FAIL);
+
+	/*__________________________________________________________________________________________________________
+	[ Skill KeyInput ]
+	____________________________________________________________________________________________________________*/
+	vector<CQuickSlot*> vecQuickSlot = m_pQuickSlotMgr->Get_QuickSlotList();
+
+	m_mapSkillKeyInput[L"STINGER_BLADE"] = -1;
+	m_mapSkillKeyInput[L"CUTTING_SLASH"] = -1;
+	m_mapSkillKeyInput[L"JAW_BREAKER"]   = -1;
+	m_mapSkillKeyInput[L"GAIA_CRUSH"]    = -1;
+	m_mapSkillKeyInput[L"DRAW_SWORD"]    = -1;
+	m_mapSkillKeyInput[L"HP_POTION"]     = -1;
+	m_mapSkillKeyInput[L"MP_POTION"]     = -1;
+
+	vecQuickSlot[0]->Set_CurQuickSlotName(QUCKSLOT_SKILL_STINGER_BLADE);
+	vecQuickSlot[1]->Set_CurQuickSlotName(QUCKSLOT_SKILL_CUTTING_SLASH);
+	vecQuickSlot[2]->Set_CurQuickSlotName(QUCKSLOT_SKILL_JAW_BREAKER);
+	vecQuickSlot[3]->Set_CurQuickSlotName(QUCKSLOT_SKILL_GAIA_CRUSH);
+	vecQuickSlot[4]->Set_CurQuickSlotName(QUCKSLOT_SKILL_DRAW_SWORD);
+	vecQuickSlot[8]->Set_CurQuickSlotName(QUCKSLOT_POTION_HP);
+	vecQuickSlot[9]->Set_CurQuickSlotName(QUCKSLOT_POTION_MP);
+
+	//m_mapSkillKeyInput[L"WIND_CUTTER"]   = DIK_4;
+	//m_mapSkillKeyInput[L"CUT_HEAD"]      = DIK_4;
 
 	return S_OK;
 }
@@ -1295,7 +1309,7 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 	if (!m_bIsSkillLoop)
 	{
 		if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"STINGER_BLADE"]) &&
-			m_uiAnimIdx != Gladiator::STINGER_BLADE && 
+ 			m_uiAnimIdx != Gladiator::STINGER_BLADE && 
 			NO_EVENT_STATE)
 		{
 			SetUp_WeaponLHand();

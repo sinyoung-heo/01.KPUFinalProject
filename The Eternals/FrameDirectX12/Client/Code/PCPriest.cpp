@@ -28,6 +28,7 @@ CPCPriest::CPCPriest(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pC
 	, m_pInstancePoolMgr(CInstancePoolMgr::Get_Instance())
 	, m_pMouserMgr(CMouseCursorMgr::Get_Instance())
 	, m_pPartySystemMgr(CPartySystemMgr::Get_Instance())
+	, m_pQuickSlotMgr(CQuickSlotMgr::Get_Instance())
 {
 }
 
@@ -73,14 +74,6 @@ HRESULT CPCPriest::Ready_GameObject(wstring wstrMeshTag,
 	m_bIsSameDir		= false;
 	m_bIsSendMoveStop	= true;
 	m_fPreAngle			= m_pTransCom->m_vAngle.y;
-
-	/*__________________________________________________________________________________________________________
-	[ Skill KeyInput ]
-	____________________________________________________________________________________________________________*/
-	m_mapSkillKeyInput[L"AURA_ON"]   = DIK_1;
-	m_mapSkillKeyInput[L"PURIFY"]    = DIK_2;
-	m_mapSkillKeyInput[L"HEAL"]      = DIK_3;
-	m_mapSkillKeyInput[L"MP_CHARGE"] = DIK_4;
 
 	/*__________________________________________________________________________________________________________
 	[ 선형보간 설정 ]
@@ -138,6 +131,25 @@ HRESULT CPCPriest::LateInit_GameObject()
 
 	// MiniMap
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::SetUp_MiniMapComponent(0), E_FAIL);
+
+	/*__________________________________________________________________________________________________________
+	[ Skill KeyInput ]
+	____________________________________________________________________________________________________________*/
+	vector<CQuickSlot*> vecQuickSlot = m_pQuickSlotMgr->Get_QuickSlotList();
+
+	m_mapSkillKeyInput[L"AURA_ON"]   = -1;
+	m_mapSkillKeyInput[L"PURIFY"]    = -1;
+	m_mapSkillKeyInput[L"HEAL"]      = -1;
+	m_mapSkillKeyInput[L"MP_CHARGE"] = -1;
+	m_mapSkillKeyInput[L"HP_POTION"] = -1;
+	m_mapSkillKeyInput[L"MP_POTION"] = -1;
+
+	vecQuickSlot[0]->Set_CurQuickSlotName(QUCKSLOT_SKILL_AURA_ON);
+	vecQuickSlot[1]->Set_CurQuickSlotName(QUCKSLOT_SKILL_PURIFY);
+	vecQuickSlot[2]->Set_CurQuickSlotName(QUCKSLOT_SKILL_HEAL);
+	vecQuickSlot[3]->Set_CurQuickSlotName(QUCKSLOT_SKILL_MP_CHARGE);
+	vecQuickSlot[8]->Set_CurQuickSlotName(QUCKSLOT_POTION_HP);
+	vecQuickSlot[9]->Set_CurQuickSlotName(QUCKSLOT_POTION_MP);
 
 	return S_OK;
 }

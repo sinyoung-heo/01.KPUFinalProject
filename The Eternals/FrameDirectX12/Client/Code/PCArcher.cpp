@@ -35,6 +35,7 @@ CPCArcher::CPCArcher(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pC
 	, m_pInstancePoolMgr(CInstancePoolMgr::Get_Instance())
 	, m_pMouserMgr(CMouseCursorMgr::Get_Instance())
 	, m_pPartySystemMgr(CPartySystemMgr::Get_Instance())
+	, m_pQuickSlotMgr(CQuickSlotMgr::Get_Instance())
 {
 }
 
@@ -80,15 +81,6 @@ HRESULT CPCArcher::Ready_GameObject(wstring wstrMeshTag,
 	m_bIsSameDir		= false;
 	m_bIsSendMoveStop	= true;
 	m_fPreAngle			= m_pTransCom->m_vAngle.y;
-
-	/*__________________________________________________________________________________________________________
-	[ Skill KeyInput ]
-	____________________________________________________________________________________________________________*/
-	m_mapSkillKeyInput[L"RAPID_SHOT"]    = DIK_1;
-	m_mapSkillKeyInput[L"ARROW_SHOWER"]  = DIK_2;
-	m_mapSkillKeyInput[L"ESCAPING_BOMB"] = DIK_3;
-	m_mapSkillKeyInput[L"ARROW_FALL"]    = DIK_4;
-	m_mapSkillKeyInput[L"CHARGE_ARROW"]  = DIK_5;
 
 	/*__________________________________________________________________________________________________________
 	[ 선형보간 설정 ]
@@ -151,6 +143,27 @@ HRESULT CPCArcher::LateInit_GameObject()
 
 	// MiniMap
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::SetUp_MiniMapComponent(0), E_FAIL);
+
+	/*__________________________________________________________________________________________________________
+	[ Skill KeyInput ]
+	____________________________________________________________________________________________________________*/
+	vector<CQuickSlot*> vecQuickSlot = m_pQuickSlotMgr->Get_QuickSlotList();
+
+	m_mapSkillKeyInput[L"RAPID_SHOT"]    = -1;
+	m_mapSkillKeyInput[L"ARROW_SHOWER"]  = -1;
+	m_mapSkillKeyInput[L"ESCAPING_BOMB"] = -1;
+	m_mapSkillKeyInput[L"ARROW_FALL"]    = -1;
+	m_mapSkillKeyInput[L"CHARGE_ARROW"]  = -1;
+	m_mapSkillKeyInput[L"HP_POTION"]     = -1;
+	m_mapSkillKeyInput[L"MP_POTION"]     = -1;
+
+	vecQuickSlot[0]->Set_CurQuickSlotName(QUCKSLOT_SKILL_RAPID_SHOT);
+	vecQuickSlot[1]->Set_CurQuickSlotName(QUCKSLOT_SKILL_ARROW_SHOWER);
+	vecQuickSlot[2]->Set_CurQuickSlotName(QUCKSLOT_SKILL_ESCAPING_BOMB);
+	vecQuickSlot[3]->Set_CurQuickSlotName(QUCKSLOT_SKILL_ARROW_FALL);
+	vecQuickSlot[4]->Set_CurQuickSlotName(QUCKSLOT_SKILL_CHARGE_ARROW);
+	vecQuickSlot[8]->Set_CurQuickSlotName(QUCKSLOT_POTION_HP);
+	vecQuickSlot[9]->Set_CurQuickSlotName(QUCKSLOT_POTION_MP);
 
 	return S_OK;
 }

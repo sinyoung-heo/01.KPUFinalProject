@@ -2,6 +2,7 @@
 #include "QuickSlot.h"
 #include "Font.h"
 #include "DirectInput.h"
+#include "InventoryEquipmentMgr.h"
 
 
 CQuickSlot::CQuickSlot(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -123,7 +124,7 @@ _int CQuickSlot::LateUpdate_GameObject(const _float& fTimeDelta)
 		m_pSlotIcon->LateUpdate_GameObject(fTimeDelta);
 	}
 
-	if (m_chCurSlotName == Prtion_HP || m_chCurSlotName == Prtion_MP)
+	if (m_chCurSlotName == Potion_HP || m_chCurSlotName == Potion_MP)
 		SetUp_FontPotionCnt(fTimeDelta);
 
 	return NO_EVENT;
@@ -181,8 +182,151 @@ void CQuickSlot::SetUp_SlotIcon()
 	if (m_chCurSlotName == m_chPreSlotName)
 		return;
 
+	FRAME tFrame;
+	tFrame.fFrameCnt = 1.0f;
+	tFrame.fCurFrame = 0.0f;
+	tFrame.fSceneCnt = 1.0f;
+	tFrame.fCurScene = 0.0f;
+
+	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+
 	switch (m_chCurSlotName)
 	{
+	case EMPTY_SLOT:
+	{
+	}
+		break;
+
+	case QUCKSLOT_POTION_HP:
+	{
+		m_pSlotIcon->SetUp_TexDescriptorHeap(L"ItemPotion", tFrame, 0);
+		if (nullptr != pThisPlayer)
+			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"HP_POTION", m_uiDIK_Key);
+	}
+		break;
+
+	case QUCKSLOT_POTION_MP:
+	{
+		m_pSlotIcon->SetUp_TexDescriptorHeap(L"ItemPotion", tFrame, 1);
+		if (nullptr != pThisPlayer)
+			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"MP_POTION", m_uiDIK_Key);
+	}
+		break;
+
+	// PC Gladiator Skill
+	case QUCKSLOT_SKILL_STINGER_BLADE:
+	{
+		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Gladiator", tFrame, 0);
+		if (nullptr != pThisPlayer)
+			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"STINGER_BLADE", m_uiDIK_Key);
+	}
+		break;
+
+	case QUCKSLOT_SKILL_CUTTING_SLASH:
+	{
+		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Gladiator", tFrame, 1);
+		if (nullptr != pThisPlayer)
+			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"CUTTING_SLASH", m_uiDIK_Key);
+	}
+		break;
+
+	case QUCKSLOT_SKILL_JAW_BREAKER:
+	{
+		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Gladiator", tFrame, 2);
+		if (nullptr != pThisPlayer)
+			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"JAW_BREAKER", m_uiDIK_Key);
+	}
+		break;
+
+	case QUCKSLOT_SKILL_GAIA_CRUSH:
+	{
+		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Gladiator", tFrame, 3);
+		if (nullptr != pThisPlayer)
+			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"GAIA_CRUSH", m_uiDIK_Key);
+	}
+		break;
+
+	case QUCKSLOT_SKILL_DRAW_SWORD:
+	{
+		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Gladiator", tFrame, 4);
+		if (nullptr != pThisPlayer)
+			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"DRAW_SWORD", m_uiDIK_Key);
+	}
+		break;
+
+	// PC Archer Skill
+	case QUCKSLOT_SKILL_RAPID_SHOT:
+	{
+		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Archer", tFrame, 0);
+		if (nullptr != pThisPlayer)
+			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"RAPID_SHOT", m_uiDIK_Key);
+	}
+		break;
+
+	case QUCKSLOT_SKILL_ARROW_SHOWER:
+	{
+		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Archer", tFrame, 1);
+		if (nullptr != pThisPlayer)
+			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"ARROW_SHOWER", m_uiDIK_Key);
+	}
+		break;
+
+	case QUCKSLOT_SKILL_ESCAPING_BOMB:
+	{
+		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Archer", tFrame, 2);
+		if (nullptr != pThisPlayer)
+			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"ESCAPING_BOMB", m_uiDIK_Key);
+	}
+		break;
+
+	case QUCKSLOT_SKILL_ARROW_FALL:
+	{
+		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Archer", tFrame, 3);
+		if (nullptr != pThisPlayer)
+			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"ARROW_FALL", m_uiDIK_Key);
+	}
+		break;
+
+	case QUCKSLOT_SKILL_CHARGE_ARROW:
+	{
+		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Archer", tFrame, 4);
+		if (nullptr != pThisPlayer)
+			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"CHARGE_ARROW", m_uiDIK_Key);
+	}
+		break;
+
+	// PC Priest Skill
+	case QUCKSLOT_SKILL_AURA_ON:
+	{
+		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Priest", tFrame, 0);
+		if (nullptr != pThisPlayer)
+			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"AURA_ON", m_uiDIK_Key);
+	}
+		break;
+
+	case QUCKSLOT_SKILL_PURIFY:
+	{
+		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Priest", tFrame, 1);
+		if (nullptr != pThisPlayer)
+			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"PURIFY", m_uiDIK_Key);
+	}
+		break;
+
+	case QUCKSLOT_SKILL_HEAL:
+	{
+		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Priest", tFrame, 2);
+		if (nullptr != pThisPlayer)
+			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"HEAL", m_uiDIK_Key);
+	}
+		break;
+
+	case QUCKSLOT_SKILL_MP_CHARGE:
+	{
+		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Priest", tFrame, 3);
+		if (nullptr != pThisPlayer)
+			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"MP_CHARGE", m_uiDIK_Key);
+	}
+		break;
 
 	default:
 		break;
@@ -193,6 +337,18 @@ void CQuickSlot::SetUp_SlotIcon()
 
 void CQuickSlot::SetUp_FontPotionCnt(const _float& fTimeDelta)
 {
+	CInventoryItemSlot* pInventorySlot = nullptr;
+
+	if (m_chCurSlotName == Potion_HP)
+		pInventorySlot = CInventoryEquipmentMgr::Get_Instance()->Get_HpPotionSlot();
+	else
+		pInventorySlot = CInventoryEquipmentMgr::Get_Instance()->Get_MpPotionSlot();
+
+	if (nullptr == pInventorySlot)
+		m_uiCnt = 0;
+	else
+		m_uiCnt = pInventorySlot->Get_CurItemCnt();
+
 	if (nullptr != m_pFont)
 	{
 		_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);

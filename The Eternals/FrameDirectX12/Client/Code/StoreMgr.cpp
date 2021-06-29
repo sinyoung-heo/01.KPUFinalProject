@@ -64,6 +64,7 @@ void CStoreMgr::Set_StoreState(const STORE_STATE& eState)
 			m_mapStoreTab[L"UIStoreItemTab1"]->Set_IsActive(true);
 			m_mapStoreTab[L"UIStoreItemTab2"]->Set_IsActive(false);
 			m_mapStoreTab[L"UIStoreItemTab3"]->Set_IsActive(false);
+
 			m_mapStoreTab[L"UIStoreItemTab1"]->Get_Font()->Set_Text(L"¹°¾à");
 			m_mapStoreTab[L"UIStoreItemTab1"]->Set_FontTextPosOffset(_vec2(-22.0f, -16.0f));
 			m_mapStoreTab[L"UIStoreItemTab1"]->Set_IsSelected(true);
@@ -182,8 +183,8 @@ void CStoreMgr::Set_StoreItemType(const char& chItemType)
 			m_vecStoreItemSlot[ITEM_GRADE::ITEM_B]->Set_IsActive(false);
 			m_vecStoreItemSlot[ITEM_GRADE::ITEM_A]->Set_IsActive(false);
 			m_vecStoreItemSlot[ITEM_GRADE::ITEM_S]->Set_IsActive(false);
-			m_vecStoreItemSlot[ITEM_GRADE::ITEM_D]->Set_CurItemInfo(ItemType_Potion, Prtion_HP);
-			m_vecStoreItemSlot[ITEM_GRADE::ITEM_C]->Set_CurItemInfo(ItemType_Potion, Prtion_MP);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_D]->Set_CurItemInfo(ItemType_Potion, Potion_HP);
+			m_vecStoreItemSlot[ITEM_GRADE::ITEM_C]->Set_CurItemInfo(ItemType_Potion, Potion_MP);
 			m_vecStoreItemSlot[ITEM_GRADE::ITEM_B]->Set_CurItemInfo(NO_ITEM, NO_ITEM);
 			m_vecStoreItemSlot[ITEM_GRADE::ITEM_A]->Set_CurItemInfo(NO_ITEM, NO_ITEM);
 			m_vecStoreItemSlot[ITEM_GRADE::ITEM_S]->Set_CurItemInfo(NO_ITEM, NO_ITEM);

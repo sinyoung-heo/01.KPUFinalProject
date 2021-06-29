@@ -15,7 +15,7 @@ void CQuickSlotMgr::Add_QuickSlot(CQuickSlot* pSlot)
 	{
 		m_vecQuickSlot.emplace_back(pSlot);
 		pSlot->Set_QuickSlotIdx(uiQuickSlotIdx);
-
+		pSlot->Set_DIKKey(uiQuickSlotIdx + 2);
 		++uiQuickSlotIdx;
 	}
 }

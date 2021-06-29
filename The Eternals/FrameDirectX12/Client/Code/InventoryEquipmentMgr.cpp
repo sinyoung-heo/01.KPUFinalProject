@@ -48,6 +48,12 @@ void CInventoryEquipmentMgr::Push_ItemInventory(const char& chItemType, const ch
 			{
 				pSlot->Set_CurItemInfo(chItemType, chItemName, iCnt);
 				++m_uiCurSlotSize;
+
+				if (Potion_HP == chItemName)
+					m_pHpPotionSlot = pSlot;
+				else
+					m_pMpPotionSlot = pSlot;
+
 				break;
 			}
 		}
@@ -90,6 +96,11 @@ void CInventoryEquipmentMgr::Pop_ItemInventory(const char& chItemType, const cha
 					pSlot->Set_CurItemCnt(0);
 					pSlot->Set_CurItemInfo(NO_ITEM, NO_ITEM);
 					--m_uiCurSlotSize;
+
+					//if (Potion_HP == chItemName)
+					//	m_pHpPotionSlot = nullptr;
+					//else
+					//	m_pMpPotionSlot = nullptr;
 				}
 
 				break;
@@ -167,4 +178,7 @@ void CInventoryEquipmentMgr::Free()
 	m_pInventoryCanvas   = nullptr;
 	m_pInventorySwapSlot = nullptr;
 	m_pEquipmentCanvas   = nullptr;
+
+	m_pHpPotionSlot = nullptr;
+	m_pMpPotionSlot = nullptr;
 }

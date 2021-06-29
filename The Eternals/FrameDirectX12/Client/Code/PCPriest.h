@@ -4,6 +4,7 @@
 #include "PriestAnimation.h"
 #include "PartySystemMgr.h"
 #include "InventoryEquipmentMgr.h"
+#include "QuickSlotMgr.h"
 
 namespace Engine
 {
@@ -116,6 +117,7 @@ private:
 	CInstancePoolMgr*	m_pInstancePoolMgr = nullptr;
 	CMouseCursorMgr*	m_pMouserMgr       = nullptr;
 	CPartySystemMgr*	m_pPartySystemMgr  = nullptr;
+	CQuickSlotMgr*		m_pQuickSlotMgr    = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]

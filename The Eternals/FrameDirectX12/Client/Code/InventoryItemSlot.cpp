@@ -201,13 +201,31 @@ void CInventoryItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 				// 현재 슬롯의 정보에 SelectSlot의 정보를 저장.
 				m_tCurItemInfo.chItemType = tSelectItemInfo.chItemType;
 				m_tCurItemInfo.chItemName = tSelectItemInfo.chItemName;
-				m_uiCnt = uiSelectItemCnt;
-				m_bIsOnEquipment = bIsOnEquipment;
-				m_wstrEquipSlotTag = wstrEquipmentTag;
+				m_uiCnt                   = uiSelectItemCnt;
+				m_bIsOnEquipment          = bIsOnEquipment;
+				m_wstrEquipSlotTag        = wstrEquipmentTag;
 
 				m_pInvenEquipMgr->Get_InventorySwapSlotClass()->Set_CurItemInfo(NO_ITEM, NO_ITEM, 0);
 				m_pInvenEquipMgr->Set_IsInventoryItemSwapState(false);
 				m_bIsKeyPressingLB = false;
+
+				// SelectSlot을 Potion ptr로 저장.
+				if (ItemType_Potion == m_tCurItemInfo.chItemType)
+				{
+					if (Potion_HP == m_tCurItemInfo.chItemName)
+						m_pInvenEquipMgr->Set_HpPotionSlot(this);
+					else
+						m_pInvenEquipMgr->Set_MpPotionSlot(this);
+				}
+
+				// this를 Potion ptr로 저장.
+				if (ItemType_Potion == pSelectItemSlot->Get_CurItemInfo().chItemType)
+				{
+					if (Potion_HP == pSelectItemSlot->Get_CurItemInfo().chItemName)
+						m_pInvenEquipMgr->Set_HpPotionSlot(pSelectItemSlot);
+					else
+						m_pInvenEquipMgr->Set_MpPotionSlot(pSelectItemSlot);
+				}
 				return;
 			}
 
@@ -631,11 +649,11 @@ void CInventoryItemSlot::SetUp_ItemIcon()
 
 		switch (m_tCurItemInfo.chItemName)
 		{
-		case Prtion_HP:
+		case Potion_HP:
 			m_uiPrice = Item_Prtion_HP_COST;
 			m_uiTexIdx = 0;
 			break;
-		case Prtion_MP:
+		case Potion_MP:
 			m_uiPrice = Item_Prtion_MP_COST;
 			m_uiTexIdx = 1;
 			break;

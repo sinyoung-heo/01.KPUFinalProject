@@ -2083,12 +2083,12 @@ void process_shopping(const int& id, cs_packet_shop* p)
 		GAMEITEM item = CItemMgr::GetInstance()->Get_Item(itemNumber);
 
 		/* 2. HP/MP 포션 개수는 따로 계산 */
-		if (p->buyItemType[i] == ItemType_Potion && p->buyItemName[i] == Prtion_HP)
+		if (p->buyItemType[i] == ItemType_Potion && p->buyItemName[i] == Potion_HP)
 		{
 			if (pUser->Is_inInventory(30, ITEM::ITEM_ETC))	continue;
 			else allItemCount += 1;
 		}
-		else if (p->buyItemType[i] == ItemType_Potion && p->buyItemName[i] == Prtion_MP)
+		else if (p->buyItemType[i] == ItemType_Potion && p->buyItemName[i] == Potion_MP)
 		{
 			if (pUser->Is_inInventory(31, ITEM::ITEM_ETC))	continue;
 			else allItemCount += 1;
