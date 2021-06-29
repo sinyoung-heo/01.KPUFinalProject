@@ -1,4 +1,4 @@
-EffectPublic|16|..\..\Bin\Resource\ResourceStage\Texture\EffectPublic\%d.dds
+EffectPublic|29|..\..\Bin\Resource\ResourceStage\Texture\EffectPublic\%d.dds
 ArrowShot0|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\ArrowShot0\%d.dds
 Bomb00|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb00\%d.dds
 Bomb01|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb01\%d.dds
@@ -32,7 +32,7 @@ SkyBox|7|..\..\Bin\Resource\ResourceStage\Texture\Environment\SkyBox\%d.dds
 Terrain|8|..\..\Bin\Resource\ResourceStage\Texture\Environment\Terrain\%d.dds
 TexWaterFall|11|..\..\Bin\Resource\ResourceStage\Texture\Environment\TexWaterFall\%d.dds
 WaterNormal|134|..\..\Bin\Resource\ResourceStage\Texture\Environment\WaterNormal\%d.dds
-PublicMagic|15|..\..\Bin\Resource\ResourceStage\Texture\PublicMagic\%d.dds
+PublicMagic|20|..\..\Bin\Resource\ResourceStage\Texture\PublicMagic\%d.dds
 ItemArmor|5|..\..\Bin\Resource\ResourceStage\Texture\UI\ItemArmor\%d.dds
 ItemHelmet|5|..\..\Bin\Resource\ResourceStage\Texture\UI\ItemHelmet\%d.dds
 ItemPotion|2|..\..\Bin\Resource\ResourceStage\Texture\UI\ItemPotion\%d.dds

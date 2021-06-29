@@ -475,6 +475,24 @@
     <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\13.QuickSlot">
       <UniqueIdentifier>{78503bd8-e828-4f5a-af4d-11066d931710}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.GameEffect\08.DistTrail%28Fire%29">
+      <UniqueIdentifier>{d8ee195b-da58-428d-8885-c5b22f18e6f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.GameEffect\09.FireRing">
+      <UniqueIdentifier>{a2852515-4068-4119-86c5-0b350bbdcc48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.GameEffect\10.GridShield">
+      <UniqueIdentifier>{1df0020a-7286-484b-a29a-c7d4d178745e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.GameEffect\11.IceDecal">
+      <UniqueIdentifier>{674862aa-1844-4328-abf5-20e6fa1bb718}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.GameEffect\12.LightingParticle">
+      <UniqueIdentifier>{53e1abbf-5180-49f5-8746-ba92e8ca2bdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\98.GameEffect\13.SwordEffect">
+      <UniqueIdentifier>{3bc1c188-9500-47da-9969-22bc6ccc9787}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -874,8 +892,6 @@
     <ClInclude Include="..\Code\PartyUIMpGauge.h">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\08.PartyInfoListCanvasChild\PartyUIMpGauge</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\DistTrail.h" />
-    <ClInclude Include="..\Code\LightingParticle.h" />
     <ClInclude Include="..\Code\ChattingCanvas.h">
       <Filter>02.GameObject\99.GameUI\00.GameUIRoot\08.ChattingCanvas</Filter>
     </ClInclude>
@@ -891,8 +907,6 @@
     <ClInclude Include="..\Code\NPCMiniMap.h">
       <Filter>02.GameObject\99.GameUI\03.NPCMiniMap</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\FrameMesh.h" />
-    <ClInclude Include="..\Code\IceDecal.h" />
     <ClInclude Include="..\Code\SwordEffect.h" />
     <ClInclude Include="..\Code\WarningFrame.h">
       <Filter>02.GameObject\99.GameUI\04.WarningFrame</Filter>
@@ -939,7 +953,6 @@
     <ClInclude Include="..\Code\LoginIDButton.h">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.LoginIDBackgroundChild\LoginIDButton</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\FireRing.h" />
     <ClInclude Include="..\Code\StoreMgr.h">
       <Filter>97.Mgr\09.StoreMgr</Filter>
     </ClInclude>
@@ -979,7 +992,33 @@
     <ClInclude Include="..\Code\QuickSlot.h">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\13.QuickSlot</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\QuickSlotMgr.h" />
+    <ClInclude Include="..\Code\DistTrail.h">
+      <Filter>02.GameObject\98.GameEffect\08.DistTrail%28Fire%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\FireRing.h">
+      <Filter>02.GameObject\98.GameEffect\09.FireRing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\FrameMesh.h">
+      <Filter>02.GameObject\98.GameEffect\99.PublicEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\GridShieldEffect.h">
+      <Filter>02.GameObject\98.GameEffect\10.GridShield</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\IceDecal.h">
+      <Filter>02.GameObject\98.GameEffect\11.IceDecal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\LightingParticle.h">
+      <Filter>02.GameObject\98.GameEffect\12.LightingParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\ParticleEffect.h">
+      <Filter>02.GameObject\98.GameEffect\99.PublicEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\MagicCircleGlow.h">
+      <Filter>02.GameObject\98.GameEffect\99.PublicEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\QuickSlotMgr.h">
+      <Filter>02.GameObject\98.GameEffect\13.SwordEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1325,8 +1364,6 @@
     <ClCompile Include="..\Code\PartyUIMpGauge.cpp">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\08.PartyInfoListCanvasChild\PartyUIMpGauge</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\DistTrail.cpp" />
-    <ClCompile Include="..\Code\LightingParticle.cpp" />
     <ClCompile Include="..\Code\ChattingCanvas.cpp">
       <Filter>02.GameObject\99.GameUI\00.GameUIRoot\08.ChattingCanvas</Filter>
     </ClCompile>
@@ -1342,8 +1379,6 @@
     <ClCompile Include="..\Code\NPCMiniMap.cpp">
       <Filter>02.GameObject\99.GameUI\03.NPCMiniMap</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\FrameMesh.cpp" />
-    <ClCompile Include="..\Code\IceDecal.cpp" />
     <ClCompile Include="..\Code\SwordEffect.cpp" />
     <ClCompile Include="..\Code\WarningFrame.cpp">
       <Filter>02.GameObject\99.GameUI\04.WarningFrame</Filter>
@@ -1390,7 +1425,6 @@
     <ClCompile Include="..\Code\LoginIDButton.cpp">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\02.LoginIDBackgroundChild\LoginIDButton</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\FireRing.cpp" />
     <ClCompile Include="..\Code\StoreMgr.cpp">
       <Filter>97.Mgr\09.StoreMgr</Filter>
     </ClCompile>
@@ -1428,6 +1462,30 @@
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\13.QuickSlot</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\QuickSlotMgr.cpp" />
+    <ClCompile Include="..\Code\DistTrail.cpp">
+      <Filter>02.GameObject\98.GameEffect\08.DistTrail%28Fire%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\FireRing.cpp">
+      <Filter>02.GameObject\98.GameEffect\09.FireRing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\FrameMesh.cpp">
+      <Filter>02.GameObject\98.GameEffect\99.PublicEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\GridShieldEffect.cpp">
+      <Filter>02.GameObject\98.GameEffect\10.GridShield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\IceDecal.cpp">
+      <Filter>02.GameObject\98.GameEffect\11.IceDecal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\LightingParticle.cpp">
+      <Filter>02.GameObject\98.GameEffect\12.LightingParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ParticleEffect.cpp">
+      <Filter>02.GameObject\98.GameEffect\99.PublicEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MagicCircleGlow.cpp">
+      <Filter>02.GameObject\98.GameEffect\99.PublicEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
