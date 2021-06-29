@@ -7,8 +7,10 @@ private:
 	explicit CQuickSlotSwapSlot(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 	virtual ~CQuickSlotSwapSlot() = default;
 public:
-	const char&	Get_QuickSlotName() { return m_chCurSlotName; }
+	const char&		Get_QuickSlotName() { return m_chCurSlotName; }
+	const _uint&	Get_QuickSlotIdx()	{ return m_uiIdx; }
 	void Set_CurQuickSlotName(const char& chSlot)	{ m_chCurSlotName = chSlot; }
+	void Set_QuickSlotIdx(const _uint& uiIdx)		{ m_uiIdx = uiIdx; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrObjectTag,
@@ -32,6 +34,7 @@ private:
 	____________________________________________________________________________________________________________*/
 	char m_chCurSlotName = EMPTY_SLOT;
 	char m_chPreSlotName = EMPTY_SLOT;
+	_uint m_uiIdx = 0;
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,

@@ -154,80 +154,35 @@ void CQuickSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 	{
 		if (!g_bIsOpenShop)
 		{
-			//// Item 정보 교환.
-			//if (m_pInvenEquipMgr->Get_IsInventoryItemSwapState())
-			//{
-			//	vector<CInventoryItemSlot*> vecInvenSlot = m_pInvenEquipMgr->Get_InventorySlotList();
-			//	_uint uiSelectIdx = m_pInvenEquipMgr->Get_InventorySwapSlotClass()->Get_ItemSlotIdx();
-			//	if (uiSelectIdx == m_uiIdx)
-			//	{
-			//		m_pInvenEquipMgr->Get_InventorySwapSlotClass()->Set_CurItemInfo(NO_ITEM, NO_ITEM, 0);
-			//		m_pInvenEquipMgr->Set_IsInventoryItemSwapState(false);
-			//		m_bIsKeyPressingLB = false;
-			//		return;
-			//	}
+			// QuickSlot 정보 교환.
+			if (m_pQuickSlotMgr->Get_IsQuickSlotSwapState())
+			{
+				vector<CQuickSlot*> vecQuickSlot = m_pQuickSlotMgr->Get_QuickSlotList();
+				_uint uiSelectIdx = m_pQuickSlotMgr->Get_QuickSlotSwapSlot()->Get_QuickSlotIdx();
+				if (uiSelectIdx == m_uiIdx)
+				{
+					m_pQuickSlotMgr->Get_QuickSlotSwapSlot()->Set_CurQuickSlotName(EMPTY_SLOT);
+					m_pQuickSlotMgr->Set_IsQuickSlotSwapState(false);
+					m_bIsKeyPressingLB = false;
+					return;
+				}
 
-			//	map<wstring, CEquipmentItemSlot*> mapEquipmentSlot = m_pInvenEquipMgr->Get_EquipmentSlotMap();
+				CQuickSlot*	pSelectQuickSlot = vecQuickSlot[uiSelectIdx];
+				char chSelectSlotName = pSelectQuickSlot->Get_QuickSlotName();
 
-			//	CInventoryItemSlot* pSelectItemSlot  = vecInvenSlot[uiSelectIdx];
-			//	ITEM_INFO			tSelectItemInfo  = pSelectItemSlot->Get_CurItemInfo();
-			//	_uint				uiSelectItemCnt  = pSelectItemSlot->Get_CurItemCnt();
-			//	_bool				bIsOnEquipment   = pSelectItemSlot->Get_IsOnEquipment();
-			//	wstring				wstrEquipmentTag = pSelectItemSlot->Get_EquipmentTag();
+				// SelectSlot에 현재 슬롯의 정보를 저장.
+				pSelectQuickSlot->Set_CurQuickSlotName(m_chCurSlotName);
 
-			//	// SelectItemSlot 장비 장착 O && this ItemSlot 장비 장착 O
-			//	if (pSelectItemSlot->Get_EquipmentTag() != L"" && m_wstrEquipSlotTag != L"")
-			//	{
-			//		mapEquipmentSlot[pSelectItemSlot->Get_EquipmentTag()]->Set_InventorySlotClass(this);
-			//		mapEquipmentSlot[m_wstrEquipSlotTag]->Set_InventorySlotClass(pSelectItemSlot);
-			//	}
-			//	// SelectItemSlot 장비 장착 O && this ItemSlot 장비 장착 X
-			//	else if (pSelectItemSlot->Get_EquipmentTag() != L"" && m_wstrEquipSlotTag == L"")
-			//	{
-			//		mapEquipmentSlot[pSelectItemSlot->Get_EquipmentTag()]->Set_InventorySlotClass(this);
-			//	}
-			//	// SelectItemSlot 장비 장착 X && this ItemSlot 장비 장착 O
-			//	else if (pSelectItemSlot->Get_EquipmentTag() == L"" && m_wstrEquipSlotTag != L"")
-			//	{
-			//		mapEquipmentSlot[m_wstrEquipSlotTag]->Set_InventorySlotClass(pSelectItemSlot);
-			//	}
+				// 현재 슬롯의 정보에 SelectSlot의 정보를 저장.
+				m_chCurSlotName = chSelectSlotName;
 
-			//	// SelectSlot에 현재 슬롯의 정보를 저장.
-			//	pSelectItemSlot->Set_CurItemInfo(m_tCurItemInfo.chItemType, m_tCurItemInfo.chItemName);
-			//	pSelectItemSlot->Set_CurItemCnt(m_uiCnt);
-			//	pSelectItemSlot->Set_IsOnEquipment(m_bIsOnEquipment);
-			//	pSelectItemSlot->Set_EquipSlotTag(m_wstrEquipSlotTag);
 
-			//	// 현재 슬롯의 정보에 SelectSlot의 정보를 저장.
-			//	m_tCurItemInfo.chItemType = tSelectItemInfo.chItemType;
-			//	m_tCurItemInfo.chItemName = tSelectItemInfo.chItemName;
-			//	m_uiCnt                   = uiSelectItemCnt;
-			//	m_bIsOnEquipment          = bIsOnEquipment;
-			//	m_wstrEquipSlotTag        = wstrEquipmentTag;
+				m_pQuickSlotMgr->Get_QuickSlotSwapSlot()->Set_CurQuickSlotName(EMPTY_SLOT);
+				m_pQuickSlotMgr->Set_IsQuickSlotSwapState(false);
+				m_bIsKeyPressingLB = false;
 
-			//	m_pInvenEquipMgr->Get_InventorySwapSlotClass()->Set_CurItemInfo(NO_ITEM, NO_ITEM, 0);
-			//	m_pInvenEquipMgr->Set_IsInventoryItemSwapState(false);
-			//	m_bIsKeyPressingLB = false;
-
-			//	// SelectSlot을 Potion ptr로 저장.
-			//	if (ItemType_Potion == m_tCurItemInfo.chItemType)
-			//	{
-			//		if (Potion_HP == m_tCurItemInfo.chItemName)
-			//			m_pInvenEquipMgr->Set_HpPotionSlot(this);
-			//		else
-			//			m_pInvenEquipMgr->Set_MpPotionSlot(this);
-			//	}
-
-			//	// this를 Potion ptr로 저장.
-			//	if (ItemType_Potion == pSelectItemSlot->Get_CurItemInfo().chItemType)
-			//	{
-			//		if (Potion_HP == pSelectItemSlot->Get_CurItemInfo().chItemName)
-			//			m_pInvenEquipMgr->Set_HpPotionSlot(pSelectItemSlot);
-			//		else
-			//			m_pInvenEquipMgr->Set_MpPotionSlot(pSelectItemSlot);
-			//	}
-			//	return;
-			//}
+				return;
+			}
 
 			if (!m_pQuickSlotMgr->Get_IsQuickSlotSwapState() &&
 				!CInventoryEquipmentMgr::Get_Instance()->Get_IsInventoryItemSwapState())
@@ -238,6 +193,7 @@ void CQuickSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 					m_pQuickSlotMgr->Set_IsQuickSlotSwapState(false);
 
 				m_pQuickSlotMgr->Get_QuickSlotSwapSlot()->Set_CurQuickSlotName(m_chCurSlotName);
+				m_pQuickSlotMgr->Get_QuickSlotSwapSlot()->Set_QuickSlotIdx(m_uiIdx);
 
 				m_bIsKeyPressingLB = false;
 				return;
