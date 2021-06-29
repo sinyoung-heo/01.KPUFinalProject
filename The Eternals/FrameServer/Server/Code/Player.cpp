@@ -78,13 +78,19 @@ bool CPlayer::Delete_Item(const int& itemNumber, ITEM eItemType)
 bool CPlayer::Buy_Item(const int& itemNumber, ITEM eItemType, const int& count)
 {
     if (m_mapInventory[eItemType][itemNumber].iCount <= 0)
+    {
         CDBMgr::GetInstance()->insert_Inventory(m_sNum, itemNumber, count);
+        m_mapInventory[eItemType][itemNumber].iCount += count;
+        return true;
+    }
     else
-        CDBMgr::GetInstance()->update_Inventory(m_sNum, itemNumber, count);
+    {
+        m_mapInventory[eItemType][itemNumber].iCount += count;
+        CDBMgr::GetInstance()->update_Inventory(m_sNum, itemNumber, m_mapInventory[eItemType][itemNumber].iCount);
+        return true;
+    }
 
-    m_mapInventory[eItemType][itemNumber].iCount += count;
-    
-    return true;
+    return false;
 }
 
 bool CPlayer::Sell_Item(const int& itemNumber, ITEM eItemType, const int& count)

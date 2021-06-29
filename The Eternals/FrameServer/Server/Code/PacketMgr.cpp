@@ -2118,23 +2118,6 @@ void process_shopping(const int& id, cs_packet_shop* p)
 		{
 			pUser->m_iMoney -= item.iCost * p->buyItemCount[i];
 
-			/*if (itemNumber == 30 || itemNumber == 31)
-			{
-				send_update_inventory(id,
-					p->buyItemType[i],
-					p->buyItemName[i],
-					pUser->Get_ItemCount(itemNumber, static_cast<ITEM>(p->buyItemType[i])),
-					true);
-			}
-			else if (itemNumber != 30 && itemNumber != 31)
-			{
-				send_update_inventory(id,
-					p->buyItemType[i],
-					p->buyItemName[i],
-					p->buyItemCount[i],
-					true);
-			}*/
-		
 			send_update_inventory(id,
 				p->buyItemType[i],
 				p->buyItemName[i],
