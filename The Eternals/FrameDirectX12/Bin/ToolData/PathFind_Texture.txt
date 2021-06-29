@@ -1,4 +1,4 @@
-EffectPublic|29|..\..\Bin\Resource\ResourceStage\Texture\EffectPublic\%d.dds
+EffectPublic|27|..\..\Bin\Resource\ResourceStage\Texture\EffectPublic\%d.dds
 ArrowShot0|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\ArrowShot0\%d.dds
 Bomb00|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb00\%d.dds
 Bomb01|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb01\%d.dds
