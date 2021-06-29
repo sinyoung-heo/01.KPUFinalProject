@@ -9,6 +9,7 @@
 #include "TimeMgr.h"
 #include "DescriptorHeapMgr.h"
 #include "SnowParticle.h"
+#include "ParticleEffect.h"
 CIceStorm::CIceStorm(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
@@ -62,7 +63,7 @@ HRESULT CIceStorm::LateInit_GameObject()
 	m_pTransCom->m_vAngle.z = random[2];
 
 	CGameObject* pGameObj = nullptr;
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		pGameObj = CSnowParticle::Create(m_pGraphicDevice, m_pCommandList,
 			L"Snow",						// TextureTag
@@ -186,7 +187,7 @@ void CIceStorm::Set_ConstantTable()
 		{
 			m_bisLifeInit = true;
 			m_fDeltatimeVelocity2 = 3;
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < 3; i++)
 			{
 				CGameObject *pGameObj = CSnowParticle::Create(m_pGraphicDevice, m_pCommandList,
 					L"Snow",						// TextureTag

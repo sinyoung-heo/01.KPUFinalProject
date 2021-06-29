@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "PublicPlane.h"
+#include "MagicCircleGlow.h"
 #include "GraphicDevice.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
@@ -8,13 +8,13 @@
 #include "RenderTarget.h"
 #include "TimeMgr.h"
 #include "DescriptorHeapMgr.h"
-CPublicPlane::CPublicPlane(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CMagicCircleGlow::CMagicCircleGlow(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
 }
 
 
-HRESULT CPublicPlane::Ready_GameObject(wstring wstrMeshTag,
+HRESULT CMagicCircleGlow::Ready_GameObject(wstring wstrMeshTag,
 											 const _vec3 & vScale,
 											 const _vec3 & vAngle, 
 											 const _vec3 & vPos)
@@ -31,7 +31,7 @@ HRESULT CPublicPlane::Ready_GameObject(wstring wstrMeshTag,
 	return S_OK;
 }
 
-HRESULT CPublicPlane::LateInit_GameObject()
+HRESULT CMagicCircleGlow::LateInit_GameObject()
 {
 
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
@@ -45,7 +45,7 @@ HRESULT CPublicPlane::LateInit_GameObject()
 	return S_OK;	
 }
 
-_int CPublicPlane::Update_GameObject(const _float & fTimeDelta)
+_int CMagicCircleGlow::Update_GameObject(const _float & fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
@@ -70,7 +70,7 @@ _int CPublicPlane::Update_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CPublicPlane::LateUpdate_GameObject(const _float & fTimeDelta)
+_int CMagicCircleGlow::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
@@ -80,13 +80,13 @@ _int CPublicPlane::LateUpdate_GameObject(const _float & fTimeDelta)
 }
 
 
-void CPublicPlane::Render_GameObject(const _float& fTimeDelta)
+void CMagicCircleGlow::Render_GameObject(const _float& fTimeDelta)
 {
 	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_fNormalMapDeltatime, m_fPatternMapDeltatime
 		,0,4);
 }
 
-HRESULT CPublicPlane::Add_Component(wstring wstrMeshTag)
+HRESULT CMagicCircleGlow::Add_Component(wstring wstrMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -100,14 +100,14 @@ HRESULT CPublicPlane::Add_Component(wstring wstrMeshTag)
 	// Shader
 	m_pShaderCom = static_cast<Engine::CShaderMeshEffect*>(m_pComponentMgr->Clone_Component(L"ShaderMeshEffect", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(5), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(6), E_FAIL);
 	m_pShaderCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
 	return S_OK;
 }
 
-void CPublicPlane::Set_ConstantTable()
+void CMagicCircleGlow::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -132,13 +132,13 @@ void CPublicPlane::Set_ConstantTable()
 	
 }
 
-void CPublicPlane::Set_ConstantTableShadowDepth()
+void CMagicCircleGlow::Set_ConstantTableShadowDepth()
 {
 
 }
 
 
-HRESULT CPublicPlane::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth)
+HRESULT CMagicCircleGlow::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth)
 {
 	_uint m_uiTexSize = vecTexture.size() + vecShadowDepth.size();
 
@@ -183,13 +183,13 @@ HRESULT CPublicPlane::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTex
 }
 
 
-Engine::CGameObject* CPublicPlane::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
+Engine::CGameObject* CMagicCircleGlow::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
 												wstring wstrMeshTag, 
 												const _vec3 & vScale,
 												const _vec3 & vAngle,
 												const _vec3 & vPos)
 {
-	CPublicPlane* pInstance = new CPublicPlane(pGraphicDevice, pCommandList);
+	CMagicCircleGlow* pInstance = new CMagicCircleGlow(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos)))
 		Engine::Safe_Release(pInstance);
@@ -197,7 +197,7 @@ Engine::CGameObject* CPublicPlane::Create(ID3D12Device * pGraphicDevice, ID3D12G
 	return pInstance;
 }
 
-void CPublicPlane::Free()
+void CMagicCircleGlow::Free()
 {
 	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pMeshCom);

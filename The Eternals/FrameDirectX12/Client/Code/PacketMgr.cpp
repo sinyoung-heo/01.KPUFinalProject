@@ -9,6 +9,8 @@
 #include "FadeInOut.h"
 #include "ChattingMgr.h"
 #include "InventoryEquipmentMgr.h"
+#include "EquipmentItemSlot.h"
+#include "StoreMgr.h"
 /* USER */
 #include "PCGladiator.h"
 #include "PCOthersGladiator.h"
@@ -31,8 +33,6 @@
 #include "GiantBeetle.h"
 #include "GiantMonkey.h"
 #include "CraftyArachne.h"
-
-#include "StoreMgr.h"
 
 IMPLEMENT_SINGLETON(CPacketMgr)
 
@@ -418,6 +418,7 @@ void CPacketMgr::Process_packet()
 	case SC_PACKET_LOAD_EQUIPMENT:
 	{
 		sc_packet_load_equipment* packet = reinterpret_cast<sc_packet_load_equipment*>(m_packet_start);
+
 		cout << "[·Î±×ÀÎ ÈÄ ÀåÂø ÁßÀÎ ¾ÆÀÌÅÛ] " << endl;
 		cout << (int)packet->itemName[0]
 			<< ", °©¿Ê: " << (int)packet->itemName[1] 

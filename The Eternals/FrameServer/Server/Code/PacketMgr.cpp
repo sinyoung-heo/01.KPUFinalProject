@@ -2118,23 +2118,6 @@ void process_shopping(const int& id, cs_packet_shop* p)
 		{
 			pUser->m_iMoney -= item.iCost * p->buyItemCount[i];
 
-			/*if (itemNumber == 30 || itemNumber == 31)
-			{
-				send_update_inventory(id,
-					p->buyItemType[i],
-					p->buyItemName[i],
-					pUser->Get_ItemCount(itemNumber, static_cast<ITEM>(p->buyItemType[i])),
-					true);
-			}
-			else if (itemNumber != 30 && itemNumber != 31)
-			{
-				send_update_inventory(id,
-					p->buyItemType[i],
-					p->buyItemName[i],
-					p->buyItemCount[i],
-					true);
-			}*/
-		
 			send_update_inventory(id,
 				p->buyItemType[i],
 				p->buyItemName[i],
@@ -2163,6 +2146,22 @@ void process_shopping(const int& id, cs_packet_shop* p)
 
 	send_user_money(id, pUser->m_iMoney);
 
+}
+
+void process_load_equipment(const int& id, const char& chItemSlotType, const char& chItemType, const char& chName)
+{
+	CPlayer* pUser = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pUser == nullptr) return;
+	if (!pUser->m_bIsConnect) return;
+
+	// 능력치 적용
+	int itemNumber = CItemMgr::GetInstance()->Find_ItemNumber(chItemType, chName);
+	pUser->m_iMaxAtt	+= CItemMgr::GetInstance()->Get_Item(itemNumber).iAtt;
+	pUser->m_iMinAtt	+= CItemMgr::GetInstance()->Get_Item(itemNumber).iAtt;
+	pUser->m_iHp		+= CItemMgr::GetInstance()->Get_Item(itemNumber).iHp;
+	pUser->m_iMaxHp		+= CItemMgr::GetInstance()->Get_Item(itemNumber).iHp;
+	pUser->m_iMp		+= CItemMgr::GetInstance()->Get_Item(itemNumber).iMp;
+	pUser->m_iMaxMp		+= CItemMgr::GetInstance()->Get_Item(itemNumber).iMp;
 }
 
 /*===========================================FUNC====================================================*/

@@ -27,7 +27,8 @@ public:
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 
 	virtual void Render_GameObject(const _float& fTimeDelta);
-	
+	void Set_isScaleAnim(bool isScaling) { m_bisScaleAnim = isScaling; }
+	void Set_TexIDX(_uint Diffuse, _uint Normal, _uint Specular) { m_uiDiffuse = Diffuse, m_uiNormal = Normal, m_uiSpec = Specular; }
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
 	void			Set_ConstantTable();
@@ -46,17 +47,21 @@ private:
 	____________________________________________________________________________________________________________*/
 	wstring			m_wstrMeshTag		       = L"";
 	
-	float m_fNormalMapDeltatime = 0.f;
+	_uint m_uiDiffuse  = 0;
+	_uint m_uiNormal   = 0;
+	_uint m_uiSpec     = 0;
 	float m_fDeltatime = 0.f;
 	float m_fDeltatime2 = 0.f;
 	float m_fDeltatime3 = 0.f;
-	float m_fPatternMapDeltatime = 0.f;
+	float m_fDegree = 0.f;
 
 	//Temp
 	float   fFrameCnt = 8.f;
 	float	fCurFrame = 0.f;
 	float	fSceneCnt = 2.f;
 	float	fCurScene = 0.f;
+	float m_fLifeTime = 0.f;
+	bool m_bisScaleAnim = false;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

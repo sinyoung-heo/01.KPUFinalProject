@@ -163,7 +163,7 @@ VS_OUT VS_MAIN(VS_IN vs_input)
 	
 	// ProjPos
 	vs_output.ProjPos		= vs_output.Pos;
-	
+    vs_output.WorldPos = mul(float4(vs_input.Pos, 1.f), g_matWorld);
 	return (vs_output);
 }
 
@@ -227,7 +227,14 @@ PS_OUT PS_DISSOLVE(VS_OUT ps_input) : SV_TARGET
 	____________________________________________________________________________________________________________*/
 	float Normal_fDissolve = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV).r;
 
-    ps_output.Emissive = float4(g_fOffset6, 0, 0, 1);
+	
+    float3 WN = ps_input.N;
+    float4 ViewDir = normalize(g_vCameraPos - ps_input.WorldPos);
+    float Lim = dot(ViewDir, float4(WN, 1));
+    Lim = saturate(Lim);
+    Lim = pow(Lim, 4);
+	
+    ps_output.Emissive = mul(float4(g_fOffset6*0.5f, 0, 0, 1),Lim);
 	if ((0.05f > (1.f - g_fDissolve) - Normal_fDissolve) && ((1.f - g_fDissolve) - Normal_fDissolve) > 0.0f)
 	{
 		ps_output.Emissive = g_vEmissiveColor;
@@ -315,7 +322,7 @@ VS_OUT VS_SHADOW_MAIN(VS_IN vs_input)
 	
 	// ProjPos
 	vs_output.ProjPos		= vs_output.Pos;
-	
+    vs_output.WorldPos = mul(float4(vs_input.Pos, 1.f), g_matWorld);
 	// 광원 위치에서의 투영 좌표
 	float4 matLightPosW		= mul(float4(vs_input.Pos.xyz, 1.0f), g_matWorld);
 	float4 matLightPosWV	= mul(float4(matLightPosW.xyz, 1.0f), g_matLightView);
