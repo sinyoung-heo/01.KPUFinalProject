@@ -197,9 +197,21 @@ void Initialize_Monster()
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(127.0f, 0.f, 55.0f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_GMONKEY, STAGE_VELIKA, 100000, 5, 10, 0.5f);
+		pNew->Ready_Monster(_vec3(125.0f, 0.f, 55.0f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_GMONKEY, STAGE_VELIKA, 100000, 5, 10, 0.5f);
 		pNew->Set_NumAnimation(GiantMonkey::NUM_ANIMATION);
 		pNew->Set_AnimDuration(GiantMonkey::duration);
+	}
+	else return;
+
+	// TEST MONSTER - drowned sailor
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_Monster(_vec3(130.0f, 0.f, 55.0f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_VELIKA, 10000, 5, 10, 0.5f);
+		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
+		pNew->Set_AnimDuration(DrownedSailor::duration);
 	}
 	else return;
 
@@ -212,18 +224,6 @@ void Initialize_Monster()
 		pNew->Ready_Monster(_vec3(135.0f, 0.f, 55.0f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_MONKEY, STAGE_VELIKA, 10000, 5, 10, 0.5f);
 		pNew->Set_NumAnimation(Monkey::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Monkey::duration);
-	}
-	else return;
-
-	// TEST MONSTER - drowned sailor
-	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
-	
-	if (pNew)
-	{
-		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(145.0f, 0.f, 55.0f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_VELIKA, 10000, 5, 10, 0.5f);
-		pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
-		pNew->Set_AnimDuration(DrownedSailor::duration);
 	}
 	else return;
 

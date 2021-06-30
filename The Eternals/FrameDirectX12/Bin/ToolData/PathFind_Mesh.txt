@@ -7,7 +7,10 @@ CraftyArachne|CraftyArachne.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monst
 DrownedSailor|DrownedSailor.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\DrownedSailor\
 GiantBeetle|GiantBeetle.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\GiantBeetle\
 GiantMonkey|GiantMonkey.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\GiantMonkey\
+Lakan|Lakan.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\Lakan\
 Monkey|Monkey.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\Monkey\
+PrionBerserker|PrionBerserker.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\PrionBerserker\
+PrionBerserkerBoss|PrionBerserkerBoss.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\PrionBerserkerBoss\
 Aman_boy|Aman_boy.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Aman_boy\
 Baraka_M_Extractor|Baraka_M_Extractor.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Baraka_M_Extractor\
 Baraka_M_Merchant|Baraka_M_Merchant.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Baraka_M_Merchant\
