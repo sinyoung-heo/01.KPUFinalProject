@@ -493,11 +493,11 @@ void CPacketMgr::Recv_Chat(sc_packet_chat* packet)
 	멀티바이트 형식을 유니코드 형식으로 바꿔주는 함수.
 	______________________________________________________________________*/
 	MultiByteToWideChar(CP_ACP,
-		0,
-		packet->message,		// 변환 할 문자열.
-		packet->messageLen,
-		szOut,					// 변환 값 저장 버퍼.
-		MAX_STR);
+						0,
+						packet->message,		// 변환 할 문자열.
+						packet->messageLen,
+						szOut,					// 변환 값 저장 버퍼.
+						MAX_STR);
 
 	szOut[packet->messageLen] = '\0';
 	CChattingMgr::Get_Instance()->Push_ChattingMessage(packet->name, szOut);
@@ -1194,9 +1194,18 @@ void CPacketMgr::send_login()
 		cout << "ID: " << name << endl;
 		cout << "PW: " << password << endl;
 
+
+
 		strncpy_s(p.name, name, strlen(name));
 		strncpy_s(p.password, password, strlen(password));
 	}
+
+	MultiByteToWideChar(CP_ACP,
+						0,
+						p.name,			// 변환 할 문자열.
+						strlen(p.name),
+						g_szPlayerName,	// 변환 값 저장 버퍼.
+						MAX_STR);
 
 	send_packet(&p);
 }

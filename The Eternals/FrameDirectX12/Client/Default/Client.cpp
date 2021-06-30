@@ -67,6 +67,7 @@ int		g_iSNum = -1;
 bool	g_bIsActive = false;
 
 const _int MAX_ID_PWD_LEN = 16;
+_tchar	g_szPlayerName[32] = L"";
 _tchar	g_szID[32]      = L"";
 _tchar	g_szPWD[32]     = L"";
 _bool	g_bIsInputID  = false;

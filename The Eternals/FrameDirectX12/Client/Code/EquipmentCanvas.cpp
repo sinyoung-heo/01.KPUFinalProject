@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "EquipmentCanvas.h"
 #include "DirectInput.h"
+#include "Font.h"
 
 CEquipmentCanvas::CEquipmentCanvas(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIRoot(pGraphicDevice, pCommandList)
@@ -25,9 +26,15 @@ HRESULT CEquipmentCanvas::Ready_GameObject(wstring wstrObjectTag,
 															  fFrameSpeed,
 															  vRectOffset,
 															  vRectScale,
-															  iUIDepth), E_FAIL);
+															  iUIDepth,
+															  true, L"Font_BinggraeMelona20"), E_FAIL);
 
 	m_bIsActive = false;
+
+	m_wstrFontName = L"NAME\t";
+	m_wstrFontState = L"\tLv %d\nHP\t%d / %d\nMP\t%d / %d\nATT\t%d ~ %d\nEXP\t%d / %d";
+	m_pFont->Set_Color(D2D1::ColorF::Cornsilk);
+	m_pFont->Set_Text(L"");
 
 	return S_OK;
 }
@@ -61,6 +68,32 @@ _int CEquipmentCanvas::LateUpdate_GameObject(const _float& fTimeDelta)
 		return NO_EVENT;
 
 	CGameUIRoot::LateUpdate_GameObject(fTimeDelta);
+
+	if (nullptr != m_pFont)
+	{
+		_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
+		vPos.x += -160.0f;
+		vPos.y += 370.0f;
+
+		Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+		if (nullptr != pThisPlayer)
+		{
+			pThisPlayer->Get_Info();
+			wstring wstrText = m_wstrFontName + wstring(g_szPlayerName) + m_wstrFontState;
+
+			_tchar	szText[MAX_STR] = L"";
+			wsprintf(szText, wstrText.c_str(),
+					 pThisPlayer->Get_Info()->m_iLev,
+					 pThisPlayer->Get_Info()->m_iHp, pThisPlayer->Get_Info()->m_iMaxHp,
+					 pThisPlayer->Get_Info()->m_iMp, pThisPlayer->Get_Info()->m_iMaxMp, 
+					 pThisPlayer->Get_Info()->m_iMinAttack, pThisPlayer->Get_Info()->m_iMaxAttack,
+					 pThisPlayer->Get_Info()->m_iExp, pThisPlayer->Get_Info()->m_iMaxExp);
+
+			m_pFont->Set_Text(szText);
+			m_pFont->Set_Pos(_vec2(vPos.x, vPos.y));
+			m_pFont->Update_GameObject(fTimeDelta);
+		}
+	}
 
 	return NO_EVENT;
 }

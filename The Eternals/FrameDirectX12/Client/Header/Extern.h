@@ -12,6 +12,7 @@ extern char		g_cJob;
 #endif // SERVER
 extern _tchar g_Text[256];
 
+extern _tchar	g_szPlayerName[32];
 extern _tchar	g_szID[32];
 extern _tchar	g_szPWD[32];
 extern _bool	g_bIsInputID;
