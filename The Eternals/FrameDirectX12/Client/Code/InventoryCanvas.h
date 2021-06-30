@@ -24,6 +24,12 @@ public:
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 private:
 	void KeyInput_MouseMove(const _float& fTimeDelta);
+
+private:
+	wstring m_wstrFontText = L"";
+	//_float	fOffsetX = 0.0f;
+	//_float	fOffsetY = 0.0f;
+
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 									   wstring wstrObjectTag,							   

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "InventoryCanvas.h"
 #include "DirectInput.h"
+#include "Font.h"
 
 CInventoryCanvas::CInventoryCanvas(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIRoot(pGraphicDevice, pCommandList)
@@ -25,9 +26,14 @@ HRESULT CInventoryCanvas::Ready_GameObject(wstring wstrObjectTag,
 															  fFrameSpeed,
 															  vRectOffset,
 															  vRectScale,
-															  iUIDepth), E_FAIL);
+															  iUIDepth,
+															  true, L"Font_BinggraeMelona24"), E_FAIL);
 
 	m_bIsActive = false;
+
+	m_wstrFontText = L"%d  G";
+	m_pFont->Set_Color(D2D1::ColorF::Goldenrod);
+	m_pFont->Set_Text(L"");
 
 	return S_OK;
 }
@@ -61,6 +67,47 @@ _int CInventoryCanvas::LateUpdate_GameObject(const _float& fTimeDelta)
 		return NO_EVENT;
 
 	CGameUIRoot::LateUpdate_GameObject(fTimeDelta);
+
+	//if (Engine::KEY_PRESSING(DIK_Z))
+	//{
+	//	++fOffsetX;
+	//	cout << fOffsetX << ", " << fOffsetY << endl;
+	//}
+	//if (Engine::KEY_PRESSING(DIK_X))
+	//{
+	//	--fOffsetX;
+	//	cout << fOffsetX << ", " << fOffsetY << endl;
+	//}
+	//if (Engine::KEY_PRESSING(DIK_C))
+	//{
+	//	++fOffsetY;
+	//	cout << fOffsetX << ", " << fOffsetY << endl;
+	//}
+	//if (Engine::KEY_PRESSING(DIK_V))
+	//{
+	//	--fOffsetY;
+	//	cout << fOffsetX << ", " << fOffsetY << endl;
+	//}
+
+	if (nullptr != m_pFont)
+	{
+		_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
+		vPos.x += -185.0f;
+		vPos.y += 615.0f;
+
+		Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+		if (nullptr != pThisPlayer)
+		{
+			_uint uiMoney = pThisPlayer->Get_Info()->m_iMoney;
+
+			_tchar	szText[MIN_STR] = L"";
+			wsprintf(szText, m_wstrFontText.c_str(), uiMoney);
+
+			m_pFont->Set_Text(szText);
+			m_pFont->Set_Pos(_vec2(vPos.x, vPos.y));
+			m_pFont->Update_GameObject(fTimeDelta);
+		}
+	}
 
 	return NO_EVENT;
 }

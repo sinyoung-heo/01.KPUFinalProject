@@ -160,7 +160,17 @@ void CStoreItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) &&
 		m_bIsKeyPressingLB)
 	{
-		CStoreMgr::Get_Instance()->Push_StoreItemBuySlot(m_tCurItemInfo.chItemType, m_tCurItemInfo.chItemName, 1, m_uiPrice);
+		Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+		if (nullptr != pThisPlayer)
+		{
+			_uint uiPlayerGold = pThisPlayer->Get_Info()->m_iMoney;
+			_uint uiBuySumGold = CStoreMgr::Get_Instance()->Get_BuyItemSumGold();
+			
+			if (uiBuySumGold + m_uiPrice <= uiPlayerGold)
+				CStoreMgr::Get_Instance()->Push_StoreItemBuySlot(m_tCurItemInfo.chItemType, m_tCurItemInfo.chItemName, 1, m_uiPrice);
+		}
+
+		m_bIsKeyPressingLB = false;
 		return;
 	}
 
