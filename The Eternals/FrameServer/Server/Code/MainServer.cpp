@@ -722,7 +722,6 @@ void gameLogic_worker()
 				else
 					++iter_begin_npc;
 			}
-
 		}
 	}
 
