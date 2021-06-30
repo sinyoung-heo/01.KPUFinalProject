@@ -202,3 +202,38 @@ namespace CraftyArachne
 	constexpr int ATTACK_SPIN_START_TICK     = 66;
 	constexpr int ATTACK_FLYSTAMP_START_TICK = 134;
 }
+
+/* CINEMATIC MONSTER */
+namespace Lakan
+{
+	constexpr int ACTIVE_MOVE_START = 1;
+	constexpr int ACTIVE_MOVE_LOOP	= 2;
+	constexpr int ACTIVE_MOVE_END	= 3;
+
+	enum ANIM_LAKAN {
+		A_WAIT, A_MOVE_START,
+		A_MOVE_LOOP, A_MOVE_END,
+		A_END
+	};
+}
+
+namespace PrionBerserker
+{
+	constexpr int ANGRY = 1;
+	constexpr int RUN	= 2;
+
+	enum ANIM_PRIONBERSERKER {
+		A_WAIT, A_ANGRY, A_RUN, A_END
+	};
+}
+
+namespace PrionBerserkerBoss
+{
+	constexpr int ANGRY		= 1;
+	constexpr int COMMAND	= 2;
+	constexpr int RUN		= 3;
+
+	enum ANIM_PRIONBERSERKERBOSS {
+		A_WAIT, A_ANGRY, A_COMMAND, A_RUN, A_END
+	};
+}

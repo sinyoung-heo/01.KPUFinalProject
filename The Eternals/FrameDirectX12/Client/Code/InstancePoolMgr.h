@@ -13,8 +13,8 @@ class CGiantBeetle;
 class CGiantMonkey;
 class CCraftyArachne;
 class CLakan;
-class PrionBerserker;
-class PrionBerserkerBoss;
+class CPrionBerserker;
+class CPrionBerserkerBoss;
 
 class CNPC_Walker;
 class CNPC_Assistant;
@@ -44,16 +44,16 @@ public:
 	INSTANCE_POOL_DESC<CCollisionTick>*		Get_CollisionTickPool()		{ return m_pCollisionTickPool; }
 	INSTANCE_POOL_DESC<CCollisionArrow>*	Get_CollisionArrowPool(const ARROW_POOL_TYPE& eType);
 	// Monster
-	INSTANCE_POOL_DESC<CCrab>*				Get_MonsterCrabPool()				{ return m_pMonsterCrabPool; }
-	INSTANCE_POOL_DESC<CCloderA>*			Get_MonsterCloderAPool()			{ return m_pMonsterCloderAPool; }
-	INSTANCE_POOL_DESC<CMonkey>*			Get_MonsterMonkeyPool()				{ return m_pMonsterMonkeyPool; }
-	INSTANCE_POOL_DESC<CDrownedSailor>*		Get_MonsterDrownedSailorPool()		{ return m_pMonsterDrownedSailorPool; }
-	INSTANCE_POOL_DESC<CGiantBeetle>*		Get_MonsterGiantBeetlePool()		{ return m_pMonsterGiantBeetlePool; }
-	INSTANCE_POOL_DESC<CGiantMonkey>*		Get_MonsterGiantMonkeyPool()		{ return m_pMonsterGiantMonkeyPool; }
-	INSTANCE_POOL_DESC<CCraftyArachne>*		Get_MonsterCraftyArachnePool()		{ return m_pMonsterCraftyArachnePool; }
-	INSTANCE_POOL_DESC<CLakan>*				Get_MonsterLakanPool()				{ return m_pMonsterLakanPool; }
-	INSTANCE_POOL_DESC<PrionBerserker>*		Get_MonsterPrionBerserkerPool()		{ return m_pMonsterPrionBerserkerPool; }
-	INSTANCE_POOL_DESC<PrionBerserkerBoss>*	Get_MonsterPrionBerserkerBossPool()	{ return m_pMonsterPrionBerserkerBossPool; }
+	INSTANCE_POOL_DESC<CCrab>*				Get_MonsterCrabPool()						{ return m_pMonsterCrabPool; }
+	INSTANCE_POOL_DESC<CCloderA>*			Get_MonsterCloderAPool()					{ return m_pMonsterCloderAPool; }
+	INSTANCE_POOL_DESC<CMonkey>*			Get_MonsterMonkeyPool()						{ return m_pMonsterMonkeyPool; }
+	INSTANCE_POOL_DESC<CDrownedSailor>*		Get_MonsterDrownedSailorPool()				{ return m_pMonsterDrownedSailorPool; }
+	INSTANCE_POOL_DESC<CGiantBeetle>*		Get_MonsterGiantBeetlePool()				{ return m_pMonsterGiantBeetlePool; }
+	INSTANCE_POOL_DESC<CGiantMonkey>*		Get_MonsterGiantMonkeyPool()				{ return m_pMonsterGiantMonkeyPool; }
+	INSTANCE_POOL_DESC<CCraftyArachne>*		Get_MonsterCraftyArachnePool()				{ return m_pMonsterCraftyArachnePool; }
+	INSTANCE_POOL_DESC<CLakan>*				Get_MonsterLakanPool()						{ return m_pMonsterLakanPool; }
+	INSTANCE_POOL_DESC<CPrionBerserker>*	Get_MonsterPrionBerserkerPool()				{ return m_pMonsterPrionBerserkerPool; }
+	INSTANCE_POOL_DESC<CPrionBerserkerBoss>*Get_MonsterPrionBerserkerBossPool()			{ return m_pMonsterPrionBerserkerBossPool; }
 	// NPC
 	INSTANCE_POOL_DESC<CNPC_Walker>*		Get_NPCChickenPool()						{ return m_pNPC_Walker_ChickenPool; }
 	INSTANCE_POOL_DESC<CNPC_Walker>*		Get_NPCCatPool()							{ return m_pNPC_Walker_CatPool; }
@@ -96,8 +96,8 @@ private:
 	INSTANCE_POOL_DESC<CGiantMonkey>*		m_pMonsterGiantMonkeyPool				= nullptr;
 	INSTANCE_POOL_DESC<CCraftyArachne>*		m_pMonsterCraftyArachnePool				= nullptr;
 	INSTANCE_POOL_DESC<CLakan>*				m_pMonsterLakanPool						= nullptr;
-	INSTANCE_POOL_DESC<PrionBerserker>*		m_pMonsterPrionBerserkerPool			= nullptr;
-	INSTANCE_POOL_DESC<PrionBerserkerBoss>* m_pMonsterPrionBerserkerBossPool		= nullptr;
+	INSTANCE_POOL_DESC<CPrionBerserker>*	m_pMonsterPrionBerserkerPool			= nullptr;
+	INSTANCE_POOL_DESC<CPrionBerserkerBoss>* m_pMonsterPrionBerserkerBossPool		= nullptr;
 
 	// NPC
 	INSTANCE_POOL_DESC<CNPC_Walker>*		m_pNPC_Walker_ChickenPool               = nullptr;

@@ -48,7 +48,7 @@ HRESULT CPrionBerserker::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviM
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
-	m_iMonsterStatus = Cloder::A_WAIT;
+	m_iMonsterStatus = PrionBerserker::A_WAIT;
 
 	return S_OK;
 }
@@ -100,8 +100,8 @@ _int CPrionBerserker::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	// Create CollisionTick
-	if (m_pMeshCom->Is_BlendingComplete())
-		SetUp_CollisionTick(fTimeDelta);
+	/*if (m_pMeshCom->Is_BlendingComplete())
+		SetUp_CollisionTick(fTimeDelta);*/
 
 	SetUp_Dissolve(fTimeDelta);
 
@@ -331,90 +331,39 @@ void CPrionBerserker::Change_Animation(const _float& fTimeDelta)
 		switch (m_iMonsterStatus)
 		{
 
-		case Cloder::A_WAIT:
+		case PrionBerserker::A_WAIT:
 		{
 			m_bIsCreateCollisionTick = false;
-			m_uiAnimIdx = Cloder::A_WAIT;
+			m_uiAnimIdx = PrionBerserker::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
 		break;
 
-		case Cloder::A_WALK:
+		case PrionBerserker::A_ANGRY:
 		{
 			m_bIsCreateCollisionTick = false;
-			m_uiAnimIdx = Cloder::A_WALK;
-			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		}
-		break;
-
-		case Cloder::A_RUN:
-		{
-			m_bIsCreateCollisionTick = false;
-			m_uiAnimIdx = Cloder::A_RUN;
-			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		}
-		break;
-
-		case Cloder::A_ATTACK:
-		{
-			m_uiAnimIdx = Cloder::A_ATTACK;
+			m_uiAnimIdx = PrionBerserker::A_ANGRY;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iMonsterStatus	= Cloder::A_WAIT;
+				m_iMonsterStatus = PrionBerserker::A_WAIT;
 
-				m_uiAnimIdx			= Cloder::A_WAIT;
+				m_uiAnimIdx = PrionBerserker::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
 		break;
 
-		case Cloder::A_ATTACK_POKE:
+		case PrionBerserker::A_RUN:
 		{
-			m_uiAnimIdx = Cloder::A_ATTACK_POKE;
+			m_bIsCreateCollisionTick = false;
+			m_uiAnimIdx = PrionBerserker::A_RUN;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-
-			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-			{
-				m_iMonsterStatus	= Cloder::A_WAIT;
-
-				m_uiAnimIdx			= Cloder::A_WAIT;
-				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-			}
 		}
 		break;
-
-		case Cloder::A_ATTACK_SWING:
-		{
-			m_uiAnimIdx = Cloder::A_ATTACK_SWING;
-			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-
-			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-			{
-				m_iMonsterStatus	= Cloder::A_WAIT;
-
-				m_uiAnimIdx			= Cloder::A_WAIT;
-				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-			}
-		}
-		break;
-
-		case Cloder::A_DEATH:
-		{
-			m_uiAnimIdx = Cloder::A_DEATH;
-			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-
-			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) 
-			{
-				m_bIsStartDissolve = true;
-			}
-		}
-		break;
-
 		}
 	}
-
 }
 
 void CPrionBerserker::SetUp_CollisionTick(const _float& fTimeDelta)
