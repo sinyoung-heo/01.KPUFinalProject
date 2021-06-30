@@ -478,6 +478,15 @@
     <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\10.QuickSlotSwapSlot">
       <UniqueIdentifier>{bd50983c-a166-4f0b-ba62-62e12fe69709}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.Monster\07.Lakan">
+      <UniqueIdentifier>{bd125270-faa8-4fdf-ab33-5968fcbd9e94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Monster\08.PrionBerserker">
+      <UniqueIdentifier>{9fabdcbe-3f07-45bc-b1f9-c31985fe902f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Monster\09.PrionBerserkerBoss">
+      <UniqueIdentifier>{4a8d8d88-d0e6-4845-b6d4-dfa790670d3d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -988,6 +997,18 @@
     <ClInclude Include="..\Code\QuickSlotSwapSlot.h">
       <Filter>02.GameObject\99.GameUI\00.GameUIRoot\10.QuickSlotSwapSlot</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\GridShieldEffect.h" />
+    <ClInclude Include="..\Code\MagicCircleGlow.h" />
+    <ClInclude Include="..\Code\ParticleEffect.h" />
+    <ClInclude Include="..\Code\Lakan.h">
+      <Filter>02.GameObject\05.Monster\07.Lakan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PrionBerserker.h">
+      <Filter>02.GameObject\05.Monster\08.PrionBerserker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\PrionBerserkerBoss.h">
+      <Filter>02.GameObject\05.Monster\09.PrionBerserkerBoss</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1440,6 +1461,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\QuickSlotSwapSlot.cpp">
       <Filter>02.GameObject\99.GameUI\00.GameUIRoot\10.QuickSlotSwapSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\GridShieldEffect.cpp" />
+    <ClCompile Include="..\Code\MagicCircleGlow.cpp" />
+    <ClCompile Include="..\Code\ParticleEffect.cpp" />
+    <ClCompile Include="..\Code\Lakan.cpp">
+      <Filter>02.GameObject\05.Monster\07.Lakan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PrionBerserker.cpp">
+      <Filter>02.GameObject\05.Monster\08.PrionBerserker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PrionBerserkerBoss.cpp">
+      <Filter>02.GameObject\05.Monster\09.PrionBerserkerBoss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

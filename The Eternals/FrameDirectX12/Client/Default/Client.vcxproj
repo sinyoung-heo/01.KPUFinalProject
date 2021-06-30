@@ -211,6 +211,7 @@
     <ClInclude Include="..\Code\InventoryEquipmentMgr.h" />
     <ClInclude Include="..\Code\InventoryItemSlot.h" />
     <ClInclude Include="..\Code\InventorySwapSlot.h" />
+    <ClInclude Include="..\Code\Lakan.h" />
     <ClInclude Include="..\Code\LightingParticle.h" />
     <ClInclude Include="..\Code\LoginIDBackground.h" />
     <ClInclude Include="..\Code\LoginIDButton.h" />
@@ -256,6 +257,8 @@
     <ClInclude Include="..\Code\PCWeaponRod.h" />
     <ClInclude Include="..\Code\PCWeaponTwoHand.h" />
     <ClInclude Include="..\Code\Portal.h" />
+    <ClInclude Include="..\Code\PrionBerserker.h" />
+    <ClInclude Include="..\Code\PrionBerserkerBoss.h" />
     <ClInclude Include="..\Code\PublicPlane.h" />
     <ClInclude Include="..\Code\PublicSphere.h" />
     <ClInclude Include="..\Code\QuickSlot.h" />
@@ -383,6 +386,7 @@
     <ClCompile Include="..\Code\InventoryEquipmentMgr.cpp" />
     <ClCompile Include="..\Code\InventoryItemSlot.cpp" />
     <ClCompile Include="..\Code\InventorySwapSlot.cpp" />
+    <ClCompile Include="..\Code\Lakan.cpp" />
     <ClCompile Include="..\Code\LightingParticle.cpp" />
     <ClCompile Include="..\Code\LoginIDBackground.cpp" />
     <ClCompile Include="..\Code\LoginIDButton.cpp" />
@@ -449,6 +453,8 @@
     <ClCompile Include="..\Code\PCWeaponTwoHand.cpp" />
     <ClCompile Include="..\Code\Popori_F.cpp" />
     <ClCompile Include="..\Code\Portal.cpp" />
+    <ClCompile Include="..\Code\PrionBerserker.cpp" />
+    <ClCompile Include="..\Code\PrionBerserkerBoss.cpp" />
     <ClCompile Include="..\Code\PublicPlane.cpp" />
     <ClCompile Include="..\Code\PublicSphere.cpp" />
     <ClCompile Include="..\Code\QuickSlot.cpp" />
