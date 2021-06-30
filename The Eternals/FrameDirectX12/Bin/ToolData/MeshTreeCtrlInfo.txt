@@ -59,6 +59,7 @@ StaticMesh|Plane|PublicTornado00
 StaticMesh|Plane|PublicTornado01
 StaticMesh|publicEffect|IceStorm0
 StaticMesh|publicEffect|IceStorm1
+StaticMesh|publicEffect|publicShield
 StaticMesh|publicEffect|publicSphere
 StaticMesh|publicEffect|publicSpline
 StaticMesh|Sample|DistortDisk

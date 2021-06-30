@@ -53,6 +53,7 @@ private:
 	_vec3 m_vecRandomvector[20];
 	float m_fAlpha = 1.f;
 	float m_fSpeed = 0.8f;
+	float m_fDegree = 0.f;
 	bool m_bisPivot;
 	_int m_Pipeline = 0;
 public:

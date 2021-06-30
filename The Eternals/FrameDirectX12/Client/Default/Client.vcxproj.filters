@@ -1019,6 +1019,7 @@
       <Filter>02.GameObject\98.GameEffect\13.SwordEffect</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\QuickSlotMgr.h" />
+    <ClInclude Include="..\Code\EffectShield.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1488,6 +1489,7 @@
     <ClCompile Include="..\Code\SwordEffect.cpp">
       <Filter>02.GameObject\98.GameEffect\13.SwordEffect</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\EffectShield.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

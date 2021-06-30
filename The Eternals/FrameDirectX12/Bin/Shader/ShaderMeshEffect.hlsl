@@ -129,7 +129,6 @@ VS_OUT VS_ANIUV(VS_IN vs_input)
     vs_output.Pos = mul(float4(vs_input.Pos, 1.0f), matWVP);
     vs_output.TexUV = vs_input.TexUV;
     vs_output.Normal = vs_input.Normal;
-
     
     vs_output.AniUV = vs_input.TexUV + float2(g_fOffset1, -g_fOffset1 * 0.3f);
     return (vs_output);
@@ -181,8 +180,6 @@ PS_OUT PS_RAINDROP(VS_OUT ps_input) : SV_TARGET
     ps_output.Effect4.a = 1.f;
     return (ps_output);
 }
-
-
 PS_OUT PS_EFFECT_SHPERE(VS_OUT ps_input) : SV_TARGET
 {
     PS_OUT ps_output = (PS_OUT) 0;
@@ -195,6 +192,23 @@ PS_OUT PS_EFFECT_SHPERE(VS_OUT ps_input) : SV_TARGET
     float4 GridColor = mul(float4(0.3, 0.3, 0.7f, 1), S.r)  + mul(float4(0.7, 0.3, 0.7f, 1), Sha.r)* 2;
    // clip(ps_input.TexUV.y + g_fOffset1);
     float4 color =N+ mul(GridColor, Dis.r)*2 + mul(mul(float4(0.0, 0.3, 1, 0.5), g_fDissolve), 1 - Lim);
+    ps_output.Effect2.rgba = color; //color.rgba; // +mul(float4(0.3, 0.4, 0.8, 1), Sha.r);
+    ps_output.Effect2.a = 0.5f;
+    return (ps_output);
+}
+PS_OUT PS_EFFECT_SHPERE_YELLOW(VS_OUT ps_input) : SV_TARGET
+{
+    PS_OUT ps_output = (PS_OUT) 0;
+    float4 ViewDir = normalize(g_vCameraPos - ps_input.WorldPos);
+    float Lim = saturate(dot(ViewDir, float4(ps_input.WorldNormal, 1)));
+    Lim= pow(Lim, 2);
+    float4 N = g_TexNormal.Sample(g_samLinearWrap, ps_input.AniUV);
+    float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV * 3);
+    float4 Dis = g_TexDissolve.Sample(g_samLinearWrap, ps_input.AniUV);
+    float4 Sha = g_TexShadowDepth.Sample(g_samLinearWrap, ps_input.TexUV * 3); //²ËÂù±×¸®µå
+    float4 GridColor = mul(float4(0.5, 0.3f, 0.f, 1), S.r) + mul(float4(0.8f, 0.2f, 0.f,1), Sha.r) * 2;
+   // clip(ps_input.TexUV.y + g_fOffset1);
+    float4 color = mul(GridColor, Dis.r) * 2 + mul(mul(float4(251.f / 255.f, 130.f / 255.f, 0.f, 0.5), 1 - Lim),g_fOffset6);
     ps_output.Effect2.rgba = color; //color.rgba; // +mul(float4(0.3, 0.4, 0.8, 1), Sha.r);
     ps_output.Effect2.a = 0.5f;
     return (ps_output);
@@ -278,7 +292,7 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
     float4 N = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
     ps_output.Effect3 = D;
-    ps_output.Effect3.a = 0.5f;
+    ps_output.Effect3.a = g_fOffset1;
     return (ps_output);
 }
 
