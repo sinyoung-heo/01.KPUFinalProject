@@ -28,10 +28,10 @@ Snow|3|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Snow\%d.dds
 Torch|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Torch\%d.dds
 UnderFire|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\UnderFire\%d.dds
 EffectTrailTexture|13|..\..\Bin\Resource\ResourceStage\Texture\EffectTrailTexture\%d.dds
-SkyBox|7|..\..\Bin\Resource\ResourceStage\Texture\Environment\SkyBox\%d.dds
-Terrain|8|..\..\Bin\Resource\ResourceStage\Texture\Environment\Terrain\%d.dds
+SkyBox|10|..\..\Bin\Resource\ResourceStage\Texture\Environment\SkyBox\%d.dds
+Terrain|13|..\..\Bin\Resource\ResourceStage\Texture\Environment\Terrain\%d.dds
 TexWaterFall|11|..\..\Bin\Resource\ResourceStage\Texture\Environment\TexWaterFall\%d.dds
-WaterNormal|134|..\..\Bin\Resource\ResourceStage\Texture\Environment\WaterNormal\%d.dds
+WaterNormal|139|..\..\Bin\Resource\ResourceStage\Texture\Environment\WaterNormal\%d.dds
 PublicMagic|20|..\..\Bin\Resource\ResourceStage\Texture\PublicMagic\%d.dds
 ItemArmor|5|..\..\Bin\Resource\ResourceStage\Texture\UI\ItemArmor\%d.dds
 ItemHelmet|5|..\..\Bin\Resource\ResourceStage\Texture\UI\ItemHelmet\%d.dds

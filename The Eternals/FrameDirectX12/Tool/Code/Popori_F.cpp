@@ -207,7 +207,8 @@ void CPopori_F::Set_ConstantTable()
 	tCB_ShaderMesh.matLightProj		= Engine::CShader::Compute_MatrixTranspose(tShadowInfo.matLightProj);
 	tCB_ShaderMesh.vLightPos		= tShadowInfo.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar	= tShadowInfo.fLightPorjFar;
-	
+	tCB_ShaderMesh.vEmissiveColor	= _rgba(1.0f);
+
 	m_fDeltaTime += 0.01f;
 	if (m_fDeltaTime > 1.f)
 		m_fDeltaTime = 0.0f;

@@ -188,6 +188,7 @@ void CToolStaticMesh::Set_ConstantTable()
 	tCB_ShaderMesh.matLightProj		= Engine::CShader::Compute_MatrixTranspose(tShadowInfo.matLightProj);
 	tCB_ShaderMesh.vLightPos		= tShadowInfo.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar	= tShadowInfo.fLightPorjFar;
+	tCB_ShaderMesh.vEmissiveColor   = _rgba(1.0f);
 
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 
