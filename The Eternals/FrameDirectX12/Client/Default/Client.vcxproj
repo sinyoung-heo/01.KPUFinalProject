@@ -189,6 +189,7 @@
     <ClInclude Include="..\Code\DistTrail.h" />
     <ClInclude Include="..\Code\DrownedSailor.h" />
     <ClInclude Include="..\Code\EffectMgr.h" />
+    <ClInclude Include="..\Code\EffectShield.h" />
     <ClInclude Include="..\Code\EffectTrail.h" />
     <ClInclude Include="..\Code\EquipmentButtonClose.h" />
     <ClInclude Include="..\Code\EquipmentCanvas.h" />
@@ -362,6 +363,7 @@
     <ClCompile Include="..\Code\DistTrail.cpp" />
     <ClCompile Include="..\Code\DrownedSailor.cpp" />
     <ClCompile Include="..\Code\EffectMgr.cpp" />
+    <ClCompile Include="..\Code\EffectShield.cpp" />
     <ClCompile Include="..\Code\EffectTrail.cpp" />
     <ClCompile Include="..\Code\EquipmentButtonClose.cpp" />
     <ClCompile Include="..\Code\EquipmentCanvas.cpp" />

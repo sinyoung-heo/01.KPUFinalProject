@@ -21,6 +21,7 @@ public:
 	void Effect_FireCone(_vec3 vecPos, float RotY, _vec3 vecDir=_vec3(0.f));
 	void Effect_Test(_vec3 vecPos);
 	void Effect_GridShieldEffect(_vec3 vecPos, int type=0);
+	void Effect_Shield(_vec3 vecPos);
 public:
 public:
 	Engine::CGameObject* pGameObj = nullptr;
