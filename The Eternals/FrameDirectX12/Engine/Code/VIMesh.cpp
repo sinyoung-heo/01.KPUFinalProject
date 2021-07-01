@@ -691,7 +691,6 @@ void CVIMesh::Render_DynamicMesh(CShader * pShader)
 
 		pShader->Begin_Shader(m_pTexDescriptorHeap, i);
 		Begin_Buffer(m_pCommandList, i);
-
 		Render_Buffer(m_pCommandList, i);
 	}
 }
@@ -704,7 +703,6 @@ void CVIMesh::Render_StaticMesh(CShader * pShader)
 	{
 		pShader->Begin_Shader(m_pTexDescriptorHeap, i);
 		Begin_Buffer(m_pCommandList, i);
-
 		Render_Buffer(m_pCommandList, i);
 	}
 }
@@ -744,7 +742,6 @@ void CVIMesh::Render_DynamicMeshShadowDepth(CShader * pShader)
 
 		pShader->Begin_Shader(m_pTexDescriptorHeap, i);
 		Begin_Buffer(m_pCommandList, i);
-
 		Render_Buffer(m_pCommandList, i);
 	}
 }
@@ -755,7 +752,6 @@ void CVIMesh::Render_StaticMeshShadowDepth(CShader * pShader)
 	{
 		pShader->Begin_Shader(m_pTexDescriptorHeap, i);
 		Begin_Buffer(m_pCommandList, i);
-
 		Render_Buffer(m_pCommandList, i);
 	}
 }
@@ -793,7 +789,6 @@ void CVIMesh::Render_DynamicMesh(ID3D12GraphicsCommandList * pCommandList,
 
 		pShader->Begin_Shader(pCommandList, iContextIdx, m_pTexDescriptorHeap, i);
 		Begin_Buffer(pCommandList, i);
-
 		Render_Buffer(pCommandList, i);
 	}
 
@@ -871,7 +866,6 @@ void CVIMesh::Render_StaticMesh(ID3D12GraphicsCommandList * pCommandList,
 	{
 		pShader->Begin_Shader(pCommandList, iContextIdx, m_pTexDescriptorHeap, i);
 		Begin_Buffer(pCommandList, i);
-
 		Render_Buffer(pCommandList, i);
 	}
 }
@@ -900,7 +894,6 @@ void CVIMesh::Render_DynamicMeshShadowDepth(ID3D12GraphicsCommandList * pCommand
 
 		pShader->Begin_Shader(pCommandList, iContextIdx, m_pTexDescriptorHeap, i);
 		Begin_Buffer(pCommandList, i);
-
 		Render_Buffer(pCommandList, i);
 	}
 }
@@ -913,7 +906,6 @@ void CVIMesh::Render_StaticMeshShadowDepth(ID3D12GraphicsCommandList * pCommandL
 	{
 		pShader->Begin_Shader(pCommandList, iContextIdx, m_pTexDescriptorHeap, i);
 		Begin_Buffer(pCommandList, i);
-
 		Render_Buffer(pCommandList, i);
 	}
 }
@@ -929,7 +921,6 @@ void CVIMesh::Render_WaterMesh(ID3D12GraphicsCommandList* pCommandList,
 		static_cast<CShaderMesh*>(pShader)->Begin_Shader(pCommandList, iContextIdx, m_pTexDescriptorHeap
 			, pTexnormalDescriptorHeap, uiNormalTextureIdx, uiPatternMapIdx, i);
 		Begin_Buffer(pCommandList, i);
-
 		Render_Buffer(pCommandList, i);
 	}
 }

@@ -189,15 +189,11 @@ void CShaderMeshInstancing::Render_Instance(ID3D12GraphicsCommandList* pCommandL
 			ID3D12DescriptorHeap* pDescriptorHeaps[] = { pTexDescriptorHeap };
 			pCommandList->SetDescriptorHeaps(_countof(pDescriptorHeaps), pDescriptorHeaps);
 
-
 			/*__________________________________________________________________________________________________________
 			[ SRV, CBV를 루트 서술자에 묶는다 ]
 			____________________________________________________________________________________________________________*/
 			pCommandList->SetGraphicsRootShaderResourceView(5,	// RootParameter Index
 				m_mapCB_ShaderMesh[iContextIdx][wstrMeshTag][iPipelineStatePass]->Resource()->GetGPUVirtualAddress());
-
-			pCommandList->SetGraphicsRootConstantBufferView(6,	// RootParameter Index
-				m_pCB_CameraProjMatrix->Resource()->GetGPUVirtualAddress());
 
 			/*__________________________________________________________________________________________________________
 			[ Render Buffer ]
@@ -304,14 +300,13 @@ HRESULT CShaderMeshInstancing::Create_RootSignature()
 	/*__________________________________________________________________________________________________________
 	- 루트 매개변수는 테이블이거나, 루트 서술자 또는 루트 상수이다.
 	____________________________________________________________________________________________________________*/
-	CD3DX12_ROOT_PARAMETER RootParameter[7];
+	CD3DX12_ROOT_PARAMETER RootParameter[6];
 	RootParameter[0].InitAsDescriptorTable(1, &SRV_Table[0], D3D12_SHADER_VISIBILITY_PIXEL);
 	RootParameter[1].InitAsDescriptorTable(1, &SRV_Table[1], D3D12_SHADER_VISIBILITY_PIXEL);
 	RootParameter[2].InitAsDescriptorTable(1, &SRV_Table[2], D3D12_SHADER_VISIBILITY_PIXEL);
 	RootParameter[3].InitAsDescriptorTable(1, &SRV_Table[3], D3D12_SHADER_VISIBILITY_PIXEL);
 	RootParameter[4].InitAsDescriptorTable(1, &SRV_Table[4], D3D12_SHADER_VISIBILITY_PIXEL);
 	RootParameter[5].InitAsShaderResourceView(0, 1);	// register t0, space1.
-	RootParameter[6].InitAsConstantBufferView(0);		// register b0.
 
 	auto StaticSamplers = Get_StaticSamplers();
 	CD3DX12_ROOT_SIGNATURE_DESC RootSignatureDesc(_countof(RootParameter),		// 루트 파라미터 개수.

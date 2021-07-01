@@ -877,9 +877,28 @@ namespace Engine
 
 	} CB_SHADER_MESH_INSTANCEING;
 
+	typedef struct tagConstantBufferShaderDynamicMeshInstancing
+	{
+		XMFLOAT4X4	matWorld;
+		XMFLOAT4X4	matView;
+		XMFLOAT4X4	matProj;
+
+		_float		fDissolve;
+		_rgba		vEmissiveColor;
+
+		XMFLOAT4X4	matBoneOffset[MAX_PALETTE];
+		XMFLOAT4X4	matBoneScale[MAX_PALETTE];
+		XMFLOAT4X4	matBoneRotation[MAX_PALETTE];
+		XMFLOAT4X4	matBoneTrans[MAX_PALETTE];
+		XMFLOAT4X4	matParentTransform[MAX_PALETTE];
+		XMFLOAT4X4	matRootTransform[MAX_PALETTE];
+
+	} CB_SHADER_DYAMICMESH_INSTANCEING;
+
 	typedef struct tagCBuffer
 	{
 		_vec4 vFloat4;
+
 	}CB_SHADER_VARIABLE;
 
 	typedef struct tagShaderInformation

@@ -38,6 +38,7 @@
 #include "ShaderEdge.h"
 #include "ShaderMeshEffect.h"
 #include "ShaderAddEffect.h"
+
 BEGIN(Engine)
 
 class ENGINE_DLL CComponentMgr final : public CBase

@@ -96,6 +96,16 @@ HRESULT CScene_MainStage::Ready_Scene()
 		pGameObj->Set_State(0);
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);
 	}
+	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterLakanPool());
+	if (nullptr != pGameObj)
+	{
+		pGameObj->Get_Transform()->m_vScale = _vec3(0.07f);
+		pGameObj->Get_Transform()->m_vAngle = _vec3(0.f);
+		pGameObj->Get_Transform()->m_vPos = _vec3(125.f, 0.f, 60.f);
+		pGameObj->Set_ServerNumber(8888);
+		pGameObj->Set_State(0);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);
+	}
 
 	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterPrionBerserkerPool());
 	if (nullptr != pGameObj)
@@ -108,12 +118,34 @@ HRESULT CScene_MainStage::Ready_Scene()
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);
 	}
 
+	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterPrionBerserkerPool());
+	if (nullptr != pGameObj)
+	{
+		pGameObj->Get_Transform()->m_vScale = _vec3(0.05f);
+		pGameObj->Get_Transform()->m_vAngle = _vec3(0.f);
+		pGameObj->Get_Transform()->m_vPos = _vec3(135.f, 0.f, 60.f);
+		pGameObj->Set_ServerNumber(8889);
+		pGameObj->Set_State(0);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);
+	}
+
 	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterPrionBerserkerBossPool());
 	if (nullptr != pGameObj)
 	{
 		pGameObj->Get_Transform()->m_vScale = _vec3(0.07f);
 		pGameObj->Get_Transform()->m_vAngle = _vec3(0.f);
 		pGameObj->Get_Transform()->m_vPos = _vec3(130.f, 0.f, 55.f);
+		pGameObj->Set_ServerNumber(8887);
+		pGameObj->Set_State(0);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);
+	}
+
+	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterPrionBerserkerBossPool());
+	if (nullptr != pGameObj)
+	{
+		pGameObj->Get_Transform()->m_vScale = _vec3(0.07f);
+		pGameObj->Get_Transform()->m_vAngle = _vec3(0.f);
+		pGameObj->Get_Transform()->m_vPos = _vec3(130.f, 0.f, 60.f);
 		pGameObj->Set_ServerNumber(8887);
 		pGameObj->Set_State(0);
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);

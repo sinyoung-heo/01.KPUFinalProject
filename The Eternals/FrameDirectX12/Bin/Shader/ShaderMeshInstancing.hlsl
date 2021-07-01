@@ -12,11 +12,11 @@ SamplerState g_samAnisotropicClamp : register(s5);
 /*__________________________________________________________________________________________________________
 [ Texture ]
 ____________________________________________________________________________________________________________*/
-Texture2D g_TexDiffuse : register(t0); // Diffuse »ö»ó.
-Texture2D g_TexNormal : register(t1); // ÅºÁ¨Æ® °ø°£ Normal Map.
-Texture2D g_TexSpecular : register(t2); // Specular °­µµ.
-Texture2D g_TexShadowDepth : register(t3); // ShadowDepth
-Texture2D g_TexDissolve : register(t4); // Dissolve
+Texture2D g_TexDiffuse : register(t0);      // Diffuse »ö»ó.
+Texture2D g_TexNormal : register(t1);       // ÅºÁ¨Æ® °ø°£ Normal Map.
+Texture2D g_TexSpecular : register(t2);     // Specular °­µµ.
+Texture2D g_TexShadowDepth : register(t3);  // ShadowDepth
+Texture2D g_TexDissolve : register(t4);     // Dissolve
 
 /*__________________________________________________________________________________________________________
 [ Shader Resource ]
@@ -42,16 +42,18 @@ typedef struct tagShaderMesh
 } SHADER_MESH;
 StructuredBuffer<SHADER_MESH> g_ShaderMesh : register(t0, space1);
 
-/*__________________________________________________________________________________________________________
-[ Constant Buffer ]
-____________________________________________________________________________________________________________*/
-cbuffer cbCamreaMatrix : register(b0)
-{
-    float4x4 g_matView : packoffset(c0);
-    float4x4 g_matProj : packoffset(c4);
-    float4 g_vCameraPos : packoffset(c8);
-    float g_fProjFar : packoffset(c9.x);
-}
+static float g_fProjFar = 1000.0f;
+
+///*__________________________________________________________________________________________________________
+//[ Constant Buffer ]
+//____________________________________________________________________________________________________________*/
+//cbuffer cbCamreaMatrix : register(b0)
+//{
+//    float4x4 g_matView : packoffset(c0);
+//    float4x4 g_matProj : packoffset(c4);
+//    float4 g_vCameraPos : packoffset(c8);
+//    float g_fProjFar : packoffset(c9.x);
+//}
 
 // VS_MAIN
 struct VS_IN

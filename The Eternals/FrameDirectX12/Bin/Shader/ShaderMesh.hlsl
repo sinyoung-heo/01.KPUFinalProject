@@ -17,6 +17,7 @@ Texture2D g_TexNormal		: register(t1);	// ÅºÁ¨Æ® °ø°£ Normal Map.
 Texture2D g_TexSpecular		: register(t2);	// Specular °­µµ.
 Texture2D g_TexShadowDepth	: register(t3);	// ShadowDepth
 Texture2D g_TexDissolve		: register(t4); // Dissolve
+
 /*__________________________________________________________________________________________________________
 [ Constant Buffer ]
 ____________________________________________________________________________________________________________*/

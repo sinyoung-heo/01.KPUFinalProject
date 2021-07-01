@@ -65,8 +65,8 @@ protected:
 	CShaderSkyBox*				m_pShaderSkyBox		       = nullptr;
 	CShaderMesh*				m_pShaderMesh		       = nullptr;
 
-	CShaderMeshEffect* m_pShaderMeshEffect = nullptr;
-	CShaderMeshInstancing*		m_pShaderMeshInstancing    = nullptr;
+	CShaderMeshEffect*			m_pShaderMeshEffect        = nullptr;
+	// CShaderMeshInstancing*	m_pShaderMeshInstancing    = nullptr;
 	CShaderSSAO*				m_pShaderSSAO              = nullptr;
 
 	Engine::CB_SHADER_VARIABLE tCB_ShaderVariable;

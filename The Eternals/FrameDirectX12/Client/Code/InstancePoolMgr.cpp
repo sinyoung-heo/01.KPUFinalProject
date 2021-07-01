@@ -125,7 +125,7 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterCraftyArachnePool, 2);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterLakanPool, 50);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterPrionBerserkerPool, 50);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterPrionBerserkerBossPool, 1);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterPrionBerserkerBossPool, 2);
 
 	// NPC
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Walker_ChickenPool, L"Chicken", 10);

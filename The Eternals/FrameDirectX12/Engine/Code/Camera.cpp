@@ -17,7 +17,6 @@ CCamera::CCamera(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pComma
 	ZeroMemory(&m_tCameraInfo, sizeof(CAMERA_DESC));
 	ZeroMemory(&m_tProjInfo, sizeof(PROJ_DESC));
 	ZeroMemory(&m_tOrthoInfo, sizeof(ORTHO_DESC));
-
 	ZeroMemory(&tCB_ShaderVariable, sizeof(Engine::CB_SHADER_VARIABLE));
 }
 
@@ -92,7 +91,7 @@ HRESULT CCamera::Ready_GameObject(const CAMERA_DESC& tCameraInfo,
 
 	m_pShaderColorInstancing    = CShaderColorInstancing::Get_Instance();
 	m_pShaderTextureInstancing	= CShaderTextureInstancing::Get_Instance();
-	m_pShaderMeshInstancing		= CShaderMeshInstancing::Get_Instance();
+	// m_pShaderMeshInstancing		= CShaderMeshInstancing::Get_Instance();
 
 	return S_OK;
 }
@@ -172,7 +171,7 @@ void CCamera::Set_ConstantTable()
 	m_pShaderMeshEffect->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 
 	// ShaderMeshInstancing
-	m_pShaderMeshInstancing->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
+	// m_pShaderMeshInstancing->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 
 	// ShaderSSAO
 	//tCB_CameraProjMatrix.matView = CShader::Compute_MatrixTranspose(m_tCameraInfo.matView);
