@@ -28,6 +28,7 @@ HRESULT CParticleEffect::Ready_GameObject(wstring wstrTextureTag,
 	
 	m_uiTexIdx = 0;
 	m_tFrame = tFrame;
+	m_fAlpha = 1.f;
 	return S_OK;
 }
 
@@ -42,7 +43,7 @@ HRESULT CParticleEffect::LateInit_GameObject()
 		m_vecRandomvector[i].y = (rand() % 100);
 		m_vecRandomvector[i].z = (rand() % 200 - 100);
 		m_vecRandomvector[i].Normalize();
-		
+		TempPos[i] += m_vecRandomvector[i] * (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 50.f;
 	}
 	
 	return S_OK;
@@ -52,6 +53,9 @@ _int CParticleEffect::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
+	m_fDegree += fTimeDelta * 120.f;
+	m_fDegree = (int)m_fDegree % 360;
+	m_fAlpha -= fTimeDelta * 0.2f;
 	if (m_fAlpha<0.f)
 		return DEAD_OBJ;
 
@@ -133,7 +137,7 @@ void CParticleEffect::Set_ConstantTable(int i)
 	Engine::CB_SHADER_TEXTURE tCB_ShaderTexture;
 	
 	
-	TempPos[i] += m_vecRandomvector[i] * (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.8f;
+	TempPos[i] += m_vecRandomvector[i] * (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 1.6f;
 	
 	m_pTransCom->m_vPos = TempPos[i];
 	m_pTransCom->Update_Component(0.0f);
@@ -147,8 +151,8 @@ void CParticleEffect::Set_ConstantTable(int i)
 	tCB_ShaderTexture.fCurFrame = (_float)(_int)m_tFrame.fCurFrame;
 	tCB_ShaderTexture.fSceneCnt = m_tFrame.fSceneCnt;
 	tCB_ShaderTexture.fCurScene = (_int)m_tFrame.fCurScene;
-	m_fAlpha = 0.5f;
 	tCB_ShaderTexture.fAlpha = m_fAlpha;
+	tCB_ShaderTexture.fOffset3 = m_fDegree;
 	m_pShaderCom[i]->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 }
 

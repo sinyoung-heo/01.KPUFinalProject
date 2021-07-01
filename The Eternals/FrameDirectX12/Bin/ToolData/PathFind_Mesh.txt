@@ -7,7 +7,10 @@ CraftyArachne|CraftyArachne.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monst
 DrownedSailor|DrownedSailor.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\DrownedSailor\
 GiantBeetle|GiantBeetle.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\GiantBeetle\
 GiantMonkey|GiantMonkey.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\GiantMonkey\
+Lakan|Lakan.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\Lakan\
 Monkey|Monkey.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\Monkey\
+PrionBerserker|PrionBerserker.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\PrionBerserker\
+PrionBerserkerBoss|PrionBerserkerBoss.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\PrionBerserkerBoss\
 Aman_boy|Aman_boy.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Aman_boy\
 Baraka_M_Extractor|Baraka_M_Extractor.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Baraka_M_Extractor\
 Baraka_M_Merchant|Baraka_M_Merchant.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Baraka_M_Merchant\
@@ -63,6 +66,7 @@ PublicTornado00|PublicTornado00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Pl
 PublicTornado01|PublicTornado01.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicTornado01\
 IceStorm0|IceStorm0.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\IceStorm0\
 IceStorm1|IceStorm1.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\IceStorm1\
+publicShield|publicShield.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicShield\
 publicSphere|publicSphere.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSphere\
 publicSpline|publicSpline.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSpline\
 DistortDisk|DistortDisk.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\DistortDisk\

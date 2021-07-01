@@ -40,7 +40,7 @@ HRESULT CMagicCircleGlow::LateInit_GameObject()
 
 
 	m_uiDiffuse = 18;
-	m_fNormalMapDeltatime = 18;//NormIdx
+	m_fNormalMapDeltatime = 21;//NormIdx
 	m_fPatternMapDeltatime = 18;//SpecIdx
 	return S_OK;	
 }

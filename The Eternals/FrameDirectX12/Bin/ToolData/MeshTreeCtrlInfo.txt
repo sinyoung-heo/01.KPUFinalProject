@@ -7,7 +7,10 @@ DynamicMesh|Monster|CraftyArachne
 DynamicMesh|Monster|DrownedSailor
 DynamicMesh|Monster|GiantBeetle
 DynamicMesh|Monster|GiantMonkey
+DynamicMesh|Monster|Lakan
 DynamicMesh|Monster|Monkey
+DynamicMesh|Monster|PrionBerserker
+DynamicMesh|Monster|PrionBerserkerBoss
 DynamicMesh|NPC|Aman_boy
 DynamicMesh|NPC|Baraka_M_Extractor
 DynamicMesh|NPC|Baraka_M_Merchant
@@ -63,6 +66,7 @@ StaticMesh|Plane|PublicTornado00
 StaticMesh|Plane|PublicTornado01
 StaticMesh|publicEffect|IceStorm0
 StaticMesh|publicEffect|IceStorm1
+StaticMesh|publicEffect|publicShield
 StaticMesh|publicEffect|publicSphere
 StaticMesh|publicEffect|publicSpline
 StaticMesh|Sample|DistortDisk

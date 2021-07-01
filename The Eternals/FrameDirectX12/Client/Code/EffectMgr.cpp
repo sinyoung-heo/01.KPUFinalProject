@@ -15,6 +15,7 @@
 #include "PublicPlane.h"
 #include "MagicCircleGlow.h"
 #include "GridShieldEffect.h"
+#include "EffectShield.h"
 IMPLEMENT_SINGLETON(CEffectMgr)
 
 CEffectMgr::CEffectMgr()
@@ -161,41 +162,30 @@ void CEffectMgr::Effect_FireCone(_vec3 vecPos, float RotY , _vec3 vecDir)
 
 void CEffectMgr::Effect_Test(_vec3 vecPos)
 {
-	vecPos.y = 1.f;
-	pGameObj = CGridShieldEffect::Create(m_pGraphicDevice, m_pCommandList,
-		L"PublicSphere00",
-		_vec3(0.00f),
-		_vec3(0.f, 0.f, 0.f),
-		vecPos,10
-	);
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicSphere00", pGameObj), E_FAIL);
-	static_cast<CPublicSphere*>(pGameObj)->Set_isScaleAnim(true);
-	/*pGameObj = CMagicCircleGlow::Create(m_pGraphicDevice, m_pCommandList,
-		L"PublicCylinder03",
-		_vec3(0.06f),
-		_vec3(0.f, 0.f, 0.f),
-		vecPos
-	);
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicSphere00", pGameObj), E_FAIL);*/
+	for(int i=0; i<5; i++)
+	{
+		vecPos.y = 1.f;
+		pGameObj = CEffectShield::Create(m_pGraphicDevice, m_pCommandList,
+			L"publicShield",
+			_vec3(0.00f),
+			_vec3(0.f, 0.f, 0.f),
+			vecPos, (360/5) *i);
+		static_cast<CEffectShield*>(pGameObj)->Set_isScaleAnim(true);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"publicShield", pGameObj), E_FAIL);
+	}
 
-	vecPos.y = 0.5f;
+	vecPos.y = rand()%50 *0.01f;
 	vecPos.z += 0.2f;
-	//pGameObj = CMagicCircle::Create(m_pGraphicDevice, m_pCommandList,
-	//	L"PublicPlane00",
-	//	_vec3(0.00f),
-	//	_vec3(0.f, 0.0f, 0.0f), vecPos,10);
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicPlane00", pGameObj), E_FAIL);
-	//static_cast<CMagicCircle*>(pGameObj)->Set_TexIDX(15, 15, 2);
-	//static_cast<CMagicCircle*>(pGameObj)->Set_isScaleAnim(true);
-	//static_cast<CMagicCircle*>(pGameObj)->Set_isRotate(false);
 	pGameObj = CMagicCircle::Create(m_pGraphicDevice, m_pCommandList,
 		L"PublicPlane00",
 		_vec3(0.00f),
-		_vec3(0.f, 0.0f, 0.0f), vecPos,0);
+		_vec3(0.f, 0.0f, 0.0f), vecPos);
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicPlane00", pGameObj), E_FAIL);
-	static_cast<CMagicCircle*>(pGameObj)->Set_TexIDX(18, 18, 2);
+	static_cast<CMagicCircle*>(pGameObj)->Set_TexIDX(20, 20, 2);
 	static_cast<CMagicCircle*>(pGameObj)->Set_isScaleAnim(true);
-	static_cast<CMagicCircle*>(pGameObj)->Set_isRotate(true);
+	static_cast<CMagicCircle*>(pGameObj)->Set_isRotate(false);
+
+
 	//vecPos.y = 2.5f;
 	//pGameObj = CMagicCircle::Create(m_pGraphicDevice, m_pCommandList,
 	//	L"PublicPlane00",
@@ -260,6 +250,10 @@ void CEffectMgr::Effect_GridShieldEffect(_vec3 vecPos,int type)
 
 	static_cast<CMagicCircle*>(pGameObj)->Set_isScaleAnim(true);
 	static_cast<CMagicCircle*>(pGameObj)->Set_isRotate(true);
+}
+
+void CEffectMgr::Effect_Shield(_vec3 vecPos)
+{
 }
 
 

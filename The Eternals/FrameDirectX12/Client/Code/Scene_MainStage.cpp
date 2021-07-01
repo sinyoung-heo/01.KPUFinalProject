@@ -51,6 +51,10 @@
 #include "StoreMgr.h"
 #include "QuickSlotMgr.h"
 
+#include "Lakan.h"
+#include "PrionBerserker.h"
+#include "PrionBerserkerBoss.h"
+
 CScene_MainStage::CScene_MainStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
 {
@@ -77,9 +81,43 @@ HRESULT CScene_MainStage::Ready_Scene()
 	Engine::CShaderLightingInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 	Engine::CShaderColorInstancing::Get_Instance()->SetUp_ConstantBuffer(m_pGraphicDevice);
 
-
 	CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(false);
 	CInstancePoolMgr::Get_Instance()->Ready_InstancePool(m_pGraphicDevice, m_pCommandList);
+
+	/* TEST CINEMATIC MONSTER */
+	Engine::CGameObject* pGameObj = nullptr;
+	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterLakanPool());
+	if (nullptr != pGameObj)
+	{
+		pGameObj->Get_Transform()->m_vScale = _vec3(0.07f);
+		pGameObj->Get_Transform()->m_vAngle = _vec3(0.f);
+		pGameObj->Get_Transform()->m_vPos = _vec3(125.f, 0.f, 55.f);
+		pGameObj->Set_ServerNumber(8888);
+		pGameObj->Set_State(0);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);
+	}
+
+	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterPrionBerserkerPool());
+	if (nullptr != pGameObj)
+	{
+		pGameObj->Get_Transform()->m_vScale = _vec3(0.05f);
+		pGameObj->Get_Transform()->m_vAngle = _vec3(0.f);
+		pGameObj->Get_Transform()->m_vPos = _vec3(135.f, 0.f, 55.f);
+		pGameObj->Set_ServerNumber(8889);
+		pGameObj->Set_State(0);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);
+	}
+
+	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterPrionBerserkerBossPool());
+	if (nullptr != pGameObj)
+	{
+		pGameObj->Get_Transform()->m_vScale = _vec3(0.07f);
+		pGameObj->Get_Transform()->m_vAngle = _vec3(0.f);
+		pGameObj->Get_Transform()->m_vPos = _vec3(130.f, 0.f, 55.f);
+		pGameObj->Set_ServerNumber(8887);
+		pGameObj->Set_State(0);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"MONSTER", pGameObj), E_FAIL);
+	}
 
 	// Server
 	Engine::FAILED_CHECK_RETURN(CPacketMgr::Get_Instance()->Ready_Server(m_pGraphicDevice, m_pCommandList), E_FAIL);
