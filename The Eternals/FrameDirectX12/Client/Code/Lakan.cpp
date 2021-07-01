@@ -10,7 +10,6 @@
 #include "TimeMgr.h"
 #include "CollisionTick.h"
 #include "InstancePoolMgr.h"
-#include "NormalMonsterHpGauge.h"
 
 CLakan::CLakan(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -49,14 +48,7 @@ HRESULT CLakan::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, c
 	[ 애니메이션 설정 ]
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
-	m_iMonsterStatus = Cloder::A_WAIT;
-
-	// Create HpGauge
-	m_pHpGauge = static_cast<CNormalMonsterHpGauge*>(CNormalMonsterHpGauge::Create(m_pGraphicDevice, 
-																				   m_pCommandList,
-																				   _vec3(0.0f),
-																				   _vec3(2.0f, 0.075f, 1.0f)));
-	Engine::NULL_CHECK_RETURN(m_pHpGauge, E_FAIL);
+	m_iMonsterStatus = Lakan::A_WAIT;
 
 	return S_OK;
 }
@@ -86,7 +78,7 @@ _int CLakan::Update_GameObject(const _float& fTimeDelta)
 		m_bIsStartDissolve = false;
 		m_fDissolve = -0.05f;
 		m_bIsResetNaviMesh = false;
-		//Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterLakanPool(), m_uiInstanceIdx);
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterLakanPool(), m_uiInstanceIdx);
 
 		return RETURN_OBJ;
 	}
@@ -96,7 +88,7 @@ _int CLakan::Update_GameObject(const _float& fTimeDelta)
 		m_bIsStartDissolve = false;
 		m_bIsResetNaviMesh = false;
 		m_fDissolve = -0.05f;
-		//Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterLakanPool(), m_uiInstanceIdx);
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterLakanPool(), m_uiInstanceIdx);
 
 		return RETURN_OBJ;
 	}
@@ -108,8 +100,8 @@ _int CLakan::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	// Create CollisionTick
-	if (m_pMeshCom->Is_BlendingComplete())
-		SetUp_CollisionTick(fTimeDelta);
+	//if (m_pMeshCom->Is_BlendingComplete())
+	//	SetUp_CollisionTick(fTimeDelta);
 
 	SetUp_Dissolve(fTimeDelta);
 
@@ -154,8 +146,6 @@ _int CLakan::Update_GameObject(const _float& fTimeDelta)
 _int CLakan::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
-
-	SetUp_HpGauge(fTimeDelta);
 
 	Set_ConstantTableShadowDepth();
 	Set_ConstantTable();
@@ -341,90 +331,54 @@ void CLakan::Change_Animation(const _float& fTimeDelta)
 		switch (m_iMonsterStatus)
 		{
 
-		case Cloder::A_WAIT:
+		case Lakan::A_WAIT:
 		{
 			m_bIsCreateCollisionTick = false;
-			m_uiAnimIdx = Cloder::A_WAIT;
+			m_uiAnimIdx = Lakan::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
 		break;
 
-		case Cloder::A_WALK:
+		case Lakan::A_MOVE_START:
 		{
 			m_bIsCreateCollisionTick = false;
-			m_uiAnimIdx = Cloder::A_WALK;
-			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		}
-		break;
-
-		case Cloder::A_RUN:
-		{
-			m_bIsCreateCollisionTick = false;
-			m_uiAnimIdx = Cloder::A_RUN;
-			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		}
-		break;
-
-		case Cloder::A_ATTACK:
-		{
-			m_uiAnimIdx = Cloder::A_ATTACK;
+			m_uiAnimIdx = Lakan::A_MOVE_START;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iMonsterStatus	= Cloder::A_WAIT;
+				m_iMonsterStatus = Lakan::A_MOVE_LOOP;
 
-				m_uiAnimIdx			= Cloder::A_WAIT;
+				m_uiAnimIdx = Lakan::A_MOVE_LOOP;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
 		break;
 
-		case Cloder::A_ATTACK_POKE:
+		case Lakan::A_MOVE_LOOP:
 		{
-			m_uiAnimIdx = Cloder::A_ATTACK_POKE;
+			m_bIsCreateCollisionTick = false;
+			m_uiAnimIdx = Lakan::A_MOVE_LOOP;
+			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+		}
+		break;
+
+		case Lakan::A_MOVE_END:
+		{
+			m_uiAnimIdx = Lakan::A_MOVE_END;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iMonsterStatus	= Cloder::A_WAIT;
+				m_iMonsterStatus	= Lakan::A_WAIT;
 
-				m_uiAnimIdx			= Cloder::A_WAIT;
+				m_uiAnimIdx			= Lakan::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
 		break;
-
-		case Cloder::A_ATTACK_SWING:
-		{
-			m_uiAnimIdx = Cloder::A_ATTACK_SWING;
-			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-
-			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
-			{
-				m_iMonsterStatus	= Cloder::A_WAIT;
-
-				m_uiAnimIdx			= Cloder::A_WAIT;
-				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-			}
-		}
-		break;
-
-		case Cloder::A_DEATH:
-		{
-			m_uiAnimIdx = Cloder::A_DEATH;
-			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-
-			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) 
-			{
-				m_bIsStartDissolve = true;
-			}
-		}
-		break;
-
 		}
 	}
-
 }
 
 void CLakan::SetUp_CollisionTick(const _float& fTimeDelta)
@@ -514,20 +468,6 @@ void CLakan::SetUp_CollisionTick(const _float& fTimeDelta)
 	}
 }
 
-void CLakan::SetUp_HpGauge(const _float& fTimeDelta)
-{
-	if (nullptr != m_pHpGauge)
-	{
-		_vec3 vPos = m_pTransCom->m_vPos;
-		vPos.y += 2.75f;
-		m_pHpGauge->Get_Transform()->m_vPos = vPos;
-		m_pHpGauge->Set_Percent((_float)m_pInfoCom->m_iHp / (_float)m_pInfoCom->m_iMaxHp);
-
-		m_pHpGauge->Update_GameObject(fTimeDelta);
-		m_pHpGauge->LateUpdate_GameObject(fTimeDelta);
-	}
-}
-
 Engine::CGameObject* CLakan::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
 {
 	CLakan* pInstance = new CLakan(pGraphicDevice, pCommandList);
@@ -566,6 +506,4 @@ void CLakan::Free()
 	Engine::Safe_Release(m_pColliderSphereCom);
 	Engine::Safe_Release(m_pColliderBoxCom);
 	Engine::Safe_Release(m_pNaviMeshCom);
-
-	Engine::Safe_Release(m_pHpGauge);
 }

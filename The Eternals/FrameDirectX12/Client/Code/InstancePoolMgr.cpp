@@ -10,6 +10,9 @@
 #include "GiantBeetle.h"
 #include "GiantMonkey.h"
 #include "CraftyArachne.h"
+#include "Lakan.h"
+#include "PrionBerserker.h"
+#include "PrionBerserkerBoss.h"
 #include "NPC_Walker.h"
 #include "NPC_Assistant.h"
 #include "NPC_Stander.h"
@@ -120,6 +123,9 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterGiantBeetlePool, 4);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterGiantMonkeyPool, 4);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterCraftyArachnePool, 2);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterLakanPool, 50);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterPrionBerserkerPool, 50);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterPrionBerserkerBossPool, 1);
 
 	// NPC
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Walker_ChickenPool, L"Chicken", 10);
@@ -175,6 +181,9 @@ void CInstancePoolMgr::Free()
 	Safe_Release_InstacePool(m_pMonsterGiantBeetlePool);
 	Safe_Release_InstacePool(m_pMonsterGiantMonkeyPool);
 	Safe_Release_InstacePool(m_pMonsterCraftyArachnePool);
+	Safe_Release_InstacePool(m_pMonsterLakanPool);
+	Safe_Release_InstacePool(m_pMonsterPrionBerserkerPool);
+	Safe_Release_InstacePool(m_pMonsterPrionBerserkerBossPool);
 
 	Safe_Release_InstacePool(m_pNPC_Walker_ChickenPool);
 	Safe_Release_InstacePool(m_pNPC_Walker_CatPool);
