@@ -43,6 +43,10 @@ TwoHand33_B_SM|TwoHand33_B_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\PCWe
 BumpDesertMesh00|BumpDesertMesh00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpDesertMesh00\
 BumpTerrainMesh00|BumpTerrainMesh00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpTerrainMesh00\
 BumpTerrainMesh01|BumpTerrainMesh01.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpTerrainMesh01\
+BumpTerrainMesh02|BumpTerrainMesh02.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpTerrainMesh02\
+BumpTerrainMesh03|BumpTerrainMesh03.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpTerrainMesh03\
+BumpTerrainMesh04|BumpTerrainMesh04.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpTerrainMesh04\
+BumpTerrainMesh05|BumpTerrainMesh05.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpTerrainMesh05\
 BumpWaterMesh00|BumpWaterMesh00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\BumpWaterMesh00\
 DistTrail|DistTrail.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\DistTrail\
 HalfMoon0|HalfMoon0.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\HalfMoon0\
@@ -205,6 +209,7 @@ Beast_Ice_04_SM|Beast_Ice_04_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\St
 Beast_Ice_05_SM|Beast_Ice_05_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageWendigo\Beast_Ice_05_SM\
 Beast_Ice_06_SM|Beast_Ice_06_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageWendigo\Beast_Ice_06_SM\
 Beast_Ice_07_SM|Beast_Ice_07_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageWendigo\Beast_Ice_07_SM\
+Buffalo_Statue|Buffalo_Statue.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageWendigo\Buffalo_Statue\
 Lion_Statue|Lion_Statue.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageWendigo\Lion_Statue\
 RostGiantjar_Ice_01_SM|RostGiantjar_Ice_01_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageWendigo\RostGiantjar_Ice_01_SM\
 RostGiantjar_Ice_02_SM|RostGiantjar_Ice_02_SM.X|..\..\Bin\Resource\ResourceStage\StaticMesh\StageWendigo\RostGiantjar_Ice_02_SM\

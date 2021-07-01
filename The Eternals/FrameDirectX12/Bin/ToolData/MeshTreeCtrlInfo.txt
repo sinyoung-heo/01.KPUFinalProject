@@ -43,6 +43,10 @@ PCWeapon|TwoHand|TwoHand33_B_SM
 StaticMesh|Plane|BumpDesertMesh00
 StaticMesh|Plane|BumpTerrainMesh00
 StaticMesh|Plane|BumpTerrainMesh01
+StaticMesh|Plane|BumpTerrainMesh02
+StaticMesh|Plane|BumpTerrainMesh03
+StaticMesh|Plane|BumpTerrainMesh04
+StaticMesh|Plane|BumpTerrainMesh05
 StaticMesh|Plane|BumpWaterMesh00
 StaticMesh|Plane|DistTrail
 StaticMesh|Plane|HalfMoon0
@@ -205,6 +209,7 @@ StaticMesh|StageWendigo|Beast_Ice_04_SM
 StaticMesh|StageWendigo|Beast_Ice_05_SM
 StaticMesh|StageWendigo|Beast_Ice_06_SM
 StaticMesh|StageWendigo|Beast_Ice_07_SM
+StaticMesh|StageWendigo|Buffalo_Statue
 StaticMesh|StageWendigo|Lion_Statue
 StaticMesh|StageWendigo|RostGiantjar_Ice_01_SM
 StaticMesh|StageWendigo|RostGiantjar_Ice_02_SM

@@ -208,15 +208,15 @@ HRESULT CScene_Logo::Render_Scene(const _float & fTimeDelta, const Engine::RENDE
 			pNewScene = CStagePJO::Create(m_pGraphicDevice, m_pCommandList);
 			Engine::CManagement::Get_Instance()->SetUp_CurrentScene(pNewScene);
 		}
-		//if (Engine::KEY_DOWN(DIK_3))
-		//{
-		//	m_pObjectMgr->Clear_Layer();
-		//	CMouseCursorMgr::Get_Instance()->Reset_MouseCursor();
+		if (Engine::KEY_DOWN(DIK_3) && m_bIsLoginPC)
+		{
+			m_pObjectMgr->Clear_Layer();
+			CMouseCursorMgr::Get_Instance()->Reset_MouseCursor();
 
-		//	Engine::CScene* pNewScene = nullptr;
-		//	pNewScene = CStageHSY::Create(m_pGraphicDevice, m_pCommandList);
-		//	Engine::CManagement::Get_Instance()->SetUp_CurrentScene(pNewScene);
-		//}
+			Engine::CScene* pNewScene = nullptr;
+			pNewScene = CStageHSY::Create(m_pGraphicDevice, m_pCommandList);
+			Engine::CManagement::Get_Instance()->SetUp_CurrentScene(pNewScene);
+		}
 	}
 
 

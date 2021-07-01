@@ -84,7 +84,11 @@ _int CStaticMeshObject::Update_GameObject(const _float & fTimeDelta)
 	if (m_wstrMeshTag == L"VK_CON_Wall_B_SM" ||
 		m_wstrMeshTag == L"Cliff_Rock2" ||
 		m_wstrMeshTag == L"Cliff_Rock4" ||
-		m_wstrMeshTag == L"Cliff_Rock7")
+		m_wstrMeshTag == L"Cliff_Rock7" ||
+		m_wstrMeshTag == L"SnowMountain01_SM" || 
+		m_wstrMeshTag == L"SnowMountain02_SM" || 
+		m_wstrMeshTag == L"Beast_Ice_06_SM" || 
+		m_wstrMeshTag == L"Beast_Ice_07_SM")
 	{
 		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 	}
@@ -164,7 +168,11 @@ void CStaticMeshObject::Render_ShadowDepth(const _float& fTimeDelta,
 		m_wstrMeshTag != L"Cliff_Rock6" &&
 		m_wstrMeshTag != L"Cliff_Rock7" &&
 		m_wstrMeshTag != L"Cliff_Rock8" &&
-		m_wstrMeshTag != L"Cliff_Rock9")
+		m_wstrMeshTag != L"Cliff_Rock9" &&
+		m_wstrMeshTag != L"SnowMountain01_SM" &&
+		m_wstrMeshTag != L"SnowMountain02_SM" &&
+		m_wstrMeshTag != L"Beast_Ice_06_SM" &&
+		m_wstrMeshTag != L"Beast_Ice_07_SM")
 	{
 		m_pShaderShadowInstancing->Add_Instance(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass);
 		_uint iInstanceIdx = m_pShaderShadowInstancing->Get_InstanceCount(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass) - 1;
