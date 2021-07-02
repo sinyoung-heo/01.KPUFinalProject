@@ -791,7 +791,7 @@ void CPCArcher::SetUp_StageID()
 
 			m_pNaviMeshCom = m_pVelikaNaviMeshCom;
 			m_mapComponent[Engine::ID_DYNAMIC][L"Com_NaviMesh"] = m_pNaviMeshCom;
-			m_pTransCom->m_vPos = _vec3(STAGE_VELIKA_X, 0.0f, STAGE_VELIKA_Z);
+			// m_pTransCom->m_vPos = _vec3(STAGE_VELIKA_X, 0.0f, STAGE_VELIKA_Z);
 			m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
 		}
 		else if (STAGE_BEACH == m_chCurStageID)
@@ -800,14 +800,14 @@ void CPCArcher::SetUp_StageID()
 
 			m_pNaviMeshCom = m_pBeachNaviMeshCom;
 			m_mapComponent[Engine::ID_DYNAMIC][L"Com_NaviMesh"] = m_pNaviMeshCom;
-			m_pTransCom->m_vPos = _vec3(STAGE_BEACH_X, 0.0f, STAGE_BEACH_Z);
+			// m_pTransCom->m_vPos = _vec3(STAGE_BEACH_X, 0.0f, STAGE_BEACH_Z);
 			m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
 		}
 		else if (STAGE_WINTER == m_chCurStageID)
 		{
 			m_pNaviMeshCom = m_pWinterNaviMeshCom;
 			m_mapComponent[Engine::ID_DYNAMIC][L"Com_NaviMesh"] = m_pNaviMeshCom;
-			m_pTransCom->m_vPos = _vec3(STAGE_WINTER_X, 0.0f, STAGE_WINTER_X);
+			// m_pTransCom->m_vPos = _vec3(STAGE_WINTER_X, 0.0f, STAGE_WINTER_X);
 			m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
 		}
 
@@ -1001,6 +1001,50 @@ void CPCArcher::Key_Input(const _float& fTimeDelta)
 
 	KeyInput_Move(fTimeDelta);
 	KeyInput_Attack(fTimeDelta);
+
+	// StageChange Stage WINTER
+	if (Engine::KEY_DOWN(DIK_O) && NO_EVENT_STATE)
+	{
+		g_bIsStageChange = true;
+		m_bIsKeyDown     = false;
+
+		if (Archer::STANCE_ATTACK == m_eStance)
+			m_uiAnimIdx = Archer::ATTACK_WAIT;
+		else
+			m_uiAnimIdx = Archer::NONE_ATTACK_IDLE;
+
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+		Engine::CGameObject* pGameObject = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
+		if (nullptr != pGameObject)
+		{
+			static_cast<CFadeInOut*>(pGameObject)->Set_FadeInOutEventType(EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
+			static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_WINTER);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
+		}
+	}
+
+	// StageChange Stage VELIKA
+	if (Engine::KEY_DOWN(DIK_P) && NO_EVENT_STATE)
+	{
+		g_bIsStageChange = true;
+		m_bIsKeyDown     = false;
+
+		if (Archer::STANCE_ATTACK == m_eStance)
+			m_uiAnimIdx = Archer::ATTACK_WAIT;
+		else
+			m_uiAnimIdx = Archer::NONE_ATTACK_IDLE;
+
+		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+		Engine::CGameObject* pGameObject = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
+		if (nullptr != pGameObject)
+		{
+			static_cast<CFadeInOut*>(pGameObject)->Set_FadeInOutEventType(EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
+			static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_VELIKA);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
+		}
+	}
 }
 
 void CPCArcher::KeyInput_Move(const _float& fTimeDelta)

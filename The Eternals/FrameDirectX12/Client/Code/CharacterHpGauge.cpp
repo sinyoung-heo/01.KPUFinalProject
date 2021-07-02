@@ -62,7 +62,7 @@ _int CCharacterHpGauge::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CGameUIChild::LateUpdate_GameObject(fTimeDelta);
 
-	if (nullptr != m_pFont)
+	if (nullptr != m_pFont && !g_bIsStageChange)
 	{
 		m_wstrText = wstring(L"%d    /    %d");
 		wsprintf(m_szText, m_wstrText.c_str(), m_iCurHp, m_iMaxHp);

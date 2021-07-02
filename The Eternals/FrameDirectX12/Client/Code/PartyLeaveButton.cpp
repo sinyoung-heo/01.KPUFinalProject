@@ -126,7 +126,7 @@ void CPartyLeaveButton::Render_GameObject(const _float& fTimeDelta)
 
 void CPartyLeaveButton::SetUp_FontPosition(const _float& fTimeDelta)
 {
-	if (nullptr != m_pFont)
+	if (nullptr != m_pFont && !g_bIsStageChange)
 	{
 		_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
 		vPos.x -= 28.0f;

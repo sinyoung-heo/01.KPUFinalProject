@@ -414,7 +414,7 @@ void CQuickSlot::SetUp_FontPotionCnt(const _float& fTimeDelta)
 	else
 		m_uiCnt = pInventorySlot->Get_CurItemCnt();
 
-	if (nullptr != m_pFontPotionCnt)
+	if (nullptr != m_pFontPotionCnt && !g_bIsStageChange)
 	{
 		_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
 		vPos.x += -19.0f;
@@ -432,7 +432,7 @@ void CQuickSlot::SetUp_FontPotionCnt(const _float& fTimeDelta)
 
 void CQuickSlot::SetUp_FontDIKKey(const _float& fTimeDelta)
 {
-	if (nullptr != m_pFont)
+	if (nullptr != m_pFont && !g_bIsStageChange)
 	{
 		_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
 		vPos.x += -18.0f;

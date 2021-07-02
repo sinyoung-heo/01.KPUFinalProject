@@ -90,8 +90,8 @@ constexpr float STAGE_VELIKA_X			= 130.0f;
 constexpr float STAGE_VELIKA_Z			= 70.0f;
 constexpr float STAGE_BEACH_X			= 80.0f + 256.0f;
 constexpr float STAGE_BEACH_Z			= 80.0f + 0.0f;
-constexpr float STAGE_WINTER_X			= 0.0f + 256.0f;
-constexpr float STAGE_WINTER_Z			= 0.0f + 256.0f;
+constexpr float STAGE_WINTER_X			= 380.0f;
+constexpr float STAGE_WINTER_Z			= 330.0f;
 
 /* CHARACTER TYPE */   // 추후 삭제 예정
 constexpr char TYPE_PLAYER				= 0;
