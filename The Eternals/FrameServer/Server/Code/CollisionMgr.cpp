@@ -43,7 +43,9 @@ bool CCollisionMgr::Is_DeadReckoning(_vec3& vPos, _vec3& vDir, _vec2* vResult, c
 	vector<_vec2> vecPoint;
 
 	/* NaviMesh의 모든 Cell 검사 */
-	if (naviType == STAGE_VELIKA)
+	switch (naviType)
+	{
+	case STAGE_VELIKA:
 	{
 		for (auto& c : CNaviMesh::GetInstance()->Get_CellList())
 		{
@@ -51,14 +53,13 @@ bool CCollisionMgr::Is_DeadReckoning(_vec3& vPos, _vec3& vDir, _vec2* vResult, c
 			for (int i = 0; i < 3; ++i)
 			{
 				if (CheckIntersectPoint(vStart, vEnd, c->Get_Line(i).Get_Point()[0], c->Get_Line(i).Get_Point()[1], vResult))
-				{
-					vecPoint.emplace_back(vResult->x, vResult->y);
-				}
+					vecPoint.emplace_back(vResult->x, vResult->y);			
 			}
 		}
 	}
+	break;
 
-	else if (naviType == STAGE_BEACH)
+	case STAGE_BEACH:
 	{
 		for (auto& c : CNaviMesh_Beach::GetInstance()->Get_CellList())
 		{
@@ -66,13 +67,26 @@ bool CCollisionMgr::Is_DeadReckoning(_vec3& vPos, _vec3& vDir, _vec2* vResult, c
 			for (int i = 0; i < 3; ++i)
 			{
 				if (CheckIntersectPoint(vStart, vEnd, c->Get_Line(i).Get_Point()[0], c->Get_Line(i).Get_Point()[1], vResult))
-				{
-					vecPoint.emplace_back(vResult->x, vResult->y);
-				}
+					vecPoint.emplace_back(vResult->x, vResult->y);		
 			}
 		}
 	}
-	
+	break;
+
+	case STAGE_WINTER:
+	{
+		for (auto& c : CNaviMesh_Winter::GetInstance()->Get_CellList())
+		{
+			/* 각 Cell의 Line 검사 */
+			for (int i = 0; i < 3; ++i)
+			{
+				if (CheckIntersectPoint(vStart, vEnd, c->Get_Line(i).Get_Point()[0], c->Get_Line(i).Get_Point()[1], vResult))
+					vecPoint.emplace_back(vResult->x, vResult->y);	
+			}
+		}
+	}
+	break;
+	}
 
 	float ret = 0.f;
 	bool bIsRet = false;
@@ -90,13 +104,9 @@ bool CCollisionMgr::Is_DeadReckoning(_vec3& vPos, _vec3& vDir, _vec2* vResult, c
 	}
 
 	if (bIsRet) 
-	{
-#ifdef SERVER
-		cout << "Navi collide to Line] x: " << vResult->x << " y: " << vResult->y << endl;
-#endif
-		return true;
-	}	
-	else return false;
+		return true;	
+	else 
+		return false;
 }
 
 bool CCollisionMgr::Is_Arrive(const _vec3& _vStart, const _vec3& _vEnd)

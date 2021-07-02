@@ -82,6 +82,7 @@ void Ready_ServerManager()
 	CItemMgr::GetInstance()->Ready_Item();
 	CNaviMesh::GetInstance()->Ready_NaviMesh(L"../../../FrameDirectX12/Bin/ToolData/StageVelika_NaviMesh.navimeshcellinfo");
 	CNaviMesh_Beach::GetInstance()->Ready_NaviMesh(L"../../../FrameDirectX12/Bin/ToolData/StageBeach_NaviMesh3.navimeshcellinfo");	
+	CNaviMesh_Winter::GetInstance()->Ready_NaviMesh(L"../../../FrameDirectX12/Bin/ToolData/StageWendigo_NaviMesh.navimeshcellinfo");
 	CCollisionMgr::GetInstance();
 
 #ifdef TEST
@@ -154,6 +155,7 @@ void Release_Server()
 	CItemMgr::GetInstance()->DestroyInstance();
 	CNaviMesh::GetInstance()->DestroyInstance();
 	CNaviMesh_Beach::GetInstance()->DestroyInstance();
+	CNaviMesh_Winter::GetInstance()->DestroyInstance();
 	CCollisionMgr::GetInstance()->DestroyInstance();
 
 	closesocket(g_hListenSock);

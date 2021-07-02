@@ -509,8 +509,12 @@ void CMonster::Move_NormalMonster(const float& fTimeDelta)
 	else if (m_chStageId == STAGE_BEACH)
 	{
 		if (CNaviMesh_Beach::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;	
+	}
+	else if (m_chStageId == STAGE_WINTER)
+	{
+		if (CNaviMesh_Winter::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
 			return;
-		
 	}
 		
 
@@ -725,6 +729,11 @@ void CMonster::Chase_Crab(const float& fTimeDelta)
 	else if (m_chStageId == STAGE_BEACH)
 	{
 		if (CNaviMesh_Beach::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+	}
+	else if (m_chStageId == STAGE_WINTER)
+	{
+		if (CNaviMesh_Winter::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
 			return;
 	}
 	
@@ -963,6 +972,11 @@ void CMonster::Chase_Monkey(const float& fTimeDelta)
 		if (CNaviMesh_Beach::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
 			return;
 	}
+	else if (m_chStageId == STAGE_WINTER)
+	{
+		if (CNaviMesh_Winter::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+	}
 
 	/* 변경된 좌표로 섹터 갱신 */
 	CSectorMgr::GetInstance()->Compare_exchange_Sector(m_sNum, (int)ori_z, (int)ori_x, (int)(m_vPos.z), (int)(m_vPos.x));
@@ -1186,6 +1200,11 @@ void CMonster::Chase_Cloder(const float& fTimeDelta)
 	else if (m_chStageId == STAGE_BEACH)
 	{
 		if (CNaviMesh_Beach::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+	}
+	else if (m_chStageId == STAGE_WINTER)
+	{
+		if (CNaviMesh_Winter::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
 			return;
 	}
 
@@ -1423,6 +1442,11 @@ void CMonster::Chase_DrownedSailor(const float& fTimeDelta)
 		if (CNaviMesh_Beach::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
 			return;
 	}
+	else if (m_chStageId == STAGE_WINTER)
+	{
+		if (CNaviMesh_Winter::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+	}
 
 	/* 변경된 좌표로 섹터 갱신 */
 	CSectorMgr::GetInstance()->Compare_exchange_Sector(m_sNum, (int)ori_z, (int)ori_x, (int)(m_vPos.z), (int)(m_vPos.x));
@@ -1653,6 +1677,11 @@ void CMonster::Chase_GiantBeetle(const float& fTimeDelta)
 	else if (m_chStageId == STAGE_BEACH)
 	{
 		if (CNaviMesh_Beach::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+	}
+	else if (m_chStageId == STAGE_WINTER)
+	{
+		if (CNaviMesh_Winter::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
 			return;
 	}
 
@@ -1901,6 +1930,11 @@ void CMonster::Chase_GiantMonkey(const float& fTimeDelta)
 		if (CNaviMesh_Beach::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
 			return;
 	}
+	else if (m_chStageId == STAGE_WINTER)
+	{
+		if (CNaviMesh_Winter::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+	}
 
 	/* 변경된 좌표로 섹터 갱신 */
 	CSectorMgr::GetInstance()->Compare_exchange_Sector(m_sNum, (int)ori_z, (int)ori_x, (int)(m_vPos.z), (int)(m_vPos.x));
@@ -2124,6 +2158,11 @@ void CMonster::Chase_CraftyArachne(const float& fTimeDelta)
 	else if (m_chStageId == STAGE_BEACH)
 	{
 		if (CNaviMesh_Beach::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+			return;
+	}
+	else if (m_chStageId == STAGE_WINTER)
+	{
+		if (CNaviMesh_Winter::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
 			return;
 	}
 
