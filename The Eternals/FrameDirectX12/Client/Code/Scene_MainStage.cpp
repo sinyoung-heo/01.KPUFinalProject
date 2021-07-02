@@ -82,7 +82,8 @@ HRESULT CScene_MainStage::Ready_Scene()
 	CInstancePoolMgr::Get_Instance()->Ready_InstancePool(m_pGraphicDevice, m_pCommandList);
 
 	// Ready Cinematic Scene Character
-	Engine::FAILED_CHECK_RETURN(CCinemaMgr::Get_Instance()->Ready_CinemaCharacter(), E_FAIL);
+	// 현재 몬스터 컬링이 되어있지 않으므로 주석처리 해놓음. 삭제 X
+	//Engine::FAILED_CHECK_RETURN(CCinemaMgr::Get_Instance()->Ready_CinemaCharacter(), E_FAIL);
 
 	// Server
 	Engine::FAILED_CHECK_RETURN(CPacketMgr::Get_Instance()->Ready_Server(m_pGraphicDevice, m_pCommandList), E_FAIL);
