@@ -2,6 +2,7 @@
 #include "Include.h"
 #include "Base.h"
 
+class CFadeInOut;
 class CCollisionTick;
 class CCollisionArrow;
 
@@ -40,6 +41,8 @@ private:
 	virtual ~CInstancePoolMgr() = default;
 
 public:
+	// FadeInOut
+	INSTANCE_POOL_DESC<CFadeInOut>*			Get_FadeInOutPool() { return m_pFadeInOutPool; }
 	// CollisionTick
 	INSTANCE_POOL_DESC<CCollisionTick>*		Get_CollisionTickPool()		{ return m_pCollisionTickPool; }
 	INSTANCE_POOL_DESC<CCollisionArrow>*	Get_CollisionArrowPool(const ARROW_POOL_TYPE& eType);
@@ -79,8 +82,12 @@ public:
 
 
 	void Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	void Ready_LoadingInstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 
 private:
+	// FadeInOut
+	INSTANCE_POOL_DESC<CFadeInOut>*			m_pFadeInOutPool						= nullptr;
+
 	// CollisionTick
 	INSTANCE_POOL_DESC<CCollisionTick>*		m_pCollisionTickPool					= nullptr;
 	INSTANCE_POOL_DESC<CCollisionArrow>*	m_pCollisionArrowIcePool				= nullptr;

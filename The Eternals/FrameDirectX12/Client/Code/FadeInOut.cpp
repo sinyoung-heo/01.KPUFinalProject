@@ -2,11 +2,31 @@
 #include "FadeInOut.h"
 #include "Management.h"
 #include "Scene_Logo.h"
+#include "InstancePoolMgr.h"
 
 CFadeInOut::CFadeInOut(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pPacketMgr(CPacketMgr::Get_Instance())
 {
+}
+
+void CFadeInOut::Set_FadeInOutEventType(const EVENT_TYPE& eEventType)
+{
+	m_eEventType = eEventType;
+
+	if (EVENT_TYPE::FADE_IN == eEventType ||
+		EVENT_TYPE::SCENE_CHANGE_FADEIN_FADEOUT == eEventType)
+	{
+		m_fAlpha = 1.0f;
+	}
+	else if (EVENT_TYPE::FADE_OUT == eEventType ||
+			 EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN == eEventType ||
+			 EVENT_TYPE::SCENE_CAHNGE_LOGO_STAGE == eEventType)
+	{
+		m_fAlpha = 0.0f;
+	}
+
+	m_pRenderer->Set_IsRenderMiniMap(false);
 }
 
 HRESULT CFadeInOut::Ready_GameObject(const EVENT_TYPE& eEventType)
@@ -57,6 +77,11 @@ _int CFadeInOut::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 	{
 		return DEAD_OBJ;
+	}
+	if (m_bIsReturn)
+	{
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool(), m_uiInstanceIdx);
+		return RETURN_OBJ;
 	}
 
 	/*__________________________________________________________________________________________________________
@@ -149,7 +174,8 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 		{
 			m_fAlpha = 0.0f;
 			m_pRenderer->Set_IsRenderMiniMap(true);
-			Set_DeadGameObject();
+			// Set_DeadGameObject();
+			m_bIsReturn = true;
 		}
 	}
 	else if (EVENT_TYPE::FADE_OUT == m_eEventType)
@@ -159,7 +185,8 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 		{
 			m_fAlpha = 1.0f;
 			m_pRenderer->Set_IsRenderMiniMap(true);
-			Set_DeadGameObject();
+			// Set_DeadGameObject();
+			m_bIsReturn = true;
 		}
 	}
 	else if (EVENT_TYPE::SCENE_CAHNGE_LOGO_STAGE == m_eEventType)
@@ -170,7 +197,8 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 			m_fAlpha = 1.0f;
 			static_cast<CScene_Logo*>(Engine::CManagement::Get_Instance()->Get_CurrentScene())->Set_IsSceneChage(true);
 			m_pRenderer->Set_IsRenderMiniMap(true);
-			Set_DeadGameObject();
+			// Set_DeadGameObject();
+			m_bIsReturn = true;
 		}
 	}
 	else if (EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN == m_eEventType)
@@ -200,7 +228,8 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 				m_fAlpha = 0.0f;
 				g_bIsStageChange = false;
 				m_pRenderer->Set_IsRenderMiniMap(true);
-				Set_DeadGameObject();
+				// Set_DeadGameObject();
+				m_bIsReturn = true;
 			}
 		}
 	}
@@ -216,6 +245,22 @@ Engine::CGameObject* CFadeInOut::Create(ID3D12Device* pGraphicDevice,
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
+}
+
+CFadeInOut** CFadeInOut::Create_InstancePool(ID3D12Device* pGraphicDevice, 
+											 ID3D12GraphicsCommandList* pCommandList, 
+											 const _uint& uiInstanceCnt)
+{
+	CFadeInOut** ppInstance = new (CFadeInOut*[uiInstanceCnt]);
+
+	for (_uint i = 0; i < uiInstanceCnt; ++i)
+	{
+		ppInstance[i] = new CFadeInOut(pGraphicDevice, pCommandList);
+		ppInstance[i]->m_uiInstanceIdx = i;
+		ppInstance[i]->Ready_GameObject(EVENT_TYPE::FADE_IN);
+	}
+
+	return ppInstance;
 }
 
 void CFadeInOut::Free()

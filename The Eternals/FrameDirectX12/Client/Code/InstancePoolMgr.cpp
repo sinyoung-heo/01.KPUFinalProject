@@ -25,6 +25,7 @@
 #include "PCWeaponTwoHand.h"
 #include "PCWeaponBow.h"
 #include "PCWeaponRod.h"
+#include "FadeInOut.h"
 
 IMPLEMENT_SINGLETON(CInstancePoolMgr)
 
@@ -167,8 +168,15 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCOthersPriestPool, 10);
 }
 
+void CInstancePoolMgr::Ready_LoadingInstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+{
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pFadeInOutPool, 4);
+}
+
 void CInstancePoolMgr::Free()
 {
+	Safe_Release_InstacePool(m_pFadeInOutPool);
+
 	Safe_Release_InstacePool(m_pCollisionTickPool);
 	Safe_Release_InstacePool(m_pCollisionArrowIcePool);
 	Safe_Release_InstacePool(m_pCollisionArrowFirePool);

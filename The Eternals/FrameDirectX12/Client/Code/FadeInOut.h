@@ -16,6 +16,7 @@ private:
 	virtual ~CFadeInOut() = default;
 
 public:
+	void Set_FadeInOutEventType(const EVENT_TYPE& eEventType);
 	void Set_IsSendPacket(const _bool& bIsSendPacket)		{ m_bIsSendPacket = bIsSendPacket; }
 	void Set_IsReceivePacket(const _bool& bIsReceivePacket) { m_bIsReceivePacket = bIsReceivePacket; }
 
@@ -56,6 +57,10 @@ public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, 
 									   ID3D12GraphicsCommandList* pCommandList,
 									   const EVENT_TYPE& eEventType);
+
+	static CFadeInOut** Create_InstancePool(ID3D12Device* pGraphicDevice,
+											ID3D12GraphicsCommandList* pCommandList,
+											const _uint& uiInstanceCnt);
 private:
 	virtual void Free();
 };

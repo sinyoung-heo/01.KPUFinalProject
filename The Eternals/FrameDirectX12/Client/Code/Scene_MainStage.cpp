@@ -348,6 +348,64 @@ HRESULT CScene_MainStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_VELIKA, L"BumpTerrainMesh00", pGameObj), E_FAIL);
 
 	static_cast<CTerrainMeshObject*>(pGameObj)->Set_Wave(1.f);
+
+
+
+	// Winter
+	wifstream fin_winter { L"../../Bin/ToolData/StageWendigo_StaticMesh.staticmesh" };
+	if (fin_winter.fail())
+		return E_FAIL;
+
+	while (true)
+	{
+		fin_winter >> wstrMeshTag 				// MeshTag
+					>> vScale.x
+					>> vScale.y
+					>> vScale.z					// Scale
+					>> vAngle.x
+					>> vAngle.y
+					>> vAngle.z					// Angle
+					>> vPos.x
+					>> vPos.y
+					>> vPos.z					// Pos
+					>> bIsRenderShadow			// Is Render Shadow
+					>> bIsCollision 			// Is Collision
+					>> vBoundingSphereScale.x	// BoundingSphere Scale
+					>> vBoundingSphereScale.y
+					>> vBoundingSphereScale.z
+					>> vBoundingSpherePos.x		// BoundingSphere Pos
+					>> vBoundingSpherePos.y
+					>> vBoundingSpherePos.z
+					>> bIsMousePicking;
+
+		if (fin_winter.eof())
+			break;
+
+		pGameObj = CStaticMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+											 wstrMeshTag,			// MeshTag
+											 vScale,				// Scale
+											 vAngle,				// Angle
+											 vPos,					// Pos
+											 bIsRenderShadow,		// Render Shadow
+											 bIsCollision,			// Bounding Sphere
+											 vBoundingSphereScale,	// Bounding Sphere Scale
+											 vBoundingSpherePos,	// Bounding Sphere Pos
+											 _vec3(STAGE_WINTER_OFFSET_X, 0.0f, STAGE_WINTER_OFFSET_Z));
+
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_WINTER, wstrMeshTag, pGameObj), E_FAIL);
+	}
+	pGameObj = CTerrainMeshObject::Create(m_pGraphicDevice, m_pCommandList,
+										  L"BumpTerrainMesh02",
+										  _vec3(0.175f),
+										  _vec3(0.0f, 0.0f ,0.0f),
+										  _vec3(128.0f, -0.0f, 128.0f),
+										  _vec3(STAGE_WINTER_OFFSET_X, 0.0f, STAGE_WINTER_OFFSET_Z));
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_WINTER, L"BumpTerrainMesh02", pGameObj), E_FAIL);
+	static_cast<CTerrainMeshObject*>(pGameObj)->Set_Wave(1.f);
+
+
+
+
 	// Beach
 	wifstream fin_beach { L"../../Bin/ToolData/StageBeach_StaticMesh.staticmesh" };
 	if (fin_beach.fail())
@@ -433,6 +491,9 @@ HRESULT CScene_MainStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 		_vec3(0.f),
 		_vec3(82.9f + 256.f, 0.7f, 149.72f ), FRAME(8.f, 8.f, 64.f));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_BEACH, L"Torch", pGameObj), E_FAIL);
+
+
+
 
 	/*__________________________________________________________________________________________________________
 	[ Sector Grid ]
@@ -540,9 +601,15 @@ HRESULT CScene_MainStage::Ready_LayerUI(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ FadeInOut ]
 	____________________________________________________________________________________________________________*/
-	pGameObj = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::FADE_IN);
-	Engine::NULL_CHECK_RETURN(pGameObj, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"FadeInOut", pGameObj), E_FAIL);
+	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
+	if (nullptr != pGameObj)
+	{
+		static_cast<CFadeInOut*>(pGameObj)->Set_FadeInOutEventType(EVENT_TYPE::FADE_IN);
+		m_pObjectMgr->Add_GameObject(L"Layer_UI", L"FadeInOut", pGameObj);
+	}
+	//pGameObj = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::FADE_IN);
+	//Engine::NULL_CHECK_RETURN(pGameObj, E_FAIL);
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"FadeInOut", pGameObj), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
 	[ WarningFrame ]
@@ -700,6 +767,12 @@ HRESULT CScene_MainStage::Ready_NaviMesh()
 										  _vec3(STAGE_BEACH_OFFSET_X, 0.0f, STAGE_BEACH_OFFSET_Z));
 	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"StageBeach_NaviMesh", Engine::ID_DYNAMIC, pNaviMesh), E_FAIL);
 
+
+	pNaviMesh = Engine::CNaviMesh::Create(m_pGraphicDevice, 
+										  m_pCommandList, 
+										  wstring(L"../../Bin/ToolData/StageWendigo_NaviMesh.navimeshcellinfo"),
+										  _vec3(STAGE_WINTER_OFFSET_X, 0.0f, STAGE_WINTER_OFFSET_Z));
+	Engine::FAILED_CHECK_RETURN(Engine::CComponentMgr::Get_Instance()->Add_ComponentPrototype(L"StageWinter_NaviMesh", Engine::ID_DYNAMIC, pNaviMesh), E_FAIL);
 
 	return S_OK;
 }

@@ -401,6 +401,9 @@ HRESULT CPCPriest::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 	m_pBeachNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"StageBeach_NaviMesh", Engine::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pBeachNaviMeshCom, E_FAIL);
 
+	m_pWinterNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"StageWinter_NaviMesh", Engine::ID_DYNAMIC));
+	Engine::NULL_CHECK_RETURN(m_pWinterNaviMeshCom, E_FAIL);
+
 	return S_OK;
 }
 
@@ -770,6 +773,13 @@ void CPCPriest::SetUp_StageID()
 			m_pNaviMeshCom = m_pBeachNaviMeshCom;
 			m_mapComponent[Engine::ID_DYNAMIC][L"Com_NaviMesh"] = m_pNaviMeshCom;
 			m_pTransCom->m_vPos = _vec3(STAGE_BEACH_X, 0.0f, STAGE_BEACH_Z);
+			m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
+		}
+		else if (STAGE_WINTER == m_chCurStageID)
+		{
+			m_pNaviMeshCom = m_pWinterNaviMeshCom;
+			m_mapComponent[Engine::ID_DYNAMIC][L"Com_NaviMesh"] = m_pNaviMeshCom;
+			m_pTransCom->m_vPos = _vec3(STAGE_WINTER_X, 0.0f, STAGE_WINTER_X);
 			m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
 		}
 
@@ -1623,9 +1633,16 @@ void CPCPriest::Collision_PortalVelikaToBeach(list<Engine::CColliderSphere*>& ls
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 				// FadeInOut
-				Engine::CGameObject* pGameObject = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
-				static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_BEACH);
-				m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
+				Engine::CGameObject* pGameObject = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
+				if (nullptr != pGameObject)
+				{
+					static_cast<CFadeInOut*>(pGameObject)->Set_FadeInOutEventType(EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
+					static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_BEACH);
+					m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
+				}
+				//Engine::CGameObject* pGameObject = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
+				//static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_BEACH);
+				//m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
 			}
 		}
 	}
@@ -1654,9 +1671,16 @@ void CPCPriest::Collision_PortalBeachToVelika(list<Engine::CColliderSphere*>& ls
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 				// FadeInOut
-				Engine::CGameObject* pGameObject = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
-				static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_VELIKA);
-				m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
+				Engine::CGameObject* pGameObject = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
+				if (nullptr != pGameObject)
+				{
+					static_cast<CFadeInOut*>(pGameObject)->Set_FadeInOutEventType(EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
+					static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_VELIKA);
+					m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
+				}
+				//Engine::CGameObject* pGameObject = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
+				//static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_VELIKA);
+				//m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
 			}
 		}
 	}
@@ -1781,5 +1805,6 @@ void CPCPriest::Free()
 	Engine::Safe_Release(m_pNaviMeshCom);
 	Engine::Safe_Release(m_pVelikaNaviMeshCom);
 	Engine::Safe_Release(m_pBeachNaviMeshCom);
+	Engine::Safe_Release(m_pWinterNaviMeshCom);
 	Engine::Safe_Release(m_pFont);
 }

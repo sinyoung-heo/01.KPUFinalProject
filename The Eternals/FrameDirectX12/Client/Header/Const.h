@@ -39,8 +39,8 @@ constexpr _float STAGE_VELIKA_OFFSET_X = 0.0f;
 constexpr _float STAGE_VELIKA_OFFSET_Z = 0.0f;
 constexpr _float STAGE_BEACH_OFFSET_X  = 256.0f;
 constexpr _float STAGE_BEACH_OFFSET_Z  = 0.0f;
-constexpr _float STAGE_TEMP_OFFSET_X   = 256.0f;
-constexpr _float STAGE_TEMP_OFFSET_Z   = 256.0f;
+constexpr _float STAGE_WINTER_OFFSET_X = 256.0f;
+constexpr _float STAGE_WINTER_OFFSET_Z = 256.0f;
 
 // Portal Pos
 constexpr _float PORTAL_FROM_VELIKA_TO_BEACH_X = 130.0f;

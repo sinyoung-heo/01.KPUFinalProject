@@ -22,6 +22,7 @@
 #include "LoginIDInputString.h"
 #include "LoginIDFont.h"
 #include "LoginIDButton.h"
+#include "InstancePoolMgr.h"
 
 char g_cJob = -1;
 
@@ -132,9 +133,16 @@ _int CScene_Logo::Update_Scene(const _float& fTimeDelta)
 
 		// Create FadeIn 
 		Engine::CGameObject* pGameObj = nullptr;
-		pGameObj = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::FADE_IN);
-		Engine::NULL_CHECK_RETURN(pGameObj, E_FAIL);
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_UI", L"FadeInOut", pGameObj), E_FAIL);
+
+		pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
+		if (nullptr != pGameObj)
+		{
+			static_cast<CFadeInOut*>(pGameObj)->Set_FadeInOutEventType(EVENT_TYPE::FADE_IN);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", L"FadeInOut", pGameObj);
+		}
+		//pGameObj = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::FADE_IN);
+		//Engine::NULL_CHECK_RETURN(pGameObj, E_FAIL);
+		//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_UI", L"FadeInOut", pGameObj), E_FAIL);
 	}
 
 	return Engine::CScene::Update_Scene(fTimeDelta);
@@ -173,9 +181,15 @@ HRESULT CScene_Logo::Render_Scene(const _float & fTimeDelta, const Engine::RENDE
 					m_pFont_LoadingStr->Set_DeadGameObject();
 
 				Engine::CGameObject* pGameObj = nullptr;
-				pGameObj = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CAHNGE_LOGO_STAGE);
-				Engine::NULL_CHECK_RETURN(pGameObj, E_FAIL);
-				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_UI", L"FadeInOut", pGameObj), E_FAIL);
+				pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
+				if (nullptr != pGameObj)
+				{
+					static_cast<CFadeInOut*>(pGameObj)->Set_FadeInOutEventType(EVENT_TYPE::SCENE_CAHNGE_LOGO_STAGE);
+					m_pObjectMgr->Add_GameObject(L"Layer_UI", L"FadeInOut", pGameObj);
+				}
+				//pGameObj = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CAHNGE_LOGO_STAGE);
+				//Engine::NULL_CHECK_RETURN(pGameObj, E_FAIL);
+				//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_UI", L"FadeInOut", pGameObj), E_FAIL);
 			}
 		}
 
@@ -449,10 +463,16 @@ HRESULT CScene_Logo::Ready_LayerUI(wstring wstrLayerTag)
 	/*__________________________________________________________________________________________________________
 	[ GameObject »ý¼º ]
 	____________________________________________________________________________________________________________*/
-	// LoadingProgress
-	pGameObj = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::FADE_IN);
-	Engine::NULL_CHECK_RETURN(pGameObj, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"FadeInOut", pGameObj), E_FAIL);
+	CInstancePoolMgr::Get_Instance()->Ready_LoadingInstancePool(m_pGraphicDevice, m_pCommandList);
+	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
+	if (nullptr != pGameObj)
+	{
+		static_cast<CFadeInOut*>(pGameObj)->Set_FadeInOutEventType(EVENT_TYPE::FADE_IN);
+		m_pObjectMgr->Add_GameObject(wstrLayerTag, L"FadeInOut", pGameObj);
+	}
+	//pGameObj = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::FADE_IN);
+	//Engine::NULL_CHECK_RETURN(pGameObj, E_FAIL);
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"FadeInOut", pGameObj), E_FAIL);
 	
 	pGameObj = CLogoBack::Create(m_pGraphicDevice, m_pCommandList, L"Logo");
 	Engine::NULL_CHECK_RETURN(pGameObj, E_FAIL);

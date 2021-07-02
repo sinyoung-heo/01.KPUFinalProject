@@ -118,6 +118,7 @@ private:
 	Engine::CNaviMesh*		m_pNaviMeshCom       = nullptr;
 	Engine::CNaviMesh*		m_pVelikaNaviMeshCom = nullptr;
 	Engine::CNaviMesh*		m_pBeachNaviMeshCom  = nullptr;
+	Engine::CNaviMesh*		m_pWinterNaviMeshCom = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Manager ]
