@@ -217,9 +217,6 @@
     <Filter Include="01.Scene\03.MainStage">
       <UniqueIdentifier>{af574c80-212e-42e6-9a44-0bbdcdee06c7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\98.GameEffect\00.FadeInOut">
-      <UniqueIdentifier>{05a37931-3661-4baf-b15e-ece51ef9d5a9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\01.Environment\03.WaterFall">
       <UniqueIdentifier>{82236fe0-48c1-4b5c-b540-a9426f9e4b58}</UniqueIdentifier>
     </Filter>
@@ -487,6 +484,12 @@
     <Filter Include="02.GameObject\05.Monster\09.PrionBerserkerBoss">
       <UniqueIdentifier>{4a8d8d88-d0e6-4845-b6d4-dfa790670d3d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.GameEffect\00.DmgFont">
+      <UniqueIdentifier>{333290f3-bc1e-4da7-91b2-e87c068747e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\05.FadeInOut">
+      <UniqueIdentifier>{05a37931-3661-4baf-b15e-ece51ef9d5a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -727,7 +730,7 @@
       <Filter>98.Header\00.protocol</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\FadeInOut.h">
-      <Filter>02.GameObject\98.GameEffect\00.FadeInOut</Filter>
+      <Filter>02.GameObject\99.GameUI\05.FadeInOut</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\WaterFall.h">
       <Filter>02.GameObject\01.Environment\03.WaterFall</Filter>
@@ -1009,6 +1012,10 @@
     <ClInclude Include="..\Code\PrionBerserkerBoss.h">
       <Filter>02.GameObject\05.Monster\09.PrionBerserkerBoss</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\EffectShield.h" />
+    <ClInclude Include="..\Code\DmgFont.h">
+      <Filter>02.GameObject\98.GameEffect\00.DmgFont</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1201,7 +1208,7 @@
       <Filter>02.GameObject\01.Environment\01.StaticMeshObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\FadeInOut.cpp">
-      <Filter>02.GameObject\98.GameEffect\00.FadeInOut</Filter>
+      <Filter>02.GameObject\99.GameUI\05.FadeInOut</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\WaterFall.cpp">
       <Filter>02.GameObject\01.Environment\03.WaterFall</Filter>
@@ -1473,6 +1480,10 @@
     </ClCompile>
     <ClCompile Include="..\Code\PrionBerserkerBoss.cpp">
       <Filter>02.GameObject\05.Monster\09.PrionBerserkerBoss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\EffectShield.cpp" />
+    <ClCompile Include="..\Code\DmgFont.cpp">
+      <Filter>02.GameObject\98.GameEffect\00.DmgFont</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

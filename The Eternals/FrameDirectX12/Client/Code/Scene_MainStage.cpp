@@ -50,7 +50,7 @@
 #include "InventoryEquipmentMgr.h"
 #include "StoreMgr.h"
 #include "QuickSlotMgr.h"
-
+#include "DmgFont.h"
 #include "Lakan.h"
 #include "PrionBerserker.h"
 #include "PrionBerserkerBoss.h"
@@ -581,6 +581,14 @@ HRESULT CScene_MainStage::Ready_LayerGameObject(wstring wstrLayerTag)
 								   m_pCommandList,
 								   _vec3(104.1f, 0.f, 95.0f), 4);
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"NPCMiniMap", pGameObj), E_FAIL);
+
+	// DmgFont
+	pGameObj = CDmgFont::Create(m_pGraphicDevice, m_pCommandList,
+								_vec3(130.0f, 3.0f, 70.0f),
+								_vec3(2.0f),
+								7654321,
+								DMG_TYPE::DMG_PLAYER);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"DmgFont", pGameObj), E_FAIL);
 
 	return S_OK;
 }

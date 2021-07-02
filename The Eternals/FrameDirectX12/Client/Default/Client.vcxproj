@@ -187,6 +187,7 @@
     <ClInclude Include="..\Code\Crab.h" />
     <ClInclude Include="..\Code\CraftyArachne.h" />
     <ClInclude Include="..\Code\DistTrail.h" />
+    <ClInclude Include="..\Code\DmgFont.h" />
     <ClInclude Include="..\Code\DrownedSailor.h" />
     <ClInclude Include="..\Code\EffectMgr.h" />
     <ClInclude Include="..\Code\EffectShield.h" />
@@ -361,6 +362,7 @@
     <ClCompile Include="..\Code\Crab.cpp" />
     <ClCompile Include="..\Code\CraftyArachne.cpp" />
     <ClCompile Include="..\Code\DistTrail.cpp" />
+    <ClCompile Include="..\Code\DmgFont.cpp" />
     <ClCompile Include="..\Code\DrownedSailor.cpp" />
     <ClCompile Include="..\Code\EffectMgr.cpp" />
     <ClCompile Include="..\Code\EffectShield.cpp" />

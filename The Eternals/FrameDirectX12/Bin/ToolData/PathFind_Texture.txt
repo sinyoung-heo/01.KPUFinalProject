@@ -43,7 +43,7 @@ ItemWeaponTwohand|5|..\..\Bin\Resource\ResourceStage\Texture\UI\ItemWeaponTwohan
 S1UI_BFParty|2|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_BFParty\%d.dds
 S1UI_CharacterWindow|3|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_CharacterWindow\%d.dds
 S1UI_Chat|6|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_Chat\%d.dds
-S1UI_ComboCounter|4|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_ComboCounter\%d.dds
+S1UI_ComboCounter|6|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_ComboCounter\%d.dds
 S1UI_Crosshair|2|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_Crosshair\%d.dds
 S1UI_Cursor|1|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_Cursor\%d.dds
 S1UI_Equipment|3|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_Equipment\%d.dds
