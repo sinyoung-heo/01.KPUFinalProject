@@ -347,9 +347,9 @@ void CPrionBerserkerBoss::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iMonsterStatus = PrionBerserkerBoss::A_COMMAND;
+				m_iMonsterStatus = PrionBerserkerBoss::A_WAIT;
 
-				m_uiAnimIdx = PrionBerserkerBoss::A_COMMAND;
+				m_uiAnimIdx = PrionBerserkerBoss::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
@@ -363,9 +363,9 @@ void CPrionBerserkerBoss::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_iMonsterStatus = PrionBerserkerBoss::A_RUN;
+				m_iMonsterStatus = PrionBerserkerBoss::A_WAIT;
 
-				m_uiAnimIdx = PrionBerserkerBoss::A_RUN;
+				m_uiAnimIdx = PrionBerserkerBoss::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
