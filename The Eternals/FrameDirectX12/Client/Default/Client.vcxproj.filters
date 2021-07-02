@@ -487,6 +487,9 @@
     <Filter Include="02.GameObject\05.Monster\09.PrionBerserkerBoss">
       <UniqueIdentifier>{4a8d8d88-d0e6-4845-b6d4-dfa790670d3d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.Mgr\11.CinemaMgr">
+      <UniqueIdentifier>{9485e0e0-ff0e-4e9f-99c4-b8390879958a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -1009,6 +1012,10 @@
     <ClInclude Include="..\Code\PrionBerserkerBoss.h">
       <Filter>02.GameObject\05.Monster\09.PrionBerserkerBoss</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\EffectShield.h" />
+    <ClInclude Include="..\Code\CinemaMgr.h">
+      <Filter>97.Mgr\11.CinemaMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1473,6 +1480,10 @@
     </ClCompile>
     <ClCompile Include="..\Code\PrionBerserkerBoss.cpp">
       <Filter>02.GameObject\05.Monster\09.PrionBerserkerBoss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\EffectShield.cpp" />
+    <ClCompile Include="..\Code\CinemaMgr.cpp">
+      <Filter>97.Mgr\11.CinemaMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

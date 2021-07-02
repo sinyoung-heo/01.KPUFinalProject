@@ -181,6 +181,7 @@
     <ClInclude Include="..\Code\ChattingCursor.h" />
     <ClInclude Include="..\Code\ChattingInput.h" />
     <ClInclude Include="..\Code\ChattingMgr.h" />
+    <ClInclude Include="..\Code\CinemaMgr.h" />
     <ClInclude Include="..\Code\CloderA.h" />
     <ClInclude Include="..\Code\CollisionArrow.h" />
     <ClInclude Include="..\Code\CollisionTick.h" />
@@ -355,6 +356,7 @@
     <ClCompile Include="..\Code\ChattingCursor.cpp" />
     <ClCompile Include="..\Code\ChattingInput.cpp" />
     <ClCompile Include="..\Code\ChattingMgr.cpp" />
+    <ClCompile Include="..\Code\CinemaMgr.cpp" />
     <ClCompile Include="..\Code\CloderA.cpp" />
     <ClCompile Include="..\Code\CollisionArrow.cpp" />
     <ClCompile Include="..\Code\CollisionTick.cpp" />
