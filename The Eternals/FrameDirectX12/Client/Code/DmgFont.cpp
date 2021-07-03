@@ -106,9 +106,17 @@ _int CDmgFont::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bIsReturn)
 	{
+		m_fAlpha = 1.0f;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_DmgFontPool(), m_uiInstanceIdx);
 		return RETURN_OBJ;
 	}
+
+	m_fAlpha -= fTimeDelta;
+	if (m_fAlpha <= 0.f)
+		m_bIsReturn = true;
+
+	m_pTransCom->m_vPos.y += fTimeDelta;
+
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
@@ -162,6 +170,7 @@ void CDmgFont::Render_GameObject(const _float& fTimeDelta)
 		tCB_ShaderTexture.fCurFrame	= 0.0f;
 		tCB_ShaderTexture.fSceneCnt	= 1.0f;
 		tCB_ShaderTexture.fCurScene	= 0.0f;
+		tCB_ShaderTexture.fAlpha    = m_fAlpha;
 		m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(m_uiDmgListSize, tCB_ShaderTexture);
 
 		// Render Buffer
@@ -188,6 +197,7 @@ void CDmgFont::Render_GameObject(const _float& fTimeDelta)
 		tCB_ShaderTexture.fCurFrame	= (_float)(_int)m_vecDmgTextureInfo[m_eDmgType][m_vecDamage[uiIdx]].tFrame.fCurFrame;
 		tCB_ShaderTexture.fSceneCnt	= m_vecDmgTextureInfo[m_eDmgType][m_vecDamage[uiIdx]].tFrame.fSceneCnt;
 		tCB_ShaderTexture.fCurScene	= (_int)m_vecDmgTextureInfo[m_eDmgType][m_vecDamage[uiIdx]].tFrame.fCurScene;
+		tCB_ShaderTexture.fAlpha    = m_fAlpha;
 
 		m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(uiIdx, tCB_ShaderTexture);
 
@@ -234,7 +244,7 @@ HRESULT CDmgFont::Add_Component()
 	m_pShaderCom = static_cast<Engine::CShaderTexture*>(m_pComponentMgr->Clone_Component(L"ShaderTexture", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	m_pShaderCom->AddRef();
-	m_pShaderCom->Set_PipelineStatePass(2);
+	m_pShaderCom->Set_PipelineStatePass(12);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
 	return S_OK;

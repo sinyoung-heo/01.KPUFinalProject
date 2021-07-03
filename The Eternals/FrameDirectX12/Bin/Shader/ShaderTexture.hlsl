@@ -148,6 +148,17 @@ float4 PS_TEXTURE_SPRITE(VS_OUT ps_input) : SV_TARGET
 	return (Color);
 }
 
+float4 PS_TEXTURE_SPRITE_ALPHA(VS_OUT ps_input) : SV_TARGET
+{
+	float u = (ps_input.TexUV.x / g_fFrameCnt) + g_fCurFrame * (1.0f / g_fFrameCnt);
+	float v = (ps_input.TexUV.y / g_fSceneCnt) + g_fCurScene * (1.0f / g_fSceneCnt);
+	
+	float4 Color = g_TexDiffuse.Sample(g_samLinearWrap, float2(u, v));
+	Color.a *= g_fAlpha;
+	
+	return (Color);
+}
+
 float4 PS_TEXTURE_LIGHTING(VS_OUT ps_input) : SV_TARGET
 {
     float u = (ps_input.TexUV.x / g_fFrameCnt) + g_fCurFrame * (1.0f / g_fFrameCnt);
