@@ -100,7 +100,7 @@ void CCollisionTick::Process_Collision()
 			if (nullptr != pGameObj)
 			{
 				static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos = pDst->Get_Transform()->m_vPos;
-				static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.y = pDst->Get_Transform()->m_vPos.y + 0.5;
+				static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.y = pDst->Get_Transform()->m_vPos.y + 2.0f;
 				static_cast<CDmgFont*>(pGameObj)->Set_DamageList(m_uiDamage);
 				static_cast<CDmgFont*>(pGameObj)->Set_DamageType(DMG_TYPE::DMG_PLAYER);
 				static_cast<CDmgFont*>(pGameObj)->Set_RandomDir();
