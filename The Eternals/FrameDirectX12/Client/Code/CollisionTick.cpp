@@ -2,6 +2,7 @@
 #include "CollisionTick.h"
 #include "InstancePoolMgr.h"
 #include "WarningFrame.h"
+#include "DmgFont.h"
 
 CCollisionTick::CCollisionTick(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -92,8 +93,24 @@ void CCollisionTick::Process_Collision()
 			pDst->Get_BoundingSphere()->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 
 			pDst->Set_bisHitted(true);
+
+			// DmgFont
+			Engine::CGameObject* pGameObj = nullptr;
+			pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_DmgFontPool());
+			if (nullptr != pGameObj)
+			{
+				static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos = pDst->Get_Transform()->m_vPos;
+				static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.y = pDst->Get_Transform()->m_vPos.y + 0.5;
+				static_cast<CDmgFont*>(pGameObj)->Set_DamageList(m_uiDamage);
+				static_cast<CDmgFont*>(pGameObj)->Set_DamageType(DMG_TYPE::DMG_PLAYER);
+				static_cast<CDmgFont*>(pGameObj)->Set_RandomDir();
+				m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"DmgFont", pGameObj);
+			}
+
 			// Player Attack to Monster
 			m_pPacketMgr->send_attackToMonster(pDst->Get_ServerNumber(), m_uiDamage, m_chAffect);
+
+
 		}
 		else if (L"CollisionTick_ThisPlayer" == m_wstrCollisionTag &&
 				 L"Monster_MultiCollider" == pDst->Get_CollisionTag())
@@ -111,6 +128,19 @@ void CCollisionTick::Process_Collision()
 			// On WarningFrame
 			Engine::CGameObject* pWarningFrame = m_pObjectMgr->Get_GameObject(L"Layer_UI", L"WarningFrame");
 			static_cast<CWarningFrame*>(pWarningFrame)->Set_IsRender(true);
+
+			// DmgFont
+			Engine::CGameObject* pGameObj = nullptr;
+			pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_DmgFontPool());
+			if (nullptr != pGameObj)
+			{
+				static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos = pDst->Get_Transform()->m_vPos;
+				static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.y = pDst->Get_Transform()->m_vPos.y + 0.5;
+				static_cast<CDmgFont*>(pGameObj)->Set_DamageList(m_uiDamage);
+				static_cast<CDmgFont*>(pGameObj)->Set_DamageType(DMG_TYPE::DMG_MONSTER);
+				static_cast<CDmgFont*>(pGameObj)->Set_RandomDir();
+				m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"DmgFont", pGameObj);
+			}
 
 			// Monster Attack to ThisPlayer
 			m_pPacketMgr->send_attackByMonster(m_iSNum, m_uiDamage);

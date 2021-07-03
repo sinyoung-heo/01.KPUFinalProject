@@ -2,8 +2,10 @@
 #include "Include.h"
 #include "GameObject.h"
 
-constexpr _uint DMG_SIZE = 7;
-constexpr _uint DMG_MAX  = 9'999'999;
+constexpr _uint		DMG_SIZE          = 7;
+constexpr _uint		DMG_MAX           = 9'999'999;
+constexpr _float	FONT_SCALE_OFFSET = 0.2f;
+constexpr _float	FONT_POS_OFFSET   = 0.2f;
 
 typedef struct tagDmgTextureInfo
 {
@@ -21,13 +23,11 @@ private:
 	virtual ~CDmgFont() = default;
 
 public:
-	void Set_DamageType(const DMG_TYPE& eType) { m_eDmgType = eType; }
+	void Set_DamageType(const DMG_TYPE& eType);
 	void Set_DamageList(const _uint& uiDmg);
-	void SetUp_RightVector();
-
+	void Set_RandomDir();
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(const _vec3& vPos,
-									 const _vec3& vScale,
 									 const _uint& uiDmg,
 									 const DMG_TYPE& eType);
 	virtual HRESULT	LateInit_GameObject();
@@ -59,9 +59,9 @@ protected:
 	vector<_uint>				m_vecDamage;
 	_float						m_fAlpha   = 1.0f;
 	_vec3						m_vRight = _vec3(0.0f);
+	_float						m_fSpeed = 1.0;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
-									   const _vec3& vPos,
 									   const _vec3& vScale,
 									   const _uint& uiDmg,
 									   const DMG_TYPE& eType);

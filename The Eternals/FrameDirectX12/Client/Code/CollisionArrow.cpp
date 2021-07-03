@@ -11,6 +11,8 @@
 #include "IceStorm_s.h"
 #include "TextureEffect.h"
 #include "DistTrail.h"
+#include "DmgFont.h"
+
 CCollisionArrow::CCollisionArrow(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CCollisionTick(pGraphicDevice, pCommandList)
 	, m_pShaderMeshInstancing(Engine::CShaderMeshInstancing::Get_Instance())
@@ -364,6 +366,20 @@ void CCollisionArrow::Process_Collision()
 			pDst->Get_BoundingSphere()->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 			pDst->Set_bisHitted(true);
 			CEffectMgr::Get_Instance()->Effect_ArrowHitted(m_pTransCom->m_vPos);
+
+			// DmgFont
+			Engine::CGameObject* pGameObj = nullptr;
+			pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_DmgFontPool());
+			if (nullptr != pGameObj)
+			{
+				static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos = pDst->Get_Transform()->m_vPos;
+				static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.y = pDst->Get_Transform()->m_vPos.y + 0.5;
+				static_cast<CDmgFont*>(pGameObj)->Set_DamageList(m_uiDamage);
+				static_cast<CDmgFont*>(pGameObj)->Set_DamageType(DMG_TYPE::DMG_PLAYER);
+				static_cast<CDmgFont*>(pGameObj)->Set_RandomDir();
+				m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"DmgFont", pGameObj);
+			}
+
 			// Player Attack to Monster
 			m_pPacketMgr->send_attackToMonster(pDst->Get_ServerNumber(), m_uiDamage, m_chAffect);
 		}

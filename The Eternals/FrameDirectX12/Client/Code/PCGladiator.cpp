@@ -1066,20 +1066,6 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 		}*/
 	}
 
-	if (Engine::KEY_DOWN(DIK_M))
-	{
-		Engine::CGameObject* pGameObj = nullptr;
-		pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_DmgFontPool());
-		if (nullptr != pGameObj)
-		{
-			static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos = m_pTransCom->m_vPos;
-			static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.y = 2.0f;
-			static_cast<CDmgFont*>(pGameObj)->Set_DamageList(m_pInfoCom->Get_RandomDamage());
-			static_cast<CDmgFont*>(pGameObj)->Set_DamageType(DMG_TYPE::DMG_PLAYER);
-			m_pObjectMgr->Add_GameObject(L"Layer_UI", L"FadeInOut", pGameObj);
-		}
-	}
-
 	// StageChange Stage WINTER
 	if (Engine::KEY_DOWN(DIK_O) && NO_EVENT_STATE)
 	{

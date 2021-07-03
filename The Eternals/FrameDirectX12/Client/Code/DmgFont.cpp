@@ -4,10 +4,27 @@
 #include "DescriptorHeapMgr.h"
 #include "DynamicCamera.h"
 #include "InstancePoolMgr.h"
+#include <random>
 
 CDmgFont::CDmgFont(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
+}
+
+void CDmgFont::Set_DamageType(const DMG_TYPE& eType)
+{
+	m_eDmgType = eType;
+
+	if (DMG_TYPE::DMG_MONSTER == m_eDmgType)
+	{
+		m_pTransCom->m_vScale = _vec3(3.0f);
+		m_fSpeed = 1.5;
+	}
+	else
+	{
+		m_pTransCom->m_vScale = _vec3(4.0f);
+		m_fSpeed = 3.5;
+	}
 }
 
 void CDmgFont::Set_DamageList(const _uint& uiDmg)
@@ -51,7 +68,7 @@ void CDmgFont::Set_DamageList(const _uint& uiDmg)
 		if (m_uiDamage / 10 == 0)
 		{
 			vecTemp.emplace_back(m_uiDamage % 10);
-			m_uiDmgListSize = vecTemp.size();
+			m_uiDmgListSize = (size_t)vecTemp.size();
 			break;
 		}
 	}
@@ -59,19 +76,19 @@ void CDmgFont::Set_DamageList(const _uint& uiDmg)
 	m_vecDamage = vector<_uint>{ vecTemp.rbegin(), vecTemp.rend() };
 }
 
-void CDmgFont::SetUp_RightVector()
+void CDmgFont::Set_RandomDir()
 {
-	CDynamicCamera*			pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
-	Engine::CGameObject*	pThisPlayer    = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+	random_device					rd;
+	default_random_engine			dre{ rd() };
+	uniform_int_distribution<_int>	uid{ -7, 7 };
 
-	_vec3 vDir = pThisPlayer->Get_Transform()->m_vPos - pDynamicCamera->Get_CameraInfo().vEye;
-	m_vRight   = vDir.Cross_InputV1(_vec3(0.0f, 1.0f, 0.0f));
-	m_vRight.Normalize();
-	m_vRight.y = 0.0f;
+	m_pTransCom->m_vDir.y = 1.0f;
+	m_pTransCom->m_vDir.x = (_float)(uid(dre)) * 0.1f;
+	m_pTransCom->m_vDir.z = 0.0f;
+	m_pTransCom->m_vDir.Normalize();
 }
 
 HRESULT CDmgFont::Ready_GameObject(const _vec3& vPos,
-								   const _vec3& vScale,
 								   const _uint& uiDmg,
 								   const DMG_TYPE& eType)
 {
@@ -80,8 +97,12 @@ HRESULT CDmgFont::Ready_GameObject(const _vec3& vPos,
 	Engine::FAILED_CHECK_RETURN(Read_DataFromFilePath(), E_FAIL);
 
 	m_pTransCom->m_vPos   = vPos;
-	m_pTransCom->m_vScale = vScale;
 	m_eDmgType            = eType;
+
+	if (DMG_TYPE::DMG_MONSTER == m_eDmgType)
+		m_pTransCom->m_vScale = _vec3(3.0f);
+	else
+		m_pTransCom->m_vScale = _vec3(4.0f);
 
 	m_vecDamage.reserve(DMG_SIZE);
 	Set_DamageList(uiDmg);
@@ -106,17 +127,25 @@ _int CDmgFont::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bIsReturn)
 	{
+		if (DMG_TYPE::DMG_MONSTER == m_eDmgType)
+			m_pTransCom->m_vScale = _vec3(3.0f);
+		else
+			m_pTransCom->m_vScale = _vec3(4.0f);
+
 		m_fAlpha = 1.0f;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_DmgFontPool(), m_uiInstanceIdx);
 		return RETURN_OBJ;
 	}
 
-	m_fAlpha -= fTimeDelta;
+	m_pTransCom->m_vScale -= _vec3(4.0f) * fTimeDelta;
+	if (m_pTransCom->m_vScale.x <= 0.0f || m_pTransCom->m_vScale.y <= 0.0f)
+		m_bIsReturn = true;
+
+	m_fAlpha -= fTimeDelta * 1.0f;
 	if (m_fAlpha <= 0.f)
 		m_bIsReturn = true;
 
-	m_pTransCom->m_vPos.y += fTimeDelta;
-
+	m_pTransCom->m_vPos += m_pTransCom->m_vDir * fTimeDelta * m_fSpeed;
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
@@ -439,11 +468,13 @@ void CDmgFont::SetUp_DmgFontWorldMatrix()
 	m_vRight.Normalize();
 	m_vRight.y = 0.0f;
 
-	_vec3 vScale = _vec3(0.2f);
+	_vec3 vScale = m_pTransCom->m_vScale * FONT_SCALE_OFFSET;
+	vScale.y *= 1.5f;
+	vScale.z = 1.0f;
 	_vec3 vPos   = m_pTransCom->m_vPos;
 	vDir.Normalize();
-	vPos += (-1.0f) * m_vRight * vScale.x * ((_float)m_uiDmgListSize / 2.0f);
-	vPos.z += vDir.z * (-1.0f) * 0.2f;
+	vPos += (-1.0f) * m_vRight * vScale.x * ((_float)(m_uiDmgListSize - 1) / 2.0f);
+	vPos.z += vDir.z * (-1.0f) * FONT_POS_OFFSET;
 
 	_matrix matScale = INIT_MATRIX;
 	_matrix matTrans = INIT_MATRIX;
@@ -456,9 +487,9 @@ void CDmgFont::SetUp_DmgFontWorldMatrix()
 		if (DMG_TYPE::DMG_PLAYER == m_eDmgType)
 		{
 			if (1 == m_vecDamage[i])
-				vScale = _vec3(0.2f * 0.5f, 0.2f, 1.0f);
+				vScale.x = m_pTransCom->m_vScale.x * FONT_SCALE_OFFSET * 0.5f;
 			else
-				vScale = _vec3(0.2f);
+				vScale.x = m_pTransCom->m_vScale.x * FONT_SCALE_OFFSET;
 		}
 
 		matScale = XMMatrixScaling(vScale.x, vScale.y, vScale.z);
@@ -468,7 +499,7 @@ void CDmgFont::SetUp_DmgFontWorldMatrix()
 
 		Make_BillboardMatrix(m_matWorld[i], vScale);
 
-		vPos += m_vRight * vScale.x;
+		vPos += m_vRight * m_pTransCom->m_vScale.x * FONT_SCALE_OFFSET;
 	}
 }
 
@@ -508,13 +539,12 @@ void CDmgFont::Make_BillboardMatrix(_matrix& matrix, const _vec3& vScale)
 Engine::CGameObject* CDmgFont::Create(ID3D12Device* pGraphicDevice, 
 									  ID3D12GraphicsCommandList* pCommandList, 
 									  const _vec3& vPos,
-									  const _vec3& vScale,
 									  const _uint& uiDmg,
 									  const DMG_TYPE& eType)
 {
 	CDmgFont* pInstance = new CDmgFont(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(vPos, vScale, uiDmg, eType)))
+	if (FAILED(pInstance->Ready_GameObject(vPos, uiDmg, eType)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
@@ -531,7 +561,6 @@ CDmgFont** CDmgFont::Create_InstancePool(ID3D12Device* pGraphicDevice,
 		ppInstance[i] = new CDmgFont(pGraphicDevice, pCommandList);
 		ppInstance[i]->m_uiInstanceIdx = i;
 		ppInstance[i]->Ready_GameObject(_vec3(0.0f),
-										_vec3(1.25f),
 										0,
 										DMG_TYPE::DMGTYPE_END);
 	}
