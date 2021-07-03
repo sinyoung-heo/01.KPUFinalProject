@@ -394,6 +394,14 @@ void CNpc::Move_Walker_NPC(const float& fTimeDelta)
 			return;
 		}
 	}
+	else if (m_chStageId == STAGE_WINTER)
+	{
+		if (CNaviMesh_Winter::GetInstance()->Get_CurrentPositionCellIndex(m_vPos) == -1)
+		{
+			m_vTempPos = m_vPos;
+			return;
+		}
+	}
 
 	/* 변경된 좌표로 섹터 갱신 */
 	CSectorMgr::GetInstance()->Compare_exchange_Sector(m_sNum, (int)ori_z, (int)ori_x, (int)(m_vPos.z), (int)(m_vPos.x));
