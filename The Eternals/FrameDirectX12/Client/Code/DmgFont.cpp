@@ -3,6 +3,7 @@
 #include "GraphicDevice.h"
 #include "DescriptorHeapMgr.h"
 #include "DynamicCamera.h"
+#include "InstancePoolMgr.h"
 
 CDmgFont::CDmgFont(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -15,7 +16,12 @@ void CDmgFont::Set_DamageList(const _uint& uiDmg)
 		m_uiDamage = DMG_MAX;
 	else
 		m_uiDamage = uiDmg;
-	m_lstDamage.clear();
+	
+	m_vecDamage.clear();
+
+	vector<_uint> vecTemp;
+	vecTemp.reserve(DMG_SIZE);
+	m_vecDamage.reserve(DMG_SIZE);
 
 	while (true)
 	{
@@ -30,7 +36,7 @@ void CDmgFont::Set_DamageList(const _uint& uiDmg)
 		앞에서 부터 넣어준다.
 		ex) 978 -> list 순회 순서 9,  7,  8
 		______________________________________________________________________*/
-		m_lstDamage.push_front(iNum);
+		vecTemp.emplace_back(iNum);
 
 		/*____________________________________________________________________
 		3. 1의 자리를 짤라낸다.
@@ -44,11 +50,24 @@ void CDmgFont::Set_DamageList(const _uint& uiDmg)
 		______________________________________________________________________*/
 		if (m_uiDamage / 10 == 0)
 		{
-			m_lstDamage.push_front(m_uiDamage % 10);
-			m_uiDmgListSize = m_lstDamage.size();
+			vecTemp.emplace_back(m_uiDamage % 10);
+			m_uiDmgListSize = vecTemp.size();
 			break;
 		}
 	}
+
+	m_vecDamage = vector<_uint>{ vecTemp.rbegin(), vecTemp.rend() };
+}
+
+void CDmgFont::SetUp_RightVector()
+{
+	CDynamicCamera*			pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
+	Engine::CGameObject*	pThisPlayer    = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+
+	_vec3 vDir = pThisPlayer->Get_Transform()->m_vPos - pDynamicCamera->Get_CameraInfo().vEye;
+	m_vRight   = vDir.Cross_InputV1(_vec3(0.0f, 1.0f, 0.0f));
+	m_vRight.Normalize();
+	m_vRight.y = 0.0f;
 }
 
 HRESULT CDmgFont::Ready_GameObject(const _vec3& vPos,
@@ -63,6 +82,8 @@ HRESULT CDmgFont::Ready_GameObject(const _vec3& vPos,
 	m_pTransCom->m_vPos   = vPos;
 	m_pTransCom->m_vScale = vScale;
 	m_eDmgType            = eType;
+
+	m_vecDamage.reserve(DMG_SIZE);
 	Set_DamageList(uiDmg);
 
 	return S_OK;
@@ -83,6 +104,12 @@ _int CDmgFont::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	if (m_bIsReturn)
+	{
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_DmgFontPool(), m_uiInstanceIdx);
+		return RETURN_OBJ;
+	}
+
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
@@ -97,7 +124,6 @@ _int CDmgFont::Update_GameObject(const _float& fTimeDelta)
 	[ Update Billboard Matrix ]
 	____________________________________________________________________________________________________________*/
 	Make_BillboardMatrix(m_pTransCom->m_matWorld, m_pTransCom->m_vScale);
-	//Engine::CGameObject::SetUp_BillboardMatrix();
 
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
 	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
@@ -158,17 +184,17 @@ void CDmgFont::Render_GameObject(const _float& fTimeDelta)
 		Engine::CB_SHADER_TEXTURE tCB_ShaderTexture;
 		ZeroMemory(&tCB_ShaderTexture, sizeof(Engine::CB_SHADER_TEXTURE));
 		tCB_ShaderTexture.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_matWorld[uiIdx]);
-		tCB_ShaderTexture.fFrameCnt	= m_vecDmgTextureInfo[m_eDmgType][uiIdx].tFrame.fFrameCnt;
-		tCB_ShaderTexture.fCurFrame	= (_float)(_int)m_vecDmgTextureInfo[m_eDmgType][uiIdx].tFrame.fCurFrame;
-		tCB_ShaderTexture.fSceneCnt	= m_vecDmgTextureInfo[m_eDmgType][uiIdx].tFrame.fSceneCnt;
-		tCB_ShaderTexture.fCurScene	= (_int)m_vecDmgTextureInfo[m_eDmgType][uiIdx].tFrame.fCurScene;
+		tCB_ShaderTexture.fFrameCnt	= m_vecDmgTextureInfo[m_eDmgType][m_vecDamage[uiIdx]].tFrame.fFrameCnt;
+		tCB_ShaderTexture.fCurFrame	= (_float)(_int)m_vecDmgTextureInfo[m_eDmgType][m_vecDamage[uiIdx]].tFrame.fCurFrame;
+		tCB_ShaderTexture.fSceneCnt	= m_vecDmgTextureInfo[m_eDmgType][m_vecDamage[uiIdx]].tFrame.fSceneCnt;
+		tCB_ShaderTexture.fCurScene	= (_int)m_vecDmgTextureInfo[m_eDmgType][m_vecDamage[uiIdx]].tFrame.fCurScene;
 
 		m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(uiIdx, tCB_ShaderTexture);
 
 		// Render Buffer
-		m_pShaderCom->Begin_Shader(m_vecDmgTextureInfo[m_eDmgType][uiIdx].pTexDescriptorHeap,
+		m_pShaderCom->Begin_Shader(m_vecDmgTextureInfo[m_eDmgType][m_vecDamage[uiIdx]].pTexDescriptorHeap,
 								   uiIdx,
-								   m_vecDmgTextureInfo[m_eDmgType][uiIdx].uiTexIdx,
+								   m_vecDmgTextureInfo[m_eDmgType][m_vecDamage[uiIdx]].uiTexIdx,
 								   Engine::MATRIXID::PROJECTION);
 
 		m_arrBufferCom[uiIdx]->Begin_Buffer();
@@ -395,30 +421,44 @@ HRESULT CDmgFont::Read_DataFromFilePath()
 
 void CDmgFont::SetUp_DmgFontWorldMatrix()
 {
-	_vec3 vScale = _vec3(1.0f);
+	CDynamicCamera*			pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
+	Engine::CGameObject*	pThisPlayer    = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+
+	_vec3 vDir = pThisPlayer->Get_Transform()->m_vPos - pDynamicCamera->Get_CameraInfo().vEye;
+	m_vRight = vDir.Cross_InputV1(_vec3(0.0f, 1.0f, 0.0f));
+	m_vRight.Normalize();
+	m_vRight.y = 0.0f;
+
+	_vec3 vScale = _vec3(0.2f);
 	_vec3 vPos   = m_pTransCom->m_vPos;
-	vPos.z -= 0.2f;
+	vDir.Normalize();
+	vPos += (-1.0f) * m_vRight * vScale.x * ((_float)m_uiDmgListSize / 2.0f);
+	vPos.z += vDir.z * (-1.0f) * 0.2f;
 
-	_matrix matTrans = INIT_MATRIX;
 	_matrix matScale = INIT_MATRIX;
-
-	CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
-	_vec3 vCameraRight = pDynamicCamera->Get_Transform()->Get_RightVector();
-	// vCameraRight.Normalize();
+	_matrix matTrans = INIT_MATRIX;
 
 	/*__________________________________________________________________________________________________________
 	[ Damage Font ]
 	____________________________________________________________________________________________________________*/
 	for (_uint i = 0; i < m_uiDmgListSize; ++i)
 	{
+		if (DMG_TYPE::DMG_PLAYER == m_eDmgType)
+		{
+			if (1 == m_vecDamage[i])
+				vScale = _vec3(0.2f * 0.5f, 0.2f, 1.0f);
+			else
+				vScale = _vec3(0.2f);
+		}
+
 		matScale = XMMatrixScaling(vScale.x, vScale.y, vScale.z);
 		matTrans = XMMatrixTranslation(vPos.x, vPos.y, vPos.z);
 
-		m_matWorld[i] = matTrans * matScale;
+		m_matWorld[i] = matScale * matTrans;
 
 		Make_BillboardMatrix(m_matWorld[i], vScale);
 
-		vPos += vCameraRight * vScale.x;
+		vPos += m_vRight * vScale.x;
 	}
 }
 
@@ -470,6 +510,25 @@ Engine::CGameObject* CDmgFont::Create(ID3D12Device* pGraphicDevice,
 	return pInstance;
 }
 
+CDmgFont** CDmgFont::Create_InstancePool(ID3D12Device* pGraphicDevice, 
+										 ID3D12GraphicsCommandList* pCommandList, 
+										 const _uint& uiInstanceCnt)
+{
+	CDmgFont** ppInstance = new (CDmgFont* [uiInstanceCnt]);
+
+	for (_uint i = 0; i < uiInstanceCnt; ++i)
+	{
+		ppInstance[i] = new CDmgFont(pGraphicDevice, pCommandList);
+		ppInstance[i]->m_uiInstanceIdx = i;
+		ppInstance[i]->Ready_GameObject(_vec3(0.0f),
+										_vec3(1.25f),
+										0,
+										DMG_TYPE::DMGTYPE_END);
+	}
+
+	return ppInstance;
+}
+
 void CDmgFont::Free()
 {
 	Engine::CGameObject::Free();
@@ -485,6 +544,4 @@ void CDmgFont::Free()
 		vecDmgTextureInfo.clear();
 		vecDmgTextureInfo.shrink_to_fit();
 	}
-
-	m_lstDamage.clear();
 }

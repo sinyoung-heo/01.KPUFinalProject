@@ -3,6 +3,7 @@
 #include "Management.h"
 #include "Scene_Logo.h"
 #include "InstancePoolMgr.h"
+#include "DirectInput.h"
 
 CFadeInOut::CFadeInOut(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)

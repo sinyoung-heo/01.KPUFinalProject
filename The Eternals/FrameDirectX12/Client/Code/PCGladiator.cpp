@@ -23,6 +23,7 @@
 #include "WarningFrame.h"
 #include "StoreMgr.h"
 #include "MainMenuInventory.h"
+#include "DmgFont.h"
 
 CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -1063,6 +1064,20 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 										 _vec3(0, 0, 0), 5.f, XMConvertToRadians(i * 10.f));
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"IceStorm1", pGameObj), E_FAIL);
 		}*/
+	}
+
+	if (Engine::KEY_DOWN(DIK_M))
+	{
+		Engine::CGameObject* pGameObj = nullptr;
+		pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_DmgFontPool());
+		if (nullptr != pGameObj)
+		{
+			static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos = m_pTransCom->m_vPos;
+			static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.y = 2.0f;
+			static_cast<CDmgFont*>(pGameObj)->Set_DamageList(m_pInfoCom->Get_RandomDamage());
+			static_cast<CDmgFont*>(pGameObj)->Set_DamageType(DMG_TYPE::DMG_PLAYER);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", L"FadeInOut", pGameObj);
+		}
 	}
 
 	// StageChange Stage WINTER

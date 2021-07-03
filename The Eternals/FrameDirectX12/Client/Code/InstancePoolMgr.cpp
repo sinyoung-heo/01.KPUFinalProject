@@ -26,6 +26,7 @@
 #include "PCWeaponBow.h"
 #include "PCWeaponRod.h"
 #include "FadeInOut.h"
+#include "DmgFont.h"
 
 IMPLEMENT_SINGLETON(CInstancePoolMgr)
 
@@ -110,6 +111,9 @@ INSTANCE_POOL_DESC<CPCWeaponRod>* CInstancePoolMgr::Get_PCWeaponRod(const char& 
 
 void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 {
+	// DmgFont
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pDmgFontPool, 128);
+
 	// CollisionTick
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pCollisionTickPool, 64);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pCollisionArrowIcePool, L"ArrowIce", 128);
@@ -176,6 +180,8 @@ void CInstancePoolMgr::Ready_LoadingInstancePool(ID3D12Device* pGraphicDevice, I
 void CInstancePoolMgr::Free()
 {
 	Safe_Release_InstacePool(m_pFadeInOutPool);
+
+	Safe_Release_InstacePool(m_pDmgFontPool);
 
 	Safe_Release_InstacePool(m_pCollisionTickPool);
 	Safe_Release_InstacePool(m_pCollisionArrowIcePool);

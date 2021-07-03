@@ -32,6 +32,8 @@ class CPCWeaponTwoHand;
 class CPCWeaponBow;
 class CPCWeaponRod;
 
+class CDmgFont;
+
 class CInstancePoolMgr : public Engine::CBase
 {
 	DECLARE_SINGLETON(CInstancePoolMgr)
@@ -43,6 +45,8 @@ private:
 public:
 	// FadeInOut
 	INSTANCE_POOL_DESC<CFadeInOut>*			Get_FadeInOutPool() { return m_pFadeInOutPool; }
+	// DmgFont
+	INSTANCE_POOL_DESC<CDmgFont>*			Get_DmgFontPool() { return m_pDmgFontPool; }
 	// CollisionTick
 	INSTANCE_POOL_DESC<CCollisionTick>*		Get_CollisionTickPool()		{ return m_pCollisionTickPool; }
 	INSTANCE_POOL_DESC<CCollisionArrow>*	Get_CollisionArrowPool(const ARROW_POOL_TYPE& eType);
@@ -79,7 +83,7 @@ public:
 	INSTANCE_POOL_DESC<CPCWeaponTwoHand>*	Get_PCWeaponTwoHand(const char& chWeaponType);
 	INSTANCE_POOL_DESC<CPCWeaponBow>*		Get_PCWeaponBow(const char& chWeaponType);
 	INSTANCE_POOL_DESC<CPCWeaponRod>*		Get_PCWeaponRod(const char& chWeaponType);
-
+	// DmgFont
 
 	void Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 	void Ready_LoadingInstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
@@ -87,6 +91,8 @@ public:
 private:
 	// FadeInOut
 	INSTANCE_POOL_DESC<CFadeInOut>*			m_pFadeInOutPool						= nullptr;
+	// DmgFont
+	INSTANCE_POOL_DESC<CDmgFont>*			m_pDmgFontPool							= nullptr;
 
 	// CollisionTick
 	INSTANCE_POOL_DESC<CCollisionTick>*		m_pCollisionTickPool					= nullptr;

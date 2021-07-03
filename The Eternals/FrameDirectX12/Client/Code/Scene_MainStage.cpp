@@ -585,7 +585,7 @@ HRESULT CScene_MainStage::Ready_LayerGameObject(wstring wstrLayerTag)
 	// DmgFont
 	pGameObj = CDmgFont::Create(m_pGraphicDevice, m_pCommandList,
 								_vec3(130.0f, 3.0f, 70.0f),
-								_vec3(2.0f),
+								_vec3(1.25f),
 								7654321,
 								DMG_TYPE::DMG_PLAYER);
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"DmgFont", pGameObj), E_FAIL);

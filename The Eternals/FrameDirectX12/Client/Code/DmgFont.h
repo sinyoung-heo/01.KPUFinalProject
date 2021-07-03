@@ -23,6 +23,7 @@ private:
 public:
 	void Set_DamageType(const DMG_TYPE& eType) { m_eDmgType = eType; }
 	void Set_DamageList(const _uint& uiDmg);
+	void SetUp_RightVector();
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(const _vec3& vPos,
@@ -55,15 +56,18 @@ protected:
 	DMG_TYPE					m_eDmgType = DMG_TYPE::DMGTYPE_END;
 	_uint						m_uiDamage = 0;
 	_uint						m_uiDmgListSize = 0;
-	list<_uint>					m_lstDamage;
+	vector<_uint>				m_vecDamage;
 	_float						m_fAlpha   = 1.0f;
-
+	_vec3						m_vRight = _vec3(0.0f);
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 									   const _vec3& vPos,
 									   const _vec3& vScale,
 									   const _uint& uiDmg,
 									   const DMG_TYPE& eType);
+	static CDmgFont** Create_InstancePool(ID3D12Device* pGraphicDevice,
+										  ID3D12GraphicsCommandList* pCommandList,
+										  const _uint& uiInstanceCnt);
 protected:
 	virtual void Free();
 
