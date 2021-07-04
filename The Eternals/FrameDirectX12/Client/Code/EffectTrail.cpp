@@ -28,7 +28,7 @@ HRESULT CEffectTrail::Ready_GameObject(wstring wstrTextureTag,
 		m_arrMax[i] = _vec3(0.0f);
 
 	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(7), E_FAIL);
-
+	m_bisAlphaObject = true;
 	return S_OK;
 }
 
@@ -36,7 +36,7 @@ HRESULT CEffectTrail::LateInit_GameObject()
 {
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer();
-	m_bisAlphaObject = true;
+
 	return S_OK;
 }
 
@@ -79,8 +79,8 @@ _int CEffectTrail::Update_GameObject(const _float& fTimeDelta)
 		/*__________________________________________________________________________________________________________
 		[ Renderer - Add Render Group ]
 		____________________________________________________________________________________________________________*/
-		if (Engine::CRenderer::RENDER_ALPHA == m_eRenderGroup)
-			Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);
+		if (Engine::CRenderer::RENDER_MAGICCIRCLE == m_eRenderGroup)
+			Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MAGICCIRCLE, this), -1);
 
 		else if (Engine::CRenderer::RENDER_DISTORTION == m_eRenderGroup)
 			Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_DISTORTION, this), -1);

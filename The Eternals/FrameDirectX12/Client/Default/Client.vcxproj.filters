@@ -1009,6 +1009,10 @@
     <ClInclude Include="..\Code\PrionBerserkerBoss.h">
       <Filter>02.GameObject\05.Monster\09.PrionBerserkerBoss</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\EffectShield.h" />
+    <ClInclude Include="..\Code\SwordEffect_s.h" />
+    <ClInclude Include="..\Code\SwordTrailEffect.h" />
+    <ClInclude Include="..\Code\IceStorm_m.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1474,6 +1478,10 @@
     <ClCompile Include="..\Code\PrionBerserkerBoss.cpp">
       <Filter>02.GameObject\05.Monster\09.PrionBerserkerBoss</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\EffectShield.cpp" />
+    <ClCompile Include="..\Code\SwordEffect_s.cpp" />
+    <ClCompile Include="..\Code\SwordTrailEffect.cpp" />
+    <ClCompile Include="..\Code\IceStorm_m.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

@@ -207,7 +207,7 @@ float4 PS_SNOW(VS_OUT ps_input) : SV_TARGET
 	
     float2 uv = rotateUV(float2(u, v), fOffset3);
     float4 Color = g_TexDiffuse.Sample(g_samLinearWrap, float2(uv.x, uv.y));
-
+    Color += g_vColor;
     Color.a = g_fAlpha;
     return (Color);
 }

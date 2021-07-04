@@ -33,6 +33,16 @@ void CTransform::Update_Component(const _float & fTimeDelta)
 
 	m_matWorld = matScale * (matRotX * matRotY * matRotZ) * matTrans;
 }
+void CTransform::Update_Component(const _float& fTimeDelta, _matrix Axis)
+{
+	_matrix matScale = XMMatrixScaling(m_vScale.x, m_vScale.y, m_vScale.z);
+	_matrix matRotX = XMMatrixRotationX(XMConvertToRadians(m_vAngle.x));
+	_matrix matRotY = XMMatrixRotationY(XMConvertToRadians(m_vAngle.y));
+	_matrix matRotZ = XMMatrixRotationZ(XMConvertToRadians(m_vAngle.z));
+	_matrix matTrans = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
+
+	m_matWorld = matScale * (matRotX * matRotY * matRotZ) * Axis * matTrans;
+}
 
 CComponent * CTransform::Clone()
 {

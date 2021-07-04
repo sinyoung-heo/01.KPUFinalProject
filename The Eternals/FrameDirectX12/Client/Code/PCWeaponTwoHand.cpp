@@ -57,7 +57,7 @@ HRESULT CPCWeaponTwoHand::LateInit_GameObject()
 	Engine::FAILED_CHECK_RETURN(CPCWeapon::LateInit_GameObject(), E_FAIL);
 
 	// Create Trail
-	m_pTrail = CEffectTrail::Create(m_pGraphicDevice, m_pCommandList, L"EffectTrailTexture", 11);		
+	m_pTrail = CEffectTrail::Create(m_pGraphicDevice, m_pCommandList, L"EffectTrailTexture", 11, Engine::CRenderer::RENDER_MAGICCIRCLE);
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Trail", m_pTrail), E_FAIL);
 
 	m_pDistortionTrail = CEffectTrail::Create(m_pGraphicDevice, m_pCommandList, L"EffectTrailTexture", 10, Engine::CRenderer::RENDER_DISTORTION);

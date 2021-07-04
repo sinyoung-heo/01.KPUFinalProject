@@ -63,8 +63,10 @@ PublicTornado01|PublicTornado01.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Pl
 IceStorm0|IceStorm0.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\IceStorm0\
 IceStorm1|IceStorm1.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\IceStorm1\
 publicShield|publicShield.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicShield\
+publicSkill3|publicSkill3.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSkill3\
 publicSphere|publicSphere.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSphere\
 publicSpline|publicSpline.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSpline\
+publicSword|publicSword.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSword\
 DistortDisk|DistortDisk.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\DistortDisk\
 LandMark|LandMark.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\LandMark\
 LandMarkBoundary|LandMarkBoundary.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\LandMarkBoundary\

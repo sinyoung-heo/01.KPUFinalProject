@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "EffectShield.h"
+#include "SwordEffect_s.h"
 #include "GraphicDevice.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
@@ -10,32 +10,42 @@
 #include "SnowParticle.h"
 #include "DescriptorHeapMgr.h"
 #include "ParticleEffect.h"
-CEffectShield::CEffectShield(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+#include "TextureEffect.h"
+CSwordEffect_s::CSwordEffect_s(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
 }
 
 
-HRESULT CEffectShield::Ready_GameObject(wstring wstrMeshTag,
+HRESULT CSwordEffect_s::Ready_GameObject(wstring wstrMeshTag,
 											 const _vec3 & vScale,
 											 const _vec3 & vAngle, 
-											 const _vec3 & vPos,
+											 const _vec3 & vPos, const _vec3& vDir,
 											 const float& vAngleOffset)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
 
+
+	_vec3 PlayerPos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
 	m_wstrMeshTag = wstrMeshTag;
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vScale = vScale;
-	m_vecParentPos=m_pTransCom->m_vPos = vPos;
 
+	m_pTransCom->m_vPos = vPos;
+	m_vecParentPos = PlayerPos + vDir * 15.f;
+
+	m_pTransCom->m_vDir = _vec3(m_vecParentPos - vPos );
+	m_pTransCom->m_vDir.Normalize();
 	m_fDeltaTime = -1.f;
 	m_fAngleOffset = vAngleOffset;
+
+	m_fDistance = m_vecParentPos.Get_Distance(vPos);
+
 	return S_OK;
 }
 
-HRESULT CEffectShield::LateInit_GameObject()
+HRESULT CSwordEffect_s::LateInit_GameObject()
 {
 	m_pShaderCom->SetUp_ShaderConstantBuffer();
 	Engine::CTexture* pTexture = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(L"EffectPublic", Engine::COMPONENTID::ID_STATIC));
@@ -43,84 +53,69 @@ HRESULT CEffectShield::LateInit_GameObject()
 
 	m_pCrossFilterShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
-	CGameObject* pGameObj = nullptr;
-	pGameObj = CParticleEffect::Create(m_pGraphicDevice, m_pCommandList,
-		L"Lighting1",						// TextureTag
-		_vec3(0.2f),		// Scale
-		_vec3(0.0f, 0.0f, 0.0f),		// Angle
-		m_pTransCom->m_vPos,	// Pos
-		FRAME(1, 1, 1.f), 9);			// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Lighting1", pGameObj), E_FAIL);
-
+	m_pTransCom->m_vAngle.y = XMConvertToDegrees(atan2(m_pTransCom->m_vPos.x - m_vecParentPos.x
+		, m_pTransCom->m_vPos.z - m_vecParentPos.z)) + 180.f;
 	return S_OK;
 }
 
-_int CEffectShield::Update_GameObject(const _float & fTimeDelta)
+_int CSwordEffect_s::Update_GameObject(const _float & fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
-
 	if (m_bIsDead)
-		return DEAD_OBJ;
-
-	m_fDegree += 60.f*fTimeDelta ;
-	m_pTransCom->m_vPos.x = m_vecParentPos.x + 3.f * cos(XMConvertToRadians(m_fDegree+m_fAngleOffset));
-	m_pTransCom->m_vPos.z = m_vecParentPos.z + 3.f * sin(XMConvertToRadians(m_fDegree+m_fAngleOffset));
-	m_pTransCom->m_vAngle.y = XMConvertToDegrees( atan2(m_pTransCom->m_vPos.x- m_vecParentPos.x
-		, m_pTransCom->m_vPos.z  - m_vecParentPos.z));
-
-
-	if (m_fLifeTime < 5.5f && m_bisScaleAnim && m_pTransCom->m_vScale.x < 0.12f)
-		m_pTransCom->m_vScale += _vec3(fTimeDelta * 0.12);
-	m_fLifeTime += fTimeDelta;
-	if (m_fLifeTime > 5.5f)
 	{
-		m_pTransCom->m_vScale -= _vec3(fTimeDelta * 0.12);
-		if (m_pTransCom->m_vScale.x < 0.00)
-			m_bIsDead = true;
+		CGameObject* pGameObj = nullptr;
+		pGameObj = CParticleEffect::Create(m_pGraphicDevice, m_pCommandList,
+			L"Lighting0",						// TextureTag
+			_vec3(0.1f),		// Scale
+			_vec3(0.0f, 0.0f, 0.0f),		// Angle
+			m_pTransCom->m_vPos,	// Pos
+			FRAME(1, 1, 1.f), 9,10);			// Sprite Image Frame
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Lighting1", pGameObj), E_FAIL);
+		return DEAD_OBJ;
 	}
-	/*__________________________________________________________________________________________________________
-	[ Renderer - Add Render Group ]
-	____________________________________________________________________________________________________________*/
+	m_fAlpha -= fTimeDelta;
+
+	float Curdist = m_pTransCom->m_vPos.Get_Distance(m_vecParentPos);
+	if (Curdist < 8.f)
+		m_bIsDead = true;
+	m_pTransCom->m_vPos += (m_pTransCom->m_vDir * m_fDistance * fTimeDelta);
+	if (m_fLifeTime < 2.5f && m_bisScaleAnim && m_pTransCom->m_vScale.x < 0.24f)
+	{
+		m_pTransCom->m_vScale += _vec3(fTimeDelta * 0.24);
+		m_pTransCom->m_vScale.y += fTimeDelta * 0.24;
+	}
+	m_fLifeTime += fTimeDelta;
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MAGICCIRCLE, this), -1);
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_CROSSFILTER, this), -1);
 
-	/*____________________________________________________________________
-	TransCom - Update WorldMatrix.
-	______________________________________________________________________*/
-
-
-	
-	//m_pTransCom->m_vPos.z += 0.3f;
 
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
 	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
 
-	Engine::CGameObject::Update_GameObject(fTimeDelta);
+	Engine::CGameObject::Reset_Collider();
+	m_pTransCom->Update_Component(fTimeDelta);
 
 	return NO_EVENT;
 }
 
-_int CEffectShield::LateUpdate_GameObject(const _float & fTimeDelta)
+_int CSwordEffect_s::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
-
-
 	return NO_EVENT;
 }
 
 
-void CEffectShield::Render_GameObject(const _float& fTimeDelta)
+void CSwordEffect_s::Render_GameObject(const _float& fTimeDelta)
 {
 	Set_ConstantTable();
-	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps,0,27, 16,17,18);
-	//D  N S Sha Dis
+	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps,0,27, 16,17,18); //D  N S Sha Dis
 }
-void CEffectShield::Render_CrossFilterGameObject(const _float& fTimeDelta)
+void CSwordEffect_s::Render_CrossFilterGameObject(const _float& fTimeDelta)
 {
 	Set_ConstantTable();
 	m_pMeshCom->Render_StaticMesh(m_pCrossFilterShaderCom);
 }
-HRESULT CEffectShield::Add_Component(wstring wstrMeshTag)
+HRESULT CSwordEffect_s::Add_Component(wstring wstrMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -130,14 +125,12 @@ HRESULT CEffectShield::Add_Component(wstring wstrMeshTag)
 	m_pMeshCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Mesh", m_pMeshCom);
 
-
 	// Shader
 	m_pShaderCom = static_cast<Engine::CShaderMeshEffect*>(m_pComponentMgr->Clone_Component(L"ShaderMeshEffect", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
 	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(11), E_FAIL);
 	m_pShaderCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
-
 
 	m_pCrossFilterShaderCom = static_cast<Engine::CShaderMesh*>(m_pComponentMgr->Clone_Component(L"ShaderMesh", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pCrossFilterShaderCom, E_FAIL);
@@ -148,7 +141,7 @@ HRESULT CEffectShield::Add_Component(wstring wstrMeshTag)
 	return S_OK;
 }
 
-void CEffectShield::Set_ConstantTable()
+void CSwordEffect_s::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -170,47 +163,22 @@ void CEffectShield::Set_ConstantTable()
 	m_fShaderDegree = int(m_fShaderDegree) % 360;
 	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
 	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
-	tCB_ShaderMesh.fOffset3 = 0.5f;
+	tCB_ShaderMesh.fOffset3 = m_fAlpha;
 	tCB_ShaderMesh.fOffset4 = m_fShaderDegree;
 	tCB_ShaderMesh.fOffset6 = abs(sin(m_fDeltatime3)) +0.2f;
+	tCB_ShaderMesh.vAfterImgColor = _rgba(0.5, 0.5f, 0.5f, 1);
+	tCB_ShaderMesh.vEmissiveColor = _rgba(1.f, 1.f, 1.f, 1);
+	tCB_ShaderMesh.vColorOffSet1 = _rgba(102.f / 255.f, 36.f / 255.f, 239.f/255.f, 0.5);
 
-	tCB_ShaderMesh.vAfterImgColor = _rgba(0.5, 0.3f, 0.f, 1);
-	tCB_ShaderMesh.vEmissiveColor = _rgba(0.8f, 0.2f, 0.f, 1);
-	tCB_ShaderMesh.vColorOffSet1 = _rgba(251.f / 255.f, 130.f / 255.f, 0.f, 0.5);
 	if (m_pShaderCom->Get_UploadBuffer_ShaderMesh() != nullptr)
 		m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
-
-	if (m_fLifeTime > 4.f)
-	{
-		m_fCrossDeltatime2 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.5f;
-		tCB_ShaderMesh.fDissolve = m_fCrossDeltatime2;
-		if (!m_bisLifeInit)
-		{
-			m_bisLifeInit = true;
-			m_fDeltatimeVelocity2 = 3;
-
-			CGameObject* pGameObj = nullptr;
-			pGameObj = CParticleEffect::Create(m_pGraphicDevice, m_pCommandList,
-				L"Lighting1",						// TextureTag
-				_vec3(0.2f),		// Scale
-				_vec3(0.0f, 0.0f, 0.0f),		// Angle
-				m_pTransCom->m_vPos,	// Pos
-				FRAME(1, 1, 1.f),9);			// Sprite Image Frame
-			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Fire2", pGameObj), E_FAIL);
-
-		}
-	}
-
 
 	m_fCrossDeltatime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.5f * m_fDeltatimeVelocity;
 	m_fCrossDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.5f * m_fDeltatimeVelocity2;
 	tCB_ShaderMesh.fOffset1 = sin(m_fCrossDeltatime);//¹øÁüÈ¿°ú
 	tCB_ShaderMesh.fOffset2 = m_fCrossDeltatime2;
 	tCB_ShaderMesh.fOffset3 = m_fCrossDeltatime3;
-	tCB_ShaderMesh.vEmissiveColor.x = 0.5;
-	tCB_ShaderMesh.vEmissiveColor.y = 0.3f;
-	tCB_ShaderMesh.vEmissiveColor.z = 0.f;
-	tCB_ShaderMesh.vEmissiveColor.w = 1.f;
+	tCB_ShaderMesh.vEmissiveColor= _rgba(102.f / 255.f, 36.f / 255.f, 239.f / 255.f, 1.f);
 	if (m_pCrossFilterShaderCom->Get_UploadBuffer_ShaderMesh() != nullptr)
 		m_pCrossFilterShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 	if (m_fCrossDeltatime > 1.f)
@@ -225,7 +193,7 @@ void CEffectShield::Set_ConstantTable()
 		m_fDeltatimeVelocity2 = 0.f;
 	}
 }
-HRESULT CEffectShield::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth)
+HRESULT CSwordEffect_s::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth)
 {
 	_uint m_uiTexSize = vecTexture.size() + vecShadowDepth.size();
 
@@ -270,21 +238,21 @@ HRESULT CEffectShield::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTe
 }
 
 
-Engine::CGameObject* CEffectShield::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
+Engine::CGameObject* CSwordEffect_s::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
 												wstring wstrMeshTag, 
 												const _vec3 & vScale,
 												const _vec3 & vAngle,
-												const _vec3 & vPos, const float& vAngleOffset)
+												const _vec3 & vPos, const _vec3& vDir, const float& vAngleOffset)
 {
-	CEffectShield* pInstance = new CEffectShield(pGraphicDevice, pCommandList);
+	CSwordEffect_s* pInstance = new CSwordEffect_s(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos, vAngleOffset)))
+	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos, vDir, vAngleOffset)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
 }
 
-void CEffectShield::Free()
+void CSwordEffect_s::Free()
 {
 	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pMeshCom);

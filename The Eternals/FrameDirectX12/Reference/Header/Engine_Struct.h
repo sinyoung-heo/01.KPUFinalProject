@@ -853,6 +853,7 @@ namespace Engine
 		_float		fOffset6;
 		_rgba		vAfterImgColor;
 		_rgba		vEmissiveColor;
+		_rgba		vColorOffSet1;
 
 	} CB_SHADER_MESH;
 

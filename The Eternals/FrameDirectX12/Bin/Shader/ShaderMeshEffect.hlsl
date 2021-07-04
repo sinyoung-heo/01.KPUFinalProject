@@ -47,12 +47,7 @@ cbuffer cbShaderMesh : register(b1)
     float		g_fOffset6			: packoffset(c14.w);
 	float4		g_vAfterImgColor	: packoffset(c15);
 	float4		g_vEmissiveColor	: packoffset(c16);
-    
-    // Texture Sprite.
-    //float g_fFrameCnt : packoffset(c4.x); // 스프라이트 이미지 X축 개수.
-    //float g_fCurFrame : packoffset(c4.y); // 현재 그려지는 이미지의 X축 Index.
-    //float g_fSceneCnt : packoffset(c4.z); // 스프라이트 이미지 Y축 개수.
-    //float g_fCurScene : packoffset(c4.w); // 현재 그려지는 이미지의 Y축 Index.
+    float4      g_vColorOffSet1      : packoffset(c17);
 };
 struct VS_IN
 {
@@ -189,14 +184,15 @@ PS_OUT PS_EFFECT_SHPERE(VS_OUT ps_input) : SV_TARGET
     float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV * 3);
     float4 Dis = g_TexDissolve.Sample(g_samLinearWrap, ps_input.AniUV);
     float4 Sha = g_TexShadowDepth.Sample(g_samLinearWrap, ps_input.TexUV * 3); //꽉찬그리드
+    
+    // g_vAfterImgColor  // g_vEmissiveColor // vColorOffSet
     float4 GridColor = mul(float4(0.3, 0.3, 0.7f, 1), S.r)  + mul(float4(0.7, 0.3, 0.7f, 1), Sha.r)* 2;
-   // clip(ps_input.TexUV.y + g_fOffset1);
     float4 color =N+ mul(GridColor, Dis.r)*2 + mul(mul(float4(0.0, 0.3, 1, 0.5), g_fDissolve), 1 - Lim);
     ps_output.Effect2.rgba = color; //color.rgba; // +mul(float4(0.3, 0.4, 0.8, 1), Sha.r);
     ps_output.Effect2.a = 0.5f;
     return (ps_output);
 }
-PS_OUT PS_EFFECT_SHPERE_YELLOW(VS_OUT ps_input) : SV_TARGET
+PS_OUT PS_EFFECT_SHPERE_COLOR(VS_OUT ps_input) : SV_TARGET
 {
     PS_OUT ps_output = (PS_OUT) 0;
     float4 ViewDir = normalize(g_vCameraPos - ps_input.WorldPos);
@@ -206,11 +202,10 @@ PS_OUT PS_EFFECT_SHPERE_YELLOW(VS_OUT ps_input) : SV_TARGET
     float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV * 3);
     float4 Dis = g_TexDissolve.Sample(g_samLinearWrap, ps_input.AniUV);
     float4 Sha = g_TexShadowDepth.Sample(g_samLinearWrap, ps_input.TexUV * 3); //꽉찬그리드
-    float4 GridColor = mul(float4(0.5, 0.3f, 0.f, 1), S.r) + mul(float4(0.8f, 0.2f, 0.f,1), Sha.r) * 2;
-   // clip(ps_input.TexUV.y + g_fOffset1);
-    float4 color = mul(GridColor, Dis.r) * 2 + mul(mul(float4(251.f / 255.f, 130.f / 255.f, 0.f, 0.5), 1 - Lim),g_fOffset6);
-    ps_output.Effect2.rgba = color; //color.rgba; // +mul(float4(0.3, 0.4, 0.8, 1), Sha.r);
-    ps_output.Effect2.a = 0.5f;
+    float4 GridColor = mul(g_vAfterImgColor, S.r) + mul(g_vEmissiveColor, Sha.r) * 2;
+    float4 color = mul(GridColor, Dis.r) * 2 + mul(mul(g_vColorOffSet1, 1 - Lim),g_fOffset6);
+    ps_output.Effect2.rgba = color;
+    ps_output.Effect2.a = g_fOffset3;
     return (ps_output);
 }
 PS_OUT PS_EFFECT_SHPERE_RED(VS_OUT ps_input) : SV_TARGET
@@ -228,6 +223,19 @@ PS_OUT PS_EFFECT_SHPERE_RED(VS_OUT ps_input) : SV_TARGET
     ps_output.Effect2.a = 0.5f;
     return (ps_output);
 }
+PS_OUT PS_EFFECT_ICE_M(VS_OUT ps_input) : SV_TARGET
+{
+    PS_OUT ps_output = (PS_OUT) 0;
+    float4 N = g_TexNormal.Sample(g_samLinearWrap, ps_input.AniUV);
+    float4 ViewDir = normalize(g_vCameraPos - ps_input.WorldPos);
+    float Lim = saturate(dot(ViewDir, float4(ps_input.WorldNormal, 1)));
+    Lim = pow(Lim, 2);
+    float4 color = N+mul(mul(g_vColorOffSet1, 1 - Lim), g_fOffset6);
+    ps_output.Effect2.rgba = color;
+    ps_output.Effect2.a = g_fOffset3;
+    return (ps_output);
+}
+
 PS_OUT PS_ICESTORM(VS_OUT ps_input) : SV_TARGET
 {
     PS_OUT ps_output = (PS_OUT) 0;
