@@ -3,6 +3,7 @@
 #include "InstancePoolMgr.h"
 #include "WarningFrame.h"
 #include "DmgFont.h"
+#include <random>
 
 CCollisionTick::CCollisionTick(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -99,8 +100,16 @@ void CCollisionTick::Process_Collision()
 			pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_DmgFontPool());
 			if (nullptr != pGameObj)
 			{
+				random_device					rd;
+				default_random_engine			dre{ rd() };
+				uniform_int_distribution<_int>	uid{ -7, 7 };
+
+				m_pTransCom->m_vDir.x = (_float)(uid(dre)) * 0.1f;
+
 				static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos = pDst->Get_Transform()->m_vPos;
-				static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.y = pDst->Get_Transform()->m_vPos.y + 2.0f;
+				static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.x += (_float)(uid(dre)) * 0.1f;
+				static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.y += 3.0f;
+				static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.z += (_float)(uid(dre)) * 0.1f;
 				static_cast<CDmgFont*>(pGameObj)->Set_DamageList(m_uiDamage);
 				static_cast<CDmgFont*>(pGameObj)->Set_DamageType(DMG_TYPE::DMG_PLAYER);
 				static_cast<CDmgFont*>(pGameObj)->Set_RandomDir();
