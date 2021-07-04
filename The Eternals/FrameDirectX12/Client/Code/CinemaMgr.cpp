@@ -97,12 +97,14 @@ void CCinemaMgr::Command_PrionBerserkerBoss()
 void CCinemaMgr::Rush_Prion()
 {
 	m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"PRIONBERSERKERBOSS", 0)->Set_State(PrionBerserkerBoss::RUN);
+	m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"PRIONBERSERKERBOSS", 0)->Set_MoveStop(false);
 
 	for (int z = 0; z < 5; ++z)
 	{
 		for (int x = 0; x < 10; ++x)
 		{
 			arrPrionBerserker[z][x]->Set_State(PrionBerserker::RUN);
+			arrPrionBerserker[z][x]->Set_MoveStop(false);
 		}
 	}
 }
