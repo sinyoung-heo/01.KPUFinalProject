@@ -7,14 +7,14 @@ constexpr _uint		DMG_MAX           = 9'999'999;
 constexpr _float	FONT_SCALE_OFFSET = 0.2f;
 constexpr _float	FONT_POS_OFFSET   = 0.2f;
 
-typedef struct tagDmgTextureInfo
+typedef struct tagDmgTextureDesc
 {
 	wstring					wstrTextureTag     = L"";
 	ID3D12DescriptorHeap*	pTexDescriptorHeap = nullptr;
 	_uint					uiTexIdx           = 0;
 	FRAME					tFrame;
 
-} DMG_TEXTURE_INFO;
+} DMG_TEXTURE_DESC;
 
 class CDmgFont : public Engine::CGameObject
 {
@@ -52,7 +52,7 @@ protected:
 	[ Value ]
 	____________________________________________________________________________________________________________*/
 	_matrix						m_matWorld[DMG_SIZE];
-	vector<DMG_TEXTURE_INFO>	m_vecDmgTextureInfo[DMG_TYPE::DMGTYPE_END];
+	vector<DMG_TEXTURE_DESC>	m_vecDmgTextureInfo[DMG_TYPE::DMGTYPE_END];
 	DMG_TYPE					m_eDmgType = DMG_TYPE::DMGTYPE_END;
 	_uint						m_uiDamage = 0;
 	_uint						m_uiDmgListSize = 0;

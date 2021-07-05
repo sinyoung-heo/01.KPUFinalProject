@@ -171,7 +171,7 @@ void CInventoryItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 				map<wstring, CEquipmentItemSlot*> mapEquipmentSlot = m_pInvenEquipMgr->Get_EquipmentSlotMap();
 
 				CInventoryItemSlot* pSelectItemSlot  = vecInvenSlot[uiSelectIdx];
-				ITEM_INFO			tSelectItemInfo  = pSelectItemSlot->Get_CurItemInfo();
+				ITEM_DESC			tSelectItemInfo  = pSelectItemSlot->Get_CurItemInfo();
 				_uint				uiSelectItemCnt  = pSelectItemSlot->Get_CurItemCnt();
 				_bool				bIsOnEquipment   = pSelectItemSlot->Get_IsOnEquipment();
 				wstring				wstrEquipmentTag = pSelectItemSlot->Get_EquipmentTag();

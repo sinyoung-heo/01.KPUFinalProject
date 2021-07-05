@@ -8,7 +8,7 @@ private:
 	virtual ~CStoreItemSlot() = default;
 
 public:
-	const ITEM_INFO& Get_CurItemInfo() { return m_tCurItemInfo; }
+	const ITEM_DESC& Get_CurItemInfo() { return m_tCurItemInfo; }
 	void Set_CurItemInfo(const char& chItemType, const char& chItemName);
 
 	// CGameObject을(를) 통해 상속됨
@@ -39,8 +39,8 @@ private:
 	_uint			m_bIsOnMouse       = false;
 	_bool			m_bIsKeyPressingLB = false;
 
-	ITEM_INFO	m_tNoItemInfo;
-	ITEM_INFO	m_tCurItemInfo;
+	ITEM_DESC	m_tNoItemInfo;
+	ITEM_DESC	m_tCurItemInfo;
 	char		m_chPreItemType = NO_ITEM;
 	char		m_chPreItemName = NO_ITEM;
 	_uint		m_uiPrice       = 0;

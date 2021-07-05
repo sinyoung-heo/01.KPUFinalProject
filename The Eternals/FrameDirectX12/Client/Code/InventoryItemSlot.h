@@ -10,7 +10,7 @@ private:
 	virtual ~CInventoryItemSlot() = default;
 
 public:
-	const ITEM_INFO&	Get_CurItemInfo()	{ return m_tCurItemInfo; }
+	const ITEM_DESC&	Get_CurItemInfo()	{ return m_tCurItemInfo; }
 	const _uint&		Get_CurItemCnt()	{ return m_uiCnt; }
 	const _uint&		Get_ItemSlotIdx()	{ return m_uiIdx; }
 	const _bool&		Get_IsOnEquipment() { return m_bIsOnEquipment; }
@@ -59,8 +59,8 @@ private:
 	_uint			m_uiSlotFrameIdx = 2;
 	_uint			m_bIsOnMouse     = false;
 
-	ITEM_INFO	m_tNoItemInfo;
-	ITEM_INFO	m_tCurItemInfo;
+	ITEM_DESC	m_tNoItemInfo;
+	ITEM_DESC	m_tCurItemInfo;
 	char		m_chPreItemType = NO_ITEM;
 	char		m_chPreItemName = NO_ITEM;
 	char		m_chJob         = -1;

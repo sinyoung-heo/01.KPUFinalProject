@@ -22,16 +22,14 @@ public:
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Render_GameObject(const _float& fTimeDelta);
-
 private:
 	void			Key_Input(const _float& fTimeDelta);
-
 private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
 	_bool	m_bIsResetDebugCamera		= false;	// Debug Camera <-> Dynamic Camera
-	_float	m_fSpeed					= 20.0f;		// Camera 이동속도.
+	_float	m_fSpeed					= 20.0f;	// Camera 이동속도.
 
 	/*__________________________________________________________________________________________________________
 	[ Font ]

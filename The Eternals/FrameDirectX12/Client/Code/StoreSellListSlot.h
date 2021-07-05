@@ -8,7 +8,7 @@ private:
 	virtual ~CStoreSellListSlot() = default;
 
 public:
-	const ITEM_INFO&	Get_CurItemInfo()	{ return m_tCurItemInfo; }
+	const ITEM_DESC&	Get_CurItemInfo()	{ return m_tCurItemInfo; }
 	const _uint&		Get_CurItemCnt()	{ return m_uiCnt; }
 	const _uint&		Get_InventoryIdx()	{ return m_uiInventoryIdx; }
 	const _int&		Get_ItemPrice()			{ return m_iPrice; }
@@ -44,8 +44,8 @@ private:
 	_uint			m_bIsOnMouse       = false;
 	_bool			m_bIsKeyPressingLB = false;
 
-	ITEM_INFO		m_tNoItemInfo;
-	ITEM_INFO		m_tCurItemInfo;
+	ITEM_DESC		m_tNoItemInfo;
+	ITEM_DESC		m_tCurItemInfo;
 	char			m_chPreItemType = NO_ITEM;
 	char			m_chPreItemName = NO_ITEM;
 	_int			m_iPrice       = 0;

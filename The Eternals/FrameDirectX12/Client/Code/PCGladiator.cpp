@@ -1081,6 +1081,17 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 		}*/
 	}
 
+	if (Engine::KEY_DOWN(DIK_M))
+	{
+		CAMERA_SHAKING_DESC tCameraShakingDesc;
+		tCameraShakingDesc.fUpdateShakingTime = 1.5f;
+		tCameraShakingDesc.vMin               = _vec2(-5.0f, -2.0f);
+		tCameraShakingDesc.vMax               = _vec2(5.0f, 2.0f);
+		tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 10.0f;
+
+		m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
+	}
+
 	// StageChange Stage WINTER
 	if (Engine::KEY_DOWN(DIK_O) && NO_EVENT_STATE)
 	{

@@ -95,7 +95,7 @@ ______________________________________________________________________*/
 
 #pragma warning(disable : 4251)
 
-typedef struct tagItemInfo
+typedef struct tagItemDesc
 {
 	char	chItemType = NO_ITEM;
 	char	chItemName = NO_ITEM;
@@ -104,4 +104,4 @@ typedef struct tagItemInfo
 	_uint	uiItemIdx = 0;
 	FRAME	tItemIconFrame;
 
-} ITEM_INFO;
+} ITEM_DESC;
