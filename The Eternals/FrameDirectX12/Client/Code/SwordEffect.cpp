@@ -29,11 +29,6 @@ HRESULT CSwordEffect::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos = vPos;
 
-	m_fDeltaTime = -1.f;
-	
-	m_fLimitScale = 0.3f;
-
-
 	return S_OK;
 }
 
@@ -78,10 +73,25 @@ _int CSwordEffect::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 	if (m_fLifeTime > 6.f)
-		m_bIsDead = true;
+		m_bIsReturn = true;
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	if (m_bIsReturn)
+	{
+		//초기화가 필요한 값들
+		m_fDeltatime = -1.f;
+		m_fDeltatimeVelocity = 0.f;
+		m_fDeltatimeVelocity2 = 1.f;
+		m_fDeltatime2 = 0.f;
+		m_fDeltatime3 = 0.f;
+		m_fLifeTime = 0.f;
+		m_bisLifeInit = false;
+		m_bisEffect = false;
+
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_SwordEffect(), m_uiInstanceIdx);
+		return RETURN_OBJ;
+	}
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
@@ -176,16 +186,9 @@ void CSwordEffect::Set_ConstantTable()
 		{
 			m_bisLifeInit = true;
 			m_fDeltatimeVelocity2 = 3;
-			for (int i = 0; i < 5; i++)
-			{
-				CGameObject* pGameObj = CSnowParticle::Create(m_pGraphicDevice, m_pCommandList,
-					L"Snow",						// TextureTag
-					_vec3(0.1f),		// Scale
-					_vec3(0.0f, 0.0f, 0.0f),		// Angle
-					m_pTransCom->m_vPos,	// Pos
-					FRAME(1, 1, 1.0f));			// Sprite Image Frame
-				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Snow", pGameObj), E_FAIL);
-			}
+
+			CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 20, L"Snow", _vec3(0.1f));
+		
 		}
 	}
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
@@ -251,6 +254,15 @@ HRESULT CSwordEffect::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTex
 }
 
 
+void CSwordEffect::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
+{
+	m_pTransCom->m_vScale = vScale;
+	m_pTransCom->m_vAngle = vAngle;
+	m_pTransCom->m_vPos = vPos;
+	m_fDeltaTime = -1.f;
+	m_fLimitScale = 0.3f;
+}
+
 Engine::CGameObject* CSwordEffect::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 	wstring wstrMeshTag,
 	const _vec3& vScale,
@@ -263,6 +275,20 @@ Engine::CGameObject* CSwordEffect::Create(ID3D12Device* pGraphicDevice, ID3D12Gr
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
+}
+
+CSwordEffect** CSwordEffect::Create_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, const _uint& uiInstanceCnt)
+{
+	CSwordEffect** ppInstance = new (CSwordEffect * [uiInstanceCnt]);
+
+	for (_uint i = 0; i < uiInstanceCnt; ++i)
+	{
+		ppInstance[i] = new CSwordEffect(pGraphicDevice, pCommandList);
+		ppInstance[i]->m_uiInstanceIdx = i;
+		ppInstance[i]->Ready_GameObject(L"Twohand19_A_SM",_vec3(0.f),_vec3(0.f),_vec3(0.f));
+	}
+
+	return ppInstance;
 }
 
 void CSwordEffect::Free()

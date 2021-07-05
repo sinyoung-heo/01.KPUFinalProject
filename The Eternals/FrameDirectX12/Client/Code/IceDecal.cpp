@@ -40,12 +40,6 @@ HRESULT CIceDecal::LateInit_GameObject()
 	SetUp_DescriptorHeap(pTexture->Get_Texture(), m_pRenderer->Get_TargetShadowDepth()->Get_TargetTexture());
 
 
-	m_uiDiffuse = 9;
-	m_fNormalMapDeltatime = 5;//NormIdx
-	m_fPatternMapDeltatime = 2;//SpecIdx
-
-	_vec3 vPos = m_pTransCom->m_vPos;
-	vPos.y += 1.f;
 	
 	return S_OK;	
 }
@@ -54,7 +48,15 @@ _int CIceDecal::Update_GameObject(const _float & fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
-	if (m_bIsDead ||m_fAlpha<0.f)
+	if (m_fAlpha < 0.f)
+		m_bIsReturn = true;
+
+	if (m_bIsReturn)
+	{
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_IceDecal_Effect(), m_uiInstanceIdx);
+		return RETURN_OBJ;
+	}
+	if (m_bIsDead)
 		return DEAD_OBJ;
 
 	/*__________________________________________________________________________________________________________
@@ -85,7 +87,7 @@ _int CIceDecal::LateUpdate_GameObject(const _float & fTimeDelta)
 
 void CIceDecal::Render_GameObject(const _float& fTimeDelta)
 {
-	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_fNormalMapDeltatime, m_fPatternMapDeltatime
+	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, 9, 5, 2
 		,0,4);
 }
 
@@ -192,6 +194,19 @@ HRESULT CIceDecal::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTextur
 }
 
 
+void CIceDecal::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
+{
+	m_pTransCom->m_vScale = vScale;
+	m_pTransCom->m_vAngle = vAngle;
+	m_pTransCom->m_vPos = vPos;
+	m_pTransCom->m_vPos.y += 0.3f;
+	m_fDeltatime = 0.f;
+	m_fDeltatime2 = 0.f;
+	m_fDelta2Velocity = 1.f;
+	m_fDeltatime3 = 0.f;
+	m_fAlpha = 1.f;
+}
+
 Engine::CGameObject* CIceDecal::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
 												wstring wstrMeshTag, 
 												const _vec3 & vScale,
@@ -204,6 +219,19 @@ Engine::CGameObject* CIceDecal::Create(ID3D12Device * pGraphicDevice, ID3D12Grap
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
+}
+
+CIceDecal** CIceDecal::Create_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, const _uint& uiInstanceCnt)
+{
+
+	CIceDecal** ppInstance = new (CIceDecal * [uiInstanceCnt]);
+	for (_uint i = 0; i < uiInstanceCnt; ++i)
+	{
+		ppInstance[i] = new CIceDecal(pGraphicDevice, pCommandList);
+		ppInstance[i]->m_uiInstanceIdx = i;
+		ppInstance[i]->Ready_GameObject(L"PublicPlane00", _vec3(0.f), _vec3(0.f), _vec3(0.f));
+	}
+	return ppInstance;
 }
 
 void CIceDecal::Free()

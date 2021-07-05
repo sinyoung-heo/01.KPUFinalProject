@@ -18,6 +18,7 @@ public:
 public:
 	HRESULT			Ready_Component();
 	virtual void	Update_Component(const _float& fTimeDelta);
+	void			Update_Component(const _float& fTimeDelta, _matrix Axis);
 
 public:
 	_vec3	m_vScale	= _vec3(1.0f);

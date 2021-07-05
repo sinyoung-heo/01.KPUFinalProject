@@ -10,18 +10,18 @@ namespace Engine
 
 class CDynamicCamera;
 
-class CIceStorm : public Engine::CGameObject
+class CIceStorm_m : public Engine::CGameObject
 {
 private:
-	explicit CIceStorm(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CIceStorm() = default; 
+	explicit CIceStorm_m(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CIceStorm_m() = default; 
 
 public:
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
 									 const _vec3& vScale,
 									 const _vec3& vAngle,
-									 const _vec3& vPos, const float& fRadius, const float& theta);
+									 const _vec3& vPos,const float& fMaxScale);
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
@@ -47,30 +47,38 @@ private:
 	[ Value ]
 	____________________________________________________________________________________________________________*/
 	wstring			m_wstrMeshTag		       = L"";
+	_uint m_uiDiffuse = 0;
+	_uint m_uiNormal = 0;
+	_uint m_uiSpec = 0;
+
+	bool  m_bisScaleAnim = false;
 	float m_fDeltatime = 0.f;
-	float m_fDeltatimeVelocity = 0.f;
-	float m_fDeltatimeVelocity2 = 1.f;
 	float m_fDeltatime2 = 0.f;
 	float m_fDeltatime3 = 0.f;
-	float m_fLimitScale = 0.f;
+	float m_fDegree = 0.f;
+	float m_fAlpha = 1.f;
+	float m_fShaderDegree = 0.f;
 	float m_fLifeTime = 0.f;
-	float m_fRadius = 0.f;
-	float m_fTheta = 0.f;
-	float random[3];
+	
+	float m_fCrossDeltatime = 0.f;
+	float m_fCrossDeltatime2 = 0.f;
+	float m_fCrossDeltatime3 = 0.f;
 
-	bool m_bisLifeInit = false;
+	float m_fDeltatimeVelocity = 0.f;
+	float m_fDeltatimeVelocity2 = 1.f;
 
+	float m_fMaxScale = 0.f;
 public:
-	void Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, const float& fRadius, const float& theta);
+	void Set_CreateInfo(const _vec3& vScale,const _vec3& vAngle,const _vec3& vPos, const float& fMaxScale);
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,
 									   wstring wstrMeshTag,
 									   const _vec3& vScale,
 									   const _vec3& vAngle,
-									   const _vec3& vPos, const float& fRadius, const float& fTheta);
+									   const _vec3& vPos , const float& fMaxScale);
 
-	static CIceStorm** Create_InstancePool(ID3D12Device* pGraphicDevice,
+	static CIceStorm_m** Create_InstancePool(ID3D12Device* pGraphicDevice,
 		ID3D12GraphicsCommandList* pCommandList,
 		const _uint& uiInstanceCnt);
 private:

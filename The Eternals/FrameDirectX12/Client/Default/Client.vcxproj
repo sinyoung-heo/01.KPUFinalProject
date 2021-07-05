@@ -206,6 +206,7 @@
     <ClInclude Include="..\Code\GridShieldEffect.h" />
     <ClInclude Include="..\Code\IceDecal.h" />
     <ClInclude Include="..\Code\IceStorm.h" />
+    <ClInclude Include="..\Code\IceStorm_m.h" />
     <ClInclude Include="..\Code\IceStorm_s.h" />
     <ClInclude Include="..\Code\InGameStoreCanvas.h" />
     <ClInclude Include="..\Code\InstancePoolMgr.h" />
@@ -318,7 +319,9 @@
     <ClInclude Include="..\Code\StoreSellListSlot.h" />
     <ClInclude Include="..\Code\StoreTab.h" />
     <ClInclude Include="..\Code\SwordEffect.h" />
+    <ClInclude Include="..\Code\SwordEffect_s.h" />
     <ClInclude Include="..\Code\SwordTrail.h" />
+    <ClInclude Include="..\Code\SwordTrailEffect.h" />
     <ClInclude Include="..\Code\TerrainMeshObject.h" />
     <ClInclude Include="..\Code\WarningFrame.h" />
     <ClInclude Include="..\Code\WaterFall.h" />
@@ -384,6 +387,7 @@
     <ClCompile Include="..\Code\GridShieldEffect.cpp" />
     <ClCompile Include="..\Code\IceDecal.cpp" />
     <ClCompile Include="..\Code\IceStorm.cpp" />
+    <ClCompile Include="..\Code\IceStorm_m.cpp" />
     <ClCompile Include="..\Code\IceStorm_s.cpp" />
     <ClCompile Include="..\Code\InGameStoreCanvas.cpp" />
     <ClCompile Include="..\Code\InstancePoolMgr.cpp" />
@@ -494,7 +498,9 @@
     <ClCompile Include="..\Code\StoreSellListSlot.cpp" />
     <ClCompile Include="..\Code\StoreTab.cpp" />
     <ClCompile Include="..\Code\SwordEffect.cpp" />
+    <ClCompile Include="..\Code\SwordEffect_s.cpp" />
     <ClCompile Include="..\Code\SwordTrail.cpp" />
+    <ClCompile Include="..\Code\SwordTrailEffect.cpp" />
     <ClCompile Include="..\Code\TerrainMeshObject.cpp" />
     <ClCompile Include="..\Code\WarningFrame.cpp" />
     <ClCompile Include="..\Code\WaterFall.cpp" />

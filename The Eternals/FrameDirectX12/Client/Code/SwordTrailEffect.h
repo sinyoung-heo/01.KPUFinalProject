@@ -10,25 +10,26 @@ namespace Engine
 
 class CDynamicCamera;
 
-class CIceStorm : public Engine::CGameObject
+class CSwordTrailEffect : public Engine::CGameObject
 {
 private:
-	explicit CIceStorm(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CIceStorm() = default; 
+	explicit CSwordTrailEffect(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CSwordTrailEffect() = default; 
 
 public:
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
 									 const _vec3& vScale,
 									 const _vec3& vAngle,
-									 const _vec3& vPos, const float& fRadius, const float& theta);
+									 const _vec3& vPos, const _vec3& vDir, const float& vAngleOffset);
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
-
-	virtual void Render_GameObject(const _float& fTimeDelta);
-
 	virtual void Render_CrossFilterGameObject(const _float& fTimeDelta);
+	virtual void Render_GameObject(const _float& fTimeDelta);
+	void Set_isScaleAnim(bool isScaling) { m_bisScaleAnim = isScaling; }
+	void Set_PlayerDir(_vec3 Dir) { m_vecPlayerDir = Dir; }
+	void Set_TexIDX(_uint Diffuse, _uint Normal, _uint Specular) { m_uiDiffuse = Diffuse, m_uiNormal = Normal, m_uiSpec = Specular; }
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
 	void			Set_ConstantTable();
@@ -39,40 +40,50 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
 	____________________________________________________________________________________________________________*/
-	Engine::CMesh*			m_pMeshCom                = nullptr;
-	Engine::CShaderMesh* m_pCrossFilterShaderCom = nullptr;
+	Engine::CMesh*						m_pMeshCom                = nullptr;
 	Engine::CShaderMeshEffect* m_pShaderCom = nullptr;
+	Engine::CShaderMesh* m_pCrossFilterShaderCom = nullptr;
 	ID3D12DescriptorHeap* m_pDescriptorHeaps = nullptr;
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
 	wstring			m_wstrMeshTag		       = L"";
+	
+	_uint m_uiDiffuse  = 0;
+	_uint m_uiNormal   = 0;
+	_uint m_uiSpec     = 0;
+
 	float m_fDeltatime = 0.f;
-	float m_fDeltatimeVelocity = 0.f;
-	float m_fDeltatimeVelocity2 = 1.f;
 	float m_fDeltatime2 = 0.f;
 	float m_fDeltatime3 = 0.f;
-	float m_fLimitScale = 0.f;
+	float m_fDegree = 0.f;
+	float m_fShaderDegree = 0.f;
+	
 	float m_fLifeTime = 0.f;
-	float m_fRadius = 0.f;
-	float m_fTheta = 0.f;
-	float random[3];
+	bool m_bisScaleAnim = false;
 
+	float m_fCrossDeltatime = 0.f;
+	float m_fCrossDeltatime2 = 0.f;
+	float m_fCrossDeltatime3 = 0.f;
+	_vec3 m_vecParentPos = _vec3(0.f);
 	bool m_bisLifeInit = false;
+	float m_fDeltatimeVelocity = 0.f;
+	float m_fDeltatimeVelocity2 = 1.f;
+	
+	_vec3 m_vecPlayerDir = _vec3(0.f);
+	_vec3 m_vecCrossDir = _vec3(0.f);
+	float m_fTheta = 0.f;
+	float m_fDistance = 0.f;
+	float m_fCurDistance = 0.f;
 
-public:
-	void Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, const float& fRadius, const float& theta);
+	float m_fAlpha = 1.f;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,
 									   wstring wstrMeshTag,
 									   const _vec3& vScale,
 									   const _vec3& vAngle,
-									   const _vec3& vPos, const float& fRadius, const float& fTheta);
-
-	static CIceStorm** Create_InstancePool(ID3D12Device* pGraphicDevice,
-		ID3D12GraphicsCommandList* pCommandList,
-		const _uint& uiInstanceCnt);
+									   const _vec3& vPos, const _vec3& vDir, const float& vAngleOffset);
 private:
 	virtual void Free();
 };

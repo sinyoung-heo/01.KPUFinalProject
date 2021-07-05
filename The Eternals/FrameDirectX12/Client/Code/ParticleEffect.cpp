@@ -13,29 +13,31 @@ HRESULT CParticleEffect::Ready_GameObject(wstring wstrTextureTag,
 	const _vec3& vScale,
 	const _vec3& vAngle,
 	const _vec3& vPos,
-	const FRAME& tFrame,const int PipeLine)
+	const FRAME& tFrame,const _int& PipeLine, const _int& ParticleCnt)
 {
 	m_Pipeline = PipeLine;
-	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(true, true, true), E_FAIL);
+	m_iParticleCnt = ParticleCnt;
+	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrTextureTag), E_FAIL);
 
 	m_strTextag = wstrTextureTag;
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos = vPos;
-	for (int i = 0; i < PARTICLECNT; i++)
+	for (int i = 0; i < ParticleCnt; i++)
 		TempPos[i] = vPos;
 	
 	m_uiTexIdx = 0;
 	m_tFrame = tFrame;
 	m_fAlpha = 1.f;
+	m_bisAlphaObject = true;
 	return S_OK;
 }
 
 HRESULT CParticleEffect::LateInit_GameObject()
 {
 	// SetUp Shader ConstantBuffer
-	for (int i = 0; i < PARTICLECNT; i++)
+	for (int i = 0; i < m_iParticleCnt; i++)
 	{
 		m_pShaderCom[i]->SetUp_ShaderConstantBuffer();
 
@@ -54,11 +56,21 @@ _int CParticleEffect::Update_GameObject(const _float& fTimeDelta)
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
 	m_fDegree += fTimeDelta * 120.f;
-	m_fDegree = (int)m_fDegree % 360;
-	m_fAlpha -= fTimeDelta * 0.2f;
-	if (m_fAlpha<0.f)
+	
+	m_fAlpha = sin(XMConvertToRadians(m_fDegree * 0.5f));
+	
+
+	if (m_fAlpha < 0.f)
+		m_bIsReturn = true;
+	if (m_bIsReturn)
+	{
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_Particle_Effect(), m_uiInstanceIdx);
+		return RETURN_OBJ;
+	}
+	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	m_fDegree = (_int)m_fDegree % 360;
 	/*__________________________________________________________________________________________________________
 	[ Update Sprite Frame ]
 	____________________________________________________________________________________________________________*/
@@ -87,7 +99,7 @@ _int CParticleEffect::LateUpdate_GameObject(const _float& fTimeDelta)
 void CParticleEffect::Render_GameObject(const _float& fTimeDelta)
 {
 
-	for (int i = 0; i < PARTICLECNT; i++)
+	for (int i = 0; i < m_iParticleCnt; i++)
 	{
 		Set_ConstantTable(i);
 		m_pShaderCom[i]->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), 0, m_uiTexIdx, Engine::MATRIXID::PROJECTION);
@@ -102,7 +114,7 @@ HRESULT CParticleEffect::Add_Component(wstring wstrTextureTag)
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
 	// Buffer
-	for (int i = 0; i < PARTICLECNT; i++)
+	for (int i = 0; i < m_iParticleCnt; i++)
 	{
 		wstring strShader = L"Com_Shader" + to_wstring(i);
 
@@ -129,7 +141,7 @@ HRESULT CParticleEffect::Add_Component(wstring wstrTextureTag)
 	return S_OK;
 }
 
-void CParticleEffect::Set_ConstantTable(int i)
+void CParticleEffect::Set_ConstantTable(_int i)
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -153,6 +165,7 @@ void CParticleEffect::Set_ConstantTable(int i)
 	tCB_ShaderTexture.fCurScene = (_int)m_tFrame.fCurScene;
 	tCB_ShaderTexture.fAlpha = m_fAlpha;
 	tCB_ShaderTexture.fOffset3 = m_fDegree;
+	tCB_ShaderTexture.v_Color = m_vecColorOffset;
 	m_pShaderCom[i]->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 }
 
@@ -175,26 +188,64 @@ void CParticleEffect::Update_SpriteFrame(const _float& fTimeDelta)
 
 }
 
+void CParticleEffect::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle,
+	const _vec3& vPos, const FRAME& tFrame, const _int& PipeLine, const _int& ParticleCnt)
+{
+	m_pTransCom->m_vScale = vScale;
+	m_pTransCom->m_vAngle = vAngle;
+	m_pTransCom->m_vPos = vPos;
+	for (int i = 0; i < ParticleCnt; i++)
+	{
+		TempPos[i] = vPos;
+		m_vecRandomvector[i].x = (rand() % 200 - 100);
+		m_vecRandomvector[i].y = (rand() % 100);
+		m_vecRandomvector[i].z = (rand() % 200 - 100);
+		m_vecRandomvector[i].Normalize();
+		TempPos[i] += m_vecRandomvector[i] * (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 50.f;
+	}
+	m_Pipeline = PipeLine;
+	m_iParticleCnt = ParticleCnt;
+
+	m_uiTexIdx = 0;
+	m_tFrame = tFrame;
+	m_fAlpha = 1.f;
+	m_bisAlphaObject = true;
+	m_fDegree = 0.f;
+
+}
+
 Engine::CGameObject* CParticleEffect::Create(ID3D12Device* pGraphicDevice,
 	ID3D12GraphicsCommandList* pCommandList,
 	wstring wstrTextureTag,
 	const _vec3& vScale,
 	const _vec3& vAngle,
 	const _vec3& vPos,
-	const FRAME& tFrame, const int PipeLine)
+	const FRAME& tFrame, const _int& PipeLine, const _int& ParticleCnt)
 {
 	CParticleEffect* pInstance = new CParticleEffect(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(wstrTextureTag, vScale, vAngle, vPos, tFrame, PipeLine)))
+	if (FAILED(pInstance->Ready_GameObject(wstrTextureTag, vScale, vAngle, vPos, tFrame, PipeLine, ParticleCnt)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
 }
 
+CParticleEffect** CParticleEffect::Create_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, const _uint& uiInstanceCnt, wstring TexTag)
+{
+	CParticleEffect** ppInstance = new (CParticleEffect * [uiInstanceCnt]);
+	for (_uint i = 0; i < uiInstanceCnt; ++i)
+	{
+		ppInstance[i] = new CParticleEffect(pGraphicDevice, pCommandList);
+		ppInstance[i]->m_uiInstanceIdx = i;
+		ppInstance[i]->Ready_GameObject(TexTag, _vec3(0.f), _vec3(0.f), _vec3(0.f));
+	}
+	return ppInstance;
+}
+
 void CParticleEffect::Free()
 {
 	Engine::CGameObject::Free();
-	for (int i = 0; i < PARTICLECNT; i++)
+	for (_int i = 0; i < m_iParticleCnt; i++)
 	{
 		Engine::Safe_Release(m_pBufferCom[i]);
 		Engine::Safe_Release(m_pShaderCom[i]);

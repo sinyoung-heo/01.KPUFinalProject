@@ -54,9 +54,11 @@ private:
 	float m_fDeltatime3 = 0.f;
 	float m_fLimitScale = 0.f;
 	float m_fLifeTime = 0.f;
+	bool  m_bisLifeInit = false;
+	bool  m_bisEffect = false;
 
-	bool m_bisLifeInit = false;
-	bool m_bisEffect = false;
+public:
+	void Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos);
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 		ID3D12GraphicsCommandList* pCommandList,
@@ -64,6 +66,10 @@ public:
 		const _vec3& vScale,
 		const _vec3& vAngle,
 		const _vec3& vPos);
+
+	static CSwordEffect** Create_InstancePool(ID3D12Device* pGraphicDevice,
+		ID3D12GraphicsCommandList* pCommandList,
+		const _uint& uiInstanceCnt);
 private:
 	virtual void Free();
 };
