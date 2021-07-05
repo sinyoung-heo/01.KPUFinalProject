@@ -21,9 +21,18 @@ namespace Priest
 
 	constexpr float OTHERS_OFFSET	= 0.85f;
 
-	constexpr float MIN_SPEED       = 0.0f;
-	constexpr float MAX_SPEED       = 5.0f;
-	constexpr float MOVE_STOP_SPEED = 3.0f;
+	constexpr float MIN_SPEED		= 0.0f;
+	constexpr float MAX_SPEED		= 5.0f;
+	constexpr float MOVE_STOP_SPEED	= 3.0f;
+
+	constexpr int	PLUS_HP			= 100;
+	constexpr int	PLUS_MP			= 50;
+
+	// 스킬 필요 MP
+	constexpr int	AMOUNT_AURA		= 100;
+	constexpr int	AMOUNT_PURIFY	= 150;
+	constexpr int	AMOUNT_HEAL		= 70;
+	constexpr int	AMOUNT_MANA		= 70;
 
 	constexpr _uint HASTE_COLLISIONTICK_START = 32;
 

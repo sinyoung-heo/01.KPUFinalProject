@@ -10,6 +10,7 @@ void send_move_stop_packet(int to_client, int id);								// 움직임 패킷
 void send_attack_packet(int to_client, int id, int animIdx, float end_angleY);
 void send_attack_stop_packet(int to_client, int id, int animIdx);
 void send_player_stat(int to_client, int id);
+void send_buff_stat(const int& to_client, const int& ani, const int& hp, const int& maxHp, const int& mp, const int& maxMp);
 void send_player_stance_change(int to_client, int id, const bool& st);
 void send_player_stage_change(int to_client, int id);
 void send_suggest_party(int to_client, int id);

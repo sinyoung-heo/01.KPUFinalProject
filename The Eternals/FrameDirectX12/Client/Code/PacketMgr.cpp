@@ -435,6 +435,16 @@ void CPacketMgr::Process_packet()
 	}
 	break;
 
+	case SC_PACKET_BUFF:
+	{
+		sc_packet_buff* packet = reinterpret_cast<sc_packet_buff*>(m_packet_start);
+
+		Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+		pThisPlayer->Set_Buff(packet->hp, packet->maxHp, packet->mp, packet->maxMp);
+		pThisPlayer->Buff_AllPartyMemeber(packet->animIdx);	
+	}
+	break;
+
 	default:
 #ifdef ERR_CHECK
 		printf("Unknown PACKET type [%d]\n", m_packet_start[1]);

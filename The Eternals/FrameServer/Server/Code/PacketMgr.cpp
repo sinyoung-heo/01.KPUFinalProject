@@ -611,6 +611,22 @@ void send_player_stat(int to_client, int id)
 	send_packet(to_client, &p);
 }
 
+void send_buff_stat(const int& to_client, const int& ani, const int& hp, const int& maxHp, const int& mp, const int& maxMp)
+{
+	sc_packet_buff p;
+
+	p.size		= sizeof(p);
+	p.type		= SC_PACKET_BUFF;
+
+	p.animIdx	= ani;
+	p.hp		= hp;
+	p.maxHp		= maxHp;
+	p.mp		= mp;
+	p.maxMp		= maxMp;
+
+	send_packet(to_client, &p);
+}
+
 void send_player_stance_change(int to_client, int id, const bool& st)
 {
 	sc_packet_stance_change p;
@@ -1684,44 +1700,81 @@ void process_buff(const int& id, cs_packet_attack* p)
 	unordered_set<int> old_viewlist = pPlayer->view_list;
 	pPlayer->v_lock.unlock();
 
-	/* 버프 타입 확인 */
+	/* 버프 타입 확인 -> 해당 유저 MP 감소 & 능력치 획득 */
 	switch (p->animIdx)
 	{
+
+	// 이동 속도
 	case Priest::AURA_ON:
 	{
+		pPlayer->m_iMp -= Priest::AMOUNT_AURA;
 	}
 	break;
-
+	// 실드
 	case Priest::PURIFY:
 	{
+		pPlayer->m_iMp -= Priest::AMOUNT_PURIFY;
 	}
 	break;
-
+	// HP
 	case Priest::HEAL_START:
 	{
+		pPlayer->m_iMp -= Priest::AMOUNT_HEAL;
+
+		pPlayer->m_iHp += Priest::PLUS_HP;
+
+		if (pPlayer->m_iHp >= pPlayer->m_iMaxHp)
+			pPlayer->m_iHp = pPlayer->m_iMaxHp;
 	}
 	break;
-
+	// MP
 	case Priest::MP_CHARGE_START:
 	{
+		pPlayer->m_iMp += Priest::PLUS_MP;
+
+		if (pPlayer->m_iMp >= pPlayer->m_iMaxMp)
+			pPlayer->m_iMp = pPlayer->m_iMaxMp;
 	}
 	break;
 	}
+
+	/* 해당 유저 능력치 업데이트 */
+	send_player_stat(id, id);
 
 	/* 파티 활동 중일 경우 */
 	if (pPlayer->m_bIsPartyState)
 	{
 		for (auto& member : *CObjMgr::GetInstance()->Get_PARTYLIST(pPlayer->m_iPartyNumber))
 		{
+			if (member == id) continue;
 
+			CPlayer* pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", member));
+			if (pOther == nullptr || !pOther->m_bIsConnect || !pOther->m_bIsPartyState) continue;
+
+			switch (p->animIdx)
+			{
+			// HP
+			case Priest::HEAL_START:
+			{
+				pOther->m_iHp += Priest::PLUS_HP;
+
+				if (pOther->m_iHp >= pOther->m_iMaxHp)
+					pOther->m_iHp = pOther->m_iMaxHp;
+			}
+			break;
+			// MP
+			case Priest::MP_CHARGE_START:
+			{
+				pOther->m_iMp += Priest::PLUS_MP;
+
+				if (pOther->m_iMp >= pOther->m_iMaxMp)
+					pOther->m_iMp = pOther->m_iMaxMp;
+			}
+			break;
+			}		
+			send_buff_stat(member, p->animIdx, pOther->m_iHp, pOther->m_iMaxHp, pOther->m_iMp, pOther->m_iMaxMp);
 		}
 	}
-	/* 개인 활동 중일 경우 */
-	else
-	{
-
-	}
-
 }
 
 void process_stance_change(int id, const bool& stance)

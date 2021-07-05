@@ -65,6 +65,7 @@ public:
 	void	Set_DeadReckoning(const _vec3& vPos);
 	void	Set_Info(const int& lev, const int& hp, const int& maxHp, const int& mp, const int& maxMp, const int& exp, const int& maxExp, const int& minatt, const int& maxatt, const int& spd, const int& money);
 	void	Set_State(const int& cur) { m_iMonsterStatus = cur; }
+	void	Set_Buff(const int& hp, const int& maxHp, const int& mp, const int& maxMp);
 	void	Set_Money(const int& money) { m_pInfoCom->m_iMoney = money; }
 	void	Set_Other_direction(_vec3& vDir);
 	float	Set_Other_Angle(_vec3& vDir);
@@ -122,6 +123,7 @@ public:
 	void			Enter_PartyMember(const int& iSNum, const PARTYMEMBER memberInfo)	{ m_mapPartyList[iSNum] = memberInfo; }
 	void			Leave_PartyMember(const int& iSNum)									{ m_mapPartyList.erase(iSNum); }
 	void			Update_PartyMember(const int& iSNum, const int& hp, const int& maxHp, const int& mp, const int& maxMp);
+	void			Buff_AllPartyMemeber(const int& buff);
 	void			Clear_PartyMember()													{ m_mapPartyList.clear(); }
 	void			SetUp_OthersIsInMyParty();
 	//Red value
