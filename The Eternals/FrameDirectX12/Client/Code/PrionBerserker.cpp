@@ -41,7 +41,7 @@ HRESULT CPrionBerserker::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviM
 	m_lstCollider.push_back(m_pBoundingSphereCom);
 
 
-	m_pInfoCom->m_fSpeed = 1.f;
+	m_pInfoCom->m_fSpeed = 3.f;
 	m_bIsMoveStop = true;
 
 	/*__________________________________________________________________________________________________________
@@ -110,6 +110,8 @@ _int CPrionBerserker::Update_GameObject(const _float& fTimeDelta)
 	
 	/* Animation AI */
 	Change_Animation(fTimeDelta);
+
+	Active_Monster(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
@@ -317,6 +319,9 @@ void CPrionBerserker::Active_Monster(const _float& fTimeDelta)
 	/* Monster MOVE */
 	if (!m_bIsMoveStop)
 	{
+		if (m_pTransCom->m_vPos.z <= 385.f)
+			m_bIsMoveStop = true;
+
 		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
 													 &m_pTransCom->m_vDir,
 													 m_pInfoCom->m_fSpeed * fTimeDelta);
@@ -472,7 +477,7 @@ CPrionBerserker** CPrionBerserker::Create_InstancePool(ID3D12Device* pGraphicDev
 		ppInstance[i] = new CPrionBerserker(pGraphicDevice, pCommandList);
 		ppInstance[i]->m_uiInstanceIdx = i;
 		ppInstance[i]->Ready_GameObject(L"PrionBerserker",					// MeshTag
-										L"StageVelika_NaviMesh",	// NaviMeshTag
+										L"StageWinter_NaviMesh",	// NaviMeshTag
 										_vec3(0.05f, 0.05f, 0.05f),	// Scale
 										_vec3(0.0f),				// Angle
 										_vec3(AWAY_FROM_STAGE));	// Pos

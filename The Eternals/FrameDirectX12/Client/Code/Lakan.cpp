@@ -41,7 +41,7 @@ HRESULT CLakan::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, c
 	m_lstCollider.push_back(m_pBoundingSphereCom);
 
 
-	m_pInfoCom->m_fSpeed = 1.f;
+	m_pInfoCom->m_fSpeed = 3.f;
 	m_bIsMoveStop = true;
 
 	/*__________________________________________________________________________________________________________
@@ -110,6 +110,8 @@ _int CLakan::Update_GameObject(const _float& fTimeDelta)
 	
 	/* Animation AI */
 	Change_Animation(fTimeDelta);
+
+	Active_Monster(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
@@ -317,6 +319,9 @@ void CLakan::Active_Monster(const _float& fTimeDelta)
 	/* Monster MOVE */
 	if (!m_bIsMoveStop)
 	{
+		if (m_pTransCom->m_vPos.z >= 385.f)
+			m_bIsMoveStop = true;
+
 		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
 													 &m_pTransCom->m_vDir,
 													 m_pInfoCom->m_fSpeed * fTimeDelta);
@@ -351,6 +356,8 @@ void CLakan::Change_Animation(const _float& fTimeDelta)
 
 				m_uiAnimIdx = Lakan::A_MOVE_LOOP;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+				m_bIsMoveStop = false;
 			}
 		}
 		break;
@@ -487,7 +494,7 @@ CLakan** CLakan::Create_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Graphic
 		ppInstance[i] = new CLakan(pGraphicDevice, pCommandList);
 		ppInstance[i]->m_uiInstanceIdx = i;
 		ppInstance[i]->Ready_GameObject(L"Lakan",					// MeshTag
-										L"StageVelika_NaviMesh",	// NaviMeshTag
+										L"StageWinter_NaviMesh",	// NaviMeshTag
 										_vec3(0.05f, 0.05f, 0.05f),	// Scale
 										_vec3(0.0f),				// Angle
 										_vec3(AWAY_FROM_STAGE));	// Pos
