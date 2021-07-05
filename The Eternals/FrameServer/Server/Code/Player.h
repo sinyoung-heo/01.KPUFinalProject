@@ -26,6 +26,7 @@ public:
 	const EQUIPMENT&			Get_All_Equipment() { return m_tEquipment; }
 	void						Equip_Item(const char& itemName, const char& eItemType);
 	void						Unequip_Item(const char& itemName, const char& eItemType);
+	void						logout_equipment();
 	void						Release_Equipment();
 
 	/* packet */

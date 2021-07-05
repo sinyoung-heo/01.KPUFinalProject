@@ -44,6 +44,7 @@ void process_equip_item(const int& id, const char& chItemSlotType, const char& c
 void process_unequip_item(const int& id, const char& chItemSlotType, const char& chItemType, const char& chName);
 void process_shopping(const int& id, cs_packet_shop* p);
 void process_load_equipment(const int& id, const char& chItemSlotType, const char& chItemType, const char& chName);
+void process_logoutForEquipment(const int& id, const char& chItemSlotType, const char& chItemType, const char& chName);
 
 /* 패킷 관리 및 처리 함수 */
 void process_packet(int id);													// 패킷 처리 함수 (모든 컨텐츠 처리)

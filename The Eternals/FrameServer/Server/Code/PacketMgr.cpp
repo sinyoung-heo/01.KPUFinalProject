@@ -60,7 +60,6 @@ void process_packet(int id)
 		if (bIsLoadItem)
 			pPlayer->send_load_InventoryAndEquipment();
 		
-
 		/* Sector 다시 등록 (접속 시 미리 한 번 하고있음. 완전함을 위해 한 번 더 등록(sector의 Key는 Unique함) */
 		CSectorMgr::GetInstance()->Enter_ClientInSector(id, (int)(pPlayer->m_vPos.z / SECTOR_SIZE), (int)(pPlayer->m_vPos.x / SECTOR_SIZE));
 
@@ -1943,11 +1942,8 @@ void process_disconnect(const int& id)
 	}
 
 	pPlayer->Get_ClientLock().lock();
-
-#ifndef DUMMY
-	// DB 정보 저장 후 종료
+	pPlayer->logout_equipment();
 	CDBMgr::GetInstance()->Update_stat_DB(id);
-#endif // !DUMMY
 
 	pPlayer->Set_IsConnected(false);
 	closesocket(pPlayer->m_sock);
@@ -2162,6 +2158,22 @@ void process_load_equipment(const int& id, const char& chItemSlotType, const cha
 	pUser->m_iMaxHp		+= CItemMgr::GetInstance()->Get_Item(itemNumber).iHp;
 	pUser->m_iMp		+= CItemMgr::GetInstance()->Get_Item(itemNumber).iMp;
 	pUser->m_iMaxMp		+= CItemMgr::GetInstance()->Get_Item(itemNumber).iMp;
+}
+
+void process_logoutForEquipment(const int& id, const char& chItemSlotType, const char& chItemType, const char& chName)
+{
+	CPlayer* pUser = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pUser == nullptr) return;
+	if (!pUser->m_bIsConnect) return;
+
+	// 능력치 적용
+	int itemNumber = CItemMgr::GetInstance()->Find_ItemNumber(chItemType, chName);
+	pUser->m_iMaxAtt	-= CItemMgr::GetInstance()->Get_Item(itemNumber).iAtt;
+	pUser->m_iMinAtt	-= CItemMgr::GetInstance()->Get_Item(itemNumber).iAtt;
+	pUser->m_iHp		-= CItemMgr::GetInstance()->Get_Item(itemNumber).iHp;
+	pUser->m_iMaxHp		-= CItemMgr::GetInstance()->Get_Item(itemNumber).iHp;
+	pUser->m_iMp		-= CItemMgr::GetInstance()->Get_Item(itemNumber).iMp;
+	pUser->m_iMaxMp		-= CItemMgr::GetInstance()->Get_Item(itemNumber).iMp;
 }
 
 /*===========================================FUNC====================================================*/
