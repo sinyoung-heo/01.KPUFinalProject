@@ -1213,8 +1213,7 @@ void CPCPriest::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pPacketMgr->send_buff(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"MP_CHARGE"]) && 
-				 NO_EVENT_STATE &&
-			(m_pInfoCom->m_iMp - Priest::AMOUNT_MANA >= 0))
+				 NO_EVENT_STATE)
 		{
 			SetUp_AttackSetting();
 			m_bIsSkill     = true;
