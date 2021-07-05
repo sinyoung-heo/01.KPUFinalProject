@@ -1307,9 +1307,19 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx, 
 
 	if (CCollisionMgr::GetInstance()->Is_DeadReckoning(pPlayer->m_vPos, pPlayer->m_vDir, &coll_pos, pPlayer->m_chStageId))
 	{
-		pPlayer->m_vTempPos.x = coll_pos.x;
-		pPlayer->m_vTempPos.y = 0.f;
-		pPlayer->m_vTempPos.z = coll_pos.y;
+		if (pPlayer->m_type == PC_GLADIATOR)
+		{
+			pPlayer->m_vTempPos.x = coll_pos.x;
+			pPlayer->m_vTempPos.y = 0.f;
+			pPlayer->m_vTempPos.z = coll_pos.y;
+		}
+		else
+		{
+			pPlayer->m_vTempPos.x = pPlayer->m_vPos.x;
+			pPlayer->m_vTempPos.y = pPlayer->m_vPos.y;
+			pPlayer->m_vTempPos.z = pPlayer->m_vPos.z;
+		}
+		
 	}
 
 	send_attack_packet(id, id, aniIdx, end_angleY);
