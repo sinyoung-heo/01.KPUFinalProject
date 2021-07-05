@@ -3,6 +3,9 @@
 
 BEGIN(Engine)
 
+constexpr _float MIN_FOVY = 30.0f;
+constexpr _float MAX_FOVY = 90.0f;
+
 class CShaderColor;
 class CShaderColorInstancing;
 class CShaderTexture;
@@ -14,6 +17,7 @@ class CShaderMeshEffect;
 class CShaderMeshInstancing;
 class CShaderSSAO;
 class CShaderNPathDir;
+
 class ENGINE_DLL CCamera : public CGameObject
 {
 protected:
@@ -54,6 +58,8 @@ protected:
 	ORTHO_DESC		m_tOrthoInfo	{ };	// 직교 투영 정보를 담은 구조체.
 	BoundingFrustum m_tFrustum;				// 카메라 절두체.
 
+	_float m_fOriginFovY = 0.0f;
+	_float m_fPreFovY = 0.0f;
 
 	/*__________________________________________________________________________________________________________
 	[ Shader Component ]

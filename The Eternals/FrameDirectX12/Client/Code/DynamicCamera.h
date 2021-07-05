@@ -28,6 +28,16 @@ typedef struct tagCameraShakingDesc
 
 } CAMERA_SHAKING_DESC;
 
+typedef struct tagCameraZoomDesc
+{
+	_bool		bIsStartZoomInOut = false;
+	_bool		bIsCameraZoom     = false;
+	CAMERA_ZOOM eZoomState        = CAMERA_ZOOM::ZOOM_END;
+	_float		fPower            = 0.0f;
+	Engine::LINEAR_INTERPOLATION_DESC<_float> tFovYInterpolationDesc;
+
+} CAMERA_ZOOM_DESC;
+
 class CDynamicCamera final : public Engine::CCamera
 {
 private:
@@ -40,6 +50,7 @@ public:
 public:
 	const CAMERA_SHAKING_DESC& Get_CameraShakingDesc() { return m_tCameraShakingDesc; }
 	void Set_CameraShakingDesc(const CAMERA_SHAKING_DESC& tDesc);
+	void Set_CameraZoomDesc(const CAMERA_ZOOM_DESC& tDesc);
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(const Engine::CAMERA_DESC& tCameraInfo,
@@ -52,6 +63,7 @@ public:
 private:
 	void SetUp_DynamicCameraFromTarget(const _float& fTimeDelta);
 	void SetUp_CameraShaking(const _float& fTimeDelta);
+	void SetUp_CameraZoom(const _float& fTimeDelta);
 	void SetUp_CameraFont(const _float& fTimeDelta);
 	void Key_Input(const _float& fTimeDelta);
 	void SetUp_TargetFromDist(const _float& fTimeDelta);
@@ -69,6 +81,7 @@ private:
 	_vec3						m_fCameraMoveResponsiveness = _vec3(0.0f, 0.0f, 6.0f);
 
 	CAMERA_SHAKING_DESC	m_tCameraShakingDesc;
+	CAMERA_ZOOM_DESC	m_tCameraZoomDesc;
 
 	/*__________________________________________________________________________________________________________
 	[ Font ]

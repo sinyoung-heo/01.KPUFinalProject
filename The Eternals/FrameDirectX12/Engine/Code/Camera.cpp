@@ -37,6 +37,9 @@ HRESULT CCamera::Ready_GameObject(const CAMERA_DESC& tCameraInfo,
 	m_tProjInfo		= tProjInfo;
 	m_tOrthoInfo	= tOrthoInfo;
 
+	m_fOriginFovY = m_tProjInfo.fFovY;
+	m_fPreFovY    = m_tProjInfo.fFovY;
+
 	/*__________________________________________________________________________________________________________
 	[ 원근 투영 행렬 ]
 	____________________________________________________________________________________________________________*/
@@ -100,16 +103,22 @@ _int CCamera::Update_GameObject(const _float & fTimeDelta)
 {
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	/*__________________________________________________________________________________________________________
-	[ 뷰 행렬 Update ]
-	____________________________________________________________________________________________________________*/
 	m_tCameraInfo.matView = XMMatrixLookAtLH(m_tCameraInfo.vEye.Get_XMVECTOR(), 
 											 m_tCameraInfo.vAt.Get_XMVECTOR(), 
 											 m_tCameraInfo.vUp.Get_XMVECTOR());
 
-	/*__________________________________________________________________________________________________________
-	[ 절두체 Update ]
-	____________________________________________________________________________________________________________*/
+	if (m_fPreFovY != m_tProjInfo.fFovY)
+	{
+		m_tProjInfo.matProj = XMMatrixPerspectiveFovLH(XMConvertToRadians(m_tProjInfo.fFovY),
+													   m_tProjInfo.fAspect,
+													   m_tProjInfo.fNearZ,
+													   m_tProjInfo.fFarZ);
+
+		m_fPreFovY = m_tProjInfo.fFovY;
+	}
+
+
+	// 절두체 
 	_vec3 vDir = m_tCameraInfo.vEye - m_tCameraInfo.vAt;
 	vDir.Normalize();
 
@@ -123,9 +132,7 @@ _int CCamera::Update_GameObject(const _float & fTimeDelta)
 
 	CRenderer::Get_Instance()->Set_Frustum(m_tFrustum);
 
-	/*__________________________________________________________________________________________________________
-	[ Shader ConstantBuffer Update ]
-	____________________________________________________________________________________________________________*/
+	// Shader ConstantBuffer Update
 	Set_ConstantTable();
 
 	return NO_EVENT;

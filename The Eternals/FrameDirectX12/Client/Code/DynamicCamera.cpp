@@ -30,6 +30,23 @@ void CDynamicCamera::Set_CameraShakingDesc(const CAMERA_SHAKING_DESC& tDesc)
 	m_tCameraShakingDesc.tOffsetInterpolationDesc.is_start_interpolation = true;
 }
 
+void CDynamicCamera::Set_CameraZoomDesc(const CAMERA_ZOOM_DESC& tDesc)
+{
+	m_tCameraZoomDesc = tDesc;
+	m_tCameraZoomDesc.bIsStartZoomInOut = true;
+	m_tCameraZoomDesc.bIsCameraZoom     = true;
+
+	m_tCameraZoomDesc.tFovYInterpolationDesc.linear_ratio           = 0.0f;
+	m_tCameraZoomDesc.tFovYInterpolationDesc.is_start_interpolation = true;
+	m_tCameraZoomDesc.tFovYInterpolationDesc.v1 = m_tProjInfo.fFovY;
+
+	if (CAMERA_ZOOM::ZOOM_IN == m_tCameraZoomDesc.eZoomState)
+		m_tCameraZoomDesc.tFovYInterpolationDesc.v2 = m_tProjInfo.fFovY - m_tProjInfo.fFovY * m_tCameraZoomDesc.fPower;
+	else
+		m_tCameraZoomDesc.tFovYInterpolationDesc.v2 = m_tProjInfo.fFovY + m_tProjInfo.fFovY * m_tCameraZoomDesc.fPower;
+
+}
+
 HRESULT CDynamicCamera::Ready_GameObject(const Engine::CAMERA_DESC& tCameraInfo,
 										 const Engine::PROJ_DESC& tProjInfo,
 										 const Engine::ORTHO_DESC& tOrthoInfo)
@@ -114,6 +131,9 @@ void CDynamicCamera::SetUp_DynamicCameraFromTarget(const _float& fTimeDelta)
 			SetUp_CameraShaking(fTimeDelta);
 			m_tCameraInfo.vEye.x += m_tCameraShakingDesc.vEyeOffset.x;
 			m_tCameraInfo.vEye.y += m_tCameraShakingDesc.vEyeOffset.y;
+
+			// Camera Zoom
+			SetUp_CameraZoom(fTimeDelta);
 		}
 		else
 		{
@@ -191,6 +211,38 @@ void CDynamicCamera::SetUp_CameraShaking(const _float& fTimeDelta)
 		}
 
 		Engine::SetUp_LinearInterpolation(fTimeDelta, m_tCameraShakingDesc.vEyeOffset, m_tCameraShakingDesc.tOffsetInterpolationDesc);
+	}
+}
+
+void CDynamicCamera::SetUp_CameraZoom(const _float& fTimeDelta)
+{
+	if (!m_tCameraZoomDesc.bIsStartZoomInOut)
+		return;
+
+	if (m_tCameraZoomDesc.bIsCameraZoom)
+	{
+		if (m_tCameraZoomDesc.tFovYInterpolationDesc.linear_ratio >= 1.0f)
+		{
+			m_tCameraZoomDesc.bIsCameraZoom = false;
+
+			m_tCameraZoomDesc.tFovYInterpolationDesc.linear_ratio           = 0.0f;
+			m_tCameraZoomDesc.tFovYInterpolationDesc.is_start_interpolation = true;
+			m_tCameraZoomDesc.tFovYInterpolationDesc.v1                     = m_tProjInfo.fFovY;
+			m_tCameraZoomDesc.tFovYInterpolationDesc.v2                     = m_fOriginFovY;
+		}
+
+		if (m_tCameraZoomDesc.bIsCameraZoom)
+			Engine::SetUp_LinearInterpolation(fTimeDelta, m_tProjInfo.fFovY, m_tCameraZoomDesc.tFovYInterpolationDesc);
+	}
+	else
+	{
+		if (m_tCameraZoomDesc.tFovYInterpolationDesc.linear_ratio >= 1.0f)
+		{
+			m_tCameraZoomDesc.bIsStartZoomInOut = false;
+			return;
+		}
+
+		Engine::SetUp_LinearInterpolation(fTimeDelta, m_tProjInfo.fFovY, m_tCameraZoomDesc.tFovYInterpolationDesc);
 	}
 }
 

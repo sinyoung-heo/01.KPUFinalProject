@@ -1092,6 +1092,25 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 		m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
 	}
 
+	if (Engine::KEY_DOWN(DIK_B))
+	{
+		CAMERA_ZOOM_DESC tCameraZoomDesc;
+		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_IN;
+		tCameraZoomDesc.fPower     = 0.08f;
+		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 5.0f;
+
+		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+	}
+	if (Engine::KEY_DOWN(DIK_N))
+	{
+		CAMERA_ZOOM_DESC tCameraZoomDesc;
+		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_OUT;
+		tCameraZoomDesc.fPower = 0.08f;
+		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 5.0f;
+
+		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+	}
+
 	// StageChange Stage WINTER
 	if (Engine::KEY_DOWN(DIK_O) && NO_EVENT_STATE)
 	{
