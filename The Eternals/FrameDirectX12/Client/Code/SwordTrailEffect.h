@@ -65,7 +65,6 @@ private:
 	float m_fCrossDeltatime = 0.f;
 	float m_fCrossDeltatime2 = 0.f;
 	float m_fCrossDeltatime3 = 0.f;
-	float m_fAngleOffset = 0.f;
 	_vec3 m_vecParentPos = _vec3(0.f);
 	bool m_bisLifeInit = false;
 	float m_fDeltatimeVelocity = 0.f;

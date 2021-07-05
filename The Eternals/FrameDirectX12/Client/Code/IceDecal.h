@@ -53,15 +53,15 @@ private:
 	_uint			m_iMeshPipelineStatePass   = 0;
 	_uint			m_iShadowPipelineStatePass = 0;
 
-	_uint m_uiDiffuse = 0;
-	float m_fNormalMapDeltatime = 0.f;
+
 	float m_fDeltatime = 0.f;
 	float m_fDeltatime2 = 0.f;
 	float m_fDelta2Velocity = 1.f;
 	float m_fDeltatime3 = 0.f;
-	float m_fPatternMapDeltatime = 0.f;
 	float m_fAlpha = 1.f;
 
+public:
+	void Set_CreateInfo(const _vec3& vScale,const _vec3& vAngle,const _vec3& vPos);
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,
@@ -69,6 +69,10 @@ public:
 									   const _vec3& vScale,
 									   const _vec3& vAngle,
 									   const _vec3& vPos);
+
+	static CIceDecal** Create_InstancePool(ID3D12Device* pGraphicDevice,
+		ID3D12GraphicsCommandList* pCommandList,
+		const _uint& uiInstanceCnt);
 private:
 	virtual void Free();
 };

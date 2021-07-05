@@ -20,27 +20,26 @@ CSwordEffect_s::CSwordEffect_s(ID3D12Device * pGraphicDevice, ID3D12GraphicsComm
 HRESULT CSwordEffect_s::Ready_GameObject(wstring wstrMeshTag,
 											 const _vec3 & vScale,
 											 const _vec3 & vAngle, 
-											 const _vec3 & vPos, const _vec3& vDir,
-											 const float& vAngleOffset)
+											 const _vec3 & vPos, const _vec3& vDir)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
 
 
-	_vec3 PlayerPos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
+	
 	m_wstrMeshTag = wstrMeshTag;
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vScale = vScale;
-
 	m_pTransCom->m_vPos = vPos;
-	m_vecParentPos = PlayerPos + vDir * 15.f;
 
+
+
+	/*_vec3 PlayerPos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
+	m_vecParentPos = PlayerPos + vDir * 15.f;
 	m_pTransCom->m_vDir = _vec3(m_vecParentPos - vPos );
 	m_pTransCom->m_vDir.Normalize();
-	m_fDeltaTime = -1.f;
-	m_fAngleOffset = vAngleOffset;
-
-	m_fDistance = m_vecParentPos.Get_Distance(vPos);
+	
+	m_fDistance = m_vecParentPos.Get_Distance(vPos);*/
 
 	return S_OK;
 }
@@ -53,8 +52,6 @@ HRESULT CSwordEffect_s::LateInit_GameObject()
 
 	m_pCrossFilterShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
-	m_pTransCom->m_vAngle.y = XMConvertToDegrees(atan2(m_pTransCom->m_vPos.x - m_vecParentPos.x
-		, m_pTransCom->m_vPos.z - m_vecParentPos.z)) + 180.f;
 	return S_OK;
 }
 
@@ -77,7 +74,17 @@ _int CSwordEffect_s::Update_GameObject(const _float & fTimeDelta)
 
 	float Curdist = m_pTransCom->m_vPos.Get_Distance(m_vecParentPos);
 	if (Curdist < 8.f)
-		m_bIsDead = true;
+		m_bIsReturn = true;
+
+	if (m_bIsReturn)
+	{
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_Sword_s_Effect(), m_uiInstanceIdx);
+		return RETURN_OBJ;
+	}
+	if (m_bIsDead)
+		return DEAD_OBJ;
+
+
 	m_pTransCom->m_vPos += (m_pTransCom->m_vDir * m_fDistance * fTimeDelta);
 	if (m_fLifeTime < 2.5f && m_bisScaleAnim && m_pTransCom->m_vScale.x < 0.24f)
 	{
@@ -156,12 +163,12 @@ void CSwordEffect_s::Set_ConstantTable()
 	tCB_ShaderMesh.vLightPos = tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 
-	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"))* 0.5f;
+	m_fDeltatime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"))* 0.5f;
 	m_fDeltatime2 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
 	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"))*1;
 	m_fShaderDegree += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 60.f;
 	m_fShaderDegree = int(m_fShaderDegree) % 360;
-	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
+	tCB_ShaderMesh.fOffset1 = m_fDeltatime;
 	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
 	tCB_ShaderMesh.fOffset3 = m_fAlpha;
 	tCB_ShaderMesh.fOffset4 = m_fShaderDegree;
@@ -238,18 +245,63 @@ HRESULT CSwordEffect_s::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecT
 }
 
 
+void CSwordEffect_s::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, const _vec3& vDir)
+{
+	m_pTransCom->m_vAngle = vAngle;
+	m_pTransCom->m_vScale = vScale;
+	m_pTransCom->m_vPos = vPos;
+
+	_vec3 PlayerPos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
+	m_vecParentPos = PlayerPos + vDir * 15.f;
+	m_pTransCom->m_vDir = _vec3(m_vecParentPos - vPos);
+	m_pTransCom->m_vDir.Normalize();
+	
+	m_fDistance = m_vecParentPos.Get_Distance(vPos); 
+
+	m_fDeltatime = -1.f;
+	m_fDeltatime2 = 0.f;
+	m_fDeltatime3 = 0.f;
+	m_fDegree = 0.f;
+	m_fShaderDegree = 0.f;
+	m_fLifeTime = 0.f;
+	m_fCrossDeltatime = 0.f;
+	m_fCrossDeltatime2 = 0.f;
+	m_fCrossDeltatime3 = 0.f;
+	m_fDeltatimeVelocity = 0.f;
+	m_fDeltatimeVelocity2 = 1.f;
+	m_fAlpha = 1.f;
+
+
+	m_pTransCom->m_vAngle.y = XMConvertToDegrees(atan2(m_pTransCom->m_vPos.x - m_vecParentPos.x
+		, m_pTransCom->m_vPos.z - m_vecParentPos.z)) + 180.f;
+}
+
 Engine::CGameObject* CSwordEffect_s::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
 												wstring wstrMeshTag, 
 												const _vec3 & vScale,
 												const _vec3 & vAngle,
-												const _vec3 & vPos, const _vec3& vDir, const float& vAngleOffset)
+												const _vec3 & vPos, const _vec3& vDir)
 {
 	CSwordEffect_s* pInstance = new CSwordEffect_s(pGraphicDevice, pCommandList);
 
-	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos, vDir, vAngleOffset)))
+	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos, vDir)))
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
+}
+
+CSwordEffect_s** CSwordEffect_s::Create_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, const _uint& uiInstanceCnt)
+{
+	CSwordEffect_s** ppInstance = new (CSwordEffect_s * [uiInstanceCnt]);
+
+	for (_uint i = 0; i < uiInstanceCnt; ++i)
+	{
+		ppInstance[i] = new CSwordEffect_s(pGraphicDevice, pCommandList);
+		ppInstance[i]->m_uiInstanceIdx = i;
+		ppInstance[i]->Ready_GameObject(L"publicSword", _vec3(0.f), _vec3(0.f), _vec3(0.f), _vec3(0.f));
+	}
+
+	return ppInstance;
 }
 
 void CSwordEffect_s::Free()

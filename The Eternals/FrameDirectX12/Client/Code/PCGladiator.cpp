@@ -1004,7 +1004,7 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 		if (m_bisSwordsSkill3Offset > 0.15f && m_bisIce_mEffect ==false)
 		{
 			m_bisIce_mEffect = true;
-			CEffectMgr::Get_Instance()->Effect_SwordTrail(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
+			CEffectMgr::Get_Instance()->Effect_Straight_IceStorm(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
 		}
 	}
 	else
@@ -1091,7 +1091,7 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 	if (Engine::KEY_DOWN(DIK_0) && NO_EVENT_STATE)
 	{
 		
-		CEffectMgr::Get_Instance()->Effect_SwordTrail(m_pTransCom->m_vPos,m_pTransCom->m_vDir);
+		CEffectMgr::Get_Instance()->Effect_Straight_IceStorm(m_pTransCom->m_vPos,m_pTransCom->m_vDir);
 		
 	}
 
