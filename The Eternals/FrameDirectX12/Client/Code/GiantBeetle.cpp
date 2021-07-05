@@ -138,7 +138,7 @@ _int CGiantBeetle::Update_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Collision - Add Collision List ]
 	____________________________________________________________________________________________________________*/
-	if (!m_bIsStartDissolve)
+	if (!m_bIsStartDissolve && GiantBeetle::A_DEATH != m_iMonsterStatus)
 		m_pCollisonMgr->Add_CollisionCheckList(this);
 
 	/*__________________________________________________________________________________________________________
@@ -552,7 +552,7 @@ void CGiantBeetle::SetUp_CollisionTick(const _float& fTimeDelta)
 
 void CGiantBeetle::SetUp_HpGauge(const _float& fTimeDelta)
 {
-	if (nullptr != m_pHpGauge)
+	if (nullptr != m_pHpGauge && GiantBeetle::A_DEATH != m_iMonsterStatus)
 	{
 		_vec3 vPos = m_pTransCom->m_vPos;
 		vPos.y += 6.15f;

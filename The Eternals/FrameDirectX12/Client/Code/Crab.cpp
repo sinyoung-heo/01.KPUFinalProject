@@ -140,7 +140,7 @@ _int CCrab::Update_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Collision - Add Collision List ]
 	____________________________________________________________________________________________________________*/
-	if (!m_bIsStartDissolve)
+	if (!m_bIsStartDissolve && Crab::A_DEATH != m_iMonsterStatus)
 		m_pCollisonMgr->Add_CollisionCheckList(this);
 
 	/*__________________________________________________________________________________________________________
@@ -486,7 +486,7 @@ void CCrab::SetUp_CollisionTick(const _float& fTimeDelta)
 
 void CCrab::SetUp_HpGauge(const _float& fTimeDelta)
 {
-	if (nullptr != m_pHpGauge)
+	if (nullptr != m_pHpGauge && Crab::A_DEATH != m_iMonsterStatus)
 	{
 		_vec3 vPos = m_pTransCom->m_vPos;
 		vPos.y += 1.0f;
