@@ -242,5 +242,8 @@
     <ClInclude Include="..\..\..\FrameDirectX12\Client\Header\PriestAnimation.h">
       <Filter>99.Header\01.User\00.Animation_Protocol</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\FrameDirectX12\Client\Header\ArcherAnimation.h">
+      <Filter>99.Header\01.User\00.Animation_Protocol</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

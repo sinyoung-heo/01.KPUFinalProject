@@ -1182,7 +1182,8 @@ void CPCPriest::KeyInput_SkillAttack(const _float& fTimeDelta)
 	if (!m_bIsSkillLoop)
 	{
 		if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"AURA_ON"]) && 
-			NO_EVENT_STATE)
+			NO_EVENT_STATE &&
+			(m_pInfoCom->m_iMp - Priest::AMOUNT_AURA >= 0))
 		{
 			SetUp_AttackSetting();
 			m_bIsSkill  = true;
@@ -1191,7 +1192,8 @@ void CPCPriest::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pPacketMgr->send_buff(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"PURIFY"]) && 
-				 NO_EVENT_STATE)
+				 NO_EVENT_STATE &&
+			(m_pInfoCom->m_iMp - Priest::AMOUNT_PURIFY >= 0))
 		{
 			SetUp_AttackSetting();
 			m_bIsSkill  = true;
@@ -1200,7 +1202,8 @@ void CPCPriest::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pPacketMgr->send_buff(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"HEAL"]) && 
-				 NO_EVENT_STATE)
+				 NO_EVENT_STATE &&
+			(m_pInfoCom->m_iMp - Priest::AMOUNT_HEAL >= 0))
 		{
 			SetUp_AttackSetting();
 			m_bIsSkill     = true;
@@ -1210,7 +1213,8 @@ void CPCPriest::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pPacketMgr->send_buff(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"MP_CHARGE"]) && 
-				 NO_EVENT_STATE)
+				 NO_EVENT_STATE &&
+			(m_pInfoCom->m_iMp - Priest::AMOUNT_MANA >= 0))
 		{
 			SetUp_AttackSetting();
 			m_bIsSkill     = true;
