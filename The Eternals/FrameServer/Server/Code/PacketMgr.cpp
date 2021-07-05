@@ -1258,7 +1258,7 @@ void process_collide(int id, int colID, int damage)
 		{
 			/* Player Dead */
 			pPlayer->m_iHp = ZERO_HP;
-			pPlayer->Set_IsDead(true);
+			//pPlayer->Set_IsDead(true);
 		}
 
 		/* 해당 플레이어의 시야 목록 */

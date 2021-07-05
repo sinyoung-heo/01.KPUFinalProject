@@ -442,6 +442,7 @@ void CPacketMgr::Process_packet()
 		Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
 		pThisPlayer->Set_Buff(packet->hp, packet->maxHp, packet->mp, packet->maxMp);
 		pThisPlayer->Buff_AllPartyMemeber(packet->animIdx);	
+		m_pPartySystemMgr->Update_ThisPlayerPartyList();
 	}
 	break;
 
