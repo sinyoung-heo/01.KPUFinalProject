@@ -41,6 +41,7 @@
     <ClCompile Include="..\Code\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\FrameDirectX12\Client\Header\PriestAnimation.h" />
     <ClInclude Include="..\Code\Cell.h" />
     <ClInclude Include="..\Code\CollisionMgr.h" />
     <ClInclude Include="..\Code\DBMgr.h" />

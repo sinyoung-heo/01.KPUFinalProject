@@ -489,11 +489,8 @@ void disconnect_client(int id)
 	}
 
 	pPlayer->Get_ClientLock().lock();
-
-#ifndef DUMMY
-	// DB 정보 저장 후 종료
+	pPlayer->logout_equipment();
 	CDBMgr::GetInstance()->Update_stat_DB(id);
-#endif // !DUMMY
 	
 	CObjPoolMgr::GetInstance()->return_Object(L"PLAYER", pPlayer);
 	CObjMgr::GetInstance()->Delete_GameObject(L"PLAYER", pPlayer);

@@ -40,6 +40,7 @@ using namespace chrono;
 #include "MonsterAnimation.h"
 #include "NPCAnimation.h"
 #include "PCWeaponType.h"
+#include "..\..\..\FrameDirectX12\Client\Header\PriestAnimation.h"
 
 #include "enum.h"
 #include "struct.h"

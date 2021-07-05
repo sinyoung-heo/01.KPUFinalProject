@@ -987,6 +987,12 @@ namespace Engine
 			iMaxMp	= maxMp;
 		}
 
+		void Buff_Info(const _int& hp, const _int& mp)
+		{
+			iHp += hp;
+			iMp += mp;
+		}
+
 		char cName[32];
 		char cJob			= -1;
 		_int iHp			= 0;

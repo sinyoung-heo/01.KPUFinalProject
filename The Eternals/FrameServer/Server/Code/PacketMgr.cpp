@@ -60,7 +60,6 @@ void process_packet(int id)
 		if (bIsLoadItem)
 			pPlayer->send_load_InventoryAndEquipment();
 		
-
 		/* Sector 다시 등록 (접속 시 미리 한 번 하고있음. 완전함을 위해 한 번 더 등록(sector의 Key는 Unique함) */
 		CSectorMgr::GetInstance()->Enter_ClientInSector(id, (int)(pPlayer->m_vPos.z / SECTOR_SIZE), (int)(pPlayer->m_vPos.x / SECTOR_SIZE));
 
@@ -309,6 +308,13 @@ void process_packet(int id)
 	{
 		cs_packet_shop* p = reinterpret_cast<cs_packet_shop*>(pPlayer->m_packet_start);		
 		process_shopping(id, p);
+	}
+	break;
+
+	case CS_BUFF:
+	{
+		cs_packet_attack* p = reinterpret_cast<cs_packet_attack*>(pPlayer->m_packet_start);
+		process_buff(id, p);
 	}
 	break;
 
@@ -601,6 +607,22 @@ void send_player_stat(int to_client, int id)
 	p.lev		= pPlayer->m_iLevel;
 	p.maxAtt	= pPlayer->m_iMaxAtt;
 	p.minAtt	= pPlayer->m_iMinAtt;
+
+	send_packet(to_client, &p);
+}
+
+void send_buff_stat(const int& to_client, const int& ani, const int& hp, const int& maxHp, const int& mp, const int& maxMp)
+{
+	sc_packet_buff p;
+
+	p.size		= sizeof(p);
+	p.type		= SC_PACKET_BUFF;
+
+	p.animIdx	= ani;
+	p.hp		= hp;
+	p.maxHp		= maxHp;
+	p.mp		= mp;
+	p.maxMp		= maxMp;
 
 	send_packet(to_client, &p);
 }
@@ -1668,6 +1690,93 @@ void process_attack_stop(int id, const _vec3& _vDir, const _vec3& _vPos, int ani
 #endif
 }
 
+void process_buff(const int& id, cs_packet_attack* p)
+{
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pPlayer == nullptr) return;
+
+	/* 해당 플레이어의 원래 시야 목록 */
+	pPlayer->v_lock.lock();
+	unordered_set<int> old_viewlist = pPlayer->view_list;
+	pPlayer->v_lock.unlock();
+
+	/* 버프 타입 확인 -> 해당 유저 MP 감소 & 능력치 획득 */
+	switch (p->animIdx)
+	{
+
+	// 이동 속도
+	case Priest::AURA_ON:
+	{
+		pPlayer->m_iMp -= Priest::AMOUNT_AURA;
+	}
+	break;
+	// 실드
+	case Priest::PURIFY:
+	{
+		pPlayer->m_iMp -= Priest::AMOUNT_PURIFY;
+	}
+	break;
+	// HP
+	case Priest::HEAL_START:
+	{
+		pPlayer->m_iMp -= Priest::AMOUNT_HEAL;
+
+		pPlayer->m_iHp += Priest::PLUS_HP;
+
+		if (pPlayer->m_iHp >= pPlayer->m_iMaxHp)
+			pPlayer->m_iHp = pPlayer->m_iMaxHp;
+	}
+	break;
+	// MP
+	case Priest::MP_CHARGE_START:
+	{
+		pPlayer->m_iMp += Priest::PLUS_MP;
+
+		if (pPlayer->m_iMp >= pPlayer->m_iMaxMp)
+			pPlayer->m_iMp = pPlayer->m_iMaxMp;
+	}
+	break;
+	}
+
+	/* 해당 유저 능력치 업데이트 */
+	send_player_stat(id, id);
+
+	/* 파티 활동 중일 경우 */
+	if (pPlayer->m_bIsPartyState)
+	{
+		for (auto& member : *CObjMgr::GetInstance()->Get_PARTYLIST(pPlayer->m_iPartyNumber))
+		{
+			if (member == id) continue;
+
+			CPlayer* pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", member));
+			if (pOther == nullptr || !pOther->m_bIsConnect || !pOther->m_bIsPartyState) continue;
+
+			switch (p->animIdx)
+			{
+			// HP
+			case Priest::HEAL_START:
+			{
+				pOther->m_iHp += Priest::PLUS_HP;
+
+				if (pOther->m_iHp >= pOther->m_iMaxHp)
+					pOther->m_iHp = pOther->m_iMaxHp;
+			}
+			break;
+			// MP
+			case Priest::MP_CHARGE_START:
+			{
+				pOther->m_iMp += Priest::PLUS_MP;
+
+				if (pOther->m_iMp >= pOther->m_iMaxMp)
+					pOther->m_iMp = pOther->m_iMaxMp;
+			}
+			break;
+			}		
+			send_buff_stat(member, p->animIdx, pOther->m_iHp, pOther->m_iMaxHp, pOther->m_iMp, pOther->m_iMaxMp);
+		}
+	}
+}
+
 void process_stance_change(int id, const bool& stance)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
@@ -1943,11 +2052,8 @@ void process_disconnect(const int& id)
 	}
 
 	pPlayer->Get_ClientLock().lock();
-
-#ifndef DUMMY
-	// DB 정보 저장 후 종료
+	pPlayer->logout_equipment();
 	CDBMgr::GetInstance()->Update_stat_DB(id);
-#endif // !DUMMY
 
 	pPlayer->Set_IsConnected(false);
 	closesocket(pPlayer->m_sock);
@@ -2162,6 +2268,22 @@ void process_load_equipment(const int& id, const char& chItemSlotType, const cha
 	pUser->m_iMaxHp		+= CItemMgr::GetInstance()->Get_Item(itemNumber).iHp;
 	pUser->m_iMp		+= CItemMgr::GetInstance()->Get_Item(itemNumber).iMp;
 	pUser->m_iMaxMp		+= CItemMgr::GetInstance()->Get_Item(itemNumber).iMp;
+}
+
+void process_logoutForEquipment(const int& id, const char& chItemSlotType, const char& chItemType, const char& chName)
+{
+	CPlayer* pUser = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pUser == nullptr) return;
+	if (!pUser->m_bIsConnect) return;
+
+	// 능력치 적용
+	int itemNumber = CItemMgr::GetInstance()->Find_ItemNumber(chItemType, chName);
+	pUser->m_iMaxAtt	-= CItemMgr::GetInstance()->Get_Item(itemNumber).iAtt;
+	pUser->m_iMinAtt	-= CItemMgr::GetInstance()->Get_Item(itemNumber).iAtt;
+	pUser->m_iHp		-= CItemMgr::GetInstance()->Get_Item(itemNumber).iHp;
+	pUser->m_iMaxHp		-= CItemMgr::GetInstance()->Get_Item(itemNumber).iHp;
+	pUser->m_iMp		-= CItemMgr::GetInstance()->Get_Item(itemNumber).iMp;
+	pUser->m_iMaxMp		-= CItemMgr::GetInstance()->Get_Item(itemNumber).iMp;
 }
 
 /*===========================================FUNC====================================================*/
