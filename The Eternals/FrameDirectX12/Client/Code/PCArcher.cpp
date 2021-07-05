@@ -1871,18 +1871,14 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fColisionTickUpdateTime = 1.0f / 1.0f;
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
-			m_tCollisionTickDesc.iMaxCollisionTick       = 48;
+			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
 
 			m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 			m_pTransCom->m_vDir.Normalize();
 			m_vArrowFallPos   = m_pTransCom->m_vPos + m_pTransCom->m_vDir * Archer::ARROW_FALL_DIST;
 			m_vArrowFallPos.y = 20.0f;
 
-			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
-
 			m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("L_Sword")));
-
-		
 		}
 	}
 
@@ -1954,7 +1950,7 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 				{
 					pCollisionArrow->Set_ArrowType(ARROW_TYPE::ARROW_CHARGE);
 					pCollisionArrow->Set_Speed(90.0f);
-					pCollisionArrow->Set_CollisionTag(L"CollisionTick_ThisPlayer");
+					pCollisionArrow->Set_CollisionTag(L"CollisionTick_ArrowCharge");
 					pCollisionArrow->Set_Damage(m_pInfoCom->Get_RandomDamage());
 					pCollisionArrow->Set_LifeTime(5.0f);
 					pCollisionArrow->Set_OriginPos(vPos);
