@@ -38,8 +38,6 @@ HRESULT CSwordTrailEffect::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vDir = _vec3(m_vecParentPos - vPos );
 	m_pTransCom->m_vDir.Normalize();
 	m_fDeltaTime = -1.f;
-	m_fAngleOffset = vAngleOffset;
-
 	m_fDistance = m_vecParentPos.Get_Distance(vPos);
 
 	return S_OK;

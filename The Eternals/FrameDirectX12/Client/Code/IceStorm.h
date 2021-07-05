@@ -59,6 +59,9 @@ private:
 	float random[3];
 
 	bool m_bisLifeInit = false;
+
+public:
+	void Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, const float& fRadius, const float& theta);
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,
@@ -66,6 +69,10 @@ public:
 									   const _vec3& vScale,
 									   const _vec3& vAngle,
 									   const _vec3& vPos, const float& fRadius, const float& fTheta);
+
+	static CIceStorm** Create_InstancePool(ID3D12Device* pGraphicDevice,
+		ID3D12GraphicsCommandList* pCommandList,
+		const _uint& uiInstanceCnt);
 private:
 	virtual void Free();
 };

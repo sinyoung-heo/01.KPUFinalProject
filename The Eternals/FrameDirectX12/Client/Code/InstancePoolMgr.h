@@ -34,6 +34,15 @@ class CPCWeaponRod;
 
 class CDmgFont;
 
+//Effect
+class CSwordEffect;
+class CSwordEffect_s;
+class CIceStorm;
+class CIceStorm_m;
+class CIceStorm_s;
+class CFireDecal;
+class CIceDecal;
+class CParticleEffect;
 class CInstancePoolMgr : public Engine::CBase
 {
 	DECLARE_SINGLETON(CInstancePoolMgr)
@@ -84,6 +93,18 @@ public:
 	INSTANCE_POOL_DESC<CPCWeaponBow>*		Get_PCWeaponBow(const char& chWeaponType);
 	INSTANCE_POOL_DESC<CPCWeaponRod>*		Get_PCWeaponRod(const char& chWeaponType);
 	// DmgFont
+
+	//Effect
+	INSTANCE_POOL_DESC<CSwordEffect>* Get_Effect_SwordEffect() { return m_pEffect_SwordEffect_Pool; }
+	INSTANCE_POOL_DESC<CSwordEffect_s>* Get_Effect_Sword_s_Effect() { return m_pEffect_SwordEffect_s_Pool; }
+	INSTANCE_POOL_DESC<CIceStorm>* Get_Effect_IceStormEffect() { return m_pEffect_IceStorm_Pool; }
+	INSTANCE_POOL_DESC<CIceStorm_s>* Get_Effect_IceStorm_s_Effect() { return m_pEffect_IceStorm_s_Pool; }
+	INSTANCE_POOL_DESC<CIceStorm_m>* Get_Effect_IceStorm_m_Effect() { return m_pEffect_IceStorm_m_Pool; }
+	INSTANCE_POOL_DESC<CIceDecal>* Get_Effect_IceDecal_Effect() { return m_pEffect_IceDecal_Pool; }
+	INSTANCE_POOL_DESC<CFireDecal>* Get_Effect_FireDecal_Effect() { return m_pEffect_FireDecal_Pool; }
+
+	INSTANCE_POOL_DESC<CParticleEffect>* Get_Effect_Particle_Effect() { return m_pEffect_Particle_Pool; }
+
 
 	void Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 	void Ready_LoadingInstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
@@ -151,6 +172,20 @@ private:
 	INSTANCE_POOL_DESC<CPCWeaponRod>*		m_pPCWeaponRod31_Pool					= nullptr;
 	INSTANCE_POOL_DESC<CPCWeaponRod>*		m_pPCWeaponRod33_B_Pool					= nullptr;
 
+	// Effect Gladiator
+	INSTANCE_POOL_DESC<CSwordEffect>*		m_pEffect_SwordEffect_Pool						= nullptr;
+	INSTANCE_POOL_DESC<CSwordEffect_s>* m_pEffect_SwordEffect_s_Pool = nullptr;
+	INSTANCE_POOL_DESC<CIceStorm>*   m_pEffect_IceStorm_Pool = nullptr;
+	INSTANCE_POOL_DESC<CIceStorm_m>* m_pEffect_IceStorm_m_Pool = nullptr;
+
+	INSTANCE_POOL_DESC<CFireDecal>* m_pEffect_FireDecal_Pool = nullptr;
+	INSTANCE_POOL_DESC<CIceDecal>* m_pEffect_IceDecal_Pool = nullptr;
+	// Effect Archer
+	INSTANCE_POOL_DESC<CIceStorm_s>* m_pEffect_IceStorm_s_Pool = nullptr;
+
+
+	// Effect Particle
+	INSTANCE_POOL_DESC<CParticleEffect>* m_pEffect_Particle_Pool = nullptr;
 private:
 	virtual void Free();
 };

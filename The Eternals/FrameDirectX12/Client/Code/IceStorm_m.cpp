@@ -28,18 +28,18 @@ HRESULT CIceStorm_m::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vScale	= vScale;
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos = vPos;
-	m_pTransCom->m_vPos.y = 0.f;
-	m_fDeltaTime = -1.f;
-	m_fMaxScale = fMaxScale;
-	
-	CGameObject* pGameObj = nullptr;
-	pGameObj = CParticleEffect::Create(m_pGraphicDevice, m_pCommandList,
-		L"Lighting0",						// TextureTag
-		_vec3(0.3f),		// Scale
-		_vec3(0.0f, 0.0f, 0.0f),		// Angle
-		m_pTransCom->m_vPos,	// Pos
-		FRAME(1, 1, 1.f), 9, 5);			// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Lighting1", pGameObj), E_FAIL);
+	//m_pTransCom->m_vPos.y = 0.f;
+	//m_fDeltatime = -1.f;
+	//m_fMaxScale = fMaxScale;
+	//
+	//CGameObject* pGameObj = nullptr;
+	//pGameObj = CParticleEffect::Create(m_pGraphicDevice, m_pCommandList,
+	//	L"Lighting0",						// TextureTag
+	//	_vec3(0.3f),		// Scale
+	//	_vec3(0.0f, 0.0f, 0.0f),		// Angle
+	//	m_pTransCom->m_vPos,	// Pos
+	//	FRAME(1, 1, 1.f), 9, 5);			// Sprite Image Frame
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Lighting1", pGameObj), E_FAIL);
 	return S_OK;
 }
 
@@ -67,8 +67,15 @@ _int CIceStorm_m::Update_GameObject(const _float & fTimeDelta)
 
 	m_fLifeTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
 	m_fAlpha-= (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"))*0.4f;
+	
 	if (m_fAlpha < 0.f)
-		m_bIsDead = true;
+		m_bIsReturn = true;
+
+	if (m_bIsReturn)
+	{
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_IceStorm_m_Effect(), m_uiInstanceIdx);
+		return RETURN_OBJ;
+	}
 	if (m_bIsDead)
 		return DEAD_OBJ;
 	/*__________________________________________________________________________________________________________
@@ -150,12 +157,12 @@ void CIceStorm_m::Set_ConstantTable()
 	tCB_ShaderMesh.vLightPos = tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 
-	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.5f;
+	m_fDeltatime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.5f;
 	m_fDeltatime2 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
 	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 1;
 	m_fShaderDegree += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 60.f;
 	m_fShaderDegree = int(m_fShaderDegree) % 360;
-	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
+	tCB_ShaderMesh.fOffset1 = m_fDeltatime;
 	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
 	tCB_ShaderMesh.fOffset3 = m_fAlpha;
 	tCB_ShaderMesh.fOffset4 = m_fShaderDegree;
@@ -211,6 +218,40 @@ HRESULT CIceStorm_m::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecText
 }
 
 
+void CIceStorm_m::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, const float& fMaxScale)
+{
+	m_pTransCom->m_vScale = vScale;
+	m_pTransCom->m_vAngle = vAngle;
+	m_pTransCom->m_vPos = vPos;
+	m_pTransCom->m_vPos.y = 0.f;
+	
+	m_fMaxScale = fMaxScale;
+
+	m_bisScaleAnim = true;
+	m_fDeltatime = -1.f;
+	m_fDeltatime2 = 0.f;
+	m_fDeltatime3 = 0.f;
+	m_fDegree = 0.f;
+	m_fAlpha = 1.f;
+	m_fShaderDegree = 0.f;
+	m_fLifeTime = 0.f;
+	m_fCrossDeltatime = 0.f;
+	m_fCrossDeltatime2 = 0.f;
+	m_fCrossDeltatime3 = 0.f;
+
+	m_fDeltatimeVelocity = 0.f;
+	m_fDeltatimeVelocity2 = 1.f;
+
+	CGameObject* pGameObj = nullptr;
+	pGameObj = CParticleEffect::Create(m_pGraphicDevice, m_pCommandList,
+		L"Lighting0",						// TextureTag
+		_vec3(0.3f),		// Scale
+		_vec3(0.0f, 0.0f, 0.0f),		// Angle
+		m_pTransCom->m_vPos,	// Pos
+		FRAME(1, 1, 1.f), 9, 5);			// Sprite Image Frame
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Lighting1", pGameObj), E_FAIL);
+}
+
 Engine::CGameObject* CIceStorm_m::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
 												wstring wstrMeshTag, 
 												const _vec3 & vScale,
@@ -223,6 +264,18 @@ Engine::CGameObject* CIceStorm_m::Create(ID3D12Device * pGraphicDevice, ID3D12Gr
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
+}
+
+CIceStorm_m** CIceStorm_m::Create_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, const _uint& uiInstanceCnt)
+{
+	CIceStorm_m** ppInstance = new (CIceStorm_m * [uiInstanceCnt]);
+	for (_uint i = 0; i < uiInstanceCnt; ++i)
+	{
+		ppInstance[i] = new CIceStorm_m(pGraphicDevice, pCommandList);
+		ppInstance[i]->m_uiInstanceIdx = i;
+		ppInstance[i]->Ready_GameObject(L"publicSkill3", _vec3(0.f), _vec3(0.f), _vec3(0.f), 0.f);
+	}
+	return ppInstance;
 }
 
 void CIceStorm_m::Free()

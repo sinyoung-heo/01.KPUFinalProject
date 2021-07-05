@@ -51,25 +51,25 @@ private:
 	_uint m_uiNormal = 0;
 	_uint m_uiSpec = 0;
 
+	bool  m_bisScaleAnim = false;
 	float m_fDeltatime = 0.f;
 	float m_fDeltatime2 = 0.f;
 	float m_fDeltatime3 = 0.f;
 	float m_fDegree = 0.f;
 	float m_fAlpha = 1.f;
 	float m_fShaderDegree = 0.f;
-
 	float m_fLifeTime = 0.f;
-	bool m_bisScaleAnim = false;
-
+	
 	float m_fCrossDeltatime = 0.f;
 	float m_fCrossDeltatime2 = 0.f;
 	float m_fCrossDeltatime3 = 0.f;
 
-	bool m_bisLifeInit = false;
 	float m_fDeltatimeVelocity = 0.f;
 	float m_fDeltatimeVelocity2 = 1.f;
 
 	float m_fMaxScale = 0.f;
+public:
+	void Set_CreateInfo(const _vec3& vScale,const _vec3& vAngle,const _vec3& vPos, const float& fMaxScale);
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,
@@ -77,6 +77,10 @@ public:
 									   const _vec3& vScale,
 									   const _vec3& vAngle,
 									   const _vec3& vPos , const float& fMaxScale);
+
+	static CIceStorm_m** Create_InstancePool(ID3D12Device* pGraphicDevice,
+		ID3D12GraphicsCommandList* pCommandList,
+		const _uint& uiInstanceCnt);
 private:
 	virtual void Free();
 };
