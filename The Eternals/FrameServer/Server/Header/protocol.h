@@ -57,6 +57,7 @@ constexpr char SC_PACKET_UPDATE_INVENTORY	= 28;
 constexpr char SC_PACKET_UPDATE_EQUIPMENT	= 29;
 constexpr char SC_PACKET_LOAD_EQUIPMENT		= 30;
 constexpr char SC_PACKET_UPDATE_MONEY		= 31;
+constexpr char SC_PACKET_BUFF				= 32;
 
 constexpr char CS_LOGIN					= 0;
 constexpr char CS_MOVE					= 1;
@@ -79,6 +80,7 @@ constexpr char CS_DELETE_ITEM			= 17;	// 아이템 제거
 constexpr char CS_EQUIP_ITEM			= 18;	// 장비 장착
 constexpr char CS_UNEQUIP_ITEM			= 19;	// 장비 해체
 constexpr char CS_SHOP					= 20;	// 상점에서 아이템 거래
+constexpr char CS_BUFF					= 21;
 
 // Stage ID
 constexpr char STAGE_VELIKA				= 0;
@@ -245,6 +247,18 @@ struct sc_packet_stat_change
 	int				maxExp;
 	int				lev;
 	int				maxAtt, minAtt;
+};
+
+struct sc_packet_buff
+{
+	unsigned char	size;
+	char			type;
+
+	int				hp;
+	int				maxHp;
+	int				mp;
+	int				maxMp;
+	int				animIdx;
 };
 
 struct sc_packet_chat 

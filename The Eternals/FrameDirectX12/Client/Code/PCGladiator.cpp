@@ -970,10 +970,10 @@ void CPCGladiator::Set_BlendingSpeed()
 
 void CPCGladiator::Set_HpMPGauge()
 {
-	if (m_pInfoCom->m_iHp <= 0)
-		m_pInfoCom->m_iHp = m_pInfoCom->m_iMaxHp;
-	if (m_pInfoCom->m_iMp <= 0)
-		m_pInfoCom->m_iMp = m_pInfoCom->m_iMaxMp;
+	//if (m_pInfoCom->m_iHp <= 0)
+	//	m_pInfoCom->m_iHp = m_pInfoCom->m_iMaxHp;
+	//if (m_pInfoCom->m_iMp <= 0)
+	//	m_pInfoCom->m_iMp = m_pInfoCom->m_iMaxMp;
 
 	if (nullptr != m_pHpGauge && nullptr != m_pMpGauge)
 	{
@@ -1093,6 +1093,36 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 		
 		CEffectMgr::Get_Instance()->Effect_SwordTrail(m_pTransCom->m_vPos,m_pTransCom->m_vDir);
 		
+	}
+
+	if (Engine::KEY_DOWN(DIK_M))
+	{
+		CAMERA_SHAKING_DESC tCameraShakingDesc;
+		tCameraShakingDesc.fUpdateShakingTime = 1.5f;
+		tCameraShakingDesc.vMin               = _vec2(-5.0f, -2.0f);
+		tCameraShakingDesc.vMax               = _vec2(5.0f, 2.0f);
+		tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 10.0f;
+
+		m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
+	}
+
+	if (Engine::KEY_DOWN(DIK_B))
+	{
+		CAMERA_ZOOM_DESC tCameraZoomDesc;
+		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_IN;
+		tCameraZoomDesc.fPower     = 0.08f;
+		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 5.0f;
+
+		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+	}
+	if (Engine::KEY_DOWN(DIK_N))
+	{
+		CAMERA_ZOOM_DESC tCameraZoomDesc;
+		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_OUT;
+		tCameraZoomDesc.fPower = 0.08f;
+		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 5.0f;
+
+		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
 	}
 
 	// StageChange Stage WINTER

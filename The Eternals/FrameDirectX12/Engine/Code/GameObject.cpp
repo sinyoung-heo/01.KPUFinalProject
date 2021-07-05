@@ -76,6 +76,14 @@ void CGameObject::Set_Info(const int& lev, const int& hp, const int& maxHp, cons
 	m_pInfoCom->m_iMoney		= money;
 }
 
+void CGameObject::Set_Buff(const int& hp, const int& maxHp, const int& mp, const int& maxMp)
+{
+	m_pInfoCom->m_iHp		= hp;
+	m_pInfoCom->m_iMaxHp	= maxHp;
+	m_pInfoCom->m_iMp		= mp;
+	m_pInfoCom->m_iMaxMp	= maxMp;
+}
+
 void CGameObject::Set_Other_direction(_vec3& vDir)
 {
 	m_pTransCom->m_vAngle.y = vDir.Get_Angle(g_vLook);
@@ -244,6 +252,45 @@ void CGameObject::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCom
 void CGameObject::Update_PartyMember(const int& iSNum, const int& hp, const int& maxHp, const int& mp, const int& maxMp)
 {
 	m_mapPartyList[iSNum].Update_Info(hp, maxHp, mp, maxMp);
+}
+
+void CGameObject::Buff_AllPartyMemeber(const int& buff)
+{
+	for (auto& p : m_mapPartyList)
+	{
+		switch (buff)
+		{
+		// 이속
+		case 7:
+		{
+		}
+		break;
+
+		// 베리어
+		case 8:
+		{
+		}
+		break;
+
+		// hp
+		case 9:
+		{
+			p.second.iHp += 100;
+			if (p.second.iHp >= p.second.iMaxHp)
+				p.second.iHp = p.second.iMaxHp;
+		}
+		break;
+
+		// mp
+		case 12:
+		{
+			p.second.iMp += 50;
+			if (p.second.iMp >= p.second.iMaxMp)
+				p.second.iMp = p.second.iMaxMp;
+		}
+		break;
+		}
+	}	
 }
 
 void CGameObject::SetUp_OthersIsInMyParty()

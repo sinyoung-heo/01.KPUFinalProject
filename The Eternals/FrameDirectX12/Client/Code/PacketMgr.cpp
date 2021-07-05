@@ -435,6 +435,17 @@ void CPacketMgr::Process_packet()
 	}
 	break;
 
+	case SC_PACKET_BUFF:
+	{
+		sc_packet_buff* packet = reinterpret_cast<sc_packet_buff*>(m_packet_start);
+
+		Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+		pThisPlayer->Set_Buff(packet->hp, packet->maxHp, packet->mp, packet->maxMp);
+		pThisPlayer->Buff_AllPartyMemeber(packet->animIdx);	
+		m_pPartySystemMgr->Update_ThisPlayerPartyList();
+	}
+	break;
+
 	default:
 #ifdef ERR_CHECK
 		printf("Unknown PACKET type [%d]\n", m_packet_start[1]);
@@ -1290,6 +1301,25 @@ void CPacketMgr::send_attack(const _int& iAniIdx, const _vec3& vDir, const _vec3
 	p.dirX    = vDir.x;
 	p.dirY    = vDir.y;
 	p.dirZ    = vDir.z;
+	p.end_angleY = fEndAngleY;
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_buff(const _int& iAniIdx, const _vec3& vDir, const _vec3& vPos, const _float& fEndAngleY)
+{
+	cs_packet_attack p;
+
+	p.size = sizeof(p);
+	p.type = CS_BUFF;
+
+	p.animIdx = iAniIdx;
+	p.posX = vPos.x;
+	p.posY = vPos.y;
+	p.posZ = vPos.z;
+	p.dirX = vDir.x;
+	p.dirY = vDir.y;
+	p.dirZ = vDir.z;
 	p.end_angleY = fEndAngleY;
 
 	send_packet(&p);

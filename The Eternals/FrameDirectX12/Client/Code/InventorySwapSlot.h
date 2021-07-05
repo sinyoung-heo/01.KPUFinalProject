@@ -10,7 +10,7 @@ private:
 	virtual ~CInventorySwapSlot() = default;
 
 public:
-	const ITEM_INFO&	Get_CurItemInfo()	{ return m_tCurItemInfo; }
+	const ITEM_DESC&	Get_CurItemInfo()	{ return m_tCurItemInfo; }
 	const _uint&		Get_CurItemCnt()	{ return m_uiCnt; }
 	const _uint&		Get_ItemSlotIdx()	{ return m_uiItemSlotIdx; }
 	void Set_CurItemInfo(const char& chItemType, const char& chItemName, const _int& iCnt);
@@ -42,7 +42,7 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	ITEM_INFO	m_tCurItemInfo;
+	ITEM_DESC	m_tCurItemInfo;
 	char		m_chPreItemName = NO_ITEM;
 	_uint		m_uiCnt = 0;
 

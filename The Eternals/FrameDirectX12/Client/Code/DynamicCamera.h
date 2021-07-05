@@ -14,6 +14,30 @@ const _float CAM_ANGLE_OFFSETMAX_X    = 75.0f;
 const _float MIN_TARGETDIST           = 3.0f;
 const _float MAX_TARGETDIST           = 12.0f;
 
+typedef struct tagCameraShakingDesc
+{
+	_bool	bIsStartCameraShaking       = false;
+	_bool	bIsCameraShaking            = false;
+	_bool	bIsReSetting                = false;
+	_float	fShakingTime                = 0.0f;			// 몇 초동안 카메라 쉐이킹을 할 것인가?
+	_float	fUpdateShakingTime          = 0.0f;
+	_vec2	vMin                        = _vec2(0.0f);	// Range Min
+	_vec2	vMax                        = _vec2(0.0f);	// Range Max
+	_vec2	vEyeOffset                  = _vec2(0.0f);
+	Engine::LINEAR_INTERPOLATION_DESC<_vec2> tOffsetInterpolationDesc;
+
+} CAMERA_SHAKING_DESC;
+
+typedef struct tagCameraZoomDesc
+{
+	_bool		bIsStartZoomInOut = false;
+	_bool		bIsCameraZoom     = false;
+	CAMERA_ZOOM eZoomState        = CAMERA_ZOOM::ZOOM_END;
+	_float		fPower            = 0.0f;
+	Engine::LINEAR_INTERPOLATION_DESC<_float> tFovYInterpolationDesc;
+
+} CAMERA_ZOOM_DESC;
+
 class CDynamicCamera final : public Engine::CCamera
 {
 private:
@@ -24,6 +48,10 @@ public:
 	void Set_Target(Engine::CGameObject* pTarget)							{ m_pTarget = pTarget; }
 	void Set_CameraAtParentMatrix(Engine::SKINNING_MATRIX* pSkinningMatrix)	{ m_pCameraAtSkinningMatrix = pSkinningMatrix; }
 public:
+	const CAMERA_SHAKING_DESC& Get_CameraShakingDesc() { return m_tCameraShakingDesc; }
+	void Set_CameraShakingDesc(const CAMERA_SHAKING_DESC& tDesc);
+	void Set_CameraZoomDesc(const CAMERA_ZOOM_DESC& tDesc);
+
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(const Engine::CAMERA_DESC& tCameraInfo,
 									 const Engine::PROJ_DESC& tProjInfo,
@@ -34,12 +62,13 @@ public:
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 private:
 	void SetUp_DynamicCameraFromTarget(const _float& fTimeDelta);
+	void SetUp_CameraShaking(const _float& fTimeDelta);
+	void SetUp_CameraZoom(const _float& fTimeDelta);
 	void SetUp_CameraFont(const _float& fTimeDelta);
 	void Key_Input(const _float& fTimeDelta);
 	void SetUp_TargetFromDist(const _float& fTimeDelta);
 	void SetUp_CameraAngle();
 	void SetUp_CameraAtHeightByTargetDist();
-
 private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
@@ -50,6 +79,9 @@ private:
 	_float						m_fDistFromTarget			= (MIN_TARGETDIST + MAX_TARGETDIST) / 2.0f;
 	_float						m_fTarget_DistFromTarget	= (MIN_TARGETDIST + MAX_TARGETDIST) / 2.0f;
 	_vec3						m_fCameraMoveResponsiveness = _vec3(0.0f, 0.0f, 6.0f);
+
+	CAMERA_SHAKING_DESC	m_tCameraShakingDesc;
+	CAMERA_ZOOM_DESC	m_tCameraZoomDesc;
 
 	/*__________________________________________________________________________________________________________
 	[ Font ]

@@ -135,7 +135,7 @@ void CEquipmentItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 		// 아이템 해제
 		if (nullptr != m_pInventoryItemSlot)
 		{
-			ITEM_INFO tItemInfo = m_pInventoryItemSlot->Get_CurItemInfo();
+			ITEM_DESC tItemInfo = m_pInventoryItemSlot->Get_CurItemInfo();
 			char chItemSlotType = 0;
 			if (ItemType_WeaponTwoHand == tItemInfo.chItemType ||
 				ItemType_WeaponBow == tItemInfo.chItemType ||

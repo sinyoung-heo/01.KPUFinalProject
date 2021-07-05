@@ -325,7 +325,7 @@ HRESULT CDmgFont::Read_DataFromFilePath()
 			if (fin.eof())
 				break;
 
-			DMG_TEXTURE_INFO tDmgTextureInfo;
+			DMG_TEXTURE_DESC tDmgTextureInfo;
 			tDmgTextureInfo.wstrTextureTag     = wstrTextureTag;
 			tDmgTextureInfo.pTexDescriptorHeap = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(wstrTextureTag);
 			tDmgTextureInfo.uiTexIdx           = iTextureIndex;
@@ -364,7 +364,7 @@ HRESULT CDmgFont::Read_DataFromFilePath()
 			if (fin.eof())
 				break;
 
-			DMG_TEXTURE_INFO tDmgTextureInfo;
+			DMG_TEXTURE_DESC tDmgTextureInfo;
 			tDmgTextureInfo.wstrTextureTag     = wstrTextureTag;
 			tDmgTextureInfo.pTexDescriptorHeap = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(wstrTextureTag);
 			tDmgTextureInfo.uiTexIdx           = iTextureIndex;
@@ -403,7 +403,7 @@ HRESULT CDmgFont::Read_DataFromFilePath()
 			if (fin.eof())
 				break;
 
-			DMG_TEXTURE_INFO tDmgTextureInfo;
+			DMG_TEXTURE_DESC tDmgTextureInfo;
 			tDmgTextureInfo.wstrTextureTag     = wstrTextureTag;
 			tDmgTextureInfo.pTexDescriptorHeap = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(wstrTextureTag);
 			tDmgTextureInfo.uiTexIdx           = iTextureIndex;
@@ -442,7 +442,7 @@ HRESULT CDmgFont::Read_DataFromFilePath()
 			if (fin.eof())
 				break;
 
-			DMG_TEXTURE_INFO tDmgTextureInfo;
+			DMG_TEXTURE_DESC tDmgTextureInfo;
 			tDmgTextureInfo.wstrTextureTag     = wstrTextureTag;
 			tDmgTextureInfo.pTexDescriptorHeap = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(wstrTextureTag);
 			tDmgTextureInfo.uiTexIdx           = iTextureIndex;

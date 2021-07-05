@@ -204,6 +204,34 @@ void CPlayer::Unequip_Item(const char& itemName, const char& eItemType)
     CDBMgr::GetInstance()->update_Equipment(m_sNum);
 }
 
+void CPlayer::logout_equipment()
+{
+    switch (this->m_type)
+    {
+    case PC_GLADIATOR:
+    {
+        process_logoutForEquipment(m_sNum, EQUIP_WEAPON, ItemType_WeaponTwoHand, m_tEquipment.weapon);
+    }
+    break;
+
+    case PC_ARCHER:
+    {
+        process_logoutForEquipment(m_sNum, EQUIP_WEAPON, ItemType_WeaponBow, m_tEquipment.weapon);
+    }
+    break;
+
+    case PC_PRIEST:
+    {
+        process_logoutForEquipment(m_sNum, EQUIP_WEAPON, ItemType_WeaponRod, m_tEquipment.weapon);
+    }
+    break;
+    }
+
+   process_logoutForEquipment(m_sNum, EQUIP_ARMOR, ItemType_Armor, m_tEquipment.armor);
+   process_logoutForEquipment(m_sNum, EQUIP_HELMET, ItemType_Helmet, m_tEquipment.helmet);
+   process_logoutForEquipment(m_sNum, EQUIP_SHOES, ItemType_Shoes, m_tEquipment.shoes);
+}
+
 void CPlayer::Release_Equipment()
 {
     m_tEquipment.weapon = -1;

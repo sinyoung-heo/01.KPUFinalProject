@@ -114,7 +114,7 @@ void CInventoryEquipmentMgr::Pop_ItemInventory(const char& chItemType, const cha
 			if (chItemType == pSlot->Get_CurItemInfo().chItemType &&
 				chItemName == pSlot->Get_CurItemInfo().chItemName)
 			{
-				ITEM_INFO tItemInfo = pSlot->Get_CurItemInfo();
+				ITEM_DESC tItemInfo = pSlot->Get_CurItemInfo();
 
 				pSlot->Set_CurItemInfo(NO_ITEM, NO_ITEM, iCnt);
 				--m_uiCurSlotSize;
@@ -136,7 +136,7 @@ void CInventoryEquipmentMgr::Pop_ItemInventory(const _uint& uiIdx)
 
 	if (NO_ITEM != m_vecInventorySlot[uiIdx]->Get_CurItemInfo().chItemType)
 	{
-		ITEM_INFO tItemInfo = m_vecInventorySlot[uiIdx]->Get_CurItemInfo();
+		ITEM_DESC tItemInfo = m_vecInventorySlot[uiIdx]->Get_CurItemInfo();
 		
 		m_vecInventorySlot[uiIdx]->Set_CurItemInfo(NO_ITEM, NO_ITEM, 0);
 		--m_uiCurSlotSize;
@@ -155,7 +155,7 @@ void CInventoryEquipmentMgr::Pop_ItemInventory()
 	{
 		if (NO_ITEM != pSlot->Get_CurItemInfo().chItemType)
 		{
-			ITEM_INFO tItemInfo = pSlot->Get_CurItemInfo();
+			ITEM_DESC tItemInfo = pSlot->Get_CurItemInfo();
 
 			pSlot->Set_CurItemInfo(NO_ITEM, NO_ITEM, 0);
 			--m_uiCurSlotSize;
