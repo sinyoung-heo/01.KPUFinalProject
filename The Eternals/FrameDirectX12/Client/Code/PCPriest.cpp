@@ -132,6 +132,24 @@ HRESULT CPCPriest::LateInit_GameObject()
 	// MiniMap
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::SetUp_MiniMapComponent(0), E_FAIL);
 
+	/*__________________________________________________________________________________________________________
+	[ Skill KeyInput ]
+	____________________________________________________________________________________________________________*/
+	vector<CQuickSlot*> vecQuickSlot = m_pQuickSlotMgr->Get_QuickSlotList();
+
+	m_mapSkillKeyInput[L"AURA_ON"]		= -1;
+	m_mapSkillKeyInput[L"PURIFY"]		= -1;
+	m_mapSkillKeyInput[L"HEAL"]			= -1;
+	m_mapSkillKeyInput[L"MP_CHARGE"]    = -1;
+	m_mapSkillKeyInput[L"HP_POTION"]    = -1;
+	m_mapSkillKeyInput[L"MP_POTION"]    = -1;
+
+	vecQuickSlot[0]->Set_CurQuickSlotName(QUCKSLOT_SKILL_AURA_ON);
+	vecQuickSlot[1]->Set_CurQuickSlotName(QUCKSLOT_SKILL_PURIFY);
+	vecQuickSlot[2]->Set_CurQuickSlotName(QUCKSLOT_SKILL_HEAL);
+	vecQuickSlot[3]->Set_CurQuickSlotName(QUCKSLOT_SKILL_MP_CHARGE);
+	vecQuickSlot[8]->Set_CurQuickSlotName(QUCKSLOT_POTION_HP);
+	vecQuickSlot[9]->Set_CurQuickSlotName(QUCKSLOT_POTION_MP);
 
 	return S_OK;
 }
@@ -1170,7 +1188,7 @@ void CPCPriest::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_bIsSkill  = true;
 			m_uiAnimIdx = Priest::AURA_ON;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+			m_pPacketMgr->send_buff(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"PURIFY"]) && 
 				 NO_EVENT_STATE)
@@ -1179,7 +1197,7 @@ void CPCPriest::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_bIsSkill  = true;
 			m_uiAnimIdx = Priest::PURIFY;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+			m_pPacketMgr->send_buff(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"HEAL"]) && 
 				 NO_EVENT_STATE)
@@ -1189,7 +1207,7 @@ void CPCPriest::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_bIsSkillLoop = true;
 			m_uiAnimIdx = Priest::HEAL_START;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+			m_pPacketMgr->send_buff(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"MP_CHARGE"]) && 
 				 NO_EVENT_STATE)
@@ -1199,7 +1217,7 @@ void CPCPriest::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_bIsSkillLoop = true;
 			m_uiAnimIdx = Priest::MP_CHARGE_START;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
+			m_pPacketMgr->send_buff(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 	}
 	else
@@ -1209,26 +1227,26 @@ void CPCPriest::KeyInput_SkillAttack(const _float& fTimeDelta)
 		{
 			m_uiAnimIdx = Priest::HEAL_LOOP;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+			m_pPacketMgr->send_buff(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
 		}
 		else if (m_uiAnimIdx == Priest::HEAL_LOOP && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
 		{
 			m_uiAnimIdx = Priest::HEAL_SHOT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+			m_pPacketMgr->send_buff(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
 		}
 		// MP_CHARGE
 		else if (m_uiAnimIdx == Priest::MP_CHARGE_START && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
 		{
 			m_uiAnimIdx = Priest::MP_CHARGE_LOOP;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+			m_pPacketMgr->send_buff(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
 		}
 		else if (m_uiAnimIdx == Priest::MP_CHARGE_LOOP && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
 		{
 			m_uiAnimIdx = Priest::MP_CHARGE_END;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
+			m_pPacketMgr->send_buff(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, -1.0f);
 		} 
 	}
 

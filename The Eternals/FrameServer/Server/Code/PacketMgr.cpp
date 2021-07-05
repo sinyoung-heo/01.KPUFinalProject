@@ -311,6 +311,13 @@ void process_packet(int id)
 	}
 	break;
 
+	case CS_BUFF:
+	{
+		cs_packet_attack* p = reinterpret_cast<cs_packet_attack*>(pPlayer->m_packet_start);
+		process_buff(id, p);
+	}
+	break;
+
 	}
 }
 
@@ -1665,6 +1672,56 @@ void process_attack_stop(int id, const _vec3& _vDir, const _vec3& _vPos, int ani
 	for (int server_obj : new_viewlist)
 		cout << "attck_stop" << server_obj << "시야 내에 존재합니다." << endl;
 #endif
+}
+
+void process_buff(const int& id, cs_packet_attack* p)
+{
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pPlayer == nullptr) return;
+
+	/* 해당 플레이어의 원래 시야 목록 */
+	pPlayer->v_lock.lock();
+	unordered_set<int> old_viewlist = pPlayer->view_list;
+	pPlayer->v_lock.unlock();
+
+	/* 버프 타입 확인 */
+	switch (p->animIdx)
+	{
+	case Priest::AURA_ON:
+	{
+	}
+	break;
+
+	case Priest::PURIFY:
+	{
+	}
+	break;
+
+	case Priest::HEAL_START:
+	{
+	}
+	break;
+
+	case Priest::MP_CHARGE_START:
+	{
+	}
+	break;
+	}
+
+	/* 파티 활동 중일 경우 */
+	if (pPlayer->m_bIsPartyState)
+	{
+		for (auto& member : *CObjMgr::GetInstance()->Get_PARTYLIST(pPlayer->m_iPartyNumber))
+		{
+
+		}
+	}
+	/* 개인 활동 중일 경우 */
+	else
+	{
+
+	}
+
 }
 
 void process_stance_change(int id, const bool& stance)

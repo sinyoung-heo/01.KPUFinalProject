@@ -1295,6 +1295,25 @@ void CPacketMgr::send_attack(const _int& iAniIdx, const _vec3& vDir, const _vec3
 	send_packet(&p);
 }
 
+void CPacketMgr::send_buff(const _int& iAniIdx, const _vec3& vDir, const _vec3& vPos, const _float& fEndAngleY)
+{
+	cs_packet_attack p;
+
+	p.size = sizeof(p);
+	p.type = CS_BUFF;
+
+	p.animIdx = iAniIdx;
+	p.posX = vPos.x;
+	p.posY = vPos.y;
+	p.posZ = vPos.z;
+	p.dirX = vDir.x;
+	p.dirY = vDir.y;
+	p.dirZ = vDir.z;
+	p.end_angleY = fEndAngleY;
+
+	send_packet(&p);
+}
+
 void CPacketMgr::send_attack_stop(const _int& iAniIdx, const _vec3& vDir, const _vec3& vPos)
 {
 	cs_packet_attack p;

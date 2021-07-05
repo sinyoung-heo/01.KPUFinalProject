@@ -79,6 +79,7 @@ constexpr char CS_DELETE_ITEM			= 17;	// 아이템 제거
 constexpr char CS_EQUIP_ITEM			= 18;	// 장비 장착
 constexpr char CS_UNEQUIP_ITEM			= 19;	// 장비 해체
 constexpr char CS_SHOP					= 20;	// 상점에서 아이템 거래
+constexpr char CS_BUFF					= 21;
 
 // Stage ID
 constexpr char STAGE_VELIKA				= 0;

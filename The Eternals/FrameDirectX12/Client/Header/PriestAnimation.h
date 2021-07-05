@@ -19,11 +19,11 @@ namespace Priest
 
 	enum STANCE		{ STANCE_NONEATTACK, STANCE_ATTACK, STANCE_END };
 
-	constexpr _float OTHERS_OFFSET	= 0.85f;
+	constexpr float OTHERS_OFFSET	= 0.85f;
 
-	constexpr _float MIN_SPEED       = 0.0f;
-	constexpr _float MAX_SPEED       = 5.0f;
-	constexpr _float MOVE_STOP_SPEED = 3.0f;
+	constexpr float MIN_SPEED       = 0.0f;
+	constexpr float MAX_SPEED       = 5.0f;
+	constexpr float MOVE_STOP_SPEED = 3.0f;
 
 	constexpr _uint HASTE_COLLISIONTICK_START = 32;
 
