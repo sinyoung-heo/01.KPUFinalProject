@@ -925,10 +925,10 @@ void CPCPriest::Set_BlendingSpeed()
 
 void CPCPriest::Set_HpMPGauge()
 {
-	if (m_pInfoCom->m_iHp <= 0)
-		m_pInfoCom->m_iHp = m_pInfoCom->m_iMaxHp;
-	if (m_pInfoCom->m_iMp <= 0)
-		m_pInfoCom->m_iMp = m_pInfoCom->m_iMaxMp;
+	//if (m_pInfoCom->m_iHp <= 0)
+	//	m_pInfoCom->m_iHp = m_pInfoCom->m_iMaxHp;
+	//if (m_pInfoCom->m_iMp <= 0)
+	//	m_pInfoCom->m_iMp = m_pInfoCom->m_iMaxMp;
 
 	if (nullptr != m_pHpGauge && nullptr != m_pMpGauge)
 	{
