@@ -984,6 +984,34 @@ void CPCGladiator::Set_HpMPGauge()
 
 void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 {
+	if (m_uiAnimIdx == Gladiator::STINGER_BLADE)
+	{
+		m_bisSwordsSkillOffset += fTimeDelta;
+		if (m_bisSwordsSkillOffset > 0.45f && m_bisSwordsEffect==false)
+		{
+			m_bisSwordsEffect = true;
+			CEffectMgr::Get_Instance()->Effect_SwordEffect_s(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
+		}
+	}
+	else
+	{
+		m_bisSwordsEffect = false;
+		m_bisSwordsSkillOffset = 0.f;
+	}
+	if (m_uiAnimIdx == Gladiator::JAW_BREAKER)
+	{
+		m_bisSwordsSkill3Offset += fTimeDelta;
+		if (m_bisSwordsSkill3Offset > 0.15f && m_bisIce_mEffect ==false)
+		{
+			m_bisIce_mEffect = true;
+			CEffectMgr::Get_Instance()->Effect_SwordTrail(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
+		}
+	}
+	else
+	{
+		m_bisIce_mEffect = false;
+		m_bisSwordsSkill3Offset = 0.f;
+	}
 	if (m_uiAnimIdx == Gladiator::DRAW_SWORD_CHARGE && m_bisDustEffect==false)
 	{
 		m_bisDustEffect = true;
@@ -1062,23 +1090,9 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 
 	if (Engine::KEY_DOWN(DIK_0) && NO_EVENT_STATE)
 	{
-		//Engine::CGameObject* pWarningFrame = m_pObjectMgr->Get_GameObject(L"Layer_UI", L"WarningFrame");
-		//static_cast<CWarningFrame*>(pWarningFrame)->Set_IsRender(true);
-
-		CEffectMgr::Get_Instance()->Effect_Test(m_pTransCom->m_vPos);
-		/*Engine::CGameObject* pWarningFrame = m_pObjectMgr->Get_GameObject(L"Layer_UI", L"WarningFrame");
-		static_cast<CWarningFrame*>(pWarningFrame)->Set_IsRender(true);*/
-
-	/*	Engine::CGameObject* pGameObj = nullptr;
-		for (int i = 0; i < 36; i++)
-		{
-			pGameObj = CIceStorm::Create(m_pGraphicDevice, m_pCommandList,
-										 L"IceStorm1",
-										 _vec3(0.f),
-										 _vec3(0.f, 0.0f, 0.0f),
-										 _vec3(0, 0, 0), 5.f, XMConvertToRadians(i * 10.f));
-			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"IceStorm1", pGameObj), E_FAIL);
-		}*/
+		
+		CEffectMgr::Get_Instance()->Effect_SwordTrail(m_pTransCom->m_vPos,m_pTransCom->m_vDir);
+		
 	}
 
 	// StageChange Stage WINTER

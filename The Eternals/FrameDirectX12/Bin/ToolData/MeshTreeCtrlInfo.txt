@@ -67,8 +67,10 @@ StaticMesh|Plane|PublicTornado01
 StaticMesh|publicEffect|IceStorm0
 StaticMesh|publicEffect|IceStorm1
 StaticMesh|publicEffect|publicShield
+StaticMesh|publicEffect|publicSkill3
 StaticMesh|publicEffect|publicSphere
 StaticMesh|publicEffect|publicSpline
+StaticMesh|publicEffect|publicSword
 StaticMesh|Sample|DistortDisk
 StaticMesh|Sample|LandMark
 StaticMesh|Sample|LandMarkBoundary

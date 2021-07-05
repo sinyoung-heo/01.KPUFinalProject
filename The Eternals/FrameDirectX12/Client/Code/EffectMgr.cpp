@@ -16,6 +16,8 @@
 #include "MagicCircleGlow.h"
 #include "GridShieldEffect.h"
 #include "EffectShield.h"
+#include "SwordEffect_s.h"
+#include "IceStorm_m.h"
 IMPLEMENT_SINGLETON(CEffectMgr)
 
 CEffectMgr::CEffectMgr()
@@ -74,7 +76,50 @@ void CEffectMgr::Effect_SwordEffect(_vec3 vecPos,_vec3 vecDir)
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"SwordEffect", pGameObj), E_FAIL);
 
 
+}
 
+void CEffectMgr::Effect_SwordEffect_s(_vec3 vecPos, _vec3 vecDir)
+{
+	_vec3 upVec = _vec3(0, 1, 0);
+	_vec3 crossVec = upVec.Cross_InputV1(vecDir);
+
+	for (int i = -6; i <= 6; i+=3)
+	{
+		_vec3 newPos = vecPos - crossVec * (1.5f) * i;
+		newPos -= (vecDir * (18 - abs( i)));
+		pGameObj = CSwordEffect_s::Create(m_pGraphicDevice, m_pCommandList,
+			L"publicSword",
+			_vec3(0.f),
+			_vec3(0.f, 0.f, 0.f),
+			newPos//Pos
+			, vecDir, 0
+		);
+		static_cast<CSwordEffect_s*>(pGameObj)->Set_isScaleAnim(true);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"publicSword", pGameObj), E_FAIL);
+	}
+}
+
+void CEffectMgr::Effect_SwordTrail(_vec3 vecPos, _vec3 vecDir)
+{
+	_matrix rotationY=XMMatrixRotationY(XMConvertToRadians(20.f));
+	XMVECTOR temp= XMVector3TransformCoord(vecDir.Get_XMVECTOR(), rotationY);
+	
+	_vec3 DirectVec;
+	XMStoreFloat3(&DirectVec, temp);
+	DirectVec.Normalize();
+	for (int i = 0; i < 13; i++)
+	{
+		_vec3 PosOffSet = vecDir * 2.f + (DirectVec *(1+ i)*(1+powf(i/13,2)));
+		pGameObj = CIceStorm_m::Create(m_pGraphicDevice, m_pCommandList,
+			L"publicSkill3",
+			_vec3(0.f),
+			_vec3(rand() % 20 - 10,m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->m_vAngle.y
+				,rand()%20 - 10),
+			vecPos+ PosOffSet
+			, 0.05f + (0.02f * i)
+		);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"publicSkill3", pGameObj), E_FAIL);
+	}
 }
 
 void CEffectMgr::Effect_FireDecal(_vec3 vecPos)
@@ -114,17 +159,6 @@ void CEffectMgr::Effect_ArrowHitted(_vec3 vecPos)
 void CEffectMgr::Effect_FireCone(_vec3 vecPos, float RotY , _vec3 vecDir)
 {
 	vecPos.y = 0.5f;
-	//Effect_FireDecal(vecPos);
-	vecPos.y = 1.5f;
-
-	//pGameObj = CMagicCircle::Create(m_pGraphicDevice, m_pCommandList,
-	//	L"PublicPlane00",
-	//	_vec3(0.000f),
-	//	_vec3(0.f, 0.0f, 0.0f), vecPos);
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicPlane00", pGameObj), E_FAIL);
-	//static_cast<CMagicCircle*>(pGameObj)->Set_TexIDX(1, 1, 2);
-	//static_cast<CMagicCircle*>(pGameObj)->Set_isScaleAnim(true);
-	//static_cast<CMagicCircle*>(pGameObj)->Set_isRotate(true);
 
 	pGameObj = CFireRing::Create(m_pGraphicDevice, m_pCommandList,
 		L"HalfMoon0",
@@ -148,16 +182,6 @@ void CEffectMgr::Effect_FireCone(_vec3 vecPos, float RotY , _vec3 vecDir)
 		);
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicCylinder01", pGameObj), E_FAIL);
 	}
-	
-
-	//pGameObj = CFrameMesh::Create(m_pGraphicDevice, m_pCommandList,
-	//	L"PublicCylinder01",
-	//	_vec3(0.015f,20.5,0.015),
-	//	_vec3(-0.f, RotY, -0.f),
-	//	vecPos//Pos
-	//	, FRAME(8, 8, 128)
-	//);
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicCylinder01", pGameObj), E_FAIL);
 }
 
 void CEffectMgr::Effect_Test(_vec3 vecPos)
