@@ -33,7 +33,7 @@ void Initialize_Monster();			// Create Monster(test)
 void Delete_Monster();				// Delete All MONSTER
 
 void add_new_client(SOCKET ns);		// 새로운 유저 접속 함수
-void disconnect_client(int id);		// 유저 접속 종료 함수
+void disconnect_client(const int& id);		// 유저 접속 종료 함수
 
 void time_worker();					// Timer Thread Enter Function
 void worker_thread();				// Worker Thread Enter Function
@@ -432,7 +432,7 @@ void add_new_client(SOCKET ns)
 	AcceptEx(g_hListenSock, cSocket, g_accept_over.iocp_buf, 0, 32, 32, NULL, &g_accept_over.wsa_over);
 }
 
-void disconnect_client(int id)
+void disconnect_client(const int& id)
 {
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 

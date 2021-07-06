@@ -728,7 +728,7 @@ bool CNpc::Is_AnimationSetEnd(const float& fTimeDelta)
 	return false;
 }
 
-void CNpc::send_NPC_enter_packet(int to_client)
+void CNpc::send_NPC_enter_packet(const int& to_client)
 {
 	sc_packet_npc_enter p;
 
@@ -752,7 +752,7 @@ void CNpc::send_NPC_enter_packet(int to_client)
 	send_packet(to_client, &p);
 }
 
-void CNpc::send_NPC_move_packet(int to_client, int ani)
+void CNpc::send_NPC_move_packet(const int& to_client, const int& ani)
 {
 	sc_packet_move p;
 
@@ -774,7 +774,7 @@ void CNpc::send_NPC_move_packet(int to_client, int ani)
 	send_packet(to_client, &p);
 }
 
-void CNpc::send_NPC_animation_packet(int to_client, int ani)
+void CNpc::send_NPC_animation_packet(const int& to_client, const int& ani)
 {
 	sc_packet_animationIndex p;
 

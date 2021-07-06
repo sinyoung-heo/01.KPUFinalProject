@@ -973,7 +973,7 @@ HRESULT CObjMgr::Leave_Party(int* iPartyNumber, const int& server_num)
 		m_mapPartyList.erase(*iPartyNumber);
 	}
 
-	Print_PartyInfo(*iPartyNumber);
+	//Print_PartyInfo(*iPartyNumber);
 
 	*iPartyNumber = INIT_PARTY_NUMBER;
 

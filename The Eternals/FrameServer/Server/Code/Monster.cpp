@@ -3936,7 +3936,7 @@ void CMonster::Hurt_Monster(const int& p_id, const int& damage, const char& affe
 			pPlayer->m_iMinAtt	+= pPlayer->m_iLevel * INCREASE_ATT;
 			pPlayer->m_iMaxAtt	+= pPlayer->m_iLevel * INCREASE_ATT;
 		}
-		send_player_stat(p_id, p_id);
+		pPlayer->send_player_stat(p_id);
 
 		Change_DeadMode();
 		return;
@@ -4267,7 +4267,7 @@ void CMonster::nonActive_monster()
 	}
 }
 
-void CMonster::send_Monster_enter_packet(int to_client)
+void CMonster::send_Monster_enter_packet(const int& to_client)
 {
 	sc_packet_monster_enter p;
 
@@ -4298,7 +4298,7 @@ void CMonster::send_Monster_enter_packet(int to_client)
 	send_packet(to_client, &p);
 }
 
-void CMonster::send_Monster_move_packet(int to_client, int ani)
+void CMonster::send_Monster_move_packet(const int& to_client, const int& ani)
 {
 	sc_packet_move p;
 
@@ -4320,7 +4320,7 @@ void CMonster::send_Monster_move_packet(int to_client, int ani)
 	send_packet(to_client, &p);
 }
 
-void CMonster::send_Monster_NormalAttack(int to_client,int ani)
+void CMonster::send_Monster_NormalAttack(const int& to_client, const int& ani)
 {
 	sc_packet_monster_attack p;
 
@@ -4337,7 +4337,7 @@ void CMonster::send_Monster_NormalAttack(int to_client,int ani)
 	send_packet(to_client, &p);
 }
 
-void CMonster::send_Monster_RushAttack(int to_client, int ani)
+void CMonster::send_Monster_RushAttack(const int& to_client, const int& ani)
 {
 	sc_packet_monster_rushAttack p;
 
@@ -4358,7 +4358,7 @@ void CMonster::send_Monster_RushAttack(int to_client, int ani)
 	send_packet(to_client, &p);
 }
 
-void CMonster::send_Monster_Stat(int to_client)
+void CMonster::send_Monster_Stat(const int& to_client)
 {
 	sc_packet_stat_change p;
 
@@ -4373,7 +4373,7 @@ void CMonster::send_Monster_Stat(int to_client)
 	send_packet(to_client, &p);
 }
 
-void CMonster::send_Monster_Dead(int to_client, int ani)
+void CMonster::send_Monster_Dead(const int& to_client, const int& ani)
 {
 	sc_packet_animationIndex p;
 
@@ -4386,7 +4386,7 @@ void CMonster::send_Monster_Dead(int to_client, int ani)
 	send_packet(to_client, &p);
 }
 
-void CMonster::send_Monster_animation_packet(int to_client, int ani)
+void CMonster::send_Monster_animation_packet(const int& to_client, const int& ani)
 {
 	sc_packet_animationIndex p;
 
@@ -4399,7 +4399,7 @@ void CMonster::send_Monster_animation_packet(int to_client, int ani)
 	send_packet(to_client, &p);
 }
 
-void CMonster::send_Monster_Knockback(int to_client, int ani)
+void CMonster::send_Monster_Knockback(const int& to_client, const int& ani)
 {
 	sc_packet_monster_knockback p;
 
