@@ -318,6 +318,13 @@ void process_packet(int id)
 	}
 	break;
 
+	case CS_DRINK_POTION:
+	{
+		cs_packet_potion* p = reinterpret_cast<cs_packet_potion*>(pPlayer->m_packet_start);
+		process_use_potion(id, p->bIsPotionHP);
+	}
+	break;
+
 	}
 }
 
@@ -611,18 +618,27 @@ void send_player_stat(int to_client, int id)
 	send_packet(to_client, &p);
 }
 
-void send_buff_stat(const int& to_client, const int& ani, const int& hp, const int& maxHp, const int& mp, const int& maxMp)
+void send_buff_stat(const int& to_client, const int& priest_id, const int& ani,
+					const int& hp, const int& maxHp, const int& mp, const int& maxMp,
+					const int& priest_hp, const int& priest_maxHp, const int& priest_mp, const int& priest_maxMp)
 {
 	sc_packet_buff p;
 
-	p.size		= sizeof(p);
-	p.type		= SC_PACKET_BUFF;
+	p.size			= sizeof(p);
+	p.type			= SC_PACKET_BUFF;
 
-	p.animIdx	= ani;
-	p.hp		= hp;
-	p.maxHp		= maxHp;
-	p.mp		= mp;
-	p.maxMp		= maxMp;
+	p.animIdx		= ani;
+	p.priest_id		= priest_id;
+
+	p.hp			= hp;
+	p.maxHp			= maxHp;
+	p.mp			= mp;
+	p.maxMp			= maxMp;
+
+	p.priest_hp		= priest_hp;
+	p.priest_maxHp	= priest_maxHp;
+	p.priest_mp		= priest_mp;
+	p.priest_maxMp	= priest_maxMp;
 
 	send_packet(to_client, &p);
 }
@@ -825,6 +841,37 @@ void send_user_money(const int& to_client, const int& money)
 	// money
 	p.id = money;
 
+	send_packet(to_client, &p);
+}
+
+void send_drink_portion(const int& to_client, const int& ability, const char& chItemType, const char& chName, const int& count, const bool& isPushItem)
+{
+	sc_packet_potion p;
+
+	p.size			= sizeof(p);
+	p.type			= SC_PACKET_DRINK_POTION;
+
+	p.itemType		= chItemType;
+	p.itemName		= chName;
+	p.count			= count;
+	p.is_pushItem	= isPushItem;
+	p.ability		= ability;
+	
+	send_packet(to_client, &p);
+}
+
+void send_consume_point(const int& to_client, const int& hp, const int& maxHp, const int& mp, const int& maxMp)
+{
+	sc_packet_update_party p;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_CONSUME_POINT;
+
+	p.hp	= hp;
+	p.maxHp = maxHp;
+	p.mp	= mp;
+	p.maxMp = maxMp;
+	
 	send_packet(to_client, &p);
 }
 
@@ -1913,7 +1960,7 @@ void process_buff(const int& id, cs_packet_attack* p)
 		pPlayer->m_iMp -= Priest::AMOUNT_PURIFY;
 	}
 	break;
-	// HP
+
 	case Priest::HEAL_START:
 	{
 		pPlayer->m_iMp -= Priest::AMOUNT_HEAL;
@@ -1924,7 +1971,7 @@ void process_buff(const int& id, cs_packet_attack* p)
 			pPlayer->m_iHp = pPlayer->m_iMaxHp;
 	}
 	break;
-	// MP
+
 	case Priest::MP_CHARGE_START:
 	{
 		pPlayer->m_iMp += Priest::PLUS_MP;
@@ -1936,7 +1983,7 @@ void process_buff(const int& id, cs_packet_attack* p)
 	}
 
 	/* 해당 유저 능력치 업데이트 */
-	send_buff_stat(id, p->animIdx, pPlayer->m_iHp, pPlayer->m_iMaxHp, pPlayer->m_iMp, pPlayer->m_iMaxMp);
+	send_consume_point(id, pPlayer->m_iHp, pPlayer->m_iMaxHp, pPlayer->m_iMp, pPlayer->m_iMaxMp);
 
 	/* 파티 활동 중일 경우 */
 	if (pPlayer->m_bIsPartyState)
@@ -1950,7 +1997,6 @@ void process_buff(const int& id, cs_packet_attack* p)
 
 			switch (p->animIdx)
 			{
-			// HP
 			case Priest::HEAL_START:
 			{
 				pOther->m_iHp += Priest::PLUS_HP;
@@ -1959,7 +2005,7 @@ void process_buff(const int& id, cs_packet_attack* p)
 					pOther->m_iHp = pOther->m_iMaxHp;
 			}
 			break;
-			// MP
+		
 			case Priest::MP_CHARGE_START:
 			{
 				pOther->m_iMp += Priest::PLUS_MP;
@@ -1969,8 +2015,11 @@ void process_buff(const int& id, cs_packet_attack* p)
 			}
 			break;
 			}		
-			send_buff_stat(member, p->animIdx, pOther->m_iHp, pOther->m_iMaxHp, pOther->m_iMp, pOther->m_iMaxMp);
-			send_update_party(member, id, pPlayer->m_iHp, pPlayer->m_iMaxHp, pPlayer->m_iMp, pPlayer->m_iMaxMp);
+
+			// 파티원 버프 능력치 전송
+			send_buff_stat(member, id, p->animIdx, 
+						   pOther->m_iHp, pOther->m_iMaxHp, pOther->m_iMp, pOther->m_iMaxMp,
+						   pPlayer->m_iHp, pPlayer->m_iMaxHp, pPlayer->m_iMp, pPlayer->m_iMaxMp);
 		}
 	}
 }
@@ -2482,6 +2531,48 @@ void process_logoutForEquipment(const int& id, const char& chItemSlotType, const
 	pUser->m_iMaxHp		-= CItemMgr::GetInstance()->Get_Item(itemNumber).iHp;
 	pUser->m_iMp		-= CItemMgr::GetInstance()->Get_Item(itemNumber).iMp;
 	pUser->m_iMaxMp		-= CItemMgr::GetInstance()->Get_Item(itemNumber).iMp;
+}
+
+void process_use_potion(const int& id, const bool& bIsPotionHP)
+{
+	CPlayer* pUser = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pUser == nullptr) return;
+	if (!pUser->m_bIsConnect) return;
+	
+	// HP Potion
+	if (bIsPotionHP)
+	{	
+		if (pUser->Delete_Item(30, ITEM::ITEM_ETC))
+		{
+			pUser->m_iHp += Item_Potion_HP_HP * pUser->m_iMaxHp / 100;
+			if (pUser->m_iHp >= pUser->m_iMaxHp)
+				pUser->m_iHp = pUser->m_iMaxHp;
+
+			send_drink_portion(id, pUser->m_iHp, ItemType_Potion, Potion_HP, pUser->Get_ItemCount(30, ITEM::ITEM_ETC), false);	
+		}
+	}
+	// MP Potion
+	else
+	{
+		if (pUser->Delete_Item(31, ITEM_ETC))
+		{
+			pUser->m_iMp += Item_Potion_MP_MP * pUser->m_iMaxMp / 100;
+			if (pUser->m_iMp >= pUser->m_iMaxMp)
+				pUser->m_iMp = pUser->m_iMaxMp;
+
+			send_drink_portion(id, pUser->m_iMp, ItemType_Potion, Potion_MP, pUser->Get_ItemCount(31, ITEM::ITEM_ETC), false);
+		}
+	}
+
+	/* 해당 유저가 파티에 가입되어 있는 상태일 경우 파티원에게 전송 */
+	if (pUser->m_bIsPartyState)
+	{
+		for (auto& p : *CObjMgr::GetInstance()->Get_PARTYLIST(pUser->m_iPartyNumber))
+		{
+			if (p == id) continue;
+			send_update_party(p, id, pUser->m_iHp, pUser->m_iMaxHp, pUser->m_iMp, pUser->m_iMaxMp);
+		}
+	}
 }
 
 /*===========================================FUNC====================================================*/

@@ -58,6 +58,8 @@ constexpr char SC_PACKET_UPDATE_EQUIPMENT	= 29;
 constexpr char SC_PACKET_LOAD_EQUIPMENT		= 30;
 constexpr char SC_PACKET_UPDATE_MONEY		= 31;
 constexpr char SC_PACKET_BUFF				= 32;
+constexpr char SC_PACKET_DRINK_POTION		= 33;
+constexpr char SC_PACKET_CONSUME_POINT		= 34;
 
 constexpr char CS_LOGIN					= 0;
 constexpr char CS_MOVE					= 1;
@@ -80,7 +82,8 @@ constexpr char CS_DELETE_ITEM			= 17;	// 아이템 제거
 constexpr char CS_EQUIP_ITEM			= 18;	// 장비 장착
 constexpr char CS_UNEQUIP_ITEM			= 19;	// 장비 해체
 constexpr char CS_SHOP					= 20;	// 상점에서 아이템 거래
-constexpr char CS_BUFF					= 21;
+constexpr char CS_BUFF					= 21;	// 버프 스킬 사용
+constexpr char CS_DRINK_POTION			= 22;	// 포션 사용
 
 // Stage ID
 constexpr char STAGE_VELIKA				= 0;
@@ -253,11 +256,18 @@ struct sc_packet_buff
 {
 	unsigned char	size;
 	char			type;
+	int				priest_id;
 
 	int				hp;
 	int				maxHp;
 	int				mp;
 	int				maxMp;
+
+	int				priest_hp;
+	int				priest_maxHp;
+	int				priest_mp;
+	int				priest_maxMp;
+
 	int				animIdx;
 };
 
@@ -433,6 +443,18 @@ struct sc_packet_load_equipment
 	char			itemName[EQUIP_END];
 };
 
+struct sc_packet_potion
+{
+	unsigned char	size;
+	char			type;
+
+	char			itemType;
+	char			itemName;
+	bool			is_pushItem;
+	int				count;
+	int				ability;
+};
+
 /* ___________________________________________________________________________________________________________________*/
 /*													CLIENT -> SERVER												  */
 /* ___________________________________________________________________________________________________________________*/
@@ -577,6 +599,14 @@ struct cs_packet_shop
 	char			sellItemType[SHOP_SLOT];
 	char			sellItemName[SHOP_SLOT];
 	char			sellItemCount[SHOP_SLOT];
+};
+
+struct cs_packet_potion
+{
+	unsigned char	size;
+	char			type;
+
+	bool			bIsPotionHP;
 };
 
 #pragma pack (pop)

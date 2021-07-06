@@ -46,18 +46,19 @@ public:
 	void    send_attackByMonster(int objID, const _int& iDamage);
 	void    send_attackToMonster(int objID, const _int& iDamage, const char& affect = AFFECT_FINCH);
 	void	send_stage_change(const char& chStageId);
-	void	send_suggest_party(const int& others_id);							// 파티 초대
-	void	send_respond_party(const bool& result, const int& suggester_id);	// 파티 초대에 대한 응답
-	void	send_join_party(const int& others_id);								// 파티 참여 신청
-	void	send_decide_party(const bool& result, const int& joinner_id);		// 파티 참여 신청에 대한 응답
+	void	send_suggest_party(const int& others_id);													// 파티 초대
+	void	send_respond_party(const bool& result, const int& suggester_id);							// 파티 초대에 대한 응답
+	void	send_join_party(const int& others_id);														// 파티 참여 신청
+	void	send_decide_party(const bool& result, const int& joinner_id);								// 파티 참여 신청에 대한 응답
 	void	send_leave_party(const int& myId);
 	void	send_logout();
 	void	send_chat(const wchar_t* message);
-	void	send_add_item(const char& chItemType, const char& chName);			// 인벤토리 아이템 추가
-	void	send_delete_item(const char& chItemType, const char& chName);		// 인벤토리 아이템 제거
+	void	send_add_item(const char& chItemType, const char& chName);									// 인벤토리 아이템 추가
+	void	send_delete_item(const char& chItemType, const char& chName);								// 인벤토리 아이템 제거
 	void	send_equip_item(const char& chSlotType, const char& chItemType, const char& chName);		// 장비 장착 
 	void	send_unequip_item(const char& chSlotType, const char& chItemType, const char& chName);		// 장비 해체 
 	void	send_deal_shop(vector<CStoreBuyListSlot*>& buyList, vector<CStoreSellListSlot*>& sellList);	// 상점 거래
+	void	send_use_potion(const bool& bIsPotionHP);
 
 public:
 	bool	change_MoveKey(MVKEY eKey);
@@ -81,6 +82,9 @@ public:
 	void	update_inventory(sc_packet_update_inventory* packet);
 	void	Update_Equipment(sc_packet_update_equipment* packet);
 	void	Update_UserMoney(sc_packet_leave* packet);
+	void	Consume_Point(sc_packet_update_party* packet);		// hp,mp 업데이트
+	void	BuffToUpgrade(sc_packet_buff* packet);				// buff 효과
+	void	Drink_Potion(sc_packet_potion* packet);
 
 	void	Enter_Monster(sc_packet_monster_enter* packet);
 	void	Move_Monster(sc_packet_move* packet);

@@ -443,12 +443,12 @@ void CStoreItemSlot::SetUp_ItemIcon()
 		switch (m_tCurItemInfo.chItemName)
 		{
 		case Potion_HP:
-			m_uiPrice = Item_Prtion_HP_COST;
+			m_uiPrice = Item_Potion_HP_COST;
 			m_uiTexIdx = 0;
 			m_wstrFontText = L"HP Potion  %d G";
 			break;
 		case Potion_MP:
-			m_uiPrice = Item_Prtion_MP_COST;
+			m_uiPrice = Item_Potion_MP_COST;
 			m_uiTexIdx = 1;
 			m_wstrFontText = L"MP Potion  %d G";
 			break;

@@ -430,7 +430,6 @@ void CPacketMgr::Process_packet()
 	case SC_PACKET_UPDATE_MONEY:
 	{
 		sc_packet_leave* packet = reinterpret_cast<sc_packet_leave*>(m_packet_start);
-
 		Update_UserMoney(packet);
 	}
 	break;
@@ -438,11 +437,21 @@ void CPacketMgr::Process_packet()
 	case SC_PACKET_BUFF:
 	{
 		sc_packet_buff* packet = reinterpret_cast<sc_packet_buff*>(m_packet_start);
+		BuffToUpgrade(packet);
+	}
+	break;
 
-		Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
-		pThisPlayer->Set_Buff(packet->hp, packet->maxHp, packet->mp, packet->maxMp);
-		pThisPlayer->Buff_AllPartyMemeber(packet->animIdx);	
-		m_pPartySystemMgr->Update_ThisPlayerPartyList();
+	case SC_PACKET_CONSUME_POINT:
+	{
+		sc_packet_update_party* packet = reinterpret_cast<sc_packet_update_party*>(m_packet_start);
+		Consume_Point(packet);
+	}
+	break;
+
+	case SC_PACKET_DRINK_POTION:
+	{
+		sc_packet_potion* packet = reinterpret_cast<sc_packet_potion*>(m_packet_start);
+		Drink_Potion(packet);			
 	}
 	break;
 
@@ -452,6 +461,35 @@ void CPacketMgr::Process_packet()
 #endif 
 		break;
 	}
+}
+
+void CPacketMgr::Drink_Potion(sc_packet_potion* packet)
+{
+	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+
+	/* 인벤토리 아이템 제거 */
+	CInventoryEquipmentMgr::Get_Instance()->Pop_ItemInventory(packet->itemType, packet->itemName);
+
+	if (packet->itemName == Potion_HP)
+		pThisPlayer->Set_PotionAbility(packet->ability, true);
+	else
+		pThisPlayer->Set_PotionAbility(packet->ability, false);
+}
+
+void CPacketMgr::Consume_Point(sc_packet_update_party* packet)
+{
+	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+	pThisPlayer->Set_Buff(packet->hp, packet->maxHp, packet->mp, packet->maxMp);
+}
+
+void CPacketMgr::BuffToUpgrade(sc_packet_buff* packet)
+{
+	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+	pThisPlayer->Set_Buff(packet->hp, packet->maxHp, packet->mp, packet->maxMp);
+
+	pThisPlayer->Buff_AllPartyMemeber(packet->animIdx);
+	pThisPlayer->Update_PartyMember(packet->priest_id, packet->priest_hp, packet->priest_maxHp, packet->priest_mp, packet->priest_maxMp);
+	m_pPartySystemMgr->Update_ThisPlayerPartyList();
 }
 
 void CPacketMgr::Update_UserMoney(sc_packet_leave* packet)
@@ -1562,6 +1600,18 @@ void CPacketMgr::send_deal_shop(vector<CStoreBuyListSlot*>& buyList, vector<CSto
 		p.sellItemName[i]  = sellList[i]->Get_CurItemInfo().chItemName;
 		p.sellItemCount[i] = sellList[i]->Get_CurItemCnt();
 	}
+
+	send_packet(&p);
+}
+
+void CPacketMgr::send_use_potion(const bool& bIsPotionHP)
+{
+	cs_packet_potion p;
+
+	p.size = sizeof(p);
+	p.type = CS_DRINK_POTION;
+
+	p.bIsPotionHP = bIsPotionHP;
 
 	send_packet(&p);
 }

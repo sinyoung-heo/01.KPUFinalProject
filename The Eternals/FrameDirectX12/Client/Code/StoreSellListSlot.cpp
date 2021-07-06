@@ -415,11 +415,11 @@ void CStoreSellListSlot::SetUp_ItemIcon()
 		switch (m_tCurItemInfo.chItemName)
 		{
 		case Potion_HP:
-			m_iPrice = Item_Prtion_HP_COST;
+			m_iPrice = Item_Potion_HP_COST;
 			m_uiTexIdx = 0;
 			break;
 		case Potion_MP:
-			m_iPrice = Item_Prtion_MP_COST;
+			m_iPrice = Item_Potion_MP_COST;
 			m_uiTexIdx = 1;
 			break;
 		}
