@@ -4,6 +4,7 @@
 #include "GraphicDevice.h"
 #include "TextureDistortion.h"
 #include "TimeMgr.h"
+#include "DescriptorHeapMgr.h"
 CTextureEffect::CTextureEffect(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
@@ -19,19 +20,15 @@ HRESULT CTextureEffect::Ready_GameObject(wstring wstrTextureTag,
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrTextureTag), E_FAIL);
 
 	m_strTextag = wstrTextureTag;
-	m_pTransCom->m_vScale	= vScale;
-	m_pTransCom->m_vAngle	= vAngle;
-	m_pTransCom->m_vPos		= vPos;
-	m_vColorOffset = _vec4(0, 0, 0, 1);
+	m_pTransCom->m_vScale = vScale;
+	m_pTransCom->m_vAngle = vAngle;
+	m_pTransCom->m_vPos = vPos;
 	// BoundingBox.
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
-										   m_pTransCom->m_vScale,
-										   _vec3(0.0f, 0.0f ,0.0f),
-										   _vec3(0.5f, 0.5f ,0.0f),
-										   _vec3(-0.5f, -0.5f ,0.0f));
-
-	m_uiTexIdx	= 0;
-	m_tFrame	= tFrame;
+		m_pTransCom->m_vScale,
+		_vec3(0.0f, 0.0f, 0.0f),
+		_vec3(0.5f, 0.5f, 0.0f),
+		_vec3(-0.5f, -0.5f, 0.0f));
 	
 	return S_OK;
 }
@@ -60,14 +57,24 @@ _int CTextureEffect::Update_GameObject(const _float & fTimeDelta)
 	if(m_bisInit==false)
 		Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
-
-
+	if (m_bIsReturn)
+	{
+		m_pTextureHeap = nullptr;
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_TextureEffect(), m_uiInstanceIdx);
+		return RETURN_OBJ;
+	}
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
 	m_fDeltatime += fTimeDelta;
+	m_fDeltaTime += fTimeDelta;
 	if (m_bisFollowHand)
 	{
+		if (m_fDeltaTime > 0.05f)
+		{
+			CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 1, L"Lighting0", _vec3(0.4f));
+			m_fDeltaTime = 0.f;
+		}
 		Follow_PlayerHand();
 		m_pTransCom->m_vScale.x += 1.75f * fTimeDelta;
 		m_pTransCom->m_vScale.y += 1.75f * fTimeDelta;
@@ -116,9 +123,12 @@ _int CTextureEffect::LateUpdate_GameObject(const _float & fTimeDelta)
 
 void CTextureEffect::Render_GameObject(const _float & fTimeDelta)
 {
+	if (m_pTextureHeap == nullptr)
+		return;
+
 	Set_ConstantTable();
-	m_pTextureCom->Get_TexDescriptorHeap()->GetDesc().NumDescriptors;
-	m_pShaderCom->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), 0, m_uiTexIdx, Engine::MATRIXID::PROJECTION);
+	/*m_pTextureCom->Get_TexDescriptorHeap()->GetDesc().NumDescriptors;*/
+	m_pShaderCom->Begin_Shader(m_pTextureHeap, 0, m_uiTexIdx, Engine::MATRIXID::PROJECTION);
 	m_pBufferCom->Begin_Buffer();
 
 	m_pBufferCom->Render_Buffer();
@@ -130,12 +140,6 @@ void CTextureEffect::Set_EffectInfo(int PipelineState, bool PlayerFollow)
 
 void CTextureEffect::Follow_PlayerHand(Engine::HIERARCHY_DESC* pHierarchyDesc,Engine::CTransform * PlayerTransform)
 {
-	if (m_bisFollowHandInit == false)
-	{
-		m_bisFollowHandInit = true;
-		m_pPlayerTransform = PlayerTransform;
-		m_pHierarchyDesc = pHierarchyDesc;
-	}
 	
 	_matrix matBoneFinalTransform = INIT_MATRIX;
 	_matrix matWorld = INIT_MATRIX;
@@ -153,7 +157,7 @@ void CTextureEffect::ScaleAnim(const _float& fTimeDelta)
 	m_fScaleTimeDelta += (fTimeDelta*10);
 	m_pTransCom->m_vScale = _vec3(sin(m_fScaleTimeDelta));
 	if (sin(m_fScaleTimeDelta) > 0.9f)
-		m_bIsDead = true;
+		m_bIsReturn = true;
 
 }
 
@@ -167,11 +171,11 @@ HRESULT CTextureEffect::Add_Component(wstring wstrTextureTag)
 	m_pBufferCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Buffer", m_pBufferCom);
 
-	// Texture
-	m_pTextureCom = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(wstrTextureTag, Engine::COMPONENTID::ID_STATIC));
-	Engine::NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
-	m_pTextureCom->AddRef();
-	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Texture", m_pTextureCom);
+	//// Texture
+	//m_pTextureCom = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(wstrTextureTag, Engine::COMPONENTID::ID_STATIC));
+	//Engine::NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
+	//m_pTextureCom->AddRef();
+	//m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Texture", m_pTextureCom);
 
 	// Shader
 	m_pShaderCom = static_cast<Engine::CShaderTexture*>(m_pComponentMgr->Clone_Component(L"ShaderTexture", Engine::COMPONENTID::ID_STATIC));
@@ -218,9 +222,43 @@ void CTextureEffect::Update_SpriteFrame(const _float & fTimeDelta)
 	{
 		m_tFrame.fCurScene = 0.0f;
 		if (!m_bisLoop)
-			m_bIsDead = true;
+			m_bIsReturn = true;
 	}
 
+}
+
+void CTextureEffect::Set_CreateInfo(wstring TexTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos,
+	 const FRAME& tFrame, bool isLoop, bool isScaleAnim , _vec4 colorOffset
+,  bool isFollowHand , Engine::HIERARCHY_DESC* hierachy , Engine::CTransform* parentTransform )
+{
+	if (nullptr == m_pTextureHeap)
+		m_pTextureHeap = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(TexTag);
+
+	m_pTransCom->m_vScale = vScale;
+	m_pTransCom->m_vAngle = vAngle;
+	m_pTransCom->m_vPos = vPos;
+	m_vColorOffset = colorOffset;
+	// BoundingBox.
+	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
+		m_pTransCom->m_vScale,
+		_vec3(0.0f, 0.0f, 0.0f),
+		_vec3(0.5f, 0.5f, 0.0f),
+		_vec3(-0.5f, -0.5f, 0.0f));
+
+	m_fDeltatime = 0.f;
+	m_fAlpha = 1.f;
+	m_bisInit = false;
+	m_uiTexIdx = 0;
+	m_tFrame = tFrame;
+
+	m_bisBillBoard = true;
+	m_bisAlphaObject = true;
+	m_bisLoop = isLoop;
+	m_bisScaleAnimation = isScaleAnim;
+	m_fScaleTimeDelta = 0.f;
+	m_bisFollowHand = isFollowHand;
+	m_pHierarchyDesc = hierachy;
+	m_pPlayerTransform = parentTransform;
 }
 
 Engine::CGameObject* CTextureEffect::Create(ID3D12Device * pGraphicDevice,
@@ -239,10 +277,22 @@ Engine::CGameObject* CTextureEffect::Create(ID3D12Device * pGraphicDevice,
 	return pInstance;
 }
 
+CTextureEffect** CTextureEffect::Create_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, const _uint& uiInstanceCnt)
+{
+	CTextureEffect** ppInstance = new (CTextureEffect * [uiInstanceCnt]);
+	for (_uint i = 0; i < uiInstanceCnt; ++i)
+	{
+		ppInstance[i] = new CTextureEffect(pGraphicDevice, pCommandList);
+		ppInstance[i]->m_uiInstanceIdx = i;
+		ppInstance[i]->Ready_GameObject(L"Temp", _vec3(0.f), _vec3(0.f), _vec3(0.f));
+	}
+	return ppInstance;
+}
+
 void CTextureEffect::Free()
 {
 	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pBufferCom);
 	Engine::Safe_Release(m_pShaderCom);
-	Engine::Safe_Release(m_pTextureCom);
+	//Engine::Safe_Release(m_pTextureCom);
 }

@@ -2041,16 +2041,10 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 		Engine::HIERARCHY_DESC* pHierarchyDesc = &(m_pMeshCom->Find_HierarchyDesc("L_Sword"));
 		_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
 		Pos.y += 2.f;
-		CGameObject* pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-			L"Lighting2",						// TextureTag
-			_vec3(1.f, 1.0f, 1.0f),		// Scale
-			_vec3(0.0f, 0.0f, 0.0f),		// Angle
-			Pos,	// Pos
-			FRAME(5, 16, 25.0f));			// Sprite Image Frame
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Lighting2", pGameObj), E_FAIL);
-		static_cast<CTextureEffect*>(pGameObj)->Set_FollowHand(true);
-		static_cast<CTextureEffect*>(pGameObj)->Follow_PlayerHand(pHierarchyDesc, m_pTransCom);
-		static_cast<CTextureEffect*>(pGameObj)->Set_IsLoop(false);
+		CEffectMgr::Get_Instance()->Effect_TextureEffect(L"Lighting2", _vec3(1.f), _vec3(0.0f), Pos, FRAME(5, 16, 25.0f)
+			, false, false
+			, _vec4(0.0f), true, pHierarchyDesc, m_pTransCom);
+		
 	}
 	if (m_uiAnimIdx == Archer::CHARGE_ARROW_SHOT)
 	{
@@ -2072,13 +2066,18 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 			Pos.y += 2.f;
 
 
-			pGameObj = CLightingParticle::Create(m_pGraphicDevice, m_pCommandList,
-				L"Lighting0",						// TextureTag
-				_vec3(3.5f, 25.5f, 3.5f),					// Scale
-				_vec3((rand() % 120 - 60), 0.0f, 0.f),		// Angle
-				Pos,			// Pos
-				FRAME(1, 1, 1.0f));			// Sprite Image Frame
-			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Lighting", pGameObj), E_FAIL);
+			//CEffectMgr::Get_Instance()->Effect_TextureEffect(L"Lighting0", _vec3(3.5f, 25.5f, 3.5f),					// Scale
+			//	_vec3((rand() % 120 - 60), 0.0f, 0.f),		// Angle
+			//	Pos,			// Pos
+			//	FRAME(1, 1, 1.0f),false,false);
+
+			//pGameObj = CLightingParticle::Create(m_pGraphicDevice, m_pCommandList,
+			//	L"Lighting0",						// TextureTag
+			//	_vec3(3.5f, 25.5f, 3.5f),					// Scale
+			//	_vec3((rand() % 120 - 60), 0.0f, 0.f),		// Angle
+			//	Pos,			// Pos
+			//	FRAME(1, 1, 1.0f));			// Sprite Image Frame
+			//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Lighting", pGameObj), E_FAIL);
 
 			
 		}

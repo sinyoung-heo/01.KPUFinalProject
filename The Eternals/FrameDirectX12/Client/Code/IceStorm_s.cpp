@@ -27,15 +27,7 @@ HRESULT CIceStorm_s::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vScale	= vScale;
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos = vPos;
-	m_pTransCom->m_vPos.y = 0.f;
-	m_fDeltaTime = -1.f;
-	m_fRadius = fRadius;
-	m_fTheta = theta;
 
-	random[0] = static_cast<float>(rand()  % 90 - 45);
-	random[1] = static_cast<float>(rand() % 360);
-	random[2] = static_cast<float>(rand() % 90 - 45);
-	
 
 	return S_OK;
 }
@@ -48,25 +40,7 @@ HRESULT CIceStorm_s::LateInit_GameObject()
 
 	m_pCrossFilterShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
-	m_pTransCom->m_vPos.x += m_fRadius * cos(m_fTheta);
-	m_pTransCom->m_vPos.z += m_fRadius * sin(m_fTheta);
 
-	m_pTransCom->m_vAngle.x = random[0];
-	m_pTransCom->m_vAngle.y = random[1];
-	m_pTransCom->m_vAngle.z = random[2];
-
-	CGameObject* pGameObj = nullptr;
-	for (int i = 0; i < 1; i++)
-	{
-		pGameObj = CSnowParticle::Create(m_pGraphicDevice, m_pCommandList,
-			L"Snow",						// TextureTag
-			_vec3(0.1f),		// Scale
-			_vec3(0.0f, 0.0f, 0.0f),		// Angle
-			m_pTransCom->m_vPos,	// Pos
-			FRAME(1, 1, 1.0f));			// Sprite Image Frame
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Snow", pGameObj), E_FAIL);
-		static_cast<CSnowParticle*>(pGameObj)->Set_Pivot(false);
-	}
 	return S_OK;
 }
 
@@ -83,10 +57,15 @@ _int CIceStorm_s::Update_GameObject(const _float & fTimeDelta)
 	m_fLifeTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
 	
 	if (m_fLifeTime >2.f)
-		m_bIsDead = true;
+		m_bIsReturn = true;
+	
+	if (m_bIsReturn)
+	{
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_IceStorm_s_Effect(), m_uiInstanceIdx);
+		return RETURN_OBJ;
+	}
 	if (m_bIsDead)
 		return DEAD_OBJ;
-
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
@@ -166,9 +145,9 @@ void CIceStorm_s::Set_ConstantTable()
 	tCB_ShaderMesh.vLightPos = tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 
-	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 1.5f * m_fDeltatimeVelocity;
+	m_fDeltatime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 1.5f * m_fDeltatimeVelocity;
 	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 1.5f * m_fDeltatimeVelocity2;
-	tCB_ShaderMesh.fOffset1 = sin(m_fDeltaTime);//¹øÁüÈ¿°ú
+	tCB_ShaderMesh.fOffset1 = sin(m_fDeltatime);//¹øÁüÈ¿°ú
 	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
 	tCB_ShaderMesh.fOffset3 = m_fDeltatime3;
 
@@ -180,34 +159,20 @@ void CIceStorm_s::Set_ConstantTable()
 		{
 			m_bisLifeInit = true;
 			m_fDeltatimeVelocity2 = 9;
-			CGameObject* pGameObj=nullptr;
-			for (int i = 0; i < 1; i++)
-			{
-				pGameObj = CSnowParticle::Create(m_pGraphicDevice, m_pCommandList,
-					L"Snow",						// TextureTag
-					_vec3(0.1f),		// Scale
-					_vec3(0.0f, 0.0f, 0.0f),		// Angle
-					m_pTransCom->m_vPos,	// Pos
-					FRAME(1, 1, 1.0f));			// Sprite Image Frame
-				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Snow", pGameObj), E_FAIL);
-				static_cast<CSnowParticle*>(pGameObj)->Set_Pivot(false);
-			}
+
+			CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 2);
 		}
 	}
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 
-
-	/*tCB_ShaderMesh.vEmissiveColor.x = 135.f / 255.f;
-	tCB_ShaderMesh.vEmissiveColor.y = 150.f / 255.f;
-	tCB_ShaderMesh.vEmissiveColor.z = 220.f / 255.f;*/
 	tCB_ShaderMesh.vEmissiveColor.x = 135.f / 255.f;
 	tCB_ShaderMesh.vEmissiveColor.y =  150.f / 255.f;
 	tCB_ShaderMesh.vEmissiveColor.z = (rand() % 100 + 155.f )/ 255.f;
 	tCB_ShaderMesh.vEmissiveColor.w = 1.f;
 	m_pCrossFilterShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
-	if (m_fDeltaTime > 1.f)
+	if (m_fDeltatime > 1.f)
 		m_fDeltatimeVelocity = -1.f;
-	else if (m_fDeltaTime < 0.f)
+	else if (m_fDeltatime < 0.f)
 		m_fDeltatimeVelocity = 1.f;
 	
 	if (m_fDeltatime3 > 1.f)
@@ -260,6 +225,32 @@ HRESULT CIceStorm_s::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecText
 }
 
 
+void CIceStorm_s::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, const float& fRadius, const float& theta)
+{
+	m_pTransCom->m_vScale = vScale;
+	m_pTransCom->m_vAngle = vAngle;
+	m_pTransCom->m_vPos = vPos;
+	
+	m_fDeltatime = -1.f;
+	m_fDeltatime2 = 0.f;
+	m_fDeltatime3 = 0.f;
+	m_fDeltatimeVelocity = 0.f;
+	m_fDeltatimeVelocity2 = 1.f;
+
+	m_fLifeTime = 0.f;
+
+	m_fRadius = fRadius;
+	m_fTheta = theta;
+
+	m_pTransCom->m_vPos += _vec3(m_fRadius * cos(m_fTheta), 0, m_fRadius * sin(m_fTheta));
+	m_pTransCom->m_vPos.y = 0.f;
+
+	m_pTransCom->m_vAngle = _vec3(static_cast<float>(rand() % 90 - 45), 
+		static_cast<float>(rand() % 360), static_cast<float>(rand() % 90 - 45));
+
+	CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 2);
+}
+
 Engine::CGameObject* CIceStorm_s::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
 												wstring wstrMeshTag, 
 												const _vec3 & vScale,
@@ -272,6 +263,18 @@ Engine::CGameObject* CIceStorm_s::Create(ID3D12Device * pGraphicDevice, ID3D12Gr
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
+}
+
+CIceStorm_s** CIceStorm_s::Create_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, const _uint& uiInstanceCnt)
+{
+	CIceStorm_s** ppInstance = new (CIceStorm_s * [uiInstanceCnt]);
+	for (_uint i = 0; i < uiInstanceCnt; ++i)
+	{
+		ppInstance[i] = new CIceStorm_s(pGraphicDevice, pCommandList);
+		ppInstance[i]->m_uiInstanceIdx = i;
+		ppInstance[i]->Ready_GameObject(L"IceStorm1", _vec3(0.f), _vec3(0.f), _vec3(0.f), 0.f, 0.f);
+	}
+	return ppInstance;
 }
 
 void CIceStorm_s::Free()

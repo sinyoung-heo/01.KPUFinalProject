@@ -1841,6 +1841,10 @@ void CPCPriest::Leave_PartyThisPlayer()
 	}
 }
 
+void CPCPriest::Effect_Loop(const _float& fTimeDelta)
+{
+}
+
 Engine::CGameObject* CPCPriest::Create(ID3D12Device* pGraphicDevice, 
 									   ID3D12GraphicsCommandList* pCommandList, 
 									   wstring wstrMeshTag, 

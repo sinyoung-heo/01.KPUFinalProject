@@ -23,11 +23,7 @@ HRESULT CDistTrail::Ready_GameObject(wstring wstrMeshTag,
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
 
 	m_wstrMeshTag = wstrMeshTag;
-	m_pTransCom->m_vScale	= vScale;
-	m_pTransCom->m_vAngle	= vAngle;
-	m_pTransCom->m_vPos		= vPos;
-	m_pTransCom->m_vPos.y += 0.1f;
-	m_fAlpha = 1.f;
+	
 	return S_OK;
 }
 
@@ -54,6 +50,12 @@ _int CDistTrail::Update_GameObject(const _float & fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	if (m_bIsReturn)
+	{
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_DistTrail_Effect(), m_uiInstanceIdx);
+		return RETURN_OBJ;
+	}
+	
 	m_fAlpha -= fTimeDelta;
 	m_fOffsetTime += fTimeDelta * 0.15f;
 
@@ -63,7 +65,7 @@ _int CDistTrail::Update_GameObject(const _float & fTimeDelta)
 	{
 		m_pTransCom->m_vScale += (_vec3(0.3f-m_fOffSet*0.001f)- _vec3(m_fOffsetTime)) * fTimeDelta;
 		if (m_fLifeTime > 2.f)
-			m_bIsDead = true;
+			m_bIsReturn = true;
 	}
 	
 	/*__________________________________________________________________________________________________________
@@ -155,9 +157,9 @@ void CDistTrail::Set_ConstantTable()
 
 	if (m_bisCrossFilter)
 	{
-		m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 1.5f * m_fDeltatimeVelocity;
+		m_fDeltatime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 1.5f * m_fDeltatimeVelocity;
 		m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 1.5f * m_fDeltatimeVelocity2;
-		tCB_ShaderMesh.fOffset1 = sin(m_fDeltaTime);//¹øÁüÈ¿°ú
+		tCB_ShaderMesh.fOffset1 = sin(m_fDeltatime);//¹øÁüÈ¿°ú
 		tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
 		tCB_ShaderMesh.fOffset3 = m_fDeltatime3;
 
@@ -177,9 +179,9 @@ void CDistTrail::Set_ConstantTable()
 		tCB_ShaderMesh.vEmissiveColor.w = 1.f;
 
 		m_pCrossFilterShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
-		if (m_fDeltaTime > 1.f)
+		if (m_fDeltatime > 1.f)
 			m_fDeltatimeVelocity = -1.f;
-		else if (m_fDeltaTime < 0.f)
+		else if (m_fDeltatime < 0.f)
 			m_fDeltatimeVelocity = 1.f;
 
 		if (m_fDeltatime3 > 1.f)
@@ -245,6 +247,27 @@ HRESULT CDistTrail::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTextu
 }
 
 
+void CDistTrail::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
+{
+	m_pTransCom->m_vScale = vScale;
+	m_pTransCom->m_vAngle = vAngle;
+	m_pTransCom->m_vPos = vPos;
+	m_pTransCom->m_vPos.y += 0.1f;
+	
+	m_fDeltatime = 0.f;
+	m_fDeltatime2 = 0.f;
+	m_fDeltatime3 = 0.f;
+	m_fPatternMapDeltatime = 0.f;
+	m_fAlpha = 1.f;
+	m_fOffSet = 0.f;
+	m_fDeltatimeVelocity = 0.f;
+	m_fDeltatimeVelocity2 = 1.f;
+	m_fLifeTime = 0.f;
+	m_fOffsetTime = 0.f;
+	m_bisLifeInit = false;
+	m_bisCrossFilter = false;
+}
+
 Engine::CGameObject* CDistTrail::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
 												wstring wstrMeshTag, 
 												const _vec3 & vScale,
@@ -257,6 +280,18 @@ Engine::CGameObject* CDistTrail::Create(ID3D12Device * pGraphicDevice, ID3D12Gra
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
+}
+
+CDistTrail** CDistTrail::Create_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, const _uint& uiInstanceCnt)
+{
+	CDistTrail** ppInstance = new (CDistTrail * [uiInstanceCnt]);
+	for (_uint i = 0; i < uiInstanceCnt; ++i)
+	{
+		ppInstance[i] = new CDistTrail(pGraphicDevice, pCommandList);
+		ppInstance[i]->m_uiInstanceIdx = i;
+		ppInstance[i]->Ready_GameObject(L"DistTrail", _vec3(0.f), _vec3(0.f), _vec3(0.f));
+	}
+	return ppInstance;
 }
 
 void CDistTrail::Free()

@@ -193,9 +193,10 @@ private:
 	_tchar			m_szText[MAX_STR] = L"";
 
 	//Bool Effect
-	float m_bisSwordsSkillOffset = 0.f;
-	float m_bisSwordsSkill3Offset = 0.f;
-	float m_bisSkillOffSet = 0.f;
+	float m_fSwordsSkillOffset = 0.f;
+	float m_fSwordsSkill3Offset = 0.f;
+	float m_fSkillOffSet = 0.f;
+	float m_fParticleDeltaTime = 0.f;
 	bool m_bisIceEffect = false;
 	bool m_bisIce_mEffect = false;
 	bool m_bisFireEffect = false;

@@ -66,7 +66,7 @@ _int CSwordEffect::Update_GameObject(const _float& fTimeDelta)
 		if (!m_bisEffect)
 		{
 			_vec3 Pos = m_pTransCom->m_vPos;
-			Pos.y = 0.5f;
+			Pos.y = 0.2f;
 			CEffectMgr::Get_Instance()->Effect_IceDecal(Pos);
 			CEffectMgr::Get_Instance()->Effect_IceStorm(Pos,6,2.f);
 			m_bisEffect = true;

@@ -53,6 +53,7 @@ _int CFireRing::Update_GameObject(const _float & fTimeDelta)
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
+	
 	if (m_fDeltaDegree > 360.f)
 		m_bIsReturn = true;
 	if (m_bIsReturn)
@@ -62,7 +63,8 @@ _int CFireRing::Update_GameObject(const _float & fTimeDelta)
 	}
 
 	m_pTransCom->m_vAngle.y += 540.f*fTimeDelta;
-	m_pTransCom->m_vScale = _vec3(sinf(XMConvertToRadians(m_fDeltaDegree* 0.25)*0.8f));
+	m_pTransCom->m_vScale.x =sinf(XMConvertToRadians(m_fDeltaDegree* 0.25)*0.8f);
+	m_pTransCom->m_vScale.z = sinf(XMConvertToRadians(m_fDeltaDegree * 0.25) * 0.8f);
 	m_tFrame.fCurFrame += fTimeDelta * m_tFrame.fFrameSpeed;
 
 	// Sprite Xรเ
