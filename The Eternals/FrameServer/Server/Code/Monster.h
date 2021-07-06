@@ -101,14 +101,14 @@ public:
 	virtual DWORD Release();
 
 	/* SEND PACKET */
-	void	send_Monster_enter_packet(int to_client);
-	void	send_Monster_move_packet(int to_client, int ani);
-	void	send_Monster_NormalAttack(int to_client, int ani);
-	void	send_Monster_RushAttack(int to_client, int ani);
-	void	send_Monster_Stat(int to_client);
-	void	send_Monster_Dead(int to_client, int ani);
-	void	send_Monster_animation_packet(int to_client, int ani);
-	void	send_Monster_Knockback(int to_client, int ani);
+	void	send_Monster_enter_packet(const int& to_client);
+	void	send_Monster_move_packet(const int& to_client, const int& ani);
+	void	send_Monster_NormalAttack(const int& to_client, const int& ani);
+	void	send_Monster_RushAttack(const int& to_client, const int& ani);
+	void	send_Monster_Stat(const int& to_client);
+	void	send_Monster_Dead(const int& to_client, const int& ani);
+	void	send_Monster_animation_packet(const int& to_client, const int& ani);
+	void	send_Monster_Knockback(const int& to_client, const int& ani);
 
 public:
 	char			m_monNum				= 0;

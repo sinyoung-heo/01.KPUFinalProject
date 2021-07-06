@@ -38,7 +38,7 @@ HRESULT CDBMgr::Ready_DB()
 				// Allocate statement handle  
 				if (m_retcode == SQL_SUCCESS || m_retcode == SQL_SUCCESS_WITH_INFO)
 				{
-					cout << "DATABASE Connected" << endl;
+					//cout << "DATABASE Connected" << endl;
 					m_retcode = SQLAllocHandle(SQL_HANDLE_STMT, m_hdbc, &m_hstmt);
 				}
 				else

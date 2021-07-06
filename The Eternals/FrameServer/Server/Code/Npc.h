@@ -53,9 +53,9 @@ private:
 	bool	Is_AnimationSetEnd(const float& fTimeDelta);
 
 public:
-	void	send_NPC_enter_packet(int to_client);				// NPC 등장 패킷
-	void	send_NPC_move_packet(int to_client, int ani);		// NPC 움직임 패킷
-	void	send_NPC_animation_packet(int to_client, int ani);
+	void	send_NPC_enter_packet(const int& to_client);				// NPC 등장 패킷
+	void	send_NPC_move_packet(const int& to_client, const int& ani);		// NPC 움직임 패킷
+	void	send_NPC_animation_packet(const int& to_client, const int& ani);
 
 	virtual DWORD Release();
 
