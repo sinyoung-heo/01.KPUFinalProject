@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PacketMgr.h"
+#include <random>
 #include "ObjectMgr.h"
 #include "Management.h"
 #include "Renderer.h"
@@ -11,6 +12,8 @@
 #include "InventoryEquipmentMgr.h"
 #include "EquipmentItemSlot.h"
 #include "StoreMgr.h"
+#include "DmgFont.h"
+
 /* USER */
 #include "PCGladiator.h"
 #include "PCOthersGladiator.h"
@@ -310,7 +313,7 @@ void CPacketMgr::Process_packet()
 
 	case SC_PACKET_MONSTER_STAT:
 	{
-		sc_packet_stat_change* packet = reinterpret_cast<sc_packet_stat_change*>(m_packet_start);
+		sc_packet_update_party* packet = reinterpret_cast<sc_packet_update_party*>(m_packet_start);
 		Change_Monster_Stat(packet);
 	}
 	break;
@@ -652,15 +655,33 @@ void CPacketMgr::Rush_Monster(sc_packet_monster_rushAttack* packet)
 	pObj->Ready_AngleInterpolationValue(pObj->Set_Other_Angle(_vec3(packet->dirX, packet->dirY, packet->dirZ)));
 }
 
-void CPacketMgr::Change_Monster_Stat(sc_packet_stat_change* packet)
+void CPacketMgr::Change_Monster_Stat(sc_packet_update_party* packet)
 {
 	int s_num = packet->id;
 	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"MONSTER", s_num);
 	if (pObj == nullptr) return;
 
 	pObj->Get_Info()->m_iHp = packet->hp;
-	pObj->Get_Info()->m_iMp = packet->mp;
-	pObj->Get_Info()->m_iExp = packet->exp;
+	pObj->Get_Info()->m_iExp = packet->maxHp;
+
+	// DmgFont
+	Engine::CGameObject* pGameObj = nullptr;
+	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_DmgFontPool());
+	if (nullptr != pGameObj)
+	{
+		random_device					rd;
+		default_random_engine			dre{ rd() };
+		uniform_int_distribution<_int>	uid{ -7, 7 };
+
+		static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos = pObj->Get_Transform()->m_vPos;
+		static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.x += (_float)(uid(dre)) * 0.1f;
+		static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.y += 3.0f;
+		static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.z += (_float)(uid(dre)) * 0.1f;
+		static_cast<CDmgFont*>(pGameObj)->Set_DamageList(packet->mp);
+		static_cast<CDmgFont*>(pGameObj)->Set_DamageType(DMG_TYPE::DMG_OTHERS);
+		static_cast<CDmgFont*>(pGameObj)->Set_RandomDir();
+		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"DmgFont", pGameObj);
+	}
 }
 
 void CPacketMgr::Move_NPC(sc_packet_move* packet)

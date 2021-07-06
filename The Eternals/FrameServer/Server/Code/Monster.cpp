@@ -3943,13 +3943,15 @@ void CMonster::Hurt_Monster(const int& p_id, const int& damage, const char& affe
 	}
 
 	// Monster View List 내의 유저들에게 해당 Monster의 변경된 stat을 알림.
-	for (auto pl : old_viewlist)
+	for (auto& pl : old_viewlist)
 	{
+		if (pl == p_id) continue;
+
 		/* 유저일 경우 처리 */
 		if (true == CObjMgr::GetInstance()->Is_Player(pl))
 		{
 			if (m_bIsDead) return;
-			send_Monster_Stat(pl);
+			send_Monster_Stat(pl, damage);
 
 			/* Affect */
 			if (Affect_Monster(pl, affect) == true)
@@ -4358,17 +4360,18 @@ void CMonster::send_Monster_RushAttack(const int& to_client, const int& ani)
 	send_packet(to_client, &p);
 }
 
-void CMonster::send_Monster_Stat(const int& to_client)
+void CMonster::send_Monster_Stat(const int& to_client, const int& damage)
 {
-	sc_packet_stat_change p;
+	sc_packet_update_party p;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_MONSTER_STAT;
-	p.id = m_sNum;
+	p.size	= sizeof(p);
+	p.type	= SC_PACKET_MONSTER_STAT;
+	p.id	= m_sNum;
 
-	p.hp = m_iHp;
-	p.mp = 0;
-	p.exp = m_iExp;
+	p.hp	= m_iHp;
+	p.maxHp = m_iExp;
+	p.mp	= damage;
+	p.maxMp = 0;
 
 	send_packet(to_client, &p);
 }

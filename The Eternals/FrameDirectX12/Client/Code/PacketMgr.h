@@ -90,7 +90,7 @@ public:
 	void	Move_Monster(sc_packet_move* packet);
 	void	Attack_Monster(sc_packet_monster_attack* packet);
 	void	Rush_Monster(sc_packet_monster_rushAttack* packet);
-	void	Change_Monster_Stat(sc_packet_stat_change* packet);
+	void	Change_Monster_Stat(sc_packet_update_party* packet);
 	void	Knockback_Monster(sc_packet_monster_knockback* packet, bool& retflag);
 	void	Dead_Monster(sc_packet_animationIndex* packet);
 
