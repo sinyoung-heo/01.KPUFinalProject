@@ -24,10 +24,56 @@ void CDynamicCamera::Set_CameraShakingDesc(const CAMERA_SHAKING_DESC& tDesc)
 	default_random_engine			dre{ rd() };
 	uniform_int_distribution<_int>	uid_x{ (_int)(m_tCameraShakingDesc.vMin.x), (_int)(m_tCameraShakingDesc.vMax.x) };
 	uniform_int_distribution<_int>	uid_y{ (_int)(m_tCameraShakingDesc.vMin.y), (_int)(m_tCameraShakingDesc.vMax.y) };
+	
+	_float fInputX = (_float)(uid_x(dre));
+	_float fInputY = (_float)(uid_y(dre));
+
+	if (fInputX < 0)
+	{
+		if (abs(fInputX) < abs(m_tCameraShakingDesc.vMin.x) * 0.7f)
+			fInputX = m_tCameraShakingDesc.vMin.x * 0.7f;
+	}
+	else if (fInputX > 0)
+	{
+		if (fInputX < m_tCameraShakingDesc.vMax.x * 0.7f)
+			fInputX = m_tCameraShakingDesc.vMax.x * 0.7f;
+	}
+
+	if (fInputY < 0)
+	{
+		if (abs(fInputY) < abs(m_tCameraShakingDesc.vMin.y) * 0.7f)
+			fInputY = m_tCameraShakingDesc.vMin.y * 0.7f;
+	}
+	else if (fInputY > 0)
+	{
+		if (fInputY < m_tCameraShakingDesc.vMax.y * 0.7f)
+			fInputY = m_tCameraShakingDesc.vMax.y * 0.7f;
+	}
+
+	if (fInputX == 0 && m_tCameraShakingDesc.vMin.x != 0.f && m_tCameraShakingDesc.vMax.x != 0.0f)
+	{
+		_int temp = rand() % 2;
+		if (temp % 2 == 0)
+			fInputX = m_tCameraShakingDesc.vMax.x / 2.0f;
+		else
+			fInputX = -(m_tCameraShakingDesc.vMax.x) / 2.0f;
+
+	}
+	if (fInputY == 0 && m_tCameraShakingDesc.vMin.y != 0.f && m_tCameraShakingDesc.vMax.y != 0.0f)
+	{
+		_int temp = rand() % 2;
+		if (temp % 2 == 0)
+			fInputY = m_tCameraShakingDesc.vMax.y / 2.0f;
+		else
+			fInputY = -(m_tCameraShakingDesc.vMax.y) / 2.0f;
+	}
+
 	m_tCameraShakingDesc.tOffsetInterpolationDesc.v1                     = _vec2(0.0f);
-	m_tCameraShakingDesc.tOffsetInterpolationDesc.v2                     = _vec2((_float)(uid_x(dre)) * 0.1f, (_float)(uid_y(dre)) * 0.1f);
+	m_tCameraShakingDesc.tOffsetInterpolationDesc.v2                     = _vec2(fInputX * 0.01f, fInputY * 0.01f);
 	m_tCameraShakingDesc.tOffsetInterpolationDesc.linear_ratio           = 0.0f;
 	m_tCameraShakingDesc.tOffsetInterpolationDesc.is_start_interpolation = true;
+
+	m_tCameraShakingDesc.vPreOffsetRange = _vec2(fInputX, fInputY);
 }
 
 void CDynamicCamera::Set_CameraZoomDesc(const CAMERA_ZOOM_DESC& tDesc)
@@ -184,10 +230,65 @@ void CDynamicCamera::SetUp_CameraShaking(const _float& fTimeDelta)
 			uniform_int_distribution<_int>	uid_x{ (_int)(m_tCameraShakingDesc.vMin.x), (_int)(m_tCameraShakingDesc.vMax.x) };
 			uniform_int_distribution<_int>	uid_y{ (_int)(m_tCameraShakingDesc.vMin.y), (_int)(m_tCameraShakingDesc.vMax.y) };
 
+			_float fInputX = (_float)(uid_x(dre));
+			_float fInputY = (_float)(uid_y(dre));
+
+			if (fInputX < 0)
+			{
+				if (abs(fInputX) < abs(m_tCameraShakingDesc.vMin.x) * 0.7f)
+					fInputX = m_tCameraShakingDesc.vMin.x * 0.7f;
+			}
+			else if (fInputX > 0)
+			{
+				if (fInputX < m_tCameraShakingDesc.vMax.x * 0.7f)
+					fInputX = m_tCameraShakingDesc.vMax.x * 0.7f;
+			}
+
+			if (fInputY < 0)
+			{
+				if (abs(fInputY) < abs(m_tCameraShakingDesc.vMin.y) * 0.7f)
+					fInputY = m_tCameraShakingDesc.vMin.y * 0.7f;
+			}
+			else if (fInputY > 0)
+			{
+				if (fInputY < m_tCameraShakingDesc.vMax.y * 0.7f)
+					fInputY = m_tCameraShakingDesc.vMax.y * 0.7f;
+			}
+
+			if (fInputX == 0 && m_tCameraShakingDesc.vMin.x != 0.f && m_tCameraShakingDesc.vMax.x != 0.0f)
+			{
+				_int temp = rand() % 2;
+				if (temp % 2 == 0)
+					fInputX = m_tCameraShakingDesc.vMax.x / 2.0f;
+				else
+					fInputX = -(m_tCameraShakingDesc.vMax.x) / 2.0f;
+
+			}
+			if (fInputY == 0 && m_tCameraShakingDesc.vMin.y != 0.f && m_tCameraShakingDesc.vMax.y != 0.0f)
+			{
+				_int temp = rand() % 2;
+				if (temp % 2 == 0)
+					fInputY = m_tCameraShakingDesc.vMax.y / 2.0f;
+				else
+					fInputY = -(m_tCameraShakingDesc.vMax.y) / 2.0f;
+			}
+
+			if (0 < m_tCameraShakingDesc.vPreOffsetRange.x)
+				fInputX = abs(fInputX);
+			else
+				fInputX = abs(fInputX) * -1.0f;
+
+			if (0 < m_tCameraShakingDesc.vPreOffsetRange.y)
+				fInputY = abs(fInputY);
+			else
+				fInputY = abs(fInputY) * -1.0f;
+
 			m_tCameraShakingDesc.tOffsetInterpolationDesc.linear_ratio           = 0.0f;
 			m_tCameraShakingDesc.tOffsetInterpolationDesc.is_start_interpolation = true;
 			m_tCameraShakingDesc.tOffsetInterpolationDesc.v1                     = _vec2(0.0f);
-			m_tCameraShakingDesc.tOffsetInterpolationDesc.v2                     = _vec2((_float)(uid_x(dre)) * 0.1f, (_float)(uid_y(dre)) * 0.1f);
+			m_tCameraShakingDesc.tOffsetInterpolationDesc.v2                     = _vec2(fInputX * 0.01f, fInputY * 0.01f);
+
+			m_tCameraShakingDesc.vPreOffsetRange = m_tCameraShakingDesc.tOffsetInterpolationDesc.v2;
 		}
 
 		if (m_tCameraShakingDesc.bIsReSetting && m_tCameraShakingDesc.tOffsetInterpolationDesc.linear_ratio >= 1.0f)

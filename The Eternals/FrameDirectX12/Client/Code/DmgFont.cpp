@@ -469,7 +469,7 @@ void CDmgFont::SetUp_DmgFontWorldMatrix()
 	m_vRight.y = 0.0f;
 
 	_vec3 vScale = m_pTransCom->m_vScale * FONT_SCALE_OFFSET;
-	vScale.y *= 1.5f;
+	vScale.y *= 1.25f;
 	vScale.z = 1.0f;
 	_vec3 vPos   = m_pTransCom->m_vPos;
 	vDir.Normalize();

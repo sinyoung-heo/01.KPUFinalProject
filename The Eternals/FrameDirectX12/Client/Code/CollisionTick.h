@@ -3,6 +3,7 @@
 #include "GameObject.h"
 
 class CInstancePoolMgr;
+class CDynamicCamera;
 
 class CCollisionTick : public Engine::CGameObject
 {
@@ -25,22 +26,26 @@ public:
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Process_Collision();
+private:
+	void SetUp_GladiatorCameraEvent();
 protected:
 	/*__________________________________________________________________________________________________________
 	[ Manager ]
 	____________________________________________________________________________________________________________*/
-	CPacketMgr* m_pPacketMgr = nullptr;
+	CPacketMgr*			m_pPacketMgr       = nullptr;
+	CInstancePoolMgr*	m_pInstancePoolMgr = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	CInstancePoolMgr* m_pInstancePoolMgr = nullptr;
-	
-	char	m_chAffect		= AFFECT_FINCH;
-	_uint	m_uiDamage		= 0;
-	_float	m_fTimeDelta	= 0.0f;
-	_float	m_fLifeTime		= 1.0f;
+	Engine::CGameObject*	m_pThisPlayer    = nullptr;
+	CDynamicCamera*			m_pDynamicCamera = nullptr;
 
+	char	m_chAffect		  = AFFECT_FINCH;
+	_uint	m_uiDamage		  = 0;
+	_float	m_fTimeDelta	  = 0.0f;
+	_float	m_fLifeTime		  = 1.0f;
+	_bool	m_bIsCameraEffect = false;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, 
 									   ID3D12GraphicsCommandList* pCommandList,

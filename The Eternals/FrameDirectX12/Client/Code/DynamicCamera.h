@@ -24,6 +24,7 @@ typedef struct tagCameraShakingDesc
 	_vec2	vMin                        = _vec2(0.0f);	// Range Min
 	_vec2	vMax                        = _vec2(0.0f);	// Range Max
 	_vec2	vEyeOffset                  = _vec2(0.0f);
+	_vec2	vPreOffsetRange             = _vec2(0.0f);
 	Engine::LINEAR_INTERPOLATION_DESC<_vec2> tOffsetInterpolationDesc;
 
 } CAMERA_SHAKING_DESC;

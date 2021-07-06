@@ -3,6 +3,8 @@
 #include "InstancePoolMgr.h"
 #include "WarningFrame.h"
 #include "DmgFont.h"
+#include "DynamicCamera.h"
+#include "PCGladiator.h"
 #include <random>
 
 CCollisionTick::CCollisionTick(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -35,6 +37,14 @@ HRESULT CCollisionTick::Ready_GameObject(wstring wstrCollisionTag,
 
 HRESULT CCollisionTick::LateInit_GameObject()
 {
+	// DynamicCamera
+	m_pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
+	Engine::NULL_CHECK_RETURN(m_pDynamicCamera, E_FAIL);
+
+	// ThisPlayer
+	m_pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+	Engine::NULL_CHECK_RETURN(m_pThisPlayer, E_FAIL);
+
 	return S_OK;
 }
 
@@ -84,6 +94,8 @@ _int CCollisionTick::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CCollisionTick::Process_Collision()
 {
+	m_bIsCameraEffect = false;
+
 	for (auto& pDst : m_lstCollisionDst)
 	{
 		// Player Attack <---> Monster
@@ -104,7 +116,7 @@ void CCollisionTick::Process_Collision()
 				default_random_engine			dre{ rd() };
 				uniform_int_distribution<_int>	uid{ -7, 7 };
 
-				m_pTransCom->m_vDir.x = (_float)(uid(dre)) * 0.1f;
+				// m_pTransCom->m_vDir.x = (_float)(uid(dre)) * 0.1f;
 
 				static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos = pDst->Get_Transform()->m_vPos;
 				static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.x += (_float)(uid(dre)) * 0.1f;
@@ -116,10 +128,11 @@ void CCollisionTick::Process_Collision()
 				m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"DmgFont", pGameObj);
 			}
 
+			// Camera Effect
+			m_bIsCameraEffect = true;
+
 			// Player Attack to Monster
 			m_pPacketMgr->send_attackToMonster(pDst->Get_ServerNumber(), m_uiDamage, m_chAffect);
-
-
 		}
 		else if (L"CollisionTick_ThisPlayer" == m_wstrCollisionTag &&
 				 L"Monster_MultiCollider" == pDst->Get_CollisionTag())
@@ -154,6 +167,94 @@ void CCollisionTick::Process_Collision()
 			// Monster Attack to ThisPlayer
 			m_pPacketMgr->send_attackByMonster(m_iSNum, m_uiDamage);
 		}
+	}
+
+	if (m_bIsCameraEffect)
+		SetUp_GladiatorCameraEvent();
+}
+
+void CCollisionTick::SetUp_GladiatorCameraEvent()
+{
+	if (nullptr == m_pDynamicCamera || nullptr == m_pThisPlayer)
+		return;
+	if (PC_GLADIATOR != m_pThisPlayer->Get_OType())
+		return;
+
+	_uint uiAniIdx = static_cast<CPCGladiator*>(m_pThisPlayer)->Get_AnimationIdx();
+
+	switch (uiAniIdx)
+	{
+	case Gladiator::COMBO1:
+	{
+		CAMERA_ZOOM_DESC tCameraZoomDesc;
+		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_IN;
+		tCameraZoomDesc.fPower     = 0.04f;
+		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 8.0f;
+		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+	}
+		break;
+	case Gladiator::COMBO2:
+	{
+		//CAMERA_ZOOM_DESC tCameraZoomDesc;
+		//tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_IN;
+		//tCameraZoomDesc.fPower     = 0.02f;
+		//tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 10.0f;
+		//m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+	}
+		break;
+	case Gladiator::COMBO3:
+	{
+		CAMERA_ZOOM_DESC tCameraZoomDesc;
+		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_IN;
+		tCameraZoomDesc.fPower     = 0.04f;
+		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 8.0f;
+		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+	}
+		break;
+	case Gladiator::COMBO4:
+	{
+		CAMERA_ZOOM_DESC tCameraZoomDesc;
+		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_IN;
+		tCameraZoomDesc.fPower     = 0.04f;
+		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 8.0f;
+		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+	}
+		break;
+
+	case Gladiator::STINGER_BLADE:
+	{
+		CAMERA_ZOOM_DESC tCameraZoomDesc;
+		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_IN;
+		tCameraZoomDesc.fPower     = 0.045f;
+		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 12.5f;
+		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+	}
+		break;
+
+	case Gladiator::CUTTING_SLASH:
+	{
+		CAMERA_SHAKING_DESC tCameraShakingDesc;
+		tCameraShakingDesc.fUpdateShakingTime = 0.3f;
+		tCameraShakingDesc.vMin               = _vec2(-25.0f, 0.0f);
+		tCameraShakingDesc.vMax               = _vec2(25.0f, 0.0f);
+		tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 20.0f;
+		m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
+	}
+		break;
+
+	case Gladiator::JAW_BREAKER:
+	{
+		CAMERA_SHAKING_DESC tCameraShakingDesc;
+		tCameraShakingDesc.fUpdateShakingTime = 0.4f;
+		tCameraShakingDesc.vMin               = _vec2(-30.0f, 0.0f);
+		tCameraShakingDesc.vMax               = _vec2(30.0f, 0.0f);
+		tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 20.0f;
+		m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
+	}
+		break;
+
+	default:
+		break;
 	}
 }
 

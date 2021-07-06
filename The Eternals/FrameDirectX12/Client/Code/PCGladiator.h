@@ -30,6 +30,8 @@ private:
 	virtual ~CPCGladiator() = default;
 
 public:
+	const _uint& Get_AnimationIdx() { return m_uiAnimIdx; }
+
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, const char& chWeaponType);
 	virtual HRESULT	LateInit_GameObject();
