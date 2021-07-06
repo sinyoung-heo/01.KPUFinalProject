@@ -43,6 +43,8 @@ class CIceStorm_s;
 class CFireDecal;
 class CIceDecal;
 class CParticleEffect;
+class CFireRing;
+class CFrameMesh;
 class CInstancePoolMgr : public Engine::CBase
 {
 	DECLARE_SINGLETON(CInstancePoolMgr)
@@ -102,6 +104,9 @@ public:
 	INSTANCE_POOL_DESC<CIceStorm_m>* Get_Effect_IceStorm_m_Effect() { return m_pEffect_IceStorm_m_Pool; }
 	INSTANCE_POOL_DESC<CIceDecal>* Get_Effect_IceDecal_Effect() { return m_pEffect_IceDecal_Pool; }
 	INSTANCE_POOL_DESC<CFireDecal>* Get_Effect_FireDecal_Effect() { return m_pEffect_FireDecal_Pool; }
+	INSTANCE_POOL_DESC<CFireRing>* Get_Effect_FireRing_Effect() { return m_pEffect_FireRing_Pool; }
+	INSTANCE_POOL_DESC<CFrameMesh>* Get_Effect_FrameMesh_Effect() { return m_pEffect_FrameMesh_Pool; }
+
 
 	INSTANCE_POOL_DESC<CParticleEffect>* Get_Effect_Particle_Effect() { return m_pEffect_Particle_Pool; }
 
@@ -177,6 +182,10 @@ private:
 	INSTANCE_POOL_DESC<CSwordEffect_s>* m_pEffect_SwordEffect_s_Pool = nullptr;
 	INSTANCE_POOL_DESC<CIceStorm>*   m_pEffect_IceStorm_Pool = nullptr;
 	INSTANCE_POOL_DESC<CIceStorm_m>* m_pEffect_IceStorm_m_Pool = nullptr;
+
+	INSTANCE_POOL_DESC<CFireRing>* m_pEffect_FireRing_Pool = nullptr;
+	INSTANCE_POOL_DESC<CFrameMesh>* m_pEffect_FrameMesh_Pool = nullptr;
+
 
 	INSTANCE_POOL_DESC<CFireDecal>* m_pEffect_FireDecal_Pool = nullptr;
 	INSTANCE_POOL_DESC<CIceDecal>* m_pEffect_IceDecal_Pool = nullptr;

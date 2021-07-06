@@ -31,15 +31,7 @@ HRESULT CIceStorm_m::Ready_GameObject(wstring wstrMeshTag,
 	//m_pTransCom->m_vPos.y = 0.f;
 	//m_fDeltatime = -1.f;
 	//m_fMaxScale = fMaxScale;
-	//
-	//CGameObject* pGameObj = nullptr;
-	//pGameObj = CParticleEffect::Create(m_pGraphicDevice, m_pCommandList,
-	//	L"Lighting0",						// TextureTag
-	//	_vec3(0.3f),		// Scale
-	//	_vec3(0.0f, 0.0f, 0.0f),		// Angle
-	//	m_pTransCom->m_vPos,	// Pos
-	//	FRAME(1, 1, 1.f), 9, 5);			// Sprite Image Frame
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Lighting1", pGameObj), E_FAIL);
+	
 	return S_OK;
 }
 
@@ -57,14 +49,15 @@ HRESULT CIceStorm_m::LateInit_GameObject()
 
 _int CIceStorm_m::Update_GameObject(const _float & fTimeDelta)
 {
+	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
+
 	if (m_pTransCom->m_vScale.x < m_fMaxScale)
 	{
 		m_pTransCom->m_vScale.x += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) *0.7f;
 		m_pTransCom->m_vScale.y += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) *0.7f;
 		m_pTransCom->m_vScale.z += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) *0.7f;
 	}
-	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
-
+	
 	m_fLifeTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
 	m_fAlpha-= (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"))*0.4f;
 	
@@ -242,14 +235,6 @@ void CIceStorm_m::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const
 	m_fDeltatimeVelocity = 0.f;
 	m_fDeltatimeVelocity2 = 1.f;
 
-	CGameObject* pGameObj = nullptr;
-	pGameObj = CParticleEffect::Create(m_pGraphicDevice, m_pCommandList,
-		L"Lighting0",						// TextureTag
-		_vec3(0.3f),		// Scale
-		_vec3(0.0f, 0.0f, 0.0f),		// Angle
-		m_pTransCom->m_vPos,	// Pos
-		FRAME(1, 1, 1.f), 9, 5);			// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Lighting1", pGameObj), E_FAIL);
 }
 
 Engine::CGameObject* CIceStorm_m::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,

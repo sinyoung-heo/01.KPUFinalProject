@@ -28,16 +28,6 @@ HRESULT CIceStorm::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vScale	= vScale;
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos = vPos;
-
-	//m_fDeltaTime = -1.f;
-	//m_fRadius = fRadius;
-	//m_fTheta = theta;
-	//random[0] = static_cast<float>(rand() % 90 - 45);
-	//random[1] = static_cast<float>(rand() % 360);
-	//random[2] = static_cast<float>(rand() % 90 - 45);
-	//m_fLimitScale = 0.15f;
-
-
 	return S_OK;
 }
 
@@ -48,23 +38,6 @@ HRESULT CIceStorm::LateInit_GameObject()
 	SetUp_DescriptorHeap(pTexture->Get_Texture(), m_pRenderer->Get_TargetShadowDepth()->Get_TargetTexture());
 
 	m_pCrossFilterShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
-
-	/*m_pTransCom->m_vPos.x += m_fRadius * cos(m_fTheta);
-	m_pTransCom->m_vPos.z += m_fRadius * sin(m_fTheta);
-
-	m_pTransCom->m_vAngle.x = random[0];
-	m_pTransCom->m_vAngle.y = random[1];
-	m_pTransCom->m_vAngle.z = random[2];*/
-
-
-	//CGameObject* pGameObj = nullptr;
-	//pGameObj = CParticleEffect::Create(m_pGraphicDevice, m_pCommandList,
-	//	L"Snow",						// TextureTag
-	//	_vec3(0.1f),		// Scale
-	//	_vec3(0.0f, 0.0f, 0.0f),		// Angle
-	//	m_pTransCom->m_vPos,	// Pos
-	//	FRAME(1, 1, 1.f), 9,3);			// Sprite Image Frame
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Snow", pGameObj), E_FAIL);
 	return S_OK;
 }
 
@@ -187,14 +160,8 @@ void CIceStorm::Set_ConstantTable()
 		{
 			m_bisLifeInit = true;
 			m_fDeltatimeVelocity2 = 3;
-			//CGameObject* pGameObj = nullptr;
-			//pGameObj = CParticleEffect::Create(m_pGraphicDevice, m_pCommandList,
-			//	L"Snow",						// TextureTag
-			//	_vec3(0.1f),		// Scale
-			//	_vec3(0.0f, 0.0f, 0.0f),		// Angle
-			//	m_pTransCom->m_vPos,	// Pos
-			//	FRAME(1, 1, 1.f), 9, 3);			// Sprite Image Frame
-			//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Snow", pGameObj), E_FAIL);
+			CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 3,L"Snow");
+		
 		}
 	}
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
@@ -282,6 +249,7 @@ void CIceStorm::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _
 	m_pTransCom->m_vPos.x += m_fRadius * cos(m_fTheta);
 	m_pTransCom->m_vPos.z += m_fRadius * sin(m_fTheta);
 
+	CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 3, L"Snow");
 
 }
 

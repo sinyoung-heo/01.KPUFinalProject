@@ -60,6 +60,9 @@ private:
 	_uint m_uiSpec = 0;
 
 	float m_fDeltaDegree = 0.f;
+
+public:
+	void Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, const FRAME& tFrame = FRAME(1, 1, 0.0f));
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,
@@ -68,6 +71,10 @@ public:
 									   const _vec3& vAngle,
 									   const _vec3& vPos,
 										const FRAME& tFrame = FRAME(1, 1, 0.0f));
+
+	static CFrameMesh** Create_InstancePool(ID3D12Device* pGraphicDevice,
+		ID3D12GraphicsCommandList* pCommandList,
+		const _uint& uiInstanceCnt);
 private:
 	virtual void Free();
 };

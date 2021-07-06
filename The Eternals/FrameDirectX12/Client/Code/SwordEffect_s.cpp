@@ -24,23 +24,10 @@ HRESULT CSwordEffect_s::Ready_GameObject(wstring wstrMeshTag,
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::Ready_GameObject(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag), E_FAIL);
-
-
-	
 	m_wstrMeshTag = wstrMeshTag;
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vPos = vPos;
-
-
-
-	/*_vec3 PlayerPos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
-	m_vecParentPos = PlayerPos + vDir * 15.f;
-	m_pTransCom->m_vDir = _vec3(m_vecParentPos - vPos );
-	m_pTransCom->m_vDir.Normalize();
-	
-	m_fDistance = m_vecParentPos.Get_Distance(vPos);*/
-
 	return S_OK;
 }
 
@@ -49,9 +36,7 @@ HRESULT CSwordEffect_s::LateInit_GameObject()
 	m_pShaderCom->SetUp_ShaderConstantBuffer();
 	Engine::CTexture* pTexture = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(L"EffectPublic", Engine::COMPONENTID::ID_STATIC));
 	SetUp_DescriptorHeap(pTexture->Get_Texture(), m_pRenderer->Get_TargetShadowDepth()->Get_TargetTexture());
-
 	m_pCrossFilterShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
-
 	return S_OK;
 }
 
@@ -59,25 +44,16 @@ _int CSwordEffect_s::Update_GameObject(const _float & fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 	if (m_bIsDead)
-	{
-		CGameObject* pGameObj = nullptr;
-		pGameObj = CParticleEffect::Create(m_pGraphicDevice, m_pCommandList,
-			L"Lighting0",						// TextureTag
-			_vec3(0.1f),		// Scale
-			_vec3(0.0f, 0.0f, 0.0f),		// Angle
-			m_pTransCom->m_vPos,	// Pos
-			FRAME(1, 1, 1.f), 9,10);			// Sprite Image Frame
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Lighting1", pGameObj), E_FAIL);
 		return DEAD_OBJ;
-	}
+	
 	m_fAlpha -= fTimeDelta;
-
 	float Curdist = m_pTransCom->m_vPos.Get_Distance(m_vecParentPos);
 	if (Curdist < 8.f)
 		m_bIsReturn = true;
 
 	if (m_bIsReturn)
 	{
+		CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 10, L"Lighting0");
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_Sword_s_Effect(), m_uiInstanceIdx);
 		return RETURN_OBJ;
 	}

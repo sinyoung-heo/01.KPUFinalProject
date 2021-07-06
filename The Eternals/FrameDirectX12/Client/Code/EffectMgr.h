@@ -26,7 +26,7 @@ public:
 	void Effect_Shield(_vec3 vecPos);
 
 	void Effect_Particle(_vec3 vecPos,_int Cnt=20,wstring Tag=L"Snow", _vec3 vecScale=_vec3(0.1f), FRAME Frame=FRAME(1,1,1));
-
+	
 public:
 public:
 	Engine::CGameObject* pGameObj = nullptr;
