@@ -105,7 +105,7 @@ public:
 	void	send_Monster_move_packet(const int& to_client, const int& ani);
 	void	send_Monster_NormalAttack(const int& to_client, const int& ani);
 	void	send_Monster_RushAttack(const int& to_client, const int& ani);
-	void	send_Monster_Stat(const int& to_client);
+	void	send_Monster_Stat(const int& to_client, const int& damage);
 	void	send_Monster_Dead(const int& to_client, const int& ani);
 	void	send_Monster_animation_packet(const int& to_client, const int& ani);
 	void	send_Monster_Knockback(const int& to_client, const int& ani);

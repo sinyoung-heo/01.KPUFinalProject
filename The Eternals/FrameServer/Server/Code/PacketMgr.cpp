@@ -881,7 +881,11 @@ void process_collide(int id, int colID, int damage)
 
 		/* Decrease Player HP */
 		if (pPlayer->m_iHp > ZERO_HP)
+		{
 			pPlayer->m_iHp -= damage;
+			if (pPlayer->m_iHp <= ZERO_HP)
+				pPlayer->m_iHp = 0;
+		}
 		else
 		{
 			/* Player Dead */
