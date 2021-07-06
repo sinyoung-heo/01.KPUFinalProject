@@ -84,6 +84,18 @@ void CGameObject::Set_Buff(const int& hp, const int& maxHp, const int& mp, const
 	m_pInfoCom->m_iMaxMp	= maxMp;
 }
 
+void CGameObject::Set_PotionAbility(const int& ability, const bool& bIsHP)
+{
+	if (bIsHP)
+	{
+		m_pInfoCom->m_iHp = ability;
+	}
+	else
+	{
+		m_pInfoCom->m_iMp = ability;
+	}
+}
+
 void CGameObject::Set_Other_direction(_vec3& vDir)
 {
 	m_pTransCom->m_vAngle.y = vDir.Get_Angle(g_vLook);

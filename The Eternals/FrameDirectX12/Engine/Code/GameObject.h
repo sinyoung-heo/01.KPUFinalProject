@@ -66,6 +66,7 @@ public:
 	void	Set_Info(const int& lev, const int& hp, const int& maxHp, const int& mp, const int& maxMp, const int& exp, const int& maxExp, const int& minatt, const int& maxatt, const int& spd, const int& money);
 	void	Set_State(const int& cur) { m_iMonsterStatus = cur; }
 	void	Set_Buff(const int& hp, const int& maxHp, const int& mp, const int& maxMp);
+	void	Set_PotionAbility(const int& ability, const bool& bIsHP);
 	void	Set_Money(const int& money) { m_pInfoCom->m_iMoney = money; }
 	void	Set_Other_direction(_vec3& vDir);
 	float	Set_Other_Angle(_vec3& vDir);

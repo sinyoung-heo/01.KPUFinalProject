@@ -191,13 +191,13 @@ constexpr int Item_Shoes_S_COST				= 10000;
 
 // ______________________________[Potion]______________________________
 // 30.Item_Prtion_HP 
-constexpr char Item_Prtion_HP_ATT			= 0;
-constexpr char Item_Prtion_HP_HP			= 10;
-constexpr char Item_Prtion_HP_MP			= 0;
-constexpr char Item_Prtion_HP_COST			= 100;
+constexpr int Item_Potion_HP_ATT			= 0;
+constexpr int Item_Potion_HP_HP				= 10;
+constexpr int Item_Potion_HP_MP				= 0;
+constexpr int Item_Potion_HP_COST			= 100;
 
 // 31.Item_Prtion_MP			
-constexpr char Item_Prtion_MP_ATT			= 0;
-constexpr char Item_Prtion_MP_HP			= 0;
-constexpr char Item_Prtion_MP_MP			= 10;
-constexpr char Item_Prtion_MP_COST			= 100;
+constexpr int Item_Potion_MP_ATT			= 0;
+constexpr int Item_Potion_MP_HP				= 0;
+constexpr int Item_Potion_MP_MP				= 10;
+constexpr int Item_Potion_MP_COST			= 100;

@@ -10,7 +10,6 @@ void send_move_stop_packet(int to_client, int id);								// 움직임 패킷
 void send_attack_packet(int to_client, int id, int animIdx, float end_angleY);
 void send_attack_stop_packet(int to_client, int id, int animIdx);
 void send_player_stat(int to_client, int id);
-void send_buff_stat(const int& to_client, const int& ani, const int& hp, const int& maxHp, const int& mp, const int& maxMp);
 void send_player_stance_change(int to_client, int id, const bool& st);
 void send_player_stage_change(int to_client, int id);
 void send_suggest_party(int to_client, int id);
@@ -24,6 +23,13 @@ void send_update_inventory(const int& id, const char& chItemType, const char& ch
 void send_update_equipment(const int& to_client, const char& chItemType, const bool& isPushItem);
 void send_load_equipment(const int& to_client, const char* chItemType, const char* chName);
 void send_user_money(const int& to_client, const int& money);
+void send_drink_portion(const int& to_client, const int& ability, const char& chItemType, const char& chName, const int& count, const bool& isPushItem);
+void send_consume_point(const int& to_client, const int& hp, const int& maxHp, const int& mp, const int& maxMp);
+void send_buff_stat(const int& to_client, const int& priest_id, const int& ani,
+					const int& hp, const int& maxHp, const int& mp, const int& maxMp,
+					const int& priest_hp, const int& priest_maxHp, const int& priest_mp, const int& priest_maxMp);
+
+
 
 void process_move(int id, const _vec3& _vDir, const _vec3& _vPos);										// 움직임 처리 함수
 void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir);
@@ -47,6 +53,7 @@ void process_unequip_item(const int& id, const char& chItemSlotType, const char&
 void process_shopping(const int& id, cs_packet_shop* p);
 void process_load_equipment(const int& id, const char& chItemSlotType, const char& chItemType, const char& chName);
 void process_logoutForEquipment(const int& id, const char& chItemSlotType, const char& chItemType, const char& chName);
+void process_use_potion(const int& id, const bool& bIsPotionHP);
 
 /* 패킷 관리 및 처리 함수 */
 void process_packet(int id);													// 패킷 처리 함수 (모든 컨텐츠 처리)
