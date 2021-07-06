@@ -1575,32 +1575,32 @@ void process_buff(const int& id, cs_packet_attack* p)
 	{
 		for (auto& member : *CObjMgr::GetInstance()->Get_PARTYLIST(pPlayer->m_iPartyNumber))
 		{
-			if (member == id) continue;
-
 			CPlayer* pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", member));
 			if (pOther == nullptr || !pOther->m_bIsConnect || !pOther->m_bIsPartyState) continue;
 
-			switch (p->animIdx)
+			if (member != id)
 			{
-			case Priest::HEAL_START:
-			{
-				pOther->m_iHp += Priest::PLUS_HP;
+				switch (p->animIdx)
+				{
+				case Priest::HEAL_START:
+				{
+					pOther->m_iHp += Priest::PLUS_HP;
 
-				if (pOther->m_iHp >= pOther->m_iMaxHp)
-					pOther->m_iHp = pOther->m_iMaxHp;
-			}
-			break;
-		
-			case Priest::MP_CHARGE_START:
-			{
-				pOther->m_iMp += Priest::PLUS_MP;
+					if (pOther->m_iHp >= pOther->m_iMaxHp)
+						pOther->m_iHp = pOther->m_iMaxHp;
+				}
+				break;
 
-				if (pOther->m_iMp >= pOther->m_iMaxMp)
-					pOther->m_iMp = pOther->m_iMaxMp;
-			}
-			break;
-			}		
+				case Priest::MP_CHARGE_START:
+				{
+					pOther->m_iMp += Priest::PLUS_MP;
 
+					if (pOther->m_iMp >= pOther->m_iMaxMp)
+						pOther->m_iMp = pOther->m_iMaxMp;
+				}
+				break;
+				}
+			}	
 			// 파티원 버프 능력치 전송
 			pPlayer->send_buff_stat(member, p->animIdx, pOther->m_iHp, pOther->m_iMaxHp, pOther->m_iMp, pOther->m_iMaxMp);
 		}
