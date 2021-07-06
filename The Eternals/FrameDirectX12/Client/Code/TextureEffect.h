@@ -59,21 +59,31 @@ private:
 
 	FRAME	m_tFrame			{ };
 
-	bool m_bisInit = false;
 	_float m_fDeltatime = 0.f;
 	_float m_fAlpha = 1.f;
+	bool   m_bisInit = false;
 	bool m_bisBillBoard = true;
-	_vec4 m_vColorOffset;
 	bool m_bisLoop = true;
+
+	_vec4 m_vColorOffset;
 //
 	bool m_bisFollowHand = false;
 	Engine::HIERARCHY_DESC* m_pHierarchyDesc = nullptr;
 	Engine::CTransform* m_pPlayerTransform = nullptr;
-	bool m_bisFollowHandInit = false;
 
 	//ScaleAnim
-	bool m_bisScaleAnimation = false;
+	bool  m_bisScaleAnimation = false;
 	float m_fScaleTimeDelta = 0.f;
+
+
+	ID3D12DescriptorHeap* m_pTextureHeap = nullptr;
+public:
+	void Set_CreateInfo(wstring TexTag,const _vec3& vScale,
+		const _vec3& vAngle,
+		const _vec3& vPos,
+		const FRAME& tFrame = FRAME(1, 1, 0.0f), bool isLoop=false,bool isScaleAnim=false,_vec4 colorOffset=_vec4(0.f,0.f,0.f,1.f)
+		, bool isFollowHand=false, Engine::HIERARCHY_DESC* hierachy=nullptr, Engine::CTransform* parentTransform = nullptr
+	);
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,
@@ -82,6 +92,11 @@ public:
 									   const _vec3 & vAngle,
 									   const _vec3 & vPos,
 									   const FRAME& tFrame = FRAME(1, 1, 0.0f));
+
+
+	static CTextureEffect** Create_InstancePool(ID3D12Device* pGraphicDevice,
+		ID3D12GraphicsCommandList* pCommandList,
+		const _uint& uiInstanceCnt);
 private:
 	virtual void Free();
 };

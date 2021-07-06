@@ -71,13 +71,13 @@ _int CFireDecal::Update_GameObject(const _float & fTimeDelta)
 		vPos.z += (rand() % 80 - 40) * 0.1f;
 		CGameObject* pGameObj = nullptr;
 		vPos.y += 1.f;
-		pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-			L"Bomb00",						// TextureTag
-			_vec3(4.f, 4.f, 1.0f),		// Scale
-			_vec3(0.0f, 0.0f, 0.0f),		// Angle
-			vPos,	// Pos
-			FRAME(10, 9, 33.0f));			// Sprite Image Frame
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Bomb00", pGameObj), E_FAIL);
+		//pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+		//	L"Bomb00",						// TextureTag
+		//	_vec3(4.f, 4.f, 1.0f),		// Scale
+		//	_vec3(0.0f, 0.0f, 0.0f),		// Angle
+		//	vPos,	// Pos
+		//	FRAME(10, 9, 33.0f));			// Sprite Image Frame
+		//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Bomb00", pGameObj), E_FAIL);
 	}
 	
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MAGICCIRCLE, this), -1);

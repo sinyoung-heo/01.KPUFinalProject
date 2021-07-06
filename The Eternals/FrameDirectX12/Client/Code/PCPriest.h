@@ -98,6 +98,8 @@ private:
 	void Collision_Quest(list<Engine::CColliderSphere*>& lstMerchantCollider, int npcServerNumber);
 	void Suggest_PartyToOthers();
 	void Leave_PartyThisPlayer();
+	//Effect
+	void			Effect_Loop(const _float& fTimeDelta);
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]

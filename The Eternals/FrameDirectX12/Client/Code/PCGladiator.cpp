@@ -986,8 +986,8 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 {
 	if (m_uiAnimIdx == Gladiator::STINGER_BLADE)
 	{
-		m_bisSwordsSkillOffset += fTimeDelta;
-		if (m_bisSwordsSkillOffset > 0.45f && m_bisSwordsEffect==false)
+		m_fSwordsSkillOffset += fTimeDelta;
+		if (m_fSwordsSkillOffset > 0.45f && m_bisSwordsEffect==false)
 		{
 			m_bisSwordsEffect = true;
 			CEffectMgr::Get_Instance()->Effect_SwordEffect_s(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
@@ -996,12 +996,12 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 	else
 	{
 		m_bisSwordsEffect = false;
-		m_bisSwordsSkillOffset = 0.f;
+		m_fSwordsSkillOffset = 0.f;
 	}
 	if (m_uiAnimIdx == Gladiator::JAW_BREAKER)
 	{
-		m_bisSwordsSkill3Offset += fTimeDelta;
-		if (m_bisSwordsSkill3Offset > 0.15f && m_bisIce_mEffect ==false)
+		m_fSwordsSkill3Offset += fTimeDelta;
+		if (m_fSwordsSkill3Offset > 0.15f && m_bisIce_mEffect ==false)
 		{
 			m_bisIce_mEffect = true;
 			CEffectMgr::Get_Instance()->Effect_Straight_IceStorm(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
@@ -1010,59 +1010,66 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 	else
 	{
 		m_bisIce_mEffect = false;
-		m_bisSwordsSkill3Offset = 0.f;
+		m_fSwordsSkill3Offset = 0.f;
 	}
 	if (m_uiAnimIdx == Gladiator::DRAW_SWORD_CHARGE && m_bisDustEffect==false)
 	{
 		m_bisDustEffect = true;
 		CEffectMgr::Get_Instance()->Effect_Dust(m_pTransCom->m_vPos,3.f);
-
 		Engine::HIERARCHY_DESC* pHierarchyDesc = &(m_pMeshCom->Find_HierarchyDesc("L_Sword"));
 		_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
 		Pos.y += 2.f;
-		CGameObject* pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-			L"Lighting4",						// TextureTag
-			_vec3(0.8f),		// Scale
-			_vec3(0.0f, 0.0f, 0.0f),		// Angle
-			Pos,	// Pos
-			FRAME(8, 8, 40.0f));			// Sprite Image Frame
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Lighting4", pGameObj), E_FAIL);
-		static_cast<CTextureEffect*>(pGameObj)->Set_FollowHand(true);
-		static_cast<CTextureEffect*>(pGameObj)->Follow_PlayerHand(pHierarchyDesc, m_pTransCom);
-		static_cast<CTextureEffect*>(pGameObj)->Set_IsLoop(false);
-		static_cast<CTextureEffect*>(pGameObj)->Set_ColorOffset(_vec4(0.7f,0.1f,0,0));	
+
+	/*	CEffectMgr::Get_Instance()->Effect_TextureEffect(L"Lighting2", _vec3(1.f), _vec3(0.0f), Pos, FRAME(5, 16, 25.0f)
+			, false, false
+			, _vec4(0.0f), true, pHierarchyDesc, m_pTransCom);*/
+		/*CEffectMgr::Get_Instance()->Effect_TextureEffect(L"Lighting4", _vec3(0.8f), _vec3(0.0f), Pos, FRAME(8, 8, 40.0f), false, false
+			, _vec4(0.7f, 0.1f, 0, 0),true, pHierarchyDesc, m_pTransCom);*/
 	}
-	else if (m_uiAnimIdx == Gladiator::DRAW_SWORD&& m_bisFireEffect == false)
+	else if (m_uiAnimIdx == Gladiator::DRAW_SWORD)
 	{
-		m_bisSkillOffSet += fTimeDelta;
-		if (m_bisSkillOffSet > 0.2f)
+		
+		if (m_bisFireEffect == false)
 		{
-			m_bisFireEffect = true;
-			CEffectMgr::Get_Instance()->Effect_FireCone(m_pTransCom->m_vPos, m_pTransCom->m_vAngle.y);
+			m_fSkillOffSet += fTimeDelta;
+			if (m_fSkillOffSet > 0.2f)
+			{
+				m_bisFireEffect = true;
+				CEffectMgr::Get_Instance()->Effect_FireCone(m_pTransCom->m_vPos, m_pTransCom->m_vAngle.y);
+			}
+		}
+	}
+	else if (m_uiAnimIdx == Gladiator::DRAW_SWORD_LOOP || m_uiAnimIdx == Gladiator::DRAW_SWORD_CHARGE)
+	{
+		m_fParticleDeltaTime += fTimeDelta;
+		if (m_fParticleDeltaTime > 0.05f)
+		{
+			m_fParticleDeltaTime = 0.f;
+			CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 3, L"Lighting0", _vec3(0.4f));
 		}
 	}
 	else if (m_uiAnimIdx == Gladiator::DRAW_SWORD_END)
 	{
-
-		m_bisSkillOffSet = 0.f;
+		m_fParticleDeltaTime = 0.f;
+		m_fSkillOffSet = 0.f;
 		m_bisFireEffect = false;
 		m_bisDustEffect = false;	
 	}
 	if (m_uiAnimIdx == Gladiator::GAIA_CRUSH2 && m_bisIceEffect == false)
 	{
-		m_bisSkillOffSet += fTimeDelta;
-		if (m_bisSkillOffSet > 0.45f)
+		m_fSkillOffSet += fTimeDelta;
+		if (m_fSkillOffSet > 0.45f)
 		{
 			m_bisIceEffect = true;
 			CEffectMgr::Get_Instance()->Effect_IceStorm(m_pTransCom->m_vPos, 36, 5.f);
 			_vec3 Temp = m_pTransCom->m_vPos;
-			Temp.y += 0.5f;
+			Temp.y += 0.2f;
 			CEffectMgr::Get_Instance()->Effect_IceDecal(Temp);
 		}
 	}
 	else if (m_uiAnimIdx == Gladiator::GAIA_CRUSH3)
 	{
-		m_bisSkillOffSet = 0.f;
+		m_fSkillOffSet = 0.f;
 		m_bisIceEffect = false;
 	}
 	

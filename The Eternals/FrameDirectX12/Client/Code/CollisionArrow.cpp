@@ -55,11 +55,6 @@ HRESULT CCollisionArrow::Ready_GameObject(wstring wstrMeshTag,
 
 	m_iMeshPipelineStatePass = 4;
 
-	//// Create Trail
-	//m_pTrail = CEffectTrail::Create(m_pGraphicDevice, m_pCommandList, L"EffectTrailTexture", 12);
-	//m_pTrail->Set_IsRenderTrail(true);
-	//m_pTrail->Set_CatmullRom(0.5f);
-
 	if (m_wstrMeshTag == L"ArrowIce")
 		m_ePoolType = ARROW_POOL_TYPE::ARROW_POOL_ICE;
 	else if (m_wstrMeshTag == L"ArrowFire")
@@ -122,34 +117,6 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 
 	if (ARROW_TYPE::ARROW_DEFAULT == m_eType)
 	{
-		//m_fEffectDeltatime += fTimeDelta;
-
-		//if (m_iEffectCnt && m_fEffectDeltatime > 0.15f)
-		//{
-		//	CGameObject* pGameObj = nullptr;
-		//	for (int i = 0; i < 10; i++)
-		//	{
-		//		pGameObj = CSnowParticle::Create(m_pGraphicDevice, m_pCommandList,
-		//										 L"Snow",						// TextureTag
-		//										 _vec3(0.1f),					// Scale
-		//										 _vec3(0.0f, 0.0f, 0.0f),		// Angle
-		//										 m_pTransCom->m_vPos,			// Pos
-		//										 FRAME(1, 1, 1.0f));			// Sprite Image Frame
-		//		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Snow", pGameObj), E_FAIL);
-		//		static_cast<CSnowParticle*>(pGameObj)->Set_Pivot(false);
-		//		static_cast<CSnowParticle*>(pGameObj)->Set_Speed(2.5f);
-		//	}
-		//	pGameObj = CGlowring::Create(m_pGraphicDevice, m_pCommandList,
-		//								 L"Glowring",				// TextureTag
-		//								 _vec3(0.00f),				// Scale
-		//								 _vec3(0.0f, 0.0f, 0.0f),	// Angle
-		//								 m_pTransCom->m_vPos,		// Pos
-		//								 FRAME(1, 1, 1.0f));		// Sprite Image Frame
-		//	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Glowring", pGameObj), E_FAIL);
-		//	m_iEffectCnt--;
-		//	m_fEffectDeltatime = 0.f;
-		//}
-
 		m_fTimeDelta += fTimeDelta;
 
 		if (m_fTimeDelta >= m_fLifeTime)
@@ -195,38 +162,21 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 			if (!m_bIsCreateCollisionTick)
 			{
 				//Eff
+				CEffectMgr::Get_Instance()->Effect_IceStorm_s(m_pTransCom->m_vPos, 0.2f);
 				CGameObject* pGameObj = nullptr;
-				pGameObj = CIceStorm_s::Create(m_pGraphicDevice, m_pCommandList,
-					L"IceStorm1",
-					_vec3(0.f),
-					_vec3(0.f, 0.0f, 0.0f),
-					m_pTransCom->m_vPos,0.2f, XMConvertToRadians(rand()%36 * 10.f));
-				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"IceStorm_s", pGameObj), E_FAIL);
-
+		
 				_vec3 newPos = m_pTransCom->m_vPos;
 				newPos.y = 0.5f;
-				pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+
+				CEffectMgr::Get_Instance()->Effect_TextureEffect(
 					L"Bomb00",						// TextureTag
 					_vec3(2.f, 2.0f, 1.0f),		// Scale
 					_vec3(0.0f, 0.0f, 0.0f),		// Angle
 					newPos,	// Pos
-					FRAME(10, 9, 30.0f));			// Sprite Image Frame
-				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Bomb00", pGameObj), E_FAIL);
-				static_cast<CTextureEffect*>(pGameObj)->Set_IsLoop(false);
-				static_cast<CTextureEffect*>(pGameObj)->Set_BillBoard(true);
-				static_cast<CTextureEffect*>(pGameObj)->Set_ColorOffset(_vec4(0.f,0.3f,0.6f,1.f));
+					FRAME(10, 9, 30.0f), false, false, _vec4(0.f, 0.3f, 0.6f, 1.f));
+
 				m_bIsCreateCollisionTick = true;
 
-				//pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-				//	L"Crack",						// TextureTag
-				//	_vec3(0.5f),		// Scale
-				//	_vec3(90.0f, 0.0f, 0.0f),		// Angle
-				//	newPos,	// Pos
-				//	FRAME(1, 1, 1));			// Sprite Image Frame
-				//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Crack", pGameObj), E_FAIL);
-				//static_cast<CTextureEffect*>(pGameObj)->Set_IsLoop(true);
-				//static_cast<CTextureEffect*>(pGameObj)->Set_BillBoard(false);
-				//
 				CCollisionTick* pCollisionTick = static_cast<CCollisionTick*>(Pop_Instance(m_pInstancePoolMgr->Get_CollisionTickPool()));
 				if (nullptr != pCollisionTick)
 				{
@@ -268,41 +218,29 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 		if (m_fEffectDelta > 0.005f)
 		{
 			m_fEffectDelta = 0.f;
-			pGameObj = CDistTrail::Create(m_pGraphicDevice, m_pCommandList,
-				L"DistTrail",						// TextureTag
-				_vec3(0.00f),					// Scale
-				_vec3(0.0f, m_pTransCom->m_vAngle.y, 0.f),		// Angle
-				m_pTransCom->m_vPos);		// Pos;			// Sprite Image Frame
-			static_cast<CDistTrail*>(pGameObj)->Set_SizeOffset(fDist);
 			if (fDist < 5.f)
 			{
-				//Firework0
-				static_cast<CDistTrail*>(pGameObj)->Set_IsCrossFilter(true);
+				CEffectMgr::Get_Instance()->Effect_DistTrail(m_pTransCom->m_vPos, _vec3(0.0f, m_pTransCom->m_vAngle.y, 0.f)
+					, true, fDist);
 			}
-
+			else
+			{
+				CEffectMgr::Get_Instance()->Effect_DistTrail(m_pTransCom->m_vPos, _vec3(0.0f, m_pTransCom->m_vAngle.y, 0.f)
+					, false, fDist);
+			}
 			if (m_bisFireworkEffect == false)
 			{
 				m_bisFireworkEffect = true;
-				/*_vec3 CrossVec = m_vOriginPos.Cross_InputV1(_vec3(0, 1, 0));
-				CrossVec.Normalize();
-				_vec3 newPos = m_vOriginPos;*/
-				/*newPos.y += (rand() % 50 - 25) * 0.1f;
-				newPos.z += (rand() % 10 - 5) * 0.1f;
-				newPos += CrossVec * ((rand() % 50 - 25) * 0.1f);*/
-				CGameObject* TexObj;
 				_vec3 newPos = m_vOriginPos;
 				newPos.y += 1.f;
-				TexObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
+				CEffectMgr::Get_Instance()->Effect_TextureEffect(
 					L"Firework0",						// TextureTag
 					_vec3(8.f, 8.0f, 1.0f),		// Scale
 					_vec3(0.0f, 0.0f, 0.0f),		// Angle
 					newPos,	// Pos
-					FRAME(5, 8, 30.0f));			// Sprite Image Frame
-				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Firework0", TexObj), E_FAIL);
-				static_cast<CTextureEffect*>(TexObj)->Set_IsLoop(false);
-				static_cast<CTextureEffect*>(TexObj)->Set_BillBoard(true);
+					FRAME(5, 8, 30.0f), false, false);
+			
 			}
-			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"DistTrail", pGameObj), E_FAIL);
 		}
 	}
 
@@ -333,23 +271,6 @@ _int CCollisionArrow::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 	Process_Collision();
-
-	//// Update Trail
-	//if (nullptr != m_pTrail)
-	//{
-	//	_vec3 vDir = m_pTransCom->Get_LookVector();
-	//	vDir.Normalize();
-
-	//	_vec3 vMin = m_pTransCom->m_vPos;
-	//	_vec3 vMax = m_pTransCom->m_vPos - vDir * 2.5f;
-	//	m_pTrail->SetUp_TrailByCatmullRom(&vMin, &vMax);
-	//	//m_pTrail->Get_Transform()->m_vPos = _vec3(0.f, 0.f, 0.0f);
-
-	//	m_pTrail->Update_GameObject(fTimeDelta);
-	//}
-
-	//if(m_pTrail!=nullptr)
-	//	m_pTrail->LateUpdate_GameObject(fTimeDelta);
 
 	return NO_EVENT;
 }

@@ -64,9 +64,9 @@ _int CFrameMesh::Update_GameObject(const _float & fTimeDelta)
 	m_pTransCom->m_vAngle.y += 540.f *fTimeDelta;
 	m_tFrame.fCurFrame += fTimeDelta * m_tFrame.fFrameSpeed;
 
-	m_pTransCom->m_vScale.x = sinf(XMConvertToRadians(m_fDeltaDegree * 0.25f) * 0.375f) *0.8f;
+	m_pTransCom->m_vScale.x = sinf(XMConvertToRadians(m_fDeltaDegree * 0.25f) * 0.375f)		 *0.8f;
 	m_pTransCom->m_vScale.y = sinf(XMConvertToRadians(m_fDeltaDegree * 0.25f) * 0.375f*0.5f) * 0.8f;
-	m_pTransCom->m_vScale.z = sinf(XMConvertToRadians(m_fDeltaDegree * 0.25f) * 0.375f) * 0.8f;
+	m_pTransCom->m_vScale.z = sinf(XMConvertToRadians(m_fDeltaDegree * 0.25f) * 0.375f)		* 0.8f;
 	// Sprite XÃà
 	if (m_tFrame.fCurFrame > m_tFrame.fFrameCnt)
 	{
