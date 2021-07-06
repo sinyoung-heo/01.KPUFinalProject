@@ -61,14 +61,16 @@ _int CSwordTrailEffect::Update_GameObject(const _float & fTimeDelta)
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 	if (m_bIsDead)
 	{
-		CGameObject* pGameObj = nullptr;
-		pGameObj = CParticleEffect::Create(m_pGraphicDevice, m_pCommandList,
-			L"Lighting0",						// TextureTag
-			_vec3(0.1f),		// Scale
-			_vec3(0.0f, 0.0f, 0.0f),		// Angle
-			m_pTransCom->m_vPos,	// Pos
-			FRAME(1, 1, 1.f), 9,10);			// Sprite Image Frame
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Lighting1", pGameObj), E_FAIL);
+
+		CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 10, L"Lighting0");
+		//CGameObject* pGameObj = nullptr;
+		//pGameObj = CParticleEffect::Create(m_pGraphicDevice, m_pCommandList,
+		//	L"Lighting0",						// TextureTag
+		//	_vec3(0.1f),		// Scale
+		//	_vec3(0.0f, 0.0f, 0.0f),		// Angle
+		//	m_pTransCom->m_vPos,	// Pos
+		//	FRAME(1, 1, 1.f), 9,10);			// Sprite Image Frame
+		//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Lighting1", pGameObj), E_FAIL);
 		return DEAD_OBJ;
 	}
 	m_fAlpha -= fTimeDelta;

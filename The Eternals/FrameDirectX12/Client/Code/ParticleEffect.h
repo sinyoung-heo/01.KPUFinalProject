@@ -61,12 +61,13 @@ private:
 	_int m_Pipeline = 0;
 	_int m_iParticleCnt = 20;
 
-
+	ID3D12DescriptorHeap* m_pTextureHeap = nullptr;
 public:
 	void Set_CreateInfo(const _vec3& vScale,
 		const _vec3& vAngle,
-		const _vec3& vPos,
-		const FRAME& tFrame = FRAME(1, 1, 0.0f), const _int& PipeLine = 9, const _int& ParticleCnt = 20);
+		const _vec3& vPos, wstring TexTag = L"Snow",
+		const FRAME& tFrame = FRAME(1, 1, 0.0f), const _int& PipeLine = 9, const _int& ParticleCnt = 20
+	);
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 		ID3D12GraphicsCommandList* pCommandList,

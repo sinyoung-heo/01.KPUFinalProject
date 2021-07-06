@@ -43,14 +43,16 @@ HRESULT CEffectShield::LateInit_GameObject()
 
 	m_pCrossFilterShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
-	CGameObject* pGameObj = nullptr;
-	pGameObj = CParticleEffect::Create(m_pGraphicDevice, m_pCommandList,
-		L"Lighting1",						// TextureTag
-		_vec3(0.2f),		// Scale
-		_vec3(0.0f, 0.0f, 0.0f),		// Angle
-		m_pTransCom->m_vPos,	// Pos
-		FRAME(1, 1, 1.f), 9);			// Sprite Image Frame
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Lighting1", pGameObj), E_FAIL);
+
+	CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 20, L"Lighting1",_vec3(0.2f));
+	//CGameObject* pGameObj = nullptr;
+	//pGameObj = CParticleEffect::Create(m_pGraphicDevice, m_pCommandList,
+	//	L"Lighting1",						// TextureTag
+	//	_vec3(0.2f),		// Scale
+	//	_vec3(0.0f, 0.0f, 0.0f),		// Angle
+	//	m_pTransCom->m_vPos,	// Pos
+	//	FRAME(1, 1, 1.f), 9);			// Sprite Image Frame
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Lighting1", pGameObj), E_FAIL);
 
 	return S_OK;
 }
@@ -189,14 +191,8 @@ void CEffectShield::Set_ConstantTable()
 			m_bisLifeInit = true;
 			m_fDeltatimeVelocity2 = 3;
 
-			CGameObject* pGameObj = nullptr;
-			pGameObj = CParticleEffect::Create(m_pGraphicDevice, m_pCommandList,
-				L"Lighting1",						// TextureTag
-				_vec3(0.2f),		// Scale
-				_vec3(0.0f, 0.0f, 0.0f),		// Angle
-				m_pTransCom->m_vPos,	// Pos
-				FRAME(1, 1, 1.f),9);			// Sprite Image Frame
-			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Fire2", pGameObj), E_FAIL);
+
+			CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 20, L"Lighting1", _vec3(0.2f));
 
 		}
 	}

@@ -187,7 +187,7 @@ void CSwordEffect::Set_ConstantTable()
 			m_bisLifeInit = true;
 			m_fDeltatimeVelocity2 = 3;
 
-			CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 20, L"Snow", _vec3(0.1f));
+			CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 20, L"Lighting1", _vec3(0.1f));
 		
 		}
 	}

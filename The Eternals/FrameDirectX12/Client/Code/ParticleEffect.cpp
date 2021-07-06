@@ -4,6 +4,7 @@
 #include "GraphicDevice.h"
 #include "TextureDistortion.h"
 #include "TimeMgr.h"
+#include "DescriptorHeapMgr.h"
 CParticleEffect::CParticleEffect(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList), m_bisPivot(true)
 {
@@ -25,8 +26,11 @@ HRESULT CParticleEffect::Ready_GameObject(wstring wstrTextureTag,
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos = vPos;
 	for (int i = 0; i < ParticleCnt; i++)
+	{
+		m_pShaderCom[i]->SetUp_ShaderConstantBuffer();
+
 		TempPos[i] = vPos;
-	
+	}
 	m_uiTexIdx = 0;
 	m_tFrame = tFrame;
 	m_fAlpha = 1.f;
@@ -36,25 +40,12 @@ HRESULT CParticleEffect::Ready_GameObject(wstring wstrTextureTag,
 
 HRESULT CParticleEffect::LateInit_GameObject()
 {
-	// SetUp Shader ConstantBuffer
-	for (int i = 0; i < m_iParticleCnt; i++)
-	{
-		m_pShaderCom[i]->SetUp_ShaderConstantBuffer();
-
-		m_vecRandomvector[i].x = (rand() % 200 - 100);
-		m_vecRandomvector[i].y = (rand() % 100);
-		m_vecRandomvector[i].z = (rand() % 200 - 100);
-		m_vecRandomvector[i].Normalize();
-		TempPos[i] += m_vecRandomvector[i] * (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 50.f;
-	}
 	
 	return S_OK;
 }
 
 _int CParticleEffect::Update_GameObject(const _float& fTimeDelta)
 {
-	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
-
 	m_fDegree += fTimeDelta * 120.f;
 	
 	m_fAlpha = sin(XMConvertToRadians(m_fDegree * 0.5f));
@@ -64,6 +55,7 @@ _int CParticleEffect::Update_GameObject(const _float& fTimeDelta)
 		m_bIsReturn = true;
 	if (m_bIsReturn)
 	{
+		m_pTextureHeap = nullptr;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_Particle_Effect(), m_uiInstanceIdx);
 		return RETURN_OBJ;
 	}
@@ -98,11 +90,12 @@ _int CParticleEffect::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CParticleEffect::Render_GameObject(const _float& fTimeDelta)
 {
-
+	if (m_pTextureHeap == nullptr)
+		return;
 	for (int i = 0; i < m_iParticleCnt; i++)
 	{
 		Set_ConstantTable(i);
-		m_pShaderCom[i]->Begin_Shader(m_pTextureCom->Get_TexDescriptorHeap(), 0, m_uiTexIdx, Engine::MATRIXID::PROJECTION);
+		m_pShaderCom[i]->Begin_Shader(m_pTextureHeap, 0, m_uiTexIdx, Engine::MATRIXID::PROJECTION);
 		m_pBufferCom[i]->Begin_Buffer();
 		m_pBufferCom[i]->Render_Buffer();
 	}
@@ -117,7 +110,6 @@ HRESULT CParticleEffect::Add_Component(wstring wstrTextureTag)
 	for (int i = 0; i < m_iParticleCnt; i++)
 	{
 		wstring strShader = L"Com_Shader" + to_wstring(i);
-
 		wstring strBuffer = L"Com_Buffer" + to_wstring(i);
 		m_pBufferCom[i] = static_cast<Engine::CRcTex*>(m_pComponentMgr->Clone_Component(L"RcTex", Engine::COMPONENTID::ID_STATIC));
 		Engine::NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
@@ -130,12 +122,12 @@ HRESULT CParticleEffect::Add_Component(wstring wstrTextureTag)
 		Engine::FAILED_CHECK_RETURN(m_pShaderCom[i]->Set_PipelineStatePass(m_Pipeline), E_FAIL);
 		m_mapComponent[Engine::ID_STATIC].emplace(strShader, m_pShaderCom[i]);
 	}
-	// Texture
-	m_pTextureCom = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(wstrTextureTag, Engine::COMPONENTID::ID_STATIC));
-	Engine::NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
-	m_pTextureCom->AddRef();
-	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Texture", m_pTextureCom);
-	// Shader
+	//// Texture
+	//m_pTextureCom = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(wstrTextureTag, Engine::COMPONENTID::ID_STATIC));
+	//Engine::NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
+	//m_pTextureCom->AddRef();
+	//m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Texture", m_pTextureCom);
+	//// Shader
 	
 
 	return S_OK;
@@ -166,7 +158,9 @@ void CParticleEffect::Set_ConstantTable(_int i)
 	tCB_ShaderTexture.fAlpha = m_fAlpha;
 	tCB_ShaderTexture.fOffset3 = m_fDegree;
 	tCB_ShaderTexture.v_Color = m_vecColorOffset;
-	m_pShaderCom[i]->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
+
+	if(m_pShaderCom[i]->Get_UploadBuffer_ShaderTexture()!=nullptr)
+		m_pShaderCom[i]->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 }
 
 void CParticleEffect::Update_SpriteFrame(const _float& fTimeDelta)
@@ -189,13 +183,18 @@ void CParticleEffect::Update_SpriteFrame(const _float& fTimeDelta)
 }
 
 void CParticleEffect::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle,
-	const _vec3& vPos, const FRAME& tFrame, const _int& PipeLine, const _int& ParticleCnt)
+	const _vec3& vPos, wstring TexTag,const FRAME& tFrame, const _int& PipeLine, const _int& ParticleCnt)
 {
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos = vPos;
+	
+	if (nullptr == m_pTextureHeap)
+		m_pTextureHeap = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(TexTag);
+
 	for (int i = 0; i < ParticleCnt; i++)
 	{
+		
 		TempPos[i] = vPos;
 		m_vecRandomvector[i].x = (rand() % 200 - 100);
 		m_vecRandomvector[i].y = (rand() % 100);
@@ -250,5 +249,5 @@ void CParticleEffect::Free()
 		Engine::Safe_Release(m_pBufferCom[i]);
 		Engine::Safe_Release(m_pShaderCom[i]);
 	}
-	Engine::Safe_Release(m_pTextureCom);
+	//Engine::Safe_Release(m_pTextureCom);
 }

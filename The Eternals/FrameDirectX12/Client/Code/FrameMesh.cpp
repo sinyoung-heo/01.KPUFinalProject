@@ -53,6 +53,13 @@ _int CFrameMesh::Update_GameObject(const _float & fTimeDelta)
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
+	if (m_fDeltaDegree > 360.f)
+		m_bIsReturn = true;
+	if (m_bIsReturn)
+	{
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_FrameMesh_Effect(), m_uiInstanceIdx);
+		return RETURN_OBJ;
+	}
 
 	m_pTransCom->m_vAngle.y += 540.f *fTimeDelta;
 	m_tFrame.fCurFrame += fTimeDelta * m_tFrame.fFrameSpeed;
@@ -161,13 +168,9 @@ void CFrameMesh::Set_ConstantTable()
 	//g_fOffSet6 = Alpha°ª
 	m_fDeltaTime += Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.5f;
 	m_fDeltaDegree += Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") *180.f;
-	if (m_fDeltaDegree > 360.f)
-		m_bIsDead = true;
+
 	tCB_ShaderMesh.fOffset1 = -m_fDeltaTime;
-	//tCB_ShaderMesh.fOffset3 = m_fDeltaDegree;
-	/*
-	tCB_ShaderMesh.vEmissiveColor = _rgba(sinf(XMConvertToRadians(m_fDeltaDegree * 0.25)), sinf(XMConvertToRadians(m_fDeltaDegree* 0.25)*0.5f)
-		, 0, 0.f);*/
+	
 	tCB_ShaderMesh.fOffset5 = 1.f;
 	tCB_ShaderMesh.fOffset6 = m_fDeltaDegree / 180.f;
 	tCB_ShaderMesh.vAfterImgColor.x = m_tFrame.fFrameCnt;
@@ -232,6 +235,16 @@ HRESULT CFrameMesh::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTextu
 }
 
 
+void CFrameMesh::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, const FRAME& tFrame)
+{
+	m_pTransCom->m_vScale = vScale;
+	m_pTransCom->m_vAngle = vAngle;
+	m_pTransCom->m_vPos = vPos;
+	m_tFrame = tFrame;
+	m_fDeltaTime = 0.f;
+	m_fDeltaDegree = 0.f;
+}
+
 Engine::CGameObject* CFrameMesh::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
 												wstring wstrMeshTag, 
 												const _vec3 & vScale,
@@ -244,6 +257,18 @@ Engine::CGameObject* CFrameMesh::Create(ID3D12Device * pGraphicDevice, ID3D12Gra
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
+}
+
+CFrameMesh** CFrameMesh::Create_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, const _uint& uiInstanceCnt)
+{
+	CFrameMesh** ppInstance = new (CFrameMesh * [uiInstanceCnt]);
+	for (_uint i = 0; i < uiInstanceCnt; ++i)
+	{
+		ppInstance[i] = new CFrameMesh(pGraphicDevice, pCommandList);
+		ppInstance[i]->m_uiInstanceIdx = i;
+		ppInstance[i]->Ready_GameObject(L"PublicCylinder02", _vec3(0.f), _vec3(0.f), _vec3(0.f));
+	}
+	return ppInstance;
 }
 
 void CFrameMesh::Free()

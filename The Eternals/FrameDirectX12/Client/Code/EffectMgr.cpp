@@ -59,6 +59,7 @@ void CEffectMgr::Effect_IceStorm(_vec3 vecPos , int Cnt , float Radius )
 			static_cast<CIceStorm*>(pGameObj)->Set_CreateInfo(_vec3(0.f), _vec3(0.f), vecPos, Radius, XMConvertToRadians(i * 10.f));
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"IceStorm1", pGameObj), E_FAIL);
 		}
+
 	}
 }
 
@@ -111,7 +112,7 @@ void CEffectMgr::Effect_Straight_IceStorm(_vec3 vecPos, _vec3 vecDir)
 			static_cast<CIceStorm_m*>(pGameObj)->Set_CreateInfo(_vec3(0.f), newAngle, vecPos + PosOffSet, 0.05f + (0.02f * i));
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"publicSkill3", pGameObj), E_FAIL);
 		}
-		
+		CEffectMgr::Get_Instance()->Effect_Particle(vecPos + PosOffSet, 5, L"Lighting0", _vec3(0.3f));
 	}
 }
 
@@ -152,28 +153,25 @@ void CEffectMgr::Effect_FireCone(_vec3 vecPos, float RotY , _vec3 vecDir)
 {
 	vecPos.y = 0.5f;
 
-	pGameObj = CFireRing::Create(m_pGraphicDevice, m_pCommandList,
-		L"HalfMoon0",
-		_vec3(0.25f) ,
-		_vec3(-0.f, RotY-90.f, 0.f),
-		vecPos+vecDir//Pos
-		, FRAME(1, 1, 1)
-	);
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicCone00", pGameObj), E_FAIL);
+	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_FireRing_Effect());
+	if (nullptr != pGameObj)
+	{
+		static_cast<CFireRing*>(pGameObj)->Set_CreateInfo(_vec3(0.01f), _vec3(0.f, 0.0f, 0.0f), vecPos);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"HalfMoon0", pGameObj), E_FAIL);
+	}
 
 	for (int i = 0; i < 5; i++)
 	{
-		_vec3 newPos = vecPos;
-		newPos.y = 0.75 * i;
-		pGameObj = CFrameMesh::Create(m_pGraphicDevice, m_pCommandList,
-			L"PublicCylinder02",
-			_vec3(0.015f, 20.5, 0.015),
-			_vec3(-0.f, RotY + 60 * i , -0.f),
-			newPos//Pos
-			, FRAME(8, 8, 128)
-		);
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicCylinder01", pGameObj), E_FAIL);
+		pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_FrameMesh_Effect());
+		if (nullptr != pGameObj)
+		{
+			static_cast<CFrameMesh*>(pGameObj)->Set_CreateInfo(_vec3(0.015f, 20.5, 0.015), _vec3(-0.f, RotY + 60 * i, -0.f)
+				, vecPos, FRAME(8, 8, 128));
+			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicCylinder02", pGameObj), E_FAIL);
+		}
 	}
+
+
 }
 
 void CEffectMgr::Effect_Test(_vec3 vecPos)
@@ -241,23 +239,14 @@ void CEffectMgr::Effect_Shield(_vec3 vecPos)
 
 void CEffectMgr::Effect_Particle(_vec3 vecPos, _int Cnt, wstring Tag,_vec3 vecScale,FRAME Frame)
 {
-
-	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_Particle_Effect());
-	if (nullptr != pGameObj)
+	//Snow Lighting1 Lighting0
+	Engine::CGameObject *particleobj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_Particle_Effect());
+	if (nullptr != particleobj)
 	{
-		static_cast<CParticleEffect*>(pGameObj)->Set_CreateInfo(vecScale, _vec3(0.f), vecPos, Frame
+		static_cast<CParticleEffect*>(particleobj)->Set_CreateInfo(vecScale, _vec3(0.f), vecPos,Tag, Frame
 		,9,Cnt);
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject",Tag, pGameObj), E_FAIL);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject",Tag, particleobj), E_FAIL);
 	}
-
-
-	//pGameObj = CParticleEffect::Create(m_pGraphicDevice, m_pCommandList,
-	//	L"Snow",						// TextureTag
-	//	_vec3(0.1f),		// Scale
-	//	_vec3(0.0f, 0.0f, 0.0f),		// Angle
-	//	vecPos,	// Pos
-	//	FRAME(1, 1, 1.f), 9, 3);			// Sprite Image Frame
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Snow", pGameObj), E_FAIL);
 }
 
 
