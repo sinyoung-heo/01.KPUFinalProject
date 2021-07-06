@@ -520,6 +520,9 @@
     <Filter Include="02.GameObject\98.GameEffect\99.Garbage">
       <UniqueIdentifier>{1251c319-13ca-4364-8c4f-74b099faac05}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.Mgr\11.CinemaMgr">
+      <UniqueIdentifier>{65fe2c00-1893-423d-8e95-7ca977b3872e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -1036,7 +1039,6 @@
     <ClInclude Include="..\Code\DmgFont.h">
       <Filter>02.GameObject\98.GameEffect\00.DmgFont</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\CinemaMgr.h" />
     <ClInclude Include="..\Code\EffectShield.h">
       <Filter>02.GameObject\98.GameEffect\08.PriestShield</Filter>
     </ClInclude>
@@ -1075,6 +1077,9 @@
     </ClInclude>
     <ClInclude Include="..\Code\SwordTrailEffect.h">
       <Filter>02.GameObject\98.GameEffect\99.Garbage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\CinemaMgr.h">
+      <Filter>97.Mgr\11.CinemaMgr</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1535,7 +1540,6 @@
     <ClCompile Include="..\Code\DmgFont.cpp">
       <Filter>02.GameObject\98.GameEffect\00.DmgFont</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CinemaMgr.cpp" />
     <ClCompile Include="..\Code\EffectShield.cpp">
       <Filter>02.GameObject\98.GameEffect\08.PriestShield</Filter>
     </ClCompile>
@@ -1574,6 +1578,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\SwordTrailEffect.cpp">
       <Filter>02.GameObject\98.GameEffect\99.Garbage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CinemaMgr.cpp">
+      <Filter>97.Mgr\11.CinemaMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
