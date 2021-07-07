@@ -155,7 +155,7 @@ void CTextureEffect::ScaleAnim(const _float& fTimeDelta)
 		return;
 
 	m_fScaleTimeDelta += (fTimeDelta*10);
-	m_pTransCom->m_vScale = _vec3(sin(m_fScaleTimeDelta));
+	m_pTransCom->m_vScale = _vec3(sin(m_fScaleTimeDelta)) * m_fMaxScale;
 	if (sin(m_fScaleTimeDelta) > 0.9f)
 		m_bIsReturn = true;
 

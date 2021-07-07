@@ -66,6 +66,7 @@ PublicTornado00|PublicTornado00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Pl
 PublicTornado01|PublicTornado01.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicTornado01\
 IceStorm0|IceStorm0.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\IceStorm0\
 IceStorm1|IceStorm1.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\IceStorm1\
+publicAxe|publicAxe.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicAxe\
 publicShield|publicShield.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicShield\
 publicSkill3|publicSkill3.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSkill3\
 publicSphere|publicSphere.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSphere\

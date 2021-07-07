@@ -180,6 +180,8 @@ private:
 	wstring			m_wstrText        = L"";
 	_tchar			m_szText[MAX_STR] = L"";
 
+	//Effect
+	_bool m_bisEffect = false;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

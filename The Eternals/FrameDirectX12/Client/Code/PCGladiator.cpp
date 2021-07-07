@@ -1048,7 +1048,7 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 		if (m_fParticleDeltaTime > 0.05f)
 		{
 			m_fParticleDeltaTime = 0.f;
-			CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 3, L"Lighting0", _vec3(0.4f));
+			CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 3, L"Lighting6", _vec3(0.4f));
 		}
 	}
 	else if (m_uiAnimIdx == Gladiator::DRAW_SWORD_END)

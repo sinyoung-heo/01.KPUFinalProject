@@ -47,6 +47,12 @@ _int CMagicCircle::Update_GameObject(const _float & fTimeDelta)
 {
 	if(m_bisRotate)
 		m_pTransCom->m_vAngle.y += 60.f*fTimeDelta;
+	if (m_bisFollowPlayer)
+	{
+		m_pTransCom->m_vPos.x = m_pParentTransform->m_vPos.x;
+		m_pTransCom->m_vPos.z = m_pParentTransform->m_vPos.z;
+	}
+
 	if (m_fLifeTime<5.5f &&m_bisScaleAnim && m_pTransCom->m_vScale.x<0.02f)
 		m_pTransCom->m_vScale += _vec3(fTimeDelta*0.04);
 	m_fLifeTime += fTimeDelta;
@@ -54,12 +60,17 @@ _int CMagicCircle::Update_GameObject(const _float & fTimeDelta)
 	{
 		m_pTransCom->m_vScale-= _vec3(fTimeDelta * 0.04);
 		if (m_pTransCom->m_vScale.x < 0.00)
-			m_bIsDead = true;
+			m_bIsReturn = true;
 	}
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
+	if (m_bIsReturn)
+	{
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_MagicCircleEffect(), m_uiInstanceIdx);
+		return RETURN_OBJ;
+	}
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
@@ -72,10 +83,7 @@ _int CMagicCircle::Update_GameObject(const _float & fTimeDelta)
 	______________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
-	//_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
-	//m_pTransCom->m_vPos = Pos;
-	//m_pTransCom->m_vPos.y += 0.2f;
-
+	
 	
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
 	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
@@ -199,6 +207,26 @@ HRESULT CMagicCircle::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTex
 }
 
 
+void CMagicCircle::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, bool bisRotate, bool bisScaleAnim, const Engine::CTransform* ParentTransform, bool bisFollowPlayer)
+{
+	m_pTransCom->m_vScale = vScale;
+	m_pTransCom->m_vAngle = vAngle;
+	m_pTransCom->m_vPos = vPos;
+
+	m_bisRotate = bisRotate;
+	m_bisScaleAnim = bisScaleAnim;
+	m_bisFollowPlayer = bisFollowPlayer;
+	m_pParentTransform = ParentTransform;
+
+	m_fDeltatime = 0.f;
+	m_fDeltatime2 = 0.f;
+	m_fDeltatime3 = 0.f;
+	m_fLifeTime = 0.f;
+
+	m_fAlpha = 0.f;
+	m_fDegree = 0.f;
+}
+
 Engine::CGameObject* CMagicCircle::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
 												wstring wstrMeshTag, 
 												const _vec3 & vScale,
@@ -211,6 +239,19 @@ Engine::CGameObject* CMagicCircle::Create(ID3D12Device * pGraphicDevice, ID3D12G
 		Engine::Safe_Release(pInstance);
 
 	return pInstance;
+}
+
+CMagicCircle** CMagicCircle::Create_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, const _uint& uiInstanceCnt)
+{
+	CMagicCircle** ppInstance = new (CMagicCircle * [uiInstanceCnt]);
+	for (_uint i = 0; i < uiInstanceCnt; ++i)
+	{
+		ppInstance[i] = new CMagicCircle(pGraphicDevice, pCommandList);
+		ppInstance[i]->m_uiInstanceIdx = i;
+		ppInstance[i]->Ready_GameObject(L"PublicPlane00", _vec3(0.f), _vec3(0.f), _vec3(0.f), 0.f);
+	}
+	return ppInstance;
+
 }
 
 void CMagicCircle::Free()

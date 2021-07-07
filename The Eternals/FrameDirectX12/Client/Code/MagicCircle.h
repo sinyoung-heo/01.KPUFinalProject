@@ -59,15 +59,21 @@ private:
 	_uint m_uiDiffuse = 0;
 	_uint m_uiNormal=0;
 	_uint m_uiSpec=0;
-	float m_fDeltatime = 0.f;
-	float m_fDeltatime2 = 0.f;
-	float m_fDeltatime3 = 0.f;
+	_float  m_fDeltatime = 0.f;
+	_float  m_fDeltatime2 = 0.f;
+	_float  m_fDeltatime3 = 0.f;
+	_float m_fLifeTime = 0.f;
 	_bool m_bisRotate = false;
 	_bool m_bisScaleAnim = false;
-	_float m_fLifeTime = 0.f;
+	_bool m_bisFollowPlayer = false;
 
 	_float m_fAlpha = 0.f;
 	_float m_fDegree = 0.f;
+
+	const Engine::CTransform* m_pParentTransform = nullptr;
+public:
+	void Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, bool bisRotate = false,bool bisScaleAnim=false
+		, const Engine::CTransform* ParentTransform=nullptr,bool bisFollowPlayer=false);
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 		ID3D12GraphicsCommandList* pCommandList,
@@ -76,6 +82,10 @@ public:
 		const _vec3& vAngle,
 		const _vec3& vPos,
 		const int& iPipeLineIdx = 0);
+
+	static CMagicCircle** Create_InstancePool(ID3D12Device* pGraphicDevice,
+		ID3D12GraphicsCommandList* pCommandList,
+		const _uint& uiInstanceCnt);
 private:
 	virtual void Free();
 };

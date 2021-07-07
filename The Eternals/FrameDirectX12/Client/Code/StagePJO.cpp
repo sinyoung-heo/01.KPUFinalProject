@@ -288,13 +288,6 @@ HRESULT CStagePJO::Ready_LayerEnvironment(wstring wstrLayerTag)
 		_vec3(256.0f, 0.7f, 276.0f), _vec3(STAGE_VELIKA_OFFSET_X, 0.0f, STAGE_VELIKA_OFFSET_Z));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"BumpWaterMesh00", pGameObj), E_FAIL);
 
-	//pGameObj =CMagicCircle::Create(m_pGraphicDevice, m_pCommandList,
-	//	L"PublicPlane00",
-	//	_vec3(0.01f),
-	//	_vec3(0.f,0.0f, 0.0f),
-	//	_vec3(0, 0, 0));
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"PublicPlane00", pGameObj), E_FAIL);
-
 	/*
 	
 

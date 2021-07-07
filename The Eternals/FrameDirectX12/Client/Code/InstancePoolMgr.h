@@ -47,6 +47,11 @@ class CFireRing;
 class CFrameMesh;
 class CDistTrail;
 class CTextureEffect;
+class CEffectShield;
+class CEffectAxe;
+class CMagicCircle;
+class CGridShieldEffect;
+
 class CInstancePoolMgr : public Engine::CBase
 {
 	DECLARE_SINGLETON(CInstancePoolMgr)
@@ -113,7 +118,14 @@ public:
 	INSTANCE_POOL_DESC<CDistTrail>* Get_Effect_DistTrail_Effect() { return m_pEffect_DistTrail_Pool; }
 	INSTANCE_POOL_DESC<CTextureEffect>* Get_Effect_TextureEffect() { return m_pEffect_Texture_Pool; }
 
+	INSTANCE_POOL_DESC<CEffectShield>* Get_Effect_ShieldEffect() { return m_pEffect_Shield_Pool; }
+	INSTANCE_POOL_DESC<CEffectAxe>* Get_Effect_AxeEffect() { return m_pEffect_Axe_Pool; }
+
+	INSTANCE_POOL_DESC<CGridShieldEffect>* Get_Effect_GridShieldEffect() { return m_pEffect_GridShieldEffect_Pool; }
+
 	
+	INSTANCE_POOL_DESC<CMagicCircle>* Get_Effect_MagicCircleEffect() { return m_pEffect_MagicCircle_Pool; }
+
 	void Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 	void Ready_LoadingInstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 
@@ -193,7 +205,15 @@ private:
 	INSTANCE_POOL_DESC<CIceStorm_s>* m_pEffect_IceStorm_s_Pool = nullptr;
 	INSTANCE_POOL_DESC<CDistTrail>* m_pEffect_DistTrail_Pool = nullptr;
 
+	//Effect Priest
 
+	INSTANCE_POOL_DESC<CEffectAxe>* m_pEffect_Axe_Pool = nullptr;
+	INSTANCE_POOL_DESC<CEffectShield>* m_pEffect_Shield_Pool = nullptr;
+	INSTANCE_POOL_DESC<CMagicCircle>* m_pEffect_MagicCircle_Pool = nullptr;
+	INSTANCE_POOL_DESC<CGridShieldEffect>* m_pEffect_GridShieldEffect_Pool = nullptr;
+
+
+	
 	// Effect Particle
 	INSTANCE_POOL_DESC<CParticleEffect>* m_pEffect_Particle_Pool = nullptr;
 	INSTANCE_POOL_DESC<CTextureEffect>* m_pEffect_Texture_Pool = nullptr;

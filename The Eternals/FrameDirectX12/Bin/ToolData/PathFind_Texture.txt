@@ -20,6 +20,8 @@ Lighting1|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Lightin
 Lighting2|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Lighting2\%d.dds
 Lighting3|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Lighting3\%d.dds
 Lighting4|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Lighting4\%d.dds
+Lighting5|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Lighting5\%d.dds
+Lighting6|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Lighting6\%d.dds
 Lightning00|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Lightning00\%d.dds
 Lightning01|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Lightning01\%d.dds
 Smoke0|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Smoke0\%d.dds
@@ -32,7 +34,7 @@ SkyBox|10|..\..\Bin\Resource\ResourceStage\Texture\Environment\SkyBox\%d.dds
 Terrain|13|..\..\Bin\Resource\ResourceStage\Texture\Environment\Terrain\%d.dds
 TexWaterFall|11|..\..\Bin\Resource\ResourceStage\Texture\Environment\TexWaterFall\%d.dds
 WaterNormal|134|..\..\Bin\Resource\ResourceStage\Texture\Environment\WaterNormal\%d.dds
-PublicMagic|21|..\..\Bin\Resource\ResourceStage\Texture\PublicMagic\%d.dds
+PublicMagic|22|..\..\Bin\Resource\ResourceStage\Texture\PublicMagic\%d.dds
 ItemArmor|5|..\..\Bin\Resource\ResourceStage\Texture\UI\ItemArmor\%d.dds
 ItemHelmet|5|..\..\Bin\Resource\ResourceStage\Texture\UI\ItemHelmet\%d.dds
 ItemPotion|2|..\..\Bin\Resource\ResourceStage\Texture\UI\ItemPotion\%d.dds
