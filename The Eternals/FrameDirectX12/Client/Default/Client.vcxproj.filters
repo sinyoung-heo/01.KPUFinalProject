@@ -1081,6 +1081,9 @@
     <ClInclude Include="..\Code\CinemaMgr.h">
       <Filter>97.Mgr\11.CinemaMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\EffectAxe.h">
+      <Filter>02.GameObject\98.GameEffect\08.PriestShield</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1581,6 +1584,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CinemaMgr.cpp">
       <Filter>97.Mgr\11.CinemaMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\EffectAxe.cpp">
+      <Filter>02.GameObject\98.GameEffect\08.PriestShield</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -157,7 +157,7 @@ HRESULT CPCPriest::LateInit_GameObject()
 _int CPCPriest::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
-
+	Effect_Loop(fTimeDelta);
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
@@ -1843,6 +1843,42 @@ void CPCPriest::Leave_PartyThisPlayer()
 
 void CPCPriest::Effect_Loop(const _float& fTimeDelta)
 {
+	if (m_uiAnimIdx == Priest::AURA_ON)
+	{
+		if (m_bisEffect == false)
+		{
+			m_bisEffect = true;
+			CEffectMgr::Get_Instance()->Effect_TargetShield(m_pTransCom->m_vPos, m_pTransCom);
+		}
+	}
+	else if (m_uiAnimIdx == Priest::PURIFY)
+	{
+		if (m_bisEffect == false)
+		{
+			m_bisEffect = true;
+			CEffectMgr::Get_Instance()->Effect_Axe(m_pTransCom->m_vPos, m_pTransCom);
+		}
+	}
+	else if (m_uiAnimIdx == Priest::HEAL_LOOP)
+	{
+		if (m_bisEffect == false)
+		{
+			m_bisEffect = true;
+			CEffectMgr::Get_Instance()->Effect_GridShieldEffect(m_pTransCom->m_vPos,1,m_pTransCom);
+		}
+	}
+	else if (m_uiAnimIdx == Priest::MP_CHARGE_LOOP)
+	{
+		if (m_bisEffect == false)
+		{
+			m_bisEffect = true;
+			CEffectMgr::Get_Instance()->Effect_GridShieldEffect(m_pTransCom->m_vPos, 0,m_pTransCom);
+		}
+	}
+	else  
+	{
+		m_bisEffect = false;
+	}
 }
 
 Engine::CGameObject* CPCPriest::Create(ID3D12Device* pGraphicDevice, 

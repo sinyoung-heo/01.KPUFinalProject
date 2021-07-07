@@ -105,6 +105,8 @@ void CCollisionTick::Process_Collision()
 			Set_IsReturnObject(true);
 			pDst->Get_BoundingSphere()->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
 
+			CEffectMgr::Get_Instance()->Effect_ArrowHitted(m_pTransCom->m_vPos);
+
 			pDst->Set_bisHitted(true);
 
 			// DmgFont

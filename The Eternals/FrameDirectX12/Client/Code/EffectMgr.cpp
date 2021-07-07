@@ -16,6 +16,7 @@
 #include "MagicCircleGlow.h"
 #include "GridShieldEffect.h"
 #include "EffectShield.h"
+#include "EffectAxe.h"
 #include "SwordEffect_s.h"
 #include "IceStorm_m.h"
 #include "IceStorm_s.h"
@@ -175,63 +176,102 @@ void CEffectMgr::Effect_Test(_vec3 vecPos)
 	
 }
 
-void CEffectMgr::Effect_GridShieldEffect(_vec3 vecPos,int type)
+void CEffectMgr::Effect_GridShieldEffect(_vec3 vecPos,int type,Engine::CTransform* parentTransform)
 {
 	int Pipeidx = 0;
+	_vec3 Texidx;
 	vecPos.y = 1.f + rand()%10 * 0.01;
 	type == 0 ? Pipeidx = 2 : Pipeidx=10;
-	pGameObj = CGridShieldEffect::Create(m_pGraphicDevice, m_pCommandList,
-		L"PublicSphere00",
-		_vec3(0.00f),
-		_vec3(0.f, 0.f, 0.f),
-		vecPos, Pipeidx
-	);
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicSphere00", pGameObj), E_FAIL);
-	static_cast<CGridShieldEffect*>(pGameObj)->Set_isScaleAnim(true);
-	if (type == 0)
+	type == 0 ? Texidx = _vec3(0,2,16) : Texidx=_vec3(0, 25, 16);
+	//pGameObj = CGridShieldEffect::Create(m_pGraphicDevice, m_pCommandList,
+	//	L"PublicSphere00",
+	//	_vec3(0.00f),
+	//	_vec3(0.f, 0.f, 0.f),
+	//	vecPos, Pipeidx
+	//);
+	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicSphere00", pGameObj), E_FAIL);
+
+	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_GridShieldEffect());
+	if (nullptr != pGameObj)
+	{
+		static_cast<CGridShieldEffect*>(pGameObj)->Set_CreateInfo(_vec3(0.f), _vec3(0.f), vecPos, Texidx.x, Texidx.y, Texidx.z,Pipeidx, true, true, parentTransform);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicSphere00", pGameObj), E_FAIL);
+	}
+	/*if (type == 0)
 		static_cast<CGridShieldEffect*>(pGameObj)->Set_TexIDX(0, 2, 16);
 	else
-		static_cast<CGridShieldEffect*>(pGameObj)->Set_TexIDX(0, 25, 16);
+		static_cast<CGridShieldEffect*>(pGameObj)->Set_TexIDX(0, 25, 16);*/
 
-	
-	pGameObj = CMagicCircle::Create(m_pGraphicDevice, m_pCommandList,
-		L"PublicPlane00",
-		_vec3(0.00f),
-		_vec3(0.f, 0.0f, 0.0f), vecPos, 0);
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicPlane00", pGameObj), E_FAIL);
+
 	if (type == 0)
-		static_cast<CMagicCircle*>(pGameObj)->Set_TexIDX(18, 18, 2);
+		Effect_MagicCircle_Effect(_vec3(0.0f), _vec3(0.0f), vecPos, 18, 18, 2,true, true, parentTransform, true);
 	else
-		static_cast<CMagicCircle*>(pGameObj)->Set_TexIDX(19, 19, 2);
-
-	static_cast<CMagicCircle*>(pGameObj)->Set_isScaleAnim(true);
-	static_cast<CMagicCircle*>(pGameObj)->Set_isRotate(true);
+		Effect_MagicCircle_Effect(_vec3(0.0f), _vec3(0.0f), vecPos, 19, 19, 2, true, true, parentTransform, true);
 }
 
-void CEffectMgr::Effect_Shield(_vec3 vecPos)
+void CEffectMgr::Effect_Shield(_vec3 vecPos,Engine::CTransform* parentTransform)
 {
 	for (int i = 0; i < 5; i++)
 	{
 		vecPos.y = 1.f;
-		pGameObj = CEffectShield::Create(m_pGraphicDevice, m_pCommandList,
-			L"publicShield",
-			_vec3(0.00f),
-			_vec3(0.f, 0.f, 0.f),
-			vecPos, (360 / 5) * i);
-		static_cast<CEffectShield*>(pGameObj)->Set_isScaleAnim(true);
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"publicShield", pGameObj), E_FAIL);
+		pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_ShieldEffect());
+		if (nullptr != pGameObj)
+		{
+			static_cast<CEffectShield*>(pGameObj)->Set_CreateInfo(_vec3(0.0f), _vec3(0.0f), vecPos,
+				5.5f,0.12f,3.f,(360 / 5) * i, parentTransform);
+			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"publicShield", pGameObj), E_FAIL);
+		}
 	}
-
 	vecPos.y = rand() % 50 * 0.01f;
 	vecPos.z += 0.2f;
-	pGameObj = CMagicCircle::Create(m_pGraphicDevice, m_pCommandList,
-		L"PublicPlane00",
-		_vec3(0.00f),
-		_vec3(0.f, 0.0f, 0.0f), vecPos);
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicPlane00", pGameObj), E_FAIL);
-	static_cast<CMagicCircle*>(pGameObj)->Set_TexIDX(20, 20, 2);
-	static_cast<CMagicCircle*>(pGameObj)->Set_isScaleAnim(true);
-	static_cast<CMagicCircle*>(pGameObj)->Set_isRotate(false);
+	Effect_MagicCircle_Effect(_vec3(0.0f), _vec3(0.0f), vecPos, 20, 20, 2, true, true, parentTransform, true);
+}
+
+void CEffectMgr::Effect_Axe(_vec3 vecPos, Engine::CTransform* parentTransform)
+{
+	for (int i = 0; i < 5; i++)
+	{
+		vecPos.y = -1.f;
+		pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_AxeEffect());
+		if (nullptr != pGameObj)
+		{
+			static_cast<CEffectAxe*>(pGameObj)->Set_CreateInfo(_vec3(0.0f), _vec3(0.0f), vecPos, (360 / 5) * i, parentTransform);
+			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"publicAxe", pGameObj), E_FAIL);
+		}
+	}
+	vecPos.y = rand() % 50 * 0.01f;
+	vecPos.z += 0.2f;
+	Effect_MagicCircle_Effect(_vec3(0.0f), _vec3(0.0f), vecPos, 21, 21, 2, true, true, parentTransform, true);
+}
+
+void CEffectMgr::Effect_TargetShield(_vec3 vecPos, Engine::CTransform* parentTransform)
+{
+	for (int i = 0; i < 3; i++)
+	{
+		vecPos.y = 1.f;
+		pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_ShieldEffect());
+		if (nullptr != pGameObj)
+		{
+			static_cast<CEffectShield*>(pGameObj)->Set_CreateInfo(_vec3(0.0f), _vec3(0.0f), vecPos,
+				180.f, 0.06f, 1.5f
+				, (360 / 3) * i, parentTransform,true);
+			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"publicShield", pGameObj), E_FAIL);
+		}
+	}
+}
+
+void CEffectMgr::Effect_TargetAxe(_vec3 vecPos, Engine::CTransform* parentTransform)
+{
+	for (int i = 0; i < 3; i++)
+	{
+		vecPos.y = -1.f;
+		pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_AxeEffect());
+		if (nullptr != pGameObj)
+		{
+			static_cast<CEffectAxe*>(pGameObj)->Set_CreateInfo(_vec3(0.0f), _vec3(0.0f), vecPos, (360 / 3) * i, parentTransform);
+			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"publicAxe", pGameObj), E_FAIL);
+		}
+	}
 }
 
 void CEffectMgr::Effect_DistTrail(_vec3 vecPos, _vec3 Angle,bool isCrossFilter,float SizeOffSet)
@@ -268,10 +308,23 @@ void CEffectMgr::Effect_TextureEffect(wstring TexTag, _vec3 Scale, _vec3 Angle, 
 		static_cast<CTextureEffect*>(textureObj)->Set_CreateInfo(TexTag,Scale,Angle,Pos,frame,isLoop,isScaleAnim,colorOffset
 		, isFollowHand, hierachy, parentTransform);
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", TexTag, textureObj), E_FAIL);
-	/*	if (isFollowHand)
-			static_cast<CTextureEffect*>(textureObj)->Follow_PlayerHand(hierachy, parentTransform);*/
+
 	}
 }
+
+void CEffectMgr::Effect_MagicCircle_Effect(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, _int Diff, _int Norm, _int Spec
+	, bool bisRotate, bool bisScaleAnim, const Engine::CTransform* ParentTransform, bool bisFollowPlayer)
+{
+	Engine::CGameObject* MagicCircleObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_MagicCircleEffect());
+	if (nullptr != MagicCircleObj)
+	{
+		static_cast<CMagicCircle*>(MagicCircleObj)->Set_CreateInfo(vScale, vAngle, vPos, bisRotate, bisScaleAnim, ParentTransform,
+			bisFollowPlayer);
+		static_cast<CMagicCircle*>(MagicCircleObj)->Set_TexIDX(Diff, Norm, Spec);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject",L"MagicCircle", MagicCircleObj), E_FAIL);
+	}
+}
+
 
 
 void CEffectMgr::Free(void)

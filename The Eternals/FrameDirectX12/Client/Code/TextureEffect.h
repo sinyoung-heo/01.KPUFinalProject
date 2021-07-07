@@ -35,7 +35,7 @@ public:
 	void Follow_PlayerHand(Engine::HIERARCHY_DESC* pHierarchyDesc= nullptr, Engine::CTransform* PlayerTransform= nullptr);
 	void Set_FollowHand(bool isFollow) { m_bisFollowHand = isFollow; }
 
-	void Set_ScaleAnim(bool isScaleAnim) { m_bisScaleAnimation = isScaleAnim; }
+	void Set_ScaleAnim(bool isScaleAnim, float MaxScale = 1.f) { m_bisScaleAnimation = isScaleAnim, m_fMaxScale = MaxScale; }
 	void ScaleAnim(const _float& fTimeDelta=0.f);
 private:
 	virtual HRESULT Add_Component(wstring wstrTextureTag);
@@ -74,7 +74,7 @@ private:
 	//ScaleAnim
 	bool  m_bisScaleAnimation = false;
 	float m_fScaleTimeDelta = 0.f;
-
+	float m_fMaxScale = 1.f;
 
 	ID3D12DescriptorHeap* m_pTextureHeap = nullptr;
 public:

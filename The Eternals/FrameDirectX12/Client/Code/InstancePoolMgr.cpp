@@ -41,6 +41,10 @@
 #include "ParticleEffect.h"
 #include "TextureEffect.h"
 #include "DistTrail.h"
+#include "EffectShield.h"
+#include "EffectAxe.h"
+#include "MagicCircle.h"
+#include "GridShieldEffect.h"
 IMPLEMENT_SINGLETON(CInstancePoolMgr)
 
 CInstancePoolMgr::CInstancePoolMgr()
@@ -198,6 +202,12 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_DistTrail_Pool, 200);
 
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_Texture_Pool, 500);
+
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_Shield_Pool, 100);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_Axe_Pool, 100);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MagicCircle_Pool, 20);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_GridShieldEffect_Pool, 20);
+
 }
 
 void CInstancePoolMgr::Ready_LoadingInstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -278,6 +288,10 @@ void CInstancePoolMgr::Free()
 	Safe_Release_InstacePool(m_pEffect_IceStorm_s_Pool);
 	Safe_Release_InstacePool(m_pEffect_DistTrail_Pool);
 	Safe_Release_InstacePool(m_pEffect_Texture_Pool);
+	Safe_Release_InstacePool(m_pEffect_Shield_Pool);
+	Safe_Release_InstacePool(m_pEffect_Axe_Pool);
+	Safe_Release_InstacePool(m_pEffect_MagicCircle_Pool);
+	Safe_Release_InstacePool(m_pEffect_GridShieldEffect_Pool);
 
 	
 }

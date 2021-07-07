@@ -51,28 +51,31 @@ private:
 	_uint m_uiDiffuse  = 0;
 	_uint m_uiNormal   = 0;
 	_uint m_uiSpec     = 0;
-	float m_fDeltatime = 0.f;
-	float m_fDeltatime2 = 0.f;
-	float m_fDeltatime3 = 0.f;
-	float m_fDegree = 0.f;
-	float m_fShaderDegree = 0.f;
-	//Temp
-	float   fFrameCnt = 8.f;
-	float	fCurFrame = 0.f;
-	float	fSceneCnt = 2.f;
-	float	fCurScene = 0.f;
-	float m_fLifeTime = 0.f;
-	bool m_bisScaleAnim = false;
+	float   m_fDeltatime = -1.f;
+	float   m_fDeltatime2 = 0.f;
+	float   m_fDeltatime3 = 0.f;
+	float   m_fDegree = 0.f;
+	float   m_fShaderDegree = 0.f;
+	float   m_fLifeTime = 0.f;
+	float   m_fLimitLifeTime = 0.f;
+	float   m_fLimitScale = 0.f;
+	float   m_fRadius = 0.f;
+	bool    m_bisScaleAnim = false;
+	float   m_fCrossDeltatime = 0.f;
+	float   m_fCrossDeltatime2 = 0.f;
+	float   m_fCrossDeltatime3 = 0.f;
+	float   m_fAngleOffset = 0.f;
+	bool    m_bisLifeInit = false;
+	float  m_fDeltatimeVelocity = 0.f;
+	float  m_fDeltatimeVelocity2 = 1.f;
 
-	float m_fCrossDeltatime = 0.f;
-	float m_fCrossDeltatime2 = 0.f;
-	float m_fCrossDeltatime3 = 0.f;
-	float m_fAngleOffset = 0.f;
-	_vec3 m_vecParentPos = _vec3(0.f);
-	bool m_bisLifeInit = false;
-	float m_fDeltatimeVelocity = 0.f;
-	float m_fDeltatimeVelocity2 = 1.f;
-	
+	bool m_bisMini = false;
+	_int m_iParticleCnt = 0;
+	const Engine::CTransform* m_pParentTransform =nullptr;
+public:
+	void Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos,
+		float fLimitLifeTime,float fLimitScale,float fRadius, const float& vAngleOffset
+	,const Engine::CTransform * ParentTransform, bool isMini=false);
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,
@@ -80,6 +83,10 @@ public:
 									   const _vec3& vScale,
 									   const _vec3& vAngle,
 									   const _vec3& vPos, const float& vAngleOffset);
+
+	static CEffectShield** Create_InstancePool(ID3D12Device* pGraphicDevice,
+		ID3D12GraphicsCommandList* pCommandList,
+		const _uint& uiInstanceCnt);
 private:
 	virtual void Free();
 };
