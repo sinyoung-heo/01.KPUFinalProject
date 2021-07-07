@@ -25,6 +25,7 @@ public:
 
 	void		Create_StageVelikaNPC();
 	void		Create_StageBeachMonster();
+	void		Create_StageWinterMonster();
 	void		Create_AiPlayer();
 
 public:

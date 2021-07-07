@@ -728,7 +728,7 @@ CGiantMonkey** CGiantMonkey::Create_InstancePool(ID3D12Device* pGraphicDevice,
 		ppInstance[i] = new CGiantMonkey(pGraphicDevice, pCommandList);
 		ppInstance[i]->m_uiInstanceIdx = i;
 		ppInstance[i]->Ready_GameObject(L"GiantMonkey",				// MeshTag
-										L"StageVelika_NaviMesh",	// NaviMeshTag
+										L"StageWinter_NaviMesh",	// NaviMeshTag
 										_vec3(0.05f, 0.05f, 0.05f),	// Scale
 										_vec3(0.0f),				// Angle
 										_vec3(AWAY_FROM_STAGE));	// Pos

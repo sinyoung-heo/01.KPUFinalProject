@@ -664,23 +664,26 @@ void CPacketMgr::Change_Monster_Stat(sc_packet_update_party* packet)
 	pObj->Get_Info()->m_iHp = packet->hp;
 	pObj->Get_Info()->m_iExp = packet->maxHp;
 
-	// DmgFont
-	Engine::CGameObject* pGameObj = nullptr;
-	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_DmgFontPool());
-	if (nullptr != pGameObj)
+	if (packet->maxMp != g_iSNum)
 	{
-		random_device					rd;
-		default_random_engine			dre{ rd() };
-		uniform_int_distribution<_int>	uid{ -7, 7 };
+		// DmgFont
+		Engine::CGameObject* pGameObj = nullptr;
+		pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_DmgFontPool());
+		if (nullptr != pGameObj)
+		{
+			random_device					rd;
+			default_random_engine			dre{ rd() };
+			uniform_int_distribution<_int>	uid{ -7, 7 };
 
-		static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos = pObj->Get_Transform()->m_vPos;
-		static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.x += (_float)(uid(dre)) * 0.1f;
-		static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.y += 3.0f;
-		static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.z += (_float)(uid(dre)) * 0.1f;
-		static_cast<CDmgFont*>(pGameObj)->Set_DamageList(packet->mp);
-		static_cast<CDmgFont*>(pGameObj)->Set_DamageType(DMG_TYPE::DMG_OTHERS);
-		static_cast<CDmgFont*>(pGameObj)->Set_RandomDir();
-		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"DmgFont", pGameObj);
+			static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos = pObj->Get_Transform()->m_vPos;
+			static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.x += (_float)(uid(dre)) * 0.1f;
+			static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.y += 3.0f;
+			static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.z += (_float)(uid(dre)) * 0.1f;
+			static_cast<CDmgFont*>(pGameObj)->Set_DamageList(packet->mp);
+			static_cast<CDmgFont*>(pGameObj)->Set_DamageType(DMG_TYPE::DMG_OTHERS);
+			static_cast<CDmgFont*>(pGameObj)->Set_RandomDir();
+			m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"DmgFont", pGameObj);
+		}
 	}
 }
 
@@ -869,8 +872,10 @@ void CPacketMgr::Leave_Object(sc_packet_leave* packet, int& retflag)
 
 	if (packet->id >= NPC_NUM_START && packet->id < MON_NUM_START)
 		m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"NPC", packet->id, true);
-	else if (packet->id >= MON_NUM_START)
+	else if (packet->id >= MON_NUM_START && packet->id < AI_NUM_START)
 		m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"MONSTER", packet->id, true);
+	else if (packet->id >= AI_NUM_START)
+		m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"Others", packet->id, true);
 	else
 		m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"Others", packet->id, true);
 }

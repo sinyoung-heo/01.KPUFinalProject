@@ -528,7 +528,7 @@ void CPCOthersArcher::Move_OnNaviMesh(const _float& fTimeDelta)
 {
 	if (m_bIsAttack)
 		return;
-	cout << "client position: " << m_pTransCom->m_vPos.x << "," << m_pTransCom->m_vPos.z << endl;
+
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 	m_pTransCom->m_vDir.Normalize();
 

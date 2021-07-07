@@ -82,7 +82,7 @@ constexpr int	ARCHNE_EXP					= 100;
 constexpr float	ARCHNE_SPD					= 1.f;
 constexpr float	ARCHNE_CHASE_SPD			= 6.f;
 
-constexpr int	MONKEY_HP					= 1000;
+constexpr int	MONKEY_HP					= 10000;
 constexpr int	MONKEY_ATT					= 150;
 constexpr int	MONKEY_EXP					= 100;
 constexpr float	MONKEY_SPD					= 1.f;
@@ -94,7 +94,7 @@ constexpr int	CLODER_EXP					= 100;
 constexpr float	CLODER_SPD					= 1.f;
 constexpr float	CLODER_CHASE_SPD			= 4.f;
 
-constexpr int	GIANTMONKEY_HP				= 1000;
+constexpr int	GIANTMONKEY_HP				= 10000;
 constexpr int	GIANTMONKEY_ATT				= 150;
 constexpr int	GIANTMONKEY_EXP				= 100;
 constexpr float	GIANTMONKEY_SPD				= 1.f;

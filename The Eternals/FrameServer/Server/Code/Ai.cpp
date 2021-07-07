@@ -110,6 +110,7 @@ void CAi::Change_Archer_Animation(const float& fTimeDelta)
 
 	case STATUS::ST_ACTIVE:
 	{
+		m_iAniIdx = Archer::ATTACK_RUN;
 		process_move_ai(fTimeDelta);
 	}
 	break;
@@ -190,13 +191,11 @@ void CAi::process_move_ai(const float& fTimeDelta)
 		}
 
 		/* AI 움직임 처리 */
-		switch (rand() % 5)
+		switch (rand() % 3)
 		{
-		case 0: m_vDir = _vec3(0.f, 0.f, 1.f); break;
-		case 1: m_vDir = _vec3(1.f, 0.f, 0.f); break;
-		case 2: m_vDir = _vec3(1.f, 0.f, 1.f); break;
-		case 3: m_vDir = _vec3(-1.f, 0.f, 0.f); break;
-		case 4: m_vDir = _vec3(-1.f, 0.f, 1.f); break;
+		case 0: m_vDir = _vec3(0.f, 0.f, 1.f); break;	
+		case 1: m_vDir = _vec3(1.f, 0.f, 1.f); break;
+		case 2: m_vDir = _vec3(-1.f, 0.f, 1.f); break;
 		}
 
 		/* 해당 AI의 미래 위치 좌표 산출 -> 미래 위치좌표는 임시 변수에 저장 */
@@ -217,40 +216,133 @@ void CAi::process_move_ai(const float& fTimeDelta)
 			m_vTempPos.z = m_vPos.z;
 		}
 
-		// ViewList 내의 유저들에게 move start 전송
-		for (const int& pl : old_viewlist)
+		m_vDir = m_vTempPos - m_vPos;
+		m_vDir.Normalize();
+
+		/* 변경된 좌표로 섹터 갱신 */
+		CSectorMgr::GetInstance()->Compare_exchange_Sector(m_sNum, (int)ori_z, (int)ori_x, (int)(m_vPos.z), (int)(m_vPos.x));
+
+		// 움직인 후 위치에서의 viewlist (시야 내에 플레이어 저장)
+		unordered_set <int> new_viewlist;
+
+		unordered_set<pair<int, int>> nearSectors;
+		nearSectors.reserve(5);
+		CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSectors, (int)(m_vPos.x), (int)(m_vPos.z));
+
+		// 이동 후: 인접 섹터 순회 -> 유저가 있을 시 new viewlist 내에 등록
+		for (auto& s : nearSectors)
+		{
+			// 인접 섹터 내의 타 유저들이 있는지 검사
+			if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
+			{				
+				for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+				{
+					/* 유저일 경우 처리 */
+					if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
+					{
+						CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
+
+						// 접속한 유저만 시야 목록에 등록한다.
+						if (!pPlayer->Get_IsConnected()) continue;
+
+						// 시야 내에 있다면 시야 목록에 등록한다.
+						if (CObjMgr::GetInstance()->Is_Near(this, pPlayer))
+							new_viewlist.insert(obj_num);
+					}
+				}
+			}
+		}
+
+		// 이동 전 viewlist & 이동 후 viewlist 비교 -> 각 유저들의 시야 목록 내에 NPC 존재 여부를 결정.
+		for (auto pl : old_viewlist)
+		{
+			// 이동 후에도 AI 시야 목록 내에 "pl"(server number) 유저가 남아있는 경우
+			if (0 < new_viewlist.count(pl))
+			{
+				CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
+				if (pPlayer != nullptr)
+				{
+					/* 해당 유저의 시야 목록에 현재 AI가 존재할 경우 */
+					pPlayer->v_lock.lock();
+					if (0 < pPlayer->view_list.count(m_sNum))
+					{
+						pPlayer->v_lock.unlock();
+						/* 해당 유저에게 AI가 움직인 후의 위치를 전송 */
+						send_AI_move_packet(pl);
+					}
+					/* 해당 유저의 시야 목록에 현재 AI가 존재하지 않을 경우 */
+					else
+					{
+						/* 해당 유저의 시야 목록에 현재 AI 등록 */
+						pPlayer->view_list.insert(m_sNum);
+						pPlayer->v_lock.unlock();
+						send_AI_enter_packet(pl);
+					}
+				}
+			}
+			// 이동 후에 AI 시야 목록 내에 "pl"(server number) 유저가 없는 경우
+			else
+			{
+				CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
+				if (pPlayer != nullptr)
+				{
+					/* 해당 유저의 시야 목록에 현재 AI가 존재할 경우 */
+					pPlayer->v_lock.lock();
+					if (0 < pPlayer->view_list.count(m_sNum))
+					{
+						/* 해당 유저의 시야 목록에서 현재 AI 삭제 */
+						pPlayer->view_list.erase(m_sNum);
+						pPlayer->v_lock.unlock();
+						send_leave_packet(pl, m_sNum);
+					}
+					else
+						pPlayer->v_lock.unlock();
+				}
+			}
+		}
+
+		// new_vielist 순회 -> 플레이어의 시야 목록에 있어야 할 새로운 npc들을 추가
+		for (auto& pl : new_viewlist)
 		{
 			CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
 			if (pPlayer != nullptr)
 			{
-				/* 해당 유저의 시야 목록에 현재 AI가 존재할 경우 */
 				pPlayer->v_lock.lock();
-				if (0 < pPlayer->view_list.count(m_sNum))
+				if (0 == pPlayer->view_list.count(pl))
 				{
-					pPlayer->v_lock.unlock();
-					/* 해당 유저에게 AI가 움직인 후의 위치를 전송 */
-					send_AI_move_packet(pl);
+					/* 각 유저의 시야 목록 내에 현재 NPC가 없을 경우 -> 현재 NPC 등록 */
+					if (0 == pPlayer->view_list.count(m_sNum))
+					{
+						pPlayer->view_list.insert(m_sNum);
+						pPlayer->v_lock.unlock();
+						send_AI_enter_packet(pl);
+					}
+					/* 각 유저의 시야 목록 내에 현재 NPC가 있을 경우 -> 현재 NPC 위치 전송 */
+					else
+					{
+						pPlayer->v_lock.unlock();
+						send_AI_move_packet(pl);
+					}
 				}
-				/* 해당 유저의 시야 목록에 현재 AI가 존재하지 않을 경우 */
 				else
-				{
-					/* 해당 유저의 시야 목록에 현재 AI 등록 */
-					pPlayer->view_list.insert(m_sNum);
 					pPlayer->v_lock.unlock();
-					send_AI_enter_packet(pl);
-				}
 			}
 		}
 	}
 	else
 	{
-		// 서버 자체 계산 구간
-		m_tMoveSpeedInterpolationDesc.interpolation_speed = 1.0f * Archer::OTHERS_OFFSET;
-		m_tMoveSpeedInterpolationDesc.linear_ratio += m_tMoveSpeedInterpolationDesc.interpolation_speed * fTimeDelta;
-		m_fSpd = LinearInterpolation(m_tMoveSpeedInterpolationDesc.v1, m_tMoveSpeedInterpolationDesc.v2, m_tMoveSpeedInterpolationDesc.linear_ratio);
+	if (false == CCollisionMgr::GetInstance()->Is_InMoveLimit(m_vPos, m_vTempPos, 30.f))
+		{
+			m_tMoveSpeedInterpolationDesc.interpolation_speed = 1.0f * Archer::OTHERS_OFFSET;
+			m_tMoveSpeedInterpolationDesc.linear_ratio += m_tMoveSpeedInterpolationDesc.interpolation_speed * fTimeDelta;
+			m_fSpd = LinearInterpolation(m_tMoveSpeedInterpolationDesc.v1, m_tMoveSpeedInterpolationDesc.v2, m_tMoveSpeedInterpolationDesc.linear_ratio);
 
-		m_vPos += m_vDir * m_fSpd * fTimeDelta;
-		cout << "server position: " << m_vPos.x << "," << m_vPos.z << endl;
+			m_vDir = m_vTempPos - m_vPos;
+			m_vDir.Normalize();
+
+			m_vPos += m_vDir * m_fSpd * fTimeDelta;
+		}
+		else m_bIsMove = false;	
 	}
 
 }
