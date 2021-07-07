@@ -91,3 +91,71 @@ typedef struct tagGameItem
 	int		iCost		= 0;
 	int		iCount		= 0;
 }GAMEITEM;
+
+
+/*__________________________________________________________________________________________________________
+	[ LINEAR INTERPOLATION DESC ]
+____________________________________________________________________________________________________________*/
+template<class T1>
+struct LINEAR_INTERPOLATION_DESC
+{
+	LINEAR_INTERPOLATION_DESC()
+		: is_start_interpolation(false)
+		, linear_ratio(0.0f)
+		, interpolation_speed(1.0f)
+	{
+		ZeroMemory(&v1, sizeof(T1));
+		ZeroMemory(&v2, sizeof(T1));
+	}
+
+
+	LINEAR_INTERPOLATION_DESC(const bool& is_start_interpolation, const float& linear_ratio, const float& interpolation_speed, const T1& v1, const T1& v2)
+		: is_start_interpolation(is_start_interpolation)
+		, linear_ratio(linear_ratio)
+		, interpolation_speed(interpolation_speed)
+		, v1(v1)
+		, v2(v2)
+	{}
+
+	bool	is_start_interpolation = false;
+	float	linear_ratio = 0.0f;
+	float	interpolation_speed = 1.0f;
+	T1		v1;
+	T1		v2;
+};
+
+const float MAX_LINEAR_RATIO = 1.0f;
+const float MIN_LINEAR_RATIO = 0.0f;
+
+template<class T1>
+T1 LinearInterpolation(const T1& v1, const T1& v2, float& ratio)
+{
+	if (ratio >= MAX_LINEAR_RATIO)
+		ratio = MAX_LINEAR_RATIO;
+
+	else if (ratio <= MIN_LINEAR_RATIO)
+		ratio = MIN_LINEAR_RATIO;
+
+	return v1 * (1.0f - ratio) + v2 * ratio;
+}
+
+template<class T1>
+void SetUp_LinearInterpolation(const float& time_delta, T1& src, LINEAR_INTERPOLATION_DESC<T1>& linear_desc)
+{
+	if (linear_desc.is_start_interpolation)
+	{
+		linear_desc.linear_ratio += linear_desc.interpolation_speed * time_delta;
+
+		if (linear_desc.linear_ratio >= MAX_LINEAR_RATIO)
+		{
+			linear_desc.linear_ratio = MAX_LINEAR_RATIO;
+			linear_desc.is_start_interpolation = false;
+		}
+
+		src = LinearInterpolation<T1>(linear_desc.v1, linear_desc.v2, linear_desc.linear_ratio);
+	}
+	else
+	{
+		linear_desc.linear_ratio = 0.0f;
+	}
+}

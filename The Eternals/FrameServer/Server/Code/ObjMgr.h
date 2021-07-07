@@ -25,11 +25,14 @@ public:
 
 	void		Create_StageVelikaNPC();
 	void		Create_StageBeachMonster();
+	void		Create_StageWinterMonster();
+	void		Create_AiPlayer();
 
 public:
 	bool		Is_Player(int server_num = 0);
 	bool		Is_NPC(int server_num = NPC_NUM_START);
 	bool		Is_Monster(int server_num = MON_NUM_START);
+	bool		Is_AI(int server_num = AI_NUM_START);
 
 	bool		Is_Near(const CObj* me, const CObj* other);
 	bool		Is_Monster_Target(const CObj* me, const CObj* other);

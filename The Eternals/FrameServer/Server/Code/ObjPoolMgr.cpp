@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Npc.h"
 #include "Monster.h"
+#include "Ai.h"
 
 IMPLEMENT_SINGLETON(CObjPoolMgr)
 
@@ -27,6 +28,10 @@ HRESULT CObjPoolMgr::Init_ObjPoolMgr(void)
 	CObjectPool* pMonsterPool = new CObjectPool();
 	pMonsterPool->Create_ObjectPool<CMonster>(MAX_MONSTER);
 	m_mapObjPool[L"MONSTER"] = pMonsterPool;
+
+	CObjectPool* pAiPool = new CObjectPool();
+	pAiPool->Create_ObjectPool<CAi>(MAX_AI);
+	m_mapObjPool[L"AI"] = pAiPool;
 
 	return S_OK;
 }

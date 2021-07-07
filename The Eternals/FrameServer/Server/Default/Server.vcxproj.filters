@@ -28,9 +28,6 @@
     <Filter Include="01.Object\02.NPC">
       <UniqueIdentifier>{8db1a4a6-5b77-481d-a941-69d693f2ee98}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Object\03.Map">
-      <UniqueIdentifier>{0007eba0-073d-485e-9257-83e4845ebcd8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="98.Manager">
       <UniqueIdentifier>{aa626495-33ce-4e80-af03-1d9d5349ebf2}</UniqueIdentifier>
     </Filter>
@@ -81,6 +78,9 @@
     </Filter>
     <Filter Include="98.Manager\07.ItemMgr">
       <UniqueIdentifier>{b1b3e5af-7f5e-4664-bf57-9e60eb0373c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Object\03.AI">
+      <UniqueIdentifier>{0007eba0-073d-485e-9257-83e4845ebcd8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +143,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\NaviMesh_Winter.cpp">
       <Filter>98.Manager\05.NaviMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Ai.cpp">
+      <Filter>01.Object\03.AI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -244,6 +247,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\FrameDirectX12\Client\Header\ArcherAnimation.h">
       <Filter>99.Header\01.User\00.Animation_Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Ai.h">
+      <Filter>01.Object\03.AI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

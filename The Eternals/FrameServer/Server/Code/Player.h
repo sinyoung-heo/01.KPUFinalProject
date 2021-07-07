@@ -30,27 +30,26 @@ public:
 	void						Release_Equipment();
 
 	/* packet */
-	void send_login_ok();
-	void send_enter_packet(const int& to_client);
-	void send_move_packet(const int& to_client);
-	void send_move_stop_packet(const int& to_client);
-	void send_attack_packet(const int& to_client, const int& animIdx, const float& end_angleY);
-	void send_attack_stop_packet(const int& to_client, const int& animIdx);
-	void send_player_stat(const int& to_client);
-	void send_player_stance_change(const int& to_client, const bool& st);
-	void send_player_stage_change(const int& to_client);
-	void send_enter_party(const int& to_client);
-	void send_leave_party(const int& to_client);
-	void send_update_party(const int& to_client);
-	void send_chat(const int& to_client, const char* buffer, const int& len);
-	void send_update_inventory(const int& to_client, const char& chItemType, const char& chName, const int& count, const bool& isPushItem);
-	void send_update_equipment(const int& to_client, const char& chItemSlotType, const bool& isPushItem);
-	void send_load_equipment(const int& to_client, const char* chItemType, const char* chName);
-	void send_user_money();
-	void send_drink_potion(const int& to_client, const int& ability, const char& chItemType, const char& chName, const int& count, const bool& isPushItem);
-	void send_consume_point(const int& to_client);
-	void send_buff_stat(const int& to_client, const int& ani, const int& hp, const int& maxHp, const int& mp, const int& maxMp);
-
+	void						send_login_ok();
+	void						send_enter_packet(const int& to_client);
+	void						send_move_packet(const int& to_client);
+	void						send_move_stop_packet(const int& to_client);
+	void						send_attack_packet(const int& to_client, const int& animIdx, const float& end_angleY);
+	void						send_attack_stop_packet(const int& to_client, const int& animIdx);
+	void						send_player_stat(const int& to_client);
+	void						send_player_stance_change(const int& to_client, const bool& st);
+	void						send_player_stage_change(const int& to_client);
+	void						send_enter_party(const int& to_client);
+	void						send_leave_party(const int& to_client);
+	void						send_update_party(const int& to_client);
+	void						send_chat(const int& to_client, const char* buffer, const int& len);
+	void						send_update_inventory(const int& to_client, const char& chItemType, const char& chName, const int& count, const bool& isPushItem);
+	void						send_update_equipment(const int& to_client, const char& chItemSlotType, const bool& isPushItem);
+	void						send_load_equipment(const int& to_client, const char* chItemType, const char* chName);
+	void						send_user_money();
+	void						send_drink_potion(const int& to_client, const int& ability, const char& chItemType, const char& chName, const int& count, const bool& isPushItem);
+	void						send_consume_point(const int& to_client);
+	void						send_buff_stat(const int& to_client, const int& ani, const int& hp, const int& maxHp, const int& mp, const int& maxMp);
 	void						send_load_InventoryAndEquipment();
 
 	virtual DWORD				Release();

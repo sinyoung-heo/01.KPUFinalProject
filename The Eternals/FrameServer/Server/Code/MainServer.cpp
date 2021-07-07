@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Npc.h"
 #include "Monster.h"
+#include "Ai.h"
 
 /* IOCP SERVER 관련 변수*/
 HANDLE g_hIocp;
@@ -28,6 +29,7 @@ void Release_Server();				// 서버 종료
 
 void Initialize_NPC();				// Create Stage Velika NPC 
 void Delete_NPC();					// Delete All NPC
+void Delete_AI();
 
 void Initialize_Monster();			// Create Monster(test)
 void Delete_Monster();				// Delete All MONSTER
@@ -166,6 +168,8 @@ void Release_Server()
 void Initialize_NPC()
 {
 	CObjMgr::GetInstance()->Create_StageVelikaNPC();
+	//CObjMgr::GetInstance()->Create_AiPlayer();
+
 #ifdef TEST
 	cout << "NPC Initialize Finish.\n";
 #endif
@@ -186,136 +190,24 @@ void Delete_NPC()
 	}
 }
 
+void Delete_AI()
+{
+	auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+	auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
+
+	for (iter_begin; iter_begin != iter_end;)
+	{
+		static_cast<CAi*>(iter_begin->second)->Release_AI();
+
+		iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+		iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
+	}
+}
+
 void Initialize_Monster()
 {
 	CObjMgr::GetInstance()->Create_StageBeachMonster();
-
-	CMonster* pNew = nullptr;
-	int s_num = -1;
-
-	// TEST MONSTER - Giant Monkey
-	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->Ready_Monster(_vec3(125.0f, 0.f, 55.0f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_GMONKEY, STAGE_VELIKA, 100000, 5, 10, 0.5f);
-	//	pNew->Set_NumAnimation(GiantMonkey::NUM_ANIMATION);
-	//	pNew->Set_AnimDuration(GiantMonkey::duration);
-	//}
-	//else return;
-
-	//// TEST MONSTER - drowned sailor
-	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->Ready_Monster(_vec3(130.0f, 0.f, 55.0f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_VELIKA, 10000, 5, 10, 0.5f);
-	//	pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
-	//	pNew->Set_AnimDuration(DrownedSailor::duration);
-	//}
-	//else return;
-
-	//// TEST MONSTER - monkey
-	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
-	//
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->Ready_Monster(_vec3(135.0f, 0.f, 55.0f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_MONKEY, STAGE_VELIKA, 10000, 5, 10, 0.5f);
-	//	pNew->Set_NumAnimation(Monkey::NUM_ANIMATION);
-	//	pNew->Set_AnimDuration(Monkey::duration);
-	//}
-	//else return;
-
-	/* ______________________________________________________________________________________________________*/
-	/*											SCENE - TEST												 */
-	/* ______________________________________________________________________________________________________*/
-
-	// TEST MONSTER - crab
-	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->Ready_Monster(_vec3(158.0f, 0.f, 55.0f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CRAB, STAGE_VELIKA, 100, 1, 0, 0.5f);
-	//	pNew->Set_NumAnimation(Crab::NUM_ANIMATION);
-	//	pNew->Set_AnimDuration(Crab::duration);
-	//}
-	//else return;
-
-	// TEST MONSTER - monkey
-	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
-	//
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->Ready_Monster(_vec3(155.0f, 0.f, 55.0f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_MONKEY, STAGE_VELIKA, 100, 1, 0, 0.5f);
-	//	pNew->Set_NumAnimation(Monkey::NUM_ANIMATION);
-	//	pNew->Set_AnimDuration(Monkey::duration);
-	//}
-	//else return;
-
-	// TEST MONSTER - cloder
-	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->Ready_Monster(_vec3(152.0f, 0.f, 55.0f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_CLODER, STAGE_VELIKA, 100, 1, 0, 0.5f);
-	//	pNew->Set_NumAnimation(Cloder::NUM_ANIMATION);
-	//	pNew->Set_AnimDuration(Cloder::duration);
-	//}
-	//else return;
-
-	//// TEST MONSTER - drowned sailor
-	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
-	//
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->Ready_Monster(_vec3(145.0f, 0.f, 55.0f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_SAILOR, STAGE_VELIKA, 100, 1, 0, 0.5f);
-	//	pNew->Set_NumAnimation(DrownedSailor::NUM_ANIMATION);
-	//	pNew->Set_AnimDuration(DrownedSailor::duration);
-	//}
-	//else return;
-
-	//// TEST MONSTER - Giant Beetle
-	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->Ready_Monster(_vec3(135.0f, 0.f, 55.0f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_GBEETLE, STAGE_VELIKA, 100, 1, 0, 0.5f);
-	//	pNew->Set_NumAnimation(GiantBeetle::NUM_ANIMATION);
-	//	pNew->Set_AnimDuration(GiantBeetle::duration);
-	//}
-	//else return;
-
-	//// TEST MONSTER - Giant Monkey
-	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
-
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->Ready_Monster(_vec3(127.0f, 0.f, 55.0f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_GMONKEY, STAGE_VELIKA, 100, 1, 0, 0.5f);
-	//	pNew->Set_NumAnimation(GiantMonkey::NUM_ANIMATION);
-	//	pNew->Set_AnimDuration(GiantMonkey::duration);
-	//}
-	//else return;
-
-	// TEST MONSTER - Crafty Arachne
-	//pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
-	//
-	//if (pNew)
-	//{
-	//	/* NPC의 정보 초기화 */
-	//	pNew->Ready_Monster(_vec3(122.0f, 0.f, 55.0f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_ARACHNE, STAGE_VELIKA, 100, 1, 0, 0.5f);
-	//	pNew->Set_NumAnimation(CraftyArachne::NUM_ANIMATION);
-	//	pNew->Set_AnimDuration(CraftyArachne::duration);
-	//}
-	//else return;
+	CObjMgr::GetInstance()->Create_StageWinterMonster();
 }
 
 void Delete_Monster()
@@ -515,6 +407,7 @@ void disconnect_client(const int& id)
 		g_bIsGameEnd = true;
 		Delete_NPC();
 		Delete_Monster();
+		Delete_AI();
 		Release_Server();
 	}
 }
@@ -720,6 +613,26 @@ void gameLogic_worker()
 				}
 				else
 					++iter_begin_npc;
+			}
+
+			/* AI PLAYER UPDATE */
+			auto iter_begin_ai = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+			auto iter_end_ai = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
+
+			for (; iter_begin_ai != iter_end_ai;)
+			{
+				int iEvent = static_cast<CAi*>(iter_begin_ai->second)->Update_AI(g_pTimerTimeDelta->Get_TimeDelta());
+
+				if (DEAD_OBJ == iEvent)
+				{
+					CObjPoolMgr::GetInstance()->return_Object(L"AI", iter_begin_ai->second);
+					CObjMgr::GetInstance()->Delete_GameObject(L"AI", iter_begin_ai->second);
+
+					iter_begin_ai = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+					iter_end_ai = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
+				}
+				else
+					++iter_begin_ai;
 			}
 		}
 	}

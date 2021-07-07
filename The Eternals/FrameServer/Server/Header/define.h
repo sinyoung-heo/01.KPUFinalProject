@@ -36,6 +36,13 @@ constexpr int	INCREASE_ATT				= 5;
 constexpr float	NUCKBACK_DIST				= 6.f;
 constexpr int	INIT_PARTY_NUMBER			= -1;
 constexpr int	MAX_ITEMSIZE				= 80;
+
+constexpr int	RAID_PARTY					= 99;
+constexpr int	AI_HP						= 5000;
+constexpr int	AI_MP						= 5000;
+constexpr int	AI_MAXATT					= 500;
+constexpr int	AI_MINATT					= 250;
+
 /*____________________________________________________________________
 Monster Attack & Chase Dist
 ______________________________________________________________________*/
@@ -75,7 +82,7 @@ constexpr int	ARCHNE_EXP					= 100;
 constexpr float	ARCHNE_SPD					= 1.f;
 constexpr float	ARCHNE_CHASE_SPD			= 6.f;
 
-constexpr int	MONKEY_HP					= 1000;
+constexpr int	MONKEY_HP					= 10000;
 constexpr int	MONKEY_ATT					= 150;
 constexpr int	MONKEY_EXP					= 100;
 constexpr float	MONKEY_SPD					= 1.f;
@@ -87,7 +94,7 @@ constexpr int	CLODER_EXP					= 100;
 constexpr float	CLODER_SPD					= 1.f;
 constexpr float	CLODER_CHASE_SPD			= 4.f;
 
-constexpr int	GIANTMONKEY_HP				= 1000;
+constexpr int	GIANTMONKEY_HP				= 10000;
 constexpr int	GIANTMONKEY_ATT				= 150;
 constexpr int	GIANTMONKEY_EXP				= 100;
 constexpr float	GIANTMONKEY_SPD				= 1.f;
@@ -120,6 +127,8 @@ const float STAGE_VELIKA_OFFSET_X	= 0.0f;
 const float STAGE_VELIKA_OFFSET_Z	= 0.0f;
 const float STAGE_BEACH_OFFSET_X	= 256.0f;
 const float STAGE_BEACH_OFFSET_Z	= 0.0f;
+const float STAGE_WINTER_OFFSET_X	= 256.0f;
+const float STAGE_WINTER_OFFSET_Z	= 256.0f;
 
 /* TYPEDEF */
 typedef	unsigned long		_ulong;

@@ -69,14 +69,14 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
 	____________________________________________________________________________________________________________*/
-	Engine::CMesh*			m_pMeshCom	   = nullptr;
-	Engine::CShaderMesh*	m_pShaderCom   = nullptr;
-	Engine::CShaderMesh* m_pEdgeObjectShaderCom = nullptr;
-	Engine::CShaderShadow*	m_pShadowCom   = nullptr;
-	Engine::CNaviMesh*		m_pNaviMeshCom = nullptr;
-	Engine::CNaviMesh*		m_pVelikaNaviMeshCom = nullptr;
-	Engine::CNaviMesh*		m_pBeachNaviMeshCom = nullptr;
-
+	Engine::CMesh*			m_pMeshCom				= nullptr;
+	Engine::CShaderMesh*	m_pShaderCom			= nullptr;
+	Engine::CShaderMesh*	m_pEdgeObjectShaderCom	= nullptr;
+	Engine::CShaderShadow*	m_pShadowCom			= nullptr;
+	Engine::CNaviMesh*		m_pNaviMeshCom			= nullptr;
+	Engine::CNaviMesh*		m_pVelikaNaviMeshCom	= nullptr;
+	Engine::CNaviMesh*		m_pBeachNaviMeshCom		= nullptr;
+	Engine::CNaviMesh*		m_pWinterNaviMeshCom	= nullptr;
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/

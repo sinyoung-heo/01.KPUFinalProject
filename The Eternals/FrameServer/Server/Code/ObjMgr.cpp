@@ -2,6 +2,7 @@
 #include "ObjMgr.h"
 #include "Monster.h"
 #include "Npc.h"
+#include "Ai.h"
 
 IMPLEMENT_SINGLETON(CObjMgr)
 
@@ -18,6 +19,7 @@ HRESULT CObjMgr::Init_ObjMgr()
 	m_mapObjList[L"PLAYER"] = OBJLIST();
 	m_mapObjList[L"NPC"] = OBJLIST();
 	m_mapObjList[L"MONSTER"] = OBJLIST();
+	m_mapObjList[L"AI"] = OBJLIST();
 
 	return S_OK;
 }
@@ -299,6 +301,58 @@ void CObjMgr::Create_StageBeachMonster()
 		pNew->Ready_Monster(_vec3(403.297f, 0.f, 185.56f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_ARACHNE, STAGE_BEACH, ARCHNE_HP, ARCHNE_ATT, ARCHNE_EXP, ARCHNE_SPD);
 		pNew->Set_NumAnimation(CraftyArachne::NUM_ANIMATION);
 		pNew->Set_AnimDuration(CraftyArachne::duration);
+	}
+	else return;
+}
+
+void CObjMgr::Create_StageWinterMonster()
+{
+	CMonster* pNew = nullptr;
+	int s_num = -1;
+
+	/*	________________________________________________________________________________
+										 집단 1
+	________________________________________________________________________________*/
+	// MONSTER - Monkey 1
+	float fAngle = 0.f;
+	for (int i = 0; i < 10; ++i, fAngle += 30.f)
+	{
+		pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+		if (pNew)
+		{
+			
+			float fX = 380.f + cosf(fAngle * PI / 180.f) * 10.f;
+			float fY = 400.f - sinf(fAngle * PI / 180.f) * 10.f;
+			pNew->Ready_Monster(_vec3(fX, 0.f, fY), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_MONKEY, STAGE_WINTER, MONKEY_HP, MONKEY_ATT, MONKEY_EXP, MONKEY_SPD);
+			pNew->Set_NumAnimation(Monkey::NUM_ANIMATION);
+			pNew->Set_AnimDuration(Monkey::duration);
+		}
+	}
+
+	// MONSTER - Giant Monkey 2
+	if (pNew)
+	{
+		/* NPC의 정보 초기화 */
+		pNew->Ready_Monster(_vec3(380.f, 0.f, 400.f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_GMONKEY, STAGE_WINTER, GIANTMONKEY_HP, GIANTMONKEY_ATT, GIANTMONKEY_EXP, GIANTMONKEY_SPD);
+		pNew->Set_NumAnimation(GiantMonkey::NUM_ANIMATION);
+		pNew->Set_AnimDuration(GiantMonkey::duration);
+	}
+	else return;
+}
+
+void CObjMgr::Create_AiPlayer()
+{
+	// 레이드 파티 생성
+	m_mapPartyList[RAID_PARTY] = PARTYLIST();
+
+	CAi* pNew = nullptr;
+	int s_num = -1;
+
+	// ARCHER 1
+	pNew = static_cast<CAi*>(CObjPoolMgr::GetInstance()->use_Object(L"AI"));
+	if (pNew)
+	{
+		pNew->Ready_AI(PC_ARCHER, Bow27_SM, STAGE_WINTER, _vec3(STAGE_WINTER_X, 0.f, STAGE_WINTER_Z));
 	}
 	else return;
 }
@@ -834,6 +888,20 @@ bool CObjMgr::Is_Monster(int server_num)
 
 	/* 해당 OBJLIST를 찾지 못하였다면 NULL 반환 */
 	if (iter_find == m_mapObjList[L"MONSTER"].end())
+		return false;
+
+	return true;
+}
+
+bool CObjMgr::Is_AI(int server_num)
+{
+	objmgr_lock ol(m_mutex);
+
+	/* NPC ObjList 에서 찾고자 하는 OBJLIST를 key 값을 통해 찾기 */
+	auto& iter_find = m_mapObjList[L"AI"].find(server_num);
+
+	/* 해당 OBJLIST를 찾지 못하였다면 NULL 반환 */
+	if (iter_find == m_mapObjList[L"AI"].end())
 		return false;
 
 	return true;
