@@ -20,6 +20,7 @@ public:
 
 	void Set_IsRenderTrail(const _bool& bIsRenderTrail) { m_bIsRender = bIsRenderTrail;  }
 	void Set_CatmullRom(const _float& fCatmullRom) { m_fCatmullRom = fCatmullRom; }
+	void Set_TextureIdx(const _uint& uiIdx) { m_uiTexIdx = uiIdx; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrTextureTag,

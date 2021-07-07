@@ -197,11 +197,11 @@ void CCollisionTick::SetUp_GladiatorCameraEvent()
 		break;
 	case Gladiator::COMBO2:
 	{
-		//CAMERA_ZOOM_DESC tCameraZoomDesc;
-		//tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_IN;
-		//tCameraZoomDesc.fPower     = 0.02f;
-		//tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 10.0f;
-		//m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+		CAMERA_ZOOM_DESC tCameraZoomDesc;
+		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_IN;
+		tCameraZoomDesc.fPower     = 0.03f;
+		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 6.0f;
+		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
 	}
 		break;
 	case Gladiator::COMBO3:
@@ -289,6 +289,26 @@ void CCollisionTick::SetUp_GladiatorCameraEvent()
 		}
 	}
 	break;
+
+	case Gladiator::DRAW_SWORD:
+	{
+		if (m_bIsCameraEffect)
+		{
+			CAMERA_ZOOM_DESC tCameraZoomDesc;
+			tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_OUT;
+			tCameraZoomDesc.fPower     = 0.05f;
+			tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 15.f;
+			m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+
+			//CAMERA_SHAKING_DESC tCameraShakingDesc;
+			//tCameraShakingDesc.fUpdateShakingTime = 0.1f;
+			//tCameraShakingDesc.vMin               = _vec2(-12.0f, 0.0f);
+			//tCameraShakingDesc.vMax               = _vec2(12.0f, 0.0f);
+			//tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 10.0f;
+			//m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
+		}
+	}
+		break;
 
 	default:
 		break;

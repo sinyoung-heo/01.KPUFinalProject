@@ -1510,6 +1510,13 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 				 m_uiAnimIdx != Gladiator::DRAW_SWORD_CHARGE && 
 				 NO_EVENT_STATE)
 		{
+			m_pWeapon->Set_TrailTextureIdx(11);
+			g_bIsStartSkillCameraEffect = true;
+			m_pDynamicCamera->Set_FovY(30.0f);
+			m_pDynamicCamera->SetUp_ThirdPersonViewOriginData();
+			m_pDynamicCamera->Set_CameraAtParentMatrix(m_pMeshCom->Find_SkinningMatrix("Bip01-Neck"));
+			m_pDynamicCamera->Set_CameraState(CAMERA_STATE::GLADIATOR_ULTIMATE);
+
 			SetUp_WeaponRHand();
 			SetUp_AttackSetting();
 			m_bIsSkill     = true;
@@ -1593,11 +1600,20 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 		m_bIsAttack    = false;
 		m_bIsSkill     = false;
 		m_bIsSkillLoop = false;
+		m_pWeapon->Set_TrailTextureIdx(11);
 		m_pWeapon->Set_IsRenderTrail(false);
 		m_uiComoboCnt = Gladiator::COMBOCNT_0;
 		m_uiAnimIdx   = Gladiator::ATTACK_WAIT;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+	}
+
+	if (Gladiator::DRAW_SWORD == m_uiAnimIdx)
+	{
+		g_bIsStartSkillCameraEffect = false;
+		m_pDynamicCamera->Set_ResetFovY();
+		m_pDynamicCamera->Set_CameraAtParentMatrix(nullptr);
+		m_pDynamicCamera->Set_CameraState(CAMERA_STATE::THIRD_PERSON_VIEW);
 	}
 }
 

@@ -10,8 +10,8 @@ private:
 
 public:
 	const _bool& Get_IsRenderTrail() { return m_pTrail->Get_IsRenderTrail(); }
-
-	void Set_IsRenderTrail(const _bool& bIsRenderTrail) { m_pTrail->Set_IsRenderTrail(bIsRenderTrail); m_pDistortionTrail->Set_IsRenderTrail(bIsRenderTrail); }
+	void Set_TrailTextureIdx(const _uint& uiTexIdx)		{ m_pTrail->Set_TextureIdx(uiTexIdx); }
+	void Set_IsRenderTrail(const _bool& bIsRenderTrail) { m_pTrail->Set_IsRenderTrail(bIsRenderTrail); /*m_pDistortionTrail->Set_IsRenderTrail(bIsRenderTrail);*/ }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
@@ -30,7 +30,7 @@ public:
 
 private:
 	CEffectTrail* m_pTrail = nullptr;
-	CEffectTrail* m_pDistortionTrail = nullptr;
+	// CEffectTrail* m_pDistortionTrail = nullptr;
 
 public:
 	static CPCWeaponTwoHand* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,

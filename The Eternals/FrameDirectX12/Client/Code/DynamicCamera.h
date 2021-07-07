@@ -39,6 +39,14 @@ typedef struct tagCameraZoomDesc
 
 } CAMERA_ZOOM_DESC;
 
+typedef struct tagCameraOriginDesc
+{
+	_bool bIsResetting = true;
+	_vec3 vOriginScale = _vec3(0.0f);
+	_vec3 vOriginAngle = _vec3(0.0f);
+
+} CAMERA_ORIGIN_DESC;
+
 class CDynamicCamera final : public Engine::CCamera
 {
 private:
@@ -48,6 +56,8 @@ private:
 public:
 	void Set_Target(Engine::CGameObject* pTarget)							{ m_pTarget = pTarget; }
 	void Set_CameraAtParentMatrix(Engine::SKINNING_MATRIX* pSkinningMatrix)	{ m_pCameraAtSkinningMatrix = pSkinningMatrix; }
+	void Set_CameraState(const CAMERA_STATE& eState)						{ m_eCameraState = eState; }
+	void SetUp_ThirdPersonViewOriginData();
 public:
 	const CAMERA_SHAKING_DESC& Get_CameraShakingDesc() { return m_tCameraShakingDesc; }
 	void Set_CameraShakingDesc(const CAMERA_SHAKING_DESC& tDesc);
@@ -63,6 +73,7 @@ public:
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 private:
 	void SetUp_DynamicCameraFromTarget(const _float& fTimeDelta);
+	void SetUp_DynamicCameraGladiatorUltimate(const _float& fTimeDelta);
 	void SetUp_CameraShaking(const _float& fTimeDelta);
 	void SetUp_CameraZoom(const _float& fTimeDelta);
 	void SetUp_CameraFont(const _float& fTimeDelta);
@@ -81,8 +92,11 @@ private:
 	_float						m_fTarget_DistFromTarget	= (MIN_TARGETDIST + MAX_TARGETDIST) / 2.0f;
 	_vec3						m_fCameraMoveResponsiveness = _vec3(0.0f, 0.0f, 6.0f);
 
+	CAMERA_STATE		m_eCameraState = CAMERA_STATE::THIRD_PERSON_VIEW;
 	CAMERA_SHAKING_DESC	m_tCameraShakingDesc;
 	CAMERA_ZOOM_DESC	m_tCameraZoomDesc;
+
+	CAMERA_ORIGIN_DESC	m_tThirdPersonViewOriginDesc;
 
 	/*__________________________________________________________________________________________________________
 	[ Font ]
