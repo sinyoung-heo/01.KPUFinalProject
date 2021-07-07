@@ -319,8 +319,7 @@ void CObjMgr::Create_StageWinterMonster()
 	{
 		pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
 		if (pNew)
-		{
-			
+		{		
 			float fX = 380.f + cosf(fAngle * PI / 180.f) * 10.f;
 			float fY = 400.f - sinf(fAngle * PI / 180.f) * 10.f;
 			pNew->Ready_Monster(_vec3(fX, 0.f, fY), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_MONKEY, STAGE_WINTER, MONKEY_HP, MONKEY_ATT, MONKEY_EXP, MONKEY_SPD);

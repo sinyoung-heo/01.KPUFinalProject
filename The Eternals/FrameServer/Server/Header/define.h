@@ -62,13 +62,13 @@ constexpr int	RUSH_RANGE_GBEETEL_END		= 10;			// MONSTER GIANT BEETLE 돌진 범위
 constexpr int	RUSH_RANGE_GMONKEY_START	= 7;			// MONSTER GIANT MONKEY 돌진 범위
 constexpr int	RUSH_RANGE_GMONKEY_END		= 8;			// MONSTER GIANT MONKEY 돌진 범위
 
-constexpr int	CRAB_HP						= 700;
+constexpr int	CRAB_HP						= 7000;
 constexpr int	CRAB_ATT					= 20;
 constexpr int	CRAB_EXP					= 20;
 constexpr float	CRAB_SPD					= 0.5f;
 constexpr float	CRAB_CHASE_SPD				= 2.f;
 
-constexpr int	SAILOR_HP					= 1000;
+constexpr int	SAILOR_HP					= 10000;
 constexpr int	SAILOR_ATT					= 80;
 constexpr int	SAILOR_EXP					= 50;
 constexpr float	SAILOR_SPD					= 1.f;
@@ -76,7 +76,7 @@ constexpr float	SAILOR_CHASE_SPD			= 4.f;
 constexpr int	SAILOR_RUSH_TICK_START		= 30;
 constexpr int	SAILOR_RUSH_TICK_END		= 55;
 
-constexpr int	ARCHNE_HP					= 1000;
+constexpr int	ARCHNE_HP					= 10000;
 constexpr int	ARCHNE_ATT					= 150;
 constexpr int	ARCHNE_EXP					= 100;
 constexpr float	ARCHNE_SPD					= 1.f;

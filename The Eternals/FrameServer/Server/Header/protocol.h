@@ -12,7 +12,7 @@ constexpr int MIDDLE_STR_LEN			= 64;
 
 constexpr int MAX_USER					= 10000;
 constexpr int MAX_NPC					= 50;
-constexpr int MAX_MONSTER				= 50;
+constexpr int MAX_MONSTER				= 100;
 constexpr int MAX_AI					= 10;
 
 constexpr int NPC_NUM_START				= 1000;
