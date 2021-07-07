@@ -297,6 +297,9 @@ HRESULT CPCOthersGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviM
 	m_pBeachNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"StageBeach_NaviMesh", Engine::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pBeachNaviMeshCom, E_FAIL);
 
+	m_pWinterNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"StageWinter_NaviMesh", Engine::ID_DYNAMIC));
+	Engine::NULL_CHECK_RETURN(m_pWinterNaviMeshCom, E_FAIL);
+
 	return S_OK;
 }
 
@@ -328,6 +331,12 @@ void CPCOthersGladiator::SetUp_StageID()
 		else if (STAGE_BEACH == m_chCurStageID)
 		{
 			m_pNaviMeshCom = m_pBeachNaviMeshCom;
+			m_mapComponent[Engine::ID_DYNAMIC][L"Com_NaviMesh"] = m_pNaviMeshCom;
+			m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
+		}
+		else if (STAGE_WINTER == m_chCurStageID)
+		{
+			m_pNaviMeshCom = m_pWinterNaviMeshCom;
 			m_mapComponent[Engine::ID_DYNAMIC][L"Com_NaviMesh"] = m_pNaviMeshCom;
 			m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
 		}

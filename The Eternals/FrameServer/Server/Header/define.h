@@ -127,6 +127,8 @@ const float STAGE_VELIKA_OFFSET_X	= 0.0f;
 const float STAGE_VELIKA_OFFSET_Z	= 0.0f;
 const float STAGE_BEACH_OFFSET_X	= 256.0f;
 const float STAGE_BEACH_OFFSET_Z	= 0.0f;
+const float STAGE_WINTER_OFFSET_X	= 256.0f;
+const float STAGE_WINTER_OFFSET_Z	= 256.0f;
 
 /* TYPEDEF */
 typedef	unsigned long		_ulong;

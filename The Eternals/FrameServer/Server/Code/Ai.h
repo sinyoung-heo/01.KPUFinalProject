@@ -17,17 +17,25 @@ public:
 	void active_AI();
 
 private:
+	void Change_Animation(const float& fTimeDelta);
+	void Change_Gladiator_Animation(const float& fTimeDelta);
+	void Change_Archer_Animation(const float& fTimeDelta);
+	void Change_Priest_Animation(const float& fTimeDelta);
+
+	void process_move_ai(const float& fTimeDelta);
 	void process_disconnect_ai();
 	void process_leave_party_ai();
 
 public:
 	void send_AI_enter_packet(const int& to_client);
+	void send_AI_move_packet(const int& to_client);
 	void send_leave_party_ai(const int& to_client);
 
 public:
 	virtual DWORD				Release();
 
 public:
+	bool	m_bIsMove			= false;
 	bool	m_bIsAttackStance	= false;
 	bool	m_bIsPartyState		= false;
 	char	m_chWeaponType      = 0;
@@ -41,5 +49,7 @@ public:
 	int		m_iMinAtt			= 0;
 	int		m_iMaxAtt			= 0;
 	float	m_fSpd				= 0;
+
+	LINEAR_INTERPOLATION_DESC<float> m_tMoveSpeedInterpolationDesc;
 };
 

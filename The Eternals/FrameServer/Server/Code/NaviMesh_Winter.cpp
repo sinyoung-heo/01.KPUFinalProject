@@ -143,7 +143,7 @@ HRESULT CNaviMesh_Winter::Ready_NaviMesh(wstring wstrFilePath)
 	if (fin.fail())
 		return E_FAIL;
 
-	_vec3 vOffSet = _vec3(STAGE_BEACH_OFFSET_X, 0.0f, STAGE_BEACH_OFFSET_Z);
+	_vec3 vOffSet = _vec3(STAGE_WINTER_OFFSET_X, 0.0f, STAGE_WINTER_OFFSET_Z);
 
 	while (true)
 	{

@@ -320,14 +320,6 @@ void CObjMgr::Create_AiPlayer()
 		pNew->Ready_AI(PC_ARCHER, Bow27_SM, STAGE_WINTER, _vec3(STAGE_WINTER_X, 0.f, STAGE_WINTER_Z));
 	}
 	else return;
-
-	// Archer 2
-	pNew = static_cast<CAi*>(CObjPoolMgr::GetInstance()->use_Object(L"AI"));
-	if (pNew)
-	{
-		pNew->Ready_AI(PC_ARCHER, Bow27_SM, STAGE_WINTER, _vec3(STAGE_WINTER_X + 5.f, 0.f, STAGE_WINTER_Z));
-	}
-	else return;
 }
 
 void CObjMgr::Create_StageVelikaNPC()

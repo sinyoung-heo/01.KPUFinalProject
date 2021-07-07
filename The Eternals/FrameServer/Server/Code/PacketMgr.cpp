@@ -1741,6 +1741,12 @@ void process_stage_change(int id, const char& stage_id)
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
 	if (pPlayer == nullptr) return;
 
+	/* 해당 플레이어의 원래 위치값 & 변경된 위치값 */
+	float ori_x, ori_y, ori_z;
+	ori_x = pPlayer->m_vPos.x;
+	ori_y = pPlayer->m_vPos.y;
+	ori_z = pPlayer->m_vPos.z;
+
 	// Set StageID
 	pPlayer->m_chStageId = stage_id;
 
@@ -1774,6 +1780,9 @@ void process_stage_change(int id, const char& stage_id)
 			pPlayer->send_player_stage_change(server_num);
 		}
 	}
+
+	/* 변경된 좌표로 섹터 갱신 */
+	CSectorMgr::GetInstance()->Compare_exchange_Sector(id, (int)ori_z, (int)ori_x, (int)(pPlayer->m_vPos.z), (int)(pPlayer->m_vPos.x));
 }
 
 void process_suggest_party(const int& suggester_id, const int& others_id)
