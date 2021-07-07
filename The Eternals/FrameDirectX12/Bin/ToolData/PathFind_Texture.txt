@@ -29,7 +29,7 @@ Smoke1|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Smoke1\%d.
 Snow|3|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Snow\%d.dds
 Torch|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Torch\%d.dds
 UnderFire|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\UnderFire\%d.dds
-EffectTrailTexture|13|..\..\Bin\Resource\ResourceStage\Texture\EffectTrailTexture\%d.dds
+EffectTrailTexture|14|..\..\Bin\Resource\ResourceStage\Texture\EffectTrailTexture\%d.dds
 SkyBox|10|..\..\Bin\Resource\ResourceStage\Texture\Environment\SkyBox\%d.dds
 Terrain|13|..\..\Bin\Resource\ResourceStage\Texture\Environment\Terrain\%d.dds
 TexWaterFall|11|..\..\Bin\Resource\ResourceStage\Texture\Environment\TexWaterFall\%d.dds

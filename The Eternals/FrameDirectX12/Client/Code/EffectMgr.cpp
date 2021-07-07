@@ -21,6 +21,9 @@
 #include "IceStorm_m.h"
 #include "IceStorm_s.h"
 #include "DistTrail.h"
+#include "CollisionTick.h"
+#include "PCGladiator.h"
+
 IMPLEMENT_SINGLETON(CEffectMgr)
 
 CEffectMgr::CEffectMgr()
@@ -100,6 +103,8 @@ void CEffectMgr::Effect_SwordEffect_s(_vec3 vecPos, _vec3 vecDir)
 
 void CEffectMgr::Effect_Straight_IceStorm(_vec3 vecPos, _vec3 vecDir)
 {
+	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+
 	_matrix rotationY=XMMatrixRotationY(XMConvertToRadians(20.f));
 	XMVECTOR temp= XMVector3TransformCoord(vecDir.Get_XMVECTOR(), rotationY);
 	_vec3 DirectVec;
@@ -117,6 +122,20 @@ void CEffectMgr::Effect_Straight_IceStorm(_vec3 vecPos, _vec3 vecDir)
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"publicSkill3", pGameObj), E_FAIL);
 		}
 		CEffectMgr::Get_Instance()->Effect_Particle(vecPos + PosOffSet, 5, L"Lighting0", _vec3(0.3f));
+
+
+		CCollisionTick* pCollisionTick = static_cast<CCollisionTick*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_CollisionTickPool()));
+		if (nullptr != pCollisionTick)
+		{
+			pCollisionTick->Get_BoundingSphere()->Get_BoundingInfo().Radius = 0.5f;
+			pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
+			pCollisionTick->Set_Damage(pThisPlayer->Get_Info()->Get_RandomDamage());
+			pCollisionTick->Set_LifeTime(0.4f);
+			pCollisionTick->Get_Transform()->m_vScale = _vec3(2.5f);
+			pCollisionTick->Get_Transform()->m_vPos   = vecPos + PosOffSet;
+			pCollisionTick->Get_BoundingSphere()->Set_Radius(pCollisionTick->Get_Transform()->m_vScale);
+			m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_ThisPlayer", pCollisionTick);
+		}
 	}
 }
 

@@ -110,6 +110,7 @@ private:
 	void Collision_Quest(list<Engine::CColliderSphere*>& lstMerchantCollider, int npcServerNumber);
 	void Suggest_PartyToOthers();
 	void Leave_PartyThisPlayer();
+	void SetUp_CameraEffect(const _float& fTimeDelta);
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]

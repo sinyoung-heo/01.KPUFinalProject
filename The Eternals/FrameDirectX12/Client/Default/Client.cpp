@@ -36,13 +36,14 @@ ________________________________________________________________________________
 HINSTANCE	g_hInst;							// 현재 인스턴스입니다.
 HWND		g_hWnd;
 
-_bool g_bIsOnDebugCaemra = false;
-_bool g_bIsStageChange   = false;
-_bool g_bIsOpenShop		 = false;
-_bool g_bIsLoadingFinish = false;
-_bool g_bIsExitGame      = false;
-_bool g_bIsChattingInput = false;
-_bool g_bIsGameStart	 = false;
+_bool g_bIsOnDebugCaemra          = false;
+_bool g_bIsStageChange            = false;
+_bool g_bIsOpenShop		          = false;
+_bool g_bIsLoadingFinish          = false;
+_bool g_bIsExitGame               = false;
+_bool g_bIsChattingInput          = false;
+_bool g_bIsGameStart	          = false;
+_bool g_bIsStartSkillCameraEffect = false;
 
 _ulong Release_Singleton();
 

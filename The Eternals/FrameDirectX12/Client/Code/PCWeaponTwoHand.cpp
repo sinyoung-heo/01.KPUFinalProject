@@ -60,8 +60,8 @@ HRESULT CPCWeaponTwoHand::LateInit_GameObject()
 	m_pTrail = CEffectTrail::Create(m_pGraphicDevice, m_pCommandList, L"EffectTrailTexture", 11, Engine::CRenderer::RENDER_MAGICCIRCLE);
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Trail", m_pTrail), E_FAIL);
 
-	m_pDistortionTrail = CEffectTrail::Create(m_pGraphicDevice, m_pCommandList, L"EffectTrailTexture", 10, Engine::CRenderer::RENDER_DISTORTION);
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Trail", m_pDistortionTrail), E_FAIL);
+	// m_pDistortionTrail = CEffectTrail::Create(m_pGraphicDevice, m_pCommandList, L"EffectTrailTexture", 10, Engine::CRenderer::RENDER_DISTORTION);
+	// Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Trail", m_pDistortionTrail), E_FAIL);
 
 	return S_OK;
 }
@@ -114,7 +114,7 @@ _int CPCWeaponTwoHand::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	// Update Trail
-	if (nullptr != m_pTrail && nullptr != m_pDistortionTrail)
+	if (nullptr != m_pTrail /*&& nullptr != m_pDistortionTrail*/)
 	{
 		m_pBoundingBoxCom->Update_Component(fTimeDelta);
 		
@@ -127,10 +127,10 @@ _int CPCWeaponTwoHand::Update_GameObject(const _float& fTimeDelta)
 		m_pTrail->SetUp_TrailByCatmullRom(&vMin, &vMax);
 		m_pTrail->Get_Transform()->m_vPos = _vec3(0.f, 0.f, 0.0f);
 
-		vMin.y -= 0.1f;
-		vMax.y -= 0.1f;
-		m_pDistortionTrail->SetUp_TrailByCatmullRom(&vMin, &vMax);
-		m_pDistortionTrail->Get_Transform()->m_vPos = _vec3(0.f, 0.f, 1.0f);
+		//vMin.y -= 0.1f;
+		//vMax.y -= 0.1f;
+		//m_pDistortionTrail->SetUp_TrailByCatmullRom(&vMin, &vMax);
+		//m_pDistortionTrail->Get_Transform()->m_vPos = _vec3(0.f, 0.f, 1.0f);
 	}
 
 	return NO_EVENT;
@@ -209,6 +209,6 @@ void CPCWeaponTwoHand::Free()
 	if (nullptr != m_pTrail)
 		m_pTrail->Set_DeadGameObject();
 
-	if (nullptr != m_pDistortionTrail)
-		m_pDistortionTrail->Set_DeadGameObject();
+	//if (nullptr != m_pDistortionTrail)
+	//	m_pDistortionTrail->Set_DeadGameObject();
 }

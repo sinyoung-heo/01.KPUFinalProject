@@ -39,6 +39,8 @@ public:
 	void				Set_Up(const _vec3& vUp)						{ m_tCameraInfo.vEye = vUp; }
 	void				Set_ProjInfo(const PROJ_DESC& tProjInfo)		{ m_tProjInfo = tProjInfo; }
 	void				Set_OrthoInfo(const ORTHO_DESC& tOrthoInfo)		{ m_tOrthoInfo = tOrthoInfo; }
+	void				Set_FovY(const _float& fFovY)					{ m_tProjInfo.fFovY = fFovY; }
+	void				Set_ResetFovY()									{ m_tProjInfo.fFovY = m_fOriginFovY; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT		Ready_GameObject(const CAMERA_DESC& tCameraInfo,
@@ -59,7 +61,7 @@ protected:
 	BoundingFrustum m_tFrustum;				// 카메라 절두체.
 
 	_float m_fOriginFovY = 0.0f;
-	_float m_fPreFovY = 0.0f;
+	_float m_fPreFovY    = 0.0f;
 
 	/*__________________________________________________________________________________________________________
 	[ Shader Component ]

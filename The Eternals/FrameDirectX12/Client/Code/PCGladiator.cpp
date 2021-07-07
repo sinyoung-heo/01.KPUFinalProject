@@ -236,6 +236,9 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	// AfterImage
 	Make_AfterImage(fTimeDelta);
 
+	// Camera Effect
+	SetUp_CameraEffect(fTimeDelta);
+
 	// Weapon Update
 	if (m_pWeapon != nullptr)
 		m_pWeapon->Update_GameObject(fTimeDelta);
@@ -1512,6 +1515,13 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 				 m_uiAnimIdx != Gladiator::DRAW_SWORD_CHARGE && 
 				 NO_EVENT_STATE)
 		{
+			m_pWeapon->Set_TrailTextureIdx(11);
+			g_bIsStartSkillCameraEffect = true;
+			m_pDynamicCamera->Set_FovY(30.0f);
+			m_pDynamicCamera->SetUp_ThirdPersonViewOriginData();
+			m_pDynamicCamera->Set_CameraAtParentMatrix(m_pMeshCom->Find_SkinningMatrix("Bip01-Neck"));
+			m_pDynamicCamera->Set_CameraState(CAMERA_STATE::GLADIATOR_ULTIMATE);
+
 			SetUp_WeaponRHand();
 			SetUp_AttackSetting();
 			m_bIsSkill     = true;
@@ -1595,11 +1605,20 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 		m_bIsAttack    = false;
 		m_bIsSkill     = false;
 		m_bIsSkillLoop = false;
+		m_pWeapon->Set_TrailTextureIdx(11);
 		m_pWeapon->Set_IsRenderTrail(false);
 		m_uiComoboCnt = Gladiator::COMBOCNT_0;
 		m_uiAnimIdx   = Gladiator::ATTACK_WAIT;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+	}
+
+	if (Gladiator::DRAW_SWORD == m_uiAnimIdx)
+	{
+		g_bIsStartSkillCameraEffect = false;
+		m_pDynamicCamera->Set_ResetFovY();
+		m_pDynamicCamera->Set_CameraAtParentMatrix(nullptr);
+		m_pDynamicCamera->Set_CameraState(CAMERA_STATE::THIRD_PERSON_VIEW);
 	}
 }
 
@@ -2440,19 +2459,19 @@ void CPCGladiator::SetUp_CollisionTick(const _float& fTimeDelta)
 			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
 		}
 	}
-	else if (Gladiator::JAW_BREAKER == m_uiAnimIdx && m_ui3DMax_CurFrame >= Gladiator::JAW_BREAKER_COLLISIONTICK_START)
-	{
-		if (!m_bIsSetCollisionTick)
-		{
-			m_bIsSetCollisionTick                        = true;
-			m_tCollisionTickDesc.fPosOffset              = 2.f;
-			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
-			m_tCollisionTickDesc.fColisionTickUpdateTime = 0.0f;
-			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
-			m_tCollisionTickDesc.iCurCollisionTick       = 0;
-			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
-		}
-	}
+	//else if (Gladiator::JAW_BREAKER == m_uiAnimIdx && m_ui3DMax_CurFrame >= Gladiator::JAW_BREAKER_COLLISIONTICK_START)
+	//{
+	//	if (!m_bIsSetCollisionTick)
+	//	{
+	//		m_bIsSetCollisionTick                        = true;
+	//		m_tCollisionTickDesc.fPosOffset              = 2.f;
+	//		m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
+	//		m_tCollisionTickDesc.fColisionTickUpdateTime = 0.0f;
+	//		m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
+	//		m_tCollisionTickDesc.iCurCollisionTick       = 0;
+	//		m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+	//	}
+	//}
 	else if (Gladiator::WIND_CUTTER1 == m_uiAnimIdx && m_ui3DMax_CurFrame >= Gladiator::WIND_CUTTER1_COLLISIONTICK_START)
 	{
 		if (!m_bIsSetCollisionTick)
@@ -2511,13 +2530,13 @@ void CPCGladiator::SetUp_CollisionTick(const _float& fTimeDelta)
 		if (!m_bIsSetCollisionTick)
 		{
 			m_bIsSetCollisionTick                        = true;
-			m_tCollisionTickDesc.fPosOffset              = 2.f;
-			m_tCollisionTickDesc.fScaleOffset            = 1.5f;
+			m_tCollisionTickDesc.fPosOffset              = 0.f;
+			m_tCollisionTickDesc.fScaleOffset            = 2.25f;
 			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
 			m_tCollisionTickDesc.fColisionTickUpdateTime = 1.0f / 10.0f;
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
-			m_tCollisionTickDesc.iMaxCollisionTick       = 9;
+			m_tCollisionTickDesc.iMaxCollisionTick       = 4;
 		}
 	}
 
@@ -2751,6 +2770,25 @@ void CPCGladiator::Leave_PartyThisPlayer()
 	{
 		m_pPartySystemMgr->Get_PartyLeaveCanvas()->Reverse_IsActive();
 		m_pPartySystemMgr->Get_PartyLeaveCanvas()->Reverse_IsActiveChild();
+	}
+}
+
+void CPCGladiator::SetUp_CameraEffect(const _float& fTimeDelta)
+{
+	switch (m_uiAnimIdx)
+	{
+	case Gladiator::GAIA_CRUSH1:
+	{
+		CAMERA_ZOOM_DESC tCameraZoomDesc;
+		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_IN;
+		tCameraZoomDesc.fPower     = 0.25f;
+		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 2.15f;
+		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+	}
+	break;
+
+	default:
+		break;
 	}
 }
 

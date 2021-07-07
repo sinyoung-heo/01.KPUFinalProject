@@ -12,6 +12,13 @@ CDynamicCamera::CDynamicCamera(ID3D12Device* pGraphicDevice, ID3D12GraphicsComma
 {
 }
 
+void CDynamicCamera::SetUp_ThirdPersonViewOriginData()
+{
+	m_tThirdPersonViewOriginDesc.bIsResetting = false;
+	m_tThirdPersonViewOriginDesc.vOriginScale = m_pTransCom->m_vScale;
+	m_tThirdPersonViewOriginDesc.vOriginAngle = m_pTransCom->m_vAngle;
+}
+
 void CDynamicCamera::Set_CameraShakingDesc(const CAMERA_SHAKING_DESC& tDesc)
 {
 	m_tCameraShakingDesc = tDesc;
@@ -48,24 +55,6 @@ void CDynamicCamera::Set_CameraShakingDesc(const CAMERA_SHAKING_DESC& tDesc)
 	{
 		if (fInputY < m_tCameraShakingDesc.vMax.y * 0.7f)
 			fInputY = m_tCameraShakingDesc.vMax.y * 0.7f;
-	}
-
-	if (fInputX == 0 && m_tCameraShakingDesc.vMin.x != 0.f && m_tCameraShakingDesc.vMax.x != 0.0f)
-	{
-		_int temp = rand() % 2;
-		if (temp % 2 == 0)
-			fInputX = m_tCameraShakingDesc.vMax.x / 2.0f;
-		else
-			fInputX = -(m_tCameraShakingDesc.vMax.x) / 2.0f;
-
-	}
-	if (fInputY == 0 && m_tCameraShakingDesc.vMin.y != 0.f && m_tCameraShakingDesc.vMax.y != 0.0f)
-	{
-		_int temp = rand() % 2;
-		if (temp % 2 == 0)
-			fInputY = m_tCameraShakingDesc.vMax.y / 2.0f;
-		else
-			fInputY = -(m_tCameraShakingDesc.vMax.y) / 2.0f;
 	}
 
 	m_tCameraShakingDesc.tOffsetInterpolationDesc.v1                     = _vec2(0.0f);
@@ -125,7 +114,24 @@ _int CDynamicCamera::Update_GameObject(const _float & fTimeDelta)
 
 	if (!g_bIsOnDebugCaemra)
 	{
-		SetUp_DynamicCameraFromTarget(fTimeDelta);
+		switch (m_eCameraState)
+		{
+		case THIRD_PERSON_VIEW:
+			if (m_tThirdPersonViewOriginDesc.bIsResetting)
+				SetUp_DynamicCameraFromTarget(fTimeDelta);
+			else
+			{
+				m_tThirdPersonViewOriginDesc.bIsResetting = true;
+				m_pTransCom->m_vScale = m_tThirdPersonViewOriginDesc.vOriginScale;
+				m_pTransCom->m_vAngle = m_tThirdPersonViewOriginDesc.vOriginAngle;
+			}
+			break;
+		case GLADIATOR_ULTIMATE:
+			SetUp_DynamicCameraGladiatorUltimate(fTimeDelta);
+			break;
+		default:
+			break;
+		}
 
 		Engine::CCamera::Update_GameObject(fTimeDelta);
 		Engine::CGraphicDevice::Get_Instance()->Set_Transform(Engine::MATRIXID::VIEW, &m_tCameraInfo.matView);
@@ -202,6 +208,39 @@ void CDynamicCamera::SetUp_DynamicCameraFromTarget(const _float& fTimeDelta)
 	}
 }
 
+void CDynamicCamera::SetUp_DynamicCameraGladiatorUltimate(const _float& fTimeDelta)
+{
+	if (nullptr != m_pTarget && PC_GLADIATOR == m_pTarget->Get_OType())
+	{
+		m_pTransCom->m_vScale = _vec3(0.0f, 0.0f, 4.5f);
+		m_pTransCom->m_vAngle = _vec3(3.0f, m_tThirdPersonViewOriginDesc.vOriginAngle.y + 135.0f, 0.0f);
+		m_pTransCom->m_vPos   = m_pTarget->Get_Transform()->m_vPos;
+		Engine::CGameObject::Update_GameObject(fTimeDelta);
+
+		m_tCameraInfo.vEye.TransformCoord(_vec3(0.0f, 0.0f, -1.0f), m_pTransCom->m_matWorld);
+
+		if (nullptr != m_pCameraAtSkinningMatrix)
+		{
+			_matrix matWorld = m_pTransCom->m_matWorld;
+			_matrix matBoneFinalTransform = ((m_pCameraAtSkinningMatrix->matBoneScale
+											* m_pCameraAtSkinningMatrix->matBoneRotation
+											* m_pCameraAtSkinningMatrix->matBoneTrans)
+											* m_pCameraAtSkinningMatrix->matParentTransform)
+											* m_pCameraAtSkinningMatrix->matRootTransform;
+
+			matWorld = (matBoneFinalTransform) * (m_pTarget->Get_Transform()->m_matWorld);
+			m_tCameraInfo.vAt = _vec3(m_pTransCom->m_vPos.x, matWorld._42, m_pTransCom->m_vPos.z);
+		}
+	}
+	
+	else if (nullptr == m_pTarget)
+	{
+		m_pTarget = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+		if (nullptr != m_pTarget)
+			m_pTarget->Get_BoundingBox()->Set_SetUpCameraAt(true);
+	}
+}
+
 void CDynamicCamera::SetUp_CameraShaking(const _float& fTimeDelta)
 {
 	if (!m_tCameraShakingDesc.bIsStartCameraShaking)
@@ -253,24 +292,6 @@ void CDynamicCamera::SetUp_CameraShaking(const _float& fTimeDelta)
 			{
 				if (fInputY < m_tCameraShakingDesc.vMax.y * 0.7f)
 					fInputY = m_tCameraShakingDesc.vMax.y * 0.7f;
-			}
-
-			if (fInputX == 0 && m_tCameraShakingDesc.vMin.x != 0.f && m_tCameraShakingDesc.vMax.x != 0.0f)
-			{
-				_int temp = rand() % 2;
-				if (temp % 2 == 0)
-					fInputX = m_tCameraShakingDesc.vMax.x / 2.0f;
-				else
-					fInputX = -(m_tCameraShakingDesc.vMax.x) / 2.0f;
-
-			}
-			if (fInputY == 0 && m_tCameraShakingDesc.vMin.y != 0.f && m_tCameraShakingDesc.vMax.y != 0.0f)
-			{
-				_int temp = rand() % 2;
-				if (temp % 2 == 0)
-					fInputY = m_tCameraShakingDesc.vMax.y / 2.0f;
-				else
-					fInputY = -(m_tCameraShakingDesc.vMax.y) / 2.0f;
 			}
 
 			if (0 < m_tCameraShakingDesc.vPreOffsetRange.x)

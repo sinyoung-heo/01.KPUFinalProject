@@ -134,13 +134,14 @@ _int CCrab::Update_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+	if (!g_bIsStartSkillCameraEffect)
+		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MINIMAP, this), -1);
 
 	/*__________________________________________________________________________________________________________
 	[ Collision - Add Collision List ]
 	____________________________________________________________________________________________________________*/
-	if (!m_bIsStartDissolve)
+	if (!m_bIsStartDissolve && Crab::A_DEATH != m_iMonsterStatus)
 		m_pCollisonMgr->Add_CollisionCheckList(this);
 
 	/*__________________________________________________________________________________________________________
@@ -486,7 +487,7 @@ void CCrab::SetUp_CollisionTick(const _float& fTimeDelta)
 
 void CCrab::SetUp_HpGauge(const _float& fTimeDelta)
 {
-	if (nullptr != m_pHpGauge)
+	if (nullptr != m_pHpGauge && Crab::A_DEATH != m_iMonsterStatus)
 	{
 		_vec3 vPos = m_pTransCom->m_vPos;
 		vPos.y += 1.0f;
