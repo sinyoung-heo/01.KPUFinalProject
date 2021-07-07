@@ -1084,6 +1084,7 @@
     <ClInclude Include="..\Code\EffectAxe.h">
       <Filter>02.GameObject\98.GameEffect\08.PriestShield</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\DragonEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1588,6 +1589,7 @@
     <ClCompile Include="..\Code\EffectAxe.cpp">
       <Filter>02.GameObject\98.GameEffect\08.PriestShield</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\DragonEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

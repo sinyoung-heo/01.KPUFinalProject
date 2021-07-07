@@ -14,6 +14,7 @@ class CShaderBumpTerrain;
 class CShaderSkyBox;
 class CShaderMesh;
 class CShaderMeshEffect;
+class CShaderDynamicMeshEffect;
 class CShaderMeshInstancing;
 class CShaderSSAO;
 class CShaderNPathDir;
@@ -74,6 +75,7 @@ protected:
 	CShaderMesh*				m_pShaderMesh		       = nullptr;
 
 	CShaderMeshEffect*			m_pShaderMeshEffect        = nullptr;
+	CShaderDynamicMeshEffect* m_pShaderDynamicMeshEffect = nullptr;
 	// CShaderMeshInstancing*	m_pShaderMeshInstancing    = nullptr;
 	CShaderSSAO*				m_pShaderSSAO              = nullptr;
 

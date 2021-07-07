@@ -53,6 +53,7 @@ public:
 		RENDER_CROSSFILTER,
 		RENDER_COLLIDER,
 		RENDER_MAGICCIRCLE,
+		RENDER_DYNAMICEFFECT,
 		RENDER_ALPHA,
 		RENDER_UI,
 		RENDER_MINIMAP,
@@ -199,6 +200,10 @@ private:
 	CScreenTex*		m_pSSAOBuffer = nullptr;
 	CShaderSSAO*	m_pSSAOShader = nullptr;
 	_bool			m_bIsSetSSAOTexture{ false };
+
+	//DynamicEffect
+	CRenderTarget* m_pTargetDynamicMeshEffect = nullptr;
+	CScreenTex* m_pDynamicMeshEffectBuffer = nullptr;
 
 	//Effect (Alpha)
 	CRenderTarget*	m_pTargetpEffect   = nullptr;

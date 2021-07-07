@@ -24,6 +24,7 @@
 #include "CollisionTick.h"
 #include "PCGladiator.h"
 
+#include "DragonEffect.h"
 IMPLEMENT_SINGLETON(CEffectMgr)
 
 CEffectMgr::CEffectMgr()
@@ -167,6 +168,9 @@ void CEffectMgr::Effect_ArrowHitted(_vec3 vecPos)
 
 void CEffectMgr::Effect_FireCone(_vec3 vecPos, float RotY , _vec3 vecDir)
 {
+	pGameObj = CDragonEffect::Create(m_pGraphicDevice, m_pCommandList, L"DragonEffect", _vec3(0.004f), _vec3(0.f), vecPos);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"EffectDragon", pGameObj), E_FAIL);
+
 	vecPos.y = 0.5f;
 
 	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_FireRing_Effect());
@@ -250,9 +254,9 @@ void CEffectMgr::Effect_Axe(_vec3 vecPos, Engine::CTransform* parentTransform)
 	vecPos.z += 0.2f;
 	Effect_MagicCircle_Effect(_vec3(0.0f), _vec3(0.0f), vecPos, 21, 21, 2, true, true, parentTransform, true);
 }
-
 void CEffectMgr::Effect_TargetShield(_vec3 vecPos, Engine::CTransform* parentTransform)
 {
+	
 	for (int i = 0; i < 3; i++)
 	{
 		vecPos.y = 1.f;

@@ -115,8 +115,7 @@ private:
 	bool m_bisFireEffect = false;
 	bool m_bisSwordEffect = false;
 	bool m_bisDustEffect = false;
-	bool m_bisSwordsEffect = false
-	bool m_bisSwordEffect = false;
+	bool m_bisSwordsEffect = false;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

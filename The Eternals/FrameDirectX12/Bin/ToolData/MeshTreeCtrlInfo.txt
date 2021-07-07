@@ -4,6 +4,7 @@ DynamicMesh|Character|PoporiR27Gladiator
 DynamicMesh|Monster|CloderA
 DynamicMesh|Monster|Crab
 DynamicMesh|Monster|CraftyArachne
+DynamicMesh|Monster|DragonEffect
 DynamicMesh|Monster|DrownedSailor
 DynamicMesh|Monster|GiantBeetle
 DynamicMesh|Monster|GiantMonkey

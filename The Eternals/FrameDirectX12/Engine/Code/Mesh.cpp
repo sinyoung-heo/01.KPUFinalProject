@@ -75,6 +75,13 @@ void CMesh::Render_DynamicMesh(CShader * pShader)
 		m_pVIMesh->Render_DynamicMesh(pShader);
 }
 
+void CMesh::Render_DynamicMeshEffect(CShader* pShader)
+{
+	if (nullptr != m_pVIMesh)
+		m_pVIMesh->Render_DynamicMeshEffect(pShader);
+
+}
+
 void CMesh::Render_DynamicMeshAfterImage(CShader* pShader, const _uint& iAfterImgIdx)
 {
 	if (nullptr != m_pVIMesh)
@@ -113,6 +120,12 @@ void CMesh::Render_DynamicMesh(ID3D12GraphicsCommandList * pCommandList,
 {
 	if (nullptr != m_pVIMesh && nullptr != pCommandList)
 		m_pVIMesh->Render_DynamicMesh(pCommandList, iContextIdx, pShader);
+}
+
+void CMesh::Render_DynamicMeshEffect(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader)
+{
+	if (nullptr != m_pVIMesh && nullptr != pCommandList)
+		m_pVIMesh->Render_DynamicMeshEffect(pCommandList, iContextIdx, pShader);
 }
 
 void CMesh::Render_DynamicMeshAfterImage(ID3D12GraphicsCommandList* pCommandList, 

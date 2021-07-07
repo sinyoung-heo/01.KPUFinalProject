@@ -4,6 +4,7 @@ PoporiR27Gladiator|PoporiR27Gladiator.X|..\..\Bin\Resource\ResourceStage\Dynamic
 CloderA|CloderA.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\CloderA\
 Crab|Crab.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\Crab\
 CraftyArachne|CraftyArachne.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\CraftyArachne\
+DragonEffect|DragonEffect.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\DragonEffect\
 DrownedSailor|DrownedSailor.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\DrownedSailor\
 GiantBeetle|GiantBeetle.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\GiantBeetle\
 GiantMonkey|GiantMonkey.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\GiantMonkey\

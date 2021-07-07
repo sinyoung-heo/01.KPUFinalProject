@@ -420,6 +420,9 @@
     <ClInclude Include="..\Code\ShaderAddEffect.h">
       <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\14.ShaderAddEffect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\ShaderDynamicMeshEffect.h">
+      <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\03.ShaderMesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\DirectInput.cpp">
@@ -620,6 +623,9 @@
     <ClCompile Include="..\Code\ShaderAddEffect.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\14.ShaderAddEffect</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\ShaderDynamicMeshEffect.cpp">
+      <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\03.ShaderMesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Bin\Shader\ShaderMesh.hlsl">
@@ -681,6 +687,9 @@
     </FxCompile>
     <FxCompile Include="..\..\Bin\Shader\ShaderAddEffect.hlsl">
       <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\14.ShaderAddEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Bin\Shader\ShaderDynamicMeshEffect.hlsl">
+      <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\03.ShaderMesh</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
