@@ -13,9 +13,11 @@ constexpr int MIDDLE_STR_LEN			= 64;
 constexpr int MAX_USER					= 10000;
 constexpr int MAX_NPC					= 50;
 constexpr int MAX_MONSTER				= 50;
+constexpr int MAX_AI					= 10;
 
 constexpr int NPC_NUM_START				= 1000;
 constexpr int MON_NUM_START				= 5000;
+constexpr int AI_NUM_START				= 9000;
 
 constexpr int WORLD_WIDTH				= 1000;
 constexpr int WORLD_HEIGHT				= 1000;

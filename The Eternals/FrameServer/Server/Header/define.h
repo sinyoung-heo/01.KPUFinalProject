@@ -36,6 +36,13 @@ constexpr int	INCREASE_ATT				= 5;
 constexpr float	NUCKBACK_DIST				= 6.f;
 constexpr int	INIT_PARTY_NUMBER			= -1;
 constexpr int	MAX_ITEMSIZE				= 80;
+
+constexpr int	RAID_PARTY					= 99;
+constexpr int	AI_HP						= 5000;
+constexpr int	AI_MP						= 5000;
+constexpr int	AI_MAXATT					= 500;
+constexpr int	AI_MINATT					= 250;
+
 /*____________________________________________________________________
 Monster Attack & Chase Dist
 ______________________________________________________________________*/

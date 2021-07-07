@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Npc.h"
 #include "Monster.h"
+#include "Ai.h"
 
 /* ========================패킷 처리========================*/
 void process_packet(int id)
@@ -136,6 +137,19 @@ void process_packet(int id)
 						pPlayer->v_lock.unlock();
 
 						pMonster->send_Monster_enter_packet(id);
+					}
+					/* AI일 경우 처리*/
+					else if (true == CObjMgr::GetInstance()->Is_AI(obj_num))
+					{
+						CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", obj_num));
+	
+						// 시야 내에 없다면 시야 목록에 등록X
+						if (false == CObjMgr::GetInstance()->Is_Near(pPlayer, pAi)) continue;
+						pPlayer->v_lock.lock();
+						pPlayer->view_list.insert(obj_num);
+						pPlayer->v_lock.unlock();
+
+						pAi->send_AI_enter_packet(id);										
 					}
 				}
 			}
@@ -547,12 +561,24 @@ void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 						pMonster->active_monster();
 					}
 				}
+				/* AI일 경우 처리*/
+				else if (true == CObjMgr::GetInstance()->Is_AI(obj_num))
+				{
+					CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", obj_num));
+		
+					// 시야 내에 없다면 시야 목록에 등록X.
+					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pAi))
+					{
+						new_viewlist.insert(obj_num);
+						pAi->active_AI();
+					}
+				}
 			}
 		}
 	}
 
 	/* 새로운 시야 목록 내의 객체 처리 */
-	for (int server_num : new_viewlist)
+	for (const int& server_num : new_viewlist)
 	{
 		// 플레이어 시야 목록에 새로 들어온 객체 처리 (이전 시야 목록에 없다면)
 		if (0 == old_viewlist.count(server_num))
@@ -599,6 +625,13 @@ void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 				CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", server_num));
 				pMonster->send_Monster_enter_packet(id);
 			}
+			// 새로 시야에 들어온 AI일 경우 처리
+			else if (true == CObjMgr::GetInstance()->Is_AI(server_num))
+			{
+				// 플레이어('나')에게 AI 등장 패킷 전송
+				CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", server_num));
+				pAi->send_AI_enter_packet(id);
+			}
 		}
 		// 플레이어 시야 목록에 계속 있는 객체 처리
 		else
@@ -624,11 +657,11 @@ void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 					pPlayer->send_enter_packet(server_num);
 				}
 			}
-		} // 상대방에게 나의 스탯 정보 갱신 .... 나중에
+		} 
 	}
 
 	/* 이전 시야 목록에서 사라진 객체 처리 */
-	for (int s_num : old_viewlist)
+	for (const int& s_num : old_viewlist)
 	{
 		// 갱신된 시야 목록에 없는 객체일 경우
 		if (0 == new_viewlist.count(s_num))
@@ -709,8 +742,8 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 			// 타 유저의 서버 번호 추출
 			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
-				/* 타유저일 경우 처리 */
 				if (obj_num == id) continue;
+				/* 타유저일 경우 처리 */
 				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
 				{
 					CPlayer* pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
@@ -747,12 +780,24 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 						pMonster->active_monster();
 					}
 				}
+				/* AI일 경우 처리*/
+				else if (true == CObjMgr::GetInstance()->Is_AI(obj_num))
+				{
+					CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", obj_num));
+
+					// 시야 내에 없다면 시야 목록에 등록X.
+					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pAi))
+					{
+						new_viewlist.insert(obj_num);
+						pAi->active_AI();
+					}
+				}
 			}
 		}
 	}
 
 	/* 새로운 시야 목록 내의 객체 처리 */
-	for (int server_num : new_viewlist)
+	for (const int& server_num : new_viewlist)
 	{
 		// 플레이어 시야 목록에 새로 들어온 객체 처리 (이전 시야 목록에 없다면)
 		if (0 == old_viewlist.count(server_num))
@@ -799,6 +844,13 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 				CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", server_num));
 				pMonster->send_Monster_enter_packet(id);
 			}
+			// 새로 시야에 들어온 AI일 경우 처리
+			else if (true == CObjMgr::GetInstance()->Is_AI(server_num))
+			{
+				// 플레이어('나')에게 Monster 등장 패킷 전송
+				CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", server_num));
+				pAi->send_AI_enter_packet(id);
+			}
 		}
 		// 플레이어 시야 목록에 계속 있는 객체 처리
 		else
@@ -824,11 +876,11 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 					pPlayer->send_enter_packet(server_num);
 				}
 			}
-		} // 상대방에게 나의 스탯 정보 갱신 .... 나중에
+		}
 	}
 
 	/* 이전 시야 목록에서 사라진 객체 처리 */
-	for (int s_num : old_viewlist)
+	for (const int& s_num : old_viewlist)
 	{
 		// 갱신된 시야 목록에 없는 객체일 경우
 		if (0 == new_viewlist.count(s_num))
@@ -974,7 +1026,7 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx, 
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 타 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 타유저일 경우 처리 */
 				if (obj_num == id) continue;
@@ -1014,12 +1066,24 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx, 
 						pMonster->active_monster();
 					}
 				}
+				/* AI일 경우 처리*/
+				else if (true == CObjMgr::GetInstance()->Is_AI(obj_num))
+				{
+					CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", obj_num));
+
+					// 시야 내에 없다면 시야 목록에 등록X.
+					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pAi))
+					{
+						new_viewlist.insert(obj_num);
+						pAi->active_AI();
+					}
+				}
 			}
 		}
 	}
 
 	/* 새로운 시야 목록 내의 객체 처리 */
-	for (int server_num : new_viewlist)
+	for (const int& server_num : new_viewlist)
 	{
 		// 플레이어 시야 목록에 새로 들어온 객체 처리 (이전 시야 목록에 없다면)
 		if (0 == old_viewlist.count(server_num))
@@ -1066,6 +1130,12 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx, 
 				CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", server_num));
 				pMonster->send_Monster_enter_packet(id);
 			}
+			// 새로 시야에 들어온 AI일 경우 처리
+			else if (true == CObjMgr::GetInstance()->Is_AI(server_num))
+			{				
+				CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", server_num));
+				pAi->send_AI_enter_packet(id);
+			}
 		}
 		// 플레이어 시야 목록에 계속 있는 객체 처리
 		else
@@ -1095,7 +1165,7 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx, 
 	}
 
 	/* 이전 시야 목록에서 사라진 객체 처리 */
-	for (int s_num : old_viewlist)
+	for (const int& s_num : old_viewlist)
 	{
 		// 갱신된 시야 목록에 없는 객체일 경우
 		if (0 == new_viewlist.count(s_num))
@@ -1174,7 +1244,7 @@ void process_attack_stop(int id, const _vec3& _vDir, const _vec3& _vPos, int ani
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 타 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 타유저일 경우 처리 */
 				if (obj_num == id) continue;
@@ -1214,12 +1284,24 @@ void process_attack_stop(int id, const _vec3& _vDir, const _vec3& _vPos, int ani
 						pMonster->active_monster();
 					}
 				}
+				/* AI일 경우 처리*/
+				else if (true == CObjMgr::GetInstance()->Is_AI(obj_num))
+				{
+					CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", obj_num));
+
+					// 시야 내에 없다면 시야 목록에 등록X.
+					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pAi))
+					{
+						new_viewlist.insert(obj_num);
+						pAi->active_AI();
+					}
+				}
 			}
 		}
 	}
 
 	/* 새로운 시야 목록 내의 객체 처리 */
-	for (int server_num : new_viewlist)
+	for (const int& server_num : new_viewlist)
 	{
 		// 플레이어 시야 목록에 새로 들어온 객체 처리 (이전 시야 목록에 없다면)
 		if (0 == old_viewlist.count(server_num))
@@ -1266,6 +1348,13 @@ void process_attack_stop(int id, const _vec3& _vDir, const _vec3& _vPos, int ani
 				CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", server_num));
 				pMonster->send_Monster_enter_packet(id);
 			}
+			// 새로 시야에 들어온 AI일 경우 처리
+			else if (true == CObjMgr::GetInstance()->Is_AI(server_num))
+			{
+				// 플레이어('나')에게 Monster 등장 패킷 전송
+				CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", server_num));
+				pAi->send_AI_enter_packet(id);
+			}
 		}
 		// 플레이어 시야 목록에 계속 있는 객체 처리
 		else
@@ -1295,7 +1384,7 @@ void process_attack_stop(int id, const _vec3& _vDir, const _vec3& _vPos, int ani
 	}
 
 	/* 이전 시야 목록에서 사라진 객체 처리 */
-	for (int s_num : old_viewlist)
+	for (const int& s_num : old_viewlist)
 	{
 		// 갱신된 시야 목록에 없는 객체일 경우
 		if (0 == new_viewlist.count(s_num))
@@ -1360,9 +1449,6 @@ void process_buff(const int& id, cs_packet_attack* p)
 	/* 변경된 좌표로 섹터 갱신 */
 	CSectorMgr::GetInstance()->Compare_exchange_Sector(id, (int)ori_z, (int)ori_x, (int)(pPlayer->m_vPos.z), (int)(pPlayer->m_vPos.x));
 
-	/* 변경된 좌표로 섹터 갱신 */
-	CSectorMgr::GetInstance()->Compare_exchange_Sector(id, (int)ori_z, (int)ori_x, (int)(pPlayer->m_vPos.z), (int)(pPlayer->m_vPos.x));
-
 	/* 플레이어 주변의 섹터를 검색 -> 인접한 섹터 내의 객체에게 좌표 전송 */
 	unordered_set<pair<int, int>> nearSector;
 	nearSector.reserve(NEAR_SECTOR);
@@ -1378,7 +1464,7 @@ void process_buff(const int& id, cs_packet_attack* p)
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 타 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 타유저일 경우 처리 */
 				if (obj_num == id) continue;
@@ -1416,6 +1502,18 @@ void process_buff(const int& id, cs_packet_attack* p)
 					{
 						new_viewlist.insert(obj_num);
 						pMonster->active_monster();
+					}
+				}
+				/* AI일 경우 처리*/
+				else if (true == CObjMgr::GetInstance()->Is_AI(obj_num))
+				{
+					CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", obj_num));
+
+					// 시야 내에 없다면 시야 목록에 등록X.
+					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pAi))
+					{
+						new_viewlist.insert(obj_num);
+						pAi->active_AI();
 					}
 				}
 			}
@@ -1469,6 +1567,12 @@ void process_buff(const int& id, cs_packet_attack* p)
 				// 플레이어('나')에게 Monster 등장 패킷 전송
 				CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", server_num));
 				pMonster->send_Monster_enter_packet(id);
+			}
+			// 새로 시야에 들어온 AI일 경우 처리
+			else if (true == CObjMgr::GetInstance()->Is_Monster(server_num))
+			{
+				CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", server_num));
+				pAi->send_AI_enter_packet(id);
 			}
 		}
 		// 플레이어 시야 목록에 계속 있는 객체 처리
@@ -1618,7 +1722,7 @@ void process_stance_change(int id, const bool& stance)
 	unordered_set<int> old_viewlist = pPlayer->view_list;
 	pPlayer->v_lock.unlock();
 
-	for (int server_num : old_viewlist)
+	for (const int& server_num : old_viewlist)
 	{
 		if (id == server_num) continue;
 		if (true == CObjMgr::GetInstance()->Is_Player(server_num))

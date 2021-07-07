@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Code\Ai.cpp" />
     <ClCompile Include="..\Code\Cell.cpp" />
     <ClCompile Include="..\Code\CollisionMgr.cpp" />
     <ClCompile Include="..\Code\DBMgr.cpp" />
@@ -43,6 +44,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\FrameDirectX12\Client\Header\ArcherAnimation.h" />
     <ClInclude Include="..\..\..\FrameDirectX12\Client\Header\PriestAnimation.h" />
+    <ClInclude Include="..\Code\Ai.h" />
     <ClInclude Include="..\Code\Cell.h" />
     <ClInclude Include="..\Code\CollisionMgr.h" />
     <ClInclude Include="..\Code\DBMgr.h" />

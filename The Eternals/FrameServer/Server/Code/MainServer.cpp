@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Npc.h"
 #include "Monster.h"
+#include "Ai.h"
 
 /* IOCP SERVER 관련 변수*/
 HANDLE g_hIocp;
@@ -28,6 +29,7 @@ void Release_Server();				// 서버 종료
 
 void Initialize_NPC();				// Create Stage Velika NPC 
 void Delete_NPC();					// Delete All NPC
+void Delete_AI();
 
 void Initialize_Monster();			// Create Monster(test)
 void Delete_Monster();				// Delete All MONSTER
@@ -166,6 +168,8 @@ void Release_Server()
 void Initialize_NPC()
 {
 	CObjMgr::GetInstance()->Create_StageVelikaNPC();
+	CObjMgr::GetInstance()->Create_AiPlayer();
+
 #ifdef TEST
 	cout << "NPC Initialize Finish.\n";
 #endif
@@ -183,6 +187,20 @@ void Delete_NPC()
 
 		iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"NPC")->begin();
 		iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"NPC")->end();
+	}
+}
+
+void Delete_AI()
+{
+	auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+	auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
+
+	for (iter_begin; iter_begin != iter_end;)
+	{
+		static_cast<CAi*>(iter_begin->second)->Release_AI();
+
+		iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+		iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
 	}
 }
 
@@ -515,6 +533,7 @@ void disconnect_client(const int& id)
 		g_bIsGameEnd = true;
 		Delete_NPC();
 		Delete_Monster();
+		Delete_AI();
 		Release_Server();
 	}
 }
@@ -720,6 +739,26 @@ void gameLogic_worker()
 				}
 				else
 					++iter_begin_npc;
+			}
+
+			/* AI PLAYER UPDATE */
+			auto iter_begin_ai = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+			auto iter_end_ai = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
+
+			for (; iter_begin_ai != iter_end_ai;)
+			{
+				int iEvent = static_cast<CAi*>(iter_begin_ai->second)->Update_AI(g_pTimerTimeDelta->Get_TimeDelta());
+
+				if (DEAD_OBJ == iEvent)
+				{
+					CObjPoolMgr::GetInstance()->return_Object(L"AI", iter_begin_ai->second);
+					CObjMgr::GetInstance()->Delete_GameObject(L"AI", iter_begin_ai->second);
+
+					iter_begin_ai = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+					iter_end_ai = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
+				}
+				else
+					++iter_begin_ai;
 			}
 		}
 	}
