@@ -183,13 +183,6 @@ void CEffectMgr::Effect_GridShieldEffect(_vec3 vecPos,int type,Engine::CTransfor
 	vecPos.y = 1.f + rand()%10 * 0.01;
 	type == 0 ? Pipeidx = 2 : Pipeidx=10;
 	type == 0 ? Texidx = _vec3(0,2,16) : Texidx=_vec3(0, 25, 16);
-	//pGameObj = CGridShieldEffect::Create(m_pGraphicDevice, m_pCommandList,
-	//	L"PublicSphere00",
-	//	_vec3(0.00f),
-	//	_vec3(0.f, 0.f, 0.f),
-	//	vecPos, Pipeidx
-	//);
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicSphere00", pGameObj), E_FAIL);
 
 	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_GridShieldEffect());
 	if (nullptr != pGameObj)
@@ -197,11 +190,6 @@ void CEffectMgr::Effect_GridShieldEffect(_vec3 vecPos,int type,Engine::CTransfor
 		static_cast<CGridShieldEffect*>(pGameObj)->Set_CreateInfo(_vec3(0.f), _vec3(0.f), vecPos, Texidx.x, Texidx.y, Texidx.z,Pipeidx, true, true, parentTransform);
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicSphere00", pGameObj), E_FAIL);
 	}
-	/*if (type == 0)
-		static_cast<CGridShieldEffect*>(pGameObj)->Set_TexIDX(0, 2, 16);
-	else
-		static_cast<CGridShieldEffect*>(pGameObj)->Set_TexIDX(0, 25, 16);*/
-
 
 	if (type == 0)
 		Effect_MagicCircle_Effect(_vec3(0.0f), _vec3(0.0f), vecPos, 18, 18, 2,true, true, parentTransform, true);

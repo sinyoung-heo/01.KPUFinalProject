@@ -1014,6 +1014,11 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 	}
 	if (m_uiAnimIdx == Gladiator::DRAW_SWORD_CHARGE && m_bisDustEffect==false)
 	{
+		_vec3 newPos = m_pTransCom->m_vPos;
+		newPos.y = 0.2f;
+		CEffectMgr::Get_Instance()->Effect_MagicCircle_Effect(_vec3(0.0f), _vec3(0.0f),
+			newPos, 20, 20, 2, true, true, nullptr, false);
+
 		m_bisDustEffect = true;
 		CEffectMgr::Get_Instance()->Effect_Dust(m_pTransCom->m_vPos,3.f);
 		Engine::HIERARCHY_DESC* pHierarchyDesc = &(m_pMeshCom->Find_HierarchyDesc("L_Sword"));
