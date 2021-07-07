@@ -21,6 +21,7 @@ Texture|EffectSpriteTexture|Lighting2
 Texture|EffectSpriteTexture|Lighting3
 Texture|EffectSpriteTexture|Lighting4
 Texture|EffectSpriteTexture|Lighting5
+Texture|EffectSpriteTexture|Lighting6
 Texture|EffectSpriteTexture|Lightning00
 Texture|EffectSpriteTexture|Lightning01
 Texture|EffectSpriteTexture|Smoke0

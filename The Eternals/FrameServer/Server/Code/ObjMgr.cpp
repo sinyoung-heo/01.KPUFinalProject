@@ -329,7 +329,8 @@ void CObjMgr::Create_StageWinterMonster()
 		}
 	}
 
-	// MONSTER - Giant Monkey 2
+	// MONSTER - Giant Monkey
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
