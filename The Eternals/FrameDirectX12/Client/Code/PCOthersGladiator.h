@@ -61,6 +61,10 @@ private:
 	void	SetUp_WeaponRHand();
 	void	SetUp_WeaponLHand();
 	void	SetUp_WeaponBack();
+
+
+	//
+	void			Effect_Loop(const _float& fTimeDelta);
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -99,6 +103,20 @@ private:
 	_float	m_fAnimationSpeed    = TPS;
 	_bool	m_bIsRepeatAnimation = true;
 
+
+
+	//Bool Effect
+	float m_fSwordsSkillOffset = 0.f;
+	float m_fSwordsSkill3Offset = 0.f;
+	float m_fSkillOffSet = 0.f;
+	float m_fParticleDeltaTime = 0.f;
+	bool m_bisIceEffect = false;
+	bool m_bisIce_mEffect = false;
+	bool m_bisFireEffect = false;
+	bool m_bisSwordEffect = false;
+	bool m_bisDustEffect = false;
+	bool m_bisSwordsEffect = false
+	bool m_bisSwordEffect = false;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

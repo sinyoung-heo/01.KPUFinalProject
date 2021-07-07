@@ -137,6 +137,7 @@ _int CPCOthersPriest::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
+	Effect_Loop(fTimeDelta);
 	if (m_bIsReturn)
 	{
 		m_pWeapon->Set_IsReturnObject(true);
@@ -592,6 +593,46 @@ void CPCOthersPriest::SetUp_WeaponBack()
 	m_pWeapon->Get_Transform()->m_vAngle.y = 0.0f;
 	m_pWeapon->Get_Transform()->m_vAngle.z = 180.0f;
 	m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")));
+}
+
+void CPCOthersPriest::Effect_Loop(const _float& fTimeDelta)
+{
+	if (m_uiAnimIdx == Priest::AURA_ON)
+	{
+		if (m_bisEffect == false)
+		{
+			m_bisEffect = true;
+			CEffectMgr::Get_Instance()->Effect_Shield(m_pTransCom->m_vPos, m_pTransCom);
+		}
+	}
+	else if (m_uiAnimIdx == Priest::PURIFY)
+	{
+		if (m_bisEffect == false)
+		{
+			m_bisEffect = true;
+			CEffectMgr::Get_Instance()->Effect_Axe(m_pTransCom->m_vPos, m_pTransCom);
+		}
+	}
+	else if (m_uiAnimIdx == Priest::HEAL_LOOP)
+	{
+		if (m_bisEffect == false)
+		{
+			m_bisEffect = true;
+			CEffectMgr::Get_Instance()->Effect_GridShieldEffect(m_pTransCom->m_vPos, 1, m_pTransCom);
+		}
+	}
+	else if (m_uiAnimIdx == Priest::MP_CHARGE_LOOP)
+	{
+		if (m_bisEffect == false)
+		{
+			m_bisEffect = true;
+			CEffectMgr::Get_Instance()->Effect_GridShieldEffect(m_pTransCom->m_vPos, 0, m_pTransCom);
+		}
+	}
+	else
+	{
+		m_bisEffect = false;
+	}
 }
 
 Engine::CGameObject* CPCOthersPriest::Create(ID3D12Device* pGraphicDevice, 

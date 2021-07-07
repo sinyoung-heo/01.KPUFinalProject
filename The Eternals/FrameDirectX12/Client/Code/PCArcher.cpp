@@ -1844,22 +1844,9 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 			m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 			m_pTransCom->m_vDir.Normalize();
 			m_vArrowFallPos = m_pTransCom->m_vPos + m_pTransCom->m_vDir * Archer::ARROW_FALL_DIST;
-
-
 			m_vArrowFallPos.y = 0.2f;
-
 			CEffectMgr::Get_Instance()->Effect_MagicCircle_Effect(_vec3(0.0f), _vec3(0.0f), 
 				m_vArrowFallPos, 0, 0, 2, true, true, nullptr, false);
-			/*CGameObject* pGameObj = CMagicCircle::Create(m_pGraphicDevice, m_pCommandList,
-				L"PublicPlane00",
-				_vec3(0.000f),
-				_vec3(0.f, 0.0f, 0.0f), m_vArrowFallPos);
-			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicPlane00", pGameObj), E_FAIL);
-			static_cast<CMagicCircle*>(pGameObj)->Set_TexIDX(0, 0, 2);
-			static_cast<CMagicCircle*>(pGameObj)->Set_isScaleAnim(true);
-			static_cast<CMagicCircle*>(pGameObj)->Set_isRotate(true);*/
-			m_vArrowFallPos.y = 20.0f;
-
 
 		}
 	}
@@ -2272,6 +2259,10 @@ void CPCArcher::Leave_PartyThisPlayer()
 		m_pPartySystemMgr->Get_PartyLeaveCanvas()->Reverse_IsActive();
 		m_pPartySystemMgr->Get_PartyLeaveCanvas()->Reverse_IsActiveChild();
 	}
+}
+
+void CPCArcher::Effect_Loop(const _float& fTimeDelta)
+{
 }
 
 Engine::CGameObject* CPCArcher::Create(ID3D12Device* pGraphicDevice, 

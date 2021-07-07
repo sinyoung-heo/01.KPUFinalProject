@@ -320,7 +320,8 @@ void CEffectMgr::Effect_TextureEffect(wstring TexTag, _vec3 Scale, _vec3 Angle, 
 }
 
 void CEffectMgr::Effect_MagicCircle_Effect(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, _int Diff, _int Norm, _int Spec
-	, bool bisRotate, bool bisScaleAnim, const Engine::CTransform* ParentTransform, bool bisFollowPlayer)
+	, bool bisRotate, bool bisScaleAnim, const Engine::CTransform* ParentTransform, bool bisFollowPlayer
+, float LimitScale, float LimitLifeTime)
 {
 	Engine::CGameObject* MagicCircleObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_MagicCircleEffect());
 	if (nullptr != MagicCircleObj)
@@ -328,6 +329,7 @@ void CEffectMgr::Effect_MagicCircle_Effect(const _vec3& vScale, const _vec3& vAn
 		static_cast<CMagicCircle*>(MagicCircleObj)->Set_CreateInfo(vScale, vAngle, vPos, bisRotate, bisScaleAnim, ParentTransform,
 			bisFollowPlayer);
 		static_cast<CMagicCircle*>(MagicCircleObj)->Set_TexIDX(Diff, Norm, Spec);
+		static_cast<CMagicCircle*>(MagicCircleObj)->Set_LimitInfo(LimitScale, LimitLifeTime);
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject",L"MagicCircle", MagicCircleObj), E_FAIL);
 	}
 }

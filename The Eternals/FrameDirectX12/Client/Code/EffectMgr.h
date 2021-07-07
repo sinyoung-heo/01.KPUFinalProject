@@ -39,7 +39,7 @@ public:
 
 	void Effect_MagicCircle_Effect(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos,_int Diff,_int Norm,_int Spec,
 		bool bisRotate = false, bool bisScaleAnim = false
-		, const Engine::CTransform* ParentTransform = nullptr, bool bisFollowPlayer = false);
+		, const Engine::CTransform* ParentTransform = nullptr, bool bisFollowPlayer = false,float LimitScale=0.02f,float LimitLifeTime=5.5f);
 public:
 public:
 	Engine::CGameObject* pGameObj = nullptr;

@@ -1848,7 +1848,7 @@ void CPCPriest::Effect_Loop(const _float& fTimeDelta)
 		if (m_bisEffect == false)
 		{
 			m_bisEffect = true;
-			CEffectMgr::Get_Instance()->Effect_TargetShield(m_pTransCom->m_vPos, m_pTransCom);
+			CEffectMgr::Get_Instance()->Effect_Shield(m_pTransCom->m_vPos, m_pTransCom);
 		}
 	}
 	else if (m_uiAnimIdx == Priest::PURIFY)

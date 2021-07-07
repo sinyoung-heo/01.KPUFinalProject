@@ -1020,7 +1020,7 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 		_vec3 newPos = m_pTransCom->m_vPos;
 		newPos.y = 0.2f;
 		CEffectMgr::Get_Instance()->Effect_MagicCircle_Effect(_vec3(0.0f), _vec3(0.0f),
-			newPos, 20, 20, 2, true, true, nullptr, false);
+			newPos, 20, 20, 2, true, true, m_pTransCom, true,0.015,2.f);
 
 		m_bisDustEffect = true;
 		CEffectMgr::Get_Instance()->Effect_Dust(m_pTransCom->m_vPos,3.f);
