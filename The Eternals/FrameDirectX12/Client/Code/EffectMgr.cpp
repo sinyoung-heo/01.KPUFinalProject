@@ -202,13 +202,6 @@ void CEffectMgr::Effect_GridShieldEffect(_vec3 vecPos,int type,Engine::CTransfor
 	vecPos.y = 1.f + rand()%10 * 0.01;
 	type == 0 ? Pipeidx = 2 : Pipeidx=10;
 	type == 0 ? Texidx = _vec3(0,2,16) : Texidx=_vec3(0, 25, 16);
-	//pGameObj = CGridShieldEffect::Create(m_pGraphicDevice, m_pCommandList,
-	//	L"PublicSphere00",
-	//	_vec3(0.00f),
-	//	_vec3(0.f, 0.f, 0.f),
-	//	vecPos, Pipeidx
-	//);
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicSphere00", pGameObj), E_FAIL);
 
 	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_GridShieldEffect());
 	if (nullptr != pGameObj)
@@ -216,11 +209,6 @@ void CEffectMgr::Effect_GridShieldEffect(_vec3 vecPos,int type,Engine::CTransfor
 		static_cast<CGridShieldEffect*>(pGameObj)->Set_CreateInfo(_vec3(0.f), _vec3(0.f), vecPos, Texidx.x, Texidx.y, Texidx.z,Pipeidx, true, true, parentTransform);
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicSphere00", pGameObj), E_FAIL);
 	}
-	/*if (type == 0)
-		static_cast<CGridShieldEffect*>(pGameObj)->Set_TexIDX(0, 2, 16);
-	else
-		static_cast<CGridShieldEffect*>(pGameObj)->Set_TexIDX(0, 25, 16);*/
-
 
 	if (type == 0)
 		Effect_MagicCircle_Effect(_vec3(0.0f), _vec3(0.0f), vecPos, 18, 18, 2,true, true, parentTransform, true);
@@ -332,7 +320,8 @@ void CEffectMgr::Effect_TextureEffect(wstring TexTag, _vec3 Scale, _vec3 Angle, 
 }
 
 void CEffectMgr::Effect_MagicCircle_Effect(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, _int Diff, _int Norm, _int Spec
-	, bool bisRotate, bool bisScaleAnim, const Engine::CTransform* ParentTransform, bool bisFollowPlayer)
+	, bool bisRotate, bool bisScaleAnim, const Engine::CTransform* ParentTransform, bool bisFollowPlayer
+, float LimitScale, float LimitLifeTime)
 {
 	Engine::CGameObject* MagicCircleObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_MagicCircleEffect());
 	if (nullptr != MagicCircleObj)
@@ -340,6 +329,7 @@ void CEffectMgr::Effect_MagicCircle_Effect(const _vec3& vScale, const _vec3& vAn
 		static_cast<CMagicCircle*>(MagicCircleObj)->Set_CreateInfo(vScale, vAngle, vPos, bisRotate, bisScaleAnim, ParentTransform,
 			bisFollowPlayer);
 		static_cast<CMagicCircle*>(MagicCircleObj)->Set_TexIDX(Diff, Norm, Spec);
+		static_cast<CMagicCircle*>(MagicCircleObj)->Set_LimitInfo(LimitScale, LimitLifeTime);
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject",L"MagicCircle", MagicCircleObj), E_FAIL);
 	}
 }

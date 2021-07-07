@@ -31,6 +31,7 @@ public:
 	void Set_isScaleAnim(bool isScaling) { m_bisScaleAnim = isScaling; }
 	void Set_isRotate(bool isRotate) { m_bisRotate = isRotate; }
 	void Set_TexIDX(_uint Diffuse, _uint Normal, _uint Specular) { m_uiDiffuse = Diffuse, m_uiNormal = Normal, m_uiSpec = Specular; }
+	void Set_LimitInfo(_float LimitScale, _float LimitLifeTime) { m_fLimitScale = LimitScale, m_fLimitLifeTime = LimitLifeTime; }
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
 	void			Set_ConstantTable();
@@ -71,6 +72,9 @@ private:
 	_float m_fDegree = 0.f;
 
 	const Engine::CTransform* m_pParentTransform = nullptr;
+
+	_float   m_fLimitLifeTime = 0.f;
+	_float   m_fLimitScale = 0.f;
 public:
 	void Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, bool bisRotate = false,bool bisScaleAnim=false
 		, const Engine::CTransform* ParentTransform=nullptr,bool bisFollowPlayer=false);

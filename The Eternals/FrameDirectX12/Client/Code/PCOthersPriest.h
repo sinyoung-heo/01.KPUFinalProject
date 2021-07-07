@@ -56,6 +56,9 @@ private:
 	void	SetUp_StanceChange(const _float& fTimeDelta);
 	void	SetUp_WeaponRHand();
 	void	SetUp_WeaponBack();
+
+	//Effect
+void			Effect_Loop(const _float& fTimeDelta);
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -93,6 +96,9 @@ private:
 	_float	m_fAnimationSpeed    = TPS;
 	_bool	m_bIsRepeatAnimation = true;
 
+
+	//Effect
+	_bool m_bisEffect = false;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

@@ -28,7 +28,8 @@ HRESULT CMagicCircle::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos		= vPos;
 
-	
+	m_fLimitLifeTime = 5.5f;
+	m_fLimitScale = 0.02f;
 	return S_OK;
 }
 
@@ -53,12 +54,12 @@ _int CMagicCircle::Update_GameObject(const _float & fTimeDelta)
 		m_pTransCom->m_vPos.z = m_pParentTransform->m_vPos.z;
 	}
 
-	if (m_fLifeTime<5.5f &&m_bisScaleAnim && m_pTransCom->m_vScale.x<0.02f)
-		m_pTransCom->m_vScale += _vec3(fTimeDelta*0.04);
+	if (m_fLifeTime< m_fLimitLifeTime &&m_bisScaleAnim && m_pTransCom->m_vScale.x<m_fLimitScale)
+		m_pTransCom->m_vScale += _vec3(fTimeDelta* m_fLimitScale*2);
 	m_fLifeTime += fTimeDelta;
-	if (m_fLifeTime > 5.5f)
+	if (m_fLifeTime > m_fLimitLifeTime)
 	{
-		m_pTransCom->m_vScale-= _vec3(fTimeDelta * 0.04);
+		m_pTransCom->m_vScale-= _vec3(fTimeDelta * m_fLimitScale*2);
 		if (m_pTransCom->m_vScale.x < 0.00)
 			m_bIsReturn = true;
 	}
