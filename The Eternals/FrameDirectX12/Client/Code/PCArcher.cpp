@@ -238,6 +238,8 @@ _int CPCArcher::Update_GameObject(const _float& fTimeDelta)
 	if (m_pMeshCom->Is_BlendingComplete())
 		SetUp_CollisionArrow(fTimeDelta);
 
+	// SetUp_CameraEffect(fTimeDelta);
+
 	return NO_EVENT;
 }
 
@@ -1906,6 +1908,9 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 				m_tCollisionTickDesc.fCollisionTickTime      = 0.0f;
 			}
 
+			// Camera Effect
+			SetUp_CameraEffect(fTimeDelta);
+
 			// CollisionTick
 			if (m_uiAnimIdx == Archer::ARROW_SHOWER_START || m_uiAnimIdx == Archer::ARROW_SHOWER_LOOP || m_uiAnimIdx == Archer::ARROW_SHOWER_SHOT)
 			{
@@ -2084,6 +2089,51 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 
 			
 		}
+	}
+}
+
+void CPCArcher::SetUp_CameraEffect(const _float& fTimeDelta)
+{
+	if (nullptr == m_pDynamicCamera)
+		return;
+
+	switch (m_uiAnimIdx)
+	{
+	case Archer::ATTACK_ARROW:
+	{
+		CAMERA_ZOOM_DESC tCameraZoomDesc;
+		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_IN;
+		tCameraZoomDesc.fPower     = 0.03f;
+		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 7.0f;
+		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+	}
+		break;
+
+	case Archer::RAPID_SHOT1:
+	case Archer::RAPID_SHOT2:
+	{
+		CAMERA_ZOOM_DESC tCameraZoomDesc;
+		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_IN;
+		tCameraZoomDesc.fPower     = 0.025f;
+		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 12.5f;
+		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+	}
+		break;
+
+	case Archer::ARROW_SHOWER_START:
+	case Archer::ARROW_SHOWER_LOOP:
+	case Archer::ARROW_SHOWER_SHOT:
+	{
+		CAMERA_ZOOM_DESC tCameraZoomDesc;
+		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_IN;
+		tCameraZoomDesc.fPower     = 0.05f;
+		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 10.0f;
+		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+	}
+		break;
+
+	default:
+		break;
 	}
 }
 

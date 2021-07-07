@@ -93,6 +93,7 @@ private:
 	void Ready_AngleInterpolationValue(const _float& fEndAngle);
 	void SetUp_AngleInterpolation(const _float& fTimeDelta);
 	void SetUp_CollisionArrow(const _float& fTimeDelta);
+	void SetUp_CameraEffect(const _float& fTimeDelta);
 
 	// Collision Event
 	void Collision_MonsterMultiCollider(list<Engine::CColliderSphere*>& lstMonsterCollider);
