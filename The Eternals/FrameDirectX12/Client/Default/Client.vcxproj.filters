@@ -523,6 +523,9 @@
     <Filter Include="97.Mgr\11.CinemaMgr">
       <UniqueIdentifier>{65fe2c00-1893-423d-8e95-7ca977b3872e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.Monster\10.CinemaVergos">
+      <UniqueIdentifier>{7054a66a-f83d-461d-b739-603ac76fec9e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -1084,6 +1087,9 @@
     <ClInclude Include="..\Code\EffectAxe.h">
       <Filter>02.GameObject\98.GameEffect\08.PriestShield</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\CinemaVergos.h">
+      <Filter>02.GameObject\05.Monster\10.CinemaVergos</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1587,6 +1593,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\EffectAxe.cpp">
       <Filter>02.GameObject\98.GameEffect\08.PriestShield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CinemaVergos.cpp">
+      <Filter>02.GameObject\05.Monster\10.CinemaVergos</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -237,3 +237,12 @@ namespace PrionBerserkerBoss
 		A_WAIT, A_ANGRY, A_COMMAND, A_RUN, A_END
 	};
 }
+
+namespace CinemaVergos
+{
+	constexpr int SPAWN = 1;
+
+	enum ANIM_CINEMAVERGOS {
+		A_WAIT, A_SPAWN, A_END
+	};
+}

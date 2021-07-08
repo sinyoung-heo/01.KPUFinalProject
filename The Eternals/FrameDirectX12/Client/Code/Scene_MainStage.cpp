@@ -52,8 +52,7 @@
 #include "QuickSlotMgr.h"
 #include "DmgFont.h"
 #include "Lakan.h"
-#include "PrionBerserker.h"
-#include "PrionBerserkerBoss.h"
+#include "CinemaVergos.h"
 #include "CinemaMgr.h"
 
 CScene_MainStage::CScene_MainStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -107,7 +106,6 @@ HRESULT CScene_MainStage::Ready_Scene()
 		pGameObj->Set_State(0);
 		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"LAKAN", pGameObj);
 	}
-
 
 	// Server
 	Engine::FAILED_CHECK_RETURN(CPacketMgr::Get_Instance()->Ready_Server(m_pGraphicDevice, m_pCommandList), E_FAIL);

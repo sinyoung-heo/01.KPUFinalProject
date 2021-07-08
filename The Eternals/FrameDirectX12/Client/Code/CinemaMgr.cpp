@@ -7,6 +7,7 @@
 #include "Lakan.h"
 #include "PrionBerserker.h"
 #include "PrionBerserkerBoss.h"
+#include "CinemaVergos.h"
 
 IMPLEMENT_SINGLETON(CCinemaMgr)
 
@@ -105,7 +106,24 @@ HRESULT CCinemaMgr::Ready_CinemaCharacter()
 		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PRIONBERSERKERBOSS", pGameObj);
 	}
 
+	// Cinema Vergos
+	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterCinemaVergosPool());
+
+	if (nullptr != pGameObj)
+	{
+		pGameObj->Get_Transform()->m_vScale = _vec3(0.05f);
+		pGameObj->Get_Transform()->m_vAngle = _vec3(0.f, -180.f, 0.f);
+		pGameObj->Get_Transform()->m_vPos = _vec3(263.f, 140.f, 570.f);
+		pGameObj->Set_State(0);
+		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CINEMAVERGOS", pGameObj);
+	}
+
     return S_OK;
+}
+
+void CCinemaMgr::Spawn_Vergos()
+{
+	m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"CINEMAVERGOS", 0)->Set_State(CinemaVergos::SPAWN);
 }
 
 void CCinemaMgr::Scream_PrionBerserkerBoss()

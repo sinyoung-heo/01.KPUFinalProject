@@ -1,6 +1,7 @@
 DynamicMesh|Character|HumanPCEvent27Archer
 DynamicMesh|Character|PoporiMR25Priest
 DynamicMesh|Character|PoporiR27Gladiator
+DynamicMesh|Monster|CinemaVergos
 DynamicMesh|Monster|CloderA
 DynamicMesh|Monster|Crab
 DynamicMesh|Monster|CraftyArachne

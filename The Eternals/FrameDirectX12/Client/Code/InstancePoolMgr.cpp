@@ -13,6 +13,7 @@
 #include "Lakan.h"
 #include "PrionBerserker.h"
 #include "PrionBerserkerBoss.h"
+#include "CinemaVergos.h"
 #include "NPC_Walker.h"
 #include "NPC_Assistant.h"
 #include "NPC_Stander.h"
@@ -139,15 +140,16 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 	
 	// Monster
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterCrabPool, 10);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterCloderAPool, 4);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterCloderAPool, 1);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterMonkeyPool, 10);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterDrownedSailorPool, 10);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterGiantBeetlePool, 4);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterGiantMonkeyPool, 4);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterCraftyArachnePool, 2);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterLakanPool, 50);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterGiantBeetlePool, 1);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterGiantMonkeyPool, 2);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterCraftyArachnePool, 1);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterLakanPool, 52);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterPrionBerserkerPool, 50);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterPrionBerserkerBossPool, 2);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterPrionBerserkerBossPool, 1);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterCinemaVergosPool, 1);
 
 	// NPC
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Walker_ChickenPool, L"Chicken", 10);

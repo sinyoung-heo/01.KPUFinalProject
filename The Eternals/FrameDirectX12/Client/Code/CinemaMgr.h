@@ -13,6 +13,7 @@ private:
 public:
 	HRESULT Ready_CinemaCharacter();
 
+	void	Spawn_Vergos();
 	void	Scream_PrionBerserkerBoss();
 	void	Scream_PrionBerserkers();
 	void	Command_PrionBerserkerBoss();
