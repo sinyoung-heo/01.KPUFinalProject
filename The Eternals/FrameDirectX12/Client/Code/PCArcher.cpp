@@ -1844,6 +1844,7 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 			CEffectMgr::Get_Instance()->Effect_MagicCircle_Effect(_vec3(0.0f), _vec3(0.0f), 
 				m_vArrowFallPos, 0, 0, 2, true, true, nullptr, false);
 
+			m_vArrowFallPos.y = 20.f;
 		}
 	}
 	else if (Archer::CHARGE_ARROW_SHOT == m_uiAnimIdx && m_ui3DMax_CurFrame >= Archer::CHARGE_ARROW_COLLISIONARROW_START)
@@ -1857,18 +1858,12 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fColisionTickUpdateTime = 1.0f / 1.0f;
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
-			m_tCollisionTickDesc.iMaxCollisionTick       = 48;
+			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
 
 			m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 			m_pTransCom->m_vDir.Normalize();
-			m_vArrowFallPos   = m_pTransCom->m_vPos + m_pTransCom->m_vDir * Archer::ARROW_FALL_DIST;
-			m_vArrowFallPos.y = 20.0f;
-
-			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
 
 			m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("L_Sword")));
-
-		
 		}
 	}
 
