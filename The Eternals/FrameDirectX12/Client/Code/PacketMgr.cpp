@@ -935,6 +935,11 @@ void CPacketMgr::Attack_User(sc_packet_attack* packet)
 			pObj->Set_LinearAngle(pObj->Get_Transform()->m_vAngle.y, packet->end_angleY);
 		}
 		pObj->Set_Attack(true);
+
+		if (PC_ARCHER == pObj->Get_OType())
+		{
+			static_cast<CPCOthersArcher*>(pObj)->Reset_CollisionArrowDesc();
+		}
 	}
 }
 

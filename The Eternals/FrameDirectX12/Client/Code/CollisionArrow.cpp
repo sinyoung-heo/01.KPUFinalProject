@@ -84,7 +84,7 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bIsReturn)
 	{
-		if (ARROW_TYPE::ARROW_CHARGE == m_eType)
+		if (ARROW_TYPE::ARROW_CHARGE == m_eType && m_wstrCollisionTag == L"ChargeArrow")
 		{
 			CCollisionTick* pCollisionTick = static_cast<CCollisionTick*>(Pop_Instance(m_pInstancePoolMgr->Get_CollisionTickPool()));
 			if (nullptr != pCollisionTick)
@@ -227,21 +227,22 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 
 		if (m_fEffectDelta > 0.005f)
 		{
-			CCollisionTick* pCollisionTick = static_cast<CCollisionTick*>(Pop_Instance(m_pInstancePoolMgr->Get_CollisionTickPool()));
-			if (nullptr != pCollisionTick)
+			if (m_wstrCollisionTag == L"ChargeArrow")
 			{
-				pCollisionTick->Get_BoundingSphere()->Get_BoundingInfo().Radius = 0.5f;
-				pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
-				pCollisionTick->Set_Damage(m_uiDamage);
-				pCollisionTick->Set_LifeTime(0.3f);
-				pCollisionTick->Get_Transform()->m_vScale = _vec3(12.0f);
-				pCollisionTick->Get_Transform()->m_vPos   = m_pTransCom->m_vPos;
-				pCollisionTick->Get_Transform()->m_vPos.y = 1.5f;
-				pCollisionTick->Get_BoundingSphere()->Set_Radius(pCollisionTick->Get_Transform()->m_vScale);
+				CCollisionTick* pCollisionTick = static_cast<CCollisionTick*>(Pop_Instance(m_pInstancePoolMgr->Get_CollisionTickPool()));
+				if (nullptr != pCollisionTick)
+				{
+					pCollisionTick->Get_BoundingSphere()->Get_BoundingInfo().Radius = 0.5f;
+					pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
+					pCollisionTick->Set_Damage(m_uiDamage);
+					pCollisionTick->Set_LifeTime(0.3f);
+					pCollisionTick->Get_Transform()->m_vScale = _vec3(12.0f);
+					pCollisionTick->Get_Transform()->m_vPos = m_pTransCom->m_vPos;
+					pCollisionTick->Get_Transform()->m_vPos.y = 1.5f;
+					pCollisionTick->Get_BoundingSphere()->Set_Radius(pCollisionTick->Get_Transform()->m_vScale);
 
-				m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_ThisPlayer", pCollisionTick);
-
-				m_bisFireworkEffect = false;
+					m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_ThisPlayer", pCollisionTick);
+				}
 			}
 
 			m_fEffectDelta = 0.f;
@@ -270,7 +271,7 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 			}
 		}
 
-		if (nullptr != m_pDynamicCamera)
+		if (nullptr != m_pDynamicCamera && m_wstrCollisionTag == L"ChargeArrow")
 		{
 			m_pDynamicCamera->Set_CameraAtParentMatrix(nullptr);
 			m_pDynamicCamera->Set_At(m_pTransCom->m_vPos);
@@ -286,7 +287,7 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Collision - Add Collision List ]
 	____________________________________________________________________________________________________________*/
-	if (ARROW_TYPE::ARROW_FALL != m_eType)
+	if (ARROW_TYPE::ARROW_FALL != m_eType && m_wstrCollisionTag == L"CollisionTick_ThisPlayer")
 		m_pCollisonMgr->Add_CollisionCheckList(this);
 
 	/*__________________________________________________________________________________________________________
