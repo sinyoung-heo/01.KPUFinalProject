@@ -291,16 +291,32 @@ void CObjMgr::Create_StageBeachMonster()
 	else return;
 
 	/*	________________________________________________________________________________
-									CRAFTY ARCHNE MONSTER
+									TEAM MONKEY MONSTER
 	________________________________________________________________________________*/
+
+	// MONSTER - Monkey 1
+	float fAngle = 0.f;
+	for (int i = 0; i < 5; ++i, fAngle += 36.f)
+	{
+		pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
+		if (pNew)
+		{
+			float fX = 415.f + cosf(fAngle * PI / 180.f) * 10.f;
+			float fY = 180.f - sinf(fAngle * PI / 180.f) * 10.f;
+			pNew->Ready_Monster(_vec3(fX, 0.f, fY), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_MONKEY, STAGE_BEACH, MONKEY_HP, MONKEY_ATT, MONKEY_EXP, MONKEY_SPD);
+			pNew->Set_NumAnimation(Monkey::NUM_ANIMATION);
+			pNew->Set_AnimDuration(Monkey::duration);
+		}
+	}
+
+	// MONSTER - Giant Monkey
 	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
-	
 	if (pNew)
 	{
 		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(403.297f, 0.f, 185.56f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_ARACHNE, STAGE_BEACH, ARCHNE_HP, ARCHNE_ATT, ARCHNE_EXP, ARCHNE_SPD);
-		pNew->Set_NumAnimation(CraftyArachne::NUM_ANIMATION);
-		pNew->Set_AnimDuration(CraftyArachne::duration);
+		pNew->Ready_Monster(_vec3(415.f, 0.f, 180.f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_GMONKEY, STAGE_BEACH, GIANTMONKEY_HP, GIANTMONKEY_ATT, GIANTMONKEY_EXP, GIANTMONKEY_SPD);
+		pNew->Set_NumAnimation(GiantMonkey::NUM_ANIMATION);
+		pNew->Set_AnimDuration(GiantMonkey::duration);
 	}
 	else return;
 }
@@ -313,31 +329,9 @@ void CObjMgr::Create_StageWinterMonster()
 	/*	________________________________________________________________________________
 										 집단 1
 	________________________________________________________________________________*/
-	// MONSTER - Monkey 1
-	float fAngle = 0.f;
-	for (int i = 0; i < 10; ++i, fAngle += 30.f)
-	{
-		pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
-		if (pNew)
-		{		
-			float fX = 380.f + cosf(fAngle * PI / 180.f) * 10.f;
-			float fY = 400.f - sinf(fAngle * PI / 180.f) * 10.f;
-			pNew->Ready_Monster(_vec3(fX, 0.f, fY), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_MONKEY, STAGE_WINTER, MONKEY_HP, MONKEY_ATT, MONKEY_EXP, MONKEY_SPD);
-			pNew->Set_NumAnimation(Monkey::NUM_ANIMATION);
-			pNew->Set_AnimDuration(Monkey::duration);
-		}
-	}
+	
 
-	// MONSTER - Giant Monkey
-	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
-	if (pNew)
-	{
-		/* NPC의 정보 초기화 */
-		pNew->Ready_Monster(_vec3(380.f, 0.f, 400.f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_GMONKEY, STAGE_WINTER, GIANTMONKEY_HP, GIANTMONKEY_ATT, GIANTMONKEY_EXP, GIANTMONKEY_SPD);
-		pNew->Set_NumAnimation(GiantMonkey::NUM_ANIMATION);
-		pNew->Set_AnimDuration(GiantMonkey::duration);
-	}
-	else return;
+
 }
 
 void CObjMgr::Create_AiPlayer()

@@ -3442,7 +3442,7 @@ void CMonster::Dead_Monkey(const float& fTimeDelta)
 			return;
 		else
 		{
-			Set_Start_Regen(100s);
+			Set_Start_Regen(50s);
 			Init_AllStatus();
 			return;
 		}
@@ -3730,7 +3730,7 @@ void CMonster::Dead_GiantMonkey(const float& fTimeDelta)
 			return;
 		else
 		{
-			Set_Start_Regen(100s);
+			Set_Start_Regen(60s);
 			Init_AllStatus();
 			return;
 		}

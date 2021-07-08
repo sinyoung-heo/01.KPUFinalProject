@@ -140,7 +140,7 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 	// Monster
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterCrabPool, 10);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterCloderAPool, 4);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterMonkeyPool, 20);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterMonkeyPool, 10);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterDrownedSailorPool, 10);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterGiantBeetlePool, 4);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterGiantMonkeyPool, 4);
