@@ -145,8 +145,11 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 	Effect_Loop(fTimeDelta);
 	if (m_bIsReturn)
 	{
-		m_pWeapon->Set_IsReturnObject(true);
-		m_pWeapon->Update_GameObject(fTimeDelta);
+		if (nullptr != m_pWeapon)
+		{
+			m_pWeapon->Set_IsReturnObject(true);
+			m_pWeapon->Update_GameObject(fTimeDelta);
+		}
 
 		m_bIsResetNaviMesh = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_PCOthersGladiatorPool(), m_uiInstanceIdx);
@@ -363,23 +366,26 @@ void CPCOthersGladiator::Is_ChangeWeapon()
 		}
 
 		m_pWeapon = static_cast<CPCWeaponTwoHand*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponTwoHand(m_chCurWeaponType)));
-		m_pWeapon->Set_ParentMatrix(&m_pTransCom->m_matWorld);
-		m_pWeapon->Update_GameObject(0.016f);
-
-		if (Gladiator::STANCE_ATTACK == m_eCurStance)
+		if (nullptr != m_pWeapon)
 		{
-			SetUp_WeaponLHand();
-			m_pWeapon->Set_DissolveInterpolation(-1.0f);
-			m_pWeapon->Set_IsRenderShadow(true);
-		}
-		else if (Gladiator::STANCE_NONEATTACK == m_eCurStance)
-		{
-			SetUp_WeaponBack();
-			m_pWeapon->Set_DissolveInterpolation(1.0f);
-			m_pWeapon->Set_IsRenderShadow(false);
-		}
+			m_pWeapon->Set_ParentMatrix(&m_pTransCom->m_matWorld);
+			m_pWeapon->Update_GameObject(0.016f);
 
-		m_chPreWeaponType = m_chCurWeaponType;
+			if (Gladiator::STANCE_ATTACK == m_eCurStance)
+			{
+				SetUp_WeaponLHand();
+				m_pWeapon->Set_DissolveInterpolation(-1.0f);
+				m_pWeapon->Set_IsRenderShadow(true);
+			}
+			else if (Gladiator::STANCE_NONEATTACK == m_eCurStance)
+			{
+				SetUp_WeaponBack();
+				m_pWeapon->Set_DissolveInterpolation(1.0f);
+				m_pWeapon->Set_IsRenderShadow(false);
+			}
+
+			m_chPreWeaponType = m_chCurWeaponType;
+		}
 	}
 }
 

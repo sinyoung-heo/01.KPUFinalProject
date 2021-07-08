@@ -140,8 +140,11 @@ _int CPCOthersPriest::Update_GameObject(const _float& fTimeDelta)
 	Effect_Loop(fTimeDelta);
 	if (m_bIsReturn)
 	{
-		m_pWeapon->Set_IsReturnObject(true);
-		m_pWeapon->Update_GameObject(fTimeDelta);
+		if (nullptr != m_pWeapon)
+		{
+			m_pWeapon->Set_IsReturnObject(true);
+			m_pWeapon->Update_GameObject(fTimeDelta);
+		}
 
 		m_bIsResetNaviMesh = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_PCOthersPriestPool(), m_uiInstanceIdx);
@@ -298,7 +301,7 @@ HRESULT CPCOthersPriest::Add_Component(wstring wstrMeshTag, wstring wstrNaviMesh
 
 HRESULT CPCOthersPriest::SetUp_PCWeapon()
 {
-	if (m_chCurWeaponType != m_chPreWeaponType)
+	if (m_chCurWeaponType != m_chPreWeaponType && nullptr != m_pWeapon)
 	{
 		m_pWeapon = static_cast<CPCWeaponRod*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponRod(m_chCurWeaponType)));
 		m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")));
@@ -355,23 +358,26 @@ void CPCOthersPriest::Is_ChangeWeapon()
 		}
 
 		m_pWeapon = static_cast<CPCWeaponRod*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponRod(m_chCurWeaponType)));
-		m_pWeapon->Set_ParentMatrix(&m_pTransCom->m_matWorld);
-		m_pWeapon->Update_GameObject(0.016f);
-
-		if (Priest::STANCE_ATTACK == m_eCurStance)
+		if (nullptr != m_pWeapon)
 		{
-			SetUp_WeaponRHand();
-			m_pWeapon->Set_DissolveInterpolation(-1.0f);
-			m_pWeapon->Set_IsRenderShadow(true);
-		}
-		else if (Priest::STANCE_NONEATTACK == m_eCurStance)
-		{
-			SetUp_WeaponBack();
-			m_pWeapon->Set_DissolveInterpolation(1.0f);
-			m_pWeapon->Set_IsRenderShadow(false);
-		}
+			m_pWeapon->Set_ParentMatrix(&m_pTransCom->m_matWorld);
+			m_pWeapon->Update_GameObject(0.016f);
 
-		m_chPreWeaponType = m_chCurWeaponType;
+			if (Priest::STANCE_ATTACK == m_eCurStance)
+			{
+				SetUp_WeaponRHand();
+				m_pWeapon->Set_DissolveInterpolation(-1.0f);
+				m_pWeapon->Set_IsRenderShadow(true);
+			}
+			else if (Priest::STANCE_NONEATTACK == m_eCurStance)
+			{
+				SetUp_WeaponBack();
+				m_pWeapon->Set_DissolveInterpolation(1.0f);
+				m_pWeapon->Set_IsRenderShadow(false);
+			}
+
+			m_chPreWeaponType = m_chCurWeaponType;
+		}
 	}
 }
 
@@ -586,6 +592,9 @@ void CPCOthersPriest::SetUp_StanceChange(const _float& fTimeDelta)
 
 void CPCOthersPriest::SetUp_WeaponRHand()
 {
+	if (nullptr == m_pWeapon)
+		return;
+
 	m_pWeapon->Get_Transform()->m_vPos.x = -2.0f;
 	m_pWeapon->Get_Transform()->m_vPos.y = 5.0f;
 	m_pWeapon->Get_Transform()->m_vPos.z = 1.0f;
@@ -599,6 +608,9 @@ void CPCOthersPriest::SetUp_WeaponRHand()
 
 void CPCOthersPriest::SetUp_WeaponBack()
 {
+	if (nullptr == m_pWeapon)
+		return;
+
 	m_pWeapon->Get_Transform()->m_vAngle.y = 0.0f;
 	m_pWeapon->Get_Transform()->m_vAngle.z = 180.0f;
 	m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")));

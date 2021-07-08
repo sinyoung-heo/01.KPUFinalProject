@@ -143,8 +143,11 @@ _int CPCOthersArcher::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bIsReturn)
 	{
-		m_pWeapon->Set_IsReturnObject(true);
-		m_pWeapon->Update_GameObject(fTimeDelta);
+		if (nullptr != m_pWeapon)
+		{
+			m_pWeapon->Set_IsReturnObject(true);
+			m_pWeapon->Update_GameObject(fTimeDelta);
+		}
 
 		m_bIsResetNaviMesh = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_PCOthersArcherPool(), m_uiInstanceIdx);
@@ -361,23 +364,26 @@ void CPCOthersArcher::Is_ChangeWeapon()
 		}
 
 		m_pWeapon = static_cast<CPCWeaponBow*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponBow(m_chCurWeaponType)));
-		m_pWeapon->Set_ParentMatrix(&m_pTransCom->m_matWorld);
-		m_pWeapon->Update_GameObject(0.016f);
-
-		if (Archer::STANCE_ATTACK == m_eCurStance)
+		if (nullptr != m_pWeapon)
 		{
-			SetUp_WeaponLHand();
-			m_pWeapon->Set_DissolveInterpolation(-1.0f);
-			m_pWeapon->Set_IsRenderShadow(true);
-		}
-		else if (Archer::STANCE_NONEATTACK == m_eCurStance)
-		{
-			SetUp_WeaponBack();
-			m_pWeapon->Set_DissolveInterpolation(1.0f);
-			m_pWeapon->Set_IsRenderShadow(false);
-		}
+			m_pWeapon->Set_ParentMatrix(&m_pTransCom->m_matWorld);
+			m_pWeapon->Update_GameObject(0.016f);
 
-		m_chPreWeaponType = m_chCurWeaponType;
+			if (Archer::STANCE_ATTACK == m_eCurStance)
+			{
+				SetUp_WeaponLHand();
+				m_pWeapon->Set_DissolveInterpolation(-1.0f);
+				m_pWeapon->Set_IsRenderShadow(true);
+			}
+			else if (Archer::STANCE_NONEATTACK == m_eCurStance)
+			{
+				SetUp_WeaponBack();
+				m_pWeapon->Set_DissolveInterpolation(1.0f);
+				m_pWeapon->Set_IsRenderShadow(false);
+			}
+
+			m_chPreWeaponType = m_chCurWeaponType;
+		}
 	}
 }
 
@@ -651,6 +657,9 @@ void CPCOthersArcher::AttackMove_OnNaviMesh(const _float& fTimeDelta)
 
 void CPCOthersArcher::SetUp_WeaponLHand()
 {
+	if (nullptr == m_pWeapon)
+		return;
+
 	m_pWeapon->Get_Transform()->m_vAngle.x = 0.0f;
 	m_pWeapon->Get_Transform()->m_vAngle.y = -160.0f;
 	m_pWeapon->Get_Transform()->m_vAngle.z = 210.0f;
@@ -659,6 +668,9 @@ void CPCOthersArcher::SetUp_WeaponLHand()
 
 void CPCOthersArcher::SetUp_WeaponBack()
 {
+	if (nullptr == m_pWeapon)
+		return;
+
 	m_pWeapon->Get_Transform()->m_vAngle.y = 0.0f;
 	m_pWeapon->Get_Transform()->m_vAngle.z = 180.0f;
 	m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")));
