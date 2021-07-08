@@ -774,7 +774,7 @@ void CPCOthersGladiator::Effect_Loop(const _float& fTimeDelta)
 		if (m_fSwordsSkill3Offset > 0.15f && m_bisIce_mEffect == false)
 		{
 			m_bisIce_mEffect = true;
-			CEffectMgr::Get_Instance()->Effect_Straight_IceStorm(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
+			CEffectMgr::Get_Instance()->Effect_Straight_IceStorm(m_pTransCom->m_vPos, m_pTransCom->m_vDir, false);
 		}
 	}
 	else
