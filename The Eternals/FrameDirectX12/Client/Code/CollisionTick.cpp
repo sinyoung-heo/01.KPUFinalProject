@@ -199,11 +199,14 @@ void CCollisionTick::SetUp_GladiatorCameraEvent()
 		break;
 	case Gladiator::COMBO2:
 	{
-		CAMERA_ZOOM_DESC tCameraZoomDesc;
-		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_IN;
-		tCameraZoomDesc.fPower     = 0.03f;
-		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 6.0f;
-		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+		if (m_bIsCameraEffect)
+		{
+			CAMERA_ZOOM_DESC tCameraZoomDesc;
+			tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_IN;
+			tCameraZoomDesc.fPower     = 0.03f;
+			tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 6.0f;
+			m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+		}
 	}
 		break;
 	case Gladiator::COMBO3:

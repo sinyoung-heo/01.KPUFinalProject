@@ -1821,6 +1821,20 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 			m_tCollisionTickDesc.iMaxCollisionTick       = 5;
 		}
 	}
+	else if (Archer::ESCAPING_BOMB == m_uiAnimIdx)
+	{
+		if (!m_bIsSetCollisionTick)
+		{
+			m_bIsSetCollisionTick = true;
+
+			m_tCollisionTickDesc.fPosOffset              = 0.0f;
+			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
+			m_tCollisionTickDesc.fColisionTickUpdateTime = 1.0f / 9.0f;
+			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
+			m_tCollisionTickDesc.iCurCollisionTick       = 0;
+			m_tCollisionTickDesc.iMaxCollisionTick       = 3;
+		}
+	}
 	// ARROW_SHOWER
 	else if (Archer::ARROW_SHOWER_START == m_uiAnimIdx && m_ui3DMax_CurFrame >= Archer::ARROW_SHOWER_COLLISIONARROW_START)
 	{
@@ -1961,6 +1975,21 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 					pCollisionArrow->Get_BoundingSphere()->Set_Radius(pCollisionArrow->Get_Transform()->m_vScale);
 
 					m_pObjectMgr->Add_GameObject(L"Layer_GameObject", pCollisionArrow->Get_MeshTag(), pCollisionArrow);
+				}
+			}
+			else if (m_uiAnimIdx == Archer::ESCAPING_BOMB)
+			{
+				CCollisionTick* pCollisionTick = static_cast<CCollisionTick*>(Pop_Instance(m_pInstancePoolMgr->Get_CollisionTickPool()));
+				if (nullptr != pCollisionTick)
+				{
+					pCollisionTick->Get_BoundingSphere()->Get_BoundingInfo().Radius = 0.5f;
+					pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
+					pCollisionTick->Set_Damage(m_pInfoCom->Get_RandomDamage());
+					pCollisionTick->Set_LifeTime(0.25f);
+					pCollisionTick->Get_Transform()->m_vScale = _vec3(5.0f);
+					pCollisionTick->Get_Transform()->m_vPos   = m_pTransCom->m_vPos;
+					pCollisionTick->Get_BoundingSphere()->Set_Radius(pCollisionTick->Get_Transform()->m_vScale);
+					m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_ThisPlayer", pCollisionTick);
 				}
 			}
 			else
@@ -2115,6 +2144,23 @@ void CPCArcher::SetUp_CameraEffect(const _float& fTimeDelta)
 		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_IN;
 		tCameraZoomDesc.fPower     = 0.05f;
 		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 10.0f;
+		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+	}
+		break;
+
+	case Archer::ESCAPING_BOMB:
+	{
+		CAMERA_SHAKING_DESC tCameraShakingDesc;
+		tCameraShakingDesc.fUpdateShakingTime = 0.5f;
+		tCameraShakingDesc.vMin = _vec2(-14.0f, 0.0f);
+		tCameraShakingDesc.vMax = _vec2(14.0f, 0.0f);
+		tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 12.0f;
+		m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
+
+		CAMERA_ZOOM_DESC tCameraZoomDesc;
+		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_OUT;
+		tCameraZoomDesc.fPower     = 0.02f;
+		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 15.0f;
 		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
 	}
 		break;
