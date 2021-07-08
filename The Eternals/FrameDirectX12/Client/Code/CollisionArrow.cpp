@@ -12,6 +12,7 @@
 #include "TextureEffect.h"
 #include "DistTrail.h"
 #include "DmgFont.h"
+#include "DynamicCamera.h"
 
 CCollisionArrow::CCollisionArrow(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CCollisionTick(pGraphicDevice, pCommandList)
@@ -67,6 +68,10 @@ HRESULT CCollisionArrow::Ready_GameObject(wstring wstrMeshTag,
 
 HRESULT CCollisionArrow::LateInit_GameObject()
 {
+	// DynamicCamera
+	m_pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
+	Engine::NULL_CHECK_RETURN(m_pDynamicCamera, E_FAIL);
+
 	return S_OK;
 }
 
@@ -96,6 +101,12 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 				m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_ThisPlayer", pCollisionTick);
 
 				m_bisFireworkEffect = false;
+			}
+
+			if (nullptr != m_pDynamicCamera)
+			{
+				m_pDynamicCamera->Set_CameraAtParentMatrix(nullptr);
+				m_pDynamicCamera->Set_At(m_pTransCom->m_vPos);
 			}
 		}
 
@@ -257,6 +268,12 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 					FRAME(5, 8, 30.0f), false, false);
 			
 			}
+		}
+
+		if (nullptr != m_pDynamicCamera)
+		{
+			m_pDynamicCamera->Set_CameraAtParentMatrix(nullptr);
+			m_pDynamicCamera->Set_At(m_pTransCom->m_vPos);
 		}
 	}
 
@@ -454,5 +471,5 @@ void CCollisionArrow::Free()
 	CCollisionTick::Free();
 
 	Engine::Safe_Release(m_pMeshCom);
-	//Engine::Safe_Release(m_pTrail);
+	m_pDynamicCamera = nullptr;
 }

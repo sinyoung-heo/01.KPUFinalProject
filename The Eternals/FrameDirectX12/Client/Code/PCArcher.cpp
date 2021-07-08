@@ -237,7 +237,7 @@ _int CPCArcher::Update_GameObject(const _float& fTimeDelta)
 	if (m_pMeshCom->Is_BlendingComplete())
 		SetUp_CollisionArrow(fTimeDelta);
 
-	// SetUp_CameraEffect(fTimeDelta);
+	SetUp_UltimateCameraEffect(fTimeDelta);
 
 	return NO_EVENT;
 }
@@ -1261,6 +1261,12 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 				 m_uiAnimIdx != Archer::CHARGE_ARROW_START && 
 				 NO_EVENT_STATE)
 		{
+			m_bIsSetCameraShaking = false;
+			m_bIsSetCameraZoom    = false;
+			m_pDynamicCamera->Set_CameraState(CAMERA_STATE::ARCHER_ULTIMATE);
+			m_pDynamicCamera->SetUp_ThirdPersonViewOriginData();
+			m_pDynamicCamera->Set_CameraAtParentMatrix(m_pMeshCom->Find_SkinningMatrix("Bip01-R-Hand"));
+
 			SetUp_AttackSetting();
 			m_bIsSkill     = true;
 			m_bIsSkillLoop = true;
@@ -1328,10 +1334,16 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 		(Archer::ARROW_FALL_SHOT == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)) ||
 		(Archer::CHARGE_ARROW_SHOT == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)))
 	{
-		if (Archer::ARROW_FALL_SHOT == m_uiAnimIdx)
+		if (Archer::ARROW_FALL_SHOT == m_uiAnimIdx || Archer::CHARGE_ARROW_SHOT == m_uiAnimIdx)
 		{
 			m_pDynamicCamera->Set_CameraAtParentMatrix(nullptr);
 			m_pDynamicCamera->Set_ResetFovY();
+			m_pDynamicCamera->Set_CameraState(CAMERA_STATE::THIRD_PERSON_VIEW);
+		}
+
+		if (Archer::CHARGE_ARROW_SHOT == m_uiAnimIdx)
+		{
+			m_pDynamicCamera->Set_CameraAtParentMatrix(nullptr);
 			m_pDynamicCamera->Set_CameraState(CAMERA_STATE::THIRD_PERSON_VIEW);
 		}
 
@@ -1931,7 +1943,7 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 				{
 					pCollisionArrow->Set_ArrowType(ARROW_TYPE::ARROW_CHARGE);
 					pCollisionArrow->Set_Speed(90.0f);
-					pCollisionArrow->Set_CollisionTag(L"CollisionTick");
+					pCollisionArrow->Set_CollisionTag(L"ChargeArrow");
 					pCollisionArrow->Set_Damage(m_pInfoCom->Get_RandomDamage());
 					pCollisionArrow->Set_LifeTime(5.0f);
 					pCollisionArrow->Set_OriginPos(vPos);
@@ -2133,9 +2145,51 @@ void CPCArcher::SetUp_CameraEffect(const _float& fTimeDelta)
 	}
 		break;
 
+	case Archer::CHARGE_ARROW_SHOT:
+	{
+		CAMERA_ZOOM_DESC tCameraZoomDesc;
+		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_OUT;
+		tCameraZoomDesc.fPower     = 0.25f;
+		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 6.0f;
+		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+	}
+		break;
+
 	default:
 		break;
 	}
+}
+
+void CPCArcher::SetUp_UltimateCameraEffect(const _float& fTimeDelta)
+{
+	if (Archer::CHARGE_ARROW_LOOP == m_uiAnimIdx)
+	{
+		if (!m_bIsSetCameraShaking)
+		{
+			m_bIsSetCameraShaking = true;
+
+			CAMERA_SHAKING_DESC tCameraShakingDesc;
+			tCameraShakingDesc.fUpdateShakingTime = 1.25f;
+			tCameraShakingDesc.vMin = _vec2(-15.0f, -7.50f);
+			tCameraShakingDesc.vMax = _vec2(15.0f, 7.50f);
+			tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 12.0f;
+			m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
+		}
+	}
+
+	//if (Archer::CHARGE_ARROW_SHOT == m_uiAnimIdx)
+	//{
+	//	if (!m_bIsSetCameraZoom)
+	//	{
+	//		m_bIsSetCameraZoom = true;
+
+	//		CAMERA_ZOOM_DESC tCameraZoomDesc;
+	//		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_OUT;
+	//		tCameraZoomDesc.fPower     = 0.35f;
+	//		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 6.0f;
+	//		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+	//	}
+	//}
 }
 
 void CPCArcher::Collision_MonsterMultiCollider(list<Engine::CColliderSphere*>& lstMonsterCollider)
