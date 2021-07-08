@@ -74,6 +74,8 @@ public:
 private:
 	void SetUp_DynamicCameraFromTarget(const _float& fTimeDelta);
 	void SetUp_DynamicCameraGladiatorUltimate(const _float& fTimeDelta);
+	void SetUp_DynamicCameraArcherArrowFall(const _float& fTimeDelta);
+	void SetUp_DynamicCameraArcherUltimate(const _float& fTimeDelta);
 	void SetUp_CameraShaking(const _float& fTimeDelta);
 	void SetUp_CameraZoom(const _float& fTimeDelta);
 	void SetUp_CameraFont(const _float& fTimeDelta);

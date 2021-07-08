@@ -226,7 +226,8 @@ _int CPCGladiator::Update_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Collision - Add Collision List ]
 	____________________________________________________________________________________________________________*/
-	m_pCollisonMgr->Add_CollisionCheckList(this);
+	if (!g_bIsStartSkillCameraEffect)
+		m_pCollisonMgr->Add_CollisionCheckList(this);
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
@@ -973,11 +974,6 @@ void CPCGladiator::Set_BlendingSpeed()
 
 void CPCGladiator::Set_HpMPGauge()
 {
-	//if (m_pInfoCom->m_iHp <= 0)
-	//	m_pInfoCom->m_iHp = m_pInfoCom->m_iMaxHp;
-	//if (m_pInfoCom->m_iMp <= 0)
-	//	m_pInfoCom->m_iMp = m_pInfoCom->m_iMaxMp;
-
 	if (nullptr != m_pHpGauge && nullptr != m_pMpGauge)
 	{
 		m_pHpGauge->Set_Percent((_float)m_pInfoCom->m_iHp / (_float)m_pInfoCom->m_iMaxHp, m_pInfoCom->m_iHp, m_pInfoCom->m_iMaxHp);

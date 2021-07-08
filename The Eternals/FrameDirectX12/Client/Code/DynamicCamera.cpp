@@ -116,7 +116,7 @@ _int CDynamicCamera::Update_GameObject(const _float & fTimeDelta)
 	{
 		switch (m_eCameraState)
 		{
-		case THIRD_PERSON_VIEW:
+		case CAMERA_STATE::THIRD_PERSON_VIEW:
 			if (m_tThirdPersonViewOriginDesc.bIsResetting)
 				SetUp_DynamicCameraFromTarget(fTimeDelta);
 			else
@@ -126,8 +126,14 @@ _int CDynamicCamera::Update_GameObject(const _float & fTimeDelta)
 				m_pTransCom->m_vAngle = m_tThirdPersonViewOriginDesc.vOriginAngle;
 			}
 			break;
-		case GLADIATOR_ULTIMATE:
+		case CAMERA_STATE::GLADIATOR_ULTIMATE:
 			SetUp_DynamicCameraGladiatorUltimate(fTimeDelta);
+			break;
+		case CAMERA_STATE::ARCHER_ARROW_FALL:
+			SetUp_DynamicCameraArcherArrowFall(fTimeDelta);
+			break;
+		case CAMERA_STATE::ARCHER_ULTIMATE:
+			SetUp_DynamicCameraArcherUltimate(fTimeDelta);
 			break;
 		default:
 			break;
@@ -232,12 +238,74 @@ void CDynamicCamera::SetUp_DynamicCameraGladiatorUltimate(const _float& fTimeDel
 			m_tCameraInfo.vAt = _vec3(m_pTransCom->m_vPos.x, matWorld._42, m_pTransCom->m_vPos.z);
 		}
 	}
-	
-	else if (nullptr == m_pTarget)
+}
+
+void CDynamicCamera::SetUp_DynamicCameraArcherArrowFall(const _float& fTimeDelta)
+{
+	if (nullptr != m_pTarget && PC_ARCHER == m_pTarget->Get_OType())
 	{
-		m_pTarget = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
-		if (nullptr != m_pTarget)
-			m_pTarget->Get_BoundingBox()->Set_SetUpCameraAt(true);
+		m_pTransCom->m_vScale = _vec3(0.0f, 0.0f, MIN_TARGETDIST);
+		m_pTransCom->m_vAngle = _vec3(5.0f, m_tThirdPersonViewOriginDesc.vOriginAngle.y, 0.0f);
+		m_pTransCom->m_vPos = m_pTarget->Get_Transform()->m_vPos;
+		Engine::CGameObject::Update_GameObject(fTimeDelta);
+
+		m_tCameraInfo.vEye.TransformCoord(_vec3(0.0f, 0.0f, -1.0f), m_pTransCom->m_matWorld);
+
+		if (nullptr != m_pCameraAtSkinningMatrix)
+		{
+			_matrix matWorld = m_pTransCom->m_matWorld;
+			_matrix matBoneFinalTransform = ((m_pCameraAtSkinningMatrix->matBoneScale
+											* m_pCameraAtSkinningMatrix->matBoneRotation
+											* m_pCameraAtSkinningMatrix->matBoneTrans)
+											* m_pCameraAtSkinningMatrix->matParentTransform)
+											* m_pCameraAtSkinningMatrix->matRootTransform;
+
+			matWorld = (matBoneFinalTransform) * (m_pTarget->Get_Transform()->m_matWorld);
+			m_tCameraInfo.vAt = _vec3(m_pTransCom->m_vPos.x, matWorld._42, m_pTransCom->m_vPos.z);
+		}
+	}
+}
+
+void CDynamicCamera::SetUp_DynamicCameraArcherUltimate(const _float& fTimeDelta)
+{
+	if (nullptr != m_pTarget && PC_ARCHER == m_pTarget->Get_OType())
+	{
+		_vec3 vRight = m_pTarget->Get_Transform()->Get_RightVector();
+		_vec3 vLook  = m_pTarget->Get_Transform()->Get_LookVector();
+		vRight.Normalize();
+		vLook.Normalize();
+
+		m_pTransCom->m_vScale = _vec3(0.0f, 0.0f, 3.0f);
+		m_pTransCom->m_vAngle = _vec3(45.0f, m_tThirdPersonViewOriginDesc.vOriginAngle.y - 45.0f, 0.0f);
+		m_pTransCom->m_vPos   = m_pTarget->Get_Transform()->m_vPos;
+		Engine::CGameObject::Update_GameObject(fTimeDelta);
+
+		m_tCameraInfo.vEye.TransformCoord(_vec3(0.0f, 0.0f, -1.0f), m_pTransCom->m_matWorld);
+		m_tCameraInfo.vEye  += vRight * 3.0f;
+		m_tCameraInfo.vEye.y += 0.5f;
+
+		if (nullptr != m_pCameraAtSkinningMatrix)
+		{
+			_matrix matWorld = m_pTransCom->m_matWorld;
+			_matrix matBoneFinalTransform = ((m_pCameraAtSkinningMatrix->matBoneScale
+											* m_pCameraAtSkinningMatrix->matBoneRotation
+											* m_pCameraAtSkinningMatrix->matBoneTrans)
+											* m_pCameraAtSkinningMatrix->matParentTransform)
+											* m_pCameraAtSkinningMatrix->matRootTransform;
+
+			matWorld = (matBoneFinalTransform) * (m_pTarget->Get_Transform()->m_matWorld);
+			m_tCameraInfo.vAt = _vec3(m_pTransCom->m_vPos.x, matWorld._42, m_pTransCom->m_vPos.z);
+			m_tCameraInfo.vAt += vLook * 3.0f;
+			m_tCameraInfo.vAt.y += 0.5f;
+		}
+
+		// Camera Shaking
+		SetUp_CameraShaking(fTimeDelta);
+		m_tCameraInfo.vEye.x += m_tCameraShakingDesc.vEyeOffset.x;
+		m_tCameraInfo.vEye.y += m_tCameraShakingDesc.vEyeOffset.y;
+
+		// Camera Zoom
+		SetUp_CameraZoom(fTimeDelta);
 	}
 }
 

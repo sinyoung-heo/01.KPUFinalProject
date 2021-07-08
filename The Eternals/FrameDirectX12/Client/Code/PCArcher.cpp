@@ -181,7 +181,6 @@ _int CPCArcher::Update_GameObject(const _float& fTimeDelta)
 	Set_HpMPGauge();
 	Is_ChangeWeapon();
 	SetUp_StageID();
-	Set_Target();
 
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
@@ -238,7 +237,7 @@ _int CPCArcher::Update_GameObject(const _float& fTimeDelta)
 	if (m_pMeshCom->Is_BlendingComplete())
 		SetUp_CollisionArrow(fTimeDelta);
 
-	// SetUp_CameraEffect(fTimeDelta);
+	SetUp_UltimateCameraEffect(fTimeDelta);
 
 	return NO_EVENT;
 }
@@ -947,54 +946,11 @@ void CPCArcher::Set_BlendingSpeed()
 
 void CPCArcher::Set_HpMPGauge()
 {
-	//if (m_pInfoCom->m_iHp <= 0)
-	//	m_pInfoCom->m_iHp = m_pInfoCom->m_iMaxHp;
-	//if (m_pInfoCom->m_iMp <= 0)
-	//	m_pInfoCom->m_iMp = m_pInfoCom->m_iMaxMp;
-
 	if (nullptr != m_pHpGauge && nullptr != m_pMpGauge)
 	{
 		m_pHpGauge->Set_Percent((_float)m_pInfoCom->m_iHp / (_float)m_pInfoCom->m_iMaxHp, m_pInfoCom->m_iHp, m_pInfoCom->m_iMaxHp);
 		m_pMpGauge->Set_Percent((_float)m_pInfoCom->m_iMp / (_float)m_pInfoCom->m_iMaxMp, m_pInfoCom->m_iMp, m_pInfoCom->m_iMaxMp);
 	}
-}
-
-void CPCArcher::Set_Target()
-{
-	/*_float fDist   = 0.0f;
-	_float fAngle  = 0.0f;
-	Engine::OBJLIST* pMonsterList = m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"MONSTER");
-
-	m_pTarget     = nullptr;
-	m_fTargetDist = 1024.0f;
-
-	if (pMonsterList != nullptr && !pMonsterList->empty())
-	{
-		for (auto& pMonster : *pMonsterList)
-		{
-			fAngle	= m_pTransCom->Get_LookVector().Get_Angle(pMonster->Get_Transform()->m_vPos);
-			fDist	= m_pTransCom->m_vPos.Get_Distance(pMonster->Get_Transform()->m_vPos);
-			
-			if (fDist > ARROW_MAX_DISTANCE)
-				continue;
-			if (fAngle > 60.0f)
-				continue;
-
-			if (nullptr == m_pTarget)
-			{
-				m_pTarget = pMonster;
-				m_fTargetDist = fDist;
-			}
-			else if (m_fTargetDist < fDist)
-			{
-				m_pTarget     = pMonster;
-				m_fTargetDist = fDist;
-			}
-		}
-	}
-
-	if (m_pTarget != nullptr)
-		cout << m_pTarget->Get_ServerNumber() << "  " << m_pTransCom->Get_LookVector().Get_Angle(m_pTarget->Get_Transform()->m_vPos) << endl;*/
 }
 
 void CPCArcher::Key_Input(const _float& fTimeDelta)
@@ -1287,6 +1243,11 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 				 m_uiAnimIdx != Archer::ARROW_FALL_START && 
 				 NO_EVENT_STATE)
 		{
+			m_pDynamicCamera->Set_CameraState(CAMERA_STATE::ARCHER_ARROW_FALL);
+			m_pDynamicCamera->SetUp_ThirdPersonViewOriginData();
+			m_pDynamicCamera->Set_FovY(50.0f);
+			m_pDynamicCamera->Set_CameraAtParentMatrix(m_pMeshCom->Find_SkinningMatrix("Bip01-Neck"));
+
 			SetUp_AttackSetting();
 			m_bIsSkill     = true;
 			m_bIsSkillLoop = true;
@@ -1300,6 +1261,12 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 				 m_uiAnimIdx != Archer::CHARGE_ARROW_START && 
 				 NO_EVENT_STATE)
 		{
+			m_bIsSetCameraShaking = false;
+			m_bIsSetCameraZoom    = false;
+			m_pDynamicCamera->Set_CameraState(CAMERA_STATE::ARCHER_ULTIMATE);
+			m_pDynamicCamera->SetUp_ThirdPersonViewOriginData();
+			m_pDynamicCamera->Set_CameraAtParentMatrix(m_pMeshCom->Find_SkinningMatrix("Bip01-R-Hand"));
+
 			SetUp_AttackSetting();
 			m_bIsSkill     = true;
 			m_bIsSkillLoop = true;
@@ -1367,6 +1334,19 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 		(Archer::ARROW_FALL_SHOT == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)) ||
 		(Archer::CHARGE_ARROW_SHOT == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)))
 	{
+		if (Archer::ARROW_FALL_SHOT == m_uiAnimIdx || Archer::CHARGE_ARROW_SHOT == m_uiAnimIdx)
+		{
+			m_pDynamicCamera->Set_CameraAtParentMatrix(nullptr);
+			m_pDynamicCamera->Set_ResetFovY();
+			m_pDynamicCamera->Set_CameraState(CAMERA_STATE::THIRD_PERSON_VIEW);
+		}
+
+		if (Archer::CHARGE_ARROW_SHOT == m_uiAnimIdx)
+		{
+			m_pDynamicCamera->Set_CameraAtParentMatrix(nullptr);
+			m_pDynamicCamera->Set_CameraState(CAMERA_STATE::THIRD_PERSON_VIEW);
+		}
+
 		m_bIsAttack    = false;
 		m_bIsSkill     = false;
 		m_bIsSkillLoop = false;
@@ -1821,6 +1801,20 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 			m_tCollisionTickDesc.iMaxCollisionTick       = 5;
 		}
 	}
+	else if (Archer::ESCAPING_BOMB == m_uiAnimIdx)
+	{
+		if (!m_bIsSetCollisionTick)
+		{
+			m_bIsSetCollisionTick = true;
+
+			m_tCollisionTickDesc.fPosOffset              = 0.0f;
+			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
+			m_tCollisionTickDesc.fColisionTickUpdateTime = 1.0f / 9.0f;
+			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
+			m_tCollisionTickDesc.iCurCollisionTick       = 0;
+			m_tCollisionTickDesc.iMaxCollisionTick       = 3;
+		}
+	}
 	// ARROW_SHOWER
 	else if (Archer::ARROW_SHOWER_START == m_uiAnimIdx && m_ui3DMax_CurFrame >= Archer::ARROW_SHOWER_COLLISIONARROW_START)
 	{
@@ -1850,6 +1844,7 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 			CEffectMgr::Get_Instance()->Effect_MagicCircle_Effect(_vec3(0.0f), _vec3(0.0f), 
 				m_vArrowFallPos, 0, 0, 2, true, true, nullptr, false);
 
+			m_vArrowFallPos.y = 20.f;
 		}
 	}
 	else if (Archer::CHARGE_ARROW_SHOT == m_uiAnimIdx && m_ui3DMax_CurFrame >= Archer::CHARGE_ARROW_COLLISIONARROW_START)
@@ -1863,18 +1858,12 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fColisionTickUpdateTime = 1.0f / 1.0f;
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
-			m_tCollisionTickDesc.iMaxCollisionTick       = 48;
+			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
 
 			m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 			m_pTransCom->m_vDir.Normalize();
-			m_vArrowFallPos   = m_pTransCom->m_vPos + m_pTransCom->m_vDir * Archer::ARROW_FALL_DIST;
-			m_vArrowFallPos.y = 20.0f;
-
-			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
 
 			m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("L_Sword")));
-
-		
 		}
 	}
 
@@ -1949,7 +1938,7 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 				{
 					pCollisionArrow->Set_ArrowType(ARROW_TYPE::ARROW_CHARGE);
 					pCollisionArrow->Set_Speed(90.0f);
-					pCollisionArrow->Set_CollisionTag(L"CollisionTick_ThisPlayer");
+					pCollisionArrow->Set_CollisionTag(L"ChargeArrow");
 					pCollisionArrow->Set_Damage(m_pInfoCom->Get_RandomDamage());
 					pCollisionArrow->Set_LifeTime(5.0f);
 					pCollisionArrow->Set_OriginPos(vPos);
@@ -1961,6 +1950,21 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 					pCollisionArrow->Get_BoundingSphere()->Set_Radius(pCollisionArrow->Get_Transform()->m_vScale);
 
 					m_pObjectMgr->Add_GameObject(L"Layer_GameObject", pCollisionArrow->Get_MeshTag(), pCollisionArrow);
+				}
+			}
+			else if (m_uiAnimIdx == Archer::ESCAPING_BOMB)
+			{
+				CCollisionTick* pCollisionTick = static_cast<CCollisionTick*>(Pop_Instance(m_pInstancePoolMgr->Get_CollisionTickPool()));
+				if (nullptr != pCollisionTick)
+				{
+					pCollisionTick->Get_BoundingSphere()->Get_BoundingInfo().Radius = 0.5f;
+					pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
+					pCollisionTick->Set_Damage(m_pInfoCom->Get_RandomDamage());
+					pCollisionTick->Set_LifeTime(0.25f);
+					pCollisionTick->Get_Transform()->m_vScale = _vec3(5.0f);
+					pCollisionTick->Get_Transform()->m_vPos   = m_pTransCom->m_vPos;
+					pCollisionTick->Get_BoundingSphere()->Set_Radius(pCollisionTick->Get_Transform()->m_vScale);
+					m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_ThisPlayer", pCollisionTick);
 				}
 			}
 			else
@@ -2119,9 +2123,68 @@ void CPCArcher::SetUp_CameraEffect(const _float& fTimeDelta)
 	}
 		break;
 
+	case Archer::ESCAPING_BOMB:
+	{
+		CAMERA_SHAKING_DESC tCameraShakingDesc;
+		tCameraShakingDesc.fUpdateShakingTime = 0.5f;
+		tCameraShakingDesc.vMin = _vec2(-14.0f, 0.0f);
+		tCameraShakingDesc.vMax = _vec2(14.0f, 0.0f);
+		tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 12.0f;
+		m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
+
+		CAMERA_ZOOM_DESC tCameraZoomDesc;
+		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_OUT;
+		tCameraZoomDesc.fPower     = 0.02f;
+		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 15.0f;
+		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+	}
+		break;
+
+	case Archer::CHARGE_ARROW_SHOT:
+	{
+		CAMERA_ZOOM_DESC tCameraZoomDesc;
+		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_OUT;
+		tCameraZoomDesc.fPower     = 0.25f;
+		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 6.0f;
+		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+	}
+		break;
+
 	default:
 		break;
 	}
+}
+
+void CPCArcher::SetUp_UltimateCameraEffect(const _float& fTimeDelta)
+{
+	if (Archer::CHARGE_ARROW_LOOP == m_uiAnimIdx)
+	{
+		if (!m_bIsSetCameraShaking)
+		{
+			m_bIsSetCameraShaking = true;
+
+			CAMERA_SHAKING_DESC tCameraShakingDesc;
+			tCameraShakingDesc.fUpdateShakingTime = 1.25f;
+			tCameraShakingDesc.vMin = _vec2(-15.0f, -7.50f);
+			tCameraShakingDesc.vMax = _vec2(15.0f, 7.50f);
+			tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 12.0f;
+			m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
+		}
+	}
+
+	//if (Archer::CHARGE_ARROW_SHOT == m_uiAnimIdx)
+	//{
+	//	if (!m_bIsSetCameraZoom)
+	//	{
+	//		m_bIsSetCameraZoom = true;
+
+	//		CAMERA_ZOOM_DESC tCameraZoomDesc;
+	//		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_OUT;
+	//		tCameraZoomDesc.fPower     = 0.35f;
+	//		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 6.0f;
+	//		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+	//	}
+	//}
 }
 
 void CPCArcher::Collision_MonsterMultiCollider(list<Engine::CColliderSphere*>& lstMonsterCollider)

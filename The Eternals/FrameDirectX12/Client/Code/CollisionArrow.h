@@ -8,7 +8,8 @@ namespace Engine
 
 const _float ARROW_MAX_DISTANCE = 15.0f;
 
-class CEffectTrail;
+class CDynamicCamera;
+
 class CCollisionArrow : public CCollisionTick
 {
 private:
@@ -61,10 +62,7 @@ private:
 	_vec3			m_vOriginPos        = _vec3(0.0f);
 	_bool			m_bIsReadyArrowFall = false;
 
-	/*__________________________________________________________________________________________________________
-	[ Trail ]
-	____________________________________________________________________________________________________________*/
-	CEffectTrail* m_pTrail           = nullptr;
+	CDynamicCamera* m_pDynamicCamera = nullptr;
 
 	//Effect
 	int m_iEffectCnt = 5;

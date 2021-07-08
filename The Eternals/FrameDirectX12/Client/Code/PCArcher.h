@@ -62,7 +62,6 @@ private:
 	void			Set_AnimationSpeed();
 	void			Set_BlendingSpeed();
 	void			Set_HpMPGauge();
-	void			Set_Target();
 
 	void Key_Input(const _float& fTimeDelta);
 	void KeyInput_Move(const _float& fTimeDelta);
@@ -94,7 +93,7 @@ private:
 	void SetUp_AngleInterpolation(const _float& fTimeDelta);
 	void SetUp_CollisionArrow(const _float& fTimeDelta);
 	void SetUp_CameraEffect(const _float& fTimeDelta);
-
+	void SetUp_UltimateCameraEffect(const _float& fTimeDelta);
 	// Collision Event
 	void Collision_MonsterMultiCollider(list<Engine::CColliderSphere*>& lstMonsterCollider);
 	void Collision_PortalVelikaToBeach(list<Engine::CColliderSphere*>& lstPortalCollider);
@@ -133,6 +132,10 @@ private:
 	CDynamicCamera*	m_pDynamicCamera = nullptr;
 	CPCWeaponBow*	m_pWeapon        = nullptr;
 	wstring			m_wstrMeshTag    = L"";
+
+	// Camera Shaking
+	_bool m_bIsSetCameraShaking = false;
+	_bool m_bIsSetCameraZoom    = false;
 
 	// HP MP Gauge
 	CCharacterHpGauge* m_pHpGauge = nullptr;
