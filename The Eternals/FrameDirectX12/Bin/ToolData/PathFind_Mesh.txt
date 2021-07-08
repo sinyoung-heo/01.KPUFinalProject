@@ -1,6 +1,7 @@
 HumanPCEvent27Archer|HumanPCEvent27Archer.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\HumanPCEvent27Archer\
 PoporiMR25Priest|PoporiMR25Priest.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\PoporiMR25Priest\
 PoporiR27Gladiator|PoporiR27Gladiator.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Character\PoporiR27Gladiator\
+CinemaVergos|CinemaVergos.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\CinemaVergos\
 CloderA|CloderA.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\CloderA\
 Crab|Crab.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\Crab\
 CraftyArachne|CraftyArachne.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\CraftyArachne\
