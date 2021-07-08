@@ -181,7 +181,6 @@ _int CPCArcher::Update_GameObject(const _float& fTimeDelta)
 	Set_HpMPGauge();
 	Is_ChangeWeapon();
 	SetUp_StageID();
-	Set_Target();
 
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
@@ -947,54 +946,11 @@ void CPCArcher::Set_BlendingSpeed()
 
 void CPCArcher::Set_HpMPGauge()
 {
-	//if (m_pInfoCom->m_iHp <= 0)
-	//	m_pInfoCom->m_iHp = m_pInfoCom->m_iMaxHp;
-	//if (m_pInfoCom->m_iMp <= 0)
-	//	m_pInfoCom->m_iMp = m_pInfoCom->m_iMaxMp;
-
 	if (nullptr != m_pHpGauge && nullptr != m_pMpGauge)
 	{
 		m_pHpGauge->Set_Percent((_float)m_pInfoCom->m_iHp / (_float)m_pInfoCom->m_iMaxHp, m_pInfoCom->m_iHp, m_pInfoCom->m_iMaxHp);
 		m_pMpGauge->Set_Percent((_float)m_pInfoCom->m_iMp / (_float)m_pInfoCom->m_iMaxMp, m_pInfoCom->m_iMp, m_pInfoCom->m_iMaxMp);
 	}
-}
-
-void CPCArcher::Set_Target()
-{
-	/*_float fDist   = 0.0f;
-	_float fAngle  = 0.0f;
-	Engine::OBJLIST* pMonsterList = m_pObjectMgr->Get_OBJLIST(L"Layer_GameObject", L"MONSTER");
-
-	m_pTarget     = nullptr;
-	m_fTargetDist = 1024.0f;
-
-	if (pMonsterList != nullptr && !pMonsterList->empty())
-	{
-		for (auto& pMonster : *pMonsterList)
-		{
-			fAngle	= m_pTransCom->Get_LookVector().Get_Angle(pMonster->Get_Transform()->m_vPos);
-			fDist	= m_pTransCom->m_vPos.Get_Distance(pMonster->Get_Transform()->m_vPos);
-			
-			if (fDist > ARROW_MAX_DISTANCE)
-				continue;
-			if (fAngle > 60.0f)
-				continue;
-
-			if (nullptr == m_pTarget)
-			{
-				m_pTarget = pMonster;
-				m_fTargetDist = fDist;
-			}
-			else if (m_fTargetDist < fDist)
-			{
-				m_pTarget     = pMonster;
-				m_fTargetDist = fDist;
-			}
-		}
-	}
-
-	if (m_pTarget != nullptr)
-		cout << m_pTarget->Get_ServerNumber() << "  " << m_pTransCom->Get_LookVector().Get_Angle(m_pTarget->Get_Transform()->m_vPos) << endl;*/
 }
 
 void CPCArcher::Key_Input(const _float& fTimeDelta)
@@ -1287,6 +1243,11 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 				 m_uiAnimIdx != Archer::ARROW_FALL_START && 
 				 NO_EVENT_STATE)
 		{
+			m_pDynamicCamera->Set_CameraState(CAMERA_STATE::ARCHER_ARROW_FALL);
+			m_pDynamicCamera->SetUp_ThirdPersonViewOriginData();
+			m_pDynamicCamera->Set_FovY(50.0f);
+			m_pDynamicCamera->Set_CameraAtParentMatrix(m_pMeshCom->Find_SkinningMatrix("Bip01-Neck"));
+
 			SetUp_AttackSetting();
 			m_bIsSkill     = true;
 			m_bIsSkillLoop = true;
@@ -1367,6 +1328,13 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 		(Archer::ARROW_FALL_SHOT == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)) ||
 		(Archer::CHARGE_ARROW_SHOT == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)))
 	{
+		if (Archer::ARROW_FALL_SHOT == m_uiAnimIdx)
+		{
+			m_pDynamicCamera->Set_CameraAtParentMatrix(nullptr);
+			m_pDynamicCamera->Set_ResetFovY();
+			m_pDynamicCamera->Set_CameraState(CAMERA_STATE::THIRD_PERSON_VIEW);
+		}
+
 		m_bIsAttack    = false;
 		m_bIsSkill     = false;
 		m_bIsSkillLoop = false;
@@ -1963,7 +1931,7 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 				{
 					pCollisionArrow->Set_ArrowType(ARROW_TYPE::ARROW_CHARGE);
 					pCollisionArrow->Set_Speed(90.0f);
-					pCollisionArrow->Set_CollisionTag(L"CollisionTick_ThisPlayer");
+					pCollisionArrow->Set_CollisionTag(L"CollisionTick");
 					pCollisionArrow->Set_Damage(m_pInfoCom->Get_RandomDamage());
 					pCollisionArrow->Set_LifeTime(5.0f);
 					pCollisionArrow->Set_OriginPos(vPos);

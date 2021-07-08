@@ -62,7 +62,6 @@ private:
 	void			Set_AnimationSpeed();
 	void			Set_BlendingSpeed();
 	void			Set_HpMPGauge();
-	void			Set_Target();
 
 	void Key_Input(const _float& fTimeDelta);
 	void KeyInput_Move(const _float& fTimeDelta);
