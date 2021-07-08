@@ -327,10 +327,18 @@ void CObjMgr::Create_StageWinterMonster()
 	int s_num = -1;
 
 	/*	________________________________________________________________________________
-										 Áý´Ü 1
+										 VERGOS
 	________________________________________________________________________________*/
 	
+	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
 
+	if (pNew)
+	{
+		pNew->Ready_Monster(_vec3(143.0f, 0.f, 79.0f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_VERGOS, STAGE_VELIKA, GIANTMONKEY_HP, GIANTMONKEY_ATT, GIANTMONKEY_EXP, GIANTMONKEY_SPD);
+		pNew->Set_NumAnimation(Vergos::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Vergos::duration);
+	}
+	else return;
 
 }
 

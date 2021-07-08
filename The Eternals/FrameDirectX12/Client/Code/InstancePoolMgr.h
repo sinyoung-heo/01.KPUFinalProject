@@ -17,6 +17,7 @@ class CLakan;
 class CPrionBerserker;
 class CPrionBerserkerBoss;
 class CCinemaVergos;
+class CVergos;
 
 class CNPC_Walker;
 class CNPC_Assistant;
@@ -81,6 +82,7 @@ public:
 	INSTANCE_POOL_DESC<CPrionBerserker>*	Get_MonsterPrionBerserkerPool()				{ return m_pMonsterPrionBerserkerPool; }
 	INSTANCE_POOL_DESC<CPrionBerserkerBoss>*Get_MonsterPrionBerserkerBossPool()			{ return m_pMonsterPrionBerserkerBossPool; }
 	INSTANCE_POOL_DESC<CCinemaVergos>*		Get_MonsterCinemaVergosPool()				{ return m_pMonsterCinemaVergosPool; }
+	INSTANCE_POOL_DESC<CVergos>*			Get_MonsterVergosPool()						{ return m_pMonsterVergosPool; }
 
 	// NPC
 	INSTANCE_POOL_DESC<CNPC_Walker>*		Get_NPCChickenPool()						{ return m_pNPC_Walker_ChickenPool; }
@@ -151,6 +153,7 @@ private:
 	INSTANCE_POOL_DESC<CPrionBerserker>*	m_pMonsterPrionBerserkerPool			= nullptr;
 	INSTANCE_POOL_DESC<CPrionBerserkerBoss>* m_pMonsterPrionBerserkerBossPool		= nullptr;
 	INSTANCE_POOL_DESC<CCinemaVergos>*		m_pMonsterCinemaVergosPool				= nullptr;
+	INSTANCE_POOL_DESC<CVergos>*			m_pMonsterVergosPool					= nullptr;
 
 	// NPC
 	INSTANCE_POOL_DESC<CNPC_Walker>*		m_pNPC_Walker_ChickenPool               = nullptr;

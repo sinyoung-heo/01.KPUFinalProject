@@ -122,6 +122,7 @@ constexpr char MON_ARACHNE				= 4;
 constexpr char MON_SAILOR				= 5;
 constexpr char MON_GBEETLE				= 6;
 constexpr char MON_GMONKEY				= 7;
+constexpr char MON_VERGOS				= 8;
 
 /* NPC TYPE */   
 constexpr char NPC_MOVE					= 0;

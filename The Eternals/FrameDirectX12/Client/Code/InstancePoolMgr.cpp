@@ -14,6 +14,7 @@
 #include "PrionBerserker.h"
 #include "PrionBerserkerBoss.h"
 #include "CinemaVergos.h"
+#include "Vergos.h"
 #include "NPC_Walker.h"
 #include "NPC_Assistant.h"
 #include "NPC_Stander.h"
@@ -150,6 +151,7 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterPrionBerserkerPool, 50);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterPrionBerserkerBossPool, 1);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterCinemaVergosPool, 1);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterVergosPool, 1);
 
 	// NPC
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Walker_ChickenPool, L"Chicken", 10);

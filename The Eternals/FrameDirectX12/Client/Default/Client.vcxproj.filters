@@ -526,6 +526,9 @@
     <Filter Include="02.GameObject\05.Monster\10.CinemaVergos">
       <UniqueIdentifier>{7054a66a-f83d-461d-b739-603ac76fec9e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.Monster\11.Vergos">
+      <UniqueIdentifier>{757ac2e0-3ce7-416f-b826-3e60c80ebddd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -1090,6 +1093,9 @@
     <ClInclude Include="..\Code\CinemaVergos.h">
       <Filter>02.GameObject\05.Monster\10.CinemaVergos</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\Vergos.h">
+      <Filter>02.GameObject\05.Monster\11.Vergos</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1596,6 +1602,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CinemaVergos.cpp">
       <Filter>02.GameObject\05.Monster\10.CinemaVergos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Vergos.cpp">
+      <Filter>02.GameObject\05.Monster\11.Vergos</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

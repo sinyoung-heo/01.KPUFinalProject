@@ -12,6 +12,7 @@ Lakan|Lakan.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\Lakan\
 Monkey|Monkey.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\Monkey\
 PrionBerserker|PrionBerserker.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\PrionBerserker\
 PrionBerserkerBoss|PrionBerserkerBoss.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\PrionBerserkerBoss\
+Vergos|Vergos.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\Monster\Vergos\
 Aman_boy|Aman_boy.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Aman_boy\
 Baraka_M_Extractor|Baraka_M_Extractor.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Baraka_M_Extractor\
 Baraka_M_Merchant|Baraka_M_Merchant.X|..\..\Bin\Resource\ResourceStage\DynamicMesh\NPC\Baraka_M_Merchant\

@@ -12,6 +12,7 @@ DynamicMesh|Monster|Lakan
 DynamicMesh|Monster|Monkey
 DynamicMesh|Monster|PrionBerserker
 DynamicMesh|Monster|PrionBerserkerBoss
+DynamicMesh|Monster|Vergos
 DynamicMesh|NPC|Aman_boy
 DynamicMesh|NPC|Baraka_M_Extractor
 DynamicMesh|NPC|Baraka_M_Merchant

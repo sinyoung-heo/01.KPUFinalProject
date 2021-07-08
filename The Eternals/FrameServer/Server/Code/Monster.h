@@ -91,6 +91,8 @@ private:
 	void	Attack_CraftyArachne(const float& fTimeDelta);
 	void	Dead_CraftyArachne(const float& fTimeDelta);
 
+	void	Change_Vergos_Animation(const float& fTimeDelta);
+
 private:
 	void	Play_Animation(float fTimeDelta);	
 	bool	Is_AnimationSetEnd(const float& fTimeDelta);

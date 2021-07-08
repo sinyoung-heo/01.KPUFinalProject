@@ -36,6 +36,7 @@
 #include "GiantBeetle.h"
 #include "GiantMonkey.h"
 #include "CraftyArachne.h"
+#include "Vergos.h"
 
 IMPLEMENT_SINGLETON(CPacketMgr)
 
@@ -1217,6 +1218,10 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 	else if (packet->mon_num == MON_ARACHNE)
 	{
 		pInstance = Pop_Instance(m_pInstancePoolMgr->Get_MonsterCraftyArachnePool());
+	}
+	else if (packet->mon_num == MON_VERGOS)
+	{
+		pInstance = Pop_Instance(m_pInstancePoolMgr->Get_MonsterVergosPool());
 	}
 	
 	if (nullptr != pInstance)

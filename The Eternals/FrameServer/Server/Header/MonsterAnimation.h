@@ -203,6 +203,39 @@ namespace CraftyArachne
 	constexpr int ATTACK_FLYSTAMP_START_TICK = 134;
 }
 
+namespace Vergos
+{
+	constexpr int SPAWN			= 1;
+	constexpr int FINCH			= 2;
+	constexpr int SWING_RIGHT	= 3;
+	constexpr int SWING_LEFT	= 4;
+	constexpr int BLOW_LEFT		= 5;
+	constexpr int BLOW_RIGHT	= 6;
+	constexpr int BLOW_HEAD		= 7;
+	constexpr int BLOW_ROTATION = 8;
+	constexpr int BREATH_FIRE	= 9;
+	constexpr int FLY_START		= 10;
+	constexpr int FLY_LOOP		= 11;
+	constexpr int FLY_END		= 12;
+	constexpr int DEATH			= 13;
+
+	constexpr int NUM_ANIMATION = 14;
+
+	enum ANIM_VERGOS
+	{
+		A_WAIT, A_SPAWN, A_FINCH,
+		A_SWING_RIGHT, A_SWING_LEFT,
+		A_BLOW_LEFT, A_BLOW_RIGHT, A_BLOW_HEAD, A_BLOW_ROTATION,
+		A_BREATH_FIRE,
+		A_FLY_START, A_FLY_LOOP, A_FLY_END, A_DEATH, A_END
+	};
+
+	static double duration[NUM_ANIMATION] =
+	{
+		10240, 32000, 16000, 22720, 22720, 16640, 16640, 25920, 28320, 24000, 16000, 3840, 10400, 48000
+	};
+}
+
 /* CINEMATIC MONSTER */
 namespace Lakan
 {
