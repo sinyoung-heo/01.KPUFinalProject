@@ -72,6 +72,11 @@ publicShield|publicShield.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEf
 publicSkill3|publicSkill3.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSkill3\
 publicSphere|publicSphere.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSphere\
 publicSpline|publicSpline.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSpline\
+publicStone0|publicStone0.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicStone0\
+publicStone1|publicStone1.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicStone1\
+publicStone2|publicStone2.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicStone2\
+publicStone3|publicStone3.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicStone3\
+publicStone4|publicStone4.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicStone4\
 publicSword|publicSword.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSword\
 DistortDisk|DistortDisk.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\DistortDisk\
 LandMark|LandMark.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\LandMark\

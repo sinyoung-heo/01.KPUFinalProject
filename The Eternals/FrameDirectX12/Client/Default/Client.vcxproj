@@ -230,6 +230,7 @@
     <ClInclude Include="..\Code\MagicCircleGlow.h" />
     <ClInclude Include="..\Code\MainMenuLogoutCanvas.h" />
     <ClInclude Include="..\Code\MainMenuSettingCanvas.h" />
+    <ClInclude Include="..\Code\MeshParticleEffect.h" />
     <ClInclude Include="..\Code\Monkey.h" />
     <ClInclude Include="..\Code\NormalMonsterHpGauge.h" />
     <ClInclude Include="..\Code\NPCMiniMap.h" />
@@ -325,6 +326,7 @@
     <ClInclude Include="..\Code\SwordTrail.h" />
     <ClInclude Include="..\Code\SwordTrailEffect.h" />
     <ClInclude Include="..\Code\TerrainMeshObject.h" />
+    <ClInclude Include="..\Code\TrailTexEffect.h" />
     <ClInclude Include="..\Code\WarningFrame.h" />
     <ClInclude Include="..\Code\WaterFall.h" />
     <ClInclude Include="..\Code\WaterMeshObject.h" />
@@ -417,6 +419,7 @@
     <ClCompile Include="..\Code\MainMenuLogoutCanvas.cpp" />
     <ClCompile Include="..\Code\MainMenuSetting.cpp" />
     <ClCompile Include="..\Code\MainMenuSettingCanvas.cpp" />
+    <ClCompile Include="..\Code\MeshParticleEffect.cpp" />
     <ClCompile Include="..\Code\Monkey.cpp" />
     <ClCompile Include="..\Code\Monster_Normal.cpp" />
     <ClCompile Include="..\Code\MouseCursorMgr.cpp" />
@@ -506,6 +509,7 @@
     <ClCompile Include="..\Code\SwordTrail.cpp" />
     <ClCompile Include="..\Code\SwordTrailEffect.cpp" />
     <ClCompile Include="..\Code\TerrainMeshObject.cpp" />
+    <ClCompile Include="..\Code\TrailTexEffect.cpp" />
     <ClCompile Include="..\Code\WarningFrame.cpp" />
     <ClCompile Include="..\Code\WaterFall.cpp" />
     <ClCompile Include="..\Code\WaterMeshObject.cpp" />

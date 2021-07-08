@@ -86,6 +86,7 @@ struct VS_OUT
 	float4 LightPos		: TEXCOORD6;
     float4 WorldPos		: TEXCOORD7;
     float2 AniUV		: TEXCOORD8;
+    float3 WorldNormal : TEXCOORD9;
 };
 
 /*__________________________________________________________________________________________________________
@@ -135,6 +136,10 @@ VS_OUT VS_MAIN(VS_IN vs_input)
 	// ProjPos
 	vs_output.ProjPos		= vs_output.Pos;
     vs_output.WorldPos = mul(float4(vs_input.Pos, 1.f), g_matWorld);
+    vs_output.WorldNormal = normalize(mul(vs_input.Normal, (float3x3) g_matWorld));
+	
+	
+    vs_output.AniUV = vs_input.TexUV + float2(g_fOffset1, -g_fOffset1 * 0.3f);
 	return (vs_output);
 }
 
@@ -146,8 +151,16 @@ struct PS_OUT
 
 PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 {
-	PS_OUT ps_output = (PS_OUT) 0;
-	
-    ps_output.Diffuse = float4(1, 0, 0, 1);
-	return (ps_output);
+    PS_OUT ps_output = (PS_OUT) 0;
+    float4 ViewDir = normalize(g_vCameraPos - ps_input.WorldPos);
+    float Lim = saturate(dot(ViewDir, float4(ps_input.WorldNormal, 1)));
+    float4 N = g_TexNormal.Sample(g_samLinearWrap, ps_input.AniUV);
+    float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV * 3);
+    float4 Dis = g_TexDissolve.Sample(g_samLinearWrap, ps_input.AniUV);
+    float4 Sha = g_TexShadowDepth.Sample(g_samLinearWrap, ps_input.TexUV * 3); //²ËÂù±×¸®µå
+    float4 GridColor = mul(float4(0.7, 0.3, 0.3f, 1), S.r) + mul(float4(0.7, 0.0, 0.0f, 1), Sha.r) * 2;
+    float4 color =  mul(GridColor, Dis.r) * 2 + mul(mul(float4(0.7, 0.3, 0, 0.5), g_fDissolve), Lim);
+    ps_output.Diffuse.rgba = color;
+    ps_output.Diffuse.a = 0.5f;
+    return (ps_output);
 }

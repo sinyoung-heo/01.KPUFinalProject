@@ -51,7 +51,7 @@ class CEffectShield;
 class CEffectAxe;
 class CMagicCircle;
 class CGridShieldEffect;
-
+class CMeshParticleEffect;
 class CInstancePoolMgr : public Engine::CBase
 {
 	DECLARE_SINGLETON(CInstancePoolMgr)
@@ -122,8 +122,12 @@ public:
 	INSTANCE_POOL_DESC<CEffectAxe>* Get_Effect_AxeEffect() { return m_pEffect_Axe_Pool; }
 
 	INSTANCE_POOL_DESC<CGridShieldEffect>* Get_Effect_GridShieldEffect() { return m_pEffect_GridShieldEffect_Pool; }
+	INSTANCE_POOL_DESC<CMeshParticleEffect>* Get_Effect_MeshParticleRock0_Effect() { return m_pEffect_MeshParticleRock0_Pool; }
+	INSTANCE_POOL_DESC<CMeshParticleEffect>* Get_Effect_MeshParticleRock1_Effect() { return m_pEffect_MeshParticleRock1_Pool; }
+	INSTANCE_POOL_DESC<CMeshParticleEffect>* Get_Effect_MeshParticleRock2_Effect() { return m_pEffect_MeshParticleRock2_Pool; }
+	INSTANCE_POOL_DESC<CMeshParticleEffect>* Get_Effect_MeshParticleRock3_Effect() { return m_pEffect_MeshParticleRock3_Pool; }
+	INSTANCE_POOL_DESC<CMeshParticleEffect>* Get_Effect_MeshParticleRock4_Effect() { return m_pEffect_MeshParticleRock4_Pool; }
 
-	
 	INSTANCE_POOL_DESC<CMagicCircle>* Get_Effect_MagicCircleEffect() { return m_pEffect_MagicCircle_Pool; }
 
 	void Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
@@ -212,9 +216,14 @@ private:
 	INSTANCE_POOL_DESC<CMagicCircle>* m_pEffect_MagicCircle_Pool = nullptr;
 	INSTANCE_POOL_DESC<CGridShieldEffect>* m_pEffect_GridShieldEffect_Pool = nullptr;
 
-
+	
 	
 	// Effect Particle
+	INSTANCE_POOL_DESC<CMeshParticleEffect>* m_pEffect_MeshParticleRock0_Pool = nullptr;
+	INSTANCE_POOL_DESC<CMeshParticleEffect>* m_pEffect_MeshParticleRock1_Pool = nullptr;
+	INSTANCE_POOL_DESC<CMeshParticleEffect>* m_pEffect_MeshParticleRock2_Pool = nullptr;
+	INSTANCE_POOL_DESC<CMeshParticleEffect>* m_pEffect_MeshParticleRock3_Pool = nullptr;
+	INSTANCE_POOL_DESC<CMeshParticleEffect>* m_pEffect_MeshParticleRock4_Pool = nullptr;
 	INSTANCE_POOL_DESC<CParticleEffect>* m_pEffect_Particle_Pool = nullptr;
 	INSTANCE_POOL_DESC<CTextureEffect>* m_pEffect_Texture_Pool = nullptr;
 private:

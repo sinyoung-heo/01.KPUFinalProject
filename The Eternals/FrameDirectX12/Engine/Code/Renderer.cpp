@@ -167,7 +167,7 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 		Render_ShadowDepth(fTimeDelta);	// Shadow Depth
 		Render_NonAlpha(fTimeDelta);	// Diffuse, Normal, Specular, Depth
 	}
-	Render_CrossFilter(fTimeDelta);
+	Render_CrossFilter(fTimeDelta); 
 	Render_EdgeObject(fTimeDelta);
 	Render_Light();						// Shade, Specular
 	Render_Edge();
@@ -178,7 +178,7 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	Render_Distortion(fTimeDelta);
 	Render_Blend();						// Target Blend
 	Render_Luminance();					// Luminance(°íÈÖµµÃßÃâ)
-	Render_Collider(fTimeDelta);		// Collider Render
+	Render_Collider(fTimeDelta);		// Collider Render 
 	Render_Alpha(fTimeDelta);			// Effect Texture, Mesh
 	Render_AddEffect();
 	Render_UI(fTimeDelta);				// UI Render
@@ -572,7 +572,8 @@ void CRenderer::Render_AddEffect()
 		vecAddEffectTarget.emplace_back(vecEffectTarget[2]);
 		vecAddEffectTarget.emplace_back(vecEffectTarget[3]);
 		vecAddEffectTarget.emplace_back(vecEffectTarget[4]);
-		vecAddEffectTarget.emplace_back(m_pTargetEffectTex->Get_TargetTexture()[0]);	// RenderTarget - Normal
+		vecAddEffectTarget.emplace_back(m_pTargetEffectTex->Get_TargetTexture()[0]);	// RenderTarget 
+		vecAddEffectTarget.emplace_back(m_pTargetDynamicMeshEffect->Get_TargetTexture()[0]);	// RenderTarget
 		m_pAddEffectShader->SetUp_ShaderTexture(vecAddEffectTarget);
 	}
 	m_pTargetAddEffect->SetUp_OnGraphicDevice();

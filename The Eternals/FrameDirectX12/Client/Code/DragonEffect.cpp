@@ -5,7 +5,7 @@
 #include "ObjectMgr.h"
 #include "TimeMgr.h"
 #include "InstancePoolMgr.h"
-
+#include "DescriptorHeapMgr.h"
 CDragonEffect::CDragonEffect(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
@@ -44,6 +44,7 @@ HRESULT CDragonEffect::LateInit_GameObject()
 {
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
+	m_pDescriptorHeaps = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(L"EffectPublic");
 
 	return S_OK;
 }
@@ -51,6 +52,17 @@ HRESULT CDragonEffect::LateInit_GameObject()
 _int CDragonEffect::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
+
+	m_fFireDecalDelta += fTimeDelta;
+	if (m_bisFireDecal == false && m_fFireDecalDelta > 1.7f)
+	{
+		m_bisFireDecal = true;
+		CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicRock" + to_wstring(rand() % 4), _vec3(0.025f), _vec3(0.f),
+			m_pTransCom->m_vPos,true,false, 5, 20, 11, 11, 11, _vec2(24, 2));
+	/*	CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 20, L"Lighting6", _vec3(0.4f));
+		m_bisFireDecal = true;
+		CEffectMgr::Get_Instance()->Effect_FireDecal(m_pTransCom->m_vPos);*/
+	}
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
@@ -86,7 +98,8 @@ _int CDragonEffect::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CDragonEffect::Render_GameObject(const _float& fTimeDelta)
 {
-	m_pMeshCom->Render_DynamicMeshEffect(m_pShaderCom);
+	m_pMeshCom->Render_DynamicMeshEffect(m_pShaderCom, m_pDescriptorHeaps, 0, 27, 3
+		, 11,18);
 }
 
 
@@ -133,12 +146,13 @@ void CDragonEffect::Set_ConstantTable()
 	tCB_ShaderMesh.matWorld       = Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
 	tCB_ShaderMesh.matLightView   = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightView);
 	tCB_ShaderMesh.matLightProj   = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
+
+	m_fDeltaTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 2;
+	m_fGridTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 0.5f;
 	tCB_ShaderMesh.vLightPos      = tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar  = tShadowDesc.fLightPorjFar;
-	tCB_ShaderMesh.fDissolve      = m_fDissolve;
-	tCB_ShaderMesh.vEmissiveColor = m_vEmissiveColor;
-	tCB_ShaderMesh.fOffset6 = m_fRedColor;
-
+	tCB_ShaderMesh.fDissolve      = abs(sin(m_fDeltaTime))+0.1f;
+	tCB_ShaderMesh.fOffset1 = abs(sin(m_fDeltaTime)) + 0.1f;
 	if(m_pShaderCom->Get_UploadBuffer_ShaderMesh()!=nullptr)
 		m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 }

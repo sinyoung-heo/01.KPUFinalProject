@@ -37,10 +37,7 @@ HRESULT CFireRing::LateInit_GameObject()
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	m_pCrossFilterShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
-	Engine::CTexture* pTexture = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(L"EffectPublic", Engine::COMPONENTID::ID_STATIC));
-	SetUp_DescriptorHeap(pTexture->Get_Texture(), m_pRenderer->Get_TargetShadowDepth()->Get_TargetTexture());
-
-
+	m_pDescriptorHeaps = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(L"EffectPublic");
 	m_uiDiffuse =8;
 	m_uiNormal = 11;//NormIdx
 	m_uiSpec = 11;//SpecIdx
@@ -183,52 +180,6 @@ void CFireRing::Set_ConstantTableShadowDepth()
 {
 
 }
-
-
-HRESULT CFireRing::SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth)
-{
-	_uint m_uiTexSize = vecTexture.size() + vecShadowDepth.size();
-
-	D3D12_DESCRIPTOR_HEAP_DESC SRV_HeapDesc = {};
-	SRV_HeapDesc.NumDescriptors             = m_uiTexSize;	// 텍스처의 개수 만큼 설정.
-	SRV_HeapDesc.Type                       = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	SRV_HeapDesc.Flags                      = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-
-	Engine::FAILED_CHECK_RETURN(m_pGraphicDevice->CreateDescriptorHeap(&SRV_HeapDesc,
-																	   IID_PPV_ARGS(&m_pDescriptorHeaps)),
-																	   E_FAIL);
-
-	// 힙의 시작을 가리키는 포인터를 얻는다.
-	CD3DX12_CPU_DESCRIPTOR_HANDLE SRV_DescriptorHandle(m_pDescriptorHeaps->GetCPUDescriptorHandleForHeapStart());
-
-	for (_uint i = 0; i < m_uiTexSize - vecShadowDepth.size(); ++i)
-	{
-		D3D12_SHADER_RESOURCE_VIEW_DESC SRV_Desc = {};
-		SRV_Desc.Format                        = vecTexture[i]->GetDesc().Format;
-		SRV_Desc.ViewDimension                 = D3D12_SRV_DIMENSION_TEXTURE2D;
-		SRV_Desc.Shader4ComponentMapping       = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		SRV_Desc.Texture2D.MostDetailedMip     = 0;
-		SRV_Desc.Texture2D.MipLevels           = vecTexture[i]->GetDesc().MipLevels;
-		SRV_Desc.Texture2D.ResourceMinLODClamp = 0.0f;
-
-		m_pGraphicDevice->CreateShaderResourceView(vecTexture[i].Get(), &SRV_Desc, SRV_DescriptorHandle);
-
-		// 힙의 다음 서술자로 넘어간다.
-		SRV_DescriptorHandle.Offset(1, Engine::CGraphicDevice::Get_Instance()->Get_CBV_SRV_UAV_DescriptorSize());
-	}
-
-	D3D12_SHADER_RESOURCE_VIEW_DESC SRV_Desc = {};
-	SRV_Desc.Format							= vecShadowDepth[0]->GetDesc().Format;
-	SRV_Desc.ViewDimension					= D3D12_SRV_DIMENSION_TEXTURE2D;
-	SRV_Desc.Shader4ComponentMapping		= D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	SRV_Desc.Texture2D.MostDetailedMip		= 0;
-	SRV_Desc.Texture2D.MipLevels			= vecShadowDepth[0]->GetDesc().MipLevels;
-	SRV_Desc.Texture2D.ResourceMinLODClamp	= 0.0f;
-	m_pGraphicDevice->CreateShaderResourceView(vecShadowDepth[0].Get(), &SRV_Desc, SRV_DescriptorHandle);
-
-	return S_OK;
-}
-
 
 void CFireRing::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, const FRAME& tFrame)
 {

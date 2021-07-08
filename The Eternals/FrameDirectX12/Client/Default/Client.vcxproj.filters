@@ -1085,6 +1085,8 @@
       <Filter>02.GameObject\98.GameEffect\08.PriestShield</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\DragonEffect.h" />
+    <ClInclude Include="..\Code\MeshParticleEffect.h" />
+    <ClInclude Include="..\Code\TrailTexEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1590,6 +1592,8 @@
       <Filter>02.GameObject\98.GameEffect\08.PriestShield</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\DragonEffect.cpp" />
+    <ClCompile Include="..\Code\MeshParticleEffect.cpp" />
+    <ClCompile Include="..\Code\TrailTexEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

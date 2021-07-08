@@ -694,7 +694,9 @@ void CVIMesh::Render_DynamicMesh(CShader * pShader)
 		Render_Buffer(m_pCommandList, i);
 	}
 }
-void CVIMesh::Render_DynamicMeshEffect(CShader* pShader)
+void CVIMesh::Render_DynamicMeshEffect(CShader* pShader, ID3D12DescriptorHeap* pTexnormalDescriptorHeap,
+	_uint uiDiffuseIdx, _uint uiNormalTextureIdx, _uint uiPatternMapIdx
+	, _uint uiShadowDepthIdx, _uint uiDissolveIdx)
 {
 	vector<VECTOR_SKINNING_MATRIX>* pvecSkinningMatrix = m_pAniCtrl->Get_VecSkinningMatrix();
 
@@ -714,8 +716,9 @@ void CVIMesh::Render_DynamicMeshEffect(CShader* pShader)
 		}
 		static_cast<CShaderDynamicMeshEffect*>(pShader)->Get_UploadBuffer_SkinningMatrix()->CopyData(i, tCB_SkinningMatrix);
 
-
-		pShader->Begin_Shader(m_pTexDescriptorHeap, i);
+		static_cast<CShaderDynamicMeshEffect*>(pShader)->Begin_Shader(m_pTexDescriptorHeap
+			, pTexnormalDescriptorHeap, uiDiffuseIdx, uiNormalTextureIdx, uiPatternMapIdx,
+			uiShadowDepthIdx, uiDissolveIdx, i);
 		Begin_Buffer(m_pCommandList, i);
 		Render_Buffer(m_pCommandList, i);
 	}
@@ -734,13 +737,13 @@ void CVIMesh::Render_StaticMesh(CShader * pShader)
 }
 
 void CVIMesh::Render_MagicCircleMesh(CShader* pShader, ID3D12DescriptorHeap* pTexnormalDescriptorHeap, 
-	_uint uiDiffuseIdx, _uint uiNormalTextureIdx, _uint uiPatternMapIdx, _uint uiShadowDepthIdx, _uint uiDissolveIdx)
+	_uint uiDiffuseIdx, _uint uiNormalTextureIdx, _uint uiPatternMapIdx, _uint uiShadowDepthIdx, _uint uiDissolveIdx,_uint IDX)
 {
 	for (_int i = 0; i < m_vecMeshEntry.size(); ++i)
 	{
 		static_cast<CShaderMeshEffect*>(pShader)->Begin_Shader(m_pTexDescriptorHeap
 			, pTexnormalDescriptorHeap, uiDiffuseIdx, uiNormalTextureIdx, uiPatternMapIdx,
-			uiShadowDepthIdx, uiDissolveIdx,i);
+			uiShadowDepthIdx, uiDissolveIdx, IDX);
 		Begin_Buffer(m_pCommandList, i);
 		Render_Buffer(m_pCommandList, i);
 	}

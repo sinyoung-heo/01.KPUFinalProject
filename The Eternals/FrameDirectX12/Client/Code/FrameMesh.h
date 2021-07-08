@@ -34,8 +34,6 @@ private:
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
 
-	HRESULT SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth);
-
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]

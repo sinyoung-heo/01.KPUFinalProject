@@ -43,6 +43,7 @@ private:
 	Engine::CMesh*				m_pMeshCom				= nullptr;
 	Engine::CShaderDynamicMeshEffect*		m_pShaderCom			= nullptr;
 	
+	ID3D12DescriptorHeap* m_pDescriptorHeaps = nullptr;
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
@@ -52,6 +53,10 @@ private:
 	_rgba	m_vEmissiveColor         = _rgba(1.0f, 0.0f, 0.0f, 1.0f);
 
 	_uint	m_uiAnimIdx			= 0;	// 현재 애니메이션 Index
+	_float m_fGridTime = 0.f;
+
+	_float m_fFireDecalDelta = 0.f;
+	_bool m_bisFireDecal = false;
 	
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,

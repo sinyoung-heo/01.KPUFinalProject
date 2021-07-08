@@ -72,6 +72,11 @@ StaticMesh|publicEffect|publicShield
 StaticMesh|publicEffect|publicSkill3
 StaticMesh|publicEffect|publicSphere
 StaticMesh|publicEffect|publicSpline
+StaticMesh|publicEffect|publicStone0
+StaticMesh|publicEffect|publicStone1
+StaticMesh|publicEffect|publicStone2
+StaticMesh|publicEffect|publicStone3
+StaticMesh|publicEffect|publicStone4
 StaticMesh|publicEffect|publicSword
 StaticMesh|Sample|DistortDisk
 StaticMesh|Sample|LandMark
