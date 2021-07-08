@@ -21,7 +21,7 @@ CShaderMeshEffect::CShaderMeshEffect(const CShaderMeshEffect& rhs)
 HRESULT CShaderMeshEffect::SetUp_ShaderConstantBuffer(const _uint& uiNumSubsetMesh)
 {
 	m_uiSubsetMeshSize = uiNumSubsetMesh;
-	m_pCB_ShaderMesh = CUploadBuffer<CB_SHADER_MESH>::Create(m_pGraphicDevice);
+	m_pCB_ShaderMesh = CUploadBuffer<CB_SHADER_MESH>::Create(m_pGraphicDevice,uiNumSubsetMesh);
 	NULL_CHECK_RETURN(m_pCB_ShaderMesh, E_FAIL);
 
 	return S_OK;
@@ -128,7 +128,8 @@ void CShaderMeshEffect::Begin_Shader(ID3D12DescriptorHeap* pTexDescriptorHeap, I
 		m_pCB_CameraProjMatrix->Resource()->GetGPUVirtualAddress());
 
 	m_pCommandList->SetGraphicsRootConstantBufferView(6,	// RootParameter Index
-		m_pCB_ShaderMesh->Resource()->GetGPUVirtualAddress());
+		m_pCB_ShaderMesh->Resource()->GetGPUVirtualAddress() +
+		m_pCB_ShaderMesh->GetElementByteSize() * iSubMeshIdx);
 
 
 }

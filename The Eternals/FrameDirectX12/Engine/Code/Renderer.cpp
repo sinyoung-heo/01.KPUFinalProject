@@ -167,7 +167,7 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 		Render_ShadowDepth(fTimeDelta);	// Shadow Depth
 		Render_NonAlpha(fTimeDelta);	// Diffuse, Normal, Specular, Depth
 	}
-	Render_CrossFilter(fTimeDelta);
+	Render_CrossFilter(fTimeDelta); 
 	Render_EdgeObject(fTimeDelta);
 	Render_Light();						// Shade, Specular
 	Render_Edge();
@@ -178,7 +178,7 @@ HRESULT CRenderer::Render_Renderer(const _float& fTimeDelta, const RENDERID& eID
 	Render_Distortion(fTimeDelta);
 	Render_Blend();						// Target Blend
 	Render_Luminance();					// Luminance(°íÈÖµµÃßÃâ)
-	Render_Collider(fTimeDelta);		// Collider Render
+	Render_Collider(fTimeDelta);		// Collider Render 
 	Render_Alpha(fTimeDelta);			// Effect Texture, Mesh
 	Render_AddEffect();
 	Render_UI(fTimeDelta);				// UI Render
@@ -531,6 +531,14 @@ void CRenderer::Render_Alpha(const _float& fTimeDelta)
 		pGameObject->Render_GameObject(fTimeDelta);
 
 
+	
+	m_pTargetDynamicMeshEffect->SetUp_OnGraphicDevice();
+	for (auto& pGameObject : m_RenderList[RENDER_DYNAMICEFFECT])
+	{
+			pGameObject->Render_GameObject(fTimeDelta);
+	}
+	m_pTargetDynamicMeshEffect->Release_OnGraphicDevice();
+
 	m_pTargetpEffect->SetUp_OnGraphicDevice();
 
 	for (auto& pGameObject : m_RenderList[RENDER_MAGICCIRCLE])
@@ -564,7 +572,8 @@ void CRenderer::Render_AddEffect()
 		vecAddEffectTarget.emplace_back(vecEffectTarget[2]);
 		vecAddEffectTarget.emplace_back(vecEffectTarget[3]);
 		vecAddEffectTarget.emplace_back(vecEffectTarget[4]);
-		vecAddEffectTarget.emplace_back(m_pTargetEffectTex->Get_TargetTexture()[0]);	// RenderTarget - Normal
+		vecAddEffectTarget.emplace_back(m_pTargetEffectTex->Get_TargetTexture()[0]);	// RenderTarget 
+		vecAddEffectTarget.emplace_back(m_pTargetDynamicMeshEffect->Get_TargetTexture()[0]);	// RenderTarget
 		m_pAddEffectShader->SetUp_ShaderTexture(vecAddEffectTarget);
 	}
 	m_pTargetAddEffect->SetUp_OnGraphicDevice();
@@ -643,6 +652,9 @@ void CRenderer::Render_RenderTarget()
 			m_pTargetpEffect->Render_RenderTarget();
 		if (nullptr != m_pTargetEffectTex)
 			m_pTargetEffectTex->Render_RenderTarget();
+		if (nullptr != m_pTargetDynamicMeshEffect)
+			m_pTargetDynamicMeshEffect->Render_RenderTarget();
+
 		if (nullptr != m_pTargetAddEffect)
 			m_pTargetAddEffect->Render_RenderTarget();
 	}
@@ -690,10 +702,15 @@ HRESULT CRenderer::Ready_ShaderPrototype()
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderMesh", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
-	// ShaderMesh
+	// ShaderMeshEffect
 	pShader = CShaderMeshEffect::Create(m_pGraphicDevice, m_pCommandList);
 	NULL_CHECK_RETURN(pShader, E_FAIL);
 	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderMeshEffect", ID_STATIC, pShader), E_FAIL);
+	++m_uiCnt_ShaderFile;
+
+	pShader = CShaderDynamicMeshEffect::Create(m_pGraphicDevice, m_pCommandList);
+	NULL_CHECK_RETURN(pShader, E_FAIL);
+	FAILED_CHECK_RETURN(m_pComponentMgr->Add_ComponentPrototype(L"ShaderDynamicMeshEffect", ID_STATIC, pShader), E_FAIL);
 	++m_uiCnt_ShaderFile;
 
 
@@ -1008,6 +1025,15 @@ HRESULT CRenderer::Ready_RenderTarget()
 	NULL_CHECK_RETURN(m_pAddEffectShader, E_FAIL);
 	FAILED_CHECK_RETURN(m_pAddEffectShader->Set_PipelineStatePass(0), E_FAIL);
 	
+	//DynamicEffect
+	m_pTargetDynamicMeshEffect = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
+	NULL_CHECK_RETURN(m_pTargetDynamicMeshEffect, E_FAIL);
+	m_pTargetDynamicMeshEffect->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 1.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	FAILED_CHECK_RETURN(m_pTargetDynamicMeshEffect->SetUp_DefaultSetting(TARGETID::TYPE_DEFAULT), E_FAIL);
+	m_pTargetDynamicMeshEffect->Set_TargetRenderPos(_vec3(WIDTH_SEVENTH, HEIGHT_FOURTH, 1.0f));
+
+	m_pDynamicMeshEffectBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pDynamicMeshEffectBuffer, E_FAIL);
 	/*__________________________________________________________________________________________________________
 	[ Blend Resource ]
 	____________________________________________________________________________________________________________*/

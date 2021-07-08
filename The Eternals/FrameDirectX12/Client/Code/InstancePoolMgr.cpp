@@ -47,6 +47,7 @@
 #include "EffectAxe.h"
 #include "MagicCircle.h"
 #include "GridShieldEffect.h"
+#include "MeshParticleEffect.h"
 IMPLEMENT_SINGLETON(CInstancePoolMgr)
 
 CInstancePoolMgr::CInstancePoolMgr()
@@ -211,6 +212,11 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_Axe_Pool, 100);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MagicCircle_Pool, 20);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_GridShieldEffect_Pool, 20);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock0_Pool,L"publicStone0", 100);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock1_Pool, L"publicStone1", 100);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock2_Pool, L"publicStone2", 100);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock3_Pool, L"publicStone3", 100);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock4_Pool, L"publicStone4", 100);
 
 }
 
@@ -296,6 +302,11 @@ void CInstancePoolMgr::Free()
 	Safe_Release_InstacePool(m_pEffect_Axe_Pool);
 	Safe_Release_InstacePool(m_pEffect_MagicCircle_Pool);
 	Safe_Release_InstacePool(m_pEffect_GridShieldEffect_Pool);
+	Safe_Release_InstacePool(m_pEffect_MeshParticleRock0_Pool);
+	Safe_Release_InstacePool(m_pEffect_MeshParticleRock1_Pool);
+	Safe_Release_InstacePool(m_pEffect_MeshParticleRock2_Pool);
+	Safe_Release_InstacePool(m_pEffect_MeshParticleRock3_Pool);
+	Safe_Release_InstacePool(m_pEffect_MeshParticleRock4_Pool);
 
 	
 }

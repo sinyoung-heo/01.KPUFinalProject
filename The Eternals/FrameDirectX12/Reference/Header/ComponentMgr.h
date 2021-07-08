@@ -37,6 +37,7 @@
 #include "ShaderNPathDir.h"
 #include "ShaderEdge.h"
 #include "ShaderMeshEffect.h"
+#include "ShaderDynamicMeshEffect.h"
 #include "ShaderAddEffect.h"
 
 BEGIN(Engine)

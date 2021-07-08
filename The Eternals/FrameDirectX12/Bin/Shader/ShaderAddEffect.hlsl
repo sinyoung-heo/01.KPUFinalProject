@@ -18,6 +18,7 @@ Texture2D Effect2 : register(t2);
 Texture2D Effect3 : register(t3);
 Texture2D Effect4 : register(t4);
 Texture2D EffectTex : register(t5);
+Texture2D DynamicMeshEffect: register(t6);
 /*____________________________________________________________________
 [ Vertex Shader ]
 ______________________________________________________________________*/
@@ -52,12 +53,13 @@ float4 PS_MAIN(VS_OUT ps_input) : SV_TARGET
     float4 output3 = Effect3.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 output4 = Effect4.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 output5 = EffectTex.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 output6 = DynamicMeshEffect.Sample(g_samLinearWrap, ps_input.TexUV);
     
     float4 MeshEffectOut = output0 + output1 + output2 + output3 + output4;
     //MeshEffectOut = mul(MeshEffectOut, 2);
     float4 TexEffectOut = output5;
     //float4 FinalOut = lerp(MeshEffectOut, TexEffectOut, 0.5);
-    float4 FinalOut = MeshEffectOut+ TexEffectOut;
+    float4 FinalOut = MeshEffectOut + TexEffectOut + output6;
     FinalOut.a = 1;
     return FinalOut;
 }

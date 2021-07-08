@@ -35,24 +35,15 @@ public:
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
 	void			Set_ConstantTable();
-	void			Set_ConstantTableShadowDepth();
-
-	HRESULT SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth);
-
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
 	____________________________________________________________________________________________________________*/
 	Engine::CMesh*						m_pMeshCom                = nullptr;
-
 	Engine::CShaderMeshEffect* m_pShaderCom = nullptr;
 	Engine::CShaderMesh* m_pCrossFilterShaderCom = nullptr;
 	Engine::CShaderMesh* m_pEdgeObjectShaderCom = nullptr;
 
-	ID3D12DescriptorHeap* m_pDescriptorHeaps = nullptr;
-	/*__________________________________________________________________________________________________________
-	[ Value ]
-	____________________________________________________________________________________________________________*/
 	wstring			m_wstrMeshTag		       = L"";
 	_uint			m_iMeshPipelineStatePass   = 0;
 	_uint			m_iShadowPipelineStatePass = 0;
@@ -75,6 +66,8 @@ private:
 
 	_float   m_fLimitLifeTime = 0.f;
 	_float   m_fLimitScale = 0.f;
+
+	ID3D12DescriptorHeap* m_pTextureHeap = nullptr;
 public:
 	void Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, bool bisRotate = false,bool bisScaleAnim=false
 		, const Engine::CTransform* ParentTransform=nullptr,bool bisFollowPlayer=false);

@@ -24,6 +24,9 @@
 #include "CollisionTick.h"
 #include "PCGladiator.h"
 
+#include "MeshParticleEffect.h"
+#include "DragonEffect.h"
+#include "TrailTexEffect.h"
 IMPLEMENT_SINGLETON(CEffectMgr)
 
 CEffectMgr::CEffectMgr()
@@ -48,6 +51,8 @@ void CEffectMgr::Effect_Dust(_vec3 vecPos, float Radius)
 
 void CEffectMgr::Effect_IceStorm(_vec3 vecPos , int Cnt , float Radius )
 {
+	Effect_MeshParticle(L"publicRock"+to_wstring(rand()%4), _vec3(0.005f), _vec3(0.f), vecPos,false,false, 5, 20, 0, 0, 0, _vec2(28, 7));
+	Effect_MeshParticle(L"publicRock" + to_wstring(rand() % 4), _vec3(0.005f), _vec3(0.f), vecPos,false,false, 5, 20, 0, 0, 0, _vec2(28, 7));
 	for (int i = 0; i < 36; i+=(36/Cnt))
 	{
 		pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_IceStormEffect());
@@ -103,6 +108,8 @@ void CEffectMgr::Effect_SwordEffect_s(_vec3 vecPos, _vec3 vecDir)
 
 void CEffectMgr::Effect_Straight_IceStorm(_vec3 vecPos, _vec3 vecDir, const _bool& bIsCollider)
 {
+	
+
 	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
 
 	_matrix rotationY=XMMatrixRotationY(XMConvertToRadians(20.f));
@@ -143,9 +150,10 @@ void CEffectMgr::Effect_Straight_IceStorm(_vec3 vecPos, _vec3 vecDir, const _boo
 
 void CEffectMgr::Effect_FireDecal(_vec3 vecPos)
 {
+	vecPos.y = 0.2f;
 	pGameObj = CFireDecal::Create(m_pGraphicDevice, m_pCommandList,
 		L"PublicPlane00",
-		_vec3(0.01f),
+		_vec3(0.04f),
 		_vec3(0.f, 0.0f, 0.0f),
 		vecPos);
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"FireDecal", pGameObj), E_FAIL);
@@ -169,6 +177,9 @@ void CEffectMgr::Effect_ArrowHitted(_vec3 vecPos)
 
 void CEffectMgr::Effect_FireCone(_vec3 vecPos, float RotY , _vec3 vecDir)
 {
+	pGameObj = CDragonEffect::Create(m_pGraphicDevice, m_pCommandList, L"DragonEffect", _vec3(0.012f), _vec3(0.f), vecPos);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"EffectDragon", pGameObj), E_FAIL);
+
 	vecPos.y = 0.5f;
 
 	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_FireRing_Effect());
@@ -192,9 +203,12 @@ void CEffectMgr::Effect_FireCone(_vec3 vecPos, float RotY , _vec3 vecDir)
 
 }
 
-void CEffectMgr::Effect_Test(_vec3 vecPos)
+void CEffectMgr::Effect_Test(_vec3 vecPos,_vec3* parent)
 {
-	
+	/*pGameObj= CTrailTexEffect::Create(m_pGraphicDevice, m_pCommandList, L"Fire3", _vec3(4.2f), _vec3(0.f), vecPos, FRAME(8, 8, 64), 2, 40);
+	static_cast<CTrailTexEffect*>(pGameObj)->SetTransform(parent);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Trail", pGameObj), E_FAIL);*/
+
 }
 
 void CEffectMgr::Effect_GridShieldEffect(_vec3 vecPos,int type,Engine::CTransform* parentTransform)
@@ -252,9 +266,9 @@ void CEffectMgr::Effect_Axe(_vec3 vecPos, Engine::CTransform* parentTransform)
 	vecPos.z += 0.2f;
 	Effect_MagicCircle_Effect(_vec3(0.0f), _vec3(0.0f), vecPos, 21, 21, 2, true, true, parentTransform, true);
 }
-
 void CEffectMgr::Effect_TargetShield(_vec3 vecPos, Engine::CTransform* parentTransform)
 {
+	
 	for (int i = 0; i < 3; i++)
 	{
 		vecPos.y = 1.f;
@@ -306,6 +320,38 @@ void CEffectMgr::Effect_Particle(_vec3 vecPos, _int Cnt, wstring Tag,_vec3 vecSc
 		,9,Cnt);
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject",Tag, particleobj), E_FAIL);
 	}
+}
+
+void CEffectMgr::Effect_MeshParticle(wstring wstrMeshTag,
+	const _vec3& vScale,
+	const _vec3& vAngle,
+	const _vec3& vPos , _bool isTextrail , _bool isParticleTrail ,
+	const _int& PipeLine , const _int& ParticleCnt
+	, _uint Diff, _uint Norm, _uint Spec, _vec2 SpeedWeight)
+{
+	Engine::CGameObject* particleobj=nullptr;
+	
+	if (wstrMeshTag == L"publicRock0")
+		particleobj= Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_MeshParticleRock0_Effect());
+	else if (wstrMeshTag == L"publicRock1")
+		particleobj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_MeshParticleRock1_Effect());
+	else if (wstrMeshTag == L"publicRock2")
+		particleobj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_MeshParticleRock2_Effect());
+	else if (wstrMeshTag == L"publicRock3")
+		particleobj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_MeshParticleRock3_Effect());
+	else if (wstrMeshTag == L"publicRock4")
+		particleobj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_MeshParticleRock4_Effect());
+	
+
+	if (nullptr != particleobj)
+	{
+		static_cast<CMeshParticleEffect*>(particleobj)->Set_CreateInfo(vScale, vAngle, vPos, SpeedWeight,isTextrail
+			,isParticleTrail,PipeLine,
+			20);
+		static_cast<CMeshParticleEffect*>(particleobj)->Set_TexInfo(Diff, Norm, Spec);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", wstrMeshTag, particleobj), E_FAIL);
+	}
+
 }
 
 void CEffectMgr::Effect_TextureEffect(wstring TexTag, _vec3 Scale, _vec3 Angle, _vec3 Pos, FRAME frame, bool isLoop, bool isScaleAnim, _vec4 colorOffset

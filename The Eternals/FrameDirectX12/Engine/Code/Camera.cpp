@@ -86,6 +86,9 @@ HRESULT CCamera::Ready_GameObject(const CAMERA_DESC& tCameraInfo,
 	m_pShaderMeshEffect = static_cast<CShaderMeshEffect*>(m_pComponentMgr->Clone_Component(L"ShaderMeshEffect", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pShaderMeshEffect, E_FAIL);
 
+	m_pShaderDynamicMeshEffect = static_cast<CShaderDynamicMeshEffect*>(m_pComponentMgr->Clone_Component(L"ShaderDynamicMeshEffect", COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pShaderDynamicMeshEffect, E_FAIL);
+
 	m_pShaderSSAO = static_cast<CShaderSSAO*>(m_pComponentMgr->Clone_Component(L"ShaderSSAO", COMPONENTID::ID_STATIC));
 	NULL_CHECK_RETURN(m_pShaderSSAO, E_FAIL);
 
@@ -176,7 +179,7 @@ void CCamera::Set_ConstantTable()
 	// ShaderMesh
 	m_pShaderMesh->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 	m_pShaderMeshEffect->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
-
+	m_pShaderDynamicMeshEffect->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 	// ShaderMeshInstancing
 	// m_pShaderMeshInstancing->Get_UploadBuffer_CameraProjMatrix()->CopyData(0, tCB_CameraProjMatrix);
 
@@ -202,6 +205,7 @@ void CCamera::Free()
 	Safe_Release(m_pShaderSkyBox);
 	Safe_Release(m_pShaderMesh);
 	Safe_Release(m_pShaderMeshEffect);
+	Safe_Release(m_pShaderDynamicMeshEffect);
 	Safe_Release(m_pShaderSSAO);
 	Safe_Release(m_pShaderNPathDir);
 }

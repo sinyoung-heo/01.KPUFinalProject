@@ -353,7 +353,6 @@ PS_OUT PS_SHADOW_MAIN(VS_OUT ps_input) : SV_TARGET
 	ps_output.Depth		= float4(ps_input.ProjPos.z / ps_input.ProjPos.w,	// (posWVP.z / posWVP.w) : Proj 영역의 Z.
 								 ps_input.ProjPos.w / g_fProjFar,			// posWVP.w / Far : 0~1로 만든 View영역의 Z.
 								 1.0f, 1.0f);
-	
 	/*__________________________________________________________________________________________________________
 	[ 현재의 깊이와 그림자 깊이 비교 ]
 	____________________________________________________________________________________________________________*/
@@ -434,7 +433,6 @@ PS_OUT2 PS_CROSSFILTER(VS_OUT ps_input) : SV_TARGET
 								 ps_input.ProjPos.w / g_fProjFar,	// posWVP.w / Far : 0~1로 만든 View영역의 Z.
 								 1.0f, 1.0f);
 
-
     return ps_out2;
 }
 
@@ -443,6 +441,18 @@ float4 PS_EDGE(VS_OUT ps_input) : SV_TARGET0
     return float4(1, 1, 1, 1);
 }
 
+float4 PS_DRAGON_MAIN(VS_OUT ps_input) : SV_TARGET
+{
+    float3 WN = ps_input.N;
+    float4 ViewDir = normalize(g_vCameraPos - ps_input.WorldPos);
+    float Lim = dot(ViewDir, float4(WN, 1));
+    Lim = saturate(Lim);
+    Lim = pow(Lim, 4);
+	
+    float4 color = mul(float4(0.5f, 0, 0, 1), Lim);
+   
+    return color;
+}
 
 /*__________________________________________________________________________________________________________
 [ AfterImage ]

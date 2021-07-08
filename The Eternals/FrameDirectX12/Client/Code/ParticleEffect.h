@@ -31,6 +31,8 @@ public:
 	void Set_Speed(_float fSpeed) { m_fSpeed = fSpeed; }
 	void Set_RenderingParticleCnt(_int iParticleCnt) { m_iParticleCnt = iParticleCnt; }
 	void Set_ColorOffset(_rgba Color) { m_vecColorOffset = Color; }
+
+	void Set_MoveInfo(bool isMove, float MovePivot, float MoveSpeed);
 private:
 	virtual HRESULT Add_Component(wstring wstrTextureTag);
 	void			Set_ConstantTable(_int i);

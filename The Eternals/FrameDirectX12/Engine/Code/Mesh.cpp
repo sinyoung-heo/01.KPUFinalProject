@@ -75,6 +75,16 @@ void CMesh::Render_DynamicMesh(CShader * pShader)
 		m_pVIMesh->Render_DynamicMesh(pShader);
 }
 
+void CMesh::Render_DynamicMeshEffect(CShader* pShader, ID3D12DescriptorHeap* pTexnormalDescriptorHeap,
+	_uint uiDiffuseIdx, _uint uiNormalTextureIdx, _uint uiPatternMapIdx
+	, _uint uiShadowDepthIdx, _uint uiDissolveIdx)
+{
+	if (nullptr != m_pVIMesh)
+		m_pVIMesh->Render_DynamicMeshEffect(pShader, pTexnormalDescriptorHeap,uiDiffuseIdx,uiNormalTextureIdx,uiPatternMapIdx,
+			uiShadowDepthIdx, uiDissolveIdx);
+
+}
+
 void CMesh::Render_DynamicMeshAfterImage(CShader* pShader, const _uint& iAfterImgIdx)
 {
 	if (nullptr != m_pVIMesh)
@@ -100,11 +110,11 @@ void CMesh::Render_StaticMeshShadowDepth(CShader * pShader)
 }
 
 void CMesh::Render_MagicCircleMesh(CShader* pShader, ID3D12DescriptorHeap* pTexnormalDescriptorHeap,
-	_uint uiDiffuseIdx,_uint uiNormalTextureIdx, _uint uiPatternMapIdx, _uint uiShadowDepthIdx, _uint uiDissolveIdx)
+	_uint uiDiffuseIdx,_uint uiNormalTextureIdx, _uint uiPatternMapIdx, _uint uiShadowDepthIdx, _uint uiDissolveIdx, _uint IDX)
 {
 	if (nullptr != m_pVIMesh)
 		m_pVIMesh->Render_MagicCircleMesh(pShader,pTexnormalDescriptorHeap, uiDiffuseIdx,uiNormalTextureIdx,uiPatternMapIdx,
-			uiShadowDepthIdx, uiDissolveIdx);
+			uiShadowDepthIdx, uiDissolveIdx,IDX);
 }
 
 void CMesh::Render_DynamicMesh(ID3D12GraphicsCommandList * pCommandList, 
@@ -113,6 +123,12 @@ void CMesh::Render_DynamicMesh(ID3D12GraphicsCommandList * pCommandList,
 {
 	if (nullptr != m_pVIMesh && nullptr != pCommandList)
 		m_pVIMesh->Render_DynamicMesh(pCommandList, iContextIdx, pShader);
+}
+
+void CMesh::Render_DynamicMeshEffect(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader)
+{
+	if (nullptr != m_pVIMesh && nullptr != pCommandList)
+		m_pVIMesh->Render_DynamicMeshEffect(pCommandList, iContextIdx, pShader);
 }
 
 void CMesh::Render_DynamicMeshAfterImage(ID3D12GraphicsCommandList* pCommandList, 

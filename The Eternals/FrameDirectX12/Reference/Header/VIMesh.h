@@ -49,14 +49,20 @@ private:
 public:
 	// SingleThread Rendering
 	void Render_DynamicMesh(CShader* pShader);
+	void Render_DynamicMeshEffect(CShader* pShader, ID3D12DescriptorHeap* pTexnormalDescriptorHeap,
+		_uint uiDiffuseIdx, _uint uiNormalTextureIdx, _uint uiPatternMapIdx
+		, _uint uiShadowDepthIdx, _uint uiDissolveIdx);
 	void Render_StaticMesh(CShader* pShader);
 	void Render_MagicCircleMesh(CShader* pShader, ID3D12DescriptorHeap* pTexnormalDescriptorHeap,
-		_uint uiDiffuseIdx, _uint uiNormalTextureIdx, _uint uiPatternMapIdx,_uint uiShadowDepthIdx,_uint uiDissolveIdx);
+		_uint uiDiffuseIdx, _uint uiNormalTextureIdx, _uint uiPatternMapIdx,_uint uiShadowDepthIdx,_uint uiDissolveIdx,_uint IDX=0);
 	void Render_DynamicMeshShadowDepth(CShader* pShader);
 	void Render_StaticMeshShadowDepth(CShader* pShader);
 	void Render_DynamicMeshAfterImage(CShader* pShader, const _uint& iAfterImgIdx);
 	// MultiThread Rendering
 	void Render_DynamicMesh(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
+	void Render_DynamicMeshEffect(ID3D12GraphicsCommandList* pCommandList,
+		const _int& iContextIdx,
+		CShader* pShader);
 	void Render_DynamicMeshAfterImage(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader, const _uint& iAfterImgIdx);
 	void Render_StaticMesh(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
 	void Render_DynamicMeshShadowDepth(ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx, CShader* pShader);
