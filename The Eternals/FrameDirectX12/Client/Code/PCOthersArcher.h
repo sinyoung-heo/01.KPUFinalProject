@@ -23,6 +23,7 @@ public:
 	virtual void Set_StanceChange(const _uint& uiAniIdx, const _bool& bIsStanceAttack);
 	virtual void Set_OthersStance(const _bool& bIsStanceAttack);
 	virtual void Reset_AttackMoveInterpolationRatio() { m_tAttackMoveSpeedInterpolationDesc.linear_ratio = 0.0f; }
+	void Reset_CollisionArrowDesc();
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
@@ -59,6 +60,7 @@ private:
 	void	AttackMove_OnNaviMesh(const _float& fTimeDelta);
 	void	SetUp_WeaponLHand();
 	void	SetUp_WeaponBack();
+	void	SetUp_CollisionArrow(const _float& fTimeDelta);
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -75,6 +77,7 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
+	CInstancePoolMgr*	m_pInstancePoolMgr = nullptr;
 	CServerMath*		m_pServerMath             = nullptr;
 	CPCWeaponBow*		m_pWeapon                 = nullptr;
 	wstring				m_wstrMeshTag             = L"";
@@ -83,6 +86,20 @@ private:
 	_bool				m_bIsCompleteStanceChange = true;
 	_bool				m_bIsResetNaviMesh        = false;
 	_bool				m_bIsCreateWeapon		  = false;
+
+	// CollisionTick
+	_bool				m_bIsSetCollisionTick = false;
+	COLLISION_TICK_DESC m_tCollisionTickDesc;
+	_vec3				m_vArrowFallPos = _vec3(0.0f);
+
+	_bool	m_bIsStartArrowFall    = false;
+	_float	m_fArrowFallTime       = 0.0f;
+	_float	m_fArrowFallUpdateTime = 1.0f / 60.0f;
+	_int	m_iCurArrowFallCnt     = 0;
+	_int	m_iMaxArrowFallCnt     = 96;
+
+	//Effect
+	_bool m_bisHandEffect = false;
 
 	// Speed Linear Interpolation
 	Engine::LINEAR_INTERPOLATION_DESC<_float> m_tMoveSpeedInterpolationDesc;
