@@ -87,7 +87,8 @@ void CInventoryEquipmentMgr::Pop_ItemInventory(const char& chItemType, const cha
 		// 현재 인벤토리에 포션이 있는지 탐색.
 		for (auto& pSlot : m_vecInventorySlot)
 		{
-			if (chItemName == pSlot->Get_CurItemInfo().chItemName)
+			if (chItemType == pSlot->Get_CurItemInfo().chItemType &&
+				chItemName == pSlot->Get_CurItemInfo().chItemName)
 			{
 				pSlot->Add_PotionCnt(iCnt);
 

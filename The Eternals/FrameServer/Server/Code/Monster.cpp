@@ -3940,7 +3940,7 @@ void CMonster::Hurt_Monster(const int& p_id, const int& damage, const char& affe
 					if (!pPlayer->Get_IsConnected()) continue;
 
 					// 시야 내에 있다면 시야 목록에 등록한다.
-					if (CObjMgr::GetInstance()->Is_Near(this, pPlayer))
+					if (CObjMgr::GetInstance()->Is_Near_PlayerToMonster(this, pPlayer, pPlayer->m_chStageId))
 						old_viewlist.insert(obj_num);
 				}
 			}
