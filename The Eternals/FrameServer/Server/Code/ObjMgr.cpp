@@ -334,7 +334,7 @@ void CObjMgr::Create_StageWinterMonster()
 
 	if (pNew)
 	{
-		pNew->Ready_Monster(_vec3(143.0f, 0.f, 79.0f), _vec3(0.f, 0.0f, 0.f), MON_NORMAL, MON_VERGOS, STAGE_VELIKA, GIANTMONKEY_HP, GIANTMONKEY_ATT, GIANTMONKEY_EXP, GIANTMONKEY_SPD);
+		pNew->Ready_Monster(_vec3(390.0f, 0.f, 390.0f), _vec3(0.f, -180.0f, 0.f), MON_NORMAL, MON_VERGOS, STAGE_WINTER, GIANTMONKEY_HP, GIANTMONKEY_ATT, GIANTMONKEY_EXP, GIANTMONKEY_SPD);
 		pNew->Set_NumAnimation(Vergos::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Vergos::duration);
 	}
@@ -916,6 +916,27 @@ bool CObjMgr::Is_Near(const CObj* me, const CObj* other)
 	dist += (other->m_vPos.z - me->m_vPos.z) * (other->m_vPos.z - me->m_vPos.z);
 
 	return dist <= VIEW_LIMIT * VIEW_LIMIT;
+}
+
+bool CObjMgr::Is_Near_PlayerToMonster(const CObj* me, const CObj* other, const char& stageID)
+{
+	if (stageID == STAGE_WINTER)
+	{
+		float dist = (other->m_vPos.x - me->m_vPos.x) * (other->m_vPos.x - me->m_vPos.x);
+		dist += (other->m_vPos.y - me->m_vPos.y) * (other->m_vPos.y - me->m_vPos.y);
+		dist += (other->m_vPos.z - me->m_vPos.z) * (other->m_vPos.z - me->m_vPos.z);
+
+		return dist <= VIEW_LIMIT_STAGE_WINTER * VIEW_LIMIT_STAGE_WINTER;
+	}
+	else
+	{
+		float dist = (other->m_vPos.x - me->m_vPos.x) * (other->m_vPos.x - me->m_vPos.x);
+		dist += (other->m_vPos.y - me->m_vPos.y) * (other->m_vPos.y - me->m_vPos.y);
+		dist += (other->m_vPos.z - me->m_vPos.z) * (other->m_vPos.z - me->m_vPos.z);
+
+		return dist <= VIEW_LIMIT * VIEW_LIMIT;
+	}
+	return false;
 }
 
 bool CObjMgr::Is_Monster_Target(const CObj* me, const CObj* other)

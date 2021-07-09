@@ -1226,7 +1226,10 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 	
 	if (nullptr != pInstance)
 	{
-		pInstance->Get_Transform()->m_vScale = _vec3(0.05f, 0.05f, 0.05f);
+		if (packet->mon_num == MON_VERGOS)
+			pInstance->Get_Transform()->m_vScale = _vec3(0.04f, 0.04f, 0.04f);
+		else
+			pInstance->Get_Transform()->m_vScale = _vec3(0.05f, 0.05f, 0.05f);
 		pInstance->Get_Transform()->m_vAngle = _vec3(packet->angleX, packet->angleY, packet->angleZ);
 		pInstance->Get_Transform()->m_vPos   = _vec3(packet->posX, packet->posY, packet->posZ);
 		pInstance->Set_ServerNumber(packet->id);

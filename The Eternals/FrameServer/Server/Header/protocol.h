@@ -23,7 +23,8 @@ constexpr int WORLD_WIDTH				= 1000;
 constexpr int WORLD_HEIGHT				= 1000;
 constexpr int SECTOR_SIZE				= 40;
 
-constexpr int VIEW_LIMIT				= 20;				
+constexpr int VIEW_LIMIT				= 20;
+constexpr int VIEW_LIMIT_STAGE_WINTER	= 40;
 
 #pragma pack (push, 1)
 

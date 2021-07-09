@@ -35,6 +35,7 @@ public:
 	bool		Is_AI(int server_num = AI_NUM_START);
 
 	bool		Is_Near(const CObj* me, const CObj* other);
+	bool		Is_Near_PlayerToMonster(const CObj* me, const CObj* other, const char& stageID);
 	bool		Is_Monster_Target(const CObj* me, const CObj* other);
 	bool		Is_Monster_AttackTarget(const CObj* me, const CObj* other, const int& range);
 
