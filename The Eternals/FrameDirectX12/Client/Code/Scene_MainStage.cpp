@@ -2786,7 +2786,7 @@ HRESULT CScene_MainStage::SetUp_UIInGameStoreCanvas()
 													  vecFrameSpeed[i],						// FrameSpeed
 													  vecRectPosOffset[i],					// RectPosOffset
 													  vecRectScale[i],						// RectScaleOffset
-													  UIDepth - 1);						// UI Depth
+													  UIDepth - 2);						// UI Depth
 
 					CStoreMgr::Get_Instance()->Add_StoreItemSlot(static_cast<CStoreItemSlot*>(pChildUI));
 				}
@@ -2802,7 +2802,7 @@ HRESULT CScene_MainStage::SetUp_UIInGameStoreCanvas()
 														 vecFrameSpeed[i],					// FrameSpeed
 														 vecRectPosOffset[i],				// RectPosOffset
 														 vecRectScale[i],					// RectScaleOffset
-														 UIDepth - 1);					// UI Depth
+														 UIDepth - 2);					// UI Depth
 
 					CStoreMgr::Get_Instance()->Add_StoreBuyItemSlot(static_cast<CStoreBuyListSlot*>(pChildUI));
 				}
@@ -2818,7 +2818,7 @@ HRESULT CScene_MainStage::SetUp_UIInGameStoreCanvas()
 														  vecFrameSpeed[i],					// FrameSpeed
 														  vecRectPosOffset[i],				// RectPosOffset
 														  vecRectScale[i],					// RectScaleOffset
-														  UIDepth - 1);					// UI Depth
+														  UIDepth - 2);					// UI Depth
 
 					CStoreMgr::Get_Instance()->Add_StoreSellItemSlot(static_cast<CStoreSellListSlot*>(pChildUI));
 				}

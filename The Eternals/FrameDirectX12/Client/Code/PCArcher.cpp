@@ -959,6 +959,7 @@ void CPCArcher::Key_Input(const _float& fTimeDelta)
 
 	KeyInput_Move(fTimeDelta);
 	KeyInput_Attack(fTimeDelta);
+	KeyInput_Potion(fTimeDelta);
 
 	// StageChange Stage WINTER
 	if (Engine::KEY_DOWN(DIK_O) && NO_EVENT_STATE)
@@ -1135,6 +1136,24 @@ void CPCArcher::KeyInput_Attack(const _float& fTimeDelta)
 		}
 	}
 }
+
+void CPCArcher::KeyInput_Potion(const _float& fTimeDelta)
+{
+	if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"HP_POTION"]) &&
+		CInventoryEquipmentMgr::Get_Instance()->Get_HpPotionSlot() != nullptr &&
+		CInventoryEquipmentMgr::Get_Instance()->Get_HpPotionSlot()->Get_CurItemCnt() > 0)
+	{
+		m_pPacketMgr->send_use_potion(true);
+	}
+
+	if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"MP_POTION"]) &&
+		CInventoryEquipmentMgr::Get_Instance()->Get_MpPotionSlot() != nullptr &&
+		CInventoryEquipmentMgr::Get_Instance()->Get_MpPotionSlot()->Get_CurItemCnt() > 0)
+	{
+		m_pPacketMgr->send_use_potion(false);
+	}
+}
+
 
 void CPCArcher::KeyInput_StanceChange(const _float& fTimeDelta)
 {
