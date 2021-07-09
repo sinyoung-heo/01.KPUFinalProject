@@ -1158,7 +1158,8 @@ void CPCPriest::KeyInput_StanceChange(const _float& fTimeDelta)
 
 void CPCPriest::KeyInput_AttackRod(const _float& fTimeDelta)
 {
-	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) && !m_bIsSkill && !m_bIsSkillLoop && NO_EVENT_STATE)
+	if (Engine::MOUSE_KEYDOWN(Engine::MOUSEBUTTON::DIM_LB) && !m_bIsSkill && !m_bIsSkillLoop && NO_EVENT_STATE && 
+		m_uiAnimIdx != Priest::HASTE)
 	{
 		SetUp_WeaponRHand();
 		SetUp_AttackSetting();
@@ -1205,6 +1206,10 @@ void CPCPriest::KeyInput_SkillAttack(const _float& fTimeDelta)
 				 NO_EVENT_STATE &&
 			(m_pInfoCom->m_iMp - Priest::AMOUNT_HEAL >= 0))
 		{
+			m_pDynamicCamera->Set_CameraState(CAMERA_STATE::PRIEST_BUFF);
+			m_pDynamicCamera->SetUp_ThirdPersonViewOriginData();
+			m_pDynamicCamera->Set_CameraAtParentMatrix(m_pMeshCom->Find_SkinningMatrix("Bip01-R-Hand"));
+
 			SetUp_AttackSetting();
 			m_bIsSkill     = true;
 			m_bIsSkillLoop = true;
@@ -1215,6 +1220,10 @@ void CPCPriest::KeyInput_SkillAttack(const _float& fTimeDelta)
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"MP_CHARGE"]) && 
 				 NO_EVENT_STATE)
 		{
+			m_pDynamicCamera->Set_CameraState(CAMERA_STATE::PRIEST_BUFF);
+			m_pDynamicCamera->SetUp_ThirdPersonViewOriginData();
+			m_pDynamicCamera->Set_CameraAtParentMatrix(m_pMeshCom->Find_SkinningMatrix("Bip01-R-Hand"));
+
 			SetUp_AttackSetting();
 			m_bIsSkill     = true;
 			m_bIsSkillLoop = true;
@@ -1259,6 +1268,12 @@ void CPCPriest::KeyInput_SkillAttack(const _float& fTimeDelta)
 		(Priest::HEAL_SHOT == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)) ||
 		(Priest::MP_CHARGE_END == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)))
 	{
+		if (Priest::HEAL_SHOT == m_uiAnimIdx || Priest::MP_CHARGE_END == m_uiAnimIdx)
+		{
+			m_pDynamicCamera->Set_CameraAtParentMatrix(nullptr);
+			m_pDynamicCamera->Set_CameraState(CAMERA_STATE::THIRD_PERSON_VIEW);
+		}
+
 		m_bIsAttack    = false;
 		m_bIsSkill     = false;
 		m_bIsSkillLoop = false;

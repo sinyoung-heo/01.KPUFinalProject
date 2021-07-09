@@ -109,7 +109,6 @@ public:
 	// DmgFont
 
 	//Effect
-<<<<<<< HEAD
 	INSTANCE_POOL_DESC<CSwordEffect>*		Get_Effect_SwordEffect()		{ return m_pEffect_SwordEffect_Pool; }
 	INSTANCE_POOL_DESC<CSwordEffect_s>*		Get_Effect_Sword_s_Effect()		{ return m_pEffect_SwordEffect_s_Pool; }
 	INSTANCE_POOL_DESC<CIceStorm>*			Get_Effect_IceStormEffect()		{ return m_pEffect_IceStorm_Pool; }

@@ -68,7 +68,7 @@ void CDmgFont::Set_DamageList(const _uint& uiDmg)
 		if (m_uiDamage / 10 == 0)
 		{
 			vecTemp.emplace_back(m_uiDamage % 10);
-			m_uiDmgListSize = (size_t)vecTemp.size();
+			m_uiDmgListSize = (_uint)vecTemp.size();
 			break;
 		}
 	}
@@ -208,8 +208,8 @@ void CDmgFont::Render_GameObject(const _float& fTimeDelta)
 								   uiTexIdx,
 								   Engine::MATRIXID::PROJECTION);
 
-		m_pBackBufferCom->Begin_Buffer();
-		m_pBackBufferCom->Render_Buffer();
+		m_pBufferCom->Begin_Buffer();
+		m_pBufferCom->Render_Buffer();
 	}
 
 	/*__________________________________________________________________________________________________________
@@ -236,8 +236,8 @@ void CDmgFont::Render_GameObject(const _float& fTimeDelta)
 								   m_vecDmgTextureInfo[m_eDmgType][m_vecDamage[uiIdx]].uiTexIdx,
 								   Engine::MATRIXID::PROJECTION);
 
-		m_arrBufferCom[uiIdx]->Begin_Buffer();
-		m_arrBufferCom[uiIdx]->Render_Buffer();
+		m_pBufferCom->Begin_Buffer();
+		m_pBufferCom->Render_Buffer();
 	}
 
 }
@@ -250,24 +250,10 @@ void CDmgFont::Set_ConstantTable()
 HRESULT CDmgFont::Add_Component()
 {
 	// Buffer
-	Engine::CComponent* pComponent = nullptr;
-	_tchar szComponentTag[MIN_STR] = L"";
-
-	for (_int i = 0; i < DMG_SIZE; ++i)
-	{
-		// Buffer
-		pComponent = static_cast<Engine::CRcTex*>(m_pComponentMgr->Clone_Component(L"RcTex", Engine::COMPONENTID::ID_STATIC));
-		NULL_CHECK_RETURN(pComponent, E_FAIL);
-		pComponent->AddRef();
-		wsprintf(szComponentTag, L"Com_Buffer%d", i);
-		m_mapComponent[Engine::ID_STATIC].emplace(szComponentTag, pComponent);
-		m_arrBufferCom[i] = static_cast<Engine::CRcTex*>(pComponent);
-	}
-
-	m_pBackBufferCom = static_cast<Engine::CRcTex*>(m_pComponentMgr->Clone_Component(L"RcTex", Engine::COMPONENTID::ID_STATIC));
-	NULL_CHECK_RETURN(m_pBackBufferCom, E_FAIL);
-	m_pBackBufferCom->AddRef();
-	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_BackBuffer", m_pBackBufferCom);
+	m_pBufferCom = static_cast<Engine::CRcTex*>(m_pComponentMgr->Clone_Component(L"RcTex", Engine::COMPONENTID::ID_STATIC));
+	NULL_CHECK_RETURN(m_pBufferCom, E_FAIL);
+	m_pBufferCom->AddRef();
+	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Buffer", m_pBufferCom);
 
 	// Shader
 	m_pShaderCom = static_cast<Engine::CShaderTexture*>(m_pComponentMgr->Clone_Component(L"ShaderTexture", Engine::COMPONENTID::ID_STATIC));
@@ -296,7 +282,7 @@ HRESULT CDmgFont::Read_DataFromFilePath()
 	_float	fGridWidth     = 0.0f;
 	_float	fGridHeight    = 0.0f;
 
-	for (_uint i = 0; i < DMG_TYPE::DMG_PLAYER; ++i)
+	for (_uint i = 0; i < DMG_TYPE::DMGTYPE_END; ++i)
 		m_vecDmgTextureInfo[i].reserve(10);
 
 	// ComboCounter Yellow
@@ -571,13 +557,9 @@ CDmgFont** CDmgFont::Create_InstancePool(ID3D12Device* pGraphicDevice,
 void CDmgFont::Free()
 {
 	Engine::CGameObject::Free();
-
-	Engine::Safe_Release(m_pBackBufferCom);
+	Engine::Safe_Release(m_pBufferCom);
 	Engine::Safe_Release(m_pShaderCom);
 	
-	for (auto& pBufferCom : m_arrBufferCom)
-		Engine::Safe_Release(pBufferCom);
-
 	for (auto& vecDmgTextureInfo : m_vecDmgTextureInfo)
 	{
 		vecDmgTextureInfo.clear();
