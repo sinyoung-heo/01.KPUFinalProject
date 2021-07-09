@@ -1096,6 +1096,12 @@
     <ClInclude Include="..\Code\Vergos.h">
       <Filter>02.GameObject\05.Monster\11.Vergos</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\MeshParticleEffect.h">
+      <Filter>02.GameObject\98.GameEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\DragonEffect.h">
+      <Filter>02.GameObject\98.GameEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1605,6 +1611,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\Vergos.cpp">
       <Filter>02.GameObject\05.Monster\11.Vergos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MeshParticleEffect.cpp">
+      <Filter>02.GameObject\98.GameEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\DragonEffect.cpp">
+      <Filter>02.GameObject\98.GameEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

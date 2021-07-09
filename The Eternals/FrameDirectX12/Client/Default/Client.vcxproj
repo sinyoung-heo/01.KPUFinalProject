@@ -190,6 +190,7 @@
     <ClInclude Include="..\Code\CraftyArachne.h" />
     <ClInclude Include="..\Code\DistTrail.h" />
     <ClInclude Include="..\Code\DmgFont.h" />
+    <ClInclude Include="..\Code\DragonEffect.h" />
     <ClInclude Include="..\Code\DrownedSailor.h" />
     <ClInclude Include="..\Code\EffectAxe.h" />
     <ClInclude Include="..\Code\EffectMgr.h" />
@@ -230,6 +231,7 @@
     <ClInclude Include="..\Code\MagicCircleGlow.h" />
     <ClInclude Include="..\Code\MainMenuLogoutCanvas.h" />
     <ClInclude Include="..\Code\MainMenuSettingCanvas.h" />
+    <ClInclude Include="..\Code\MeshParticleEffect.h" />
     <ClInclude Include="..\Code\Monkey.h" />
     <ClInclude Include="..\Code\NormalMonsterHpGauge.h" />
     <ClInclude Include="..\Code\NPCMiniMap.h" />
@@ -372,6 +374,7 @@
     <ClCompile Include="..\Code\CraftyArachne.cpp" />
     <ClCompile Include="..\Code\DistTrail.cpp" />
     <ClCompile Include="..\Code\DmgFont.cpp" />
+    <ClCompile Include="..\Code\DragonEffect.cpp" />
     <ClCompile Include="..\Code\DrownedSailor.cpp" />
     <ClCompile Include="..\Code\EffectAxe.cpp" />
     <ClCompile Include="..\Code\EffectMgr.cpp" />
@@ -418,6 +421,7 @@
     <ClCompile Include="..\Code\MainMenuLogoutCanvas.cpp" />
     <ClCompile Include="..\Code\MainMenuSetting.cpp" />
     <ClCompile Include="..\Code\MainMenuSettingCanvas.cpp" />
+    <ClCompile Include="..\Code\MeshParticleEffect.cpp" />
     <ClCompile Include="..\Code\Monkey.cpp" />
     <ClCompile Include="..\Code\Monster_Normal.cpp" />
     <ClCompile Include="..\Code\MouseCursorMgr.cpp" />

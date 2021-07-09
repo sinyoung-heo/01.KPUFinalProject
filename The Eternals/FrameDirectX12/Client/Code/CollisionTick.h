@@ -28,6 +28,7 @@ public:
 	virtual void	Process_Collision();
 private:
 	void SetUp_GladiatorCameraEvent();
+	void SetUp_PriestCameraEvent();
 protected:
 	/*__________________________________________________________________________________________________________
 	[ Manager ]

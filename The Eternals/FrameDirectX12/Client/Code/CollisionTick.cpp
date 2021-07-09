@@ -5,6 +5,7 @@
 #include "DmgFont.h"
 #include "DynamicCamera.h"
 #include "PCGladiator.h"
+#include "PCPriest.h"
 #include <random>
 
 CCollisionTick::CCollisionTick(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -159,7 +160,7 @@ void CCollisionTick::Process_Collision()
 			if (nullptr != pGameObj)
 			{
 				static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos = pDst->Get_Transform()->m_vPos;
-				static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.y = pDst->Get_Transform()->m_vPos.y + 0.5;
+				static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.y = pDst->Get_Transform()->m_vPos.y + 0.5f;
 				static_cast<CDmgFont*>(pGameObj)->Set_DamageList(m_uiDamage);
 				static_cast<CDmgFont*>(pGameObj)->Set_DamageType(DMG_TYPE::DMG_MONSTER);
 				static_cast<CDmgFont*>(pGameObj)->Set_RandomDir();
@@ -172,6 +173,7 @@ void CCollisionTick::Process_Collision()
 	}
 
 	SetUp_GladiatorCameraEvent();
+	SetUp_PriestCameraEvent();
 }
 
 void CCollisionTick::SetUp_GladiatorCameraEvent()
@@ -304,13 +306,6 @@ void CCollisionTick::SetUp_GladiatorCameraEvent()
 			tCameraZoomDesc.fPower     = 0.05f;
 			tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 15.f;
 			m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
-
-			//CAMERA_SHAKING_DESC tCameraShakingDesc;
-			//tCameraShakingDesc.fUpdateShakingTime = 0.1f;
-			//tCameraShakingDesc.vMin               = _vec2(-12.0f, 0.0f);
-			//tCameraShakingDesc.vMax               = _vec2(12.0f, 0.0f);
-			//tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 10.0f;
-			//m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
 		}
 	}
 		break;
@@ -320,6 +315,31 @@ void CCollisionTick::SetUp_GladiatorCameraEvent()
 	}
 }
 
+void CCollisionTick::SetUp_PriestCameraEvent()
+{
+	if (nullptr == m_pDynamicCamera || nullptr == m_pThisPlayer)
+		return;
+	if (PC_PRIEST != m_pThisPlayer->Get_OType())
+		return;
+
+	_uint uiAniIdx = static_cast<CPCPriest*>(m_pThisPlayer)->Get_AnimationIdx();
+
+	switch (uiAniIdx)
+	{
+	case Priest::HASTE:
+	{
+		if (m_bIsCameraEffect)
+		{
+			CAMERA_ZOOM_DESC tCameraZoomDesc;
+			tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_IN;
+			tCameraZoomDesc.fPower = 0.04f;
+			tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 8.0f;
+			m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
+		}
+	}
+		break;
+	}
+}
 
 Engine::CGameObject* CCollisionTick::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, 
 											wstring wstrCollisionTag, 

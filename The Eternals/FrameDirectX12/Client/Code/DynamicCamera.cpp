@@ -135,6 +135,9 @@ _int CDynamicCamera::Update_GameObject(const _float & fTimeDelta)
 		case CAMERA_STATE::ARCHER_ULTIMATE:
 			SetUp_DynamicCameraArcherUltimate(fTimeDelta);
 			break;
+		case CAMERA_STATE::PRIEST_BUFF:
+			SetUp_DynamicCameraPriestBuffSkill(fTimeDelta);
+			break;
 		default:
 			break;
 		}
@@ -306,6 +309,32 @@ void CDynamicCamera::SetUp_DynamicCameraArcherUltimate(const _float& fTimeDelta)
 
 		// Camera Zoom
 		SetUp_CameraZoom(fTimeDelta);
+	}
+}
+
+void CDynamicCamera::SetUp_DynamicCameraPriestBuffSkill(const _float& fTimeDelta)
+{
+	if (nullptr != m_pTarget && PC_PRIEST == m_pTarget->Get_OType())
+	{
+		m_pTransCom->m_vScale = _vec3(0.0f, 0.0f, 6.0f);
+		m_pTransCom->m_vAngle = _vec3(20.0f, m_tThirdPersonViewOriginDesc.vOriginAngle.y + 180.0f, 0.0f);
+		m_pTransCom->m_vPos = m_pTarget->Get_Transform()->m_vPos;
+		Engine::CGameObject::Update_GameObject(fTimeDelta);
+
+		m_tCameraInfo.vEye.TransformCoord(_vec3(0.0f, 0.0f, -1.0f), m_pTransCom->m_matWorld);
+
+		if (nullptr != m_pCameraAtSkinningMatrix)
+		{
+			_matrix matWorld = m_pTransCom->m_matWorld;
+			_matrix matBoneFinalTransform = ((m_pCameraAtSkinningMatrix->matBoneScale
+											* m_pCameraAtSkinningMatrix->matBoneRotation
+											* m_pCameraAtSkinningMatrix->matBoneTrans)
+											* m_pCameraAtSkinningMatrix->matParentTransform)
+											* m_pCameraAtSkinningMatrix->matRootTransform;
+
+			matWorld = (matBoneFinalTransform) * (m_pTarget->Get_Transform()->m_matWorld);
+			m_tCameraInfo.vAt = _vec3(m_pTransCom->m_vPos.x, matWorld._42, m_pTransCom->m_vPos.z);
+		}
 	}
 }
 
