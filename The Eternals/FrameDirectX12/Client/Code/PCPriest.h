@@ -68,6 +68,7 @@ private:
 	void Key_Input(const _float& fTimeDelta);
 	void KeyInput_Move(const _float& fTimeDelta);
 	void KeyInput_Attack(const _float& fTimeDelta);
+	void KeyInput_Potion(const _float& fTimeDelta);
 	void KeyInput_StanceChange(const _float& fTimeDelta);
 	void KeyInput_AttackRod(const _float& fTimeDelta);
 	void KeyInput_SkillAttack(const _float& fTimeDelta);

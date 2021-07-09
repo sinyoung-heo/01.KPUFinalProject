@@ -550,7 +550,7 @@ HRESULT CPCPriest::SetUp_ClassFrame()
 														 vecFrameSpeed[i],				// FrameSpeed
 														 vecRectPosOffset[i],			// RectPosOffset
 														 vecRectScale[i],				// RectScaleOffset
-														 vecUIDepth[i]);				// UI Depth
+														 UIDepth - 1);					// UI Depth
 					m_pHpGauge = static_cast<CCharacterHpGauge*>(pChildUI);
 				}
 				else if (L"ClassFrameMpFront" == vecObjectTag[i])
@@ -565,7 +565,7 @@ HRESULT CPCPriest::SetUp_ClassFrame()
 														 vecFrameSpeed[i],				// FrameSpeed
 														 vecRectPosOffset[i],			// RectPosOffset
 														 vecRectScale[i],				// RectScaleOffset
-														 vecUIDepth[i]);				// UI Depth
+														 UIDepth - 1);					// UI Depth
 					m_pMpGauge = static_cast<CCharacterMpGauge*>(pChildUI);
 				}
 				else
@@ -580,7 +580,7 @@ HRESULT CPCPriest::SetUp_ClassFrame()
 													vecFrameSpeed[i],				// FrameSpeed
 													vecRectPosOffset[i],			// RectPosOffset
 													vecRectScale[i],				// RectScaleOffset
-													vecUIDepth[i]);					// UI Depth
+													UIDepth - 1);					// UI Depth
 				}
 				m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
 				static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
@@ -706,7 +706,7 @@ HRESULT CPCPriest::SetUp_Equipment()
 														  vecFrameSpeed[i],					// FrameSpeed
 														  vecRectPosOffset[i],				// RectPosOffset
 														  vecRectScale[i],					// RectScaleOffset
-														  vecUIDepth[i]);					// UI Depth
+														  UIDepth - 1);						// UI Depth
 
 					CInventoryEquipmentMgr::Get_Instance()->Add_EquipmentSlot(vecObjectTag[i], static_cast<CEquipmentItemSlot*>(pChildUI));
 				}
@@ -724,7 +724,7 @@ HRESULT CPCPriest::SetUp_Equipment()
 															 vecFrameSpeed[i],					// FrameSpeed
 															 vecRectPosOffset[i],				// RectPosOffset
 															 vecRectScale[i],					// RectScaleOffset
-															 vecUIDepth[i]);					// UI Depth
+															 UIDepth - 1);						// UI Depth
 
 					if (L"EquipmentButtonCloseMouseOn" == vecObjectTag[i])
 						pButtonXMouseOn = static_cast<CEquipmentButtonClose*>(pChildUI);
@@ -948,6 +948,7 @@ void CPCPriest::Key_Input(const _float& fTimeDelta)
 
 	KeyInput_Move(fTimeDelta);
 	KeyInput_Attack(fTimeDelta);
+	KeyInput_Potion(fTimeDelta);
 
 	// StageChange Stage WINTER
 	if (Engine::KEY_DOWN(DIK_O) && NO_EVENT_STATE)
@@ -1111,6 +1112,23 @@ void CPCPriest::KeyInput_Attack(const _float& fTimeDelta)
 			KeyInput_AttackRod(fTimeDelta);
 			KeyInput_SkillAttack(fTimeDelta);
 		}
+	}
+}
+
+void CPCPriest::KeyInput_Potion(const _float& fTimeDelta)
+{
+	if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"HP_POTION"]) &&
+		CInventoryEquipmentMgr::Get_Instance()->Get_HpPotionSlot() != nullptr &&
+		CInventoryEquipmentMgr::Get_Instance()->Get_HpPotionSlot()->Get_CurItemCnt() > 0)
+	{
+		m_pPacketMgr->send_use_potion(true);
+	}
+
+	if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"MP_POTION"]) &&
+		CInventoryEquipmentMgr::Get_Instance()->Get_MpPotionSlot() != nullptr &&
+		CInventoryEquipmentMgr::Get_Instance()->Get_MpPotionSlot()->Get_CurItemCnt() > 0)
+	{
+		m_pPacketMgr->send_use_potion(false);
 	}
 }
 

@@ -24,7 +24,6 @@
 #include "StoreMgr.h"
 #include "MainMenuInventory.h"
 #include "DmgFont.h"
-
 #include "CinemaMgr.h"
 
 CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -570,7 +569,7 @@ HRESULT CPCGladiator::SetUp_ClassFrame()
 														 vecFrameSpeed[i],				// FrameSpeed
 														 vecRectPosOffset[i],			// RectPosOffset
 														 vecRectScale[i],				// RectScaleOffset
-														 vecUIDepth[i]);				// UI Depth
+														 UIDepth - 1);				// UI Depth
 					m_pHpGauge = static_cast<CCharacterHpGauge*>(pChildUI);
 				}
 				else if (L"ClassFrameMpFront" == vecObjectTag[i])
@@ -585,7 +584,7 @@ HRESULT CPCGladiator::SetUp_ClassFrame()
 														 vecFrameSpeed[i],				// FrameSpeed
 														 vecRectPosOffset[i],			// RectPosOffset
 														 vecRectScale[i],				// RectScaleOffset
-														 vecUIDepth[i]);				// UI Depth
+														 UIDepth - 1);					// UI Depth
 					m_pMpGauge = static_cast<CCharacterMpGauge*>(pChildUI);
 				}
 				else
@@ -600,7 +599,7 @@ HRESULT CPCGladiator::SetUp_ClassFrame()
 													vecFrameSpeed[i],				// FrameSpeed
 													vecRectPosOffset[i],			// RectPosOffset
 													vecRectScale[i],				// RectScaleOffset
-													vecUIDepth[i]);					// UI Depth
+													UIDepth - 1);					// UI Depth
 				}
 				m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
 				static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
@@ -726,7 +725,7 @@ HRESULT CPCGladiator::SetUp_Equipment()
 														  vecFrameSpeed[i],					// FrameSpeed
 														  vecRectPosOffset[i],				// RectPosOffset
 														  vecRectScale[i],					// RectScaleOffset
-														  vecUIDepth[i]);					// UI Depth
+														  UIDepth - 1);					// UI Depth
 
 					CInventoryEquipmentMgr::Get_Instance()->Add_EquipmentSlot(vecObjectTag[i], static_cast<CEquipmentItemSlot*>(pChildUI));
 				}
@@ -744,7 +743,7 @@ HRESULT CPCGladiator::SetUp_Equipment()
 															 vecFrameSpeed[i],					// FrameSpeed
 															 vecRectPosOffset[i],				// RectPosOffset
 															 vecRectScale[i],					// RectScaleOffset
-															 vecUIDepth[i]);					// UI Depth
+															 UIDepth - 1);					// UI Depth
 
 					if (L"EquipmentButtonCloseMouseOn" == vecObjectTag[i])
 						pButtonXMouseOn = static_cast<CEquipmentButtonClose*>(pChildUI);
@@ -1085,6 +1084,7 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 
 	KeyInput_Move(fTimeDelta);
 	KeyInput_Attack(fTimeDelta);
+	KeyInput_Potion(fTimeDelta);
 
 	/*if (Engine::KEY_DOWN(DIK_R))
 		CCinemaMgr::Get_Instance()->Spawn_Vergos();
@@ -1103,39 +1103,6 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 
 	if (Engine::KEY_DOWN(DIK_0) && NO_EVENT_STATE)
 	{
-		
-		CEffectMgr::Get_Instance()->Effect_Straight_IceStorm(m_pTransCom->m_vPos,m_pTransCom->m_vDir);
-		
-	}
-
-	if (Engine::KEY_DOWN(DIK_M))
-	{
-		CAMERA_SHAKING_DESC tCameraShakingDesc;
-		tCameraShakingDesc.fUpdateShakingTime = 1.5f;
-		tCameraShakingDesc.vMin               = _vec2(-5.0f, -2.0f);
-		tCameraShakingDesc.vMax               = _vec2(5.0f, 2.0f);
-		tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 10.0f;
-
-		m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
-	}
-
-	if (Engine::KEY_DOWN(DIK_B))
-	{
-		CAMERA_ZOOM_DESC tCameraZoomDesc;
-		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_IN;
-		tCameraZoomDesc.fPower     = 0.08f;
-		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 5.0f;
-
-		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
-	}
-	if (Engine::KEY_DOWN(DIK_N))
-	{
-		CAMERA_ZOOM_DESC tCameraZoomDesc;
-		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_OUT;
-		tCameraZoomDesc.fPower = 0.08f;
-		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 5.0f;
-
-		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
 	}
 
 	// StageChange Stage WINTER
@@ -1378,6 +1345,23 @@ void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 
 			AttackMove_OnNaviMesh(fTimeDelta);
 		}
+	}
+}
+
+void CPCGladiator::KeyInput_Potion(const _float& fTimeDelta)
+{
+	if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"HP_POTION"]) &&
+		CInventoryEquipmentMgr::Get_Instance()->Get_HpPotionSlot() != nullptr &&
+		CInventoryEquipmentMgr::Get_Instance()->Get_HpPotionSlot()->Get_CurItemCnt() > 0)
+	{
+		m_pPacketMgr->send_use_potion(true);
+	}
+
+	if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"MP_POTION"]) &&
+		CInventoryEquipmentMgr::Get_Instance()->Get_MpPotionSlot() != nullptr &&
+		CInventoryEquipmentMgr::Get_Instance()->Get_MpPotionSlot()->Get_CurItemCnt() > 0)
+	{
+		m_pPacketMgr->send_use_potion(false);
 	}
 }
 

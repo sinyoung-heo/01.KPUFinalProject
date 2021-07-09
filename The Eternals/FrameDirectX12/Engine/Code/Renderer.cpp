@@ -608,9 +608,6 @@ void CRenderer::Render_Collider(const _float & fTimeDelta)
 
 void CRenderer::Render_RenderTarget()
 {
-	if (nullptr != m_pTargetMiniMap && m_bIsRenderMiniMap)
-		m_pTargetMiniMap->Render_RenderTarget();
-
 	if (m_mapRenderOnOff[L"RenderTarget"])
 	{
 		if (nullptr != m_pTargetDeferred)
@@ -657,6 +654,9 @@ void CRenderer::Render_RenderTarget()
 
 		if (nullptr != m_pTargetAddEffect)
 			m_pTargetAddEffect->Render_RenderTarget();
+
+		if (nullptr != m_pTargetMiniMap && m_bIsRenderMiniMap)
+			m_pTargetMiniMap->Render_RenderTarget();
 	}
 }
 

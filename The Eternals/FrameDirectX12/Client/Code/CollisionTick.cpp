@@ -269,8 +269,8 @@ void CCollisionTick::SetUp_GladiatorCameraEvent()
 		{
 			CAMERA_SHAKING_DESC tCameraShakingDesc;
 			tCameraShakingDesc.fUpdateShakingTime = 0.2f;
-			tCameraShakingDesc.vMin               = _vec2(-30.0f, 0.0f);
-			tCameraShakingDesc.vMax               = _vec2(30.0f, 0.0f);
+			tCameraShakingDesc.vMin               = _vec2(-60.0f, 0.0f);
+			tCameraShakingDesc.vMax               = _vec2(60.0f, 0.0f);
 			tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 20.0f;
 			m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
 		}

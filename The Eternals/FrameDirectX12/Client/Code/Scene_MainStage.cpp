@@ -54,6 +54,7 @@
 #include "Lakan.h"
 #include "CinemaVergos.h"
 #include "CinemaMgr.h"
+#include "MiniMapCanvas.h"
 
 CScene_MainStage::CScene_MainStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -1021,7 +1022,7 @@ HRESULT CScene_MainStage::SetUp_UIMainMenuInventory()
 														  vecFrameSpeed[i],					// FrameSpeed
 														  vecRectPosOffset[i],				// RectPosOffset
 														  vecRectScale[i],					// RectScaleOffset
-														  vecUIDepth[i]);					// UI Depth
+														  UIDepth - 1);					// UI Depth
 					CInventoryEquipmentMgr::Get_Instance()->Add_InventorySlot(static_cast<CInventoryItemSlot*>(pChildUI));
 				}
 				else if (L"InventoryButtonCloseNormal" == vecObjectTag[i] ||
@@ -1038,7 +1039,7 @@ HRESULT CScene_MainStage::SetUp_UIMainMenuInventory()
 														   vecFrameSpeed[i],				// FrameSpeed
 														   vecRectPosOffset[i],				// RectPosOffset
 														   vecRectScale[i],					// RectScaleOffset
-														   vecUIDepth[i]);					// UI Depth
+														   UIDepth - 1);					// UI Depth
 
 					if (L"InventoryButtonCloseMouseOn" == vecObjectTag[i])
 						pButtonXMouseOn = static_cast<CInventoryButtonClose*>(pChildUI);
@@ -1252,7 +1253,7 @@ HRESULT CScene_MainStage::SetUp_UIMainMenuSetting()
 															  vecFrameSpeed[i],					// FrameSpeed
 															  vecRectPosOffset[i],				// RectPosOffset
 															  vecRectScale[i],					// RectScaleOffset
-															  vecUIDepth[i]);					// UI Depth
+															  UIDepth - 1);					// UI Depth
 				}
 				else if (L"SystemSettingButtonX_Normal" == vecObjectTag[i] ||
 					L"SystemSettingButtonX_MouseOn" == vecObjectTag[i] ||
@@ -1268,7 +1269,7 @@ HRESULT CScene_MainStage::SetUp_UIMainMenuSetting()
 														   vecFrameSpeed[i],				// FrameSpeed
 														   vecRectPosOffset[i],				// RectPosOffset
 														   vecRectScale[i],					// RectScaleOffset
-														   vecUIDepth[i]);					// UI Depth
+														   UIDepth - 1);					// UI Depth
 
 					if (L"SystemSettingButtonX_MouseOn" == vecObjectTag[i])
 						pSettingButtonXMouseOn = static_cast<CSettingButtonClose*>(pChildUI);
@@ -1295,7 +1296,7 @@ HRESULT CScene_MainStage::SetUp_UIMainMenuSetting()
 																	vecFrameSpeed[i],				// FrameSpeed
 																	vecRectPosOffset[i],			// RectPosOffset
 																	vecRectScale[i],				// RectScaleOffset
-																	vecUIDepth[i]);					// UI Depth
+																	UIDepth - 1);					// UI Depth
 				}
 
 				if (nullptr != pChildUI &&
@@ -1505,7 +1506,7 @@ HRESULT CScene_MainStage::SetUp_UIMainMenuLogout()
 														   vecFrameSpeed[i],				// FrameSpeed
 														   vecRectPosOffset[i],				// RectPosOffset
 														   vecRectScale[i],					// RectScaleOffset
-														   vecUIDepth[i]);					// UI Depth
+														   UIDepth - 1);					// UI Depth
 				}
 				else if (L"SystemButtonX_Normal" == vecObjectTag[i] ||
 					L"SystemButtonX_MouseOn" == vecObjectTag[i] ||
@@ -1521,7 +1522,7 @@ HRESULT CScene_MainStage::SetUp_UIMainMenuLogout()
 														  vecFrameSpeed[i],					// FrameSpeed
 														  vecRectPosOffset[i],				// RectPosOffset
 														  vecRectScale[i],					// RectScaleOffset
-														  vecUIDepth[i]);					// UI Depth
+														  UIDepth - 1);					// UI Depth
 
 					if (L"SystemButtonX_MouseOn" == vecObjectTag[i])
 						pLogoutButtonXMouseOn = static_cast<CLogoutButtonClose*>(pChildUI);
@@ -1678,7 +1679,7 @@ HRESULT CScene_MainStage::SetUp_UIPartySuggestCanvas()
 													   vecFrameSpeed[i],				// FrameSpeed
 													   vecRectPosOffset[i],				// RectPosOffset
 													   vecRectScale[i],					// RectScaleOffset
-													   vecUIDepth[i]);					// UI Depth
+													   UIDepth - 1);					// UI Depth
 
 				if (nullptr != pChildUI)
 				{
@@ -1816,7 +1817,7 @@ HRESULT CScene_MainStage::SetUp_UIPartySuggestResponseCanvas()
 																   vecFrameSpeed[i],				// FrameSpeed
 																   vecRectPosOffset[i],				// RectPosOffset
 																   vecRectScale[i],					// RectScaleOffset
-																   vecUIDepth[i]);					// UI Depth
+																   UIDepth - 1);					// UI Depth
 
 					static_cast<CPartySuggestResponseChoice*>(pChildUI)->Set_CanvasClass(pCanvas);
 				}
@@ -1834,7 +1835,7 @@ HRESULT CScene_MainStage::SetUp_UIPartySuggestResponseCanvas()
 																  vecFrameSpeed[i],					// FrameSpeed
 																  vecRectPosOffset[i],				// RectPosOffset
 																  vecRectScale[i],					// RectScaleOffset
-																  vecUIDepth[i]);					// UI Depth
+																  UIDepth - 1);					// UI Depth
 
 					if (L"SystemButtonX_MouseOn" == vecObjectTag[i])
 						pButtonXMouseOn = static_cast<CPartySuggestResponseClose*>(pChildUI);
@@ -1993,7 +1994,7 @@ HRESULT CScene_MainStage::SetUp_UIPartyLeaveCanvas()
 													 vecFrameSpeed[i],					// FrameSpeed
 													 vecRectPosOffset[i],				// RectPosOffset
 													 vecRectScale[i],					// RectScaleOffset
-													 vecUIDepth[i]);					// UI Depth
+													 UIDepth - 1);					// UI Depth
 
 				if (nullptr != pChildUI)
 				{
@@ -2243,7 +2244,7 @@ HRESULT CScene_MainStage::SetUp_UIPartyListInfoCanvas()
 															 vecFrameSpeed[i],					// FrameSpeed
 															 vecRectPosOffset[i],				// RectPosOffset
 															 vecRectScale[i],					// RectScaleOffset
-															 vecUIDepth[i]);					// UI Depth
+															 UIDepth - 1);					// UI Depth
 
 						if (L"PartyUIClassGladiator" == vecObjectTag[i])
 						{
@@ -2269,7 +2270,7 @@ HRESULT CScene_MainStage::SetUp_UIPartyListInfoCanvas()
 														   vecFrameSpeed[i],				// FrameSpeed
 														   vecRectPosOffset[i],				// RectPosOffset
 														   vecRectScale[i],					// RectScaleOffset
-														   vecUIDepth[i]);					// UI Depth
+														   UIDepth - 1);					// UI Depth
 						pCanvas->Set_PartyUIHpGaugeClass(static_cast<CPartyUIHpGauge*>(pChildUI));
 					}
 					else if (L"PartyUIMpGauge" == vecObjectTag[i])
@@ -2284,7 +2285,7 @@ HRESULT CScene_MainStage::SetUp_UIPartyListInfoCanvas()
 														   vecFrameSpeed[i],				// FrameSpeed
 														   vecRectPosOffset[i],				// RectPosOffset
 														   vecRectScale[i],					// RectScaleOffset
-														   vecUIDepth[i]);					// UI Depth
+														   UIDepth - 1);					// UI Depth
 						pCanvas->Set_PartyUIMpGaugeClass(static_cast<CPartyUIMpGauge*>(pChildUI));
 					}
 					else
@@ -2299,7 +2300,7 @@ HRESULT CScene_MainStage::SetUp_UIPartyListInfoCanvas()
 														vecFrameSpeed[i],				// FrameSpeed
 														vecRectPosOffset[i],			// RectPosOffset
 														vecRectScale[i],				// RectScaleOffset
-														vecUIDepth[i]);					// UI Depth
+														UIDepth - 1);					// UI Depth
 						static_cast<CGameUIChild*>(pChildUI)->Set_IsActive(false);
 					}
 
@@ -2456,7 +2457,7 @@ HRESULT CScene_MainStage::SetUp_UIChattingCanvas()
 													  vecFrameSpeed[i],					// FrameSpeed
 													  vecRectPosOffset[i],				// RectPosOffset
 													  vecRectScale[i],					// RectScaleOffset
-													  vecUIDepth[i]);					// UI Depth
+													  UIDepth - 1);					// UI Depth
 
 					CChattingMgr::Get_Instance()->Set_ChattingInputClass(static_cast<CChattingInput*>(pChildUI));
 				}
@@ -2472,7 +2473,7 @@ HRESULT CScene_MainStage::SetUp_UIChattingCanvas()
 													   vecFrameSpeed[i],					// FrameSpeed
 													   vecRectPosOffset[i],					// RectPosOffset
 													   vecRectScale[i],						// RectScaleOffset
-													   vecUIDepth[i]);						// UI Depth
+													   UIDepth - 1);						// UI Depth
 
 					CChattingMgr::Get_Instance()->Set_ChattingCursorClass(static_cast<CChattingCursor*>(pChildUI));
 				}
@@ -2568,16 +2569,16 @@ HRESULT CScene_MainStage::SetUp_UIMiniMapCanvas()
 
 			// UIRoot »ý¼º.
 			Engine::CGameObject* pRootUI = nullptr;
-			pRootUI = CGameUIRoot::Create(m_pGraphicDevice, m_pCommandList,
-										  wstrRootObjectTag,
-										  wstrDataFilePath,
-										  vPos,
-										  vScale,
-										  bIsSpriteAnimation,
-										  fFrameSpeed,
-										  vRectPosOffset,
-										  vRectScale,
-										  UIDepth);
+			pRootUI = CMiniMapCanvas::Create(m_pGraphicDevice, m_pCommandList,
+											 wstrRootObjectTag,
+											 wstrDataFilePath,
+											 vPos,
+											 vScale,
+											 bIsSpriteAnimation,
+											 fFrameSpeed,
+											 vRectPosOffset,
+											 vRectScale,
+											 UIDepth);
 			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
 		}
 	}
@@ -2701,7 +2702,7 @@ HRESULT CScene_MainStage::SetUp_UIInGameStoreCanvas()
 												 vecFrameSpeed[i],					// FrameSpeed
 												 vecRectPosOffset[i],				// RectPosOffset
 												 vecRectScale[i],					// RectScaleOffset
-												 vecUIDepth[i]);					// UI Depth
+												 UIDepth - 1);					// UI Depth
 					CStoreMgr::Get_Instance()->Add_StoreTab(vecObjectTag[i], static_cast<CStoreTab*>(pChildUI));
 				}
 				else if (L"UIStoreButtonCloseNormal" == vecObjectTag[i] ||
@@ -2718,7 +2719,7 @@ HRESULT CScene_MainStage::SetUp_UIInGameStoreCanvas()
 														 vecFrameSpeed[i],					// FrameSpeed
 														 vecRectPosOffset[i],				// RectPosOffset
 														 vecRectScale[i],					// RectScaleOffset
-														 vecUIDepth[i]);					// UI Depth
+														 UIDepth - 1);					// UI Depth
 
 					if (L"UIStoreButtonCloseMouseOn" == vecObjectTag[i])
 						pButtonXMouseOn = static_cast<CStoreButtonClose*>(pChildUI);
@@ -2742,7 +2743,7 @@ HRESULT CScene_MainStage::SetUp_UIInGameStoreCanvas()
 															 vecFrameSpeed[i],					// FrameSpeed
 															 vecRectPosOffset[i],				// RectPosOffset
 															 vecRectScale[i],					// RectScaleOffset
-															 vecUIDepth[i]);					// UI Depth
+															 UIDepth - 1);					// UI Depth
 				}
 				else if (L"UIStoreBuyListBack" == vecObjectTag[i] ||
 						 L"UIStoreSellListBack" == vecObjectTag[i])
@@ -2757,7 +2758,7 @@ HRESULT CScene_MainStage::SetUp_UIInGameStoreCanvas()
 															 vecFrameSpeed[i],					// FrameSpeed
 															 vecRectPosOffset[i],				// RectPosOffset
 															 vecRectScale[i],					// RectScaleOffset
-															 vecUIDepth[i]);					// UI Depth
+															 UIDepth - 1);					// UI Depth
 				}
 				else if (L"UIStoreItemSlotBack" == vecObjectTag[i])
 				{
@@ -2771,7 +2772,7 @@ HRESULT CScene_MainStage::SetUp_UIInGameStoreCanvas()
 														  vecFrameSpeed[i],						// FrameSpeed
 														  vecRectPosOffset[i],					// RectPosOffset
 														  vecRectScale[i],						// RectScaleOffset
-														  vecUIDepth[i]);						// UI Depth
+														  UIDepth - 1);						// UI Depth
 				}
 				else if (L"UIStoreItemSlot" == vecObjectTag[i])
 				{
@@ -2785,7 +2786,7 @@ HRESULT CScene_MainStage::SetUp_UIInGameStoreCanvas()
 													  vecFrameSpeed[i],						// FrameSpeed
 													  vecRectPosOffset[i],					// RectPosOffset
 													  vecRectScale[i],						// RectScaleOffset
-													  vecUIDepth[i]);						// UI Depth
+													  UIDepth - 2);						// UI Depth
 
 					CStoreMgr::Get_Instance()->Add_StoreItemSlot(static_cast<CStoreItemSlot*>(pChildUI));
 				}
@@ -2801,7 +2802,7 @@ HRESULT CScene_MainStage::SetUp_UIInGameStoreCanvas()
 														 vecFrameSpeed[i],					// FrameSpeed
 														 vecRectPosOffset[i],				// RectPosOffset
 														 vecRectScale[i],					// RectScaleOffset
-														 vecUIDepth[i]);					// UI Depth
+														 UIDepth - 2);					// UI Depth
 
 					CStoreMgr::Get_Instance()->Add_StoreBuyItemSlot(static_cast<CStoreBuyListSlot*>(pChildUI));
 				}
@@ -2817,7 +2818,7 @@ HRESULT CScene_MainStage::SetUp_UIInGameStoreCanvas()
 														  vecFrameSpeed[i],					// FrameSpeed
 														  vecRectPosOffset[i],				// RectPosOffset
 														  vecRectScale[i],					// RectScaleOffset
-														  vecUIDepth[i]);					// UI Depth
+														  UIDepth - 2);					// UI Depth
 
 					CStoreMgr::Get_Instance()->Add_StoreSellItemSlot(static_cast<CStoreSellListSlot*>(pChildUI));
 				}
@@ -2964,7 +2965,7 @@ HRESULT CScene_MainStage::SetUp_UIQuickSlot()
 												  vecFrameSpeed[i],					// FrameSpeed
 												  vecRectPosOffset[i],				// RectPosOffset
 												  vecRectScale[i],					// RectScaleOffset
-												  vecUIDepth[i]);					// UI Depth
+												  UIDepth - 1);					// UI Depth
 					CQuickSlotMgr::Get_Instance()->Add_QuickSlot(static_cast<CQuickSlot*>(pChildUI));
 				}
 

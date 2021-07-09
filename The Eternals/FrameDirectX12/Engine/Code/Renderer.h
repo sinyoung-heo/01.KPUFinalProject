@@ -74,6 +74,7 @@ public:
 	const _uint&		Get_CntSetPipelineState()			{ return m_uiCnt_SetPipelineState; }
 	_bool				Get_RenderOnOff(wstring wstrTag);
 	CRenderTarget*		Get_TargetShadowDepth()				{ return m_pTargetShadowDepth; }
+	CRenderTarget*		Get_TargetMiniMap()					{ return m_pTargetMiniMap; }
 	BoundingFrustum&	Get_Frustum()						{ return m_tFrustum; } 
 	const _bool&		Get_IsRenderShadow()				{ return m_bIsRenderShadow; }
 	const _bool&		Get_IsRenderMiniMap()				{ return m_bIsRenderMiniMap; }
