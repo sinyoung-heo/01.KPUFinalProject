@@ -16,7 +16,7 @@ HRESULT CWarningFrame::Ready_GameObject()
 	m_pTransCom->m_vScale	= _vec3((_float)WINCX, (_float)WINCY, 1.0f);
 
 	m_uiTexIdx	= 0;
-	m_UIDepth	= 0;
+	m_UIDepth	= 1;
 
 	return S_OK;
 }

@@ -570,7 +570,7 @@ HRESULT CPCGladiator::SetUp_ClassFrame()
 														 vecFrameSpeed[i],				// FrameSpeed
 														 vecRectPosOffset[i],			// RectPosOffset
 														 vecRectScale[i],				// RectScaleOffset
-														 vecUIDepth[i]);				// UI Depth
+														 UIDepth - 1);				// UI Depth
 					m_pHpGauge = static_cast<CCharacterHpGauge*>(pChildUI);
 				}
 				else if (L"ClassFrameMpFront" == vecObjectTag[i])
@@ -585,7 +585,7 @@ HRESULT CPCGladiator::SetUp_ClassFrame()
 														 vecFrameSpeed[i],				// FrameSpeed
 														 vecRectPosOffset[i],			// RectPosOffset
 														 vecRectScale[i],				// RectScaleOffset
-														 vecUIDepth[i]);				// UI Depth
+														 UIDepth - 1);					// UI Depth
 					m_pMpGauge = static_cast<CCharacterMpGauge*>(pChildUI);
 				}
 				else
@@ -600,7 +600,7 @@ HRESULT CPCGladiator::SetUp_ClassFrame()
 													vecFrameSpeed[i],				// FrameSpeed
 													vecRectPosOffset[i],			// RectPosOffset
 													vecRectScale[i],				// RectScaleOffset
-													vecUIDepth[i]);					// UI Depth
+													UIDepth - 1);					// UI Depth
 				}
 				m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
 				static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
@@ -726,7 +726,7 @@ HRESULT CPCGladiator::SetUp_Equipment()
 														  vecFrameSpeed[i],					// FrameSpeed
 														  vecRectPosOffset[i],				// RectPosOffset
 														  vecRectScale[i],					// RectScaleOffset
-														  vecUIDepth[i]);					// UI Depth
+														  UIDepth - 1);					// UI Depth
 
 					CInventoryEquipmentMgr::Get_Instance()->Add_EquipmentSlot(vecObjectTag[i], static_cast<CEquipmentItemSlot*>(pChildUI));
 				}
@@ -744,7 +744,7 @@ HRESULT CPCGladiator::SetUp_Equipment()
 															 vecFrameSpeed[i],					// FrameSpeed
 															 vecRectPosOffset[i],				// RectPosOffset
 															 vecRectScale[i],					// RectScaleOffset
-															 vecUIDepth[i]);					// UI Depth
+															 UIDepth - 1);					// UI Depth
 
 					if (L"EquipmentButtonCloseMouseOn" == vecObjectTag[i])
 						pButtonXMouseOn = static_cast<CEquipmentButtonClose*>(pChildUI);
