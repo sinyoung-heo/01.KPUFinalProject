@@ -1002,6 +1002,44 @@ namespace Engine
 		_int iMaxMp			= 0;
 
 	} PARTYMEMBER;
+
+	/*__________________________________________________________________________________________________________
+	[ Skill Cool Down Time ]
+	____________________________________________________________________________________________________________*/
+	typedef struct tagSkillCoolDownDesc
+	{
+		tagSkillCoolDownDesc() {}
+		tagSkillCoolDownDesc(const _float& max_cooldowntime)
+			: bIsCoolDownComplete(true)
+			, fMaxCoolDownTime(max_cooldowntime)
+			, fCurCoolDownTime(0.0f)
+		{}
+
+		void Use_Skill()
+		{
+			bIsCoolDownComplete = false;
+			fCurCoolDownTime = fMaxCoolDownTime;
+		}
+
+		void Update_CoolDownTime(const _float& fTimeDelta)
+		{
+			if (!bIsCoolDownComplete)
+			{
+				fCurCoolDownTime -= fTimeDelta;
+				if (fCurCoolDownTime <= 0.0f)
+				{
+					fCurCoolDownTime = 0.0f;
+					bIsCoolDownComplete = true;
+				}
+			}
+		}
+
+		_bool bIsCoolDownComplete = true;
+		_float fMaxCoolDownTime   = 1.0f;
+		_float fCurCoolDownTime   = 0.0f;
+
+	} SKILL_COOLDOWN_DESC;
+
 }
 
 

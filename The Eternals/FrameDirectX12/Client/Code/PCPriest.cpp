@@ -137,12 +137,18 @@ HRESULT CPCPriest::LateInit_GameObject()
 	____________________________________________________________________________________________________________*/
 	vector<CQuickSlot*> vecQuickSlot = m_pQuickSlotMgr->Get_QuickSlotList();
 
-	m_mapSkillKeyInput[L"AURA_ON"]		= -1;
-	m_mapSkillKeyInput[L"PURIFY"]		= -1;
-	m_mapSkillKeyInput[L"HEAL"]			= -1;
-	m_mapSkillKeyInput[L"MP_CHARGE"]    = -1;
-	m_mapSkillKeyInput[L"HP_POTION"]    = -1;
-	m_mapSkillKeyInput[L"MP_POTION"]    = -1;
+	m_mapSkillKeyInput[L"AURA_ON"]	 = -1;
+	m_mapSkillCoolDown[L"AURA_ON"]   = Engine::SKILL_COOLDOWN_DESC(4.0f);
+	m_mapSkillKeyInput[L"PURIFY"]	 = -1;
+	m_mapSkillCoolDown[L"PURIFY"]    = Engine::SKILL_COOLDOWN_DESC(4.0f);
+	m_mapSkillKeyInput[L"HEAL"]		 = -1;
+	m_mapSkillCoolDown[L"HEAL"]      = Engine::SKILL_COOLDOWN_DESC(6.0f);
+	m_mapSkillKeyInput[L"MP_CHARGE"] = -1;
+	m_mapSkillCoolDown[L"MP_CHARGE"] = Engine::SKILL_COOLDOWN_DESC(6.0f);
+	m_mapSkillKeyInput[L"HP_POTION"] = -1;
+	m_mapSkillCoolDown[L"HP_POTION"] = Engine::SKILL_COOLDOWN_DESC(1.0f);
+	m_mapSkillKeyInput[L"MP_POTION"] = -1;
+	m_mapSkillCoolDown[L"MP_POTION"] = Engine::SKILL_COOLDOWN_DESC(1.0f);
 
 	vecQuickSlot[0]->Set_CurQuickSlotName(QUCKSLOT_SKILL_AURA_ON);
 	vecQuickSlot[1]->Set_CurQuickSlotName(QUCKSLOT_SKILL_PURIFY);
@@ -1118,16 +1124,20 @@ void CPCPriest::KeyInput_Attack(const _float& fTimeDelta)
 void CPCPriest::KeyInput_Potion(const _float& fTimeDelta)
 {
 	if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"HP_POTION"]) &&
+		m_mapSkillCoolDown[L"HP_POTION"].bIsCoolDownComplete &&
 		CInventoryEquipmentMgr::Get_Instance()->Get_HpPotionSlot() != nullptr &&
 		CInventoryEquipmentMgr::Get_Instance()->Get_HpPotionSlot()->Get_CurItemCnt() > 0)
 	{
+		m_mapSkillCoolDown[L"HP_POTION"].Use_Skill();
 		m_pPacketMgr->send_use_potion(true);
 	}
 
 	if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"MP_POTION"]) &&
+		m_mapSkillCoolDown[L"MP_POTION"].bIsCoolDownComplete &&
 		CInventoryEquipmentMgr::Get_Instance()->Get_MpPotionSlot() != nullptr &&
 		CInventoryEquipmentMgr::Get_Instance()->Get_MpPotionSlot()->Get_CurItemCnt() > 0)
 	{
+		m_mapSkillCoolDown[L"MP_POTION"].Use_Skill();
 		m_pPacketMgr->send_use_potion(false);
 	}
 }
@@ -1201,9 +1211,12 @@ void CPCPriest::KeyInput_SkillAttack(const _float& fTimeDelta)
 	if (!m_bIsSkillLoop)
 	{
 		if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"AURA_ON"]) && 
+			m_mapSkillCoolDown[L"AURA_ON"].bIsCoolDownComplete &&
 			NO_EVENT_STATE &&
 			(m_pInfoCom->m_iMp - Priest::AMOUNT_AURA >= 0))
 		{
+			m_mapSkillCoolDown[L"AURA_ON"].Use_Skill();
+
 			SetUp_AttackSetting();
 			m_bIsSkill  = true;
 			m_uiAnimIdx = Priest::AURA_ON;
@@ -1211,9 +1224,12 @@ void CPCPriest::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pPacketMgr->send_buff(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"PURIFY"]) && 
+				 m_mapSkillCoolDown[L"PURIFY"].bIsCoolDownComplete &&
 				 NO_EVENT_STATE &&
-			(m_pInfoCom->m_iMp - Priest::AMOUNT_PURIFY >= 0))
+				 (m_pInfoCom->m_iMp - Priest::AMOUNT_PURIFY >= 0))
 		{
+			m_mapSkillCoolDown[L"PURIFY"].Use_Skill();
+
 			SetUp_AttackSetting();
 			m_bIsSkill  = true;
 			m_uiAnimIdx = Priest::PURIFY;
@@ -1221,9 +1237,12 @@ void CPCPriest::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pPacketMgr->send_buff(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"HEAL"]) && 
+				 m_mapSkillCoolDown[L"HEAL"].bIsCoolDownComplete &&
 				 NO_EVENT_STATE &&
-			(m_pInfoCom->m_iMp - Priest::AMOUNT_HEAL >= 0))
+				 (m_pInfoCom->m_iMp - Priest::AMOUNT_HEAL >= 0))
 		{
+			m_mapSkillCoolDown[L"HEAL"].Use_Skill();
+
 			m_pDynamicCamera->Set_CameraState(CAMERA_STATE::PRIEST_BUFF);
 			m_pDynamicCamera->SetUp_ThirdPersonViewOriginData();
 			m_pDynamicCamera->Set_CameraAtParentMatrix(m_pMeshCom->Find_SkinningMatrix("Bip01-R-Hand"));
@@ -1236,8 +1255,11 @@ void CPCPriest::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pPacketMgr->send_buff(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"MP_CHARGE"]) && 
+				 m_mapSkillCoolDown[L"MP_CHARGE"].bIsCoolDownComplete &&
 				 NO_EVENT_STATE)
 		{
+			m_mapSkillCoolDown[L"MP_CHARGE"].Use_Skill();
+
 			m_pDynamicCamera->Set_CameraState(CAMERA_STATE::PRIEST_BUFF);
 			m_pDynamicCamera->SetUp_ThirdPersonViewOriginData();
 			m_pDynamicCamera->Set_CameraAtParentMatrix(m_pMeshCom->Find_SkinningMatrix("Bip01-R-Hand"));

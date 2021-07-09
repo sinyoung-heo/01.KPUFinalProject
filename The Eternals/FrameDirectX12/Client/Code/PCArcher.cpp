@@ -150,12 +150,19 @@ HRESULT CPCArcher::LateInit_GameObject()
 	vector<CQuickSlot*> vecQuickSlot = m_pQuickSlotMgr->Get_QuickSlotList();
 
 	m_mapSkillKeyInput[L"RAPID_SHOT"]    = -1;
+	m_mapSkillCoolDown[L"RAPID_SHOT"]    = Engine::SKILL_COOLDOWN_DESC(2.0f);
 	m_mapSkillKeyInput[L"ARROW_SHOWER"]  = -1;
+	m_mapSkillCoolDown[L"ARROW_SHOWER"]  = Engine::SKILL_COOLDOWN_DESC(4.0f);
 	m_mapSkillKeyInput[L"ESCAPING_BOMB"] = -1;
+	m_mapSkillCoolDown[L"ESCAPING_BOMB"] = Engine::SKILL_COOLDOWN_DESC(6.0f);
 	m_mapSkillKeyInput[L"ARROW_FALL"]    = -1;
+	m_mapSkillCoolDown[L"ARROW_FALL"]    = Engine::SKILL_COOLDOWN_DESC(8.0f);
 	m_mapSkillKeyInput[L"CHARGE_ARROW"]  = -1;
+	m_mapSkillCoolDown[L"CHARGE_ARROW"]  = Engine::SKILL_COOLDOWN_DESC(10.0f);
 	m_mapSkillKeyInput[L"HP_POTION"]     = -1;
+	m_mapSkillCoolDown[L"HP_POTION"]     = Engine::SKILL_COOLDOWN_DESC(1.0f);
 	m_mapSkillKeyInput[L"MP_POTION"]     = -1;
+	m_mapSkillCoolDown[L"MP_POTION"]     = Engine::SKILL_COOLDOWN_DESC(1.0f);
 
 	vecQuickSlot[0]->Set_CurQuickSlotName(QUCKSLOT_SKILL_RAPID_SHOT);
 	vecQuickSlot[1]->Set_CurQuickSlotName(QUCKSLOT_SKILL_ARROW_SHOWER);
@@ -1140,16 +1147,20 @@ void CPCArcher::KeyInput_Attack(const _float& fTimeDelta)
 void CPCArcher::KeyInput_Potion(const _float& fTimeDelta)
 {
 	if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"HP_POTION"]) &&
+		m_mapSkillCoolDown[L"HP_POTION"].bIsCoolDownComplete &&
 		CInventoryEquipmentMgr::Get_Instance()->Get_HpPotionSlot() != nullptr &&
 		CInventoryEquipmentMgr::Get_Instance()->Get_HpPotionSlot()->Get_CurItemCnt() > 0)
 	{
+		m_mapSkillCoolDown[L"HP_POTION"].Use_Skill();
 		m_pPacketMgr->send_use_potion(true);
 	}
 
 	if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"MP_POTION"]) &&
+		m_mapSkillCoolDown[L"MP_POTION"].bIsCoolDownComplete &&
 		CInventoryEquipmentMgr::Get_Instance()->Get_MpPotionSlot() != nullptr &&
 		CInventoryEquipmentMgr::Get_Instance()->Get_MpPotionSlot()->Get_CurItemCnt() > 0)
 	{
+		m_mapSkillCoolDown[L"MP_POTION"].Use_Skill();
 		m_pPacketMgr->send_use_potion(false);
 	}
 }
@@ -1226,9 +1237,12 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 	if (!m_bIsSkillLoop)
 	{
 		if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"RAPID_SHOT"]) && 
+			m_mapSkillCoolDown[L"RAPID_SHOT"].bIsCoolDownComplete &&
 			m_uiAnimIdx != Archer::RAPID_SHOT1 && 
 			NO_EVENT_STATE)
 		{
+			m_mapSkillCoolDown[L"RAPID_SHOT"].Use_Skill();
+
 			SetUp_AttackSetting();
 			m_bIsSkill  = true;
 			//m_bIsSkillLoop = true;
@@ -1237,9 +1251,12 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"ESCAPING_BOMB"]) &&
+				 m_mapSkillCoolDown[L"ESCAPING_BOMB"].bIsCoolDownComplete &&
 				 m_uiAnimIdx != Archer::ESCAPING_BOMB && 
 				 NO_EVENT_STATE)
 		{
+			m_mapSkillCoolDown[L"ESCAPING_BOMB"].Use_Skill();
+
 			SetUp_AttackSetting();
 			m_bIsSkill     = true;
 			m_bIsSkillLoop = true;
@@ -1248,9 +1265,12 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"ARROW_SHOWER"]) &&
+				 m_mapSkillCoolDown[L"ARROW_SHOWER"].bIsCoolDownComplete &&
 				 m_uiAnimIdx != Archer::ARROW_SHOWER_START && 
 				 NO_EVENT_STATE)
 		{
+			m_mapSkillCoolDown[L"ARROW_SHOWER"].Use_Skill();
+
 			SetUp_AttackSetting();
 			m_bIsSkill     = true;
 			m_bIsSkillLoop = true;
@@ -1259,9 +1279,12 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"ARROW_FALL"]) &&
+				 m_mapSkillCoolDown[L"ARROW_FALL"].bIsCoolDownComplete &&
 				 m_uiAnimIdx != Archer::ARROW_FALL_START && 
 				 NO_EVENT_STATE)
 		{
+			m_mapSkillCoolDown[L"ARROW_FALL"].Use_Skill();
+
 			m_pDynamicCamera->Set_CameraState(CAMERA_STATE::ARCHER_ARROW_FALL);
 			m_pDynamicCamera->SetUp_ThirdPersonViewOriginData();
 			m_pDynamicCamera->Set_FovY(50.0f);
@@ -1277,9 +1300,12 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"CHARGE_ARROW"]) &&
+				 m_mapSkillCoolDown[L"CHARGE_ARROW"].bIsCoolDownComplete &&
 				 m_uiAnimIdx != Archer::CHARGE_ARROW_START && 
 				 NO_EVENT_STATE)
 		{
+			m_mapSkillCoolDown[L"CHARGE_ARROW"].Use_Skill();
+
 			m_bIsSetCameraShaking = false;
 			m_bIsSetCameraZoom    = false;
 			m_pDynamicCamera->Set_CameraState(CAMERA_STATE::ARCHER_ULTIMATE);

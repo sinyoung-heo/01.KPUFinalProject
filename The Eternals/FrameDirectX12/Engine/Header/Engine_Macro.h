@@ -101,7 +101,7 @@ ______________________________________________________________________*/
 ______________________________________________________________________*/
 #ifdef _DEBUG
 
-#define ENGINE_LOG 0
+//#define ENGINE_LOG 0
 #define COUT_STR(STR)	cout << STR << endl;
 
 //AfterImageTerm

@@ -36,10 +36,12 @@ public:
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 
 	void SetUp_SlotIcon();
+	void SetUp_SkillCoolDownTime();
 private:
 	void KeyInput_MouseButton(const _float& fTimeDelta);
 	void SetUp_FontPotionCnt(const _float& fTimeDelta);
 	void SetUp_FontDIKKey(const _float& fTimeDelta);
+	void SetUp_FontCoolDownTime(const _float& fTimeDelta);
 private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
@@ -63,9 +65,13 @@ private:
 	// SlotIdx
 	_uint m_uiIdx     = 0;
 	_uint m_uiDIK_Key = 0;
+	
+	wstring m_wstrCoolDownTag = L"";
+	_float	m_fMaxCoolDownTime = 0.0f;
+	_float	m_fCurCoolDownTime = 0.0f;
 
-	Engine::CFont* m_pFontPotionCnt = nullptr;
-
+	Engine::CFont* m_pFontPotionCnt         = nullptr;
+	Engine::CFont* m_pFontSkillCoolDownTime = nullptr;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 									   wstring wstrRootObjectTag,

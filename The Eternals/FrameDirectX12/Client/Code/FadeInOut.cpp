@@ -26,8 +26,6 @@ void CFadeInOut::Set_FadeInOutEventType(const EVENT_TYPE& eEventType)
 	{
 		m_fAlpha = 0.0f;
 	}
-
-	m_pRenderer->Set_IsRenderMiniMap(false);
 }
 
 HRESULT CFadeInOut::Ready_GameObject(const EVENT_TYPE& eEventType)
@@ -57,8 +55,6 @@ HRESULT CFadeInOut::Ready_GameObject(const EVENT_TYPE& eEventType)
 	{
 		m_fAlpha = 0.0f;
 	}
-
-	m_pRenderer->Set_IsRenderMiniMap(false);
 
 	return S_OK;
 }
@@ -174,7 +170,6 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 		if (m_fAlpha < 0.0f)
 		{
 			m_fAlpha = 0.0f;
-			m_pRenderer->Set_IsRenderMiniMap(true);
 			// Set_DeadGameObject();
 			m_bIsReturn = true;
 		}
@@ -185,7 +180,6 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 		if (m_fAlpha > 1.0f)
 		{
 			m_fAlpha = 1.0f;
-			m_pRenderer->Set_IsRenderMiniMap(true);
 			// Set_DeadGameObject();
 			m_bIsReturn = true;
 		}
@@ -197,7 +191,6 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 		{
 			m_fAlpha = 1.0f;
 			static_cast<CScene_Logo*>(Engine::CManagement::Get_Instance()->Get_CurrentScene())->Set_IsSceneChage(true);
-			m_pRenderer->Set_IsRenderMiniMap(true);
 			// Set_DeadGameObject();
 			m_bIsReturn = true;
 		}
@@ -228,7 +221,6 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 			{
 				m_fAlpha = 0.0f;
 				g_bIsStageChange = false;
-				m_pRenderer->Set_IsRenderMiniMap(true);
 				// Set_DeadGameObject();
 				m_bIsReturn = true;
 			}

@@ -84,6 +84,12 @@ HRESULT CQuickSlot::Ready_GameObject(wstring wstrRootObjectTag,
 	m_pFontPotionCnt->Set_Color(D2D1::ColorF::Cornsilk);
 	m_pFontPotionCnt->Set_Text(L"");
 
+	// CoolDownTime Font
+	m_pFontSkillCoolDownTime = static_cast<Engine::CFont*>(m_pObjectMgr->Clone_GameObjectPrototype(L"Font_BinggraeMelona20"));
+	Engine::NULL_CHECK_RETURN(m_pFontSkillCoolDownTime, E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pFontSkillCoolDownTime->Ready_GameObject(L"", _vec2(0.0f, 0.f), D2D1::ColorF::White), E_FAIL);
+	m_pFontSkillCoolDownTime->Set_Color(D2D1::ColorF::Cornsilk);
+	m_pFontSkillCoolDownTime->Set_Text(L"");
 
 	m_pFont->Set_Color(D2D1::ColorF::White);
 	m_pFont->Set_Text(L"");
@@ -106,6 +112,8 @@ _int CQuickSlot::Update_GameObject(const _float& fTimeDelta)
 		return DEAD_OBJ;
 
 	SetUp_SlotIcon();
+	SetUp_SkillCoolDownTime();
+
 	CGameUIChild::Update_GameObject(fTimeDelta);
 
 	return NO_EVENT;
@@ -136,6 +144,7 @@ _int CQuickSlot::LateUpdate_GameObject(const _float& fTimeDelta)
 		SetUp_FontPotionCnt(fTimeDelta);
 
 	SetUp_FontDIKKey(fTimeDelta);
+	SetUp_FontCoolDownTime(fTimeDelta);
 
 	return NO_EVENT;
 }
@@ -259,6 +268,9 @@ void CQuickSlot::SetUp_SlotIcon()
 	{
 	case EMPTY_SLOT:
 	{
+		m_wstrCoolDownTag = L"";
+		m_fMaxCoolDownTime = 0.0f;
+		m_fCurCoolDownTime = 0.0f;
 	}
 		break;
 
@@ -266,7 +278,9 @@ void CQuickSlot::SetUp_SlotIcon()
 	{
 		m_pSlotIcon->SetUp_TexDescriptorHeap(L"ItemPotion", tFrame, 0);
 		if (nullptr != pThisPlayer)
-			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"HP_POTION", m_uiDIK_Key);
+			pThisPlayer->Set_ThisPlayerSkillKeyInput(L"HP_POTION", m_uiDIK_Key);
+
+		m_wstrCoolDownTag = L"HP_POTION";
 	}
 		break;
 
@@ -274,7 +288,9 @@ void CQuickSlot::SetUp_SlotIcon()
 	{
 		m_pSlotIcon->SetUp_TexDescriptorHeap(L"ItemPotion", tFrame, 1);
 		if (nullptr != pThisPlayer)
-			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"MP_POTION", m_uiDIK_Key);
+			pThisPlayer->Set_ThisPlayerSkillKeyInput(L"MP_POTION", m_uiDIK_Key);
+
+		m_wstrCoolDownTag = L"MP_POTION";
 	}
 		break;
 
@@ -283,7 +299,9 @@ void CQuickSlot::SetUp_SlotIcon()
 	{
 		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Gladiator", tFrame, 0);
 		if (nullptr != pThisPlayer)
-			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"STINGER_BLADE", m_uiDIK_Key);
+			pThisPlayer->Set_ThisPlayerSkillKeyInput(L"STINGER_BLADE", m_uiDIK_Key);
+
+		m_wstrCoolDownTag = L"STINGER_BLADE";
 	}
 		break;
 
@@ -291,7 +309,9 @@ void CQuickSlot::SetUp_SlotIcon()
 	{
 		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Gladiator", tFrame, 1);
 		if (nullptr != pThisPlayer)
-			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"CUTTING_SLASH", m_uiDIK_Key);
+			pThisPlayer->Set_ThisPlayerSkillKeyInput(L"CUTTING_SLASH", m_uiDIK_Key);
+
+		m_wstrCoolDownTag = L"CUTTING_SLASH";
 	}
 		break;
 
@@ -299,7 +319,7 @@ void CQuickSlot::SetUp_SlotIcon()
 	{
 		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Gladiator", tFrame, 2);
 		if (nullptr != pThisPlayer)
-			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"JAW_BREAKER", m_uiDIK_Key);
+			pThisPlayer->Set_ThisPlayerSkillKeyInput(L"JAW_BREAKER", m_uiDIK_Key);
 	}
 		break;
 
@@ -307,7 +327,9 @@ void CQuickSlot::SetUp_SlotIcon()
 	{
 		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Gladiator", tFrame, 3);
 		if (nullptr != pThisPlayer)
-			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"GAIA_CRUSH", m_uiDIK_Key);
+			pThisPlayer->Set_ThisPlayerSkillKeyInput(L"GAIA_CRUSH", m_uiDIK_Key);
+
+		m_wstrCoolDownTag = L"GAIA_CRUSH";
 	}
 		break;
 
@@ -315,7 +337,9 @@ void CQuickSlot::SetUp_SlotIcon()
 	{
 		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Gladiator", tFrame, 4);
 		if (nullptr != pThisPlayer)
-			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"DRAW_SWORD", m_uiDIK_Key);
+			pThisPlayer->Set_ThisPlayerSkillKeyInput(L"DRAW_SWORD", m_uiDIK_Key);
+
+		m_wstrCoolDownTag = L"DRAW_SWORD";
 	}
 		break;
 
@@ -324,7 +348,9 @@ void CQuickSlot::SetUp_SlotIcon()
 	{
 		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Archer", tFrame, 0);
 		if (nullptr != pThisPlayer)
-			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"RAPID_SHOT", m_uiDIK_Key);
+			pThisPlayer->Set_ThisPlayerSkillKeyInput(L"RAPID_SHOT", m_uiDIK_Key);
+
+		m_wstrCoolDownTag = L"RAPID_SHOT";
 	}
 		break;
 
@@ -332,7 +358,9 @@ void CQuickSlot::SetUp_SlotIcon()
 	{
 		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Archer", tFrame, 1);
 		if (nullptr != pThisPlayer)
-			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"ARROW_SHOWER", m_uiDIK_Key);
+			pThisPlayer->Set_ThisPlayerSkillKeyInput(L"ARROW_SHOWER", m_uiDIK_Key);
+
+		m_wstrCoolDownTag = L"ARROW_SHOWER";
 	}
 		break;
 
@@ -340,7 +368,9 @@ void CQuickSlot::SetUp_SlotIcon()
 	{
 		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Archer", tFrame, 2);
 		if (nullptr != pThisPlayer)
-			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"ESCAPING_BOMB", m_uiDIK_Key);
+			pThisPlayer->Set_ThisPlayerSkillKeyInput(L"ESCAPING_BOMB", m_uiDIK_Key);
+
+		m_wstrCoolDownTag = L"ESCAPING_BOMB";
 	}
 		break;
 
@@ -348,7 +378,9 @@ void CQuickSlot::SetUp_SlotIcon()
 	{
 		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Archer", tFrame, 3);
 		if (nullptr != pThisPlayer)
-			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"ARROW_FALL", m_uiDIK_Key);
+			pThisPlayer->Set_ThisPlayerSkillKeyInput(L"ARROW_FALL", m_uiDIK_Key);
+
+		m_wstrCoolDownTag = L"ARROW_FALL";
 	}
 		break;
 
@@ -356,7 +388,9 @@ void CQuickSlot::SetUp_SlotIcon()
 	{
 		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Archer", tFrame, 4);
 		if (nullptr != pThisPlayer)
-			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"CHARGE_ARROW", m_uiDIK_Key);
+			pThisPlayer->Set_ThisPlayerSkillKeyInput(L"CHARGE_ARROW", m_uiDIK_Key);
+
+		m_wstrCoolDownTag = L"CHARGE_ARROW";
 	}
 		break;
 
@@ -365,7 +399,9 @@ void CQuickSlot::SetUp_SlotIcon()
 	{
 		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Priest", tFrame, 0);
 		if (nullptr != pThisPlayer)
-			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"AURA_ON", m_uiDIK_Key);
+			pThisPlayer->Set_ThisPlayerSkillKeyInput(L"AURA_ON", m_uiDIK_Key);
+
+		m_wstrCoolDownTag = L"AURA_ON";
 	}
 		break;
 
@@ -373,7 +409,9 @@ void CQuickSlot::SetUp_SlotIcon()
 	{
 		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Priest", tFrame, 1);
 		if (nullptr != pThisPlayer)
-			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"PURIFY", m_uiDIK_Key);
+			pThisPlayer->Set_ThisPlayerSkillKeyInput(L"PURIFY", m_uiDIK_Key);
+
+		m_wstrCoolDownTag = L"PURIFY";
 	}
 		break;
 
@@ -381,7 +419,9 @@ void CQuickSlot::SetUp_SlotIcon()
 	{
 		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Priest", tFrame, 2);
 		if (nullptr != pThisPlayer)
-			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"HEAL", m_uiDIK_Key);
+			pThisPlayer->Set_ThisPlayerSkillKeyInput(L"HEAL", m_uiDIK_Key);
+
+		m_wstrCoolDownTag = L"HEAL";
 	}
 		break;
 
@@ -389,15 +429,33 @@ void CQuickSlot::SetUp_SlotIcon()
 	{
 		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Priest", tFrame, 3);
 		if (nullptr != pThisPlayer)
-			pThisPlayer->Set_ThilsPlayerSkillKeyInput(L"MP_CHARGE", m_uiDIK_Key);
+			pThisPlayer->Set_ThisPlayerSkillKeyInput(L"MP_CHARGE", m_uiDIK_Key);
+
+		m_wstrCoolDownTag = L"MP_CHARGE";
 	}
 		break;
 
 	default:
+
 		break;
 	}
 
 	m_chPreSlotName = m_chCurSlotName;
+}
+
+void CQuickSlot::SetUp_SkillCoolDownTime()
+{
+	if (L"" == m_wstrCoolDownTag)
+		return;
+
+	Engine::CGameObject*			pThisPlayer        = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+	Engine::SKILL_COOLDOWN_DESC*	pSkillCoolDownDesc = pThisPlayer->Get_ThisPlayerSkillCoolDown(m_wstrCoolDownTag);
+
+	if (nullptr == pSkillCoolDownDesc)
+		return;
+
+	m_fMaxCoolDownTime = pSkillCoolDownDesc->fMaxCoolDownTime;
+	m_fCurCoolDownTime = pSkillCoolDownDesc->fCurCoolDownTime;
 }
 
 void CQuickSlot::SetUp_FontPotionCnt(const _float& fTimeDelta)
@@ -452,6 +510,24 @@ void CQuickSlot::SetUp_FontDIKKey(const _float& fTimeDelta)
 	}
 }
 
+void CQuickSlot::SetUp_FontCoolDownTime(const _float& fTimeDelta)
+{
+	if (nullptr != m_pFontSkillCoolDownTime && 0.0f != m_fCurCoolDownTime && L"" != m_wstrCoolDownTag)
+	{
+		_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
+		vPos.x += -12.0f;
+		vPos.y += -10.0f;
+
+		_tchar	szText[MIN_STR] = L"";
+		wstring wstrText        = L"%d";
+		swprintf_s(szText, L"%0.1f", m_fCurCoolDownTime);
+
+		m_pFontPotionCnt->Set_Text(szText);
+		m_pFontPotionCnt->Set_Pos(_vec2(vPos.x, vPos.y));
+		m_pFontPotionCnt->Update_GameObject(fTimeDelta);
+	}
+}
+
 Engine::CGameObject* CQuickSlot::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 												wstring wstrRootObjectTag,
 												wstring wstrObjectTag, 
@@ -488,4 +564,5 @@ void CQuickSlot::Free()
 	Engine::Safe_Release(m_pSlotFrame);
 	Engine::Safe_Release(m_pSlotIcon);
 	Engine::Safe_Release(m_pFontPotionCnt);
+	Engine::Safe_Release(m_pFontSkillCoolDownTime);
 }

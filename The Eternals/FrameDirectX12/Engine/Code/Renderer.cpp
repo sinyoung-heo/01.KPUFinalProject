@@ -239,9 +239,6 @@ void CRenderer::Render_NonAlpha(const _float& fTimeDelta)
 
 void CRenderer::Render_MiniMap(const _float& fTimeDelta)
 {
-	if (!m_bIsRenderMiniMap)
-		return;
-
 	sort(m_RenderList[RENDER_MINIMAP].begin(), m_RenderList[RENDER_MINIMAP].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
 		{
 			return pSour->Get_MiniMapTransform()->m_vPos.y > pDest->Get_MiniMapTransform()->m_vPos.y;
@@ -655,7 +652,7 @@ void CRenderer::Render_RenderTarget()
 		if (nullptr != m_pTargetAddEffect)
 			m_pTargetAddEffect->Render_RenderTarget();
 
-		if (nullptr != m_pTargetMiniMap && m_bIsRenderMiniMap)
+		if (nullptr != m_pTargetMiniMap)
 			m_pTargetMiniMap->Render_RenderTarget();
 	}
 }

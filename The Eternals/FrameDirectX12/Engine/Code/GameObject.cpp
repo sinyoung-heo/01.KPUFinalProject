@@ -56,6 +56,16 @@ CComponent * CGameObject::Get_Component(wstring wstrComponentTag, COMPONENTID eI
 	return pComponent;
 }
 
+SKILL_COOLDOWN_DESC* CGameObject::Get_ThisPlayerSkillCoolDown(wstring wstrTag)
+{
+	auto iter_find = m_mapSkillCoolDown.find(wstrTag);
+
+	if (iter_find != m_mapSkillCoolDown.end())
+		return &(iter_find->second);
+
+	return nullptr;
+}
+
 void CGameObject::Set_DeadReckoning(const _vec3& vPos)
 {
 	m_pInfoCom->m_vArrivePos = vPos;	
@@ -183,6 +193,10 @@ HRESULT CGameObject::LateInit_GameObject()
 _int CGameObject::Update_GameObject(const _float & fTimeDelta)
 {
 	Reset_Collider();
+
+	// Skill CoolDown
+	for (auto& pair : m_mapSkillCoolDown)
+		pair.second.Update_CoolDownTime(fTimeDelta);
 
 	if (nullptr != m_pTransCom)
 		m_pTransCom->Update_Component(fTimeDelta);

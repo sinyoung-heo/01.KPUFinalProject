@@ -77,7 +77,6 @@ public:
 	CRenderTarget*		Get_TargetMiniMap()					{ return m_pTargetMiniMap; }
 	BoundingFrustum&	Get_Frustum()						{ return m_tFrustum; } 
 	const _bool&		Get_IsRenderShadow()				{ return m_bIsRenderShadow; }
-	const _bool&		Get_IsRenderMiniMap()				{ return m_bIsRenderMiniMap; }
 
 	// Set
 	HRESULT	Set_CurPipelineState(ID3D12PipelineState* pPipelineState);
@@ -90,7 +89,6 @@ public:
 	void	Set_bIsLoadingFinish()								{ m_bIsLoadingFinish = true; }
 	void	Set_Frustum(const BoundingFrustum& tFrustum)		{ m_tFrustum = tFrustum; }
 	void	Set_IsRenderShadow(const _bool& bIsRenderShadow)	{ m_bIsRenderShadow = bIsRenderShadow; }
-	void	Set_IsRenderMiniMap(const _bool& bIsRenderMiniMap)	{ m_bIsRenderMiniMap = bIsRenderMiniMap; }
 
 	// Method
 	HRESULT	Ready_Renderer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
@@ -261,7 +259,6 @@ private:
 	_bool m_bIsLoadingFinish	= false;
 	_bool m_bIsCreateThread		= false;
 	_bool m_bIsRenderShadow		= true;
-	_bool m_bIsRenderMiniMap    = false;
 
 public:
 	void	Create_ThreadContext();

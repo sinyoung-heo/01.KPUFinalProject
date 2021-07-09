@@ -46,6 +46,8 @@ public:
 	const char&				Get_WeaponType()		{ return m_chCurWeaponType; }
 	const _bool&			Get_IsThisPlayerPartyMember()	{ return m_bIsThisPlayerPartyMember; }
 	map<wstring, _int>&		Get_ThilsPlayerSkillKeyInput()	{ return m_mapSkillKeyInput; }
+	map<wstring, SKILL_COOLDOWN_DESC>& Get_ThisPlayerSkillCoolDown() { return m_mapSkillCoolDown; }
+	SKILL_COOLDOWN_DESC* Get_ThisPlayerSkillCoolDown(wstring wstrTag);
 	const high_resolution_clock::time_point& Get_LastMoveTime() { return m_last_move_time; }
 	// Set
 	void	Set_CurrentStageID(const char& chStageID)				{ m_chCurStageID = chStageID; }
@@ -83,7 +85,8 @@ public:
 	void	Set_PartyState(const _bool& st)							{ m_bIsPartyState = st; }
 	void	Set_PartySuggestSNum(const _int& iNum)					{ m_iSuggesterNumber = iNum; }
 	void	Set_IsThisPlayerPartyMember(const _bool& bIsPartyMember) { m_bIsThisPlayerPartyMember = bIsPartyMember; }
-	void	Set_ThilsPlayerSkillKeyInput(wstring wstrTag, const _uint& uiKey) { m_mapSkillKeyInput[wstrTag] = uiKey; }
+	void	Set_ThisPlayerSkillKeyInput(wstring wstrTag, const _uint& uiKey)				{ m_mapSkillKeyInput[wstrTag] = uiKey; }
+	void	Set_ThisPlayerSkillCoolDown(wstring wstrTag, const SKILL_COOLDOWN_DESC& tDesc)	{ m_mapSkillCoolDown[wstrTag] = tDesc; }
 	void	Ready_AngleInterpolationValue(const _float& fEndAngle);
 	void	Ready_PositionInterpolationValue(const _vec3& vEndPosition, float fSpd = 3.f);
 
@@ -192,7 +195,8 @@ protected:
 	_float m_fHitVelocity = 1.f;
 	
 	// Player Skill Key Input
-	map<wstring, _int>	m_mapSkillKeyInput;
+	map<wstring, _int>					m_mapSkillKeyInput;
+	map<wstring, SKILL_COOLDOWN_DESC>	m_mapSkillCoolDown;
 
 	/*__________________________________________________________________________________________________________
 	[ Collision ]
