@@ -232,6 +232,7 @@
     <ClInclude Include="..\Code\MainMenuLogoutCanvas.h" />
     <ClInclude Include="..\Code\MainMenuSettingCanvas.h" />
     <ClInclude Include="..\Code\MeshParticleEffect.h" />
+    <ClInclude Include="..\Code\MiniMapCanvas.h" />
     <ClInclude Include="..\Code\Monkey.h" />
     <ClInclude Include="..\Code\NormalMonsterHpGauge.h" />
     <ClInclude Include="..\Code\NPCMiniMap.h" />
@@ -422,6 +423,7 @@
     <ClCompile Include="..\Code\MainMenuSetting.cpp" />
     <ClCompile Include="..\Code\MainMenuSettingCanvas.cpp" />
     <ClCompile Include="..\Code\MeshParticleEffect.cpp" />
+    <ClCompile Include="..\Code\MiniMapCanvas.cpp" />
     <ClCompile Include="..\Code\Monkey.cpp" />
     <ClCompile Include="..\Code\Monster_Normal.cpp" />
     <ClCompile Include="..\Code\MouseCursorMgr.cpp" />

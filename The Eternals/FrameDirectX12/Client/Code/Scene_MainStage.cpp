@@ -54,6 +54,7 @@
 #include "Lakan.h"
 #include "CinemaVergos.h"
 #include "CinemaMgr.h"
+#include "MiniMapCanvas.h"
 
 CScene_MainStage::CScene_MainStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -2568,16 +2569,16 @@ HRESULT CScene_MainStage::SetUp_UIMiniMapCanvas()
 
 			// UIRoot »ý¼º.
 			Engine::CGameObject* pRootUI = nullptr;
-			pRootUI = CGameUIRoot::Create(m_pGraphicDevice, m_pCommandList,
-										  wstrRootObjectTag,
-										  wstrDataFilePath,
-										  vPos,
-										  vScale,
-										  bIsSpriteAnimation,
-										  fFrameSpeed,
-										  vRectPosOffset,
-										  vRectScale,
-										  UIDepth);
+			pRootUI = CMiniMapCanvas::Create(m_pGraphicDevice, m_pCommandList,
+											 wstrRootObjectTag,
+											 wstrDataFilePath,
+											 vPos,
+											 vScale,
+											 bIsSpriteAnimation,
+											 fFrameSpeed,
+											 vRectPosOffset,
+											 vRectScale,
+											 UIDepth);
 			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
 		}
 	}

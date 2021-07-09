@@ -529,6 +529,9 @@
     <Filter Include="02.GameObject\05.Monster\11.Vergos">
       <UniqueIdentifier>{757ac2e0-3ce7-416f-b826-3e60c80ebddd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\10.MiniMapCanvas">
+      <UniqueIdentifier>{3dfc12ec-a19d-430b-b197-4ea03300d825}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -1102,6 +1105,9 @@
     <ClInclude Include="..\Code\DragonEffect.h">
       <Filter>02.GameObject\98.GameEffect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\MiniMapCanvas.h">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\10.MiniMapCanvas</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1617,6 +1623,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\DragonEffect.cpp">
       <Filter>02.GameObject\98.GameEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MiniMapCanvas.cpp">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\10.MiniMapCanvas</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

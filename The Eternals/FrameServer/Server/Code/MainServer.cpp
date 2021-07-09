@@ -207,7 +207,7 @@ void Delete_AI()
 void Initialize_Monster()
 {
 	CObjMgr::GetInstance()->Create_StageBeachMonster();
-	CObjMgr::GetInstance()->Create_StageWinterMonster();
+	//CObjMgr::GetInstance()->Create_StageWinterMonster();
 }
 
 void Delete_Monster()
