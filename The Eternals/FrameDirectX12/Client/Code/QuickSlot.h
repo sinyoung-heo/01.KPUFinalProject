@@ -2,6 +2,7 @@
 #include "GameUIChild.h"
 
 class CQuickSlotMgr;
+class CCoolTime;
 
 class CQuickSlot : public CGameUIChild
 {
@@ -34,6 +35,7 @@ public:
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Render_GameObject(const _float& fTimeDelta);
+	void			Render_CoolDownTime(const _float& fTimeDelta);
 
 	void SetUp_SlotIcon();
 	void SetUp_SkillCoolDownTime();
@@ -43,6 +45,11 @@ private:
 	void SetUp_FontDIKKey(const _float& fTimeDelta);
 	void SetUp_FontCoolDownTime(const _float& fTimeDelta);
 private:
+	/*__________________________________________________________________________________________________________
+	[ Component ]
+	____________________________________________________________________________________________________________*/
+	// Engine::CShaderTexture* m_pShaderCoolDownCom = nullptr;
+	
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
@@ -66,9 +73,10 @@ private:
 	_uint m_uiIdx     = 0;
 	_uint m_uiDIK_Key = 0;
 	
-	wstring m_wstrCoolDownTag = L"";
-	_float	m_fMaxCoolDownTime = 0.0f;
-	_float	m_fCurCoolDownTime = 0.0f;
+	CCoolTime*	m_pUICoolDownTime  = nullptr;
+	wstring		m_wstrCoolDownTag  = L"";
+	_float		m_fMaxCoolDownTime = 0.0f;
+	_float		m_fCurCoolDownTime = 0.0f;
 
 	Engine::CFont* m_pFontPotionCnt         = nullptr;
 	Engine::CFont* m_pFontSkillCoolDownTime = nullptr;

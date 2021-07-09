@@ -1,11 +1,11 @@
 #pragma once
 #include "GameUIChild.h"
 
-class CStoreBuySellListBack : public CGameUIChild
+class CCoolTime : public CGameUIChild
 {
 private:
-	explicit CStoreBuySellListBack(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CStoreBuySellListBack() = default;
+	explicit CCoolTime(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CCoolTime() = default;
 
 public:
 	// CGameObject을(를) 통해 상속됨
@@ -23,15 +23,6 @@ public:
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Render_GameObject(const _float& fTimeDelta);
-private:
-	void SetUp_FontPosition(const _float& fTimeDelta);
-private:
-	/*__________________________________________________________________________________________________________
-	[ Value ]
-	____________________________________________________________________________________________________________*/
-	_uint			m_uiSumPrice   = 0;
-	Engine::CFont*	m_pFontPrice   = nullptr;
-	wstring			m_wstrFontText = L"";
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 									   wstring wstrRootObjectTag,

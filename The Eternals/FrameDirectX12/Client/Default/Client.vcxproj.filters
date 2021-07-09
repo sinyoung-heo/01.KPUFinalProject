@@ -529,8 +529,11 @@
     <Filter Include="02.GameObject\05.Monster\11.Vergos">
       <UniqueIdentifier>{757ac2e0-3ce7-416f-b826-3e60c80ebddd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\10.MiniMapCanvas">
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\11.MiniMapCanvas">
       <UniqueIdentifier>{3dfc12ec-a19d-430b-b197-4ea03300d825}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\14.CoolTime">
+      <UniqueIdentifier>{2b23d665-33b3-474f-8e77-77ea90e7cf97}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1106,7 +1109,10 @@
       <Filter>02.GameObject\98.GameEffect</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\MiniMapCanvas.h">
-      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\10.MiniMapCanvas</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\11.MiniMapCanvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\CoolTime.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\14.CoolTime</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1625,7 +1631,10 @@
       <Filter>02.GameObject\98.GameEffect</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\MiniMapCanvas.cpp">
-      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\10.MiniMapCanvas</Filter>
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\11.MiniMapCanvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CoolTime.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\14.CoolTime</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

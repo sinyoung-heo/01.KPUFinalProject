@@ -35,7 +35,7 @@ HRESULT CMiniMapCanvas::Ready_GameObject(wstring wstrObjectTag,
 	m_pShaderTargetCom = static_cast<Engine::CShaderTexture*>(m_pComponentMgr->Clone_Component(L"ShaderTexture", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderTargetCom, E_FAIL);
 	m_pShaderTargetCom->AddRef();
-	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderTargetCom);
+	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_ShaderTarget", m_pShaderTargetCom);
 	m_pShaderTargetCom->Set_PipelineStatePass(5);
 
 	return S_OK;

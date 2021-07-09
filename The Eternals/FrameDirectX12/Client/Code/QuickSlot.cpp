@@ -4,6 +4,7 @@
 #include "DirectInput.h"
 #include "InventoryEquipmentMgr.h"
 #include "QuickSlotMgr.h"
+#include "CoolTime.h"
 
 CQuickSlot::CQuickSlot(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
@@ -61,6 +62,20 @@ HRESULT CQuickSlot::Ready_GameObject(wstring wstrRootObjectTag,
 	Engine::FAILED_CHECK_RETURN(m_pSlotFrame->SetUp_TexDescriptorHeap(L"S1UI_WareHouse", tFrame, 2), E_FAIL);
 	m_pSlotFrame->Set_IsActive(m_bIsActive);
 
+	// CoolTime
+	Engine::CGameObject* pCoolTime = CCoolTime::Create(m_pGraphicDevice, m_pCommandList,
+													   wstrRootObjectTag, 
+													   wstrObjectTag,
+													   L"",
+													   vPos,
+													   _vec3(0.086f, 0.88f, 1.0f),
+													   bIsSpriteAnimation,
+													   fFrameSpeed,
+													   _vec3(0.0f),
+													   _vec3(0.0f),
+													   iUIDepth - 2);
+	m_pUICoolDownTime = static_cast<CCoolTime*>(pCoolTime);
+
 	// Slot Icon
 	Engine::CGameObject* pSlotIcon = CGameUIChild::Create(m_pGraphicDevice, m_pCommandList,
 														   wstrRootObjectTag, 
@@ -76,6 +91,13 @@ HRESULT CQuickSlot::Ready_GameObject(wstring wstrRootObjectTag,
 	m_pSlotIcon = static_cast<CGameUIChild*>(pSlotIcon);
 	Engine::FAILED_CHECK_RETURN(m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Gladiator", tFrame, m_uiSlotIncoIdx), E_FAIL);
 	m_pSlotIcon->Set_IsActive(m_bIsActive);
+
+	//// CoolDownShader
+	//m_pShaderCoolDownCom = static_cast<Engine::CShaderTexture*>(m_pComponentMgr->Clone_Component(L"ShaderTexture", Engine::COMPONENTID::ID_STATIC));
+	//Engine::NULL_CHECK_RETURN(m_pShaderCoolDownCom, E_FAIL);
+	//m_pShaderCoolDownCom->AddRef();
+	//m_pShaderCoolDownCom->Set_PipelineStatePass(12);
+	//m_mapComponent[Engine::ID_STATIC].emplace(L"Com_ShaderCoolDown", m_pShaderCoolDownCom);
 
 	// PotionCnt Font
 	m_pFontPotionCnt = static_cast<Engine::CFont*>(m_pObjectMgr->Clone_GameObjectPrototype(L"Font_BinggraeMelona16"));
@@ -100,6 +122,7 @@ HRESULT CQuickSlot::Ready_GameObject(wstring wstrRootObjectTag,
 HRESULT CQuickSlot::LateInit_GameObject()
 {
 	Engine::FAILED_CHECK_RETURN(CGameUIChild::LateInit_GameObject(), E_FAIL);
+	// m_pShaderCoolDownCom->SetUp_ShaderConstantBuffer();
 
 	return S_OK;
 }
@@ -143,6 +166,12 @@ _int CQuickSlot::LateUpdate_GameObject(const _float& fTimeDelta)
 	if (m_chCurSlotName == Potion_HP || m_chCurSlotName == Potion_MP)
 		SetUp_FontPotionCnt(fTimeDelta);
 
+	if (0.0f != m_fCurCoolDownTime && L"" != m_wstrCoolDownTag)
+	{
+		m_pUICoolDownTime->Update_GameObject(fTimeDelta);
+		m_pUICoolDownTime->LateUpdate_GameObject(fTimeDelta);
+	}
+
 	SetUp_FontDIKKey(fTimeDelta);
 	SetUp_FontCoolDownTime(fTimeDelta);
 
@@ -152,6 +181,34 @@ _int CQuickSlot::LateUpdate_GameObject(const _float& fTimeDelta)
 void CQuickSlot::Render_GameObject(const _float& fTimeDelta)
 {
 	CGameUIChild::Render_GameObject(fTimeDelta);
+	// Render_CoolDownTime(fTimeDelta);
+}
+
+void CQuickSlot::Render_CoolDownTime(const _float& fTimeDelta)
+{
+	//if (0.0f != m_fCurCoolDownTime && L"" != m_wstrCoolDownTag)
+	//{
+	//	/*__________________________________________________________________________________________________________
+	//	[ Set ConstantBuffer Data ]
+	//	____________________________________________________________________________________________________________*/
+	//	Engine::CB_SHADER_TEXTURE tCB_ShaderTexture;
+	//	ZeroMemory(&tCB_ShaderTexture, sizeof(Engine::CB_SHADER_TEXTURE));
+	//	tCB_ShaderTexture.matWorld	= Engine::CShader::Compute_MatrixTranspose(m_pTransCom->m_matWorld);
+	//	tCB_ShaderTexture.fFrameCnt	= m_tFrame.fFrameCnt;
+	//	tCB_ShaderTexture.fSceneCnt	= m_tFrame.fSceneCnt;
+	//	tCB_ShaderTexture.fCurFrame = m_tFrame.fCurFrame;
+	//	tCB_ShaderTexture.fCurScene = m_tFrame.fCurScene;
+	//	tCB_ShaderTexture.fAlpha    = 0.75f;
+
+	//	m_pShaderCoolDownCom->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
+
+	//	m_pShaderCoolDownCom->Begin_Shader(Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(L"BackBuffer"),
+	//									   0,
+	//									   1,
+	//									   Engine::MATRIXID::ORTHO);
+	//	m_pBufferCom->Begin_Buffer();
+	//	m_pBufferCom->Render_Buffer();
+	//}
 }
 
 void CQuickSlot::KeyInput_MouseButton(const _float& fTimeDelta)
@@ -320,6 +377,8 @@ void CQuickSlot::SetUp_SlotIcon()
 		m_pSlotIcon->SetUp_TexDescriptorHeap(L"SkillIcon_Gladiator", tFrame, 2);
 		if (nullptr != pThisPlayer)
 			pThisPlayer->Set_ThisPlayerSkillKeyInput(L"JAW_BREAKER", m_uiDIK_Key);
+
+		m_wstrCoolDownTag = L"JAW_BREAKER";
 	}
 		break;
 
@@ -561,7 +620,9 @@ void CQuickSlot::Free()
 {
 	CGameUIChild::Free();
 
+	// Engine::Safe_Release(m_pShaderCoolDownCom);
 	Engine::Safe_Release(m_pSlotFrame);
+	Engine::Safe_Release(m_pUICoolDownTime);
 	Engine::Safe_Release(m_pSlotIcon);
 	Engine::Safe_Release(m_pFontPotionCnt);
 	Engine::Safe_Release(m_pFontSkillCoolDownTime);

@@ -186,6 +186,7 @@
     <ClInclude Include="..\Code\CloderA.h" />
     <ClInclude Include="..\Code\CollisionArrow.h" />
     <ClInclude Include="..\Code\CollisionTick.h" />
+    <ClInclude Include="..\Code\CoolTime.h" />
     <ClInclude Include="..\Code\Crab.h" />
     <ClInclude Include="..\Code\CraftyArachne.h" />
     <ClInclude Include="..\Code\DistTrail.h" />
@@ -371,6 +372,7 @@
     <ClCompile Include="..\Code\CloderA.cpp" />
     <ClCompile Include="..\Code\CollisionArrow.cpp" />
     <ClCompile Include="..\Code\CollisionTick.cpp" />
+    <ClCompile Include="..\Code\CoolTime.cpp" />
     <ClCompile Include="..\Code\Crab.cpp" />
     <ClCompile Include="..\Code\CraftyArachne.cpp" />
     <ClCompile Include="..\Code\DistTrail.cpp" />
