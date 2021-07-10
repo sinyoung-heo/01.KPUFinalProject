@@ -957,6 +957,8 @@ bool CObjMgr::Is_Monster_AttackTarget(const CObj* me, const CObj* other, const i
 
 HRESULT CObjMgr::Add_GameObject(wstring wstrObjTag, CObj* pObj, int server_num)
 {
+	objmgr_lock ol(m_mutex);
+
 	if (pObj != nullptr)
 	{
 		/* map에서 찾고자 하는 OBJLIST를 key 값을 통해 찾기 */
@@ -974,6 +976,8 @@ HRESULT CObjMgr::Add_GameObject(wstring wstrObjTag, CObj* pObj, int server_num)
 
 HRESULT CObjMgr::Delete_GameObject(wstring wstrObjTag, CObj* pObj)
 {
+	objmgr_lock ol(m_mutex);
+
 	if (pObj != nullptr)
 	{
 		/* map에서 찾고자 하는 OBJLIST를 key 값을 통해 찾기 */
@@ -1009,6 +1013,8 @@ HRESULT CObjMgr::Delete_OBJLIST(wstring wstrObjTag)
 
 HRESULT CObjMgr::Create_Party(int* iPartyNumber, const int& server_num)
 {
+	objmgr_lock ol(m_mutex);
+
 	if (*iPartyNumber == INIT_PARTY_NUMBER)
 	{
 		int party_num = m_mapPartyList.size();
@@ -1031,6 +1037,8 @@ HRESULT CObjMgr::Create_Party(int* iPartyNumber, const int& server_num)
 
 HRESULT CObjMgr::Add_PartyMember(const int& iPartyNumber, int* responderPartyNum, const int& server_num)
 {
+	objmgr_lock ol(m_mutex);
+
 	/* map에서 찾고자 하는 PARTYLIST를 key 값을 통해 찾기 */
 	auto& iter_find = m_mapPartyList.find(iPartyNumber);
 
@@ -1046,6 +1054,8 @@ HRESULT CObjMgr::Add_PartyMember(const int& iPartyNumber, int* responderPartyNum
 
 HRESULT CObjMgr::Leave_Party(int* iPartyNumber, const int& server_num)
 {
+	objmgr_lock ol(m_mutex);
+
 	/* map에서 찾고자 하는 PARTYLIST를 key 값을 통해 찾기 */
 	auto& iter_find = m_mapPartyList.find(*iPartyNumber);
 
@@ -1087,6 +1097,47 @@ void CObjMgr::Print_PartyInfo(const int& iPartyNumber)
 	cout << endl;
 }
 
+HRESULT CObjMgr::Add_RaidList(const int& server_num)
+{
+	objmgr_lock ol(m_mutex);
+
+	/* Raid List에 해당 유저가 존재하는지 탐색 */
+	if (0 == m_usetBossRaidList.count(server_num))
+	{
+		/* Raid에 등록되어 있지 않다면 등록 */
+		m_usetBossRaidList.insert(server_num);
+		return S_OK;
+	}
+
+	return E_FAIL;
+}
+
+HRESULT CObjMgr::Leave_RaidList(const int& server_num)
+{
+	objmgr_lock ol(m_mutex);
+
+	/* Raid List에 해당 유저가 존재하는지 탐색 */
+	if (0 != m_usetBossRaidList.count(server_num))
+	{
+		/* Raid에 등록되어 있다면 탈퇴 */
+		m_usetBossRaidList.erase(server_num);
+		return S_OK;
+	}
+
+	return E_FAIL;
+}
+
+HRESULT CObjMgr::Clear_RaidList()
+{
+	if (m_usetBossRaidList.size() > 0)
+	{
+		m_usetBossRaidList.clear();
+		return S_OK;
+	}
+
+	return E_FAIL;
+}
+
 void CObjMgr::Release()
 {
 	for (auto& o_list : m_mapObjList)
@@ -1098,4 +1149,8 @@ void CObjMgr::Release()
 	{
 		p_list.second.clear();
 	}
+
+	m_mapObjList.clear();
+	m_mapPartyList.clear();
+	m_usetBossRaidList.clear();
 }

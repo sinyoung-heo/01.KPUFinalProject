@@ -433,8 +433,7 @@ void CMonster::Change_Vergos_Animation(const float& fTimeDelta)
 
 	case STATUS::ST_ACTIVE:
 	{
-		m_uiAnimIdx = Monster_Normal::WAIT;
-	
+		Spawn_Vergos(fTimeDelta);
 	}
 	break;
 
@@ -447,7 +446,7 @@ void CMonster::Change_Vergos_Animation(const float& fTimeDelta)
 
 	case STATUS::ST_CHASE:
 	{
-	
+		// 공격패턴 준비
 	}
 	break;
 
@@ -463,6 +462,35 @@ void CMonster::Change_Vergos_Animation(const float& fTimeDelta)
 	}
 	break;
 	}
+}
+
+void CMonster::Spawn_Vergos(const float& fTimeDelta)
+{
+	if (m_uiAnimIdx == Vergos::SPAWN)
+	{
+		if (!Is_AnimationSetEnd(fTimeDelta))
+			return;
+		else
+		{
+			Set_Start_Fight();
+			Change_ChaseMode();
+			return;
+		}
+	}
+
+	m_uiAnimIdx = Vergos::SPAWN;
+
+	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+	{
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+
+		send_Monster_animation_packet(raid, m_uiAnimIdx);
+	}
+}
+
+void CMonster::Choose_VergosPattern(const float& fTimeDelta)
+{
 }
 
 
@@ -2681,7 +2709,7 @@ void CMonster::Attack_DrownedSailor(const float& fTimeDelta)
 		if (m_bIsRushAttack) return;
 
 		// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
-		for (auto pl : old_viewlist)
+		for (auto& pl : old_viewlist)
 		{
 			/* 유저일 경우 처리 */
 			if (true == CObjMgr::GetInstance()->Is_Player(pl))

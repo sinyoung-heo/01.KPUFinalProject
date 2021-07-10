@@ -1820,14 +1820,29 @@ void process_stage_change(int id, const char& stage_id)
 	pPlayer->m_chStageId = stage_id;
 
 	// Set Position
-	if (STAGE_VELIKA == stage_id)
+	switch (stage_id)
+	{
+	case STAGE_VELIKA:
+	{
 		pPlayer->m_vPos = _vec3(STAGE_VELIKA_X, 0.0f, STAGE_VELIKA_Z);
+		CObjMgr::GetInstance()->Leave_RaidList(id);
+	}
+	break;
 
-	else if (STAGE_BEACH == stage_id)
+	case STAGE_BEACH:
+	{
 		pPlayer->m_vPos = _vec3(STAGE_BEACH_X, 0.0f, STAGE_BEACH_Z);
+		CObjMgr::GetInstance()->Leave_RaidList(id);
+	}
+	break;
 
-	else if (STAGE_WINTER == stage_id)
+	case STAGE_WINTER:
+	{
 		pPlayer->m_vPos = _vec3(STAGE_WINTER_X, 0.0f, STAGE_WINTER_Z);
+		CObjMgr::GetInstance()->Add_RaidList(id);
+	}
+	break;
+	}
 
 	// Send Packet
 	pPlayer->send_player_stage_change(id);

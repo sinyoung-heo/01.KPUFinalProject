@@ -92,6 +92,7 @@ private:
 	void	Dead_CraftyArachne(const float& fTimeDelta);
 
 	void	Change_Vergos_Animation(const float& fTimeDelta);
+	void	Spawn_Vergos(const float& fTimeDelta);
 
 private:
 	void	Play_Animation(float fTimeDelta);	
