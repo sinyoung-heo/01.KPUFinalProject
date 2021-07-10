@@ -131,7 +131,7 @@ void process_packet(int id)
 						CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", obj_num));
 
 						// 시야 내에 없다면 시야 목록에 등록X
-						if (false == CObjMgr::GetInstance()->Is_Near_PlayerToMonster(pPlayer, pMonster, pPlayer->m_chStageId)) continue;
+						if (false == CObjMgr::GetInstance()->Is_Near(pPlayer, pMonster)) continue;
 						pPlayer->v_lock.lock();
 						pPlayer->view_list.insert(obj_num);
 						pPlayer->v_lock.unlock();
@@ -153,6 +153,20 @@ void process_packet(int id)
 					}
 				}
 			}
+		}
+
+		// Stage Winter일 경우
+		if (pPlayer->m_chStageId == STAGE_WINTER)
+		{
+			CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
+			if (pMonster->Get_Dead() == false)
+			{
+				pPlayer->v_lock.lock();
+				pPlayer->view_list.insert(g_iVergosServerNum);
+				pPlayer->v_lock.unlock();
+
+				pMonster->send_Monster_enter_packet(id);
+			}			
 		}
 	}
 	break;
@@ -555,7 +569,7 @@ void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 					if (pMonster->Get_Dead() == true) continue;
 
 					// 시야 내에 없다면 시야 목록에 등록X.
-					if (CObjMgr::GetInstance()->Is_Near_PlayerToMonster(pPlayer, pMonster, pPlayer->m_chStageId))
+					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pMonster))
 					{
 						new_viewlist.insert(obj_num);
 						pMonster->active_monster();
@@ -574,6 +588,17 @@ void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 					}
 				}
 			}
+		}
+	}
+
+	// Stage Winter일 경우
+	if (pPlayer->m_chStageId == STAGE_WINTER)
+	{
+		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
+		if (pMonster->Get_Dead() == false)
+		{
+			new_viewlist.insert(g_iVergosServerNum);
+			pMonster->active_monster();
 		}
 	}
 
@@ -774,7 +799,7 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 					if (pMonster->Get_Dead() == true) continue;
 
 					// 시야 내에 없다면 시야 목록에 등록X.
-					if (CObjMgr::GetInstance()->Is_Near_PlayerToMonster(pPlayer, pMonster, pPlayer->m_chStageId))
+					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pMonster))
 					{
 						new_viewlist.insert(obj_num);
 						pMonster->active_monster();
@@ -793,6 +818,17 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 					}
 				}
 			}
+		}
+	}
+
+	// Stage Winter일 경우
+	if (pPlayer->m_chStageId == STAGE_WINTER)
+	{
+		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
+		if (pMonster->Get_Dead() == false)
+		{
+			new_viewlist.insert(g_iVergosServerNum);
+			pMonster->active_monster();
 		}
 	}
 
@@ -1060,7 +1096,7 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx, 
 					if (pMonster->Get_Dead() == true) continue;
 
 					// 시야 내에 없다면 시야 목록에 등록X.
-					if (CObjMgr::GetInstance()->Is_Near_PlayerToMonster(pPlayer, pMonster, pPlayer->m_chStageId))
+					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pMonster))
 					{
 						new_viewlist.insert(obj_num);
 						pMonster->active_monster();
@@ -1079,6 +1115,17 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx, 
 					}
 				}
 			}
+		}
+	}
+
+	// Stage Winter일 경우
+	if (pPlayer->m_chStageId == STAGE_WINTER)
+	{
+		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
+		if (pMonster->Get_Dead() == false)
+		{
+			new_viewlist.insert(g_iVergosServerNum);
+			pMonster->active_monster();
 		}
 	}
 
@@ -1278,7 +1325,7 @@ void process_attack_stop(int id, const _vec3& _vDir, const _vec3& _vPos, int ani
 					if (pMonster->Get_Dead() == true) continue;
 
 					// 시야 내에 없다면 시야 목록에 등록X.
-					if (CObjMgr::GetInstance()->Is_Near_PlayerToMonster(pPlayer, pMonster, pPlayer->m_chStageId))
+					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pMonster))
 					{
 						new_viewlist.insert(obj_num);
 						pMonster->active_monster();
@@ -1297,6 +1344,17 @@ void process_attack_stop(int id, const _vec3& _vDir, const _vec3& _vPos, int ani
 					}
 				}
 			}
+		}
+	}
+
+	// Stage Winter일 경우
+	if (pPlayer->m_chStageId == STAGE_WINTER)
+	{
+		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
+		if (pMonster->Get_Dead() == false)
+		{
+			new_viewlist.insert(g_iVergosServerNum);
+			pMonster->active_monster();
 		}
 	}
 
@@ -1498,7 +1556,7 @@ void process_buff(const int& id, cs_packet_attack* p)
 					if (pMonster->Get_Dead() == true) continue;
 
 					// 시야 내에 없다면 시야 목록에 등록X.
-					if (CObjMgr::GetInstance()->Is_Near_PlayerToMonster(pPlayer, pMonster, pPlayer->m_chStageId))
+					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pMonster))
 					{
 						new_viewlist.insert(obj_num);
 						pMonster->active_monster();
@@ -1517,6 +1575,17 @@ void process_buff(const int& id, cs_packet_attack* p)
 					}
 				}
 			}
+		}
+	}
+
+	// Stage Winter일 경우
+	if (pPlayer->m_chStageId == STAGE_WINTER)
+	{
+		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
+		if (pMonster != nullptr && pMonster->Get_Dead() == false)
+		{
+			new_viewlist.insert(g_iVergosServerNum);
+			pMonster->active_monster();
 		}
 	}
 

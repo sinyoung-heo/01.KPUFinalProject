@@ -71,7 +71,6 @@ void CInventoryEquipmentMgr::Push_ItemInventory(const char& chItemType, const ch
 			}
 		}
 	}
-
 }
 
 void CInventoryEquipmentMgr::Pop_ItemInventory(const char& chItemType, const char& chItemName, const _int& iCnt)

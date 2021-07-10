@@ -77,7 +77,6 @@ PARTYLIST* CObjMgr::Get_PARTYLIST(const int& party_num)
 void CObjMgr::Create_StageBeachMonster()
 {
 	CMonster* pNew = nullptr;
-	int s_num = -1;
 
 	/*	________________________________________________________________________________
 										CRAB MONSTER
@@ -324,10 +323,9 @@ void CObjMgr::Create_StageBeachMonster()
 void CObjMgr::Create_StageWinterMonster()
 {
 	CMonster* pNew = nullptr;
-	int s_num = -1;
 
 	/*	________________________________________________________________________________
-										 VERGOS
+										 VERGOS - 5023
 	________________________________________________________________________________*/
 	
 	pNew = static_cast<CMonster*>(CObjPoolMgr::GetInstance()->use_Object(L"MONSTER"));
@@ -337,6 +335,7 @@ void CObjMgr::Create_StageWinterMonster()
 		pNew->Ready_Monster(_vec3(390.0f, 0.f, 390.0f), _vec3(0.f, -180.0f, 0.f), MON_NORMAL, MON_VERGOS, STAGE_WINTER, GIANTMONKEY_HP, GIANTMONKEY_ATT, GIANTMONKEY_EXP, GIANTMONKEY_SPD);
 		pNew->Set_NumAnimation(Vergos::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Vergos::duration);
+		g_iVergosServerNum = pNew->m_sNum;
 	}
 	else return;
 
@@ -348,7 +347,6 @@ void CObjMgr::Create_AiPlayer()
 	m_mapPartyList[RAID_PARTY] = PARTYLIST();
 
 	CAi* pNew = nullptr;
-	int s_num = -1;
 
 	// ARCHER 1
 	pNew = static_cast<CAi*>(CObjPoolMgr::GetInstance()->use_Object(L"AI"));

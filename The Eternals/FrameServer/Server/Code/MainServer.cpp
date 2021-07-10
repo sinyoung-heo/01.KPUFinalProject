@@ -5,22 +5,23 @@
 #include "Ai.h"
 
 /* IOCP SERVER 관련 변수*/
-HANDLE g_hIocp;
-SOCKET g_hListenSock;
+HANDLE	g_hIocp;
+SOCKET	g_hListenSock;
 OVER_EX g_accept_over;
 
 /* OBJECT 관련 변수 */
-mutex g_id_lock;
+mutex	g_id_lock;
 
 /* TIMER 관련 변수 */
 priority_queue<event_type> g_timer_queue;
-mutex g_timer_lock;
+mutex	g_timer_lock;
 
 /* GameLogic 관련 변수 */
 CTimer* g_pTimerFPS;
 CTimer* g_pTimerTimeDelta;
 
-bool g_bIsGameEnd = false;
+bool	g_bIsGameEnd = false;
+int		g_iVergosServerNum = -1;
 
 /*==============================================================함수 선언부========================================================================*/
 void Ready_ServerManager();			// 서버 매니저 초기화
