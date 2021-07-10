@@ -241,7 +241,7 @@ void CRenderer::Render_MiniMap(const _float& fTimeDelta)
 {
 	sort(m_RenderList[RENDER_MINIMAP].begin(), m_RenderList[RENDER_MINIMAP].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
 		{
-			return pSour->Get_MiniMapTransform()->m_vPos.y > pDest->Get_MiniMapTransform()->m_vPos.y;
+			return pSour->Get_MiniMapTransform()->m_vPos.y < pDest->Get_MiniMapTransform()->m_vPos.y;
 		});
 
 	m_pTargetMiniMap->SetUp_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);

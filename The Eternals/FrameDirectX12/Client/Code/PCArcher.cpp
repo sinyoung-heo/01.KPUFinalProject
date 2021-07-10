@@ -568,7 +568,7 @@ HRESULT CPCArcher::SetUp_ClassFrame()
 														 vecFrameSpeed[i],				// FrameSpeed
 														 vecRectPosOffset[i],			// RectPosOffset
 														 vecRectScale[i],				// RectScaleOffset
-														 UIDepth - 1);					// UI Depth
+														 UIDepth - 2);					// UI Depth
 					m_pHpGauge = static_cast<CCharacterHpGauge*>(pChildUI);
 				}
 				else if (L"ClassFrameMpFront" == vecObjectTag[i])
@@ -583,7 +583,7 @@ HRESULT CPCArcher::SetUp_ClassFrame()
 														 vecFrameSpeed[i],				// FrameSpeed
 														 vecRectPosOffset[i],			// RectPosOffset
 														 vecRectScale[i],				// RectScaleOffset
-														 UIDepth - 1);					// UI Depth
+														 UIDepth - 2);					// UI Depth
 					m_pMpGauge = static_cast<CCharacterMpGauge*>(pChildUI);
 				}
 				else

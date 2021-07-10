@@ -1111,6 +1111,8 @@ void CPacketMgr::Login_Player(sc_packet_login_ok* packet)
 		wstrNaviMeshTag = L"StageVelika_NaviMesh";
 	else if (packet->naviType == STAGE_BEACH)
 		wstrNaviMeshTag = L"StageBeach_NaviMesh";
+	else if (packet->naviType == STAGE_WINTER)
+		wstrNaviMeshTag = L"StageWinter_NaviMesh";
 
 	/* Character Type */
 	if (PC_GLADIATOR == packet->o_type)
