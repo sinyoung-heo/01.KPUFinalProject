@@ -93,6 +93,7 @@ private:
 
 	void	Change_Vergos_Animation(const float& fTimeDelta);
 	void	Spawn_Vergos(const float& fTimeDelta);
+	void	Choose_VergosPattern(const float& fTimeDelta);
 
 private:
 	void	Play_Animation(float fTimeDelta);	
