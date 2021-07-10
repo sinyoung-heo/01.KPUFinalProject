@@ -423,34 +423,7 @@ void CPacketMgr::Process_packet()
 	case SC_PACKET_LOAD_EQUIPMENT:
 	{
 		sc_packet_load_equipment* packet = reinterpret_cast<sc_packet_load_equipment*>(m_packet_start);
-
-		Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
-		if (nullptr != pThisPlayer)
-		{
-			switch (pThisPlayer->Get_OType())
-			{
-			case PC_GLADIATOR:
-				packet->equipType[0] = ItemType_WeaponTwoHand;
-				break;
-			case PC_ARCHER:
-				packet->equipType[0] = ItemType_WeaponBow;
-				break;
-			case PC_PRIEST:
-				packet->equipType[0] = ItemType_WeaponRod;
-				break;
-		
-			}
-			pThisPlayer->Set_ThisPlayerLoginEquipment(packet->equipType[0], packet->itemName[0]);
-			pThisPlayer->Set_ThisPlayerLoginEquipment(ItemType_Armor, packet->itemName[1]);
-			pThisPlayer->Set_ThisPlayerLoginEquipment(ItemType_Helmet, packet->itemName[2]);
-			pThisPlayer->Set_ThisPlayerLoginEquipment(ItemType_Shoes, packet->itemName[3]);
-		}
-
-		cout	<< "[로그인 후 장착 중인 아이템] " << endl;
-		cout	<< ", 무기: " << (int)packet->itemName[0]
-				<< ", 갑옷: " << (int)packet->itemName[1] 
-				<< ", 투구: " << (int)packet->itemName[2]
-				<< ", 신발: " << (int)packet->itemName[3] << endl;
+		LoginToLoadEqipment(packet);
 	}
 	break;
 
@@ -487,6 +460,31 @@ void CPacketMgr::Process_packet()
 		printf("Unknown PACKET type [%d]\n", m_packet_start[1]);
 #endif 
 		break;
+	}
+}
+
+void CPacketMgr::LoginToLoadEqipment(sc_packet_load_equipment* packet)
+{
+	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+	if (nullptr != pThisPlayer)
+	{
+		switch (pThisPlayer->Get_OType())
+		{
+		case PC_GLADIATOR:
+			packet->equipType[0] = ItemType_WeaponTwoHand;
+			break;
+		case PC_ARCHER:
+			packet->equipType[0] = ItemType_WeaponBow;
+			break;
+		case PC_PRIEST:
+			packet->equipType[0] = ItemType_WeaponRod;
+			break;
+
+		}
+		pThisPlayer->Set_ThisPlayerLoginEquipment(packet->equipType[0], packet->itemName[0]);
+		pThisPlayer->Set_ThisPlayerLoginEquipment(ItemType_Armor, packet->itemName[1]);
+		pThisPlayer->Set_ThisPlayerLoginEquipment(ItemType_Helmet, packet->itemName[2]);
+		pThisPlayer->Set_ThisPlayerLoginEquipment(ItemType_Shoes, packet->itemName[3]);
 	}
 }
 

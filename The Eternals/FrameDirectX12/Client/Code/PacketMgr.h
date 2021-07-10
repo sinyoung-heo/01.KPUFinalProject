@@ -35,6 +35,8 @@ public:
 	void	Process_recv_reassembly(size_t iosize);
 	void	Process_packet();
 
+	void LoginToLoadEqipment(sc_packet_load_equipment* packet);
+
 public:
 	void	send_login();
 	void	send_move(const _vec3& vDir, const _vec3& vPos, const _int& iAniIdx);

@@ -556,6 +556,11 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) 
 			{
 				m_bIsStartDissolve = true;
+
+				m_iMonsterStatus = Vergos::A_DEATH;
+
+				m_uiAnimIdx = Vergos::A_DEATH;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
 		break;

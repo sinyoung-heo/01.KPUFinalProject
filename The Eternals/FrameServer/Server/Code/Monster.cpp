@@ -682,15 +682,20 @@ void CMonster::Dead_Vergos(const float& fTimeDelta)
 		}
 	}
 
-	m_uiAnimIdx = Vergos::DEATH;
-
 	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 	{
 		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
 		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
 		
-		send_Monster_animation_packet(raid, Vergos::DEATH);
+		send_Monster_Dead(raid, Vergos::DEATH);
+
+		pPlayer->v_lock.lock();
+		pPlayer->view_list.erase(m_sNum);
+		pPlayer->v_lock.unlock();
 	}
+
+	m_uiAnimIdx = Vergos::DEATH;
+	Set_AnimationKey(m_uiAnimIdx);
 }
 
 
@@ -3666,7 +3671,7 @@ void CMonster::Dead_Crab(const float& fTimeDelta)
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 유저일 경우 처리 */
 				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
@@ -3685,7 +3690,7 @@ void CMonster::Dead_Crab(const float& fTimeDelta)
 	}
 
 	// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
-	for (auto pl : old_viewlist)
+	for (auto& pl : old_viewlist)
 	{
 		send_Monster_Dead(pl, Crab::DEATH);
 
