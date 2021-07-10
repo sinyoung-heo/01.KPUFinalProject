@@ -120,9 +120,6 @@ HRESULT CPCPriest::LateInit_GameObject()
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()), m_uiAfterImgSize);
 	m_pShadowCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
-	// Create Weapon
-	Engine::FAILED_CHECK_RETURN(SetUp_PCWeapon(), E_FAIL);
-
 	// UI ClassFrame
 	Engine::FAILED_CHECK_RETURN(SetUp_ClassFrame(), E_FAIL);
 
@@ -160,6 +157,9 @@ HRESULT CPCPriest::LateInit_GameObject()
 	// SetUp Login Equipment
 	for (auto& pair : m_mapLoginEquipment)
 		CInventoryEquipmentMgr::Get_Instance()->SetUp_LoginEquipment(pair.first, pair.second);
+	
+	// Create Weapon
+	Engine::FAILED_CHECK_RETURN(SetUp_PCWeapon(), E_FAIL);
 
 	return S_OK;
 }
