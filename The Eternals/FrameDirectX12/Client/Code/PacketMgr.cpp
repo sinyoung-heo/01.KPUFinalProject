@@ -12,6 +12,7 @@
 #include "InventoryEquipmentMgr.h"
 #include "EquipmentItemSlot.h"
 #include "StoreMgr.h"
+#include "LightMgr.h"
 #include "DmgFont.h"
 
 /* USER */
@@ -717,13 +718,36 @@ void CPacketMgr::Stage_Change(sc_packet_stage_change* packet)
 			pThisPlayer->Set_CurrentStageID(packet->stage_id);
 		}
 
-		// Static Object
+		// Static Object && Ambient Light
+		Engine::D3DLIGHT tDirLight = Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL);
+		
 		if (STAGE_VELIKA == packet->stage_id)
+		{
 			Engine::CObjectMgr::Get_Instance()->Set_CurrentStage(Engine::STAGEID::STAGE_VELIKA);
+			tDirLight.Ambient.x = 0.55f;
+			tDirLight.Ambient.y = 0.55f;
+			tDirLight.Ambient.z = 0.55f;
+			tDirLight.Ambient.w = 1.0f;
+			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL, 0, tDirLight);
+		}
 		else if (STAGE_BEACH == packet->stage_id)
+		{
 			Engine::CObjectMgr::Get_Instance()->Set_CurrentStage(Engine::STAGEID::STAGE_BEACH);
+			tDirLight.Ambient.x = 0.55f;
+			tDirLight.Ambient.y = 0.55f;
+			tDirLight.Ambient.z = 0.55f;
+			tDirLight.Ambient.w = 1.0f;
+			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL, 0, tDirLight);
+		}
 		else if (STAGE_WINTER == packet->stage_id)
+		{
 			Engine::CObjectMgr::Get_Instance()->Set_CurrentStage(Engine::STAGEID::STAGE_WINTER);
+			tDirLight.Ambient.x = 0.45f;
+			tDirLight.Ambient.y = 0.45f;
+			tDirLight.Ambient.z = 0.45f;
+			tDirLight.Ambient.w = 1.0f;
+			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL, 0, tDirLight);
+		}
 
 		// Set FadeInOut
 		Engine::CGameObject* pFadeInOut = *(--(m_pObjectMgr->Get_OBJLIST(L"Layer_UI", L"StageChange_FadeInOut")->end()));

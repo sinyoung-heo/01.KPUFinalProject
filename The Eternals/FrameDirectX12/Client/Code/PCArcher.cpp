@@ -799,7 +799,6 @@ void CPCArcher::SetUp_StageID()
 
 			m_pNaviMeshCom = m_pVelikaNaviMeshCom;
 			m_mapComponent[Engine::ID_DYNAMIC][L"Com_NaviMesh"] = m_pNaviMeshCom;
-			// m_pTransCom->m_vPos = _vec3(STAGE_VELIKA_X, 0.0f, STAGE_VELIKA_Z);
 			m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
 		}
 		else if (STAGE_BEACH == m_chCurStageID)
@@ -808,14 +807,12 @@ void CPCArcher::SetUp_StageID()
 
 			m_pNaviMeshCom = m_pBeachNaviMeshCom;
 			m_mapComponent[Engine::ID_DYNAMIC][L"Com_NaviMesh"] = m_pNaviMeshCom;
-			// m_pTransCom->m_vPos = _vec3(STAGE_BEACH_X, 0.0f, STAGE_BEACH_Z);
 			m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
 		}
 		else if (STAGE_WINTER == m_chCurStageID)
 		{
 			m_pNaviMeshCom = m_pWinterNaviMeshCom;
 			m_mapComponent[Engine::ID_DYNAMIC][L"Com_NaviMesh"] = m_pNaviMeshCom;
-			// m_pTransCom->m_vPos = _vec3(STAGE_WINTER_X, 0.0f, STAGE_WINTER_X);
 			m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
 		}
 
