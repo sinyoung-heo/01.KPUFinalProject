@@ -540,6 +540,16 @@ void worker_thread()
 		}
 		break;
 
+		case OPMODE::OP_MODE_BOSS_NEXT_ATTACK:
+		{
+			CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", key));
+			if (nullptr == pMonster) return;
+
+			pMonster->Change_AttackMode();
+			delete over_ex;
+		}
+		break;
+
 		default:
 #ifdef TEST
 			cout << "[ERROR] Unknown Type MODE in Worker Thread!" << endl;

@@ -94,6 +94,12 @@ private:
 	void	Change_Vergos_Animation(const float& fTimeDelta);
 	void	Spawn_Vergos(const float& fTimeDelta);
 	void	Choose_VergosPattern(const float& fTimeDelta);
+	void	VergosPattern_FirstPhase();
+	void	VergosPattern_SecondPhase();
+	void	VergosPattern_ThirdPhase();
+	void	Attack_Vergos(const float& fTimedelta);
+	void	Play_Vergos_NextAttack(chrono::seconds t = 3s);
+	void	Dead_Vergos(const float& fTimeDelta);
 
 private:
 	void	Play_Animation(float fTimeDelta);	
@@ -135,6 +141,9 @@ public:
 	_vec3			m_vOriPos				= _vec3(0.f);
 	_vec3			m_vKnockbackPos			= _vec3(0.f);
 	ATTACK_DIST		m_eAttackDist			= ATTACK_DIST::DIST_END;
+
+	int				m_arrAttackPattern[VERGOS_PATTERN];
+	int				m_iCurPatternNumber		= 0;
 
 	/* Animation */
 	_uint			m_uiNewAniIndex			= 0;
