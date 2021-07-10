@@ -87,6 +87,7 @@ public:
 	void	Set_IsThisPlayerPartyMember(const _bool& bIsPartyMember) { m_bIsThisPlayerPartyMember = bIsPartyMember; }
 	void	Set_ThisPlayerSkillKeyInput(wstring wstrTag, const _uint& uiKey)				{ m_mapSkillKeyInput[wstrTag] = uiKey; }
 	void	Set_ThisPlayerSkillCoolDown(wstring wstrTag, const SKILL_COOLDOWN_DESC& tDesc)	{ m_mapSkillCoolDown[wstrTag] = tDesc; }
+	void	Set_ThisPlayerLoginEquipment(const char& chItemType, const char& chItemName)	{ m_mapLoginEquipment[chItemType] = chItemName; }
 	void	Ready_AngleInterpolationValue(const _float& fEndAngle);
 	void	Ready_PositionInterpolationValue(const _vec3& vEndPosition, float fSpd = 3.f);
 
@@ -231,6 +232,9 @@ protected:
 	_bool	m_bIsPartyState			= false; // --> 파티 참여 (유/무)
 	_int	m_iSuggesterNumber		= -1;	 // --> 파티 초대자 or 참여 신청자 
 	_bool	m_bIsThisPlayerPartyMember = false;
+
+	// Equipment : Type - Name
+	map<char, char> m_mapLoginEquipment;
 
 	// Linear Interpolation Desc
 	LINEAR_INTERPOLATION_DESC<_vec3>	m_tPosInterpolationDesc;

@@ -119,8 +119,6 @@ void CCollisionTick::Process_Collision()
 				default_random_engine			dre{ rd() };
 				uniform_int_distribution<_int>	uid{ -7, 7 };
 
-				// m_pTransCom->m_vDir.x = (_float)(uid(dre)) * 0.1f;
-
 				static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos = pDst->Get_Transform()->m_vPos;
 				static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.x += (_float)(uid(dre)) * 0.1f;
 				static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.y += 3.0f;

@@ -424,11 +424,20 @@ void CPacketMgr::Process_packet()
 	{
 		sc_packet_load_equipment* packet = reinterpret_cast<sc_packet_load_equipment*>(m_packet_start);
 
-		cout << "[로그인 후 장착 중인 아이템] " << endl;
-		cout << (int)packet->itemName[0]
-			<< ", 갑옷: " << (int)packet->itemName[1] 
-			<< ", 투구: " << (int)packet->itemName[2]
-			<< ", 신발: " << (int)packet->itemName[3] << endl;
+		Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+		if (nullptr != pThisPlayer)
+		{
+			pThisPlayer->Set_ThisPlayerLoginEquipment(packet->equipType[0], packet->itemName[0]);
+			pThisPlayer->Set_ThisPlayerLoginEquipment(packet->equipType[1], packet->itemName[1]);
+			pThisPlayer->Set_ThisPlayerLoginEquipment(packet->equipType[2], packet->itemName[2]);
+			pThisPlayer->Set_ThisPlayerLoginEquipment(packet->equipType[3], packet->itemName[3]);
+		}
+
+		cout	<< "[로그인 후 장착 중인 아이템] " << endl;
+		cout	<< ", 무기: " << (int)packet->itemName[0]
+				<< ", 갑옷: " << (int)packet->itemName[1] 
+				<< ", 투구: " << (int)packet->itemName[2]
+				<< ", 신발: " << (int)packet->itemName[3] << endl;
 	}
 	break;
 

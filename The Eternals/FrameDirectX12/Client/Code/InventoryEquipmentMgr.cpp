@@ -20,6 +20,15 @@ void CInventoryEquipmentMgr::Add_InventorySlot(CInventoryItemSlot* pSlot)
 	}
 }
 
+void CInventoryEquipmentMgr::Add_EquipmentSlot(wstring wstrTag, CEquipmentItemSlot* pSlot)
+{
+	auto iter_find = m_mapEquipmentSlot.find(wstrTag);
+
+	if (iter_find == m_mapEquipmentSlot.end())
+		m_mapEquipmentSlot.emplace(wstrTag, pSlot);
+}
+
+
 void CInventoryEquipmentMgr::Push_ItemInventory(const char& chItemType, const char& chItemName, const _int& iCnt)
 {
 	if (m_uiCurSlotSize >= m_uiMaxSlotSize)
@@ -126,51 +135,85 @@ void CInventoryEquipmentMgr::Pop_ItemInventory(const char& chItemType, const cha
 
 }
 
-void CInventoryEquipmentMgr::Pop_ItemInventory(const _uint& uiIdx)
+void CInventoryEquipmentMgr::SetUp_LoginEquipment(const char& chItemType, const char& chItemName)
 {
-	if (uiIdx < 0 || uiIdx >= m_uiMaxSlotSize)
-	{
-		cout << "Error Idx ! " << endl;
+	if (NO_ITEM == chItemType || NO_ITEM == chItemName)
 		return;
-	}
 
-	if (NO_ITEM != m_vecInventorySlot[uiIdx]->Get_CurItemInfo().chItemType)
-	{
-		ITEM_DESC tItemInfo = m_vecInventorySlot[uiIdx]->Get_CurItemInfo();
-		
-		m_vecInventorySlot[uiIdx]->Set_CurItemInfo(NO_ITEM, NO_ITEM, 0);
-		--m_uiCurSlotSize;
-	}
-}
-
-void CInventoryEquipmentMgr::Pop_ItemInventory()
-{
-	if (m_uiCurSlotSize <= 0)
-	{
-		cout << "Inventory is Empty ! " << endl;
-		return;
-	}
-
+	// 인벤토리에서 아이템 탐색.
+	CInventoryItemSlot* pItemSlot = nullptr;
 	for (auto& pSlot : m_vecInventorySlot)
 	{
-		if (NO_ITEM != pSlot->Get_CurItemInfo().chItemType)
+		if (chItemType == pSlot->Get_CurItemInfo().chItemType &&
+			chItemName == pSlot->Get_CurItemInfo().chItemName)
 		{
-			ITEM_DESC tItemInfo = pSlot->Get_CurItemInfo();
-
-			pSlot->Set_CurItemInfo(NO_ITEM, NO_ITEM, 0);
-			--m_uiCurSlotSize;
-
+			pItemSlot = pSlot;
 			break;
 		}
 	}
-}
 
-void CInventoryEquipmentMgr::Add_EquipmentSlot(wstring wstrTag, CEquipmentItemSlot* pSlot)
-{
-	auto iter_find = m_mapEquipmentSlot.find(wstrTag);
+	if (nullptr == pItemSlot)
+		return;
 
-	if (iter_find == m_mapEquipmentSlot.end())
-		m_mapEquipmentSlot.emplace(wstrTag, pSlot);
+	Engine::CGameObject* pThisPlayer = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+	wstring wsrEquipSlotTag = L"";
+
+	switch (chItemType)
+	{
+	case ItemType_WeaponTwoHand:
+	case ItemType_WeaponBow:
+	case ItemType_WeaponRod:
+	{
+		if (ItemType_WeaponTwoHand == chItemType && PC_GLADIATOR != pThisPlayer->Get_OType())
+			return;
+		else if (ItemType_WeaponBow == chItemType && PC_ARCHER != pThisPlayer->Get_OType())
+			return;
+		else if (ItemType_WeaponRod == chItemType && PC_PRIEST != pThisPlayer->Get_OType())
+			return;
+
+		wsrEquipSlotTag = L"EquipmentWeapon";
+
+		if (nullptr == m_mapEquipmentSlot[wsrEquipSlotTag]->Get_InventoryItemSlot())
+		{
+			m_mapEquipmentSlot[wsrEquipSlotTag]->Set_InventorySlotClass(pItemSlot);
+			pItemSlot->Set_IsOnEquipment(true);
+			pThisPlayer->Set_WeaponType(chItemName);
+		}
+
+		return;
+	}
+		break;
+
+	case ItemType_Helmet:
+	{
+		wsrEquipSlotTag = L"EquipmentHelmet";
+	}
+		break;
+
+	case ItemType_Armor:
+	{
+		wsrEquipSlotTag = L"EquipmentArmor";
+	}
+		break;
+
+	case ItemType_Shoes:
+	{
+		wsrEquipSlotTag = L"EquipmentShoes";
+	}
+		break;
+	default:
+	{
+		return;
+	}
+		break;
+	}
+
+	if (L"" != wsrEquipSlotTag &&
+		nullptr == m_mapEquipmentSlot[wsrEquipSlotTag]->Get_InventoryItemSlot())
+	{
+		m_mapEquipmentSlot[wsrEquipSlotTag]->Set_InventorySlotClass(pItemSlot);
+		pItemSlot->Set_IsOnEquipment(true);
+	}
 }
 
 void CInventoryEquipmentMgr::Free()

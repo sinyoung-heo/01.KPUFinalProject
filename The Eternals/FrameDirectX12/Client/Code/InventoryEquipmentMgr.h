@@ -35,16 +35,14 @@ public:
 	void Set_CurInventorySize(const _uint& uiValue)				{ m_uiCurSlotSize = uiValue; }
 	void Set_EquipmentCanvasClass(CEquipmentCanvas* pUI)		{ m_pEquipmentCanvas = pUI; }
 	void Set_ThisPlayerJob(const char& chJob)					{ m_chJob = chJob; }
-	void Set_HpPotionSlot(CInventoryItemSlot* pSlot) { m_pHpPotionSlot = pSlot; }
-	void Set_MpPotionSlot(CInventoryItemSlot* pSlot) { m_pMpPotionSlot = pSlot; }
-
+	void Set_HpPotionSlot(CInventoryItemSlot* pSlot)			{ m_pHpPotionSlot = pSlot; }
+	void Set_MpPotionSlot(CInventoryItemSlot* pSlot)			{ m_pMpPotionSlot = pSlot; }
 	void Add_InventorySlot(CInventoryItemSlot* pSlot);
+	void Add_EquipmentSlot(wstring wstrTag, CEquipmentItemSlot* pSlot);
+
 	void Push_ItemInventory(const char& chItemType, const char& chItemName, const _int& iCnt = 1);
 	void Pop_ItemInventory(const char& chItemType, const char& chItemName, const _int& uiCnt = -1);
-	void Pop_ItemInventory(const _uint& uiIdx);
-	void Pop_ItemInventory();
-
-	void Add_EquipmentSlot(wstring wstrTag, CEquipmentItemSlot* pSlot);
+	void SetUp_LoginEquipment(const char& chItemType, const char& chItemName);
 private:
 	vector<CInventoryItemSlot*> m_vecInventorySlot;
 	CInventoryCanvas*			m_pInventoryCanvas          = nullptr;

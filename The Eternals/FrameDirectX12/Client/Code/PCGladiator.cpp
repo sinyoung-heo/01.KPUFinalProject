@@ -170,6 +170,10 @@ HRESULT CPCGladiator::LateInit_GameObject()
 	vecQuickSlot[8]->Set_CurQuickSlotName(QUCKSLOT_POTION_HP);
 	vecQuickSlot[9]->Set_CurQuickSlotName(QUCKSLOT_POTION_MP);
 
+	// SetUp Login Equipment
+	for (auto& pair : m_mapLoginEquipment)
+		CInventoryEquipmentMgr::Get_Instance()->SetUp_LoginEquipment(pair.first, pair.second);
+
 	return S_OK;
 }
 

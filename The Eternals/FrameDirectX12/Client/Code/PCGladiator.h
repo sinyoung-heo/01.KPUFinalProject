@@ -59,9 +59,8 @@ private:
 	void			Set_AnimationSpeed();
 	void			Set_BlendingSpeed();
 	void			Set_HpMPGauge();
-
-	//
 	void			Effect_Loop(const _float& fTimeDelta);
+
 	// KeyInput
 	void Key_Input(const _float& fTimeDelta);
 	void KeyInput_Move(const _float& fTimeDelta);
