@@ -19,9 +19,10 @@ public:
 	HRESULT		Init_ObjMgr();
 
 public:
-	CObj*		Get_GameObject(wstring wstrObjTag, int server_num = 0);
-	OBJLIST*	Get_OBJLIST(wstring wstrObjTag);
-	PARTYLIST*	Get_PARTYLIST(const int& party_num);
+	CObj*						Get_GameObject(wstring wstrObjTag, int server_num = 0);
+	OBJLIST*					Get_OBJLIST(wstring wstrObjTag);
+	PARTYLIST*					Get_PARTYLIST(const int& party_num);
+	const unordered_set<int>*	Get_RAIDLIST() { return &m_usetBossRaidList; }
 
 	void		Create_StageVelikaNPC();
 	void		Create_StageBeachMonster();
@@ -49,12 +50,17 @@ public:
 	HRESULT		Leave_Party(int* iPartyNumber, const int& server_num);
 	void		Print_PartyInfo(const int& iPartyNumber);
 
+	HRESULT		Add_RaidList(const int& server_num);
+	HRESULT		Leave_RaidList(const int& server_num);
+	HRESULT		Clear_RaidList();
+
 public:
 	void		Release();
 
 private:
 	map<wstring, OBJLIST>			m_mapObjList;
 	map<int, unordered_set<int>>	m_mapPartyList; // 파티번호 + 구성원 서버넘버
+	unordered_set<int>				m_usetBossRaidList;
 	recursive_mutex					m_mutex;
 };
 

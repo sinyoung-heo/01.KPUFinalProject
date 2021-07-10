@@ -36,6 +36,7 @@ constexpr int	INCREASE_ATT				= 5;
 constexpr float	NUCKBACK_DIST				= 6.f;
 constexpr int	INIT_PARTY_NUMBER			= -1;
 constexpr int	MAX_ITEMSIZE				= 80;
+constexpr float	PERCENT						= 100.f;
 
 constexpr int	RAID_PARTY					= 99;
 constexpr int	AI_HP						= 5000;
@@ -105,6 +106,13 @@ constexpr int	GIANTBETTLE_ATT				= 150;
 constexpr int	GIANTBETTLE_EXP				= 100;
 constexpr float	GIANTBETTLE_SPD				= 1.f;
 constexpr float	GIANTBETTLE_CHASE_SPD		= 4.f;
+
+constexpr int	VERGOS_HP					= 10000;
+constexpr int	VERGOS_ATT					= 500;
+constexpr int	VERGOS_EXP					= 10000;
+constexpr float	VERGOS_SPD					= 1.f;
+constexpr float	VERGOS_CHASE_SPD			= 4.f;
+constexpr int	VERGOS_PATTERN				= 7;
 
 constexpr float	GOBACK_SPD					= 6.f;
 

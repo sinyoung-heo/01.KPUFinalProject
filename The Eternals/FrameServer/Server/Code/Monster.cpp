@@ -6,8 +6,9 @@ CMonster::CMonster()
 	:m_iHp(0), m_iMaxHp(0), m_iExp(0), m_iMinAtt(0), m_iMaxAtt(0), m_fSpd(0.f), m_iChaseDist(CHASE_RANGE),
 	m_iTargetNum(-1), m_bIsAttack(false), m_bIsShortAttack(true), m_bIsRegen(false),
 	m_bIsRushAttack(false), m_bIsFighting(false), m_monNum(0), m_uiAnimIdx(0), m_bIsReaction(false),
-	m_vKnockbackPos(_vec3(0.f)), m_eAttackDist(ATTACK_DIST::DIST_END)
+	m_vKnockbackPos(_vec3(0.f)), m_eAttackDist(ATTACK_DIST::DIST_END), m_iCurPatternNumber(0)
 {
+	memset(m_arrAttackPattern, -1, sizeof(int) * VERGOS_PATTERN);
 }
 
 CMonster::~CMonster()
@@ -433,8 +434,7 @@ void CMonster::Change_Vergos_Animation(const float& fTimeDelta)
 
 	case STATUS::ST_ACTIVE:
 	{
-		m_uiAnimIdx = Monster_Normal::WAIT;
-	
+		Spawn_Vergos(fTimeDelta);
 	}
 	break;
 
@@ -447,21 +447,249 @@ void CMonster::Change_Vergos_Animation(const float& fTimeDelta)
 
 	case STATUS::ST_CHASE:
 	{
-	
+		// 공격패턴 준비
+		Choose_VergosPattern(fTimeDelta);
 	}
 	break;
 
 	case STATUS::ST_ATTACK:
 	{
-	
+		Attack_Vergos(fTimeDelta);
+	}
+	break;
+
+	case STATUS::ST_REACTION:
+	{
+		Play_Vergos_NextAttack();
 	}
 	break;
 
 	case STATUS::ST_DEAD:
 	{
-		
+		Dead_Vergos(fTimeDelta);
 	}
 	break;
+	}
+}
+
+void CMonster::Spawn_Vergos(const float& fTimeDelta)
+{
+	if (m_uiAnimIdx == Vergos::SPAWN)
+	{
+		if (!Is_AnimationSetEnd(fTimeDelta))
+			return;
+		else
+		{
+			Set_Start_Fight();
+			Change_ChaseMode();
+			return;
+		}
+	}
+
+	m_uiAnimIdx = Vergos::SPAWN;
+
+	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+	{
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+
+		send_Monster_animation_packet(raid, m_uiAnimIdx);
+	}
+}
+
+void CMonster::Choose_VergosPattern(const float& fTimeDelta)
+{
+	// 기본 공격: SWING_LFET/RIGHT & BLOW_LEFT/RIGHT/HEAD & BREATH_FIRE
+	// 강화 공격: BLOW_ROTATION & FLY
+
+	if (80.f < ((float)m_iHp / m_iMaxHp * PERCENT))
+		VergosPattern_FirstPhase();
+	else if (50.f < ((float)m_iHp / m_iMaxHp * PERCENT) && (m_iHp / m_iMaxHp * PERCENT) < 80.f)
+		VergosPattern_SecondPhase();
+	else if (((float)m_iHp / m_iMaxHp * PERCENT) < 50.f)
+		VergosPattern_ThirdPhase();
+	
+	m_iCurPatternNumber = 0;
+	Change_AttackMode();
+}
+
+void CMonster::VergosPattern_FirstPhase()
+{
+	// 1 Phase : HP > 80%
+	// 	   => SWING LEFT - BLOW RIGHT - BREATH FIRE - SWING RIGHT - BLOW LEFT - BREATH FIRE - BLOW HEAD
+	//	   => BREATH FIRE - BLOW LEFT - SWING RIGHT - BLOW HEAD - SWING LEFT - BREATH FIRE - BLOW RIGHT
+	int iRand = rand() % 4;
+	switch (iRand)
+	{
+	case 0:
+	case 2:
+	{
+		m_arrAttackPattern[0] = Vergos::SWING_LEFT;
+		m_arrAttackPattern[1] = Vergos::BLOW_RIGHT;
+		m_arrAttackPattern[2] = Vergos::BREATH_FIRE;
+		m_arrAttackPattern[3] = Vergos::SWING_RIGHT;
+		m_arrAttackPattern[4] = Vergos::BLOW_LEFT;
+		m_arrAttackPattern[5] = Vergos::BREATH_FIRE;
+		m_arrAttackPattern[6] = Vergos::BLOW_HEAD;
+	}
+	break;
+
+	case 1:
+	case 3:
+	{
+		m_arrAttackPattern[0] = Vergos::BREATH_FIRE;
+		m_arrAttackPattern[1] = Vergos::BLOW_LEFT;
+		m_arrAttackPattern[2] = Vergos::SWING_RIGHT;
+		m_arrAttackPattern[3] = Vergos::BLOW_HEAD;
+		m_arrAttackPattern[4] = Vergos::SWING_LEFT;
+		m_arrAttackPattern[5] = Vergos::BREATH_FIRE;
+		m_arrAttackPattern[6] = Vergos::BLOW_RIGHT;
+	}
+	break;
+	}
+}
+
+void CMonster::VergosPattern_SecondPhase()
+{
+	// 2 Phase : HP > 50%
+	// 	   => BLOW_ROTATION - BREATH FIRE - BLOW HEAD - SWING LEFT - SWING RIGHT - BREATH FIRE - BLOW LEFT
+	// 	   => BLOW_HEAD - BLOW ROTATION - BREATH FIRE - SWING LEFT - BLOW ROTATION - SWING RIGHT - BLOW LEFT
+	int iRand = rand() % 4;
+	switch (iRand)
+	{
+	case 0:
+	case 2:
+	{
+		m_arrAttackPattern[0] = Vergos::BLOW_ROTATION;
+		m_arrAttackPattern[1] = Vergos::BREATH_FIRE;
+		m_arrAttackPattern[2] = Vergos::BLOW_HEAD;
+		m_arrAttackPattern[3] = Vergos::SWING_LEFT;
+		m_arrAttackPattern[4] = Vergos::SWING_RIGHT;
+		m_arrAttackPattern[5] = Vergos::BREATH_FIRE;
+		m_arrAttackPattern[6] = Vergos::BLOW_LEFT;
+	}
+	break;
+
+	case 1:
+	case 3:
+	{
+		m_arrAttackPattern[0] = Vergos::BLOW_HEAD;
+		m_arrAttackPattern[1] = Vergos::BLOW_ROTATION;
+		m_arrAttackPattern[2] = Vergos::BREATH_FIRE;
+		m_arrAttackPattern[3] = Vergos::SWING_LEFT;
+		m_arrAttackPattern[4] = Vergos::BLOW_ROTATION;
+		m_arrAttackPattern[5] = Vergos::SWING_RIGHT;
+		m_arrAttackPattern[6] = Vergos::BLOW_LEFT;
+	}
+	break;
+	}
+}
+
+void CMonster::VergosPattern_ThirdPhase()
+{
+	// 3 Phase : HP > 30%
+	//	   => FLY - SWING RIGHT - BREATH FIRE - BLOW ROTATION - SWING LEFT - BLOW HEAD - BREATH FIRE
+	//     => BLOW ROTATION - BREATH FIRE - FLY - BLOW HEAD - SWING RIGHT - BLOW LEFT - BREATH FIRE
+	int iRand = rand() % 4;
+	switch (iRand)
+	{
+	case 0:
+	case 2:
+	{
+		m_arrAttackPattern[0] = Vergos::FLY_START;
+		m_arrAttackPattern[1] = Vergos::SWING_RIGHT;
+		m_arrAttackPattern[2] = Vergos::BREATH_FIRE;
+		m_arrAttackPattern[3] = Vergos::BLOW_ROTATION;
+		m_arrAttackPattern[4] = Vergos::SWING_LEFT;
+		m_arrAttackPattern[5] = Vergos::BLOW_HEAD;
+		m_arrAttackPattern[6] = Vergos::BREATH_FIRE;
+	}
+	break;
+
+	case 1:
+	case 3:
+	{
+		m_arrAttackPattern[0] = Vergos::BLOW_ROTATION;
+		m_arrAttackPattern[1] = Vergos::BREATH_FIRE;
+		m_arrAttackPattern[2] = Vergos::FLY_START;
+		m_arrAttackPattern[3] = Vergos::BLOW_HEAD;
+		m_arrAttackPattern[4] = Vergos::SWING_RIGHT;
+		m_arrAttackPattern[5] = Vergos::BLOW_LEFT;
+		m_arrAttackPattern[6] = Vergos::BREATH_FIRE;
+	}
+	break;
+	}
+}
+
+void CMonster::Attack_Vergos(const float& fTimedelta)
+{
+	if (!m_bIsAttack) return;
+
+	if (Vergos::SWING_RIGHT <= m_uiAnimIdx && m_uiAnimIdx <= Vergos::FLY_END)
+	{
+		if (!Is_AnimationSetEnd(fTimedelta))
+			return;
+		else
+		{
+			++m_iCurPatternNumber;
+			m_uiAnimIdx = Monster_Normal::WAIT;
+
+			if (m_iCurPatternNumber >= VERGOS_PATTERN)
+				Set_Stop_Attack(1s);
+			else
+				Change_ReactionMode();
+			return;
+		}
+	}
+
+	m_uiAnimIdx = m_arrAttackPattern[m_iCurPatternNumber];
+
+	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+	{
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+
+		send_Monster_animation_packet(raid, m_uiAnimIdx);
+	}
+}
+
+void CMonster::Play_Vergos_NextAttack(chrono::seconds t)
+{
+	if (m_bIsReaction)
+	{
+		bool prev_state = m_bIsReaction;
+		if (true == atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsReaction), &prev_state, false))
+		{
+			add_timer(m_sNum, OP_MODE_BOSS_NEXT_ATTACK, system_clock::now() + t);
+		}
+	}
+}
+
+void CMonster::Dead_Vergos(const float& fTimeDelta)
+{
+	if (m_bIsRegen) return;
+	
+	// 애니메이션이 아직 종료되지 않았을 경우 -> 몬스터 공격 패킷 전송 X
+	if (Vergos::DEATH == m_uiAnimIdx)
+	{
+		if (!Is_AnimationSetEnd(fTimeDelta))
+			return;
+		else
+		{
+			Set_Start_Regen(300s);
+			Init_AllStatus();
+			return;
+		}
+	}
+
+	m_uiAnimIdx = Vergos::DEATH;
+
+	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+	{
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+		
+		send_Monster_animation_packet(raid, Vergos::DEATH);
 	}
 }
 
@@ -2681,7 +2909,7 @@ void CMonster::Attack_DrownedSailor(const float& fTimeDelta)
 		if (m_bIsRushAttack) return;
 
 		// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
-		for (auto pl : old_viewlist)
+		for (auto& pl : old_viewlist)
 		{
 			/* 유저일 경우 처리 */
 			if (true == CObjMgr::GetInstance()->Is_Player(pl))
