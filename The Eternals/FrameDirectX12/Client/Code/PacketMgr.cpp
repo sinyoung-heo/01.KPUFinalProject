@@ -427,10 +427,23 @@ void CPacketMgr::Process_packet()
 		Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
 		if (nullptr != pThisPlayer)
 		{
+			switch (pThisPlayer->Get_OType())
+			{
+			case PC_GLADIATOR:
+				packet->equipType[0] = ItemType_WeaponTwoHand;
+				break;
+			case PC_ARCHER:
+				packet->equipType[0] = ItemType_WeaponBow;
+				break;
+			case PC_PRIEST:
+				packet->equipType[0] = ItemType_WeaponRod;
+				break;
+		
+			}
 			pThisPlayer->Set_ThisPlayerLoginEquipment(packet->equipType[0], packet->itemName[0]);
-			pThisPlayer->Set_ThisPlayerLoginEquipment(packet->equipType[1], packet->itemName[1]);
-			pThisPlayer->Set_ThisPlayerLoginEquipment(packet->equipType[2], packet->itemName[2]);
-			pThisPlayer->Set_ThisPlayerLoginEquipment(packet->equipType[3], packet->itemName[3]);
+			pThisPlayer->Set_ThisPlayerLoginEquipment(ItemType_Armor, packet->itemName[1]);
+			pThisPlayer->Set_ThisPlayerLoginEquipment(ItemType_Helmet, packet->itemName[2]);
+			pThisPlayer->Set_ThisPlayerLoginEquipment(ItemType_Shoes, packet->itemName[3]);
 		}
 
 		cout	<< "[로그인 후 장착 중인 아이템] " << endl;
