@@ -1,11 +1,11 @@
 #pragma once
 #include "GameUIChild.h"
 
-class CStoreButtonCalculate : public CGameUIChild
+class CQuestComplete : public CGameUIChild
 {
 private:
-	explicit CStoreButtonCalculate(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CStoreButtonCalculate() = default;
+	explicit CQuestComplete(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CQuestComplete() = default;
 
 public:
 	// CGameObject을(를) 통해 상속됨

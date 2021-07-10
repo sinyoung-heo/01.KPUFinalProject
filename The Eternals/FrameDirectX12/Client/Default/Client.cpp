@@ -22,6 +22,8 @@
 #include "InventoryEquipmentMgr.h"
 #include "StoreMgr.h"
 #include "QuickSlotMgr.h"
+#include "CinemaMgr.h"
+#include "QuestMgr.h"
 #include <chrono>
 
 #define MAX_LOADSTRING 100
@@ -393,6 +395,18 @@ _ulong Release_Singleton()
 #endif
 	_ulong dwRefCnt = 0;
 
+	if (dwRefCnt = CQuestMgr::Get_Instance()->Destroy_Instance())
+	{
+		MSG_BOX(L"CQuestMgr Release Failed");
+		return dwRefCnt;
+	}
+
+	if (dwRefCnt = CCinemaMgr::Get_Instance()->Destroy_Instance())
+	{
+		MSG_BOX(L"CCinemaMgr Release Failed");
+		return dwRefCnt;
+	}
+
 	if (dwRefCnt = CQuickSlotMgr::Get_Instance()->Destroy_Instance())
 	{
 		MSG_BOX(L"CQuickSlotMgr Release Failed");
@@ -402,12 +416,6 @@ _ulong Release_Singleton()
 	if (dwRefCnt = CStoreMgr::Get_Instance()->Destroy_Instance())
 	{
 		MSG_BOX(L"CStoreMgr Release Failed");
-		return dwRefCnt;
-	}
-
-	if (dwRefCnt = CInventoryEquipmentMgr::Get_Instance()->Destroy_Instance())
-	{
-		MSG_BOX(L"CInventoryEquipmentMgr Release Failed");
 		return dwRefCnt;
 	}
 

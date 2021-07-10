@@ -37,12 +37,14 @@ private:
 	HRESULT			SetUp_UIMiniMapCanvas();
 	HRESULT			SetUp_UIInGameStoreCanvas();
 	HRESULT			SetUp_UIQuickSlot();
+	HRESULT			SetUp_UIQuestRequestCanvas();
+	HRESULT			SetUp_UIQuesetMiniCanvas();
 private:
 	_bool m_bIsReadyMouseCursorMgr = false;
 
 public:
-	static CScene_MainStage*	Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	static CScene_MainStage* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 private:
-	virtual void			Free();
+	virtual void Free();
 };
 

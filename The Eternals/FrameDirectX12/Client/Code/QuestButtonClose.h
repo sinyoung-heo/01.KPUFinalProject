@@ -1,11 +1,11 @@
 #pragma once
 #include "GameUIChild.h"
 
-class CStoreButtonCalculate : public CGameUIChild
+class CQuestButtonClose : public CGameUIChild
 {
 private:
-	explicit CStoreButtonCalculate(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CStoreButtonCalculate() = default;
+	explicit CQuestButtonClose(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CQuestButtonClose() = default;
 
 public:
 	// CGameObject을(를) 통해 상속됨
@@ -23,12 +23,13 @@ public:
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Render_GameObject(const _float& fTimeDelta);
-private:
-	void SetUp_FontPosition(const _float& fTimeDelta);
+
+	HRESULT			SetUp_MainMenuState(wstring wstrTag, const UI_CHILD_STATE& tState);
 private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
+	map<wstring, UI_CHILD_STATE> m_mapMainMenuState;
 	_bool m_bIsKeyPressing = false;
 
 public:

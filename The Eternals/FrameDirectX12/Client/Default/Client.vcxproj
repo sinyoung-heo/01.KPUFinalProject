@@ -271,6 +271,11 @@
     <ClInclude Include="..\Code\PrionBerserkerBoss.h" />
     <ClInclude Include="..\Code\PublicPlane.h" />
     <ClInclude Include="..\Code\PublicSphere.h" />
+    <ClInclude Include="..\Code\QuestButtonAccept.h" />
+    <ClInclude Include="..\Code\QuestButtonClose.h" />
+    <ClInclude Include="..\Code\QuestComplete.h" />
+    <ClInclude Include="..\Code\QuestMgr.h" />
+    <ClInclude Include="..\Code\QuestRequestCanvas.h" />
     <ClInclude Include="..\Code\QuickSlot.h" />
     <ClInclude Include="..\Code\QuickSlotMgr.h" />
     <ClInclude Include="..\Code\QuickSlotSwapSlot.h" />
@@ -480,6 +485,11 @@
     <ClCompile Include="..\Code\PrionBerserkerBoss.cpp" />
     <ClCompile Include="..\Code\PublicPlane.cpp" />
     <ClCompile Include="..\Code\PublicSphere.cpp" />
+    <ClCompile Include="..\Code\QuestButtonAccept.cpp" />
+    <ClCompile Include="..\Code\QuestButtonClose.cpp" />
+    <ClCompile Include="..\Code\QuestComplete.cpp" />
+    <ClCompile Include="..\Code\QuestMgr.cpp" />
+    <ClCompile Include="..\Code\QuestRequestCanvas.cpp" />
     <ClCompile Include="..\Code\QuickSlot.cpp" />
     <ClCompile Include="..\Code\QuickSlotMgr.cpp" />
     <ClCompile Include="..\Code\QuickSlotSwapSlot.cpp" />

@@ -55,6 +55,7 @@
 #include "CinemaVergos.h"
 #include "CinemaMgr.h"
 #include "MiniMapCanvas.h"
+#include "QuestMgr.h"
 
 CScene_MainStage::CScene_MainStage(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
@@ -89,24 +90,24 @@ HRESULT CScene_MainStage::Ready_Scene()
 	// 현재 몬스터 컬링이 되어있지 않으므로 주석처리 해놓음. 삭제 X
 	//Engine::FAILED_CHECK_RETURN(CCinemaMgr::Get_Instance()->Ready_CinemaCharacter(), E_FAIL);
 
-	Engine::CGameObject* pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterLakanPool());
-	if (nullptr != pGameObj)
-	{
-		pGameObj->Get_Transform()->m_vScale = _vec3(0.1f);
-		pGameObj->Get_Transform()->m_vAngle = _vec3(0.f);
-		pGameObj->Get_Transform()->m_vPos	= _vec3(135.0f, 0.f, 65.0f);
-		pGameObj->Set_State(0);
-		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"LAKAN", pGameObj);
-	}
-	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterLakanPool());
-	if (nullptr != pGameObj)
-	{
-		pGameObj->Get_Transform()->m_vScale = _vec3(0.1f);
-		pGameObj->Get_Transform()->m_vAngle = _vec3(0.f);
-		pGameObj->Get_Transform()->m_vPos	= _vec3(130.0f, 0.f, 65.0f);
-		pGameObj->Set_State(0);
-		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"LAKAN", pGameObj);
-	}
+	//Engine::CGameObject* pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterLakanPool());
+	//if (nullptr != pGameObj)
+	//{
+	//	pGameObj->Get_Transform()->m_vScale = _vec3(0.1f);
+	//	pGameObj->Get_Transform()->m_vAngle = _vec3(0.f);
+	//	pGameObj->Get_Transform()->m_vPos	= _vec3(135.0f, 0.f, 65.0f);
+	//	pGameObj->Set_State(0);
+	//	m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"LAKAN", pGameObj);
+	//}
+	//pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterLakanPool());
+	//if (nullptr != pGameObj)
+	//{
+	//	pGameObj->Get_Transform()->m_vScale = _vec3(0.1f);
+	//	pGameObj->Get_Transform()->m_vAngle = _vec3(0.f);
+	//	pGameObj->Get_Transform()->m_vPos	= _vec3(130.0f, 0.f, 65.0f);
+	//	pGameObj->Set_State(0);
+	//	m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"LAKAN", pGameObj);
+	//}
 
 	// Server
 	Engine::FAILED_CHECK_RETURN(CPacketMgr::Get_Instance()->Ready_Server(m_pGraphicDevice, m_pCommandList), E_FAIL);
@@ -435,22 +436,18 @@ HRESULT CScene_MainStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 										_vec3(STAGE_BEACH_OFFSET_X, 0.0f, STAGE_BEACH_OFFSET_Z));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_BEACH, L"BumpWaterMesh00", pGameObj), E_FAIL);
 
-	//CEffectMgr::Get_Instance()->Effect_TextureEffect(L"Torch", _vec3(3.f), _vec3(0.f), _vec3(80.6f + 256.f, 2.f, 157.75f)
-	//	, FRAME(8.f, 8.f, 64.f), true, false);
-	//CEffectMgr::Get_Instance()->Effect_TextureEffect(L"Torch", _vec3(3.f), _vec3(0.f), _vec3(82.9f + 256.f, 0.7f, 149.72f)
-	//	, FRAME(8.f, 8.f, 64.f), true, false);
 	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-		L"Torch",
-		_vec3(3.f),
-		_vec3(0.f),
-		_vec3(80.6f +256.f, 2.f, 157.75f)
-	,FRAME(8.f,8.f,64.f));
+									  L"Torch",
+									  _vec3(3.f),
+									  _vec3(0.f),
+									  _vec3(80.6f +256.f, 2.f, 157.75f)
+									  ,FRAME(8.f,8.f,64.f));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_BEACH, L"Torch", pGameObj), E_FAIL);
 	pGameObj = CTextureEffect::Create(m_pGraphicDevice, m_pCommandList,
-		L"Torch",
-		_vec3(2.f),
-		_vec3(0.f),
-		_vec3(82.9f + 256.f, 0.7f, 149.72f ), FRAME(8.f, 8.f, 64.f));
+									  L"Torch",
+									  _vec3(2.f),
+									  _vec3(0.f),
+									  _vec3(82.9f + 256.f, 0.7f, 149.72f ), FRAME(8.f, 8.f, 64.f));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_BEACH, L"Torch", pGameObj), E_FAIL);
 
 
@@ -568,9 +565,6 @@ HRESULT CScene_MainStage::Ready_LayerUI(wstring wstrLayerTag)
 		static_cast<CFadeInOut*>(pGameObj)->Set_FadeInOutEventType(EVENT_TYPE::FADE_IN);
 		m_pObjectMgr->Add_GameObject(L"Layer_UI", L"FadeInOut", pGameObj);
 	}
-	//pGameObj = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::FADE_IN);
-	//Engine::NULL_CHECK_RETURN(pGameObj, E_FAIL);
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(wstrLayerTag, L"FadeInOut", pGameObj), E_FAIL);
 
 	/*__________________________________________________________________________________________________________
 	[ WarningFrame ]
@@ -599,6 +593,8 @@ HRESULT CScene_MainStage::Ready_LayerUI(wstring wstrLayerTag)
 	Engine::FAILED_CHECK_RETURN(SetUp_UIMiniMapCanvas(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(SetUp_UIInGameStoreCanvas(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(SetUp_UIQuickSlot(), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(SetUp_UIQuestRequestCanvas(), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(SetUp_UIQuesetMiniCanvas(), E_FAIL);
 
 	return S_OK;
 }
@@ -3030,6 +3026,422 @@ HRESULT CScene_MainStage::SetUp_UIQuickSlot()
 												 UIDepth);
 			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
 			CQuickSlotMgr::Get_Instance()->Set_QuickSlotSwapSlot(static_cast<CQuickSlotSwapSlot*>(pRootUI));
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CScene_MainStage::SetUp_UIQuestRequestCanvas()
+{
+	// MainMenuSettingCanvas
+	CQuestButtonClose* pButtonXMouseNormal  = nullptr;
+	CQuestButtonClose* pButtonXMouseOn      = nullptr;
+	CQuestButtonClose* pButtonXMouseClicked = nullptr;
+
+	{
+		wifstream fin{ L"../../Bin/ToolData/2DUIQuestCanvas.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		// ChildUI Data
+		vector<wstring> vecDataFilePath;
+		vector<wstring> vecObjectTag;
+		vector<_vec3>	vecPos;
+		vector<_vec3>	vecScale;
+		vector<_long>	vecUIDepth;
+		vector<_int>	vecIsSpriteAnimation;
+		vector<_float>	vecFrameSpeed;
+		vector<_vec3>	vecRectPosOffset;
+		vector<_vec3>	vecRectScale;
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			vecDataFilePath.resize(iChildUISize);
+			vecObjectTag.resize(iChildUISize);
+			vecPos.resize(iChildUISize);
+			vecScale.resize(iChildUISize);
+			vecUIDepth.resize(iChildUISize);
+			vecIsSpriteAnimation.resize(iChildUISize);
+			vecFrameSpeed.resize(iChildUISize);
+			vecRectPosOffset.resize(iChildUISize);
+			vecRectScale.resize(iChildUISize);
+
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				fin >> vecDataFilePath[i]			// DataFilePath
+					>> vecObjectTag[i]				// Object Tag
+					>> vecPos[i].x					// Pos X
+					>> vecPos[i].y					// Pos Y
+					>> vecScale[i].x				// Scale X
+					>> vecScale[i].y				// Scale Y
+					>> vecUIDepth[i]				// UI Depth
+					>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
+					>> vecFrameSpeed[i]				// Frame Speed
+					>> vecRectPosOffset[i].x		// RectPosOffset X
+					>> vecRectPosOffset[i].y		// RectPosOffset Y
+					>> vecRectScale[i].x			// RectScale X
+					>> vecRectScale[i].y;			// RectScale Y
+			}
+
+			if (fin.eof())
+				break;
+
+			// UIRoot 생성.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CQuestRequestCanvas::Create(m_pGraphicDevice, m_pCommandList,
+												  wstrRootObjectTag,
+												  wstrDataFilePath,
+												  vPos,
+												  vScale,
+												  bIsSpriteAnimation,
+												  fFrameSpeed,
+												  vRectPosOffset,
+												  vRectScale,
+												  UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+			CQuestMgr::Get_Instance()->Set_CanvasClass(static_cast<CQuestRequestCanvas*>(pRootUI));
+
+			// UIChild 생성.
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				Engine::CGameObject* pChildUI = nullptr;
+
+				if (L"UIQuestButton" == vecObjectTag[i])
+				{
+					pChildUI = CQuestButtonAccept::Create(m_pGraphicDevice, m_pCommandList,
+														  wstrRootObjectTag,				// RootObjectTag
+														  vecObjectTag[i],					// ObjectTag
+														  vecDataFilePath[i],				// DataFilePath
+														  vecPos[i],						// Pos
+														  vecScale[i],						// Scane
+														  (_bool)vecIsSpriteAnimation[i],	// Is Animation
+														  vecFrameSpeed[i],					// FrameSpeed
+														  vecRectPosOffset[i],				// RectPosOffset
+														  vecRectScale[i],					// RectScaleOffset
+														  UIDepth - 1);					// UI Depth
+					CQuestMgr::Get_Instance()->Set_ButtonAccpetClass(static_cast<CQuestButtonAccept*>(pChildUI));
+				}
+				else if (L"QuestButtonCloseNormal" == vecObjectTag[i] ||
+						 L"QuestButtonCloseMouseOn" == vecObjectTag[i] ||
+						 L"QuestButtonCloseMouseClickend" == vecObjectTag[i])
+				{
+					pChildUI = CQuestButtonClose::Create(m_pGraphicDevice, m_pCommandList,
+														 wstrRootObjectTag,					// RootObjectTag
+														 vecObjectTag[i],					// ObjectTag
+														 vecDataFilePath[i],				// DataFilePath
+														 vecPos[i],							// Pos
+														 vecScale[i],						// Scane
+														 (_bool)vecIsSpriteAnimation[i],	// Is Animation
+														 vecFrameSpeed[i],					// FrameSpeed
+														 vecRectPosOffset[i],				// RectPosOffset
+														 vecRectScale[i],					// RectScaleOffset
+														 UIDepth - 1);						// UI Depth
+
+					if (L"QuestButtonCloseMouseOn" == vecObjectTag[i])
+					{
+						pButtonXMouseOn = static_cast<CQuestButtonClose*>(pChildUI);
+						CQuestMgr::Get_Instance()->Set_ButtonCloseClass(static_cast<CQuestButtonClose*>(pChildUI));
+
+					}
+					else if (L"QuestButtonCloseMouseClickend" == vecObjectTag[i])
+						pButtonXMouseClicked = static_cast<CQuestButtonClose*>(pChildUI);
+					else
+						pButtonXMouseNormal = static_cast<CQuestButtonClose*>(pChildUI);
+
+				}
+
+				if (nullptr != pChildUI &&
+					(L"QuestButtonCloseMouseOn" != vecObjectTag[i] &&
+					 L"QuestButtonCloseMouseClickend" != vecObjectTag[i]))
+				{
+					m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
+					static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
+				}
+			}
+		}
+
+		UI_CHILD_STATE tState;
+
+		tState.tFrame         = pButtonXMouseOn->Get_Frame();
+		tState.vPos           = pButtonXMouseOn->Get_Transform()->m_vPos;
+		tState.vScale         = pButtonXMouseOn->Get_Transform()->m_vScale;
+		tState.vRectPosOffset = pButtonXMouseOn->Get_RectOffset();
+		tState.vRectScale     = pButtonXMouseOn->Get_TransformColor()->m_vScale;
+		pButtonXMouseNormal->SetUp_MainMenuState(L"MouseOn", tState);
+
+		tState.tFrame         = pButtonXMouseClicked->Get_Frame();
+		tState.vPos           = pButtonXMouseClicked->Get_Transform()->m_vPos;
+		tState.vScale         = pButtonXMouseClicked->Get_Transform()->m_vScale;
+		tState.vRectPosOffset = pButtonXMouseClicked->Get_RectOffset();
+		tState.vRectScale     = pButtonXMouseClicked->Get_TransformColor()->m_vScale;
+		pButtonXMouseNormal->SetUp_MainMenuState(L"MouseClicked", tState);
+
+		pButtonXMouseNormal = nullptr;
+		Engine::Safe_Release(pButtonXMouseOn);
+		Engine::Safe_Release(pButtonXMouseClicked);
+	}
+
+	return S_OK;
+}
+
+HRESULT CScene_MainStage::SetUp_UIQuesetMiniCanvas()
+{
+	{
+		wifstream fin{ L"../../Bin/ToolData/2DUIQuestMiniSubCanvas.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		// ChildUI Data
+		vector<wstring> vecDataFilePath;
+		vector<wstring> vecObjectTag;
+		vector<_vec3>	vecPos;
+		vector<_vec3>	vecScale;
+		vector<_long>	vecUIDepth;
+		vector<_int>	vecIsSpriteAnimation;
+		vector<_float>	vecFrameSpeed;
+		vector<_vec3>	vecRectPosOffset;
+		vector<_vec3>	vecRectScale;
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			vecDataFilePath.resize(iChildUISize);
+			vecObjectTag.resize(iChildUISize);
+			vecPos.resize(iChildUISize);
+			vecScale.resize(iChildUISize);
+			vecUIDepth.resize(iChildUISize);
+			vecIsSpriteAnimation.resize(iChildUISize);
+			vecFrameSpeed.resize(iChildUISize);
+			vecRectPosOffset.resize(iChildUISize);
+			vecRectScale.resize(iChildUISize);
+
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				fin >> vecDataFilePath[i]			// DataFilePath
+					>> vecObjectTag[i]				// Object Tag
+					>> vecPos[i].x					// Pos X
+					>> vecPos[i].y					// Pos Y
+					>> vecScale[i].x				// Scale X
+					>> vecScale[i].y				// Scale Y
+					>> vecUIDepth[i]				// UI Depth
+					>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
+					>> vecFrameSpeed[i]				// Frame Speed
+					>> vecRectPosOffset[i].x		// RectPosOffset X
+					>> vecRectPosOffset[i].y		// RectPosOffset Y
+					>> vecRectScale[i].x			// RectScale X
+					>> vecRectScale[i].y;			// RectScale Y
+			}
+
+			if (fin.eof())
+				break;
+
+			// UIRoot 생성.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CGameUIRoot::Create(m_pGraphicDevice, m_pCommandList,
+										  wstrRootObjectTag,
+										  wstrDataFilePath,
+										  vPos,
+										  vScale,
+										  bIsSpriteAnimation,
+										  fFrameSpeed,
+										  vRectPosOffset,
+										  vRectScale,
+										  UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+			static_cast<CGameUIRoot*>(pRootUI)->Set_IsActive(true);
+			CQuestMgr::Get_Instance()->Set_SubQuestMiniCanvas(static_cast<CGameUIRoot*>(pRootUI));
+
+			// UIChild 생성.
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				Engine::CGameObject* pChildUI = nullptr;
+					pChildUI = CQuestComplete::Create(m_pGraphicDevice, m_pCommandList,
+													  wstrRootObjectTag,				// RootObjectTag
+													  vecObjectTag[i],					// ObjectTag
+													  vecDataFilePath[i],				// DataFilePath
+													  vecPos[i],						// Pos
+													  vecScale[i],						// Scane
+													  (_bool)vecIsSpriteAnimation[i],	// Is Animation
+													  vecFrameSpeed[i],					// FrameSpeed
+													  vecRectPosOffset[i],				// RectPosOffset
+													  vecRectScale[i],					// RectScaleOffset
+													  UIDepth - 1);						// UI Depth
+
+				if (nullptr != pChildUI)
+				{
+					m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
+					static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
+				}
+			}
+		}
+	}
+
+	{
+		wifstream fin{ L"../../Bin/ToolData/2DUIQuestMiniMainCanvas.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		// ChildUI Data
+		vector<wstring> vecDataFilePath;
+		vector<wstring> vecObjectTag;
+		vector<_vec3>	vecPos;
+		vector<_vec3>	vecScale;
+		vector<_long>	vecUIDepth;
+		vector<_int>	vecIsSpriteAnimation;
+		vector<_float>	vecFrameSpeed;
+		vector<_vec3>	vecRectPosOffset;
+		vector<_vec3>	vecRectScale;
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			vecDataFilePath.resize(iChildUISize);
+			vecObjectTag.resize(iChildUISize);
+			vecPos.resize(iChildUISize);
+			vecScale.resize(iChildUISize);
+			vecUIDepth.resize(iChildUISize);
+			vecIsSpriteAnimation.resize(iChildUISize);
+			vecFrameSpeed.resize(iChildUISize);
+			vecRectPosOffset.resize(iChildUISize);
+			vecRectScale.resize(iChildUISize);
+
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				fin >> vecDataFilePath[i]			// DataFilePath
+					>> vecObjectTag[i]				// Object Tag
+					>> vecPos[i].x					// Pos X
+					>> vecPos[i].y					// Pos Y
+					>> vecScale[i].x				// Scale X
+					>> vecScale[i].y				// Scale Y
+					>> vecUIDepth[i]				// UI Depth
+					>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
+					>> vecFrameSpeed[i]				// Frame Speed
+					>> vecRectPosOffset[i].x		// RectPosOffset X
+					>> vecRectPosOffset[i].y		// RectPosOffset Y
+					>> vecRectScale[i].x			// RectScale X
+					>> vecRectScale[i].y;			// RectScale Y
+			}
+
+			if (fin.eof())
+				break;
+
+			// UIRoot 생성.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CGameUIRoot::Create(m_pGraphicDevice, m_pCommandList,
+										  wstrRootObjectTag,
+										  wstrDataFilePath,
+										  vPos,
+										  vScale,
+										  bIsSpriteAnimation,
+										  fFrameSpeed,
+										  vRectPosOffset,
+										  vRectScale,
+										  UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+			CQuestMgr::Get_Instance()->Set_SubQuestMiniCanvas(static_cast<CGameUIRoot*>(pRootUI));
+
+			// UIChild 생성.
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				Engine::CGameObject* pChildUI = nullptr;
+					pChildUI = CQuestComplete::Create(m_pGraphicDevice, m_pCommandList,
+													  wstrRootObjectTag,				// RootObjectTag
+													  vecObjectTag[i],					// ObjectTag
+													  vecDataFilePath[i],				// DataFilePath
+													  vecPos[i],						// Pos
+													  vecScale[i],						// Scane
+													  (_bool)vecIsSpriteAnimation[i],	// Is Animation
+													  vecFrameSpeed[i],					// FrameSpeed
+													  vecRectPosOffset[i],				// RectPosOffset
+													  vecRectScale[i],					// RectScaleOffset
+													  UIDepth - 1);						// UI Depth
+
+				if (nullptr != pChildUI)
+				{
+					m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
+					static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
+				}
+			}
 		}
 	}
 
