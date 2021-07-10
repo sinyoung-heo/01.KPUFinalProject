@@ -154,6 +154,20 @@ void process_packet(int id)
 				}
 			}
 		}
+
+		// Stage Winter老 版快
+		if (pPlayer->m_chStageId == STAGE_WINTER)
+		{
+			CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
+			if (pMonster->Get_Dead() == false)
+			{
+				pPlayer->v_lock.lock();
+				pPlayer->view_list.insert(g_iVergosServerNum);
+				pPlayer->v_lock.unlock();
+
+				pMonster->send_Monster_enter_packet(id);
+			}			
+		}
 	}
 	break;
 
@@ -577,6 +591,17 @@ void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 		}
 	}
 
+	// Stage Winter老 版快
+	if (pPlayer->m_chStageId == STAGE_WINTER)
+	{
+		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
+		if (pMonster->Get_Dead() == false)
+		{
+			new_viewlist.insert(g_iVergosServerNum);
+			pMonster->active_monster();
+		}
+	}
+
 	/* 货肺款 矫具 格废 郴狼 按眉 贸府 */
 	for (const int& server_num : new_viewlist)
 	{
@@ -793,6 +818,17 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 					}
 				}
 			}
+		}
+	}
+
+	// Stage Winter老 版快
+	if (pPlayer->m_chStageId == STAGE_WINTER)
+	{
+		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
+		if (pMonster->Get_Dead() == false)
+		{
+			new_viewlist.insert(g_iVergosServerNum);
+			pMonster->active_monster();
 		}
 	}
 
@@ -1082,6 +1118,17 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx, 
 		}
 	}
 
+	// Stage Winter老 版快
+	if (pPlayer->m_chStageId == STAGE_WINTER)
+	{
+		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
+		if (pMonster->Get_Dead() == false)
+		{
+			new_viewlist.insert(g_iVergosServerNum);
+			pMonster->active_monster();
+		}
+	}
+
 	/* 货肺款 矫具 格废 郴狼 按眉 贸府 */
 	for (const int& server_num : new_viewlist)
 	{
@@ -1297,6 +1344,17 @@ void process_attack_stop(int id, const _vec3& _vDir, const _vec3& _vPos, int ani
 					}
 				}
 			}
+		}
+	}
+
+	// Stage Winter老 版快
+	if (pPlayer->m_chStageId == STAGE_WINTER)
+	{
+		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
+		if (pMonster->Get_Dead() == false)
+		{
+			new_viewlist.insert(g_iVergosServerNum);
+			pMonster->active_monster();
 		}
 	}
 
@@ -1517,6 +1575,17 @@ void process_buff(const int& id, cs_packet_attack* p)
 					}
 				}
 			}
+		}
+	}
+
+	// Stage Winter老 版快
+	if (pPlayer->m_chStageId == STAGE_WINTER)
+	{
+		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
+		if (pMonster != nullptr && pMonster->Get_Dead() == false)
+		{
+			new_viewlist.insert(g_iVergosServerNum);
+			pMonster->active_monster();
 		}
 	}
 

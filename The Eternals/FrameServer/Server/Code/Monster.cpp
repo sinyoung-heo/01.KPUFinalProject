@@ -3929,7 +3929,7 @@ void CMonster::Hurt_Monster(const int& p_id, const int& damage, const char& affe
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 유저일 경우 처리 */
 				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))

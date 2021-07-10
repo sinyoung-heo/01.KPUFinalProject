@@ -16,3 +16,6 @@ extern mutex g_timer_lock;
 class CTimer;
 extern CTimer* g_pTimerFPS;
 extern CTimer* g_pTimerTimeDelta;
+
+/* Boss Monster Vergos Server Number */
+extern int g_iVergosServerNum;

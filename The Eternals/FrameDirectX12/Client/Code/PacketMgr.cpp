@@ -1159,6 +1159,16 @@ void CPacketMgr::Login_Player(sc_packet_login_ok* packet)
 	pGameObj->Set_OType(packet->o_type);
 	pGameObj->Set_ServerNumber(g_iSNum);
 	pGameObj->Set_Info(packet->level, packet->hp, packet->maxHp, packet->mp, packet->maxMp, packet->exp, packet->maxExp, packet->min_att, packet->max_att, packet->spd, packet->money);
+	
+	pGameObj->Set_CurrentStageID(packet->naviType);
+	// Static Object
+	if (STAGE_VELIKA == packet->naviType)
+		Engine::CObjectMgr::Get_Instance()->Set_CurrentStage(Engine::STAGEID::STAGE_VELIKA);
+	else if (STAGE_BEACH == packet->naviType)
+		Engine::CObjectMgr::Get_Instance()->Set_CurrentStage(Engine::STAGEID::STAGE_BEACH);
+	else if (STAGE_WINTER == packet->naviType)
+		Engine::CObjectMgr::Get_Instance()->Set_CurrentStage(Engine::STAGEID::STAGE_WINTER);
+
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"ThisPlayer", pGameObj), E_FAIL);
 
 #ifdef ERR_CHECK
