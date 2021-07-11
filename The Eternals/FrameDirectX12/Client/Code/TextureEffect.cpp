@@ -188,7 +188,7 @@ void CTextureEffect::Set_ConstantTable()
 	tCB_ShaderTexture.fFrameCnt	= m_tFrame.fFrameCnt;
 	tCB_ShaderTexture.fCurFrame	= (_float)(_int)m_tFrame.fCurFrame;
 	tCB_ShaderTexture.fSceneCnt	= m_tFrame.fSceneCnt;
-	tCB_ShaderTexture.fCurScene	= (_int)m_tFrame.fCurScene;
+	tCB_ShaderTexture.fCurScene	= (_float)(_int)m_tFrame.fCurScene;
 	tCB_ShaderTexture.v_Color   = m_vColorOffset;
 
 	if(m_bisFollowHand)

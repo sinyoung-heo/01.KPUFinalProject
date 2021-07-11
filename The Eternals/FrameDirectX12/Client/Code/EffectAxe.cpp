@@ -69,12 +69,12 @@ _int CEffectAxe::Update_GameObject(const _float & fTimeDelta)
 
 
 	if (m_fLifeTime < 5.5f && m_bisScaleAnim && m_pTransCom->m_vScale.x < 0.12f)
-		m_pTransCom->m_vScale += _vec3(fTimeDelta * 0.12);
+		m_pTransCom->m_vScale += _vec3(fTimeDelta * 0.12f);
 	m_fLifeTime += fTimeDelta;
 	if (m_fLifeTime > 5.5f)
 	{
-		m_pTransCom->m_vScale -= _vec3(fTimeDelta * 0.12);
-		if (m_pTransCom->m_vScale.x < 0.00)
+		m_pTransCom->m_vScale -= _vec3(fTimeDelta * 0.12f);
+		if (m_pTransCom->m_vScale.x < 0.0f)
 			m_bIsReturn = true;
 	}
 	/*__________________________________________________________________________________________________________
@@ -166,7 +166,7 @@ void CEffectAxe::Set_ConstantTable()
 	m_fDeltatime2 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
 	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"))*1;
 	m_fShaderDegree += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 60.f;
-	m_fShaderDegree = int(m_fShaderDegree) % 360;
+	m_fShaderDegree = _float(int(m_fShaderDegree) % 360);
 	tCB_ShaderMesh.fOffset1 = m_fDeltatime;
 	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
 	tCB_ShaderMesh.fOffset3 = 0.5f;

@@ -186,7 +186,7 @@ CMagicCircle** CMagicCircle::Create_InstancePool(ID3D12Device* pGraphicDevice, I
 	{
 		ppInstance[i] = new CMagicCircle(pGraphicDevice, pCommandList);
 		ppInstance[i]->m_uiInstanceIdx = i;
-		ppInstance[i]->Ready_GameObject(L"PublicPlane00", _vec3(0.f), _vec3(0.f), _vec3(0.f), 0.f);
+		ppInstance[i]->Ready_GameObject(L"PublicPlane00", _vec3(0.f), _vec3(0.f), _vec3(0.f), 0);
 	}
 	return ppInstance;
 

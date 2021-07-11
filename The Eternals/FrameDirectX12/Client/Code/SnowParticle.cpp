@@ -35,9 +35,9 @@ HRESULT CSnowParticle::LateInit_GameObject()
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer();
 
-	m_vecRandomvector.x = (rand() % 200 - 100);
-	m_vecRandomvector.y = (rand() % 100);
-	m_vecRandomvector.z = (rand() % 200 - 100);
+	m_vecRandomvector.x =(_float)(rand() % 200 - 100);
+	m_vecRandomvector.y =(_float)(rand() % 100);
+	m_vecRandomvector.z =(_float)(rand() % 200 - 100);
 	m_vecRandomvector.Normalize();
 
 	if (m_bisPivot)
@@ -136,7 +136,7 @@ void CSnowParticle::Set_ConstantTable()
 	tCB_ShaderTexture.fFrameCnt = m_tFrame.fFrameCnt;
 	tCB_ShaderTexture.fCurFrame = (_float)(_int)m_tFrame.fCurFrame;
 	tCB_ShaderTexture.fSceneCnt = m_tFrame.fSceneCnt;
-	tCB_ShaderTexture.fCurScene = (_int)m_tFrame.fCurScene;
+	tCB_ShaderTexture.fCurScene = (_float)(_int)m_tFrame.fCurScene;
 	m_fAlpha -= Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.5f;
 	tCB_ShaderTexture.fAlpha = m_fAlpha;
 

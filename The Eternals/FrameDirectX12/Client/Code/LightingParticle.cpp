@@ -125,7 +125,7 @@ void CLightingParticle::Set_ConstantTable()
 	tCB_ShaderTexture.fFrameCnt = m_tFrame.fFrameCnt;
 	tCB_ShaderTexture.fCurFrame = (_float)(_int)m_tFrame.fCurFrame;
 	tCB_ShaderTexture.fSceneCnt = m_tFrame.fSceneCnt;
-	tCB_ShaderTexture.fCurScene = (_int)m_tFrame.fCurScene;
+	tCB_ShaderTexture.fCurScene = (_float)(_int)m_tFrame.fCurScene;
 	
 	m_fAlpha -= Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.75f;
 	tCB_ShaderTexture.fAlpha = m_fAlpha;

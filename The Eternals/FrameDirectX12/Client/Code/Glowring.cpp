@@ -131,7 +131,7 @@ void CGlowring::Set_ConstantTable()
 	tCB_ShaderTexture.fFrameCnt = m_tFrame.fFrameCnt;
 	tCB_ShaderTexture.fCurFrame = (_float)(_int)m_tFrame.fCurFrame;
 	tCB_ShaderTexture.fSceneCnt = m_tFrame.fSceneCnt;
-	tCB_ShaderTexture.fCurScene = (_int)m_tFrame.fCurScene;
+	tCB_ShaderTexture.fCurScene = (_float)(_int)m_tFrame.fCurScene;
 	m_fAlpha -= Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 1.5f;
 	tCB_ShaderTexture.fAlpha = m_fAlpha;
 	m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);

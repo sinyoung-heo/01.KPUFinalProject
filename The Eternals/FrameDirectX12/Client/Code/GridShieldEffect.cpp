@@ -62,12 +62,12 @@ _int CGridShieldEffect::Update_GameObject(const _float & fTimeDelta)
 
 
 	if (m_fLifeTime < 5.5f && m_bisScaleAnim && m_pTransCom->m_vScale.x < 0.2f)
-		m_pTransCom->m_vScale += _vec3(fTimeDelta * 0.5);
+		m_pTransCom->m_vScale += _vec3(fTimeDelta * 0.5f);
 	m_fLifeTime += fTimeDelta;
 	if (m_fLifeTime > 5.5f)
 	{
-		m_pTransCom->m_vScale -= _vec3(fTimeDelta * 0.5);
-		if (m_pTransCom->m_vScale.x < 0.00)
+		m_pTransCom->m_vScale -= _vec3(fTimeDelta * 0.5f);
+		if (m_pTransCom->m_vScale.x < 0.0f)
 			m_bIsReturn = true;
 	}
 	/*__________________________________________________________________________________________________________
@@ -144,7 +144,7 @@ void CGridShieldEffect::Set_ConstantTable()
 	m_fDeltatime2 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
 	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"))*2;
 	m_fDegree += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 60.f;
-	m_fDegree = int(m_fDegree) % 360;
+	m_fDegree = _float(int(m_fDegree) % 360);
 	tCB_ShaderMesh.fOffset1 = m_fDeltatime;
 	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
 	tCB_ShaderMesh.fOffset4 = m_fDegree;
@@ -196,7 +196,7 @@ CGridShieldEffect** CGridShieldEffect::Create_InstancePool(ID3D12Device* pGraphi
 	{
 		ppInstance[i] = new CGridShieldEffect(pGraphicDevice, pCommandList);
 		ppInstance[i]->m_uiInstanceIdx = i;
-		ppInstance[i]->Ready_GameObject(L"PublicSphere00", _vec3(0.f), _vec3(0.f), _vec3(0.f), 0.f);
+		ppInstance[i]->Ready_GameObject(L"PublicSphere00", _vec3(0.f), _vec3(0.f), _vec3(0.f), 0);
 	}
 	return ppInstance;
 }

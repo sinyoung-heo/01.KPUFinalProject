@@ -49,12 +49,12 @@ _int CPublicSphere::Update_GameObject(const _float & fTimeDelta)
 
 
 	if (m_fLifeTime < 5.5f && m_bisScaleAnim && m_pTransCom->m_vScale.x < 0.2f)
-		m_pTransCom->m_vScale += _vec3(fTimeDelta * 0.5);
+		m_pTransCom->m_vScale += _vec3(fTimeDelta * 0.5f);
 	m_fLifeTime += fTimeDelta;
 	if (m_fLifeTime > 5.5f)
 	{
-		m_pTransCom->m_vScale -= _vec3(fTimeDelta * 0.5);
-		if (m_pTransCom->m_vScale.x < 0.00)
+		m_pTransCom->m_vScale -= _vec3(fTimeDelta * 0.5f);
+		if (m_pTransCom->m_vScale.x < 0.0f)
 			m_bIsDead = true;
 	}
 	/*__________________________________________________________________________________________________________
@@ -148,7 +148,7 @@ void CPublicSphere::Set_ConstantTable()
 	m_fDeltatime2 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
 	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"))*2;
 	m_fDegree += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 60.f;
-	m_fDegree = int(m_fDegree) % 360;
+	m_fDegree = _float(int(m_fDegree) % 360);
 	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
 	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
 	tCB_ShaderMesh.fOffset4 = m_fDegree;

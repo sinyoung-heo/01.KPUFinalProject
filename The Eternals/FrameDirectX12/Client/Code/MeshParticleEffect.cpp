@@ -115,7 +115,7 @@ void CMeshParticleEffect::Make_TextureTrail(const _float& fTimeDelta)
 		m_fMakeTexTrail = 0.f;
 		for (int i = 0; i < m_iParticleCnt; i++)
 		{
-			CEffectMgr::Get_Instance()->Effect_TextureEffect(L"Bomb05", _vec3(2.f), _vec3(rand()%360,0,rand()%360)
+			CEffectMgr::Get_Instance()->Effect_TextureEffect(L"Bomb05", _vec3(2.f), _vec3(float(rand()%360),0,float(rand()%360))
 				, ParticlePos[i], FRAME(6, 6, 36),false,true,1.f,1, _vec4(-0.1f));
 		
 		}
@@ -218,11 +218,11 @@ void CMeshParticleEffect::Set_CreateInfo(const _vec3& vScale,
 		ParticlePos[i] = vPos;
 
 
-		m_vecRandomvector[i].x = (rand() % 400 - 200);
-		m_vecRandomvector[i].y = (rand() % 150 + YOffSet);
-		m_vecRandomvector[i].z = (rand() % 400 - 200);
+		m_vecRandomvector[i].x = (_float)(rand() % 400 - 200);
+		m_vecRandomvector[i].y = (_float)(rand() % 150 + YOffSet);
+		m_vecRandomvector[i].z = (_float)(rand() % 400 - 200);
 		m_vecRandomvector[i].Normalize();
-		ParticleAngle[i] = _vec3(rand() % 360, rand() % 360, rand() % 360);
+		ParticleAngle[i] = _vec3(_float(rand() % 360),_float( rand() % 360),_float( rand() % 360));
 		ParticleScale[i] = vScale * _vec3(float(rand() % 9 + 4) * 0.1f, float(rand() % 9 + 4) * 0.1f, float(rand() % 9 + 4) * 0.1f);
 		m_fCurGravity[i] = 0.f;
 		ParticleSpeed_Weight[i].x = SpeedWeight.x - rand() % int(SpeedWeight.x *0.5f);

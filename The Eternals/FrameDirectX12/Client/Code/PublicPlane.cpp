@@ -39,8 +39,8 @@ HRESULT CPublicPlane::LateInit_GameObject()
 	m_pDescriptorHeaps = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(L"EffectPublic");
 
 	m_uiDiffuse = 18;
-	m_fNormalMapDeltatime = 18;//NormIdx
-	m_fPatternMapDeltatime = 18;//SpecIdx
+	m_uiNorm = 18;//NormIdx
+	m_uiSpec = 18;//SpecIdx
 	return S_OK;	
 }
 
@@ -81,7 +81,7 @@ _int CPublicPlane::LateUpdate_GameObject(const _float & fTimeDelta)
 
 void CPublicPlane::Render_GameObject(const _float& fTimeDelta)
 {
-	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_fNormalMapDeltatime, m_fPatternMapDeltatime
+	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_uiNorm, m_uiSpec
 		,0,4);
 }
 

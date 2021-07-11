@@ -62,7 +62,7 @@ _int CParticleEffect::Update_GameObject(const _float& fTimeDelta)
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
-	m_fDegree = (_int)m_fDegree % 360;
+	m_fDegree =(_float)((_int)m_fDegree % 360);
 	/*__________________________________________________________________________________________________________
 	[ Update Sprite Frame ]
 	____________________________________________________________________________________________________________*/
@@ -154,7 +154,7 @@ void CParticleEffect::Set_ConstantTable(_int i)
 	tCB_ShaderTexture.fFrameCnt = m_tFrame.fFrameCnt;
 	tCB_ShaderTexture.fCurFrame = (_float)(_int)m_tFrame.fCurFrame;
 	tCB_ShaderTexture.fSceneCnt = m_tFrame.fSceneCnt;
-	tCB_ShaderTexture.fCurScene = (_int)m_tFrame.fCurScene;
+	tCB_ShaderTexture.fCurScene = (_float)(_int)m_tFrame.fCurScene;
 	tCB_ShaderTexture.fAlpha = m_fAlpha;
 	tCB_ShaderTexture.fOffset3 = m_fDegree;
 	tCB_ShaderTexture.v_Color = m_vecColorOffset;
@@ -196,9 +196,9 @@ void CParticleEffect::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle,
 	{
 		
 		TempPos[i] = vPos;
-		m_vecRandomvector[i].x = (rand() % 200 - 100);
-		m_vecRandomvector[i].y = (rand() % 100);
-		m_vecRandomvector[i].z = (rand() % 200 - 100);
+		m_vecRandomvector[i].x = (_float)(rand() % 200 - 100);
+		m_vecRandomvector[i].y = (_float)(rand() % 100);
+		m_vecRandomvector[i].z = (_float)(rand() % 200 - 100);
 		m_vecRandomvector[i].Normalize();
 		TempPos[i] += m_vecRandomvector[i] * (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 50.f;
 	}
