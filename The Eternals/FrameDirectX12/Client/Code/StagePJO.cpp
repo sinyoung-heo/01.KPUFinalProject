@@ -36,7 +36,6 @@
 #include "PublicPlane.h"
 #include "FireDecal.h"
 #include "SwordTrail.h"
-#include "ArrowDecal.h"
 CStagePJO::CStagePJO(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CScene(pGraphicDevice, pCommandList)
 {

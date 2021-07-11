@@ -174,7 +174,7 @@ void CFrameMesh::Set_ConstantTable()
 	tCB_ShaderMesh.vAfterImgColor.x = m_tFrame.fFrameCnt;
 	tCB_ShaderMesh.vAfterImgColor.y = (_float)(_int)m_tFrame.fCurFrame;
 	tCB_ShaderMesh.vAfterImgColor.z = m_tFrame.fSceneCnt;
-	tCB_ShaderMesh.vAfterImgColor.w = (_int)m_tFrame.fCurScene;
+	tCB_ShaderMesh.vAfterImgColor.w = (_float)(_int)m_tFrame.fCurScene;
 	if(m_pShaderCom->Get_UploadBuffer_ShaderMesh()!=nullptr)
 		m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 

@@ -63,8 +63,8 @@ _int CSwordEffect_s::Update_GameObject(const _float & fTimeDelta)
 	m_pTransCom->m_vPos += (m_pTransCom->m_vDir * m_fDistance * fTimeDelta);
 	if (m_fLifeTime < 2.5f && m_bisScaleAnim && m_pTransCom->m_vScale.x < 0.24f)
 	{
-		m_pTransCom->m_vScale += _vec3(fTimeDelta * 0.24);
-		m_pTransCom->m_vScale.y += fTimeDelta * 0.24;
+		m_pTransCom->m_vScale += _vec3(fTimeDelta * 0.24f);
+		m_pTransCom->m_vScale.y += fTimeDelta * 0.24f;
 	}
 	m_fLifeTime += fTimeDelta;
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MAGICCIRCLE, this), -1);
@@ -142,7 +142,7 @@ void CSwordEffect_s::Set_ConstantTable()
 	m_fDeltatime2 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
 	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"))*1;
 	m_fShaderDegree += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 60.f;
-	m_fShaderDegree = int(m_fShaderDegree) % 360;
+	m_fShaderDegree = (_float)(int(m_fShaderDegree) % 360);
 	tCB_ShaderMesh.fOffset1 = m_fDeltatime;
 	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
 	tCB_ShaderMesh.fOffset3 = m_fAlpha;

@@ -123,8 +123,8 @@ void CEffectMgr::Effect_Straight_IceStorm(_vec3 vecPos, _vec3 vecDir, const _boo
 	float fPlayerAngleY = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->m_vAngle.y;
 	for (int i = 0; i < 13; i++)
 	{
-		_vec3 PosOffSet = vecDir * 2.f + (DirectVec *(1+ i)*(1+powf(i/13,2)));
-		_vec3 newAngle = _vec3(rand() % 20 - 10, fPlayerAngleY, rand() % 20 - 10);
+		_vec3 PosOffSet = vecDir * 2.f + (DirectVec *(1.f+ (float)i)*(1.f+powf((float)i/13.f,2.f)));
+		_vec3 newAngle = _vec3(float(rand() % 20 - 10), fPlayerAngleY, float(rand() % 20 - 10));
 		pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_IceStorm_m_Effect());
 		if (nullptr != pGameObj)
 		{
@@ -197,7 +197,7 @@ void CEffectMgr::Effect_FireCone(_vec3 vecPos, float RotY , _vec3 vecDir)
 		pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_FrameMesh_Effect());
 		if (nullptr != pGameObj)
 		{
-			static_cast<CFrameMesh*>(pGameObj)->Set_CreateInfo(_vec3(0.015f, 20.5, 0.015), _vec3(-0.f, RotY + 60 * i, -0.f)
+			static_cast<CFrameMesh*>(pGameObj)->Set_CreateInfo(_vec3(0.015f, 20.5f, 0.015f), _vec3(-0.f, RotY + 60.f * i, -0.f)
 				, vecPos, FRAME(8, 8, 128));
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicCylinder02", pGameObj), E_FAIL);
 		}
@@ -218,14 +218,14 @@ void CEffectMgr::Effect_GridShieldEffect(_vec3 vecPos,int type,Engine::CTransfor
 {
 	int Pipeidx = 0;
 	_vec3 Texidx;
-	vecPos.y = 1.f + rand()%10 * 0.01;
+	vecPos.y = 1.f + float(rand()%10) * 0.01f;
 	type == 0 ? Pipeidx = 2 : Pipeidx=10;
 	type == 0 ? Texidx = _vec3(0,2,16) : Texidx=_vec3(0, 25, 16);
 
 	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_GridShieldEffect());
 	if (nullptr != pGameObj)
 	{
-		static_cast<CGridShieldEffect*>(pGameObj)->Set_CreateInfo(_vec3(0.f), _vec3(0.f), vecPos, Texidx.x, Texidx.y, Texidx.z,Pipeidx, true, true, parentTransform);
+		static_cast<CGridShieldEffect*>(pGameObj)->Set_CreateInfo(_vec3(0.f), _vec3(0.f), vecPos, (_int)Texidx.x, (_int)Texidx.y, (_int)Texidx.z,Pipeidx, true, true, parentTransform);
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicSphere00", pGameObj), E_FAIL);
 	}
 
@@ -244,7 +244,7 @@ void CEffectMgr::Effect_Shield(_vec3 vecPos,Engine::CTransform* parentTransform)
 		if (nullptr != pGameObj)
 		{
 			static_cast<CEffectShield*>(pGameObj)->Set_CreateInfo(_vec3(0.0f), _vec3(0.0f), vecPos,
-				5.5f,0.12f,3.f,(360 / 5) * i, parentTransform);
+				5.5f,0.12f,3.f,(360.f / 5.f) * i, parentTransform);
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"publicShield", pGameObj), E_FAIL);
 		}
 	}
@@ -261,7 +261,7 @@ void CEffectMgr::Effect_Axe(_vec3 vecPos, Engine::CTransform* parentTransform)
 		pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_AxeEffect());
 		if (nullptr != pGameObj)
 		{
-			static_cast<CEffectAxe*>(pGameObj)->Set_CreateInfo(_vec3(0.0f), _vec3(0.0f), vecPos, (360 / 5) * i, parentTransform);
+			static_cast<CEffectAxe*>(pGameObj)->Set_CreateInfo(_vec3(0.0f), _vec3(0.0f), vecPos, (360.f / 5.f) * i, parentTransform);
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"publicAxe", pGameObj), E_FAIL);
 		}
 	}
@@ -280,7 +280,7 @@ void CEffectMgr::Effect_TargetShield(_vec3 vecPos, Engine::CTransform* parentTra
 		{
 			static_cast<CEffectShield*>(pGameObj)->Set_CreateInfo(_vec3(0.0f), _vec3(0.0f), vecPos,
 				180.f, 0.06f, 1.5f
-				, (360 / 3) * i, parentTransform,true);
+				, (360.f / 3.f) * i, parentTransform,true);
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"publicShield", pGameObj), E_FAIL);
 		}
 	}
@@ -294,7 +294,7 @@ void CEffectMgr::Effect_TargetAxe(_vec3 vecPos, Engine::CTransform* parentTransf
 		pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_AxeEffect());
 		if (nullptr != pGameObj)
 		{
-			static_cast<CEffectAxe*>(pGameObj)->Set_CreateInfo(_vec3(0.0f), _vec3(0.0f), vecPos, (360 / 3) * i, parentTransform);
+			static_cast<CEffectAxe*>(pGameObj)->Set_CreateInfo(_vec3(0.0f), _vec3(0.0f), vecPos, (360.f / 3.f) * i, parentTransform);
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"publicAxe", pGameObj), E_FAIL);
 		}
 	}

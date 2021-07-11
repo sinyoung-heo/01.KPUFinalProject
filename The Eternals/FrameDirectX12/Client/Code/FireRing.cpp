@@ -60,8 +60,8 @@ _int CFireRing::Update_GameObject(const _float & fTimeDelta)
 	}
 
 	m_pTransCom->m_vAngle.y += 540.f*fTimeDelta;
-	m_pTransCom->m_vScale.x =sinf(XMConvertToRadians(m_fDeltaDegree* 0.25)*0.8f);
-	m_pTransCom->m_vScale.z = sinf(XMConvertToRadians(m_fDeltaDegree * 0.25) * 0.8f);
+	m_pTransCom->m_vScale.x =sinf(XMConvertToRadians(m_fDeltaDegree* 0.25f)*0.8f);
+	m_pTransCom->m_vScale.z = sinf(XMConvertToRadians(m_fDeltaDegree * 0.25f) * 0.8f);
 	m_tFrame.fCurFrame += fTimeDelta * m_tFrame.fFrameSpeed;
 
 	// Sprite XÃà
@@ -168,7 +168,7 @@ void CFireRing::Set_ConstantTable()
 	tCB_ShaderMesh.vAfterImgColor.x = m_tFrame.fFrameCnt;
 	tCB_ShaderMesh.vAfterImgColor.y = (_float)(_int)m_tFrame.fCurFrame;
 	tCB_ShaderMesh.vAfterImgColor.z = m_tFrame.fSceneCnt;
-	tCB_ShaderMesh.vAfterImgColor.w = (_int)m_tFrame.fCurScene;
+	tCB_ShaderMesh.vAfterImgColor.w = (_float)(_int)m_tFrame.fCurScene;
 	if(m_pShaderCom->Get_UploadBuffer_ShaderMesh()!=nullptr)
 		m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 

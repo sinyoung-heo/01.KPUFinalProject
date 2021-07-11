@@ -225,7 +225,7 @@ void CDmgFont::Render_GameObject(const _float& fTimeDelta)
 		tCB_ShaderTexture.fFrameCnt	= m_vecDmgTextureInfo[m_eDmgType][m_vecDamage[uiIdx]].tFrame.fFrameCnt;
 		tCB_ShaderTexture.fCurFrame	= (_float)(_int)m_vecDmgTextureInfo[m_eDmgType][m_vecDamage[uiIdx]].tFrame.fCurFrame;
 		tCB_ShaderTexture.fSceneCnt	= m_vecDmgTextureInfo[m_eDmgType][m_vecDamage[uiIdx]].tFrame.fSceneCnt;
-		tCB_ShaderTexture.fCurScene	= (_int)m_vecDmgTextureInfo[m_eDmgType][m_vecDamage[uiIdx]].tFrame.fCurScene;
+		tCB_ShaderTexture.fCurScene	= (_float)(_int)m_vecDmgTextureInfo[m_eDmgType][m_vecDamage[uiIdx]].tFrame.fCurScene;
 		tCB_ShaderTexture.fAlpha    = m_fAlpha;
 
 		m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(uiIdx, tCB_ShaderTexture);

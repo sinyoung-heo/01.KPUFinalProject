@@ -153,7 +153,7 @@ void CIceStorm_m::Set_ConstantTable()
 	m_fDeltatime2 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
 	m_fDeltatime3 += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 1;
 	m_fShaderDegree += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) * 60.f;
-	m_fShaderDegree = int(m_fShaderDegree) % 360;
+	m_fShaderDegree = (_float)(int(m_fShaderDegree) % 360);
 	tCB_ShaderMesh.fOffset1 = m_fDeltatime;
 	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
 	tCB_ShaderMesh.fOffset3 = m_fAlpha;

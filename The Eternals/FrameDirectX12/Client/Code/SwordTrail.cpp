@@ -39,8 +39,8 @@ HRESULT CSwordTrail::LateInit_GameObject()
 
 
 	m_uiDiffuse = 8;
-	m_fNormalMapDeltatime = 5;//NormIdx
-	m_fPatternMapDeltatime = 8;//SpecIdx
+	m_uiNorm = 5;//NormIdx
+	m_uiSpec = 8;//SpecIdx
 	return S_OK;	
 }
 
@@ -83,7 +83,7 @@ _int CSwordTrail::LateUpdate_GameObject(const _float & fTimeDelta)
 
 void CSwordTrail::Render_GameObject(const _float& fTimeDelta)
 {
-	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_fNormalMapDeltatime, m_fPatternMapDeltatime,0,0);
+	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_uiNorm, m_uiSpec,0,0);
 }
 
 HRESULT CSwordTrail::Add_Component(wstring wstrMeshTag)

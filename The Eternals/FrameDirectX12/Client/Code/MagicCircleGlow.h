@@ -54,11 +54,11 @@ private:
 	_uint			m_iShadowPipelineStatePass = 0;
 
 	_uint m_uiDiffuse = 0;
-	float m_fNormalMapDeltatime = 0.f;
+	_uint m_uiNorm= 0;
+	_uint m_uiSpec= 0;
 	float m_fDeltatime = 0.f;
 	float m_fDeltatime2 = 0.f;
 	float m_fDeltatime3 = 0.f;
-	float m_fPatternMapDeltatime = 0.f;
 	float m_fAlpha = 1.f;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,

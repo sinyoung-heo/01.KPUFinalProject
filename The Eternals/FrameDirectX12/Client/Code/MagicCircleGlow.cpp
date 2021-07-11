@@ -40,8 +40,8 @@ HRESULT CMagicCircleGlow::LateInit_GameObject()
 
 
 	m_uiDiffuse = 18;
-	m_fNormalMapDeltatime = 21;//NormIdx
-	m_fPatternMapDeltatime = 18;//SpecIdx
+	m_uiNorm = 21;//NormIdx
+	m_uiSpec = 18;//SpecIdx
 	return S_OK;	
 }
 
@@ -82,7 +82,7 @@ _int CMagicCircleGlow::LateUpdate_GameObject(const _float & fTimeDelta)
 
 void CMagicCircleGlow::Render_GameObject(const _float& fTimeDelta)
 {
-	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_fNormalMapDeltatime, m_fPatternMapDeltatime
+	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_uiNorm, m_uiSpec
 		,0,4);
 }
 

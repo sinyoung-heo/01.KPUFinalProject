@@ -36,8 +36,8 @@ HRESULT CDistTrail::LateInit_GameObject()
 	m_pDescriptorHeaps = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(L"EffectPublic");
 
 	m_uiDiffuse =8;
-	m_fNormalMapDeltatime = 8;//NormIdx
-	m_fPatternMapDeltatime = 8;//SpecIdx
+	m_uiNorm = 8;//NormIdx
+	m_uiSpec = 8;//SpecIdx
 	return S_OK;	
 }
 
@@ -96,7 +96,7 @@ _int CDistTrail::LateUpdate_GameObject(const _float & fTimeDelta)
 void CDistTrail::Render_GameObject(const _float& fTimeDelta)
 {
 	Set_ConstantTable();
-	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_fNormalMapDeltatime, m_fPatternMapDeltatime
+	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_uiNorm, m_uiSpec
 		,0,4);
 }
 void CDistTrail::Render_CrossFilterGameObject(const _float& fTimeDelta)
@@ -207,7 +207,7 @@ void CDistTrail::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const 
 	m_fDeltatime = 0.f;
 	m_fDeltatime2 = 0.f;
 	m_fDeltatime3 = 0.f;
-	m_fPatternMapDeltatime = 0.f;
+	m_uiSpec = 0;
 	m_fAlpha = 1.f;
 	m_fOffSet = 0.f;
 	m_fDeltatimeVelocity = 0.f;
