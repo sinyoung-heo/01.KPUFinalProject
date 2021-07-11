@@ -3302,7 +3302,7 @@ HRESULT CScene_MainStage::SetUp_UIQuesetMiniCanvas()
 										  vRectScale,
 										  UIDepth);
 			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
-			static_cast<CGameUIRoot*>(pRootUI)->Set_IsActive(true);
+			static_cast<CGameUIRoot*>(pRootUI)->Set_IsActive(false);
 			CQuestMgr::Get_Instance()->Set_SubQuestMiniCanvas(static_cast<CGameUIRoot*>(pRootUI));
 
 			// UIChild 持失.
@@ -3418,7 +3418,8 @@ HRESULT CScene_MainStage::SetUp_UIQuesetMiniCanvas()
 										  vRectScale,
 										  UIDepth);
 			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
-			CQuestMgr::Get_Instance()->Set_SubQuestMiniCanvas(static_cast<CGameUIRoot*>(pRootUI));
+			static_cast<CGameUIRoot*>(pRootUI)->Set_IsActive(false);
+			CQuestMgr::Get_Instance()->Set_MainQuestMiniCanvas(static_cast<CGameUIRoot*>(pRootUI));
 
 			// UIChild 持失.
 			for (_int i = 0; i < iChildUISize; ++i)

@@ -27,6 +27,7 @@
 #include "PartySuggestCanvas.h"
 #include "StoreMgr.h"
 #include "MainMenuInventory.h"
+#include "QuestMgr.h"
 
 CPCArcher::CPCArcher(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -318,7 +319,7 @@ void CPCArcher::Process_Collision()
 		if (L"NPC_Merchant" == pDst->Get_CollisionTag())
 			Collision_Merchant(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
 
-		if (L"NPC_QUest" == pDst->Get_CollisionTag())
+		if (L"NPC_Quest" == pDst->Get_CollisionTag())
 			Collision_Quest(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
 	}
 
@@ -1479,19 +1480,27 @@ void CPCArcher::KeyInput_OpenShop(const char& npcNumber)
 
 void CPCArcher::KeyInput_OpenQuest(const char& npcNumber)
 {
+	if (CQuestMgr::Get_Instance()->Get_IsAcceptQuest())
+		return;
+
 	g_bIsOpenShop = !g_bIsOpenShop;
 
 	if (g_bIsOpenShop)
 	{
 		if (npcNumber == NPC_CASTANIC_LSMITH)
 		{
-			// NPC에 맞는 상점 리소스 생성
 			cout << "퀘스트창 오픈" << endl;
+			CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(true);
+			CQuestMgr::Get_Instance()->Get_QuestRequestCanvas()->Set_IsActive(true);
+			CQuestMgr::Get_Instance()->Get_QuestRequestCanvas()->Set_IsChildActive(true);
 		}
 	}
 	else
 	{
 		cout << "퀘스트창 종료" << endl;
+		CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(false);
+		CQuestMgr::Get_Instance()->Get_QuestRequestCanvas()->Set_IsActive(false);
+		CQuestMgr::Get_Instance()->Get_QuestRequestCanvas()->Set_IsChildActive(false);
 	}
 }
 

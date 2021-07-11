@@ -24,8 +24,6 @@ public:
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 private:
-	void SetUp_FontPosition(const _float& fTimeDelta);
-private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
