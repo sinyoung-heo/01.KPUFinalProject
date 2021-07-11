@@ -10,6 +10,7 @@
 #include "Scene_Menu.h"
 #include "Scene_MainStage.h"
 #include "Font.h"
+#include "QuestMgr.h"
 
 CMainApp::CMainApp()
 	: m_pDeviceClass(Engine::CGraphicDevice::Get_Instance())
@@ -463,8 +464,6 @@ void CMainApp::SetUp_WindowMouseSetting()
 
 void CMainApp::SetUp_SystemInfo()
 {
-
-
 	//레지스트리를 조사하여 프로세서의 모델명을 얻어냅니다.
 	wchar_t Cpu_info[100];
 	HKEY hKey;
@@ -539,6 +538,35 @@ void CMainApp::Key_Input()
 	if (Engine::KEY_DOWN(DIK_F4))
 		m_pRenderer->Set_RenderOnOff(L"SectorGrid");
 
+	if (Engine::KEY_DOWN(DIK_F5))
+	{
+		// SubQuest
+		CQuestMgr::Get_Instance()->Set_IsAcceptQuest(true);
+		CQuestMgr::Get_Instance()->Set_IsCompleteSubQuest(true);
+		CQuestMgr::Get_Instance()->Get_SubQuestMiniCanvas()->Set_IsActive(true);
+		CQuestMgr::Get_Instance()->Get_SubQuestMiniCanvas()->Set_IsChildActive(true);
+		CQuestMgr::Get_Instance()->Get_MainQuestMiniCanvas()->Set_IsActive(true);
+	}
+	if (Engine::KEY_DOWN(DIK_F6))
+	{
+		CQuestMgr::Get_Instance()->Set_IsAcceptQuest(true);
+		CQuestMgr::Get_Instance()->Set_IsCompleteSubQuest(true);
+		CQuestMgr::Get_Instance()->Set_IsCompleteMainQuest(true);
+		CQuestMgr::Get_Instance()->Get_SubQuestMiniCanvas()->Set_IsActive(true);
+		CQuestMgr::Get_Instance()->Get_SubQuestMiniCanvas()->Set_IsChildActive(true);
+		CQuestMgr::Get_Instance()->Get_MainQuestMiniCanvas()->Set_IsActive(true);
+		CQuestMgr::Get_Instance()->Get_MainQuestMiniCanvas()->Set_IsChildActive(true);
+	}
+	if (Engine::KEY_DOWN(DIK_F7))
+	{
+		CQuestMgr::Get_Instance()->Set_IsAcceptQuest(false);
+		CQuestMgr::Get_Instance()->Set_IsCompleteSubQuest(false);
+		CQuestMgr::Get_Instance()->Set_IsCompleteMainQuest(false);
+		CQuestMgr::Get_Instance()->Get_SubQuestMiniCanvas()->Set_IsActive(false);
+		CQuestMgr::Get_Instance()->Get_SubQuestMiniCanvas()->Set_IsChildActive(false);
+		CQuestMgr::Get_Instance()->Get_MainQuestMiniCanvas()->Set_IsActive(false);
+		CQuestMgr::Get_Instance()->Get_MainQuestMiniCanvas()->Set_IsChildActive(false);
+	}
 }
 
 void CMainApp::Show_FontLog(const _float& fTimeDelta)

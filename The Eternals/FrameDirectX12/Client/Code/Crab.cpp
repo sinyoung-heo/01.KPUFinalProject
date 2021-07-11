@@ -77,7 +77,7 @@ HRESULT CCrab::LateInit_GameObject()
 _int CCrab::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
-	Update_ServerNumberFont(fTimeDelta);
+	// Update_ServerNumberFont(fTimeDelta);
 	if (m_bIsDead)
 		return DEAD_OBJ;
 

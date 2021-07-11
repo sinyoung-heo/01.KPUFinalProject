@@ -274,6 +274,9 @@
     <ClInclude Include="..\Code\QuestButtonAccept.h" />
     <ClInclude Include="..\Code\QuestButtonClose.h" />
     <ClInclude Include="..\Code\QuestComplete.h" />
+    <ClInclude Include="..\Code\QuestMessageButton.h" />
+    <ClInclude Include="..\Code\QuestMessageButtonClose.h" />
+    <ClInclude Include="..\Code\QuestMessageCanvas.h" />
     <ClInclude Include="..\Code\QuestMgr.h" />
     <ClInclude Include="..\Code\QuestRequestCanvas.h" />
     <ClInclude Include="..\Code\QuickSlot.h" />
@@ -488,6 +491,9 @@
     <ClCompile Include="..\Code\QuestButtonAccept.cpp" />
     <ClCompile Include="..\Code\QuestButtonClose.cpp" />
     <ClCompile Include="..\Code\QuestComplete.cpp" />
+    <ClCompile Include="..\Code\QuestMessageButton.cpp" />
+    <ClCompile Include="..\Code\QuestMessageButtonClose.cpp" />
+    <ClCompile Include="..\Code\QuestMessageCanvas.cpp" />
     <ClCompile Include="..\Code\QuestMgr.cpp" />
     <ClCompile Include="..\Code\QuestRequestCanvas.cpp" />
     <ClCompile Include="..\Code\QuickSlot.cpp" />

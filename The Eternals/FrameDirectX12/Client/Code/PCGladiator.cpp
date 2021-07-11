@@ -25,6 +25,7 @@
 #include "MainMenuInventory.h"
 #include "DmgFont.h"
 #include "CinemaMgr.h"
+#include "QuestMgr.h"
 
 CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -319,7 +320,7 @@ void CPCGladiator::Process_Collision()
 		if (L"NPC_Merchant" == pDst->Get_CollisionTag())
 			Collision_Merchant(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
 
-		if (L"NPC_QUest" == pDst->Get_CollisionTag())
+		if (L"NPC_Quest" == pDst->Get_CollisionTag())
 			Collision_Quest(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
 	}
 
@@ -597,6 +598,12 @@ HRESULT CPCGladiator::SetUp_ClassFrame()
 				}
 				else
 				{
+					_long iChildDepth = 0;
+					if (L"ClassInfo" == vecObjectTag[i])
+						iChildDepth = UIDepth - 2;
+					else
+						iChildDepth = UIDepth - 1;
+
 					pChildUI = CGameUIChild::Create(m_pGraphicDevice, m_pCommandList,
 													wstrRootObjectTag,				// RootObjectTag
 													vecObjectTag[i],				// ObjectTag
@@ -607,7 +614,7 @@ HRESULT CPCGladiator::SetUp_ClassFrame()
 													vecFrameSpeed[i],				// FrameSpeed
 													vecRectPosOffset[i],			// RectPosOffset
 													vecRectScale[i],				// RectScaleOffset
-													UIDepth - 1);					// UI Depth
+													iChildDepth);					// UI Depth
 				}
 				m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
 				static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
@@ -1108,50 +1115,6 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 
 	if (Engine::KEY_DOWN(DIK_0) && NO_EVENT_STATE)
 	{
-	}
-
-	// StageChange Stage WINTER
-	if (Engine::KEY_DOWN(DIK_O) && NO_EVENT_STATE)
-	{
-		g_bIsStageChange = true;
-		m_bIsKeyDown     = false;
-
-		if (Gladiator::STANCE_ATTACK == m_eStance)
-			m_uiAnimIdx = Gladiator::ATTACK_WAIT;
-		else
-			m_uiAnimIdx = Gladiator::NONE_ATTACK_IDLE;
-
-		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-
-		Engine::CGameObject* pGameObject = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
-		if (nullptr != pGameObject)
-		{
-			static_cast<CFadeInOut*>(pGameObject)->Set_FadeInOutEventType(EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
-			static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_WINTER);
-			m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
-		}
-	}
-
-	// StageChange Stage VELIKA
-	if (Engine::KEY_DOWN(DIK_P) && NO_EVENT_STATE)
-	{
-		g_bIsStageChange = true;
-		m_bIsKeyDown     = false;
-
-		if (Gladiator::STANCE_ATTACK == m_eStance)
-			m_uiAnimIdx = Gladiator::ATTACK_WAIT;
-		else
-			m_uiAnimIdx = Gladiator::NONE_ATTACK_IDLE;
-
-		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-
-		Engine::CGameObject* pGameObject = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
-		if (nullptr != pGameObject)
-		{
-			static_cast<CFadeInOut*>(pGameObject)->Set_FadeInOutEventType(EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
-			static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_VELIKA);
-			m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
-		}
 	}
 }
 
@@ -1812,19 +1775,27 @@ void CPCGladiator::KeyInput_OpenShop(const char& npcNumber)
 
 void CPCGladiator::KeyInput_OpenQuest(const char& npcNumber)
 {
+	if (CQuestMgr::Get_Instance()->Get_IsAcceptQuest())
+		return;
+
 	g_bIsOpenShop = !g_bIsOpenShop;
 
 	if (g_bIsOpenShop)
 	{
 		if (npcNumber == NPC_CASTANIC_LSMITH)
 		{
-			// NPC에 맞는 상점 리소스 생성
 			cout << "퀘스트창 오픈" << endl;
+			CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(true);
+			CQuestMgr::Get_Instance()->Get_QuestRequestCanvas()->Set_IsActive(true);
+			CQuestMgr::Get_Instance()->Get_QuestRequestCanvas()->Set_IsChildActive(true);
 		}
 	}
 	else
 	{
 		cout << "퀘스트창 종료" << endl;
+		CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(false);
+		CQuestMgr::Get_Instance()->Get_QuestRequestCanvas()->Set_IsActive(false);
+		CQuestMgr::Get_Instance()->Get_QuestRequestCanvas()->Set_IsChildActive(false);
 	}
 }
 
@@ -2648,9 +2619,6 @@ void CPCGladiator::Collision_PortalVelikaToBeach(list<Engine::CColliderSphere*>&
 					static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_BEACH);
 					m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
 				}
-				//Engine::CGameObject* pGameObject = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
-				//static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_BEACH);
-				//m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
 			}
 		}
 	}
@@ -2686,9 +2654,6 @@ void CPCGladiator::Collision_PortalBeachToVelika(list<Engine::CColliderSphere*>&
 					static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_VELIKA);
 					m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
 				}
-				//Engine::CGameObject* pGameObject = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
-				//static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_VELIKA);
-				//m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
 			}
 		}
 	}
@@ -2738,7 +2703,7 @@ void CPCGladiator::Collision_Quest(list<Engine::CColliderSphere*>& lstMerchantCo
 				pObj->Set_State(Castanic_M_Lsmith::A_TALK);
 
 				/* Shop Open */
-				if (Engine::KEY_DOWN(DIK_F) && NO_EVENT_STATE)
+				if (Engine::KEY_DOWN(DIK_F))
 				{
 					KeyInput_OpenQuest(pObj->Get_NPCNumber());
 				}

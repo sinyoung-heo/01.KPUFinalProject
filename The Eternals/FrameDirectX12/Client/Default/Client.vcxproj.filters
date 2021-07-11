@@ -553,6 +553,18 @@
     <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\16.QuestMiniCanvasChild">
       <UniqueIdentifier>{965ab2c6-0c21-4f61-88fe-10d93b5057f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\17.QuestMessageCanvas">
+      <UniqueIdentifier>{b765ac48-2a69-4520-8129-2a9b4d482592}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\17.QuestMessageCanvas\QuestMessageButtonClose">
+      <UniqueIdentifier>{a0fbac1b-475f-458c-a3ae-72005c1ff313}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\17.QuestMessageCanvas\QuestMessageButton">
+      <UniqueIdentifier>{5cf19f6e-90c2-43b2-b9a9-ac3a937337ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\13.QuestMessageCanvas">
+      <UniqueIdentifier>{44d6e15e-9d8c-4de4-a3c6-dea778d2ca29}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -1147,6 +1159,15 @@
     <ClInclude Include="..\Code\QuestComplete.h">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\16.QuestMiniCanvasChild</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\QuestMessageButton.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\17.QuestMessageCanvas\QuestMessageButton</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\QuestMessageButtonClose.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\17.QuestMessageCanvas\QuestMessageButtonClose</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\QuestMessageCanvas.h">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\13.QuestMessageCanvas</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1683,6 +1704,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\QuestComplete.cpp">
       <Filter>02.GameObject\99.GameUI\01.GameUIChild\16.QuestMiniCanvasChild</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\QuestMessageButton.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\17.QuestMessageCanvas\QuestMessageButton</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\QuestMessageButtonClose.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\17.QuestMessageCanvas\QuestMessageButtonClose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\QuestMessageCanvas.cpp">
+      <Filter>02.GameObject\99.GameUI\00.GameUIRoot\13.QuestMessageCanvas</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

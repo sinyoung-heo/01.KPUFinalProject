@@ -72,10 +72,14 @@ _int CQuestButtonAccept::LateUpdate_GameObject(const _float& fTimeDelta)
 		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
 		m_bIsKeyPressing)
 	{
+		CQuestMgr::Get_Instance()->Set_IsAcceptQuest(true);
+		CQuestMgr::Get_Instance()->Get_SubQuestMiniCanvas()->Set_IsActive(true);
+		CQuestMgr::Get_Instance()->Get_MainQuestMiniCanvas()->Set_IsActive(true);
+
+		g_bIsOpenShop = false;
+		CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(false);
 		CQuestMgr::Get_Instance()->Get_QuestRequestCanvas()->Set_IsActive(false);
 		CQuestMgr::Get_Instance()->Get_QuestRequestCanvas()->Set_IsChildActive(false);
-
-
 	}
 
 	m_bIsKeyPressing = false;

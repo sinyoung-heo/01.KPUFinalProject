@@ -39,6 +39,7 @@ private:
 	HRESULT			SetUp_UIQuickSlot();
 	HRESULT			SetUp_UIQuestRequestCanvas();
 	HRESULT			SetUp_UIQuesetMiniCanvas();
+	HRESULT			SetUp_UIQuestMessageCanvas();
 private:
 	_bool m_bIsReadyMouseCursorMgr = false;
 

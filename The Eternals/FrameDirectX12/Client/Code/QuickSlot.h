@@ -35,7 +35,6 @@ public:
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Render_GameObject(const _float& fTimeDelta);
-	void			Render_CoolDownTime(const _float& fTimeDelta);
 
 	void SetUp_SlotIcon();
 	void SetUp_SkillCoolDownTime();
@@ -45,11 +44,6 @@ private:
 	void SetUp_FontDIKKey(const _float& fTimeDelta);
 	void SetUp_FontCoolDownTime(const _float& fTimeDelta);
 private:
-	/*__________________________________________________________________________________________________________
-	[ Component ]
-	____________________________________________________________________________________________________________*/
-	// Engine::CShaderTexture* m_pShaderCoolDownCom = nullptr;
-	
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
