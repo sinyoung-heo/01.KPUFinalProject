@@ -353,6 +353,8 @@ void CObjMgr::Create_AiPlayer()
 	if (pNew)
 	{
 		pNew->Ready_AI(PC_ARCHER, Bow27_SM, STAGE_WINTER, _vec3(STAGE_WINTER_X, 0.f, STAGE_WINTER_Z));
+		pNew->Set_NumAnimation(Archer::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Archer::duration);
 	}
 	else return;
 }

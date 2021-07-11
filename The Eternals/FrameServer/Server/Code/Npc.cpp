@@ -13,7 +13,7 @@ CNpc::~CNpc()
 
 void CNpc::Set_AnimDuration(double arr[])
 {
-	for (int i = 0; i < MAX_ANI; ++i)
+	for (_uint i = 0; i < MAX_ANI; ++i)
 	{
 		if (m_uiNumAniIndex > i)
 			m_arrDuration[i] = arr[i];

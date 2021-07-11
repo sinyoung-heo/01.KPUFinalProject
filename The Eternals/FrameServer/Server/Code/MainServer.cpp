@@ -550,6 +550,26 @@ void worker_thread()
 		}
 		break;
 
+		case OPMODE::OP_MODE_CHASE_AI:
+		{
+			CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", key));
+			if (nullptr == pAi) return;
+
+			pAi->Change_ChaseMode();
+			delete over_ex;
+		}
+		break;
+
+		case OPMODE::OP_MODE_AI_NEXT_ATTACK:
+		{
+			CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", key));
+			if (nullptr == pAi) return;
+
+			pAi->Change_AttackMode();
+			delete over_ex;
+		}
+		break;
+
 		default:
 #ifdef TEST
 			cout << "[ERROR] Unknown Type MODE in Worker Thread!" << endl;

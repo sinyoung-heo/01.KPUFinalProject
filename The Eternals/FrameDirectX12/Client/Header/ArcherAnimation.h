@@ -22,6 +22,12 @@ namespace Archer
 	constexpr int CHARGE_ARROW_LOOP  = 18;
 	constexpr int CHARGE_ARROW_SHOT  = 19;
 
+	constexpr int NUM_ANIMATION = 20;
+	static double duration[NUM_ANIMATION] =
+	{
+		13440,4800,6400,3840,6400,6400,3840,2880,2400,6240,8640,4800,3840,4800,7200,3840,14400,9600,3840,8640
+	};
+
 	enum STANCE	{ STANCE_NONEATTACK, STANCE_ATTACK, STANCE_END };
 
 	constexpr float OTHERS_OFFSET	= 0.9f;

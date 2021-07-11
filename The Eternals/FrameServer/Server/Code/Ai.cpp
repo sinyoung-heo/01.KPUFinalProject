@@ -4,8 +4,8 @@
 #include "Monster.h"
 
 CAi::CAi()
-    :m_iLevel(0), m_iHp(0), m_iMaxHp(0), m_fSpd(0.f),
-    m_iMp(0), m_iMaxMp(0), m_iMaxAtt(0), m_iMinAtt(0.f), m_bIsMove(false),
+    :m_iLevel(0), m_iHp(0), m_iMaxHp(0), m_fSpd(0.f), m_bIsAttack(false), m_bIsReaction(false),
+    m_iMp(0), m_iMaxMp(0), m_iMaxAtt(0), m_iMinAtt(0), m_bIsMove(false),
     m_bIsAttackStance(false), m_bIsPartyState(false), m_iPartyNumber(-1)
 {
 	memset(m_arrAttackPattern, -1, sizeof(int) * VERGOS_PATTERN);
@@ -17,7 +17,7 @@ CAi::~CAi()
 
 void CAi::Set_AnimDuration(double arr[])
 {
-	for (int i = 0; i < MAX_ANI; ++i)
+	for (_uint i = 0; i < MAX_ANI_AI; ++i)
 	{
 		if (m_uiNumAniIndex > i)
 			m_arrDuration[i] = arr[i];
@@ -31,6 +31,50 @@ void CAi::Set_AnimationKey(const _uint& uiAniKey)
 		m_uiNewAniIndex = uiAniKey;
 		m_fBlendingTime = 1.0f;
 		m_fBlendAnimationTime = m_fAnimationTime;
+	}
+}
+
+void CAi::Set_Stop_Attack(chrono::seconds t)
+{
+	/* 공격이 끝나면 추적 모드로 변경 */
+	if (m_bIsAttack)
+	{
+		bool prev_state = m_bIsAttack;
+
+		if (true == atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsAttack), &prev_state, false))
+		{
+			add_timer(m_sNum, OP_MODE_CHASE_AI, system_clock::now() + t);
+		}
+	}
+}
+
+void CAi::Set_Start_Attack()
+{
+	if (!m_bIsAttack)
+	{
+		bool prev_state = m_bIsAttack;
+		atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsAttack), &prev_state, true);
+	}
+}
+
+void CAi::Set_Stop_Reaction(chrono::seconds t)
+{
+	if (m_bIsReaction)
+	{
+		bool prev_state = m_bIsReaction;
+		if (true == atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsReaction), &prev_state, false))
+		{
+			//add_timer(m_sNum, OP_MODE_CHASE_MONSTER, system_clock::now() + t);
+		}
+	}
+}
+
+void CAi::Set_Start_Reaction()
+{
+	if (!m_bIsReaction)
+	{
+		bool prev_state = m_bIsReaction;
+		atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsReaction), &prev_state, true);
 	}
 }
 
@@ -107,7 +151,8 @@ void CAi::Change_AttackMode()
 	if (m_status != ST_ATTACK)
 	{
 		STATUS prev_state = m_status;
-		atomic_compare_exchange_strong(&m_status, &prev_state, ST_ATTACK);			
+		if (true == atomic_compare_exchange_strong(&m_status, &prev_state, ST_ATTACK))
+			Set_Start_Attack();
 	}
 }
 
@@ -125,8 +170,8 @@ void CAi::Change_ReactionMode()
 	if (m_status != ST_REACTION)
 	{
 		STATUS prev_state = m_status;
-		if (true == atomic_compare_exchange_strong(&m_status, &prev_state, ST_REACTION));
-			//Set_Start_Reaction();
+		if (true == atomic_compare_exchange_strong(&m_status, &prev_state, ST_REACTION))
+			Set_Start_Reaction();
 	}
 }
 
@@ -201,13 +246,13 @@ void CAi::Change_Archer_Animation(const float& fTimeDelta)
 
 	case STATUS::ST_ATTACK:
 	{
-		
+		Attack_Archer_AI(fTimeDelta);
 	}
 	break;
 
 	case STATUS::ST_REACTION:
 	{
-		
+		Play_Archer_NextAttack();
 	}
 	break;
 
@@ -286,6 +331,58 @@ void CAi::ArcherPattern_FirstPhase()
 
 void CAi::ArcherPattern_SecondPhase()
 {
+	m_arrAttackPattern[0] = Archer::ATTACK_ARROW;
+	m_arrAttackPattern[1] = Archer::RAPID_SHOT1;
+	m_arrAttackPattern[2] = Archer::ARROW_FALL_START;
+	m_arrAttackPattern[3] = Archer::BACK_DASH;
+	m_arrAttackPattern[4] = Archer::ARROW_SHOWER_START;
+	m_arrAttackPattern[5] = Archer::CHARGE_ARROW_START;
+	m_arrAttackPattern[6] = Archer::RAPID_SHOT1;
+}
+
+void CAi::Attack_Archer_AI(const float& fTimedelta)
+{
+	if (!m_bIsAttack) return;
+
+	if (Archer::BACK_DASH <= m_uiAnimIdx && m_uiAnimIdx <= Archer::CHARGE_ARROW_SHOT)
+	{
+		if (!Is_AnimationSetEnd(fTimedelta))
+			return;
+		else
+		{
+			++m_iCurPatternNumber;
+			m_uiAnimIdx = Archer::ATTACK_WAIT;
+
+			if (m_iCurPatternNumber >= VERGOS_PATTERN)
+				Set_Stop_Attack(1s);
+			else
+				Change_ReactionMode();
+			return;
+		}
+	}
+
+	m_uiAnimIdx = m_arrAttackPattern[m_iCurPatternNumber];
+	m_iAniIdx = m_arrAttackPattern[m_iCurPatternNumber];
+
+	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+	{
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+
+		send_AI_attack_packet(raid);
+	}
+}
+
+void CAi::Play_Archer_NextAttack(chrono::seconds t)
+{
+	if (m_bIsReaction)
+	{
+		bool prev_state = m_bIsReaction;
+		if (true == atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsReaction), &prev_state, false))
+		{
+			add_timer(m_sNum, OP_MODE_AI_NEXT_ATTACK, system_clock::now() + t);
+		}
+	}
 }
 
 void CAi::process_disconnect_ai()
@@ -494,6 +591,30 @@ void CAi::send_AI_moveStop_packet(const int& to_client)
 	p.dirX = m_vDir.x;
 	p.dirY = m_vDir.y;
 	p.dirZ = m_vDir.z;
+
+	send_packet(to_client, &p);
+}
+
+void CAi::send_AI_attack_packet(const int& to_client)
+{
+	sc_packet_attack p;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_ATTACK;
+	p.id = m_sNum;
+
+	p.o_type = m_type;
+
+	p.posX = m_vPos.x;
+	p.posY = m_vPos.y;
+	p.posZ = m_vPos.z;
+
+	p.dirX = m_vDir.x;
+	p.dirY = m_vDir.y;
+	p.dirZ = m_vDir.z;
+
+	p.animIdx = m_iAniIdx;
+	p.end_angleY = -1.f;
 
 	send_packet(to_client, &p);
 }

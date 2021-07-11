@@ -12,6 +12,10 @@ public:
 	void	Set_NumAnimation(const _uint& num) { m_uiNumAniIndex = num; }
 	void	Set_AnimationKey(const _uint& uiAniKey);
 
+	void	Set_Stop_Attack(chrono::seconds t = 3s);
+	void	Set_Start_Attack();
+	void	Set_Stop_Reaction(chrono::seconds t = 3s);
+	void	Set_Start_Reaction();
 public:
 	void	Ready_AI(const char& chJob, const char& chWeaponType, const char& chStageID, const _vec3& vPos);
 	int		Update_AI(const float& fTimeDelta);
@@ -35,6 +39,8 @@ private:
 	void	Choose_ArcherPattern(const float& fTimeDelta);
 	void	ArcherPattern_FirstPhase();
 	void	ArcherPattern_SecondPhase();
+	void	Attack_Archer_AI(const float& fTimedelta);
+	void	Play_Archer_NextAttack(chrono::seconds t = 5s);
 
 	void	process_disconnect_ai();
 	void	process_leave_party_ai();
@@ -47,12 +53,15 @@ public:
 	void	send_AI_enter_packet(const int& to_client);
 	void	send_AI_move_packet(const int& to_client);
 	void	send_AI_moveStop_packet(const int& to_client);
+	void	send_AI_attack_packet(const int& to_client);
 	void	send_leave_party_ai(const int& to_client);
 
 public:
 	virtual DWORD				Release();
 
 public:
+	volatile bool	m_bIsAttack		= false;
+	volatile bool	m_bIsReaction	= false;
 	bool	m_bIsMove				= false;
 	bool	m_bIsAttackStance		= false;
 	bool	m_bIsPartyState			= false;
@@ -84,7 +93,7 @@ public:
 	float	m_fBlendAnimationTime	= 0.f;
 	float	m_fBlendingTime			= 0.f;
 
-	double	m_arrDuration[MAX_ANI]	= { 0 };
+	double	m_arrDuration[MAX_ANI_AI]	= { 0 };
 
 	_uint	m_uiAnimIdx				= 0;   // Apply Animation Index
 };
