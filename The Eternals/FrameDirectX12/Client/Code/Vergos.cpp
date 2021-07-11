@@ -528,6 +528,14 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			m_uiAnimIdx = Vergos::A_FLY_LOOP;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			{
+				m_iMonsterStatus = Vergos::A_FLY_END;
+
+				m_uiAnimIdx = Vergos::A_FLY_END;
+				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			}
 		}
 		break;
 

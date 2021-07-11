@@ -9,6 +9,7 @@ CMonster::CMonster()
 	m_vKnockbackPos(_vec3(0.f)), m_eAttackDist(ATTACK_DIST::DIST_END), m_iCurPatternNumber(0)
 {
 	memset(m_arrAttackPattern, -1, sizeof(int) * VERGOS_PATTERN);
+	memset(m_arrVergosSkillEffect, 0, sizeof(_vec2) * 3);
 }
 
 CMonster::~CMonster()
@@ -644,12 +645,30 @@ void CMonster::Attack_Vergos(const float& fTimedelta)
 
 	m_uiAnimIdx = m_arrAttackPattern[m_iCurPatternNumber];
 
+	/* 베르고스 스킬 소환 */
+	if (m_uiAnimIdx == Vergos::FLY_START)
+	{
+		random_device					rd;
+		default_random_engine			dre{ rd() };
+		uniform_int_distribution<int>	uid_posX{ 340, 425 };
+		uniform_int_distribution<int>	uid_posZ{ 325, 375 };
+
+		for (int i = 0; i < 3; ++i)
+		{
+			m_arrVergosSkillEffect[i].x = (float)uid_posX(dre);
+			m_arrVergosSkillEffect[i].y = (float)uid_posZ(dre);
+		}
+	}
+
 	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 	{
 		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
 		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
 
 		send_Monster_animation_packet(raid, m_uiAnimIdx);
+
+		if (m_uiAnimIdx == Vergos::FLY_START)
+			send_Monster_Effect(raid);
 	}
 }
 
@@ -659,7 +678,7 @@ void CMonster::Play_Vergos_NextAttack(chrono::seconds t)
 	{
 		chrono::seconds nextTime = 0s;
 		if (m_arrAttackPattern[m_iCurPatternNumber-1] == Vergos::FLY_START)
-			nextTime = 15s;
+			nextTime = 10s;
 		else
 			nextTime = 3s;
 
@@ -4694,6 +4713,24 @@ void CMonster::send_Monster_Knockback(const int& to_client, const int& ani)
 	p.posX = m_vKnockbackPos.x;
 	p.posY = m_vKnockbackPos.y;
 	p.posZ = m_vKnockbackPos.z;
+
+	send_packet(to_client, &p);
+}
+
+void CMonster::send_Monster_Effect(const int& to_client)
+{
+	sc_packet_monster_effect p;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_MONSTER_EFFECT;
+
+	p.mon_id = m_sNum;
+	
+	for (int i = 0; i < 3; ++i)
+	{
+		p.posX[i] = m_arrVergosSkillEffect[i].x;
+		p.posZ[i] = m_arrVergosSkillEffect[i].y;
+	}
 
 	send_packet(to_client, &p);
 }
