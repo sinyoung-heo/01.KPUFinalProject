@@ -35,8 +35,6 @@ public:
 	void	Process_recv_reassembly(size_t iosize);
 	void	Process_packet();
 
-	void LoginToLoadEqipment(sc_packet_load_equipment* packet);
-
 public:
 	void	send_login();
 	void	send_move(const _vec3& vDir, const _vec3& vPos, const _int& iAniIdx);
@@ -87,6 +85,7 @@ public:
 	void	Consume_Point(sc_packet_update_party* packet);		// hp,mp 업데이트
 	void	BuffToUpgrade(sc_packet_buff* packet);				// buff 효과
 	void	Drink_Potion(sc_packet_potion* packet);
+	void	LoginToLoadEqipment(sc_packet_load_equipment* packet);
 
 	void	Enter_Monster(sc_packet_monster_enter* packet);
 	void	Move_Monster(sc_packet_move* packet);
@@ -95,7 +94,8 @@ public:
 	void	Change_Monster_Stat(sc_packet_update_party* packet);
 	void	Knockback_Monster(sc_packet_monster_knockback* packet, bool& retflag);
 	void	Dead_Monster(sc_packet_animationIndex* packet);
-
+	void	Create_Monster_Effect(sc_packet_monster_effect* packet);
+	
 	void	Enter_NPC(sc_packet_npc_enter* packet);
 	void	Move_NPC(sc_packet_move* packet);
 

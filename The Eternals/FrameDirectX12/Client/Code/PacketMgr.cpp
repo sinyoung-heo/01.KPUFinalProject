@@ -14,6 +14,7 @@
 #include "StoreMgr.h"
 #include "LightMgr.h"
 #include "DmgFont.h"
+#include "DragonEffect.h"
 
 /* USER */
 #include "PCGladiator.h"
@@ -455,11 +456,29 @@ void CPacketMgr::Process_packet()
 	}
 	break;
 
+	case SC_PACKET_MONSTER_EFFECT:
+	{
+		sc_packet_monster_effect* packet = reinterpret_cast<sc_packet_monster_effect*>(m_packet_start);	
+		Create_Monster_Effect(packet);
+	}
+	break;
+
 	default:
 #ifdef ERR_CHECK
 		printf("Unknown PACKET type [%d]\n", m_packet_start[1]);
 #endif 
 		break;
+	}
+}
+
+void CPacketMgr::Create_Monster_Effect(sc_packet_monster_effect* packet)
+{
+	for (int i = 0; i < 3; ++i)
+	{
+		_vec3 vPos = _vec3(packet->posX[i], 0.f, packet->posZ[i]);
+		Engine::CGameObject* pGameObj = CDragonEffect::Create(m_pGraphicDevice, m_pCommandList, L"DragonEffect", _vec3(0.012f), _vec3(-180.f), vPos);
+
+		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"EffectDragon", pGameObj);
 	}
 }
 

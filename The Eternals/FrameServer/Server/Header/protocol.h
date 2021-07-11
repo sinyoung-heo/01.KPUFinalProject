@@ -63,6 +63,7 @@ constexpr char SC_PACKET_UPDATE_MONEY		= 31;
 constexpr char SC_PACKET_BUFF				= 32;
 constexpr char SC_PACKET_DRINK_POTION		= 33;
 constexpr char SC_PACKET_CONSUME_POINT		= 34;
+constexpr char SC_PACKET_MONSTER_EFFECT		= 35;
 
 constexpr char CS_LOGIN					= 0;
 constexpr char CS_MOVE					= 1;
@@ -457,6 +458,16 @@ struct sc_packet_potion
 	bool			is_pushItem;
 	int				count;
 	int				ability;
+};
+
+struct sc_packet_monster_effect
+{
+	unsigned char	size;
+	char			type;
+
+	int				mon_id;
+	float			posX[3];
+	float			posZ[3];
 };
 
 /* ___________________________________________________________________________________________________________________*/
