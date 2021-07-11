@@ -359,7 +359,6 @@ void CObjMgr::Create_AiPlayer()
 
 void CObjMgr::Create_StageVelikaNPC()
 {
-
 	CNpc* pNew = nullptr;
 	int s_num = -1;
 

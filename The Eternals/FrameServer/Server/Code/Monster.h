@@ -102,7 +102,7 @@ private:
 	void	Dead_Vergos(const float& fTimeDelta);
 
 private:
-	void	Play_Animation(float fTimeDelta);	
+	void	Play_Animation(const float& fTimeDelta);	
 	bool	Is_AnimationSetEnd(const float& fTimeDelta);
 
 	float	Calculate_TargetDist(const _vec3& vPos);

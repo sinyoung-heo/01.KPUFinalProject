@@ -1,17 +1,37 @@
 #include "stdafx.h"
 #include "Ai.h"
 #include "Player.h"
+#include "Monster.h"
 
 CAi::CAi()
     :m_iLevel(0), m_iHp(0), m_iMaxHp(0), m_fSpd(0.f),
     m_iMp(0), m_iMaxMp(0), m_iMaxAtt(0), m_iMinAtt(0.f), m_bIsMove(false),
     m_bIsAttackStance(false), m_bIsPartyState(false), m_iPartyNumber(-1)
 {
-
+	memset(m_arrAttackPattern, -1, sizeof(int) * VERGOS_PATTERN);
 }
 
 CAi::~CAi()
 {
+}
+
+void CAi::Set_AnimDuration(double arr[])
+{
+	for (int i = 0; i < MAX_ANI; ++i)
+	{
+		if (m_uiNumAniIndex > i)
+			m_arrDuration[i] = arr[i];
+	}
+}
+
+void CAi::Set_AnimationKey(const _uint& uiAniKey)
+{
+	if (m_uiNewAniIndex != uiAniKey)
+	{
+		m_uiNewAniIndex = uiAniKey;
+		m_fBlendingTime = 1.0f;
+		m_fBlendAnimationTime = m_fAnimationTime;
+	}
 }
 
 void CAi::Ready_AI(const char& chJob, const char& chWeaponType, const char& chStageID, const _vec3& vPos)
@@ -49,7 +69,6 @@ void CAi::Ready_AI(const char& chJob, const char& chWeaponType, const char& chSt
 	m_tMoveSpeedInterpolationDesc.v1 = Archer::MIN_SPEED;
 	m_tMoveSpeedInterpolationDesc.v2 = Archer::MAX_SPEED * Archer::OTHERS_OFFSET;
 
-
     CSectorMgr::GetInstance()->Enter_ClientInSector(s_num, (int)(m_vPos.z / SECTOR_SIZE), (int)(m_vPos.x / SECTOR_SIZE));
     CObjMgr::GetInstance()->Add_GameObject(L"AI", this, s_num);
     CObjMgr::GetInstance()->Add_PartyMember(RAID_PARTY, &m_iPartyNumber, s_num);
@@ -67,6 +86,10 @@ int CAi::Update_AI(const float& fTimeDelta)
 
 	Change_Animation(fTimeDelta);
 
+	/* Calculate Animation frame */
+	Set_AnimationKey(m_uiAnimIdx);
+	Play_Animation(fTimeDelta * Monster_Normal::TPS);
+
 	return NO_EVENT;
 }
 
@@ -76,6 +99,34 @@ void CAi::active_AI()
 	{
 		STATUS prev_state = m_status;
 		atomic_compare_exchange_strong(&m_status, &prev_state, ST_ACTIVE);
+	}
+}
+
+void CAi::Change_AttackMode()
+{
+	if (m_status != ST_ATTACK)
+	{
+		STATUS prev_state = m_status;
+		atomic_compare_exchange_strong(&m_status, &prev_state, ST_ATTACK);			
+	}
+}
+
+void CAi::Change_ChaseMode()
+{
+	if (m_status != ST_CHASE)
+	{
+		STATUS prev_state = m_status;
+		atomic_compare_exchange_strong(&m_status, &prev_state, ST_CHASE);
+	}
+}
+
+void CAi::Change_ReactionMode()
+{
+	if (m_status != ST_REACTION)
+	{
+		STATUS prev_state = m_status;
+		if (true == atomic_compare_exchange_strong(&m_status, &prev_state, ST_REACTION));
+			//Set_Start_Reaction();
 	}
 }
 
@@ -110,20 +161,41 @@ void CAi::Change_Archer_Animation(const float& fTimeDelta)
 
 	case STATUS::ST_ACTIVE:
 	{
-		m_iAniIdx = Archer::ATTACK_RUN;
-		process_move_ai(fTimeDelta);
+		if (m_bIsMove)
+		{
+			if (false == CCollisionMgr::GetInstance()->Is_Arrive(m_vPos, m_vTempPos))
+			{
+				m_tMoveSpeedInterpolationDesc.interpolation_speed = 1.0f * Archer::OTHERS_OFFSET;
+				m_tMoveSpeedInterpolationDesc.linear_ratio += m_tMoveSpeedInterpolationDesc.interpolation_speed * fTimeDelta;
+				m_fSpd = LinearInterpolation(m_tMoveSpeedInterpolationDesc.v1, m_tMoveSpeedInterpolationDesc.v2, m_tMoveSpeedInterpolationDesc.linear_ratio);
+
+				m_vDir = m_vTempPos - m_vPos;
+				m_vDir.Normalize();
+
+				m_vPos += m_vDir * m_fSpd * fTimeDelta;
+			}	
+			else
+			{
+				m_bIsMove = false;
+				process_moveStop_archer(fTimeDelta);
+				Change_ChaseMode();
+			}
+		}
+		else
+			process_move_archer(fTimeDelta);
+
 	}
 	break;
 
 	case STATUS::ST_NONACTIVE:
 	{
-		
+		m_iAniIdx = Archer::ATTACK_WAIT;
 	}
 	break;
 
 	case STATUS::ST_CHASE:
 	{
-		
+		Choose_ArcherPattern(fTimeDelta);
 	}
 	break;
 
@@ -147,204 +219,73 @@ void CAi::Change_Archer_Animation(const float& fTimeDelta)
 	}
 }
 
-void CAi::process_move_ai(const float& fTimeDelta)
+void CAi::process_move_archer(const float& fTimeDelta)
 {
-	/* 방향 선정 */
-	if (!m_bIsMove)
+	if (m_bIsMove) return;
+
+	// 움직일 방향 설정
+	CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
+	if (pMonster->Get_Dead()) return;
+
+	m_vDir = pMonster->m_vPos - m_vPos;
+	m_vDir.Normalize();
+
+	m_vTempPos = m_vPos + m_vDir * 10.f;
+	m_vTempPos.z = 350.f;
+
+	m_iAniIdx = Archer::ATTACK_RUN;
+	m_uiAnimIdx = Archer::ATTACK_RUN;
+
+	m_bIsMove = true;
+
+	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 	{
-		/* 해당 NPC의 원래 위치값 */
-		float ori_x, ori_y, ori_z;
-		ori_x = m_vPos.x;
-		ori_y = m_vPos.y;
-		ori_z = m_vPos.z;
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
 
-		// 움직이기 전 위치에서의 viewlist (시야 내에 플레이어 저장)
-		unordered_set<pair<int, int>> oldnearSector;
-		oldnearSector.reserve(NEAR_SECTOR);
-		CSectorMgr::GetInstance()->Get_NearSectorIndex(&oldnearSector, (int)ori_x, (int)ori_z);
-
-		unordered_set <int> old_viewlist;
-
-		// 이동 전: 인접 섹터 순회
-		for (auto& s : oldnearSector)
-		{
-			// 인접 섹터 내의 타 유저들이 있는지 검사
-			if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
-			{
-				// 유저의 서버 번호 추출
-				for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
-				{
-					/* 유저일 경우 처리 */
-					if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
-					{
-						CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
-
-						// 접속한 유저만 시야 목록에 등록한다.
-						if (!pPlayer->Get_IsConnected()) continue;
-
-						// 시야 내에 있다면 시야 목록에 등록한다.
-						if (CObjMgr::GetInstance()->Is_Near(this, pPlayer))
-							old_viewlist.insert(obj_num);
-					}
-				}
-			}
-		}
-
-		/* AI 움직임 처리 */
-		switch (rand() % 3)
-		{
-		case 0: m_vDir = _vec3(0.f, 0.f, 1.f); break;	
-		case 1: m_vDir = _vec3(1.f, 0.f, 1.f); break;
-		case 2: m_vDir = _vec3(-1.f, 0.f, 1.f); break;
-		}
-
-		/* 해당 AI의 미래 위치 좌표 산출 -> 미래 위치좌표는 임시 변수에 저장 */
-		_vec2 coll_pos = _vec2(0.f);
-
-		if (CCollisionMgr::GetInstance()->Is_DeadReckoning(m_vPos, m_vDir, &coll_pos, m_chStageId))
-		{
-			m_vTempPos.x = coll_pos.x;
-			m_vTempPos.y = 0.f;
-			m_vTempPos.z = coll_pos.y;
-
-			m_bIsMove = true;
-		}
-		else
-		{
-			m_vTempPos.x = m_vPos.x;
-			m_vTempPos.y = m_vPos.y;
-			m_vTempPos.z = m_vPos.z;
-		}
-
-		m_vDir = m_vTempPos - m_vPos;
-		m_vDir.Normalize();
-
-		/* 변경된 좌표로 섹터 갱신 */
-		CSectorMgr::GetInstance()->Compare_exchange_Sector(m_sNum, (int)ori_z, (int)ori_x, (int)(m_vPos.z), (int)(m_vPos.x));
-
-		// 움직인 후 위치에서의 viewlist (시야 내에 플레이어 저장)
-		unordered_set <int> new_viewlist;
-
-		unordered_set<pair<int, int>> nearSectors;
-		nearSectors.reserve(5);
-		CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSectors, (int)(m_vPos.x), (int)(m_vPos.z));
-
-		// 이동 후: 인접 섹터 순회 -> 유저가 있을 시 new viewlist 내에 등록
-		for (auto& s : nearSectors)
-		{
-			// 인접 섹터 내의 타 유저들이 있는지 검사
-			if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
-			{				
-				for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
-				{
-					/* 유저일 경우 처리 */
-					if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
-					{
-						CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
-
-						// 접속한 유저만 시야 목록에 등록한다.
-						if (!pPlayer->Get_IsConnected()) continue;
-
-						// 시야 내에 있다면 시야 목록에 등록한다.
-						if (CObjMgr::GetInstance()->Is_Near(this, pPlayer))
-							new_viewlist.insert(obj_num);
-					}
-				}
-			}
-		}
-
-		// 이동 전 viewlist & 이동 후 viewlist 비교 -> 각 유저들의 시야 목록 내에 NPC 존재 여부를 결정.
-		for (auto pl : old_viewlist)
-		{
-			// 이동 후에도 AI 시야 목록 내에 "pl"(server number) 유저가 남아있는 경우
-			if (0 < new_viewlist.count(pl))
-			{
-				CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
-				if (pPlayer != nullptr)
-				{
-					/* 해당 유저의 시야 목록에 현재 AI가 존재할 경우 */
-					pPlayer->v_lock.lock();
-					if (0 < pPlayer->view_list.count(m_sNum))
-					{
-						pPlayer->v_lock.unlock();
-						/* 해당 유저에게 AI가 움직인 후의 위치를 전송 */
-						send_AI_move_packet(pl);
-					}
-					/* 해당 유저의 시야 목록에 현재 AI가 존재하지 않을 경우 */
-					else
-					{
-						/* 해당 유저의 시야 목록에 현재 AI 등록 */
-						pPlayer->view_list.insert(m_sNum);
-						pPlayer->v_lock.unlock();
-						send_AI_enter_packet(pl);
-					}
-				}
-			}
-			// 이동 후에 AI 시야 목록 내에 "pl"(server number) 유저가 없는 경우
-			else
-			{
-				CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
-				if (pPlayer != nullptr)
-				{
-					/* 해당 유저의 시야 목록에 현재 AI가 존재할 경우 */
-					pPlayer->v_lock.lock();
-					if (0 < pPlayer->view_list.count(m_sNum))
-					{
-						/* 해당 유저의 시야 목록에서 현재 AI 삭제 */
-						pPlayer->view_list.erase(m_sNum);
-						pPlayer->v_lock.unlock();
-						send_leave_packet(pl, m_sNum);
-					}
-					else
-						pPlayer->v_lock.unlock();
-				}
-			}
-		}
-
-		// new_vielist 순회 -> 플레이어의 시야 목록에 있어야 할 새로운 npc들을 추가
-		for (auto& pl : new_viewlist)
-		{
-			CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
-			if (pPlayer != nullptr)
-			{
-				pPlayer->v_lock.lock();
-				if (0 == pPlayer->view_list.count(pl))
-				{
-					/* 각 유저의 시야 목록 내에 현재 NPC가 없을 경우 -> 현재 NPC 등록 */
-					if (0 == pPlayer->view_list.count(m_sNum))
-					{
-						pPlayer->view_list.insert(m_sNum);
-						pPlayer->v_lock.unlock();
-						send_AI_enter_packet(pl);
-					}
-					/* 각 유저의 시야 목록 내에 현재 NPC가 있을 경우 -> 현재 NPC 위치 전송 */
-					else
-					{
-						pPlayer->v_lock.unlock();
-						send_AI_move_packet(pl);
-					}
-				}
-				else
-					pPlayer->v_lock.unlock();
-			}
-		}
+		send_AI_move_packet(raid);
 	}
-	else
+}
+
+void CAi::process_moveStop_archer(const float& fTimeDelta)
+{
+	// 움직일 방향 설정
+	m_iAniIdx = Archer::ATTACK_WAIT;
+	m_uiAnimIdx = Archer::ATTACK_WAIT;
+	
+	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 	{
-	if (false == CCollisionMgr::GetInstance()->Is_InMoveLimit(m_vPos, m_vTempPos, 30.f))
-		{
-			m_tMoveSpeedInterpolationDesc.interpolation_speed = 1.0f * Archer::OTHERS_OFFSET;
-			m_tMoveSpeedInterpolationDesc.linear_ratio += m_tMoveSpeedInterpolationDesc.interpolation_speed * fTimeDelta;
-			m_fSpd = LinearInterpolation(m_tMoveSpeedInterpolationDesc.v1, m_tMoveSpeedInterpolationDesc.v2, m_tMoveSpeedInterpolationDesc.linear_ratio);
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
 
-			m_vDir = m_vTempPos - m_vPos;
-			m_vDir.Normalize();
-
-			m_vPos += m_vDir * m_fSpd * fTimeDelta;
-		}
-		else m_bIsMove = false;	
+		send_AI_moveStop_packet(raid);
 	}
+}
 
+void CAi::Choose_ArcherPattern(const float& fTimeDelta)
+{
+	if (rand() % 5 == 0)
+		ArcherPattern_FirstPhase();
+	else  
+		ArcherPattern_SecondPhase();
+
+	m_iCurPatternNumber = 0;
+	Change_AttackMode();
+}
+
+void CAi::ArcherPattern_FirstPhase()
+{
+	m_arrAttackPattern[0] = Archer::ATTACK_ARROW;
+	m_arrAttackPattern[1] = Archer::RAPID_SHOT1;
+	m_arrAttackPattern[2] = Archer::ARROW_FALL_START;
+	m_arrAttackPattern[3] = Archer::BACK_DASH;
+	m_arrAttackPattern[4] = Archer::ARROW_SHOWER_START;
+	m_arrAttackPattern[5] = Archer::CHARGE_ARROW_START;
+	m_arrAttackPattern[6] = Archer::RAPID_SHOT1;
+}
+
+void CAi::ArcherPattern_SecondPhase()
+{
 }
 
 void CAi::process_disconnect_ai()
@@ -434,6 +375,54 @@ void CAi::process_leave_party_ai()
 	m_bIsPartyState = false;
 }
 
+void CAi::Play_Animation(const float& fTimeDelta)
+{
+	if (m_uiCurAniIndex >= m_uiNumAniIndex) return;
+
+	/*__________________________________________________________________________________________________________
+	[ 애니메이션이 계속 반복되도록 fmod 수행 ]
+	____________________________________________________________________________________________________________*/
+	if (m_uiNewAniIndex != m_uiCurAniIndex)
+	{
+		m_fAnimationTime = m_fBlendAnimationTime;
+		m_fBlendingTime -= 0.001f * fTimeDelta;
+
+		if (m_fBlendingTime <= 0.0f)
+			m_fBlendingTime = 0.0f;
+	}
+	else
+	{
+		m_fAnimationTime += fTimeDelta;
+	}
+
+	m_fAnimationTime = (float)(fmod(m_fAnimationTime, (m_arrDuration[m_uiCurAniIndex])));
+
+	/*__________________________________________________________________________________________________________
+	[ 3DMax 상에서의 Frame 계산 ]
+	____________________________________________________________________________________________________________*/
+	m_ui3DMax_NumFrame = (_uint)(_3DMAX_FPS * (m_arrDuration[m_uiCurAniIndex] / Monster_Normal::TPS));
+	m_ui3DMax_CurFrame = (_uint)(_3DMAX_FPS * (m_fAnimationTime / Monster_Normal::TPS));
+
+	if (m_fBlendingTime <= 0.0f)
+	{
+		m_uiCurAniIndex = m_uiNewAniIndex;
+		m_fAnimationTime = 0.0f;
+		m_fBlendingTime = 1.f;
+	}
+}
+
+bool CAi::Is_AnimationSetEnd(const float& fTimeDelta)
+{
+	if ((m_fAnimationTime >= m_arrDuration[m_uiCurAniIndex] -
+		static_cast<double>(Monster_Normal::TPS * ANIMA_INTERPOLATION * fTimeDelta)) &&
+		(m_uiCurAniIndex == m_uiNewAniIndex))
+	{
+		return true;
+	}
+
+	return false;
+}
+
 void CAi::send_AI_enter_packet(const int& to_client)
 {
 	sc_packet_enter p;
@@ -482,6 +471,29 @@ void CAi::send_AI_move_packet(const int& to_client)
 	p.dirX		= m_vDir.x;
 	p.dirY		= m_vDir.y;
 	p.dirZ		= m_vDir.z;
+
+	send_packet(to_client, &p);
+}
+
+void CAi::send_AI_moveStop_packet(const int& to_client)
+{
+	sc_packet_move p;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_MOVE_STOP;
+	p.id = m_sNum;
+
+	p.spd = m_fSpd;
+	p.animIdx = m_iAniIdx;
+	p.move_time = move_time;
+
+	p.posX = m_vPos.x;
+	p.posY = m_vPos.y;
+	p.posZ = m_vPos.z;
+
+	p.dirX = m_vDir.x;
+	p.dirY = m_vDir.y;
+	p.dirZ = m_vDir.z;
 
 	send_packet(to_client, &p);
 }

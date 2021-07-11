@@ -723,7 +723,6 @@ void CMonster::Dead_Vergos(const float& fTimeDelta)
 	Set_AnimationKey(m_uiAnimIdx);
 }
 
-
 void CMonster::Move_NormalMonster(const float& fTimeDelta)
 {
 	if (m_bIsDead || m_bIsRegen) return;
@@ -4380,7 +4379,7 @@ float CMonster::Calculate_TargetDist(const _vec3& vPos)
 	return dist;
 }
 
-void CMonster::Play_Animation(float fTimeDelta)
+void CMonster::Play_Animation(const float& fTimeDelta)
 {
 	if (m_uiCurAniIndex >= m_uiNumAniIndex) return;
 

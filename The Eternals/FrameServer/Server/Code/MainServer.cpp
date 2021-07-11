@@ -169,7 +169,7 @@ void Release_Server()
 void Initialize_NPC()
 {
 	CObjMgr::GetInstance()->Create_StageVelikaNPC();
-	//CObjMgr::GetInstance()->Create_AiPlayer();
+	CObjMgr::GetInstance()->Create_AiPlayer();
 
 #ifdef TEST
 	cout << "NPC Initialize Finish.\n";

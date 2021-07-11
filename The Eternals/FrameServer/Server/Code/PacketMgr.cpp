@@ -595,10 +595,17 @@ void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 	if (pPlayer->m_chStageId == STAGE_WINTER)
 	{
 		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
-		if (pMonster->Get_Dead() == false)
+		if (pMonster != nullptr && pMonster->Get_Dead() == false)
 		{
 			new_viewlist.insert(g_iVergosServerNum);
 			pMonster->active_monster();
+		}
+
+		CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", 9000));
+		if (pAi != nullptr)
+		{
+			new_viewlist.insert(9000);
+			pAi->active_AI();
 		}
 	}
 
@@ -825,10 +832,17 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 	if (pPlayer->m_chStageId == STAGE_WINTER)
 	{
 		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
-		if (pMonster->Get_Dead() == false)
+		if (pMonster != nullptr && pMonster->Get_Dead() == false)
 		{
 			new_viewlist.insert(g_iVergosServerNum);
 			pMonster->active_monster();
+		}
+
+		CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", 9000));
+		if (pAi != nullptr)
+		{
+			new_viewlist.insert(9000);
+			pAi->active_AI();
 		}
 	}
 
@@ -1122,10 +1136,17 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx, 
 	if (pPlayer->m_chStageId == STAGE_WINTER)
 	{
 		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
-		if (pMonster->Get_Dead() == false)
+		if (pMonster != nullptr && pMonster->Get_Dead() == false)
 		{
 			new_viewlist.insert(g_iVergosServerNum);
 			pMonster->active_monster();
+		}
+
+		CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", 9000));
+		if (pAi != nullptr)
+		{
+			new_viewlist.insert(9000);
+			pAi->active_AI();
 		}
 	}
 
@@ -1434,10 +1455,17 @@ void process_attack_stop(int id, const _vec3& _vDir, const _vec3& _vPos, int ani
 	if (pPlayer->m_chStageId == STAGE_WINTER)
 	{
 		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
-		if (pMonster->Get_Dead() == false)
+		if (pMonster != nullptr && pMonster->Get_Dead() == false)
 		{
 			new_viewlist.insert(g_iVergosServerNum);
 			pMonster->active_monster();
+		}
+
+		CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", 9000));
+		if (pAi != nullptr)
+		{
+			new_viewlist.insert(9000);
+			pAi->active_AI();
 		}
 	}
 
@@ -1669,6 +1697,13 @@ void process_buff(const int& id, cs_packet_attack* p)
 		{
 			new_viewlist.insert(g_iVergosServerNum);
 			pMonster->active_monster();
+		}
+
+		CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", 9000));
+		if (pAi != nullptr)
+		{
+			new_viewlist.insert(9000);
+			pAi->active_AI();
 		}
 	}
 
