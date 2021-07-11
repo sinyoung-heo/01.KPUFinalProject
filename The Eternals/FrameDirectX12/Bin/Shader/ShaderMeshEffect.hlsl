@@ -257,6 +257,8 @@ PS_OUT PS_ICESTORM(VS_OUT ps_input) : SV_TARGET
     }
     clip((1.f - g_fDissolve) - Normal_fDissolve);
     
+    
+    
     ps_output.Effect1 = lerp((D + N), E, 0.5f);
     ps_output.Effect1.a = 0.5f;
     return (ps_output);
@@ -274,7 +276,7 @@ PS_OUT PS_DECAL(VS_OUT ps_input) : SV_TARGET
     float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 color = mul(D.r, N) + mul(D.g, float4(0.6 + g_fOffset2, g_fOffset2, 0, 1)) + mul(D.b, float4(1.f, 0.5, 0.5, 1));
     ps_output.Effect2 = color;
-    ps_output.Effect2.a = 1;
+    ps_output.Effect2.a = g_fOffset6;
     return (ps_output);
 }
 PS_OUT PS_ICEDECAL(VS_OUT ps_input) : SV_TARGET

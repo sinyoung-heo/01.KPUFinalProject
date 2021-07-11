@@ -199,6 +199,7 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_IceStorm_Pool, 720);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_IceStorm_m_Pool, 260);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_IceDecal_Pool, 20);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_FireDecal_Pool, 20);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_Particle_Pool, 1000);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_FrameMesh_Pool, 100);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_FireRing_Pool, 20);
@@ -290,7 +291,7 @@ void CInstancePoolMgr::Free()
 
 	Safe_Release_InstacePool(m_pEffect_IceStorm_m_Pool);
 	Safe_Release_InstacePool(m_pEffect_IceDecal_Pool);
-	//Safe_Release_InstacePool(m_pEffect_FireDecal_Pool);
+	Safe_Release_InstacePool(m_pEffect_FireDecal_Pool);
 	Safe_Release_InstacePool(m_pEffect_Particle_Pool);
 	Safe_Release_InstacePool(m_pEffect_FireRing_Pool);
 	Safe_Release_InstacePool(m_pEffect_FrameMesh_Pool);

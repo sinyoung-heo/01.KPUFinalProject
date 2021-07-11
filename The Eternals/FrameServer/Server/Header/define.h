@@ -20,7 +20,7 @@ constexpr int	SERVER_CORE					= 4;
 constexpr int	NEAR_SECTOR					= 5;
 
 constexpr int	ZERO_HP						= 0;
-constexpr int	INIT_HP						= 10000;			// 초기 HP
+constexpr int	INIT_HP						= 10000;			// 초기 HPw1
 constexpr int	INIT_MP						= 10000;			// 초기 MP
 constexpr int	INIT_EXP					= 0;			// 초기 EXP
 constexpr int	INIT_MAXEXP					= 100;			// 초기 MAXEXP

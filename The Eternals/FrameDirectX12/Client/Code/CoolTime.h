@@ -23,6 +23,8 @@ public:
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Render_GameObject(const _float& fTimeDelta);
+
+	void Set_Ratio(_float Ratio) { m_fRatio = Ratio; }
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 									   wstring wstrRootObjectTag,
@@ -35,6 +37,9 @@ public:
 									   const _vec3& vRectOffset,
 									   const _vec3& vRectScale,
 									   const _long& iUIDepth = 1000);
+
+private:
+	float m_fRatio = 0.f;
 private:
 	virtual void Free();
 };

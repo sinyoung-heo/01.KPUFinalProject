@@ -52,9 +52,9 @@ void CEffectMgr::Effect_Dust(_vec3 vecPos, float Radius)
 void CEffectMgr::Effect_IceStorm(_vec3 vecPos , int Cnt , float Radius )
 {
 	Effect_MeshParticle(L"publicStone"+to_wstring(rand()%4), _vec3(0.01f), _vec3(0.f), vecPos,false,false, 5, 20
-		, 0, 0, 0, _vec2(28, 7),true);
+		, 0, 0, 0, _vec2(28, 7),0,true);
 	Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.01f), _vec3(0.f), vecPos,false,false, 5, 20
-		, 0, 0, 0, _vec2(28, 7),true);
+		, 0, 0, 0, _vec2(28, 7), 0, true);
 	for (int i = 0; i < 36; i+=(36/Cnt))
 	{
 		pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_IceStormEffect());
@@ -154,12 +154,12 @@ void CEffectMgr::Effect_Straight_IceStorm(_vec3 vecPos, _vec3 vecDir, const _boo
 void CEffectMgr::Effect_FireDecal(_vec3 vecPos)
 {
 	vecPos.y = 0.2f;
-	pGameObj = CFireDecal::Create(m_pGraphicDevice, m_pCommandList,
-		L"PublicPlane00",
-		_vec3(0.04f),
-		_vec3(0.f, 0.0f, 0.0f),
-		vecPos);
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"FireDecal", pGameObj), E_FAIL);
+	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_FireDecal_Effect());
+	if (nullptr != pGameObj)
+	{
+		static_cast<CFireDecal*>(pGameObj)->Set_CreateInfo(_vec3(0.05f), _vec3(0.f, 0.0f, 0.0f), vecPos);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"FireDecal", pGameObj), E_FAIL);
+	}
 }
 void CEffectMgr::Effect_IceDecal(_vec3 vecPos)
 {
@@ -171,9 +171,9 @@ void CEffectMgr::Effect_IceDecal(_vec3 vecPos)
 	}
 }
 
-void CEffectMgr::Effect_ArrowHitted(_vec3 vecPos)
+void CEffectMgr::Effect_ArrowHitted(_vec3 vecPos,_float maxScale)
 {	
-	Effect_TextureEffect(L"Lighting3", _vec3(0.f), _vec3(0.f), vecPos, FRAME(4, 4, 16.0f), true, true,1.f,0,
+	Effect_TextureEffect(L"Lighting3", _vec3(0.f), _vec3(0.f), vecPos, FRAME(4, 4, 16.0f), true, true, maxScale,0,
 		_vec4(0.f, 0.3f, 0.6f, 1.f));
 	
 }
