@@ -1461,6 +1461,9 @@ void CRenderer::Free()
 	Safe_Release(m_pTargetAddEffect);
 	Safe_Release(m_pAddEffectBuffer);
 	
+	//
+	Safe_Release(m_pTargetDynamicMeshEffect);
+	Safe_Release(m_pDynamicMeshEffectBuffer);
 	/*__________________________________________________________________________________________________________
 	2020.06.07 MultiThreadRendering
 	- CommandAllocators & CommandList Á¦°Å.

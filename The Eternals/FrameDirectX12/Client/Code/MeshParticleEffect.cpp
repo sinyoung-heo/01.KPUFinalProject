@@ -110,14 +110,14 @@ void CMeshParticleEffect::Make_TextureTrail(const _float& fTimeDelta)
 		return;
 
 	m_fMakeTexTrail += fTimeDelta;
-	if (m_fMakeTexTrail > 0.06f)
+	if (m_fMakeTexTrail > 0.1f)
 	{
 		m_fMakeTexTrail = 0.f;
 		for (int i = 0; i < m_iParticleCnt; i++)
 		{
-		/*	CEffectMgr::Get_Instance()->Effect_TextureEffect(L"Bomb01", _vec3(1.f), _vec3(0.f), ParticlePos[i], FRAME(10, 9, 90), false, false);
-			CEffectMgr::Get_Instance()->Effect_TextureEffect(L"Dust", _vec3(1.f), _vec3(0.f), ParticlePos[i]+ m_vecRandomvector[i]
-				, FRAME(12, 7, 40), false, false);*/
+			CEffectMgr::Get_Instance()->Effect_TextureEffect(L"Bomb05", _vec3(2.f), _vec3(rand()%360,0,rand()%360)
+				, ParticlePos[i], FRAME(6, 6, 36),false,true,1.f,1, _vec4(-0.1f));
+		
 		}
 	}
 }
@@ -156,9 +156,10 @@ void CMeshParticleEffect::Set_ConstantTable(float fTimeDelta)
 		ParticlePos[uiIdx].y -= m_fCurGravity[uiIdx];
 
 		if (ParticlePos[uiIdx].y < 0.f)
-		{	
-			m_fCurGravity[uiIdx] *= 0.6f;
+		{
+			m_bisPingPong==true ? m_fCurGravity[uiIdx] *= 0.6f : m_bIsReturn = true;
 		}
+	
 		_matrix matScale = INIT_MATRIX;
 		_matrix  matRotateX = INIT_MATRIX;
 		_matrix  matRotateY = INIT_MATRIX;
@@ -195,24 +196,28 @@ void CMeshParticleEffect::Set_ConstantTable(float fTimeDelta)
 void CMeshParticleEffect::Set_CreateInfo(const _vec3& vScale,
 	const _vec3& vAngle,
 	const _vec3& vPos, _vec2 SpeedWeight, _bool isMakeTexTrail , _bool isMakeParticleTrail ,
-	const _int& PipeLine , const _int& ParticleCnt)
+	const _int& PipeLine , const _int& ParticleCnt, _float YOffSet,_bool isPingPong )
 {
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos = vPos;
 
+	m_bisPingPong = isPingPong;
 	m_bisMakeTexTrail = isMakeTexTrail;
 	m_bisMakeParticleTrail = isMakeParticleTrail;
 	//Parent vScale ¿¡¼­ -30~30%  0.8~1.2
 	//float random = float(rand() % 9 + 4) * 0.1f;
+
+	
 	for (int i = 0; i < ParticleCnt; i++)
 	{
+
 		ParticleInit[i] = false;
 		ParticlePos[i] = vPos;
 
 
 		m_vecRandomvector[i].x = (rand() % 400 - 200);
-		m_vecRandomvector[i].y = (rand() % 150+50);
+		m_vecRandomvector[i].y = (rand() % 150 + YOffSet);
 		m_vecRandomvector[i].z = (rand() % 400 - 200);
 		m_vecRandomvector[i].Normalize();
 		ParticleAngle[i] = _vec3(rand() % 360, rand() % 360, rand() % 360);

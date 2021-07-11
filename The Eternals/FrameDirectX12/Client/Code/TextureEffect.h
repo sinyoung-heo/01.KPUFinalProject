@@ -75,13 +75,14 @@ private:
 	bool  m_bisScaleAnimation = false;
 	float m_fScaleTimeDelta = 0.f;
 	float m_fMaxScale = 1.f;
-
+	_int m_ScaleAnimIdx = 0;
 	ID3D12DescriptorHeap* m_pTextureHeap = nullptr;
 public:
 	void Set_CreateInfo(wstring TexTag,const _vec3& vScale,
 		const _vec3& vAngle,
 		const _vec3& vPos,
-		const FRAME& tFrame = FRAME(1, 1, 0.0f), bool isLoop=false,bool isScaleAnim=false,_vec4 colorOffset=_vec4(0.f,0.f,0.f,1.f)
+		const FRAME& tFrame = FRAME(1, 1, 0.0f), bool isLoop=false,bool isScaleAnim=false, float maxScale=1.f, _int ScaleAnimIdx=0,
+		_vec4 colorOffset=_vec4(0.f,0.f,0.f,1.f)
 		, bool isFollowHand=false, Engine::HIERARCHY_DESC* hierachy=nullptr, Engine::CTransform* parentTransform = nullptr
 	);
 public:

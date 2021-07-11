@@ -5,6 +5,7 @@ Bomb01|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb01\%d.
 Bomb02|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb02\%d.dds
 Bomb03|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb03\%d.dds
 Bomb04|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb04\%d.dds
+Bomb05|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb05\%d.dds
 Crack|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Crack\%d.dds
 Dust|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Dust\%d.dds
 Fire|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Fire\%d.dds

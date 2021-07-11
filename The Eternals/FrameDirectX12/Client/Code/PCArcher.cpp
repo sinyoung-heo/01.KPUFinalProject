@@ -2087,8 +2087,8 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 		_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
 		Pos.y += 2.f;
 		CEffectMgr::Get_Instance()->Effect_TextureEffect(L"Lighting2", _vec3(1.f), _vec3(0.0f), Pos, FRAME(5, 16, 25.0f)
-			, false, false
-			, _vec4(0.0f), true, pHierarchyDesc, m_pTransCom);
+			, false, false,0.f,0,
+			_vec4(0.0f), true, pHierarchyDesc, m_pTransCom);
 		
 	}
 	if (m_uiAnimIdx == Archer::CHARGE_ARROW_SHOT)

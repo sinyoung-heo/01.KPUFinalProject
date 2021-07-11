@@ -39,16 +39,7 @@ HRESULT CTextureEffect::LateInit_GameObject()
 	m_bisInit = true;
 	m_pShaderCom->SetUp_ShaderConstantBuffer();
 	m_bisAlphaObject = true;
-	//CGameObject* pGameObj;
-	//// Fire
-	//pGameObj = CTextureDistortion::Create(m_pGraphicDevice, m_pCommandList,
-	//									  m_strTextag,				// TextureTag
-	//									  m_pTransCom->m_vScale,	// Scale
-	//									  m_pTransCom->m_vAngle,	// Angle
-	//									  m_pTransCom->m_vPos,		// Pos
-	//									  m_tFrame);				// Sprite Image Frame
-	//Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", m_strTextag, pGameObj), E_FAIL);
-	//static_cast<CTextureDistortion*>(pGameObj)->Set_ParentPosition(&m_pTransCom->m_vPos);
+	
 	return S_OK;
 }
 
@@ -93,7 +84,6 @@ _int CTextureEffect::Update_GameObject(const _float & fTimeDelta)
 	if (m_pRenderer->Get_Frustum().Contains(m_pBoundingBoxCom->Get_BoundingInfo()) != DirectX::DISJOINT)
 		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MAGICCIRCLE, this), -1);
 
-
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
@@ -107,8 +97,6 @@ _int CTextureEffect::Update_GameObject(const _float & fTimeDelta)
 		Engine::CGameObject::SetUp_BillboardMatrix();
 	}
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
-
-
 	Engine::CGameObject::Compute_ViewZ(vPosInWorld);
 	return NO_EVENT;
 }
@@ -127,7 +115,6 @@ void CTextureEffect::Render_GameObject(const _float & fTimeDelta)
 		return;
 
 	Set_ConstantTable();
-	/*m_pTextureCom->Get_TexDescriptorHeap()->GetDesc().NumDescriptors;*/
 	m_pShaderCom->Begin_Shader(m_pTextureHeap, 0, m_uiTexIdx, Engine::MATRIXID::PROJECTION);
 	m_pBufferCom->Begin_Buffer();
 
@@ -154,11 +141,19 @@ void CTextureEffect::ScaleAnim(const _float& fTimeDelta)
 	if (!m_bisScaleAnimation)
 		return;
 
-	m_fScaleTimeDelta += (fTimeDelta*10);
-	m_pTransCom->m_vScale = _vec3(sin(m_fScaleTimeDelta)) * m_fMaxScale;
-	if (sin(m_fScaleTimeDelta) > 0.9f)
-		m_bIsReturn = true;
-
+	if (m_ScaleAnimIdx == 0)
+	{
+		m_fScaleTimeDelta += (fTimeDelta * 10);
+		m_pTransCom->m_vScale = _vec3(sin(m_fScaleTimeDelta)) * m_fMaxScale;
+		if (sin(m_fScaleTimeDelta) > 0.9f)
+			m_bIsReturn = true;
+	}
+	else if (m_ScaleAnimIdx == 1)
+	{
+		m_pTransCom->m_vScale -= _vec3(1.f) * fTimeDelta;
+		if (m_pTransCom->m_vScale.x<0.f)
+			m_bIsReturn = true;
+	}
 }
 
 HRESULT CTextureEffect::Add_Component(wstring wstrTextureTag)
@@ -171,12 +166,7 @@ HRESULT CTextureEffect::Add_Component(wstring wstrTextureTag)
 	m_pBufferCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Buffer", m_pBufferCom);
 
-	//// Texture
-	//m_pTextureCom = static_cast<Engine::CTexture*>(m_pComponentMgr->Clone_Component(wstrTextureTag, Engine::COMPONENTID::ID_STATIC));
-	//Engine::NULL_CHECK_RETURN(m_pTextureCom, E_FAIL);
-	//m_pTextureCom->AddRef();
-	//m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Texture", m_pTextureCom);
-
+	
 	// Shader
 	m_pShaderCom = static_cast<Engine::CShaderTexture*>(m_pComponentMgr->Clone_Component(L"ShaderTexture", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
@@ -228,7 +218,7 @@ void CTextureEffect::Update_SpriteFrame(const _float & fTimeDelta)
 }
 
 void CTextureEffect::Set_CreateInfo(wstring TexTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos,
-	 const FRAME& tFrame, bool isLoop, bool isScaleAnim , _vec4 colorOffset
+	 const FRAME& tFrame, bool isLoop, bool isScaleAnim,float maxScale,_int ScaleAnimIdx , _vec4 colorOffset
 ,  bool isFollowHand , Engine::HIERARCHY_DESC* hierachy , Engine::CTransform* parentTransform )
 {
 	if (nullptr == m_pTextureHeap)
@@ -251,6 +241,8 @@ void CTextureEffect::Set_CreateInfo(wstring TexTag, const _vec3& vScale, const _
 	m_uiTexIdx = 0;
 	m_tFrame = tFrame;
 
+	m_ScaleAnimIdx = ScaleAnimIdx;
+	m_fMaxScale = maxScale;
 	m_bisBillBoard = true;
 	m_bisAlphaObject = true;
 	m_bisLoop = isLoop;
@@ -294,5 +286,4 @@ void CTextureEffect::Free()
 	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pBufferCom);
 	Engine::Safe_Release(m_pShaderCom);
-	//Engine::Safe_Release(m_pTextureCom);
 }
