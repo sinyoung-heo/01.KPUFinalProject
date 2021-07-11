@@ -51,8 +51,10 @@ void CEffectMgr::Effect_Dust(_vec3 vecPos, float Radius)
 
 void CEffectMgr::Effect_IceStorm(_vec3 vecPos , int Cnt , float Radius )
 {
-	Effect_MeshParticle(L"publicRock"+to_wstring(rand()%4), _vec3(0.005f), _vec3(0.f), vecPos,false,false, 5, 20, 0, 0, 0, _vec2(28, 7));
-	Effect_MeshParticle(L"publicRock" + to_wstring(rand() % 4), _vec3(0.005f), _vec3(0.f), vecPos,false,false, 5, 20, 0, 0, 0, _vec2(28, 7));
+	Effect_MeshParticle(L"publicStone"+to_wstring(rand()%4), _vec3(0.01f), _vec3(0.f), vecPos,false,false, 5, 20
+		, 0, 0, 0, _vec2(28, 7),true);
+	Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.01f), _vec3(0.f), vecPos,false,false, 5, 20
+		, 0, 0, 0, _vec2(28, 7),true);
 	for (int i = 0; i < 36; i+=(36/Cnt))
 	{
 		pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_IceStormEffect());
@@ -77,6 +79,7 @@ void CEffectMgr::Effect_IceStorm_s(_vec3 vecPos, float Radius)
 
 void CEffectMgr::Effect_SwordEffect(_vec3 vecPos,_vec3 vecDir)
 {
+	
 	vecPos.y += 100.f;
 	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_SwordEffect());
 	if (nullptr != pGameObj)
@@ -170,7 +173,7 @@ void CEffectMgr::Effect_IceDecal(_vec3 vecPos)
 
 void CEffectMgr::Effect_ArrowHitted(_vec3 vecPos)
 {	
-	Effect_TextureEffect(L"Lighting3", _vec3(0.f), _vec3(0.f), vecPos, FRAME(4, 4, 16.0f), true, true,
+	Effect_TextureEffect(L"Lighting3", _vec3(0.f), _vec3(0.f), vecPos, FRAME(4, 4, 16.0f), true, true,1.f,0,
 		_vec4(0.f, 0.3f, 0.6f, 1.f));
 	
 }
@@ -327,19 +330,19 @@ void CEffectMgr::Effect_MeshParticle(wstring wstrMeshTag,
 	const _vec3& vAngle,
 	const _vec3& vPos , _bool isTextrail , _bool isParticleTrail ,
 	const _int& PipeLine , const _int& ParticleCnt
-	, _uint Diff, _uint Norm, _uint Spec, _vec2 SpeedWeight)
+	, _uint Diff, _uint Norm, _uint Spec, _vec2 SpeedWeight,float YOffset, _bool isPingPong)
 {
 	Engine::CGameObject* particleobj=nullptr;
 	
-	if (wstrMeshTag == L"publicRock0")
+	if (wstrMeshTag == L"publicStone0")
 		particleobj= Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_MeshParticleRock0_Effect());
-	else if (wstrMeshTag == L"publicRock1")
+	else if (wstrMeshTag == L"publicStone1")
 		particleobj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_MeshParticleRock1_Effect());
-	else if (wstrMeshTag == L"publicRock2")
+	else if (wstrMeshTag == L"publicStone2")
 		particleobj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_MeshParticleRock2_Effect());
-	else if (wstrMeshTag == L"publicRock3")
+	else if (wstrMeshTag == L"publicStone3")
 		particleobj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_MeshParticleRock3_Effect());
-	else if (wstrMeshTag == L"publicRock4")
+	else if (wstrMeshTag == L"publicStone4")
 		particleobj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_MeshParticleRock4_Effect());
 	
 
@@ -347,21 +350,22 @@ void CEffectMgr::Effect_MeshParticle(wstring wstrMeshTag,
 	{
 		static_cast<CMeshParticleEffect*>(particleobj)->Set_CreateInfo(vScale, vAngle, vPos, SpeedWeight,isTextrail
 			,isParticleTrail,PipeLine,
-			20);
+			ParticleCnt, YOffset, isPingPong);
 		static_cast<CMeshParticleEffect*>(particleobj)->Set_TexInfo(Diff, Norm, Spec);
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", wstrMeshTag, particleobj), E_FAIL);
 	}
 
 }
 
-void CEffectMgr::Effect_TextureEffect(wstring TexTag, _vec3 Scale, _vec3 Angle, _vec3 Pos, FRAME frame, bool isLoop, bool isScaleAnim, _vec4 colorOffset
+void CEffectMgr::Effect_TextureEffect(wstring TexTag, _vec3 Scale, _vec3 Angle, _vec3 Pos, FRAME frame, bool isLoop,
+	bool isScaleAnim,float maxScale, _int ScaleAnimIdx, _vec4 colorOffset
  , bool isFollowHand , Engine::HIERARCHY_DESC* hierachy, Engine::CTransform* parentTransform)
 {
 	Engine::CGameObject* textureObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_TextureEffect());
 	if (nullptr != textureObj)
 	{
-		static_cast<CTextureEffect*>(textureObj)->Set_CreateInfo(TexTag,Scale,Angle,Pos,frame,isLoop,isScaleAnim,colorOffset
-		, isFollowHand, hierachy, parentTransform);
+		static_cast<CTextureEffect*>(textureObj)->Set_CreateInfo(TexTag,Scale,Angle,Pos,frame,isLoop, maxScale,isScaleAnim, ScaleAnimIdx,
+			colorOffset, isFollowHand, hierachy, parentTransform);
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", TexTag, textureObj), E_FAIL);
 
 	}

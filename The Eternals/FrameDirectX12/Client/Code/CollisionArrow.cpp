@@ -184,7 +184,7 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 					_vec3(2.f, 2.0f, 1.0f),		// Scale
 					_vec3(0.0f, 0.0f, 0.0f),		// Angle
 					newPos,	// Pos
-					FRAME(10, 9, 30.0f), false, false, _vec4(0.f, 0.3f, 0.6f, 1.f));
+					FRAME(10, 9, 30.0f), false, false,1.f,0, _vec4(0.f, 0.3f, 0.6f, 1.f));
 
 				m_bIsCreateCollisionTick = true;
 

@@ -80,6 +80,7 @@ private:
 	Engine::CMesh* m_pMeshCom = nullptr;
 	Engine::CShaderMeshEffect* m_pShaderCom = nullptr;
 
+	_bool m_bisPingPong = false;
 	_bool m_bisMakeTexTrail = false;
 	float m_fMakeTexTrail = 0.f;
 	_bool m_bisMakeParticleTrail = false;
@@ -87,7 +88,7 @@ public:
 	void Set_CreateInfo(const _vec3& vScale,
 		const _vec3& vAngle,
 		const _vec3& vPos, _vec2 SpeedWeight, _bool isMakeTexTrail = false, _bool isMakeParticleTrail = false,
-		const _int& PipeLine = 9, const _int& ParticleCnt = 20
+		const _int& PipeLine = 9, const _int& ParticleCnt = 20, _float YOffSet = 0.f, _bool isPingPong=false
 	);
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,

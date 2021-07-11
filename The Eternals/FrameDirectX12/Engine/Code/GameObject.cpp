@@ -413,7 +413,7 @@ void CGameObject::SetUp_BillboardMatrix()
 		[ Scale + Rotate ют╥б ]
 		____________________________________________________________________________________________________________*/
 		memcpy(&m_pTransCom->m_matWorld._11, &matBillboard._11, sizeof(_vec3));
-		//memcpy(&m_pTransCom->m_matWorld._21, &matBillboard._21, sizeof(_vec3));
+		memcpy(&m_pTransCom->m_matWorld._21, &matBillboard._21, sizeof(_vec3));
 		memcpy(&m_pTransCom->m_matWorld._31, &matBillboard._31, sizeof(_vec3));
 	}
 
