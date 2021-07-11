@@ -975,50 +975,6 @@ void CPCArcher::Key_Input(const _float& fTimeDelta)
 	KeyInput_Move(fTimeDelta);
 	KeyInput_Attack(fTimeDelta);
 	KeyInput_Potion(fTimeDelta);
-
-	// StageChange Stage WINTER
-	if (Engine::KEY_DOWN(DIK_O) && NO_EVENT_STATE)
-	{
-		g_bIsStageChange = true;
-		m_bIsKeyDown     = false;
-
-		if (Archer::STANCE_ATTACK == m_eStance)
-			m_uiAnimIdx = Archer::ATTACK_WAIT;
-		else
-			m_uiAnimIdx = Archer::NONE_ATTACK_IDLE;
-
-		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-
-		Engine::CGameObject* pGameObject = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
-		if (nullptr != pGameObject)
-		{
-			static_cast<CFadeInOut*>(pGameObject)->Set_FadeInOutEventType(EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
-			static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_WINTER);
-			m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
-		}
-	}
-
-	// StageChange Stage VELIKA
-	if (Engine::KEY_DOWN(DIK_P) && NO_EVENT_STATE)
-	{
-		g_bIsStageChange = true;
-		m_bIsKeyDown     = false;
-
-		if (Archer::STANCE_ATTACK == m_eStance)
-			m_uiAnimIdx = Archer::ATTACK_WAIT;
-		else
-			m_uiAnimIdx = Archer::NONE_ATTACK_IDLE;
-
-		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-
-		Engine::CGameObject* pGameObject = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
-		if (nullptr != pGameObject)
-		{
-			static_cast<CFadeInOut*>(pGameObject)->Set_FadeInOutEventType(EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
-			static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_VELIKA);
-			m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
-		}
-	}
 }
 
 void CPCArcher::KeyInput_Move(const _float& fTimeDelta)

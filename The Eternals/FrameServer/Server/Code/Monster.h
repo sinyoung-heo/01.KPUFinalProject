@@ -119,6 +119,7 @@ public:
 	void	send_Monster_Dead(const int& to_client, const int& ani);
 	void	send_Monster_animation_packet(const int& to_client, const int& ani);
 	void	send_Monster_Knockback(const int& to_client, const int& ani);
+	void	send_Monster_Effect(const int& to_client);
 
 public:
 	char			m_monNum				= 0;
@@ -144,6 +145,7 @@ public:
 
 	int				m_arrAttackPattern[VERGOS_PATTERN];
 	int				m_iCurPatternNumber		= 0;
+	_vec2			m_arrVergosSkillEffect[3];
 
 	/* Animation */
 	_uint			m_uiNewAniIndex			= 0;
