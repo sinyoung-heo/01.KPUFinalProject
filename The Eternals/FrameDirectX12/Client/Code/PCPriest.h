@@ -30,7 +30,10 @@ private:
 	virtual ~CPCPriest() = default;
 
 public:
-	const _uint& Get_AnimationIdx() { return m_uiAnimIdx; }
+	const _uint&			Get_AnimationIdx()	{ return m_uiAnimIdx; }
+	const Priest::STANCE&	Get_PlayerStance()	{ return m_eStance; }
+	void Set_IsKeyDown(const _bool& bIsKeyDown)	{ m_bIsKeyDown = bIsKeyDown; }
+	void Set_AnimationIdx(const _uint& uiIdx)	{ m_uiAnimIdx = uiIdx; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag, 

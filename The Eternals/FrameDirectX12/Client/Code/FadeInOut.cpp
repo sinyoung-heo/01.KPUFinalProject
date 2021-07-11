@@ -77,6 +77,8 @@ _int CFadeInOut::Update_GameObject(const _float& fTimeDelta)
 	}
 	if (m_bIsReturn)
 	{
+		m_bIsSendPacket    = false;
+		m_bIsReceivePacket = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool(), m_uiInstanceIdx);
 		return RETURN_OBJ;
 	}

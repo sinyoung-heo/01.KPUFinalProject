@@ -2,6 +2,7 @@
 #include "QuestComplete.h"
 #include "DirectInput.h"
 #include "Font.h"
+#include "QuestMgr.h"
 
 CQuestComplete::CQuestComplete(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
@@ -67,7 +68,19 @@ _int CQuestComplete::LateUpdate_GameObject(const _float& fTimeDelta)
 		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
 		m_bIsKeyPressing)
 	{
+		CQuestMgr::Get_Instance()->Get_QuestMessageCanvas()->Set_IsActive(true);
+		CQuestMgr::Get_Instance()->Get_QuestMessageCanvas()->Set_IsChildActive(true);
 
+		if (L"SubQuestComplete" == m_wstrObjectTag)
+		{
+			CQuestMgr::Get_Instance()->Set_ClearQuestType(QUEST_TYPE::QUEST_SUB);
+			CQuestMgr::Get_Instance()->Get_QuestMessageCanvas()->Get_Font()->Set_Text(L"관문으로 이동하시겠습니까?");
+		}
+		else
+		{
+			CQuestMgr::Get_Instance()->Set_ClearQuestType(QUEST_TYPE::QUEST_MAIN);
+			CQuestMgr::Get_Instance()->Get_QuestMessageCanvas()->Get_Font()->Set_Text(L"벨리카로 이동하시겠습니까?");
+		}
 	}
 
 	m_bIsKeyPressing = false;

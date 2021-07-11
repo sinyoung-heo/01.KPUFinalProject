@@ -581,6 +581,12 @@ HRESULT CPCPriest::SetUp_ClassFrame()
 				}
 				else
 				{
+					_long iChildDepth = 0;
+					if (L"ClassInfo" == vecObjectTag[i])
+						iChildDepth = UIDepth - 2;
+					else
+						iChildDepth = UIDepth - 1;
+
 					pChildUI = CGameUIChild::Create(m_pGraphicDevice, m_pCommandList,
 													wstrRootObjectTag,				// RootObjectTag
 													vecObjectTag[i],				// ObjectTag
@@ -591,7 +597,7 @@ HRESULT CPCPriest::SetUp_ClassFrame()
 													vecFrameSpeed[i],				// FrameSpeed
 													vecRectPosOffset[i],			// RectPosOffset
 													vecRectScale[i],				// RectScaleOffset
-													UIDepth - 1);					// UI Depth
+													iChildDepth);					// UI Depth
 				}
 				m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
 				static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
@@ -1770,9 +1776,6 @@ void CPCPriest::Collision_PortalVelikaToBeach(list<Engine::CColliderSphere*>& ls
 					static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_BEACH);
 					m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
 				}
-				//Engine::CGameObject* pGameObject = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
-				//static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_BEACH);
-				//m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
 			}
 		}
 	}
@@ -1808,9 +1811,6 @@ void CPCPriest::Collision_PortalBeachToVelika(list<Engine::CColliderSphere*>& ls
 					static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_VELIKA);
 					m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
 				}
-				//Engine::CGameObject* pGameObject = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
-				//static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_VELIKA);
-				//m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
 			}
 		}
 	}
