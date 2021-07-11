@@ -25,6 +25,9 @@ HRESULT CTransform::Ready_Component()
 
 void CTransform::Update_Component(const _float & fTimeDelta)
 {
+	if (m_bIsStatic)
+		return;
+
 	_matrix matScale	= XMMatrixScaling(m_vScale.x, m_vScale.y, m_vScale.z);
 	_matrix matRotX		= XMMatrixRotationX(XMConvertToRadians(m_vAngle.x));
 	_matrix matRotY		= XMMatrixRotationY(XMConvertToRadians(m_vAngle.y));

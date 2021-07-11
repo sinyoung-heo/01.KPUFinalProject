@@ -30,22 +30,17 @@ public:
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Send_PacketToServer();
-	virtual void	Render_MiniMap(const _float& fTimeDelta);
 	// MultiThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
-
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag);
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
 	void			Set_ConstantTableMiniMap();
 	void			SetUp_AngleInterpolation(const _float& fTimeDelta);
-	void			SetUp_Dissolve(const _float& fTimeDelta);
 	void			Active_Monster(const _float& fTimeDelta);
 	void			Change_Animation(const _float& fTimeDelta);
-	void			SetUp_CollisionTick(const _float& fTimeDelta);
-
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]

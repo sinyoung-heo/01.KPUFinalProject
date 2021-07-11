@@ -88,26 +88,7 @@ HRESULT CScene_MainStage::Ready_Scene()
 
 	// Ready Cinematic Scene Character
 	// 현재 몬스터 컬링이 되어있지 않으므로 주석처리 해놓음. 삭제 X
-	//Engine::FAILED_CHECK_RETURN(CCinemaMgr::Get_Instance()->Ready_CinemaCharacter(), E_FAIL);
-
-	//Engine::CGameObject* pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterLakanPool());
-	//if (nullptr != pGameObj)
-	//{
-	//	pGameObj->Get_Transform()->m_vScale = _vec3(0.1f);
-	//	pGameObj->Get_Transform()->m_vAngle = _vec3(0.f);
-	//	pGameObj->Get_Transform()->m_vPos	= _vec3(135.0f, 0.f, 65.0f);
-	//	pGameObj->Set_State(0);
-	//	m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"LAKAN", pGameObj);
-	//}
-	//pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterLakanPool());
-	//if (nullptr != pGameObj)
-	//{
-	//	pGameObj->Get_Transform()->m_vScale = _vec3(0.1f);
-	//	pGameObj->Get_Transform()->m_vAngle = _vec3(0.f);
-	//	pGameObj->Get_Transform()->m_vPos	= _vec3(130.0f, 0.f, 65.0f);
-	//	pGameObj->Set_State(0);
-	//	m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"LAKAN", pGameObj);
-	//}
+	Engine::FAILED_CHECK_RETURN(CCinemaMgr::Get_Instance()->Ready_CinemaCharacter(), E_FAIL);
 
 	// Server
 	Engine::FAILED_CHECK_RETURN(CPacketMgr::Get_Instance()->Ready_Server(m_pGraphicDevice, m_pCommandList), E_FAIL);

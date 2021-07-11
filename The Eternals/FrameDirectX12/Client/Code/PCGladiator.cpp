@@ -1098,7 +1098,7 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 	KeyInput_Attack(fTimeDelta);
 	KeyInput_Potion(fTimeDelta);
 
-	/*if (Engine::KEY_DOWN(DIK_R))
+	if (Engine::KEY_DOWN(DIK_R))
 		CCinemaMgr::Get_Instance()->Spawn_Vergos();
 	if (Engine::KEY_DOWN(DIK_T))
 		CCinemaMgr::Get_Instance()->Scream_PrionBerserkerBoss();
@@ -1110,7 +1110,7 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 	{
 		CCinemaMgr::Get_Instance()->Rush_Lakan();
 		CCinemaMgr::Get_Instance()->Rush_Prion();
-	}*/
+	}
 	
 
 	if (Engine::KEY_DOWN(DIK_0) && NO_EVENT_STATE)

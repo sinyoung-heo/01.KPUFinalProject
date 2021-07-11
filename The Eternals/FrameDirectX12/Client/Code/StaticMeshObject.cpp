@@ -32,6 +32,9 @@ HRESULT CStaticMeshObject::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vScale	= vScale;
 	m_pTransCom->m_vAngle	= vAngle;
 	m_pTransCom->m_vPos		= vPos + vPosOffset;
+	m_pTransCom->Update_Component(0.016f);
+	m_pTransCom->Set_IsStatic(true);
+
 	m_bIsCollision			= bIsCollision;
 	m_eRenderGroup = Engine::CRenderer::RENDERGROUP::RENDER_NONALPHA;
 	// BoundingBox.
@@ -172,7 +175,8 @@ void CStaticMeshObject::Render_ShadowDepth(const _float& fTimeDelta,
 		m_wstrMeshTag != L"SnowMountain01_SM" &&
 		m_wstrMeshTag != L"SnowMountain02_SM" &&
 		m_wstrMeshTag != L"Beast_Ice_06_SM" &&
-		m_wstrMeshTag != L"Beast_Ice_07_SM")
+		m_wstrMeshTag != L"Beast_Ice_07_SM" &&
+		m_wstrMeshTag != L"Ur_Oriyn_Statue_01_SM")
 	{
 		m_pShaderShadowInstancing->Add_Instance(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass);
 		_uint iInstanceIdx = m_pShaderShadowInstancing->Get_InstanceCount(iContextIdx, m_wstrMeshTag, m_iShadowPipelineStatePass) - 1;

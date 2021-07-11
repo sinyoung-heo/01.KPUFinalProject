@@ -22,9 +22,9 @@ HRESULT CCinemaMgr::Ready_CinemaCharacter()
 
 	// Lakan
 	Engine::CGameObject* pGameObj = nullptr;
-	for (int z = 0; z < 5; ++z)
+	for (int z = 0; z < LINEUP_Z; ++z)
 	{
-		for (int x = 0; x < 10; ++x)
+		for (int x = 0; x < LINEUP_X; ++x)
 		{
 			pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterLakanPool());
 
@@ -41,9 +41,9 @@ HRESULT CCinemaMgr::Ready_CinemaCharacter()
 	}
 
 	// PrionBerserker
-	for (int z = 0; z < 5; ++z)
+	for (int z = 0; z < LINEUP_Z; ++z)
 	{
-		for (int x = 0; x < 10; ++x)
+		for (int x = 0; x < LINEUP_X; ++x)
 		{
 			pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterPrionBerserkerPool());
 
@@ -133,9 +133,9 @@ void CCinemaMgr::Scream_PrionBerserkerBoss()
 
 void CCinemaMgr::Scream_PrionBerserkers()
 {
-	for (int z = 0; z < 5; ++z)
+	for (int z = 0; z < LINEUP_Z; ++z)
 	{
-		for (int x = 0; x < 10; ++x)
+		for (int x = 0; x < LINEUP_X; ++x)
 		{
 			arrPrionBerserker[z][x]->Set_State(PrionBerserker::ANGRY);
 		}
@@ -152,9 +152,9 @@ void CCinemaMgr::Rush_Prion()
 	m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"PRIONBERSERKERBOSS", 0)->Set_State(PrionBerserkerBoss::RUN);
 	m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"PRIONBERSERKERBOSS", 0)->Set_MoveStop(false);
 
-	for (int z = 0; z < 5; ++z)
+	for (int z = 0; z < LINEUP_Z; ++z)
 	{
-		for (int x = 0; x < 10; ++x)
+		for (int x = 0; x < LINEUP_X; ++x)
 		{
 			arrPrionBerserker[z][x]->Set_State(PrionBerserker::RUN);
 			arrPrionBerserker[z][x]->Set_MoveStop(false);
@@ -164,9 +164,9 @@ void CCinemaMgr::Rush_Prion()
 
 void CCinemaMgr::Rush_Lakan()
 {
-	for (int z = 0; z < 5; ++z)
+	for (int z = 0; z < LINEUP_Z; ++z)
 	{
-		for (int x = 0; x < 10; ++x)
+		for (int x = 0; x < LINEUP_X; ++x)
 		{	
 			arrLakan[z][x]->Set_State(Lakan::ACTIVE_MOVE_START);		
 		}

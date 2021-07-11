@@ -1277,7 +1277,7 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 	}
 	else if (packet->mon_num == MON_VERGOS)
 	{
-		pInstance = Pop_Instance(m_pInstancePoolMgr->Get_MonsterVergosPool());
+		//pInstance = Pop_Instance(m_pInstancePoolMgr->Get_MonsterVergosPool());
 	}
 	
 	if (nullptr != pInstance)

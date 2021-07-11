@@ -122,6 +122,8 @@ _int CQuestMessageButton::LateUpdate_GameObject(const _float& fTimeDelta)
 
 			if (QUEST_TYPE::QUEST_SUB == CQuestMgr::Get_Instance()->Get_ClearQuestType())
 			{
+				g_bIsCinemaStart = true;
+
 				Engine::CGameObject* pGameObject = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
 				if (nullptr != pGameObject)
 				{
@@ -132,6 +134,8 @@ _int CQuestMessageButton::LateUpdate_GameObject(const _float& fTimeDelta)
 			}
 			else if (QUEST_TYPE::QUEST_MAIN == CQuestMgr::Get_Instance()->Get_ClearQuestType())
 			{
+				g_bIsCinemaStart = false;
+
 				Engine::CGameObject* pGameObject = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
 				if (nullptr != pGameObject)
 				{
@@ -139,6 +143,14 @@ _int CQuestMessageButton::LateUpdate_GameObject(const _float& fTimeDelta)
 					static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_VELIKA);
 					m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
 				}
+
+				CQuestMgr::Get_Instance()->Set_IsAcceptQuest(false);
+				CQuestMgr::Get_Instance()->Set_IsCompleteSubQuest(false);
+				CQuestMgr::Get_Instance()->Set_IsCompleteMainQuest(false);
+				CQuestMgr::Get_Instance()->Get_SubQuestMiniCanvas()->Set_IsActive(false);
+				CQuestMgr::Get_Instance()->Get_SubQuestMiniCanvas()->Set_IsChildActive(false);
+				CQuestMgr::Get_Instance()->Get_MainQuestMiniCanvas()->Set_IsActive(false);
+				CQuestMgr::Get_Instance()->Get_MainQuestMiniCanvas()->Set_IsChildActive(false);
 			}
 		}
 
