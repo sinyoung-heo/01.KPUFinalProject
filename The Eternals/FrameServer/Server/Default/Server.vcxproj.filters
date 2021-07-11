@@ -251,5 +251,8 @@
     <ClInclude Include="..\Code\Ai.h">
       <Filter>01.Object\03.AI</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\FrameDirectX12\Client\Header\GladiatorAnimation.h">
+      <Filter>99.Header\01.User\00.Animation_Protocol</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

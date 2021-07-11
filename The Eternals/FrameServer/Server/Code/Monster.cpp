@@ -657,10 +657,16 @@ void CMonster::Play_Vergos_NextAttack(chrono::seconds t)
 {
 	if (m_bIsReaction)
 	{
+		chrono::seconds nextTime = 0s;
+		if (m_arrAttackPattern[m_iCurPatternNumber-1] == Vergos::FLY_START)
+			nextTime = 15s;
+		else
+			nextTime = 3s;
+
 		bool prev_state = m_bIsReaction;
 		if (true == atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsReaction), &prev_state, false))
 		{
-			add_timer(m_sNum, OP_MODE_BOSS_NEXT_ATTACK, system_clock::now() + t);
+			add_timer(m_sNum, OP_MODE_BOSS_NEXT_ATTACK, system_clock::now() + nextTime);
 		}
 	}
 }

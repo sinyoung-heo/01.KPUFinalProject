@@ -1,11 +1,11 @@
 #pragma once
 #include "GameUIChild.h"
 
-class CQuestComplete : public CGameUIChild
+class CQuestMessageButton : public CGameUIChild
 {
 private:
-	explicit CQuestComplete(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
-	virtual ~CQuestComplete() = default;
+	explicit CQuestMessageButton(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
+	virtual ~CQuestMessageButton() = default;
 
 public:
 	// CGameObject을(를) 통해 상속됨
@@ -23,6 +23,8 @@ public:
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Render_GameObject(const _float& fTimeDelta);
+private:
+	void SetUp_FontPosition(const _float& fTimeDelta);
 private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]

@@ -11,6 +11,7 @@
 #include "CollisionTick.h"
 #include "InstancePoolMgr.h"
 #include "NormalMonsterHpGauge.h"
+#include "QuestMgr.h"
 
 CGiantMonkey::CGiantMonkey(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -26,7 +27,7 @@ HRESULT CGiantMonkey::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMesh
 	Engine::FAILED_CHECK_RETURN(Add_Component(wstrMeshTag, wstrNaviMeshTag), E_FAIL);
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
-	m_pTransCom->m_vPos = vPos;
+	m_pTransCom->m_vPos   = vPos;
 	m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(vPos));
 
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
@@ -491,6 +492,13 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) 
 			{
 				m_bIsStartDissolve = true;
+			}
+			
+			// SubQuest
+			if (CQuestMgr::Get_Instance()->Get_IsAcceptQuest())
+			{
+				CQuestMgr::Get_Instance()->Set_IsCompleteSubQuest(true);
+				CQuestMgr::Get_Instance()->Get_SubQuestMiniCanvas()->Set_IsChildActive(true);
 			}
 		}
 		break;

@@ -1,23 +1,23 @@
 #include "stdafx.h"
-#include "QuestButtonClose.h"
+#include "QuestMessageButtonClose.h"
 #include "DirectInput.h"
 #include "QuestMgr.h"
 
-CQuestButtonClose::CQuestButtonClose(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
+CQuestMessageButtonClose::CQuestMessageButtonClose(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
 {
 }
 
-HRESULT CQuestButtonClose::Ready_GameObject(wstring wstrRootObjectTag, 
-											wstring wstrObjectTag, 
-											wstring wstrDataFilePath,
-											const _vec3& vPos, 
-											const _vec3& vScale,
-											const _bool& bIsSpriteAnimation, 
-											const _float& fFrameSpeed,
-											const _vec3& vRectOffset,
-											const _vec3& vRectScale, 
-											const _long& iUIDepth)
+HRESULT CQuestMessageButtonClose::Ready_GameObject(wstring wstrRootObjectTag, 
+												   wstring wstrObjectTag, 
+												   wstring wstrDataFilePath,
+												   const _vec3& vPos, 
+												   const _vec3& vScale,
+												   const _bool& bIsSpriteAnimation, 
+												   const _float& fFrameSpeed,
+												   const _vec3& vRectOffset,
+												   const _vec3& vRectScale, 
+												   const _long& iUIDepth)
 {
 	Engine::FAILED_CHECK_RETURN(CGameUIChild::Ready_GameObject(wstrRootObjectTag, 
 															   wstrObjectTag,
@@ -44,14 +44,14 @@ HRESULT CQuestButtonClose::Ready_GameObject(wstring wstrRootObjectTag,
 	return S_OK;
 }
 
-HRESULT CQuestButtonClose::LateInit_GameObject()
+HRESULT CQuestMessageButtonClose::LateInit_GameObject()
 {
 	Engine::FAILED_CHECK_RETURN(CGameUIChild::LateInit_GameObject(), E_FAIL);
 
 	return S_OK;
 }
 
-_int CQuestButtonClose::Update_GameObject(const _float& fTimeDelta)
+_int CQuestMessageButtonClose::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 	
@@ -65,7 +65,7 @@ _int CQuestButtonClose::Update_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CQuestButtonClose::LateUpdate_GameObject(const _float& fTimeDelta)
+_int CQuestMessageButtonClose::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	if (!m_bIsActive)
 		return NO_EVENT;
@@ -76,10 +76,10 @@ _int CQuestButtonClose::LateUpdate_GameObject(const _float& fTimeDelta)
 		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
 		m_bIsKeyPressing)
 	{
-		g_bIsOpenShop = false;
+		//g_bIsOpenShop = false;
 		CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(false);
-		CQuestMgr::Get_Instance()->Get_QuestRequestCanvas()->Set_IsActive(false);
-		CQuestMgr::Get_Instance()->Get_QuestRequestCanvas()->Set_IsChildActive(false);
+		CQuestMgr::Get_Instance()->Get_QuestMessageCanvas()->Set_IsActive(false);
+		CQuestMgr::Get_Instance()->Get_QuestMessageCanvas()->Set_IsChildActive(false);
 	}
 
 	m_bIsKeyPressing = false;
@@ -120,12 +120,12 @@ _int CQuestButtonClose::LateUpdate_GameObject(const _float& fTimeDelta)
 	return NO_EVENT;
 }
 
-void CQuestButtonClose::Render_GameObject(const _float& fTimeDelta)
+void CQuestMessageButtonClose::Render_GameObject(const _float& fTimeDelta)
 {
 	CGameUIChild::Render_GameObject(fTimeDelta);
 }
 
-HRESULT CQuestButtonClose::SetUp_MainMenuState(wstring wstrTag, const UI_CHILD_STATE& tState)
+HRESULT CQuestMessageButtonClose::SetUp_MainMenuState(wstring wstrTag, const UI_CHILD_STATE& tState)
 {
 	auto iter_find = m_mapMainMenuState.find(wstrTag);
 	if (iter_find == m_mapMainMenuState.end())
@@ -136,19 +136,19 @@ HRESULT CQuestButtonClose::SetUp_MainMenuState(wstring wstrTag, const UI_CHILD_S
 	return S_OK;
 }
 
-Engine::CGameObject* CQuestButtonClose::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
-											   wstring wstrRootObjectTag,
-											   wstring wstrObjectTag, 
-											   wstring wstrDataFilePath,
-											   const _vec3& vPos, 
-											   const _vec3& vScale, 
-											   const _bool& bIsSpriteAnimation, 
-											   const _float& fFrameSpeed, 
-											   const _vec3& vRectOffset, 
-											   const _vec3& vRectScale, 
-											   const _long& iUIDepth)
+Engine::CGameObject* CQuestMessageButtonClose::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
+													  wstring wstrRootObjectTag,
+													  wstring wstrObjectTag, 
+													  wstring wstrDataFilePath,
+													  const _vec3& vPos, 
+													  const _vec3& vScale, 
+													  const _bool& bIsSpriteAnimation, 
+													  const _float& fFrameSpeed, 
+													  const _vec3& vRectOffset, 
+													  const _vec3& vRectScale, 
+													  const _long& iUIDepth)
 {
-	CQuestButtonClose* pInstance = new CQuestButtonClose(pGraphicDevice, pCommandList);
+	CQuestMessageButtonClose* pInstance = new CQuestMessageButtonClose(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrRootObjectTag,
 										   wstrObjectTag,
@@ -165,7 +165,7 @@ Engine::CGameObject* CQuestButtonClose::Create(ID3D12Device* pGraphicDevice, ID3
 	return pInstance;
 }
 
-void CQuestButtonClose::Free()
+void CQuestMessageButtonClose::Free()
 {
 	CGameUIChild::Free();
 	m_mapMainMenuState.clear();

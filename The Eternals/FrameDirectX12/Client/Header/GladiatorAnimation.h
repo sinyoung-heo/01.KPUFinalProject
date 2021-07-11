@@ -35,11 +35,11 @@ namespace Gladiator
 	enum STANCE		{ STANCE_NONEATTACK, STANCE_ATTACK, STANCE_END };
 	enum COMBOCNT	{ COMBOCNT_0, COMBOCNT_1, COMBOCNT_2, COMBOCNT_3, COMBOCNT_4 };
 
-	constexpr _float OTHERS_OFFSET	= 0.9f;
+	constexpr float OTHERS_OFFSET	= 0.9f;
 
-	constexpr _float MIN_SPEED       = 0.0f;
-	constexpr _float MAX_SPEED       = 5.0f;
-	constexpr _float MOVE_STOP_SPEED = 3.0f;
+	constexpr float MIN_SPEED       = 0.0f;
+	constexpr float MAX_SPEED       = 5.0f;
+	constexpr float MOVE_STOP_SPEED = 3.0f;
 
 	// COMOBO ATTACK
 	constexpr _uint COMBO1_MOVE_STOP = 16;
@@ -116,4 +116,11 @@ namespace Gladiator
 	constexpr _uint WIND_CUTTER3_COLLISIONTICK_START  = 12;
 	constexpr _uint GAIA_CRUSH2_COLLISIONTICK_START   = 24;
 	constexpr _uint DRAW_SWORD_COLLISIONTICK_START    = 16;
+
+	// 스킬 필요 MP
+	constexpr int	AMOUNT_STINGER_BLADE		= 30;
+	constexpr int	AMOUNT_CUTTING_SLASH		= 50;
+	constexpr int	AMOUNT_JAW_BREAKER			= 70;
+	constexpr int	AMOUNT_GAIA_CRUSH1			= 90;
+	constexpr int	AMOUNT_DRAW_SWORD_CHARGE	= 100;
 }

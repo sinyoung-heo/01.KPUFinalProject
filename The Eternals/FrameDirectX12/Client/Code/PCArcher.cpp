@@ -27,6 +27,7 @@
 #include "PartySuggestCanvas.h"
 #include "StoreMgr.h"
 #include "MainMenuInventory.h"
+#include "QuestMgr.h"
 
 CPCArcher::CPCArcher(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -318,7 +319,7 @@ void CPCArcher::Process_Collision()
 		if (L"NPC_Merchant" == pDst->Get_CollisionTag())
 			Collision_Merchant(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
 
-		if (L"NPC_QUest" == pDst->Get_CollisionTag())
+		if (L"NPC_Quest" == pDst->Get_CollisionTag())
 			Collision_Quest(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
 	}
 
@@ -592,6 +593,12 @@ HRESULT CPCArcher::SetUp_ClassFrame()
 				}
 				else
 				{
+					_long iChildDepth = 0;
+					if (L"ClassInfo" == vecObjectTag[i])
+						iChildDepth = UIDepth - 2;
+					else
+						iChildDepth = UIDepth - 1;
+
 					pChildUI = CGameUIChild::Create(m_pGraphicDevice, m_pCommandList,
 													wstrRootObjectTag,				// RootObjectTag
 													vecObjectTag[i],				// ObjectTag
@@ -602,7 +609,7 @@ HRESULT CPCArcher::SetUp_ClassFrame()
 													vecFrameSpeed[i],				// FrameSpeed
 													vecRectPosOffset[i],			// RectPosOffset
 													vecRectScale[i],				// RectScaleOffset
-													UIDepth - 1);					// UI Depth
+													iChildDepth);					// UI Depth
 				}
 				m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
 				static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
@@ -1240,7 +1247,8 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 		if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"RAPID_SHOT"]) && 
 			m_mapSkillCoolDown[L"RAPID_SHOT"].bIsCoolDownComplete &&
 			m_uiAnimIdx != Archer::RAPID_SHOT1 && 
-			NO_EVENT_STATE)
+			NO_EVENT_STATE &&
+			(m_pInfoCom->m_iMp - Archer::AMOUNT_RAPID_SHOT1 >= 0))
 		{
 			m_mapSkillCoolDown[L"RAPID_SHOT"].Use_Skill();
 
@@ -1254,7 +1262,8 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"ESCAPING_BOMB"]) &&
 				 m_mapSkillCoolDown[L"ESCAPING_BOMB"].bIsCoolDownComplete &&
 				 m_uiAnimIdx != Archer::ESCAPING_BOMB && 
-				 NO_EVENT_STATE)
+				 NO_EVENT_STATE &&
+				 (m_pInfoCom->m_iMp - Archer::AMOUNT_ESCAPING_BOMB >= 0))
 		{
 			m_mapSkillCoolDown[L"ESCAPING_BOMB"].Use_Skill();
 
@@ -1268,7 +1277,8 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"ARROW_SHOWER"]) &&
 				 m_mapSkillCoolDown[L"ARROW_SHOWER"].bIsCoolDownComplete &&
 				 m_uiAnimIdx != Archer::ARROW_SHOWER_START && 
-				 NO_EVENT_STATE)
+				 NO_EVENT_STATE &&
+				 (m_pInfoCom->m_iMp - Archer::AMOUNT_ARROW_SHOWER_START >= 0))
 		{
 			m_mapSkillCoolDown[L"ARROW_SHOWER"].Use_Skill();
 
@@ -1282,7 +1292,8 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"ARROW_FALL"]) &&
 				 m_mapSkillCoolDown[L"ARROW_FALL"].bIsCoolDownComplete &&
 				 m_uiAnimIdx != Archer::ARROW_FALL_START && 
-				 NO_EVENT_STATE)
+				 NO_EVENT_STATE &&
+				 (m_pInfoCom->m_iMp - Archer::AMOUNT_ARROW_FALL_START >= 0))
 		{
 			m_mapSkillCoolDown[L"ARROW_FALL"].Use_Skill();
 
@@ -1303,7 +1314,8 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"CHARGE_ARROW"]) &&
 				 m_mapSkillCoolDown[L"CHARGE_ARROW"].bIsCoolDownComplete &&
 				 m_uiAnimIdx != Archer::CHARGE_ARROW_START && 
-				 NO_EVENT_STATE)
+				 NO_EVENT_STATE &&
+				 (m_pInfoCom->m_iMp - Archer::AMOUNT_CHARGE_ARROW_START >= 0))
 		{
 			m_mapSkillCoolDown[L"CHARGE_ARROW"].Use_Skill();
 
@@ -1479,19 +1491,27 @@ void CPCArcher::KeyInput_OpenShop(const char& npcNumber)
 
 void CPCArcher::KeyInput_OpenQuest(const char& npcNumber)
 {
+	if (CQuestMgr::Get_Instance()->Get_IsAcceptQuest())
+		return;
+
 	g_bIsOpenShop = !g_bIsOpenShop;
 
 	if (g_bIsOpenShop)
 	{
 		if (npcNumber == NPC_CASTANIC_LSMITH)
 		{
-			// NPC에 맞는 상점 리소스 생성
 			cout << "퀘스트창 오픈" << endl;
+			CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(true);
+			CQuestMgr::Get_Instance()->Get_QuestRequestCanvas()->Set_IsActive(true);
+			CQuestMgr::Get_Instance()->Get_QuestRequestCanvas()->Set_IsChildActive(true);
 		}
 	}
 	else
 	{
 		cout << "퀘스트창 종료" << endl;
+		CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(false);
+		CQuestMgr::Get_Instance()->Get_QuestRequestCanvas()->Set_IsActive(false);
+		CQuestMgr::Get_Instance()->Get_QuestRequestCanvas()->Set_IsChildActive(false);
 	}
 }
 
@@ -2280,9 +2300,6 @@ void CPCArcher::Collision_PortalVelikaToBeach(list<Engine::CColliderSphere*>& ls
 					static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_BEACH);
 					m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
 				}
-				//Engine::CGameObject* pGameObject = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
-				//static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_BEACH);
-				//m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
 			}
 		}
 	}
@@ -2318,9 +2335,6 @@ void CPCArcher::Collision_PortalBeachToVelika(list<Engine::CColliderSphere*>& ls
 					static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_VELIKA);
 					m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
 				}
-				//Engine::CGameObject* pGameObject = CFadeInOut::Create(m_pGraphicDevice, m_pCommandList, EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
-				//static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_VELIKA);
-				//m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
 			}
 		}
 	}

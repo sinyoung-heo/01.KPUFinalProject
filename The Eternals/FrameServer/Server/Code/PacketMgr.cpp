@@ -1242,6 +1242,89 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx, 
 		}
 	}
 
+	/* 스킬 타입 확인 -> 해당 유저 MP 감소 & 능력치 획득 */
+	if (pPlayer->m_type == PC_GLADIATOR)
+	{
+		switch (aniIdx)
+		{
+		case Gladiator::STINGER_BLADE:
+		{
+			pPlayer->m_iMp -= Gladiator::AMOUNT_STINGER_BLADE;
+		}
+		break;
+		case Gladiator::CUTTING_SLASH:
+		{
+			pPlayer->m_iMp -= Gladiator::AMOUNT_CUTTING_SLASH;
+		}
+		break;
+		case Gladiator::JAW_BREAKER:
+		{
+			pPlayer->m_iMp -= Gladiator::AMOUNT_JAW_BREAKER;
+		}
+		break;
+		case Gladiator::GAIA_CRUSH1:
+		{
+			pPlayer->m_iMp -= Gladiator::AMOUNT_GAIA_CRUSH1;
+		}
+		break;
+		case Gladiator::DRAW_SWORD_CHARGE:
+		{
+			pPlayer->m_iMp -= Gladiator::AMOUNT_DRAW_SWORD_CHARGE;
+		}
+		break;
+		}
+	}
+	else if (pPlayer->m_type == PC_ARCHER)
+	{
+		switch (aniIdx)
+		{
+		case Archer::RAPID_SHOT1:
+		{
+			pPlayer->m_iMp -= Archer::AMOUNT_RAPID_SHOT1;
+		}
+		break;
+		case Archer::ESCAPING_BOMB:
+		{
+			pPlayer->m_iMp -= Archer::AMOUNT_ESCAPING_BOMB;
+		}
+		break;
+		case Archer::ARROW_SHOWER_START:
+		{
+			pPlayer->m_iMp -= Archer::AMOUNT_ARROW_SHOWER_START;
+		}
+		break;
+		case Archer::ARROW_FALL_START:
+		{
+			pPlayer->m_iMp -= Archer::AMOUNT_ARROW_FALL_START;
+		}
+		break;
+		case Archer::CHARGE_ARROW_START:
+		{
+			pPlayer->m_iMp -= Archer::AMOUNT_CHARGE_ARROW_START;
+		}
+		break;
+		}
+	}
+
+	if (pPlayer->m_iMp <= ZERO_HP)
+		pPlayer->m_iMp = ZERO_HP;
+
+	/* 해당 유저 능력치 업데이트 */
+	pPlayer->send_consume_point(id);
+
+	/* 파티 활동 중일 경우 */
+	if (pPlayer->m_bIsPartyState)
+	{
+		for (auto& member : *CObjMgr::GetInstance()->Get_PARTYLIST(pPlayer->m_iPartyNumber))
+		{
+			CPlayer* pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", member));
+			if (pOther == nullptr || !pOther->m_bIsConnect || !pOther->m_bIsPartyState || member == id) continue;
+
+			// 파티원 버프 능력치 전송
+			pPlayer->send_update_party(member);
+		}
+	}
+
 #ifdef TEST
 	/* 플레이어 시야 내에 있는 객체 출력 */
 	for (int server_obj : new_viewlist)
