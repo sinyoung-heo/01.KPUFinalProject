@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\FrameDirectX12\Client\Header\ArcherAnimation.h" />
+    <ClInclude Include="..\..\..\FrameDirectX12\Client\Header\GladiatorAnimation.h" />
     <ClInclude Include="..\..\..\FrameDirectX12\Client\Header\PriestAnimation.h" />
     <ClInclude Include="..\Code\Ai.h" />
     <ClInclude Include="..\Code\Cell.h" />

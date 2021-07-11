@@ -1435,7 +1435,8 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 		if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"STINGER_BLADE"]) &&
 			m_mapSkillCoolDown[L"STINGER_BLADE"].bIsCoolDownComplete &&
  			m_uiAnimIdx != Gladiator::STINGER_BLADE && 
-			NO_EVENT_STATE)
+			NO_EVENT_STATE &&
+			(m_pInfoCom->m_iMp - Gladiator::AMOUNT_STINGER_BLADE >= 0))
 		{
 			m_mapSkillCoolDown[L"STINGER_BLADE"].Use_Skill();
 
@@ -1449,7 +1450,8 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"CUTTING_SLASH"]) &&
 				 m_mapSkillCoolDown[L"CUTTING_SLASH"].bIsCoolDownComplete &&
 				 m_uiAnimIdx != Gladiator::CUTTING_SLASH && 
-				 NO_EVENT_STATE)
+				 NO_EVENT_STATE &&
+				 (m_pInfoCom->m_iMp - Gladiator::AMOUNT_CUTTING_SLASH >= 0))
 		{
 			m_mapSkillCoolDown[L"CUTTING_SLASH"].Use_Skill();
 
@@ -1465,7 +1467,8 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"JAW_BREAKER"]) &&
 				 m_mapSkillCoolDown[L"JAW_BREAKER"].bIsCoolDownComplete &&
 				 m_uiAnimIdx != Gladiator::JAW_BREAKER && 
-				 NO_EVENT_STATE)
+				 NO_EVENT_STATE &&
+				 (m_pInfoCom->m_iMp - Gladiator::AMOUNT_JAW_BREAKER >= 0))
 		{
 			m_mapSkillCoolDown[L"JAW_BREAKER"].Use_Skill();
 
@@ -1502,7 +1505,8 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"GAIA_CRUSH"]) &&
 				 m_mapSkillCoolDown[L"GAIA_CRUSH"].bIsCoolDownComplete &&
 				 m_uiAnimIdx != Gladiator::GAIA_CRUSH1 && 
-				 NO_EVENT_STATE)
+				 NO_EVENT_STATE &&
+				 (m_pInfoCom->m_iMp - Gladiator::AMOUNT_GAIA_CRUSH1 >= 0))
 		{
 			m_mapSkillCoolDown[L"GAIA_CRUSH"].Use_Skill();
 
@@ -1517,7 +1521,8 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"DRAW_SWORD"]) &&
 				 m_mapSkillCoolDown[L"DRAW_SWORD"].bIsCoolDownComplete &&
 				 m_uiAnimIdx != Gladiator::DRAW_SWORD_CHARGE && 
-				 NO_EVENT_STATE)
+				 NO_EVENT_STATE &&
+				 (m_pInfoCom->m_iMp - Gladiator::AMOUNT_DRAW_SWORD_CHARGE >= 0))
 		{
 			m_mapSkillCoolDown[L"DRAW_SWORD"].Use_Skill();
 

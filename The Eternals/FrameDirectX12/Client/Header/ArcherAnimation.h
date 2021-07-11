@@ -44,6 +44,13 @@ namespace Archer
 	constexpr _uint ARROW_FALL_COLLISIONARROW_START   = 0;
 	constexpr _uint CHARGE_ARROW_COLLISIONARROW_START = 3;
 
-	constexpr _uint		ARROW_SHOWER_CNT = 8;
+	constexpr _uint	ARROW_SHOWER_CNT = 8;
 	constexpr float	ARROW_FALL_DIST  = 8.0f;
+
+	// 스킬 필요 MP
+	constexpr int	AMOUNT_RAPID_SHOT1			= 30;
+	constexpr int	AMOUNT_ESCAPING_BOMB		= 50;
+	constexpr int	AMOUNT_ARROW_SHOWER_START	= 70;
+	constexpr int	AMOUNT_ARROW_FALL_START		= 90;
+	constexpr int	AMOUNT_CHARGE_ARROW_START	= 100;
 }

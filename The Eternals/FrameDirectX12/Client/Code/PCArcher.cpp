@@ -1240,7 +1240,8 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 		if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"RAPID_SHOT"]) && 
 			m_mapSkillCoolDown[L"RAPID_SHOT"].bIsCoolDownComplete &&
 			m_uiAnimIdx != Archer::RAPID_SHOT1 && 
-			NO_EVENT_STATE)
+			NO_EVENT_STATE &&
+			(m_pInfoCom->m_iMp - Archer::AMOUNT_RAPID_SHOT1 >= 0))
 		{
 			m_mapSkillCoolDown[L"RAPID_SHOT"].Use_Skill();
 
@@ -1254,7 +1255,8 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"ESCAPING_BOMB"]) &&
 				 m_mapSkillCoolDown[L"ESCAPING_BOMB"].bIsCoolDownComplete &&
 				 m_uiAnimIdx != Archer::ESCAPING_BOMB && 
-				 NO_EVENT_STATE)
+				 NO_EVENT_STATE &&
+				 (m_pInfoCom->m_iMp - Archer::AMOUNT_ESCAPING_BOMB >= 0))
 		{
 			m_mapSkillCoolDown[L"ESCAPING_BOMB"].Use_Skill();
 
@@ -1268,7 +1270,8 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"ARROW_SHOWER"]) &&
 				 m_mapSkillCoolDown[L"ARROW_SHOWER"].bIsCoolDownComplete &&
 				 m_uiAnimIdx != Archer::ARROW_SHOWER_START && 
-				 NO_EVENT_STATE)
+				 NO_EVENT_STATE &&
+				 (m_pInfoCom->m_iMp - Archer::AMOUNT_ARROW_SHOWER_START >= 0))
 		{
 			m_mapSkillCoolDown[L"ARROW_SHOWER"].Use_Skill();
 
@@ -1282,7 +1285,8 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"ARROW_FALL"]) &&
 				 m_mapSkillCoolDown[L"ARROW_FALL"].bIsCoolDownComplete &&
 				 m_uiAnimIdx != Archer::ARROW_FALL_START && 
-				 NO_EVENT_STATE)
+				 NO_EVENT_STATE &&
+				 (m_pInfoCom->m_iMp - Archer::AMOUNT_ARROW_FALL_START >= 0))
 		{
 			m_mapSkillCoolDown[L"ARROW_FALL"].Use_Skill();
 
@@ -1303,7 +1307,8 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"CHARGE_ARROW"]) &&
 				 m_mapSkillCoolDown[L"CHARGE_ARROW"].bIsCoolDownComplete &&
 				 m_uiAnimIdx != Archer::CHARGE_ARROW_START && 
-				 NO_EVENT_STATE)
+				 NO_EVENT_STATE &&
+				 (m_pInfoCom->m_iMp - Archer::AMOUNT_CHARGE_ARROW_START >= 0))
 		{
 			m_mapSkillCoolDown[L"CHARGE_ARROW"].Use_Skill();
 

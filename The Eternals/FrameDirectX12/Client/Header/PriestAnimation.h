@@ -29,10 +29,10 @@ namespace Priest
 	constexpr int	PLUS_MP			= 50;
 
 	// 스킬 필요 MP
-	constexpr int	AMOUNT_AURA		= 100;
-	constexpr int	AMOUNT_PURIFY	= 150;
-	constexpr int	AMOUNT_HEAL		= 70;
-	constexpr int	AMOUNT_MANA		= 70;
+	constexpr int	AMOUNT_AURA		= 70;
+	constexpr int	AMOUNT_PURIFY	= 70;
+	constexpr int	AMOUNT_HEAL		= 90;
+	constexpr int	AMOUNT_MANA		= 50;
 
 	constexpr _uint HASTE_COLLISIONTICK_START = 32;
 

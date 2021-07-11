@@ -42,6 +42,7 @@ using namespace chrono;
 #include "PCWeaponType.h"
 #include "..\..\..\FrameDirectX12\Client\Header\PriestAnimation.h"
 #include "..\..\..\FrameDirectX12\Client\Header\ArcherAnimation.h"
+#include "..\..\..\FrameDirectX12\Client\Header\GladiatorAnimation.h"
 
 #include "enum.h"
 #include "struct.h"
