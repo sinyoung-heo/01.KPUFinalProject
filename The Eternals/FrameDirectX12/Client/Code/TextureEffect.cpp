@@ -225,6 +225,7 @@ void CTextureEffect::Set_CreateInfo(wstring TexTag, const _vec3& vScale, const _
 		m_pTextureHeap = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(TexTag);
 
 	m_pTransCom->m_vScale = vScale;
+	m_pTransCom->m_vScale.z = 0.f;
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos = vPos;
 	m_vColorOffset = colorOffset;

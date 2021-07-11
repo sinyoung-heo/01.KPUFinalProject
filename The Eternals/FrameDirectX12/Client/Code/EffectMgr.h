@@ -28,7 +28,8 @@ public:
 	void Effect_Axe(_vec3 vecPos, Engine::CTransform* parentTransform);
 	void Effect_TargetShield(_vec3 vecPos, Engine::CTransform* parentTransform);
 	void Effect_TargetAxe(_vec3 vecPos, Engine::CTransform* parentTransform);
-
+	void Effect_WarningGround(_vec3 vecPos, _float fLimitScale);
+	void Effect_RectDecal(_vec3 vecPos, float RotY);
 
 	void Effect_DistTrail(_vec3 vecPos,_vec3 Angle, bool isCrossFilter, float SizeOffSet);
 	void Effect_Particle(_vec3 vecPos,_int Cnt=20,wstring Tag=L"Snow", _vec3 vecScale=_vec3(0.1f), FRAME Frame=FRAME(1,1,1));

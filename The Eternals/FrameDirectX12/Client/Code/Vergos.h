@@ -94,7 +94,10 @@ private:
 	
 	//Effect
 	_bool m_bisDecalEffect = false;
+
+	_bool m_bisWarningEffect = false;
 	_float m_fSkillOffset = 0.f;
+
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

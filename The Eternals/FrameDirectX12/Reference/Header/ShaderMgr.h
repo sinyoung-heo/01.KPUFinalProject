@@ -21,7 +21,7 @@ public:
 	void SetUp_ShaderInfo();
 	const _bool& Find_IsOnShader(wstring wstrTag);
 public:
-	void Set_DOF(int Mode) { m_pCB_ShaderInformation.DepthOfField = _float(Mode); }
+	void Set_DOF(int Mode) { m_pCB_ShaderInformation.DepthOfField = Mode; }
 
 private:
 	CB_SHADER_INFORMATION	m_pCB_ShaderInformation;

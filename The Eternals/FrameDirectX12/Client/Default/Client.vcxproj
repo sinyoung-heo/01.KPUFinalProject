@@ -282,6 +282,7 @@
     <ClInclude Include="..\Code\QuickSlotMgr.h" />
     <ClInclude Include="..\Code\QuickSlotSwapSlot.h" />
     <ClInclude Include="..\Code\RainDrop.h" />
+    <ClInclude Include="..\Code\RectDecal.h" />
     <ClInclude Include="..\Code\SampleNPC.h" />
     <ClInclude Include="..\Code\GameUIChild.h" />
     <ClInclude Include="..\Code\GameUIRoot.h" />
@@ -338,6 +339,7 @@
     <ClInclude Include="..\Code\TerrainMeshObject.h" />
     <ClInclude Include="..\Code\Vergos.h" />
     <ClInclude Include="..\Code\WarningFrame.h" />
+    <ClInclude Include="..\Code\WarningGround.h" />
     <ClInclude Include="..\Code\WaterFall.h" />
     <ClInclude Include="..\Code\WaterMeshObject.h" />
     <ClInclude Include="..\Code\TerrainObject.h" />
@@ -498,6 +500,7 @@
     <ClCompile Include="..\Code\QuickSlotMgr.cpp" />
     <ClCompile Include="..\Code\QuickSlotSwapSlot.cpp" />
     <ClCompile Include="..\Code\RainDrop.cpp" />
+    <ClCompile Include="..\Code\RectDecal.cpp" />
     <ClCompile Include="..\Code\RectObject.cpp" />
     <ClCompile Include="..\Code\SampleNPC.cpp" />
     <ClCompile Include="..\Code\Scene_Logo.cpp" />
@@ -531,6 +534,7 @@
     <ClCompile Include="..\Code\TerrainMeshObject.cpp" />
     <ClCompile Include="..\Code\Vergos.cpp" />
     <ClCompile Include="..\Code\WarningFrame.cpp" />
+    <ClCompile Include="..\Code\WarningGround.cpp" />
     <ClCompile Include="..\Code\WaterFall.cpp" />
     <ClCompile Include="..\Code\WaterMeshObject.cpp" />
     <ClCompile Include="..\Code\TerrainObject.cpp" />

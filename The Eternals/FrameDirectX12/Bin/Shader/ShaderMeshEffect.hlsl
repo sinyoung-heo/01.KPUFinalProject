@@ -295,6 +295,22 @@ PS_OUT PS_ICEDECAL(VS_OUT ps_input) : SV_TARGET
     ps_output.Effect2.a = g_fOffset6;
     return (ps_output);
 }
+PS_OUT PS_RECTDECAL(VS_OUT ps_input) : SV_TARGET
+{
+    PS_OUT ps_output = (PS_OUT) 0;
+    vector vDistortionInfo = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV);
+    float2 vDistortion = (vDistortionInfo.xy * 2.f) - 1.f;
+    vDistortion *= g_fOffset1; //°­µµ
+    float2 NewUV = float2(ps_input.TexUV.x + vDistortion.x * vDistortionInfo.b, ps_input.TexUV.y + vDistortion.y * vDistortionInfo.b);
+    float2 AniUV = ps_input.AniUV;
+    float4 D = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 N = g_TexNormal.Sample(g_samLinearWrap, NewUV * 5);
+    float4 color = mul(N, D.a) ;
+    ps_output.Effect2 = color;
+    ps_output.Effect2.a = g_fOffset6;
+    return (ps_output);
+}
+
 PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 {
     PS_OUT ps_output = (PS_OUT) 0;
@@ -348,6 +364,18 @@ PS_OUT PS_MAIN_SPRITE(VS_OUT ps_input) : SV_TARGET
     ps_output.Effect4.a = 1.f - g_fOffset6;
     return (ps_output);
 }
+PS_OUT PS_WARNING_GROUND(VS_OUT ps_input) : SV_TARGET
+{
+    PS_OUT ps_output = (PS_OUT) 0;
+    float4 D = float4(1, 0, 0, 1);
+    float4 N = g_TexNormal.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
+    
+    float4 color = mul(D, S.a); /* + mul(float4(1, 0, 0, 1), N);*/
+    ps_output.Effect1 = float4(mul(float3(mul(1 - color.r, 2.f), 0, 0), S.a), g_fOffset1);
+    return (ps_output);
+}
+
 PS_OUT PS_MAIN_SPRITE2(VS_OUT ps_input) : SV_TARGET
 {
     PS_OUT ps_output = (PS_OUT) 0;

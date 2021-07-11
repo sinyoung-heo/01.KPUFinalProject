@@ -1165,6 +1165,10 @@
     <ClInclude Include="..\Code\QuestMessageCanvas.h">
       <Filter>02.GameObject\99.GameUI\00.GameUIRoot\13.QuestMessageCanvas</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\WarningGround.h">
+      <Filter>99.Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\RectDecal.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1708,6 +1712,10 @@
     <ClCompile Include="..\Code\QuestMessageCanvas.cpp">
       <Filter>02.GameObject\99.GameUI\00.GameUIRoot\13.QuestMessageCanvas</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\WarningGround.cpp">
+      <Filter>99.Etc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\RectDecal.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
