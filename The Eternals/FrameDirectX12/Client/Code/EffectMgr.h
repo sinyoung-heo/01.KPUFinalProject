@@ -20,7 +20,7 @@ public:
 	void Effect_Straight_IceStorm(_vec3 vecPos, _vec3 vecDir, const _bool& bIsCollider = true);
 	void Effect_FireDecal(_vec3 vecPos);
 	void Effect_IceDecal(_vec3 vecPos);
-	void Effect_ArrowHitted(_vec3 vecPos);
+	void Effect_ArrowHitted(_vec3 vecPos, _float maxScale=1.f);
 	void Effect_FireCone(_vec3 vecPos, float RotY, _vec3 vecDir=_vec3(0.f));
 	void Effect_Test(_vec3 vecPos,_vec3* parent);
 	void Effect_GridShieldEffect(_vec3 vecPos, int type=0, Engine::CTransform* parentTransform=nullptr);

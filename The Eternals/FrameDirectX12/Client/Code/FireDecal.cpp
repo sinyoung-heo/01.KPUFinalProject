@@ -39,8 +39,8 @@ HRESULT CFireDecal::LateInit_GameObject()
 	m_pDescriptorHeaps = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(L"PublicMagic");
 	
 	m_uiDiffuse = 9;
-	m_fNormalMapDeltatime = 10;//NormIdx
-	m_fPatternMapDeltatime = 2;//SpecIdx
+	m_uiNorm = 10;//NormIdx
+	m_uiSpec = 2;//SpecIdx
 
 	_vec3 vPos = m_pTransCom->m_vPos;
 	vPos.y += 1.f;
@@ -52,9 +52,16 @@ _int CFireDecal::Update_GameObject(const _float & fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
-	if (m_bIsDead /*||m_fAlpha<0.f*/)
-		return DEAD_OBJ;
+	if (m_fAlpha < 0.f)
+		m_bIsReturn = true;
 
+	if (m_bIsReturn)
+	{
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_FireDecal_Effect(), m_uiInstanceIdx);
+		return RETURN_OBJ;
+	}
+	if (m_bIsDead)
+		return DEAD_OBJ;
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
@@ -102,7 +109,7 @@ _int CFireDecal::LateUpdate_GameObject(const _float & fTimeDelta)
 
 void CFireDecal::Render_GameObject(const _float& fTimeDelta)
 {
-	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_fNormalMapDeltatime, m_fPatternMapDeltatime
+	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_uiNorm, m_uiSpec
 		,0,4);
 }
 
@@ -163,6 +170,25 @@ void CFireDecal::Set_ConstantTableShadowDepth()
 
 }
 
+void CFireDecal::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
+{
+	int random = rand() % 3;
+	switch (random){
+	case 0:m_uiDiffuse = 9;  break;
+	case 1:m_uiDiffuse = 22;  break;
+	case 2:m_uiDiffuse = 23;  break;}
+
+	m_pTransCom->m_vScale = vScale;
+	m_pTransCom->m_vAngle = vAngle;
+	m_pTransCom->m_vPos = vPos;
+	m_pTransCom->m_vPos.y += 0.3f;
+	m_fDeltatime = 0.f;
+	m_fDeltatime2 = 0.f;
+	m_fDelta2Velocity = 1.f;
+	m_fDeltatime3 = 0.f;
+	m_fAlpha = 1.f;
+}
+
 Engine::CGameObject* CFireDecal::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
 												wstring wstrMeshTag, 
 												const _vec3 & vScale,
@@ -177,10 +203,21 @@ Engine::CGameObject* CFireDecal::Create(ID3D12Device * pGraphicDevice, ID3D12Gra
 	return pInstance;
 }
 
+CFireDecal** CFireDecal::Create_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, const _uint& uiInstanceCnt)
+{
+	CFireDecal** ppInstance = new (CFireDecal * [uiInstanceCnt]);
+	for (_uint i = 0; i < uiInstanceCnt; ++i)
+	{
+		ppInstance[i] = new CFireDecal(pGraphicDevice, pCommandList);
+		ppInstance[i]->m_uiInstanceIdx = i;
+		ppInstance[i]->Ready_GameObject(L"PublicPlane00", _vec3(0.f), _vec3(0.f), _vec3(0.f));
+	}
+	return ppInstance;
+}
+
 void CFireDecal::Free()
 {
 	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pMeshCom);
-//	Engine::Safe_Release(m_pDescriptorHeaps);
 	Engine::Safe_Release(m_pShaderCom);
 }

@@ -31,7 +31,7 @@ HRESULT CCoolTime::Ready_GameObject(wstring wstrRootObjectTag,
 
 	m_bIsActive = true;
 
-	m_pShaderCom->Set_PipelineStatePass(12);
+	m_pShaderCom->Set_PipelineStatePass(13);
 
 	return S_OK;
 }
@@ -40,6 +40,7 @@ HRESULT CCoolTime::LateInit_GameObject()
 {
 	Engine::FAILED_CHECK_RETURN(CGameUIChild::LateInit_GameObject(), E_FAIL);
 
+	m_pTransCom->m_vAngle.y = 90.f;
 	return S_OK;
 }
 
@@ -80,6 +81,7 @@ void CCoolTime::Render_GameObject(const _float& fTimeDelta)
 	tCB_ShaderTexture.fCurFrame = m_tFrame.fCurFrame;
 	tCB_ShaderTexture.fCurScene = m_tFrame.fCurScene;
 	tCB_ShaderTexture.fAlpha    = 0.75f;
+	tCB_ShaderTexture.fOffset2 = (m_fRatio*360.f);
 	m_pShaderCom->Get_UploadBuffer_ShaderTexture()->CopyData(0, tCB_ShaderTexture);
 
 	m_pShaderCom->Begin_Shader(Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(L"BackBuffer"),

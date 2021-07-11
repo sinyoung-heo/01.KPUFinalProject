@@ -157,7 +157,9 @@ void CMeshParticleEffect::Set_ConstantTable(float fTimeDelta)
 
 		if (ParticlePos[uiIdx].y < 0.f)
 		{
-			m_bisPingPong==true ? m_fCurGravity[uiIdx] *= 0.6f : m_bIsReturn = true;
+			if (m_bisPingPong == true)
+				m_fCurGravity[uiIdx] *= 0.6f;
+		
 		}
 	
 		_matrix matScale = INIT_MATRIX;

@@ -33,7 +33,6 @@ private:
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
 
-	HRESULT SetUp_DescriptorHeap(vector<ComPtr<ID3D12Resource>> vecTexture, vector<ComPtr<ID3D12Resource>> vecShadowDepth);
 
 private:
 	/*__________________________________________________________________________________________________________
@@ -54,16 +53,18 @@ private:
 	_uint			m_iShadowPipelineStatePass = 0;
 
 	_uint m_uiDiffuse = 0;
-	float m_fNormalMapDeltatime = 0.f;
+	_uint m_uiNorm= 0;
+	_uint m_uiSpec=0;
 	float m_fDeltatime = 0.f;
 	float m_fDeltatime2 = 0.f;
 	float m_fDelta2Velocity = 1.f;
 	float m_fDeltatime3 = 0.f;
-	float m_fPatternMapDeltatime = 0.f;
 	float m_fAlpha = 1.f;
 
 	float m_fResponeatime = 0.f;
 	int m_fEffectCnt = 5;
+public:
+	void Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos);
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,
@@ -71,6 +72,11 @@ public:
 									   const _vec3& vScale,
 									   const _vec3& vAngle,
 									   const _vec3& vPos);
+
+
+	static CFireDecal** Create_InstancePool(ID3D12Device* pGraphicDevice,
+		ID3D12GraphicsCommandList* pCommandList,
+		const _uint& uiInstanceCnt);
 private:
 	virtual void Free();
 };

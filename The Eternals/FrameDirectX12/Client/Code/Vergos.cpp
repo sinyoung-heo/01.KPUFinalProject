@@ -76,6 +76,7 @@ _int CVergos::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
+	EffectLoop(fTimeDelta);
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
@@ -584,6 +585,37 @@ void CVergos::SetUp_HpGauge(const _float& fTimeDelta)
 
 		m_pHpGauge->Update_GameObject(fTimeDelta);
 		m_pHpGauge->LateUpdate_GameObject(fTimeDelta);
+	}
+}
+
+void CVergos::EffectLoop(const _float& fTimeDelta)
+{
+
+	if (m_uiAnimIdx == Vergos::BLOW_LEFT || m_uiAnimIdx == Vergos::BLOW_RIGHT)
+	{
+		m_fSkillOffset += fTimeDelta;
+		if (m_fSkillOffset > 2.f && m_bisDecalEffect == false)
+		{
+			string Bone;
+			m_uiAnimIdx == Vergos::BLOW_LEFT ? Bone = "Bip01-L-Hand" : Bone = "Bip01-R-Hand";
+			Engine::HIERARCHY_DESC* pHierarchyDesc = &(m_pMeshCom->Find_HierarchyDesc(Bone));
+			_matrix matBoneFinalTransform = (pHierarchyDesc->matScale * pHierarchyDesc->matRotate * pHierarchyDesc->matTrans)
+				* pHierarchyDesc->matGlobalTransform;
+			_matrix matWorld = matBoneFinalTransform * m_pTransCom->m_matWorld;
+			_vec3 Pos= _vec3(matWorld._41, matWorld._42, matWorld._43);
+			m_bisDecalEffect = true;
+			CEffectMgr::Get_Instance()->Effect_FireDecal(Pos);
+
+			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.03f), 
+				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(50, 7), 0, true);
+			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.03f),
+				_vec3(0.f), Pos , false, false, 5, 20, 0, 0, 0, _vec2(50, 7), 0, true);
+		}
+	}
+	else
+	{
+		m_bisDecalEffect = false;
+		m_fSkillOffset = 0.f;
 	}
 }
 

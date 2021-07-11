@@ -5,6 +5,7 @@ Texture|EffectSpriteTexture|Bomb01
 Texture|EffectSpriteTexture|Bomb02
 Texture|EffectSpriteTexture|Bomb03
 Texture|EffectSpriteTexture|Bomb04
+Texture|EffectSpriteTexture|Bomb05
 Texture|EffectSpriteTexture|Crack
 Texture|EffectSpriteTexture|Dust
 Texture|EffectSpriteTexture|Fire

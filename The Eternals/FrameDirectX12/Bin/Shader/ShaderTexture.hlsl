@@ -153,10 +153,32 @@ float4 PS_TEXTURE_SPRITE_ALPHA(VS_OUT ps_input) : SV_TARGET
 	float u = (ps_input.TexUV.x / g_fFrameCnt) + g_fCurFrame * (1.0f / g_fFrameCnt);
 	float v = (ps_input.TexUV.y / g_fSceneCnt) + g_fCurScene * (1.0f / g_fSceneCnt);
 	
+    //float Radian = atan2((0.5f - ps_input.TexUV.y), (ps_input.TexUV.x - 0.5f));
+    //float Degree = degrees(Radian) + 180.f; // 0~360°ª
+	
 	float4 Color = g_TexDiffuse.Sample(g_samLinearWrap, float2(u, v));
 	Color.a *= g_fAlpha;
 	
 	return (Color);
+}
+float4 PS_TEXTURE_SPRITE_ALPHA_COOLTIME(VS_OUT ps_input) : SV_TARGET
+{
+    float u = (ps_input.TexUV.x / g_fFrameCnt) + g_fCurFrame * (1.0f / g_fFrameCnt);
+    float v = (ps_input.TexUV.y / g_fSceneCnt) + g_fCurScene * (1.0f / g_fSceneCnt);
+	
+	
+    
+    float Radian = atan2((0.5f - ps_input.TexUV.y), (ps_input.TexUV.x - 0.5f));
+    float Degree = degrees(Radian) +180; // 0~360°ª
+    float4 Color = g_TexDiffuse.Sample(g_samLinearWrap, float2(u, v));
+    Color.a *= g_fAlpha;
+    if (!(0 < Degree && Degree < fOffset2))
+        Color.a = 0.f;
+    
+	
+   
+	
+    return (Color);
 }
 
 float4 PS_TEXTURE_LIGHTING(VS_OUT ps_input) : SV_TARGET

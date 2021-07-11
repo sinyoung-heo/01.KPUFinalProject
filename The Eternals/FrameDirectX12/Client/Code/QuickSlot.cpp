@@ -479,6 +479,9 @@ void CQuickSlot::SetUp_SkillCoolDownTime()
 
 	m_fMaxCoolDownTime = pSkillCoolDownDesc->fMaxCoolDownTime;
 	m_fCurCoolDownTime = pSkillCoolDownDesc->fCurCoolDownTime;
+
+	m_pUICoolDownTime->Set_Ratio(m_fCurCoolDownTime / m_fMaxCoolDownTime);
+	
 }
 
 void CQuickSlot::SetUp_FontPotionCnt(const _float& fTimeDelta)
