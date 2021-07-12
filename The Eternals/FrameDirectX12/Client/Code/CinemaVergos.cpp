@@ -72,7 +72,9 @@ _int CCinemaVergos::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
-	
+	if (!m_bIsUpdate)
+		return NO_EVENT;
+
 	if (m_bIsReturn)
 	{
 		m_iSNum = -1;

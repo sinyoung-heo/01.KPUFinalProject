@@ -20,6 +20,8 @@ private:
 	virtual ~CPrionBerserkerBoss() = default;
 
 public:
+	Engine::CMesh* Get_MeshComponent() { return m_pMeshCom; }
+
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
 									 wstring wstrNaviMeshTag,

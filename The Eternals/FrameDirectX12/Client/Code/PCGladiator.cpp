@@ -2787,7 +2787,8 @@ Engine::CGameObject* CPCGladiator::Create(ID3D12Device* pGraphicDevice,
 
 void CPCGladiator::Free()
 {
-	Engine::Safe_Release(m_pWeapon);
+	// Engine::Safe_Release(m_pWeapon);
+	m_pWeapon = nullptr;
 
 	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pDynamicCamera);

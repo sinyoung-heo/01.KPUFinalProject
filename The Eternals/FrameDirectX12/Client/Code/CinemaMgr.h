@@ -16,6 +16,11 @@ private:
 	virtual ~CCinemaMgr() = default;
 
 public:
+	Engine::CGameObject* Get_CenterLakan()			{ return m_pCenterLakan; }
+	Engine::CGameObject* Get_PrionBerserkerBoss()	{ return m_pPrionBerserkerBoss; }
+	Engine::CGameObject* Get_CinemaVergos()			{ return m_pVergos; }
+	void Set_IsUpdateVergos(const _bool& bIsUpdate);
+
 	HRESULT Ready_CinemaCharacter();
 	void	Update_Animation(const _float& fTimeDelta);
 public:
@@ -34,7 +39,10 @@ private:
 	vector<Engine::CGameObject*> m_vecLakan;
 	vector<Engine::CGameObject*> m_vecPrionBerserker;
 
-	Engine::CObjectMgr*		m_pObjectMgr = nullptr;
+	Engine::CObjectMgr*		m_pObjectMgr          = nullptr;
+	Engine::CGameObject*	m_pVergos             = nullptr;
+	Engine::CGameObject*	m_pCenterLakan        = nullptr;
+	Engine::CGameObject*	m_pPrionBerserkerBoss = nullptr;
 	Engine::CGameObject*	arrLakan[LINEUP_Z][LINEUP_X];
 	Engine::CGameObject*	arrPrionBerserker[LINEUP_Z][LINEUP_X];
 private:

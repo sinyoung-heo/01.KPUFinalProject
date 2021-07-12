@@ -4,6 +4,7 @@
 #include "Scene_Logo.h"
 #include "InstancePoolMgr.h"
 #include "DirectInput.h"
+#include "DynamicCamera.h"
 
 CFadeInOut::CFadeInOut(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -79,6 +80,7 @@ _int CFadeInOut::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_bIsSendPacket    = false;
 		m_bIsReceivePacket = false;
+		m_bIsSetCinematic  = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool(), m_uiInstanceIdx);
 		return RETURN_OBJ;
 	}
@@ -218,6 +220,21 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 		// Receive StageChange Packet
 		else if (m_bIsSendPacket && m_bIsReceivePacket)
 		{
+			// Cinematic Setting
+			if (STAGE_WINTER == m_chCurStageID)
+			{
+				if (!m_bIsSetCinematic)
+				{
+					m_bIsSetCinematic = true;
+
+					g_bIsCinemaStart = true;
+					// Set DynamicCamera State
+					CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
+					pDynamicCamera->Set_CameraState(CAMERA_STATE::CINEMATIC_LAKAN_ALL);
+					pDynamicCamera->SetUp_ThirdPersonViewOriginData();
+				}
+			}
+
 			m_fAlpha -= fTimeDelta * 0.5f;
 			if (m_fAlpha < 0.0f)
 			{

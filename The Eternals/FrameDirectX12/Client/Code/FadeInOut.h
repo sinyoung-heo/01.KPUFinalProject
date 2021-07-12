@@ -48,6 +48,7 @@ private:
 	_float		m_fAlpha           = 1.0f;
 	_bool		m_bIsSendPacket    = false;
 	_bool		m_bIsReceivePacket = false;
+	_bool		m_bIsSetCinematic  = false;
 
 	_vec3	m_vConvert	= _vec3(0.0f, 0.0f, 0.0f);
 	_matrix	m_matView	= INIT_MATRIX;

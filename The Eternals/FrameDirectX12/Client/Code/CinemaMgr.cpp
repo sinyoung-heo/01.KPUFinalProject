@@ -17,6 +17,12 @@ CCinemaMgr::CCinemaMgr()
 	m_pObjectMgr = Engine::CObjectMgr::Get_Instance();
 }
 
+void CCinemaMgr::Set_IsUpdateVergos(const _bool& bIsUpdate)
+{
+	if (nullptr != m_pVergos)
+		static_cast<CCinemaVergos*>(m_pVergos)->Set_IsUpdate(bIsUpdate);
+}
+
 HRESULT CCinemaMgr::Ready_CinemaCharacter()
 {
 	/* CINEMATIC MONSTER */
@@ -41,6 +47,9 @@ HRESULT CCinemaMgr::Ready_CinemaCharacter()
 
 				if (z == 0)
 					m_vecAnimationLakan.emplace_back(pGameObj);
+
+				if (z == LINEUP_Z - 1 && x == LINEUP_X / 2)
+					m_pCenterLakan = pGameObj;
 			}
 		}
 	}
@@ -115,6 +124,7 @@ HRESULT CCinemaMgr::Ready_CinemaCharacter()
 		pGameObj->Get_Transform()->m_vPos = _vec3(387.f, 0.f, 415.f);
 		pGameObj->Set_State(0);
 		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PRIONBERSERKERBOSS", pGameObj);
+		m_pPrionBerserkerBoss = pGameObj;
 	}
 
 	// Cinema Vergos
@@ -128,6 +138,7 @@ HRESULT CCinemaMgr::Ready_CinemaCharacter()
 		pGameObj->Get_Transform()->m_vPos = _vec3(260.f, 98.0f, 570.f);
 		pGameObj->Set_State(0);
 		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CINEMAVERGOS", pGameObj);
+		m_pVergos = pGameObj;
 	}
 
 	for (auto& pObj : m_vecAnimationLakan)
@@ -180,7 +191,7 @@ void CCinemaMgr::Update_Animation(const _float& fTimeDelta)
 		_uint uiAnimationObjIdx = static_cast<CPrionBerserker*>(pObj)->Get_AnimationObjectIdx();
 		vector<Engine::VECTOR_SKINNING_MATRIX> vecSkinningMatrix = *(static_cast<CPrionBerserker*>(m_vecAnimationPrionBerserker[uiAnimationObjIdx])->Get_MeshComponent()->Get_AniCtrl()->Get_VecSkinningMatrix());
 
-		static_cast<CLakan*>(pObj)->Get_MeshComponent()->Set_VecSkinningMatrix(vecSkinningMatrix);
+		static_cast<CPrionBerserker*>(pObj)->Get_MeshComponent()->Set_VecSkinningMatrix(vecSkinningMatrix);
 	}
 }
 

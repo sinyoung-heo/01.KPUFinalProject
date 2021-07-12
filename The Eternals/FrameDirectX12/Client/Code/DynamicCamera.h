@@ -77,6 +77,12 @@ private:
 	void SetUp_DynamicCameraArcherArrowFall(const _float& fTimeDelta);
 	void SetUp_DynamicCameraArcherUltimate(const _float& fTimeDelta);
 	void SetUp_DynamicCameraPriestBuffSkill(const _float& fTimeDelta);
+	void SetUp_DynamicCameraCinematicLakanAll(const _float& fTimeDelta);
+	void SetUp_DynamicCameraCinematicPrionBerserkerAll(const _float& fTimeDelta);
+	void SetUp_DynamicCameraCinematicLakanCenter(const _float& fTimeDelta);
+	void SetUp_DynamicCameraCinematicPrionBerserkerBoss(const _float& fTimeDelta);
+	void SetUp_DynamicCameraCinematicVergosFlying(const _float& fTimeDelta);
+	void SetUp_DynamicCameraCinematicVergosScreaming(const _float& fTimeDelta);
 	void SetUp_CameraShaking(const _float& fTimeDelta);
 	void SetUp_CameraZoom(const _float& fTimeDelta);
 	void SetUp_CameraFont(const _float& fTimeDelta);
@@ -98,8 +104,14 @@ private:
 	CAMERA_STATE		m_eCameraState = CAMERA_STATE::THIRD_PERSON_VIEW;
 	CAMERA_SHAKING_DESC	m_tCameraShakingDesc;
 	CAMERA_ZOOM_DESC	m_tCameraZoomDesc;
-
 	CAMERA_ORIGIN_DESC	m_tThirdPersonViewOriginDesc;
+
+	// Cinematic Camera
+	_bool m_bIsSettingCinematicValue = false;
+	Engine::LINEAR_INTERPOLATION_DESC<_vec3> m_vEyeInterpolationDesc;
+	Engine::LINEAR_INTERPOLATION_DESC<_vec3> m_vAtInterpolationDesc;
+	_float m_fCameraTime       = 0.0f;
+	_float m_fUpdateCameraTime = 2.5f;
 
 	/*__________________________________________________________________________________________________________
 	[ Font ]

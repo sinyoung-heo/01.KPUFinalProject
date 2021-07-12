@@ -5,7 +5,11 @@
 #include "ObjectMgr.h"
 #include "Font.h"
 #include <random>
-
+#include "CinemaMgr.h"
+#include "Lakan.h"
+#include "PrionBerserkerBoss.h"
+#include "CinemaVergos.h"
+#include "FadeInOut.h"
 
 CDynamicCamera::CDynamicCamera(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CCamera(pGraphicDevice, pCommandList)
@@ -138,6 +142,24 @@ _int CDynamicCamera::Update_GameObject(const _float & fTimeDelta)
 		case CAMERA_STATE::PRIEST_BUFF:
 			SetUp_DynamicCameraPriestBuffSkill(fTimeDelta);
 			break;
+		case CAMERA_STATE::CINEMATIC_LAKAN_ALL:
+			SetUp_DynamicCameraCinematicLakanAll(fTimeDelta);
+			break;
+		case CAMERA_STATE::CINEMATIC_PRION_BERSERKER_ALL:
+			SetUp_DynamicCameraCinematicPrionBerserkerAll(fTimeDelta);
+			break;
+		case CAMERA_STATE::CINEMATIC_LAKAN_CENTER:
+			SetUp_DynamicCameraCinematicLakanCenter(fTimeDelta);
+			break;
+		case CAMERA_STATE::CINEMATIC_PRION_BERSERKER_BOSS:
+			SetUp_DynamicCameraCinematicPrionBerserkerBoss(fTimeDelta);
+			break;
+		case CAMERA_STATE::CINEMATIC_VERGOS_SPAWN_FLYING:
+			SetUp_DynamicCameraCinematicVergosFlying(fTimeDelta);
+			break;
+		case CAMERA_STATE::CINEMATIC_VERGOS_SPAWN_SCREAMING:
+			SetUp_DynamicCameraCinematicVergosScreaming(fTimeDelta);
+			break;
 		default:
 			break;
 		}
@@ -206,7 +228,7 @@ void CDynamicCamera::SetUp_DynamicCameraFromTarget(const _float& fTimeDelta)
 											* m_pCameraAtSkinningMatrix->matRootTransform;
 
 			matWorld = (matBoneFinalTransform) * (m_pTarget->Get_Transform()->m_matWorld);
-			m_tCameraInfo.vAt = _vec3(m_pTransCom->m_vPos.x, matWorld._42, m_pTransCom->m_vPos.z);
+			m_tCameraInfo.vAt = _vec3(matWorld._41, matWorld._42, matWorld._43);
 		}
 	}
 	else
@@ -238,7 +260,7 @@ void CDynamicCamera::SetUp_DynamicCameraGladiatorUltimate(const _float& fTimeDel
 											* m_pCameraAtSkinningMatrix->matRootTransform;
 
 			matWorld = (matBoneFinalTransform) * (m_pTarget->Get_Transform()->m_matWorld);
-			m_tCameraInfo.vAt = _vec3(m_pTransCom->m_vPos.x, matWorld._42, m_pTransCom->m_vPos.z);
+			m_tCameraInfo.vAt = _vec3(matWorld._41, matWorld._42, matWorld._43);
 		}
 	}
 }
@@ -264,7 +286,7 @@ void CDynamicCamera::SetUp_DynamicCameraArcherArrowFall(const _float& fTimeDelta
 											* m_pCameraAtSkinningMatrix->matRootTransform;
 
 			matWorld = (matBoneFinalTransform) * (m_pTarget->Get_Transform()->m_matWorld);
-			m_tCameraInfo.vAt = _vec3(m_pTransCom->m_vPos.x, matWorld._42, m_pTransCom->m_vPos.z);
+			m_tCameraInfo.vAt = _vec3(matWorld._41, matWorld._42, matWorld._43);
 		}
 	}
 }
@@ -333,8 +355,246 @@ void CDynamicCamera::SetUp_DynamicCameraPriestBuffSkill(const _float& fTimeDelta
 											* m_pCameraAtSkinningMatrix->matRootTransform;
 
 			matWorld = (matBoneFinalTransform) * (m_pTarget->Get_Transform()->m_matWorld);
-			m_tCameraInfo.vAt = _vec3(m_pTransCom->m_vPos.x, matWorld._42, m_pTransCom->m_vPos.z);
+			m_tCameraInfo.vAt = _vec3(matWorld._41, matWorld._42, matWorld._43);
 		}
+	}
+}
+
+void CDynamicCamera::SetUp_DynamicCameraCinematicLakanAll(const _float& fTimeDelta)
+{
+	if (!m_bIsSettingCinematicValue)
+	{
+		m_bIsSettingCinematicValue = true;
+
+		m_vEyeInterpolationDesc.is_start_interpolation = true;
+		m_vEyeInterpolationDesc.linear_ratio           = 0.0f;
+		m_vEyeInterpolationDesc.interpolation_speed    = 0.15f;
+		m_vEyeInterpolationDesc.v1                     = _vec3(405, 1.0f, 373.0f);
+		m_vEyeInterpolationDesc.v2                     = _vec3(375.0f, 2.0f, 375.0f);
+
+		m_vAtInterpolationDesc.is_start_interpolation = true;
+		m_vAtInterpolationDesc.linear_ratio           = 0.0f;
+		m_vAtInterpolationDesc.interpolation_speed    = 0.15f;
+		m_vAtInterpolationDesc.v1                     = _vec3(380.0f, 32.0f, 316.0f);
+		m_vAtInterpolationDesc.v2                     = _vec3(405.0f, 31.0f, 315.0f);
+	}
+
+	Engine::SetUp_LinearInterpolation(fTimeDelta, m_tCameraInfo.vEye, m_vEyeInterpolationDesc);
+	Engine::SetUp_LinearInterpolation(fTimeDelta, m_tCameraInfo.vAt, m_vAtInterpolationDesc);
+
+	// Complete CameraCinematic
+	if (m_vEyeInterpolationDesc.linear_ratio == 1.0f && m_vAtInterpolationDesc.linear_ratio == 1.0f)
+	{
+		m_bIsSettingCinematicValue = false;
+		m_eCameraState = CAMERA_STATE::CINEMATIC_PRION_BERSERKER_ALL;
+	}
+}
+
+void CDynamicCamera::SetUp_DynamicCameraCinematicPrionBerserkerAll(const _float& fTimeDelta)
+{
+	if (!m_bIsSettingCinematicValue)
+	{
+		m_bIsSettingCinematicValue = true;
+
+		m_vEyeInterpolationDesc.is_start_interpolation = true;
+		m_vEyeInterpolationDesc.linear_ratio           = 0.0f;
+		m_vEyeInterpolationDesc.interpolation_speed    = 0.2f;
+		m_vEyeInterpolationDesc.v1                     = _vec3(370.0f, 2.5f, 395.0f);
+		m_vEyeInterpolationDesc.v2                     = _vec3(405.0f, 3.0f, 397.0f);
+
+		m_vAtInterpolationDesc.is_start_interpolation = true;
+		m_vAtInterpolationDesc.linear_ratio           = 0.0f;
+		m_vAtInterpolationDesc.interpolation_speed    = 0.15f;
+		m_vAtInterpolationDesc.v1                     = _vec3(390.0f, 34.0f, 467.0f);
+		m_vAtInterpolationDesc.v2                     = _vec3(320.0f, 36.0f, 474.0f);
+	}
+
+	Engine::SetUp_LinearInterpolation(fTimeDelta, m_tCameraInfo.vEye, m_vEyeInterpolationDesc);
+	// Engine::SetUp_LinearInterpolation(fTimeDelta, m_tCameraInfo.vAt, m_vAtInterpolationDesc);
+
+	CPrionBerserkerBoss* pTarget = static_cast<CPrionBerserkerBoss*>(CCinemaMgr::Get_Instance()->Get_PrionBerserkerBoss());
+	m_pCameraAtSkinningMatrix = pTarget->Get_MeshComponent()->Find_SkinningMatrix("Bip01-Head");
+	if (nullptr != m_pCameraAtSkinningMatrix)
+	{
+		_matrix matWorld = m_pTransCom->m_matWorld;
+		_matrix matBoneFinalTransform = ((m_pCameraAtSkinningMatrix->matBoneScale
+										* m_pCameraAtSkinningMatrix->matBoneRotation
+										* m_pCameraAtSkinningMatrix->matBoneTrans)
+										* m_pCameraAtSkinningMatrix->matParentTransform)
+										* m_pCameraAtSkinningMatrix->matRootTransform;
+
+		matWorld = (matBoneFinalTransform) * (pTarget->Get_Transform()->m_matWorld);
+		m_tCameraInfo.vAt = _vec3(matWorld._41, 11.0f, matWorld._43);
+	}
+
+	// Complete CameraCinematic
+	if (m_vEyeInterpolationDesc.linear_ratio == 1.0f /*&& m_vAtInterpolationDesc.linear_ratio == 1.0f*/)
+	{
+		m_bIsSettingCinematicValue = false;
+		m_eCameraState = CAMERA_STATE::CINEMATIC_LAKAN_CENTER;
+	}
+}
+
+void CDynamicCamera::SetUp_DynamicCameraCinematicLakanCenter(const _float& fTimeDelta)
+{
+	if (!m_bIsSettingCinematicValue)
+	{
+		m_bIsSettingCinematicValue = true;
+		m_fCameraTime              = 0.0f;
+		m_fUpdateCameraTime        = 2.5f;
+	}
+	CLakan* pTarget = static_cast<CLakan*>(CCinemaMgr::Get_Instance()->Get_CenterLakan());
+	m_pCameraAtSkinningMatrix = pTarget->Get_MeshComponent()->Find_SkinningMatrix("Bip01-Head");
+
+	m_pTransCom->m_vScale = _vec3(0.0f, 0.0f, 4.0f);
+	m_pTransCom->m_vAngle = _vec3(34.0f, 208.0f, 0.0f);
+	m_pTransCom->m_vPos   = pTarget->Get_Transform()->m_vPos;
+	Engine::CGameObject::Update_GameObject(fTimeDelta);
+
+	m_tCameraInfo.vEye.TransformCoord(_vec3(0.0f, 0.0f, -1.0f), m_pTransCom->m_matWorld);
+
+	if (nullptr != m_pCameraAtSkinningMatrix)
+	{
+		_matrix matWorld = m_pTransCom->m_matWorld;
+		_matrix matBoneFinalTransform = ((m_pCameraAtSkinningMatrix->matBoneScale
+										* m_pCameraAtSkinningMatrix->matBoneRotation
+										* m_pCameraAtSkinningMatrix->matBoneTrans)
+										* m_pCameraAtSkinningMatrix->matParentTransform)
+										* m_pCameraAtSkinningMatrix->matRootTransform;
+
+		matWorld = (matBoneFinalTransform) * (pTarget->Get_Transform()->m_matWorld);
+		m_tCameraInfo.vAt = _vec3(matWorld._41, matWorld._42, matWorld._43);
+	}
+
+	m_fCameraTime += fTimeDelta;
+	if (m_fCameraTime >= m_fUpdateCameraTime)
+	{
+		m_fCameraTime = 0.0f;
+		m_bIsSettingCinematicValue = false;
+		m_eCameraState = CAMERA_STATE::CINEMATIC_PRION_BERSERKER_BOSS;
+
+	}
+}
+
+void CDynamicCamera::SetUp_DynamicCameraCinematicPrionBerserkerBoss(const _float& fTimeDelta)
+{
+	if (!m_bIsSettingCinematicValue)
+	{
+		m_bIsSettingCinematicValue = true;
+		m_fCameraTime              = 0.0f;
+		m_fUpdateCameraTime        = 2.5f;
+	}
+
+	CPrionBerserkerBoss* pTarget = static_cast<CPrionBerserkerBoss*>(CCinemaMgr::Get_Instance()->Get_PrionBerserkerBoss());
+	m_pCameraAtSkinningMatrix = pTarget->Get_MeshComponent()->Find_SkinningMatrix("Bip01-Head");
+
+	m_pTransCom->m_vScale = _vec3(0.0f, 0.0f, -19.0f);
+	m_pTransCom->m_vAngle = _vec3(-17.0f, 201.0f, 0.0f);
+	m_pTransCom->m_vPos   = pTarget->Get_Transform()->m_vPos;
+	Engine::CGameObject::Update_GameObject(fTimeDelta);
+
+	m_tCameraInfo.vEye.TransformCoord(_vec3(0.0f, 0.0f, -1.0f), m_pTransCom->m_matWorld);
+
+	if (nullptr != m_pCameraAtSkinningMatrix)
+	{
+		_matrix matWorld = m_pTransCom->m_matWorld;
+		_matrix matBoneFinalTransform = ((m_pCameraAtSkinningMatrix->matBoneScale
+										* m_pCameraAtSkinningMatrix->matBoneRotation
+										* m_pCameraAtSkinningMatrix->matBoneTrans)
+										* m_pCameraAtSkinningMatrix->matParentTransform)
+										* m_pCameraAtSkinningMatrix->matRootTransform;
+
+		matWorld = (matBoneFinalTransform) * (pTarget->Get_Transform()->m_matWorld);
+		m_tCameraInfo.vAt = _vec3(matWorld._41, matWorld._42, matWorld._43);
+	}
+
+	m_fCameraTime += fTimeDelta;
+	if (m_fCameraTime >= m_fUpdateCameraTime)
+	{
+		m_fCameraTime = 0.0f;
+		m_bIsSettingCinematicValue = false;
+		m_eCameraState = CAMERA_STATE::CINEMATIC_VERGOS_SPAWN_FLYING;
+
+		Engine::CGameObject* pGameObj = nullptr;
+		pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
+		if (nullptr != pGameObj)
+		{
+			static_cast<CFadeInOut*>(pGameObj)->Set_FadeInOutEventType(EVENT_TYPE::FADE_IN);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", L"FadeInOut", pGameObj);
+		}
+	}
+}
+
+void CDynamicCamera::SetUp_DynamicCameraCinematicVergosFlying(const _float& fTimeDelta)
+{
+	CCinemaVergos* pTarget = static_cast<CCinemaVergos*>(CCinemaMgr::Get_Instance()->Get_CinemaVergos());
+	_uint uiCurAnimationFrame = pTarget->Get_CurAnimationFrame();
+	m_pCameraAtSkinningMatrix = pTarget->Get_MeshComponent()->Find_SkinningMatrix("Bip01-Head");
+
+	if (!m_bIsSettingCinematicValue)
+	{
+		m_bIsSettingCinematicValue = true;
+		pTarget->Set_IsUpdate(true);
+		CCinemaMgr::Get_Instance()->Spawn_Vergos();
+		m_tCameraInfo.vEye = _vec3(380.0f, 0.0f, 380.0f);
+	}
+
+	if (nullptr != m_pCameraAtSkinningMatrix)
+	{
+		_matrix matWorld = m_pTransCom->m_matWorld;
+		_matrix matBoneFinalTransform = ((m_pCameraAtSkinningMatrix->matBoneScale
+										* m_pCameraAtSkinningMatrix->matBoneRotation
+										* m_pCameraAtSkinningMatrix->matBoneTrans)
+										* m_pCameraAtSkinningMatrix->matParentTransform)
+										* m_pCameraAtSkinningMatrix->matRootTransform;
+
+		matWorld = (matBoneFinalTransform) * (pTarget->Get_Transform()->m_matWorld);
+		m_tCameraInfo.vAt = _vec3(matWorld._41, matWorld._42, matWorld._43);
+	}
+
+	// if (uiCurAnimationFrame >= 215)
+	if (uiCurAnimationFrame >= 85)
+	{
+		m_bIsSettingCinematicValue = false;
+		m_eCameraState = CAMERA_STATE::CINEMATIC_VERGOS_SPAWN_SCREAMING;
+	}
+}
+
+void CDynamicCamera::SetUp_DynamicCameraCinematicVergosScreaming(const _float& fTimeDelta)
+{
+	CCinemaVergos* pTarget = static_cast<CCinemaVergos*>(CCinemaMgr::Get_Instance()->Get_CinemaVergos());
+	_uint uiCurAnimationFrame = pTarget->Get_CurAnimationFrame();
+	m_pCameraAtSkinningMatrix = pTarget->Get_MeshComponent()->Find_SkinningMatrix("Bip01-Head");
+
+	if (!m_bIsSettingCinematicValue)
+	{
+		m_bIsSettingCinematicValue = true;
+		m_tCameraInfo.vEye = _vec3(232.0f, 96.0f, 600.0f);
+	}
+
+	if (nullptr != m_pCameraAtSkinningMatrix)
+	{
+		_matrix matWorld = m_pTransCom->m_matWorld;
+		_matrix matBoneFinalTransform = ((m_pCameraAtSkinningMatrix->matBoneScale
+										* m_pCameraAtSkinningMatrix->matBoneRotation
+										* m_pCameraAtSkinningMatrix->matBoneTrans)
+										* m_pCameraAtSkinningMatrix->matParentTransform)
+										* m_pCameraAtSkinningMatrix->matRootTransform;
+
+		matWorld = (matBoneFinalTransform) * (pTarget->Get_Transform()->m_matWorld);
+		m_tCameraInfo.vAt = _vec3(matWorld._41, matWorld._42, matWorld._43);
+	}
+
+	if (uiCurAnimationFrame >= 565)
+	{
+		m_bIsSettingCinematicValue = false;
+		m_fCameraTime = 0.0f;
+		m_eCameraState = CAMERA_STATE::CINEMATIC_LAKAN_ALL;
+
+		pTarget->Set_MonsterState(CinemaVergos::A_WAIT);
+		pTarget->Get_MeshComponent()->Set_AnimationTime(0.0f);
+		pTarget->Set_CurAnimationFrame(0);
+		pTarget->Set_IsUpdate(false);
 	}
 }
 

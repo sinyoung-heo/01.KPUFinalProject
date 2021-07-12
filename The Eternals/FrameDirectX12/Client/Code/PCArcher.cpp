@@ -2458,7 +2458,8 @@ Engine::CGameObject* CPCArcher::Create(ID3D12Device* pGraphicDevice,
 
 void CPCArcher::Free()
 {
-	Engine::Safe_Release(m_pWeapon);
+	// Engine::Safe_Release(m_pWeapon);
+	m_pWeapon = nullptr;
 
 	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pDynamicCamera);

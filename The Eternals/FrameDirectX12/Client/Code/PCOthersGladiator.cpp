@@ -916,5 +916,6 @@ void CPCOthersGladiator::Free()
 	Engine::Safe_Release(m_pNaviMeshCom);
 	Engine::Safe_Release(m_pVelikaNaviMeshCom);
 	Engine::Safe_Release(m_pBeachNaviMeshCom);
-	Engine::Safe_Release(m_pWeapon);
+	// Engine::Safe_Release(m_pWeapon);
+	m_pWeapon = nullptr;
 }
