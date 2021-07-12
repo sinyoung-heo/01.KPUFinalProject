@@ -352,7 +352,7 @@ void CObjMgr::Create_AiPlayer()
 	/*pNew = static_cast<CAi*>(CObjPoolMgr::GetInstance()->use_Object(L"AI"));
 	if (pNew)
 	{
-		pNew->Ready_AI(PC_ARCHER, Bow27_SM, STAGE_WINTER, _vec3(STAGE_WINTER_X, 0.f, STAGE_WINTER_Z));
+		pNew->Ready_AI(PC_ARCHER, Event_Season_Bow_01_SM, STAGE_WINTER, _vec3(STAGE_WINTER_X, 0.f, STAGE_WINTER_Z));
 		pNew->Set_NumAnimation(Archer::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Archer::duration);
 	}
@@ -362,7 +362,7 @@ void CObjMgr::Create_AiPlayer()
 	pNew = static_cast<CAi*>(CObjPoolMgr::GetInstance()->use_Object(L"AI"));
 	if (pNew)
 	{
-		pNew->Ready_AI(PC_PRIEST, Event_Wit_Rod_01, STAGE_WINTER, _vec3(STAGE_WINTER_X, 0.f, STAGE_WINTER_Z));
+		pNew->Ready_AI(PC_PRIEST, Rod33_B, STAGE_WINTER, _vec3(STAGE_WINTER_X, 0.f, STAGE_WINTER_Z));
 		pNew->Set_NumAnimation(Priest::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Priest::duration);
 	}

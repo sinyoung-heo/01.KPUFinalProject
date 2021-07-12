@@ -301,7 +301,7 @@ HRESULT CPCOthersPriest::Add_Component(wstring wstrMeshTag, wstring wstrNaviMesh
 
 HRESULT CPCOthersPriest::SetUp_PCWeapon()
 {
-	if (m_chCurWeaponType != m_chPreWeaponType && nullptr != m_pWeapon)
+	if (m_chCurWeaponType != m_chPreWeaponType)
 	{
 		m_pWeapon = static_cast<CPCWeaponRod*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponRod(m_chCurWeaponType)));
 		m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")));
