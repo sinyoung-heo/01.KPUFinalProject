@@ -2,12 +2,13 @@
 #include "CinemaMgr.h"
 #include "InstancePoolMgr.h"
 #include "ObjectMgr.h"
-#include "GameObject.h"
-
 #include "Lakan.h"
 #include "PrionBerserker.h"
 #include "PrionBerserkerBoss.h"
 #include "CinemaVergos.h"
+#include <iterator>
+#include <random>
+#include "DirectInput.h"
 
 IMPLEMENT_SINGLETON(CCinemaMgr)
 
@@ -36,6 +37,10 @@ HRESULT CCinemaMgr::Ready_CinemaCharacter()
 				pGameObj->Set_State(0);
 				m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"LAKAN", pGameObj);
 				arrLakan[z][x] = pGameObj;
+				m_vecLakan.emplace_back(pGameObj);
+
+				if (z == 0)
+					m_vecAnimationLakan.emplace_back(pGameObj);
 			}
 		}
 	}
@@ -90,8 +95,14 @@ HRESULT CCinemaMgr::Ready_CinemaCharacter()
 				pGameObj->Set_State(0);
 				m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PRIONBERSERKER", pGameObj);
 				arrPrionBerserker[z][x] = pGameObj;
+				m_vecPrionBerserker.emplace_back(pGameObj);
+				m_vecAnimationPrionBerserker.emplace_back(pGameObj);
+
+				if (z == 0)
+					m_vecAnimationPrionBerserker.emplace_back(pGameObj);
 			}
 		}
+
 	}
 
 	// PrionBerserkerBoss
@@ -112,13 +123,66 @@ HRESULT CCinemaMgr::Ready_CinemaCharacter()
 	if (nullptr != pGameObj)
 	{
 		pGameObj->Get_Transform()->m_vScale = _vec3(0.05f);
-		pGameObj->Get_Transform()->m_vAngle = _vec3(0.f, -180.f, 0.f);
-		pGameObj->Get_Transform()->m_vPos = _vec3(263.f, 140.f, 570.f);
+		// pGameObj->Get_Transform()->m_vAngle = _vec3(35.f, -180.f, 0.f);
+		pGameObj->Get_Transform()->m_vAngle = _vec3(0.0f, -180.f, 0.f);
+		pGameObj->Get_Transform()->m_vPos = _vec3(260.f, 98.0f, 570.f);
 		pGameObj->Set_State(0);
 		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CINEMAVERGOS", pGameObj);
+		pVergos = pGameObj;
 	}
 
+	for (auto& pObj : m_vecAnimationLakan)
+	{
+		random_device					rd;
+		default_random_engine			dre{ rd() };
+		uniform_int_distribution<_int>	uid{ 0, 6400 };
+
+		static_cast<CLakan*>(pObj)->Get_MeshComponent()->Set_AnimationTime(_float(uid(dre)));
+	}
+
+	for (auto& pObj : m_vecAnimationPrionBerserker)
+	{
+		random_device					rd;
+		default_random_engine			dre{ rd() };
+		uniform_int_distribution<_int>	uid{ 0, 9600 };
+
+		static_cast<CPrionBerserker*>(pObj)->Get_MeshComponent()->Set_AnimationTime(_float(uid(dre)));
+	}
+
+	random_device	rd;
+	mt19937			g(rd());
+	shuffle(m_vecLakan.begin(), m_vecLakan.end(), g);
+	shuffle(m_vecPrionBerserker.begin(), m_vecPrionBerserker.end(), g);
+
+	m_fLakanAnimationSpeed = 0.5f;
+	m_fPrionBerserkerAnimationSpeed = 0.5f;
+
     return S_OK;
+}
+
+void CCinemaMgr::Update_Animation(const _float& fTimeDelta)
+{
+	for (auto& pObj : m_vecAnimationLakan)
+		static_cast<CLakan*>(pObj)->Get_MeshComponent()->Play_Animation(fTimeDelta * TPS * m_fLakanAnimationSpeed);
+
+	for (auto& pObj : m_vecLakan)
+	{
+		_uint uiAnimationObjIdx = static_cast<CLakan*>(pObj)->Get_AnimationObjectIdx();
+		vector<Engine::VECTOR_SKINNING_MATRIX> vecSkinningMatrix = *(static_cast<CLakan*>(m_vecAnimationLakan[uiAnimationObjIdx])->Get_MeshComponent()->Get_AniCtrl()->Get_VecSkinningMatrix());
+
+		static_cast<CLakan*>(pObj)->Get_MeshComponent()->Set_VecSkinningMatrix(vecSkinningMatrix);
+	}
+
+	for (auto& pObj : m_vecAnimationPrionBerserker)
+		static_cast<CPrionBerserker*>(pObj)->Get_MeshComponent()->Play_Animation(fTimeDelta * TPS * m_fPrionBerserkerAnimationSpeed);
+
+	for (auto& pObj : m_vecPrionBerserker)
+	{
+		_uint uiAnimationObjIdx = static_cast<CPrionBerserker*>(pObj)->Get_AnimationObjectIdx();
+		vector<Engine::VECTOR_SKINNING_MATRIX> vecSkinningMatrix = *(static_cast<CPrionBerserker*>(m_vecAnimationPrionBerserker[uiAnimationObjIdx])->Get_MeshComponent()->Get_AniCtrl()->Get_VecSkinningMatrix());
+
+		static_cast<CLakan*>(pObj)->Get_MeshComponent()->Set_VecSkinningMatrix(vecSkinningMatrix);
+	}
 }
 
 void CCinemaMgr::Spawn_Vergos()
@@ -175,4 +239,12 @@ void CCinemaMgr::Rush_Lakan()
 
 void CCinemaMgr::Free()
 {
+	m_vecAnimationLakan.clear();
+	m_vecAnimationLakan.shrink_to_fit();
+	m_vecAnimationPrionBerserker.clear();
+	m_vecAnimationPrionBerserker.shrink_to_fit();
+	m_vecLakan.clear();
+	m_vecLakan.shrink_to_fit();
+	m_vecPrionBerserker.clear();
+	m_vecPrionBerserker.shrink_to_fit();
 }

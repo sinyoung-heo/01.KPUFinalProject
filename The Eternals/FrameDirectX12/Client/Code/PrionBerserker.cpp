@@ -10,6 +10,7 @@
 #include "TimeMgr.h"
 #include "CollisionTick.h"
 #include "InstancePoolMgr.h"
+#include <random>
 
 CPrionBerserker::CPrionBerserker(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -46,6 +47,11 @@ HRESULT CPrionBerserker::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviM
 	____________________________________________________________________________________________________________*/
 	m_uiAnimIdx = 0;
 	m_iMonsterStatus = PrionBerserker::A_WAIT;
+
+	random_device					rd;
+	default_random_engine			dre{ rd() };
+	uniform_int_distribution<_int>	uid{ 0, 9 };
+	m_uiAnimationObjIdx = uid(dre);
 
 	return S_OK;
 }
@@ -108,7 +114,7 @@ _int CPrionBerserker::Update_GameObject(const _float& fTimeDelta)
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
 	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+	// m_pMeshCom->Play_Animation(fTimeDelta * TPS);
 	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
 	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 

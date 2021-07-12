@@ -111,6 +111,9 @@ _int CScene_MainStage::Update_Scene(const _float & fTimeDelta)
 		CMouseCursorMgr::Get_Instance()->Ready_MouseCursorMgr();
 	}
 
+	if (g_bIsCinemaStart)
+		CCinemaMgr::Get_Instance()->Update_Animation(fTimeDelta);
+
 	return Engine::CScene::Update_Scene(fTimeDelta);
 }
 
@@ -337,7 +340,7 @@ HRESULT CScene_MainStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 										  L"BumpTerrainMesh02",
 										  _vec3(0.175f),
 										  _vec3(0.0f, 0.0f ,0.0f),
-										  _vec3(128.0f, -0.0f, 128.0f),
+										  _vec3(128.0f, -0.0f, 148.0f),
 										  _vec3(STAGE_WINTER_OFFSET_X, 0.0f, STAGE_WINTER_OFFSET_Z));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_WINTER, L"BumpTerrainMesh02", pGameObj), E_FAIL);
 	static_cast<CTerrainMeshObject*>(pGameObj)->Set_Wave(1.f);

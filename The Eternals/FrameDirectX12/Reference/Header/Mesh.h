@@ -28,11 +28,13 @@ public:
 	const _vec3&					Get_MaxVector()				{ return m_pVIMesh->Get_MaxVector(); }
 	wstring							Get_FileName()				{ return m_pVIMesh->Get_FileName(); }
 
-	void							Set_AfterImgSize(const _uint& uiSize)		{ m_pVIMesh->Set_AfterImgSize(uiSize); }
-	void							Set_AfterImgTime(const _float& fTime)		{ m_pVIMesh->Set_AfterImgTime(fTime); }
-	void							Set_AfterImgMakeTime(const _float& fTime)	{ m_pVIMesh->Set_AfterImgMakeTime(fTime); }
-	void							Set_AfterImgSubAlpha(const _float& fSub)	{ m_pVIMesh->Set_AfterImgSubAlpha(fSub); }
-	void							Set_BlendingSpeed(const _float& fSpeed)		{ m_pAniCtrl->Set_BlendingSpeed(fSpeed); }
+	void Set_AfterImgSize(const _uint& uiSize)		{ m_pVIMesh->Set_AfterImgSize(uiSize); }
+	void Set_AfterImgTime(const _float& fTime)		{ m_pVIMesh->Set_AfterImgTime(fTime); }
+	void Set_AfterImgMakeTime(const _float& fTime)	{ m_pVIMesh->Set_AfterImgMakeTime(fTime); }
+	void Set_AfterImgSubAlpha(const _float& fSub)	{ m_pVIMesh->Set_AfterImgSubAlpha(fSub); }
+	void Set_BlendingSpeed(const _float& fSpeed)	{ m_pAniCtrl->Set_BlendingSpeed(fSpeed); }
+	void Set_AnimationTime(const _float& fTime)		{ m_pAniCtrl->Set_AnimationTime(fTime); }
+	void Set_VecSkinningMatrix(const vector<VECTOR_SKINNING_MATRIX>& vecSkinningMatrix) { m_pAniCtrl->Set_VecSkinningMatrix(vecSkinningMatrix); }
 	_bool							Is_AnimationSetEnd(const _float& fTimeDelta, const _float& fAnimationSpeed = 4'800.0f)	{ return m_pAniCtrl->Is_AnimationSetEnd(fTimeDelta, fAnimationSpeed); };
 	_bool							Is_BlendingComplete()						{ return m_pAniCtrl->Is_BlendingComplete(); }
 

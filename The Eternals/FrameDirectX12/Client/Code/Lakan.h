@@ -20,6 +20,9 @@ private:
 	virtual ~CLakan() = default;
 
 public:
+	Engine::CMesh* Get_MeshComponent() { return m_pMeshCom; }
+	const _uint& Get_AnimationObjectIdx() { return m_uiAnimationObjIdx; }
+
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
 									 wstring wstrNaviMeshTag,
@@ -72,6 +75,8 @@ private:
 	_bool	m_bIsStartDissolve       = false;
 	_float	m_fDissolve              = -0.05f;
 	_rgba	m_vEmissiveColor         = _rgba(1.0f, 0.0f, 0.0f, 1.0f);
+
+	_uint	m_uiAnimationObjIdx = 0;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]
