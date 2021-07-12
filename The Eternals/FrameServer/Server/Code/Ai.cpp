@@ -5,7 +5,7 @@
 
 CAi::CAi()
     :m_iLevel(0), m_iHp(0), m_iMaxHp(0), m_fSpd(0.f), m_bIsAttack(false), m_bIsReaction(false),
-    m_iMp(0), m_iMaxMp(0), m_iMaxAtt(0), m_iMinAtt(0), m_bIsMove(false),
+    m_iMp(0), m_iMaxMp(0), m_iMaxAtt(0), m_iMinAtt(0), m_bIsMove(false), m_fAnimationSpeed(0.f),
     m_bIsAttackStance(false), m_bIsPartyState(false), m_iPartyNumber(-1)
 {
 	memset(m_arrAttackPattern, -1, sizeof(int) * VERGOS_PATTERN);
@@ -132,7 +132,7 @@ int CAi::Update_AI(const float& fTimeDelta)
 
 	/* Calculate Animation frame */
 	Set_AnimationKey(m_uiAnimIdx);
-	Play_Animation(fTimeDelta * Monster_Normal::TPS);
+	Play_Animation(fTimeDelta * m_fAnimationSpeed);
 
 	return NO_EVENT;
 }
@@ -140,6 +140,15 @@ int CAi::Update_AI(const float& fTimeDelta)
 void CAi::active_AI()
 {
 	if (m_status == ST_NONACTIVE)
+	{
+		STATUS prev_state = m_status;
+		atomic_compare_exchange_strong(&m_status, &prev_state, ST_ACTIVE);
+	}
+}
+
+void CAi::Change_ActiveMode()
+{
+	if (m_status != ST_ACTIVE)
 	{
 		STATUS prev_state = m_status;
 		atomic_compare_exchange_strong(&m_status, &prev_state, ST_ACTIVE);
@@ -188,6 +197,7 @@ void CAi::Change_Animation(const float& fTimeDelta)
 	case PC_ARCHER:
 	{
 		Change_Archer_Animation(fTimeDelta);
+		Set_AnimationSpeed_Archer();
 	}
 	break;
 
@@ -228,7 +238,6 @@ void CAi::Change_Archer_Animation(const float& fTimeDelta)
 		}
 		else
 			process_move_archer(fTimeDelta);
-
 	}
 	break;
 
@@ -264,6 +273,45 @@ void CAi::Change_Archer_Animation(const float& fTimeDelta)
 	}
 }
 
+void CAi::Set_AnimationSpeed_Archer()
+{
+	if (m_uiAnimIdx == Archer::ATTACK_ARROW)
+	{
+		m_fAnimationSpeed = Monster_Normal::TPS * 1.6f;
+	}
+	else if (m_uiAnimIdx == Archer::ATTACK_RUN)
+	{
+		m_fAnimationSpeed = Monster_Normal::TPS * 1.35f;
+	}
+	else if (m_uiAnimIdx == Archer::BACK_DASH)
+	{
+		m_fAnimationSpeed = Monster_Normal::TPS * 1.25f;
+	}
+	else if (m_uiAnimIdx == Archer::RAPID_SHOT1 ||
+		m_uiAnimIdx == Archer::RAPID_SHOT2)
+	{
+		m_fAnimationSpeed = Monster_Normal::TPS * 2.0f;
+	}
+	else if (m_uiAnimIdx == Archer::ESCAPING_BOMB)
+	{
+		m_fAnimationSpeed = Monster_Normal::TPS * 1.25f;
+	}
+	else if (m_uiAnimIdx == Archer::ARROW_SHOWER_START ||
+		m_uiAnimIdx == Archer::ARROW_SHOWER_LOOP ||
+		m_uiAnimIdx == Archer::ARROW_SHOWER_SHOT)
+	{
+		m_fAnimationSpeed = Monster_Normal::TPS * 1.65f;
+	}
+	else if (m_uiAnimIdx == Archer::ARROW_FALL_START ||
+		m_uiAnimIdx == Archer::ARROW_FALL_LOOP ||
+		m_uiAnimIdx == Archer::ARROW_FALL_SHOT)
+	{
+		m_fAnimationSpeed = Monster_Normal::TPS * 2.25f;
+	}
+	else
+		m_fAnimationSpeed = Monster_Normal::TPS;
+}
+
 void CAi::process_move_archer(const float& fTimeDelta)
 {
 	if (m_bIsMove) return;
@@ -280,6 +328,7 @@ void CAi::process_move_archer(const float& fTimeDelta)
 
 	m_iAniIdx = Archer::ATTACK_RUN;
 	m_uiAnimIdx = Archer::ATTACK_RUN;
+	Set_AnimationKey(m_uiAnimIdx);
 
 	m_bIsMove = true;
 
@@ -320,24 +369,41 @@ void CAi::Choose_ArcherPattern(const float& fTimeDelta)
 
 void CAi::ArcherPattern_FirstPhase()
 {
+	/*m_arrAttackPattern[0] = Archer::ATTACK_ARROW;
+	m_arrAttackPattern[1] = Archer::RAPID_SHOT1;
+	m_arrAttackPattern[2] = Archer::ARROW_FALL_START;
+	m_arrAttackPattern[3] = Archer::BACK_DASH;
+	m_arrAttackPattern[4] = Archer::ARROW_SHOWER_START;
+	m_arrAttackPattern[5] = Archer::CHARGE_ARROW_START;
+	m_arrAttackPattern[6] = Archer::RAPID_SHOT1;*/
+
+
 	m_arrAttackPattern[0] = Archer::ATTACK_ARROW;
 	m_arrAttackPattern[1] = Archer::RAPID_SHOT1;
 	m_arrAttackPattern[2] = Archer::ARROW_FALL_START;
 	m_arrAttackPattern[3] = Archer::BACK_DASH;
 	m_arrAttackPattern[4] = Archer::ARROW_SHOWER_START;
 	m_arrAttackPattern[5] = Archer::CHARGE_ARROW_START;
-	m_arrAttackPattern[6] = Archer::RAPID_SHOT1;
+	m_arrAttackPattern[6] = Archer::BACK_DASH;
 }
 
 void CAi::ArcherPattern_SecondPhase()
 {
+	/*m_arrAttackPattern[0] = Archer::ATTACK_ARROW;
+	m_arrAttackPattern[1] = Archer::RAPID_SHOT1;
+	m_arrAttackPattern[2] = Archer::ARROW_FALL_START;
+	m_arrAttackPattern[3] = Archer::BACK_DASH;
+	m_arrAttackPattern[4] = Archer::ARROW_SHOWER_START;
+	m_arrAttackPattern[5] = Archer::CHARGE_ARROW_START;
+	m_arrAttackPattern[6] = Archer::RAPID_SHOT1;*/
+
 	m_arrAttackPattern[0] = Archer::ATTACK_ARROW;
 	m_arrAttackPattern[1] = Archer::RAPID_SHOT1;
 	m_arrAttackPattern[2] = Archer::ARROW_FALL_START;
 	m_arrAttackPattern[3] = Archer::BACK_DASH;
 	m_arrAttackPattern[4] = Archer::ARROW_SHOWER_START;
 	m_arrAttackPattern[5] = Archer::CHARGE_ARROW_START;
-	m_arrAttackPattern[6] = Archer::RAPID_SHOT1;
+	m_arrAttackPattern[6] = Archer::BACK_DASH;
 }
 
 void CAi::Attack_Archer_AI(const float& fTimedelta)
@@ -346,23 +412,57 @@ void CAi::Attack_Archer_AI(const float& fTimedelta)
 
 	if (Archer::BACK_DASH <= m_uiAnimIdx && m_uiAnimIdx <= Archer::CHARGE_ARROW_SHOT)
 	{
-		if (!Is_AnimationSetEnd(fTimedelta))
+		if (!Is_AnimationSetEnd(fTimedelta, m_fAnimationSpeed))
 			return;
 		else
 		{
-			++m_iCurPatternNumber;
-			m_uiAnimIdx = Archer::ATTACK_WAIT;
+			if (Is_ComboAttack_Archer(fTimedelta))
+			{
+				for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+					if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
 
-			if (m_iCurPatternNumber >= VERGOS_PATTERN)
-				Set_Stop_Attack(1s);
+					send_AI_attack_packet(raid);
+				}
+			}
 			else
-				Change_ReactionMode();
+			{
+				++m_iCurPatternNumber;
+
+				m_uiAnimIdx = Archer::ATTACK_WAIT;
+				m_iAniIdx = Archer::ATTACK_WAIT;
+				Set_AnimationKey(m_uiAnimIdx);
+
+				for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+					if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+
+					send_AI_attackStop_packet(raid);
+				}
+
+				if (m_iCurPatternNumber >= VERGOS_PATTERN)
+					Set_Stop_Attack(1s);
+				else
+					Change_ReactionMode();
+				
+			}
 			return;
 		}
 	}
 
 	m_uiAnimIdx = m_arrAttackPattern[m_iCurPatternNumber];
 	m_iAniIdx = m_arrAttackPattern[m_iCurPatternNumber];
+	Set_AnimationKey(m_uiAnimIdx);
+
+	if (m_uiAnimIdx == Archer::BACK_DASH)
+	{
+		_vec3 vTempDir = m_vDir * -1.f;
+		vTempDir.Normalize();
+
+		m_vPos += vTempDir * 2.8f;
+	}
 
 	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 	{
@@ -373,14 +473,91 @@ void CAi::Attack_Archer_AI(const float& fTimedelta)
 	}
 }
 
+bool CAi::Is_ComboAttack_Archer(const float& fTimeDelta)
+{
+	switch (m_uiAnimIdx)
+	{
+	case Archer::RAPID_SHOT1:
+	{	
+		m_uiAnimIdx = Archer::RAPID_SHOT2;
+		m_iAniIdx = Archer::RAPID_SHOT2;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;		
+	}
+	break;
+
+	case Archer::ARROW_SHOWER_START:
+	{	
+		m_uiAnimIdx = Archer::ARROW_SHOWER_LOOP;
+		m_iAniIdx = Archer::ARROW_SHOWER_LOOP;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;	
+	}
+	break;
+
+	case Archer::ARROW_SHOWER_LOOP:
+	{	
+		m_uiAnimIdx = Archer::ARROW_SHOWER_SHOT;
+		m_iAniIdx = Archer::ARROW_SHOWER_SHOT;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;		
+	}
+	break;
+
+	case Archer::ARROW_FALL_START:
+	{	
+		m_uiAnimIdx = Archer::ARROW_FALL_LOOP;
+		m_iAniIdx = Archer::ARROW_FALL_LOOP;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;	
+	}
+	break;
+
+	case Archer::ARROW_FALL_LOOP:
+	{		
+		m_uiAnimIdx = Archer::ARROW_FALL_SHOT;
+		m_iAniIdx = Archer::ARROW_FALL_SHOT;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;		
+	}
+	break;
+
+	case Archer::CHARGE_ARROW_START:
+	{		
+		m_uiAnimIdx = Archer::CHARGE_ARROW_LOOP;
+		m_iAniIdx = Archer::CHARGE_ARROW_LOOP;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;		
+	}
+	break;
+
+	case Archer::CHARGE_ARROW_LOOP:
+	{		
+		m_uiAnimIdx = Archer::CHARGE_ARROW_SHOT;
+		m_iAniIdx = Archer::CHARGE_ARROW_SHOT;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;		
+	}
+	break;
+	}
+
+	return false;
+}
+
 void CAi::Play_Archer_NextAttack(chrono::seconds t)
 {
 	if (m_bIsReaction)
 	{
+		chrono::seconds nextTime = 0s;
+		if (m_arrAttackPattern[m_iCurPatternNumber] == Archer::BACK_DASH)
+			nextTime = 1s;
+		else
+			nextTime = 2s;
+
 		bool prev_state = m_bIsReaction;
 		if (true == atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsReaction), &prev_state, false))
 		{
-			add_timer(m_sNum, OP_MODE_AI_NEXT_ATTACK, system_clock::now() + t);
+			add_timer(m_sNum, OP_MODE_AI_NEXT_ATTACK, system_clock::now() + nextTime);
 		}
 	}
 }
@@ -508,10 +685,10 @@ void CAi::Play_Animation(const float& fTimeDelta)
 	}
 }
 
-bool CAi::Is_AnimationSetEnd(const float& fTimeDelta)
+bool CAi::Is_AnimationSetEnd(const float& fTimeDelta, const float& fAnimationSpeed)
 {
 	if ((m_fAnimationTime >= m_arrDuration[m_uiCurAniIndex] -
-		static_cast<double>(Monster_Normal::TPS * ANIMA_INTERPOLATION * fTimeDelta)) &&
+		static_cast<double>(fAnimationSpeed * ANIMA_INTERPOLATION * fTimeDelta)) &&
 		(m_uiCurAniIndex == m_uiNewAniIndex))
 	{
 		return true;
@@ -615,6 +792,28 @@ void CAi::send_AI_attack_packet(const int& to_client)
 
 	p.animIdx = m_iAniIdx;
 	p.end_angleY = -1.f;
+
+	send_packet(to_client, &p);
+}
+
+void CAi::send_AI_attackStop_packet(const int& to_client)
+{
+	sc_packet_attack p;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_ATTACK_STOP;
+	p.id = m_sNum;
+
+	p.o_type = m_type;
+	p.animIdx = m_iAniIdx;
+
+	p.posX = m_vPos.x;
+	p.posY = m_vPos.y;
+	p.posZ = m_vPos.z;
+
+	p.dirX = m_vDir.x;
+	p.dirY = m_vDir.y;
+	p.dirZ = m_vDir.z;
 
 	send_packet(to_client, &p);
 }

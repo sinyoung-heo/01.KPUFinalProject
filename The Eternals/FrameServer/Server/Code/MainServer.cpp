@@ -555,7 +555,8 @@ void worker_thread()
 			CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", key));
 			if (nullptr == pAi) return;
 
-			pAi->Change_ChaseMode();
+			//pAi->Change_ChaseMode();
+			pAi->Change_ActiveMode();
 			delete over_ex;
 		}
 		break;

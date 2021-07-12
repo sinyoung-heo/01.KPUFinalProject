@@ -23,6 +23,7 @@ public:
 
 public:
 	void	active_AI();
+	void	Change_ActiveMode();
 	void	Change_AttackMode();								// STATUS == ATTACK
 	void	Change_ChaseMode();									// STATUS == CHASE
 	void	Change_ReactionMode();
@@ -34,6 +35,7 @@ private:
 	void	Change_Priest_Animation(const float& fTimeDelta);
 
 	/* ARCHER */
+	void	Set_AnimationSpeed_Archer();
 	void	process_move_archer(const float& fTimeDelta);
 	void	process_moveStop_archer(const float& fTimeDelta);
 	void	Choose_ArcherPattern(const float& fTimeDelta);
@@ -41,19 +43,21 @@ private:
 	void	ArcherPattern_SecondPhase();
 	void	Attack_Archer_AI(const float& fTimedelta);
 	void	Play_Archer_NextAttack(chrono::seconds t = 5s);
+	bool	Is_ComboAttack_Archer(const float& fTimeDelta);
 
 	void	process_disconnect_ai();
 	void	process_leave_party_ai();
 
 private:
 	void	Play_Animation(const float& fTimeDelta);
-	bool	Is_AnimationSetEnd(const float& fTimeDelta);
+	bool	Is_AnimationSetEnd(const float& fTimeDelta, const float& fAnimationSpeed = 4'800.0f);
 
 public:
 	void	send_AI_enter_packet(const int& to_client);
 	void	send_AI_move_packet(const int& to_client);
 	void	send_AI_moveStop_packet(const int& to_client);
 	void	send_AI_attack_packet(const int& to_client);
+	void	send_AI_attackStop_packet(const int& to_client);
 	void	send_leave_party_ai(const int& to_client);
 
 public:
@@ -75,7 +79,8 @@ public:
 	int		m_iMaxMp				= 0;	
 	int		m_iMinAtt				= 0;
 	int		m_iMaxAtt				= 0;
-	float	m_fSpd					= 0;
+	float	m_fSpd					= 0.f;
+	float	m_fAnimationSpeed		= 0.f;
 
 	LINEAR_INTERPOLATION_DESC<float> m_tMoveSpeedInterpolationDesc;
 

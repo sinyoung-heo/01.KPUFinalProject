@@ -9,16 +9,16 @@ namespace Archer
 	constexpr int OUT_WEAPON         = 5;
 	constexpr int BACK_DASH          = 6;
 	constexpr int ATTACK_ARROW       = 7;
-	constexpr int RAPID_SHOT1        = 8;
+	constexpr int RAPID_SHOT1        = 8;	// 1
 	constexpr int RAPID_SHOT2        = 9;
-	constexpr int ESCAPING_BOMB      = 10;
-	constexpr int ARROW_SHOWER_START = 11;
+	constexpr int ESCAPING_BOMB      = 10;	// 3
+	constexpr int ARROW_SHOWER_START = 11;	// 2
 	constexpr int ARROW_SHOWER_LOOP  = 12;
 	constexpr int ARROW_SHOWER_SHOT  = 13;
-	constexpr int ARROW_FALL_START   = 14;
+	constexpr int ARROW_FALL_START   = 14;	// 4
 	constexpr int ARROW_FALL_LOOP    = 15;
 	constexpr int ARROW_FALL_SHOT    = 16;
-	constexpr int CHARGE_ARROW_START = 17;
+	constexpr int CHARGE_ARROW_START = 17;	// 5
 	constexpr int CHARGE_ARROW_LOOP  = 18;
 	constexpr int CHARGE_ARROW_SHOT  = 19;
 
