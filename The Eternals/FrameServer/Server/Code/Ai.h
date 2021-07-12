@@ -42,9 +42,21 @@ private:
 	void	ArcherPattern_FirstPhase();
 	void	ArcherPattern_SecondPhase();
 	void	Attack_Archer_AI(const float& fTimedelta);
-	void	Play_Archer_NextAttack(chrono::seconds t = 5s);
+	void	Play_Archer_NextAttack(chrono::seconds t = 2s);
 	bool	Is_ComboAttack_Archer(const float& fTimeDelta);
 
+	/* PRIEST */
+	void	Set_AnimationSpeed_Priest();
+	void	process_move_priest(const float& fTimeDelta);
+	void	process_moveStop_priest(const float& fTimeDelta);
+	void	Choose_PriestPattern(const float& fTimeDelta);
+	void	PriestPattern_FirstPhase();
+	void	PriestPattern_SecondPhase();
+	void	Attack_Priest_AI(const float& fTimedelta);
+	void	Play_Priest_NextAttack(chrono::seconds t = 5s);
+	bool	Is_ComboAttack_Priest(const float& fTimeDelta);
+
+	/* ALL CLASS */
 	void	process_disconnect_ai();
 	void	process_leave_party_ai();
 

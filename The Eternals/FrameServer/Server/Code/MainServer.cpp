@@ -549,14 +549,23 @@ void worker_thread()
 			delete over_ex;
 		}
 		break;
+	
+		case OPMODE::OP_MODE_ACTIVE_AI:
+		{
+			CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", key));
+			if (nullptr == pAi) return;
+
+			pAi->Change_ActiveMode();
+			delete over_ex;
+		}
+		break;
 
 		case OPMODE::OP_MODE_CHASE_AI:
 		{
 			CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", key));
 			if (nullptr == pAi) return;
 
-			//pAi->Change_ChaseMode();
-			pAi->Change_ActiveMode();
+			pAi->Change_ChaseMode();
 			delete over_ex;
 		}
 		break;

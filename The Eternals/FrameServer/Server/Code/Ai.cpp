@@ -43,7 +43,10 @@ void CAi::Set_Stop_Attack(chrono::seconds t)
 
 		if (true == atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsAttack), &prev_state, false))
 		{
-			add_timer(m_sNum, OP_MODE_CHASE_AI, system_clock::now() + t);
+			if (m_type == PC_ARCHER)
+				add_timer(m_sNum, OP_MODE_ACTIVE_AI, system_clock::now() + t);
+			else
+				add_timer(m_sNum, OP_MODE_CHASE_AI, system_clock::now() + t);
 		}
 	}
 }
@@ -203,7 +206,8 @@ void CAi::Change_Animation(const float& fTimeDelta)
 
 	case PC_PRIEST:
 	{
-
+		Change_Priest_Animation(fTimeDelta);
+		Set_AnimationSpeed_Priest();
 	}
 	break;
 	}
@@ -268,6 +272,70 @@ void CAi::Change_Archer_Animation(const float& fTimeDelta)
 	case STATUS::ST_DEAD:
 	{
 		
+	}
+	break;
+	}
+}
+
+void CAi::Change_Priest_Animation(const float& fTimeDelta)
+{
+	switch (m_status)
+	{
+
+	case STATUS::ST_ACTIVE:
+	{
+		if (m_bIsMove)
+		{
+			if (false == CCollisionMgr::GetInstance()->Is_Arrive(m_vPos, m_vTempPos))
+			{
+				m_tMoveSpeedInterpolationDesc.interpolation_speed = 1.0f * Priest::OTHERS_OFFSET;
+				m_tMoveSpeedInterpolationDesc.linear_ratio += m_tMoveSpeedInterpolationDesc.interpolation_speed * fTimeDelta;
+				m_fSpd = LinearInterpolation(m_tMoveSpeedInterpolationDesc.v1, m_tMoveSpeedInterpolationDesc.v2, m_tMoveSpeedInterpolationDesc.linear_ratio);
+
+				m_vDir = m_vTempPos - m_vPos;
+				m_vDir.Normalize();
+
+				m_vPos += m_vDir * m_fSpd * fTimeDelta;
+			}
+			else
+			{
+				m_bIsMove = false;
+				process_moveStop_priest(fTimeDelta);
+				Change_ChaseMode();
+			}
+		}
+		else
+			process_move_priest(fTimeDelta);
+	}
+	break;
+
+	case STATUS::ST_NONACTIVE:
+	{
+		m_iAniIdx = Priest::ATTACK_WAIT;
+	}
+	break;
+
+	case STATUS::ST_CHASE:
+	{
+		Choose_PriestPattern(fTimeDelta);
+	}
+	break;
+
+	case STATUS::ST_ATTACK:
+	{
+		Attack_Priest_AI(fTimeDelta);
+	}
+	break;
+
+	case STATUS::ST_REACTION:
+	{
+		Play_Priest_NextAttack();
+	}
+	break;
+
+	case STATUS::ST_DEAD:
+	{
+
 	}
 	break;
 	}
@@ -560,6 +628,214 @@ void CAi::Play_Archer_NextAttack(chrono::seconds t)
 			add_timer(m_sNum, OP_MODE_AI_NEXT_ATTACK, system_clock::now() + nextTime);
 		}
 	}
+}
+
+void CAi::Set_AnimationSpeed_Priest()
+{
+	if (m_uiAnimIdx == Priest::ATTACK_WAIT)	
+		m_fAnimationSpeed = Monster_Normal::TPS * 0.8f;	
+	else if (m_uiAnimIdx == Priest::HASTE)
+		m_fAnimationSpeed = Monster_Normal::TPS * 1.35f;	
+	else
+		m_fAnimationSpeed = Monster_Normal::TPS;
+}
+
+void CAi::process_move_priest(const float& fTimeDelta)
+{
+	if (m_bIsMove) return;
+
+	// 움직일 방향 설정
+	CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
+	if (pMonster->Get_Dead()) return;
+
+	m_vDir = pMonster->m_vPos - m_vPos;
+	m_vDir.Normalize();
+
+	m_vTempPos = m_vPos + m_vDir * 10.f;
+	m_vTempPos.z = 345.f;
+
+	m_iAniIdx = Priest::ATTACK_RUN;
+	m_uiAnimIdx = Priest::ATTACK_RUN;
+	Set_AnimationKey(m_uiAnimIdx);
+
+	m_bIsMove = true;
+
+	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+	{
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+
+		send_AI_move_packet(raid);
+	}
+}
+
+void CAi::process_moveStop_priest(const float& fTimeDelta)
+{
+	// 움직일 방향 설정
+	m_iAniIdx = Priest::ATTACK_WAIT;
+	m_uiAnimIdx = Priest::ATTACK_WAIT;
+
+	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+	{
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+
+		send_AI_moveStop_packet(raid);
+	}
+}
+
+void CAi::Choose_PriestPattern(const float& fTimeDelta)
+{
+	if (rand() % 5 == 0)
+		PriestPattern_FirstPhase();
+	else
+		PriestPattern_SecondPhase();
+
+	m_iCurPatternNumber = 0;
+	Change_AttackMode();
+}
+
+void CAi::PriestPattern_FirstPhase()
+{
+	m_arrAttackPattern[0] =Priest::HASTE;
+	m_arrAttackPattern[1] =Priest::AURA_ON;
+	m_arrAttackPattern[2] =Priest::HASTE;
+	m_arrAttackPattern[3] =Priest::PURIFY;
+	m_arrAttackPattern[4] =Priest::HEAL_START;
+	m_arrAttackPattern[5] =Priest::HASTE;
+	m_arrAttackPattern[6] =Priest::MP_CHARGE_START;
+}
+
+void CAi::PriestPattern_SecondPhase()
+{
+	m_arrAttackPattern[0] = Priest::HASTE;
+	m_arrAttackPattern[1] = Priest::AURA_ON;
+	m_arrAttackPattern[2] = Priest::HASTE;
+	m_arrAttackPattern[3] = Priest::PURIFY;
+	m_arrAttackPattern[4] = Priest::HEAL_START;
+	m_arrAttackPattern[5] = Priest::HASTE;
+	m_arrAttackPattern[6] = Priest::MP_CHARGE_START;
+}
+
+void CAi::Attack_Priest_AI(const float& fTimedelta)
+{
+	if (!m_bIsAttack) return;
+
+	if (Priest::HASTE <= m_uiAnimIdx && m_uiAnimIdx <= Priest::MP_CHARGE_END)
+	{
+		if (!Is_AnimationSetEnd(fTimedelta, m_fAnimationSpeed))
+			return;
+		else
+		{
+			if (Is_ComboAttack_Priest(fTimedelta))
+			{
+				for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+					if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+
+					send_AI_attack_packet(raid);
+				}
+			}
+			else
+			{
+				++m_iCurPatternNumber;
+
+				m_uiAnimIdx = Priest::ATTACK_WAIT;
+				m_iAniIdx = Priest::ATTACK_WAIT;
+				Set_AnimationKey(m_uiAnimIdx);
+
+				for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+					if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+
+					send_AI_attackStop_packet(raid);
+				}
+
+				if (m_iCurPatternNumber >= VERGOS_PATTERN)
+					Set_Stop_Attack(1s);
+				else
+					Change_ReactionMode();
+
+			}
+			return;
+		}
+	}
+
+	m_uiAnimIdx = m_arrAttackPattern[m_iCurPatternNumber];
+	m_iAniIdx = m_arrAttackPattern[m_iCurPatternNumber];
+	Set_AnimationKey(m_uiAnimIdx);
+
+	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+	{
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+
+		send_AI_attack_packet(raid);
+	}
+}
+
+void CAi::Play_Priest_NextAttack(chrono::seconds t)
+{
+	if (m_bIsReaction)
+	{
+		chrono::seconds nextTime = 0s;
+		if (m_arrAttackPattern[m_iCurPatternNumber] == Priest::HASTE)
+			nextTime = 3s;
+		else
+			nextTime = 5s;
+
+		bool prev_state = m_bIsReaction;
+		if (true == atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsReaction), &prev_state, false))
+		{
+			add_timer(m_sNum, OP_MODE_AI_NEXT_ATTACK, system_clock::now() + nextTime);
+		}
+	}
+}
+
+bool CAi::Is_ComboAttack_Priest(const float& fTimeDelta)
+{
+	switch (m_uiAnimIdx)
+	{
+	case Priest::HEAL_START:
+	{
+		m_uiAnimIdx = Priest::HEAL_LOOP;
+		m_iAniIdx = Priest::HEAL_LOOP;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Priest::HEAL_LOOP:
+	{
+		m_uiAnimIdx = Priest::HEAL_SHOT;
+		m_iAniIdx = Priest::HEAL_SHOT;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Priest::MP_CHARGE_START:
+	{
+		m_uiAnimIdx = Priest::MP_CHARGE_LOOP;
+		m_iAniIdx = Priest::MP_CHARGE_LOOP;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Priest::MP_CHARGE_LOOP:
+	{
+		m_uiAnimIdx = Priest::MP_CHARGE_END;
+		m_iAniIdx = Priest::MP_CHARGE_END;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;	
+	}
+
+	return false;
 }
 
 void CAi::process_disconnect_ai()

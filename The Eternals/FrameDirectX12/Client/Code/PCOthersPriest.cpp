@@ -688,7 +688,7 @@ CPCOthersPriest** CPCOthersPriest::Create_InstancePool(ID3D12Device* pGraphicDev
 										_vec3(0.05f, 0.05f, 0.05f),	// Scale
 										_vec3(0.0f, 0.0f, 0.0f),	// Angle
 										_vec3(AWAY_FROM_STAGE),		// Pos
-										Event_Season_Bow_01_SM);	// Pos
+										Event_Wit_Rod_01);	// Pos
 	}
 
 	return ppInstance;
