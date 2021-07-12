@@ -128,7 +128,6 @@ HRESULT CCinemaMgr::Ready_CinemaCharacter()
 		pGameObj->Get_Transform()->m_vPos = _vec3(260.f, 98.0f, 570.f);
 		pGameObj->Set_State(0);
 		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CINEMAVERGOS", pGameObj);
-		pVergos = pGameObj;
 	}
 
 	for (auto& pObj : m_vecAnimationLakan)

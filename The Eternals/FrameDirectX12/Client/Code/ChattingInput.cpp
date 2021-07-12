@@ -66,6 +66,8 @@ _int CChattingInput::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 	
+	if (g_bIsCinemaStart)
+		return NO_EVENT;
 	if (m_bIsDead)
 		return DEAD_OBJ;
 	if (!m_bIsActive)
@@ -79,6 +81,8 @@ _int CChattingInput::Update_GameObject(const _float& fTimeDelta)
 
 _int CChattingInput::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	if (g_bIsCinemaStart)
+		return NO_EVENT;
 	if (!m_bIsActive)
 		return NO_EVENT;
 

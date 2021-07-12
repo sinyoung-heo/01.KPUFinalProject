@@ -37,9 +37,6 @@ private:
 	Engine::CObjectMgr*		m_pObjectMgr = nullptr;
 	Engine::CGameObject*	arrLakan[LINEUP_Z][LINEUP_X];
 	Engine::CGameObject*	arrPrionBerserker[LINEUP_Z][LINEUP_X];
-
-	Engine::CGameObject* pVergos = nullptr;
-
 private:
 	virtual void Free();
 
