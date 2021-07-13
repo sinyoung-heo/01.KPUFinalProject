@@ -118,6 +118,7 @@ private:
 	Engine::CShaderMesh*	m_pShaderCom         = nullptr;
 	Engine::CShaderShadow*	m_pShadowCom         = nullptr;
 	Engine::CNaviMesh*		m_pNaviMeshCom       = nullptr;
+	Engine::CNaviMesh*		m_pOriginNaviMeshCom = nullptr;
 	Engine::CNaviMesh*		m_pVelikaNaviMeshCom = nullptr;
 	Engine::CNaviMesh*		m_pBeachNaviMeshCom  = nullptr;
 	Engine::CNaviMesh*		m_pWinterNaviMeshCom = nullptr;

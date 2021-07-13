@@ -46,11 +46,13 @@ public:
 	_uint*							Get_3DMaxCurFrame()		{ return &m_ui3DMax_CurFrame; }
 	const _uint&					Get_CurAnimationIdx()	{ return m_uiCurAniIndex; }
 	const _uint&					Get_NewAnimationIdx()	{ return m_uiNewAniIdx; }
+	const _float&					Get_AnimationTime()		{ return m_fAnimationTime; }
 	// Set
 	void Set_AnimationKey(const _uint& uiAniKey);
 	void Set_BlendingSpeed(const _float& fBlendingSpeed) { m_fBlendingSpeed = fBlendingSpeed; }
 	void Set_VecSkinningMatrix(const vector<VECTOR_SKINNING_MATRIX>& vecSkinningMatrix);
-	void Set_AnimationTime(const _float& fTime) { m_fAnimationTime = fTime; }
+	void Set_AnimationTime(const _float& fTime)				{ m_fAnimationTime = fTime; }
+	void Set_IsBlendingComplete(const _bool& bIsComplete)	{ m_bIsBlendingComplete = bIsComplete; }
 
 	// Method
 	void				Play_Animation(_float fTimeDelta, const _bool& bIsRepeat = true);

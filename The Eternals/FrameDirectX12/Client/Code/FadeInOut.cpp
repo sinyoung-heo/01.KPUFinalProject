@@ -5,6 +5,7 @@
 #include "InstancePoolMgr.h"
 #include "DirectInput.h"
 #include "DynamicCamera.h"
+#include "CinemaMgr.h"
 
 CFadeInOut::CFadeInOut(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -15,6 +16,7 @@ CFadeInOut::CFadeInOut(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* 
 void CFadeInOut::Set_FadeInOutEventType(const EVENT_TYPE& eEventType)
 {
 	m_eEventType = eEventType;
+	m_bIsReturn = false;
 
 	if (EVENT_TYPE::FADE_IN == eEventType ||
 		EVENT_TYPE::SCENE_CHANGE_FADEIN_FADEOUT == eEventType)
@@ -23,9 +25,11 @@ void CFadeInOut::Set_FadeInOutEventType(const EVENT_TYPE& eEventType)
 	}
 	else if (EVENT_TYPE::FADE_OUT == eEventType ||
 			 EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN == eEventType ||
-			 EVENT_TYPE::SCENE_CAHNGE_LOGO_STAGE == eEventType)
+			 EVENT_TYPE::SCENE_CAHNGE_LOGO_STAGE == eEventType ||
+			 EVENT_TYPE::EVENT_CINEMATIC_ENDING == eEventType)
 	{
 		m_fAlpha = 0.0f;
+		m_bIsCinematicEnding = false;
 	}
 }
 
@@ -78,9 +82,10 @@ _int CFadeInOut::Update_GameObject(const _float& fTimeDelta)
 	}
 	if (m_bIsReturn)
 	{
-		m_bIsSendPacket    = false;
-		m_bIsReceivePacket = false;
-		m_bIsSetCinematic  = false;
+		m_bIsSendPacket      = false;
+		m_bIsReceivePacket   = false;
+		m_bIsSetCinematic    = false;
+		m_bIsCinematicEnding = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool(), m_uiInstanceIdx);
 		return RETURN_OBJ;
 	}
@@ -168,13 +173,15 @@ void CFadeInOut::Set_ConstantTable()
 
 void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 {
+	if (m_bIsReturn)
+		return;
+
 	if (EVENT_TYPE::FADE_IN == m_eEventType)
 	{
 		m_fAlpha -= fTimeDelta * 0.5f;
 		if (m_fAlpha < 0.0f)
 		{
 			m_fAlpha = 0.0f;
-			// Set_DeadGameObject();
 			m_bIsReturn = true;
 		}
 	}
@@ -184,7 +191,6 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 		if (m_fAlpha > 1.0f)
 		{
 			m_fAlpha = 1.0f;
-			// Set_DeadGameObject();
 			m_bIsReturn = true;
 		}
 	}
@@ -195,7 +201,6 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 		{
 			m_fAlpha = 1.0f;
 			static_cast<CScene_Logo*>(Engine::CManagement::Get_Instance()->Get_CurrentScene())->Set_IsSceneChage(true);
-			// Set_DeadGameObject();
 			m_bIsReturn = true;
 		}
 	}
@@ -230,7 +235,8 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 					g_bIsCinemaStart = true;
 					// Set DynamicCamera State
 					CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
-					pDynamicCamera->Set_CameraState(CAMERA_STATE::CINEMATIC_LAKAN_ALL);
+					//pDynamicCamera->Set_CameraState(CAMERA_STATE::CINEMATIC_LAKAN_ALL);
+					pDynamicCamera->Set_CameraState(CAMERA_STATE::CINEMATIC_SCREAMING_PRIONBERSERKER);
 					pDynamicCamera->SetUp_ThirdPersonViewOriginData();
 				}
 			}
@@ -240,7 +246,39 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 			{
 				m_fAlpha = 0.0f;
 				g_bIsStageChange = false;
-				// Set_DeadGameObject();
+				m_bIsReturn = true;
+			}
+		}
+	}
+	else if (EVENT_TYPE::EVENT_CINEMATIC_ENDING == m_eEventType)
+	{
+		if (!m_bIsCinematicEnding)
+		{
+			m_fAlpha += fTimeDelta * 0.7f;
+			if (m_fAlpha > 1.0f)
+			{
+				m_fAlpha = 1.0f;
+				m_bIsCinematicEnding = true;
+
+				// Stage Setting.
+				// g_bIsCinemaStart = false;
+				CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
+				// pDynamicCamera->Set_CameraState(CAMERA_STATE::THIRD_PERSON_VIEW);
+				pDynamicCamera->Set_CameraState(CAMERA_STATE::CINEMATIC_SCREAMING_PRIONBERSERKER);
+				pDynamicCamera->Set_IsCinematicEnding(false);
+				pDynamicCamera->Set_IsSettingCameraCinematicValue(false);
+				CCinemaMgr::Get_Instance()->Reset_PrionBerserkerPosition();
+				CCinemaMgr::Get_Instance()->Reset_LakanPosition();
+				CCinemaMgr::Get_Instance()->Reset_Vergos();
+			}
+		}
+		else
+		{
+			m_fAlpha -= fTimeDelta * 0.7f;
+			if (m_fAlpha < 0.0f)
+			{
+				m_fAlpha = 0.0f;
+				m_bIsCinematicEnding = false;
 				m_bIsReturn = true;
 			}
 		}

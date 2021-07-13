@@ -10,6 +10,8 @@
 #include "TimeMgr.h"
 #include "CollisionTick.h"
 #include "InstancePoolMgr.h"
+#include "CinemaMgr.h"
+#include "DynamicCamera.h"
 
 CPrionBerserkerBoss::CPrionBerserkerBoss(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -38,7 +40,7 @@ HRESULT CPrionBerserkerBoss::Ready_GameObject(wstring wstrMeshTag, wstring wstrN
 											  _vec3(60.0f),
 											  _vec3(0.0f, 20.f, 7.0f));
 
-	m_pInfoCom->m_fSpeed = 3.f;
+	m_pInfoCom->m_fSpeed = 0.f;
 	m_bIsMoveStop = true;
 
 	/*__________________________________________________________________________________________________________
@@ -111,7 +113,7 @@ _int CPrionBerserkerBoss::Update_GameObject(const _float& fTimeDelta)
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
 	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+	m_pMeshCom->Play_Animation(fTimeDelta * TPS * m_fAnimationSpeed);
 	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
 	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
@@ -275,9 +277,13 @@ void CPrionBerserkerBoss::Active_Monster(const _float& fTimeDelta)
 	m_pTransCom->m_vDir.Normalize();
 
 	/* Monster MOVE */
-	if (!m_bIsMoveStop)
+	if (!m_bIsMoveStop && m_pMeshCom->Is_BlendingComplete())
 	{
-		if (m_pTransCom->m_vPos.z <= 385.f)
+		m_pInfoCom->m_fSpeed += fTimeDelta * 10.0f;
+		if (m_pInfoCom->m_fSpeed >= 8.0f)
+			m_pInfoCom->m_fSpeed = 8.0f;
+
+		if (m_pTransCom->m_vPos.z <= 375.f)
 			m_bIsMoveStop = true;
 
 		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
@@ -296,7 +302,8 @@ void CPrionBerserkerBoss::Change_Animation(const _float& fTimeDelta)
 
 		case PrionBerserkerBoss::A_WAIT:
 		{
-			m_bIsCreateCollisionTick = false;
+			m_pInfoCom->m_fSpeed = 0.0f;
+			m_fAnimationSpeed    = 0.8f;
 			m_uiAnimIdx = PrionBerserkerBoss::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
@@ -304,39 +311,53 @@ void CPrionBerserkerBoss::Change_Animation(const _float& fTimeDelta)
 
 		case PrionBerserkerBoss::A_ANGRY:
 		{
-			m_bIsCreateCollisionTick = false;
+			m_fAnimationSpeed = 1.0f;
 			m_uiAnimIdx = PrionBerserkerBoss::A_ANGRY;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
 				m_iMonsterStatus = PrionBerserkerBoss::A_WAIT;
-
 				m_uiAnimIdx = PrionBerserkerBoss::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+				// ½Ã³×¸¶Æ½.
+				if (m_bIsPrionBerserkerScreaming)
+				{
+					CCinemaMgr::Get_Instance()->Scream_PrionBerserkers();
+				}
 			}
 		}
 		break;
 
 		case PrionBerserkerBoss::A_COMMAND:
 		{
-			m_bIsCreateCollisionTick = false;
+			m_fAnimationSpeed = 0.5f;
 			m_uiAnimIdx = PrionBerserkerBoss::A_COMMAND;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
-			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete())
 			{
 				m_iMonsterStatus = PrionBerserkerBoss::A_WAIT;
-
 				m_uiAnimIdx = PrionBerserkerBoss::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+				if (m_bIsPrionBerserkerScreaming)
+				{
+					m_bIsMoveStop = false;
+					m_iMonsterStatus = PrionBerserkerBoss::A_RUN;
+					CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
+					pDynamicCamera->Set_CameraState(CAMERA_STATE::CINEMATIC_RUSH_PRIONBERSERKER);
+					pDynamicCamera->Set_IsSettingCameraCinematicValue(false);
+					// CCinemaMgr::Get_Instance()->Rush_Prion();
+				}
 			}
 		}
 		break;
 
 		case PrionBerserkerBoss::A_RUN:
 		{
-			m_bIsCreateCollisionTick = false;
+			m_fAnimationSpeed = 0.75f;
 			m_uiAnimIdx = PrionBerserkerBoss::A_RUN;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}

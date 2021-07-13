@@ -11,6 +11,7 @@
 #include "CollisionTick.h"
 #include "InstancePoolMgr.h"
 #include <random>
+#include "CinemaMgr.h"
 
 CPrionBerserker::CPrionBerserker(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -39,7 +40,7 @@ HRESULT CPrionBerserker::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviM
 											  _vec3(60.0f),
 											  _vec3(0.0f, 20.f, 7.0f));
 
-	m_pInfoCom->m_fSpeed = 3.f;
+	m_pInfoCom->m_fSpeed = 0.f;
 	m_bIsMoveStop = true;
 
 	/*__________________________________________________________________________________________________________
@@ -282,6 +283,10 @@ void CPrionBerserker::Active_Monster(const _float& fTimeDelta)
 	/* Monster MOVE */
 	if (!m_bIsMoveStop)
 	{
+		m_pInfoCom->m_fSpeed += fTimeDelta * 10.0f;
+		if (m_pInfoCom->m_fSpeed >= 8.0f)
+			m_pInfoCom->m_fSpeed = 8.0f;
+
 		if (m_pTransCom->m_vPos.z <= 385.f)
 			m_bIsMoveStop = true;
 
@@ -301,7 +306,8 @@ void CPrionBerserker::Change_Animation(const _float& fTimeDelta)
 
 		case PrionBerserker::A_WAIT:
 		{
-			m_bIsCreateCollisionTick = false;
+			m_bIsRepeat = true;
+			m_pInfoCom->m_fSpeed = 0.0f;
 			m_uiAnimIdx = PrionBerserker::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
@@ -309,23 +315,26 @@ void CPrionBerserker::Change_Animation(const _float& fTimeDelta)
 
 		case PrionBerserker::A_ANGRY:
 		{
-			m_bIsCreateCollisionTick = false;
+			m_bIsRepeat = false;
 			m_uiAnimIdx = PrionBerserker::A_ANGRY;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
-			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete())
 			{
 				m_iMonsterStatus = PrionBerserker::A_WAIT;
 
 				m_uiAnimIdx = PrionBerserker::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+				// ½Ã³×¸¶Æ½
+				CCinemaMgr::Get_Instance()->Command_PrionBerserkerBoss();
 			}
 		}
 		break;
 
 		case PrionBerserker::A_RUN:
 		{
-			m_bIsCreateCollisionTick = false;
+			m_bIsRepeat = true;
 			m_uiAnimIdx = PrionBerserker::A_RUN;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}

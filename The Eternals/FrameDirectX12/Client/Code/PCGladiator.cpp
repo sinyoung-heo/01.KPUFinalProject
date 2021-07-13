@@ -52,7 +52,7 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vPos   = vPos;
 	m_chCurWeaponType     = chWeaponType;
 	m_chCurStageID        = STAGE_VELIKA;
-	m_chPreStageID        = m_chCurStageID;
+	m_chPreStageID        = -1;
 	m_wstrCollisionTag    = L"ThisPlayer";
 	m_wstrMeshTag         = wstrMeshTag;
 
@@ -440,6 +440,8 @@ HRESULT CPCGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag
 	Engine::NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);
 	m_pNaviMeshCom->AddRef();
 	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
+
+	m_pOriginNaviMeshCom = m_pNaviMeshCom;
 
 	m_pVelikaNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"StageVelika_NaviMesh", Engine::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pVelikaNaviMeshCom, E_FAIL);
@@ -2789,6 +2791,8 @@ void CPCGladiator::Free()
 {
 	// Engine::Safe_Release(m_pWeapon);
 	m_pWeapon = nullptr;
+	m_pNaviMeshCom = m_pOriginNaviMeshCom;
+	m_mapComponent[Engine::ID_DYNAMIC][L"Com_NaviMesh"] = m_pOriginNaviMeshCom;
 
 	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pDynamicCamera);
@@ -2796,8 +2800,10 @@ void CPCGladiator::Free()
 	Engine::Safe_Release(m_pShaderCom);
 	Engine::Safe_Release(m_pShadowCom);
 	Engine::Safe_Release(m_pNaviMeshCom);
+
 	Engine::Safe_Release(m_pVelikaNaviMeshCom);
 	Engine::Safe_Release(m_pBeachNaviMeshCom);
 	Engine::Safe_Release(m_pWinterNaviMeshCom);
+
 	Engine::Safe_Release(m_pFont);
 }

@@ -35,6 +35,7 @@ public:
 	void Set_BlendingSpeed(const _float& fSpeed)	{ m_pAniCtrl->Set_BlendingSpeed(fSpeed); }
 	void Set_AnimationTime(const _float& fTime)		{ m_pAniCtrl->Set_AnimationTime(fTime); }
 	void Set_VecSkinningMatrix(const vector<VECTOR_SKINNING_MATRIX>& vecSkinningMatrix) { m_pAniCtrl->Set_VecSkinningMatrix(vecSkinningMatrix); }
+	void Set_IsBlendingComplete(const _bool& bIsComplete) { m_pAniCtrl->Set_IsBlendingComplete(bIsComplete); }
 	_bool							Is_AnimationSetEnd(const _float& fTimeDelta, const _float& fAnimationSpeed = 4'800.0f)	{ return m_pAniCtrl->Is_AnimationSetEnd(fTimeDelta, fAnimationSpeed); };
 	_bool							Is_BlendingComplete()						{ return m_pAniCtrl->Is_BlendingComplete(); }
 

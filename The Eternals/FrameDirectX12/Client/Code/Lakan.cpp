@@ -11,6 +11,7 @@
 #include "CollisionTick.h"
 #include "InstancePoolMgr.h"
 #include <random>
+#include "DynamicCamera.h"
 
 CLakan::CLakan(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -39,7 +40,7 @@ HRESULT CLakan::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, c
 											  _vec3(60.0f),
 											  _vec3(0.0f, 20.f, 7.0f));
 
-	m_pInfoCom->m_fSpeed = 3.f;
+	m_pInfoCom->m_fSpeed = 0.f;
 	m_bIsMoveStop = true;
 
 	/*__________________________________________________________________________________________________________
@@ -282,8 +283,12 @@ void CLakan::Active_Monster(const _float& fTimeDelta)
 	/* Monster MOVE */
 	if (!m_bIsMoveStop)
 	{
-		if (m_pTransCom->m_vPos.z >= 385.f)
-			m_bIsMoveStop = true;
+		//m_pInfoCom->m_fSpeed += fTimeDelta * 6.0f;
+		//if (m_pInfoCom->m_fSpeed >= 8.0f)
+		//	m_pInfoCom->m_fSpeed = 8.0f;
+
+		//if (m_pTransCom->m_vPos.z >= 385.f)
+		//	m_bIsMoveStop = true;
 
 		_vec3 vPos = m_pNaviMeshCom->Move_OnNaviMesh(&m_pTransCom->m_vPos,
 													 &m_pTransCom->m_vDir,
@@ -301,7 +306,8 @@ void CLakan::Change_Animation(const _float& fTimeDelta)
 
 		case Lakan::A_WAIT:
 		{
-			m_bIsCreateCollisionTick = false;
+			m_pInfoCom->m_fSpeed = 0.0f;
+
 			m_uiAnimIdx = Lakan::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
@@ -309,17 +315,22 @@ void CLakan::Change_Animation(const _float& fTimeDelta)
 
 		case Lakan::A_MOVE_START:
 		{
-			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = Lakan::A_MOVE_START;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
-			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
+			// ½Ã³×¸¶Æ½
+			if (m_ui3DMax_CurFrame > 25)
+			{
+				CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
+				pDynamicCamera->Set_IsSettingCameraCinematicValue(false);
+				pDynamicCamera->Set_CameraStateCinematicEnding();
+			}
+
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta) && m_pMeshCom->Is_BlendingComplete())
 			{
 				m_iMonsterStatus = Lakan::A_MOVE_LOOP;
-
 				m_uiAnimIdx = Lakan::A_MOVE_LOOP;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-
 				m_bIsMoveStop = false;
 			}
 		}
@@ -327,7 +338,7 @@ void CLakan::Change_Animation(const _float& fTimeDelta)
 
 		case Lakan::A_MOVE_LOOP:
 		{
-			m_bIsCreateCollisionTick = false;
+			m_bIsMoveStop = false;
 			m_uiAnimIdx = Lakan::A_MOVE_LOOP;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}

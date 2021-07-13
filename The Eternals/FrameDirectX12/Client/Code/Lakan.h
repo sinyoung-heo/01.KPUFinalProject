@@ -22,6 +22,8 @@ private:
 public:
 	Engine::CMesh* Get_MeshComponent() { return m_pMeshCom; }
 	const _uint& Get_AnimationObjectIdx() { return m_uiAnimationObjIdx; }
+	void Set_OriginPos(const _vec3& vPos) { m_vOriginPos = vPos; }
+	void Reset_Position() { m_pTransCom->m_vPos = m_vOriginPos; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
@@ -77,6 +79,7 @@ private:
 	_rgba	m_vEmissiveColor         = _rgba(1.0f, 0.0f, 0.0f, 1.0f);
 
 	_uint	m_uiAnimationObjIdx = 0;
+	_vec3	m_vOriginPos = _vec3(0.0f);
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]
@@ -84,7 +87,7 @@ private:
 	_uint	m_uiAnimIdx			= 0;	// 현재 애니메이션 Index
 	_uint	m_ui3DMax_NumFrame	= 0;	// 3DMax에서 애니메이션의 총 Frame 개수
 	_uint	m_ui3DMax_CurFrame	= 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
-	
+
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

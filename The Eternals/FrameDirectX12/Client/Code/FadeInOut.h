@@ -43,12 +43,13 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	_uint		m_uiTexIdx		   = 0;
-	EVENT_TYPE	m_eEventType       = EVENT_TYPE::EVENT_END;
-	_float		m_fAlpha           = 1.0f;
-	_bool		m_bIsSendPacket    = false;
-	_bool		m_bIsReceivePacket = false;
-	_bool		m_bIsSetCinematic  = false;
+	_uint		m_uiTexIdx		     = 0;
+	EVENT_TYPE	m_eEventType         = EVENT_TYPE::EVENT_END;
+	_float		m_fAlpha             = 1.0f;
+	_bool		m_bIsSendPacket      = false;
+	_bool		m_bIsReceivePacket   = false;
+	_bool		m_bIsSetCinematic    = false;
+	_bool		m_bIsCinematicEnding = false;
 
 	_vec3	m_vConvert	= _vec3(0.0f, 0.0f, 0.0f);
 	_matrix	m_matView	= INIT_MATRIX;

@@ -8,6 +8,8 @@
 #include "PCArcher.h"
 #include "PCPriest.h"
 #include "DynamicCamera.h"
+#include "ShaderMgr.h"
+#include "CinemaMgr.h"
 
 CQuestMessageButton::CQuestMessageButton(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
@@ -125,10 +127,7 @@ _int CQuestMessageButton::LateUpdate_GameObject(const _float& fTimeDelta)
 
 			if (QUEST_TYPE::QUEST_SUB == CQuestMgr::Get_Instance()->Get_ClearQuestType())
 			{
-				// g_bIsCinemaStart = true;
-				//// Set DynamicCamera State
-				//pDynamicCamera->Set_CameraState(CAMERA_STATE::CINEMATIC_LAKAN_ALL);
-				//pDynamicCamera->SetUp_ThirdPersonViewOriginData();
+				Engine::CShaderMgr::Get_Instance()->Set_DOF(true);
 
 				Engine::CGameObject* pGameObject = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
 				if (nullptr != pGameObject)
@@ -140,6 +139,8 @@ _int CQuestMessageButton::LateUpdate_GameObject(const _float& fTimeDelta)
 			}
 			else if (QUEST_TYPE::QUEST_MAIN == CQuestMgr::Get_Instance()->Get_ClearQuestType())
 			{
+				Engine::CShaderMgr::Get_Instance()->Set_DOF(false);
+
 				Engine::CGameObject* pGameObject = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
 				if (nullptr != pGameObject)
 				{
@@ -156,6 +157,10 @@ _int CQuestMessageButton::LateUpdate_GameObject(const _float& fTimeDelta)
 				CQuestMgr::Get_Instance()->Get_SubQuestMiniCanvas()->Set_IsChildActive(false);
 				CQuestMgr::Get_Instance()->Get_MainQuestMiniCanvas()->Set_IsActive(false);
 				CQuestMgr::Get_Instance()->Get_MainQuestMiniCanvas()->Set_IsChildActive(false);
+
+				CCinemaMgr::Get_Instance()->Reset_LakanPosition();
+				CCinemaMgr::Get_Instance()->Reset_PrionBerserkerPosition();
+				CCinemaMgr::Get_Instance()->Reset_Vergos();
 
 				// Set DynamicCamera State
 				pDynamicCamera->Set_CameraState(CAMERA_STATE::THIRD_PERSON_VIEW);

@@ -30,6 +30,10 @@ public:
 	void	Command_PrionBerserkerBoss();
 	void	Rush_Prion();
 	void	Rush_Lakan();
+	void	Reset_LakanPosition();
+	void	Reset_Vergos();
+	void	Reset_PrionBerserkerPosition();
+	void	Set_IsMoveStopPrionBerserker(const _bool& bIsMoveStop);
 private:
 	vector<Engine::CGameObject*> m_vecAnimationLakan;
 	vector<Engine::CGameObject*> m_vecAnimationPrionBerserker;
