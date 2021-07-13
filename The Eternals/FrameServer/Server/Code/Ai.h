@@ -3,6 +3,11 @@
 class CAi :
     public CObj
 {
+	enum GLADIATOR_PHASE
+	{
+		GL_PHASE1, GL_PHASE2, GL_PHASE3, GL_END
+	};
+
 public:
 	CAi();
 	virtual ~CAi();
@@ -33,6 +38,17 @@ private:
 	void	Change_Gladiator_Animation(const float& fTimeDelta);
 	void	Change_Archer_Animation(const float& fTimeDelta);
 	void	Change_Priest_Animation(const float& fTimeDelta);
+
+	/*GLADIATOR */
+	void	Set_AnimationSpeed_Gladiator();
+	void	process_move_gladiator(const float& fTimeDelta);
+	void	process_moveStop_gladiator(const float& fTimeDelta);
+	void	Choose_GladiatorPattern(const float& fTimeDelta);
+	bool	GladiatorPattern_FirstPhase();
+	void	GladiatorPattern_SecondPhase();
+	void	Attack_Gladiator_AI(const float& fTimedelta);
+	void	Play_Gladiator_NextAttack(chrono::seconds t = 0s);
+	bool	Is_ComboAttack_Gladiator(const float& fTimeDelta);
 
 	/* ARCHER */
 	void	Set_AnimationSpeed_Archer();
@@ -69,6 +85,7 @@ public:
 	void	send_AI_move_packet(const int& to_client);
 	void	send_AI_moveStop_packet(const int& to_client);
 	void	send_AI_attack_packet(const int& to_client);
+	void	send_AIGladiator_attack_packet(const int& to_client, const float& fAngle);
 	void	send_AI_attackStop_packet(const int& to_client);
 	void	send_leave_party_ai(const int& to_client);
 
@@ -93,11 +110,13 @@ public:
 	int		m_iMaxAtt				= 0;
 	float	m_fSpd					= 0.f;
 	float	m_fAnimationSpeed		= 0.f;
+	float	m_fLookAngle			= 0.f;
 
+	GLADIATOR_PHASE m_eGladiatorPhase = GLADIATOR_PHASE::GL_END;
 	LINEAR_INTERPOLATION_DESC<float> m_tMoveSpeedInterpolationDesc;
 
 	int		m_arrAttackPattern[VERGOS_PATTERN];
-	int		m_iCurPatternNumber		= 0;
+	int		m_iCurPatternNumber			= 0;
 
 	/* Animation */
 	_uint	m_uiNewAniIndex			= 0;

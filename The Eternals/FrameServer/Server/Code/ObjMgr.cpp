@@ -359,12 +359,22 @@ void CObjMgr::Create_AiPlayer()
 	else return;*/
 
 	// PRIEST 1
-	pNew = static_cast<CAi*>(CObjPoolMgr::GetInstance()->use_Object(L"AI"));
+	/*pNew = static_cast<CAi*>(CObjPoolMgr::GetInstance()->use_Object(L"AI"));
 	if (pNew)
 	{
 		pNew->Ready_AI(PC_PRIEST, Rod33_B, STAGE_WINTER, _vec3(STAGE_WINTER_X, 0.f, STAGE_WINTER_Z));
 		pNew->Set_NumAnimation(Priest::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Priest::duration);
+	}
+	else return;*/
+
+	// GLADIATOR 1
+	pNew = static_cast<CAi*>(CObjPoolMgr::GetInstance()->use_Object(L"AI"));
+	if (pNew)
+	{
+		pNew->Ready_AI(PC_GLADIATOR, TwoHand33_B_SM, STAGE_WINTER, _vec3(STAGE_WINTER_X, 0.f, STAGE_WINTER_Z));
+		pNew->Set_NumAnimation(Gladiator::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Gladiator::duration);
 	}
 	else return;
 }

@@ -5,8 +5,8 @@
 
 CAi::CAi()
     :m_iLevel(0), m_iHp(0), m_iMaxHp(0), m_fSpd(0.f), m_bIsAttack(false), m_bIsReaction(false),
-    m_iMp(0), m_iMaxMp(0), m_iMaxAtt(0), m_iMinAtt(0), m_bIsMove(false), m_fAnimationSpeed(0.f),
-    m_bIsAttackStance(false), m_bIsPartyState(false), m_iPartyNumber(-1)
+    m_iMp(0), m_iMaxMp(0), m_iMaxAtt(0), m_iMinAtt(0), m_bIsMove(false), m_fAnimationSpeed(0.f), m_fLookAngle(0.f),
+    m_bIsAttackStance(false), m_bIsPartyState(false), m_iPartyNumber(-1), m_eGladiatorPhase (GLADIATOR_PHASE::GL_END)
 {
 	memset(m_arrAttackPattern, -1, sizeof(int) * VERGOS_PATTERN);
 }
@@ -43,7 +43,7 @@ void CAi::Set_Stop_Attack(chrono::seconds t)
 
 		if (true == atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsAttack), &prev_state, false))
 		{
-			if (m_type == PC_ARCHER)
+			if (m_type != PC_PRIEST)
 				add_timer(m_sNum, OP_MODE_ACTIVE_AI, system_clock::now() + t);
 			else
 				add_timer(m_sNum, OP_MODE_CHASE_AI, system_clock::now() + t);
@@ -65,10 +65,7 @@ void CAi::Set_Stop_Reaction(chrono::seconds t)
 	if (m_bIsReaction)
 	{
 		bool prev_state = m_bIsReaction;
-		if (true == atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsReaction), &prev_state, false))
-		{
-			//add_timer(m_sNum, OP_MODE_CHASE_MONSTER, system_clock::now() + t);
-		}
+		atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsReaction), &prev_state, false);		
 	}
 }
 
@@ -193,7 +190,8 @@ void CAi::Change_Animation(const float& fTimeDelta)
 	{
 	case PC_GLADIATOR:
 	{
-
+		Change_Gladiator_Animation(fTimeDelta);
+		Set_AnimationSpeed_Gladiator();
 	}
 	break;
 
@@ -208,6 +206,70 @@ void CAi::Change_Animation(const float& fTimeDelta)
 	{
 		Change_Priest_Animation(fTimeDelta);
 		Set_AnimationSpeed_Priest();
+	}
+	break;
+	}
+}
+
+void CAi::Change_Gladiator_Animation(const float& fTimeDelta)
+{
+	switch (m_status)
+	{
+
+	case STATUS::ST_ACTIVE:
+	{
+		if (m_bIsMove)
+		{
+			if (false == CCollisionMgr::GetInstance()->Is_Arrive(m_vPos, m_vTempPos))
+			{
+				m_tMoveSpeedInterpolationDesc.interpolation_speed = 1.0f * Archer::OTHERS_OFFSET;
+				m_tMoveSpeedInterpolationDesc.linear_ratio += m_tMoveSpeedInterpolationDesc.interpolation_speed * fTimeDelta;
+				m_fSpd = LinearInterpolation(m_tMoveSpeedInterpolationDesc.v1, m_tMoveSpeedInterpolationDesc.v2, m_tMoveSpeedInterpolationDesc.linear_ratio);
+
+				m_vDir = m_vTempPos - m_vPos;
+				m_vDir.Normalize();
+
+				m_vPos += m_vDir * m_fSpd * fTimeDelta;
+			}
+			else
+			{
+				m_bIsMove = false;
+				process_moveStop_gladiator(fTimeDelta);
+				Change_ChaseMode();
+			}
+		}
+		else
+			process_move_gladiator(fTimeDelta);
+	}
+	break;
+
+	case STATUS::ST_NONACTIVE:
+	{
+		m_iAniIdx = Archer::ATTACK_WAIT;
+	}
+	break;
+
+	case STATUS::ST_CHASE:
+	{
+		Choose_GladiatorPattern(fTimeDelta);
+	}
+	break;
+
+	case STATUS::ST_ATTACK:
+	{
+		Attack_Gladiator_AI(fTimeDelta);
+	}
+	break;
+
+	case STATUS::ST_REACTION:
+	{
+		Play_Gladiator_NextAttack();
+	}
+	break;
+
+	case STATUS::ST_DEAD:
+	{
+
 	}
 	break;
 	}
@@ -341,6 +403,287 @@ void CAi::Change_Priest_Animation(const float& fTimeDelta)
 	}
 }
 
+void CAi::Set_AnimationSpeed_Gladiator()
+{
+	if (m_uiAnimIdx == Gladiator::TUMBLING)
+	{
+		m_fAnimationSpeed = Monster_Normal::TPS * 1.60f;
+	}
+	else if (m_uiAnimIdx == Gladiator::COMBO1 || m_uiAnimIdx == Gladiator::COMBO2)
+	{
+		m_fAnimationSpeed = Monster_Normal::TPS * 1.25f;
+	}
+	else if (m_uiAnimIdx == Gladiator::STINGER_BLADE)
+	{
+		m_fAnimationSpeed = Monster_Normal::TPS * 1.45f;
+	}
+	else if (m_uiAnimIdx == Gladiator::CUTTING_SLASH)
+	{
+		m_fAnimationSpeed = Monster_Normal::TPS * 1.35f;
+	}
+	else if (m_uiAnimIdx == Gladiator::JAW_BREAKER)
+	{
+		m_fAnimationSpeed = Monster_Normal::TPS * 1.45f;
+	}
+	else if (m_uiAnimIdx == Gladiator::GAIA_CRUSH1 || m_uiAnimIdx == Gladiator::GAIA_CRUSH3)
+	{
+		m_fAnimationSpeed = Monster_Normal::TPS * 1.4f;
+	}
+	else
+		m_fAnimationSpeed = Monster_Normal::TPS;
+}
+
+void CAi::process_move_gladiator(const float& fTimeDelta)
+{
+	if (m_bIsMove) return;
+
+	// 움직일 방향 설정
+	CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
+	if (pMonster->Get_Dead()) return;
+
+	m_vDir = pMonster->m_vPos - m_vPos;
+	m_vDir.Normalize();
+
+	m_vTempPos = m_vPos + m_vDir * 10.f;
+	m_vTempPos.z = 355.f;
+
+	m_iAniIdx = Gladiator::ATTACK_RUN;
+	m_uiAnimIdx = Gladiator::ATTACK_RUN;
+	Set_AnimationKey(m_uiAnimIdx);
+
+	m_bIsMove = true;
+
+	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+	{
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+
+		send_AI_move_packet(raid);
+	}
+}
+
+void CAi::process_moveStop_gladiator(const float& fTimeDelta)
+{
+	// 움직일 방향 설정
+	m_iAniIdx = Gladiator::ATTACK_WAIT;
+	m_uiAnimIdx = Gladiator::ATTACK_WAIT;
+
+	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+	{
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+
+		send_AI_moveStop_packet(raid);
+	}
+}
+
+void CAi::Choose_GladiatorPattern(const float& fTimeDelta)
+{
+	m_eGladiatorPhase = GLADIATOR_PHASE::GL_END;
+
+	if (rand() % 5 == 0)
+		m_eGladiatorPhase = GLADIATOR_PHASE::GL_PHASE1;
+	else
+		m_eGladiatorPhase = GLADIATOR_PHASE::GL_PHASE1;
+
+	m_iCurPatternNumber = 0;
+	Change_AttackMode();
+}
+
+bool CAi::GladiatorPattern_FirstPhase()
+{
+	switch (m_uiAnimIdx)
+	{
+	case Gladiator::COMBO1:
+	{
+		m_uiAnimIdx = Gladiator::COMBO2;
+		m_iAniIdx = Gladiator::COMBO2;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Gladiator::COMBO2:
+	{
+		m_uiAnimIdx = Gladiator::STINGER_BLADE;
+		m_iAniIdx = Gladiator::STINGER_BLADE;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Gladiator::STINGER_BLADE:
+	{
+		m_uiAnimIdx = Gladiator::JAW_BREAKER;
+		m_iAniIdx = Gladiator::JAW_BREAKER;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Gladiator::JAW_BREAKER:
+	{
+		m_uiAnimIdx = Gladiator::CUTTING_SLASH;
+		m_iAniIdx = Gladiator::CUTTING_SLASH;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Gladiator::CUTTING_SLASH:
+	{
+		m_uiAnimIdx = Gladiator::TUMBLING;
+		m_iAniIdx = Gladiator::TUMBLING;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Gladiator::TUMBLING:
+	{
+		m_uiAnimIdx = Gladiator::GAIA_CRUSH1;
+		m_iAniIdx = Gladiator::GAIA_CRUSH1;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Gladiator::GAIA_CRUSH1:
+	{
+		m_uiAnimIdx = Gladiator::GAIA_CRUSH2;
+		m_iAniIdx = Gladiator::GAIA_CRUSH2;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Gladiator::GAIA_CRUSH2:
+	{
+		m_uiAnimIdx = Gladiator::GAIA_CRUSH3;
+		m_iAniIdx = Gladiator::GAIA_CRUSH3;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;	
+	}
+
+	return false;
+}
+
+void CAi::GladiatorPattern_SecondPhase()
+{
+	/*m_arrAttackPattern[0] = Gladiator::COMBO1;
+	m_arrAttackPattern[1] = Gladiator::COMBO1;
+	m_arrAttackPattern[2] = Gladiator::COMBO1;
+	m_arrAttackPattern[3] = Gladiator::COMBO1;
+	m_arrAttackPattern[4] = Gladiator::COMBO1;
+	m_arrAttackPattern[5] = Gladiator::COMBO1;
+	m_arrAttackPattern[6] = Gladiator::COMBO1;*/
+}
+
+void CAi::Attack_Gladiator_AI(const float& fTimedelta)
+{
+	if (!m_bIsAttack) return;
+
+	if (Gladiator::COMBO1 <= m_uiAnimIdx && m_uiAnimIdx <= Gladiator::TUMBLING)
+	{
+		if (!Is_AnimationSetEnd(fTimedelta, m_fAnimationSpeed))
+			return;
+		else
+		{
+			if (Is_ComboAttack_Gladiator(fTimedelta))
+			{			
+				if (m_uiAnimIdx == Gladiator::TUMBLING)
+				{
+					_vec3 vTempDir = m_vDir * -1.f;
+					vTempDir.Normalize();
+
+					m_vPos += vTempDir * 2.5f;
+					m_fLookAngle = 180.f;
+				}
+				else
+					m_fLookAngle = 0.f;
+				
+				for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+					if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+
+					send_AIGladiator_attack_packet(raid, m_fLookAngle);
+				}
+			}
+			else
+			{
+				m_uiAnimIdx = Gladiator::ATTACK_WAIT;
+				m_iAniIdx = Gladiator::ATTACK_WAIT;
+				Set_AnimationKey(m_uiAnimIdx);
+
+				for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+				{
+					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+					if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+
+					send_AI_attackStop_packet(raid);
+				}
+
+				Set_Stop_Attack(3s);
+
+			}
+			return;
+		}
+	}
+
+	m_uiAnimIdx = Gladiator::COMBO1;
+	m_iAniIdx = Gladiator::COMBO1;
+	Set_AnimationKey(m_uiAnimIdx);
+
+	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+	{
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+
+		send_AI_attack_packet(raid);
+	}
+}
+
+void CAi::Play_Gladiator_NextAttack(chrono::seconds t)
+{
+	if (m_bIsReaction)
+	{
+		bool prev_state = m_bIsReaction;
+		if (true == atomic_compare_exchange_strong(reinterpret_cast<volatile atomic_bool*>(&m_bIsReaction), &prev_state, false))
+		{
+			add_timer(m_sNum, OP_MODE_AI_NEXT_ATTACK, system_clock::now() + t);
+		}
+	}
+}
+
+bool CAi::Is_ComboAttack_Gladiator(const float& fTimeDelta)
+{
+	switch (m_eGladiatorPhase)
+	{
+	case GLADIATOR_PHASE::GL_PHASE1:
+	{		
+		return GladiatorPattern_FirstPhase();
+	}
+	break;
+
+	case GLADIATOR_PHASE::GL_PHASE2:
+	{
+		return true;
+	}
+	break;
+
+	case GLADIATOR_PHASE::GL_PHASE3:
+	{
+		return true;
+	}
+	break;
+	}
+
+	return false;
+}
+
 void CAi::Set_AnimationSpeed_Archer()
 {
 	if (m_uiAnimIdx == Archer::ATTACK_ARROW)
@@ -437,15 +780,6 @@ void CAi::Choose_ArcherPattern(const float& fTimeDelta)
 
 void CAi::ArcherPattern_FirstPhase()
 {
-	/*m_arrAttackPattern[0] = Archer::ATTACK_ARROW;
-	m_arrAttackPattern[1] = Archer::RAPID_SHOT1;
-	m_arrAttackPattern[2] = Archer::ARROW_FALL_START;
-	m_arrAttackPattern[3] = Archer::BACK_DASH;
-	m_arrAttackPattern[4] = Archer::ARROW_SHOWER_START;
-	m_arrAttackPattern[5] = Archer::CHARGE_ARROW_START;
-	m_arrAttackPattern[6] = Archer::RAPID_SHOT1;*/
-
-
 	m_arrAttackPattern[0] = Archer::ATTACK_ARROW;
 	m_arrAttackPattern[1] = Archer::RAPID_SHOT1;
 	m_arrAttackPattern[2] = Archer::ARROW_FALL_START;
@@ -457,14 +791,6 @@ void CAi::ArcherPattern_FirstPhase()
 
 void CAi::ArcherPattern_SecondPhase()
 {
-	/*m_arrAttackPattern[0] = Archer::ATTACK_ARROW;
-	m_arrAttackPattern[1] = Archer::RAPID_SHOT1;
-	m_arrAttackPattern[2] = Archer::ARROW_FALL_START;
-	m_arrAttackPattern[3] = Archer::BACK_DASH;
-	m_arrAttackPattern[4] = Archer::ARROW_SHOWER_START;
-	m_arrAttackPattern[5] = Archer::CHARGE_ARROW_START;
-	m_arrAttackPattern[6] = Archer::RAPID_SHOT1;*/
-
 	m_arrAttackPattern[0] = Archer::ATTACK_ARROW;
 	m_arrAttackPattern[1] = Archer::RAPID_SHOT1;
 	m_arrAttackPattern[2] = Archer::ARROW_FALL_START;
@@ -1068,6 +1394,30 @@ void CAi::send_AI_attack_packet(const int& to_client)
 
 	p.animIdx = m_iAniIdx;
 	p.end_angleY = -1.f;
+
+	send_packet(to_client, &p);
+}
+
+void CAi::send_AIGladiator_attack_packet(const int& to_client, const float& fAngle)
+{
+	sc_packet_attack p;
+
+	p.size = sizeof(p);
+	p.type = SC_PACKET_ATTACK;
+	p.id = m_sNum;
+
+	p.o_type = m_type;
+
+	p.posX = m_vPos.x;
+	p.posY = m_vPos.y;
+	p.posZ = m_vPos.z;
+
+	p.dirX = m_vDir.x;
+	p.dirY = m_vDir.y;
+	p.dirZ = m_vDir.z;
+
+	p.animIdx = m_iAniIdx;
+	p.end_angleY = fAngle;
 
 	send_packet(to_client, &p);
 }
