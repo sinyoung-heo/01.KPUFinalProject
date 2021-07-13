@@ -1169,6 +1169,12 @@
       <Filter>99.Etc</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\RectDecal.h" />
+    <ClInclude Include="..\Code\DirParticleEffect.h">
+      <Filter>02.GameObject\98.GameEffect\16.ParticleEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\BreathEffect.h">
+      <Filter>02.GameObject\98.GameEffect\99.Garbage</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1716,6 +1722,12 @@
       <Filter>99.Etc</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\RectDecal.cpp" />
+    <ClCompile Include="..\Code\DirParticleEffect.cpp">
+      <Filter>02.GameObject\98.GameEffect\16.ParticleEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\BreathEffect.cpp">
+      <Filter>02.GameObject\98.GameEffect\99.Garbage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

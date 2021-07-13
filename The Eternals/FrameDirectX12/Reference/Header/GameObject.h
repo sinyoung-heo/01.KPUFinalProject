@@ -138,6 +138,7 @@ protected:
 	HRESULT			Add_Component();
 	HRESULT			SetUp_MiniMapComponent(const _uint& uiMiniMapTexIdx);
 	void			SetUp_BillboardMatrix();
+	void			SetUp_BillboardMatrix(_matrix* matrix, _vec3 vecScale);
 	void			SetUp_BoundingBox(_matrix* pParent, const _vec3& vParentScale, const _vec3& vCenter, const _vec3& vMin, const _vec3& vMax, const _float& fScaleOffset = 1.0f, const _vec3& vPosOffset = _vec3(0.0f));
 	void			SetUp_BoundingSphere(_matrix* pParent, const _vec3& vParentScale, const _vec3& vScale, const _vec3& vPos);
 	void			Reset_Collider();

@@ -40,6 +40,14 @@ public:
 		const _int& PipeLine=5, const _int& ParticleCnt = 20
 		, _uint Diff = 0, _uint Norm = 0, _uint Spec = 0, _vec2 SpeedWeight = _vec2(1, 0), float YOffset=0,_bool isPingPong=false);
 
+	void Effect_DirParticle(const _vec3& vScale,
+		const _vec3& vAngle,
+		const _vec3& vPos, wstring TexTag = L"Snow",
+		const _vec3& StartPos = _vec3(0.f),
+		const _vec3& DstPos = _vec3(0.f),
+		const FRAME& tFrame = FRAME(1, 1, 0.0f), const _int& PipeLine = 9, const _int& ParticleCnt = 20);
+
+
 	void Effect_TextureEffect(wstring TexTag,_vec3 Scale,_vec3 Angle,_vec3 Pos,FRAME frame
 		, bool isLoop = false, bool isScaleAnim = false, float maxScale=1.f,_int ScaleAnimIdx=0, _vec4 colorOffset = _vec4(0.f, 0.f, 0.f, 1.f)
 	,bool isFollowHand=false, Engine::HIERARCHY_DESC* hierachy=nullptr,Engine::CTransform* parentTransform=nullptr);

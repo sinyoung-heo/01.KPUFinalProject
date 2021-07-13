@@ -11,6 +11,7 @@
 #include "CollisionTick.h"
 #include "InstancePoolMgr.h"
 #include "NormalMonsterHpGauge.h"
+#include "BreathEffect.h"
 CVergos::CVergos(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pPacketMgr(CPacketMgr::Get_Instance())
@@ -68,6 +69,10 @@ HRESULT CVergos::LateInit_GameObject()
 	// MiniMap
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::SetUp_MiniMapComponent(3), E_FAIL);
 
+	BazierPos[0] = _vec3(403.f, 0.f, 360.f);
+	BazierPos[1] = _vec3(390.f, 0.f, 347.5f);
+	BazierPos[2] = _vec3(350.f, 0.f, 362.f);
+
 	return S_OK;
 }
 
@@ -76,6 +81,7 @@ _int CVergos::Update_GameObject(const _float& fTimeDelta)
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
 	EffectLoop(fTimeDelta);
+	
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
@@ -680,8 +686,57 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 			CEffectMgr::Get_Instance()->Effect_RectDecal(Pos, m_pTransCom->m_vAngle.y);
 		}
 	}
+	else if (m_uiAnimIdx == Vergos::A_BREATH_FIRE)
+	{
+		m_fSkillOffset += fTimeDelta;
+		m_bisBreathDelta += fTimeDelta;
+		m_fParticleTime += fTimeDelta;
+		Engine::HIERARCHY_DESC* pHierarchyDesc = &(m_pMeshCom->Find_HierarchyDesc("FxShot"));
+	
+	
+
+		if (m_fSkillOffset >3.f)
+		{
+
+			m_fBreathTime += fTimeDelta * 0.5f;
+			if (m_fParticleTime > 0.1f)
+			{
+				m_fParticleTime = 0.f;
+				_matrix matBoneFinalTransform = (pHierarchyDesc->matScale * pHierarchyDesc->matRotate * pHierarchyDesc->matTrans)
+					* pHierarchyDesc->matGlobalTransform;
+				_matrix matWorld = matBoneFinalTransform * m_pTransCom->m_matWorld;
+				_vec3 Pos = _vec3(matWorld._41, matWorld._42, matWorld._43);
+				BreathPos.x = powf((1.f - m_fBreathTime), 2.f) * BazierPos[0].x + 2 * m_fBreathTime * (1 - m_fBreathTime) * BazierPos[1].x
+					+ powf(m_fBreathTime, 2.f) * BazierPos[2].x;
+				BreathPos.y = 0.f;
+				BreathPos.z = powf((1.f - m_fBreathTime), 2.f) * BazierPos[0].z + 2 * m_fBreathTime * (1 - m_fBreathTime) * BazierPos[1].z
+					+ powf(m_fBreathTime, 2.f) * BazierPos[2].z;
+
+				CEffectMgr::Get_Instance()->Effect_DirParticle(_vec3(1, 1, 0), _vec3(0.f), m_pTransCom->m_vPos, L"Lighting6", Pos,
+					BreathPos, FRAME(1, 1, 1), 2, 20);
+			}
+			if (m_bisBreathEffect == false)
+			{
+				m_bisBreathEffect = true;
+				m_bisBreathDelta = 0.f;
+				CGameObject* pGameObj;
+				pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_Breath_Effect());
+				if (nullptr != pGameObj)
+				{
+					static_cast<CBreathEffect*>(pGameObj)->Set_CreateInfo(_vec3(0.f), _vec3(0.f), _vec3(-65.f, 2.2, -16.f));
+					static_cast<CBreathEffect*>(pGameObj)->Set_HierchyDesc(pHierarchyDesc);
+					static_cast<CBreathEffect*>(pGameObj)->Set_ParentMatrix(&m_pTransCom->m_matWorld);
+					Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Breath", pGameObj), E_FAIL);
+				}
+			}
+			//CEffectMgr::Get_Instance()->Effect_DirParticle(_vec3(1, 1, 0), _vec3(0.f), m_pTransCom->m_vPos, L"Bomb06", Pos,
+			//	BreathPos, FRAME(6, 6, 24), 2, 40);
+		}
+	}
 	else
 	{
+		m_bisBreathEffect = false;
+		m_fBreathTime = 0.f;
 		m_bisWarningEffect = false;
 		m_bisDecalEffect = false;
 		m_fSkillOffset = 0.f;

@@ -303,9 +303,28 @@ PS_OUT PS_RECTDECAL(VS_OUT ps_input) : SV_TARGET
     vDistortion *= g_fOffset1; //강도
     float2 NewUV = float2(ps_input.TexUV.x + vDistortion.x * vDistortionInfo.b, ps_input.TexUV.y + vDistortion.y * vDistortionInfo.b);
     float2 AniUV = ps_input.AniUV;
-    float4 D = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
-    float4 N = g_TexNormal.Sample(g_samLinearWrap, NewUV * 5);
-    float4 color = mul(N, D.a) ;
+    float4 D = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.AniUV);
+    float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 N = g_TexNormal.Sample(g_samLinearWrap, NewUV * 2);
+    float4 Sha = g_TexShadowDepth.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 color = ((mul(D, N.a) + D) * S + N)*Sha.a;
+    ps_output.Effect2 = color;
+    ps_output.Effect2.a = g_fOffset6;
+    return (ps_output);
+}
+PS_OUT PS_BREATH(VS_OUT ps_input) : SV_TARGET
+{
+    PS_OUT ps_output = (PS_OUT) 0;
+    vector vDistortionInfo = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV);
+    float2 vDistortion = (vDistortionInfo.xy * 2.f) - 1.f;
+    vDistortion *= g_fOffset1; //강도
+    float2 NewUV = float2(ps_input.AniUV.x + vDistortion.x * vDistortionInfo.b, ps_input.AniUV.y + vDistortion.y * vDistortionInfo.b);
+    
+    float2 AniUV = ps_input.AniUV;
+    float4 D = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.AniUV);
+    float4 N = g_TexNormal.Sample(g_samLinearWrap, NewUV * 2.f);
+    float4 Sha = g_TexShadowDepth.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 color = D + N;
     ps_output.Effect2 = color;
     ps_output.Effect2.a = g_fOffset6;
     return (ps_output);

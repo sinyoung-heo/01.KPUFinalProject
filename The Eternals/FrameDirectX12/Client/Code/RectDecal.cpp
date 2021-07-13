@@ -88,8 +88,8 @@ _int CRectDecal::LateUpdate_GameObject(const _float & fTimeDelta)
 
 void CRectDecal::Render_GameObject(const _float& fTimeDelta)
 {
-	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, 11, m_uiNorm, m_uiSpec
-		,0,4);
+	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, 31, 30, 25
+		,24,28);
 }
 
 HRESULT CRectDecal::Add_Component(wstring wstrMeshTag)
@@ -133,7 +133,7 @@ void CRectDecal::Set_ConstantTable()
 	{
 		m_fDelta2Velocity *= -1.f;
 	}
-	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
+	tCB_ShaderMesh.fOffset1 = -m_fDeltaTime;
 	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
 	m_fAlpha -= Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.1f;
 	tCB_ShaderMesh.fOffset6 = m_fAlpha;
@@ -184,7 +184,7 @@ CRectDecal** CRectDecal::Create_InstancePool(ID3D12Device* pGraphicDevice, ID3D1
 	{
 		ppInstance[i] = new CRectDecal(pGraphicDevice, pCommandList);
 		ppInstance[i]->m_uiInstanceIdx = i;
-		ppInstance[i]->Ready_GameObject(L"PublicPlane00", _vec3(0.f), _vec3(0.f), _vec3(0.f));
+		ppInstance[i]->Ready_GameObject(L"groundEffect", _vec3(0.f), _vec3(0.f), _vec3(0.f));
 	}
 	return ppInstance;
 }
