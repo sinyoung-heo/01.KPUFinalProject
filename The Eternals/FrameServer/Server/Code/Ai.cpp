@@ -4,7 +4,7 @@
 #include "Monster.h"
 
 CAi::CAi()
-    :m_iLevel(0), m_iHp(0), m_iMaxHp(0), m_fSpd(0.f), m_bIsAttack(false), m_bIsReaction(false),
+    :m_iLevel(0), m_iHp(0), m_iMaxHp(0), m_fSpd(0.f), m_bIsAttack(false), m_bIsReaction(false), m_pMonster(nullptr),
     m_iMp(0), m_iMaxMp(0), m_iMaxAtt(0), m_iMinAtt(0), m_bIsMove(false), m_fAnimationSpeed(0.f), m_fLookAngle(0.f),
     m_bIsAttackStance(false), m_bIsPartyState(false), m_iPartyNumber(-1), m_eGladiatorPhase (GLADIATOR_PHASE::GL_END)
 {
@@ -107,6 +107,9 @@ void CAi::Ready_AI(const char& chJob, const char& chWeaponType, const char& chSt
     m_vDir              = _vec3(0.f, 0.f, 1.f);
     m_vAngle            = _vec3(0.f, 0.f, 0.f);
 	m_status			= STATUS::ST_NONACTIVE;
+
+	// 움직일 방향 설정
+	m_pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
 
 	// Move Speed
 	m_tMoveSpeedInterpolationDesc.linear_ratio = 0.0f;
@@ -245,7 +248,7 @@ void CAi::Change_Gladiator_Animation(const float& fTimeDelta)
 
 	case STATUS::ST_NONACTIVE:
 	{
-		m_iAniIdx = Archer::ATTACK_WAIT;
+		m_iAniIdx = Gladiator::ATTACK_WAIT;
 	}
 	break;
 
@@ -758,7 +761,7 @@ void CAi::Attack_Gladiator_AI(const float& fTimedelta)
 					_vec3 vTempDir = m_vDir * -1.f;
 					vTempDir.Normalize();
 
-					m_vPos += vTempDir * 2.9f;
+					m_vPos += vTempDir * 2.95f;
 					m_fLookAngle = 180.f;
 				}
 				else
@@ -771,6 +774,9 @@ void CAi::Attack_Gladiator_AI(const float& fTimedelta)
 
 					send_AIGladiator_attack_packet(raid, m_fLookAngle);
 				}
+				// 베르고스 HP 감소
+				if (m_pMonster)
+					m_pMonster->Hurt_MonsterbyAI(m_sNum, m_iMaxAtt);
 			}
 			else
 			{
@@ -804,6 +810,10 @@ void CAi::Attack_Gladiator_AI(const float& fTimedelta)
 
 		send_AI_attack_packet(raid);
 	}
+
+	// 베르고스 HP 감소
+	if (m_pMonster)
+		m_pMonster->Hurt_MonsterbyAI(m_sNum, m_iMaxAtt);
 }
 
 void CAi::Play_Gladiator_NextAttack(chrono::seconds t)
@@ -979,6 +989,9 @@ void CAi::Attack_Archer_AI(const float& fTimedelta)
 
 					send_AI_attack_packet(raid);
 				}
+				// 베르고스 HP 감소
+				if (m_pMonster)
+					m_pMonster->Hurt_MonsterbyAI(m_sNum, m_iMaxAtt);
 			}
 			else
 			{
@@ -1025,6 +1038,9 @@ void CAi::Attack_Archer_AI(const float& fTimedelta)
 
 		send_AI_attack_packet(raid);
 	}
+	// 베르고스 HP 감소
+	if (m_pMonster)
+		m_pMonster->Hurt_MonsterbyAI(m_sNum, m_iMaxAtt);
 }
 
 bool CAi::Is_ComboAttack_Archer(const float& fTimeDelta)

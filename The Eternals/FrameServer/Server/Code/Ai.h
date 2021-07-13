@@ -1,5 +1,8 @@
 #pragma once
 #include "Obj.h"
+
+class CMonster;
+
 class CAi :
     public CObj
 {
@@ -118,6 +121,7 @@ public:
 
 	int		m_arrAttackPattern[VERGOS_PATTERN];
 	int		m_iCurPatternNumber			= 0;
+	CMonster* m_pMonster				= nullptr;
 
 	/* Animation */
 	_uint	m_uiNewAniIndex			= 0;

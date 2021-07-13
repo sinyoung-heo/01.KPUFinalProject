@@ -601,12 +601,20 @@ void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 			pMonster->active_monster();
 		}
 
-		CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", 9000));
+		auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+		auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
+		for (iter_begin; iter_begin != iter_end; ++iter_begin)
+		{
+			new_viewlist.insert(iter_begin->second->m_sNum);
+			static_cast<CAi*>(iter_begin->second)->active_AI();
+		}
+
+		/*CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", 9000));
 		if (pAi != nullptr)
 		{
 			new_viewlist.insert(9000);
 			pAi->active_AI();
-		}
+		}*/
 	}
 
 	/* 货肺款 矫具 格废 郴狼 按眉 贸府 */
@@ -838,12 +846,20 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 			pMonster->active_monster();
 		}
 
-		CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", 9000));
+		auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+		auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
+		for (iter_begin; iter_begin != iter_end; ++iter_begin)
+		{
+			new_viewlist.insert(iter_begin->second->m_sNum);
+			static_cast<CAi*>(iter_begin->second)->active_AI();
+		}
+
+		/*CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", 9000));
 		if (pAi != nullptr)
 		{
 			new_viewlist.insert(9000);
 			pAi->active_AI();
-		}
+		}*/
 	}
 
 	/* 货肺款 矫具 格废 郴狼 按眉 贸府 */
@@ -1142,12 +1158,20 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx, 
 			pMonster->active_monster();
 		}
 
-		CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", 9000));
+		auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+		auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
+		for (iter_begin; iter_begin != iter_end; ++iter_begin)
+		{
+			new_viewlist.insert(iter_begin->second->m_sNum);
+			static_cast<CAi*>(iter_begin->second)->active_AI();
+		}
+
+		/*CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", 9000));
 		if (pAi != nullptr)
 		{
 			new_viewlist.insert(9000);
 			pAi->active_AI();
-		}
+		}*/
 	}
 
 	/* 货肺款 矫具 格废 郴狼 按眉 贸府 */
@@ -1461,12 +1485,20 @@ void process_attack_stop(int id, const _vec3& _vDir, const _vec3& _vPos, int ani
 			pMonster->active_monster();
 		}
 
-		CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", 9000));
+		auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+		auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
+		for (iter_begin; iter_begin != iter_end; ++iter_begin)
+		{
+			new_viewlist.insert(iter_begin->second->m_sNum);
+			static_cast<CAi*>(iter_begin->second)->active_AI();
+		}
+
+		/*CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", 9000));
 		if (pAi != nullptr)
 		{
 			new_viewlist.insert(9000);
 			pAi->active_AI();
-		}
+		}*/
 	}
 
 	/* 货肺款 矫具 格废 郴狼 按眉 贸府 */
@@ -1699,12 +1731,20 @@ void process_buff(const int& id, cs_packet_attack* p)
 			pMonster->active_monster();
 		}
 
-		CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", 9000));
+		auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+		auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
+		for (iter_begin; iter_begin != iter_end; ++iter_begin)
+		{
+			new_viewlist.insert(iter_begin->second->m_sNum);
+			static_cast<CAi*>(iter_begin->second)->active_AI();
+		}
+
+		/*CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", 9000));
 		if (pAi != nullptr)
 		{
 			new_viewlist.insert(9000);
 			pAi->active_AI();
-		}
+		}*/
 	}
 
 	/* 货肺款 矫具 格废 郴狼 按眉 贸府 */

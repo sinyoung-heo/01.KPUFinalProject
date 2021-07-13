@@ -4327,6 +4327,33 @@ bool CMonster::Affect_Monster(const int& to_client, const char& affect)
 	return false;
 }
 
+void CMonster::Hurt_MonsterbyAI(const int& p_id, const int& damage)
+{
+	if (m_bIsRegen || m_bIsDead) return;
+
+	/* 피격 당함 */
+	if (m_iHp > ZERO_HP)
+	{
+		m_iHp -= damage;
+	}
+
+	/* Monster Dead */
+	else if (m_iHp <= ZERO_HP)
+	{
+		m_iHp = ZERO_HP;
+		m_bIsDead = true;
+
+		Change_DeadMode();
+		return;
+	}
+
+	// Monster View List 내의 유저들에게 해당 Monster의 변경된 stat을 알림.
+	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+	{	
+		send_Monster_Stat(raid, p_id, damage);
+	}
+}
+
 void CMonster::Change_AttackMode()
 {
 	/* Monster가 활성화되어 있지 않을 경우 활성화 */

@@ -104,6 +104,9 @@ void Ready_Server()
 	/* Create Monster */
 	Initialize_Monster();
 
+	/* Create AI */
+	CObjMgr::GetInstance()->Create_AiPlayer();
+
 	std::wcout.imbue(std::locale("korean"));
 
 	/* WINSOCK ÃÊ±âÈ­ */
@@ -169,7 +172,6 @@ void Release_Server()
 void Initialize_NPC()
 {
 	CObjMgr::GetInstance()->Create_StageVelikaNPC();
-	CObjMgr::GetInstance()->Create_AiPlayer();
 
 #ifdef TEST
 	cout << "NPC Initialize Finish.\n";
