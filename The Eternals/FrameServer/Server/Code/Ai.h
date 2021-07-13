@@ -45,7 +45,8 @@ private:
 	void	process_moveStop_gladiator(const float& fTimeDelta);
 	void	Choose_GladiatorPattern(const float& fTimeDelta);
 	bool	GladiatorPattern_FirstPhase();
-	void	GladiatorPattern_SecondPhase();
+	bool	GladiatorPattern_SecondPhase();
+	bool	GladiatorPattern_ThirdPhase();
 	void	Attack_Gladiator_AI(const float& fTimedelta);
 	void	Play_Gladiator_NextAttack(chrono::seconds t = 0s);
 	bool	Is_ComboAttack_Gladiator(const float& fTimeDelta);

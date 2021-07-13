@@ -481,12 +481,23 @@ void CAi::Choose_GladiatorPattern(const float& fTimeDelta)
 {
 	m_eGladiatorPhase = GLADIATOR_PHASE::GL_END;
 
-	if (rand() % 5 == 0)
-		m_eGladiatorPhase = GLADIATOR_PHASE::GL_PHASE1;
-	else
-		m_eGladiatorPhase = GLADIATOR_PHASE::GL_PHASE1;
+	if (m_iCurPatternNumber > 2)
+		m_iCurPatternNumber = 0;
 
-	m_iCurPatternNumber = 0;
+	switch (m_iCurPatternNumber)
+	{
+	case 0:
+		m_eGladiatorPhase = GLADIATOR_PHASE::GL_PHASE1;
+		break;
+	case 1:
+		m_eGladiatorPhase = GLADIATOR_PHASE::GL_PHASE2;
+		break;
+	case 2:
+		m_eGladiatorPhase = GLADIATOR_PHASE::GL_PHASE3;
+		break;
+	}
+
+	++m_iCurPatternNumber;
 	Change_AttackMode();
 }
 
@@ -570,15 +581,164 @@ bool CAi::GladiatorPattern_FirstPhase()
 	return false;
 }
 
-void CAi::GladiatorPattern_SecondPhase()
+bool CAi::GladiatorPattern_SecondPhase()
 {
-	/*m_arrAttackPattern[0] = Gladiator::COMBO1;
-	m_arrAttackPattern[1] = Gladiator::COMBO1;
-	m_arrAttackPattern[2] = Gladiator::COMBO1;
-	m_arrAttackPattern[3] = Gladiator::COMBO1;
-	m_arrAttackPattern[4] = Gladiator::COMBO1;
-	m_arrAttackPattern[5] = Gladiator::COMBO1;
-	m_arrAttackPattern[6] = Gladiator::COMBO1;*/
+	switch (m_uiAnimIdx)
+	{
+	case Gladiator::COMBO1:
+	{
+		m_uiAnimIdx = Gladiator::COMBO2;
+		m_iAniIdx = Gladiator::COMBO2;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Gladiator::COMBO2:
+	{
+		m_uiAnimIdx = Gladiator::CUTTING_SLASH;
+		m_iAniIdx = Gladiator::CUTTING_SLASH;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Gladiator::CUTTING_SLASH:
+	{
+		m_uiAnimIdx = Gladiator::TUMBLING;
+		m_iAniIdx = Gladiator::TUMBLING;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Gladiator::TUMBLING:
+	{
+		m_uiAnimIdx = Gladiator::STINGER_BLADE;
+		m_iAniIdx = Gladiator::STINGER_BLADE;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Gladiator::STINGER_BLADE:
+	{
+		m_uiAnimIdx = Gladiator::JAW_BREAKER;
+		m_iAniIdx = Gladiator::JAW_BREAKER;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Gladiator::JAW_BREAKER:
+	{
+		m_uiAnimIdx = Gladiator::GAIA_CRUSH1;
+		m_iAniIdx = Gladiator::GAIA_CRUSH1;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Gladiator::GAIA_CRUSH1:
+	{
+		m_uiAnimIdx = Gladiator::GAIA_CRUSH2;
+		m_iAniIdx = Gladiator::GAIA_CRUSH2;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Gladiator::GAIA_CRUSH2:
+	{
+		m_uiAnimIdx = Gladiator::GAIA_CRUSH3;
+		m_iAniIdx = Gladiator::GAIA_CRUSH3;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+	}
+
+	return false;
+}
+
+bool CAi::GladiatorPattern_ThirdPhase()
+{
+	switch (m_uiAnimIdx)
+	{
+	case Gladiator::COMBO1:
+	{
+		m_uiAnimIdx = Gladiator::COMBO2;
+		m_iAniIdx = Gladiator::COMBO2;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Gladiator::COMBO2:
+	{
+		m_uiAnimIdx = Gladiator::JAW_BREAKER;
+		m_iAniIdx = Gladiator::JAW_BREAKER;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Gladiator::JAW_BREAKER:
+	{
+		m_uiAnimIdx = Gladiator::TUMBLING;
+		m_iAniIdx = Gladiator::TUMBLING;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Gladiator::TUMBLING:
+	{
+		m_uiAnimIdx = Gladiator::STINGER_BLADE;
+		m_iAniIdx = Gladiator::STINGER_BLADE;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Gladiator::STINGER_BLADE:
+	{
+		m_uiAnimIdx = Gladiator::CUTTING_SLASH;
+		m_iAniIdx = Gladiator::CUTTING_SLASH;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Gladiator::CUTTING_SLASH:
+	{
+		m_uiAnimIdx = Gladiator::GAIA_CRUSH1;
+		m_iAniIdx = Gladiator::GAIA_CRUSH1;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Gladiator::GAIA_CRUSH1:
+	{
+		m_uiAnimIdx = Gladiator::GAIA_CRUSH2;
+		m_iAniIdx = Gladiator::GAIA_CRUSH2;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+
+	case Gladiator::GAIA_CRUSH2:
+	{
+		m_uiAnimIdx = Gladiator::GAIA_CRUSH3;
+		m_iAniIdx = Gladiator::GAIA_CRUSH3;
+		Set_AnimationKey(m_uiAnimIdx);
+		return true;
+	}
+	break;
+	}
+
+	return false;
 }
 
 void CAi::Attack_Gladiator_AI(const float& fTimedelta)
@@ -598,7 +758,7 @@ void CAi::Attack_Gladiator_AI(const float& fTimedelta)
 					_vec3 vTempDir = m_vDir * -1.f;
 					vTempDir.Normalize();
 
-					m_vPos += vTempDir * 2.5f;
+					m_vPos += vTempDir * 2.9f;
 					m_fLookAngle = 180.f;
 				}
 				else
@@ -670,13 +830,13 @@ bool CAi::Is_ComboAttack_Gladiator(const float& fTimeDelta)
 
 	case GLADIATOR_PHASE::GL_PHASE2:
 	{
-		return true;
+		return GladiatorPattern_SecondPhase();
 	}
 	break;
 
 	case GLADIATOR_PHASE::GL_PHASE3:
 	{
-		return true;
+		return GladiatorPattern_ThirdPhase();
 	}
 	break;
 	}
