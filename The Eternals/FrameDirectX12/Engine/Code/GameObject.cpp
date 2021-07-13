@@ -432,8 +432,31 @@ void CGameObject::SetUp_BillboardMatrix()
 	}
 
 }
+void CGameObject::SetUp_BillboardMatrix(_matrix* matrix, _vec3 vecScale)
+{
+	_matrix* pmatView = CGraphicDevice::Get_Instance()->Get_Transform(MATRIXID::VIEW);
+	if (nullptr == pmatView)
+		return;
 
-void CGameObject::SetUp_BoundingBox(_matrix* pParent, 
+	_matrix matBillboard = (*pmatView);
+	memset(&matBillboard._41, 0, sizeof(_vec3));
+	matBillboard = MATRIX_INVERSE(matBillboard);
+	_float fScale[3] = { vecScale.x, vecScale.y,vecScale.z };
+
+	for (_int i = 0; i < 3; ++i)
+	{
+		for (_int j = 0; j < 4; ++j)
+		{
+			matBillboard(i, j) *= fScale[i];
+		}
+	}
+	memcpy(&(*matrix)._11, &matBillboard._11, sizeof(_vec3));
+	memcpy(&(*matrix)._21, &matBillboard._21, sizeof(_vec3));
+	memcpy(&(*matrix)._31, &matBillboard._31, sizeof(_vec3));
+
+
+}
+void CGameObject::SetUp_BoundingBox(_matrix* pParent,
 									const _vec3& vParentScale,
 									const _vec3& vCenter, 
 									const _vec3& vMin,

@@ -67,9 +67,11 @@ PublicSphere00|PublicSphere00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plan
 PublicTesselPlane00|PublicTesselPlane00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicTesselPlane00\
 PublicTornado00|PublicTornado00.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicTornado00\
 PublicTornado01|PublicTornado01.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Plane\PublicTornado01\
+groundEffect|groundEffect.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\groundEffect\
 IceStorm0|IceStorm0.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\IceStorm0\
 IceStorm1|IceStorm1.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\IceStorm1\
 publicAxe|publicAxe.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicAxe\
+publicBreath|publicBreath.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicBreath\
 publicShield|publicShield.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicShield\
 publicSkill3|publicSkill3.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSkill3\
 publicSphere|publicSphere.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSphere\

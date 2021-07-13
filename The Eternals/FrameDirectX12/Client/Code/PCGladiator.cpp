@@ -997,10 +997,22 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 	if (m_uiAnimIdx == Gladiator::STINGER_BLADE)
 	{
 		m_fSwordsSkillOffset += fTimeDelta;
+		m_fTemp += fTimeDelta;
+		if (m_fTemp > 0.05f)
+		{
+			_vec3 TempPos = m_pTransCom->m_vPos + m_pTransCom->m_vDir * 20;
+			TempPos.y += 5.f;
+			CEffectMgr::Get_Instance()->Effect_DirParticle(_vec3(1, 1, 0), _vec3(0.f), m_pTransCom->m_vPos, L"Bomb06", TempPos,
+				m_pTransCom->m_vPos, FRAME(6, 6, 24), 2, 20);
+			m_fTemp = 0.f;
+		}
 		if (m_fSwordsSkillOffset > 0.45f && m_bisSwordsEffect==false)
 		{
 			m_bisSwordsEffect = true;
 			CEffectMgr::Get_Instance()->Effect_SwordEffect_s(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
+
+		
+
 		}
 	}
 	else

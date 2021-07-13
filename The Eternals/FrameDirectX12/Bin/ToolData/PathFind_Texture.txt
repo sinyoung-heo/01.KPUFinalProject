@@ -6,6 +6,7 @@ Bomb02|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb02\%d.
 Bomb03|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb03\%d.dds
 Bomb04|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb04\%d.dds
 Bomb05|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb05\%d.dds
+Bomb06|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb06\%d.dds
 Crack|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Crack\%d.dds
 Dust|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Dust\%d.dds
 Fire|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Fire\%d.dds
@@ -35,7 +36,7 @@ SkyBox|10|..\..\Bin\Resource\ResourceStage\Texture\Environment\SkyBox\%d.dds
 Terrain|13|..\..\Bin\Resource\ResourceStage\Texture\Environment\Terrain\%d.dds
 TexWaterFall|11|..\..\Bin\Resource\ResourceStage\Texture\Environment\TexWaterFall\%d.dds
 WaterNormal|134|..\..\Bin\Resource\ResourceStage\Texture\Environment\WaterNormal\%d.dds
-PublicMagic|24|..\..\Bin\Resource\ResourceStage\Texture\PublicMagic\%d.dds
+PublicMagic|32|..\..\Bin\Resource\ResourceStage\Texture\PublicMagic\%d.dds
 ItemArmor|5|..\..\Bin\Resource\ResourceStage\Texture\UI\ItemArmor\%d.dds
 ItemHelmet|5|..\..\Bin\Resource\ResourceStage\Texture\UI\ItemHelmet\%d.dds
 ItemPotion|2|..\..\Bin\Resource\ResourceStage\Texture\UI\ItemPotion\%d.dds

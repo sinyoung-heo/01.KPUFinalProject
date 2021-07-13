@@ -110,7 +110,7 @@ void CMeshParticleEffect::Make_TextureTrail(const _float& fTimeDelta)
 		return;
 
 	m_fMakeTexTrail += fTimeDelta;
-	if (m_fMakeTexTrail > 0.1f)
+	if (m_fMakeTexTrail > 0.06f)
 	{
 		m_fMakeTexTrail = 0.f;
 		for (int i = 0; i < m_iParticleCnt; i++)

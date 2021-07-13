@@ -48,6 +48,11 @@
 #include "MagicCircle.h"
 #include "GridShieldEffect.h"
 #include "MeshParticleEffect.h"
+
+#include "WarningGround.h"
+#include"RectDecal.h"
+#include "DirParticleEffect.h"
+#include "BreathEffect.h"
 IMPLEMENT_SINGLETON(CInstancePoolMgr)
 
 CInstancePoolMgr::CInstancePoolMgr()
@@ -219,6 +224,12 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock3_Pool, L"publicStone3", 100);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock4_Pool, L"publicStone4", 100);
 
+
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_WarningGround_Pool, 20);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_RectDecal_Pool, 20);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_DirParticle_Pool, 100);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_BreathEffect_Pool, 3);
+
 }
 
 void CInstancePoolMgr::Ready_LoadingInstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -309,5 +320,11 @@ void CInstancePoolMgr::Free()
 	Safe_Release_InstacePool(m_pEffect_MeshParticleRock3_Pool);
 	Safe_Release_InstacePool(m_pEffect_MeshParticleRock4_Pool);
 
-	
+
+	Safe_Release_InstacePool(m_pEffect_WarningGround_Pool);
+	Safe_Release_InstacePool(m_pEffect_RectDecal_Pool);
+	Safe_Release_InstacePool(m_pEffect_DirParticle_Pool);
+	Safe_Release_InstacePool(m_pEffect_BreathEffect_Pool);
+
+
 }

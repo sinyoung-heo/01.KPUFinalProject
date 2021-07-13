@@ -67,9 +67,11 @@ StaticMesh|Plane|PublicSphere00
 StaticMesh|Plane|PublicTesselPlane00
 StaticMesh|Plane|PublicTornado00
 StaticMesh|Plane|PublicTornado01
+StaticMesh|publicEffect|groundEffect
 StaticMesh|publicEffect|IceStorm0
 StaticMesh|publicEffect|IceStorm1
 StaticMesh|publicEffect|publicAxe
+StaticMesh|publicEffect|publicBreath
 StaticMesh|publicEffect|publicShield
 StaticMesh|publicEffect|publicSkill3
 StaticMesh|publicEffect|publicSphere

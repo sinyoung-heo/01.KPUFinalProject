@@ -27,6 +27,9 @@
 #include "MeshParticleEffect.h"
 #include "DragonEffect.h"
 #include "TrailTexEffect.h"
+#include "WarningGround.h"
+#include "RectDecal.h"
+#include "DirParticleEffect.h"
 IMPLEMENT_SINGLETON(CEffectMgr)
 
 CEffectMgr::CEffectMgr()
@@ -44,7 +47,7 @@ void CEffectMgr::Effect_Dust(_vec3 vecPos, float Radius)
 		newPos.y = 0.5f;
 		newPos.x = vecPos.x + Radius * cos(XMConvertToRadians(i * 20.f));
 		newPos.z = vecPos.z + Radius * sin(XMConvertToRadians(i * 20.f));
-		Effect_TextureEffect(L"Dust", _vec3(3.f), _vec3(0.f), newPos, FRAME(12, 7, 84.0f), false, false);
+		Effect_TextureEffect(L"Dust", _vec3(3.f,3.f,0.f), _vec3(0.f), newPos, FRAME(12, 7, 84.0f), false, false);
 	
 	}
 }
@@ -91,6 +94,9 @@ void CEffectMgr::Effect_SwordEffect(_vec3 vecPos,_vec3 vecDir)
 
 void CEffectMgr::Effect_SwordEffect_s(_vec3 vecPos, _vec3 vecDir)
 {
+	cout << vecPos.x << " " << vecPos.z << endl;
+	//Effect_RectDecal(vecPos, (0.f));
+
 	_vec3 upVec = _vec3(0, 1, 0);
 	_vec3 crossVec = upVec.Cross_InputV1(vecDir);
 
@@ -112,7 +118,6 @@ void CEffectMgr::Effect_SwordEffect_s(_vec3 vecPos, _vec3 vecDir)
 void CEffectMgr::Effect_Straight_IceStorm(_vec3 vecPos, _vec3 vecDir, const _bool& bIsCollider)
 {
 	
-
 	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
 
 	_matrix rotationY=XMMatrixRotationY(XMConvertToRadians(20.f));
@@ -153,16 +158,17 @@ void CEffectMgr::Effect_Straight_IceStorm(_vec3 vecPos, _vec3 vecDir, const _boo
 
 void CEffectMgr::Effect_FireDecal(_vec3 vecPos)
 {
-	vecPos.y = 0.2f;
+	vecPos.y = 0.3f;
 	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_FireDecal_Effect());
 	if (nullptr != pGameObj)
 	{
-		static_cast<CFireDecal*>(pGameObj)->Set_CreateInfo(_vec3(0.05f), _vec3(0.f, 0.0f, 0.0f), vecPos);
+		static_cast<CFireDecal*>(pGameObj)->Set_CreateInfo(_vec3(0.05f,0.f,0.05f), _vec3(0.f, 0.0f, 0.0f), vecPos);
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"FireDecal", pGameObj), E_FAIL);
 	}
 }
 void CEffectMgr::Effect_IceDecal(_vec3 vecPos)
 {
+	vecPos.y = 0.15f;
 	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_IceDecal_Effect());
 	if (nullptr != pGameObj)
 	{
@@ -300,6 +306,29 @@ void CEffectMgr::Effect_TargetAxe(_vec3 vecPos, Engine::CTransform* parentTransf
 	}
 }
 
+void CEffectMgr::Effect_WarningGround(_vec3 vecPos, _float fLimitScale)
+{
+	vecPos.y = 0.2f;
+	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_WarningGround_Effect());
+	if (nullptr != pGameObj)
+	{
+		static_cast<CWarningGround*>(pGameObj)->Set_CreateInfo(_vec3(0.f),_vec3(0.f),vecPos,true,0.03f);
+		static_cast<CWarningGround*>(pGameObj)->Set_TexIDX(0, 3, 2);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"WarningGround", pGameObj), E_FAIL);
+	}
+}
+
+void CEffectMgr::Effect_RectDecal(_vec3 vecPos, float RotY)
+{
+	vecPos.y = 0.2f;
+	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_RectDecal_Effect());
+	if (nullptr != pGameObj)
+	{
+		static_cast<CRectDecal*>(pGameObj)->Set_CreateInfo(_vec3(0.5f,0.00f,0.5f), _vec3(0.f), vecPos);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"RectDecal", pGameObj), E_FAIL);
+	}
+}
+
 void CEffectMgr::Effect_DistTrail(_vec3 vecPos, _vec3 Angle,bool isCrossFilter,float SizeOffSet)
 {
 	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_DistTrail_Effect());
@@ -355,6 +384,18 @@ void CEffectMgr::Effect_MeshParticle(wstring wstrMeshTag,
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", wstrMeshTag, particleobj), E_FAIL);
 	}
 
+}
+
+void CEffectMgr::Effect_DirParticle(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, wstring TexTag,
+	const _vec3& StartPos, const _vec3& DstPos, const FRAME& tFrame, const _int& PipeLine, const _int& ParticleCnt)
+{
+	Engine::CGameObject* particleobj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_DirParticle_Effect());
+	if (nullptr != particleobj)
+	{
+		static_cast<CDirParticleEffect*>(particleobj)->Set_CreateInfo(vScale,vAngle, vPos, TexTag,StartPos,DstPos,tFrame
+			, PipeLine, ParticleCnt);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", TexTag, particleobj), E_FAIL);
+	}
 }
 
 void CEffectMgr::Effect_TextureEffect(wstring TexTag, _vec3 Scale, _vec3 Angle, _vec3 Pos, FRAME frame, bool isLoop,

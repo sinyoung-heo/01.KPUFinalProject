@@ -54,6 +54,10 @@ class CEffectAxe;
 class CMagicCircle;
 class CGridShieldEffect;
 class CMeshParticleEffect;
+class CWarningGround;
+class CRectDecal;
+class CDirParticleEffect;
+class CBreathEffect;
 class CInstancePoolMgr : public Engine::CBase
 {
 	DECLARE_SINGLETON(CInstancePoolMgr)
@@ -131,6 +135,12 @@ public:
 	INSTANCE_POOL_DESC<CMeshParticleEffect>* Get_Effect_MeshParticleRock3_Effect() { return m_pEffect_MeshParticleRock3_Pool; }
 	INSTANCE_POOL_DESC<CMeshParticleEffect>* Get_Effect_MeshParticleRock4_Effect() { return m_pEffect_MeshParticleRock4_Pool; }
 
+	INSTANCE_POOL_DESC<CWarningGround>* Get_Effect_WarningGround_Effect() { return m_pEffect_WarningGround_Pool; }
+	INSTANCE_POOL_DESC<CRectDecal>* Get_Effect_RectDecal_Effect() { return m_pEffect_RectDecal_Pool; }
+	INSTANCE_POOL_DESC<CDirParticleEffect>* Get_Effect_DirParticle_Effect() { return m_pEffect_DirParticle_Pool; }
+	INSTANCE_POOL_DESC<CBreathEffect>* Get_Effect_Breath_Effect() { return m_pEffect_BreathEffect_Pool; }
+	
+	
 	void Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 	void Ready_LoadingInstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 
@@ -227,6 +237,13 @@ private:
 	INSTANCE_POOL_DESC<CMeshParticleEffect>* m_pEffect_MeshParticleRock4_Pool = nullptr;
 	INSTANCE_POOL_DESC<CParticleEffect>* m_pEffect_Particle_Pool = nullptr;
 	INSTANCE_POOL_DESC<CTextureEffect>* m_pEffect_Texture_Pool = nullptr;
+
+	//Effect Boss
+	INSTANCE_POOL_DESC<CWarningGround>* m_pEffect_WarningGround_Pool = nullptr;
+	INSTANCE_POOL_DESC<CRectDecal>* m_pEffect_RectDecal_Pool = nullptr;
+	INSTANCE_POOL_DESC<CDirParticleEffect>* m_pEffect_DirParticle_Pool = nullptr;
+	INSTANCE_POOL_DESC<CBreathEffect>* m_pEffect_BreathEffect_Pool = nullptr;
+
 private:
 	virtual void Free();
 };

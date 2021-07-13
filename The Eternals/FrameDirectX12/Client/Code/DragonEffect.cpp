@@ -58,7 +58,7 @@ _int CDragonEffect::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_bisFireDecal = true;
 		CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.00f), _vec3(0.f),
-			m_pTransCom->m_vPos, true, false, 5, 5, 11, 11, 11, _vec2(15, 2), 500,false);
+			m_pTransCom->m_vPos, true, false,5, 10, 11, 11, 11, _vec2(15, 2), 500,false);
 
 	/*	CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 20, L"Lighting6", _vec3(0.4f));
 		m_bisFireDecal = true;
