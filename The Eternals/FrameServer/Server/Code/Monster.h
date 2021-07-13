@@ -37,7 +37,8 @@ public:
 	int		Update_Monster(const float& fTimeDelta);
 	void	Hurt_Monster(const int& p_id, const int& damage, const char& affect);	// ATTACKED BY PLAYER
 	bool	Affect_Monster(const int& to_client, const char& affect);
-	
+	void	Hurt_MonsterbyAI(const int& p_id, const int& damage);										// ATTACKED BY AI
+
 	/* MONSTER STATUS CHANGE */
 	void	Change_AttackMode();								// STATUS == ATTACK
 	void	Change_ChaseMode();									// STATUS == CHASE
@@ -102,7 +103,7 @@ private:
 	void	Dead_Vergos(const float& fTimeDelta);
 
 private:
-	void	Play_Animation(float fTimeDelta);	
+	void	Play_Animation(const float& fTimeDelta);	
 	bool	Is_AnimationSetEnd(const float& fTimeDelta);
 
 	float	Calculate_TargetDist(const _vec3& vPos);

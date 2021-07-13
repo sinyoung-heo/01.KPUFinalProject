@@ -17,6 +17,12 @@ namespace Priest
 	constexpr int MP_CHARGE_LOOP   = 13;
 	constexpr int MP_CHARGE_END    = 14;
 
+	constexpr int NUM_ANIMATION = 15;
+	static double duration[NUM_ANIMATION] =
+	{
+		27520,5280,2720,3840,4320,2400,7200,7200,7200,4800,4800,7200,4800,4800,4800
+	};
+
 	enum STANCE		{ STANCE_NONEATTACK, STANCE_ATTACK, STANCE_END };
 
 	constexpr float OTHERS_OFFSET	= 0.85f;

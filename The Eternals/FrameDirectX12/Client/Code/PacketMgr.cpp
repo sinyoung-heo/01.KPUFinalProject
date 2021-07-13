@@ -988,16 +988,16 @@ void CPacketMgr::Attack_User(sc_packet_attack* packet)
 		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
 		if (pObj == nullptr) return;
 
-
 		pObj->Set_AnimationIdx(packet->animIdx);
 		pObj->Reset_AttackMoveInterpolationRatio();
 		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
 
-		if (-1 != packet->end_angleY)
+		if (-1.f != packet->end_angleY)
 		{
 			pObj->Set_IsStartAngleInterpolation(true);
 			pObj->Set_LinearAngle(pObj->Get_Transform()->m_vAngle.y, packet->end_angleY);
 		}
+		
 		pObj->Set_Attack(true);
 
 		if (PC_ARCHER == pObj->Get_OType())

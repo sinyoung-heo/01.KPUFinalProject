@@ -13,7 +13,7 @@ CNpc::~CNpc()
 
 void CNpc::Set_AnimDuration(double arr[])
 {
-	for (int i = 0; i < MAX_ANI; ++i)
+	for (_uint i = 0; i < MAX_ANI; ++i)
 	{
 		if (m_uiNumAniIndex > i)
 			m_arrDuration[i] = arr[i];
@@ -439,7 +439,7 @@ void CNpc::Move_Walker_NPC(const float& fTimeDelta)
 	}
 
 	// 이동 전 viewlist & 이동 후 viewlist 비교 -> 각 유저들의 시야 목록 내에 NPC 존재 여부를 결정.
-	for (auto pl : old_viewlist)
+	for (auto& pl : old_viewlist)
 	{
 		// 이동 후에도 Monster 시야 목록 내에 "pl"(server number) 유저가 남아있는 경우
 		if (0 < new_viewlist.count(pl))
@@ -487,7 +487,7 @@ void CNpc::Move_Walker_NPC(const float& fTimeDelta)
 	}
 
 	// new_vielist 순회 -> 플레이어의 시야 목록에 있어야 할 새로운 npc들을 추가
-	for (auto pl : new_viewlist)
+	for (auto& pl : new_viewlist)
 	{
 		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
 		if (pPlayer != nullptr)

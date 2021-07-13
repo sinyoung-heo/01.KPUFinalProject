@@ -104,6 +104,9 @@ void Ready_Server()
 	/* Create Monster */
 	Initialize_Monster();
 
+	/* Create AI */
+	CObjMgr::GetInstance()->Create_AiPlayer();
+
 	std::wcout.imbue(std::locale("korean"));
 
 	/* WINSOCK ÃÊ±âÈ­ */
@@ -169,7 +172,6 @@ void Release_Server()
 void Initialize_NPC()
 {
 	CObjMgr::GetInstance()->Create_StageVelikaNPC();
-	//CObjMgr::GetInstance()->Create_AiPlayer();
 
 #ifdef TEST
 	cout << "NPC Initialize Finish.\n";
@@ -546,6 +548,36 @@ void worker_thread()
 			if (nullptr == pMonster) return;
 
 			pMonster->Change_AttackMode();
+			delete over_ex;
+		}
+		break;
+	
+		case OPMODE::OP_MODE_ACTIVE_AI:
+		{
+			CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", key));
+			if (nullptr == pAi) return;
+
+			pAi->Change_ActiveMode();
+			delete over_ex;
+		}
+		break;
+
+		case OPMODE::OP_MODE_CHASE_AI:
+		{
+			CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", key));
+			if (nullptr == pAi) return;
+
+			pAi->Change_ChaseMode();
+			delete over_ex;
+		}
+		break;
+
+		case OPMODE::OP_MODE_AI_NEXT_ATTACK:
+		{
+			CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", key));
+			if (nullptr == pAi) return;
+
+			pAi->Change_AttackMode();
 			delete over_ex;
 		}
 		break;

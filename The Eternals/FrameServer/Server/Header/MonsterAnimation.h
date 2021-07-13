@@ -7,7 +7,7 @@ namespace Monster_Normal
 	constexpr int RUN		= 2;
 	constexpr int ATTACK	= 3;
 
-	constexpr double TPS	= 4800.0;
+	constexpr float TPS		= 4800.0f;
 }
 namespace Crab
 {
