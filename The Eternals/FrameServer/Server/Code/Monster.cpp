@@ -33,7 +33,11 @@ void CMonster::Ready_Monster(const _vec3& pos, const _vec3& angle, const char& t
 
 	m_chStageId = naviType;
 
-	m_bIsConnect = true;
+	if (num == MON_VERGOS)
+		m_bIsConnect = false;
+	else
+		m_bIsConnect = true;
+
 	m_bIsDead = false;
 
 	m_vPos		= pos;
@@ -57,11 +61,9 @@ void CMonster::Ready_Monster(const _vec3& pos, const _vec3& angle, const char& t
 
 int CMonster::Update_Monster(const float& fTimeDelta)
 {
-	if (m_bIsRegen)
-		return NO_EVENT;
-
-	if (fTimeDelta > 1.f)
-		return NO_EVENT;
+	if (m_bIsConnect == false) return NO_EVENT;
+	if (m_bIsRegen) return NO_EVENT;
+	if (fTimeDelta > 1.f) return NO_EVENT;
 
 	Change_Animation(fTimeDelta);
 
@@ -492,7 +494,7 @@ void CMonster::Spawn_Vergos(const float& fTimeDelta)
 	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 	{
 		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
-		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) continue;
 
 		send_Monster_animation_packet(raid, m_uiAnimIdx);
 	}
@@ -663,7 +665,7 @@ void CMonster::Attack_Vergos(const float& fTimedelta)
 	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 	{
 		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
-		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) continue;
 
 		send_Monster_animation_packet(raid, m_uiAnimIdx);
 
@@ -710,7 +712,7 @@ void CMonster::Dead_Vergos(const float& fTimeDelta)
 	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 	{
 		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
-		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) continue;
 		
 		send_Monster_Dead(raid, Vergos::DEATH);
 
@@ -834,7 +836,7 @@ void CMonster::Move_NormalMonster(const float& fTimeDelta)
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 타 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 타유저일 경우 처리 */
 				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
@@ -1072,7 +1074,7 @@ void CMonster::Chase_Crab(const float& fTimeDelta)
 	}
 
 	// 이동 전 viewlist & 이동 후 viewlist 비교 -> 각 유저들의 시야 목록 내에 Monster 존재 여부를 결정.
-	for (auto pl : old_viewlist)
+	for (auto& pl : old_viewlist)
 	{
 		// 이동 후에도 Monster 시야 목록 내에 "pl"(server number) 유저가 남아있는 경우
 		if (0 < new_viewlist.count(pl))
@@ -1120,7 +1122,7 @@ void CMonster::Chase_Crab(const float& fTimeDelta)
 	}
 
 	// new_vielist 순회 -> 플레이어의 시야 목록에 있어야 할 새로운 Monster들을 추가
-	for (auto pl : new_viewlist)
+	for (auto& pl : new_viewlist)
 	{
 		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
 		if (pPlayer != nullptr)
@@ -1175,7 +1177,7 @@ void CMonster::Chase_Monkey(const float& fTimeDelta)
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 타 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 타유저일 경우 처리 */
 				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
@@ -1361,7 +1363,7 @@ void CMonster::Chase_Monkey(const float& fTimeDelta)
 	}
 
 	// new_vielist 순회 -> 플레이어의 시야 목록에 있어야 할 새로운 Monster들을 추가
-	for (auto pl : new_viewlist)
+	for (auto& pl : new_viewlist)
 	{
 		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
 		if (pPlayer != nullptr)
@@ -1524,7 +1526,7 @@ void CMonster::Chase_Cloder(const float& fTimeDelta)
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 타 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 타유저일 경우 처리 */
 				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
@@ -1543,7 +1545,7 @@ void CMonster::Chase_Cloder(const float& fTimeDelta)
 	}
 
 	// 이동 전 viewlist & 이동 후 viewlist 비교 -> 각 유저들의 시야 목록 내에 Monster 존재 여부를 결정.
-	for (auto pl : old_viewlist)
+	for (auto& pl : old_viewlist)
 	{
 		// 이동 후에도 Monster 시야 목록 내에 "pl"(server number) 유저가 남아있는 경우
 		if (0 < new_viewlist.count(pl))
@@ -1591,7 +1593,7 @@ void CMonster::Chase_Cloder(const float& fTimeDelta)
 	}
 
 	// new_vielist 순회 -> 플레이어의 시야 목록에 있어야 할 새로운 Monster들을 추가
-	for (auto pl : new_viewlist)
+	for (auto& pl : new_viewlist)
 	{
 		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
 		if (pPlayer != nullptr)
@@ -1783,7 +1785,7 @@ void CMonster::Chase_DrownedSailor(const float& fTimeDelta)
 	}
 
 	// 이동 전 viewlist & 이동 후 viewlist 비교 -> 각 유저들의 시야 목록 내에 Monster 존재 여부를 결정.
-	for (auto pl : old_viewlist)
+	for (auto& pl : old_viewlist)
 	{
 		// 이동 후에도 Monster 시야 목록 내에 "pl"(server number) 유저가 남아있는 경우
 		if (0 < new_viewlist.count(pl))
@@ -1831,7 +1833,7 @@ void CMonster::Chase_DrownedSailor(const float& fTimeDelta)
 	}
 
 	// new_vielist 순회 -> 플레이어의 시야 목록에 있어야 할 새로운 Monster들을 추가
-	for (auto pl : new_viewlist)
+	for (auto& pl : new_viewlist)
 	{
 		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
 		if (pPlayer != nullptr)
@@ -2020,7 +2022,7 @@ void CMonster::Chase_GiantBeetle(const float& fTimeDelta)
 	}
 
 	// 이동 전 viewlist & 이동 후 viewlist 비교 -> 각 유저들의 시야 목록 내에 Monster 존재 여부를 결정.
-	for (auto pl : old_viewlist)
+	for (auto& pl : old_viewlist)
 	{
 		// 이동 후에도 Monster 시야 목록 내에 "pl"(server number) 유저가 남아있는 경우
 		if (0 < new_viewlist.count(pl))
@@ -2068,7 +2070,7 @@ void CMonster::Chase_GiantBeetle(const float& fTimeDelta)
 	}
 
 	// new_vielist 순회 -> 플레이어의 시야 목록에 있어야 할 새로운 Monster들을 추가
-	for (auto pl : new_viewlist)
+	for (auto& pl : new_viewlist)
 	{
 		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
 		if (pPlayer != nullptr)
@@ -2271,7 +2273,7 @@ void CMonster::Chase_GiantMonkey(const float& fTimeDelta)
 	}
 
 	// 이동 전 viewlist & 이동 후 viewlist 비교 -> 각 유저들의 시야 목록 내에 Monster 존재 여부를 결정.
-	for (auto pl : old_viewlist)
+	for (auto& pl : old_viewlist)
 	{
 		// 이동 후에도 Monster 시야 목록 내에 "pl"(server number) 유저가 남아있는 경우
 		if (0 < new_viewlist.count(pl))
@@ -2319,7 +2321,7 @@ void CMonster::Chase_GiantMonkey(const float& fTimeDelta)
 	}
 
 	// new_vielist 순회 -> 플레이어의 시야 목록에 있어야 할 새로운 Monster들을 추가
-	for (auto pl : new_viewlist)
+	for (auto& pl : new_viewlist)
 	{
 		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
 		if (pPlayer != nullptr)
@@ -2642,7 +2644,7 @@ void CMonster::Attack_Crab(const float& fTimeDelta)
 		Set_AnimationKey(m_uiAnimIdx);
 
 		// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
-		for (auto pl : old_viewlist)
+		for (auto& pl : old_viewlist)
 		{
 			/* 유저일 경우 처리 */
 			if (true == CObjMgr::GetInstance()->Is_Player(pl))
@@ -2697,7 +2699,7 @@ void CMonster::Attack_Monkey(const float& fTimeDelta)
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 유저일 경우 처리 */
 				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
@@ -2740,7 +2742,7 @@ void CMonster::Attack_Monkey(const float& fTimeDelta)
 		Set_AnimationKey(m_uiAnimIdx);
 		
 		// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
-		for (auto pl : old_viewlist)
+		for (auto& pl : old_viewlist)
 		{
 			/* 유저일 경우 처리 */
 			if (true == CObjMgr::GetInstance()->Is_Player(pl))
@@ -2793,7 +2795,7 @@ void CMonster::Attack_Cloder(const float& fTimeDelta)
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 유저일 경우 처리 */
 				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
@@ -2825,7 +2827,7 @@ void CMonster::Attack_Cloder(const float& fTimeDelta)
 		Set_AnimationKey(m_uiAnimIdx);
 
 		// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
-		for (auto pl : old_viewlist)
+		for (auto& pl : old_viewlist)
 		{
 			/* 유저일 경우 처리 */
 			if (true == CObjMgr::GetInstance()->Is_Player(pl))
@@ -2881,7 +2883,7 @@ void CMonster::Attack_DrownedSailor(const float& fTimeDelta)
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 유저일 경우 처리 */
 				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
@@ -2992,7 +2994,7 @@ void CMonster::Attack_GiantBeetle(const float& fTimeDelta)
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 유저일 경우 처리 */
 				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
@@ -3048,7 +3050,7 @@ void CMonster::Attack_GiantBeetle(const float& fTimeDelta)
 		if (m_bIsRushAttack) return;
 
 		// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
-		for (auto pl : old_viewlist)
+		for (auto& pl : old_viewlist)
 		{
 			/* 유저일 경우 처리 */
 			if (true == CObjMgr::GetInstance()->Is_Player(pl))
@@ -3104,7 +3106,7 @@ void CMonster::Attack_GiantMonkey(const float& fTimeDelta)
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 유저일 경우 처리 */
 				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
@@ -3175,7 +3177,7 @@ void CMonster::Attack_GiantMonkey(const float& fTimeDelta)
 		if (m_bIsRushAttack) return;
 
 		// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
-		for (auto pl : old_viewlist)
+		for (auto& pl : old_viewlist)
 		{
 			/* 유저일 경우 처리 */
 			if (true == CObjMgr::GetInstance()->Is_Player(pl))
@@ -3321,12 +3323,12 @@ void CMonster::Rush_DrownedSailor(const float& fTimeDelta)
 		}
 	}
 
-	for (auto pl : old_viewlist)
+	for (auto& pl : old_viewlist)
 	{
 		/* 유저일 경우 처리 */
 		if (true == CObjMgr::GetInstance()->Is_Player(pl))
 		{		
-			if (m_uiAnimIdx == DrownedSailor::ATTACK_RUSH)
+			//if (m_uiAnimIdx == DrownedSailor::ATTACK_RUSH)
 			{
 				send_Monster_RushAttack(pl, m_uiAnimIdx);
 			}
@@ -3417,7 +3419,7 @@ void CMonster::Rush_GiantMonkey(const float& fTimeDelta)
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 유저일 경우 처리 */
 				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
@@ -3435,12 +3437,12 @@ void CMonster::Rush_GiantMonkey(const float& fTimeDelta)
 		}
 	}
 
-	for (auto pl : old_viewlist)
+	for (auto& pl : old_viewlist)
 	{
 		/* 유저일 경우 처리 */
 		if (true == CObjMgr::GetInstance()->Is_Player(pl))
 		{
-			if (m_uiAnimIdx == GiantMonkey::ATTACK_JUMPING || m_uiAnimIdx == GiantMonkey::ATTACK_COMBO)
+			//if (m_uiAnimIdx == GiantMonkey::ATTACK_JUMPING || m_uiAnimIdx == GiantMonkey::ATTACK_COMBO)
 			{
 				send_Monster_RushAttack(pl, m_uiAnimIdx);
 			}
@@ -3484,7 +3486,7 @@ void CMonster::Knockback_Monkey(const float& fTimeDelta)
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 유저일 경우 처리 */
 				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
@@ -3505,7 +3507,7 @@ void CMonster::Knockback_Monkey(const float& fTimeDelta)
 	// 넉백 후의 위치 갱신
 	m_vKnockbackPos = m_vPos + (-1.f * m_vDir) * NUCKBACK_DIST;
 
-	for (auto pl : old_viewlist)
+	for (auto& pl : old_viewlist)
 	{
 		/* 유저일 경우 처리 */
 		if (true == CObjMgr::GetInstance()->Is_Player(pl))
@@ -3554,7 +3556,7 @@ void CMonster::Knockback_DrownedSailor(const float& fTimeDelta)
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 유저일 경우 처리 */
 				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
@@ -3575,7 +3577,7 @@ void CMonster::Knockback_DrownedSailor(const float& fTimeDelta)
 	// 넉백 후의 위치 갱신
 	m_vKnockbackPos = m_vPos + (-1.f * m_vDir) * NUCKBACK_DIST;
 
-	for (auto pl : old_viewlist)
+	for (auto& pl : old_viewlist)
 	{
 		/* 유저일 경우 처리 */
 		if (true == CObjMgr::GetInstance()->Is_Player(pl))
@@ -3624,7 +3626,7 @@ void CMonster::Knockback_GiantMonkey(const float& fTimeDelta)
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 유저일 경우 처리 */
 				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
@@ -3645,7 +3647,7 @@ void CMonster::Knockback_GiantMonkey(const float& fTimeDelta)
 	// 넉백 후의 위치 갱신
 	m_vKnockbackPos = m_vPos + (-1.f * m_vDir) * NUCKBACK_DIST;
 
-	for (auto pl : old_viewlist)
+	for (auto& pl : old_viewlist)
 	{
 		/* 유저일 경우 처리 */
 		if (true == CObjMgr::GetInstance()->Is_Player(pl))
@@ -3767,7 +3769,7 @@ void CMonster::Dead_Monkey(const float& fTimeDelta)
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 유저일 경우 처리 */
 				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
@@ -3786,7 +3788,7 @@ void CMonster::Dead_Monkey(const float& fTimeDelta)
 	}
 
 	// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
-	for (auto pl : old_viewlist)
+	for (auto& pl : old_viewlist)
 	{
 		send_Monster_Dead(pl, Monkey::DEATH);
 
@@ -3839,7 +3841,7 @@ void CMonster::Dead_Cloder(const float& fTimeDelta)
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 유저일 경우 처리 */
 				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
@@ -3858,7 +3860,7 @@ void CMonster::Dead_Cloder(const float& fTimeDelta)
 	}
 
 	// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
-	for (auto pl : old_viewlist)
+	for (auto& pl : old_viewlist)
 	{
 		send_Monster_Dead(pl, Cloder::DEATH);
 
@@ -3911,7 +3913,7 @@ void CMonster::Dead_DrownedSailor(const float& fTimeDelta)
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 유저일 경우 처리 */
 				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
@@ -3930,7 +3932,7 @@ void CMonster::Dead_DrownedSailor(const float& fTimeDelta)
 	}
 
 	// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
-	for (auto pl : old_viewlist)
+	for (auto& pl : old_viewlist)
 	{
 		send_Monster_Dead(pl, DrownedSailor::DEATH);
 
@@ -4055,7 +4057,7 @@ void CMonster::Dead_GiantMonkey(const float& fTimeDelta)
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 유저일 경우 처리 */
 				if (true == CObjMgr::GetInstance()->Is_Player(obj_num))
@@ -4074,7 +4076,7 @@ void CMonster::Dead_GiantMonkey(const float& fTimeDelta)
 	}
 
 	// Monster View List 내의 유저들에게 해당 Monster의 공격 시작을 알림.
-	for (auto pl : old_viewlist)
+	for (auto& pl : old_viewlist)
 	{
 		send_Monster_Dead(pl, GiantMonkey::DEATH);
 

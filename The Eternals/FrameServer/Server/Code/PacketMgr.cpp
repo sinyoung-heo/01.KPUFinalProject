@@ -139,18 +139,18 @@ void process_packet(int id)
 						pMonster->send_Monster_enter_packet(id);
 					}
 					/* AI일 경우 처리*/
-					else if (true == CObjMgr::GetInstance()->Is_AI(obj_num))
-					{
-						CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", obj_num));
+					//else if (true == CObjMgr::GetInstance()->Is_AI(obj_num))
+					//{
+					//	CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", obj_num));
 	
-						// 시야 내에 없다면 시야 목록에 등록X
-						if (false == CObjMgr::GetInstance()->Is_Near(pPlayer, pAi)) continue;
-						pPlayer->v_lock.lock();
-						pPlayer->view_list.insert(obj_num);
-						pPlayer->v_lock.unlock();
+					//	// 시야 내에 없다면 시야 목록에 등록X
+					//	if (false == CObjMgr::GetInstance()->Is_Near(pPlayer, pAi)) continue;
+					//	pPlayer->v_lock.lock();
+					//	pPlayer->view_list.insert(obj_num);
+					//	pPlayer->v_lock.unlock();
 
-						pAi->send_AI_enter_packet(id);										
-					}
+					//	pAi->send_AI_enter_packet(id);										
+					//}
 				}
 			}
 		}
@@ -430,11 +430,12 @@ void send_packet(int id, void* p)
 	ZeroMemory(&send_over->wsa_over, sizeof(send_over->wsa_over));
 
 	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
-
-	pPlayer->Get_ClientLock().lock();
-	if (pPlayer->Get_IsConnected())
+	if (pPlayer != nullptr && pPlayer->Get_IsConnected())
+	{
+		pPlayer->Get_ClientLock().lock();
 		WSASend(pPlayer->m_sock, &send_over->wsa_buf, 1, NULL, 0, &send_over->wsa_over, NULL);
-	pPlayer->Get_ClientLock().unlock();
+		pPlayer->Get_ClientLock().unlock();
+	}	
 }
 
 void send_leave_packet(const int& to_client, const int& leave_id)
@@ -576,17 +577,17 @@ void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 					}
 				}
 				/* AI일 경우 처리*/
-				else if (true == CObjMgr::GetInstance()->Is_AI(obj_num))
-				{
-					CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", obj_num));
+				//else if (true == CObjMgr::GetInstance()->Is_AI(obj_num))
+				//{
+				//	CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", obj_num));
 		
-					// 시야 내에 없다면 시야 목록에 등록X.
-					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pAi))
-					{
-						new_viewlist.insert(obj_num);
-						pAi->active_AI();
-					}
-				}
+				//	// 시야 내에 없다면 시야 목록에 등록X.
+				//	if (CObjMgr::GetInstance()->Is_Near(pPlayer, pAi))
+				//	{
+				//		new_viewlist.insert(obj_num);
+				//		pAi->active_AI();
+				//	}
+				//}
 			}
 		}
 	}
@@ -608,13 +609,6 @@ void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 			new_viewlist.insert(iter_begin->second->m_sNum);
 			static_cast<CAi*>(iter_begin->second)->active_AI();
 		}
-
-		/*CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", 9000));
-		if (pAi != nullptr)
-		{
-			new_viewlist.insert(9000);
-			pAi->active_AI();
-		}*/
 	}
 
 	/* 새로운 시야 목록 내의 객체 처리 */
@@ -821,17 +815,17 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 					}
 				}
 				/* AI일 경우 처리*/
-				else if (true == CObjMgr::GetInstance()->Is_AI(obj_num))
-				{
-					CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", obj_num));
+				//else if (true == CObjMgr::GetInstance()->Is_AI(obj_num))
+				//{
+				//	CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", obj_num));
 
-					// 시야 내에 없다면 시야 목록에 등록X.
-					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pAi))
-					{
-						new_viewlist.insert(obj_num);
-						pAi->active_AI();
-					}
-				}
+				//	// 시야 내에 없다면 시야 목록에 등록X.
+				//	if (CObjMgr::GetInstance()->Is_Near(pPlayer, pAi))
+				//	{
+				//		new_viewlist.insert(obj_num);
+				//		pAi->active_AI();
+				//	}
+				//}
 			}
 		}
 	}
@@ -853,13 +847,6 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 			new_viewlist.insert(iter_begin->second->m_sNum);
 			static_cast<CAi*>(iter_begin->second)->active_AI();
 		}
-
-		/*CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", 9000));
-		if (pAi != nullptr)
-		{
-			new_viewlist.insert(9000);
-			pAi->active_AI();
-		}*/
 	}
 
 	/* 새로운 시야 목록 내의 객체 처리 */
@@ -1133,17 +1120,17 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx, 
 					}
 				}
 				/* AI일 경우 처리*/
-				else if (true == CObjMgr::GetInstance()->Is_AI(obj_num))
-				{
-					CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", obj_num));
+				//else if (true == CObjMgr::GetInstance()->Is_AI(obj_num))
+				//{
+				//	CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", obj_num));
 
-					// 시야 내에 없다면 시야 목록에 등록X.
-					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pAi))
-					{
-						new_viewlist.insert(obj_num);
-						pAi->active_AI();
-					}
-				}
+				//	// 시야 내에 없다면 시야 목록에 등록X.
+				//	if (CObjMgr::GetInstance()->Is_Near(pPlayer, pAi))
+				//	{
+				//		new_viewlist.insert(obj_num);
+				//		pAi->active_AI();
+				//	}
+				//}
 			}
 		}
 	}
@@ -1165,13 +1152,6 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx, 
 			new_viewlist.insert(iter_begin->second->m_sNum);
 			static_cast<CAi*>(iter_begin->second)->active_AI();
 		}
-
-		/*CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", 9000));
-		if (pAi != nullptr)
-		{
-			new_viewlist.insert(9000);
-			pAi->active_AI();
-		}*/
 	}
 
 	/* 새로운 시야 목록 내의 객체 처리 */
@@ -1365,7 +1345,7 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx, 
 			CPlayer* pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", member));
 			if (pOther == nullptr || !pOther->m_bIsConnect || !pOther->m_bIsPartyState || member == id) continue;
 
-			// 파티원 버프 능력치 전송
+			// 현재 능력치 전송
 			pPlayer->send_update_party(member);
 		}
 	}
@@ -1460,17 +1440,17 @@ void process_attack_stop(int id, const _vec3& _vDir, const _vec3& _vPos, int ani
 					}
 				}
 				/* AI일 경우 처리*/
-				else if (true == CObjMgr::GetInstance()->Is_AI(obj_num))
-				{
-					CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", obj_num));
+				//else if (true == CObjMgr::GetInstance()->Is_AI(obj_num))
+				//{
+				//	CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", obj_num));
 
-					// 시야 내에 없다면 시야 목록에 등록X.
-					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pAi))
-					{
-						new_viewlist.insert(obj_num);
-						pAi->active_AI();
-					}
-				}
+				//	// 시야 내에 없다면 시야 목록에 등록X.
+				//	if (CObjMgr::GetInstance()->Is_Near(pPlayer, pAi))
+				//	{
+				//		new_viewlist.insert(obj_num);
+				//		pAi->active_AI();
+				//	}
+				//}
 			}
 		}
 	}
@@ -1492,13 +1472,6 @@ void process_attack_stop(int id, const _vec3& _vDir, const _vec3& _vPos, int ani
 			new_viewlist.insert(iter_begin->second->m_sNum);
 			static_cast<CAi*>(iter_begin->second)->active_AI();
 		}
-
-		/*CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", 9000));
-		if (pAi != nullptr)
-		{
-			new_viewlist.insert(9000);
-			pAi->active_AI();
-		}*/
 	}
 
 	/* 새로운 시야 목록 내의 객체 처리 */
@@ -1706,17 +1679,17 @@ void process_buff(const int& id, cs_packet_attack* p)
 					}
 				}
 				/* AI일 경우 처리*/
-				else if (true == CObjMgr::GetInstance()->Is_AI(obj_num))
-				{
-					CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", obj_num));
+				//else if (true == CObjMgr::GetInstance()->Is_AI(obj_num))
+				//{
+				//	CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", obj_num));
 
-					// 시야 내에 없다면 시야 목록에 등록X.
-					if (CObjMgr::GetInstance()->Is_Near(pPlayer, pAi))
-					{
-						new_viewlist.insert(obj_num);
-						pAi->active_AI();
-					}
-				}
+				//	// 시야 내에 없다면 시야 목록에 등록X.
+				//	if (CObjMgr::GetInstance()->Is_Near(pPlayer, pAi))
+				//	{
+				//		new_viewlist.insert(obj_num);
+				//		pAi->active_AI();
+				//	}
+				//}
 			}
 		}
 	}
@@ -1738,13 +1711,6 @@ void process_buff(const int& id, cs_packet_attack* p)
 			new_viewlist.insert(iter_begin->second->m_sNum);
 			static_cast<CAi*>(iter_begin->second)->active_AI();
 		}
-
-		/*CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", 9000));
-		if (pAi != nullptr)
-		{
-			new_viewlist.insert(9000);
-			pAi->active_AI();
-		}*/
 	}
 
 	/* 새로운 시야 목록 내의 객체 처리 */
@@ -1998,6 +1964,40 @@ void process_stage_change(int id, const char& stage_id)
 	{
 		pPlayer->m_vPos = _vec3(STAGE_WINTER_X, 0.0f, STAGE_WINTER_Z);
 		CObjMgr::GetInstance()->Add_RaidList(id);
+
+		/* 기존 파티 탈퇴 -> 레이드 파티 가입 */
+		process_leave_party(id);
+
+		CObjMgr::GetInstance()->Add_PartyMember(RAID_PARTY, &pPlayer->m_iPartyNumber, id);
+		pPlayer->m_bIsPartyState = true;
+
+		// 파티구성원들에게 새로운 파티멤버 정보 전송
+		for (auto& p : *CObjMgr::GetInstance()->Get_PARTYLIST(RAID_PARTY))
+		{			
+			if (p != id)
+			{
+				if (CObjMgr::GetInstance()->Is_Player(p) == true)
+				{
+					CPlayer* pMember = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", p));
+					if (pMember == nullptr) continue;
+					if (!pMember->m_bIsConnect) continue;
+
+					// 새로운 멤버 정보 -> 기존 구성원			
+					pPlayer->send_enter_party(p);
+					// 기존 구성원 정보 -> 새로운 멤버
+					pMember->send_enter_party(id);
+				}
+				else if(CObjMgr::GetInstance()->Is_AI(p) == true)
+				{
+					CAi* pMember = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", p));
+					if (pMember != nullptr)
+					{
+						// 기존 구성원 정보 -> 새로운 멤버
+						pMember->send_enter_party(id);
+					}					
+				}				
+			}
+		}
 	}
 	break;
 	}
@@ -2025,6 +2025,16 @@ void process_stage_change(int id, const char& stage_id)
 
 	/* 변경된 좌표로 섹터 갱신 */
 	CSectorMgr::GetInstance()->Compare_exchange_Sector(id, (int)ori_z, (int)ori_x, (int)(pPlayer->m_vPos.z), (int)(pPlayer->m_vPos.x));
+
+	/* AI & Vergos Connect */
+	if (CObjMgr::GetInstance()->Get_RAIDLIST()->size() >= 2)
+	{
+		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
+		if (pMonster != nullptr && pMonster->Get_IsConnected() == false)
+		{
+			add_timer(pMonster->m_sNum, OP_MODE_RAID_START, system_clock::now() + 10s);
+		}
+	}
 }
 
 void process_suggest_party(const int& suggester_id, const int& others_id)
@@ -2168,7 +2178,7 @@ void process_leave_party(const int& id)
 	// 파티 구성원들에게 파티 탈퇴를 알림
 	for (auto& p : *CObjMgr::GetInstance()->Get_PARTYLIST(pUser->m_iPartyNumber))
 	{
-		if (p != id)
+		if (CObjMgr::GetInstance()->Is_Player(p) == true && p != id)
 		{
 			// 탈퇴 멤버 정보 -> 기존 구성원
 			pUser->send_leave_party(p);
