@@ -34,6 +34,7 @@ public:
 	void	Reset_Vergos();
 	void	Reset_PrionBerserkerPosition();
 	void	Set_IsMoveStopPrionBerserker(const _bool& bIsMoveStop);
+	void	Set_IsCancleCinematic(const _bool& bIsCancel) { m_bIsCancelCinematic = bIsCancel; }
 private:
 	vector<Engine::CGameObject*> m_vecAnimationLakan;
 	vector<Engine::CGameObject*> m_vecAnimationPrionBerserker;
@@ -49,6 +50,8 @@ private:
 	Engine::CGameObject*	m_pPrionBerserkerBoss = nullptr;
 	Engine::CGameObject*	arrLakan[LINEUP_Z][LINEUP_X];
 	Engine::CGameObject*	arrPrionBerserker[LINEUP_Z][LINEUP_X];
+
+	_bool m_bIsCancelCinematic = false;
 private:
 	virtual void Free();
 

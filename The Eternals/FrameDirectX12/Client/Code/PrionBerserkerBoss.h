@@ -25,6 +25,7 @@ public:
 	void Set_OriginPos(const _vec3& vPos) { m_vOriginPos = vPos; }
 	void Reset_Position() { m_pTransCom->m_vPos = m_vOriginPos; }
 	void Set_IsMoveStob(const _bool& bIsMoveStop) { m_bIsMoveStop = bIsMoveStop; }
+	void Set_IsCameraShaking(const _bool& bIsShaking) { m_bIsCameraShaking = bIsShaking; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
@@ -77,6 +78,7 @@ private:
 	_bool	m_bIsStartDissolve       = false;
 	_float	m_fDissolve              = -0.05f;
 	_rgba	m_vEmissiveColor         = _rgba(1.0f, 0.0f, 0.0f, 1.0f);
+	_bool	m_bIsCameraShaking = false;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]

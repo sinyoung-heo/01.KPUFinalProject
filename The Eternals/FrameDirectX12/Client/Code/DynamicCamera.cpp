@@ -431,6 +431,7 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicLakanCenter(const _float& fTime
 	if (!m_bIsSettingCinematicValue)
 	{
 		m_bIsSettingCinematicValue = true;
+
 		m_fCameraTime              = 0.0f;
 		m_fUpdateCameraTime        = 3.0f;
 	}
@@ -474,6 +475,7 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicPrionBerserkerBoss(const _float
 	if (!m_bIsSettingCinematicValue)
 	{
 		m_bIsSettingCinematicValue = true;
+
 		m_fCameraTime              = 0.0f;
 		m_fUpdateCameraTime        = 5.0f;
 
@@ -525,6 +527,7 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicVergosFlying(const _float& fTim
 	if (!m_bIsSettingCinematicValue)
 	{
 		m_bIsSettingCinematicValue = true;
+
 		pTarget->Set_IsUpdate(true);
 		CCinemaMgr::Get_Instance()->Spawn_Vergos();
 		m_tCameraInfo.vEye = _vec3(380.0f, 0.0f, 380.0f);
@@ -542,8 +545,7 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicVergosFlying(const _float& fTim
 		m_tCameraInfo.vAt = _vec3(matWorld._41, matWorld._42, matWorld._43);
 	}
 
-	// if (uiCurAnimationFrame >= 215)
-	if (uiCurAnimationFrame >= 120)
+	if (uiCurAnimationFrame >= 90)
 	{
 		m_bIsSettingCinematicValue = false;
 		m_eCameraState = CAMERA_STATE::CINEMATIC_VERGOS_SPAWN_SCREAMING;
@@ -598,8 +600,9 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicPrionBerserkerScreaming(const _
 
 	if (!m_bIsSettingCinematicValue)
 	{
-		m_tProjInfo.fFovY = 50.0f;
 		m_bIsSettingCinematicValue = true;
+
+		m_tProjInfo.fFovY = 50.0f;
 		pTarget->Set_State(PrionBerserkerBoss::ANGRY);
 		pTarget->Set_IsPrionBerserkerScreaming(true);
 	}
@@ -610,6 +613,11 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicPrionBerserkerScreaming(const _
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 	m_tCameraInfo.vEye.TransformCoord(_vec3(0.0f, 0.0f, -1.0f), m_pTransCom->m_matWorld);
+
+	// Camera Shaking
+	SetUp_CameraShaking(fTimeDelta);
+	m_tCameraInfo.vEye.x += m_tCameraShakingDesc.vEyeOffset.x;
+	m_tCameraInfo.vEye.y += m_tCameraShakingDesc.vEyeOffset.y;
 
 	if (nullptr != m_pCameraAtSkinningMatrix)
 	{
@@ -631,6 +639,8 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicPrionBerserkerRush(const _float
 
 	if (!m_bIsSettingCinematicValue)
 	{
+		m_bIsSettingCinematicValue = true;
+
 		m_vEyeInterpolationDesc.is_start_interpolation = true;
 		m_vEyeInterpolationDesc.linear_ratio           = 0.0f;
 		m_vEyeInterpolationDesc.interpolation_speed    = 0.35f;
@@ -638,7 +648,6 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicPrionBerserkerRush(const _float
 		m_vEyeInterpolationDesc.v2                     = _vec3(387.0f, 12.0f, 470.0f);
 
 		m_tProjInfo.fFovY = 50.0f;
-		m_bIsSettingCinematicValue = true;
 		CCinemaMgr::Get_Instance()->Rush_Prion();
 	}
 	 

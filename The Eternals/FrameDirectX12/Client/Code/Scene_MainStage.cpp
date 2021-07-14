@@ -111,8 +111,7 @@ _int CScene_MainStage::Update_Scene(const _float & fTimeDelta)
 		CMouseCursorMgr::Get_Instance()->Ready_MouseCursorMgr();
 	}
 
-	if (g_bIsCinemaStart)
-		CCinemaMgr::Get_Instance()->Update_Animation(fTimeDelta);
+	CCinemaMgr::Get_Instance()->Update_Animation(fTimeDelta);
 
 	return Engine::CScene::Update_Scene(fTimeDelta);
 }

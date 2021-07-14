@@ -9,6 +9,7 @@
 #include <iterator>
 #include <random>
 #include "DirectInput.h"
+#include "FadeInOut.h"
 
 IMPLEMENT_SINGLETON(CCinemaMgr)
 
@@ -205,6 +206,28 @@ HRESULT CCinemaMgr::Ready_CinemaCharacter()
 
 void CCinemaMgr::Update_Animation(const _float& fTimeDelta)
 {
+	if (!g_bIsCinemaStart)
+		return;
+
+	if (g_bIsCinemaStart)
+	{
+		if (Engine::KEY_DOWN(DIK_ESCAPE))
+		{
+			if (!m_bIsCancelCinematic)
+			{
+				m_bIsCancelCinematic = true;
+
+				Engine::CGameObject* pGameObj = nullptr;
+				pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
+				if (nullptr != pGameObj)
+				{
+					static_cast<CFadeInOut*>(pGameObj)->Set_FadeInOutEventType(EVENT_TYPE::EVENT_CINEMATIC_ENDING);
+					m_pObjectMgr->Add_GameObject(L"Layer_UI", L"FadeInOut", pGameObj);
+				}
+			}
+		}
+	}
+
 	for (auto& pObj : m_vecAnimationLakan)
 		static_cast<CLakan*>(pObj)->Get_MeshComponent()->Play_Animation(fTimeDelta * TPS * m_fLakanAnimationSpeed);
 
@@ -337,6 +360,7 @@ void CCinemaMgr::Reset_PrionBerserkerPosition()
 	static_cast<CPrionBerserkerBoss*>(m_pPrionBerserkerBoss)->Set_State(PrionBerserkerBoss::A_WAIT);
 	static_cast<CPrionBerserkerBoss*>(m_pPrionBerserkerBoss)->Set_MoveStop(true);
 	static_cast<CPrionBerserkerBoss*>(m_pPrionBerserkerBoss)->Set_IsPrionBerserkerScreaming(false);
+	static_cast<CPrionBerserkerBoss*>(m_pPrionBerserkerBoss)->Set_IsCameraShaking(false);
 }
 
 void CCinemaMgr::Set_IsMoveStopPrionBerserker(const _bool& bIsMoveStop)

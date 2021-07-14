@@ -163,11 +163,14 @@ _int CQuestMessageButton::LateUpdate_GameObject(const _float& fTimeDelta)
 				CCinemaMgr::Get_Instance()->Reset_LakanPosition();
 				CCinemaMgr::Get_Instance()->Reset_PrionBerserkerPosition();
 				CCinemaMgr::Get_Instance()->Reset_Vergos();
+				CCinemaMgr::Get_Instance()->Set_IsCancleCinematic(false);
 
 				// Set DynamicCamera State
 				pDynamicCamera->Set_CameraState(CAMERA_STATE::THIRD_PERSON_VIEW);
 				pDynamicCamera->Set_CameraAtParentMatrix(nullptr);
 				pDynamicCamera->Set_ResetFovY();
+				pDynamicCamera->Set_IsCinematicEnding(false);
+				pDynamicCamera->Set_IsSettingCameraCinematicValue(false);
 			}
 		}
 

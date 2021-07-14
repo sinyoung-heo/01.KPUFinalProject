@@ -235,8 +235,7 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 					g_bIsCinemaStart = true;
 					// Set DynamicCamera State
 					CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
-					//pDynamicCamera->Set_CameraState(CAMERA_STATE::CINEMATIC_LAKAN_ALL);
-					pDynamicCamera->Set_CameraState(CAMERA_STATE::CINEMATIC_VERGOS_SPAWN_FLYING);
+					pDynamicCamera->Set_CameraState(CAMERA_STATE::CINEMATIC_LAKAN_ALL);
 					pDynamicCamera->SetUp_ThirdPersonViewOriginData();
 				}
 			}
@@ -261,16 +260,17 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 				m_bIsCinematicEnding = true;
 
 				// Stage Setting.
-				// g_bIsCinemaStart = false;
+				g_bIsCinemaStart = false;
 				CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
-				// pDynamicCamera->Set_CameraState(CAMERA_STATE::THIRD_PERSON_VIEW);
-				pDynamicCamera->Set_CameraState(CAMERA_STATE::CINEMATIC_LAKAN_ALL);
+				pDynamicCamera->Set_CameraState(CAMERA_STATE::THIRD_PERSON_VIEW);
 				pDynamicCamera->Set_ResetFovY();
 				pDynamicCamera->Set_IsCinematicEnding(false);
 				pDynamicCamera->Set_IsSettingCameraCinematicValue(false);
+				pDynamicCamera->Set_CameraAtParentMatrix(nullptr);
 				CCinemaMgr::Get_Instance()->Reset_PrionBerserkerPosition();
 				CCinemaMgr::Get_Instance()->Reset_LakanPosition();
 				CCinemaMgr::Get_Instance()->Reset_Vergos();
+				CCinemaMgr::Get_Instance()->Set_IsCancleCinematic(false);
 			}
 		}
 		else

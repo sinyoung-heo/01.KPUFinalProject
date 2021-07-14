@@ -109,6 +109,24 @@ _int CPrionBerserkerBoss::Update_GameObject(const _float& fTimeDelta)
 
 	Active_Monster(fTimeDelta);
 
+	// ½Ã³×¸¶Æ½.
+	if (m_bIsPrionBerserkerScreaming && m_ui3DMax_CurFrame > 50)
+	{
+		if (!m_bIsCameraShaking)
+		{
+			m_bIsCameraShaking = true;
+
+			CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
+
+			CAMERA_SHAKING_DESC tCameraShakingDesc;
+			tCameraShakingDesc.fUpdateShakingTime = 1.75f;
+			tCameraShakingDesc.vMin = _vec2(-175.0f, -175.0f);
+			tCameraShakingDesc.vMax = _vec2(175.0f, 175.0f);
+			tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 4.0f;
+			pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
+		}
+	}
+
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
@@ -323,9 +341,7 @@ void CPrionBerserkerBoss::Change_Animation(const _float& fTimeDelta)
 
 				// ½Ã³×¸¶Æ½.
 				if (m_bIsPrionBerserkerScreaming)
-				{
 					CCinemaMgr::Get_Instance()->Scream_PrionBerserkers();
-				}
 			}
 		}
 		break;
@@ -349,7 +365,6 @@ void CPrionBerserkerBoss::Change_Animation(const _float& fTimeDelta)
 					CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
 					pDynamicCamera->Set_CameraState(CAMERA_STATE::CINEMATIC_RUSH_PRIONBERSERKER);
 					pDynamicCamera->Set_IsSettingCameraCinematicValue(false);
-					// CCinemaMgr::Get_Instance()->Rush_Prion();
 				}
 			}
 		}
