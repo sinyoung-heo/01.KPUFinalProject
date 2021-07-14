@@ -128,6 +128,7 @@ _int CQuestMessageButton::LateUpdate_GameObject(const _float& fTimeDelta)
 			if (QUEST_TYPE::QUEST_SUB == CQuestMgr::Get_Instance()->Get_ClearQuestType())
 			{
 				Engine::CShaderMgr::Get_Instance()->Set_DOF(true);
+				Engine::CShaderMgr::Get_Instance()->Set_IsOnShader(L"SSAO", false);
 
 				Engine::CGameObject* pGameObject = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
 				if (nullptr != pGameObject)
@@ -140,6 +141,7 @@ _int CQuestMessageButton::LateUpdate_GameObject(const _float& fTimeDelta)
 			else if (QUEST_TYPE::QUEST_MAIN == CQuestMgr::Get_Instance()->Get_ClearQuestType())
 			{
 				Engine::CShaderMgr::Get_Instance()->Set_DOF(false);
+				Engine::CShaderMgr::Get_Instance()->Set_IsOnShader(L"SSAO", true);
 
 				Engine::CGameObject* pGameObject = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
 				if (nullptr != pGameObject)

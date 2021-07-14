@@ -51,7 +51,7 @@ _int CSkyBox::Update_GameObject(const _float & fTimeDelta)
 		m_pTarget = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
 
 	if (g_bIsCinemaStart)
-		m_pTransCom->m_vPos = _vec3(380.0f, 0.0f, 400.0f);
+		m_pTransCom->m_vPos = _vec3(380.0f, 0.0f, 480.0f);
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]

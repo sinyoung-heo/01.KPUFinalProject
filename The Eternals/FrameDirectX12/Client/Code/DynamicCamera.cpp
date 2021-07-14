@@ -543,7 +543,7 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicVergosFlying(const _float& fTim
 	}
 
 	// if (uiCurAnimationFrame >= 215)
-	if (uiCurAnimationFrame >= 85)
+	if (uiCurAnimationFrame >= 120)
 	{
 		m_bIsSettingCinematicValue = false;
 		m_eCameraState = CAMERA_STATE::CINEMATIC_VERGOS_SPAWN_SCREAMING;
@@ -561,6 +561,13 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicVergosScreaming(const _float& f
 		m_bIsSettingCinematicValue = true;
 		m_tCameraInfo.vEye = _vec3(232.0f, 96.0f, 600.0f);
 	}
+
+	m_tCameraInfo.vEye = _vec3(232.0f, 96.0f, 600.0f);
+
+	// Camera Shaking
+	SetUp_CameraShaking(fTimeDelta);
+	m_tCameraInfo.vEye.x += m_tCameraShakingDesc.vEyeOffset.x;
+	m_tCameraInfo.vEye.y += m_tCameraShakingDesc.vEyeOffset.y;
 
 	if (nullptr != m_pCameraAtSkinningMatrix)
 	{

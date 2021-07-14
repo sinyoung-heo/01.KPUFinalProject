@@ -235,7 +235,8 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 					g_bIsCinemaStart = true;
 					// Set DynamicCamera State
 					CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
-					pDynamicCamera->Set_CameraState(CAMERA_STATE::CINEMATIC_LAKAN_ALL);
+					//pDynamicCamera->Set_CameraState(CAMERA_STATE::CINEMATIC_LAKAN_ALL);
+					pDynamicCamera->Set_CameraState(CAMERA_STATE::CINEMATIC_VERGOS_SPAWN_FLYING);
 					pDynamicCamera->SetUp_ThirdPersonViewOriginData();
 				}
 			}

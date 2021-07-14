@@ -25,7 +25,8 @@ public:
 	const _uint& Get_CurAnimationFrame() { return m_ui3DMax_CurFrame; }
 	void Set_IsUpdate(const _bool& bIsUpdate) { m_bIsUpdate = bIsUpdate; }
 	void Set_MonsterState(const _uint& iState) { m_iMonsterStatus = iState; }
-	void Set_CurAnimationFrame(const _uint& uiFrame) { m_ui3DMax_CurFrame = uiFrame; }
+	void Set_CurAnimationFrame(const _uint& uiFrame)	{ m_ui3DMax_CurFrame = uiFrame; }
+	void Set_IsCameraShaking(const _bool& bIsShaking)	{ m_bIsCameraShaking = bIsShaking; }
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
@@ -79,7 +80,8 @@ private:
 	_bool	m_bIsStartDissolve       = false;
 	_float	m_fDissolve              = -0.05f;
 	_rgba	m_vEmissiveColor         = _rgba(1.0f, 0.0f, 0.0f, 1.0f);
-	_bool	m_bIsUpdate = false;
+	_bool	m_bIsUpdate              = false;
+	_bool	m_bIsCameraShaking       = false;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]

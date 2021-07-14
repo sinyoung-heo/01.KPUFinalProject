@@ -10,6 +10,7 @@
 #include "TimeMgr.h"
 #include "CollisionTick.h"
 #include "InstancePoolMgr.h"
+#include "DynamicCamera.h"
 
 CCinemaVergos::CCinemaVergos(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -109,6 +110,20 @@ _int CCinemaVergos::Update_GameObject(const _float& fTimeDelta)
 	Change_Animation(fTimeDelta);
 
 	Active_Monster(fTimeDelta);
+
+	if (!m_bIsCameraShaking && m_ui3DMax_CurFrame > 340)
+	{
+		m_bIsCameraShaking = true;
+
+		CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
+
+		CAMERA_SHAKING_DESC tCameraShakingDesc;
+		tCameraShakingDesc.fUpdateShakingTime = 1.75f;
+		tCameraShakingDesc.vMin               = _vec2(-300.0f, -300.0f);
+		tCameraShakingDesc.vMax               = _vec2(300.0f, 300.0f);
+		tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 8.0f;
+		pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
+	}
 
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
@@ -276,8 +291,6 @@ void CCinemaVergos::Active_Monster(const _float& fTimeDelta)
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 	m_pTransCom->m_vDir.Normalize();
 
-	// cout << "pos: " << m_pTransCom->m_vPos.x << ", " << m_pTransCom->m_vPos.z << endl;
-
 	/* Monster MOVE */
 	if (!m_bIsMoveStop)
 	{
@@ -308,7 +321,6 @@ void CCinemaVergos::Change_Animation(const _float& fTimeDelta)
 		{
 			m_uiAnimIdx = CinemaVergos::A_SPAWN;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-			cout << "Vergos : " << m_ui3DMax_CurFrame << " / " << m_ui3DMax_NumFrame << endl;
 		}
 		break;
 		}
