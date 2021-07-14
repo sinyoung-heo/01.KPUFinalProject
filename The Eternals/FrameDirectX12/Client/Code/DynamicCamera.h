@@ -127,8 +127,6 @@ private:
 	Engine::CFont*	m_pFont				= nullptr;
 	wstring			m_wstrText			= L"";
 	_tchar			m_szText[MAX_STR]	= L"";
-
-	_vec3 vOffset = _vec3(-12.0f, 570.0f, -23.0f);
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,
