@@ -153,8 +153,7 @@ void CIceStorm_s::Set_ConstantTable()
 		{
 			m_bisLifeInit = true;
 			m_fDeltatimeVelocity2 = 9;
-
-			CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 2);
+			CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 1);
 		}
 	}
 	m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
@@ -183,25 +182,19 @@ void CIceStorm_s::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos = vPos;
-	
 	m_fDeltatime = -1.f;
 	m_fDeltatime2 = 0.f;
 	m_fDeltatime3 = 0.f;
 	m_fDeltatimeVelocity = 0.f;
 	m_fDeltatimeVelocity2 = 1.f;
-
 	m_fLifeTime = 0.f;
-
 	m_fRadius = fRadius;
 	m_fTheta = theta;
-
 	m_pTransCom->m_vPos += _vec3(m_fRadius * cos(m_fTheta), 0, m_fRadius * sin(m_fTheta));
 	m_pTransCom->m_vPos.y = 0.f;
-
 	m_pTransCom->m_vAngle = _vec3(static_cast<float>(rand() % 90 - 45), 
 		static_cast<float>(rand() % 360), static_cast<float>(rand() % 90 - 45));
 
-	CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 2);
 }
 
 Engine::CGameObject* CIceStorm_s::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,

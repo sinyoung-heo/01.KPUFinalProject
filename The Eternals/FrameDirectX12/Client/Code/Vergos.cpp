@@ -14,7 +14,7 @@
 #include "BreathEffect.h"
 #include "GameUIRoot.h"
 #include "VergosHpGauge.h"
-
+#include "BossDecal.h"
 CVergos::CVergos(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pPacketMgr(CPacketMgr::Get_Instance())
@@ -756,8 +756,51 @@ void CVergos::SetUp_HpGauge(const _float& fTimeDelta)
 
 void CVergos::EffectLoop(const _float& fTimeDelta)
 {
+	if (m_uiAnimIdx == Vergos::SWING_LEFT || m_uiAnimIdx == Vergos::SWING_RIGHT)
+	{
+		string Bone;
+		if (m_uiAnimIdx == Vergos::SWING_LEFT)
+			Bone = "Bip01-L-Hand";
+		else
+			Bone = "Bip01-R-Hand";
+		m_fSkillOffset += fTimeDelta;
 
-	if (m_uiAnimIdx == Vergos::BLOW_LEFT || m_uiAnimIdx == Vergos::BLOW_RIGHT)
+		if (3.3f>m_fSkillOffset && m_fSkillOffset > 2.8f)
+		{
+			m_fParticleTime += fTimeDelta;
+			if (m_fParticleTime > 0.01f)
+			{
+				m_fParticleTime = 0.f;
+				Engine::HIERARCHY_DESC* pHierarchyDesc = &(m_pMeshCom->Find_HierarchyDesc(Bone));
+				_matrix matBoneFinalTransform = (pHierarchyDesc->matScale * pHierarchyDesc->matRotate * pHierarchyDesc->matTrans)
+					* pHierarchyDesc->matGlobalTransform;
+				_matrix matWorld = matBoneFinalTransform * m_pTransCom->m_matWorld;
+				_vec3 Pos = _vec3(matWorld._41,0.2f, matWorld._43);
+
+				CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.02f),
+					_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(15, 2), 0, true);
+			}
+		}
+		if (m_fSkillOffset > 3.f && m_bisDecalEffect == false)
+		{
+			m_bisDecalEffect = true;
+			CGameObject* pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_BossDecal_Effect());
+			if (m_uiAnimIdx == Vergos::SWING_RIGHT)
+			{	
+					static_cast<CBossDecal*>(pGameObj)->Set_CreateInfo(_vec3(0.5f, 0.f, 0.5f), _vec3(0.f, -180.f, 0.0f),
+						CEffectMgr::Get_Instance()->InterPolated_YOffset(_vec3(375.f, 0.3f, 371.f)));
+					Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BossDecal", pGameObj), E_FAIL);
+				
+			}
+			else
+			{		
+					static_cast<CBossDecal*>(pGameObj)->Set_CreateInfo(_vec3(0.5f, 0.f, 0.5f), _vec3(0.f, -180.f, 180.f),
+						CEffectMgr::Get_Instance()->InterPolated_YOffset(_vec3(398.f, 0.3f, 367.f)));
+					Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BossDecal", pGameObj), E_FAIL);
+			}
+		}
+	}
+	else if (m_uiAnimIdx == Vergos::BLOW_LEFT || m_uiAnimIdx == Vergos::BLOW_RIGHT)
 	{
 		string Bone;
 		if (m_bisWarningEffect == false)
@@ -767,12 +810,12 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 			if (m_uiAnimIdx == Vergos::BLOW_LEFT)
 			{
 				Bone = "Bip01-L-Hand";
-				CEffectMgr::Get_Instance()->Effect_WarningGround(_vec3(390.4, 0.3f, 350.994f), 0.03f);
+				CEffectMgr::Get_Instance()->Effect_WarningGround(_vec3(390.4, 0.0f, 350.994f), 0.03f);
 			}
 			else
 			{
 				Bone = "Bip01-R-Hand";
-				CEffectMgr::Get_Instance()->Effect_WarningGround(_vec3(385.4, 0.3f, 351.045f), 0.03f);
+				CEffectMgr::Get_Instance()->Effect_WarningGround(_vec3(385.4, 0.0f, 351.045f), 0.03f);
 			}
 		}
 		m_fSkillOffset += fTimeDelta;
@@ -836,7 +879,10 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.02f),
 				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(15, 2), 0, true);
 
-			CEffectMgr::Get_Instance()->Effect_RectDecal(Pos, m_pTransCom->m_vAngle.y);
+			CEffectMgr::Get_Instance()->Effect_RectDecal(_vec3(395.f,0.3f,232.f), m_pTransCom->m_vAngle.y);
+
+			CEffectMgr::Get_Instance()->Effect_BossIceStorm(_vec3(400.f, 0.3f, 365.f),_vec3(0.1,0,-1) );
+			CEffectMgr::Get_Instance()->Effect_BossIceStorm(_vec3(378.f, 0.3f, 358.f), _vec3(-0.1, 0, -1));
 		}
 	}
 	else if (m_uiAnimIdx == Vergos::A_BREATH_FIRE)

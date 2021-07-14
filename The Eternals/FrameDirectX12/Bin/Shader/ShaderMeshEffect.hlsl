@@ -128,7 +128,22 @@ VS_OUT VS_ANIUV(VS_IN vs_input)
     vs_output.AniUV = vs_input.TexUV + float2(g_fOffset1, -g_fOffset1 * 0.3f);
     return (vs_output);
 }
+VS_OUT VS_ANIUV_X(VS_IN vs_input)
+{
+    VS_OUT vs_output = (VS_OUT) 0;
+    float4x4 matworld = g_matWorld;
+    float4x4 matWV, matWVP;
+    matWV = mul(matworld, g_matView);
+    matWVP = mul(matWV, g_matProj);
+	
+    vs_output.Pos = mul(float4(vs_input.Pos, 1.0f), matWVP);
+    vs_output.TexUV = vs_input.TexUV;
+    vs_output.Normal = vs_input.Normal;
 
+    
+    vs_output.AniUV = vs_input.TexUV + float2(g_fOffset1, 0.f);
+    return (vs_output);
+}
 
 PS_OUT PS_MAGIC_CIRCLE_RGB(VS_OUT ps_input) : SV_TARGET
 {
@@ -298,16 +313,15 @@ PS_OUT PS_ICEDECAL(VS_OUT ps_input) : SV_TARGET
 PS_OUT PS_RECTDECAL(VS_OUT ps_input) : SV_TARGET
 {
     PS_OUT ps_output = (PS_OUT) 0;
-    vector vDistortionInfo = g_TexDissolve.Sample(g_samLinearWrap, ps_input.TexUV);
+    vector vDistortionInfo = g_TexDissolve.Sample(g_samLinearWrap, ps_input.AniUV);
     float2 vDistortion = (vDistortionInfo.xy * 2.f) - 1.f;
     vDistortion *= g_fOffset1; //°­µµ
-    float2 NewUV = float2(ps_input.TexUV.x + vDistortion.x * vDistortionInfo.b, ps_input.TexUV.y + vDistortion.y * vDistortionInfo.b);
+    float2 NewUV = float2(ps_input.AniUV.x + vDistortion.x * vDistortionInfo.b, ps_input.AniUV.y + vDistortion.y * vDistortionInfo.b);
     float2 AniUV = ps_input.AniUV;
-    float4 D = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.AniUV);
+    float4 D = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 N = g_TexNormal.Sample(g_samLinearWrap, NewUV * 10);
     float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.TexUV);
-    float4 N = g_TexNormal.Sample(g_samLinearWrap, NewUV * 2);
-    float4 Sha = g_TexShadowDepth.Sample(g_samLinearWrap, ps_input.TexUV);
-    float4 color = ((mul(D, N.a) + D) * S + N)*Sha.a;
+    float4 color = mul(D.g, N) + mul(D.r, float4(0.5, 0.5, 1, 1));
     ps_output.Effect2 = color;
     ps_output.Effect2.a = g_fOffset6;
     return (ps_output);
@@ -342,22 +356,7 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
 }
 
 
-VS_OUT VS_ANIUV_X(VS_IN vs_input)
-{
-    VS_OUT vs_output = (VS_OUT) 0;
-    float4x4 matworld = g_matWorld;
-    float4x4 matWV, matWVP;
-    matWV = mul(matworld, g_matView);
-    matWVP = mul(matWV, g_matProj);
-	
-    vs_output.Pos = mul(float4(vs_input.Pos, 1.0f), matWVP);
-    vs_output.TexUV = vs_input.TexUV;
-    vs_output.Normal = vs_input.Normal;
 
-    
-    vs_output.AniUV = vs_input.TexUV + float2(g_fOffset1, 0.f);
-    return (vs_output);
-}
 
 PS_OUT PS_MAIN_SPRITE(VS_OUT ps_input) : SV_TARGET
 {
@@ -405,3 +404,14 @@ PS_OUT PS_MAIN_SPRITE2(VS_OUT ps_input) : SV_TARGET
     ps_output.Effect3.a = 1.f - g_fOffset6;
     return (ps_output);
 }
+PS_OUT PS_BOSSDECAL(VS_OUT ps_input) : SV_TARGET
+{
+    PS_OUT ps_output = (PS_OUT) 0;
+    float2 DetailUV = float2(ps_input.TexUV.x, ps_input.TexUV.y * 5.f);
+    float4 D = g_TexDiffuse.Sample(g_samLinearWrap, DetailUV);
+    float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.AniUV);
+    ps_output.Effect3.xyz = mul(D.xyz, saturate(S.r));
+    ps_output.Effect3.a = g_fOffset6;
+    return (ps_output);
+}
+

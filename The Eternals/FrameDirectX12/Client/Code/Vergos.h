@@ -99,6 +99,7 @@ private:
 
 	_bool m_bisWarningEffect = false;
 	_bool m_bisBreathEffect = false;
+	
 	_float m_fSkillOffset = 0.f;
 	_float m_bisBreathDelta = 0.f;
 

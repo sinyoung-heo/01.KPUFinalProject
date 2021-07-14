@@ -1864,9 +1864,8 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 			m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 			m_pTransCom->m_vDir.Normalize();
 			m_vArrowFallPos = m_pTransCom->m_vPos + m_pTransCom->m_vDir * Archer::ARROW_FALL_DIST;
-			m_vArrowFallPos.y = 0.2f;
 			CEffectMgr::Get_Instance()->Effect_MagicCircle_Effect(_vec3(0.0f), _vec3(0.0f), 
-				m_vArrowFallPos, 0, 0, 2, true, true, nullptr, false);
+				m_vArrowFallPos, 34, 34, 2, true, true, nullptr, false);
 
 			m_vArrowFallPos.y = 20.f;
 		}

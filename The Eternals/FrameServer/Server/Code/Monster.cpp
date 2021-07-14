@@ -519,8 +519,8 @@ void CMonster::Choose_VergosPattern(const float& fTimeDelta)
 void CMonster::VergosPattern_FirstPhase()
 {
 	// 1 Phase : HP > 80%
-	// 	   => SWING LEFT - BLOW RIGHT - BREATH FIRE - SWING RIGHT - BLOW LEFT - BREATH FIRE - BLOW HEAD
-	//	   => BREATH FIRE - BLOW LEFT - SWING RIGHT - BLOW HEAD - SWING LEFT - BREATH FIRE - BLOW RIGHT
+   //       => SWING LEFT - BLOW RIGHT - BREATH FIRE - SWING RIGHT - BLOW LEFT - BREATH FIRE - BLOW HEAD
+   //      => BREATH FIRE - BLOW LEFT - SWING RIGHT - BLOW HEAD - SWING LEFT - BREATH FIRE - BLOW RIGHT
 	int iRand = rand() % 4;
 	switch (iRand)
 	{

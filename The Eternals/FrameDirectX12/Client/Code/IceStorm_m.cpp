@@ -52,9 +52,9 @@ _int CIceStorm_m::Update_GameObject(const _float & fTimeDelta)
 
 	if (m_pTransCom->m_vScale.x < m_fMaxScale)
 	{
-		m_pTransCom->m_vScale.x += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) *0.7f;
-		m_pTransCom->m_vScale.y += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) *0.7f;
-		m_pTransCom->m_vScale.z += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) *0.7f;
+		m_pTransCom->m_vScale.x += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) *m_fScaleVelocity;
+		m_pTransCom->m_vScale.y += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) *m_fScaleVelocity;
+		m_pTransCom->m_vScale.z += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")) *m_fScaleVelocity;
 	}
 	
 	m_fLifeTime += (Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta"));
@@ -168,14 +168,17 @@ void CIceStorm_m::Set_ConstantTable()
 
 
 }
-void CIceStorm_m::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, const float& fMaxScale)
+void CIceStorm_m::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, const float& fMaxScale
+, const float& fScaleVelocity)
 {
+
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos = vPos;
 	m_pTransCom->m_vPos.y = 0.f;
 	
 	m_fMaxScale = fMaxScale;
+	m_fScaleVelocity = fScaleVelocity;
 
 	m_bisScaleAnim = true;
 	m_fDeltatime = -1.f;

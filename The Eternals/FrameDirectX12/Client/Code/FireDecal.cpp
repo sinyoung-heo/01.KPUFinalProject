@@ -44,7 +44,6 @@ HRESULT CFireDecal::LateInit_GameObject()
 
 	_vec3 vPos = m_pTransCom->m_vPos;
 	vPos.y += 1.f;
-	
 	return S_OK;	
 }
 

@@ -999,7 +999,7 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 	if (m_uiAnimIdx == Gladiator::STINGER_BLADE)
 	{
 		m_fSwordsSkillOffset += fTimeDelta;
-		m_fTemp += fTimeDelta;
+		/*m_fTemp += fTimeDelta;
 		if (m_fTemp > 0.05f)
 		{
 			_vec3 TempPos = m_pTransCom->m_vPos + m_pTransCom->m_vDir * 20;
@@ -1007,7 +1007,7 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 			CEffectMgr::Get_Instance()->Effect_DirParticle(_vec3(1, 1, 0), _vec3(0.f), m_pTransCom->m_vPos, L"Bomb06", TempPos,
 				m_pTransCom->m_vPos, FRAME(6, 6, 24), 2, 20);
 			m_fTemp = 0.f;
-		}
+		}*/
 		if (m_fSwordsSkillOffset > 0.45f && m_bisSwordsEffect==false)
 		{
 			m_bisSwordsEffect = true;
@@ -1091,9 +1091,7 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 		{
 			m_bisIceEffect = true;
 			CEffectMgr::Get_Instance()->Effect_IceStorm(m_pTransCom->m_vPos, 36, 5.f);
-			_vec3 Temp = m_pTransCom->m_vPos;
-			Temp.y += 0.2f;
-			CEffectMgr::Get_Instance()->Effect_IceDecal(Temp);
+			CEffectMgr::Get_Instance()->Effect_IceDecal(m_pTransCom->m_vPos);
 		}
 	}
 	else if (m_uiAnimIdx == Gladiator::GAIA_CRUSH3)

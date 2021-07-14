@@ -30,6 +30,7 @@
 #include "WarningGround.h"
 #include "RectDecal.h"
 #include "DirParticleEffect.h"
+#include "BossDecal.h"
 IMPLEMENT_SINGLETON(CEffectMgr)
 
 CEffectMgr::CEffectMgr()
@@ -95,8 +96,15 @@ void CEffectMgr::Effect_SwordEffect(_vec3 vecPos,_vec3 vecDir)
 void CEffectMgr::Effect_SwordEffect_s(_vec3 vecPos, _vec3 vecDir)
 {
 	cout << vecPos.x << " " << vecPos.z << endl;
-	//Effect_RectDecal(vecPos, (0.f));
+	/*vecPos.y = 0.3f;
+	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_BossDecal_Effect());
+	if (nullptr != pGameObj)
+	{
+		static_cast<CBossDecal*>(pGameObj)->Set_CreateInfo(_vec3(0.3f, 0.f, 0.3f), _vec3(0.f, 0.0f, 0.0f), vecPos);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BossDecal", pGameObj), E_FAIL);
+	}*/
 
+	vecPos.y = 0.f;
 	_vec3 upVec = _vec3(0, 1, 0);
 	_vec3 crossVec = upVec.Cross_InputV1(vecDir);
 
@@ -155,24 +163,36 @@ void CEffectMgr::Effect_Straight_IceStorm(_vec3 vecPos, _vec3 vecDir, const _boo
 		}
 	}
 }
-
+void CEffectMgr::Effect_BossIceStorm(_vec3 vecPos, _vec3 vecDir)
+{
+	for (int i = 0; i < 13; i++)
+	{
+		_vec3 PosOffSet = vecDir * 2.f + (vecDir * (1.f + (float)i) * (1.f + powf((float)i / 13.f, 2.f)*2.f));
+		pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_IceStorm_m_Effect());
+		if (nullptr != pGameObj)
+		{
+			static_cast<CIceStorm_m*>(pGameObj)->Set_CreateInfo(_vec3(0.f), _vec3(0.f,-180.f,0.f), vecPos + PosOffSet, 0.1f + (0.06f * i)
+			,2.f);
+			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"publicSkill3", pGameObj), E_FAIL);
+		}
+	}
+}
 void CEffectMgr::Effect_FireDecal(_vec3 vecPos)
 {
-	vecPos.y = 0.3f;
+	
 	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_FireDecal_Effect());
 	if (nullptr != pGameObj)
 	{
-		static_cast<CFireDecal*>(pGameObj)->Set_CreateInfo(_vec3(0.05f,0.f,0.05f), _vec3(0.f, 0.0f, 0.0f), vecPos);
+		static_cast<CFireDecal*>(pGameObj)->Set_CreateInfo(_vec3(0.05f,0.f,0.05f), _vec3(0.f, 0.0f, 0.0f), InterPolated_YOffset(vecPos));
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"FireDecal", pGameObj), E_FAIL);
 	}
 }
 void CEffectMgr::Effect_IceDecal(_vec3 vecPos)
 {
-	vecPos.y = 0.15f;
 	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_IceDecal_Effect());
 	if (nullptr != pGameObj)
 	{
-		static_cast<CIceDecal*>(pGameObj)->Set_CreateInfo(_vec3(0.01f),_vec3(0.f, 0.0f, 0.0f),vecPos);
+		static_cast<CIceDecal*>(pGameObj)->Set_CreateInfo(_vec3(0.01f),_vec3(0.f, 0.0f, 0.0f), InterPolated_YOffset(vecPos));
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"IceDecal", pGameObj), E_FAIL);
 	}
 }
@@ -254,8 +274,8 @@ void CEffectMgr::Effect_Shield(_vec3 vecPos,Engine::CTransform* parentTransform)
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"publicShield", pGameObj), E_FAIL);
 		}
 	}
-	vecPos.y = rand() % 50 * 0.01f;
-	vecPos.z += 0.2f;
+	
+
 	Effect_MagicCircle_Effect(_vec3(0.0f), _vec3(0.0f), vecPos, 20, 20, 2, true, true, parentTransform, true);
 }
 
@@ -271,8 +291,7 @@ void CEffectMgr::Effect_Axe(_vec3 vecPos, Engine::CTransform* parentTransform)
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"publicAxe", pGameObj), E_FAIL);
 		}
 	}
-	vecPos.y = rand() % 50 * 0.01f;
-	vecPos.z += 0.2f;
+	
 	Effect_MagicCircle_Effect(_vec3(0.0f), _vec3(0.0f), vecPos, 21, 21, 2, true, true, parentTransform, true);
 }
 void CEffectMgr::Effect_TargetShield(_vec3 vecPos, Engine::CTransform* parentTransform)
@@ -308,11 +327,11 @@ void CEffectMgr::Effect_TargetAxe(_vec3 vecPos, Engine::CTransform* parentTransf
 
 void CEffectMgr::Effect_WarningGround(_vec3 vecPos, _float fLimitScale)
 {
-	vecPos.y = 0.2f;
+	vecPos.y = 0.4f;
 	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_WarningGround_Effect());
 	if (nullptr != pGameObj)
 	{
-		static_cast<CWarningGround*>(pGameObj)->Set_CreateInfo(_vec3(0.f),_vec3(0.f),vecPos,true,0.03f);
+		static_cast<CWarningGround*>(pGameObj)->Set_CreateInfo(_vec3(0.f),_vec3(0.f), vecPos,true,0.03f);
 		static_cast<CWarningGround*>(pGameObj)->Set_TexIDX(0, 3, 2);
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"WarningGround", pGameObj), E_FAIL);
 	}
@@ -320,11 +339,10 @@ void CEffectMgr::Effect_WarningGround(_vec3 vecPos, _float fLimitScale)
 
 void CEffectMgr::Effect_RectDecal(_vec3 vecPos, float RotY)
 {
-	vecPos.y = 0.2f;
 	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_RectDecal_Effect());
 	if (nullptr != pGameObj)
 	{
-		static_cast<CRectDecal*>(pGameObj)->Set_CreateInfo(_vec3(0.5f,0.00f,0.5f), _vec3(0.f), vecPos);
+		static_cast<CRectDecal*>(pGameObj)->Set_CreateInfo(_vec3(15.f,0.00f,2.5f), _vec3(0.f), InterPolated_YOffset(vecPos));
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"RectDecal", pGameObj), E_FAIL);
 	}
 }
@@ -419,12 +437,22 @@ void CEffectMgr::Effect_MagicCircle_Effect(const _vec3& vScale, const _vec3& vAn
 	Engine::CGameObject* MagicCircleObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_MagicCircleEffect());
 	if (nullptr != MagicCircleObj)
 	{
-		static_cast<CMagicCircle*>(MagicCircleObj)->Set_CreateInfo(vScale, vAngle, vPos, bisRotate, bisScaleAnim, ParentTransform,
+		static_cast<CMagicCircle*>(MagicCircleObj)->Set_CreateInfo(vScale, vAngle, InterPolated_YOffset(vPos), bisRotate, bisScaleAnim, ParentTransform,
 			bisFollowPlayer);
 		static_cast<CMagicCircle*>(MagicCircleObj)->Set_TexIDX(Diff, Norm, Spec);
 		static_cast<CMagicCircle*>(MagicCircleObj)->Set_LimitInfo(LimitScale, LimitLifeTime);
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject",L"MagicCircle", MagicCircleObj), E_FAIL);
 	}
+}
+
+_vec3 CEffectMgr::InterPolated_YOffset(_vec3 Pos)
+{
+	_vec3 ReturnVector=Pos;
+	m_fY -= 0.03f;
+	if (m_fY < 0.01f)
+		m_fY = 0.27f;
+	ReturnVector.y = m_fY;
+	return ReturnVector;
 }
 
 
