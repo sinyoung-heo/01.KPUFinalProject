@@ -1248,7 +1248,7 @@ HRESULT CScene_Logo::SetUp_MaxLoadingCount()
 			break;
 
 		int iCnt = _ttoi(szLineCnt);
-		m_iMaxFileCount += (_float)iCnt;
+		m_iMaxFileCount += iCnt;
 	}
 
 	fin.close();

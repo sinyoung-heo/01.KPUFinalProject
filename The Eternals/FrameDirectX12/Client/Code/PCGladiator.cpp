@@ -1111,28 +1111,10 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 	KeyInput_Move(fTimeDelta);
 	KeyInput_Attack(fTimeDelta);
 	KeyInput_Potion(fTimeDelta);
-<<<<<<< HEAD
-=======
-
-	if (Engine::KEY_DOWN(DIK_R))
-		CCinemaMgr::Get_Instance()->Spawn_Vergos();
-	if (Engine::KEY_DOWN(DIK_T))
-		CCinemaMgr::Get_Instance()->Scream_PrionBerserkerBoss();
-	if (Engine::KEY_DOWN(DIK_Y))
-		CCinemaMgr::Get_Instance()->Scream_PrionBerserkers();
-	if (Engine::KEY_DOWN(DIK_U))
-		CCinemaMgr::Get_Instance()->Command_PrionBerserkerBoss();
-	if (Engine::KEY_DOWN(DIK_I))
-	{
-		CCinemaMgr::Get_Instance()->Rush_Lakan();
-		CCinemaMgr::Get_Instance()->Rush_Prion();
-	}
-	
 
 	if (Engine::KEY_DOWN(DIK_0) && NO_EVENT_STATE)
 	{
 	}
->>>>>>> hsy0711v2
 }
 
 void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
