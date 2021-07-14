@@ -91,6 +91,7 @@ public:
 	void	send_AI_attack_packet(const int& to_client);
 	void	send_AIGladiator_attack_packet(const int& to_client, const float& fAngle);
 	void	send_AI_attackStop_packet(const int& to_client);
+	void	send_enter_party(const int& to_client);
 	void	send_leave_party_ai(const int& to_client);
 
 public:

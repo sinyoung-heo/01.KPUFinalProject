@@ -83,7 +83,7 @@ void CAi::Ready_AI(const char& chJob, const char& chWeaponType, const char& chSt
     m_sNum += AI_NUM_START;
     int s_num = m_sNum;
 
-    m_bIsConnect        = true;
+    m_bIsConnect        = false;
     m_bIsDead           = false;
 
 	sprintf_s(m_ID, "AI_%03d", m_sNum);
@@ -128,6 +128,8 @@ void CAi::Release_AI()
 
 int CAi::Update_AI(const float& fTimeDelta)
 {
+	if (!m_bIsConnect) 
+		return NO_EVENT;
 	if (fTimeDelta > 1.f)
 		return NO_EVENT;
 
@@ -459,7 +461,7 @@ void CAi::process_move_gladiator(const float& fTimeDelta)
 	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 	{
 		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
-		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) continue;
 
 		send_AI_move_packet(raid);
 	}
@@ -474,7 +476,7 @@ void CAi::process_moveStop_gladiator(const float& fTimeDelta)
 	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 	{
 		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
-		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) continue;
 
 		send_AI_moveStop_packet(raid);
 	}
@@ -770,7 +772,7 @@ void CAi::Attack_Gladiator_AI(const float& fTimedelta)
 				for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 				{
 					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
-					if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+					if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) continue;
 
 					send_AIGladiator_attack_packet(raid, m_fLookAngle);
 				}
@@ -787,7 +789,7 @@ void CAi::Attack_Gladiator_AI(const float& fTimedelta)
 				for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 				{
 					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
-					if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+					if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) continue;
 
 					send_AI_attackStop_packet(raid);
 				}
@@ -806,7 +808,7 @@ void CAi::Attack_Gladiator_AI(const float& fTimedelta)
 	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 	{
 		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
-		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) continue;
 
 		send_AI_attack_packet(raid);
 	}
@@ -916,7 +918,7 @@ void CAi::process_move_archer(const float& fTimeDelta)
 	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 	{
 		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
-		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) continue;
 
 		send_AI_move_packet(raid);
 	}
@@ -931,7 +933,7 @@ void CAi::process_moveStop_archer(const float& fTimeDelta)
 	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 	{
 		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
-		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) continue;
 
 		send_AI_moveStop_packet(raid);
 	}
@@ -985,7 +987,7 @@ void CAi::Attack_Archer_AI(const float& fTimedelta)
 				for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 				{
 					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
-					if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+					if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) continue;
 
 					send_AI_attack_packet(raid);
 				}
@@ -1004,7 +1006,7 @@ void CAi::Attack_Archer_AI(const float& fTimedelta)
 				for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 				{
 					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
-					if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+					if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) continue;
 
 					send_AI_attackStop_packet(raid);
 				}
@@ -1034,7 +1036,7 @@ void CAi::Attack_Archer_AI(const float& fTimedelta)
 	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 	{
 		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
-		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) continue;
 
 		send_AI_attack_packet(raid);
 	}
@@ -1165,7 +1167,7 @@ void CAi::process_move_priest(const float& fTimeDelta)
 	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 	{
 		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
-		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) continue;
 
 		send_AI_move_packet(raid);
 	}
@@ -1180,7 +1182,7 @@ void CAi::process_moveStop_priest(const float& fTimeDelta)
 	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 	{
 		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
-		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) continue;
 
 		send_AI_moveStop_packet(raid);
 	}
@@ -1234,7 +1236,7 @@ void CAi::Attack_Priest_AI(const float& fTimedelta)
 				for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 				{
 					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
-					if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+					if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) continue;
 
 					send_AI_attack_packet(raid);
 				}
@@ -1250,7 +1252,7 @@ void CAi::Attack_Priest_AI(const float& fTimedelta)
 				for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 				{
 					CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
-					if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+					if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) continue;
 
 					send_AI_attackStop_packet(raid);
 				}
@@ -1272,7 +1274,7 @@ void CAi::Attack_Priest_AI(const float& fTimedelta)
 	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 	{
 		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
-		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) return;
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) continue;
 
 		send_AI_attack_packet(raid);
 	}
@@ -1620,13 +1622,31 @@ void CAi::send_AI_attackStop_packet(const int& to_client)
 	send_packet(to_client, &p);
 }
 
+void CAi::send_enter_party(const int& to_client)
+{
+	sc_packet_enter_party p;
+
+	p.size		= sizeof(p);
+	p.type		= SC_PACKET_ENTER_PARTY;
+	p.id		= m_sNum;
+
+	strncpy_s(p.name, m_ID, strlen(m_ID));
+	p.o_type	= m_type;
+	p.hp		= m_iHp;
+	p.maxHp		= m_iMaxHp;
+	p.mp		= m_iMp;
+	p.maxMp		= m_iMaxMp;
+
+	send_packet(to_client, &p);
+}
+
 void CAi::send_leave_party_ai(const int& to_client)
 {
 	sc_packet_suggest_party p;
 
-	p.size = sizeof(p);
-	p.type = SC_PACKET_LEAVE_PARTY;
-	p.id = m_sNum;
+	p.size	= sizeof(p);
+	p.type	= SC_PACKET_LEAVE_PARTY;
+	p.id	= m_sNum;
 
 	send_packet(to_client, &p);
 }
