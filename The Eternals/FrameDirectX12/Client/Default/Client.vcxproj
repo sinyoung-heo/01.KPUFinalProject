@@ -340,6 +340,7 @@
     <ClInclude Include="..\Code\SwordTrailEffect.h" />
     <ClInclude Include="..\Code\TerrainMeshObject.h" />
     <ClInclude Include="..\Code\Vergos.h" />
+    <ClInclude Include="..\Code\VergosHpGauge.h" />
     <ClInclude Include="..\Code\WarningFrame.h" />
     <ClInclude Include="..\Code\WarningGround.h" />
     <ClInclude Include="..\Code\WaterFall.h" />
@@ -537,6 +538,7 @@
     <ClCompile Include="..\Code\SwordTrailEffect.cpp" />
     <ClCompile Include="..\Code\TerrainMeshObject.cpp" />
     <ClCompile Include="..\Code\Vergos.cpp" />
+    <ClCompile Include="..\Code\VergosHpGauge.cpp" />
     <ClCompile Include="..\Code\WarningFrame.cpp" />
     <ClCompile Include="..\Code\WarningGround.cpp" />
     <ClCompile Include="..\Code\WaterFall.cpp" />

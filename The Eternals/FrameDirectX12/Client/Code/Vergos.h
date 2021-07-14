@@ -13,7 +13,8 @@ namespace Engine
 	class CNaviMesh;
 }
 
-class CNormalMonsterHpGauge;
+class CGameUIRoot;
+class CVergosHpGauge;
 
 class CVergos : public Engine::CGameObject
 {
@@ -39,13 +40,13 @@ public:
 
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag);
+	HRESULT			Create_HpGauge();
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
 	void			Set_ConstantTableMiniMap();
 	void			SetUp_AngleInterpolation(const _float& fTimeDelta);
 	void			SetUp_PositionInterpolation(const _float& fTimeDelta);
 	void			SetUp_Dissolve(const _float& fTimeDelta);
-
 	void			Active_Monster(const _float& fTimeDelta);
 	void			Change_Animation(const _float& fTimeDelta);
 	void			SetUp_CollisionTick(const _float& fTimeDelta);
@@ -83,7 +84,8 @@ private:
 	_float	m_fDissolve              = -0.05f;
 	_rgba	m_vEmissiveColor         = _rgba(1.0f, 0.0f, 0.0f, 1.0f);
 
-	CNormalMonsterHpGauge* m_pHpGauge = nullptr;
+	CGameUIRoot*	m_pHpGaugeRoot = nullptr;
+	CVergosHpGauge* m_pHpGauge = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]

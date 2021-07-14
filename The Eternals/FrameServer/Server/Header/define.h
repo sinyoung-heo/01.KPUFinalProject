@@ -108,7 +108,7 @@ constexpr int	GIANTBETTLE_EXP				= 100;
 constexpr float	GIANTBETTLE_SPD				= 1.f;
 constexpr float	GIANTBETTLE_CHASE_SPD		= 4.f;
 
-constexpr int	VERGOS_HP					= 10000;
+constexpr int	VERGOS_HP					= 100'000'000;
 constexpr int	VERGOS_ATT					= 500;
 constexpr int	VERGOS_EXP					= 10000;
 constexpr float	VERGOS_SPD					= 1.f;
