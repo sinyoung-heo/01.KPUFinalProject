@@ -353,6 +353,13 @@ void process_packet(int id)
 	}
 	break;
 
+	case CS_END_CINEMA:
+	{
+		cs_packet_potion* p = reinterpret_cast<cs_packet_potion*>(pPlayer->m_packet_start);
+		process_cinema_end(id);
+	}
+	break;
+
 	}
 }
 
@@ -1963,41 +1970,41 @@ void process_stage_change(int id, const char& stage_id)
 	case STAGE_WINTER:
 	{
 		pPlayer->m_vPos = _vec3(STAGE_WINTER_X, 0.0f, STAGE_WINTER_Z);
-		CObjMgr::GetInstance()->Add_RaidList(id);
+		//CObjMgr::GetInstance()->Add_RaidList(id);
 
-		/* 기존 파티 탈퇴 -> 레이드 파티 가입 */
-		process_leave_party(id);
+		///* 기존 파티 탈퇴 -> 레이드 파티 가입 */
+		//process_leave_party(id);
 
-		CObjMgr::GetInstance()->Add_PartyMember(RAID_PARTY, &pPlayer->m_iPartyNumber, id);
-		pPlayer->m_bIsPartyState = true;
+		//CObjMgr::GetInstance()->Add_PartyMember(RAID_PARTY, &pPlayer->m_iPartyNumber, id);
+		//pPlayer->m_bIsPartyState = true;
 
-		// 파티구성원들에게 새로운 파티멤버 정보 전송
-		for (auto& p : *CObjMgr::GetInstance()->Get_PARTYLIST(RAID_PARTY))
-		{			
-			if (p != id)
-			{
-				if (CObjMgr::GetInstance()->Is_Player(p) == true)
-				{
-					CPlayer* pMember = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", p));
-					if (pMember == nullptr) continue;
-					if (!pMember->m_bIsConnect) continue;
+		//// 파티구성원들에게 새로운 파티멤버 정보 전송
+		//for (auto& p : *CObjMgr::GetInstance()->Get_PARTYLIST(RAID_PARTY))
+		//{			
+		//	if (p != id)
+		//	{
+		//		if (CObjMgr::GetInstance()->Is_Player(p) == true)
+		//		{
+		//			CPlayer* pMember = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", p));
+		//			if (pMember == nullptr) continue;
+		//			if (!pMember->m_bIsConnect) continue;
 
-					// 새로운 멤버 정보 -> 기존 구성원			
-					pPlayer->send_enter_party(p);
-					// 기존 구성원 정보 -> 새로운 멤버
-					pMember->send_enter_party(id);
-				}
-				else if(CObjMgr::GetInstance()->Is_AI(p) == true)
-				{
-					CAi* pMember = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", p));
-					if (pMember != nullptr)
-					{
-						// 기존 구성원 정보 -> 새로운 멤버
-						pMember->send_enter_party(id);
-					}					
-				}				
-			}
-		}
+		//			// 새로운 멤버 정보 -> 기존 구성원			
+		//			pPlayer->send_enter_party(p);
+		//			// 기존 구성원 정보 -> 새로운 멤버
+		//			pMember->send_enter_party(id);
+		//		}
+		//		else if(CObjMgr::GetInstance()->Is_AI(p) == true)
+		//		{
+		//			CAi* pMember = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", p));
+		//			if (pMember != nullptr)
+		//			{
+		//				// 기존 구성원 정보 -> 새로운 멤버
+		//				pMember->send_enter_party(id);
+		//			}					
+		//		}				
+		//	}
+		//}
 	}
 	break;
 	}
@@ -2026,15 +2033,15 @@ void process_stage_change(int id, const char& stage_id)
 	/* 변경된 좌표로 섹터 갱신 */
 	CSectorMgr::GetInstance()->Compare_exchange_Sector(id, (int)ori_z, (int)ori_x, (int)(pPlayer->m_vPos.z), (int)(pPlayer->m_vPos.x));
 
-	/* AI & Vergos Connect */
-	if (CObjMgr::GetInstance()->Get_RAIDLIST()->size() >= 2)
-	{
-		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
-		if (pMonster != nullptr && pMonster->Get_IsConnected() == false)
-		{
-			add_timer(pMonster->m_sNum, OP_MODE_RAID_START, system_clock::now() + 10s);
-		}
-	}
+	///* AI & Vergos Connect */
+	//if (CObjMgr::GetInstance()->Get_RAIDLIST()->size() >= 2)
+	//{
+	//	CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
+	//	if (pMonster != nullptr && pMonster->Get_IsConnected() == false)
+	//	{
+	//		add_timer(pMonster->m_sNum, OP_MODE_RAID_START, system_clock::now() + 10s);
+	//	}
+	//}
 }
 
 void process_suggest_party(const int& suggester_id, const int& others_id)
@@ -2520,6 +2527,62 @@ void process_use_potion(const int& id, const bool& bIsPotionHP)
 			pUser->send_update_party(p);
 		}
 	}
+}
+
+void process_cinema_end(const int& id)
+{
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pPlayer == nullptr) return;
+
+	if (pPlayer->m_chStageId == STAGE_WINTER)
+	{
+		CObjMgr::GetInstance()->Add_RaidList(id);
+
+		/* 기존 파티 탈퇴 -> 레이드 파티 가입 */
+		process_leave_party(id);
+
+		CObjMgr::GetInstance()->Add_PartyMember(RAID_PARTY, &pPlayer->m_iPartyNumber, id);
+		pPlayer->m_bIsPartyState = true;
+
+		// 파티구성원들에게 새로운 파티멤버 정보 전송
+		for (auto& p : *CObjMgr::GetInstance()->Get_PARTYLIST(RAID_PARTY))
+		{
+			if (p != id)
+			{
+				if (CObjMgr::GetInstance()->Is_Player(p) == true)
+				{
+					CPlayer* pMember = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", p));
+					if (pMember == nullptr) continue;
+					if (!pMember->m_bIsConnect) continue;
+
+					// 새로운 멤버 정보 -> 기존 구성원			
+					pPlayer->send_enter_party(p);
+					// 기존 구성원 정보 -> 새로운 멤버
+					pMember->send_enter_party(id);
+				}
+				else if (CObjMgr::GetInstance()->Is_AI(p) == true)
+				{
+					CAi* pMember = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", p));
+					if (pMember != nullptr)
+					{
+						// 기존 구성원 정보 -> 새로운 멤버
+						pMember->send_enter_party(id);
+					}
+				}
+			}
+		}
+	}
+
+	/* AI & Vergos Connect */
+	if (CObjMgr::GetInstance()->Get_RAIDLIST()->size() >= RAID_MINIMUM)
+	{
+		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
+		if (pMonster != nullptr && pMonster->Get_IsConnected() == false)
+		{
+			add_timer(pMonster->m_sNum, OP_MODE_RAID_START, system_clock::now() + 10s);
+		}
+	}
+
 }
 
 /*===========================================FUNC====================================================*/

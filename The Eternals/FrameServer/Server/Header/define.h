@@ -40,6 +40,7 @@ constexpr int	MAX_ITEMSIZE				= 80;
 constexpr float	PERCENT						= 100.f;
 
 constexpr int	RAID_PARTY					= 99;
+constexpr int	RAID_MINIMUM				= 2;
 constexpr int	AI_HP						= 5000;
 constexpr int	AI_MP						= 5000;
 constexpr int	AI_MAXATT					= 500;

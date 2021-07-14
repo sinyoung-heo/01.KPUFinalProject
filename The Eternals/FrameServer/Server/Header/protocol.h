@@ -88,6 +88,7 @@ constexpr char CS_UNEQUIP_ITEM			= 19;	// 장비 해체
 constexpr char CS_SHOP					= 20;	// 상점에서 아이템 거래
 constexpr char CS_BUFF					= 21;	// 버프 스킬 사용
 constexpr char CS_DRINK_POTION			= 22;	// 포션 사용
+constexpr char CS_END_CINEMA			= 23;	// 씨네마틱 컷씬 종료
 
 // Stage ID
 constexpr char STAGE_VELIKA				= 0;

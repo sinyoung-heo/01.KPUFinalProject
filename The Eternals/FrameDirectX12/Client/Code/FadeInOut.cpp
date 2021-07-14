@@ -271,6 +271,7 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 				CCinemaMgr::Get_Instance()->Reset_LakanPosition();
 				CCinemaMgr::Get_Instance()->Reset_Vergos();
 				CCinemaMgr::Get_Instance()->Set_IsCancleCinematic(false);
+				CPacketMgr::Get_Instance()->send_end_cinema();
 			}
 		}
 		else
