@@ -54,11 +54,6 @@ _int CSkyBox::Update_GameObject(const _float & fTimeDelta)
 	if (g_bIsCinemaStart)
 		m_pTransCom->m_vPos = _vec3(380.0f, 0.0f, 480.0f);
 
-	if (Engine::KEY_DOWN(DIK_Z))
-	{
-
-	}
-
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/

@@ -15,6 +15,7 @@
 #include "LightMgr.h"
 #include "DmgFont.h"
 #include "DragonEffect.h"
+#include "SkyBox.h"
 
 /* USER */
 #include "PCGladiator.h"
@@ -760,6 +761,9 @@ void CPacketMgr::Stage_Change(sc_packet_stage_change* packet)
 		// Static Object && Ambient Light
 		Engine::D3DLIGHT tDirLight = Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL);
 		
+		// SkyBox
+		CSkyBox* pSkyBox = static_cast<CSkyBox*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"SkyBox"));
+
 		if (STAGE_VELIKA == packet->stage_id)
 		{
 			Engine::CObjectMgr::Get_Instance()->Set_CurrentStage(Engine::STAGEID::STAGE_VELIKA);
@@ -768,6 +772,9 @@ void CPacketMgr::Stage_Change(sc_packet_stage_change* packet)
 			tDirLight.Ambient.z = 0.55f;
 			tDirLight.Ambient.w = 1.0f;
 			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL, 0, tDirLight);
+
+			if (nullptr != pSkyBox)
+				pSkyBox->Set_TextureIdx(1);
 		}
 		else if (STAGE_BEACH == packet->stage_id)
 		{
@@ -777,6 +784,9 @@ void CPacketMgr::Stage_Change(sc_packet_stage_change* packet)
 			tDirLight.Ambient.z = 0.55f;
 			tDirLight.Ambient.w = 1.0f;
 			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL, 0, tDirLight);
+
+			if (nullptr != pSkyBox)
+				pSkyBox->Set_TextureIdx(1);
 		}
 		else if (STAGE_WINTER == packet->stage_id)
 		{
@@ -786,6 +796,9 @@ void CPacketMgr::Stage_Change(sc_packet_stage_change* packet)
 			tDirLight.Ambient.z = 0.3f;
 			tDirLight.Ambient.w = 1.0f;
 			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL, 0, tDirLight);
+
+			if (nullptr != pSkyBox)
+				pSkyBox->Set_TextureIdx(6);
 		}
 
 		// Set FadeInOut
