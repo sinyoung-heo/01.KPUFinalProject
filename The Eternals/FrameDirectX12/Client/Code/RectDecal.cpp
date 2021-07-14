@@ -88,8 +88,8 @@ _int CRectDecal::LateUpdate_GameObject(const _float & fTimeDelta)
 
 void CRectDecal::Render_GameObject(const _float& fTimeDelta)
 {
-	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, 31, 30, 25
-		,24,28);
+	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, 32, 5, 2
+		, 0, 4);
 }
 
 HRESULT CRectDecal::Add_Component(wstring wstrMeshTag)
@@ -128,14 +128,14 @@ void CRectDecal::Set_ConstantTable()
 	tCB_ShaderMesh.vLightPos = tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 	m_fDeltaTime  += Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.5f;
-	m_fDeltatime2 += Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.3f* m_fDelta2Velocity;
+	m_fDeltatime2 += Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.03f* m_fDelta2Velocity;
 	if (fabsf(m_fDeltatime2) > 0.3f)
 	{
 		m_fDelta2Velocity *= -1.f;
 	}
-	tCB_ShaderMesh.fOffset1 = -m_fDeltaTime;
+	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
 	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
-	m_fAlpha -= Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.1f;
+	m_fAlpha -= Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta");
 	tCB_ShaderMesh.fOffset6 = m_fAlpha;
 
 	if(m_pShaderCom->Get_UploadBuffer_ShaderMesh()!=nullptr)

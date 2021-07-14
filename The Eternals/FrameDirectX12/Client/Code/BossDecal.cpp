@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "IceDecal.h"
+#include "BossDecal.h"
 #include "GraphicDevice.h"
 #include "DirectInput.h"
 #include "ObjectMgr.h"
@@ -9,13 +9,13 @@
 #include "TimeMgr.h"
 #include "DescriptorHeapMgr.h"
 #include "TextureEffect.h"
-CIceDecal::CIceDecal(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
+CBossDecal::CBossDecal(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
 }
 
 
-HRESULT CIceDecal::Ready_GameObject(wstring wstrMeshTag,
+HRESULT CBossDecal::Ready_GameObject(wstring wstrMeshTag,
 											 const _vec3 & vScale,
 											 const _vec3 & vAngle, 
 											 const _vec3 & vPos)
@@ -32,16 +32,53 @@ HRESULT CIceDecal::Ready_GameObject(wstring wstrMeshTag,
 	return S_OK;
 }
 
-HRESULT CIceDecal::LateInit_GameObject()
+HRESULT CBossDecal::LateInit_GameObject()
 {
 
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
-	m_pDescriptorHeaps = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(L"PublicMagic");
+	m_pDescriptorHeaps = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(L"EffectPublic");
+	
+	m_uiDiffuse = 28;
+	m_uiNorm = 10;//NormIdx
+	m_uiSpec = 29;//SpecIdx
+
+	_vec3 vPos = m_pTransCom->m_vPos;
+	vPos.y += 1.f;
+	m_fDeltatime = 0.2f;
 	return S_OK;	
 }
 
-_int CIceDecal::Update_GameObject(const _float & fTimeDelta)
+_int CBossDecal::Update_GameObject(const _float & fTimeDelta)
 {
+	if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD7))
+	{
+		m_pTransCom->m_vAngle.x += fTimeDelta * 100;
+	}
+	if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD4))
+	{
+		m_pTransCom->m_vAngle.x -= fTimeDelta * 100;
+	}
+	if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD8))
+	{
+		m_pTransCom->m_vAngle.y += fTimeDelta * 100;
+	}
+	if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD5))
+	{
+		m_pTransCom->m_vAngle.y -= fTimeDelta * 100;
+	}
+	if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD9))
+	{
+		m_pTransCom->m_vAngle.z += fTimeDelta * 100;
+	}
+	if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD6))
+	{
+		m_pTransCom->m_vAngle.z -= fTimeDelta * 100;
+	}
+	if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD0))
+	{
+		cout << m_pTransCom->m_vAngle.x << " | " << m_pTransCom->m_vAngle.y << " | " << m_pTransCom->m_vAngle.z << endl;
+	}
+
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
 	if (m_fAlpha < 0.f)
@@ -49,16 +86,16 @@ _int CIceDecal::Update_GameObject(const _float & fTimeDelta)
 
 	if (m_bIsReturn)
 	{
-		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_IceDecal_Effect(), m_uiInstanceIdx);
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_BossDecal_Effect(), m_uiInstanceIdx);
 		return RETURN_OBJ;
 	}
 	if (m_bIsDead)
 		return DEAD_OBJ;
-
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
 
+	
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MAGICCIRCLE, this), -1);
 	
 	_vec4 vPosInWorld = _vec4(m_pTransCom->m_vPos, 1.0f);
@@ -71,7 +108,7 @@ _int CIceDecal::Update_GameObject(const _float & fTimeDelta)
 	return NO_EVENT;
 }
 
-_int CIceDecal::LateUpdate_GameObject(const _float & fTimeDelta)
+_int CBossDecal::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
 
@@ -81,13 +118,13 @@ _int CIceDecal::LateUpdate_GameObject(const _float & fTimeDelta)
 }
 
 
-void CIceDecal::Render_GameObject(const _float& fTimeDelta)
+void CBossDecal::Render_GameObject(const _float& fTimeDelta)
 {
-	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, 33, 5, 2
+	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_uiNorm, m_uiSpec
 		,0,4);
 }
 
-HRESULT CIceDecal::Add_Component(wstring wstrMeshTag)
+HRESULT CBossDecal::Add_Component(wstring wstrMeshTag)
 {
 	Engine::NULL_CHECK_RETURN(m_pComponentMgr, E_FAIL);
 
@@ -101,14 +138,14 @@ HRESULT CIceDecal::Add_Component(wstring wstrMeshTag)
 	// Shader
 	m_pShaderCom = static_cast<Engine::CShaderMeshEffect*>(m_pComponentMgr->Clone_Component(L"ShaderMeshEffect", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(7), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(16), E_FAIL);
 	m_pShaderCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
 	return S_OK;
 }
 
-void CIceDecal::Set_ConstantTable()
+void CBossDecal::Set_ConstantTable()
 {
 	/*__________________________________________________________________________________________________________
 	[ Set ConstantBuffer Data ]
@@ -122,15 +159,16 @@ void CIceDecal::Set_ConstantTable()
 	tCB_ShaderMesh.matLightProj = Engine::CShader::Compute_MatrixTranspose(tShadowDesc.matLightProj);
 	tCB_ShaderMesh.vLightPos = tShadowDesc.vLightPosition;
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
-	m_fDeltaTime  += Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.5f;
-	m_fDeltatime2 += Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.3f* m_fDelta2Velocity;
-	if (fabsf(m_fDeltatime2) > 0.3f)
+	if (m_fDeltatime < 0.3f)
 	{
-		m_fDelta2Velocity *= -1.f;
+		m_fDeltatime += Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.8f;
 	}
-	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
-	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
-	m_fAlpha -= Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.3f;
+	else
+	{
+		m_fAlpha -= Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta");
+	}
+	
+	tCB_ShaderMesh.fOffset1 = m_fDeltatime;
 	tCB_ShaderMesh.fOffset6 = m_fAlpha;
 
 	if(m_pShaderCom->Get_UploadBuffer_ShaderMesh()!=nullptr)
@@ -139,30 +177,31 @@ void CIceDecal::Set_ConstantTable()
 	
 }
 
-void CIceDecal::Set_ConstantTableShadowDepth()
+void CBossDecal::Set_ConstantTableShadowDepth()
 {
 
 }
-void CIceDecal::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
+
+void CBossDecal::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
 {
+
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos = vPos;
-	m_pTransCom->m_vPos.y += 0.3f;
-	m_fDeltatime = 0.f;
+	m_fDeltatime = 0.2f;
 	m_fDeltatime2 = 0.f;
 	m_fDelta2Velocity = 1.f;
 	m_fDeltatime3 = 0.f;
-	m_fAlpha = 1.f;
+	m_fAlpha = 0.9f;
 }
 
-Engine::CGameObject* CIceDecal::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
+Engine::CGameObject* CBossDecal::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,
 												wstring wstrMeshTag, 
 												const _vec3 & vScale,
 												const _vec3 & vAngle,
 												const _vec3 & vPos)
 {
-	CIceDecal* pInstance = new CIceDecal(pGraphicDevice, pCommandList);
+	CBossDecal* pInstance = new CBossDecal(pGraphicDevice, pCommandList);
 
 	if (FAILED(pInstance->Ready_GameObject(wstrMeshTag, vScale, vAngle, vPos)))
 		Engine::Safe_Release(pInstance);
@@ -170,23 +209,21 @@ Engine::CGameObject* CIceDecal::Create(ID3D12Device * pGraphicDevice, ID3D12Grap
 	return pInstance;
 }
 
-CIceDecal** CIceDecal::Create_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, const _uint& uiInstanceCnt)
+CBossDecal** CBossDecal::Create_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, const _uint& uiInstanceCnt)
 {
-
-	CIceDecal** ppInstance = new (CIceDecal * [uiInstanceCnt]);
+	CBossDecal** ppInstance = new (CBossDecal * [uiInstanceCnt]);
 	for (_uint i = 0; i < uiInstanceCnt; ++i)
 	{
-		ppInstance[i] = new CIceDecal(pGraphicDevice, pCommandList);
+		ppInstance[i] = new CBossDecal(pGraphicDevice, pCommandList);
 		ppInstance[i]->m_uiInstanceIdx = i;
-		ppInstance[i]->Ready_GameObject(L"PublicPlane00", _vec3(0.f), _vec3(0.f), _vec3(0.f));
+		ppInstance[i]->Ready_GameObject(L"publicBossDecal", _vec3(0.f), _vec3(0.f), _vec3(0.f));
 	}
 	return ppInstance;
 }
 
-void CIceDecal::Free()
+void CBossDecal::Free()
 {
 	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pMeshCom);
-//	Engine::Safe_Release(m_pDescriptorHeaps);
 	Engine::Safe_Release(m_pShaderCom);
 }

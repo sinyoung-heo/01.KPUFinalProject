@@ -1175,6 +1175,9 @@
     <ClInclude Include="..\Code\BreathEffect.h">
       <Filter>02.GameObject\98.GameEffect\99.Garbage</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\BossDecal.h">
+      <Filter>02.GameObject\98.GameEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1727,6 +1730,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\BreathEffect.cpp">
       <Filter>02.GameObject\98.GameEffect\99.Garbage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\BossDecal.cpp">
+      <Filter>02.GameObject\98.GameEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

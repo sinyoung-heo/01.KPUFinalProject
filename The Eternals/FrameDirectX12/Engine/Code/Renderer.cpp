@@ -517,9 +517,13 @@ void CRenderer::Render_Alpha(const _float& fTimeDelta)
 		{
 			return pSour->Get_DepthOfView() > pDest->Get_DepthOfView();
 		});
-	sort(m_RenderList[RENDER_MAGICCIRCLE].begin(), m_RenderList[RENDER_MAGICCIRCLE].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
+	stable_sort(m_RenderList[RENDER_MAGICCIRCLE].begin(), m_RenderList[RENDER_MAGICCIRCLE].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
 		{
 			return pSour->Get_DepthOfView() > pDest->Get_DepthOfView();
+		});
+	stable_sort(m_RenderList[RENDER_MAGICCIRCLE].begin(), m_RenderList[RENDER_MAGICCIRCLE].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
+		{
+			return pSour->Get_Transform()->m_vPos.y > pDest->Get_Transform()->m_vPos.y;
 		});
 
 	
