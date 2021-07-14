@@ -12,6 +12,9 @@
 #include "InstancePoolMgr.h"
 #include "NormalMonsterHpGauge.h"
 #include "BreathEffect.h"
+#include "GameUIRoot.h"
+#include "VergosHpGauge.h"
+
 CVergos::CVergos(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pPacketMgr(CPacketMgr::Get_Instance())
@@ -51,11 +54,7 @@ HRESULT CVergos::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, 
 	m_iMonsterStatus = Vergos::A_WAIT;
 
 	// Create HpGauge
-	m_pHpGauge = static_cast<CNormalMonsterHpGauge*>(CNormalMonsterHpGauge::Create(m_pGraphicDevice, 
-																				   m_pCommandList,
-																				   _vec3(0.0f),
-																				   _vec3(2.0f, 0.075f, 1.0f)));
-	Engine::NULL_CHECK_RETURN(m_pHpGauge, E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Create_HpGauge(), E_FAIL);
 
 	return S_OK;
 }
@@ -87,6 +86,12 @@ _int CVergos::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bIsReturn)
 	{
+		if (nullptr != m_pHpGaugeRoot)
+		{
+			m_pHpGaugeRoot->Set_IsActive(false);
+			m_pHpGaugeRoot->Set_IsChildActive(false);
+		}
+
 		m_iSNum = -1;
 		m_bIsStartDissolve = false;
 		m_fDissolve = -0.05f;
@@ -228,6 +233,146 @@ HRESULT CVergos::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 	Engine::NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);
 	m_pNaviMeshCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
+
+	return S_OK;
+}
+
+HRESULT CVergos::Create_HpGauge()
+{
+	{
+		wifstream fin { L"../../Bin/ToolData/2DUIBossHpGaugeV2.2DUI" };
+		if (fin.fail())
+			return E_FAIL;
+
+		// RootUI Data
+		wstring wstrDataFilePath   = L"";			// DataFilePath
+		wstring wstrRootObjectTag  = L"";			// ObjectTag
+		_vec3	vPos               = _vec3(0.0f);	// Pos
+		_vec3	vScale             = _vec3(1.0f);	// Scale
+		_long	UIDepth            = 0;				// UIDepth
+		_bool	bIsSpriteAnimation = false;			// IsSpriteAnimation
+		_float	fFrameSpeed        = 0.0f;			// FrameSpeed
+		_vec3	vRectPosOffset     = _vec3(0.0f);	// RectPosOffset
+		_vec3	vRectScale         = _vec3(1.0f);	// RectScale
+		_int	iChildUISize       = 0;				// ChildUI Size
+
+		// ChildUI Data
+		vector<wstring> vecDataFilePath;
+		vector<wstring> vecObjectTag;
+		vector<_vec3>	vecPos;
+		vector<_vec3>	vecScale;
+		vector<_long>	vecUIDepth;
+		vector<_int>	vecIsSpriteAnimation;
+		vector<_float>	vecFrameSpeed;
+		vector<_vec3>	vecRectPosOffset;
+		vector<_vec3>	vecRectScale;
+
+		while (true)
+		{
+			fin >> wstrDataFilePath
+				>> wstrRootObjectTag
+				>> vPos.x
+				>> vPos.y
+				>> vScale.x
+				>> vScale.y
+				>> UIDepth
+				>> bIsSpriteAnimation
+				>> fFrameSpeed
+				>> vRectPosOffset.x
+				>> vRectPosOffset.y
+				>> vRectScale.x
+				>> vRectScale.y
+				>> iChildUISize;
+
+			vecDataFilePath.resize(iChildUISize);
+			vecObjectTag.resize(iChildUISize);
+			vecPos.resize(iChildUISize);
+			vecScale.resize(iChildUISize);
+			vecUIDepth.resize(iChildUISize);
+			vecIsSpriteAnimation.resize(iChildUISize);
+			vecFrameSpeed.resize(iChildUISize);
+			vecRectPosOffset.resize(iChildUISize);
+			vecRectScale.resize(iChildUISize);
+
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				fin >> vecDataFilePath[i]			// DataFilePath
+					>> vecObjectTag[i]				// Object Tag
+					>> vecPos[i].x					// Pos X
+					>> vecPos[i].y					// Pos Y
+					>> vecScale[i].x				// Scale X
+					>> vecScale[i].y				// Scale Y
+					>> vecUIDepth[i]				// UI Depth
+					>> vecIsSpriteAnimation[i]		// Is SpriteAnimation
+					>> vecFrameSpeed[i]				// Frame Speed
+					>> vecRectPosOffset[i].x		// RectPosOffset X
+					>> vecRectPosOffset[i].y		// RectPosOffset Y
+					>> vecRectScale[i].x			// RectScale X
+					>> vecRectScale[i].y;			// RectScale Y
+			}
+
+			if (fin.eof())
+				break;
+
+			// UIRoot 持失.
+			Engine::CGameObject* pRootUI = nullptr;
+			pRootUI = CGameUIRoot::Create(m_pGraphicDevice, m_pCommandList,
+										  wstrRootObjectTag,
+										  wstrDataFilePath,
+										  vPos,
+										  vScale,
+										  bIsSpriteAnimation,
+										  fFrameSpeed,
+										  vRectPosOffset,
+										  vRectScale,
+										  UIDepth);
+			m_pObjectMgr->Add_GameObject(L"Layer_UI", wstrRootObjectTag, pRootUI);
+			m_pHpGaugeRoot = static_cast<CGameUIRoot*>(pRootUI);
+
+			// UIChild 持失.
+			Engine::CGameObject* pChildUI = nullptr;
+			for (_int i = 0; i < iChildUISize; ++i)
+			{
+				if (L"BossGaugeFrontV2" == vecObjectTag[i])
+				{
+					pChildUI = CVergosHpGauge::Create(m_pGraphicDevice, m_pCommandList,
+													  wstrRootObjectTag,				// RootObjectTag
+													  vecObjectTag[i],					// ObjectTag
+													  vecDataFilePath[i],				// DataFilePath
+													  vecPos[i],						// Pos
+													  vecScale[i],						// Scane
+													  (_bool)vecIsSpriteAnimation[i],	// Is Animation
+													  vecFrameSpeed[i],					// FrameSpeed
+													  vecRectPosOffset[i],				// RectPosOffset
+													  vecRectScale[i],					// RectScaleOffset
+													  vecUIDepth[i]);						// UI Depth
+					m_pHpGauge = static_cast<CVergosHpGauge*>(pChildUI);
+				}
+				else
+				{
+					pChildUI = CGameUIChild::Create(m_pGraphicDevice, m_pCommandList,
+													wstrRootObjectTag,				// RootObjectTag
+													vecObjectTag[i],				// ObjectTag
+													vecDataFilePath[i],				// DataFilePath
+													vecPos[i],						// Pos
+													vecScale[i],					// Scane
+													(_bool)vecIsSpriteAnimation[i],	// Is Animation
+													vecFrameSpeed[i],				// FrameSpeed
+													vecRectPosOffset[i],			// RectPosOffset
+													vecRectScale[i],				// RectScaleOffset
+													vecUIDepth[i]);					// UI Depth
+				}
+				m_pObjectMgr->Add_GameObject(L"Layer_UI", vecObjectTag[i], pChildUI);
+				static_cast<CGameUIRoot*>(pRootUI)->Add_ChildUI(pChildUI);
+			}
+		}
+	}
+
+	if (nullptr != m_pHpGaugeRoot)
+	{
+		m_pHpGaugeRoot->Set_IsActive(false);
+		m_pHpGaugeRoot->Set_IsChildActive(false);
+	}
 
 	return S_OK;
 }
@@ -375,6 +520,12 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 		case Vergos::A_SPAWN:
 		{
+			if (nullptr != m_pHpGaugeRoot)
+			{
+				m_pHpGaugeRoot->Set_IsActive(true);
+				m_pHpGaugeRoot->Set_IsChildActive(true);
+			}
+
 			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = Vergos::A_SPAWN;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -567,6 +718,12 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 			m_uiAnimIdx = Vergos::A_DEATH;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			
+			if (nullptr != m_pHpGaugeRoot)
+			{
+				m_pHpGaugeRoot->Set_IsActive(false);
+				m_pHpGaugeRoot->Set_IsChildActive(false);
+			}
+
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) 
 			{
 				m_bIsStartDissolve = true;
@@ -591,13 +748,9 @@ void CVergos::SetUp_HpGauge(const _float& fTimeDelta)
 {
 	if (nullptr != m_pHpGauge && Vergos::A_DEATH != m_iMonsterStatus)
 	{
-		_vec3 vPos = m_pTransCom->m_vPos;
-		vPos.y += 4.75f;
-		m_pHpGauge->Get_Transform()->m_vPos = vPos;
-		m_pHpGauge->Set_Percent((_float)m_pInfoCom->m_iHp / (_float)m_pInfoCom->m_iMaxHp);
-
-		m_pHpGauge->Update_GameObject(fTimeDelta);
-		m_pHpGauge->LateUpdate_GameObject(fTimeDelta);
+		m_pHpGauge->Set_Percent((_float)(m_pInfoCom->m_iHp) / (_float)(m_pInfoCom->m_iMaxHp), 
+								m_pInfoCom->m_iHp, 
+								m_pInfoCom->m_iMaxHp);
 	}
 }
 
@@ -784,5 +937,9 @@ void CVergos::Free()
 	Engine::Safe_Release(m_pColliderBoxCom);
 	Engine::Safe_Release(m_pNaviMeshCom);
 
-	Engine::Safe_Release(m_pHpGauge);
+	if (nullptr != m_pHpGaugeRoot)
+		m_pHpGaugeRoot->Set_DeadGameObject();
+
+	if (nullptr != m_pHpGauge)
+		m_pHpGauge->Set_DeadGameObject();
 }

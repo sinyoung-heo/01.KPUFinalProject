@@ -307,6 +307,8 @@ HRESULT CPCOthersArcher::Add_Component(wstring wstrMeshTag, wstring wstrNaviMesh
 	m_pNaviMeshCom->Set_CurrentCellIndex(0);
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
 
+	m_pOriginNaviMeshCom = m_pNaviMeshCom;
+
 	m_pVelikaNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"StageVelika_NaviMesh", Engine::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pVelikaNaviMeshCom, E_FAIL);
 
@@ -1016,6 +1018,9 @@ CPCOthersArcher** CPCOthersArcher::Create_InstancePool(ID3D12Device* pGraphicDev
 void CPCOthersArcher::Free()
 {
 	Engine::CGameObject::Free();
+
+	m_pNaviMeshCom = m_pOriginNaviMeshCom;
+	m_mapComponent[Engine::ID_DYNAMIC][L"Com_NaviMesh"] = m_pOriginNaviMeshCom;
 
 	Engine::Safe_Release(m_pMeshCom);
 	Engine::Safe_Release(m_pShaderCom);

@@ -2,6 +2,7 @@
 #include "SkyBox.h"
 #include "ObjectMgr.h"
 #include "GraphicDevice.h"
+#include "DirectInput.h"
 
 
 CSkyBox::CSkyBox(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)

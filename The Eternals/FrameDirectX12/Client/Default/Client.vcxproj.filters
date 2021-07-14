@@ -313,12 +313,6 @@
     <Filter Include="97.Mgr\07.ChattingMgr">
       <UniqueIdentifier>{2904b338-b7c5-4d45-a62a-077e1b63a009}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\99.GameUI\03.NPCMiniMap">
-      <UniqueIdentifier>{fb87df6f-a6be-4b2b-89a6-c03aef3109a5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\99.GameUI\04.WarningFrame">
-      <UniqueIdentifier>{cff0a3a9-8d5f-4a14-9a57-23eb93b0dd7b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.Mgr\08.InventoryEquimentMgr">
       <UniqueIdentifier>{f98edfe9-53c5-4831-8d41-ab37db7e4434}</UniqueIdentifier>
     </Filter>
@@ -487,9 +481,6 @@
     <Filter Include="02.GameObject\98.GameEffect\00.DmgFont">
       <UniqueIdentifier>{333290f3-bc1e-4da7-91b2-e87c068747e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\99.GameUI\05.FadeInOut">
-      <UniqueIdentifier>{05a37931-3661-4baf-b15e-ece51ef9d5a9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\98.GameEffect\08.PriestShield">
       <UniqueIdentifier>{b0ba30a7-e9a4-4f44-ac3f-7d7300316a22}</UniqueIdentifier>
     </Filter>
@@ -564,6 +555,18 @@
     </Filter>
     <Filter Include="02.GameObject\99.GameUI\00.GameUIRoot\13.QuestMessageCanvas">
       <UniqueIdentifier>{44d6e15e-9d8c-4de4-a3c6-dea778d2ca29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\01.GameUIChild\18.VergosHpGauge">
+      <UniqueIdentifier>{de576bde-6fd4-426d-8a5a-80c5129526cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\03.NPCMiniMap">
+      <UniqueIdentifier>{fb87df6f-a6be-4b2b-89a6-c03aef3109a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\04.WarningFrame">
+      <UniqueIdentifier>{cff0a3a9-8d5f-4a14-9a57-23eb93b0dd7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\99.GameUI\05.FadeInOut">
+      <UniqueIdentifier>{05a37931-3661-4baf-b15e-ece51ef9d5a9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1175,6 +1178,9 @@
     <ClInclude Include="..\Code\BreathEffect.h">
       <Filter>02.GameObject\98.GameEffect\99.Garbage</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\VergosHpGauge.h">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\18.VergosHpGauge</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1727,6 +1733,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\BreathEffect.cpp">
       <Filter>02.GameObject\98.GameEffect\99.Garbage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\VergosHpGauge.cpp">
+      <Filter>02.GameObject\99.GameUI\01.GameUIChild\18.VergosHpGauge</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
