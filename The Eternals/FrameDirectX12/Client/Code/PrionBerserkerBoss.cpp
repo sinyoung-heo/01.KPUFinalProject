@@ -280,8 +280,8 @@ void CPrionBerserkerBoss::Active_Monster(const _float& fTimeDelta)
 	if (!m_bIsMoveStop && m_pMeshCom->Is_BlendingComplete())
 	{
 		m_pInfoCom->m_fSpeed += fTimeDelta * 10.0f;
-		if (m_pInfoCom->m_fSpeed >= 8.0f)
-			m_pInfoCom->m_fSpeed = 8.0f;
+		if (m_pInfoCom->m_fSpeed >= 6.0f)
+			m_pInfoCom->m_fSpeed = 6.0f;
 
 		if (m_pTransCom->m_vPos.z <= 375.f)
 			m_bIsMoveStop = true;

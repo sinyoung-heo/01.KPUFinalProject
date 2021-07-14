@@ -334,6 +334,8 @@ void CCinemaMgr::Reset_PrionBerserkerPosition()
 
 	static_cast<CPrionBerserkerBoss*>(m_pPrionBerserkerBoss)->Reset_Position();
 	static_cast<CPrionBerserkerBoss*>(m_pPrionBerserkerBoss)->Set_State(PrionBerserkerBoss::A_WAIT);
+	static_cast<CPrionBerserkerBoss*>(m_pPrionBerserkerBoss)->Set_MoveStop(true);
+	static_cast<CPrionBerserkerBoss*>(m_pPrionBerserkerBoss)->Set_IsPrionBerserkerScreaming(false);
 }
 
 void CCinemaMgr::Set_IsMoveStopPrionBerserker(const _bool& bIsMoveStop)

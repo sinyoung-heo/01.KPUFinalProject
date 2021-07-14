@@ -299,7 +299,6 @@ void CCinemaVergos::Change_Animation(const _float& fTimeDelta)
 		{
 		case CinemaVergos::A_WAIT:
 		{
-			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = CinemaVergos::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
@@ -307,9 +306,9 @@ void CCinemaVergos::Change_Animation(const _float& fTimeDelta)
 
 		case CinemaVergos::A_SPAWN:
 		{
-			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = CinemaVergos::A_SPAWN;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+			cout << "Vergos : " << m_ui3DMax_CurFrame << " / " << m_ui3DMax_NumFrame << endl;
 		}
 		break;
 		}

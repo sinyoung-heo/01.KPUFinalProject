@@ -628,7 +628,7 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicPrionBerserkerRush(const _float
 		m_vEyeInterpolationDesc.linear_ratio           = 0.0f;
 		m_vEyeInterpolationDesc.interpolation_speed    = 0.35f;
 		m_vEyeInterpolationDesc.v1                     = m_tCameraInfo.vEye;
-		m_vEyeInterpolationDesc.v2                     = _vec3(387.0f, 12.0f, 476.0f);
+		m_vEyeInterpolationDesc.v2                     = _vec3(387.0f, 12.0f, 470.0f);
 
 		m_tProjInfo.fFovY = 50.0f;
 		m_bIsSettingCinematicValue = true;
@@ -694,13 +694,13 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicEnding(const _float& fTimeDelta
 
 		m_vEyeInterpolationDesc.is_start_interpolation = true;
 		m_vEyeInterpolationDesc.linear_ratio           = 0.0f;
-		m_vEyeInterpolationDesc.interpolation_speed    = 0.3f;
+		m_vEyeInterpolationDesc.interpolation_speed    = 0.25f;
 		m_vEyeInterpolationDesc.v1                     = m_tCameraInfo.vEye;
 		m_vEyeInterpolationDesc.v2                     = _vec3(392.0f, 8.0f, 327.0f);
 	}
 	Engine::SetUp_LinearInterpolation(fTimeDelta, m_tCameraInfo.vEye, m_vEyeInterpolationDesc);
 
-	if (m_vEyeInterpolationDesc.linear_ratio > 0.5f && !m_bIsCinematicEnding)
+	if (m_vEyeInterpolationDesc.linear_ratio > 0.35f && !m_bIsCinematicEnding)
 	{
 		m_bIsCinematicEnding = true;
 
@@ -711,6 +711,9 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicEnding(const _float& fTimeDelta
 			static_cast<CFadeInOut*>(pGameObj)->Set_FadeInOutEventType(EVENT_TYPE::EVENT_CINEMATIC_ENDING);
 			m_pObjectMgr->Add_GameObject(L"Layer_UI", L"FadeInOut", pGameObj);
 		}
+
+		// PrionBerserker MoveStop false
+		CCinemaMgr::Get_Instance()->Set_IsMoveStopPrionBerserker(false);
 	}
 }
 

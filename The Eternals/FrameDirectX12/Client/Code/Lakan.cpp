@@ -319,7 +319,7 @@ void CLakan::Change_Animation(const _float& fTimeDelta)
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			// ½Ã³×¸¶Æ½
-			if (m_ui3DMax_CurFrame > 25)
+			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
 				CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
 				pDynamicCamera->Set_IsSettingCameraCinematicValue(false);
