@@ -30,11 +30,13 @@ public:
 	void	Release_AI();
 
 public:
+	void	nonActive_AI();
 	void	active_AI();
 	void	Change_ActiveMode();
 	void	Change_AttackMode();								// STATUS == ATTACK
 	void	Change_ChaseMode();									// STATUS == CHASE
 	void	Change_ReactionMode();
+	void    Change_DeadMode();
 
 private:
 	void	Change_Animation(const float& fTimeDelta);
@@ -77,6 +79,7 @@ private:
 	bool	Is_ComboAttack_Priest(const float& fTimeDelta);
 
 	/* ALL CLASS */
+	void	reset_ai();
 	void	process_disconnect_ai();
 	void	process_leave_party_ai();
 
@@ -98,45 +101,46 @@ public:
 	virtual DWORD				Release();
 
 public:
-	volatile bool	m_bIsAttack		= false;
-	volatile bool	m_bIsReaction	= false;
-	bool	m_bIsMove				= false;
-	bool	m_bIsAttackStance		= false;
-	bool	m_bIsPartyState			= false;
-	char	m_chWeaponType			= 0;
-	int		m_iPartyNumber			= -1;
-	int		m_iAniIdx				= 0;
-	int		m_iLevel				= 0;
-	int		m_iHp					= 0; 
-	int		m_iMaxHp				= 0;
-	int		m_iMp					= 0;
-	int		m_iMaxMp				= 0;	
-	int		m_iMinAtt				= 0;
-	int		m_iMaxAtt				= 0;
-	float	m_fSpd					= 0.f;
-	float	m_fAnimationSpeed		= 0.f;
-	float	m_fLookAngle			= 0.f;
+	volatile bool	m_bIsAttack				= false;
+	volatile bool	m_bIsReaction			= false;
+	bool			m_bIsMove				= false;
+	bool			m_bIsAttackStance		= false;
+	bool			m_bIsPartyState			= false;
+	char			m_chWeaponType			= 0;
+	int				m_iPartyNumber			= -1;
+	int				m_iAniIdx				= 0;
+	int				m_iLevel				= 0;
+	int				m_iHp					= 0; 
+	int				m_iMaxHp				= 0;
+	int				m_iMp					= 0;
+	int				m_iMaxMp				= 0;	
+	int				m_iMinAtt				= 0;
+	int				m_iMaxAtt				= 0;
+	float			m_fSpd					= 0.f;
+	float			m_fAnimationSpeed		= 0.f;
+	float			m_fLookAngle			= 0.f;
+	_vec3			m_vOriPos				= _vec3(0.f);
 
-	GLADIATOR_PHASE m_eGladiatorPhase = GLADIATOR_PHASE::GL_END;
+	GLADIATOR_PHASE m_eGladiatorPhase		= GLADIATOR_PHASE::GL_END;
 	LINEAR_INTERPOLATION_DESC<float> m_tMoveSpeedInterpolationDesc;
 
-	int		m_arrAttackPattern[VERGOS_PATTERN];
-	int		m_iCurPatternNumber			= 0;
-	CMonster* m_pMonster				= nullptr;
+	int				m_arrAttackPattern[VERGOS_PATTERN];
+	int				m_iCurPatternNumber		= 0;
+	CMonster*		m_pMonster				= nullptr; // Vergos
 
 	/* Animation */
-	_uint	m_uiNewAniIndex			= 0;
-	_uint	m_uiCurAniIndex			= 0;
-	_uint	m_uiNumAniIndex			= 0;
-	_uint	m_ui3DMax_NumFrame		= 0;
-	_uint	m_ui3DMax_CurFrame		= 0;
+	_uint			m_uiNewAniIndex				= 0;
+	_uint			m_uiCurAniIndex				= 0;
+	_uint			m_uiNumAniIndex				= 0;
+	_uint			m_ui3DMax_NumFrame			= 0;
+	_uint			m_ui3DMax_CurFrame			= 0;
 
-	float	m_fAnimationTime		= 0.f;
-	float	m_fBlendAnimationTime	= 0.f;
-	float	m_fBlendingTime			= 0.f;
+	float			m_fAnimationTime			= 0.f;
+	float			m_fBlendAnimationTime		= 0.f;
+	float			m_fBlendingTime				= 0.f;
 
-	double	m_arrDuration[MAX_ANI_AI]	= { 0 };
+	double			m_arrDuration[MAX_ANI_AI]	= { 0 };
 
-	_uint	m_uiAnimIdx				= 0;   // Apply Animation Index
+	_uint			m_uiAnimIdx					= 0;   // Apply Animation Index
 };
 

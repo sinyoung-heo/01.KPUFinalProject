@@ -586,12 +586,14 @@ void worker_thread()
 		{
 			CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));			
 			pMonster->Set_IsConnected(true);
+			pMonster->active_monster();
 
 			auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
 			auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
 			for (iter_begin; iter_begin != iter_end; ++iter_begin)
 			{
 				static_cast<CAi*>(iter_begin->second)->Set_IsConnected(true);
+				static_cast<CAi*>(iter_begin->second)->active_AI();
 			}		
 		}
 		break;

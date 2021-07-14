@@ -4,9 +4,10 @@
 #include "Monster.h"
 
 CAi::CAi()
-    :m_iLevel(0), m_iHp(0), m_iMaxHp(0), m_fSpd(0.f), m_bIsAttack(false), m_bIsReaction(false), m_pMonster(nullptr),
-    m_iMp(0), m_iMaxMp(0), m_iMaxAtt(0), m_iMinAtt(0), m_bIsMove(false), m_fAnimationSpeed(0.f), m_fLookAngle(0.f),
-    m_bIsAttackStance(false), m_bIsPartyState(false), m_iPartyNumber(-1), m_eGladiatorPhase (GLADIATOR_PHASE::GL_END)
+	:m_iLevel(0), m_iHp(0), m_iMaxHp(0), m_fSpd(0.f), m_bIsAttack(false), m_bIsReaction(false), m_pMonster(nullptr),
+	m_iMp(0), m_iMaxMp(0), m_iMaxAtt(0), m_iMinAtt(0), m_bIsMove(false), m_fAnimationSpeed(0.f), m_fLookAngle(0.f),
+	m_bIsAttackStance(false), m_bIsPartyState(false), m_iPartyNumber(-1), m_eGladiatorPhase(GLADIATOR_PHASE::GL_END),
+	m_vOriPos(_vec3(0.f))
 {
 	memset(m_arrAttackPattern, -1, sizeof(int) * VERGOS_PATTERN);
 }
@@ -104,6 +105,7 @@ void CAi::Ready_AI(const char& chJob, const char& chWeaponType, const char& chSt
     m_fSpd              = INIT_SPEED;
 
     m_vPos              = vPos;
+	m_vOriPos			= vPos;
     m_vDir              = _vec3(0.f, 0.f, 1.f);
     m_vAngle            = _vec3(0.f, 0.f, 0.f);
 	m_status			= STATUS::ST_NONACTIVE;
@@ -140,6 +142,15 @@ int CAi::Update_AI(const float& fTimeDelta)
 	Play_Animation(fTimeDelta * m_fAnimationSpeed);
 
 	return NO_EVENT;
+}
+
+void CAi::nonActive_AI()
+{
+	if (m_status != ST_NONACTIVE)
+	{
+		STATUS prev_state = m_status;
+		atomic_compare_exchange_strong(&m_status, &prev_state, ST_NONACTIVE);
+	}
 }
 
 void CAi::active_AI()
@@ -186,6 +197,15 @@ void CAi::Change_ReactionMode()
 		STATUS prev_state = m_status;
 		if (true == atomic_compare_exchange_strong(&m_status, &prev_state, ST_REACTION))
 			Set_Start_Reaction();
+	}
+}
+
+void CAi::Change_DeadMode()
+{
+	if (m_status != ST_DEAD)
+	{
+		STATUS prev_state = m_status;
+		atomic_compare_exchange_strong(&m_status, &prev_state, ST_DEAD);
 	}
 }
 
@@ -274,7 +294,7 @@ void CAi::Change_Gladiator_Animation(const float& fTimeDelta)
 
 	case STATUS::ST_DEAD:
 	{
-
+		reset_ai();
 	}
 	break;
 	}
@@ -338,7 +358,7 @@ void CAi::Change_Archer_Animation(const float& fTimeDelta)
 
 	case STATUS::ST_DEAD:
 	{
-		
+		reset_ai();
 	}
 	break;
 	}
@@ -402,7 +422,7 @@ void CAi::Change_Priest_Animation(const float& fTimeDelta)
 
 	case STATUS::ST_DEAD:
 	{
-
+		reset_ai();
 	}
 	break;
 	}
@@ -1342,6 +1362,39 @@ bool CAi::Is_ComboAttack_Priest(const float& fTimeDelta)
 	return false;
 }
 
+void CAi::reset_ai()
+{
+	m_bIsConnect		= false;
+	m_bIsAttackStance	= true;
+	m_bIsPartyState		= true;
+
+	m_bIsMove			= false;
+	m_bIsAttack			= false;
+	m_bIsReaction		= false;
+	
+	m_iCurPatternNumber = 0;
+
+	m_vPos				= m_vOriPos;
+	m_fLookAngle		= 0.f;
+
+	m_uiAnimIdx			= Gladiator::ATTACK_WAIT;
+	m_iAniIdx			= Gladiator::ATTACK_WAIT;
+
+	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+	{
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) continue;
+
+		pPlayer->v_lock.lock();
+		pPlayer->view_list.erase(m_sNum);
+		pPlayer->v_lock.unlock();
+
+		send_leave_packet(raid,m_sNum);
+	}
+
+	nonActive_AI();
+}
+
 void CAi::process_disconnect_ai()
 {
 	/* sector에서 해당 플레이어 지우기 */
@@ -1351,50 +1404,6 @@ void CAi::process_disconnect_ai()
 	if (m_bIsPartyState == true)
 		process_leave_party_ai();
 
-	/* 해당 플레이어가 등록되어 있는 섹터 내의 유저들에게 접속 종료를 알림 */
-	unordered_set<pair<int, int>> nearSector;
-	nearSector.reserve(NEAR_SECTOR);
-	CSectorMgr::GetInstance()->Get_NearSectorIndex(&nearSector, (int)m_vPos.x, (int)m_vPos.z);
-
-	// 인접 섹터 순회
-	for (auto& s : nearSector)
-	{
-		// 인접 섹터 내의 타 유저들이 있는지 검사
-		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
-		{
-			// 타 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
-			{
-				/* 오직 유저들에게만 패킷을 전송 (NPC 제외) */
-				if (false == CObjMgr::GetInstance()->Is_Player(obj_num)) continue;
-				// '나'에게 패킷 전송 X
-				if (obj_num == m_sNum) continue;
-
-				CPlayer* pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", obj_num));
-
-				// 접속한 유저들에게만 접속 종료를 알림
-				if (pOther->Get_IsConnected())
-				{
-					/* 타 유저의 시야 목록 내에 '나'가 있다면 지운다 */
-					pOther->v_lock.lock();
-					if (0 != pOther->view_list.count(m_sNum))
-					{
-						pOther->view_list.erase(m_sNum);
-						pOther->v_lock.unlock();
-
-						/* 타 유저에게 접속 종료 패킷 전송 */
-#ifdef TEST
-						cout << obj_num << "님에게" << id << "님 퇴장을 전송" << endl;
-#endif					
-						send_leave_packet(obj_num, m_sNum);
-					}
-					else pOther->v_lock.unlock();
-				}
-			}
-		}
-	}
-
-
 	m_bIsConnect	= false;
 	m_bIsDead		= false;
 	m_vPos			= _vec3(0.f, 0.f, 0.f);
@@ -1402,7 +1411,7 @@ void CAi::process_disconnect_ai()
 	m_ID[0]			= 0;
 	m_type			= 0;
 	m_chStageId		= STAGE_WINTER;
-	m_bIsPartyState = false;
+	m_bIsPartyState = true;
 	m_iPartyNumber	= INIT_PARTY_NUMBER;
 	m_status		= STATUS::ST_END;
 
