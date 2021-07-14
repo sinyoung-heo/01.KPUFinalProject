@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Monster.h"
 #include "Player.h"
+#include "Ai.h"
 
 CMonster::CMonster()
 	:m_iHp(0), m_iMaxHp(0), m_iExp(0), m_iMinAtt(0), m_iMaxAtt(0), m_fSpd(0.f), m_iChaseDist(CHASE_RANGE),
@@ -703,8 +704,30 @@ void CMonster::Dead_Vergos(const float& fTimeDelta)
 			return;
 		else
 		{
-			Set_Start_Regen(300s);
+			m_bIsConnect = false;
+			m_iCurPatternNumber = 0;
+
+			Set_Start_Regen(10s);
 			Init_AllStatus();
+
+			/* AI 초기화 */
+			auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+			auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
+			for (iter_begin; iter_begin != iter_end; ++iter_begin)
+			{
+				static_cast<CAi*>(iter_begin->second)->Change_DeadMode();
+			}
+
+			/* 레이드 파티에서 유저 탈퇴 */
+			for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+			{
+				CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+				if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) continue;
+
+				CObjMgr::GetInstance()->Leave_Party(&pPlayer->m_iPartyNumber, pPlayer->m_sNum);
+				pPlayer->m_bIsPartyState = false;
+			}
+
 			return;
 		}
 	}

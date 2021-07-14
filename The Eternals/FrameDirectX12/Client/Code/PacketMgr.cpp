@@ -1740,6 +1740,18 @@ void CPacketMgr::send_use_potion(const bool& bIsPotionHP)
 	send_packet(&p);
 }
 
+void CPacketMgr::send_end_cinema()
+{
+	cs_packet_potion p;
+
+	p.size = sizeof(p);
+	p.type = CS_END_CINEMA;
+
+	p.bIsPotionHP = true;
+
+	send_packet(&p);
+}
+
 void CPacketMgr::send_packet(void* packet)
 {
 	char* p = reinterpret_cast<char*>(packet);
