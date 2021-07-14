@@ -10,7 +10,7 @@ constexpr int KEY_SERVER		= 1000000;
 #define NO_EVENT			0
 #define DEAD_OBJ			1
 #define NO_INIT				-1
-#define PI					3.141592
+#define PI					3.141592f
 #define _3DMAX_FPS			30.0f
 #define ANIMA_INTERPOLATION	1.f
 #define MAX_ANI				15
