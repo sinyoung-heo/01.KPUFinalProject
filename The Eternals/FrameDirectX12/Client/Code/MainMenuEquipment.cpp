@@ -50,6 +50,9 @@ _int CMainMenuEquipment::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
+	if (g_bIsCinemaStart)
+		return NO_EVENT;
+
 	if (m_bIsDead)
 		return DEAD_OBJ;
 	if (g_bIsOpenShop)
@@ -62,9 +65,12 @@ _int CMainMenuEquipment::Update_GameObject(const _float& fTimeDelta)
 
 _int CMainMenuEquipment::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	if (g_bIsCinemaStart)
+		return NO_EVENT;
+
 	CGameUIRoot::LateUpdate_GameObject(fTimeDelta);
 
-if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect) &&
+	if (CMouseCursorMgr::Get_Instance()->Check_CursorInRect(m_tRect) &&
 		Engine::MOUSE_KEYUP(Engine::MOUSEBUTTON::DIM_LB) && 
 		m_bIsKeyPressing && !g_bIsOpenShop)
 	{

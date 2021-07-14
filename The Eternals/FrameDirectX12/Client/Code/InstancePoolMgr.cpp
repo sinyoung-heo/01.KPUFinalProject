@@ -142,8 +142,8 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 	// CollisionTick
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pCollisionTickPool, 64);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pCollisionArrowIcePool, L"ArrowIce", 128);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pCollisionArrowFirePool, L"ArrowFire", 128);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pCollisionArrowLightningPool, L"ArrowLightning", 128);
+	// Ready_InstacePool(pGraphicDevice, pCommandList, &m_pCollisionArrowFirePool, L"ArrowFire", 128);
+	// Ready_InstacePool(pGraphicDevice, pCommandList, &m_pCollisionArrowLightningPool, L"ArrowLightning", 128);
 	
 	// Monster
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pMonsterCrabPool, 10);
@@ -199,30 +199,30 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCOthersPriestPool, 10);
 
 	// Effect
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_SwordEffect_Pool, 20);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_SwordEffect_Pool, 16);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_SwordEffect_s_Pool, 100);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_IceStorm_Pool, 720);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_IceStorm_m_Pool, 260);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_IceStorm_Pool, 512);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_IceStorm_m_Pool, 256);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_IceDecal_Pool, 20);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_FireDecal_Pool, 20);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_Particle_Pool, 1000);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_Particle_Pool, 512);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_FrameMesh_Pool, 100);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_FireRing_Pool, 20);
 
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_IceStorm_s_Pool, 720);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_DistTrail_Pool, 200);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_IceStorm_s_Pool, 512);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_DistTrail_Pool, 128);
 
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_Texture_Pool, 500);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_Texture_Pool, 512);
 
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_Shield_Pool, 100);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_Axe_Pool, 100);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_Shield_Pool, 64);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_Axe_Pool, 64);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MagicCircle_Pool, 20);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_GridShieldEffect_Pool, 20);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock0_Pool,L"publicStone0", 100);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock1_Pool, L"publicStone1", 100);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock2_Pool, L"publicStone2", 100);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock3_Pool, L"publicStone3", 100);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock4_Pool, L"publicStone4", 100);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock0_Pool,L"publicStone0", 64);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock1_Pool, L"publicStone1", 64);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock2_Pool, L"publicStone2", 64);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock3_Pool, L"publicStone3", 64);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock4_Pool, L"publicStone4", 64);
 
 
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_WarningGround_Pool, 20);

@@ -172,6 +172,12 @@ void CAniCtrl::Set_AnimationKey(const _uint & uiAniKey)
 	}
 }
 
+void CAniCtrl::Set_VecSkinningMatrix(const vector<VECTOR_SKINNING_MATRIX>& vecSkinningMatrix)
+{
+	if (nullptr != m_vecSkinningMatrix)
+		*m_vecSkinningMatrix = vecSkinningMatrix;
+}
+
 void CAniCtrl::Play_Animation(_float fTimeDelta, const _bool& bIsRepeat)
 {
 	if (m_uiCurAniIndex >= m_uiNumAnimation)

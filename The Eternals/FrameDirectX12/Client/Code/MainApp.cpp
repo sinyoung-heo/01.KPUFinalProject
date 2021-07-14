@@ -559,6 +559,7 @@ void CMainApp::Key_Input()
 	}
 	if (Engine::KEY_DOWN(DIK_F7))
 	{
+		g_bIsCinemaStart = false;
 		CQuestMgr::Get_Instance()->Set_IsAcceptQuest(false);
 		CQuestMgr::Get_Instance()->Set_IsCompleteSubQuest(false);
 		CQuestMgr::Get_Instance()->Set_IsCompleteMainQuest(false);
@@ -566,6 +567,10 @@ void CMainApp::Key_Input()
 		CQuestMgr::Get_Instance()->Get_SubQuestMiniCanvas()->Set_IsChildActive(false);
 		CQuestMgr::Get_Instance()->Get_MainQuestMiniCanvas()->Set_IsActive(false);
 		CQuestMgr::Get_Instance()->Get_MainQuestMiniCanvas()->Set_IsChildActive(false);
+	}
+	if (Engine::KEY_DOWN(DIK_F8))
+	{
+		g_bIsCinemaStart = !g_bIsCinemaStart;
 	}
 }
 

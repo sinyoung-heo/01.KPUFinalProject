@@ -424,6 +424,8 @@ HRESULT CPCPriest::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 	m_pNaviMeshCom->AddRef();
 	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
 
+	m_pOriginNaviMeshCom = m_pNaviMeshCom;
+
 	m_pVelikaNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"StageVelika_NaviMesh", Engine::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pVelikaNaviMeshCom, E_FAIL);
 
@@ -1921,7 +1923,10 @@ Engine::CGameObject* CPCPriest::Create(ID3D12Device* pGraphicDevice,
 
 void CPCPriest::Free()
 {
-	Engine::Safe_Release(m_pWeapon);
+	// Engine::Safe_Release(m_pWeapon);
+	m_pWeapon = nullptr;
+	m_pNaviMeshCom = m_pOriginNaviMeshCom;
+	m_mapComponent[Engine::ID_DYNAMIC][L"Com_NaviMesh"] = m_pOriginNaviMeshCom;
 
 	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pDynamicCamera);

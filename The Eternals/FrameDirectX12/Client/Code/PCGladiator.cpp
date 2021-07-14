@@ -52,7 +52,7 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->m_vPos   = vPos;
 	m_chCurWeaponType     = chWeaponType;
 	m_chCurStageID        = STAGE_VELIKA;
-	m_chPreStageID        = m_chCurStageID;
+	m_chPreStageID        = -1;
 	m_wstrCollisionTag    = L"ThisPlayer";
 	m_wstrMeshTag         = wstrMeshTag;
 
@@ -440,6 +440,8 @@ HRESULT CPCGladiator::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag
 	Engine::NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);
 	m_pNaviMeshCom->AddRef();
 	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
+
+	m_pOriginNaviMeshCom = m_pNaviMeshCom;
 
 	m_pVelikaNaviMeshCom = static_cast<Engine::CNaviMesh*>(m_pComponentMgr->Clone_Component(L"StageVelika_NaviMesh", Engine::ID_DYNAMIC));
 	Engine::NULL_CHECK_RETURN(m_pVelikaNaviMeshCom, E_FAIL);
@@ -1109,6 +1111,28 @@ void CPCGladiator::Key_Input(const _float& fTimeDelta)
 	KeyInput_Move(fTimeDelta);
 	KeyInput_Attack(fTimeDelta);
 	KeyInput_Potion(fTimeDelta);
+<<<<<<< HEAD
+=======
+
+	if (Engine::KEY_DOWN(DIK_R))
+		CCinemaMgr::Get_Instance()->Spawn_Vergos();
+	if (Engine::KEY_DOWN(DIK_T))
+		CCinemaMgr::Get_Instance()->Scream_PrionBerserkerBoss();
+	if (Engine::KEY_DOWN(DIK_Y))
+		CCinemaMgr::Get_Instance()->Scream_PrionBerserkers();
+	if (Engine::KEY_DOWN(DIK_U))
+		CCinemaMgr::Get_Instance()->Command_PrionBerserkerBoss();
+	if (Engine::KEY_DOWN(DIK_I))
+	{
+		CCinemaMgr::Get_Instance()->Rush_Lakan();
+		CCinemaMgr::Get_Instance()->Rush_Prion();
+	}
+	
+
+	if (Engine::KEY_DOWN(DIK_0) && NO_EVENT_STATE)
+	{
+	}
+>>>>>>> hsy0711v2
 }
 
 void CPCGladiator::KeyInput_Move(const _float& fTimeDelta)
@@ -2780,7 +2804,10 @@ Engine::CGameObject* CPCGladiator::Create(ID3D12Device* pGraphicDevice,
 
 void CPCGladiator::Free()
 {
-	Engine::Safe_Release(m_pWeapon);
+	// Engine::Safe_Release(m_pWeapon);
+	m_pWeapon = nullptr;
+	m_pNaviMeshCom = m_pOriginNaviMeshCom;
+	m_mapComponent[Engine::ID_DYNAMIC][L"Com_NaviMesh"] = m_pOriginNaviMeshCom;
 
 	Engine::CGameObject::Free();
 	Engine::Safe_Release(m_pDynamicCamera);
@@ -2788,8 +2815,10 @@ void CPCGladiator::Free()
 	Engine::Safe_Release(m_pShaderCom);
 	Engine::Safe_Release(m_pShadowCom);
 	Engine::Safe_Release(m_pNaviMeshCom);
+
 	Engine::Safe_Release(m_pVelikaNaviMeshCom);
 	Engine::Safe_Release(m_pBeachNaviMeshCom);
 	Engine::Safe_Release(m_pWinterNaviMeshCom);
+
 	Engine::Safe_Release(m_pFont);
 }

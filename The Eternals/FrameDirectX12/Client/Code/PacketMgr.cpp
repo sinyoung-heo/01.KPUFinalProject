@@ -781,9 +781,9 @@ void CPacketMgr::Stage_Change(sc_packet_stage_change* packet)
 		else if (STAGE_WINTER == packet->stage_id)
 		{
 			Engine::CObjectMgr::Get_Instance()->Set_CurrentStage(Engine::STAGEID::STAGE_WINTER);
-			tDirLight.Ambient.x = 0.45f;
-			tDirLight.Ambient.y = 0.45f;
-			tDirLight.Ambient.z = 0.45f;
+			tDirLight.Ambient.x = 0.3f;
+			tDirLight.Ambient.y = 0.3f;
+			tDirLight.Ambient.z = 0.3f;
 			tDirLight.Ambient.w = 1.0f;
 			Engine::CLightMgr::Get_Instance()->Set_LightInfo(Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL, 0, tDirLight);
 		}

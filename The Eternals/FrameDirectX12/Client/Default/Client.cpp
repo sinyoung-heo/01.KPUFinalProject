@@ -46,6 +46,7 @@ _bool g_bIsExitGame               = false;
 _bool g_bIsChattingInput          = false;
 _bool g_bIsGameStart	          = false;
 _bool g_bIsStartSkillCameraEffect = false;
+_bool g_bIsCinemaStart            = false;
 
 _ulong Release_Singleton();
 

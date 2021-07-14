@@ -92,7 +92,7 @@ ______________________________________________________________________*/
 #pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console") 
 #endif
 
-#endif
+ #endif
 
 #pragma warning(disable : 4251)
 

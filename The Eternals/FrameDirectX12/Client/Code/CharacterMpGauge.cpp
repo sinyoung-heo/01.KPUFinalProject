@@ -50,6 +50,9 @@ _int CCharacterMpGauge::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 	
+	if (g_bIsCinemaStart)
+		return NO_EVENT;
+
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
@@ -60,6 +63,9 @@ _int CCharacterMpGauge::Update_GameObject(const _float& fTimeDelta)
 
 _int CCharacterMpGauge::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	if (g_bIsCinemaStart)
+		return NO_EVENT;
+
 	CGameUIChild::LateUpdate_GameObject(fTimeDelta);
 
 	if (nullptr != m_pFont && !g_bIsStageChange)

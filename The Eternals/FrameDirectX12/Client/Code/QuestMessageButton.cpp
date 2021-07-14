@@ -7,6 +7,9 @@
 #include "PCGladiator.h"
 #include "PCArcher.h"
 #include "PCPriest.h"
+#include "DynamicCamera.h"
+#include "ShaderMgr.h"
+#include "CinemaMgr.h"
 
 CQuestMessageButton::CQuestMessageButton(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: CGameUIChild(pGraphicDevice, pCommandList)
@@ -81,6 +84,8 @@ _int CQuestMessageButton::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		if (L"SystemButtonYes" == m_wstrObjectTag)
 		{
+			CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
+
 			Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
 			char chOType = pThisPlayer->Get_OType();
 
@@ -122,6 +127,9 @@ _int CQuestMessageButton::LateUpdate_GameObject(const _float& fTimeDelta)
 
 			if (QUEST_TYPE::QUEST_SUB == CQuestMgr::Get_Instance()->Get_ClearQuestType())
 			{
+				Engine::CShaderMgr::Get_Instance()->Set_DOF(true);
+				Engine::CShaderMgr::Get_Instance()->Set_IsOnShader(L"SSAO", false);
+
 				Engine::CGameObject* pGameObject = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
 				if (nullptr != pGameObject)
 				{
@@ -132,6 +140,9 @@ _int CQuestMessageButton::LateUpdate_GameObject(const _float& fTimeDelta)
 			}
 			else if (QUEST_TYPE::QUEST_MAIN == CQuestMgr::Get_Instance()->Get_ClearQuestType())
 			{
+				Engine::CShaderMgr::Get_Instance()->Set_DOF(false);
+				Engine::CShaderMgr::Get_Instance()->Set_IsOnShader(L"SSAO", true);
+
 				Engine::CGameObject* pGameObject = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
 				if (nullptr != pGameObject)
 				{
@@ -139,6 +150,27 @@ _int CQuestMessageButton::LateUpdate_GameObject(const _float& fTimeDelta)
 					static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_VELIKA);
 					m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
 				}
+
+				g_bIsCinemaStart = false;
+				CQuestMgr::Get_Instance()->Set_IsAcceptQuest(false);
+				CQuestMgr::Get_Instance()->Set_IsCompleteSubQuest(false);
+				CQuestMgr::Get_Instance()->Set_IsCompleteMainQuest(false);
+				CQuestMgr::Get_Instance()->Get_SubQuestMiniCanvas()->Set_IsActive(false);
+				CQuestMgr::Get_Instance()->Get_SubQuestMiniCanvas()->Set_IsChildActive(false);
+				CQuestMgr::Get_Instance()->Get_MainQuestMiniCanvas()->Set_IsActive(false);
+				CQuestMgr::Get_Instance()->Get_MainQuestMiniCanvas()->Set_IsChildActive(false);
+
+				CCinemaMgr::Get_Instance()->Reset_LakanPosition();
+				CCinemaMgr::Get_Instance()->Reset_PrionBerserkerPosition();
+				CCinemaMgr::Get_Instance()->Reset_Vergos();
+				CCinemaMgr::Get_Instance()->Set_IsCancleCinematic(false);
+
+				// Set DynamicCamera State
+				pDynamicCamera->Set_CameraState(CAMERA_STATE::THIRD_PERSON_VIEW);
+				pDynamicCamera->Set_CameraAtParentMatrix(nullptr);
+				pDynamicCamera->Set_ResetFovY();
+				pDynamicCamera->Set_IsCinematicEnding(false);
+				pDynamicCamera->Set_IsSettingCameraCinematicValue(false);
 			}
 		}
 

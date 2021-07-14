@@ -18,10 +18,11 @@ public:
 	CB_SHADER_INFORMATION&	Get_ShaderInfo() { return m_pCB_ShaderInformation; }
 	void Set_IsOnShader(wstring wstrTag, const _bool& bIsOn);
 	void Set_TreeAlphaTest(const _float& fOnOff) { m_pCB_ShaderInformation.TreeAlphaTest = fOnOff; }
+	void Set_DOF(const _float& fOnOff);
 	void SetUp_ShaderInfo();
 	const _bool& Find_IsOnShader(wstring wstrTag);
 public:
-	void Set_DOF(int Mode) { m_pCB_ShaderInformation.DepthOfField = Mode; }
+	// void Set_DOF(int Mode) { m_pCB_ShaderInformation.DepthOfField = Mode; }
 
 private:
 	CB_SHADER_INFORMATION	m_pCB_ShaderInformation;

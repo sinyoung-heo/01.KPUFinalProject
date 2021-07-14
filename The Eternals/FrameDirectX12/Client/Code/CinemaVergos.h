@@ -20,6 +20,14 @@ private:
 	virtual ~CCinemaVergos() = default;
 
 public:
+	Engine::CMesh* Get_MeshComponent() { return m_pMeshCom; }
+	const _uint& Get_MaxAnimationFrame() { return m_ui3DMax_NumFrame; }
+	const _uint& Get_CurAnimationFrame() { return m_ui3DMax_CurFrame; }
+	void Set_IsUpdate(const _bool& bIsUpdate) { m_bIsUpdate = bIsUpdate; }
+	void Set_MonsterState(const _uint& iState) { m_iMonsterStatus = iState; }
+	void Set_CurAnimationFrame(const _uint& uiFrame)	{ m_ui3DMax_CurFrame = uiFrame; }
+	void Set_IsCameraShaking(const _bool& bIsShaking)	{ m_bIsCameraShaking = bIsShaking; }
+
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
 									 wstring wstrNaviMeshTag,
@@ -30,7 +38,6 @@ public:
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Send_PacketToServer();
-	virtual void	Render_MiniMap(const _float& fTimeDelta);
 	// MultiThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
@@ -41,11 +48,8 @@ private:
 	void			Set_ConstantTableShadowDepth();
 	void			Set_ConstantTableMiniMap();
 	void			SetUp_AngleInterpolation(const _float& fTimeDelta);
-	void			SetUp_Dissolve(const _float& fTimeDelta);
 	void			Active_Monster(const _float& fTimeDelta);
 	void			Change_Animation(const _float& fTimeDelta);
-	void			SetUp_CollisionTick(const _float& fTimeDelta);
-
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -76,6 +80,8 @@ private:
 	_bool	m_bIsStartDissolve       = false;
 	_float	m_fDissolve              = -0.05f;
 	_rgba	m_vEmissiveColor         = _rgba(1.0f, 0.0f, 0.0f, 1.0f);
+	_bool	m_bIsUpdate              = false;
+	_bool	m_bIsCameraShaking       = false;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]

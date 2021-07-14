@@ -88,26 +88,7 @@ HRESULT CScene_MainStage::Ready_Scene()
 
 	// Ready Cinematic Scene Character
 	// 현재 몬스터 컬링이 되어있지 않으므로 주석처리 해놓음. 삭제 X
-	//Engine::FAILED_CHECK_RETURN(CCinemaMgr::Get_Instance()->Ready_CinemaCharacter(), E_FAIL);
-
-	//Engine::CGameObject* pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterLakanPool());
-	//if (nullptr != pGameObj)
-	//{
-	//	pGameObj->Get_Transform()->m_vScale = _vec3(0.1f);
-	//	pGameObj->Get_Transform()->m_vAngle = _vec3(0.f);
-	//	pGameObj->Get_Transform()->m_vPos	= _vec3(135.0f, 0.f, 65.0f);
-	//	pGameObj->Set_State(0);
-	//	m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"LAKAN", pGameObj);
-	//}
-	//pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterLakanPool());
-	//if (nullptr != pGameObj)
-	//{
-	//	pGameObj->Get_Transform()->m_vScale = _vec3(0.1f);
-	//	pGameObj->Get_Transform()->m_vAngle = _vec3(0.f);
-	//	pGameObj->Get_Transform()->m_vPos	= _vec3(130.0f, 0.f, 65.0f);
-	//	pGameObj->Set_State(0);
-	//	m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"LAKAN", pGameObj);
-	//}
+	Engine::FAILED_CHECK_RETURN(CCinemaMgr::Get_Instance()->Ready_CinemaCharacter(), E_FAIL);
 
 	// Server
 	Engine::FAILED_CHECK_RETURN(CPacketMgr::Get_Instance()->Ready_Server(m_pGraphicDevice, m_pCommandList), E_FAIL);
@@ -129,6 +110,8 @@ _int CScene_MainStage::Update_Scene(const _float & fTimeDelta)
 		m_bIsReadyMouseCursorMgr = true;
 		CMouseCursorMgr::Get_Instance()->Ready_MouseCursorMgr();
 	}
+
+	CCinemaMgr::Get_Instance()->Update_Animation(fTimeDelta);
 
 	return Engine::CScene::Update_Scene(fTimeDelta);
 }
@@ -356,7 +339,7 @@ HRESULT CScene_MainStage::Ready_LayerEnvironment(wstring wstrLayerTag)
 										  L"BumpTerrainMesh02",
 										  _vec3(0.175f),
 										  _vec3(0.0f, 0.0f ,0.0f),
-										  _vec3(128.0f, -0.0f, 128.0f),
+										  _vec3(128.0f, -0.0f, 148.0f),
 										  _vec3(STAGE_WINTER_OFFSET_X, 0.0f, STAGE_WINTER_OFFSET_Z));
 	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(Engine::STAGEID::STAGE_WINTER, L"BumpTerrainMesh02", pGameObj), E_FAIL);
 	static_cast<CTerrainMeshObject*>(pGameObj)->Set_Wave(1.f);

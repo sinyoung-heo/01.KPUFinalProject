@@ -57,6 +57,9 @@ public:
 	void Set_Target(Engine::CGameObject* pTarget)							{ m_pTarget = pTarget; }
 	void Set_CameraAtParentMatrix(Engine::SKINNING_MATRIX* pSkinningMatrix)	{ m_pCameraAtSkinningMatrix = pSkinningMatrix; }
 	void Set_CameraState(const CAMERA_STATE& eState)						{ m_eCameraState = eState; }
+	void Set_CameraStateCinematicEnding()									{ if (m_eCameraState != CAMERA_STATE::CINEMATIC_ENDING) m_eCameraState = CAMERA_STATE::CINEMATIC_ENDING; }
+	void Set_IsSettingCameraCinematicValue(const _bool& bIsSetting)			{ m_bIsSettingCinematicValue = bIsSetting; }
+	void Set_IsCinematicEnding(const _bool& bIsEnding)						{ m_bIsCinematicEnding = bIsEnding; }
 	void SetUp_ThirdPersonViewOriginData();
 public:
 	const CAMERA_SHAKING_DESC& Get_CameraShakingDesc() { return m_tCameraShakingDesc; }
@@ -77,6 +80,16 @@ private:
 	void SetUp_DynamicCameraArcherArrowFall(const _float& fTimeDelta);
 	void SetUp_DynamicCameraArcherUltimate(const _float& fTimeDelta);
 	void SetUp_DynamicCameraPriestBuffSkill(const _float& fTimeDelta);
+	void SetUp_DynamicCameraCinematicLakanAll(const _float& fTimeDelta);
+	void SetUp_DynamicCameraCinematicPrionBerserkerAll(const _float& fTimeDelta);
+	void SetUp_DynamicCameraCinematicLakanCenter(const _float& fTimeDelta);
+	void SetUp_DynamicCameraCinematicPrionBerserkerBoss(const _float& fTimeDelta);
+	void SetUp_DynamicCameraCinematicVergosFlying(const _float& fTimeDelta);
+	void SetUp_DynamicCameraCinematicVergosScreaming(const _float& fTimeDelta);
+	void SetUp_DynamicCameraCinematicPrionBerserkerScreaming(const _float& fTimeDelta);
+	void SetUp_DynamicCameraCinematicPrionBerserkerRush(const _float& fTimeDelta);
+	void SetUp_DynamicCameraCinematicLakanRush(const _float& fTimeDelta);
+	void SetUp_DynamicCameraCinematicEnding(const _float& fTimeDelta);
 	void SetUp_CameraShaking(const _float& fTimeDelta);
 	void SetUp_CameraZoom(const _float& fTimeDelta);
 	void SetUp_CameraFont(const _float& fTimeDelta);
@@ -98,8 +111,15 @@ private:
 	CAMERA_STATE		m_eCameraState = CAMERA_STATE::THIRD_PERSON_VIEW;
 	CAMERA_SHAKING_DESC	m_tCameraShakingDesc;
 	CAMERA_ZOOM_DESC	m_tCameraZoomDesc;
-
 	CAMERA_ORIGIN_DESC	m_tThirdPersonViewOriginDesc;
+
+	// Cinematic Camera
+	_bool m_bIsSettingCinematicValue = false;
+	_bool m_bIsCinematicEnding       = false;
+	Engine::LINEAR_INTERPOLATION_DESC<_vec3> m_vEyeInterpolationDesc;
+	Engine::LINEAR_INTERPOLATION_DESC<_vec3> m_vAtInterpolationDesc;
+	_float m_fCameraTime       = 0.0f;
+	_float m_fUpdateCameraTime = 2.5f;
 
 	/*__________________________________________________________________________________________________________
 	[ Font ]
@@ -108,6 +128,7 @@ private:
 	wstring			m_wstrText			= L"";
 	_tchar			m_szText[MAX_STR]	= L"";
 
+	_vec3 vOffset = _vec3(-12.0f, 570.0f, -23.0f);
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

@@ -20,6 +20,13 @@ private:
 	virtual ~CPrionBerserkerBoss() = default;
 
 public:
+	Engine::CMesh* Get_MeshComponent() { return m_pMeshCom; }
+	void Set_IsPrionBerserkerScreaming(const _bool& bIsScreaming) { m_bIsPrionBerserkerScreaming = bIsScreaming; }
+	void Set_OriginPos(const _vec3& vPos) { m_vOriginPos = vPos; }
+	void Reset_Position() { m_pTransCom->m_vPos = m_vOriginPos; }
+	void Set_IsMoveStob(const _bool& bIsMoveStop) { m_bIsMoveStop = bIsMoveStop; }
+	void Set_IsCameraShaking(const _bool& bIsShaking) { m_bIsCameraShaking = bIsShaking; }
+
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
 									 wstring wstrNaviMeshTag,
@@ -30,22 +37,17 @@ public:
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Send_PacketToServer();
-	virtual void	Render_MiniMap(const _float& fTimeDelta);
 	// MultiThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
-
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag);
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
 	void			Set_ConstantTableMiniMap();
 	void			SetUp_AngleInterpolation(const _float& fTimeDelta);
-	void			SetUp_Dissolve(const _float& fTimeDelta);
 	void			Active_Monster(const _float& fTimeDelta);
 	void			Change_Animation(const _float& fTimeDelta);
-	void			SetUp_CollisionTick(const _float& fTimeDelta);
-
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -76,6 +78,7 @@ private:
 	_bool	m_bIsStartDissolve       = false;
 	_float	m_fDissolve              = -0.05f;
 	_rgba	m_vEmissiveColor         = _rgba(1.0f, 0.0f, 0.0f, 1.0f);
+	_bool	m_bIsCameraShaking = false;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]
@@ -83,7 +86,10 @@ private:
 	_uint	m_uiAnimIdx			= 0;	// 현재 애니메이션 Index
 	_uint	m_ui3DMax_NumFrame	= 0;	// 3DMax에서 애니메이션의 총 Frame 개수
 	_uint	m_ui3DMax_CurFrame	= 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
-	
+	_float	m_fAnimationSpeed   = 1.0f;
+
+	_bool	m_bIsPrionBerserkerScreaming = false;
+	_vec3	m_vOriginPos = _vec3(0.0f);
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

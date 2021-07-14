@@ -14,21 +14,56 @@ CShadowLightMgr::CShadowLightMgr()
 
 _int CShadowLightMgr::Update_ShadowLight()
 {
+	if (g_bIsCinemaStart)
+		m_eShadowType = SHADOW_TYPE_ALL;
+	else
+		m_eShadowType = SHADOW_TYPE_PLAYER;
+
 	_vec3 vLightDir = _vec3(Engine::CLightMgr::Get_Instance()->Get_LightInfo(Engine::LIGHTTYPE::D3DLIGHT_DIRECTIONAL, 0).Direction);
 	vLightDir *= -1.0f;
 
 	if (SHADOW_TYPE_ALL == m_eShadowType)
 	{
-		// LightView
-		m_vLightEye = (vLightDir) * m_fAllSceneLightHeight;
+		m_pThisPlayer = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+		if (nullptr != m_pThisPlayer)
+		{
+			char chStateID = m_pThisPlayer->Get_CurrentStageID();
+			switch (chStateID)
+			{
+			case STAGE_VELIKA:
+			{
+				m_vLightEye        = _vec3(0.0f, 0.0f, 0.0f) + _vec3(STAGE_VELIKA_OFFSET_X, 0.0f, STAGE_VELIKA_OFFSET_Z);
+				m_vAllSceneLightAt = _vec3(128.0f) + _vec3(STAGE_VELIKA_OFFSET_X, 0.0f, STAGE_VELIKA_OFFSET_Z);
+				m_vLightEye = (vLightDir)*m_fAllSceneLightHeight;
+			}
+				break;
+			case STAGE_BEACH:
+			{
+				m_vLightEye        = _vec3(0.0f, 0.0f, 0.0f) + _vec3(STAGE_BEACH_OFFSET_X, 0.0f, STAGE_BEACH_OFFSET_Z);
+				m_vAllSceneLightAt = _vec3(128.0f) + _vec3(STAGE_BEACH_OFFSET_X, 0.0f, STAGE_BEACH_OFFSET_Z);
+				m_vLightEye = (vLightDir)*m_fAllSceneLightHeight;
+			}
+				break;
+			case STAGE_WINTER:
+			{
+				m_vLightEye = _vec3(226.f, 1200.f, 236.f);
+				m_vAllSceneLightAt = _vec3(360.0f, 0.0f, 390.0f);
+			}
+				break;
+			default:
+				break;
+			}
+		}
 
+		// LightView
 		m_tShadowDesc.vLightPosition = _vec4(m_vLightEye, 1.0f);
+
 		m_tShadowDesc.matLightView	 = XMMatrixLookAtLH(m_vLightEye.Get_XMVECTOR(), 
 														m_vAllSceneLightAt.Get_XMVECTOR(), 
 														_vec3(0.0f, 1.0f, 0.0f).Get_XMVECTOR());
 
 		// LightProj
-		m_tShadowDesc.fLightPorjFar	= m_fFar;
+		m_tShadowDesc.fLightPorjFar	= m_fAllSceneLightFar;
 		m_tShadowDesc.matLightProj	= XMMatrixPerspectiveFovLH(XMConvertToRadians(m_fAllSceneLightFovY), 
 																				  1.0f,
 																				  m_fNear, 

@@ -10,6 +10,7 @@
 #include "TimeMgr.h"
 #include "CollisionTick.h"
 #include "InstancePoolMgr.h"
+#include "DynamicCamera.h"
 
 CCinemaVergos::CCinemaVergos(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -37,9 +38,6 @@ HRESULT CCinemaVergos::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMes
 											  m_pTransCom->m_vScale,
 											  _vec3(60.0f),
 											  _vec3(0.0f, 20.f, 7.0f));
-	m_wstrCollisionTag = L"Monster_SingleCollider";
-	m_lstCollider.push_back(m_pBoundingSphereCom);
-
 
 	m_iSNum = 9999;
 	m_pInfoCom->m_fSpeed = 3.f;
@@ -70,9 +68,14 @@ _int CCinemaVergos::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
+	if (!g_bIsCinemaStart)
+		return NO_EVENT;
+
 	if (m_bIsDead)
 		return DEAD_OBJ;
-	
+	if (!m_bIsUpdate)
+		return NO_EVENT;
+
 	if (m_bIsReturn)
 	{
 		m_iSNum = -1;
@@ -100,12 +103,6 @@ _int CCinemaVergos::Update_GameObject(const _float& fTimeDelta)
 		m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
 	}
 
-	// Create CollisionTick
-	//if (m_pMeshCom->Is_BlendingComplete())
-	//	SetUp_CollisionTick(fTimeDelta);
-
-	SetUp_Dissolve(fTimeDelta);
-
 	// Angle Linear Interpolation
 	SetUp_AngleInterpolation(fTimeDelta);
 	
@@ -114,35 +111,37 @@ _int CCinemaVergos::Update_GameObject(const _float& fTimeDelta)
 
 	Active_Monster(fTimeDelta);
 
+	if (!m_bIsCameraShaking && m_ui3DMax_CurFrame > 340)
+	{
+		m_bIsCameraShaking = true;
+
+		CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
+
+		CAMERA_SHAKING_DESC tCameraShakingDesc;
+		tCameraShakingDesc.fUpdateShakingTime = 1.75f;
+		tCameraShakingDesc.vMin               = _vec2(-300.0f, -300.0f);
+		tCameraShakingDesc.vMax               = _vec2(300.0f, 300.0f);
+		tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 8.0f;
+		pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
+	}
+
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
-	if (!m_bIsStartDissolve)
-	{
-		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pMeshCom->Play_Animation(fTimeDelta * TPS);
-		m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
-		m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
-	}
+	m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+	m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
+	m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
-	if (!g_bIsStartSkillCameraEffect)
-		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MINIMAP, this), -1);
-
-	/*__________________________________________________________________________________________________________
-	[ Collision - Add Collision List ]
-	____________________________________________________________________________________________________________*/
-	if (!m_bIsStartDissolve)
-		m_pCollisonMgr->Add_CollisionCheckList(this);
+	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]
 	____________________________________________________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
-	Engine::CGameObject::SetUp_MiniMapRandomY();
 
 	return NO_EVENT;
 }
@@ -159,18 +158,6 @@ _int CCinemaVergos::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CCinemaVergos::Send_PacketToServer()
 {
-}
-
-void CCinemaVergos::Render_MiniMap(const _float& fTimeDelta)
-{
-	Set_ConstantTableMiniMap();
-
-	m_pShaderMiniMap->Begin_Shader(m_pTextureMiniMap->Get_TexDescriptorHeap(), 
-								   0, 
-								   m_uiMiniMapTexIdx, 
-								   Engine::MATRIXID::TOP_VIEW);
-	m_pBufferMiniMap->Begin_Buffer();
-	m_pBufferMiniMap->Render_Buffer();
 }
 
 void CCinemaVergos::Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx)
@@ -299,26 +286,10 @@ void CCinemaVergos::SetUp_AngleInterpolation(const _float& fTimeDelta)
 	}
 }
 
-void CCinemaVergos::SetUp_Dissolve(const _float& fTimeDelta)
-{
-	if (m_bIsStartDissolve)
-	{
-		m_fDissolve += fTimeDelta * 0.33f;
-
-		if (m_fDissolve >= 1.0f)
-		{
-			m_fDissolve = 1.0f;
-			m_bIsReturn = true;
-		}
-	}
-}
-
 void CCinemaVergos::Active_Monster(const _float& fTimeDelta)
 {
 	m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
 	m_pTransCom->m_vDir.Normalize();
-
-	cout << "pos: " << m_pTransCom->m_vPos.x << ", " << m_pTransCom->m_vPos.z << endl;
 
 	/* Monster MOVE */
 	if (!m_bIsMoveStop)
@@ -341,7 +312,6 @@ void CCinemaVergos::Change_Animation(const _float& fTimeDelta)
 		{
 		case CinemaVergos::A_WAIT:
 		{
-			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = CinemaVergos::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
@@ -349,98 +319,10 @@ void CCinemaVergos::Change_Animation(const _float& fTimeDelta)
 
 		case CinemaVergos::A_SPAWN:
 		{
-			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = CinemaVergos::A_SPAWN;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
 		break;
-		}
-	}
-}
-
-void CCinemaVergos::SetUp_CollisionTick(const _float& fTimeDelta)
-{
-	if (Cloder::A_ATTACK == m_uiAnimIdx && m_ui3DMax_CurFrame >= Cloder::ATTACK_START_TICK)
-	{
-		if (!m_bIsCreateCollisionTick)
-		{
-			m_bIsCreateCollisionTick                     = true;
-			m_tCollisionTickDesc.fPosOffset              = 2.75f;
-			m_tCollisionTickDesc.fScaleOffset			 = 3.0f;
-			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
-			m_tCollisionTickDesc.fColisionTickUpdateTime = 1.0f / 8.0f;
-			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
-			m_tCollisionTickDesc.iCurCollisionTick       = 0;
-			m_tCollisionTickDesc.iMaxCollisionTick       = 2;
-		}
-	}
-	else if (Cloder::A_ATTACK_POKE == m_uiAnimIdx && m_ui3DMax_CurFrame >= Cloder::ATTACK_POKE_START_TICK)
-	{
-		if (!m_bIsCreateCollisionTick)
-		{
-			m_bIsCreateCollisionTick = true;
-			m_tCollisionTickDesc.fPosOffset              = 2.75f;
-			m_tCollisionTickDesc.fScaleOffset            = 3.0f;
-			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
-			m_tCollisionTickDesc.fColisionTickUpdateTime = 0.0f;
-			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
-			m_tCollisionTickDesc.iCurCollisionTick       = 0;
-			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
-		}
-	}
-	else if (Cloder::A_ATTACK_SWING == m_uiAnimIdx && m_ui3DMax_CurFrame >= Cloder::ATTACK_SWING_START_TICK)
-	{
-		if (!m_bIsCreateCollisionTick)
-		{
-			m_bIsCreateCollisionTick = true;
-			m_tCollisionTickDesc.fPosOffset              = 2.75f;
-			m_tCollisionTickDesc.fScaleOffset            = 3.0f;
-			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
-			m_tCollisionTickDesc.fColisionTickUpdateTime = 1.0f / 2.0f;
-			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
-			m_tCollisionTickDesc.iCurCollisionTick       = 0;
-			m_tCollisionTickDesc.iMaxCollisionTick       = 4;
-		}
-	}
-
-	// Create CollisionTick
-	if (m_bIsCreateCollisionTick &&
-		m_tCollisionTickDesc.bIsCreateCollisionTick &&
-		m_tCollisionTickDesc.iCurCollisionTick < m_tCollisionTickDesc.iMaxCollisionTick)
-	{
-		m_tCollisionTickDesc.fCollisionTickTime += fTimeDelta;
-
-		if (m_tCollisionTickDesc.fCollisionTickTime >= m_tCollisionTickDesc.fColisionTickUpdateTime)
-		{
-			m_tCollisionTickDesc.fCollisionTickTime = 0.0f;
-			++m_tCollisionTickDesc.iCurCollisionTick;
-
-			if (m_tCollisionTickDesc.iCurCollisionTick >= m_tCollisionTickDesc.iMaxCollisionTick)
-			{
-				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
-				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
-				m_tCollisionTickDesc.fCollisionTickTime      = 0.0f;
-			}
-
-			// CollisionTick
-			m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
-			m_pTransCom->m_vDir.Normalize();
-			_vec3 vPos = m_pTransCom->m_vPos + m_pTransCom->m_vDir * m_tCollisionTickDesc.fPosOffset;
-			vPos.y = 1.f;
-
-			CCollisionTick* pCollisionTick = static_cast<CCollisionTick*>(Pop_Instance(m_pInstancePoolMgr->Get_CollisionTickPool()));
-			if (nullptr != pCollisionTick)
-			{
-				pCollisionTick->Get_BoundingSphere()->Get_BoundingInfo().Radius = 0.5f;
-				pCollisionTick->Set_CollisionTag(L"CollisionTick_Monster");
-				pCollisionTick->Set_Damage(m_pInfoCom->Get_RandomDamage());
-				pCollisionTick->Set_LifeTime(0.2f);
-				pCollisionTick->Get_Transform()->m_vScale = _vec3(1.0f) * m_tCollisionTickDesc.fScaleOffset;
-				pCollisionTick->Get_Transform()->m_vPos   = vPos;
-				pCollisionTick->Get_BoundingSphere()->Set_Radius(pCollisionTick->Get_Transform()->m_vScale);
-				pCollisionTick->Set_ServerNumber(m_iSNum);
-				m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_Monster", pCollisionTick);
-			}
 		}
 	}
 }

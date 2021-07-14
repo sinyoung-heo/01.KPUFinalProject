@@ -15,12 +15,14 @@ public:
 	_vec3	Get_UpVector()			{ _vec3 vUp;		memcpy(&vUp, &m_matWorld._21, sizeof(_vec3));		return vUp; };
 	_vec3	Get_LookVector()		{ _vec3 vLook;		memcpy(&vLook, &m_matWorld._31, sizeof(_vec3));		return vLook; };
 	_vec3	Get_PositionVector()	{ _vec3 vPosition;	memcpy(&vPosition, &m_matWorld._41, sizeof(_vec3)); return vPosition; };
+	void	Set_IsStatic(const _bool& bIsStatic) { m_bIsStatic = bIsStatic; }
 public:
 	HRESULT			Ready_Component();
 	virtual void	Update_Component(const _float& fTimeDelta);
 	void			Update_Component(const _float& fTimeDelta, _matrix Axis);
 
 public:
+	_bool	m_bIsStatic = false;
 	_vec3	m_vScale	= _vec3(1.0f);
 	_vec3	m_vAngle	= _vec3(0.0f);
 	_vec3	m_vPos		= _vec3(0.0f);

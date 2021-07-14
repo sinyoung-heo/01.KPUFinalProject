@@ -39,7 +39,7 @@ private:
 	_vec3	m_vAllSceneLightAt     = _vec3(128.0f);
 	_float	m_fAllSceneLightHeight = 1000.0f;
 	_float	m_fAllSceneLightFovY   = 60.0f;
-	_float	m_fAllSceneLightFar    = 1000.0f;
+	_float	m_fAllSceneLightFar    = 1500.0f;
 
 	_vec3	m_vLightAt	=_vec3(0.0f);
 	_float	m_fHeight	= 300.0f;

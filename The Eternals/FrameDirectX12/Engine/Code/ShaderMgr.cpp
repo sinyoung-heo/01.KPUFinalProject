@@ -89,6 +89,16 @@ void CShaderMgr::Set_IsOnShader(wstring wstrTag, const _bool& bIsOn)
 	}
 }
 
+void CShaderMgr::Set_DOF(const _float& fOnOff)
+{
+	m_mapIsOnShader[L"DOF"] = fOnOff;
+
+	if (fOnOff)
+		m_pCB_ShaderInformation.DepthOfField = 1.0f;
+	else
+		m_pCB_ShaderInformation.DepthOfField = 0.f;
+}
+
 void CShaderMgr::SetUp_ShaderInfo()
 {
 	m_mapIsOnShader[L"DOF"]      = false;
