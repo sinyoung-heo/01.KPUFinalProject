@@ -49,6 +49,7 @@ public:
 	map<wstring, SKILL_COOLDOWN_DESC>& Get_ThisPlayerSkillCoolDown() { return m_mapSkillCoolDown; }
 	SKILL_COOLDOWN_DESC* Get_ThisPlayerSkillCoolDown(wstring wstrTag);
 	const high_resolution_clock::time_point& Get_LastMoveTime() { return m_last_move_time; }
+	virtual const _uint& Get_AnimationIdx() { return 0; }
 	// Set
 	void	Set_CurrentStageID(const char& chStageID)				{ m_chCurStageID = chStageID; }
 	void	Set_UIDepth(const _long& iUIDepth)						{ m_UIDepth = iUIDepth; }

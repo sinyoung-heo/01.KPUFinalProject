@@ -30,7 +30,7 @@ private:
 	virtual ~CPCGladiator() = default;
 
 public:
-	const _uint&				Get_AnimationIdx() { return m_uiAnimIdx; }
+	virtual const _uint& Get_AnimationIdx() { return m_uiAnimIdx; }
 	const Gladiator::STANCE&	Get_PlayerStance() { return m_eStance; }
 	void Set_IsKeyDown(const _bool& bIsKeyDown) { m_bIsKeyDown = bIsKeyDown; }
 	void Set_AnimationIdx(const _uint& uiIdx)	{ m_uiAnimIdx = uiIdx; }

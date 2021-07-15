@@ -28,7 +28,7 @@ public:
 	virtual HRESULT	LateInit_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
-
+	virtual void	Process_Collision(const _float& fTimeDelta);
 	// SingleThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta);
 	virtual void	Render_EdgeGameObject(const _float& fTimeDelta);
@@ -36,16 +36,12 @@ public:
 	// MultiThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
-
 	void			Set_RenderGroup(Engine::CRenderer::RENDERGROUP eGroup) { m_eRenderGroup = eGroup; }
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
 	void			Set_ConstantTable(const _int& iContextIdx, const _int& iInstanceIdx);
 	void			Set_ConstantTable();
-
 	void			Set_ConstantTableShadowDepth(const _int& iContextIdx, const _int& iInstanceIdx);
-
-
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]

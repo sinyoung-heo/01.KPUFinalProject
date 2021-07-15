@@ -8,6 +8,7 @@
 #include "DynamicCamera.h"
 #include "RenderTarget.h"
 #include "ShaderMgr.h"
+#include "NaviMesh.h"
 
 CStaticMeshObject::CStaticMeshObject(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -35,8 +36,9 @@ HRESULT CStaticMeshObject::Ready_GameObject(wstring wstrMeshTag,
 	m_pTransCom->Update_Component(0.016f);
 	m_pTransCom->Set_IsStatic(true);
 
-	m_bIsCollision			= bIsCollision;
+	m_bIsCollision = bIsCollision;
 	m_eRenderGroup = Engine::CRenderer::RENDERGROUP::RENDER_NONALPHA;
+
 	// BoundingBox.
 	Engine::CGameObject::SetUp_BoundingBox(&(m_pTransCom->m_matWorld),
 										   m_pTransCom->m_vScale,
@@ -100,12 +102,6 @@ _int CStaticMeshObject::Update_GameObject(const _float & fTimeDelta)
 		if (m_pRenderer->Get_Frustum().Contains(m_pBoundingBoxCom->Get_BoundingInfo()) != DirectX::DISJOINT)
 		{
 			Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
-
-			//if (m_iRandomnumber == 1)
-			//{
-			//	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_CROSSFILTER, this), -1);
-			//	//Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_EDGE, this), -1);
-			//}
 		}
 	}
 
@@ -120,10 +116,42 @@ _int CStaticMeshObject::Update_GameObject(const _float & fTimeDelta)
 _int CStaticMeshObject::LateUpdate_GameObject(const _float & fTimeDelta)
 {
 	Engine::NULL_CHECK_RETURN(m_pRenderer, -1);
+	Process_Collision(fTimeDelta);
 
 	Set_ConstantTable();
 
 	return NO_EVENT;
+}
+
+void CStaticMeshObject::Process_Collision(const _float& fTimeDelta)
+{
+	if (m_bIsCollision)
+	{
+		Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+
+		if (Engine::CCollisionMgr::Check_Sphere(m_pBoundingSphereCom->Get_BoundingInfo(), pThisPlayer->Get_BoundingSphere()->Get_BoundingInfo()))
+		{
+			// Process Collision Event
+			m_pBoundingSphereCom->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+			pThisPlayer->Get_BoundingSphere()->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+
+			_float fSpeed = pThisPlayer->Get_Info()->m_fSpeed;
+			_vec3 vDir = pThisPlayer->Get_Transform()->m_vDir;
+			vDir.Normalize();
+
+			pThisPlayer->Get_Transform()->m_vPos += (-1.0f) * vDir * fTimeDelta * fSpeed * 1.05f;
+
+			Engine::CNaviMesh* pNaviMeshCom = static_cast<Engine::CNaviMesh*>(pThisPlayer->Get_Component(L"Com_NaviMesh", Engine::ID_DYNAMIC));
+			if (nullptr != pNaviMeshCom)
+				pNaviMeshCom->Set_CurrentCellIndex(pNaviMeshCom->Get_CurrentPositionCellIndex(pThisPlayer->Get_Transform()->m_vPos));
+
+			// Send Packet
+			CPacketMgr::Get_Instance()->send_move_stop(pThisPlayer->Get_Transform()->m_vPos,
+													   pThisPlayer->Get_Transform()->m_vDir,
+													   pThisPlayer->Get_AnimationIdx());
+		}
+	}
+
 }
 
 void CStaticMeshObject::Render_GameObject(const _float& fTimeDelta)
