@@ -99,7 +99,6 @@ _int CVergos::Update_GameObject(const _float& fTimeDelta)
 		m_bIsStartDissolve = false;
 		m_fDissolve = -0.05f;
 		m_bIsResetNaviMesh = false;
-		m_pObjectMgr->Delete_ServerObject(L"Layer_GameObject", L"MONSTER", m_iSNum, true);
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterVergosPool(), m_uiInstanceIdx);
 
 		return RETURN_OBJ;

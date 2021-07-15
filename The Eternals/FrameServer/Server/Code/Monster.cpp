@@ -4373,6 +4373,56 @@ void CMonster::Hurt_MonsterbyAI(const int& p_id, const int& damage)
 	}
 }
 
+void CMonster::Hurt_Vergos(const int& p_id, const int& damage, const char& affect)
+{
+	if (m_bIsRegen || m_bIsDead || !m_bIsConnect) return;
+
+	/* 피격 당함 */
+	if (m_iHp > ZERO_HP)
+	{
+		m_iHp -= damage;
+	}
+
+	/* Monster Dead */
+	else if (m_iHp <= ZERO_HP)
+	{
+		m_iHp = ZERO_HP;
+		m_bIsDead = true;
+
+		/* Increase Raid Memeber Exp */
+		for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+		{
+			CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+			if (pPlayer == nullptr) continue;
+
+			pPlayer->m_iExp += m_iExp;
+
+			/* Player Level Up */
+			if (pPlayer->m_iExp >= pPlayer->m_iMaxExp)
+			{
+				pPlayer->m_iLevel	+= INIT_LEV;
+				pPlayer->m_iExp		= INIT_EXP;
+				pPlayer->m_iMaxExp	+= pPlayer->m_iLevel * INCREASE_EXP;
+				pPlayer->m_iMaxHp	+= pPlayer->m_iLevel * INCREASE_HP;
+				pPlayer->m_iHp		= pPlayer->m_iMaxHp;
+				pPlayer->m_iMaxMp	+= pPlayer->m_iLevel * INCREASE_MP;
+				pPlayer->m_iMp		= pPlayer->m_iMaxMp;
+				pPlayer->m_iMinAtt	+= pPlayer->m_iLevel * INCREASE_ATT;
+				pPlayer->m_iMaxAtt	+= pPlayer->m_iLevel * INCREASE_ATT;
+			}
+			pPlayer->send_player_stat(raid);
+		}
+		Change_DeadMode();
+		return;
+	}
+
+	// Monster View List 내의 유저들에게 해당 Monster의 변경된 stat을 알림.
+	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+	{
+		send_Monster_Stat(raid, p_id, damage);
+	}
+}
+
 void CMonster::Change_AttackMode()
 {
 	/* Monster가 활성화되어 있지 않을 경우 활성화 */

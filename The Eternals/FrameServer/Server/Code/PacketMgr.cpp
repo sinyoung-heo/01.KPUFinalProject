@@ -245,7 +245,10 @@ void process_packet(int id)
 		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", p->col_id));
 		if (nullptr == pMonster) return;
 
-		pMonster->Hurt_Monster(id, p->damage, p->affect);
+		if (pMonster->m_monNum == MON_VERGOS)
+			pMonster->Hurt_Vergos(id, p->damage, p->affect);
+		else
+			pMonster->Hurt_Monster(id, p->damage, p->affect);
 	}
 	break;
 
