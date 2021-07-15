@@ -37,7 +37,8 @@ public:
 	int		Update_Monster(const float& fTimeDelta);
 	void	Hurt_Monster(const int& p_id, const int& damage, const char& affect);	// ATTACKED BY PLAYER
 	bool	Affect_Monster(const int& to_client, const char& affect);
-	void	Hurt_MonsterbyAI(const int& p_id, const int& damage);										// ATTACKED BY AI
+	void	Hurt_MonsterbyAI(const int& p_id, const int& damage);					// ATTACKED BY AI
+	void	Reset_Vergos();
 
 	/* MONSTER STATUS CHANGE */
 	void	Change_AttackMode();								// STATUS == ATTACK

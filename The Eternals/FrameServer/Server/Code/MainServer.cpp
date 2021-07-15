@@ -598,6 +598,22 @@ void worker_thread()
 		}
 		break;
 
+		case OPMODE::OP_MODE_RAID_END:
+		{
+			CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", key));
+			if (nullptr == pMonster) return;
+			pMonster->Reset_Vergos();
+
+			auto& iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+			auto& iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
+			for (iter_begin; iter_begin != iter_end; ++iter_begin)
+			{
+				static_cast<CAi*>(iter_begin->second)->Change_DeadMode();
+			}
+
+		}
+		break;
+
 		default:
 #ifdef TEST
 			cout << "[ERROR] Unknown Type MODE in Worker Thread!" << endl;

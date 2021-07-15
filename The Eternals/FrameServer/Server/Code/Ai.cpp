@@ -130,7 +130,7 @@ void CAi::Release_AI()
 
 int CAi::Update_AI(const float& fTimeDelta)
 {
-	if (!m_bIsConnect) 
+	if (m_bIsConnect == false) 
 		return NO_EVENT;
 	if (fTimeDelta > 1.f)
 		return NO_EVENT;
@@ -1379,18 +1379,6 @@ void CAi::reset_ai()
 
 	m_uiAnimIdx			= Gladiator::ATTACK_WAIT;
 	m_iAniIdx			= Gladiator::ATTACK_WAIT;
-
-	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
-	{
-		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
-		if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) continue;
-
-		pPlayer->v_lock.lock();
-		pPlayer->view_list.erase(m_sNum);
-		pPlayer->v_lock.unlock();
-
-		send_leave_packet(raid,m_sNum);
-	}
 
 	nonActive_AI();
 }
