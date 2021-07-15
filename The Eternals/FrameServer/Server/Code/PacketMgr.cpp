@@ -142,19 +142,19 @@ void process_packet(int id)
 			}
 		}
 
-		// Stage Winter일 경우
-		if (pPlayer->m_chStageId == STAGE_WINTER)
-		{
-			CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
-			if (pMonster->Get_Dead() == false)
-			{
-				pPlayer->v_lock.lock();
-				pPlayer->view_list.insert(g_iVergosServerNum);
-				pPlayer->v_lock.unlock();
+		//// Stage Winter일 경우
+		//if (pPlayer->m_chStageId == STAGE_WINTER)
+		//{
+		//	CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
+		//	if (pMonster->Get_Dead() == false)
+		//	{
+		//		pPlayer->v_lock.lock();
+		//		pPlayer->view_list.insert(g_iVergosServerNum);
+		//		pPlayer->v_lock.unlock();
 
-				pMonster->send_Monster_enter_packet(id);
-			}			
-		}
+		//		pMonster->send_Monster_enter_packet(id);
+		//	}			
+		//}
 	}
 	break;
 
@@ -583,8 +583,8 @@ void process_move(int id, const _vec3& _vDir, const _vec3& _vPos)
 			new_viewlist.insert(g_iVergosServerNum);
 		}
 
-		auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
-		auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
+		auto& iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+		auto& iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
 		for (iter_begin; iter_begin != iter_end; ++iter_begin)
 		{
 			new_viewlist.insert(iter_begin->second->m_sNum);
@@ -807,8 +807,8 @@ void process_move_stop(int id, const _vec3& _vPos, const _vec3& _vDir)
 			new_viewlist.insert(g_iVergosServerNum);
 		}
 
-		auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
-		auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
+		auto& iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+		auto& iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
 		for (iter_begin; iter_begin != iter_end; ++iter_begin)
 		{
 			new_viewlist.insert(iter_begin->second->m_sNum);
@@ -1098,8 +1098,8 @@ void process_attack(int id, const _vec3& _vDir, const _vec3& _vPos, int aniIdx, 
 			new_viewlist.insert(g_iVergosServerNum);
 		}
 
-		auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
-		auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
+		auto& iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+		auto& iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
 		for (iter_begin; iter_begin != iter_end; ++iter_begin)
 		{
 			new_viewlist.insert(iter_begin->second->m_sNum);
@@ -1404,8 +1404,8 @@ void process_attack_stop(int id, const _vec3& _vDir, const _vec3& _vPos, int ani
 			new_viewlist.insert(g_iVergosServerNum);
 		}
 
-		auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
-		auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
+		auto& iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+		auto& iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
 		for (iter_begin; iter_begin != iter_end; ++iter_begin)
 		{
 			new_viewlist.insert(iter_begin->second->m_sNum);
@@ -1629,8 +1629,8 @@ void process_buff(const int& id, cs_packet_attack* p)
 			new_viewlist.insert(g_iVergosServerNum);
 		}
 
-		auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
-		auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
+		auto& iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+		auto& iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
 		for (iter_begin; iter_begin != iter_end; ++iter_begin)
 		{
 			new_viewlist.insert(iter_begin->second->m_sNum);
@@ -1864,23 +1864,21 @@ void process_stage_change(int id, const char& stage_id)
 	ori_y = pPlayer->m_vPos.y;
 	ori_z = pPlayer->m_vPos.z;
 
-	// Set StageID
-	pPlayer->m_chStageId = stage_id;
-
 	// Set Position
 	switch (stage_id)
 	{
 	case STAGE_VELIKA:
 	{
 		pPlayer->m_vPos = _vec3(STAGE_VELIKA_X, 0.0f, STAGE_VELIKA_Z);
-		CObjMgr::GetInstance()->Leave_RaidList(id);
+		
+		if (pPlayer->m_chStageId == STAGE_WINTER)
+			process_raid_end(id);
 	}
 	break;
 
 	case STAGE_BEACH:
 	{
 		pPlayer->m_vPos = _vec3(STAGE_BEACH_X, 0.0f, STAGE_BEACH_Z);
-		CObjMgr::GetInstance()->Leave_RaidList(id);
 	}
 	break;
 
@@ -1890,6 +1888,9 @@ void process_stage_change(int id, const char& stage_id)
 	}
 	break;
 	}
+
+	// Set StageID
+	pPlayer->m_chStageId = stage_id;
 
 	// Send Packet
 	pPlayer->send_player_stage_change(id);
@@ -2454,7 +2455,42 @@ void process_cinema_end(const int& id)
 			add_timer(pMonster->m_sNum, OP_MODE_RAID_START, system_clock::now() + 10s);
 		}
 	}
+}
 
+void process_raid_end(const int& id)
+{
+	CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", id));
+	if (pPlayer == nullptr) return;
+	if (pPlayer->m_chStageId != STAGE_WINTER) return;
+	
+	/* Vergos & AI 시야에서 제거 */
+	pPlayer->v_lock.lock();
+	if (pPlayer->view_list.count(g_iVergosServerNum) != 0)
+	{
+		pPlayer->view_list.erase(g_iVergosServerNum);
+		send_leave_packet(id, g_iVergosServerNum);
+	}
+
+	auto& iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+	auto& iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
+	for (iter_begin; iter_begin != iter_end; ++iter_begin)
+	{
+		pPlayer->view_list.erase(iter_begin->second->m_sNum);
+		send_leave_packet(id, iter_begin->second->m_sNum);
+	}
+	pPlayer->v_lock.unlock();
+
+	/* 레이드 파티 탈퇴 */
+	process_leave_party(id);
+
+	/* 레이드 대원 목록에서 탈퇴 */
+	CObjMgr::GetInstance()->Leave_RaidList(id);
+	
+	/* AI & Vergos Reset */
+	if (CObjMgr::GetInstance()->Get_RAIDLIST()->size() < 1)
+	{
+		add_timer(g_iVergosServerNum, OP_MODE_RAID_END, system_clock::now() + 1s);
+	}
 }
 
 /*===========================================FUNC====================================================*/

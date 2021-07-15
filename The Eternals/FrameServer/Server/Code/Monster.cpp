@@ -704,29 +704,11 @@ void CMonster::Dead_Vergos(const float& fTimeDelta)
 			return;
 		else
 		{
-			m_bIsConnect = false;
+			m_bIsConnect		= false;
 			m_iCurPatternNumber = 0;
 
-			Set_Start_Regen(10s);
+			Set_Start_Regen(20s);
 			Init_AllStatus();
-
-			/* AI 초기화 */
-			auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
-			auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
-			for (iter_begin; iter_begin != iter_end; ++iter_begin)
-			{
-				static_cast<CAi*>(iter_begin->second)->Change_DeadMode();
-			}
-
-			/* 레이드 파티에서 유저 탈퇴 */
-			for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
-			{
-				CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
-				if (pPlayer == nullptr || pPlayer->Get_IsConnected() == false) continue;
-
-				CObjMgr::GetInstance()->Leave_Party(&pPlayer->m_iPartyNumber, pPlayer->m_sNum);
-				pPlayer->m_bIsPartyState = false;
-			}
 
 			return;
 		}
@@ -746,6 +728,18 @@ void CMonster::Dead_Vergos(const float& fTimeDelta)
 
 	m_uiAnimIdx = Vergos::DEATH;
 	Set_AnimationKey(m_uiAnimIdx);
+}
+
+void CMonster::Reset_Vergos()
+{
+	m_bIsConnect		= false;
+	m_bIsRegen			= false;
+	m_bIsDead			= false;
+	m_iHp				= m_iMaxHp;
+	m_iCurPatternNumber = 0;
+
+	Init_AllStatus();
+	nonActive_monster();
 }
 
 void CMonster::Move_NormalMonster(const float& fTimeDelta)
@@ -777,7 +771,7 @@ void CMonster::Move_NormalMonster(const float& fTimeDelta)
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 타 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 타유저일 경우 처리 */
 				if (obj_num == m_sNum) continue;
@@ -878,7 +872,7 @@ void CMonster::Move_NormalMonster(const float& fTimeDelta)
 	}
 
 	// 이동 전 viewlist & 이동 후 viewlist 비교 -> 각 유저들의 시야 목록 내에 Monster 존재 여부를 결정.
-	for (auto pl : old_viewlist)
+	for (auto& pl : old_viewlist)
 	{
 		// 이동 후에도 Monster 시야 목록 내에 "pl"(server number) 유저가 남아있는 경우
 		if (0 < new_viewlist.count(pl))
@@ -926,7 +920,7 @@ void CMonster::Move_NormalMonster(const float& fTimeDelta)
 	}
 
 	// new_vielist 순회 -> 플레이어의 시야 목록에 있어야 할 새로운 Monster들을 추가
-	for (auto pl : new_viewlist)
+	for (auto& pl : new_viewlist)
 	{
 		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", pl));
 		if (pPlayer != nullptr)
