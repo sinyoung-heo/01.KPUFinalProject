@@ -332,8 +332,8 @@ void CObjMgr::Create_StageWinterMonster()
 
 	if (pNew)
 	{
-		//pNew->Ready_Monster(_vec3(380.0f, 0.f, 390.0f), _vec3(0.f, -180.0f, 0.f), MON_NORMAL, MON_VERGOS, STAGE_WINTER, VERGOS_HP, GIANTMONKEY_ATT, GIANTMONKEY_EXP, GIANTMONKEY_SPD);
-		pNew->Ready_Monster(_vec3(380.0f, 0.f, 390.0f), _vec3(0.f, -180.0f, 0.f), MON_NORMAL, MON_VERGOS, STAGE_WINTER, 50000, GIANTMONKEY_ATT, GIANTMONKEY_EXP, GIANTMONKEY_SPD);
+		pNew->Ready_Monster(_vec3(380.0f, 0.f, 390.0f), _vec3(0.f, -180.0f, 0.f), MON_NORMAL, MON_VERGOS, STAGE_WINTER, VERGOS_HP, GIANTMONKEY_ATT, GIANTMONKEY_EXP, GIANTMONKEY_SPD);
+		//pNew->Ready_Monster(_vec3(380.0f, 0.f, 390.0f), _vec3(0.f, -180.0f, 0.f), MON_NORMAL, MON_VERGOS, STAGE_WINTER, 50000, GIANTMONKEY_ATT, GIANTMONKEY_EXP, GIANTMONKEY_SPD);
 		pNew->Set_NumAnimation(Vergos::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Vergos::duration);
 		g_iVergosServerNum = pNew->m_sNum;
