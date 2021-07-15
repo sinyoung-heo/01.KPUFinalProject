@@ -340,6 +340,7 @@
     <ClInclude Include="..\Code\SwordTrail.h" />
     <ClInclude Include="..\Code\SwordTrailEffect.h" />
     <ClInclude Include="..\Code\TerrainMeshObject.h" />
+    <ClInclude Include="..\Code\TonadoEffect.h" />
     <ClInclude Include="..\Code\Vergos.h" />
     <ClInclude Include="..\Code\VergosHpGauge.h" />
     <ClInclude Include="..\Code\WarningFrame.h" />
@@ -539,6 +540,7 @@
     <ClCompile Include="..\Code\SwordTrail.cpp" />
     <ClCompile Include="..\Code\SwordTrailEffect.cpp" />
     <ClCompile Include="..\Code\TerrainMeshObject.cpp" />
+    <ClCompile Include="..\Code\TonadoEffect.cpp" />
     <ClCompile Include="..\Code\Vergos.cpp" />
     <ClCompile Include="..\Code\VergosHpGauge.cpp" />
     <ClCompile Include="..\Code\WarningFrame.cpp" />

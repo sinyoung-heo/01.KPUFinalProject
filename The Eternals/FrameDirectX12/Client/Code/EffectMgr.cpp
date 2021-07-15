@@ -31,6 +31,7 @@
 #include "RectDecal.h"
 #include "DirParticleEffect.h"
 #include "BossDecal.h"
+#include "TonadoEffect.h"
 IMPLEMENT_SINGLETON(CEffectMgr)
 
 CEffectMgr::CEffectMgr()
@@ -206,12 +207,20 @@ void CEffectMgr::Effect_ArrowHitted(_vec3 vecPos,_float maxScale)
 
 void CEffectMgr::Effect_FireCone(_vec3 vecPos, float RotY , _vec3 vecDir)
 {
-	pGameObj = CDragonEffect::Create(m_pGraphicDevice, m_pCommandList, L"DragonEffect", _vec3(0.012f), _vec3(0.f), vecPos);
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"EffectDragon", pGameObj), E_FAIL);
+	/*pGameObj = CDragonEffect::Create(m_pGraphicDevice, m_pCommandList, L"DragonEffect", _vec3(0.012f), _vec3(0.f), vecPos);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"EffectDragon", pGameObj), E_FAIL);*/
 
 	vecPos.y = 0.5f;
 
-	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_FireRing_Effect());
+
+	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_Tonado_Effect());
+	if (nullptr != pGameObj)
+	{
+		static_cast<CTonadoEffect*>(pGameObj)->Set_CreateInfo(_vec3(0.01f), _vec3(0.f, 0.0f, 0.0f), vecPos);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Tonado", pGameObj), E_FAIL);
+	}
+
+	/*pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_FireRing_Effect());
 	if (nullptr != pGameObj)
 	{
 		static_cast<CFireRing*>(pGameObj)->Set_CreateInfo(_vec3(0.01f), _vec3(0.f, 0.0f, 0.0f), vecPos);
@@ -228,7 +237,7 @@ void CEffectMgr::Effect_FireCone(_vec3 vecPos, float RotY , _vec3 vecDir)
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicCylinder02", pGameObj), E_FAIL);
 		}
 	}
-
+*/
 
 }
 

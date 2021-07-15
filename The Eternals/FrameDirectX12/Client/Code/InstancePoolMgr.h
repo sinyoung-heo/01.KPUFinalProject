@@ -59,6 +59,7 @@ class CRectDecal;
 class CDirParticleEffect;
 class CBreathEffect;
 class CBossDecal;
+class CTonadoEffect;
 class CInstancePoolMgr : public Engine::CBase
 {
 	DECLARE_SINGLETON(CInstancePoolMgr)
@@ -141,7 +142,8 @@ public:
 	INSTANCE_POOL_DESC<CBossDecal>* Get_Effect_BossDecal_Effect() { return m_pEffect_BossDecal_Pool; }
 	INSTANCE_POOL_DESC<CDirParticleEffect>* Get_Effect_DirParticle_Effect() { return m_pEffect_DirParticle_Pool; }
 	INSTANCE_POOL_DESC<CBreathEffect>* Get_Effect_Breath_Effect() { return m_pEffect_BreathEffect_Pool; }
-	
+	INSTANCE_POOL_DESC<CTonadoEffect>* Get_Effect_Tonado_Effect() { return m_pEffect_Tonado_Pool; }
+
 	
 	void Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
 	void Ready_LoadingInstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
@@ -220,6 +222,10 @@ private:
 	INSTANCE_POOL_DESC<CFrameMesh>*			m_pEffect_FrameMesh_Pool = nullptr;
 	INSTANCE_POOL_DESC<CFireDecal>*			m_pEffect_FireDecal_Pool = nullptr;
 	INSTANCE_POOL_DESC<CIceDecal>*			m_pEffect_IceDecal_Pool = nullptr;
+	INSTANCE_POOL_DESC<CTonadoEffect>* m_pEffect_Tonado_Pool = nullptr;
+
+	
+
 	// Effect Archer
 	INSTANCE_POOL_DESC<CIceStorm_s>*		m_pEffect_IceStorm_s_Pool = nullptr;
 	INSTANCE_POOL_DESC<CDistTrail>*			m_pEffect_DistTrail_Pool = nullptr;

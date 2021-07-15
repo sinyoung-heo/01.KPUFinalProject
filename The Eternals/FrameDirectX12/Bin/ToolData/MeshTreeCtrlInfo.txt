@@ -83,6 +83,7 @@ StaticMesh|publicEffect|publicStone2
 StaticMesh|publicEffect|publicStone3
 StaticMesh|publicEffect|publicStone4
 StaticMesh|publicEffect|publicSword
+StaticMesh|publicEffect|publicTonado
 StaticMesh|Sample|DistortDisk
 StaticMesh|Sample|LandMark
 StaticMesh|Sample|LandMarkBoundary
