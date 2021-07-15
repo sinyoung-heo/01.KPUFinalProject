@@ -922,7 +922,7 @@ void CPCOthersArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 				pCollisionArrow->Set_ArrowType(ARROW_TYPE::ARROW_FALL);
 				pCollisionArrow->Set_Speed(50.0f);
 				pCollisionArrow->Set_IsReadyArrowFall(false);
-				pCollisionArrow->Set_CollisionTag(L"");
+				pCollisionArrow->Set_CollisionTag(L"NoneCollisionArrow");
 				pCollisionArrow->Set_Damage(m_pInfoCom->Get_RandomDamage());
 				pCollisionArrow->Set_LifeTime(5.0f);
 				pCollisionArrow->Get_Transform()->m_vScale = _vec3(0.08f);

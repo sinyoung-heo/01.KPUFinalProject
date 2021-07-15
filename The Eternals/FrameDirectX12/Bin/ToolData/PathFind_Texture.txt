@@ -54,7 +54,7 @@ S1UI_Equipment|3|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_Equipment\%d.d
 S1UI_GageBoss|6|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_GageBoss\%d.dds
 S1UI_InGameStore|6|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_InGameStore\%d.dds
 S1UI_MainMenu|3|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_MainMenu\%d.dds
-S1UI_MIniMap|12|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_MIniMap\%d.dds
+S1UI_MIniMap|13|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_MIniMap\%d.dds
 S1UI_Quest|4|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_Quest\%d.dds
 S1UI_ServerWaiting|4|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_ServerWaiting\%d.dds
 S1UI_WareHouse|3|..\..\Bin\Resource\ResourceStage\Texture\UI\S1UI_WareHouse\%d.dds
