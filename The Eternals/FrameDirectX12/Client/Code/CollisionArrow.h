@@ -38,6 +38,7 @@ public:
 	virtual void	Process_Collision();
 	// MultiThread Rendering
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
+	void Collision_MonsterMultiCollider(list<Engine::CColliderSphere*>& lstMonsterCollider, const _uint& uiSNum);
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
 	void			Set_ConstantTable(const _int& iContextIdx, const _int& iInstanceIdx);

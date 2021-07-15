@@ -118,6 +118,7 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 			m_fDissolve              = -0.05f;
 		}
 
+		m_wstrCollisionTag = L"NoneCollisionArrow";
 		m_pTransCom->m_vScale = _vec3(_vec3(0.05f));
 		m_pTransCom->m_vAngle = _vec3(0.0f);
 		m_pTransCom->m_vPos   = _vec3(AWAY_FROM_STAGE);
@@ -188,19 +189,22 @@ _int CCollisionArrow::Update_GameObject(const _float& fTimeDelta)
 
 				m_bIsCreateCollisionTick = true;
 
-				CCollisionTick* pCollisionTick = static_cast<CCollisionTick*>(Pop_Instance(m_pInstancePoolMgr->Get_CollisionTickPool()));
-				if (nullptr != pCollisionTick)
+				if (m_wstrCollisionTag != L"NoneCollisionArrow")
 				{
-					pCollisionTick->Get_BoundingSphere()->Get_BoundingInfo().Radius = 0.5f;
-					pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
-					pCollisionTick->Set_Damage(m_uiDamage);
-					pCollisionTick->Set_LifeTime(0.25f);
-					pCollisionTick->Get_Transform()->m_vScale = _vec3(3.0f);
-					pCollisionTick->Get_Transform()->m_vPos = m_pTransCom->m_vPos;
-					pCollisionTick->Get_Transform()->m_vPos.y = 1.5f;
-					pCollisionTick->Get_BoundingSphere()->Set_Radius(pCollisionTick->Get_Transform()->m_vScale);
+					CCollisionTick* pCollisionTick = static_cast<CCollisionTick*>(Pop_Instance(m_pInstancePoolMgr->Get_CollisionTickPool()));
+					if (nullptr != pCollisionTick)
+					{
+						pCollisionTick->Get_BoundingSphere()->Get_BoundingInfo().Radius = 0.5f;
+						pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
+						pCollisionTick->Set_Damage(m_uiDamage);
+						pCollisionTick->Set_LifeTime(0.25f);
+						pCollisionTick->Get_Transform()->m_vScale = _vec3(3.0f);
+						pCollisionTick->Get_Transform()->m_vPos = m_pTransCom->m_vPos;
+						pCollisionTick->Get_Transform()->m_vPos.y = 1.5f;
+						pCollisionTick->Get_BoundingSphere()->Set_Radius(pCollisionTick->Get_Transform()->m_vScale);
 
-					m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_ThisPlayer", pCollisionTick);
+						m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_ThisPlayer", pCollisionTick);
+					}
 				}
 			}
 		}
@@ -349,7 +353,7 @@ void CCollisionArrow::Process_Collision()
 		else if (L"CollisionTick_ThisPlayer" == m_wstrCollisionTag &&
 				 L"Monster_MultiCollider" == pDst->Get_CollisionTag())
 		{
-
+			Collision_MonsterMultiCollider(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
 		}
 	}
 }
@@ -364,6 +368,55 @@ void CCollisionArrow::Render_GameObject(const _float& fTimeDelta,
 	m_pShaderMeshInstancing->Add_Instance(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass);
 	_uint iInstanceIdx = m_pShaderMeshInstancing->Get_InstanceCount(iContextIdx, m_wstrMeshTag, m_iMeshPipelineStatePass) - 1;
 	Set_ConstantTable(iContextIdx, iInstanceIdx);
+}
+
+void CCollisionArrow::Collision_MonsterMultiCollider(list<Engine::CColliderSphere*>& lstMonsterCollider, const _uint& uiSNum)
+{
+	for (auto iter_begin = m_lstCollider.begin(); iter_begin != m_lstCollider.end(); ++iter_begin)
+	{
+		for (auto iter_dst_begin = ++lstMonsterCollider.begin(); iter_dst_begin != lstMonsterCollider.end(); ++iter_dst_begin)
+		{
+			if (Engine::CCollisionMgr::Check_Sphere((*iter_begin)->Get_BoundingInfo(), (*iter_dst_begin)->Get_BoundingInfo()))
+			{
+				// Process Collision Event
+				(*iter_begin)->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+				(*iter_dst_begin)->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+
+				Set_IsReturnObject(true);
+
+				CEffectMgr::Get_Instance()->Effect_ArrowHitted(m_pTransCom->m_vPos, 2.5f);
+
+				// pDst->Set_bisHitted(true);
+
+				// DmgFont
+				Engine::CGameObject* pGameObj = nullptr;
+				pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_DmgFontPool());
+				if (nullptr != pGameObj)
+				{
+					random_device					rd;
+					default_random_engine			dre{ rd() };
+					uniform_int_distribution<_int>	uid{ -7, 7 };
+
+					static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos = _vec3((*iter_begin)->Get_BoundingInfo().Center);
+					static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.x += (_float)(uid(dre)) * 0.1f;
+					static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.y += 3.0f;
+					static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.z += (_float)(uid(dre)) * 0.1f;
+					static_cast<CDmgFont*>(pGameObj)->Set_DamageList(m_uiDamage);
+					static_cast<CDmgFont*>(pGameObj)->Set_DamageType(DMG_TYPE::DMG_PLAYER);
+					static_cast<CDmgFont*>(pGameObj)->Set_RandomDir();
+					m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"DmgFont", pGameObj);
+				}
+
+				// Camera Effect
+				m_bIsCameraEffect = true;
+
+				// Player Attack to Monster
+				m_pPacketMgr->send_attackToMonster(uiSNum, m_uiDamage, m_chAffect);
+
+				return;
+			}
+		}
+	}
 }
 
 HRESULT CCollisionArrow::Add_Component(wstring wstrMeshTag)

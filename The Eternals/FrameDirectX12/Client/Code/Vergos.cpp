@@ -39,9 +39,12 @@ HRESULT CVergos::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, 
 										   m_pMeshCom->Get_MaxVector());
 	Engine::CGameObject::SetUp_BoundingSphere(&(m_pTransCom->m_matWorld),
 											  m_pTransCom->m_vScale,
-											  _vec3(128.0f),
-											  _vec3(2.0f, 37.f, 0.0f));
-	m_wstrCollisionTag = L"Monster_SingleCollider";
+											  _vec3(1200.0f),
+											  _vec3(-120.0f, 40.f, 120.0f));
+
+	Engine::FAILED_CHECK_RETURN(Create_Collider(), E_FAIL);
+
+	m_wstrCollisionTag = L"Monster_MultiCollider";
 	m_lstCollider.push_back(m_pBoundingSphereCom);
 
 	m_pInfoCom->m_fSpeed = 1.f;
@@ -66,7 +69,7 @@ HRESULT CVergos::LateInit_GameObject()
 	m_pShadowCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
 	// MiniMap
-	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::SetUp_MiniMapComponent(3), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::SetUp_MiniMapComponent(12), E_FAIL);
 
 	BazierPos[0] = _vec3(403.f, 0.f, 360.f);
 	BazierPos[1] = _vec3(390.f, 0.f, 347.5f);
@@ -233,6 +236,57 @@ HRESULT CVergos::Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag)
 	Engine::NULL_CHECK_RETURN(m_pNaviMeshCom, E_FAIL);
 	m_pNaviMeshCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_NaviMesh", m_pNaviMeshCom);
+
+	return S_OK;
+}
+
+HRESULT CVergos::Create_Collider()
+{
+	/*__________________________________________________________________________________________________________
+	[ Collider Bone Setting ]
+	____________________________________________________________________________________________________________*/
+	Engine::CColliderSphere*	pColliderSphereCom = nullptr;
+	Engine::SKINNING_MATRIX*	pmatSkinning       = nullptr;
+	_matrix* pmatParent = &(m_pTransCom->m_matWorld);
+
+	// Head
+	pColliderSphereCom = static_cast<Engine::CColliderSphere*>(m_pComponentMgr->Clone_Component(L"ColliderSphere", Engine::COMPONENTID::ID_DYNAMIC));
+	Engine::NULL_CHECK_RETURN(pColliderSphereCom, E_FAIL);
+	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderSphere_Head", pColliderSphereCom);
+
+	pmatSkinning = m_pMeshCom->Find_SkinningMatrix("Head_Bone01");
+	Engine::NULL_CHECK_RETURN(pmatSkinning, E_FAIL);
+	pColliderSphereCom->Set_SkinningMatrix(pmatSkinning);		// Bone Matrix
+	pColliderSphereCom->Set_ParentMatrix(pmatParent);			// Parent Matrix
+	pColliderSphereCom->Set_Scale(_vec3(450.f, 450.f, 450.f));	// Collider Scale
+	pColliderSphereCom->Set_Radius(m_pTransCom->m_vScale);		// Collider Radius
+	m_lstCollider.emplace_back(pColliderSphereCom);
+
+	// R Hand
+	pColliderSphereCom = static_cast<Engine::CColliderSphere*>(m_pComponentMgr->Clone_Component(L"ColliderSphere", Engine::COMPONENTID::ID_DYNAMIC));
+	Engine::NULL_CHECK_RETURN(pColliderSphereCom, E_FAIL);
+	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderSphere_RHand", pColliderSphereCom);
+
+	pmatSkinning = m_pMeshCom->Find_SkinningMatrix("Bip01-R-Hand");
+	Engine::NULL_CHECK_RETURN(pmatSkinning, E_FAIL);
+	pColliderSphereCom->Set_SkinningMatrix(pmatSkinning);		// Bone Matrix
+	pColliderSphereCom->Set_ParentMatrix(pmatParent);			// Parent Matrix
+	pColliderSphereCom->Set_Scale(_vec3(450.f, 450.f, 450.f));	// Collider Scale
+	pColliderSphereCom->Set_Radius(m_pTransCom->m_vScale);		// Collider Radius
+	m_lstCollider.emplace_back(pColliderSphereCom);
+
+	// L Hand
+	pColliderSphereCom = static_cast<Engine::CColliderSphere*>(m_pComponentMgr->Clone_Component(L"ColliderSphere", Engine::COMPONENTID::ID_DYNAMIC));
+	Engine::NULL_CHECK_RETURN(pColliderSphereCom, E_FAIL);
+	m_mapComponent[Engine::ID_DYNAMIC].emplace(L"Com_ColliderSphere_LHand", pColliderSphereCom);
+
+	pmatSkinning = m_pMeshCom->Find_SkinningMatrix("Bip01-L-Hand");
+	Engine::NULL_CHECK_RETURN(pmatSkinning, E_FAIL);
+	pColliderSphereCom->Set_SkinningMatrix(pmatSkinning);		// Bone Matrix
+	pColliderSphereCom->Set_ParentMatrix(pmatParent);			// Parent Matrix
+	pColliderSphereCom->Set_Scale(_vec3(450.f, 450.f, 450.f));	// Collider Scale
+	pColliderSphereCom->Set_Radius(m_pTransCom->m_vScale);		// Collider Radius
+	m_lstCollider.emplace_back(pColliderSphereCom);
 
 	return S_OK;
 }
@@ -416,10 +470,10 @@ void CVergos::Set_ConstantTableShadowDepth()
 
 void CVergos::Set_ConstantTableMiniMap()
 {
-	m_pTransMiniMap->m_vPos.x = m_pTransCom->m_vPos.x;
-	m_pTransMiniMap->m_vPos.z = m_pTransCom->m_vPos.z;
+	m_pTransMiniMap->m_vPos.x = m_pTransCom->m_vPos.x + 7.0f;
+	m_pTransMiniMap->m_vPos.z = m_pTransCom->m_vPos.z + -31.0f;
 	m_pTransMiniMap->m_vAngle = _vec3(90.0f, 0.0f, 0.0f);
-	m_pTransMiniMap->m_vScale = _vec3(6.0f, 6.0f, 6.0f);
+	m_pTransMiniMap->m_vScale = _vec3(12.0f, 12.0f, 12.0f);
 	m_pTransMiniMap->Update_Component(0.16f);
 
 	/*__________________________________________________________________________________________________________
@@ -512,6 +566,12 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 		case Vergos::A_WAIT:
 		{
+			if (nullptr != m_pHpGaugeRoot)
+			{
+				m_pHpGaugeRoot->Set_IsActive(true);
+				m_pHpGaugeRoot->Set_IsChildActive(true);
+			}
+
 			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = Vergos::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -979,7 +1039,6 @@ void CVergos::Free()
 	Engine::Safe_Release(m_pMeshCom);
 	Engine::Safe_Release(m_pShaderCom);
 	Engine::Safe_Release(m_pShadowCom);
-	Engine::Safe_Release(m_pColliderSphereCom);
 	Engine::Safe_Release(m_pColliderBoxCom);
 	Engine::Safe_Release(m_pNaviMeshCom);
 

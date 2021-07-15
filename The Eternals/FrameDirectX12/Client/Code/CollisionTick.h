@@ -26,6 +26,7 @@ public:
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual _int	LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void	Process_Collision();
+	void Collision_MonsterMultiCollider(list<Engine::CColliderSphere*>& lstMonsterCollider, const _uint& uiSNum);
 private:
 	void SetUp_GladiatorCameraEvent();
 	void SetUp_PriestCameraEvent();

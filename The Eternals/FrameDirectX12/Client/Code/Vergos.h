@@ -40,6 +40,7 @@ public:
 
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag);
+	HRESULT			Create_Collider();
 	HRESULT			Create_HpGauge();
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
@@ -60,7 +61,6 @@ private:
 	Engine::CMesh*				m_pMeshCom				= nullptr;
 	Engine::CShaderMesh*		m_pShaderCom			= nullptr;
 	Engine::CShaderShadow*		m_pShadowCom			= nullptr;
-	Engine::CColliderSphere*	m_pColliderSphereCom	= nullptr;
 	Engine::CColliderBox*		m_pColliderBoxCom		= nullptr;
 	Engine::CNaviMesh*			m_pNaviMeshCom			= nullptr;
 

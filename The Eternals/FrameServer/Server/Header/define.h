@@ -10,7 +10,7 @@ constexpr int KEY_SERVER		= 1000000;
 #define NO_EVENT			0
 #define DEAD_OBJ			1
 #define NO_INIT				-1
-#define PI					3.141592
+#define PI					3.141592f
 #define _3DMAX_FPS			30.0f
 #define ANIMA_INTERPOLATION	1.f
 #define MAX_ANI				15
@@ -40,6 +40,7 @@ constexpr int	MAX_ITEMSIZE				= 80;
 constexpr float	PERCENT						= 100.f;
 
 constexpr int	RAID_PARTY					= 99;
+constexpr int	RAID_MINIMUM				= 1;
 constexpr int	AI_HP						= 5000;
 constexpr int	AI_MP						= 5000;
 constexpr int	AI_MAXATT					= 500;

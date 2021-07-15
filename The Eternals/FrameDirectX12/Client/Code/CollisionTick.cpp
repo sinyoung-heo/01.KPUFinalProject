@@ -65,6 +65,7 @@ _int CCollisionTick::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bIsReturn)
 	{
+		m_wstrCollisionTag = L"NoneCollision";
 		Return_Instance(m_pInstancePoolMgr->Get_CollisionTickPool(), m_uiInstanceIdx);
 		return RETURN_OBJ;
 	}
@@ -138,7 +139,7 @@ void CCollisionTick::Process_Collision()
 		else if (L"CollisionTick_ThisPlayer" == m_wstrCollisionTag &&
 				 L"Monster_MultiCollider" == pDst->Get_CollisionTag())
 		{
-
+			Collision_MonsterMultiCollider(pDst->Get_ColliderList(), pDst->Get_ServerNumber());
 		}
 
 		// Monster Attack <---> ThisPlayer
@@ -172,6 +173,55 @@ void CCollisionTick::Process_Collision()
 
 	SetUp_GladiatorCameraEvent();
 	SetUp_PriestCameraEvent();
+}
+
+void CCollisionTick::Collision_MonsterMultiCollider(list<Engine::CColliderSphere*>& lstMonsterCollider, const _uint& uiSNum)
+{
+	for (auto iter_begin = m_lstCollider.begin(); iter_begin != m_lstCollider.end(); ++iter_begin)
+	{
+		for (auto iter_dst_begin = ++lstMonsterCollider.begin(); iter_dst_begin != lstMonsterCollider.end(); ++iter_dst_begin)
+		{
+			if (Engine::CCollisionMgr::Check_Sphere((*iter_begin)->Get_BoundingInfo(), (*iter_dst_begin)->Get_BoundingInfo()))
+			{
+				// Process Collision Event
+				(*iter_begin)->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+				(*iter_dst_begin)->Set_Color(_rgba(1.0f, 0.0f, 0.0f, 1.0f));
+
+				Set_IsReturnObject(true);
+
+				CEffectMgr::Get_Instance()->Effect_ArrowHitted(m_pTransCom->m_vPos, 2.5f);
+
+				// pDst->Set_bisHitted(true);
+
+				// DmgFont
+				Engine::CGameObject* pGameObj = nullptr;
+				pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_DmgFontPool());
+				if (nullptr != pGameObj)
+				{
+					random_device					rd;
+					default_random_engine			dre{ rd() };
+					uniform_int_distribution<_int>	uid{ -7, 7 };
+
+					static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos = _vec3((*iter_begin)->Get_BoundingInfo().Center);
+					static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.x += (_float)(uid(dre)) * 0.1f;
+					static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.y += 3.0f;
+					static_cast<CDmgFont*>(pGameObj)->Get_Transform()->m_vPos.z += (_float)(uid(dre)) * 0.1f;
+					static_cast<CDmgFont*>(pGameObj)->Set_DamageList(m_uiDamage);
+					static_cast<CDmgFont*>(pGameObj)->Set_DamageType(DMG_TYPE::DMG_PLAYER);
+					static_cast<CDmgFont*>(pGameObj)->Set_RandomDir();
+					m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"DmgFont", pGameObj);
+				}
+
+				// Camera Effect
+				m_bIsCameraEffect = true;
+
+				// Player Attack to Monster
+				m_pPacketMgr->send_attackToMonster(uiSNum, m_uiDamage, m_chAffect);
+
+				return;
+			}
+		}
+	}
 }
 
 void CCollisionTick::SetUp_GladiatorCameraEvent()
