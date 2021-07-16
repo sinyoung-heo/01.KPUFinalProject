@@ -11,6 +11,7 @@ constexpr _uint VERGOS_BLOW_ROTATION_CAMERA_SHAKING_TICK_1 = 56 + 14;
 constexpr _uint VERGOS_BLOW_ROTATION_CAMERA_SHAKING_TICK_2 = 56 + 40;
 constexpr _uint VERGOS_BLOW_ROTATION_CAMERA_SHAKING_TICK_3 = 56 + 95;
 constexpr _uint VERGOS_BREATH_FRONT_CAMERA_SHAKING_TICK    = 80;
+constexpr _uint VERGOS_FLY_CAMERA_SHAKING_TICK             = 20;
 constexpr _uint VERGOS_DEATH_HEAD_DOWN_CAMERA_SHAKING_TICK = 265;
 
 constexpr _uint VERGOS_DEATH_HEAD_DOWN_TICK = 230;
@@ -126,7 +127,9 @@ private:
 	_vec3 BazierPos[3];
 
 	// Camera Shaking
-	_bool m_bIsCameraShaking = false;
+	_bool m_bIsCameraShaking  = false;
+	_bool m_bIsCameraShaking2 = false;
+	_bool m_bIsCameraShaking3 = false;
 
 	_bool m_bIsSettingCamera = false;
 	_bool m_bIsFadeInOut     = false;

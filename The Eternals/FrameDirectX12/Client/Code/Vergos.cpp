@@ -102,14 +102,16 @@ _int CVergos::Update_GameObject(const _float& fTimeDelta)
 			m_pHpGaugeRoot->Set_IsChildActive(false);
 		}
 
-		m_iSNum            = -1;
-		m_bIsStartDissolve = false;
-		m_fDissolve        = -0.05f;
-		m_bIsResetNaviMesh = false;
-		m_bIsCameraShaking = false;
-		m_bIsSpawn         = false;
-		m_bIsSettingCamera = false;
-		m_bIsFadeInOut     =  false;
+		m_iSNum             = -1;
+		m_bIsStartDissolve  = false;
+		m_fDissolve         = -0.05f;
+		m_bIsResetNaviMesh  = false;
+		m_bIsCameraShaking  = false;
+		m_bIsCameraShaking2 = false;
+		m_bIsCameraShaking3 = false;
+		m_bIsSpawn          = false;
+		m_bIsSettingCamera  = false;
+		m_bIsFadeInOut      =  false;
 
 		CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
 		if (nullptr != pDynamicCamera)
@@ -604,7 +606,9 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 				m_pHpGaugeRoot->Set_IsChildActive(true);
 			}
 
-			m_bIsCameraShaking = false;
+			m_bIsCameraShaking  = false;
+			m_bIsCameraShaking2 = false;
+			m_bIsCameraShaking3 = false;
 
 			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = Vergos::A_WAIT;
@@ -629,9 +633,12 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_bIsCameraShaking = false;
+				m_bIsCameraShaking  = false;
+				m_bIsCameraShaking2 = false;
+				m_bIsCameraShaking3 = false;
+
 				m_iMonsterStatus = Vergos::A_WAIT;
-				m_uiAnimIdx = Vergos::A_WAIT;
+				m_uiAnimIdx      = Vergos::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
 		}
@@ -645,7 +652,10 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_bIsCameraShaking = false;
+				m_bIsCameraShaking  = false;
+				m_bIsCameraShaking2 = false;
+				m_bIsCameraShaking3 = false;
+
 				m_iMonsterStatus	= Vergos::A_WAIT;
 				m_uiAnimIdx			= Vergos::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -661,7 +671,10 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_bIsCameraShaking = false;
+				m_bIsCameraShaking  = false;
+				m_bIsCameraShaking2 = false;
+				m_bIsCameraShaking3 = false;
+
 				m_iMonsterStatus	= Vergos::A_WAIT;
 				m_uiAnimIdx			= Vergos::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -678,6 +691,9 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
 				m_bIsCameraShaking = false;
+				m_bIsCameraShaking2 = false;
+				m_bIsCameraShaking3 = false;
+
 				m_iMonsterStatus	= Vergos::A_WAIT;
 				m_uiAnimIdx			= Vergos::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -694,6 +710,9 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
 				m_bIsCameraShaking = false;
+				m_bIsCameraShaking2 = false;
+				m_bIsCameraShaking3 = false;
+
 				m_iMonsterStatus	= Vergos::A_WAIT;
 				m_uiAnimIdx			= Vergos::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -710,6 +729,9 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
 				m_bIsCameraShaking = false;
+				m_bIsCameraShaking2 = false;
+				m_bIsCameraShaking3 = false;
+
 				m_iMonsterStatus	= Vergos::A_WAIT;
 				m_uiAnimIdx			= Vergos::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -726,6 +748,9 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
 				m_bIsCameraShaking = false;
+				m_bIsCameraShaking2 = false;
+				m_bIsCameraShaking3 = false;
+
 				m_iMonsterStatus	= Vergos::A_WAIT;
 				m_uiAnimIdx			= Vergos::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -742,6 +767,9 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
 				m_bIsCameraShaking = false;
+				m_bIsCameraShaking2 = false;
+				m_bIsCameraShaking3 = false;
+
 				m_iMonsterStatus	= Vergos::A_WAIT;
 				m_uiAnimIdx			= Vergos::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -760,6 +788,9 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
 				m_bIsCameraShaking = false;
+				m_bIsCameraShaking2 = false;
+				m_bIsCameraShaking3 = false;
+
 				m_iMonsterStatus = Vergos::A_WAIT;
 				m_uiAnimIdx = Vergos::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -778,6 +809,9 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
 				m_bIsCameraShaking = false;
+				m_bIsCameraShaking2 = false;
+				m_bIsCameraShaking3 = false;
+
 				m_iMonsterStatus = Vergos::A_FLY_LOOP;
 				m_uiAnimIdx = Vergos::A_FLY_LOOP;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -796,6 +830,9 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
 				m_bIsCameraShaking = false;
+				m_bIsCameraShaking2 = false;
+				m_bIsCameraShaking3 = false;
+
 				m_iMonsterStatus = Vergos::A_FLY_END;
 				m_uiAnimIdx = Vergos::A_FLY_END;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -814,6 +851,9 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
 				m_bIsCameraShaking = false;
+				m_bIsCameraShaking2 = false;
+				m_bIsCameraShaking3 = false;
+
 				m_iMonsterStatus = Vergos::A_WAIT;
 				m_uiAnimIdx = Vergos::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -828,7 +868,10 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 				m_bIsSettingCamera = true;
 
 				g_bIsCinemaVergosDeath = true;
+
 				m_bIsCameraShaking = false;
+				m_bIsCameraShaking2 = false;
+				m_bIsCameraShaking3 = false;
 
 				m_pRenderer->Set_IsRenderAlphaGroup(false);
 
@@ -1142,6 +1185,41 @@ void CVergos::SetUp_CameraShaking()
 
 	case Vergos::BLOW_ROTATION:
 	{
+		if (!m_bIsCameraShaking && m_ui3DMax_CurFrame >= VERGOS_BLOW_ROTATION_CAMERA_SHAKING_TICK_1)
+		{
+			m_bIsCameraShaking = true;
+
+			CAMERA_SHAKING_DESC tCameraShakingDesc;
+			tCameraShakingDesc.fUpdateShakingTime = 0.4f;
+			tCameraShakingDesc.vMin = _vec2(-40.0f, -40.0f);
+			tCameraShakingDesc.vMax = _vec2(40.0f, 40.0f);
+			tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 8.0f;
+			m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
+		}
+
+		if (!m_bIsCameraShaking2 && m_ui3DMax_CurFrame >= VERGOS_BLOW_ROTATION_CAMERA_SHAKING_TICK_2)
+		{
+			m_bIsCameraShaking2 = true;
+
+			CAMERA_SHAKING_DESC tCameraShakingDesc;
+			tCameraShakingDesc.fUpdateShakingTime = 0.4f;
+			tCameraShakingDesc.vMin = _vec2(-40.0f, -40.0f);
+			tCameraShakingDesc.vMax = _vec2(40.0f, 40.0f);
+			tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 8.0f;
+			m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
+		}
+
+		if (!m_bIsCameraShaking3 && m_ui3DMax_CurFrame >= VERGOS_BLOW_ROTATION_CAMERA_SHAKING_TICK_3)
+		{
+			m_bIsCameraShaking3 = true;
+
+			CAMERA_SHAKING_DESC tCameraShakingDesc;
+			tCameraShakingDesc.fUpdateShakingTime = 0.65f;
+			tCameraShakingDesc.vMin = _vec2(-80.0f, -80.0f);
+			tCameraShakingDesc.vMax = _vec2(80.0f, 80.0f);
+			tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 8.0f;
+			m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
+		}
 
 	}
 		break;
@@ -1157,6 +1235,22 @@ void CVergos::SetUp_CameraShaking()
 			tCameraShakingDesc.vMin = _vec2(-20.0f, -20.0f);
 			tCameraShakingDesc.vMax = _vec2(20.0f, 20.0f);
 			tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 12.5f;
+			m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
+		}
+	}
+		break;
+
+	case Vergos::FLY_END:
+	{
+		if (!m_bIsCameraShaking && m_ui3DMax_CurFrame >= VERGOS_FLY_CAMERA_SHAKING_TICK)
+		{
+			m_bIsCameraShaking = true;
+
+			CAMERA_SHAKING_DESC tCameraShakingDesc;
+			tCameraShakingDesc.fUpdateShakingTime = 0.75f;
+			tCameraShakingDesc.vMin = _vec2(-75.0f, -75.0f);
+			tCameraShakingDesc.vMax = _vec2(75.0f, 75.0f);
+			tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 8.0f;
 			m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
 		}
 	}
