@@ -15,6 +15,8 @@
 #include "GameUIRoot.h"
 #include "VergosHpGauge.h"
 #include "BossDecal.h"
+#include "DynamicCamera.h"
+
 CVergos::CVergos(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 	, m_pPacketMgr(CPacketMgr::Get_Instance())
@@ -64,6 +66,10 @@ HRESULT CVergos::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, 
 
 HRESULT CVergos::LateInit_GameObject()
 {
+	// DynamicCamera
+	m_pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
+	Engine::NULL_CHECK_RETURN(m_pDynamicCamera, E_FAIL);
+
 	// SetUp Shader ConstantBuffer
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	m_pShadowCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
@@ -99,6 +105,11 @@ _int CVergos::Update_GameObject(const _float& fTimeDelta)
 		m_bIsStartDissolve = false;
 		m_fDissolve = -0.05f;
 		m_bIsResetNaviMesh = false;
+
+		m_bIsCameraShaking = false;
+
+		m_bIsSpawn = false;
+
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterVergosPool(), m_uiInstanceIdx);
 
 		return RETURN_OBJ;
@@ -131,6 +142,7 @@ _int CVergos::Update_GameObject(const _float& fTimeDelta)
 	
 	/* Animation AI */
 	Change_Animation(fTimeDelta);
+	SetUp_CameraShaking();
 
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
@@ -146,7 +158,7 @@ _int CVergos::Update_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
-	if (!g_bIsStartSkillCameraEffect && !g_bIsCinemaStart)
+	if (!g_bIsStartSkillCameraEffect && !g_bIsCinemaStart && m_bIsSpawn)
 		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MINIMAP, this), -1);
 
@@ -572,6 +584,8 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 				m_pHpGaugeRoot->Set_IsChildActive(true);
 			}
 
+			m_bIsCameraShaking = false;
+
 			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = Vergos::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -580,6 +594,9 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 		case Vergos::A_SPAWN:
 		{
+			m_bIsSpawn = true;
+			m_bIsCreateCollisionTick = false;
+
 			if (nullptr != m_pHpGaugeRoot)
 			{
 				m_pHpGaugeRoot->Set_IsActive(true);
@@ -592,8 +609,8 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsCameraShaking = false;
 				m_iMonsterStatus = Vergos::A_WAIT;
-
 				m_uiAnimIdx = Vergos::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
@@ -602,13 +619,14 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 		case Vergos::A_FINCH:
 		{
+			m_bIsSpawn = true;
 			m_uiAnimIdx = Vergos::A_FINCH;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsCameraShaking = false;
 				m_iMonsterStatus	= Vergos::A_WAIT;
-
 				m_uiAnimIdx			= Vergos::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
@@ -617,13 +635,14 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 		case Vergos::A_SWING_RIGHT:
 		{
+			m_bIsSpawn = true;
 			m_uiAnimIdx = Vergos::A_SWING_RIGHT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsCameraShaking = false;
 				m_iMonsterStatus	= Vergos::A_WAIT;
-
 				m_uiAnimIdx			= Vergos::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
@@ -632,13 +651,14 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 		case Vergos::A_SWING_LEFT:
 		{
+			m_bIsSpawn = true;
 			m_uiAnimIdx = Vergos::A_SWING_LEFT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsCameraShaking = false;
 				m_iMonsterStatus	= Vergos::A_WAIT;
-
 				m_uiAnimIdx			= Vergos::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
@@ -647,13 +667,14 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 		case Vergos::A_BLOW_LEFT:
 		{
+			m_bIsSpawn = true;
 			m_uiAnimIdx = Vergos::A_BLOW_LEFT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsCameraShaking = false;
 				m_iMonsterStatus	= Vergos::A_WAIT;
-
 				m_uiAnimIdx			= Vergos::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
@@ -662,13 +683,14 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 		case Vergos::A_BLOW_RIGHT:
 		{
+			m_bIsSpawn = true;
 			m_uiAnimIdx = Vergos::A_BLOW_RIGHT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsCameraShaking = false;
 				m_iMonsterStatus	= Vergos::A_WAIT;
-
 				m_uiAnimIdx			= Vergos::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
@@ -677,13 +699,14 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 		case Vergos::A_BLOW_HEAD:
 		{
+			m_bIsSpawn = true;
 			m_uiAnimIdx = Vergos::A_BLOW_HEAD;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsCameraShaking = false;
 				m_iMonsterStatus	= Vergos::A_WAIT;
-
 				m_uiAnimIdx			= Vergos::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
@@ -692,13 +715,14 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 		case Vergos::A_BLOW_ROTATION:
 		{
+			m_bIsSpawn = true;
 			m_uiAnimIdx = Vergos::A_BLOW_ROTATION;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsCameraShaking = false;
 				m_iMonsterStatus	= Vergos::A_WAIT;
-
 				m_uiAnimIdx			= Vergos::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
@@ -707,6 +731,7 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 		case Vergos::A_BREATH_FIRE:
 		{
+			m_bIsSpawn = true;
 			m_bIsCreateCollisionTick = false;
 
 			m_uiAnimIdx = Vergos::A_BREATH_FIRE;
@@ -714,8 +739,8 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsCameraShaking = false;
 				m_iMonsterStatus = Vergos::A_WAIT;
-
 				m_uiAnimIdx = Vergos::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
@@ -724,6 +749,7 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 		case Vergos::A_FLY_START:
 		{
+			m_bIsSpawn = true;
 			m_bIsCreateCollisionTick = false;
 
 			m_uiAnimIdx = Vergos::A_FLY_START;
@@ -731,8 +757,8 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsCameraShaking = false;
 				m_iMonsterStatus = Vergos::A_FLY_LOOP;
-
 				m_uiAnimIdx = Vergos::A_FLY_LOOP;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
@@ -741,6 +767,7 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 		case Vergos::A_FLY_LOOP:
 		{
+			m_bIsSpawn = true;
 			m_bIsCreateCollisionTick = false;
 
 			m_uiAnimIdx = Vergos::A_FLY_LOOP;
@@ -748,8 +775,8 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsCameraShaking = false;
 				m_iMonsterStatus = Vergos::A_FLY_END;
-
 				m_uiAnimIdx = Vergos::A_FLY_END;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
@@ -758,6 +785,7 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 		case Vergos::A_FLY_END:
 		{
+			m_bIsSpawn = true;
 			m_bIsCreateCollisionTick = false;
 
 			m_uiAnimIdx = Vergos::A_FLY_END;
@@ -765,8 +793,8 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsCameraShaking = false;
 				m_iMonsterStatus = Vergos::A_WAIT;
-
 				m_uiAnimIdx = Vergos::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
@@ -775,6 +803,7 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 		case Vergos::A_DEATH:
 		{
+			m_bIsSpawn = true;
 			m_uiAnimIdx = Vergos::A_DEATH;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			
@@ -789,7 +818,6 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 				m_bIsStartDissolve = true;
 
 				m_iMonsterStatus = Vergos::A_DEATH;
-
 				m_uiAnimIdx = Vergos::A_DEATH;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			}
@@ -999,6 +1027,103 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 		m_bisWarningEffect = false;
 		m_bisDecalEffect = false;
 		m_fSkillOffset = 0.f;
+	}
+}
+
+void CVergos::SetUp_CameraShaking()
+{
+	if (!m_pMeshCom->Is_BlendingComplete())
+		return; 
+
+	switch (m_uiAnimIdx)
+	{
+	case Vergos::SPAWN:
+	{
+		if (!m_bIsCameraShaking && m_ui3DMax_CurFrame >= VERGOS_SPAWN_CAMERA_SHAKING_TICK)
+		{
+			m_bIsCameraShaking = true;
+
+			CAMERA_SHAKING_DESC tCameraShakingDesc;
+			tCameraShakingDesc.fUpdateShakingTime = 0.75f;
+			tCameraShakingDesc.vMin = _vec2(-75.0f, -75.0f);
+			tCameraShakingDesc.vMax = _vec2(75.0f, 75.0f);
+			tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 8.0f;
+			m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
+		}
+	}
+		break;
+
+	case Vergos::SWING_RIGHT:
+	case Vergos::SWING_LEFT:
+	{
+		if (!m_bIsCameraShaking && m_ui3DMax_CurFrame >= VERGOS_SWING_CAMERA_SHAKING_TICK)
+		{
+			m_bIsCameraShaking = true;
+
+			CAMERA_SHAKING_DESC tCameraShakingDesc;
+			tCameraShakingDesc.fUpdateShakingTime = 0.65f;
+			tCameraShakingDesc.vMin = _vec2(-75.0f, -75.0f);
+			tCameraShakingDesc.vMax = _vec2(75.0f, 75.0f);
+			tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 6.0f;
+			m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
+		}
+	}
+		break;
+
+	case Vergos::BLOW_LEFT:
+	case Vergos::BLOW_RIGHT:
+	{
+		if (!m_bIsCameraShaking && m_ui3DMax_CurFrame >= VERGOS_BLOW_CAMERA_SHKAING_TICK)
+		{
+			m_bIsCameraShaking = true;
+
+			CAMERA_SHAKING_DESC tCameraShakingDesc;
+			tCameraShakingDesc.fUpdateShakingTime = 0.65f;
+			tCameraShakingDesc.vMin = _vec2(-45.0f, -45.0f);
+			tCameraShakingDesc.vMax = _vec2(45.0f, 45.0f);
+			tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 6.0f;
+			m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
+		}
+	}
+		break;
+
+	case Vergos::BLOW_HEAD:
+	{
+		if (!m_bIsCameraShaking && m_ui3DMax_CurFrame >= VERGOS_BLOW_HEAD_CAMERA_SHAKING_TICK)
+		{
+			m_bIsCameraShaking = true;
+
+			CAMERA_SHAKING_DESC tCameraShakingDesc;
+			tCameraShakingDesc.fUpdateShakingTime = 0.55f;
+			tCameraShakingDesc.vMin = _vec2(-75.0f, -75.0f);
+			tCameraShakingDesc.vMax = _vec2(75.0f, 75.0f);
+			tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 6.0f;
+			m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
+		}
+	}
+		break;
+
+	case Vergos::BLOW_ROTATION:
+	{
+
+	}
+		break;
+
+	case Vergos::BREATH_FIRE:
+	{
+		if (!m_bIsCameraShaking && m_ui3DMax_CurFrame >= VERGOS_BREATH_FRONT_CAMERA_SHAKING_TICK)
+		{
+			m_bIsCameraShaking = true;
+
+			CAMERA_SHAKING_DESC tCameraShakingDesc;
+			tCameraShakingDesc.fUpdateShakingTime = 1.5f;
+			tCameraShakingDesc.vMin = _vec2(-20.0f, -20.0f);
+			tCameraShakingDesc.vMax = _vec2(20.0f, 20.0f);
+			tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 12.5f;
+			m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
+		}
+	}
+		break;
 	}
 }
 

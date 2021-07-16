@@ -3,6 +3,18 @@
 #include "Include.h"
 #include "GameObject.h"
 
+constexpr _uint VERGOS_SPAWN_CAMERA_SHAKING_TICK           = 150;
+constexpr _uint VERGOS_SWING_CAMERA_SHAKING_TICK           = 76 + 7;
+constexpr _uint VERGOS_BLOW_CAMERA_SHKAING_TICK            = 50;
+constexpr _uint VERGOS_BLOW_HEAD_CAMERA_SHAKING_TICK       = 71 + 8;
+constexpr _uint VERGOS_BLOW_ROTATION_CAMERA_SHAKING_TICK_1 = 56 + 14;
+constexpr _uint VERGOS_BLOW_ROTATION_CAMERA_SHAKING_TICK_2 = 56 + 40;
+constexpr _uint VERGOS_BLOW_ROTATION_CAMERA_SHAKING_TICK_3 = 56 + 95;
+constexpr _uint VERGOS_BREATH_FRONT_CAMERA_SHAKING_TICK    = 80;
+constexpr _uint VERGOS_DEATH_HEAD_DOWN_CAMERA_SHAKING_TICK = 265;
+
+constexpr _uint VERGOS_DEATH_HEAD_DOWN_TICK = 230;
+
 namespace Engine
 {
 	class CMesh;
@@ -15,6 +27,7 @@ namespace Engine
 
 class CGameUIRoot;
 class CVergosHpGauge;
+class CDynamicCamera;
 
 class CVergos : public Engine::CGameObject
 {
@@ -52,8 +65,8 @@ private:
 	void			Change_Animation(const _float& fTimeDelta);
 	void			SetUp_CollisionTick(const _float& fTimeDelta);
 	void			SetUp_HpGauge(const _float& fTimeDelta);
-
 	void			EffectLoop(const _float& fTimeDelta);
+	void			SetUp_CameraShaking();
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -74,6 +87,7 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
+	CDynamicCamera* m_pDynamicCamera = nullptr;
 	wstring	m_wstrMeshTag            = L"";
 	_bool	m_bIsResetNaviMesh       = false;
 
@@ -107,6 +121,12 @@ private:
 	_float m_fBreathTime = 0.f;
 	_vec3 BreathPos;
 	_vec3 BazierPos[3];
+
+	// Camera Shaking
+	_bool m_bIsCameraShaking = false;
+
+	// Spawn
+	_bool m_bIsSpawn = false;
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
