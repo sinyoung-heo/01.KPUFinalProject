@@ -152,6 +152,7 @@ _int CQuestMessageButton::LateUpdate_GameObject(const _float& fTimeDelta)
 				}
 
 				g_bIsCinemaStart = false;
+				g_bIsCinemaVergosDeath = false;
 				CQuestMgr::Get_Instance()->Set_IsAcceptQuest(false);
 				CQuestMgr::Get_Instance()->Set_IsCompleteSubQuest(false);
 				CQuestMgr::Get_Instance()->Set_IsCompleteMainQuest(false);

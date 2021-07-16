@@ -568,10 +568,6 @@ void CMainApp::Key_Input()
 		CQuestMgr::Get_Instance()->Get_MainQuestMiniCanvas()->Set_IsActive(false);
 		CQuestMgr::Get_Instance()->Get_MainQuestMiniCanvas()->Set_IsChildActive(false);
 	}
-	if (Engine::KEY_DOWN(DIK_F8))
-	{
-		g_bIsCinemaStart = !g_bIsCinemaStart;
-	}
 }
 
 void CMainApp::Show_FontLog(const _float& fTimeDelta)

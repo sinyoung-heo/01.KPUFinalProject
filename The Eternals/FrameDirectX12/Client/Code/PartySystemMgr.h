@@ -33,6 +33,7 @@ public:
 
 	void Add_PartyListInfoCanvas(CPartyInfoListCanvas* pCanvas)					{ m_vecPartyInfoListCanvas.emplace_back(pCanvas); }
 	void SetUp_ThisPlayerPartyList();
+	void Reset_UIPartyList();
 	void Update_ThisPlayerPartyList();
 private:
 	Engine::CGameObject*			m_pSelectPlayer               = nullptr;

@@ -89,6 +89,7 @@ public:
 	void	Set_bIsLoadingFinish()								{ m_bIsLoadingFinish = true; }
 	void	Set_Frustum(const BoundingFrustum& tFrustum)		{ m_tFrustum = tFrustum; }
 	void	Set_IsRenderShadow(const _bool& bIsRenderShadow)	{ m_bIsRenderShadow = bIsRenderShadow; }
+	void	Set_IsRenderAlphaGroup(const _bool& bIsRenderAlpha) { m_bIsRenderAlpha = bIsRenderAlpha; }
 
 	// Method
 	HRESULT	Ready_Renderer(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
@@ -256,9 +257,10 @@ private:
 
 	ThreadParameter											m_tThreadParameter[CONTEXT::CONTEXT_END];
 
-	_bool m_bIsLoadingFinish	= false;
-	_bool m_bIsCreateThread		= false;
-	_bool m_bIsRenderShadow		= true;
+	_bool m_bIsLoadingFinish = false;
+	_bool m_bIsCreateThread	 = false;
+	_bool m_bIsRenderShadow	 = true;
+	_bool m_bIsRenderAlpha   = true;
 
 public:
 	void	Create_ThreadContext();

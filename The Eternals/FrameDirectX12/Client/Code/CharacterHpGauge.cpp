@@ -50,7 +50,7 @@ _int CCharacterHpGauge::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 	
-	if (g_bIsCinemaStart)
+	if (g_bIsCinemaStart || g_bIsCinemaVergosDeath)
 		return NO_EVENT;
 
 	if (m_bIsDead)
@@ -63,7 +63,7 @@ _int CCharacterHpGauge::Update_GameObject(const _float& fTimeDelta)
 
 _int CCharacterHpGauge::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	if (g_bIsCinemaStart)
+	if (g_bIsCinemaStart || g_bIsCinemaVergosDeath)
 		return NO_EVENT;
 
 	CGameUIChild::LateUpdate_GameObject(fTimeDelta);

@@ -69,7 +69,7 @@ _int CVergosHpGauge::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	CGameUIChild::LateUpdate_GameObject(fTimeDelta);
 
-	if (nullptr != m_pFont && !g_bIsStageChange && !g_bIsCinemaStart && m_bIsActive)
+	if (nullptr != m_pFont && !g_bIsStageChange && !g_bIsCinemaStart && m_bIsActive && !g_bIsCinemaVergosDeath)
 	{
 		m_wstrText = wstring(L"%d   /   %d");
 		wsprintf(m_szText, m_wstrText.c_str(), m_iCurHp, m_iMaxHp);

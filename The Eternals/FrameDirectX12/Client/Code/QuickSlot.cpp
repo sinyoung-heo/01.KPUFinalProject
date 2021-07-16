@@ -502,7 +502,7 @@ void CQuickSlot::SetUp_FontPotionCnt(const _float& fTimeDelta)
 	else
 		m_uiCnt = pInventorySlot->Get_CurItemCnt();
 
-	if (nullptr != m_pFontPotionCnt && !g_bIsStageChange)
+	if (nullptr != m_pFontPotionCnt && !g_bIsStageChange && !g_bIsCinemaStart && !g_bIsCinemaVergosDeath)
 	{
 		_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
 		vPos.x += -19.0f;
@@ -520,7 +520,7 @@ void CQuickSlot::SetUp_FontPotionCnt(const _float& fTimeDelta)
 
 void CQuickSlot::SetUp_FontDIKKey(const _float& fTimeDelta)
 {
-	if (nullptr != m_pFont && !g_bIsStageChange)
+	if (nullptr != m_pFont && !g_bIsStageChange && !g_bIsCinemaStart && !g_bIsCinemaVergosDeath)
 	{
 		_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
 		vPos.x += -18.0f;
@@ -542,7 +542,7 @@ void CQuickSlot::SetUp_FontDIKKey(const _float& fTimeDelta)
 
 void CQuickSlot::SetUp_FontCoolDownTime(const _float& fTimeDelta)
 {
-	if (nullptr != m_pFontSkillCoolDownTime && 0.0f != m_fCurCoolDownTime && L"" != m_wstrCoolDownTag)
+	if (nullptr != m_pFontSkillCoolDownTime && 0.0f != m_fCurCoolDownTime && L"" != m_wstrCoolDownTag && !g_bIsCinemaStart && !g_bIsCinemaVergosDeath)
 	{
 		_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
 		vPos.x += -12.0f;

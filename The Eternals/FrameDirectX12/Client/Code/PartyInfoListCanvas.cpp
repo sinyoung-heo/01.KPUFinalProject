@@ -96,7 +96,7 @@ void CPartyInfoListCanvas::Render_GameObject(const _float& fTimeDelta)
 
 void CPartyInfoListCanvas::SetUp_FontPosition(const _float& fTimeDelta)
 {
-	if (nullptr != m_pFont && !g_bIsStageChange && !g_bIsCinemaStart)
+	if (nullptr != m_pFont && !g_bIsStageChange && !g_bIsCinemaStart && !g_bIsCinemaVergosDeath)
 	{
 		_vec3 vPos = _vec3(m_pTransColor->m_matWorld._41, m_pTransColor->m_matWorld._42, m_pTransColor->m_matWorld._43).Convert_DescartesTo2DWindow(WINCX, WINCY);
 		vPos.x += -90.0f;

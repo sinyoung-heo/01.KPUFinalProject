@@ -9,6 +9,7 @@
 #include "Lakan.h"
 #include "PrionBerserkerBoss.h"
 #include "CinemaVergos.h"
+#include "Vergos.h"
 #include "FadeInOut.h"
 
 CDynamicCamera::CDynamicCamera(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -172,6 +173,9 @@ _int CDynamicCamera::Update_GameObject(const _float & fTimeDelta)
 			break;
 		case CAMERA_STATE::CINEMATIC_ENDING:
 			SetUp_DynamicCameraCinematicEnding(fTimeDelta);
+			break;
+		case CAMERA_STATE::CINEMATIC_VERGOS_DEATH:
+			SetUp_DynamicCameraCinematicVergosDeath(fTimeDelta);
 			break;
 		default:
 			break;
@@ -733,6 +737,46 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicEnding(const _float& fTimeDelta
 	}
 }
 
+void CDynamicCamera::SetUp_DynamicCameraCinematicVergosDeath(const _float& fTimeDelta)
+{
+	if (!m_bIsSettingCinematicValue)
+	{
+		m_bIsSettingCinematicValue = true;
+
+		if (nullptr != m_pVergos)
+			m_pCameraAtSkinningMatrix = m_pVergos->Get_MeshComponent()->Find_SkinningMatrix("Head_Bone01");
+
+		m_tCameraInfo.vEye = _vec3(400.0f, 1.25f, 350.0f);
+	}
+
+	if (nullptr != m_pVergos)
+	{
+		_uint uiCurFrame = m_pVergos->Get_CurAnimationFrame();
+		if (uiCurFrame > 235)
+			m_tCameraInfo.vEye = _vec3(368.0f, 3.0f, 352.0f);
+		else
+			m_tCameraInfo.vEye = _vec3(400.0f, 1.25f, 350.0f);
+	}
+
+	// Camera Shaking
+	SetUp_CameraShaking(fTimeDelta);
+	m_tCameraInfo.vEye.x += m_tCameraShakingDesc.vEyeOffset.x;
+	m_tCameraInfo.vEye.y += m_tCameraShakingDesc.vEyeOffset.y;
+
+
+	if (nullptr != m_pCameraAtSkinningMatrix)
+	{
+		_matrix matBoneFinalTransform = ((m_pCameraAtSkinningMatrix->matBoneScale
+										* m_pCameraAtSkinningMatrix->matBoneRotation
+										* m_pCameraAtSkinningMatrix->matBoneTrans)
+										* m_pCameraAtSkinningMatrix->matParentTransform)
+										* m_pCameraAtSkinningMatrix->matRootTransform;
+
+		_matrix matWorld = (matBoneFinalTransform) * (m_pVergos->Get_Transform()->m_matWorld);
+		m_tCameraInfo.vAt = _vec3(matWorld._41, matWorld._42, matWorld._43);
+	}
+}
+
 void CDynamicCamera::SetUp_CameraShaking(const _float& fTimeDelta)
 {
 	if (!m_tCameraShakingDesc.bIsStartCameraShaking)
@@ -989,7 +1033,8 @@ Engine::CGameObject* CDynamicCamera::Create(ID3D12Device * pGraphicDevice,
 
 void CDynamicCamera::Free()
 {
+	CCamera::Free();
 	Engine::Safe_Release(m_pFont);
 	
-	CCamera::Free();
+	m_pVergos = nullptr;
 }

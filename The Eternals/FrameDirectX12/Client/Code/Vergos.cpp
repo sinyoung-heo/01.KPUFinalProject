@@ -16,6 +16,7 @@
 #include "VergosHpGauge.h"
 #include "BossDecal.h"
 #include "DynamicCamera.h"
+#include "FadeInOut.h"
 
 CVergos::CVergos(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -101,14 +102,21 @@ _int CVergos::Update_GameObject(const _float& fTimeDelta)
 			m_pHpGaugeRoot->Set_IsChildActive(false);
 		}
 
-		m_iSNum = -1;
+		m_iSNum            = -1;
 		m_bIsStartDissolve = false;
-		m_fDissolve = -0.05f;
+		m_fDissolve        = -0.05f;
 		m_bIsResetNaviMesh = false;
-
 		m_bIsCameraShaking = false;
+		m_bIsSpawn         = false;
+		m_bIsSettingCamera = false;
+		m_bIsFadeInOut     =  false;
 
-		m_bIsSpawn = false;
+		CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
+		if (nullptr != pDynamicCamera)
+		{
+			pDynamicCamera->Set_CameraAtParentMatrix(nullptr);
+			pDynamicCamera->Set_Vergos(nullptr);
+		}
 
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterVergosPool(), m_uiInstanceIdx);
 
@@ -482,10 +490,10 @@ void CVergos::Set_ConstantTableShadowDepth()
 
 void CVergos::Set_ConstantTableMiniMap()
 {
-	m_pTransMiniMap->m_vPos.x = m_pTransCom->m_vPos.x + 7.0f;
-	m_pTransMiniMap->m_vPos.z = m_pTransCom->m_vPos.z + -31.0f;
+	m_pTransMiniMap->m_vPos.x = m_pTransCom->m_vPos.x + 8.5f;
+	m_pTransMiniMap->m_vPos.z = m_pTransCom->m_vPos.z + -22.0f;
 	m_pTransMiniMap->m_vAngle = _vec3(90.0f, 0.0f, 0.0f);
-	m_pTransMiniMap->m_vScale = _vec3(12.0f, 12.0f, 12.0f);
+	m_pTransMiniMap->m_vScale = _vec3(20.0f, 20.0f, 20.0f);
 	m_pTransMiniMap->Update_Component(0.16f);
 
 	/*__________________________________________________________________________________________________________
@@ -545,6 +553,18 @@ void CVergos::SetUp_Dissolve(const _float& fTimeDelta)
 	if (m_bIsStartDissolve)
 	{
 		m_fDissolve += fTimeDelta * 0.33f;
+
+		if (!m_bIsFadeInOut)
+		{
+			m_bIsFadeInOut = true;
+
+			Engine::CGameObject* pGameObject = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
+			if (nullptr != pGameObject)
+			{
+				static_cast<CFadeInOut*>(pGameObject)->Set_FadeInOutEventType(EVENT_TYPE::EVENT_CINEMATIC_VERGOS_DEATH);
+				m_pObjectMgr->Add_GameObject(L"Layer_UI", L"FadeInOut", pGameObject);
+			}
+		}
 
 		if (m_fDissolve >= 1.0f)
 		{
@@ -803,6 +823,23 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 		case Vergos::A_DEATH:
 		{
+			if (!m_bIsSettingCamera)
+			{
+				m_bIsSettingCamera = true;
+
+				g_bIsCinemaVergosDeath = true;
+				m_bIsCameraShaking = false;
+
+				m_pRenderer->Set_IsRenderAlphaGroup(false);
+
+				CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
+				if (nullptr != pDynamicCamera)
+				{
+					pDynamicCamera->Set_CameraState(CAMERA_STATE::CINEMATIC_VERGOS_DEATH);
+					m_pDynamicCamera->SetUp_ThirdPersonViewOriginData();
+				}
+			}
+
 			m_bIsSpawn = true;
 			m_uiAnimIdx = Vergos::A_DEATH;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -1120,6 +1157,22 @@ void CVergos::SetUp_CameraShaking()
 			tCameraShakingDesc.vMin = _vec2(-20.0f, -20.0f);
 			tCameraShakingDesc.vMax = _vec2(20.0f, 20.0f);
 			tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 12.5f;
+			m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
+		}
+	}
+		break;
+
+	case Vergos::DEATH:
+	{
+		if (!m_bIsCameraShaking && m_ui3DMax_CurFrame >= VERGOS_DEATH_HEAD_DOWN_CAMERA_SHAKING_TICK)
+		{
+			m_bIsCameraShaking = true;
+
+			CAMERA_SHAKING_DESC tCameraShakingDesc;
+			tCameraShakingDesc.fUpdateShakingTime = 0.8f;
+			tCameraShakingDesc.vMin = _vec2(-150.0f, -150.0f);
+			tCameraShakingDesc.vMax = _vec2(150.0f, 150.0f);
+			tCameraShakingDesc.tOffsetInterpolationDesc.interpolation_speed = 5.0f;
 			m_pDynamicCamera->Set_CameraShakingDesc(tCameraShakingDesc);
 		}
 	}

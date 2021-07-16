@@ -72,7 +72,7 @@ _int CGameUIChild::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 	
-	if (g_bIsCinemaStart)
+	if (g_bIsCinemaStart || g_bIsCinemaVergosDeath)
 		return NO_EVENT;
 	if (m_bIsDead)
 		return DEAD_OBJ;

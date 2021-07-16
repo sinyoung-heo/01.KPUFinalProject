@@ -199,8 +199,11 @@ _int CPCOthersArcher::Update_GameObject(const _float& fTimeDelta)
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+	if (!g_bIsCinemaVergosDeath)
+		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_NONALPHA, this), -1);
+	
 	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MINIMAP, this), -1);
+	
 	if (m_bIsThisPlayerPartyMember)
 	{
 		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_EDGE, this), -1);
@@ -217,7 +220,7 @@ _int CPCOthersArcher::Update_GameObject(const _float& fTimeDelta)
 		SetUp_CollisionArrow(fTimeDelta);
 
 	// Weapon Update
-	if (m_pWeapon != nullptr)
+	if (m_pWeapon != nullptr && !g_bIsCinemaVergosDeath)
 		m_pWeapon->Update_GameObject(fTimeDelta);
 
 	return NO_EVENT;

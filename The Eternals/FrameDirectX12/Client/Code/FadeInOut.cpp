@@ -6,6 +6,10 @@
 #include "DirectInput.h"
 #include "DynamicCamera.h"
 #include "CinemaMgr.h"
+#include "ShaderMgr.h"
+#include "QuestMgr.h"
+#include "PartySystemMgr.h"
+#include "Renderer.h"
 
 CFadeInOut::CFadeInOut(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -26,7 +30,8 @@ void CFadeInOut::Set_FadeInOutEventType(const EVENT_TYPE& eEventType)
 	else if (EVENT_TYPE::FADE_OUT == eEventType ||
 			 EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN == eEventType ||
 			 EVENT_TYPE::SCENE_CAHNGE_LOGO_STAGE == eEventType ||
-			 EVENT_TYPE::EVENT_CINEMATIC_ENDING == eEventType)
+			 EVENT_TYPE::EVENT_CINEMATIC_ENDING == eEventType ||
+			 EVENT_TYPE::EVENT_CINEMATIC_VERGOS_DEATH) 
 	{
 		m_fAlpha = 0.0f;
 		m_bIsCinematicEnding = false;
@@ -282,6 +287,67 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 				m_fAlpha = 0.0f;
 				m_bIsCinematicEnding = false;
 				m_bIsReturn = true;
+			}
+		}
+	}
+	else if (EVENT_TYPE::EVENT_CINEMATIC_VERGOS_DEATH == m_eEventType)
+	{
+		if (!m_bIsCinematicEnding)
+		{
+			m_fAlpha += fTimeDelta * 0.5f;
+			if (m_fAlpha > 1.0f)
+			{
+				m_fAlpha = 1.0f;
+				m_bIsCinematicEnding = true;
+
+				g_bIsCinemaStart       = false;
+				g_bIsCinemaVergosDeath = false;
+
+				Engine::CShaderMgr::Get_Instance()->Set_DOF(false);
+				Engine::CShaderMgr::Get_Instance()->Set_IsOnShader(L"SSAO", true);
+
+				Engine::CRenderer::Get_Instance()->Set_IsRenderAlphaGroup(true);
+
+				CQuestMgr::Get_Instance()->Set_IsAcceptQuest(false);
+				CQuestMgr::Get_Instance()->Set_IsCompleteSubQuest(false);
+				CQuestMgr::Get_Instance()->Set_IsCompleteMainQuest(false);
+				CQuestMgr::Get_Instance()->Get_SubQuestMiniCanvas()->Set_IsActive(false);
+				CQuestMgr::Get_Instance()->Get_SubQuestMiniCanvas()->Set_IsChildActive(false);
+				CQuestMgr::Get_Instance()->Get_MainQuestMiniCanvas()->Set_IsActive(false);
+				CQuestMgr::Get_Instance()->Get_MainQuestMiniCanvas()->Set_IsChildActive(false);
+
+				CCinemaMgr::Get_Instance()->Reset_LakanPosition();
+				CCinemaMgr::Get_Instance()->Reset_PrionBerserkerPosition();
+				CCinemaMgr::Get_Instance()->Reset_Vergos();
+				CCinemaMgr::Get_Instance()->Set_IsCancleCinematic(false);
+
+				CPartySystemMgr::Get_Instance()->Reset_UIPartyList();
+
+				// Set DynamicCamera State
+				CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
+				pDynamicCamera->Set_CameraState(CAMERA_STATE::THIRD_PERSON_VIEW);
+				pDynamicCamera->Set_CameraAtParentMatrix(nullptr);
+				pDynamicCamera->Set_ResetFovY();
+				pDynamicCamera->Set_IsCinematicEnding(false);
+				pDynamicCamera->Set_IsSettingCameraCinematicValue(false);
+			}
+		}
+		else
+		{
+			m_fAlpha -= fTimeDelta * 0.5f;
+			if (m_fAlpha < 0.0f)
+			{
+				m_fAlpha = 0.0f;
+				m_bIsCinematicEnding = false;
+				m_bIsReturn = true;
+
+				Engine::CGameObject* pGameObject = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());
+				if (nullptr != pGameObject)
+				{
+					static_cast<CFadeInOut*>(pGameObject)->Set_FadeInOutEventType(EVENT_TYPE::SCENE_CHANGE_FADEOUT_FADEIN);
+					static_cast<CFadeInOut*>(pGameObject)->Set_CurrentStageID(STAGE_VELIKA);
+					m_pObjectMgr->Add_GameObject(L"Layer_UI", L"StageChange_FadeInOut", pGameObject);
+				}
 			}
 		}
 	}

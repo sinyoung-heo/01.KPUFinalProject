@@ -32,6 +32,15 @@ void CPartySystemMgr::SetUp_ThisPlayerPartyList()
 	}
 }
 
+void CPartySystemMgr::Reset_UIPartyList()
+{
+	for (auto& pPartyInfoCanvas : m_vecPartyInfoListCanvas)
+	{
+		pPartyInfoCanvas->Set_IsActive(false);
+		pPartyInfoCanvas->Set_IsChildActive(false);
+	}
+}
+
 void CPartySystemMgr::Update_ThisPlayerPartyList()
 {
 	Engine::CGameObject* pThisPlayer = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");

@@ -36,6 +36,9 @@ private:
 	virtual ~CVergos() = default;
 
 public:
+	Engine::CMesh* Get_MeshComponent() { return m_pMeshCom; }
+	const _uint& Get_CurAnimationFrame() { return m_ui3DMax_CurFrame; }
+
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
 									 wstring wstrNaviMeshTag,
@@ -124,6 +127,9 @@ private:
 
 	// Camera Shaking
 	_bool m_bIsCameraShaking = false;
+
+	_bool m_bIsSettingCamera = false;
+	_bool m_bIsFadeInOut     = false;
 
 	// Spawn
 	_bool m_bIsSpawn = false;

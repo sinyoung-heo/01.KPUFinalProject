@@ -1310,6 +1310,10 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 	else if (packet->mon_num == MON_VERGOS)
 	{
 		pInstance = Pop_Instance(m_pInstancePoolMgr->Get_MonsterVergosPool());
+
+		CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
+		if (nullptr != pDynamicCamera)
+			pDynamicCamera->Set_Vergos(static_cast<CVergos*>(pInstance));
 	}
 	
 	if (nullptr != pInstance)

@@ -318,6 +318,10 @@ void CRenderer::Render_Blend()
 
 void CRenderer::Render_EdgeObject(const _float& fTimeDelta)
 {
+	if (!m_bIsRenderAlpha)
+	{
+		m_RenderList[RENDER_EDGE].clear();
+	}
 
 	m_pTargetEdgeObject->SetUp_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
 
@@ -329,6 +333,10 @@ void CRenderer::Render_EdgeObject(const _float& fTimeDelta)
 
 void CRenderer::Render_CrossFilter(const _float& fTimeDelta)
 {
+	if (!m_bIsRenderAlpha)
+	{
+		m_RenderList[RENDER_CROSSFILTER].clear();
+	}
 
 	m_pTargetCrossFilter->SetUp_OnGraphicDevice(TARGETID::TYPE_SHADOWDEPTH);
 
@@ -513,6 +521,13 @@ void CRenderer::Render_SSAO()
 
 void CRenderer::Render_Alpha(const _float& fTimeDelta)
 {
+	if (!m_bIsRenderAlpha)
+	{
+		m_RenderList[RENDER_ALPHA].clear();
+		m_RenderList[RENDER_MAGICCIRCLE].clear();
+		m_RenderList[RENDER_DYNAMICEFFECT].clear();
+	}
+
 	sort(m_RenderList[RENDER_ALPHA].begin(), m_RenderList[RENDER_ALPHA].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
 		{
 			return pSour->Get_DepthOfView() > pDest->Get_DepthOfView();

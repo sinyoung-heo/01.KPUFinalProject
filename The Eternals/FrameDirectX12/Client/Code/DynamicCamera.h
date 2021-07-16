@@ -47,6 +47,8 @@ typedef struct tagCameraOriginDesc
 
 } CAMERA_ORIGIN_DESC;
 
+class CVergos;
+
 class CDynamicCamera final : public Engine::CCamera
 {
 private:
@@ -55,6 +57,7 @@ private:
 
 public:
 	void Set_Target(Engine::CGameObject* pTarget)							{ m_pTarget = pTarget; }
+	void Set_Vergos(CVergos* pVergos)										{ m_pVergos = pVergos; }
 	void Set_CameraAtParentMatrix(Engine::SKINNING_MATRIX* pSkinningMatrix)	{ m_pCameraAtSkinningMatrix = pSkinningMatrix; }
 	void Set_CameraState(const CAMERA_STATE& eState)						{ m_eCameraState = eState; }
 	void Set_CameraStateCinematicEnding()									{ if (m_eCameraState != CAMERA_STATE::CINEMATIC_ENDING) m_eCameraState = CAMERA_STATE::CINEMATIC_ENDING; }
@@ -90,6 +93,7 @@ private:
 	void SetUp_DynamicCameraCinematicPrionBerserkerRush(const _float& fTimeDelta);
 	void SetUp_DynamicCameraCinematicLakanRush(const _float& fTimeDelta);
 	void SetUp_DynamicCameraCinematicEnding(const _float& fTimeDelta);
+	void SetUp_DynamicCameraCinematicVergosDeath(const _float& fTimeDelta);
 	void SetUp_CameraShaking(const _float& fTimeDelta);
 	void SetUp_CameraZoom(const _float& fTimeDelta);
 	void SetUp_CameraFont(const _float& fTimeDelta);
@@ -120,6 +124,8 @@ private:
 	Engine::LINEAR_INTERPOLATION_DESC<_vec3> m_vAtInterpolationDesc;
 	_float m_fCameraTime       = 0.0f;
 	_float m_fUpdateCameraTime = 2.5f;
+
+	CVergos* m_pVergos = nullptr;
 
 	/*__________________________________________________________________________________________________________
 	[ Font ]

@@ -25,6 +25,7 @@ extern _bool g_bIsOpenShop;
 extern _bool g_bIsChattingInput;
 extern _bool g_bIsStartSkillCameraEffect;
 extern _bool g_bIsCinemaStart;
+extern _bool g_bIsCinemaVergosDeath;
 
 // Loading
 extern _bool g_bIsLoadingFinish;
