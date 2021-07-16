@@ -34,6 +34,7 @@ void process_logoutForEquipment(const int& id, const char& chItemSlotType, const
 void process_use_potion(const int& id, const bool& bIsPotionHP);
 void process_cinema_end(const int& id);
 void process_raid_end(const int& id);
+void process_hurt_ai();
 
 /* 패킷 관리 및 처리 함수 */
 void process_packet(int id);													// 패킷 처리 함수 (모든 컨텐츠 처리)

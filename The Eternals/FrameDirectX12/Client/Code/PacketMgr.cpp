@@ -530,10 +530,14 @@ void CPacketMgr::Consume_Point(sc_packet_update_party* packet)
 void CPacketMgr::BuffToUpgrade(sc_packet_buff* packet)
 {
 	Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
-	pThisPlayer->Set_Buff(packet->hp, packet->maxHp, packet->mp, packet->maxMp);
 
+	if (packet->priest_id != g_iSNum)
+	{
+		pThisPlayer->Set_Buff(packet->hp, packet->maxHp, packet->mp, packet->maxMp);
+		pThisPlayer->Update_PartyMember(packet->priest_id, packet->priest_hp, packet->priest_maxHp, packet->priest_mp, packet->priest_maxMp);
+	}
+	
 	pThisPlayer->Buff_AllPartyMemeber(packet->animIdx);
-	pThisPlayer->Update_PartyMember(packet->priest_id, packet->priest_hp, packet->priest_maxHp, packet->priest_mp, packet->priest_maxMp);
 	m_pPartySystemMgr->Update_ThisPlayerPartyList();
 }
 

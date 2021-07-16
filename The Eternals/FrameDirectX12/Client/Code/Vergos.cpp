@@ -965,7 +965,7 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 					static_cast<CBossDecal*>(pGameObj)->Set_CreateInfo(_vec3(0.5f, 0.f, 0.5f), _vec3(0.f, -180.f, 180.f),
 						CEffectMgr::Get_Instance()->InterPolated_YOffset(_vec3(398.f, 0.3f, 367.f)));
 					Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BossDecal", pGameObj), E_FAIL);
-			}
+			}	
 		}
 	}
 	else if (m_uiAnimIdx == Vergos::BLOW_LEFT || m_uiAnimIdx == Vergos::BLOW_RIGHT)
@@ -1049,8 +1049,8 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 
 			CEffectMgr::Get_Instance()->Effect_RectDecal(_vec3(395.f,0.3f,232.f), m_pTransCom->m_vAngle.y);
 
-			CEffectMgr::Get_Instance()->Effect_BossIceStorm(_vec3(400.f, 0.3f, 365.f),_vec3(0.1,0,-1) );
-			CEffectMgr::Get_Instance()->Effect_BossIceStorm(_vec3(378.f, 0.3f, 358.f), _vec3(-0.1, 0, -1));
+			CEffectMgr::Get_Instance()->Effect_BossIceStorm(_vec3(400.f, 0.3f, 365.f), _vec3(0.1f, 0.f, -1.f));
+			CEffectMgr::Get_Instance()->Effect_BossIceStorm(_vec3(378.f, 0.3f, 358.f), _vec3(-0.1f, 0.f, -1.f));
 		}
 	}
 	else if (m_uiAnimIdx == Vergos::A_BREATH_FIRE)

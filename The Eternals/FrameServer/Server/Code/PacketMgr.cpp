@@ -1774,7 +1774,7 @@ void process_buff(const int& id, cs_packet_attack* p)
 	{
 		pPlayer->m_iMp -= Priest::AMOUNT_HEAL;
 
-		pPlayer->m_iHp += Priest::PLUS_HP;
+		pPlayer->m_iHp += (int)((float)pPlayer->m_iMaxHp * Priest::PLUS_HP / PERCENT);
 
 		if (pPlayer->m_iHp >= pPlayer->m_iMaxHp)
 			pPlayer->m_iHp = pPlayer->m_iMaxHp;
@@ -1783,7 +1783,7 @@ void process_buff(const int& id, cs_packet_attack* p)
 
 	case Priest::MP_CHARGE_START:
 	{
-		pPlayer->m_iMp += Priest::PLUS_MP;
+		pPlayer->m_iMp += (int)((float)pPlayer->m_iMaxMp * Priest::PLUS_MP / PERCENT);
 
 		if (pPlayer->m_iMp >= pPlayer->m_iMaxMp)
 			pPlayer->m_iMp = pPlayer->m_iMaxMp;
@@ -1799,8 +1799,18 @@ void process_buff(const int& id, cs_packet_attack* p)
 	{
 		for (auto& member : *CObjMgr::GetInstance()->Get_PARTYLIST(pPlayer->m_iPartyNumber))
 		{
-			CPlayer* pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", member));
-			if (pOther == nullptr || !pOther->m_bIsConnect || !pOther->m_bIsPartyState) continue;
+			CPlayer* pOther = nullptr;
+			if (member >= AI_NUM_START)
+			{
+				// 수정 필요 : AI 클래스로
+				pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", member));
+				if (pOther == nullptr || !pOther->m_bIsConnect || !pOther->m_bIsPartyState) continue;
+			}
+			else
+			{
+				pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", member));
+				if (pOther == nullptr || !pOther->m_bIsConnect || !pOther->m_bIsPartyState) continue;
+			}
 
 			if (member != id)
 			{
@@ -1808,7 +1818,7 @@ void process_buff(const int& id, cs_packet_attack* p)
 				{
 				case Priest::HEAL_START:
 				{
-					pOther->m_iHp += Priest::PLUS_HP;
+					pOther->m_iHp += (int)((float)pOther->m_iMaxHp * Priest::PLUS_HP / PERCENT);
 
 					if (pOther->m_iHp >= pOther->m_iMaxHp)
 						pOther->m_iHp = pOther->m_iMaxHp;
@@ -1817,7 +1827,7 @@ void process_buff(const int& id, cs_packet_attack* p)
 
 				case Priest::MP_CHARGE_START:
 				{
-					pOther->m_iMp += Priest::PLUS_MP;
+					pOther->m_iMp += (int)((float)pOther->m_iMaxMp * Priest::PLUS_MP / PERCENT);
 
 					if (pOther->m_iMp >= pOther->m_iMaxMp)
 						pOther->m_iMp = pOther->m_iMaxMp;
@@ -1826,7 +1836,8 @@ void process_buff(const int& id, cs_packet_attack* p)
 				}
 			}	
 			// 파티원 버프 능력치 전송
-			pPlayer->send_buff_stat(member, p->animIdx, pOther->m_iHp, pOther->m_iMaxHp, pOther->m_iMp, pOther->m_iMaxMp);
+			if (member < AI_NUM_START)
+				pPlayer->send_buff_stat(member, p->animIdx, pOther->m_iHp, pOther->m_iMaxHp, pOther->m_iMp, pOther->m_iMaxMp);
 		}
 	}
 }
@@ -2493,6 +2504,17 @@ void process_raid_end(const int& id)
 	if (CObjMgr::GetInstance()->Get_RAIDLIST()->size() < 1)
 	{
 		add_timer(g_iVergosServerNum, OP_MODE_RAID_END, system_clock::now() + 1s);
+	}
+}
+
+void process_hurt_ai()
+{
+	auto& iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+	auto& iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
+	for (iter_begin; iter_begin != iter_end; ++iter_begin)
+	{
+		if (iter_begin->second->Get_IsConnected() == false) continue;
+		static_cast<CAi*>(iter_begin->second)->Hurt_AI();
 	}
 }
 
