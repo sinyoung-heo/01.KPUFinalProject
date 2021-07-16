@@ -27,6 +27,7 @@ public:
 public:
 	void	Ready_AI(const char& chJob, const char& chWeaponType, const char& chStageID, const _vec3& vPos);
 	int		Update_AI(const float& fTimeDelta);
+	void	Hurt_AI();
 	void	Release_AI();
 
 public:
@@ -96,6 +97,7 @@ public:
 	void	send_AI_attackStop_packet(const int& to_client);
 	void	send_enter_party(const int& to_client);
 	void	send_leave_party_ai(const int& to_client);
+	void	send_update_party(const int& to_client);
 
 public:
 	virtual DWORD				Release();

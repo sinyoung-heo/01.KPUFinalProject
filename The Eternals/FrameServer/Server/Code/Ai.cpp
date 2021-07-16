@@ -144,6 +144,28 @@ int CAi::Update_AI(const float& fTimeDelta)
 	return NO_EVENT;
 }
 
+void CAi::Hurt_AI()
+{
+	random_device					rd;
+	default_random_engine			dre{ rd() };
+	uniform_int_distribution<int>	HP_Percent{ 1, 5 };
+	uniform_int_distribution<int>	MP_Percent{ 0, 5 };
+	
+	m_iHp -= (int)((float)m_iMaxHp * (float)HP_Percent(dre) / PERCENT);
+	m_iMp -= (int)((float)m_iMaxMp * (float)MP_Percent(dre) / PERCENT);
+
+	if (m_iHp <= 0) m_iHp = ZERO_HP;
+	if (m_iMp <= 0) m_iMp = ZERO_HP;
+
+	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
+	{
+		CPlayer* pPlayer = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", raid));
+		if (pPlayer == nullptr || pPlayer->m_bIsPartyState == false) continue;
+
+		send_update_party(raid);
+	}
+}
+
 void CAi::nonActive_AI()
 {
 	if (m_status != ST_NONACTIVE)
@@ -1376,6 +1398,8 @@ void CAi::reset_ai()
 
 	m_vPos				= m_vOriPos;
 	m_fLookAngle		= 0.f;
+	m_iHp				= m_iMaxHp;
+	m_iMp				= m_iMaxMp;
 
 	m_uiAnimIdx			= Gladiator::ATTACK_WAIT;
 	m_iAniIdx			= Gladiator::ATTACK_WAIT;
@@ -1644,6 +1668,22 @@ void CAi::send_leave_party_ai(const int& to_client)
 	p.size	= sizeof(p);
 	p.type	= SC_PACKET_LEAVE_PARTY;
 	p.id	= m_sNum;
+
+	send_packet(to_client, &p);
+}
+
+void CAi::send_update_party(const int& to_client)
+{
+	sc_packet_update_party p;
+
+	p.size	= sizeof(p);
+	p.type	= SC_PACKET_UPDATE_PARTY;
+	p.id	= m_sNum;
+
+	p.hp	= m_iHp;
+	p.maxHp = m_iMaxHp;
+	p.mp	= m_iMp;
+	p.maxMp = m_iMaxMp;
 
 	send_packet(to_client, &p);
 }

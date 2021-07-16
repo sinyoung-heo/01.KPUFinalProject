@@ -6,6 +6,7 @@
 #include "Renderer.h"
 #include "Font.h"
 #include <random>
+#include "..\..\Client\Header\PriestAnimation.h"
 
 USING(Engine)
 
@@ -301,7 +302,8 @@ void CGameObject::Buff_AllPartyMemeber(const int& buff)
 		// hp
 		case 9:
 		{
-			p.second.iHp += 100;
+			p.second.iHp += (int)((float)p.second.iMaxHp * Priest::PLUS_HP / 100.f);
+
 			if (p.second.iHp >= p.second.iMaxHp)
 				p.second.iHp = p.second.iMaxHp;
 		}
@@ -310,7 +312,8 @@ void CGameObject::Buff_AllPartyMemeber(const int& buff)
 		// mp
 		case 12:
 		{
-			p.second.iMp += 50;
+			p.second.iMp += (int)((float)p.second.iMaxMp * Priest::PLUS_MP / 100.f);
+
 			if (p.second.iMp >= p.second.iMaxMp)
 				p.second.iMp = p.second.iMaxMp;
 		}
