@@ -1796,51 +1796,7 @@ void process_buff(const int& id, cs_packet_attack* p)
 
 	/* 파티 활동 중일 경우 */
 	if (pPlayer->m_bIsPartyState)
-	{
-		for (auto& member : *CObjMgr::GetInstance()->Get_PARTYLIST(pPlayer->m_iPartyNumber))
-		{
-			CPlayer* pOther = nullptr;
-			
-			if (member >= AI_NUM_START)
-			{
-				// 수정 필요 : AI 클래스로
-				pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", member));
-				if (pOther == nullptr || !pOther->m_bIsConnect || !pOther->m_bIsPartyState) continue;
-			}
-			else
-			{
-				pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", member));
-				if (pOther == nullptr || !pOther->m_bIsConnect || !pOther->m_bIsPartyState) continue;
-			}
-
-			if (member != id)
-			{
-				switch (p->animIdx)
-				{
-				case Priest::HEAL_START:
-				{
-					pOther->m_iHp += (int)((float)pOther->m_iMaxHp * Priest::PLUS_HP / PERCENT);
-
-					if (pOther->m_iHp >= pOther->m_iMaxHp)
-						pOther->m_iHp = pOther->m_iMaxHp;
-				}
-				break;
-
-				case Priest::MP_CHARGE_START:
-				{
-					pOther->m_iMp += (int)((float)pOther->m_iMaxMp * Priest::PLUS_MP / PERCENT);
-
-					if (pOther->m_iMp >= pOther->m_iMaxMp)
-						pOther->m_iMp = pOther->m_iMaxMp;
-				}
-				break;
-				}
-			}	
-			// 파티원 버프 능력치 전송
-			if (member < AI_NUM_START)
-				pPlayer->send_buff_stat(member, p->animIdx, pOther->m_iHp, pOther->m_iMaxHp, pOther->m_iMp, pOther->m_iMaxMp);
-		}
-	}
+		pPlayer->Heal_PartyMember(p->animIdx);	
 }
 
 void process_stance_change(int id, const bool& stance)

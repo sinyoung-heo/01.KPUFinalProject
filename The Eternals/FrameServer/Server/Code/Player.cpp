@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Player.h"
+#include "Ai.h"
 
 CPlayer::CPlayer()
     :m_iLevel(0), m_iHp(0), m_iMaxHp(0),
@@ -15,6 +16,74 @@ CPlayer::CPlayer()
 
 CPlayer::~CPlayer()
 {
+}
+
+void CPlayer::Heal_PartyMember(const int& ani)
+{
+    for (auto& member : *CObjMgr::GetInstance()->Get_PARTYLIST(m_iPartyNumber))
+    {
+        if (member >= AI_NUM_START)
+        {
+            CAi* pOther = nullptr;
+            pOther = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", member));
+            if (pOther == nullptr || !pOther->m_bIsConnect || !pOther->m_bIsPartyState) continue;
+
+            if (member != m_sNum)
+            {
+                switch (ani)
+                {
+                case Priest::HEAL_START:
+                {
+                    pOther->m_iHp += (int)((float)pOther->m_iMaxHp * Priest::PLUS_HP / PERCENT);
+
+                    if (pOther->m_iHp >= pOther->m_iMaxHp)
+                        pOther->m_iHp = pOther->m_iMaxHp;
+                }
+                break;
+
+                case Priest::MP_CHARGE_START:
+                {
+                    pOther->m_iMp += (int)((float)pOther->m_iMaxMp * Priest::PLUS_MP / PERCENT);
+
+                    if (pOther->m_iMp >= pOther->m_iMaxMp)
+                        pOther->m_iMp = pOther->m_iMaxMp;
+                }
+                break;
+                }
+            }
+        }
+        else
+        {
+            CPlayer* pOther = nullptr;
+            pOther = static_cast<CPlayer*>(CObjMgr::GetInstance()->Get_GameObject(L"PLAYER", member));
+            if (pOther == nullptr || !pOther->m_bIsConnect || !pOther->m_bIsPartyState) continue;
+
+            if (member != m_sNum)
+            {
+                switch (ani)
+                {
+                case Priest::HEAL_START:
+                {
+                    pOther->m_iHp += (int)((float)pOther->m_iMaxHp * Priest::PLUS_HP / PERCENT);
+
+                    if (pOther->m_iHp >= pOther->m_iMaxHp)
+                        pOther->m_iHp = pOther->m_iMaxHp;
+                }
+                break;
+
+                case Priest::MP_CHARGE_START:
+                {
+                    pOther->m_iMp += (int)((float)pOther->m_iMaxMp * Priest::PLUS_MP / PERCENT);
+
+                    if (pOther->m_iMp >= pOther->m_iMaxMp)
+                        pOther->m_iMp = pOther->m_iMaxMp;
+                }
+                break;
+                }
+            }
+            send_buff_stat(member, ani, pOther->m_iHp, pOther->m_iMaxHp, pOther->m_iMp, pOther->m_iMaxMp);
+        }
+    }
 }
 
 bool CPlayer::Is_Full_Inventory(const int& count)

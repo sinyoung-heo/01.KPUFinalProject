@@ -31,8 +31,8 @@ namespace Priest
 	constexpr float MAX_SPEED		= 5.0f;
 	constexpr float MOVE_STOP_SPEED	= 3.0f;
 
-	constexpr float	PLUS_HP			= 20;
-	constexpr float	PLUS_MP			= 10;
+	constexpr float	PLUS_HP			= 10;
+	constexpr float	PLUS_MP			= 5;
 
 	// 스킬 필요 MP
 	constexpr int	AMOUNT_AURA		= 70;

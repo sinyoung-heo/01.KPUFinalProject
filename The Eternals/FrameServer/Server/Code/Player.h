@@ -8,6 +8,9 @@ public:
 	virtual ~CPlayer();
 
 public:
+	void						Heal_PartyMember(const int& ani);
+
+public:
 	/* Inventory */
 	void						Load_InventoryFromDB(const GAMEITEM& item, const int& itemNumber, const int& count);
 	const int&					Get_ItemCount(const int& itemNumber, ITEM eItemType);
