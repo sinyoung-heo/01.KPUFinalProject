@@ -28,12 +28,8 @@ void Ready_ServerManager();			// 서버 매니저 초기화
 void Ready_Server();				// 서버 메인 루프 초기화
 void Release_Server();				// 서버 종료
 
-void Initialize_NPC();				// Create Stage Velika NPC 
-void Delete_NPC();					// Delete All NPC
-void Delete_AI();
-
-void Initialize_Monster();			// Create Monster(test)
-void Delete_Monster();				// Delete All MONSTER
+void Initialize_ServerObject();
+void Delete_ServerObject();
 
 void add_new_client(SOCKET ns);		// 새로운 유저 접속 함수
 void disconnect_client(const int& id);		// 유저 접속 종료 함수
@@ -67,7 +63,7 @@ int main()
 
 	/* Game Logic Thread 소멸 */
 	gameLogic_thread.join();
-
+	
 	Release_Server();
 	closesocket(g_hListenSock);
 	WSACleanup();
@@ -98,14 +94,8 @@ void Ready_Server()
 	/* Init Server Managers */
 	Ready_ServerManager();
 
-	/* Create NPC */
-	Initialize_NPC();
-
-	/* Create Monster */
-	Initialize_Monster();
-
-	/* Create AI */
-	CObjMgr::GetInstance()->Create_AiPlayer();
+	/* Create Server Object */
+	Initialize_ServerObject();
 
 	std::wcout.imbue(std::locale("korean"));
 
@@ -169,62 +159,55 @@ void Release_Server()
 	exit(1);
 }
 
-void Initialize_NPC()
+void Initialize_ServerObject()
 {
+	// normal npc & merchant npc & quest npc
 	CObjMgr::GetInstance()->Create_StageVelikaNPC();
-
-#ifdef TEST
-	cout << "NPC Initialize Finish.\n";
-#endif
-}
-
-void Delete_NPC()
-{
-	auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"NPC")->begin();
-	auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"NPC")->end();
-	
-	for (iter_begin; iter_begin != iter_end;)
-	{
-		CObjPoolMgr::GetInstance()->return_Object(L"NPC", iter_begin->second);
-		CObjMgr::GetInstance()->Delete_GameObject(L"NPC", iter_begin->second);
-
-		iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"NPC")->begin();
-		iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"NPC")->end();
-	}
-}
-
-void Delete_AI()
-{
-	auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
-	auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
-
-	for (iter_begin; iter_begin != iter_end;)
-	{
-		static_cast<CAi*>(iter_begin->second)->Release_AI();
-
-		iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
-		iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
-	}
-}
-
-void Initialize_Monster()
-{
+	// monster
 	CObjMgr::GetInstance()->Create_StageBeachMonster();
 	CObjMgr::GetInstance()->Create_StageWinterMonster();
+	// ai
+	CObjMgr::GetInstance()->Create_AiPlayer();
 }
 
-void Delete_Monster()
+void Delete_ServerObject()
 {
-	auto iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"MONSTER")->begin();
-	auto iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"MONSTER")->end();
+	// npc
+	auto& iter_begin_npc = CObjMgr::GetInstance()->Get_OBJLIST(L"NPC")->begin();
+	auto& iter_end_npc = CObjMgr::GetInstance()->Get_OBJLIST(L"NPC")->end();
 
-	for (iter_begin; iter_begin != iter_end;)
+	for (iter_begin_npc; iter_begin_npc != iter_end_npc;)
 	{
-		CObjPoolMgr::GetInstance()->return_Object(L"MONSTER", iter_begin->second);
-		CObjMgr::GetInstance()->Delete_GameObject(L"MONSTER", iter_begin->second);
+		CObjPoolMgr::GetInstance()->return_Object(L"NPC", iter_begin_npc->second);
+		CObjMgr::GetInstance()->Delete_GameObject(L"NPC", iter_begin_npc->second);
 
-		iter_begin = CObjMgr::GetInstance()->Get_OBJLIST(L"MONSTER")->begin();
-		iter_end = CObjMgr::GetInstance()->Get_OBJLIST(L"MONSTER")->end();
+		iter_begin_npc = CObjMgr::GetInstance()->Get_OBJLIST(L"NPC")->begin();
+		iter_end_npc = CObjMgr::GetInstance()->Get_OBJLIST(L"NPC")->end();
+	}
+
+	// monster 
+	auto& iter_begin_monster = CObjMgr::GetInstance()->Get_OBJLIST(L"MONSTER")->begin();
+	auto& iter_end_monster = CObjMgr::GetInstance()->Get_OBJLIST(L"MONSTER")->end();
+
+	for (iter_begin_monster; iter_begin_monster != iter_end_monster;)
+	{
+		CObjPoolMgr::GetInstance()->return_Object(L"MONSTER", iter_begin_monster->second);
+		CObjMgr::GetInstance()->Delete_GameObject(L"MONSTER", iter_begin_monster->second);
+
+		iter_begin_monster = CObjMgr::GetInstance()->Get_OBJLIST(L"MONSTER")->begin();
+		iter_end_monster = CObjMgr::GetInstance()->Get_OBJLIST(L"MONSTER")->end();
+	}
+
+	// ai
+	auto& iter_begin_ai = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+	auto& iter_end_ai = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
+
+	for (iter_begin_ai; iter_begin_ai != iter_end_ai;)
+	{
+		static_cast<CAi*>(iter_begin_ai->second)->Release_AI();
+
+		iter_begin_ai = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->begin();
+		iter_end_ai = CObjMgr::GetInstance()->Get_OBJLIST(L"AI")->end();
 	}
 }
 
@@ -279,21 +262,21 @@ void add_new_client(SOCKET ns)
 		pNew->m_bIsPartyState	= false;
 		pNew->m_iPartyNumber	= INIT_PARTY_NUMBER;
 
-		pNew->m_iLevel	    = INIT_LEV;
-		pNew->m_iHp		    = INIT_HP;
-		pNew->m_iMaxHp	    = INIT_HP;
-		pNew->m_iMp		    = INIT_MP;
-		pNew->m_iMaxMp	    = INIT_MP;
-		pNew->m_iExp	    = INIT_EXP;
-		pNew->m_iMaxExp     = INIT_MAXEXP;
-		pNew->m_iMinAtt     = INIT_MINATT;
-		pNew->m_iMaxAtt	    = INIT_MAXATT;
-		pNew->m_iMoney		= INIT_MONEY;
-		pNew->m_fSpd	    = INIT_SPEED;
+		pNew->m_iLevel			= INIT_LEV;
+		pNew->m_iHp				= INIT_HP;
+		pNew->m_iMaxHp			= INIT_HP;
+		pNew->m_iMp				= INIT_MP;
+		pNew->m_iMaxMp			= INIT_MP;
+		pNew->m_iExp			= INIT_EXP;
+		pNew->m_iMaxExp			= INIT_MAXEXP;
+		pNew->m_iMinAtt			= INIT_MINATT;
+		pNew->m_iMaxAtt			= INIT_MAXATT;
+		pNew->m_iMoney			= INIT_MONEY;
+		pNew->m_fSpd			= INIT_SPEED;
 
-		pNew->m_vPos	= _vec3(STAGE_VELIKA_X, 0.f, STAGE_VELIKA_Z);
-		pNew->m_vDir	= _vec3(0.f, 0.f, 1.f);
-		pNew->m_vAngle	= _vec3(0.f, 0.f, 0.f);
+		pNew->m_vPos			= _vec3(STAGE_VELIKA_X, 0.f, STAGE_VELIKA_Z);
+		pNew->m_vDir			= _vec3(0.f, 0.f, 1.f);
+		pNew->m_vAngle			= _vec3(0.f, 0.f, 0.f);
 
 		CSectorMgr::GetInstance()->Enter_ClientInSector((int)s_num, (int)(pNew->m_vPos.z / SECTOR_SIZE), (int)(pNew->m_vPos.x / SECTOR_SIZE));
 		CObjMgr::GetInstance()->Add_GameObject(L"PLAYER", pNew, (int)s_num);
@@ -352,7 +335,7 @@ void disconnect_client(const int& id)
 		if (!(CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList().empty()))
 		{
 			// 타 유저의 서버 번호 추출
-			for (auto obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
+			for (auto& obj_num : CSectorMgr::GetInstance()->Get_SectorList()[s.first][s.second].Get_ObjList())
 			{
 				/* 오직 유저들에게만 패킷을 전송 (NPC 제외) */
 				if (false == CObjMgr::GetInstance()->Is_Player(obj_num)) continue;		
@@ -408,9 +391,7 @@ void disconnect_client(const int& id)
 	if (CObjMgr::GetInstance()->Get_OBJLIST(L"PLAYER")->size() <= 0)
 	{
 		g_bIsGameEnd = true;
-		Delete_NPC();
-		Delete_Monster();
-		Delete_AI();
+		Delete_ServerObject();
 		Release_Server();
 	}
 }

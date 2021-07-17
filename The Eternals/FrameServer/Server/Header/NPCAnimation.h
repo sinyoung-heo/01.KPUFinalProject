@@ -7,7 +7,7 @@ namespace NPC_TYPE
 	constexpr int IDLE		= 1;
 	constexpr int WALK		= 2;
 
-	constexpr double TPS	= 4800.0;
+	constexpr float TPS	= 4800.f;
 }
 
 namespace NPC_NORMAL_TYPE

@@ -88,4 +88,3 @@ public:
 	unordered_set<int>		view_list; 
 	mutex					v_lock; 
 };
-
