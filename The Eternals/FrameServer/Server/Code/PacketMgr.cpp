@@ -1689,7 +1689,7 @@ void process_buff(const int& id, cs_packet_attack* p)
 				pMonster->send_Monster_enter_packet(id);
 			}
 			// 새로 시야에 들어온 AI일 경우 처리
-			else if (true == CObjMgr::GetInstance()->Is_Monster(server_num))
+			else if (true == CObjMgr::GetInstance()->Is_AI(server_num))
 			{
 				CAi* pAi = static_cast<CAi*>(CObjMgr::GetInstance()->Get_GameObject(L"AI", server_num));
 				pAi->send_AI_enter_packet(id);
@@ -1800,6 +1800,7 @@ void process_buff(const int& id, cs_packet_attack* p)
 		for (auto& member : *CObjMgr::GetInstance()->Get_PARTYLIST(pPlayer->m_iPartyNumber))
 		{
 			CPlayer* pOther = nullptr;
+			
 			if (member >= AI_NUM_START)
 			{
 				// 수정 필요 : AI 클래스로
