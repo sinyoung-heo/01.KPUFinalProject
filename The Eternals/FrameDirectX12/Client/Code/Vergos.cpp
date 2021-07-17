@@ -1033,6 +1033,22 @@ void CVergos::SetUp_CollisionTick(const _float& fTimeDelta)
 			m_strBone = "Bip01-L-Hand";
 		}
 	}
+	else if (Vergos::BREATH_FIRE == m_uiAnimIdx && m_ui3DMax_CurFrame >= VERGOS_BREATH_FRONT_CAMERA_SHAKING_TICK + 10)
+	{
+		if (!m_bIsCreateCollisionTick)
+		{
+			m_bIsCreateCollisionTick                     = true;
+			m_tCollisionTickDesc.fPosOffset              = 20.0f;
+			m_tCollisionTickDesc.fScaleOffset            = 45.0f;
+			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
+			m_tCollisionTickDesc.fColisionTickUpdateTime = 1.0f / 3.f;
+			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
+			m_tCollisionTickDesc.iCurCollisionTick       = 0;
+			m_tCollisionTickDesc.iMaxCollisionTick       = 4;
+
+			m_strBone = "FxShot";
+		}
+	}
 
 	// Create CollisionTick
 	if (m_bIsCreateCollisionTick &&
@@ -1054,8 +1070,6 @@ void CVergos::SetUp_CollisionTick(const _float& fTimeDelta)
 			}
 
 			// CollisionTick
-			m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
-			m_pTransCom->m_vDir.Normalize();
 			
 			_matrix matBoneFinalTransform = INIT_MATRIX;
 			_matrix matWorld = INIT_MATRIX;
@@ -1069,8 +1083,10 @@ void CVergos::SetUp_CollisionTick(const _float& fTimeDelta)
 									  * pHierarchyDesc->matGlobalTransform;
 				matWorld = matBoneFinalTransform * m_pTransCom->m_matWorld;
 			}
+			_vec3 vDir = _vec3(matWorld._31, matWorld._32, matWorld._33);
+			vDir.Normalize();
 			
-			_vec3 vPos = _vec3(matWorld._41, matWorld._42, matWorld._43) + m_pTransCom->m_vDir * m_tCollisionTickDesc.fPosOffset;
+			_vec3 vPos = _vec3(matWorld._41, matWorld._42, matWorld._43) + vDir * m_tCollisionTickDesc.fPosOffset;
 			vPos.y = 1.f;
 
 			CCollisionTick* pCollisionTick = static_cast<CCollisionTick*>(Pop_Instance(m_pInstancePoolMgr->Get_CollisionTickPool()));
