@@ -141,10 +141,6 @@ _int CVergos::Update_GameObject(const _float& fTimeDelta)
 		m_pNaviMeshCom->Set_CurrentCellIndex(m_pNaviMeshCom->Get_CurrentPositionCellIndex(m_pTransCom->m_vPos));
 	}
 
-	// Create CollisionTick
-	if (m_pMeshCom->Is_BlendingComplete())
-		SetUp_CollisionTick(fTimeDelta);
-
 	SetUp_Dissolve(fTimeDelta);
 
 	// Angle Linear Interpolation
@@ -153,6 +149,10 @@ _int CVergos::Update_GameObject(const _float& fTimeDelta)
 	/* Animation AI */
 	Change_Animation(fTimeDelta);
 	SetUp_CameraShaking();
+
+	// Create CollisionTick
+	if (m_pMeshCom->Is_BlendingComplete())
+		SetUp_CollisionTick(fTimeDelta);
 
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
@@ -606,11 +606,15 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 				m_pHpGaugeRoot->Set_IsChildActive(true);
 			}
 
-			m_bIsCameraShaking  = false;
-			m_bIsCameraShaking2 = false;
-			m_bIsCameraShaking3 = false;
+			m_bIsCreateCollisionTick                     = false;
+			m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
+			m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
+			m_tCollisionTickDesc.fCollisionTickTime      = 0.0f;
 
-			m_bIsCreateCollisionTick = false;
+			m_bIsCameraShaking       = false;
+			m_bIsCameraShaking2      = false;
+			m_bIsCameraShaking3      = false;
+
 			m_uiAnimIdx = Vergos::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
@@ -619,7 +623,6 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 		case Vergos::A_SPAWN:
 		{
 			m_bIsSpawn = true;
-			m_bIsCreateCollisionTick = false;
 
 			if (nullptr != m_pHpGaugeRoot)
 			{
@@ -627,15 +630,19 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 				m_pHpGaugeRoot->Set_IsChildActive(true);
 			}
 
-			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = Vergos::A_SPAWN;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_bIsCameraShaking  = false;
-				m_bIsCameraShaking2 = false;
-				m_bIsCameraShaking3 = false;
+				m_bIsCreateCollisionTick                     = false;
+				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
+				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
+				m_tCollisionTickDesc.fCollisionTickTime      = 0.0f;
+
+				m_bIsCameraShaking       = false;
+				m_bIsCameraShaking2      = false;
+				m_bIsCameraShaking3      = false;
 
 				m_iMonsterStatus = Vergos::A_WAIT;
 				m_uiAnimIdx      = Vergos::A_WAIT;
@@ -652,9 +659,14 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_bIsCameraShaking  = false;
-				m_bIsCameraShaking2 = false;
-				m_bIsCameraShaking3 = false;
+				m_bIsCreateCollisionTick                     = false;
+				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
+				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
+				m_tCollisionTickDesc.fCollisionTickTime      = 0.0f;
+
+				m_bIsCameraShaking       = false;
+				m_bIsCameraShaking2      = false;
+				m_bIsCameraShaking3      = false;
 
 				m_iMonsterStatus	= Vergos::A_WAIT;
 				m_uiAnimIdx			= Vergos::A_WAIT;
@@ -671,9 +683,14 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_bIsCameraShaking  = false;
-				m_bIsCameraShaking2 = false;
-				m_bIsCameraShaking3 = false;
+				m_bIsCreateCollisionTick                     = false;
+				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
+				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
+				m_tCollisionTickDesc.fCollisionTickTime      = 0.0f;
+
+				m_bIsCameraShaking       = false;
+				m_bIsCameraShaking2      = false;
+				m_bIsCameraShaking3      = false;
 
 				m_iMonsterStatus	= Vergos::A_WAIT;
 				m_uiAnimIdx			= Vergos::A_WAIT;
@@ -690,9 +707,14 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_bIsCameraShaking = false;
-				m_bIsCameraShaking2 = false;
-				m_bIsCameraShaking3 = false;
+				m_bIsCreateCollisionTick                     = false;
+				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
+				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
+				m_tCollisionTickDesc.fCollisionTickTime      = 0.0f;
+
+				m_bIsCameraShaking       = false;
+				m_bIsCameraShaking2      = false;
+				m_bIsCameraShaking3      = false;
 
 				m_iMonsterStatus	= Vergos::A_WAIT;
 				m_uiAnimIdx			= Vergos::A_WAIT;
@@ -709,9 +731,14 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_bIsCameraShaking = false;
-				m_bIsCameraShaking2 = false;
-				m_bIsCameraShaking3 = false;
+				m_bIsCreateCollisionTick                     = false;
+				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
+				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
+				m_tCollisionTickDesc.fCollisionTickTime      = 0.0f;
+
+				m_bIsCameraShaking       = false;
+				m_bIsCameraShaking2      = false;
+				m_bIsCameraShaking3      = false;
 
 				m_iMonsterStatus	= Vergos::A_WAIT;
 				m_uiAnimIdx			= Vergos::A_WAIT;
@@ -728,9 +755,14 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_bIsCameraShaking = false;
-				m_bIsCameraShaking2 = false;
-				m_bIsCameraShaking3 = false;
+				m_bIsCreateCollisionTick                     = false;
+				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
+				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
+				m_tCollisionTickDesc.fCollisionTickTime      = 0.0f;
+
+				m_bIsCameraShaking       = false;
+				m_bIsCameraShaking2      = false;
+				m_bIsCameraShaking3      = false;
 
 				m_iMonsterStatus	= Vergos::A_WAIT;
 				m_uiAnimIdx			= Vergos::A_WAIT;
@@ -747,9 +779,14 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_bIsCameraShaking = false;
-				m_bIsCameraShaking2 = false;
-				m_bIsCameraShaking3 = false;
+				m_bIsCreateCollisionTick                     = false;
+				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
+				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
+				m_tCollisionTickDesc.fCollisionTickTime      = 0.0f;
+
+				m_bIsCameraShaking       = false;
+				m_bIsCameraShaking2      = false;
+				m_bIsCameraShaking3      = false;
 
 				m_iMonsterStatus	= Vergos::A_WAIT;
 				m_uiAnimIdx			= Vergos::A_WAIT;
@@ -766,9 +803,14 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_bIsCameraShaking = false;
-				m_bIsCameraShaking2 = false;
-				m_bIsCameraShaking3 = false;
+				m_bIsCreateCollisionTick = false;
+				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
+				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
+				m_tCollisionTickDesc.fCollisionTickTime      = 0.0f;
+
+				m_bIsCameraShaking       = false;
+				m_bIsCameraShaking2      = false;
+				m_bIsCameraShaking3      = false;
 
 				m_iMonsterStatus	= Vergos::A_WAIT;
 				m_uiAnimIdx			= Vergos::A_WAIT;
@@ -780,16 +822,20 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 		case Vergos::A_BREATH_FIRE:
 		{
 			m_bIsSpawn = true;
-			m_bIsCreateCollisionTick = false;
 
 			m_uiAnimIdx = Vergos::A_BREATH_FIRE;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_bIsCameraShaking = false;
-				m_bIsCameraShaking2 = false;
-				m_bIsCameraShaking3 = false;
+				m_bIsCreateCollisionTick                     = false;
+				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
+				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
+				m_tCollisionTickDesc.fCollisionTickTime      = 0.0f;
+
+				m_bIsCameraShaking       = false;
+				m_bIsCameraShaking2      = false;
+				m_bIsCameraShaking3      = false;
 
 				m_iMonsterStatus = Vergos::A_WAIT;
 				m_uiAnimIdx = Vergos::A_WAIT;
@@ -801,16 +847,20 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 		case Vergos::A_FLY_START:
 		{
 			m_bIsSpawn = true;
-			m_bIsCreateCollisionTick = false;
 
 			m_uiAnimIdx = Vergos::A_FLY_START;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_bIsCameraShaking = false;
-				m_bIsCameraShaking2 = false;
-				m_bIsCameraShaking3 = false;
+				m_bIsCreateCollisionTick                     = false;
+				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
+				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
+				m_tCollisionTickDesc.fCollisionTickTime      = 0.0f;
+
+				m_bIsCameraShaking       = false;
+				m_bIsCameraShaking2      = false;
+				m_bIsCameraShaking3      = false;
 
 				m_iMonsterStatus = Vergos::A_FLY_LOOP;
 				m_uiAnimIdx = Vergos::A_FLY_LOOP;
@@ -822,16 +872,20 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 		case Vergos::A_FLY_LOOP:
 		{
 			m_bIsSpawn = true;
-			m_bIsCreateCollisionTick = false;
 
 			m_uiAnimIdx = Vergos::A_FLY_LOOP;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_bIsCameraShaking = false;
-				m_bIsCameraShaking2 = false;
-				m_bIsCameraShaking3 = false;
+				m_bIsCreateCollisionTick                     = false;
+				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
+				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
+				m_tCollisionTickDesc.fCollisionTickTime      = 0.0f;
+
+				m_bIsCameraShaking       = false;
+				m_bIsCameraShaking2      = false;
+				m_bIsCameraShaking3      = false;
 
 				m_iMonsterStatus = Vergos::A_FLY_END;
 				m_uiAnimIdx = Vergos::A_FLY_END;
@@ -843,16 +897,20 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 		case Vergos::A_FLY_END:
 		{
 			m_bIsSpawn = true;
-			m_bIsCreateCollisionTick = false;
 
 			m_uiAnimIdx = Vergos::A_FLY_END;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
-				m_bIsCameraShaking = false;
-				m_bIsCameraShaking2 = false;
-				m_bIsCameraShaking3 = false;
+				m_bIsCreateCollisionTick                     = false;
+				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
+				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
+				m_tCollisionTickDesc.fCollisionTickTime      = 0.0f;
+
+				m_bIsCameraShaking       = false;
+				m_bIsCameraShaking2      = false;
+				m_bIsCameraShaking3      = false;
 
 				m_iMonsterStatus = Vergos::A_WAIT;
 				m_uiAnimIdx = Vergos::A_WAIT;
@@ -909,7 +967,127 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 void CVergos::SetUp_CollisionTick(const _float& fTimeDelta)
 {
-	
+	if (Vergos::SWING_RIGHT == m_uiAnimIdx && m_ui3DMax_CurFrame >= VERGOS_SWING_CAMERA_SHAKING_TICK)
+	{
+		if (!m_bIsCreateCollisionTick)
+		{
+			m_bIsCreateCollisionTick = true;
+
+			m_tCollisionTickDesc.fPosOffset              = 0.0f;
+			m_tCollisionTickDesc.fScaleOffset            = 35.0f;
+			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
+			m_tCollisionTickDesc.fColisionTickUpdateTime = 0.0f;
+			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
+			m_tCollisionTickDesc.iCurCollisionTick       = 0;
+			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+
+			m_strBone = "Bip01-R-Hand";
+		}
+	}
+	else if (Vergos::SWING_LEFT == m_uiAnimIdx && m_ui3DMax_CurFrame >= VERGOS_SWING_CAMERA_SHAKING_TICK)
+	{
+		if (!m_bIsCreateCollisionTick)
+		{
+			m_bIsCreateCollisionTick = true;
+
+			m_tCollisionTickDesc.fPosOffset              = 0.0f;
+			m_tCollisionTickDesc.fScaleOffset            = 35.0f;
+			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
+			m_tCollisionTickDesc.fColisionTickUpdateTime = 0.0f;
+			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
+			m_tCollisionTickDesc.iCurCollisionTick       = 0;
+			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+
+			m_strBone = "Bip01-L-Hand";
+		}
+	}
+	else if (Vergos::BLOW_RIGHT == m_uiAnimIdx && m_ui3DMax_CurFrame >= VERGOS_BLOW_CAMERA_SHKAING_TICK)
+	{
+		if (!m_bIsCreateCollisionTick)
+		{
+			m_bIsCreateCollisionTick                     = true;
+			m_tCollisionTickDesc.fPosOffset              = 0.0f;
+			m_tCollisionTickDesc.fScaleOffset            = 22.0f;
+			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
+			m_tCollisionTickDesc.fColisionTickUpdateTime = 0.0f;
+			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
+			m_tCollisionTickDesc.iCurCollisionTick       = 0;
+			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+
+			m_strBone = "Bip01-R-Hand";
+		}
+	}
+	else if (Vergos::BLOW_LEFT == m_uiAnimIdx && m_ui3DMax_CurFrame >= VERGOS_BLOW_CAMERA_SHKAING_TICK)
+	{
+		if (!m_bIsCreateCollisionTick)
+		{
+			m_bIsCreateCollisionTick                     = true;
+			m_tCollisionTickDesc.fPosOffset              = 0.0f;
+			m_tCollisionTickDesc.fScaleOffset            = 22.0f;
+			m_tCollisionTickDesc.bIsCreateCollisionTick  = true;
+			m_tCollisionTickDesc.fColisionTickUpdateTime = 0.0f;
+			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
+			m_tCollisionTickDesc.iCurCollisionTick       = 0;
+			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+
+			m_strBone = "Bip01-L-Hand";
+		}
+	}
+
+	// Create CollisionTick
+	if (m_bIsCreateCollisionTick &&
+		m_tCollisionTickDesc.bIsCreateCollisionTick &&
+		m_tCollisionTickDesc.iCurCollisionTick < m_tCollisionTickDesc.iMaxCollisionTick)
+	{
+		m_tCollisionTickDesc.fCollisionTickTime += fTimeDelta;
+
+		if (m_tCollisionTickDesc.fCollisionTickTime >= m_tCollisionTickDesc.fColisionTickUpdateTime)
+		{
+			m_tCollisionTickDesc.fCollisionTickTime = 0.0f;
+			++m_tCollisionTickDesc.iCurCollisionTick;
+
+			if (m_tCollisionTickDesc.iCurCollisionTick >= m_tCollisionTickDesc.iMaxCollisionTick)
+			{
+				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
+				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
+				m_tCollisionTickDesc.fCollisionTickTime      = 0.0f;
+			}
+
+			// CollisionTick
+			m_pTransCom->m_vDir = m_pTransCom->Get_LookVector();
+			m_pTransCom->m_vDir.Normalize();
+			
+			_matrix matBoneFinalTransform = INIT_MATRIX;
+			_matrix matWorld = INIT_MATRIX;
+
+			Engine::HIERARCHY_DESC* pHierarchyDesc = &(m_pMeshCom->Find_HierarchyDesc(m_strBone));
+			if (nullptr != pHierarchyDesc)
+			{
+				matBoneFinalTransform = (pHierarchyDesc->matScale 
+									  * pHierarchyDesc->matRotate 
+									  * pHierarchyDesc->matTrans)
+									  * pHierarchyDesc->matGlobalTransform;
+				matWorld = matBoneFinalTransform * m_pTransCom->m_matWorld;
+			}
+			
+			_vec3 vPos = _vec3(matWorld._41, matWorld._42, matWorld._43) + m_pTransCom->m_vDir * m_tCollisionTickDesc.fPosOffset;
+			vPos.y = 1.f;
+
+			CCollisionTick* pCollisionTick = static_cast<CCollisionTick*>(Pop_Instance(m_pInstancePoolMgr->Get_CollisionTickPool()));
+			if (nullptr != pCollisionTick)
+			{
+				pCollisionTick->Get_BoundingSphere()->Get_BoundingInfo().Radius = 0.5f;
+				pCollisionTick->Set_CollisionTag(L"CollisionTick_Monster");
+				pCollisionTick->Set_Damage(m_pInfoCom->Get_RandomDamage());
+				pCollisionTick->Set_LifeTime(0.3f);
+				pCollisionTick->Get_Transform()->m_vScale = _vec3(1.0f) * m_tCollisionTickDesc.fScaleOffset;
+				pCollisionTick->Get_Transform()->m_vPos   = vPos;
+				pCollisionTick->Get_BoundingSphere()->Set_Radius(pCollisionTick->Get_Transform()->m_vScale);
+				pCollisionTick->Set_ServerNumber(m_iSNum);
+				m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_Monster", pCollisionTick);
+			}
+		}
+	}
 }
 
 void CVergos::SetUp_HpGauge(const _float& fTimeDelta)
@@ -1049,8 +1227,8 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 
 			CEffectMgr::Get_Instance()->Effect_RectDecal(_vec3(395.f,0.3f,232.f), m_pTransCom->m_vAngle.y);
 
-			CEffectMgr::Get_Instance()->Effect_BossIceStorm(_vec3(400.f, 0.3f, 365.f), _vec3(0.1f, 0.f, -1.f));
-			CEffectMgr::Get_Instance()->Effect_BossIceStorm(_vec3(378.f, 0.3f, 358.f), _vec3(-0.1f, 0.f, -1.f));
+			CEffectMgr::Get_Instance()->Effect_BossIceStorm(_vec3(400.f, 0.3f, 365.f), _vec3(0.1f, 0.f, -1.f), m_iSNum, m_pInfoCom->Get_RandomDamage());
+			CEffectMgr::Get_Instance()->Effect_BossIceStorm(_vec3(378.f, 0.3f, 358.f), _vec3(-0.1f, 0.f, -1.f), m_iSNum, m_pInfoCom->Get_RandomDamage());
 		}
 	}
 	else if (m_uiAnimIdx == Vergos::A_BREATH_FIRE)

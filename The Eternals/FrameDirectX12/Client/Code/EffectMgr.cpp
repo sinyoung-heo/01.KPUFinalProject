@@ -163,7 +163,7 @@ void CEffectMgr::Effect_Straight_IceStorm(_vec3 vecPos, _vec3 vecDir, const _boo
 		}
 	}
 }
-void CEffectMgr::Effect_BossIceStorm(_vec3 vecPos, _vec3 vecDir)
+void CEffectMgr::Effect_BossIceStorm(_vec3 vecPos, _vec3 vecDir, const _uint& uiSNum, const _uint& uiDamage)
 {
 	for (int i = 0; i < 13; i++)
 	{
@@ -174,6 +174,21 @@ void CEffectMgr::Effect_BossIceStorm(_vec3 vecPos, _vec3 vecDir)
 			static_cast<CIceStorm_m*>(pGameObj)->Set_CreateInfo(_vec3(0.f), _vec3(0.f,-180.f,0.f), vecPos + PosOffSet, 0.1f + (0.06f * i)
 			,2.f);
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"publicSkill3", pGameObj), E_FAIL);
+		}
+
+		// CollisionTick
+		CCollisionTick* pCollisionTick = static_cast<CCollisionTick*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_CollisionTickPool()));
+		if (nullptr != pCollisionTick)
+		{
+			pCollisionTick->Get_BoundingSphere()->Get_BoundingInfo().Radius = 0.5f;
+			pCollisionTick->Set_CollisionTag(L"CollisionTick_Monster");
+			pCollisionTick->Set_Damage(uiDamage);
+			pCollisionTick->Set_LifeTime(0.3f);
+			pCollisionTick->Get_Transform()->m_vScale = _vec3(9.0f);
+			pCollisionTick->Get_Transform()->m_vPos   = vecPos + PosOffSet;
+			pCollisionTick->Get_BoundingSphere()->Set_Radius(pCollisionTick->Get_Transform()->m_vScale);
+			pCollisionTick->Set_ServerNumber(uiSNum);
+			m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"CollisionTick_Monster", pCollisionTick);
 		}
 	}
 }

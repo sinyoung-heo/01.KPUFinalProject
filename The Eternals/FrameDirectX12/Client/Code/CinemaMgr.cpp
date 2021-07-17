@@ -10,6 +10,7 @@
 #include <random>
 #include "DirectInput.h"
 #include "FadeInOut.h"
+#include "Renderer.h"
 
 IMPLEMENT_SINGLETON(CCinemaMgr)
 
@@ -216,6 +217,8 @@ void CCinemaMgr::Update_Animation(const _float& fTimeDelta)
 			if (!m_bIsCancelCinematic)
 			{
 				m_bIsCancelCinematic = true;
+
+				Engine::CRenderer::Get_Instance()->Set_IsRenderShadow(true);
 
 				Engine::CGameObject* pGameObj = nullptr;
 				pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_FadeInOutPool());

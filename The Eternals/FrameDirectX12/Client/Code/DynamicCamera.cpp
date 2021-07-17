@@ -389,6 +389,8 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicLakanAll(const _float& fTimeDel
 		m_vAtInterpolationDesc.interpolation_speed    = 0.15f;
 		m_vAtInterpolationDesc.v1                     = _vec3(380.0f, 32.0f, 316.0f);
 		m_vAtInterpolationDesc.v2                     = _vec3(405.0f, 31.0f, 315.0f);
+
+		m_pRenderer->Set_IsRenderShadow(false);
 	}
 
 	Engine::SetUp_LinearInterpolation(fTimeDelta, m_tCameraInfo.vEye, m_vEyeInterpolationDesc);
@@ -417,6 +419,7 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicPrionBerserkerAll(const _float&
 		m_vEyeInterpolationDesc.v2                     = _vec3(405.0f, 3.0f, 397.0f);
 
 		pTarget->Set_State(PrionBerserkerBoss::ANGRY);
+		m_pRenderer->Set_IsRenderShadow(true);
 	}
 
 	Engine::SetUp_LinearInterpolation(fTimeDelta, m_tCameraInfo.vEye, m_vEyeInterpolationDesc);
@@ -438,6 +441,7 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicLakanCenter(const _float& fTime
 
 		m_fCameraTime              = 0.0f;
 		m_fUpdateCameraTime        = 3.0f;
+		m_pRenderer->Set_IsRenderShadow(false);
 	}
 	CLakan* pTarget = static_cast<CLakan*>(CCinemaMgr::Get_Instance()->Get_CenterLakan());
 	m_pCameraAtSkinningMatrix = pTarget->Get_MeshComponent()->Find_SkinningMatrix("Bip01-Head");
@@ -484,6 +488,7 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicPrionBerserkerBoss(const _float
 		m_fUpdateCameraTime        = 5.0f;
 
 		pTarget->Set_State(PrionBerserkerBoss::COMMAND);
+		m_pRenderer->Set_IsRenderShadow(true);
 	}
 
 	m_pTransCom->m_vScale = _vec3(0.0f, 0.0f, -19.0f);
@@ -535,6 +540,7 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicVergosFlying(const _float& fTim
 		pTarget->Set_IsUpdate(true);
 		CCinemaMgr::Get_Instance()->Spawn_Vergos();
 		m_tCameraInfo.vEye = _vec3(380.0f, 0.0f, 380.0f);
+		m_pRenderer->Set_IsRenderShadow(false);
 	}
 
 	if (nullptr != m_pCameraAtSkinningMatrix)
@@ -566,6 +572,7 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicVergosScreaming(const _float& f
 	{
 		m_bIsSettingCinematicValue = true;
 		m_tCameraInfo.vEye = _vec3(232.0f, 96.0f, 600.0f);
+		m_pRenderer->Set_IsRenderShadow(true);
 	}
 
 	m_tCameraInfo.vEye = _vec3(232.0f, 96.0f, 600.0f);
@@ -609,6 +616,7 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicPrionBerserkerScreaming(const _
 		m_tProjInfo.fFovY = 50.0f;
 		pTarget->Set_State(PrionBerserkerBoss::ANGRY);
 		pTarget->Set_IsPrionBerserkerScreaming(true);
+		m_pRenderer->Set_IsRenderShadow(true);
 	}
 
 	m_pTransCom->m_vScale = _vec3(0.0f, 0.0f, -22.8f);
@@ -653,6 +661,7 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicPrionBerserkerRush(const _float
 
 		m_tProjInfo.fFovY = 50.0f;
 		CCinemaMgr::Get_Instance()->Rush_Prion();
+		m_pRenderer->Set_IsRenderShadow(true);
 	}
 	 
 	if (pTarget->Get_Info()->m_fSpeed > 0.f)
@@ -687,6 +696,7 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicLakanRush(const _float& fTimeDe
 		m_tProjInfo.fFovY = 45.0f;
 		m_tCameraInfo.vEye = _vec3(395.0f, 1.0f, 370.0f);
 		CCinemaMgr::Get_Instance()->Rush_Lakan();
+		m_pRenderer->Set_IsRenderShadow(true);
 	}
 
 	CLakan* pTarget = static_cast<CLakan*>(CCinemaMgr::Get_Instance()->Get_CenterLakan());
@@ -717,6 +727,7 @@ void CDynamicCamera::SetUp_DynamicCameraCinematicEnding(const _float& fTimeDelta
 		m_vEyeInterpolationDesc.interpolation_speed    = 0.25f;
 		m_vEyeInterpolationDesc.v1                     = m_tCameraInfo.vEye;
 		m_vEyeInterpolationDesc.v2                     = _vec3(392.0f, 8.0f, 327.0f);
+		m_pRenderer->Set_IsRenderShadow(true);
 	}
 	Engine::SetUp_LinearInterpolation(fTimeDelta, m_tCameraInfo.vEye, m_vEyeInterpolationDesc);
 

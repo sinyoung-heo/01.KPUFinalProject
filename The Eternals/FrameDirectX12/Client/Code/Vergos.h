@@ -97,6 +97,7 @@ private:
 
 	_bool	m_bIsCreateCollisionTick = false;
 	COLLISION_TICK_DESC m_tCollisionTickDesc;
+	string	m_strBone = "";
 
 	_bool	m_bIsStartDissolve       = false;
 	_float	m_fDissolve              = -0.05f;
