@@ -532,13 +532,9 @@ void CRenderer::Render_Alpha(const _float& fTimeDelta)
 		{
 			return pSour->Get_DepthOfView() > pDest->Get_DepthOfView();
 		});
-	stable_sort(m_RenderList[RENDER_MAGICCIRCLE].begin(), m_RenderList[RENDER_MAGICCIRCLE].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
+	sort(m_RenderList[RENDER_MAGICCIRCLE].begin(), m_RenderList[RENDER_MAGICCIRCLE].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
 		{
 			return pSour->Get_DepthOfView() > pDest->Get_DepthOfView();
-		});
-	stable_sort(m_RenderList[RENDER_MAGICCIRCLE].begin(), m_RenderList[RENDER_MAGICCIRCLE].end(), [](CGameObject* pSour, CGameObject* pDest)->_bool
-		{
-			return pSour->Get_Transform()->m_vPos.y > pDest->Get_Transform()->m_vPos.y;
 		});
 
 	
@@ -1032,7 +1028,7 @@ HRESULT CRenderer::Ready_RenderTarget()
 	//AddEffect
 	m_pTargetAddEffect = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
 	NULL_CHECK_RETURN(m_pTargetAddEffect, E_FAIL);
-	m_pTargetAddEffect->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 1.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	m_pTargetAddEffect->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
 	FAILED_CHECK_RETURN(m_pTargetAddEffect->SetUp_DefaultSetting(TARGETID::TYPE_DEFAULT), E_FAIL);
 	m_pTargetAddEffect->Set_TargetRenderPos(_vec3(WIDTH_SEVENTH, HEIGHT_FIRST, 1.0f));
 	m_pAddEffectBuffer = static_cast<CScreenTex*>(m_pComponentMgr->Clone_Component(L"ScreenTex", COMPONENTID::ID_STATIC));
@@ -1044,7 +1040,7 @@ HRESULT CRenderer::Ready_RenderTarget()
 	//DynamicEffect
 	m_pTargetDynamicMeshEffect = CRenderTarget::Create(m_pGraphicDevice, m_pCommandList, 1);
 	NULL_CHECK_RETURN(m_pTargetDynamicMeshEffect, E_FAIL);
-	m_pTargetDynamicMeshEffect->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 1.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
+	m_pTargetDynamicMeshEffect->Set_TargetClearColor(0, _rgba(0.0f, 0.0f, 0.0f, 0.0f), DXGI_FORMAT_R8G8B8A8_UNORM);
 	FAILED_CHECK_RETURN(m_pTargetDynamicMeshEffect->SetUp_DefaultSetting(TARGETID::TYPE_DEFAULT), E_FAIL);
 	m_pTargetDynamicMeshEffect->Set_TargetRenderPos(_vec3(WIDTH_SEVENTH, HEIGHT_FOURTH, 1.0f));
 

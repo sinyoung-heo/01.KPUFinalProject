@@ -73,6 +73,7 @@ StaticMesh|publicEffect|IceStorm1
 StaticMesh|publicEffect|publicAxe
 StaticMesh|publicEffect|publicBossDecal
 StaticMesh|publicEffect|publicBreath
+StaticMesh|publicEffect|publicBreathGround
 StaticMesh|publicEffect|publicShield
 StaticMesh|publicEffect|publicSkill3
 StaticMesh|publicEffect|publicSphere
@@ -83,6 +84,7 @@ StaticMesh|publicEffect|publicStone2
 StaticMesh|publicEffect|publicStone3
 StaticMesh|publicEffect|publicStone4
 StaticMesh|publicEffect|publicSword
+StaticMesh|publicEffect|publicTonado
 StaticMesh|Sample|DistortDisk
 StaticMesh|Sample|LandMark
 StaticMesh|Sample|LandMarkBoundary

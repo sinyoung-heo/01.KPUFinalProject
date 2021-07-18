@@ -73,6 +73,7 @@ IceStorm1|IceStorm1.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\I
 publicAxe|publicAxe.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicAxe\
 publicBossDecal|publicBossDecal.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicBossDecal\
 publicBreath|publicBreath.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicBreath\
+publicBreathGround|publicBreathGround.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicBreathGround\
 publicShield|publicShield.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicShield\
 publicSkill3|publicSkill3.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSkill3\
 publicSphere|publicSphere.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSphere\
@@ -83,6 +84,7 @@ publicStone2|publicStone2.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEf
 publicStone3|publicStone3.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicStone3\
 publicStone4|publicStone4.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicStone4\
 publicSword|publicSword.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSword\
+publicTonado|publicTonado.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicTonado\
 DistortDisk|DistortDisk.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\DistortDisk\
 LandMark|LandMark.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\LandMark\
 LandMarkBoundary|LandMarkBoundary.X|..\..\Bin\Resource\ResourceStage\StaticMesh\Sample\LandMarkBoundary\

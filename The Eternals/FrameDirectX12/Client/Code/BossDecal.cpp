@@ -50,34 +50,6 @@ HRESULT CBossDecal::LateInit_GameObject()
 
 _int CBossDecal::Update_GameObject(const _float & fTimeDelta)
 {
-	if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD7))
-	{
-		m_pTransCom->m_vAngle.x += fTimeDelta * 100;
-	}
-	if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD4))
-	{
-		m_pTransCom->m_vAngle.x -= fTimeDelta * 100;
-	}
-	if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD8))
-	{
-		m_pTransCom->m_vAngle.y += fTimeDelta * 100;
-	}
-	if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD5))
-	{
-		m_pTransCom->m_vAngle.y -= fTimeDelta * 100;
-	}
-	if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD9))
-	{
-		m_pTransCom->m_vAngle.z += fTimeDelta * 100;
-	}
-	if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD6))
-	{
-		m_pTransCom->m_vAngle.z -= fTimeDelta * 100;
-	}
-	if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD0))
-	{
-		cout << m_pTransCom->m_vAngle.x << " | " << m_pTransCom->m_vAngle.y << " | " << m_pTransCom->m_vAngle.z << endl;
-	}
 
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 

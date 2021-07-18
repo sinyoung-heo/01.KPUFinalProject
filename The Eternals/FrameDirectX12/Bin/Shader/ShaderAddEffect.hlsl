@@ -56,10 +56,11 @@ float4 PS_MAIN(VS_OUT ps_input) : SV_TARGET
     float4 output6 = DynamicMeshEffect.Sample(g_samLinearWrap, ps_input.TexUV);
     
     float4 MeshEffectOut = output0 + output1 + output2 + output3 + output4;
+    MeshEffectOut.a = 0.5f;
     //MeshEffectOut = mul(MeshEffectOut, 2);
     float4 TexEffectOut = output5;
     //float4 FinalOut = lerp(MeshEffectOut, TexEffectOut, 0.5);
     float4 FinalOut = MeshEffectOut + TexEffectOut + output6;
-    FinalOut.a = 1;
+    FinalOut.a = 0.8f;
     return FinalOut;
 }

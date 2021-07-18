@@ -24,6 +24,7 @@
 #include "QuickSlotMgr.h"
 #include "CinemaMgr.h"
 #include "QuestMgr.h"
+#include "SoundMgr.h"
 #include <chrono>
 
 #define MAX_LOADSTRING 100
@@ -546,7 +547,11 @@ _ulong Release_Singleton()
 		MSG_BOX(L"CDirectInput Release Failed");
 		return dwRefCnt;
 	}
-
+	if (dwRefCnt = Engine::CSoundMgr::Get_Instance()->Destroy_Instance())
+	{
+		MSG_BOX(L"CSoundMgr Release Failed");
+		return dwRefCnt;
+	}
 	return dwRefCnt;
 }
 

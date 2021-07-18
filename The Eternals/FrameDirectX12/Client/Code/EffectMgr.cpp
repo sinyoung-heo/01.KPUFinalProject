@@ -31,6 +31,7 @@
 #include "RectDecal.h"
 #include "DirParticleEffect.h"
 #include "BossDecal.h"
+#include "TonadoEffect.h"
 IMPLEMENT_SINGLETON(CEffectMgr)
 
 CEffectMgr::CEffectMgr()
@@ -40,15 +41,15 @@ CEffectMgr::CEffectMgr()
 	m_pObjectMgr= Engine::CObjectMgr::Get_Instance();
 }
 
-void CEffectMgr::Effect_Dust(_vec3 vecPos, float Radius)
+void CEffectMgr::Effect_Dust(_vec3 vecPos, float Radius, float Scale,float FPS)
 {
 	_vec3 newPos;
 	for (int i = 0; i < 18; i++)
 	{
-		newPos.y = 0.5f;
+		newPos.y = 1.f;
 		newPos.x = vecPos.x + Radius * cos(XMConvertToRadians(i * 20.f));
 		newPos.z = vecPos.z + Radius * sin(XMConvertToRadians(i * 20.f));
-		Effect_TextureEffect(L"Dust", _vec3(3.f,3.f,0.f), _vec3(0.f), newPos, FRAME(12, 7, 84.0f), false, false);
+		Effect_TextureEffect(L"Dust", _vec3(Scale, Scale,0.f), _vec3(0.f), newPos, FRAME(12, 7, FPS), false, false);
 	
 	}
 }
@@ -93,16 +94,19 @@ void CEffectMgr::Effect_SwordEffect(_vec3 vecPos,_vec3 vecDir)
 	}
 }
 
+#include "BossGroundEffect.h"
 void CEffectMgr::Effect_SwordEffect_s(_vec3 vecPos, _vec3 vecDir)
 {
+
 	cout << vecPos.x << " " << vecPos.z << endl;
-	/*vecPos.y = 0.3f;
-	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_BossDecal_Effect());
+	
+	vecPos.y = 0.3f;
+	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_BossGround_Effect());
 	if (nullptr != pGameObj)
 	{
-		static_cast<CBossDecal*>(pGameObj)->Set_CreateInfo(_vec3(0.3f, 0.f, 0.3f), _vec3(0.f, 0.0f, 0.0f), vecPos);
-		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BossDecal", pGameObj), E_FAIL);
-	}*/
+		static_cast<CBossGroundEffect*>(pGameObj)->Set_CreateInfo(_vec3(0.1f, 0.1f, 0.1f), _vec3(0.f, 0.0f, 0.0f), vecPos);
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BossGroundEffect", pGameObj), E_FAIL);
+	}
 
 	vecPos.y = 0.f;
 	_vec3 upVec = _vec3(0, 1, 0);
@@ -221,8 +225,8 @@ void CEffectMgr::Effect_ArrowHitted(_vec3 vecPos,_float maxScale)
 
 void CEffectMgr::Effect_FireCone(_vec3 vecPos, float RotY , _vec3 vecDir)
 {
-	pGameObj = CDragonEffect::Create(m_pGraphicDevice, m_pCommandList, L"DragonEffect", _vec3(0.012f), _vec3(0.f), vecPos);
-	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"EffectDragon", pGameObj), E_FAIL);
+	/*pGameObj = CDragonEffect::Create(m_pGraphicDevice, m_pCommandList, L"DragonEffect", _vec3(0.012f), _vec3(0.f), vecPos);
+	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"EffectDragon", pGameObj), E_FAIL);*/
 
 	vecPos.y = 0.5f;
 
@@ -243,8 +247,6 @@ void CEffectMgr::Effect_FireCone(_vec3 vecPos, float RotY , _vec3 vecDir)
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"PublicCylinder02", pGameObj), E_FAIL);
 		}
 	}
-
-
 }
 
 void CEffectMgr::Effect_Test(_vec3 vecPos,_vec3* parent)
@@ -438,7 +440,7 @@ void CEffectMgr::Effect_TextureEffect(wstring TexTag, _vec3 Scale, _vec3 Angle, 
 	Engine::CGameObject* textureObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_TextureEffect());
 	if (nullptr != textureObj)
 	{
-		static_cast<CTextureEffect*>(textureObj)->Set_CreateInfo(TexTag,Scale,Angle,Pos,frame,isLoop, maxScale,isScaleAnim, ScaleAnimIdx,
+		static_cast<CTextureEffect*>(textureObj)->Set_CreateInfo(TexTag,Scale,Angle,Pos,frame,isLoop,isScaleAnim, maxScale, ScaleAnimIdx,
 			colorOffset, isFollowHand, hierachy, parentTransform);
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", TexTag, textureObj), E_FAIL);
 
@@ -463,9 +465,9 @@ void CEffectMgr::Effect_MagicCircle_Effect(const _vec3& vScale, const _vec3& vAn
 _vec3 CEffectMgr::InterPolated_YOffset(_vec3 Pos)
 {
 	_vec3 ReturnVector=Pos;
-	m_fY -= 0.03f;
-	if (m_fY < 0.01f)
-		m_fY = 0.27f;
+	m_fY += 0.05f;
+	if (m_fY > 0.31f)
+		m_fY = 0.05f;
 	ReturnVector.y = m_fY;
 	return ReturnVector;
 }

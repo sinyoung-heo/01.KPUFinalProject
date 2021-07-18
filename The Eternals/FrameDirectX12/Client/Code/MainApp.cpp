@@ -11,7 +11,7 @@
 #include "Scene_MainStage.h"
 #include "Font.h"
 #include "QuestMgr.h"
-
+#include "SoundMgr.h"
 CMainApp::CMainApp()
 	: m_pDeviceClass(Engine::CGraphicDevice::Get_Instance())
 	, m_pComponentMgr(Engine::CComponentMgr::Get_Instance())
@@ -96,7 +96,7 @@ _int CMainApp::Update_MainApp(const _float & fTimeDelta)
 
 	m_pManagement->Update_Management(fTimeDelta);
 	CShadowLightMgr::Get_Instance()->Update_ShadowLight();
-
+	m_pSoundMgr->Update_Sound();
 	return 0;
 }
 
@@ -176,6 +176,10 @@ HRESULT CMainApp::SetUp_DefaultSetting(Engine::WINMODE eMode, const _uint& uiWid
 
 	//EffectMgr »ý¼º
 	CEffectMgr::Get_Instance();
+
+	m_pSoundMgr = Engine::CSoundMgr::Get_Instance();
+	Engine::FAILED_CHECK_RETURN(m_pSoundMgr->Ready_SoundMgr(), E_FAIL);
+	m_pSoundMgr->Load_Sound("../../Bin/Sound/BGM/*.*");
 
 	return S_OK;
 }

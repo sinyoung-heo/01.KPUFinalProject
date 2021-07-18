@@ -106,6 +106,11 @@ ______________________________________________________________________*/
 
 //AfterImageTerm
 #define AFTERIMAGE_MAKETERM 0.05f
+
+
+// Sound Channel
+#define		MAX_SOUNDCHANNEL				100
+
 #endif
 
 

@@ -48,7 +48,7 @@ _int CMeshParticleEffect::Update_GameObject(const _float& fTimeDelta)
 	Make_TextureTrail(fTimeDelta);
 	m_fDegree += fTimeDelta * 120.f;
 
-	m_fAlpha -= fTimeDelta * 0.1f;
+	m_fAlpha -= fTimeDelta * 0.5f;
 	m_pTransCom->m_vAngle.y += (fTimeDelta * 60.f);
 	
 	if (m_fAlpha < 0.f)

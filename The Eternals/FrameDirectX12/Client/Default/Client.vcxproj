@@ -175,6 +175,7 @@
     <ClInclude Include="..\..\..\FrameServer\Server\Header\PCWeaponType.h" />
     <ClInclude Include="..\..\..\FrameServer\Server\Header\protocol.h" />
     <ClInclude Include="..\Code\BossDecal.h" />
+    <ClInclude Include="..\Code\BossGroundEffect.h" />
     <ClInclude Include="..\Code\BreathEffect.h" />
     <ClInclude Include="..\Code\CharacterHpGauge.h" />
     <ClInclude Include="..\Code\CharacterMpGauge.h" />
@@ -340,6 +341,7 @@
     <ClInclude Include="..\Code\SwordTrail.h" />
     <ClInclude Include="..\Code\SwordTrailEffect.h" />
     <ClInclude Include="..\Code\TerrainMeshObject.h" />
+    <ClInclude Include="..\Code\TonadoEffect.h" />
     <ClInclude Include="..\Code\Vergos.h" />
     <ClInclude Include="..\Code\VergosHpGauge.h" />
     <ClInclude Include="..\Code\WarningFrame.h" />
@@ -374,6 +376,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\BossDecal.cpp" />
+    <ClCompile Include="..\Code\BossGroundEffect.cpp" />
     <ClCompile Include="..\Code\BreathEffect.cpp" />
     <ClCompile Include="..\Code\CharacterHpGauge.cpp" />
     <ClCompile Include="..\Code\CharacterMpGauge.cpp" />
@@ -539,6 +542,7 @@
     <ClCompile Include="..\Code\SwordTrail.cpp" />
     <ClCompile Include="..\Code\SwordTrailEffect.cpp" />
     <ClCompile Include="..\Code\TerrainMeshObject.cpp" />
+    <ClCompile Include="..\Code\TonadoEffect.cpp" />
     <ClCompile Include="..\Code\Vergos.cpp" />
     <ClCompile Include="..\Code\VergosHpGauge.cpp" />
     <ClCompile Include="..\Code\WarningFrame.cpp" />

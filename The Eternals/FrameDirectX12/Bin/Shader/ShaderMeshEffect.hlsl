@@ -141,7 +141,7 @@ VS_OUT VS_ANIUV_X(VS_IN vs_input)
     vs_output.Normal = vs_input.Normal;
 
     
-    vs_output.AniUV = vs_input.TexUV + float2(g_fOffset1, 0.f);
+    vs_output.AniUV = vs_input.TexUV + float2(g_fOffset1, g_fOffset5);
     return (vs_output);
 }
 
@@ -414,4 +414,20 @@ PS_OUT PS_BOSSDECAL(VS_OUT ps_input) : SV_TARGET
     ps_output.Effect3.a = g_fOffset6;
     return (ps_output);
 }
-
+PS_OUT PS_GROUNDEFFECT(VS_OUT ps_input) : SV_TARGET
+{
+    PS_OUT ps_output = (PS_OUT) 0;
+    float4 D = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.AniUV*5.f);
+    float4 Dt = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 N = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.AniUV * 2.f);
+    float4 S = g_TexSpecular.Sample(g_samLinearWrap, ps_input.AniUV);
+    
+    float4 Sha = g_TexShadowDepth.Sample(g_samLinearWrap, ps_input.TexUV);
+    float4 Color =mul(Dt, Sha.r);
+    Color.a = g_fOffset4;
+    ps_output.Effect3.xyz = mul(lerp(D, N, 0.5), S.r);
+    ps_output.Effect3.a = g_fOffset6;
+    
+    ps_output.Effect3 = lerp(ps_output.Effect3, Color, 0.5f);
+    return (ps_output);
+}

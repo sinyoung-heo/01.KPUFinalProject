@@ -129,13 +129,13 @@ void CRectDecal::Set_ConstantTable()
 	tCB_ShaderMesh.fLightPorjFar = tShadowDesc.fLightPorjFar;
 	m_fDeltaTime  += Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.5f;
 	m_fDeltatime2 += Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.03f* m_fDelta2Velocity;
-	if (fabsf(m_fDeltatime2) > 0.3f)
+	if (fabsf(m_fDeltatime2) > 0.01f)
 	{
 		m_fDelta2Velocity *= -1.f;
 	}
 	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
 	tCB_ShaderMesh.fOffset2 = m_fDeltatime2;
-	m_fAlpha -= Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta");
+	m_fAlpha -= Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta")*0.5f;
 	tCB_ShaderMesh.fOffset6 = m_fAlpha;
 
 	if(m_pShaderCom->Get_UploadBuffer_ShaderMesh()!=nullptr)

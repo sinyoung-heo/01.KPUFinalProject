@@ -5,6 +5,7 @@
 
 namespace Engine
 {
+	class CSoundMgr;
 	class CComponentMgr;
 	class CObjectMgr;
 	class CManagement;
@@ -51,7 +52,7 @@ private:
 	Engine::CObjectMgr*			m_pObjectMgr		= nullptr;
 	Engine::CManagement*		m_pManagement		= nullptr;
 	Engine::CRenderer*			m_pRenderer			= nullptr;
-
+	Engine::CSoundMgr*			m_pSoundMgr			= nullptr;
 	/*__________________________________________________________________________________________________________
 	[ Font ]
 	____________________________________________________________________________________________________________*/
