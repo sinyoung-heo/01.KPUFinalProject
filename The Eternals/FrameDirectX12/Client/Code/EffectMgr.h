@@ -12,7 +12,7 @@ private:
 	virtual ~CEffectMgr() = default;
 
 public:
-	void Effect_Dust(_vec3 vecPos, float Radius=2.f);
+	void Effect_Dust(_vec3 vecPos, float Radius=2.f,float Scale=3.f, float FPS=84.f);
 	void Effect_IceStorm(_vec3 vecPos,int Cnt=36,float Radius=5.f);
 	void Effect_IceStorm_s(_vec3 vecPos,float Radius);
 	void Effect_SwordEffect(_vec3 vecPos,_vec3 vecDir);
@@ -60,7 +60,7 @@ public:
 
 	_vec3 InterPolated_YOffset(_vec3 Pos);
 private:
-	float m_fY = 0.27f;
+	float m_fY = 0.05f;
 public:
 	Engine::CGameObject* pGameObj = nullptr;
 	ID3D12Device* m_pGraphicDevice = nullptr;

@@ -1183,6 +1183,7 @@
     </ClInclude>
     <ClInclude Include="..\Code\BossDecal.h" />
     <ClInclude Include="..\Code\TonadoEffect.h" />
+    <ClInclude Include="..\Code\BossGroundEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1741,6 +1742,7 @@
     </ClCompile>
     <ClCompile Include="..\Code\BossDecal.cpp" />
     <ClCompile Include="..\Code\TonadoEffect.cpp" />
+    <ClCompile Include="..\Code\BossGroundEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

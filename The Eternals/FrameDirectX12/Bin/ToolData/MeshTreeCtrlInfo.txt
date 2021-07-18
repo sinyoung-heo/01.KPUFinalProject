@@ -73,6 +73,7 @@ StaticMesh|publicEffect|IceStorm1
 StaticMesh|publicEffect|publicAxe
 StaticMesh|publicEffect|publicBossDecal
 StaticMesh|publicEffect|publicBreath
+StaticMesh|publicEffect|publicBreathGround
 StaticMesh|publicEffect|publicShield
 StaticMesh|publicEffect|publicSkill3
 StaticMesh|publicEffect|publicSphere

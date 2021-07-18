@@ -848,14 +848,14 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 			if (m_uiAnimIdx == Vergos::SWING_RIGHT)
 			{	
 					static_cast<CBossDecal*>(pGameObj)->Set_CreateInfo(_vec3(0.5f, 0.f, 0.5f), _vec3(0.f, -180.f, 0.0f),
-						CEffectMgr::Get_Instance()->InterPolated_YOffset(_vec3(375.f, 0.3f, 371.f)));
+						_vec3(375.f, 0.4f, 371.f));
 					Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BossDecal", pGameObj), E_FAIL);
 				
 			}
 			else
 			{		
 					static_cast<CBossDecal*>(pGameObj)->Set_CreateInfo(_vec3(0.5f, 0.f, 0.5f), _vec3(0.f, -180.f, 180.f),
-						CEffectMgr::Get_Instance()->InterPolated_YOffset(_vec3(398.f, 0.3f, 367.f)));
+						_vec3(375.f, 0.4f, 371.f));
 					Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BossDecal", pGameObj), E_FAIL);
 			}
 		}
@@ -892,7 +892,7 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 			_matrix matWorld = matBoneFinalTransform * m_pTransCom->m_matWorld;
 			_vec3 Pos= _vec3(matWorld._41, matWorld._42, matWorld._43);
 			m_bisDecalEffect = true;
-			CEffectMgr::Get_Instance()->Effect_FireDecal(Pos);
+			CEffectMgr::Get_Instance()->Effect_Dust(Pos,12.f,10.f,42.f);
 
 			cout <<Bone<< ":"<<Pos.x << "|" << Pos.z << endl;
 			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.07f), 

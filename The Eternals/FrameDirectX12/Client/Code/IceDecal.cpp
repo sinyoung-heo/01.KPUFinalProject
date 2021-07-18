@@ -148,7 +148,6 @@ void CIceDecal::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos = vPos;
-	m_pTransCom->m_vPos.y += 0.3f;
 	m_fDeltatime = 0.f;
 	m_fDeltatime2 = 0.f;
 	m_fDelta2Velocity = 1.f;

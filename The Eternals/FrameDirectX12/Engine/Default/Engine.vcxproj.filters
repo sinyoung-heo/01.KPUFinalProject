@@ -423,6 +423,9 @@
     <ClInclude Include="..\Code\ShaderDynamicMeshEffect.h">
       <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\03.ShaderMesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\SoundMgr.h">
+      <Filter>97.Mgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\DirectInput.cpp">
@@ -625,6 +628,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\ShaderDynamicMeshEffect.cpp">
       <Filter>01.Utility\04.SuperClass\04.Component\99.Resource\99.Shader\03.ShaderMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\SoundMgr.cpp">
+      <Filter>97.Mgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

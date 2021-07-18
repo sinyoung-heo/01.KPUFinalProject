@@ -61,11 +61,19 @@ ________________________________________________________________________________
 /*__________________________________________________________________________________________________________
 [ DirectSound ]
 ____________________________________________________________________________________________________________*/
+#include "fmod.hpp"
+#ifdef _DEBUG
+#pragma comment(lib,"fmodL_vc.lib")
+#else
+#pragma comment(lib,"fmod_vc.lib")
+#endif // _DEBUG 
+
 #include <mmsystem.h>
 #include <dsound.h>
 #pragma comment(lib, "dsound.lib")
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "winmm.lib")
+
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;

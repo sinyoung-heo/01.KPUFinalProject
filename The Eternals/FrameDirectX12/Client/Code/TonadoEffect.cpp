@@ -31,11 +31,11 @@ HRESULT CTonadoEffect::Ready_GameObject(wstring wstrMeshTag,
 
 HRESULT CTonadoEffect::LateInit_GameObject()
 {
-
+	m_fDeltaTime = 1.f;
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	m_pCrossFilterShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
-	m_pDescriptorHeaps = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(L"EffectPublic");
+	m_pDescriptorHeaps = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(L"PublicMagic");
 	m_uiDiffuse =8;
 	m_uiNormal = 11;//NormIdx
 	m_uiSpec = 11;//SpecIdx
@@ -48,9 +48,9 @@ _int CTonadoEffect::Update_GameObject(const _float & fTimeDelta)
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
-	
+	/*
 	if (m_fDeltaDegree > 360.f)
-		m_bIsReturn = true;
+		m_bIsReturn = true;*/
 	if (m_bIsReturn)
 	{
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_Tonado_Effect(), m_uiInstanceIdx);
@@ -58,9 +58,10 @@ _int CTonadoEffect::Update_GameObject(const _float & fTimeDelta)
 	}
 
 	m_pTransCom->m_vAngle.y += 540.f*fTimeDelta;
-	m_pTransCom->m_vScale.x =sinf(XMConvertToRadians(m_fDeltaDegree* 0.25f)*0.8f);
-	m_pTransCom->m_vScale.y = sinf(XMConvertToRadians(m_fDeltaDegree * 0.25f) * 0.8f);
-	m_pTransCom->m_vScale.z = sinf(XMConvertToRadians(m_fDeltaDegree * 0.25f) * 0.8f);
+	m_pTransCom->m_vPos.y += 2.f * fTimeDelta;
+	m_pTransCom->m_vScale.x += 0.3f * fTimeDelta;
+	m_pTransCom->m_vScale.y += 0.02f * fTimeDelta;
+	m_pTransCom->m_vScale.z += 0.3f * fTimeDelta;
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
@@ -90,8 +91,10 @@ _int CTonadoEffect::LateUpdate_GameObject(const _float & fTimeDelta)
 void CTonadoEffect::Render_GameObject(const _float& fTimeDelta)
 {
 	Set_ConstantTable();
-	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_uiNormal,m_uiSpec
-		,0,4);
+	/*m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, m_uiDiffuse, m_uiNormal,m_uiSpec
+		,0,4);*/
+	m_pMeshCom->Render_MagicCircleMesh(m_pShaderCom, m_pDescriptorHeaps, 31, 31, 2
+		, 0, 25);
 }
 void CTonadoEffect::Render_CrossFilterGameObject(const _float& fTimeDelta)
 {
@@ -112,7 +115,7 @@ HRESULT CTonadoEffect::Add_Component(wstring wstrMeshTag)
 	// Shader
 	m_pShaderCom = static_cast<Engine::CShaderMeshEffect*>(m_pComponentMgr->Clone_Component(L"ShaderMeshEffect", Engine::COMPONENTID::ID_STATIC));
 	Engine::NULL_CHECK_RETURN(m_pShaderCom, E_FAIL);
-	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(8), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(m_pShaderCom->Set_PipelineStatePass(5), E_FAIL);
 	m_pShaderCom->AddRef();
 	m_mapComponent[Engine::ID_STATIC].emplace(L"Com_Shader", m_pShaderCom);
 
@@ -143,11 +146,11 @@ void CTonadoEffect::Set_ConstantTable()
 
 	//g_fOffSet1 = AnimationUV X  // g_fOffSet3 = Degree Delta°ª
 	//g_fOffSet5 = Detail°ª
-	m_fDeltaTime += Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.5f;
+	m_fDeltaTime -= Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 0.5f;
 	m_fDeltaDegree += Engine::CTimerMgr::Get_Instance()->Get_TimeDelta(L"Timer_TimeDelta") * 180.f;
 	tCB_ShaderMesh.fOffset6 = m_fDeltaDegree / 180.f;
 
-	tCB_ShaderMesh.fOffset1 = -m_fDeltaTime;
+	tCB_ShaderMesh.fOffset1 = m_fDeltaTime;
 	tCB_ShaderMesh.fOffset3 = m_fDeltaDegree;
 	
 	tCB_ShaderMesh.fOffset5 = 1.f;
@@ -170,7 +173,7 @@ void CTonadoEffect::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, con
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos = vPos;
 	m_fDeltaDegree = 0.f;
-	m_fDeltaTime = 0.f;
+	m_fDeltaTime = 1.f;
 }
 
 Engine::CGameObject* CTonadoEffect::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,

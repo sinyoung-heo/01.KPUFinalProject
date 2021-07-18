@@ -73,6 +73,7 @@ IceStorm1|IceStorm1.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\I
 publicAxe|publicAxe.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicAxe\
 publicBossDecal|publicBossDecal.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicBossDecal\
 publicBreath|publicBreath.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicBreath\
+publicBreathGround|publicBreathGround.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicBreathGround\
 publicShield|publicShield.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicShield\
 publicSkill3|publicSkill3.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSkill3\
 publicSphere|publicSphere.X|..\..\Bin\Resource\ResourceStage\StaticMesh\publicEffect\publicSphere\

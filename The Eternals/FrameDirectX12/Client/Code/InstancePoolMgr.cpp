@@ -55,6 +55,7 @@
 #include "BreathEffect.h"
 #include "BossDecal.h"
 #include "TonadoEffect.h"
+#include "BossGroundEffect.h"
 IMPLEMENT_SINGLETON(CInstancePoolMgr)
 
 CInstancePoolMgr::CInstancePoolMgr()
@@ -216,23 +217,23 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_Texture_Pool, 512);
 
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_Shield_Pool, 64);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_Axe_Pool, 64);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MagicCircle_Pool, 20);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_Shield_Pool, 32);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_Axe_Pool, 32);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MagicCircle_Pool, 10);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_GridShieldEffect_Pool, 20);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock0_Pool,L"publicStone0", 64);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock1_Pool, L"publicStone1", 64);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock2_Pool, L"publicStone2", 64);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock3_Pool, L"publicStone3", 64);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock4_Pool, L"publicStone4", 64);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock0_Pool,L"publicStone0", 10);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock1_Pool, L"publicStone1", 10);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock2_Pool, L"publicStone2", 10);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock3_Pool, L"publicStone3", 10);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_MeshParticleRock4_Pool, L"publicStone4", 10);
 
 
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_WarningGround_Pool, 20);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_WarningGround_Pool, 3);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_RectDecal_Pool, 20);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_BossDecal_Pool, 3);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_DirParticle_Pool, 100);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_BreathEffect_Pool, 3);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_Tonado_Pool, 3);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_BossGroundEffect_Pool, 3);
 
 	
 }
@@ -331,7 +332,7 @@ void CInstancePoolMgr::Free()
 	Safe_Release_InstacePool(m_pEffect_BossDecal_Pool);
 	Safe_Release_InstacePool(m_pEffect_DirParticle_Pool);
 	Safe_Release_InstacePool(m_pEffect_BreathEffect_Pool);
-	Safe_Release_InstacePool(m_pEffect_Tonado_Pool);
+	Safe_Release_InstacePool(m_pEffect_BossGroundEffect_Pool);
 
 	
 }

@@ -68,6 +68,8 @@ namespace Engine
 
 }
 
+// Sound
+enum SOUNDID { SOUND_BGM, SOUND_PLAYER, SOUND_MONSTER, SOUND_EFFECT, SOUND_UI, SOUND_MOVIE, SOUND_ONCE, SOUND_REPEA, SOUND_END };
 
 
 #endif // Engine_Enum_h__
