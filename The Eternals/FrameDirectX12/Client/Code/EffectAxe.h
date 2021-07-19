@@ -54,6 +54,9 @@ private:
 	float   m_fDegree = 0.f;
 	float   m_fShaderDegree = 0.f;
 	float   m_fLifeTime = 0.f;
+	float   m_fLimitLifeTime = 0.f;
+	float   m_fLimitScale = 0.f;
+	float   m_fRadius = 0.f;
 	bool    m_bisScaleAnim = false;
 	float   m_fCrossDeltatime = 0.f;
 	float   m_fCrossDeltatime2 = 0.f;
@@ -63,10 +66,14 @@ private:
 	float  m_fDeltatimeVelocity = 0.f;
 	float  m_fDeltatimeVelocity2 = 1.f;
 
-	const Engine::CTransform* m_pParentTransform =nullptr;
+
+	bool m_bisMini = false;
+	_int m_iParticleCnt = 0;
+	const Engine::CTransform* m_pParentTransform = nullptr;
 public:
-	void Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, const float& vAngleOffset
-	,const Engine::CTransform * ParentTransform);
+	void Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos,
+		float fLimitLifeTime, float fLimitScale, float fRadius, const float& vAngleOffset
+		, const Engine::CTransform* ParentTransform, bool isMini = false);
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

@@ -118,6 +118,12 @@ private:
 	bool m_bisDustEffect		= false;
 	bool m_bisSwordsEffect		= false;
 
+
+	_bool m_bisUseShieldEffect = false;
+	_float m_fUseShieldDelta = 0.f;
+	_bool m_bisUseAxeEffect = false;
+	_float m_fUseAxeDelta = 0.f;
+
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

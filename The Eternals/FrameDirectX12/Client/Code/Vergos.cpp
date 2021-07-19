@@ -1145,6 +1145,7 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 		}
 		if (m_fSkillOffset > 3.f && m_bisDecalEffect == false)
 		{
+			
 			m_bisDecalEffect = true;
 			CGameObject* pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_BossDecal_Effect());
 			if (m_uiAnimIdx == Vergos::SWING_RIGHT)
@@ -1209,6 +1210,12 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(15, 2), 0, true);
 			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.02f),
 				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(15, 2), 0, true);
+
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Crack.ogg", SOUNDID::SOUND_EFFECT);
+			int SoundNumber = rand() % 16;
+			wstring SoundTag = L"RockImpact_HardCrumble_" + to_wstring(SoundNumber)+L".ogg";
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(SoundTag.c_str(), SOUNDID::SOUND_EFFECT);
+
 		}
 	}
 	else if (m_uiAnimIdx == Vergos::BLOW_HEAD)

@@ -244,6 +244,13 @@ protected:
 
 	high_resolution_clock::time_point	m_last_move_time;
 
+//SkillEffect
+public:
+	void Set_ShieldEffect(bool isShield) { m_bisSkillEffect[0] = isShield; }
+	void Set_AxeEffect(bool isAxe) { m_bisSkillEffect[1] = isAxe; }
+protected:
+	bool m_bisSkillEffect[2];
+
 public:
 	virtual CGameObject* Clone_GameObject();
 protected:

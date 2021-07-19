@@ -43,8 +43,6 @@ HRESULT CEffectAxe::LateInit_GameObject()
 	m_pDescriptorHeaps = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(L"EffectPublic");
 	m_pCrossFilterShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 
-	CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 20, L"Lighting5",_vec3(0.2f));
-	
 	return S_OK;
 }
 
@@ -59,22 +57,21 @@ _int CEffectAxe::Update_GameObject(const _float & fTimeDelta)
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_AxeEffect(), m_uiInstanceIdx);
 		return RETURN_OBJ;
 	}
-
-	m_fDegree += 60.f*fTimeDelta ;
+	m_fDegree += 60.f * fTimeDelta;
 	_vec3 ParentPos = m_pParentTransform->m_vPos;
-	m_pTransCom->m_vPos.x = ParentPos.x + 6.f * cos(XMConvertToRadians(m_fDegree+m_fAngleOffset));
-	m_pTransCom->m_vPos.z = ParentPos.z + 6.f * sin(XMConvertToRadians(m_fDegree+m_fAngleOffset));
-	m_pTransCom->m_vAngle.y = XMConvertToDegrees( atan2(m_pTransCom->m_vPos.x- ParentPos.x
-		, m_pTransCom->m_vPos.z  - ParentPos.z));
+	m_pTransCom->m_vPos.x = ParentPos.x + m_fRadius * cos(XMConvertToRadians(m_fDegree + m_fAngleOffset));
+	m_pTransCom->m_vPos.z = ParentPos.z + m_fRadius * sin(XMConvertToRadians(m_fDegree + m_fAngleOffset));
+	m_pTransCom->m_vAngle.y = XMConvertToDegrees(atan2(m_pTransCom->m_vPos.x - ParentPos.x
+		, m_pTransCom->m_vPos.z - ParentPos.z));
 
 
-	if (m_fLifeTime < 5.5f && m_bisScaleAnim && m_pTransCom->m_vScale.x < 0.12f)
-		m_pTransCom->m_vScale += _vec3(fTimeDelta * 0.12f);
+	if (m_fLifeTime < m_fLimitLifeTime && m_bisScaleAnim && m_pTransCom->m_vScale.x < m_fLimitScale)
+		m_pTransCom->m_vScale += _vec3(fTimeDelta * m_fLimitScale);
 	m_fLifeTime += fTimeDelta;
-	if (m_fLifeTime > 5.5f)
+	if (m_fLifeTime > m_fLimitLifeTime)
 	{
-		m_pTransCom->m_vScale -= _vec3(fTimeDelta * 0.12f);
-		if (m_pTransCom->m_vScale.x < 0.0f)
+		m_pTransCom->m_vScale -= _vec3(fTimeDelta * m_fLimitScale);
+		if (m_pTransCom->m_vScale.x < 0.00)
 			m_bIsReturn = true;
 	}
 	/*__________________________________________________________________________________________________________
@@ -208,14 +205,20 @@ void CEffectAxe::Set_ConstantTable()
 	else if (m_fCrossDeltatime < 0.f)
 		m_fDeltatimeVelocity = 1.f;
 	if (m_fCrossDeltatime3 > 1.f)
+	{
 		m_fDeltatimeVelocity2 = -1.f;
+		if (m_bisMini)
+			CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 1, L"Lighting5", _vec3(0.1f));
+	}
 	else if (m_fCrossDeltatime3 < 0.f)
 	{
 		m_fCrossDeltatime3 = 0.0f;
 		m_fDeltatimeVelocity2 = 0.f;
 	}
 }
-void CEffectAxe::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, const float& vAngleOffset, const Engine::CTransform* ParentTransform)
+void CEffectAxe::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos,
+	float fLimitLifeTime, float fLimitScale, float fRadius, const float& vAngleOffset
+	, const Engine::CTransform* ParentTransform, bool isMini)
 {
 	m_pParentTransform = ParentTransform;
 	m_pTransCom->m_vAngle = vAngle;
@@ -237,8 +240,17 @@ void CEffectAxe::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const 
 	m_fDeltatimeVelocity = 0.f;
 	m_fDeltatimeVelocity2 = 1.f;
 
-
+	m_fLimitLifeTime = fLimitLifeTime;
+	m_fLimitScale = fLimitScale;
+	m_fRadius = fRadius;
 	m_bisScaleAnim = true;
+	m_bisMini = isMini;
+
+	m_bisMini == true ? m_iParticleCnt = 20 : m_iParticleCnt = 4;
+
+
+	CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 20, L"Lighting5", _vec3(0.2f));
+
 }
 
 Engine::CGameObject* CEffectAxe::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,

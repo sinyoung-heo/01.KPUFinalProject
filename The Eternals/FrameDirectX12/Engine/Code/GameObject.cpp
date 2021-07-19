@@ -8,6 +8,7 @@
 #include <random>
 #include "..\..\Client\Header\PriestAnimation.h"
 
+
 USING(Engine)
 
 CGameObject::CGameObject()
@@ -283,24 +284,30 @@ void CGameObject::Update_PartyMember(const int& iSNum, const int& hp, const int&
 
 void CGameObject::Buff_AllPartyMemeber(const int& buff)
 {
+
 	for (auto& p : m_mapPartyList)
 	{
+		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", p.first);
+		if (pObj == nullptr) continue;
+
 		switch (buff)
 		{
-		// 이속
-		case 7:
+		// 이속(보호막이펙)
+		case Priest::AURA_ON: 
 		{
+			pObj->Set_ShieldEffect(true); 
 		}
 		break;
 
-		// 베리어
-		case 8:
+		// 베리어(도끼이펙)
+		case Priest::PURIFY:
 		{
+			pObj->Set_AxeEffect(true);
 		}
 		break;
 
 		// hp
-		case 9:
+		case Priest::HEAL_START:
 		{
 			p.second.iHp += (int)((float)p.second.iMaxHp * Priest::PLUS_HP / 100.f);
 
@@ -310,7 +317,7 @@ void CGameObject::Buff_AllPartyMemeber(const int& buff)
 		break;
 
 		// mp
-		case 12:
+		case Priest::MP_CHARGE_START:
 		{
 			p.second.iMp += (int)((float)p.second.iMaxMp * Priest::PLUS_MP / 100.f);
 

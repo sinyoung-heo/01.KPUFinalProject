@@ -38,8 +38,8 @@ HRESULT CBossGroundEffect::LateInit_GameObject()
 	m_pShaderCom->SetUp_ShaderConstantBuffer((_uint)(m_pMeshCom->Get_DiffTexture().size()));
 	m_pDescriptorHeaps = Engine::CDescriptorHeapMgr::Get_Instance()->Find_DescriptorHeap(L"EffectPublic");
 	
-	m_uiDiffuse = 28;
-	m_uiNorm = 10;//NormIdx
+	m_uiDiffuse = 3;
+	m_uiNorm = 11;//NormIdx
 	m_uiSpec = 29;//SpecIdx
 
 	_vec3 vPos = m_pTransCom->m_vPos;
@@ -53,6 +53,7 @@ _int CBossGroundEffect::Update_GameObject(const _float & fTimeDelta)
 	
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
+	m_fAlpha -= fTimeDelta * 0.4f;
 	if (m_fAlpha < 0.f)
 		m_bIsReturn = true;
 
@@ -142,7 +143,7 @@ void CBossGroundEffect::Set_ConstantTable()
 	tCB_ShaderMesh.fOffset1 = -m_fDeltatime;
 	tCB_ShaderMesh.fOffset4 = m_fDeltaTime*0.4f;
 	tCB_ShaderMesh.fOffset5 = m_fDeltatime*0.3f;
-	tCB_ShaderMesh.fOffset6 = 1.f;
+	tCB_ShaderMesh.fOffset6 = m_fAlpha;
 
 	if(m_pShaderCom->Get_UploadBuffer_ShaderMesh()!=nullptr)
 		m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
@@ -161,7 +162,7 @@ void CBossGroundEffect::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle,
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
 	m_pTransCom->m_vPos = vPos;
-	m_fDeltatime = 0.2f;
+	m_fDeltatime = -0.1f;
 	m_fDeltatime2 = 0.f;
 	m_fDelta2Velocity = 1.f;
 	m_fDeltatime3 = 0.f;
@@ -189,7 +190,7 @@ CBossGroundEffect** CBossGroundEffect::Create_InstancePool(ID3D12Device* pGraphi
 	{
 		ppInstance[i] = new CBossGroundEffect(pGraphicDevice, pCommandList);
 		ppInstance[i]->m_uiInstanceIdx = i;
-		ppInstance[i]->Ready_GameObject(L"publicBreathGround", _vec3(0.f), _vec3(0.f), _vec3(0.f));
+		ppInstance[i]->Ready_GameObject(L"publicBossDecal", _vec3(0.f), _vec3(0.f), _vec3(0.f));
 	}
 	return ppInstance;
 }
