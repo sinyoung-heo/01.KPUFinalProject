@@ -28,12 +28,16 @@ public:
 
 
 	virtual void	Render_GameObject(const _float& fTimeDelta);
+	void Set_TexIdx(_uint Diff, _uint Norm, _uint Spec)
+	{
+		m_uiDiffuse = Diff, m_uiNorm = Norm, m_uiSpec = Spec;
+	}
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
 	void			Set_ConstantTable();
 	void			Set_ConstantTableShadowDepth();
 
-
+	
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]

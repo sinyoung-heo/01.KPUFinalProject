@@ -999,22 +999,11 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 	if (m_uiAnimIdx == Gladiator::STINGER_BLADE)
 	{
 		m_fSwordsSkillOffset += fTimeDelta;
-		/*m_fTemp += fTimeDelta;
-		if (m_fTemp > 0.05f)
-		{
-			_vec3 TempPos = m_pTransCom->m_vPos + m_pTransCom->m_vDir * 20;
-			TempPos.y += 5.f;
-			CEffectMgr::Get_Instance()->Effect_DirParticle(_vec3(1, 1, 0), _vec3(0.f), m_pTransCom->m_vPos, L"Bomb06", TempPos,
-				m_pTransCom->m_vPos, FRAME(6, 6, 24), 2, 20);
-			m_fTemp = 0.f;
-		}*/
+	
 		if (m_fSwordsSkillOffset > 0.45f && m_bisSwordsEffect==false)
 		{
 			m_bisSwordsEffect = true;
 			CEffectMgr::Get_Instance()->Effect_SwordEffect_s(m_pTransCom->m_vPos, m_pTransCom->m_vDir);
-
-		
-
 		}
 	}
 	else
@@ -1048,12 +1037,6 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 		Engine::HIERARCHY_DESC* pHierarchyDesc = &(m_pMeshCom->Find_HierarchyDesc("L_Sword"));
 		_vec3 Pos = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer")->Get_Transform()->Get_PositionVector();
 		Pos.y += 2.f;
-
-	/*	CEffectMgr::Get_Instance()->Effect_TextureEffect(L"Lighting2", _vec3(1.f), _vec3(0.0f), Pos, FRAME(5, 16, 25.0f)
-			, false, false
-			, _vec4(0.0f), true, pHierarchyDesc, m_pTransCom);*/
-		/*CEffectMgr::Get_Instance()->Effect_TextureEffect(L"Lighting4", _vec3(0.8f), _vec3(0.0f), Pos, FRAME(8, 8, 40.0f), false, false
-			, _vec4(0.7f, 0.1f, 0, 0),true, pHierarchyDesc, m_pTransCom);*/
 	}
 	else if (m_uiAnimIdx == Gladiator::DRAW_SWORD)
 	{
@@ -1065,6 +1048,10 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 			{
 				m_bisFireEffect = true;
 				CEffectMgr::Get_Instance()->Effect_FireCone(m_pTransCom->m_vPos, m_pTransCom->m_vAngle.y);
+
+				int SoundNumber = rand() % 7;
+				wstring SoundTag = L"G_Skill5_" + to_wstring(SoundNumber)+L".ogg";
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(SoundTag.c_str(), SOUNDID::SOUND_EFFECT);
 			}
 		}
 	}
@@ -1092,6 +1079,7 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 			m_bisIceEffect = true;
 			CEffectMgr::Get_Instance()->Effect_IceStorm(m_pTransCom->m_vPos, 36, 5.f);
 			CEffectMgr::Get_Instance()->Effect_IceDecal(m_pTransCom->m_vPos);
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"G_Skill4.ogg", SOUNDID::SOUND_EFFECT);
 		}
 	}
 	else if (m_uiAnimIdx == Gladiator::GAIA_CRUSH3)

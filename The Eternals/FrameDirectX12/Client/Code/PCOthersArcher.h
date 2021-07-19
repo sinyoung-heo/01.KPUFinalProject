@@ -61,6 +61,8 @@ private:
 	void	SetUp_WeaponLHand();
 	void	SetUp_WeaponBack();
 	void	SetUp_CollisionArrow(const _float& fTimeDelta);
+
+	void Effect_Loop(const _float& fTimeDelta);
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -115,6 +117,11 @@ private:
 	_float	m_fBlendingSpeed     = 0.001f;
 	_float	m_fAnimationSpeed    = TPS;
 	_bool	m_bIsRepeatAnimation = true;
+
+	bool m_bisUseShieldEffect = false;
+	_float m_fUseShieldDelta = 0.f;
+	_bool m_bisUseAxeEffect = false;
+	_float m_fUseAxeDelta = 0.f;
 
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,

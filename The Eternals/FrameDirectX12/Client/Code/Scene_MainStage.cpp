@@ -94,7 +94,7 @@ HRESULT CScene_MainStage::Ready_Scene()
 	Engine::FAILED_CHECK_RETURN(CPacketMgr::Get_Instance()->Ready_Server(m_pGraphicDevice, m_pCommandList), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(CPacketMgr::Get_Instance()->Connect_Server(), E_FAIL);
 
-	Engine::CSoundMgr::Get_Instance()->Play_BGM(L"Stage2.mp3");
+	//Engine::CSoundMgr::Get_Instance()->Play_BGM(L"Stage2.mp3");
 	return S_OK;
 }
 

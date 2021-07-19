@@ -148,6 +148,7 @@ HRESULT CPCOthersArcher::LateInit_GameObject()
 _int CPCOthersArcher::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
+	Effect_Loop(fTimeDelta);
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
@@ -975,6 +976,42 @@ void CPCOthersArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 			if (Temp == 0)
 				Temp = 10;
 			Pos.y += 2.f;
+		}
+	}
+}
+
+void CPCOthersArcher::Effect_Loop(const _float& fTimeDelta)
+{
+	//
+	if (m_bisSkillEffect[0] == true && m_bisUseShieldEffect == false)
+	{
+		m_bisSkillEffect[0] = false;
+		m_bisUseShieldEffect = true;
+		CEffectMgr::Get_Instance()->Effect_TargetShield(m_pTransCom->m_vPos, m_pTransCom);
+	}
+	if (m_bisUseShieldEffect)
+	{
+		m_fUseShieldDelta += fTimeDelta;//쉴드를 쓰는동안 사용시간올라감
+		if (m_fUseShieldDelta > 60.f)
+		{
+			m_fUseShieldDelta = 0.f;
+			m_bisUseShieldEffect = false;
+		}
+	}
+
+	if (m_bisSkillEffect[1] == true && m_bisUseAxeEffect == false)
+	{
+		m_bisSkillEffect[1] = false;
+		m_bisUseAxeEffect = true;
+		CEffectMgr::Get_Instance()->Effect_TargetAxe(m_pTransCom->m_vPos, m_pTransCom);
+	}
+	if (m_bisUseAxeEffect)
+	{
+		m_fUseAxeDelta += fTimeDelta;//쉴드를 쓰는동안 사용시간올라감
+		if (m_fUseAxeDelta > 60.f)
+		{
+			m_fUseAxeDelta = 0.f;
+			m_bisUseAxeEffect = false;
 		}
 	}
 }

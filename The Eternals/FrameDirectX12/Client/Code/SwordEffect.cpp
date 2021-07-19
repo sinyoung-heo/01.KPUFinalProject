@@ -63,6 +63,7 @@ _int CSwordEffect::Update_GameObject(const _float& fTimeDelta)
 	{
 		if (!m_bisEffect)
 		{
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"G_Skill2.ogg", SOUNDID::SOUND_EFFECT);
 			_vec3 Pos = m_pTransCom->m_vPos;
 			Pos.y = 0.2f;
 			CEffectMgr::Get_Instance()->Effect_IceDecal(Pos);

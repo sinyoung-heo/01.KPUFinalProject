@@ -425,9 +425,8 @@ PS_OUT PS_GROUNDEFFECT(VS_OUT ps_input) : SV_TARGET
     float4 Sha = g_TexShadowDepth.Sample(g_samLinearWrap, ps_input.TexUV);
     float4 Color =mul(Dt, Sha.r);
     Color.a = g_fOffset4;
-    ps_output.Effect3.xyz = mul(lerp(D, N, 0.5), S.r);
+    ps_output.Effect3.xyz = mul(D.xyz, saturate(S.r));
     ps_output.Effect3.a = g_fOffset6;
     
-    ps_output.Effect3 = lerp(ps_output.Effect3, Color, 0.5f);
     return (ps_output);
 }

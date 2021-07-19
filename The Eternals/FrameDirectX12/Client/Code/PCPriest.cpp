@@ -1864,14 +1864,26 @@ void CPCPriest::Leave_PartyThisPlayer()
 	}
 }
 
+
 void CPCPriest::Effect_Loop(const _float& fTimeDelta)
 {
 	if (m_uiAnimIdx == Priest::AURA_ON)
 	{
+		
+
 		if (m_bisEffect == false)
 		{
 			m_bisEffect = true;
 			CEffectMgr::Get_Instance()->Effect_Shield(m_pTransCom->m_vPos, m_pTransCom);
+
+			//for (auto& Party : m_mapPartyList)
+			//{
+			//	//Party.first //server number;
+			//	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", Party.first);
+			//	if (pObj == nullptr) return;
+
+			//	CEffectMgr::Get_Instance()->Effect_TargetShield(pObj->Get_Transform()->m_vPos, pObj->Get_Transform());
+			//}
 		}
 	}
 	else if (m_uiAnimIdx == Priest::PURIFY)
