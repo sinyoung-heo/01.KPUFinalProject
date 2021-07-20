@@ -62,6 +62,11 @@ HRESULT CVergos::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, 
 	// Create HpGauge
 	Engine::FAILED_CHECK_RETURN(Create_HpGauge(), E_FAIL);
 
+
+	m_pHierarchyDesc[R_HAND]= &(m_pMeshCom->Find_HierarchyDesc("Bip01-R-Hand"));
+	m_pHierarchyDesc[L_HAND] =& (m_pMeshCom->Find_HierarchyDesc("Bip01-L-Hand"));
+	m_pHierarchyDesc[BREATH]= &(m_pMeshCom->Find_HierarchyDesc("FxShot"));
+	m_pHierarchyDesc[HEAD]= &(m_pMeshCom->Find_HierarchyDesc("Bip01-Head"));
 	return S_OK;
 }
 
@@ -1165,52 +1170,37 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 	}
 	else if (m_uiAnimIdx == Vergos::BLOW_LEFT || m_uiAnimIdx == Vergos::BLOW_RIGHT)
 	{
-		string Bone;
+		Engine::HIERARCHY_DESC* pHierarchyDesc;
 		if (m_bisWarningEffect == false)
 		{
 			m_bisWarningEffect = true;
-			
 			if (m_uiAnimIdx == Vergos::BLOW_LEFT)
 			{
-				Bone = "Bip01-L-Hand";
+				pHierarchyDesc = m_pHierarchyDesc[L_HAND];
 				CEffectMgr::Get_Instance()->Effect_WarningGround(_vec3(390.4, 0.0f, 350.994f), 0.03f);
 			}
 			else
 			{
-				Bone = "Bip01-R-Hand";
+				pHierarchyDesc = m_pHierarchyDesc[R_HAND];
 				CEffectMgr::Get_Instance()->Effect_WarningGround(_vec3(385.4, 0.0f, 351.045f), 0.03f);
 			}
 		}
 		m_fSkillOffset += fTimeDelta;
 		if (m_fSkillOffset > 2.f && m_bisDecalEffect == false)
 		{
+			m_bisDecalEffect = true;
+		
 			if (m_uiAnimIdx == Vergos::BLOW_LEFT)
-				Bone = "Bip01-L-Hand";
+				pHierarchyDesc = m_pHierarchyDesc[L_HAND];
 			else
-				Bone = "Bip01-R-Hand";
+				pHierarchyDesc = m_pHierarchyDesc[R_HAND];
 
-			Engine::HIERARCHY_DESC* pHierarchyDesc = &(m_pMeshCom->Find_HierarchyDesc(Bone));
 			_matrix matBoneFinalTransform = (pHierarchyDesc->matScale * pHierarchyDesc->matRotate * pHierarchyDesc->matTrans)
 				* pHierarchyDesc->matGlobalTransform;
 			_matrix matWorld = matBoneFinalTransform * m_pTransCom->m_matWorld;
 			_vec3 Pos= _vec3(matWorld._41, matWorld._42, matWorld._43);
-			m_bisDecalEffect = true;
 			CEffectMgr::Get_Instance()->Effect_Dust(Pos,12.f,10.f,42.f);
-
-			cout <<Bone<< ":"<<Pos.x << "|" << Pos.z << endl;
-			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.07f), 
-				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(100, 10), 0, true);
-			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.07f),
-				_vec3(0.f), Pos , false, false, 5, 20, 0, 0, 0, _vec2(100, 10), 0, true);
-			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.05f),
-				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(25, 6), 0, true);
-			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.05f),
-				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(25, 6), 0, true);
-			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.02f),
-				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(15, 2), 0, true);
-			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.02f),
-				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(15, 2), 0, true);
-
+			Effect_BossStone(Pos, 0);
 			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Crack.ogg", SOUNDID::SOUND_EFFECT);
 			int SoundNumber = rand() % 16;
 			wstring SoundTag = L"RockImpact_HardCrumble_" + to_wstring(SoundNumber)+L".ogg";
@@ -1225,9 +1215,8 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 		if (m_fSkillOffset > 3.f && m_bisDecalEffect == false)
 		{
 			m_bisDecalEffect = true;
-			Engine::HIERARCHY_DESC* pHierarchyDesc = &(m_pMeshCom->Find_HierarchyDesc("Bip01-Head"));
-			_matrix matBoneFinalTransform = (pHierarchyDesc->matScale * pHierarchyDesc->matRotate * pHierarchyDesc->matTrans)
-				* pHierarchyDesc->matGlobalTransform;
+			_matrix matBoneFinalTransform = (m_pHierarchyDesc[HEAD]->matScale * m_pHierarchyDesc[HEAD]->matRotate 
+				* m_pHierarchyDesc[HEAD]->matTrans)* m_pHierarchyDesc[HEAD]->matGlobalTransform;
 			_matrix matWorld = matBoneFinalTransform * m_pTransCom->m_matWorld;
 			_vec3 Pos = _vec3(matWorld._41, matWorld._42, matWorld._43);
 			Pos.y = 0.3f;
@@ -1235,23 +1224,55 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 			Dir.y = 0;
 			Dir.Normalize();
 			Pos += Dir * 10.f;
-			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.07f),
-				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(100, 10), 0, true);
-			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.07f),
-				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(100, 10), 0, true);
-			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.05f),
-				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(25, 6), 0, true);
-			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.05f),
-				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(25, 6), 0, true);
-			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.02f),
-				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(15, 2), 0, true);
-			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.02f),
-				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(15, 2), 0, true);
-
+			Effect_BossStone(Pos, 0);
 			CEffectMgr::Get_Instance()->Effect_RectDecal(_vec3(395.f,0.3f,232.f), m_pTransCom->m_vAngle.y);
-
 			CEffectMgr::Get_Instance()->Effect_BossIceStorm(_vec3(400.f, 0.3f, 365.f), _vec3(0.1f, 0.f, -1.f), m_iSNum, m_pInfoCom->Get_RandomDamage());
 			CEffectMgr::Get_Instance()->Effect_BossIceStorm(_vec3(378.f, 0.3f, 358.f), _vec3(-0.1f, 0.f, -1.f), m_iSNum, m_pInfoCom->Get_RandomDamage());
+		}
+	}
+	else if (m_uiAnimIdx == Vergos::A_BLOW_ROTATION)
+	{
+		m_fSkillOffset += fTimeDelta;
+		if (m_fSkillOffset > 2.5f && m_bisBlow_Head_Effect[0] ==false)
+		{
+			m_bisBlow_Head_Effect[0] = true;
+			_matrix matBoneFinalTransform = (m_pHierarchyDesc[R_HAND]->matScale * m_pHierarchyDesc[R_HAND]->matRotate 
+				* m_pHierarchyDesc[R_HAND]->matTrans)* m_pHierarchyDesc[R_HAND]->matGlobalTransform;
+			_matrix matWorld = matBoneFinalTransform * m_pTransCom->m_matWorld;
+			_vec3 Pos = _vec3(matWorld._41, matWorld._42, matWorld._43);
+			CEffectMgr::Get_Instance()->Effect_Dust(Pos, 12.f, 10.f, 42.f);
+
+			Pos.y = 0.2f;
+			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.02f),
+				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(15, 2), 0, true);
+			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.02f),
+				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(15, 2), 0, true);
+		}
+		else if (m_fSkillOffset > 3.2f && m_bisBlow_Head_Effect[1] == false)
+		{
+			m_bisBlow_Head_Effect[1] = true;
+			_matrix matBoneFinalTransform = (m_pHierarchyDesc[L_HAND]->matScale * m_pHierarchyDesc[L_HAND]->matRotate
+				* m_pHierarchyDesc[L_HAND]->matTrans) * m_pHierarchyDesc[L_HAND]->matGlobalTransform;
+			_matrix matWorld = matBoneFinalTransform * m_pTransCom->m_matWorld;
+			_vec3 Pos = _vec3(matWorld._41, matWorld._42, matWorld._43);
+			CEffectMgr::Get_Instance()->Effect_Dust(Pos, 12.f, 10.f, 42.f);
+
+			Pos.y = 0.2f;
+			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.02f),
+				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(15, 2), 0, true);
+			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.02f),
+				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(15, 2), 0, true);
+		}
+		else if (m_fSkillOffset > 5.f && m_bisBlow_Head_Effect[2] == false)
+		{
+			m_bisBlow_Head_Effect[2] = true;
+			_matrix matBoneFinalTransform = (m_pHierarchyDesc[HEAD]->matScale * m_pHierarchyDesc[HEAD]->matRotate
+				* m_pHierarchyDesc[HEAD]->matTrans) * m_pHierarchyDesc[HEAD]->matGlobalTransform;
+			_matrix matWorld = matBoneFinalTransform * m_pTransCom->m_matWorld;
+			_vec3 Pos = _vec3(matWorld._41, matWorld._42, matWorld._43);
+			Pos.y = 0.5f;
+			CEffectMgr::Get_Instance()->Effect_Dust(Pos, 16.f, 10.f, 42.f,36);
+			Effect_BossStone(Pos);
 		}
 	}
 	else if (m_uiAnimIdx == Vergos::A_BREATH_FIRE)
@@ -1259,19 +1280,14 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 		m_fSkillOffset += fTimeDelta;
 		m_bisBreathDelta += fTimeDelta;
 		m_fParticleTime += fTimeDelta;
-		Engine::HIERARCHY_DESC* pHierarchyDesc = &(m_pMeshCom->Find_HierarchyDesc("FxShot"));
-	
-	
-
 		if (m_fSkillOffset >3.f)
 		{
-
 			m_fBreathTime += fTimeDelta * 0.5f;
 			if (m_fParticleTime > 0.1f)
 			{
 				m_fParticleTime = 0.f;
-				_matrix matBoneFinalTransform = (pHierarchyDesc->matScale * pHierarchyDesc->matRotate * pHierarchyDesc->matTrans)
-					* pHierarchyDesc->matGlobalTransform;
+				_matrix matBoneFinalTransform = (m_pHierarchyDesc[BREATH]->matScale * m_pHierarchyDesc[BREATH]->matRotate 
+					* m_pHierarchyDesc[BREATH]->matTrans)* m_pHierarchyDesc[BREATH]->matGlobalTransform;
 				_matrix matWorld = matBoneFinalTransform * m_pTransCom->m_matWorld;
 				_vec3 Pos = _vec3(matWorld._41, matWorld._42, matWorld._43);
 				BreathPos.x = powf((1.f - m_fBreathTime), 2.f) * BazierPos[0].x + 2 * m_fBreathTime * (1 - m_fBreathTime) * BazierPos[1].x
@@ -1292,17 +1308,19 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 				if (nullptr != pGameObj)
 				{
 					static_cast<CBreathEffect*>(pGameObj)->Set_CreateInfo(_vec3(0.f), _vec3(0.f), _vec3(-65.f, 2.2, -16.f));
-					static_cast<CBreathEffect*>(pGameObj)->Set_HierchyDesc(pHierarchyDesc);
+					static_cast<CBreathEffect*>(pGameObj)->Set_HierchyDesc(m_pHierarchyDesc[BREATH]);
 					static_cast<CBreathEffect*>(pGameObj)->Set_ParentMatrix(&m_pTransCom->m_matWorld);
 					Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Breath", pGameObj), E_FAIL);
 				}
 			}
-			//CEffectMgr::Get_Instance()->Effect_DirParticle(_vec3(1, 1, 0), _vec3(0.f), m_pTransCom->m_vPos, L"Bomb06", Pos,
-			//	BreathPos, FRAME(6, 6, 24), 2, 40);
 		}
 	}
+
 	else
 	{
+		m_bisBlow_Head_Effect[0] = false;
+		m_bisBlow_Head_Effect[1] = false;
+		m_bisBlow_Head_Effect[2] = false;
 		m_bisBreathEffect = false;
 		m_fBreathTime = 0.f;
 		m_bisWarningEffect = false;
@@ -1473,6 +1491,23 @@ void CVergos::SetUp_CameraShaking()
 	}
 		break;
 	}
+}
+
+void CVergos::Effect_BossStone(_vec3 Pos,int Option)
+{
+	CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.07f),
+		_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(100, 10), 0, true);
+	CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.07f),
+		_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(100, 10), 0, true);
+	CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.05f),
+		_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(25, 6), 0, true);
+	CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.05f),
+		_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(25, 6), 0, true);
+	CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.02f),
+		_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(15, 2), 0, true);
+	CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.02f),
+		_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(15, 2), 0, true);
+
 }
 
 Engine::CGameObject* CVergos::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)

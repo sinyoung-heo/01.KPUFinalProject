@@ -477,10 +477,12 @@ void CPacketMgr::Create_Monster_Effect(sc_packet_monster_effect* packet)
 {
 	for (int i = 0; i < 3; ++i)
 	{
-		_vec3 vPos = _vec3(packet->posX[i], 0.f, packet->posZ[i]);
-		Engine::CGameObject* pGameObj = CDragonEffect::Create(m_pGraphicDevice, m_pCommandList, L"DragonEffect", _vec3(0.012f), _vec3(-180.f), vPos);
+		_vec3 vPos = _vec3(packet->posX[i], 0.1f, packet->posZ[i]);
+		CEffectMgr::Get_Instance()->Effect_WarningGround(vPos, 0.03f, true);
+		/*Engine::CGameObject* pGameObj = CDragonEffect::Create(m_pGraphicDevice, m_pCommandList, 
+			L"DragonEffect", _vec3(0.012f), _vec3(-180.f), vPos);
 
-		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"EffectDragon", pGameObj);
+		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"EffectDragon", pGameObj);*/
 	}
 }
 

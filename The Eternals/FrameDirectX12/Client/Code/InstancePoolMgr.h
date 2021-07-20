@@ -61,6 +61,7 @@ class CBreathEffect;
 class CBossDecal;
 class CTonadoEffect;
 class CBossGroundEffect;
+class CDragonEffect;
 class CInstancePoolMgr : public Engine::CBase
 {
 	DECLARE_SINGLETON(CInstancePoolMgr)
@@ -145,6 +146,7 @@ public:
 	INSTANCE_POOL_DESC<CBreathEffect>* Get_Effect_Breath_Effect() { return m_pEffect_BreathEffect_Pool; }
 	INSTANCE_POOL_DESC<CTonadoEffect>* Get_Effect_Tonado_Effect() { return m_pEffect_Tonado_Pool; }
 	INSTANCE_POOL_DESC<CBossGroundEffect>* Get_Effect_BossGround_Effect() { return m_pEffect_BossGroundEffect_Pool; }
+	INSTANCE_POOL_DESC<CDragonEffect>* Get_Effect_Dragon_Effect() { return m_pEffect_DragonEffect_Pool; }
 
 	
 	void Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList);
@@ -255,7 +257,7 @@ private:
 	INSTANCE_POOL_DESC<CDirParticleEffect>* m_pEffect_DirParticle_Pool = nullptr;
 	INSTANCE_POOL_DESC<CBreathEffect>* m_pEffect_BreathEffect_Pool = nullptr;
 	INSTANCE_POOL_DESC<CBossGroundEffect>* m_pEffect_BossGroundEffect_Pool = nullptr;
-
+	INSTANCE_POOL_DESC<CDragonEffect>* m_pEffect_DragonEffect_Pool = nullptr;
 	
 private:
 	virtual void Free();

@@ -57,16 +57,18 @@ _int CDragonEffect::Update_GameObject(const _float& fTimeDelta)
 	if (m_bisFireDecal == false && m_fFireDecalDelta > 1.7f)
 	{
 		m_bisFireDecal = true;
-		CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.00f), _vec3(0.f),
-			m_pTransCom->m_vPos, true, false,5, 10, 11, 11, 11, _vec2(15, 2), 500,false);
-
-	/*	CEffectMgr::Get_Instance()->Effect_Particle(m_pTransCom->m_vPos, 20, L"Lighting6", _vec3(0.4f));
-		m_bisFireDecal = true;
-		CEffectMgr::Get_Instance()->Effect_FireDecal(m_pTransCom->m_vPos);*/
 	}
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
+
+	m_fAlphaDelta += fTimeDelta;
+	if (m_fAlphaDelta > 2.5f)
+	{
+		m_fDissolve += fTimeDelta*0.6f;
+		if (m_fDissolve > 1.f)
+			m_bIsReturn = true;
+	}
 
 	m_pMeshCom->Set_AnimationKey(0);
 	m_pMeshCom->Play_Animation(fTimeDelta * TPS);
@@ -74,7 +76,7 @@ _int CDragonEffect::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_iSNum = -1;
 		m_fDissolve = -0.05f;
-		
+		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_Dragon_Effect(), m_uiInstanceIdx);
 		return RETURN_OBJ;
 	}
 
@@ -99,7 +101,7 @@ _int CDragonEffect::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CDragonEffect::Render_GameObject(const _float& fTimeDelta)
 {
-	m_pMeshCom->Render_DynamicMeshEffect(m_pShaderCom, m_pDescriptorHeaps, 0, 27, 3
+	m_pMeshCom->Render_DynamicMeshEffect(m_pShaderCom, m_pDescriptorHeaps, 1, 27, 3
 		, 11,18);
 }
 
@@ -154,8 +156,26 @@ void CDragonEffect::Set_ConstantTable()
 	tCB_ShaderMesh.fLightPorjFar  = tShadowDesc.fLightPorjFar;
 	tCB_ShaderMesh.fDissolve      = abs(sin(m_fDeltaTime))+0.1f;
 	tCB_ShaderMesh.fOffset1 = abs(sin(m_fDeltaTime)) + 0.1f;
+	tCB_ShaderMesh.fOffset6 = m_fDissolve;
 	if(m_pShaderCom->Get_UploadBuffer_ShaderMesh()!=nullptr)
 		m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
+}
+
+void CDragonEffect::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
+{
+	m_pTransCom->m_vScale = vScale;
+	m_pTransCom->m_vAngle = vAngle;
+	m_pTransCom->m_vPos = vPos;
+
+	m_fAlphaDelta = 0.f;
+	m_fGridTime = 0.f;
+	m_fAlpha = 1.f;
+	m_bisFireDecal = false;
+	m_fDeltaTime = 0.f;
+	m_fDissolve = -0.05f;
+	m_fFireDecalDelta = 0.f;
+	
+	m_pMeshCom->Set_AnimationTime(0.f);
 }
 
 Engine::CGameObject* CDragonEffect::Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList, wstring wstrMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)

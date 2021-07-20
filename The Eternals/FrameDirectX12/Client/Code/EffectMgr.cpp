@@ -41,14 +41,14 @@ CEffectMgr::CEffectMgr()
 	m_pObjectMgr= Engine::CObjectMgr::Get_Instance();
 }
 
-void CEffectMgr::Effect_Dust(_vec3 vecPos, float Radius, float Scale,float FPS)
+void CEffectMgr::Effect_Dust(_vec3 vecPos, float Radius, float Scale,float FPS,_int number)
 {
 	_vec3 newPos;
-	for (int i = 0; i < 18; i++)
+	for (int i = 0; i < number; i++)
 	{
 		newPos.y = 1.f;
-		newPos.x = vecPos.x + Radius * cos(XMConvertToRadians(i * 20.f));
-		newPos.z = vecPos.z + Radius * sin(XMConvertToRadians(i * 20.f));
+		newPos.x = vecPos.x + Radius * cos(XMConvertToRadians(i * 360.f/(_float)number));
+		newPos.z = vecPos.z + Radius * sin(XMConvertToRadians(i * 360.f/(_float)number));
 		Effect_TextureEffect(L"Dust", _vec3(Scale, Scale,0.f), _vec3(0.f), newPos, FRAME(12, 7, FPS), false, false);
 	
 	}
@@ -333,13 +333,13 @@ void CEffectMgr::Effect_TargetAxe(_vec3 vecPos, Engine::CTransform* parentTransf
 	}
 }
 
-void CEffectMgr::Effect_WarningGround(_vec3 vecPos, _float fLimitScale)
+void CEffectMgr::Effect_WarningGround(_vec3 vecPos, _float fLimitScale,_bool DragonEffect)
 {
 	vecPos.y = 0.4f;
 	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_WarningGround_Effect());
 	if (nullptr != pGameObj)
 	{
-		static_cast<CWarningGround*>(pGameObj)->Set_CreateInfo(_vec3(0.f),_vec3(0.f), vecPos,true,0.03f);
+		static_cast<CWarningGround*>(pGameObj)->Set_CreateInfo(_vec3(0.f),_vec3(0.f), vecPos,true,0.03f, DragonEffect);
 		static_cast<CWarningGround*>(pGameObj)->Set_TexIDX(0, 3, 2);
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"WarningGround", pGameObj), E_FAIL);
 	}
