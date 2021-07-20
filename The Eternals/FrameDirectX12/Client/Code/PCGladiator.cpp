@@ -26,6 +26,7 @@
 #include "DmgFont.h"
 #include "CinemaMgr.h"
 #include "QuestMgr.h"
+#include "SoundMgr.h"
 
 CPCGladiator::CPCGladiator(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -146,15 +147,15 @@ HRESULT CPCGladiator::LateInit_GameObject()
 	vector<CQuickSlot*> vecQuickSlot = m_pQuickSlotMgr->Get_QuickSlotList();
 
 	m_mapSkillKeyInput[L"STINGER_BLADE"] = -1;
-	m_mapSkillCoolDown[L"STINGER_BLADE"] = Engine::SKILL_COOLDOWN_DESC(2.0f);
+	m_mapSkillCoolDown[L"STINGER_BLADE"] = Engine::SKILL_COOLDOWN_DESC(1.0f);
 	m_mapSkillKeyInput[L"CUTTING_SLASH"] = -1;
-	m_mapSkillCoolDown[L"CUTTING_SLASH"] = Engine::SKILL_COOLDOWN_DESC(4.0f);
+	m_mapSkillCoolDown[L"CUTTING_SLASH"] = Engine::SKILL_COOLDOWN_DESC(1.0f);
 	m_mapSkillKeyInput[L"JAW_BREAKER"]   = -1;
-	m_mapSkillCoolDown[L"JAW_BREAKER"]   = Engine::SKILL_COOLDOWN_DESC(6.0f);
+	m_mapSkillCoolDown[L"JAW_BREAKER"]   = Engine::SKILL_COOLDOWN_DESC(1.0f);
 	m_mapSkillKeyInput[L"GAIA_CRUSH"]    = -1;
-	m_mapSkillCoolDown[L"GAIA_CRUSH"]    = Engine::SKILL_COOLDOWN_DESC(8.0f);
+	m_mapSkillCoolDown[L"GAIA_CRUSH"]    = Engine::SKILL_COOLDOWN_DESC(1.0f);
 	m_mapSkillKeyInput[L"DRAW_SWORD"]    = -1;
-	m_mapSkillCoolDown[L"DRAW_SWORD"]    = Engine::SKILL_COOLDOWN_DESC(10.0f);
+	m_mapSkillCoolDown[L"DRAW_SWORD"]    = Engine::SKILL_COOLDOWN_DESC(1.0f);
 	m_mapSkillKeyInput[L"HP_POTION"]     = -1;
 	m_mapSkillCoolDown[L"HP_POTION"]     = Engine::SKILL_COOLDOWN_DESC(1.0f);
 	m_mapSkillKeyInput[L"MP_POTION"]     = -1;
@@ -947,10 +948,14 @@ void CPCGladiator::Set_AnimationSpeed()
 	{
 		m_fAnimationSpeed = TPS * 0.85f;
 	}
+	else if (m_uiAnimIdx == Gladiator::GAIA_CRUSH2)
+	{
+		m_fAnimationSpeed = TPS * 0.75f;
+	}
 	else if (m_uiAnimIdx == Gladiator::GAIA_CRUSH1 ||
 			 m_uiAnimIdx == Gladiator::GAIA_CRUSH3)
 	{
-		m_fAnimationSpeed = TPS * 1.4f;
+		m_fAnimationSpeed = TPS * 1.25f;
 	}
 	else if (m_uiAnimIdx == Gladiator::DRAW_SWORD_CHARGE ||
 			 m_uiAnimIdx == Gladiator::DRAW_SWORD_LOOP ||
@@ -1051,7 +1056,7 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 
 				int SoundNumber = rand() % 7;
 				wstring SoundTag = L"G_Skill5_" + to_wstring(SoundNumber)+L".ogg";
-				Engine::CSoundMgr::Get_Instance()->Play_Sound(SoundTag.c_str(), SOUNDID::SOUND_EFFECT);
+				// Engine::CSoundMgr::Get_Instance()->Play_Sound(SoundTag.c_str(), SOUNDID::SOUND_EFFECT);
 			}
 		}
 	}
@@ -1074,12 +1079,12 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 	if (m_uiAnimIdx == Gladiator::GAIA_CRUSH2 && m_bisIceEffect == false)
 	{
 		m_fSkillOffSet += fTimeDelta;
-		if (m_fSkillOffSet > 0.45f)
+		if (m_fSkillOffSet > 1.0f)
 		{
 			m_bisIceEffect = true;
 			CEffectMgr::Get_Instance()->Effect_IceStorm(m_pTransCom->m_vPos, 36, 5.f);
 			CEffectMgr::Get_Instance()->Effect_IceDecal(m_pTransCom->m_vPos);
-			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"G_Skill4.ogg", SOUNDID::SOUND_EFFECT);
+			// Engine::CSoundMgr::Get_Instance()->Play_Sound(L"G_Skill4.ogg", SOUNDID::SOUND_EFFECT);
 		}
 	}
 	else if (m_uiAnimIdx == Gladiator::GAIA_CRUSH3)
@@ -1262,6 +1267,12 @@ void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 			SetUp_AttackTrail(Gladiator::COMBOCNT_3, Gladiator::COMBO3, Gladiator::COMBO3_TRAIL_START, Gladiator::COMBO3_TRAIL_STOP);
 			SetUp_AttackTrail(Gladiator::COMBOCNT_4, Gladiator::COMBO4, Gladiator::COMBO4_TRAIL_START, Gladiator::COMBO4_TRAIL_STOP);
 
+			// ComboAttack Sound
+			SetUp_PlaySound(Gladiator::COMBO1, Gladiator::COMBO1_TRAIL_START, L"TwoH_Sword.ogg");
+			SetUp_PlaySound(Gladiator::COMBO2, Gladiator::COMBO2_TRAIL_START, L"TwoH_Sword3.ogg");
+			SetUp_PlaySound(Gladiator::COMBO3, Gladiator::COMBO3_TRAIL_START, L"TwoH_Sword.ogg");
+			SetUp_PlaySound(Gladiator::COMBO4, Gladiator::COMBO4_TRAIL_START - 10, L"G_Skill5_6.ogg");
+
 			// SkillAttack Move
 			SetUp_AttackMove(Gladiator::STINGER_BLADE, Gladiator::STINGER_BLADE_MOVE_START, Gladiator::STINGER_BLADE_MOVE_STOP, 3.0f, -3.0f);
 			SetUp_AttackMove(Gladiator::CUTTING_SLASH, Gladiator::CUTTING_SLASH_MOVE_START, Gladiator::CUTTING_SLASH_MOVE_STOP, 1.25f, -1.75f);
@@ -1287,6 +1298,14 @@ void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 			SetUp_AttackTrail(Gladiator::GAIA_CRUSH2, Gladiator::GAIA_CRUSH2_TRAIL_START, Gladiator::GAIA_CRUSH2_TRAIL_STOP);
 			SetUp_AttackTrail(Gladiator::DRAW_SWORD, Gladiator::DRAW_SWORD_TRAIL_START, Gladiator::DRAW_SWORD_TRAIL_STOP);
 			SetUp_AttackTrail(Gladiator::DRAW_SWORD_END, Gladiator::DRAW_SWORD_END_TRAIL_START, Gladiator::DRAW_SWORD_END_TRAIL_STOP);
+
+			// SkillAttack Sound
+			SetUp_PlaySound(Gladiator::STINGER_BLADE, Gladiator::STINGER_BLADE_SOUND_START, L"PC_Skill.gpk_000055_Gladiator_StingerBlade.wav");
+			SetUp_PlaySound(Gladiator::CUTTING_SLASH, Gladiator::CUTTING_SLASH_SOUND_START, L"PC_Skill.gpk_000079_Gladiator_CuttingSlash.wav");
+			SetUp_PlaySound(Gladiator::JAW_BREAKER, Gladiator::JAWBREAKER_SOUND_START, L"PC_Skill.gpk_000081_Gladiator_JawBreaker.wav");
+			SetUp_PlaySound(Gladiator::GAIA_CRUSH1, Gladiator::GAIA_CRUSH_SOUND_START, L"PC_Skill.gpk_000039_Gladiator_GiaiCrush.wav");
+			SetUp_PlaySound(Gladiator::DRAW_SWORD_CHARGE, Gladiator::DROW_SWORD_CHARGE_SOUND_START, L"PC_Skill.gpk_000058_Gladiator_DrawSwordCharge2.wav");
+			SetUp_PlaySound(Gladiator::DRAW_SWORD, Gladiator::DROW_SWORD_CHARGE_SOUND_START, L"PC_Skill.gpk_000057_Gladiator_DrawSword.wav");
 
 			// SkillAttack AfterImage
 			SetUp_AttackAfterImage(Gladiator::WIND_CUTTER1, 0, 18, 0.05f, 1.75f);
@@ -1570,6 +1589,18 @@ void CPCGladiator::KeyInput_SkillAttack(const _float& fTimeDelta)
 		m_uiAnimIdx   = Gladiator::ATTACK_WAIT;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+
+		m_mapIsPlaySound[Gladiator::STINGER_BLADE]     = false;
+		m_mapIsPlaySound[Gladiator::CUTTING_SLASH]     = false;
+		m_mapIsPlaySound[Gladiator::JAW_BREAKER]       = false;
+		m_mapIsPlaySound[Gladiator::CUT_HEAD]          = false;
+		m_mapIsPlaySound[Gladiator::GAIA_CRUSH1]       = false;
+		m_mapIsPlaySound[Gladiator::GAIA_CRUSH2]       = false;
+		m_mapIsPlaySound[Gladiator::GAIA_CRUSH3]       = false;
+		m_mapIsPlaySound[Gladiator::DRAW_SWORD_CHARGE] = false;
+		m_mapIsPlaySound[Gladiator::DRAW_SWORD_LOOP]   = false;
+		m_mapIsPlaySound[Gladiator::DRAW_SWORD]        = false;
+		m_mapIsPlaySound[Gladiator::DRAW_SWORD_END]    = false;
 	}
 
 	if (Gladiator::DRAW_SWORD == m_uiAnimIdx)
@@ -1902,6 +1933,9 @@ void CPCGladiator::SetUp_FromComboAttackToAttackWait(const _float& fTimeDelta)
 		m_uiAnimIdx  = Gladiator::COMBO1R;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+
+		// Reset Sound
+		m_mapIsPlaySound[Gladiator::COMBO1] = false;
 	}
 	else if (Gladiator::COMBO2 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
 	{
@@ -1911,6 +1945,9 @@ void CPCGladiator::SetUp_FromComboAttackToAttackWait(const _float& fTimeDelta)
 		m_uiAnimIdx  = Gladiator::COMBO2R;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+
+		// Reset Sound
+		m_mapIsPlaySound[Gladiator::COMBO2] = false;
 	}
 	else if (Gladiator::COMBO3 == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed))
 	{
@@ -1920,6 +1957,9 @@ void CPCGladiator::SetUp_FromComboAttackToAttackWait(const _float& fTimeDelta)
 		m_uiAnimIdx  = Gladiator::COMBO3R;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+
+		// Reset Sound
+		m_mapIsPlaySound[Gladiator::COMBO3] = false;
 	}
 
 	else if ((Gladiator::COMBO1R == m_uiAnimIdx && m_pMeshCom->Is_AnimationSetEnd(fTimeDelta, m_fAnimationSpeed)) ||
@@ -1934,6 +1974,12 @@ void CPCGladiator::SetUp_FromComboAttackToAttackWait(const _float& fTimeDelta)
 		m_uiAnimIdx   = Gladiator::ATTACK_WAIT;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+
+		// Reset Sound
+		m_mapIsPlaySound[Gladiator::COMBO1] = false;
+		m_mapIsPlaySound[Gladiator::COMBO2] = false;
+		m_mapIsPlaySound[Gladiator::COMBO3] = false;
+		m_mapIsPlaySound[Gladiator::COMBO4] = false;
 	}
 }
 
@@ -2557,6 +2603,19 @@ void CPCGladiator::SetUp_CollisionTick(const _float& fTimeDelta)
 	}
 }
 
+void CPCGladiator::SetUp_PlaySound(const _uint& uiAniIdx, const _uint& uiStartTick, wstring wstrSoundTag)
+{
+	if (uiAniIdx == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
+	{
+		// Trail On
+		if (m_ui3DMax_CurFrame >= uiStartTick && !m_mapIsPlaySound[uiAniIdx])
+		{
+			m_mapIsPlaySound[uiAniIdx] = true;
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(wstrSoundTag.c_str(), SOUNDID::SOUND_PLAYER);
+		}
+	}
+}
+
 void CPCGladiator::Collision_MonsterMultiCollider(list<Engine::CColliderSphere*>& lstMonsterCollider)
 {
 	for (auto& pSrcCollider : m_lstCollider)
@@ -2743,7 +2802,7 @@ void CPCGladiator::SetUp_CameraEffect(const _float& fTimeDelta)
 		CAMERA_ZOOM_DESC tCameraZoomDesc;
 		tCameraZoomDesc.eZoomState = CAMERA_ZOOM::ZOOM_IN;
 		tCameraZoomDesc.fPower     = 0.25f;
-		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 2.15f;
+		tCameraZoomDesc.tFovYInterpolationDesc.interpolation_speed = 1.5f;
 		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
 	}
 	break;

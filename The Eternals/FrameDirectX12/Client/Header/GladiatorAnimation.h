@@ -125,6 +125,14 @@ namespace Gladiator
 	constexpr _uint GAIA_CRUSH2_COLLISIONTICK_START   = 24;
 	constexpr _uint DRAW_SWORD_COLLISIONTICK_START    = 16;
 
+	constexpr _uint STINGER_BLADE_SOUND_START     = 30;
+	constexpr _uint CUTTING_SLASH_SOUND_START     = 32;
+	constexpr _uint JAWBREAKER_SOUND_START        = 7;
+	constexpr _uint GAIA_CRUSH_SOUND_START        = 0;
+	constexpr _uint DROW_SWORD_CHARGE_SOUND_START = 5;
+	constexpr _uint DROW_SWORD_SOUND_START        = 10;
+
+
 	// 스킬 필요 MP
 	constexpr int	AMOUNT_STINGER_BLADE		= 30;
 	constexpr int	AMOUNT_CUTTING_SLASH		= 50;

@@ -104,6 +104,7 @@ private:
 	void SetUp_AttackAfterImage(const _uint& uiAnimIdx, const _uint& uiStartTick, const _uint& uiStopTick, const _float& fMakeTime, const _float& fAlphaSpeed);
 	void Make_AfterImage(const _float& fTimeDelta);
 	void SetUp_CollisionTick(const _float& fTimeDelta);
+	void SetUp_PlaySound(const _uint& uiAniIdx, const _uint& uiStartTick, wstring wstrSoundTag);
 
 	// Collision Event
 	void Collision_MonsterMultiCollider(list<Engine::CColliderSphere*>& lstMonsterCollider);
@@ -210,6 +211,11 @@ private:
 	bool m_bisDustEffect = false;
 	bool m_bisSwordsEffect=false;
 	_float m_fTemp = 0.f;
+
+	// Sound
+	map<_uint, _bool> m_mapIsPlaySound;
+	_bool m_bIsPlaySoundCombo4 = false;
+
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,
