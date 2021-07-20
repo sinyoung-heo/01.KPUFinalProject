@@ -12,7 +12,7 @@ private:
 	virtual ~CEffectMgr() = default;
 
 public:
-	void Effect_Dust(_vec3 vecPos, float Radius=2.f,float Scale=3.f, float FPS=84.f);
+	void Effect_Dust(_vec3 vecPos, float Radius=2.f,float Scale=3.f, float FPS=84.f, _int number=18);
 	void Effect_IceStorm(_vec3 vecPos,int Cnt=36,float Radius=5.f);
 	void Effect_IceStorm_s(_vec3 vecPos,float Radius);
 	void Effect_SwordEffect(_vec3 vecPos,_vec3 vecDir);
@@ -29,7 +29,7 @@ public:
 	void Effect_Axe(_vec3 vecPos, Engine::CTransform* parentTransform);
 	void Effect_TargetShield(_vec3 vecPos, Engine::CTransform* parentTransform);
 	void Effect_TargetAxe(_vec3 vecPos, Engine::CTransform* parentTransform);
-	void Effect_WarningGround(_vec3 vecPos, _float fLimitScale);
+	void Effect_WarningGround(_vec3 vecPos, _float fLimitScale,_bool DragonEffect=false);
 	void Effect_RectDecal(_vec3 vecPos, float RotY);
 
 	void Effect_DistTrail(_vec3 vecPos,_vec3 Angle, bool isCrossFilter, float SizeOffSet);

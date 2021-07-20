@@ -160,7 +160,11 @@ PS_OUT PS_MAIN(VS_OUT ps_input) : SV_TARGET
     float4 Sha = g_TexShadowDepth.Sample(g_samLinearWrap, ps_input.TexUV * 3); //²ËÂù±×¸®µå
     float4 GridColor = mul(float4(0.7, 0.3, 0.3f, 1), S.r) + mul(float4(0.7, 0.0, 0.0f, 1), Sha.r) * 2;
     float4 color =  mul(GridColor, Dis.r) * 2 + mul(mul(float4(0.7, 0.3, 0, 0.5), g_fDissolve), Lim);
-    ps_output.Diffuse.rgba = color;
-    ps_output.Diffuse.a = 0.5f;
+	
+    float4 Normal_fDissolve = g_TexDiffuse.Sample(g_samLinearWrap, ps_input.TexUV);
+
+    clip((1.f - g_fOffset6) - Normal_fDissolve.r);
+
+    ps_output.Diffuse = color;
     return (ps_output);
 }
