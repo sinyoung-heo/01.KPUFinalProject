@@ -181,10 +181,11 @@ HRESULT CMainApp::SetUp_DefaultSetting(Engine::WINMODE eMode, const _uint& uiWid
 	Engine::FAILED_CHECK_RETURN(m_pSoundMgr->Ready_SoundMgr(), E_FAIL);
 	m_pSoundMgr->Load_Sound("../../Bin/Sound/BGM/*.*");
 	//m_pSoundMgr->Load_Sound("../../Bin/Sound/A_Skill/*.*");
-	m_pSoundMgr->Load_Sound("../../Bin/Sound/G_Skill/*.*");
+	//m_pSoundMgr->Load_Sound("../../Bin/Sound/G_Skill/*.*");
 	//m_pSoundMgr->Load_Sound("../../Bin/Sound/P_Skill/*.*");
 	m_pSoundMgr->Load_Sound("../../Bin/Sound/Player/*.*");
-	m_pSoundMgr->Load_Sound("../../Bin/Sound/Boss/*.*");
+	//m_pSoundMgr->Load_Sound("../../Bin/Sound/Boss/*.*");
+	m_pSoundMgr->Load_Sound("../../Bin/Sound/Monster/*.*");
 
 	return S_OK;
 }
