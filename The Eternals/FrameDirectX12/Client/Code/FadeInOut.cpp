@@ -10,6 +10,7 @@
 #include "QuestMgr.h"
 #include "PartySystemMgr.h"
 #include "Renderer.h"
+#include "SoundMgr.h"
 
 CFadeInOut::CFadeInOut(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -277,6 +278,10 @@ void CFadeInOut::SetUp_FadeInOutEvent(const _float& fTimeDelta)
 				CCinemaMgr::Get_Instance()->Reset_Vergos();
 				CCinemaMgr::Get_Instance()->Set_IsCancleCinematic(false);
 				CPacketMgr::Get_Instance()->send_end_cinema();
+
+				// Sound
+				Engine::CSoundMgr::Get_Instance()->Stop_Sound(SOUNDID::SOUND_BGM);
+				Engine::CSoundMgr::Get_Instance()->Play_BGM(L"StageWendigo_ServerTheme.gpk_000001.wav");
 			}
 		}
 		else

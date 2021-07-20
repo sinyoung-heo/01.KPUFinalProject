@@ -16,6 +16,7 @@
 #include "DmgFont.h"
 #include "DragonEffect.h"
 #include "SkyBox.h"
+#include "SoundMgr.h"
 
 /* USER */
 #include "PCGladiator.h"
@@ -768,6 +769,9 @@ void CPacketMgr::Stage_Change(sc_packet_stage_change* packet)
 		// SkyBox
 		CSkyBox* pSkyBox = static_cast<CSkyBox*>(m_pObjectMgr->Get_GameObject(L"Layer_Environment", L"SkyBox"));
 
+		// Sound
+		Engine::CSoundMgr::Get_Instance()->Stop_Sound(SOUNDID::SOUND_BGM);
+
 		if (STAGE_VELIKA == packet->stage_id)
 		{
 			Engine::CObjectMgr::Get_Instance()->Set_CurrentStage(Engine::STAGEID::STAGE_VELIKA);
@@ -779,6 +783,9 @@ void CPacketMgr::Stage_Change(sc_packet_stage_change* packet)
 
 			if (nullptr != pSkyBox)
 				pSkyBox->Set_TextureIdx(1);
+
+			// Sound
+			Engine::CSoundMgr::Get_Instance()->Play_BGM(L"StageVelka_Village.gpk_000008.wav");
 		}
 		else if (STAGE_BEACH == packet->stage_id)
 		{
@@ -791,6 +798,9 @@ void CPacketMgr::Stage_Change(sc_packet_stage_change* packet)
 
 			if (nullptr != pSkyBox)
 				pSkyBox->Set_TextureIdx(1);
+
+			// Sound
+			Engine::CSoundMgr::Get_Instance()->Play_BGM(L"StageBeach_Village.gpk_000021.wav");
 		}
 		else if (STAGE_WINTER == packet->stage_id)
 		{
@@ -803,6 +813,9 @@ void CPacketMgr::Stage_Change(sc_packet_stage_change* packet)
 
 			if (nullptr != pSkyBox)
 				pSkyBox->Set_TextureIdx(6);
+
+			// Sound
+			Engine::CSoundMgr::Get_Instance()->Play_BGM(L"StageWendigoCinematic_Music_DungeonEvent.gpk_000010.wav");
 		}
 
 		// Set FadeInOut
