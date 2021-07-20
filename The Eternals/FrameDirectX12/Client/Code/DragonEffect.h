@@ -49,6 +49,8 @@ private:
 	____________________________________________________________________________________________________________*/
 	wstring	m_wstrMeshTag            = L"";
 	
+	_float m_fAlphaDelta = 0.f;
+	_float m_fAlpha = 1.f;
 	_float	m_fDissolve              = -0.05f;
 	_rgba	m_vEmissiveColor         = _rgba(1.0f, 0.0f, 0.0f, 1.0f);
 
@@ -58,6 +60,10 @@ private:
 	_float m_fFireDecalDelta = 0.f;
 	_bool m_bisFireDecal = false;
 	
+public:
+	void Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos);
+
+public:
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

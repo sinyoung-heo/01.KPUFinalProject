@@ -114,6 +114,9 @@ private:
 	_uint	m_ui3DMax_CurFrame	= 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
 	
 	//Effect
+
+	void Effect_BossStone(_vec3 Pos,int Option = 0);
+	_bool m_bisBlow_Head_Effect[3] = { false,false,false };
 	_bool m_bisDecalEffect = false;
 
 	_bool m_bisWarningEffect = false;
@@ -138,6 +141,8 @@ private:
 	// Spawn
 	_bool m_bIsSpawn = false;
 
+	enum BONENAME{R_HAND,L_HAND,BREATH,HEAD,BONE_END};
+	Engine::HIERARCHY_DESC* m_pHierarchyDesc[BONE_END];
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

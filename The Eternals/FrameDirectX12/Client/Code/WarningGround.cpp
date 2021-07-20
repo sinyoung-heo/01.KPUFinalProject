@@ -8,6 +8,7 @@
 #include "RenderTarget.h"
 #include "TimeMgr.h"
 #include "DescriptorHeapMgr.h"
+#include "DragonEffect.h"
 CWarningGround::CWarningGround(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {
@@ -46,9 +47,19 @@ _int CWarningGround::Update_GameObject(const _float & fTimeDelta)
 	else
 		m_fAlpha -= 1.f * fTimeDelta;
 
-	if(m_fAlpha <0.f)
+	if (m_fAlpha < 0.f)
+	{
+		if (m_bisDragonEffect)
+		{
+			CGameObject* pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_Dragon_Effect());
+			if (nullptr != pGameObj)
+			{
+				static_cast<CDragonEffect*>(pGameObj)->Set_CreateInfo(_vec3(0.012f), _vec3(0.f,180.f,0.f), m_pTransCom->m_vPos);
+				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"DragonEffect", pGameObj), E_FAIL);
+			}
+		}
 		m_bIsReturn = true;
-	
+	}
 
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
@@ -135,7 +146,8 @@ void CWarningGround::Set_ConstantTable()
 	if(m_pShaderCom->Get_UploadBuffer_ShaderMesh()!=nullptr)
 		m_pShaderCom->Get_UploadBuffer_ShaderMesh()->CopyData(0, tCB_ShaderMesh);
 }
-void CWarningGround::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos,bool bisScaleAnim,_float LimitScale)
+void CWarningGround::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos,bool bisScaleAnim,_float LimitScale
+,_bool DragonEffect)
 {
 	m_pTransCom->m_vScale = vScale;
 	m_pTransCom->m_vAngle = vAngle;
@@ -151,6 +163,7 @@ void CWarningGround::Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, co
 
 	m_fAlpha = 1.f;
 	m_fDegree = 0.f;
+	m_bisDragonEffect = DragonEffect;
 }
 
 Engine::CGameObject* CWarningGround::Create(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList,

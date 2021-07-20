@@ -56,6 +56,7 @@
 #include "BossDecal.h"
 #include "TonadoEffect.h"
 #include "BossGroundEffect.h"
+#include "DragonEffect.h"
 IMPLEMENT_SINGLETON(CInstancePoolMgr)
 
 CInstancePoolMgr::CInstancePoolMgr()
@@ -234,6 +235,7 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_DirParticle_Pool, 100);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_BreathEffect_Pool, 3);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_BossGroundEffect_Pool, 3);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_DragonEffect_Pool, 5);
 
 	
 }
@@ -333,6 +335,7 @@ void CInstancePoolMgr::Free()
 	Safe_Release_InstacePool(m_pEffect_DirParticle_Pool);
 	Safe_Release_InstacePool(m_pEffect_BreathEffect_Pool);
 	Safe_Release_InstacePool(m_pEffect_BossGroundEffect_Pool);
+	Safe_Release_InstacePool(m_pEffect_DragonEffect_Pool);
 
 	
 }

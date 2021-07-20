@@ -62,10 +62,11 @@ private:
 
 	_float   m_fLimitLifeTime = 0.f;
 	_float   m_fLimitScale = 0.f;
-
+	_bool m_bisDragonEffect = false;
 	ID3D12DescriptorHeap* m_pTextureHeap = nullptr;
 public:
-	void Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos,bool bisScaleAnim=false, _float LimitScale=1.f);
+	void Set_CreateInfo(const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos, bool bisScaleAnim = false, _float LimitScale = 1.f
+		, _bool DragonEffect = false);
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 		ID3D12GraphicsCommandList* pCommandList,
