@@ -87,6 +87,7 @@ _int CCrab::Update_GameObject(const _float& fTimeDelta)
 		m_bIsStartDissolve = false;
 		m_bIsResetNaviMesh = false;
 		m_fDissolve = -0.05f;
+		m_bIsSoundStart = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterCrabPool(), m_uiInstanceIdx);
 
 		return RETURN_OBJ;
@@ -97,6 +98,7 @@ _int CCrab::Update_GameObject(const _float& fTimeDelta)
 		m_bIsStartDissolve = false;
 		m_bIsResetNaviMesh = false;
 		m_fDissolve = -0.05f;
+		m_bIsSoundStart	= false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterCrabPool(), m_uiInstanceIdx);
 
 		return RETURN_OBJ;
@@ -371,6 +373,7 @@ void CCrab::Change_Animation(const _float& fTimeDelta)
 
 		case Crab::A_WAIT:
 		{
+			m_bIsSoundStart			 = false;
 			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = Crab::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -379,6 +382,7 @@ void CCrab::Change_Animation(const _float& fTimeDelta)
 
 		case Crab::A_WALK:
 		{
+			m_bIsSoundStart			 = false;
 			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = Crab::A_WALK;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -387,6 +391,7 @@ void CCrab::Change_Animation(const _float& fTimeDelta)
 
 		case Crab::A_RUN:
 		{
+			m_bIsSoundStart			 = false;
 			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = Crab::A_RUN;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -407,6 +412,7 @@ void CCrab::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsSoundStart		= false;
 				m_iMonsterStatus	= Crab::A_WAIT;
 				m_uiAnimIdx			= Crab::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -418,6 +424,12 @@ void CCrab::Change_Animation(const _float& fTimeDelta)
 		{
 			m_uiAnimIdx = Crab::A_DEATH;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (!m_bIsSoundStart)
+			{
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"00.dead_crab.ogg", SOUNDID::SOUND_MONSTER);
+				m_bIsSoundStart = true;
+			}
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) 
 			{
