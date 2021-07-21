@@ -86,6 +86,8 @@ _int CGiantMonkey::Update_GameObject(const _float& fTimeDelta)
 		m_bIsStartDissolve = false;
 		m_fDissolve = -0.05f;
 		m_bIsResetNaviMesh = false;
+		m_bIsSoundStart = false;
+		m_bIsEffectSoundStart = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterGiantMonkeyPool(), m_uiInstanceIdx);
 
 		return RETURN_OBJ;
@@ -96,6 +98,8 @@ _int CGiantMonkey::Update_GameObject(const _float& fTimeDelta)
 		m_bIsStartDissolve = false;
 		m_bIsResetNaviMesh = false;
 		m_fDissolve = -0.05f;
+		m_bIsSoundStart = false;
+		m_bIsEffectSoundStart = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterGiantMonkeyPool(), m_uiInstanceIdx);
 
 		return RETURN_OBJ;
@@ -368,6 +372,8 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 
 		case GiantMonkey::A_WAIT:
 		{
+			m_bIsSoundStart = false;
+			m_bIsEffectSoundStart = false;
 			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = GiantMonkey::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -376,6 +382,8 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 
 		case GiantMonkey::A_WALK:
 		{
+			m_bIsSoundStart = false;
+			m_bIsEffectSoundStart = false;
 			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = GiantMonkey::A_WALK;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -387,8 +395,15 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 			m_uiAnimIdx = GiantMonkey::A_ATTACK_RIGHT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
+			if (!m_bIsSoundStart)
+			{
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"07.hit_gmonkey.ogg", SOUNDID::SOUND_MONSTER);
+				m_bIsSoundStart = true;
+			}
+
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsSoundStart		= false;
 				m_iMonsterStatus	= GiantMonkey::A_WAIT;
 
 				m_uiAnimIdx			= GiantMonkey::A_WAIT;
@@ -402,8 +417,15 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 			m_uiAnimIdx = GiantMonkey::A_ATTACK_LEFT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
+			if (!m_bIsSoundStart)
+			{
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"07.hit_gmonkey.ogg", SOUNDID::SOUND_MONSTER);
+				m_bIsSoundStart = true;
+			}
+
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsSoundStart		= false;
 				m_iMonsterStatus	= GiantMonkey::A_WAIT;
 
 				m_uiAnimIdx			= GiantMonkey::A_WAIT;
@@ -417,8 +439,15 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 			m_uiAnimIdx = GiantMonkey::A_ATTACK_STAMP;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
+			if (!m_bIsSoundStart)
+			{
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"07.hit_gmonkey.ogg", SOUNDID::SOUND_MONSTER);
+				m_bIsSoundStart = true;
+			}
+
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsSoundStart		= false;
 				m_iMonsterStatus	= GiantMonkey::A_WAIT;
 
 				m_uiAnimIdx			= GiantMonkey::A_WAIT;
@@ -432,8 +461,15 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 			m_uiAnimIdx = GiantMonkey::A_ATTACK_HOOK;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
+			if (!m_bIsSoundStart)
+			{
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"07.hit_gmonkey.ogg", SOUNDID::SOUND_MONSTER);
+				m_bIsSoundStart = true;
+			}
+
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsSoundStart		= false;
 				m_iMonsterStatus	= GiantMonkey::A_WAIT;
 
 				m_uiAnimIdx			= GiantMonkey::A_WAIT;
@@ -447,8 +483,15 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 			m_uiAnimIdx = GiantMonkey::A_ATTACK_JUMPING;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
+			if (!m_bIsSoundStart)
+			{
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"09.rush_gmonkey.ogg", SOUNDID::SOUND_MONSTER);
+				m_bIsSoundStart = true;
+			}
+
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsSoundStart		= false;
 				m_iMonsterStatus	= GiantMonkey::A_WAIT;
 
 				m_uiAnimIdx			= GiantMonkey::A_WAIT;
@@ -462,8 +505,15 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 			m_uiAnimIdx = GiantMonkey::A_ATTACK_FLYSTAMP;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
+			if (!m_bIsSoundStart)
+			{
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"08.jump_gmonkey.ogg", SOUNDID::SOUND_MONSTER);
+				m_bIsSoundStart = true;
+			}
+
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsSoundStart		= false;
 				m_iMonsterStatus	= GiantMonkey::A_WAIT;
 
 				m_uiAnimIdx			= GiantMonkey::A_WAIT;
@@ -477,8 +527,15 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 			m_uiAnimIdx = GiantMonkey::A_ATTACK_COMBO;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
+			if (!m_bIsSoundStart)
+			{
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"10.combo_gmonkey.ogg", SOUNDID::SOUND_MONSTER);
+				m_bIsSoundStart = true;
+			}
+
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsSoundStart		= false;
 				m_iMonsterStatus	= GiantMonkey::A_WAIT;
 
 				m_uiAnimIdx			= GiantMonkey::A_WAIT;
@@ -491,6 +548,12 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 		{
 			m_uiAnimIdx = GiantMonkey::A_DEATH;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (!m_bIsSoundStart)
+			{
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"11.dead_gmonkey.ogg", SOUNDID::SOUND_MONSTER);
+				m_bIsSoundStart = true;
+			}
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) 
 			{
@@ -515,6 +578,8 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsSoundStart = false;
+				m_bIsEffectSoundStart = false;
 				m_iMonsterStatus = GiantMonkey::A_WAIT;
 
 				m_uiAnimIdx = GiantMonkey::A_WAIT;
@@ -532,6 +597,8 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsSoundStart = false;
+				m_bIsEffectSoundStart = false;
 				m_iMonsterStatus = GiantMonkey::A_WAIT;
 
 				m_uiAnimIdx = GiantMonkey::A_WAIT;
@@ -549,6 +616,8 @@ void CGiantMonkey::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsSoundStart = false;
+				m_bIsEffectSoundStart = false;
 				m_iMonsterStatus = GiantMonkey::A_WAIT;
 
 				m_uiAnimIdx = GiantMonkey::A_WAIT;
@@ -620,6 +689,15 @@ void CGiantMonkey::SetUp_CollisionTick(const _float& fTimeDelta)
 			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
 		}
 	}
+	else if (GiantMonkey::A_ATTACK_JUMPING == m_uiAnimIdx && m_ui3DMax_CurFrame >= GiantMonkey::A_ATTACK_JUMPING_START_TICK-10 &&
+		m_ui3DMax_CurFrame < GiantMonkey::A_ATTACK_JUMPING_START_TICK)
+	{
+		if (!m_bIsEffectSoundStart)
+		{
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"10.combo_end.ogg", SOUNDID::SOUND_MONSTER);
+			m_bIsEffectSoundStart = true;
+		}
+	}
 	else if (GiantMonkey::A_ATTACK_JUMPING == m_uiAnimIdx && m_ui3DMax_CurFrame >= GiantMonkey::A_ATTACK_JUMPING_START_TICK)
 	{
 		if (!m_bIsCreateCollisionTick)
@@ -632,6 +710,16 @@ void CGiantMonkey::SetUp_CollisionTick(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
 			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+			m_bIsEffectSoundStart = false;
+		}
+	}
+	else if (GiantMonkey::A_ATTACK_FLYSTAMP == m_uiAnimIdx && m_ui3DMax_CurFrame >= GiantMonkey::A_ATTACK_FLYSTAMP_START_TICK - 10 &&
+		m_ui3DMax_CurFrame < GiantMonkey::A_ATTACK_FLYSTAMP_START_TICK)
+	{
+		if (!m_bIsEffectSoundStart)
+		{
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"10.combo_end.ogg", SOUNDID::SOUND_MONSTER);
+			m_bIsEffectSoundStart = true;
 		}
 	}
 	else if (GiantMonkey::A_ATTACK_FLYSTAMP == m_uiAnimIdx && m_ui3DMax_CurFrame >= GiantMonkey::A_ATTACK_FLYSTAMP_START_TICK)
@@ -646,7 +734,17 @@ void CGiantMonkey::SetUp_CollisionTick(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
 			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+			m_bIsEffectSoundStart = false;
 		}
+	}
+	else if (GiantMonkey::A_ATTACK_COMBO == m_uiAnimIdx && m_ui3DMax_CurFrame >= GiantMonkey::A_ATTACK_COMBO_START_TICK - 10 &&
+		m_ui3DMax_CurFrame < GiantMonkey::A_ATTACK_COMBO_START_TICK)
+	{
+		if (!m_bIsEffectSoundStart)
+		{
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"10.combo_tick.ogg", SOUNDID::SOUND_MONSTER);
+			m_bIsEffectSoundStart = true;
+		}		
 	}
 	else if (GiantMonkey::A_ATTACK_COMBO == m_uiAnimIdx && m_ui3DMax_CurFrame >= GiantMonkey::A_ATTACK_COMBO_START_TICK)
 	{
@@ -660,6 +758,7 @@ void CGiantMonkey::SetUp_CollisionTick(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
 			m_tCollisionTickDesc.iMaxCollisionTick       = 5;
+			m_bIsEffectSoundStart = false;
 		}
 	}
 
