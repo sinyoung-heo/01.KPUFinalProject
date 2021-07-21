@@ -1166,6 +1166,7 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 						_vec3(375.f, 0.4f, 371.f));
 					Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BossDecal", pGameObj), E_FAIL);
 			}	
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Crash.ogg", SOUNDID::SOUND_EFFECT);
 		}
 	}
 	else if (m_uiAnimIdx == Vergos::BLOW_LEFT || m_uiAnimIdx == Vergos::BLOW_RIGHT)
@@ -1228,6 +1229,9 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 			CEffectMgr::Get_Instance()->Effect_RectDecal(_vec3(395.f,0.3f,232.f), m_pTransCom->m_vAngle.y);
 			CEffectMgr::Get_Instance()->Effect_BossIceStorm(_vec3(400.f, 0.3f, 365.f), _vec3(0.1f, 0.f, -1.f), m_iSNum, m_pInfoCom->Get_RandomDamage());
 			CEffectMgr::Get_Instance()->Effect_BossIceStorm(_vec3(378.f, 0.3f, 358.f), _vec3(-0.1f, 0.f, -1.f), m_iSNum, m_pInfoCom->Get_RandomDamage());
+			int SoundNumber = rand() % 16;
+			wstring SoundTag = L"RockImpact_HardCrumble_" + to_wstring(SoundNumber) + L".ogg";
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(SoundTag.c_str(), SOUNDID::SOUND_EFFECT);
 		}
 	}
 	else if (m_uiAnimIdx == Vergos::A_BLOW_ROTATION)
@@ -1247,6 +1251,7 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(15, 2), 0, true);
 			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.02f),
 				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(15, 2), 0, true);
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Crack.ogg", SOUNDID::SOUND_EFFECT);
 		}
 		else if (m_fSkillOffset > 3.2f && m_bisBlow_Head_Effect[1] == false)
 		{
@@ -1262,6 +1267,7 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(15, 2), 0, true);
 			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.02f),
 				_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(15, 2), 0, true);
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Crack.ogg", SOUNDID::SOUND_EFFECT);
 		}
 		else if (m_fSkillOffset > 5.f && m_bisBlow_Head_Effect[2] == false)
 		{
@@ -1273,6 +1279,10 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 			Pos.y = 0.5f;
 			CEffectMgr::Get_Instance()->Effect_Dust(Pos, 16.f, 10.f, 42.f,36);
 			Effect_BossStone(Pos);
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Crack.ogg", SOUNDID::SOUND_EFFECT);
+			int SoundNumber = rand() % 16;
+			wstring SoundTag = L"RockImpact_HardCrumble_" + to_wstring(SoundNumber) + L".ogg";
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(SoundTag.c_str(), SOUNDID::SOUND_EFFECT);
 		}
 	}
 	else if (m_uiAnimIdx == Vergos::A_BREATH_FIRE)
@@ -1305,6 +1315,9 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 				m_bisBreathDelta = 0.f;
 				CGameObject* pGameObj;
 				pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_Breath_Effect());
+				int SoundNumber = rand() % 2;
+				wstring SoundTag = L"Breath_" + to_wstring(SoundNumber) + L".ogg";
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(SoundTag.c_str(), SOUNDID::SOUND_EFFECT);
 				if (nullptr != pGameObj)
 				{
 					static_cast<CBreathEffect*>(pGameObj)->Set_CreateInfo(_vec3(0.f), _vec3(0.f), _vec3(-65.f, 2.2, -16.f));
