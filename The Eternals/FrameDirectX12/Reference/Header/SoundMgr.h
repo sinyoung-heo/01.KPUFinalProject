@@ -20,8 +20,8 @@ public:
 	void		Update_Sound(void);
 
 public:
-	void		Play_Sound(const _tchar* pSoundTag, SOUNDID eID);
-	void		Play_BGM(const _tchar* pSoundTag);
+	void		Play_Sound(const _tchar* pSoundTag, SOUNDID eID, const _float& fVolume = 1.0f);
+	void		Play_BGM(const _tchar* pSoundTag, const _float& fVolume = 1.0f);
 
 public:
 	void		Stop_Sound(SOUNDID eID);

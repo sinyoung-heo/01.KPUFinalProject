@@ -30,7 +30,7 @@ void CSoundMgr::Update_Sound()
 		m_pSystem->update();
 }
 
-void CSoundMgr::Play_Sound(const _tchar* pSoundTag, SOUNDID eID)
+void CSoundMgr::Play_Sound(const _tchar* pSoundTag, SOUNDID eID, const _float& fVolume)
 {
 	Sound* pSound = Find_Sound(pSoundTag);
 
@@ -40,6 +40,7 @@ void CSoundMgr::Play_Sound(const _tchar* pSoundTag, SOUNDID eID)
 	Channel* pChannel = nullptr;
 
 	m_pSystem->playSound(pSound, 0, false, &pChannel);
+	pChannel->setVolume(fVolume);
 	m_ChannelLst[eID].push_back(pChannel);
 
 	if (MAX_SOUNDCHANNEL < m_ChannelLst[eID].size())
@@ -53,7 +54,7 @@ void CSoundMgr::Play_Sound(const _tchar* pSoundTag, SOUNDID eID)
 	}
 }
 
-void CSoundMgr::Play_BGM(const _tchar* pSoundTag)
+void CSoundMgr::Play_BGM(const _tchar* pSoundTag, const _float& fVolume)
 {
 	Sound* pSound = Find_Sound(pSoundTag);
 
@@ -64,6 +65,7 @@ void CSoundMgr::Play_BGM(const _tchar* pSoundTag)
 
 	m_pSystem->playSound(pSound, 0, false, &pChannel);
 	pChannel->setMode(FMOD_LOOP_NORMAL);
+	pChannel->setVolume(fVolume);
 
 	m_ChannelLst[SOUND_BGM].push_back(pChannel);
 

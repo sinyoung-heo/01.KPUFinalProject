@@ -28,6 +28,7 @@
 #include "StoreMgr.h"
 #include "MainMenuInventory.h"
 #include "QuestMgr.h"
+#include "SoundMgr.h"
 
 CPCArcher::CPCArcher(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -108,6 +109,21 @@ HRESULT CPCArcher::Ready_GameObject(wstring wstrMeshTag,
 	m_pMeshCom->Set_AfterImgMakeTime(m_fAfterImgMakeTime);
 	m_pMeshCom->Set_AfterImgSize(m_uiAfterImgSize);
 	m_pMeshCom->Set_AfterImgSubAlpha(m_fAfterSubAlpha);
+
+	// Sound
+	m_mapIsPlaySound[Archer::ATTACK_ARROW]       = false;
+	m_mapIsPlaySound[Archer::RAPID_SHOT1]        = false;
+	m_mapIsPlaySound[Archer::RAPID_SHOT2]        = false;
+	m_mapIsPlaySound[Archer::ESCAPING_BOMB]      = false;
+	m_mapIsPlaySound[Archer::ARROW_SHOWER_START] = false;
+	m_mapIsPlaySound[Archer::ARROW_SHOWER_LOOP]  = false;
+	m_mapIsPlaySound[Archer::ARROW_SHOWER_SHOT]  = false;
+	m_mapIsPlaySound[Archer::ARROW_FALL_START]   = false;
+	m_mapIsPlaySound[Archer::ARROW_FALL_LOOP]    = false;
+	m_mapIsPlaySound[Archer::ARROW_FALL_SHOT]    = false;
+	m_mapIsPlaySound[Archer::CHARGE_ARROW_START] = false;
+	m_mapIsPlaySound[Archer::CHARGE_ARROW_LOOP]  = false;
+	m_mapIsPlaySound[Archer::CHARGE_ARROW_SHOT]  = false;
 
 	/*__________________________________________________________________________________________________________
 	[ Font »ý¼º ]
@@ -1105,6 +1121,37 @@ void CPCArcher::KeyInput_Attack(const _float& fTimeDelta)
 			SetUp_AttackMove(Archer::ESCAPING_BOMB, Archer::ESCAPING_BOMB_MOVE_START, Archer::ESCAPING_BOMB_MOVE_STOP, 10.0f, -5.0f);
 			SetUp_AttackMove(Archer::CHARGE_ARROW_SHOT, Archer::CHARGE_ARROW_MOVE_START, Archer::CHARGE_ARROW_MOVE_STOP, 4.0f, -5.0f);
 
+			// Sound
+			SetUp_PlaySound(Archer::ATTACK_ARROW, Archer::ATTACK_ARROW_SOUND_START, L"AttackArrow_01.ogg");
+			SetUp_PlaySound(Archer::ESCAPING_BOMB, Archer::ESCAPE_BOMB_SOUND_START, L"EscapeShot_01_PC_Skill.gpk_000453.wav");
+			SetUp_PlaySound(Archer::ARROW_FALL_SHOT, Archer::ARROW_FALL_SHOT_SOUND_START, L"ArrowFall_02_PC_Skill.gpk_000076.wav");
+			SetUp_PlaySound(Archer::CHARGE_ARROW_START, Archer::CHARGE_ARROW_START_SOUND_START, L"ChargeArrow_01_PC_Skill.gpk_000270.wav");
+			SetUp_PlaySound(Archer::CHARGE_ARROW_LOOP, Archer::CHARGE_ARROW_LOOP_SOUND_START, L"ChargeArrow_01_PC_Skill.gpk_000509.wav");
+			SetUp_PlaySound(Archer::CHARGE_ARROW_SHOT, Archer::CHARGE_ARROW_SHOT_SOUND_START, L"ChargeArrow_02_PC_Skill.gpk_000515.wav");
+
+			if (!m_bIsArrowFall)
+			{
+				if (Archer::ARROW_FALL_SHOT == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
+				{
+					// Trail On
+					if (m_ui3DMax_CurFrame >= Archer::ARROW_FALL_SHOT_SOUND_START + 50 && !m_bIsArrowFall)
+					{
+						m_bIsArrowFall = true;
+						Engine::CSoundMgr::Get_Instance()->Play_Sound(L"ArrowFall_02_PC_Skill.gpk_000076.wav", SOUNDID::SOUND_PLAYER);
+					}
+				}
+			}
+
+			if (Archer::ARROW_FALL_LOOP == m_uiAnimIdx || Archer::ARROW_FALL_SHOT == m_uiAnimIdx)
+			{
+				m_fArrowFallSoundTime += fTimeDelta;
+				if (m_fArrowFallSoundTime > m_fArrowFallUpdateSoundTime)
+				{
+					m_fArrowFallSoundTime = 0.0f;
+					Engine::CSoundMgr::Get_Instance()->Play_Sound(L"ArrowFall_01_PC_Skill.gpk_000480.wav", SOUNDID::SOUND_PLAYER, 0.8f);
+				}
+			}
+
 			AttackMove_OnNaviMesh(fTimeDelta);
 		}
 	}
@@ -1195,6 +1242,9 @@ void CPCArcher::KeyInput_AttackArrow(const _float& fTimeDelta)
 		m_uiAnimIdx   = Archer::ATTACK_WAIT;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+
+		// Sound
+		m_mapIsPlaySound[Archer::ATTACK_ARROW] = false;
 	}
 }
 
@@ -1267,7 +1317,8 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 			m_pPacketMgr->send_attack(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos, m_pDynamicCamera->Get_Transform()->m_vAngle.y);
 			
-
+			// Sound
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"ArrowFall_01_PC_Skill_00.gpk_000063.wav", SOUNDID::SOUND_PLAYER);
 		}
 		else if (Engine::KEY_DOWN(m_mapSkillKeyInput[L"CHARGE_ARROW"]) &&
 				 m_mapSkillCoolDown[L"CHARGE_ARROW"].bIsCoolDownComplete &&
@@ -1369,6 +1420,21 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 		m_uiAnimIdx    = Archer::ATTACK_WAIT;
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		m_pPacketMgr->send_attack_stop(m_uiAnimIdx, m_pTransCom->m_vDir, m_pTransCom->m_vPos);
+
+		m_mapIsPlaySound[Archer::RAPID_SHOT1]        = false;
+		m_mapIsPlaySound[Archer::RAPID_SHOT2]        = false;
+		m_mapIsPlaySound[Archer::ESCAPING_BOMB]      = false;
+		m_mapIsPlaySound[Archer::ARROW_SHOWER_START] = false;
+		m_mapIsPlaySound[Archer::ARROW_SHOWER_LOOP]  = false;
+		m_mapIsPlaySound[Archer::ARROW_SHOWER_SHOT]  = false;
+		m_mapIsPlaySound[Archer::ARROW_FALL_START]   = false;
+		m_mapIsPlaySound[Archer::ARROW_FALL_LOOP]    = false;
+		m_mapIsPlaySound[Archer::ARROW_FALL_SHOT]    = false;
+		m_mapIsPlaySound[Archer::CHARGE_ARROW_START] = false;
+		m_mapIsPlaySound[Archer::CHARGE_ARROW_LOOP]  = false;
+		m_mapIsPlaySound[Archer::CHARGE_ARROW_SHOT]  = false;
+		m_bIsArrowFall = false;
+		m_fArrowFallSoundTime = 0.0f;
 	}
 }
 
@@ -1810,7 +1876,7 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
 		}
 	}
-	// ATTACK_ARROW
+	// RAPID SHOT
 	else if (Archer::RAPID_SHOT1 == m_uiAnimIdx && m_ui3DMax_CurFrame >= Archer::RAPID_SHOT_COLLISIONARROW_START)
 	{
 		if (!m_bIsSetCollisionTick)
@@ -1925,9 +1991,6 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 					matRotation = XMMatrixRotationY(XMConvertToRadians(fAngle));
 					vDir.TransformNormal(_vec3(0.0f, 0.0f, 1.0f), matRotation);
 
-
-				
-
 					CCollisionArrow* pCollisionArrow = static_cast<CCollisionArrow*>(Pop_Instance(m_pInstancePoolMgr->Get_CollisionArrowPool(ARROW_POOL_TYPE::ARROW_POOL_ICE)));
 					if (nullptr != pCollisionArrow)
 					{
@@ -1948,6 +2011,10 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 
 					fAngle += (45.0f / (_float)Archer::ARROW_SHOWER_CNT);
 				}
+
+				// Sound
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"ArrowShower_01_PC_Skill.gpk_000408.wav", SOUNDID::SOUND_PLAYER, 0.75f);
+
 			}
 			else if (m_uiAnimIdx == Archer::CHARGE_ARROW_SHOT)
 			{
@@ -2013,6 +2080,10 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 					pCollisionArrow->Get_BoundingSphere()->Set_Radius(pCollisionArrow->Get_Transform()->m_vScale);
 
 					m_pObjectMgr->Add_GameObject(L"Layer_GameObject", pCollisionArrow->Get_MeshTag(), pCollisionArrow);
+
+					// Sound
+					if (Archer::RAPID_SHOT1 == m_uiAnimIdx || Archer::RAPID_SHOT2 == m_uiAnimIdx)
+						Engine::CSoundMgr::Get_Instance()->Play_Sound(L"RapidShot_01_PC_Skill.gpk_000119.wav", SOUNDID::SOUND_PLAYER, 0.5f);
 				}
 			}
 		}
@@ -2208,6 +2279,19 @@ void CPCArcher::SetUp_UltimateCameraEffect(const _float& fTimeDelta)
 	//		m_pDynamicCamera->Set_CameraZoomDesc(tCameraZoomDesc);
 	//	}
 	//}
+}
+
+void CPCArcher::SetUp_PlaySound(const _uint& uiAniIdx, const _uint& uiStartTick, wstring wstrSoundTag, const _float& fVolume)
+{
+	if (uiAniIdx == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
+	{
+		// Trail On
+		if (m_ui3DMax_CurFrame >= uiStartTick && !m_mapIsPlaySound[uiAniIdx])
+		{
+			m_mapIsPlaySound[uiAniIdx] = true;
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(wstrSoundTag.c_str(), SOUNDID::SOUND_PLAYER, fVolume);
+		}
+	}
 }
 
 void CPCArcher::Collision_MonsterMultiCollider(list<Engine::CColliderSphere*>& lstMonsterCollider)

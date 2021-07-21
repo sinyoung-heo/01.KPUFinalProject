@@ -108,6 +108,23 @@ HRESULT CPCGladiator::Ready_GameObject(wstring wstrMeshTag,
 	m_pMeshCom->Set_AfterImgSize(m_uiAfterImgSize);
 	m_pMeshCom->Set_AfterImgSubAlpha(m_fAfterSubAlpha);
 
+	// Sound
+	m_mapIsPlaySound[Gladiator::COMBO1]            = false;
+	m_mapIsPlaySound[Gladiator::COMBO2]            = false;
+	m_mapIsPlaySound[Gladiator::COMBO3]            = false;
+	m_mapIsPlaySound[Gladiator::COMBO4]            = false;
+	m_mapIsPlaySound[Gladiator::STINGER_BLADE]     = false;
+	m_mapIsPlaySound[Gladiator::CUTTING_SLASH]     = false;
+	m_mapIsPlaySound[Gladiator::JAW_BREAKER]       = false;
+	m_mapIsPlaySound[Gladiator::CUT_HEAD]          = false;
+	m_mapIsPlaySound[Gladiator::GAIA_CRUSH1]       = false;
+	m_mapIsPlaySound[Gladiator::GAIA_CRUSH2]       = false;
+	m_mapIsPlaySound[Gladiator::GAIA_CRUSH3]       = false;
+	m_mapIsPlaySound[Gladiator::DRAW_SWORD_CHARGE] = false;
+	m_mapIsPlaySound[Gladiator::DRAW_SWORD_LOOP]   = false;
+	m_mapIsPlaySound[Gladiator::DRAW_SWORD]        = false;
+	m_mapIsPlaySound[Gladiator::DRAW_SWORD_END]    = false;
+
 	/*__________________________________________________________________________________________________________
 	[ Font »ý¼º ]
 	____________________________________________________________________________________________________________*/
@@ -2603,7 +2620,7 @@ void CPCGladiator::SetUp_CollisionTick(const _float& fTimeDelta)
 	}
 }
 
-void CPCGladiator::SetUp_PlaySound(const _uint& uiAniIdx, const _uint& uiStartTick, wstring wstrSoundTag)
+void CPCGladiator::SetUp_PlaySound(const _uint& uiAniIdx, const _uint& uiStartTick, wstring wstrSoundTag, const _float& fVolume)
 {
 	if (uiAniIdx == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
 	{
@@ -2611,7 +2628,7 @@ void CPCGladiator::SetUp_PlaySound(const _uint& uiAniIdx, const _uint& uiStartTi
 		if (m_ui3DMax_CurFrame >= uiStartTick && !m_mapIsPlaySound[uiAniIdx])
 		{
 			m_mapIsPlaySound[uiAniIdx] = true;
-			Engine::CSoundMgr::Get_Instance()->Play_Sound(wstrSoundTag.c_str(), SOUNDID::SOUND_PLAYER);
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(wstrSoundTag.c_str(), SOUNDID::SOUND_PLAYER, fVolume);
 		}
 	}
 }
