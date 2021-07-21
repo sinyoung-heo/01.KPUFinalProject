@@ -70,17 +70,18 @@ private:
 	/*__________________________________________________________________________________________________________
 	[ Value ]
 	____________________________________________________________________________________________________________*/
-	wstring	m_wstrMeshTag            = L"";
-	_bool	m_bIsResetNaviMesh       = false;
+	wstring	m_wstrMeshTag				= L"";
+	_bool	m_bIsResetNaviMesh			= false;
 
-	_bool	m_bIsCreateCollisionTick = false;
+	_bool	m_bIsCreateCollisionTick	= false;
 	COLLISION_TICK_DESC m_tCollisionTickDesc;
 
-	_bool	m_bIsStartDissolve       = false;
-	_float	m_fDissolve              = -0.05f;
-	_rgba	m_vEmissiveColor         = _rgba(1.0f, 0.0f, 0.0f, 1.0f);
+	_bool	m_bIsStartDissolve			= false;
+	_float	m_fDissolve					= -0.05f;
+	_rgba	m_vEmissiveColor			= _rgba(1.0f, 0.0f, 0.0f, 1.0f);
 
-	CNormalMonsterHpGauge* m_pHpGauge = nullptr;
+	CNormalMonsterHpGauge* m_pHpGauge	= nullptr;
+	_bool	m_bIsSoundStart				= false;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]

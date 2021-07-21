@@ -86,6 +86,7 @@ _int CDrownedSailor::Update_GameObject(const _float& fTimeDelta)
 		m_bIsStartDissolve = false;
 		m_fDissolve = -0.05f;
 		m_bIsResetNaviMesh = false;
+		m_bIsSoundStart = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterDrownedSailorPool(), m_uiInstanceIdx);
 
 		return RETURN_OBJ;
@@ -96,6 +97,7 @@ _int CDrownedSailor::Update_GameObject(const _float& fTimeDelta)
 		m_bIsStartDissolve = false;
 		m_bIsResetNaviMesh = false;
 		m_fDissolve = -0.05f;
+		m_bIsSoundStart = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterDrownedSailorPool(), m_uiInstanceIdx);
 
 		return RETURN_OBJ;
@@ -369,6 +371,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 
 		case DrownedSailor::A_WAIT:
 		{
+			m_bIsSoundStart = false;
 			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = DrownedSailor::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -377,6 +380,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 
 		case DrownedSailor::A_WALK:
 		{
+			m_bIsSoundStart = false;
 			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = DrownedSailor::A_WALK;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -385,6 +389,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 
 		case DrownedSailor::A_RUN:
 		{
+			m_bIsSoundStart = false;
 			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = DrownedSailor::A_RUN;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -398,6 +403,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsSoundStart = false;
 				m_iMonsterStatus	= DrownedSailor::A_WAIT;
 				m_uiAnimIdx			= DrownedSailor::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -412,6 +418,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsSoundStart = false;
 				m_iMonsterStatus	= DrownedSailor::A_WAIT;
 				m_uiAnimIdx			= DrownedSailor::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -426,6 +433,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsSoundStart = false;
 				m_iMonsterStatus	= DrownedSailor::A_WAIT;
 				m_uiAnimIdx			= DrownedSailor::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -440,6 +448,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsSoundStart = false;
 				m_iMonsterStatus	= DrownedSailor::A_WAIT;
 				m_uiAnimIdx			= DrownedSailor::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -454,6 +463,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsSoundStart = false;
 				m_iMonsterStatus	= DrownedSailor::A_WAIT;
 				m_uiAnimIdx			= DrownedSailor::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -465,6 +475,12 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 		{
 			m_uiAnimIdx = DrownedSailor::A_DEATH;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (!m_bIsSoundStart)
+			{
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"03.dead_sailor.ogg", SOUNDID::SOUND_MONSTER);
+				m_bIsSoundStart = true;
+			}
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) 
 			{
@@ -482,6 +498,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsSoundStart = false;
 				m_iMonsterStatus = DrownedSailor::A_WAIT;
 
 				m_uiAnimIdx = DrownedSailor::A_WAIT;
@@ -499,6 +516,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsSoundStart = false;
 				m_iMonsterStatus = DrownedSailor::A_WAIT;
 
 				m_uiAnimIdx = DrownedSailor::A_WAIT;
@@ -516,6 +534,7 @@ void CDrownedSailor::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsSoundStart = false;
 				m_iMonsterStatus = DrownedSailor::A_WAIT;
 
 				m_uiAnimIdx = DrownedSailor::A_WAIT;
@@ -543,6 +562,8 @@ void CDrownedSailor::SetUp_CollisionTick(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
 			m_tCollisionTickDesc.iMaxCollisionTick       = 4;
+
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"01.hit_sailor.ogg", SOUNDID::SOUND_MONSTER);
 		}
 	}
 	else if (DrownedSailor::ATTACK_NORMAL == m_uiAnimIdx && m_ui3DMax_CurFrame >= DrownedSailor::ATTACK_NORMAL_START_TICK)
@@ -557,6 +578,8 @@ void CDrownedSailor::SetUp_CollisionTick(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
 			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"01.hit_sailor.ogg", SOUNDID::SOUND_MONSTER);
 		}
 	}
 	else if (DrownedSailor::ATTACK_STRONG == m_uiAnimIdx && m_ui3DMax_CurFrame >= DrownedSailor::ATTACK_STRONG_START_TICK)
@@ -571,6 +594,8 @@ void CDrownedSailor::SetUp_CollisionTick(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
 			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"02.rush_sailor.ogg", SOUNDID::SOUND_MONSTER);
 		}
 	}
 	else if (DrownedSailor::ATTACK_RUSH == m_uiAnimIdx && m_ui3DMax_CurFrame >= DrownedSailor::ATTACK_RUSH_START_TICK)
@@ -585,6 +610,8 @@ void CDrownedSailor::SetUp_CollisionTick(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
 			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"02.rush_sailor.ogg", SOUNDID::SOUND_MONSTER);
 		}
 	}
 	else if (DrownedSailor::ATTACK_HOOK == m_uiAnimIdx && m_ui3DMax_CurFrame >= DrownedSailor::ATTACK_HOOK_START_TICK)
@@ -599,6 +626,8 @@ void CDrownedSailor::SetUp_CollisionTick(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
 			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"01.hit_sailor.ogg", SOUNDID::SOUND_MONSTER);
 		}
 	}
 

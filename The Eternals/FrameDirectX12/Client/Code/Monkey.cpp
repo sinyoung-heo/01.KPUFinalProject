@@ -86,6 +86,7 @@ _int CMonkey::Update_GameObject(const _float& fTimeDelta)
 		m_bIsStartDissolve = false;
 		m_fDissolve = -0.05f;
 		m_bIsResetNaviMesh = false;
+		m_bIsSoundStart = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterMonkeyPool(), m_uiInstanceIdx);
 
 		return RETURN_OBJ;
@@ -96,6 +97,7 @@ _int CMonkey::Update_GameObject(const _float& fTimeDelta)
 		m_bIsStartDissolve = false;
 		m_bIsResetNaviMesh = false;
 		m_fDissolve = -0.05f;
+		m_bIsSoundStart = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterMonkeyPool(), m_uiInstanceIdx);
 
 		return RETURN_OBJ;
@@ -369,6 +371,7 @@ void CMonkey::Change_Animation(const _float& fTimeDelta)
 
 		case Monkey::A_WAIT:
 		{
+			m_bIsSoundStart			 = false;
 			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = Monkey::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -377,6 +380,7 @@ void CMonkey::Change_Animation(const _float& fTimeDelta)
 
 		case Monkey::A_WALK:
 		{
+			m_bIsSoundStart			 = false;
 			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = Monkey::A_WALK;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -385,6 +389,7 @@ void CMonkey::Change_Animation(const _float& fTimeDelta)
 
 		case Monkey::A_RUN:
 		{
+			m_bIsSoundStart			 = false;
 			m_bIsCreateCollisionTick = false;
 			m_uiAnimIdx = Monkey::A_RUN;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
@@ -398,6 +403,7 @@ void CMonkey::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsSoundStart		= false;
 				m_iMonsterStatus	= Monkey::A_WAIT;
 
 				m_uiAnimIdx			= Monkey::A_WAIT;
@@ -413,6 +419,7 @@ void CMonkey::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsSoundStart		= false;
 				m_iMonsterStatus	= Monkey::A_WAIT;
 
 				m_uiAnimIdx			= Monkey::A_WAIT;
@@ -425,6 +432,12 @@ void CMonkey::Change_Animation(const _float& fTimeDelta)
 		{
 			m_uiAnimIdx = Monkey::A_DEATH;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+			if (!m_bIsSoundStart)
+			{
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"06.dead_monkey.ogg", SOUNDID::SOUND_MONSTER);
+				m_bIsSoundStart = true;
+			}
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) 
 			{
@@ -502,6 +515,8 @@ void CMonkey::SetUp_CollisionTick(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
 			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"04.hit_monkey.ogg", SOUNDID::SOUND_MONSTER);
 		}
 	}
 	else if (Monkey::A_ATTACK_THROW == m_uiAnimIdx && m_ui3DMax_CurFrame >= Monkey::ATTACK_THROW_START_TICK)
@@ -516,6 +531,8 @@ void CMonkey::SetUp_CollisionTick(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
 			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"05.throw_monkey.ogg", SOUNDID::SOUND_MONSTER);
 		}
 	}
 
