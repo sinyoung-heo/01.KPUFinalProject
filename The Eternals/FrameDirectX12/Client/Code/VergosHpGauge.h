@@ -35,9 +35,6 @@ private:
 	_float m_fPercent = 1.0f;
 	_int	m_iCurHp  = 0;
 	_int	m_iMaxHp  = 0;
-
-	_vec2 vOffset = _vec2(0.0f);
-
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList,
 									   wstring wstrRootObjectTag,

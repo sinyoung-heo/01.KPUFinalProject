@@ -100,6 +100,8 @@ private:
 	void SetUp_CollisionArrow(const _float& fTimeDelta);
 	void SetUp_CameraEffect(const _float& fTimeDelta);
 	void SetUp_UltimateCameraEffect(const _float& fTimeDelta);
+	void SetUp_PlaySound(const _uint& uiAniIdx, const _uint& uiStartTick, wstring wstrSoundTag, const _float& fVolume = 1.0f);
+
 	// Collision Event
 	void Collision_MonsterMultiCollider(list<Engine::CColliderSphere*>& lstMonsterCollider);
 	void Collision_PortalVelikaToBeach(list<Engine::CColliderSphere*>& lstPortalCollider);
@@ -208,6 +210,13 @@ private:
 
 	//Effect
 	bool m_bisHandEffect = false;
+
+	// Sound
+	map<_uint, _bool> m_mapIsPlaySound;
+	_bool	m_bIsArrowFall              = false;
+	_float	m_fArrowFallSoundTime       = 0.0f;
+	_float	m_fArrowFallUpdateSoundTime = 0.2;
+
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

@@ -83,27 +83,6 @@ _int CVergosHpGauge::LateUpdate_GameObject(const _float& fTimeDelta)
 		m_pFont->Set_Text(wstring(m_szText));
 	}
 
-	if (Engine::KEY_PRESSING(DIK_Z))
-	{
-		++vOffset.x;
-		vOffset.Print();
-	}
-	if (Engine::KEY_PRESSING(DIK_X))
-	{
-		--vOffset.x;
-		vOffset.Print();
-	}
-	if (Engine::KEY_PRESSING(DIK_C))
-	{
-		++vOffset.y;
-		vOffset.Print();
-	}
-	if (Engine::KEY_PRESSING(DIK_V))
-	{
-		--vOffset.y;
-		vOffset.Print();
-	}
-
 	return NO_EVENT;
 }
 

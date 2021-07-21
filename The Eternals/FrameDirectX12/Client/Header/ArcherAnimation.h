@@ -53,6 +53,14 @@ namespace Archer
 	constexpr _uint	ARROW_SHOWER_CNT = 8;
 	constexpr float	ARROW_FALL_DIST  = 8.0f;
 
+	// Sound
+	constexpr _uint ATTACK_ARROW_SOUND_START       = 5;
+	constexpr _uint ESCAPE_BOMB_SOUND_START        = 0;
+	constexpr _uint ARROW_FALL_SHOT_SOUND_START    = 3;
+	constexpr _uint CHARGE_ARROW_START_SOUND_START = 1;
+	constexpr _uint CHARGE_ARROW_LOOP_SOUND_START  = 0;
+	constexpr _uint CHARGE_ARROW_SHOT_SOUND_START  = 2;
+
 	// 스킬 필요 MP
 	constexpr int	AMOUNT_RAPID_SHOT1			= 30;
 	constexpr int	AMOUNT_ESCAPING_BOMB		= 50;
