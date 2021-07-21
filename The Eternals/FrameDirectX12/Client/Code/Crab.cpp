@@ -408,7 +408,15 @@ void CCrab::Change_Animation(const _float& fTimeDelta)
 				Attack_Moving(fTimeDelta, (m_pInfoCom->m_fSpeed * 1.f), false);
 			/* Front Step (28~65 tick) */
 			else if (28 <= m_ui3DMax_CurFrame)
+			{
 				Attack_Moving(fTimeDelta, (m_pInfoCom->m_fSpeed * 1.f), true);
+
+				if (!m_bIsSoundStart)
+				{
+					Engine::CSoundMgr::Get_Instance()->Play_Sound(L"00.hit_crab.ogg", SOUNDID::SOUND_MONSTER);
+					m_bIsSoundStart = true;
+				}
+			}
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
