@@ -1875,15 +1875,7 @@ void CPCPriest::Effect_Loop(const _float& fTimeDelta)
 		{
 			m_bisEffect = true;
 			CEffectMgr::Get_Instance()->Effect_Shield(m_pTransCom->m_vPos, m_pTransCom);
-
-			//for (auto& Party : m_mapPartyList)
-			//{
-			//	//Party.first //server number;
-			//	Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", Party.first);
-			//	if (pObj == nullptr) return;
-
-			//	CEffectMgr::Get_Instance()->Effect_TargetShield(pObj->Get_Transform()->m_vPos, pObj->Get_Transform());
-			//}
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Barrior.ogg", SOUNDID::SOUND_EFFECT);
 		}
 	}
 	else if (m_uiAnimIdx == Priest::PURIFY)
@@ -1892,6 +1884,7 @@ void CPCPriest::Effect_Loop(const _float& fTimeDelta)
 		{
 			m_bisEffect = true;
 			CEffectMgr::Get_Instance()->Effect_Axe(m_pTransCom->m_vPos, m_pTransCom);
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Axe.ogg", SOUNDID::SOUND_EFFECT);
 		}
 	}
 	else if (m_uiAnimIdx == Priest::HEAL_LOOP)
@@ -1900,6 +1893,7 @@ void CPCPriest::Effect_Loop(const _float& fTimeDelta)
 		{
 			m_bisEffect = true;
 			CEffectMgr::Get_Instance()->Effect_GridShieldEffect(m_pTransCom->m_vPos,1,m_pTransCom);
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Hill.ogg", SOUNDID::SOUND_EFFECT);
 		}
 	}
 	else if (m_uiAnimIdx == Priest::MP_CHARGE_LOOP)
@@ -1908,6 +1902,7 @@ void CPCPriest::Effect_Loop(const _float& fTimeDelta)
 		{
 			m_bisEffect = true;
 			CEffectMgr::Get_Instance()->Effect_GridShieldEffect(m_pTransCom->m_vPos, 0,m_pTransCom);
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Mana.ogg", SOUNDID::SOUND_EFFECT);
 		}
 	}
 	else  
