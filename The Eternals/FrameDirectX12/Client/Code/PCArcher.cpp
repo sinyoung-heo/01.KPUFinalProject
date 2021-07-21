@@ -1273,6 +1273,8 @@ void CPCArcher::KeyInput_SkillAttack(const _float& fTimeDelta)
 				 NO_EVENT_STATE &&
 				 (m_pInfoCom->m_iMp - Archer::AMOUNT_ESCAPING_BOMB >= 0))
 		{
+			CEffectMgr::Get_Instance()->Effect_Explosion(m_pTransCom->m_vPos);
+
 			m_mapSkillCoolDown[L"ESCAPING_BOMB"].Use_Skill();
 
 			SetUp_AttackSetting();
