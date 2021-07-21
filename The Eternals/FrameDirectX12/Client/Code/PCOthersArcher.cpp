@@ -736,6 +736,7 @@ void CPCOthersArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 	{
 		if (!m_bIsSetCollisionTick)
 		{
+			CEffectMgr::Get_Instance()->Effect_Explosion(m_pTransCom->m_vPos);
 			m_bIsSetCollisionTick = true;
 
 			m_tCollisionTickDesc.fPosOffset              = 0.0f;

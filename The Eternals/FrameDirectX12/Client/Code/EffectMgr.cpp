@@ -184,13 +184,13 @@ void CEffectMgr::Effect_BossIceStorm(_vec3 vecPos, _vec3 vecDir, const _uint& ui
 		}
 	}
 }
-void CEffectMgr::Effect_FireDecal(_vec3 vecPos)
+void CEffectMgr::Effect_FireDecal(_vec3 vecPos,_vec3 vecScale)
 {
 	
 	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_FireDecal_Effect());
 	if (nullptr != pGameObj)
 	{
-		static_cast<CFireDecal*>(pGameObj)->Set_CreateInfo(_vec3(0.05f,0.f,0.05f), _vec3(0.f, 0.0f, 0.0f), InterPolated_YOffset(vecPos));
+		static_cast<CFireDecal*>(pGameObj)->Set_CreateInfo(vecScale, _vec3(0.f, 0.0f, 0.0f), InterPolated_YOffset(vecPos));
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"FireDecal", pGameObj), E_FAIL);
 	}
 }
@@ -353,6 +353,53 @@ void CEffectMgr::Effect_RectDecal(_vec3 vecPos, float RotY)
 		static_cast<CRectDecal*>(pGameObj)->Set_CreateInfo(_vec3(15.f,0.00f,2.5f), _vec3(0.f), InterPolated_YOffset(vecPos));
 		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"RectDecal", pGameObj), E_FAIL);
 	}
+}
+
+void CEffectMgr::Effect_Explosion(_vec3 vecPos)
+{
+
+	Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.02f),
+		_vec3(0.f), vecPos, false, false, 5, 20, 11, 11, 11, _vec2(15, 2), 0, true);
+	Effect_Particle(vecPos, 20, L"Lighting6");
+	
+	vecPos.y = 0.2f;
+	Effect_FireDecal(vecPos,_vec3(0.01f,0.f,0.01f));
+	
+	_vec3 newPos = vecPos;
+	newPos.y += 4.f;
+	Engine::CGameObject* textureObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_TextureEffect());
+	if (nullptr != textureObj)
+	{
+		static_cast<CTextureEffect*>(textureObj)->Set_CreateInfo(L"Bomb00", _vec3(12.f,12.f,0.f), _vec3(0.f), newPos,
+			FRAME(10,9,20), false, false, 0.f, 0,_rgba(0.f));
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Bomb00", textureObj), E_FAIL);
+
+		textureObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_TextureEffect());
+		newPos.x -= 3.f;
+		static_cast<CTextureEffect*>(textureObj)->Set_CreateInfo(L"Bomb00", _vec3(12.f, 12.f, 0.f), _vec3(0.f), newPos,
+			FRAME(10, 9, 30), false, false, 0.f, 0, _rgba(0.f));
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Bomb00", textureObj), E_FAIL);
+
+		textureObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_TextureEffect());
+		newPos.z -= 3.f;
+		static_cast<CTextureEffect*>(textureObj)->Set_CreateInfo(L"Bomb00", _vec3(12.f, 12.f, 0.f), _vec3(0.f), newPos,
+			FRAME(10, 9, 30), false, false, 0.f, 0, _rgba(0.f));
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Bomb00", textureObj), E_FAIL);
+
+		textureObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_TextureEffect());
+		newPos.x += 3.f;
+		static_cast<CTextureEffect*>(textureObj)->Set_CreateInfo(L"Bomb00", _vec3(12.f, 12.f, 0.f), _vec3(0.f), newPos,
+			FRAME(10, 9, 45), false, false, 0.f, 0, _rgba(0.f));
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Bomb00", textureObj), E_FAIL);
+
+		textureObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_TextureEffect());
+		newPos.z += 3.f;
+		static_cast<CTextureEffect*>(textureObj)->Set_CreateInfo(L"Bomb00", _vec3(12.f, 12.f, 0.f), _vec3(0.f), newPos,
+			FRAME(10, 9, 45), false, false, 0.f, 0, _rgba(0.f));
+		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Bomb00", textureObj), E_FAIL);
+
+	}
+	
 }
 
 void CEffectMgr::Effect_DistTrail(_vec3 vecPos, _vec3 Angle,bool isCrossFilter,float SizeOffSet)
