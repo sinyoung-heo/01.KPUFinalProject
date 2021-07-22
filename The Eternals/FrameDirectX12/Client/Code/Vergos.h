@@ -71,6 +71,7 @@ private:
 	void			SetUp_HpGauge(const _float& fTimeDelta);
 	void			EffectLoop(const _float& fTimeDelta);
 	void			SetUp_CameraShaking();
+	void			SetUp_PlaySound();
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -143,6 +144,10 @@ private:
 
 	enum BONENAME{R_HAND,L_HAND,BREATH,HEAD,BONE_END};
 	Engine::HIERARCHY_DESC* m_pHierarchyDesc[BONE_END];
+
+	// Sound
+	map<_uint, _bool> m_mapIsPlaySound;
+
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

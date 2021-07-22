@@ -410,7 +410,7 @@ void CCinemaVergos::SetUp_PlaySound()
 		}
 
 		// Fly Away
-		if (!m_bIsPlaySoundSpawnAwayFly01 && m_ui3DMax_CurFrame >= 491)
+		if (!m_bIsPlaySoundSpawnAwayFly01 && m_ui3DMax_CurFrame >= 489)
 		{
 			m_bIsPlaySoundSpawnAwayFly01 = true;
 			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Vergos_Fly_02.mp3", SOUNDID::SOUND_MONSTER, 1.0f);

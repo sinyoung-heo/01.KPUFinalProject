@@ -67,6 +67,19 @@ HRESULT CVergos::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, 
 	m_pHierarchyDesc[L_HAND] =& (m_pMeshCom->Find_HierarchyDesc("Bip01-L-Hand"));
 	m_pHierarchyDesc[BREATH]= &(m_pMeshCom->Find_HierarchyDesc("FxShot"));
 	m_pHierarchyDesc[HEAD]= &(m_pMeshCom->Find_HierarchyDesc("Bip01-Head"));
+
+	m_mapIsPlaySound[Vergos::SPAWN]         = false;
+	m_mapIsPlaySound[Vergos::SWING_RIGHT]   = false;
+	m_mapIsPlaySound[Vergos::SWING_LEFT]    = false;
+	m_mapIsPlaySound[Vergos::BLOW_RIGHT]    = false;
+	m_mapIsPlaySound[Vergos::BLOW_HEAD]     = false;
+	m_mapIsPlaySound[Vergos::BLOW_ROTATION] = false;
+	m_mapIsPlaySound[Vergos::BREATH_FIRE]   = false;
+	m_mapIsPlaySound[Vergos::FLY_START]     = false;
+	m_mapIsPlaySound[Vergos::FLY_LOOP]      = false;
+	m_mapIsPlaySound[Vergos::FLY_END]       = false;
+	m_mapIsPlaySound[Vergos::DEATH]         = false;
+
 	return S_OK;
 }
 
@@ -118,6 +131,9 @@ _int CVergos::Update_GameObject(const _float& fTimeDelta)
 		m_bIsSettingCamera  = false;
 		m_bIsFadeInOut      =  false;
 
+		for (auto& pair : m_mapIsPlaySound)
+			pair.second = false;
+
 		CDynamicCamera* pDynamicCamera = static_cast<CDynamicCamera*>(m_pObjectMgr->Get_GameObject(L"Layer_Camera", L"DynamicCamera"));
 		if (nullptr != pDynamicCamera)
 		{
@@ -158,6 +174,9 @@ _int CVergos::Update_GameObject(const _float& fTimeDelta)
 	// Create CollisionTick
 	if (m_pMeshCom->Is_BlendingComplete())
 		SetUp_CollisionTick(fTimeDelta);
+
+	if (m_pMeshCom->Is_BlendingComplete())
+		SetUp_PlaySound();
 
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
@@ -640,6 +659,8 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_mapIsPlaySound[Vergos::SPAWN] = false;
+
 				m_bIsCreateCollisionTick                     = false;
 				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
 				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
@@ -688,6 +709,8 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_mapIsPlaySound[Vergos::SWING_RIGHT] = false;
+
 				m_bIsCreateCollisionTick                     = false;
 				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
 				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
@@ -712,6 +735,8 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_mapIsPlaySound[Vergos::SWING_LEFT] = false;
+
 				m_bIsCreateCollisionTick                     = false;
 				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
 				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
@@ -736,6 +761,8 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_mapIsPlaySound[Vergos::BLOW_LEFT] = false;
+
 				m_bIsCreateCollisionTick                     = false;
 				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
 				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
@@ -760,6 +787,8 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_mapIsPlaySound[Vergos::BLOW_RIGHT] = false;
+
 				m_bIsCreateCollisionTick                     = false;
 				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
 				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
@@ -784,6 +813,8 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_mapIsPlaySound[Vergos::BLOW_HEAD] = false;
+
 				m_bIsCreateCollisionTick                     = false;
 				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
 				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
@@ -808,6 +839,8 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_mapIsPlaySound[Vergos::BLOW_ROTATION] = false;
+
 				m_bIsCreateCollisionTick = false;
 				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
 				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
@@ -833,6 +866,8 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_mapIsPlaySound[Vergos::BREATH_FIRE] = false;
+
 				m_bIsCreateCollisionTick                     = false;
 				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
 				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
@@ -858,6 +893,8 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_mapIsPlaySound[Vergos::FLY_START] = false;
+
 				m_bIsCreateCollisionTick                     = false;
 				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
 				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
@@ -883,6 +920,8 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_mapIsPlaySound[Vergos::FLY_LOOP] = false;
+
 				m_bIsCreateCollisionTick                     = false;
 				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
 				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
@@ -908,6 +947,8 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_mapIsPlaySound[Vergos::FLY_END] = false;
+
 				m_bIsCreateCollisionTick                     = false;
 				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
 				m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
@@ -958,6 +999,8 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) 
 			{
+				m_mapIsPlaySound[Vergos::DEATH] = false;
+
 				m_bIsStartDissolve = true;
 
 				m_iMonsterStatus = Vergos::A_DEATH;
@@ -1315,9 +1358,12 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 				m_bisBreathDelta = 0.f;
 				CGameObject* pGameObj;
 				pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_Breath_Effect());
-				int SoundNumber = rand() % 2;
-				wstring SoundTag = L"Breath_" + to_wstring(SoundNumber) + L".ogg";
-				Engine::CSoundMgr::Get_Instance()->Play_Sound(SoundTag.c_str(), SOUNDID::SOUND_EFFECT);
+
+				//int SoundNumber = rand() % 2;
+				//wstring SoundTag = L"Breath_" + to_wstring(SoundNumber) + L".ogg";
+				//Engine::CSoundMgr::Get_Instance()->Play_Sound(SoundTag.c_str(), SOUNDID::SOUND_EFFECT);
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"VergosAttack_Breath_02.mp3", SOUNDID::SOUND_EFFECT);
+
 				if (nullptr != pGameObj)
 				{
 					static_cast<CBreathEffect*>(pGameObj)->Set_CreateInfo(_vec3(0.f), _vec3(0.f), _vec3(-65.f, 2.2, -16.f));
@@ -1503,6 +1549,78 @@ void CVergos::SetUp_CameraShaking()
 		}
 	}
 		break;
+	}
+}
+
+void CVergos::SetUp_PlaySound()
+{
+	// Spawn
+	if (!m_mapIsPlaySound[Vergos::SPAWN] && 
+		m_uiAnimIdx == Vergos::SPAWN && m_ui3DMax_CurFrame >= 148)
+	{
+		m_mapIsPlaySound[Vergos::SPAWN] = true;
+		Engine::CSoundMgr::Get_Instance()->Play_Sound(L"VergosAttack_Crash_01.mp3", SOUNDID::SOUND_MONSTER, 1.0f);
+	}
+
+	// Swing Left & Right
+	if (!m_mapIsPlaySound[Vergos::SWING_LEFT] &&
+		m_uiAnimIdx == Vergos::SWING_LEFT && m_ui3DMax_CurFrame >= 9)
+	{
+		m_mapIsPlaySound[Vergos::SWING_LEFT] = true;
+		Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Vergos_Screaming_Swing_Monster_Voice26.gpk_000090.wav", SOUNDID::SOUND_MONSTER, 1.0f);
+	}
+
+	if (!m_mapIsPlaySound[Vergos::SWING_RIGHT] &&
+		m_uiAnimIdx == Vergos::SWING_RIGHT && m_ui3DMax_CurFrame >= 9)
+	{
+		m_mapIsPlaySound[Vergos::SWING_RIGHT] = true;
+		Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Vergos_Screaming_Swing_Monster_Voice26.gpk_000090.wav", SOUNDID::SOUND_MONSTER, 1.0f);
+	}
+
+	// Blow Left & Right
+	if (!m_mapIsPlaySound[Vergos::BLOW_LEFT] &&
+		m_uiAnimIdx == Vergos::BLOW_LEFT && m_ui3DMax_CurFrame >= 10)
+	{
+		m_mapIsPlaySound[Vergos::BLOW_LEFT] = true;
+		Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Vergos_Screaming_Blow_Monster_Voice22.gpk_000164.wav", SOUNDID::SOUND_MONSTER, 1.0f);
+	}
+
+	if (!m_mapIsPlaySound[Vergos::BLOW_RIGHT] &&
+		m_uiAnimIdx == Vergos::BLOW_RIGHT && m_ui3DMax_CurFrame >= 10)
+	{
+		m_mapIsPlaySound[Vergos::BLOW_RIGHT] = true;
+		Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Vergos_Screaming_Blow_Monster_Voice22.gpk_000164.wav", SOUNDID::SOUND_MONSTER, 1.0f);
+	}
+
+	// Breath
+	if (!m_mapIsPlaySound[Vergos::BREATH_FIRE] &&
+		m_uiAnimIdx == Vergos::BREATH_FIRE && m_ui3DMax_CurFrame >= 12)
+	{
+		m_mapIsPlaySound[Vergos::BREATH_FIRE] = true;
+		Engine::CSoundMgr::Get_Instance()->Play_Sound(L"VergosVoice_Breath_04.mp3", SOUNDID::SOUND_MONSTER, 1.0f);
+	}
+
+	// Fly
+	if (!m_mapIsPlaySound[Vergos::FLY_START] &&
+		m_uiAnimIdx == Vergos::FLY_START && m_ui3DMax_CurFrame >= 25)
+	{
+		m_mapIsPlaySound[Vergos::FLY_START] = true;
+		Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Vergos_Screaming_Blow_Monster_Voice26.gpk_000091.wav", SOUNDID::SOUND_MONSTER, 1.0f);
+	}
+
+	if (!m_mapIsPlaySound[Vergos::FLY_END] &&
+		m_uiAnimIdx == Vergos::FLY_END && m_ui3DMax_CurFrame >= 21)
+	{
+		m_mapIsPlaySound[Vergos::FLY_END] = true;
+		Engine::CSoundMgr::Get_Instance()->Play_Sound(L"VergosAttack_Crash_01.mp3", SOUNDID::SOUND_MONSTER, 1.0f);
+	}
+
+	// Rotate
+	if (!m_mapIsPlaySound[Vergos::BLOW_ROTATION] &&
+		m_uiAnimIdx == Vergos::BLOW_ROTATION && m_ui3DMax_CurFrame >= 8)
+	{
+		m_mapIsPlaySound[Vergos::BLOW_ROTATION] = true;
+		Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Vergos_Screaming_Rotate_Monster_Voice22.gpk_000028.wav", SOUNDID::SOUND_MONSTER, 1.0f);
 	}
 }
 
