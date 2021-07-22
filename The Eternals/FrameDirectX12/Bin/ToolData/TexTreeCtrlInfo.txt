@@ -1,3 +1,6 @@
+Texture|EffectMultiTexture|Fire_05
+Texture|EffectMultiTexture|Fire_10
+Texture|EffectMultiTexture|Fire_13
 ResourceStage|Texture|EffectPublic
 Texture|EffectSpriteTexture|ArrowShot0
 Texture|EffectSpriteTexture|Bomb00

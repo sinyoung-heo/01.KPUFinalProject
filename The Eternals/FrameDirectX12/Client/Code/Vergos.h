@@ -142,7 +142,7 @@ private:
 	// Spawn
 	_bool m_bIsSpawn = false;
 
-	enum BONENAME{R_HAND,L_HAND,BREATH,HEAD,BONE_END};
+	enum BONENAME{ R_HAND, L_HAND, BREATH, HEAD, HEAD_01, NECK_02, BONE_END};
 	Engine::HIERARCHY_DESC* m_pHierarchyDesc[BONE_END];
 
 	// Sound

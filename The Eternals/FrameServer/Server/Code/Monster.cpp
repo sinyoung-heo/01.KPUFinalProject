@@ -528,26 +528,42 @@ void CMonster::VergosPattern_FirstPhase()
 	case 0:
 	case 2:
 	{
-		m_arrAttackPattern[0] = Vergos::SWING_LEFT;
-		m_arrAttackPattern[1] = Vergos::BLOW_RIGHT;
+		//m_arrAttackPattern[0] = Vergos::SWING_LEFT;
+		//m_arrAttackPattern[1] = Vergos::BLOW_RIGHT;
+		//m_arrAttackPattern[2] = Vergos::BREATH_FIRE;
+		//m_arrAttackPattern[3] = Vergos::SWING_RIGHT;
+		//m_arrAttackPattern[4] = Vergos::BLOW_LEFT;
+		//m_arrAttackPattern[5] = Vergos::BREATH_FIRE;
+		//m_arrAttackPattern[6] = Vergos::BLOW_HEAD;
+
+		m_arrAttackPattern[0] = Vergos::BREATH_FIRE;
+		m_arrAttackPattern[1] = Vergos::BREATH_FIRE;
 		m_arrAttackPattern[2] = Vergos::BREATH_FIRE;
-		m_arrAttackPattern[3] = Vergos::SWING_RIGHT;
-		m_arrAttackPattern[4] = Vergos::BLOW_LEFT;
+		m_arrAttackPattern[3] = Vergos::BREATH_FIRE;
+		m_arrAttackPattern[4] = Vergos::BREATH_FIRE;
 		m_arrAttackPattern[5] = Vergos::BREATH_FIRE;
-		m_arrAttackPattern[6] = Vergos::BLOW_HEAD;
+		m_arrAttackPattern[6] = Vergos::BREATH_FIRE;
 	}
 	break;
 
 	case 1:
 	case 3:
 	{
+		//m_arrAttackPattern[0] = Vergos::BREATH_FIRE;
+		//m_arrAttackPattern[1] = Vergos::BLOW_LEFT;
+		//m_arrAttackPattern[2] = Vergos::SWING_RIGHT;
+		//m_arrAttackPattern[3] = Vergos::BLOW_HEAD;
+		//m_arrAttackPattern[4] = Vergos::SWING_LEFT;
+		//m_arrAttackPattern[5] = Vergos::BREATH_FIRE;
+		//m_arrAttackPattern[6] = Vergos::BLOW_RIGHT;
+
 		m_arrAttackPattern[0] = Vergos::BREATH_FIRE;
-		m_arrAttackPattern[1] = Vergos::BLOW_LEFT;
-		m_arrAttackPattern[2] = Vergos::SWING_RIGHT;
-		m_arrAttackPattern[3] = Vergos::BLOW_HEAD;
-		m_arrAttackPattern[4] = Vergos::SWING_LEFT;
+		m_arrAttackPattern[1] = Vergos::BREATH_FIRE;
+		m_arrAttackPattern[2] = Vergos::BREATH_FIRE;
+		m_arrAttackPattern[3] = Vergos::BREATH_FIRE;
+		m_arrAttackPattern[4] = Vergos::BREATH_FIRE;
 		m_arrAttackPattern[5] = Vergos::BREATH_FIRE;
-		m_arrAttackPattern[6] = Vergos::BLOW_RIGHT;
+		m_arrAttackPattern[6] = Vergos::BREATH_FIRE;
 	}
 	break;
 	}
