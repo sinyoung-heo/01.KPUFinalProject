@@ -76,7 +76,7 @@ HRESULT CGiantMonkey::LateInit_GameObject()
 _int CGiantMonkey::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
-
+	Effect_Loop(fTimeDelta);
 	if (m_bIsDead)
 		return DEAD_OBJ;
 
@@ -201,6 +201,82 @@ void CGiantMonkey::Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCo
 	if (!m_bIsStartDissolve)
 	{
 		m_pMeshCom->Render_DynamicMeshShadowDepth(pCommandList, iContextIdx, m_pShadowCom);
+	}
+}
+
+void CGiantMonkey::Effect_Loop(const _float& fTimeDelta)
+{
+
+	if (GiantMonkey::ATTACK_STAMP == m_iMonsterStatus
+		&& m_ui3DMax_CurFrame == 62 && m_bisEffect == false)
+	{
+		m_bisEffect = true;
+		CEffectMgr::Get_Instance()->Effect_Dust(m_pTransCom->m_vPos, 6.f);
+		CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.01f),
+			_vec3(0.f), m_pTransCom->m_vPos, false, false, 5, 20, 31, 31, 31, _vec2(15, 2), 0, true);
+	}
+	else if (GiantMonkey::ATTACK_JUMPING == m_iMonsterStatus
+		&& m_ui3DMax_CurFrame == 66 && m_bisEffect == false)
+	{
+		m_bisEffect = true;
+		CEffectMgr::Get_Instance()->Effect_Dust(m_pTransCom->m_vPos, 6.f);
+		CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.01f),
+			_vec3(0.f), m_pTransCom->m_vPos, false, false, 5, 20, 31, 31, 31, _vec2(15, 2), 0, true);
+	}
+	else if (GiantMonkey::ATTACK_FLYSTAMP == m_iMonsterStatus
+		&& m_ui3DMax_CurFrame == 59 && m_bisEffect == false)
+	{
+		m_bisEffect = true;
+		CEffectMgr::Get_Instance()->Effect_Dust(m_pTransCom->m_vPos, 8.f,5.f,84.f,36);
+		CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.005f),
+			_vec3(0.f), m_pTransCom->m_vPos, false, false, 5, 20, 31, 31, 31, _vec2(25, 6), 0, true);
+		CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.01f),
+			_vec3(0.f), m_pTransCom->m_vPos, false, false, 5, 20, 31, 31, 31, _vec2(15, 2), 0, true);
+	}
+	else if (GiantMonkey::ATTACK_COMBO == m_iMonsterStatus)
+	{
+		if (m_ui3DMax_CurFrame == 845 - 768)
+		{
+			CEffectMgr::Get_Instance()->Effect_Dust(m_pTransCom->m_vPos, 3.f);
+			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.01f),
+				_vec3(0.f), m_pTransCom->m_vPos, false, false, 10, 20, 31, 31, 31, _vec2(15, 2), 0, true);
+		}
+		else if (m_ui3DMax_CurFrame == 854 - 768)
+		{
+			CEffectMgr::Get_Instance()->Effect_Dust(m_pTransCom->m_vPos, 3.f);
+			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.01f),
+				_vec3(0.f), m_pTransCom->m_vPos, false, false, 10, 20, 31, 31, 31, _vec2(15, 2), 0, true);
+		}
+		else if (m_ui3DMax_CurFrame == 856 - 768)
+		{
+			CEffectMgr::Get_Instance()->Effect_Dust(m_pTransCom->m_vPos, 3.f);
+			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.01f),
+				_vec3(0.f), m_pTransCom->m_vPos, false, false, 10, 20, 31, 31, 31, _vec2(15, 2), 0, true);
+		}
+		else if (m_ui3DMax_CurFrame == 874 - 768)
+		{
+			CEffectMgr::Get_Instance()->Effect_Dust(m_pTransCom->m_vPos, 3.f);
+			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.01f),
+				_vec3(0.f), m_pTransCom->m_vPos, false, false, 5, 20, 31, 31, 31, _vec2(15, 2), 0, true);
+		}
+		else if (m_ui3DMax_CurFrame == 884 - 768)
+		{
+			CEffectMgr::Get_Instance()->Effect_Dust(m_pTransCom->m_vPos, 3.f);
+			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.01f),
+				_vec3(0.f), m_pTransCom->m_vPos, false, false, 5,20, 31, 31, 31, _vec2(15, 2), 0, true);
+		}
+		else if (m_ui3DMax_CurFrame == 912 - 768)
+		{
+			CEffectMgr::Get_Instance()->Effect_Dust(m_pTransCom->m_vPos, 8.f, 5.f, 84.f, 36);
+			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.01f),
+				_vec3(0.f), m_pTransCom->m_vPos, false, false, 5, 20, 31, 31, 31, _vec2(25, 6), 0, true);
+			CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.01f),
+				_vec3(0.f), m_pTransCom->m_vPos, false, false, 5, 20, 31, 31, 31, _vec2(15, 2), 0, true);
+		}
+	}
+	else
+	{
+		m_bisEffect = false;
 	}
 }
 
