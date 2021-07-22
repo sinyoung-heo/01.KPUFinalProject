@@ -106,6 +106,7 @@ private:
 
 	CGameUIRoot*	m_pHpGaugeRoot = nullptr;
 	CVergosHpGauge* m_pHpGauge = nullptr;
+	_bool			m_bIsSoundStart = false;
 
 	/*__________________________________________________________________________________________________________
 	[ Animation Frame ]
