@@ -12,6 +12,7 @@
 #include "InstancePoolMgr.h"
 #include "CinemaMgr.h"
 #include "DynamicCamera.h"
+#include "SoundMgr.h"
 
 CPrionBerserkerBoss::CPrionBerserkerBoss(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -49,6 +50,9 @@ HRESULT CPrionBerserkerBoss::Ready_GameObject(wstring wstrMeshTag, wstring wstrN
 	m_uiAnimIdx = 0;
 	m_iMonsterStatus = PrionBerserkerBoss::A_WAIT;
 
+	m_mapIsPlaySound[PrionBerserkerBoss::ANGRY]   = false;
+	m_mapIsPlaySound[PrionBerserkerBoss::COMMAND] = false;
+
 	return S_OK;
 }
 
@@ -80,6 +84,10 @@ _int CPrionBerserkerBoss::Update_GameObject(const _float& fTimeDelta)
 		m_bIsStartDissolve = false;
 		m_fDissolve = -0.05f;
 		m_bIsResetNaviMesh = false;
+
+		m_mapIsPlaySound[PrionBerserkerBoss::ANGRY] = false;
+		m_mapIsPlaySound[PrionBerserkerBoss::COMMAND] = false;
+
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterPrionBerserkerBossPool(), m_uiInstanceIdx);
 
 		return RETURN_OBJ;
@@ -108,6 +116,9 @@ _int CPrionBerserkerBoss::Update_GameObject(const _float& fTimeDelta)
 	Change_Animation(fTimeDelta);
 
 	Active_Monster(fTimeDelta);
+
+	SetUp_PlaySound(PrionBerserkerBoss::ANGRY, 44, L"PrionBerserkerBoss_Angry_Monster_Voice26.gpk_000018.wav", 1.0f);
+	SetUp_PlaySound(PrionBerserkerBoss::COMMAND, 18, L"PrionBerserkerBoss_Angry_Monster_Voice26.gpk_000019.wav", 1.0f);
 
 	// ½Ã³×¸¶Æ½.
 	if (m_bIsPrionBerserkerScreaming && m_ui3DMax_CurFrame > 50)
@@ -342,6 +353,8 @@ void CPrionBerserkerBoss::Change_Animation(const _float& fTimeDelta)
 				// ½Ã³×¸¶Æ½.
 				if (m_bIsPrionBerserkerScreaming)
 					CCinemaMgr::Get_Instance()->Scream_PrionBerserkers();
+
+				m_mapIsPlaySound[PrionBerserkerBoss::ANGRY] = false;
 			}
 		}
 		break;
@@ -357,6 +370,8 @@ void CPrionBerserkerBoss::Change_Animation(const _float& fTimeDelta)
 				m_iMonsterStatus = PrionBerserkerBoss::A_WAIT;
 				m_uiAnimIdx = PrionBerserkerBoss::A_WAIT;
 				m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
+
+				m_mapIsPlaySound[PrionBerserkerBoss::COMMAND] = false;
 
 				if (m_bIsPrionBerserkerScreaming)
 				{
@@ -377,6 +392,21 @@ void CPrionBerserkerBoss::Change_Animation(const _float& fTimeDelta)
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
 		break;
+		}
+	}
+}
+
+void CPrionBerserkerBoss::SetUp_PlaySound(const _uint& uiAniIdx, 
+										  const _uint& uiStartTick,
+										  wstring wstrSoundTag, 
+										  const _float& fVolume)
+{
+	if (uiAniIdx == m_uiAnimIdx && m_pMeshCom->Is_BlendingComplete())
+	{
+		if (m_ui3DMax_CurFrame >= uiStartTick && !m_mapIsPlaySound[uiAniIdx])
+		{
+			m_mapIsPlaySound[uiAniIdx] = true;
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(wstrSoundTag.c_str(), SOUNDID::SOUND_MONSTER, fVolume);
 		}
 	}
 }

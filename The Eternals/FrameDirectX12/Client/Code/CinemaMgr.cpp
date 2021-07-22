@@ -11,6 +11,7 @@
 #include "DirectInput.h"
 #include "FadeInOut.h"
 #include "Renderer.h"
+#include "SoundMgr.h"
 
 IMPLEMENT_SINGLETON(CCinemaMgr)
 
@@ -244,7 +245,20 @@ void CCinemaMgr::Update_Animation(const _float& fTimeDelta)
 	}
 
 	for (auto& pObj : m_vecAnimationPrionBerserker)
-		static_cast<CPrionBerserker*>(pObj)->Get_MeshComponent()->Play_Animation(fTimeDelta * TPS * m_fPrionBerserkerAnimationSpeed, static_cast<CPrionBerserker*>(pObj)->Get_IsRepeatAnimation());
+	{
+		static_cast<CPrionBerserker*>(pObj)->Get_MeshComponent()->Play_Animation(fTimeDelta* TPS* m_fPrionBerserkerAnimationSpeed, static_cast<CPrionBerserker*>(pObj)->Get_IsRepeatAnimation());
+
+		_uint uiCurFrame = *(static_cast<CPrionBerserker*>(pObj)->Get_MeshComponent()->Get_3DMaxCurFrame());
+		static_cast<CPrionBerserker*>(pObj)->Get_AnimationIdx();
+
+		if (PrionBerserker::ANGRY == static_cast<CPrionBerserker*>(pObj)->Get_AnimationIdx())
+		{
+			if (uiCurFrame >= 48 && static_cast<CPrionBerserker*>(pObj)->Get_MeshComponent()->Is_BlendingComplete())
+			{
+				PlaySound_PrionBerserkerScremaing();
+			}
+		}
+	}
 
 	for (auto& pObj : m_vecPrionBerserker)
 	{
@@ -359,6 +373,8 @@ void CCinemaMgr::Reset_PrionBerserkerPosition()
 		static_cast<CPrionBerserker*>(pObj)->Get_MeshComponent()->Set_AnimationTime(_float(uid(dre)));
 	}
 
+	m_bIsPlaySoundPrionBerserker = false;
+
 	static_cast<CPrionBerserkerBoss*>(m_pPrionBerserkerBoss)->Reset_Position();
 	static_cast<CPrionBerserkerBoss*>(m_pPrionBerserkerBoss)->Set_State(PrionBerserkerBoss::A_WAIT);
 	static_cast<CPrionBerserkerBoss*>(m_pPrionBerserkerBoss)->Set_MoveStop(true);
@@ -374,6 +390,16 @@ void CCinemaMgr::Set_IsMoveStopPrionBerserker(const _bool& bIsMoveStop)
 	}
 
 	static_cast<CPrionBerserkerBoss*>(m_pPrionBerserkerBoss)->Set_IsMoveStob(bIsMoveStop);
+}
+
+void CCinemaMgr::PlaySound_PrionBerserkerScremaing()
+{
+	if (!m_bIsPlaySoundPrionBerserker)
+	{
+		m_bIsPlaySoundPrionBerserker = true;
+
+		Engine::CSoundMgr::Get_Instance()->Play_Sound(L"PrionBerserkerBoss_Angry_Monster_Voice26.gpk_000020.wav", SOUNDID::SOUND_MONSTER, 1.0f);
+	}
 }
 
 void CCinemaMgr::Free()

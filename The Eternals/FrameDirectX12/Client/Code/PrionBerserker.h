@@ -20,6 +20,7 @@ private:
 	virtual ~CPrionBerserker() = default;
 
 public:
+	virtual const _uint& Get_AnimationIdx() { return m_uiAnimIdx; }
 	Engine::CMesh*	Get_MeshComponent() { return m_pMeshCom; }
 	const _uint&	Get_AnimationObjectIdx() { return m_uiAnimationObjIdx; }
 	const _bool&	Get_IsRepeatAnimation() { return m_bIsRepeat; }
@@ -90,7 +91,6 @@ private:
 	_bool	m_bIsRepeat = true;
 
 	_vec3	m_vOriginPos = _vec3(0.0f);
-
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

@@ -111,6 +111,14 @@ _int CPrionBerserker::Update_GameObject(const _float& fTimeDelta)
 
 	Active_Monster(fTimeDelta);
 
+	//if (PrionBerserker::ANGRY == m_uiAnimIdx)
+	//{
+	//	if (m_ui3DMax_CurFrame >= 48)
+	//	{
+	//		CCinemaMgr::Get_Instance()->PlaySound_PrionBerserkerScremaing();
+	//	}
+	//}
+
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
