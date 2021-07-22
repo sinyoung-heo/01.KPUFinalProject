@@ -134,6 +134,7 @@ _int CVergos::Update_GameObject(const _float& fTimeDelta)
 		m_bIsSpawn          = false;
 		m_bIsSettingCamera  = false;
 		m_bIsFadeInOut      =  false;
+		m_bIsSoundStart = false;
 
 		for (auto& pair : m_mapIsPlaySound)
 			pair.second = false;
@@ -155,6 +156,7 @@ _int CVergos::Update_GameObject(const _float& fTimeDelta)
 		m_bIsStartDissolve = false;
 		m_bIsResetNaviMesh = false;
 		m_fDissolve = -0.05f;
+		m_bIsSoundStart = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterVergosPool(), m_uiInstanceIdx);
 
 		return RETURN_OBJ;
@@ -634,6 +636,7 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 				m_pHpGaugeRoot->Set_IsChildActive(true);
 			}
 
+			m_bIsSoundStart = false;
 			m_bIsCreateCollisionTick                     = false;
 			m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
 			m_tCollisionTickDesc.fColisionTickUpdateTime = -1.0f;
@@ -661,9 +664,16 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 			m_uiAnimIdx = Vergos::A_SPAWN;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
+			if (!m_bIsSoundStart)
+			{
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"vergos_spawn.ogg", SOUNDID::SOUND_MONSTER);
+				m_bIsSoundStart = true;
+			}
+
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
 				m_mapIsPlaySound[Vergos::SPAWN] = false;
+				m_bIsSoundStart = false;
 
 				m_bIsCreateCollisionTick                     = false;
 				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
@@ -868,9 +878,16 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 			m_uiAnimIdx = Vergos::A_BREATH_FIRE;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
+			if (!m_bIsSoundStart)
+			{
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"vergos_breath.ogg", SOUNDID::SOUND_MONSTER);
+				m_bIsSoundStart = true;
+			}
+
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
 				m_mapIsPlaySound[Vergos::BREATH_FIRE] = false;
+				m_bIsSoundStart = false;
 
 				m_bIsCreateCollisionTick                     = false;
 				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
@@ -895,9 +912,16 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 			m_uiAnimIdx = Vergos::A_FLY_START;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
+			if (!m_bIsSoundStart)
+			{
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"vergos_fly.ogg", SOUNDID::SOUND_MONSTER);
+				m_bIsSoundStart = true;
+			}
+
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
 				m_mapIsPlaySound[Vergos::FLY_START] = false;
+				m_bIsSoundStart = false;
 
 				m_bIsCreateCollisionTick                     = false;
 				m_tCollisionTickDesc.bIsCreateCollisionTick  = false;
@@ -999,6 +1023,12 @@ void CVergos::Change_Animation(const _float& fTimeDelta)
 			{
 				m_pHpGaugeRoot->Set_IsActive(false);
 				m_pHpGaugeRoot->Set_IsChildActive(false);
+			}
+
+			if (!m_bIsSoundStart)
+			{
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"vergos_dead.ogg", SOUNDID::SOUND_MONSTER);
+				m_bIsSoundStart = true;
 			}
 
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta)) 

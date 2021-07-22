@@ -1312,12 +1312,14 @@ void CPCPriest::KeyInput_OpenShop(const char& npcNumber)
 			break;
 			case NPC_BARAKA_MERCHANT:		// 물약상인
 			{
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"npc_assistant.ogg", SOUNDID::SOUND_MONSTER);
 				CStoreMgr::Get_Instance()->Set_StoreState(STORE_STATE::STORE_POTION);
 				CStoreMgr::Get_Instance()->Set_StoreItemType(ItemType_Potion);
 			}
 			break;
 			case NPC_BARAKA_MYSTELLIUM:		// 방어구상인
 			{
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"npc_assistant.ogg", SOUNDID::SOUND_MONSTER);
 				CStoreMgr::Get_Instance()->Set_StoreState(STORE_STATE::STORE_ARMOR);
 				CStoreMgr::Get_Instance()->Set_StoreItemType(ItemType_Helmet);
 			}
