@@ -17,6 +17,8 @@
 #include "BossDecal.h"
 #include "DynamicCamera.h"
 #include "FadeInOut.h"
+#include "BreathParticle.h"
+#include <random>
 
 CVergos::CVergos(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -67,6 +69,8 @@ HRESULT CVergos::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, 
 	m_pHierarchyDesc[L_HAND] =& (m_pMeshCom->Find_HierarchyDesc("Bip01-L-Hand"));
 	m_pHierarchyDesc[BREATH]= &(m_pMeshCom->Find_HierarchyDesc("FxShot"));
 	m_pHierarchyDesc[HEAD]= &(m_pMeshCom->Find_HierarchyDesc("Bip01-Head"));
+	m_pHierarchyDesc[HEAD_01]= &(m_pMeshCom->Find_HierarchyDesc("Head_Bone01"));
+	m_pHierarchyDesc[NECK_02]= &(m_pMeshCom->Find_HierarchyDesc("Bip01-Neck2"));
 
 	m_mapIsPlaySound[Vergos::SPAWN]         = false;
 	m_mapIsPlaySound[Vergos::SWING_RIGHT]   = false;
@@ -1347,47 +1351,126 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 	}
 	else if (m_uiAnimIdx == Vergos::A_BREATH_FIRE)
 	{
-		m_fSkillOffset += fTimeDelta;
+		m_fSkillOffset   += fTimeDelta;
 		m_bisBreathDelta += fTimeDelta;
-		m_fParticleTime += fTimeDelta;
-		if (m_fSkillOffset >3.f)
-		{
-			m_fBreathTime += fTimeDelta * 0.5f;
-			if (m_fParticleTime > 0.1f)
-			{
-				m_fParticleTime = 0.f;
-				_matrix matBoneFinalTransform = (m_pHierarchyDesc[BREATH]->matScale * m_pHierarchyDesc[BREATH]->matRotate 
-					* m_pHierarchyDesc[BREATH]->matTrans)* m_pHierarchyDesc[BREATH]->matGlobalTransform;
-				_matrix matWorld = matBoneFinalTransform * m_pTransCom->m_matWorld;
-				_vec3 Pos = _vec3(matWorld._41, matWorld._42, matWorld._43);
-				BreathPos.x = powf((1.f - m_fBreathTime), 2.f) * BazierPos[0].x + 2 * m_fBreathTime * (1 - m_fBreathTime) * BazierPos[1].x
-					+ powf(m_fBreathTime, 2.f) * BazierPos[2].x;
-				BreathPos.y = 0.f;
-				BreathPos.z = powf((1.f - m_fBreathTime), 2.f) * BazierPos[0].z + 2 * m_fBreathTime * (1 - m_fBreathTime) * BazierPos[1].z
-					+ powf(m_fBreathTime, 2.f) * BazierPos[2].z;
+		m_fParticleTime  += fTimeDelta;
 
-				CEffectMgr::Get_Instance()->Effect_DirParticle(_vec3(1, 1, 0), _vec3(0.f), m_pTransCom->m_vPos, L"Lighting6", Pos,
-					BreathPos, FRAME(1, 1, 1), 2, 20);
+		_matrix matBoneFinalTransform = (m_pHierarchyDesc[BREATH]->matScale 
+										 * m_pHierarchyDesc[BREATH]->matRotate 
+										 * m_pHierarchyDesc[BREATH]->matTrans) 
+										 * m_pHierarchyDesc[BREATH]->matGlobalTransform;
+
+		_matrix matWorld = matBoneFinalTransform * m_pTransCom->m_matWorld;
+
+		_vec3 Pos = _vec3(matWorld._41, matWorld._42, matWorld._43);
+		_vec3 vDir = _vec3(matWorld._31, matWorld._32, matWorld._33);
+		vDir.Normalize();
+
+		if (m_ui3DMax_CurFrame >= 78 && m_ui3DMax_CurFrame <= 130)
+		{
+			random_device					rd;
+			default_random_engine			dre{ rd() };
+			uniform_int_distribution<_int>	uid{ -1500, 1500 };
+
+			_float fOffset = (_float)(uid(dre)) * 0.001f;
+
+			// BreathParticle
+			Engine::CGameObject* pGameObj;
+
+			// Fire10
+			pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_BreathParticlePool());
+			if (nullptr != pGameObj)
+			{
+				static_cast<CBreathParticle*>(pGameObj)->Set_Instnace(L"Fire_10", 32, 
+																	  Pos + _vec3((_float)(uid(dre)) * 0.001f, (_float)(uid(dre)) * 0.001f + 0.5f, 8.0f + (_float)(uid(dre)) * 0.001f),
+																	  vDir + _vec3((_float)(uid(dre)) * 0.0005f, 0.0f, 0.0f));
+				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BreathParticle", pGameObj), E_FAIL);
 			}
+			pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_BreathParticlePool());
+			if (nullptr != pGameObj)
+			{
+				static_cast<CBreathParticle*>(pGameObj)->Set_Instnace(L"Fire_10", 32, 
+																	  Pos + _vec3((_float)(uid(dre)) * 0.001f, (_float)(uid(dre)) * 0.001f + 0.5f, 8.0f + (_float)(uid(dre)) * 0.001f),
+																	  vDir + _vec3((_float)(uid(dre)) * 0.0005f, 0.0f, 0.0f));
+				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BreathParticle", pGameObj), E_FAIL);
+			}
+
+			// Fire05
+			pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_BreathParticlePool());
+			if (nullptr != pGameObj)
+			{
+				static_cast<CBreathParticle*>(pGameObj)->Set_Instnace(L"Fire_05", 16, 
+																	  Pos + _vec3((_float)(uid(dre)) * 0.001f, (_float)(uid(dre)) * 0.001f + 0.5f, 8.0f + (_float)(uid(dre)) * 0.001f),
+																	  vDir + _vec3((_float)(uid(dre)) * 0.0005f, 0.0f, 0.0f));
+				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BreathParticle", pGameObj), E_FAIL);
+			}
+			pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_BreathParticlePool());
+			if (nullptr != pGameObj)
+			{
+				static_cast<CBreathParticle*>(pGameObj)->Set_Instnace(L"Fire_05", 16, 
+																	  Pos + _vec3((_float)(uid(dre)) * 0.001f, (_float)(uid(dre)) * 0.001f + 0.5f, 8.0f + (_float)(uid(dre)) * 0.001f),
+																	  vDir + _vec3((_float)(uid(dre)) * 0.0005f, 0.0f, 0.0f));
+				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BreathParticle", pGameObj), E_FAIL);
+			}
+
+			// Fire13
+			pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_BreathParticlePool());
+			if (nullptr != pGameObj)
+			{
+				static_cast<CBreathParticle*>(pGameObj)->Set_Instnace(L"Fire_13", 16, 
+																	  Pos + _vec3((_float)(uid(dre)) * 0.001f, (_float)(uid(dre)) * 0.001f + 0.5f, 8.0f + (_float)(uid(dre)) * 0.001f),
+																	  vDir + _vec3((_float)(uid(dre)) * 0.0005f, 0.0f, 0.0f));
+				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BreathParticle", pGameObj), E_FAIL);
+			}
+
+			pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_BreathParticlePool());
+			if (nullptr != pGameObj)
+			{
+				static_cast<CBreathParticle*>(pGameObj)->Set_Instnace(L"Fire_13", 16, 
+																	  Pos + _vec3((_float)(uid(dre)) * 0.001f, (_float)(uid(dre)) * 0.001f + 0.5f, 8.0f + (_float)(uid(dre)) * 0.001f),
+																	  vDir + _vec3((_float)(uid(dre)) * 0.0005f, 0.0f, 0.0f));
+				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BreathParticle", pGameObj), E_FAIL);
+			}
+		}
+
+		if (m_fSkillOffset > 3.f)
+		{
+			//m_fBreathTime += fTimeDelta * 0.5f;
+			//if (m_fParticleTime > 0.1f)
+			//{
+			//	m_fParticleTime = 0.f;
+
+			//	BreathPos.x = powf((1.f - m_fBreathTime), 2.f) * BazierPos[0].x + 2 * m_fBreathTime * (1 - m_fBreathTime) * BazierPos[1].x + powf(m_fBreathTime, 2.f) * BazierPos[2].x;
+			//	BreathPos.y = 0.f;
+			//	BreathPos.z = powf((1.f - m_fBreathTime), 2.f) * BazierPos[0].z + 2 * m_fBreathTime * (1 - m_fBreathTime) * BazierPos[1].z + powf(m_fBreathTime, 2.f) * BazierPos[2].z;
+
+			//	CEffectMgr::Get_Instance()->Effect_DirParticle(_vec3(1, 1, 0), 
+			//												   _vec3(0.f), 
+			//												   m_pTransCom->m_vPos, 
+			//												   L"Lighting6", 
+			//												   Pos,
+			//												   BreathPos,
+			//												   FRAME(1, 1, 1),
+			//												   2, 
+			//												   20);
+			//}
+
 			if (m_bisBreathEffect == false)
 			{
 				m_bisBreathEffect = true;
-				m_bisBreathDelta = 0.f;
-				CGameObject* pGameObj;
-				pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_Breath_Effect());
+			//	m_bisBreathDelta = 0.f;
+			//	CGameObject* pGameObj;
+			//	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_Breath_Effect());
 
-				//int SoundNumber = rand() % 2;
-				//wstring SoundTag = L"Breath_" + to_wstring(SoundNumber) + L".ogg";
-				//Engine::CSoundMgr::Get_Instance()->Play_Sound(SoundTag.c_str(), SOUNDID::SOUND_EFFECT);
+			//	if (nullptr != pGameObj)
+			//	{
+			//		static_cast<CBreathEffect*>(pGameObj)->Set_CreateInfo(_vec3(0.f), _vec3(0.f), _vec3(-65.f, 2.2, -16.f) + _vec3(-100.0f, -40.0f, -50.0f));
+			//		static_cast<CBreathEffect*>(pGameObj)->Set_HierchyDesc(m_pHierarchyDesc[BREATH]);
+			//		static_cast<CBreathEffect*>(pGameObj)->Set_ParentMatrix(&m_pTransCom->m_matWorld);
+			//		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Breath", pGameObj), E_FAIL);
+			//	}
+
 				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"VergosAttack_Breath_02.mp3", SOUNDID::SOUND_EFFECT);
-
-				if (nullptr != pGameObj)
-				{
-					static_cast<CBreathEffect*>(pGameObj)->Set_CreateInfo(_vec3(0.f), _vec3(0.f), _vec3(-65.f, 2.2, -16.f));
-					static_cast<CBreathEffect*>(pGameObj)->Set_HierchyDesc(m_pHierarchyDesc[BREATH]);
-					static_cast<CBreathEffect*>(pGameObj)->Set_ParentMatrix(&m_pTransCom->m_matWorld);
-					Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Breath", pGameObj), E_FAIL);
-				}
 			}
 		}
 	}

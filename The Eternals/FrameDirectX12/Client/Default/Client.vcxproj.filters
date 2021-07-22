@@ -568,6 +568,9 @@
     <Filter Include="02.GameObject\99.GameUI\05.FadeInOut">
       <UniqueIdentifier>{05a37931-3661-4baf-b15e-ece51ef9d5a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.GameEffect\17.BreathParticle">
+      <UniqueIdentifier>{8ed6e824-16d0-4f72-b3b0-bffb645c7fca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -1184,6 +1187,9 @@
     <ClInclude Include="..\Code\BossDecal.h" />
     <ClInclude Include="..\Code\TonadoEffect.h" />
     <ClInclude Include="..\Code\BossGroundEffect.h" />
+    <ClInclude Include="..\Code\BreathParticle.h">
+      <Filter>02.GameObject\98.GameEffect\17.BreathParticle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1743,6 +1749,9 @@
     <ClCompile Include="..\Code\BossDecal.cpp" />
     <ClCompile Include="..\Code\TonadoEffect.cpp" />
     <ClCompile Include="..\Code\BossGroundEffect.cpp" />
+    <ClCompile Include="..\Code\BreathParticle.cpp">
+      <Filter>02.GameObject\98.GameEffect\17.BreathParticle</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

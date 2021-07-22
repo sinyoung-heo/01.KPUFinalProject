@@ -177,6 +177,7 @@
     <ClInclude Include="..\Code\BossDecal.h" />
     <ClInclude Include="..\Code\BossGroundEffect.h" />
     <ClInclude Include="..\Code\BreathEffect.h" />
+    <ClInclude Include="..\Code\BreathParticle.h" />
     <ClInclude Include="..\Code\CharacterHpGauge.h" />
     <ClInclude Include="..\Code\CharacterMpGauge.h" />
     <ClInclude Include="..\Code\ChattingCanvas.h" />
@@ -378,6 +379,7 @@
     <ClCompile Include="..\Code\BossDecal.cpp" />
     <ClCompile Include="..\Code\BossGroundEffect.cpp" />
     <ClCompile Include="..\Code\BreathEffect.cpp" />
+    <ClCompile Include="..\Code\BreathParticle.cpp" />
     <ClCompile Include="..\Code\CharacterHpGauge.cpp" />
     <ClCompile Include="..\Code\CharacterMpGauge.cpp" />
     <ClCompile Include="..\Code\ChattingCanvas.cpp" />

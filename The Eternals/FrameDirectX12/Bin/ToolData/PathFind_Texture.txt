@@ -1,3 +1,6 @@
+Fire_05|16|..\..\Bin\Resource\ResourceStage\Texture\EffectMultiTexture\Fire_05\%d.dds
+Fire_10|32|..\..\Bin\Resource\ResourceStage\Texture\EffectMultiTexture\Fire_10\%d.dds
+Fire_13|16|..\..\Bin\Resource\ResourceStage\Texture\EffectMultiTexture\Fire_13\%d.dds
 EffectPublic|32|..\..\Bin\Resource\ResourceStage\Texture\EffectPublic\%d.dds
 ArrowShot0|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\ArrowShot0\%d.dds
 Bomb00|1|..\..\Bin\Resource\ResourceStage\Texture\EffectSpriteTexture\Bomb00\%d.dds
@@ -35,7 +38,7 @@ EffectTrailTexture|14|..\..\Bin\Resource\ResourceStage\Texture\EffectTrailTextur
 SkyBox|10|..\..\Bin\Resource\ResourceStage\Texture\Environment\SkyBox\%d.dds
 Terrain|13|..\..\Bin\Resource\ResourceStage\Texture\Environment\Terrain\%d.dds
 TexWaterFall|11|..\..\Bin\Resource\ResourceStage\Texture\Environment\TexWaterFall\%d.dds
-WaterNormal|134|..\..\Bin\Resource\ResourceStage\Texture\Environment\WaterNormal\%d.dds
+WaterNormal|139|..\..\Bin\Resource\ResourceStage\Texture\Environment\WaterNormal\%d.dds
 PublicMagic|36|..\..\Bin\Resource\ResourceStage\Texture\PublicMagic\%d.dds
 ItemArmor|5|..\..\Bin\Resource\ResourceStage\Texture\UI\ItemArmor\%d.dds
 ItemHelmet|5|..\..\Bin\Resource\ResourceStage\Texture\UI\ItemHelmet\%d.dds
