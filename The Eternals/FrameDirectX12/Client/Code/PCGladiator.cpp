@@ -1790,9 +1790,6 @@ void CPCGladiator::KeyInput_OpenShop(const char& npcNumber)
 			default:
 				break;
 			}
-
-			// NPC에 맞는 상점 리소스 생성
-			cout << "상점 오픈" << endl;
 		}		
 	}
 	else
@@ -1803,7 +1800,6 @@ void CPCGladiator::KeyInput_OpenShop(const char& npcNumber)
 
 		static_cast<CInGameStoreCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInGameStoreCanvas"))->Set_IsActive(false);
 		static_cast<CInGameStoreCanvas*>(m_pObjectMgr->Get_GameObject(L"Layer_UI", L"UIInGameStoreCanvas"))->Set_IsChildActive(false);
-		cout << "상점 종료" << endl;
 	}
 }
 
@@ -1818,7 +1814,6 @@ void CPCGladiator::KeyInput_OpenQuest(const char& npcNumber)
 	{
 		if (npcNumber == NPC_CASTANIC_LSMITH)
 		{
-			cout << "퀘스트창 오픈" << endl;
 			CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(true);
 			CQuestMgr::Get_Instance()->Get_QuestRequestCanvas()->Set_IsActive(true);
 			CQuestMgr::Get_Instance()->Get_QuestRequestCanvas()->Set_IsChildActive(true);
@@ -1826,7 +1821,6 @@ void CPCGladiator::KeyInput_OpenQuest(const char& npcNumber)
 	}
 	else
 	{
-		cout << "퀘스트창 종료" << endl;
 		CMouseCursorMgr::Get_Instance()->Set_IsActiveMouse(false);
 		CQuestMgr::Get_Instance()->Get_QuestRequestCanvas()->Set_IsActive(false);
 		CQuestMgr::Get_Instance()->Get_QuestRequestCanvas()->Set_IsChildActive(false);
