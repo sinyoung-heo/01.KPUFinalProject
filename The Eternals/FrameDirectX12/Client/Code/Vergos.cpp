@@ -1349,7 +1349,7 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 		_vec3 vDir = _vec3(matWorld._31, matWorld._32, matWorld._33);
 		vDir.Normalize();
 
-		if (m_ui3DMax_CurFrame >= 78 && m_ui3DMax_CurFrame <= 132)
+		if (m_ui3DMax_CurFrame >= 78 && m_ui3DMax_CurFrame <= 130)
 		{
 			random_device					rd;
 			default_random_engine			dre{ rd() };
