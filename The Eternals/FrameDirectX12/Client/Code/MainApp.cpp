@@ -186,6 +186,7 @@ HRESULT CMainApp::SetUp_DefaultSetting(Engine::WINMODE eMode, const _uint& uiWid
 	m_pSoundMgr->Load_Sound("../../Bin/Sound/Boss/*.*");
 	m_pSoundMgr->Load_Sound("../../Bin/Sound/Monster/*.*");
 	m_pSoundMgr->Load_Sound("../../Bin/Sound/Cinematic/*.*");
+	m_pSoundMgr->Load_Sound("../../Bin/Sound/NPC/*.*");
 
 	return S_OK;
 }
