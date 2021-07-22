@@ -37,6 +37,8 @@ public:
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 
+public:
+	void Effect_Loop(const _float& fTimeDelta);
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag);
 	void			Set_ConstantTable();
@@ -92,6 +94,9 @@ private:
 	_uint	m_ui3DMax_NumFrame	= 0;	// 3DMax에서 애니메이션의 총 Frame 개수
 	_uint	m_ui3DMax_CurFrame	= 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
 	
+
+	_bool m_bisEffect = false;
+	_float m_fEffectDelta = 0.f;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

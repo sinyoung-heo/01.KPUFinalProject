@@ -1123,6 +1123,23 @@ void CVergos::SetUp_HpGauge(const _float& fTimeDelta)
 
 void CVergos::EffectLoop(const _float& fTimeDelta)
 {
+	if (m_uiAnimIdx == Vergos::A_SPAWN && m_bisDecalEffect==false
+		&& (m_ui3DMax_CurFrame >=149 && m_ui3DMax_CurFrame<=155))
+	{
+		m_bisDecalEffect = true;
+		_matrix matBoneFinalTransform = (m_pHierarchyDesc[HEAD]->matScale * m_pHierarchyDesc[HEAD]->matRotate
+			* m_pHierarchyDesc[HEAD]->matTrans) * m_pHierarchyDesc[HEAD]->matGlobalTransform;
+		_matrix matWorld = matBoneFinalTransform * m_pTransCom->m_matWorld;
+		_vec3 Pos = _vec3(matWorld._41, matWorld._42, matWorld._43);
+		Pos.y = 0.5f;
+		CEffectMgr::Get_Instance()->Effect_Dust(Pos, 16.f, 10.f, 42.f, 36);
+		Effect_BossStone(Pos);
+		Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Crack.ogg", SOUNDID::SOUND_EFFECT);
+		int SoundNumber = rand() % 16;
+		wstring SoundTag = L"RockImpact_HardCrumble_" + to_wstring(SoundNumber) + L".ogg";
+		Engine::CSoundMgr::Get_Instance()->Play_Sound(SoundTag.c_str(), SOUNDID::SOUND_EFFECT);
+	}
+
 	if (m_uiAnimIdx == Vergos::SWING_LEFT || m_uiAnimIdx == Vergos::SWING_RIGHT)
 	{
 		string Bone;
