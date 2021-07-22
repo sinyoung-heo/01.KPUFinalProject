@@ -27,6 +27,7 @@ public:
 	void Set_MonsterState(const _uint& iState) { m_iMonsterStatus = iState; }
 	void Set_CurAnimationFrame(const _uint& uiFrame)	{ m_ui3DMax_CurFrame = uiFrame; }
 	void Set_IsCameraShaking(const _bool& bIsShaking)	{ m_bIsCameraShaking = bIsShaking; }
+	void Reset_SoundValue();
 
 	// CGameObject을(를) 통해 상속됨
 	virtual HRESULT	Ready_GameObject(wstring wstrMeshTag,
@@ -44,12 +45,13 @@ public:
 
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag, wstring wstrNaviMeshTag);
-	void			Set_ConstantTable();
-	void			Set_ConstantTableShadowDepth();
-	void			Set_ConstantTableMiniMap();
-	void			SetUp_AngleInterpolation(const _float& fTimeDelta);
-	void			Active_Monster(const _float& fTimeDelta);
-	void			Change_Animation(const _float& fTimeDelta);
+	void Set_ConstantTable();
+	void Set_ConstantTableShadowDepth();
+	void Set_ConstantTableMiniMap();
+	void SetUp_AngleInterpolation(const _float& fTimeDelta);
+	void Active_Monster(const _float& fTimeDelta);
+	void Change_Animation(const _float& fTimeDelta);
+	void SetUp_PlaySound();
 private:
 	/*__________________________________________________________________________________________________________
 	[ Component ]
@@ -90,6 +92,18 @@ private:
 	_uint	m_ui3DMax_NumFrame	= 0;	// 3DMax에서 애니메이션의 총 Frame 개수
 	_uint	m_ui3DMax_CurFrame	= 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
 	
+	// Sound
+	_bool m_bIsPlaySoundSpawn          = false;
+	_bool m_bIsPlaySoundSpawnFly01     = false;
+	_bool m_bIsPlaySoundSpawnFly02     = false;
+	_bool m_bIsPlaySoundSpawnFly03     = false;
+	_bool m_bIsPlaySoundSpawnFlyEnd    = false;
+	_bool m_bIsPlaySoundSpawnCrush01   = false;
+	_bool m_bIsPlaySoundSpawnCrush02   = false;
+	_bool m_bIsPlaySoundSpawnCrush03   = false;
+	_bool m_bIsPlaySoundSpawnRoar      = false;
+	_bool m_bIsPlaySoundSpawnAwayFly01 = false;
+	_bool m_bIsPlaySoundSpawnAwayFly02 = false;
 public:
 	static Engine::CGameObject* Create(ID3D12Device* pGraphicDevice,
 									   ID3D12GraphicsCommandList* pCommandList,

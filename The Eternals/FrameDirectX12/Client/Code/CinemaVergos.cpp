@@ -11,6 +11,7 @@
 #include "CollisionTick.h"
 #include "InstancePoolMgr.h"
 #include "DynamicCamera.h"
+#include "SoundMgr.h"
 
 CCinemaVergos::CCinemaVergos(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
@@ -18,6 +19,21 @@ CCinemaVergos::CCinemaVergos(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommand
 	, m_pServerMath(CServerMath::Get_Instance())
 	, m_pInstancePoolMgr(CInstancePoolMgr::Get_Instance())
 {
+}
+
+void CCinemaVergos::Reset_SoundValue()
+{
+	m_bIsPlaySoundSpawn          = false;
+	m_bIsPlaySoundSpawnFly01     = false;
+	m_bIsPlaySoundSpawnFly02     = false;
+	m_bIsPlaySoundSpawnFly03     = false;
+	m_bIsPlaySoundSpawnFlyEnd    = false;
+	m_bIsPlaySoundSpawnCrush01   = false;
+	m_bIsPlaySoundSpawnCrush02   = false;
+	m_bIsPlaySoundSpawnCrush03   = false;
+	m_bIsPlaySoundSpawnRoar      = false;
+	m_bIsPlaySoundSpawnAwayFly01 = false;
+	m_bIsPlaySoundSpawnAwayFly02 = false;
 }
 
 HRESULT CCinemaVergos::Ready_GameObject(wstring wstrMeshTag, wstring wstrNaviMeshTag, const _vec3& vScale, const _vec3& vAngle, const _vec3& vPos)
@@ -82,6 +98,7 @@ _int CCinemaVergos::Update_GameObject(const _float& fTimeDelta)
 		m_bIsStartDissolve = false;
 		m_fDissolve = -0.05f;
 		m_bIsResetNaviMesh = false;
+		m_bIsPlaySoundSpawn = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_MonsterCinemaVergosPool(), m_uiInstanceIdx);
 
 		return RETURN_OBJ;
@@ -110,6 +127,9 @@ _int CCinemaVergos::Update_GameObject(const _float& fTimeDelta)
 	Change_Animation(fTimeDelta);
 
 	Active_Monster(fTimeDelta);
+
+	if (m_pMeshCom->Is_BlendingComplete())
+		SetUp_PlaySound();
 
 	if (!m_bIsCameraShaking && m_ui3DMax_CurFrame > 340)
 	{
@@ -323,6 +343,83 @@ void CCinemaVergos::Change_Animation(const _float& fTimeDelta)
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 		}
 		break;
+		}
+	}
+}
+
+void CCinemaVergos::SetUp_PlaySound()
+{
+	if (CinemaVergos::A_SPAWN == m_uiAnimIdx)
+	{
+		// Spawn
+		if (!m_bIsPlaySoundSpawn && m_ui3DMax_CurFrame >= 0)
+		{
+			m_bIsPlaySoundSpawn = true;
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Vergos_Spawn_01.mp3", SOUNDID::SOUND_MONSTER, 1.0f);
+		}
+
+		// Fly
+		if (!m_bIsPlaySoundSpawnFly01 && m_ui3DMax_CurFrame >= 170)
+		{
+			m_bIsPlaySoundSpawnFly01 = true;
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Vergos_Fly_01.mp3", SOUNDID::SOUND_MONSTER, 1.0f);
+		}
+
+		if (!m_bIsPlaySoundSpawnFly02 && m_ui3DMax_CurFrame >= 204)
+		{
+			m_bIsPlaySoundSpawnFly02 = true;
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Vergos_Fly_02.mp3", SOUNDID::SOUND_MONSTER, 1.0f);
+		}
+
+		if (!m_bIsPlaySoundSpawnFly03 && m_ui3DMax_CurFrame >= 224)
+		{
+			m_bIsPlaySoundSpawnFly03 = true;
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Vergos_Fly_02.mp3", SOUNDID::SOUND_MONSTER, 1.0f);
+		}
+
+		if (!m_bIsPlaySoundSpawnFlyEnd && m_ui3DMax_CurFrame >= 240)
+		{
+			m_bIsPlaySoundSpawnFlyEnd = true;
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Vergos_FlyEnd_01.mp3", SOUNDID::SOUND_MONSTER, 1.0f);
+		}
+
+		// Crush
+		if (!m_bIsPlaySoundSpawnCrush01 && m_ui3DMax_CurFrame >= 241)
+		{
+			m_bIsPlaySoundSpawnCrush01 = true;
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Vergos_Spawn_Crush_01.mp3", SOUNDID::SOUND_MONSTER, 1.0f);
+		}
+
+		if (!m_bIsPlaySoundSpawnCrush02 && m_ui3DMax_CurFrame >= 298)
+		{
+			m_bIsPlaySoundSpawnCrush02 = true;
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Vergos_SpawnCrash_01.mp3", SOUNDID::SOUND_MONSTER, 1.0f);
+		}
+
+		if (!m_bIsPlaySoundSpawnCrush03 && m_ui3DMax_CurFrame >= 315)
+		{
+			m_bIsPlaySoundSpawnCrush03 = true;
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Vergos_SpawnCrash_02.mp3", SOUNDID::SOUND_MONSTER, 1.0f);
+		}
+
+		// Roar
+		if (!m_bIsPlaySoundSpawnRoar && m_ui3DMax_CurFrame >= 336)
+		{
+			m_bIsPlaySoundSpawnRoar = true;
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Vergos_Screaming_01.mp3", SOUNDID::SOUND_MONSTER, 1.0f);
+		}
+
+		// Fly Away
+		if (!m_bIsPlaySoundSpawnAwayFly01 && m_ui3DMax_CurFrame >= 491)
+		{
+			m_bIsPlaySoundSpawnAwayFly01 = true;
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Vergos_Fly_02.mp3", SOUNDID::SOUND_MONSTER, 1.0f);
+		}
+
+		if (!m_bIsPlaySoundSpawnAwayFly02 && m_ui3DMax_CurFrame >= 526)
+		{
+			m_bIsPlaySoundSpawnAwayFly02 = true;
+			Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Vergos_Fly_02.mp3", SOUNDID::SOUND_MONSTER, 1.0f);
 		}
 	}
 }

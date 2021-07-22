@@ -353,6 +353,7 @@ void CCinemaMgr::Reset_Vergos()
 	static_cast<CCinemaVergos*>(m_pVergos)->Set_CurAnimationFrame(0);
 	static_cast<CCinemaVergos*>(m_pVergos)->Set_IsUpdate(false);
 	static_cast<CCinemaVergos*>(m_pVergos)->Set_IsCameraShaking(false);
+	static_cast<CCinemaVergos*>(m_pVergos)->Reset_SoundValue();
 }
 
 void CCinemaMgr::Reset_PrionBerserkerPosition()
