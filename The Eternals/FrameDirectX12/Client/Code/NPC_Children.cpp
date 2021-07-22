@@ -327,6 +327,8 @@ void CNPC_Children::Change_Animation_NonMoveType(const _float& fTimeDelta)
 
 		case Human_boy::A_WAIT:
 		{
+			m_bIsSoundStart = false;
+
 			m_uiAnimIdx = Human_boy::A_WAIT;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
@@ -390,8 +392,15 @@ void CNPC_Children::Change_Animation_NonMoveType(const _float& fTimeDelta)
 			m_uiAnimIdx = Human_boy::A_LAUGH;
 			m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
 
+			if (!m_bIsSoundStart)
+			{
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"npc_children.ogg", SOUNDID::SOUND_MONSTER);
+				m_bIsSoundStart = true;
+			}
+
 			if (m_pMeshCom->Is_AnimationSetEnd(fTimeDelta))
 			{
+				m_bIsSoundStart = false;
 				m_iMonsterStatus = Human_boy::A_WAIT;
 
 				m_uiAnimIdx = Human_boy::A_WAIT;

@@ -1770,6 +1770,7 @@ void CPCGladiator::KeyInput_OpenShop(const char& npcNumber)
 			{
 			case NPC_POPORI_MERCHANT:		// 무기상인
 			{
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"npc_assistant.ogg", SOUNDID::SOUND_MONSTER);
 				CStoreMgr::Get_Instance()->Set_StoreState(STORE_STATE::STORE_WEAPON);
 				CStoreMgr::Get_Instance()->Set_StoreItemType(ItemType_WeaponTwoHand);
 			}
@@ -2766,6 +2767,7 @@ void CPCGladiator::Collision_Quest(list<Engine::CColliderSphere*>& lstMerchantCo
 				/* Shop Open */
 				if (Engine::KEY_DOWN(DIK_F))
 				{
+					Engine::CSoundMgr::Get_Instance()->Play_Sound(L"npc_quest.ogg", SOUNDID::SOUND_MONSTER);
 					KeyInput_OpenQuest(pObj->Get_NPCNumber());
 				}
 			}
