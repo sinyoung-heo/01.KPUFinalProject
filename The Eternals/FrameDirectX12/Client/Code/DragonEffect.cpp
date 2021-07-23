@@ -56,7 +56,19 @@ _int CDragonEffect::Update_GameObject(const _float& fTimeDelta)
 	m_fFireDecalDelta += fTimeDelta;
 	if (m_bisFireDecal == false && m_fFireDecalDelta > 1.7f)
 	{
+	/*	CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone0", _vec3(0.f), _vec3(0.f), m_pTransCom->m_vPos, true, false, 5, 3, 0, 0, 0
+			, _vec2(25, 5), 90.f, true);*/
+		CEffectMgr::Get_Instance()->Effect_Explosion(m_pTransCom->m_vPos);
 		m_bisFireDecal = true;
+		CEffectMgr::Get_Instance()->Effect_Dust(m_pTransCom->m_vPos, 5.f, 5.f,24);
+		CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.04f),
+			_vec3(0.f), m_pTransCom->m_vPos, false, false, 5, 20, 11, 11, 11, _vec2(35, 6), 0, true);
+		CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.02f),
+			_vec3(0.f), m_pTransCom->m_vPos, false, false, 5, 20, 11, 11, 11, _vec2(25, 2), 0, true);
+
+		_vec3 newPos = m_pTransCom->m_vPos;
+		newPos.y += 4.f;
+		CEffectMgr::Get_Instance()->Effect_Dust2(m_pTransCom->m_vPos, 8.f, 8.f, FRAME(10, 9, rand() % 20 + 20), 18, L"Bomb00");
 	}
 
 	if (m_bIsDead)
