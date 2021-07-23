@@ -154,8 +154,8 @@ void CAi::Hurt_AI()
 	m_iHp -= (int)((float)m_iMaxHp * (float)HP_Percent(dre) / PERCENT);
 	m_iMp -= (int)((float)m_iMaxMp * (float)MP_Percent(dre) / PERCENT);
 
-	if (m_iHp <= 0) m_iHp = ZERO_HP;
-	if (m_iMp <= 0) m_iMp = ZERO_HP;
+	if (m_iHp <= 100) m_iHp = 100;
+	if (m_iMp <= 100) m_iMp = 100;
 
 	for (const int& raid : *CObjMgr::GetInstance()->Get_RAIDLIST())
 	{
@@ -492,7 +492,7 @@ void CAi::process_move_gladiator(const float& fTimeDelta)
 	m_vDir.Normalize();
 
 	m_vTempPos = m_vPos + m_vDir * 10.f;
-	m_vTempPos.z = 355.f;
+	m_vTempPos.z = 365.f;
 
 	m_iAniIdx = Gladiator::ATTACK_RUN;
 	m_uiAnimIdx = Gladiator::ATTACK_RUN;
@@ -528,10 +528,14 @@ void CAi::Choose_GladiatorPattern(const float& fTimeDelta)
 {
 	m_eGladiatorPhase = GLADIATOR_PHASE::GL_END;
 
+	random_device					rd;
+	default_random_engine			dre{ rd() };
+	uniform_int_distribution<int>	pattern{ rand() % 5 + 1,  rand() % 50 + 50 };
+
 	if (m_iCurPatternNumber > 2)
 		m_iCurPatternNumber = 0;
 
-	switch (m_iCurPatternNumber)
+	switch (pattern(dre) % 3)
 	{
 	case 0:
 		m_eGladiatorPhase = GLADIATOR_PHASE::GL_PHASE1;
@@ -820,7 +824,14 @@ void CAi::Attack_Gladiator_AI(const float& fTimedelta)
 				}
 				// 베르고스 HP 감소
 				if (m_pMonster)
-					m_pMonster->Hurt_MonsterbyAI(m_sNum, m_iMaxAtt);
+				{
+					random_device					rd;
+					default_random_engine			dre{ rd() };
+					uniform_int_distribution<int>	dmg{ m_iMinAtt, m_iMaxAtt };
+					
+					int iDmg = dmg(dre);
+					m_pMonster->Hurt_MonsterbyAI(m_sNum, iDmg);
+				}
 			}
 			else
 			{
@@ -857,7 +868,14 @@ void CAi::Attack_Gladiator_AI(const float& fTimedelta)
 
 	// 베르고스 HP 감소
 	if (m_pMonster)
-		m_pMonster->Hurt_MonsterbyAI(m_sNum, m_iMaxAtt);
+	{
+		random_device					rd;
+		default_random_engine			dre{ rd() };
+		uniform_int_distribution<int>	dmg{ m_iMinAtt, m_iMaxAtt };
+
+		int iDmg = dmg(dre);
+		m_pMonster->Hurt_MonsterbyAI(m_sNum, iDmg);
+	}
 }
 
 void CAi::Play_Gladiator_NextAttack(chrono::seconds t)
@@ -949,7 +967,7 @@ void CAi::process_move_archer(const float& fTimeDelta)
 	m_vDir.Normalize();
 
 	m_vTempPos = m_vPos + m_vDir * 10.f;
-	m_vTempPos.z = 350.f;
+	m_vTempPos.z = 355.f + rand() % 5 * 1.f;
 
 	m_iAniIdx = Archer::ATTACK_RUN;
 	m_uiAnimIdx = Archer::ATTACK_RUN;
@@ -983,10 +1001,22 @@ void CAi::process_moveStop_archer(const float& fTimeDelta)
 
 void CAi::Choose_ArcherPattern(const float& fTimeDelta)
 {
-	if (rand() % 5 == 0)
+	random_device					rd;
+	default_random_engine			dre{ rd() };
+	uniform_int_distribution<int>	phase{ rand() % 5 + 1, rand() % 50 + 50 };
+
+	switch (phase(dre) % 3)
+	{
+	case 0:
 		ArcherPattern_FirstPhase();
-	else  
+		break;
+	case 1:
 		ArcherPattern_SecondPhase();
+		break;
+	case 2:
+		ArcherPattern_FirstPhase();
+		break;
+	}
 
 	m_iCurPatternNumber = 0;
 	Change_AttackMode();
@@ -1035,7 +1065,14 @@ void CAi::Attack_Archer_AI(const float& fTimedelta)
 				}
 				// 베르고스 HP 감소
 				if (m_pMonster)
-					m_pMonster->Hurt_MonsterbyAI(m_sNum, m_iMaxAtt);
+				{
+					random_device					rd;
+					default_random_engine			dre{ rd() };
+					uniform_int_distribution<int>	dmg{ m_iMinAtt, m_iMaxAtt };
+
+					int iDmg = dmg(dre);
+					m_pMonster->Hurt_MonsterbyAI(m_sNum, iDmg);
+				}
 			}
 			else
 			{
@@ -1084,7 +1121,14 @@ void CAi::Attack_Archer_AI(const float& fTimedelta)
 	}
 	// 베르고스 HP 감소
 	if (m_pMonster)
-		m_pMonster->Hurt_MonsterbyAI(m_sNum, m_iMaxAtt);
+	{
+		random_device					rd;
+		default_random_engine			dre{ rd() };
+		uniform_int_distribution<int>	dmg{ m_iMinAtt, m_iMaxAtt };
+
+		int iDmg = dmg(dre);
+		m_pMonster->Hurt_MonsterbyAI(m_sNum, iDmg);
+	}
 }
 
 bool CAi::Is_ComboAttack_Archer(const float& fTimeDelta)

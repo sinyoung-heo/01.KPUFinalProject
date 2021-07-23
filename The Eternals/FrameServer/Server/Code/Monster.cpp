@@ -48,7 +48,7 @@ void CMonster::Ready_Monster(const _vec3& pos, const _vec3& angle, const char& t
 	m_vAngle	= angle;
 	m_iHp		= hp;
 	m_iMaxHp	= hp;
-	m_iMinAtt	= att / 2;
+	m_iMinAtt	= att / 4;
 	m_iMaxAtt	= att;
 	m_iExp		= exp;
 	m_fSpd		= spd;
@@ -3109,7 +3109,7 @@ void CMonster::Attack_GiantMonkey(const float& fTimeDelta)
 		else
 		{
 			m_bIsRushAttack = false;
-			Set_Stop_Attack(7s);
+			Set_Stop_Attack(5s);
 			return;
 		}
 	}

@@ -21,14 +21,14 @@ constexpr int	SERVER_CORE					= 4;
 constexpr int	NEAR_SECTOR					= 5;
 
 constexpr int	ZERO_HP						= 0;
-constexpr int	INIT_HP						= 10000;			// 초기 HPw1
-constexpr int	INIT_MP						= 10000;			// 초기 MP
+constexpr int	INIT_HP						= 100'000;		// 초기 HPw1
+constexpr int	INIT_MP						= 100'000;		// 초기 MP
 constexpr int	INIT_EXP					= 0;			// 초기 EXP
 constexpr int	INIT_MAXEXP					= 100;			// 초기 MAXEXP
 constexpr int	INIT_LEV					= 1;			// 초기 LEVEL
-constexpr int	INIT_MINATT					= 100;			// 초기 ATTACK
-constexpr int	INIT_MAXATT					= 200;			// 초기 ATTACK
-constexpr int	INIT_MONEY					= 100000;
+constexpr int	INIT_MINATT					= 1'000;		// 초기 ATTACK
+constexpr int	INIT_MAXATT					= 2'000;		// 초기 ATTACK
+constexpr int	INIT_MONEY					= 100'000;
 constexpr float	INIT_SPEED					= 5.f;			// 초기 SPEED
 constexpr int	INCREASE_EXP				= 50;
 constexpr int	INCREASE_HP					= 50;
@@ -41,10 +41,10 @@ constexpr float	PERCENT						= 100.f;
 
 constexpr int	RAID_PARTY					= 99;
 constexpr int	RAID_MINIMUM				= 1;
-constexpr int	AI_HP						= 5000;
-constexpr int	AI_MP						= 5000;
-constexpr int	AI_MAXATT					= 500;
-constexpr int	AI_MINATT					= 250;
+constexpr int	AI_HP						= 100'000;
+constexpr int	AI_MP						= 100'000;
+constexpr int	AI_MAXATT					= 50'000;
+constexpr int	AI_MINATT					= 10'000;
 
 /*____________________________________________________________________
 Monster Attack & Chase Dist
@@ -65,15 +65,15 @@ constexpr int	RUSH_RANGE_GBEETEL_END		= 10;			// MONSTER GIANT BEETLE 돌진 범위
 constexpr int	RUSH_RANGE_GMONKEY_START	= 7;			// MONSTER GIANT MONKEY 돌진 범위
 constexpr int	RUSH_RANGE_GMONKEY_END		= 8;			// MONSTER GIANT MONKEY 돌진 범위
 
-constexpr int	CRAB_HP						= 7000;
-constexpr int	CRAB_ATT					= 20;
-constexpr int	CRAB_EXP					= 20;
+constexpr int	CRAB_HP						= 14'000;
+constexpr int	CRAB_ATT					= 800;
+constexpr int	CRAB_EXP					= 500;
 constexpr float	CRAB_SPD					= 0.5f;
 constexpr float	CRAB_CHASE_SPD				= 2.f;
 
-constexpr int	SAILOR_HP					= 10000;
-constexpr int	SAILOR_ATT					= 80;
-constexpr int	SAILOR_EXP					= 50;
+constexpr int	SAILOR_HP					= 100'000;
+constexpr int	SAILOR_ATT					= 1'600;
+constexpr int	SAILOR_EXP					= 800;
 constexpr float	SAILOR_SPD					= 1.f;
 constexpr float	SAILOR_CHASE_SPD			= 4.f;
 constexpr int	SAILOR_RUSH_TICK_START		= 30;
@@ -85,9 +85,9 @@ constexpr int	ARCHNE_EXP					= 100;
 constexpr float	ARCHNE_SPD					= 1.f;
 constexpr float	ARCHNE_CHASE_SPD			= 6.f;
 
-constexpr int	MONKEY_HP					= 10000;
-constexpr int	MONKEY_ATT					= 150;
-constexpr int	MONKEY_EXP					= 100;
+constexpr int	MONKEY_HP					= 100'000;
+constexpr int	MONKEY_ATT					= 2'000;
+constexpr int	MONKEY_EXP					= 900;
 constexpr float	MONKEY_SPD					= 1.f;
 constexpr float	MONKEY_CHASE_SPD			= 3.f;
 
@@ -97,9 +97,9 @@ constexpr int	CLODER_EXP					= 100;
 constexpr float	CLODER_SPD					= 1.f;
 constexpr float	CLODER_CHASE_SPD			= 4.f;
 
-constexpr int	GIANTMONKEY_HP				= 10000;
-constexpr int	GIANTMONKEY_ATT				= 150;
-constexpr int	GIANTMONKEY_EXP				= 100;
+constexpr int	GIANTMONKEY_HP				= 1'000'000;
+constexpr int	GIANTMONKEY_ATT				= 4'000;
+constexpr int	GIANTMONKEY_EXP				= 1'000;
 constexpr float	GIANTMONKEY_SPD				= 1.f;
 constexpr float	GIANTMONKEY_CHASE_SPD		= 4.f;
 
@@ -110,8 +110,8 @@ constexpr float	GIANTBETTLE_SPD				= 1.f;
 constexpr float	GIANTBETTLE_CHASE_SPD		= 4.f;
 
 constexpr int	VERGOS_HP					= 100'000'000;
-constexpr int	VERGOS_ATT					= 500;
-constexpr int	VERGOS_EXP					= 10000;
+constexpr int	VERGOS_ATT					= 10'000;
+constexpr int	VERGOS_EXP					= 10'000;
 constexpr float	VERGOS_SPD					= 1.f;
 constexpr float	VERGOS_CHASE_SPD			= 4.f;
 constexpr int	VERGOS_PATTERN				= 7;

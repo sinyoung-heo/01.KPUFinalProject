@@ -332,8 +332,7 @@ void CObjMgr::Create_StageWinterMonster()
 
 	if (pNew)
 	{
-		pNew->Ready_Monster(_vec3(380.0f, 0.f, 390.0f), _vec3(0.f, -180.0f, 0.f), MON_NORMAL, MON_VERGOS, STAGE_WINTER, VERGOS_HP, GIANTMONKEY_ATT, GIANTMONKEY_EXP, GIANTMONKEY_SPD);
-		//pNew->Ready_Monster(_vec3(380.0f, 0.f, 390.0f), _vec3(0.f, -180.0f, 0.f), MON_NORMAL, MON_VERGOS, STAGE_WINTER, 100000, GIANTMONKEY_ATT, GIANTMONKEY_EXP, GIANTMONKEY_SPD);
+		pNew->Ready_Monster(_vec3(380.0f, 0.f, 390.0f), _vec3(0.f, -180.0f, 0.f), MON_NORMAL, MON_VERGOS, STAGE_WINTER, VERGOS_HP, VERGOS_ATT, VERGOS_EXP, VERGOS_SPD);
 		pNew->Set_NumAnimation(Vergos::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Vergos::duration);
 		g_iVergosServerNum = pNew->m_sNum;
@@ -353,7 +352,27 @@ void CObjMgr::Create_AiPlayer()
 	pNew = static_cast<CAi*>(CObjPoolMgr::GetInstance()->use_Object(L"AI"));
 	if (pNew)
 	{
-		pNew->Ready_AI(PC_ARCHER, Event_Season_Bow_01_SM, STAGE_WINTER, _vec3(STAGE_WINTER_X - 5.f, 0.f, STAGE_WINTER_Z));
+		pNew->Ready_AI(PC_ARCHER, Event_Season_Bow_01_SM, STAGE_WINTER, _vec3(STAGE_WINTER_X - 5.f, 0.f, STAGE_WINTER_Z + 5.f));
+		pNew->Set_NumAnimation(Archer::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Archer::duration);
+	}
+	else return;
+
+	// ARCHER 2
+	pNew = static_cast<CAi*>(CObjPoolMgr::GetInstance()->use_Object(L"AI"));
+	if (pNew)
+	{
+		pNew->Ready_AI(PC_ARCHER, Event_Season_Bow_01_SM, STAGE_WINTER, _vec3(STAGE_WINTER_X - 15.f, 0.f, STAGE_WINTER_Z));
+		pNew->Set_NumAnimation(Archer::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Archer::duration);
+	}
+	else return;
+
+	// ARCHER 3
+	pNew = static_cast<CAi*>(CObjPoolMgr::GetInstance()->use_Object(L"AI"));
+	if (pNew)
+	{
+		pNew->Ready_AI(PC_ARCHER, Event_Season_Bow_01_SM, STAGE_WINTER, _vec3(STAGE_WINTER_X + 25.f, 0.f, STAGE_WINTER_Z - 5.f));
 		pNew->Set_NumAnimation(Archer::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Archer::duration);
 	}
@@ -373,7 +392,27 @@ void CObjMgr::Create_AiPlayer()
 	pNew = static_cast<CAi*>(CObjPoolMgr::GetInstance()->use_Object(L"AI"));
 	if (pNew)
 	{
-		pNew->Ready_AI(PC_GLADIATOR, TwoHand33_B_SM, STAGE_WINTER, _vec3(STAGE_WINTER_X, 0.f, STAGE_WINTER_Z - 5.f));
+		pNew->Ready_AI(PC_GLADIATOR, TwoHand33_B_SM, STAGE_WINTER, _vec3(STAGE_WINTER_X + 10.f, 0.f, STAGE_WINTER_Z + 6.f));
+		pNew->Set_NumAnimation(Gladiator::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Gladiator::duration);
+	}
+	else return;
+
+	// GLADIATOR 2
+	pNew = static_cast<CAi*>(CObjPoolMgr::GetInstance()->use_Object(L"AI"));
+	if (pNew)
+	{
+		pNew->Ready_AI(PC_GLADIATOR, TwoHand33_B_SM, STAGE_WINTER, _vec3(STAGE_WINTER_X + 23.f, 0.f, STAGE_WINTER_Z + 4.f));
+		pNew->Set_NumAnimation(Gladiator::NUM_ANIMATION);
+		pNew->Set_AnimDuration(Gladiator::duration);
+	}
+	else return;
+
+	// GLADIATOR 3
+	pNew = static_cast<CAi*>(CObjPoolMgr::GetInstance()->use_Object(L"AI"));
+	if (pNew)
+	{
+		pNew->Ready_AI(PC_GLADIATOR, TwoHand33_B_SM, STAGE_WINTER, _vec3(STAGE_WINTER_X - 13.f, 0.f, STAGE_WINTER_Z + 5.f));
 		pNew->Set_NumAnimation(Gladiator::NUM_ANIMATION);
 		pNew->Set_AnimDuration(Gladiator::duration);
 	}
