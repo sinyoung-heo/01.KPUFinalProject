@@ -114,7 +114,8 @@ private:
 	_uint	m_uiAnimIdx			= 0;	// 현재 애니메이션 Index
 	_uint	m_ui3DMax_NumFrame	= 0;	// 3DMax에서 애니메이션의 총 Frame 개수
 	_uint	m_ui3DMax_CurFrame	= 0;	// 3DMAx에서 현재 애니메이션의 Frame 위치
-	
+	_float	m_fAnimationSpeed = 1.0f;
+
 	//Effect
 
 	void Effect_BossStone(_vec3 Pos,int Option = 0);

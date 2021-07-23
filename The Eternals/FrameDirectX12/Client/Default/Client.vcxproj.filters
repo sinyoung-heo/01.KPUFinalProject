@@ -571,6 +571,9 @@
     <Filter Include="02.GameObject\98.GameEffect\17.BreathParticle">
       <UniqueIdentifier>{8ed6e824-16d0-4f72-b3b0-bffb645c7fca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\98.GameEffect\18.SmokeParticle">
+      <UniqueIdentifier>{681dae6a-847b-47ba-9ea3-288af84c2294}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -1190,6 +1193,9 @@
     <ClInclude Include="..\Code\BreathParticle.h">
       <Filter>02.GameObject\98.GameEffect\17.BreathParticle</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\SmokeParticle.h">
+      <Filter>02.GameObject\98.GameEffect\18.SmokeParticle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1751,6 +1757,9 @@
     <ClCompile Include="..\Code\BossGroundEffect.cpp" />
     <ClCompile Include="..\Code\BreathParticle.cpp">
       <Filter>02.GameObject\98.GameEffect\17.BreathParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\SmokeParticle.cpp">
+      <Filter>02.GameObject\98.GameEffect\18.SmokeParticle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

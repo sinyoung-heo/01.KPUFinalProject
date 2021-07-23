@@ -70,7 +70,16 @@ int CMonster::Update_Monster(const float& fTimeDelta)
 
 	/* Calculate Animation frame */
 	Set_AnimationKey(m_uiAnimIdx);
-	Play_Animation(fTimeDelta * Monster_Normal::TPS);
+
+	if (m_monNum == MON_VERGOS)
+	{
+		if (m_uiAnimIdx == Vergos::BREATH_FIRE)
+			m_fAnimationSpeed = 0.75f;
+	}
+	else
+		m_fAnimationSpeed = 1.0f;
+
+	Play_Animation(fTimeDelta * Monster_Normal::TPS * m_fAnimationSpeed);
 
 	return NO_EVENT;
 }

@@ -58,6 +58,7 @@
 #include "BossGroundEffect.h"
 #include "DragonEffect.h"
 #include "BreathParticle.h"
+#include "SmokeParticle.h"
 
 IMPLEMENT_SINGLETON(CInstancePoolMgr)
 
@@ -239,7 +240,8 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_BossGroundEffect_Pool, 3);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_DragonEffect_Pool, 5);
 
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pBreathParticle_Pool, 512);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pBreathParticle_Pool, 1024);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pSmokeParticle_Pool, 128);
 }
 
 void CInstancePoolMgr::Ready_LoadingInstancePool(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -340,4 +342,5 @@ void CInstancePoolMgr::Free()
 	Safe_Release_InstacePool(m_pEffect_DragonEffect_Pool);
 
 	Safe_Release_InstacePool(m_pBreathParticle_Pool);
+	Safe_Release_InstacePool(m_pSmokeParticle_Pool);
 }
