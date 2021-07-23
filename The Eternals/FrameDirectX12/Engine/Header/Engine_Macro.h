@@ -96,22 +96,19 @@ ______________________________________________________________________*/
 #define GetDIMouseState(eMouseID)					CDirectInput::Get_Instance()->Get_DIMouseState(eMouseID)
 #define GetDIMouseMove(eMouseMoveState)				CDirectInput::Get_Instance()->Get_DIMouseMove(eMouseMoveState)
 
+//AfterImageTerm
+#define AFTERIMAGE_MAKETERM 0.05f
+// Sound Channel
+#define		MAX_SOUNDCHANNEL				100
+
 /*____________________________________________________________________
 [ COUT DEBUG ]
 ______________________________________________________________________*/
 #ifdef _DEBUG
-
 //#define ENGINE_LOG 0
 #define COUT_STR(STR)	cout << STR << endl;
-
-//AfterImageTerm
-#define AFTERIMAGE_MAKETERM 0.05f
-
-
-// Sound Channel
-#define		MAX_SOUNDCHANNEL				100
-
 #endif
+
 
 
 

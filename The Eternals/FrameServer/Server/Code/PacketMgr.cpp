@@ -2423,7 +2423,7 @@ void process_cinema_end(const int& id)
 		CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
 		if (pMonster != nullptr && pMonster->Get_IsConnected() == false)
 		{
-			add_timer(pMonster->m_sNum, OP_MODE_RAID_START, system_clock::now() + 10s);
+			add_timer(pMonster->m_sNum, OP_MODE_RAID_START, system_clock::now() + 5s);
 		}
 	}
 }
