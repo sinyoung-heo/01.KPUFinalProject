@@ -13,6 +13,9 @@ private:
 
 public:
 	void Effect_Dust(_vec3 vecPos, float Radius=2.f,float Scale=3.f, float FPS=84.f, _int number=18);
+	void Effect_Dust2(_vec3 vecPos, float Radius = 2.f, float Scale = 3.f, FRAME frame=FRAME(12,7,84), _int number = 18
+	,wstring Tag=L"Dust");
+
 	void Effect_IceStorm(_vec3 vecPos,int Cnt=36,float Radius=5.f);
 	void Effect_IceStorm_s(_vec3 vecPos,float Radius);
 	void Effect_SwordEffect(_vec3 vecPos,_vec3 vecDir);

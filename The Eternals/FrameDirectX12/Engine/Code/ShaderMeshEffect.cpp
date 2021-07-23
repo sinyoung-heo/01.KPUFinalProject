@@ -617,6 +617,7 @@ HRESULT CShaderMeshEffect::Create_PipelineState()
 	PipelineStateDesc.VS = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.PS = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.RasterizerState = CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
+	PipelineStateDesc.DepthStencilState = CShader::Create_DepthStencilState(false);
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
 	CRenderer::Get_Instance()->Add_PipelineStateCnt();
@@ -626,6 +627,7 @@ HRESULT CShaderMeshEffect::Create_PipelineState()
 	PipelineStateDesc.VS = { reinterpret_cast<BYTE*>(m_pVS_ByteCode->GetBufferPointer()), m_pVS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.PS = { reinterpret_cast<BYTE*>(m_pPS_ByteCode->GetBufferPointer()), m_pPS_ByteCode->GetBufferSize() };
 	PipelineStateDesc.RasterizerState = CShader::Create_RasterizerState(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_NONE);
+	PipelineStateDesc.DepthStencilState = CShader::Create_DepthStencilState();
 	FAILED_CHECK_RETURN(m_pGraphicDevice->CreateGraphicsPipelineState(&PipelineStateDesc, IID_PPV_ARGS(&pPipelineState)), E_FAIL);
 	m_vecPipelineState.emplace_back(pPipelineState);
 	CRenderer::Get_Instance()->Add_PipelineStateCnt();

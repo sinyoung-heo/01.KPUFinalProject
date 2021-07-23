@@ -50,7 +50,18 @@ void CEffectMgr::Effect_Dust(_vec3 vecPos, float Radius, float Scale,float FPS,_
 		newPos.x = vecPos.x + Radius * cos(XMConvertToRadians(i * 360.f/(_float)number));
 		newPos.z = vecPos.z + Radius * sin(XMConvertToRadians(i * 360.f/(_float)number));
 		Effect_TextureEffect(L"Dust", _vec3(Scale, Scale,0.f), _vec3(0.f), newPos, FRAME(12, 7, FPS), false, false);
-	
+	}
+}
+
+void CEffectMgr::Effect_Dust2(_vec3 vecPos, float Radius, float Scale, FRAME frame, _int number,wstring Tag)
+{
+	_vec3 newPos;
+	for (int i = 0; i < number; i++)
+	{
+		newPos.y = 1.f;
+		newPos.x = vecPos.x + Radius * cos(XMConvertToRadians(i * 360.f / (_float)number));
+		newPos.z = vecPos.z + Radius * sin(XMConvertToRadians(i * 360.f / (_float)number));
+		Effect_TextureEffect(Tag, _vec3(Scale, Scale, 0.f), _vec3(0.f), newPos, frame, false, false);
 	}
 }
 

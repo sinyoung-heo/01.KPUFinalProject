@@ -1200,6 +1200,25 @@ void CVergos::SetUp_HpGauge(const _float& fTimeDelta)
 
 void CVergos::EffectLoop(const _float& fTimeDelta)
 {
+	if (m_uiAnimIdx == Vergos::FLY_END && m_bisDecalEffect == false
+		&& (m_ui3DMax_CurFrame >= 25 && m_ui3DMax_CurFrame <= 26))
+	{
+		m_bisDecalEffect = true;
+		_matrix matBoneFinalTransform = (m_pHierarchyDesc[HEAD]->matScale * m_pHierarchyDesc[HEAD]->matRotate
+			* m_pHierarchyDesc[HEAD]->matTrans) * m_pHierarchyDesc[HEAD]->matGlobalTransform;
+		_matrix matWorld = matBoneFinalTransform * m_pTransCom->m_matWorld;
+		_vec3 Pos = _vec3(matWorld._41, matWorld._42, matWorld._43);
+		Pos.y = 0.5f;
+		CEffectMgr::Get_Instance()->Effect_Dust(Pos, 16.f, 10.f, 42.f, 36);
+		CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.07f),
+			_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(100, 10), 0, true);
+		CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.05f),
+			_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(25, 6), 0, true);
+		Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Crack.ogg", SOUNDID::SOUND_EFFECT);
+		int SoundNumber = rand() % 16;
+		wstring SoundTag = L"RockImpact_HardCrumble_" + to_wstring(SoundNumber) + L".ogg";
+		Engine::CSoundMgr::Get_Instance()->Play_Sound(SoundTag.c_str(), SOUNDID::SOUND_EFFECT);
+	}
 	if (m_uiAnimIdx == Vergos::A_SPAWN && m_bisDecalEffect==false
 		&& (m_ui3DMax_CurFrame >=149 && m_ui3DMax_CurFrame<=155))
 	{
@@ -1210,7 +1229,10 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 		_vec3 Pos = _vec3(matWorld._41, matWorld._42, matWorld._43);
 		Pos.y = 0.5f;
 		CEffectMgr::Get_Instance()->Effect_Dust(Pos, 16.f, 10.f, 42.f, 36);
-		Effect_BossStone(Pos);
+		CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.07f),
+			_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(100, 10), 0, true);
+		CEffectMgr::Get_Instance()->Effect_MeshParticle(L"publicStone" + to_wstring(rand() % 4), _vec3(0.05f),
+			_vec3(0.f), Pos, false, false, 5, 20, 0, 0, 0, _vec2(25, 6), 0, true);
 		Engine::CSoundMgr::Get_Instance()->Play_Sound(L"Crack.ogg", SOUNDID::SOUND_EFFECT);
 		int SoundNumber = rand() % 16;
 		wstring SoundTag = L"RockImpact_HardCrumble_" + to_wstring(SoundNumber) + L".ogg";
@@ -1326,6 +1348,7 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 			int SoundNumber = rand() % 16;
 			wstring SoundTag = L"RockImpact_HardCrumble_" + to_wstring(SoundNumber) + L".ogg";
 			Engine::CSoundMgr::Get_Instance()->Play_Sound(SoundTag.c_str(), SOUNDID::SOUND_EFFECT);
+
 		}
 	}
 	else if (m_uiAnimIdx == Vergos::A_BLOW_ROTATION)
