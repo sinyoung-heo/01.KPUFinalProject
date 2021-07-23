@@ -18,6 +18,7 @@
 #include "DynamicCamera.h"
 #include "FadeInOut.h"
 #include "BreathParticle.h"
+#include "SmokeParticle.h"
 #include <random>
 
 CVergos::CVergos(ID3D12Device* pGraphicDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -184,13 +185,18 @@ _int CVergos::Update_GameObject(const _float& fTimeDelta)
 	if (m_pMeshCom->Is_BlendingComplete())
 		SetUp_PlaySound();
 
+	if (m_uiAnimIdx == Vergos::BREATH_FIRE)
+		m_fAnimationSpeed = 0.75f;
+	else
+		m_fAnimationSpeed = 1.0f;
+
 	/*__________________________________________________________________________________________________________
 	[ Play Animation ]
 	____________________________________________________________________________________________________________*/
 	if (!m_bIsStartDissolve)
 	{
 		m_pMeshCom->Set_AnimationKey(m_uiAnimIdx);
-		m_pMeshCom->Play_Animation(fTimeDelta * TPS);
+		m_pMeshCom->Play_Animation(fTimeDelta * TPS * m_fAnimationSpeed);
 		m_ui3DMax_NumFrame = *(m_pMeshCom->Get_3DMaxNumFrame());
 		m_ui3DMax_CurFrame = *(m_pMeshCom->Get_3DMaxCurFrame());
 	}
@@ -1272,12 +1278,12 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 			if (m_uiAnimIdx == Vergos::BLOW_LEFT)
 			{
 				pHierarchyDesc = m_pHierarchyDesc[L_HAND];
-				CEffectMgr::Get_Instance()->Effect_WarningGround(_vec3(390.4, 0.0f, 350.994f), 0.03f);
+				CEffectMgr::Get_Instance()->Effect_WarningGround(_vec3(390.4f, 0.0f, 350.994f), 0.03f);
 			}
 			else
 			{
 				pHierarchyDesc = m_pHierarchyDesc[R_HAND];
-				CEffectMgr::Get_Instance()->Effect_WarningGround(_vec3(385.4, 0.0f, 351.045f), 0.03f);
+				CEffectMgr::Get_Instance()->Effect_WarningGround(_vec3(385.4f, 0.0f, 351.045f), 0.03f);
 			}
 		}
 		m_fSkillOffset += fTimeDelta;
@@ -1392,9 +1398,16 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 
 		_matrix matWorld = matBoneFinalTransform * m_pTransCom->m_matWorld;
 
-		_vec3 Pos = _vec3(matWorld._41, matWorld._42, matWorld._43);
+		_vec3 vPos = _vec3(matWorld._41, matWorld._42, matWorld._43);
 		_vec3 vDir = _vec3(matWorld._31, matWorld._32, matWorld._33);
 		vDir.Normalize();
+
+		//if (m_ui3DMax_CurFrame >= 130)
+		//{
+		//	Engine::CGameObject* pBreath = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"Breath");
+		//	if (nullptr != pBreath)
+		//		pBreath->Set_IsReturnObject(true);
+		//}
 
 		if (m_ui3DMax_CurFrame >= 78 && m_ui3DMax_CurFrame <= 130)
 		{
@@ -1407,59 +1420,76 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 			// BreathParticle
 			Engine::CGameObject* pGameObj;
 
-			// Fire10
-			pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_BreathParticlePool());
-			if (nullptr != pGameObj)
+			// Smoke
+			for (_int i = 0; i < 2; ++i)
 			{
-				static_cast<CBreathParticle*>(pGameObj)->Set_Instnace(L"Fire_10", 32, 
-																	  Pos + _vec3((_float)(uid(dre)) * 0.001f, (_float)(uid(dre)) * 0.001f + 0.5f, 8.0f + (_float)(uid(dre)) * 0.001f),
-																	  vDir + _vec3((_float)(uid(dre)) * 0.0005f, 0.0f, 0.0f));
-				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BreathParticle", pGameObj), E_FAIL);
+				pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_SmokeParticlePool());
+				if (nullptr != pGameObj)
+				{
+					static_cast<CSmokeParticle*>(pGameObj)->Set_Instnace(L"Smoke1",
+																		 FRAME(5, 6, 30),
+																		 vPos + _vec3((_float)(uid(dre)) * 0.001f, (_float)(uid(dre)) * 0.001f + 1.1f, 14.0f + (_float)(uid(dre)) * 0.001f),
+																		 vDir + _vec3((_float)(uid(dre)) * 0.0005f, 0.0f, 0.0f));
+					Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BreathParticle", pGameObj), E_FAIL);
+				}
 			}
-			pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_BreathParticlePool());
-			if (nullptr != pGameObj)
+
+			// Fire10
+			for (_int i = 0; i < 4; ++i)
 			{
-				static_cast<CBreathParticle*>(pGameObj)->Set_Instnace(L"Fire_10", 32, 
-																	  Pos + _vec3((_float)(uid(dre)) * 0.001f, (_float)(uid(dre)) * 0.001f + 0.5f, 8.0f + (_float)(uid(dre)) * 0.001f),
-																	  vDir + _vec3((_float)(uid(dre)) * 0.0005f, 0.0f, 0.0f));
-				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BreathParticle", pGameObj), E_FAIL);
+				pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_BreathParticlePool());
+				if (nullptr != pGameObj)
+				{
+					static_cast<CBreathParticle*>(pGameObj)->Set_Instnace(L"Fire_10", 32, 
+																		  vPos + _vec3((_float)(uid(dre)) * 0.001f, (_float)(uid(dre)) * 0.001f + 0.7f, 11.0f + (_float)(uid(dre)) * 0.001f),
+																		  vDir + _vec3((_float)(uid(dre)) * 0.0005f, 0.0f, 0.0f));
+					Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BreathParticle", pGameObj), E_FAIL);
+				}
 			}
 
 			// Fire05
-			pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_BreathParticlePool());
-			if (nullptr != pGameObj)
+			for (_int i = 0; i < 4; ++i)
 			{
-				static_cast<CBreathParticle*>(pGameObj)->Set_Instnace(L"Fire_05", 16, 
-																	  Pos + _vec3((_float)(uid(dre)) * 0.001f, (_float)(uid(dre)) * 0.001f + 0.5f, 8.0f + (_float)(uid(dre)) * 0.001f),
-																	  vDir + _vec3((_float)(uid(dre)) * 0.0005f, 0.0f, 0.0f));
-				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BreathParticle", pGameObj), E_FAIL);
-			}
-			pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_BreathParticlePool());
-			if (nullptr != pGameObj)
-			{
-				static_cast<CBreathParticle*>(pGameObj)->Set_Instnace(L"Fire_05", 16, 
-																	  Pos + _vec3((_float)(uid(dre)) * 0.001f, (_float)(uid(dre)) * 0.001f + 0.5f, 8.0f + (_float)(uid(dre)) * 0.001f),
-																	  vDir + _vec3((_float)(uid(dre)) * 0.0005f, 0.0f, 0.0f));
-				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BreathParticle", pGameObj), E_FAIL);
+				pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_BreathParticlePool());
+				if (nullptr != pGameObj)
+				{
+					static_cast<CBreathParticle*>(pGameObj)->Set_Instnace(L"Fire_05", 16, 
+																		  vPos + _vec3((_float)(uid(dre)) * 0.001f, (_float)(uid(dre)) * 0.001f + 0.7f, 11.0f + (_float)(uid(dre)) * 0.001f),
+																		  vDir + _vec3((_float)(uid(dre)) * 0.0005f, 0.0f, 0.0f));
+					Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BreathParticle", pGameObj), E_FAIL);
+				}
 			}
 
 			// Fire13
-			pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_BreathParticlePool());
-			if (nullptr != pGameObj)
+			for (_int i = 0; i < 2; ++i)
 			{
-				static_cast<CBreathParticle*>(pGameObj)->Set_Instnace(L"Fire_13", 16, 
-																	  Pos + _vec3((_float)(uid(dre)) * 0.001f, (_float)(uid(dre)) * 0.001f + 0.5f, 8.0f + (_float)(uid(dre)) * 0.001f),
-																	  vDir + _vec3((_float)(uid(dre)) * 0.0005f, 0.0f, 0.0f));
-				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BreathParticle", pGameObj), E_FAIL);
+				pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_BreathParticlePool());
+				if (nullptr != pGameObj)
+				{
+					static_cast<CBreathParticle*>(pGameObj)->Set_Instnace(L"Fire_13", 16, 
+																		  vPos + _vec3((_float)(uid(dre)) * 0.001f, (_float)(uid(dre)) * 0.001f + 0.7f, 11.0f + (_float)(uid(dre)) * 0.001f),
+																		  vDir + _vec3((_float)(uid(dre)) * 0.0005f, 0.0f, 0.0f));
+					Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BreathParticle", pGameObj), E_FAIL);
+				}
 			}
-
-			pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_BreathParticlePool());
-			if (nullptr != pGameObj)
+			
+			// Breath Mesh
+			if (m_bisBreathEffect == false)
 			{
-				static_cast<CBreathParticle*>(pGameObj)->Set_Instnace(L"Fire_13", 16, 
-																	  Pos + _vec3((_float)(uid(dre)) * 0.001f, (_float)(uid(dre)) * 0.001f + 0.5f, 8.0f + (_float)(uid(dre)) * 0.001f),
-																	  vDir + _vec3((_float)(uid(dre)) * 0.0005f, 0.0f, 0.0f));
-				Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"BreathParticle", pGameObj), E_FAIL);
+				m_bisBreathEffect = true;
+				//m_bisBreathDelta = 0.f;
+				//CGameObject* pGameObj;
+				//pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_Breath_Effect());
+
+				//if (nullptr != pGameObj)
+				//{
+				//	static_cast<CBreathEffect*>(pGameObj)->Set_CreateInfo(_vec3(0.f), _vec3(0.f), _vec3(-65.f, 2.2, -16.f) + _vec3(-100.0f, -40.0f, -50.0f));
+				//	static_cast<CBreathEffect*>(pGameObj)->Set_HierchyDesc(m_pHierarchyDesc[BREATH]);
+				//	static_cast<CBreathEffect*>(pGameObj)->Set_ParentMatrix(&m_pTransCom->m_matWorld);
+				//	Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Breath", pGameObj), E_FAIL);
+				//}
+
+				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"VergosAttack_Breath_02.mp3", SOUNDID::SOUND_EFFECT);
 			}
 		}
 
@@ -1485,23 +1515,23 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 			//												   20);
 			//}
 
-			if (m_bisBreathEffect == false)
+			/*if (m_bisBreathEffect == false)
 			{
 				m_bisBreathEffect = true;
-			//	m_bisBreathDelta = 0.f;
-			//	CGameObject* pGameObj;
-			//	pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_Breath_Effect());
+				m_bisBreathDelta = 0.f;
+				CGameObject* pGameObj;
+				pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_Breath_Effect());
 
-			//	if (nullptr != pGameObj)
-			//	{
-			//		static_cast<CBreathEffect*>(pGameObj)->Set_CreateInfo(_vec3(0.f), _vec3(0.f), _vec3(-65.f, 2.2, -16.f) + _vec3(-100.0f, -40.0f, -50.0f));
-			//		static_cast<CBreathEffect*>(pGameObj)->Set_HierchyDesc(m_pHierarchyDesc[BREATH]);
-			//		static_cast<CBreathEffect*>(pGameObj)->Set_ParentMatrix(&m_pTransCom->m_matWorld);
-			//		Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Breath", pGameObj), E_FAIL);
-			//	}
+				if (nullptr != pGameObj)
+				{
+					static_cast<CBreathEffect*>(pGameObj)->Set_CreateInfo(_vec3(0.f), _vec3(0.f), _vec3(-65.f, 2.2, -16.f) + _vec3(-100.0f, -40.0f, -50.0f));
+					static_cast<CBreathEffect*>(pGameObj)->Set_HierchyDesc(m_pHierarchyDesc[BREATH]);
+					static_cast<CBreathEffect*>(pGameObj)->Set_ParentMatrix(&m_pTransCom->m_matWorld);
+					Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"Breath", pGameObj), E_FAIL);
+				}
 
 				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"VergosAttack_Breath_02.mp3", SOUNDID::SOUND_EFFECT);
-			}
+			}*/
 		}
 	}
 

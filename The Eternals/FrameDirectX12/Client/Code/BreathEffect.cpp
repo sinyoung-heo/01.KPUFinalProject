@@ -57,34 +57,34 @@ _int CBreathEffect::Update_GameObject(const _float & fTimeDelta)
 		return RETURN_OBJ;
 	}
 
-	if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD7))
-	{
-		m_pTransCom->m_vPos.x += fTimeDelta*100;
-	}
-	if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD4))
-	{
-		m_pTransCom->m_vPos.x -= fTimeDelta * 100;
-	}
-	if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD8))
-	{
-		m_pTransCom->m_vPos.y += fTimeDelta * 100;
-	}
-	if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD5))
-	{
-		m_pTransCom->m_vPos.y -= fTimeDelta * 100;
-	}
-	if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD9))
-	{
-		m_pTransCom->m_vPos.z+= fTimeDelta * 100;
-	}
-	if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD6))
-	{
-		m_pTransCom->m_vPos.z -= fTimeDelta * 100;
-	}
-	if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD0))
-	{
-		cout << m_pTransCom->m_vPos.x << " | " << m_pTransCom->m_vPos.y << " | " << m_pTransCom->m_vPos.z << endl;
-	}
+	//if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD7))
+	//{
+	//	m_pTransCom->m_vPos.x += fTimeDelta*100;
+	//}
+	//if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD4))
+	//{
+	//	m_pTransCom->m_vPos.x -= fTimeDelta * 100;
+	//}
+	//if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD8))
+	//{
+	//	m_pTransCom->m_vPos.y += fTimeDelta * 100;
+	//}
+	//if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD5))
+	//{
+	//	m_pTransCom->m_vPos.y -= fTimeDelta * 100;
+	//}
+	//if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD9))
+	//{
+	//	m_pTransCom->m_vPos.z+= fTimeDelta * 100;
+	//}
+	//if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD6))
+	//{
+	//	m_pTransCom->m_vPos.z -= fTimeDelta * 100;
+	//}
+	//if (Engine::KEY_PRESSING(DIKEYBOARD_NUMPAD0))
+	//{
+	//	cout << m_pTransCom->m_vPos.x << " | " << m_pTransCom->m_vPos.y << " | " << m_pTransCom->m_vPos.z << endl;
+	//}
 
 
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
@@ -98,11 +98,11 @@ _int CBreathEffect::Update_GameObject(const _float & fTimeDelta)
 
 	if (m_fLifeTime < m_fLimitLifeTime && m_bisScaleAnim && m_pTransCom->m_vScale.x < 0.5f)
 		m_pTransCom->m_vScale += _vec3(fTimeDelta * 0.5f);
-	else
-		m_fAlpha -= fTimeDelta * 2.f;
-	
-	if (m_fAlpha<0.f)
-		m_bIsReturn = true;
+	//else
+	//	m_fAlpha -= fTimeDelta * 2.f;
+	//
+	//if (m_fAlpha < 0.f)
+	//	m_bIsReturn = true;
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/

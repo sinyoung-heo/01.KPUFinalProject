@@ -5,6 +5,7 @@
 #include "TextureDistortion.h"
 #include "TimeMgr.h"
 #include "DescriptorHeapMgr.h"
+
 CTextureEffect::CTextureEffect(ID3D12Device * pGraphicDevice, ID3D12GraphicsCommandList * pCommandList)
 	: Engine::CGameObject(pGraphicDevice, pCommandList)
 {

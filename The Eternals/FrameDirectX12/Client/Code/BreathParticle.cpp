@@ -13,15 +13,13 @@ void CBreathParticle::Set_Instnace(wstring wstrTextueTag, const _uint& uiTexSize
 {
 	m_wstrTextureTag = wstrTextueTag;
 	m_uiTexSize      = uiTexSize;
+	m_fAlpha = 0.7f;
 
-	m_pTransCom->m_vPos = vPos;
-	m_pTransCom->m_vDir = vDir;
+	m_pTransCom->m_vScale = _vec3(4.0f);
+	m_pTransCom->m_vPos   = vPos;
+	m_pTransCom->m_vDir   = vDir;
 	m_pTransCom->m_vDir.z = -1.0f;
 	m_pTransCom->m_vDir.Normalize();
-
-	m_pInfoCom->m_fSpeed = 30.0f;
-
-	m_fUpdateLifeTime = 3.0f;
 
 	random_device					rd_texIdx;
 	default_random_engine			dre_texIdx{ rd_texIdx() };
@@ -37,7 +35,7 @@ void CBreathParticle::Set_Instnace(wstring wstrTextueTag, const _uint& uiTexSize
 
 	random_device					rd_Speed;
 	default_random_engine			dre_Speed{ rd_Speed() };
-	uniform_int_distribution<_int>	uid_Speed{ 40, 50 };
+	uniform_int_distribution<_int>	uid_Speed{ 35, 45 };
 
 	m_pInfoCom->m_fSpeed = (_float)(uid_Speed(dre_Speed));
 }
@@ -78,7 +76,7 @@ _int CBreathParticle::Update_GameObject(const _float& fTimeDelta)
 		m_pTransCom->m_vScale = _vec3(6.0f);
 
 		m_bIsCalcAlpha      = false;
-		m_fAlpha            = 1.0f;
+		m_fAlpha            = 0.8f;
 		m_fLifeTime         = 0.0f;
 		m_fTexIdx           = 0.0f;
 		m_uiTexSize         = 0;
@@ -95,11 +93,11 @@ _int CBreathParticle::Update_GameObject(const _float& fTimeDelta)
 
 	// Update Texture Frame
 	m_fTexIdx += fTimeDelta * m_fFrameSpeed;
-	if (m_fTexIdx > (_float)m_uiTexSize)
+	if (m_fTexIdx >= (_float)m_uiTexSize)
 		m_fTexIdx = 0.0f;
 
 	// Move
-	m_pTransCom->m_vPos += m_pTransCom->m_vDir * m_pInfoCom->m_fSpeed* fTimeDelta;
+	m_pTransCom->m_vPos += m_pTransCom->m_vDir * m_pInfoCom->m_fSpeed * fTimeDelta;
 
 	if (m_pTransCom->m_vPos.y <= 0.0f)
 	{
@@ -110,7 +108,7 @@ _int CBreathParticle::Update_GameObject(const _float& fTimeDelta)
 	// Alpha
 	if (m_bIsCalcAlpha)
 	{
-		m_fAlpha -= fTimeDelta * 1.0f;
+		m_fAlpha -= fTimeDelta * 0.5f;
 		if (m_fAlpha <= 0.0f)
 		{
 			m_fAlpha = 0.0f;
@@ -119,15 +117,17 @@ _int CBreathParticle::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	// Scale
-	m_pTransCom->m_vScale += _vec3(4.0f) * fTimeDelta;
-	if (m_pTransCom->m_vScale.x >= 8.0f)
-		m_pTransCom->m_vScale = _vec3(8.0f);
+	m_pTransCom->m_vScale += _vec3(10.0) * fTimeDelta;
+	if (m_pTransCom->m_vScale.x >= 12.0f)
+		m_pTransCom->m_vScale = _vec3(12.0f);
 
 
 	/*__________________________________________________________________________________________________________
 	[ Renderer - Add Render Group ]
 	____________________________________________________________________________________________________________*/
-	Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_MAGICCIRCLE, this), -1);
+	// Frustum Culling
+	if (m_pRenderer->Get_Frustum().Contains(m_pBoundingBoxCom->Get_BoundingInfo()) != DirectX::DISJOINT)
+		Engine::FAILED_CHECK_RETURN(m_pRenderer->Add_Renderer(Engine::CRenderer::RENDER_ALPHA, this), -1);
 
 	/*__________________________________________________________________________________________________________
 	[ TransCom - Update WorldMatrix ]

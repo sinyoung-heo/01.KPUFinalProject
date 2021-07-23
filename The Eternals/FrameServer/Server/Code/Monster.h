@@ -166,5 +166,6 @@ public:
 	double			m_arrDuration[MAX_ANI]	= { 0 };
 
 	_uint			m_uiAnimIdx				= 0;   // Apply Animation Index
+	float			m_fAnimationSpeed = 1.0f;
 };
 
