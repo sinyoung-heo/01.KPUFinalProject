@@ -296,6 +296,7 @@ void CGameObject::Buff_AllPartyMemeber(const int& buff)
 		case Priest::AURA_ON: 
 		{
 			pObj->Set_ShieldEffect(true); 
+			Set_ShieldEffect(true);
 		}
 		break;
 
@@ -303,6 +304,7 @@ void CGameObject::Buff_AllPartyMemeber(const int& buff)
 		case Priest::PURIFY:
 		{
 			pObj->Set_AxeEffect(true);
+			Set_AxeEffect(true);
 		}
 		break;
 
