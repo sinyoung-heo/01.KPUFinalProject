@@ -30,8 +30,8 @@ public:
 	void Effect_GridShieldEffect(_vec3 vecPos, int type=0, Engine::CTransform* parentTransform=nullptr);
 	void Effect_Shield(_vec3 vecPos, Engine::CTransform* parentTransform);
 	void Effect_Axe(_vec3 vecPos, Engine::CTransform* parentTransform);
-	void Effect_TargetShield(_vec3 vecPos, Engine::CTransform* parentTransform);
-	void Effect_TargetAxe(_vec3 vecPos, Engine::CTransform* parentTransform);
+	void Effect_TargetShield(Engine::CGameObject * Target);
+	void Effect_TargetAxe(Engine::CGameObject* Target);
 	void Effect_WarningGround(_vec3 vecPos, _float fLimitScale,_bool DragonEffect=false);
 	void Effect_RectDecal(_vec3 vecPos, float RotY);
 	void Effect_Explosion(_vec3 vecPos);

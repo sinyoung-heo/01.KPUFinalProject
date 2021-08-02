@@ -29,6 +29,7 @@ public:
 	virtual void Render_GameObject(const _float& fTimeDelta);
 	void Set_isScaleAnim(bool isScaling) { m_bisScaleAnim = isScaling; }
 	void Set_TexIDX(_uint Diffuse, _uint Normal, _uint Specular) { m_uiDiffuse = Diffuse, m_uiNormal = Normal, m_uiSpec = Specular; }
+	void Set_Target(Engine::CGameObject* Target) { m_pTarget = Target; }
 private:
 	virtual HRESULT Add_Component(wstring wstrMeshTag);
 	void			Set_ConstantTable();
@@ -66,7 +67,7 @@ private:
 	float  m_fDeltatimeVelocity = 0.f;
 	float  m_fDeltatimeVelocity2 = 1.f;
 
-
+	Engine::CGameObject* m_pTarget = nullptr;
 	bool m_bisMini = false;
 	_int m_iParticleCnt = 0;
 	const Engine::CTransform* m_pParentTransform = nullptr;

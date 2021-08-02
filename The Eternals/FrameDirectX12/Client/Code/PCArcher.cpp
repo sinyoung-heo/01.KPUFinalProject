@@ -2482,7 +2482,7 @@ void CPCArcher::Effect_Loop(const _float& fTimeDelta)
 	{
 		m_bisSkillEffect[0] = false;
 		m_bisUseShieldEffect = true;
-		CEffectMgr::Get_Instance()->Effect_TargetShield(m_pTransCom->m_vPos, m_pTransCom);
+		CEffectMgr::Get_Instance()->Effect_TargetShield(this);
 	}
 	if (m_bisUseShieldEffect)
 	{
@@ -2498,7 +2498,7 @@ void CPCArcher::Effect_Loop(const _float& fTimeDelta)
 	{
 		m_bisSkillEffect[1] = false;
 		m_bisUseAxeEffect = true;
-		CEffectMgr::Get_Instance()->Effect_TargetAxe(m_pTransCom->m_vPos, m_pTransCom);
+		CEffectMgr::Get_Instance()->Effect_TargetAxe(this);
 	}
 	if (m_bisUseAxeEffect)
 	{

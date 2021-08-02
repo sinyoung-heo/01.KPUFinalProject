@@ -311,34 +311,37 @@ void CEffectMgr::Effect_Axe(_vec3 vecPos, Engine::CTransform* parentTransform)
 	
 	Effect_MagicCircle_Effect(_vec3(0.0f), _vec3(0.0f), vecPos, 21, 21, 2, true, true, parentTransform, true);
 }
-void CEffectMgr::Effect_TargetShield(_vec3 vecPos, Engine::CTransform* parentTransform)
+void CEffectMgr::Effect_TargetShield(Engine::CGameObject* Target)
 {
-	
+	_vec3 vecPos = Target->Get_Transform()->m_vPos;
 	for (int i = 0; i < 3; i++)
 	{
 		vecPos.y = 1.f;
 		pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_ShieldEffect());
 		if (nullptr != pGameObj)
 		{
+			static_cast<CEffectShield*>(pGameObj)->Set_Target(Target);
 			static_cast<CEffectShield*>(pGameObj)->Set_CreateInfo(_vec3(0.0f), _vec3(0.0f), vecPos,
 				60.f, 0.06f, 1.5f
-				, (360.f / 3.f) * i, parentTransform,true);
+				, (360.f / 3.f) * i, Target->Get_Transform(),true);
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"publicShield", pGameObj), E_FAIL);
 		}
 	}
 }
 
-void CEffectMgr::Effect_TargetAxe(_vec3 vecPos, Engine::CTransform* parentTransform)
+void CEffectMgr::Effect_TargetAxe(Engine::CGameObject* Target)
 {
+	_vec3 vecPos = Target->Get_Transform()->m_vPos;
 	for (int i = 0; i < 3; i++)
 	{
 		vecPos.y = -1.f;
 		pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_AxeEffect());
 		if (nullptr != pGameObj)
 		{
+			static_cast<CEffectAxe*>(pGameObj)->Set_Target(Target);
 			static_cast<CEffectAxe*>(pGameObj)->Set_CreateInfo(_vec3(0.0f), _vec3(0.0f), vecPos,
 				60.f, 0.06f, 2.f
-				, (360.f / 3.f) * i, parentTransform, true);
+				, (360.f / 3.f) * i, Target->Get_Transform(), true);
 			Engine::FAILED_CHECK_RETURN(m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"publicAxe", pGameObj), E_FAIL);
 		}
 	}

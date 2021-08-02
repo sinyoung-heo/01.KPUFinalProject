@@ -52,6 +52,11 @@ _int CEffectShield::Update_GameObject(const _float & fTimeDelta)
 {
 	Engine::FAILED_CHECK_RETURN(Engine::CGameObject::LateInit_GameObject(), E_FAIL);
 
+	if (m_pTarget != nullptr && m_bisMini == true)
+	{
+		if (m_pTarget->Get_IsReturn())
+			m_bIsReturn = true;
+	}
 	if (m_bIsDead)
 		return DEAD_OBJ;
 	if (m_bIsReturn)

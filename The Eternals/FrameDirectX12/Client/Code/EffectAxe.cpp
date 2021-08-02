@@ -52,6 +52,12 @@ _int CEffectAxe::Update_GameObject(const _float & fTimeDelta)
 
 	if (m_bIsDead)
 		return DEAD_OBJ;
+
+	if (m_pTarget != nullptr && m_bisMini == true)
+	{
+		if (m_pTarget->Get_IsReturn())
+			m_bIsReturn = true;
+	}
 	if (m_bIsReturn)
 	{
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_AxeEffect(), m_uiInstanceIdx);
