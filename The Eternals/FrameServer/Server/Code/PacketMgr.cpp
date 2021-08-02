@@ -1881,6 +1881,20 @@ void process_stage_change(int id, const char& stage_id)
 			if (!pOther->m_bIsConnect) continue;
 
 			pPlayer->send_player_stage_change(server_num);
+
+			pPlayer->v_lock.lock();
+			if (pPlayer->view_list.count(server_num) != 0)
+			{
+				pPlayer->view_list.erase(server_num);
+				send_leave_packet(id, server_num);
+			}
+
+			if (pOther->view_list.count(id) != 0)
+			{
+				pOther->view_list.erase(id);
+				send_leave_packet(server_num, id);
+			}		
+			pPlayer->v_lock.unlock();
 		}
 	}
 
