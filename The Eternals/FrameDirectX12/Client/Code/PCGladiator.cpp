@@ -1110,6 +1110,37 @@ void CPCGladiator::Effect_Loop(const _float& fTimeDelta)
 		m_bisIceEffect = false;
 	}
 	
+	if (m_bisSkillEffect[0] == true && m_bisUseShieldEffect == false)
+	{
+		m_bisSkillEffect[0] = false;
+		m_bisUseShieldEffect = true;
+		CEffectMgr::Get_Instance()->Effect_TargetShield(m_pTransCom->m_vPos, m_pTransCom);
+	}
+	if (m_bisUseShieldEffect)
+	{
+		m_fUseShieldDelta += fTimeDelta;//쉴드를 쓰는동안 사용시간올라감
+		if (m_fUseShieldDelta > 60.f)
+		{
+			m_fUseShieldDelta = 0.f;
+			m_bisUseShieldEffect = false;
+		}
+	}
+
+	if (m_bisSkillEffect[1] == true && m_bisUseAxeEffect == false)
+	{
+		m_bisSkillEffect[1] = false;
+		m_bisUseAxeEffect = true;
+		CEffectMgr::Get_Instance()->Effect_TargetAxe(m_pTransCom->m_vPos, m_pTransCom);
+	}
+	if (m_bisUseAxeEffect)
+	{
+		m_fUseAxeDelta += fTimeDelta;//쉴드를 쓰는동안 사용시간올라감
+		if (m_fUseAxeDelta > 60.f)
+		{
+			m_fUseAxeDelta = 0.f;
+			m_bisUseAxeEffect = false;
+		}
+	}
 }
 
 void CPCGladiator::Key_Input(const _float& fTimeDelta)
