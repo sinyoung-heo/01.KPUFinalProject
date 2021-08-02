@@ -240,7 +240,7 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_BossGroundEffect_Pool, 3);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pEffect_DragonEffect_Pool, 5);
 
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pBreathParticle_Pool, 1024);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pBreathParticle_Pool, 1500);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pSmokeParticle_Pool, 128);
 }
 
