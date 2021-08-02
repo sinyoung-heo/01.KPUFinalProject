@@ -1432,7 +1432,7 @@ void CVergos::EffectLoop(const _float& fTimeDelta)
 		//		pBreath->Set_IsReturnObject(true);
 		//}
 
-		if (m_ui3DMax_CurFrame >= 78 && m_ui3DMax_CurFrame <= 130)
+		if (m_ui3DMax_CurFrame >= 76 && m_ui3DMax_CurFrame <= 130)
 		{
 			random_device					rd;
 			default_random_engine			dre{ rd() };

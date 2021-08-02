@@ -34,10 +34,26 @@ void CPartySystemMgr::SetUp_ThisPlayerPartyList()
 
 void CPartySystemMgr::Reset_UIPartyList()
 {
-	for (auto& pPartyInfoCanvas : m_vecPartyInfoListCanvas)
+	Engine::CGameObject* pThisPlayer = Engine::CObjectMgr::Get_Instance()->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
+	if (nullptr != pThisPlayer)
 	{
-		pPartyInfoCanvas->Set_IsActive(false);
-		pPartyInfoCanvas->Set_IsChildActive(false);
+		pThisPlayer->Clear_PartyMember();
+
+		for (auto& pPartyInfoCanvas : m_vecPartyInfoListCanvas)
+		{
+			pPartyInfoCanvas->Set_IsActive(false);
+			pPartyInfoCanvas->Set_IsChildActive(false);
+		}
+
+		map<_int, Engine::PARTYMEMBER> mapPartyList = pThisPlayer->Get_PartyList();
+		if (m_vecPartyInfoListCanvas.size() >= mapPartyList.size())
+		{
+			for (_int i = 0; i < mapPartyList.size(); ++i)
+			{
+				m_vecPartyInfoListCanvas[i]->Set_IsActive(true);
+				m_vecPartyInfoListCanvas[i]->Set_IsChildActive(true);
+			}
+		}
 	}
 }
 
