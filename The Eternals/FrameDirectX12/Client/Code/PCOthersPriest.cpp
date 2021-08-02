@@ -144,6 +144,7 @@ _int CPCOthersPriest::Update_GameObject(const _float& fTimeDelta)
 		{
 			m_pWeapon->Set_IsReturnObject(true);
 			m_pWeapon->Update_GameObject(fTimeDelta);
+			m_pWeapon = nullptr;
 		}
 
 		m_bIsResetNaviMesh = false;
