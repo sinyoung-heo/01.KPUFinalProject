@@ -90,6 +90,8 @@ public:
 	void	Set_ThisPlayerSkillKeyInput(wstring wstrTag, const _uint& uiKey)				{ m_mapSkillKeyInput[wstrTag] = uiKey; }
 	void	Set_ThisPlayerSkillCoolDown(wstring wstrTag, const SKILL_COOLDOWN_DESC& tDesc)	{ m_mapSkillCoolDown[wstrTag] = tDesc; }
 	void	Set_ThisPlayerLoginEquipment(const char& chItemType, const char& chItemName)	{ m_mapLoginEquipment[chItemType] = chItemName; }
+	void	Set_EffectAxe(CGameObject* pEffectAxe, const _uint& uiIdx) {m_pEffectAxe[uiIdx] = pEffectAxe; }
+	void	Set_EffectShild(CGameObject* pEffectShild, const _uint& uiIdx) { m_pEffectShield[uiIdx] = pEffectShild; }
 	void	Ready_AngleInterpolationValue(const _float& fEndAngle);
 	void	Ready_PositionInterpolationValue(const _vec3& vEndPosition, float fSpd = 3.f);
 
@@ -251,6 +253,8 @@ public:
 	void Set_AxeEffect(bool isAxe) { m_bisSkillEffect[1] = isAxe; }
 protected:
 	bool m_bisSkillEffect[2];
+	CGameObject* m_pEffectAxe[3]    { nullptr };
+	CGameObject* m_pEffectShield[3] { nullptr };
 
 public:
 	virtual CGameObject* Clone_GameObject();

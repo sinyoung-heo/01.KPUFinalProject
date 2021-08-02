@@ -161,6 +161,24 @@ _int CPCOthersArcher::Update_GameObject(const _float& fTimeDelta)
 			m_pWeapon = nullptr;
 		}
 
+		for (auto& pEffect : m_pEffectAxe)
+		{
+			if (nullptr != pEffect)
+			{
+				pEffect->Set_IsReturnObject(true);
+				pEffect = nullptr;
+			}
+		}
+
+		for (auto& pEffect : m_pEffectShield)
+		{
+			if (nullptr != pEffect)
+			{
+				pEffect->Set_IsReturnObject(true);
+				pEffect = nullptr;
+			}
+		}
+
 		m_bIsResetNaviMesh = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_PCOthersArcherPool(), m_uiInstanceIdx);
 

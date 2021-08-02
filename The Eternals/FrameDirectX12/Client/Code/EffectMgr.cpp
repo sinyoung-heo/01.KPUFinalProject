@@ -320,6 +320,7 @@ void CEffectMgr::Effect_TargetShield(Engine::CGameObject* Target)
 		pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_ShieldEffect());
 		if (nullptr != pGameObj)
 		{
+			Target->Set_EffectShild(pGameObj, i);
 			static_cast<CEffectShield*>(pGameObj)->Set_Target(Target);
 			static_cast<CEffectShield*>(pGameObj)->Set_CreateInfo(_vec3(0.0f), _vec3(0.0f), vecPos,
 				60.f, 0.06f, 1.5f
@@ -338,6 +339,7 @@ void CEffectMgr::Effect_TargetAxe(Engine::CGameObject* Target)
 		pGameObj = Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_Effect_AxeEffect());
 		if (nullptr != pGameObj)
 		{
+			Target->Set_EffectAxe(pGameObj, i);
 			static_cast<CEffectAxe*>(pGameObj)->Set_Target(Target);
 			static_cast<CEffectAxe*>(pGameObj)->Set_CreateInfo(_vec3(0.0f), _vec3(0.0f), vecPos,
 				60.f, 0.06f, 2.f

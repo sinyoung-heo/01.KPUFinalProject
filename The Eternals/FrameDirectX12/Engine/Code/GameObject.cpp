@@ -586,5 +586,10 @@ void CGameObject::Free()
 		Safe_Release(m_pShaderMiniMap);
 
 	m_mapPartyList.clear();
-		
+
+	for (auto& pEffect : m_pEffectAxe)
+		pEffect = nullptr;
+	
+	for (auto& pEffect : m_pEffectShield)
+		pEffect = nullptr;
 }
