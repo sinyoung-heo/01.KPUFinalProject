@@ -1958,7 +1958,7 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 
 			m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("L_Sword")));
 
-			m_fDP = 5.0f;
+			m_fDP = 2.5f;
 		}
 	}
 
