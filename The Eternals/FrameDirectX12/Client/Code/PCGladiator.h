@@ -165,6 +165,7 @@ private:
 	// CollisionTick
 	_bool				m_bIsSetCollisionTick = false;
 	COLLISION_TICK_DESC m_tCollisionTickDesc;
+	_float				m_fDP = 1.0f;
 
 	// Server
 	_bool			m_bIsKeyDown      = false;

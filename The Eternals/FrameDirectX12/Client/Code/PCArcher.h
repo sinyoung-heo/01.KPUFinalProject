@@ -167,6 +167,7 @@ private:
 	_bool				m_bIsSetCollisionTick = false;
 	COLLISION_TICK_DESC m_tCollisionTickDesc;
 	_vec3				m_vArrowFallPos     = _vec3(0.0f);
+	_float				m_fDP = 1.0f;
 
 	_bool	m_bIsStartArrowFall    = false;
 	_float	m_fArrowFallTime       = 0.0f;
