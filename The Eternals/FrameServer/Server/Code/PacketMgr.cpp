@@ -2113,6 +2113,13 @@ void process_disconnect(const int& id)
 
 	pPlayer->Get_ClientLock().lock();
 	pPlayer->logout_equipment();
+
+	if (pPlayer->m_chStageId == STAGE_WINTER)
+	{
+		pPlayer->m_chStageId = STAGE_VELIKA;
+		pPlayer->m_vPos = _vec3(STAGE_VELIKA_X, 0.f, STAGE_VELIKA_Z);
+	}
+
 	CDBMgr::GetInstance()->Update_stat_DB(id);
 
 	pPlayer->Set_IsConnected(false);

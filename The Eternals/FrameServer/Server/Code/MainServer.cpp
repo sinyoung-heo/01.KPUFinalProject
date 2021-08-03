@@ -368,6 +368,10 @@ void disconnect_client(const int& id)
 
 	pPlayer->Get_ClientLock().lock();
 	pPlayer->logout_equipment();
+
+	if (pPlayer->m_chStageId == STAGE_WINTER)
+		pPlayer->m_chStageId = STAGE_VELIKA;
+
 	CDBMgr::GetInstance()->Update_stat_DB(id);
 	
 	CObjPoolMgr::GetInstance()->return_Object(L"PLAYER", pPlayer);
