@@ -156,7 +156,7 @@ void CEffectMgr::Effect_Straight_IceStorm(_vec3 vecPos, _vec3 vecDir, const _boo
 			{
 				pCollisionTick->Get_BoundingSphere()->Get_BoundingInfo().Radius = 0.5f;
 				pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
-				pCollisionTick->Set_Damage(pThisPlayer->Get_Info()->Get_RandomDamage());
+				pCollisionTick->Set_Damage(pThisPlayer->Get_Info()->Get_RandomDamage() * 0.3f);
 				pCollisionTick->Set_LifeTime(0.4f);
 				pCollisionTick->Get_Transform()->m_vScale = _vec3(2.5f);
 				pCollisionTick->Get_Transform()->m_vPos = vecPos + PosOffSet;

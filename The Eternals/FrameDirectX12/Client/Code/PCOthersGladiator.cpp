@@ -336,9 +336,13 @@ HRESULT CPCOthersGladiator::SetUp_PCWeapon()
 	if (m_chCurWeaponType != m_chPreWeaponType)
 	{
 		m_pWeapon = static_cast<CPCWeaponTwoHand*>(Pop_Instance(CInstancePoolMgr::Get_Instance()->Get_PCWeaponTwoHand(m_chCurWeaponType)));
-		m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")));
-		m_pWeapon->Set_ParentMatrix(&m_pTransCom->m_matWorld);
-		m_pWeapon->Update_GameObject(0.016f);
+		
+		if (nullptr != m_pWeapon)
+		{
+			m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("Weapon_Back")));
+			m_pWeapon->Set_ParentMatrix(&m_pTransCom->m_matWorld);
+			m_pWeapon->Update_GameObject(0.016f);
+		}
 
 		m_chPreWeaponType = m_chCurWeaponType;
 	}

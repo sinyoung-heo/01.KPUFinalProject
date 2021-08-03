@@ -1874,6 +1874,7 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
 			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+			m_fDP = 0.075f;
 		}
 	}
 	// RAPID SHOT
@@ -1889,6 +1890,7 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
 			m_tCollisionTickDesc.iMaxCollisionTick       = 5;
+			m_fDP = 0.1f;
 		}
 	}
 	else if (Archer::ESCAPING_BOMB == m_uiAnimIdx)
@@ -1903,6 +1905,7 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
 			m_tCollisionTickDesc.iMaxCollisionTick       = 3;
+			m_fDP = 1.0f;
 		}
 	}
 	// ARROW_SHOWER
@@ -1918,6 +1921,7 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
 			m_tCollisionTickDesc.iMaxCollisionTick       = 4;
+			m_fDP = 0.3f;
 		}
 	}
 	// ARROW_FALL
@@ -1953,6 +1957,8 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 			m_pTransCom->m_vDir.Normalize();
 
 			m_pWeapon->Set_HierarchyDesc(&(m_pMeshCom->Find_HierarchyDesc("L_Sword")));
+
+			m_fDP = 2.5f;
 		}
 	}
 
@@ -1997,7 +2003,7 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 						pCollisionArrow->Set_ArrowType(ARROW_TYPE::ARROW_DEFAULT);
 						pCollisionArrow->Set_Speed(45.0f);
 						pCollisionArrow->Set_CollisionTag(L"CollisionTick_ThisPlayer");
-						pCollisionArrow->Set_Damage(m_pInfoCom->Get_RandomDamage());
+						pCollisionArrow->Set_Damage(m_pInfoCom->Get_RandomDamage() * m_fDP);
 						pCollisionArrow->Set_LifeTime(5.0f);
 						pCollisionArrow->Set_OriginPos(vPos);
 						pCollisionArrow->Get_Transform()->m_vPos     = vPos;
@@ -2029,7 +2035,7 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 					pCollisionArrow->Set_ArrowType(ARROW_TYPE::ARROW_CHARGE);
 					pCollisionArrow->Set_Speed(90.0f);
 					pCollisionArrow->Set_CollisionTag(L"ChargeArrow");
-					pCollisionArrow->Set_Damage(m_pInfoCom->Get_RandomDamage());
+					pCollisionArrow->Set_Damage(m_pInfoCom->Get_RandomDamage() * m_fDP);
 					pCollisionArrow->Set_LifeTime(5.0f);
 					pCollisionArrow->Set_OriginPos(vPos);
 					pCollisionArrow->Get_Transform()->m_vAngle.y = m_pTransCom->m_vAngle.y;
@@ -2049,7 +2055,7 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 				{
 					pCollisionTick->Get_BoundingSphere()->Get_BoundingInfo().Radius = 0.5f;
 					pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
-					pCollisionTick->Set_Damage(m_pInfoCom->Get_RandomDamage());
+					pCollisionTick->Set_Damage(m_pInfoCom->Get_RandomDamage() * m_fDP);
 					pCollisionTick->Set_LifeTime(0.25f);
 					pCollisionTick->Get_Transform()->m_vScale = _vec3(5.0f);
 					pCollisionTick->Get_Transform()->m_vPos   = m_pTransCom->m_vPos;
@@ -2070,7 +2076,7 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 					pCollisionArrow->Set_ArrowType(ARROW_TYPE::ARROW_DEFAULT);
 					pCollisionArrow->Set_Speed(45.0f);
 					pCollisionArrow->Set_CollisionTag(L"CollisionTick_ThisPlayer");
-					pCollisionArrow->Set_Damage(m_pInfoCom->Get_RandomDamage());
+					pCollisionArrow->Set_Damage(m_pInfoCom->Get_RandomDamage() * m_fDP);
 					pCollisionArrow->Set_LifeTime(5.0f);
 					pCollisionArrow->Set_OriginPos(vPos);
 					pCollisionArrow->Get_Transform()->m_vPos     = vPos;
@@ -2108,7 +2114,7 @@ void CPCArcher::SetUp_CollisionArrow(const _float& fTimeDelta)
 				pCollisionArrow->Set_Speed(50.0f);
 				pCollisionArrow->Set_IsReadyArrowFall(false);
 				pCollisionArrow->Set_CollisionTag(L"");
-				pCollisionArrow->Set_Damage(m_pInfoCom->Get_RandomDamage());
+				pCollisionArrow->Set_Damage(m_pInfoCom->Get_RandomDamage() * 0.05f);
 				pCollisionArrow->Set_LifeTime(5.0f);
 				pCollisionArrow->Get_Transform()->m_vScale = _vec3(0.08f);
 				pCollisionArrow->Get_Transform()->m_vAngle = _vec3(90.0f, 0.0f ,0.0f);

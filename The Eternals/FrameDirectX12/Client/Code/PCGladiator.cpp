@@ -2448,6 +2448,7 @@ void CPCGladiator::SetUp_CollisionTick(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
 			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+			m_fDP = 0.1f;
 		}
 	}
 	else if (Gladiator::COMBO2 == m_uiAnimIdx && m_ui3DMax_CurFrame >= Gladiator::COMBO2_COLLISIONTICK_START)
@@ -2461,6 +2462,7 @@ void CPCGladiator::SetUp_CollisionTick(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
 			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+			m_fDP = 0.1f;
 		}
 	}
 	else if (Gladiator::COMBO3 == m_uiAnimIdx && m_ui3DMax_CurFrame >= Gladiator::COMBO3_COLLISIONTICK_START)
@@ -2474,6 +2476,7 @@ void CPCGladiator::SetUp_CollisionTick(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
 			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+			m_fDP = 0.1f;
 		}
 	}
 	else if (Gladiator::COMBO4 == m_uiAnimIdx && m_ui3DMax_CurFrame >= Gladiator::COMBO4_COLLISIONTICK_START)
@@ -2487,6 +2490,7 @@ void CPCGladiator::SetUp_CollisionTick(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
 			m_tCollisionTickDesc.iMaxCollisionTick       = 2;
+			m_fDP = 0.1f;
 		}
 	}
 
@@ -2502,6 +2506,7 @@ void CPCGladiator::SetUp_CollisionTick(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
 			m_tCollisionTickDesc.iMaxCollisionTick       = 3;
+			m_fDP = 0.5f;
 		}
 	}
 	else if (Gladiator::CUTTING_SLASH == m_uiAnimIdx && m_ui3DMax_CurFrame >= Gladiator::CUTTING_SLASH_COLLISIONTICK_START)
@@ -2515,6 +2520,7 @@ void CPCGladiator::SetUp_CollisionTick(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
 			m_tCollisionTickDesc.iMaxCollisionTick       = 1;
+			m_fDP = 2.5f;
 		}
 	}
 	//else if (Gladiator::JAW_BREAKER == m_uiAnimIdx && m_ui3DMax_CurFrame >= Gladiator::JAW_BREAKER_COLLISIONTICK_START)
@@ -2581,6 +2587,7 @@ void CPCGladiator::SetUp_CollisionTick(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
 			m_tCollisionTickDesc.iMaxCollisionTick       = 6;
+			m_fDP = 1.5f;
 		}
 	}
 	else if (Gladiator::DRAW_SWORD == m_uiAnimIdx && m_ui3DMax_CurFrame >= Gladiator::DRAW_SWORD_COLLISIONTICK_START)
@@ -2595,6 +2602,7 @@ void CPCGladiator::SetUp_CollisionTick(const _float& fTimeDelta)
 			m_tCollisionTickDesc.fCollisionTickTime      = m_tCollisionTickDesc.fColisionTickUpdateTime;
 			m_tCollisionTickDesc.iCurCollisionTick       = 0;
 			m_tCollisionTickDesc.iMaxCollisionTick       = 4;
+			m_fDP = 3.0f;
 		}
 	}
 
@@ -2637,7 +2645,7 @@ void CPCGladiator::SetUp_CollisionTick(const _float& fTimeDelta)
 
 				pCollisionTick->Get_BoundingSphere()->Get_BoundingInfo().Radius = 0.5f;
 				pCollisionTick->Set_CollisionTag(L"CollisionTick_ThisPlayer");
-				pCollisionTick->Set_Damage(m_pInfoCom->Get_RandomDamage());
+				pCollisionTick->Set_Damage(m_pInfoCom->Get_RandomDamage() * m_fDP);
 				pCollisionTick->Set_LifeTime(0.25f);
 				pCollisionTick->Get_Transform()->m_vScale = _vec3(4.0f) * m_tCollisionTickDesc.fScaleOffset;
 				pCollisionTick->Get_Transform()->m_vPos   = vPos;
