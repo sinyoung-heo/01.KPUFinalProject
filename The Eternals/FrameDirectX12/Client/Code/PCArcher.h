@@ -216,7 +216,7 @@ private:
 	map<_uint, _bool> m_mapIsPlaySound;
 	_bool	m_bIsArrowFall              = false;
 	_float	m_fArrowFallSoundTime       = 0.0f;
-	_float	m_fArrowFallUpdateSoundTime = 0.2;
+	_float	m_fArrowFallUpdateSoundTime = 0.2f;
 
 	_bool m_bisUseShieldEffect = false;
 	_float m_fUseShieldDelta = 0.f;

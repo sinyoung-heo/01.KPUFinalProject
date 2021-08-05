@@ -59,9 +59,9 @@ constexpr int	THROW_RANGE_MONKEY_END		= 15;			// MONSTER MONKEY 원거리 공격 범위
 constexpr int	ATTACK_RANGE_CLODER			= 4;			// MONSTER CLODER 공격 범위
 constexpr float ATTACK_RANGE_SAILOR			= 2.5f;			// MONSTER SAILOR 공격 범위
 constexpr int	ATTACK_RANGE_GBEETEL		= 5;			// MONSTER GIANT BEETLE 공격 범위
-constexpr int	ATTACK_RANGE_ARACHNE		= 13;			// MONSTER ARACHNE 공격 범위
-constexpr int	RUSH_RANGE_GBEETEL_START	= 9;			// MONSTER GIANT BEETLE 돌진 범위
-constexpr int	RUSH_RANGE_GBEETEL_END		= 10;			// MONSTER GIANT BEETLE 돌진 범위
+//constexpr int	ATTACK_RANGE_ARACHNE		= 13;			// MONSTER ARACHNE 공격 범위
+//constexpr int	RUSH_RANGE_GBEETEL_START	= 9;			// MONSTER GIANT BEETLE 돌진 범위
+//constexpr int	RUSH_RANGE_GBEETEL_END		= 10;			// MONSTER GIANT BEETLE 돌진 범위
 constexpr int	RUSH_RANGE_GMONKEY_START	= 7;			// MONSTER GIANT MONKEY 돌진 범위
 constexpr int	RUSH_RANGE_GMONKEY_END		= 8;			// MONSTER GIANT MONKEY 돌진 범위
 
@@ -79,11 +79,11 @@ constexpr float	SAILOR_CHASE_SPD			= 4.f;
 constexpr int	SAILOR_RUSH_TICK_START		= 30;
 constexpr int	SAILOR_RUSH_TICK_END		= 55;
 
-constexpr int	ARCHNE_HP					= 10000;
-constexpr int	ARCHNE_ATT					= 150;
-constexpr int	ARCHNE_EXP					= 100;
-constexpr float	ARCHNE_SPD					= 1.f;
-constexpr float	ARCHNE_CHASE_SPD			= 6.f;
+//constexpr int	ARCHNE_HP					= 10000;
+//constexpr int	ARCHNE_ATT					= 150;
+//constexpr int	ARCHNE_EXP					= 100;
+//constexpr float	ARCHNE_SPD					= 1.f;
+//constexpr float	ARCHNE_CHASE_SPD			= 6.f;
 
 constexpr int	MONKEY_HP					= 10'000'000;
 constexpr int	MONKEY_ATT					= 4'000;
@@ -91,11 +91,11 @@ constexpr int	MONKEY_EXP					= 900;
 constexpr float	MONKEY_SPD					= 1.f;
 constexpr float	MONKEY_CHASE_SPD			= 3.f;
 
-constexpr int	CLODER_HP					= 1000;
-constexpr int	CLODER_ATT					= 150;
-constexpr int	CLODER_EXP					= 100;
-constexpr float	CLODER_SPD					= 1.f;
-constexpr float	CLODER_CHASE_SPD			= 4.f;
+//constexpr int	CLODER_HP					= 1000;
+//constexpr int	CLODER_ATT					= 150;
+//constexpr int	CLODER_EXP					= 100;
+//constexpr float	CLODER_SPD					= 1.f;
+//constexpr float	CLODER_CHASE_SPD			= 4.f;
 
 constexpr int	GIANTMONKEY_HP				= 50'000'000;
 constexpr int	GIANTMONKEY_ATT				= 7'000;
@@ -103,11 +103,11 @@ constexpr int	GIANTMONKEY_EXP				= 1'000;
 constexpr float	GIANTMONKEY_SPD				= 1.f;
 constexpr float	GIANTMONKEY_CHASE_SPD		= 4.f;
 
-constexpr int	GIANTBETTLE_HP				= 1000;
-constexpr int	GIANTBETTLE_ATT				= 150;
-constexpr int	GIANTBETTLE_EXP				= 100;
-constexpr float	GIANTBETTLE_SPD				= 1.f;
-constexpr float	GIANTBETTLE_CHASE_SPD		= 4.f;
+//constexpr int	GIANTBETTLE_HP				= 1000;
+//constexpr int	GIANTBETTLE_ATT				= 150;
+//constexpr int	GIANTBETTLE_EXP				= 100;
+//constexpr float	GIANTBETTLE_SPD				= 1.f;
+//constexpr float	GIANTBETTLE_CHASE_SPD		= 4.f;
 
 constexpr int	VERGOS_HP					= 200'000'000;
 constexpr int	VERGOS_ATT					= 8'000;

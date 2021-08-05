@@ -87,7 +87,7 @@ HRESULT CPacketMgr::Connect_Server()
 
 	sockAddr.sin_family = AF_INET;
 	sockAddr.sin_port = htons(SERVER_PORT);
-	sockAddr.sin_addr.s_addr = inet_addr(SERVER_DHIP);
+	sockAddr.sin_addr.s_addr = inet_addr(SERVER_IP);
 
 	if (connect(g_hSocket, (SOCKADDR*)&sockAddr, sizeof(sockAddr)) == SOCKET_ERROR)
 	{
@@ -1075,8 +1075,6 @@ void CPacketMgr::MoveStop_User(sc_packet_move* packet)
 		Engine::CGameObject* pObj = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
 		if (pObj == nullptr) return;
 
-		auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
-
 		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
 	}
 
@@ -1085,8 +1083,6 @@ void CPacketMgr::MoveStop_User(sc_packet_move* packet)
 	{
 		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
 		if (pObj == nullptr) return;
-
-		auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
 		pObj->Set_AnimationIdx(packet->animIdx);
 		pObj->Set_IsStartPosInterpolation(true);
@@ -1106,18 +1102,13 @@ void CPacketMgr::Move_User(sc_packet_move* packet)
 		Engine::CGameObject* pObj = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer", 0);
 		if (pObj == nullptr) return;
 
-		auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
-
 		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
-
 	}
 	/* 다른 클라이언트가 움직인 경우 */
 	else
 	{
 		Engine::CGameObject* pObj = m_pObjectMgr->Get_ServerObject(L"Layer_GameObject", L"Others", s_num);
 		if (pObj == nullptr) return;
-
-		auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - packet->move_time;
 
 		pObj->Set_AnimationIdx(packet->animIdx);
 		pObj->Set_DeadReckoning(_vec3(packet->posX, packet->posY, packet->posZ));
@@ -1220,7 +1211,7 @@ void CPacketMgr::Login_Player(sc_packet_login_ok* packet)
 
 	pGameObj->Set_OType(packet->o_type);
 	pGameObj->Set_ServerNumber(g_iSNum);
-	pGameObj->Set_Info(packet->level, packet->hp, packet->maxHp, packet->mp, packet->maxMp, packet->exp, packet->maxExp, packet->min_att, packet->max_att, packet->spd, packet->money);
+	pGameObj->Set_Info(packet->level, packet->hp, packet->maxHp, packet->mp, packet->maxMp, packet->exp, packet->maxExp, packet->min_att, packet->max_att, (int)packet->spd, packet->money);
 	
 	pGameObj->Set_CurrentStageID(packet->naviType);
 	// Static Object
@@ -1305,26 +1296,14 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 	else if (packet->mon_num == MON_MONKEY)
 	{
 		pInstance = Pop_Instance(m_pInstancePoolMgr->Get_MonsterMonkeyPool());
-	}
-	else if (packet->mon_num == MON_CLODER)
-	{
-		pInstance = Pop_Instance(m_pInstancePoolMgr->Get_MonsterCloderAPool());
-	}
+	}	
 	else if (packet->mon_num == MON_SAILOR)
 	{
 		pInstance = Pop_Instance(m_pInstancePoolMgr->Get_MonsterDrownedSailorPool());
-	}
-	else if (packet->mon_num == MON_GBEETLE)
-	{
-		pInstance = Pop_Instance(m_pInstancePoolMgr->Get_MonsterGiantBeetlePool());
-	}
+	}	
 	else if (packet->mon_num == MON_GMONKEY)
 	{
 		pInstance = Pop_Instance(m_pInstancePoolMgr->Get_MonsterGiantMonkeyPool());
-	}
-	else if (packet->mon_num == MON_ARACHNE)
-	{
-		pInstance = Pop_Instance(m_pInstancePoolMgr->Get_MonsterCraftyArachnePool());
 	}
 	else if (packet->mon_num == MON_VERGOS)
 	{
@@ -1342,7 +1321,7 @@ void CPacketMgr::Enter_Monster(sc_packet_monster_enter* packet)
 		pInstance->Get_Transform()->m_vPos   = _vec3(packet->posX, packet->posY, packet->posZ);
 		pInstance->Set_ServerNumber(packet->id);
 		pInstance->Set_State(packet->animIdx);
-		pInstance->Set_Info(1, packet->Hp, packet->maxHp, 0, 0, 0, 0, packet->min_att, packet->max_att, packet->spd, 0);
+		pInstance->Set_Info(1, packet->Hp, packet->maxHp, 0, 0, 0, 0, packet->min_att, packet->max_att, (int)packet->spd, 0);
 		m_pObjectMgr->Add_GameObject(L"Layer_GameObject", L"MONSTER", pInstance);
 	}
 }
@@ -1412,6 +1391,7 @@ void CPacketMgr::send_move(const _vec3& vDir, const _vec3& vPos, const _int& iAn
 
 	p.size = sizeof(p);
 	p.type = CS_MOVE;
+
 	p.animIdx = iAniIdx;
 	p.posX = vPos.x;
 	p.posY = vPos.y;
@@ -1420,8 +1400,6 @@ void CPacketMgr::send_move(const _vec3& vDir, const _vec3& vPos, const _int& iAn
 	p.dirX = vDir.x;
 	p.dirY = vDir.y;
 	p.dirZ = vDir.z;
-
-	p.move_time = static_cast<unsigned>(duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count());
 
 	send_packet(&p);
 }

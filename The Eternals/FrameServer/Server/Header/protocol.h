@@ -104,7 +104,7 @@ constexpr float STAGE_WINTER_X			= 380.0f;
 constexpr float STAGE_WINTER_Z			= 330.0f;
 
 /* CHARACTER TYPE */   // 추후 삭제 예정
-constexpr char TYPE_PLAYER				= 0;
+//constexpr char TYPE_PLAYER				= 0;
 
 /* PLAYER CHARACTER TYPE */
 constexpr char PC_GLADIATOR				= 0;
@@ -114,18 +114,24 @@ constexpr char PC_ALL					= 3;
 
 /* MONSTER TYPE */
 constexpr char MON_NORMAL				= 0;
-constexpr char MON_EPIC					= 1;
-constexpr char MON_BOSS					= 2;
+//constexpr char MON_EPIC					= 1;
+//constexpr char MON_BOSS					= 2;
 
 /* MONSTER NUMBER */
 constexpr char MON_CRAB					= 1;
 constexpr char MON_MONKEY				= 2;
-constexpr char MON_CLODER				= 3;
-constexpr char MON_ARACHNE				= 4;
-constexpr char MON_SAILOR				= 5;
-constexpr char MON_GBEETLE				= 6;
-constexpr char MON_GMONKEY				= 7;
-constexpr char MON_VERGOS				= 8;
+constexpr char MON_SAILOR				= 3;
+constexpr char MON_GMONKEY				= 4;
+constexpr char MON_VERGOS				= 5;
+
+//constexpr char MON_CRAB					= 1;
+//constexpr char MON_MONKEY				= 2;
+//constexpr char MON_CLODER				= 3;
+//constexpr char MON_ARACHNE				= 4;
+//constexpr char MON_SAILOR				= 5;
+//constexpr char MON_GBEETLE				= 6;
+//constexpr char MON_GMONKEY				= 7;
+//constexpr char MON_VERGOS				= 8;
 
 /* NPC TYPE */   
 constexpr char NPC_MOVE					= 0;
@@ -164,7 +170,7 @@ constexpr char EQUIP_SHOES				= 3;
 constexpr char EQUIP_END				= 4;
 
 /* SHOP */
-constexpr int  SHOP_SLOT					= 12;
+constexpr int  SHOP_SLOT				= 12;
 
 /* ___________________________________________________________________________________________________________________*/
 /*													SERVER -> CLIENT												  */
@@ -200,7 +206,7 @@ struct sc_packet_move
 	int				id;
 
 	int				animIdx;
-	int				move_time;
+	//int				move_time;
 	float			spd;
 	float			posX, posY, posZ;
 	float			dirX, dirY, dirZ;
@@ -492,7 +498,7 @@ struct cs_packet_move
 	char			type;
 
 	int				animIdx;
-	int				move_time; 
+	//int				move_time; 
 	float			dirX, dirY, dirZ;
 	float			posX, posY, posZ;
 };
