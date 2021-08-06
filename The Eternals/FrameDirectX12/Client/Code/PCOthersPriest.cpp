@@ -164,10 +164,10 @@ _int CPCOthersPriest::Update_GameObject(const _float& fTimeDelta)
 				pEffect = nullptr;
 			}
 		}
-
+		m_chCurWeaponType = -1;
 		m_bIsResetNaviMesh = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_PCOthersPriestPool(), m_uiInstanceIdx);
-
+		
 		return RETURN_OBJ;
 	}
 
@@ -376,6 +376,8 @@ void CPCOthersPriest::SetUp_StageID()
 
 void CPCOthersPriest::Is_ChangeWeapon()
 {
+	if (m_chCurWeaponType == -1)
+		return;
 	if (m_chCurWeaponType != m_chPreWeaponType)
 	{
 		if (nullptr != m_pWeapon)

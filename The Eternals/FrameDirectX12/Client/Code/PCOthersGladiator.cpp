@@ -169,7 +169,7 @@ _int CPCOthersGladiator::Update_GameObject(const _float& fTimeDelta)
 				pEffect = nullptr;
 			}
 		}
-
+		m_chCurWeaponType = -1;
 		m_bIsResetNaviMesh = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_PCOthersGladiatorPool(), m_uiInstanceIdx);
 
@@ -385,6 +385,8 @@ void CPCOthersGladiator::SetUp_StageID()
 
 void CPCOthersGladiator::Is_ChangeWeapon()
 {
+	if (m_chCurWeaponType == -1)
+		return;
 	if (m_chCurWeaponType != m_chPreWeaponType)
 	{
 		if (nullptr != m_pWeapon)

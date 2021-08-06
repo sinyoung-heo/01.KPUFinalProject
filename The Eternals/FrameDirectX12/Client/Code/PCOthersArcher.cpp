@@ -178,7 +178,7 @@ _int CPCOthersArcher::Update_GameObject(const _float& fTimeDelta)
 				pEffect = nullptr;
 			}
 		}
-
+		m_chCurWeaponType = -1;
 		m_bIsResetNaviMesh = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_PCOthersArcherPool(), m_uiInstanceIdx);
 
@@ -397,6 +397,8 @@ void CPCOthersArcher::SetUp_StageID()
 
 void CPCOthersArcher::Is_ChangeWeapon()
 {
+	if (m_chCurWeaponType == -1)
+		return;
 	if (m_chCurWeaponType != m_chPreWeaponType)
 	{
 		if (nullptr != m_pWeapon)
