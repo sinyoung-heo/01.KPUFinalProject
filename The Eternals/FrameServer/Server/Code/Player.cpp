@@ -383,6 +383,7 @@ void CPlayer::send_move_packet(const int& to_client)
 
     p.spd       = m_fSpd;
     p.animIdx   = m_iAniIdx;
+    p.move_time = move_time;
 
     p.posX      = m_vTempPos.x;
     p.posY      = m_vTempPos.y;
@@ -405,7 +406,8 @@ void CPlayer::send_move_stop_packet(const int& to_client)
 
     p.spd       = m_fSpd;
     p.animIdx   = m_iAniIdx;
- 
+    p.move_time = move_time;
+
     p.posX      = m_vPos.x;
     p.posY      = m_vPos.y;
     p.posZ      = m_vPos.z;

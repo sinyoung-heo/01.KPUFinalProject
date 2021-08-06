@@ -66,10 +66,10 @@ private:
 	void	Knockback_Monkey(const float& fTimeDelta);
 	void	Dead_Monkey(const float& fTimeDelta);
 
-	/*void	Change_Cloder_Animation(const float& fTimeDelta);
+	void	Change_Cloder_Animation(const float& fTimeDelta);
 	void	Chase_Cloder(const float& fTimeDelta);
 	void	Attack_Cloder(const float& fTimeDelta);
-	void	Dead_Cloder(const float& fTimeDelta);*/
+	void	Dead_Cloder(const float& fTimeDelta);
 
 	void	Change_DrownedSailor_Animation(const float& fTimeDelta);
 	void	Chase_DrownedSailor(const float& fTimeDelta);
@@ -78,11 +78,11 @@ private:
 	void	Knockback_DrownedSailor(const float& fTimeDelta);
 	void	Dead_DrownedSailor(const float& fTimeDelta);
 
-	/*void	Change_GiantBeetle_Animation(const float& fTimeDelta);
+	void	Change_GiantBeetle_Animation(const float& fTimeDelta);
 	void	Chase_GiantBeetle(const float& fTimeDelta);
 	void	Attack_GiantBeetle(const float& fTimeDelta);
 	void	Rush_GiantBeetle(const float& fTimeDelta);
-	void	Dead_GiantBeetle(const float& fTimeDelta);*/
+	void	Dead_GiantBeetle(const float& fTimeDelta);
 
 	void	Change_GiantMonkey_Animation(const float& fTimeDelta);
 	void	Chase_GiantMonkey(const float& fTimeDelta);
@@ -91,10 +91,10 @@ private:
 	void	Knockback_GiantMonkey(const float& fTimeDelta);
 	void	Dead_GiantMonkey(const float& fTimeDelta);
 
-	/*void	Change_CraftyArachne_Animation(const float& fTimeDelta);
+	void	Change_CraftyArachne_Animation(const float& fTimeDelta);
 	void	Chase_CraftyArachne(const float& fTimeDelta);
 	void	Attack_CraftyArachne(const float& fTimeDelta);
-	void	Dead_CraftyArachne(const float& fTimeDelta);*/
+	void	Dead_CraftyArachne(const float& fTimeDelta);
 
 	void	Change_Vergos_Animation(const float& fTimeDelta);
 	void	Spawn_Vergos(const float& fTimeDelta);

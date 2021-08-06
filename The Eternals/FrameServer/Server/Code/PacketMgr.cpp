@@ -141,13 +141,28 @@ void process_packet(int id)
 				}
 			}
 		}
+
+		//// Stage WinterÀÏ °æ¿ì
+		//if (pPlayer->m_chStageId == STAGE_WINTER)
+		//{
+		//	CMonster* pMonster = static_cast<CMonster*>(CObjMgr::GetInstance()->Get_GameObject(L"MONSTER", g_iVergosServerNum));
+		//	if (pMonster->Get_Dead() == false)
+		//	{
+		//		pPlayer->v_lock.lock();
+		//		pPlayer->view_list.insert(g_iVergosServerNum);
+		//		pPlayer->v_lock.unlock();
+
+		//		pMonster->send_Monster_enter_packet(id);
+		//	}			
+		//}
 	}
 	break;
 
 	case CS_MOVE:
 	{
 		cs_packet_move* p = reinterpret_cast<cs_packet_move*>(pPlayer->m_packet_start);
-		
+
+		pPlayer->move_time = p->move_time;
 		pPlayer->m_iAniIdx = p->animIdx;
 		_vec3 vPos = _vec3(p->posX, p->posY, p->posZ);
 		_vec3 vDir = _vec3(p->dirX, p->dirY, p->dirZ);
