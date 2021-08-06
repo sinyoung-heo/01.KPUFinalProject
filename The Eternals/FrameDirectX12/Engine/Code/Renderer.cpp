@@ -657,15 +657,14 @@ void CRenderer::Render_RenderTarget()
 			m_pTargetNPathDir->Render_RenderTarget();
 		if (nullptr != m_pTargetSunShine)
 			m_pTargetSunShine->Render_RenderTarget();
-		if (nullptr != m_pTargetpEffect)
+		/*if (nullptr != m_pTargetpEffect)
 			m_pTargetpEffect->Render_RenderTarget();
 		if (nullptr != m_pTargetEffectTex)
 			m_pTargetEffectTex->Render_RenderTarget();
 		if (nullptr != m_pTargetDynamicMeshEffect)
-			m_pTargetDynamicMeshEffect->Render_RenderTarget();
-
-		if (nullptr != m_pTargetAddEffect)
-			m_pTargetAddEffect->Render_RenderTarget();
+			m_pTargetDynamicMeshEffect->Render_RenderTarget();*/
+		/*if (nullptr != m_pTargetAddEffect)
+			m_pTargetAddEffect->Render_RenderTarget();*/
 
 		if (nullptr != m_pTargetMiniMap)
 			m_pTargetMiniMap->Render_RenderTarget();
