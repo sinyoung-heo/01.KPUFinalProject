@@ -30,11 +30,11 @@ namespace Archer
 
 	enum STANCE	{ STANCE_NONEATTACK, STANCE_ATTACK, STANCE_END };
 
-	constexpr float OTHERS_OFFSET	= 0.9f;
+	constexpr float OTHERS_OFFSET	= 0.8f;
 
 	constexpr float MIN_SPEED        = 0.0f;
 	constexpr float MAX_SPEED        = 5.0f;
-	constexpr float MAX_ATTACK_SPEED = MAX_SPEED * 1.35f;
+	constexpr float MAX_ATTACK_SPEED = MAX_SPEED * 1.0f;
 	constexpr float MOVE_STOP_SPEED  = 3.0f;
 
 	constexpr _uint BACK_DASH_MOVE_START     = 2;
