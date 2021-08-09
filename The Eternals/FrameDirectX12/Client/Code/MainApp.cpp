@@ -28,7 +28,7 @@ HRESULT CMainApp::Ready_MainApp()
 
 	SetUp_SystemInfo();
 	SetUp_WindowMouseSetting();
-	Engine::FAILED_CHECK_RETURN(SetUp_DefaultSetting(Engine::WINMODE::MODE_WIN, WINCX, WINCY), E_FAIL);
+	Engine::FAILED_CHECK_RETURN(SetUp_DefaultSetting(Engine::WINMODE::MODE_FULL, WINCX, WINCY), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(SetUp_Font(), E_FAIL);
 	Engine::FAILED_CHECK_RETURN(SetUp_ComponentPrototype(), E_FAIL);
 

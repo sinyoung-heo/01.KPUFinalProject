@@ -178,6 +178,8 @@ _int CPCOthersArcher::Update_GameObject(const _float& fTimeDelta)
 				pEffect = nullptr;
 			}
 		}
+
+		m_chPreWeaponType = -1;
 		m_chCurWeaponType = -1;
 		m_bIsResetNaviMesh = false;
 		Return_Instance(CInstancePoolMgr::Get_Instance()->Get_PCOthersArcherPool(), m_uiInstanceIdx);
