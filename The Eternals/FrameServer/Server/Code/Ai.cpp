@@ -1430,6 +1430,7 @@ bool CAi::Is_ComboAttack_Priest(const float& fTimeDelta)
 
 void CAi::reset_ai()
 {
+	c_lock.lock();
 	m_bIsConnect		= false;
 	m_bIsAttackStance	= true;
 	m_bIsPartyState		= true;
@@ -1441,12 +1442,14 @@ void CAi::reset_ai()
 	m_iCurPatternNumber = 0;
 
 	m_vPos				= m_vOriPos;
+	m_vTempPos			= m_vOriPos;
 	m_fLookAngle		= 0.f;
 	m_iHp				= m_iMaxHp;
 	m_iMp				= m_iMaxMp;
 
 	m_uiAnimIdx			= Gladiator::ATTACK_WAIT;
 	m_iAniIdx			= Gladiator::ATTACK_WAIT;
+	c_lock.unlock();
 
 	nonActive_AI();
 }
