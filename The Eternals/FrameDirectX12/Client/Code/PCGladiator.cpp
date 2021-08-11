@@ -1288,11 +1288,9 @@ void CPCGladiator::KeyInput_Attack(const _float& fTimeDelta)
 
 	if (Gladiator::STANCE_ATTACK == m_eStance && m_bIsCompleteStanceChange)
 	{
-		// 기본공격 (스킬공격 중에는 사용 X)
 		if (!m_bIsSkill && !m_bIsSkillLoop)
 			KeyInput_ComboAttack(fTimeDelta);
 
-		// 스킬공격
 		if (m_pMeshCom->Is_BlendingComplete())
 		{
 			KeyInput_SkillAttack(fTimeDelta);

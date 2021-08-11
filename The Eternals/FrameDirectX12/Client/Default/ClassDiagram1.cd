@@ -1,0 +1,2146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CWarningGround" Collapsed="true">
+    <Position X="102.25" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASQQoBIAAAUAEIACAQABJAAAkMAEAEEACARwAAgACKo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\WarningGround.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CRectObject" Collapsed="true">
+    <Position X="102.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAIAAAEAAIAAAQAAAABAAAAACEAAAAAgAQAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\RectObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCubeObject" Collapsed="true">
+    <Position X="119.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAIAAAEAAIAAAQAAIABAAAAAAEAAAAAgAQAAQAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\CubeObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTerrainObject" Collapsed="true">
+    <Position X="118" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAoAIAAAEAAIAIAQAAAAAAAAAAAEAAAAAwAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\TerrainObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPopori_F" Collapsed="true">
+    <Position X="104" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EDAwIAIiACEABYQAAUAHIAEAEAAAAEEIAAAwAQEEAII=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\Popori_F.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTextureDistortion" Collapsed="true">
+    <Position X="112.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAIAAAEAAIAQAQEgAAQAIQAAAEAQAACwABAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\TextureDistortion.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTextureEffect" Collapsed="true">
+    <Position X="114.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QDAwIAIAAAUAsIIQAUGhAAAAICgAAUFSQAAwAhgACAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\TextureEffect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTexDistortionInstance" Collapsed="true">
+    <Position X="109.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAIAAAEAAMAAAQEgAAQAIAAAAECQAAAgABCAAAM=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\TexDistortionInstance.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTexEffectInstance" Collapsed="true">
+    <Position X="111" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAMAIAAAEAAMAAAQEgBAAAAAAAAECQAAAgABAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\TexEffectInstance.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTestCollisonObject" Collapsed="true">
+    <Position X="119.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAgIAIigAAACIACAAAAAABABAAAAEAAAAAgAQAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\TestCollisonObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMonster_Normal" Collapsed="true">
+    <Position X="109.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKAwIAICAgAABIQKAQAGAAEAEAAgAEAIAAAwBgAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\Monster_Normal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSampleNPC" Collapsed="true">
+    <Position X="104" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAQIAIAIACABIQAAQACAAEAEAAAAEEAAAAwAAAAAII=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\SampleNPC.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTestColPlayer" Collapsed="true">
+    <Position X="104" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IKQgIgIiiAAEAKAIAAAAEABAAIAAAEAAAEAgBQAkAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\TestColPlayer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTestColMonster" Collapsed="true">
+    <Position X="102.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKAgIAICgAAAAIAIAAAAAABIAAAAAEAIAABgBQAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\TestColMonster.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMainApp" Collapsed="true">
+    <Position X="104" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AwQSAMBkEYWAghAgGiAASzAggQECBWSASFECJAIACAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\MainApp.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPacketMgr" Collapsed="true">
+    <Position X="107.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BATENzJYMWCAGEohIDMCjCgIGYAGAxAUTASkHgggOAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PacketMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShadowLightMgr" Collapsed="true">
+    <Position X="112.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAiggAAACACQIAgQAlAAAAAAAAABgAQgBRAAYAwQM=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\ShadowLightMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMouseCursorMgr" Collapsed="true">
+    <Position X="111" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIwABAACAICAEAAAAAAAAJAAAACAABAAAQAgQI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\MouseCursorMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CInstancePoolMgr" Collapsed="true">
+    <Position X="105.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ZaAC3oGAc7gDEBRiJPRkaLt7Bzg7AARLTU6gPRNQ6oM=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\InstancePoolMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CEffectMgr" Collapsed="true">
+    <Position X="118" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAACgCEAEQAEgBACwgC0QzAQAEAAABACCAIAACAII=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\EffectMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPartySystemMgr" Collapsed="true">
+    <Position X="111" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAsAIAABAIAAAhAASICABAAAAgAAAABAgAMAgAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PartySystemMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CChattingMgr" Collapsed="true">
+    <Position X="109.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAgAAgAKAAAAAAAAQBAAFAAAADACAAAAAAgAAAEEI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\ChattingMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CInventoryEquipmentMgr" Collapsed="true">
+    <Position X="107.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QFEBgAgIAAAQAyAEAJIAIAEAgJAAAAAQUAMoAgAIIEI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\InventoryEquipmentMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStoreMgr" Collapsed="true">
+    <Position X="107.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAQCCAAAgghBhQBMAgAAAAAIAAhQFCEABNQAGQCEaoI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\StoreMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CQuickSlotMgr" Collapsed="true">
+    <Position X="116.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAACAAAAAEAAAAAAACIAAAIAAQAAgAAAAAAAAAABABI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\QuickSlotMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCinemaMgr" Collapsed="true">
+    <Position X="111" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAADAAAgkCwAEBEAAACAIAIgABABQACQIAAcEAIQI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\CinemaMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CQuestMgr" Collapsed="true">
+    <Position X="114.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>SEIBEAAAQVQAAAAJBgFBAAIEAACAAkAAACBEQEAEBAo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\QuestMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CScene_Menu" Collapsed="true">
+    <Position X="109.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAACACAAAAAAIACAAAAgAAYEAAAAAAAAACAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\Scene_Menu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLoading" Collapsed="true">
+    <Position X="112.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IASAAEACAEAAAAAgADBAgCEAAQgAAUAEACAQBAABAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\Loading.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStageLDH" Collapsed="true">
+    <Position X="102.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAECACABAAAAIACgAAAgACIEAACAEABAACAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\StageLDH.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStagePJO" Collapsed="true">
+    <Position X="104" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAECACAAAAAAIACAAAAgACIEBACAEABAACAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\StagePJO.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStageHSY" Collapsed="true">
+    <Position X="119.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAECACAAAAAAIACAAAAgACIEAACAEABgQCAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\StageHSY.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CScene_MainStage" Collapsed="true">
+    <Position X="107.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAICA0DACgQBAJIIADACAAgACIGAQCAEABAQCAAc=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\Scene_MainStage.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CScene_Logo" Collapsed="true">
+    <Position X="105.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAgowAMiACREQiABIICAEgCkgBJUAIIAQEAkCSABI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\Scene_Logo.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLogoBack" Collapsed="true">
+    <Position X="118" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASAAIgIAAAGIAIAAAQAAAAAAAAAAAEAQAACwAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\LogoBack.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLoadingProgressBack" Collapsed="true">
+    <Position X="116.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASAAIgIAAAEAAIAAQQAAAAAAAAAAAGAQAACwAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\LoadingProgressBack.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLoadingProgress" Collapsed="true">
+    <Position X="114.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASAAIiIAAAEAAIAAAQAAACAAAAAAAEIQAACwBAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\LoadingProgress.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSkyBox" Collapsed="true">
+    <Position X="114.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACACIAIAAEEAAIAAAQAgAAAAAAAAAUAQAAAwAAAAIAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\SkyBox.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStaticMeshObject" Collapsed="true">
+    <Position X="105.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACIQIhIAAAEAAIAAAQAAAAEAEABAAEEAAgA4AQBAAKI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\StaticMeshObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTerrainMeshObject" Collapsed="true">
+    <Position X="116.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AiAQIAIAAAAAAIAAhQABAAEAEMAAAEEAAiAwAAAAAII=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\TerrainMeshObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CWaterMeshObject" Collapsed="true">
+    <Position X="105.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAQIgIAAAAAAKAAAQABAAAAEMAEAEIAAAAwAAIAAII=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\WaterMeshObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CWaterFall" Collapsed="true">
+    <Position X="104" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAQIAIAAAAAAKAEAQABAAEAEMAEAEMAAgAwABIAAII=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\WaterFall.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPCGladiator" Collapsed="true">
+    <Position X="95.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>eLwd7xoyJPg2FZYYZVxF8AELXOtEUeGgaEpwhZm2SII=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PCGladiator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPCOthersGladiator" Collapsed="true">
+    <Position X="90.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>YKgQZQoRIIkiBoQQJRAE4IEAVKsAAWCCIQiwARyADAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PCOthersGladiator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPCArcher" Collapsed="true">
+    <Position X="95.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>MLwfaxoyJHA2FYYYRVxFcAEKfKtU0eGBaEAwhbl2SIM=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PCArcher.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPCOthersArcher" Collapsed="true">
+    <Position X="90.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IKgYYZoQICkiFoYQARQEQIEAdKkAgeCDIQCwABwATAM=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PCOthersArcher.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPCOthersPriest" Collapsed="true">
+    <Position X="90.25" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IKgQJQoQIAkiBoQQAQAEQAEAXKkAAWAKIQCwABwALAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PCOthersPriest.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPCPriest" Collapsed="true">
+    <Position X="95.25" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>MLwdLxoyJDA2FYYYRVxFcAEKXKlAUeEAaEBwhZk2YII=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PCPriest.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CGameUIChild" Collapsed="true">
+    <Position X="52.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ADhQJsIAACGAALEAAWEgwCAgAAAAAUAQAAC4ABBEAJI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\GameUIChild.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCharacterHpGauge" Collapsed="true">
+    <Position X="23.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIQAAAAABQIAAAQAAEAAAAAAAAEIAAAAgAAQAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\CharacterHpGauge.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCharacterMpGauge" Collapsed="true">
+    <Position X="30" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIQAAACABAIAAAQAAAAIAAAAAAEIAAAAggAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\CharacterMpGauge.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPCSelectJob" Collapsed="true">
+    <Position X="36.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASAAMAAAAABAAIAAAQAAAAAAAAAAAEAAAACgAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PCSelectJob.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPCSelectButton" Collapsed="true">
+    <Position X="43.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASACIAAAAAAAAIAAASAAAAAAAAAEAUgAAACgAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PCSelectButton.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPCSelectFrame" Collapsed="true">
+    <Position X="50.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASAAIAABAAAAAIAAASAAAAAAAgAEAEAAAACgAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PCSelectFrame.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSettingButtonClose" Collapsed="true">
+    <Position X="57" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAAAAAACAIAAAAQAAIAAAAAAAEAQAAAkAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\SettingButtonClose.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSettingButtonGameExit" Collapsed="true">
+    <Position X="63.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAABAAAAAIAAAAAAAAAAAAAAAEAAAAEkAQAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\SettingButtonGameExit.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSettingButtonShaderCheckBox" Collapsed="true">
+    <Position X="70.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAAAAAAAAIAAAAIAQAAAAAAEAFACAAEgAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\SettingButtonShaderCheckBox.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLogoutButtonClose" Collapsed="true">
+    <Position X="75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAAAAAABAIQAAAQAAIAAAAAAAEAAAAAkAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\LogoutButtonClose.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLogoutButtonChoice" Collapsed="true">
+    <Position X="79.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAAAAAAAAIAAgAAAAAAAAAAAAEAAAAEkAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\LogoutButtonChoice.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPartySuggestButton" Collapsed="true">
+    <Position X="84" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIACAAAAAAIAAAgAAAAAAAAAAAEAACAEsAAAABAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PartySuggestButton.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPartySuggestResponseChoice" Collapsed="true">
+    <Position X="88.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAAAAAAAAIAAAwAAAAARAAAAAEAAAAEkAAAABIY=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PartySuggestResponseChoice.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPartySuggestResponseClose" Collapsed="true">
+    <Position X="93" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAAAAAAAAIAAAwQAAIARAAAAAEAAQBAkAAAABAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PartySuggestResponseClose.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPartyLeaveButton" Collapsed="true">
+    <Position X="97.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACEAIAAAAAAAAIAAAgAAACAAAAAAAEAAAAEkAAAABAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PartyLeaveButton.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPartyUIHpGauge" Collapsed="true">
+    <Position X="5.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIQAAACAAAIAAAQAAAAAAAAAAEEIAAAAgAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PartyUIHpGauge.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPartyUIMpGauge" Collapsed="true">
+    <Position X="9.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIQAAAAAAAIAAAQAAAAQAAAAAEEIAAAAgAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PartyUIMpGauge.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPartyUIClassInfo" Collapsed="true">
+    <Position X="14.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CCAAIAAIAAAAAIAAAAAAAAAAAAEAAEABACAgAAgAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PartyUIClassInfo.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CChattingCursor" Collapsed="true">
+    <Position X="18.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACEAIAAAAAEBAMAAAgQEAAACAAAAAEAAEAAkAABAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\ChattingCursor.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CChattingInput" Collapsed="true">
+    <Position X="25.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAKAAAAAAAAIAAAAAAABAEAAAAAEEAAAAggAAQAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\ChattingInput.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CInventoryButtonClose" Collapsed="true">
+    <Position X="32.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAAAAAAAAIAAAAQAAIAAAAEEAEAAAAAkAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\InventoryButtonClose.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CInventoryItemSlot" Collapsed="true">
+    <Position X="39" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AHARoQwBEABAQIgAAQImIgEJAAACAEAQAIBgAAABIAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\InventoryItemSlot.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CEquipmentButtonClose" Collapsed="true">
+    <Position X="45.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAAAAAAAgIAAAAQAAIAAAAAAAEAAAAAkAAQAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\EquipmentButtonClose.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CEquipmentItemSlot" Collapsed="true">
+    <Position X="52.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ADCBqQgABABAAIgEAQIgAAAAAACAAEAAAIBgAgAFAAo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\EquipmentItemSlot.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLoginIDButton" Collapsed="true">
+    <Position X="59.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASECJAAAAAAAAIAAASAAAAAAAAAEAEAAAACkAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\LoginIDButton.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLoginIDFont" Collapsed="true">
+    <Position X="66" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASAAIAAAAAAAAIAAAQAAAIAAAAAAAEAAAAigAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\LoginIDFont.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLoginIDInputString" Collapsed="true">
+    <Position X="72.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASAAIAAAAAAAAICAAQAAAAAAAAAAAEAAAACsAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\LoginIDInputString.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStoreTab" Collapsed="true">
+    <Position X="77.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CKgQIAABAAAAAMAAAAEACgAAAAAEAEAAAAEkAIAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\StoreTab.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStoreButtonCalculate" Collapsed="true">
+    <Position X="81.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAAAEAAAAIAAAAAAAAAAAAAAAEAAAAEkAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\StoreButtonCalculate.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStoreButtonClose" Collapsed="true">
+    <Position X="86.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACQAIAAAAAAAAIAAAAQAAIAAAAAAAEAAAAAkQAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\StoreButtonClose.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStoreBuyListSlot" Collapsed="true">
+    <Position X="90.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACABoQAAAABAQIgAAAImIAABAAAAAEAQAIJgAAABAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\StoreBuyListSlot.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStoreBuySellList" Collapsed="true">
+    <Position X="95.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>iCAAIAAAAAAAAIAAAAAAAAAAAAAAAEAAAAAgAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\StoreBuySellList.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStoreItemSlot" Collapsed="true">
+    <Position X="99.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACABoAAAYABAQIgAACIgAAAAAAAAAEAAAIFgAAABIAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\StoreItemSlot.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStoreItemSlotBack" Collapsed="true">
+    <Position X="7.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIIAAAAAAAIAAAAAAAAAAAAIAAEAAAAAgAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\StoreItemSlotBack.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStoreSellListSlot" Collapsed="true">
+    <Position X="12" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ECABoAACBABAQIgAAAImIAABAQAAAGAQAIBgAAABAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\StoreSellListSlot.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStoreBuySellListBack" Collapsed="true">
+    <Position X="16.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gCACIAAAQAAAAIAAAIAAAAAAAAAAAEAgAAEgAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\StoreBuySellListBack.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CQuickSlot" Collapsed="true">
+    <Position X="21" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BGAApQAhAAAAaIgAQEAGIoIBBAAAAEAEIAAiBAITICI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\QuickSlot.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCoolTime" Collapsed="true">
+    <Position X="27.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAgAAAAAAIAAIAAAAAAAAAAAAkAQAAAgAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\CoolTime.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CQuestButtonClose" Collapsed="true">
+    <Position X="34.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIQAAAAAAAIAAAAYAAIAAAAAAAEAAAAAkAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\QuestButtonClose.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CQuestButtonAccept" Collapsed="true">
+    <Position X="41.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAAAgAAAAIAAAAAAAAAAAAAAAEAAAAEkAAAQAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\QuestButtonAccept.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CQuestComplete" Collapsed="true">
+    <Position X="48" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAAAgABAAIAAAAAAAAAAAAAAAEAAAAAkAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\QuestComplete.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CQuestMessageButtonClose" Collapsed="true">
+    <Position X="54.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAAAAEAAAIAAAAQAAIAAAAAAAEAAAAAkAEAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\QuestMessageButtonClose.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CQuestMessageButton" Collapsed="true">
+    <Position X="61.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAAAAAAACIAAAAAAAAAAAAAAAEBAAAEkAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\QuestMessageButton.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CVergosHpGauge" Collapsed="true">
+    <Position X="68.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIQACAAAAAICAAQAAEAAAAAAAAEIAAAAgAAQAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\VergosHpGauge.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CGameUIRoot" Collapsed="true">
+    <Position X="26.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ADoUJkIAACUAALGAAWEgQCCAAAgCQEAQAAD4ABBEEBI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\GameUIRoot.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CEquipmentCanvas" Collapsed="true">
+    <Position X="34.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QCAAIgIAAgAAAIAAABRAAAAAAAAAAEAAAAAgAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\EquipmentCanvas.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMainMenuEquipment" Collapsed="true">
+    <Position X="38.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAAAAAAAAIAAQAQAAIGAAAAAAEgAAAAkAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\MainMenuEquipment.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMainMenuSettingCanvas" Collapsed="true">
+    <Position X="43.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAIAAAAAAIAAAAAAAAAQAAAAAEAAAAggAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\MainMenuSettingCanvas.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMainMenuSetting" Collapsed="true">
+    <Position X="47.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ECAAIAQAAAAAAIAAAAQAAIGAAAAAAEgQAAAkAAAAQAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\MainMenuSetting.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMainMenuLogoutCanvas" Collapsed="true">
+    <Position X="2.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAIAQAAAAIAAAAEAAAAAAAAAAEAAAAEgAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\MainMenuLogoutCanvas.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMainMenuLogout" Collapsed="true">
+    <Position X="5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAQAAAAAAIAAAAQAAIGAAAAAAEgACAAkQAAIAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\MainMenuLogout.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CInventoryCanvas" Collapsed="true">
+    <Position X="7.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAICQAAAAIAAAAAAAAIAAAAAAEAAAAAgAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\InventoryCanvas.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CInventorySwapSlot" Collapsed="true">
+    <Position X="9.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACARIAABAABAAoAAAAJmIAAAAAAGAEAAAAAgAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\InventorySwapSlot.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMainMenuInventory" Collapsed="true">
+    <Position X="11.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAAAAAAAAIAAAAQAAIGAAAAAAEgAAAAkAEAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\MainMenuInventory.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPCSelectBackground" Collapsed="true">
+    <Position X="14" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASAAIAAAAAAAAIAAAQAAAAAABACAAEAAAACgAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PCSelectBackground.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLoginSelectButton" Collapsed="true">
+    <Position X="16.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASAAIAAAACAAAIAAAQAAAAAAAAAAAEgAAACgAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\LoginSelectButton.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPartySuggestCanvas" Collapsed="true">
+    <Position X="18.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIBAAAAAAAIAAAAAAAAAAAAAAAEAAAAAgAAAAACI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PartySuggestCanvas.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPartySuggestResponseCanvas" Collapsed="true">
+    <Position X="20.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKAAMAIAAAAAAIAAAQAAAAARAAAAAEAAAAEgAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PartySuggestResponseCanvas.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPartySystemMessageCanvas" Collapsed="true">
+    <Position X="23" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACQAIAAAAAAAQIQIAAQAABAABAAQQEAAAAFkAAAAAhI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PartySystemMessageCanvas.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPartyInfoListCanvas" Collapsed="true">
+    <Position X="25.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAIAAAACAIAAAAAAAAAAIAAAAEAAACEgAAQBiAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PartyInfoListCanvas.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CChattingCanvas" Collapsed="true">
+    <Position X="27.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BCAAIAAAAAAAAIAAgAAAAAAAAAAAQEAAEACgAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\ChattingCanvas.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLoginIDBackground" Collapsed="true">
+    <Position X="29.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASAAIAAAAAAAAIAAAQAAAAAAAAAAAEAAAACgAAQAAII=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\LoginIDBackground.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CInGameStoreCanvas" Collapsed="true">
+    <Position X="32" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAAAAABAAIAAAAAAAAAAAAAAAEAAAAAgAAAEAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\InGameStoreCanvas.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CQuickSlotSwapSlot" Collapsed="true">
+    <Position X="36.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AGAAYQAAAAAAQIAAAAAAAgAAAAAAAEAEIAAgAAABKAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\QuickSlotSwapSlot.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMiniMapCanvas" Collapsed="true">
+    <Position X="41" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAAAAggAAIAAAAQAACAAAAAAAEAAAAAgBAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\MiniMapCanvas.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CQuestRequestCanvas" Collapsed="true">
+    <Position X="45.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAAAAAAAAIAAgAAAAAAAAAAAAEAAAAAgAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\QuestRequestCanvas.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CQuestMessageCanvas" Collapsed="true">
+    <Position X="50" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAIIAAAAAAAAIAAAAAAAAAAAAAAAEAAAAEgAgAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\QuestMessageCanvas.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CNormalMonsterHpGauge" Collapsed="true">
+    <Position X="112.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACARIQIAAAEAANAAAQAgAAAAAAAAAEIQAAAwARAAABI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\NormalMonsterHpGauge.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CNPCMiniMap" Collapsed="true">
+    <Position X="105.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAIAQAQAAAAAAAAEAAECAIAAgBAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\NPCMiniMap.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CWarningFrame" Collapsed="true">
+    <Position X="119.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIoIAAAEAEIAAAQAAEACAAAAAAEAQAAAwAAAEEAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\WarningFrame.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CFadeInOut" Collapsed="true">
+    <Position X="104" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASACIgIABEEAEIAIAQAAABAAAECAAEAYAACwQAAECAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\FadeInOut.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CNPC_Walker" Collapsed="true">
+    <Position X="104" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKAwIBICAAAABoQIAQAGAAEgEAIAEEAAAAIwBAAACAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\NPC_Walker.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CNPC_Merchant" Collapsed="true">
+    <Position X="118" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKCwIAICAAAAhIQIAQCGAAMAEAACEGAAAAAwBAAACAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\NPC_Merchant.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CNPC_Stander" Collapsed="true">
+    <Position X="102.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKAwIAICAAAABIQIAQAGAAEAEAAAEEAAAAAwDAAgCAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\NPC_Stander.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CNPC_Assistant" Collapsed="true">
+    <Position X="114.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKAwIAICAAAABIQIAQAGAAEAEAAAUEACAAAwBAAACAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\NPC_Assistant.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CNPC_Quest" Collapsed="true">
+    <Position X="119.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKAwIAICAAAIhIQIgQCGAAEAEAACEGAAAAAwBAAACAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\NPC_Quest.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CNPC_Children" Collapsed="true">
+    <Position X="116.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKAwIAICAAAABqQIAQAEABEAEAIQFEQAAAIwBAAACAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\NPC_Children.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCrab" Collapsed="true">
+    <Position X="116.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKA4KAoGBAAAFoQOAQEGgBEAEAEAEEAIABBwBAAICII=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\Crab.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMonkey" Collapsed="true">
+    <Position X="107.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKA4IAoGBAAAFoQMAQEGhBEAEAEBEEAIAAJwBAAICII=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\Monkey.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCloderA" Collapsed="true">
+    <Position X="114.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKA4IAoGBAAAFoQMAQEGgIEAEAEAEEAIAABwBAAISII=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\CloderA.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CDrownedSailor" Collapsed="true">
+    <Position X="112.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BKA4IAoGBAAAFoQMAQEGgBEAEAEAEEAIAAJwBAAICII=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\DrownedSailor.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CGiantBeetle" Collapsed="true">
+    <Position X="111" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKQ4IAoGBAAAFoQMAQEGgAEAEAEgEEAIAABwBAAICII=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\GiantBeetle.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CGiantMonkey" Collapsed="true">
+    <Position X="112.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKA4IAoGBAACFsQOAQEGgBEAEAEAEEAIAAJwBAAIKII=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\GiantMonkey.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCraftyArachne" Collapsed="true">
+    <Position X="118" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKA4IQoGBAAAFpQMAQEGgAEAEBEAEEAIAABwBQAYCII=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\CraftyArachne.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLakan" Collapsed="true">
+    <Position X="109.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKA4IAoOBAAAFoQMQQBmAEEAECAAEEAIAAAwBAAICAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\Lakan.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPrionBerserker" Collapsed="true">
+    <Position X="107.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKA8IAoGBAAAFoQMQQBnBEEAECAEEEEIAgAwBAAICAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PrionBerserker.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPrionBerserkerBoss" Collapsed="true">
+    <Position X="109.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKI4IFoGBEAAFoQMAQBmAEEAEIAgEEAIAgAwBAAICQY=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PrionBerserkerBoss.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCinemaVergos" Collapsed="true">
+    <Position X="112.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gKI4IBoGRAAAFpQMASAGAEEAEGBnGEAJAAAwTAAISQM=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\CinemaVergos.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CVergos" Collapsed="true">
+    <Position X="118" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ALAcIBoGBEAAlqQNCQEHgFEIELEokGAIlEJyRgAMCII=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\Vergos.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPCWeapon" Collapsed="true">
+    <Position X="3" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACCQIBIEAQAAhIAEEQAYgEkIUAAAAAEAgwg0CBgAAoI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PCWeapon.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPCWeaponTwoHand" Collapsed="true">
+    <Position X="0.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAACAAAAAIAAAAgAAAAAAAAAAEAAACCwBAAACAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PCWeaponTwoHand.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPCWeaponBow" Collapsed="true">
+    <Position X="3" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAAAAAAAAIAAAAAAAAAAAAAAAEAAAAAyAAAgCAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PCWeaponBow.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPCWeaponRod" Collapsed="true">
+    <Position X="5.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAAAAAAAAIAAAEAAAAAAAAAAAEAAAAAwIAAACAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PCWeaponRod.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CDragonEffect" Collapsed="true">
+    <Position X="111" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAQIAIEAACAEJQEgQAAAABAUAAAAEIgAAAwAAgACAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\DragonEffect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMeshParticleEffect" Collapsed="true">
+    <Position X="105.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>UaQVIAMQgCSAEICRAYEAEAABMIAAgNAyAAAwCEgCCII=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\MeshParticleEffect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CEffectTrail" Collapsed="true">
+    <Position X="102.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACCAIBIAAAEAGIAAAQggAAAIAAAAAcAQAAC4AAAEAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\EffectTrail.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMagicCircle" Collapsed="true">
+    <Position X="119.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASQQIBIAIAUAEIACASQBJAAAkMAEQEEEAARwAAgAGKo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\MagicCircle.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CIceStorm" Collapsed="true">
+    <Position X="119.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gCAQIgIBAAAAIIAAAQABAAAAkMBEAEIiAARwAAgACCI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\IceStorm.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSnowParticle" Collapsed="true">
+    <Position X="118" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASAAIAMAAAEAkIAAAQEgEAAAIAQAAMAQABAwAFACAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\SnowParticle.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPublicPlane" Collapsed="true">
+    <Position X="111" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACQRIAISAAEAEIAAAQABAAEAEMAAAEMAAAAwAAAAAKo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PublicPlane.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPublicSphere" Collapsed="true">
+    <Position X="112.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASQQIBIAAAAAgIAAAQABBAAIEMAEAEKAAARwACAggAo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\PublicSphere.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CRainDrop" Collapsed="true">
+    <Position X="118" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAQoAIAAAAAAKAAAQAAAAAAEAAAAEEAAAAwAAAAAII=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\RainDrop.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSwordTrail" Collapsed="true">
+    <Position X="112.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACQRIAIAAAEAAIAAAQABAAEAEMAEAEsAAAAwAAAAQKo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\SwordTrail.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CIceStorm_s" Collapsed="true">
+    <Position X="104" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gCAQIgIBAAAAAIAAAQABAAAAEMBAAMICAQBwAAgACCI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\IceStorm_s.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CFireDecal" Collapsed="true">
+    <Position X="105.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QCQRIAIAAAEAFIAAAQABAAEAEMAAAEcAAAAwAAkACKs=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\FireDecal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CGlowring" Collapsed="true">
+    <Position X="114.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BCAAIAMAAAEAEIAgAQEgAAAAIACAAEAQAAAwABAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\Glowring.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CDmgFont" Collapsed="true">
+    <Position X="109.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CCAENAIQAAEIEIAAAQAAEAAAAAAAAGQhEAk0AAEACAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\DmgFont.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CEffectAxe" Collapsed="true">
+    <Position X="116.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gWQSIhIBACgAAIAAAQgBNAAAkMBEAEIEAARwACgACCo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\EffectAxe.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CEffectShield" Collapsed="true">
+    <Position X="119.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gWYSIhIBACAAAIAAAQgBNAAAkMBEAUIEAARwAAgACCo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\EffectShield.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CDistTrail" Collapsed="true">
+    <Position X="107.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ECQxIgIBAAEAkIAAAQABIAEAEMBAAENAQIBwAAgACKo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\DistTrail.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CFireRing" Collapsed="true">
+    <Position X="107.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACQQIhIAAAEQAIAAAQAAAAEAEAAAAEMBAAAwADgACKo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\FireRing.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CFrameMesh" Collapsed="true">
+    <Position X="109.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACQQIhIAAAEQAIAAAQAAAAEAEAAAAEMAAAAwABgAiKo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\FrameMesh.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSwordEffect" Collapsed="true">
+    <Position X="109.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAQIgIBAAAAAIQAAQABAAAAkMBAAEIAgABwAAgAKCI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\SwordEffect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSwordEffect_s" Collapsed="true">
+    <Position X="111" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AWQQIhIBAAAAEYAAAQABFAAAEcAEAEIAAARwAAgACCo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\SwordEffect_s.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CGridShieldEffect" Collapsed="true">
+    <Position X="116.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASQQIBIAAAAAAIAAAQABBAIAEMAkAEIEAAxwAAgACAo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\GridShieldEffect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CIceDecal" Collapsed="true">
+    <Position X="118" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QKAQIAIAAAEAEIAAAQABAAEAEMAAAEMAAAAwAAgACKI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\IceDecal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CIceStorm_m" Collapsed="true">
+    <Position X="102.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ASQwIhIBAAAAEIAAAQABECAgEMAEAEIAAQBwAAgACCo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\IceStorm_m.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CDirParticleEffect" Collapsed="true">
+    <Position X="104" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EKAEIQMAgC0AEMAQAQEgAAAAIAIAgMAwQgAwABgACAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\DirParticleEffect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CParticleEffect" Collapsed="true">
+    <Position X="109.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AaAAIAMAAOUAEIAQAQEgEAAAIAQAAMAwAAAwAFgCCAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\ParticleEffect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CBreathEffect" Collapsed="true">
+    <Position X="105.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACQQIhIDICAAkIAAAQgJJACAkMBEAEIEAAxwAAgACCo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\BreathEffect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLightingParticle" Collapsed="true">
+    <Position X="111" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAMAAQEAEIAAAQEgEAAEIAQAAEAQAQAwAFACAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\LightingParticle.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMagicCircleGlow" Collapsed="true">
+    <Position X="102.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACQRIAIAAAEAEIAAAQBBAAEAEMAEAEMAgAAwAAAAAKo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\MagicCircleGlow.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSwordTrailEffect" Collapsed="true">
+    <Position X="114.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AWQQIhYBAAEAEIAAAQABFAACEMBEAEICAARwAgAAACo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\SwordTrailEffect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CBreathParticle" Collapsed="true">
+    <Position X="107.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACQAIAIQABEBkIAAAQAigABAAAAAAEAAAABwAAAACAo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\BreathParticle.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSmokeParticle" Collapsed="true">
+    <Position X="116.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAIQAAEAkIAEAQEgAAAAAACAAEAQAQAyABAACAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\SmokeParticle.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCollisionTick" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACABgQgAAAAREIAMAAAAAAAAAABAAEAAEABggWAECAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\CollisionTick.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCollisionArrow" Collapsed="true">
+    <Position X="0.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAQIAICBAAAAIAEAQRgsAEAEQcAAEEBAAAggUENCII=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\CollisionArrow.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPortal" Collapsed="true">
+    <Position X="105.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CCAAAAAAAAAAAIAAAAAAAAAAAAAAAEAAACAgAQAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\Portal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CDebugCamera" Collapsed="true">
+    <Position X="102.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ADAAIAAgECAAAICAAEAAECAAAAAAAEAAAAAgAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\DebugCamera.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CDynamicCamera" Collapsed="true">
+    <Position X="114.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AXArMAg2ACAKQYCAEkQgkABEikaA4NAAEgIogkFEICI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\DynamicCamera.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CBossDecal" Collapsed="true">
+    <Position X="102.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QCQRIAIAAgEAEIAAAQABAAEAEMQAAEMAAAAwIAgACKo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\BossDecal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CBossGroundEffect" Collapsed="true">
+    <Position X="104" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QCQRIAIAAAEAEIAAASABAAUAEMAAAEMAAAAwAAgACKo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\BossGroundEffect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CRectDecal" Collapsed="true">
+    <Position X="119.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QCQRIAIAAAEAEIAAAQIBAAEAEMAAAFMAAAAwAAgACKo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\RectDecal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CDistortionDisk" Collapsed="true">
+    <Position X="105.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAQIAIAAAAABIAAAQAAAAEAEAAAAEAAAAAwAAEECAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\DistortionDisk.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CServerMath" Collapsed="true">
+    <Position X="111" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAEAAACAAAAEAAAAAAAAAAAIAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\ServerMath.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTonadoEffect" Collapsed="true">
+    <Position X="116.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACQQIhIAAAEQAIAAAQAAAAEAEAAAAEMAAAAwACwACKo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\TonadoEffect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTestOthers" Collapsed="true">
+    <Position X="105.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IKAwIAIiIAAABIQIAQAEAAEAEAAAAEAAAAAwBAAAgAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\TestOthers.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTestPlayer" Collapsed="true">
+    <Position X="107.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ILQwIgIiACAEBIQIAUBEAAEAEAAAAEAAAEAwBAAEAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\TestPlayer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="tagItemDesc" Collapsed="true">
+    <Position X="17.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAABAAACAABAAAAAAAAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>stdafx.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="tagFrame" Collapsed="true">
+    <Position X="5.5" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAABAAQAAAAAAAACAAAAAACAgAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="tagCollisionTickDesc" Collapsed="true">
+    <Position X="1.5" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAACAAAAAAAAAAAAACAAAAAgAAAAAAAAAAIBgAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="INSTANCE_POOL_DESC&lt;T1&gt;" Collapsed="true">
+    <Position X="109.25" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAIAAgAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\Template.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_login_ok" Collapsed="true">
+    <Position X="107.5" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAIACAAAAAIAAAAIAIAAAAAAABEBAAAAEABCwAIAEgA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_move" Collapsed="true">
+    <Position X="118" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAECAAsAAAAAAAAIAAAAAAAAABAAAAAAAAwAIAAgA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_attack" Collapsed="true">
+    <Position X="112.75" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAACAAsAAAAAAIAIAAAAAAAAABAAAAAAAAwAIAAgA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_enter" Collapsed="true">
+    <Position X="118" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAsACAAAAIAIAAAAAAQAAFAEAAAAAAwAIAAgA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_leave" Collapsed="true">
+    <Position X="102.25" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAABAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_stat_change" Collapsed="true">
+    <Position X="107.5" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAIAAAAAAAIAAAAAAICAAgAAAAADAAAAAABCAAAAAgA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_buff" Collapsed="true">
+    <Position X="114.5" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAIAACAAAAAAAAAAAIAAEAAAAAABCAAQAABCAAAIAQA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_chat" Collapsed="true">
+    <Position X="116.25" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAAFAAAAAAAAAAAAAiA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_login_fail" Collapsed="true">
+    <Position X="105.75" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAABAAAAAAAAAAAAAiA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_stance_change" Collapsed="true">
+    <Position X="105.75" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAIAIAAAAAAQAABAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_npc_enter" Collapsed="true">
+    <Position X="119.75" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAIIIAAAAAAAAABAAAAAAAAwAJAAgA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_monster_enter" Collapsed="true">
+    <Position X="112.75" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAACCAAAAAAAAAIAIAAAABAABABAAAAEAAAwAJAQgA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_monster_attack" Collapsed="true">
+    <Position X="109.25" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAsAAAAAAAAIAAAAAAAAABAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_monster_rushAttack" Collapsed="true">
+    <Position X="116.25" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAsAAAAAAAAIAAAAAAAAABAAAAAAAAwAIAAgA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_monster_knockback" Collapsed="true">
+    <Position X="114.5" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAIAAAAAAAAABAAAAAAAAwAIAAgA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_stage_change" Collapsed="true">
+    <Position X="104" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAABAIAAAAAAAAABAAAAAAAAwAIAAgA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_animationIndex" Collapsed="true">
+    <Position X="111" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAABAAAAAAEAAAAAAgA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_suggest_party" Collapsed="true">
+    <Position X="109.25" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAABAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_enter_party" Collapsed="true">
+    <Position X="119.75" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAIAAAAAAAAAAAAIAIAAAAAAAAAFAAAAAABCAAAAAgA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_update_party" Collapsed="true">
+    <Position X="114.5" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAIAAAAAAAAAAAAAAIAAAAAAAAABAAAAAABCAAAAAgA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_update_inventory" Collapsed="true">
+    <Position X="112.75" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAABIAAAAAAEAABAAAAAAACAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_update_equipment" Collapsed="true">
+    <Position X="111" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAIAAAAABAAAABAAAIAAAgAAEAADAAAAAABCAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_load_equipment" Collapsed="true">
+    <Position X="104" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAABAAAIAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_potion" Collapsed="true">
+    <Position X="102.25" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAABIIAAAAAEAABAAAAAAACAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sc_packet_monster_effect" Collapsed="true">
+    <Position X="111" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAIAAAAAAAAABAAAAAAAAgAIAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="cs_packet_login" Collapsed="true">
+    <Position X="105.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAIAAAAAAACCFAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="cs_packet_move" Collapsed="true">
+    <Position X="111" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAECAAsAAAAAAAAIAAAAAAAAABAAAAAAAAwAIAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="cs_packet_move_stop" Collapsed="true">
+    <Position X="112.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAsAAAAAAAAIAAAAAAAAABAAAAAAAAwAIAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="cs_packet_stance_change" Collapsed="true">
+    <Position X="104" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAIAAAAAAQAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="cs_packet_attack" Collapsed="true">
+    <Position X="102.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAACAAsAAAAAAAAIAAAAAAAAABAAAAAAAAwAIAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="cs_packet_player_collision" Collapsed="true">
+    <Position X="114.5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAgAAAAIAAAAAAAIABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="cs_packet_chat" Collapsed="true">
+    <Position X="104" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAABAAAAAAAAAAAAACA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="cs_packet_logout" Collapsed="true">
+    <Position X="107.5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAIAAAAAAAKAAAAAAIAAAgAAAAEDAAAAAABCwAIAAgA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="cs_packet_teleport" Collapsed="true">
+    <Position X="107.5" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAABAAAAAAAAwAIAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="cs_packet_stage_change" Collapsed="true">
+    <Position X="102.25" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAABAIAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="cs_packet_suggest_party" Collapsed="true">
+    <Position X="105.75" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAABAAAAAAAAAACAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="cs_packet_respond_party" Collapsed="true">
+    <Position X="118" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABICAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="cs_packet_manage_inventory" Collapsed="true">
+    <Position X="109.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAIgAAAAAAAABAAAAAAACAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="cs_packet_shop" Collapsed="true">
+    <Position X="119.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAQAAAAAAAAIAgAIgAABABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="cs_packet_potion" Collapsed="true">
+    <Position X="116.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAIAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\protocol.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="tagUIChildState" Collapsed="true">
+    <Position X="13.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAABBAAAQAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\GameUIChild.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="tagUIRootState" Collapsed="true">
+    <Position X="13.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAABBAAAQAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\GameUIRoot.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="tagDmgTextureDesc" Collapsed="true">
+    <Position X="9.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAABAgAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\DmgFont.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="tagCameraShakingDesc" Collapsed="true">
+    <Position X="5.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AiAAAAAAUAAAAAAAAAEAAAAAAQAAAAABAAAIACAAIAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\DynamicCamera.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="tagCameraZoomDesc" Collapsed="true">
+    <Position X="1.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAEAAAAAGAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\DynamicCamera.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="tagCameraOriginDesc" Collapsed="true">
+    <Position X="9.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAEAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\DynamicCamera.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="ITEM_DESC" Collapsed="true">
+    <Position X="17.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stdafx.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="FRAME" Collapsed="true">
+    <Position X="5.5" Y="17.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="COLLISION_TICK_DESC" Collapsed="true">
+    <Position X="1.5" Y="17.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="_bool" Collapsed="true">
+    <Position X="102.25" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="_byte" Collapsed="true">
+    <Position X="104" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="_ubyte" Collapsed="true">
+    <Position X="118" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="_tchar" Collapsed="true">
+    <Position X="116.25" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="_short" Collapsed="true">
+    <Position X="114.5" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="_ushort" Collapsed="true">
+    <Position X="104" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="_int" Collapsed="true">
+    <Position X="109.25" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="_uint" Collapsed="true">
+    <Position X="119.75" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="_long" Collapsed="true">
+    <Position X="111" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="_ulong" Collapsed="true">
+    <Position X="102.25" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="_float" Collapsed="true">
+    <Position X="107.5" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="_double" Collapsed="true">
+    <Position X="105.75" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="_vector" Collapsed="true">
+    <Position X="105.75" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="_matrix" Collapsed="true">
+    <Position X="112.75" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="UI_CHILD_STATE" Collapsed="true">
+    <Position X="13.5" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\GameUIChild.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="UI_ROOT_STATE" Collapsed="true">
+    <Position X="13.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\GameUIRoot.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="DMG_TEXTURE_DESC" Collapsed="true">
+    <Position X="9.5" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\DmgFont.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="CAMERA_SHAKING_DESC" Collapsed="true">
+    <Position X="5.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\DynamicCamera.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="CAMERA_ZOOM_DESC" Collapsed="true">
+    <Position X="1.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\DynamicCamera.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="CAMERA_ORIGIN_DESC" Collapsed="true">
+    <Position X="9.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\DynamicCamera.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="DIRECTION" Collapsed="true">
+    <Position X="118" Y="17.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAEAAAAAAAAAACAAAAAAQAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\TestCollisonObject.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MOVE" Collapsed="true">
+    <Position X="107.5" Y="18.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Code\TestCollisonObject.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MVKEY" Collapsed="true">
+    <Position X="109.25" Y="18.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAIAAAAgAAAQAAAAAAAAAkAAAIACCAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SHADOW_TYPE" Collapsed="true">
+    <Position X="118" Y="18.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAIAAAAAAAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EVENT_TYPE" Collapsed="true">
+    <Position X="102.25" Y="18.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAEAAAIAAABAAAQQAAAAAAAgAAIAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MONSTER" Collapsed="true">
+    <Position X="105.75" Y="18.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAACAAAAAABAAQAgAAAAACAAEAACA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NPC" Collapsed="true">
+    <Position X="111" Y="18.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ARROW_TYPE" Collapsed="true">
+    <Position X="109.25" Y="17.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAQAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAg=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ARROW_POOL_TYPE" Collapsed="true">
+    <Position X="107.5" Y="17.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAJAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PARTY_REQUEST_STATE" Collapsed="true">
+    <Position X="112.75" Y="18.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAEAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PARTY_SYSTEM_MESSAGE" Collapsed="true">
+    <Position X="114.5" Y="18.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAUAAAAAAQAAAAAAAAEAAAAAAAAAAg=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CHATTING_CURSOR_MOVE" Collapsed="true">
+    <Position X="114.5" Y="17.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAEAAAAAAEAAAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="STORE_STATE" Collapsed="true">
+    <Position X="105.75" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAII=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ITEM_GRADE" Collapsed="true">
+    <Position X="104" Y="18.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAIAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DMG_TYPE" Collapsed="true">
+    <Position X="119.75" Y="17.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAACAAAAAAAAAAAAECAAAAAAQA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CAMERA_ZOOM" Collapsed="true">
+    <Position X="112.75" Y="17.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAIAAAAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CAMERA_STATE" Collapsed="true">
+    <Position X="111" Y="17.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IABAAAAACAAwAAAAAAAAAYEAgAgAAAAAQCAAkIAAQAE=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="QUEST_TYPE" Collapsed="true">
+    <Position X="116.25" Y="18.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAGAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Crab::ANIM_CRAB" Collapsed="true">
+    <Position X="118" Y="16" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAMAAAAAABEAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\MonsterAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Monkey::ANIM_MONKEY" Collapsed="true">
+    <Position X="112.75" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAMggAAABBEAAAAAAAAAAAAAAQAAAAIAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\MonsterAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Cloder::ANIM_CLODER" Collapsed="true">
+    <Position X="116.25" Y="16" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEDAAAAMAAAAAABEAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\MonsterAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DrownedSailor::ANIM_SAILOR" Collapsed="true">
+    <Position X="102.25" Y="17.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAEAAAAAMogAAAABEgAAAAAABAAAAAAQAAAAIAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\MonsterAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="GiantBeetle::ANIM_GIANTBEETLE" Collapsed="true">
+    <Position X="102.25" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ALAAAAEAAAAAIAAAAAABEgAAIAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\MonsterAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="GiantMonkey::ANIM_GIANTMONKEY" Collapsed="true">
+    <Position X="104" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAQAEAAAAAIggAAAghEAAAAAAAAAAAAAA0AAIAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\MonsterAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CraftyArachne::ANIM_CRAFTYARACHNE" Collapsed="true">
+    <Position X="119.75" Y="16" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ADAAAAEAAAAAIIAAAAABEgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\MonsterAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Vergos::ANIM_VERGOS" Collapsed="true">
+    <Position X="104" Y="17.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAACFAAAAIAoABAAIBkAEAAAAAAAAAAAAAAAAgAQA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\MonsterAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Lakan::ANIM_LAKAN" Collapsed="true">
+    <Position X="111" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAEAIAAAAAAAAAAAEAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\MonsterAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PrionBerserker::ANIM_PRIONBERSERKER" Collapsed="true">
+    <Position X="118" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\MonsterAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PrionBerserkerBoss::ANIM_PRIONBERSERKERBOSS" Collapsed="true">
+    <Position X="119.75" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAEAAAAACAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\MonsterAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CinemaVergos::ANIM_CINEMAVERGOS" Collapsed="true">
+    <Position X="114.5" Y="16" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAkAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\MonsterAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Aman_boy::ANIM_AMAN_BOY" Collapsed="true">
+    <Position X="102.25" Y="16" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAIAQAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\NPCAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Cat::ANIM_CAT" Collapsed="true">
+    <Position X="111" Y="16" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAIAQAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\NPCAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Chicken::ANIM_CHICKEN" Collapsed="true">
+    <Position X="112.75" Y="16" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAIAQAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\NPCAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Highelf_girl::ANIM_HIGHELF_GIRL" Collapsed="true">
+    <Position X="105.75" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAIAQBAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\NPCAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Human_boy::ANIM_HUMAN_BOY" Collapsed="true">
+    <Position X="107.5" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAIAQBAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\NPCAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Human_girl::ANIM_HUMAN_GIRL" Collapsed="true">
+    <Position X="109.25" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAIAQBAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\NPCAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Popori_boy::ANIM_POPORI_BOY" Collapsed="true">
+    <Position X="114.5" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAQAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\NPCAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NPC_Villagers::ANIM_VILLAGERS" Collapsed="true">
+    <Position X="105.75" Y="17.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\NPCAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Baraka_M_Extractor::ANIM_BARAKA_EXTRACTOR" Collapsed="true">
+    <Position X="104" Y="16" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\NPCAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Baraka_M_Merchant::ANIM_BARAKA_MERCHANT" Collapsed="true">
+    <Position X="105.75" Y="16" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAIAAAAAAAEAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\NPCAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Baraka_M_Mystellium::ANIM_BARAKA_MYSTELLIUM" Collapsed="true">
+    <Position X="107.5" Y="16" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAIAAAAAAAEAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\NPCAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Popori_M_Merchant::ANIM_POPORI_MERCHANT" Collapsed="true">
+    <Position X="116.25" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAIAAAAAAAEAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\NPCAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Castanic_M_Lsmith::ANIM_CASTANIC_LSMITH" Collapsed="true">
+    <Position X="109.25" Y="16" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAIAAAAAAAEAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameServer\Server\Header\NPCAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Gladiator::STANCE" Collapsed="true">
+    <Position X="119.75" Y="18.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQEAAAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\GladiatorAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Gladiator::COMBOCNT" Collapsed="true">
+    <Position X="116.25" Y="17.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAA4AkAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\GladiatorAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Archer::STANCE" Collapsed="true">
+    <Position X="102.25" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQEAAAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\ArcherAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Priest::STANCE" Collapsed="true">
+    <Position X="104" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQEAAAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Client\Header\PriestAnimation.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>

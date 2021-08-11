@@ -218,6 +218,7 @@ void CDynamicCamera::SetUp_DynamicCameraFromTarget(const _float& fTimeDelta)
 		Engine::CGameObject::Update_GameObject(fTimeDelta);
 
 		m_tCameraInfo.vEye.TransformCoord(_vec3(0.0f, 0.0f, -1.0f), m_pTransCom->m_matWorld);
+
 		if (m_tCameraInfo.vEye.y < 1.0f)
 			m_tCameraInfo.vEye.y = 1.0f;
 
@@ -951,18 +952,12 @@ void CDynamicCamera::Key_Input(const _float & fTimeDelta)
 	_matrix matWorld = INIT_MATRIX;
 	matWorld = MATRIX_INVERSE(m_tCameraInfo.matView);
 
-	/*__________________________________________________________________________________________________________
-	[ 마우스 좌, 우 이동 ]
-	____________________________________________________________________________________________________________*/
 	_long dwMouseMoveX = 0;
 	if (dwMouseMoveX = Engine::GetDIMouseMove(Engine::MOUSEMOVESTATE::DIMS_X))
 	{
 		m_pTransCom->m_vAngle.y += static_cast<_float>(dwMouseMoveX) * (1.0f + m_fCameraMoveResponsiveness.x) * fTimeDelta;
 	}
 
-	/*__________________________________________________________________________________________________________
-	[ 마우스 상, 하 이동 ]
-	___________________________________________________________________________________________________________*/
 	_long dwMouseMoveY = 0;
 	if (dwMouseMoveY = Engine::GetDIMouseMove(Engine::MOUSEMOVESTATE::DIMS_Y))
 	{
@@ -972,9 +967,6 @@ void CDynamicCamera::Key_Input(const _float & fTimeDelta)
 			m_fTarget_DistFromTarget += (static_cast<_float>(dwMouseMoveY) / m_fCameraMoveResponsiveness.z) * fTimeDelta;
 	}
 
-	/*__________________________________________________________________________________________________________
-	[ 마우수 휠 버튼 처리. ]
-	___________________________________________________________________________________________________________*/
 	_long dwMouseMoveZ = 0;
 	if (dwMouseMoveZ = Engine::GetDIMouseMove(Engine::MOUSEMOVESTATE::DIMS_Z))
 	{

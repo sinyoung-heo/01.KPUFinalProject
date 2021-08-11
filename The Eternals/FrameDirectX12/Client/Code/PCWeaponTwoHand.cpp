@@ -102,7 +102,6 @@ _int CPCWeaponTwoHand::Update_GameObject(const _float& fTimeDelta)
 	______________________________________________________________________*/
 	Engine::CGameObject::Update_GameObject(fTimeDelta);
 
-	// Upate BoneMatrix
 	if (nullptr != m_pHierarchyDesc && nullptr != m_pParentMatrix)
 	{
 		m_matBoneFinalTransform = (m_pHierarchyDesc->matScale * 

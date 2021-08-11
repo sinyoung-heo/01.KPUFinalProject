@@ -1,0 +1,1631 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CShaderMgr" Collapsed="true">
+    <Position X="9.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAIIACAgAAACAAAAIABAAAAEIAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ShaderMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCollisionMgr" Collapsed="true">
+    <Position X="20.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABABAAAAACAAAAAAAAAhQYAAAAAAAAACAAgAQAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\CollisionMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CDescriptorHeapMgr" Collapsed="true">
+    <Position X="36.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAQgAAAAAAIAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\DescriptorHeapMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSoundMgr" Collapsed="true">
+    <Position X="40.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAQAAAAAgCAAAEAQAAQCAAAAAkABCAAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\SoundMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CFont" Collapsed="true">
+    <Position X="142" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAMAAAABAAAICBQEAAICBCAIAAwEAgEAAigAAABAM=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\Font.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTimerMgr" Collapsed="true">
+    <Position X="29.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAFAAAAAAAAAAAAAAAAAAgAAAAAAABAAAAIAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\TimeMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTimer" Collapsed="true">
+    <Position X="34" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACIgABAAGAAQAAABAAACAAAAAAAgAEAAAAAAAAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\Timer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CFrame" Collapsed="true">
+    <Position X="38.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAIAAAAAAAAEAAAAAAAAACAAAAQAEAAAAAAAAAAAEI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\Frame.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CFrameMgr" Collapsed="true">
+    <Position X="43" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAQAAEAAAgAAAAAAEI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\FrameMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CDirectInput" Collapsed="true">
+    <Position X="47.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAIAIAEAAJiAAAAAAAAA0AABDAEAwAMAANAFEAYQAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\DirectInput.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CDirectSound" Collapsed="true">
+    <Position X="146.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AICAAMAAAAAAAAAKAAAACIAAIGWAAAAAAIIAAAgJ8UI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\DirectSound.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CGraphicDevice" Collapsed="true">
+    <Position X="11.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>DAAIGjYmIIBgZgKQwRYCApAIQ6qAkQ4GAVSBkJBCAJo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\GraphicDevice.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLight" Collapsed="true">
+    <Position X="16" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAgQCAAAgAmAAARAQSAAAAAAAxSCSEEAAAAAAAAAAAY=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\Light.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLightMgr" Collapsed="true">
+    <Position X="18.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAFEAAgAAAAAIAQAQAEAAAAAAABAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\LightMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CRenderer" Collapsed="true">
+    <Position X="22.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AwgOkEbBAsY2bbCX4mg51XKupRESAe1FLAJUvCE+BM4=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\Renderer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CManagement" Collapsed="true">
+    <Position X="25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAIAAAICIQAAAAAAAAACAAAAAAAABAAQAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\Management.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CScene" Collapsed="true">
+    <Position X="31.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQACACAAAgACIACAAAAQACAAAAAAAABAACAAo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\Scene.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLayer" Collapsed="true">
+    <Position X="45.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAARIAgIABgAAAAAAAICBAAAAAAFAAAAAABAgQAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\Layer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CObjectMgr" Collapsed="true">
+    <Position X="49.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CQIAAQSAgICBAUAABIBAIUBAEAAAAAAAAABABAAQQAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ObjectMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CInfo" Collapsed="true">
+    <Position X="110.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ggAAAAAAAAAAQgAAAAoQEAIAAAEAAEIAIAAAAgCIABI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\Info.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CVIMesh" Collapsed="true">
+    <Position X="112.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAQAAEBCAARFwHmFRCjOgFGAC0GQECEBABAiAF4gxM=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\VIMesh.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CAniCtrl" Collapsed="true">
+    <Position X="52" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>YQgQgAAEAIACAx7IIyAASAMCIAJhAEQJBSARAAAAQDI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\AniCtrl.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMesh" Collapsed="true">
+    <Position X="101.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>YAAAAAAECAADEwDAMAAACABEAC4mClAJBCBBCABogDI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\Mesh.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CRcCol" Collapsed="true">
+    <Position X="115" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAQAAIAggAAAAAEAAAAAAAAAAABI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\RcCol.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CRcTex" Collapsed="true">
+    <Position X="117.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAQAAAAAAAAAQAAIAAAAAQAAEAAAAAAAAAAABI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\RcTex.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCubeCol" Collapsed="true">
+    <Position X="121.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAQAAIAAAAAAABEAQAAAAAAAAABI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\CubeCol.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCubeTex" Collapsed="true">
+    <Position X="124" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAEAAAAAAAAACAAQAAIAAAAAAAAEAAAAAAAAAAABI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\CubeTex.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTrailTex" Collapsed="true">
+    <Position X="128.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAEQAAYAAAAAAAAEAQgAAAAAAAABI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\TrailTex.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CScreenTex" Collapsed="true">
+    <Position X="133" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAIAQAAYAAAAAAAAEAAAAAAAAAAABI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ScreenTex.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTerrainTex" Collapsed="true">
+    <Position X="135.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEKCEAAAAIAQAAAgAwAAoACAAAACAEAAAAAAAAAAABI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\TerrainTex.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCoordinateCol" Collapsed="true">
+    <Position X="137.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAFAAAAAAAAAACAQAAIAAAAAAAAEAAAAAAAAAAABI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\CoordinateCol.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CVIBuffer" Collapsed="true">
+    <Position X="126.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABECEAAAAQAAAABwCAKAECAAAAREKDAACAACIBARI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\VIBuffer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShaderDynamicMeshEffect" Collapsed="true">
+    <Position X="92.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABEBAEACAAAAEQAEAAAAAABDAAAAAEDAAAAAAQQACBo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ShaderDynamicMeshEffect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShaderMesh" Collapsed="true">
+    <Position X="97" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABEBAEACAAAAEQIEAAAAAABDAACAAEBAAAAAAQQACBo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ShaderMesh.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShaderMeshEffect" Collapsed="true">
+    <Position X="54.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEBAAAAAAAAEQBEAAAAAABCAAAAAEBQAAAAAQQACBo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ShaderMeshEffect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShaderMeshInstancing" Collapsed="true">
+    <Position X="58.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAUARQIAAEAAQAgAAAABAAAAkAAAAAEAABQQAKAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ShaderMeshInstancing.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShaderEdge" Collapsed="true">
+    <Position X="63.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABERAAAAAACAEAAAABAAAAAABEAAAEAAAAAQAQQACBI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ShaderEdge.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShaderBlur" Collapsed="true">
+    <Position X="67.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAERAAAAAACAEAAAAAAAAAAAREAAAEAAAAAQAQQACBI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ShaderBlur.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShaderSSAO" Collapsed="true">
+    <Position X="70" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAERAAAAAACAEAAEAAAAAAAABEAAAMAAAAAQAQQACBI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ShaderSSAO.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShaderColor" Collapsed="true">
+    <Position X="72.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAEAAAAAAAAwAAAEAAAEABAAAQAQSACBI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ShaderColor.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShaderColorInstancing" Collapsed="true">
+    <Position X="74.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAABQABACAAEAQQAgAAAgAAAAQ0AABAAEAABQQBCAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ShaderColorInstancing.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShaderLighting" Collapsed="true">
+    <Position X="76.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAERAAAAAEAAEAAAAAAAAAAABMAAAEgAAAAQAQQACBI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ShaderLighting.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShaderLightingInstancing" Collapsed="true">
+    <Position X="79" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAQAQABAMEAEIQQAgAAAAAAAAQkCAAAAEAABQQACAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ShaderLightingInstancing.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShaderBlend" Collapsed="true">
+    <Position X="81.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAERAAAAAACAEAAAAAAABAAABEAAQEAAAAAYAQQACBI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ShaderBlend.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShaderSkyBox" Collapsed="true">
+    <Position X="83.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEBAgAAACAAEQAAAAAAAAAAAAAEAEAAAAQAAQQACBI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ShaderSkyBox.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShaderShadow" Collapsed="true">
+    <Position X="85.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEBABAAAAAAEQAAAAAAACAAAEADAEBAAAAQAQQACBo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ShaderShadow.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShaderShadowInstancing" Collapsed="true">
+    <Position X="88" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABA0ABAIAAEAAQAgAAAAAAAgAmAAAAAAAABQQAKAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ShaderShadowInstancing.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShaderTexture" Collapsed="true">
+    <Position X="90.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEBAAIAAAAAERAAAAAAAAAABAAAAEQAAAAAAQQACBI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ShaderTexture.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShaderTextureInstancing" Collapsed="true">
+    <Position X="94.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAQABAAAAEBAQEgAAAAAAAAAkAAAAAAAABQRAKAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ShaderTextureInstancing.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShaderNPathDir" Collapsed="true">
+    <Position X="99.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAERAAAACACAEAAAAAAAAAIABEAAAEAAAAAQAQQQKBI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ShaderNPathDir.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShaderLuminance" Collapsed="true">
+    <Position X="56.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAERBAAAAACAEAAAAAAAAIAABEAAAEAAAAAQAQQACBI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ShaderLuminance.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShaderAddEffect" Collapsed="true">
+    <Position X="61" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAERAEAAAACAEAAAAAAAQAAABEAAAEAAAAAQAQQACBI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ShaderAddEffect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShaderDownSampling" Collapsed="true">
+    <Position X="65.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAERAAAAAACAEAAAEAAAAAAQBEAAAEAAAAAQAQQACBI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ShaderDownSampling.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CShader" Collapsed="true">
+    <Position X="76.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAmDAJIggCACEQABIIAACABAAECAgCCAAAIQAYYCCBo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\Shader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTexture" Collapsed="true">
+    <Position X="103.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAEAAAAgAgAACAAIEAAQAAAEEAAIBACAAAAho=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\Texture.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CLine" Collapsed="true">
+    <Position X="27.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAQAAAAAAAAAAAAACAABAABEAAYABACAAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\Line.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCell" Collapsed="true">
+    <Position X="119.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQgEAgEAQAAAACAAgREQBBAAABEABEAAAABQCABAAQI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\Cell.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CNaviMesh" Collapsed="true">
+    <Position X="106" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAQAAAYAAAQAAAAASSAAAAAAAAAEABAAEAAAQAABI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\NaviMesh.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CColliderBox" Collapsed="true">
+    <Position X="126.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BBQAMAIgAIAAAICEAQAYJUBJIAAAAEAEgQgQIQAsBFY=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ColliderBox.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CColliderSphere" Collapsed="true">
+    <Position X="130.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAMAIgAAAgAICAAQAYJkBAAAAAAEAAgQgQIQAIABI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ColliderSphere.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTransform" Collapsed="true">
+    <Position X="108.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAABAAAAAiAggQAAQABAAABEAAEAEAAAAgAAAABI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\Transform.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CComponent" Collapsed="true">
+    <Position X="94.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAQCAQBAEAAQAAAAAAAAAAAAAAABI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\Component.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CComponentMgr" Collapsed="true">
+    <Position X="139.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAAAAAAAAAAEAAIAAAQAAAAAAIQAAABI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\ComponentMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCamera" Collapsed="true">
+    <Position X="144.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CCIADAAEAAdEAJAQCRAACCBAAAAAICSACFiAAQAAgCI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\Camera.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CGameObject" Collapsed="true">
+    <Position X="143.25" Y="2.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>OLD2fqvxU1FSyfglwvTlWwGuI+cRCQM6HzX2b1SJwHo=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\GameObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CRenderTarget" Collapsed="true">
+    <Position X="13.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIEcQAIAAFsABwAgASCQAAEQAQEAAEAyAEgSgAAAIgI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\RenderTarget.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::CTag_Finder" Collapsed="true">
+    <Position X="152.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAEAAAAAAAAEAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Functor.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::CDeleteObj" Collapsed="true">
+    <Position X="150.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEgAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Functor.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::CDeleteMap" Collapsed="true">
+    <Position X="149" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAEEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Functor.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::CUploadBuffer&lt;T&gt;" Collapsed="true">
+    <Position X="154.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAIIgAAAAAAAABAAAQQQAAAGAQAAAAIhAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Template.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::CBase" Collapsed="true">
+    <Position X="78" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACBAAAEAAAAAAAACAAAAAAAAAAABAAAAI=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\Base.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="DDS_PIXELFORMAT" Collapsed="true">
+    <Position X="154.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAQAAAIAAAAAAAAAAAAAAAAAAACAFIAQ=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\DDSTextureLoader.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="DDS_HEADER" Collapsed="true">
+    <Position X="150.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAASAAAAAAAgQIQIAAIAAEgAAAAAAAAAAQIAAAAAQ=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\DDSTextureLoader.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="DDS_HEADER_DXT10" Collapsed="true">
+    <Position X="152.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAgAAAAAAACAAAAAAAAAAAQAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\DDSTextureLoader.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_DEFAULT" Collapsed="true">
+    <Position X="156" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_RECT" Collapsed="true">
+    <Position X="149" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAAAgAAAAAEAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_VIEWPORT" Collapsed="true">
+    <Position X="149" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAABAAIAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_BOX" Collapsed="true">
+    <Position X="150.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAACAAAAQAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_DEPTH_STENCIL_DESC" Collapsed="true">
+    <Position X="157.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABACAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_BLEND_DESC" Collapsed="true">
+    <Position X="149" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAAAAABAAAAIAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_RASTERIZER_DESC" Collapsed="true">
+    <Position X="159.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAAAAAAIAAAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_RESOURCE_ALLOCATION_INFO" Collapsed="true">
+    <Position X="150.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_HEAP_PROPERTIES" Collapsed="true">
+    <Position X="154.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAABAAAAAAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_HEAP_DESC" Collapsed="true">
+    <Position X="152.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAIAQAAAAAIAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_CLEAR_VALUE" Collapsed="true">
+    <Position X="152.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAABAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_RANGE" Collapsed="true">
+    <Position X="157.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAgBAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_SHADER_BYTECODE" Collapsed="true">
+    <Position X="157.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_TILED_RESOURCE_COORDINATE" Collapsed="true">
+    <Position X="157.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAIAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_TILE_REGION_SIZE" Collapsed="true">
+    <Position X="154.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_SUBRESOURCE_TILING" Collapsed="true">
+    <Position X="150.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_TILE_SHAPE" Collapsed="true">
+    <Position X="156" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAIAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_RESOURCE_BARRIER" Collapsed="true">
+    <Position X="152.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAQAIAAAAAAAABAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_PACKED_MIP_INFO" Collapsed="true">
+    <Position X="156" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_SUBRESOURCE_FOOTPRINT" Collapsed="true">
+    <Position X="149" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_TEXTURE_COPY_LOCATION" Collapsed="true">
+    <Position X="152.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_DESCRIPTOR_RANGE" Collapsed="true">
+    <Position X="159.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQACAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_ROOT_DESCRIPTOR_TABLE" Collapsed="true">
+    <Position X="159.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_ROOT_CONSTANTS" Collapsed="true">
+    <Position X="156" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAACAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_ROOT_DESCRIPTOR" Collapsed="true">
+    <Position X="157.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_ROOT_PARAMETER" Collapsed="true">
+    <Position X="152.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIQAAAAAAAACAAAAAAAAAAAECAAAAAAgAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_STATIC_SAMPLER_DESC" Collapsed="true">
+    <Position X="159.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_ROOT_SIGNATURE_DESC" Collapsed="true">
+    <Position X="156" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_DESCRIPTOR_RANGE1" Collapsed="true">
+    <Position X="149" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAgA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_ROOT_DESCRIPTOR_TABLE1" Collapsed="true">
+    <Position X="149" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_ROOT_DESCRIPTOR1" Collapsed="true">
+    <Position X="150.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_ROOT_PARAMETER1" Collapsed="true">
+    <Position X="154.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAABAAACAAAAAAAAAAAECAAAAAAgAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC" Collapsed="true">
+    <Position X="159.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAQAAAIAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_CPU_DESCRIPTOR_HANDLE" Collapsed="true">
+    <Position X="154.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAARAAAAAAAAAAAAAgAAAAgAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_GPU_DESCRIPTOR_HANDLE" Collapsed="true">
+    <Position X="150.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAARAAAAAAAAAAAAAgAAAAgAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CD3DX12_RESOURCE_DESC" Collapsed="true">
+    <Position X="154.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIA0AAAAAgACAAAAAgCAAAAAAAgAAAAAAAAQQA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\d3dx12.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="tagVector2" Collapsed="true">
+    <Position X="30.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACCAAAAEAAAAYAACAAgQAIAAAAgAAAEBAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="tagVector3" Collapsed="true">
+    <Position X="7.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACCAAAAEAAgAUAACCEgQAIAgAEkAAAEBAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="tagVector4" Collapsed="true">
+    <Position X="3.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIACSAAAAUAAAAQAgCAAgAAAAAAAgAAAEBAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="WaveHeaderType" Collapsed="true">
+    <Position X="11.5" Y="28.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAYAAAAAAAgAABAECAACAAAEAAAgAQAAAAAEACA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\DirectSound.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="tag3DSound" Collapsed="true">
+    <Position X="3.5" Y="27.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAAAAAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\DirectSound.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="ThreadParameter" Collapsed="true">
+    <Position X="159.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\Renderer.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="tagHierarchyDesc" Collapsed="true">
+    <Position X="27.5" Y="25.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAADAAAEADAAAAAgAAAAHAAAAAAAAAAIAAg=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\AniCtrl.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="`anonymous-namespace'::handle_closer" Collapsed="true">
+    <Position X="156" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\DDSTextureLoader.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagCameraDesc" Collapsed="true">
+    <Position X="27.5" Y="15.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAIAAAAAAAAAAAgAQAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagPerspectiveDesc" Collapsed="true">
+    <Position X="27.5" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABQAAABAAAAAAAAAAAAgAAAAACAAAAAAAAAAIA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagOrthographicDesc" Collapsed="true">
+    <Position X="23.5" Y="25.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAABAAAAAAAAAAAAAAAAAAGAAAAAACCAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagVertexColor" Collapsed="true">
+    <Position X="19.5" Y="25.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAEAAAAAAAAAACAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagVertexTexture" Collapsed="true">
+    <Position X="15.5" Y="25.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagVertexTextureNormal" Collapsed="true">
+    <Position X="7.5" Y="25.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAgAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAACAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagVertexCube" Collapsed="true">
+    <Position X="26.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAGAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagVertexScreen" Collapsed="true">
+    <Position X="11.5" Y="23.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACCAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagVertexMesh" Collapsed="true">
+    <Position X="23.5" Y="20.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAgCABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAQ=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagMeshEntry" Collapsed="true">
+    <Position X="23.5" Y="15.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAQAAEAAAAAAgQAAAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagBoneDesc" Collapsed="true">
+    <Position X="23.5" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAgAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagSkinningMatrix" Collapsed="true">
+    <Position X="3.5" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAABAAAAAABAAAICAAAAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagSubmeshGeometry" Collapsed="true">
+    <Position X="22.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAABAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagD3DLight" Collapsed="true">
+    <Position X="19.5" Y="20.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAACAAgAiAAAAAAAAAAAAAAAQAAAEAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagShadowDesc" Collapsed="true">
+    <Position X="15.5" Y="20.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAIAAAAQBAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagInstancingDesc" Collapsed="true">
+    <Position X="7.5" Y="20.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagConstantBufferCameraDesc" Collapsed="true">
+    <Position X="19.5" Y="15.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gABAAAABACABAAAAAAAAAAAIAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagConstantBufferShaderColor" Collapsed="true">
+    <Position X="11.5" Y="18.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagConstantBufferShaderTexture" Collapsed="true">
+    <Position X="19.5" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAABACAAgAAAAAAAAACAABAEAACAAAAAACA8AAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagConstantBufferShaderSkyBox" Collapsed="true">
+    <Position X="18.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagConstantBufferShaderMesh" Collapsed="true">
+    <Position X="3.5" Y="17.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gEIAAAABACAAAIAQAAABAAAgUAAEAAIQAAAQAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagConstantBufferShaderMeshInstancing" Collapsed="true">
+    <Position X="15.5" Y="15.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gEJAAAABACABAIAAAAABAAAgUAAEAAIQAAAQAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagConstantBufferShaderDynamicMeshInstancing" Collapsed="true">
+    <Position X="7.5" Y="15.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEBABAAAAAABAIAICAABAAAAAAAEAAAAAAABAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagCBuffer" Collapsed="true">
+    <Position X="15.5" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagShaderInformation" Collapsed="true">
+    <Position X="11.5" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QEAAAAAIAAACAAAAAAAAAAAAAAAAAAACAQAAAAABAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagConstantBufferShaderShadow" Collapsed="true">
+    <Position X="14.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gABAAAABACABAAAAAAAAAAAAAAAEAAAAAAAAAABAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagConstnatBufferSkinningMatrix" Collapsed="true">
+    <Position X="3.5" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAABAAAAAABAAAICAAAAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagConstantBufferShaderLighting" Collapsed="true">
+    <Position X="11.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAIBAAAAgAQgAAAAAIQAAAAAAAAAAAAAABAEA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagPartyMember" Collapsed="true">
+    <Position X="7.5" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAIBAAAAAgEAAAAAAAAAAAEAACAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::tagSkillCoolDownDesc" Collapsed="true">
+    <Position X="3.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAACAAAAAgAgAAAAAAAAAAAIQAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::LINEAR_INTERPOLATION_DESC&lt;T1&gt;" Collapsed="true">
+    <Position X="157.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAgAAAAAAAAAAAQAAAAAAAIgAAAAAAQ=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Template.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="Engine::LIGHTTYPE" Collapsed="true">
+    <Position X="27.5" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Enum.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="_vec2" Collapsed="true">
+    <Position X="30.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="_vec3" Collapsed="true">
+    <Position X="10.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="_rgb" Collapsed="true">
+    <Position X="7.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="_vec4" Collapsed="true">
+    <Position X="6.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="_rgba" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="_rect" Collapsed="true">
+    <Position X="3.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="_plane" Collapsed="true">
+    <Position X="3.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::CAMERA_DESC" Collapsed="true">
+    <Position X="27.5" Y="17.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::PROJ_DESC" Collapsed="true">
+    <Position X="27.5" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::ORTHO_DESC" Collapsed="true">
+    <Position X="23.5" Y="27.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::VTXCOL" Collapsed="true">
+    <Position X="19.5" Y="27.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::VTXTEX" Collapsed="true">
+    <Position X="15.5" Y="27.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::VTXTEX_NORMAL" Collapsed="true">
+    <Position X="7.5" Y="27.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::VTXCUBE" Collapsed="true">
+    <Position X="26.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::VTXSCREEN" Collapsed="true">
+    <Position X="11.5" Y="25.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::VTXMESH" Collapsed="true">
+    <Position X="23.5" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::MESH_ENTRY" Collapsed="true">
+    <Position X="23.5" Y="17.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::BONE_DESC" Collapsed="true">
+    <Position X="23.5" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::SKINNING_MATRIX" Collapsed="true">
+    <Position X="3.5" Y="24.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::SUBMESH_GEOMETRY" Collapsed="true">
+    <Position X="22.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::D3DLIGHT" Collapsed="true">
+    <Position X="19.5" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::SHADOW_DESC" Collapsed="true">
+    <Position X="15.5" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::INSTANCING_DESC" Collapsed="true">
+    <Position X="7.5" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::CB_CAMERA_MATRIX" Collapsed="true">
+    <Position X="19.5" Y="17.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::CB_SHADER_COLOR" Collapsed="true">
+    <Position X="11.5" Y="20.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::CB_SHADER_TEXTURE" Collapsed="true">
+    <Position X="19.5" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::CB_SHADER_SKYBOX" Collapsed="true">
+    <Position X="18.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::CB_SHADER_MESH" Collapsed="true">
+    <Position X="3.5" Y="19.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::CB_SHADER_MESH_INSTANCEING" Collapsed="true">
+    <Position X="15.5" Y="17.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::CB_SHADER_DYAMICMESH_INSTANCEING" Collapsed="true">
+    <Position X="7.5" Y="17.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::CB_SHADER_VARIABLE" Collapsed="true">
+    <Position X="15.5" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::CB_SHADER_INFORMATION" Collapsed="true">
+    <Position X="11.5" Y="15.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::CB_SHADER_SHADOW" Collapsed="true">
+    <Position X="14.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::CB_SKINNING_MATRIX" Collapsed="true">
+    <Position X="3.5" Y="14.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::CB_SHADER_LIGHTING" Collapsed="true">
+    <Position X="11.5" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::PARTYMEMBER" Collapsed="true">
+    <Position X="7.5" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::SKILL_COOLDOWN_DESC" Collapsed="true">
+    <Position X="3.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Struct.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::_bool" Collapsed="true">
+    <Position X="149" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::_byte" Collapsed="true">
+    <Position X="150.75" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::_ubyte" Collapsed="true">
+    <Position X="152.5" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::_tchar" Collapsed="true">
+    <Position X="150.75" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::_short" Collapsed="true">
+    <Position X="149" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::_ushort" Collapsed="true">
+    <Position X="157.75" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::_int" Collapsed="true">
+    <Position X="156" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::_uint" Collapsed="true">
+    <Position X="154.25" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::_long" Collapsed="true">
+    <Position X="157.75" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::_ulong" Collapsed="true">
+    <Position X="156" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::_float" Collapsed="true">
+    <Position X="154.25" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::_double" Collapsed="true">
+    <Position X="152.5" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::_matrix" Collapsed="true">
+    <Position X="159.5" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Typedef.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="SOUNDTYPE" Collapsed="true">
+    <Position X="11.5" Y="30.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\DirectSound.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="SOUND3D" Collapsed="true">
+    <Position X="3.5" Y="29.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\DirectSound.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="OBJLIST" Collapsed="true">
+    <Position X="150.75" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\Layer.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="OBJITER" Collapsed="true">
+    <Position X="149" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\Layer.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="VECTOR_MATRIX" Collapsed="true">
+    <Position X="154.25" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\AniCtrl.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="MAP_BONENAME" Collapsed="true">
+    <Position X="159.5" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\AniCtrl.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="VECTOR_BONE_DESC" Collapsed="true">
+    <Position X="152.5" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\AniCtrl.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="VECTOR_SKINNING_MATRIX" Collapsed="true">
+    <Position X="156" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\AniCtrl.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="HIERARCHY_DESC" Collapsed="true">
+    <Position X="27.5" Y="27.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\AniCtrl.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="OVERLAP_AXIS" Collapsed="true">
+    <Position X="156" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\CollisionMgr.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="IS_OVERLAP" Collapsed="true">
+    <Position X="149" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAEAAAAAAABAAAAAAACAIAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\CollisionMgr.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DDS_MISC_FLAGS2" Collapsed="true">
+    <Position X="157.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\DDSTextureLoader.cpp</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SOUNDID" Collapsed="true">
+    <Position X="149" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAIIAAAAAAAEACAABAAAAACAAAAQAAAAAAAAAAgA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="TARGETID" Collapsed="true">
+    <Position X="154.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\RenderTarget.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DirectX::DDS_ALPHA_MODE" Collapsed="true">
+    <Position X="156" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAACAAAAAQAAAQAAAAAAAAABA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Code\DDSTextureLoader.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Engine::WINMODE" Collapsed="true">
+    <Position X="149" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAIAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Engine::SWAPCHAIN" Collapsed="true">
+    <Position X="152.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIABAABAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Engine::CMDID" Collapsed="true">
+    <Position X="149" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAACAAAAAgAAAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Engine::MATRIXID" Collapsed="true">
+    <Position X="150.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAEAAAAAAAAAAAAAgAABAAAAAEAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Engine::INSTANCE" Collapsed="true">
+    <Position X="159.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAgAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Engine::COLOR_BUFFER" Collapsed="true">
+    <Position X="150.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>oAAAAAAAAAAAAABEEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Engine::CONTEXT" Collapsed="true">
+    <Position X="154.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAIAAAAAQIAAAAAAABAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Engine::THREADID" Collapsed="true">
+    <Position X="159.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAhAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Engine::TEXTURE_MAPPING" Collapsed="true">
+    <Position X="156" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAQAAAAAAACAAAABAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Engine::RENDERID" Collapsed="true">
+    <Position X="157.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACBAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Engine::COMPONENTID" Collapsed="true">
+    <Position X="152.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAAAAAAACAAAAAAAAAEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Engine::TEXTYPE" Collapsed="true">
+    <Position X="157.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAABAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Engine::MOUSEBUTTON" Collapsed="true">
+    <Position X="152.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAQAAAAAAAIAAAAAIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Engine::MOUSEMOVESTATE" Collapsed="true">
+    <Position X="154.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAACAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Engine::SCENEID" Collapsed="true">
+    <Position X="159.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAAABAAAAABAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Engine::STAGEID" Collapsed="true">
+    <Position X="150.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAIAAAEAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Engine::tagD3DLightType" Collapsed="true">
+    <Position X="27.5" Y="20.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAIAAAAEAAAAAAAAgAgAAAAAAAA=</HashCode>
+      <FileName>D:\03. GitHub\01.KPUFinalProject\The Eternals\FrameDirectX12\Engine\Header\Engine_Enum.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>
