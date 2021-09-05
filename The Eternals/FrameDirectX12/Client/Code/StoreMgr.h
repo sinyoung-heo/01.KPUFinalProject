@@ -46,6 +46,7 @@ public:
 	void Push_StoreItemBuySlot(const char& chItemType, const char& chItemName, const _uint& uiCnt, const _uint& uiPrice);
 	void Min_StoreBuySlotSize() { if (m_uiCurBuySlotSize > 0) --m_uiCurBuySlotSize; }
 	void Add_BuyItemSumGold(const _int& uiGold) { m_iBuyItemSumGold += uiGold; }
+
 	// ItemSellSlot
 	void Reset_StoreItemSellSlotList(const _bool& bIsPushInventory = true);
 	void Push_StoreItemSellSlot(const char& chItemType, const char& chItemName, const _uint& uiInventoryIdx, const _uint& uiPrice);

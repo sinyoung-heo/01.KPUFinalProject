@@ -120,7 +120,9 @@ public:
 	virtual void	Render_ShadowDepth(const _float & fTimeDelta);
 	virtual void	Render_EdgeGameObject(const _float& fTimeDelta);
 	virtual void	Render_CrossFilterGameObject(const _float& fTimeDelta);
+
 	virtual void	Render_MiniMap(const _float& fTimeDelta);
+
 	// MultiThread Rendering.
 	virtual void	Render_GameObject(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);
 	virtual void	Render_ShadowDepth(const _float& fTimeDelta, ID3D12GraphicsCommandList* pCommandList, const _int& iContextIdx);

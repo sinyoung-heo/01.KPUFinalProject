@@ -46,10 +46,10 @@ private:
 	Key값은 ResourceTag
 	vector의 Index는 PipelineStateIndex, Size는 Instance개수.
 	____________________________________________________________________________________________________________*/
-	map<wstring, vector<INSTANCING_DESC>>								m_mapInstancing[CONTEXT::CONTEXT_END];
-	map<wstring, vector<CUploadBuffer<CB_SHADER_MESH_INSTANCEING>*>>	m_mapCB_ShaderMesh[CONTEXT::CONTEXT_END];
-	map<wstring, _uint>													m_mapTotalInstanceCnt;
-	_uint																m_uiPipelineStateCnt = 0;
+	map<wstring, vector<INSTANCING_DESC>> m_mapInstancing[CONTEXT::CONTEXT_END];
+	map<wstring, vector<CUploadBuffer<CB_SHADER_MESH_INSTANCEING>*>> m_mapCB_ShaderMesh[CONTEXT::CONTEXT_END];
+	map<wstring, _uint>	m_mapTotalInstanceCnt;
+	_uint m_uiPipelineStateCnt = 0;
 
 
 private:

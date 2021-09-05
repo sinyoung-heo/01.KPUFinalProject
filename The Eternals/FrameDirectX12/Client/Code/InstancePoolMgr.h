@@ -293,7 +293,9 @@ void Ready_InstacePool(ID3D12Device* pGraphicDevice,
 					   const _uint& uiSize)
 {
 	(*pInstacePoolDesc)                 = new INSTANCE_POOL_DESC<T1>;
-	(*pInstacePoolDesc)->ppInstances    = T1::Create_InstancePool(pGraphicDevice, pCommandList, wstrMeshTag, uiSize);
+	(*pInstacePoolDesc)->ppInstances    = T1::Create_InstancePool(pGraphicDevice, pCommandList, 
+																  wstrMeshTag, 
+																  uiSize);
 	(*pInstacePoolDesc)->uiInstanceSize = uiSize;
 }
 
@@ -319,7 +321,7 @@ Engine::CGameObject* Pop_Instance(INSTANCE_POOL_DESC<T1>* pInstacePoolDesc)
 	}
 	else
 	{
-		// CurrentIdx 사용중인지 검사.
+		// CurrentIdx의 객체가 사용중인지 검사.
 		if (!pInstacePoolDesc->ppInstances[uiIdx]->Get_IsUsingInstance())
 		{
 			++pInstacePoolDesc->uiCurrentIdx;

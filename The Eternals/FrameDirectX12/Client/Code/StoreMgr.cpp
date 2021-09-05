@@ -254,7 +254,7 @@ void CStoreMgr::Push_StoreItemBuySlot(const char& chItemType, const char& chItem
 
 	if (ItemType_Potion == chItemType)
 	{
-		// 현재 인벤토리에 포션이 있는지 탐색.
+		// 현재 구매슬롯에 포션이 있는지 탐색.
 		for (auto& pBuyItemSlot : m_vecBuySlotList)
 		{
 			if (chItemType == pBuyItemSlot->Get_CurItemInfo().chItemType &&
@@ -266,7 +266,7 @@ void CStoreMgr::Push_StoreItemBuySlot(const char& chItemType, const char& chItem
 			}
 		}
 
-		// 현재 인벤토리에 포션이 없다면 빈칸에 포션을 새로 생성.
+		// 현재 구매슬롯에 포션이 없다면 빈칸에 포션을 새로 생성.
 		for (auto& pBuyItemSlot : m_vecBuySlotList)
 		{
 			if (NO_ITEM == pBuyItemSlot->Get_CurItemInfo().chItemType)

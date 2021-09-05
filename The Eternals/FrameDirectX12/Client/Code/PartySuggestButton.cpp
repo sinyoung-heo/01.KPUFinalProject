@@ -86,6 +86,7 @@ _int CPartySuggestButton::LateUpdate_GameObject(const _float& fTimeDelta)
 
 		Engine::CGameObject* pThisPlayer = m_pObjectMgr->Get_GameObject(L"Layer_GameObject", L"ThisPlayer");
 		Engine::CGameObject* pSelectPlayer = m_pPartySystemMgr->Get_SelectPlayer();
+
 		if (nullptr != pSelectPlayer)
 		{
 			// 파티초대
@@ -101,7 +102,6 @@ _int CPartySuggestButton::LateUpdate_GameObject(const _float& fTimeDelta)
 					m_pPartySystemMgr->Get_PartySystemMessageCanvas()->Set_PartyMessageState(PARTY_SYSTEM_MESSAGE::SELECT_JOIN_IN_PARYY);
 				}
 			}
-
 			// 파티가입
 			else
 			{

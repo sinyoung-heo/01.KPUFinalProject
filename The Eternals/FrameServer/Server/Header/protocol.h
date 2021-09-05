@@ -1,7 +1,7 @@
 #pragma once
 
 constexpr char SERVER_IP[16]			= "127.0.0.1";
-constexpr char SERVER_DHIP[16]			= "192.168.142.192";
+constexpr char SERVER_DHIP[16]			= "210.93.52.190";
 
 constexpr int SERVER_PORT				= 5689;
 

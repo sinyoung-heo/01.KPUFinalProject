@@ -164,18 +164,19 @@ HRESULT CPCGladiator::LateInit_GameObject()
 	vector<CQuickSlot*> vecQuickSlot = m_pQuickSlotMgr->Get_QuickSlotList();
 
 	m_mapSkillKeyInput[L"STINGER_BLADE"] = -1;
-	m_mapSkillCoolDown[L"STINGER_BLADE"] = Engine::SKILL_COOLDOWN_DESC(1.0f);
 	m_mapSkillKeyInput[L"CUTTING_SLASH"] = -1;
-	m_mapSkillCoolDown[L"CUTTING_SLASH"] = Engine::SKILL_COOLDOWN_DESC(1.0f);
 	m_mapSkillKeyInput[L"JAW_BREAKER"]   = -1;
-	m_mapSkillCoolDown[L"JAW_BREAKER"]   = Engine::SKILL_COOLDOWN_DESC(1.0f);
 	m_mapSkillKeyInput[L"GAIA_CRUSH"]    = -1;
-	m_mapSkillCoolDown[L"GAIA_CRUSH"]    = Engine::SKILL_COOLDOWN_DESC(1.0f);
 	m_mapSkillKeyInput[L"DRAW_SWORD"]    = -1;
-	m_mapSkillCoolDown[L"DRAW_SWORD"]    = Engine::SKILL_COOLDOWN_DESC(1.0f);
 	m_mapSkillKeyInput[L"HP_POTION"]     = -1;
-	m_mapSkillCoolDown[L"HP_POTION"]     = Engine::SKILL_COOLDOWN_DESC(1.0f);
 	m_mapSkillKeyInput[L"MP_POTION"]     = -1;
+
+	m_mapSkillCoolDown[L"STINGER_BLADE"] = Engine::SKILL_COOLDOWN_DESC(1.0f);
+	m_mapSkillCoolDown[L"CUTTING_SLASH"] = Engine::SKILL_COOLDOWN_DESC(1.0f);
+	m_mapSkillCoolDown[L"JAW_BREAKER"]   = Engine::SKILL_COOLDOWN_DESC(1.0f);
+	m_mapSkillCoolDown[L"GAIA_CRUSH"]    = Engine::SKILL_COOLDOWN_DESC(1.0f);
+	m_mapSkillCoolDown[L"DRAW_SWORD"]    = Engine::SKILL_COOLDOWN_DESC(1.0f);
+	m_mapSkillCoolDown[L"HP_POTION"]     = Engine::SKILL_COOLDOWN_DESC(1.0f);
 	m_mapSkillCoolDown[L"MP_POTION"]     = Engine::SKILL_COOLDOWN_DESC(1.0f);
 
 	vecQuickSlot[0]->Set_CurQuickSlotName(QUCKSLOT_SKILL_STINGER_BLADE);
