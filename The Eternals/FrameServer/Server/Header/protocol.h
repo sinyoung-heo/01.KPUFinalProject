@@ -1,7 +1,7 @@
 #pragma once
 
 constexpr char SERVER_IP[16]			= "127.0.0.1";
-constexpr char SERVER_DHIP[16]			= "210.93.52.190";
+constexpr char SERVER_DHIP[16]			= "192.168.143.11";
 
 constexpr int SERVER_PORT				= 5689;
 
@@ -12,8 +12,8 @@ constexpr int MAX_STR_LEN				= 100;
 constexpr int MIDDLE_STR_LEN			= 64;
 
 constexpr int MAX_USER					= 10000;
-constexpr int MAX_NPC					= 50;
-constexpr int MAX_MONSTER				= 50;
+constexpr int MAX_NPC					= 30;
+constexpr int MAX_MONSTER				= 30;
 constexpr int MAX_AI					= 10;
 
 constexpr int NPC_NUM_START				= 1000;

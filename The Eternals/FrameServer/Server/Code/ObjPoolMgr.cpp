@@ -18,7 +18,7 @@ CObjPoolMgr::~CObjPoolMgr(void)
 HRESULT CObjPoolMgr::Init_ObjPoolMgr(void)
 {
 	CObjectPool* pPlayerPool = new CObjectPool();
-	pPlayerPool->Create_ObjectPool<CPlayer>(10);
+	pPlayerPool->Create_ObjectPool<CPlayer>(3);
 	m_mapObjPool[L"PLAYER"] = pPlayerPool;
 
 	CObjectPool* pNpcPool = new CObjectPool();
