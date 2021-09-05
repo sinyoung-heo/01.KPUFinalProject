@@ -106,19 +106,17 @@ _int CShadowLightMgr::Update_ShadowLight()
 		_vec3 vEye = m_pThisPlayer->Get_Transform()->m_vPos;
 		_vec3 vAt  = m_pThisPlayer->Get_Transform()->m_vPos;
 
-		vEye.z -= 0.5f;
+		vEye.z -= MINIMAP_OFFSET;
 		vEye.y = m_fMiniMapHeight;
 
-		// LightView
 		m_matMiniMapView = XMMatrixLookAtLH(vEye.Get_XMVECTOR(),
 											vAt.Get_XMVECTOR(), 
 											_vec3(0.0f, 1.0f, 0.0f).Get_XMVECTOR());
 
-		// LightProj
-		m_matMiniMapProj = XMMatrixPerspectiveFovLH(XMConvertToRadians(120.0f),
+		m_matMiniMapProj = XMMatrixPerspectiveFovLH(XMConvertToRadians(MINIMAP_FOV_Y),
 																	   1.0f,
 																	   1.0f, 
-																	   100.0f);
+																	   MINIMAP_FAR);
 	}
 	else
 	{

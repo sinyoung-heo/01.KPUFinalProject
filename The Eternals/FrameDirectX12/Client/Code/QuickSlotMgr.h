@@ -18,8 +18,10 @@ public:
 	void Set_QuickSlotSwapSlot(CQuickSlotSwapSlot* pSlot)	{ m_pQuickSlotSwapSlot = pSlot; }
 	void Set_IsQuickSlotSwapState(const _bool& bIsSwap)		{ m_bIsQuickSlotSwapState = bIsSwap; }
 	void Add_QuickSlot(CQuickSlot* pSlot);
+
 private:
 	vector<CQuickSlot*> m_vecQuickSlot;
+
 	CQuickSlotSwapSlot* m_pQuickSlotSwapSlot = nullptr;
 	_bool				m_bIsQuickSlotSwapState = false;
 

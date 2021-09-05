@@ -774,7 +774,6 @@ namespace Engine
 	typedef struct tagInstancingDesc
 	{
 		_uint		iInstanceCount = 0;
-
 	} INSTANCING_DESC;
 
 

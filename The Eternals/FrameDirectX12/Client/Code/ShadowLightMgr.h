@@ -7,6 +7,11 @@ namespace Engine
 	class CGameObject;
 }
 
+constexpr _float MINIMAP_FOV_Y  = 120.0f;
+constexpr _float MINIMAP_NEAR   = 1.0f;
+constexpr _float MINIMAP_FAR    = 100.0f;
+constexpr _float MINIMAP_OFFSET = 0.5f;
+
 class CShadowLightMgr : public Engine::CBase
 {
 	DECLARE_SINGLETON(CShadowLightMgr)

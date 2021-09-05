@@ -357,23 +357,26 @@ void CInventoryItemSlot::KeyInput_MouseButton(const _float& fTimeDelta)
 					return;
 				}
 
-				// Çï¸ä ÀåÂø
 				else if (ItemType_Helmet == m_tCurItemInfo.chItemType)
 				{
 					wsrEquipSlotTag = L"EquipmentHelmet";
-					CPacketMgr::Get_Instance()->send_equip_item(EQUIP_HELMET, m_tCurItemInfo.chItemType, m_tCurItemInfo.chItemName);
+					CPacketMgr::Get_Instance()->send_equip_item(EQUIP_HELMET,
+																m_tCurItemInfo.chItemType, 
+																m_tCurItemInfo.chItemName);
 				}
-				// °©¿Ê ÀåÂø
 				else if (ItemType_Armor == m_tCurItemInfo.chItemType)
 				{
 					wsrEquipSlotTag = L"EquipmentArmor";
-					CPacketMgr::Get_Instance()->send_equip_item(EQUIP_ARMOR, m_tCurItemInfo.chItemType, m_tCurItemInfo.chItemName);
+					CPacketMgr::Get_Instance()->send_equip_item(EQUIP_ARMOR, 
+																m_tCurItemInfo.chItemType,
+																m_tCurItemInfo.chItemName);
 				}
-				// ½Å¹ß ÀåÂø
 				else if (ItemType_Shoes == m_tCurItemInfo.chItemType)
 				{
 					wsrEquipSlotTag = L"EquipmentShoes";
-					CPacketMgr::Get_Instance()->send_equip_item(EQUIP_SHOES, m_tCurItemInfo.chItemType, m_tCurItemInfo.chItemName);
+					CPacketMgr::Get_Instance()->send_equip_item(EQUIP_SHOES,
+																m_tCurItemInfo.chItemType, 
+																m_tCurItemInfo.chItemName);
 				}
 
 				// ÇöÀç ÀåºñÃ¢¿¡ Àåºñ Âø¿ë [X] :: ¾ÆÀÌÅÛ ÀåÂø.

@@ -1268,7 +1268,6 @@ HRESULT CRenderer::Render_MultiThread(const _float& fTimeDelta)
 		for (_int i = 0; i < CONTEXT::CONTEXT_END; ++i)
 			SetEvent(m_hWorkerBeginRender[i]);
 
-		// ShadowDepth가 전부 그려질 때 까지 대기하자. 전부 그려졌으면 명령 제출.
 		WaitForMultipleObjects(CONTEXT::CONTEXT_END, m_hWorkerFinishShadow, TRUE, INFINITE);
 
 		// End Render ShadowDepth Pass.
