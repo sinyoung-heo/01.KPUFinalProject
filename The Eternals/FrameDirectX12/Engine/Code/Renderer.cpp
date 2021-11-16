@@ -1401,7 +1401,6 @@ void CRenderer::Worker_Thread(_int threadIndex)
 		m_arrSceneCommandList[threadIndex]->Close();
 	
 		// Tell main thread that we are done.
-		// 메인 쓰레드에 우리는 끝났다고 말해라.
 		// None-Signal -> Signal
 		SetEvent(m_hWorkerFinishedRenderNoneAlpha[threadIndex]);
 	}

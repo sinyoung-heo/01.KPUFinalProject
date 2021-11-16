@@ -394,7 +394,7 @@ void CNPC_Children::Change_Animation_NonMoveType(const _float& fTimeDelta)
 
 			if (!m_bIsSoundStart)
 			{
-				Engine::CSoundMgr::Get_Instance()->Play_Sound(L"npc_children.ogg", SOUNDID::SOUND_MONSTER);
+				// Engine::CSoundMgr::Get_Instance()->Play_Sound(L"npc_children.ogg", SOUNDID::SOUND_MONSTER);
 				m_bIsSoundStart = true;
 			}
 

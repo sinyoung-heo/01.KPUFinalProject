@@ -177,9 +177,9 @@ void CInstancePoolMgr::Ready_InstancePool(ID3D12Device* pGraphicDevice, ID3D12Gr
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Merchant_Baraka_M_MerchantPool, L"Baraka_M_Merchant", 1);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Merchant_Baraka_M_MystelliumPool, L"Baraka_M_Mystellium", 1);
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_QuestPool, L"Castanic_M_Lsmith", 1);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Children_HumanBoyPool, L"Human_boy", 4);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Children_HumanGirlPool, L"Human_girl", 4);
-	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Children_HighelfGirlPool, L"Highelf_girl", 4);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Children_HumanBoyPool, L"Human_boy", 10);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Children_HumanGirlPool, L"Human_girl", 10);
+	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pNPC_Children_HighelfGirlPool, L"Highelf_girl", 10);
 
 	// PCWeapon
 	Ready_InstacePool(pGraphicDevice, pCommandList, &m_pPCWeaponTwohand19_A_SM_Pool, L"Twohand19_A_SM", 16);
